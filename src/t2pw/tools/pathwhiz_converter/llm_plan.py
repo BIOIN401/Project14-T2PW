@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import json
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 from pydantic import ValidationError
 
@@ -55,7 +55,7 @@ def request_patch_plan(
     input_model_summary: Dict[str, Any],
     example_summaries: List[Dict[str, Any]],
     allow_add_reaction: bool,
-    max_tokens: int = 2400,
+    max_tokens: Optional[int] = None,
 ) -> Tuple[PatchPlan, Dict[str, Any]]:
     chat_fn = _resolve_chat_fn(llm_client)
     allowed_ops = list(ALLOWED_OPS_BASE)
@@ -73,7 +73,7 @@ def request_patch_plan(
             {"role": "user", "content": prompt},
         ],
         temperature=0.0,
-        max_tokens=int(max_tokens),
+        max_tokens=max_tokens,
         response_json=True,
     )
     parsed = _parse_json_maybe(raw)

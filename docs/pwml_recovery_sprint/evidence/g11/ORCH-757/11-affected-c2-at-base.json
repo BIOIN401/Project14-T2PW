@@ -1,0 +1,126 @@
+{
+  "label": "affected-c2-at-base",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-757/11-affected-c2-at-base.pin.json",
+    "-q",
+    "--basetemp=C:/t/bt-orch757/11-affected-c2-at-base-2682",
+    "tests/test_gap_resolver.py",
+    "tests/test_gap_resolver_agent_tools.py",
+    "tests/test_gap_resolver_biological_state_resolution.py",
+    "tests/test_gap_resolver_lineage.py",
+    "tests/test_gap_resolver_stage3_issues.py",
+    "tests/test_identity_evidence_hydration.py",
+    "tests/test_identity_hydration_regression.py",
+    "tests/test_interactive_curator.py",
+    "tests/test_llm_client_empty_completion_retry.py",
+    "tests/test_llm_client_request_timeout.py",
+    "tests/test_localized_repair.py",
+    "tests/test_locked_noop_quarantine_policy.py",
+    "tests/test_map_ids.py",
+    "tests/test_map_ids_mapping_lineage.py",
+    "tests/test_orch754c_curator_prompt_reverted.py",
+    "tests/test_orch757_llm_token_budgets.py",
+    "tests/test_pathbank_unknown_fallback.py",
+    "tests/test_pipeline_cleanup.py",
+    "tests/test_pipeline_lineage_carrier.py",
+    "tests/test_prefreeze_compound_resolution.py",
+    "tests/test_prefreeze_third_export_seam.py",
+    "tests/test_preprocessor.py",
+    "tests/test_probe_decimal_normalization.py",
+    "tests/test_probe_json_repair_deletion.py",
+    "tests/test_probe_row_field_exactness.py",
+    "tests/test_process_normalizer.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch757",
+  "started_at": "2026-10-22T02:59:35+00:00",
+  "finished_at": "2026-10-22T02:59:39+00:00",
+  "duration_seconds": 3.88940569999977,
+  "timeout_seconds": 540.0,
+  "root_pid": 1025316,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 2,
+  "returned_code": 2,
+  "descendants_observed": [
+    {
+      "pid": 1025888,
+      "name": "python.exe",
+      "ppid": 1025316
+    }
+  ],
+  "descendants_terminated": [
+    1025888
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 965236,
+      "name": "python.exe"
+    },
+    {
+      "pid": 968864,
+      "name": "python.exe"
+    },
+    {
+      "pid": 977424,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1009112,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1009864,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1013048,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1013664,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1013700,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1026924,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1026944,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch757\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-757\\11-affected-c2-at-base.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch757\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch757",
+    "repo_head": "2aebbfe019ccd53a832141ed3536153a0b3235f8",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

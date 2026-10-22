@@ -1,0 +1,676 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch757\src\t2pw\__init__.py
+.................................................................F..FF.. [ 13%]
+........................................................................ [ 26%]
+........................................................................ [ 39%]
+........................................................................ [ 52%]
+........................................................................ [ 65%]
+........................................................................ [ 78%]
+........................................................................ [ 92%]
+...........................................                              [100%]
+================================== FAILURES ===================================
+____ test_a_timeout_raises_the_distinct_outcome_inside_the_computed_bound _____
+
+self = <test_llm_client_request_timeout._Completions object at 0x000002D31E5B67B0>
+kwargs = {'max_tokens': 65536, 'messages': [{'content': 'extract the pathway', 'role': 'user'}], 'model': 'm', 'temperature': 0.0, ...}
+item = <object object at 0x000002D31AD028F0>
+
+    def create(self, **kwargs: Any) -> Any:
+        self.calls.append(kwargs)
+        item = self._script.pop(0) if self._script else HANG
+        if item is HANG:
+            time.sleep(min(kwargs["timeout"].read, UNBOUNDED_SECONDS))
+>           raise openai.APITimeoutError("request timed out")
+E           RuntimeError: request timed out
+
+tests\test_llm_client_request_timeout.py:66: RuntimeError
+
+The above exception was the direct cause of the following exception:
+
+llm = <function llm.<locals>._install at 0x000002D323622F20>
+
+    def test_a_timeout_raises_the_distinct_outcome_inside_the_computed_bound(llm) -> None:
+        """(a) The bound is asserted as elapsed time, not merely as an exception type."""
+        fake = llm([HANG, HANG])
+        bound = client_mod.worst_case_call_seconds(timeout=0.05)  # 2*0.05 + 2*0.01 + 0
+        started = time.monotonic()
+        with pytest.raises(client_mod.LLMOperationTimeout) as caught:
+>           client_mod.chat_detailed(MESSAGES, model_override="m", timeout=0.05)
+
+tests\test_llm_client_request_timeout.py:98: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+messages = [{'content': 'extract the pathway', 'role': 'user'}]
+temperature = 0.0, max_tokens = None, response_json = False, json_schema = None
+model_override = 'm', model_env_var = None, stage_name = None, timeout = 0.05
+
+    def chat_detailed(
+        messages: List[Dict[str, Any]],
+        temperature: float = 0.0,
+        max_tokens: Optional[int] = None,
+        response_json: bool = False,
+        json_schema: Optional[Dict[str, Any]] = None,
+        model_override: Optional[str] = None,
+        model_env_var: Optional[str] = None,
+        stage_name: Optional[str] = None,
+        timeout: Optional[float] = None,
+    ) -> CompletionResult:
+        """:func:`chat` plus a :class:`CompletionDiagnostics` describing the call.
+    
+        ``timeout`` bounds each attempt of THIS call only, defaulting to
+        :data:`REQUEST_TIMEOUT_SECONDS`; :func:`worst_case_call_seconds` prices the
+        whole call in advance. A budget spent on timeouts raises
+        :class:`LLMOperationTimeout`, never the empty string.
+    
+        The text returned is identical to what ``chat`` returns for the same inputs;
+        the only behavioural difference anywhere in this function relative to the
+        pre-2026-07-29 code is the content-filter exit described below.
+    
+        CONTENT FILTER IS A DURABLE EXIT, NOT A TRANSIENT
+        -------------------------------------------------
+        An empty 200 whose ``finish_reason`` is ``content_filter`` is not a hiccup.
+        Moderation is a deterministic function of the prompt, so LLM_MAX_RETRIES
+        re-sends of the *identical* prompt buy exactly one thing: LLM_MAX_RETRIES
+        times the latency, and then the same empty string. The loop therefore stops
+        on the first one and reports ``terminal_reason="content_filter"``, which is
+        the fact an operator needs -- editing the prompt is the fix, re-running the
+        leg is not. Retrying a *different* prompt is still allowed and is what the
+        localized-repair path does; what is forbidden is the blind identical retry.
+    
+        A ``content_filter`` reply that carries text is NOT affected: it is a partial
+        answer, it is returned like any other non-empty completion, and the reason is
+        recorded on the diagnostics.
+        """
+        resolved_model = _resolve_model(
+            model_override=model_override,
+            model_env_var=model_env_var,
+        )
+        logger.info("LLM model for %s: %s", stage_name or "chat", resolved_model)
+    
+        diagnostics = CompletionDiagnostics(
+            model=resolved_model,
+            stage=str(stage_name or "chat"),
+            request_hash=_hash(messages),
+        )
+    
+        request_timeout = resolve_request_timeout(timeout)
+        kwargs: Dict[str, Any] = {
+            "model": resolved_model,
+            "messages": messages,
+            "temperature": temperature,
+            "max_tokens": request_max_tokens(max_tokens, model=resolved_model, model_env_var=model_env_var),
+            "timeout": _timeout(request_timeout),
+        }
+    
+        # OpenAI-compatible response_format
+        if response_json:
+            if json_schema:
+                kwargs["response_format"] = {
+                    "type": "json_schema",
+                    "json_schema": json_schema,
+                }
+            else:
+                kwargs["response_format"] = {"type": "json_object"}
+    
+        # Retry tuning (env configurable)
+        max_retries = int(os.getenv("LLM_MAX_RETRIES", "8"))
+        base_sleep = float(os.getenv("LLM_RETRY_BASE_SLEEP", "1.0"))
+        max_sleep = float(os.getenv("LLM_RETRY_MAX_SLEEP", "20.0"))
+    
+        # Spacing helps chunk pipelines avoid bursts
+        spacing = float(os.getenv("LLM_CALL_SPACING", "0.35"))
+    
+        last_err: Exception | None = None
+        empty_attempts = 0
+    
+        for attempt in range(max_retries):
+            try:
+                resp = _client.chat.completions.create(**kwargs)
+                _record_usage(resp)
+                time.sleep(spacing)
+    
+                # An HTTP 200 with no text is a transient, not a result. See the
+                # "Empty-but-successful completions" note above: this is the exact
+                # shape that killed PMC13278307/research (137s) and
+                # PMC13231680/strict (55s) in runs/2026-07-28_0919, and it is
+                # deliberately handled *inside* this loop so it shares the same
+                # backoff and the same LLM_MAX_RETRIES budget as every other
+                # transient rather than growing a second retry mechanism.
+                if _completion_is_empty(resp, tools_were_sent=False):
+                    empty_attempts += 1
+                    reason = _finish_reason(resp)
+                    last_err = RuntimeError(
+                        f"empty completion from {resolved_model} (finish_reason={reason})"
+                    )
+                    if _is_content_filter(reason):
+                        # Durable, not transient. Stop here rather than spending the
+                        # rest of the budget re-asking a question already refused.
+                        diagnostics.note(
+                            attempt=attempt + 1,
+                            status=STATUS_CONTENT_FILTER,
+                            finish_reason=reason,
+                            error=str(last_err),
+                        )
+                        diagnostics.terminal_reason = TERMINAL_CONTENT_FILTER
+                        logger.error(
+                            "LLM stopped %s on finish_reason=%s (model %s) with no content on "
+                            "attempt %d/%d. This is a moderation stop, not a transient: the "
+                            "identical prompt will be refused again, so no retry is spent. "
+                            "Edit the prompt or the source passage rather than re-running.",
+                            stage_name or "chat",
+                            reason,
+                            resolved_model,
+                            attempt + 1,
+                            max_retries,
+                        )
+                        return CompletionResult("", diagnostics)
+                    diagnostics.note(
+                        attempt=attempt + 1,
+                        status=STATUS_EMPTY,
+                        finish_reason=reason,
+                        error=str(last_err),
+                    )
+                    if attempt < max_retries - 1:
+                        logger.warning(
+                            "LLM returned an empty completion for %s (model %s, "
+                            "finish_reason=%s) on attempt %d/%d; retrying as a transient.",
+                            stage_name or "chat",
+                            resolved_model,
+                            reason,
+                            attempt + 1,
+                            max_retries,
+                        )
+                        time.sleep(min(base_sleep * (2 ** attempt), max_sleep))
+                        continue
+                    # Budget exhausted. Return the empty string exactly as this
+                    # function did before 2026-07-28 instead of raising: the
+                    # preprocessor turns "" into status "empty_reply" plus the empty
+                    # context, and a new exception type here would change the
+                    # contract of every call site at once.
+                    logger.error(
+                        "LLM returned an empty completion for %s (model %s, "
+                        "finish_reason=%s) on %d of %d attempts; giving up and returning "
+                        "the empty string for the caller's own empty-reply handling.",
+                        stage_name or "chat",
+                        resolved_model,
+                        reason,
+                        empty_attempts,
+                        max_retries,
+                    )
+                    diagnostics.terminal_reason = TERMINAL_EMPTY_AFTER_RETRIES
+                    return CompletionResult("", diagnostics)
+    
+                text = (resp.choices[0].message.content or "").strip()
+                reason = _finish_reason(resp)
+                diagnostics.note(
+                    attempt=attempt + 1,
+                    status=STATUS_OK,
+                    finish_reason=reason,
+                    content_chars=len(text),
+                )
+                diagnostics.response_hash = _hash(text)
+                diagnostics.raw_chars = len(text)
+                return CompletionResult(text, diagnostics)
+    
+            except AuthenticationError as e:
+>               raise RuntimeError(
+                    f"Authentication failed (401). Key starts with: {_mask(os.getenv('OPENROUTER_API_KEY',''))}. "
+                    f"Checked .env at: {ENV_PATH}. Original error: {e}"
+                ) from e
+E               RuntimeError: Authentication failed (401). Key starts with: None. Checked .env at: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch757\.env. Original error: request timed out
+
+src\t2pw\llm\client.py:835: RuntimeError
+___________ test_d_a_timeout_is_never_filed_as_an_empty_completion ____________
+
+self = <test_llm_client_request_timeout._Completions object at 0x000002D32242C690>
+kwargs = {'max_tokens': 65536, 'messages': [{'content': 'extract the pathway', 'role': 'user'}], 'model': 'm', 'temperature': 0.0, ...}
+item = RuntimeError('t')
+
+    def create(self, **kwargs: Any) -> Any:
+        self.calls.append(kwargs)
+        item = self._script.pop(0) if self._script else HANG
+        if item is HANG:
+            time.sleep(min(kwargs["timeout"].read, UNBOUNDED_SECONDS))
+            raise openai.APITimeoutError("request timed out")
+        if isinstance(item, Exception):
+>           raise item
+E           RuntimeError: t
+
+tests\test_llm_client_request_timeout.py:68: RuntimeError
+
+The above exception was the direct cause of the following exception:
+
+llm = <function llm.<locals>._install at 0x000002D3236237E0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002D31FF04050>
+
+    def test_d_a_timeout_is_never_filed_as_an_empty_completion(llm, monkeypatch) -> None:
+        """(d) Distinct status, and the empty-completion retry budget is left intact."""
+        monkeypatch.setenv("LLM_MAX_RETRIES", "3")
+        fake = llm([openai.APITimeoutError("t"), _resp(""), _resp("recovered")])
+>       result = client_mod.chat_detailed(MESSAGES, model_override="m")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_llm_client_request_timeout.py:144: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+messages = [{'content': 'extract the pathway', 'role': 'user'}]
+temperature = 0.0, max_tokens = None, response_json = False, json_schema = None
+model_override = 'm', model_env_var = None, stage_name = None, timeout = None
+
+    def chat_detailed(
+        messages: List[Dict[str, Any]],
+        temperature: float = 0.0,
+        max_tokens: Optional[int] = None,
+        response_json: bool = False,
+        json_schema: Optional[Dict[str, Any]] = None,
+        model_override: Optional[str] = None,
+        model_env_var: Optional[str] = None,
+        stage_name: Optional[str] = None,
+        timeout: Optional[float] = None,
+    ) -> CompletionResult:
+        """:func:`chat` plus a :class:`CompletionDiagnostics` describing the call.
+    
+        ``timeout`` bounds each attempt of THIS call only, defaulting to
+        :data:`REQUEST_TIMEOUT_SECONDS`; :func:`worst_case_call_seconds` prices the
+        whole call in advance. A budget spent on timeouts raises
+        :class:`LLMOperationTimeout`, never the empty string.
+    
+        The text returned is identical to what ``chat`` returns for the same inputs;
+        the only behavioural difference anywhere in this function relative to the
+        pre-2026-07-29 code is the content-filter exit described below.
+    
+        CONTENT FILTER IS A DURABLE EXIT, NOT A TRANSIENT
+        -------------------------------------------------
+        An empty 200 whose ``finish_reason`` is ``content_filter`` is not a hiccup.
+        Moderation is a deterministic function of the prompt, so LLM_MAX_RETRIES
+        re-sends of the *identical* prompt buy exactly one thing: LLM_MAX_RETRIES
+        times the latency, and then the same empty string. The loop therefore stops
+        on the first one and reports ``terminal_reason="content_filter"``, which is
+        the fact an operator needs -- editing the prompt is the fix, re-running the
+        leg is not. Retrying a *different* prompt is still allowed and is what the
+        localized-repair path does; what is forbidden is the blind identical retry.
+    
+        A ``content_filter`` reply that carries text is NOT affected: it is a partial
+        answer, it is returned like any other non-empty completion, and the reason is
+        recorded on the diagnostics.
+        """
+        resolved_model = _resolve_model(
+            model_override=model_override,
+            model_env_var=model_env_var,
+        )
+        logger.info("LLM model for %s: %s", stage_name or "chat", resolved_model)
+    
+        diagnostics = CompletionDiagnostics(
+            model=resolved_model,
+            stage=str(stage_name or "chat"),
+            request_hash=_hash(messages),
+        )
+    
+        request_timeout = resolve_request_timeout(timeout)
+        kwargs: Dict[str, Any] = {
+            "model": resolved_model,
+            "messages": messages,
+            "temperature": temperature,
+            "max_tokens": request_max_tokens(max_tokens, model=resolved_model, model_env_var=model_env_var),
+            "timeout": _timeout(request_timeout),
+        }
+    
+        # OpenAI-compatible response_format
+        if response_json:
+            if json_schema:
+                kwargs["response_format"] = {
+                    "type": "json_schema",
+                    "json_schema": json_schema,
+                }
+            else:
+                kwargs["response_format"] = {"type": "json_object"}
+    
+        # Retry tuning (env configurable)
+        max_retries = int(os.getenv("LLM_MAX_RETRIES", "8"))
+        base_sleep = float(os.getenv("LLM_RETRY_BASE_SLEEP", "1.0"))
+        max_sleep = float(os.getenv("LLM_RETRY_MAX_SLEEP", "20.0"))
+    
+        # Spacing helps chunk pipelines avoid bursts
+        spacing = float(os.getenv("LLM_CALL_SPACING", "0.35"))
+    
+        last_err: Exception | None = None
+        empty_attempts = 0
+    
+        for attempt in range(max_retries):
+            try:
+                resp = _client.chat.completions.create(**kwargs)
+                _record_usage(resp)
+                time.sleep(spacing)
+    
+                # An HTTP 200 with no text is a transient, not a result. See the
+                # "Empty-but-successful completions" note above: this is the exact
+                # shape that killed PMC13278307/research (137s) and
+                # PMC13231680/strict (55s) in runs/2026-07-28_0919, and it is
+                # deliberately handled *inside* this loop so it shares the same
+                # backoff and the same LLM_MAX_RETRIES budget as every other
+                # transient rather than growing a second retry mechanism.
+                if _completion_is_empty(resp, tools_were_sent=False):
+                    empty_attempts += 1
+                    reason = _finish_reason(resp)
+                    last_err = RuntimeError(
+                        f"empty completion from {resolved_model} (finish_reason={reason})"
+                    )
+                    if _is_content_filter(reason):
+                        # Durable, not transient. Stop here rather than spending the
+                        # rest of the budget re-asking a question already refused.
+                        diagnostics.note(
+                            attempt=attempt + 1,
+                            status=STATUS_CONTENT_FILTER,
+                            finish_reason=reason,
+                            error=str(last_err),
+                        )
+                        diagnostics.terminal_reason = TERMINAL_CONTENT_FILTER
+                        logger.error(
+                            "LLM stopped %s on finish_reason=%s (model %s) with no content on "
+                            "attempt %d/%d. This is a moderation stop, not a transient: the "
+                            "identical prompt will be refused again, so no retry is spent. "
+                            "Edit the prompt or the source passage rather than re-running.",
+                            stage_name or "chat",
+                            reason,
+                            resolved_model,
+                            attempt + 1,
+                            max_retries,
+                        )
+                        return CompletionResult("", diagnostics)
+                    diagnostics.note(
+                        attempt=attempt + 1,
+                        status=STATUS_EMPTY,
+                        finish_reason=reason,
+                        error=str(last_err),
+                    )
+                    if attempt < max_retries - 1:
+                        logger.warning(
+                            "LLM returned an empty completion for %s (model %s, "
+                            "finish_reason=%s) on attempt %d/%d; retrying as a transient.",
+                            stage_name or "chat",
+                            resolved_model,
+                            reason,
+                            attempt + 1,
+                            max_retries,
+                        )
+                        time.sleep(min(base_sleep * (2 ** attempt), max_sleep))
+                        continue
+                    # Budget exhausted. Return the empty string exactly as this
+                    # function did before 2026-07-28 instead of raising: the
+                    # preprocessor turns "" into status "empty_reply" plus the empty
+                    # context, and a new exception type here would change the
+                    # contract of every call site at once.
+                    logger.error(
+                        "LLM returned an empty completion for %s (model %s, "
+                        "finish_reason=%s) on %d of %d attempts; giving up and returning "
+                        "the empty string for the caller's own empty-reply handling.",
+                        stage_name or "chat",
+                        resolved_model,
+                        reason,
+                        empty_attempts,
+                        max_retries,
+                    )
+                    diagnostics.terminal_reason = TERMINAL_EMPTY_AFTER_RETRIES
+                    return CompletionResult("", diagnostics)
+    
+                text = (resp.choices[0].message.content or "").strip()
+                reason = _finish_reason(resp)
+                diagnostics.note(
+                    attempt=attempt + 1,
+                    status=STATUS_OK,
+                    finish_reason=reason,
+                    content_chars=len(text),
+                )
+                diagnostics.response_hash = _hash(text)
+                diagnostics.raw_chars = len(text)
+                return CompletionResult(text, diagnostics)
+    
+            except AuthenticationError as e:
+>               raise RuntimeError(
+                    f"Authentication failed (401). Key starts with: {_mask(os.getenv('OPENROUTER_API_KEY',''))}. "
+                    f"Checked .env at: {ENV_PATH}. Original error: {e}"
+                ) from e
+E               RuntimeError: Authentication failed (401). Key starts with: None. Checked .env at: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch757\.env. Original error: t
+
+src\t2pw\llm\client.py:835: RuntimeError
+_______ test_d_a_budget_spent_on_timeouts_is_not_the_empty_string_exit ________
+
+self = <test_llm_client_request_timeout._Completions object at 0x000002D321A33230>
+kwargs = {'max_tokens': 65536, 'messages': [{'content': 'extract the pathway', 'role': 'user'}], 'model': 'm', 'temperature': 0.0, ...}
+item = RuntimeError('t')
+
+    def create(self, **kwargs: Any) -> Any:
+        self.calls.append(kwargs)
+        item = self._script.pop(0) if self._script else HANG
+        if item is HANG:
+            time.sleep(min(kwargs["timeout"].read, UNBOUNDED_SECONDS))
+            raise openai.APITimeoutError("request timed out")
+        if isinstance(item, Exception):
+>           raise item
+E           RuntimeError: t
+
+tests\test_llm_client_request_timeout.py:68: RuntimeError
+
+The above exception was the direct cause of the following exception:
+
+llm = <function llm.<locals>._install at 0x000002D321C137E0>
+
+    def test_d_a_budget_spent_on_timeouts_is_not_the_empty_string_exit(llm) -> None:
+        """(d) Both loops raise operation_timeout instead of returning "" as empty."""
+        llm([openai.APITimeoutError("t"), openai.APITimeoutError("t")])
+        with pytest.raises(client_mod.LLMOperationTimeout) as caught:
+>           client_mod.chat_detailed(MESSAGES, model_override="m")
+
+tests\test_llm_client_request_timeout.py:155: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+messages = [{'content': 'extract the pathway', 'role': 'user'}]
+temperature = 0.0, max_tokens = None, response_json = False, json_schema = None
+model_override = 'm', model_env_var = None, stage_name = None, timeout = None
+
+    def chat_detailed(
+        messages: List[Dict[str, Any]],
+        temperature: float = 0.0,
+        max_tokens: Optional[int] = None,
+        response_json: bool = False,
+        json_schema: Optional[Dict[str, Any]] = None,
+        model_override: Optional[str] = None,
+        model_env_var: Optional[str] = None,
+        stage_name: Optional[str] = None,
+        timeout: Optional[float] = None,
+    ) -> CompletionResult:
+        """:func:`chat` plus a :class:`CompletionDiagnostics` describing the call.
+    
+        ``timeout`` bounds each attempt of THIS call only, defaulting to
+        :data:`REQUEST_TIMEOUT_SECONDS`; :func:`worst_case_call_seconds` prices the
+        whole call in advance. A budget spent on timeouts raises
+        :class:`LLMOperationTimeout`, never the empty string.
+    
+        The text returned is identical to what ``chat`` returns for the same inputs;
+        the only behavioural difference anywhere in this function relative to the
+        pre-2026-07-29 code is the content-filter exit described below.
+    
+        CONTENT FILTER IS A DURABLE EXIT, NOT A TRANSIENT
+        -------------------------------------------------
+        An empty 200 whose ``finish_reason`` is ``content_filter`` is not a hiccup.
+        Moderation is a deterministic function of the prompt, so LLM_MAX_RETRIES
+        re-sends of the *identical* prompt buy exactly one thing: LLM_MAX_RETRIES
+        times the latency, and then the same empty string. The loop therefore stops
+        on the first one and reports ``terminal_reason="content_filter"``, which is
+        the fact an operator needs -- editing the prompt is the fix, re-running the
+        leg is not. Retrying a *different* prompt is still allowed and is what the
+        localized-repair path does; what is forbidden is the blind identical retry.
+    
+        A ``content_filter`` reply that carries text is NOT affected: it is a partial
+        answer, it is returned like any other non-empty completion, and the reason is
+        recorded on the diagnostics.
+        """
+        resolved_model = _resolve_model(
+            model_override=model_override,
+            model_env_var=model_env_var,
+        )
+        logger.info("LLM model for %s: %s", stage_name or "chat", resolved_model)
+    
+        diagnostics = CompletionDiagnostics(
+            model=resolved_model,
+            stage=str(stage_name or "chat"),
+            request_hash=_hash(messages),
+        )
+    
+        request_timeout = resolve_request_timeout(timeout)
+        kwargs: Dict[str, Any] = {
+            "model": resolved_model,
+            "messages": messages,
+            "temperature": temperature,
+            "max_tokens": request_max_tokens(max_tokens, model=resolved_model, model_env_var=model_env_var),
+            "timeout": _timeout(request_timeout),
+        }
+    
+        # OpenAI-compatible response_format
+        if response_json:
+            if json_schema:
+                kwargs["response_format"] = {
+                    "type": "json_schema",
+                    "json_schema": json_schema,
+                }
+            else:
+                kwargs["response_format"] = {"type": "json_object"}
+    
+        # Retry tuning (env configurable)
+        max_retries = int(os.getenv("LLM_MAX_RETRIES", "8"))
+        base_sleep = float(os.getenv("LLM_RETRY_BASE_SLEEP", "1.0"))
+        max_sleep = float(os.getenv("LLM_RETRY_MAX_SLEEP", "20.0"))
+    
+        # Spacing helps chunk pipelines avoid bursts
+        spacing = float(os.getenv("LLM_CALL_SPACING", "0.35"))
+    
+        last_err: Exception | None = None
+        empty_attempts = 0
+    
+        for attempt in range(max_retries):
+            try:
+                resp = _client.chat.completions.create(**kwargs)
+                _record_usage(resp)
+                time.sleep(spacing)
+    
+                # An HTTP 200 with no text is a transient, not a result. See the
+                # "Empty-but-successful completions" note above: this is the exact
+                # shape that killed PMC13278307/research (137s) and
+                # PMC13231680/strict (55s) in runs/2026-07-28_0919, and it is
+                # deliberately handled *inside* this loop so it shares the same
+                # backoff and the same LLM_MAX_RETRIES budget as every other
+                # transient rather than growing a second retry mechanism.
+                if _completion_is_empty(resp, tools_were_sent=False):
+                    empty_attempts += 1
+                    reason = _finish_reason(resp)
+                    last_err = RuntimeError(
+                        f"empty completion from {resolved_model} (finish_reason={reason})"
+                    )
+                    if _is_content_filter(reason):
+                        # Durable, not transient. Stop here rather than spending the
+                        # rest of the budget re-asking a question already refused.
+                        diagnostics.note(
+                            attempt=attempt + 1,
+                            status=STATUS_CONTENT_FILTER,
+                            finish_reason=reason,
+                            error=str(last_err),
+                        )
+                        diagnostics.terminal_reason = TERMINAL_CONTENT_FILTER
+                        logger.error(
+                            "LLM stopped %s on finish_reason=%s (model %s) with no content on "
+                            "attempt %d/%d. This is a moderation stop, not a transient: the "
+                            "identical prompt will be refused again, so no retry is spent. "
+                            "Edit the prompt or the source passage rather than re-running.",
+                            stage_name or "chat",
+                            reason,
+                            resolved_model,
+                            attempt + 1,
+                            max_retries,
+                        )
+                        return CompletionResult("", diagnostics)
+                    diagnostics.note(
+                        attempt=attempt + 1,
+                        status=STATUS_EMPTY,
+                        finish_reason=reason,
+                        error=str(last_err),
+                    )
+                    if attempt < max_retries - 1:
+                        logger.warning(
+                            "LLM returned an empty completion for %s (model %s, "
+                            "finish_reason=%s) on attempt %d/%d; retrying as a transient.",
+                            stage_name or "chat",
+                            resolved_model,
+                            reason,
+                            attempt + 1,
+                            max_retries,
+                        )
+                        time.sleep(min(base_sleep * (2 ** attempt), max_sleep))
+                        continue
+                    # Budget exhausted. Return the empty string exactly as this
+                    # function did before 2026-07-28 instead of raising: the
+                    # preprocessor turns "" into status "empty_reply" plus the empty
+                    # context, and a new exception type here would change the
+                    # contract of every call site at once.
+                    logger.error(
+                        "LLM returned an empty completion for %s (model %s, "
+                        "finish_reason=%s) on %d of %d attempts; giving up and returning "
+                        "the empty string for the caller's own empty-reply handling.",
+                        stage_name or "chat",
+                        resolved_model,
+                        reason,
+                        empty_attempts,
+                        max_retries,
+                    )
+                    diagnostics.terminal_reason = TERMINAL_EMPTY_AFTER_RETRIES
+                    return CompletionResult("", diagnostics)
+    
+                text = (resp.choices[0].message.content or "").strip()
+                reason = _finish_reason(resp)
+                diagnostics.note(
+                    attempt=attempt + 1,
+                    status=STATUS_OK,
+                    finish_reason=reason,
+                    content_chars=len(text),
+                )
+                diagnostics.response_hash = _hash(text)
+                diagnostics.raw_chars = len(text)
+                return CompletionResult(text, diagnostics)
+    
+            except AuthenticationError as e:
+>               raise RuntimeError(
+                    f"Authentication failed (401). Key starts with: {_mask(os.getenv('OPENROUTER_API_KEY',''))}. "
+                    f"Checked .env at: {ENV_PATH}. Original error: {e}"
+                ) from e
+E               RuntimeError: Authentication failed (401). Key starts with: None. Checked .env at: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch757\.env. Original error: t
+
+src\t2pw\llm\client.py:835: RuntimeError
+=========================== short test summary info ===========================
+FAILED tests/test_llm_client_request_timeout.py::test_a_timeout_raises_the_distinct_outcome_inside_the_computed_bound
+FAILED tests/test_llm_client_request_timeout.py::test_d_a_timeout_is_never_filed_as_an_empty_completion
+FAILED tests/test_llm_client_request_timeout.py::test_d_a_budget_spent_on_timeouts_is_not_the_empty_string_exit
+3 failed, 544 passed in 7.25s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch757\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 2aebbfe019ccd53a832141ed3536153a0b3235f8  [git, worktree dirty=False]
+label                   : affected-c2-reordered
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-757/12-affected-c2-reordered.pin.json -q --basetemp=C:/t/bt-orch757/12-affected-c2-reordered-13669 tests/test_identity_evidence_hydration.py tests/test_identity_hydration_regression.py tests/test_interactive_curator.py tests/test_llm_client_empty_completion_retry.py tests/test_llm_client_request_timeout.py tests/test_localized_repair.py tests/test_locked_noop_quarantine_policy.py tests/test_map_ids.py tests/test_map_ids_mapping_lineage.py tests/test_orch754c_curator_prompt_reverted.py tests/test_orch757_llm_token_budgets.py tests/test_pathbank_unknown_fallback.py tests/test_pipeline_cleanup.py tests/test_pipeline_lineage_carrier.py tests/test_prefreeze_compound_resolution.py tests/test_prefreeze_third_export_seam.py tests/test_preprocessor.py tests/test_probe_decimal_normalization.py tests/test_probe_json_repair_deletion.py tests/test_probe_row_field_exactness.py tests/test_process_normalizer.py tests/test_gap_resolver.py tests/test_gap_resolver_agent_tools.py tests/test_gap_resolver_biological_state_resolution.py tests/test_gap_resolver_lineage.py tests/test_gap_resolver_stage3_issues.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch757
+root PID / process group: 1026876 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 8.62 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  1025656:python.exe
+descendants terminated  : 1  1025656
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch757\docs\pwml_recovery_sprint\evidence\g11\ORCH-757\12-affected-c2-reordered.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================

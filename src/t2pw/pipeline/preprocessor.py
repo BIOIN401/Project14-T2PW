@@ -1,10 +1,9 @@
 import json
 import logging
-import os
 import re
 from typing import Any, Dict, Optional
 
-from t2pw.llm.client import chat_detailed
+from t2pw.llm.client import chat_detailed, configured_max_tokens
 from t2pw.paths import PROMPTS_DIR
 from t2pw.pipeline.extraction_diagnostics import (
     BOUNDARY_STAGE0_PREPROCESS,
@@ -63,38 +62,13 @@ _REPAIR_MAX_CANDIDATES = 400
 
 # Reasoning-capable models count their hidden reasoning against the completion
 # budget.  Stage 0 asks for a comparatively large JSON object, so 2,000 tokens
-# can leave only a few hundred visible characters after reasoning.  Keep a safe
-# standalone default, but let deployments tune the budget without a code edit.
-_DEFAULT_PREPROCESS_MAX_TOKENS = 10_000
-
-
+# can leave only a few hundred visible characters after reasoning.  The default
+# is the shared one (D-105), and deployments tune it without a code edit.
 def _resolve_preprocess_max_tokens(max_tokens: Optional[int]) -> int:
     """Resolve Stage 0's output budget in explicit-to-general precedence order."""
     if max_tokens is not None:
         return int(max_tokens)
-
-    raw_value = (
-        os.getenv("OPENROUTER_PREPROCESSOR_MAX_TOKENS")
-        or os.getenv("LLM_MAX_TOKENS")
-        or str(_DEFAULT_PREPROCESS_MAX_TOKENS)
-    )
-    try:
-        value = int(raw_value)
-    except (TypeError, ValueError):
-        logger.warning(
-            "Invalid Stage 0 token budget %r; using %d.",
-            raw_value,
-            _DEFAULT_PREPROCESS_MAX_TOKENS,
-        )
-        return _DEFAULT_PREPROCESS_MAX_TOKENS
-    if value <= 0:
-        logger.warning(
-            "Stage 0 token budget must be positive (got %d); using %d.",
-            value,
-            _DEFAULT_PREPROCESS_MAX_TOKENS,
-        )
-        return _DEFAULT_PREPROCESS_MAX_TOKENS
-    return value
+    return configured_max_tokens("OPENROUTER_PREPROCESSOR_MAX_TOKENS")
 
 
 def _format_user_task_context(user_task_context: Optional[str]) -> str:
@@ -135,7 +109,7 @@ def preprocess(
 
     When ``max_tokens`` is omitted, the Stage 0 output budget is read from
     ``OPENROUTER_PREPROCESSOR_MAX_TOKENS``, then ``LLM_MAX_TOKENS``, and finally
-    defaults to 10,000.  The output contract is large (Case B asks for
+    defaults to 128,000 (D-105).  The output contract is large (Case B asks for
     ``selected_example``, up to ten fully-described ``candidate_examples``, and
     every standard field), and reasoning-capable models also spend completion
     tokens before writing the visible JSON.  Passing ``max_tokens`` explicitly

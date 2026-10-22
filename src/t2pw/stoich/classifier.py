@@ -133,7 +133,6 @@ def classify_reaction(reaction: dict) -> dict:
     raw = chat(
         messages=[{"role": "system", "content": system}, {"role": "user", "content": user_msg}],
         temperature=0.0,
-        max_tokens=300,
         response_json=True,
     )
 

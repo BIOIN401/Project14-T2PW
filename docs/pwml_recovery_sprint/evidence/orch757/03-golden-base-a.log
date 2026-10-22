@@ -1,0 +1,111 @@
+
+=== RAW MODEL OUTPUT ===
+
+{}
+
+=== PARSED JSON ===
+
+{}
+extraction json repair returned valid JSON that does not preserve the malformed reply's content (?); refusing it and falling back to deterministic salvage.
+{
+    "audit": [
+        "5c0b3479048985d9836e5b153ba8aba178065e17ed62a3b3ee4f285b0f8011ca"
+    ],
+    "client.chat": [
+        "0ac5ec9b65792596e928666ecb34227ac3a92a0d32cc5b5a4cfd28bc99915380"
+    ],
+    "client.chat_with_tools": [
+        "0ac5ec9b65792596e928666ecb34227ac3a92a0d32cc5b5a4cfd28bc99915380"
+    ],
+    "completeness": [
+        "3792147b463e772c899b298ff0b160b8a125e89e128c3ed4bb6da615fdb4ec28"
+    ],
+    "curator": [
+        "21a36f90117d565e833d6f752b5ec37d2f60b52b920c6e6ced0448f0a0115c89"
+    ],
+    "extraction": [
+        "b4ec1b8f44082ba2527439cac90c0766767e3a6778d0a1cebb7a89fd46bc76e7",
+        "6ae567d4d71134a1b9b37f8f41dc08fed463bb0f212f95dcb6a9aa61f104291b"
+    ],
+    "extraction.demo": [
+        "b103910a190e9e16b93bd0bdcab55cbda15b5f267b6ac9f73cf09050a7ff422b"
+    ],
+    "focused_repair": [
+        "35ec27090442c91dccf3b3f1ef04a62ef8bd323181bb8900333daffd6b8f1dfe"
+    ],
+    "gap.species": [
+        "2b12c03909774d312212f3721a97eb0600f463900b29c0945976a01139d0c9cd"
+    ],
+    "inference": [
+        "27a8ad55093ffbf9288e1ffed590162484f207d23929880259c1f4ec4cae2537"
+    ],
+    "inference.chunking": [
+        "f76555d7661a38c09a25e2cd4534d8b76d239877113f236dd75bf98e8b510f01"
+    ],
+    "interactive_curator": [
+        "7eb7db6e90cf549a9926ea7462e005da6ea2daa3395931620d804941cb21f67e",
+        "49b3a17edc6d0b616377a335d84be9eddf9e6922c47bf01c1277f056bc52fb1d"
+    ],
+    "legacy_sbml_pipeline": [
+        "5c0b3479048985d9836e5b153ba8aba178065e17ed62a3b3ee4f285b0f8011ca",
+        "d634c2b60df9a71b4603c96f221f51c4252bc4ef99cdabaf07729080de80f119"
+    ],
+    "localized_repair.json": [
+        "f02c8f6d3991ada58d598f224ae99dbcf3de50dc61bfc362fd251e472ad8989f"
+    ],
+    "localized_repair.rows": [
+        "a21a049f8f712e23387c0f0c472f84740457ce7478ae09246e9d9c6d7fa365ea"
+    ],
+    "map_ids.alias": [
+        "dc7e6674e257237a13871ad820d95a7480ac5d5b18f145dbd880bbd0047de71d"
+    ],
+    "map_ids.species": [
+        "2b12c03909774d312212f3721a97eb0600f463900b29c0945976a01139d0c9cd"
+    ],
+    "overwatch": [
+        "d634c2b60df9a71b4603c96f221f51c4252bc4ef99cdabaf07729080de80f119"
+    ],
+    "pathwhiz_converter.llm_plan": [
+        "606ccd87c1f29970bd279e6e5c64d3571f5499f2d68fbec13d6620321efc39df"
+    ],
+    "preprocessor": [
+        "920f56a9507cf9dda0fc3c5de310f2ffdecb9353a9cb1ba2805398a9d59e19b0"
+    ],
+    "rag.prose_extraction": [
+        "735ffa29cd7671311ea2c372b4d1163861aa8e370e7bc9c0e0f3e2bebde2939d"
+    ],
+    "stoich.agent": [
+        "7f385f1d4df3fa7470d5fdb2c918db186d1b082c75b09b0b3ba05a31745019db",
+        "bfcb6934455119ef77af3f31bd8b481b8b67b6843f637d3bca2f44561d2ced51",
+        "18ce5423bd23a9716dc59e71c517f63d7d74dc92b170dcafa9702952b4d9fe82"
+    ],
+    "stoich.classifier": [
+        "6fe6b6aaf71bf6b65ea08a29dc9d972d259b81ce64bbaa78cec7cee0035767ab"
+    ]
+}
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch757\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ a43a2b123f3cf8105ef28123280c076fbf785443  [git, worktree dirty=True]
+label                   : golden-base-a
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/orch757_golden_capture.py C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch757 C:/t/bt-orch757/golden-a
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch757
+root PID / process group: 1000220 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 2.15 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  1007552:python.exe
+descendants terminated  : 1  1007552
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch757\docs\pwml_recovery_sprint\evidence\g11\ORCH-757\03-golden-base-a.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================

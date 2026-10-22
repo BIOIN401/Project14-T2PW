@@ -1,0 +1,142 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch757\src\t2pw\__init__.py
+.......................................................                  [100%]
+=================================== PASSES ====================================
+________ test_g9_every_stage_requests_llm_max_tokens[extraction.demo] _________
+---------------------------- Captured stdout call -----------------------------
+
+=== RAW MODEL OUTPUT ===
+
+{}
+
+=== PARSED JSON ===
+
+{}
+_____ test_g9_every_stage_requests_llm_max_tokens[localized_repair.json] ______
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.pipeline.localized_repair:localized_repair.py:1187 extraction json repair returned valid JSON that does not preserve the malformed reply's content (?); refusing it and falling back to deterministic salvage.
+_ test_g9_with_nothing_configured_every_stage_requests_128000[extraction.demo] _
+---------------------------- Captured stdout call -----------------------------
+
+=== RAW MODEL OUTPUT ===
+
+{}
+
+=== PARSED JSON ===
+
+{}
+_ test_g9_with_nothing_configured_every_stage_requests_128000[localized_repair.json] _
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.pipeline.localized_repair:localized_repair.py:1187 extraction json repair returned valid JSON that does not preserve the malformed reply's content (?); refusing it and falling back to deterministic salvage.
+__________ test_g9_an_unusable_budget_falls_back_to_the_code_default __________
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.llm.client:client.py:601 Invalid token budget 'lots'; using 128000.
+WARNING  t2pw.llm.client:client.py:601 Invalid token budget 'lots'; using 128000.
+WARNING  t2pw.llm.client:client.py:604 Token budget must be positive (got 0); using 128000.
+WARNING  t2pw.llm.client:client.py:604 Token budget must be positive (got 0); using 128000.
+WARNING  t2pw.llm.client:client.py:604 Token budget must be positive (got -5); using 128000.
+WARNING  t2pw.llm.client:client.py:604 Token budget must be positive (got -5); using 128000.
+__________ test_g9_extraction_is_clamped_to_its_fallback_models_cap ___________
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.pipeline.localized_repair:localized_repair.py:1187 extraction json repair returned valid JSON that does not preserve the malformed reply's content (?); refusing it and falling back to deterministic salvage.
+_________ test_g9_the_truncation_retry_is_not_capped_below_the_budget _________
+------------------------------ Captured log call ------------------------------
+ERROR    t2pw.llm.client:client.py:809 LLM returned an empty completion for Stage 2 inference (model deepseek/deepseek-v4-flash, finish_reason=length) on 1 of 1 attempts; giving up and returning the empty string for the caller's own empty-reply handling.
+ERROR    t2pw.llm.client:client.py:809 LLM returned an empty completion for Stage 2 inference (model deepseek/deepseek-v4-flash, finish_reason=length) on 1 of 1 attempts; giving up and returning the empty string for the caller's own empty-reply handling.
+WARNING  t2pw.pipeline.pipeline:pipeline.py:515 Stage-2 inference failed for chunk 1 (0-17).
+ERROR    t2pw.llm.client:client.py:809 LLM returned an empty completion for Stage 2 inference (model deepseek/deepseek-v4-flash, finish_reason=length) on 1 of 1 attempts; giving up and returning the empty string for the caller's own empty-reply handling.
+ERROR    t2pw.llm.client:client.py:809 LLM returned an empty completion for Stage 2 inference (model deepseek/deepseek-v4-flash, finish_reason=length) on 1 of 1 attempts; giving up and returning the empty string for the caller's own empty-reply handling.
+_____________ test_requests_are_byte_identical_except_the_budget ______________
+---------------------------- Captured stdout call -----------------------------
+
+=== RAW MODEL OUTPUT ===
+
+{}
+
+=== PARSED JSON ===
+
+{}
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.pipeline.localized_repair:localized_repair.py:1187 extraction json repair returned valid JSON that does not preserve the malformed reply's content (?); refusing it and falling back to deterministic salvage.
+=========================== short test summary info ===========================
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_every_stage_requests_llm_max_tokens[audit]
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_every_stage_requests_llm_max_tokens[client.chat]
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_every_stage_requests_llm_max_tokens[client.chat_with_tools]
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_every_stage_requests_llm_max_tokens[completeness]
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_every_stage_requests_llm_max_tokens[curator]
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_every_stage_requests_llm_max_tokens[extraction]
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_every_stage_requests_llm_max_tokens[extraction.demo]
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_every_stage_requests_llm_max_tokens[focused_repair]
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_every_stage_requests_llm_max_tokens[gap.species]
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_every_stage_requests_llm_max_tokens[inference]
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_every_stage_requests_llm_max_tokens[inference.chunking]
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_every_stage_requests_llm_max_tokens[interactive_curator]
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_every_stage_requests_llm_max_tokens[legacy_sbml_pipeline]
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_every_stage_requests_llm_max_tokens[localized_repair.json]
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_every_stage_requests_llm_max_tokens[localized_repair.rows]
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_every_stage_requests_llm_max_tokens[map_ids.alias]
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_every_stage_requests_llm_max_tokens[map_ids.species]
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_every_stage_requests_llm_max_tokens[overwatch]
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_every_stage_requests_llm_max_tokens[pathwhiz_converter.llm_plan]
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_every_stage_requests_llm_max_tokens[preprocessor]
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_every_stage_requests_llm_max_tokens[rag.prose_extraction]
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_every_stage_requests_llm_max_tokens[stoich.agent]
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_every_stage_requests_llm_max_tokens[stoich.classifier]
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_with_nothing_configured_every_stage_requests_128000[audit]
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_with_nothing_configured_every_stage_requests_128000[client.chat]
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_with_nothing_configured_every_stage_requests_128000[client.chat_with_tools]
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_with_nothing_configured_every_stage_requests_128000[completeness]
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_with_nothing_configured_every_stage_requests_128000[curator]
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_with_nothing_configured_every_stage_requests_128000[extraction]
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_with_nothing_configured_every_stage_requests_128000[extraction.demo]
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_with_nothing_configured_every_stage_requests_128000[focused_repair]
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_with_nothing_configured_every_stage_requests_128000[gap.species]
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_with_nothing_configured_every_stage_requests_128000[inference]
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_with_nothing_configured_every_stage_requests_128000[inference.chunking]
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_with_nothing_configured_every_stage_requests_128000[interactive_curator]
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_with_nothing_configured_every_stage_requests_128000[legacy_sbml_pipeline]
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_with_nothing_configured_every_stage_requests_128000[localized_repair.json]
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_with_nothing_configured_every_stage_requests_128000[localized_repair.rows]
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_with_nothing_configured_every_stage_requests_128000[map_ids.alias]
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_with_nothing_configured_every_stage_requests_128000[map_ids.species]
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_with_nothing_configured_every_stage_requests_128000[overwatch]
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_with_nothing_configured_every_stage_requests_128000[pathwhiz_converter.llm_plan]
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_with_nothing_configured_every_stage_requests_128000[preprocessor]
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_with_nothing_configured_every_stage_requests_128000[rag.prose_extraction]
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_with_nothing_configured_every_stage_requests_128000[stoich.agent]
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_with_nothing_configured_every_stage_requests_128000[stoich.classifier]
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_an_unusable_budget_falls_back_to_the_code_default
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_the_stage_variables_feed_their_stage_defaults
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_extraction_is_clamped_to_its_fallback_models_cap
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_an_unlisted_model_gets_the_smallest_listed_cap
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_the_truncation_retry_is_not_capped_below_the_budget
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_app_audit_gap_curator_and_overwatch_sites_read_the_budget
+PASSED tests/test_orch757_llm_token_budgets.py::test_g9_app_fallback_candidate_sites_read_the_budget
+PASSED tests/test_orch757_llm_token_budgets.py::test_per_stage_variables_still_win
+PASSED tests/test_orch757_llm_token_budgets.py::test_requests_are_byte_identical_except_the_budget
+55 passed in 3.37s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch757\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 089d3c7dd8b3f6c1954ef63fcc1a3998019d3f63  [git, worktree dirty=True]
+label                   : g9-tip-try1
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-757/06-g9-tip-try1.pin.json -q --basetemp=C:/t/bt-orch757/06-g9-tip-try1-29557 tests/test_orch757_llm_token_budgets.py -rA --tb=short
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch757
+root PID / process group: 1017436 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 5.01 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  1017516:python.exe
+descendants terminated  : 1  1017516
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch757\docs\pwml_recovery_sprint\evidence\g11\ORCH-757\06-g9-tip-try1.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================

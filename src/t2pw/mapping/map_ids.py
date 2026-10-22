@@ -440,7 +440,6 @@ def _ai_protein_synonym_lookup(
         raw = chat(
             [{"role": "user", "content": prompt}],
             temperature=0.0,
-            max_tokens=300,
             response_json=True,
             model_env_var="OPENROUTER_GAP_MODEL",
         )
@@ -3311,7 +3310,6 @@ def _infer_species_with_gap_resolver(
             entity_name=name,
             use_llm=True,
             temperature=0.0,
-            max_tokens=450,
         )
     except Exception:
         return None

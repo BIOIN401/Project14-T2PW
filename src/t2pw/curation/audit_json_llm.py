@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 from t2pw.curation.prompt_payload_keys import PROMPT_OMITTED_PAYLOAD_KEYS
-from t2pw.llm.client import PROVIDER, chat
+from t2pw.llm.client import PROVIDER, chat, configured_max_tokens
 from t2pw.pipeline.process_normalizer import validate_no_composites, validate_registry_references
 from t2pw.pipeline.reaction_lock_manifest import MANIFEST_FILENAME
 
@@ -1403,7 +1403,7 @@ def audit_payload(
     *,
     use_llm: bool = True,
     llm_temperature: float = 0.0,
-    llm_max_tokens: int = 3200,
+    llm_max_tokens: Optional[int] = None,
     context_note: str = "",
     retrieval_context: str = "",
     locked_manifest: Optional[List[Dict[str, Any]]] = None,
@@ -1411,6 +1411,8 @@ def audit_payload(
 ) -> Dict[str, Any]:
     if not isinstance(payload, dict):
         raise ValueError("Input JSON must be an object.")
+    if llm_max_tokens is None:
+        llm_max_tokens = configured_max_tokens()  # resolved here: the report records it
 
     locked_indices: Optional[set] = None
     if locked_manifest is not None:
@@ -1518,7 +1520,7 @@ def run_audit(
     *,
     use_llm: bool = True,
     llm_temperature: float = 0.0,
-    llm_max_tokens: int = 3200,
+    llm_max_tokens: Optional[int] = None,
     context_note: str = "",
     retrieval_context: str = "",
     locked_manifest_path: Optional[Path] = None,
@@ -1706,7 +1708,7 @@ def main() -> None:
     )
     parser.add_argument("--no-llm", action="store_true", help="Disable LLM auditing and run deterministic checks only.")
     parser.add_argument("--temperature", type=float, default=0.0, help="LLM temperature for audit call")
-    parser.add_argument("--max-tokens", type=int, default=3200, help="LLM max tokens for audit call")
+    parser.add_argument("--max-tokens", type=int, default=None, help="LLM max tokens for audit call (default: LLM_MAX_TOKENS)")
     parser.add_argument(
         "--locked-manifest",
         dest="locked_manifest_path",
@@ -1721,7 +1723,7 @@ def main() -> None:
         Path(args.audit_patch_path),
         use_llm=not args.no_llm,
         llm_temperature=float(args.temperature),
-        llm_max_tokens=int(args.max_tokens),
+        llm_max_tokens=args.max_tokens,
         locked_manifest_path=Path(args.locked_manifest_path) if args.locked_manifest_path else None,
     )
     print(f"Wrote audit report: {args.audit_report_path}")

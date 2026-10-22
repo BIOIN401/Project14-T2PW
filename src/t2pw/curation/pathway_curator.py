@@ -211,7 +211,7 @@ def run_pathway_curator(
     pathway_name: str = "",
     organism: str = "",
     llm_temperature: float = 0.2,
-    llm_max_tokens: int = 2000,
+    llm_max_tokens: Optional[int] = None,
 ) -> Dict[str, Any]:
     """
     Run the curator agent on *input_path*, write the patched payload to

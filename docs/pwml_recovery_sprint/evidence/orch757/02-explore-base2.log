@@ -1,0 +1,108 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch757\src\t2pw\__init__.py
+============================= test session starts =============================
+platform win32 -- Python 3.13.6, pytest-9.0.3, pluggy-1.6.0 -- C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch757
+configfile: pytest.ini
+plugins: anyio-4.14.2
+collecting ... collected 55 items / 51 deselected / 4 selected
+
+tests/test_orch757_llm_token_budgets.py::test_g9_the_truncation_retry_is_not_capped_below_the_budget FAILED [ 25%]
+tests/test_orch757_llm_token_budgets.py::test_g9_app_audit_gap_curator_and_overwatch_sites_read_the_budget FAILED [ 50%]
+tests/test_orch757_llm_token_budgets.py::test_g9_app_fallback_candidate_sites_read_the_budget FAILED [ 75%]
+tests/test_orch757_llm_token_budgets.py::test_requests_are_byte_identical_except_the_budget FAILED [100%]
+
+================================== FAILURES ===================================
+_________ test_g9_the_truncation_retry_is_not_capped_below_the_budget _________
+tests\test_orch757_llm_token_budgets.py:488: in test_g9_the_truncation_retry_is_not_capped_below_the_budget
+    assert budgets[-1] == 96_000, budgets
+E   AssertionError: [64000, 64000, 24000, 24000]
+E   assert 24000 == 96000
+------------------------------ Captured log call ------------------------------
+ERROR    t2pw.llm.client:client.py:746 LLM returned an empty completion for Stage 2 inference (model deepseek/deepseek-v4-flash, finish_reason=length) on 1 of 1 attempts; giving up and returning the empty string for the caller's own empty-reply handling.
+ERROR    t2pw.llm.client:client.py:746 LLM returned an empty completion for Stage 2 inference (model deepseek/deepseek-v4-flash, finish_reason=length) on 1 of 1 attempts; giving up and returning the empty string for the caller's own empty-reply handling.
+WARNING  t2pw.pipeline.pipeline:pipeline.py:511 Stage-2 inference failed for chunk 1 (0-17).
+ERROR    t2pw.llm.client:client.py:746 LLM returned an empty completion for Stage 2 inference (model deepseek/deepseek-v4-flash, finish_reason=length) on 1 of 1 attempts; giving up and returning the empty string for the caller's own empty-reply handling.
+ERROR    t2pw.llm.client:client.py:746 LLM returned an empty completion for Stage 2 inference (model deepseek/deepseek-v4-flash, finish_reason=length) on 1 of 1 attempts; giving up and returning the empty string for the caller's own empty-reply handling.
+______ test_g9_app_audit_gap_curator_and_overwatch_sites_read_the_budget ______
+tests\test_orch757_llm_token_budgets.py:543: in test_g9_app_audit_gap_curator_and_overwatch_sites_read_the_budget
+    assert llm_audits == [CONFIGURED, CONFIGURED]
+E   AssertionError: assert [3600, 4100] == [50000, 50000]
+E     
+E     At index 0 diff: 3600 != 50000
+E     
+E     Full diff:
+E       [
+E     -     50000,
+E     -     50000,...
+E     
+E     ...Full output truncated (3 lines hidden), use '-vv' to show
+____________ test_g9_app_fallback_candidate_sites_read_the_budget _____________
+tests\test_orch757_llm_token_budgets.py:561: in test_g9_app_fallback_candidate_sites_read_the_budget
+    assert [k["llm_max_tokens"] for k in audits] == [CONFIGURED, CONFIGURED]
+E   AssertionError: assert [1200, 1200] == [50000, 50000]
+E     
+E     At index 0 diff: 1200 != 50000
+E     
+E     Full diff:
+E       [
+E     -     50000,
+E     -     50000,...
+E     
+E     ...Full output truncated (3 lines hidden), use '-vv' to show
+_____________ test_requests_are_byte_identical_except_the_budget ______________
+tests\test_orch757_llm_token_budgets.py:593: in test_requests_are_byte_identical_except_the_budget
+    assert got == GOLDEN
+E   AssertionError: assert {'audit': ['5...b4ec28'], ...} == {}
+E     
+E     Left contains 23 more items:
+E     {'audit': ['5c0b3479048985d9836e5b153ba8aba178065e17ed62a3b3ee4f285b0f8011ca'],
+E      'client.chat': ['0ac5ec9b65792596e928666ecb34227ac3a92a0d32cc5b5a4cfd28bc99915380'],
+E      'client.chat_with_tools': ['0ac5ec9b65792596e928666ecb34227ac3a92a0d32cc5b5a4cfd28bc99915380'],
+E      'completeness': ['3792147b463e772c899b298ff0b160b8a125e89e128c3ed4bb6da615fdb4ec28'],
+E      'curator': ['21a36f90117d565e833d6f752b5ec37d2f60b52b920c6e6ced0448f0a0115c89'],...
+E     
+E     ...Full output truncated (102 lines hidden), use '-vv' to show
+---------------------------- Captured stdout call -----------------------------
+
+=== RAW MODEL OUTPUT ===
+
+{}
+
+=== PARSED JSON ===
+
+{}
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.pipeline.localized_repair:localized_repair.py:1187 extraction json repair returned valid JSON that does not preserve the malformed reply's content (?); refusing it and falling back to deterministic salvage.
+=========================== short test summary info ===========================
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_the_truncation_retry_is_not_capped_below_the_budget
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_app_audit_gap_curator_and_overwatch_sites_read_the_budget
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_app_fallback_candidate_sites_read_the_budget
+FAILED tests/test_orch757_llm_token_budgets.py::test_requests_are_byte_identical_except_the_budget
+====================== 4 failed, 51 deselected in 2.82s =======================
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch757\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ a43a2b123f3cf8105ef28123280c076fbf785443  [git, worktree dirty=True]
+label                   : explore-base2
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-757/02-explore-base2.pin.json -q --basetemp=C:/t/bt-orch757/02-explore-base2-30489 tests/test_orch757_llm_token_budgets.py -vv --tb=short -k truncation or app_ or byte_identical
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch757
+root PID / process group: 998500 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 4.09 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  967948:python.exe
+descendants terminated  : 1  967948
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch757\docs\pwml_recovery_sprint\evidence\g11\ORCH-757\02-explore-base2.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================

@@ -1,0 +1,81 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch757\src\t2pw\__init__.py
+
+=================================== ERRORS ====================================
+______ ERROR collecting tests/test_llm_client_empty_completion_retry.py _______
+ImportError while importing test module 'C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch757\tests\test_llm_client_empty_completion_retry.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Python313\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_llm_client_empty_completion_retry.py:73: in <module>
+    from t2pw.llm.client import (  # noqa: E402
+E   ImportError: cannot import name '_completion_is_empty' from 't2pw.llm.client' (unknown location)
+_______________ ERROR collecting tests/test_pipeline_cleanup.py _______________
+ImportError while importing test module 'C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch757\tests\test_pipeline_cleanup.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Python313\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_pipeline_cleanup.py:33: in <module>
+    from t2pw.pipeline.pipeline import (  # noqa: E402
+src\t2pw\pipeline\pipeline.py:9: in <module>
+    from t2pw.llm.client import chat, chat_detailed, configured_max_tokens
+E   ImportError: cannot import name 'chat_detailed' from 't2pw.llm.client' (unknown location)
+___________ ERROR collecting tests/test_pipeline_lineage_carrier.py ___________
+ImportError while importing test module 'C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch757\tests\test_pipeline_lineage_carrier.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Python313\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_pipeline_lineage_carrier.py:69: in <module>
+    from t2pw.pipeline.pipeline import (  # noqa: E402
+src\t2pw\pipeline\pipeline.py:9: in <module>
+    from t2pw.llm.client import chat, chat_detailed, configured_max_tokens
+E   ImportError: cannot import name 'chat_detailed' from 't2pw.llm.client' (unknown location)
+_________________ ERROR collecting tests/test_preprocessor.py _________________
+ImportError while importing test module 'C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch757\tests\test_preprocessor.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Python313\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_preprocessor.py:17: in <module>
+    from t2pw.llm.client import CompletionDiagnostics, CompletionResult  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   ImportError: cannot import name 'CompletionDiagnostics' from 't2pw.llm.client' (unknown location)
+=========================== short test summary info ===========================
+ERROR tests/test_llm_client_empty_completion_retry.py
+ERROR tests/test_pipeline_cleanup.py
+ERROR tests/test_pipeline_lineage_carrier.py
+ERROR tests/test_preprocessor.py
+!!!!!!!!!!!!!!!!!!! Interrupted: 4 errors during collection !!!!!!!!!!!!!!!!!!!
+4 errors in 3.01s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch757\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 2aebbfe019ccd53a832141ed3536153a0b3235f8  [git, worktree dirty=False]
+label                   : affected-c2
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-757/10-affected-c2.pin.json -q --basetemp=C:/t/bt-orch757/10-affected-c2-4680 tests/test_gap_resolver.py tests/test_gap_resolver_agent_tools.py tests/test_gap_resolver_biological_state_resolution.py tests/test_gap_resolver_lineage.py tests/test_gap_resolver_stage3_issues.py tests/test_identity_evidence_hydration.py tests/test_identity_hydration_regression.py tests/test_interactive_curator.py tests/test_llm_client_empty_completion_retry.py tests/test_llm_client_request_timeout.py tests/test_localized_repair.py tests/test_locked_noop_quarantine_policy.py tests/test_map_ids.py tests/test_map_ids_mapping_lineage.py tests/test_orch754c_curator_prompt_reverted.py tests/test_orch757_llm_token_budgets.py tests/test_pathbank_unknown_fallback.py tests/test_pipeline_cleanup.py tests/test_pipeline_lineage_carrier.py tests/test_prefreeze_compound_resolution.py tests/test_prefreeze_third_export_seam.py tests/test_preprocessor.py tests/test_probe_decimal_normalization.py tests/test_probe_json_repair_deletion.py tests/test_probe_row_field_exactness.py tests/test_process_normalizer.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch757
+root PID / process group: 1020548 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 4.14 s
+exit reason             : nonzero
+exit code (real)        : 2
+returned code           : 2
+descendants observed    : 1  1016516:python.exe
+descendants terminated  : 1  1016516
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch757\docs\pwml_recovery_sprint\evidence\g11\ORCH-757\10-affected-c2.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================

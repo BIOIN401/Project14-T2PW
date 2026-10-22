@@ -1,0 +1,1921 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch757\src\t2pw\__init__.py
+.................................................................F..FF.. [ 13%]
+........................................................................ [ 26%]
+........................................FFFFFFFFFFFFFFFFFFF.FFFFFFFFFFFF [ 39%]
+FFFFFFFFFFFFFFFFFFFFF................................................... [ 52%]
+........................................................................ [ 65%]
+........................................................................ [ 78%]
+........................................................................ [ 92%]
+...........................................                              [100%]
+================================== FAILURES ===================================
+____ test_a_timeout_raises_the_distinct_outcome_inside_the_computed_bound _____
+
+self = <test_llm_client_request_timeout._Completions object at 0x000002485C1A27B0>
+kwargs = {'max_tokens': 800, 'messages': [{'content': 'extract the pathway', 'role': 'user'}], 'model': 'm', 'temperature': 0.0, ...}
+item = <object object at 0x00000248588228F0>
+
+    def create(self, **kwargs: Any) -> Any:
+        self.calls.append(kwargs)
+        item = self._script.pop(0) if self._script else HANG
+        if item is HANG:
+            time.sleep(min(kwargs["timeout"].read, UNBOUNDED_SECONDS))
+>           raise openai.APITimeoutError("request timed out")
+E           RuntimeError: request timed out
+
+tests\test_llm_client_request_timeout.py:66: RuntimeError
+
+The above exception was the direct cause of the following exception:
+
+llm = <function llm.<locals>._install at 0x00000248611CD440>
+
+    def test_a_timeout_raises_the_distinct_outcome_inside_the_computed_bound(llm) -> None:
+        """(a) The bound is asserted as elapsed time, not merely as an exception type."""
+        fake = llm([HANG, HANG])
+        bound = client_mod.worst_case_call_seconds(timeout=0.05)  # 2*0.05 + 2*0.01 + 0
+        started = time.monotonic()
+        with pytest.raises(client_mod.LLMOperationTimeout) as caught:
+>           client_mod.chat_detailed(MESSAGES, model_override="m", timeout=0.05)
+
+tests\test_llm_client_request_timeout.py:98: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+messages = [{'content': 'extract the pathway', 'role': 'user'}]
+temperature = 0.0, max_tokens = 800, response_json = False, json_schema = None
+model_override = 'm', model_env_var = None, stage_name = None, timeout = 0.05
+
+    def chat_detailed(
+        messages: List[Dict[str, Any]],
+        temperature: float = 0.0,
+        max_tokens: int = 800,
+        response_json: bool = False,
+        json_schema: Optional[Dict[str, Any]] = None,
+        model_override: Optional[str] = None,
+        model_env_var: Optional[str] = None,
+        stage_name: Optional[str] = None,
+        timeout: Optional[float] = None,
+    ) -> CompletionResult:
+        """:func:`chat` plus a :class:`CompletionDiagnostics` describing the call.
+    
+        ``timeout`` bounds each attempt of THIS call only, defaulting to
+        :data:`REQUEST_TIMEOUT_SECONDS`; :func:`worst_case_call_seconds` prices the
+        whole call in advance. A budget spent on timeouts raises
+        :class:`LLMOperationTimeout`, never the empty string.
+    
+        The text returned is identical to what ``chat`` returns for the same inputs;
+        the only behavioural difference anywhere in this function relative to the
+        pre-2026-07-29 code is the content-filter exit described below.
+    
+        CONTENT FILTER IS A DURABLE EXIT, NOT A TRANSIENT
+        -------------------------------------------------
+        An empty 200 whose ``finish_reason`` is ``content_filter`` is not a hiccup.
+        Moderation is a deterministic function of the prompt, so LLM_MAX_RETRIES
+        re-sends of the *identical* prompt buy exactly one thing: LLM_MAX_RETRIES
+        times the latency, and then the same empty string. The loop therefore stops
+        on the first one and reports ``terminal_reason="content_filter"``, which is
+        the fact an operator needs -- editing the prompt is the fix, re-running the
+        leg is not. Retrying a *different* prompt is still allowed and is what the
+        localized-repair path does; what is forbidden is the blind identical retry.
+    
+        A ``content_filter`` reply that carries text is NOT affected: it is a partial
+        answer, it is returned like any other non-empty completion, and the reason is
+        recorded on the diagnostics.
+        """
+        resolved_model = _resolve_model(
+            model_override=model_override,
+            model_env_var=model_env_var,
+        )
+        logger.info("LLM model for %s: %s", stage_name or "chat", resolved_model)
+    
+        diagnostics = CompletionDiagnostics(
+            model=resolved_model,
+            stage=str(stage_name or "chat"),
+            request_hash=_hash(messages),
+        )
+    
+        request_timeout = resolve_request_timeout(timeout)
+        kwargs: Dict[str, Any] = {
+            "model": resolved_model,
+            "messages": messages,
+            "temperature": temperature,
+            "max_tokens": max_tokens,
+            "timeout": _timeout(request_timeout),
+        }
+    
+        # OpenAI-compatible response_format
+        if response_json:
+            if json_schema:
+                kwargs["response_format"] = {
+                    "type": "json_schema",
+                    "json_schema": json_schema,
+                }
+            else:
+                kwargs["response_format"] = {"type": "json_object"}
+    
+        # Retry tuning (env configurable)
+        max_retries = int(os.getenv("LLM_MAX_RETRIES", "8"))
+        base_sleep = float(os.getenv("LLM_RETRY_BASE_SLEEP", "1.0"))
+        max_sleep = float(os.getenv("LLM_RETRY_MAX_SLEEP", "20.0"))
+    
+        # Spacing helps chunk pipelines avoid bursts
+        spacing = float(os.getenv("LLM_CALL_SPACING", "0.35"))
+    
+        last_err: Exception | None = None
+        empty_attempts = 0
+    
+        for attempt in range(max_retries):
+            try:
+                resp = _client.chat.completions.create(**kwargs)
+                _record_usage(resp)
+                time.sleep(spacing)
+    
+                # An HTTP 200 with no text is a transient, not a result. See the
+                # "Empty-but-successful completions" note above: this is the exact
+                # shape that killed PMC13278307/research (137s) and
+                # PMC13231680/strict (55s) in runs/2026-07-28_0919, and it is
+                # deliberately handled *inside* this loop so it shares the same
+                # backoff and the same LLM_MAX_RETRIES budget as every other
+                # transient rather than growing a second retry mechanism.
+                if _completion_is_empty(resp, tools_were_sent=False):
+                    empty_attempts += 1
+                    reason = _finish_reason(resp)
+                    last_err = RuntimeError(
+                        f"empty completion from {resolved_model} (finish_reason={reason})"
+                    )
+                    if _is_content_filter(reason):
+                        # Durable, not transient. Stop here rather than spending the
+                        # rest of the budget re-asking a question already refused.
+                        diagnostics.note(
+                            attempt=attempt + 1,
+                            status=STATUS_CONTENT_FILTER,
+                            finish_reason=reason,
+                            error=str(last_err),
+                        )
+                        diagnostics.terminal_reason = TERMINAL_CONTENT_FILTER
+                        logger.error(
+                            "LLM stopped %s on finish_reason=%s (model %s) with no content on "
+                            "attempt %d/%d. This is a moderation stop, not a transient: the "
+                            "identical prompt will be refused again, so no retry is spent. "
+                            "Edit the prompt or the source passage rather than re-running.",
+                            stage_name or "chat",
+                            reason,
+                            resolved_model,
+                            attempt + 1,
+                            max_retries,
+                        )
+                        return CompletionResult("", diagnostics)
+                    diagnostics.note(
+                        attempt=attempt + 1,
+                        status=STATUS_EMPTY,
+                        finish_reason=reason,
+                        error=str(last_err),
+                    )
+                    if attempt < max_retries - 1:
+                        logger.warning(
+                            "LLM returned an empty completion for %s (model %s, "
+                            "finish_reason=%s) on attempt %d/%d; retrying as a transient.",
+                            stage_name or "chat",
+                            resolved_model,
+                            reason,
+                            attempt + 1,
+                            max_retries,
+                        )
+                        time.sleep(min(base_sleep * (2 ** attempt), max_sleep))
+                        continue
+                    # Budget exhausted. Return the empty string exactly as this
+                    # function did before 2026-07-28 instead of raising: the
+                    # preprocessor turns "" into status "empty_reply" plus the empty
+                    # context, and a new exception type here would change the
+                    # contract of every call site at once.
+                    logger.error(
+                        "LLM returned an empty completion for %s (model %s, "
+                        "finish_reason=%s) on %d of %d attempts; giving up and returning "
+                        "the empty string for the caller's own empty-reply handling.",
+                        stage_name or "chat",
+                        resolved_model,
+                        reason,
+                        empty_attempts,
+                        max_retries,
+                    )
+                    diagnostics.terminal_reason = TERMINAL_EMPTY_AFTER_RETRIES
+                    return CompletionResult("", diagnostics)
+    
+                text = (resp.choices[0].message.content or "").strip()
+                reason = _finish_reason(resp)
+                diagnostics.note(
+                    attempt=attempt + 1,
+                    status=STATUS_OK,
+                    finish_reason=reason,
+                    content_chars=len(text),
+                )
+                diagnostics.response_hash = _hash(text)
+                diagnostics.raw_chars = len(text)
+                return CompletionResult(text, diagnostics)
+    
+            except AuthenticationError as e:
+>               raise RuntimeError(
+                    f"Authentication failed (401). Key starts with: {_mask(os.getenv('OPENROUTER_API_KEY',''))}. "
+                    f"Checked .env at: {ENV_PATH}. Original error: {e}"
+                ) from e
+E               RuntimeError: Authentication failed (401). Key starts with: None. Checked .env at: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch757\.env. Original error: request timed out
+
+src\t2pw\llm\client.py:772: RuntimeError
+___________ test_d_a_timeout_is_never_filed_as_an_empty_completion ____________
+
+self = <test_llm_client_request_timeout._Completions object at 0x000002485FFE4690>
+kwargs = {'max_tokens': 800, 'messages': [{'content': 'extract the pathway', 'role': 'user'}], 'model': 'm', 'temperature': 0.0, ...}
+item = RuntimeError('t')
+
+    def create(self, **kwargs: Any) -> Any:
+        self.calls.append(kwargs)
+        item = self._script.pop(0) if self._script else HANG
+        if item is HANG:
+            time.sleep(min(kwargs["timeout"].read, UNBOUNDED_SECONDS))
+            raise openai.APITimeoutError("request timed out")
+        if isinstance(item, Exception):
+>           raise item
+E           RuntimeError: t
+
+tests\test_llm_client_request_timeout.py:68: RuntimeError
+
+The above exception was the direct cause of the following exception:
+
+llm = <function llm.<locals>._install at 0x00000248611BF600>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002485DADC050>
+
+    def test_d_a_timeout_is_never_filed_as_an_empty_completion(llm, monkeypatch) -> None:
+        """(d) Distinct status, and the empty-completion retry budget is left intact."""
+        monkeypatch.setenv("LLM_MAX_RETRIES", "3")
+        fake = llm([openai.APITimeoutError("t"), _resp(""), _resp("recovered")])
+>       result = client_mod.chat_detailed(MESSAGES, model_override="m")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_llm_client_request_timeout.py:144: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+messages = [{'content': 'extract the pathway', 'role': 'user'}]
+temperature = 0.0, max_tokens = 800, response_json = False, json_schema = None
+model_override = 'm', model_env_var = None, stage_name = None, timeout = None
+
+    def chat_detailed(
+        messages: List[Dict[str, Any]],
+        temperature: float = 0.0,
+        max_tokens: int = 800,
+        response_json: bool = False,
+        json_schema: Optional[Dict[str, Any]] = None,
+        model_override: Optional[str] = None,
+        model_env_var: Optional[str] = None,
+        stage_name: Optional[str] = None,
+        timeout: Optional[float] = None,
+    ) -> CompletionResult:
+        """:func:`chat` plus a :class:`CompletionDiagnostics` describing the call.
+    
+        ``timeout`` bounds each attempt of THIS call only, defaulting to
+        :data:`REQUEST_TIMEOUT_SECONDS`; :func:`worst_case_call_seconds` prices the
+        whole call in advance. A budget spent on timeouts raises
+        :class:`LLMOperationTimeout`, never the empty string.
+    
+        The text returned is identical to what ``chat`` returns for the same inputs;
+        the only behavioural difference anywhere in this function relative to the
+        pre-2026-07-29 code is the content-filter exit described below.
+    
+        CONTENT FILTER IS A DURABLE EXIT, NOT A TRANSIENT
+        -------------------------------------------------
+        An empty 200 whose ``finish_reason`` is ``content_filter`` is not a hiccup.
+        Moderation is a deterministic function of the prompt, so LLM_MAX_RETRIES
+        re-sends of the *identical* prompt buy exactly one thing: LLM_MAX_RETRIES
+        times the latency, and then the same empty string. The loop therefore stops
+        on the first one and reports ``terminal_reason="content_filter"``, which is
+        the fact an operator needs -- editing the prompt is the fix, re-running the
+        leg is not. Retrying a *different* prompt is still allowed and is what the
+        localized-repair path does; what is forbidden is the blind identical retry.
+    
+        A ``content_filter`` reply that carries text is NOT affected: it is a partial
+        answer, it is returned like any other non-empty completion, and the reason is
+        recorded on the diagnostics.
+        """
+        resolved_model = _resolve_model(
+            model_override=model_override,
+            model_env_var=model_env_var,
+        )
+        logger.info("LLM model for %s: %s", stage_name or "chat", resolved_model)
+    
+        diagnostics = CompletionDiagnostics(
+            model=resolved_model,
+            stage=str(stage_name or "chat"),
+            request_hash=_hash(messages),
+        )
+    
+        request_timeout = resolve_request_timeout(timeout)
+        kwargs: Dict[str, Any] = {
+            "model": resolved_model,
+            "messages": messages,
+            "temperature": temperature,
+            "max_tokens": max_tokens,
+            "timeout": _timeout(request_timeout),
+        }
+    
+        # OpenAI-compatible response_format
+        if response_json:
+            if json_schema:
+                kwargs["response_format"] = {
+                    "type": "json_schema",
+                    "json_schema": json_schema,
+                }
+            else:
+                kwargs["response_format"] = {"type": "json_object"}
+    
+        # Retry tuning (env configurable)
+        max_retries = int(os.getenv("LLM_MAX_RETRIES", "8"))
+        base_sleep = float(os.getenv("LLM_RETRY_BASE_SLEEP", "1.0"))
+        max_sleep = float(os.getenv("LLM_RETRY_MAX_SLEEP", "20.0"))
+    
+        # Spacing helps chunk pipelines avoid bursts
+        spacing = float(os.getenv("LLM_CALL_SPACING", "0.35"))
+    
+        last_err: Exception | None = None
+        empty_attempts = 0
+    
+        for attempt in range(max_retries):
+            try:
+                resp = _client.chat.completions.create(**kwargs)
+                _record_usage(resp)
+                time.sleep(spacing)
+    
+                # An HTTP 200 with no text is a transient, not a result. See the
+                # "Empty-but-successful completions" note above: this is the exact
+                # shape that killed PMC13278307/research (137s) and
+                # PMC13231680/strict (55s) in runs/2026-07-28_0919, and it is
+                # deliberately handled *inside* this loop so it shares the same
+                # backoff and the same LLM_MAX_RETRIES budget as every other
+                # transient rather than growing a second retry mechanism.
+                if _completion_is_empty(resp, tools_were_sent=False):
+                    empty_attempts += 1
+                    reason = _finish_reason(resp)
+                    last_err = RuntimeError(
+                        f"empty completion from {resolved_model} (finish_reason={reason})"
+                    )
+                    if _is_content_filter(reason):
+                        # Durable, not transient. Stop here rather than spending the
+                        # rest of the budget re-asking a question already refused.
+                        diagnostics.note(
+                            attempt=attempt + 1,
+                            status=STATUS_CONTENT_FILTER,
+                            finish_reason=reason,
+                            error=str(last_err),
+                        )
+                        diagnostics.terminal_reason = TERMINAL_CONTENT_FILTER
+                        logger.error(
+                            "LLM stopped %s on finish_reason=%s (model %s) with no content on "
+                            "attempt %d/%d. This is a moderation stop, not a transient: the "
+                            "identical prompt will be refused again, so no retry is spent. "
+                            "Edit the prompt or the source passage rather than re-running.",
+                            stage_name or "chat",
+                            reason,
+                            resolved_model,
+                            attempt + 1,
+                            max_retries,
+                        )
+                        return CompletionResult("", diagnostics)
+                    diagnostics.note(
+                        attempt=attempt + 1,
+                        status=STATUS_EMPTY,
+                        finish_reason=reason,
+                        error=str(last_err),
+                    )
+                    if attempt < max_retries - 1:
+                        logger.warning(
+                            "LLM returned an empty completion for %s (model %s, "
+                            "finish_reason=%s) on attempt %d/%d; retrying as a transient.",
+                            stage_name or "chat",
+                            resolved_model,
+                            reason,
+                            attempt + 1,
+                            max_retries,
+                        )
+                        time.sleep(min(base_sleep * (2 ** attempt), max_sleep))
+                        continue
+                    # Budget exhausted. Return the empty string exactly as this
+                    # function did before 2026-07-28 instead of raising: the
+                    # preprocessor turns "" into status "empty_reply" plus the empty
+                    # context, and a new exception type here would change the
+                    # contract of every call site at once.
+                    logger.error(
+                        "LLM returned an empty completion for %s (model %s, "
+                        "finish_reason=%s) on %d of %d attempts; giving up and returning "
+                        "the empty string for the caller's own empty-reply handling.",
+                        stage_name or "chat",
+                        resolved_model,
+                        reason,
+                        empty_attempts,
+                        max_retries,
+                    )
+                    diagnostics.terminal_reason = TERMINAL_EMPTY_AFTER_RETRIES
+                    return CompletionResult("", diagnostics)
+    
+                text = (resp.choices[0].message.content or "").strip()
+                reason = _finish_reason(resp)
+                diagnostics.note(
+                    attempt=attempt + 1,
+                    status=STATUS_OK,
+                    finish_reason=reason,
+                    content_chars=len(text),
+                )
+                diagnostics.response_hash = _hash(text)
+                diagnostics.raw_chars = len(text)
+                return CompletionResult(text, diagnostics)
+    
+            except AuthenticationError as e:
+>               raise RuntimeError(
+                    f"Authentication failed (401). Key starts with: {_mask(os.getenv('OPENROUTER_API_KEY',''))}. "
+                    f"Checked .env at: {ENV_PATH}. Original error: {e}"
+                ) from e
+E               RuntimeError: Authentication failed (401). Key starts with: None. Checked .env at: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch757\.env. Original error: t
+
+src\t2pw\llm\client.py:772: RuntimeError
+_______ test_d_a_budget_spent_on_timeouts_is_not_the_empty_string_exit ________
+
+self = <test_llm_client_request_timeout._Completions object at 0x000002485FFC3100>
+kwargs = {'max_tokens': 800, 'messages': [{'content': 'extract the pathway', 'role': 'user'}], 'model': 'm', 'temperature': 0.0, ...}
+item = RuntimeError('t')
+
+    def create(self, **kwargs: Any) -> Any:
+        self.calls.append(kwargs)
+        item = self._script.pop(0) if self._script else HANG
+        if item is HANG:
+            time.sleep(min(kwargs["timeout"].read, UNBOUNDED_SECONDS))
+            raise openai.APITimeoutError("request timed out")
+        if isinstance(item, Exception):
+>           raise item
+E           RuntimeError: t
+
+tests\test_llm_client_request_timeout.py:68: RuntimeError
+
+The above exception was the direct cause of the following exception:
+
+llm = <function llm.<locals>._install at 0x000002485F7B2C00>
+
+    def test_d_a_budget_spent_on_timeouts_is_not_the_empty_string_exit(llm) -> None:
+        """(d) Both loops raise operation_timeout instead of returning "" as empty."""
+        llm([openai.APITimeoutError("t"), openai.APITimeoutError("t")])
+        with pytest.raises(client_mod.LLMOperationTimeout) as caught:
+>           client_mod.chat_detailed(MESSAGES, model_override="m")
+
+tests\test_llm_client_request_timeout.py:155: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+messages = [{'content': 'extract the pathway', 'role': 'user'}]
+temperature = 0.0, max_tokens = 800, response_json = False, json_schema = None
+model_override = 'm', model_env_var = None, stage_name = None, timeout = None
+
+    def chat_detailed(
+        messages: List[Dict[str, Any]],
+        temperature: float = 0.0,
+        max_tokens: int = 800,
+        response_json: bool = False,
+        json_schema: Optional[Dict[str, Any]] = None,
+        model_override: Optional[str] = None,
+        model_env_var: Optional[str] = None,
+        stage_name: Optional[str] = None,
+        timeout: Optional[float] = None,
+    ) -> CompletionResult:
+        """:func:`chat` plus a :class:`CompletionDiagnostics` describing the call.
+    
+        ``timeout`` bounds each attempt of THIS call only, defaulting to
+        :data:`REQUEST_TIMEOUT_SECONDS`; :func:`worst_case_call_seconds` prices the
+        whole call in advance. A budget spent on timeouts raises
+        :class:`LLMOperationTimeout`, never the empty string.
+    
+        The text returned is identical to what ``chat`` returns for the same inputs;
+        the only behavioural difference anywhere in this function relative to the
+        pre-2026-07-29 code is the content-filter exit described below.
+    
+        CONTENT FILTER IS A DURABLE EXIT, NOT A TRANSIENT
+        -------------------------------------------------
+        An empty 200 whose ``finish_reason`` is ``content_filter`` is not a hiccup.
+        Moderation is a deterministic function of the prompt, so LLM_MAX_RETRIES
+        re-sends of the *identical* prompt buy exactly one thing: LLM_MAX_RETRIES
+        times the latency, and then the same empty string. The loop therefore stops
+        on the first one and reports ``terminal_reason="content_filter"``, which is
+        the fact an operator needs -- editing the prompt is the fix, re-running the
+        leg is not. Retrying a *different* prompt is still allowed and is what the
+        localized-repair path does; what is forbidden is the blind identical retry.
+    
+        A ``content_filter`` reply that carries text is NOT affected: it is a partial
+        answer, it is returned like any other non-empty completion, and the reason is
+        recorded on the diagnostics.
+        """
+        resolved_model = _resolve_model(
+            model_override=model_override,
+            model_env_var=model_env_var,
+        )
+        logger.info("LLM model for %s: %s", stage_name or "chat", resolved_model)
+    
+        diagnostics = CompletionDiagnostics(
+            model=resolved_model,
+            stage=str(stage_name or "chat"),
+            request_hash=_hash(messages),
+        )
+    
+        request_timeout = resolve_request_timeout(timeout)
+        kwargs: Dict[str, Any] = {
+            "model": resolved_model,
+            "messages": messages,
+            "temperature": temperature,
+            "max_tokens": max_tokens,
+            "timeout": _timeout(request_timeout),
+        }
+    
+        # OpenAI-compatible response_format
+        if response_json:
+            if json_schema:
+                kwargs["response_format"] = {
+                    "type": "json_schema",
+                    "json_schema": json_schema,
+                }
+            else:
+                kwargs["response_format"] = {"type": "json_object"}
+    
+        # Retry tuning (env configurable)
+        max_retries = int(os.getenv("LLM_MAX_RETRIES", "8"))
+        base_sleep = float(os.getenv("LLM_RETRY_BASE_SLEEP", "1.0"))
+        max_sleep = float(os.getenv("LLM_RETRY_MAX_SLEEP", "20.0"))
+    
+        # Spacing helps chunk pipelines avoid bursts
+        spacing = float(os.getenv("LLM_CALL_SPACING", "0.35"))
+    
+        last_err: Exception | None = None
+        empty_attempts = 0
+    
+        for attempt in range(max_retries):
+            try:
+                resp = _client.chat.completions.create(**kwargs)
+                _record_usage(resp)
+                time.sleep(spacing)
+    
+                # An HTTP 200 with no text is a transient, not a result. See the
+                # "Empty-but-successful completions" note above: this is the exact
+                # shape that killed PMC13278307/research (137s) and
+                # PMC13231680/strict (55s) in runs/2026-07-28_0919, and it is
+                # deliberately handled *inside* this loop so it shares the same
+                # backoff and the same LLM_MAX_RETRIES budget as every other
+                # transient rather than growing a second retry mechanism.
+                if _completion_is_empty(resp, tools_were_sent=False):
+                    empty_attempts += 1
+                    reason = _finish_reason(resp)
+                    last_err = RuntimeError(
+                        f"empty completion from {resolved_model} (finish_reason={reason})"
+                    )
+                    if _is_content_filter(reason):
+                        # Durable, not transient. Stop here rather than spending the
+                        # rest of the budget re-asking a question already refused.
+                        diagnostics.note(
+                            attempt=attempt + 1,
+                            status=STATUS_CONTENT_FILTER,
+                            finish_reason=reason,
+                            error=str(last_err),
+                        )
+                        diagnostics.terminal_reason = TERMINAL_CONTENT_FILTER
+                        logger.error(
+                            "LLM stopped %s on finish_reason=%s (model %s) with no content on "
+                            "attempt %d/%d. This is a moderation stop, not a transient: the "
+                            "identical prompt will be refused again, so no retry is spent. "
+                            "Edit the prompt or the source passage rather than re-running.",
+                            stage_name or "chat",
+                            reason,
+                            resolved_model,
+                            attempt + 1,
+                            max_retries,
+                        )
+                        return CompletionResult("", diagnostics)
+                    diagnostics.note(
+                        attempt=attempt + 1,
+                        status=STATUS_EMPTY,
+                        finish_reason=reason,
+                        error=str(last_err),
+                    )
+                    if attempt < max_retries - 1:
+                        logger.warning(
+                            "LLM returned an empty completion for %s (model %s, "
+                            "finish_reason=%s) on attempt %d/%d; retrying as a transient.",
+                            stage_name or "chat",
+                            resolved_model,
+                            reason,
+                            attempt + 1,
+                            max_retries,
+                        )
+                        time.sleep(min(base_sleep * (2 ** attempt), max_sleep))
+                        continue
+                    # Budget exhausted. Return the empty string exactly as this
+                    # function did before 2026-07-28 instead of raising: the
+                    # preprocessor turns "" into status "empty_reply" plus the empty
+                    # context, and a new exception type here would change the
+                    # contract of every call site at once.
+                    logger.error(
+                        "LLM returned an empty completion for %s (model %s, "
+                        "finish_reason=%s) on %d of %d attempts; giving up and returning "
+                        "the empty string for the caller's own empty-reply handling.",
+                        stage_name or "chat",
+                        resolved_model,
+                        reason,
+                        empty_attempts,
+                        max_retries,
+                    )
+                    diagnostics.terminal_reason = TERMINAL_EMPTY_AFTER_RETRIES
+                    return CompletionResult("", diagnostics)
+    
+                text = (resp.choices[0].message.content or "").strip()
+                reason = _finish_reason(resp)
+                diagnostics.note(
+                    attempt=attempt + 1,
+                    status=STATUS_OK,
+                    finish_reason=reason,
+                    content_chars=len(text),
+                )
+                diagnostics.response_hash = _hash(text)
+                diagnostics.raw_chars = len(text)
+                return CompletionResult(text, diagnostics)
+    
+            except AuthenticationError as e:
+>               raise RuntimeError(
+                    f"Authentication failed (401). Key starts with: {_mask(os.getenv('OPENROUTER_API_KEY',''))}. "
+                    f"Checked .env at: {ENV_PATH}. Original error: {e}"
+                ) from e
+E               RuntimeError: Authentication failed (401). Key starts with: None. Checked .env at: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch757\.env. Original error: t
+
+src\t2pw\llm\client.py:772: RuntimeError
+_____________ test_g9_every_stage_requests_llm_max_tokens[audit] ______________
+
+name = 'audit'
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_every_stage_requests_l0')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x00000248602C0C20>
+
+    @pytest.mark.parametrize("name", sorted(STAGES))
+    def test_g9_every_stage_requests_llm_max_tokens(name: str, tmp_path: Path, wire: _Wire) -> None:
+        """``LLM_MAX_TOKENS=50000``: every request of every stage asks for exactly 50,000."""
+    
+>       assert set(_drive(name, tmp_path, wire).budgets()) == {CONFIGURED}
+E       assert {3200} == {50000}
+E         
+E         Extra items in the left set:
+E         3200
+E         Extra items in the right set:
+E         50000
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:400: AssertionError
+__________ test_g9_every_stage_requests_llm_max_tokens[client.chat] ___________
+
+name = 'client.chat'
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_every_stage_requests_l1')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x000002485FFE4F50>
+
+    @pytest.mark.parametrize("name", sorted(STAGES))
+    def test_g9_every_stage_requests_llm_max_tokens(name: str, tmp_path: Path, wire: _Wire) -> None:
+        """``LLM_MAX_TOKENS=50000``: every request of every stage asks for exactly 50,000."""
+    
+>       assert set(_drive(name, tmp_path, wire).budgets()) == {CONFIGURED}
+E       assert {800} == {50000}
+E         
+E         Extra items in the left set:
+E         800
+E         Extra items in the right set:
+E         50000
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:400: AssertionError
+_____ test_g9_every_stage_requests_llm_max_tokens[client.chat_with_tools] _____
+
+name = 'client.chat_with_tools'
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_every_stage_requests_l2')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x000002485FFE4CD0>
+
+    @pytest.mark.parametrize("name", sorted(STAGES))
+    def test_g9_every_stage_requests_llm_max_tokens(name: str, tmp_path: Path, wire: _Wire) -> None:
+        """``LLM_MAX_TOKENS=50000``: every request of every stage asks for exactly 50,000."""
+    
+>       assert set(_drive(name, tmp_path, wire).budgets()) == {CONFIGURED}
+E       assert {1200} == {50000}
+E         
+E         Extra items in the left set:
+E         1200
+E         Extra items in the right set:
+E         50000
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:400: AssertionError
+__________ test_g9_every_stage_requests_llm_max_tokens[completeness] __________
+
+name = 'completeness'
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_every_stage_requests_l3')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x00000248602ACE90>
+
+    @pytest.mark.parametrize("name", sorted(STAGES))
+    def test_g9_every_stage_requests_llm_max_tokens(name: str, tmp_path: Path, wire: _Wire) -> None:
+        """``LLM_MAX_TOKENS=50000``: every request of every stage asks for exactly 50,000."""
+    
+>       assert set(_drive(name, tmp_path, wire).budgets()) == {CONFIGURED}
+E       assert {4000} == {50000}
+E         
+E         Extra items in the left set:
+E         4000
+E         Extra items in the right set:
+E         50000
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:400: AssertionError
+____________ test_g9_every_stage_requests_llm_max_tokens[curator] _____________
+
+name = 'curator'
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_every_stage_requests_l4')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x00000248602AE060>
+
+    @pytest.mark.parametrize("name", sorted(STAGES))
+    def test_g9_every_stage_requests_llm_max_tokens(name: str, tmp_path: Path, wire: _Wire) -> None:
+        """``LLM_MAX_TOKENS=50000``: every request of every stage asks for exactly 50,000."""
+    
+>       assert set(_drive(name, tmp_path, wire).budgets()) == {CONFIGURED}
+E       assert {2000} == {50000}
+E         
+E         Extra items in the left set:
+E         2000
+E         Extra items in the right set:
+E         50000
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:400: AssertionError
+___________ test_g9_every_stage_requests_llm_max_tokens[extraction] ___________
+
+name = 'extraction'
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_every_stage_requests_l5')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x000002485C6727B0>
+
+    @pytest.mark.parametrize("name", sorted(STAGES))
+    def test_g9_every_stage_requests_llm_max_tokens(name: str, tmp_path: Path, wire: _Wire) -> None:
+        """``LLM_MAX_TOKENS=50000``: every request of every stage asks for exactly 50,000."""
+    
+>       assert set(_drive(name, tmp_path, wire).budgets()) == {CONFIGURED}
+E       assert {12000} == {50000}
+E         
+E         Extra items in the left set:
+E         12000
+E         Extra items in the right set:
+E         50000
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:400: AssertionError
+________ test_g9_every_stage_requests_llm_max_tokens[extraction.demo] _________
+
+name = 'extraction.demo'
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_every_stage_requests_l6')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x0000024861113DF0>
+
+    @pytest.mark.parametrize("name", sorted(STAGES))
+    def test_g9_every_stage_requests_llm_max_tokens(name: str, tmp_path: Path, wire: _Wire) -> None:
+        """``LLM_MAX_TOKENS=50000``: every request of every stage asks for exactly 50,000."""
+    
+>       assert set(_drive(name, tmp_path, wire).budgets()) == {CONFIGURED}
+E       assert {1200} == {50000}
+E         
+E         Extra items in the left set:
+E         1200
+E         Extra items in the right set:
+E         50000
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:400: AssertionError
+---------------------------- Captured stdout call -----------------------------
+
+=== RAW MODEL OUTPUT ===
+
+{}
+
+=== PARSED JSON ===
+
+{}
+_________ test_g9_every_stage_requests_llm_max_tokens[focused_repair] _________
+
+name = 'focused_repair'
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_every_stage_requests_l7')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x0000024861112BE0>
+
+    @pytest.mark.parametrize("name", sorted(STAGES))
+    def test_g9_every_stage_requests_llm_max_tokens(name: str, tmp_path: Path, wire: _Wire) -> None:
+        """``LLM_MAX_TOKENS=50000``: every request of every stage asks for exactly 50,000."""
+    
+>       assert set(_drive(name, tmp_path, wire).budgets()) == {CONFIGURED}
+E       assert {4000} == {50000}
+E         
+E         Extra items in the left set:
+E         4000
+E         Extra items in the right set:
+E         50000
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:400: AssertionError
+__________ test_g9_every_stage_requests_llm_max_tokens[gap.species] ___________
+
+name = 'gap.species'
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_every_stage_requests_l8')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x000002485C6CC350>
+
+    @pytest.mark.parametrize("name", sorted(STAGES))
+    def test_g9_every_stage_requests_llm_max_tokens(name: str, tmp_path: Path, wire: _Wire) -> None:
+        """``LLM_MAX_TOKENS=50000``: every request of every stage asks for exactly 50,000."""
+    
+>       assert set(_drive(name, tmp_path, wire).budgets()) == {CONFIGURED}
+E       assert {450} == {50000}
+E         
+E         Extra items in the left set:
+E         450
+E         Extra items in the right set:
+E         50000
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:400: AssertionError
+___________ test_g9_every_stage_requests_llm_max_tokens[inference] ____________
+
+name = 'inference'
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_every_stage_requests_l9')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x000002485C6CD050>
+
+    @pytest.mark.parametrize("name", sorted(STAGES))
+    def test_g9_every_stage_requests_llm_max_tokens(name: str, tmp_path: Path, wire: _Wire) -> None:
+        """``LLM_MAX_TOKENS=50000``: every request of every stage asks for exactly 50,000."""
+    
+>       assert set(_drive(name, tmp_path, wire).budgets()) == {CONFIGURED}
+E       assert {10000} == {50000}
+E         
+E         Extra items in the left set:
+E         10000
+E         Extra items in the right set:
+E         50000
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:400: AssertionError
+_______ test_g9_every_stage_requests_llm_max_tokens[inference.chunking] _______
+
+name = 'inference.chunking'
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_every_stage_requests_l10')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x0000024860426300>
+
+    @pytest.mark.parametrize("name", sorted(STAGES))
+    def test_g9_every_stage_requests_llm_max_tokens(name: str, tmp_path: Path, wire: _Wire) -> None:
+        """``LLM_MAX_TOKENS=50000``: every request of every stage asks for exactly 50,000."""
+    
+>       assert set(_drive(name, tmp_path, wire).budgets()) == {CONFIGURED}
+E       assert {10000} == {50000}
+E         
+E         Extra items in the left set:
+E         10000
+E         Extra items in the right set:
+E         50000
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:400: AssertionError
+______ test_g9_every_stage_requests_llm_max_tokens[interactive_curator] _______
+
+name = 'interactive_curator'
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_every_stage_requests_l11')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x00000248600675C0>
+
+    @pytest.mark.parametrize("name", sorted(STAGES))
+    def test_g9_every_stage_requests_llm_max_tokens(name: str, tmp_path: Path, wire: _Wire) -> None:
+        """``LLM_MAX_TOKENS=50000``: every request of every stage asks for exactly 50,000."""
+    
+>       assert set(_drive(name, tmp_path, wire).budgets()) == {CONFIGURED}
+E       assert {4096} == {50000}
+E         
+E         Extra items in the left set:
+E         4096
+E         Extra items in the right set:
+E         50000
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:400: AssertionError
+______ test_g9_every_stage_requests_llm_max_tokens[legacy_sbml_pipeline] ______
+
+name = 'legacy_sbml_pipeline'
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_every_stage_requests_l12')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x000002485C574830>
+
+    @pytest.mark.parametrize("name", sorted(STAGES))
+    def test_g9_every_stage_requests_llm_max_tokens(name: str, tmp_path: Path, wire: _Wire) -> None:
+        """``LLM_MAX_TOKENS=50000``: every request of every stage asks for exactly 50,000."""
+    
+>       assert set(_drive(name, tmp_path, wire).budgets()) == {CONFIGURED}
+E       assert {3000, 3600} == {50000}
+E         
+E         Extra items in the left set:
+E         3600
+E         3000
+E         Extra items in the right set:
+E         50000
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:400: AssertionError
+_____ test_g9_every_stage_requests_llm_max_tokens[localized_repair.json] ______
+
+name = 'localized_repair.json'
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_every_stage_requests_l13')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x000002485C574AD0>
+
+    @pytest.mark.parametrize("name", sorted(STAGES))
+    def test_g9_every_stage_requests_llm_max_tokens(name: str, tmp_path: Path, wire: _Wire) -> None:
+        """``LLM_MAX_TOKENS=50000``: every request of every stage asks for exactly 50,000."""
+    
+>       assert set(_drive(name, tmp_path, wire).budgets()) == {CONFIGURED}
+E       assert {12000} == {50000}
+E         
+E         Extra items in the left set:
+E         12000
+E         Extra items in the right set:
+E         50000
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:400: AssertionError
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.pipeline.localized_repair:localized_repair.py:1187 extraction json repair returned valid JSON that does not preserve the malformed reply's content (?); refusing it and falling back to deterministic salvage.
+_____ test_g9_every_stage_requests_llm_max_tokens[localized_repair.rows] ______
+
+name = 'localized_repair.rows'
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_every_stage_requests_l14')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x0000024860CBB860>
+
+    @pytest.mark.parametrize("name", sorted(STAGES))
+    def test_g9_every_stage_requests_llm_max_tokens(name: str, tmp_path: Path, wire: _Wire) -> None:
+        """``LLM_MAX_TOKENS=50000``: every request of every stage asks for exactly 50,000."""
+    
+>       assert set(_drive(name, tmp_path, wire).budgets()) == {CONFIGURED}
+E       assert {4000} == {50000}
+E         
+E         Extra items in the left set:
+E         4000
+E         Extra items in the right set:
+E         50000
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:400: AssertionError
+_________ test_g9_every_stage_requests_llm_max_tokens[map_ids.alias] __________
+
+name = 'map_ids.alias'
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_every_stage_requests_l15')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x00000248600E9E50>
+
+    @pytest.mark.parametrize("name", sorted(STAGES))
+    def test_g9_every_stage_requests_llm_max_tokens(name: str, tmp_path: Path, wire: _Wire) -> None:
+        """``LLM_MAX_TOKENS=50000``: every request of every stage asks for exactly 50,000."""
+    
+>       assert set(_drive(name, tmp_path, wire).budgets()) == {CONFIGURED}
+E       assert {300} == {50000}
+E         
+E         Extra items in the left set:
+E         300
+E         Extra items in the right set:
+E         50000
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:400: AssertionError
+________ test_g9_every_stage_requests_llm_max_tokens[map_ids.species] _________
+
+name = 'map_ids.species'
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_every_stage_requests_l16')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x00000248600EA510>
+
+    @pytest.mark.parametrize("name", sorted(STAGES))
+    def test_g9_every_stage_requests_llm_max_tokens(name: str, tmp_path: Path, wire: _Wire) -> None:
+        """``LLM_MAX_TOKENS=50000``: every request of every stage asks for exactly 50,000."""
+    
+>       assert set(_drive(name, tmp_path, wire).budgets()) == {CONFIGURED}
+E       assert {450} == {50000}
+E         
+E         Extra items in the left set:
+E         450
+E         Extra items in the right set:
+E         50000
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:400: AssertionError
+___________ test_g9_every_stage_requests_llm_max_tokens[overwatch] ____________
+
+name = 'overwatch'
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_every_stage_requests_l17')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x000002485C744730>
+
+    @pytest.mark.parametrize("name", sorted(STAGES))
+    def test_g9_every_stage_requests_llm_max_tokens(name: str, tmp_path: Path, wire: _Wire) -> None:
+        """``LLM_MAX_TOKENS=50000``: every request of every stage asks for exactly 50,000."""
+    
+>       assert set(_drive(name, tmp_path, wire).budgets()) == {CONFIGURED}
+E       assert {2600} == {50000}
+E         
+E         Extra items in the left set:
+E         2600
+E         Extra items in the right set:
+E         50000
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:400: AssertionError
+__ test_g9_every_stage_requests_llm_max_tokens[pathwhiz_converter.llm_plan] ___
+
+name = 'pathwhiz_converter.llm_plan'
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_every_stage_requests_l18')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x000002485C24A150>
+
+    @pytest.mark.parametrize("name", sorted(STAGES))
+    def test_g9_every_stage_requests_llm_max_tokens(name: str, tmp_path: Path, wire: _Wire) -> None:
+        """``LLM_MAX_TOKENS=50000``: every request of every stage asks for exactly 50,000."""
+    
+>       assert set(_drive(name, tmp_path, wire).budgets()) == {CONFIGURED}
+E       assert {2400} == {50000}
+E         
+E         Extra items in the left set:
+E         2400
+E         Extra items in the right set:
+E         50000
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:400: AssertionError
+______ test_g9_every_stage_requests_llm_max_tokens[rag.prose_extraction] ______
+
+name = 'rag.prose_extraction'
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_every_stage_requests_l20')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x000002485C51BD90>
+
+    @pytest.mark.parametrize("name", sorted(STAGES))
+    def test_g9_every_stage_requests_llm_max_tokens(name: str, tmp_path: Path, wire: _Wire) -> None:
+        """``LLM_MAX_TOKENS=50000``: every request of every stage asks for exactly 50,000."""
+    
+>       assert set(_drive(name, tmp_path, wire).budgets()) == {CONFIGURED}
+E       assert {1500} == {50000}
+E         
+E         Extra items in the left set:
+E         1500
+E         Extra items in the right set:
+E         50000
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:400: AssertionError
+__________ test_g9_every_stage_requests_llm_max_tokens[stoich.agent] __________
+
+name = 'stoich.agent'
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_every_stage_requests_l21')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x000002485C5C7650>
+
+    @pytest.mark.parametrize("name", sorted(STAGES))
+    def test_g9_every_stage_requests_llm_max_tokens(name: str, tmp_path: Path, wire: _Wire) -> None:
+        """``LLM_MAX_TOKENS=50000``: every request of every stage asks for exactly 50,000."""
+    
+>       assert set(_drive(name, tmp_path, wire).budgets()) == {CONFIGURED}
+E       assert {None, 300} == {50000}
+E         
+E         Extra items in the left set:
+E         None
+E         300
+E         Extra items in the right set:
+E         50000
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:400: AssertionError
+_______ test_g9_every_stage_requests_llm_max_tokens[stoich.classifier] ________
+
+name = 'stoich.classifier'
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_every_stage_requests_l22')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x000002485C3609D0>
+
+    @pytest.mark.parametrize("name", sorted(STAGES))
+    def test_g9_every_stage_requests_llm_max_tokens(name: str, tmp_path: Path, wire: _Wire) -> None:
+        """``LLM_MAX_TOKENS=50000``: every request of every stage asks for exactly 50,000."""
+    
+>       assert set(_drive(name, tmp_path, wire).budgets()) == {CONFIGURED}
+E       assert {300} == {50000}
+E         
+E         Extra items in the left set:
+E         300
+E         Extra items in the right set:
+E         50000
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:400: AssertionError
+_____ test_g9_with_nothing_configured_every_stage_requests_128000[audit] ______
+
+name = 'audit'
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_with_nothing_configure0')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x000002485C2F90D0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002485C485860>
+
+    @pytest.mark.parametrize("name", sorted(STAGES))
+    def test_g9_with_nothing_configured_every_stage_requests_128000(
+        name: str, tmp_path: Path, wire: _Wire, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """No budget variable at all: the code default is 128,000 (D-105 § 1)."""
+    
+        monkeypatch.delenv("LLM_MAX_TOKENS")
+>       assert set(_drive(name, tmp_path, wire).budgets()) == {CODE_DEFAULT}
+E       assert {3200} == {128000}
+E         
+E         Extra items in the left set:
+E         3200
+E         Extra items in the right set:
+E         128000
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:410: AssertionError
+__ test_g9_with_nothing_configured_every_stage_requests_128000[client.chat] ___
+
+name = 'client.chat'
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_with_nothing_configure1')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x000002485C486190>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002485C485550>
+
+    @pytest.mark.parametrize("name", sorted(STAGES))
+    def test_g9_with_nothing_configured_every_stage_requests_128000(
+        name: str, tmp_path: Path, wire: _Wire, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """No budget variable at all: the code default is 128,000 (D-105 § 1)."""
+    
+        monkeypatch.delenv("LLM_MAX_TOKENS")
+>       assert set(_drive(name, tmp_path, wire).budgets()) == {CODE_DEFAULT}
+E       assert {800} == {128000}
+E         
+E         Extra items in the left set:
+E         800
+E         Extra items in the right set:
+E         128000
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:410: AssertionError
+_ test_g9_with_nothing_configured_every_stage_requests_128000[client.chat_with_tools] _
+
+name = 'client.chat_with_tools'
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_with_nothing_configure2')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x000002485C484130>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002485C4850F0>
+
+    @pytest.mark.parametrize("name", sorted(STAGES))
+    def test_g9_with_nothing_configured_every_stage_requests_128000(
+        name: str, tmp_path: Path, wire: _Wire, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """No budget variable at all: the code default is 128,000 (D-105 § 1)."""
+    
+        monkeypatch.delenv("LLM_MAX_TOKENS")
+>       assert set(_drive(name, tmp_path, wire).budgets()) == {CODE_DEFAULT}
+E       assert {1200} == {128000}
+E         
+E         Extra items in the left set:
+E         1200
+E         Extra items in the right set:
+E         128000
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:410: AssertionError
+__ test_g9_with_nothing_configured_every_stage_requests_128000[completeness] __
+
+name = 'completeness'
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_with_nothing_configure3')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x000002485C4844B0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002485C487AF0>
+
+    @pytest.mark.parametrize("name", sorted(STAGES))
+    def test_g9_with_nothing_configured_every_stage_requests_128000(
+        name: str, tmp_path: Path, wire: _Wire, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """No budget variable at all: the code default is 128,000 (D-105 § 1)."""
+    
+        monkeypatch.delenv("LLM_MAX_TOKENS")
+>       assert set(_drive(name, tmp_path, wire).budgets()) == {CODE_DEFAULT}
+E       assert {4000} == {128000}
+E         
+E         Extra items in the left set:
+E         4000
+E         Extra items in the right set:
+E         128000
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:410: AssertionError
+____ test_g9_with_nothing_configured_every_stage_requests_128000[curator] _____
+
+name = 'curator'
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_with_nothing_configure4')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x000002485C4871C0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002485C4875B0>
+
+    @pytest.mark.parametrize("name", sorted(STAGES))
+    def test_g9_with_nothing_configured_every_stage_requests_128000(
+        name: str, tmp_path: Path, wire: _Wire, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """No budget variable at all: the code default is 128,000 (D-105 § 1)."""
+    
+        monkeypatch.delenv("LLM_MAX_TOKENS")
+>       assert set(_drive(name, tmp_path, wire).budgets()) == {CODE_DEFAULT}
+E       assert {2000} == {128000}
+E         
+E         Extra items in the left set:
+E         2000
+E         Extra items in the right set:
+E         128000
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:410: AssertionError
+___ test_g9_with_nothing_configured_every_stage_requests_128000[extraction] ___
+
+name = 'extraction'
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_with_nothing_configure5')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x000002485C487D90>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002485C4877E0>
+
+    @pytest.mark.parametrize("name", sorted(STAGES))
+    def test_g9_with_nothing_configured_every_stage_requests_128000(
+        name: str, tmp_path: Path, wire: _Wire, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """No budget variable at all: the code default is 128,000 (D-105 § 1)."""
+    
+        monkeypatch.delenv("LLM_MAX_TOKENS")
+>       assert set(_drive(name, tmp_path, wire).budgets()) == {CODE_DEFAULT}
+E       assert {12000} == {128000}
+E         
+E         Extra items in the left set:
+E         12000
+E         Extra items in the right set:
+E         128000
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:410: AssertionError
+_ test_g9_with_nothing_configured_every_stage_requests_128000[extraction.demo] _
+
+name = 'extraction.demo'
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_with_nothing_configure6')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x000002485C4879A0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002485C487EE0>
+
+    @pytest.mark.parametrize("name", sorted(STAGES))
+    def test_g9_with_nothing_configured_every_stage_requests_128000(
+        name: str, tmp_path: Path, wire: _Wire, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """No budget variable at all: the code default is 128,000 (D-105 § 1)."""
+    
+        monkeypatch.delenv("LLM_MAX_TOKENS")
+>       assert set(_drive(name, tmp_path, wire).budgets()) == {CODE_DEFAULT}
+E       assert {1200} == {128000}
+E         
+E         Extra items in the left set:
+E         1200
+E         Extra items in the right set:
+E         128000
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:410: AssertionError
+---------------------------- Captured stdout call -----------------------------
+
+=== RAW MODEL OUTPUT ===
+
+{}
+
+=== PARSED JSON ===
+
+{}
+_ test_g9_with_nothing_configured_every_stage_requests_128000[focused_repair] _
+
+name = 'focused_repair'
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_with_nothing_configure7')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x000002485C487E70>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002485C485A20>
+
+    @pytest.mark.parametrize("name", sorted(STAGES))
+    def test_g9_with_nothing_configured_every_stage_requests_128000(
+        name: str, tmp_path: Path, wire: _Wire, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """No budget variable at all: the code default is 128,000 (D-105 § 1)."""
+    
+        monkeypatch.delenv("LLM_MAX_TOKENS")
+>       assert set(_drive(name, tmp_path, wire).budgets()) == {CODE_DEFAULT}
+E       assert {4000} == {128000}
+E         
+E         Extra items in the left set:
+E         4000
+E         Extra items in the right set:
+E         128000
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:410: AssertionError
+__ test_g9_with_nothing_configured_every_stage_requests_128000[gap.species] ___
+
+name = 'gap.species'
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_with_nothing_configure8')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x000002485C484FA0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002485C486740>
+
+    @pytest.mark.parametrize("name", sorted(STAGES))
+    def test_g9_with_nothing_configured_every_stage_requests_128000(
+        name: str, tmp_path: Path, wire: _Wire, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """No budget variable at all: the code default is 128,000 (D-105 § 1)."""
+    
+        monkeypatch.delenv("LLM_MAX_TOKENS")
+>       assert set(_drive(name, tmp_path, wire).budgets()) == {CODE_DEFAULT}
+E       assert {450} == {128000}
+E         
+E         Extra items in the left set:
+E         450
+E         Extra items in the right set:
+E         128000
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:410: AssertionError
+___ test_g9_with_nothing_configured_every_stage_requests_128000[inference] ____
+
+name = 'inference'
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_with_nothing_configure9')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x000002485C4860B0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002485C485B00>
+
+    @pytest.mark.parametrize("name", sorted(STAGES))
+    def test_g9_with_nothing_configured_every_stage_requests_128000(
+        name: str, tmp_path: Path, wire: _Wire, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """No budget variable at all: the code default is 128,000 (D-105 § 1)."""
+    
+        monkeypatch.delenv("LLM_MAX_TOKENS")
+>       assert set(_drive(name, tmp_path, wire).budgets()) == {CODE_DEFAULT}
+E       assert {10000} == {128000}
+E         
+E         Extra items in the left set:
+E         10000
+E         Extra items in the right set:
+E         128000
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:410: AssertionError
+_ test_g9_with_nothing_configured_every_stage_requests_128000[inference.chunking] _
+
+name = 'inference.chunking'
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_with_nothing_configure10')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x000002485C486580>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002485C484600>
+
+    @pytest.mark.parametrize("name", sorted(STAGES))
+    def test_g9_with_nothing_configured_every_stage_requests_128000(
+        name: str, tmp_path: Path, wire: _Wire, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """No budget variable at all: the code default is 128,000 (D-105 § 1)."""
+    
+        monkeypatch.delenv("LLM_MAX_TOKENS")
+>       assert set(_drive(name, tmp_path, wire).budgets()) == {CODE_DEFAULT}
+E       assert {10000} == {128000}
+E         
+E         Extra items in the left set:
+E         10000
+E         Extra items in the right set:
+E         128000
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:410: AssertionError
+_ test_g9_with_nothing_configured_every_stage_requests_128000[interactive_curator] _
+
+name = 'interactive_curator'
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_with_nothing_configure11')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x000002485C485BE0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002485C485010>
+
+    @pytest.mark.parametrize("name", sorted(STAGES))
+    def test_g9_with_nothing_configured_every_stage_requests_128000(
+        name: str, tmp_path: Path, wire: _Wire, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """No budget variable at all: the code default is 128,000 (D-105 § 1)."""
+    
+        monkeypatch.delenv("LLM_MAX_TOKENS")
+>       assert set(_drive(name, tmp_path, wire).budgets()) == {CODE_DEFAULT}
+E       assert {4096} == {128000}
+E         
+E         Extra items in the left set:
+E         4096
+E         Extra items in the right set:
+E         128000
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:410: AssertionError
+_ test_g9_with_nothing_configured_every_stage_requests_128000[legacy_sbml_pipeline] _
+
+name = 'legacy_sbml_pipeline'
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_with_nothing_configure12')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x000002485C4877E0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002485C487A80>
+
+    @pytest.mark.parametrize("name", sorted(STAGES))
+    def test_g9_with_nothing_configured_every_stage_requests_128000(
+        name: str, tmp_path: Path, wire: _Wire, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """No budget variable at all: the code default is 128,000 (D-105 § 1)."""
+    
+        monkeypatch.delenv("LLM_MAX_TOKENS")
+>       assert set(_drive(name, tmp_path, wire).budgets()) == {CODE_DEFAULT}
+E       assert {3000, 3600} == {128000}
+E         
+E         Extra items in the left set:
+E         3600
+E         3000
+E         Extra items in the right set:
+E         128000
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:410: AssertionError
+_ test_g9_with_nothing_configured_every_stage_requests_128000[localized_repair.json] _
+
+name = 'localized_repair.json'
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_with_nothing_configure13')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x000002485C487000>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002485C485550>
+
+    @pytest.mark.parametrize("name", sorted(STAGES))
+    def test_g9_with_nothing_configured_every_stage_requests_128000(
+        name: str, tmp_path: Path, wire: _Wire, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """No budget variable at all: the code default is 128,000 (D-105 § 1)."""
+    
+        monkeypatch.delenv("LLM_MAX_TOKENS")
+>       assert set(_drive(name, tmp_path, wire).budgets()) == {CODE_DEFAULT}
+E       assert {12000} == {128000}
+E         
+E         Extra items in the left set:
+E         12000
+E         Extra items in the right set:
+E         128000
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:410: AssertionError
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.pipeline.localized_repair:localized_repair.py:1187 extraction json repair returned valid JSON that does not preserve the malformed reply's content (?); refusing it and falling back to deterministic salvage.
+_ test_g9_with_nothing_configured_every_stage_requests_128000[localized_repair.rows] _
+
+name = 'localized_repair.rows'
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_with_nothing_configure14')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x000002485C4844B0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002485C487310>
+
+    @pytest.mark.parametrize("name", sorted(STAGES))
+    def test_g9_with_nothing_configured_every_stage_requests_128000(
+        name: str, tmp_path: Path, wire: _Wire, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """No budget variable at all: the code default is 128,000 (D-105 § 1)."""
+    
+        monkeypatch.delenv("LLM_MAX_TOKENS")
+>       assert set(_drive(name, tmp_path, wire).budgets()) == {CODE_DEFAULT}
+E       assert {4000} == {128000}
+E         
+E         Extra items in the left set:
+E         4000
+E         Extra items in the right set:
+E         128000
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:410: AssertionError
+_ test_g9_with_nothing_configured_every_stage_requests_128000[map_ids.alias] __
+
+name = 'map_ids.alias'
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_with_nothing_configure15')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x000002485C413E00>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002485C412C80>
+
+    @pytest.mark.parametrize("name", sorted(STAGES))
+    def test_g9_with_nothing_configured_every_stage_requests_128000(
+        name: str, tmp_path: Path, wire: _Wire, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """No budget variable at all: the code default is 128,000 (D-105 § 1)."""
+    
+        monkeypatch.delenv("LLM_MAX_TOKENS")
+>       assert set(_drive(name, tmp_path, wire).budgets()) == {CODE_DEFAULT}
+E       assert {300} == {128000}
+E         
+E         Extra items in the left set:
+E         300
+E         Extra items in the right set:
+E         128000
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:410: AssertionError
+_ test_g9_with_nothing_configured_every_stage_requests_128000[map_ids.species] _
+
+name = 'map_ids.species'
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_with_nothing_configure16')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x000002485C4EC8A0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002485C4ED320>
+
+    @pytest.mark.parametrize("name", sorted(STAGES))
+    def test_g9_with_nothing_configured_every_stage_requests_128000(
+        name: str, tmp_path: Path, wire: _Wire, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """No budget variable at all: the code default is 128,000 (D-105 § 1)."""
+    
+        monkeypatch.delenv("LLM_MAX_TOKENS")
+>       assert set(_drive(name, tmp_path, wire).budgets()) == {CODE_DEFAULT}
+E       assert {450} == {128000}
+E         
+E         Extra items in the left set:
+E         450
+E         Extra items in the right set:
+E         128000
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:410: AssertionError
+___ test_g9_with_nothing_configured_every_stage_requests_128000[overwatch] ____
+
+name = 'overwatch'
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_with_nothing_configure17')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x000002485C4EDA90>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002485C4EDB00>
+
+    @pytest.mark.parametrize("name", sorted(STAGES))
+    def test_g9_with_nothing_configured_every_stage_requests_128000(
+        name: str, tmp_path: Path, wire: _Wire, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """No budget variable at all: the code default is 128,000 (D-105 § 1)."""
+    
+        monkeypatch.delenv("LLM_MAX_TOKENS")
+>       assert set(_drive(name, tmp_path, wire).budgets()) == {CODE_DEFAULT}
+E       assert {2600} == {128000}
+E         
+E         Extra items in the left set:
+E         2600
+E         Extra items in the right set:
+E         128000
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:410: AssertionError
+_ test_g9_with_nothing_configured_every_stage_requests_128000[pathwhiz_converter.llm_plan] _
+
+name = 'pathwhiz_converter.llm_plan'
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_with_nothing_configure18')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x000002485C4EDC50>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002485C4ED400>
+
+    @pytest.mark.parametrize("name", sorted(STAGES))
+    def test_g9_with_nothing_configured_every_stage_requests_128000(
+        name: str, tmp_path: Path, wire: _Wire, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """No budget variable at all: the code default is 128,000 (D-105 § 1)."""
+    
+        monkeypatch.delenv("LLM_MAX_TOKENS")
+>       assert set(_drive(name, tmp_path, wire).budgets()) == {CODE_DEFAULT}
+E       assert {2400} == {128000}
+E         
+E         Extra items in the left set:
+E         2400
+E         Extra items in the right set:
+E         128000
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:410: AssertionError
+__ test_g9_with_nothing_configured_every_stage_requests_128000[preprocessor] __
+
+name = 'preprocessor'
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_with_nothing_configure19')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x000002485C4EC050>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002485C4EC2F0>
+
+    @pytest.mark.parametrize("name", sorted(STAGES))
+    def test_g9_with_nothing_configured_every_stage_requests_128000(
+        name: str, tmp_path: Path, wire: _Wire, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """No budget variable at all: the code default is 128,000 (D-105 § 1)."""
+    
+        monkeypatch.delenv("LLM_MAX_TOKENS")
+>       assert set(_drive(name, tmp_path, wire).budgets()) == {CODE_DEFAULT}
+E       assert {10000} == {128000}
+E         
+E         Extra items in the left set:
+E         10000
+E         Extra items in the right set:
+E         128000
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:410: AssertionError
+_ test_g9_with_nothing_configured_every_stage_requests_128000[rag.prose_extraction] _
+
+name = 'rag.prose_extraction'
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_with_nothing_configure20')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x000002485C4ECC90>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002485C4ED8D0>
+
+    @pytest.mark.parametrize("name", sorted(STAGES))
+    def test_g9_with_nothing_configured_every_stage_requests_128000(
+        name: str, tmp_path: Path, wire: _Wire, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """No budget variable at all: the code default is 128,000 (D-105 § 1)."""
+    
+        monkeypatch.delenv("LLM_MAX_TOKENS")
+>       assert set(_drive(name, tmp_path, wire).budgets()) == {CODE_DEFAULT}
+E       assert {1500} == {128000}
+E         
+E         Extra items in the left set:
+E         1500
+E         Extra items in the right set:
+E         128000
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:410: AssertionError
+__ test_g9_with_nothing_configured_every_stage_requests_128000[stoich.agent] __
+
+name = 'stoich.agent'
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_with_nothing_configure21')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x000002485C4EC3D0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002485C4ED0F0>
+
+    @pytest.mark.parametrize("name", sorted(STAGES))
+    def test_g9_with_nothing_configured_every_stage_requests_128000(
+        name: str, tmp_path: Path, wire: _Wire, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """No budget variable at all: the code default is 128,000 (D-105 § 1)."""
+    
+        monkeypatch.delenv("LLM_MAX_TOKENS")
+>       assert set(_drive(name, tmp_path, wire).budgets()) == {CODE_DEFAULT}
+E       assert {None, 300} == {128000}
+E         
+E         Extra items in the left set:
+E         None
+E         300
+E         Extra items in the right set:
+E         128000
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:410: AssertionError
+_ test_g9_with_nothing_configured_every_stage_requests_128000[stoich.classifier] _
+
+name = 'stoich.classifier'
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_with_nothing_configure22')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x000002485C4EDDA0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002485C4ECDE0>
+
+    @pytest.mark.parametrize("name", sorted(STAGES))
+    def test_g9_with_nothing_configured_every_stage_requests_128000(
+        name: str, tmp_path: Path, wire: _Wire, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """No budget variable at all: the code default is 128,000 (D-105 § 1)."""
+    
+        monkeypatch.delenv("LLM_MAX_TOKENS")
+>       assert set(_drive(name, tmp_path, wire).budgets()) == {CODE_DEFAULT}
+E       assert {300} == {128000}
+E         
+E         Extra items in the left set:
+E         300
+E         Extra items in the right set:
+E         128000
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:410: AssertionError
+__________ test_g9_an_unusable_budget_falls_back_to_the_code_default __________
+
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_an_unusable_budget_fal0')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x000002485C4EC280>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002485C4ECE50>
+
+    def test_g9_an_unusable_budget_falls_back_to_the_code_default(
+        tmp_path: Path, wire: _Wire, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        for bad in ("lots", "0", "-5"):
+            monkeypatch.setenv("LLM_MAX_TOKENS", bad)
+>           assert set(_drive("preprocessor", tmp_path, wire).budgets()) == {CODE_DEFAULT}, bad
+E           AssertionError: lots
+E           assert {10000} == {128000}
+E             
+E             Extra items in the left set:
+E             10000
+E             Extra items in the right set:
+E             128000
+E             Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:418: AssertionError
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.pipeline.preprocessor:preprocessor.py:84 Invalid Stage 0 token budget 'lots'; using 10000.
+____________ test_g9_the_stage_variables_feed_their_stage_defaults ____________
+
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_the_stage_variables_fe0')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x000002485C413E00>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002485C4EC0C0>
+
+    def test_g9_the_stage_variables_feed_their_stage_defaults(
+        tmp_path: Path, wire: _Wire, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """Extraction and inference read their own variable when the caller passes nothing."""
+    
+        monkeypatch.setenv("OPENROUTER_EXTRACTION_MAX_TOKENS", "40000")
+        monkeypatch.setenv("OPENROUTER_INFERENCE_MAX_TOKENS", "60000")
+>       assert set(_drive("extraction", tmp_path, wire).budgets()) == {40_000}
+E       assert {12000} == {40000}
+E         
+E         Extra items in the left set:
+E         12000
+E         Extra items in the right set:
+E         40000
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:429: AssertionError
+__________ test_g9_extraction_is_clamped_to_its_fallback_models_cap ___________
+
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_extraction_is_clamped_0')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x000002485C5172A0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002485C517AF0>
+
+    def test_g9_extraction_is_clamped_to_its_fallback_models_cap(
+        tmp_path: Path, wire: _Wire, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """The ladder can fail over to gemini (65,536), so the deepseek request is clamped too."""
+    
+        from t2pw.pipeline.pipeline import run_extraction_pipeline
+    
+        monkeypatch.setenv("OPENROUTER_EXTRACTION_MODEL", DEEPSEEK)
+        monkeypatch.setenv("OPENROUTER_EXTRACTION_FALLBACK_MODEL", GEMINI)
+        monkeypatch.setenv("OPENROUTER_EXTRACTION_MAX_TOKENS", "128000")
+>       assert set(_drive("extraction", tmp_path, wire).budgets()) == {65_536}
+E       assert {12000} == {65536}
+E         
+E         Extra items in the left set:
+E         12000
+E         Extra items in the right set:
+E         65536
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:444: AssertionError
+___________ test_g9_an_unlisted_model_gets_the_smallest_listed_cap ____________
+
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_an_unlisted_model_gets0')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x000002485C484C20>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002485C4862E0>
+
+    def test_g9_an_unlisted_model_gets_the_smallest_listed_cap(
+        tmp_path: Path, wire: _Wire, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """The open-question rule (ORCH-757-RESULT): unknown model -> 65,536, the tightest known cap."""
+    
+        monkeypatch.setenv("OPENROUTER_MODEL", "example/unlisted-model")
+        monkeypatch.setenv("LLM_MAX_TOKENS", "128000")
+>       assert set(_drive("audit", tmp_path, wire).budgets()) == {65_536}
+E       assert {3200} == {65536}
+E         
+E         Extra items in the left set:
+E         3200
+E         Extra items in the right set:
+E         65536
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:472: AssertionError
+_________ test_g9_the_truncation_retry_is_not_capped_below_the_budget _________
+
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_the_truncation_retry_i0')
+wire = <test_orch757_llm_token_budgets._Wire object at 0x000002485C485550>
+
+    def test_g9_the_truncation_retry_is_not_capped_below_the_budget(
+        tmp_path: Path, wire: _Wire
+    ) -> None:
+        """Stage 2's length retry escalated to ``min(24000, 1.5x)``: with the UI's 64,000 it
+        SHRANK to 24,000. Now it grows 1.5x, bounded only by the model's cap.
+    
+        The reply is ORCH-755's measured shape: an EMPTY completion with
+        ``finish_reason=length``. An empty reply gets no localized repair, so the parse error
+        ("Expecting value") is the last error and the truncation branch is taken."""
+    
+        from t2pw.pipeline.pipeline import PipelineFailure, run_stage_two_with_chunking
+    
+        wire.reply, wire.finish_reason = "", "length"
+        with pytest.raises(PipelineFailure):
+            run_stage_two_with_chunking(TEXT, _payload(), enable_chunking=False, max_tokens=64_000)
+        budgets = wire.budgets()
+        assert budgets[0] == 64_000
+>       assert budgets[-1] == 96_000, budgets
+E       AssertionError: [64000, 64000, 24000, 24000]
+E       assert 24000 == 96000
+
+tests\test_orch757_llm_token_budgets.py:494: AssertionError
+------------------------------ Captured log call ------------------------------
+ERROR    t2pw.llm.client:client.py:746 LLM returned an empty completion for Stage 2 inference (model deepseek/deepseek-v4-flash, finish_reason=length) on 1 of 1 attempts; giving up and returning the empty string for the caller's own empty-reply handling.
+ERROR    t2pw.llm.client:client.py:746 LLM returned an empty completion for Stage 2 inference (model deepseek/deepseek-v4-flash, finish_reason=length) on 1 of 1 attempts; giving up and returning the empty string for the caller's own empty-reply handling.
+WARNING  t2pw.pipeline.pipeline:pipeline.py:511 Stage-2 inference failed for chunk 1 (0-17).
+ERROR    t2pw.llm.client:client.py:746 LLM returned an empty completion for Stage 2 inference (model deepseek/deepseek-v4-flash, finish_reason=length) on 1 of 1 attempts; giving up and returning the empty string for the caller's own empty-reply handling.
+ERROR    t2pw.llm.client:client.py:746 LLM returned an empty completion for Stage 2 inference (model deepseek/deepseek-v4-flash, finish_reason=length) on 1 of 1 attempts; giving up and returning the empty string for the caller's own empty-reply handling.
+______ test_g9_app_audit_gap_curator_and_overwatch_sites_read_the_budget ______
+
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_app_audit_gap_curator_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002485C517620>
+
+    def test_g9_app_audit_gap_curator_and_overwatch_sites_read_the_budget(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """``streamlit_app.py`` audit (base ``min(8000, 3600+700r)`` / ``min(10000, +offset)``,
+        deterministic scoring 1200), gap resolver (``min(1400, 700+120r)``), curator (2000),
+        overwatch (3000): each now hands its stage the configured budget, and the round record
+        says so."""
+    
+        result, seen = _app_harness(tmp_path, monkeypatch)
+        audits = seen["run_audit"]
+        llm_audits = [k["llm_max_tokens"] for k in audits if k["use_llm"]]
+        scoring = [k["llm_max_tokens"] for k in audits if not k["use_llm"]]
+>       assert llm_audits == [CONFIGURED, CONFIGURED]
+E       assert [3600, 4100] == [50000, 50000]
+E         
+E         At index 0 diff: 3600 != 50000
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:549: AssertionError
+____________ test_g9_app_fallback_candidate_sites_read_the_budget _____________
+
+tmp_path = WindowsPath('C:/t/bt-orch757/13-affected-c2-reordered-at-base-881/test_g9_app_fallback_candidate0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002485C5170E0>
+
+    def test_g9_app_fallback_candidate_sites_read_the_budget(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """The timed-out-round fallback (two deterministic audits at 1200, recorded as 1200)."""
+    
+        ticks = iter([0.0, 0.0])  # loop start and the round check; every later read is late
+        clock = types.SimpleNamespace(time=lambda: next(ticks, 10_000.0))
+        result, seen = _app_harness(tmp_path, monkeypatch, clock=clock)
+        audits = seen["run_audit"]
+        assert [k["use_llm"] for k in audits] == [False, False], "the fallback path was not reached"
+>       assert [k["llm_max_tokens"] for k in audits] == [CONFIGURED, CONFIGURED]
+E       assert [1200, 1200] == [50000, 50000]
+E         
+E         At index 0 diff: 1200 != 50000
+E         Use -v to get more diff
+
+tests\test_orch757_llm_token_budgets.py:567: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_llm_client_request_timeout.py::test_a_timeout_raises_the_distinct_outcome_inside_the_computed_bound
+FAILED tests/test_llm_client_request_timeout.py::test_d_a_timeout_is_never_filed_as_an_empty_completion
+FAILED tests/test_llm_client_request_timeout.py::test_d_a_budget_spent_on_timeouts_is_not_the_empty_string_exit
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_every_stage_requests_llm_max_tokens[audit]
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_every_stage_requests_llm_max_tokens[client.chat]
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_every_stage_requests_llm_max_tokens[client.chat_with_tools]
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_every_stage_requests_llm_max_tokens[completeness]
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_every_stage_requests_llm_max_tokens[curator]
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_every_stage_requests_llm_max_tokens[extraction]
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_every_stage_requests_llm_max_tokens[extraction.demo]
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_every_stage_requests_llm_max_tokens[focused_repair]
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_every_stage_requests_llm_max_tokens[gap.species]
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_every_stage_requests_llm_max_tokens[inference]
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_every_stage_requests_llm_max_tokens[inference.chunking]
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_every_stage_requests_llm_max_tokens[interactive_curator]
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_every_stage_requests_llm_max_tokens[legacy_sbml_pipeline]
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_every_stage_requests_llm_max_tokens[localized_repair.json]
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_every_stage_requests_llm_max_tokens[localized_repair.rows]
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_every_stage_requests_llm_max_tokens[map_ids.alias]
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_every_stage_requests_llm_max_tokens[map_ids.species]
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_every_stage_requests_llm_max_tokens[overwatch]
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_every_stage_requests_llm_max_tokens[pathwhiz_converter.llm_plan]
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_every_stage_requests_llm_max_tokens[rag.prose_extraction]
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_every_stage_requests_llm_max_tokens[stoich.agent]
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_every_stage_requests_llm_max_tokens[stoich.classifier]
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_with_nothing_configured_every_stage_requests_128000[audit]
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_with_nothing_configured_every_stage_requests_128000[client.chat]
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_with_nothing_configured_every_stage_requests_128000[client.chat_with_tools]
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_with_nothing_configured_every_stage_requests_128000[completeness]
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_with_nothing_configured_every_stage_requests_128000[curator]
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_with_nothing_configured_every_stage_requests_128000[extraction]
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_with_nothing_configured_every_stage_requests_128000[extraction.demo]
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_with_nothing_configured_every_stage_requests_128000[focused_repair]
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_with_nothing_configured_every_stage_requests_128000[gap.species]
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_with_nothing_configured_every_stage_requests_128000[inference]
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_with_nothing_configured_every_stage_requests_128000[inference.chunking]
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_with_nothing_configured_every_stage_requests_128000[interactive_curator]
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_with_nothing_configured_every_stage_requests_128000[legacy_sbml_pipeline]
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_with_nothing_configured_every_stage_requests_128000[localized_repair.json]
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_with_nothing_configured_every_stage_requests_128000[localized_repair.rows]
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_with_nothing_configured_every_stage_requests_128000[map_ids.alias]
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_with_nothing_configured_every_stage_requests_128000[map_ids.species]
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_with_nothing_configured_every_stage_requests_128000[overwatch]
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_with_nothing_configured_every_stage_requests_128000[pathwhiz_converter.llm_plan]
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_with_nothing_configured_every_stage_requests_128000[preprocessor]
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_with_nothing_configured_every_stage_requests_128000[rag.prose_extraction]
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_with_nothing_configured_every_stage_requests_128000[stoich.agent]
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_with_nothing_configured_every_stage_requests_128000[stoich.classifier]
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_an_unusable_budget_falls_back_to_the_code_default
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_the_stage_variables_feed_their_stage_defaults
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_extraction_is_clamped_to_its_fallback_models_cap
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_an_unlisted_model_gets_the_smallest_listed_cap
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_the_truncation_retry_is_not_capped_below_the_budget
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_app_audit_gap_curator_and_overwatch_sites_read_the_budget
+FAILED tests/test_orch757_llm_token_budgets.py::test_g9_app_fallback_candidate_sites_read_the_budget
+55 failed, 492 passed in 7.14s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch757\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 2aebbfe019ccd53a832141ed3536153a0b3235f8  [git, worktree dirty=True]
+label                   : affected-c2-reordered-at-base
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-757/13-affected-c2-reordered-at-base.pin.json -q --basetemp=C:/t/bt-orch757/13-affected-c2-reordered-at-base-881 tests/test_identity_evidence_hydration.py tests/test_identity_hydration_regression.py tests/test_interactive_curator.py tests/test_llm_client_empty_completion_retry.py tests/test_llm_client_request_timeout.py tests/test_localized_repair.py tests/test_locked_noop_quarantine_policy.py tests/test_map_ids.py tests/test_map_ids_mapping_lineage.py tests/test_orch754c_curator_prompt_reverted.py tests/test_orch757_llm_token_budgets.py tests/test_pathbank_unknown_fallback.py tests/test_pipeline_cleanup.py tests/test_pipeline_lineage_carrier.py tests/test_prefreeze_compound_resolution.py tests/test_prefreeze_third_export_seam.py tests/test_preprocessor.py tests/test_probe_decimal_normalization.py tests/test_probe_json_repair_deletion.py tests/test_probe_row_field_exactness.py tests/test_process_normalizer.py tests/test_gap_resolver.py tests/test_gap_resolver_agent_tools.py tests/test_gap_resolver_biological_state_resolution.py tests/test_gap_resolver_lineage.py tests/test_gap_resolver_stage3_issues.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch757
+root PID / process group: 1027248 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 8.55 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  1027172:python.exe
+descendants terminated  : 1  1027172
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch757\docs\pwml_recovery_sprint\evidence\g11\ORCH-757\13-affected-c2-reordered-at-base.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================

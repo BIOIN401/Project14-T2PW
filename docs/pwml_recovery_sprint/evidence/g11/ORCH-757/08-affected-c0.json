@@ -1,0 +1,248 @@
+{
+  "label": "affected-c0",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-757/08-affected-c0.pin.json",
+    "-q",
+    "--basetemp=C:/t/bt-orch757/08-affected-c0-13743",
+    "tests/test_adversarial_actor_entity_type.py",
+    "tests/test_adversarial_json_repair_guard.py",
+    "tests/test_adversarial_row_repair_deletion.py",
+    "tests/test_apply_audit_patch_referential_integrity.py",
+    "tests/test_attempt_cap_termination_reason.py",
+    "tests/test_audit_json_llm_payload.py",
+    "tests/test_batch_research_gate_fail_open.py",
+    "tests/test_c011_freeze_seam_golden_equivalence.py",
+    "tests/test_c030_canonical_identity_fallback.py",
+    "tests/test_c030a_object_sharing_at_the_freeze_seam.py",
+    "tests/test_c060a_requested_pathway_wiring.py",
+    "tests/test_c064_round_cap_reason.py",
+    "tests/test_c073_identity_admission.py",
+    "tests/test_c075_source_support_armed.py",
+    "tests/test_c078_refusal_durable_through_resolution.py",
+    "tests/test_c079_interactive_prompt_allowlist.py",
+    "tests/test_c081_cofactor_role_identity.py",
+    "tests/test_c082_post_pipeline_seam.py",
+    "tests/test_c082_species_rename_declination.py",
+    "tests/test_c083_inner_timeout_row.py",
+    "tests/test_c086_superset_complex_promotion.py",
+    "tests/test_c087_prefreeze_declination_demotes_release_status.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch757",
+  "started_at": "2026-10-22T02:55:32+00:00",
+  "finished_at": "2026-10-22T02:56:19+00:00",
+  "duration_seconds": 46.75152999999409,
+  "timeout_seconds": 540.0,
+  "root_pid": 1020072,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 1020600,
+      "name": "python.exe",
+      "ppid": 1020072
+    },
+    {
+      "pid": 1016256,
+      "name": "git.exe",
+      "ppid": 1020600
+    },
+    {
+      "pid": 1015024,
+      "name": "git.exe",
+      "ppid": 1020600
+    },
+    {
+      "pid": 1018600,
+      "name": "python.exe",
+      "ppid": 1020600
+    },
+    {
+      "pid": 1019560,
+      "name": "python.exe",
+      "ppid": 1018600
+    },
+    {
+      "pid": 1009252,
+      "name": "python.exe",
+      "ppid": 1018948
+    },
+    {
+      "pid": 1018948,
+      "name": "python.exe",
+      "ppid": 1020600
+    },
+    {
+      "pid": 1017316,
+      "name": "git.exe",
+      "ppid": 1009252
+    },
+    {
+      "pid": 1021392,
+      "name": "python.exe",
+      "ppid": 1020600
+    },
+    {
+      "pid": 1021412,
+      "name": "python.exe",
+      "ppid": 1021392
+    },
+    {
+      "pid": 1021460,
+      "name": "python.exe",
+      "ppid": 1020600
+    },
+    {
+      "pid": 1021480,
+      "name": "python.exe",
+      "ppid": 1021460
+    },
+    {
+      "pid": 1021500,
+      "name": "python.exe",
+      "ppid": 1020600
+    },
+    {
+      "pid": 1021520,
+      "name": "python.exe",
+      "ppid": 1021500
+    },
+    {
+      "pid": 1021556,
+      "name": "python.exe",
+      "ppid": 1020600
+    },
+    {
+      "pid": 1021576,
+      "name": "python.exe",
+      "ppid": 1021556
+    },
+    {
+      "pid": 1021596,
+      "name": "git.exe",
+      "ppid": 1020600
+    },
+    {
+      "pid": 1021728,
+      "name": "git.exe",
+      "ppid": 1020600
+    },
+    {
+      "pid": 1021816,
+      "name": "git.exe",
+      "ppid": 1020600
+    },
+    {
+      "pid": 1003796,
+      "name": "git.exe",
+      "ppid": 1020600
+    },
+    {
+      "pid": 1021036,
+      "name": "git.exe",
+      "ppid": 1020600
+    },
+    {
+      "pid": 1016680,
+      "name": "git.exe",
+      "ppid": 1020600
+    }
+  ],
+  "descendants_terminated": [
+    1003796,
+    1009252,
+    1015024,
+    1016256,
+    1016680,
+    1017316,
+    1018600,
+    1018948,
+    1019560,
+    1020600,
+    1021036,
+    1021392,
+    1021412,
+    1021460,
+    1021480,
+    1021500,
+    1021520,
+    1021556,
+    1021576,
+    1021596,
+    1021728,
+    1021816
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 965236,
+      "name": "python.exe"
+    },
+    {
+      "pid": 968864,
+      "name": "python.exe"
+    },
+    {
+      "pid": 977424,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1009112,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1009864,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1013048,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1013664,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1013700,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1019572,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1020324,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch757\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-757\\08-affected-c0.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch757\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch757",
+    "repo_head": "2aebbfe019ccd53a832141ed3536153a0b3235f8",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

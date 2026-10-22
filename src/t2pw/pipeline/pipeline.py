@@ -6,7 +6,7 @@ from copy import deepcopy
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
-from t2pw.llm.client import chat, chat_detailed
+from t2pw.llm.client import chat, chat_detailed, configured_max_tokens
 from t2pw.paths import PROMPTS_DIR, TMP_DIR
 from t2pw.pipeline.enzyme_cues import (
     MAX_INJECTOR_EVIDENCE_CHARS,
@@ -112,7 +112,6 @@ def run_legacy_sbml_pipeline(
         audit_patch,
         use_llm=use_llm_audit,
         llm_temperature=0.0,
-        llm_max_tokens=3600,
     )
     run_apply(
         input_path,
@@ -145,7 +144,6 @@ def run_legacy_sbml_pipeline(
             sbml_report_json,
             sbml_overwatch_report,
             use_llm=True,
-            llm_max_tokens=3000,
         )
 
     return {
@@ -253,7 +251,7 @@ def run_extraction_pipeline(
     user_task_context: Optional[str] = None,
     max_attempts: int = 2,
     temperature: float = 0.0,
-    max_tokens: int = 12000,
+    max_tokens: Optional[int] = None,
     draws: Optional[int] = None,
 ) -> Tuple[Dict[str, Any], AttemptLogs]:
     """
@@ -273,6 +271,8 @@ def run_extraction_pipeline(
     """
     if is_ambiguous_multi_example_review_context(pathway_context):
         raise _ambiguous_review_scope_failure(pathway_context)
+    if max_tokens is None:
+        max_tokens = configured_max_tokens("OPENROUTER_EXTRACTION_MAX_TOKENS")
 
     def _draw() -> Tuple[Dict[str, Any], AttemptLogs]:
         return _run_json_stage(
@@ -394,13 +394,15 @@ def run_inference_pipeline(
     chunk_relevance_score: Optional[float] = None,
     max_attempts: int = 2,
     temperature: float = 0.0,
-    max_tokens: int = 10000,
+    max_tokens: Optional[int] = None,
 ) -> Tuple[Dict[str, Any], AttemptLogs]:
     """
     Stage 2: inference/enrichment pass. Uses Stage-1 output as context and retries if JSON is invalid.
     """
     if is_ambiguous_multi_example_review_context(pathway_context):
         raise _ambiguous_review_scope_failure(pathway_context)
+    if max_tokens is None:
+        max_tokens = configured_max_tokens("OPENROUTER_INFERENCE_MAX_TOKENS")
 
     stage_one_str = json.dumps(stage_one, indent=2, ensure_ascii=False)
     return _run_json_stage(
@@ -437,7 +439,7 @@ def run_stage_two_with_chunking(
     chunk_overlap: int = 1200,
     max_attempts: int = 2,
     temperature: float = 0.0,
-    max_tokens: int = 10000,
+    max_tokens: Optional[int] = None,
     compact_stage_one: bool = True,
     retry_on_failure: bool = True,
     retry_max_tokens: Optional[int] = None,
@@ -449,6 +451,8 @@ def run_stage_two_with_chunking(
     """
     if is_ambiguous_multi_example_review_context(pathway_context):
         raise _ambiguous_review_scope_failure(pathway_context)
+    if max_tokens is None:
+        max_tokens = configured_max_tokens("OPENROUTER_INFERENCE_MAX_TOKENS")
 
     chunks: List[Dict[str, Any]] = []
 
@@ -582,11 +586,13 @@ def run_stage_two_with_chunking(
 def _default_retry_tokens(max_tokens: int, attempts: AttemptLogs) -> int:
     """
     Pick retry token budget based on observed failure mode.
-    - If JSON appears truncated, increase token budget.
+    - If JSON appears truncated, increase token budget. No absolute ceiling: it
+      was 24,000, which SHRANK a 64,000 retry (D-105); the client clamps every
+      request to the max completion of the models it can reach.
     - Otherwise keep a conservative smaller retry.
     """
     if _looks_truncated_json_failure(attempts):
-        return min(24000, max(max_tokens + 800, int(max_tokens * 1.5)))
+        return max(max_tokens + 800, int(max_tokens * 1.5))
     return max(200, int(max_tokens * 0.6))
 
 
@@ -683,7 +689,7 @@ def run_stage_two_with_feedback_loop(
     chunk_overlap: int = 1200,
     max_attempts: int = 2,
     temperature: float = 0.0,
-    max_tokens: int = 10000,
+    max_tokens: Optional[int] = None,
     compact_stage_one: bool = True,
     retry_on_failure: bool = True,
     retry_max_tokens: Optional[int] = None,
@@ -2653,7 +2659,7 @@ def run_stage_one_with_chunking(
     chunk_overlap: int = 1200,
     max_attempts: int = 2,
     temperature: float = 0.0,
-    max_tokens: int = 12000,
+    max_tokens: Optional[int] = None,
 ) -> Tuple[Dict[str, Any], List[Dict[str, Any]]]:
     """
     Optionally chunk the input text before running Stage 1 extraction. Returns the merged JSON

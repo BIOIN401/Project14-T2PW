@@ -3813,7 +3813,7 @@ def run_post_pipeline_sbml_artifacts(
             round_input_hash = _payload_file_hash(current_input)
 
             base_temperature = min(0.65, 0.15 * (round_idx - 1))
-            base_max_tokens = min(8000, 3600 + 700 * (round_idx - 1))
+            base_max_tokens = llm_client_module.configured_max_tokens()
             temp_offsets = [0.0, 0.14, 0.28, 0.40, 0.50]
             token_offsets = [0, 500, 900, 1300, 1700]
             candidate_count = 1 if not use_llm_audit else min(max_candidates, len(temp_offsets))
@@ -3846,7 +3846,7 @@ def run_post_pipeline_sbml_artifacts(
                     timed_out_mid_round = True
                     break
                 cand_temperature = min(0.9, base_temperature + temp_offsets[cand_idx])
-                cand_max_tokens = min(10000, base_max_tokens + token_offsets[cand_idx])
+                cand_max_tokens = base_max_tokens
                 cand_suffix = f"round{round_idx}.cand{cand_idx + 1}"
                 cand_audit_report = tmp / f"audit_report.{cand_suffix}.json"
                 cand_audit_patch = tmp / f"audit_patch.{cand_suffix}.json"
@@ -3878,7 +3878,7 @@ def run_post_pipeline_sbml_artifacts(
                     cand_eval_patch,
                     use_llm=False,
                     llm_temperature=0.0,
-                    llm_max_tokens=1200,
+                    llm_max_tokens=base_max_tokens,
                     context_note="deterministic post-apply scoring",
                 )
 
@@ -3931,7 +3931,7 @@ def run_post_pipeline_sbml_artifacts(
                     cand_audit_patch,
                     use_llm=False,
                     llm_temperature=0.0,
-                    llm_max_tokens=1200,
+                    llm_max_tokens=base_max_tokens,
                     context_note="fallback deterministic audit after timeout/empty candidate set",
                     retrieval_context="",
                 )
@@ -3948,7 +3948,7 @@ def run_post_pipeline_sbml_artifacts(
                     cand_eval_patch,
                     use_llm=False,
                     llm_temperature=0.0,
-                    llm_max_tokens=1200,
+                    llm_max_tokens=base_max_tokens,
                     context_note="deterministic fallback scoring",
                     retrieval_context="",
                 )
@@ -3970,7 +3970,7 @@ def run_post_pipeline_sbml_artifacts(
                     {
                         "index": 1,
                         "temperature": 0.0,
-                        "max_tokens": 1200,
+                        "max_tokens": base_max_tokens,
                         "score": list(score),
                         "audit_error_count": int(cand_audit_summary.get("error_count", 0)),
                         "audit_warning_count": int(cand_audit_summary.get("warning_count", 0)),
@@ -4002,7 +4002,7 @@ def run_post_pipeline_sbml_artifacts(
 
             if use_gap_resolver and not timed_out_mid_round:
                 gap_temp = min(0.45, 0.05 + 0.08 * (round_idx - 1))
-                gap_tokens = min(1400, 700 + 120 * (round_idx - 1))
+                gap_tokens = llm_client_module.configured_max_tokens()
                 gap_report_round = run_gap_resolution(
                     round_audited,
                     round_resolved,
@@ -4237,7 +4237,7 @@ def run_post_pipeline_sbml_artifacts(
                 pathway_name=str(_meta.get("pathway_name", "") or ""),
                 organism=str(_meta.get("organism", "") or ""),
                 llm_temperature=0.2,
-                llm_max_tokens=2000,
+                llm_max_tokens=llm_client_module.configured_max_tokens(),
             )
             # Use curated output as input to mapping only if patches were accepted
             if int(_safe_dict(curator_report.get("summary", {})).get("patches_accepted", 0)) > 0:
@@ -4397,7 +4397,7 @@ def run_post_pipeline_sbml_artifacts(
                     sbml_report_json_path,
                     sbml_overwatch_path,
                     use_llm=True,
-                    llm_max_tokens=3000,
+                    llm_max_tokens=llm_client_module.configured_max_tokens(),
                 )
             try:
                 render_artifacts = build_render_artifacts(str(sbml_path))

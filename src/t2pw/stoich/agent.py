@@ -9,7 +9,7 @@ from xml.etree import ElementTree
 
 import requests
 
-from t2pw.llm.client import _client, _model
+from t2pw.llm.client import _client, _model, request_max_tokens
 from t2pw.stoich.classifier import classify_reaction
 from t2pw.stoich.templates import REACTION_TEMPLATES
 
@@ -411,6 +411,8 @@ def run_stoich_agent(
     working = copy.deepcopy(mapped_json)
     audit_log: list[dict] = []
     deadline = time.time() + timeout_seconds
+    # This agent calls the SDK directly, so it reads the D-105 budget itself.
+    max_tokens = request_max_tokens(None, model=_model)
 
     for reaction in working.get("processes", {}).get("reactions", []):
         if time.time() >= deadline:
@@ -479,6 +481,7 @@ def run_stoich_agent(
                 messages=messages,
                 tools=STOICH_TOOLS,
                 temperature=temperature,
+                max_tokens=max_tokens,
             )
 
             choice = response.choices[0]
@@ -565,7 +568,7 @@ def run_stoich_agent(
                     },
                 ],
                 temperature=0.0,
-                max_tokens=300,
+                max_tokens=max_tokens,
             )
             av = _parse_json_from_text(audit_response.choices[0].message.content or "").get("verdict", "uncertain")
             if av not in ("correct", "incorrect", "uncertain"):
@@ -593,7 +596,7 @@ def run_stoich_agent(
                     },
                 ],
                 temperature=0.0,
-                max_tokens=300,
+                max_tokens=max_tokens,
             )
             av = _parse_json_from_text(audit_response.choices[0].message.content or "").get("verdict", "uncertain")
             if av not in ("correct", "incorrect", "uncertain"):

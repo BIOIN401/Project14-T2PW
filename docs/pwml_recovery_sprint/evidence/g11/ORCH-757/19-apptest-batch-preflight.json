@@ -1,0 +1,215 @@
+{
+  "label": "apptest-batch-preflight",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-757/19-apptest-batch-preflight.pin.json",
+    "-q",
+    "--basetemp=C:/t/bt-orch757/19-apptest-batch-preflight-3061",
+    "tests/test_batch_preflight.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch757",
+  "started_at": "2026-10-22T03:04:17+00:00",
+  "finished_at": "2026-10-22T03:04:29+00:00",
+  "duration_seconds": 11.415356099998462,
+  "timeout_seconds": 540.0,
+  "root_pid": 1028432,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 1030516,
+      "name": "python.exe",
+      "ppid": 1028432
+    },
+    {
+      "pid": 1027628,
+      "name": "python.exe",
+      "ppid": 1030516
+    },
+    {
+      "pid": 1030172,
+      "name": "python.exe",
+      "ppid": 1027628
+    },
+    {
+      "pid": 1027196,
+      "name": "python.exe",
+      "ppid": 1030428
+    },
+    {
+      "pid": 1030428,
+      "name": "python.exe",
+      "ppid": 1030516
+    },
+    {
+      "pid": 1024924,
+      "name": "python.exe",
+      "ppid": 1030516
+    },
+    {
+      "pid": 1025360,
+      "name": "python.exe",
+      "ppid": 1030516
+    },
+    {
+      "pid": 1030696,
+      "name": "python.exe",
+      "ppid": 1025360
+    },
+    {
+      "pid": 1030512,
+      "name": "python.exe",
+      "ppid": 1030712
+    },
+    {
+      "pid": 1030712,
+      "name": "python.exe",
+      "ppid": 1030516
+    },
+    {
+      "pid": 4916,
+      "name": "python.exe",
+      "ppid": 1030328
+    },
+    {
+      "pid": 1030328,
+      "name": "python.exe",
+      "ppid": 1030516
+    },
+    {
+      "pid": 1030164,
+      "name": "python.exe",
+      "ppid": 1030516
+    },
+    {
+      "pid": 1030968,
+      "name": "python.exe",
+      "ppid": 1030164
+    },
+    {
+      "pid": 1030312,
+      "name": "python.exe",
+      "ppid": 1030572
+    },
+    {
+      "pid": 1030572,
+      "name": "python.exe",
+      "ppid": 1030968
+    },
+    {
+      "pid": 14304,
+      "name": "python.exe",
+      "ppid": 1030516
+    },
+    {
+      "pid": 1024360,
+      "name": "python.exe",
+      "ppid": 14304
+    },
+    {
+      "pid": 1030596,
+      "name": "python.exe",
+      "ppid": 1024360
+    },
+    {
+      "pid": 982724,
+      "name": "python.exe",
+      "ppid": 1030596
+    }
+  ],
+  "descendants_terminated": [
+    4916,
+    14304,
+    982724,
+    1024360,
+    1024924,
+    1025360,
+    1027196,
+    1027628,
+    1030164,
+    1030172,
+    1030312,
+    1030328,
+    1030428,
+    1030512,
+    1030516,
+    1030572,
+    1030596,
+    1030696,
+    1030712,
+    1030968
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 965236,
+      "name": "python.exe"
+    },
+    {
+      "pid": 968864,
+      "name": "python.exe"
+    },
+    {
+      "pid": 977424,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1009112,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1009864,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1013048,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1013664,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1013700,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1030244,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1030320,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch757\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-757\\19-apptest-batch-preflight.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch757\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch757",
+    "repo_head": "2aebbfe019ccd53a832141ed3536153a0b3235f8",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

@@ -44,9 +44,6 @@ from typing import Any, Callable, Dict, List, Optional
 # Injected in tests; defaults to the shared LLM client in production.
 ChatFn = Callable[[str, str], str]
 
-# Bound the model's output so one passage can never balloon the response.
-_MAX_TOKENS = 1500
-
 # The system prompt is the guarantee. It forbids invention explicitly and
 # repeatedly, because an invented reaction here would be attached to a real
 # paper's provenance — a false attribution the downstream gates cannot catch.
@@ -141,7 +138,6 @@ def _default_chat_fn(system_prompt: str, user_text: str) -> str:
             {"role": "user", "content": user_text},
         ],
         temperature=0.0,
-        max_tokens=_MAX_TOKENS,
         response_json=True,
         json_schema=_RESPONSE_JSON_SCHEMA,
         model_env_var="OPENROUTER_RAG_EXTRACT_MODEL",

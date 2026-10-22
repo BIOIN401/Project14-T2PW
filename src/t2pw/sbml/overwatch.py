@@ -170,7 +170,7 @@ def run_sbml_overwatch(
     output_path: Path,
     *,
     use_llm: bool = True,
-    llm_max_tokens: int = 2600,
+    llm_max_tokens: Optional[int] = None,
 ) -> Dict[str, Any]:
     mapped_payload = json.loads(mapped_json_path.read_text(encoding="utf-8"))
     if not isinstance(mapped_payload, dict):
@@ -264,7 +264,7 @@ def main() -> None:
     parser.add_argument("--validation", required=True, help="SBML validation report JSON path")
     parser.add_argument("--out", default="sbml_overwatch_report.json", help="Output report JSON path")
     parser.add_argument("--no-llm", action="store_true", help="Disable LLM semantic review")
-    parser.add_argument("--max-tokens", type=int, default=2600, help="LLM max tokens")
+    parser.add_argument("--max-tokens", type=int, default=None, help="LLM max tokens (default: LLM_MAX_TOKENS)")
     args = parser.parse_args()
 
     report = run_sbml_overwatch(
@@ -273,7 +273,7 @@ def main() -> None:
         Path(args.validation),
         Path(args.out),
         use_llm=not args.no_llm,
-        llm_max_tokens=int(args.max_tokens),
+        llm_max_tokens=args.max_tokens,
     )
     print(f"Wrote SBML overwatch report: {args.out}")
     print(json.dumps(report["summary"], indent=2))

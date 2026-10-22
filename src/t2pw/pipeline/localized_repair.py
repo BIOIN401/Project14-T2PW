@@ -1001,7 +1001,7 @@ def _chat_json(
     system: str,
     user: str,
     stage_name: str,
-    max_tokens: int,
+    max_tokens: Optional[int],
     temperature: float,
     model_env_var: Optional[str],
     chat_fn: Optional[Callable[..., Any]],
@@ -1049,7 +1049,7 @@ def repair_json_text(
     stage: str = "extraction",
     max_attempts: Optional[int] = None,
     temperature: float = 0.0,
-    max_tokens: int = 12000,
+    max_tokens: Optional[int] = None,
     model_env_var: Optional[str] = "OPENROUTER_EXTRACTION_MODEL",
     chat_fn: Optional[Callable[..., Any]] = None,
 ) -> JsonRepairResult:
@@ -1331,7 +1331,7 @@ def repair_invalid_rows(
     stage: str = "extraction",
     max_attempts: Optional[int] = None,
     temperature: float = 0.0,
-    max_tokens: int = 4000,
+    max_tokens: Optional[int] = None,
     model_env_var: Optional[str] = "OPENROUTER_EXTRACTION_MODEL",
     chat_fn: Optional[Callable[..., Any]] = None,
 ) -> RowRepairResult:
