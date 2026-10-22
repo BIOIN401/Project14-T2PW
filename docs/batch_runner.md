@@ -306,9 +306,10 @@ for a completely unrelated-looking reason.
   the child tree past it and records a `timeout` row. The child is given a
   slightly smaller internal budget (`--timeout` minus a 120 s grace) so it has
   room to write its artifacts and print its row instead of being killed one
-  second before finishing. Inside the child, one *interaction* may take up to
-  `DEFAULT_APP_TIMEOUT` = 3600 s and the whole pair shares the budget the parent
-  handed it.
+  second before finishing. Inside the child there is no separate per-interaction
+  cap: one *interaction* may use whatever is left of the budget the parent handed
+  it, never more (ORCH-759d removed the fixed 3600 s cap that killed a 10,800 s
+  leg's submit at 3600 s; `run_one(app_timeout=...)` still sets a smaller one).
 - Whole night: `--deadline` (default 10 h). Ten papers × two modes × one hour is
   twenty hours, which is not "overnight" — it is still running when you need the
   machine. The check happens *before* each pair starts, so a pair already in

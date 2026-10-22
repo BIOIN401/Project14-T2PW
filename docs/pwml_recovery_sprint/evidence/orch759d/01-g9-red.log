@@ -1,0 +1,54 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759d\src\t2pw\__init__.py
+F...                                                                     [100%]
+================================== FAILURES ===================================
+_____________ test_g9_a_4000s_submit_finishes_inside_a_10800s_leg _____________
+
+tmp_path = WindowsPath('C:/t/bt-orch759d2/01-g9-red-2458/test_g9_a_4000s_submit_finishe0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000025737EEB490>
+
+    def test_g9_a_4000s_submit_finishes_inside_a_10800s_leg(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """**BASE: ``timeout`` at 3,600 s, "extraction did not finish". TIP: ``pass``.**"""
+    
+        row, calls = _leg(tmp_path, monkeypatch, cost=4000.0, deadline=CHILD_DEADLINE)
+    
+>       assert row["status"] == "pass", (row["status"], row["message"], calls)
+E       AssertionError: ('timeout', 'extraction did not finish inside the time budget', [{'cost': 1.0, 'start': 0.0, 'timeout': 3600.0}, {'cost': 1.0, 'start': 1.0, 'timeout': 3600.0}, {'cost': 4000.0, 'start': 2.0, 'timeout': 3600.0}])
+E       assert 'timeout' == 'pass'
+E         
+E         - pass
+E         + timeout
+
+tests\test_orch759d_app_timeout.py:126: AssertionError
+---------------------------- Captured stderr call -----------------------------
+2026-10-22 17:12:32.867 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+=========================== short test summary info ===========================
+FAILED tests/test_orch759d_app_timeout.py::test_g9_a_4000s_submit_finishes_inside_a_10800s_leg
+1 failed, 3 passed in 2.28s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759d\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 30702e2f03b8ce947504613afcf51d14cdd9f753  [git, worktree dirty=False]
+label                   : g9-red
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-759d/01-g9-red.pin.json -q --basetemp=C:/t/bt-orch759d2/01-g9-red-2458 tests/test_orch759d_app_timeout.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759d
+root PID / process group: 356696 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 500 s
+duration                : 3.17 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  356656:python.exe
+descendants terminated  : 1  356656
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759d\docs\pwml_recovery_sprint\evidence\g11\ORCH-759d\01-g9-red.json
+json report written     : True
+pre-existing (reported, NEVER killed): 6
+================================================

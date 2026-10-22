@@ -1,0 +1,110 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759d\src\t2pw\__init__.py
+FF                                                                       [100%]
+================================== FAILURES ===================================
+_ test_corpus_the_armed_pass_over_every_committed_artifact_and_its_own_paper __
+
+    def test_corpus_the_armed_pass_over_every_committed_artifact_and_its_own_paper() -> None:
+        """THE LOAD-BEARING EVIDENCE (card section 6.5).
+    
+        ``test_c073_identity_admission.py::test_the_whole_committed_corpus_yields_one_conflict_and_no_collateral``
+        replays the same corpus with NO source index, which exercises pass B alone.
+        This is the other half and the one arming makes real: every committed
+        ``final_mapped.json`` replayed against its OWN ``01_source_text.txt``.
+    
+        Measured at this tip: 70 artifacts, 678 eligible rows, 3 refusals, all three
+        of them hallucinations, 0 collateral. Measured with the ruling's two routes
+        removed -- which is what the C-073 predicate does on its own -- 39 refusals,
+        36 of them legitimate rows. That difference is this card's whole argument.
+    
+        If a newly committed run artifact moves these numbers, TRIAGE the new row as
+        a catch or as collateral before moving the pin. Do not regenerate it.
+        """
+        from t2pw.mapping import identity_admission
+    
+        artifacts = _committed_artifacts()
+        if not artifacts:
+            pytest.skip("no committed final_mapped.json artifacts")
+    
+        examined = 0
+        catches: set = set()
+        for path in artifacts:
+            source = path.parent.parent / "01_source_text.txt"
+            payload = json.loads(path.read_text(encoding="utf-8"))
+            entities = payload.get("entities") or {}
+            if source.exists():
+                payload[identity_admission.SOURCE_INDEX_KEY] = identity_admission.build_source_index(
+                    source.read_text(encoding="utf-8", errors="replace")
+                )
+            report = map_ids._admit_identities(payload, entities)
+            examined += report["counts"]["rows_examined"]
+            for entry in report["withheld"]:
+                if entry["rule"] == identity_admission.RULE_NOT_SUPPORTED:
+                    catches.add((path.parent.parent.name.split("__")[0], path.parent.name,
+                                 entry["name"]))
+    
+        assert len(artifacts) >= 70
+        assert examined >= 678
+>       assert catches == EXPECTED_CATCHES, (
+            f"the armed pass changed over the corpus ({len(artifacts)} artifacts). "
+            f"unexpected: {sorted(catches - EXPECTED_CATCHES)}; "
+            f"no longer caught: {sorted(EXPECTED_CATCHES - catches)}"
+        )
+E       AssertionError: the armed pass changed over the corpus (116 artifacts). unexpected: [('PMC12096016', 'strict', "Pantetheine 4'-phosphate")]; no longer caught: []
+E       assert {('PMC1209601...uccinyl-CoA')} == {('PMC1218015...uccinyl-CoA')}
+E         
+E         Extra items in the left set:
+E         ('PMC12096016', 'strict', "Pantetheine 4'-phosphate")
+E         Use -v to get more diff
+
+tests\test_c075_source_support_armed.py:879: AssertionError
+_______ test_the_2122_evaluation_with_cached_abstracts_beats_title_only _______
+
+    @requires_2122
+    def test_the_2122_evaluation_with_cached_abstracts_beats_title_only() -> None:
+        """The point of persisting inputs: more evidence, better decisions."""
+        module = dry_run_module()
+        titles = module.dry_run(DRY_RUN_PLAN, thresholds=THRESHOLDS, title_only=True)
+        cached = module.dry_run(DRY_RUN_PLAN, thresholds=THRESHOLDS, title_only=False)
+>       assert cached["abstract_sources"] == {
+            "acquisition_cache": 27,
+            "derived_from_stored_full_text": 1,
+        }
+E       AssertionError: assert {'derived_fro...ull_text': 28} == {'acquisition...full_text': 1}
+E         
+E         Differing items:
+E         {'derived_from_stored_full_text': 28} != {'derived_from_stored_full_text': 1}
+E         Right contains 1 more item:
+E         {'acquisition_cache': 27}
+E         Use -v to get more diff
+
+tests\test_paper_eligibility_corrections.py:1209: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_c075_source_support_armed.py::test_corpus_the_armed_pass_over_every_committed_artifact_and_its_own_paper
+FAILED tests/test_paper_eligibility_corrections.py::test_the_2122_evaluation_with_cached_abstracts_beats_title_only
+2 failed in 1.55s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759d\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 96d686c73b777b6971b167e59b410847432e8277  [git, worktree dirty=True]
+label                   : affected-fails-at-base
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-759d/04-affected-fails-at-base.pin.json -q --basetemp=C:/t/bt-orch759d2/04-affected-fails-at-base-1903 tests/test_c075_source_support_armed.py::test_corpus_the_armed_pass_over_every_committed_artifact_and_its_own_paper tests/test_paper_eligibility_corrections.py::test_the_2122_evaluation_with_cached_abstracts_beats_title_only
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759d
+root PID / process group: 361660 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 400 s
+duration                : 2.27 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 2  361672:python.exe, 361768:git.exe
+descendants terminated  : 2  361672, 361768
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759d\docs\pwml_recovery_sprint\evidence\g11\ORCH-759d\04-affected-fails-at-base.json
+json report written     : True
+pre-existing (reported, NEVER killed): 8
+================================================
