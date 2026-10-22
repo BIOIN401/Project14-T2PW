@@ -277,3 +277,30 @@ base `src/` in `g11/ORCH-764/24`).
 | `docs/pwml_recovery_sprint/evidence/orch764/make_fixture.py` | cuts the fixture (prints source and output sha256) |
 | `docs/pwml_recovery_sprint/evidence/orch764/replay.py` | the § 5 replay and scoring |
 | `docs/pwml_recovery_sprint/evidence/orch764/*.log`, `evidence/g11/ORCH-764/01-25`, `evidence/g11/pin/ORCH-764/` | bounded-run logs, G11 reports, pin verdicts |
+
+## 12. Merge of 762 round 1
+
+At the orchestrator's request the ORCH-762 repair-round-1 tip `0a9f9829` (which carries the ORCH-759a repair
+`cea94c91`) was merged into this branch: merge commit `c1b89161`, `git merge --no-ff -F <file>`, **no conflict**.
+`git diff 0a9f9829 c1b89161 -- src` is exactly this lane's delta (+44 −4 in the same two files; the predicate import
+is `map_ids.py:44`, the wrapped gate calls `:6886` and `:7129`, the helper `:6902`). The merged range includes
+ORCH-762's own merge commit `dc4a3c3e` whose message reads `tmp` (recorded in ORCH-762-RESULT.md § 12); it is
+not this lane's and is unchanged.
+
+| rerun after the merge | G11 | result |
+|---|---|---|
+| G9 file | `26-m1-g9` | 11 passed |
+| offline replay (both legs) | `27-m1-replay-tip` | identical to `09`: menaquinone final 8/9 (P 1.000 R 0.889 F1 0.941), enterobactin 5/5, Stage 1 9/9 and 5/5 |
+| `test_orch762_protein_identity.py` + `test_orch759a_duplicate_protein_fold.py` | `28` | 73 passed |
+| `test_orch759a_fold_app_path.py` alone | `29` | 2 passed |
+| SMOKE | `30-m1-smoke` | **508 passed** |
+| affected (same 176 files; 5 batches, gap files last, c055 / quarantine_boundary / c052 alone) | `31`-`39` (+ `29`) | **4427 passed, 6 skipped, 5 failed**: the same 5 known failures, assertion lines identical to base `src/` (`24`; md5 of the sorted `E` lines equal) |
+
+**MenD (R2) is not recovered by this replay, and it cannot be.** The replay starts from the leg's recorded
+`final_mapped.json`, after Stage 6 had already quarantined `rxn_lock_007` for `protein_missing_external_identity`;
+it re-runs only pre-freeze compound resolution, never protein mapping, so ORCH-762's change to the MenD lookup is
+not on its path. Final 9/9 on this leg would need Stage 6 re-run over the ORCH-759 leg with ORCH-762's recorded
+UniProt answers; ORCH-762's own replays are where MenD's identity is measured (ORCH-762-RESULT.md § 4, MenD →
+Q9CHK0 on the KF147 replay). Not built here: outside this lane.
+
+`g11_evidence.py check --task ORCH-764` after these reruns: 39 artifacts, 0 non-compliant, every pytest report pinned.

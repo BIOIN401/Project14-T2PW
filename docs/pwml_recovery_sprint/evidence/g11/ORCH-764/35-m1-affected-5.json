@@ -1,0 +1,137 @@
+{
+  "label": "m1-affected-5",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-764/35-m1-affected-5.pin.json",
+    "-q",
+    "--basetemp=C:/t/bt-orch764/35-m1-affected-5-522",
+    "tests/test_rag_synthesize.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_typed_gap_resolution.py",
+    "tests/test_rag_typed_resolution_integrity.py",
+    "tests/test_rd092_1_reaction_lineage.py",
+    "tests/test_reaction_evidence.py",
+    "tests/test_reference_repair.py",
+    "tests/test_research_mode_contracts.py",
+    "tests/test_research_mode_normalizer.py",
+    "tests/test_research_mode_report.py",
+    "tests/test_research_mode_tiers.py",
+    "tests/test_scope_membership_filter_end_to_end.py",
+    "tests/test_semantic_production_no_gold.py",
+    "tests/test_semantic_release_gating.py",
+    "tests/test_stage0_case_c_retry_clobber.py",
+    "tests/test_stage0_scope_fallback.py",
+    "tests/test_stage2_mapping_boundary.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_stage_contracts.py",
+    "tests/test_stage_one_boundary.py",
+    "tests/test_stage_one_boundary_lineage.py",
+    "tests/test_stage_one_ensemble.py",
+    "tests/test_stage_one_paper_dictionary.py",
+    "tests/test_streamlit_stage2_orchestration.py",
+    "tests/test_streamlit_stage8_export_contract.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_lineage.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_real_artifact_replay.py",
+    "tests/test_strict_quarantine_release_seam.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_transport_actor_guards.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch764",
+  "started_at": "2026-10-22T23:15:48+00:00",
+  "finished_at": "2026-10-22T23:16:36+00:00",
+  "duration_seconds": 47.924786600000516,
+  "timeout_seconds": 530.0,
+  "root_pid": 361428,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 353528,
+      "name": "python.exe",
+      "ppid": 361428
+    },
+    {
+      "pid": 356024,
+      "name": "python.exe",
+      "ppid": 353528
+    },
+    {
+      "pid": 357968,
+      "name": "python.exe",
+      "ppid": 356024
+    }
+  ],
+  "descendants_terminated": [
+    353528,
+    356024,
+    357968
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 340216,
+      "name": "python.exe"
+    },
+    {
+      "pid": 345584,
+      "name": "python.exe"
+    },
+    {
+      "pid": 351792,
+      "name": "python.exe"
+    },
+    {
+      "pid": 356776,
+      "name": "python.exe"
+    },
+    {
+      "pid": 358296,
+      "name": "python.exe"
+    },
+    {
+      "pid": 358628,
+      "name": "python.exe"
+    },
+    {
+      "pid": 360012,
+      "name": "python.exe"
+    },
+    {
+      "pid": 360200,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch764\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-764\\35-m1-affected-5.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch764\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch764",
+    "repo_head": "c1b89161877bec23ee1b0866d31fff026fd4b0ba",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}
