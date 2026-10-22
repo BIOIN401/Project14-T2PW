@@ -1,0 +1,37 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759b\src\t2pw\__init__.py
+........................................................................ [ 11%]
+........................................................................ [ 22%]
+........................................................................ [ 33%]
+........................................................................ [ 45%]
+........................................................................ [ 56%]
+........................................................................ [ 67%]
+........................................................................ [ 79%]
+........................................................................ [ 90%]
+.............................................................            [100%]
+637 passed in 29.50s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759b\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 81a5c556a998178e267e63786a3b01e55cf86661  [git, worktree dirty=False]
+label                   : affected-core
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-759b/09-affected-core.pin.json -q --basetemp=C:/t/bt-orch759b/09-affected-core-30930 tests/test_adversarial_diagnostics_isolation.py tests/test_adversarial_json_repair_guard.py tests/test_adversarial_row_repair_deletion.py tests/test_attempt_cap_termination_reason.py tests/test_c110_negative_control_status.py tests/test_early_failure_replay.py tests/test_extraction_diagnostics.py tests/test_extraction_escalation_ladder.py tests/test_localized_repair.py tests/test_orch758b_empty_chunk.py tests/test_stage_one_boundary.py tests/test_stage_one_boundary_lineage.py tests/test_stage_one_ensemble.py tests/test_stage_one_paper_dictionary.py tests/test_streamlit_stage2_orchestration.py tests/test_orch757_llm_token_budgets.py tests/test_batch_driver_quarantine_artifacts.py tests/test_batch_driver_seam_golden.py tests/test_batch_pwml_artifact_naming.py tests/test_batch_report.py tests/test_batch_run.py tests/test_batch_fetch.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759b
+root PID / process group: 203904 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 30.56 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 16  204404:python.exe, 210244:python.exe, 210568:python.exe, 209536:taskkill.exe, 203076:python.exe, 207840:python.exe, 208276:python.exe, 208788:python.exe, 206428:python.exe, 208544:python.exe, 164544:python.exe, 210228:python.exe, 207000:python.exe, 209552:python.exe, 185932:python.exe, 210892:python.exe
+descendants terminated  : 16  164544, 185932, 203076, 204404, 206428, 207000, 207840, 208276, 208544, 208788, 209536, 209552, 210228, 210244, 210568, 210892
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759b\docs\pwml_recovery_sprint\evidence\g11\ORCH-759b\09-affected-core.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================

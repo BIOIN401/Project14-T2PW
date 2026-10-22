@@ -1,0 +1,124 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759b\src\t2pw\__init__.py
+F                                                                        [100%]
+================================== FAILURES ===================================
+____ test_llm_inputs_are_the_bases_bytes_and_never_carry_the_merge_record _____
+
+offline_app = {'network': ["('https://www.ebi.ac.uk/webservices/chebi/2.0/test/getLiteEntity',)", "('https://rest.kegg.jp/find/compo...-30613/test_llm_inputs_are_the_bases_0'), 'wire': <test_orch759b_recorder_reattach._Wire object at 0x000001D012918AD0>}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001D00EF676F0>
+
+    def test_llm_inputs_are_the_bases_bytes_and_never_carry_the_merge_record(
+        offline_app: Dict[str, Any], monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        at = _app()
+        wire = offline_app["wire"]
+        _run_pipeline(at, monkeypatch, "3")
+        stage1 = [_request_digest(c) for c in wire.calls]
+        artifacts = _run_post_pipeline(at, monkeypatch)
+        post = [_request_digest(c) for c in wire.calls[len(stage1):]]
+    
+        measured = {"pipeline_run": stage1, "post_pipeline": post}
+>       assert measured == GOLDEN, json.dumps(measured, indent=1)
+E       AssertionError: {
+E          "pipeline_run": [
+E           "98824bc06dbc3f79b9b6ac30671f71eb473ccab83e653556de8380958e0ba05f",
+E           "16d8bc5eb5c243934c6d5d3254b26d30801cceacc84d42ee205f9f3204bf05ae",
+E           "16d8bc5eb5c243934c6d5d3254b26d30801cceacc84d42ee205f9f3204bf05ae",
+E           "16d8bc5eb5c243934c6d5d3254b26d30801cceacc84d42ee205f9f3204bf05ae"
+E          ],
+E          "post_pipeline": [
+E           "99ed836fd78cb0a7abc579a8ec0b9dca0b1ea65b469ea0caa9759cbcd911d6d8",
+E           "eb95ccbc7e9f191967f1c3b5ac9bf88910fe69b0d9e1411e7a393bc4e532d61e",
+E           "05c6e15f8bac5aeb5b74ceabe2549ec947cc903aa3bd23f8e57c462d588de313",
+E           "718aba4d196b99f6e9026b97686736e9d23f613e4d05df9098665283e5d692e0",
+E           "f6a3746772c56898e1219acf80471b0121fa5ff1e17ae7b02c2ba856e0a2b805",
+E           "a18b7dddd242a7566feabf6622649ae0ca9b75e8498fb7d44531dea55e7c509a",
+E           "980588f3721636bd7439a096788338edb286b56e12e8816dd5ce97adc0e37708",
+E           "83885a7cd8bebd48973bfabb4e7b9687c5631b9a4a128a1dcc780fd6404ea101",
+E           "d771b2a8777929ad6f70962b86e240cad353cb374b94eb134f110d1fa571a503",
+E           "427c214fdcb685a747a71dfa927631bb85c3a224bbe69bb418e8294d9d3877b3",
+E           "9ce4caeb7c955113f28a0bcdae68c4a4177744e62d98bcb7bfd99d2d0b8d158a"
+E          ]
+E         }
+E       assert {'pipeline_ru...7c509a', ...]} == {}
+E         
+E         Left contains 2 more items:
+E         {'pipeline_run': ['98824bc06dbc3f79b9b6ac30671f71eb473ccab83e653556de8380958e0ba05f',
+E                           '16d8bc5eb5c243934c6d5d3254b26d30801cceacc84d42ee205f9f3204bf05ae',
+E                           '16d8bc5eb5c243934c6d5d3254b26d30801cceacc84d42ee205f9f3204bf05ae',
+E                           '16d8bc5eb5c243934c6d5d3254b26d30801cceacc84d42ee205f9f3204bf05ae'],
+E          'post_pipeline': ['99ed836fd78cb0a7abc579a8ec0b9dca0b1ea65b469ea0caa9759cbcd911d6d8',...
+E         
+E         ...Full output truncated (11 lines hidden), use '-vv' to show
+
+tests\test_orch759b_recorder_reattach.py:346: AssertionError
+---------------------------- Captured stderr call -----------------------------
+2026-10-22 14:24:29.406 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 14:24:30.854 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-10-22 14:24:30.855 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-10-22 14:24:30.856 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-10-22 14:24:30.857 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-10-22 14:24:31.137 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-10-22 14:24:31.138 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-10-22 14:24:31.139 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-10-22 14:24:31.139 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+=========================== short test summary info ===========================
+FAILED tests/test_orch759b_recorder_reattach.py::test_llm_inputs_are_the_bases_bytes_and_never_carry_the_merge_record
+1 failed, 5 deselected in 3.73s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759b\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 4f750030294f1d7872638b8a1792c01c4bfa5e56  [git, worktree dirty=False]
+label                   : dev-base-golden2
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-759b/03-dev-base-golden2.pin.json -q --basetemp=C:/t/bt-orch759b/03-dev-base-golden2-30613 -k llm_inputs tests/test_orch759b_recorder_reattach.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759b
+root PID / process group: 199064 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 5.08 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  199076:python.exe
+descendants terminated  : 1  199076
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759b\docs\pwml_recovery_sprint\evidence\g11\ORCH-759b\03-dev-base-golden2.json
+json report written     : True
+pre-existing (reported, NEVER killed): 14
+================================================

@@ -1,0 +1,212 @@
+{
+  "label": "affected-core",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-759b/09-affected-core.pin.json",
+    "-q",
+    "--basetemp=C:/t/bt-orch759b/09-affected-core-30930",
+    "tests/test_adversarial_diagnostics_isolation.py",
+    "tests/test_adversarial_json_repair_guard.py",
+    "tests/test_adversarial_row_repair_deletion.py",
+    "tests/test_attempt_cap_termination_reason.py",
+    "tests/test_c110_negative_control_status.py",
+    "tests/test_early_failure_replay.py",
+    "tests/test_extraction_diagnostics.py",
+    "tests/test_extraction_escalation_ladder.py",
+    "tests/test_localized_repair.py",
+    "tests/test_orch758b_empty_chunk.py",
+    "tests/test_stage_one_boundary.py",
+    "tests/test_stage_one_boundary_lineage.py",
+    "tests/test_stage_one_ensemble.py",
+    "tests/test_stage_one_paper_dictionary.py",
+    "tests/test_streamlit_stage2_orchestration.py",
+    "tests/test_orch757_llm_token_budgets.py",
+    "tests/test_batch_driver_quarantine_artifacts.py",
+    "tests/test_batch_driver_seam_golden.py",
+    "tests/test_batch_pwml_artifact_naming.py",
+    "tests/test_batch_report.py",
+    "tests/test_batch_run.py",
+    "tests/test_batch_fetch.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch759b",
+  "started_at": "2026-10-22T20:36:11+00:00",
+  "finished_at": "2026-10-22T20:36:42+00:00",
+  "duration_seconds": 30.557414400002017,
+  "timeout_seconds": 540.0,
+  "root_pid": 203904,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 204404,
+      "name": "python.exe",
+      "ppid": 203904
+    },
+    {
+      "pid": 210244,
+      "name": "python.exe",
+      "ppid": 204404
+    },
+    {
+      "pid": 210568,
+      "name": "python.exe",
+      "ppid": 210244
+    },
+    {
+      "pid": 209536,
+      "name": "taskkill.exe",
+      "ppid": 204404
+    },
+    {
+      "pid": 203076,
+      "name": "python.exe",
+      "ppid": 204404
+    },
+    {
+      "pid": 207840,
+      "name": "python.exe",
+      "ppid": 203076
+    },
+    {
+      "pid": 208276,
+      "name": "python.exe",
+      "ppid": 204404
+    },
+    {
+      "pid": 208788,
+      "name": "python.exe",
+      "ppid": 208276
+    },
+    {
+      "pid": 206428,
+      "name": "python.exe",
+      "ppid": 208544
+    },
+    {
+      "pid": 208544,
+      "name": "python.exe",
+      "ppid": 204404
+    },
+    {
+      "pid": 164544,
+      "name": "python.exe",
+      "ppid": 210228
+    },
+    {
+      "pid": 210228,
+      "name": "python.exe",
+      "ppid": 204404
+    },
+    {
+      "pid": 207000,
+      "name": "python.exe",
+      "ppid": 209552
+    },
+    {
+      "pid": 209552,
+      "name": "python.exe",
+      "ppid": 204404
+    },
+    {
+      "pid": 185932,
+      "name": "python.exe",
+      "ppid": 210892
+    },
+    {
+      "pid": 210892,
+      "name": "python.exe",
+      "ppid": 204404
+    }
+  ],
+  "descendants_terminated": [
+    164544,
+    185932,
+    203076,
+    204404,
+    206428,
+    207000,
+    207840,
+    208276,
+    208544,
+    208788,
+    209536,
+    209552,
+    210228,
+    210244,
+    210568,
+    210892
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 153260,
+      "name": "python.exe"
+    },
+    {
+      "pid": 156288,
+      "name": "python.exe"
+    },
+    {
+      "pid": 202040,
+      "name": "python.exe"
+    },
+    {
+      "pid": 202788,
+      "name": "python.exe"
+    },
+    {
+      "pid": 203148,
+      "name": "python.exe"
+    },
+    {
+      "pid": 204744,
+      "name": "python.exe"
+    },
+    {
+      "pid": 204844,
+      "name": "python.exe"
+    },
+    {
+      "pid": 205288,
+      "name": "python.exe"
+    },
+    {
+      "pid": 206452,
+      "name": "python.exe"
+    },
+    {
+      "pid": 209956,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch759b\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-759b\\09-affected-core.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch759b\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch759b",
+    "repo_head": "81a5c556a998178e267e63786a3b01e55cf86661",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}
