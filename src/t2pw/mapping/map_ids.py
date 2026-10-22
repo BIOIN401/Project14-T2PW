@@ -4720,6 +4720,10 @@ def _uniprot_taxon_scope(client: HttpClient, taxonomy_id: str, cache: Optional["
 def _memo_taxon_scope(context: Optional[Dict[str, Any]], client: HttpClient, cache: Optional["MappingCache"]) -> Optional[Dict[str, Any]]:
     """The scope for ``context['taxonomy_id']``, looked up at most once per mapping pass."""
 
+    # ponytail: no taxonomy answer means no scope, and the caller falls back to the old
+    # free-text query (base behaviour, which can cross a subspecies on a species-level
+    # name). The answer is cached per taxon after its first success; a degraded
+    # ``taxonomy_id:<requested>`` scope would hold D-108 through that failure too.
     ctx = _safe_dict(context)
     taxonomy_id = str(ctx.get("taxonomy_id") or "").strip()
     if not taxonomy_id:
