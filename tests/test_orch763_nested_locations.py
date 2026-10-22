@@ -12,6 +12,10 @@ G9 labelling, test by test:
 * **NEW ACCEPTANCE (D-109 § 1)** -- the new rule itself, labelled new; they fail at base by
   construction and claim nothing more: ``test_new_*``.
 * **PRESERVATION** -- pass at base and at the tip: ``test_preserved_*``.
+* **Repair round 1** (review round 0, finding 1): ``test_preserved_r1_a_reused_label_never_joins_cytosol_and_nucleus``
+  passes at base and FAILED at ``7189582f`` (a regression of round 0);
+  ``test_g9_r1_a_label_reused_by_a_later_draw_is_still_compared`` fails at base AND at ``7189582f``;
+  ``test_preserved_r1_an_unlocated_reused_label_still_merges`` passes at all three.
 
 String literals, not new module symbols, so the file collects at base and its failures there
 are behaviour, not a missing name. No model, network or database is called.
@@ -215,6 +219,54 @@ def test_new_the_containment_table_is_a_tree_of_folded_names() -> None:
     assert E._nests("intracellular", "cytosol") and E._nests("plastid", "thylakoid membrane")
     assert not E._nests("cytosol", "membrane") and not E._nests("cytosol", "nucleus")
     assert not E._nests("cytosol", "periplasm")  # unknown: fail closed
+
+
+# ------------------------------------------------------------------ repair round 1 (review finding 1)
+# A state label is defined per draw, so two draws can give one label two locations. A pooled
+# row merged from two differently named states must still compare a later row that reuses
+# either name: the label-equality shortcut in _conflict may not skip it.
+
+
+def _sdraw(state: Dict[str, Any], *rows: Dict[str, Any]) -> Dict[str, Any]:
+    return {"biological_states": [state], "processes": {"reactions": list(rows)}}
+
+
+def test_preserved_r1_a_reused_label_never_joins_cytosol_and_nucleus() -> None:
+    """S1, PRESERVATION (passes at base; failed at 7189582f, which pooled all three into one row):
+    draw 1 X = intracellular, draw 2 Y = cytosol, draw 3 X = nucleus. Cytosol and nucleus do
+    not nest, so the draw-2 and draw-3 rows must never share a pooled row."""
+
+    _merged, report = merge_draws([_sdraw({"name": "X", "subcellular_location": "intracellular"}, _row("a", "X")),
+                                   _sdraw({"name": "Y", "compartment_canonical": "cytosol"}, _row("b", "Y")),
+                                   _sdraw({"name": "X", "subcellular_location": "nucleus"}, _row("c", "X"))])
+    rows = _rows(report)
+    assert len(rows) == 2
+    assert not any({2, 3} <= set(r["draws"]) for r in rows)
+
+
+@pytest.mark.parametrize("third, reason", [
+    ({"subcellular_location": "membrane"}, "biological_state location 'cytosol' vs 'membrane'"),
+    ({"compartment_canonical": "mitochondrial_matrix"}, "biological_state location 'cytosol' vs 'mitochondrial matrix'"),
+], ids=["S2_membrane", "S3_matrix"])
+def test_g9_r1_a_label_reused_by_a_later_draw_is_still_compared(third: Dict[str, Any], reason: str) -> None:
+    """S2/S3, G9 CORRECTION (fail at base and at 7189582f, which both pooled one row): draw 1 X
+    states no location, draw 2 Y = cytosol joins it, draw 3 X = membrane / mitochondrial matrix.
+    The draw-3 row reuses the claim's first label, and must still be compared."""
+
+    merged, report = merge_draws([_sdraw({"name": "X"}, _row("a", "X")),
+                                  _sdraw({"name": "Y", "compartment_canonical": "cytosol"}, _row("b", "Y")),
+                                  _sdraw({"name": "X", **third}, _row("c", "X"))])
+    assert [r["name"] for r in _reactions(merged)] == ["a", "c"]
+    assert _rows(report)[1]["kept_apart_from"][0]["reason"] == reason
+
+
+def test_preserved_r1_an_unlocated_reused_label_still_merges() -> None:
+    """S6, PRESERVATION: the fix may not refuse a legitimate row -- draw 3 reuses X with no location."""
+
+    merged, _report = merge_draws([_sdraw({"name": "X"}, _row("a", "X")),
+                                   _sdraw({"name": "Y", "compartment_canonical": "cytosol"}, _row("b", "Y")),
+                                   _sdraw({"name": "X"}, _row("c", "X"))])
+    assert [r["name"] for r in _reactions(merged)] == ["a"]
 
 
 # ------------------------------------------------------------------ preservation
