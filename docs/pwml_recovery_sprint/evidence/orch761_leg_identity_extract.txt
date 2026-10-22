@@ -1,0 +1,152 @@
+# A. menaquinone, ORCH-756 1-draw (organism string: Lactococcus lactis subsp. lactis KF147)
+  read .claude/worktrees/orch756/runs_papers/ORCH-756/legs/menaquinone-strict/2026-10-21_2048/papers/PMC12421875/strict/initial_stage3_gate_report.json  sha256=2b8c3ebc8a0a4c208582a60c973496ef74f5c2f1d1d061456b48e3917654be59
+
+== initial gate: post_normalization_hard_gates / initial_post_normalization -- 9 error(s)
+- /entities/proteins/0 'MenF': Protein 'MenF' is missing a UniProt or DrugBank identifier.
+    organism='Lactococcus lactis subsp. lactis KF147' provider=UniProt resolution={'status': 'novel', 'issue': 'implausible_name_match', 'order_step': 'name_plausibility_gate', 'failed_check': 'species_mismatch'}
+    queries_tried=['(protein_name:"MenF" OR gene:"MenF") AND organism_name:"Lactococcus lactis subsp. lactis KF147"', '(protein_name:"MenF" OR gene:"MenF")']
+    verdict=species_mismatch identity=uniprot:P38051 score=-1.0 margin=-1.0
+    judged_candidate=P38051|Escherichia coli (strain K12)|tax=83333|score=0.56
+- /entities/proteins/1 'MenD': Protein 'MenD' is missing a UniProt or DrugBank identifier.
+    organism='Lactococcus lactis subsp. lactis KF147' provider=UniProt resolution={'status': 'novel', 'issue': 'implausible_name_match', 'order_step': 'name_plausibility_gate', 'failed_check': 'species_mismatch'}
+    queries_tried=['(protein_name:"MenD" OR gene:"MenD") AND organism_name:"Lactococcus lactis subsp. lactis KF147"', '(protein_name:"MenD" OR gene:"MenD")']
+    verdict=species_mismatch identity=uniprot:P17109 score=-1.0 margin=-1.0
+    judged_candidate=P17109|Escherichia coli (strain K12)|tax=83333|score=0.56
+- /entities/proteins/2 'MenH': Protein 'MenH' is missing a UniProt or DrugBank identifier.
+    organism='Lactococcus lactis subsp. lactis KF147' provider=UniProt resolution={'status': 'novel', 'issue': 'implausible_name_match', 'order_step': 'name_plausibility_gate', 'failed_check': 'species_mismatch'}
+    queries_tried=['(protein_name:"MenH" OR gene:"MenH") AND organism_name:"Lactococcus lactis subsp. lactis KF147"', '(protein_name:"MenH" OR gene:"MenH")']
+    verdict=species_mismatch identity=uniprot:P37355 score=-1.0 margin=-1.0
+    judged_candidate=P37355|Escherichia coli (strain K12)|tax=83333|score=0.56
+- /entities/proteins/3 'MenC': Protein 'MenC' is missing a UniProt or DrugBank identifier.
+    organism='Lactococcus lactis subsp. lactis KF147' provider=UniProt resolution={'status': 'novel', 'issue': 'implausible_name_match', 'order_step': 'name_plausibility_gate', 'failed_check': 'species_mismatch'}
+    queries_tried=['(protein_name:"MenC" OR gene:"MenC") AND organism_name:"Lactococcus lactis subsp. lactis KF147"', '(protein_name:"MenC" OR gene:"MenC")']
+    verdict=species_mismatch identity=uniprot:A0A0P0ZBS7 score=-1.0 margin=-1.0
+    judged_candidate=A0A0P0ZBS7|Geobacillus stearothermophilus|tax=1422|score=0.56
+- /entities/proteins/4 'MenE': Protein 'MenE' is missing a UniProt or DrugBank identifier.
+    organism='Lactococcus lactis subsp. lactis KF147' provider=UniProt resolution={'status': 'novel', 'issue': 'implausible_name_match', 'order_step': 'name_plausibility_gate', 'failed_check': 'species_mismatch'}
+    queries_tried=['(protein_name:"MenE" OR gene:"MenE") AND organism_name:"Lactococcus lactis subsp. lactis KF147"', '(protein_name:"MenE" OR gene:"MenE")']
+    verdict=species_mismatch identity=uniprot:P23971 score=-1.0 margin=-1.0
+    judged_candidate=P23971|Bacillus subtilis (strain 168)|tax=224308|score=0.56
+- /entities/proteins/5 'MenB': Protein 'MenB' is missing a UniProt or DrugBank identifier.
+    organism='Lactococcus lactis subsp. lactis KF147' provider=UniProt resolution={'status': 'novel', 'issue': 'implausible_name_match', 'order_step': 'name_plausibility_gate', 'failed_check': 'species_mismatch'}
+    queries_tried=['(protein_name:"MenB" OR gene:"MenB") AND organism_name:"Lactococcus lactis subsp. lactis KF147"', '(protein_name:"MenB" OR gene:"MenB")']
+    verdict=species_mismatch identity=uniprot:P0ABU0 score=-1.0 margin=-1.0
+    judged_candidate=P0ABU0|Escherichia coli (strain K12)|tax=83333|score=0.56
+- /entities/proteins/6 'MenI': Protein 'MenI' is missing a UniProt or DrugBank identifier.
+    organism='Lactococcus lactis subsp. lactis KF147' provider=UniProt resolution={'status': 'novel', 'issue': 'implausible_name_match', 'order_step': 'name_plausibility_gate', 'failed_check': 'species_mismatch'}
+    queries_tried=['(protein_name:"MenI" OR gene:"MenI") AND organism_name:"Lactococcus lactis subsp. lactis KF147"', '(protein_name:"MenI" OR gene:"MenI")']
+    verdict=species_mismatch identity=uniprot:P77781 score=-1.0 margin=-1.0
+    judged_candidate=P77781|Escherichia coli (strain K12)|tax=83333|score=0.56
+- /entities/proteins/7 'MenA': Protein 'MenA' is missing a UniProt or DrugBank identifier.
+    organism='Lactococcus lactis subsp. lactis KF147' provider=UniProt resolution={'status': 'novel', 'issue': 'implausible_name_match', 'order_step': 'name_plausibility_gate', 'failed_check': 'species_mismatch'}
+    queries_tried=['(protein_name:"MenA" OR gene:"MenA") AND organism_name:"Lactococcus lactis subsp. lactis KF147"', '(protein_name:"MenA" OR gene:"MenA")']
+    verdict=species_mismatch identity=uniprot:Q8N8S7 score=-1.0 margin=-1.0
+    judged_candidate=Q8N8S7|Homo sapiens|tax=9606|score=0.56
+- /entities/proteins/8 'MenG': Protein 'MenG' is missing a UniProt or DrugBank identifier.
+    organism='Lactococcus lactis subsp. lactis KF147' provider=UniProt resolution={'status': 'novel', 'issue': 'implausible_name_match', 'order_step': 'name_plausibility_gate', 'failed_check': 'species_mismatch'}
+    queries_tried=['(protein_name:"MenG" OR gene:"MenG") AND organism_name:"Lactococcus lactis subsp. lactis KF147"', '(protein_name:"MenG" OR gene:"MenG")']
+    verdict=species_mismatch identity=uniprot:Q9VM90 score=-1.0 margin=-1.0
+    judged_candidate=Q9VM90|Drosophila melanogaster|tax=7227|score=0.56
+  read .claude/worktrees/orch756/runs_papers/ORCH-756/legs/menaquinone-strict/2026-10-21_2048/papers/PMC12421875/strict/final_mapped.json  sha256=ad1ec8615abbd8ecdaa31dcb9512f7be5c76fe963e42d2d6de5b7d28c8b01b21
+  species rows: [('Lactococcus lactis', '684738', 'Lactococcus lactis subsp. lactis KF147'), ('Lactiplantibacillus plantarum', '1590', None), ('Arabidopsis thaliana', '3702', None)]
+  protein_export_policy.summary: {'verified_real_proteins': 0, 'unknown_backed_functional_complexes': 8, 'ambiguous_real_candidates_rejected': 0, 'unused_proteins_quarantined': 0, 'false_protein_promotions_blocked': 0, 'bare_unresolved_proteins_remaining': 1, 'unused_proteins_flagged_for_review': 0}
+  quarantined_locked_reactions: [('MenF reaction', 'duplicate_locked_reaction'), ('MenD reaction', 'duplicate_locked_reaction'), ('MenD reaction', 'protein_missing_external_identity')]
+  read .claude/worktrees/orch756/runs_papers/ORCH-756/legs/menaquinone-strict/2026-10-21_2048/papers/PMC12421875/strict/removed_entity_report.json  sha256=b69dc59498d24a7b88f98338a51855a274805e7f65a934d4a8c05db492e61d0d
+  removed_entities: [{'bucket': 'proteins', 'name': 'MenD', 'reason': 'degree_zero_after_quarantine', 'had_external_identity': False, 'iteration': 1}]
+  read .claude/worktrees/orch756/runs_papers/ORCH-756/legs/menaquinone-strict/2026-10-21_2048/papers/PMC12421875/strict/quarantine_report.json  sha256=06cd53404783959ff88bdcc25f20c6c332ec4f471e0b93a954ce68ffe4fd7d52
+  quarantine ok: True | release.status: review_required | missing_anchors: ['MenD']
+  admission: reaction 'MenD reaction' -> quarantined_unmapped_entity (protein_missing_external_identity)
+  admission: interaction 'DHNA inhibits MenD' -> quarantined_unmapped_entity (protein_missing_external_identity)
+  admission: interaction 'DHNA inhibition of MenD' -> quarantined_unmapped_entity (protein_missing_external_identity)
+  read .claude/worktrees/orch756/data/id_mapping_cache.json  sha256=de78cd56d2de612a1338115365a0d6537714f1237b648dee6b0e5a3985683603
+  cache api-v8::mena::lactococcus lactis subsp lactis kf147::::{}::[]: status=mapped reason=best_effort_fallback mapped={'uniprot': 'Q8N8S7'} top=['Q8N8S7|Homo sapiens|tax=9606|score=0.56', 'Q03173|Mus musculus|tax=10090|score=0.56', 'P32166|Escherichia coli (strain K12)|tax=83333|score=0.56']
+  cache api-v8::menb::lactococcus lactis subsp lactis kf147::::{}::[]: status=mapped reason=best_effort_fallback mapped={'uniprot': 'P0ABU0'} top=['P0ABU0|Escherichia coli (strain K12)|tax=83333|score=0.56', 'P9WNP5|Mycobacterium tuberculosis (strain ATCC 25618 / H37Rv)|tax=83332|score=0.56', 'P23966|Bacillus subtilis (strain 168)|tax=224308|score=0.56']
+  cache api-v8::menc::lactococcus lactis subsp lactis kf147::::{}::[]: status=mapped reason=best_effort_fallback mapped={'uniprot': 'A0A0P0ZBS7'} top=['A0A0P0ZBS7|Geobacillus stearothermophilus|tax=1422|score=0.56', 'B1A612|Geobacillus kaustophilus|tax=1462|score=0.56', 'Q47Q21|Thermobifida fusca (strain YX)|tax=269800|score=0.56']
+  cache api-v8::mend::lactococcus lactis subsp lactis kf147::::{}::[]: status=mapped reason=best_effort_fallback mapped={'uniprot': 'P17109'} top=['P17109|Escherichia coli (strain K12)|tax=83333|score=0.56', 'P23970|Bacillus subtilis (strain 168)|tax=224308|score=0.56', 'A9GFL5|Sorangium cellulosum (strain So ce56)|tax=448385|score=0.56']
+  cache api-v8::mene::lactococcus lactis subsp lactis kf147::::{}::[]: status=mapped reason=best_effort_fallback mapped={'uniprot': 'P23971'} top=['P23971|Bacillus subtilis (strain 168)|tax=224308|score=0.56', 'P37353|Escherichia coli (strain K12)|tax=83333|score=0.56', 'Q8VYJ1|Arabidopsis thaliana|tax=3702|score=0.56']
+  cache api-v8::menf::lactococcus lactis subsp lactis kf147::::{}::[]: status=mapped reason=best_effort_fallback mapped={'uniprot': 'P38051'} top=['P38051|Escherichia coli (strain K12)|tax=83333|score=0.56', 'P23973|Bacillus subtilis (strain 168)|tax=224308|score=0.56', 'Q9CPI5|Pasteurella multocida (strain Pm70)|tax=272843|score=0.56']
+  cache api-v8::meng::lactococcus lactis subsp lactis kf147::::{}::[]: status=mapped reason=best_effort_fallback mapped={'uniprot': 'Q9VM90'} top=['Q9VM90|Drosophila melanogaster|tax=7227|score=0.56', 'P0A8R0|Escherichia coli (strain K12)|tax=83333|score=0.56', 'Q3ED65|Arabidopsis thaliana|tax=3702|score=0.56']
+  cache api-v8::menh::lactococcus lactis subsp lactis kf147::::{}::[]: status=mapped reason=best_effort_fallback mapped={'uniprot': 'P37355'} top=['P37355|Escherichia coli (strain K12)|tax=83333|score=0.56', 'P23974|Bacillus subtilis (strain 168)|tax=224308|score=0.56', 'P31113|Bacillus subtilis (strain 168)|tax=224308|score=0.56']
+  cache api-v8::meni::lactococcus lactis subsp lactis kf147::::{}::[]: status=mapped reason=best_effort_fallback mapped={'uniprot': 'P77781'} top=['P77781|Escherichia coli (strain K12)|tax=83333|score=0.56', 'A0A0H3GEM5|Listeria monocytogenes serotype 1/2a (strain 10403S)|tax=393133|score=0.56', 'W1DG34|Klebsiella pneumoniae IS43|tax=1432552|score=0.51']
+  cache db::mena::lactococcus lactis subsp lactis kf147::::{}: status=unmapped reason=species_not_found:Lactococcus lactis subsp. lactis KF147 mapped=None top=[]
+  cache db::menb::lactococcus lactis subsp lactis kf147::::{}: status=unmapped reason=species_not_found:Lactococcus lactis subsp. lactis KF147 mapped=None top=[]
+  cache db::menc::lactococcus lactis subsp lactis kf147::::{}: status=unmapped reason=species_not_found:Lactococcus lactis subsp. lactis KF147 mapped=None top=[]
+  cache db::mend::lactococcus lactis subsp lactis kf147::::{}: status=unmapped reason=species_not_found:Lactococcus lactis subsp. lactis KF147 mapped=None top=[]
+  cache db::mene::lactococcus lactis subsp lactis kf147::::{}: status=unmapped reason=species_not_found:Lactococcus lactis subsp. lactis KF147 mapped=None top=[]
+  cache db::menf::lactococcus lactis subsp lactis kf147::::{}: status=unmapped reason=species_not_found:Lactococcus lactis subsp. lactis KF147 mapped=None top=[]
+  cache db::meng::lactococcus lactis subsp lactis kf147::::{}: status=unmapped reason=species_not_found:Lactococcus lactis subsp. lactis KF147 mapped=None top=[]
+  cache db::menh::lactococcus lactis subsp lactis kf147::::{}: status=unmapped reason=species_not_found:Lactococcus lactis subsp. lactis KF147 mapped=None top=[]
+  cache db::meni::lactococcus lactis subsp lactis kf147::::{}: status=unmapped reason=species_not_found:Lactococcus lactis subsp. lactis KF147 mapped=None top=[]
+
+# B. menaquinone, ORCH-755 night (organism string: Lactococcus lactis)
+  read tmp/post_pipeline_3ded14a704d24183a8ab5b8d85ac864e/gate_fail_report.json  sha256=4a6c84a140d2a20cc60b14593274b5fea70eaa1a393d7a6258d2660bf17e5c3e
+
+== initial gate: post_normalization_hard_gates / initial_post_normalization -- 8 error(s)
+- /entities/proteins/0 'MenF': Protein 'MenF' is missing a UniProt or DrugBank identifier.
+    organism='Lactococcus lactis' provider=UniProt resolution={'status': 'novel', 'issue': 'implausible_name_match', 'order_step': 'name_plausibility_gate', 'failed_check': 'ambiguous_insufficient_margin'}
+    queries_tried=['(protein_name:"MenF" OR gene:"MenF") AND organism_name:"Lactococcus lactis"', '(protein_name:"MenF" OR gene:"MenF")']
+    verdict=ambiguous_insufficient_margin identity=uniprot:A2RM72 score=0.8 margin=0.0
+    judged_candidate=A2RM72|Lactococcus lactis subsp. cremoris (strain MG1363)|tax=None|score=0.8
+- /entities/proteins/1 'MenD': Protein 'MenD' is missing a UniProt or DrugBank identifier.
+    organism='Lactococcus lactis' provider=UniProt resolution={'status': 'novel', 'issue': 'implausible_name_match', 'order_step': 'name_plausibility_gate', 'failed_check': 'ambiguous_insufficient_margin'}
+    queries_tried=['(protein_name:"MenD" OR gene:"MenD") AND organism_name:"Lactococcus lactis"', '(protein_name:"MenD" OR gene:"MenD")']
+    verdict=ambiguous_insufficient_margin identity=uniprot:A2RM73 score=0.85 margin=0.0
+    judged_candidate=A2RM73|Lactococcus lactis subsp. cremoris (strain MG1363)|tax=None|score=0.85
+- /entities/proteins/2 'MenH': Protein 'MenH' is missing a UniProt or DrugBank identifier.
+    organism='Lactococcus lactis' provider=UniProt resolution={'status': 'novel', 'issue': 'implausible_name_match', 'order_step': 'name_plausibility_gate', 'failed_check': 'ambiguous_insufficient_margin'}
+    queries_tried=['(protein_name:"MenH" OR gene:"MenH") AND organism_name:"Lactococcus lactis"', '(protein_name:"MenH" OR gene:"MenH")']
+    verdict=ambiguous_insufficient_margin identity=uniprot:P49016 score=0.85 margin=0.04999999999999993
+    judged_candidate=P49016|Lactococcus lactis subsp. lactis (strain IL1403)|tax=None|score=0.85
+- /entities/proteins/3 'MenC': Protein 'MenC' is missing a UniProt or DrugBank identifier.
+    organism='Lactococcus lactis' provider=UniProt resolution={'status': 'novel', 'issue': 'implausible_name_match', 'order_step': 'name_plausibility_gate', 'failed_check': 'ambiguous_insufficient_margin'}
+    queries_tried=['(protein_name:"MenC" OR gene:"MenC") AND organism_name:"Lactococcus lactis"', '(protein_name:"MenC" OR gene:"MenC")']
+    verdict=ambiguous_insufficient_margin identity=uniprot:A2RM77 score=0.8 margin=0.0
+    judged_candidate=A2RM77|Lactococcus lactis subsp. cremoris (strain MG1363)|tax=None|score=0.8
+- /entities/proteins/4 'MenE': Protein 'MenE' is missing a UniProt or DrugBank identifier.
+    organism='Lactococcus lactis' provider=UniProt resolution={'status': 'novel', 'issue': 'implausible_name_match', 'order_step': 'name_plausibility_gate', 'failed_check': 'ambiguous_insufficient_margin'}
+    queries_tried=['(protein_name:"MenE" OR gene:"MenE") AND organism_name:"Lactococcus lactis"', '(protein_name:"MenE" OR gene:"MenE")']
+    verdict=ambiguous_insufficient_margin identity=uniprot:Q9CHK3 score=0.85 margin=0.04999999999999993
+    judged_candidate=Q9CHK3|Lactococcus lactis subsp. lactis (strain IL1403)|tax=None|score=0.85
+- /entities/proteins/5 'MenB': Protein 'MenB' is missing a UniProt or DrugBank identifier.
+    organism='Lactococcus lactis' provider=UniProt resolution={'status': 'novel', 'issue': 'implausible_name_match', 'order_step': 'name_plausibility_gate', 'failed_check': 'ambiguous_insufficient_margin'}
+    queries_tried=['(protein_name:"MenB" OR gene:"MenB") AND organism_name:"Lactococcus lactis"', '(protein_name:"MenB" OR gene:"MenB")']
+    verdict=ambiguous_insufficient_margin identity=uniprot:A2RM75 score=0.8 margin=0.0
+    judged_candidate=A2RM75|Lactococcus lactis subsp. cremoris (strain MG1363)|tax=None|score=0.8
+- /entities/proteins/6 'MenI': Protein 'MenI' is missing a UniProt or DrugBank identifier.
+    organism='Lactococcus lactis' provider=UniProt resolution={'status': 'novel', 'issue': 'implausible_name_match', 'order_step': 'name_plausibility_gate', 'failed_check': 'species_mismatch'}
+    queries_tried=['(protein_name:"MenI" OR gene:"MenI") AND organism_name:"Lactococcus lactis"', '(protein_name:"MenI" OR gene:"MenI")']
+    verdict=species_mismatch identity=uniprot:P77781 score=-1.0 margin=-1.0
+    judged_candidate=P77781|Escherichia coli (strain K12)|tax=None|score=0.56
+- /entities/proteins/8 'MenG': Protein 'MenG' is missing a UniProt or DrugBank identifier.
+    organism='Lactococcus lactis' provider=UniProt resolution={'status': 'novel', 'issue': 'implausible_name_match', 'order_step': 'name_plausibility_gate', 'failed_check': 'ambiguous_insufficient_margin'}
+    queries_tried=['(protein_name:"MenG" OR gene:"MenG") AND organism_name:"Lactococcus lactis"', '(protein_name:"MenG" OR gene:"MenG")']
+    verdict=ambiguous_insufficient_margin identity=uniprot:P49016 score=0.85 margin=0.04999999999999993
+    judged_candidate=P49016|Lactococcus lactis subsp. lactis (strain IL1403)|tax=None|score=0.85
+
+# C. enterobactin, ORCH-755 night (D1: holo-EntB)
+  read runs_papers/ORCH-755/legs/enterobactin-strict/2026-10-20_2201/papers/PMC12096016/strict/final_mapped.json  sha256=50c53e428cd08c4f5dcb8b0103e79f3e977860d3690715d47e0cd83c51f9727f
+  compounds/16 'holo-EntB' confidence=0.8 provenance=inferred route=protein route_reason=known_protein_like chosen_rule=best_effort_fallback resolution={'status': 'matched', 'order_step': 'api_uniprot'}
+    top candidate=P0ADI4|Escherichia coli (strain K12)|tax=83333|score=0.85 matched_alias=EntB alias_source=literature_alias
+    identity_admission rules=['accession_claimed_across_incompatible_entity_kinds'] withheld={'uniprot': 'P0ADI4'}
+  proteins/1 'EntB' mapped_ids={'pathbank_protein_id': '6224', 'gene_name': 'entB'} rejected_mapped_ids={'uniprot': 'P0ADI4'} admission_rules=['accession_claimed_across_incompatible_entity_kinds'] verdict=verified_real_protein
+  read runs_papers/ORCH-755/legs/enterobactin-strict/2026-10-20_2201/papers/PMC12096016/strict/quarantine_report.json  sha256=74ec413aedec6ae45c29549bbdedf34d5323eac2aac87bb5d57855f6ce199f4c
+  quarantine ok: False | refusal_reasons: ['unexportable_entity:1'] | release.status: diagnostic_only
+
+# D. enterobactin, ORCH-759 3-draw
+  read runs_papers/ORCH-759/legs/enterobactin-strict/2026-10-22_1037/papers/PMC12096016/strict/initial_stage3_gate_report.json  sha256=9078e638af5f22b9bd7301374651c00cabfafacb8ef0364186a017e186f47ffc
+
+== initial gate: post_normalization_hard_gates / initial_post_normalization -- 5 error(s)
+- /entities/proteins/7 'enterobactin synthase': Protein 'enterobactin synthase' is missing species/organism.
+- /entities/proteins/7 'enterobactin synthase': Protein 'enterobactin synthase' is missing a UniProt or DrugBank identifier.
+- /entities/protein_complexes/1 'enterobactin synthase complex': Generated protein complex 'enterobactin synthase complex' is missing species/organism.
+- /entities/protein_complexes/1/components/0 'enterobactin synthase': Generated protein complex 'enterobactin synthase complex' component protein 'enterobactin synthase' is missing species/organism.
+- /entities/protein_complexes/1/components/0 'enterobactin synthase': Generated protein complex 'enterobactin synthase complex' component protein 'enterobactin synthase' is missing a UniProt or DrugBank identifier.
+  read runs_papers/ORCH-759/legs/enterobactin-strict/2026-10-22_1037/papers/PMC12096016/strict/final_mapped.json  sha256=b2ab0c94ef7bef6899f5e312f8eb5c011932c2b3ec2bdecf8c5aaec37bb463f7
+  proteins/7 'enterobactin synthase' uniprot=P11454 pathbank_protein_id=6312 synonyms=['enterobactin synthase complex', 'Enterochelin synthase F', 'Nonribosomal peptide synthetase EntF', 'entF', 'Enterobactin synthase component F']
+  protein_complexes/1 'enterobactin synthase complex' generated=True generation_reason=complex_named_source_entity_wrapper components=['EntF']
+    mapping_meta.resolution={'status': 'ambiguous', 'issue': 'ambiguous_complex_name_species', 'order_step': 'complex_name_species'} candidates=[(3623, 'enterobactin synthase', 0.7567)]
+    lineage=[('identifier_mapping', 'unresolved'), ('audit_repair', 'audit_modified')]
+  read runs_papers/ORCH-759/legs/enterobactin-strict/2026-10-22_1037/papers/PMC12096016/strict/final_stage3_gate_report.json  sha256=c11c831b8a40328d597c29d53f767895b47ebfaeaef73e4c29a171398aa599d2
+  final gate: final_pre_export_stage3_gates False ['Protein has degree 0 after normalization: enterobactin synthase']
+  read runs_papers/ORCH-759/legs/enterobactin-strict/2026-10-22_1037/papers/PMC12096016/strict/audit_iteration_summary.json  sha256=37abcb04442082ba694732cdbc9bdaff3d7a0742679b97ccefcc5a71d6628d0a
+  audit round 1: accepted_patch_count= 2 | rationale: The only blocking defects are incomplete species/identifier metadata on the bare 'enterobactin synthase' protein and its generated complex wrapper; evidence ties 'enterobactin synthase' to EntF (P11454), so those fields are backfilled from … (+121 chars elided)

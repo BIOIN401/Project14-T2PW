@@ -1,0 +1,53 @@
+
+### column defaults on proteins / protein_complexes / species
+SQL: SELECT table_name, column_name, column_default, is_nullable FROM information_schema.columns WHERE table_schema = DATABASE() AND table_name IN (%s, %s, %s) AND column_name IN (%s, %s) ORDER BY table_name, column_name | params: ['proteins', 'protein_complexes', 'species', 'user_id', 'species_id']
+   {"table_name": "proteins", "column_name": "species_id", "column_default": "1", "is_nullable": "YES"}
+   {"table_name": "proteins", "column_name": "user_id", "column_default": "11", "is_nullable": "NO"}
+   {"table_name": "protein_complexes", "column_name": "species_id", "column_default": "1", "is_nullable": "YES"}
+   {"table_name": "protein_complexes", "column_name": "user_id", "column_default": "11", "is_nullable": "NO"}
+   {"table_name": "species", "column_name": "user_id", "column_default": "11", "is_nullable": "NO"}
+
+### default owner user 11 exists (id only)
+SQL: SELECT id FROM users WHERE id = %s | params: [11]
+   {"id": 11}
+
+### species id 1 (the default species_id)
+SQL: SELECT id, name, taxonomy_id FROM species WHERE id = %s | params: [1]
+   {"id": 1, "name": "Homo sapiens", "taxonomy_id": "9606"}
+
+### rows already carrying P0ADI4 / P11454 (what PathWhiz find_by would meet)
+SQL: SELECT id, name, uniprot_id, gene_name, species_id FROM proteins WHERE uniprot_id IN (%s, %s) ORDER BY id | params: ['P0ADI4', 'P11454']
+   {"id": 6224, "name": "Isochorismatase", "uniprot_id": "P0ADI4", "gene_name": "entB", "species_id": 3}
+   {"id": 6312, "name": "Enterobactin synthase component F", "uniprot_id": "P11454", "gene_name": "entF", "species_id": 3}
+
+### complexes named like the 3-draw wrapper or its stem in E. coli (species 3)
+SQL: SELECT id, name, species_id FROM protein_complexes WHERE species_id = %s AND (LOWER(name) = LOWER(%s) OR LOWER(name) = LOWER(%s)) | params: [3, 'enterobactin synthase complex', 'enterobactin synthase']
+   {"id": 3623, "name": "enterobactin synthase", "species_id": 3}
+
+DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ d1da8572cdc62acb057aac53a8491fd4a1a766ae  [git, worktree dirty=True]
+label                   : orch761-db4
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/orch761_pathbank_probe4.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 112056 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 1.41 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  106336:python.exe
+descendants terminated  : 1  106336
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/bt-orch761/db4.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================

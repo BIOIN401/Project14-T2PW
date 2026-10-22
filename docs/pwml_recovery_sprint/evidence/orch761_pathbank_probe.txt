@@ -1,0 +1,334 @@
+
+### proteins columns
+SQL: SELECT column_name, data_type, is_nullable, column_default FROM information_schema.columns WHERE table_schema = DATABASE() AND table_name = 'proteins' ORDER BY ordinal_position | params: []
+   {"column_name": "id", "data_type": "int", "is_nullable": "NO", "column_default": null}
+   {"column_name": "name", "data_type": "varchar", "is_nullable": "YES", "column_default": null}
+   {"column_name": "created_at", "data_type": "datetime", "is_nullable": "YES", "column_default": null}
+   {"column_name": "updated_at", "data_type": "datetime", "is_nullable": "YES", "column_default": null}
+   {"column_name": "uniprot_id", "data_type": "varchar", "is_nullable": "YES", "column_default": null}
+   {"column_name": "description", "data_type": "text", "is_nullable": "YES", "column_default": null}
+   {"column_name": "hmdbp_id", "data_type": "varchar", "is_nullable": "YES", "column_default": null}
+   {"column_name": "gene_name", "data_type": "varchar", "is_nullable": "YES", "column_default": null}
+   {"column_name": "locus", "data_type": "varchar", "is_nullable": "YES", "column_default": null}
+   {"column_name": "drugbank_id", "data_type": "varchar", "is_nullable": "YES", "column_default": null}
+   {"column_name": "genbank_id", "data_type": "varchar", "is_nullable": "YES", "column_default": null}
+   {"column_name": "user_id", "data_type": "int", "is_nullable": "NO", "column_default": "11"}
+   {"column_name": "species_id", "data_type": "int", "is_nullable": "YES", "column_default": "1"}
+   {"column_name": "ec_numbers", "data_type": "varchar", "is_nullable": "YES", "column_default": null}
+   {"column_name": "synonyms", "data_type": "text", "is_nullable": "YES", "column_default": null}
+
+### protein identity coverage (all rows)
+SQL: SELECT COUNT(*) AS total, SUM(p.uniprot_id IS NOT NULL AND TRIM(p.uniprot_id) <> '' AND p.uniprot_id <> 'Unknown') AS real_uniprot, SUM(p.uniprot_id = 'Unknown') AS uniprot_literal_unknown, SUM(p.drugbank_id IS NOT NULL AND TRIM(p.drugbank_id) <> '') AS has_drugbank, SUM((p.uniprot_id IS NULL OR TRIM(p.uniprot_id) = '') AND (p.drugbank_id IS NULL OR TRIM(p.drugbank_id) = '')) AS has_neither, SUM(p.name = 'Unknown') AS name_unknown FROM proteins p | params: []
+   {"total": 161094, "real_uniprot": "156185", "uniprot_literal_unknown": "2195", "has_drugbank": "2730", "has_neither": "0", "name_unknown": "2196"}
+
+### protein identity coverage, proteins drawn in any pathway (protein_locations)
+SQL: SELECT COUNT(DISTINCT p.id) AS total, COUNT(DISTINCT CASE WHEN p.uniprot_id IS NOT NULL AND TRIM(p.uniprot_id) <> '' AND p.uniprot_id <> 'Unknown' THEN p.id END) AS real_uniprot, COUNT(DISTINCT CASE WHEN p.drugbank_id IS NOT NULL AND TRIM(p.drugbank_id) <> '' THEN p.id END) AS has_drugbank, COUNT(DISTINCT CASE WHEN p.uniprot_id = 'Unknown' THEN p.id END) AS unknown_sentinel, COUNT(DISTINCT CASE WHEN (p.uniprot_id IS NULL OR TRIM(p.uniprot_id) = '') AND (p.drugbank_id IS NULL OR TRIM(p.drugbank_id) = '') THEN p.id END) AS has_neither FROM proteins p JOIN protein_locations pl ON pl.protein_id = p.id | params: []
+   {"total": 110982, "real_uniprot": 107352, "has_drugbank": 2713, "unknown_sentinel": 928, "has_neither": 0}
+
+### identity coverage by species classification
+SQL: SELECT s.classification, COUNT(*) AS total, SUM(p.uniprot_id IS NOT NULL AND TRIM(p.uniprot_id) <> '' AND p.uniprot_id <> 'Unknown') AS real_uniprot, SUM(p.uniprot_id = 'Unknown') AS unknown_sentinel, SUM(p.drugbank_id IS NOT NULL AND TRIM(p.drugbank_id) <> '') AS has_drugbank, SUM((p.uniprot_id IS NULL OR TRIM(p.uniprot_id) = '') AND (p.drugbank_id IS NULL OR TRIM(p.drugbank_id) = '')) AS has_neither FROM proteins p LEFT JOIN species s ON s.id = p.species_id GROUP BY s.classification | params: []
+   {"classification": null, "total": 162, "real_uniprot": "162", "unknown_sentinel": "0", "has_drugbank": "0", "has_neither": "0"}
+   {"classification": "Eukaryote", "total": 23573, "real_uniprot": "20801", "unknown_sentinel": "63", "has_drugbank": "2721", "has_neither": "0"}
+   {"classification": "Prokaryote", "total": 137359, "real_uniprot": "135222", "unknown_sentinel": "2132", "has_drugbank": "9", "has_neither": "0"}
+
+### uniprot_id strings that are not accession-shaped
+SQL: SELECT uniprot_id, COUNT(*) AS n FROM proteins WHERE uniprot_id IS NOT NULL AND uniprot_id <> '' AND uniprot_id NOT REGEXP '^[A-Z0-9]{6}([A-Z0-9]{4})?$' GROUP BY uniprot_id ORDER BY n DESC LIMIT 25 | params: []
+   {"uniprot_id": "Unknown", "n": 2195}
+   {"uniprot_id": ":O15111", "n": 1}
+   {"uniprot_id": "A0A5V5QKG2_SALER", "n": 1}
+   {"uniprot_id": "B1W366 ", "n": 1}
+   {"uniprot_id": "F8JWX7 ", "n": 1}
+   {"uniprot_id": "\\Q9LVC8", "n": 1}
+   {"uniprot_id": "A0A5Y3UZN9_SALER", "n": 1}
+   {"uniprot_id": "B1W383 ", "n": 1}
+   {"uniprot_id": "F8JX84 ", "n": 1}
+   {"uniprot_id": "\tQ6XUU3", "n": 1}
+   {"uniprot_id": "A0A076LSX6 ", "n": 1}
+   {"uniprot_id": "A0A737H4S4_SALER", "n": 1}
+   {"uniprot_id": "B5GLD3 ", "n": 1}
+   {"uniprot_id": "G3J0P9_METTV", "n": 1}
+   {"uniprot_id": " O00180", "n": 1}
+   {"uniprot_id": "A0A076PPN3 ", "n": 1}
+   {"uniprot_id": "A0A737LJN4_SALER", "n": 1}
+   {"uniprot_id": "B6HJU1 ", "n": 1}
+   {"uniprot_id": "G7UWL6 ", "n": 1}
+   {"uniprot_id": " O49347", "n": 1}
+   {"uniprot_id": "A0A0H3DLD6_MYCPB", "n": 1}
+   {"uniprot_id": "A0A738XCL9_SALER", "n": 1}
+   {"uniprot_id": "B6HJU5 ", "n": 1}
+   {"uniprot_id": "H2JZP5\t", "n": 1}
+   {"uniprot_id": " P04049", "n": 1}
+
+### drugbank_id sample
+SQL: SELECT p.id, p.name, p.uniprot_id, p.drugbank_id, p.species_id FROM proteins p WHERE p.drugbank_id IS NOT NULL AND TRIM(p.drugbank_id) <> '' LIMIT 10 | params: []
+   {"id": 5700, "name": "Abciximab", "uniprot_id": null, "drugbank_id": "DB00054", "species_id": 1}
+   {"id": 5727, "name": "Bevacizumab", "uniprot_id": null, "drugbank_id": "DB00112", "species_id": 1}
+   {"id": 5748, "name": "Bivalirudin", "uniprot_id": null, "drugbank_id": "DB00006", "species_id": 1}
+   {"id": 5749, "name": "Lepirudin", "uniprot_id": null, "drugbank_id": "DB00001", "species_id": 1}
+   {"id": 5751, "name": "Trastuzumab", "uniprot_id": null, "drugbank_id": "DB00072", "species_id": 1}
+   {"id": 5752, "name": "Panitumumab", "uniprot_id": null, "drugbank_id": "DB01269", "species_id": 1}
+   {"id": 5753, "name": "Eptifibatide", "uniprot_id": null, "drugbank_id": "DB00063", "species_id": 1}
+   {"id": 5754, "name": "Alteplase", "uniprot_id": null, "drugbank_id": "DB00009", "species_id": 1}
+   {"id": 5756, "name": "Anistreplase", "uniprot_id": null, "drugbank_id": "DB00029", "species_id": 1}
+   {"id": 5757, "name": "Streptokinase", "uniprot_id": null, "drugbank_id": "DB00086", "species_id": 1}
+
+### rows with neither id (sample)
+SQL: SELECT p.id, p.name, p.uniprot_id, p.drugbank_id, p.gene_name, p.species_id, s.name AS species FROM proteins p LEFT JOIN species s ON s.id = p.species_id WHERE (p.uniprot_id IS NULL OR TRIM(p.uniprot_id) = '') AND (p.drugbank_id IS NULL OR TRIM(p.drugbank_id) = '') LIMIT 15 | params: []
+
+### accessions carried by more than one protein row
+SQL: SELECT COUNT(*) AS accessions_on_more_than_one_row, SUM(n) AS rows_involved FROM (SELECT uniprot_id, COUNT(*) AS n FROM proteins WHERE uniprot_id IS NOT NULL AND uniprot_id <> '' AND uniprot_id <> 'Unknown' GROUP BY uniprot_id HAVING COUNT(*) > 1) t | params: []
+   {"accessions_on_more_than_one_row": 5533, "rows_involved": "64648"}
+
+### Unknown sentinel count by species
+SQL: SELECT p.species_id, s.name, COUNT(*) AS n FROM proteins p LEFT JOIN species s ON s.id = p.species_id WHERE p.name = 'Unknown' GROUP BY p.species_id, s.name ORDER BY n DESC LIMIT 15 | params: []
+   {"species_id": 3, "name": "Escherichia coli", "n": 21}
+   {"species_id": 12, "name": "Mus musculus", "n": 12}
+   {"species_id": 5, "name": "Bos taurus", "n": 7}
+   {"species_id": 17, "name": "Rattus norvegicus", "n": 4}
+   {"species_id": 355, "name": "Pseudomonas putida DOT-T1E", "n": 3}
+   {"species_id": 1, "name": "Homo sapiens", "n": 3}
+   {"species_id": 2121, "name": "Streptomyces avermitilis", "n": 3}
+   {"species_id": 351, "name": "Aromatoleum aromaticum", "n": 2}
+   {"species_id": 362, "name": "Serratia sp. FS14", "n": 2}
+   {"species_id": 571, "name": "Shigella flexneri", "n": 2}
+   {"species_id": 12184, "name": "Pisum sativum", "n": 2}
+   {"species_id": 22, "name": "Zea mays", "n": 2}
+   {"species_id": 46, "name": "Oryza sativa subsp. japonica", "n": 2}
+   {"species_id": 433, "name": "Brevibacillus borstelensis AK1", "n": 1}
+   {"species_id": 11471, "name": "Candidatus Liberibacter asiaticus str. psy62", "n": 1}
+
+### species rows: Lactococcus, lactis, coli, plantarum, and the taxa UniProt uses
+SQL: SELECT id, name, common_name, taxonomy_id, classification FROM species WHERE name LIKE '%Lactococc%' OR name LIKE '%lactis%' OR name LIKE '%coli%' OR name LIKE '%plantarum%' OR taxonomy_id IN ('1358','1359','1360','684738','272623','416870','562','83333','511145','316407','1590') ORDER BY id | params: []
+  (error) db_query_failed:not enough arguments for format string
+
+### species count by classification
+SQL: SELECT classification, COUNT(*) AS n FROM species GROUP BY classification | params: []
+   {"classification": "Eukaryote", "n": 203}
+   {"classification": "Prokaryote", "n": 3815}
+
+### T2PW _find_species_ids SQL (map_ids.py:1004-1015) for the KF147 organism string
+SQL: SELECT id, name, common_name, taxonomy_id FROM species WHERE LOWER(name)=LOWER(%s) OR LOWER(common_name)=LOWER(%s) OR taxonomy_id=%s OR LOWER(name) LIKE LOWER(%s) OR LOWER(common_name) LIKE LOWER(%s) LIMIT 40 | params: ['Lactococcus lactis subsp. lactis KF147', 'Lactococcus lactis subsp. lactis KF147', 'Lactococcus lactis subsp. lactis KF147', '%Lactococcus lactis subsp. lactis KF147%', '%Lactococcus lactis subsp. lactis KF147%']
+
+### same SQL for the canonicalised name Lactococcus lactis
+SQL: SELECT id, name, common_name, taxonomy_id FROM species WHERE LOWER(name)=LOWER(%s) OR LOWER(common_name)=LOWER(%s) OR taxonomy_id=%s OR LOWER(name) LIKE LOWER(%s) OR LOWER(common_name) LIKE LOWER(%s) LIMIT 40 | params: ['Lactococcus lactis', 'Lactococcus lactis', 'Lactococcus lactis', '%Lactococcus lactis%', '%Lactococcus lactis%']
+   {"id": 1030, "name": "Lactococcus lactis", "common_name": null, "taxonomy_id": "1358"}
+   {"id": 1204, "name": "Lactococcus lactis subsp. lactis Il1403", "common_name": null, "taxonomy_id": "272623"}
+   {"id": 1205, "name": "Lactococcus lactis subsp. cremoris SK11", "common_name": null, "taxonomy_id": "272622"}
+   {"id": 1206, "name": "Lactococcus lactis subsp. cremoris MG1363", "common_name": null, "taxonomy_id": "416870"}
+   {"id": 10688, "name": "Lactococcus lactis subsp. lactis", "common_name": "Streptococcus lactis", "taxonomy_id": "1360"}
+   {"id": 10727, "name": "Lactococcus lactis subsp. cremoris", "common_name": "Streptococcus cremoris", "taxonomy_id": "1359"}
+   {"id": 10733, "name": "Lactococcus lactis subsp. lactis (strain KF147)", "common_name": null, "taxonomy_id": "684738"}
+   {"id": 10734, "name": "Lactococcus lactis subsp. lactis A12", "common_name": null, "taxonomy_id": "1137134"}
+   {"id": 10779, "name": "Lactococcus lactis subsp. lactis KLDS 4.0325", "common_name": null, "taxonomy_id": "1399116"}
+
+### same SQL for taxonomy id 684738 (what the species row carries)
+SQL: SELECT id, name, common_name, taxonomy_id FROM species WHERE LOWER(name)=LOWER(%s) OR LOWER(common_name)=LOWER(%s) OR taxonomy_id=%s OR LOWER(name) LIKE LOWER(%s) OR LOWER(common_name) LIKE LOWER(%s) LIMIT 40 | params: ['684738', '684738', '684738', '%684738%', '%684738%']
+   {"id": 10733, "name": "Lactococcus lactis subsp. lactis (strain KF147)", "common_name": null, "taxonomy_id": "684738"}
+
+### proteins whose species is Lactococcus
+SQL: SELECT s.id AS species_id, s.name, s.taxonomy_id, COUNT(p.id) AS n_proteins, SUM(p.uniprot_id IS NOT NULL AND TRIM(p.uniprot_id) <> '' AND p.uniprot_id <> 'Unknown') AS real_uniprot FROM species s LEFT JOIN proteins p ON p.species_id = s.id WHERE s.name LIKE '%Lactococc%' GROUP BY s.id, s.name, s.taxonomy_id | params: []
+  (error) db_query_failed:not enough arguments for format string
+
+### Men genes, any species
+SQL: SELECT p.id, p.name, p.gene_name, p.uniprot_id, p.drugbank_id, p.species_id, s.name AS species, s.taxonomy_id FROM proteins p LEFT JOIN species s ON s.id = p.species_id WHERE LOWER(p.gene_name) IN (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ORDER BY s.name, p.gene_name | params: ['mena', 'menb', 'menc', 'mend', 'mene', 'menf', 'menh', 'meni', 'meng', 'ubie', 'menx', 'yhdb', 'yhda', 'prea']
+   {"id": 86881, "name": "Ubiquinone/menaquinone biosynthesis C-methyltransferase UbiE", "gene_name": "ubiE", "uniprot_id": "D0SDD8", "drugbank_id": null, "species_id": 1962, "species": "Acinetobacter johnsonii SH046", "taxonomy_id": "575586"}
+   {"id": 82991, "name": "Ubiquinone/menaquinone biosynthesis C-methyltransferase UbiE", "gene_name": "ubiE", "uniprot_id": "D0SPL7", "drugbank_id": null, "species_id": 1964, "species": "Acinetobacter junii SH205", "taxonomy_id": "575587"}
+   {"id": 58665, "name": "1,4-dihydroxy-2-naphthoate octaprenyltransferase", "gene_name": "menA", "uniprot_id": "G5H8H2", "drugbank_id": null, "species_id": 1698, "species": "Alistipes indistinctus YIT 12060", "taxonomy_id": "742725"}
+   {"id": 82430, "name": "Demethylmenaquinone methyltransferase", "gene_name": "menG", "uniprot_id": "G5H8B6", "drugbank_id": null, "species_id": 1698, "species": "Alistipes indistinctus YIT 12060", "taxonomy_id": "742725"}
+   {"id": 85438, "name": "1,4-dihydroxy-2-naphthoate octaprenyltransferase", "gene_name": "menA", "uniprot_id": "B0MSL7", "drugbank_id": null, "species_id": 1700, "species": "Alistipes putredinis DSM 17216", "taxonomy_id": "445970"}
+   {"id": 36484, "name": "Demethylmenaquinone methyltransferase", "gene_name": "menG", "uniprot_id": "B0MSN4", "drugbank_id": null, "species_id": 1700, "species": "Alistipes putredinis DSM 17216", "taxonomy_id": "445970"}
+   {"id": 36237, "name": "Demethylmenaquinone methyltransferase", "gene_name": "menG", "uniprot_id": "D4IMM8", "drugbank_id": null, "species_id": 380, "species": "Alistipes shahii WAL 8301", "taxonomy_id": "717959"}
+   {"id": 85194, "name": "1,4-dihydroxy-2-naphthoate octaprenyltransferase", "gene_name": "menA", "uniprot_id": "C9LE67", "drugbank_id": null, "species_id": 1658, "species": "Alloprevotella tannerae ATCC 51259", "taxonomy_id": "626522"}
+   {"id": 34535, "name": "Demethylmenaquinone methyltransferase", "gene_name": "menG", "uniprot_id": "C9LFM8", "drugbank_id": null, "species_id": 1658, "species": "Alloprevotella tannerae ATCC 51259", "taxonomy_id": "626522"}
+   {"id": 23553, "name": "1,4-dihydroxy-2-naphthoyl-CoA synthase, peroxisomal", "gene_name": "MENB", "uniprot_id": "Q8GYN9", "drugbank_id": null, "species_id": 4, "species": "Arabidopsis thaliana", "taxonomy_id": "3702"}
+   {"id": 11563, "name": "demethylphylloquinol methyltransferase", "gene_name": "MENG", "uniprot_id": "Q3ED65", "drugbank_id": null, "species_id": 4, "species": "Arabidopsis thaliana", "taxonomy_id": "3702"}
+   {"id": 110081, "name": "1,4-dihydroxy-2-naphthoate octaprenyltransferase", "gene_name": "menA", "uniprot_id": "A0A8I1WJI4", "drugbank_id": null, "species_id": 92, "species": "Bacillus subtilis", "taxonomy_id": "1423"}
+   {"id": 109372, "name": "o-succinylbenzoate synthase", "gene_name": "menC", "uniprot_id": "A0A8I2BAP7", "drugbank_id": null, "species_id": 92, "species": "Bacillus subtilis", "taxonomy_id": "1423"}
+   {"id": 144547, "name": "o-succinylbenzoate synthase", "gene_name": "menC", "uniprot_id": "A0AAP2PZJ7", "drugbank_id": null, "species_id": 92, "species": "Bacillus subtilis", "taxonomy_id": "1423"}
+   {"id": 110074, "name": "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase", "gene_name": "menD", "uniprot_id": "A0A0D1IVW0", "drugbank_id": null, "species_id": 92, "species": "Bacillus subtilis", "taxonomy_id": "1423"}
+   {"id": 110075, "name": "Putative 2-succinyl-6-hydroxy-2,4-cyclohexadiene-1-carboxylate synthase", "gene_name": "menH", "uniprot_id": "A0AAQ3IFH1", "drugbank_id": null, "species_id": 92, "species": "Bacillus subtilis", "taxonomy_id": "1423"}
+   {"id": 110078, "name": "1,4-dihydroxy-2-naphthoyl-CoA synthase", "gene_name": "menB", "uniprot_id": "A0A199WJK9", "drugbank_id": null, "species_id": 10743, "species": "Bacillus subtilis subsp. subtilis", "taxonomy_id": "135461"}
+   {"id": 110079, "name": "1,4-dihydroxy-2-naphthoyl-CoA synthase", "gene_name": "menB", "uniprot_id": "A0A199WJK9", "drugbank_id": null, "species_id": 10743, "species": "Bacillus subtilis subsp. subtilis", "taxonomy_id": "135461"}
+   {"id": 144606, "name": "1,4-dihydroxy-2-naphthoyl-CoA synthase", "gene_name": "menB", "uniprot_id": "A0A199WJK9", "drugbank_id": null, "species_id": 10743, "species": "Bacillus subtilis subsp. subtilis", "taxonomy_id": "135461"}
+   {"id": 144607, "name": "1,4-dihydroxy-2-naphthoyl-CoA synthase", "gene_name": "menB", "uniprot_id": "A0A199WJK9", "drugbank_id": null, "species_id": 10743, "species": "Bacillus subtilis subsp. subtilis", "taxonomy_id": "135461"}
+   {"id": 108965, "name": "1,4-dihydroxy-2-naphthoyl-CoA synthase", "gene_name": "menB", "uniprot_id": "A0A199WJK9", "drugbank_id": null, "species_id": 10743, "species": "Bacillus subtilis subsp. subtilis", "taxonomy_id": "135461"}
+   {"id": 110077, "name": "2-succinylbenzoate--CoA ligase", "gene_name": "menE", "uniprot_id": "A0AAE2SNW3", "drugbank_id": null, "species_id": 10743, "species": "Bacillus subtilis subsp. subtilis", "taxonomy_id": "135461"}
+   {"id": 144605, "name": "2-succinylbenzoate--CoA ligase", "gene_name": "menE", "uniprot_id": "A0AAE2SNW3", "drugbank_id": null, "species_id": 10743, "species": "Bacillus subtilis subsp. subtilis", "taxonomy_id": "135461"}
+   {"id": 84066, "name": "1,4-dihydroxy-2-naphthoate octaprenyltransferase", "gene_name": "menA", "uniprot_id": "F3PLE9", "drugbank_id": null, "species_id": 394, "species": "Bacteroides clarus YIT 12056", "taxonomy_id": "762984"}
+   {"id": 81566, "name": "Demethylmenaquinone methyltransferase", "gene_name": "menG", "uniprot_id": "F3PKL1", "drugbank_id": null, "species_id": 394, "species": "Bacteroides clarus YIT 12056", "taxonomy_id": "762984"}
+   {"id": 84611, "name": "1,4-dihydroxy-2-naphthoate octaprenyltransferase", "gene_name": "menA", "uniprot_id": "E5WYD0", "drugbank_id": null, "species_id": 1613, "species": "Bacteroides eggerthii 1_2_48FAA", "taxonomy_id": "665953"}
+   {"id": 29655, "name": "1,4-dihydroxy-2-naphthoyl-CoA synthase", "gene_name": "menB", "uniprot_id": "E5X2M0", "drugbank_id": null, "species_id": 1613, "species": "Bacteroides eggerthii 1_2_48FAA", "taxonomy_id": "665953"}
+   {"id": 84607, "name": "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase", "gene_name": "menD", "uniprot_id": "E5X2L9", "drugbank_id": null, "species_id": 1613, "species": "Bacteroides eggerthii 1_2_48FAA", "taxonomy_id": "665953"}
+   {"id": 81977, "name": "Demethylmenaquinone methyltransferase", "gene_name": "menG", "uniprot_id": "E5WY23", "drugbank_id": null, "species_id": 1613, "species": "Bacteroides eggerthii 1_2_48FAA", "taxonomy_id": "665953"}
+   {"id": 84605, "name": "1,4-dihydroxy-2-naphthoate octaprenyltransferase", "gene_name": "menA", "uniprot_id": "C9KVB3", "drugbank_id": null, "species_id": 1616, "species": "Bacteroides finegoldii DSM 17565", "taxonomy_id": "483215"}
+   {"id": 29657, "name": "1,4-dihydroxy-2-naphthoyl-CoA synthase", "gene_name": "menB", "uniprot_id": "C9L255", "drugbank_id": null, "species_id": 1616, "species": "Bacteroides finegoldii DSM 17565", "taxonomy_id": "483215"}
+   {"id": 84602, "name": "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase", "gene_name": "menD", "uniprot_id": "C9L256", "drugbank_id": null, "species_id": 1616, "species": "Bacteroides finegoldii DSM 17565", "taxonomy_id": "483215"}
+   {"id": 84606, "name": "Demethylmenaquinone methyltransferase", "gene_name": "menG", "uniprot_id": "C9L2K7", "drugbank_id": null, "species_id": 1616, "species": "Bacteroides finegoldii DSM 17565", "taxonomy_id": "483215"}
+   {"id": 84696, "name": "1,4-dihydroxy-2-naphthoate octaprenyltransferase", "gene_name": "menA", "uniprot_id": "F3PR85", "drugbank_id": null, "species_id": 1617, "species": "Bacteroides fluxus YIT 12057", "taxonomy_id": "763034"}
+   {"id": 29659, "name": "1,4-dihydroxy-2-naphthoyl-CoA synthase", "gene_name": "menB", "uniprot_id": "F3PWC8", "drugbank_id": null, "species_id": 1617, "species": "Bacteroides fluxus YIT 12057", "taxonomy_id": "763034"}
+   {"id": 84691, "name": "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase", "gene_name": "menD", "uniprot_id": "F3PWC7", "drugbank_id": null, "species_id": 1617, "species": "Bacteroides fluxus YIT 12057", "taxonomy_id": "763034"}
+   {"id": 84697, "name": "Demethylmenaquinone methyltransferase", "gene_name": "menG", "uniprot_id": "F3PYG5", "drugbank_id": null, "species_id": 1617, "species": "Bacteroides fluxus YIT 12057", "taxonomy_id": "763034"}
+   {"id": 34300, "name": "1,4-dihydroxy-2-naphthoyl-CoA synthase", "gene_name": "menB", "uniprot_id": "A0A069D526", "drugbank_id": null, "species_id": 1619, "species": "Bacteroides graminisolvens DSM 19988 = JCM 15093", "taxonomy_id": "1121097"}
+   {"id": 84704, "name": "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase", "gene_name": "menD", "uniprot_id": "A0A069D3N8", "drugbank_id": null, "species_id": 1619, "species": "Bacteroides graminisolvens DSM 19988 = JCM 15093", "taxonomy_id": "1121097"}
+   {"id": 84708, "name": "Demethylmenaquinone methyltransferase", "gene_name": "menG", "uniprot_id": "A0A069D1N7", "drugbank_id": null, "species_id": 1619, "species": "Bacteroides graminisolvens DSM 19988 = JCM 15093", "taxonomy_id": "1121097"}
+   {"id": 84422, "name": "1,4-dihydroxy-2-naphthoate octaprenyltransferase", "gene_name": "menA", "uniprot_id": "A0A139LUH1", "drugbank_id": null, "species_id": 958, "species": "Bacteroides intestinalis", "taxonomy_id": "329854"}
+   {"id": 84416, "name": "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase", "gene_name": "menD", "uniprot_id": "A0A6N2UR16", "drugbank_id": null, "species_id": 958, "species": "Bacteroides intestinalis", "taxonomy_id": "329854"}
+   {"id": 81861, "name": "Demethylmenaquinone methyltransferase", "gene_name": "ubiE", "uniprot_id": "A0A6N2VF43", "drugbank_id": null, "species_id": 958, "species": "Bacteroides intestinalis", "taxonomy_id": "329854"}
+   {"id": 84713, "name": "1,4-dihydroxy-2-naphthoate octaprenyltransferase", "gene_name": "menA", "uniprot_id": "I8X2K1", "drugbank_id": null, "species_id": 1621, "species": "Bacteroides nordii CL02T12C05", "taxonomy_id": "997884"}
+   {"id": 29661, "name": "1,4-dihydroxy-2-naphthoyl-CoA synthase", "gene_name": "menB", "uniprot_id": "I9S9S1", "drugbank_id": null, "species_id": 1621, "species": "Bacteroides nordii CL02T12C05", "taxonomy_id": "997884"}
+   {"id": 84709, "name": "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase", "gene_name": "menD", "uniprot_id": "I8XQ17", "drugbank_id": null, "species_id": 1621, "species": "Bacteroides nordii CL02T12C05", "taxonomy_id": "997884"}
+   {"id": 81995, "name": "Demethylmenaquinone methyltransferase", "gene_name": "menG", "uniprot_id": "I9S8I9", "drugbank_id": null, "species_id": 1621, "species": "Bacteroides nordii CL02T12C05", "taxonomy_id": "997884"}
+   {"id": 84703, "name": "Demethylmenaquinone methyltransferase", "gene_name": "menG", "uniprot_id": "K9DZM9", "drugbank_id": null, "species_id": 1622, "species": "Bacteroides oleiciplenus YIT 12058", "taxonomy_id": "742727"}
+   {"id": 84777, "name": "1,4-dihydroxy-2-naphthoate octaprenyltransferase", "gene_name": "menA", "uniprot_id": "W4PI17", "drugbank_id": null, "species_id": 1625, "species": "Bacteroides pyogenes DSM 20611 = JCM 6294", "taxonomy_id": "1121100"}
+   {"id": 34521, "name": "1,4-dihydroxy-2-naphthoyl-CoA synthase", "gene_name": "menB", "uniprot_id": "W4PGI5", "drugbank_id": null, "species_id": 1625, "species": "Bacteroides pyogenes DSM 20611 = JCM 6294", "taxonomy_id": "1121100"}
+   {"id": 84774, "name": "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase", "gene_name": "menD", "uniprot_id": "W4PFG3", "drugbank_id": null, "species_id": 1625, "species": "Bacteroides pyogenes DSM 20611 = JCM 6294", "taxonomy_id": "1121100"}
+   {"id": 84778, "name": "Demethylmenaquinone methyltransferase", "gene_name": "menG", "uniprot_id": "W4PFA0", "drugbank_id": null, "species_id": 1625, "species": "Bacteroides pyogenes DSM 20611 = JCM 6294", "taxonomy_id": "1121100"}
+   {"id": 57150, "name": "1,4-dihydroxy-2-naphthoate octaprenyltransferase", "gene_name": "menA", "uniprot_id": "D7IBX3", "drugbank_id": null, "species_id": 1632, "species": "Bacteroides sp. 1_1_14", "taxonomy_id": "469585"}
+   {"id": 34313, "name": "1,4-dihydroxy-2-naphthoyl-CoA synthase", "gene_name": "menB", "uniprot_id": "D7IA91", "drugbank_id": null, "species_id": 1632, "species": "Bacteroides sp. 1_1_14", "taxonomy_id": "469585"}
+   {"id": 84914, "name": "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase", "gene_name": "menD", "uniprot_id": "D7IA90", "drugbank_id": null, "species_id": 1632, "species": "Bacteroides sp. 1_1_14", "taxonomy_id": "469585"}
+   {"id": 82054, "name": "Demethylmenaquinone methyltransferase", "gene_name": "menG", "uniprot_id": "D7I8E1", "drugbank_id": null, "species_id": 1632, "species": "Bacteroides sp. 1_1_14", "taxonomy_id": "469585"}
+   {"id": 84924, "name": "1,4-dihydroxy-2-naphthoate octaprenyltransferase", "gene_name": "menA", "uniprot_id": "F7M1G3", "drugbank_id": null, "species_id": 1633, "species": "Bacteroides sp. 1_1_30", "taxonomy_id": "457387"}
+   {"id": 34317, "name": "1,4-dihydroxy-2-naphthoyl-CoA synthase", "gene_name": "menB", "uniprot_id": "F7M5M6", "drugbank_id": null, "species_id": 1633, "species": "Bacteroides sp. 1_1_30", "taxonomy_id": "457387"}
+   {"id": 84920, "name": "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase", "gene_name": "menD", "uniprot_id": "F7M5M5", "drugbank_id": null, "species_id": 1633, "species": "Bacteroides sp. 1_1_30", "taxonomy_id": "457387"}
+   {"id": 82060, "name": "Demethylmenaquinone methyltransferase", "gene_name": "menG", "uniprot_id": "F7MBC2", "drugbank_id": null, "species_id": 1633, "species": "Bacteroides sp. 1_1_30", "taxonomy_id": "457387"}
+   {"id": 84935, "name": "1,4-dihydroxy-2-naphthoate octaprenyltransferase", "gene_name": "menA", "uniprot_id": "D0TR99", "drugbank_id": null, "species_id": 1634, "species": "Bacteroides sp. 2_1_22", "taxonomy_id": "469588"}
+   {"id": 34523, "name": "1,4-dihydroxy-2-naphthoyl-CoA synthase", "gene_name": "menB", "uniprot_id": "D0TT47", "drugbank_id": null, "species_id": 1634, "species": "Bacteroides sp. 2_1_22", "taxonomy_id": "469588"}
+   {"id": 84932, "name": "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase", "gene_name": "menD", "uniprot_id": "D0TT46", "drugbank_id": null, "species_id": 1634, "species": "Bacteroides sp. 2_1_22", "taxonomy_id": "469588"}
+   {"id": 82064, "name": "Demethylmenaquinone methyltransferase", "gene_name": "menG", "uniprot_id": "D0TVA3", "drugbank_id": null, "species_id": 1634, "species": "Bacteroides sp. 2_1_22", "taxonomy_id": "469588"}
+   {"id": 84921, "name": "1,4-dihydroxy-2-naphthoate octaprenyltransferase", "gene_name": "menA", "uniprot_id": "C3QXA9", "drugbank_id": null, "species_id": 1635, "species": "Bacteroides sp. 2_2_4", "taxonomy_id": "469590"}
+   {"id": 34321, "name": "1,4-dihydroxy-2-naphthoyl-CoA synthase", "gene_name": "menB", "uniprot_id": "C3QQ42", "drugbank_id": null, "species_id": 1635, "species": "Bacteroides sp. 2_2_4", "taxonomy_id": "469590"}
+   {"id": 84917, "name": "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase", "gene_name": "menD", "uniprot_id": "C3QQ43", "drugbank_id": null, "species_id": 1635, "species": "Bacteroides sp. 2_2_4", "taxonomy_id": "469590"}
+   {"id": 82061, "name": "Demethylmenaquinone methyltransferase", "gene_name": "menG", "uniprot_id": "C3QSH7", "drugbank_id": null, "species_id": 1635, "species": "Bacteroides sp. 2_2_4", "taxonomy_id": "469590"}
+   {"id": 84995, "name": "1,4-dihydroxy-2-naphthoate octaprenyltransferase", "gene_name": "menA", "uniprot_id": "E5VDK3", "drugbank_id": null, "species_id": 1641, "species": "Bacteroides sp. 4_1_36", "taxonomy_id": "457393"}
+   {"id": 82129, "name": "Demethylmenaquinone methyltransferase", "gene_name": "menG", "uniprot_id": "E5VEH6", "drugbank_id": null, "species_id": 1641, "species": "Bacteroides sp. 4_1_36", "taxonomy_id": "457393"}
+   {"id": 34624, "name": "1,4-dihydroxy-2-naphthoyl-CoA synthase", "gene_name": "menB", "uniprot_id": "E5C449", "drugbank_id": null, "species_id": 1645, "species": "Bacteroides sp. D2", "taxonomy_id": "556259"}
+   {"id": 85064, "name": "1,4-dihydroxy-2-naphthoate octaprenyltransferase", "gene_name": "menA", "uniprot_id": "A0AAV3DDW7", "drugbank_id": null, "species_id": 1646, "species": "Bacteroides sp. D20", "taxonomy_id": "585543"}
+   {"id": 85061, "name": "1,4-dihydroxy-2-naphthoate octaprenyltransferase", "gene_name": "menA", "uniprot_id": "D7IY01", "drugbank_id": null, "species_id": 1647, "species": "Bacteroides sp. D22", "taxonomy_id": "585544"}
+   {"id": 34333, "name": "1,4-dihydroxy-2-naphthoyl-CoA synthase", "gene_name": "menB", "uniprot_id": "D7J8Q1", "drugbank_id": null, "species_id": 1647, "species": "Bacteroides sp. D22", "taxonomy_id": "585544"}
+   {"id": 85057, "name": "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase", "gene_name": "menD", "uniprot_id": "D7J8Q0", "drugbank_id": null, "species_id": 1647, "species": "Bacteroides sp. D22", "taxonomy_id": "585544"}
+   {"id": 82166, "name": "Demethylmenaquinone methyltransferase", "gene_name": "menG", "uniprot_id": "D7J5C1", "drugbank_id": null, "species_id": 1647, "species": "Bacteroides sp. D22", "taxonomy_id": "585544"}
+   {"id": 84129, "name": "1,4-dihydroxy-2-naphthoate octaprenyltransferase", "gene_name": "menA", "uniprot_id": "B0NUD0", "drugbank_id": null, "species_id": 404, "species": "Bacteroides stercoris ATCC 43183", "taxonomy_id": "449673"}
+   {"id": 29642, "name": "1,4-dihydroxy-2-naphthoyl-CoA synthase", "gene_name": "menB", "uniprot_id": "B0NM96", "drugbank_id": null, "species_id": 404, "species": "Bacteroides stercoris ATCC 43183", "taxonomy_id": "449673"}
+   {"id": 84125, "name": "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase", "gene_name": "menD", "uniprot_id": "B0NM97", "drugbank_id": null, "species_id": 404, "species": "Bacteroides stercoris ATCC 43183", "taxonomy_id": "449673"}
+   {"id": 81620, "name": "Demethylmenaquinone methyltransferase", "gene_name": "menG", "uniprot_id": "B0NVS0", "drugbank_id": null, "species_id": 404, "species": "Bacteroides stercoris ATCC 43183", "taxonomy_id": "449673"}
+   ... 337 rows total
+
+### Men-pathway enzyme names, any species
+SQL: SELECT p.id, p.name, p.gene_name, p.uniprot_id, p.species_id, s.name AS species FROM proteins p LEFT JOIN species s ON s.id = p.species_id WHERE p.name LIKE '%naphthoate%' OR p.name LIKE '%naphthoyl%' OR p.name LIKE '%succinylbenzoate%' OR p.name LIKE '%menaquinone%' OR p.name LIKE '%2-succinyl-5-enolpyruvyl%' OR p.name LIKE '%2-succinyl-6-hydroxy%' ORDER BY s.name, p.name LIMIT 200 | params: []
+  (error) db_query_failed:not enough arguments for format string
+
+### Ent genes, any species
+SQL: SELECT p.id, p.name, p.gene_name, p.uniprot_id, p.drugbank_id, p.species_id, s.name AS species, s.taxonomy_id FROM proteins p LEFT JOIN species s ON s.id = p.species_id WHERE LOWER(p.gene_name) IN (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ORDER BY s.name, p.gene_name LIMIT 200 | params: ['enta', 'entb', 'entc', 'entd', 'ente', 'entf', 'entg', 'enth', 'ents', 'fepa', 'fes', 'tolc']
+   {"id": 34178, "name": "Enterobactin synthase subunit E", "gene_name": "entE", "uniprot_id": "A0A0F6REA9", "drugbank_id": null, "species_id": 1866, "species": "Citrobacter amalonaticus Y19", "taxonomy_id": "1261127"}
+   {"id": 6341, "name": "2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase", "gene_name": "entA", "uniprot_id": "P15047", "drugbank_id": null, "species_id": 3, "species": "Escherichia coli", "taxonomy_id": "562"}
+   {"id": 6224, "name": "Isochorismatase", "gene_name": "entB", "uniprot_id": "P0ADI4", "drugbank_id": null, "species_id": 3, "species": "Escherichia coli", "taxonomy_id": "562"}
+   {"id": 6238, "name": "Isochorismate synthase entC", "gene_name": "entC", "uniprot_id": "P0AEJ2", "drugbank_id": null, "species_id": 3, "species": "Escherichia coli", "taxonomy_id": "562"}
+   {"id": 6383, "name": "4'-phosphopantetheinyl transferase entD", "gene_name": "entD", "uniprot_id": "P19925", "drugbank_id": null, "species_id": 3, "species": "Escherichia coli", "taxonomy_id": "562"}
+   {"id": 6301, "name": "Enterobactin synthase component E", "gene_name": "entE", "uniprot_id": "P10378", "drugbank_id": null, "species_id": 3, "species": "Escherichia coli", "taxonomy_id": "562"}
+   {"id": 6312, "name": "Enterobactin synthase component F", "gene_name": "entF", "uniprot_id": "P11454", "drugbank_id": null, "species_id": 3, "species": "Escherichia coli", "taxonomy_id": "562"}
+   {"id": 7382, "name": "Enterobactin exporter entS", "gene_name": "entS", "uniprot_id": "P24077", "drugbank_id": null, "species_id": 3, "species": "Escherichia coli", "taxonomy_id": "562"}
+   {"id": 7426, "name": "Ferrienterobactin receptor", "gene_name": "fepA", "uniprot_id": "P05825", "drugbank_id": null, "species_id": 3, "species": "Escherichia coli", "taxonomy_id": "562"}
+   {"id": 6331, "name": "Enterochelin esterase", "gene_name": "fes", "uniprot_id": "P13039", "drugbank_id": null, "species_id": 3, "species": "Escherichia coli", "taxonomy_id": "562"}
+   {"id": 7446, "name": "Outer membrane protein tolC", "gene_name": "tolC", "uniprot_id": "P02930", "drugbank_id": null, "species_id": 3, "species": "Escherichia coli", "taxonomy_id": "562"}
+   {"id": 34486, "name": "EntE protein", "gene_name": "entE", "uniprot_id": "B7L8H7", "drugbank_id": null, "species_id": 32, "species": "Escherichia coli (strain 55989 / EAEC)", "taxonomy_id": "585055"}
+   {"id": 76339, "name": "Enterobactin exporter EntS", "gene_name": "entS", "uniprot_id": "C4ZV37", "drugbank_id": null, "species_id": 34, "species": "Escherichia coli (strain K12 / MC4100 / BW2952)", "taxonomy_id": "595496"}
+   {"id": 34236, "name": "Enterobactin synthase component E", "gene_name": "entE", "uniprot_id": "P10378", "drugbank_id": null, "species_id": 25, "species": "Escherichia coli (strain K12)", "taxonomy_id": "83333"}
+   {"id": 34880, "name": "Enterobactin synthase component D", "gene_name": "entD", "uniprot_id": "B1LKH4", "drugbank_id": null, "species_id": 27, "species": "Escherichia coli (strain SMS-3-5 / SECEC)", "taxonomy_id": "439855"}
+   {"id": 34241, "name": "Enterobactin synthetase component E", "gene_name": "entE", "uniprot_id": "B1LKI7", "drugbank_id": null, "species_id": 27, "species": "Escherichia coli (strain SMS-3-5 / SECEC)", "taxonomy_id": "439855"}
+   {"id": 34244, "name": "Enterobactin synthetase component E", "gene_name": "entE", "uniprot_id": "Q1REW8", "drugbank_id": null, "species_id": 28, "species": "Escherichia coli (strain UTI89 / UPEC)", "taxonomy_id": "364106"}
+   {"id": 1387, "name": "Tyrosine-protein kinase Fes/Fps", "gene_name": "FES", "uniprot_id": "P07332", "drugbank_id": null, "species_id": 1, "species": "Homo sapiens", "taxonomy_id": "9606"}
+   {"id": 35575, "name": "NodT family efflux transporter", "gene_name": "tolC", "uniprot_id": "A0AA36UKC1", "drugbank_id": null, "species_id": 1809, "species": "Neisseria macacae ATCC 33926", "taxonomy_id": "997348"}
+   {"id": 35866, "name": "Outer membrane channel protein", "gene_name": "tolC", "uniprot_id": "R8AT30", "drugbank_id": null, "species_id": 1946, "species": "Plesiomonas shigelloides 302-73", "taxonomy_id": "1315976"}
+   {"id": 33971, "name": "isochorismate synthase", "gene_name": "entC", "uniprot_id": "F9DJ63", "drugbank_id": null, "species_id": 1689, "species": "Prevotella pallens ATCC 700821", "taxonomy_id": "997353"}
+   {"id": 35846, "name": "isochorismatase", "gene_name": "entB", "uniprot_id": "A0AAN2NWI6", "drugbank_id": null, "species_id": 1933, "species": "Serratia marcescens subsp. marcescens Db11", "taxonomy_id": "273526"}
+   {"id": 35844, "name": "isochorismate synthase", "gene_name": "entC", "uniprot_id": "A0AAN2NWN7", "drugbank_id": null, "species_id": 1933, "species": "Serratia marcescens subsp. marcescens Db11", "taxonomy_id": "273526"}
+   {"id": 34433, "name": "Enterobactin synthase subunit E", "gene_name": "entE", "uniprot_id": "A0AAN2NWS0", "drugbank_id": null, "species_id": 1933, "species": "Serratia marcescens subsp. marcescens Db11", "taxonomy_id": "273526"}
+   {"id": 35848, "name": "Enterobactin exporter EntS", "gene_name": "entS", "uniprot_id": "A0AAN2NRG7", "drugbank_id": null, "species_id": 1933, "species": "Serratia marcescens subsp. marcescens Db11", "taxonomy_id": "273526"}
+   {"id": 34017, "name": "2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase", "gene_name": "entA", "uniprot_id": "A0A085JQA4", "drugbank_id": null, "species_id": 1912, "species": "Tatumella ptyseos ATCC 33301", "taxonomy_id": "1005995"}
+   {"id": 34015, "name": "isochorismatase", "gene_name": "entB", "uniprot_id": "A0A085JQA3", "drugbank_id": null, "species_id": 1912, "species": "Tatumella ptyseos ATCC 33301", "taxonomy_id": "1005995"}
+   {"id": 34014, "name": "isochorismate synthase", "gene_name": "entC", "uniprot_id": "A0A085JQA1", "drugbank_id": null, "species_id": 1912, "species": "Tatumella ptyseos ATCC 33301", "taxonomy_id": "1005995"}
+   {"id": 35770, "name": "Enterobactin synthetase serine activating enzyme", "gene_name": "entF", "uniprot_id": "A0A085JQ96", "drugbank_id": null, "species_id": 1912, "species": "Tatumella ptyseos ATCC 33301", "taxonomy_id": "1005995"}
+   {"id": 35785, "name": "Enterobactin esterase", "gene_name": "fes", "uniprot_id": "A0A085JQ94", "drugbank_id": null, "species_id": 1912, "species": "Tatumella ptyseos ATCC 33301", "taxonomy_id": "1005995"}
+   {"id": 34013, "name": "2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase", "gene_name": "entA", "uniprot_id": "A0A084ZZ18", "drugbank_id": null, "species_id": 1900, "species": "Trabulsiella guamensis ATCC 49490", "taxonomy_id": "1005994"}
+   {"id": 34011, "name": "isochorismatase", "gene_name": "entB", "uniprot_id": "A0A084ZZ17", "drugbank_id": null, "species_id": 1900, "species": "Trabulsiella guamensis ATCC 49490", "taxonomy_id": "1005994"}
+   {"id": 86441, "name": "Enterobactin synthetase serine activating enzyme", "gene_name": "entF", "uniprot_id": "A0A085A0S9", "drugbank_id": null, "species_id": 1900, "species": "Trabulsiella guamensis ATCC 49490", "taxonomy_id": "1005994"}
+
+### rows carrying the accessions UniProt REST returned
+SQL: SELECT p.id, p.name, p.gene_name, p.uniprot_id, p.species_id, s.name AS species FROM proteins p LEFT JOIN species s ON s.id = p.species_id WHERE p.uniprot_id IN (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ORDER BY p.uniprot_id | params: ['P15047', 'P0ADI4', 'P0AEJ2', 'P19925', 'P10378', 'P11454', 'P38051', 'P02930', 'Q9CHJ9', 'Q9CHK0', 'Q9CHK1', 'Q9CHK2', 'Q9CHK3', 'Q9CHK4', 'Q9CHK5', 'P49016', 'Q9CJ25', 'A2RM72', 'A2RM73', 'A2RM74', 'A2RM75', 'A2RM76', 'A2RM77', 'A2RHR6', 'A2RJA5']
+   {"id": 7446, "name": "Outer membrane protein tolC", "gene_name": "tolC", "uniprot_id": "P02930", "species_id": 3, "species": "Escherichia coli"}
+   {"id": 6224, "name": "Isochorismatase", "gene_name": "entB", "uniprot_id": "P0ADI4", "species_id": 3, "species": "Escherichia coli"}
+   {"id": 6238, "name": "Isochorismate synthase entC", "gene_name": "entC", "uniprot_id": "P0AEJ2", "species_id": 3, "species": "Escherichia coli"}
+   {"id": 6301, "name": "Enterobactin synthase component E", "gene_name": "entE", "uniprot_id": "P10378", "species_id": 3, "species": "Escherichia coli"}
+   {"id": 34236, "name": "Enterobactin synthase component E", "gene_name": "entE", "uniprot_id": "P10378", "species_id": 25, "species": "Escherichia coli (strain K12)"}
+   {"id": 6312, "name": "Enterobactin synthase component F", "gene_name": "entF", "uniprot_id": "P11454", "species_id": 3, "species": "Escherichia coli"}
+   {"id": 6341, "name": "2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase", "gene_name": "entA", "uniprot_id": "P15047", "species_id": 3, "species": "Escherichia coli"}
+   {"id": 6383, "name": "4'-phosphopantetheinyl transferase entD", "gene_name": "entD", "uniprot_id": "P19925", "species_id": 3, "species": "Escherichia coli"}
+   {"id": 6595, "name": "Menaquinone-specific isochorismate synthase", "gene_name": "menF", "uniprot_id": "P38051", "species_id": 3, "species": "Escherichia coli"}
+   {"id": 83739, "name": "Isochorismate synthase MenF", "gene_name": "menF", "uniprot_id": "P38051", "species_id": 25, "species": "Escherichia coli (strain K12)"}
+
+### pathways named menaquinone / enterobactin (PW accession via spv.pw_id)
+SQL: SELECT pw.id AS pathway_id, pw.name, pw.species_id, s.name AS species, s.taxonomy_id, spv.id AS spv_id, spv.pw_id, spv.smpdb_id FROM pathways pw LEFT JOIN species s ON s.id = pw.species_id LEFT JOIN super_pathway_visualizations spv ON spv.named_for_id = pw.id AND spv.named_for_type = 'Pathway' WHERE pw.name LIKE '%enaquinone%' OR pw.name LIKE '%nterobactin%' OR pw.name LIKE '%nterochelin%' ORDER BY pw.name LIMIT 60 | params: []
+  (error) db_query_failed:not enough arguments for format string
+
+### proteins drawn in E. coli enterobactin pathways
+SQL: SELECT DISTINCT pw.id AS pathway_id, spv.pw_id, p.id AS protein_id, p.name, p.gene_name, p.uniprot_id, p.species_id FROM pathways pw JOIN pathway_visualizations pv ON pv.pathway_id = pw.id JOIN protein_locations pl ON pl.pathway_visualization_id = pv.id JOIN proteins p ON p.id = pl.protein_id LEFT JOIN super_pathway_visualizations spv ON spv.named_for_id = pw.id AND spv.named_for_type = 'Pathway' WHERE pw.name LIKE '%nterobactin%' AND pw.species_id = 3 ORDER BY pw.id, p.gene_name LIMIT 80 | params: []
+  (error) db_query_failed:not enough arguments for format string
+
+### menaquinone pathways: protein identity per pathway
+SQL: SELECT pw.id AS pathway_id, pw.name, s.name AS species, COUNT(DISTINCT p.id) AS n, COUNT(DISTINCT CASE WHEN p.uniprot_id IS NOT NULL AND TRIM(p.uniprot_id) <> '' AND p.uniprot_id <> 'Unknown' THEN p.id END) AS real_uniprot, COUNT(DISTINCT CASE WHEN p.uniprot_id = 'Unknown' THEN p.id END) AS unknown FROM pathways pw LEFT JOIN species s ON s.id = pw.species_id JOIN pathway_visualizations pv ON pv.pathway_id = pw.id JOIN protein_locations pl ON pl.pathway_visualization_id = pv.id JOIN proteins p ON p.id = pl.protein_id WHERE pw.name LIKE '%enaquinone%' GROUP BY pw.id, pw.name, s.name ORDER BY s.name LIMIT 60 | params: []
+  (error) db_query_failed:not enough arguments for format string
+
+### menaquinone pathway proteins in prokaryote pathways (rows)
+SQL: SELECT DISTINCT pw.id AS pathway_id, s.name AS species, p.id AS protein_id, p.name, p.gene_name, p.uniprot_id, p.species_id AS protein_species_id FROM pathways pw LEFT JOIN species s ON s.id = pw.species_id JOIN pathway_visualizations pv ON pv.pathway_id = pw.id JOIN protein_locations pl ON pl.pathway_visualization_id = pv.id JOIN proteins p ON p.id = pl.protein_id WHERE pw.name LIKE '%enaquinone%' AND s.classification = 'Prokaryote' ORDER BY s.name, pw.id, p.gene_name LIMIT 120 | params: []
+  (error) db_query_failed:not enough arguments for format string
+
+### protein_complex 3623 with components
+SQL: SELECT pc.id, pc.name, pc.species_id, pc.pwp_id, pcp.protein_id, pcp.stoichiometry, p.name AS protein_name, p.gene_name, p.uniprot_id FROM protein_complexes pc LEFT JOIN protein_complex_proteins pcp ON pcp.protein_complex_id = pc.id LEFT JOIN proteins p ON p.id = pcp.protein_id WHERE pc.id = %s | params: [3623]
+   {"id": 3623, "name": "enterobactin synthase", "species_id": 3, "pwp_id": "PW_P003623", "protein_id": 6224, "stoichiometry": 2, "protein_name": "Isochorismatase", "gene_name": "entB", "uniprot_id": "P0ADI4"}
+   {"id": 3623, "name": "enterobactin synthase", "species_id": 3, "pwp_id": "PW_P003623", "protein_id": 6383, "stoichiometry": null, "protein_name": "4'-phosphopantetheinyl transferase entD", "gene_name": "entD", "uniprot_id": "P19925"}
+   {"id": 3623, "name": "enterobactin synthase", "species_id": 3, "pwp_id": "PW_P003623", "protein_id": 6312, "stoichiometry": null, "protein_name": "Enterobactin synthase component F", "gene_name": "entF", "uniprot_id": "P11454"}
+   {"id": 3623, "name": "enterobactin synthase", "species_id": 3, "pwp_id": "PW_P003623", "protein_id": 6301, "stoichiometry": 2, "protein_name": "Enterobactin synthase component E", "gene_name": "entE", "uniprot_id": "P10378"}
+
+### protein_complex 1143 with components
+SQL: SELECT pc.id, pc.name, pc.species_id, pc.pwp_id, pcp.protein_id, pcp.stoichiometry, p.name AS protein_name, p.gene_name, p.uniprot_id FROM protein_complexes pc LEFT JOIN protein_complex_proteins pcp ON pcp.protein_complex_id = pc.id LEFT JOIN proteins p ON p.id = pcp.protein_id WHERE pc.id = %s | params: [1143]
+   {"id": 1143, "name": "Isochorismate synthase", "species_id": 3, "pwp_id": "PW_P001143", "protein_id": 6238, "stoichiometry": null, "protein_name": "Isochorismate synthase entC", "gene_name": "entC", "uniprot_id": "P0AEJ2"}
+
+### protein_complex 1189 with components
+SQL: SELECT pc.id, pc.name, pc.species_id, pc.pwp_id, pcp.protein_id, pcp.stoichiometry, p.name AS protein_name, p.gene_name, p.uniprot_id FROM protein_complexes pc LEFT JOIN protein_complex_proteins pcp ON pcp.protein_complex_id = pc.id LEFT JOIN proteins p ON p.id = pcp.protein_id WHERE pc.id = %s | params: [1189]
+   {"id": 1189, "name": "isochorismatase", "species_id": 3, "pwp_id": "PW_P001189", "protein_id": 6224, "stoichiometry": null, "protein_name": "Isochorismatase", "gene_name": "entB", "uniprot_id": "P0ADI4"}
+
+### protein_complex 1190 with components
+SQL: SELECT pc.id, pc.name, pc.species_id, pc.pwp_id, pcp.protein_id, pcp.stoichiometry, p.name AS protein_name, p.gene_name, p.uniprot_id FROM protein_complexes pc LEFT JOIN protein_complex_proteins pcp ON pcp.protein_complex_id = pc.id LEFT JOIN proteins p ON p.id = pcp.protein_id WHERE pc.id = %s | params: [1190]
+   {"id": 1190, "name": "oxidoreductase (entA)", "species_id": 3, "pwp_id": "PW_P001190", "protein_id": 6341, "stoichiometry": null, "protein_name": "2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase", "gene_name": "entA", "uniprot_id": "P15047"}
+
+### protein_complex 3929 with components
+SQL: SELECT pc.id, pc.name, pc.species_id, pc.pwp_id, pcp.protein_id, pcp.stoichiometry, p.name AS protein_name, p.gene_name, p.uniprot_id FROM protein_complexes pc LEFT JOIN protein_complex_proteins pcp ON pcp.protein_complex_id = pc.id LEFT JOIN proteins p ON p.id = pcp.protein_id WHERE pc.id = %s | params: [3929]
+   {"id": 3929, "name": "enterobactin B", "species_id": 3, "pwp_id": "PW_P003929", "protein_id": 6224, "stoichiometry": null, "protein_name": "Isochorismatase", "gene_name": "entB", "uniprot_id": "P0ADI4"}
+
+DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ b06b86b5ab1cd69ffe73274f063337f04c72bc79  [git, worktree dirty=True]
+label                   : orch761-db
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/orch761_pathbank_probe.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 95456 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 12.51 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  88824:python.exe
+descendants terminated  : 1  88824
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/bt-orch761/db.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================

@@ -1,0 +1,108 @@
+
+### pathway_visualizations for pathway 1817 (Enterobactin Biosynthesis, E. coli (562))
+SQL: SELECT id, pathway_id FROM pathway_visualizations WHERE pathway_id = %s | params: [1817]
+   {"id": 1801, "pathway_id": 1817}
+
+### proteins drawn in pathway 1817 / pv 1801
+SQL: SELECT DISTINCT p.id, p.name, p.gene_name, p.uniprot_id, p.drugbank_id, p.species_id, s.name AS protein_species FROM protein_locations pl JOIN proteins p ON p.id = pl.protein_id LEFT JOIN species s ON s.id = p.species_id WHERE pl.pathway_visualization_id = %s ORDER BY p.gene_name | params: [1801]
+   {"id": 6341, "name": "2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase", "gene_name": "entA", "uniprot_id": "P15047", "drugbank_id": null, "species_id": 3, "protein_species": "Escherichia coli"}
+   {"id": 6224, "name": "Isochorismatase", "gene_name": "entB", "uniprot_id": "P0ADI4", "drugbank_id": null, "species_id": 3, "protein_species": "Escherichia coli"}
+   {"id": 6238, "name": "Isochorismate synthase entC", "gene_name": "entC", "uniprot_id": "P0AEJ2", "drugbank_id": null, "species_id": 3, "protein_species": "Escherichia coli"}
+   {"id": 6301, "name": "Enterobactin synthase component E", "gene_name": "entE", "uniprot_id": "P10378", "drugbank_id": null, "species_id": 3, "protein_species": "Escherichia coli"}
+   {"id": 6312, "name": "Enterobactin synthase component F", "gene_name": "entF", "uniprot_id": "P11454", "drugbank_id": null, "species_id": 3, "protein_species": "Escherichia coli"}
+
+### protein complexes drawn in pathway 1817 / pv 1801
+SQL: SELECT DISTINCT pc.id, pc.name, pc.species_id, pc.pwp_id FROM protein_complex_visualizations pcv JOIN protein_complexes pc ON pc.id = pcv.protein_complex_id WHERE pcv.pathway_visualization_id = %s ORDER BY pc.name | params: [1801]
+   {"id": 4015, "name": "2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase", "species_id": 25, "pwp_id": "PW_P004015"}
+   {"id": 4016, "name": "2,3-dihydroxybenzoate-AMP ligase", "species_id": 25, "pwp_id": "PW_P004016"}
+   {"id": 3929, "name": "enterobactin B", "species_id": 3, "pwp_id": "PW_P003929"}
+   {"id": 4017, "name": "holo [EntF peptidyl-carrier protein]", "species_id": 25, "pwp_id": "PW_P004017"}
+   {"id": 1143, "name": "Isochorismate synthase", "species_id": 3, "pwp_id": "PW_P001143"}
+
+### pathway_visualizations for pathway 438675 (Menaquinone biosynthesis, E. coli MG1655 (511145))
+SQL: SELECT id, pathway_id FROM pathway_visualizations WHERE pathway_id = %s | params: [438675]
+   {"id": 428658, "pathway_id": 438675}
+
+### proteins drawn in pathway 438675 / pv 428658
+SQL: SELECT DISTINCT p.id, p.name, p.gene_name, p.uniprot_id, p.drugbank_id, p.species_id, s.name AS protein_species FROM protein_locations pl JOIN proteins p ON p.id = pl.protein_id LEFT JOIN species s ON s.id = p.species_id WHERE pl.pathway_visualization_id = %s ORDER BY p.gene_name | params: [428658]
+   {"id": 6238, "name": "Isochorismate synthase entC", "gene_name": "entC", "uniprot_id": "P0AEJ2", "drugbank_id": null, "species_id": 3, "protein_species": "Escherichia coli"}
+   {"id": 6520, "name": "1,4-dihydroxy-2-naphthoate octaprenyltransferase", "gene_name": "menA", "uniprot_id": "P32166", "drugbank_id": null, "species_id": 3, "protein_species": "Escherichia coli"}
+   {"id": 6189, "name": "Naphthoate synthase", "gene_name": "menB", "uniprot_id": "P0ABU0", "drugbank_id": null, "species_id": 3, "protein_species": "Escherichia coli"}
+   {"id": 6485, "name": "o-succinylbenzoate synthase", "gene_name": "menC", "uniprot_id": "P29208", "drugbank_id": null, "species_id": 3, "protein_species": "Escherichia coli"}
+   {"id": 6360, "name": "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase", "gene_name": "menD", "uniprot_id": "P17109", "drugbank_id": null, "species_id": 3, "protein_species": "Escherichia coli"}
+   {"id": 6570, "name": "2-succinylbenzoate--CoA ligase", "gene_name": "menE", "uniprot_id": "P37353", "drugbank_id": null, "species_id": 3, "protein_species": "Escherichia coli"}
+   {"id": 72607, "name": "2-succinyl-6-hydroxy-2,4-cyclohexadiene-1-carboxylate synthase", "gene_name": "menH", "uniprot_id": "P37355", "drugbank_id": null, "species_id": 25, "protein_species": "Escherichia coli (strain K12)"}
+   {"id": 72661, "name": "1,4-dihydroxy-2-naphthoyl-CoA hydrolase", "gene_name": "menI", "uniprot_id": "P77781", "drugbank_id": null, "species_id": 25, "protein_species": "Escherichia coli (strain K12)"}
+   {"id": 7453, "name": "Ubiquinone/menaquinone biosynthesis methyltransferase ubiE", "gene_name": "ubiE", "uniprot_id": "P0A887", "drugbank_id": null, "species_id": 3, "protein_species": "Escherichia coli"}
+   {"id": 74541, "name": "NAD(P)H dehydrogenase (quinone)", "gene_name": "wrbA", "uniprot_id": "P0A8G6", "drugbank_id": null, "species_id": 25, "protein_species": "Escherichia coli (strain K12)"}
+
+### protein complexes drawn in pathway 438675 / pv 428658
+SQL: SELECT DISTINCT pc.id, pc.name, pc.species_id, pc.pwp_id FROM protein_complex_visualizations pcv JOIN protein_complexes pc ON pc.id = pcv.protein_complex_id WHERE pcv.pathway_visualization_id = %s ORDER BY pc.name | params: [428658]
+   {"id": 3924, "name": " o-succinylbenzoate synthase", "species_id": 3, "pwp_id": "PW_P003924"}
+   {"id": 3928, "name": "1,4-dihydroxy-2-naphthoate octaprenyltransferase", "species_id": 3, "pwp_id": "PW_P003928"}
+   {"id": 246985, "name": "1,4-dihydroxy-2-naphthoyl-CoA hydrolase", "species_id": 25, "pwp_id": "PW_P246983"}
+   {"id": 3926, "name": "1,4-dihydroxy-2-naphthoyl-CoA synthase", "species_id": 3, "pwp_id": "PW_P003926"}
+   {"id": 3922, "name": "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase", "species_id": 3, "pwp_id": "PW_P003922"}
+   {"id": 246871, "name": "2-succinyl-6-hydroxy-2,4-cyclohexadiene-1-carboxylate synthase", "species_id": 25, "pwp_id": "PW_P246871"}
+   {"id": 3838, "name": "bifunctional 2-octaprenyl-6-methoxy-1,4-benzoquinone methylase and S-adenosylmethionine:2-DMK methyltransferase", "species_id": 3, "pwp_id": "PW_P003838"}
+   {"id": 1143, "name": "Isochorismate synthase", "species_id": 3, "pwp_id": "PW_P001143"}
+   {"id": 250475, "name": "NAD(P)H dehydrogenase (quinone)", "species_id": 25, "pwp_id": "PW_P250475"}
+   {"id": 3925, "name": "o-succinylbenzoate-CoA ligase", "species_id": 3, "pwp_id": "PW_P003925"}
+
+### pathway_visualizations for pathway 734611 (Menaquinone biosynthesis, B. subtilis (1423))
+SQL: SELECT id, pathway_id FROM pathway_visualizations WHERE pathway_id = %s | params: [734611]
+   {"id": 722701, "pathway_id": 734611}
+
+### proteins drawn in pathway 734611 / pv 722701
+SQL: SELECT DISTINCT p.id, p.name, p.gene_name, p.uniprot_id, p.drugbank_id, p.species_id, s.name AS protein_species FROM protein_locations pl JOIN proteins p ON p.id = pl.protein_id LEFT JOIN species s ON s.id = p.species_id WHERE pl.pathway_visualization_id = %s ORDER BY p.gene_name | params: [722701]
+   {"id": 144608, "name": "2-heptaprenyl-1,4-naphthoquinone methyltransferase", "gene_name": "B4067_2491", "uniprot_id": "A0ABD3ZZD0", "drugbank_id": null, "species_id": 10743, "protein_species": "Bacillus subtilis subsp. subtilis"}
+   {"id": 144604, "name": "Isochorismate synthase", "gene_name": "B4067_3616", "uniprot_id": "A0ABD3ZN88", "drugbank_id": null, "species_id": 10743, "protein_species": "Bacillus subtilis subsp. subtilis"}
+   {"id": 110081, "name": "1,4-dihydroxy-2-naphthoate octaprenyltransferase", "gene_name": "menA", "uniprot_id": "A0A8I1WJI4", "drugbank_id": null, "species_id": 92, "protein_species": "Bacillus subtilis"}
+   {"id": 144606, "name": "1,4-dihydroxy-2-naphthoyl-CoA synthase", "gene_name": "menB", "uniprot_id": "A0A199WJK9", "drugbank_id": null, "species_id": 10743, "protein_species": "Bacillus subtilis subsp. subtilis"}
+   {"id": 110074, "name": "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase", "gene_name": "menD", "uniprot_id": "A0A0D1IVW0", "drugbank_id": null, "species_id": 92, "protein_species": "Bacillus subtilis"}
+   {"id": 144605, "name": "2-succinylbenzoate--CoA ligase", "gene_name": "menE", "uniprot_id": "A0AAE2SNW3", "drugbank_id": null, "species_id": 10743, "protein_species": "Bacillus subtilis subsp. subtilis"}
+   {"id": 110075, "name": "Putative 2-succinyl-6-hydroxy-2,4-cyclohexadiene-1-carboxylate synthase", "gene_name": "menH", "uniprot_id": "A0AAQ3IFH1", "drugbank_id": null, "species_id": 92, "protein_species": "Bacillus subtilis"}
+   {"id": 144610, "name": "Oxidoreductase", "gene_name": "SC09_Contig19orf00056", "uniprot_id": "A0A0D1IQZ9", "drugbank_id": null, "species_id": 92, "protein_species": "Bacillus subtilis"}
+   {"id": 110076, "name": "Dipeptide epimerase", "gene_name": "ykfB", "uniprot_id": "A0A8I2B8U4", "drugbank_id": null, "species_id": 92, "protein_species": "Bacillus subtilis"}
+   {"id": 110080, "name": "Hotdog fold thioesterase", "gene_name": "yuxO", "uniprot_id": "A0A8I2B5T2", "drugbank_id": null, "species_id": 92, "protein_species": "Bacillus subtilis"}
+
+### protein complexes drawn in pathway 734611 / pv 722701
+SQL: SELECT DISTINCT pc.id, pc.name, pc.species_id, pc.pwp_id FROM protein_complex_visualizations pcv JOIN protein_complexes pc ON pc.id = pcv.protein_complex_id WHERE pcv.pathway_visualization_id = %s ORDER BY pc.name | params: [722701]
+   {"id": 417846, "name": " o-succinylbenzoate synthase", "species_id": 92, "pwp_id": "PW_P417846"}
+   {"id": 417850, "name": "1,4-dihydroxy-2-naphthoate octaprenyltransferase", "species_id": 92, "pwp_id": "PW_P417850"}
+   {"id": 423084, "name": "1,4-dihydroxy-2-naphthoyl-CoA hydrolase", "species_id": 92, "pwp_id": "PW_P423084"}
+   {"id": 417848, "name": "1,4-dihydroxy-2-naphthoyl-CoA synthase", "species_id": 92, "pwp_id": "PW_P417848"}
+   {"id": 417844, "name": "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase", "species_id": 92, "pwp_id": "PW_P417844"}
+   {"id": 423083, "name": "2-succinyl-6-hydroxy-2,4-cyclohexadiene-1-carboxylate synthase", "species_id": 92, "pwp_id": "PW_P423083"}
+   {"id": 417851, "name": "bifunctional 2-octaprenyl-6-methoxy-1,4-benzoquinone methylase and S-adenosylmethionine:2-DMK methyltransferase", "species_id": 92, "pwp_id": "PW_P417851"}
+   {"id": 417188, "name": "Isochorismate synthase", "species_id": 92, "pwp_id": "PW_P417188"}
+   {"id": 423085, "name": "NAD(P)H dehydrogenase (quinone)", "species_id": 92, "pwp_id": "PW_P423085"}
+   {"id": 417847, "name": "o-succinylbenzoate-CoA ligase", "species_id": 92, "pwp_id": "PW_P417847"}
+
+DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ b06b86b5ab1cd69ffe73274f063337f04c72bc79  [git, worktree dirty=True]
+label                   : orch761-db3
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/orch761_pathbank_probe3.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 97916 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 1.17 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  94352:python.exe
+descendants terminated  : 1  94352
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/bt-orch761/db3.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================

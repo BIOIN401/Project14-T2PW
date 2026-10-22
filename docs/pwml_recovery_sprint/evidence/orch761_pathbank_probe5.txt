@@ -1,0 +1,52 @@
+
+### existing complexes already carrying the pwp-ids written for document ids 40000-40005
+SQL: SELECT id, name, species_id, pwp_id FROM protein_complexes WHERE pwp_id IN (%s,%s,%s,%s,%s,%s) ORDER BY pwp_id | params: ['PW_P040000', 'PW_P040001', 'PW_P040002', 'PW_P040003', 'PW_P040004', 'PW_P040005']
+   {"id": 40000, "name": "pantothenate synthetase", "species_id": 1874, "pwp_id": "PW_P040000"}
+   {"id": 431773, "name": "Hexokinase complex", "species_id": 1, "pwp_id": "PW_P040000"}
+   {"id": 431796, "name": "phenylalanine hydroxylase complex", "species_id": 1, "pwp_id": "PW_P040000"}
+   {"id": 431802, "name": "LOX complex", "species_id": 4, "pwp_id": "PW_P040000"}
+   {"id": 40001, "name": "pantothenate kinase", "species_id": 1874, "pwp_id": "PW_P040001"}
+   {"id": 431797, "name": "tyrosine hydroxylase complex", "species_id": 1, "pwp_id": "PW_P040001"}
+   {"id": 40002, "name": " fused 4'-phosphopantothenoylcysteine decarboxylase and phosphopantothenoylcysteine synthetase", "species_id": 1874, "pwp_id": "PW_P040002"}
+   {"id": 431774, "name": "phosphofructokinase-1 complex", "species_id": 1, "pwp_id": "PW_P040002"}
+   {"id": 431803, "name": "AOC complex", "species_id": 4, "pwp_id": "PW_P040002"}
+   {"id": 40003, "name": "phosphopantetheine adenylyltransferase", "species_id": 1874, "pwp_id": "PW_P040003"}
+   {"id": 431775, "name": "aldolase complex", "species_id": 1, "pwp_id": "PW_P040003"}
+   {"id": 40004, "name": "dephospho-CoA kinase", "species_id": 1874, "pwp_id": "PW_P040004"}
+   {"id": 40005, "name": " triphosphoribosyl-dephospho-CoA synthase", "species_id": 1874, "pwp_id": "PW_P040005"}
+
+### unique index on protein_complexes.pwp_id?
+SQL: SELECT index_name, non_unique, column_name FROM information_schema.statistics WHERE table_schema = DATABASE() AND table_name = %s | params: ['protein_complexes']
+   {"index_name": "PRIMARY", "non_unique": 0, "column_name": "id"}
+
+### duplicate pwp_ids already present
+SQL: SELECT COUNT(*) AS duplicated_pwp_ids FROM (SELECT pwp_id FROM protein_complexes WHERE pwp_id IS NOT NULL AND pwp_id <> %s GROUP BY pwp_id HAVING COUNT(*) > 1) t | params: ['']
+  (error) db_query_failed:(2013, 'Lost connection to MySQL server during query (timed out)')
+
+DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ d1da8572cdc62acb057aac53a8491fd4a1a766ae  [git, worktree dirty=True]
+label                   : orch761-db5
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/orch761_pathbank_probe5.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 114372 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 21.47 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  115144:python.exe
+descendants terminated  : 1  115144
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/bt-orch761/db5.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================

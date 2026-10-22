@@ -1,0 +1,193 @@
+
+### species rows naming Lactococcus
+SQL: SELECT id, name, common_name, taxonomy_id, classification FROM species WHERE name LIKE %s ORDER BY id | params: ['%Lactococc%']
+   {"id": 1030, "name": "Lactococcus lactis", "common_name": null, "taxonomy_id": "1358", "classification": "Prokaryote"}
+   {"id": 1204, "name": "Lactococcus lactis subsp. lactis Il1403", "common_name": null, "taxonomy_id": "272623", "classification": "Prokaryote"}
+   {"id": 1205, "name": "Lactococcus lactis subsp. cremoris SK11", "common_name": null, "taxonomy_id": "272622", "classification": "Prokaryote"}
+   {"id": 1206, "name": "Lactococcus lactis subsp. cremoris MG1363", "common_name": null, "taxonomy_id": "416870", "classification": "Prokaryote"}
+   {"id": 1251, "name": "Lactococcus garvieae ATCC 49156", "common_name": null, "taxonomy_id": "420889", "classification": "Prokaryote"}
+   {"id": 2290, "name": "Lactococcus garvieae", "common_name": null, "taxonomy_id": "1363", "classification": "Prokaryote"}
+   {"id": 2291, "name": "Lactococcus raffinolactis", "common_name": null, "taxonomy_id": "1366", "classification": "Prokaryote"}
+   {"id": 2292, "name": "Lactococcus raffinolactis 4877", "common_name": null, "taxonomy_id": "1215915", "classification": "Prokaryote"}
+   {"id": 10688, "name": "Lactococcus lactis subsp. lactis", "common_name": "Streptococcus lactis", "taxonomy_id": "1360", "classification": "Prokaryote"}
+   {"id": 10727, "name": "Lactococcus lactis subsp. cremoris", "common_name": "Streptococcus cremoris", "taxonomy_id": "1359", "classification": "Prokaryote"}
+   {"id": 10733, "name": "Lactococcus lactis subsp. lactis (strain KF147)", "common_name": null, "taxonomy_id": "684738", "classification": "Prokaryote"}
+   {"id": 10734, "name": "Lactococcus lactis subsp. lactis A12", "common_name": null, "taxonomy_id": "1137134", "classification": "Prokaryote"}
+   {"id": 10779, "name": "Lactococcus lactis subsp. lactis KLDS 4.0325", "common_name": null, "taxonomy_id": "1399116", "classification": "Prokaryote"}
+
+### E. coli species rows
+SQL: SELECT id, name, taxonomy_id FROM species WHERE name LIKE %s ORDER BY id LIMIT 30 | params: ['Escherichia coli%']
+   {"id": 3, "name": "Escherichia coli", "taxonomy_id": "562"}
+   {"id": 25, "name": "Escherichia coli (strain K12)", "taxonomy_id": "83333"}
+   {"id": 26, "name": "Escherichia coli (strain ATCC 8739 / DSM 1576 / Crooks)", "taxonomy_id": "481805"}
+   {"id": 27, "name": "Escherichia coli (strain SMS-3-5 / SECEC)", "taxonomy_id": "439855"}
+   {"id": 28, "name": "Escherichia coli (strain UTI89 / UPEC)", "taxonomy_id": "364106"}
+   {"id": 32, "name": "Escherichia coli (strain 55989 / EAEC)", "taxonomy_id": "585055"}
+   {"id": 33, "name": "Escherichia coli (strain SE11)", "taxonomy_id": "409438"}
+   {"id": 34, "name": "Escherichia coli (strain K12 / MC4100 / BW2952)", "taxonomy_id": "595496"}
+   {"id": 35, "name": "Escherichia coli (strain ATCC 55124 / KO11)", "taxonomy_id": "595495"}
+   {"id": 36, "name": "Escherichia coli (strain B / REL606)", "taxonomy_id": "413997"}
+   {"id": 37, "name": "Escherichia coli (strain B / BL21-DE3)", "taxonomy_id": "469008"}
+   {"id": 39, "name": "Escherichia coli (strain MS 21-1)", "taxonomy_id": "749527"}
+   {"id": 76, "name": "Escherichia coli DORA_B_14", "taxonomy_id": "1403944"}
+   {"id": 77, "name": "Escherichia coli O6:H1 (strain CFT073 / ATCC 700928 / UPEC)", "taxonomy_id": "199310"}
+   {"id": 255, "name": "Escherichia coli str. K-12 substr. MG1655", "taxonomy_id": "511145"}
+   {"id": 335, "name": "Escherichia coli O157:H7", "taxonomy_id": "83334"}
+   {"id": 346, "name": "Escherichia coli K-12", "taxonomy_id": "679895"}
+   {"id": 462, "name": "Escherichia coli SE15", "taxonomy_id": "431946"}
+   {"id": 1155, "name": "Escherichia coli O157:H7 str. Sakai", "taxonomy_id": "386585"}
+   {"id": 1156, "name": "Escherichia coli 536", "taxonomy_id": "362663"}
+   {"id": 1157, "name": "Escherichia coli APEC O1", "taxonomy_id": "405955"}
+   {"id": 1158, "name": "Escherichia coli E24377A", "taxonomy_id": "331111"}
+   {"id": 1159, "name": "Escherichia coli HS", "taxonomy_id": "331112"}
+   {"id": 1160, "name": "Escherichia coli str. K-12 substr. DH10B", "taxonomy_id": "316385"}
+   {"id": 1161, "name": "Escherichia coli O157:H7 str. EC4115", "taxonomy_id": "444450"}
+   {"id": 1162, "name": "Escherichia coli O127:H6 str. E2348/69", "taxonomy_id": "574521"}
+   {"id": 1163, "name": "Escherichia coli UMN026", "taxonomy_id": "585056"}
+   {"id": 1165, "name": "Escherichia coli IAI1", "taxonomy_id": "585034"}
+   {"id": 1166, "name": "Escherichia coli S88", "taxonomy_id": "585035"}
+   {"id": 1167, "name": "Escherichia coli ED1a", "taxonomy_id": "585397"}
+
+### proteins per Lactococcus species
+SQL: SELECT p.species_id, COUNT(*) AS n, SUM(p.uniprot_id IS NOT NULL AND TRIM(p.uniprot_id) <> '' AND p.uniprot_id <> 'Unknown') AS real_uniprot FROM proteins p WHERE p.species_id IN (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) GROUP BY p.species_id | params: [1030, 1204, 1205, 1206, 1251, 2290, 2291, 2292, 10688, 10727, 10733, 10734, 10779]
+   {"species_id": 1030, "n": 13, "real_uniprot": "12"}
+   {"species_id": 1204, "n": 7, "real_uniprot": "6"}
+   {"species_id": 1205, "n": 1, "real_uniprot": "0"}
+   {"species_id": 1206, "n": 2, "real_uniprot": "1"}
+   {"species_id": 1251, "n": 1, "real_uniprot": "0"}
+   {"species_id": 10688, "n": 1, "real_uniprot": "1"}
+   {"species_id": 10727, "n": 1, "real_uniprot": "1"}
+   {"species_id": 10733, "n": 1, "real_uniprot": "1"}
+   {"species_id": 10734, "n": 1, "real_uniprot": "1"}
+
+### all proteins in Lactococcus species (rows)
+SQL: SELECT p.id, p.name, p.gene_name, p.uniprot_id, p.species_id FROM proteins p WHERE p.species_id IN (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ORDER BY p.species_id, p.gene_name | params: [1030, 1204, 1205, 1206, 1251, 2290, 2291, 2292, 10688, 10727, 10733, 10734, 10779]
+   {"id": 28136, "name": "Unknown", "gene_name": null, "uniprot_id": "Unknown", "species_id": 1030}
+   {"id": 91639, "name": "Signal recognition particle protein", "gene_name": "ffh", "uniprot_id": "A0A9X4S2B5", "species_id": 1030}
+   {"id": 91640, "name": "Signal recognition particle receptor FtsY", "gene_name": "ftsY", "uniprot_id": "A0A2X0SQG4", "species_id": 1030}
+   {"id": 91615, "name": "Lantibiotic", "gene_name": "nisA", "uniprot_id": "V5NTA4", "species_id": 1030}
+   {"id": 91616, "name": "NisB", "gene_name": "nisB", "uniprot_id": "Q8VQ01", "species_id": 1030}
+   {"id": 91618, "name": "NisC protein", "gene_name": "nisC", "uniprot_id": "Q48670", "species_id": 1030}
+   {"id": 91624, "name": "Lantibiotic ABC transporter permease", "gene_name": "nisE", "uniprot_id": "Q48636", "species_id": 1030}
+   {"id": 91623, "name": "ABC transporter ATP-binding protein", "gene_name": "nisF", "uniprot_id": "Q48635", "species_id": 1030}
+   {"id": 91625, "name": "Membrane protein", "gene_name": "nisG", "uniprot_id": "Q48637", "species_id": 1030}
+   {"id": 91622, "name": "histidine kinase", "gene_name": "nisK", "uniprot_id": "Q48675", "species_id": 1030}
+   {"id": 91620, "name": "Leader peptide-processing serine protease", "gene_name": "nisP", "uniprot_id": "Q48674", "species_id": 1030}
+   {"id": 91621, "name": "NisR", "gene_name": "nisR", "uniprot_id": "Q0GU37", "species_id": 1030}
+   {"id": 91617, "name": "ABC transporter ATP-binding protein", "gene_name": "nisT", "uniprot_id": "Q48669", "species_id": 1030}
+   {"id": 28309, "name": "Unknown", "gene_name": null, "uniprot_id": "Unknown", "species_id": 1204}
+   {"id": 91646, "name": "DNA-directed RNA polymerase subunit beta", "gene_name": "rpoB", "uniprot_id": "Q9CEN6", "species_id": 1204}
+   {"id": 91645, "name": "DNA-directed RNA polymerase subunit beta'", "gene_name": "rpoC", "uniprot_id": "Q9CEN7", "species_id": 1204}
+   {"id": 91649, "name": "DNA-directed RNA polymerase subunit omega", "gene_name": "rpoZ", "uniprot_id": "Q9CEE4", "species_id": 1204}
+   {"id": 105873, "name": "Protein translocase subunit SecY", "gene_name": "secY", "uniprot_id": "P58118", "species_id": 1204}
+   {"id": 102989, "name": "ABM domain-containing protein", "gene_name": "yphI", "uniprot_id": "Q9CFE4", "species_id": 1204}
+   {"id": 102987, "name": "DUF2255 family protein", "gene_name": "yphK", "uniprot_id": "Q9CFE2", "species_id": 1204}
+   {"id": 28310, "name": "Unknown", "gene_name": null, "uniprot_id": "Unknown", "species_id": 1205}
+   {"id": 28311, "name": "Unknown", "gene_name": null, "uniprot_id": "Unknown", "species_id": 1206}
+   {"id": 91650, "name": "DNA-directed RNA polymerase subunit alpha", "gene_name": "rpoA", "uniprot_id": "A2RNM7", "species_id": 1206}
+   {"id": 28356, "name": "Unknown", "gene_name": null, "uniprot_id": "Unknown", "species_id": 1251}
+   {"id": 91619, "name": "Nisin immunity protein", "gene_name": "nisI", "uniprot_id": "P42708", "species_id": 10688}
+   {"id": 102988, "name": "4-carboxymuconolactone decarboxylase", "gene_name": "yphJ", "uniprot_id": "A0AAD1NH71", "species_id": 10727}
+   {"id": 105874, "name": "Protein translocase, subunit SecE", "gene_name": "secE", "uniprot_id": "A0AAN0P471", "species_id": 10733}
+   {"id": 105875, "name": "Protein-export membrane protein SecG", "gene_name": "secG", "uniprot_id": "S6FTD1", "species_id": 10734}
+
+### Men genes / Men enzyme names in Lactococcus species
+SQL: SELECT p.id, p.name, p.gene_name, p.uniprot_id, p.species_id FROM proteins p WHERE p.species_id IN (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) AND (LOWER(p.gene_name) LIKE %s OR p.name LIKE %s OR p.name LIKE %s OR p.name LIKE %s OR p.name LIKE %s) | params: [1030, 1204, 1205, 1206, 1251, 2290, 2291, 2292, 10688, 10727, 10733, 10734, 10779, 'men%', '%naphtho%', '%succinyl%', '%menaquinone%', '%isochorismate%']
+
+### pathways for Lactococcus species
+SQL: SELECT pw.id AS pathway_id, pw.name, pw.species_id, spv.pw_id, spv.smpdb_id FROM pathways pw LEFT JOIN super_pathway_visualizations spv ON spv.named_for_id = pw.id AND spv.named_for_type = 'Pathway' WHERE pw.species_id IN (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ORDER BY pw.species_id, pw.name | params: [1030, 1204, 1205, 1206, 1251, 2290, 2291, 2292, 10688, 10727, 10733, 10734, 10779]
+   {"pathway_id": 499747, "name": "Quorum Sensing: Nisin Biosynthesis (nis Operon Activation)", "species_id": 1030, "pw_id": "PW499224", "smpdb_id": "SMP0477637"}
+   {"pathway_id": 776979, "name": "Homo and hetero fermentative pathways", "species_id": 10688, "pw_id": "PW766173", "smpdb_id": "SMP0728394"}
+
+### Men-pathway enzyme names, any species: count by name
+SQL: SELECT p.name, COUNT(*) AS n, SUM(p.uniprot_id IS NOT NULL AND TRIM(p.uniprot_id) <> '' AND p.uniprot_id <> 'Unknown') AS real_uniprot FROM proteins p WHERE p.name LIKE %s OR p.name LIKE %s OR p.name LIKE %s OR p.name LIKE %s GROUP BY p.name ORDER BY n DESC LIMIT 30 | params: ['%naphthoate%', '%naphthoyl%', '%succinylbenzoate%', '%2-succinyl-%']
+   {"name": "1,4-dihydroxy-2-naphthoyl-CoA synthase", "n": 69, "real_uniprot": "69"}
+   {"name": "1,4-dihydroxy-2-naphthoate octaprenyltransferase", "n": 60, "real_uniprot": "60"}
+   {"name": "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase", "n": 39, "real_uniprot": "39"}
+   {"name": "o-succinylbenzoate synthase", "n": 32, "real_uniprot": "32"}
+   {"name": "2-succinyl-6-hydroxy-2,4-cyclohexadiene-1-carboxylate synthase", "n": 18, "real_uniprot": "18"}
+   {"name": "1,4-dihydroxy-2-naphthoyl-CoA hydrolase", "n": 18, "real_uniprot": "18"}
+   {"name": "Putative o-succinylbenzoate synthase", "n": 9, "real_uniprot": "9"}
+   {"name": "O-succinylbenzoate-CoA ligase", "n": 6, "real_uniprot": "6"}
+   {"name": "Putative 2-succinyl-6-hydroxy-2,4-cyclohexadiene-1-carboxylate synthase", "n": 6, "real_uniprot": "6"}
+   {"name": "2-succinylbenzoate--CoA ligase", "n": 6, "real_uniprot": "6"}
+   {"name": "Naphthoate synthase", "n": 3, "real_uniprot": "3"}
+   {"name": "2-succinylbenzoate--CoA ligase family protein", "n": 2, "real_uniprot": "2"}
+   {"name": "1,4-dihydroxy-2-naphthoyl-CoA synthase, peroxisomal", "n": 1, "real_uniprot": "1"}
+   {"name": "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase family protein", "n": 1, "real_uniprot": "1"}
+   {"name": "1,4-dihydroxy-2-naphthoyl-CoA thioesterase 1", "n": 1, "real_uniprot": "1"}
+   {"name": "O-succinylbenzoate--CoA ligase", "n": 1, "real_uniprot": "1"}
+   {"name": "Putative 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylic-acid synthase", "n": 1, "real_uniprot": "1"}
+   {"name": "1,4-dihydroxy-2-naphthoyl-CoA thioesterase", "n": 1, "real_uniprot": "1"}
+   {"name": "2-succinylbenzoate--CoA ligase, chloroplastic/peroxisomal", "n": 1, "real_uniprot": "1"}
+   {"name": "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylic-acid synthase", "n": 1, "real_uniprot": "1"}
+
+### Men gene rows, any species: count by gene
+SQL: SELECT LOWER(p.gene_name) AS gene, COUNT(*) AS n, SUM(p.uniprot_id IS NOT NULL AND TRIM(p.uniprot_id) <> '' AND p.uniprot_id <> 'Unknown') AS real_uniprot, COUNT(DISTINCT p.species_id) AS n_species FROM proteins p WHERE LOWER(p.gene_name) IN (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) GROUP BY LOWER(p.gene_name) | params: ['mena', 'menb', 'menc', 'mend', 'mene', 'menf', 'menh', 'meni', 'meng', 'ubie']
+   {"gene": "mena", "n": 57, "real_uniprot": "57", "n_species": 56}
+   {"gene": "menb", "n": 65, "real_uniprot": "65", "n_species": 59}
+   {"gene": "menc", "n": 22, "real_uniprot": "22", "n_species": 21}
+   {"gene": "mend", "n": 38, "real_uniprot": "38", "n_species": 38}
+   {"gene": "mene", "n": 9, "real_uniprot": "9", "n_species": 8}
+   {"gene": "menf", "n": 19, "real_uniprot": "19", "n_species": 19}
+   {"gene": "meng", "n": 42, "real_uniprot": "42", "n_species": 41}
+   {"gene": "menh", "n": 23, "real_uniprot": "23", "n_species": 23}
+   {"gene": "meni", "n": 14, "real_uniprot": "14", "n_species": 13}
+   {"gene": "ubie", "n": 46, "real_uniprot": "46", "n_species": 43}
+
+### pathways named menaquinone / enterobactin (PW accession via spv.pw_id)
+SQL: SELECT pw.id AS pathway_id, pw.name, pw.species_id, s.name AS species, s.taxonomy_id, spv.pw_id, spv.smpdb_id FROM pathways pw LEFT JOIN species s ON s.id = pw.species_id LEFT JOIN super_pathway_visualizations spv ON spv.named_for_id = pw.id AND spv.named_for_type = 'Pathway' WHERE pw.name LIKE %s OR pw.name LIKE %s OR pw.name LIKE %s ORDER BY pw.name, pw.id | params: ['%enaquinone%', '%nterobactin%', '%nterochelin%']
+   {"pathway_id": 1817, "name": "Enterobactin Biosynthesis", "species_id": 3, "species": "Escherichia coli", "taxonomy_id": "562", "pw_id": "PW002048", "smpdb_id": "SMP0002062"}
+   {"pathway_id": 698671, "name": "Enterobactin Biosynthesis", "species_id": 23, "species": "Pseudomonas aeruginosa", "taxonomy_id": "287", "pw_id": "PW696610", "smpdb_id": "SMP0658831"}
+   {"pathway_id": 734072, "name": "Enterobactin Biosynthesis", "species_id": 92, "species": "Bacillus subtilis", "taxonomy_id": "1423", "pw_id": "PW728654", "smpdb_id": "SMP0690875"}
+   {"pathway_id": 438675, "name": "Menaquinone biosynthesis", "species_id": 255, "species": "Escherichia coli str. K-12 substr. MG1655", "taxonomy_id": "511145", "pw_id": "PW438177", "smpdb_id": "SMP0424568"}
+   {"pathway_id": 706814, "name": "Menaquinone biosynthesis", "species_id": 23, "species": "Pseudomonas aeruginosa", "taxonomy_id": "287", "pw_id": "PW704719", "smpdb_id": "SMP0666940"}
+   {"pathway_id": 734611, "name": "Menaquinone biosynthesis", "species_id": 92, "species": "Bacillus subtilis", "taxonomy_id": "1423", "pw_id": "PW729140", "smpdb_id": "SMP0691361"}
+
+### proteins drawn in E. coli (species 3) enterobactin pathways
+SQL: SELECT DISTINCT pw.id AS pathway_id, spv.pw_id, p.id AS protein_id, p.name, p.gene_name, p.uniprot_id, p.species_id FROM pathways pw JOIN pathway_visualizations pv ON pv.pathway_id = pw.id JOIN protein_locations pl ON pl.pathway_visualization_id = pv.id JOIN proteins p ON p.id = pl.protein_id LEFT JOIN super_pathway_visualizations spv ON spv.named_for_id = pw.id AND spv.named_for_type = 'Pathway' WHERE pw.name LIKE %s AND pw.species_id = 3 ORDER BY pw.id, p.gene_name | params: ['%nterobactin%']
+  (error) db_query_failed:(2013, 'Lost connection to MySQL server during query (timed out)')
+
+### menaquinone pathways: protein identity per pathway
+SQL: SELECT pw.id AS pathway_id, pw.name, s.name AS species, s.classification, COUNT(DISTINCT p.id) AS n, COUNT(DISTINCT CASE WHEN p.uniprot_id IS NOT NULL AND TRIM(p.uniprot_id) <> '' AND p.uniprot_id <> 'Unknown' THEN p.id END) AS real_uniprot, COUNT(DISTINCT CASE WHEN p.uniprot_id = 'Unknown' THEN p.id END) AS unknown FROM pathways pw LEFT JOIN species s ON s.id = pw.species_id JOIN pathway_visualizations pv ON pv.pathway_id = pw.id JOIN protein_locations pl ON pl.pathway_visualization_id = pv.id JOIN proteins p ON p.id = pl.protein_id WHERE pw.name LIKE %s GROUP BY pw.id, pw.name, s.name, s.classification ORDER BY s.classification, s.name | params: ['%enaquinone%']
+  (error) db_query_failed:(0, '')
+
+### E. coli (species 3) menaquinone pathway proteins
+SQL: SELECT DISTINCT pw.id AS pathway_id, spv.pw_id, p.id AS protein_id, p.name, p.gene_name, p.uniprot_id, p.species_id FROM pathways pw JOIN pathway_visualizations pv ON pv.pathway_id = pw.id JOIN protein_locations pl ON pl.pathway_visualization_id = pv.id JOIN proteins p ON p.id = pl.protein_id LEFT JOIN super_pathway_visualizations spv ON spv.named_for_id = pw.id AND spv.named_for_type = 'Pathway' WHERE pw.name LIKE %s AND pw.species_id = 3 ORDER BY pw.id, p.gene_name | params: ['%enaquinone%']
+  (error) db_query_failed:(0, '')
+
+### Unknown-sentinel proteins drawn in prokaryote pathways: how many pathways
+SQL: SELECT COUNT(DISTINCT pw.id) AS pathways_with_unknown, COUNT(DISTINCT p.id) AS unknown_rows FROM pathways pw JOIN species s ON s.id = pw.species_id JOIN pathway_visualizations pv ON pv.pathway_id = pw.id JOIN protein_locations pl ON pl.pathway_visualization_id = pv.id JOIN proteins p ON p.id = pl.protein_id WHERE p.uniprot_id = %s AND s.classification = %s | params: ['Unknown', 'Prokaryote']
+  (error) db_query_failed:(0, '')
+
+### protein species vs pathway species in prokaryote menaquinone pathways
+SQL: SELECT (p.species_id = pw.species_id) AS same_species, COUNT(DISTINCT p.id) AS n FROM pathways pw JOIN species s ON s.id = pw.species_id JOIN pathway_visualizations pv ON pv.pathway_id = pw.id JOIN protein_locations pl ON pl.pathway_visualization_id = pv.id JOIN proteins p ON p.id = pl.protein_id WHERE pw.name LIKE %s AND s.classification = %s GROUP BY same_species | params: ['%enaquinone%', 'Prokaryote']
+  (error) db_query_failed:(0, '')
+
+DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ b06b86b5ab1cd69ffe73274f063337f04c72bc79  [git, worktree dirty=True]
+label                   : orch761-db2
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/orch761_pathbank_probe2.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 95056 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 40.90 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  97084:python.exe
+descendants terminated  : 1  97084
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/bt-orch761/db2.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================
