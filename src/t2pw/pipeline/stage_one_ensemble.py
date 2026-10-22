@@ -294,7 +294,7 @@ _LOCATION_PARENT: Dict[str, str] = {_location(child): _location(parent) for chil
     "plastid": "cytoplasm",                     # GO:0009536, part_of GO:0005737
     "chloroplast": "plastid",                   # GO:0009507, is_a GO:0009536
     "etioplast": "plastid",                     # GO:0009513, is_a GO:0009536
-    "thylakoid": "chloroplast",                 # GO:0009534 chloroplast thylakoid, part_of GO:0009507
+    "thylakoid": "chloroplast",                 # GO:0009579; APPROXIMATE: GO puts only GO:0009534 chloroplast thylakoid in the chloroplast
     "thylakoid membrane": "thylakoid",          # GO:0042651, part_of GO:0009579 thylakoid
 }.items()}
 
@@ -622,7 +622,12 @@ def _absorb(profile: Optional[Dict[str, Any]], other: Optional[Dict[str, Any]]) 
         return profile or other
     state = next((st for st in (profile["state"], other["state"]) if _defined(st)), profile["state"] or other["state"])
     if _defined(profile["state"]) and _defined(other["state"]):
-        state = {**state, "location": _narrower(profile["state"]["location"], other["state"]["location"])}
+        # A claim merged from two differently NAMED states carries a label no row can carry
+        # (strict keys hold no \x1f), so _conflict always compares a later row against it: a
+        # label is defined per draw, and draw 3's "X" need not be draw 1's (review round 0).
+        la, lb = profile["state"]["label"], other["state"]["label"]
+        state = {**state, "location": _narrower(profile["state"]["location"], other["state"]["location"]),
+                 "label": la if la == lb else "\x1f".join(sorted({la, lb}))}
     return {**profile,
             "inputs": profile["inputs"] | other["inputs"],
             "outputs": profile["outputs"] | other["outputs"],
