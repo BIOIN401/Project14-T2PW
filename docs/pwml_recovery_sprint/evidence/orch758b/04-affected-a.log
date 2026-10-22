@@ -1,0 +1,82 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch758b\src\t2pw\__init__.py
+........................................................................ [ 10%]
+........................................................................ [ 20%]
+........................................................................ [ 31%]
+........................................................................ [ 41%]
+.........ss.....s...sF.................................................. [ 52%]
+........................................................................ [ 62%]
+........................................................................ [ 73%]
+........................................................................ [ 83%]
+........................................................................ [ 93%]
+..........................................                               [100%]
+================================== FAILURES ===================================
+________ test_missing_or_wrong_pythonpath_is_refused_before_collection ________
+
+tmp_path = WindowsPath('C:/t/bt-orch758b/04-affected-a-22035/test_missing_or_wrong_pythonpa0')
+
+    def test_missing_or_wrong_pythonpath_is_refused_before_collection(tmp_path: Path) -> None:
+        tree = _make_tree(tmp_path / "measured", "MEASURED")
+        decoy = _make_tree(tmp_path / "decoy", "DECOY", launcher=False)
+        launcher = tree / "ev" / "pinned_pytest.py"
+        bt = tmp_path / "bt"
+        bt.mkdir()
+    
+        # (a) PYTHONPATH absent: the real editable .pth supplies the PRIMARY checkout's t2pw.
+        #     F-003 itself, live -- and refused.
+        v1 = tmp_path / "v1.json"
+        proc = _run(launcher, [f"--pin-verdict={v1}", "-q", f"--basetemp={bt / 'a'}",
+                               "tests/test_plain.py"], cwd=tree)
+>       data = _assert_refused(proc, v1, ["T2PW_FROM_WRONG_TREE"])
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_measurement_tree_pin.py:157: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+proc = CompletedProcess(args=['C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe', '-u', 'C:...04-affected-a-22035\\test_missing_or_wrong_pythonpa0\\v1.json\nREFUSED before collection. No test was run. Exit 98.\n")
+verdict = WindowsPath('C:/t/bt-orch758b/04-affected-a-22035/test_missing_or_wrong_pythonpa0/v1.json')
+codes = ['T2PW_FROM_WRONG_TREE']
+
+    def _assert_refused(proc: subprocess.CompletedProcess, verdict: Path,
+                        codes: Sequence[str]) -> Dict:
+        text = _out(proc)
+        assert proc.returncode == 98, f"expected exit 98, got {proc.returncode}\n{text}"
+        assert MARKER in text, text
+        assert "passed" not in text and "collected" not in text, text  # nothing was counted
+        assert verdict.is_file(), f"no verdict artifact at {verdict}\n{text}"
+        data = _verdict(verdict)
+        assert data["refused"] is True
+        for code in codes:
+>           assert code in data["violations"], f"{code} not in {data['violations']}"
+E           AssertionError: T2PW_FROM_WRONG_TREE not in ['T2PW_UNIMPORTABLE']
+E           assert 'T2PW_FROM_WRONG_TREE' in ['T2PW_UNIMPORTABLE']
+
+tests\test_measurement_tree_pin.py:141: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_measurement_tree_pin.py::test_missing_or_wrong_pythonpath_is_refused_before_collection
+1 failed, 685 passed, 4 skipped in 61.64s (0:01:01)
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch758b\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ a9179eb883f8ec074818adc68c6baaafa501680e  [git, worktree dirty=False]
+label                   : affected-a
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-758b/04-affected-a.pin.json -q --basetemp=C:/t/bt-orch758b/04-affected-a-22035 tests/test_attempt_cap_termination_reason.py tests/test_batch_driver.py tests/test_c060a_requested_pathway_wiring.py tests/test_c064_round_cap_reason.py tests/test_c082_post_pipeline_seam.py tests/test_c087_prefreeze_declination_demotes_release_status.py tests/test_c088_extracted_not_serialized_disposition.py tests/test_completeness_audit.py tests/test_deadline_budget.py tests/test_early_failure_replay.py tests/test_empty_extraction_payload.py tests/test_eval_v2_metrics.py tests/test_extraction_escalation_ladder.py tests/test_f179_reaction_support.py tests/test_isolated_collection.py tests/test_measurement_tree_pin.py tests/test_orch757_llm_token_budgets.py tests/test_orch758b_empty_chunk.py tests/test_pipeline_lineage_carrier.py tests/test_pipeline_reaction_rag_provenance.py tests/test_pwml_interaction_protein_wrappers.py tests/test_rd092_1_reaction_lineage.py tests/test_rd093_phoenix_ingest.py tests/test_rd093_rag_metrics.py tests/test_reaction_evidence.py tests/test_reaction_lock_manifest.py tests/test_research_mode_report.py tests/test_research_mode_tiers.py tests/test_scope_membership_filter_end_to_end.py tests/test_stage_one_ensemble.py tests/test_stage_one_paper_dictionary.py tests/test_streamlit_stage2_orchestration.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch758b
+root PID / process group: 1078188 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 64.06 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 52  1084516:python.exe, 1086496:git.exe, 1074244:git.exe, 1087404:git.exe, 1087196:git.exe, 1078296:git.exe, 1087240:git.exe, 1084884:git.exe, 1086204:git.exe, 1086500:git.exe, 1085080:git.exe, 1083376:python.exe, 1086816:python.exe, 1068604:python.exe, 1087200:python.exe, 1084840:python.exe, 1086748:python.exe, 1081600:python.exe, 1084436:python.exe, 1078600:python.exe, 1081136:python.exe, 1082508:python.exe, 1084160:python.exe, 1084500:python.exe, 1086584:python.exe, 1086668:python.exe, 1079684:python.exe, 1086564:python.exe, 1065220:python.exe, 1085548:python.exe, 1086372:python.exe, 1087044:python.exe, 1079080:python.exe, 1086248:python.exe, 1076240:python.exe, 1087068:python.exe, 1084344:python.exe, 1087468:python.exe, 1086572:python.exe, 1085288:python.exe, 1087528:python.exe, 1087548:python.exe, 1087680:python.exe, 1087700:python.exe, 1087776:python.exe, 1087804:python.exe, 1087984:python.exe, 1088024:python.exe, 1088044:python.exe, 1088064:python.exe, 1088316:python.exe, 1088336:python.exe
+descendants terminated  : 52  1065220, 1068604, 1074244, 1076240, 1078296, 1078600, 1079080, 1079684, 1081136, 1081600, 1082508, 1083376, 1084160, 1084344, 1084436, 1084500, 1084516, 1084840, 1084884, 1085080, 1085288, 1085548, 1086204, 1086248, 1086372, 1086496, 1086500, 1086564, 1086572, 1086584, 1086668, 1086748, 1086816, 1087044, 1087068, 1087196, 1087200, 1087240, 1087404, 1087468, 1087528, 1087548, 1087680, 1087700, 1087776, 1087804, 1087984, 1088024, 1088044, 1088064, 1088316, 1088336
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch758b\docs\pwml_recovery_sprint\evidence\g11\ORCH-758b\04-affected-a.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================

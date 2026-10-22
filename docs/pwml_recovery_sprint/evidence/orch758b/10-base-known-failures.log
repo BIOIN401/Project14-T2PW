@@ -1,0 +1,91 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch758b\src\t2pw\__init__.py
+FF                                                                       [100%]
+================================== FAILURES ===================================
+________ test_missing_or_wrong_pythonpath_is_refused_before_collection ________
+
+tmp_path = WindowsPath('C:/t/bt-orch758b/10-base-known-failures-15969/test_missing_or_wrong_pythonpa0')
+
+    def test_missing_or_wrong_pythonpath_is_refused_before_collection(tmp_path: Path) -> None:
+        tree = _make_tree(tmp_path / "measured", "MEASURED")
+        decoy = _make_tree(tmp_path / "decoy", "DECOY", launcher=False)
+        launcher = tree / "ev" / "pinned_pytest.py"
+        bt = tmp_path / "bt"
+        bt.mkdir()
+    
+        # (a) PYTHONPATH absent: the real editable .pth supplies the PRIMARY checkout's t2pw.
+        #     F-003 itself, live -- and refused.
+        v1 = tmp_path / "v1.json"
+        proc = _run(launcher, [f"--pin-verdict={v1}", "-q", f"--basetemp={bt / 'a'}",
+                               "tests/test_plain.py"], cwd=tree)
+>       data = _assert_refused(proc, v1, ["T2PW_FROM_WRONG_TREE"])
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_measurement_tree_pin.py:157: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+proc = CompletedProcess(args=['C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe', '-u', 'C:...nown-failures-15969\\test_missing_or_wrong_pythonpa0\\v1.json\nREFUSED before collection. No test was run. Exit 98.\n")
+verdict = WindowsPath('C:/t/bt-orch758b/10-base-known-failures-15969/test_missing_or_wrong_pythonpa0/v1.json')
+codes = ['T2PW_FROM_WRONG_TREE']
+
+    def _assert_refused(proc: subprocess.CompletedProcess, verdict: Path,
+                        codes: Sequence[str]) -> Dict:
+        text = _out(proc)
+        assert proc.returncode == 98, f"expected exit 98, got {proc.returncode}\n{text}"
+        assert MARKER in text, text
+        assert "passed" not in text and "collected" not in text, text  # nothing was counted
+        assert verdict.is_file(), f"no verdict artifact at {verdict}\n{text}"
+        data = _verdict(verdict)
+        assert data["refused"] is True
+        for code in codes:
+>           assert code in data["violations"], f"{code} not in {data['violations']}"
+E           AssertionError: T2PW_FROM_WRONG_TREE not in ['T2PW_UNIMPORTABLE']
+E           assert 'T2PW_FROM_WRONG_TREE' in ['T2PW_UNIMPORTABLE']
+
+tests\test_measurement_tree_pin.py:141: AssertionError
+_______ test_the_message_names_the_problem_the_interpreter_and_the_cure _______
+
+    def test_the_message_names_the_problem_the_interpreter_and_the_cure() -> None:
+        """The wrong-interpreter case: the one that actually happened.
+    
+        The cure has to be a command, not advice. "Use the venv" is not actionable at
+        2am; ``C:\\...\\.venv\\Scripts\\python.exe scripts\\batch_run.py`` is, and the
+        root cause -- ``py.exe`` ignoring the active virtualenv -- has to be named or
+        the operator fixes it once and hits it again next week.
+        """
+    
+        venv = runner.venv_python()
+>       assert venv is not None, "this project ships a .venv; the test assumes it"
+E       AssertionError: this project ships a .venv; the test assumes it
+E       assert None is not None
+
+tests\test_batch_preflight.py:616: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_measurement_tree_pin.py::test_missing_or_wrong_pythonpath_is_refused_before_collection
+FAILED tests/test_batch_preflight.py::test_the_message_names_the_problem_the_interpreter_and_the_cure
+2 failed in 0.60s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch758b\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ a9179eb883f8ec074818adc68c6baaafa501680e  [git, worktree dirty=True]
+label                   : base-known-failures
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-758b/10-base-known-failures.pin.json -q --basetemp=C:/t/bt-orch758b/10-base-known-failures-15969 tests/test_measurement_tree_pin.py::test_missing_or_wrong_pythonpath_is_refused_before_collection tests/test_batch_preflight.py::test_the_message_names_the_problem_the_interpreter_and_the_cure
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch758b
+root PID / process group: 1089720 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 1.62 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 3  1085792:python.exe, 1073512:python.exe, 1089132:python.exe
+descendants terminated  : 3  1073512, 1085792, 1089132
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch758b\docs\pwml_recovery_sprint\evidence\g11\ORCH-758b\10-base-known-failures.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================

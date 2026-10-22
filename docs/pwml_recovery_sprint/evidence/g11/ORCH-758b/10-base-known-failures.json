@@ -1,0 +1,114 @@
+{
+  "label": "base-known-failures",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-758b/10-base-known-failures.pin.json",
+    "-q",
+    "--basetemp=C:/t/bt-orch758b/10-base-known-failures-15969",
+    "tests/test_measurement_tree_pin.py::test_missing_or_wrong_pythonpath_is_refused_before_collection",
+    "tests/test_batch_preflight.py::test_the_message_names_the_problem_the_interpreter_and_the_cure"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch758b",
+  "started_at": "2026-10-22T04:05:22+00:00",
+  "finished_at": "2026-10-22T04:05:24+00:00",
+  "duration_seconds": 1.6187708000070415,
+  "timeout_seconds": 540.0,
+  "root_pid": 1089720,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 1085792,
+      "name": "python.exe",
+      "ppid": 1089720
+    },
+    {
+      "pid": 1073512,
+      "name": "python.exe",
+      "ppid": 1085792
+    },
+    {
+      "pid": 1089132,
+      "name": "python.exe",
+      "ppid": 1073512
+    }
+  ],
+  "descendants_terminated": [
+    1073512,
+    1085792,
+    1089132
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 1030124,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1033368,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1034392,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1034712,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1034816,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1035124,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1035180,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1043896,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1060644,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1092328,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch758b\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-758b\\10-base-known-failures.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch758b\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch758b",
+    "repo_head": "a9179eb883f8ec074818adc68c6baaafa501680e",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

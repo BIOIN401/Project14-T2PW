@@ -56,7 +56,7 @@ from t2pw.pipeline.qa_graph import build_graph, connected_components, degrees, g
 from t2pw.pipeline.draft_graph import DraftGraph, build_draft_graph
 from t2pw.pipeline.reaction_summary import generate_reaction_summary
 from t2pw.pipeline.reaction_lock_manifest import write_stage1_lock_artifacts
-from t2pw.pipeline.stage_one_ensemble import extraction_draws, run_ensemble
+from t2pw.pipeline.stage_one_ensemble import extraction_draws, record_empty_chunk, run_ensemble
 
 logger = logging.getLogger(__name__)
 
@@ -2648,6 +2648,78 @@ def merge_stage_one_outputs(outputs: List[Dict[str, Any]]) -> Dict[str, Any]:
     return merged
 
 
+#: ORCH-758b (D3): the diagnostics record of a chunk accepted as empty. Its own boundary
+#: name, so nothing that counts ``stage1_extraction`` attempts counts it twice.
+BOUNDARY_STAGE1_EMPTY_CHUNK = "stage1_empty_chunk"
+
+
+def _said_nothing(entry: Any) -> bool:
+    """One attempt that returned valid JSON declaring no entities and no processes, with
+    no error and a ``stop`` finish. Any other finish is not an answer: ``length`` is cut
+    off, ``content_filter`` is a partial reply (``client.chat_detailed``)."""
+
+    if not isinstance(entry, dict) or entry.get("error"):
+        return False
+    if _safe_dict(entry.get("boundary_diagnostics")).get("finish_reason") != "stop":
+        return False
+    try:
+        parsed = json.loads(entry.get("raw") or "")
+    except (TypeError, ValueError):
+        return False
+    return isinstance(parsed, dict) and _payload_is_structurally_empty(parsed)
+
+
+def _empty_chunk_attempts(failure: PipelineFailure) -> Optional[AttemptLogs]:
+    """The chunk's attempt log when its ONLY fault is that every attempt of every draw said
+    nothing (ORCH-758b, D3), draw-tagged as :func:`run_ensemble` tags them; ``None`` for
+    any other failure, which stays fatal. A draw with no attempt at all is not "nothing",
+    nor is one whose retry a leg deadline refused (``budget_exhausted``): it never got it."""
+
+    logs: AttemptLogs = []
+    for number, exc in getattr(failure, "ensemble_failures", None) or [(0, failure)]:
+        attempts = getattr(exc, "attempts", None) or []
+        if getattr(exc, "terminal_reason", "") == BUDGET_EXHAUSTED:
+            return None
+        if not attempts or not all(_said_nothing(entry) for entry in attempts):
+            return None
+        logs.extend({**entry, "draw": number} if number else entry for entry in attempts)
+    return logs
+
+
+def _record_empty_chunk(
+    chunk: Dict[str, Any], failure: PipelineFailure, attempts: AttemptLogs
+) -> Dict[str, Any]:
+    """Which chunk was accepted as empty, its attempts and their outcomes: in the boundary
+    report, in the ensemble side file when draws > 1, and returned for the chunk record.
+    Diagnostics only -- the chunk payload stays ``{}`` and no prompt reads this."""
+
+    record = {
+        "chunk_id": chunk.get("chunk_id"),
+        "section": chunk.get("section"),
+        "draws": len(getattr(failure, "ensemble_failures", None) or [failure]),
+        "attempts": [
+            {
+                "draw": entry.get("draw", 1),
+                "attempt": entry.get("attempt"),
+                "note": entry.get("note"),
+                "finish_reason": _safe_dict(entry.get("boundary_diagnostics")).get("finish_reason"),
+                "raw_chars": len(entry.get("raw") or ""),
+            }
+            for entry in attempts
+        ],
+        "failure": str(failure),
+    }
+    current_diagnostics().record_boundary(
+        stage="extraction",
+        boundary=BOUNDARY_STAGE1_EMPTY_CHUNK,
+        attempts=len(attempts),
+        outcome=OUTCOME_ZERO_PROCESSES,
+        empty_chunk=record,
+    )
+    record_empty_chunk(failure, chunk.get("chunk_id"))
+    return record
+
+
 def run_stage_one_with_chunking(
     input_text: str,
     *,
@@ -2702,8 +2774,11 @@ def run_stage_one_with_chunking(
     chunk_results: List[Dict[str, Any]] = []
     outputs: List[Dict[str, Any]] = []
     raw_stage_one_chunks: List[Dict[str, Any]] = []
+    #: (chunk record, its failure) per chunk accepted as empty; recorded after the loop.
+    empty_chunks: List[Tuple[Dict[str, Any], PipelineFailure]] = []
 
     for chunk in chunks:
+        empty: Optional[PipelineFailure] = None
         try:
             parsed, attempts = run_extraction_pipeline(
                 chunk["text"],
@@ -2714,11 +2789,17 @@ def run_stage_one_with_chunking(
                 max_tokens=max_tokens,
             )
         except PipelineFailure as failure:
-            raise PipelineFailure(
-                stage=f"extraction chunk {chunk['chunk_id']}",
-                message=f"Chunk {chunk['chunk_id']} failed to produce valid JSON.",
-                attempts=failure.attempts,
-            ) from failure
+            empty_attempts = _empty_chunk_attempts(failure)
+            if empty_attempts is None:
+                raise PipelineFailure(
+                    stage=f"extraction chunk {chunk['chunk_id']}",
+                    message=f"Chunk {chunk['chunk_id']} failed to produce valid JSON.",
+                    attempts=failure.attempts,
+                ) from failure
+            # ORCH-758b (D3): every attempt of every draw read this chunk and declared
+            # nothing -- a reference list does exactly that. That is an answer, not a
+            # fault: the chunk contributes ``{}``, is recorded, and the paper goes on.
+            parsed, attempts, empty = {}, empty_attempts, failure
 
         raw_stage_one_chunks.append(
             {
@@ -2730,8 +2811,24 @@ def run_stage_one_with_chunking(
             parsed, label=f"stage_one_chunk_{int(chunk['chunk_id']):03d}", record=True
         )
         chunk_entry = {**chunk, "output": parsed, "attempts": attempts}
+        if empty is not None:
+            empty_chunks.append((chunk_entry, empty))
         chunk_results.append(chunk_entry)
         outputs.append(parsed)
+
+    if len(empty_chunks) == len(chunks):
+        # Nothing anywhere in the paper: an empty extraction, as an unchunked one fails.
+        raise PipelineFailure(
+            stage="extraction",
+            message=(
+                "Extraction stage returned a structurally empty payload (no entities and no "
+                f"processes) on every attempt of every one of the {len(chunks)} chunks."
+            ),
+            attempts=[entry for result in chunk_results for entry in result["attempts"]],
+        ) from empty_chunks[-1][1]
+    # Only now is each empty chunk accepted, so a run that failed above recorded none.
+    for chunk_entry, failure in empty_chunks:
+        chunk_entry["empty_chunk"] = _record_empty_chunk(chunk_entry, failure, chunk_entry["attempts"])
 
     if artifact_dir is not None:
         write_stage1_lock_artifacts(raw_stage_one_chunks, artifact_dir)

@@ -1031,13 +1031,15 @@ def run_ensemble(draw: DrawFn, n: int, *, failure: type,
             payloads.append(payload)
         attempts.extend({**entry, "draw": index} for entry in logs if isinstance(entry, dict))
     if not any(isinstance(p, dict) for p in payloads):
-        raise failures[-1][1]
+        last = failures[-1][1]
+        # ORCH-758b (D3): every draw's failure, on the instance like ``terminal_reason``, so a
+        # chunked caller can tell a chunk that said nothing on every draw from one that broke
+        # (:func:`record_empty_chunk`). The object raised is the one raised before.
+        last.ensemble_failures = failures
+        raise last
 
     merged, report = merge_draws(payloads, paper_text=paper_text)
-    report["failed_draws"] = [
-        {"draw": index, "stage": str(getattr(exc, "stage", "") or ""), "error": str(exc)}
-        for index, exc in failures
-    ]
+    report["failed_draws"] = _failed_draws(failures)
     diagnostics = current_diagnostics()
     report_path = _write_side_file(diagnostics.artifact_dir, report)
     diagnostics.record_boundary(
@@ -1048,6 +1050,42 @@ def run_ensemble(draw: DrawFn, n: int, *, failure: type,
         ensemble=_summary(report, report_path),
     )
     return merged, attempts
+
+
+def _failed_draws(failures: Sequence[Tuple[int, BaseException]]) -> List[Dict[str, Any]]:
+    return [
+        {"draw": index, "stage": str(getattr(exc, "stage", "") or ""), "error": str(exc)}
+        for index, exc in failures
+    ]
+
+
+def record_empty_chunk(failure: BaseException, chunk_id: Any) -> str:
+    """The side-file entry of a chunk whose every draw said nothing (ORCH-758b, D3).
+
+    :func:`run_ensemble` raises before it writes one, so without this the chunk would be
+    missing from ``stage1_ensemble_report.json``. Called only by the chunked Stage-1 path,
+    after every chunk has run and the paper is known not to be empty, so the entry comes
+    after the other chunks' and names its ``chunk_id``; a failure that ends the run writes
+    nothing, as before. Returns the path written, or ``''`` when no ensemble ran (one
+    draw) or there is no artifact dir.
+    """
+
+    failures = getattr(failure, "ensemble_failures", None)
+    if not failures:
+        return ""
+    n = len(failures)
+    return _write_side_file(current_diagnostics().artifact_dir, {
+        "chunk_id": chunk_id,
+        "empty_chunk": True,
+        "draws_requested": n,
+        "draws_succeeded": 0,
+        "draws_failed": n,
+        "paper_lexicon": {"status": "not_evaluated", "reason": "no draw succeeded"},
+        "names_rewritten": [],
+        "typo_snapped": [],
+        "buckets": {},
+        "failed_draws": _failed_draws(failures),
+    })
 
 
 # ----------------------------------------------------------------------------- rule 3

@@ -1,0 +1,438 @@
+{
+  "label": "affected-a",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-758b/04-affected-a.pin.json",
+    "-q",
+    "--basetemp=C:/t/bt-orch758b/04-affected-a-22035",
+    "tests/test_attempt_cap_termination_reason.py",
+    "tests/test_batch_driver.py",
+    "tests/test_c060a_requested_pathway_wiring.py",
+    "tests/test_c064_round_cap_reason.py",
+    "tests/test_c082_post_pipeline_seam.py",
+    "tests/test_c087_prefreeze_declination_demotes_release_status.py",
+    "tests/test_c088_extracted_not_serialized_disposition.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_deadline_budget.py",
+    "tests/test_early_failure_replay.py",
+    "tests/test_empty_extraction_payload.py",
+    "tests/test_eval_v2_metrics.py",
+    "tests/test_extraction_escalation_ladder.py",
+    "tests/test_f179_reaction_support.py",
+    "tests/test_isolated_collection.py",
+    "tests/test_measurement_tree_pin.py",
+    "tests/test_orch757_llm_token_budgets.py",
+    "tests/test_orch758b_empty_chunk.py",
+    "tests/test_pipeline_lineage_carrier.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_pwml_interaction_protein_wrappers.py",
+    "tests/test_rd092_1_reaction_lineage.py",
+    "tests/test_rd093_phoenix_ingest.py",
+    "tests/test_rd093_rag_metrics.py",
+    "tests/test_reaction_evidence.py",
+    "tests/test_reaction_lock_manifest.py",
+    "tests/test_research_mode_report.py",
+    "tests/test_research_mode_tiers.py",
+    "tests/test_scope_membership_filter_end_to_end.py",
+    "tests/test_stage_one_ensemble.py",
+    "tests/test_stage_one_paper_dictionary.py",
+    "tests/test_streamlit_stage2_orchestration.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch758b",
+  "started_at": "2026-10-22T04:00:46+00:00",
+  "finished_at": "2026-10-22T04:01:50+00:00",
+  "duration_seconds": 64.05880130000878,
+  "timeout_seconds": 540.0,
+  "root_pid": 1078188,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 1084516,
+      "name": "python.exe",
+      "ppid": 1078188
+    },
+    {
+      "pid": 1086496,
+      "name": "git.exe",
+      "ppid": 1084516
+    },
+    {
+      "pid": 1074244,
+      "name": "git.exe",
+      "ppid": 1084516
+    },
+    {
+      "pid": 1087404,
+      "name": "git.exe",
+      "ppid": 1084516
+    },
+    {
+      "pid": 1087196,
+      "name": "git.exe",
+      "ppid": 1084516
+    },
+    {
+      "pid": 1078296,
+      "name": "git.exe",
+      "ppid": 1084516
+    },
+    {
+      "pid": 1087240,
+      "name": "git.exe",
+      "ppid": 1084516
+    },
+    {
+      "pid": 1084884,
+      "name": "git.exe",
+      "ppid": 1084516
+    },
+    {
+      "pid": 1086204,
+      "name": "git.exe",
+      "ppid": 1086500
+    },
+    {
+      "pid": 1086500,
+      "name": "git.exe",
+      "ppid": 1084516
+    },
+    {
+      "pid": 1085080,
+      "name": "git.exe",
+      "ppid": 1084516
+    },
+    {
+      "pid": 1083376,
+      "name": "python.exe",
+      "ppid": 1084516
+    },
+    {
+      "pid": 1086816,
+      "name": "python.exe",
+      "ppid": 1083376
+    },
+    {
+      "pid": 1068604,
+      "name": "python.exe",
+      "ppid": 1084516
+    },
+    {
+      "pid": 1087200,
+      "name": "python.exe",
+      "ppid": 1068604
+    },
+    {
+      "pid": 1084840,
+      "name": "python.exe",
+      "ppid": 1084516
+    },
+    {
+      "pid": 1086748,
+      "name": "python.exe",
+      "ppid": 1084840
+    },
+    {
+      "pid": 1081600,
+      "name": "python.exe",
+      "ppid": 1084436
+    },
+    {
+      "pid": 1084436,
+      "name": "python.exe",
+      "ppid": 1084516
+    },
+    {
+      "pid": 1078600,
+      "name": "python.exe",
+      "ppid": 1084516
+    },
+    {
+      "pid": 1081136,
+      "name": "python.exe",
+      "ppid": 1084516
+    },
+    {
+      "pid": 1082508,
+      "name": "python.exe",
+      "ppid": 1084516
+    },
+    {
+      "pid": 1084160,
+      "name": "python.exe",
+      "ppid": 1084500
+    },
+    {
+      "pid": 1084500,
+      "name": "python.exe",
+      "ppid": 1084516
+    },
+    {
+      "pid": 1086584,
+      "name": "python.exe",
+      "ppid": 1086668
+    },
+    {
+      "pid": 1086668,
+      "name": "python.exe",
+      "ppid": 1084516
+    },
+    {
+      "pid": 1079684,
+      "name": "python.exe",
+      "ppid": 1086564
+    },
+    {
+      "pid": 1086564,
+      "name": "python.exe",
+      "ppid": 1084516
+    },
+    {
+      "pid": 1065220,
+      "name": "python.exe",
+      "ppid": 1084516
+    },
+    {
+      "pid": 1085548,
+      "name": "python.exe",
+      "ppid": 1065220
+    },
+    {
+      "pid": 1086372,
+      "name": "python.exe",
+      "ppid": 1084516
+    },
+    {
+      "pid": 1087044,
+      "name": "python.exe",
+      "ppid": 1086372
+    },
+    {
+      "pid": 1079080,
+      "name": "python.exe",
+      "ppid": 1084516
+    },
+    {
+      "pid": 1086248,
+      "name": "python.exe",
+      "ppid": 1079080
+    },
+    {
+      "pid": 1076240,
+      "name": "python.exe",
+      "ppid": 1084516
+    },
+    {
+      "pid": 1087068,
+      "name": "python.exe",
+      "ppid": 1076240
+    },
+    {
+      "pid": 1084344,
+      "name": "python.exe",
+      "ppid": 1084516
+    },
+    {
+      "pid": 1087468,
+      "name": "python.exe",
+      "ppid": 1084344
+    },
+    {
+      "pid": 1086572,
+      "name": "python.exe",
+      "ppid": 1084516
+    },
+    {
+      "pid": 1085288,
+      "name": "python.exe",
+      "ppid": 1086572
+    },
+    {
+      "pid": 1087528,
+      "name": "python.exe",
+      "ppid": 1084516
+    },
+    {
+      "pid": 1087548,
+      "name": "python.exe",
+      "ppid": 1087528
+    },
+    {
+      "pid": 1087680,
+      "name": "python.exe",
+      "ppid": 1084516
+    },
+    {
+      "pid": 1087700,
+      "name": "python.exe",
+      "ppid": 1087680
+    },
+    {
+      "pid": 1087776,
+      "name": "python.exe",
+      "ppid": 1084516
+    },
+    {
+      "pid": 1087804,
+      "name": "python.exe",
+      "ppid": 1087776
+    },
+    {
+      "pid": 1087984,
+      "name": "python.exe",
+      "ppid": 1084516
+    },
+    {
+      "pid": 1088024,
+      "name": "python.exe",
+      "ppid": 1084516
+    },
+    {
+      "pid": 1088044,
+      "name": "python.exe",
+      "ppid": 1088024
+    },
+    {
+      "pid": 1088064,
+      "name": "python.exe",
+      "ppid": 1084516
+    },
+    {
+      "pid": 1088316,
+      "name": "python.exe",
+      "ppid": 1084516
+    },
+    {
+      "pid": 1088336,
+      "name": "python.exe",
+      "ppid": 1088316
+    }
+  ],
+  "descendants_terminated": [
+    1065220,
+    1068604,
+    1074244,
+    1076240,
+    1078296,
+    1078600,
+    1079080,
+    1079684,
+    1081136,
+    1081600,
+    1082508,
+    1083376,
+    1084160,
+    1084344,
+    1084436,
+    1084500,
+    1084516,
+    1084840,
+    1084884,
+    1085080,
+    1085288,
+    1085548,
+    1086204,
+    1086248,
+    1086372,
+    1086496,
+    1086500,
+    1086564,
+    1086572,
+    1086584,
+    1086668,
+    1086748,
+    1086816,
+    1087044,
+    1087068,
+    1087196,
+    1087200,
+    1087240,
+    1087404,
+    1087468,
+    1087528,
+    1087548,
+    1087680,
+    1087700,
+    1087776,
+    1087804,
+    1087984,
+    1088024,
+    1088044,
+    1088064,
+    1088316,
+    1088336
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 1033368,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1034392,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1034712,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1034816,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1035124,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1035180,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1043896,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1060644,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1084444,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1086012,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch758b\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-758b\\04-affected-a.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch758b\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch758b",
+    "repo_head": "a9179eb883f8ec074818adc68c6baaafa501680e",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}
