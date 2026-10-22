@@ -437,3 +437,45 @@ Docs and evidence (this commit): this file, `evidence/orch757_streamlit_budget_e
 (logs and file lists).
 
 Not edited: `TEST_MATRIX.md`, `LEDGER.md`, `DECISIONS.md`.
+
+## 12. Orchestrator record: review, integration, merge (appended by the sub-orchestrator, 2026-10-22)
+
+**Review.** One independent `pwml-reviewer` (Opus, extra-high effort), round 0, on the actual diff
+`a43a2b12..3582b0d7`, from detached trees `rev757-base` (`089d3c7d`) and `rev757-tip`. The severity standard was
+fixed in the review prompt before round 0: blocking = any non-budget byte in `streamlit_app.py` (incl. imports,
+whitespace, line endings); a stage still capped below its configured budget on its first request, or an absolute
+ceiling below it on a retry path; a request that can exceed a fallback model's max completion; any change to
+LLM-bound content; a failing gate the lane caused; a D-105 ruling not implemented. Everything else a note.
+
+**Verdict: APPROVE WITH NOTES, no blocking finding.** The reviewer verified by itself:
+- `streamlit_app.py`: CRLF working-tree bytes base vs tip, 7,279 lines both, exactly 9 lines differ (`:3816, 3849,
+  3881, 3934, 3951, 3973, 4005, 4240, 4400`), 0 bare LF at the tip, no import (`llm_client_module` already imported
+  at `:25`). Fingerprints match § 4: working tree `7bf2aea3…` → `28c09117…`, blob `d4aa606a…` → `52e016d7…`.
+- every `chat`/`chat_detailed`/`chat_with_tools` call and the three direct SDK calls in `stoich/agent.py` resolve to
+  `configured_max_tokens()`; the clamp sits on the sending path (`client.py:720`, `:937`); the only failover is
+  Stage-1 rung 3 (`pipeline.py:4090`); no network lookup; no hardcoded budget literal left in `src/`.
+- G9 behavioural: base `g11/ORCH-757/01-rev-g9-base` **52 failed, 3 passed** (wire showed `{3200}`, `{800}`,
+  `{12000}`, `24000 == 96000`, …); tip `27-rev-g9-tip` **55 passed**. SMOKE `29-rev-smoke-tip-r2` **508**
+  (`28` was the reviewer's own CR-in-file-list mistake, exit 4, no test ran). Affected 17 files `30` 339 passed;
+  gap-resolver + c030a `31` 34 passed. All 0 survivors.
+
+Reviewer notes (none blocking): (1) `token_offsets` at `streamlit_app.py:3818` is dead code, kept so no non-budget
+byte changes; (2) the non-truncation Stage-2 retry still shrinks to 0.6x (76,800 of 128,000); (3)
+`audit_json_llm.py:1498` records the budget before the clamp; (4) the stoich tool loop now sends `max_tokens` where
+base sent none; (5) an invalid stage variable falls back to 128,000, not to `LLM_MAX_TOKENS` (as base's
+preprocessor); (6) the app-site tests assert the argument handed to each stage; the stage wire tests cover the wire.
+The implementer's § 9 Q1-Q6 were judged product questions or notes, none blocking.
+
+**Integration.** Chunk D was run by the orchestrator, heavy lock, between ORCH-756 legs (the runner was paused with a
+`PAUSE` file): on `e4520a01` (757 + 758a) `g11/ORCH-757i/01` 187/187, failed none; on the merged tip `6b7766ec`
+`ORCH-757i/34` 187/187, SMOKE `67` 508, eval_v2 + focused `68` 423 passed + 1 xfailed, the six AppTest files alone
+`69`-`74` all green except the known worktree-only `batch_preflight` node. Details: `TEST_MATRIX.md` § ORCH-757i.
+
+**Merge.** `git merge --no-ff orch757/llm-budgets` into `sprint/pwml-recovery` = **`23753144`** (then 758a
+`e9c852a5`, 758b `6b7766ec`, the 758 diagnosis `6403af88`, evidence `f392d447`); `main` fast-forwarded with
+`git fetch . sprint/pwml-recovery:main`; both pushed (`a43a2b12..f392d447`). The protected-file fingerprint moves
+as recorded above. TEST_MATRIX § ORCH-757 appended from § 10 of this document.
+
+**First live evidence (ORCH-756, 1 draw, pre-757 code `8b074dda` vs `.env` 128k):** with only `.env` raised, the
+hardcoded sites still failed exactly as § 1 predicts: RAG prose 24/69 empty-length, audit loop 14/15
+(`evidence/orch756_leg_stats_partial.txt`). Those are the sites this lane lifts.

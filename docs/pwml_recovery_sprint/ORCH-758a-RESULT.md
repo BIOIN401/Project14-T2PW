@@ -240,3 +240,29 @@ Affected sweep, 52 files: 1399 passed, 11 skipped, 1 failed (`03`, `04`). The fa
 `test_rag_seed_entity_reimport.py::test_the_orchestrator_passes_the_merge_base_to_conform`,
 already in § ORCH-754 "Known failures" and red at base (`05`).
 ```
+
+## 10. Orchestrator record: review and merge (appended by the sub-orchestrator, 2026-10-22)
+
+Chartered by the ORCH-756-759 sub-orchestrator from `ORCH-758-RESULT.md` § 4 D2 (blocks PWML production after the
+budget fix; a defect, not a product choice), base `3582b0d7` (approved ORCH-757 tip).
+
+**Review** (`pwml-reviewer`, Opus, extra-high, round 0; severity standard fixed in the prompt: a byte outside
+scope; a composite regression on REAL data, measured by a corpus scan; a non-behavioural G9; an LLM-bound change; a
+lane-caused gate failure; a weakened gate or dropped `review_required` pathway). **Verdict: APPROVE WITH NOTES.**
+- G9 base `g11/ORCH-758a/01-rev-g9-base` 13 failed / 15 passed, each with the defect's own `ValueError`; tip `15` 28
+  passed; SMOKE `18` 508; affected 8 files `19` 247 passed, 2 failed, both the known
+  `test_compound_resolution_extraction.py` GOLDEN-coverage pair, red at base (`03`).
+- **Corpus scan** (`02`/`16`/`17`): 8,088 files, 10,632 distinct `+` strings (fixtures, evaluation_v2, evidence,
+  189 runs_verify payloads, ORCH-755 payloads): **12 names changed, all True→False, all charge notation** (`Ca++`,
+  `voltage-gated Ca ++ channels`, `ferric iron (Fe3+)`, …); none False→True; no real composite changed.
+- Fixture regeneration reproduced the committed fixture (`20`).
+- Notes: (1) the charge rule is wider than its `ponytail:` comment: hypothetical `CO2+ H2O`, `H2O2+ O2`, `A ++ B` now
+  read as one name; none occurs in the corpus (`04`/`21`); (2) `K+ channel`, `NAD+ kinase`, `H+ influx via OTOP1`
+  still read as composites, as at base, only as process names `validate_no_composites` does not check; (3) the false
+  "repair the Ca++ composite" errors no longer reach the Stage-4 audit LLM's context note, which removes the defect
+  and may stop the audit dropping `Ca++` (F2); watch the next sour-taste leg; (4) the sibling splitters
+  `pipeline.py:1689` and `audit_json_llm.py:230` still split `Ca++` into `Ca` (Q4).
+
+**Merge:** `--no-ff` into `sprint/pwml-recovery` = **`e9c852a5`**, after Chunk D on `e4520a01` (`ORCH-757i/01`,
+187/187) and the merged-tip gates (`ORCH-757i/34`, `67`-`74`); pushed with `main` at `f392d447`. Open questions
+Q1-Q4 (§ 8) go to the product owner in the sub-orchestrator's final report.

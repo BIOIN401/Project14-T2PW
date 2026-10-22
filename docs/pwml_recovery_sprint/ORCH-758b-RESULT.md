@@ -352,3 +352,34 @@ unchanged at 508 (`/16`).
 ### Still not settled
 
 Q1, Q2, Q3 and Q5 of § 7 stand as written. Q4 is settled by the review (above).
+
+## 11. Orchestrator record: reviews and merge (appended by the sub-orchestrator, 2026-10-22)
+
+Chartered by the ORCH-756-759 sub-orchestrator from `ORCH-758-RESULT.md` § 4 D3 (blocks PWML production for long
+papers; a defect, not a product choice), base `3582b0d7`. Severity standard fixed in the review prompt before round
+0: a byte outside scope; **a failure fatal at base no longer fatal** other than the solely-structurally-empty chunk; a
+changed stage/message/attempts/cause on a fatal path; other chunks' LLM-bound content changed or chunk metadata
+reaching an LLM; a non-behavioural G9; a lane-caused gate failure; a weakened gate or dropped `review_required`.
+
+**Round 0 (`7e8f8f60`): REJECT, one blocking finding.** B1 (item 2): `_said_nothing` rejected only `length`, so a
+valid empty reply stopped by `content_filter` was accepted; and `_empty_chunk_attempts` accepted a chunk whose retry
+was refused `budget_exhausted` under a live `LegDeadline` (latent today: no production caller activates one).
+Reviewer probes: base `ORCH-758b/02-rev-probes-base-unpinned`, tip `14-rev-probes-tip-unpinned` (P3 = B1a, P9 = B1b, P8
+= note 1). Note 1: an all-empty failed run left N "accepted" records behind.
+
+**Repair round 1 (`10f0dd27`):** accept only `finish_reason == "stop"`; a `budget_exhausted` draw keeps the chunk
+fatal; empty chunks recorded only after the all-empty check (§ 10).
+
+**Round 1: APPROVE WITH NOTES.** Probes `19` 12 passed; G9 tip `20` 30 passed; SMOKE `21` 508; affected `22` 162
+passed + 1 xfailed; the new test file on base `src/` (`rev758b-base` `03-rev-r1-tests-on-base-unpinned`) 19
+preservation tests pass, the same 11 G9/acceptance tests fail as at round 0. Notes: (1) in 3-draw side files the
+empty chunk's entry now comes after the others' (successful entries carry no `chunk_id`); (2) Q1 and Q2 remain for
+the product owner. On Q2 the reviewer found Stage 2 round 1 reading the empty chunk is the same exposure as
+unchunked runs and rounds 2+; no gate would catch a Stage-2 process inferred from a reference title (its quote is
+real paper text); minimal fix if wanted: a guard beside `pipeline.py:481`.
+
+Reviewer probe runs used the bounded wrapper without `pinned_pytest.py` (it refuses test files outside the tree);
+probe P0 printed the imported `pipeline.py` path to prove the measured tree.
+
+**Merge:** `--no-ff` into `sprint/pwml-recovery` = **`6b7766ec`**; merged-tip gates `ORCH-757i/34` (Chunk D
+187/187), `67` (SMOKE 508), `68`-`74`; pushed with `main` at `f392d447`.

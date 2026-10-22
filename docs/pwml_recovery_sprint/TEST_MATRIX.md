@@ -1008,3 +1008,91 @@ The c081/c089 corpus tests skip any path containing `worktrees`, so a run from `
 `ORCH-754d`. **Add `tests/test_eval_v2_*.py` to the integration gate of any change under `src/t2pw/pipeline/`.**
 
 After `754d` (merged `ff3457fa`), `tests/test_eval_v2_*.py` + the focused files + `test_early_failure_replay.py`: **239 passed, 1 xfailed, 0 failed** (`g11/ORCH-754/57`); SMOKE 508 (`56`). The two copies of the normalizer (production `name_keys.py`, evaluator `matcher.py`) must change together; the equality test is the alarm, and its reviewer measured it as weaker than an AST identity check (some Greek-table mutants survive). Strengthening it is open.
+
+## ORCH-757 (D-105 § 2): test obligations — appended end-of-file by rule · 2026-10-21
+
+Lane `orch757/llm-budgets` (`089d3c7d` test-first, `2aebbfe0` code). Reports `evidence/g11/ORCH-757/01`–`26`.
+
+**SMOKE is unchanged at 508** (`g11/ORCH-757/17`). No pin moved.
+
+### New focused selection
+
+`tests/test_orch757_llm_token_budgets.py` (55): the `max_tokens` on the wire for 23 LLM call sites and the
+protected `streamlit_app.py` budget sites, plus a golden of every request minus `max_tokens`/`timeout`
+pinned at base `a43a2b12`. Any prompt or message change to a covered stage fails the golden until it
+is re-pinned with `evidence/orch757_golden_capture.py`. Run it for any change to `src/t2pw/llm/client.py`
+or to an LLM call site. It pins its own budget and model variables; `.env` cannot change it.
+
+### Harness
+
+`tests/test_streamlit_stage2_orchestration.py::_orchestration_harness` injects the real `t2pw.llm.client`
+as `llm_client_module`. Any harness that execs `run_post_pipeline_sbml_artifacts` into its own namespace
+must provide it.
+
+### Collection-order hazard (pre-existing)
+
+`tests/test_gap_resolver.py`, `_agent_tools.py`, `_lineage.py` and `_stage3_issues.py` install a stub
+`t2pw.llm.client` with `sys.modules.setdefault` at import. Collected first in a batch, they cause
+`ImportError` in later files that import the real client (`test_preprocessor.py`,
+`test_pipeline_cleanup.py`, `test_pipeline_lineage_carrier.py`, `test_llm_client_empty_completion_retry.py`).
+Batched after them, `test_llm_client_request_timeout.py` fails 3 cases. It is identical on base
+(`g11/ORCH-757/10`/`11`, `12`/`13`). Collect the gap-resolver files last, or run them in their own job.
+
+### Known failures
+
+Unchanged from ORCH-754's list. Measured red on base `src/` again in `g11/ORCH-757/16`. In a worktree,
+`test_batch_preflight.py::test_the_message_names_the_problem_the_interpreter_and_the_cure` also fails
+(no `.venv` in a worktree; same on base, `/22`).
+
+## ORCH-758a (D2): test obligations — appended end-of-file by rule · 2026-10-21
+
+New focused file: `tests/test_orch758a_charge_notation_not_composite.py` (28 tests, <1 s), with
+fixture `tests/fixtures/orch758a/sour_taste_PMC7059786_merged_excerpt.json`. It is in no chunk
+and not in SMOKE; its focused selection is the file itself. G9: 13 `test_g9_*` red at base
+(`g11/ORCH-758a/01`), 28 green at tip (`02`).
+SMOKE unchanged at 508 (`g11/ORCH-758a/06`). No pin moved.
+Affected sweep, 52 files: 1399 passed, 11 skipped, 1 failed (`03`, `04`). The failure is
+`test_rag_seed_entity_reimport.py::test_the_orchestrator_passes_the_merge_base_to_conform`,
+already in § ORCH-754 "Known failures" and red at base (`05`).
+
+## ORCH-758b (D3): test obligations — appended end-of-file by rule · 2026-10-21
+
+Lane `orch758b/empty-chunk` (`11ace4fc` test-first, `a9179eb8` code; repair round 1 `bc5579a5` tests,
+`1c0262e7` code). Reports `evidence/g11/ORCH-758b/01`–`18` (implementer), plus the reviewer's (`rev-*`).
+
+**SMOKE is unchanged at 508** (`g11/ORCH-758b/16`). No pin moved.
+
+### New focused selection
+
+`tests/test_orch758b_empty_chunk.py` (**30**, ~2 s): a chunk that returns valid, structurally empty JSON with
+`finish_reason=stop` on every attempt of every draw contributes `{}` and is recorded (`stage1_empty_chunk`
+boundary, `chunk_entry["empty_chunk"]`, an ensemble side-file entry when draws > 1), but only after the
+all-empty check; every other chunk failure stays fatal unchanged (invalid JSON, `length`, `content_filter`,
+a `budget_exhausted` draw, an exception, a draw with no attempts); all-empty still fails and leaves no
+accepted record; unchunked unchanged; LLM inputs byte-identical to the paper without the empty chunk
+(D-104 AMENDMENT 2). Run it for any change to `run_stage_one_with_chunking`, `run_ensemble`'s failure path,
+`_payload_is_structurally_empty`, or the attempt-log keys `raw`, `error` and
+`boundary_diagnostics.finish_reason` written by `_run_json_stage`.
+
+### Known failures
+
+Unchanged from ORCH-754's list. In a worktree, `test_measurement_tree_pin.py::test_missing_or_wrong_pythonpath_is_refused_before_collection`
+also fails (`T2PW_FROM_WRONG_TREE not in ['T2PW_UNIMPORTABLE']`), identically on base `src/` (`g11/ORCH-758b/10`).
+
+## ORCH-757i: integration gates on the merged tip of ORCH-757 + 758a + 758b — appended end-of-file by rule · 2026-10-21
+
+Recorded by the sub-orchestrator. Merged tip `6b7766ec` (merges `23753144` 757, `e9c852a5` 758a,
+`6b7766ec` 758b), measured in a clean worktree (no `.env`), heavy lock `ORCH-757i`. Reports
+`evidence/g11/ORCH-757i/`, logs `evidence/orch757i/`; `g11_evidence.py check --task ORCH-757i`: 74 artifacts,
+0 non-compliant. Every report `FINAL SURVIVING COUNT : 0`.
+
+| run | report | result |
+|---|---|---|
+| Chunk D on `e4520a01` (757 + 758a, before merge) | `01` outer + inner | 187/187 executed, core 160 passed, 27 nodes ok, failed none |
+| Chunk D on the merged tip | `34` outer + inner | 187/187 executed, failed none |
+| SMOKE | `67` | **508 passed** |
+| `tests/test_eval_v2_*.py` + the 757/758a/758b focused files + ensemble, paper dictionary, empty payload, early-failure replay, Stage-2 orchestration, process normalizer | `68` | 423 passed, 1 xfailed |
+| AppTest files, each alone: batch_preflight, c055, quarantine_boundary, c052, reaction_evidence_view, app_hook | `69`-`74` | 32+1 failed / 14 / 23 / 13 / 11 / 1. The one failure is `test_batch_preflight.py::test_the_message_names_the_problem_the_interpreter_and_the_cure`, worktree-only (no `.venv`), red on base too (`ORCH-757/22`, `ORCH-758b/10`) |
+
+**SMOKE stays 508. Merge rule 10 unchanged.** The four primary-only known failures of § ORCH-754 were not
+exercised (clean worktree).

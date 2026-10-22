@@ -510,3 +510,20 @@ ORCH-755-RESULT § 3 and in this task's brief is the number of rows found by **o
 9. **D5/D6 (lexicon).** Reading the verbatim `X (Y) L` phrase is a small, ORCH-754a-scoped fix (about 2 h
    plus review, worth about 5 rows on chlorophyll). The SH ceiling (D6) is lower value. Accept it, or allow
    a paper-defined `long (SF)` pair that fails the character match. A ruling is needed: it loosens rule 1.
+
+## 10. Orchestrator record: what was done with these findings (appended by the sub-orchestrator, 2026-10-22)
+
+- **D2 and D3 block PWML production after the budget fix and are defects, not product choices**, so fix lanes were
+  chartered under D-105's sub-orchestrator mandate: **ORCH-758a** (D2, `Ca++` charge notation; APPROVE WITH NOTES,
+  merged `e9c852a5`) and **ORCH-758b** (D3, empty chunk; REJECT then APPROVE WITH NOTES, merged `6b7766ec`). See
+  `ORCH-758a-RESULT.md` § 10 and `ORCH-758b-RESULT.md` § 11.
+- **D1** is intermittent, did not recur in ORCH-756's 1-draw enterobactin leg (which wrote
+  `pathway.review_required.pwml`), and its fix touches identity admission policy; no lane chartered; open for the
+  product owner.
+- **D4** (D-104 rule 3, the Stage-6 database-ID merge, never runs in the app) and **D9** (extraction capped at
+  64,000 for a fallback that is never called) are product questions; routed to `main` in the final report.
+- **D7** (leg timeout): ORCH-756 measured Stage-2 calls of 21-26 min at 128k budgets; `main` approved 10,800 s per
+  leg for the ORCH-756 retry pass and ORCH-759 (orchestrator operating ruling, `ORCH-756-RESULT.md`).
+- **D8** (L. lactis Men enzymes without UniProt) recurs at 1 draw but did not block: ORCH-756 menaquinone wrote
+  `pathway.review_required.pwml`. Not sent to the bio-auditor; open.
+- This diagnosis branch `orch758/diagnosis` (`cf25b5c6`, docs only) was merged `--no-ff` as **`6403af88`**.
