@@ -1797,9 +1797,14 @@ def _complex_component_norms(payload: Mapping[str, Any], surviving_complex_norms
 
 def _prune_entities(
     payload: Dict[str, Any],
-    keep_norms: Set[str],
+    keep_norms: Set[str] | Mapping[str, Set[str]],
 ) -> List[Dict[str, Any]]:
-    """Drop graph entities nothing in ``keep_norms`` reaches. Returns removals."""
+    """Drop graph entities nothing in ``keep_norms`` reaches. Returns removals.
+
+    ``keep_norms`` is one set for every bucket, or a ``bucket -> set`` mapping in
+    which an omitted bucket keeps nothing. The closure loop passes the mapping
+    (ORCH-759c) so that a complex-component name keeps ``proteins`` rows only.
+    """
 
     entities = _safe_dict(payload.get("entities"))
     removed: List[Dict[str, Any]] = []
@@ -1807,6 +1812,7 @@ def _prune_entities(
         rows = entities.get(bucket)
         if not isinstance(rows, list):
             continue
+        bucket_keep = keep_norms.get(bucket, set()) if isinstance(keep_norms, Mapping) else keep_norms
         kept: List[Any] = []
         for row in rows:
             if not isinstance(row, dict) or not _row_name(row):
@@ -1827,7 +1833,7 @@ def _prune_entities(
                 continue
             name = _row_name(row)
             norms = {norm for norm in _entity_name_norms([row]) if norm}
-            if norms & keep_norms:
+            if norms & bucket_keep:
                 kept.append(row)
                 continue
             reason = (
@@ -2451,7 +2457,18 @@ def quarantine_and_close(
             for row in _safe_list(_safe_dict(working.get("entities")).get("protein_complexes"))
             if isinstance(row, dict) and (_entity_name_norms([row]) & referenced)
         }
-        keep_norms = referenced | _complex_component_norms(working, surviving_complex_norms)
+        # ORCH-759c. A component names a PROTEIN: ``_component_name``, ``ir.py``
+        # (``proteins_by_name``) and ``writer.py`` (``_protein_complex_members``)
+        # resolve it against proteins and nothing else. So a component name keeps
+        # a ``proteins`` row only; every other row survives by reference alone.
+        # Applying it to every bucket kept a same-named GENE alive that no
+        # surviving process reached, and _entity_type_overlaps then refused the
+        # run (chlorophyll-strict: HEMA1, CAO, GUN4, PORB). That gate is unchanged.
+        component_norms = _complex_component_norms(working, surviving_complex_norms)
+        keep_norms = {
+            bucket: (referenced | component_norms) if bucket == "proteins" else referenced
+            for bucket in _GRAPH_ENTITY_BUCKETS
+        }
 
         removed_entities = _prune_entities(working, keep_norms)
         registry = _build_registry(working)
