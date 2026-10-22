@@ -7227,3 +7227,21 @@ inferred alias). Recorded by the Lead Orchestrator at the product owner's standi
    an inferred alias overwrite a grounded identity), and know exactly what PathWhiz's importer requires. **ORCH-761** reads the
    PathWhiz source (`SummerBIOIN/smpdb`, read-only) and checks the failing proteins against UniProt and the PathBank database
    (read-only queries) to establish both.
+
+---
+
+## D-107 — re-attach the Stage-1 recorder in the post-pipeline run so rule 3 and the lost diagnostics work in the app · 2026-10-22 · LOCKED
+
+**Decided by the product owner** (2026-10-22, in session, on the sub-orchestrator's D4 plan). ORCH-758 D4 established that the
+D-104 rule-3 database-ID merge **never ran in the app**. `_pooled_draws()` (`stage_one_ensemble.py:1154`) and the rule-3 report
+writer depend on a ContextVar recorder set at Stage 1, and Stage 6 runs in the separate post-pipeline Streamlit script run with an
+empty context. The same loss drops the audit and gap summaries (0 of 312 runs have them). Recorded by the Lead Orchestrator at the
+product owner's standing instruction to record the decisions made.
+
+1. **Chosen: option 1.** Store Stage 1's recorder boundaries and artifact directory in session state when Stage 1 finishes, and
+   re-enter them before Stage 6 in the post-pipeline run. Rejected: gating on the configured draw count (it loses the diagnostics),
+   and carrying the count in the payload (the payload reaches Stage-2 prompts, which breaks D-104 AMENDMENT 2).
+2. **The protected `streamlit_app.py` may take the lines this needs, and only those**: store at the end of Stage 1, re-enter before the
+   Stage-6 call. No LLM input changes; the lane proves that against base. The fingerprint moves and is recorded at merge.
+3. Usual gates: one lane, an independent review with the severity standard set before round 0, then merge, a 3-draw re-run proving
+   rule 3 and the audit and gap summaries now appear in a real app leg, and main fast-forwarded and pushed.
