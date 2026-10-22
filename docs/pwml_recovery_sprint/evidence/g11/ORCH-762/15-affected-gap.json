@@ -1,0 +1,105 @@
+{
+  "label": "affected-gap",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-762/15-affected-gap.pin.json",
+    "-q",
+    "--basetemp=C:/t/bt-orch762/15-affected-gap-15541",
+    "tests/test_gap_resolver.py",
+    "tests/test_gap_resolver_agent_tools.py",
+    "tests/test_gap_resolver_biological_state_resolution.py",
+    "tests/test_gap_resolver_lineage.py",
+    "tests/test_gap_resolver_stage3_issues.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch762",
+  "started_at": "2026-10-22T21:24:52+00:00",
+  "finished_at": "2026-10-22T21:24:53+00:00",
+  "duration_seconds": 1.037020499999926,
+  "timeout_seconds": 540.0,
+  "root_pid": 226880,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 226244,
+      "name": "python.exe",
+      "ppid": 226880
+    }
+  ],
+  "descendants_terminated": [
+    226244
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 122956,
+      "name": "python.exe"
+    },
+    {
+      "pid": 202040,
+      "name": "python.exe"
+    },
+    {
+      "pid": 202788,
+      "name": "python.exe"
+    },
+    {
+      "pid": 203148,
+      "name": "python.exe"
+    },
+    {
+      "pid": 204744,
+      "name": "python.exe"
+    },
+    {
+      "pid": 204844,
+      "name": "python.exe"
+    },
+    {
+      "pid": 206452,
+      "name": "python.exe"
+    },
+    {
+      "pid": 212108,
+      "name": "python.exe"
+    },
+    {
+      "pid": 225492,
+      "name": "python.exe"
+    },
+    {
+      "pid": 236116,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch762\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-762\\15-affected-gap.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch762\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch762",
+    "repo_head": "9d140ce7574729ee55410081c00979c14641291a",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

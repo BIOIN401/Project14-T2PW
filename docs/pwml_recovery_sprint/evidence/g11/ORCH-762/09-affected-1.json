@@ -1,0 +1,315 @@
+{
+  "label": "affected-1",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-762/09-affected-1.pin.json",
+    "-q",
+    "--basetemp=C:/t/bt-orch762/09-affected-1-11813",
+    "tests/test_adversarial_actor_entity_type.py",
+    "tests/test_apply_audit_patch_referential_integrity.py",
+    "tests/test_baseline_regression_2026_07_28.py",
+    "tests/test_batch_driver.py",
+    "tests/test_batch_driver_quarantine_artifacts.py",
+    "tests/test_batch_driver_seam_golden.py",
+    "tests/test_batch_report.py",
+    "tests/test_batch_research_gate_fail_open.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_c011_freeze_seam_golden_equivalence.py",
+    "tests/test_c030_canonical_identity_fallback.py",
+    "tests/test_c030a_object_sharing_at_the_freeze_seam.py",
+    "tests/test_c056d_gate_failure_semantic_carry.py",
+    "tests/test_c060a_requested_pathway_wiring.py",
+    "tests/test_c064_round_cap_reason.py",
+    "tests/test_c073_identity_admission.py",
+    "tests/test_c074_strict_core_floor.py",
+    "tests/test_c075_source_support_armed.py",
+    "tests/test_c076_alias_holo_apo_identity.py",
+    "tests/test_c078_refusal_durable_through_resolution.py",
+    "tests/test_c079_interactive_prompt_allowlist.py",
+    "tests/test_c080_production_gate_kind_aware.py",
+    "tests/test_c081_cofactor_role_identity.py",
+    "tests/test_c082_post_pipeline_seam.py",
+    "tests/test_c082_species_rename_declination.py",
+    "tests/test_c086_superset_complex_promotion.py",
+    "tests/test_c087_prefreeze_declination_demotes_release_status.py",
+    "tests/test_c088_extracted_not_serialized_disposition.py",
+    "tests/test_c089_participant_schema.py",
+    "tests/test_c090_wrapper_identity_actor_evidence.py",
+    "tests/test_c095_wrapper_superset_identity.py",
+    "tests/test_c096_explicit_no_resolver.py",
+    "tests/test_c097_semantic_name_keys.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch762",
+  "started_at": "2026-10-22T21:10:51+00:00",
+  "finished_at": "2026-10-22T21:12:23+00:00",
+  "duration_seconds": 91.54546299999856,
+  "timeout_seconds": 540.0,
+  "root_pid": 231828,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 231192,
+      "name": "python.exe",
+      "ppid": 231828
+    },
+    {
+      "pid": 230760,
+      "name": "python.exe",
+      "ppid": 231192
+    },
+    {
+      "pid": 231324,
+      "name": "python.exe",
+      "ppid": 230760
+    },
+    {
+      "pid": 152312,
+      "name": "python.exe",
+      "ppid": 224480
+    },
+    {
+      "pid": 224480,
+      "name": "python.exe",
+      "ppid": 231192
+    },
+    {
+      "pid": 30160,
+      "name": "python.exe",
+      "ppid": 221616
+    },
+    {
+      "pid": 221616,
+      "name": "python.exe",
+      "ppid": 231192
+    },
+    {
+      "pid": 230412,
+      "name": "python.exe",
+      "ppid": 231192
+    },
+    {
+      "pid": 231476,
+      "name": "python.exe",
+      "ppid": 230412
+    },
+    {
+      "pid": 232796,
+      "name": "python.exe",
+      "ppid": 231192
+    },
+    {
+      "pid": 232816,
+      "name": "python.exe",
+      "ppid": 232796
+    },
+    {
+      "pid": 232836,
+      "name": "python.exe",
+      "ppid": 231192
+    },
+    {
+      "pid": 232856,
+      "name": "python.exe",
+      "ppid": 232836
+    },
+    {
+      "pid": 232920,
+      "name": "git.exe",
+      "ppid": 232856
+    },
+    {
+      "pid": 233184,
+      "name": "python.exe",
+      "ppid": 231192
+    },
+    {
+      "pid": 233208,
+      "name": "python.exe",
+      "ppid": 233184
+    },
+    {
+      "pid": 233240,
+      "name": "python.exe",
+      "ppid": 231192
+    },
+    {
+      "pid": 233260,
+      "name": "python.exe",
+      "ppid": 233240
+    },
+    {
+      "pid": 233280,
+      "name": "python.exe",
+      "ppid": 231192
+    },
+    {
+      "pid": 233300,
+      "name": "python.exe",
+      "ppid": 233280
+    },
+    {
+      "pid": 233400,
+      "name": "python.exe",
+      "ppid": 231192
+    },
+    {
+      "pid": 233420,
+      "name": "python.exe",
+      "ppid": 233400
+    },
+    {
+      "pid": 232460,
+      "name": "git.exe",
+      "ppid": 231192
+    },
+    {
+      "pid": 231928,
+      "name": "git.exe",
+      "ppid": 231192
+    },
+    {
+      "pid": 200596,
+      "name": "git.exe",
+      "ppid": 231192
+    },
+    {
+      "pid": 232580,
+      "name": "git.exe",
+      "ppid": 231192
+    },
+    {
+      "pid": 232604,
+      "name": "git.exe",
+      "ppid": 231192
+    },
+    {
+      "pid": 232924,
+      "name": "git.exe",
+      "ppid": 231192
+    },
+    {
+      "pid": 227516,
+      "name": "git.exe",
+      "ppid": 231192
+    },
+    {
+      "pid": 233376,
+      "name": "git.exe",
+      "ppid": 231192
+    },
+    {
+      "pid": 233220,
+      "name": "git.exe",
+      "ppid": 231192
+    }
+  ],
+  "descendants_terminated": [
+    30160,
+    152312,
+    200596,
+    221616,
+    224480,
+    227516,
+    230412,
+    230760,
+    231192,
+    231324,
+    231476,
+    231928,
+    232460,
+    232580,
+    232604,
+    232796,
+    232816,
+    232836,
+    232856,
+    232920,
+    232924,
+    233184,
+    233208,
+    233220,
+    233240,
+    233260,
+    233280,
+    233300,
+    233376,
+    233400,
+    233420
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 202040,
+      "name": "python.exe"
+    },
+    {
+      "pid": 202788,
+      "name": "python.exe"
+    },
+    {
+      "pid": 203148,
+      "name": "python.exe"
+    },
+    {
+      "pid": 204744,
+      "name": "python.exe"
+    },
+    {
+      "pid": 204844,
+      "name": "python.exe"
+    },
+    {
+      "pid": 206452,
+      "name": "python.exe"
+    },
+    {
+      "pid": 212108,
+      "name": "python.exe"
+    },
+    {
+      "pid": 225492,
+      "name": "python.exe"
+    },
+    {
+      "pid": 228776,
+      "name": "python.exe"
+    },
+    {
+      "pid": 232064,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch762\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-762\\09-affected-1.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch762\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch762",
+    "repo_head": "9d140ce7574729ee55410081c00979c14641291a",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

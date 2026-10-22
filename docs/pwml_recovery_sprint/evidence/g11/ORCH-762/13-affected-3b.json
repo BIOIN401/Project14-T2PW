@@ -1,0 +1,134 @@
+{
+  "label": "affected-3b",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-762/13-affected-3b.pin.json",
+    "-q",
+    "--basetemp=C:/t/bt-orch762/13-affected-3b-4490",
+    "tests/test_orch757_llm_token_budgets.py",
+    "tests/test_orch758a_charge_notation_not_composite.py",
+    "tests/test_orch759a_duplicate_protein_fold.py",
+    "tests/test_orch762_protein_identity.py",
+    "tests/test_paper_eligibility_corrections.py",
+    "tests/test_pathbank_unknown_fallback.py",
+    "tests/test_payload_models.py",
+    "tests/test_pipeline_lineage_carrier.py",
+    "tests/test_pipeline_lineage_schema.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_prefreeze_compound_resolution.py",
+    "tests/test_prefreeze_species_resolution.py",
+    "tests/test_prefreeze_third_export_seam.py",
+    "tests/test_probe_decimal_normalization.py",
+    "tests/test_process_normalizer.py",
+    "tests/test_protein_export_policy.py",
+    "tests/test_pwml_db_resolver.py",
+    "tests/test_pwml_interaction_export.py",
+    "tests/test_pwml_interaction_protein_wrappers.py",
+    "tests/test_pwml_interaction_type_spellings.py",
+    "tests/test_pwml_ir.py",
+    "tests/test_pwml_ir_duplicate_row_refusal.py",
+    "tests/test_pwml_writer.py",
+    "tests/test_rag_acquire.py",
+    "tests/test_rag_admission_adversarial.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_already_covered_gap.py",
+    "tests/test_rag_cached_replay.py",
+    "tests/test_rag_conform_merge.py",
+    "tests/test_rag_differential_gate.py",
+    "tests/test_rag_extract.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_graph_delta.py",
+    "tests/test_rag_ingest.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch762",
+  "started_at": "2026-10-22T21:23:04+00:00",
+  "finished_at": "2026-10-22T21:23:50+00:00",
+  "duration_seconds": 46.13929940000162,
+  "timeout_seconds": 540.0,
+  "root_pid": 234584,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 231064,
+      "name": "python.exe",
+      "ppid": 234584
+    }
+  ],
+  "descendants_terminated": [
+    231064
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 202040,
+      "name": "python.exe"
+    },
+    {
+      "pid": 202788,
+      "name": "python.exe"
+    },
+    {
+      "pid": 203148,
+      "name": "python.exe"
+    },
+    {
+      "pid": 204744,
+      "name": "python.exe"
+    },
+    {
+      "pid": 204844,
+      "name": "python.exe"
+    },
+    {
+      "pid": 206452,
+      "name": "python.exe"
+    },
+    {
+      "pid": 212108,
+      "name": "python.exe"
+    },
+    {
+      "pid": 218644,
+      "name": "python.exe"
+    },
+    {
+      "pid": 225492,
+      "name": "python.exe"
+    },
+    {
+      "pid": 229548,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch762\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-762\\13-affected-3b.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch762\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch762",
+    "repo_head": "9d140ce7574729ee55410081c00979c14641291a",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

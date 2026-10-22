@@ -1,0 +1,44 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch762\src\t2pw\__init__.py
+..................F.........                                             [100%]
+================================== FAILURES ===================================
+______________ test_new_reaction_evidence_report_shows_the_flag _______________
+
+runs = {'ecoli_uniprot': ({'stage2': {'payload': {'biological_states': [{...}, {...}, {...}, {...}, {...}, {...}], 'element_l....}}}, <orch762_harness.Doors object at 0x000002EB2F2A5310>, <orch762_harness.ReplayHttp object at 0x000002EB2F075310>)}
+
+    def test_new_reaction_evidence_report_shows_the_flag(runs: Dict[str, Any]) -> None:
+        from t2pw.app.reaction_evidence import build_report, render_text
+    
+        text = render_text(build_report({"final_mapped.json": _payload(runs, "kf147", "stage6")}))
+>       assert "borrowed identity: UniProt Q9CHK2, from strain IL1403" in text
+E       AssertionError: assert 'borrowed identity: UniProt Q9CHK2, from strain IL1403' in 'PATHWAY EVIDENCE REPORT\n=======================\nPaper: Not recorded\nPathway: Not recorded\nRequested organism (Sta...ot recorded\n\nCORE COVERAGE\n-------------\nRequested: Not recorded\nMatched: Not recorded\nUnmatched: Not recorded\n'
+
+tests\test_orch762_protein_identity.py:366: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_orch762_protein_identity.py::test_new_reaction_evidence_report_shows_the_flag
+1 failed, 27 passed in 1.97s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch762\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 493c1a100a40bcdea1b9dd5d61828e5f0f11e68d  [git, worktree dirty=True]
+label                   : dev-new
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-762/03-dev-new.pin.json -q --basetemp=C:/t/bt-orch762/03-dev-new-32002 tests/test_orch762_protein_identity.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch762
+root PID / process group: 226112 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 520 s
+duration                : 2.82 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  220712:python.exe
+descendants terminated  : 1  220712
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch762\docs\pwml_recovery_sprint\evidence\g11\ORCH-762\03-dev-new.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================
