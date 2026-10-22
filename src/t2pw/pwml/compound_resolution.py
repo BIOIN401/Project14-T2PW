@@ -399,6 +399,46 @@ def is_class_participant_term(name: Any) -> bool:
     return " ".join(re.findall(r"[a-z0-9]+", str(name or "").casefold())) in CLASS_PARTICIPANT_TERMS
 
 
+def _withhold_class_identity(row: Any) -> tuple:
+    """D-109 § 2 (repair round 1): a class-term row keeps no member's identifier, wherever it arrived.
+
+    Every identifier the row carries -- top-level scalars (:data:`_REFUSABLE_NAMESPACE`),
+    ``mapped_ids``, a resolved ``db_row``, the same scalars on ``mapping_meta`` and the top
+    candidate's ids, all of which ``_first_nonempty`` reads -- moves to
+    ``mapping_meta.rejected_mapped_ids``, and ``mapping_meta.candidates`` to ``rejected_candidates``:
+    the review record Stage 6 already writes and C-078's veto already reads. With no identifier left
+    the row skips the legacy-id branch and meets :func:`_db_match_rule_decision`, which refuses every
+    match for it. Returns ``(row, withheld)``; the row is a copy whenever anything moved.
+    """
+    if not isinstance(row, dict) or not is_class_participant_term(row.get("name")):
+        return row, {}
+    out = dict(row)
+    meta = dict(_safe_dict(out.get("mapping_meta")))
+    candidates = _safe_list(meta.get("candidates"))
+    top = _safe_dict(candidates[0]) if candidates else {}
+    found: Dict[str, str] = {}
+    for source in (out, meta):
+        for key in [key for key in source if key in _REFUSABLE_NAMESPACE]:
+            value = source.pop(key)
+            if value not in (None, ""):
+                found.setdefault(key, str(value))
+    for key in (key for key in top if key in _REFUSABLE_NAMESPACE and top[key] not in (None, "")):
+        found.setdefault(key, str(top[key]))
+    for ids in (out.pop("mapped_ids", None), top.get("mapped_ids"),
+                _mapped_ids_from_row(_safe_dict(out.pop("db_row", None)))):
+        for key, value in _safe_dict(ids).items():
+            if value not in (None, ""):
+                found.setdefault(key, str(value))
+    if not found and not candidates:
+        return row, {}
+    if candidates:
+        meta["rejected_candidates"] = [*_safe_list(meta.get("rejected_candidates")), *candidates]
+        meta["candidates"] = []
+    meta["rejected_mapped_ids"] = {**found, **_safe_dict(meta.get("rejected_mapped_ids"))}
+    out["mapping_meta"] = meta
+    return out, found
+
+
 def _db_match_rule_decision(row: Dict[str, Any], match: Dict[str, Any]) -> Dict[str, Any]:
     """Weigh the MATCH: does this rule, at this confidence, justify an identity?
 
@@ -709,7 +749,10 @@ def _resolve_compound_rows(
     apply_canonical_name: bool = True,
 ) -> List[Dict[str, Any]]:
     ensure_resolution_report(report)
-    normalized = [_normalize_compound_external_ids(row) for row in rows]
+    # D-109 § 2, BEFORE normalization and the legacy-id branch: both read identifiers wherever a row
+    # keeps them (``_first_nonempty``), so a class row's member ids must be gone before either looks.
+    withheld = [_withhold_class_identity(row) for row in rows]
+    normalized = [_normalize_compound_external_ids(row) for row, _ in withheld]
     resolver: Optional[PathWhizCompoundResolver] = None
     db_reason = ""
 
@@ -762,6 +805,11 @@ def _resolve_compound_rows(
     resolved: List[Dict[str, Any]] = []
     for idx, row in enumerate(normalized):
         raw_name = _canonical(row.get("raw_name") or row.get("name"))
+        if withheld[idx][1]:
+            report["unresolved"].setdefault("class_term_identities_withheld", []).append(
+                {"pointer": f"{pointer_prefix}/{idx}", "raw_name": raw_name,
+                 "reason": CLASS_TERM_NEVER_NARROWED, "withheld": withheld[idx][1]}
+            )
         legacy_id = _db_id(row, ["pathbank_compound_id", "pw_compound_id", "pathwhiz_id"])
         if legacy_id is not None:
             fallback = dict(row)
