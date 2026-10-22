@@ -7212,3 +7212,18 @@ product owner's standing instruction to record the decisions made.
    primary checkout's `.env` draw count (a leg needing 1 draw runs from its own worktree with its own `.env`).
 5. Merging and pushing follow D-104 § 7. Each lane is independently reviewed, gates pass on the merged tip, then `sprint/pwml-recovery`
    and `main` are pushed. The primary checkout's branch is not switched while ORCH-760 commits from it.
+
+---
+
+## D-106 — the protein identity requirement is NOT relaxed; fix the lookup, not the gate · 2026-10-22 · LOCKED
+
+**Decided by the product owner** (2026-10-22, in session, on the ORCH-756 gold scoring and the ORCH-758 diagnosis: MenD quarantined
+for `protein_missing_external_identity`, none of the *L. lactis* Men enzymes grounded, an enterobactin enzyme's UniProt lost to an
+inferred alias). Recorded by the Lead Orchestrator at the product owner's standing instruction to record the decisions made.
+
+1. **The external-identity requirement for proteins stays exactly as strict as it is.** A protein without a valid UniProt or DrugBank
+   identity is not exported as if it had one, and no lane proposes downgrading the gate. Merge rule 6 applies with full force.
+2. The remedy is upstream: find the identity correctly (organism and strain-aware lookup, existing PathBank records, never letting
+   an inferred alias overwrite a grounded identity), and know exactly what PathWhiz's importer requires. **ORCH-761** reads the
+   PathWhiz source (`SummerBIOIN/smpdb`, read-only) and checks the failing proteins against UniProt and the PathBank database
+   (read-only queries) to establish both.
