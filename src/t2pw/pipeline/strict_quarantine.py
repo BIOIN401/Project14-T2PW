@@ -439,6 +439,16 @@ _LOCATION_BUCKETS: Dict[str, str] = {
     "element_collection_locations": "element_collection",
 }
 
+#: element_locations bucket -> the entity buckets its rows may locate. A complex is
+#: placed through ``protein_locations`` (``process_normalizer`` moves it there).
+#: A row is never checked against another kind's names (ORCH-759c round 1).
+_LOCATION_ENTITY_BUCKETS: Dict[str, Tuple[str, ...]] = {
+    "compound_locations": ("compounds",),
+    "protein_locations": ("proteins", "protein_complexes"),
+    "nucleic_acid_locations": ("nucleic_acids",),
+    "element_collection_locations": ("element_collections",),
+}
+
 
 # ── Small shared helpers ────────────────────────────────────────────────────
 
@@ -1857,28 +1867,51 @@ def _prune_entities(
 
 
 def _prune_locations(payload: Dict[str, Any], declared_norms: Set[str]) -> List[Dict[str, Any]]:
-    """Drop element_locations rows whose entity is gone."""
+    """Drop element_locations rows whose entity is gone.
+
+    Each bucket is checked against the names of the entity buckets it locates
+    (``_LOCATION_ENTITY_BUCKETS``), not against ``declared_norms``, which holds every
+    kind's names. With the shared list, a gene's ``nucleus`` row outlived the gene
+    because a same-named protein kept the name, and the IR then placed the PROTEIN
+    in the nucleus (ORCH-759c round 1). A row whose name only another kind
+    declares is ``location_entity_kind_mismatch``; one no kind declares is
+    ``location_entity_removed``, as before.
+    """
 
     element_locations = payload.get("element_locations")
     if not isinstance(element_locations, dict):
         return []
+    entities = _safe_dict(payload.get("entities"))
     removed: List[Dict[str, Any]] = []
     for bucket, name_field in _LOCATION_BUCKETS.items():
         rows = element_locations.get(bucket)
         if not isinstance(rows, list):
             continue
+        own_norms = {
+            norm
+            for entity_bucket in _LOCATION_ENTITY_BUCKETS[bucket]
+            for row in _safe_list(entities.get(entity_bucket))
+            if _row_name(row)
+            for norm in _entity_name_norms([row])
+            if norm
+        }
         kept: List[Any] = []
         for row in rows:
             if not isinstance(row, dict):
                 kept.append(row)
                 continue
             name = _text(row.get(name_field) or row.get("entity"))
-            if name and _normalize(name) not in declared_norms:
+            norm = _normalize(name)
+            if name and norm not in own_norms:
                 removed.append(
                     {
                         "bucket": f"element_locations/{bucket}",
                         "name": name,
-                        "reason": "location_entity_removed",
+                        "reason": (
+                            "location_entity_kind_mismatch"
+                            if norm in declared_norms
+                            else "location_entity_removed"
+                        ),
                         "biological_state": _text(row.get("biological_state")),
                     }
                 )
@@ -2258,9 +2291,12 @@ def _degree_zero_exports(
     exactly as :func:`_prune_entities` resolves it against ``keep_norms`` and
     :func:`_build_registry` indexes it.** Resolving on the primary name alone
     made this the only consumer in the module that could not see a synonym
-    reference, and ``referenced | exempt`` here is the same set the closure loop
-    calls ``keep_norms``. So on a converged run every row this saw had already
-    survived a fixpoint prune against the wider test: a row whose primary name
+    reference. ``referenced | exempt`` here is the set the closure loop keeps
+    ``proteins`` rows by. Every other bucket, complexes included, is kept by
+    ``referenced`` alone (ORCH-759c), so a complex that survived closure is
+    referenced and only a protein can owe its survival to ``exempt``. So on a
+    converged run every row this saw had already survived a fixpoint prune
+    against at least this test: a row whose primary name
     was absent from that set had matched under a SYNONYM, was therefore reached
     by a surviving process, and was reported degree-zero anyway. Two production
     legs refused export over the identical protein that way. Now the two agree,
