@@ -1,0 +1,293 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch758b\src\t2pw\__init__.py
+.F.............F....FFFFF.....                                           [100%]
+================================== FAILURES ===================================
+__ test_g9_an_empty_chunk_contributes_nothing_and_the_paper_goes_on[3-draws] __
+
+draws = 3
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001FF0E1155B0>
+tmp_path = WindowsPath('C:/t/bt-orch758b/12-r1-red-round0-code-19670/test_g9_an_empty_chunk_contrib1')
+
+    @DRAWS
+    def test_g9_an_empty_chunk_contributes_nothing_and_the_paper_goes_on(
+            draws: int, monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+        monkeypatch.setenv(ENV_VAR, str(draws))
+        transport = _install(monkeypatch, {"MARKA": [(REPLY_A, STOP)], "MARKB": EMPTY_DRAW * draws,
+                                           "MARKC": [(REPLY_C, STOP)]})
+        recorder = diag.activate(run_id="orch758b", artifact_dir=tmp_path)
+    
+        merged, chunks = _stage_one(_text("MARKA", "MARKB", "MARKC"))
+    
+        assert _reaction_names(merged) == ["glucose phosphorylation", "fructose phosphorylation"]
+        assert [c["chunk_id"] for c in chunks] == [1, 2, 3]
+        assert (transport.count("MARKA"), transport.count("MARKB"), transport.count("MARKC")) == (
+            draws, 2 * draws, draws)  # no extra call: retries and budgets are unchanged
+    
+        empty = chunks[1]
+        assert "MARKB" in empty["text"]
+        assert _reaction_names(empty["output"]) == []
+        assert [a["note"] for a in empty["attempts"]] == [
+            NOTE_EMPTY_PAYLOAD_RETRY, NOTE_EMPTY_PAYLOAD_EXHAUSTED] * draws
+        if draws > 1:
+            assert [a["draw"] for a in empty["attempts"]] == [1, 1, 2, 2, 3, 3]
+        record = empty["empty_chunk"]
+        assert record["chunk_id"] == 2 and record["draws"] == draws
+        assert [a["finish_reason"] for a in record["attempts"]] == [STOP] * (2 * draws)
+        assert "structurally empty payload" in record["failure"]
+        assert all("empty_chunk" not in c for c in (chunks[0], chunks[2]))
+    
+        [boundary] = [b for b in recorder.boundaries if b["boundary"] == "stage1_empty_chunk"]
+        assert boundary["empty_chunk"]["chunk_id"] == 2
+        assert boundary["outcome"] == "valid_json_zero_processes"
+        assert boundary["attempts"] == 2 * draws
+    
+        if draws > 1:
+            entries = json.loads((tmp_path / REPORT_NAME).read_text(encoding="utf-8"))
+            # Repair round 1: written once the run is known not to fail, so after the other chunks'.
+>           assert [e["draws_succeeded"] for e in entries] == [3, 3, 0]
+E           assert [3, 0, 3] == [3, 3, 0]
+E             
+E             At index 1 diff: 0 != 3
+E             Use -v to get more diff
+
+tests\test_orch758b_empty_chunk.py:200: AssertionError
+__ test_still_fatal_when_any_attempt_broke[1-draw-empty-json-content-filter] __
+
+bad = [('{"entities": {"proteins": [], "compounds": []}, "processes": {"reactions": []}}', 'content_filter')]
+draws = 1
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001FF0E22EDB0>
+
+    @pytest.mark.parametrize("bad", [
+        [(NOT_JSON, STOP)],
+        [("", LENGTH)],
+        [(EMPTY_1, LENGTH)],  # valid and empty, but cut off: not an answer
+        [(EMPTY_1, STOP), (NOT_JSON, STOP)],
+        # Repair round 1 (B1b): the client returns a content_filter reply as a partial answer.
+        [(EMPTY_1, "content_filter")],
+    ], ids=["invalid-json", "empty-length", "empty-json-at-length", "empty-then-invalid",
+            "empty-json-content-filter"])
+    @DRAWS
+    def test_still_fatal_when_any_attempt_broke(bad: List[Tuple[str, str]], draws: int,
+                                                 monkeypatch: pytest.MonkeyPatch) -> None:
+        monkeypatch.setenv(ENV_VAR, str(draws))
+        # Every draw but the last says nothing; the last one breaks. One broken draw is enough.
+        transport = _install(monkeypatch, {"MARKA": [(REPLY_A, STOP)],
+                                           "MARKB": EMPTY_DRAW * (draws - 1) + bad, "MARKC": [(REPLY_C, STOP)]})
+    
+>       with pytest.raises(PipelineFailure) as excinfo:
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 't2pw.pipeline.pipeline.PipelineFailure'>
+
+tests\test_orch758b_empty_chunk.py:297: Failed
+_ test_still_fatal_when_any_attempt_broke[3-draws-empty-json-content-filter] __
+
+bad = [('{"entities": {"proteins": [], "compounds": []}, "processes": {"reactions": []}}', 'content_filter')]
+draws = 3
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001FF0E2A19D0>
+
+    @pytest.mark.parametrize("bad", [
+        [(NOT_JSON, STOP)],
+        [("", LENGTH)],
+        [(EMPTY_1, LENGTH)],  # valid and empty, but cut off: not an answer
+        [(EMPTY_1, STOP), (NOT_JSON, STOP)],
+        # Repair round 1 (B1b): the client returns a content_filter reply as a partial answer.
+        [(EMPTY_1, "content_filter")],
+    ], ids=["invalid-json", "empty-length", "empty-json-at-length", "empty-then-invalid",
+            "empty-json-content-filter"])
+    @DRAWS
+    def test_still_fatal_when_any_attempt_broke(bad: List[Tuple[str, str]], draws: int,
+                                                 monkeypatch: pytest.MonkeyPatch) -> None:
+        monkeypatch.setenv(ENV_VAR, str(draws))
+        # Every draw but the last says nothing; the last one breaks. One broken draw is enough.
+        transport = _install(monkeypatch, {"MARKA": [(REPLY_A, STOP)],
+                                           "MARKB": EMPTY_DRAW * (draws - 1) + bad, "MARKC": [(REPLY_C, STOP)]})
+    
+>       with pytest.raises(PipelineFailure) as excinfo:
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 't2pw.pipeline.pipeline.PipelineFailure'>
+
+tests\test_orch758b_empty_chunk.py:297: Failed
+_________ test_still_fatal_when_the_budget_refused_the_retry[1-draw] __________
+
+draws = 1
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001FF0E1A3460>
+
+    @DRAWS
+    def test_still_fatal_when_the_budget_refused_the_retry(draws: int, monkeypatch: pytest.MonkeyPatch) -> None:
+        """Repair round 1 (B1a). A live leg deadline admits the last draw's first call on chunk 2,
+        which says nothing, then refuses its retry as ``budget_exhausted``. That chunk never got
+        its retry, so its silence is not an answer."""
+    
+        monkeypatch.setenv(ENV_VAR, str(draws))
+        price = price_llm_call()
+        assert math.isfinite(price)
+        now = [0.0]
+        transport = _install(monkeypatch, {"MARKA": [(REPLY_A, STOP)], "MARKB": EMPTY_DRAW * draws,
+                                           "MARKC": [(REPLY_C, STOP)]})
+    
+        def tick(marker: str) -> None:
+            if marker == "MARKB" and transport.count("MARKB") == 2 * draws - 1:
+                now[0] += 20.0  # the leg had price + 10 s: now one more call does not fit
+    
+        transport.on_call = tick
+        token = activate_leg_deadline(LegDeadline(price + 10.0, reserve_seconds=0.0, clock=lambda: now[0]))
+        try:
+            with pytest.raises(PipelineFailure) as excinfo:
+                _stage_one(_text("MARKA", "MARKB", "MARKC"))
+        finally:
+            deactivate_leg_deadline(token)
+    
+        assert excinfo.value.__cause__.terminal_reason == BUDGET_EXHAUSTED  # the case is the one meant
+        assert transport.count("MARKB") == 2 * draws - 1
+>       _assert_chunk_2_fatal_as_at_base(excinfo.value, transport)
+
+tests\test_orch758b_empty_chunk.py:338: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+failure = PipelineFailure('Chunk 3 failed to produce valid JSON.')
+transport = <test_orch758b_empty_chunk.Transport object at 0x000001FF0E2457F0>
+
+    def _assert_chunk_2_fatal_as_at_base(failure: PipelineFailure, transport: Transport) -> None:
+>       assert failure.stage == "extraction chunk 2"
+E       AssertionError: assert 'extraction chunk 3' == 'extraction chunk 2'
+E         
+E         - extraction chunk 2
+E         ?                  ^
+E         + extraction chunk 3
+E         ?                  ^
+
+tests\test_orch758b_empty_chunk.py:304: AssertionError
+_________ test_still_fatal_when_the_budget_refused_the_retry[3-draws] _________
+
+draws = 3
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001FF0E1A23C0>
+
+    @DRAWS
+    def test_still_fatal_when_the_budget_refused_the_retry(draws: int, monkeypatch: pytest.MonkeyPatch) -> None:
+        """Repair round 1 (B1a). A live leg deadline admits the last draw's first call on chunk 2,
+        which says nothing, then refuses its retry as ``budget_exhausted``. That chunk never got
+        its retry, so its silence is not an answer."""
+    
+        monkeypatch.setenv(ENV_VAR, str(draws))
+        price = price_llm_call()
+        assert math.isfinite(price)
+        now = [0.0]
+        transport = _install(monkeypatch, {"MARKA": [(REPLY_A, STOP)], "MARKB": EMPTY_DRAW * draws,
+                                           "MARKC": [(REPLY_C, STOP)]})
+    
+        def tick(marker: str) -> None:
+            if marker == "MARKB" and transport.count("MARKB") == 2 * draws - 1:
+                now[0] += 20.0  # the leg had price + 10 s: now one more call does not fit
+    
+        transport.on_call = tick
+        token = activate_leg_deadline(LegDeadline(price + 10.0, reserve_seconds=0.0, clock=lambda: now[0]))
+        try:
+            with pytest.raises(PipelineFailure) as excinfo:
+                _stage_one(_text("MARKA", "MARKB", "MARKC"))
+        finally:
+            deactivate_leg_deadline(token)
+    
+        assert excinfo.value.__cause__.terminal_reason == BUDGET_EXHAUSTED  # the case is the one meant
+        assert transport.count("MARKB") == 2 * draws - 1
+>       _assert_chunk_2_fatal_as_at_base(excinfo.value, transport)
+
+tests\test_orch758b_empty_chunk.py:338: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+failure = PipelineFailure('Chunk 3 failed to produce valid JSON.')
+transport = <test_orch758b_empty_chunk.Transport object at 0x000001FF0E244710>
+
+    def _assert_chunk_2_fatal_as_at_base(failure: PipelineFailure, transport: Transport) -> None:
+>       assert failure.stage == "extraction chunk 2"
+E       AssertionError: assert 'extraction chunk 3' == 'extraction chunk 2'
+E         
+E         - extraction chunk 2
+E         ?                  ^
+E         + extraction chunk 3
+E         ?                  ^
+
+tests\test_orch758b_empty_chunk.py:304: AssertionError
+_______ test_still_no_accepted_record_when_every_chunk_is_empty[1-draw] _______
+
+draws = 1
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001FF0E1A3150>
+tmp_path = WindowsPath('C:/t/bt-orch758b/12-r1-red-round0-code-19670/test_still_no_accepted_record_0')
+
+    @DRAWS
+    def test_still_no_accepted_record_when_every_chunk_is_empty(
+            draws: int, monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+        """Repair round 1 (reviewer note 1). A run that fails leaves no chunk recorded as accepted."""
+    
+        monkeypatch.setenv(ENV_VAR, str(draws))
+        _install(monkeypatch, {m: EMPTY_DRAW * draws for m in SENTENCE})
+        recorder = diag.activate(run_id="orch758b", artifact_dir=tmp_path)
+    
+        with pytest.raises(PipelineFailure):
+            _stage_one(_text("MARKA", "MARKB", "MARKC"))
+    
+>       assert [b for b in recorder.boundaries if b["boundary"] == "stage1_empty_chunk"] == []
+E       AssertionError: assert [{'attempts':...on': '', ...}] == []
+E         
+E         Left contains 3 more items, first extra item: {'attempts': 2, 'boundary': 'stage1_empty_chunk', 'empty_chunk': {'attempts': [{'attempt': 1, 'draw': 1, 'finish_reaso...turned a structurally empty payload (no entities and no processes) on all 2 attempts.', ...}, 'finish_reason': '', ...}
+E         Use -v to get more diff
+
+tests\test_orch758b_empty_chunk.py:353: AssertionError
+______ test_still_no_accepted_record_when_every_chunk_is_empty[3-draws] _______
+
+draws = 3
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001FF0E1A32A0>
+tmp_path = WindowsPath('C:/t/bt-orch758b/12-r1-red-round0-code-19670/test_still_no_accepted_record_1')
+
+    @DRAWS
+    def test_still_no_accepted_record_when_every_chunk_is_empty(
+            draws: int, monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+        """Repair round 1 (reviewer note 1). A run that fails leaves no chunk recorded as accepted."""
+    
+        monkeypatch.setenv(ENV_VAR, str(draws))
+        _install(monkeypatch, {m: EMPTY_DRAW * draws for m in SENTENCE})
+        recorder = diag.activate(run_id="orch758b", artifact_dir=tmp_path)
+    
+        with pytest.raises(PipelineFailure):
+            _stage_one(_text("MARKA", "MARKB", "MARKC"))
+    
+>       assert [b for b in recorder.boundaries if b["boundary"] == "stage1_empty_chunk"] == []
+E       AssertionError: assert [{'attempts':...on': '', ...}] == []
+E         
+E         Left contains 3 more items, first extra item: {'attempts': 6, 'boundary': 'stage1_empty_chunk', 'empty_chunk': {'attempts': [{'attempt': 1, 'draw': 1, 'finish_reaso...turned a structurally empty payload (no entities and no processes) on all 2 attempts.', ...}, 'finish_reason': '', ...}
+E         Use -v to get more diff
+
+tests\test_orch758b_empty_chunk.py:353: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_orch758b_empty_chunk.py::test_g9_an_empty_chunk_contributes_nothing_and_the_paper_goes_on[3-draws]
+FAILED tests/test_orch758b_empty_chunk.py::test_still_fatal_when_any_attempt_broke[1-draw-empty-json-content-filter]
+FAILED tests/test_orch758b_empty_chunk.py::test_still_fatal_when_any_attempt_broke[3-draws-empty-json-content-filter]
+FAILED tests/test_orch758b_empty_chunk.py::test_still_fatal_when_the_budget_refused_the_retry[1-draw]
+FAILED tests/test_orch758b_empty_chunk.py::test_still_fatal_when_the_budget_refused_the_retry[3-draws]
+FAILED tests/test_orch758b_empty_chunk.py::test_still_no_accepted_record_when_every_chunk_is_empty[1-draw]
+FAILED tests/test_orch758b_empty_chunk.py::test_still_no_accepted_record_when_every_chunk_is_empty[3-draws]
+7 failed, 23 passed in 2.25s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch758b\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ bc5579a5f5ed74ccb8a2f8815e328bbe24c46d52  [git, worktree dirty=False]
+label                   : r1-red-round0-code
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-758b/12-r1-red-round0-code.pin.json -q --basetemp=C:/t/bt-orch758b/12-r1-red-round0-code-19670 tests/test_orch758b_empty_chunk.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch758b
+root PID / process group: 1121148 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 500 s
+duration                : 3.57 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  1120000:python.exe
+descendants terminated  : 1  1120000
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch758b\docs\pwml_recovery_sprint\evidence\g11\ORCH-758b\12-r1-red-round0-code.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================

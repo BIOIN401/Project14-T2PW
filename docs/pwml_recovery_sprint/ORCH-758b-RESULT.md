@@ -234,7 +234,7 @@ the path-sensitive corpus skips under a `worktrees` path. Chunk D was not run (t
   `extraction chunk 1`. (iii) The message names the empty extraction, not "failed to produce valid
   JSON". `grep` finds no consumer of the `extraction chunk` stage string or of either message in
   `src/`/`scripts/`. If the product owner wants base's message kept, it is a one-line change.
-- **Q4. `budget_exhausted` (latent).** With a live `LegDeadline` (none in production: P2-04), a chunk
+- **Q4. `budget_exhausted` (latent).** *Settled by the round-0 review and fixed in § 10.* With a live `LegDeadline` (none in production: P2-04), a chunk
   whose rungs 1-2 were valid-empty and whose rung 3 was refused for budget would be accepted as empty.
   § 9's `budget_exhausted` means "another step might have helped". Option: also require
   `failure.terminal_reason != "budget_exhausted"` for each draw. Cost: 2 lines, plus a test. Today it
@@ -276,3 +276,79 @@ Code (`a9179eb8`): `src/t2pw/pipeline/pipeline.py`, `src/t2pw/pipeline/stage_one
 Docs/evidence (this commit): this file; `evidence/g11/ORCH-758b/01`–`11` and their pin verdicts under
 `evidence/g11/pin/ORCH-758b/`; `evidence/orch758b/` (11 logs, the five file lists, `run.sh`, the bounded
 wrapper invocation used for every run).
+
+---
+
+## 10. Repair round 1
+
+The round-0 review verdict was **REJECT**, with one blocking finding (B1) and a small note (note 1).
+Same worktree, branch and rules. Only the following changed.
+
+**B1. Two failures that are fatal at base were accepted as empty.** "Everything else stays fatal"
+was not met.
+
+- (a) **Budget refusal.** With a live `LegDeadline`, attempt 1 returned valid empty JSON and the
+  ladder refused attempt 2 as `budget_exhausted`. The chunk never got its retry, but
+  `_empty_chunk_attempts` accepted it. This settles § 7 **Q4** as in scope: the fix is the option
+  listed there.
+- (b) **`content_filter`.** A valid empty reply with `finish_reason="content_filter"` was accepted.
+  The client returns such a reply as a partial answer (`client.chat_detailed` docstring).
+- **What I got wrong.** In round 0 I treated `length` as the only finish that could disqualify an
+  attempt. I also treated a budget refusal as unreachable because production activates no deadline
+  (P2-04). Unreachable today does not mean "stays fatal": the code accepted it.
+
+**Note 1.** In the all-chunks-empty case, round 0 wrote N `stage1_empty_chunk` "accepted" records
+and N side-file entries, then failed. That contradicted `record_empty_chunk`'s own docstring.
+
+### The fix (`1c0262e7`; tests first in `bc5579a5`)
+
+- `_said_nothing` (`pipeline.py:2656`) now accepts only `finish_reason == "stop"` (`:2663`). Round 0
+  accepted anything except `"length"`.
+- `_empty_chunk_attempts` (`:2672`) returns `None` for any draw whose `terminal_reason` is
+  `BUDGET_EXHAUSTED` (`:2681`).
+- `run_stage_one_with_chunking` now only collects each empty chunk as `(chunk record, failure)`
+  inside the loop. It records them (boundary record, chunk record, side-file entry) **after** the
+  all-empty check (`:2819-2831`), so a run that fails there records nothing. Consequence: in the
+  3-draw side file, the empty chunk's entry now comes after the other chunks' entries, not in chunk
+  order. It names its `chunk_id`, and the entries without one are the other chunks in order. The
+  `record_empty_chunk` docstring and the G9 test (`[3, 3, 0]`) say so.
+
+### New tests, in `tests/test_orch758b_empty_chunk.py` (now 30)
+
+| test | role | round-0 code `a9179eb8` | base `src/` `3582b0d7` | round-1 tip |
+|---|---|---|---|---|
+| `test_still_fatal_when_any_attempt_broke[{1,3}-draw(s)-empty-json-content-filter]` | preservation (B1b) | **fail** ("Chunk 3 failed": chunk 2 was accepted) | pass | pass |
+| `test_still_fatal_when_the_budget_refused_the_retry[1-draw, 3-draws]` | preservation (B1a). A real `LegDeadline` with a fake clock, priced by `price_llm_call()`. Chunk 2's last draw is admitted for its first call, then the clock moves 20 s and the retry is refused. The test asserts `__cause__.terminal_reason == "budget_exhausted"` | **fail** | pass | pass |
+| `test_still_no_accepted_record_when_every_chunk_is_empty[1-draw, 3-draws]` | preservation (note 1): no `stage1_empty_chunk` boundary, no side file | **fail** | pass | pass |
+| `test_g9_an_empty_chunk_…[3-draws]` | G9, side-file order updated | **fail** (`[3, 0, 3]`) | fail (raises) | pass |
+
+Each B1 case asserts the base failure exactly: stage `extraction chunk 2`, message "Chunk 2 failed
+to produce valid JSON.", `attempts is __cause__.attempts`, cause a `PipelineFailure`, and chunk 3
+never called.
+
+### Gates (round 1)
+
+| gate | report | result |
+|---|---|---|
+| new tests on round-0 code (`bc5579a5` tree) | `/12` | **7 failed**, 23 passed: the 6 new cases above + `test_g9_…[3-draws]` |
+| same file on base `src/` `3582b0d7` | `/13` | 11 failed (the same 11 G9/acceptance nodes as `/01`), **19 passed**: every `test_still_*`, including the 6 new |
+| G9 file, uncommitted fix (same bytes as `1c0262e7`) | `/14` | 30 passed |
+| G9 file at `1c0262e7` | `/15` | **30 passed** |
+| SMOKE | `/16` | **508 passed** |
+| `test_stage_one_ensemble.py`, `test_empty_extraction_payload.py`, `test_early_failure_replay.py` (`r1focus.txt`) | `/17` | **66 passed** |
+| `tests/test_eval_v2_*.py` | `/18` | **89 passed, 1 xfailed** |
+
+Every report shows `FINAL SURVIVING COUNT : 0`. I re-ran only the gates the reviewer named.
+The round-0 affected batches (`/04`, `/05`, `/11`) were not repeated.
+
+### TEST_MATRIX delta: supersedes § 8's numbers
+
+In § 8's text, read `(30, ~2 s)` for `(24, ~2 s)` and `Reports evidence/g11/ORCH-758b/01`–`18` for
+`01`–`11`. Add one sentence to its description: "only a `stop` finish counts as 'said nothing', a
+draw whose retry a leg deadline refused (`budget_exhausted`) stays fatal, and empty chunks are
+recorded only once the run is known not to be all-empty." Everything else in § 8 stands. SMOKE is
+unchanged at 508 (`/16`).
+
+### Still not settled
+
+Q1, Q2, Q3 and Q5 of § 7 stand as written. Q4 is settled by the review (above).
