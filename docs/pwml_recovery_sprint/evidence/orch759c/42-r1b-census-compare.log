@@ -1,0 +1,33 @@
+DIFF C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_papers\ORCH-759\legs\chlorophyll-strict\2026-10-22_1231\papers\PMC5130987\strict\final_mapped.json
+   ok: False -> True
+   refusal: ['entity_type_overlap:4'] -> []
+   release: diagnostic_only -> review_required
+   removed_entities: only base=[] | only tip=['nucleic_acids|CAO|unreferenced_after_quarantine', 'nucleic_acids|GUN4|unreferenced_after_quarantine', 'nucleic_acids|HEMA1|unreferenced_after_quarantine', 'nucleic_acids|PORB|unreferenced_after_quarantine']
+   removed_locations: only base=[] | only tip=['element_locations/nucleic_acid_locations|CAO|location_entity_removed|nucleus state', 'element_locations/nucleic_acid_locations|GUN4|location_entity_removed|nucleus state', 'element_locations/nucleic_acid_locations|HEMA1|location_entity_removed|nucleus state', 'element_locations/nucleic_acid_locations|PORB|location_entity_removed|nucleus state']
+COMPARE legs=121 differ=1 same=120 cross_kind_legs base=8 tip=8
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 4f3307a10708c56b5706443e739d284c39a65972  [git, worktree dirty=False]
+label                   : r1b-census-compare
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/orch759c/r1_census.py compare C:/t/bt-orch759c/census_base.json C:/t/bt-orch759c/census_tip_b.json
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759c
+root PID / process group: 367332 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 120 s
+duration                : 0.27 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  379108:python.exe
+descendants terminated  : 1  379108
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759c\docs\pwml_recovery_sprint\evidence\g11\ORCH-759c\42-r1b-census-compare.json
+json report written     : True
+pre-existing (reported, NEVER killed): 8
+================================================

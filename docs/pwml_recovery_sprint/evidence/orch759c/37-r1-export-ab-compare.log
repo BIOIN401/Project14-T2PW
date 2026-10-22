@@ -1,0 +1,53 @@
+SAME .claude\worktrees\orch759c\runs\2026-07-28_0919\papers\PMC12444477__the-regulation-of-lipid-a-biosynthesis\strict
+   final_gate (both): {"ok": true, "connectivity": {"n_reactions": 27, "n_transports": 2, "n_interactions": 6, "n_reaction_coupled_transports": 0, "n_nodes": 127, "n_edges": 321, "n_components": 2, "main_component_size": 124, "largest_component_pct": 97.64, "n_isolated_nodes": 0, "proteins_degree0": 0, "proteins_attached
+   contract_codes (both): []
+SAME runs_papers\ORCH-759\legs\wnt_pcp-strict\2026-10-22_1432\papers\PMC10425814\strict
+   final_gate (both): {"ok": true, "connectivity": {"n_reactions": 3, "n_transports": 2, "n_interactions": 11, "n_reaction_coupled_transports": 0, "n_nodes": 48, "n_edges": 55, "n_components": 4, "main_component_size": 24, "largest_component_pct": 50.0, "n_isolated_nodes": 0, "proteins_degree0": 4, "proteins_attached_pct
+   contract_codes (both): []
+SAME runs_verify\2026-08-25_1216\papers\PMC12856317\strict
+   final_gate (both): {"ok": true, "connectivity": {"n_reactions": 1, "n_transports": 0, "n_interactions": 4, "n_reaction_coupled_transports": 0, "n_nodes": 18, "n_edges": 19, "n_components": 1, "main_component_size": 18, "largest_component_pct": 100.0, "n_isolated_nodes": 0, "proteins_degree0": 0, "proteins_attached_pct
+   contract_codes (both): []
+SAME runs_verify\2026-08-28_1816\papers\PMC12856317\strict
+   final_gate (both): {"ok": true, "connectivity": {"n_reactions": 1, "n_transports": 0, "n_interactions": 3, "n_reaction_coupled_transports": 0, "n_nodes": 15, "n_edges": 15, "n_components": 1, "main_component_size": 15, "largest_component_pct": 100.0, "n_isolated_nodes": 0, "proteins_degree0": 0, "proteins_attached_pct
+   contract_codes (both): []
+SAME runs_verify\2026-09-02_2052\papers\PMC12444477\strict
+SAME runs_verify\2026-09-02_2052\papers\PMC12856317\strict
+   final_gate (both): {"ok": true, "connectivity": {"n_reactions": 1, "n_transports": 0, "n_interactions": 2, "n_reaction_coupled_transports": 0, "n_nodes": 13, "n_edges": 12, "n_components": 1, "main_component_size": 13, "largest_component_pct": 100.0, "n_isolated_nodes": 0, "proteins_degree0": 0, "proteins_attached_pct
+   contract_codes (both): []
+MOVED runs_verify\2026-09-06_1425\papers\PMC11172790\strict
+   final_gate: {"ok": true, "connectivity": {"n_reactions": 0, "n_transports": 1, "n_interactions": 2, "n_reaction_coupled_transports": 0, "n_nodes": 12, "n_edges": 13, "n_components": 1, "main_component_size": 12, "largest_component_pct": 100.0, "n_isolated_nodes": 0, "proteins_degree0": 0, "proteins_attached_pct": 100.0}} -> {"ok": true, "connectivity": {"n_reactions": 0, "n_transports": 1, "n_interactions": 2, "n_reaction_coupled_transports": 0, "n_nodes": 11, "n_edges": 10, "n_components": 2, "main_component_size": 6, "largest_component_pct": 54.55, "n_isolated_nodes": 0, "proteins_degree0": 0, "proteins_attached_pct": 100.0}}
+   contract_codes (both): []
+MOVED runs_papers\ORCH-759\legs\chlorophyll-strict\2026-10-22_1231\papers\PMC5130987\strict
+   ok: false -> true
+   refusal: ["entity_type_overlap:4"] -> []
+   release: "diagnostic_only" -> "review_required"
+   final_gate: null -> {"ok": true, "connectivity": {"n_reactions": 30, "n_transports": 0, "n_interactions": 25, "n_reaction_coupled_transports": 0, "n_nodes": 148, "n_edges": 213, "n_components": 1, "main_component_size": 148, "largest_component_pct": 100.0, "n_isolated_nodes": 0, "proteins_degree0": 1, "proteins_attached_pct": 95.45}}
+   contract_codes: null -> ["reaction_enzyme_must_be_protein_complex", "reaction_enzyme_must_be_protein_complex"]
+   ir_codes: null -> ["reaction_enzyme_must_be_protein_complex", "reaction_enzyme_must_be_protein_complex", "reaction_enzyme_must_be_protein_complex", "reaction_enzyme_must_be_protein_complex"]
+COMPARE legs=8 moved=2
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 3c012ab20c9f7d058719b112d3afc8b2f5255abd  [git, worktree dirty=False]
+label                   : r1-export-ab-compare
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/orch759c/r1_export_ab.py compare C:/t/bt-orch759c/export_base.json C:/t/bt-orch759c/export_tip.json
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759c
+root PID / process group: 374448 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 120 s
+duration                : 0.34 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  370868:python.exe
+descendants terminated  : 1  370868
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759c\docs\pwml_recovery_sprint\evidence\g11\ORCH-759c\37-r1-export-ab-compare.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================

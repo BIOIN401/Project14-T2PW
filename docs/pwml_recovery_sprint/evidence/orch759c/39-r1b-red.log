@@ -1,0 +1,65 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759c\src\t2pw\__init__.py
+.F.........                                                              [100%]
+================================== FAILURES ===================================
+______ test_g9_r1_leg_no_location_row_moves_to_an_entity_of_another_kind ______
+
+    def test_g9_r1_leg_no_location_row_moves_to_an_entity_of_another_kind() -> None:
+        """Correction round 1, N1. Red at the round-0 tip ``7b30e564`` and at base.
+    
+        Round 0 pruned the four gene rows but kept their four ``nucleus state`` rows:
+        ``_prune_locations`` checked one name list shared by every bucket, and the
+        same-named PROTEIN kept each name in it. ``ir.py``'s ``resolve_entity`` then
+        placed proteins CAO, HEMA1, GUN4 and PORB in the nucleus with no issue raised,
+        which is an invented location. A location row now goes with its own-kind
+        entity when closure removes it.
+    
+        The leg's only remaining cross-kind rows are two that base had too: complex
+        locations filed under ``element_collection_locations``, where no element
+        collection was ever declared (``evidence/orch759c/25-r1-ec-locations.log``). This
+        lane leaves them exactly as base did; RESULT, correction round 1, says why.
+        """
+    
+        payload, context = _leg()
+        result = quarantine_and_close(payload, strict_db=True, pathway_context=context, mode="pathwhiz")
+    
+        removed = [
+            f"{row['bucket']}|{row['name']}|{row['reason']}|{row['biological_state']}"
+            for row in result.removed_entity_report["removed_locations"]
+        ]
+        new = [f"element_locations/nucleic_acid_locations|{name}|location_entity_removed|nucleus state" for name in ORPHAN_GENES]
+>       assert sorted(line for line in removed if line in new) == new
+E       AssertionError: assert [] == ['element_loc...ucleus state']
+E         
+E         Right contains 4 more items, first extra item: 'element_locations/nucleic_acid_locations|CAO|location_entity_removed|nucleus state'
+E         Use -v to get more diff
+
+tests\test_orch759c_quarantine_bucket_closure.py:157: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_orch759c_quarantine_bucket_closure.py::test_g9_r1_leg_no_location_row_moves_to_an_entity_of_another_kind
+1 failed, 10 passed in 1.59s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 75855829dfcbeb8955a536c5bb889bfed32b3d1d  [git, worktree dirty=True]
+label                   : r1b-red
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-759c/39-r1b-red.pin.json -q --basetemp=C:/t/bt-orch759c/39-r1b-red-25840 tests/test_orch759c_quarantine_bucket_closure.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759c
+root PID / process group: 380264 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 2.56 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  380276:python.exe
+descendants terminated  : 1  380276
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759c\docs\pwml_recovery_sprint\evidence\g11\ORCH-759c\39-r1b-red.json
+json report written     : True
+pre-existing (reported, NEVER killed): 8
+================================================

@@ -1,0 +1,62 @@
+== c3ok: ok=False refusal=['entity_type_overlap:1'] overlaps=[{'name': 'glutathione synthetase', 'buckets': 'compounds+proteins'}]
+   'gamma-glutamylcysteine synthesis': core_accepted admitted
+   'glutathione synthesis': core_accepted admitted
+   removed entities: []
+   exporter contract codes: (not reached: quarantine refused)
+== c7: ok=False refusal=['entity_type_overlap:1'] overlaps=[{'name': 'glutathione synthetase', 'buckets': 'proteins+element_collections'}]
+   'gamma-glutamylcysteine synthesis': core_accepted admitted
+   'glutathione synthesis': core_accepted admitted
+   removed entities: []
+   exporter contract codes: (not reached: quarantine refused)
+== n2a: ok=False refusal=['entity_type_overlap:1', 'unexportable_entity:1'] overlaps=[{'name': 'glutathione synthetase', 'buckets': 'compounds+proteins'}]
+   'gamma-glutamylcysteine synthesis': core_accepted admitted
+   'glutathione synthesis': core_accepted admitted
+   removed entities: []
+   exporter contract codes: (not reached: quarantine refused)
+== n2b: ok=True refusal=[] overlaps=[]
+   'gamma-glutamylcysteine synthesis': core_accepted admitted
+   'glutathione synthesis': core_accepted admitted
+   removed entities: [('proteins', 'glutathione synthetase', 'degree_zero_after_quarantine')]
+   exporter contract codes: ['component_protein_unresolved']
+== n2c: ok=True refusal=[] overlaps=[]
+   'gamma-glutamylcysteine synthesis': core_accepted admitted
+   'glutathione synthesis': core_accepted admitted
+   removed entities: [('proteins', 'glutathione synthetase', 'degree_zero_after_quarantine')]
+   exporter contract codes: ['component_protein_unresolved']
+== leg: ok=False resulting=sha256:e1f3bec8621d8069 removed_locations n=53 sha=66891e59028a1dc0fd2c0919d30e6f77571d612c7e2420de71329cb685bde7ff
+   removed: element_locations/nucleic_acid_locations|ALAD1/HEMB1|location_entity_removed|nucleus state
+   removed: element_locations/nucleic_acid_locations|CAO promoter|location_entity_removed|nucleus state
+   removed: element_locations/nucleic_acid_locations|CHL27 promoter|location_entity_removed|nucleus state
+   removed: element_locations/nucleic_acid_locations|CHLH|location_entity_removed|nucleus state
+   removed: element_locations/nucleic_acid_locations|GUN4 promoter|location_entity_removed|nucleus state
+   removed: element_locations/nucleic_acid_locations|PORA|location_entity_removed|nucleus state
+   removed: element_locations/nucleic_acid_locations|PORC|location_entity_removed|nucleus state
+   removed: element_locations/nucleic_acid_locations|tRNAGlu|location_entity_removed|plastid state
+   CROSS-KIND survivor: element_collection_locations 'Mg-chelatase complex' state='thylakoid membrane state'
+   CROSS-KIND survivor: element_collection_locations 'Mg-Proto ME cyclase complex' state='thylakoid membrane state'
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ b16df73401392c3a31dc80ca40df172824b97397  [git, worktree dirty=True]
+label                   : r1-probe-base2
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/orch759c/r1_shapes_probe.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759c
+root PID / process group: 360012 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 1.85 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  351792:python.exe
+descendants terminated  : 1  351792
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759c\docs\pwml_recovery_sprint\evidence\g11\ORCH-759c\27-r1-probe-base2.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================

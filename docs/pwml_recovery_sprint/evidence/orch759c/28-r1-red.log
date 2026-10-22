@@ -1,0 +1,69 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759c\src\t2pw\__init__.py
+.F.................................................                      [100%]
+================================== FAILURES ===================================
+______ test_g9_r1_leg_no_location_row_moves_to_an_entity_of_another_kind ______
+
+    def test_g9_r1_leg_no_location_row_moves_to_an_entity_of_another_kind() -> None:
+        """Correction round 1, N1. Red at the round-0 tip ``7b30e564`` and at base.
+    
+        Round 0 pruned the four gene rows but kept their four ``nucleus state`` rows:
+        ``_prune_locations`` checked one name list shared by every bucket, and the
+        same-named PROTEIN kept each name in it. ``ir.py``'s ``resolve_entity`` then
+        placed proteins CAO, HEMA1, GUN4 and PORB in the nucleus with no issue raised,
+        which is an invented location. Each location bucket is now checked against the
+        entity buckets it locates. The same rule also drops the leg's two
+        ``element_collection_locations`` rows that name protein COMPLEXES. They were
+        misfiled at Stage 1, and no element collection was ever declared
+        (``evidence/orch759c/25-r1-ec-locations.log``).
+        """
+    
+        payload, context = _leg()
+        result = quarantine_and_close(payload, strict_db=True, pathway_context=context, mode="pathwhiz")
+    
+        removed = [
+            f"{row['bucket']}|{row['name']}|{row['reason']}|{row['biological_state']}"
+            for row in result.removed_entity_report["removed_locations"]
+        ]
+        new = sorted(
+            [f"element_locations/nucleic_acid_locations|{name}|location_entity_kind_mismatch|nucleus state" for name in ORPHAN_GENES]
+            + [
+                f"element_locations/element_collection_locations|{name}|location_entity_kind_mismatch|thylakoid membrane state"
+                for name in ("Mg-Proto ME cyclase complex", "Mg-chelatase complex")
+            ]
+        )
+>       assert sorted(line for line in removed if line in new) == new
+E       AssertionError: assert [] == ['element_loc...ucleus state']
+E         
+E         Right contains 6 more items, first extra item: 'element_locations/element_collection_locations|Mg-Proto ME cyclase complex|location_entity_kind_mismatch|thylakoid membrane state'
+E         Use -v to get more diff
+
+tests\test_orch759c_quarantine_bucket_closure.py:161: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_orch759c_quarantine_bucket_closure.py::test_g9_r1_leg_no_location_row_moves_to_an_entity_of_another_kind
+1 failed, 50 passed in 1.89s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ a42a5d3022c4054ac60445aecc995776c1c4f29e  [git, worktree dirty=False]
+label                   : r1-red
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-759c/28-r1-red.pin.json -q --basetemp=C:/t/bt-orch759c/28-r1-red-23795 tests/test_orch759c_quarantine_bucket_closure.py tests/test_strict_quarantine.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759c
+root PID / process group: 364124 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 3.20 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  368460:python.exe
+descendants terminated  : 1  368460
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759c\docs\pwml_recovery_sprint\evidence\g11\ORCH-759c\28-r1-red.json
+json report written     : True
+pre-existing (reported, NEVER killed): 12
+================================================

@@ -4,10 +4,10 @@
 |---|---|
 | Lane | `orch759c/quarantine-bucket-closure`, worktree `.claude/worktrees/orch759c` |
 | Base | `5d1ea64c` (= `sprint/pwml-recovery`) |
-| Commits | `58821368` test-first · `a2fc1408` code · `7b30e564` baseline move (merge rule 4) · docs commit (this file + evidence) |
-| Status | **Implemented and tested. Not merged, not pushed, not reviewed.** It needs an independent review of the actual diff. |
+| Commits | `58821368` test-first · `a2fc1408` code · `7b30e564` baseline move (merge rule 4) · `b16df734` docs. **Correction round 1:** `a42a5d30` tests · `3c012ab2` code (location rule, superseded) · `75855829` test revision · `4f3307a1` code (narrowed location rule) · docs commit |
+| Status | **Round 0 reviewed: APPROVE WITH NOTES (N1–N4). Correction round 1 implemented and tested (§ 13). Not merged, not pushed.** It needs a re-review of the round-1 diff. |
 | Classification | `product_contract_violation`: a correct `review_required` pathway was suppressed (merge rule 7; PRODUCT_CONTRACT "a valid pathway core suppressed …") |
-| Reports | `evidence/g11/ORCH-759c/01`–`23`; logs `evidence/orch759c/NN-*.log`; every report `FINAL SURVIVING COUNT : 0` |
+| Reports | `evidence/g11/ORCH-759c/01`–`51` (round 1 from `24`); logs `evidence/orch759c/NN-*.log`; every report `FINAL SURVIVING COUNT : 0` |
 
 ## 1. The defect
 
@@ -38,9 +38,17 @@ nucleic acid, element collection or complex. So:
   positional arguments (`test_strict_quarantine.py:387` and `:1087`, base line numbers); a third parameter would have
   broken the monkeypatch.
 
-Untouched: `_entity_type_overlaps`, the refusal (`:2619` base), every admission decision,
-`_complex_component_norms`, `_degree_zero_exports`, `_referenced_entity_norms`. No other file in `src/`.
+Untouched: `_entity_type_overlaps`, the refusal (`:2619` base), `_admit_processes`,
+`_complex_component_norms`, `_degree_zero_exports` (code), `_referenced_entity_norms`. No other file in `src/`.
 No prompt and no LLM input changes (see F5).
+
+**Corrected in round 1 (review N2).** The original sentence here said "every admission
+decision" was untouched. That holds for the decisions `_admit_processes` takes, and on the
+chlorophyll leg the admissions are identical. It does **not** hold in general:
+closure's revalidation (`_revalidate_surviving_processes`) re-resolves surviving processes
+against the pruned registry. Where a row that round 0 now prunes was the thing a component
+resolved to, revalidation newly quarantines the process as `stranded_by_closure`. Three shapes are known
+and pinned (§ 13.3). It only ever quarantines more, and base wrote no PWML in any of them.
 
 ## 3. G9: the leg's own input, base RED → tip GREEN
 
@@ -209,29 +217,32 @@ Append at end of file:
 ```markdown
 ## ORCH-759c: test obligations, appended end-of-file by rule · 2026-10-22
 
-Lane `orch759c/quarantine-bucket-closure` (`58821368` test-first, `a2fc1408` code, `7b30e564` baseline
-move). Reports `evidence/g11/ORCH-759c/01`–`23`.
+Lane `orch759c/quarantine-bucket-closure` (round 0: `58821368` test-first, `a2fc1408` code, `7b30e564`
+baseline move; correction round 1: `a42a5d30`/`75855829` tests, `4f3307a1` code). Reports
+`evidence/g11/ORCH-759c/01`–`51`.
 
-**SMOKE is unchanged at 508** (`g11/ORCH-759c/16`). Merge rule 10 unchanged. Chunk A count unchanged (134).
+**SMOKE is unchanged at 508** (`g11/ORCH-759c/16`; round 1 `45`). Merge rule 10 unchanged. Chunk A count unchanged (134).
 
 ### New focused selection
 
-`tests/test_orch759c_quarantine_bucket_closure.py` (5, ~1 s), fixture `tests/fixtures/orch759c/`
+`tests/test_orch759c_quarantine_bucket_closure.py` (11, ~1 s), fixture `tests/fixtures/orch759c/`
 (the chlorophyll-strict leg's `final_mapped.json`, gzipped, sha256 asserted). It is in no chunk and
-not in SMOKE. G9: 2 `test_g9_*` red at base (`g11/ORCH-759c/03`), 5 green at tip (`06`). Run it for
-any change to `_prune_entities`, `_complex_component_norms` or the closure loop's keep set in
-`strict_quarantine.py`.
+not in SMOKE. G9: 8 `test_g9_*`/`test_delta_n2_*` red at base (`g11/ORCH-759c/29`), 3 preservation
+green there; the round-1 location test red at the round-0 tip (`39`); 11 green at tip (`40`). Run it
+for any change to `_prune_entities`, `_prune_locations`, `_complex_component_norms` or the closure
+loop's keep set in `strict_quarantine.py`.
 
 ### Pinned tests moved (merge rule 4)
 
 `test_strict_quarantine.py::test_an_entity_type_overlap_that_survives_closure_blocks_the_export` and
 `test_strict_quarantine_locks_and_scope.py::test_each_refusal_class_gets_its_own_reason`: the overlap
 compound gains `"synonyms": ["glycine"]`; assertions unchanged. Green on base `src/` (`09`) and tip (`08`).
+The helper `test_strict_quarantine.py::_closure_keep_norms` now builds the per-bucket keep mapping.
 
 ### Known failures
 
-None new. Affected sweep, 27 files: 556 passed, 8 skipped (data-driven skips in
-`test_strict_failure_replay.py`) (`10`).
+None new. Affected sweep, 27 files: 562 passed, 8 skipped (data-driven skips in
+`test_strict_failure_replay.py`) (`43`). Chunk E 175 passed (`44`).
 ```
 
 ## 12. Evidence index
@@ -244,3 +255,151 @@ None new. Affected sweep, 27 files: 556 passed, 8 skipped (data-driven skips in
 | `evidence/orch759c/export_probe.py` → `22` (`21` ran it before the per-error detail lines were appended; same codes) | F3: the next blocker past the final gate |
 | `evidence/orch759c/cpo_diag.py` → `23-cpo-diag.log` | F3: the CPO / CPO1 rows (ran from `C:/t/bt-orch759c/cpo.py`; copied verbatim) |
 | `tests/fixtures/orch759c/README.md` | fixture provenance and checksums |
+
+## 13. Correction round 1 (review round 0: APPROVE WITH NOTES, N1–N4)
+
+Reports `g11/ORCH-759c/24`–`51`, logs `evidence/orch759c/24-*`–`51-*`. Every report shows `FINAL SURVIVING COUNT : 0`;
+`g11_evidence.py check --task ORCH-759c` is clean (§ 13.7).
+
+### 13.1 N1: a gene's location no longer lands on the same-named protein
+
+**Defect (reviewer's finding, reproduced).** Round 0 pruned the gene rows CAO, HEMA1, GUN4 and PORB.
+Their four `nucleic_acid_locations` rows (`nucleus state`) survived, because `_prune_locations` checked
+every bucket against `registry.norms`, which holds every kind's names, and the same-named proteins
+kept each name there. `ir.py`'s `resolve_entity` then attached the rows to the proteins with no issue:
+an invented location. At round 0 the leg showed 6 cross-kind surviving location rows; at base it showed 2
+(`24-r1-probe-r0tip.log`, `26-r1-probe-base.log`).
+
+**First attempt, measured and superseded (`3c012ab2`).** This was the reviewer's literal rule: prune each
+location bucket against its own entity kinds. It fixed N1, but measured against **real base**
+(`r1_census.py`, base `src/` checked out for the dump; `31`/`32`/`33`) it changed **7 non-target
+legs**:
+
+- 5 legs (FtsH-LapB, FtsH/YciM, ALAS2 homodimer ×2, LONP1, Dvl/Prickle/inturned) lose a complex
+  location filed under `element_collection_locations`. On 2 of them that is the complex's only location
+  row (`34-r1-kind-of-misfiled.log`).
+- PMC11172790 loses `protein_locations` rows for PvdA/PvdI/PvdJ, which that leg declares only as
+  **compounds**. At base the IR attached protein locations to compounds there. That is a real,
+  pre-existing wrong-kind attachment.
+- On the chlorophyll leg itself, its 2 misfiled complex rows (thylakoid membrane, paper-evidenced) go too.
+
+It also moved the protected C-011 freeze-seam golden: `38-r1-affected`, 3 failures on
+`runs/2026-08-02_2130/papers/PMC12856317/strict`, connectivity 1 → 2 components, main component 15 → 7.
+Moving that golden requires a registered per-card delta. Its own docstring calls retiring the BEFORE
+baseline a product decision.
+
+A/B on the export outcome (`r1_export_ab.py`, `35`–`37`): 6 of the 7 legs have identical quarantine
+verdicts, final gates and contract and IR codes. PMC11172790's final gate still passes but goes from 1
+component to 2. None of this was introduced by round 0, so it is outside this lane (open question 13.6-1).
+
+**Fix (`4f3307a1`).** `_prune_locations` now drops a row in two cases:
+
+1. no kind declares its name (unchanged); or
+2. **closure removed its own-kind entity**: the name was in the input's own-kind names, taken once
+   before the closure loop, and is no longer, while another kind still declares it.
+
+`_LOCATION_ENTITY_BUCKETS` maps each location bucket to the kinds it locates. `protein_locations` also
+covers complexes, which `process_normalizer._rewrite_element_locations` moves there. A row whose own
+kind never declared its name keeps base behaviour. The reason string stays `location_entity_removed`.
+
+**Proof.**
+
+- `test_g9_r1_leg_no_location_row_moves_to_an_entity_of_another_kind` is red at the round-0 code
+  (`39`) and at base (`29`), and green at tip (`40`).
+- It pins: the 4 nucleus rows removed with their genes; base's other 53 location removals unchanged
+  (count and digest `66891e59…`, identical at base and round 0, `26`/`24`); no surviving location names
+  an orphan gene; and the only cross-kind rows left are base's 2 misfiled complex rows.
+- Release `review_required`, and the strict final gate passes with one connected component.
+- Census against real base (`31` vs `41`, `42`): **121 legs, 1 differs** (the chlorophyll leg: +4 genes,
+  +4 nucleus rows, ok False → True). 120 are byte-identical in outcome, admissions, removed entities,
+  removed locations and cross-kind rows. Cross-kind legs: 8 at base, 8 at tip.
+
+### 13.2 N3: stale docstrings
+
+- `_degree_zero_exports`: "`referenced | exempt` here is the same set the closure loop calls
+  `keep_norms`" now reads as the set the loop keeps **proteins** by. Every other bucket is kept by
+  `referenced` alone, so only a protein can owe its survival to `exempt`.
+- `tests/test_strict_quarantine.py::_closure_keep_norms`: it now **builds** the per-bucket mapping the
+  loop builds, and its docstring names the one remaining difference (it recognises a complex by primary
+  name only, while the loop uses F-083 synonyms; the fixtures never exercise that).
+- This supersedes § 10 item 6.
+
+### 13.3 N2: deliberate delta, revalidation newly quarantines
+
+Each shape is pinned by a labelled `test_delta_n2_*` test, red at base (`29`) and green at tip (`40`).
+Behaviour at base comes from `27-r1-probe-base2.log`, at tip from `50-r1b-probe-tip.log`.
+
+| shape | base | tip |
+|---|---|---|
+| unreferenced compound `glutathione synthetase` shadowing the wrapped protein, which has **no accession** (admission resolves the component to the compound, because compounds register first) | refused: `entity_type_overlap:1` + `unexportable_entity:1`; no PWML | `glutathione synthesis` → `quarantined_disconnected`, `stranded_by_closure:protein_complex_component_unrepresentable:glutathione synthetase:protein_missing_external_identity`; contract clean |
+| generated wrapper whose component names a **complex** (`GS holoenzyme`) | quarantine ok; exporter contract `component_protein_unresolved`; no PWML | `stranded_by_closure:protein_complex_component_unresolved:GS holoenzyme`; contract clean |
+| wrapper whose component names only a **gene** (`GSS`) | quarantine ok; contract `component_protein_unresolved`; no PWML | `stranded_by_closure:protein_complex_component_unresolved:GSS`; contract clean |
+
+In each shape the other reaction stays `core_accepted` and `ok` is True. The delta only ever
+quarantines more: a process whose component resolves to no protein leaves before export instead of
+failing the exporter. § 2 is corrected accordingly. This answers § 10 items 1 and 2 for the shapes
+measured: the pruned complex or gene took the wrapper's process with it, which is the right outcome
+for a component that names no protein.
+
+### 13.4 N4: the compound and element-collection buckets
+
+`test_g9_r1_n4_unreferenced_compound_named_like_a_wrapped_protein_is_pruned` (`c3ok`) and
+`..._element_collection_...` (`c7`) are red at base (`entity_type_overlap:1`, `29`) and green at tip
+(`40`). Both reactions stay `core_accepted`, only the shadowing row is removed, and the contract is clean (`50`).
+
+### 13.5 Gates at the round-1 tip `4f3307a1`
+
+| gate | report | result |
+|---|---|---|
+| G9 + preservation + N1–N4, plus `test_strict_quarantine.py` | `40` | 51 passed |
+| affected suites (27 files, AppTest files excluded) | `43` | **562 passed, 8 skipped**, 0 failed (C-011 golden green) |
+| Chunk E | `44` | 175 passed |
+| SMOKE | `45` | **508 passed** |
+| `tests/test_eval_v2_*.py` | `46` | 89 passed, 1 xfailed |
+| `test_streamlit_quarantine_boundary.py` alone | `47` | 23 passed |
+| `test_c052_prefreeze_report_at_the_streamlit_seams.py` alone | `48` | 13 passed |
+| `test_c055_rag_loop_wiring.py` alone | `49` | 14 passed |
+
+F3 (the CPO required-field blocker) is unchanged at tip `4f3307a1`: `51` (`export_probe.py`) shows the same two
+`reaction_enzyme_must_be_protein_complex` codes.
+
+### 13.6 NOT settled (round 1)
+
+1. **Misfiled location rows that predate this lane.** On 8 of 121 legs, a location row names an entity
+   of another kind, and the IR's `resolve_entity` falls back to that kind. Sometimes that is right: a
+   complex in `element_collection_locations` with paper evidence. Sometimes it is wrong: PvdA/PvdI/PvdJ
+   protein locations on compound rows. *Options:*
+   (a) leave it (current; cost: the exporter keeps guessing a row's kind);
+   (b) the literal per-bucket prune (`3c012ab2`'s rule; cost: 7 more legs change, 2 complexes lose their
+   only explicit location, and the C-011 golden needs a registered delta);
+   (c) upstream: `process_normalizer` re-files `element_collection_locations` rows naming a complex into
+   `protein_locations`, as it already does for `compound_locations`, and quarantine prunes the remaining
+   wrong-kind rows (cost: a normalizer lane and its own census). **Recommended: (c) as a separate lane.**
+2. The § 10 items 3, 4, 5 and 7 still stand. Items 1 and 2 are answered for the measured shapes by
+   § 13.3. Item 6 is fixed by § 13.2.
+
+### 13.7 Failures and dead ends (round 1)
+
+- `3c012ab2` is the literal location rule, measured and superseded (§ 13.1). It stays in history, and
+  its reports `31`–`38` are its record. `75855829` revises the N1 test to the narrowed rule;
+  `4f3307a1` is the code.
+- **A rule slip.** One command began with a `python -` heredoc stub, which the lane forbids. It hung
+  and went to background. I stopped it with TaskStop (it was my own task), then checked the process
+  list at 17:15:27. No process from it survived; the only python processes alive were other lanes'
+  bounded jobs (ORCH-759d, ORCH-764) and the editor's language server. The edit it was meant to make
+  was redone with the Edit tool. Nothing it would have run reached a report.
+- `24`–`27` are diagnosis probes of the shapes; `27` reran `26` after the exporter-contract line was
+  added to `r1_shapes_probe.py`.
+- `g9_leg_replay.py` (`05`) is round-0 evidence. Its in-process base emulation patches entity pruning
+  only, so it does not model round 1's location rule. `r1_census.py`, which checks out real base `src/`
+  for the dump, supersedes it.
+
+### 13.8 Evidence index (round 1)
+
+| artifact | what |
+|---|---|
+| `evidence/orch759c/r1_shapes_probe.py` → `24` (round-0 tip), `26`/`27` (base), `50` (tip) | N2/N4 shapes and the leg's location rows |
+| `evidence/orch759c/r1_ec_locations.py` → `25` | where the leg's misfiled complex location rows come from (no element collection at any stage) |
+| `evidence/orch759c/r1_census.py` → `31` (base dump), `32`/`33` (`3c012ab2` dump, compare), `41`/`42` (`4f3307a1` dump, compare) | real base vs tip over 121 archived strict legs; dumps `r1_census_dump_base.json`, `r1_census_dump_tip_4f3307a1.json` |
+| `evidence/orch759c/r1_kind_of_misfiled.py` → `34` | which kind declares each misfiled row's name |
+| `evidence/orch759c/r1_export_ab.py` → `35`–`37` | export-outcome A/B on the 8 legs `3c012ab2` changed; dumps `r1_export_ab_dump_base.json`, `r1_export_ab_dump_tip_3c012ab2.json` |
