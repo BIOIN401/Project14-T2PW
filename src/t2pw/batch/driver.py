@@ -116,8 +116,6 @@ MODE_RESEARCH = "research"
 #: The app under test. Never imported -- AppTest execs it as a script.
 DEFAULT_APP_PATH = PACKAGE_ROOT / "app" / "streamlit_app.py"
 
-#: One app *interaction* can legitimately take an hour (LLM + PathBank + RAG).
-DEFAULT_APP_TIMEOUT = 3600.0
 #: Whole-run wall-clock budget across all interactions for one paper+mode.
 DEFAULT_TIMEOUT = 7200.0
 
@@ -2344,7 +2342,7 @@ def run_one(
     *,
     app_path: Optional[Any] = None,
     timeout: float = DEFAULT_TIMEOUT,
-    app_timeout: float = DEFAULT_APP_TIMEOUT,
+    app_timeout: Optional[float] = None,
 ) -> RunOutcome:
     """Run one paper through the real app once, in one export mode.
 
@@ -2352,11 +2350,16 @@ def run_one(
     bug in this module -- becomes ``status="error"``, ``failure_kind="crash"``
     with the traceback in ``detail``, because an overnight batch that dies on
     paper three is worthless.
+
+    ``app_timeout`` caps one interaction; ``None`` (every production caller) means
+    the leg's own ``timeout``, so a single slow interaction may use whatever the
+    leg has left but never more (ORCH-759d: a fixed 3600 s cap killed a 10,800 s
+    leg's Stage 0-2 submit at 3600 s).
     """
 
     mode_token, mode_label = _resolve_mode(mode)
     outcome = RunOutcome(paper_id=_paper_id(paper), mode=mode_token)
-    budget = _Budget(timeout, app_timeout)
+    budget = _Budget(timeout, timeout if app_timeout is None else app_timeout)
     try:
         _drive(paper, mode_label, outcome, budget, app_path)
     except Exception:  # noqa: BLE001 -- the whole point of this wrapper
@@ -3233,7 +3236,6 @@ def _drive(
 
 __all__ = [
     "DEFAULT_APP_PATH",
-    "DEFAULT_APP_TIMEOUT",
     "DEFAULT_TIMEOUT",
     "DETAIL_LIMIT",
     "KIND_CONTRACT",
