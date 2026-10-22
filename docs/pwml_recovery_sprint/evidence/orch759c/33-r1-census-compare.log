@@ -1,0 +1,55 @@
+DIFF C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759c\runs\2026-07-28_0919\papers\PMC12444477__the-regulation-of-lipid-a-biosynthesis\strict\final_mapped.json
+   removed_locations: only base=[] | only tip=['element_locations/element_collection_locations|FtsH-LapB complex|location_entity_kind_mismatch|inner membrane state']
+   cross_kind_surviving_locations: only base=['element_collection_locations|FtsH-LapB complex|inner membrane state'] | only tip=[]
+DIFF C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_papers\ORCH-759\legs\chlorophyll-strict\2026-10-22_1231\papers\PMC5130987\strict\final_mapped.json
+   ok: False -> True
+   refusal: ['entity_type_overlap:4'] -> []
+   release: diagnostic_only -> review_required
+   removed_entities: only base=[] | only tip=['nucleic_acids|CAO|unreferenced_after_quarantine', 'nucleic_acids|GUN4|unreferenced_after_quarantine', 'nucleic_acids|HEMA1|unreferenced_after_quarantine', 'nucleic_acids|PORB|unreferenced_after_quarantine']
+   removed_locations: only base=[] | only tip=['element_locations/element_collection_locations|Mg-Proto ME cyclase complex|location_entity_kind_mismatch|thylakoid membrane state', 'element_locations/element_collection_locations|Mg-chelatase complex|location_entity_kind_mismatch|thylakoid membrane state', 'element_locations/nucleic_acid_locations|CAO|location_entity_kind_mismatch|nucleus state', 'element_locations/nucleic_acid_locations|GUN4|location_entity_kind_mismatch|nucleus state', 'element_locations/nucleic_acid_locations|HEMA1|location_entity_kind_mismatch|nucleus state', 'element_locations/nucleic_acid_locations|PORB|location_entity_kind_mismatch|nucleus state']
+   cross_kind_surviving_locations: only base=['element_collection_locations|Mg-Proto ME cyclase complex|thylakoid membrane state', 'element_collection_locations|Mg-chelatase complex|thylakoid membrane state'] | only tip=[]
+DIFF C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_papers\ORCH-759\legs\wnt_pcp-strict\2026-10-22_1432\papers\PMC10425814\strict\final_mapped.json
+   removed_locations: only base=[] | only tip=['element_locations/element_collection_locations|complex of Dvl, Prickle, and inturned|location_entity_kind_mismatch|plasma membrane state']
+   cross_kind_surviving_locations: only base=['element_collection_locations|complex of Dvl, Prickle, and inturned|plasma membrane state'] | only tip=[]
+DIFF C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-08-25_1216\papers\PMC12856317\strict\final_mapped.json
+   removed_locations: only base=[] | only tip=['element_locations/element_collection_locations|LONP1|location_entity_kind_mismatch|mitochondrial matrix state']
+   cross_kind_surviving_locations: only base=['element_collection_locations|LONP1|mitochondrial matrix state'] | only tip=[]
+DIFF C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-08-28_1816\papers\PMC12856317\strict\final_mapped.json
+   removed_locations: only base=[] | only tip=['element_locations/element_collection_locations|ALAS2 homodimer|location_entity_kind_mismatch|mitochondrial matrix state']
+   cross_kind_surviving_locations: only base=['element_collection_locations|ALAS2 homodimer|mitochondrial matrix state'] | only tip=[]
+DIFF C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-09-02_2052\papers\PMC12444477\strict\final_mapped.json
+   removed_locations: only base=[] | only tip=['element_locations/element_collection_locations|FtsH/YciM complex|location_entity_kind_mismatch|E. coli inner membrane cytoplasmic leaflet state']
+   cross_kind_surviving_locations: only base=['element_collection_locations|FtsH/YciM complex|E. coli inner membrane cytoplasmic leaflet state'] | only tip=[]
+DIFF C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-09-02_2052\papers\PMC12856317\strict\final_mapped.json
+   removed_locations: only base=[] | only tip=['element_locations/element_collection_locations|ALAS2 homodimer|location_entity_kind_mismatch|mitochondrial matrix state']
+   cross_kind_surviving_locations: only base=['element_collection_locations|ALAS2 homodimer|mitochondrial matrix state'] | only tip=[]
+DIFF C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs_verify\2026-09-06_1425\papers\PMC11172790\strict\final_mapped.json
+   removed_locations: only base=[] | only tip=['element_locations/protein_locations|PvdA|location_entity_kind_mismatch|inner membrane state', 'element_locations/protein_locations|PvdI|location_entity_kind_mismatch|cytoplasmic state', 'element_locations/protein_locations|PvdJ|location_entity_kind_mismatch|cytoplasmic state']
+   cross_kind_surviving_locations: only base=['protein_locations|PvdA|inner membrane state', 'protein_locations|PvdI|cytoplasmic state', 'protein_locations|PvdJ|cytoplasmic state'] | only tip=[]
+COMPARE legs=121 differ=8 same=113 cross_kind_legs base=8 tip=0
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 3c012ab20c9f7d058719b112d3afc8b2f5255abd  [git, worktree dirty=False]
+label                   : r1-census-compare
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/orch759c/r1_census.py compare C:/t/bt-orch759c/census_base.json C:/t/bt-orch759c/census_tip.json
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759c
+root PID / process group: 370716 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 120 s
+duration                : 0.25 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  369120:python.exe
+descendants terminated  : 1  369120
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759c\docs\pwml_recovery_sprint\evidence\g11\ORCH-759c\33-r1-census-compare.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================

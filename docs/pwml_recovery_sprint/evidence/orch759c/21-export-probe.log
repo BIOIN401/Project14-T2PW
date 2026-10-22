@@ -1,0 +1,30 @@
+quarantine ok: True | release: review_required
+required-field contract error codes: ['reaction_enzyme_must_be_protein_complex', 'reaction_enzyme_must_be_protein_complex']
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 4 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=['Glu 1-semialdehyde', 'Mg-Proto IX monomethyl ester', '3,8-divinyl-protochlorophyllide', 'geranylgeraniol']; species=['Arabidopsis thaliana']
+IR error codes: ['reaction_enzyme_must_be_protein_complex', 'reaction_enzyme_must_be_protein_complex', 'reaction_enzyme_must_be_protein_complex', 'reaction_enzyme_must_be_protein_complex']
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 7b30e56456719fad18aa52fabfd81c4e578a5ce7  [git, worktree dirty=False]
+label                   : export-probe
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/orch759c/export_probe.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759c
+root PID / process group: 286880 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 1.74 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  282460:python.exe
+descendants terminated  : 1  282460
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759c\docs\pwml_recovery_sprint\evidence\g11\ORCH-759c\21-export-probe.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================

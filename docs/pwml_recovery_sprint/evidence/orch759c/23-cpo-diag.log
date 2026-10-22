@@ -1,0 +1,32 @@
+proteins 28 {"name": "CPO", "synonyms": ["CPO"], "components": null, "species": "Arabidopsis thaliana", "uniprot_id": null, "mapped_ids": {"uniprot": "Q9LR75"}, "generated": null, "generation_reason": null, "issues": null}
+   mapping_meta: {"species_resolution": {"name": "Arabidopsis thaliana", "pathbank_species_id": 4, "species_id": 4, "taxonomy_id": "3702", "common_name": "Thale cress", "source": "explicit_entity_species", "status": "matched", "confidence": 1.0}, "query": {"name": "CPO", "organism": "Arabidopsis thaliana"}, "provider": "PathBankDB", "source": "db", "candidates": [], "chosen_rule": "api_uniprot_fallback", "confidence": 0.0, "reviewed": false, "resolution": {"status": "matched", "issue": "api_resolved", "order_step": "api_uniprot_fallback"}, "alias_source": "primary_name", "resolved_name": "Coproporphyrinogen-III oxidase 1, chloroplastic", "queries_tried": ["(protein_name:\"CPO\" OR gene:\"CPO\") AND organism_name:\"Arabidopsis thaliana\""], "identity_verdict": {"verified": true, "reason": "verified_real_protein", "entity_name": "CPO", "organism": "Arabidopsis thaliana", "checks": {"identifier_resolution":
+protein_complexes 26 {"name": "CPO1", "synonyms": null, "components": [{"name": "Unknown", "stoichiometry": 1, "pathbank_protein_id": 9659, "mapped_ids": {"uniprot": "Unknown", "pathbank_protein_id": 9659}}], "species": "Arabidopsis thaliana", "uniprot_id": null, "mapped_ids": null, "generated": true, "generation_reason": "single_protein_pathwhiz_wrapper", "issues": null}
+   mapping_meta: {"provider": "PathBankDB", "source": "db", "chosen_rule": "pathbank_unknown_protein_fallback", "confidence": 0.0, "identity_status": "placeholder", "fallback_used": true, "fallback_reason": "all_normal_protein_identity_strategies_failed", "real_mapping_failure_reason": "species_mismatch", "role_evidence": {"declared_role": "catalyst", "allowed_role": "enzyme", "role_basis": "canonical_actor_membership", "reason": "canonical_actor_membership", "ok": true, "provenance": "inferred", "evidence_digest": {"chars": 95, "sha256": "3301c0360de1f0ee1e11b31f390f3cd2cde8a7e691f5a9bbb4f1615189fe2a68", "excerpt": "Coprogen III is oxidized by Coprogen III oxidase (CPO) to form protoporphyrinogen (Protogen) IX", "truncated": false}, "direct_evidence_present": true}, "cross_species_placeholder": true, "target_organism": "Arabidopsis thaliana", "functional_enzyme_name": "CPO1", "sentinel_pathbank_protein_
+reaction 6 Coprogen III oxidation to Protogen IX [{"entity": "CPO1", "entity_type": "protein_complex", "role": "catalyst", "evidence": "oxidized by Coprogen III oxidase (CPO) to form Protogen IX", "confidence": 1.0, "provenance": "extracted"}] [{"entity": "CPO1", "entity_type": "protein_complex", "role": "catalyst", "evidence": "oxidized by Coprogen III oxidase (CPO) to form Protogen IX", "confidence": 1.0, "provenance": "extracted"}]
+reaction 22 CPO reaction [{"entity": "CPO", "entity_type": "protein", "role": "catalyst", "confidence": 1.0, "provenance": "extracted", "evidence": "Coprogen III oxidase (CPO)"}, {"entity": "CPO1", "entity_type": "protein_complex", "role": "catalyst", "evidence": "Coprogen III is oxidized by Coprogen III oxidase (CPO) to fo [{"entity": "CPO", "entity_type": "protein", "role": "catalyst", "evidence": "Coprogen III oxidase (CPO)", "confidence": 1.0, "provenance": "extracted"}, {"entity": "CPO1", "entity_type": "protein_complex", "role": "catalyst", "evidence": "Coprogen III is oxidized by Coprogen III oxidase (CPO) to fo
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 7b30e56456719fad18aa52fabfd81c4e578a5ce7  [git, worktree dirty=False]
+label                   : cpo-diag
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/bt-orch759c/cpo.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759c
+root PID / process group: 288932 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 120 s
+duration                : 0.24 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  288944:python.exe
+descendants terminated  : 1  288944
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759c\docs\pwml_recovery_sprint\evidence\g11\ORCH-759c\23-cpo-diag.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================

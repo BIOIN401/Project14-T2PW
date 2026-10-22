@@ -1,0 +1,33 @@
+quarantine ok: True | release: review_required
+required-field contract error codes: ['reaction_enzyme_must_be_protein_complex', 'reaction_enzyme_must_be_protein_complex']
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 4 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=['Glu 1-semialdehyde', 'Mg-Proto IX monomethyl ester', '3,8-divinyl-protochlorophyllide', 'geranylgeraniol']; species=['Arabidopsis thaliana']
+IR error codes: ['reaction_enzyme_must_be_protein_complex', 'reaction_enzyme_must_be_protein_complex', 'reaction_enzyme_must_be_protein_complex', 'reaction_enzyme_must_be_protein_complex']
+  contract error: {"code": "reaction_enzyme_must_be_protein_complex", "pointer": "/processes/reactions/21/enzymes/0", "message": "Reaction 'CPO reaction' enzyme/modifier 'CPO' must reference a protein_complex entity."}
+  contract error: {"code": "reaction_enzyme_must_be_protein_complex", "pointer": "/processes/reactions/21/modifiers/0", "message": "Reaction 'CPO reaction' enzyme/modifier 'CPO' must reference a protein_complex entity."}
+  /processes/reactions/21 'CPO reaction' enzyme={"entity": "CPO", "entity_type": "protein", "role": "catalyst", "confidence": 1.0, "provenance": "extracted", "evidence": "Coprogen III oxidase (CPO)"}
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 4f3307a10708c56b5706443e739d284c39a65972  [git, worktree dirty=True]
+label                   : r1b-export-probe
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/orch759c/export_probe.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759c
+root PID / process group: 393376 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 1.58 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  391908:python.exe
+descendants terminated  : 1  391908
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759c\docs\pwml_recovery_sprint\evidence\g11\ORCH-759c\51-r1b-export-probe.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================

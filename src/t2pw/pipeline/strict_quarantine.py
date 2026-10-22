@@ -439,6 +439,17 @@ _LOCATION_BUCKETS: Dict[str, str] = {
     "element_collection_locations": "element_collection",
 }
 
+#: element_locations bucket -> the entity buckets its rows locate. A complex is
+#: placed through ``protein_locations`` (``process_normalizer`` moves it there).
+#: Used by :func:`_prune_locations` to tell when closure removed a row's own-kind
+#: entity (ORCH-759c round 1).
+_LOCATION_ENTITY_BUCKETS: Dict[str, Tuple[str, ...]] = {
+    "compound_locations": ("compounds",),
+    "protein_locations": ("proteins", "protein_complexes"),
+    "nucleic_acid_locations": ("nucleic_acids",),
+    "element_collection_locations": ("element_collections",),
+}
+
 
 # ── Small shared helpers ────────────────────────────────────────────────────
 
@@ -1797,9 +1808,14 @@ def _complex_component_norms(payload: Mapping[str, Any], surviving_complex_norms
 
 def _prune_entities(
     payload: Dict[str, Any],
-    keep_norms: Set[str],
+    keep_norms: Set[str] | Mapping[str, Set[str]],
 ) -> List[Dict[str, Any]]:
-    """Drop graph entities nothing in ``keep_norms`` reaches. Returns removals."""
+    """Drop graph entities nothing in ``keep_norms`` reaches. Returns removals.
+
+    ``keep_norms`` is one set for every bucket, or a ``bucket -> set`` mapping in
+    which an omitted bucket keeps nothing. The closure loop passes the mapping
+    (ORCH-759c) so that a complex-component name keeps ``proteins`` rows only.
+    """
 
     entities = _safe_dict(payload.get("entities"))
     removed: List[Dict[str, Any]] = []
@@ -1807,6 +1823,7 @@ def _prune_entities(
         rows = entities.get(bucket)
         if not isinstance(rows, list):
             continue
+        bucket_keep = keep_norms.get(bucket, set()) if isinstance(keep_norms, Mapping) else keep_norms
         kept: List[Any] = []
         for row in rows:
             if not isinstance(row, dict) or not _row_name(row):
@@ -1827,7 +1844,7 @@ def _prune_entities(
                 continue
             name = _row_name(row)
             norms = {norm for norm in _entity_name_norms([row]) if norm}
-            if norms & keep_norms:
+            if norms & bucket_keep:
                 kept.append(row)
                 continue
             reason = (
@@ -1850,12 +1867,46 @@ def _prune_entities(
     return removed
 
 
-def _prune_locations(payload: Dict[str, Any], declared_norms: Set[str]) -> List[Dict[str, Any]]:
-    """Drop element_locations rows whose entity is gone."""
+def _own_kind_location_norms(payload: Mapping[str, Any]) -> Dict[str, Set[str]]:
+    """``element_locations`` bucket -> every name its own entity kinds declare."""
+
+    entities = _safe_dict(payload.get("entities"))
+    return {
+        bucket: {
+            norm
+            for entity_bucket in owners
+            for row in _safe_list(entities.get(entity_bucket))
+            if _row_name(row)
+            for norm in _entity_name_norms([row])
+            if norm
+        }
+        for bucket, owners in _LOCATION_ENTITY_BUCKETS.items()
+    }
+
+
+def _prune_locations(
+    payload: Dict[str, Any],
+    declared_norms: Set[str],
+    own_norms_at_input: Mapping[str, Set[str]],
+) -> List[Dict[str, Any]]:
+    """Drop element_locations rows whose entity is gone.
+
+    "Gone" has two cases. In the first, no kind declares the name any more. In
+    the second (ORCH-759c round 1), closure removed the row's OWN-kind entity
+    (``own_norms_at_input`` holds it, the payload no longer does) while another
+    kind still declares the name. Without the second case, a gene's ``nucleus``
+    row outlived the gene because a same-named protein kept the name in
+    ``declared_norms``, and the IR then placed the PROTEIN in the nucleus.
+
+    A row whose own kind never declared its name is a separate, pre-existing
+    misfiling (e.g. a complex's location in ``element_collection_locations``).
+    It is untouched here, exactly as before.
+    """
 
     element_locations = payload.get("element_locations")
     if not isinstance(element_locations, dict):
         return []
+    own_norms_now = _own_kind_location_norms(payload)
     removed: List[Dict[str, Any]] = []
     for bucket, name_field in _LOCATION_BUCKETS.items():
         rows = element_locations.get(bucket)
@@ -1867,7 +1918,11 @@ def _prune_locations(payload: Dict[str, Any], declared_norms: Set[str]) -> List[
                 kept.append(row)
                 continue
             name = _text(row.get(name_field) or row.get("entity"))
-            if name and _normalize(name) not in declared_norms:
+            norm = _normalize(name)
+            own_entity_removed = (
+                norm in own_norms_at_input.get(bucket, ()) and norm not in own_norms_now[bucket]
+            )
+            if name and (norm not in declared_norms or own_entity_removed):
                 removed.append(
                     {
                         "bucket": f"element_locations/{bucket}",
@@ -2252,9 +2307,12 @@ def _degree_zero_exports(
     exactly as :func:`_prune_entities` resolves it against ``keep_norms`` and
     :func:`_build_registry` indexes it.** Resolving on the primary name alone
     made this the only consumer in the module that could not see a synonym
-    reference, and ``referenced | exempt`` here is the same set the closure loop
-    calls ``keep_norms``. So on a converged run every row this saw had already
-    survived a fixpoint prune against the wider test: a row whose primary name
+    reference. ``referenced | exempt`` here is the set the closure loop keeps
+    ``proteins`` rows by. Every other bucket, complexes included, is kept by
+    ``referenced`` alone (ORCH-759c), so a complex that survived closure is
+    referenced and only a protein can owe its survival to ``exempt``. So on a
+    converged run every row this saw had already survived a fixpoint prune
+    against at least this test: a row whose primary name
     was absent from that set had matched under a SYNONYM, was therefore reached
     by a surviving process, and was reported degree-zero anyway. Two production
     legs refused export over the identical protein that way. Now the two agree,
@@ -2424,6 +2482,10 @@ def quarantine_and_close(
         if 0 <= index < len(rows):
             originals[(bucket, index)] = deepcopy(rows[index])
 
+    # Which names each location bucket's own kinds declared before closure removed
+    # anything, so _prune_locations can tell "own-kind entity removed" from "never
+    # declared in its own kind" (ORCH-759c round 1).
+    locations_own_kind_at_input = _own_kind_location_norms(working)
     iterations: List[Dict[str, Any]] = []
     all_removed_entities: List[Dict[str, Any]] = []
     all_removed_locations: List[Dict[str, Any]] = []
@@ -2451,11 +2513,22 @@ def quarantine_and_close(
             for row in _safe_list(_safe_dict(working.get("entities")).get("protein_complexes"))
             if isinstance(row, dict) and (_entity_name_norms([row]) & referenced)
         }
-        keep_norms = referenced | _complex_component_norms(working, surviving_complex_norms)
+        # ORCH-759c. A component names a PROTEIN: ``_component_name``, ``ir.py``
+        # (``proteins_by_name``) and ``writer.py`` (``_protein_complex_members``)
+        # resolve it against proteins and nothing else. So a component name keeps
+        # a ``proteins`` row only; every other row survives by reference alone.
+        # Applying it to every bucket kept a same-named GENE alive that no
+        # surviving process reached, and _entity_type_overlaps then refused the
+        # run (chlorophyll-strict: HEMA1, CAO, GUN4, PORB). That gate is unchanged.
+        component_norms = _complex_component_norms(working, surviving_complex_norms)
+        keep_norms = {
+            bucket: (referenced | component_norms) if bucket == "proteins" else referenced
+            for bucket in _GRAPH_ENTITY_BUCKETS
+        }
 
         removed_entities = _prune_entities(working, keep_norms)
         registry = _build_registry(working)
-        removed_locations = _prune_locations(working, set(registry.norms))
+        removed_locations = _prune_locations(working, set(registry.norms), locations_own_kind_at_input)
         newly_quarantined = _revalidate_surviving_processes(
             working, admissions, registry, strict_db=strict_db, iteration=iteration
         )

@@ -1,0 +1,76 @@
+final_mapped sha256 = 20c61fd792a7a7e085fa0e2da409ef3d9f4eec400300ff265673337a86431526 bytes 987256
+requested_context = {"pathway_name": "Chlorophyll biosynthesis in Arabidopsis thaliana", "likely_organism": "Arabidopsis thaliana", "key_compounds": ["5-aminolevulinic acid (ALA)", "porphobilinogen (PBG)", "protoporphyrin IX", "Mg-protoporphyrin IX", "protochlorophyllide", "chlorophyll a", "chlorophyll b", "heme"], "key_proteins": ["HEMA1 (GluTR)", "CHLH (Mg-chelatase subunit)", "PORB (protochlorophyllide oxidoreductase)", "HY5 (transcription factor)", "PIF1 (transcription factor)", "GLK1 (transcription factor)", "GUN4 (Mg-chelatase regulator)", "FC2 (ferrochelatase)", "CHL27 (Mg-Proto ME cyclase subunit)"], "likely_compartments": ["plastid", "chloroplast", "thylakoid membrane", "nucleus"], "main_subprocesses": ["5-aminolevulinic acid synthesis (C5 pathway)", "porphyrin macrocycle formation", "protoporphyrin IX synthesis", "Mg-chelation and Mg-branch", "light-dependent protochlorophyllide reduction", "chlorophyll a and b formation", "heme biosynthesis (Fe-branch)"], "relevant_sections": ["abstract", "introduction", "body", "discussion", "supplementary"], "pathway_relevance_score": 1.0, "document_type": "primary_research", "context_type": "single_pathway", "scope_status": "clear", "scope_clarity_score": 1.0, "selected_example": "", "candidate_examples": [], "excluded_examples": [], "warning": "", "preprocess_status": {"status": "ok", "recovered": false, "detail": "Stage 0 returned a JSON object.", "model": "deepseek/deepseek-v4-flash", "stage": "preprocessor", "attempts": 1, "finish_reason": "stop", "response_status": "ok", "terminal_reason": "", "request_hash": "sha256:1c51151e9cf4a23d", "response_hash": "sha256:2c9e4634dff98f78", "raw_chars": 1482, "attempt_log": [{"attempt": 1, "status": "ok", "content_chars": 1482, "finish_reason": "stop"}]}}
+admitted_payload_hash = sha256:b43803adf2a8f7c9
+decision_input_hash = sha256:d2ef87f2ae5da361
+resulting_payload_hash = sha256:e1f3bec8621d8069
+ok = False
+refusal_reasons = ['entity_type_overlap:4']
+counts = {'core_accepted': 19, 'auxiliary_accepted': 36, 'quarantined_unmapped_entity': 14, 'quarantined_out_of_scope': 0, 'quarantined_weak_evidence': 0, 'quarantined_broken_reference': 28, 'quarantined_disconnected': 0}
+release.status = diagnostic_only
+admissions n = 97 sha = ba2aaf41f34a16fe6c81631a9b16bf269de3d5b85191a9699b857c5944847ff4
+removed n = 37 sha = 458182341f2975feeee3dd3de78b7e4c2bc61d395981397ed1d2eb915c0011da
+  removed: compounds|12-oxo phytodienoic acid|unreferenced_after_quarantine
+  removed: compounds|Glu|unreferenced_after_quarantine
+  removed: compounds|JA|unreferenced_after_quarantine
+  removed: compounds|Mg porphyrin|unreferenced_after_quarantine
+  removed: compounds|Pchlide|unreferenced_after_quarantine
+  removed: compounds|chlorophyll|unreferenced_after_quarantine
+  removed: compounds|flagellin 22|unreferenced_after_quarantine
+  removed: compounds|heme b|unreferenced_after_quarantine
+  removed: compounds|heme|unreferenced_after_quarantine
+  removed: compounds|singlet oxygen|unreferenced_after_quarantine
+  removed: compounds|tRNAGlu|unreferenced_after_quarantine
+  removed: compounds|tetrapyrrole|unreferenced_after_quarantine
+  removed: nucleic_acids|ABI4|unreferenced_after_quarantine
+  removed: nucleic_acids|ALAD1 promoter|unreferenced_after_quarantine
+  removed: nucleic_acids|ALAD1/HEMB1|unreferenced_after_quarantine
+  removed: nucleic_acids|CAO promoter|unreferenced_after_quarantine
+  removed: nucleic_acids|CHL27 promoter|unreferenced_after_quarantine
+  removed: nucleic_acids|CHLH|unreferenced_after_quarantine
+  removed: nucleic_acids|FC1|unreferenced_after_quarantine
+  removed: nucleic_acids|FC2|unreferenced_after_quarantine
+  removed: nucleic_acids|GLK1|unreferenced_after_quarantine
+  removed: nucleic_acids|GUN4 promoter|unreferenced_after_quarantine
+  removed: nucleic_acids|HEMA2|unreferenced_after_quarantine
+  removed: nucleic_acids|PORA|unreferenced_after_quarantine
+  removed: nucleic_acids|PORC|unreferenced_after_quarantine
+  removed: nucleic_acids|tRNAGlu|unreferenced_after_quarantine
+  removed: proteins|ABI4|degree_zero_after_quarantine
+  removed: proteins|ALAD1/HEMB1|degree_zero_after_quarantine
+  removed: proteins|CHLH|degree_zero_after_quarantine
+  removed: proteins|DELLA|degree_zero_after_quarantine
+  removed: proteins|FAR1|degree_zero_after_quarantine
+  removed: proteins|FC1|degree_zero_after_quarantine
+  removed: proteins|GLK1|degree_zero_after_quarantine
+  removed: proteins|GUN1|degree_zero_after_quarantine
+  removed: proteins|HEMA2|degree_zero_after_quarantine
+  removed: proteins|PORA|degree_zero_after_quarantine
+  removed: proteins|PORC|degree_zero_after_quarantine
+surviving NA = ['ALAD1', 'ALAD1/HEMB1 promoter', 'CAO', 'CHLH promoter', 'GUN4', 'HEMA1', 'HEMA1 promoter', 'LHCB1.1', 'PORA promoter', 'PORB', 'PORB promoter', 'PORC promoter', 'RBCS']
+removed_entity_report keys = ['counts', 'removed_biological_states', 'removed_entities', 'removed_locations', 'schema_version', 'stage']
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 5d1ea64c9e3aabbaa386d0673bcea83dd1e1fb2a  [git, worktree dirty=False]
+label                   : base-facts
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/bt-orch759c/base_facts.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759c
+root PID / process group: 263532 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 1.98 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  265088:python.exe
+descendants terminated  : 1  265088
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759c\docs\pwml_recovery_sprint\evidence\g11\ORCH-759c\01-base-facts.json
+json report written     : True
+pre-existing (reported, NEVER killed): 14
+================================================

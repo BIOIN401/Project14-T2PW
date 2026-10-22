@@ -1,0 +1,43 @@
+######## final_mapped.json (fixture)
+  element_collections: []
+  entity protein_complexes: 'Mg-Proto ME cyclase complex' class='protein_complex' components=[{"name": "LCAA", "mapped_ids": {"uniprot": "Q9LVM3"}, "mapping_status": "mapped"}]
+  entity protein_complexes: 'Mg-chelatase complex' class='protein_complex' components=[{"name": "Unknown", "stoichiometry": 1, "pathbank_protein_id": 9659, "mapped_ids": {"uniprot": "Unknown", "pathbank_protein_id": 9659}}]
+  location protein_locations: {"protein": "Mg-Proto ME cyclase complex", "biological_state": "__auto_state__", "provenance_lineage": [{"stage": "gap_resolution", "origin": "inferred", "support": "unsupported", "paper_explicit": "not_evaluated", "reason": "gap resolution created this location row to place protein_complex 'Mg-Prot
+  location protein_locations: {"protein": "Mg-chelatase complex", "biological_state": "__auto_state__", "provenance_lineage": [{"stage": "gap_resolution", "origin": "inferred", "support": "unsupported", "paper_explicit": "not_evaluated", "reason": "gap resolution created this location row to place protein_complex 'Mg-chelatase c
+  location element_collection_locations: {"element_collection": "Mg-chelatase complex", "biological_state": "thylakoid membrane state", "evidence": "stabilizing the Mg-chelatase complex in membranes"}
+  location element_collection_locations: {"element_collection": "Mg-Proto ME cyclase complex", "biological_state": "thylakoid membrane state", "evidence": "Mg-Proto ME cyclase in plants is assumed to consist of three subunits including the membrane-bound subunits CHL27 and LCAA"}
+######## merged_payload.json
+  element_collections: []
+  entity protein_complexes: 'Mg-Proto ME cyclase complex' class='protein_complex' components=["CHL27", "LCAA"]
+  location element_collection_locations: {"element_collection": "Mg-chelatase complex", "biological_state": "thylakoid membrane state", "evidence": "stabilizing the Mg-chelatase complex in membranes"}
+  location element_collection_locations: {"element_collection": "Mg-Proto ME cyclase complex", "biological_state": "thylakoid membrane state", "evidence": "Mg-Proto ME cyclase in plants is assumed to consist of three subunits including the membrane-bound subunits CHL27 and LCAA"}
+######## stage1_payload.json
+  element_collections: []
+  entity protein_complexes: 'Mg-chelatase complex' class='protein_complex' components=["CHLD", "CHIH", "CHLI"]
+  entity protein_complexes: 'Mg-Proto ME cyclase complex' class='protein_complex' components=["CHL27", "LCAA"]
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ b16df73401392c3a31dc80ca40df172824b97397  [git, worktree dirty=False]
+label                   : r1-ec-locations
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/orch759c/r1_ec_locations.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759c
+root PID / process group: 355156 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 120 s
+duration                : 0.28 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  355168:python.exe
+descendants terminated  : 1  355168
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759c\docs\pwml_recovery_sprint\evidence\g11\ORCH-759c\25-r1-ec-locations.json
+json report written     : True
+pre-existing (reported, NEVER killed): 8
+================================================

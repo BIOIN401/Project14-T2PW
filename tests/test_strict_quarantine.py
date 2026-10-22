@@ -824,14 +824,20 @@ def test_an_ambiguous_entity_name_quarantines_the_processes_that_reference_it() 
 
 
 def test_an_entity_type_overlap_that_survives_closure_blocks_the_export() -> None:
-    """The surviving case: kept alive as a complex component, never referenced.
+    """The surviving case: both rows survive closure, so both are exported.
 
     Closure cannot pick which declaration is real, and guessing would be the
     silent edit this module exists to avoid -- so it reports and refuses.
+
+    ORCH-759c moved the vehicle, not the assertion. The compound used to survive
+    only because the complex component shares its name; a component names a
+    protein, so that no longer keeps a compound (``test_orch759c_*``). It now
+    survives the way a real overlap does: a surviving reaction reaches it,
+    through a synonym (``glycine``, which still resolves to the glycine row).
     """
 
     payload = _glutathione_payload()
-    payload["entities"]["compounds"].append({"name": "GCLC"})
+    payload["entities"]["compounds"].append({"name": "GCLC", "synonyms": ["glycine"]})
     payload["entities"]["proteins"].append(
         {"name": "GCLC", "species": "Homo sapiens", "mapped_ids": {"uniprot": "P48506"}}
     )
@@ -1062,8 +1068,11 @@ def _synonym_payload(*, synonyms: bool = True) -> dict:
     }
 
 
-def _closure_keep_norms(payload: dict, admissions: list) -> set:
-    """``keep_norms`` exactly as the closure loop builds it (``:2080-2086``)."""
+def _closure_keep_norms(payload: dict, admissions: list) -> dict:
+    """``keep_norms`` as the closure loop builds it: a per-bucket mapping in which
+    only ``proteins`` also takes the component names (ORCH-759c). One difference:
+    this recognises a surviving complex by its primary name only. The loop also
+    accepts a synonym (F-083), and these fixtures never use one on a complex."""
 
     referenced = SQ._referenced_entity_norms(payload, admissions)
     surviving_complex_norms = {
@@ -1071,7 +1080,11 @@ def _closure_keep_norms(payload: dict, admissions: list) -> set:
         for row in SQ._safe_list(SQ._safe_dict(payload.get("entities")).get("protein_complexes"))
         if isinstance(row, dict) and SQ._normalize(SQ._row_name(row)) in referenced
     }
-    return referenced | SQ._complex_component_norms(payload, surviving_complex_norms)
+    components = SQ._complex_component_norms(payload, surviving_complex_norms)
+    return {
+        bucket: (referenced | components) if bucket == "proteins" else referenced
+        for bucket in SQ._GRAPH_ENTITY_BUCKETS
+    }
 
 
 def _prune_to_fixpoint(payload: dict, admissions: list) -> list:
