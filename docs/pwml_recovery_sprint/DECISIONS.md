@@ -7185,3 +7185,30 @@ product owner's instruction to record the decisions made.
 3. Any Stage-6 entry point outside that file (CLI or batch) passes True as well, each one listed in the
    lane's RESULT.
 4. Chosen over a separate end-of-file hook (larger edit) and over shipping without the database-ID merge.
+
+---
+
+## D-105 — every LLM stage gets a large token budget; PWMLs at 1 draw today and the 3-draw fix run in parallel · 2026-10-21 · LOCKED
+
+**Decided by the product owner** (2026-10-21, in session, on `ORCH-755-RESULT.md` §§ 4-5: no strict PWML was written because
+downstream stages on small budgets returned empty `finish_reason=length` completions). Recorded by the Lead Orchestrator at the
+product owner's standing instruction to record the decisions made.
+
+1. **No small token budgets on any LLM stage** ("increase the token budget for all stages"). `.env`, done 2026-10-21:
+   `LLM_MAX_TOKENS`, `OPENROUTER_PREPROCESSOR_MAX_TOKENS` and `OPENROUTER_INFERENCE_MAX_TOKENS` = **128000**, the app's own
+   input ceiling. `OPENROUTER_EXTRACTION_MAX_TOKENS` stays at **64000**, measured: its fallback model `google/gemini-3.8-flash` caps
+   output at 65,536 (OpenRouter `/api/v1/models`, 2026-10-21), while `deepseek/deepseek-v4-flash` allows 943,717.
+2. **The hardcoded budgets in code are lifted to the same configurable large budget**, fallback-aware: no request may exceed the
+   max completion of any model it can fail over to. Sites: audit `streamlit_app.py:3849, 3881, 3934, 3951`; gap resolver `:4005`;
+   curator `:4240`; overwatch `:4400`; RAG prose `rag/extract.py:48`; any other LLM call site the lane finds.
+   **The protected `streamlit_app.py` may take those budget changes, and only those**: token-budget literals or expressions at LLM
+   call sites, read from configuration. No other byte. The fingerprint moves and is recorded at merge.
+3. **Both remediation paths are authorized and run in parallel**, managed by one sub-orchestrator agent:
+   - (a) the 7 strict legs re-run at **1 draw** with the raised `.env` budgets, so PWMLs exist for hand comparison now;
+   - (b) the code lane for § 2, reviewed and merged, then a **3-draw** re-run.
+
+   The product owner also asked why the PWML is not generated. A diagnosis of every no-PWML leg is part of the work.
+4. **Live LLM runs are authorized** for these re-runs. They run one bounded leg at a time with the heavy lock, and never alter the
+   primary checkout's `.env` draw count (a leg needing 1 draw runs from its own worktree with its own `.env`).
+5. Merging and pushing follow D-104 § 7. Each lane is independently reviewed, gates pass on the merged tip, then `sprint/pwml-recovery`
+   and `main` are pushed. The primary checkout's branch is not switched while ORCH-760 commits from it.
