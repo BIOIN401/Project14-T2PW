@@ -311,7 +311,7 @@ def run_final_completeness_audit(
     quarantined_reactions: Optional[List[Dict[str, Any]]] = None,
     output_path: Optional[Path] = None,
     temperature: float = 0.0,
-    max_tokens: int = 4000,
+    max_tokens: Optional[int] = None,
     enabled: bool = True,
 ) -> Dict[str, Any]:
     """Run an optional final completeness audit on the pipeline output.
@@ -340,7 +340,7 @@ def run_final_completeness_audit(
     temperature:
         LLM temperature for the audit call.
     max_tokens:
-        Maximum tokens for the LLM response.
+        Maximum tokens for the LLM response (default: ``LLM_MAX_TOKENS``).
     enabled:
         When ``False``, return a minimal skip report immediately.
 

@@ -294,7 +294,7 @@ def run_interactive_curator_round(
     qa_report: dict | None = None,
     mapping_misses: list[dict] | None = None,
     history: list[dict] | None = None,
-    max_tokens: int = 4096,
+    max_tokens: int | None = None,
 ) -> dict:
     from t2pw.llm.client import chat
 

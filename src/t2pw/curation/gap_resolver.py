@@ -295,7 +295,7 @@ def infer_entity_species(
     entity_name: str,
     use_llm: bool = True,
     temperature: float = 0.0,
-    max_tokens: int = 450,
+    max_tokens: Optional[int] = None,
 ) -> Dict[str, Any]:
     """Infer a species name for a protein/protein-complex gap.
 
@@ -373,7 +373,7 @@ def infer_entity_species(
                 {"role": "user", "content": json.dumps(prompt, ensure_ascii=False)},
             ],
             temperature=float(temperature),
-            max_tokens=int(max_tokens),
+            max_tokens=max_tokens,
             response_json=True,
             model_env_var="OPENROUTER_GAP_MODEL",
             stage_name="gap resolver",
@@ -794,7 +794,7 @@ def _llm_choose_location(
     candidates: List[Dict[str, Any]],
     use_llm: bool,
     temperature: float,
-    max_tokens: int,
+    max_tokens: Optional[int],
 ) -> Dict[str, Any]:
     if not candidates:
         return {"choice": "", "confidence": 0.0, "reason": "no_candidates", "source": "none"}
@@ -842,7 +842,7 @@ def _llm_choose_location(
                 {"role": "user", "content": json.dumps(prompt, ensure_ascii=False)},
             ],
             temperature=float(temperature),
-            max_tokens=int(max_tokens),
+            max_tokens=max_tokens,
             response_json=True,
             model_env_var="OPENROUTER_GAP_MODEL",
             stage_name="gap resolver",
@@ -1479,7 +1479,7 @@ def _llm_plan_stage3(
     *,
     use_llm: bool,
     temperature: float,
-    max_tokens: int,
+    max_tokens: Optional[int],
 ) -> Dict[str, Any]:
     if not issues or not use_llm:
         return {"source": "deterministic_default", "operations": _default_stage3_plan(issues), "raw": ""}
@@ -1521,7 +1521,7 @@ def _llm_plan_stage3(
                 {"role": "user", "content": json.dumps(prompt_obj, ensure_ascii=False)},
             ],
             temperature=float(temperature),
-            max_tokens=int(max_tokens),
+            max_tokens=max_tokens,
             response_json=True,
             model_env_var="OPENROUTER_GAP_MODEL",
             stage_name="gap resolver",
@@ -1612,7 +1612,7 @@ def _llm_choose_id_candidate(
     background_context: Optional[Dict[str, Any]],
     use_llm: bool,
     temperature: float,
-    max_tokens: int,
+    max_tokens: Optional[int],
 ) -> Dict[str, Any]:
     if not candidates:
         return {"selected_index": -1, "confidence": 0.0, "reason": "no_candidates", "source": "none"}
@@ -1645,7 +1645,7 @@ def _llm_choose_id_candidate(
                 {"role": "user", "content": json.dumps(prompt_obj, ensure_ascii=False)},
             ],
             temperature=float(temperature),
-            max_tokens=int(max_tokens),
+            max_tokens=max_tokens,
             response_json=True,
             model_env_var="OPENROUTER_GAP_MODEL",
             stage_name="gap resolver",
@@ -2562,7 +2562,7 @@ def _run_enrichment_agent(
     client: HttpClient,
     global_organism: str,
     llm_temperature: float,
-    llm_max_tokens: int,
+    llm_max_tokens: Optional[int],
     max_flags_per_type: int = 20,
     reaction_summary: Optional[str] = None,
     stage3_issues: Optional[List[Dict[str, Any]]] = None,
@@ -2800,7 +2800,7 @@ def resolve_gaps(
     db_config: Optional[Dict[str, Any]] = None,
     use_llm: bool = True,
     llm_temperature: float = 0.15,
-    llm_max_tokens: int = 900,
+    llm_max_tokens: Optional[int] = None,
     max_items: int = 80,
     enable_id_resolution: bool = True,
     qa_report: Optional[Dict[str, Any]] = None,
@@ -3055,7 +3055,7 @@ def resolve_gaps(
                     background_context=background_context,
                     use_llm=use_llm,
                     temperature=llm_temperature,
-                    max_tokens=max(500, int(llm_max_tokens)),
+                    max_tokens=llm_max_tokens,
                 )
                 op_exec["id_execution"] = id_exec
                 op_exec["id_candidates"] = id_candidates[:8]
@@ -3298,7 +3298,7 @@ def resolve_gaps(
             client=client,
             global_organism=global_organism,
             llm_temperature=llm_temperature,
-            llm_max_tokens=max(llm_max_tokens, 1200),
+            llm_max_tokens=llm_max_tokens,
             max_flags_per_type=max(1, max_items // 4),
             reaction_summary=reaction_summary,
             stage3_issues=stage3_agent_issues,
@@ -3385,7 +3385,7 @@ def run_gap_resolution(
     db_config: Optional[Dict[str, Any]] = None,
     use_llm: bool = True,
     llm_temperature: float = 0.15,
-    llm_max_tokens: int = 900,
+    llm_max_tokens: Optional[int] = None,
     max_items: int = 80,
     enable_id_resolution: bool = True,
     qa_report: Optional[Dict[str, Any]] = None,
@@ -3446,7 +3446,7 @@ def main() -> None:
         help="Skip Stage-3 ID resolution and only fill organism/location gaps.",
     )
     parser.add_argument("--temperature", type=float, default=0.15)
-    parser.add_argument("--max-tokens", type=int, default=900)
+    parser.add_argument("--max-tokens", type=int, default=None)
     parser.add_argument("--max-items", type=int, default=80)
     parser.add_argument("--locked-manifest", dest="locked_manifest_path", default=None)
     args = parser.parse_args()
@@ -3465,7 +3465,7 @@ def main() -> None:
         },
         use_llm=not args.no_llm,
         llm_temperature=float(args.temperature),
-        llm_max_tokens=int(args.max_tokens),
+        llm_max_tokens=args.max_tokens,
         max_items=int(args.max_items),
         enable_id_resolution=not args.skip_id_resolution,
         locked_manifest_path=Path(args.locked_manifest_path) if args.locked_manifest_path else None,

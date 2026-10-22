@@ -566,12 +566,75 @@ def _resolve_model(
 
 
 # -----------------------------------------------------------------------------
+# Completion-token budget (D-105, ORCH-757)
+# -----------------------------------------------------------------------------
+#: Small per-site budgets (300 to 12,000) were spent by a reasoning model on
+#: reasoning, leaving empty ``finish_reason=length`` completions (ORCH-755 § 4).
+#: Every call now asks for :func:`configured_max_tokens`, clamped per request.
+DEFAULT_MAX_TOKENS = 128_000  # the app's own input ceiling (D-105 § 1)
+
+#: Max completion tokens per model, OpenRouter ``/api/v1/models``, 2026-10-21.
+MODEL_MAX_COMPLETION_TOKENS: Dict[str, int] = {
+    "google/gemini-3.8-flash": 65_536,
+    "deepseek/deepseek-v4-flash": 943_717,
+}
+#: A model not in the table gets the tightest cap in it (open question, ORCH-757-RESULT).
+UNLISTED_MODEL_MAX_COMPLETION_TOKENS = min(MODEL_MAX_COMPLETION_TOKENS.values())
+
+#: The only failover in the code: the Stage-1 ladder's rung 3 swaps the extraction
+#: model for ``extraction_ladder.ALTERNATE_MODEL_ENV_VAR`` at the same budget.
+FAILOVER_MODEL_ENV_VARS: Dict[str, str] = {
+    "OPENROUTER_EXTRACTION_MODEL": "OPENROUTER_EXTRACTION_FALLBACK_MODEL",
+}
+
+
+def configured_max_tokens(stage_env_var: Optional[str] = None) -> int:
+    """``stage_env_var``, else ``LLM_MAX_TOKENS``, else 128,000; a bad value -> 128,000."""
+    raw_value = (
+        (os.getenv(stage_env_var) if stage_env_var else None)
+        or os.getenv("LLM_MAX_TOKENS")
+        or str(DEFAULT_MAX_TOKENS)
+    )
+    try:
+        value = int(raw_value)
+    except (TypeError, ValueError):
+        logger.warning("Invalid token budget %r; using %d.", raw_value, DEFAULT_MAX_TOKENS)
+        return DEFAULT_MAX_TOKENS
+    if value <= 0:
+        logger.warning("Token budget must be positive (got %d); using %d.", value, DEFAULT_MAX_TOKENS)
+        return DEFAULT_MAX_TOKENS
+    return value
+
+
+def request_max_tokens(
+    max_tokens: Optional[int],
+    *,
+    model: str,
+    model_env_var: Optional[str] = None,
+) -> int:
+    """What one request may ask for: ``max_tokens`` (``None`` = configured), clamped
+    to the smallest max completion among ``model`` and every model it can fail over to."""
+    requested = configured_max_tokens() if max_tokens is None else int(max_tokens)
+    models = [model]
+    fallback_env_var = FAILOVER_MODEL_ENV_VARS.get(model_env_var or "")
+    if fallback_env_var and (os.getenv(fallback_env_var) or "").strip():
+        models.append(_resolve_model(model_env_var=fallback_env_var))
+    granted = min(
+        [requested]
+        + [MODEL_MAX_COMPLETION_TOKENS.get(m, UNLISTED_MODEL_MAX_COMPLETION_TOKENS) for m in models]
+    )
+    if granted < requested:
+        logger.info("max_tokens %d clamped to %d: the max completion of %s.", requested, granted, models)
+    return granted
+
+
+# -----------------------------------------------------------------------------
 # Chat function (NOW supports response_json=True)
 # -----------------------------------------------------------------------------
 def chat(
     messages: List[Dict[str, Any]],
     temperature: float = 0.0,
-    max_tokens: int = 800,
+    max_tokens: Optional[int] = None,
     response_json: bool = False,
     json_schema: Optional[Dict[str, Any]] = None,
     model_override: Optional[str] = None,
@@ -603,7 +666,7 @@ def chat(
 def chat_detailed(
     messages: List[Dict[str, Any]],
     temperature: float = 0.0,
-    max_tokens: int = 800,
+    max_tokens: Optional[int] = None,
     response_json: bool = False,
     json_schema: Optional[Dict[str, Any]] = None,
     model_override: Optional[str] = None,
@@ -654,7 +717,7 @@ def chat_detailed(
         "model": resolved_model,
         "messages": messages,
         "temperature": temperature,
-        "max_tokens": max_tokens,
+        "max_tokens": request_max_tokens(max_tokens, model=resolved_model, model_env_var=model_env_var),
         "timeout": _timeout(request_timeout),
     }
 
@@ -839,7 +902,7 @@ def chat_with_tools(
     tools: List[Dict[str, Any]],
     tool_executor: Callable[[str, Dict[str, Any]], Any],
     temperature: float = 0.0,
-    max_tokens: int = 1200,
+    max_tokens: Optional[int] = None,
     max_tool_rounds: int = 8,
     model_override: Optional[str] = None,
     model_env_var: Optional[str] = None,
@@ -871,6 +934,7 @@ def chat_with_tools(
         model_env_var=model_env_var,
     )
     logger.info("LLM model for %s: %s", stage_name or "chat_with_tools", resolved_model)
+    max_tokens = request_max_tokens(max_tokens, model=resolved_model, model_env_var=model_env_var)
 
     working_messages: List[Dict[str, Any]] = list(messages)
 

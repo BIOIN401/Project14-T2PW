@@ -171,7 +171,7 @@ def _call_repair_llm(
     user_prompt: str,
     *,
     temperature: float = 0.0,
-    max_tokens: int = 4000,
+    max_tokens: Optional[int] = None,
 ) -> str:
     """Call the LLM using the inference model for repair passes."""
     from t2pw.llm.client import chat
@@ -236,7 +236,7 @@ def _run_missing_entity_repair(
     *,
     source_text: str = "",
     temperature: float = 0.0,
-    max_tokens: int = 4000,
+    max_tokens: Optional[int] = None,
     output_dir: Optional[Path] = None,
 ) -> Dict[str, Any]:
     """Pass 1: Find reaction inputs/outputs/modifiers that lack matching declared entities.
@@ -403,7 +403,7 @@ def _run_modifier_enzyme_repair(
     *,
     source_text: str = "",
     temperature: float = 0.0,
-    max_tokens: int = 4000,
+    max_tokens: Optional[int] = None,
     output_dir: Optional[Path] = None,
 ) -> Dict[str, Any]:
     """Pass 2: Add catalyst/enzyme links for reactions missing them."""
@@ -539,7 +539,7 @@ def _run_cofactor_repair(
     *,
     source_text: str = "",
     temperature: float = 0.0,
-    max_tokens: int = 4000,
+    max_tokens: Optional[int] = None,
     output_dir: Optional[Path] = None,
 ) -> Dict[str, Any]:
     """Pass 3: Add missing standard cofactors when explicitly stated or biologically standard."""
@@ -655,7 +655,7 @@ def _run_compartment_state_repair(
     *,
     source_text: str = "",
     temperature: float = 0.0,
-    max_tokens: int = 4000,
+    max_tokens: Optional[int] = None,
     output_dir: Optional[Path] = None,
 ) -> Dict[str, Any]:
     """Pass 4: Fill missing biological state/compartment fields."""
@@ -802,7 +802,7 @@ def _run_alias_repair(
     *,
     source_text: str = "",
     temperature: float = 0.0,
-    max_tokens: int = 4000,
+    max_tokens: Optional[int] = None,
     output_dir: Optional[Path] = None,
 ) -> Dict[str, Any]:
     """Pass 5: Add SAME_AS alias links between entities that refer to the same thing."""
@@ -917,7 +917,7 @@ def run_focused_repair_passes(
     source_text: str = "",
     output_dir: Optional[Path] = None,
     temperature: float = 0.0,
-    max_tokens: int = 4000,
+    max_tokens: Optional[int] = None,
     enabled_passes: Optional[List[str]] = None,
 ) -> Tuple[Dict[str, Any], Dict[str, Any]]:
     """
@@ -935,8 +935,8 @@ def run_focused_repair_passes(
         Directory for repair artifacts.
     temperature : float
         LLM temperature.
-    max_tokens : int
-        LLM max tokens per call.
+    max_tokens : int, optional
+        LLM max tokens per call (default: ``LLM_MAX_TOKENS``).
     enabled_passes : list[str], optional
         Which passes to run. Defaults to all. Each name must be one of
         ALL_PASS_NAMES.
