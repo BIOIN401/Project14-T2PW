@@ -51,11 +51,19 @@ CHEBI = {"L-glutamate": "16015", "L-cysteine": "17561", "gamma-glutamylcysteine"
 def _e1_payload() -> Dict[str, Any]:
     """The boundary suite's core payload plus the E1 shape: a second row for GSS, the one
     component of a generated wrapper that also catalyses glutathione synthesis. No accession
-    is on the component yet, so Stage 2B and Stage 3 leave it named after its own row."""
+    is on the component yet, so Stage 2B and Stage 3 leave it named after its own row.
+
+    The row carries its record's names as synonyms, as ``enterobactin synthase`` did
+    (``entF``, ``Enterobactin synthase component F``). That is what kept the orphan alive on
+    the leg: the quarantine pruner resolves a row by name UNION synonyms and finds
+    ``Glutathione synthetase`` among the surviving complex's components, while the final gate
+    tests the name alone. Without such a synonym the pruner deletes the orphan at base and
+    the run passes -- an earlier version of this test did exactly that."""
 
     payload = _core_payload()
     payload["entities"]["proteins"].append(
-        {"name": DUPLICATE, "species": "Homo sapiens", "mapped_ids": {"uniprot": "P48637"}})
+        {"name": DUPLICATE, "species": "Homo sapiens", "mapped_ids": {"uniprot": "P48637"},
+         "synonyms": ["Glutathione synthetase", "GSS"]})
     payload["entities"]["protein_complexes"].append({
         "name": WRAPPER, "class": "protein_complex", "generated": True,
         "generation_reason": "single_protein_pathwhiz_wrapper", "species": "Homo sapiens",
