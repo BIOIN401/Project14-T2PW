@@ -24,12 +24,16 @@ prompt carries the record. It cannot pass on base: there the run dies at the emp
 
 PRESERVATION (``test_still_*``): pass on base and at the tip. Invalid JSON on every
 attempt, a ``length`` stop, an empty draw mixed with a broken one, every chunk empty, and
-the unchunked path all fail exactly as before.
+the unchunked path all fail exactly as before. Repair round 1 added three that the round-0
+tip ``a9179eb8`` failed: a ``content_filter`` stop, a retry refused as ``budget_exhausted``
+by a live leg deadline (both stay fatal), and a failed all-empty run leaving no record of
+an "accepted" empty chunk.
 """
 
 from __future__ import annotations
 
 import json
+import math
 import sys
 from pathlib import Path
 from typing import Any, Dict, List, Sequence, Tuple
@@ -55,6 +59,8 @@ from t2pw.pipeline.pipeline import (  # noqa: E402
 )
 from t2pw.pipeline.reaction_lock_manifest import MANIFEST_FILENAME, write_stage1_lock_artifacts  # noqa: E402
 from t2pw.pipeline.stage_one_ensemble import ENV_VAR, REPORT_NAME  # noqa: E402
+from t2pw.pipeline.deadline import BUDGET_EXHAUSTED, LegDeadline, price_llm_call  # noqa: E402
+from t2pw.pipeline.extraction_ladder import activate_leg_deadline, deactivate_leg_deadline  # noqa: E402
 
 SENTENCE = {
     "MARKA": "Glucose is phosphorylated MARKA here.",
@@ -95,6 +101,8 @@ class Transport:
     def __init__(self, script: Dict[str, Sequence[Tuple[str, str]]]) -> None:
         self.script = {marker: list(replies) for marker, replies in script.items()}
         self.calls: List[Tuple[str, str, str]] = []
+        #: Called with the marker after each call is recorded (the budget test's clock).
+        self.on_call: Any = None
 
     def __call__(self, messages: Any, **_kwargs: Any) -> CompletionResult:
         user = str(messages[-1]["content"])
@@ -102,6 +110,8 @@ class Transport:
         marker = next((m for m in SENTENCE if m in user), "")
         served = sum(1 for call in self.calls if call[0] == marker)
         self.calls.append((marker, system, user))
+        if self.on_call is not None:
+            self.on_call(marker)
         replies = self.script.get(marker) or [("still not json", STOP)]
         text, finish = replies[min(served, len(replies) - 1)]
         return CompletionResult(
@@ -186,9 +196,10 @@ def test_g9_an_empty_chunk_contributes_nothing_and_the_paper_goes_on(
 
     if draws > 1:
         entries = json.loads((tmp_path / REPORT_NAME).read_text(encoding="utf-8"))
-        assert [e["draws_succeeded"] for e in entries] == [3, 0, 3]
-        assert entries[1]["chunk_id"] == 2 and entries[1]["empty_chunk"] is True
-        assert [d["draw"] for d in entries[1]["failed_draws"]] == [1, 2, 3]
+        # Repair round 1: written once the run is known not to fail, so after the other chunks'.
+        assert [e["draws_succeeded"] for e in entries] == [3, 3, 0]
+        assert entries[2]["chunk_id"] == 2 and entries[2]["empty_chunk"] is True
+        assert [d["draw"] for d in entries[2]["failed_draws"]] == [1, 2, 3]
         assert "0 of 3 succeeded" in (tmp_path / REPORT_NAME).with_suffix(".txt").read_text(encoding="utf-8")
     else:
         assert not (tmp_path / REPORT_NAME).exists()
@@ -271,7 +282,10 @@ def test_llm_inputs_the_lock_manifest_gains_nothing_from_the_empty_chunk(
     [("", LENGTH)],
     [(EMPTY_1, LENGTH)],  # valid and empty, but cut off: not an answer
     [(EMPTY_1, STOP), (NOT_JSON, STOP)],
-], ids=["invalid-json", "empty-length", "empty-json-at-length", "empty-then-invalid"])
+    # Repair round 1 (B1b): the client returns a content_filter reply as a partial answer.
+    [(EMPTY_1, "content_filter")],
+], ids=["invalid-json", "empty-length", "empty-json-at-length", "empty-then-invalid",
+        "empty-json-content-filter"])
 @DRAWS
 def test_still_fatal_when_any_attempt_broke(bad: List[Tuple[str, str]], draws: int,
                                              monkeypatch: pytest.MonkeyPatch) -> None:
@@ -283,12 +297,61 @@ def test_still_fatal_when_any_attempt_broke(bad: List[Tuple[str, str]], draws: i
     with pytest.raises(PipelineFailure) as excinfo:
         _stage_one(_text("MARKA", "MARKB", "MARKC"))
 
-    failure = excinfo.value
+    _assert_chunk_2_fatal_as_at_base(excinfo.value, transport)
+
+
+def _assert_chunk_2_fatal_as_at_base(failure: PipelineFailure, transport: Transport) -> None:
     assert failure.stage == "extraction chunk 2"
     assert str(failure) == "Chunk 2 failed to produce valid JSON."
     assert isinstance(failure.__cause__, PipelineFailure)
     assert failure.attempts is failure.__cause__.attempts
     assert transport.count("MARKC") == 0
+
+
+@DRAWS
+def test_still_fatal_when_the_budget_refused_the_retry(draws: int, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Repair round 1 (B1a). A live leg deadline admits the last draw's first call on chunk 2,
+    which says nothing, then refuses its retry as ``budget_exhausted``. That chunk never got
+    its retry, so its silence is not an answer."""
+
+    monkeypatch.setenv(ENV_VAR, str(draws))
+    price = price_llm_call()
+    assert math.isfinite(price)
+    now = [0.0]
+    transport = _install(monkeypatch, {"MARKA": [(REPLY_A, STOP)], "MARKB": EMPTY_DRAW * draws,
+                                       "MARKC": [(REPLY_C, STOP)]})
+
+    def tick(marker: str) -> None:
+        if marker == "MARKB" and transport.count("MARKB") == 2 * draws - 1:
+            now[0] += 20.0  # the leg had price + 10 s: now one more call does not fit
+
+    transport.on_call = tick
+    token = activate_leg_deadline(LegDeadline(price + 10.0, reserve_seconds=0.0, clock=lambda: now[0]))
+    try:
+        with pytest.raises(PipelineFailure) as excinfo:
+            _stage_one(_text("MARKA", "MARKB", "MARKC"))
+    finally:
+        deactivate_leg_deadline(token)
+
+    assert excinfo.value.__cause__.terminal_reason == BUDGET_EXHAUSTED  # the case is the one meant
+    assert transport.count("MARKB") == 2 * draws - 1
+    _assert_chunk_2_fatal_as_at_base(excinfo.value, transport)
+
+
+@DRAWS
+def test_still_no_accepted_record_when_every_chunk_is_empty(
+        draws: int, monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    """Repair round 1 (reviewer note 1). A run that fails leaves no chunk recorded as accepted."""
+
+    monkeypatch.setenv(ENV_VAR, str(draws))
+    _install(monkeypatch, {m: EMPTY_DRAW * draws for m in SENTENCE})
+    recorder = diag.activate(run_id="orch758b", artifact_dir=tmp_path)
+
+    with pytest.raises(PipelineFailure):
+        _stage_one(_text("MARKA", "MARKB", "MARKC"))
+
+    assert [b for b in recorder.boundaries if b["boundary"] == "stage1_empty_chunk"] == []
+    assert not (tmp_path / REPORT_NAME).exists()
 
 
 @DRAWS
