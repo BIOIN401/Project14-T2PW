@@ -4686,22 +4686,38 @@ def _uniprot_taxon_scope(client: HttpClient, taxonomy_id: str, cache: Optional["
     * anything below species (strain, serotype, ...): ``organism_id:<it>`` first, then the
       bound -- the subspecies in its lineage, else the species. Without a known subspecies
       the climbed tier also drops subspecies-qualified records (:func:`_outside_unknown_subspecies`).
-    * genus or above, or an ambiguous lineage: None, and the caller keeps its free-text query.
+    * genus or above (no species in the lineage): None, and the caller keeps its free-text query.
+    * no taxonomy answer, or a lineage naming several species or subspecies (repair round 1,
+      B1): a DEGRADED scope -- one tier, ``taxonomy_id:<requested>`` itself, no climb, so
+      nothing borrowed and nothing from outside the requested taxon. It is marked
+      ``degraded`` and never memoized, so the next lookup asks the service again. A taxonomy
+      id never falls back to a free-text query.
     """
 
-    record = _uniprot_taxon_record(client, taxonomy_id, cache)
-    if not record:
+    if not str(taxonomy_id or "").strip().isdigit():
         return None
-    rank = record["rank"]
-    if rank in ("species", "subspecies"):
-        bound = record
-    else:
+    record = _uniprot_taxon_record(client, taxonomy_id, cache)
+    rank = str(record.get("rank") or "")
+    bound: Optional[Dict[str, Any]] = record if rank in ("species", "subspecies") else None
+    if record and bound is None:
         lineage = _safe_list(record.get("lineage"))
         subspecies = [row for row in lineage if row.get("rank") == "subspecies"]
         species = [row for row in lineage if row.get("rank") == "species"]
-        if len(subspecies) > 1 or len(species) != 1:
+        if not subspecies and not species:
             return None
-        bound = (subspecies or species)[0]
+        if len(subspecies) <= 1 and len(species) == 1:
+            bound = (subspecies or species)[0]
+    if bound is None:
+        return {
+            "requested_taxonomy_id": str(taxonomy_id),
+            "requested_name": str(record.get("scientificName") or ""),
+            "requested_rank": rank or "unknown",
+            "bound_taxonomy_id": str(taxonomy_id),
+            "bound_name": "",  # unknown: the caller judges against its own organism text
+            "bound_rank": rank or "unknown",
+            "tiers": [{"clause": f"taxonomy_id:{taxonomy_id}", "level": "requested"}],
+            "degraded": True,
+        }
     tiers: List[Dict[str, str]] = []
     if bound is not record:
         tiers.append({"clause": f"organism_id:{record['taxonId']}", "level": "strain"})
@@ -4720,20 +4736,17 @@ def _uniprot_taxon_scope(client: HttpClient, taxonomy_id: str, cache: Optional["
 def _memo_taxon_scope(context: Optional[Dict[str, Any]], client: HttpClient, cache: Optional["MappingCache"]) -> Optional[Dict[str, Any]]:
     """The scope for ``context['taxonomy_id']``, looked up at most once per mapping pass."""
 
-    # ponytail: no taxonomy answer means no scope, and the caller falls back to the old
-    # free-text query (base behaviour, which can cross a subspecies on a species-level
-    # name). The answer is cached per taxon after its first success; a degraded
-    # ``taxonomy_id:<requested>`` scope would hold D-108 through that failure too.
     ctx = _safe_dict(context)
     taxonomy_id = str(ctx.get("taxonomy_id") or "").strip()
     if not taxonomy_id:
         return None
     memo = ctx.get("taxon_memo")
-    if not isinstance(memo, dict):
-        return _uniprot_taxon_scope(client, taxonomy_id, cache)
-    if taxonomy_id not in memo:
-        memo[taxonomy_id] = _uniprot_taxon_scope(client, taxonomy_id, cache)
-    return memo[taxonomy_id]
+    if isinstance(memo, dict) and taxonomy_id in memo:
+        return memo[taxonomy_id]
+    scope = _uniprot_taxon_scope(client, taxonomy_id, cache)
+    if isinstance(memo, dict) and not _safe_dict(scope).get("degraded"):
+        memo[taxonomy_id] = scope  # a failure is asked again, never remembered
+    return scope
 
 
 def _outside_unknown_subspecies(candidate: Dict[str, Any], scope: Dict[str, Any]) -> bool:
@@ -4862,17 +4875,26 @@ def _map_protein_uniprot_in_scope(
     *,
     cache: Optional["MappingCache"],
     scope: Dict[str, Any],
+    organism: str = "",
 ) -> Dict[str, Any]:
-    """FX1: the strain tier, then FX5, then the bound -- the first that yields a candidate."""
+    """FX1: the strain tier, then FX5, then the bound -- the first that yields a candidate.
 
-    organism = str(scope["bound_name"])
+    ``organism`` is judged against only when the scope carries no bound name (a degraded scope).
+    """
+
+    organism = str(scope["bound_name"] or organism)
     tiers = _safe_list(scope.get("tiers"))
+    # D-108 without a known subspecies: a climbed tier, FX5 included, takes no subspecies record.
+    unknown_subspecies = scope.get("bound_rank") != "subspecies" and scope.get("requested_rank") not in ("species", "subspecies")
     queries_tried: List[str] = []
     result: Dict[str, Any] = {}
     for position, tier in enumerate(tiers):
         climbed = position > 0
         if climbed:
-            exact = _exact_sequence_candidates(client, name, scope, queries_tried)
+            exact = [
+                row for row in _exact_sequence_candidates(client, name, scope, queries_tried)
+                if not (unknown_subspecies and _outside_unknown_subspecies(row, scope))
+            ]
             if exact:
                 accepted = _uniprot_result_from_candidates(
                     exact, organism, queries_tried=list(queries_tried), literature_aliases=[]
@@ -4892,7 +4914,7 @@ def _map_protein_uniprot_in_scope(
         tier_queries = _safe_list(result.get("queries_tried")) or str(result.get("query") or "").split(" | ")
         queries_tried.extend(query for query in map(str, tier_queries) if query.strip())
         candidates = [row for row in _safe_list(result.get("candidates")) if isinstance(row, dict)]
-        if climbed and scope.get("bound_rank") != "subspecies" and scope.get("requested_rank") not in ("species", "subspecies"):
+        if climbed and unknown_subspecies:
             kept = [row for row in candidates if not _outside_unknown_subspecies(row, scope)]
             if len(kept) != len(candidates):
                 result = _uniprot_result_from_candidates(
@@ -5005,7 +5027,7 @@ def map_protein_uniprot(
     """
 
     if taxon_scope and not organism_clause:
-        return _map_protein_uniprot_in_scope(client, name, aliases, cache=cache, scope=taxon_scope)
+        return _map_protein_uniprot_in_scope(client, name, aliases, cache=cache, scope=taxon_scope, organism=organism)
     alias_entries = _protein_alias_entries(name, None)
     for entry in aliases or []:
         alias = _canonical_name(str(_safe_dict(entry).get("alias") or ""))
@@ -5722,7 +5744,11 @@ def _borrowed_protein_identities(mapped: Dict[str, Any], taxon_memo: Dict[str, A
     """
 
     records: List[Dict[str, Any]] = []
-    for idx, row in enumerate(_safe_list(_safe_dict(mapped.get("entities")).get("proteins"))):
+    entities = _safe_dict(mapped.get("entities"))
+    rows = [("proteins", idx, row) for idx, row in enumerate(_safe_list(entities.get("proteins")))]
+    # Repair round 1, B3: a compound row the compound loop resolved on the protein route.
+    rows += [("compounds", idx, row) for idx, row in enumerate(_safe_list(entities.get("compounds")))]
+    for bucket, idx, row in rows:
         meta = _safe_dict(_safe_dict(row).get("mapping_meta"))
         requested = str(_safe_dict(meta.get("query")).get("taxonomy_id") or "").strip()
         scope = _safe_dict(taxon_memo.get(requested)) if requested else {}
@@ -5742,7 +5768,7 @@ def _borrowed_protein_identities(mapped: Dict[str, Any], taxon_memo: Dict[str, A
         strain = _strain_label(source_organism)
         records.append(
             {
-                "json_pointer": f"/entities/proteins/{idx}",
+                "json_pointer": f"/entities/{bucket}/{idx}",
                 "name": str(row.get("name") or ""),
                 "uniprot": accession,
                 "source_strain": strain,
@@ -7269,7 +7295,7 @@ def _map_protein_with_strategy(
         if scope is not None:
             # FX1. A scoped answer is keyed by the scope, and no free-text entry is read
             # back: those were answers to a different question (ORCH-761 § 4.1 item 5).
-            organism = str(scope["bound_name"])
+            organism = str(scope["bound_name"] or organism)
             api_key = (
                 f"api-v9::{_normalize_name(name)}::tax:{scope['requested_taxonomy_id']}>{scope['bound_taxonomy_id']}"
                 f"::{pathbank_id}::{json.dumps(row_ids, sort_keys=True)}::{alias_key}"
@@ -11404,7 +11430,7 @@ def map_payload(
             _p_context = _identity_context(_p_row, _p_name, _p_org)
             _p_scope = _memo_taxon_scope(_p_context, client, cache) if _p_context["taxonomy_id"] else None
             if _p_scope is not None:
-                _p_org = str(_p_scope["bound_name"])
+                _p_org = str(_p_scope["bound_name"] or _p_org)
             try:
                 # Consult the run's own cache before issuing work. This leg is
                 # the LAST place an unresolved protein is asked about, so the
@@ -11708,6 +11734,11 @@ def map_payload(
 
         compound.setdefault("mapping_meta", {})
         compound["mapping_meta"]["query"] = {"name": name}
+        compound_scope = _safe_dict(result.get("identity_scope"))
+        if compound_scope:
+            # Repair round 1, B3: a rerouted compound borrows like a protein, so it records
+            # the taxon it was resolved for and is flagged like one.
+            compound["mapping_meta"]["query"]["taxonomy_id"] = str(compound_scope.get("requested_taxonomy_id") or "")
         compound["mapping_meta"]["route"] = route["route"]
         compound["mapping_meta"]["route_reason"] = route["reason"]
         compound["mapping_meta"]["providers"] = [provider]

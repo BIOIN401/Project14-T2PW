@@ -614,6 +614,15 @@ def build_report(
             (payload_source if name == FINAL_MAPPED_FILENAME else name for name in artifacts), key=str.lower
         ),
         "reactions": reactions,
+        # Repair round 1, B2: every borrowed identity, whatever the protein takes part in
+        # (a reaction, an interaction, a transport, or nothing), not only reaction lines.
+        "borrowed_identities": [
+            f"{_text(row.get('name'))} ({_text(row.get('json_pointer'))}): {_text(row.get('flag'))}"
+            f" -- record of {_show(row.get('source_organism'))} (taxon {_show(row.get('source_taxonomy_id'))}),"
+            f" requested {_show(row.get('requested_organism'))} (taxon {_show(row.get('requested_taxonomy_id'))}),"
+            f" route {_show(row.get('route'))}"
+            for row in map(_dict, _list(payload.get(BORROWED_PROTEIN_IDENTITIES_KEY)))
+        ],
         "interactions": _interactions(
             payload,
             artifacts.get(PWML_IR_FILENAME),
@@ -715,6 +724,10 @@ def interaction_lines(item: Mapping[str, Any]) -> List[str]:
     ]
 
 
+def borrowed_identities_title(report: Mapping[str, Any]) -> str:
+    return f"BORROWED IDENTITIES ({len(report['borrowed_identities'])}) -- D-108: a UniProt record of another strain"
+
+
 def interactions_title(report: Mapping[str, Any]) -> str:
     return f"INTERACTIONS ({len(report['interactions'])}) -- PWML verdicts read from: {report['ir_source']}"
 
@@ -766,6 +779,8 @@ def render_text(report: Mapping[str, Any]) -> str:
         lines += [*interaction_lines(item), ""]
     if not report["interactions"]:
         lines += _absent(None if report["payload_source"] == NOT_RECORDED else [])
+    if report["borrowed_identities"]:  # absent section when nothing is borrowed: other reports keep their bytes
+        lines += [*_section(borrowed_identities_title(report)), *(f"- {line}" for line in report["borrowed_identities"]), ""]
     quarantined = report["quarantined"]
     lines += [*_section(quarantined_title(report)), *report["quarantine_sources"], ""]
     for number, row in enumerate(quarantined or [], 1):
