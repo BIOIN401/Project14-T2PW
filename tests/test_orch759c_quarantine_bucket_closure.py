@@ -137,11 +137,13 @@ def test_g9_r1_leg_no_location_row_moves_to_an_entity_of_another_kind() -> None:
     ``_prune_locations`` checked one name list shared by every bucket, and the
     same-named PROTEIN kept each name in it. ``ir.py``'s ``resolve_entity`` then
     placed proteins CAO, HEMA1, GUN4 and PORB in the nucleus with no issue raised,
-    which is an invented location. Each location bucket is now checked against the
-    entity buckets it locates. The same rule also drops the leg's two
-    ``element_collection_locations`` rows that name protein COMPLEXES. They were
-    misfiled at Stage 1, and no element collection was ever declared
-    (``evidence/orch759c/25-r1-ec-locations.log``).
+    which is an invented location. A location row now goes with its own-kind
+    entity when closure removes it.
+
+    The leg's only remaining cross-kind rows are two that base had too: complex
+    locations filed under ``element_collection_locations``, where no element
+    collection was ever declared (``evidence/orch759c/25-r1-ec-locations.log``). This
+    lane leaves them exactly as base did; RESULT, correction round 1, says why.
     """
 
     payload, context = _leg()
@@ -151,22 +153,24 @@ def test_g9_r1_leg_no_location_row_moves_to_an_entity_of_another_kind() -> None:
         f"{row['bucket']}|{row['name']}|{row['reason']}|{row['biological_state']}"
         for row in result.removed_entity_report["removed_locations"]
     ]
-    new = sorted(
-        [f"element_locations/nucleic_acid_locations|{name}|location_entity_kind_mismatch|nucleus state" for name in ORPHAN_GENES]
-        + [
-            f"element_locations/element_collection_locations|{name}|location_entity_kind_mismatch|thylakoid membrane state"
-            for name in ("Mg-Proto ME cyclase complex", "Mg-chelatase complex")
-        ]
-    )
+    new = [f"element_locations/nucleic_acid_locations|{name}|location_entity_removed|nucleus state" for name in ORPHAN_GENES]
     assert sorted(line for line in removed if line in new) == new
     rest = [line for line in removed if line not in new]
     assert (len(rest), _digest(rest)) == (BASE_REMOVED_LOCATIONS_COUNT, BASE_REMOVED_LOCATIONS_SHA256)
 
     entities = result.payload["entities"]
+    cross_kind = []
     for bucket, (field, owners) in LOCATES.items():
         own = {norm for owner in owners for norm in _entity_name_norms(entities.get(owner) or [])}
         for row in (result.payload.get("element_locations") or {}).get(bucket) or []:
-            assert _normalize(row.get(field) or row.get("entity")) in own, (bucket, row)
+            name = row.get(field) or row.get("entity")
+            if _normalize(name) not in own:
+                cross_kind.append((bucket, name, row.get("biological_state")))
+    assert sorted(cross_kind) == [
+        ("element_collection_locations", "Mg-Proto ME cyclase complex", "thylakoid membrane state"),
+        ("element_collection_locations", "Mg-chelatase complex", "thylakoid membrane state"),
+    ]
+    assert not {name for _bucket, name, _state in cross_kind} & set(ORPHAN_GENES)
 
     assert result.ok
     assert result.quarantine_report["release"]["status"] == "review_required"
