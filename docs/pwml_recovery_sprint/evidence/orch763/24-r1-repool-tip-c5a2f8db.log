@@ -1,0 +1,345 @@
+stage_one_ensemble loaded from C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch763\src\t2pw\pipeline\stage_one_ensemble.py
+nested-location rule present: True
+
+=================== menaquinone-759 (PMC12421875); dictionary: leg chunk text (54281 chars, = side file paper_chars)
+draw rows [4, 9, 9] -> pooled reactions 11; names rewritten 6; typo snaps 0
+  R1 [3/3 draws [1, 2, 3]] 'MenF reaction: chorismate to isochorismate'  key 'chorismate -> isochorismate'  state 'Lactococcus lactis cells'
+      + d2 'MenF reaction' bridged ['exact'] flags []
+      + d3 'MenF reaction' bridged ['exact'] flags ['nested_location_merged']  locations 'cytosol' within 'intracellular'
+  R2 [3/3 draws [1, 2, 3]] 'MenD reaction: isochorismate to SEPHCHC'  key 'isochorismate -> 2 succinyl 5 enolpyruvyl 6 hydroxy 3 cyclohexene 1 carboxylate'  state 'Lactococcus lactis cells'
+      + d2 'MenD reaction' bridged ['exact'] flags []
+      + d3 'MenD reaction' bridged ['exact'] flags ['nested_location_merged']  locations 'cytosol' within 'intracellular'
+  R3 [2/3 draws [1, 2]] 'MenA reaction: DHNA to DMK'  key '1 4 dihydroxy 2 naphthoate + prenyl diphosphate -> demethylmenaquinone dmk'  state 'Lactococcus lactis cells'
+      + d2 'MenA reaction' bridged ['exact'] flags []
+  R4 [2/3 draws [1, 2]] 'MenG reaction: DMK to MK'  key 'demethylmenaquinone dmk -> menaquinone mk'  state 'Lactococcus lactis cells'
+      + d2 'MenG reaction' bridged ['exact'] flags []
+  R5 [2/3 draws [2, 3]] 'MenH reaction'  key '2 succinyl 5 enolpyruvyl 6 hydroxy 3 cyclohexene 1 carboxylate -> shchc'  state 'intracellular state'
+      + d3 'MenH reaction' bridged ['exact'] flags ['nested_location_merged']  locations 'cytosol' within 'intracellular'
+  R6 [2/3 draws [2, 3]] 'MenC reaction'  key 'shchc -> osb'  state 'intracellular state'
+      + d3 'MenC reaction' bridged ['exact'] flags ['nested_location_merged']  locations 'cytosol' within 'intracellular'
+  R7 [2/3 draws [2, 3]] 'MenE reaction'  key 'osb -> osb coa'  state 'intracellular state'
+      + d3 'MenE reaction' bridged ['exact'] flags ['nested_location_merged']  locations 'cytosol' within 'intracellular'
+  R8 [2/3 draws [2, 3]] 'MenB reaction'  key 'osb coa -> dhna coa'  state 'intracellular state'
+      + d3 'MenB reaction' bridged ['exact'] flags ['nested_location_merged']  locations 'cytosol' within 'intracellular'
+  R9 [2/3 draws [2, 3]] 'MenI reaction'  key 'dhna coa -> 1 4 dihydroxy 2 naphthoate'  state 'intracellular state'
+      + d3 'MenI reaction' bridged ['exact'] flags ['nested_location_merged']  locations 'cytosol' within 'intracellular'
+  R10 [1/3 draws [3]] 'MenA reaction'  key '1 4 dihydroxy 2 naphthoate + prenyl diphosphate -> dmk'  state 'Lactococcus lactis intracellular'
+  R11 [1/3 draws [3]] 'MenG reaction'  key 'dmk -> mk'  state 'Lactococcus lactis intracellular'
+  merge flags: {'nested_location_merged': 7}
+  SPLITS (a) one key, kept apart:
+      total 0
+  SPLITS (b) one enzyme set, different keys:
+      {mena}: R3 '1 4 dihydroxy 2 naphthoate + prenyl diphosphate -> demethylmenaquinone dmk'; R10 '1 4 dihydroxy 2 naphthoate + prenyl diphosphate -> dmk'
+      {meng}: R4 'demethylmenaquinone dmk -> menaquinone mk'; R11 'dmk -> mk'
+      total 2 enzyme set(s)
+  GOLD P 1.000 R 1.000 matched 9/9 predicted 11 (rows 11, dups collapsed 0)
+  SPLITS (c) one gold reaction, several pooled rows:
+      gold R8 MenA: DHNA + prenyl diphosphate -> DMK: R3 '1 4 dihydroxy 2 naphthoate + prenyl diphosphate -> demethylmenaquinone dmk'; R10 '1 4 dihydroxy 2 naphthoate + prenyl diphosphate -> dmk'
+      gold R9 MenG: DMK -> MK: R4 'demethylmenaquinone dmk -> menaquinone mk'; R11 'dmk -> mk'
+  pairwise conflicts inside pooled rows: 0
+  RECONSTRUCTION CHECK vs the leg's own side file (16 rows, 6 renames): DIFFERENT
+      leg ('2 succinyl 5 enolpyruvyl 6 hydroxy 3 cyclohexene 1 carboxylate -> shchc', [2], [])
+      now ('2 succinyl 5 enolpyruvyl 6 hydroxy 3 cyclohexene 1 carboxylate -> shchc', [2, 3], [])
+      leg ('2 succinyl 5 enolpyruvyl 6 hydroxy 3 cyclohexene 1 carboxylate -> shchc', [3], ["biological_state location 'cytosol' vs 'intracellular'"])
+      now ('shchc -> osb', [2, 3], [])
+      leg ('shchc -> osb', [2], [])
+      now ('osb -> osb coa', [2, 3], [])
+      leg ('shchc -> osb', [3], ["biological_state location 'cytosol' vs 'intracellular'"])
+      now ('osb coa -> dhna coa', [2, 3], [])
+      leg ('osb -> osb coa', [2], [])
+      now ('dhna coa -> 1 4 dihydroxy 2 naphthoate', [2, 3], [])
+      leg ('osb -> osb coa', [3], ["biological_state location 'cytosol' vs 'intracellular'"])
+      now ('1 4 dihydroxy 2 naphthoate + prenyl diphosphate -> dmk', [3], [])
+      leg ('osb coa -> dhna coa', [2], [])
+      now ('dmk -> mk', [3], [])
+      leg rows 16 vs now 11
+
+=================== menaquinone-751 (PMC12421875); dictionary: committed full paper
+draw rows [2, 9, 7] -> pooled reactions 9; names rewritten 6; typo snaps 0
+  R1 [3/3 draws [1, 2, 3]] 'MenF reaction'  key 'chorismate -> isochorismate'  state 'Intracellular state'
+      + d2 'MenF reaction' bridged ['exact'] flags []
+      + d3 'MenF reaction' bridged ['exact'] flags []
+  R2 [3/3 draws [1, 2, 3]] 'MenD reaction'  key 'isochorismate -> 2 succinyl 5 enolpyruvyl 6 hydroxy 3 cyclohexene 1 carboxylate'  state 'Intracellular state'
+      + d2 'MenD reaction' bridged ['exact'] flags []
+      + d3 'MenD reaction' bridged ['exact'] flags []
+  R3 [2/3 draws [2, 3]] 'MenH reaction'  key '2 succinyl 5 enolpyruvyl 6 hydroxy 3 cyclohexene 1 carboxylate -> shchc'  state 'L. lactis intracellular state'
+      + d3 'MenH reaction' bridged ['exact'] flags []
+  R4 [2/3 draws [2, 3]] 'MenC reaction'  key 'shchc -> osb'  state 'cytosolic state'
+      + d3 'MenC reaction' bridged ['exact'] flags []
+  R5 [2/3 draws [2, 3]] 'MenE reaction'  key 'osb -> osb coa'  state 'L. lactis intracellular state'
+      + d3 'MenE reaction' bridged ['exact'] flags []
+  R6 [2/3 draws [2, 3]] 'MenB reaction'  key 'osb coa -> dhna coa'  state 'cytosolic state'
+      + d3 'MenB reaction' bridged ['exact'] flags []
+  R7 [2/3 draws [2, 3]] 'MenI reaction'  key 'dhna coa -> 1 4 dihydroxy 2 naphthoate'  state 'cytosolic state'
+      + d3 'MenI reaction' bridged ['exact'] flags []
+  R8 [1/3 draws [2]] 'MenA reaction'  key '1 4 dihydroxy 2 naphthoate + prenyl diphosphate -> dmk'  state 'cytosolic state'
+  R9 [1/3 draws [2]] 'MenG reaction'  key 'dmk -> mk'  state 'cytosolic state'
+  merge flags: {}
+  SPLITS (a) one key, kept apart:
+      total 0
+  SPLITS (b) one enzyme set, different keys:
+      total 0 enzyme set(s)
+  GOLD P 1.000 R 1.000 matched 9/9 predicted 9 (rows 9, dups collapsed 0)
+  SPLITS (c) one gold reaction, several pooled rows:
+  pairwise conflicts inside pooled rows: 0
+
+=================== enterobactin-759 (PMC12096016); dictionary: leg chunk text (43667 chars, = side file paper_chars)
+draw rows [5, 5, 5] -> pooled reactions 6; names rewritten 4; typo snaps 0
+  R1 [3/3 draws [1, 2, 3]] 'EntC-catalyzed isomerization of chorismate to isochorismate'  key 'chorismate -> isochorismate'  state 'cytoplasmic state'
+      + d2 'EntC isochorismate synthase reaction' bridged ['exact'] flags []
+      + d3 'EntC isochorismate synthase reaction' bridged ['exact'] flags []
+  R2 [3/3 draws [1, 2, 3]] 'EntB isochorismatase reaction'  key 'isochorismate -> 2 3 dihydro 2 3 dihydroxybenzoate + pyruvate'  state 'cytoplasmic state'
+      + d2 'EntB isochorismatase reaction' bridged ['abbreviation'] flags []
+      + d3 'EntB isochorismatase reaction' bridged ['abbreviation'] flags []
+  R3 [3/3 draws [1, 2, 3]] 'EntA dehydrogenase reaction'  key '2 3 dihydro 2 3 dihydroxybenzoate -> 2 3 dihydroxybenzoate'  state 'cytoplasmic state'
+      + d2 'EntA dehydrogenase reaction' bridged ['abbreviation'] flags []
+      + d3 'EntA 2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase reaction' bridged ['abbreviation'] flags []
+  R4 [3/3 draws [1, 2, 3]] 'EntE adenylation of 2,3-DHB'  key '2 3 dihydroxybenzoate -> 2 3 dihydroxybenzoyl amp'  state 'cytoplasmic state'
+      + d2 'EntE adenylation reaction' bridged ['abbreviation'] flags []
+      + d3 'EntE 2,3-dihydroxybenzoyl-AMP ligase reaction' bridged ['abbreviation'] flags []
+  R5 [1/3 draws [1]] 'EntF enterobactin synthesis'  key '2 3 dihydroxybenzoyl amp + l serine -> enterobactin'  state 'cytoplasmic state'
+  R6 [2/3 draws [2, 3]] 'EntF enterobactin synthase reaction'  key '2 3 dihydroxybenzoate + l serine -> enterobactin'  state 'cytoplasmic state'
+      + d3 'EntF enterobactin synthase reaction' bridged ['abbreviation'] flags []
+  merge flags: {}
+  SPLITS (a) one key, kept apart:
+      total 0
+  SPLITS (b) one enzyme set, different keys:
+      {entf}: R5 '2 3 dihydroxybenzoyl amp + l serine -> enterobactin'; R6 '2 3 dihydroxybenzoate + l serine -> enterobactin'
+      total 1 enzyme set(s)
+  GOLD P 1.000 R 1.000 matched 5/5 predicted 6 (rows 6, dups collapsed 0)
+  SPLITS (c) one gold reaction, several pooled rows:
+      gold R5 EntF: activated 2,3-DHB + L-serine -> enterobactin: R5 '2 3 dihydroxybenzoyl amp + l serine -> enterobactin'; R6 '2 3 dihydroxybenzoate + l serine -> enterobactin'
+  pairwise conflicts inside pooled rows: 0
+  RECONSTRUCTION CHECK vs the leg's own side file (6 rows, 4 renames): IDENTICAL
+
+=================== enterobactin-751 (PMC12096016); dictionary: committed full paper
+draw rows [4, 5, 5] -> pooled reactions 5; names rewritten 0; typo snaps 0
+  R1 [3/3 draws [1, 2, 3]] 'EntC-catalyzed isomerization of chorismate to isochorismate'  key 'chorismate -> isochorismate'  state 'cytoplasmic state'
+      + d2 'EntC-catalyzed isomerization of chorismate to isochorismate' bridged ['exact'] flags []
+      + d3 'EntC-catalyzed isomerization of chorismate to isochorismate' bridged ['exact'] flags []
+  R2 [3/3 draws [1, 2, 3]] 'EntB isochorismatase reaction'  key 'isochorismate -> 2 3 dihydro 2 3 dihydroxybenzoate + pyruvate'  state 'cytoplasmic state'
+      + d2 'EntB isochorismatase conversion of isochorismate to 2,3-diDHB and pyruvate' bridged ['exact'] flags []
+      + d3 'EntB isochorismatase reaction' bridged ['exact'] flags []
+  R3 [3/3 draws [1, 2, 3]] 'EntA dehydrogenase reaction'  key '2 3 dihydro 2 3 dihydroxybenzoate -> 2 3 dihydroxybenzoate'  state 'cytoplasmic state'
+      + d2 'EntA-catalyzed dehydrogenation of 2,3-diDHB to 2,3-DHB' bridged ['exact'] flags []
+      + d3 'EntA-catalyzed dehydrogenation' bridged ['exact'] flags []
+  R4 [3/3 draws [1, 2, 3]] 'EntE adenylation of 2,3-DHB'  key '2 3 dihydroxybenzoate -> 2 3 dihydroxybenzoyl amp'  state 'cytoplasmic state'
+      + d2 'EntE-catalyzed adenylation of 2,3-DHB' bridged ['exact'] flags []
+      + d3 'EntE-catalyzed adenylation of 2,3-DHB' bridged ['exact'] flags []
+  R5 [2/3 draws [2, 3]] 'LDH-catalyzed reduction of pyruvate to lactate'  key 'pyruvate -> lactate'  state ''
+      + d3 'LDH-catalyzed reduction of pyruvate' bridged ['exact'] flags []
+  merge flags: {}
+  SPLITS (a) one key, kept apart:
+      total 0
+  SPLITS (b) one enzyme set, different keys:
+      total 0 enzyme set(s)
+  GOLD P 0.800 R 0.800 matched 4/5 predicted 5 (rows 5, dups collapsed 0)
+  SPLITS (c) one gold reaction, several pooled rows:
+      gold R5 EntF: activated 2,3-DHB + L-serine -> enterobactin: NOT MATCHED
+  pairwise conflicts inside pooled rows: 0
+
+=================== chlorophyll-759 (PMC5130987); dictionary: leg chunk text (64053 chars, = side file paper_chars)
+draw rows [16, 16, 18] -> pooled reactions 28; names rewritten 33; typo snaps 0
+  R1 [1/3 draws [1]] 'Glu-tRNA reduction to GSA'  key 'glu trna -> glu 1 semialdehyde'  state 'plastid state'
+  R2 [3/3 draws [1, 2, 3]] 'GSA conversion to ALA'  key 'glu 1 semialdehyde -> 5 aminolevulinate'  state 'plastid state'
+      + d2 'GSA to ALA' bridged ['exact'] flags []
+      + d3 'GSAT reaction' bridged ['exact'] flags []
+  R3 [2/3 draws [1, 3]] 'ALA condensation to PBG'  key '5 aminolevulinate -> porphobilinogen'  state 'plastid state'
+      + d3 'ALAD reaction' bridged ['exact'] flags []
+  R4 [1/3 draws [2]] 'ALA condensation to PBG'  key '5 aminolevulinate -> porphobilinogen'  state 'plastid state'
+  R5 [3/3 draws [1, 2, 3]] 'PBG polymerization to HMB'  key 'porphobilinogen -> hydroxymethylbilane'  state 'plastid state'
+      + d2 'PBG polymerization to HMB' bridged ['exact'] flags []
+      + d3 'PBG deaminase reaction' bridged ['exact'] flags []
+  R6 [3/3 draws [1, 2, 3]] 'HMB conversion to Urogen III'  key 'hydroxymethylbilane -> uroporphyrinogen iii'  state 'plastid state'
+      + d2 'HMB to Urogen III' bridged ['exact'] flags []
+      + d3 'UROS reaction' bridged ['exact'] flags []
+  R7 [3/3 draws [1, 2, 3]] 'Urogen III decarboxylation to Coprogen III'  key 'uroporphyrinogen iii -> coproporphyrinogen iii'  state 'plastid state'
+      + d2 'Urogen III to Coprogen III' bridged ['exact'] flags []
+      + d3 'UROD reaction' bridged ['exact'] flags []
+  R8 [2/3 draws [1, 2]] 'Coprogen III oxidation to Protogen IX'  key 'coproporphyrinogen iii -> protoporphyrinogen ix'  state 'plastid state'
+      + d2 'Coprogen III to Protogen IX' bridged ['exact'] flags []
+  R9 [1/3 draws [3]] 'CPO reaction'  key 'coproporphyrinogen iii -> protoporphyrinogen ix'  state 'plastid state'
+  R10 [2/3 draws [1, 2]] 'Protogen IX oxidation to Proto IX'  key 'protoporphyrinogen ix -> protoporphyrin ix'  state 'plastid state'
+      + d2 'Protogen IX to Proto IX' bridged ['exact'] flags []
+  R11 [1/3 draws [3]] 'PPO reaction'  key 'protoporphyrinogen ix -> protoporphyrin ix'  state 'plastid state'
+  R12 [2/3 draws [1, 3]] 'Mg-chelatase reaction: Proto IX to Mg-Proto IX'  key 'protoporphyrin ix -> mg proto ix'  state 'thylakoid membrane state'
+      + d3 'Mg-chelatase reaction' bridged ['exact'] flags ['nested_location_merged']  locations 'thylakoid membrane' within 'plastid'
+  R13 [1/3 draws [2]] 'Mg2+ insertion into Proto IX'  key 'protoporphyrin ix -> mg proto ix'  state 'plastid state'
+  R14 [3/3 draws [1, 2, 3]] 'Mg-Proto IX methylation to Mg-Proto ME'  key 'mg proto ix -> mg proto ix monomethyl ester'  state 'plastid state'
+      + d2 'Mg-Proto IX methylation' bridged ['exact'] flags []
+      + d3 'Mg-Proto IX methyltransferase reaction' bridged ['exact'] flags []
+  R15 [2/3 draws [1, 3]] 'Mg-Proto ME cyclization to DV-Pchlide'  key 'mg proto ix monomethyl ester -> 3 8 divinyl protochlorophyllide'  state 'thylakoid membrane state'
+      + d3 'Mg-Proto ME cyclase reaction' bridged ['exact'] flags ['nested_location_merged']  locations 'thylakoid membrane' within 'plastid'
+  R16 [1/3 draws [2]] 'Mg-Proto ME cyclization'  key 'mg proto ix monomethyl ester -> 3 8 divinyl protochlorophyllide'  state 'plastid state'
+  R17 [2/3 draws [1, 3]] 'DV-Pchlide reduction to DV-Chlide by POR'  key '3 8 divinyl protochlorophyllide -> 3 8 divinyl chlorophyllide'  state 'thylakoid membrane state'
+      + d3 'POR reaction' bridged ['exact'] flags ['nested_location_merged']  locations 'thylakoid membrane' within 'plastid'
+  R18 [1/3 draws [2]] 'DV-Pchlide reduction by POR'  key '3 8 divinyl protochlorophyllide -> 3 8 divinyl chlorophyllide'  state 'plastid state'
+  R19 [3/3 draws [1, 2, 3]] 'DV-Chlide conversion to MV-Chlide a by DVR'  key '3 8 divinyl chlorophyllide -> mv chlide a'  state 'plastid state'
+      + d2 'DV-Chlide to MV-Chlide a' bridged ['exact'] flags []
+      + d3 'DVR reaction' bridged ['exact'] flags []
+  R20 [1/3 draws [1]] 'Geranylgeranyl reduction to phytyl by CHLP'  key 'geranylgeranyl chain -> phytyl chain'  state 'thylakoid membrane state'
+  R21 [3/3 draws [1, 2, 3]] 'Chl a formation by Chl synthase'  key 'geranylgeraniol + mv chlide a -> chl a'  state 'thylakoid membrane state'
+      + d2 'Chl a formation by esterification' bridged ['exact'] flags ['nested_location_merged']  locations 'thylakoid membrane' within 'plastid'
+      + d3 'Chl synthase reaction (geranylgeraniol)' bridged ['exact'] flags ['nested_location_merged']  locations 'thylakoid membrane' within 'plastid'
+  R22 [3/3 draws [1, 2, 3]] 'Chl a conversion to Chl b by CAO'  key 'chl a -> chl b'  state 'thylakoid membrane state'
+      + d2 'Chl a to Chl b conversion' bridged ['exact'] flags []
+      + d3 'CAO reaction (Chl a to Chl b)' bridged ['exact'] flags ['nested_location_merged']  locations 'thylakoid membrane' within 'plastid'
+  R23 [1/3 draws [2]] 'Glu-tRNAGlu reduction to GSA'  key 'glu trnaglu -> glu 1 semialdehyde'  state 'plastid state'
+  R24 [1/3 draws [3]] 'GluTR reaction'  key 'glu trnaglu -> glu 1 semialdehyde'  state 'plastid state'
+  R25 [1/3 draws [2]] 'Fe2+ insertion into Proto IX (heme formation)'  key 'protoporphyrin ix -> heme b'  state 'plastid state'
+  R26 [1/3 draws [3]] 'Chl synthase reaction (phytol)'  key 'mv chlide a + phytol -> chl a'  state 'plastid state'
+  R27 [1/3 draws [3]] 'CAO reaction (Chlide a to Chlide b)'  key 'chlide a -> chlide b'  state 'plastid state'
+  R28 [1/3 draws [3]] 'ferrochelatase reaction'  key 'protoporphyrin ix -> protoheme'  state 'plastid state'
+  merge flags: {'nested_location_merged': 6}
+  SPLITS (a) one key, kept apart:
+      R4 'ALA condensation to PBG' (draws [2]) apart from 'ALA condensation to PBG' (draws [1]): different enzymes {ala dehydratase} vs {alad1 hemb1}
+      R9 'CPO reaction' (draws [3]) apart from 'Coprogen III oxidation to Protogen IX' (draws [1, 2]): different enzymes {cpo1} vs {coprogen iii oxidase}
+      R11 'PPO reaction' (draws [3]) apart from 'Protogen IX oxidation to Proto IX' (draws [1, 2]): different enzymes {ppo1} vs {ppo}
+      R13 'Mg2+ insertion into Proto IX' (draws [2]) apart from 'Mg-chelatase reaction: Proto IX to Mg-Proto IX' (draws [1]): different enzymes {gun4, mg chelatase} vs {mg chelatase complex}
+      R16 'Mg-Proto ME cyclization' (draws [2]) apart from 'Mg-Proto ME cyclization to DV-Pchlide' (draws [1]): different enzymes {mg proto me cyclase} vs {mg proto me cyclase complex}
+      R18 'DV-Pchlide reduction by POR' (draws [2]) apart from 'DV-Pchlide reduction to DV-Chlide by POR' (draws [1]): different enzymes {pchlide oxidoreductase} vs {porb}
+      R24 'GluTR reaction' (draws [3]) apart from 'Glu-tRNAGlu reduction to GSA' (draws [2]): different enzymes {hema1} vs {glu trna reductase}
+      total 7
+  SPLITS (b) one enzyme set, different keys:
+      {hema1}: R1 'glu trna -> glu 1 semialdehyde'; R23 'glu trnaglu -> glu 1 semialdehyde'
+      {chl synthase}: R21 'geranylgeraniol + mv chlide a -> chl a'; R26 'mv chlide a + phytol -> chl a'
+      {cao}: R22 'chl a -> chl b'; R27 'chlide a -> chlide b'
+      total 3 enzyme set(s)
+  GOLD gold not certified complete: not scored
+  pairwise conflicts inside pooled rows: 0
+  RECONSTRUCTION CHECK vs the leg's own side file (33 rows, 33 renames): DIFFERENT
+      leg ('protoporphyrin ix -> mg proto ix', [1], [])
+      now ('protoporphyrin ix -> mg proto ix', [1, 3], [])
+      leg ('protoporphyrin ix -> mg proto ix', [3], ["biological_state location 'thylakoid membrane' vs 'plastid'", 'different enzymes {mg chelatase complex} vs {mg chelatase}'])
+      now ('mg proto ix -> mg proto ix monomethyl ester', [1, 2, 3], [])
+      leg ('mg proto ix -> mg proto ix monomethyl ester', [1, 2, 3], [])
+      now ('mg proto ix monomethyl ester -> 3 8 divinyl protochlorophyllide', [1, 3], [])
+      leg ('mg proto ix monomethyl ester -> 3 8 divinyl protochlorophyllide', [1], [])
+      now ('mg proto ix monomethyl ester -> 3 8 divinyl protochlorophyllide', [2], ['different enzymes {mg proto me cyclase} vs {mg proto me cyclase complex}'])
+      leg ('mg proto ix monomethyl ester -> 3 8 divinyl protochlorophyllide', [2], ['different enzymes {mg proto me cyclase} vs {mg proto me cyclase complex}'])
+      now ('3 8 divinyl protochlorophyllide -> 3 8 divinyl chlorophyllide', [1, 3], [])
+      leg ('mg proto ix monomethyl ester -> 3 8 divinyl protochlorophyllide', [3], ["biological_state location 'thylakoid membrane' vs 'plastid'", 'different enzymes {mg proto me cyclase complex} vs {mg proto me cyclase}'])
+      now ('3 8 divinyl protochlorophyllide -> 3 8 divinyl chlorophyllide', [2], ['different enzymes {pchlide oxidoreductase} vs {porb}'])
+      leg ('3 8 divinyl protochlorophyllide -> 3 8 divinyl chlorophyllide', [1], [])
+      now ('3 8 divinyl chlorophyllide -> mv chlide a', [1, 2, 3], [])
+      leg ('3 8 divinyl protochlorophyllide -> 3 8 divinyl chlorophyllide', [2], ['different enzymes {pchlide oxidoreductase} vs {porb}'])
+      now ('geranylgeranyl chain -> phytyl chain', [1], [])
+      leg ('3 8 divinyl protochlorophyllide -> 3 8 divinyl chlorophyllide', [3], ["biological_state location 'thylakoid membrane' vs 'plastid'", 'different enzymes {porb} vs {pchlide oxidoreductase}'])
+      now ('geranylgeraniol + mv chlide a -> chl a', [1, 2, 3], [])
+      leg ('3 8 divinyl chlorophyllide -> mv chlide a', [1, 2, 3], [])
+      now ('chl a -> chl b', [1, 2, 3], [])
+      leg ('geranylgeranyl chain -> phytyl chain', [1], [])
+      now ('glu trnaglu -> glu 1 semialdehyde', [2], [])
+      leg ('geranylgeraniol + mv chlide a -> chl a', [1], [])
+      now ('glu trnaglu -> glu 1 semialdehyde', [3], ['different enzymes {hema1} vs {glu trna reductase}'])
+      leg ('geranylgeraniol + mv chlide a -> chl a', [2, 3], ["biological_state location 'thylakoid membrane' vs 'plastid'"])
+      now ('protoporphyrin ix -> heme b', [2], [])
+      leg ('chl a -> chl b', [1, 2], [])
+      now ('mv chlide a + phytol -> chl a', [3], [])
+      leg ('chl a -> chl b', [3], ["biological_state location 'thylakoid membrane' vs 'plastid'"])
+      now ('chlide a -> chlide b', [3], [])
+      leg ('glu trnaglu -> glu 1 semialdehyde', [2], [])
+      now ('protoporphyrin ix -> protoheme', [3], [])
+      leg rows 33 vs now 28
+
+=================== chlorophyll-751 (PMC5130987); dictionary: committed full paper
+draw rows [16, 19, 18] -> pooled reactions 29; names rewritten 31; typo snaps 5
+  R1 [3/3 draws [1, 2, 3]] 'Glu-tRNA reductase reaction'  key 'glu trnaglu -> glu 1 semialdehyde'  state 'plastid'
+      + d2 'Glu-tRNA reductase reaction' bridged ['abbreviation'] flags ['undefined_state_treated_as_absent']
+      + d3 'GluTR reaction' bridged ['exact'] flags []
+  R2 [3/3 draws [1, 2, 3]] 'GSAT reaction'  key 'glu 1 semialdehyde -> 5 aminolevulinate'  state 'plastid'
+      + d2 'GSAT reaction' bridged ['abbreviation'] flags ['undefined_state_treated_as_absent']
+      + d3 'GSAT reaction' bridged ['exact'] flags []
+  R3 [3/3 draws [1, 2, 3]] 'ALAD reaction'  key '5 aminolevulinate -> porphobilinogen'  state 'plastid'
+      + d2 'ALA dehydratase reaction' bridged ['abbreviation'] flags ['undefined_state_treated_as_absent']
+      + d3 'ALAD reaction' bridged ['exact'] flags []
+  R4 [3/3 draws [1, 2, 3]] 'PBG deaminase reaction'  key 'porphobilinogen -> hydroxymethylbilane'  state 'plastid'
+      + d2 'PBG deaminase reaction' bridged ['abbreviation', 'typo'] flags ['undefined_state_treated_as_absent', 'typo_snapped']
+      + d3 'PBG deaminase reaction' bridged ['exact'] flags []
+  R5 [3/3 draws [1, 2, 3]] 'UROS reaction'  key 'hydroxymethylbilane -> uroporphyrinogen iii'  state 'plastid'
+      + d2 'UROS reaction' bridged ['abbreviation'] flags ['undefined_state_treated_as_absent']
+      + d3 'UROS reaction' bridged ['exact'] flags []
+  R6 [3/3 draws [1, 2, 3]] 'UROD reaction'  key 'uroporphyrinogen iii -> coproporphyrinogen iii'  state 'plastid'
+      + d2 'UROD reaction' bridged ['abbreviation'] flags ['undefined_state_treated_as_absent']
+      + d3 'UROD reaction' bridged ['exact'] flags []
+  R7 [3/3 draws [1, 2, 3]] 'CPO reaction'  key 'coproporphyrinogen iii -> protoporphyrinogen ix'  state 'plastid'
+      + d2 'CPO reaction' bridged ['abbreviation'] flags ['undefined_state_treated_as_absent']
+      + d3 'CPO reaction' bridged ['exact'] flags []
+  R8 [2/3 draws [1, 3]] 'PPO reaction'  key 'protoporphyrinogen ix -> protoporphyrin ix'  state 'plastid'
+      + d3 'PPO reaction' bridged ['exact'] flags []
+  R9 [1/3 draws [2]] 'PPO reaction'  key 'protoporphyrinogen ix -> protoporphyrin ix'  state 'plastidic state'
+  R10 [1/3 draws [1]] 'ferrochelatase reaction'  key 'protoporphyrin ix -> protoheme'  state 'plastid'
+  R11 [3/3 draws [1, 2, 3]] 'Mg-chelatase reaction'  key 'protoporphyrin ix -> mg proto ix'  state 'plastid state'
+      + d2 'Mg-chelatase reaction' bridged ['abbreviation'] flags ['undefined_state_treated_as_absent']
+      + d3 'Mg-chelatase reaction' bridged ['exact'] flags []
+  R12 [3/3 draws [1, 2, 3]] 'Mg-Proto IX methyltransferase reaction'  key 'mg proto ix -> mg proto ix monomethyl ester'  state 'plastid'
+      + d2 'Mg-Proto IX methyltransferas reaction' bridged ['abbreviation'] flags ['undefined_state_treated_as_absent']
+      + d3 'Mg-Proto IX methyltransferase reaction' bridged ['exact'] flags []
+  R13 [3/3 draws [1, 2, 3]] 'Mg-Proto ME cyclase reaction'  key 'mg proto ix monomethyl ester -> 3 8 divinyl protochlorophyllide'  state 'plastid'
+      + d2 'Mg-Proto ME cyclase reaction' bridged ['abbreviation'] flags ['undefined_state_treated_as_absent']
+      + d3 'Mg-Proto ME cyclase reaction' bridged ['abbreviation'] flags []
+  R14 [2/3 draws [1, 3]] 'POR reaction'  key '3 8 divinyl protochlorophyllide -> 3 8 divinyl chlorophyllide'  state 'plastid'
+      + d3 'POR reaction' bridged ['abbreviation'] flags []
+  R15 [1/3 draws [2]] 'POR reaction'  key '3 8 divinyl protochlorophyllide -> 3 8 divinyl chlorophyllide'  state 'plastidic state'
+  R16 [1/3 draws [1]] 'DVR reaction'  key '3 8 divinyl chlorophyllide -> 3 vinyl chlide a'  state 'plastid'
+  R17 [1/3 draws [1]] 'Chl synthase reaction'  key '3 vinyl chlide a + geranylgeraniol -> chl a'  state 'plastid'
+  R18 [3/3 draws [1, 2, 3]] 'CAO reaction'  key 'chlide a -> chlide b'  state 'plastid'
+      + d2 'Chlide a oxygenase reaction (Chlide a)' bridged ['abbreviation'] flags ['undefined_state_treated_as_absent']
+      + d3 'CAO reaction' bridged ['exact'] flags []
+  R19 [1/3 draws [2]] 'Fero chelatase reaction'  key 'protoporphyrin ix -> protoheme heme b'  state 'plastidic state'
+  R20 [1/3 draws [2]] 'DVR reaction'  key '3 8 divinyl chlorophyllide -> 3 vinyl chlide a mv chlide a'  state 'plastidic state'
+  R21 [1/3 draws [2]] 'geranylgeranyl reductase reaction'  key 'geranylgeranyl diphosphate -> phytyl diphosphate'  state 'plastidic state'
+  R22 [1/3 draws [2]] 'Chl synthase reaction'  key '3 vinyl chlide a mv chlide a -> chl a'  state 'plastidic state'
+  R23 [1/3 draws [2]] 'Chlide a oxygenase reaction (Chl a)'  key 'chl a -> chl b'  state 'plastidic state'
+  R24 [1/3 draws [2]] 'heme oxygenase reaction'  key 'protoheme heme b -> biliverdin ix'  state 'plastidic state'
+  R25 [1/3 draws [3]] 'Ferrochelatase reaction'  key 'protoporphyrin ix -> heme b'  state 'plastid state'
+  R26 [1/3 draws [3]] 'DVR reaction'  key '3 8 divinyl chlorophyllide -> mv chlide a'  state 'plastid state'
+  R27 [1/3 draws [3]] 'Geranylgeranyl reductase reaction'  key 'geranylgeranyl chain -> phytyl chain'  state 'plastid state'
+  R28 [1/3 draws [3]] 'Chl synthase reaction'  key 'geranylgeraniol + mv chlide a -> chl a'  state 'plastid state'
+  R29 [1/3 draws [3]] 'Heme oxygenase reaction'  key 'heme b -> biliverdin ix'  state 'plastid state'
+  merge flags: {'undefined_state_treated_as_absent': 11, 'typo_snapped': 1}
+  SPLITS (a) one key, kept apart:
+      R9 'PPO reaction' (draws [2]) apart from 'PPO reaction' (draws [1]): different enzymes {ppo} vs {protogen ix oxidase ppo}
+      R15 'POR reaction' (draws [2]) apart from 'POR reaction' (draws [1]): different enzymes {por} vs {pchlide oxidoreductase por}
+      total 2
+  SPLITS (b) one enzyme set, different keys:
+      {ferrochelatase}: R10 'protoporphyrin ix -> protoheme'; R19 'protoporphyrin ix -> protoheme heme b'; R25 'protoporphyrin ix -> heme b'
+      {dvr}: R16 '3 8 divinyl chlorophyllide -> 3 vinyl chlide a'; R26 '3 8 divinyl chlorophyllide -> mv chlide a'
+      {chl synthase}: R17 '3 vinyl chlide a + geranylgeraniol -> chl a'; R22 '3 vinyl chlide a mv chlide a -> chl a'; R28 'geranylgeraniol + mv chlide a -> chl a'
+      total 3 enzyme set(s)
+  GOLD gold not certified complete: not scored
+  pairwise conflicts inside pooled rows: 0
+
+SUMMARY
+  menaquinone-759    pooled  11  splits(a)  0  splits(b)  2  flags {'nested_location_merged': 7}  chimeras 0  gold P 1.000 R 1.000 matched 9/9 predicted 11 (rows 11, dups collapsed 0)
+  menaquinone-751    pooled   9  splits(a)  0  splits(b)  0  flags {}  chimeras 0  gold P 1.000 R 1.000 matched 9/9 predicted 9 (rows 9, dups collapsed 0)
+  enterobactin-759   pooled   6  splits(a)  0  splits(b)  1  flags {}  chimeras 0  gold P 1.000 R 1.000 matched 5/5 predicted 6 (rows 6, dups collapsed 0)
+  enterobactin-751   pooled   5  splits(a)  0  splits(b)  0  flags {}  chimeras 0  gold P 0.800 R 0.800 matched 4/5 predicted 5 (rows 5, dups collapsed 0)
+  chlorophyll-759    pooled  28  splits(a)  7  splits(b)  3  flags {'nested_location_merged': 6}  chimeras 0  gold gold not certified complete: not scored
+  chlorophyll-751    pooled  29  splits(a)  2  splits(b)  3  flags {'undefined_state_treated_as_absent': 11, 'typo_snapped': 1}  chimeras 0  gold gold not certified complete: not scored
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch763\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ c5a2f8dbfd5f96f202af0f4712e265d703b8f1e7  [git, worktree dirty=False]
+label                   : r1-repool-tip-c5a2f8db
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/orch763/repool.py C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch763 C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch763
+root PID / process group: 354768 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 400 s
+duration                : 1.67 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  355084:python.exe
+descendants terminated  : 1  355084
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch763\docs\pwml_recovery_sprint\evidence\g11\ORCH-763\24-r1-repool-tip-c5a2f8db.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================

@@ -1,0 +1,1196 @@
+{
+ "source": {
+  "stage1_payload": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\runs_papers\\ORCH-759\\legs\\chlorophyll-strict\\2026-10-22_1231\\papers\\PMC5130987\\strict\\stage1_payload.json",
+  "stage1_payload_sha256": "393388a5d4d3e8f5aa7c88f9ab28a57299a10bedd4bd9be4cdbd26b70edfea4f",
+  "side_file": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\runs_papers\\ORCH-759\\REVIEW\\chlorophyll\\strict\\stage1_ensemble_report.json",
+  "side_file_sha256": "a7aae215190ddab3ba2458b2878394e151ee33b50be074713feca6fbc8afbf24",
+  "side_file_paper_chars": 64053,
+  "pooled_reactions": 33
+ },
+ "reconstruction": {
+  "rules": "-- every one is recorded in the output under \"reconstruction\":\n1. A pooled reaction row is VERBATIM from ``stage1_payload.json`` (minus the post-Stage-1 keys\n   ``provenance_lineage``, ``locked_reaction_id``, ``scope_membership``), assigned to the draw\n   that created it. Pooled rows and side-file records are matched per reaction key, k-th to\n   k-th (both lists are in creation order), and the names must agree.\n2. A row merged INTO a pooled row is rebuilt: its own name and quote from the side file; its\n   participants and enzyme names from the survivor (the merge bridged their keys, so they\n   are one reaction under the rules that ran); each entry quote at the pointer the side file\n   gives (``/modifiers/0/evidence`` -> ``modifiers[0]``); a cofactor the side file lists as\n   withheld from that row's quote is put back on its side.\n3. A merged row's ``biological_state`` is NOT recorded anywhere. It is INFERRED, and listed:\n   the survivor's label when the merged row's draw defines that label, else the label most\n   of that draw's own pooled rows carry.\n4. Each draw's ``biological_states`` are the side file's state rows of that draw, with the\n   content of the pooled payload's first row of that name.\n5. Names the side file lists as rewritten (``names_rewritten``: draw, from, to) are written\n   back to the draw's own spelling in that draw's reaction participants.\n6. ``--state-field`` patches a field the pooled payload lost (it carries no\n   ``compartment_canonical``), each with its reason.",
+  "inferred_states": [
+   {
+    "draw": 2,
+    "row": "GSA to ALA",
+    "merged_into": "GSA conversion to ALA",
+    "biological_state": "plastid state",
+    "why": "the survivor's label, defined in this draw"
+   },
+   {
+    "draw": 3,
+    "row": "GSAT reaction",
+    "merged_into": "GSA conversion to ALA",
+    "biological_state": "plastid state",
+    "why": "the survivor's label, defined in this draw"
+   },
+   {
+    "draw": 3,
+    "row": "ALAD reaction",
+    "merged_into": "ALA condensation to PBG",
+    "biological_state": "plastid state",
+    "why": "the survivor's label, defined in this draw"
+   },
+   {
+    "draw": 2,
+    "row": "PBG polymerization to HMB",
+    "merged_into": "PBG polymerization to HMB",
+    "biological_state": "plastid state",
+    "why": "the survivor's label, defined in this draw"
+   },
+   {
+    "draw": 3,
+    "row": "PBG deaminase reaction",
+    "merged_into": "PBG polymerization to HMB",
+    "biological_state": "plastid state",
+    "why": "the survivor's label, defined in this draw"
+   },
+   {
+    "draw": 2,
+    "row": "HMB to Urogen III",
+    "merged_into": "HMB conversion to Urogen III",
+    "biological_state": "plastid state",
+    "why": "the survivor's label, defined in this draw"
+   },
+   {
+    "draw": 3,
+    "row": "UROS reaction",
+    "merged_into": "HMB conversion to Urogen III",
+    "biological_state": "plastid state",
+    "why": "the survivor's label, defined in this draw"
+   },
+   {
+    "draw": 2,
+    "row": "Urogen III to Coprogen III",
+    "merged_into": "Urogen III decarboxylation to Coprogen III",
+    "biological_state": "plastid state",
+    "why": "the survivor's label, defined in this draw"
+   },
+   {
+    "draw": 3,
+    "row": "UROD reaction",
+    "merged_into": "Urogen III decarboxylation to Coprogen III",
+    "biological_state": "plastid state",
+    "why": "the survivor's label, defined in this draw"
+   },
+   {
+    "draw": 2,
+    "row": "Coprogen III to Protogen IX",
+    "merged_into": "Coprogen III oxidation to Protogen IX",
+    "biological_state": "plastid state",
+    "why": "the survivor's label, defined in this draw"
+   },
+   {
+    "draw": 2,
+    "row": "Protogen IX to Proto IX",
+    "merged_into": "Protogen IX oxidation to Proto IX",
+    "biological_state": "plastid state",
+    "why": "the survivor's label, defined in this draw"
+   },
+   {
+    "draw": 2,
+    "row": "Mg-Proto IX methylation",
+    "merged_into": "Mg-Proto IX methylation to Mg-Proto ME",
+    "biological_state": "plastid state",
+    "why": "the survivor's label, defined in this draw"
+   },
+   {
+    "draw": 3,
+    "row": "Mg-Proto IX methyltransferase reaction",
+    "merged_into": "Mg-Proto IX methylation to Mg-Proto ME",
+    "biological_state": "plastid state",
+    "why": "the survivor's label, defined in this draw"
+   },
+   {
+    "draw": 2,
+    "row": "DV-Chlide to MV-Chlide a",
+    "merged_into": "DV-Chlide conversion to MV-Chlide a by DVR",
+    "biological_state": "plastid state",
+    "why": "the survivor's label, defined in this draw"
+   },
+   {
+    "draw": 3,
+    "row": "DVR reaction",
+    "merged_into": "DV-Chlide conversion to MV-Chlide a by DVR",
+    "biological_state": "plastid state",
+    "why": "the survivor's label, defined in this draw"
+   },
+   {
+    "draw": 3,
+    "row": "Chl synthase reaction (geranylgeraniol)",
+    "merged_into": "Chl a formation by esterification",
+    "biological_state": "plastid state",
+    "why": "the survivor's label, defined in this draw"
+   },
+   {
+    "draw": 2,
+    "row": "Chl a to Chl b conversion",
+    "merged_into": "Chl a conversion to Chl b by CAO",
+    "biological_state": "thylakoid membrane state",
+    "why": "the survivor's label, defined in this draw"
+   }
+  ],
+  "state_field_patches": []
+ },
+ "draws": [
+  {
+   "biological_states": [
+    {
+     "name": "plastid state",
+     "species": "Arabidopsis thaliana",
+     "subcellular_location": "plastid",
+     "evidence": "all reactions of TPB take place in plastids"
+    },
+    {
+     "name": "thylakoid membrane state",
+     "species": "Arabidopsis thaliana",
+     "subcellular_location": "thylakoid membrane",
+     "evidence": "thylakoid membrane"
+    },
+    {
+     "name": "nucleus state",
+     "species": "Arabidopsis thaliana",
+     "subcellular_location": "nucleus",
+     "evidence": "nucleus"
+    },
+    {
+     "name": "etioplast state",
+     "species": "Arabidopsis thaliana",
+     "subcellular_location": "etioplast",
+     "evidence": "etioplasts"
+    }
+   ],
+   "processes": {
+    "reactions": [
+     {
+      "inputs": [
+       "Glu-tRNA"
+      ],
+      "outputs": [
+       "GSA"
+      ],
+      "name": "Glu-tRNA reduction to GSA",
+      "enzymes": [
+       {
+        "protein": "HEMA1",
+        "evidence": "reduced to GSA by Glu-tRNA reductase (GluTR)",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "plastid state",
+      "evidence": "reduced to Glu 1-semialdehyde (GSA) by Glu-tRNA reductase (GluTR)"
+     },
+     {
+      "inputs": [
+       "GSA"
+      ],
+      "outputs": [
+       "ALA"
+      ],
+      "name": "GSA conversion to ALA",
+      "enzymes": [
+       {
+        "protein": "GSAT",
+        "evidence": "GSA is converted to ALA by GSA aminotransferase (GSAT)",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "plastid state",
+      "evidence": "GSA is converted to ALA by GSA aminotransferase (GSAT)"
+     },
+     {
+      "inputs": [
+       "ALA"
+      ],
+      "outputs": [
+       "PBG"
+      ],
+      "name": "ALA condensation to PBG",
+      "enzymes": [
+       {
+        "protein": "ALAD",
+        "evidence": "catalyzed by ALA dehydratase (ALAD)",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "plastid state",
+      "evidence": "two molecules of ALA are condensed ... to form PBG, catalyzed by ALA dehydratase (ALAD)"
+     },
+     {
+      "inputs": [
+       "PBG"
+      ],
+      "outputs": [
+       "HMB"
+      ],
+      "name": "PBG polymerization to HMB",
+      "enzymes": [
+       {
+        "protein": "PBG deaminase",
+        "evidence": "polymerized by PBG deaminase to result in hydroxymethylbilane (HMB)",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "plastid state",
+      "evidence": "Four PBG molecules are then sequentially polymerized by PBG deaminase to result in HMB"
+     },
+     {
+      "inputs": [
+       "HMB"
+      ],
+      "outputs": [
+       "Urogen III"
+      ],
+      "name": "HMB conversion to Urogen III",
+      "enzymes": [
+       {
+        "protein": "UROS",
+        "evidence": "converted into Urogen III by Urogen III synthase (UROS)",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "plastid state",
+      "evidence": "HMB is converted into Urogen III by Urogen III synthase (UROS)"
+     },
+     {
+      "inputs": [
+       "Urogen III"
+      ],
+      "outputs": [
+       "Coprogen III"
+      ],
+      "name": "Urogen III decarboxylation to Coprogen III",
+      "enzymes": [
+       {
+        "protein": "UROD",
+        "evidence": "metabolized to Coprogen III by Urogen III decarboxylase (UROD)",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "plastid state",
+      "evidence": "metabolized to coproporphyrinogen (Coprogen) III by Urogen III decarboxylase (UROD)"
+     },
+     {
+      "inputs": [
+       "Coprogen III"
+      ],
+      "outputs": [
+       "Protogen IX"
+      ],
+      "name": "Coprogen III oxidation to Protogen IX",
+      "enzymes": [
+       {
+        "protein": "CPO1",
+        "evidence": "oxidized by Coprogen III oxidase (CPO) to form Protogen IX",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "plastid state",
+      "evidence": "Coprogen III is oxidized by Coprogen III oxidase (CPO) to form protoporphyrinogen (Protogen) IX"
+     },
+     {
+      "inputs": [
+       "Protogen IX"
+      ],
+      "outputs": [
+       "Proto IX"
+      ],
+      "name": "Protogen IX oxidation to Proto IX",
+      "enzymes": [
+       {
+        "protein": "PPO1",
+        "evidence": "oxidized by Protogen IX oxidase (PPO) to result in Proto IX",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "plastid state",
+      "evidence": "further oxidized by Protogen IX oxidase (PPO) to result in protoporphyrin (Proto) IX"
+     },
+     {
+      "inputs": [
+       "Proto IX",
+       "Mg2",
+       "ATP"
+      ],
+      "outputs": [
+       "Mg-Proto IX"
+      ],
+      "name": "Mg-chelatase reaction: Proto IX to Mg-Proto IX",
+      "enzymes": [
+       {
+        "protein_complex": "Mg-chelatase",
+        "evidence": "catalyzed by Mg-chelatase consisting of CHLD, CHIH, and CHLI",
+        "provenance": "extracted",
+        "confidence": 1.0
+       },
+       {
+        "protein": "GUN4",
+        "evidence": "GUN4 ... assists this step by stabilizing the Mg-chelatase complex",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "thylakoid membrane state",
+      "evidence": "Mg2+ ion is inserted into the Proto IX macrocycle in an ATP-dependent manner to form Mg-Proto IX, catalyzed by Mg-chelatase"
+     },
+     {
+      "inputs": [
+       "Mg-Proto IX",
+       "S-adenosyl L-methionine"
+      ],
+      "outputs": [
+       "Mg-Proto ME"
+      ],
+      "name": "Mg-Proto IX methylation to Mg-Proto ME",
+      "enzymes": [
+       {
+        "protein": "Mg-Proto IX methyltransferase",
+        "evidence": "methyl group added by Mg-Proto IX methyltransferase",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "plastid state",
+      "evidence": "a methyl group is added to Mg-Proto IX from S-adenosyl L-methionine by Mg-Proto IX methyltransferase"
+     },
+     {
+      "inputs": [
+       "Mg-Proto ME"
+      ],
+      "outputs": [
+       "DV-Pchlide"
+      ],
+      "name": "Mg-Proto ME cyclization to DV-Pchlide",
+      "enzymes": [
+       {
+        "protein_complex": "Mg-Proto ME cyclase",
+        "evidence": "converted to DV-Pchlide by Mg-Proto ME cyclase",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "thylakoid membrane state",
+      "evidence": "Mg-Proto ME is converted to 3,8-divinyl-protochlorophyllide (DV-Pchlide) by Mg-Proto ME cyclase"
+     },
+     {
+      "inputs": [
+       "DV-Pchlide",
+       "NADPH"
+      ],
+      "outputs": [
+       "DV-Chlide"
+      ],
+      "name": "DV-Pchlide reduction to DV-Chlide by POR",
+      "enzymes": [
+       {
+        "protein": "POR",
+        "evidence": "reduced by Pchlide oxidoreductase (POR) to form DV-Chlide",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "thylakoid membrane state",
+      "evidence": "the D ring of DV-Pchlide is reduced by Pchlide oxidoreductase (POR) to form 3,8-divinyl-chlorophyllide (DV-Chlide)"
+     },
+     {
+      "inputs": [
+       "DV-Chlide"
+      ],
+      "outputs": [
+       "MV-Chlide a"
+      ],
+      "name": "DV-Chlide conversion to MV-Chlide a by DVR",
+      "enzymes": [
+       {
+        "protein": "DVR",
+        "evidence": "converted to MV-Chlide a by DV-Chlide reductase (DVR)",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "plastid state",
+      "evidence": "DV-Chlide is converted to 3-vinyl Chlide a (MV-Chlide a) by DV-Chlide reductase (DVR)"
+     },
+     {
+      "inputs": [
+       "geranylgeranyl chain"
+      ],
+      "outputs": [
+       "phytyl chain"
+      ],
+      "name": "Geranylgeranyl reduction to phytyl by CHLP",
+      "enzymes": [
+       {
+        "protein": "CHLP",
+        "evidence": "reduced by geranylgeranyl reductase encoded by CHLP to form a phytyl chain",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "thylakoid membrane state",
+      "evidence": "a geranylgeranyl chain is reduced by geranylgeranyl reductase encoded by CHLP to form a phytyl chain"
+     },
+     {
+      "inputs": [
+       "MV-Chlide a",
+       "geranylgeraniol"
+      ],
+      "outputs": [
+       "Chl a"
+      ],
+      "name": "Chl a formation by Chl synthase",
+      "enzymes": [
+       {
+        "protein": "Chl synthase",
+        "evidence": "catalyzed by Chl synthase",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "thylakoid membrane state",
+      "evidence": "Chl a is formed by esterification of MV-Chlide with geranylgeraniol or phytol, catalyzed by Chl synthase"
+     },
+     {
+      "inputs": [
+       "Chl a"
+      ],
+      "outputs": [
+       "Chl b"
+      ],
+      "name": "Chl a conversion to Chl b by CAO",
+      "enzymes": [
+       {
+        "protein": "CAO",
+        "evidence": "converted into Chl b by Chlide a oxygenase (CAO)",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "thylakoid membrane state",
+      "evidence": "Some of Chl a is converted into Chl b by Chlide a oxygenase (CAO)"
+     }
+    ]
+   }
+  },
+  {
+   "biological_states": [
+    {
+     "name": "plastid state",
+     "species": "Arabidopsis thaliana",
+     "subcellular_location": "plastid",
+     "evidence": "all reactions of TPB take place in plastids"
+    },
+    {
+     "name": "thylakoid membrane state",
+     "species": "Arabidopsis thaliana",
+     "subcellular_location": "thylakoid membrane",
+     "evidence": "thylakoid membrane"
+    },
+    {
+     "name": "nuclear state",
+     "species": "Arabidopsis thaliana",
+     "subcellular_location": "nucleus",
+     "evidence": "HY5 is accumulated in the nucleus"
+    }
+   ],
+   "processes": {
+    "reactions": [
+     {
+      "inputs": [
+       "GSA"
+      ],
+      "outputs": [
+       "ALA"
+      ],
+      "name": "GSA to ALA",
+      "evidence": "GSA is converted to ALA by GSA aminotransferase (GSAT)",
+      "modifiers": [
+       {
+        "protein": "GSAT",
+        "provenance": "extracted",
+        "confidence": 1.0,
+        "evidence": "GSA is converted to ALA by GSA aminotransferase (GSAT)"
+       }
+      ],
+      "biological_state": "plastid state"
+     },
+     {
+      "inputs": [
+       "ALA"
+      ],
+      "outputs": [
+       "PBG"
+      ],
+      "name": "ALA condensation to PBG",
+      "enzymes": [
+       {
+        "protein": "ALAD1/HEMB1",
+        "evidence": "Two molecules of ALA are condensed to form PBG by ALA dehydratase (ALAD)",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "plastid state",
+      "evidence": "Two molecules of ALA are condensed asymmetrically to form porphobilinogen (PBG), which is catalyzed by ALA dehydratase (ALAD)"
+     },
+     {
+      "inputs": [
+       "PBG"
+      ],
+      "outputs": [
+       "HMB"
+      ],
+      "name": "PBG polymerization to HMB",
+      "evidence": "Four PBG molecules are then sequentially polymerized by PBG deaminase to result in HMB",
+      "modifiers": [
+       {
+        "protein": "PBG deaminase",
+        "provenance": "extracted",
+        "confidence": 1.0,
+        "evidence": "Four PBG molecules are sequentially polymerized by PBG deaminase"
+       }
+      ],
+      "biological_state": "plastid state"
+     },
+     {
+      "inputs": [
+       "HMB"
+      ],
+      "outputs": [
+       "Urogen III"
+      ],
+      "name": "HMB to Urogen III",
+      "evidence": "HMB is converted into the first macrocyclic tetrapyrrole, uroporphyrinogen (Urogen) III, by Urogen III synthase (UROS)",
+      "modifiers": [
+       {
+        "protein": "UROS",
+        "provenance": "extracted",
+        "confidence": 1.0,
+        "evidence": "HMB is converted to uroporphyrinogen III by Urogen III synthase (UROS)"
+       }
+      ],
+      "biological_state": "plastid state"
+     },
+     {
+      "inputs": [
+       "Urogen III"
+      ],
+      "outputs": [
+       "Coprogen III"
+      ],
+      "name": "Urogen III to Coprogen III",
+      "evidence": "converted to coproporphyrinogen (Coprogen) III by Urogen III decarboxylase (UROD)",
+      "modifiers": [
+       {
+        "protein": "UROD",
+        "provenance": "extracted",
+        "confidence": 1.0,
+        "evidence": "Urogen III is converted to Coprogen III by Urogen III decarboxylase (UROD)"
+       }
+      ],
+      "biological_state": "plastid state"
+     },
+     {
+      "inputs": [
+       "Coprogen III"
+      ],
+      "outputs": [
+       "Protogen IX"
+      ],
+      "name": "Coprogen III to Protogen IX",
+      "evidence": "Coprogen III is oxidized by Coprogen III oxidase (CPO) to form protoporphyrinogen (Protogen) IX",
+      "modifiers": [
+       {
+        "protein": "CPO1",
+        "provenance": "extracted",
+        "confidence": 1.0,
+        "evidence": "Coprogen III is oxidized by Coprogen III oxidase (CPO) to form Protogen IX"
+       }
+      ],
+      "biological_state": "plastid state"
+     },
+     {
+      "inputs": [
+       "Protogen IX"
+      ],
+      "outputs": [
+       "Proto IX"
+      ],
+      "name": "Protogen IX to Proto IX",
+      "evidence": "further oxidized by Protogen IX oxidase (PPO) to result in protoporphyrin (Proto) IX",
+      "modifiers": [
+       {
+        "protein": "PPO1",
+        "provenance": "extracted",
+        "confidence": 1.0,
+        "evidence": "Protogen IX is oxidized by Protogen IX oxidase (PPO) to Proto IX"
+       }
+      ],
+      "biological_state": "plastid state"
+     },
+     {
+      "inputs": [
+       "Proto IX",
+       "Mg2"
+      ],
+      "outputs": [
+       "Mg-Proto IX"
+      ],
+      "name": "Mg2+ insertion into Proto IX",
+      "enzymes": [
+       {
+        "protein_complex": "Mg-chelatase complex",
+        "evidence": "Mg2+ is inserted into Proto IX by Mg-chelatase consisting of CHLD, CHIH, and CHLI",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "plastid state",
+      "evidence": "an Mg2+ ion is inserted into the Proto IX macrocycle ... catalyzed by Mg-chelatase consisting of the three subunits CHLD, CHIH, and CHLI"
+     },
+     {
+      "inputs": [
+       "Mg-Proto IX",
+       "S-adenosyl L-methionine",
+       "SAM",
+       "SAM"
+      ],
+      "outputs": [
+       "Mg-Proto ME"
+      ],
+      "name": "Mg-Proto IX methylation",
+      "evidence": "a methyl group is added to Mg-Proto IX from S-adenosyl L-methionine by Mg-Proto IX methyltransferase",
+      "modifiers": [
+       {
+        "protein": "Mg-Proto IX methyltransferase",
+        "provenance": "extracted",
+        "confidence": 1.0,
+        "evidence": "methyl group is added to Mg-Proto IX from SAM by Mg-Proto IX methyltransferase"
+       }
+      ],
+      "biological_state": "plastid state"
+     },
+     {
+      "inputs": [
+       "Mg-Proto ME"
+      ],
+      "outputs": [
+       "DV-Pchlide"
+      ],
+      "name": "Mg-Proto ME cyclization",
+      "enzymes": [
+       {
+        "protein_complex": "Mg-Proto ME cyclase complex",
+        "evidence": "Mg-Proto ME is converted to DV-Pchlide by Mg-Proto ME cyclase (CHL27, LCAA)",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "plastid state",
+      "evidence": "Mg-Proto ME is converted to 3,8-divinyl-protochlorophyllide (DV-Pchlide) by Mg-Proto ME cyclase"
+     },
+     {
+      "inputs": [
+       "DV-Pchlide"
+      ],
+      "outputs": [
+       "DV-Chlide"
+      ],
+      "name": "DV-Pchlide reduction by POR",
+      "enzymes": [
+       {
+        "protein": "PORB",
+        "evidence": "DV-Pchlide is reduced by Pchlide oxidoreductase (POR) to DV-Chlide",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "plastid state",
+      "evidence": "the D ring of DV-Pchlide is reduced by Pchlide oxidoreductase (POR) to form 3,8-divinyl-chlorophyllide (DV-Chlide)"
+     },
+     {
+      "inputs": [
+       "DV-Chlide"
+      ],
+      "outputs": [
+       "MV-Chlide a"
+      ],
+      "name": "DV-Chlide to MV-Chlide a",
+      "evidence": "DV-Chlide is converted to 3-vinyl Chlide a (MV-Chlide a) by DV-Chlide reductase (DVR)",
+      "modifiers": [
+       {
+        "protein": "DVR",
+        "provenance": "extracted",
+        "confidence": 1.0,
+        "evidence": "DV-Chlide is converted to MV-Chlide a by DV-Chlide reductase (DVR)"
+       }
+      ],
+      "biological_state": "plastid state"
+     },
+     {
+      "inputs": [
+       "MV-Chlide a",
+       "geranylgeraniol"
+      ],
+      "outputs": [
+       "Chl a"
+      ],
+      "name": "Chl a formation by esterification",
+      "enzymes": [
+       {
+        "protein": "Chl synthase",
+        "evidence": "Chl a is formed by esterification of MV-Chlide with geranylgeraniol, catalyzed by Chl synthase",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "plastid state",
+      "evidence": "Chl a is formed by esterification of MV-Chlide with geranylgeraniol or phytol, which is catalyzed by Chl synthase"
+     },
+     {
+      "inputs": [
+       "Chl a"
+      ],
+      "outputs": [
+       "Chl b"
+      ],
+      "name": "Chl a to Chl b conversion",
+      "evidence": "Some of Chlide a or Chl a is converted into Chlide b or Chl b by Chlide a oxygenase (CAO)",
+      "modifiers": [
+       {
+        "protein": "CAO",
+        "provenance": "extracted",
+        "confidence": 1.0,
+        "evidence": "Chl a is converted to Chl b by Chlide a oxygenase (CAO)"
+       }
+      ],
+      "biological_state": "thylakoid membrane state"
+     },
+     {
+      "inputs": [
+       "Glu-tRNAGlu"
+      ],
+      "outputs": [
+       "GSA"
+      ],
+      "name": "Glu-tRNAGlu reduction to GSA",
+      "enzymes": [
+       {
+        "protein": "HEMA1",
+        "evidence": "Glu-tRNAGlu is reduced to GSA by Glu-tRNA reductase (GluTR)",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "plastid state",
+      "evidence": "Glu-tRNAGlu is reduced to GSA by Glu-tRNA reductase (GluTR)"
+     },
+     {
+      "inputs": [
+       "Proto IX",
+       "Fe2"
+      ],
+      "outputs": [
+       "heme b"
+      ],
+      "name": "Fe2+ insertion into Proto IX (heme formation)",
+      "enzymes": [
+       {
+        "protein": "FC2",
+        "evidence": "Fe2+ ion is inserted into Proto IX by ferrochelatase to form protoheme (heme b)",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "plastid state",
+      "evidence": "an Fe2+ ion is inserted into the Proto IX macrocycle by ferrochelatase to form protoheme (heme b)"
+     }
+    ]
+   }
+  },
+  {
+   "biological_states": [
+    {
+     "name": "plastid state",
+     "species": "Arabidopsis thaliana",
+     "subcellular_location": "plastid",
+     "evidence": "all reactions of TPB take place in plastids"
+    },
+    {
+     "name": "thylakoid membrane state",
+     "species": "Arabidopsis thaliana",
+     "subcellular_location": "thylakoid membrane",
+     "evidence": "thylakoid membrane"
+    },
+    {
+     "name": "nucleus state",
+     "species": "Arabidopsis thaliana",
+     "subcellular_location": "nucleus",
+     "evidence": "nucleus"
+    }
+   ],
+   "processes": {
+    "reactions": [
+     {
+      "inputs": [
+       "GSA"
+      ],
+      "outputs": [
+       "ALA"
+      ],
+      "name": "GSAT reaction",
+      "evidence": "GSA is converted to ALA by GSA aminotransferase (GSAT)",
+      "modifiers": [
+       {
+        "protein": "GSAT",
+        "provenance": "extracted",
+        "confidence": 1.0,
+        "evidence": "GSA aminotransferase (GSAT)"
+       }
+      ],
+      "biological_state": "plastid state"
+     },
+     {
+      "inputs": [
+       "ALA"
+      ],
+      "outputs": [
+       "PBG"
+      ],
+      "name": "ALAD reaction",
+      "evidence": "two molecules of ALA are condensed asymmetrically to form porphobilinogen (PBG), catalyzed by ALA dehydratase (ALAD)",
+      "modifiers": [
+       {
+        "protein": "ALAD",
+        "provenance": "extracted",
+        "confidence": 1.0,
+        "evidence": "ALA dehydratase (ALAD)"
+       }
+      ],
+      "biological_state": "plastid state"
+     },
+     {
+      "inputs": [
+       "PBG"
+      ],
+      "outputs": [
+       "HMB"
+      ],
+      "name": "PBG deaminase reaction",
+      "evidence": "Four PBG molecules are then sequentially polymerized by PBG deaminase to result in hydroxymethylbilane (HMB)",
+      "modifiers": [
+       {
+        "protein": "PBG deaminase",
+        "provenance": "extracted",
+        "confidence": 1.0,
+        "evidence": "PBG deaminase"
+       }
+      ],
+      "biological_state": "plastid state"
+     },
+     {
+      "inputs": [
+       "HMB"
+      ],
+      "outputs": [
+       "Urogen III"
+      ],
+      "name": "UROS reaction",
+      "evidence": "HMB is converted into uroporphyrinogen (Urogen) III, by Urogen III synthase (UROS)",
+      "modifiers": [
+       {
+        "protein": "UROS",
+        "provenance": "extracted",
+        "confidence": 1.0,
+        "evidence": "Urogen III synthase (UROS)"
+       }
+      ],
+      "biological_state": "plastid state"
+     },
+     {
+      "inputs": [
+       "Urogen III"
+      ],
+      "outputs": [
+       "Coprogen III"
+      ],
+      "name": "UROD reaction",
+      "evidence": "then metabolized to coproporphyrinogen (Coprogen) III by Urogen III decarboxylase (UROD)",
+      "modifiers": [
+       {
+        "protein": "UROD",
+        "provenance": "extracted",
+        "confidence": 1.0,
+        "evidence": "Urogen III decarboxylase (UROD)"
+       }
+      ],
+      "biological_state": "plastid state"
+     },
+     {
+      "inputs": [
+       "Coprogen III"
+      ],
+      "outputs": [
+       "Protogen IX"
+      ],
+      "name": "CPO reaction",
+      "enzymes": [
+       {
+        "protein": "CPO",
+        "evidence": "Coprogen III oxidase (CPO)",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "plastid state",
+      "evidence": "Coprogen III is oxidized by Coprogen III oxidase (CPO) to form protoporphyrinogen (Protogen) IX"
+     },
+     {
+      "inputs": [
+       "Protogen IX"
+      ],
+      "outputs": [
+       "Proto IX"
+      ],
+      "name": "PPO reaction",
+      "enzymes": [
+       {
+        "protein": "PPO",
+        "evidence": "Protogen IX oxidase (PPO)",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "plastid state",
+      "evidence": "which is further oxidized by Protogen IX oxidase (PPO) to result in protoporphyrin (Proto) IX"
+     },
+     {
+      "inputs": [
+       "Proto IX",
+       "Mg2",
+       "ATP"
+      ],
+      "outputs": [
+       "Mg-Proto IX"
+      ],
+      "name": "Mg-chelatase reaction",
+      "enzymes": [
+       {
+        "protein_complex": "Mg-chelatase",
+        "evidence": "Mg-chelatase consisting of the three subunits CHLD, CHIH, and CHLI",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "plastid state",
+      "evidence": "an Mg2+ ion is inserted into the Proto IX macrocycle in an ATP-dependent manner to form Mg-Proto IX, catalyzed by Mg-chelatase"
+     },
+     {
+      "inputs": [
+       "Mg-Proto IX",
+       "S-adenosyl L-methionine",
+       "SAM",
+       "SAM"
+      ],
+      "outputs": [
+       "Mg-Proto ME"
+      ],
+      "name": "Mg-Proto IX methyltransferase reaction",
+      "evidence": "a methyl group is added to Mg-Proto IX from S-adenosyl L-methionine by Mg-Proto IX methyltransferase",
+      "modifiers": [
+       {
+        "protein": "Mg-Proto IX methyltransferase",
+        "provenance": "extracted",
+        "confidence": 1.0,
+        "evidence": "Mg-Proto IX methyltransferase"
+       }
+      ],
+      "biological_state": "plastid state"
+     },
+     {
+      "inputs": [
+       "Mg-Proto ME"
+      ],
+      "outputs": [
+       "DV-Pchlide"
+      ],
+      "name": "Mg-Proto ME cyclase reaction",
+      "enzymes": [
+       {
+        "protein_complex": "Mg-Proto ME cyclase",
+        "evidence": "Mg-Proto ME cyclase consisting of three subunits including CHL27 and LCAA",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "plastid state",
+      "evidence": "Mg-Proto ME is converted to 3,8-divinyl-protochlorophyllide (DV-Pchlide) by Mg-Proto ME cyclase"
+     },
+     {
+      "inputs": [
+       "DV-Pchlide"
+      ],
+      "outputs": [
+       "DV-Chlide"
+      ],
+      "name": "POR reaction",
+      "enzymes": [
+       {
+        "protein": "POR",
+        "evidence": "Pchlide oxidoreductase (POR)",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "plastid state",
+      "evidence": "the D ring of DV-Pchlide is reduced by Pchlide oxidoreductase (POR) to form 3,8-divinyl-chlorophyllide (DV-Chlide)"
+     },
+     {
+      "inputs": [
+       "DV-Chlide"
+      ],
+      "outputs": [
+       "MV-Chlide a"
+      ],
+      "name": "DVR reaction",
+      "evidence": "DV-Chlide is converted to 3-vinyl Chlide a (MV-Chlide a) by DV-Chlide reductase (DVR)",
+      "modifiers": [
+       {
+        "protein": "DVR",
+        "provenance": "extracted",
+        "confidence": 1.0,
+        "evidence": "DV-Chlide reductase (DVR)"
+       }
+      ],
+      "biological_state": "plastid state"
+     },
+     {
+      "inputs": [
+       "MV-Chlide a",
+       "geranylgeraniol"
+      ],
+      "outputs": [
+       "Chl a"
+      ],
+      "name": "Chl synthase reaction (geranylgeraniol)",
+      "evidence": "Chl a is formed by esterification of MV-Chlide with geranylgeraniol or phytol, which is catalyzed by Chl synthase",
+      "modifiers": [
+       {
+        "protein": "Chl synthase",
+        "provenance": "extracted",
+        "confidence": 1.0,
+        "evidence": "Chl synthase"
+       }
+      ],
+      "biological_state": "plastid state"
+     },
+     {
+      "inputs": [
+       "Chl a"
+      ],
+      "outputs": [
+       "Chl b"
+      ],
+      "name": "CAO reaction (Chl a to Chl b)",
+      "enzymes": [
+       {
+        "protein": "CAO",
+        "evidence": "Chlide a oxygenase (CAO)",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "plastid state",
+      "evidence": "Some of Chlide a or Chl a is converted into Chlide b or Chl b by Chlide a oxygenase (CAO)"
+     },
+     {
+      "inputs": [
+       "Glu-tRNAGlu"
+      ],
+      "outputs": [
+       "GSA"
+      ],
+      "name": "GluTR reaction",
+      "enzymes": [
+       {
+        "protein": "GluTR",
+        "evidence": "Glu-tRNA reductase (GluTR)",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "plastid state",
+      "evidence": "Glu-tRNAGlu is reduced to Glu 1-semialdehyde (GSA) by Glu-tRNA reductase (GluTR)"
+     },
+     {
+      "inputs": [
+       "MV-Chlide a",
+       "phytol"
+      ],
+      "outputs": [
+       "Chl a"
+      ],
+      "name": "Chl synthase reaction (phytol)",
+      "enzymes": [
+       {
+        "protein": "Chl synthase",
+        "evidence": "Chl synthase",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "plastid state",
+      "evidence": "Chl a is formed by esterification of MV-Chlide with geranylgeraniol or phytol, which is catalyzed by Chl synthase"
+     },
+     {
+      "inputs": [
+       "Chlide a"
+      ],
+      "outputs": [
+       "Chlide b"
+      ],
+      "name": "CAO reaction (Chlide a to Chlide b)",
+      "enzymes": [
+       {
+        "protein": "CAO",
+        "evidence": "Chlide a oxygenase (CAO)",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "plastid state",
+      "evidence": "Some of Chlide a or Chl a is converted into Chlide b or Chl b by Chlide a oxygenase (CAO)"
+     },
+     {
+      "inputs": [
+       "Proto IX",
+       "Fe2"
+      ],
+      "outputs": [
+       "protoheme"
+      ],
+      "name": "ferrochelatase reaction",
+      "enzymes": [
+       {
+        "protein": "ferrochelatase",
+        "evidence": "ferrochelatase",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "plastid state",
+      "evidence": "an Fe2+ ion is inserted into the Proto IX macrocycle by ferrochelatase to form protoheme"
+     }
+    ]
+   }
+  }
+ ]
+}

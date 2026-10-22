@@ -39,7 +39,10 @@ distinct is a row the evaluator scores as distinct (``reactions.score_leg``, R-D
   enzyme set containing the other is compatible and the larger set is kept, each extra
   enzyme only on a quote that names it (``enzymes_added`` / ``enzymes_withheld``); and the
   row that states more -- a defined state, then the larger enzyme set -- becomes the
-  survivor, so its own quote is the one kept (``became_survivor``)
+  survivor, so its own quote is the one kept (``became_survivor``). D-109 § 1 (2026-10-22):
+  two locations where one CONTAINS the other (:data:`_LOCATION_PARENT`; ``intracellular``
+  holds ``cytosol``) are compatible, the survivor keeps the more specific one, and the merge
+  is flagged ``nested_location_merged``; a pair the table does not nest still conflicts
 * interaction: (entity_1, relationship, entity_2); the names strict-keyed, the relationship
   by the type the exporter will emit for it (``ir.PWML_INTERACTION_TYPES``: ``activates``
   and ``activation`` are one ``Activation``; a word that table does not know keeps its
@@ -125,6 +128,8 @@ IDENTITY_REPORT_NAME = "ensemble_identity_merge_report.json"
 UNDEFINED_STATE_FLAG = "undefined_state_treated_as_absent"
 #: The review flag on every name a typo snap rewrote (ruling N4). Side file and .txt only.
 TYPO_FLAG = "typo_snapped"
+#: The review flag on a merge two NESTED locations made compatible (D-109 § 1). Side file and .txt only.
+NESTED_LOCATION_FLAG = "nested_location_merged"
 #: Fields of a row that NAME an entity, rewritten in step with it (rule 4).
 _REFERENCE_FIELDS = {
     "/processes/reactions": ("inputs", "outputs", "enzymes", "modifiers"),
@@ -258,21 +263,75 @@ def _enzyme_entries(row: Dict[str, Any]) -> List[Tuple[str, Any, str]]:
     return [(slot, item, name) for slot in ("enzymes", "modifiers") for item, name in _participants(row.get(slot))]
 
 
+def _location(value: Any) -> str:
+    """A location as the merge compares it: strict-keyed, a plural ``-s`` folded per word
+    (``plastids`` is ``plastid``; the fold also turns ``nucleus`` into ``nucleu``, on both
+    sides alike)."""
+
+    return " ".join(t[:-1] if len(t) > 3 and t.endswith("s") else t for t in _strict_key(value).split())
+
+
+#: D-109 § 1 (product owner, 2026-10-22): which location CONTAINS which, for merging only.
+#: Each location names its one container, so the containers of any location form ONE chain;
+#: that is what lets a pooled row keep only its narrowest location (:func:`_absorb`). A pair
+#: this table does not nest is a conflict (fail closed), and nothing is ever looked up at run
+#: time. Written from GO cellular component part_of / is_a; the ids are for the reviewer.
+#: Known ceiling: the thylakoid rows hold where a draw can say "plastid" (plants, algae); a
+#: cyanobacterial thylakoid lies in no plastid, and a pool naming both would be misread.
+_LOCATION_PARENT: Dict[str, str] = {_location(child): _location(parent) for child, parent in {
+    "intracellular": "cell",                    # GO:0005622 intracellular anatomical structure
+    "cytoplasm": "intracellular",               # GO:0005737, part_of GO:0005622
+    "cytosol": "cytoplasm",                     # GO:0005829, part_of GO:0005737
+    "nucleus": "intracellular",                 # GO:0005634, an intracellular organelle
+    "mitochondrion": "cytoplasm",               # GO:0005739, part_of GO:0005737
+    "mitochondrial matrix": "mitochondrion",    # GO:0005759, part_of GO:0005739
+    "endoplasmic reticulum": "cytoplasm",       # GO:0005783, part_of GO:0005737
+    "golgi": "cytoplasm",                       # GO:0005794 Golgi apparatus, part_of GO:0005737
+    "lysosome": "cytoplasm",                    # GO:0005764, part_of GO:0005737
+    "peroxisome": "cytoplasm",                  # GO:0005777, part_of GO:0005737
+    "endosome": "cytoplasm",                    # GO:0005768, part_of GO:0005737
+    "plasma membrane": "cell",                  # GO:0005886, the cell periphery
+    "plastid": "cytoplasm",                     # GO:0009536, part_of GO:0005737
+    "chloroplast": "plastid",                   # GO:0009507, is_a GO:0009536
+    "etioplast": "plastid",                     # GO:0009513, is_a GO:0009536
+    "thylakoid": "chloroplast",                 # GO:0009579; APPROXIMATE: GO puts only GO:0009534 chloroplast thylakoid in the chloroplast
+    "thylakoid membrane": "thylakoid",          # GO:0042651, part_of GO:0009579 thylakoid
+}.items()}
+
+
+def _containers(location: str) -> List[str]:
+    """Every location the table puts around ``location``, innermost first."""
+
+    out: List[str] = []
+    while location in _LOCATION_PARENT:
+        location = _LOCATION_PARENT[location]
+        out.append(location)
+    return out
+
+
+def _nests(a: str, b: str) -> bool:
+    return a == b or a in _containers(b) or b in _containers(a)
+
+
+def _narrower(a: str, b: str) -> str:
+    """The more specific location: ``b`` when ``a`` is empty or contains it, else ``a``."""
+
+    return b if not a or a in _containers(b) else a
+
+
 def _state_profile(label: Any, states: Dict[str, Dict[str, Any]]) -> Dict[str, str]:
     """What a reaction's ``biological_state`` label denotes. Resolved through the
     ``biological_states`` row of that name in the same payload: its compartment
-    (``compartment_canonical``, else ``subcellular_location`` with a plural ``-s`` folded,
-    so ``plastids`` is ``plastid``), cell type, tissue and species. A label with no
-    definition is only its own text."""
+    (``compartment_canonical``, else ``subcellular_location``, by :func:`_location`), cell
+    type, tissue and species. A label with no definition is only its own text."""
 
     key = _strict_key(label)
     row = states.get(key)
     if not key or not isinstance(row, dict):
         return {"label": key} if key else {}
-    loc = _strict_key(row.get("compartment_canonical")) or _strict_key(row.get("subcellular_location"))
     return {
         "label": key,
-        "location": " ".join(t[:-1] if len(t) > 3 and t.endswith("s") else t for t in loc.split()),
+        "location": _location(row.get("compartment_canonical")) or _location(row.get("subcellular_location")),
         **{f: _strict_key(row.get(f)) for f in ("cell_type", "tissue", "species")},
     }
 
@@ -317,6 +376,21 @@ def _undefined_state(a: Optional[Dict[str, Any]], b: Optional[Dict[str, Any]]) -
     return ", ".join(repr(s["label"]) for s in (sa, sb) if not _defined(s))
 
 
+def _nested_location(a: Optional[Dict[str, Any]], b: Optional[Dict[str, Any]]) -> str:
+    """The location pair a merge of ``a`` and ``b`` relies on (D-109 § 1), as ``'inner'
+    within 'outer'``, or ``''``: two differently named DEFINED states whose locations differ
+    and nest -- the case :func:`_conflict` admits only because one contains the other."""
+
+    sa, sb = (a or {}).get("state") or {}, (b or {}).get("state") or {}
+    if not (_defined(sa) and _defined(sb)) or sa["label"] == sb["label"]:
+        return ""
+    la, lb = sa["location"], sb["location"]
+    if not la or not lb or la == lb or not _nests(la, lb):
+        return ""
+    inner = _narrower(la, lb)
+    return f"{inner!r} within {(lb if inner == la else la)!r}"
+
+
 def _conflict(a: Optional[Dict[str, Any]], b: Optional[Dict[str, Any]]) -> str:
     """Why two rows under one reaction key are NOT one reaction, or ``''`` (finding 1).
 
@@ -325,10 +399,12 @@ def _conflict(a: Optional[Dict[str, Any]], b: Optional[Dict[str, Any]]) -> str:
     other omits; one enzyme set containing the other (product-owner ruling Q2) -- but only
     when a verbatim quote on either row names every extra enzyme (review B2); a state one
     payload never defines, which counts as no state stated (ruling Q1; the merge is then
-    flagged, :func:`_undefined_state`). Everything else conflicts and is never merged:
-    two rows that each name a cofactor the other lacks (NAD+ vs NADP+, NAD+ vs FAD, ATP vs
-    PPi); enzyme sets that do not nest (A+B vs A+C); an extra enzyme no quote names; two
-    DEFINED states that differ."""
+    flagged, :func:`_undefined_state`); two defined states whose locations nest, one inside
+    the other (D-109 § 1; flagged, :func:`_nested_location`). Everything else conflicts and
+    is never merged: two rows that each name a cofactor the other lacks (NAD+ vs NADP+, NAD+
+    vs FAD, ATP vs PPi); enzyme sets that do not nest (A+B vs A+C); an extra enzyme no quote
+    names; two DEFINED states that differ in a cell type, tissue or species, or in locations
+    the table does not nest (an unknown pair included)."""
 
     if not a or not b:
         return ""
@@ -350,6 +426,8 @@ def _conflict(a: Optional[Dict[str, Any]], b: Optional[Dict[str, Any]]) -> str:
     if _defined(sa) and _defined(sb) and sa["label"] != sb["label"]:
         for field in ("location", "cell_type", "tissue", "species"):
             if sa[field] and sb[field] and sa[field] != sb[field]:
+                if field == "location" and _nests(sa[field], sb[field]):
+                    continue  # D-109 § 1: one contains the other
                 return f"biological_state {field} {sa[field]!r} vs {sb[field]!r}"
     return ""
 
@@ -414,7 +492,8 @@ def _fold(survivor: Dict[str, Any], other: Dict[str, Any], own: Dict[str, Any],
     """Carry onto ``survivor`` (in place) what the compatible ``other`` row adds, each
     piece only on a verbatim quote. Returns ``(audit fields, survivor's new profile)``.
 
-    * a defined biological state, when the survivor's is undefined or absent (Q1);
+    * a defined biological state, when the survivor's is undefined or absent (Q1), or when
+      its location lies inside the survivor's own (D-109 § 1: the more specific is kept);
     * enzymes outside the survivor's set (Q2), each only when ``other``'s row quote or the
       enzyme entry's own quote names it -- that quote is recorded with it;
     * cofactors, each only when the SURVIVOR's quote names it (:func:`_donate_cofactors`).
@@ -429,7 +508,10 @@ def _fold(survivor: Dict[str, Any], other: Dict[str, Any], own: Dict[str, Any],
             if key not in theirs["enzymes"]:
                 audit.setdefault("enzymes_kept", []).append(
                     {"enzyme": name, "supporting_quote": _naming_quote(name, survivor, item) or _naming_quote(name, other)})
-    if _defined(theirs["state"]) and not _defined(own["state"]):
+    mine, their_state = own["state"] or {}, theirs["state"] or {}
+    if (_defined(their_state) and not _defined(mine)) or (
+            mine.get("location") and mine["label"] != their_state.get("label")
+            and mine["location"] in _containers(their_state.get("location") or "")):
         audit["state_taken"] = other.get("biological_state")
         survivor["biological_state"] = other.get("biological_state")
         new["state"] = theirs["state"]
@@ -530,13 +612,22 @@ def _bridge(a: Optional[Dict[str, Any]], b: Optional[Dict[str, Any]]) -> List[st
 
 def _absorb(profile: Optional[Dict[str, Any]], other: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
     """What a record has CLAIMED once a compatible row joins it: every cofactor and enzyme
-    either row named, and a defined state over an undefined one. Later rows are judged
+    either row named, a defined state over an undefined one, and of two defined states the
+    narrower location (D-109 § 1: cytosol, once it joins intracellular, so nucleus may not
+    follow; a row stating no location never widens the claim). Later rows are judged
     against all of it, so a row compatible with each of two conflicting rows can never
     join them into one."""
 
     if not profile or not other:
         return profile or other
     state = next((st for st in (profile["state"], other["state"]) if _defined(st)), profile["state"] or other["state"])
+    if _defined(profile["state"]) and _defined(other["state"]):
+        # A claim merged from two differently NAMED states carries a label no row can carry
+        # (strict keys hold no \x1f), so _conflict always compares a later row against it: a
+        # label is defined per draw, and draw 3's "X" need not be draw 1's (review round 0).
+        la, lb = profile["state"]["label"], other["state"]["label"]
+        state = {**state, "location": _narrower(profile["state"]["location"], other["state"]["location"]),
+                 "label": la if la == lb else "\x1f".join(sorted({la, lb}))}
     return {**profile,
             "inputs": profile["inputs"] | other["inputs"],
             "outputs": profile["outputs"] | other["outputs"],
@@ -619,6 +710,9 @@ def _union(dest: List[Any], items: List[Any], path: str, draw: int,
             undefined = _undefined_state(record["_profile"], theirs)
             if undefined:
                 merge["flag"] = {"reason": UNDEFINED_STATE_FLAG, "undefined_state": undefined}
+            nested = _nested_location(record["_profile"], theirs)
+            if nested:
+                merge["location_flag"] = {"reason": NESTED_LOCATION_FLAG, "locations": nested}
             record["_profile"] = _absorb(record["_profile"], theirs)
             why = _prefers(record["_own"], theirs)
             if why:
@@ -892,6 +986,9 @@ def _flag_lines(merge: Dict[str, Any]) -> List[str]:
                      f"is not defined in its payload's biological_states")
     if merge.get("typo_flag"):
         lines.append(f"    FLAG (review): {merge['typo_flag']} -- bridged by a typo snap (see TYPO SNAPS)")
+    if merge.get("location_flag"):
+        lines.append(f"    FLAG (review): {NESTED_LOCATION_FLAG} -- {merge['location_flag']['locations']} "
+                     "(D-109: nested locations merge; the pooled row keeps the more specific)")
     return lines
 
 
@@ -936,14 +1033,15 @@ def render_report_text(report: Dict[str, Any]) -> str:
     else:
         dictionary = f"not evaluated -- {lexicon.get('reason') or 'no paper text'}"
     rows = ((report.get("buckets") or {}).get(_REACTIONS) or {}).get("rows") or []
+    flagged = sum(1 for r in rows for m in r.get("merges") or [] if m.get("flag") or m.get("typo_flag")
+                  or m.get("location_flag"))
     lines = [
         "STAGE-1 ENSEMBLE: POOLED REACTIONS",
         f"Draws: {report.get('draws_succeeded')} of {report.get('draws_requested')} succeeded"
         + "".join(f"; draw {f.get('draw')} failed ({f.get('error')})" for f in report.get("failed_draws") or []),
         f"Paper dictionary: {dictionary}",
         f"Pooled reactions: {len(rows)} ({sum(1 for r in rows if r.get('review_required'))} found by one draw only; "
-        f"{sum(1 for r in rows for m in r.get('merges') or [] if m.get('flag') or m.get('typo_flag'))} "
-        "merge(s) flagged for review)",
+        f"{flagged} merge(s) flagged for review)",
         "",
     ]
     for number, row in enumerate(rows, 1):
@@ -1331,6 +1429,7 @@ def merge_on_mapped_identity(payload: Dict[str, Any], report: Optional[Dict[str,
         merged_away.append(away_index)
         bridged = RULE_EXACT if row_key(path, row) == row_key(path, first) else RULE_DATABASE_ID
         undefined = _undefined_state(slot[1], profile)
+        nested = _nested_location(slot[1], profile)
         slot[1] = _absorb(slot[1], profile)
         if why:
             away = deepcopy(first)
@@ -1346,6 +1445,7 @@ def merge_on_mapped_identity(payload: Dict[str, Any], report: Optional[Dict[str,
             **({"merged_entry_evidence": _entry_quotes(away)} if _entry_quotes(away) else {}),
             **({"became_survivor": why} if why else {}),
             **({"flag": {"reason": UNDEFINED_STATE_FLAG, "undefined_state": undefined}} if undefined else {}),
+            **({"location_flag": {"reason": NESTED_LOCATION_FLAG, "locations": nested}} if nested else {}),
             **audit,
         })
         if _lock_id(away) and _lock_id(first) and _lock_id(away) != _lock_id(first):
