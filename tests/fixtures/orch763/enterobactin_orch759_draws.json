@@ -1,0 +1,423 @@
+{
+ "source": {
+  "stage1_payload": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\runs_papers\\ORCH-759\\legs\\enterobactin-strict\\2026-10-22_1037\\papers\\PMC12096016\\strict\\stage1_payload.json",
+  "stage1_payload_sha256": "51aa236736a7ea5d1888ad5a0d22e311beb80554575cb3d1b2040c5c17a08486",
+  "side_file": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\runs_papers\\ORCH-759\\REVIEW\\enterobactin\\strict\\stage1_ensemble_report.json",
+  "side_file_sha256": "04e64178db45b8cd9465919542a320e566c2cae6dbabf38f09a7299f0317e82e",
+  "side_file_paper_chars": 43667,
+  "pooled_reactions": 6
+ },
+ "reconstruction": {
+  "rules": "-- every one is recorded in the output under \"reconstruction\":\n1. A pooled reaction row is VERBATIM from ``stage1_payload.json`` (minus the post-Stage-1 keys\n   ``provenance_lineage``, ``locked_reaction_id``, ``scope_membership``), assigned to the draw\n   that created it. Pooled rows and side-file records are matched per reaction key, k-th to\n   k-th (both lists are in creation order), and the names must agree.\n2. A row merged INTO a pooled row is rebuilt: its own name and quote from the side file; its\n   participants and enzyme names from the survivor (the merge bridged their keys, so they\n   are one reaction under the rules that ran); each entry quote at the pointer the side file\n   gives (``/modifiers/0/evidence`` -> ``modifiers[0]``); a cofactor the side file lists as\n   withheld from that row's quote is put back on its side.\n3. A merged row's ``biological_state`` is NOT recorded anywhere. It is INFERRED, and listed:\n   the survivor's label when the merged row's draw defines that label, else the label most\n   of that draw's own pooled rows carry.\n4. Each draw's ``biological_states`` are the side file's state rows of that draw, with the\n   content of the pooled payload's first row of that name.\n5. Names the side file lists as rewritten (``names_rewritten``: draw, from, to) are written\n   back to the draw's own spelling in that draw's reaction participants.\n6. ``--state-field`` patches a field the pooled payload lost (it carries no\n   ``compartment_canonical``), each with its reason.",
+  "inferred_states": [
+   {
+    "draw": 2,
+    "row": "EntC isochorismate synthase reaction",
+    "merged_into": "EntC-catalyzed isomerization of chorismate to isochorismate",
+    "biological_state": "cytoplasmic state",
+    "why": "the survivor's label, defined in this draw"
+   },
+   {
+    "draw": 3,
+    "row": "EntC isochorismate synthase reaction",
+    "merged_into": "EntC-catalyzed isomerization of chorismate to isochorismate",
+    "biological_state": "cytoplasmic state",
+    "why": "the survivor's label, defined in this draw"
+   },
+   {
+    "draw": 2,
+    "row": "EntB isochorismatase reaction",
+    "merged_into": "EntB isochorismatase reaction",
+    "biological_state": "cytoplasmic state",
+    "why": "the survivor's label, defined in this draw"
+   },
+   {
+    "draw": 3,
+    "row": "EntB isochorismatase reaction",
+    "merged_into": "EntB isochorismatase reaction",
+    "biological_state": "cytoplasmic state",
+    "why": "the survivor's label, defined in this draw"
+   },
+   {
+    "draw": 2,
+    "row": "EntA dehydrogenase reaction",
+    "merged_into": "EntA dehydrogenase reaction",
+    "biological_state": "cytoplasmic state",
+    "why": "the survivor's label, defined in this draw"
+   },
+   {
+    "draw": 3,
+    "row": "EntA 2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase reaction",
+    "merged_into": "EntA dehydrogenase reaction",
+    "biological_state": "cytoplasmic state",
+    "why": "the survivor's label, defined in this draw"
+   },
+   {
+    "draw": 2,
+    "row": "EntE adenylation reaction",
+    "merged_into": "EntE adenylation of 2,3-DHB",
+    "biological_state": "cytoplasmic state",
+    "why": "the survivor's label, defined in this draw"
+   },
+   {
+    "draw": 3,
+    "row": "EntE 2,3-dihydroxybenzoyl-AMP ligase reaction",
+    "merged_into": "EntE adenylation of 2,3-DHB",
+    "biological_state": "cytoplasmic state",
+    "why": "the survivor's label, defined in this draw"
+   },
+   {
+    "draw": 3,
+    "row": "EntF enterobactin synthase reaction",
+    "merged_into": "EntF enterobactin synthase reaction",
+    "biological_state": "cytoplasmic state",
+    "why": "the survivor's label, defined in this draw"
+   }
+  ],
+  "state_field_patches": []
+ },
+ "draws": [
+  {
+   "biological_states": [
+    {
+     "name": "cytoplasmic state",
+     "species": "Escherichia coli",
+     "subcellular_location": "cytoplasm",
+     "evidence": "enterobactin is synthesized in the cytoplasm"
+    }
+   ],
+   "processes": {
+    "reactions": [
+     {
+      "inputs": [
+       "chorismate"
+      ],
+      "outputs": [
+       "isochorismate"
+      ],
+      "name": "EntC-catalyzed isomerization of chorismate to isochorismate",
+      "enzymes": [
+       {
+        "protein": "EntC",
+        "evidence": "EntC (isochorismate synthase; EC 5.4.4.2)",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "cytoplasmic state",
+      "evidence": "the EntC-catalyzed isomerization of chorismate to isochorismate"
+     },
+     {
+      "inputs": [
+       "isochorismate"
+      ],
+      "outputs": [
+       "2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB)",
+       "pyruvate"
+      ],
+      "name": "EntB isochorismatase reaction",
+      "enzymes": [
+       {
+        "protein": "EntB",
+        "evidence": "isochorismate is converted to 2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB) and pyruvate by EntB isochorismatase activity",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "cytoplasmic state",
+      "evidence": "isochorismate is converted to 2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB) and pyruvate by EntB isochorismatase activity"
+     },
+     {
+      "inputs": [
+       "2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB)"
+      ],
+      "outputs": [
+       "2,3-dihydroxybenzoic acid (2,3-DHB)"
+      ],
+      "name": "EntA dehydrogenase reaction",
+      "enzymes": [
+       {
+        "protein": "EntA",
+        "evidence": "EntA (2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase; EC 1.3.1.28)",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "cytoplasmic state",
+      "evidence": "2,3-DHB is produced from chorismate by sequential reactions catalyzed by three enzymes"
+     },
+     {
+      "inputs": [
+       "2,3-dihydroxybenzoic acid (2,3-DHB)",
+       "ATP"
+      ],
+      "outputs": [
+       "2,3-dihydroxybenzoyl-AMP"
+      ],
+      "name": "EntE adenylation of 2,3-DHB",
+      "enzymes": [
+       {
+        "protein": "EntE",
+        "evidence": "2,3-DHB is adenylated by EntE (2,3-dihydroxybenzoyl-AMP ligase; EC 6.2.1.71) in an ATP-dependent reaction",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "cytoplasmic state",
+      "evidence": "2,3-DHB is adenylated by EntE (2,3-dihydroxybenzoyl-AMP ligase; EC 6.2.1.71) in an ATP-dependent reaction"
+     },
+     {
+      "inputs": [
+       "2,3-dihydroxybenzoyl-AMP",
+       "L-serine"
+      ],
+      "outputs": [
+       "enterobactin"
+      ],
+      "name": "EntF enterobactin synthesis",
+      "enzymes": [
+       {
+        "protein": "EntF",
+        "evidence": "three EntF-catalyzed cycles of condensation with L-serine",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "cytoplasmic state",
+      "evidence": "Enterobactin production from activated 2,3-DHB then involves three EntF-catalyzed cycles of condensation with L-serine"
+     }
+    ]
+   }
+  },
+  {
+   "biological_states": [
+    {
+     "name": "cytoplasmic state",
+     "species": "Escherichia coli",
+     "subcellular_location": "cytoplasm",
+     "evidence": "enterobactin is synthesized in the cytoplasm"
+    }
+   ],
+   "processes": {
+    "reactions": [
+     {
+      "inputs": [
+       "chorismate"
+      ],
+      "outputs": [
+       "isochorismate"
+      ],
+      "name": "EntC isochorismate synthase reaction",
+      "evidence": "the EntC‐catalyzed isomerization of chorismate to isochorismate",
+      "modifiers": [
+       {
+        "protein": "EntC",
+        "provenance": "extracted",
+        "confidence": 1.0,
+        "evidence": "EntC (isochorismate synthase; EC 5.4.4.2)"
+       }
+      ],
+      "biological_state": "cytoplasmic state"
+     },
+     {
+      "inputs": [
+       "isochorismate"
+      ],
+      "outputs": [
+       "2,3-dihydro-2,3-dihydroxybenzoate",
+       "pyruvate"
+      ],
+      "name": "EntB isochorismatase reaction",
+      "evidence": "isochorismate is converted to 2,3‐dihydro‐2,3‐dihydroxybenzoate (2,3‐diDHB) and pyruvate by EntB isochorismatase activity",
+      "modifiers": [
+       {
+        "protein": "EntB",
+        "provenance": "extracted",
+        "confidence": 1.0,
+        "evidence": "isochorismate is converted to 2,3‐dihydro‐2,3‐dihydroxybenzoate (2,3‐diDHB) and pyruvate by EntB isochorismatase activity"
+       }
+      ],
+      "biological_state": "cytoplasmic state"
+     },
+     {
+      "inputs": [
+       "2,3-dihydro-2,3-dihydroxybenzoate"
+      ],
+      "outputs": [
+       "2,3-dihydroxybenzoic acid"
+      ],
+      "name": "EntA dehydrogenase reaction",
+      "evidence": "2,3‐DHB is produced from chorismate by sequential reactions catalyzed by three enzymes",
+      "modifiers": [
+       {
+        "protein": "EntA",
+        "provenance": "extracted",
+        "confidence": 1.0,
+        "evidence": "EntA (2,3‐dihydro‐2,3‐dihydroxybenzoate dehydrogenase; EC 1.3.1.28)"
+       }
+      ],
+      "biological_state": "cytoplasmic state"
+     },
+     {
+      "inputs": [
+       "2,3-dihydroxybenzoic acid",
+       "ATP"
+      ],
+      "outputs": [
+       "2,3-dihydroxybenzoyl-AMP"
+      ],
+      "name": "EntE adenylation reaction",
+      "evidence": "2,3‐DHB is adenylated by EntE (2,3‐dihydroxybenzoyl‐AMP ligase; EC 6.2.1.71) in an ATP‐dependent reaction",
+      "modifiers": [
+       {
+        "protein": "EntE",
+        "provenance": "extracted",
+        "confidence": 1.0,
+        "evidence": "EntE (2,3‐dihydroxybenzoyl‐AMP ligase; EC 6.2.1.71)"
+       }
+      ],
+      "biological_state": "cytoplasmic state"
+     },
+     {
+      "inputs": [
+       "2,3-dihydroxybenzoic acid",
+       "L-serine"
+      ],
+      "outputs": [
+       "enterobactin"
+      ],
+      "name": "EntF enterobactin synthase reaction",
+      "enzymes": [
+       {
+        "protein": "EntF",
+        "evidence": "phosphopantetheinylated EntF (enterobactin synthase)",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "cytoplasmic state",
+      "evidence": "Enterobactin production from activated 2,3‐DHB then involves three EntF‐catalyzed cycles of condensation with L‐serine"
+     }
+    ]
+   }
+  },
+  {
+   "biological_states": [
+    {
+     "name": "cytoplasmic state",
+     "species": "Escherichia coli",
+     "subcellular_location": "cytoplasm",
+     "evidence": "enterobactin is synthesized in the cytoplasm"
+    },
+    {
+     "name": "extracellular state",
+     "species": "Escherichia coli",
+     "subcellular_location": "extracellular",
+     "evidence": "secreted to the extracellular environment"
+    }
+   ],
+   "processes": {
+    "reactions": [
+     {
+      "inputs": [
+       "chorismate"
+      ],
+      "outputs": [
+       "isochorismate"
+      ],
+      "name": "EntC isochorismate synthase reaction",
+      "evidence": "the EntC-catalyzed isomerization of chorismate to isochorismate",
+      "modifiers": [
+       {
+        "protein": "EntC",
+        "provenance": "extracted",
+        "confidence": 1.0,
+        "evidence": "the EntC-catalyzed isomerization of chorismate to isochorismate"
+       }
+      ],
+      "biological_state": "cytoplasmic state"
+     },
+     {
+      "inputs": [
+       "isochorismate"
+      ],
+      "outputs": [
+       "2,3-diDHB",
+       "pyruvate"
+      ],
+      "name": "EntB isochorismatase reaction",
+      "evidence": "isochorismate is converted to 2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB) and pyruvate by EntB isochorismatase activity",
+      "modifiers": [
+       {
+        "protein": "EntB",
+        "provenance": "extracted",
+        "confidence": 1.0,
+        "evidence": "isochorismate is converted to 2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB) and pyruvate by EntB isochorismatase activity"
+       }
+      ],
+      "biological_state": "cytoplasmic state"
+     },
+     {
+      "inputs": [
+       "2,3-diDHB"
+      ],
+      "outputs": [
+       "2,3-DHB"
+      ],
+      "name": "EntA 2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase reaction",
+      "evidence": "2,3-DHB is produced from chorismate by sequential reactions catalyzed by three enzymes",
+      "modifiers": [
+       {
+        "protein": "EntA",
+        "provenance": "extracted",
+        "confidence": 1.0,
+        "evidence": "2,3-DHB is produced from chorismate by sequential reactions catalyzed by three enzymes"
+       }
+      ],
+      "biological_state": "cytoplasmic state"
+     },
+     {
+      "inputs": [
+       "2,3-DHB",
+       "ATP"
+      ],
+      "outputs": [
+       "2,3-dihydroxybenzoyl-AMP"
+      ],
+      "name": "EntE 2,3-dihydroxybenzoyl-AMP ligase reaction",
+      "evidence": "2,3-DHB is adenylated by EntE (2,3-dihydroxybenzoyl-AMP ligase; EC 6.2.1.71) in an ATP-dependent reaction",
+      "modifiers": [
+       {
+        "protein": "EntE",
+        "provenance": "extracted",
+        "confidence": 1.0,
+        "evidence": "2,3-DHB is adenylated by EntE (2,3-dihydroxybenzoyl-AMP ligase; EC 6.2.1.71) in an ATP-dependent reaction"
+       }
+      ],
+      "biological_state": "cytoplasmic state"
+     },
+     {
+      "inputs": [
+       "2,3-DHB",
+       "L-serine"
+      ],
+      "outputs": [
+       "enterobactin"
+      ],
+      "name": "EntF enterobactin synthase reaction",
+      "evidence": "Enterobactin production from activated 2,3-DHB then involves three EntF-catalyzed cycles of condensation with L-serine",
+      "modifiers": [
+       {
+        "protein": "EntF",
+        "provenance": "extracted",
+        "confidence": 1.0,
+        "evidence": "Enterobactin production from activated 2,3-DHB then involves three EntF-catalyzed cycles of condensation with L-serine"
+       }
+      ],
+      "biological_state": "cytoplasmic state"
+     }
+    ]
+   }
+  }
+ ]
+}

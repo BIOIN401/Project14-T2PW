@@ -1,0 +1,543 @@
+{
+ "source": {
+  "stage1_payload": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\runs_papers\\ORCH-759\\legs\\menaquinone-strict\\2026-10-22_1148\\papers\\PMC12421875\\strict\\stage1_payload.json",
+  "stage1_payload_sha256": "9a41ffaf7c64d080a05dae348efe0b154961a85783bf3705a28f2725f373608b",
+  "side_file": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\runs_papers\\ORCH-759\\REVIEW\\menaquinone\\strict\\stage1_ensemble_report.json",
+  "side_file_sha256": "023bd557acd19eb7d177c1abf941164019eca93d26732cbd7057c2ca80b0facc",
+  "side_file_paper_chars": 54281,
+  "pooled_reactions": 16
+ },
+ "reconstruction": {
+  "rules": "-- every one is recorded in the output under \"reconstruction\":\n1. A pooled reaction row is VERBATIM from ``stage1_payload.json`` (minus the post-Stage-1 keys\n   ``provenance_lineage``, ``locked_reaction_id``, ``scope_membership``), assigned to the draw\n   that created it. Pooled rows and side-file records are matched per reaction key, k-th to\n   k-th (both lists are in creation order), and the names must agree.\n2. A row merged INTO a pooled row is rebuilt: its own name and quote from the side file; its\n   participants and enzyme names from the survivor (the merge bridged their keys, so they\n   are one reaction under the rules that ran); each entry quote at the pointer the side file\n   gives (``/modifiers/0/evidence`` -> ``modifiers[0]``); a cofactor the side file lists as\n   withheld from that row's quote is put back on its side.\n3. A merged row's ``biological_state`` is NOT recorded anywhere. It is INFERRED, and listed:\n   the survivor's label when the merged row's draw defines that label, else the label most\n   of that draw's own pooled rows carry.\n4. Each draw's ``biological_states`` are the side file's state rows of that draw, with the\n   content of the pooled payload's first row of that name.\n5. Names the side file lists as rewritten (``names_rewritten``: draw, from, to) are written\n   back to the draw's own spelling in that draw's reaction participants.\n6. ``--state-field`` patches a field the pooled payload lost (it carries no\n   ``compartment_canonical``), each with its reason.",
+  "inferred_states": [
+   {
+    "draw": 2,
+    "row": "MenF reaction",
+    "merged_into": "MenF reaction: chorismate to isochorismate",
+    "biological_state": "intracellular state",
+    "why": "the label most of this draw's own pooled rows carry"
+   },
+   {
+    "draw": 3,
+    "row": "MenF reaction",
+    "merged_into": "MenF reaction: chorismate to isochorismate",
+    "biological_state": "Lactococcus lactis intracellular",
+    "why": "the label most of this draw's own pooled rows carry"
+   },
+   {
+    "draw": 2,
+    "row": "MenD reaction",
+    "merged_into": "MenD reaction: isochorismate to SEPHCHC",
+    "biological_state": "intracellular state",
+    "why": "the label most of this draw's own pooled rows carry"
+   },
+   {
+    "draw": 3,
+    "row": "MenD reaction",
+    "merged_into": "MenD reaction: isochorismate to SEPHCHC",
+    "biological_state": "Lactococcus lactis intracellular",
+    "why": "the label most of this draw's own pooled rows carry"
+   },
+   {
+    "draw": 2,
+    "row": "MenA reaction",
+    "merged_into": "MenA reaction: DHNA to DMK",
+    "biological_state": "intracellular state",
+    "why": "the label most of this draw's own pooled rows carry"
+   },
+   {
+    "draw": 2,
+    "row": "MenG reaction",
+    "merged_into": "MenG reaction: DMK to MK",
+    "biological_state": "intracellular state",
+    "why": "the label most of this draw's own pooled rows carry"
+   }
+  ],
+  "state_field_patches": [
+   {
+    "draw": 2,
+    "state": "intracellular state",
+    "field": "compartment_canonical",
+    "value": "cytosol",
+    "why": "the leg's side file kept draw 3's MenH-MenI rows apart from draw 2's on 'biological_state location cytosol vs intracellular' (candidate first, so draw 2 = cytosol); this state's subcellular_location is 'intracellular', so only compartment_canonical can have given cytosol, and the pooled payload carries no compartment_canonical"
+   }
+  ]
+ },
+ "draws": [
+  {
+   "biological_states": [
+    {
+     "name": "Lactococcus lactis cells",
+     "species": "Lactococcus lactis",
+     "evidence": "the lactic acid bacterium Lactococcus lactis"
+    }
+   ],
+   "processes": {
+    "reactions": [
+     {
+      "inputs": [
+       "chorismate"
+      ],
+      "outputs": [
+       "isochorismate"
+      ],
+      "name": "MenF reaction: chorismate to isochorismate",
+      "enzymes": [
+       {
+        "protein": "MenF",
+        "evidence": "The enzyme MenF catalyzes a reversible reaction converting chorismate to isochorismate",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "Lactococcus lactis cells",
+      "evidence": "The enzyme MenF catalyzes a reversible reaction converting chorismate to isochorismate"
+     },
+     {
+      "inputs": [
+       "isochorismate"
+      ],
+      "outputs": [
+       "SEPHCHC"
+      ],
+      "name": "MenD reaction: isochorismate to SEPHCHC",
+      "enzymes": [
+       {
+        "protein": "MenD",
+        "evidence": "MenD facilitates the conversion of isochorismate (B) to SEPHCHC (C)",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "Lactococcus lactis cells",
+      "evidence": "MenD facilitates the conversion of isochorismate (B) to SEPHCHC (C)"
+     },
+     {
+      "inputs": [
+       "DHNA",
+       "prenyl diphosphate"
+      ],
+      "outputs": [
+       "demethylmenaquinone (DMK)"
+      ],
+      "name": "MenA reaction: DHNA to DMK",
+      "enzymes": [
+       {
+        "protein": "MenA",
+        "evidence": "MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK)",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "Lactococcus lactis cells",
+      "evidence": "MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK)"
+     },
+     {
+      "inputs": [
+       "demethylmenaquinone (DMK)"
+      ],
+      "outputs": [
+       "menaquinone (MK)"
+      ],
+      "name": "MenG reaction: DMK to MK",
+      "enzymes": [
+       {
+        "protein": "MenG",
+        "evidence": "MenG demethylates DMK to generate MK",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "Lactococcus lactis cells",
+      "evidence": "MenG demethylates DMK to generate MK"
+     }
+    ]
+   }
+  },
+  {
+   "biological_states": [
+    {
+     "name": "intracellular state",
+     "species": "Lactococcus lactis",
+     "subcellular_location": "intracellular",
+     "evidence": "intracellular DHNA concentration",
+     "compartment_canonical": "cytosol"
+    },
+    {
+     "name": "extracellular state",
+     "species": "Lactococcus lactis",
+     "subcellular_location": "extracellular",
+     "evidence": "extracellular DHNA concentration"
+    }
+   ],
+   "processes": {
+    "reactions": [
+     {
+      "inputs": [
+       "chorismate"
+      ],
+      "outputs": [
+       "isochorismate"
+      ],
+      "name": "MenF reaction",
+      "evidence": "The enzyme MenF catalyzes a reversible reaction converting chorismate (A) to isochorismate (B)",
+      "modifiers": [
+       {
+        "protein": "MenF",
+        "provenance": "extracted",
+        "confidence": 1.0,
+        "evidence": "The enzyme MenF catalyzes a reversible reaction converting chorismate (A) to isochorismate (B)"
+       }
+      ],
+      "biological_state": "intracellular state"
+     },
+     {
+      "inputs": [
+       "isochorismate"
+      ],
+      "outputs": [
+       "SEPHCHC"
+      ],
+      "name": "MenD reaction",
+      "evidence": "MenD facilitates the conversion of isochorismate (B) to 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC, C)",
+      "modifiers": [
+       {
+        "protein": "MenD",
+        "provenance": "extracted",
+        "confidence": 1.0,
+        "evidence": "MenD facilitates the conversion of isochorismate (B) to 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC, C)"
+       }
+      ],
+      "biological_state": "intracellular state"
+     },
+     {
+      "inputs": [
+       "DHNA",
+       "prenyl diphosphate"
+      ],
+      "outputs": [
+       "demethylmenaquinone (DMK)"
+      ],
+      "name": "MenA reaction",
+      "evidence": "MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK)",
+      "modifiers": [
+       {
+        "protein": "MenA",
+        "provenance": "extracted",
+        "confidence": 1.0,
+        "evidence": "MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK)"
+       }
+      ],
+      "biological_state": "intracellular state"
+     },
+     {
+      "inputs": [
+       "demethylmenaquinone (DMK)"
+      ],
+      "outputs": [
+       "menaquinone (MK)"
+      ],
+      "name": "MenG reaction",
+      "evidence": "MenG demethylates DMK to generate MK",
+      "modifiers": [
+       {
+        "protein": "MenG",
+        "provenance": "extracted",
+        "confidence": 1.0,
+        "evidence": "MenG demethylates DMK to generate MK"
+       }
+      ],
+      "biological_state": "intracellular state"
+     },
+     {
+      "inputs": [
+       "SEPHCHC"
+      ],
+      "outputs": [
+       "SHCHC"
+      ],
+      "name": "MenH reaction",
+      "enzymes": [
+       {
+        "protein": "MenH",
+        "evidence": "k_cat_H[MenH][C]/(KM_H+[C])",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "intracellular state",
+      "evidence": "k_cat_H[MenH][C]/(KM_H+[C])"
+     },
+     {
+      "inputs": [
+       "SHCHC"
+      ],
+      "outputs": [
+       "OSB"
+      ],
+      "name": "MenC reaction",
+      "enzymes": [
+       {
+        "protein": "MenC",
+        "evidence": "k_cat_C[MenC][D]/(KM_C+[D])",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "intracellular state",
+      "evidence": "k_cat_C[MenC][D]/(KM_C+[D])"
+     },
+     {
+      "inputs": [
+       "OSB"
+      ],
+      "outputs": [
+       "OSB-CoA"
+      ],
+      "name": "MenE reaction",
+      "enzymes": [
+       {
+        "protein": "MenE",
+        "evidence": "k_cat_E[MenE][E]/(KM_E+[E])",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "intracellular state",
+      "evidence": "k_cat_E[MenE][E]/(KM_E+[E])"
+     },
+     {
+      "inputs": [
+       "OSB-CoA"
+      ],
+      "outputs": [
+       "DHNA-CoA"
+      ],
+      "name": "MenB reaction",
+      "enzymes": [
+       {
+        "protein": "MenB",
+        "evidence": "k_cat_B[MenB][F]/(KM_B+[F])",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "intracellular state",
+      "evidence": "k_cat_B[MenB][F]/(KM_B+[F])"
+     },
+     {
+      "inputs": [
+       "DHNA-CoA"
+      ],
+      "outputs": [
+       "DHNA"
+      ],
+      "name": "MenI reaction",
+      "enzymes": [
+       {
+        "protein": "MenI",
+        "evidence": "k_cat_I[MenI][G]/(KM_I+[G])",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "intracellular state",
+      "evidence": "k_cat_I[MenI][G]/(KM_I+[G])"
+     }
+    ]
+   }
+  },
+  {
+   "biological_states": [
+    {
+     "name": "Lactococcus lactis intracellular",
+     "species": "Lactococcus lactis",
+     "subcellular_location": "intracellular",
+     "evidence": "intracellular DHNA concentration"
+    },
+    {
+     "name": "Lactococcus lactis extracellular",
+     "species": "Lactococcus lactis",
+     "subcellular_location": "extracellular",
+     "evidence": "extracellular DHNA concentration"
+    }
+   ],
+   "processes": {
+    "reactions": [
+     {
+      "inputs": [
+       "chorismate"
+      ],
+      "outputs": [
+       "isochorismate"
+      ],
+      "name": "MenF reaction",
+      "evidence": "MenF catalyzes a reversible reaction converting chorismate (A) to isochorismate (B)",
+      "modifiers": [
+       {
+        "protein": "MenF",
+        "provenance": "extracted",
+        "confidence": 1.0,
+        "evidence": "MenF catalyzes a reversible reaction converting chorismate (A) to isochorismate (B)"
+       }
+      ],
+      "biological_state": "Lactococcus lactis intracellular"
+     },
+     {
+      "inputs": [
+       "isochorismate"
+      ],
+      "outputs": [
+       "SEPHCHC"
+      ],
+      "name": "MenD reaction",
+      "evidence": "MenD facilitates the conversion of isochorismate (B) to SEPHCHC (C)",
+      "modifiers": [
+       {
+        "protein": "MenD",
+        "provenance": "extracted",
+        "confidence": 1.0,
+        "evidence": "MenD facilitates the conversion of isochorismate (B) to SEPHCHC (C)"
+       }
+      ],
+      "biological_state": "Lactococcus lactis intracellular"
+     },
+     {
+      "inputs": [
+       "SEPHCHC"
+      ],
+      "outputs": [
+       "SHCHC"
+      ],
+      "name": "MenH reaction",
+      "enzymes": [
+       {
+        "protein": "MenH",
+        "evidence": "k_cat_H[MenH][C]/(K_M_H+[C])",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "Lactococcus lactis intracellular",
+      "evidence": "k_cat_H[MenH][C]/(K_M_H+[C])"
+     },
+     {
+      "inputs": [
+       "SHCHC"
+      ],
+      "outputs": [
+       "OSB"
+      ],
+      "name": "MenC reaction",
+      "enzymes": [
+       {
+        "protein": "MenC",
+        "evidence": "k_cat_C[MenC][D]/(K_M_C+[D])",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "Lactococcus lactis intracellular",
+      "evidence": "k_cat_C[MenC][D]/(K_M_C+[D])"
+     },
+     {
+      "inputs": [
+       "OSB"
+      ],
+      "outputs": [
+       "OSB-CoA"
+      ],
+      "name": "MenE reaction",
+      "enzymes": [
+       {
+        "protein": "MenE",
+        "evidence": "k_cat_E[MenE][E]/(K_M_E+[E])",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "Lactococcus lactis intracellular",
+      "evidence": "k_cat_E[MenE][E]/(K_M_E+[E])"
+     },
+     {
+      "inputs": [
+       "OSB-CoA"
+      ],
+      "outputs": [
+       "DHNA-CoA"
+      ],
+      "name": "MenB reaction",
+      "enzymes": [
+       {
+        "protein": "MenB",
+        "evidence": "k_cat_B[MenB][F]/(K_M_B+[F])",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "Lactococcus lactis intracellular",
+      "evidence": "k_cat_B[MenB][F]/(K_M_B+[F])"
+     },
+     {
+      "inputs": [
+       "DHNA-CoA"
+      ],
+      "outputs": [
+       "DHNA"
+      ],
+      "name": "MenI reaction",
+      "enzymes": [
+       {
+        "protein": "MenI",
+        "evidence": "k_cat_I[MenI][G]/(K_M_I+[G])",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "Lactococcus lactis intracellular",
+      "evidence": "k_cat_I[MenI][G]/(K_M_I+[G])"
+     },
+     {
+      "inputs": [
+       "DHNA",
+       "prenyl diphosphate"
+      ],
+      "outputs": [
+       "DMK"
+      ],
+      "name": "MenA reaction",
+      "enzymes": [
+       {
+        "protein": "MenA",
+        "evidence": "MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK)",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "Lactococcus lactis intracellular",
+      "evidence": "MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK)"
+     },
+     {
+      "inputs": [
+       "DMK"
+      ],
+      "outputs": [
+       "MK"
+      ],
+      "name": "MenG reaction",
+      "enzymes": [
+       {
+        "protein": "MenG",
+        "evidence": "MenG demethylates DMK to generate MK",
+        "provenance": "extracted",
+        "confidence": 1.0
+       }
+      ],
+      "biological_state": "Lactococcus lactis intracellular",
+      "evidence": "MenG demethylates DMK to generate MK"
+     }
+    ]
+   }
+  }
+ ]
+}
