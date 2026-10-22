@@ -96,6 +96,7 @@ from t2pw.pipeline.extraction_diagnostics import (
     count_processes as diagnostic_process_counts,
     current as current_extraction_diagnostics,
     payload_hash as diagnostic_payload_hash,
+    reenter as reenter_extraction_diagnostics,
 )
 from t2pw.pipeline.stage_one_boundary import settle_stage_one
 from t2pw.pipeline.gate_reports import (
@@ -5703,6 +5704,7 @@ if submit:
     st.session_state["pathway_context"] = pathway_context
     st.session_state["user_task_context"] = user_task_context
     st.session_state["stage_one"] = stage_one
+    st.session_state["extraction_diagnostics_recorder"] = current_extraction_diagnostics()
     st.session_state["out_of_scope_removed_reactions"] = out_of_scope_removed_reactions
     st.session_state["chunk_details"] = chunk_details
     st.session_state["stage_two"] = stage_two
@@ -6687,6 +6689,7 @@ if st.session_state.get("pipeline_ready"):
             # never the thing that has to remember to invalidate.
             reset_quarantine_state(PROJECT_ROOT / "outputs")
             post_artifacts = {}
+            reenter_extraction_diagnostics(st.session_state.get("extraction_diagnostics_recorder"))
             try:
                 with st.spinner("Running audit and DB mapping..."):
                     final_payload = propagate_context_organism(

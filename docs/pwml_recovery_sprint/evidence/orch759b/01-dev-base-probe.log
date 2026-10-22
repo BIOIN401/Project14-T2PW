@@ -1,0 +1,953 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759b\src\t2pw\__init__.py
+FFF.FF                                                                   [100%]
+================================== FAILURES ===================================
+_______ test_g9_rule3_runs_at_stage6_and_files_its_record_beside_stage1 _______
+
+offline_app = {'network': ["('https://www.ebi.ac.uk/webservices/chebi/2.0/test/getLiteEntity',)", "('https://rest.kegg.jp/find/compo...-32394/test_g9_rule3_runs_at_stage6_a0'), 'wire': <test_orch759b_recorder_reattach._Wire object at 0x00000237FC7ED160>}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000237F7EF5E00>
+
+    def test_g9_rule3_runs_at_stage6_and_files_its_record_beside_stage1(
+        offline_app: Dict[str, Any], monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        at = _app()
+        stage1_dir = _run_pipeline(at, monkeypatch, "3")
+        assert (stage1_dir / STAGE1_SIDE_FILE).is_file(), "Stage 1 did not pool: the premise is wrong"
+        assert not (stage1_dir / IDENTITY_REPORT).exists()
+    
+        artifacts = _run_post_pipeline(at, monkeypatch)
+    
+        # What came into Stage 6 still has both rows; what came out has one (rule 3, D-104 § 3(c)).
+        assert _reactions(artifacts["final_audited"]) == ["heme b formation", "protoheme formation"]
+>       assert _reactions(artifacts["final_mapped_db"]) == ["protoheme formation"]
+E       AssertionError: assert ['heme b form...me formation'] == ['protoheme formation']
+E         
+E         At index 0 diff: 'heme b formation' != 'protoheme formation'
+E         Left contains one more item: 'protoheme formation'
+E         Use -v to get more diff
+
+tests\test_orch759b_recorder_reattach.py:233: AssertionError
+---------------------------- Captured stderr call -----------------------------
+2026-10-22 14:23:26.490 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 14:23:27.907 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-10-22 14:23:27.908 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-10-22 14:23:27.909 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-10-22 14:23:27.909 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-10-22 14:23:28.181 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-10-22 14:23:28.182 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-10-22 14:23:28.182 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-10-22 14:23:28.183 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+___ test_g9_audit_and_gap_rounds_reach_the_stage1_directory_and_the_driver ____
+
+offline_app = {'network': ["('https://www.ebi.ac.uk/webservices/chebi/2.0/test/getLiteEntity',)", "('https://rest.kegg.jp/find/compo...-32394/test_g9_audit_and_gap_rounds_r0'), 'wire': <test_orch759b_recorder_reattach._Wire object at 0x00000237D90FF250>}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000237F7EF5940>
+
+    def test_g9_audit_and_gap_rounds_reach_the_stage1_directory_and_the_driver(
+        offline_app: Dict[str, Any], monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        at = _app()
+        stage1_dir = _run_pipeline(at, monkeypatch, "3")
+        artifacts = _run_post_pipeline(at, monkeypatch)
+    
+        rounds = len(artifacts["audit_iterations"])
+        assert rounds >= 1 and len(artifacts["gap_resolution_iterations"]) == rounds
+        for name in (AUDIT_SUMMARY, GAP_SUMMARY):
+>           on_disk = json.loads((stage1_dir / name).read_text(encoding="utf-8"))
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_orch759b_recorder_reattach.py:253: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Python313\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Python313\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/t/bt-orch759b/01-dev-base-probe-32394/test_g9_audit_and_gap_rounds_r0/tmp/extraction_diagnostics/run-7c279d12b3f4/audit_iteration_summary.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\t\\bt-orch759b\\01-dev-base-probe-32394\\test_g9_audit_and_gap_rounds_r0\\tmp\\extraction_diagnostics\\run-7c279d12b3f4\\audit_iteration_summary.json'
+
+C:\Python313\Lib\pathlib\_local.py:537: FileNotFoundError
+---------------------------- Captured stdout call -----------------------------
+[31m──[0m[31m────────────────────────[0m[31m [0m[1;31mTraceback [0m[1;2;31m(most recent call last)[0m[31m [0m[31m─────────────────────────[0m[31m──[0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner\exec_code.py:136 in exec_func_with_error_handling               [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner\script_runner.py:837 in code_to_exec                            [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759b\src\t2p [31m [0m
+[31m [0m w\app\streamlit_app.py:7278 in <module>                                              [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m   [2m7275 [0m[2m# directory can be reviewed with no run loaded. Presentation only.[0m            [31m [0m
+[31m [0m   [2m7276 [0m[94mfrom[0m[90m [0m[4;96mt2pw[0m[4;96m.[0m[4;96mapp[0m[4;96m.[0m[4;96mreaction_evidence_view[0m[90m [0m[94mimport[0m render_reaction_evidence  [2m# noqa:[0m [31m [0m
+[31m [0m   [2m7277 [0m                                                                              [31m [0m
+[31m [0m [31m> [0m7278 [1;4mrender_reaction_evidence()[0m                                                    [31m [0m
+[31m [0m   [2m7279 [0m                                                                              [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759b\src\t2p [31m [0m
+[31m [0m w\app\reaction_evidence_view.py:91 in render_reaction_evidence                       [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m   [2m 88 [0m                                                                               [31m [0m
+[31m [0m   [2m 89 [0m                                                                               [31m [0m
+[31m [0m   [2m 90 [0m[94mdef[0m[90m [0m[92mrender_reaction_evidence[0m() -> [94mNone[0m:                                        [31m [0m
+[31m [0m [31m> [0m 91 [2m│   [0m[1;4mst.divider()[0m                                                               [31m [0m
+[31m [0m   [2m 92 [0m[2m│   [0mst.subheader([33m"[0m[33mReaction Evidence[0m[33m"[0m)                                          [31m [0m
+[31m [0m   [2m 93 [0m[2m│   [0mst.caption(                                                                [31m [0m
+[31m [0m   [2m 94 [0m[2m│   │   [0m[33m"[0m[33mRead-only review of what the run[0m[33m'[0m[33ms artifacts say the pathway contains[0m [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\metrics_util.py:628 in wrapped_func                                          [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m elements\markdown.py:452 in divider                                                  [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m delta_generator.py:533 in _enqueue                                                   [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner_utils\script_run_context.py:174 in get                          [31m [0m
+[31m────────────────────────────────────────────────────────────────────────────────────────[0m
+[1;91mRuntimeError: [0mFragmentThreadState not initialized — [1;35mScriptRunContext.reset[0m[1m([0m[1m)[0m or 
+[1;35madd_script_run_ctx[0m[1m([0m[1m)[0m must be called on this thread first.
+[31m──[0m[31m────────────────────────[0m[31m [0m[1;31mTraceback [0m[1;2;31m(most recent call last)[0m[31m [0m[31m─────────────────────────[0m[31m──[0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner\exec_code.py:136 in exec_func_with_error_handling               [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner\script_runner.py:837 in code_to_exec                            [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759b\src\t2p [31m [0m
+[31m [0m w\app\streamlit_app.py:7128 in <module>                                              [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m   [2m7125 [0m[2m│   │   │   │   [0mkey=[33m"[0m[33mdl_completeness_audit[0m[33m"[0m,                                  [31m [0m
+[31m [0m   [2m7126 [0m[2m│   │   │   [0m)                                                                 [31m [0m
+[31m [0m   [2m7127 [0m[2m│   [0m                                                                          [31m [0m
+[31m [0m [31m> [0m7128 [2m│   [0m[1;4mrender_pathwhiz_converter_section(llm_client_module)[0m                      [31m [0m
+[31m [0m   [2m7129 [0m[2m│   [0m                                                                          [31m [0m
+[31m [0m   [2m7130 [0m[2m│   [0mst.subheader([33m"[0m[33mConnectivity snapshot[0m[33m"[0m)                                     [31m [0m
+[31m [0m   [2m7131 [0m[2m│   [0mstats = graph_summary(final_payload)                                      [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759b\src\t2p [31m [0m
+[31m [0m w\tools\pathwhiz_converter\ui.py:26 in render_pathwhiz_converter_section             [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m   [2m 23 [0m                                                                               [31m [0m
+[31m [0m   [2m 24 [0m                                                                               [31m [0m
+[31m [0m   [2m 25 [0m[94mdef[0m[90m [0m[92mrender_pathwhiz_converter_section[0m(llm_client) -> [94mNone[0m:                     [31m [0m
+[31m [0m [31m> [0m 26 [2m│   [0m[1;4mst.subheader([0m[1;4;33m"[0m[1;4;33mPathWhiz Converter[0m[1;4;33m"[0m[1;4m)[0m                                         [31m [0m
+[31m [0m   [2m 27 [0m[2m│   [0m                                                                           [31m [0m
+[31m [0m   [2m 28 [0m[2m│   [0minput_sbml = st.file_uploader(                                             [31m [0m
+[31m [0m   [2m 29 [0m[2m│   │   [0m[33m"[0m[33mUpload your SBML (.xml)[0m[33m"[0m,                                             [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\metrics_util.py:628 in wrapped_func                                          [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m elements\heading.py:249 in subheader                                                 [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m delta_generator.py:533 in _enqueue                                                   [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner_utils\script_run_context.py:174 in get                          [31m [0m
+[31m────────────────────────────────────────────────────────────────────────────────────────[0m
+[1;91mRuntimeError: [0mFragmentThreadState not initialized — [1;35mScriptRunContext.reset[0m[1m([0m[1m)[0m or 
+[1;35madd_script_run_ctx[0m[1m([0m[1m)[0m must be called on this thread first.
+[31m──[0m[31m────────────────────────[0m[31m [0m[1;31mTraceback [0m[1;2;31m(most recent call last)[0m[31m [0m[31m─────────────────────────[0m[31m──[0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner\exec_code.py:136 in exec_func_with_error_handling               [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner\script_runner.py:837 in code_to_exec                            [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759b\src\t2p [31m [0m
+[31m [0m w\app\streamlit_app.py:7128 in <module>                                              [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m   [2m7125 [0m[2m│   │   │   │   [0mkey=[33m"[0m[33mdl_completeness_audit[0m[33m"[0m,                                  [31m [0m
+[31m [0m   [2m7126 [0m[2m│   │   │   [0m)                                                                 [31m [0m
+[31m [0m   [2m7127 [0m[2m│   [0m                                                                          [31m [0m
+[31m [0m [31m> [0m7128 [2m│   [0m[1;4mrender_pathwhiz_converter_section(llm_client_module)[0m                      [31m [0m
+[31m [0m   [2m7129 [0m[2m│   [0m                                                                          [31m [0m
+[31m [0m   [2m7130 [0m[2m│   [0mst.subheader([33m"[0m[33mConnectivity snapshot[0m[33m"[0m)                                     [31m [0m
+[31m [0m   [2m7131 [0m[2m│   [0mstats = graph_summary(final_payload)                                      [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759b\src\t2p [31m [0m
+[31m [0m w\tools\pathwhiz_converter\ui.py:26 in render_pathwhiz_converter_section             [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m   [2m 23 [0m                                                                               [31m [0m
+[31m [0m   [2m 24 [0m                                                                               [31m [0m
+[31m [0m   [2m 25 [0m[94mdef[0m[90m [0m[92mrender_pathwhiz_converter_section[0m(llm_client) -> [94mNone[0m:                     [31m [0m
+[31m [0m [31m> [0m 26 [2m│   [0m[1;4mst.subheader([0m[1;4;33m"[0m[1;4;33mPathWhiz Converter[0m[1;4;33m"[0m[1;4m)[0m                                         [31m [0m
+[31m [0m   [2m 27 [0m[2m│   [0m                                                                           [31m [0m
+[31m [0m   [2m 28 [0m[2m│   [0minput_sbml = st.file_uploader(                                             [31m [0m
+[31m [0m   [2m 29 [0m[2m│   │   [0m[33m"[0m[33mUpload your SBML (.xml)[0m[33m"[0m,                                             [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\metrics_util.py:628 in wrapped_func                                          [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m elements\heading.py:249 in subheader                                                 [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m delta_generator.py:533 in _enqueue                                                   [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner_utils\script_run_context.py:174 in get                          [31m [0m
+[31m────────────────────────────────────────────────────────────────────────────────────────[0m
+[1;91mRuntimeError: [0mFragmentThreadState not initialized — [1;35mScriptRunContext.reset[0m[1m([0m[1m)[0m or 
+[1;35madd_script_run_ctx[0m[1m([0m[1m)[0m must be called on this thread first.
+---------------------------- Captured stderr call -----------------------------
+2026-10-22 14:23:29.152 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 14:23:30.147 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-10-22 14:23:30.148 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-10-22 14:23:30.148 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-10-22 14:23:30.149 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-10-22 14:23:30.707 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-10-22 14:23:30.708 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-10-22 14:23:30.708 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-10-22 14:23:30.709 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+___________ test_g9_a_new_pipeline_run_replaces_the_stored_recorder ___________
+
+offline_app = {'network': ["('https://www.ebi.ac.uk/webservices/chebi/2.0/test/getLiteEntity',)", "('https://rest.kegg.jp/find/compo...-32394/test_g9_a_new_pipeline_run_rep0'), 'wire': <test_orch759b_recorder_reattach._Wire object at 0x00000237D92A1A90>}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000237DB4D0950>
+
+    def test_g9_a_new_pipeline_run_replaces_the_stored_recorder(
+        offline_app: Dict[str, Any], monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """Run 1 pools 3 draws, run 2 in the same session draws once. The post-pipeline run must
+        use run 2's recorder: its rounds land in run 2's directory, and rule 3 stays off, because
+        run 2 did not pool -- even with the operator's ``.env`` saying 3."""
+    
+        at = _app()
+        first = _run_pipeline(at, monkeypatch, "3")
+        second = _run_pipeline(at, monkeypatch, "1")
+        assert first != second
+        artifacts = _run_post_pipeline(at, monkeypatch, "3")
+    
+        assert _reactions(artifacts["final_mapped_db"]) == ["heme b formation", "protoheme formation"]
+        assert _written(offline_app["root"], IDENTITY_REPORT) == []
+>       assert (second / AUDIT_SUMMARY).is_file()
+E       AssertionError: assert False
+E        +  where False = is_file()
+E        +    where is_file = (WindowsPath('C:/t/bt-orch759b/01-dev-base-probe-32394/test_g9_a_new_pipeline_run_rep0/tmp/extraction_diagnostics/run-1fba0648d742') / 'audit_iteration_summary.json').is_file
+
+tests\test_orch759b_recorder_reattach.py:279: AssertionError
+---------------------------- Captured stdout call -----------------------------
+[31m──[0m[31m────────────────────────[0m[31m [0m[1;31mTraceback [0m[1;2;31m(most recent call last)[0m[31m [0m[31m─────────────────────────[0m[31m──[0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner\exec_code.py:136 in exec_func_with_error_handling               [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner\script_runner.py:837 in code_to_exec                            [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759b\src\t2p [31m [0m
+[31m [0m w\app\streamlit_app.py:7278 in <module>                                              [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m   [2m7275 [0m[2m# directory can be reviewed with no run loaded. Presentation only.[0m            [31m [0m
+[31m [0m   [2m7276 [0m[94mfrom[0m[90m [0m[4;96mt2pw[0m[4;96m.[0m[4;96mapp[0m[4;96m.[0m[4;96mreaction_evidence_view[0m[90m [0m[94mimport[0m render_reaction_evidence  [2m# noqa:[0m [31m [0m
+[31m [0m   [2m7277 [0m                                                                              [31m [0m
+[31m [0m [31m> [0m7278 [1;4mrender_reaction_evidence()[0m                                                    [31m [0m
+[31m [0m   [2m7279 [0m                                                                              [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759b\src\t2p [31m [0m
+[31m [0m w\app\reaction_evidence_view.py:91 in render_reaction_evidence                       [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m   [2m 88 [0m                                                                               [31m [0m
+[31m [0m   [2m 89 [0m                                                                               [31m [0m
+[31m [0m   [2m 90 [0m[94mdef[0m[90m [0m[92mrender_reaction_evidence[0m() -> [94mNone[0m:                                        [31m [0m
+[31m [0m [31m> [0m 91 [2m│   [0m[1;4mst.divider()[0m                                                               [31m [0m
+[31m [0m   [2m 92 [0m[2m│   [0mst.subheader([33m"[0m[33mReaction Evidence[0m[33m"[0m)                                          [31m [0m
+[31m [0m   [2m 93 [0m[2m│   [0mst.caption(                                                                [31m [0m
+[31m [0m   [2m 94 [0m[2m│   │   [0m[33m"[0m[33mRead-only review of what the run[0m[33m'[0m[33ms artifacts say the pathway contains[0m [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\metrics_util.py:628 in wrapped_func                                          [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m elements\markdown.py:452 in divider                                                  [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m delta_generator.py:533 in _enqueue                                                   [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner_utils\script_run_context.py:174 in get                          [31m [0m
+[31m────────────────────────────────────────────────────────────────────────────────────────[0m
+[1;91mRuntimeError: [0mFragmentThreadState not initialized — [1;35mScriptRunContext.reset[0m[1m([0m[1m)[0m or 
+[1;35madd_script_run_ctx[0m[1m([0m[1m)[0m must be called on this thread first.
+[31m──[0m[31m────────────────────────[0m[31m [0m[1;31mTraceback [0m[1;2;31m(most recent call last)[0m[31m [0m[31m─────────────────────────[0m[31m──[0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner\exec_code.py:136 in exec_func_with_error_handling               [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner\script_runner.py:837 in code_to_exec                            [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759b\src\t2p [31m [0m
+[31m [0m w\app\streamlit_app.py:7128 in <module>                                              [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m   [2m7125 [0m[2m│   │   │   │   [0mkey=[33m"[0m[33mdl_completeness_audit[0m[33m"[0m,                                  [31m [0m
+[31m [0m   [2m7126 [0m[2m│   │   │   [0m)                                                                 [31m [0m
+[31m [0m   [2m7127 [0m[2m│   [0m                                                                          [31m [0m
+[31m [0m [31m> [0m7128 [2m│   [0m[1;4mrender_pathwhiz_converter_section(llm_client_module)[0m                      [31m [0m
+[31m [0m   [2m7129 [0m[2m│   [0m                                                                          [31m [0m
+[31m [0m   [2m7130 [0m[2m│   [0mst.subheader([33m"[0m[33mConnectivity snapshot[0m[33m"[0m)                                     [31m [0m
+[31m [0m   [2m7131 [0m[2m│   [0mstats = graph_summary(final_payload)                                      [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759b\src\t2p [31m [0m
+[31m [0m w\tools\pathwhiz_converter\ui.py:26 in render_pathwhiz_converter_section             [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m   [2m 23 [0m                                                                               [31m [0m
+[31m [0m   [2m 24 [0m                                                                               [31m [0m
+[31m [0m   [2m 25 [0m[94mdef[0m[90m [0m[92mrender_pathwhiz_converter_section[0m(llm_client) -> [94mNone[0m:                     [31m [0m
+[31m [0m [31m> [0m 26 [2m│   [0m[1;4mst.subheader([0m[1;4;33m"[0m[1;4;33mPathWhiz Converter[0m[1;4;33m"[0m[1;4m)[0m                                         [31m [0m
+[31m [0m   [2m 27 [0m[2m│   [0m                                                                           [31m [0m
+[31m [0m   [2m 28 [0m[2m│   [0minput_sbml = st.file_uploader(                                             [31m [0m
+[31m [0m   [2m 29 [0m[2m│   │   [0m[33m"[0m[33mUpload your SBML (.xml)[0m[33m"[0m,                                             [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\metrics_util.py:628 in wrapped_func                                          [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m elements\heading.py:249 in subheader                                                 [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m delta_generator.py:533 in _enqueue                                                   [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner_utils\script_run_context.py:174 in get                          [31m [0m
+[31m────────────────────────────────────────────────────────────────────────────────────────[0m
+[1;91mRuntimeError: [0mFragmentThreadState not initialized — [1;35mScriptRunContext.reset[0m[1m([0m[1m)[0m or 
+[1;35madd_script_run_ctx[0m[1m([0m[1m)[0m must be called on this thread first.
+[31m──[0m[31m────────────────────────[0m[31m [0m[1;31mTraceback [0m[1;2;31m(most recent call last)[0m[31m [0m[31m─────────────────────────[0m[31m──[0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner\exec_code.py:136 in exec_func_with_error_handling               [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner\script_runner.py:837 in code_to_exec                            [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759b\src\t2p [31m [0m
+[31m [0m w\app\streamlit_app.py:7128 in <module>                                              [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m   [2m7125 [0m[2m│   │   │   │   [0mkey=[33m"[0m[33mdl_completeness_audit[0m[33m"[0m,                                  [31m [0m
+[31m [0m   [2m7126 [0m[2m│   │   │   [0m)                                                                 [31m [0m
+[31m [0m   [2m7127 [0m[2m│   [0m                                                                          [31m [0m
+[31m [0m [31m> [0m7128 [2m│   [0m[1;4mrender_pathwhiz_converter_section(llm_client_module)[0m                      [31m [0m
+[31m [0m   [2m7129 [0m[2m│   [0m                                                                          [31m [0m
+[31m [0m   [2m7130 [0m[2m│   [0mst.subheader([33m"[0m[33mConnectivity snapshot[0m[33m"[0m)                                     [31m [0m
+[31m [0m   [2m7131 [0m[2m│   [0mstats = graph_summary(final_payload)                                      [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759b\src\t2p [31m [0m
+[31m [0m w\tools\pathwhiz_converter\ui.py:26 in render_pathwhiz_converter_section             [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m   [2m 23 [0m                                                                               [31m [0m
+[31m [0m   [2m 24 [0m                                                                               [31m [0m
+[31m [0m   [2m 25 [0m[94mdef[0m[90m [0m[92mrender_pathwhiz_converter_section[0m(llm_client) -> [94mNone[0m:                     [31m [0m
+[31m [0m [31m> [0m 26 [2m│   [0m[1;4mst.subheader([0m[1;4;33m"[0m[1;4;33mPathWhiz Converter[0m[1;4;33m"[0m[1;4m)[0m                                         [31m [0m
+[31m [0m   [2m 27 [0m[2m│   [0m                                                                           [31m [0m
+[31m [0m   [2m 28 [0m[2m│   [0minput_sbml = st.file_uploader(                                             [31m [0m
+[31m [0m   [2m 29 [0m[2m│   │   [0m[33m"[0m[33mUpload your SBML (.xml)[0m[33m"[0m,                                             [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\metrics_util.py:628 in wrapped_func                                          [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m elements\heading.py:249 in subheader                                                 [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m delta_generator.py:533 in _enqueue                                                   [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner_utils\script_run_context.py:174 in get                          [31m [0m
+[31m────────────────────────────────────────────────────────────────────────────────────────[0m
+[1;91mRuntimeError: [0mFragmentThreadState not initialized — [1;35mScriptRunContext.reset[0m[1m([0m[1m)[0m or 
+[1;35madd_script_run_ctx[0m[1m([0m[1m)[0m must be called on this thread first.
+[31m──[0m[31m────────────────────────[0m[31m [0m[1;31mTraceback [0m[1;2;31m(most recent call last)[0m[31m [0m[31m─────────────────────────[0m[31m──[0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner\exec_code.py:136 in exec_func_with_error_handling               [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner\script_runner.py:837 in code_to_exec                            [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759b\src\t2p [31m [0m
+[31m [0m w\app\streamlit_app.py:7128 in <module>                                              [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m   [2m7125 [0m[2m│   │   │   │   [0mkey=[33m"[0m[33mdl_completeness_audit[0m[33m"[0m,                                  [31m [0m
+[31m [0m   [2m7126 [0m[2m│   │   │   [0m)                                                                 [31m [0m
+[31m [0m   [2m7127 [0m[2m│   [0m                                                                          [31m [0m
+[31m [0m [31m> [0m7128 [2m│   [0m[1;4mrender_pathwhiz_converter_section(llm_client_module)[0m                      [31m [0m
+[31m [0m   [2m7129 [0m[2m│   [0m                                                                          [31m [0m
+[31m [0m   [2m7130 [0m[2m│   [0mst.subheader([33m"[0m[33mConnectivity snapshot[0m[33m"[0m)                                     [31m [0m
+[31m [0m   [2m7131 [0m[2m│   [0mstats = graph_summary(final_payload)                                      [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759b\src\t2p [31m [0m
+[31m [0m w\tools\pathwhiz_converter\ui.py:26 in render_pathwhiz_converter_section             [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m   [2m 23 [0m                                                                               [31m [0m
+[31m [0m   [2m 24 [0m                                                                               [31m [0m
+[31m [0m   [2m 25 [0m[94mdef[0m[90m [0m[92mrender_pathwhiz_converter_section[0m(llm_client) -> [94mNone[0m:                     [31m [0m
+[31m [0m [31m> [0m 26 [2m│   [0m[1;4mst.subheader([0m[1;4;33m"[0m[1;4;33mPathWhiz Converter[0m[1;4;33m"[0m[1;4m)[0m                                         [31m [0m
+[31m [0m   [2m 27 [0m[2m│   [0m                                                                           [31m [0m
+[31m [0m   [2m 28 [0m[2m│   [0minput_sbml = st.file_uploader(                                             [31m [0m
+[31m [0m   [2m 29 [0m[2m│   │   [0m[33m"[0m[33mUpload your SBML (.xml)[0m[33m"[0m,                                             [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\metrics_util.py:628 in wrapped_func                                          [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m elements\heading.py:249 in subheader                                                 [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m delta_generator.py:533 in _enqueue                                                   [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner_utils\script_run_context.py:174 in get                          [31m [0m
+[31m────────────────────────────────────────────────────────────────────────────────────────[0m
+[1;91mRuntimeError: [0mFragmentThreadState not initialized — [1;35mScriptRunContext.reset[0m[1m([0m[1m)[0m or 
+[1;35madd_script_run_ctx[0m[1m([0m[1m)[0m must be called on this thread first.
+---------------------------- Captured stderr call -----------------------------
+2026-10-22 14:23:31.515 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 14:23:32.627 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-10-22 14:23:32.628 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-10-22 14:23:32.629 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-10-22 14:23:32.629 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-10-22 14:23:33.207 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-10-22 14:23:33.208 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-10-22 14:23:33.208 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-10-22 14:23:33.209 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-10-22 14:23:33.799 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-10-22 14:23:33.799 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-10-22 14:23:33.800 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-10-22 14:23:33.800 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+_____ test_still_no_stage1_run_in_the_session_means_todays_post_pipeline ______
+
+offline_app = {'network': ["('https://www.ebi.ac.uk/webservices/chebi/2.0/test/getLiteEntity',)", "('https://rest.kegg.jp/find/compo...-32394/test_still_no_stage1_run_in_th0'), 'wire': <test_orch759b_recorder_reattach._Wire object at 0x00000237DCF0E8B0>}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000237FF4C0AF0>
+
+    def test_still_no_stage1_run_in_the_session_means_todays_post_pipeline(
+        offline_app: Dict[str, Any], monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """A session that never ran Stage 1 (a seeded payload, as the boundary suite seeds one):
+        no recorder is stored, so the post-pipeline run records into a detached recorder exactly as
+        at base -- nothing merges, nothing is written under ``tmp/extraction_diagnostics``."""
+    
+        at = _app()
+        payload = json.loads(json.dumps(DRAW))
+        payload["metadata"] = {"pathway_name": CONTEXT["pathway_name"], "organism": CONTEXT["likely_organism"]}
+        for key, value in {"pipeline_ready": True, "stage_one": payload, "stage_two": None, "stage_two_chunks": [],
+                           "stage_two_rounds": [], "chunk_details": [], "qa_hints": None,
+                           "final_payload": payload, "final_payload_snapshot": payload,
+                           "pipeline_source_text": PAPER, "pathway_context": dict(CONTEXT)}.items():
+            at.session_state[key] = value
+        at.run()
+        artifacts = _run_post_pipeline(at, monkeypatch, "3")
+    
+        assert _reactions(artifacts["final_mapped_db"]) == ["heme b formation", "protoheme formation"]
+        assert not (offline_app["root"] / "tmp" / "extraction_diagnostics").exists()
+>       assert at.session_state[KEY_DIAGNOSTICS] == {}
+E       AssertionError: assert {'audit_itera...'run_id': ''}} == {}
+E         
+E         Left contains 2 more items:
+E         {'audit_iteration_summary.json': {'round_count': 2,
+E                                           'rounds': [{'accepted_patch_count': 0,
+E                                                       'actionable_issues_remain': True,
+E                                                       'audit_payload_changed': False,
+E                                                       'candidate_count': 3,...
+E         
+E         ...Full output truncated (668 lines hidden), use '-vv' to show
+
+tests\test_orch759b_recorder_reattach.py:319: AssertionError
+---------------------------- Captured stdout call -----------------------------
+[31m──[0m[31m────────────────────────[0m[31m [0m[1;31mTraceback [0m[1;2;31m(most recent call last)[0m[31m [0m[31m─────────────────────────[0m[31m──[0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner\exec_code.py:136 in exec_func_with_error_handling               [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner\script_runner.py:837 in code_to_exec                            [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759b\src\t2p [31m [0m
+[31m [0m w\app\streamlit_app.py:7278 in <module>                                              [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m   [2m7275 [0m[2m# directory can be reviewed with no run loaded. Presentation only.[0m            [31m [0m
+[31m [0m   [2m7276 [0m[94mfrom[0m[90m [0m[4;96mt2pw[0m[4;96m.[0m[4;96mapp[0m[4;96m.[0m[4;96mreaction_evidence_view[0m[90m [0m[94mimport[0m render_reaction_evidence  [2m# noqa:[0m [31m [0m
+[31m [0m   [2m7277 [0m                                                                              [31m [0m
+[31m [0m [31m> [0m7278 [1;4mrender_reaction_evidence()[0m                                                    [31m [0m
+[31m [0m   [2m7279 [0m                                                                              [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759b\src\t2p [31m [0m
+[31m [0m w\app\reaction_evidence_view.py:91 in render_reaction_evidence                       [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m   [2m 88 [0m                                                                               [31m [0m
+[31m [0m   [2m 89 [0m                                                                               [31m [0m
+[31m [0m   [2m 90 [0m[94mdef[0m[90m [0m[92mrender_reaction_evidence[0m() -> [94mNone[0m:                                        [31m [0m
+[31m [0m [31m> [0m 91 [2m│   [0m[1;4mst.divider()[0m                                                               [31m [0m
+[31m [0m   [2m 92 [0m[2m│   [0mst.subheader([33m"[0m[33mReaction Evidence[0m[33m"[0m)                                          [31m [0m
+[31m [0m   [2m 93 [0m[2m│   [0mst.caption(                                                                [31m [0m
+[31m [0m   [2m 94 [0m[2m│   │   [0m[33m"[0m[33mRead-only review of what the run[0m[33m'[0m[33ms artifacts say the pathway contains[0m [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\metrics_util.py:628 in wrapped_func                                          [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m elements\markdown.py:452 in divider                                                  [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m delta_generator.py:533 in _enqueue                                                   [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner_utils\script_run_context.py:174 in get                          [31m [0m
+[31m────────────────────────────────────────────────────────────────────────────────────────[0m
+[1;91mRuntimeError: [0mFragmentThreadState not initialized — [1;35mScriptRunContext.reset[0m[1m([0m[1m)[0m or 
+[1;35madd_script_run_ctx[0m[1m([0m[1m)[0m must be called on this thread first.
+[31m──[0m[31m────────────────────────[0m[31m [0m[1;31mTraceback [0m[1;2;31m(most recent call last)[0m[31m [0m[31m─────────────────────────[0m[31m──[0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner\exec_code.py:136 in exec_func_with_error_handling               [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner\script_runner.py:837 in code_to_exec                            [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759b\src\t2p [31m [0m
+[31m [0m w\app\streamlit_app.py:7128 in <module>                                              [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m   [2m7125 [0m[2m│   │   │   │   [0mkey=[33m"[0m[33mdl_completeness_audit[0m[33m"[0m,                                  [31m [0m
+[31m [0m   [2m7126 [0m[2m│   │   │   [0m)                                                                 [31m [0m
+[31m [0m   [2m7127 [0m[2m│   [0m                                                                          [31m [0m
+[31m [0m [31m> [0m7128 [2m│   [0m[1;4mrender_pathwhiz_converter_section(llm_client_module)[0m                      [31m [0m
+[31m [0m   [2m7129 [0m[2m│   [0m                                                                          [31m [0m
+[31m [0m   [2m7130 [0m[2m│   [0mst.subheader([33m"[0m[33mConnectivity snapshot[0m[33m"[0m)                                     [31m [0m
+[31m [0m   [2m7131 [0m[2m│   [0mstats = graph_summary(final_payload)                                      [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759b\src\t2p [31m [0m
+[31m [0m w\tools\pathwhiz_converter\ui.py:26 in render_pathwhiz_converter_section             [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m   [2m 23 [0m                                                                               [31m [0m
+[31m [0m   [2m 24 [0m                                                                               [31m [0m
+[31m [0m   [2m 25 [0m[94mdef[0m[90m [0m[92mrender_pathwhiz_converter_section[0m(llm_client) -> [94mNone[0m:                     [31m [0m
+[31m [0m [31m> [0m 26 [2m│   [0m[1;4mst.subheader([0m[1;4;33m"[0m[1;4;33mPathWhiz Converter[0m[1;4;33m"[0m[1;4m)[0m                                         [31m [0m
+[31m [0m   [2m 27 [0m[2m│   [0m                                                                           [31m [0m
+[31m [0m   [2m 28 [0m[2m│   [0minput_sbml = st.file_uploader(                                             [31m [0m
+[31m [0m   [2m 29 [0m[2m│   │   [0m[33m"[0m[33mUpload your SBML (.xml)[0m[33m"[0m,                                             [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\metrics_util.py:628 in wrapped_func                                          [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m elements\heading.py:249 in subheader                                                 [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m delta_generator.py:533 in _enqueue                                                   [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner_utils\script_run_context.py:174 in get                          [31m [0m
+[31m────────────────────────────────────────────────────────────────────────────────────────[0m
+[1;91mRuntimeError: [0mFragmentThreadState not initialized — [1;35mScriptRunContext.reset[0m[1m([0m[1m)[0m or 
+[1;35madd_script_run_ctx[0m[1m([0m[1m)[0m must be called on this thread first.
+[31m──[0m[31m────────────────────────[0m[31m [0m[1;31mTraceback [0m[1;2;31m(most recent call last)[0m[31m [0m[31m─────────────────────────[0m[31m──[0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner\exec_code.py:136 in exec_func_with_error_handling               [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner\script_runner.py:837 in code_to_exec                            [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759b\src\t2p [31m [0m
+[31m [0m w\app\streamlit_app.py:7128 in <module>                                              [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m   [2m7125 [0m[2m│   │   │   │   [0mkey=[33m"[0m[33mdl_completeness_audit[0m[33m"[0m,                                  [31m [0m
+[31m [0m   [2m7126 [0m[2m│   │   │   [0m)                                                                 [31m [0m
+[31m [0m   [2m7127 [0m[2m│   [0m                                                                          [31m [0m
+[31m [0m [31m> [0m7128 [2m│   [0m[1;4mrender_pathwhiz_converter_section(llm_client_module)[0m                      [31m [0m
+[31m [0m   [2m7129 [0m[2m│   [0m                                                                          [31m [0m
+[31m [0m   [2m7130 [0m[2m│   [0mst.subheader([33m"[0m[33mConnectivity snapshot[0m[33m"[0m)                                     [31m [0m
+[31m [0m   [2m7131 [0m[2m│   [0mstats = graph_summary(final_payload)                                      [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759b\src\t2p [31m [0m
+[31m [0m w\tools\pathwhiz_converter\ui.py:26 in render_pathwhiz_converter_section             [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m   [2m 23 [0m                                                                               [31m [0m
+[31m [0m   [2m 24 [0m                                                                               [31m [0m
+[31m [0m   [2m 25 [0m[94mdef[0m[90m [0m[92mrender_pathwhiz_converter_section[0m(llm_client) -> [94mNone[0m:                     [31m [0m
+[31m [0m [31m> [0m 26 [2m│   [0m[1;4mst.subheader([0m[1;4;33m"[0m[1;4;33mPathWhiz Converter[0m[1;4;33m"[0m[1;4m)[0m                                         [31m [0m
+[31m [0m   [2m 27 [0m[2m│   [0m                                                                           [31m [0m
+[31m [0m   [2m 28 [0m[2m│   [0minput_sbml = st.file_uploader(                                             [31m [0m
+[31m [0m   [2m 29 [0m[2m│   │   [0m[33m"[0m[33mUpload your SBML (.xml)[0m[33m"[0m,                                             [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\metrics_util.py:628 in wrapped_func                                          [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m elements\heading.py:249 in subheader                                                 [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m delta_generator.py:533 in _enqueue                                                   [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner_utils\script_run_context.py:174 in get                          [31m [0m
+[31m────────────────────────────────────────────────────────────────────────────────────────[0m
+[1;91mRuntimeError: [0mFragmentThreadState not initialized — [1;35mScriptRunContext.reset[0m[1m([0m[1m)[0m or 
+[1;35madd_script_run_ctx[0m[1m([0m[1m)[0m must be called on this thread first.
+---------------------------- Captured stderr call -----------------------------
+2026-10-22 14:23:36.934 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 14:23:37.831 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 14:23:37.832 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 14:23:37.832 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 14:23:37.832 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 14:23:37.832 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 14:23:37.832 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 14:23:37.832 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 14:23:37.832 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 14:23:37.832 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 14:23:37.832 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 14:23:37.832 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+____ test_llm_inputs_are_the_bases_bytes_and_never_carry_the_merge_record _____
+
+offline_app = {'network': ["('https://www.ebi.ac.uk/webservices/chebi/2.0/test/getLiteEntity',)", "('https://rest.kegg.jp/find/compo...-32394/test_llm_inputs_are_the_bases_0'), 'wire': <test_orch759b_recorder_reattach._Wire object at 0x00000237DCCB4B90>}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000237DC98F450>
+
+    def test_llm_inputs_are_the_bases_bytes_and_never_carry_the_merge_record(
+        offline_app: Dict[str, Any], monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        at = _app()
+        wire = offline_app["wire"]
+        _run_pipeline(at, monkeypatch, "3")
+        stage1 = [_request_digest(c) for c in wire.calls]
+        artifacts = _run_post_pipeline(at, monkeypatch)
+        post = [_request_digest(c) for c in wire.calls[len(stage1):]]
+    
+>       assert {"pipeline_run": stage1, "post_pipeline": post} == GOLDEN
+E       AssertionError: assert {'pipeline_ru...7c509a', ...]} == {}
+E         
+E         Left contains 2 more items:
+E         {'pipeline_run': ['98824bc06dbc3f79b9b6ac30671f71eb473ccab83e653556de8380958e0ba05f',
+E                           '16d8bc5eb5c243934c6d5d3254b26d30801cceacc84d42ee205f9f3204bf05ae',
+E                           '16d8bc5eb5c243934c6d5d3254b26d30801cceacc84d42ee205f9f3204bf05ae',
+E                           '16d8bc5eb5c243934c6d5d3254b26d30801cceacc84d42ee205f9f3204bf05ae'],
+E          'post_pipeline': ['99ed836fd78cb0a7abc579a8ec0b9dca0b1ea65b469ea0caa9759cbcd911d6d8',...
+E         
+E         ...Full output truncated (11 lines hidden), use '-vv' to show
+
+tests\test_orch759b_recorder_reattach.py:345: AssertionError
+---------------------------- Captured stdout call -----------------------------
+[31m──[0m[31m────────────────────────[0m[31m [0m[1;31mTraceback [0m[1;2;31m(most recent call last)[0m[31m [0m[31m─────────────────────────[0m[31m──[0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner\exec_code.py:136 in exec_func_with_error_handling               [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner\script_runner.py:837 in code_to_exec                            [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759b\src\t2p [31m [0m
+[31m [0m w\app\streamlit_app.py:7278 in <module>                                              [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m   [2m7275 [0m[2m# directory can be reviewed with no run loaded. Presentation only.[0m            [31m [0m
+[31m [0m   [2m7276 [0m[94mfrom[0m[90m [0m[4;96mt2pw[0m[4;96m.[0m[4;96mapp[0m[4;96m.[0m[4;96mreaction_evidence_view[0m[90m [0m[94mimport[0m render_reaction_evidence  [2m# noqa:[0m [31m [0m
+[31m [0m   [2m7277 [0m                                                                              [31m [0m
+[31m [0m [31m> [0m7278 [1;4mrender_reaction_evidence()[0m                                                    [31m [0m
+[31m [0m   [2m7279 [0m                                                                              [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759b\src\t2p [31m [0m
+[31m [0m w\app\reaction_evidence_view.py:91 in render_reaction_evidence                       [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m   [2m 88 [0m                                                                               [31m [0m
+[31m [0m   [2m 89 [0m                                                                               [31m [0m
+[31m [0m   [2m 90 [0m[94mdef[0m[90m [0m[92mrender_reaction_evidence[0m() -> [94mNone[0m:                                        [31m [0m
+[31m [0m [31m> [0m 91 [2m│   [0m[1;4mst.divider()[0m                                                               [31m [0m
+[31m [0m   [2m 92 [0m[2m│   [0mst.subheader([33m"[0m[33mReaction Evidence[0m[33m"[0m)                                          [31m [0m
+[31m [0m   [2m 93 [0m[2m│   [0mst.caption(                                                                [31m [0m
+[31m [0m   [2m 94 [0m[2m│   │   [0m[33m"[0m[33mRead-only review of what the run[0m[33m'[0m[33ms artifacts say the pathway contains[0m [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\metrics_util.py:628 in wrapped_func                                          [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m elements\markdown.py:452 in divider                                                  [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m delta_generator.py:533 in _enqueue                                                   [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner_utils\script_run_context.py:174 in get                          [31m [0m
+[31m────────────────────────────────────────────────────────────────────────────────────────[0m
+[1;91mRuntimeError: [0mFragmentThreadState not initialized — [1;35mScriptRunContext.reset[0m[1m([0m[1m)[0m or 
+[1;35madd_script_run_ctx[0m[1m([0m[1m)[0m must be called on this thread first.
+[31m──[0m[31m────────────────────────[0m[31m [0m[1;31mTraceback [0m[1;2;31m(most recent call last)[0m[31m [0m[31m─────────────────────────[0m[31m──[0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner\exec_code.py:136 in exec_func_with_error_handling               [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner\script_runner.py:837 in code_to_exec                            [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759b\src\t2p [31m [0m
+[31m [0m w\app\streamlit_app.py:7128 in <module>                                              [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m   [2m7125 [0m[2m│   │   │   │   [0mkey=[33m"[0m[33mdl_completeness_audit[0m[33m"[0m,                                  [31m [0m
+[31m [0m   [2m7126 [0m[2m│   │   │   [0m)                                                                 [31m [0m
+[31m [0m   [2m7127 [0m[2m│   [0m                                                                          [31m [0m
+[31m [0m [31m> [0m7128 [2m│   [0m[1;4mrender_pathwhiz_converter_section(llm_client_module)[0m                      [31m [0m
+[31m [0m   [2m7129 [0m[2m│   [0m                                                                          [31m [0m
+[31m [0m   [2m7130 [0m[2m│   [0mst.subheader([33m"[0m[33mConnectivity snapshot[0m[33m"[0m)                                     [31m [0m
+[31m [0m   [2m7131 [0m[2m│   [0mstats = graph_summary(final_payload)                                      [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759b\src\t2p [31m [0m
+[31m [0m w\tools\pathwhiz_converter\ui.py:26 in render_pathwhiz_converter_section             [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m   [2m 23 [0m                                                                               [31m [0m
+[31m [0m   [2m 24 [0m                                                                               [31m [0m
+[31m [0m   [2m 25 [0m[94mdef[0m[90m [0m[92mrender_pathwhiz_converter_section[0m(llm_client) -> [94mNone[0m:                     [31m [0m
+[31m [0m [31m> [0m 26 [2m│   [0m[1;4mst.subheader([0m[1;4;33m"[0m[1;4;33mPathWhiz Converter[0m[1;4;33m"[0m[1;4m)[0m                                         [31m [0m
+[31m [0m   [2m 27 [0m[2m│   [0m                                                                           [31m [0m
+[31m [0m   [2m 28 [0m[2m│   [0minput_sbml = st.file_uploader(                                             [31m [0m
+[31m [0m   [2m 29 [0m[2m│   │   [0m[33m"[0m[33mUpload your SBML (.xml)[0m[33m"[0m,                                             [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\metrics_util.py:628 in wrapped_func                                          [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m elements\heading.py:249 in subheader                                                 [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m delta_generator.py:533 in _enqueue                                                   [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner_utils\script_run_context.py:174 in get                          [31m [0m
+[31m────────────────────────────────────────────────────────────────────────────────────────[0m
+[1;91mRuntimeError: [0mFragmentThreadState not initialized — [1;35mScriptRunContext.reset[0m[1m([0m[1m)[0m or 
+[1;35madd_script_run_ctx[0m[1m([0m[1m)[0m must be called on this thread first.
+[31m──[0m[31m────────────────────────[0m[31m [0m[1;31mTraceback [0m[1;2;31m(most recent call last)[0m[31m [0m[31m─────────────────────────[0m[31m──[0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner\exec_code.py:136 in exec_func_with_error_handling               [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner\script_runner.py:837 in code_to_exec                            [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759b\src\t2p [31m [0m
+[31m [0m w\app\streamlit_app.py:7128 in <module>                                              [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m   [2m7125 [0m[2m│   │   │   │   [0mkey=[33m"[0m[33mdl_completeness_audit[0m[33m"[0m,                                  [31m [0m
+[31m [0m   [2m7126 [0m[2m│   │   │   [0m)                                                                 [31m [0m
+[31m [0m   [2m7127 [0m[2m│   [0m                                                                          [31m [0m
+[31m [0m [31m> [0m7128 [2m│   [0m[1;4mrender_pathwhiz_converter_section(llm_client_module)[0m                      [31m [0m
+[31m [0m   [2m7129 [0m[2m│   [0m                                                                          [31m [0m
+[31m [0m   [2m7130 [0m[2m│   [0mst.subheader([33m"[0m[33mConnectivity snapshot[0m[33m"[0m)                                     [31m [0m
+[31m [0m   [2m7131 [0m[2m│   [0mstats = graph_summary(final_payload)                                      [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759b\src\t2p [31m [0m
+[31m [0m w\tools\pathwhiz_converter\ui.py:26 in render_pathwhiz_converter_section             [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m   [2m 23 [0m                                                                               [31m [0m
+[31m [0m   [2m 24 [0m                                                                               [31m [0m
+[31m [0m   [2m 25 [0m[94mdef[0m[90m [0m[92mrender_pathwhiz_converter_section[0m(llm_client) -> [94mNone[0m:                     [31m [0m
+[31m [0m [31m> [0m 26 [2m│   [0m[1;4mst.subheader([0m[1;4;33m"[0m[1;4;33mPathWhiz Converter[0m[1;4;33m"[0m[1;4m)[0m                                         [31m [0m
+[31m [0m   [2m 27 [0m[2m│   [0m                                                                           [31m [0m
+[31m [0m   [2m 28 [0m[2m│   [0minput_sbml = st.file_uploader(                                             [31m [0m
+[31m [0m   [2m 29 [0m[2m│   │   [0m[33m"[0m[33mUpload your SBML (.xml)[0m[33m"[0m,                                             [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\metrics_util.py:628 in wrapped_func                                          [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m elements\heading.py:249 in subheader                                                 [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m delta_generator.py:533 in _enqueue                                                   [31m [0m
+[31m [0m                                                                                      [31m [0m
+[31m [0m C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ [31m [0m
+[31m [0m runtime\scriptrunner_utils\script_run_context.py:174 in get                          [31m [0m
+[31m────────────────────────────────────────────────────────────────────────────────────────[0m
+[1;91mRuntimeError: [0mFragmentThreadState not initialized — [1;35mScriptRunContext.reset[0m[1m([0m[1m)[0m or 
+[1;35madd_script_run_ctx[0m[1m([0m[1m)[0m must be called on this thread first.
+---------------------------- Captured stderr call -----------------------------
+2026-10-22 14:23:39.383 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 14:23:40.514 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-10-22 14:23:40.514 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-10-22 14:23:40.515 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-10-22 14:23:40.516 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-10-22 14:23:41.067 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-10-22 14:23:41.068 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-10-22 14:23:41.069 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-10-22 14:23:41.069 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+=========================== short test summary info ===========================
+FAILED tests/test_orch759b_recorder_reattach.py::test_g9_rule3_runs_at_stage6_and_files_its_record_beside_stage1
+FAILED tests/test_orch759b_recorder_reattach.py::test_g9_audit_and_gap_rounds_reach_the_stage1_directory_and_the_driver
+FAILED tests/test_orch759b_recorder_reattach.py::test_g9_a_new_pipeline_run_replaces_the_stored_recorder
+FAILED tests/test_orch759b_recorder_reattach.py::test_still_no_stage1_run_in_the_session_means_todays_post_pipeline
+FAILED tests/test_orch759b_recorder_reattach.py::test_llm_inputs_are_the_bases_bytes_and_never_carry_the_merge_record
+5 failed, 1 passed in 16.90s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759b\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 4f750030294f1d7872638b8a1792c01c4bfa5e56  [git, worktree dirty=False]
+label                   : dev-base-probe
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-759b/01-dev-base-probe.pin.json -q --basetemp=C:/t/bt-orch759b/01-dev-base-probe-32394 tests/test_orch759b_recorder_reattach.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759b
+root PID / process group: 198404 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 500 s
+duration                : 18.57 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  198432:python.exe
+descendants terminated  : 1  198432
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759b\docs\pwml_recovery_sprint\evidence\g11\ORCH-759b\01-dev-base-probe.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================
