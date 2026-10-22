@@ -529,3 +529,122 @@ def test_preservation_a_compound_row_that_is_also_an_enzyme_stays_on_the_protein
         mapped = H.stage2(payload, tmp_path)["payload"]
     phox = _rows(mapped, "compounds")["PhoX"]["mapping_meta"]
     assert (phox["route"], phox["route_reason"]) == ("protein", "known_protein_like")
+
+
+# ── REPAIR ROUND 1 (review round 0: B1, B2, B3, note a) ─────────────────────────────────
+#
+# G9 against the round-0 tip (``79080db7`` + the ORCH-759a merge): each test_g9_r1_* fails
+# there on behaviour and passes after the repair.
+
+
+class _TaxonomyFails(H.ReplayHttp):
+    """Recorded answers, except UniProt taxonomy answers 429 while ``failing`` (``budget`` times, or always)."""
+
+    def __init__(self, budget: int = -1) -> None:
+        super().__init__()
+        self.failing = budget != 0
+        self.budget = budget
+
+    def get(self, url: str, params: Any = None, headers: Any = None) -> H.FakeResponse:
+        if self.failing and "/taxonomy/" in url:
+            self.calls.append(H.request_key(url, params))
+            self.budget -= 1
+            if self.budget == 0:
+                self.failing = False
+            return H.FakeResponse(429, {})
+        return super().get(url, params, headers)
+
+
+@pytest.mark.parametrize("fixture", ["menaquinone_lactis_species.json", "menaquinone_kf147_merged.json"])
+def test_g9_r1_a_failed_taxonomy_answer_never_falls_back_to_free_text(tmp_path: Path, fixture: str) -> None:
+    """B1: one 429 from UniProt taxonomy at Stage 6 (the app's Stage 6 runs ``use_cache=False``)."""
+
+    from t2pw.pipeline.process_normalizer import normalize_process_payload
+
+    http = _TaxonomyFails(budget=0)
+    with H.Doors(http):
+        first = H.stage2(H.load_fixture(fixture), tmp_path)
+        normalized, _ = normalize_process_payload(first["payload"])
+        http.failing, http.budget = True, -1
+        start = len(http.calls)
+        final = H.stage6(normalized, tmp_path)["payload"]
+    stage6_queries = [q for q in http.calls[start:] if q.startswith("https://rest.uniprot.org/uniprotkb/search")]
+    assert stage6_queries and all("organism_id%3A" in q or "taxonomy_id%3A" in q for q in stage6_queries), \
+        "a free-text query was issued after the taxonomy answer failed"
+    shipped = set(H.shipped_uniprot(final).values()) | set(H.shipped_uniprot(final, "compounds").values())
+    assert not (shipped & CREMORIS)
+    if fixture == "menaquinone_lactis_species.json":
+        assert H.shipped_uniprot(final)["MenF"] == "Q9CHJ9"  # the species itself is still the scope
+
+
+def test_g9_r1_a_taxonomy_failure_is_not_remembered_for_the_pass(tmp_path: Path) -> None:
+    """B1: the first taxonomy answer fails; the next protein asks again and gets the full scope."""
+
+    http = _TaxonomyFails(budget=1)
+    with H.Doors(http):
+        payload = H.stage2(H.load_fixture("menaquinone_kf147_merged.json"), tmp_path)["payload"]
+    shipped = H.shipped_uniprot(payload)
+    assert shipped["MenD"] == "Q9CHK0" and shipped["MenG"] == "P49016"
+
+
+def test_g9_r1_a_borrowed_identity_off_the_reaction_lines_is_shown() -> None:
+    """B2: a protein in an interaction only (no reaction line) still has its flag rendered."""
+
+    from t2pw.app.reaction_evidence import build_report, render_text
+
+    payload = {
+        "entities": {"species": [{"name": "Escherichia coli O157:H7", "taxonomy_id": "83334"}],
+                     "proteins": [{"name": "Fur", "mapped_ids": {"uniprot": "P0A9A9"}}], "compounds": [{"name": "Fe2+"}]},
+        "processes": {"reactions": [], "transports": [],
+                      "interactions": [{"entity_1": "Fur", "entity_2": "Fe2+", "interaction_type": "inhibition"}]},
+        BORROWED_KEY: [{"json_pointer": "/entities/proteins/0", "name": "Fur", "uniprot": "P0A9A9", "source_strain": "K12",
+                        "source_organism": "Escherichia coli (strain K12)", "source_taxonomy_id": "83333",
+                        "requested_organism": "Escherichia coli O157:H7", "requested_taxonomy_id": "83334",
+                        "route": "same_bound_gene_record", "flag": "UniProt P0A9A9, from strain K12"}],
+    }
+    text = render_text(build_report({"final_mapped.json": payload}))
+    assert "UniProt P0A9A9, from strain K12" in text
+
+
+def test_g9_r1_every_borrowed_identity_of_the_kf147_replay_is_listed(runs: Dict[str, Any]) -> None:
+    from t2pw.app.reaction_evidence import build_report, render_text
+
+    text = render_text(build_report({"final_mapped.json": _payload(runs, "kf147", "stage6")}))
+    assert "BORROWED IDENTITIES (7)" in text
+    assert "MenB (/entities/proteins/" in text and "route exact_sequence_uniparc" in text
+
+
+def test_g9_r1_a_rerouted_compound_that_borrows_is_flagged(tmp_path: Path) -> None:
+    """B3: a compound row the compound loop resolves on the protein route, under a strain scope."""
+
+    payload = {
+        "entities": {
+            "species": [{"name": "Lactococcus lactis subsp. lactis KF147", "taxonomy_id": "684738", "classification": "Prokaryote"}],
+            "proteins": [],
+            "compounds": [{"name": "MenF"}, {"name": "chorismate"}, {"name": "isochorismate"}],
+        },
+        "processes": {"reactions": [{"name": "r", "inputs": ["chorismate"], "outputs": ["isochorismate"], "enzymes": [{"protein": "MenF"}]}]},
+    }
+    http = _synthetic_http({"taxonomy_id:1360": [_entry("Q9CHJ9", "menF", IL1403, 272623)]})
+    with H.Doors(http):
+        mapped = H.stage2(payload, tmp_path)["payload"]
+    assert H.shipped_uniprot(mapped, "compounds")["MenF"] == "Q9CHJ9"
+    records = {row["json_pointer"]: row["flag"] for row in mapped.get(BORROWED_KEY) or []}
+    assert records == {"/entities/compounds/0": "UniProt Q9CHJ9, from strain IL1403"}
+
+
+def test_g9_r1_exact_sequence_takes_no_subspecies_record_without_a_known_subspecies(tmp_path: Path) -> None:
+    """Note a: FX5 applies the climbed tier's rule -- a strain whose lineage names no subspecies takes
+    no record filed under a subspecies, identical sequence or not."""
+
+    lineage = {"999001": {"taxonId": 999001, "scientificName": "Lactococcus lactis (strain Z9)", "rank": "strain",
+                          "lineage": [{"taxonId": 1358, "scientificName": "Lactococcus lactis", "rank": "species"}]}}
+    uniparc = {
+        "gene:MenF": {"results": [{"uniParcId": "UPI0000TEST02"}]},
+        "UPI0000TEST02": {"uniParcCrossReferences": [{"database": "UniProtKB/TrEMBL", "id": "Q9CHJ9", "active": True,
+                                                       "organism": {"taxonId": 272623}}]},
+    }
+    http = _synthetic_http({"accession:Q9CHJ9) AND taxonomy_id:1358": [_entry("Q9CHJ9", "menF", IL1403, 272623)]},
+                           uniparc=uniparc, lineage=lineage)
+    payload = _one_protein(tmp_path, http, organism="Lactococcus lactis Z9", taxonomy_id="999001")
+    assert H.shipped_uniprot(payload)["MenF"] == ""
