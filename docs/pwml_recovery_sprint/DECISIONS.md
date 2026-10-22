@@ -7265,3 +7265,22 @@ Recorded by the Lead Orchestrator at the product owner's standing instruction to
 4. Fix package `ORCH-761` FX1-FX6 is authorized: taxonomy-id search, canonical species, PathBank species by taxonomy id, the MenH clash
    resolved by function, the exact-sequence route through UniParc, and normaliser/mapper agreement on protein vs compound (which
    recovers EntB). No gate is touched. FX6 is preferred over `ORCH-761` Q2, which lapses if FX6 lands.
+
+---
+
+## D-109 — nested locations are merge-compatible; mapping never narrows a class name to a specific molecule · 2026-10-22 · LOCKED
+
+**Decided by the product owner** (2026-10-22, in session, on the ORCH-759 3-draw menaquinone gold scoring,
+`evidence/orch759_gold_accuracy.txt`). Stage 1 found 9/9, but the final payload carried 16 rows for 9 gold reactions: 5 duplicates of
+MenH-MenI kept apart only by "cytosol" vs "intracellular", and MenA lost because mapping replaced the paper's "prenyl diphosphate" with
+dimethylallyl pyrophosphate. Recorded by the Lead Orchestrator at the product owner's standing instruction to record the decisions made.
+
+1. **Locations: nested means compatible.** Two rows whose locations are equal, or where one location contains the other (intracellular
+   contains cytosol), are compatible for merging. The survivor keeps the MORE SPECIFIC location, and the merge is flagged for review in
+   the human-facing output. Locations that do not nest (cytosol vs membrane) still conflict. **An unknown pair is a conflict (fail
+   closed).** This amends the compatibility rule of D-104 AMENDMENT 3, which so far treated any two differing defined states or
+   locations as a conflict.
+2. **Class names: mapping never narrows.** A participant the paper names as a class ("prenyl diphosphate") keeps the paper's term.
+   Mapping may give it a class-level database identity (e.g. a ChEBI class) if one exists, and **never** substitutes a specific molecule
+   the paper does not state. With no class identity it stays unmapped and is flagged for review, not guessed. This is consistent with
+   D-106: no gate is relaxed, and the identity must be honest.
