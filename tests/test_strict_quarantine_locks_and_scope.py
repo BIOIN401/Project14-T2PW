@@ -302,7 +302,9 @@ def test_each_refusal_class_gets_its_own_reason() -> None:
     )
 
     overlap = _base()
-    overlap["entities"]["compounds"].append({"name": "GPX1"})
+    # ORCH-759c: a component name keeps proteins only, so the compound survives by
+    # a surviving reaction's reference (synonym ``glycine``), not by the component.
+    overlap["entities"]["compounds"].append({"name": "GPX1", "synonyms": ["glycine"]})
     overlap["entities"]["proteins"].append(
         {"name": "GPX1", "species": "Homo sapiens", "mapped_ids": {"uniprot": "P07203"}}
     )

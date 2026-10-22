@@ -824,14 +824,20 @@ def test_an_ambiguous_entity_name_quarantines_the_processes_that_reference_it() 
 
 
 def test_an_entity_type_overlap_that_survives_closure_blocks_the_export() -> None:
-    """The surviving case: kept alive as a complex component, never referenced.
+    """The surviving case: both rows survive closure, so both are exported.
 
     Closure cannot pick which declaration is real, and guessing would be the
     silent edit this module exists to avoid -- so it reports and refuses.
+
+    ORCH-759c moved the vehicle, not the assertion. The compound used to survive
+    only because the complex component shares its name; a component names a
+    protein, so that no longer keeps a compound (``test_orch759c_*``). It now
+    survives the way a real overlap does: a surviving reaction reaches it,
+    through a synonym (``glycine``, which still resolves to the glycine row).
     """
 
     payload = _glutathione_payload()
-    payload["entities"]["compounds"].append({"name": "GCLC"})
+    payload["entities"]["compounds"].append({"name": "GCLC", "synonyms": ["glycine"]})
     payload["entities"]["proteins"].append(
         {"name": "GCLC", "species": "Homo sapiens", "mapped_ids": {"uniprot": "P48506"}}
     )
