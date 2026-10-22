@@ -352,12 +352,23 @@ def _to_float(value: Any, default: float = 0.0) -> float:
         return default
 
 
+# Charge notation, never a composite separator (ORCH-758a). At the end of a name:
+# any plus run, digits first or not, spaced or not (NAD+, H+, Ca2+, Ca++, Fe+++,
+# "Ca ++", "Ca 2+"). Inside a name, before a space, "/", "-", ")", "]" or ",":
+# a "++" run ("voltage-gated Ca ++ channels"), element digits then "+" ("Ca2+
+# channel", "Mg2+/ATP"), or one "+" glued to the left before "/" or "-"
+# ("Na+/K+-ATPase"). A lone spaced "+" ("A + B") or one between two words
+# ("glucose+fructose") is still a separator.
+# ponytail: lexical; an unevenly spaced composite whose left member ends in a
+# digit ("CO2+ H2O") now reads as one name. Add an element list if that shows up.
+_CHARGE_PLUS_RE = re.compile(
+    r"\s*\d*\++$"
+    r"|(?:\s?\+{2,}|(?<=[A-Za-z])\s?\d+\+|(?<=[A-Za-z0-9])\+(?=[/-]))(?=[\s/\-)\],])"
+)
+
+
 def _has_plus_token(value: str) -> bool:
-    # Strip trailing charge notation (e.g. NAD+, H+, Ca2+) before checking
-    # for a composite "+" separator so chemical names aren't mis-parsed.
-    stripped = re.sub(r"\+$", "", _canonical(value).rstrip())
-    stripped = re.sub(r"\d+\+$", "", stripped.rstrip())
-    return "+" in stripped
+    return "+" in _CHARGE_PLUS_RE.sub("", _canonical(value))
 
 
 def _split_composite(value: str) -> List[str]:
