@@ -1,0 +1,238 @@
+{
+  "label": "r1-affected-1",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-764/47-r1-affected-1.pin.json",
+    "-q",
+    "--basetemp=C:/t/bt-orch764/47-r1-affected-1-1639",
+    "tests/helpers_prefreeze.py",
+    "tests/orch762_harness.py",
+    "tests/test_adversarial_actor_entity_type.py",
+    "tests/test_adversarial_json_repair_guard.py",
+    "tests/test_adversarial_row_repair_deletion.py",
+    "tests/test_apply_audit_patch_lineage.py",
+    "tests/test_apply_audit_patch_lock_policy.py",
+    "tests/test_apply_audit_patch_referential_integrity.py",
+    "tests/test_audit_json_llm_payload.py",
+    "tests/test_baseline_regression_2026_07_28.py",
+    "tests/test_batch_driver.py",
+    "tests/test_batch_research_gate_fail_open.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_c030_canonical_identity_fallback.py",
+    "tests/test_c030a_object_sharing_at_the_freeze_seam.py",
+    "tests/test_c056b_semantic_denominators.py",
+    "tests/test_c060a_requested_pathway_wiring.py",
+    "tests/test_c064_round_cap_reason.py",
+    "tests/test_c071_actor_evidence_gate.py",
+    "tests/test_c073_identity_admission.py",
+    "tests/test_c074_strict_core_floor.py",
+    "tests/test_c075_source_support_armed.py",
+    "tests/test_c076_alias_holo_apo_identity.py",
+    "tests/test_c078_refusal_durable_through_resolution.py",
+    "tests/test_c079_interactive_prompt_allowlist.py",
+    "tests/test_c080_production_gate_kind_aware.py",
+    "tests/test_c081_cofactor_role_identity.py",
+    "tests/test_c082_species_rename_declination.py",
+    "tests/test_c085_priority2_honesty.py",
+    "tests/test_c086_superset_complex_promotion.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch764",
+  "started_at": "2026-10-22T23:49:05+00:00",
+  "finished_at": "2026-10-22T23:50:00+00:00",
+  "duration_seconds": 54.59799329999805,
+  "timeout_seconds": 530.0,
+  "root_pid": 413388,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 417724,
+      "name": "python.exe",
+      "ppid": 413388
+    },
+    {
+      "pid": 400316,
+      "name": "python.exe",
+      "ppid": 417724
+    },
+    {
+      "pid": 417668,
+      "name": "python.exe",
+      "ppid": 400316
+    },
+    {
+      "pid": 415732,
+      "name": "python.exe",
+      "ppid": 417724
+    },
+    {
+      "pid": 416792,
+      "name": "python.exe",
+      "ppid": 415732
+    },
+    {
+      "pid": 405636,
+      "name": "python.exe",
+      "ppid": 417724
+    },
+    {
+      "pid": 417532,
+      "name": "python.exe",
+      "ppid": 405636
+    },
+    {
+      "pid": 403572,
+      "name": "python.exe",
+      "ppid": 415860
+    },
+    {
+      "pid": 415860,
+      "name": "python.exe",
+      "ppid": 417724
+    },
+    {
+      "pid": 414548,
+      "name": "git.exe",
+      "ppid": 417724
+    },
+    {
+      "pid": 415008,
+      "name": "git.exe",
+      "ppid": 417724
+    },
+    {
+      "pid": 415812,
+      "name": "git.exe",
+      "ppid": 417724
+    },
+    {
+      "pid": 412000,
+      "name": "git.exe",
+      "ppid": 417724
+    },
+    {
+      "pid": 417868,
+      "name": "git.exe",
+      "ppid": 417724
+    },
+    {
+      "pid": 418052,
+      "name": "git.exe",
+      "ppid": 417724
+    },
+    {
+      "pid": 418164,
+      "name": "git.exe",
+      "ppid": 417724
+    },
+    {
+      "pid": 418432,
+      "name": "git.exe",
+      "ppid": 417724
+    },
+    {
+      "pid": 418780,
+      "name": "git.exe",
+      "ppid": 417724
+    },
+    {
+      "pid": 418428,
+      "name": "git.exe",
+      "ppid": 417724
+    },
+    {
+      "pid": 418744,
+      "name": "git.exe",
+      "ppid": 417724
+    }
+  ],
+  "descendants_terminated": [
+    400316,
+    403572,
+    405636,
+    412000,
+    414548,
+    415008,
+    415732,
+    415812,
+    415860,
+    416792,
+    417532,
+    417668,
+    417724,
+    417868,
+    418052,
+    418164,
+    418428,
+    418432,
+    418744,
+    418780
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 375172,
+      "name": "python.exe"
+    },
+    {
+      "pid": 375192,
+      "name": "python.exe"
+    },
+    {
+      "pid": 414392,
+      "name": "python.exe"
+    },
+    {
+      "pid": 414480,
+      "name": "python.exe"
+    },
+    {
+      "pid": 417320,
+      "name": "python.exe"
+    },
+    {
+      "pid": 417360,
+      "name": "python.exe"
+    },
+    {
+      "pid": 417512,
+      "name": "python.exe"
+    },
+    {
+      "pid": 417540,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch764\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-764\\47-r1-affected-1.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch764\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch764",
+    "repo_head": "043626faa1bdb20ae3c312b2af62073da6d1e71e",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

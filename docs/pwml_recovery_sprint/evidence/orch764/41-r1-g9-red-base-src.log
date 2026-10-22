@@ -1,0 +1,202 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch764\src\t2pw\__init__.py
+.FFFFFFFFF......                                                         [100%]
+================================== FAILURES ===================================
+_ test_g9_prefreeze_keeps_the_paper_class_term_and_flags_it[prenyl diphosphate] _
+
+term = 'prenyl diphosphate'
+
+    @pytest.mark.parametrize("term", ["prenyl diphosphate", "Prenyl Diphosphate"])
+    def test_g9_prefreeze_keeps_the_paper_class_term_and_flags_it(term: str) -> None:
+        """G9. Base: the row and the MenA reaction come back as Dimethylallylpyrophosphate, DMAPP ids on."""
+        payload = _payload(term)
+        summary, report = _prefreeze(payload, _rows())
+    
+        row = _compound(payload, term)
+>       assert row["name"] == term
+E       AssertionError: assert 'Dimethylallylpyrophosphate' == 'prenyl diphosphate'
+E         
+E         - prenyl diphosphate
+E         + Dimethylallylpyrophosphate
+
+tests\test_orch764_class_term_not_narrowed.py:133: AssertionError
+_ test_g9_prefreeze_keeps_the_paper_class_term_and_flags_it[Prenyl Diphosphate] _
+
+term = 'Prenyl Diphosphate'
+
+    @pytest.mark.parametrize("term", ["prenyl diphosphate", "Prenyl Diphosphate"])
+    def test_g9_prefreeze_keeps_the_paper_class_term_and_flags_it(term: str) -> None:
+        """G9. Base: the row and the MenA reaction come back as Dimethylallylpyrophosphate, DMAPP ids on."""
+        payload = _payload(term)
+        summary, report = _prefreeze(payload, _rows())
+    
+        row = _compound(payload, term)
+>       assert row["name"] == term
+E       AssertionError: assert 'Dimethylallylpyrophosphate' == 'Prenyl Diphosphate'
+E         
+E         - Prenyl Diphosphate
+E         + Dimethylallylpyrophosphate
+
+tests\test_orch764_class_term_not_narrowed.py:133: AssertionError
+_ test_g9_r1_prefreeze_withholds_a_member_identity_already_on_the_class_row[candidate_only] _
+
+case = 'candidate_only'
+
+    @pytest.mark.parametrize("case", sorted(ARRIVING_IDENTITIES))
+    def test_g9_r1_prefreeze_withholds_a_member_identity_already_on_the_class_row(case: str) -> None:
+        """G9. Base 79080db7 and the round-0 tip: scalar, mapped_ids and candidate-only take the legacy-id
+        branch and ship PathBank 874; kegg/hmdb is admitted and renamed to DMAPP (base) or refused
+        record-only with C00235 / HMDB0001120 still on the row (round 0)."""
+        payload = _class_payload_carrying(case)
+        summary, _ = _prefreeze(payload, _rows())
+    
+        row = _compound(payload, "prenyl diphosphate")
+        assert row["name"] == "prenyl diphosphate"
+        assert summary["rename_map"] == {}
+>       assert not any(row.get(key) not in (None, "", {}) for key in STAMPED), {k: row.get(k) for k in STAMPED}
+E       AssertionError: {'biocyc_id': None, 'cas': None, 'chebi_id': None, 'chemspider_id': None, ...}
+E       assert not True
+E        +  where True = any(<generator object test_g9_r1_prefreeze_withholds_a_member_identity_already_on_the_class_row.<locals>.<genexpr> at 0x000001EDDF88AEA0>)
+
+tests\test_orch764_class_term_not_narrowed.py:188: AssertionError
+_ test_g9_r1_prefreeze_withholds_a_member_identity_already_on_the_class_row[kegg_hmdb] _
+
+case = 'kegg_hmdb'
+
+    @pytest.mark.parametrize("case", sorted(ARRIVING_IDENTITIES))
+    def test_g9_r1_prefreeze_withholds_a_member_identity_already_on_the_class_row(case: str) -> None:
+        """G9. Base 79080db7 and the round-0 tip: scalar, mapped_ids and candidate-only take the legacy-id
+        branch and ship PathBank 874; kegg/hmdb is admitted and renamed to DMAPP (base) or refused
+        record-only with C00235 / HMDB0001120 still on the row (round 0)."""
+        payload = _class_payload_carrying(case)
+        summary, _ = _prefreeze(payload, _rows())
+    
+        row = _compound(payload, "prenyl diphosphate")
+>       assert row["name"] == "prenyl diphosphate"
+E       AssertionError: assert 'Dimethylallylpyrophosphate' == 'prenyl diphosphate'
+E         
+E         - prenyl diphosphate
+E         + Dimethylallylpyrophosphate
+
+tests\test_orch764_class_term_not_narrowed.py:186: AssertionError
+_ test_g9_r1_prefreeze_withholds_a_member_identity_already_on_the_class_row[mapped_ids] _
+
+case = 'mapped_ids'
+
+    @pytest.mark.parametrize("case", sorted(ARRIVING_IDENTITIES))
+    def test_g9_r1_prefreeze_withholds_a_member_identity_already_on_the_class_row(case: str) -> None:
+        """G9. Base 79080db7 and the round-0 tip: scalar, mapped_ids and candidate-only take the legacy-id
+        branch and ship PathBank 874; kegg/hmdb is admitted and renamed to DMAPP (base) or refused
+        record-only with C00235 / HMDB0001120 still on the row (round 0)."""
+        payload = _class_payload_carrying(case)
+        summary, _ = _prefreeze(payload, _rows())
+    
+        row = _compound(payload, "prenyl diphosphate")
+        assert row["name"] == "prenyl diphosphate"
+        assert summary["rename_map"] == {}
+>       assert not any(row.get(key) not in (None, "", {}) for key in STAMPED), {k: row.get(k) for k in STAMPED}
+E       AssertionError: {'biocyc_id': None, 'cas': None, 'chebi_id': None, 'chemspider_id': None, ...}
+E       assert not True
+E        +  where True = any(<generator object test_g9_r1_prefreeze_withholds_a_member_identity_already_on_the_class_row.<locals>.<genexpr> at 0x000001EDDE7B8740>)
+
+tests\test_orch764_class_term_not_narrowed.py:188: AssertionError
+_ test_g9_r1_prefreeze_withholds_a_member_identity_already_on_the_class_row[scalar] _
+
+case = 'scalar'
+
+    @pytest.mark.parametrize("case", sorted(ARRIVING_IDENTITIES))
+    def test_g9_r1_prefreeze_withholds_a_member_identity_already_on_the_class_row(case: str) -> None:
+        """G9. Base 79080db7 and the round-0 tip: scalar, mapped_ids and candidate-only take the legacy-id
+        branch and ship PathBank 874; kegg/hmdb is admitted and renamed to DMAPP (base) or refused
+        record-only with C00235 / HMDB0001120 still on the row (round 0)."""
+        payload = _class_payload_carrying(case)
+        summary, _ = _prefreeze(payload, _rows())
+    
+        row = _compound(payload, "prenyl diphosphate")
+        assert row["name"] == "prenyl diphosphate"
+        assert summary["rename_map"] == {}
+>       assert not any(row.get(key) not in (None, "", {}) for key in STAMPED), {k: row.get(k) for k in STAMPED}
+E       AssertionError: {'biocyc_id': None, 'cas': None, 'chebi_id': None, 'chemspider_id': None, ...}
+E       assert not True
+E        +  where True = any(<generator object test_g9_r1_prefreeze_withholds_a_member_identity_already_on_the_class_row.<locals>.<genexpr> at 0x000001EDDF88BAE0>)
+
+tests\test_orch764_class_term_not_narrowed.py:188: AssertionError
+_ test_g9_stage6_refuses_a_specific_record_for_a_class_term[prenyl diphosphate] _
+
+term = 'prenyl diphosphate'
+
+    @pytest.mark.parametrize("term", ["prenyl diphosphate", "prenyl pyrophosphate"])
+    def test_g9_stage6_refuses_a_specific_record_for_a_class_term(term: str) -> None:
+        """G9. Base: the result stays ``mapped`` with CHEBI:16057 / C00235 for the class term."""
+        result = _apply_name_plausibility_gate(_same_named_record(), term, kind="compound")
+>       assert result["status"] == "unmapped"
+E       AssertionError: assert 'mapped' == 'unmapped'
+E         
+E         - unmapped
+E         ? --
+E         + mapped
+
+tests\test_orch764_class_term_not_narrowed.py:219: AssertionError
+_ test_g9_stage6_refuses_a_specific_record_for_a_class_term[prenyl pyrophosphate] _
+
+term = 'prenyl pyrophosphate'
+
+    @pytest.mark.parametrize("term", ["prenyl diphosphate", "prenyl pyrophosphate"])
+    def test_g9_stage6_refuses_a_specific_record_for_a_class_term(term: str) -> None:
+        """G9. Base: the result stays ``mapped`` with CHEBI:16057 / C00235 for the class term."""
+        result = _apply_name_plausibility_gate(_same_named_record(), term, kind="compound")
+>       assert result["status"] == "unmapped"
+E       AssertionError: assert 'mapped' == 'unmapped'
+E         
+E         - unmapped
+E         ? --
+E         + mapped
+
+tests\test_orch764_class_term_not_narrowed.py:219: AssertionError
+______ test_g9_stage6_strips_a_specific_identity_already_on_a_class_row _______
+
+    def test_g9_stage6_strips_a_specific_identity_already_on_a_class_row() -> None:
+        """G9. An earlier pass (or a patch) left DMAPP's ids on the class row. Base: they stay on it."""
+        row = {"name": "prenyl diphosphate", "mapped_ids": dict(DMAPP_IDS), "mapping_meta": {}}
+        report = _enforce_shipped_identity_names(
+            row, _same_named_record(), kind="compound", entity_name="prenyl diphosphate")
+>       assert report["rejected"] is True
+E       assert False is True
+
+tests\test_orch764_class_term_not_narrowed.py:231: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_orch764_class_term_not_narrowed.py::test_g9_prefreeze_keeps_the_paper_class_term_and_flags_it[prenyl diphosphate]
+FAILED tests/test_orch764_class_term_not_narrowed.py::test_g9_prefreeze_keeps_the_paper_class_term_and_flags_it[Prenyl Diphosphate]
+FAILED tests/test_orch764_class_term_not_narrowed.py::test_g9_r1_prefreeze_withholds_a_member_identity_already_on_the_class_row[candidate_only]
+FAILED tests/test_orch764_class_term_not_narrowed.py::test_g9_r1_prefreeze_withholds_a_member_identity_already_on_the_class_row[kegg_hmdb]
+FAILED tests/test_orch764_class_term_not_narrowed.py::test_g9_r1_prefreeze_withholds_a_member_identity_already_on_the_class_row[mapped_ids]
+FAILED tests/test_orch764_class_term_not_narrowed.py::test_g9_r1_prefreeze_withholds_a_member_identity_already_on_the_class_row[scalar]
+FAILED tests/test_orch764_class_term_not_narrowed.py::test_g9_stage6_refuses_a_specific_record_for_a_class_term[prenyl diphosphate]
+FAILED tests/test_orch764_class_term_not_narrowed.py::test_g9_stage6_refuses_a_specific_record_for_a_class_term[prenyl pyrophosphate]
+FAILED tests/test_orch764_class_term_not_narrowed.py::test_g9_stage6_strips_a_specific_identity_already_on_a_class_row
+9 failed, 7 passed in 0.45s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch764\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 972d0d32fe646ae301fdaa17322bee774400d4fe  [git, worktree dirty=True]
+label                   : r1-g9-red-base-src
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-764/41-r1-g9-red-base-src.pin.json -q --basetemp=C:/t/bt-orch764/41-r1-g9-red-base-src-1414 tests/test_orch764_class_term_not_narrowed.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch764
+root PID / process group: 393540 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 530 s
+duration                : 1.19 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  410908:python.exe
+descendants terminated  : 1  410908
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch764\docs\pwml_recovery_sprint\evidence\g11\ORCH-764\41-r1-g9-red-base-src.json
+json report written     : True
+pre-existing (reported, NEVER killed): 16
+================================================

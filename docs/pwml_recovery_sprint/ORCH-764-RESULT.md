@@ -112,8 +112,16 @@ paper's word names a class distinguishes the case, and that is what the list rec
   ("prenyl diphosphate (DMAPP)") are not listed and are not caught.
 * `prenyl pyrophosphate` is listed as the same name in the other spelling; it is not measured on any leg.
 * Stage 6 gates only `status: mapped` results (pre-existing): an `ambiguous` result is not judged here.
-* An identifier already on a class row when pre-freeze runs is not removed there (D-028 refusals are record-only);
-  Stage 6's shipped-identity site removes it on the final `map_payload` pass, which runs first.
+* ~~An identifier already on a class row when pre-freeze runs is not removed there (D-028 refusals are
+  record-only); Stage 6's shipped-identity site removes it on the final `map_payload` pass, which runs first.~~
+  **Wrong, corrected in repair round 1 (§ 13).** Stage 6 strips only `mapped_ids` and the `pathbank_compound_id`
+  scalar and returns early when `mapped_ids` is empty; the legacy-id branch ran before the class check; and
+  `run_pwml_export` runs pre-freeze resolution with no Stage 6 at all. So a class row arriving with a member id
+  shipped it. Since repair round 1, pre-freeze resolution withholds every member identifier from a class row
+  before the legacy-id branch, so the limit no longer holds.
+* An incoming resolution account is kept (pre-existing D-015 rule, `_resolve_to_fixed_point`): a class row that
+  arrives already carrying `db_status` (e.g. a saved, already-resolved payload re-exported) has its identifiers
+  withheld, but its recorded `db_status` / `chosen_rule` are restored as they arrived.
 
 ## 3. The diff (`git diff 79080db7 -- src`: 2 files, +44 −4)
 
@@ -253,12 +261,12 @@ outside the sprint.
 ```
 ### ORCH-764 — D-109 § 2, class names never narrowed
 
-New focused selection: `tests/test_orch764_class_term_not_narrowed.py` (**11**, <1 s): the ORCH-759
+New focused selection: `tests/test_orch764_class_term_not_narrowed.py` (**16**, <1 s): the ORCH-759
 menaquinone leg's MenA slice before pre-freeze resolution and its recorded PathBank answer
 (`tests/fixtures/orch764/menA_prenyl_diphosphate.json`, cut by
 `docs/pwml_recovery_sprint/evidence/orch764/make_fixture.py`), a SQL emulator for the PathBank compound
-table, no network. G9: 5 red at base `src/` (`g11/ORCH-764/05`), 11 green at tip (`25`). Run it for any change
-to `compound_resolution._db_match_rule_decision`, `CLASS_PARTICIPANT_TERMS`, `PathWhizCompoundResolver`,
+table, no network. G9: 9 red at base `src/` (`g11/ORCH-764/41`), 16 green at tip (`42`). Run it for any change
+to `compound_resolution._db_match_rule_decision`, `_withhold_class_identity`, `CLASS_PARTICIPANT_TERMS`, `PathWhizCompoundResolver`,
 `prefreeze_resolution.resolve_compounds_prefreeze`, or the compound branches of
 `map_ids._apply_name_plausibility_gate` / `_enforce_shipped_identity_names`.
 
@@ -304,3 +312,50 @@ UniProt answers; ORCH-762's own replays are where MenD's identity is measured (O
 Q9CHK0 on the KF147 replay). Not built here: outside this lane.
 
 `g11_evidence.py check --task ORCH-764` after these reruns: 39 artifacts, 0 non-compliant, every pytest report pinned.
+
+## 13. Repair round 1
+
+**Review round 0: REJECT, finding 1 (standard item 1).** A class is still narrowed when a member's identifiers are
+already on the row. The reviewer's probes: 42 at the tip, 04 at base, 43 for Stage 6 then pre-freeze. A
+"prenyl diphosphate" row carrying DMAPP's `pathbank_compound_id` 874 took the legacy-id branch
+(`compound_resolution.py`, `_db_id` → `_first_nonempty`, which reads the row scalar, `mapped_ids` and
+`mapping_meta.candidates[0]`) before the class check. That covers three shapes: the id as a scalar, in `mapped_ids`,
+or only on the top candidate. With KEGG/HMDB ids the D-109 refusal was record-only, so C00235 / HMDB0001120 stayed
+on the row, and the writer emits them. Stage 6 does not cover it: it strips scalars only partly, and
+`run_pwml_export` has no Stage 6 at all. The § 2 limit claiming otherwise was wrong and is corrected there.
+
+**Fix (`043626fa`, `compound_resolution.py` +49 −1).** `_withhold_class_identity` runs inside
+`_resolve_compound_rows` BEFORE `_normalize_compound_external_ids` and the legacy-id branch, on a row whose `name`
+is a listed class term. It moves every member identifier into `mapping_meta.rejected_mapped_ids`, which is the
+review record Stage 6 writes and C-078's veto reads:
+
+- top-level scalars (every `_REFUSABLE_NAMESPACE` key);
+- `mapped_ids`;
+- a resolved `db_row`;
+- the same scalars on `mapping_meta`;
+- the top candidate's ids.
+
+The candidates themselves move to `rejected_candidates`. The row then takes the resolver path, where the D-109
+refusal makes it record-only with `identity_refused_review_required`. Each withholding is logged in the resolution
+report, `unresolved.class_term_identities_withheld`. Every export seam runs pre-freeze resolution, so no Stage-6
+change was needed. Unchanged: the closed list, Stage 6, every non-class row.
+
+| run | G11 | result |
+|---|---|---|
+| tests first (`972d0d32`) on round-0 tip code | `40-r1-g9-red-round0-tip` | **4 failed**, 12 passed: all four `test_g9_r1_*` cases (scalar, mapped_ids, candidate_only, kegg_hmdb) fail with identifiers on the row |
+| same tests on base `src/` (`0a9f9829`) | `41-r1-g9-red-base-src` | **9 failed**, 7 passed: the four new cases (three ship 874; kegg_hmdb is renamed to DMAPP) and the five round-0 G9 cases |
+| GREEN | `42-r1-g9-green` | 16 passed (new preservation test: a DMAPP-named row carrying 874 is unchanged, legacy-id as before) |
+| offline replay | `43-r1-replay-tip` | identical to `09`: menaquinone final 8/9 (P 1.000), enterobactin 5/5. The leg's row carried no id, so nothing was withheld there |
+| `test_orch762_protein_identity.py` + `test_orch759a_duplicate_protein_fold.py` | `44` | 73 passed |
+| `test_prefreeze_third_export_seam.py` alone | `45` | 12 passed |
+| SMOKE | `46-r1-smoke` | **508 passed** |
+| compound-affected (176 files) | `47`-`56` | **4432 passed**, 6 skipped, 5 failed (+5 passed = the new tests). The 5 known failures have assertion lines identical to base (`24`, md5 equal) |
+
+Every report shows `FINAL SURVIVING COUNT : 0`.
+
+New limit, stated in § 2: a class row that arrives already carrying a `db_status` keeps that recorded account (the
+D-015 fixed point restores it), although its identifiers are withheld. It is not settled whether the account should
+then read `identity_refused_review_required`; that would need a change to `prefreeze_resolution` (Q6).
+
+**Q6 (new, for the product owner).** Should a withheld class row's restored `db_status` be overwritten? The cost is
+an exception to D-015's "the payload's own account stands", in `prefreeze_resolution._authoritative_provenance`.

@@ -1,0 +1,46 @@
+compound_resolution: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch764\src\t2pw\pwml\compound_resolution.py | D-109 class gate present: True
+
+=== menaquinone PMC12421875  leg runs_papers/ORCH-759/legs/menaquinone-strict/2026-10-22_1148/papers/PMC12421875/strict
+final_mapped.json sha256 3eb9eae25f370578689f85c473f687b8a68addd2069ef829fc78defc14616bbf
+recorded pre-freeze renames undone: {'Dimethylallylpyrophosphate': 'prenyl diphosphate'}
+replay rename_map: {}
+replay reproduces the recorded final_mapped.json exactly: False
+  DB-matched row: name 'prenyl diphosphate' raw_name 'prenyl diphosphate' db_status 'identity_refused_review_required' ids []
+  stage1 (recorded)   P 1.000  R 1.000  F1 1.000  matched 9/9 ['R1', 'R2', 'R3', 'R4', 'R5', 'R6', 'R7', 'R8', 'R9']
+  final  (recorded)   P 0.875  R 0.778  F1 0.824  matched 7/9 ['R1', 'R3', 'R4', 'R5', 'R6', 'R7', 'R9']
+  final  (replayed)   P 1.000  R 0.889  F1 0.941  matched 8/9 ['R1', 'R3', 'R4', 'R5', 'R6', 'R7', 'R8', 'R9']
+
+=== enterobactin PMC12096016  leg runs_papers/ORCH-759/legs/enterobactin-strict/2026-10-22_1037/papers/PMC12096016/strict
+final_mapped.json sha256 b2ab0c94ef7bef6899f5e312f8eb5c011932c2b3ec2bdecf8c5aaec37bb463f7
+recorded pre-freeze renames undone: {}
+replay rename_map: {}
+replay reproduces the recorded final_mapped.json exactly: True
+  stage1 (recorded)   P 1.000  R 1.000  F1 1.000  matched 5/5 ['R1', 'R2', 'R3', 'R4', 'R5']
+  final  (recorded)   P 1.000  R 1.000  F1 1.000  matched 5/5 ['R1', 'R2', 'R3', 'R4', 'R5']
+  final  (replayed)   P 1.000  R 1.000  F1 1.000  matched 5/5 ['R1', 'R2', 'R3', 'R4', 'R5']
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch764\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 043626faa1bdb20ae3c312b2af62073da6d1e71e  [git, worktree dirty=False]
+label                   : r1-replay-tip
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/orch764/replay.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch764
+root PID / process group: 413756 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 400 s
+duration                : 0.82 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  374280:python.exe
+descendants terminated  : 1  374280
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch764\docs\pwml_recovery_sprint\evidence\g11\ORCH-764\43-r1-replay-tip.json
+json report written     : True
+pre-existing (reported, NEVER killed): 8
+================================================
