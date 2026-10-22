@@ -1,0 +1,49 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch762\src\t2pw\__init__.py
+.................Fs....sss...........                                    [100%]
+================================== FAILURES ===================================
+_______ test_the_message_names_the_problem_the_interpreter_and_the_cure _______
+
+    def test_the_message_names_the_problem_the_interpreter_and_the_cure() -> None:
+        """The wrong-interpreter case: the one that actually happened.
+    
+        The cure has to be a command, not advice. "Use the venv" is not actionable at
+        2am; ``C:\\...\\.venv\\Scripts\\python.exe scripts\\batch_run.py`` is, and the
+        root cause -- ``py.exe`` ignoring the active virtualenv -- has to be named or
+        the operator fixes it once and hits it again next week.
+        """
+    
+        venv = runner.venv_python()
+>       assert venv is not None, "this project ships a .venv; the test assumes it"
+E       AssertionError: this project ships a .venv; the test assumes it
+E       assert None is not None
+
+tests\test_batch_preflight.py:616: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_batch_preflight.py::test_the_message_names_the_problem_the_interpreter_and_the_cure
+1 failed, 32 passed, 4 skipped in 6.90s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch762\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 9d140ce7574729ee55410081c00979c14641291a  [git, worktree dirty=False]
+label                   : alone-test-batch-preflight
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-762/25-alone-test-batch-preflight.pin.json -q --basetemp=C:/t/bt-orch762/25-alone-test-batch-preflight-24181 tests/test_batch_preflight.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch762
+root PID / process group: 235572 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 7.52 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 19  236060:python.exe, 239728:python.exe, 239748:python.exe, 189044:python.exe, 238752:python.exe, 239828:python.exe, 239860:python.exe, 229768:python.exe, 238848:python.exe, 239912:python.exe, 239968:python.exe, 240120:python.exe, 240232:python.exe, 240252:python.exe, 240288:python.exe, 240456:python.exe, 240556:python.exe, 240600:python.exe, 240620:python.exe
+descendants terminated  : 19  189044, 229768, 236060, 238752, 238848, 239728, 239748, 239828, 239860, 239912, 239968, 240120, 240232, 240252, 240288, 240456, 240556, 240600, 240620
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch762\docs\pwml_recovery_sprint\evidence\g11\ORCH-762\25-alone-test-batch-preflight.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================

@@ -1,0 +1,151 @@
+{
+  "label": "affected-4",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-762/14-affected-4.pin.json",
+    "-q",
+    "--basetemp=C:/t/bt-orch762/14-affected-4-16214",
+    "tests/test_rag_lineage_emission.py",
+    "tests/test_rag_loop_controller.py",
+    "tests/test_rag_loop_policy.py",
+    "tests/test_rag_payload_gate_guardrails.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_rag_relation_recall.py",
+    "tests/test_rag_reversible_reaction_preservation.py",
+    "tests/test_rag_seed_entity_reimport.py",
+    "tests/test_rag_select.py",
+    "tests/test_rag_synthesize.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_typed_gap_resolution.py",
+    "tests/test_rag_typed_resolution_integrity.py",
+    "tests/test_reaction_evidence.py",
+    "tests/test_reference_repair.py",
+    "tests/test_research_mode_contracts.py",
+    "tests/test_research_mode_normalizer.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_research_mode_report.py",
+    "tests/test_research_mode_tiers.py",
+    "tests/test_sbml_render_pathwhiz_like.py",
+    "tests/test_semantic_production_no_gold.py",
+    "tests/test_semantic_release_gating.py",
+    "tests/test_stage2_mapping_boundary.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_stage_contracts.py",
+    "tests/test_stage_one_boundary.py",
+    "tests/test_stage_one_ensemble.py",
+    "tests/test_stage_one_paper_dictionary.py",
+    "tests/test_streamlit_stage2_orchestration.py",
+    "tests/test_strict_failure_replay.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_lineage.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_real_artifact_replay.py",
+    "tests/test_strict_quarantine_release_seam.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_transport_actor_guards.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch762",
+  "started_at": "2026-10-22T21:24:05+00:00",
+  "finished_at": "2026-10-22T21:24:44+00:00",
+  "duration_seconds": 39.427561100001185,
+  "timeout_seconds": 540.0,
+  "root_pid": 235276,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 235504,
+      "name": "python.exe",
+      "ppid": 235276
+    },
+    {
+      "pid": 230676,
+      "name": "python.exe",
+      "ppid": 234760
+    },
+    {
+      "pid": 234760,
+      "name": "python.exe",
+      "ppid": 235504
+    }
+  ],
+  "descendants_terminated": [
+    230676,
+    234760,
+    235504
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 198356,
+      "name": "python.exe"
+    },
+    {
+      "pid": 202040,
+      "name": "python.exe"
+    },
+    {
+      "pid": 202788,
+      "name": "python.exe"
+    },
+    {
+      "pid": 203148,
+      "name": "python.exe"
+    },
+    {
+      "pid": 204744,
+      "name": "python.exe"
+    },
+    {
+      "pid": 204844,
+      "name": "python.exe"
+    },
+    {
+      "pid": 206452,
+      "name": "python.exe"
+    },
+    {
+      "pid": 212108,
+      "name": "python.exe"
+    },
+    {
+      "pid": 225492,
+      "name": "python.exe"
+    },
+    {
+      "pid": 234144,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch762\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-762\\14-affected-4.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch762\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch762",
+    "repo_head": "9d140ce7574729ee55410081c00979c14641291a",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

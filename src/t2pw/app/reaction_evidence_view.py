@@ -35,6 +35,7 @@ from t2pw.app.reaction_evidence import (
     NONE_RECORDED,
     NOT_RECORDED,
     PWML_IR_FILENAME,
+    borrowed_identities_title,
     build_report,
     coverage_lines,
     header_lines,
@@ -176,6 +177,10 @@ def _render_body() -> None:
             st.write(NOT_RECORDED if report["payload_source"] == NOT_RECORDED else NONE_RECORDED)
         for item in report["interactions"]:
             _block(interaction_lines(item))
+
+    if report["borrowed_identities"]:
+        with st.expander(borrowed_identities_title(report)):
+            _block([f"- {line}" for line in report["borrowed_identities"]])
 
     quarantined = report["quarantined"]
     label = NOT_RECORDED if quarantined is None else str(len(quarantined))

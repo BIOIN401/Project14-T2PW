@@ -1,0 +1,425 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch762\src\t2pw\__init__.py
+FFFFFFFFFFFFFFFFF.FFF........                                            [100%]
+================================== FAILURES ===================================
+_ test_g9_kf147_men_enzymes_resolve_to_their_same_subspecies_records[stage2] __
+
+runs = {'ecoli_uniprot': ({'stage2': {'payload': {'biological_states': [{...}, {...}, {...}, {...}, {...}, {...}], 'element_l....}}}, <orch762_harness.Doors object at 0x000001EEC0107390>, <orch762_harness.ReplayHttp object at 0x000001EEBFF0A490>)}
+stage = 'stage2'
+
+    @pytest.mark.parametrize("stage", ["stage2", "stage6"])
+    def test_g9_kf147_men_enzymes_resolve_to_their_same_subspecies_records(runs: Dict[str, Any], stage: str) -> None:
+        rows = _rows(_payload(runs, "kf147", stage))
+        shipped = {name: str((rows.get(name, {}).get("mapped_ids") or {}).get("uniprot") or "") for name in SAME_SUBSPECIES}
+>       assert shipped == SAME_SUBSPECIES
+E       AssertionError: assert {'MenB': '', ...enE': '', ...} == {'MenB': 'Q9C...'Q9CHK3', ...}
+E         
+E         Differing items:
+E         {'MenC': ''} != {'MenC': 'Q9CHK4'}
+E         {'MenE': ''} != {'MenE': 'Q9CHK3'}
+E         {'MenB': ''} != {'MenB': 'Q9CHK2'}
+E         {'MenG': ''} != {'MenG': 'P49016'}
+E         {'MenF': ''} != {'MenF': 'Q9CHJ9'}
+E         {'MenD': ''} != {'MenD': 'Q9CHK0'}
+E         Use -v to get more diff
+
+tests\test_orch762_protein_identity.py:89: AssertionError
+_ test_g9_kf147_men_enzymes_resolve_to_their_same_subspecies_records[stage6] __
+
+runs = {'ecoli_uniprot': ({'stage2': {'payload': {'biological_states': [{...}, {...}, {...}, {...}, {...}, {...}], 'element_l....}}}, <orch762_harness.Doors object at 0x000001EEC0107390>, <orch762_harness.ReplayHttp object at 0x000001EEBFF0A490>)}
+stage = 'stage6'
+
+    @pytest.mark.parametrize("stage", ["stage2", "stage6"])
+    def test_g9_kf147_men_enzymes_resolve_to_their_same_subspecies_records(runs: Dict[str, Any], stage: str) -> None:
+        rows = _rows(_payload(runs, "kf147", stage))
+        shipped = {name: str((rows.get(name, {}).get("mapped_ids") or {}).get("uniprot") or "") for name in SAME_SUBSPECIES}
+>       assert shipped == SAME_SUBSPECIES
+E       AssertionError: assert {'MenB': '', ...enE': '', ...} == {'MenB': 'Q9C...'Q9CHK3', ...}
+E         
+E         Differing items:
+E         {'MenC': ''} != {'MenC': 'Q9CHK4'}
+E         {'MenE': ''} != {'MenE': 'Q9CHK3'}
+E         {'MenB': ''} != {'MenB': 'Q9CHK2'}
+E         {'MenG': ''} != {'MenG': 'P49016'}
+E         {'MenF': ''} != {'MenF': 'Q9CHJ9'}
+E         {'MenD': ''} != {'MenD': 'Q9CHK0'}
+E         Use -v to get more diff
+
+tests\test_orch762_protein_identity.py:89: AssertionError
+_ test_g9_menh_resolves_to_its_own_record_not_the_menG_methyltransferase[kf147] _
+
+runs = {'ecoli_uniprot': ({'stage2': {'payload': {'biological_states': [{...}, {...}, {...}, {...}, {...}, {...}], 'element_l....}}}, <orch762_harness.Doors object at 0x000001EEC0107390>, <orch762_harness.ReplayHttp object at 0x000001EEBFF0A490>)}
+scenario = 'kf147'
+
+    @pytest.mark.parametrize("scenario", ["kf147", "lactis_species"])
+    def test_g9_menh_resolves_to_its_own_record_not_the_menG_methyltransferase(runs: Dict[str, Any], scenario: str) -> None:
+        for stage in ("stage2", "stage6"):
+            menh = _rows(_payload(runs, scenario, stage)).get("MenH", {})
+>           assert (menh.get("mapped_ids") or {}).get("uniprot") == "Q9CHK1"
+E           AssertionError: assert None == 'Q9CHK1'
+E            +  where None = <built-in method get of dict object at 0x000001EEC12FD880>('uniprot')
+E            +    where <built-in method get of dict object at 0x000001EEC12FD880> = (None or {}).get
+E            +      where None = <built-in method get of dict object at 0x000001EEBFD023C0>('mapped_ids')
+E            +        where <built-in method get of dict object at 0x000001EEBFD023C0> = {'class': 'protein', 'confidence': 1.0, 'mapping_meta': {'candidates': [], 'chosen_rule': 'novel_protein', 'confidence...ource': 'primary_name', 'gene_names': ['menH', 'yfbB'], 'matched_query': 'MenH', ...}, ...}, ...}, 'name': 'MenH', ...}.get
+
+tests\test_orch762_protein_identity.py:97: AssertionError
+_ test_g9_menh_resolves_to_its_own_record_not_the_menG_methyltransferase[lactis_species] _
+
+runs = {'ecoli_uniprot': ({'stage2': {'payload': {'biological_states': [{...}, {...}, {...}, {...}, {...}, {...}], 'element_l....}}}, <orch762_harness.Doors object at 0x000001EEC0107390>, <orch762_harness.ReplayHttp object at 0x000001EEBFF0A490>)}
+scenario = 'lactis_species'
+
+    @pytest.mark.parametrize("scenario", ["kf147", "lactis_species"])
+    def test_g9_menh_resolves_to_its_own_record_not_the_menG_methyltransferase(runs: Dict[str, Any], scenario: str) -> None:
+        for stage in ("stage2", "stage6"):
+            menh = _rows(_payload(runs, scenario, stage)).get("MenH", {})
+>           assert (menh.get("mapped_ids") or {}).get("uniprot") == "Q9CHK1"
+E           AssertionError: assert None == 'Q9CHK1'
+E            +  where None = <built-in method get of dict object at 0x000001EEC12FB240>('uniprot')
+E            +    where <built-in method get of dict object at 0x000001EEC12FB240> = (None or {}).get
+E            +      where None = <built-in method get of dict object at 0x000001EEC06EC040>('mapped_ids')
+E            +        where <built-in method get of dict object at 0x000001EEC06EC040> = {'class': 'protein', 'confidence': 1.0, 'mapping_meta': {'candidates': [], 'chosen_rule': 'novel_protein', 'confidence...ccessions': ['a2rm74', 'q9chk1'], 'entity_name': 'MenH', 'identity': 'uniprot:P49016', ...}, ...}, 'name': 'MenH', ...}.get
+
+tests\test_orch762_protein_identity.py:97: AssertionError
+__________ test_g9_mena_no_longer_takes_the_cremoris_record[stage2] ___________
+
+runs = {'ecoli_uniprot': ({'stage2': {'payload': {'biological_states': [{...}, {...}, {...}, {...}, {...}, {...}], 'element_l....}}}, <orch762_harness.Doors object at 0x000001EEC0107390>, <orch762_harness.ReplayHttp object at 0x000001EEBFF0A490>)}
+stage = 'stage2'
+
+    @pytest.mark.parametrize("stage", ["stage2", "stage6"])
+    def test_g9_mena_no_longer_takes_the_cremoris_record(runs: Dict[str, Any], stage: str) -> None:
+        payload = _payload(runs, "lactis_species", stage)
+        mena = _rows(payload).get("MenA") or {}
+>       assert (mena.get("mapped_ids") or {}).get("uniprot") != "A2RHR6"
+E       AssertionError: assert 'A2RHR6' != 'A2RHR6'
+E        +  where 'A2RHR6' = <built-in method get of dict object at 0x000001EEC07031C0>('uniprot')
+E        +    where <built-in method get of dict object at 0x000001EEC07031C0> = ({'uniprot': 'A2RHR6'}).get
+E        +      where {'uniprot': 'A2RHR6'} = <built-in method get of dict object at 0x000001EEC06EC580>('mapped_ids')
+E        +        where <built-in method get of dict object at 0x000001EEC06EC580> = {'class': 'protein', 'confidence': 1.0, 'mapped_ids': {'uniprot': 'A2RHR6'}, 'mapping_meta': {'alias_source': 'primary...nA', 'ywaB'], 'matched_query': 'MenA', ...}, ...], 'chosen_rule': 'top_unique_candidate', 'confidence': 0.8, ...}, ...}.get
+
+tests\test_orch762_protein_identity.py:105: AssertionError
+__________ test_g9_mena_no_longer_takes_the_cremoris_record[stage6] ___________
+
+runs = {'ecoli_uniprot': ({'stage2': {'payload': {'biological_states': [{...}, {...}, {...}, {...}, {...}, {...}], 'element_l....}}}, <orch762_harness.Doors object at 0x000001EEC0107390>, <orch762_harness.ReplayHttp object at 0x000001EEBFF0A490>)}
+stage = 'stage6'
+
+    @pytest.mark.parametrize("stage", ["stage2", "stage6"])
+    def test_g9_mena_no_longer_takes_the_cremoris_record(runs: Dict[str, Any], stage: str) -> None:
+        payload = _payload(runs, "lactis_species", stage)
+        mena = _rows(payload).get("MenA") or {}
+>       assert (mena.get("mapped_ids") or {}).get("uniprot") != "A2RHR6"
+E       AssertionError: assert 'A2RHR6' != 'A2RHR6'
+E        +  where 'A2RHR6' = <built-in method get of dict object at 0x000001EEC076A200>('uniprot')
+E        +    where <built-in method get of dict object at 0x000001EEC076A200> = ({'uniprot': 'A2RHR6'}).get
+E        +      where {'uniprot': 'A2RHR6'} = <built-in method get of dict object at 0x000001EEC0769FC0>('mapped_ids')
+E        +        where <built-in method get of dict object at 0x000001EEC0769FC0> = {'class': 'protein', 'confidence': 1.0, 'mapped_ids': {'uniprot': 'A2RHR6'}, 'mapping_meta': {'alias_source': 'primary...nA', 'ywaB'], 'matched_query': 'MenA', ...}, ...], 'chosen_rule': 'top_unique_candidate', 'confidence': 0.8, ...}, ...}.get
+
+tests\test_orch762_protein_identity.py:105: AssertionError
+_______ test_g9_entb_keeps_its_grounded_accession_on_the_orch755_shape ________
+
+runs = {'ecoli_uniprot': ({'stage2': {'payload': {'biological_states': [{...}, {...}, {...}, {...}, {...}, {...}], 'element_l....}}}, <orch762_harness.Doors object at 0x000001EEC0107390>, <orch762_harness.ReplayHttp object at 0x000001EEBFF0A490>)}
+
+    def test_g9_entb_keeps_its_grounded_accession_on_the_orch755_shape(runs: Dict[str, Any]) -> None:
+        payload = _payload(runs, "enterobactin_holo", "stage6")
+        entb = _rows(payload)["EntB"]
+>       assert (entb.get("mapped_ids") or {}).get("uniprot") == "P0ADI4"
+E       AssertionError: assert None == 'P0ADI4'
+E        +  where None = <built-in method get of dict object at 0x000001EEC0C8E6C0>('uniprot')
+E        +    where <built-in method get of dict object at 0x000001EEC0C8E6C0> = ({'gene_name': 'entB', 'pathbank_protein_id': '6224'}).get
+E        +      where {'gene_name': 'entB', 'pathbank_protein_id': '6224'} = <built-in method get of dict object at 0x000001EEC0C8E300>('mapped_ids')
+E        +        where <built-in method get of dict object at 0x000001EEC0C8E300> = {'class': 'protein', 'confidence': 1.0, 'mapped_ids': {'gene_name': 'entB', 'pathbank_protein_id': '6224'}, 'mapping_m...cession_claimed_across_incompatible_entity_kinds'], 'schema_version': 1, 'withheld': {'uniprot': 'P0ADI4'}}, ...}, ...}.get
+
+tests\test_orch762_protein_identity.py:118: AssertionError
+______________ test_g9_a_cached_free_text_answer_does_not_replay ______________
+
+tmp_path = WindowsPath('C:/t/bt-orch762/06-g9-red-23781/test_g9_a_cached_free_text_ans0')
+
+    def test_g9_a_cached_free_text_answer_does_not_replay(tmp_path: Path) -> None:
+        """The leg's own cache rows (E. coli/human best efforts, PathBank species_not_found)."""
+    
+        seeded = H.load_fixture("kf147_leg_cache_entries.json")
+        (tmp_path / "id_mapping_cache.json").write_text(json.dumps(seeded), encoding="utf-8")
+        http = H.ReplayHttp()
+        with H.Doors(http):
+            payload = H.stage2(H.load_fixture("menaquinone_kf147_merged.json"), tmp_path)["payload"]
+        assert http.unrecorded == []
+>       assert H.shipped_uniprot(payload)["MenF"] == "Q9CHJ9"
+E       AssertionError: assert '' == 'Q9CHJ9'
+E         
+E         - Q9CHJ9
+
+tests\test_orch762_protein_identity.py:134: AssertionError
+_________ test_g9_pathbank_species_tier_finds_the_strain[taxonomy_id] _________
+
+tmp_path = WindowsPath('C:/t/bt-orch762/06-g9-red-23781/test_g9_pathbank_species_tier_0')
+with_taxonomy_id = True
+
+    @pytest.mark.parametrize("with_taxonomy_id", [True, False], ids=["taxonomy_id", "strain_spelling"])
+    def test_g9_pathbank_species_tier_finds_the_strain(tmp_path: Path, with_taxonomy_id: bool) -> None:
+        payload = H.load_fixture("menaquinone_kf147_merged.json")
+        if not with_taxonomy_id:
+            for row in payload["entities"]["species"]:
+                row.pop("taxonomy_id", None)
+        resolver = _SpeciesTable()
+        with H.Doors(H.ReplayHttp()):
+            from unittest.mock import patch
+    
+            with patch.object(map_ids.PathBankDbResolver, "from_env", classmethod(lambda cls, overrides=None: resolver)):
+                mapped = map_ids.map_payload(
+                    deepcopy(payload), cache_path=tmp_path / "cache.json", id_source="db",
+                    allow_complex_wrapper_creation=False, allow_structural_cleanup=False,
+                )["payload"]
+        menf = _rows(mapped)["MenF"]["mapping_meta"]["resolution"]
+>       assert menf.get("issue") != "species_not_found", menf
+E       AssertionError: {'issue': 'species_not_found', 'status': 'unresolved'}
+E       assert 'species_not_found' != 'species_not_found'
+E        +  where 'species_not_found' = <built-in method get of dict object at 0x000001EEC1D19880>('issue')
+E        +    where <built-in method get of dict object at 0x000001EEC1D19880> = {'issue': 'species_not_found', 'status': 'unresolved'}.get
+
+tests\test_orch762_protein_identity.py:191: AssertionError
+_______ test_g9_pathbank_species_tier_finds_the_strain[strain_spelling] _______
+
+tmp_path = WindowsPath('C:/t/bt-orch762/06-g9-red-23781/test_g9_pathbank_species_tier_1')
+with_taxonomy_id = False
+
+    @pytest.mark.parametrize("with_taxonomy_id", [True, False], ids=["taxonomy_id", "strain_spelling"])
+    def test_g9_pathbank_species_tier_finds_the_strain(tmp_path: Path, with_taxonomy_id: bool) -> None:
+        payload = H.load_fixture("menaquinone_kf147_merged.json")
+        if not with_taxonomy_id:
+            for row in payload["entities"]["species"]:
+                row.pop("taxonomy_id", None)
+        resolver = _SpeciesTable()
+        with H.Doors(H.ReplayHttp()):
+            from unittest.mock import patch
+    
+            with patch.object(map_ids.PathBankDbResolver, "from_env", classmethod(lambda cls, overrides=None: resolver)):
+                mapped = map_ids.map_payload(
+                    deepcopy(payload), cache_path=tmp_path / "cache.json", id_source="db",
+                    allow_complex_wrapper_creation=False, allow_structural_cleanup=False,
+                )["payload"]
+        menf = _rows(mapped)["MenF"]["mapping_meta"]["resolution"]
+>       assert menf.get("issue") != "species_not_found", menf
+E       AssertionError: {'issue': 'species_not_found', 'status': 'unresolved'}
+E       assert 'species_not_found' != 'species_not_found'
+E        +  where 'species_not_found' = <built-in method get of dict object at 0x000001EEC1C40F00>('issue')
+E        +    where <built-in method get of dict object at 0x000001EEC1C40F00> = {'issue': 'species_not_found', 'status': 'unresolved'}.get
+
+tests\test_orch762_protein_identity.py:191: AssertionError
+____ test_new_exact_sequence_route_returns_the_identical_records_accession ____
+
+runs = {'ecoli_uniprot': ({'stage2': {'payload': {'biological_states': [{...}, {...}, {...}, {...}, {...}, {...}], 'element_l....}}}, <orch762_harness.Doors object at 0x000001EEC0107390>, <orch762_harness.ReplayHttp object at 0x000001EEBFF0A490>)}
+
+    def test_new_exact_sequence_route_returns_the_identical_records_accession(runs: Dict[str, Any]) -> None:
+        """FX5: KF147 MenB = UniParc UPI00000C68C6 = the active UniProtKB record Q9CHK2 (IL1403)."""
+    
+        menb = _rows(_payload(runs, "kf147", "stage2"))["MenB"]
+        judged = menb["mapping_meta"]["identity_verdict"]["judged_candidate"]
+>       assert (judged["accession"], judged["identity_route"], judged["uniparc_id"]) == ("Q9CHK2", "exact_sequence_uniparc", "UPI00000C68C6")
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'identity_route'
+
+tests\test_orch762_protein_identity.py:204: KeyError
+_______________ test_new_exact_sequence_route_refuses_paralogs ________________
+
+runs = {'ecoli_uniprot': ({'stage2': {'payload': {'biological_states': [{...}, {...}, {...}, {...}, {...}, {...}], 'element_l....}}}, <orch762_harness.Doors object at 0x000001EEC0107390>, <orch762_harness.ReplayHttp object at 0x000001EEBFF0A490>)}
+
+    def test_new_exact_sequence_route_refuses_paralogs(runs: Dict[str, Any]) -> None:
+        """KF147 carries three menA genes and two menF genes; no sequence is chosen among them."""
+    
+        payload = _payload(runs, "kf147", "stage2")
+        assert "Q9CF18" not in H.shipped_uniprot(payload).values()  # menA_3's identical record
+        menf = _rows(payload)["MenF"]["mapping_meta"]["identity_verdict"]["judged_candidate"]
+>       assert menf.get("identity_route") is None and menf["accession"] == "Q9CHJ9"
+E       AssertionError: assert (None is None and 'P38051' == 'Q9CHJ9'
+E        +  where None = <built-in method get of dict object at 0x000001EEBFD28540>('identity_route')
+E        +    where <built-in method get of dict object at 0x000001EEBFD28540> = {'accession': 'P38051', 'alias_source': 'primary_name', 'gene_names': ['menF', 'yfbA'], 'matched_query': 'MenF', ...}.get
+E         
+E         - Q9CHJ9
+E         + P38051)
+
+tests\test_orch762_protein_identity.py:215: AssertionError
+_______________ test_new_the_climb_never_passes_the_subspecies ________________
+
+tmp_path = WindowsPath('C:/t/bt-orch762/06-g9-red-23781/test_new_the_climb_never_passe0')
+
+    def test_new_the_climb_never_passes_the_subspecies(tmp_path: Path) -> None:
+        """A bound-tier answer holding a cremoris record (a lying server, a stale index) is refused."""
+    
+        http = _synthetic_http({"taxonomy_id:1360": [_entry("A2RM72", "menF", MG1363, 416870)]})
+        payload = _one_protein(tmp_path, http)
+        assert H.shipped_uniprot(payload)["MenF"] == ""
+        verdict = _rows(payload)["MenF"]["mapping_meta"].get("identity_verdict") or {}
+>       assert verdict.get("reason") == "species_mismatch"
+E       AssertionError: assert None == 'species_mismatch'
+E        +  where None = <built-in method get of dict object at 0x000001EEC1BBF4C0>('reason')
+E        +    where <built-in method get of dict object at 0x000001EEC1BBF4C0> = {}.get
+
+tests\test_orch762_protein_identity.py:284: AssertionError
+____________ test_new_a_scoped_lookup_opens_no_organism_free_door _____________
+
+runs = {'ecoli_uniprot': ({'stage2': {'payload': {'biological_states': [{...}, {...}, {...}, {...}, {...}, {...}], 'element_l....}}}, <orch762_harness.Doors object at 0x000001EEC0107390>, <orch762_harness.ReplayHttp object at 0x000001EEBFF0A490>)}
+
+    def test_new_a_scoped_lookup_opens_no_organism_free_door(runs: Dict[str, Any]) -> None:
+        for scenario in ("kf147", "lactis_species"):
+            result, doors, http = runs[scenario]
+            queries = http.uniprot_queries()
+>           assert queries and all("organism_id%3A" in q or "taxonomy_id%3A" in q for q in queries), scenario
+E           AssertionError: kf147
+E           assert (['https://rest.uniprot.org/uniprotkb/search?fields=accession%2Cprotein_name%2Cgene_names%2Corganism_name%2Creviewed%2C...ism_name%2Creviewed%2Corganism_id&format=json&query=%28protein_name%3A%22MenH%22+OR+gene%3A%22MenH%22%29&size=10', ...] and False)
+E            +  where False = all(<generator object test_new_a_scoped_lookup_opens_no_organism_free_door.<locals>.<genexpr> at 0x000001EEC1857C60>)
+
+tests\test_orch762_protein_identity.py:291: AssertionError
+________ test_new_a_stale_candidate_list_is_not_promoted_under_a_scope ________
+
+tmp_path = WindowsPath('C:/t/bt-orch762/06-g9-red-23781/test_new_a_stale_candidate_lis0')
+
+    def test_new_a_stale_candidate_list_is_not_promoted_under_a_scope(tmp_path: Path) -> None:
+        """A row arriving with the free-text era's candidate list (A2RHR6 first, as the 2026-10-20
+        leg wrote it) is not promoted back into a match: only candidates found under this scope are."""
+    
+        payload = H.load_fixture("menaquinone_lactis_species.json")
+        mena = next(row for row in payload["entities"]["proteins"] if row["name"] == "MenA")
+        mena["mapping_meta"] = {"candidates": [{
+            "accession": "A2RHR6", "protein_name": "Prenyltransferase, UbiA family", "gene_names": ["menA"],
+            "primary_gene_names": ["menA"], "organism": MG1363, "taxonomy_id": "416870", "reviewed": False,
+            "score": 0.8, "matched_query": "MenA", "alias_source": "primary_name"}]}
+        http = H.ReplayHttp()
+        with H.Doors(http):
+            mapped = H.stage2(payload, tmp_path)["payload"]
+        assert http.unrecorded == []
+>       assert H.shipped_uniprot(mapped)["MenA"] == ""
+E       AssertionError: assert 'A2RHR6' == ''
+E         
+E         + A2RHR6
+
+tests\test_orch762_protein_identity.py:309: AssertionError
+____ test_new_a_strain_with_no_known_subspecies_takes_no_subspecies_record ____
+
+tmp_path = WindowsPath('C:/t/bt-orch762/06-g9-red-23781/test_new_a_strain_with_no_know0')
+
+    def test_new_a_strain_with_no_known_subspecies_takes_no_subspecies_record(tmp_path: Path) -> None:
+        """D-108 when the strain's lineage names no subspecies: the species is the bound, and a
+        record filed under one of its subspecies may be across a boundary nobody can see."""
+    
+        lineage = {"999001": {"taxonId": 999001, "scientificName": "Lactococcus lactis (strain Z9)", "rank": "strain",
+                              "lineage": [{"taxonId": 1358, "scientificName": "Lactococcus lactis", "rank": "species"}]}}
+        http = _synthetic_http({"taxonomy_id:1358": [_entry("Q9CHJ9", "menF", IL1403, 272623)]}, lineage=lineage)
+        payload = _one_protein(tmp_path, http, organism="Lactococcus lactis Z9", taxonomy_id="999001")
+        assert H.shipped_uniprot(payload)["MenF"] == ""
+        http = _synthetic_http({"taxonomy_id:1358": [_entry("Q0ZZZ1", "menF", "Lactococcus lactis (strain Y2)", 999002)]}, lineage=lineage)
+        payload = _one_protein(tmp_path / "b", http, organism="Lactococcus lactis Z9", taxonomy_id="999001")
+>       assert H.shipped_uniprot(payload)["MenF"] == "Q0ZZZ1"
+E       AssertionError: assert '' == 'Q0ZZZ1'
+E         
+E         - Q0ZZZ1
+
+tests\test_orch762_protein_identity.py:323: AssertionError
+__________ test_new_exact_sequence_route_stays_inside_the_subspecies __________
+
+tmp_path = WindowsPath('C:/t/bt-orch762/06-g9-red-23781/test_new_exact_sequence_route_0')
+
+    def test_new_exact_sequence_route_stays_inside_the_subspecies(tmp_path: Path) -> None:
+        """The identical sequence's only active record is MG1363's: the bound clause returns nothing."""
+    
+        uniparc = {
+            "gene:MenF": {"results": [{"uniParcId": "UPI0000TEST01"}]},
+            "UPI0000TEST01": {"uniParcCrossReferences": [{"database": "UniProtKB/TrEMBL", "id": "A2RM72", "active": True,
+                                                           "organism": {"taxonId": 416870}}]},
+        }
+        http = _synthetic_http({}, uniparc=uniparc)
+        payload = _one_protein(tmp_path, http)
+        assert H.shipped_uniprot(payload)["MenF"] == ""
+        asked = [q for q in http.uniprot_queries() if "accession%3AA2RM72" in q]
+>       assert asked and all("taxonomy_id%3A1360" in q for q in asked)
+E       assert ([])
+
+tests\test_orch762_protein_identity.py:338: AssertionError
+______ test_new_borrowed_identities_are_flagged_with_their_source_strain ______
+
+runs = {'ecoli_uniprot': ({'stage2': {'payload': {'biological_states': [{...}, {...}, {...}, {...}, {...}, {...}], 'element_l....}}}, <orch762_harness.Doors object at 0x000001EEC0107390>, <orch762_harness.ReplayHttp object at 0x000001EEBFF0A490>)}
+
+    def test_new_borrowed_identities_are_flagged_with_their_source_strain(runs: Dict[str, Any]) -> None:
+        result, _, _ = runs["kf147"]
+        for stage in ("stage2", "stage6"):
+            payload, report = result[stage]["payload"], result[stage]["report"]
+>           flags = {row["name"]: row["flag"] for row in payload[BORROWED_KEY]}
+                                                         ^^^^^^^^^^^^^^^^^^^^^
+E           KeyError: 'borrowed_protein_identities'
+
+tests\test_orch762_protein_identity.py:368: KeyError
+______________ test_new_reaction_evidence_report_shows_the_flag _______________
+
+runs = {'ecoli_uniprot': ({'stage2': {'payload': {'biological_states': [{...}, {...}, {...}, {...}, {...}, {...}], 'element_l....}}}, <orch762_harness.Doors object at 0x000001EEC0107390>, <orch762_harness.ReplayHttp object at 0x000001EEBFF0A490>)}
+
+    def test_new_reaction_evidence_report_shows_the_flag(runs: Dict[str, Any]) -> None:
+        from t2pw.app.reaction_evidence import build_report, render_text
+    
+        text = render_text(build_report({"final_mapped.json": _payload(runs, "kf147", "stage6")}))
+        # The enzyme a reaction names is the Stage-6 wrapper; the flag is its component's.
+>       assert "MenB complex: unresolved; no identifier recorded; borrowed identity: MenB: UniProt Q9CHK2, from strain IL1403" in text
+E       AssertionError: assert 'MenB complex: unresolved; no identifier recorded; borrowed identity: MenB: UniProt Q9CHK2, from strain IL1403' in 'PATHWAY EVIDENCE REPORT\n=======================\nPaper: Not recorded\nPathway: Not recorded\nRequested organism (Sta...ot recorded\n\nCORE COVERAGE\n-------------\nRequested: Not recorded\nMatched: Not recorded\nUnmatched: Not recorded\n'
+
+tests\test_orch762_protein_identity.py:384: AssertionError
+________________ test_new_the_flag_never_reaches_an_llm_input _________________
+
+runs = {'ecoli_uniprot': ({'stage2': {'payload': {'biological_states': [{...}, {...}, {...}, {...}, {...}, {...}], 'element_l....}}}, <orch762_harness.Doors object at 0x000001EEC0107390>, <orch762_harness.ReplayHttp object at 0x000001EEBFF0A490>)}
+tmp_path = WindowsPath('C:/t/bt-orch762/06-g9-red-23781/test_new_the_flag_never_reache0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001EEC13289D0>
+
+    def test_new_the_flag_never_reaches_an_llm_input(runs: Dict[str, Any], tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+        from test_orch757_llm_token_budgets import install_wire
+    
+        wire = install_wire(monkeypatch)
+        result, _, _ = runs["kf147"]
+        payload, report = result["stage6"]["payload"], result["stage6"]["report"]
+>       assert payload[BORROWED_KEY] and report[BORROWED_KEY]
+               ^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'borrowed_protein_identities'
+
+tests\test_orch762_protein_identity.py:448: KeyError
+=========================== short test summary info ===========================
+FAILED tests/test_orch762_protein_identity.py::test_g9_kf147_men_enzymes_resolve_to_their_same_subspecies_records[stage2]
+FAILED tests/test_orch762_protein_identity.py::test_g9_kf147_men_enzymes_resolve_to_their_same_subspecies_records[stage6]
+FAILED tests/test_orch762_protein_identity.py::test_g9_menh_resolves_to_its_own_record_not_the_menG_methyltransferase[kf147]
+FAILED tests/test_orch762_protein_identity.py::test_g9_menh_resolves_to_its_own_record_not_the_menG_methyltransferase[lactis_species]
+FAILED tests/test_orch762_protein_identity.py::test_g9_mena_no_longer_takes_the_cremoris_record[stage2]
+FAILED tests/test_orch762_protein_identity.py::test_g9_mena_no_longer_takes_the_cremoris_record[stage6]
+FAILED tests/test_orch762_protein_identity.py::test_g9_entb_keeps_its_grounded_accession_on_the_orch755_shape
+FAILED tests/test_orch762_protein_identity.py::test_g9_a_cached_free_text_answer_does_not_replay
+FAILED tests/test_orch762_protein_identity.py::test_g9_pathbank_species_tier_finds_the_strain[taxonomy_id]
+FAILED tests/test_orch762_protein_identity.py::test_g9_pathbank_species_tier_finds_the_strain[strain_spelling]
+FAILED tests/test_orch762_protein_identity.py::test_new_exact_sequence_route_returns_the_identical_records_accession
+FAILED tests/test_orch762_protein_identity.py::test_new_exact_sequence_route_refuses_paralogs
+FAILED tests/test_orch762_protein_identity.py::test_new_the_climb_never_passes_the_subspecies
+FAILED tests/test_orch762_protein_identity.py::test_new_a_scoped_lookup_opens_no_organism_free_door
+FAILED tests/test_orch762_protein_identity.py::test_new_a_stale_candidate_list_is_not_promoted_under_a_scope
+FAILED tests/test_orch762_protein_identity.py::test_new_a_strain_with_no_known_subspecies_takes_no_subspecies_record
+FAILED tests/test_orch762_protein_identity.py::test_new_exact_sequence_route_stays_inside_the_subspecies
+FAILED tests/test_orch762_protein_identity.py::test_new_borrowed_identities_are_flagged_with_their_source_strain
+FAILED tests/test_orch762_protein_identity.py::test_new_reaction_evidence_report_shows_the_flag
+FAILED tests/test_orch762_protein_identity.py::test_new_the_flag_never_reaches_an_llm_input
+20 failed, 9 passed in 1.93s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch762\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ a001129bcb9578c392a83c72c10ffea32166e35a  [git, worktree dirty=False]
+label                   : g9-red
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-762/06-g9-red.pin.json -q --basetemp=C:/t/bt-orch762/06-g9-red-23781 tests/test_orch762_protein_identity.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch762
+root PID / process group: 228804 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 520 s
+duration                : 2.76 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  228760:python.exe
+descendants terminated  : 1  228760
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch762\docs\pwml_recovery_sprint\evidence\g11\ORCH-762\06-g9-red.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================

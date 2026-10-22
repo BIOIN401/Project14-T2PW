@@ -1,0 +1,98 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch762\src\t2pw\__init__.py
+........................................................................ [  9%]
+........................................................................ [ 19%]
+........................................................................ [ 28%]
+........................................................................ [ 38%]
+........................................................................ [ 48%]
+........................................................................ [ 57%]
+...................................................................F.... [ 67%]
+........................................................................ [ 76%]
+.......................................s................................ [ 86%]
+............................................ss.......................... [ 96%]
+.............................                                            [100%]
+================================== FAILURES ===================================
+_ test_corpus_the_armed_pass_over_every_committed_artifact_and_its_own_paper __
+
+    def test_corpus_the_armed_pass_over_every_committed_artifact_and_its_own_paper() -> None:
+        """THE LOAD-BEARING EVIDENCE (card section 6.5).
+    
+        ``test_c073_identity_admission.py::test_the_whole_committed_corpus_yields_one_conflict_and_no_collateral``
+        replays the same corpus with NO source index, which exercises pass B alone.
+        This is the other half and the one arming makes real: every committed
+        ``final_mapped.json`` replayed against its OWN ``01_source_text.txt``.
+    
+        Measured at this tip: 70 artifacts, 678 eligible rows, 3 refusals, all three
+        of them hallucinations, 0 collateral. Measured with the ruling's two routes
+        removed -- which is what the C-073 predicate does on its own -- 39 refusals,
+        36 of them legitimate rows. That difference is this card's whole argument.
+    
+        If a newly committed run artifact moves these numbers, TRIAGE the new row as
+        a catch or as collateral before moving the pin. Do not regenerate it.
+        """
+        from t2pw.mapping import identity_admission
+    
+        artifacts = _committed_artifacts()
+        if not artifacts:
+            pytest.skip("no committed final_mapped.json artifacts")
+    
+        examined = 0
+        catches: set = set()
+        for path in artifacts:
+            source = path.parent.parent / "01_source_text.txt"
+            payload = json.loads(path.read_text(encoding="utf-8"))
+            entities = payload.get("entities") or {}
+            if source.exists():
+                payload[identity_admission.SOURCE_INDEX_KEY] = identity_admission.build_source_index(
+                    source.read_text(encoding="utf-8", errors="replace")
+                )
+            report = map_ids._admit_identities(payload, entities)
+            examined += report["counts"]["rows_examined"]
+            for entry in report["withheld"]:
+                if entry["rule"] == identity_admission.RULE_NOT_SUPPORTED:
+                    catches.add((path.parent.parent.name.split("__")[0], path.parent.name,
+                                 entry["name"]))
+    
+        assert len(artifacts) >= 70
+        assert examined >= 678
+>       assert catches == EXPECTED_CATCHES, (
+            f"the armed pass changed over the corpus ({len(artifacts)} artifacts). "
+            f"unexpected: {sorted(catches - EXPECTED_CATCHES)}; "
+            f"no longer caught: {sorted(EXPECTED_CATCHES - catches)}"
+        )
+E       AssertionError: the armed pass changed over the corpus (116 artifacts). unexpected: [('PMC12096016', 'strict', "Pantetheine 4'-phosphate")]; no longer caught: []
+E       assert {('PMC1209601...uccinyl-CoA')} == {('PMC1218015...uccinyl-CoA')}
+E         
+E         Extra items in the left set:
+E         ('PMC12096016', 'strict', "Pantetheine 4'-phosphate")
+E         Use -v to get more diff
+
+tests\test_c075_source_support_armed.py:879: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_c075_source_support_armed.py::test_corpus_the_armed_pass_over_every_committed_artifact_and_its_own_paper
+1 failed, 745 passed, 3 skipped in 89.74s (0:01:29)
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch762\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 9d140ce7574729ee55410081c00979c14641291a  [git, worktree dirty=False]
+label                   : affected-1
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-762/09-affected-1.pin.json -q --basetemp=C:/t/bt-orch762/09-affected-1-11813 tests/test_adversarial_actor_entity_type.py tests/test_apply_audit_patch_referential_integrity.py tests/test_baseline_regression_2026_07_28.py tests/test_batch_driver.py tests/test_batch_driver_quarantine_artifacts.py tests/test_batch_driver_seam_golden.py tests/test_batch_report.py tests/test_batch_research_gate_fail_open.py tests/test_bench_acquisition_and_artifacts.py tests/test_bench_controls.py tests/test_bench_goldset_and_semantic.py tests/test_c011_freeze_seam_golden_equivalence.py tests/test_c030_canonical_identity_fallback.py tests/test_c030a_object_sharing_at_the_freeze_seam.py tests/test_c056d_gate_failure_semantic_carry.py tests/test_c060a_requested_pathway_wiring.py tests/test_c064_round_cap_reason.py tests/test_c073_identity_admission.py tests/test_c074_strict_core_floor.py tests/test_c075_source_support_armed.py tests/test_c076_alias_holo_apo_identity.py tests/test_c078_refusal_durable_through_resolution.py tests/test_c079_interactive_prompt_allowlist.py tests/test_c080_production_gate_kind_aware.py tests/test_c081_cofactor_role_identity.py tests/test_c082_post_pipeline_seam.py tests/test_c082_species_rename_declination.py tests/test_c086_superset_complex_promotion.py tests/test_c087_prefreeze_declination_demotes_release_status.py tests/test_c088_extracted_not_serialized_disposition.py tests/test_c089_participant_schema.py tests/test_c090_wrapper_identity_actor_evidence.py tests/test_c095_wrapper_superset_identity.py tests/test_c096_explicit_no_resolver.py tests/test_c097_semantic_name_keys.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch762
+root PID / process group: 231828 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 91.55 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 31  231192:python.exe, 230760:python.exe, 231324:python.exe, 152312:python.exe, 224480:python.exe, 30160:python.exe, 221616:python.exe, 230412:python.exe, 231476:python.exe, 232796:python.exe, 232816:python.exe, 232836:python.exe, 232856:python.exe, 232920:git.exe, 233184:python.exe, 233208:python.exe, 233240:python.exe, 233260:python.exe, 233280:python.exe, 233300:python.exe, 233400:python.exe, 233420:python.exe, 232460:git.exe, 231928:git.exe, 200596:git.exe, 232580:git.exe, 232604:git.exe, 232924:git.exe, 227516:git.exe, 233376:git.exe, 233220:git.exe
+descendants terminated  : 31  30160, 152312, 200596, 221616, 224480, 227516, 230412, 230760, 231192, 231324, 231476, 231928, 232460, 232580, 232604, 232796, 232816, 232836, 232856, 232920, 232924, 233184, 233208, 233220, 233240, 233260, 233280, 233300, 233376, 233400, 233420
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch762\docs\pwml_recovery_sprint\evidence\g11\ORCH-762\09-affected-1.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================

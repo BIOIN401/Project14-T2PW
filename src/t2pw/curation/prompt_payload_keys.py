@@ -70,7 +70,16 @@ from t2pw.mapping import identity_admission
 #: set, and ``strip_payload_for_interactive_context`` drops it from any record the
 #: walker does copy. No payload or report produced before ORCH-759a carries it.
 DUPLICATE_PROTEIN_FOLDS_KEY = "duplicate_protein_folds"
+#:
+#: ORCH-762: :data:`BORROWED_PROTEIN_IDENTITIES_KEY` records every protein identity taken
+#: from another strain of the same subspecies (D-108 § 3, "UniProt Q9CHK2, from strain
+#: IL1403"). It is a TOP-LEVEL payload key and a mapping-report key, read by the
+#: human-facing Reaction Evidence report. D-108 keeps it out of LLM-bound text: the audit
+#: drops top-level keys of this set, the interactive curator drops them at every depth and
+#: its mapping-report walker never enters them.
+BORROWED_PROTEIN_IDENTITIES_KEY = "borrowed_protein_identities"
 PROMPT_OMITTED_PAYLOAD_KEYS: frozenset = frozenset({
     identity_admission.SOURCE_INDEX_KEY,
     DUPLICATE_PROTEIN_FOLDS_KEY,
+    BORROWED_PROTEIN_IDENTITIES_KEY,
 })
