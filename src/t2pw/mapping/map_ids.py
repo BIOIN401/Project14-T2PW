@@ -10165,10 +10165,18 @@ def _row_name_variants(row: Dict[str, Any]) -> List[str]:
     return [name for name in names if name.strip()]
 
 
+#: An entity row's evidence-bearing fields: ``entity_admission._spans``' keys plus
+#: ``apply_audit_patch._ACTOR_ROW_EVIDENCE_KEYS``, each a string, a list, or a dict entry.
+_ENTITY_QUOTE_KEYS = ("evidence", "source_refs", "evidence_quote", "source_evidence", "source_text")
+
+
 def _entity_quotes(row: Dict[str, Any]) -> List[str]:
     quotes: List[str] = []
-    for value in (row.get("evidence"), row.get("source_refs")):
+    for key in _ENTITY_QUOTE_KEYS:
+        value = row.get(key)
         for quote in value if isinstance(value, list) else [value]:
+            if isinstance(quote, dict):
+                quote = quote.get("span") or quote.get("text") or quote.get("quote")
             if isinstance(quote, str) and quote.strip() and quote not in quotes:
                 quotes.append(quote)
     return quotes
@@ -10217,16 +10225,31 @@ def _fold_unreferenced_duplicate_proteins(payload: Dict[str, Any], report: Dict[
     rows = [(index, row) for index, row in enumerate(proteins)
             if isinstance(row, dict) and _canonical_name(str(row.get("name") or ""))]
 
+    def same_identity(index: int, other_index: int) -> bool:
+        mine, theirs = folded_ids[index], folded_ids[other_index]
+        return (any(theirs.get(ns) == v for ns, v in mine.items())
+                and not any(ns in theirs and theirs[ns] != v for ns, v in mine.items()))
+
     def referenced(index: int, row: Dict[str, Any]) -> bool:
-        # An alias another row also carries resolves to that row after the fold, so only
-        # the name, the key and the aliases nobody else holds can name THIS row. Compared
-        # exactly (finer than the gate's key), so no alias is excused that the gate's
-        # registry would not still resolve.
-        others = {_exact_key(name) for other_index, other in rows if other_index != index
-                  for name in _row_name_variants(other)}
-        others |= {_exact_key(name) for row_ in complexes for name in _row_name_variants(row_)}
+        # The name and the key always name THIS row. An alias is excused only when, after
+        # the fold, it still resolves to the same thing: it is another protein's or
+        # complex's own NAME, or every other protein holding it shares this row's admitted
+        # identity and no complex holds it as an alias. Compared exactly (finer than the
+        # gate's key), so nothing is excused that the gate's registry would not resolve.
+        names = {_exact_key(other.get("name")) for other_index, other in rows if other_index != index}
+        names |= {_exact_key(row_.get("name")) for row_ in complexes}
+
+        def excused(alias: str) -> bool:
+            key = _exact_key(alias)
+            if key in names:
+                return True
+            holders = [other_index for other_index, other in rows if other_index != index
+                       and key in {_exact_key(name) for name in _row_name_variants(other)}]
+            in_complex = any(key in {_exact_key(name) for name in _row_name_variants(row_)} for row_ in complexes)
+            return bool(holders) and not in_complex and all(same_identity(index, j) for j in holders)
+
         own = [row.get("name"), row.get("key")]
-        own += [name for name in _row_name_variants(row) if _exact_key(name) not in others]
+        own += [name for name in _row_name_variants(row) if not excused(name)]
         return any(_fold_key(name) in references for name in own if isinstance(name, str) and _fold_key(name))
 
     admitted = {index: _admitted_ids(row) for index, row in rows}
@@ -10265,6 +10288,10 @@ def _fold_unreferenced_duplicate_proteins(payload: Dict[str, Any], report: Dict[
                 "alias_added": alias,
                 "quotes_moved": moved,
                 "folded_row_names": _row_name_variants(row),
+                "folded_mapped_ids": deepcopy(_safe_dict(row.get("mapped_ids"))),
+                "folded_provenance_lineage": deepcopy(_safe_list(row.get("provenance_lineage"))),
+                "folded_rag_provenance": deepcopy(row.get("rag_provenance")),
+                "folded_source_papers": deepcopy(row.get("source_papers")),
             })
             survivor_of[index] = other_index
             break
