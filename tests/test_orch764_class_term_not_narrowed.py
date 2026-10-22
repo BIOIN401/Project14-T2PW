@@ -14,6 +14,8 @@ network. The PathBank database is a small SQL emulator over the fixture's record
 * ``test_g9_*`` -- G9 REGRESSION PROOF: each fails behaviourally at base 79080db7 (the class term
   comes back as DMAPP, or carrying DMAPP's identifiers) and passes at the tip. No test imports a
   symbol the base lacks, so the base run is a behavioural failure, not an ImportError.
+  ``test_g9_r1_*`` (repair round 1) also fail at the round-0 tip 9ce739ba: a member identifier the
+  class row already carries took the legacy-id branch or survived a record-only refusal.
 * ``test_fidelity_*`` -- the fixture reproduces the leg's recorded answer; passes at base and tip.
 * ``test_preservation_*`` -- labelled PRESERVATION: today's behaviour that must not move; passes at
   base and tip.
@@ -29,6 +31,7 @@ from typing import Any, Dict, List
 
 import pytest
 
+import t2pw.pwml.compound_resolution as cr
 from t2pw.mapping.map_ids import _apply_name_plausibility_gate, _enforce_shipped_identity_names
 from t2pw.pwml.db_resolver import IDENTITY_REFUSED_STATUS, PathWhizCompoundResolver
 from t2pw.pwml.prefreeze_resolution import resolve_compounds_prefreeze
@@ -145,6 +148,54 @@ def test_g9_prefreeze_keeps_the_paper_class_term_and_flags_it(term: str) -> None
 
 
 # --------------------------------------------------------------------------------------------------
+# G9, repair round 1: a member's identifiers ALREADY on the class row (review round 0, finding 1)
+# --------------------------------------------------------------------------------------------------
+
+#: Where a class row can arrive at pre-freeze resolution already carrying DMAPP's identity. The first
+#: three are read by ``compound_resolution._first_nonempty`` (row scalar, ``mapped_ids``,
+#: ``mapping_meta.candidates[0]``) and take the legacy-id branch; the fourth reaches the resolver's
+#: identifier rules. Constructed shapes; the identifiers are the leg's recorded row 874.
+ARRIVING_IDENTITIES: Dict[str, Dict[str, Any]] = {
+    "scalar": {"pathbank_compound_id": 874},
+    "mapped_ids": {"mapped_ids": {"pathbank_compound_id": "874"}},
+    "candidate_only": {"candidates": [{"pathbank_compound_id": 874, "name": "Dimethylallylpyrophosphate",
+                                       "mapped_ids": {"kegg": "C00235", "pathbank_compound_id": "874"}}]},
+    "kegg_hmdb": {"kegg_id": "C00235", "hmdb_id": "HMDB0001120"},
+}
+
+
+def _class_payload_carrying(case: str) -> Dict[str, Any]:
+    payload = _payload()
+    row = _compound(payload, "prenyl diphosphate")
+    extra = copy.deepcopy(ARRIVING_IDENTITIES[case])
+    if "candidates" in extra:
+        row["mapping_meta"]["candidates"] = extra.pop("candidates")
+    row.update(extra)
+    return payload
+
+
+@pytest.mark.parametrize("case", sorted(ARRIVING_IDENTITIES))
+def test_g9_r1_prefreeze_withholds_a_member_identity_already_on_the_class_row(case: str) -> None:
+    """G9. Base 79080db7 and the round-0 tip: scalar, mapped_ids and candidate-only take the legacy-id
+    branch and ship PathBank 874; kegg/hmdb is admitted and renamed to DMAPP (base) or refused
+    record-only with C00235 / HMDB0001120 still on the row (round 0)."""
+    payload = _class_payload_carrying(case)
+    summary, _ = _prefreeze(payload, _rows())
+
+    row = _compound(payload, "prenyl diphosphate")
+    assert row["name"] == "prenyl diphosphate"
+    assert summary["rename_map"] == {}
+    assert not any(row.get(key) not in (None, "", {}) for key in STAMPED), {k: row.get(k) for k in STAMPED}
+    assert not row.get("mapped_ids")
+    assert not row["mapping_meta"].get("candidates")
+    assert cr._db_id(row, ["pathbank_compound_id", "pw_compound_id", "pathwhiz_id"]) is None
+    assert not any(cr._compound_external_ids(row).values()), cr._compound_external_ids(row)
+    assert row["db_status"] == IDENTITY_REFUSED_STATUS
+    withheld = {str(value) for value in row["mapping_meta"]["rejected_mapped_ids"].values()}
+    assert withheld & {"874", "C00235", "HMDB0001120"}, row["mapping_meta"]["rejected_mapped_ids"]
+
+
+# --------------------------------------------------------------------------------------------------
 # G9: the same rule at Stage 6 (map_ids), on a provider record that names the class term itself
 # --------------------------------------------------------------------------------------------------
 
@@ -204,6 +255,21 @@ def test_preservation_a_paper_naming_dmapp_by_its_pathbank_name_still_maps() -> 
     assert row["name"] == "Dimethylallylpyrophosphate"
     assert row["db_status"] == "matched"
     assert (row["pathbank_compound_id"], row["chebi_id"], row["kegg_id"]) == (874, "16057", "C00235")
+
+
+def test_preservation_r1_a_dmapp_row_carrying_874_is_unchanged() -> None:
+    """PRESERVATION (repair round 1). A row named DMAPP that already carries 874 keeps it (legacy-id
+    branch, as today); nothing is withheld from it."""
+    payload = _payload("Dimethylallylpyrophosphate")
+    row = _compound(payload, "Dimethylallylpyrophosphate")
+    row["pathbank_compound_id"] = 874
+    meta_before = copy.deepcopy(row["mapping_meta"])
+    summary, _ = _prefreeze(payload, _rows())
+    row = _compound(payload, "Dimethylallylpyrophosphate")
+    assert (row["name"], row["pathbank_compound_id"], row["db_status"]) == (
+        "Dimethylallylpyrophosphate", 874, "legacy_id_unverified")
+    assert row["mapping_meta"] == meta_before
+    assert summary["rename_map"] == {}
 
 
 def test_preservation_dmapp_named_otherwise_still_resolves_by_identifier() -> None:
