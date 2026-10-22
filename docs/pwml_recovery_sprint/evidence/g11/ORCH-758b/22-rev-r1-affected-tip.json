@@ -1,0 +1,230 @@
+{
+  "label": "rev-r1-affected-tip",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-758b/22-rev-r1-affected-tip.pin.json",
+    "-q",
+    "--basetemp=C:/t/bt-rev758b/22-rev-r1-affected-tip-7135",
+    "tests/test_eval_v2_embedding_cache.py",
+    "tests/test_eval_v2_gold_matcher.py",
+    "tests/test_eval_v2_metrics.py",
+    "tests/test_eval_v2_paper_gold.py",
+    "tests/test_eval_v2_pathbank_gold.py",
+    "tests/test_eval_v2_report.py",
+    "tests/test_stage_one_ensemble.py",
+    "tests/test_early_failure_replay.py",
+    "tests/test_stage0_case_c_retry_clobber.py",
+    "tests/test_streamlit_stage2_orchestration.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\rev758b-tip",
+  "started_at": "2026-10-22T04:40:29+00:00",
+  "finished_at": "2026-10-22T04:41:03+00:00",
+  "duration_seconds": 32.75156590000552,
+  "timeout_seconds": 540.0,
+  "root_pid": 1134136,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 1134148,
+      "name": "python.exe",
+      "ppid": 1134136
+    },
+    {
+      "pid": 1133992,
+      "name": "git.exe",
+      "ppid": 1134148
+    },
+    {
+      "pid": 1134084,
+      "name": "git.exe",
+      "ppid": 1134148
+    },
+    {
+      "pid": 1134048,
+      "name": "git.exe",
+      "ppid": 1134148
+    },
+    {
+      "pid": 1134296,
+      "name": "git.exe",
+      "ppid": 1134148
+    },
+    {
+      "pid": 1134456,
+      "name": "git.exe",
+      "ppid": 1134148
+    },
+    {
+      "pid": 1134436,
+      "name": "git.exe",
+      "ppid": 1134148
+    },
+    {
+      "pid": 1132520,
+      "name": "git.exe",
+      "ppid": 1134148
+    },
+    {
+      "pid": 1133208,
+      "name": "git.exe",
+      "ppid": 1134148
+    },
+    {
+      "pid": 1134068,
+      "name": "git.exe",
+      "ppid": 1134148
+    },
+    {
+      "pid": 1134244,
+      "name": "git.exe",
+      "ppid": 1134148
+    },
+    {
+      "pid": 1134576,
+      "name": "git.exe",
+      "ppid": 1134148
+    },
+    {
+      "pid": 1134364,
+      "name": "git.exe",
+      "ppid": 1134148
+    },
+    {
+      "pid": 1133696,
+      "name": "git.exe",
+      "ppid": 1134148
+    },
+    {
+      "pid": 1133940,
+      "name": "git.exe",
+      "ppid": 1134148
+    },
+    {
+      "pid": 1134516,
+      "name": "git.exe",
+      "ppid": 1134148
+    },
+    {
+      "pid": 1133232,
+      "name": "git.exe",
+      "ppid": 1134148
+    },
+    {
+      "pid": 1128108,
+      "name": "git.exe",
+      "ppid": 1134148
+    },
+    {
+      "pid": 1127580,
+      "name": "git.exe",
+      "ppid": 1134148
+    },
+    {
+      "pid": 1133332,
+      "name": "git.exe",
+      "ppid": 1134148
+    },
+    {
+      "pid": 1120968,
+      "name": "git.exe",
+      "ppid": 1134148
+    },
+    {
+      "pid": 1131648,
+      "name": "git.exe",
+      "ppid": 1134148
+    },
+    {
+      "pid": 1133508,
+      "name": "git.exe",
+      "ppid": 1134148
+    },
+    {
+      "pid": 1133116,
+      "name": "git.exe",
+      "ppid": 1134148
+    },
+    {
+      "pid": 1123480,
+      "name": "git.exe",
+      "ppid": 1134148
+    }
+  ],
+  "descendants_terminated": [
+    1120968,
+    1123480,
+    1127580,
+    1128108,
+    1131648,
+    1132520,
+    1133116,
+    1133208,
+    1133232,
+    1133332,
+    1133508,
+    1133696,
+    1133940,
+    1133992,
+    1134048,
+    1134068,
+    1134084,
+    1134148,
+    1134244,
+    1134296,
+    1134364,
+    1134436,
+    1134456,
+    1134516,
+    1134576
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 1120952,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1121060,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1133792,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1133804,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\rev758b-tip\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-758b\\22-rev-r1-affected-tip.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\rev758b-tip\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\rev758b-tip",
+    "repo_head": "10f0dd271f95959a42485c93b5e4b413489aa623",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

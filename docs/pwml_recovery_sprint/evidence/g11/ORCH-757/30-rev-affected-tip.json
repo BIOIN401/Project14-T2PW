@@ -1,0 +1,117 @@
+{
+  "label": "rev-affected-tip",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-757/30-rev-affected-tip.pin.json",
+    "-q",
+    "--basetemp=C:/t/bt-rev757/30-rev-affected-tip-20044",
+    "tests/test_llm_client_request_timeout.py",
+    "tests/test_llm_client_empty_completion_retry.py",
+    "tests/test_preprocessor.py",
+    "tests/test_stage_one_ensemble.py",
+    "tests/test_extraction_escalation_ladder.py",
+    "tests/test_attempt_cap_termination_reason.py",
+    "tests/test_early_failure_replay.py",
+    "tests/test_adversarial_json_repair_guard.py",
+    "tests/test_focused_repair.py",
+    "tests/test_curator_offline_mode.py",
+    "tests/test_streamlit_stage2_orchestration.py",
+    "tests/test_localized_repair.py",
+    "tests/test_rag_extract.py",
+    "tests/test_audit_json_llm_payload.py",
+    "tests/test_interactive_curator.py",
+    "tests/test_stage2_mapping_boundary.py",
+    "tests/test_stage0_case_c_retry_clobber.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\rev757-tip",
+  "started_at": "2026-10-22T03:37:31+00:00",
+  "finished_at": "2026-10-22T03:37:44+00:00",
+  "duration_seconds": 12.561448000007658,
+  "timeout_seconds": 520.0,
+  "root_pid": 1054004,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 1048156,
+      "name": "python.exe",
+      "ppid": 1054004
+    }
+  ],
+  "descendants_terminated": [
+    1048156
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 1033368,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1034392,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1034712,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1034816,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1035124,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1035180,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1042660,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1045548,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1055440,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1055704,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\rev757-tip\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-757\\30-rev-affected-tip.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\rev757-tip\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\rev757-tip",
+    "repo_head": "3582b0d745bd3a06ed03bd84a58d5bd73da4e498",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}
