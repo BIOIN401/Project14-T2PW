@@ -14,7 +14,7 @@ from xml.etree import ElementTree
 
 import requests
 
-from t2pw.curation.prompt_payload_keys import DUPLICATE_PROTEIN_FOLDS_KEY
+from t2pw.curation.prompt_payload_keys import BORROWED_PROTEIN_IDENTITIES_KEY, DUPLICATE_PROTEIN_FOLDS_KEY
 from t2pw.mapping import identity_admission
 from t2pw.pipeline.entity_identity import (
     IDENTITY_PLACEHOLDER,
@@ -829,6 +829,20 @@ class MappingCache:
         if not self.enabled:
             return
         self.path.write_text(json.dumps(self.data, indent=2, ensure_ascii=False), encoding="utf-8")
+
+
+def _pathbank_species_alternatives(species: str, row: Any) -> List[str]:
+    """FX3: other spellings PathBank may file ``species`` under -- the row's taxonomy id
+    (``_find_species_ids`` already matches ``taxonomy_id=``), then "<name> (strain <code>)"."""
+
+    out: List[str] = []
+    taxonomy_id = str(_safe_dict(row).get("taxonomy_id") or "").strip()
+    if taxonomy_id.isdigit():
+        out.append(taxonomy_id)
+    tokens = _canonical_name(species).split(" ")
+    if len(tokens) >= 3 and "(" not in species and re.search(r"\d", tokens[-1]):
+        out.append(f"{' '.join(tokens[:-1])} (strain {tokens[-1]})")
+    return out
 
 
 class PathBankDbResolver:
@@ -2117,6 +2131,16 @@ class PathBankDbResolver:
                 issue="needs_species",
             )
 
+        if not self._find_species_ids(species):
+            # FX3 (ORCH-762). PathBank names a strain "Lactococcus lactis subsp. lactis
+            # (strain KF147)" where the paper writes "... subsp. lactis KF147", so the name
+            # lookup misses and every later rung was skipped. Try the row's taxonomy id,
+            # then PathBank's "(strain X)" spelling; every rung below then runs on the
+            # species that answered, by the same SQL as before.
+            for alternative in _pathbank_species_alternatives(species, row):
+                if self._find_species_ids(alternative):
+                    species = alternative
+                    break
         if not self._find_species_ids(species):
             return _with_resolution(
                 {
@@ -4525,6 +4549,436 @@ def _promote_uniprot_result_from_row_metadata(
     return promoted
 
 
+def _uniprot_result_from_candidates(
+    candidates: List[Dict[str, Any]],
+    organism: str,
+    *,
+    queries_tried: List[str],
+    literature_aliases: List[Dict[str, str]],
+    network_errors: Optional[List[str]] = None,
+) -> Dict[str, Any]:
+    """The tail of :func:`map_protein_uniprot`, unchanged: accept, else best effort, else ambiguous."""
+
+    candidates = sorted(candidates, key=lambda item: item.get("score", 0.0), reverse=True)
+    if not candidates:
+        reason = f"network_error:{network_errors[0]}" if network_errors else "no_match"
+        return {
+            "status": "unmapped",
+            "reason": reason,
+            "query": " | ".join(queries_tried),
+            "candidates": [],
+            "literature_aliases": literature_aliases,
+        }
+
+    accepted = _accepted_uniprot_candidate_result(
+        candidates,
+        organism,
+        query=" | ".join(queries_tried),
+        queries_tried=queries_tried,
+        literature_aliases=literature_aliases,
+    )
+    if accepted is not None:
+        return accepted
+    best = candidates[0]
+    best_accession = str(best.get("accession") or "").strip()
+    if best_accession:
+        return {
+            "status": "mapped",
+            "reason": "best_effort_fallback",
+            "query": " | ".join(queries_tried),
+            "mapped_ids": {"uniprot": best_accession},
+            "confidence": best["score"],
+            "chosen_rule": "best_effort_fallback",
+            "candidates": candidates[:8],
+            "queries_tried": queries_tried,
+            "reviewed": bool(best.get("reviewed")),
+            "resolved_name": str(best.get("protein_name") or "").strip(),
+            "literature_aliases": literature_aliases,
+            "best_effort": True,
+        }
+    return {
+        "status": "unmapped",
+        "reason": "ambiguous",
+        "query": " | ".join(queries_tried),
+        "confidence": best["score"],
+        "candidates": candidates[:8],
+        "queries_tried": queries_tried,
+    }
+
+
+# ── ORCH-762 / D-108: protein identity scoped by taxonomy, never across a subspecies ──
+#
+# ORCH-761 § 4: the UniProt tier asked ``organism_name:"<the paper's free text>"`` and,
+# finding nothing, the same name with no organism at all. For "Lactococcus lactis subsp.
+# lactis KF147" the first answers 0 (UniProt spells the strain "(strain KF147)" and holds 2
+# entries for it) and the second answers E. coli, B. subtilis and human records, refused
+# one by one as ``species_mismatch``. On the night the organism read "Lactococcus lactis",
+# the free text matched *L. lactis subsp. cremoris* MG1363 and MenA shipped A2RHR6 as
+# verified, although D-108 forbids an identity from across a subspecies boundary.
+#
+# FX1/FX2: when the payload's own species row carries an NCBI taxonomy id, the lookup is
+# scoped by it: the strain itself (``organism_id``, exact) first, then -- only when the
+# strain has no candidate -- its bound (``taxonomy_id``, lineage): the subspecies when the
+# lineage names one, else the species. Never above the bound, and no organism-free query
+# is issued under a scope. The identity verdict is not touched; it is handed the bound's
+# scientific name as the organism it judges against, so a record from outside the bound
+# stays a ``species_mismatch`` on the rung's own unchanged string rule. With no taxonomy
+# id, or no answer from the taxonomy service, everything below is inert and the lookup is
+# exactly what it was.
+
+_UNIPROT_TAXONOMY_URL = "https://rest.uniprot.org/taxonomy/{}"
+_UNIPARC_SEARCH_URL = "https://rest.uniprot.org/uniparc/search"
+_UNIPARC_ENTRY_URL = "https://rest.uniprot.org/uniparc/{}"
+_UNIPROT_SEARCH_URL = "https://rest.uniprot.org/uniprotkb/search"
+_TAXON_CACHE_SECTION = "uniprot_taxonomy"
+#: How a borrowed identity was found; recorded on the FX5 candidate and in the flag record.
+IDENTITY_ROUTE_EXACT_SEQUENCE = "exact_sequence_uniparc"
+IDENTITY_ROUTE_SAME_SUBSPECIES_GENE = "same_bound_gene_record"
+
+
+def _uniprot_taxon_record(client: HttpClient, taxonomy_id: str, cache: Optional["MappingCache"]) -> Dict[str, Any]:
+    """``{taxonId, scientificName, rank, lineage}`` from UniProt taxonomy, cached; ``{}`` when unknown.
+
+    A failed or malformed answer is not cached (PRODUCT_CONTRACT § 8: a lookup failure is
+    not evidence), so the next run asks again.
+    """
+
+    key = str(taxonomy_id or "").strip()
+    if not key.isdigit():
+        return {}
+    if cache is not None:
+        hit = _safe_dict(cache.get(_TAXON_CACHE_SECTION, key))
+        if str(hit.get("taxonId") or "") == key and hit.get("rank"):
+            return hit
+    try:
+        resp = client.get(_UNIPROT_TAXONOMY_URL.format(key), params={"format": "json"})
+        data = _safe_dict(resp.json()) if resp.status_code == 200 else {}
+    except Exception:  # noqa: BLE001 - no answer is no scope, never a refutation
+        return {}
+    if str(data.get("taxonId") or "") != key or not str(data.get("rank") or "").strip():
+        return {}
+    record = {
+        "taxonId": key,
+        "scientificName": str(data.get("scientificName") or "").strip(),
+        "rank": str(data.get("rank") or "").strip().casefold(),
+        "lineage": [
+            {
+                "taxonId": str(row.get("taxonId") or ""),
+                "scientificName": str(row.get("scientificName") or "").strip(),
+                "rank": str(row.get("rank") or "").strip().casefold(),
+            }
+            for row in _safe_list(data.get("lineage"))
+            if isinstance(row, dict) and str(row.get("taxonId") or "").isdigit()
+        ],
+    }
+    if not record["scientificName"]:
+        return {}
+    if cache is not None:
+        cache.set(_TAXON_CACHE_SECTION, key, record)
+    return record
+
+
+def _uniprot_taxon_scope(client: HttpClient, taxonomy_id: str, cache: Optional["MappingCache"]) -> Optional[Dict[str, Any]]:
+    """The query ladder for one requested organism and its D-108 bound, or None (no scope).
+
+    * species or subspecies requested: one tier, ``taxonomy_id:<it>`` -- the request names
+      no narrower boundary, so every record inside it is the requested organism's own.
+    * anything below species (strain, serotype, ...): ``organism_id:<it>`` first, then the
+      bound -- the subspecies in its lineage, else the species. Without a known subspecies
+      the climbed tier also drops subspecies-qualified records (:func:`_outside_unknown_subspecies`).
+    * genus or above, or an ambiguous lineage: None, and the caller keeps its free-text query.
+    """
+
+    record = _uniprot_taxon_record(client, taxonomy_id, cache)
+    if not record:
+        return None
+    rank = record["rank"]
+    if rank in ("species", "subspecies"):
+        bound = record
+    else:
+        lineage = _safe_list(record.get("lineage"))
+        subspecies = [row for row in lineage if row.get("rank") == "subspecies"]
+        species = [row for row in lineage if row.get("rank") == "species"]
+        if len(subspecies) > 1 or len(species) != 1:
+            return None
+        bound = (subspecies or species)[0]
+    tiers: List[Dict[str, str]] = []
+    if bound is not record:
+        tiers.append({"clause": f"organism_id:{record['taxonId']}", "level": "strain"})
+    tiers.append({"clause": f"taxonomy_id:{bound['taxonId']}", "level": bound["rank"]})
+    return {
+        "requested_taxonomy_id": record["taxonId"],
+        "requested_name": record["scientificName"],
+        "requested_rank": rank,
+        "bound_taxonomy_id": bound["taxonId"],
+        "bound_name": bound["scientificName"],
+        "bound_rank": bound["rank"],
+        "tiers": tiers,
+    }
+
+
+def _memo_taxon_scope(context: Optional[Dict[str, Any]], client: HttpClient, cache: Optional["MappingCache"]) -> Optional[Dict[str, Any]]:
+    """The scope for ``context['taxonomy_id']``, looked up at most once per mapping pass."""
+
+    ctx = _safe_dict(context)
+    taxonomy_id = str(ctx.get("taxonomy_id") or "").strip()
+    if not taxonomy_id:
+        return None
+    memo = ctx.get("taxon_memo")
+    if not isinstance(memo, dict):
+        return _uniprot_taxon_scope(client, taxonomy_id, cache)
+    if taxonomy_id not in memo:
+        memo[taxonomy_id] = _uniprot_taxon_scope(client, taxonomy_id, cache)
+    return memo[taxonomy_id]
+
+
+def _outside_unknown_subspecies(candidate: Dict[str, Any], scope: Dict[str, Any]) -> bool:
+    """True for a subspecies-qualified record when the requested strain's subspecies is unknown.
+
+    D-108: never across a subspecies boundary. A strain whose lineage names no subspecies
+    climbs to its species, and a record filed under one of that species' subspecies may be
+    on the far side of a boundary nobody can see, so it is not taken.
+    # ponytail: reads UniProt's "subsp." naming, not the record's lineage; a lineage call per
+    # candidate taxon would make it exact if a subspecies is ever named some other way.
+    """
+
+    bound = _normalize_name(str(scope.get("bound_name") or ""))
+    organism = _normalize_name(str(candidate.get("organism") or ""))
+    rest = organism[len(bound):] if bound and organism.startswith(bound) else organism
+    return "subsp" in rest.split()
+
+
+def _requested_taxonomy_id(row: Any, entities: Dict[str, Any], organism: str) -> str:
+    """FX2: the NCBI taxonomy id of the organism a protein row is resolved for, else ``""``.
+
+    The row's own species reference first; else the payload's species row whose name, raw
+    name or alias is the row's organism (species hydration backfills the id on species rows
+    only, ``backfill_species_taxonomy``). Two species rows that disagree give no id.
+    """
+
+    data = _safe_dict(row)
+    for value in (data.get("taxonomy_id"), _safe_dict(data.get("species_ref")).get("taxonomy_id")):
+        text = str(value or "").strip()
+        if text.isdigit():
+            return text
+    wanted = {
+        _normalize_name(str(value or ""))
+        for value in (
+            organism,
+            data.get("organism"),
+            data.get("species") if isinstance(data.get("species"), str) else "",
+            _safe_dict(data.get("species_ref")).get("name"),
+        )
+        if _normalize_name(str(value or ""))
+    }
+    found: Set[str] = set()
+    for species_row in _safe_list(_safe_dict(entities).get("species")):
+        if not isinstance(species_row, dict):
+            continue
+        names = [species_row.get("name"), species_row.get("raw_name"), *_safe_list(species_row.get("aliases"))]
+        if wanted & {_normalize_name(str(value or "")) for value in names}:
+            text = str(species_row.get("taxonomy_id") or species_row.get("taxonomy-id") or "").strip()
+            if text.isdigit():
+                found.add(text)
+    return found.pop() if len(found) == 1 else ""
+
+
+def _exact_sequence_candidates(
+    client: HttpClient, name: str, scope: Dict[str, Any], queries_tried: List[str]
+) -> List[Dict[str, Any]]:
+    """FX5 (NEW capability): the active UniProtKB record of the strain's IDENTICAL sequence.
+
+    For a strain UniProtKB does not cover: UniParc ``taxonomy_id:<strain> AND gene:<symbol>``
+    must name exactly ONE sequence (several are paralogs nobody can choose between); its
+    active UniProtKB cross-references are fetched with the bound as a query clause, so a
+    record from outside the subspecies is never returned. The rows go to the unchanged
+    verdict like any other candidate.
+    """
+
+    tiers = _safe_list(scope.get("tiers"))
+    symbol = _canonical_name(name)
+    if len(tiers) < 2 or not re.fullmatch(r"[A-Za-z0-9_.-]{2,24}", symbol):
+        return []
+    query = f"taxonomy_id:{scope['requested_taxonomy_id']} AND gene:{symbol}"
+    try:
+        resp = client.get(_UNIPARC_SEARCH_URL, params={"query": query, "format": "json", "size": 10})
+        results = _safe_list(_safe_dict(resp.json()).get("results")) if resp.status_code == 200 else []
+    except Exception:  # noqa: BLE001
+        return []
+    queries_tried.append(f"uniparc:{query}")
+    upis = sorted({str(_safe_dict(row).get("uniParcId") or "") for row in results} - {""})
+    if len(upis) != 1:
+        return []
+    try:
+        resp = client.get(_UNIPARC_ENTRY_URL.format(upis[0]), params={"format": "json"})
+        entry = _safe_dict(resp.json()) if resp.status_code == 200 else {}
+    except Exception:  # noqa: BLE001
+        return []
+    accessions = sorted(
+        {
+            str(xref.get("id") or "").strip()
+            for xref in map(_safe_dict, _safe_list(entry.get("uniParcCrossReferences")))
+            if str(xref.get("database") or "").startswith("UniProtKB") and xref.get("active") is True
+        }
+        - {""}
+    )
+    if not accessions:
+        return []
+    record_query = "(" + " OR ".join(f"accession:{acc}" for acc in accessions[:10]) + ")"
+    record_query += f" AND taxonomy_id:{scope['bound_taxonomy_id']}"
+    try:
+        resp = client.get(
+            _UNIPROT_SEARCH_URL,
+            params={"query": record_query, "format": "json", "size": 10, "fields": _UNIPROT_SEARCH_FIELDS},
+        )
+        payload = _safe_dict(resp.json()) if resp.status_code == 200 else {}
+    except Exception:  # noqa: BLE001
+        return []
+    queries_tried.append(record_query)
+    out = []
+    for candidate in _extract_uniprot_candidates(payload, query_name=symbol, organism=scope["bound_name"]):
+        candidate.update(
+            {
+                "matched_query": symbol,
+                "alias_source": "primary_name",
+                # The clause the record itself was fetched under (the bound).
+                "matched_scope": f"taxonomy_id:{scope['bound_taxonomy_id']}",
+                "identity_route": IDENTITY_ROUTE_EXACT_SEQUENCE,
+                "uniparc_id": upis[0],
+            }
+        )
+        out.append(candidate)
+    return out
+
+
+def _map_protein_uniprot_in_scope(
+    client: HttpClient,
+    name: str,
+    aliases: Optional[List[Dict[str, str]]],
+    *,
+    cache: Optional["MappingCache"],
+    scope: Dict[str, Any],
+) -> Dict[str, Any]:
+    """FX1: the strain tier, then FX5, then the bound -- the first that yields a candidate."""
+
+    organism = str(scope["bound_name"])
+    tiers = _safe_list(scope.get("tiers"))
+    queries_tried: List[str] = []
+    result: Dict[str, Any] = {}
+    for position, tier in enumerate(tiers):
+        climbed = position > 0
+        if climbed:
+            exact = _exact_sequence_candidates(client, name, scope, queries_tried)
+            if exact:
+                accepted = _uniprot_result_from_candidates(
+                    exact, organism, queries_tried=list(queries_tried), literature_aliases=[]
+                )
+                if accepted.get("status") == "mapped" and not accepted.get("best_effort"):
+                    accepted["queries_tried"] = list(queries_tried)
+                    return accepted
+        result = map_protein_uniprot(
+            client,
+            name,
+            organism,
+            aliases=aliases,
+            cache=cache,
+            organism_clause=str(tier["clause"]),
+            literature_tier=position == len(tiers) - 1,
+        )
+        tier_queries = _safe_list(result.get("queries_tried")) or str(result.get("query") or "").split(" | ")
+        queries_tried.extend(query for query in map(str, tier_queries) if query.strip())
+        candidates = [row for row in _safe_list(result.get("candidates")) if isinstance(row, dict)]
+        if climbed and scope.get("bound_rank") != "subspecies" and scope.get("requested_rank") not in ("species", "subspecies"):
+            kept = [row for row in candidates if not _outside_unknown_subspecies(row, scope)]
+            if len(kept) != len(candidates):
+                result = _uniprot_result_from_candidates(
+                    kept,
+                    organism,
+                    queries_tried=list(queries_tried),
+                    literature_aliases=[e for e in _safe_list(result.get("literature_aliases")) if isinstance(e, dict)],
+                )
+                candidates = kept
+        if candidates:
+            break
+    result["queries_tried"] = queries_tried
+    result["query"] = " | ".join(queries_tried)
+    return result
+
+
+def _with_taxon_clause_candidates(protein_row: Optional[Dict[str, Any]], scope: Dict[str, Any]) -> Dict[str, Any]:
+    """The row with only the candidates an earlier pass found under THIS scope.
+
+    A candidate list recorded by a free-text lookup (an earlier run, or a payload mapped
+    before ORCH-762) may hold a record from across the bound; under a scope it is not
+    promoted back into a match.
+    """
+
+    row = dict(_safe_dict(protein_row))
+    meta = dict(_safe_dict(row.get("mapping_meta")))
+    clauses = {str(tier.get("clause") or "") for tier in _safe_list(scope.get("tiers"))}
+    meta["candidates"] = [
+        candidate
+        for candidate in _safe_list(meta.get("candidates"))
+        if isinstance(candidate, dict)
+        and str(candidate.get("matched_scope") or "") in clauses
+    ]
+    row["mapping_meta"] = meta
+    return row
+
+
+def _break_gene_synonym_collision(
+    result: Dict[str, Any],
+    name: str,
+    foreign_symbols: Any,
+    organism: str,
+) -> Dict[str, Any]:
+    """FX4: a synonym-only symbol hit that names ANOTHER enzyme of this payload is set aside.
+
+    "MenH" in *L. lactis* answers two records through the shared synonym ``menH``: Q9CHK1
+    (primary ``menX``, SHCHC synthase) and P49016 (primary ``menG``, the demethylmenaquinone
+    methyltransferase). The payload itself says which is which: its protein ``MenG``
+    catalyses a different reaction (DMK -> MK) from ``MenH`` (SEPHCHC -> SHCHC), so the
+    record whose own gene is ``menG`` describes that enzyme's function, not this one's.
+    ``foreign_symbols`` holds the normalized names of the payload's other enzymes whose
+    reactions share none of this protein's. The collision must be real (two or more
+    records carry the queried symbol) and at least one record must survive; the survivor
+    still faces the unchanged verdict, rivals and all.
+    """
+
+    foreign = {value for value in (foreign_symbols or ()) if value}
+    if not foreign or not isinstance(result, dict):
+        return result
+    query = _normalize_name(name)
+    candidates = [row for row in _safe_list(result.get("candidates")) if isinstance(row, dict)]
+    hits = [row for row in candidates if query and query in _candidate_gene_symbols(row)]
+    if len(hits) < 2:
+        return result
+    drop = {
+        str(row.get("accession") or row.get("uniprot") or "").strip()
+        for row in hits
+        if query not in _candidate_primary_gene_symbols(row) and _candidate_primary_gene_symbols(row) & foreign
+    } - {""}
+    if not drop or len(drop) >= len(hits):
+        return result
+    kept = [row for row in candidates if str(row.get("accession") or row.get("uniprot") or "").strip() not in drop]
+    out = _uniprot_result_from_candidates(
+        kept,
+        organism,
+        queries_tried=[str(q) for q in _safe_list(result.get("queries_tried")) if str(q or "").strip()],
+        literature_aliases=[e for e in _safe_list(result.get("literature_aliases")) if isinstance(e, dict)],
+    )
+    out.setdefault("provider", str(result.get("provider") or "UniProt"))
+    out.setdefault("source", str(result.get("source") or "api"))
+    out["gene_synonym_collision"] = {
+        "query": name,
+        "set_aside": sorted(drop),
+        "reason": "synonym-only hit whose primary gene is another enzyme of this payload with a different reaction",
+    }
+    if out.get("status") == "mapped":
+        _with_resolution(out, "matched", order_step="gene_synonym_collision")
+    return out
+
+
 def map_protein_uniprot(
     client: HttpClient,
     name: str,
@@ -4532,7 +4986,22 @@ def map_protein_uniprot(
     aliases: Optional[List[Dict[str, str]]] = None,
     *,
     cache: Optional["MappingCache"] = None,
+    taxon_scope: Optional[Dict[str, Any]] = None,
+    organism_clause: str = "",
+    literature_tier: bool = True,
 ) -> Dict[str, Any]:
+    """UniProtKB lookup for one protein name.
+
+    ORCH-762: ``taxon_scope`` (from :func:`_uniprot_taxon_scope`) runs the scoped ladder
+    instead. ``organism_clause`` is one tier of it -- that clause replaces
+    ``organism_name:"<organism>"``, no organism-free query is issued, and the model alias
+    tier is not consulted (its aliases are uncorroborated by construction, and under a scope
+    it would add model calls a base run never made). With neither argument the lookup is
+    byte-for-byte what it was.
+    """
+
+    if taxon_scope and not organism_clause:
+        return _map_protein_uniprot_in_scope(client, name, aliases, cache=cache, scope=taxon_scope)
     alias_entries = _protein_alias_entries(name, None)
     for entry in aliases or []:
         alias = _canonical_name(str(_safe_dict(entry).get("alias") or ""))
@@ -4576,6 +5045,13 @@ def map_protein_uniprot(
         # ('operon', 'gene', 'protein', 'complex', 'enzyme', 'transferase', ...)
         # cannot identify anything, so it is never issued at all.
         if _is_generic_query_name(query_name):
+            return
+        if organism_clause:
+            # ORCH-762 / D-108: under a taxon scope there is no organism-free query.
+            if not used_organism:
+                return
+            term = f'"{query_name}"' if broad else f'(protein_name:"{query_name}" OR gene:"{query_name}")'
+            query_plan.append((query_name, f"{term} AND {organism_clause}", True, alias_source, matched_alias))
             return
         if broad:
             query = f'"{query_name}"'
@@ -4638,6 +5114,8 @@ def map_protein_uniprot(
             if not used_organism:
                 adjusted["score"] = round(float(adjusted.get("score", 0.0)) - 0.04, 4)
             adjusted["matched_query"] = variant
+            if organism_clause:
+                adjusted["matched_scope"] = organism_clause
             adjusted["alias_source"] = alias_source
             if matched_alias:
                 adjusted["matched_alias"] = matched_alias
@@ -4653,7 +5131,7 @@ def map_protein_uniprot(
                 break
 
     literature_aliases_used: List[Dict[str, str]] = []
-    if not aggregated:
+    if not aggregated and literature_tier:
         literature_result = lookup_literature_protein_aliases(client, name, organism)
         literature_aliases = _safe_list(literature_result.get("aliases"))
         if not literature_aliases and organism:
@@ -4710,6 +5188,8 @@ def map_protein_uniprot(
                 if not used_organism:
                     adjusted["score"] = round(float(adjusted.get("score", 0.0)) - 0.04, 4)
                 adjusted["matched_query"] = variant
+                if organism_clause:
+                    adjusted["matched_scope"] = organism_clause
                 adjusted["alias_source"] = alias_source
                 if matched_alias:
                     adjusted["matched_alias"] = matched_alias
@@ -4719,7 +5199,7 @@ def map_protein_uniprot(
 
     # Third-tier fallback: ask the LLM for alternate names/gene symbols when both
     # the direct UniProt search and the EuropePMC literature lookup found nothing.
-    if not aggregated:
+    if not aggregated and not organism_clause:
         # ONE call per resolution. The organism-less retry that used to follow
         # this line asked the same model the same question with the species
         # deleted -- the one piece of context that keeps the answer on the right
@@ -4777,6 +5257,8 @@ def map_protein_uniprot(
                 if not used_organism:
                     adjusted["score"] = round(float(adjusted.get("score", 0.0)) - 0.04, 4)
                 adjusted["matched_query"] = variant
+                if organism_clause:
+                    adjusted["matched_scope"] = organism_clause
                 adjusted["alias_source"] = alias_source
                 if matched_alias:
                     adjusted["matched_alias"] = matched_alias
@@ -4784,51 +5266,13 @@ def map_protein_uniprot(
                 if not existing or float(adjusted.get("score", 0.0)) > float(existing.get("score", 0.0)):
                     aggregated[accession] = adjusted
 
-    candidates = sorted(aggregated.values(), key=lambda item: item.get("score", 0.0), reverse=True)
-    if not candidates:
-        reason = f"network_error:{network_errors[0]}" if network_errors else "no_match"
-        return {
-            "status": "unmapped",
-            "reason": reason,
-            "query": " | ".join(queries_tried),
-            "candidates": [],
-            "literature_aliases": literature_aliases_used,
-        }
-
-    accepted = _accepted_uniprot_candidate_result(
-        candidates,
+    return _uniprot_result_from_candidates(
+        list(aggregated.values()),
         organism,
-        query=" | ".join(queries_tried),
         queries_tried=queries_tried,
         literature_aliases=literature_aliases_used,
+        network_errors=network_errors,
     )
-    if accepted is not None:
-        return accepted
-    best = candidates[0]
-    best_accession = str(best.get("accession") or "").strip()
-    if best_accession:
-        return {
-            "status": "mapped",
-            "reason": "best_effort_fallback",
-            "query": " | ".join(queries_tried),
-            "mapped_ids": {"uniprot": best_accession},
-            "confidence": best["score"],
-            "chosen_rule": "best_effort_fallback",
-            "candidates": candidates[:8],
-            "queries_tried": queries_tried,
-            "reviewed": bool(best.get("reviewed")),
-            "resolved_name": str(best.get("protein_name") or "").strip(),
-            "literature_aliases": literature_aliases_used,
-            "best_effort": True,
-        }
-    return {
-        "status": "unmapped",
-        "reason": "ambiguous",
-        "query": " | ".join(queries_tried),
-        "confidence": best["score"],
-        "candidates": candidates[:8],
-        "queries_tried": queries_tried,
-    }
 
 
 def _score_compound_candidate(query: str, candidate_name: str) -> float:
@@ -5161,9 +5605,23 @@ def _collect_protein_like_names(payload: Dict[str, Any]) -> Set[str]:
         for component in _safe_list(row.get("components")):
             if isinstance(component, str) and component.strip():
                 out.add(_normalize_name(component))
+    # FX6 (ORCH-762, ORCH-761 761-B). A location row is not a kind declaration. The
+    # normaliser files a dangling protein-location token it does not read as a protein
+    # (``holo-EntB``) as a COMPOUND row; counting the location here made the compound
+    # loop resolve that compound through the protein route, where a literature alias
+    # handed it EntB's P0ADI4 and identity admission then withheld the accession from the
+    # grounded protein EntB too. A name the payload files as a compound, and as no
+    # protein or complex, keeps its compound route; every other located name is
+    # protein-like exactly as before.
+    declared_compounds = {
+        _normalize_name(str(row.get("name") or ""))
+        for row in _safe_list(entities.get("compounds"))
+        if isinstance(row, dict) and str(row.get("name") or "").strip()
+    } - out
     for row in _safe_list(element_locations.get("protein_locations")):
         if isinstance(row, dict) and isinstance(row.get("protein"), str) and row.get("protein").strip():
-            out.add(_normalize_name(row["protein"]))
+            if _normalize_name(row["protein"]) not in declared_compounds:
+                out.add(_normalize_name(row["protein"]))
     for reaction in _safe_list(processes.get("reactions")):
         if not isinstance(reaction, dict):
             continue
@@ -5187,6 +5645,115 @@ def _collect_protein_like_names(payload: Dict[str, Any]) -> Set[str]:
                     out.add(_normalize_name(value))
                     break
     return {value for value in out if value}
+
+
+def _enzyme_reaction_signatures(payload: Dict[str, Any]) -> Dict[str, Set[Tuple[Tuple[str, ...], Tuple[str, ...]]]]:
+    """FX4: normalized enzyme name -> the chemistry (inputs, outputs) of every reaction it catalyses.
+
+    A complex enzyme also credits its components, so a wrapper named after its protein
+    (Stage 6) and the bare protein (Stage 2) read the same.
+    """
+
+    entities = _safe_dict(payload.get("entities"))
+    components: Dict[str, List[str]] = {}
+    for row in _safe_list(entities.get("protein_complexes")):
+        if isinstance(row, dict) and str(row.get("name") or "").strip():
+            components[_normalize_name(str(row["name"]))] = [
+                _normalize_name(_component_name(component)) for component in _safe_list(row.get("components"))
+            ]
+    out: Dict[str, Set[Tuple[Tuple[str, ...], Tuple[str, ...]]]] = {}
+    for reaction in _safe_list(_safe_dict(payload.get("processes")).get("reactions")):
+        if not isinstance(reaction, dict):
+            continue
+        signature = tuple(
+            tuple(sorted(_normalize_name(_participant_name(item)) for item in _safe_list(reaction.get(side))))
+            for side in ("inputs", "outputs")
+        )
+        for enzyme in _safe_list(reaction.get("enzymes")):
+            enzyme_row = _safe_dict(enzyme)
+            enzyme_name = next(
+                (str(enzyme_row.get(key) or "").strip() for key in ("protein", "protein_complex", "entity", "name") if str(enzyme_row.get(key) or "").strip()),
+                "",
+            )
+            norm = _normalize_name(enzyme_name)
+            for key in [norm, *components.get(norm, [])]:
+                if key:
+                    out.setdefault(key, set()).add(signature)  # type: ignore[arg-type]
+    return out
+
+
+def _foreign_enzyme_symbols(name: str, enzyme_reactions: Dict[str, Set[Any]]) -> Set[str]:
+    """The payload's other enzymes whose reactions share none of ``name``'s (FX4).
+
+    Empty unless ``name`` itself catalyses something: without its own reaction there is
+    no function to compare, and nothing is set aside.
+    """
+
+    own = enzyme_reactions.get(_normalize_name(name)) or set()
+    if not own:
+        return set()
+    return {other for other, reactions in enzyme_reactions.items() if other != _normalize_name(name) and reactions and not (reactions & own)}
+
+
+def _participant_name(item: Any) -> str:
+    if isinstance(item, dict):
+        return str(item.get("name") or item.get("entity") or item.get("compound") or "")
+    return str(item or "")
+
+
+def _strain_label(organism: str) -> str:
+    match = re.search(r"\(strain ([^)]+)\)", str(organism or ""))
+    return match.group(1).strip() if match else ""
+
+
+def _borrowed_protein_identities(mapped: Dict[str, Any], taxon_memo: Dict[str, Any]) -> List[Dict[str, Any]]:
+    """D-108 § 3: every identity a row ships from ANOTHER strain, with that strain.
+
+    Read off what the rows actually ship after every pass of this mapping (admission, the
+    fold, rule 3), so a withheld or moved accession is never flagged and a surviving one
+    always is: the row's shipped UniProt, the verdict's judged record for it, and the
+    scope its lookup ran under. A strain-level request answered by a record of another
+    strain (the climbed tier, or FX5's identical sequence) is borrowed; a species- or
+    subspecies-level request is answered inside the organism it names and is not.
+    """
+
+    records: List[Dict[str, Any]] = []
+    for idx, row in enumerate(_safe_list(_safe_dict(mapped.get("entities")).get("proteins"))):
+        meta = _safe_dict(_safe_dict(row).get("mapping_meta"))
+        requested = str(_safe_dict(meta.get("query")).get("taxonomy_id") or "").strip()
+        scope = _safe_dict(taxon_memo.get(requested)) if requested else {}
+        accession = str(_safe_dict(row.get("mapped_ids")).get("uniprot") or "").strip() if scope else ""
+        judged = _safe_dict(_safe_dict(meta.get("identity_verdict")).get("judged_candidate"))
+        source_taxon = str(judged.get("taxonomy_id") or "").strip()
+        if (
+            len(_safe_list(scope.get("tiers"))) < 2  # a species/subspecies request borrows nothing
+            or not _is_real_protein_identifier(accession)
+            or meta.get("identity_status") != IDENTITY_VERIFIED
+            or str(judged.get("accession") or judged.get("uniprot") or "").strip().casefold() != accession.casefold()
+            or not source_taxon
+            or source_taxon == requested
+        ):
+            continue
+        source_organism = str(judged.get("organism") or "").strip()
+        strain = _strain_label(source_organism)
+        records.append(
+            {
+                "json_pointer": f"/entities/proteins/{idx}",
+                "name": str(row.get("name") or ""),
+                "uniprot": accession,
+                "source_strain": strain,
+                "source_organism": source_organism,
+                "source_taxonomy_id": source_taxon,
+                "requested_organism": str(scope.get("requested_name") or ""),
+                "requested_taxonomy_id": requested,
+                "bound_name": str(scope.get("bound_name") or ""),
+                "bound_taxonomy_id": str(scope.get("bound_taxonomy_id") or ""),
+                "bound_rank": str(scope.get("bound_rank") or ""),
+                "route": str(judged.get("identity_route") or IDENTITY_ROUTE_SAME_SUBSPECIES_GENE),
+                "flag": f"UniProt {accession}, from strain {strain}" if strain else f"UniProt {accession}, from {source_organism}",
+            }
+        )
+    return records
 
 
 _NAME_GATE_ORDER_STEP = "name_plausibility_gate"
@@ -6569,7 +7136,20 @@ def _map_protein_with_strategy(
     name: str,
     organism: str,
     protein_row: Optional[Dict[str, Any]] = None,
+    identity_context: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
+    """One protein through PathBank, then UniProt.
+
+    ``identity_context`` (ORCH-762, from ``map_payload``; ``None`` keeps every byte of the
+    old behaviour): ``taxonomy_id`` is the requested organism's NCBI id (FX2), which lets
+    the PathBank tier find a species its name does not match (FX3) and scopes the UniProt
+    tier by taxonomy (FX1, FX5); ``foreign_symbols`` feeds the gene-synonym tie-break
+    (FX4); ``taxon_memo`` holds this pass's taxonomy answers. A scoped UniProt result
+    carries ``identity_scope`` with the organism its verdict was judged against, which the
+    caller must judge the row against too.
+    """
+    context = _safe_dict(identity_context)
+    taxonomy_id = str(context.get("taxonomy_id") or "").strip()
     if is_pathbank_unknown_protein(protein_row):
         return _with_resolution(
             {
@@ -6635,9 +7215,16 @@ def _map_protein_with_strategy(
 
     if id_source in {"db", "hybrid"}:
         db_result = cache.get("proteins", db_key)
+        if db_result is not None and taxonomy_id and str(db_result.get("reason") or "").startswith("species_not_found"):
+            # FX3: a PathBank miss on the species NAME is asked again with the taxonomy id;
+            # every other cached answer replays exactly as before.
+            db_result = None
         if db_result is None:
             if db and db.available():
-                db_result = db.map_protein_row(_safe_dict(protein_row) or {"name": name}, organism)
+                db_row = dict(_safe_dict(protein_row) or {"name": name})
+                if taxonomy_id and not str(db_row.get("taxonomy_id") or "").strip():
+                    db_row["taxonomy_id"] = taxonomy_id
+                db_result = db.map_protein_row(db_row, organism)
             else:
                 db_reason = db.last_error if db else "db_not_configured"
                 db_result = {
@@ -6661,12 +7248,30 @@ def _map_protein_with_strategy(
             # (``_protein_result_from_row``) that were not stamped individually.
             if db is not None:
                 db.stamp_candidate_species(_safe_list(db_result.get("candidates")), organism)
+            if taxonomy_id:
+                # The species rung compares taxon ids first when both sides carry one.
+                # A PathBank row of the requested taxon itself says so; a row of any
+                # other taxon is left to the rung's name rule, exactly as before.
+                for candidate in _safe_list(db_result.get("candidates")):
+                    if isinstance(candidate, dict) and str(candidate.get("taxonomy_id") or "").strip() == taxonomy_id:
+                        candidate["requested_taxonomy_id"] = taxonomy_id
             # The gate is applied to the cache's *return value*, never to what is
             # stored, so the raw resolver answer stays inspectable in the cache
             # file and the verdict is recomputed on every read.
             return _apply_name_plausibility_gate(db_result, name, kind="protein", organism=organism)
 
     if id_source in {"api", "hybrid"}:
+        scope = _memo_taxon_scope(context, client, cache) if taxonomy_id else None
+        if scope is not None:
+            # FX1. A scoped answer is keyed by the scope, and no free-text entry is read
+            # back: those were answers to a different question (ORCH-761 § 4.1 item 5).
+            organism = str(scope["bound_name"])
+            api_key = (
+                f"api-v9::{_normalize_name(name)}::tax:{scope['requested_taxonomy_id']}>{scope['bound_taxonomy_id']}"
+                f"::{pathbank_id}::{json.dumps(row_ids, sort_keys=True)}::{alias_key}"
+            )
+            legacy_api_keys = []
+            protein_row = _with_taxon_clause_candidates(protein_row, scope)
         api_result = cache.get("proteins", api_key)
         if api_result is None:
             # Backward-compatible cache keys from earlier resolver semantics.
@@ -6677,6 +7282,10 @@ def _map_protein_with_strategy(
                     break
             if legacy is not None:
                 api_result = _promote_cached_uniprot_result(legacy, organism)
+            elif scope is not None:
+                api_result = map_protein_uniprot(
+                    client, name, organism, aliases=protein_aliases, cache=cache, taxon_scope=scope
+                )
             else:
                 api_result = map_protein_uniprot(client, name, organism, aliases=protein_aliases, cache=cache)
             api_result.setdefault("provider", "UniProt")
@@ -6700,7 +7309,17 @@ def _map_protein_with_strategy(
             if api_result.get("status") == "mapped":
                 _with_resolution(api_result, "matched", order_step="api_uniprot")
                 cache.set("proteins", api_key, api_result)
-        return _apply_name_plausibility_gate(api_result, name, kind="protein", organism=organism)
+        # FX4, on the value read, never on what is stored (same rule as the gate below).
+        api_result = _break_gene_synonym_collision(api_result, name, context.get("foreign_symbols"), organism)
+        gated = _apply_name_plausibility_gate(api_result, name, kind="protein", organism=organism)
+        if scope is not None:
+            gated = dict(gated)
+            gated["identity_scope"] = {
+                key: scope[key]
+                for key in ("requested_taxonomy_id", "requested_name", "requested_rank", "bound_taxonomy_id", "bound_name", "bound_rank")
+            }
+            gated["identity_scope"]["verdict_organism"] = organism
+        return gated
 
     return _with_resolution(
         {"status": "unmapped", "reason": "invalid_id_source", "provider": "none", "source": "none", "candidates": []},
@@ -10383,6 +11002,17 @@ def map_payload(
             "false_protein_promotions_blocked", 0
         )
     )
+    # ORCH-762: one taxonomy answer per organism per pass, and the payload's own
+    # enzyme -> reaction assignment for the FX4 tie-break.
+    taxon_memo: Dict[str, Optional[Dict[str, Any]]] = {}
+    enzyme_reactions = _enzyme_reaction_signatures(mapped)
+
+    def _identity_context(row: Any, row_name: str, row_organism: str) -> Dict[str, Any]:
+        return {
+            "taxonomy_id": _requested_taxonomy_id(row, entities, row_organism),
+            "taxon_memo": taxon_memo,
+            "foreign_symbols": _foreign_enzyme_symbols(row_name, enzyme_reactions),
+        }
 
     for idx, protein in enumerate(proteins):
         if not isinstance(protein, dict):
@@ -10421,12 +11051,20 @@ def map_payload(
             name=name,
             organism=organism,
             protein_row=protein,
+            identity_context=_identity_context(protein, name, organism),
         )
         provider = str(result.get("provider") or ("PathBankDB" if result.get("source") == "db" else "UniProt"))
         source = str(result.get("source") or ("db" if provider == "PathBankDB" else "api"))
+        identity_scope = _safe_dict(result.get("identity_scope"))
+        if identity_scope:
+            # FX2: the row is judged against the organism its scoped lookup was judged
+            # against -- every re-check below uses the same ``organism``.
+            organism = str(identity_scope.get("verdict_organism") or organism)
 
         protein.setdefault("mapping_meta", {})
         protein["mapping_meta"]["query"] = {"name": name, "organism": organism}
+        if identity_scope:
+            protein["mapping_meta"]["query"]["taxonomy_id"] = str(identity_scope.get("requested_taxonomy_id") or "")
         protein["mapping_meta"]["provider"] = provider
         protein["mapping_meta"]["source"] = source
         protein["mapping_meta"]["candidates"] = result.get("candidates", [])
@@ -10458,6 +11096,8 @@ def map_payload(
             # is omitted precisely when it would equal resolution["issue"] -- so
             # the reason it produces is unchanged.
             "identity_verdict",
+            # ORCH-762 FX4: which records the gene-synonym tie-break set aside, and why.
+            "gene_synonym_collision",
         ]:
             if result.get(meta_key):
                 protein["mapping_meta"][meta_key] = result.get(meta_key)
@@ -10727,6 +11367,13 @@ def map_payload(
             ).strip()
             if not _p_name or not _p_org:
                 continue
+            # ORCH-762: the last lookup is scoped like the first. Unscoped, this is where
+            # a free-text "Lactococcus lactis" would bring MenA -> A2RHR6 (subsp. cremoris)
+            # straight back after the scoped loop refused to find it.
+            _p_context = _identity_context(_p_row, _p_name, _p_org)
+            _p_scope = _memo_taxon_scope(_p_context, client, cache) if _p_context["taxonomy_id"] else None
+            if _p_scope is not None:
+                _p_org = str(_p_scope["bound_name"])
             try:
                 # Consult the run's own cache before issuing work. This leg is
                 # the LAST place an unresolved protein is asked about, so the
@@ -10736,11 +11383,16 @@ def map_payload(
                 # object sitting in scope. The path itself is unchanged; only
                 # the repetition is removed.
                 _fb_key = f"api-fallback-v1::{_normalize_name(_p_name)}::{_normalize_name(_p_org)}"
+                if _p_scope is not None:
+                    _fb_key = (
+                        f"api-fallback-v2::{_normalize_name(_p_name)}"
+                        f"::tax:{_p_scope['requested_taxonomy_id']}>{_p_scope['bound_taxonomy_id']}"
+                    )
                 _fb_cached = cache.get("proteins", _fb_key)
                 if _fb_cached is not None:
                     _api_result = deepcopy(_fb_cached)
                 else:
-                    _api_result = map_protein_uniprot(client, _p_name, _p_org, cache=cache)
+                    _api_result = map_protein_uniprot(client, _p_name, _p_org, cache=cache, taxon_scope=_p_scope)
                     # A transport failure is NOT memoized. ``map_protein_uniprot``
                     # reports an unreachable UniProt as
                     # ``reason='network_error:...'`` with ``status='unmapped'``,
@@ -10756,6 +11408,9 @@ def map_payload(
                 # mineralocorticoid receptor) onto the E. coli entity 'mcr genes';
                 # it calls map_protein_uniprot with no row aliases, so its ladder
                 # degrades faster than the main one and it needs the check most.
+                _api_result = _break_gene_synonym_collision(
+                    _api_result, _p_name, _p_context["foreign_symbols"], _p_org
+                )
                 _api_result = _apply_name_plausibility_gate(
                     _api_result, _p_name, kind="protein", organism=_p_org
                 )
@@ -10765,6 +11420,12 @@ def map_payload(
                         _p_row["mapped_ids"] = _merge_mapped_ids(
                             _safe_dict(_p_row.get("mapped_ids")), _api_ids
                         )
+                        if _p_scope is not None:
+                            _p_row.setdefault("mapping_meta", {})["query"] = {
+                                "name": _p_name,
+                                "organism": _p_org,
+                                "taxonomy_id": str(_p_scope["requested_taxonomy_id"]),
+                            }
                         _p_row.setdefault("mapping_meta", {}).update({
                             "chosen_rule": "api_uniprot_fallback",
                             "resolution": {
@@ -10999,6 +11660,7 @@ def map_payload(
                 name=name,
                 organism=global_organism,
                 protein_row={"name": name},
+                identity_context=_identity_context({}, name, global_organism),
             )
             provider = str(result.get("provider") or ("PathBankDB" if result.get("source") == "db" else "UniProt"))
             source = str(result.get("source") or ("db" if provider == "PathBankDB" else "api"))
@@ -11036,7 +11698,11 @@ def map_payload(
                 result,
                 kind=gate_kind,
                 entity_name=name,
-                organism=global_organism if route["route"] == "protein" else "",
+                organism=(
+                    str(_safe_dict(result.get("identity_scope")).get("verdict_organism") or global_organism)
+                    if route["route"] == "protein"
+                    else ""
+                ),
             )
             if identity_report.get("rejected"):
                 # 'PhoP' lands here: a protein name routed through the compound
@@ -11067,7 +11733,11 @@ def map_payload(
                 result,
                 kind=gate_kind,
                 entity_name=name,
-                organism=global_organism if route["route"] == "protein" else "",
+                organism=(
+                    str(_safe_dict(result.get("identity_scope")).get("verdict_organism") or global_organism)
+                    if route["route"] == "protein"
+                    else ""
+                ),
             )
             if identity_report.get("rejected"):
                 name_gate_rejections += 1
@@ -11292,6 +11962,16 @@ def map_payload(
         # rule 3's pooled-draws check, which the app's post-pipeline run cannot see (ORCH-758 D4).
         _fold_unreferenced_duplicate_proteins(mapped, report)
         merge_on_mapped_identity(mapped, report=report)
+    # ORCH-762 / D-108 § 3: a borrowed identity is flagged with its source strain, in the
+    # mapping report and on the payload for the human-facing outputs, under a key no LLM
+    # prompt may carry (PROMPT_OMITTED_PAYLOAD_KEYS, D-104 amendment 2). Last, so it
+    # describes what the payload really ships; absent when nothing is borrowed, so every
+    # other payload and report keeps its exact shape.
+    borrowed = _borrowed_protein_identities(mapped, taxon_memo)
+    mapped.pop(BORROWED_PROTEIN_IDENTITIES_KEY, None)
+    if borrowed:
+        mapped[BORROWED_PROTEIN_IDENTITIES_KEY] = borrowed
+        report[BORROWED_PROTEIN_IDENTITIES_KEY] = deepcopy(borrowed)
     return {"payload": mapped, "report": report}
 
 

@@ -45,6 +45,9 @@ from t2pw.pipeline.strict_quarantine import (
 )
 
 FINAL_MAPPED_FILENAME = "final_mapped.json"
+#: ``t2pw.curation.prompt_payload_keys.BORROWED_PROTEIN_IDENTITIES_KEY``, spelled out: this
+#: module imports only the standard library and two leaf tables (see the module docstring).
+BORROWED_PROTEIN_IDENTITIES_KEY = "borrowed_protein_identities"
 PWML_IR_FILENAME = "pwml_ir.json"
 #: The PWML a strict leg writes (``batch.driver``: release-ready / review-required). A verdict
 #: is shown only when one of them is present: an IR exists even when validation stopped the
@@ -202,7 +205,28 @@ def _entity_index(payload: Mapping[str, Any]) -> Dict[str, Dict[str, Any]]:
     return index
 
 
-def _mapping(name: str, entity: Mapping[str, Any]) -> str:
+def _borrowed_flags(payload: Mapping[str, Any]) -> Dict[str, str]:
+    """D-108 § 3 (ORCH-762): name -> "UniProt Q9CHK2, from strain IL1403", as the mapping recorded it."""
+
+    return {
+        _norm(row.get("name")): _text(row.get("flag"))
+        for row in map(_dict, _list(payload.get(BORROWED_PROTEIN_IDENTITIES_KEY)))
+        if _text(row.get("name")) and _text(row.get("flag"))
+    }
+
+
+def _borrowed_for(name: str, index: Mapping[str, Dict[str, Any]], borrowed: Mapping[str, str]) -> str:
+    """The flag of ``name`` itself, or of each component when ``name`` is a complex (its wrapper)."""
+
+    flags = [borrowed[_norm(name)]] if _norm(name) in borrowed else []
+    for component in _list(_dict(index.get(_norm(name))).get("components")):
+        component_name = _text(_dict(component).get("name") if isinstance(component, dict) else component)
+        if _norm(component_name) in borrowed and _norm(component_name) != _norm(name):
+            flags.append(f"{component_name}: {borrowed[_norm(component_name)]}")
+    return "; ".join(flags)
+
+
+def _mapping(name: str, entity: Mapping[str, Any], borrowed: str = "") -> str:
     if not entity:
         return f"{name}: {NOT_RECORDED}"
     parts = [_show(_dict(_dict(entity.get("mapping_meta")).get("resolution")).get("status"))]
@@ -210,6 +234,8 @@ def _mapping(name: str, entity: Mapping[str, Any]) -> str:
         parts.append(f"db_status={_text(entity['db_status'])}")
     ids = [f"{key}={_text(entity[key])}" for key in _ID_FIELDS if _text(entity.get(key))]
     parts.append(", ".join(ids) or "no identifier recorded")
+    if borrowed:
+        parts.append(f"borrowed identity: {borrowed}")
     return f"{name}: " + "; ".join(parts)
 
 
@@ -399,6 +425,7 @@ def build_report(
     context = _dict(coverage.get("requested_context"))
     paper_id = _show(_dict(artifacts.get(LEG_TRACE_FILENAME)).get("paper_id"))
     index = _entity_index(payload)
+    borrowed = _borrowed_flags(payload)
     processes = _dict(payload.get("processes"))
 
     admitted: Dict[str, set] = {}
@@ -526,7 +553,11 @@ def build_report(
                 "scope": _text(row.get("scope_membership")),
                 "preservation": _text(row.get("preservation_status")),
                 "lineage": _lineage(row),
-                "mapping": [_mapping(n, index.get(_norm(n), {})) for n in [*_participant_names(row), *enzyme_names] if n],
+                "mapping": [
+                    _mapping(n, index.get(_norm(n), {}), _borrowed_for(n, index, borrowed))
+                    for n in [*_participant_names(row), *enzyme_names]
+                    if n
+                ],
                 "evidence": _quotes(row),
                 "sources": _sources(row, paper_id),
                 "duplicate_of": [],
