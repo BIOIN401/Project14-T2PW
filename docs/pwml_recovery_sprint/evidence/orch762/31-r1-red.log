@@ -1,0 +1,193 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch762\src\t2pw\__init__.py
+.............................FFFFFFF                                     [100%]
+================================== FAILURES ===================================
+_ test_g9_r1_a_failed_taxonomy_answer_never_falls_back_to_free_text[menaquinone_lactis_species.json] _
+
+tmp_path = WindowsPath('C:/t/bt-orch762/31-r1-red-17943/test_g9_r1_a_failed_taxonomy_a0')
+fixture = 'menaquinone_lactis_species.json'
+
+    @pytest.mark.parametrize("fixture", ["menaquinone_lactis_species.json", "menaquinone_kf147_merged.json"])
+    def test_g9_r1_a_failed_taxonomy_answer_never_falls_back_to_free_text(tmp_path: Path, fixture: str) -> None:
+        """B1: one 429 from UniProt taxonomy at Stage 6 (the app's Stage 6 runs ``use_cache=False``)."""
+    
+        from t2pw.pipeline.process_normalizer import normalize_process_payload
+    
+        http = _TaxonomyFails(budget=0)
+        with H.Doors(http):
+            first = H.stage2(H.load_fixture(fixture), tmp_path)
+            normalized, _ = normalize_process_payload(first["payload"])
+            http.failing, http.budget = True, -1
+            start = len(http.calls)
+            final = H.stage6(normalized, tmp_path)["payload"]
+        stage6_queries = [q for q in http.calls[start:] if q.startswith("https://rest.uniprot.org/uniprotkb/search")]
+>       assert stage6_queries and all("organism_id%3A" in q or "taxonomy_id%3A" in q for q in stage6_queries), \
+            "a free-text query was issued after the taxonomy answer failed"
+E       AssertionError: a free-text query was issued after the taxonomy answer failed
+E       assert (['https://rest.uniprot.org/uniprotkb/search?fields=accession%2Cprotein_name%2Cgene_names%2Corganism_name%2Creviewed%2C...ism_name%2Creviewed%2Corganism_id&format=json&query=%28protein_name%3A%22MenH%22+OR+gene%3A%22MenH%22%29&size=10', ...] and False)
+E        +  where False = all(<generator object test_g9_r1_a_failed_taxonomy_answer_never_falls_back_to_free_text.<locals>.<genexpr> at 0x0000028B7FE45FF0>)
+
+tests\test_orch762_protein_identity.py:572: AssertionError
+_ test_g9_r1_a_failed_taxonomy_answer_never_falls_back_to_free_text[menaquinone_kf147_merged.json] _
+
+tmp_path = WindowsPath('C:/t/bt-orch762/31-r1-red-17943/test_g9_r1_a_failed_taxonomy_a1')
+fixture = 'menaquinone_kf147_merged.json'
+
+    @pytest.mark.parametrize("fixture", ["menaquinone_lactis_species.json", "menaquinone_kf147_merged.json"])
+    def test_g9_r1_a_failed_taxonomy_answer_never_falls_back_to_free_text(tmp_path: Path, fixture: str) -> None:
+        """B1: one 429 from UniProt taxonomy at Stage 6 (the app's Stage 6 runs ``use_cache=False``)."""
+    
+        from t2pw.pipeline.process_normalizer import normalize_process_payload
+    
+        http = _TaxonomyFails(budget=0)
+        with H.Doors(http):
+            first = H.stage2(H.load_fixture(fixture), tmp_path)
+            normalized, _ = normalize_process_payload(first["payload"])
+            http.failing, http.budget = True, -1
+            start = len(http.calls)
+            final = H.stage6(normalized, tmp_path)["payload"]
+        stage6_queries = [q for q in http.calls[start:] if q.startswith("https://rest.uniprot.org/uniprotkb/search")]
+>       assert stage6_queries and all("organism_id%3A" in q or "taxonomy_id%3A" in q for q in stage6_queries), \
+            "a free-text query was issued after the taxonomy answer failed"
+E       AssertionError: a free-text query was issued after the taxonomy answer failed
+E       assert (['https://rest.uniprot.org/uniprotkb/search?fields=accession%2Cprotein_name%2Cgene_names%2Corganism_name%2Creviewed%2C...ism_name%2Creviewed%2Corganism_id&format=json&query=%28protein_name%3A%22MenH%22+OR+gene%3A%22MenH%22%29&size=10', ...] and False)
+E        +  where False = all(<generator object test_g9_r1_a_failed_taxonomy_answer_never_falls_back_to_free_text.<locals>.<genexpr> at 0x0000028B005732A0>)
+
+tests\test_orch762_protein_identity.py:572: AssertionError
+________ test_g9_r1_a_taxonomy_failure_is_not_remembered_for_the_pass _________
+
+tmp_path = WindowsPath('C:/t/bt-orch762/31-r1-red-17943/test_g9_r1_a_taxonomy_failure_0')
+
+    def test_g9_r1_a_taxonomy_failure_is_not_remembered_for_the_pass(tmp_path: Path) -> None:
+        """B1: the first taxonomy answer fails; the next protein asks again and gets the full scope."""
+    
+        http = _TaxonomyFails(budget=1)
+        with H.Doors(http):
+            payload = H.stage2(H.load_fixture("menaquinone_kf147_merged.json"), tmp_path)["payload"]
+        shipped = H.shipped_uniprot(payload)
+>       assert shipped["MenD"] == "Q9CHK0" and shipped["MenG"] == "P49016"
+E       AssertionError: assert ('' == 'Q9CHK0'
+E         
+E         - Q9CHK0)
+
+tests\test_orch762_protein_identity.py:587: AssertionError
+_______ test_g9_r1_a_borrowed_identity_off_the_reaction_lines_is_shown ________
+
+    def test_g9_r1_a_borrowed_identity_off_the_reaction_lines_is_shown() -> None:
+        """B2: a protein in an interaction only (no reaction line) still has its flag rendered."""
+    
+        from t2pw.app.reaction_evidence import build_report, render_text
+    
+        payload = {
+            "entities": {"species": [{"name": "Escherichia coli O157:H7", "taxonomy_id": "83334"}],
+                         "proteins": [{"name": "Fur", "mapped_ids": {"uniprot": "P0A9A9"}}], "compounds": [{"name": "Fe2+"}]},
+            "processes": {"reactions": [], "transports": [],
+                          "interactions": [{"entity_1": "Fur", "entity_2": "Fe2+", "interaction_type": "inhibition"}]},
+            BORROWED_KEY: [{"json_pointer": "/entities/proteins/0", "name": "Fur", "uniprot": "P0A9A9", "source_strain": "K12",
+                            "source_organism": "Escherichia coli (strain K12)", "source_taxonomy_id": "83333",
+                            "requested_organism": "Escherichia coli O157:H7", "requested_taxonomy_id": "83334",
+                            "route": "same_bound_gene_record", "flag": "UniProt P0A9A9, from strain K12"}],
+        }
+        text = render_text(build_report({"final_mapped.json": payload}))
+>       assert "UniProt P0A9A9, from strain K12" in text
+E       AssertionError: assert 'UniProt P0A9A9, from strain K12' in 'PATHWAY EVIDENCE REPORT\n=======================\nPaper: Not recorded\nPathway: Not recorded\nRequested organism (Sta...ot recorded\n\nCORE COVERAGE\n-------------\nRequested: Not recorded\nMatched: Not recorded\nUnmatched: Not recorded\n'
+
+tests\test_orch762_protein_identity.py:606: AssertionError
+______ test_g9_r1_every_borrowed_identity_of_the_kf147_replay_is_listed _______
+
+runs = {'ecoli_uniprot': ({'stage2': {'payload': {'biological_states': [{...}, {...}, {...}, {...}, {...}, {...}], 'element_l....}}}, <orch762_harness.Doors object at 0x0000028B7D20A350>, <orch762_harness.ReplayHttp object at 0x0000028B7D006350>)}
+
+    def test_g9_r1_every_borrowed_identity_of_the_kf147_replay_is_listed(runs: Dict[str, Any]) -> None:
+        from t2pw.app.reaction_evidence import build_report, render_text
+    
+        text = render_text(build_report({"final_mapped.json": _payload(runs, "kf147", "stage6")}))
+>       assert "BORROWED IDENTITIES (7)" in text
+E       AssertionError: assert 'BORROWED IDENTITIES (7)' in 'PATHWAY EVIDENCE REPORT\n=======================\nPaper: Not recorded\nPathway: Not recorded\nRequested organism (Sta...ot recorded\n\nCORE COVERAGE\n-------------\nRequested: Not recorded\nMatched: Not recorded\nUnmatched: Not recorded\n'
+
+tests\test_orch762_protein_identity.py:613: AssertionError
+___________ test_g9_r1_a_rerouted_compound_that_borrows_is_flagged ____________
+
+tmp_path = WindowsPath('C:/t/bt-orch762/31-r1-red-17943/test_g9_r1_a_rerouted_compound0')
+
+    def test_g9_r1_a_rerouted_compound_that_borrows_is_flagged(tmp_path: Path) -> None:
+        """B3: a compound row the compound loop resolves on the protein route, under a strain scope."""
+    
+        payload = {
+            "entities": {
+                "species": [{"name": "Lactococcus lactis subsp. lactis KF147", "taxonomy_id": "684738", "classification": "Prokaryote"}],
+                "proteins": [],
+                "compounds": [{"name": "MenF"}, {"name": "chorismate"}, {"name": "isochorismate"}],
+            },
+            "processes": {"reactions": [{"name": "r", "inputs": ["chorismate"], "outputs": ["isochorismate"], "enzymes": [{"protein": "MenF"}]}]},
+        }
+        http = _synthetic_http({"taxonomy_id:1360": [_entry("Q9CHJ9", "menF", IL1403, 272623)]})
+        with H.Doors(http):
+            mapped = H.stage2(payload, tmp_path)["payload"]
+        assert H.shipped_uniprot(mapped, "compounds")["MenF"] == "Q9CHJ9"
+        records = {row["json_pointer"]: row["flag"] for row in mapped.get(BORROWED_KEY) or []}
+>       assert records == {"/entities/compounds/0": "UniProt Q9CHJ9, from strain IL1403"}
+E       AssertionError: assert {} == {'/entities/c...train IL1403'}
+E         
+E         Right contains 1 more item:
+E         {'/entities/compounds/0': 'UniProt Q9CHJ9, from strain IL1403'}
+E         Use -v to get more diff
+
+tests\test_orch762_protein_identity.py:633: AssertionError
+_ test_g9_r1_exact_sequence_takes_no_subspecies_record_without_a_known_subspecies _
+
+tmp_path = WindowsPath('C:/t/bt-orch762/31-r1-red-17943/test_g9_r1_exact_sequence_take0')
+
+    def test_g9_r1_exact_sequence_takes_no_subspecies_record_without_a_known_subspecies(tmp_path: Path) -> None:
+        """Note a: FX5 applies the climbed tier's rule -- a strain whose lineage names no subspecies takes
+        no record filed under a subspecies, identical sequence or not."""
+    
+        lineage = {"999001": {"taxonId": 999001, "scientificName": "Lactococcus lactis (strain Z9)", "rank": "strain",
+                              "lineage": [{"taxonId": 1358, "scientificName": "Lactococcus lactis", "rank": "species"}]}}
+        uniparc = {
+            "gene:MenF": {"results": [{"uniParcId": "UPI0000TEST02"}]},
+            "UPI0000TEST02": {"uniParcCrossReferences": [{"database": "UniProtKB/TrEMBL", "id": "Q9CHJ9", "active": True,
+                                                           "organism": {"taxonId": 272623}}]},
+        }
+        http = _synthetic_http({"accession:Q9CHJ9) AND taxonomy_id:1358": [_entry("Q9CHJ9", "menF", IL1403, 272623)]},
+                               uniparc=uniparc, lineage=lineage)
+        payload = _one_protein(tmp_path, http, organism="Lactococcus lactis Z9", taxonomy_id="999001")
+>       assert H.shipped_uniprot(payload)["MenF"] == ""
+E       AssertionError: assert 'Q9CHJ9' == ''
+E         
+E         + Q9CHJ9
+
+tests\test_orch762_protein_identity.py:650: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_orch762_protein_identity.py::test_g9_r1_a_failed_taxonomy_answer_never_falls_back_to_free_text[menaquinone_lactis_species.json]
+FAILED tests/test_orch762_protein_identity.py::test_g9_r1_a_failed_taxonomy_answer_never_falls_back_to_free_text[menaquinone_kf147_merged.json]
+FAILED tests/test_orch762_protein_identity.py::test_g9_r1_a_taxonomy_failure_is_not_remembered_for_the_pass
+FAILED tests/test_orch762_protein_identity.py::test_g9_r1_a_borrowed_identity_off_the_reaction_lines_is_shown
+FAILED tests/test_orch762_protein_identity.py::test_g9_r1_every_borrowed_identity_of_the_kf147_replay_is_listed
+FAILED tests/test_orch762_protein_identity.py::test_g9_r1_a_rerouted_compound_that_borrows_is_flagged
+FAILED tests/test_orch762_protein_identity.py::test_g9_r1_exact_sequence_takes_no_subspecies_record_without_a_known_subspecies
+7 failed, 29 passed in 2.38s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch762\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 9935cf702bb07f552f2d08aa0833b67311ec1a36  [git, worktree dirty=False]
+label                   : r1-red
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-762/31-r1-red.pin.json -q --basetemp=C:/t/bt-orch762/31-r1-red-17943 tests/test_orch762_protein_identity.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch762
+root PID / process group: 313064 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 520 s
+duration                : 3.36 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  313040:python.exe
+descendants terminated  : 1  313040
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch762\docs\pwml_recovery_sprint\evidence\g11\ORCH-762\31-r1-red.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================

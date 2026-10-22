@@ -380,3 +380,75 @@ Unchanged from § ORCH-754, § ORCH-757 and § ORCH-757i; all six seen here are 
 | `docs/pwml_recovery_sprint/evidence/orch759a/make_fixture.py` | `30942f32` | excerpt recipe |
 | `docs/pwml_recovery_sprint/evidence/orch759a/mutations.py`, logs `01`-`27`, `evidence/g11/ORCH-759a/`, `evidence/g11/pin/ORCH-759a/` | docs commit | evidence |
 | this file | docs commit | record |
+
+## 10. Repair round 1
+
+Review round 0 **rejected** the lane on two blocking findings under standard item 1: "the fold can fire on a
+referenced row, or drop a quote". It also asked for two additions to the record. Nothing else changed.
+
+| | |
+|---|---|
+| tests first, on the round-0 code | `03673599` |
+| code | `f7790501` (`map_ids.py` only, +36 −9 against `493c1a10`) |
+| docs/evidence | the commit that adds this section |
+
+### The findings and the fix
+
+- **B1 — a referenced row could fold.** In round 0, `referenced()` excused an alias whenever ANY other protein or
+  complex row also held it, including an unrelated protein. The reviewer's probe 34:
+  - the duplicate (P11454) and an unrelated protein (P99999) both list `shared alias`, and a reaction enzyme names it;
+  - `strict_quarantine._build_registry().resolve("shared alias")` returns the duplicate, yet the fold fired;
+  - after the fold the alias resolved to P99999, so the reaction's enzyme had moved to another protein.
+
+  **Fix:** an alias is excused only when, after the fold, it still resolves to the same thing:
+  - it is another protein's or complex's own **name**, or
+  - every other protein holding it shares this row's admitted identity (`same_identity`: at least one admitted
+    accession shared, none disagreeing).
+
+  The name and the `key` always count. I added one condition beyond the reviewer's rule: a complex holding the
+  alias as a synonym (not its name) also keeps the reference. A registry lookup could otherwise move the reference
+  to that complex. This only blocks folds; it never permits one.
+- **B2 — quotes were dropped silently.** `_entity_quotes` read only plain-string `evidence` / `source_refs`, so
+  `evidence_quote` and `source_evidence` vanished (probe 33, `quotes_moved: []`).
+
+  **Fix:** it reads `_ENTITY_QUOTE_KEYS = ("evidence", "source_refs", "evidence_quote", "source_evidence",
+  "source_text")`. These are `entity_admission._spans`' keys plus `apply_audit_patch._ACTOR_ROW_EVIDENCE_KEYS`.
+  Each may be a string or a list, and a dict entry contributes its `span`, `text` or `quote`. `quote` is one key
+  beyond the request; it is the dict key `app/reaction_evidence._quotes` also reads.
+- **N1:** each fold record carries `folded_mapped_ids`, the folded row's whole `mapped_ids`.
+- **N5:** each fold record carries `folded_provenance_lineage`, `folded_rag_provenance` and `folded_source_papers`.
+  The record stays under the skipped key, so § 4's LLM argument is unchanged.
+
+These answer § 7 item 5 (lineage) with option (a). The other § 7 items stand.
+
+### New tests (new acceptance, in `tests/test_orch759a_duplicate_protein_fold.py`, now 37)
+
+- `test_new_an_alias_held_by_an_unrelated_row_still_names_the_duplicate[unrelated_protein, complex_alias]` (B1).
+  It asserts the registry resolves `shared alias` to the duplicate before the fold, then that nothing folds and the
+  payload is byte-identical.
+- `test_new_an_alias_held_only_by_rows_of_the_same_identity_is_not_a_reference` (B1's other side: EntF holds the
+  alias, so the fold fires).
+- `test_new_every_quote_field_moves_with_the_fold` (B2: all five keys and dict `span`/`text` entries; a quote the
+  survivor already holds does not move twice).
+- `test_new_the_fold_keeps_the_name_and_every_quote_and_records_them` now also asserts the N1/N5 fields.
+
+### Gates (round 1)
+
+| gate | report | result |
+|---|---|---|
+| repair tests on round-0 code (`03673599`) | `28-r1-red` | **4 failed**, 33 passed. The failures: both B1 cases, the B2 case, and the record test (N1/N5). The same-identity case passes there too, as the preservation side should |
+| G9 + acceptance at `f7790501` | `29-r1-g9-green` | **37 passed** |
+| app path, each node alone | `30`, `31` | 1 + 1 passed |
+| SMOKE | `32-r1-smoke` | **508 passed** |
+| affected sweep A (29 files) | `33` | 710 passed, 4 failed, 3 skipped |
+| affected sweep B (28 files) | `34` | 780 passed, 1 failed |
+| mutations (M5 updated to the new line; M10 and M11 added: round 0's B1 and B2 behaviour) | `35-r1-mutations` | **11/11 killed**, sources restored |
+
+The 5 failures in `33` and `34` are the same nodes as round 0, all red on base `src/` in `27`. Every report shows
+`FINAL SURVIVING COUNT : 0`.
+
+### TEST_MATRIX delta: supersedes § 8's numbers
+
+In the § 8 text, `tests/test_orch759a_duplicate_protein_fold.py` is **37** tests (was 33). Its G9 line becomes:
+"G9: 2 `test_g9_*` red at base (`01`), 33 green at round 0 (`02`), 37 green at repair round 1 (`29`); the four
+repair-round tests red on the round-0 code (`28`)". Reports run to `35`. Everything else in § 8 stands.

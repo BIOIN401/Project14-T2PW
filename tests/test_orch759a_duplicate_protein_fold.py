@@ -307,9 +307,14 @@ def _fold(payload: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def test_new_the_fold_keeps_the_name_and_every_quote_and_records_them() -> None:
+    lineage = [{"stage": "audit_repair", "origin": "audit_modified", "sources": []}]
+    rag = {"source_id": "PMC0000001", "section": "results", "chunk_id": "c7"}
+    papers = [{"source_id": "PMC0000001", "title": "a supporting paper"}]
     duplicate = _row("enterobactin synthase", evidence="EntF (enterobactin synthase) acts last.",
                      source_refs=["the synthase assembles the trilactone", "EntF is the synthetase."],
-                     synonyms=["enterobactin synthetase"])
+                     synonyms=["enterobactin synthetase"], provenance_lineage=lineage, rag_provenance=rag,
+                     source_papers=papers)
+    duplicate["mapped_ids"]["gene_name"] = "entF"
     payload = _e1(duplicate)
     report = _fold(payload)
     assert _protein_names(payload) == ["EntF"]
@@ -325,8 +330,29 @@ def test_new_the_fold_keeps_the_name_and_every_quote_and_records_them() -> None:
         "alias_added": "enterobactin synthase",
         "quotes_moved": ["EntF (enterobactin synthase) acts last.", "the synthase assembles the trilactone"],
         "folded_row_names": ["enterobactin synthase", "enterobactin synthetase"],
+        # Repair round 1, N1 and N5: the folded row's whole identity and provenance are kept.
+        "folded_mapped_ids": {"uniprot": "P11454", "gene_name": "entF"},
+        "folded_provenance_lineage": lineage,
+        "folded_rag_provenance": rag,
+        "folded_source_papers": papers,
     }]
     assert [e["json_pointer"] for e in report["entities"]] == ["/entities/proteins/0", "/entities/proteins/0"]
+
+
+def test_new_every_quote_field_moves_with_the_fold() -> None:
+    """Repair round 1, B2: every evidence-bearing field ``entity_admission._spans`` and
+    ``apply_audit_patch._ACTOR_ROW_EVIDENCE_KEYS`` read, dict ``span``/``text`` entries included."""
+
+    duplicate = _row("enterobactin synthase", evidence="q evidence", evidence_quote="q evidence_quote",
+                     source_evidence=["q source_evidence"], source_text="q source_text",
+                     source_refs=[{"span": "q span"}, {"text": "q text"}, "EntF is the synthetase."])
+    payload = _e1(duplicate)
+    [fold] = _fold(payload)[FOLDS_KEY]
+    # "EntF is the synthetase." is already the survivor's own evidence, so it does not move twice.
+    expected = ["q evidence", "q span", "q text", "q evidence_quote", "q source_evidence", "q source_text"]
+    assert fold["quotes_moved"] == expected
+    [entf] = payload["entities"]["proteins"]
+    assert entf["source_refs"] == expected
 
 
 @pytest.mark.parametrize("duplicate", [
@@ -411,6 +437,44 @@ def test_new_an_alias_another_row_holds_does_not_count_as_a_reference_to_the_dup
     payload["processes"]["reactions"][0]["enzymes"].append({"entity": "enterobactin synthase complex"})
     payload["processes"]["interactions"] = [{"entity_1": "entF", "entity_2": "enterobactin", "relationship": "binds"}]
     assert [f["folded"] for f in _fold(payload)[FOLDS_KEY]] == ["enterobactin synthase"]
+
+
+def _shared_alias_payload(holder: str) -> Dict[str, Any]:
+    """Repair round 1, B1 (the reviewer's probe 34): the duplicate lists ``shared alias``, a
+    reaction enzyme names it, and ``holder`` says who else holds it."""
+
+    payload = _e1(_row("enterobactin synthase", synonyms=["shared alias"]))
+    if holder == "unrelated_protein":
+        payload["entities"]["proteins"].append(_row("OtherP", uniprot="P99999", synonyms=["shared alias"]))
+    elif holder == "complex_alias":
+        payload["entities"]["protein_complexes"].append({"name": "other complex", "synonyms": ["shared alias"],
+                                                        "components": [{"name": "EntF"}]})
+    elif holder == "same_identity_protein":
+        payload["entities"]["proteins"][0]["synonyms"].append("shared alias")
+    payload["processes"]["reactions"][0]["enzymes"].append({"entity": "shared alias", "entity_type": "protein"})
+    return payload
+
+
+@pytest.mark.parametrize("holder", ["unrelated_protein", "complex_alias"])
+def test_new_an_alias_held_by_an_unrelated_row_still_names_the_duplicate(holder: str) -> None:
+    """B1: the registry resolves ``shared alias`` to the duplicate today; folding it would move
+    the reaction's enzyme to another protein (P99999) or to a complex. So it is a reference."""
+
+    from t2pw.pipeline.strict_quarantine import _build_registry
+
+    payload = _shared_alias_payload(holder)
+    assert _build_registry(payload).resolve("shared alias")[1]["name"] == "enterobactin synthase"
+    before = json.dumps(payload, sort_keys=True)
+    assert FOLDS_KEY not in _fold(payload)
+    assert json.dumps(payload, sort_keys=True) == before
+
+
+def test_new_an_alias_held_only_by_rows_of_the_same_identity_is_not_a_reference() -> None:
+    """B1, the other side: when every other protein holding the alias shares the duplicate's
+    admitted identity, the alias still resolves to that protein after the fold."""
+
+    payload = _shared_alias_payload("same_identity_protein")
+    assert [(f["survivor"], f["folded"]) for f in _fold(payload)[FOLDS_KEY]] == [("EntF", "enterobactin synthase")]
 
 
 def test_new_two_unreferenced_rows_never_fold_into_each_other() -> None:
