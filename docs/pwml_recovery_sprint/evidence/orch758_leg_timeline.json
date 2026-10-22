@@ -1,0 +1,1238 @@
+{
+ "ara_operon-research": {
+  "status": "pass",
+  "elapsed": 2381.69,
+  "last_model_event": 2253,
+  "empty_seconds": 875,
+  "per_stage": {
+   "preprocessor": {
+    "n": 1,
+    "empty": 0,
+    "secs": 67,
+    "empty_secs": 0
+   },
+   "Stage 1 extraction": {
+    "n": 6,
+    "empty": 0,
+    "secs": 665,
+    "empty_secs": 0
+   },
+   "rag_prose_extraction": {
+    "n": 14,
+    "empty": 0,
+    "secs": 85,
+    "empty_secs": 0
+   },
+   "Stage 2 inference": {
+    "n": 7,
+    "empty": 3,
+    "secs": 1068,
+    "empty_secs": 506
+   },
+   "audit loop": {
+    "n": 6,
+    "empty": 6,
+    "secs": 369,
+    "empty_secs": 369
+   }
+  },
+  "phases": [
+   {
+    "stage": "preprocessor",
+    "start": 0,
+    "n": 1,
+    "empty": 0,
+    "empty_secs": 0,
+    "end": 67
+   },
+   {
+    "stage": "Stage 1 extraction",
+    "start": 67,
+    "n": 6,
+    "empty": 0,
+    "empty_secs": 0,
+    "end": 731
+   },
+   {
+    "stage": "rag_prose_extraction",
+    "start": 731,
+    "n": 14,
+    "empty": 0,
+    "empty_secs": 0,
+    "end": 816
+   },
+   {
+    "stage": "Stage 2 inference",
+    "start": 816,
+    "n": 7,
+    "empty": 3,
+    "empty_secs": 506,
+    "end": 1884
+   },
+   {
+    "stage": "audit loop",
+    "start": 1884,
+    "n": 6,
+    "empty": 6,
+    "empty_secs": 369,
+    "end": 2253
+   }
+  ]
+ },
+ "ara_operon-strict": {
+  "status": "timeout",
+  "elapsed": 3600.5,
+  "last_model_event": 3579,
+  "empty_seconds": 2194,
+  "per_stage": {
+   "preprocessor": {
+    "n": 1,
+    "empty": 0,
+    "secs": 66,
+    "empty_secs": 0
+   },
+   "Stage 1 extraction": {
+    "n": 6,
+    "empty": 0,
+    "secs": 797,
+    "empty_secs": 0
+   },
+   "rag_prose_extraction": {
+    "n": 10,
+    "empty": 0,
+    "secs": 36,
+    "empty_secs": 0
+   },
+   "Stage 2 inference": {
+    "n": 24,
+    "empty": 19,
+    "secs": 2554,
+    "empty_secs": 2084
+   },
+   "inference json repair": {
+    "n": 1,
+    "empty": 0,
+    "secs": 16,
+    "empty_secs": 0
+   },
+   "chat": {
+    "n": 6,
+    "empty": 6,
+    "secs": 110,
+    "empty_secs": 110
+   }
+  },
+  "phases": [
+   {
+    "stage": "preprocessor",
+    "start": 0,
+    "n": 1,
+    "empty": 0,
+    "empty_secs": 0,
+    "end": 66
+   },
+   {
+    "stage": "Stage 1 extraction",
+    "start": 66,
+    "n": 6,
+    "empty": 0,
+    "empty_secs": 0,
+    "end": 863
+   },
+   {
+    "stage": "rag_prose_extraction",
+    "start": 863,
+    "n": 10,
+    "empty": 0,
+    "empty_secs": 0,
+    "end": 899
+   },
+   {
+    "stage": "Stage 2 inference",
+    "start": 899,
+    "n": 11,
+    "empty": 9,
+    "empty_secs": 974,
+    "end": 2139
+   },
+   {
+    "stage": "inference json repair",
+    "start": 2139,
+    "n": 1,
+    "empty": 0,
+    "empty_secs": 0,
+    "end": 2154
+   },
+   {
+    "stage": "Stage 2 inference",
+    "start": 2154,
+    "n": 13,
+    "empty": 10,
+    "empty_secs": 1111,
+    "end": 3469
+   },
+   {
+    "stage": "chat",
+    "start": 3469,
+    "n": 6,
+    "empty": 6,
+    "empty_secs": 110,
+    "end": 3579
+   }
+  ]
+ },
+ "chlorophyll-research": {
+  "status": "timeout",
+  "elapsed": 3600.67,
+  "last_model_event": 3478,
+  "empty_seconds": 1024,
+  "per_stage": {
+   "preprocessor": {
+    "n": 1,
+    "empty": 0,
+    "secs": 46,
+    "empty_secs": 0
+   },
+   "Stage 1 extraction": {
+    "n": 6,
+    "empty": 0,
+    "secs": 2166,
+    "empty_secs": 0
+   },
+   "rag_prose_extraction": {
+    "n": 26,
+    "empty": 8,
+    "secs": 638,
+    "empty_secs": 395
+   },
+   "Stage 2 inference": {
+    "n": 3,
+    "empty": 3,
+    "secs": 628,
+    "empty_secs": 628
+   }
+  },
+  "phases": [
+   {
+    "stage": "preprocessor",
+    "start": 0,
+    "n": 1,
+    "empty": 0,
+    "empty_secs": 0,
+    "end": 46
+   },
+   {
+    "stage": "Stage 1 extraction",
+    "start": 46,
+    "n": 6,
+    "empty": 0,
+    "empty_secs": 0,
+    "end": 2212
+   },
+   {
+    "stage": "rag_prose_extraction",
+    "start": 2212,
+    "n": 26,
+    "empty": 8,
+    "empty_secs": 395,
+    "end": 2850
+   },
+   {
+    "stage": "Stage 2 inference",
+    "start": 2850,
+    "n": 3,
+    "empty": 3,
+    "empty_secs": 628,
+    "end": 3478
+   }
+  ]
+ },
+ "chlorophyll-strict": {
+  "status": "timeout",
+  "elapsed": 3600.43,
+  "last_model_event": 3559,
+  "empty_seconds": 1344,
+  "per_stage": {
+   "preprocessor": {
+    "n": 1,
+    "empty": 0,
+    "secs": 32,
+    "empty_secs": 0
+   },
+   "Stage 1 extraction": {
+    "n": 6,
+    "empty": 0,
+    "secs": 2071,
+    "empty_secs": 0
+   },
+   "rag_prose_extraction": {
+    "n": 31,
+    "empty": 13,
+    "secs": 519,
+    "empty_secs": 407
+   },
+   "Stage 2 inference": {
+    "n": 8,
+    "empty": 8,
+    "secs": 937,
+    "empty_secs": 937
+   }
+  },
+  "phases": [
+   {
+    "stage": "preprocessor",
+    "start": 0,
+    "n": 1,
+    "empty": 0,
+    "empty_secs": 0,
+    "end": 32
+   },
+   {
+    "stage": "Stage 1 extraction",
+    "start": 32,
+    "n": 6,
+    "empty": 0,
+    "empty_secs": 0,
+    "end": 2103
+   },
+   {
+    "stage": "rag_prose_extraction",
+    "start": 2103,
+    "n": 31,
+    "empty": 13,
+    "empty_secs": 407,
+    "end": 2622
+   },
+   {
+    "stage": "Stage 2 inference",
+    "start": 2622,
+    "n": 8,
+    "empty": 8,
+    "empty_secs": 937,
+    "end": 3559
+   }
+  ]
+ },
+ "enterobactin-research": {
+  "status": "pass",
+  "elapsed": 3447.7,
+  "last_model_event": 3414,
+  "empty_seconds": 1960,
+  "per_stage": {
+   "preprocessor": {
+    "n": 5,
+    "empty": 0,
+    "secs": 180,
+    "empty_secs": 0
+   },
+   "Stage 1 extraction": {
+    "n": 3,
+    "empty": 0,
+    "secs": 563,
+    "empty_secs": 0
+   },
+   "rag_prose_extraction": {
+    "n": 25,
+    "empty": 9,
+    "secs": 412,
+    "empty_secs": 264
+   },
+   "Stage 2 inference": {
+    "n": 7,
+    "empty": 5,
+    "secs": 1257,
+    "empty_secs": 919
+   },
+   "inference json repair": {
+    "n": 2,
+    "empty": 0,
+    "secs": 47,
+    "empty_secs": 0
+   },
+   "chat": {
+    "n": 24,
+    "empty": 24,
+    "secs": 525,
+    "empty_secs": 525
+   },
+   "audit loop": {
+    "n": 5,
+    "empty": 3,
+    "secs": 126,
+    "empty_secs": 78
+   },
+   "gap resolver": {
+    "n": 17,
+    "empty": 13,
+    "secs": 304,
+    "empty_secs": 174
+   }
+  },
+  "phases": [
+   {
+    "stage": "preprocessor",
+    "start": 0,
+    "n": 1,
+    "empty": 0,
+    "empty_secs": 0,
+    "end": 35
+   },
+   {
+    "stage": "Stage 1 extraction",
+    "start": 35,
+    "n": 3,
+    "empty": 0,
+    "empty_secs": 0,
+    "end": 598
+   },
+   {
+    "stage": "preprocessor",
+    "start": 598,
+    "n": 4,
+    "empty": 0,
+    "empty_secs": 0,
+    "end": 743
+   },
+   {
+    "stage": "rag_prose_extraction",
+    "start": 743,
+    "n": 25,
+    "empty": 9,
+    "empty_secs": 264,
+    "end": 1154
+   },
+   {
+    "stage": "Stage 2 inference",
+    "start": 1154,
+    "n": 6,
+    "empty": 5,
+    "empty_secs": 919,
+    "end": 2221
+   },
+   {
+    "stage": "inference json repair",
+    "start": 2221,
+    "n": 1,
+    "empty": 0,
+    "empty_secs": 0,
+    "end": 2265
+   },
+   {
+    "stage": "Stage 2 inference",
+    "start": 2265,
+    "n": 1,
+    "empty": 0,
+    "empty_secs": 0,
+    "end": 2456
+   },
+   {
+    "stage": "inference json repair",
+    "start": 2456,
+    "n": 1,
+    "empty": 0,
+    "empty_secs": 0,
+    "end": 2459
+   },
+   {
+    "stage": "chat",
+    "start": 2459,
+    "n": 12,
+    "empty": 12,
+    "empty_secs": 200,
+    "end": 2659
+   },
+   {
+    "stage": "audit loop",
+    "start": 2659,
+    "n": 5,
+    "empty": 3,
+    "empty_secs": 78,
+    "end": 2785
+   },
+   {
+    "stage": "gap resolver",
+    "start": 2785,
+    "n": 7,
+    "empty": 6,
+    "empty_secs": 39,
+    "end": 2832
+   },
+   {
+    "stage": "chat",
+    "start": 2832,
+    "n": 6,
+    "empty": 6,
+    "empty_secs": 63,
+    "end": 2895
+   },
+   {
+    "stage": "gap resolver",
+    "start": 2895,
+    "n": 10,
+    "empty": 7,
+    "empty_secs": 135,
+    "end": 3152
+   },
+   {
+    "stage": "chat",
+    "start": 3152,
+    "n": 6,
+    "empty": 6,
+    "empty_secs": 262,
+    "end": 3414
+   }
+  ]
+ },
+ "enterobactin-strict": {
+  "status": "fail",
+  "elapsed": 2212.52,
+  "last_model_event": 2183,
+  "empty_seconds": 735,
+  "per_stage": {
+   "preprocessor": {
+    "n": 5,
+    "empty": 0,
+    "secs": 182,
+    "empty_secs": 0
+   },
+   "Stage 1 extraction": {
+    "n": 3,
+    "empty": 0,
+    "secs": 692,
+    "empty_secs": 0
+   },
+   "rag_prose_extraction": {
+    "n": 21,
+    "empty": 2,
+    "secs": 308,
+    "empty_secs": 60
+   },
+   "Stage 2 inference": {
+    "n": 3,
+    "empty": 1,
+    "secs": 348,
+    "empty_secs": 95
+   },
+   "inference json repair": {
+    "n": 2,
+    "empty": 0,
+    "secs": 74,
+    "empty_secs": 0
+   },
+   "audit loop": {
+    "n": 6,
+    "empty": 6,
+    "secs": 333,
+    "empty_secs": 333
+   },
+   "chat": {
+    "n": 3,
+    "empty": 3,
+    "secs": 246,
+    "empty_secs": 246
+   }
+  },
+  "phases": [
+   {
+    "stage": "preprocessor",
+    "start": 0,
+    "n": 1,
+    "empty": 0,
+    "empty_secs": 0,
+    "end": 50
+   },
+   {
+    "stage": "Stage 1 extraction",
+    "start": 50,
+    "n": 3,
+    "empty": 0,
+    "empty_secs": 0,
+    "end": 742
+   },
+   {
+    "stage": "preprocessor",
+    "start": 742,
+    "n": 4,
+    "empty": 0,
+    "empty_secs": 0,
+    "end": 874
+   },
+   {
+    "stage": "rag_prose_extraction",
+    "start": 874,
+    "n": 21,
+    "empty": 2,
+    "empty_secs": 60,
+    "end": 1181
+   },
+   {
+    "stage": "Stage 2 inference",
+    "start": 1181,
+    "n": 2,
+    "empty": 1,
+    "empty_secs": 95,
+    "end": 1393
+   },
+   {
+    "stage": "inference json repair",
+    "start": 1393,
+    "n": 1,
+    "empty": 0,
+    "empty_secs": 0,
+    "end": 1431
+   },
+   {
+    "stage": "Stage 2 inference",
+    "start": 1431,
+    "n": 1,
+    "empty": 0,
+    "empty_secs": 0,
+    "end": 1568
+   },
+   {
+    "stage": "inference json repair",
+    "start": 1568,
+    "n": 1,
+    "empty": 0,
+    "empty_secs": 0,
+    "end": 1603
+   },
+   {
+    "stage": "audit loop",
+    "start": 1603,
+    "n": 6,
+    "empty": 6,
+    "empty_secs": 333,
+    "end": 1937
+   },
+   {
+    "stage": "chat",
+    "start": 1937,
+    "n": 3,
+    "empty": 3,
+    "empty_secs": 246,
+    "end": 2183
+   }
+  ]
+ },
+ "menaquinone-research": {
+  "status": "timeout",
+  "elapsed": 3582.88,
+  "last_model_event": 3582,
+  "empty_seconds": 1983,
+  "per_stage": {
+   "preprocessor": {
+    "n": 8,
+    "empty": 0,
+    "secs": 264,
+    "empty_secs": 0
+   },
+   "Stage 1 extraction": {
+    "n": 6,
+    "empty": 0,
+    "secs": 623,
+    "empty_secs": 0
+   },
+   "rag_prose_extraction": {
+    "n": 28,
+    "empty": 6,
+    "secs": 310,
+    "empty_secs": 186
+   },
+   "Stage 2 inference": {
+    "n": 23,
+    "empty": 19,
+    "secs": 2236,
+    "empty_secs": 1797
+   },
+   "inference json repair": {
+    "n": 3,
+    "empty": 0,
+    "secs": 149,
+    "empty_secs": 0
+   }
+  },
+  "phases": [
+   {
+    "stage": "preprocessor",
+    "start": 0,
+    "n": 1,
+    "empty": 0,
+    "empty_secs": 0,
+    "end": 16
+   },
+   {
+    "stage": "Stage 1 extraction",
+    "start": 16,
+    "n": 6,
+    "empty": 0,
+    "empty_secs": 0,
+    "end": 639
+   },
+   {
+    "stage": "preprocessor",
+    "start": 639,
+    "n": 7,
+    "empty": 0,
+    "empty_secs": 0,
+    "end": 887
+   },
+   {
+    "stage": "rag_prose_extraction",
+    "start": 887,
+    "n": 28,
+    "empty": 6,
+    "empty_secs": 186,
+    "end": 1197
+   },
+   {
+    "stage": "Stage 2 inference",
+    "start": 1197,
+    "n": 7,
+    "empty": 6,
+    "empty_secs": 554,
+    "end": 1884
+   },
+   {
+    "stage": "inference json repair",
+    "start": 1884,
+    "n": 1,
+    "empty": 0,
+    "empty_secs": 0,
+    "end": 1899
+   },
+   {
+    "stage": "Stage 2 inference",
+    "start": 1899,
+    "n": 9,
+    "empty": 7,
+    "empty_secs": 658,
+    "end": 2738
+   },
+   {
+    "stage": "inference json repair",
+    "start": 2738,
+    "n": 1,
+    "empty": 0,
+    "empty_secs": 0,
+    "end": 2751
+   },
+   {
+    "stage": "Stage 2 inference",
+    "start": 2751,
+    "n": 7,
+    "empty": 6,
+    "empty_secs": 585,
+    "end": 3461
+   },
+   {
+    "stage": "inference json repair",
+    "start": 3461,
+    "n": 1,
+    "empty": 0,
+    "empty_secs": 0,
+    "end": 3582
+   }
+  ]
+ },
+ "menaquinone-strict": {
+  "status": "timeout",
+  "elapsed": 3600.28,
+  "last_model_event": 3569,
+  "empty_seconds": 1754,
+  "per_stage": {
+   "preprocessor": {
+    "n": 8,
+    "empty": 0,
+    "secs": 247,
+    "empty_secs": 0
+   },
+   "Stage 1 extraction": {
+    "n": 8,
+    "empty": 2,
+    "secs": 2153,
+    "empty_secs": 1046
+   },
+   "rag_prose_extraction": {
+    "n": 30,
+    "empty": 9,
+    "secs": 310,
+    "empty_secs": 207
+   },
+   "Stage 2 inference": {
+    "n": 7,
+    "empty": 3,
+    "secs": 600,
+    "empty_secs": 266
+   },
+   "audit loop": {
+    "n": 9,
+    "empty": 8,
+    "secs": 259,
+    "empty_secs": 236
+   }
+  },
+  "phases": [
+   {
+    "stage": "preprocessor",
+    "start": 0,
+    "n": 1,
+    "empty": 0,
+    "empty_secs": 0,
+    "end": 43
+   },
+   {
+    "stage": "Stage 1 extraction",
+    "start": 43,
+    "n": 8,
+    "empty": 2,
+    "empty_secs": 1046,
+    "end": 2196
+   },
+   {
+    "stage": "preprocessor",
+    "start": 2196,
+    "n": 7,
+    "empty": 0,
+    "empty_secs": 0,
+    "end": 2400
+   },
+   {
+    "stage": "rag_prose_extraction",
+    "start": 2400,
+    "n": 30,
+    "empty": 9,
+    "empty_secs": 207,
+    "end": 2710
+   },
+   {
+    "stage": "Stage 2 inference",
+    "start": 2710,
+    "n": 7,
+    "empty": 3,
+    "empty_secs": 266,
+    "end": 3310
+   },
+   {
+    "stage": "audit loop",
+    "start": 3310,
+    "n": 9,
+    "empty": 8,
+    "empty_secs": 236,
+    "end": 3569
+   }
+  ]
+ },
+ "sour_taste-research": {
+  "status": "pass",
+  "elapsed": 1969.93,
+  "last_model_event": 1897,
+  "empty_seconds": 1347,
+  "per_stage": {
+   "preprocessor": {
+    "n": 1,
+    "empty": 0,
+    "secs": 74,
+    "empty_secs": 0
+   },
+   "Stage 1 extraction": {
+    "n": 4,
+    "empty": 1,
+    "secs": 1279,
+    "empty_secs": 946
+   },
+   "rag_prose_extraction": {
+    "n": 8,
+    "empty": 0,
+    "secs": 36,
+    "empty_secs": 0
+   },
+   "Stage 2 inference": {
+    "n": 2,
+    "empty": 0,
+    "secs": 107,
+    "empty_secs": 0
+   },
+   "audit loop": {
+    "n": 6,
+    "empty": 6,
+    "secs": 401,
+    "empty_secs": 401
+   }
+  },
+  "phases": [
+   {
+    "stage": "preprocessor",
+    "start": 0,
+    "n": 1,
+    "empty": 0,
+    "empty_secs": 0,
+    "end": 74
+   },
+   {
+    "stage": "Stage 1 extraction",
+    "start": 74,
+    "n": 4,
+    "empty": 1,
+    "empty_secs": 946,
+    "end": 1353
+   },
+   {
+    "stage": "rag_prose_extraction",
+    "start": 1353,
+    "n": 8,
+    "empty": 0,
+    "empty_secs": 0,
+    "end": 1389
+   },
+   {
+    "stage": "Stage 2 inference",
+    "start": 1389,
+    "n": 2,
+    "empty": 0,
+    "empty_secs": 0,
+    "end": 1496
+   },
+   {
+    "stage": "audit loop",
+    "start": 1496,
+    "n": 6,
+    "empty": 6,
+    "empty_secs": 401,
+    "end": 1897
+   }
+  ]
+ },
+ "sour_taste-strict": {
+  "status": "fail",
+  "elapsed": 1655.08,
+  "last_model_event": 1620,
+  "empty_seconds": 790,
+  "per_stage": {
+   "preprocessor": {
+    "n": 1,
+    "empty": 0,
+    "secs": 168,
+    "empty_secs": 0
+   },
+   "Stage 1 extraction": {
+    "n": 3,
+    "empty": 0,
+    "secs": 397,
+    "empty_secs": 0
+   },
+   "rag_prose_extraction": {
+    "n": 8,
+    "empty": 0,
+    "secs": 41,
+    "empty_secs": 0
+   },
+   "Stage 2 inference": {
+    "n": 4,
+    "empty": 2,
+    "secs": 406,
+    "empty_secs": 202
+   },
+   "inference json repair": {
+    "n": 1,
+    "empty": 0,
+    "secs": 6,
+    "empty_secs": 0
+   },
+   "chat": {
+    "n": 10,
+    "empty": 9,
+    "secs": 181,
+    "empty_secs": 166
+   },
+   "audit loop": {
+    "n": 6,
+    "empty": 6,
+    "secs": 422,
+    "empty_secs": 422
+   }
+  },
+  "phases": [
+   {
+    "stage": "preprocessor",
+    "start": 0,
+    "n": 1,
+    "empty": 0,
+    "empty_secs": 0,
+    "end": 168
+   },
+   {
+    "stage": "Stage 1 extraction",
+    "start": 168,
+    "n": 3,
+    "empty": 0,
+    "empty_secs": 0,
+    "end": 565
+   },
+   {
+    "stage": "rag_prose_extraction",
+    "start": 565,
+    "n": 8,
+    "empty": 0,
+    "empty_secs": 0,
+    "end": 606
+   },
+   {
+    "stage": "Stage 2 inference",
+    "start": 606,
+    "n": 2,
+    "empty": 1,
+    "empty_secs": 100,
+    "end": 809
+   },
+   {
+    "stage": "inference json repair",
+    "start": 809,
+    "n": 1,
+    "empty": 0,
+    "empty_secs": 0,
+    "end": 815
+   },
+   {
+    "stage": "Stage 2 inference",
+    "start": 815,
+    "n": 2,
+    "empty": 1,
+    "empty_secs": 101,
+    "end": 1018
+   },
+   {
+    "stage": "chat",
+    "start": 1018,
+    "n": 4,
+    "empty": 3,
+    "empty_secs": 44,
+    "end": 1076
+   },
+   {
+    "stage": "audit loop",
+    "start": 1076,
+    "n": 6,
+    "empty": 6,
+    "empty_secs": 422,
+    "end": 1498
+   },
+   {
+    "stage": "chat",
+    "start": 1498,
+    "n": 6,
+    "empty": 6,
+    "empty_secs": 122,
+    "end": 1620
+   }
+  ]
+ },
+ "wnt_ca-research": {
+  "status": "timeout",
+  "elapsed": 3600.73,
+  "last_model_event": 3598,
+  "empty_seconds": 1345,
+  "per_stage": {
+   "preprocessor": {
+    "n": 1,
+    "empty": 0,
+    "secs": 90,
+    "empty_secs": 0
+   },
+   "Stage 1 extraction": {
+    "n": 17,
+    "empty": 1,
+    "secs": 2353,
+    "empty_secs": 791
+   },
+   "rag_prose_extraction": {
+    "n": 42,
+    "empty": 28,
+    "secs": 705,
+    "empty_secs": 554
+   },
+   "Stage 2 inference": {
+    "n": 5,
+    "empty": 0,
+    "secs": 450,
+    "empty_secs": 0
+   }
+  },
+  "phases": [
+   {
+    "stage": "preprocessor",
+    "start": 0,
+    "n": 1,
+    "empty": 0,
+    "empty_secs": 0,
+    "end": 90
+   },
+   {
+    "stage": "Stage 1 extraction",
+    "start": 90,
+    "n": 17,
+    "empty": 1,
+    "empty_secs": 791,
+    "end": 2443
+   },
+   {
+    "stage": "rag_prose_extraction",
+    "start": 2443,
+    "n": 42,
+    "empty": 28,
+    "empty_secs": 554,
+    "end": 3148
+   },
+   {
+    "stage": "Stage 2 inference",
+    "start": 3148,
+    "n": 5,
+    "empty": 0,
+    "empty_secs": 0,
+    "end": 3598
+   }
+  ]
+ },
+ "wnt_ca-strict": {
+  "status": "fail",
+  "elapsed": 1465.66,
+  "last_model_event": 1465,
+  "empty_seconds": 0,
+  "per_stage": {
+   "preprocessor": {
+    "n": 1,
+    "empty": 0,
+    "secs": 148,
+    "empty_secs": 0
+   },
+   "Stage 1 extraction": {
+    "n": 12,
+    "empty": 0,
+    "secs": 1317,
+    "empty_secs": 0
+   }
+  },
+  "phases": [
+   {
+    "stage": "preprocessor",
+    "start": 0,
+    "n": 1,
+    "empty": 0,
+    "empty_secs": 0,
+    "end": 148
+   },
+   {
+    "stage": "Stage 1 extraction",
+    "start": 148,
+    "n": 12,
+    "empty": 0,
+    "empty_secs": 0,
+    "end": 1465
+   }
+  ]
+ },
+ "wnt_pcp-research": {
+  "status": "fail",
+  "elapsed": 3323.45,
+  "last_model_event": 3323,
+  "empty_seconds": 1281,
+  "per_stage": {
+   "preprocessor": {
+    "n": 1,
+    "empty": 0,
+    "secs": 82,
+    "empty_secs": 0
+   },
+   "Stage 1 extraction": {
+    "n": 16,
+    "empty": 2,
+    "secs": 3241,
+    "empty_secs": 1281
+   }
+  },
+  "phases": [
+   {
+    "stage": "preprocessor",
+    "start": 0,
+    "n": 1,
+    "empty": 0,
+    "empty_secs": 0,
+    "end": 82
+   },
+   {
+    "stage": "Stage 1 extraction",
+    "start": 82,
+    "n": 16,
+    "empty": 2,
+    "empty_secs": 1281,
+    "end": 3323
+   }
+  ]
+ },
+ "wnt_pcp-strict": {
+  "status": "timeout",
+  "elapsed": 3600.6,
+  "last_model_event": 3513,
+  "empty_seconds": 1816,
+  "per_stage": {
+   "preprocessor": {
+    "n": 1,
+    "empty": 0,
+    "secs": 132,
+    "empty_secs": 0
+   },
+   "Stage 1 extraction": {
+    "n": 15,
+    "empty": 2,
+    "secs": 2380,
+    "empty_secs": 1021
+   },
+   "rag_prose_extraction": {
+    "n": 35,
+    "empty": 20,
+    "secs": 652,
+    "empty_secs": 447
+   },
+   "Stage 2 inference": {
+    "n": 2,
+    "empty": 2,
+    "secs": 348,
+    "empty_secs": 348
+   }
+  },
+  "phases": [
+   {
+    "stage": "preprocessor",
+    "start": 0,
+    "n": 1,
+    "empty": 0,
+    "empty_secs": 0,
+    "end": 132
+   },
+   {
+    "stage": "Stage 1 extraction",
+    "start": 132,
+    "n": 15,
+    "empty": 2,
+    "empty_secs": 1021,
+    "end": 2512
+   },
+   {
+    "stage": "rag_prose_extraction",
+    "start": 2512,
+    "n": 35,
+    "empty": 20,
+    "empty_secs": 447,
+    "end": 3164
+   },
+   {
+    "stage": "Stage 2 inference",
+    "start": 3164,
+    "n": 2,
+    "empty": 2,
+    "empty_secs": 348,
+    "end": 3513
+   }
+  ]
+ }
+}

@@ -1,0 +1,53 @@
+
+### runs_verify/2026-09-16_2152/papers/*/*/LEG_TRACE.jsonl
+leg                                            chars   s1_s down_s down_empty_s down_net_s s2_calls  status
+PMC12059215\strict                             78440    196   1025           84        940        4  pass
+PMC12369002\strict                             51244     77   1850          450       1401        2  pass
+PMC12505894\strict                             64844    227   1013          132        882        4  pass
+PMC12860957\strict                             78615    715      0            0          0        0  fail
+PMC12983300\strict                             46033     62   1085           75       1010        2  pass
+PMC13170813\strict                             51656    108    901          123        778        2  pass
+PMC13364408\strict                             60279    245   2261          563       1698        2  pass
+PMC13418202\strict                             36980    123   1041           78        963        2  error
+PMC13486683\strict                             99339    232   2206          354       1852        4  pass
+PMC13534948\strict                             58570    144    818           33        785        2  fail
+
+### runs_verify/2026-09-06_1425/papers/*/*/LEG_TRACE.jsonl
+leg                                            chars   s1_s down_s down_empty_s down_net_s s2_calls  status
+PMC11172790\research                           52375    212   1104          278        826        2  pass
+PMC11172790\strict                             52375    149   1512          337       1175        2  fail
+PMC11405693\research                           83065    293    870           32        837        4  pass
+PMC11405693\strict                             83065    286   1104          228        876        4  fail
+PMC12071552\research                           53587    105    422          146        276        2  scope_conflict
+PMC12071552\strict                             53587    158   1003          100        903        2  pass
+PMC12326985\research                          111062    184      1            0          1        0  fail
+PMC12326985\strict                            111062      0     21            0         21        0  fail
+PMC12376012\research                           70287    295   3156          921       2235        4  pass
+PMC12376012\strict                             70287    399   1546          417       1129        4  fail
+PMC12542839\research                          133332    379   2262          668       1595        6  pass
+PMC12542839\strict                            133332   1044   2556          796       1760        5  timeout
+PMC13017326\research                           68480    232   3368         1272       2096        2  timeout
+PMC13017326\strict                             68480    287   3313         1604       1710        2  timeout
+PMC3480714\research                            51828    243    988          556        431        2  scope_conflict
+PMC3480714\strict                              51828    124    672          323        348        2  scope_conflict
+PMC7232280\research                            51452    154    474          147        327        2  scope_conflict
+PMC7232280\strict                              51452     42   1911          818       1093        2  fail
+PMC8510960\research                            87882    353    763          300        463        4  scope_conflict
+PMC8510960\strict                              87882    327   2662          736       1926        4  fail
+
+### runs_papers/ORCH-755/legs/*/*/papers/*/*/LEG_TRACE.jsonl
+leg                                            chars   s1_s down_s down_empty_s down_net_s s2_calls  status
+\2026-10-21_0629\papers\PMC11983282\research   66782    731   1650          875        776        4  pass
+ct\2026-10-21_0039\papers\PMC11983282\strict   66782    863   2737         2194        543        4  timeout
+h\2026-10-21_0529\papers\PMC5130987\research  100576   2212   1389         1024        365        1  timeout
+ict\2026-10-20_2338\papers\PMC5130987\strict  100576   2103   1497         1344        153        1  timeout
+\2026-10-21_0331\papers\PMC12096016\research   44463    598   2850         1960        890        2  pass
+ct\2026-10-20_2201\papers\PMC12096016\strict   44463    742   1471          735        736        2  fail
+\2026-10-21_0429\papers\PMC12421875\research   63325    639   2944         1983        962        4  timeout
+ct\2026-10-20_2238\papers\PMC12421875\strict   63325   2196   1404          708        696        4  timeout
+h\2026-10-21_0709\papers\PMC7059786\research   36169   1353    617          401        216        2  pass
+ict\2026-10-21_0139\papers\PMC7059786\strict   36169    565   1090          790        301        2  fail
+\2026-10-21_0837\papers\PMC10425814\research  200898   2443   1158          554        604        5  timeout
+ct\2026-10-21_0307\papers\PMC10425814\strict  200898   1465      0            0          0        0  fail
+\2026-10-21_0742\papers\PMC10425814\research  200898   3323      0            0          0        0  fail
+ct\2026-10-21_0207\papers\PMC10425814\strict  200898   2512   1088          795        293        1  timeout

@@ -1,0 +1,68 @@
+
+== chunks of chlorophyll PMC5130987: 100209 chars, 14981 words
+   chunk 1: section='preamble' relevance=0.5 chars=64053 words=9994 | starts: '1787 frontplantsci Frontiers in Plant Science Front Plant Sci Frontiers Media SA'
+   chunk 2: section='preamble' relevance=0.5 chars=46704 words=6574 | starts: 'Although modification of Mg porphyrin levels by induced silencing of CHLH ,'
+
+== chunks of WNT PMC10425814: 199748 chars, 28726 words
+   chunk 1: section='preamble' relevance=0.5 chars=63691 words=9933 | starts: '3547 genesdiss Genes & Diseases Genes Dis Chongqing Medical University PMC10425814 10425814'
+   chunk 2: section='preamble' relevance=0.5 chars=66006 words=9994 | starts: 'Diaphanous 1 (DIA1) DIA1 (also called mDia in mammals) is a member'
+   chunk 3: section='preamble' relevance=0.5 chars=75671 words=9995 | starts: 'These fracture calluses also demonstrated increased levels of Wnt4, 5a, 5b, 10,'
+   chunk 4: section='preamble' relevance=0.5 chars=27330 words=3533 | starts: 'New ligand binding function of human Cerberus and role of proteolytic processing'
+
+== lexicon over chlorophyll chunk 1: paper_chars=64053 (side file: 64053), pairs=56 (side file: 56)
+   pair for 'Urogen III': ('Urogen III', 'uroporphyrinogen III', 'shared_locant')
+   pair for 'Coprogen III': ('Coprogen III', 'coproporphyrinogen III', 'shared_locant')
+   pair for 'Protogen IX': ('Protogen IX', 'protoporphyrinogen IX', 'shared_locant')
+   pair for 'Proto IX': ('Proto IX', 'protoporphyrin IX', 'shared_locant')
+   pair for 'MV-Chlide a': None
+   pair for 'Mg-Proto IX': None
+   pair for 'heme b': None
+   pair for 'Chl': ('Chl', 'chlorophyll', 'long (SF)')
+   pair for 'Glu-tRNA': None
+   pair for 'CPO': ('CPO', 'Coprogen III oxidase', 'long (SF)')
+   pair for 'PPO': None
+   pair for 'POR': ('POR', 'Pchlide oxidoreductase', 'long (SF)')
+   pair for 'UROS': ('UROS', 'Urogen III synthase', 'long (SF)')
+   Schwartz-Hearst candidates around 'MV-Chlide a': [('DV-Pchlide', '3,8-divinyl-protochlorophyllide', 'long (SF)'), ('DV-Chlide', '3,8-divinyl-chlorophyllide', 'long (SF)')]
+
+== canonical() on every compound spelling in chunk 1 (draw: name -> production | counterfactual)
+   d1: 'uroporphyrinogen (Urogen) III' -> 'uroporphyrinogen (Urogen) III' [] | 'uroporphyrinogen III' ['abbreviation']
+   d1: 'coproporphyrinogen (Coprogen) III' -> 'coproporphyrinogen (Coprogen) III' [] | 'coproporphyrinogen III' ['abbreviation']
+   d1: 'protoporphyrinogen (Protogen) IX' -> 'protoporphyrinogen (Protogen) IX' [] | 'protoporphyrinogen IX' ['abbreviation']
+   d1: 'protoporphyrin (Proto) IX' -> 'protoporphyrin (Proto) IX' [] | 'protoporphyrin IX' ['abbreviation']
+   counterfactual renames (strict keys): {'uroporphyrinogen urogen iii': 'uroporphyrinogen iii', 'coproporphyrinogen coprogen iii': 'coproporphyrinogen iii', 'protoporphyrinogen protogen ix': 'protoporphyrinogen ix', 'protoporphyrin proto ix': 'protoporphyrin ix'}
+
+== pooled reaction rows 41; distinct keys 37; distinct keys after the counterfactual renames 32 (rows sharing a key still need _conflict to merge)
+   hydroxymethylbilane -> uroporphyrinogen iii: rows [5, 23] draws [[1], [2, 3]]
+   uroporphyrinogen iii -> coproporphyrinogen iii: rows [6, 24] draws [[1], [2, 3]]
+   coproporphyrinogen iii -> protoporphyrinogen ix: rows [7, 25, 26] draws [[1], [2], [3]]
+   protoporphyrinogen ix -> protoporphyrin ix: rows [8, 27, 28] draws [[1], [2], [3]]
+   protoporphyrin ix -> mg proto ix: rows [9, 30] draws [[1], [2]]
+   mg proto ix monomethyl ester -> 3 8 divinyl protochlorophyllide: rows [11, 12] draws [[1], [2, 3]]
+   3 8 divinyl protochlorophyllide -> 3 8 divinyl chlorophyllide: rows [13, 14] draws [[1], [2, 3]]
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch758\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ a43a2b123f3cf8105ef28123280c076fbf785443  [git, worktree dirty=False]
+label                   : chl-lexicon
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/orch758_chlorophyll_lexicon.py C:/t/eval-fulltext/PMC5130987.txt C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_papers/ORCH-755/legs/wnt_ca-strict/2026-10-21_0307/papers/PMC10425814/01_source_text.txt docs/pwml_recovery_sprint/evidence/orch758_inputs/chlorophyll_strict_stage1_ensemble_report.json
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch758
+root PID / process group: 1006944 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 2.34 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  1011276:python.exe
+descendants terminated  : 1  1011276
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch758\docs\pwml_recovery_sprint\evidence\g11\ORCH-758\02-chl-lexicon.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================
