@@ -1,0 +1,303 @@
+
+=== enterobactin/strict  exit=1  36.9 min  result=RESULT: FAIL
+   dir C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\tmp\extraction_diagnostics\run-93fd6f07511d
+   boundaries=10 outcomes=['ok', 'invalid_json', 'semantic_guard_failed', 'valid_json_zero_processes']
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=9642 processes=5 (rx 4) entities=22 req=b8c575 note= attempts=[('ok', 'stop', 9642)]
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=12406 processes=7 (rx 2) entities=29 req=b8c575 note= attempts=[('ok', 'stop', 12406)]
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=14563 processes=7 (rx 4) entities=22 req=b8c575 note= attempts=[('ok', 'stop', 14563)]
+   [ensemble] draws 3/3 failed=[] reactions=4
+   [stage1_extraction] outcome=ok finish= model= chars=None processes=11 (rx 4) entities=30 req=None note=stage_one_boundary_settled attempts=[]
+   [stage2_inference] outcome=invalid_json finish=length model=deepseek/deepseek-v4-flash chars=6724 processes=None (rx None) entities=None req=e32db3 note= attempts=[('empty', 'length', 0), ('ok', 'length', 6724)]
+   [stage1_json_repair] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=6731 processes=0 (rx None) entities=0 req=5988b4 note= attempts=[]
+   [stage2_inference] outcome=invalid_json finish=length model=deepseek/deepseek-v4-flash chars=3909 processes=None (rx None) entities=None req=2b91ed note= attempts=[('ok', 'length', 3909)]
+   [stage1_json_repair] outcome=semantic_guard_failed finish=stop model=deepseek/deepseek-v4-flash chars=3939 processes=None (rx None) entities=None req=3f5a8f note= attempts=[]
+   [stage2_inference] outcome=valid_json_zero_processes finish=length model=deepseek/deepseek-v4-flash chars=3909 processes=0 (rx None) entities=0 req=2b91ed note=salvaged_json_after_failed_repair attempts=[('ok', 'length', 3909)]
+   ensemble #1: draws 3/3 failed=[] chunk_chars=43667 abbrev_pairs=17 reactions=4 per_draw=[4, 2, 4] one_draw=0 all_draws=2 merge_rules={'exact': 6} flagged=0 names_rewritten=0 typo_snapped=0
+
+=== menaquinone/strict  exit=1  60.0 min  result=RESULT: FAIL
+   dir C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\tmp\extraction_diagnostics\run-ec37fde94452
+   boundaries=13 outcomes=['ok', 'valid_json_zero_processes']
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=16501 processes=11 (rx 9) entities=21 req=149c65 note= attempts=[('ok', 'stop', 16501)]
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=14350 processes=11 (rx 9) entities=21 req=149c65 note= attempts=[('ok', 'stop', 14350)]
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=9740 processes=10 (rx 9) entities=21 req=149c65 note= attempts=[('ok', 'stop', 9740)]
+   [ensemble] draws 3/3 failed=[] reactions=9
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=4625 processes=2 (rx 1) entities=6 req=2eb3a0 note= attempts=[('empty', 'length', 0), ('empty', 'length', 0), ('ok', 'stop', 4625)]
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=5217 processes=3 (rx 1) entities=5 req=2eb3a0 note= attempts=[('ok', 'stop', 5217)]
+   [stage1_extraction] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=1774 processes=0 (rx 0) entities=5 req=2eb3a0 note= attempts=[('ok', 'stop', 1774)]
+   [ensemble] draws 3/3 failed=[] reactions=1
+   [stage1_extraction] outcome=ok finish= model= chars=None processes=16 (rx 10) entities=23 req=None note=stage_one_boundary_settled attempts=[]
+   [stage2_inference] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=14338 processes=0 (rx None) entities=0 req=a28730 note= attempts=[('ok', 'stop', 14338)]
+   [stage2_inference] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=3296 processes=0 (rx None) entities=0 req=edcae2 note= attempts=[('ok', 'stop', 3296)]
+   [stage2_inference] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=11713 processes=0 (rx None) entities=0 req=860907 note= attempts=[('empty', 'length', 0), ('empty', 'length', 0), ('ok', 'stop', 11713)]
+   [stage2_inference] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=6315 processes=0 (rx None) entities=0 req=5f1592 note= attempts=[('empty', 'length', 0), ('ok', 'stop', 6315)]
+   ensemble #1: draws 3/3 failed=[] chunk_chars=54281 abbrev_pairs=15 reactions=9 per_draw=[9, 9, 9] one_draw=0 all_draws=9 merge_rules={'exact': 18} flagged=0 names_rewritten=6 typo_snapped=0
+   ensemble #2: draws 3/3 failed=[] chunk_chars=16202 abbrev_pairs=1 reactions=1 per_draw=[1, 1, 0] one_draw=0 all_draws=0 merge_rules={'exact': 1} flagged=0 names_rewritten=0 typo_snapped=0
+
+=== chlorophyll/strict  exit=1  60.0 min  result=RESULT: FAIL
+   dir C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\tmp\extraction_diagnostics\run-44bc6ac5b7d7
+   boundaries=11 outcomes=['ok', 'empty_completion']
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=41989 processes=51 (rx 18) entities=100 req=d2cc2e note= attempts=[('ok', 'stop', 41989)]
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=38491 processes=36 (rx 19) entities=110 req=d2cc2e note= attempts=[('ok', 'stop', 38491)]
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=38275 processes=34 (rx 18) entities=98 req=d2cc2e note= attempts=[('ok', 'stop', 38275)]
+   [ensemble] draws 3/3 failed=[] reactions=41
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=7636 processes=4 (rx 0) entities=37 req=741336 note= attempts=[('ok', 'stop', 7636)]
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=12100 processes=8 (rx 0) entities=48 req=741336 note= attempts=[('ok', 'stop', 12100)]
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=9491 processes=6 (rx 0) entities=31 req=741336 note= attempts=[('ok', 'stop', 9491)]
+   [ensemble] draws 3/3 failed=[] reactions=0
+   [stage1_extraction] outcome=ok finish= model= chars=None processes=96 (rx 41) entities=181 req=None note=stage_one_boundary_settled attempts=[]
+   [stage2_inference] outcome=empty_completion finish=length model=deepseek/deepseek-v4-flash chars=0 processes=None (rx None) entities=None req=221e3f note= attempts=[('empty', 'length', 0), ('empty', 'length', 0), ('empty', 'length', 0)]
+   [stage2_inference] outcome=empty_completion finish=length model=deepseek/deepseek-v4-flash chars=0 processes=None (rx None) entities=None req=221e3f note= attempts=[('empty', 'length', 0), ('empty', 'length', 0), ('empty', 'length', 0)]
+   ensemble #1: draws 3/3 failed=[] chunk_chars=64053 abbrev_pairs=56 reactions=41 per_draw=[18, 19, 18] one_draw=31 all_draws=4 merge_rules={'abbreviation': 12, 'exact': 2} flagged=0 names_rewritten=18 typo_snapped=0
+      kept apart: 'Mg-Proto ME cyclase reaction' vs 'Mg-Proto ME cyclase reaction': biological_state location 'thylakoid membrane' vs 'plastid'
+      kept apart: 'POR reaction' vs 'Pchlide oxidoreductase reaction': different enzymes {pchlide oxidoreductase} vs {porb}
+      kept apart: 'Coprogen III to Protogen IX' vs 'CPO reaction': different enzymes {coprogen iii oxidase} vs {cpo1}
+      kept apart: 'Protogen IX to Proto IX' vs 'PPO reaction': different enzymes {ppo} vs {ppo1}
+   ensemble #2: draws 3/3 failed=[] chunk_chars=46704 abbrev_pairs=8 reactions=0 per_draw=[0, 0, 0] one_draw=0 all_draws=0 merge_rules={} flagged=0 names_rewritten=0 typo_snapped=0
+
+=== ara_operon/strict  exit=1  60.0 min  result=RESULT: FAIL
+   dir C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\tmp\extraction_diagnostics\run-52be2f3b13e5
+   boundaries=21 outcomes=['ok', 'empty_completion', 'valid_json_zero_processes', 'invalid_json', 'semantic_guard_failed']
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=8725 processes=13 (rx 0) entities=15 req=c1f4ba note= attempts=[('ok', 'stop', 8725)]
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=8696 processes=13 (rx 0) entities=16 req=c1f4ba note= attempts=[('ok', 'stop', 8696)]
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=7720 processes=11 (rx 0) entities=15 req=c1f4ba note= attempts=[('ok', 'stop', 7720)]
+   [ensemble] draws 3/3 failed=[] reactions=0
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=4977 processes=3 (rx 0) entities=13 req=5cfe1a note= attempts=[('ok', 'stop', 4977)]
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=4254 processes=2 (rx 0) entities=13 req=5cfe1a note= attempts=[('ok', 'stop', 4254)]
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=3867 processes=3 (rx 0) entities=7 req=5cfe1a note= attempts=[('ok', 'stop', 3867)]
+   [ensemble] draws 3/3 failed=[] reactions=0
+   [stage1_extraction] outcome=ok finish= model= chars=None processes=23 (rx None) entities=33 req=None note=stage_one_boundary_settled attempts=[]
+   [stage2_inference] outcome=empty_completion finish=length model=deepseek/deepseek-v4-flash chars=0 processes=None (rx None) entities=None req=c8a915 note= attempts=[('empty', 'length', 0), ('empty', 'length', 0), ('empty', 'length', 0)]
+   [stage2_inference] outcome=empty_completion finish=length model=deepseek/deepseek-v4-flash chars=0 processes=None (rx None) entities=None req=c8a915 note= attempts=[('empty', 'length', 0), ('empty', 'length', 0), ('empty', 'length', 0)]
+   [stage2_inference] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=6576 processes=0 (rx None) entities=0 req=c8a915 note= attempts=[('ok', 'stop', 6576)]
+   [stage2_inference] outcome=empty_completion finish=length model=deepseek/deepseek-v4-flash chars=0 processes=None (rx None) entities=None req=4a6149 note= attempts=[('empty', 'length', 0), ('empty', 'length', 0), ('empty', 'length', 0)]
+   [stage2_inference] outcome=invalid_json finish=length model=deepseek/deepseek-v4-flash chars=2263 processes=None (rx None) entities=None req=4a6149 note= attempts=[('ok', 'length', 2263)]
+   [stage1_json_repair] outcome=semantic_guard_failed finish=stop model=deepseek/deepseek-v4-flash chars=2268 processes=None (rx None) entities=None req=c10f14 note= attempts=[]
+   [stage2_inference] outcome=valid_json_zero_processes finish=length model=deepseek/deepseek-v4-flash chars=2263 processes=0 (rx None) entities=0 req=4a6149 note=salvaged_json_after_failed_repair attempts=[('ok', 'length', 2263)]
+   [stage2_inference] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=10019 processes=0 (rx None) entities=0 req=5fa295 note= attempts=[('empty', 'length', 0), ('empty', 'error', 0), ('ok', 'stop', 10019)]
+   [stage2_inference] outcome=empty_completion finish=length model=deepseek/deepseek-v4-flash chars=0 processes=None (rx None) entities=None req=cc8574 note= attempts=[('empty', 'length', 0), ('empty', 'length', 0), ('empty', 'length', 0)]
+   [stage2_inference] outcome=empty_completion finish=length model=deepseek/deepseek-v4-flash chars=0 processes=None (rx None) entities=None req=cc8574 note= attempts=[('empty', 'length', 0), ('empty', 'length', 0), ('empty', 'length', 0)]
+   [stage2_inference] outcome=empty_completion finish=length model=deepseek/deepseek-v4-flash chars=0 processes=None (rx None) entities=None req=cc8574 note= attempts=[('empty', 'length', 0), ('empty', 'length', 0), ('empty', 'length', 0)]
+   [stage2_inference] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=9118 processes=0 (rx None) entities=0 req=cc8574 note= attempts=[('ok', 'stop', 9118)]
+   ensemble #1: draws 3/3 failed=[] chunk_chars=63041 abbrev_pairs=9 reactions=0 per_draw=[0, 0, 0] one_draw=0 all_draws=0 merge_rules={} flagged=0 names_rewritten=0 typo_snapped=0
+   ensemble #2: draws 3/3 failed=[] chunk_chars=12565 abbrev_pairs=0 reactions=0 per_draw=[0, 0, 0] one_draw=0 all_draws=0 merge_rules={} flagged=0 names_rewritten=0 typo_snapped=0
+
+=== sour_taste/strict  exit=1  27.6 min  result=RESULT: FAIL
+   dir C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\tmp\extraction_diagnostics\run-50916ef48c88
+   boundaries=9 outcomes=['ok', 'invalid_json', 'semantic_guard_failed', 'valid_json_zero_processes']
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=12350 processes=6 (rx 0) entities=19 req=20a7ff note= attempts=[('ok', 'stop', 12350)]
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=12331 processes=5 (rx 0) entities=18 req=20a7ff note= attempts=[('ok', 'stop', 12331)]
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=11149 processes=5 (rx 0) entities=19 req=20a7ff note= attempts=[('ok', 'stop', 11149)]
+   [ensemble] draws 3/3 failed=[] reactions=0
+   [stage1_extraction] outcome=ok finish= model= chars=None processes=12 (rx None) entities=24 req=None note=stage_one_boundary_settled attempts=[]
+   [stage2_inference] outcome=invalid_json finish=length model=deepseek/deepseek-v4-flash chars=206 processes=None (rx None) entities=None req=b8d3dc note= attempts=[('empty', 'length', 0), ('ok', 'length', 206)]
+   [stage1_json_repair] outcome=semantic_guard_failed finish=stop model=deepseek/deepseek-v4-flash chars=213 processes=None (rx None) entities=None req=ef4f9f note= attempts=[]
+   [stage2_inference] outcome=valid_json_zero_processes finish=length model=deepseek/deepseek-v4-flash chars=206 processes=0 (rx None) entities=0 req=b8d3dc note=salvaged_json_after_failed_repair attempts=[('empty', 'length', 0), ('ok', 'length', 206)]
+   [stage2_inference] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=2603 processes=0 (rx None) entities=0 req=11c2f6 note= attempts=[('empty', 'length', 0), ('ok', 'stop', 2603)]
+   ensemble #1: draws 3/3 failed=[] chunk_chars=35999 abbrev_pairs=7 reactions=0 per_draw=[0, 0, 0] one_draw=0 all_draws=0 merge_rules={} flagged=0 names_rewritten=0 typo_snapped=0
+
+=== wnt_pcp/strict  exit=1  60.1 min  result=RESULT: FAIL
+   dir C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\tmp\extraction_diagnostics\run-0d3bfc0620c9
+   boundaries=19 outcomes=['ok', 'valid_json_zero_processes']
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=16587 processes=19 (rx 0) entities=36 req=e36b49 note= attempts=[('ok', 'stop', 16587)]
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=13406 processes=17 (rx 0) entities=28 req=e36b49 note= attempts=[('ok', 'stop', 13406)]
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=16741 processes=22 (rx 0) entities=30 req=e36b49 note= attempts=[('ok', 'stop', 16741)]
+   [ensemble] draws 3/3 failed=[] reactions=0
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=2693 processes=2 (rx 0) entities=5 req=c53ae5 note= attempts=[('empty', 'length', 0), ('ok', 'stop', 2693)]
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=1843 processes=1 (rx 0) entities=3 req=c53ae5 note= attempts=[('ok', 'stop', 1843)]
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=8006 processes=6 (rx 0) entities=18 req=c53ae5 note= attempts=[('ok', 'stop', 8006)]
+   [ensemble] draws 3/3 failed=[] reactions=0
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=6536 processes=6 (rx 0) entities=22 req=e77cc4 note= attempts=[('ok', 'stop', 6536)]
+   [stage1_extraction] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=1471 processes=0 (rx 0) entities=1 req=e77cc4 note= attempts=[('empty', 'length', 0), ('ok', 'stop', 1471)]
+   [stage1_extraction] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=1184 processes=0 (rx 0) entities=0 req=e77cc4 note=structurally_empty_payload_retry attempts=[('ok', 'stop', 1184)]
+   [stage1_extraction] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=1153 processes=0 (rx 0) entities=0 req=6c724d note=structurally_empty_payload_exhausted attempts=[('ok', 'stop', 1153)]
+   [ladder end] outcome=valid_json_zero_processes issued=2/3 rungs=['normal', 'structurally_empty_repair'] skipped=[('materially_different_strategy', 'budget_indeterminate')]
+   [ensemble] draws 2/3 failed=[{'draw': 3, 'stage': 'extraction', 'error': 'Extraction stage returned a structurally empty payload (no entities and no processes) on all 2 attempts.'}] reactions=0
+   [stage1_extraction] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=1412 processes=0 (rx 0) entities=1 req=42ba92 note= attempts=[('ok', 'stop', 1412)]
+   [stage1_extraction] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=1337 processes=0 (rx 0) entities=1 req=42ba92 note= attempts=[('ok', 'stop', 1337)]
+   [stage1_extraction] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=1422 processes=0 (rx 0) entities=1 req=42ba92 note= attempts=[('ok', 'stop', 1422)]
+   [ensemble] draws 3/3 failed=[] reactions=0
+   [stage1_extraction] outcome=ok finish= model= chars=None processes=52 (rx None) entities=63 req=None note=stage_one_boundary_settled attempts=[]
+   ensemble #1: draws 3/3 failed=[] chunk_chars=63691 abbrev_pairs=100 reactions=0 per_draw=[0, 0, 0] one_draw=0 all_draws=0 merge_rules={} flagged=0 names_rewritten=0 typo_snapped=1
+   ensemble #2: draws 3/3 failed=[] chunk_chars=66006 abbrev_pairs=93 reactions=0 per_draw=[0, 0, 0] one_draw=0 all_draws=0 merge_rules={} flagged=0 names_rewritten=0 typo_snapped=0
+   ensemble #3: draws 2/3 failed=[{'draw': 3, 'stage': 'extraction', 'error': 'Extraction stage returned a structurally empty payload (no entities and no processes) on all 2 attempts.'}] chunk_chars=75671 abbrev_pairs=21 reactions=0 per_draw=[0, 0, 0] one_draw=0 all_draws=0 merge_rules={} flagged=0 names_rewritten=0 typo_snapped=0
+   ensemble #4: draws 3/3 failed=[] chunk_chars=27330 abbrev_pairs=14 reactions=0 per_draw=[0, 0, 0] one_draw=0 all_draws=0 merge_rules={} flagged=0 names_rewritten=0 typo_snapped=0
+
+=== wnt_ca/strict  exit=1  24.5 min  result=RESULT: FAIL
+   dir C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\tmp\extraction_diagnostics\run-4a18f108e2a3
+   boundaries=17 outcomes=['ok', 'valid_json_zero_processes']
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=19214 processes=18 (rx 1) entities=28 req=83258a note= attempts=[('ok', 'stop', 19214)]
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=18413 processes=17 (rx 1) entities=26 req=83258a note= attempts=[('ok', 'stop', 18413)]
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=18522 processes=18 (rx 1) entities=29 req=83258a note= attempts=[('ok', 'stop', 18522)]
+   [ensemble] draws 3/3 failed=[] reactions=2
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=10214 processes=8 (rx 3) entities=19 req=f1f76c note= attempts=[('ok', 'stop', 10214)]
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=10190 processes=8 (rx 1) entities=25 req=f1f76c note= attempts=[('ok', 'stop', 10190)]
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=12795 processes=11 (rx 1) entities=21 req=f1f76c note= attempts=[('ok', 'stop', 12795)]
+   [ensemble] draws 3/3 failed=[] reactions=3
+   [stage1_extraction] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=1245 processes=0 (rx 0) entities=0 req=9723e8 note=structurally_empty_payload_retry attempts=[('ok', 'stop', 1245)]
+   [stage1_extraction] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=1153 processes=0 (rx 0) entities=0 req=5857e1 note=structurally_empty_payload_exhausted attempts=[('ok', 'stop', 1153)]
+   [ladder end] outcome=valid_json_zero_processes issued=2/3 rungs=['normal', 'structurally_empty_repair'] skipped=[('materially_different_strategy', 'budget_indeterminate')]
+   [stage1_extraction] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=1245 processes=0 (rx 0) entities=0 req=9723e8 note=structurally_empty_payload_retry attempts=[('ok', 'stop', 1245)]
+   [stage1_extraction] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=1153 processes=0 (rx 0) entities=0 req=5857e1 note=structurally_empty_payload_exhausted attempts=[('ok', 'stop', 1153)]
+   [ladder end] outcome=valid_json_zero_processes issued=2/3 rungs=['normal', 'structurally_empty_repair'] skipped=[('materially_different_strategy', 'budget_indeterminate')]
+   [stage1_extraction] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=1153 processes=0 (rx 0) entities=0 req=9723e8 note=structurally_empty_payload_retry attempts=[('ok', 'stop', 1153)]
+   [stage1_extraction] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=1249 processes=0 (rx 0) entities=0 req=5857e1 note=structurally_empty_payload_exhausted attempts=[('ok', 'stop', 1249)]
+   [ladder end] outcome=valid_json_zero_processes issued=2/3 rungs=['normal', 'structurally_empty_repair'] skipped=[('materially_different_strategy', 'budget_indeterminate')]
+   ensemble #1: draws 3/3 failed=[] chunk_chars=63691 abbrev_pairs=100 reactions=2 per_draw=[1, 1, 1] one_draw=1 all_draws=0 merge_rules={'exact': 1} flagged=0 names_rewritten=2 typo_snapped=0
+   ensemble #2: draws 3/3 failed=[] chunk_chars=66006 abbrev_pairs=93 reactions=3 per_draw=[3, 1, 1] one_draw=2 all_draws=1 merge_rules={'exact': 2} flagged=0 names_rewritten=0 typo_snapped=0
+
+=== enterobactin/research  exit=0  57.5 min  result=RESULT: PASS (with warnings)
+   dir C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\tmp\extraction_diagnostics\run-3c63f435cc5d
+   boundaries=11 outcomes=['ok', 'empty_completion', 'invalid_json', 'semantic_guard_failed', 'valid_json_zero_processes']
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=13043 processes=11 (rx 4) entities=22 req=934632 note= attempts=[('ok', 'stop', 13043)]
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=14899 processes=11 (rx 5) entities=25 req=934632 note= attempts=[('ok', 'stop', 14899)]
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=19234 processes=12 (rx 5) entities=32 req=934632 note= attempts=[('ok', 'stop', 19234)]
+   [ensemble] draws 3/3 failed=[] reactions=5
+   [stage1_extraction] outcome=ok finish= model= chars=None processes=17 (rx 5) entities=34 req=None note=stage_one_boundary_settled attempts=[]
+   [stage2_inference] outcome=empty_completion finish=length model=deepseek/deepseek-v4-flash chars=0 processes=None (rx None) entities=None req=1e7fed note= attempts=[('empty', 'length', 0), ('empty', 'length', 0), ('empty', 'length', 0)]
+   [stage2_inference] outcome=invalid_json finish=length model=deepseek/deepseek-v4-flash chars=5721 processes=None (rx None) entities=None req=1e7fed note= attempts=[('empty', 'length', 0), ('empty', 'length', 0), ('ok', 'length', 5721)]
+   [stage1_json_repair] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=5728 processes=0 (rx None) entities=0 req=a690b3 note= attempts=[]
+   [stage2_inference] outcome=invalid_json finish=length model=deepseek/deepseek-v4-flash chars=357 processes=None (rx None) entities=None req=0f7cbe note= attempts=[('ok', 'length', 357)]
+   [stage1_json_repair] outcome=semantic_guard_failed finish=stop model=deepseek/deepseek-v4-flash chars=359 processes=None (rx None) entities=None req=1697e2 note= attempts=[]
+   [stage2_inference] outcome=valid_json_zero_processes finish=length model=deepseek/deepseek-v4-flash chars=357 processes=0 (rx None) entities=0 req=0f7cbe note=salvaged_json_after_failed_repair attempts=[('ok', 'length', 357)]
+   ensemble #1: draws 3/3 failed=[] chunk_chars=43667 abbrev_pairs=17 reactions=5 per_draw=[4, 5, 5] one_draw=0 all_draws=4 merge_rules={'exact': 5, 'abbreviation': 4} flagged=0 names_rewritten=6 typo_snapped=0
+
+=== menaquinone/research  exit=1  59.8 min  result=RESULT: FAIL
+   dir C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\tmp\extraction_diagnostics\run-f7765c75b93a
+   boundaries=23 outcomes=['ok', 'empty_completion', 'invalid_json', 'valid_json_zero_processes', 'semantic_guard_failed']
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=13694 processes=12 (rx 9) entities=32 req=508268 note= attempts=[('ok', 'stop', 13694)]
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=12657 processes=11 (rx 9) entities=29 req=508268 note= attempts=[('ok', 'stop', 12657)]
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=13252 processes=11 (rx 9) entities=21 req=508268 note= attempts=[('ok', 'stop', 13252)]
+   [ensemble] draws 3/3 failed=[] reactions=11
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=6879 processes=4 (rx 2) entities=13 req=54cc7e note= attempts=[('ok', 'stop', 6879)]
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=6963 processes=4 (rx 2) entities=10 req=54cc7e note= attempts=[('ok', 'stop', 6963)]
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=5057 processes=3 (rx 1) entities=7 req=54cc7e note= attempts=[('ok', 'stop', 5057)]
+   [ensemble] draws 3/3 failed=[] reactions=2
+   [stage1_extraction] outcome=ok finish= model= chars=None processes=19 (rx 13) entities=45 req=None note=stage_one_boundary_settled attempts=[]
+   [stage2_inference] outcome=empty_completion finish=length model=deepseek/deepseek-v4-flash chars=0 processes=None (rx None) entities=None req=e77514 note= attempts=[('empty', 'length', 0), ('empty', 'length', 0), ('empty', 'length', 0)]
+   [stage2_inference] outcome=empty_completion finish=length model=deepseek/deepseek-v4-flash chars=0 processes=None (rx None) entities=None req=e77514 note= attempts=[('empty', 'length', 0), ('empty', 'length', 0), ('empty', 'length', 0)]
+   [stage2_inference] outcome=invalid_json finish=length model=deepseek/deepseek-v4-flash chars=1469 processes=None (rx None) entities=None req=e77514 note= attempts=[('ok', 'length', 1469)]
+   [stage1_json_repair] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=1478 processes=0 (rx None) entities=0 req=1de426 note= attempts=[]
+   [stage2_inference] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=2157 processes=0 (rx None) entities=0 req=91a7f4 note= attempts=[('ok', 'stop', 2157)]
+   [stage2_inference] outcome=empty_completion finish=length model=deepseek/deepseek-v4-flash chars=0 processes=None (rx None) entities=None req=3dd269 note= attempts=[('empty', 'length', 0), ('empty', 'length', 0), ('empty', 'length', 0)]
+   [stage2_inference] outcome=empty_completion finish=length model=deepseek/deepseek-v4-flash chars=0 processes=None (rx None) entities=None req=3dd269 note= attempts=[('empty', 'length', 0), ('empty', 'length', 0), ('empty', 'length', 0)]
+   [stage2_inference] outcome=invalid_json finish=length model=deepseek/deepseek-v4-flash chars=2575 processes=None (rx None) entities=None req=3dd269 note= attempts=[('empty', 'length', 0), ('ok', 'length', 2575)]
+   [stage1_json_repair] outcome=semantic_guard_failed finish=stop model=deepseek/deepseek-v4-flash chars=2605 processes=None (rx None) entities=None req=d426d0 note= attempts=[]
+   [stage2_inference] outcome=valid_json_zero_processes finish=length model=deepseek/deepseek-v4-flash chars=2575 processes=0 (rx None) entities=0 req=3dd269 note=salvaged_json_after_failed_repair attempts=[('empty', 'length', 0), ('ok', 'length', 2575)]
+   [stage2_inference] outcome=empty_completion finish=length model=deepseek/deepseek-v4-flash chars=0 processes=None (rx None) entities=None req=57bffb note= attempts=[('empty', 'length', 0), ('empty', 'length', 0), ('empty', 'length', 0)]
+   [stage2_inference] outcome=empty_completion finish=length model=deepseek/deepseek-v4-flash chars=0 processes=None (rx None) entities=None req=57bffb note= attempts=[('empty', 'length', 0), ('empty', 'length', 0), ('empty', 'length', 0)]
+   [stage2_inference] outcome=invalid_json finish=length model=deepseek/deepseek-v4-flash chars=11784 processes=None (rx None) entities=None req=57bffb note= attempts=[('ok', 'length', 11784)]
+   [stage1_json_repair] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=11724 processes=0 (rx None) entities=0 req=10c5af note= attempts=[]
+   ensemble #1: draws 3/3 failed=[] chunk_chars=54281 abbrev_pairs=15 reactions=11 per_draw=[9, 9, 9] one_draw=2 all_draws=7 merge_rules={'exact': 16} flagged=0 names_rewritten=6 typo_snapped=0
+   ensemble #2: draws 3/3 failed=[] chunk_chars=16202 abbrev_pairs=1 reactions=2 per_draw=[2, 2, 1] one_draw=0 all_draws=1 merge_rules={'exact': 3} flagged=0 names_rewritten=0 typo_snapped=0
+
+=== chlorophyll/research  exit=1  60.1 min  result=RESULT: FAIL
+   dir C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\tmp\extraction_diagnostics\run-f3e94849fd83
+   boundaries=10 outcomes=['ok', 'empty_completion']
+   [stage1_extraction] outcome=ok finish=length model=deepseek/deepseek-v4-flash chars=39443 processes=25 (rx 17) entities=96 req=0fb747 note=salvaged_json attempts=[('ok', 'length', 39443)]
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=48179 processes=44 (rx 19) entities=96 req=0fb747 note= attempts=[('ok', 'stop', 48179)]
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=42343 processes=45 (rx 17) entities=85 req=0fb747 note=salvaged_json attempts=[('ok', 'stop', 42343)]
+   [ensemble] draws 3/3 failed=[] reactions=33
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=9937 processes=4 (rx 0) entities=37 req=c43a44 note= attempts=[('ok', 'stop', 9937)]
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=9961 processes=4 (rx 0) entities=33 req=c43a44 note= attempts=[('ok', 'stop', 9961)]
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=8427 processes=6 (rx 0) entities=27 req=c43a44 note= attempts=[('ok', 'stop', 8427)]
+   [ensemble] draws 3/3 failed=[] reactions=0
+   [stage1_extraction] outcome=ok finish= model= chars=None processes=79 (rx 33) entities=143 req=None note=stage_one_boundary_settled attempts=[]
+   [stage2_inference] outcome=empty_completion finish=length model=deepseek/deepseek-v4-flash chars=0 processes=None (rx None) entities=None req=49a861 note= attempts=[('empty', 'length', 0), ('empty', 'length', 0), ('empty', 'length', 0)]
+   ensemble #1: draws 3/3 failed=[] chunk_chars=64053 abbrev_pairs=56 reactions=33 per_draw=[17, 19, 17] one_draw=20 all_draws=7 merge_rules={'abbreviation': 10, 'exact': 10} flagged=0 names_rewritten=11 typo_snapped=0
+      kept apart: 'POR reaction' vs 'Pchlide oxidoreductase reaction': biological_state location 'chloroplast' vs 'plastid'
+      kept apart: 'Chlide a oxygenation to Chlide b' vs 'Chlide a oxygenase reaction (Chlide a to Chlide b)': biological_state location 'thylakoid membrane' vs 'plastid'
+      kept apart: 'CAO reaction (Chl a to Chl b)' vs 'Chlide a oxygenase reaction (Chl a to Chl b)': biological_state location 'thylakoid membrane' vs 'plastid'
+   ensemble #2: draws 3/3 failed=[] chunk_chars=46704 abbrev_pairs=8 reactions=0 per_draw=[0, 0, 0] one_draw=0 all_draws=0 merge_rules={} flagged=0 names_rewritten=0 typo_snapped=0
+
+=== ara_operon/research  exit=0  39.8 min  result=RESULT: PASS (with warnings)
+   dir C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\tmp\extraction_diagnostics\run-ed634852700b
+   boundaries=14 outcomes=['ok', 'valid_json_zero_processes', 'empty_completion']
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=7656 processes=8 (rx 0) entities=13 req=914191 note= attempts=[('ok', 'stop', 7656)]
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=8048 processes=9 (rx 0) entities=13 req=914191 note= attempts=[('ok', 'stop', 8048)]
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=8287 processes=12 (rx 0) entities=15 req=914191 note= attempts=[('ok', 'stop', 8287)]
+   [ensemble] draws 3/3 failed=[] reactions=0
+   [stage1_extraction] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=2770 processes=0 (rx 0) entities=11 req=76de64 note= attempts=[('ok', 'stop', 2770)]
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=5915 processes=5 (rx 0) entities=13 req=76de64 note= attempts=[('ok', 'stop', 5915)]
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=4174 processes=4 (rx 0) entities=7 req=76de64 note= attempts=[('ok', 'stop', 4174)]
+   [ensemble] draws 3/3 failed=[] reactions=0
+   [stage1_extraction] outcome=ok finish= model= chars=None processes=24 (rx None) entities=34 req=None note=stage_one_boundary_settled attempts=[]
+   [stage2_inference] outcome=empty_completion finish=length model=deepseek/deepseek-v4-flash chars=0 processes=None (rx None) entities=None req=513a72 note= attempts=[('empty', 'length', 0), ('empty', 'length', 0), ('empty', 'length', 0)]
+   [stage2_inference] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=3725 processes=0 (rx None) entities=0 req=513a72 note= attempts=[('ok', 'stop', 3725)]
+   [stage2_inference] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=8405 processes=0 (rx None) entities=0 req=5b0963 note= attempts=[('ok', 'stop', 8405)]
+   [stage2_inference] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=5732 processes=0 (rx None) entities=0 req=54fbca note= attempts=[('ok', 'stop', 5732)]
+   [stage2_inference] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=8047 processes=0 (rx None) entities=0 req=99864b note= attempts=[('ok', 'stop', 8047)]
+   ensemble #1: draws 3/3 failed=[] chunk_chars=63041 abbrev_pairs=9 reactions=0 per_draw=[0, 0, 0] one_draw=0 all_draws=0 merge_rules={} flagged=0 names_rewritten=0 typo_snapped=0
+   ensemble #2: draws 3/3 failed=[] chunk_chars=12565 abbrev_pairs=0 reactions=0 per_draw=[0, 0, 0] one_draw=0 all_draws=0 merge_rules={} flagged=0 names_rewritten=0 typo_snapped=0
+
+=== sour_taste/research  exit=0  32.9 min  result=RESULT: PASS (with warnings)
+   dir C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\tmp\extraction_diagnostics\run-cd2215e5a110
+   boundaries=7 outcomes=['ok', 'valid_json_zero_processes']
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=7170 processes=2 (rx 0) entities=15 req=f7cd2b note= attempts=[('ok', 'stop', 7170)]
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=7675 processes=2 (rx 0) entities=17 req=f7cd2b note= attempts=[('ok', 'stop', 7675)]
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=8328 processes=6 (rx 0) entities=17 req=f7cd2b note= attempts=[('empty', 'length', 0), ('ok', 'stop', 8328)]
+   [ensemble] draws 3/3 failed=[] reactions=0
+   [stage1_extraction] outcome=ok finish= model= chars=None processes=7 (rx None) entities=22 req=None note=stage_one_boundary_settled attempts=[]
+   [stage2_inference] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=944 processes=0 (rx None) entities=0 req=9ff6d3 note= attempts=[('ok', 'stop', 944)]
+   [stage2_inference] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=1511 processes=0 (rx None) entities=0 req=705694 note= attempts=[('ok', 'stop', 1511)]
+   ensemble #1: draws 3/3 failed=[] chunk_chars=35999 abbrev_pairs=7 reactions=0 per_draw=[0, 0, 0] one_draw=0 all_draws=0 merge_rules={} flagged=0 names_rewritten=0 typo_snapped=0
+
+=== wnt_pcp/research  exit=1  55.4 min  result=RESULT: FAIL
+   dir C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\tmp\extraction_diagnostics\run-d2a781b69084
+   boundaries=18 outcomes=['ok', 'valid_json_zero_processes']
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=11029 processes=18 (rx 0) entities=25 req=10ea52 note= attempts=[('ok', 'stop', 11029)]
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=16123 processes=20 (rx 0) entities=33 req=10ea52 note= attempts=[('ok', 'stop', 16123)]
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=21389 processes=20 (rx 0) entities=38 req=10ea52 note= attempts=[('ok', 'stop', 21389)]
+   [ensemble] draws 3/3 failed=[] reactions=0
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=1763 processes=1 (rx 0) entities=2 req=a42f02 note= attempts=[('ok', 'stop', 1763)]
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=1727 processes=1 (rx 0) entities=3 req=a42f02 note= attempts=[('ok', 'stop', 1727)]
+   [stage1_extraction] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=1275 processes=0 (rx 0) entities=0 req=a42f02 note=structurally_empty_payload_retry attempts=[('empty', 'length', 0), ('error', None, 0), ('ok', 'stop', 1275)]
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=1886 processes=1 (rx 0) entities=3 req=b1ac02 note= attempts=[('ok', 'stop', 1886)]
+   [ensemble] draws 3/3 failed=[] reactions=0
+   [stage1_extraction] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=1243 processes=0 (rx 0) entities=0 req=f5df30 note=structurally_empty_payload_retry attempts=[('ok', 'stop', 1243)]
+   [stage1_extraction] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=1153 processes=0 (rx 0) entities=0 req=afed48 note=structurally_empty_payload_exhausted attempts=[('ok', 'stop', 1153)]
+   [ladder end] outcome=valid_json_zero_processes issued=2/3 rungs=['normal', 'structurally_empty_repair'] skipped=[('materially_different_strategy', 'budget_indeterminate')]
+   [stage1_extraction] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=1260 processes=0 (rx 0) entities=0 req=f5df30 note=structurally_empty_payload_retry attempts=[('empty', 'length', 0), ('ok', 'stop', 1260)]
+   [stage1_extraction] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=1153 processes=0 (rx 0) entities=0 req=afed48 note=structurally_empty_payload_exhausted attempts=[('ok', 'stop', 1153)]
+   [ladder end] outcome=valid_json_zero_processes issued=2/3 rungs=['normal', 'structurally_empty_repair'] skipped=[('materially_different_strategy', 'budget_indeterminate')]
+   [stage1_extraction] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=1277 processes=0 (rx 0) entities=0 req=f5df30 note=structurally_empty_payload_retry attempts=[('ok', 'stop', 1277)]
+   [stage1_extraction] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=1295 processes=0 (rx 0) entities=0 req=afed48 note=structurally_empty_payload_exhausted attempts=[('ok', 'stop', 1295)]
+   [ladder end] outcome=valid_json_zero_processes issued=2/3 rungs=['normal', 'structurally_empty_repair'] skipped=[('materially_different_strategy', 'budget_indeterminate')]
+   ensemble #1: draws 3/3 failed=[] chunk_chars=63691 abbrev_pairs=100 reactions=0 per_draw=[0, 0, 0] one_draw=0 all_draws=0 merge_rules={} flagged=0 names_rewritten=0 typo_snapped=0
+   ensemble #2: draws 3/3 failed=[] chunk_chars=66006 abbrev_pairs=93 reactions=0 per_draw=[0, 0, 0] one_draw=0 all_draws=0 merge_rules={} flagged=0 names_rewritten=0 typo_snapped=0
+
+=== wnt_ca/research  exit=1  60.0 min  result=RESULT: FAIL
+   dir C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\tmp\extraction_diagnostics\run-6f01ca20564b
+   boundaries=29 outcomes=['ok', 'valid_json_zero_processes']
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=16335 processes=17 (rx 1) entities=28 req=9060c1 note= attempts=[('ok', 'stop', 16335)]
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=18130 processes=18 (rx 1) entities=27 req=9060c1 note= attempts=[('ok', 'stop', 18130)]
+   [stage1_extraction] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=2 processes=0 (rx None) entities=0 req=9060c1 note=structurally_empty_payload_retry attempts=[('ok', 'stop', 2)]
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=17129 processes=15 (rx 1) entities=30 req=7a6938 note= attempts=[('ok', 'stop', 17129)]
+   [ensemble] draws 3/3 failed=[] reactions=2
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=8990 processes=8 (rx 1) entities=19 req=804656 note= attempts=[('ok', 'stop', 8990)]
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=13341 processes=10 (rx 2) entities=28 req=804656 note= attempts=[('ok', 'stop', 13341)]
+   [stage1_extraction] outcome=ok finish=stop model=deepseek/deepseek-v4-flash chars=10158 processes=7 (rx 1) entities=22 req=804656 note= attempts=[('ok', 'stop', 10158)]
+   [ensemble] draws 3/3 failed=[] reactions=2
+   [stage1_extraction] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=1357 processes=0 (rx 0) entities=1 req=0bdaf5 note= attempts=[('ok', 'stop', 1357)]
+   [stage1_extraction] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=1153 processes=0 (rx 0) entities=0 req=0bdaf5 note=structurally_empty_payload_retry attempts=[('empty', 'length', 0), ('ok', 'stop', 1153)]
+   [stage1_extraction] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=1248 processes=0 (rx 0) entities=0 req=5f45a6 note=structurally_empty_payload_exhausted attempts=[('ok', 'stop', 1248)]
+   [ladder end] outcome=valid_json_zero_processes issued=2/3 rungs=['normal', 'structurally_empty_repair'] skipped=[('materially_different_strategy', 'budget_indeterminate')]
+   [stage1_extraction] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=5724 processes=0 (rx 0) entities=19 req=0bdaf5 note= attempts=[('ok', 'stop', 5724)]
+   [ensemble] draws 2/3 failed=[{'draw': 2, 'stage': 'extraction', 'error': 'Extraction stage returned a structurally empty payload (no entities and no processes) on all 2 attempts.'}] reactions=0
+   [stage1_extraction] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=1329 processes=0 (rx 0) entities=1 req=cd472f note= attempts=[('ok', 'stop', 1329)]
+   [stage1_extraction] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=1316 processes=0 (rx 0) entities=0 req=cd472f note=structurally_empty_payload_retry attempts=[('ok', 'stop', 1316)]
+   [stage1_extraction] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=1153 processes=0 (rx 0) entities=0 req=fcb860 note=structurally_empty_payload_exhausted attempts=[('ok', 'stop', 1153)]
+   [ladder end] outcome=valid_json_zero_processes issued=2/3 rungs=['normal', 'structurally_empty_repair'] skipped=[('materially_different_strategy', 'budget_indeterminate')]
+   [stage1_extraction] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=1242 processes=0 (rx 0) entities=0 req=cd472f note=structurally_empty_payload_retry attempts=[('ok', 'stop', 1242)]
+   [stage1_extraction] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=1153 processes=0 (rx 0) entities=0 req=fcb860 note=structurally_empty_payload_exhausted attempts=[('ok', 'stop', 1153)]
+   [ladder end] outcome=valid_json_zero_processes issued=2/3 rungs=['normal', 'structurally_empty_repair'] skipped=[('materially_different_strategy', 'budget_indeterminate')]
+   [ensemble] draws 1/3 failed=[{'draw': 2, 'stage': 'extraction', 'error': 'Extraction stage returned a structurally empty payload (no entities and no processes) on all 2 attempts.'}, {'draw': 3, 'stage': 'extraction', 'error': 'Extraction stage returned a structurally empty payload (no entities and no processes) on all 2 attempts.'}] reactions=0
+   [stage1_extraction] outcome=ok finish= model= chars=None processes=42 (rx 4) entities=54 req=None note=stage_one_boundary_settled attempts=[]
+   [stage2_inference] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=3002 processes=0 (rx None) entities=0 req=7fa090 note= attempts=[('ok', 'stop', 3002)]
+   [stage2_inference] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=6075 processes=0 (rx None) entities=0 req=15b297 note= attempts=[('ok', 'stop', 6075)]
+   [stage2_inference] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=4743 processes=0 (rx None) entities=0 req=5a6c6d note= attempts=[('ok', 'stop', 4743)]
+   [stage2_inference] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=10003 processes=0 (rx None) entities=0 req=71b892 note= attempts=[('ok', 'stop', 10003)]
+   [stage2_inference] outcome=valid_json_zero_processes finish=stop model=deepseek/deepseek-v4-flash chars=4114 processes=0 (rx None) entities=0 req=5d290f note= attempts=[('ok', 'stop', 4114)]
+   ensemble #1: draws 3/3 failed=[] chunk_chars=63691 abbrev_pairs=100 reactions=2 per_draw=[1, 1, 1] one_draw=1 all_draws=0 merge_rules={'exact': 1} flagged=0 names_rewritten=3 typo_snapped=0
+   ensemble #2: draws 3/3 failed=[] chunk_chars=66006 abbrev_pairs=93 reactions=2 per_draw=[1, 2, 1] one_draw=1 all_draws=1 merge_rules={'exact': 2} flagged=0 names_rewritten=0 typo_snapped=0
+   ensemble #3: draws 2/3 failed=[{'draw': 2, 'stage': 'extraction', 'error': 'Extraction stage returned a structurally empty payload (no entities and no processes) on all 2 attempts.'}] chunk_chars=75671 abbrev_pairs=21 reactions=0 per_draw=[0, 0, 0] one_draw=0 all_draws=0 merge_rules={} flagged=0 names_rewritten=0 typo_snapped=0
+   ensemble #4: draws 1/3 failed=[{'draw': 2, 'stage': 'extraction', 'error': 'Extraction stage returned a structurally empty payload (no entities and no processes) on all 2 attempts.'}, {'draw': 3, 'stage': 'extraction', 'error': 'Extraction stage returned a structurally empty payload (no entities and no processes) on all 2 attempts.'}] chunk_chars=27330 abbrev_pairs=14 reactions=0 per_draw=[0, 0, 0] one_draw=0 all_draws=0 merge_rules={} flagged=0 names_rewritten=0 typo_snapped=0

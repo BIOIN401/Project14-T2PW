@@ -1,0 +1,45 @@
+2026-10-21 20:47:15.615 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+{
+ "python": "3.13.6",
+ "main_thread": 1010352,
+ "same_run": {
+  "artifact_dir": "C:\\t\\bt-orch758\\diag\\run-8bc7aa9f6673",
+  "ensemble_boundaries": 1,
+  "pooled_draws": 3,
+  "rule3_applied": true
+ },
+ "next_run": {
+  "artifact_dir": "",
+  "ensemble_boundaries": 0,
+  "pooled_draws": 0,
+  "rule3_applied": false
+ },
+ "exceptions": []
+}
+VERDICT: rule 3 applies only inside the Stage-1 script run; the post-pipeline run sees a detached recorder
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch758\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ a43a2b123f3cf8105ef28123280c076fbf785443  [git, worktree dirty=False]
+label                   : rule3-probe
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/orch758_rule3_probe.py C:/t/bt-orch758/diag
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch758
+root PID / process group: 1010288 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 1.49 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  1010356:python.exe
+descendants terminated  : 1  1010356
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch758\docs\pwml_recovery_sprint\evidence\g11\ORCH-758\01-rule3-probe.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================

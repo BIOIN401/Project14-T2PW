@@ -1,0 +1,238 @@
+
+=== ara_operon-research  status=pass reason= elapsed=2381.69 child_deadline=3480.0
+   event {'seq': 37, 'kind': 'stage_end', 'elapsed_seconds': 2381.083, 'stage': 'driver', 'stage_elapsed_seconds': 2381.082, 'status': 'pass', 'termination_reason': ''}
+   event {'seq': 39, 'kind': 'stage_end', 'elapsed_seconds': 2381.093, 'stage': 'artifacts', 'stage_elapsed_seconds': 0.009, 'artifact_count': 19}
+   event {'seq': 40, 'kind': 'leg_end', 'elapsed_seconds': 2381.094, 'status': 'pass', 'stage': 'research_report', 'termination_reason': '', 'operational_failure': False, 'timeout_source': 'none', 'counts': {'stage0_observed_pathways': 1, 'stage0_observed_organisms': 1, 'reactions': 3, 'transports': 0, 'entities': 36, 'proteins': 6, 'compounds': 5, 'runtime_schema_findings': 8, 'gate_errors': 6, 'gate_errors_not_blocking': 6, 'blocking_issues': 0, 'review_flags': 12, 'skipped_format_rules': 0, 'normalization_actions': 6, 'gate_review_flags': 6, 'tier': {'a': 0, 'b': 0, 'c': 0, 'd': 0}, 'citations': 0, 'unsourced': 0}, 'artifact_count': 19}
+        0-     67s      67s  preprocessor             n=1   empty=0   empty_s=    0
+       67-    731s     665s  Stage 1 extraction       n=6   empty=0   empty_s=    0
+         1(13s,7656c,914191) 1(20s,8048c,914191) 1(194s,8287c,914191) 1(98s,2770c,76de64) 1(198s,5915c,76de64) 1(142s,4174c,76de64)
+      731-    816s      85s  rag_prose_extraction     n=14  empty=0   empty_s=    0
+      816-   1884s    1068s  Stage 2 inference        n=7   empty=3   empty_s=  506
+         1E(190s,0c,513a72) 2E(149s,0c,513a72) 3E(166s,0c,513a72) 1(90s,3725c,513a72) 1(187s,8405c,5b0963) 1(121s,5732c,54fbca) 1(163s,8047c,99864b)
+     1884-   2253s     369s  audit loop               n=6   empty=6   empty_s=  369
+         1E(88s,0c,cc6bc6) 2E(59s,0c,cc6bc6) 3E(51s,0c,cc6bc6) 1E(55s,0c,cc6bc6) 2E(61s,0c,cc6bc6) 3E(55s,0c,cc6bc6)
+  last model event at 2253s; tail after it to kill: 129s
+  per stage: preprocessor: 1 att, 0 empty, 67s (0s empty) | Stage 1 extraction: 6 att, 0 empty, 665s (0s empty) | rag_prose_extraction: 14 att, 0 empty, 85s (0s empty) | Stage 2 inference: 7 att, 3 empty, 1068s (506s empty) | audit loop: 6 att, 6 empty, 369s (369s empty)
+  seconds on empty-length attempts: 875
+
+=== ara_operon-strict  status=timeout reason=budget_exhausted elapsed=3600.5 child_deadline=3480.0
+        0-     66s      66s  preprocessor             n=1   empty=0   empty_s=    0
+       66-    863s     797s  Stage 1 extraction       n=6   empty=0   empty_s=    0
+         1(122s,8725c,c1f4ba) 1(166s,8696c,c1f4ba) 1(143s,7720c,c1f4ba) 1(172s,4977c,5cfe1a) 1(114s,4254c,5cfe1a) 1(80s,3867c,5cfe1a)
+      863-    899s      36s  rag_prose_extraction     n=10  empty=0   empty_s=    0
+      899-   2139s    1240s  Stage 2 inference        n=11  empty=9   empty_s=  974
+         1E(108s,0c,c8a915) 2E(100s,0c,c8a915) 3E(104s,0c,c8a915) 1E(105s,0c,c8a915) 2E(104s,0c,c8a915) 3E(112s,0c,c8a915) 1(154s,6576c,c8a915) 1E(112s,0c,4a6149) 2E(118s,0c,4a6149) 3E(111s,0c,4a6149) 1L(111s,2263c,4a6149)
+     2139-   2154s      16s  inference json repair    n=1   empty=0   empty_s=    0
+         1(16s,2268c,455174)
+     2154-   3469s    1315s  Stage 2 inference        n=13  empty=10  empty_s= 1111
+         1E(96s,0c,5fa295) 2(11s,0c,5fa295) 3(90s,10019c,5fa295) 1E(93s,0c,cc8574) 2E(98s,0c,cc8574) 3E(100s,0c,cc8574) 1E(98s,0c,cc8574) 2E(99s,0c,cc8574) 3E(97s,0c,cc8574) 1E(149s,0c,cc8574) 2E(141s,0c,cc8574) 3E(141s,0c,cc8574) 1(103s,9118c,cc8574)
+     3469-   3579s     110s  chat                     n=6   empty=6   empty_s=  110
+         1E(35s,0c,e111b8) 2E(7s,0c,e111b8) 3E(7s,0c,e111b8) 1E(46s,0c,f3635a) 2E(8s,0c,f3635a) 3E(7s,0c,f3635a)
+  last model event at 3579s; tail after it to kill: 22s
+  per stage: preprocessor: 1 att, 0 empty, 66s (0s empty) | Stage 1 extraction: 6 att, 0 empty, 797s (0s empty) | rag_prose_extraction: 10 att, 0 empty, 36s (0s empty) | Stage 2 inference: 24 att, 19 empty, 2554s (2084s empty) | inference json repair: 1 att, 0 empty, 16s (0s empty) | chat: 6 att, 6 empty, 110s (110s empty)
+  seconds on empty-length attempts: 2194
+
+=== chlorophyll-research  status=timeout reason=budget_exhausted elapsed=3600.67 child_deadline=3480.0
+        0-     46s      46s  preprocessor             n=1   empty=0   empty_s=    0
+       46-   2212s    2166s  Stage 1 extraction       n=6   empty=0   empty_s=    0
+         1L(523s,39443c,0fb747) 1(493s,48179c,0fb747) 1(350s,42343c,0fb747) 1(172s,9937c,c43a44) 1(212s,9961c,c43a44) 1(415s,8427c,c43a44)
+     2212-   2850s     638s  rag_prose_extraction     n=26  empty=8   empty_s=  395
+     2850-   3478s     628s  Stage 2 inference        n=3   empty=3   empty_s=  628
+         1E(303s,0c,49a861) 2E(175s,0c,49a861) 3E(150s,0c,49a861)
+  last model event at 3478s; tail after it to kill: 122s
+  per stage: preprocessor: 1 att, 0 empty, 46s (0s empty) | Stage 1 extraction: 6 att, 0 empty, 2166s (0s empty) | rag_prose_extraction: 26 att, 8 empty, 638s (395s empty) | Stage 2 inference: 3 att, 3 empty, 628s (628s empty)
+  seconds on empty-length attempts: 1024
+
+=== chlorophyll-strict  status=timeout reason=budget_exhausted elapsed=3600.43 child_deadline=3480.0
+        0-     32s      32s  preprocessor             n=1   empty=0   empty_s=    0
+       32-   2103s    2071s  Stage 1 extraction       n=6   empty=0   empty_s=    0
+         1(557s,41989c,d2cc2e) 1(486s,38491c,d2cc2e) 1(573s,38275c,d2cc2e) 1(138s,7636c,741336) 1(149s,12100c,741336) 1(168s,9491c,741336)
+     2103-   2622s     519s  rag_prose_extraction     n=31  empty=13  empty_s=  407
+     2622-   3559s     937s  Stage 2 inference        n=8   empty=8   empty_s=  937
+         1E(139s,0c,221e3f) 2E(97s,0c,221e3f) 3E(104s,0c,221e3f) 1E(102s,0c,221e3f) 2E(95s,0c,221e3f) 3E(107s,0c,221e3f) 1E(149s,0c,221e3f) 2E(144s,0c,221e3f)
+  last model event at 3559s; tail after it to kill: 42s
+  per stage: preprocessor: 1 att, 0 empty, 32s (0s empty) | Stage 1 extraction: 6 att, 0 empty, 2071s (0s empty) | rag_prose_extraction: 31 att, 13 empty, 519s (407s empty) | Stage 2 inference: 8 att, 8 empty, 937s (937s empty)
+  seconds on empty-length attempts: 1344
+
+=== enterobactin-research  status=pass reason= elapsed=3447.7 child_deadline=3480.0
+   event {'seq': 91, 'kind': 'stage_end', 'elapsed_seconds': 3447.102, 'stage': 'driver', 'stage_elapsed_seconds': 3447.101, 'status': 'pass', 'termination_reason': ''}
+   event {'seq': 93, 'kind': 'stage_end', 'elapsed_seconds': 3447.114, 'stage': 'artifacts', 'stage_elapsed_seconds': 0.01, 'artifact_count': 19}
+   event {'seq': 94, 'kind': 'leg_end', 'elapsed_seconds': 3447.115, 'status': 'pass', 'stage': 'research_report', 'termination_reason': '', 'operational_failure': False, 'timeout_source': 'none', 'counts': {'stage0_observed_pathways': 1, 'stage0_observed_organisms': 1, 'reactions': 5, 'transports': 3, 'entities': 35, 'proteins': 9, 'compounds': 17, 'runtime_schema_findings': 2, 'gate_errors': 2, 'gate_errors_not_blocking': 2, 'blocking_issues': 0, 'review_flags': 3, 'skipped_format_rules': 0, 'normalization_actions': 3, 'gate_review_flags': 2, 'tier': {'a': 17, 'b': 0, 'c': 7, 'd': 0}, 'citations': 1, 'unsourced': 0}, 'artifact_count': 19}
+        0-     35s      35s  preprocessor             n=1   empty=0   empty_s=    0
+       35-    598s     563s  Stage 1 extraction       n=3   empty=0   empty_s=    0
+         1(168s,13043c,934632) 1(163s,14899c,934632) 1(232s,19234c,934632)
+      598-    743s     145s  preprocessor             n=4   empty=0   empty_s=    0
+      743-   1154s     412s  rag_prose_extraction     n=25  empty=9   empty_s=  264
+     1154-   2221s    1066s  Stage 2 inference        n=6   empty=5   empty_s=  919
+         1E(231s,0c,1e7fed) 2E(209s,0c,1e7fed) 3E(205s,0c,1e7fed) 1E(130s,0c,1e7fed) 2E(144s,0c,1e7fed) 3L(148s,5721c,1e7fed)
+     2221-   2265s      44s  inference json repair    n=1   empty=0   empty_s=    0
+         1(44s,5728c,f6d7e2)
+     2265-   2456s     191s  Stage 2 inference        n=1   empty=0   empty_s=    0
+         1L(191s,357c,0f7cbe)
+     2456-   2459s       3s  inference json repair    n=1   empty=0   empty_s=    0
+         1(3s,359c,837a60)
+     2459-   2659s     200s  chat                     n=12  empty=12  empty_s=  200
+         1E(40s,0c,9b0800) 2E(4s,0c,9b0800) 3E(6s,0c,9b0800) 1E(31s,0c,9b0800) 2E(5s,0c,9b0800) 3E(5s,0c,9b0800) 1E(48s,0c,9b0800) 2E(5s,0c,9b0800) 3E(5s,0c,9b0800) 1E(40s,0c,9b0800) 2E(5s,0c,9b0800) 3E(6s,0c,9b0800)
+     2659-   2785s     126s  audit loop               n=5   empty=3   empty_s=   78
+         1E(25s,0c,74bc01) 2E(26s,0c,74bc01) 3E(27s,0c,74bc01) 1L(24s,2479c,74bc01) 1L(24s,6419c,74bc01)
+     2785-   2832s      47s  gap resolver             n=7   empty=6   empty_s=   39
+         1E(4s,0c,381569) 2E(5s,0c,381569) 3E(7s,0c,381569) 1E(11s,0c,429cd0) 2E(5s,0c,429cd0) 3E(7s,0c,429cd0) 1(8s,220c,3981a1)
+     2832-   2895s      63s  chat                     n=6   empty=6   empty_s=   63
+         1E(20s,0c,9b0800) 2E(4s,0c,9b0800) 3E(6s,0c,9b0800) 1E(20s,0c,9b0800) 2E(6s,0c,9b0800) 3E(7s,0c,9b0800)
+     2895-   3152s     257s  gap resolver             n=10  empty=7   empty_s=  135
+         1(20s,244c,36dee0) 1E(42s,0c,2ef326) 2E(8s,0c,2ef326) 3E(8s,0c,2ef326) 1(97s,368c,9874de) 1E(37s,0c,92f2a1) 2E(7s,0c,92f2a1) 3E(8s,0c,92f2a1) 1E(26s,0c,faebed) 2(5s,266c,faebed)
+     3152-   3414s     262s  chat                     n=6   empty=6   empty_s=  262
+         1E(190s,0c,9b0800) 2E(9s,0c,9b0800) 3E(7s,0c,9b0800) 1E(46s,0c,9b0800) 2E(5s,0c,9b0800) 3E(6s,0c,9b0800)
+  last model event at 3414s; tail after it to kill: 34s
+  per stage: preprocessor: 5 att, 0 empty, 180s (0s empty) | Stage 1 extraction: 3 att, 0 empty, 563s (0s empty) | rag_prose_extraction: 25 att, 9 empty, 412s (264s empty) | Stage 2 inference: 7 att, 5 empty, 1257s (919s empty) | inference json repair: 2 att, 0 empty, 47s (0s empty) | chat: 24 att, 24 empty, 525s (525s empty) | audit loop: 5 att, 3 empty, 126s (78s empty) | gap resolver: 17 att, 13 empty, 304s (174s empty)
+  seconds on empty-length attempts: 1960
+
+=== enterobactin-strict  status=fail reason= elapsed=2212.52 child_deadline=3480.0
+   event {'seq': 46, 'kind': 'stage_end', 'elapsed_seconds': 2212.002, 'stage': 'driver', 'stage_elapsed_seconds': 2212.0, 'status': 'fail', 'termination_reason': ''}
+   event {'seq': 48, 'kind': 'stage_end', 'elapsed_seconds': 2212.01, 'stage': 'artifacts', 'stage_elapsed_seconds': 0.008, 'artifact_count': 14}
+   event {'seq': 49, 'kind': 'leg_end', 'elapsed_seconds': 2212.012, 'status': 'fail', 'stage': 'post_pipeline', 'termination_reason': '', 'operational_failure': False, 'timeout_source': 'none', 'counts': {'stage0_observed_pathways': 1, 'stage0_observed_organisms': 1, 'reactions': 6, 'transports': 4, 'entities': 36, 'proteins': 8, 'compounds': 18, 'superseded_contract_errors': 1, 'runtime_schema_findings': 8, 'gate_errors': 1, 'blocking_issues': 1}, 'artifact_count': 14}
+        0-     50s      50s  preprocessor             n=1   empty=0   empty_s=    0
+       50-    742s     692s  Stage 1 extraction       n=3   empty=0   empty_s=    0
+         1(232s,9642c,b8c575) 1(260s,12406c,b8c575) 1(199s,14563c,b8c575)
+      742-    874s     132s  preprocessor             n=4   empty=0   empty_s=    0
+      874-   1181s     308s  rag_prose_extraction     n=21  empty=2   empty_s=   60
+     1181-   1393s     211s  Stage 2 inference        n=2   empty=1   empty_s=   95
+         1E(95s,0c,e32db3) 2L(117s,6724c,e32db3)
+     1393-   1431s      38s  inference json repair    n=1   empty=0   empty_s=    0
+         1(38s,6731c,724236)
+     1431-   1568s     137s  Stage 2 inference        n=1   empty=0   empty_s=    0
+         1L(137s,3909c,2b91ed)
+     1568-   1603s      36s  inference json repair    n=1   empty=0   empty_s=    0
+         1(36s,3939c,8bd204)
+     1603-   1937s     333s  audit loop               n=6   empty=6   empty_s=  333
+         1E(74s,0c,9fc30c) 2E(54s,0c,9fc30c) 3E(42s,0c,9fc30c) 1E(64s,0c,9fc30c) 2E(56s,0c,9fc30c) 3E(45s,0c,9fc30c)
+     1937-   2183s     246s  chat                     n=3   empty=3   empty_s=  246
+         1E(229s,0c,89b749) 2E(5s,0c,89b749) 3E(12s,0c,89b749)
+  last model event at 2183s; tail after it to kill: 30s
+  per stage: preprocessor: 5 att, 0 empty, 182s (0s empty) | Stage 1 extraction: 3 att, 0 empty, 692s (0s empty) | rag_prose_extraction: 21 att, 2 empty, 308s (60s empty) | Stage 2 inference: 3 att, 1 empty, 348s (95s empty) | inference json repair: 2 att, 0 empty, 74s (0s empty) | audit loop: 6 att, 6 empty, 333s (333s empty) | chat: 3 att, 3 empty, 246s (246s empty)
+  seconds on empty-length attempts: 735
+
+=== menaquinone-research  status=timeout reason=operation_timeout elapsed=3582.88 child_deadline=3480.0
+   event {'seq': 71, 'kind': 'stage_end', 'elapsed_seconds': 3582.432, 'stage': 'driver', 'stage_elapsed_seconds': 3582.431, 'status': 'timeout', 'termination_reason': 'operation_timeout'}
+   event {'seq': 73, 'kind': 'stage_end', 'elapsed_seconds': 3582.434, 'stage': 'artifacts', 'stage_elapsed_seconds': 0.001, 'artifact_count': 0}
+   event {'seq': 74, 'kind': 'leg_end', 'elapsed_seconds': 3582.435, 'status': 'timeout', 'stage': 'input', 'termination_reason': 'operation_timeout', 'operational_failure': True, 'timeout_source': 'in_process_deadline', 'counts': {}, 'artifact_count': 0}
+        0-     16s      16s  preprocessor             n=1   empty=0   empty_s=    0
+       16-    639s     623s  Stage 1 extraction       n=6   empty=0   empty_s=    0
+         1(33s,13694c,508268) 1(118s,12657c,508268) 1(92s,13252c,508268) 1(129s,6879c,54cc7e) 1(148s,6963c,54cc7e) 1(103s,5057c,54cc7e)
+      639-    887s     248s  preprocessor             n=7   empty=0   empty_s=    0
+      887-   1197s     310s  rag_prose_extraction     n=28  empty=6   empty_s=  186
+     1197-   1884s     687s  Stage 2 inference        n=7   empty=6   empty_s=  554
+         1E(100s,0c,e77514) 2E(92s,0c,e77514) 3E(92s,0c,e77514) 1E(89s,0c,e77514) 2E(92s,0c,e77514) 3E(90s,0c,e77514) 1L(133s,1469c,e77514)
+     1884-   1899s      16s  inference json repair    n=1   empty=0   empty_s=    0
+         1(16s,1478c,ad1238)
+     1899-   2738s     839s  Stage 2 inference        n=9   empty=7   empty_s=  658
+         1(48s,2157c,91a7f4) 1E(87s,0c,3dd269) 2E(88s,0c,3dd269) 3E(91s,0c,3dd269) 1E(85s,0c,3dd269) 2E(86s,0c,3dd269) 3E(88s,0c,3dd269) 1E(133s,0c,3dd269) 2L(134s,2575c,3dd269)
+     2738-   2751s      12s  inference json repair    n=1   empty=0   empty_s=    0
+         1(12s,2605c,4ec168)
+     2751-   3461s     711s  Stage 2 inference        n=7   empty=6   empty_s=  585
+         1E(105s,0c,57bffb) 2E(96s,0c,57bffb) 3E(97s,0c,57bffb) 1E(92s,0c,57bffb) 2E(95s,0c,57bffb) 3E(100s,0c,57bffb) 1L(126s,11784c,57bffb)
+     3461-   3582s     121s  inference json repair    n=1   empty=0   empty_s=    0
+         1(121s,11724c,7ad864)
+  last model event at 3582s; tail after it to kill: 0s
+  per stage: preprocessor: 8 att, 0 empty, 264s (0s empty) | Stage 1 extraction: 6 att, 0 empty, 623s (0s empty) | rag_prose_extraction: 28 att, 6 empty, 310s (186s empty) | Stage 2 inference: 23 att, 19 empty, 2236s (1797s empty) | inference json repair: 3 att, 0 empty, 149s (0s empty)
+  seconds on empty-length attempts: 1983
+
+=== menaquinone-strict  status=timeout reason=budget_exhausted elapsed=3600.28 child_deadline=3480.0
+        0-     43s      43s  preprocessor             n=1   empty=0   empty_s=    0
+       43-   2196s    2153s  Stage 1 extraction       n=8   empty=2   empty_s= 1046
+         1(137s,16501c,149c65) 1(250s,14350c,149c65) 1(177s,9740c,149c65) 1E(476s,0c,2eb3a0) 2E(570s,0c,2eb3a0) 3(184s,4625c,2eb3a0) 1(256s,5217c,2eb3a0) 1(103s,1774c,2eb3a0)
+     2196-   2400s     204s  preprocessor             n=7   empty=0   empty_s=    0
+     2400-   2710s     310s  rag_prose_extraction     n=30  empty=9   empty_s=  207
+     2710-   3310s     600s  Stage 2 inference        n=7   empty=3   empty_s=  266
+         1(84s,14338c,a28730) 1(81s,3296c,edcae2) 1E(86s,0c,860907) 2E(88s,0c,860907) 3(83s,11713c,860907) 1E(92s,0c,5f1592) 2(87s,6315c,5f1592)
+     3310-   3569s     259s  audit loop               n=9   empty=8   empty_s=  236
+         1E(41s,0c,a4b690) 2E(25s,0c,a4b690) 3L(24s,3976c,a4b690) 1E(27s,0c,a4b690) 2E(27s,0c,a4b690) 3E(27s,0c,a4b690) 1E(29s,0c,a4b690) 2E(29s,0c,a4b690) 3E(30s,0c,a4b690)
+  last model event at 3569s; tail after it to kill: 31s
+  per stage: preprocessor: 8 att, 0 empty, 247s (0s empty) | Stage 1 extraction: 8 att, 2 empty, 2153s (1046s empty) | rag_prose_extraction: 30 att, 9 empty, 310s (207s empty) | Stage 2 inference: 7 att, 3 empty, 600s (266s empty) | audit loop: 9 att, 8 empty, 259s (236s empty)
+  seconds on empty-length attempts: 1754
+
+=== sour_taste-research  status=pass reason= elapsed=1969.93 child_deadline=3480.0
+   event {'seq': 24, 'kind': 'stage_end', 'elapsed_seconds': 1969.34, 'stage': 'driver', 'stage_elapsed_seconds': 1969.339, 'status': 'pass', 'termination_reason': ''}
+   event {'seq': 26, 'kind': 'stage_end', 'elapsed_seconds': 1969.349, 'stage': 'artifacts', 'stage_elapsed_seconds': 0.009, 'artifact_count': 20}
+   event {'seq': 27, 'kind': 'leg_end', 'elapsed_seconds': 1969.35, 'status': 'pass', 'stage': 'research_report', 'termination_reason': '', 'operational_failure': False, 'timeout_source': 'none', 'counts': {'stage0_observed_pathways': 1, 'stage0_observed_organisms': 1, 'stage0_scope_specializations': 1, 'reactions': 0, 'transports': 4, 'entities': 22, 'proteins': 7, 'compounds': 4, 'runtime_schema_findings': 2, 'gate_errors': 4, 'gate_errors_not_blocking': 4, 'blocking_issues': 0, 'review_flags': 4, 'skipped_format_rules': 0, 'normalization_actions': 4, 'gate_review_flags': 4, 'tier': {'a': 0, 'b': 0, 'c': 0, 'd': 0}, 'citations': 0, 'unsourced': 0}, 'artifact_count': 20}
+        0-     74s      74s  preprocessor             n=1   empty=0   empty_s=    0
+       74-   1353s    1279s  Stage 1 extraction       n=4   empty=1   empty_s=  946
+         1(74s,7170c,f7cd2b) 1(84s,7675c,f7cd2b) 1E(946s,0c,f7cd2b) 2(176s,8328c,f7cd2b)
+     1353-   1389s      36s  rag_prose_extraction     n=8   empty=0   empty_s=    0
+     1389-   1496s     107s  Stage 2 inference        n=2   empty=0   empty_s=    0
+         1(45s,944c,9ff6d3) 1(62s,1511c,705694)
+     1496-   1897s     401s  audit loop               n=6   empty=6   empty_s=  401
+         1E(92s,0c,f32dc9) 2E(63s,0c,f32dc9) 3E(70s,0c,f32dc9) 1E(61s,0c,f32dc9) 2E(53s,0c,f32dc9) 3E(62s,0c,f32dc9)
+  last model event at 1897s; tail after it to kill: 73s
+  per stage: preprocessor: 1 att, 0 empty, 74s (0s empty) | Stage 1 extraction: 4 att, 1 empty, 1279s (946s empty) | rag_prose_extraction: 8 att, 0 empty, 36s (0s empty) | Stage 2 inference: 2 att, 0 empty, 107s (0s empty) | audit loop: 6 att, 6 empty, 401s (401s empty)
+  seconds on empty-length attempts: 1347
+
+=== sour_taste-strict  status=fail reason= elapsed=1655.08 child_deadline=3480.0
+   event {'seq': 36, 'kind': 'stage_end', 'elapsed_seconds': 1654.43, 'stage': 'driver', 'stage_elapsed_seconds': 1654.429, 'status': 'fail', 'termination_reason': ''}
+   event {'seq': 38, 'kind': 'stage_end', 'elapsed_seconds': 1654.439, 'stage': 'artifacts', 'stage_elapsed_seconds': 0.008, 'artifact_count': 16}
+   event {'seq': 39, 'kind': 'leg_end', 'elapsed_seconds': 1654.441, 'status': 'fail', 'stage': 'pwml_export', 'termination_reason': '', 'operational_failure': False, 'timeout_source': 'none', 'counts': {'stage0_observed_pathways': 1, 'stage0_observed_organisms': 1, 'stage0_scope_specializations': 1, 'reactions': 0, 'transports': 7, 'entities': 24, 'proteins': 7, 'compounds': 5, 'superseded_contract_errors': 10, 'runtime_schema_findings': 20, 'gate_errors': 0, 'blocking_issues': 0}, 'artifact_count': 16}
+        0-    168s     168s  preprocessor             n=1   empty=0   empty_s=    0
+      168-    565s     397s  Stage 1 extraction       n=3   empty=0   empty_s=    0
+         1(162s,12350c,20a7ff) 1(113s,12331c,20a7ff) 1(121s,11149c,20a7ff)
+      565-    606s      41s  rag_prose_extraction     n=8   empty=0   empty_s=    0
+      606-    809s     203s  Stage 2 inference        n=2   empty=1   empty_s=  100
+         1E(100s,0c,b8d3dc) 2L(103s,206c,b8d3dc)
+      809-    815s       6s  inference json repair    n=1   empty=0   empty_s=    0
+         1(6s,213c,f19c50)
+      815-   1018s     202s  Stage 2 inference        n=2   empty=1   empty_s=  101
+         1E(101s,0c,11c2f6) 2(101s,2603c,11c2f6)
+     1018-   1076s      59s  chat                     n=4   empty=3   empty_s=   44
+         1E(33s,0c,9b768d) 2E(5s,0c,9b768d) 3E(6s,0c,9b768d) 1(15s,283c,9b768d)
+     1076-   1498s     422s  audit loop               n=6   empty=6   empty_s=  422
+         1E(83s,0c,87cd35) 2E(44s,0c,87cd35) 3E(67s,0c,87cd35) 1E(72s,0c,87cd35) 2E(90s,0c,87cd35) 3E(64s,0c,87cd35)
+     1498-   1620s     122s  chat                     n=6   empty=6   empty_s=  122
+         1E(68s,0c,9b768d) 2E(5s,0c,9b768d) 3E(7s,0c,9b768d) 1E(31s,0c,9b768d) 2E(5s,0c,9b768d) 3E(6s,0c,9b768d)
+  last model event at 1620s; tail after it to kill: 35s
+  per stage: preprocessor: 1 att, 0 empty, 168s (0s empty) | Stage 1 extraction: 3 att, 0 empty, 397s (0s empty) | rag_prose_extraction: 8 att, 0 empty, 41s (0s empty) | Stage 2 inference: 4 att, 2 empty, 406s (202s empty) | inference json repair: 1 att, 0 empty, 6s (0s empty) | chat: 10 att, 9 empty, 181s (166s empty) | audit loop: 6 att, 6 empty, 422s (422s empty)
+  seconds on empty-length attempts: 790
+
+=== wnt_ca-research  status=timeout reason=budget_exhausted elapsed=3600.73 child_deadline=3480.0
+        0-     90s      90s  preprocessor             n=1   empty=0   empty_s=    0
+       90-   2443s    2353s  Stage 1 extraction       n=17  empty=1   empty_s=  791
+         1(190s,16335c,9060c1) 1(136s,18130c,9060c1) 1(2s,2c,9060c1) 1(233s,17129c,7a6938) 1(185s,8990c,804656) 1(206s,13341c,804656) 1(360s,10158c,804656) 1(55s,1357c,0bdaf5) 1E(791s,0c,0bdaf5) 2(21s,1153c,0bdaf5) 1(31s,1248c,5f45a6) 1(65s,5724c,0bdaf5) 1(14s,1329c,cd472f) 1(10s,1316c,cd472f) 1(23s,1153c,fcb860) 1(13s,1242c,cd472f) 1(19s,1153c,fcb860)
+     2443-   3148s     705s  rag_prose_extraction     n=42  empty=28  empty_s=  554
+     3148-   3598s     450s  Stage 2 inference        n=5   empty=0   empty_s=    0
+         1(78s,3002c,7fa090) 1(88s,6075c,15b297) 1(74s,4743c,5a6c6d) 1(142s,10003c,71b892) 1(68s,4114c,5d290f)
+  last model event at 3598s; tail after it to kill: 3s
+  per stage: preprocessor: 1 att, 0 empty, 90s (0s empty) | Stage 1 extraction: 17 att, 1 empty, 2353s (791s empty) | rag_prose_extraction: 42 att, 28 empty, 705s (554s empty) | Stage 2 inference: 5 att, 0 empty, 450s (0s empty)
+  seconds on empty-length attempts: 1345
+
+=== wnt_ca-strict  status=fail reason= elapsed=1465.66 child_deadline=3480.0
+   event {'seq': 16, 'kind': 'stage_end', 'elapsed_seconds': 1465.168, 'stage': 'driver', 'stage_elapsed_seconds': 1465.167, 'status': 'fail', 'termination_reason': ''}
+   event {'seq': 18, 'kind': 'stage_end', 'elapsed_seconds': 1465.17, 'stage': 'artifacts', 'stage_elapsed_seconds': 0.002, 'artifact_count': 3}
+   event {'seq': 19, 'kind': 'leg_end', 'elapsed_seconds': 1465.172, 'status': 'fail', 'stage': 'stage1', 'termination_reason': '', 'operational_failure': False, 'timeout_source': 'none', 'counts': {}, 'artifact_count': 3}
+        0-    148s     148s  preprocessor             n=1   empty=0   empty_s=    0
+      148-   1465s    1317s  Stage 1 extraction       n=12  empty=0   empty_s=    0
+         1(239s,19214c,83258a) 1(158s,18413c,83258a) 1(154s,18522c,83258a) 1(207s,10214c,f1f76c) 1(183s,10190c,f1f76c) 1(201s,12795c,f1f76c) 1(25s,1245c,9723e8) 1(28s,1153c,5857e1) 1(35s,1245c,9723e8) 1(20s,1153c,5857e1) 1(26s,1153c,9723e8) 1(42s,1249c,5857e1)
+  last model event at 1465s; tail after it to kill: 0s
+  per stage: preprocessor: 1 att, 0 empty, 148s (0s empty) | Stage 1 extraction: 12 att, 0 empty, 1317s (0s empty)
+  seconds on empty-length attempts: 0
+
+=== wnt_pcp-research  status=fail reason= elapsed=3323.45 child_deadline=3480.0
+   event {'seq': 20, 'kind': 'stage_end', 'elapsed_seconds': 3322.987, 'stage': 'driver', 'stage_elapsed_seconds': 3322.986, 'status': 'fail', 'termination_reason': ''}
+   event {'seq': 22, 'kind': 'stage_end', 'elapsed_seconds': 3322.99, 'stage': 'artifacts', 'stage_elapsed_seconds': 0.002, 'artifact_count': 3}
+   event {'seq': 23, 'kind': 'leg_end', 'elapsed_seconds': 3322.991, 'status': 'fail', 'stage': 'stage1', 'termination_reason': '', 'operational_failure': False, 'timeout_source': 'none', 'counts': {}, 'artifact_count': 3}
+        0-     82s      82s  preprocessor             n=1   empty=0   empty_s=    0
+       82-   3323s    3241s  Stage 1 extraction       n=16  empty=2   empty_s= 1281
+         1(254s,11029c,10ea52) 1(225s,16123c,10ea52) 1(217s,21389c,10ea52) 1(54s,1763c,a42f02) 1(102s,1727c,a42f02) 1E(613s,0c,a42f02) 2(118s,0c,a42f02) 3(115s,1275c,a42f02) 1(105s,1886c,b1ac02) 1(116s,1243c,f5df30) 1(59s,1153c,afed48) 1E(669s,0c,f5df30) 2(61s,1260c,f5df30) 1(262s,1153c,afed48) 1(126s,1277c,f5df30) 1(147s,1295c,afed48)
+  last model event at 3323s; tail after it to kill: 0s
+  per stage: preprocessor: 1 att, 0 empty, 82s (0s empty) | Stage 1 extraction: 16 att, 2 empty, 3241s (1281s empty)
+  seconds on empty-length attempts: 1281
+
+=== wnt_pcp-strict  status=timeout reason=budget_exhausted elapsed=3600.6 child_deadline=3480.0
+        0-    132s     132s  preprocessor             n=1   empty=0   empty_s=    0
+      132-   2512s    2380s  Stage 1 extraction       n=15  empty=2   empty_s= 1021
+         1(127s,16587c,e36b49) 1(159s,13406c,e36b49) 1(141s,16741c,e36b49) 1E(694s,0c,c53ae5) 2(171s,2693c,c53ae5) 1(97s,1843c,c53ae5) 1(250s,8006c,c53ae5) 1(119s,6536c,e77cc4) 1E(327s,0c,e77cc4) 2(70s,1471c,e77cc4) 1(49s,1184c,e77cc4) 1(28s,1153c,6c724d) 1(31s,1412c,42ba92) 1(49s,1337c,42ba92) 1(70s,1422c,42ba92)
+     2512-   3164s     652s  rag_prose_extraction     n=35  empty=20  empty_s=  447
+     3164-   3513s     348s  Stage 2 inference        n=2   empty=2   empty_s=  348
+         1E(146s,0c,fe48c2) 2E(202s,0c,fe48c2)
+  last model event at 3513s; tail after it to kill: 88s
+  per stage: preprocessor: 1 att, 0 empty, 132s (0s empty) | Stage 1 extraction: 15 att, 2 empty, 2380s (1021s empty) | rag_prose_extraction: 35 att, 20 empty, 652s (447s empty) | Stage 2 inference: 2 att, 2 empty, 348s (348s empty)
+  seconds on empty-length attempts: 1816
+
+wrote C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch758\docs\pwml_recovery_sprint\evidence\orch758_leg_timeline.json

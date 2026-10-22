@@ -1,0 +1,7518 @@
+[
+  {
+    "draws_requested": 3,
+    "draws_succeeded": 3,
+    "draws_failed": 0,
+    "paper_lexicon": {
+      "paper_chars": 64053,
+      "abbreviation_pairs": 56,
+      "ambiguous_abbreviations": {
+        "TPB": [
+          "tetrapyrrole biosynthesis",
+          "tetrapyrrole biosynthesis pathway"
+        ]
+      }
+    },
+    "names_rewritten": [
+      {
+        "draw": 1,
+        "from": "Glu 1-semialdehyde (GSA)",
+        "to": "Glu 1-semialdehyde",
+        "rules": [
+          "abbreviation"
+        ],
+        "pattern": "long (SF)"
+      },
+      {
+        "draw": 1,
+        "from": "5-aminolevulinic acid (ALA)",
+        "to": "5-aminolevulinic acid",
+        "rules": [
+          "abbreviation"
+        ],
+        "pattern": "long (SF)"
+      },
+      {
+        "draw": 1,
+        "from": "porphobilinogen (PBG)",
+        "to": "porphobilinogen",
+        "rules": [
+          "abbreviation"
+        ],
+        "pattern": "long (SF)"
+      },
+      {
+        "draw": 1,
+        "from": "hydroxymethylbilane (HMB)",
+        "to": "hydroxymethylbilane",
+        "rules": [
+          "abbreviation"
+        ],
+        "pattern": "long (SF)"
+      },
+      {
+        "draw": 1,
+        "from": "Mg-Proto IX monomethyl ester (Mg-Proto ME)",
+        "to": "Mg-Proto IX monomethyl ester",
+        "rules": [
+          "abbreviation"
+        ],
+        "pattern": "long (SF)"
+      },
+      {
+        "draw": 1,
+        "from": "3,8-divinyl-protochlorophyllide (DV-Pchlide)",
+        "to": "3,8-divinyl-protochlorophyllide",
+        "rules": [
+          "abbreviation"
+        ],
+        "pattern": "long (SF)"
+      },
+      {
+        "draw": 1,
+        "from": "3,8-divinyl-chlorophyllide (DV-Chlide)",
+        "to": "3,8-divinyl-chlorophyllide",
+        "rules": [
+          "abbreviation"
+        ],
+        "pattern": "long (SF)"
+      },
+      {
+        "draw": 2,
+        "from": "GSA",
+        "to": "Glu 1-semialdehyde",
+        "rules": [
+          "abbreviation"
+        ],
+        "pattern": "long (SF)"
+      },
+      {
+        "draw": 2,
+        "from": "ALA",
+        "to": "5-aminolevulinic acid",
+        "rules": [
+          "abbreviation"
+        ],
+        "pattern": "long (SF)"
+      },
+      {
+        "draw": 2,
+        "from": "PBG",
+        "to": "porphobilinogen",
+        "rules": [
+          "abbreviation"
+        ],
+        "pattern": "long (SF)"
+      },
+      {
+        "draw": 2,
+        "from": "HMB",
+        "to": "hydroxymethylbilane",
+        "rules": [
+          "abbreviation"
+        ],
+        "pattern": "long (SF)"
+      },
+      {
+        "draw": 2,
+        "from": "Urogen III",
+        "to": "uroporphyrinogen III",
+        "rules": [
+          "abbreviation"
+        ],
+        "pattern": "shared_locant"
+      },
+      {
+        "draw": 2,
+        "from": "Coprogen III",
+        "to": "coproporphyrinogen III",
+        "rules": [
+          "abbreviation"
+        ],
+        "pattern": "shared_locant"
+      },
+      {
+        "draw": 2,
+        "from": "Protogen IX",
+        "to": "protoporphyrinogen IX",
+        "rules": [
+          "abbreviation"
+        ],
+        "pattern": "shared_locant"
+      },
+      {
+        "draw": 2,
+        "from": "Proto IX",
+        "to": "protoporphyrin IX",
+        "rules": [
+          "abbreviation"
+        ],
+        "pattern": "shared_locant"
+      },
+      {
+        "draw": 2,
+        "from": "Mg-Proto ME",
+        "to": "Mg-Proto IX monomethyl ester",
+        "rules": [
+          "abbreviation"
+        ],
+        "pattern": "long (SF)"
+      },
+      {
+        "draw": 2,
+        "from": "DV-Pchlide",
+        "to": "3,8-divinyl-protochlorophyllide",
+        "rules": [
+          "abbreviation"
+        ],
+        "pattern": "long (SF)"
+      },
+      {
+        "draw": 2,
+        "from": "DV-Chlide",
+        "to": "3,8-divinyl-chlorophyllide",
+        "rules": [
+          "abbreviation"
+        ],
+        "pattern": "long (SF)"
+      }
+    ],
+    "typo_snapped": [],
+    "buckets": {
+      "/compartments": {
+        "merged": 5,
+        "rows_per_draw": [
+          4,
+          5,
+          5
+        ],
+        "first_seen_in_draw": [
+          4,
+          1,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 4,
+        "rows": [
+          {
+            "key": "plastid",
+            "name": "plastid",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "plastid",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "plastid",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "thylakoid membrane",
+            "name": "thylakoid membrane",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "thylakoid membrane",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "thylakoid membrane",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "etioplast",
+            "name": "etioplast",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "etioplast",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "etioplast",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "nucleus",
+            "name": "nucleus",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "nucleus",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "nucleus",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "chloroplast",
+            "name": "chloroplast",
+            "draws": [
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "chloroplast",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "2/3"
+          }
+        ]
+      },
+      "/entities/cell_types": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/entities/species": {
+        "merged": 1,
+        "rows_per_draw": [
+          1,
+          1,
+          1
+        ],
+        "first_seen_in_draw": [
+          1,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 1,
+        "rows": [
+          {
+            "key": "arabidopsis thaliana",
+            "name": "Arabidopsis thaliana",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "Arabidopsis thaliana",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "Arabidopsis thaliana",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          }
+        ]
+      },
+      "/entities/tissues": {
+        "merged": 10,
+        "rows_per_draw": [
+          0,
+          7,
+          3
+        ],
+        "first_seen_in_draw": [
+          0,
+          7,
+          3
+        ],
+        "unique_to_one_draw": 10,
+        "in_every_successful_draw": 0,
+        "rows": [
+          {
+            "key": "green tissues",
+            "name": "green tissues",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "leaves",
+            "name": "leaves",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "roots",
+            "name": "roots",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "cotyledons",
+            "name": "cotyledons",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "leaf epidermis",
+            "name": "leaf epidermis",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "hypocotyls",
+            "name": "hypocotyls",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "senesced leaves",
+            "name": "senesced leaves",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "leaf",
+            "name": "leaf",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "root",
+            "name": "root",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "cotyledon",
+            "name": "cotyledon",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          }
+        ]
+      },
+      "/entities/subcellular_locations": {
+        "merged": 5,
+        "rows_per_draw": [
+          4,
+          5,
+          5
+        ],
+        "first_seen_in_draw": [
+          4,
+          1,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 4,
+        "rows": [
+          {
+            "key": "plastid",
+            "name": "plastid",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "plastid",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "all reactions of TPB take place in plastids"
+              },
+              {
+                "draw": 3,
+                "name": "plastid",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "all reactions of TPB take place in plastids"
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "thylakoid membrane",
+            "name": "thylakoid membrane",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "thylakoid membrane",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "recruits them to the thylakoid membrane"
+              },
+              {
+                "draw": 3,
+                "name": "thylakoid membrane",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "recruits them to the thylakoid membrane"
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "etioplast",
+            "name": "etioplast",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "etioplast",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "dark-specific plastid etioplasts"
+              },
+              {
+                "draw": 3,
+                "name": "etioplast",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "dark-specific plastid etioplasts"
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "nucleus",
+            "name": "nucleus",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "nucleus",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "HY5 is accumulated in the nucleus"
+              },
+              {
+                "draw": 3,
+                "name": "nucleus",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "HY5 is accumulated in the nucleus"
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "chloroplast",
+            "name": "chloroplast",
+            "draws": [
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "chloroplast",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "chloroplast biogenesis"
+              }
+            ],
+            "support": "2/3"
+          }
+        ]
+      },
+      "/entities/compounds": {
+        "merged": 47,
+        "rows_per_draw": [
+          25,
+          32,
+          28
+        ],
+        "first_seen_in_draw": [
+          25,
+          17,
+          5
+        ],
+        "unique_to_one_draw": 21,
+        "in_every_successful_draw": 12,
+        "rows": [
+          {
+            "key": "glu trna",
+            "name": "Glu-tRNA",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "glu 1 semialdehyde",
+            "name": "Glu 1-semialdehyde",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "Glu 1-semialdehyde",
+                "bridged_by": [
+                  "abbreviation"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "Glu 1-semialdehyde",
+                "bridged_by": [
+                  "abbreviation"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "5 aminolevulinate",
+            "name": "5-aminolevulinic acid",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "5-aminolevulinic acid",
+                "bridged_by": [
+                  "abbreviation"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "5-aminolevulinic acid",
+                "bridged_by": [
+                  "abbreviation"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "porphobilinogen",
+            "name": "porphobilinogen",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "porphobilinogen",
+                "bridged_by": [
+                  "abbreviation"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "porphobilinogen",
+                "bridged_by": [
+                  "abbreviation"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "hydroxymethylbilane",
+            "name": "hydroxymethylbilane",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "hydroxymethylbilane",
+                "bridged_by": [
+                  "abbreviation"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "hydroxymethylbilane",
+                "bridged_by": [
+                  "abbreviation"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "uroporphyrinogen urogen iii",
+            "name": "uroporphyrinogen (Urogen) III",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "coproporphyrinogen coprogen iii",
+            "name": "coproporphyrinogen (Coprogen) III",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "protoporphyrinogen protogen ix",
+            "name": "protoporphyrinogen (Protogen) IX",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "protoporphyrin proto ix",
+            "name": "protoporphyrin (Proto) IX",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "mg2",
+            "name": "Mg2+",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "Mg2+",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "Mg2+",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "atp",
+            "name": "ATP",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "ATP",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "ATP",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "mg proto ix",
+            "name": "Mg-Proto IX",
+            "draws": [
+              1,
+              2
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "Mg-Proto IX",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "s adenosyl l methionine",
+            "name": "S-adenosyl L-methionine",
+            "draws": [
+              1,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "S-adenosyl L-methionine",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "mg proto ix monomethyl ester",
+            "name": "Mg-Proto IX monomethyl ester",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "Mg-Proto IX monomethyl ester",
+                "bridged_by": [
+                  "abbreviation"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "Mg-Proto IX monomethyl ester",
+                "bridged_by": [
+                  "abbreviation"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "3 8 divinyl protochlorophyllide",
+            "name": "3,8-divinyl-protochlorophyllide",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "3,8-divinyl-protochlorophyllide",
+                "bridged_by": [
+                  "abbreviation"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "3,8-divinyl-protochlorophyllide",
+                "bridged_by": [
+                  "abbreviation"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "3 8 divinyl chlorophyllide",
+            "name": "3,8-divinyl-chlorophyllide",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "3,8-divinyl-chlorophyllide",
+                "bridged_by": [
+                  "abbreviation"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "3,8-divinyl-chlorophyllide",
+                "bridged_by": [
+                  "abbreviation"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "3 vinyl chlide a mv chlide a",
+            "name": "3-vinyl Chlide a (MV-Chlide a)",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "geranylgeranyl chain",
+            "name": "geranylgeranyl chain",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "phytyl chain",
+            "name": "phytyl chain",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "geranylgeraniol",
+            "name": "geranylgeraniol",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "geranylgeraniol",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "geranylgeraniol",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "phytol",
+            "name": "phytol",
+            "draws": [
+              1,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "phytol",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "chl a",
+            "name": "Chl a",
+            "draws": [
+              1,
+              2
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "Chl a",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "chl b",
+            "name": "Chl b",
+            "draws": [
+              1,
+              2
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "Chl b",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "chlide a",
+            "name": "Chlide a",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "Chlide a",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "Chlide a",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "chlide b",
+            "name": "Chlide b",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "Chlide b",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "Chlide b",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "glu",
+            "name": "Glu",
+            "draws": [
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "Glu",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "glu trnaglu",
+            "name": "Glu-tRNAGlu",
+            "draws": [
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "Glu-tRNAGlu",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "uroporphyrinogen iii",
+            "name": "uroporphyrinogen III",
+            "draws": [
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "uroporphyrinogen III",
+                "bridged_by": [
+                  "abbreviation"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "coproporphyrinogen iii",
+            "name": "coproporphyrinogen III",
+            "draws": [
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "coproporphyrinogen III",
+                "bridged_by": [
+                  "abbreviation"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "protoporphyrinogen ix",
+            "name": "protoporphyrinogen IX",
+            "draws": [
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "protoporphyrinogen IX",
+                "bridged_by": [
+                  "abbreviation"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "protoporphyrin ix",
+            "name": "protoporphyrin IX",
+            "draws": [
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "protoporphyrin IX",
+                "bridged_by": [
+                  "abbreviation"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "fe2",
+            "name": "Fe2+",
+            "draws": [
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "Fe2+",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "protoheme",
+            "name": "protoheme",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "sam",
+            "name": "SAM",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "mv chlide a",
+            "name": "MV-Chlide a",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "geranylgeranyl",
+            "name": "geranylgeranyl",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "phytyl",
+            "name": "phytyl",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "biliverdin ix",
+            "name": "biliverdin IX",
+            "draws": [
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "biliverdin IX",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "heme a",
+            "name": "heme a",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "heme c",
+            "name": "heme c",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "phytochromobilin",
+            "name": "phytochromobilin",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "siroheme",
+            "name": "siroheme",
+            "draws": [
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "siroheme",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "mg protoporphyrin ix",
+            "name": "Mg-protoporphyrin IX",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "3 vinyl chlide a",
+            "name": "3-vinyl Chlide a",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "chlorophyll a",
+            "name": "chlorophyll a",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "chlorophyll b",
+            "name": "chlorophyll b",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "heme b",
+            "name": "heme b",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          }
+        ]
+      },
+      "/entities/element_collections": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/entities/nucleic_acids": {
+        "merged": 20,
+        "rows_per_draw": [
+          16,
+          6,
+          6
+        ],
+        "first_seen_in_draw": [
+          16,
+          3,
+          1
+        ],
+        "unique_to_one_draw": 15,
+        "in_every_successful_draw": 3,
+        "rows": [
+          {
+            "key": "chlh",
+            "name": "CHLH",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "porc",
+            "name": "PORC",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "hema1",
+            "name": "HEMA1",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "alad1",
+            "name": "ALAD1",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "pora",
+            "name": "PORA",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "porb",
+            "name": "PORB",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "gun4",
+            "name": "GUN4",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "cao",
+            "name": "CAO",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "chl27",
+            "name": "CHL27",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "chlp",
+            "name": "CHLP",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "chlh promoter",
+            "name": "CHLH promoter",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "CHLH promoter",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "CHLH promoter",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "porc promoter",
+            "name": "PORC promoter",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "PORC promoter",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "PORC promoter",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "cao promoter",
+            "name": "CAO promoter",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "alad1 promoter",
+            "name": "ALAD1 promoter",
+            "draws": [
+              1,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "ALAD1 promoter",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "pora promoter",
+            "name": "PORA promoter",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "PORA promoter",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "PORA promoter",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "porb promoter",
+            "name": "PORB promoter",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "trnaglu",
+            "name": "tRNAGlu",
+            "draws": [
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "tRNAGlu",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "hema1 promoter",
+            "name": "HEMA1 promoter",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "gun4 promoter",
+            "name": "GUN4 promoter",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "cab locus",
+            "name": "CAB locus",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          }
+        ]
+      },
+      "/entities/proteins": {
+        "merged": 64,
+        "rows_per_draw": [
+          52,
+          57,
+          53
+        ],
+        "first_seen_in_draw": [
+          52,
+          9,
+          3
+        ],
+        "unique_to_one_draw": 9,
+        "in_every_successful_draw": 43,
+        "rows": [
+          {
+            "key": "glutr",
+            "name": "GluTR",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "gsat",
+            "name": "GSAT",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "GSAT",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "GSAT",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "alad",
+            "name": "ALAD",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "ALAD",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "ALAD",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "pbg deaminase",
+            "name": "PBG deaminase",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "PBG deaminase",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "PBG deaminase",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "uros",
+            "name": "UROS",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "UROS",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "UROS",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "urod",
+            "name": "UROD",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "UROD",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "UROD",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "cpo",
+            "name": "CPO",
+            "draws": [
+              1,
+              2
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "CPO",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "ppo",
+            "name": "PPO",
+            "draws": [
+              1,
+              2
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "PPO",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "chld",
+            "name": "CHLD",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "CHLD",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "CHLD",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "chih",
+            "name": "CHIH",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "CHIH",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "CHIH",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "chli",
+            "name": "CHLI",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "CHLI",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "CHLI",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "gun4",
+            "name": "GUN4",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "GUN4",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "GUN4",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "mg proto ix methyltransferase",
+            "name": "Mg-Proto IX methyltransferase",
+            "draws": [
+              1,
+              2
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "Mg-Proto IX methyltransferase",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "chl27",
+            "name": "CHL27",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "CHL27",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "CHL27",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "lcaa",
+            "name": "LCAA",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "LCAA",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "LCAA",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "por",
+            "name": "POR",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "pora",
+            "name": "PORA",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "PORA",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "PORA",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "porb",
+            "name": "PORB",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "PORB",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "PORB",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "porc",
+            "name": "PORC",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "PORC",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "PORC",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "dvr",
+            "name": "DVR",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "DVR",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "DVR",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "geranylgeranyl reductase",
+            "name": "geranylgeranyl reductase",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "chl synthase",
+            "name": "Chl synthase",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "Chl synthase",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "Chl synthase",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "cao",
+            "name": "CAO",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "CAO",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "CAO",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "flu",
+            "name": "FLU",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "FLU",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "FLU",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "gbp",
+            "name": "GBP",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "GBP",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "GBP",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "hy5",
+            "name": "HY5",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "HY5",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "HY5",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "pif1",
+            "name": "PIF1",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "PIF1",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "PIF1",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "pif3",
+            "name": "PIF3",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "PIF3",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "PIF3",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "pif4",
+            "name": "PIF4",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "PIF4",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "PIF4",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "pif5",
+            "name": "PIF5",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "PIF5",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "PIF5",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "glk1",
+            "name": "GLK1",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "GLK1",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "GLK1",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "glk2",
+            "name": "GLK2",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "GLK2",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "GLK2",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "gnc",
+            "name": "GNC",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "GNC",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "GNC",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "gnl",
+            "name": "GNL",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "GNL",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "GNL",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "fhy3",
+            "name": "FHY3",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "FHY3",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "FHY3",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "far1",
+            "name": "FAR1",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "FAR1",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "FAR1",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "scl6",
+            "name": "SCL6",
+            "draws": [
+              1,
+              2
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "SCL6",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "scl22",
+            "name": "SCL22",
+            "draws": [
+              1,
+              2
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "SCL22",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "scl27",
+            "name": "SCL27",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "SCL27",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "SCL27",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "rve1",
+            "name": "RVE1",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "RVE1",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "RVE1",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "toc1",
+            "name": "TOC1",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "TOC1",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "TOC1",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "cca1",
+            "name": "CCA1",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "CCA1",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "CCA1",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "lhy",
+            "name": "LHY",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "LHY",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "LHY",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "abi4",
+            "name": "ABI4",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "ABI4",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "ABI4",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "cop1",
+            "name": "COP1",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "COP1",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "COP1",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "det1",
+            "name": "DET1",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "DET1",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "DET1",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "ein3",
+            "name": "EIN3",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "EIN3",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "EIN3",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "eil1",
+            "name": "EIL1",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "EIL1",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "EIL1",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "della",
+            "name": "DELLA",
+            "draws": [
+              1,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "DELLA",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "hda15",
+            "name": "HDA15",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "HDA15",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "HDA15",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "arr10",
+            "name": "ARR10",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "ARR10",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "ARR10",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "arr12",
+            "name": "ARR12",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "ARR12",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "ARR12",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "hema1",
+            "name": "HEMA1",
+            "draws": [
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "HEMA1",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "hema2",
+            "name": "HEMA2",
+            "draws": [
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "HEMA2",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "fc1",
+            "name": "FC1",
+            "draws": [
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "FC1",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "fc2",
+            "name": "FC2",
+            "draws": [
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "FC2",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "chli1",
+            "name": "CHLI1",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "chli2",
+            "name": "CHLI2",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "chlh",
+            "name": "CHLH",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "chlp",
+            "name": "CHLP",
+            "draws": [
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "CHLP",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "ho1",
+            "name": "HO1",
+            "draws": [
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "HO1",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "cpo1",
+            "name": "CPO1",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "ppo1",
+            "name": "PPO1",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "chlm",
+            "name": "CHLM",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          }
+        ]
+      },
+      "/entities/protein_complexes": {
+        "merged": 2,
+        "rows_per_draw": [
+          2,
+          2,
+          2
+        ],
+        "first_seen_in_draw": [
+          2,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 2,
+        "rows": [
+          {
+            "key": "mg chelatase",
+            "name": "Mg-chelatase",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "Mg-chelatase",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "Mg-chelatase consisting of the three subunits CHLD, CHIH, and CHLI in plants"
+              },
+              {
+                "draw": 3,
+                "name": "Mg-chelatase",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "Mg-chelatase consisting of the three subunits CHLD, CHIH, and CHLI"
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "mg proto me cyclase",
+            "name": "Mg-Proto ME cyclase",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "Mg-Proto ME cyclase",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "Mg-Proto ME cyclase in plants is assumed to consist of three subunits including the membrane-bound subunits CHL27 and LOW CHLOROPHYLL ACCUMULATION A (LCAA)"
+              },
+              {
+                "draw": 3,
+                "name": "Mg-Proto ME cyclase",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "Mg-Proto ME cyclase in plants is assumed to consist of three subunits including the membrane-bound subunits CHL27 and LCAA"
+              }
+            ],
+            "support": "3/3"
+          }
+        ]
+      },
+      "/biological_states": {
+        "merged": 5,
+        "rows_per_draw": [
+          4,
+          5,
+          5
+        ],
+        "first_seen_in_draw": [
+          4,
+          1,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 4,
+        "rows": [
+          {
+            "key": "plastid state",
+            "name": "plastid state",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "plastid state",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "all reactions of TPB take place in plastids"
+              },
+              {
+                "draw": 3,
+                "name": "plastid state",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "all reactions of TPB take place in plastids"
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "thylakoid membrane state",
+            "name": "thylakoid membrane state",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "thylakoid membrane state",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "recruits them to the thylakoid membrane"
+              },
+              {
+                "draw": 3,
+                "name": "thylakoid membrane state",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "recruits them to the thylakoid membrane"
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "etioplast state",
+            "name": "etioplast state",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "etioplast state",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "dark-specific plastid etioplasts"
+              },
+              {
+                "draw": 3,
+                "name": "etioplast state",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "dark-specific plastid etioplasts"
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "nucleus state",
+            "name": "nucleus state",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "nucleus state",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "HY5 is accumulated in the nucleus"
+              },
+              {
+                "draw": 3,
+                "name": "nucleus state",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "HY5 is accumulated in the nucleus"
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "chloroplast state",
+            "name": "chloroplast state",
+            "draws": [
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "chloroplast state",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "chloroplast biogenesis"
+              }
+            ],
+            "support": "2/3"
+          }
+        ]
+      },
+      "/element_locations/compound_locations": {
+        "merged": 23,
+        "rows_per_draw": [
+          5,
+          8,
+          18
+        ],
+        "first_seen_in_draw": [
+          5,
+          5,
+          13
+        ],
+        "unique_to_one_draw": 16,
+        "in_every_successful_draw": 1,
+        "rows": [
+          {
+            "key": "glu trna | plastid state",
+            "name": "",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "5 aminolevulinate | plastid state",
+            "name": "",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "all reactions of TPB take place in plastids"
+              },
+              {
+                "draw": 3,
+                "name": "",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "synthesize 5-aminolevulinic acid (ALA)"
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "protoporphyrin proto ix | plastid state",
+            "name": "",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "mg proto ix | plastid state",
+            "name": "",
+            "draws": [
+              1,
+              2
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "all reactions of TPB take place in plastids"
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "chl a | plastid state",
+            "name": "",
+            "draws": [
+              1,
+              2
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "all reactions of TPB take place in plastids"
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "glu trnaglu | plastid state",
+            "name": "",
+            "draws": [
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "Glu-tRNAGlu formed from Glu and tRNAGlu within plastids"
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "glu 1 semialdehyde | plastid state",
+            "name": "",
+            "draws": [
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "reduced to Glu 1-semialdehyde (GSA)"
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "porphobilinogen | plastid state",
+            "name": "",
+            "draws": [
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "form the monopyrrole porphobilinogen (PBG)"
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "protoporphyrin ix | plastid state",
+            "name": "",
+            "draws": [
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "result in protoporphyrin (Proto) IX"
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "3 8 divinyl protochlorophyllide | plastid state",
+            "name": "",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "hydroxymethylbilane | plastid state",
+            "name": "",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "uroporphyrinogen iii | plastid state",
+            "name": "",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "coproporphyrinogen iii | plastid state",
+            "name": "",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "protoporphyrinogen ix | plastid state",
+            "name": "",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "mg protoporphyrin ix | plastid state",
+            "name": "",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "mg proto ix monomethyl ester | plastid state",
+            "name": "",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "3 8 divinyl protochlorophyllide | etioplast state",
+            "name": "",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "3 8 divinyl chlorophyllide | plastid state",
+            "name": "",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "3 vinyl chlide a | plastid state",
+            "name": "",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "chlorophyll a | plastid state",
+            "name": "",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "chlorophyll b | plastid state",
+            "name": "",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "heme b | plastid state",
+            "name": "",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "biliverdin ix | plastid state",
+            "name": "",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          }
+        ]
+      },
+      "/element_locations/element_collection_locations": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/element_locations/nucleic_acid_locations": {
+        "merged": 7,
+        "rows_per_draw": [
+          2,
+          1,
+          5
+        ],
+        "first_seen_in_draw": [
+          2,
+          1,
+          4
+        ],
+        "unique_to_one_draw": 6,
+        "in_every_successful_draw": 0,
+        "rows": [
+          {
+            "key": "chlh | nucleus state",
+            "name": "",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "porc | nucleus state",
+            "name": "",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "trnaglu | plastid state",
+            "name": "",
+            "draws": [
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "tRNAGlu, the starting material for all TPB, is plastid-encoded"
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "chlh promoter | nucleus state",
+            "name": "",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "porc promoter | nucleus state",
+            "name": "",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "pora promoter | nucleus state",
+            "name": "",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "alad1 promoter | nucleus state",
+            "name": "",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          }
+        ]
+      },
+      "/element_locations/protein_locations": {
+        "merged": 17,
+        "rows_per_draw": [
+          3,
+          12,
+          7
+        ],
+        "first_seen_in_draw": [
+          3,
+          11,
+          3
+        ],
+        "unique_to_one_draw": 13,
+        "in_every_successful_draw": 1,
+        "rows": [
+          {
+            "key": "glutr | plastid state",
+            "name": "",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "mg chelatase | thylakoid membrane state",
+            "name": "",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "hy5 | nucleus state",
+            "name": "",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "HY5 is accumulated in the nucleus"
+              },
+              {
+                "draw": 3,
+                "name": "",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "HY5 is accumulated in the nucleus"
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "hema1 | plastid state",
+            "name": "",
+            "draws": [
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "HEMA1 (GluTR) is actively transcribed in green tissues"
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "gsat | plastid state",
+            "name": "",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "alad | plastid state",
+            "name": "",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "chlh | plastid state",
+            "name": "",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "porb | plastid state",
+            "name": "",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "cao | plastid state",
+            "name": "",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "fc2 | plastid state",
+            "name": "",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "pif3 | nucleus state",
+            "name": "",
+            "draws": [
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "PIF3 binds to G-box regions"
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "glk1 | nucleus state",
+            "name": "",
+            "draws": [
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "GLK1 directly binds to the promoter regions"
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "flu | plastid state",
+            "name": "",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "gbp | thylakoid membrane state",
+            "name": "",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "chl27 | thylakoid membrane state",
+            "name": "",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "lcaa | thylakoid membrane state",
+            "name": "",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "toc1 | nucleus state",
+            "name": "",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          }
+        ]
+      },
+      "/processes/reactions": {
+        "merged": 41,
+        "rows_per_draw": [
+          18,
+          19,
+          18
+        ],
+        "first_seen_in_draw": [
+          18,
+          14,
+          9
+        ],
+        "unique_to_one_draw": 31,
+        "in_every_successful_draw": 4,
+        "rows": [
+          {
+            "key": "glu trna -> glu 1 semialdehyde",
+            "name": "Glu-tRNA reductase reaction",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "glu 1 semialdehyde -> 5 aminolevulinate",
+            "name": "GSA aminotransferase reaction",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "GSAT reaction",
+                "bridged_by": [
+                  "abbreviation"
+                ],
+                "evidence": "GSA is converted to ALA by GSA aminotransferase (GSAT)",
+                "entry_evidence": [
+                  {
+                    "at": "/modifiers/0/evidence",
+                    "evidence": "GSA is converted to ALA by GSA aminotransferase (GSAT)"
+                  }
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "GSA to ALA",
+                "bridged_by": [
+                  "abbreviation"
+                ],
+                "evidence": "GSA is converted to ALA by GSA aminotransferase (GSAT)",
+                "entry_evidence": [
+                  {
+                    "at": "/modifiers/0/evidence",
+                    "evidence": "GSA is converted to ALA by GSA aminotransferase (GSAT)"
+                  }
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "5 aminolevulinate -> porphobilinogen",
+            "name": "ALA dehydratase reaction",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "ALAD reaction",
+                "bridged_by": [
+                  "abbreviation"
+                ],
+                "evidence": "two molecules of ALA are condensed asymmetrically to form the monopyrrole porphobilinogen (PBG), which is catalyzed by ALA dehydratase (ALAD)",
+                "entry_evidence": [
+                  {
+                    "at": "/modifiers/0/evidence",
+                    "evidence": "two molecules of ALA are condensed asymmetrically to form the monopyrrole porphobilinogen (PBG), which is catalyzed by ALA dehydratase (ALAD)"
+                  }
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "ALA to PBG",
+                "bridged_by": [
+                  "abbreviation"
+                ],
+                "evidence": "two molecules of ALA are condensed asymmetrically to form the monopyrrole porphobilinogen (PBG), which is catalyzed by ALA dehydratase (ALAD)",
+                "entry_evidence": [
+                  {
+                    "at": "/modifiers/0/evidence",
+                    "evidence": "catalyzed by ALA dehydratase (ALAD)"
+                  }
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "porphobilinogen -> hydroxymethylbilane",
+            "name": "PBG deaminase reaction",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "PBG deaminase reaction",
+                "bridged_by": [
+                  "abbreviation"
+                ],
+                "evidence": "Four PBG molecules are then sequentially polymerized by PBG deaminase to result in the unstable linear tetrapyrrole hydroxymethylbilane (HMB)",
+                "entry_evidence": [
+                  {
+                    "at": "/modifiers/0/evidence",
+                    "evidence": "Four PBG molecules are then sequentially polymerized by PBG deaminase to result in the unstable linear tetrapyrrole hydroxymethylbilane (HMB)"
+                  }
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "PBG to HMB",
+                "bridged_by": [
+                  "abbreviation"
+                ],
+                "evidence": "Four PBG molecules are then sequentially polymerized by PBG deaminase to result in the unstable linear tetrapyrrole hydroxymethylbilane (HMB)",
+                "entry_evidence": [
+                  {
+                    "at": "/modifiers/0/evidence",
+                    "evidence": "polymerized by PBG deaminase"
+                  }
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "hydroxymethylbilane -> uroporphyrinogen urogen iii",
+            "name": "Urogen III synthase reaction",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "uroporphyrinogen urogen iii -> coproporphyrinogen coprogen iii",
+            "name": "Urogen III decarboxylase reaction",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "coproporphyrinogen coprogen iii -> protoporphyrinogen protogen ix",
+            "name": "Coprogen III oxidase reaction",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "protoporphyrinogen protogen ix -> protoporphyrin proto ix",
+            "name": "Protogen IX oxidase reaction",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "protoporphyrin proto ix -> mg proto ix",
+            "name": "Mg-chelatase reaction",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "mg proto ix -> mg proto ix monomethyl ester",
+            "name": "Mg-Proto IX methyltransferase reaction",
+            "draws": [
+              1,
+              2
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "Mg-Proto IX methyltransferase reaction",
+                "bridged_by": [
+                  "abbreviation"
+                ],
+                "evidence": "a methyl group is added to Mg-Proto IX from S-adenosyl L-methionine by Mg-Proto IX methyltransferase, to result in Mg-Proto IX monomethyl ester (Mg-Proto ME)",
+                "entry_evidence": [
+                  {
+                    "at": "/modifiers/0/evidence",
+                    "evidence": "a methyl group is added to Mg-Proto IX from S-adenosyl L-methionine by Mg-Proto IX methyltransferase, to result in Mg-Proto IX monomethyl ester (Mg-Proto ME)"
+                  }
+                ]
+              }
+            ],
+            "cofactors_added": [
+              "SAM"
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "mg proto ix monomethyl ester -> 3 8 divinyl protochlorophyllide",
+            "name": "Mg-Proto ME cyclase reaction",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "mg proto ix monomethyl ester -> 3 8 divinyl protochlorophyllide",
+            "name": "Mg-Proto ME cyclase reaction",
+            "draws": [
+              2,
+              3
+            ],
+            "kept_apart_from": [
+              {
+                "name": "Mg-Proto ME cyclase reaction",
+                "draws": [
+                  1
+                ],
+                "reason": "biological_state location 'thylakoid membrane' vs 'plastid'"
+              }
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "Mg-Proto ME to DV-Pchlide",
+                "bridged_by": [
+                  "abbreviation"
+                ],
+                "evidence": "Mg-Proto ME is converted to 3,8-divinyl-protochlorophyllide (DV-Pchlide) by Mg-Proto ME cyclase",
+                "entry_evidence": [
+                  {
+                    "at": "/modifiers/0/evidence",
+                    "evidence": "by Mg-Proto ME cyclase, which forms a fifth isocyclic ring"
+                  }
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "3 8 divinyl protochlorophyllide -> 3 8 divinyl chlorophyllide",
+            "name": "Pchlide oxidoreductase reaction",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "3 8 divinyl protochlorophyllide -> 3 8 divinyl chlorophyllide",
+            "name": "POR reaction",
+            "draws": [
+              2,
+              3
+            ],
+            "kept_apart_from": [
+              {
+                "name": "Pchlide oxidoreductase reaction",
+                "draws": [
+                  1
+                ],
+                "reason": "different enzymes {pchlide oxidoreductase} vs {porb}"
+              }
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "DV-Pchlide reduction to DV-Chlide",
+                "bridged_by": [
+                  "abbreviation"
+                ],
+                "evidence": "the D ring of DV-Pchlide is reduced by Pchlide oxidoreductase (POR) to form 3,8-divinyl-chlorophyllide (DV-Chlide)",
+                "entry_evidence": [
+                  {
+                    "at": "/modifiers/0/evidence",
+                    "evidence": "reduced by Pchlide oxidoreductase (POR)"
+                  }
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "3 8 divinyl chlorophyllide -> 3 vinyl chlide a mv chlide a",
+            "name": "DV-Chlide reductase reaction",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "geranylgeranyl chain -> phytyl chain",
+            "name": "Geranylgeranyl reductase reaction",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "3 vinyl chlide a mv chlide a + geranylgeraniol -> chl a",
+            "name": "Chl synthase reaction (geranylgeraniol)",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "3 vinyl chlide a mv chlide a + phytol -> chl a",
+            "name": "Chl synthase reaction (phytol)",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "chlide a -> chlide b",
+            "name": "Chlide a oxygenase reaction (Chlide)",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "CAO reaction",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "Some of Chlide a or Chl a is converted into Chlide b or Chl b by Chlide a oxygenase (CAO)",
+                "entry_evidence": [
+                  {
+                    "at": "/modifiers/0/evidence",
+                    "evidence": "Some of Chlide a or Chl a is converted into Chlide b or Chl b by Chlide a oxygenase (CAO)"
+                  }
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "Chlide a to Chlide b",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "Some of Chlide a or Chl a is converted into Chlide b or Chl b by Chlide a oxygenase (CAO)",
+                "entry_evidence": [
+                  {
+                    "at": "/modifiers/0/evidence",
+                    "evidence": "by Chlide a oxygenase (CAO)"
+                  }
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "chl a -> chl b",
+            "name": "Chlide a oxygenase reaction (Chl)",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "glu + trnaglu -> glu trnaglu",
+            "name": "Formation of Glu-tRNAGlu",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "glu trnaglu -> glu 1 semialdehyde",
+            "name": "GluTR reaction",
+            "draws": [
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "Glu-tRNAGlu reduction to GSA",
+                "bridged_by": [
+                  "abbreviation"
+                ],
+                "evidence": "Glu-tRNAGlu formed from Glu and tRNAGlu within plastids is reduced to Glu 1-semialdehyde (GSA) by Glu-tRNA reductase (GluTR)",
+                "entry_evidence": [
+                  {
+                    "at": "/modifiers/0/evidence",
+                    "evidence": "Glu-tRNAGlu ... is reduced to Glu 1-semialdehyde (GSA) by Glu-tRNA reductase (GluTR)"
+                  }
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "hydroxymethylbilane -> uroporphyrinogen iii",
+            "name": "UROS reaction",
+            "draws": [
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "HMB to Urogen III",
+                "bridged_by": [
+                  "abbreviation"
+                ],
+                "evidence": "HMB is converted into the first macrocyclic tetrapyrrole, uroporphyrinogen (Urogen) III, by Urogen III synthase (UROS)",
+                "entry_evidence": [
+                  {
+                    "at": "/modifiers/0/evidence",
+                    "evidence": "by Urogen III synthase (UROS)"
+                  }
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "uroporphyrinogen iii -> coproporphyrinogen iii",
+            "name": "UROD reaction",
+            "draws": [
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "Urogen III to Coprogen III",
+                "bridged_by": [
+                  "abbreviation"
+                ],
+                "evidence": "then metabolized to coproporphyrinogen (Coprogen) III by Urogen III decarboxylase (UROD)",
+                "entry_evidence": [
+                  {
+                    "at": "/modifiers/0/evidence",
+                    "evidence": "by Urogen III decarboxylase (UROD)"
+                  }
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "coproporphyrinogen iii -> protoporphyrinogen ix",
+            "name": "CPO reaction",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "coproporphyrinogen iii -> protoporphyrinogen ix",
+            "name": "Coprogen III to Protogen IX",
+            "draws": [
+              3
+            ],
+            "kept_apart_from": [
+              {
+                "name": "CPO reaction",
+                "draws": [
+                  2
+                ],
+                "reason": "different enzymes {coprogen iii oxidase} vs {cpo1}"
+              }
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "protoporphyrinogen ix -> protoporphyrin ix",
+            "name": "PPO reaction",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "protoporphyrinogen ix -> protoporphyrin ix",
+            "name": "Protogen IX to Proto IX",
+            "draws": [
+              3
+            ],
+            "kept_apart_from": [
+              {
+                "name": "PPO reaction",
+                "draws": [
+                  2
+                ],
+                "reason": "different enzymes {ppo} vs {ppo1}"
+              }
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "protoporphyrin ix -> protoheme",
+            "name": "Ferrochelatase reaction",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "protoporphyrin ix -> mg proto ix",
+            "name": "Mg-chelatase reaction",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "3 8 divinyl chlorophyllide -> mv chlide a",
+            "name": "DVR reaction",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "geranylgeranyl -> phytyl",
+            "name": "CHLP reaction",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "geranylgeraniol + mv chlide a -> chl a",
+            "name": "Chl synthase reaction",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "protoheme -> biliverdin ix",
+            "name": "Heme oxygenase reaction",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "protoporphyrin ix -> heme b",
+            "name": "Fe2+ insertion into Proto IX",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "protoporphyrin ix -> mg protoporphyrin ix",
+            "name": "Mg2+ insertion into Proto IX",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "mg protoporphyrin ix -> mg proto ix monomethyl ester",
+            "name": "Mg-Proto IX methylation",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "3 8 divinyl chlorophyllide -> 3 vinyl chlide a",
+            "name": "DV-Chlide to MV-Chlide a",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "geranylgeraniol -> phytol",
+            "name": "Geranylgeranyl chain reduction",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "3 vinyl chlide a + geranylgeraniol -> chlorophyll a",
+            "name": "Chl a formation",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "heme b -> biliverdin ix",
+            "name": "Heme b to biliverdin IX",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          }
+        ]
+      },
+      "/processes/reaction_coupled_transports": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/processes/transports": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/processes/interactions": {
+        "merged": 47,
+        "rows_per_draw": [
+          33,
+          17,
+          16
+        ],
+        "first_seen_in_draw": [
+          33,
+          6,
+          8
+        ],
+        "unique_to_one_draw": 30,
+        "in_every_successful_draw": 2,
+        "rows": [
+          {
+            "key": "hy5 | binding | chlh promoter",
+            "name": "HY5 binding to CHLH promoter",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "HY5 binding to CHLH promoter",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "HY5 binds to G-box–containing promoter regions of CHLH"
+              },
+              {
+                "draw": 3,
+                "name": "HY5 binds to CHLH promoter",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "HY5 binds to G-box–containing promoter regions of CHLH"
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "hy5 | binding | porc promoter",
+            "name": "HY5 binding to PORC promoter",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "hy5 | Activation | chlh",
+            "name": "HY5 activation of CHLH",
+            "draws": [
+              1,
+              2
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "HY5 activation of CHLH",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "HY5 binds to G-box–containing promoter regions of CHLH, PORC, and other light-responsive genes"
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "hy5 | Activation | porc",
+            "name": "HY5 activation of PORC",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "pif3 | binding | chlh promoter",
+            "name": "PIF3 binding to CHLH promoter",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "PIF3 binding to CHLH promoter",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "PIF3 binds to G-box regions of CHLH"
+              },
+              {
+                "draw": 3,
+                "name": "PIF3 binds to CHLH promoter",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "PIF3 binds to G-box regions of CHLH and other PhANGs"
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "pif1 | binding | chlh promoter",
+            "name": "PIF1 binding to CHLH promoter",
+            "draws": [
+              1,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "PIF1 binds to CHLH promoter",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "The interaction of PIF1 with G-box regions of CHLH, PORC and CAO was also reported"
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "pif1 | binding | porc promoter",
+            "name": "PIF1 binding to PORC promoter",
+            "draws": [
+              1,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "PIF1 binds to PORC promoter",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "The interaction of PIF1 with G-box regions of CHLH, PORC and CAO was also reported"
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "pif1 | binding | cao promoter",
+            "name": "PIF1 binding to CAO promoter",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "pif1 | Inhibition | chlh",
+            "name": "PIF1 inhibition of CHLH",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "pif3 | Inhibition | chlh",
+            "name": "PIF3 inhibition of CHLH",
+            "draws": [
+              1,
+              2
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "PIF3 repression of CHLH",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "PIF3 binds to G-box regions of CHLH and other PhANGs"
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "glk1 | Activation | hema1",
+            "name": "GLK1 activation of HEMA1",
+            "draws": [
+              1,
+              2
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "GLK1 activation of HEMA1",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "GLK1 binds to the promoter regions of its target genes including key TPB genes"
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "glk1 | Activation | chlh",
+            "name": "GLK1 activation of CHLH",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "glk1 | Activation | gun4",
+            "name": "GLK1 activation of GUN4",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "glk2 | Activation | hema1",
+            "name": "GLK2 activation of HEMA1",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "fhy3 | Activation | hema1",
+            "name": "FHY3 activation of HEMA1",
+            "draws": [
+              1,
+              2
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "FHY3 activation of HEMA1",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "upregulation of HEMA1 in response to red and far-red light stimuli requires FHY3"
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "fhy3 | Activation | alad1",
+            "name": "FHY3 activation of ALAD1",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "far1 | Activation | alad1",
+            "name": "FAR1 activation of ALAD1",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "rve1 | binding | pora promoter",
+            "name": "RVE1 binding to PORA promoter",
+            "draws": [
+              1,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "RVE1 binds to PORA promoter",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "RVE1 binds to the promoter of PORA through a cis-element termed evening element"
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "rve1 | Activation | pora",
+            "name": "RVE1 activation of PORA",
+            "draws": [
+              1,
+              2
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "RVE1 activation of PORA",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "RVE1 binds to the promoter of PORA and upregulates PORA expression in the dark"
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "scl27 | binding | porc promoter",
+            "name": "SCL27 binding to PORC promoter",
+            "draws": [
+              1,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "SCL27 binds to PORC promoter",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "SCL27 can bind to the promoter of PORC through GT cis-element repeats"
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "scl27 | Inhibition | porc",
+            "name": "SCL27 inhibition of PORC",
+            "draws": [
+              1,
+              2
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "SCL27 repression of PORC",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "SCL27 can bind to the promoter of PORC through GT cis-element repeats and inhibit its expression"
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "toc1 | binding | chlh promoter",
+            "name": "TOC1 binding to CHLH promoter",
+            "draws": [
+              1,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "TOC1 binds to CHLH promoter",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "TOC1 binding to the CHLH promoter was antiphasic to CHLH expression"
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "toc1 | Inhibition | chlh",
+            "name": "TOC1 inhibition of CHLH",
+            "draws": [
+              1,
+              2
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "TOC1 repression of CHLH",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "TOC1 binds to the CHLH promoter and represses its expression"
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "ein3 | binding | pora promoter",
+            "name": "EIN3 binding to PORA promoter",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "ein3 | Activation | pora",
+            "name": "EIN3 activation of PORA",
+            "draws": [
+              1,
+              2
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "EIN3 activation of PORA",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "EIN3/EIL1 protein upregulates PORA and PORB by binding to their promoter regions"
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "ein3 | binding | porb promoter",
+            "name": "EIN3 binding to PORB promoter",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "ein3 | Activation | porb",
+            "name": "EIN3 activation of PORB",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "della | Activation | pora",
+            "name": "DELLA activation of PORA",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "della | Activation | porb",
+            "name": "DELLA activation of PORB",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "cop1 | Activation | pora",
+            "name": "COP1 activation of PORA",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "cop1 | Activation | porb",
+            "name": "COP1 activation of PORB",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "abi4 | Activation | pora",
+            "name": "ABI4 activation of PORA",
+            "draws": [
+              1,
+              2
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "ABI4 activation of PORA",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "ABI4 is required for PORA expression in the dark"
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "hy5 | interaction | cca1",
+            "name": "HY5 interaction with CCA1",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "flu | Inhibition | hema1",
+            "name": "FLU inhibition of HEMA1",
+            "draws": [
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "FLU inhibits HEMA1",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "FLUORESCENT IN BLUE LIGHT (FLU), which is a negative regulator of ALA synthesis, interacts with HEMA1-encoded GluTR1 to prevent excess accumulation of Chl precursors"
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "gbp | Activation | hema1",
+            "name": "GBP activation of HEMA1",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "gun4 | Activation | mg chelatase",
+            "name": "GUN4 activation of Mg-chelatase",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "cop1 | Inhibition | hy5",
+            "name": "COP1 inhibition of HY5",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "pif1 | Inhibition | hy5",
+            "name": "PIF1 inhibition of HY5",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "arr10 | Activation | hema1",
+            "name": "ARR10 activation of HEMA1",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "glk1 | binding | chlh promoter",
+            "name": "GLK1 binds to target gene promoters",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "fhy3 | binding | alad1 promoter",
+            "name": "FHY3 binds to ALAD1 promoter",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "gbp | binding | hema1",
+            "name": "GBP interacts with GluTRs",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "della | Inhibition | scl27",
+            "name": "DELLA proteins inhibit SCL27",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "pif1 | Inhibition | fhy3",
+            "name": "PIF1 inhibits FHY3",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "fhy3 | binding | hy5",
+            "name": "FHY3 binds to HY5",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "cca1 | binding | hy5",
+            "name": "CCA1 binds to HY5",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "toc1 | binding | pif1",
+            "name": "TOC1 interacts with PIFs",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          }
+        ]
+      },
+      "/visualizations/bounds": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/visualizations/bound_visualizations": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/visualizations/protein_complex_visualizations": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/visualizations/reaction_visualizations": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/visualizations/reaction_coupled_transport_visualizations": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/visualizations/transport_visualizations": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/visualizations/interaction_visualizations": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/visualizations/sub_pathway_visualizations": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/visualizations/edges": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/visualizations/vacuous/vacuous_compound_visualizations": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/visualizations/vacuous/vacuous_nucleic_acid_visualizations": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/visualizations/vacuous/vacuous_element_collection_visualizations": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/visualizations/vacuous/vacuous_protein_visualizations": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      }
+    },
+    "failed_draws": []
+  },
+  {
+    "draws_requested": 3,
+    "draws_succeeded": 3,
+    "draws_failed": 0,
+    "paper_lexicon": {
+      "paper_chars": 46704,
+      "abbreviation_pairs": 8,
+      "ambiguous_abbreviations": {}
+    },
+    "names_rewritten": [],
+    "typo_snapped": [],
+    "buckets": {
+      "/compartments": {
+        "merged": 5,
+        "rows_per_draw": [
+          3,
+          5,
+          4
+        ],
+        "first_seen_in_draw": [
+          3,
+          2,
+          0
+        ],
+        "unique_to_one_draw": 1,
+        "in_every_successful_draw": 3,
+        "rows": [
+          {
+            "key": "plastid",
+            "name": "plastid",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "plastid",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "plastid",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "chloroplast",
+            "name": "chloroplast",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "chloroplast",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "chloroplast",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "cytosol",
+            "name": "cytosol",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "cytosol",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "cytosol",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "endoplasmic reticulum",
+            "name": "endoplasmic reticulum",
+            "draws": [
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "endoplasmic reticulum",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "extraplastidic organelles",
+            "name": "extraplastidic organelles",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          }
+        ]
+      },
+      "/entities/cell_types": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/entities/species": {
+        "merged": 1,
+        "rows_per_draw": [
+          1,
+          1,
+          1
+        ],
+        "first_seen_in_draw": [
+          1,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 1,
+        "rows": [
+          {
+            "key": "arabidopsis thaliana",
+            "name": "Arabidopsis thaliana",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "Arabidopsis thaliana",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "Arabidopsis thaliana",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          }
+        ]
+      },
+      "/entities/tissues": {
+        "merged": 2,
+        "rows_per_draw": [
+          0,
+          1,
+          2
+        ],
+        "first_seen_in_draw": [
+          0,
+          1,
+          1
+        ],
+        "unique_to_one_draw": 1,
+        "in_every_successful_draw": 0,
+        "rows": [
+          {
+            "key": "green tissues",
+            "name": "green tissues",
+            "draws": [
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "green tissues",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "roots",
+            "name": "roots",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          }
+        ]
+      },
+      "/entities/subcellular_locations": {
+        "merged": 5,
+        "rows_per_draw": [
+          3,
+          5,
+          4
+        ],
+        "first_seen_in_draw": [
+          3,
+          2,
+          0
+        ],
+        "unique_to_one_draw": 1,
+        "in_every_successful_draw": 3,
+        "rows": [
+          {
+            "key": "plastid",
+            "name": "plastid",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "plastid",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "plastid-to-nucleus retrograde signaling"
+              },
+              {
+                "draw": 3,
+                "name": "plastid",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "plastid-to-nucleus retrograde signaling"
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "chloroplast",
+            "name": "chloroplast",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "chloroplast",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "chloroplast dysfunction"
+              },
+              {
+                "draw": 3,
+                "name": "chloroplast",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "chloroplast dysfunction"
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "cytosol",
+            "name": "cytosol",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "cytosol",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "cytosolic ascorbate peroxidase"
+              },
+              {
+                "draw": 3,
+                "name": "cytosol",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "cytosolic ascorbate peroxidase"
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "endoplasmic reticulum",
+            "name": "endoplasmic reticulum",
+            "draws": [
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "endoplasmic reticulum",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "endoplasmic reticulum-localized cytochrome P450"
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "extraplastidic organelles",
+            "name": "extraplastidic organelles",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          }
+        ]
+      },
+      "/entities/compounds": {
+        "merged": 11,
+        "rows_per_draw": [
+          3,
+          8,
+          8
+        ],
+        "first_seen_in_draw": [
+          3,
+          5,
+          3
+        ],
+        "unique_to_one_draw": 6,
+        "in_every_successful_draw": 3,
+        "rows": [
+          {
+            "key": "mg proto ix",
+            "name": "Mg-Proto IX",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "Mg-Proto IX",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "Mg-Proto IX",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "pchlide",
+            "name": "Pchlide",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "Pchlide",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "Pchlide",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "heme",
+            "name": "heme",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "heme",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "heme",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "mg porphyrin",
+            "name": "Mg porphyrin",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "singlet oxygen",
+            "name": "singlet oxygen",
+            "draws": [
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "singlet oxygen",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "jasmonate ja",
+            "name": "jasmonic acid (JA)",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "12 oxo phytodienoate opda",
+            "name": "12-oxo phytodienoic acid (OPDA)",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "flagellin 22",
+            "name": "flagellin 22",
+            "draws": [
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "flagellin 22",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "ja",
+            "name": "JA",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "opda",
+            "name": "OPDA",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "chlorophyll",
+            "name": "chlorophyll",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          }
+        ]
+      },
+      "/entities/element_collections": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/entities/nucleic_acids": {
+        "merged": 16,
+        "rows_per_draw": [
+          16,
+          16,
+          2
+        ],
+        "first_seen_in_draw": [
+          16,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 2,
+        "rows": [
+          {
+            "key": "hema1",
+            "name": "HEMA1",
+            "draws": [
+              1,
+              2
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "HEMA1",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "hema2",
+            "name": "HEMA2",
+            "draws": [
+              1,
+              2
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "HEMA2",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "fc1",
+            "name": "FC1",
+            "draws": [
+              1,
+              2
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "FC1",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "fc2",
+            "name": "FC2",
+            "draws": [
+              1,
+              2
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "FC2",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "chlh",
+            "name": "CHLH",
+            "draws": [
+              1,
+              2
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "CHLH",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "chlm",
+            "name": "CHLM",
+            "draws": [
+              1,
+              2
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "CHLM",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "chl27",
+            "name": "CHL27",
+            "draws": [
+              1,
+              2
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "CHL27",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "glk1",
+            "name": "GLK1",
+            "draws": [
+              1,
+              2
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "GLK1",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "glk2",
+            "name": "GLK2",
+            "draws": [
+              1,
+              2
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "GLK2",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "hy5",
+            "name": "HY5",
+            "draws": [
+              1,
+              2
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "HY5",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "cry1",
+            "name": "CRY1",
+            "draws": [
+              1,
+              2
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "CRY1",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "abi4",
+            "name": "ABI4",
+            "draws": [
+              1,
+              2
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "ABI4",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "gun1",
+            "name": "GUN1",
+            "draws": [
+              1,
+              2
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "GUN1",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "flu",
+            "name": "FLU",
+            "draws": [
+              1,
+              2
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "FLU",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "lhcb1 1",
+            "name": "LHCB1.1",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "LHCB1.1",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "LHCB1.1",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "rbcs",
+            "name": "RBCS",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "RBCS",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "RBCS",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          }
+        ]
+      },
+      "/entities/proteins": {
+        "merged": 18,
+        "rows_per_draw": [
+          14,
+          17,
+          14
+        ],
+        "first_seen_in_draw": [
+          14,
+          4,
+          0
+        ],
+        "unique_to_one_draw": 4,
+        "in_every_successful_draw": 13,
+        "rows": [
+          {
+            "key": "chlh",
+            "name": "CHLH",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "CHLH",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "CHLH",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "chlm",
+            "name": "CHLM",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "CHLM",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "CHLM",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "chl27",
+            "name": "CHL27",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "CHL27",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "CHL27",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "hema1",
+            "name": "HEMA1",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "HEMA1",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "HEMA1",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "hema2",
+            "name": "HEMA2",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "HEMA2",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "HEMA2",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "fc1",
+            "name": "FC1",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "FC1",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "FC1",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "fc2",
+            "name": "FC2",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "FC2",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "FC2",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "gun1",
+            "name": "GUN1",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "GUN1",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "GUN1",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "abi4",
+            "name": "ABI4",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "ABI4",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "ABI4",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "glk1",
+            "name": "GLK1",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "GLK1",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "GLK1",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "glk2",
+            "name": "GLK2",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "GLK2",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "GLK2",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "hy5",
+            "name": "HY5",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "HY5",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "HY5",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "cry1",
+            "name": "CRY1",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "CRY1",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "CRY1",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "flu",
+            "name": "FLU",
+            "draws": [
+              1,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "FLU",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "glutr1",
+            "name": "GluTR1",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "executer",
+            "name": "EXECUTER",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "cytochrome p450 family",
+            "name": "cytochrome P450 family",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "ascorbate peroxidase",
+            "name": "ascorbate peroxidase",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          }
+        ]
+      },
+      "/entities/protein_complexes": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/biological_states": {
+        "merged": 8,
+        "rows_per_draw": [
+          3,
+          5,
+          6
+        ],
+        "first_seen_in_draw": [
+          3,
+          3,
+          2
+        ],
+        "unique_to_one_draw": 4,
+        "in_every_successful_draw": 2,
+        "rows": [
+          {
+            "key": "plastid state",
+            "name": "plastid state",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "plastid state",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "plastid-to-nucleus retrograde signaling"
+              },
+              {
+                "draw": 3,
+                "name": "plastid state",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "plastid-to-nucleus retrograde signaling"
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "chloroplast state",
+            "name": "chloroplast state",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "chloroplast state",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "chloroplast dysfunction"
+              },
+              {
+                "draw": 3,
+                "name": "chloroplast state",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "chloroplast dysfunction"
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "cytosol state",
+            "name": "cytosol state",
+            "draws": [
+              1,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "cytosol state",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "cytosolic ascorbate peroxidase"
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "endoplasmic reticulum state",
+            "name": "endoplasmic reticulum state",
+            "draws": [
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "endoplasmic reticulum state",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "endoplasmic reticulum-localized cytochrome P450"
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "cytosolic state",
+            "name": "cytosolic state",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "extraplastidic state",
+            "name": "extraplastidic state",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "green tissues state",
+            "name": "green tissues state",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "roots state",
+            "name": "roots state",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          }
+        ]
+      },
+      "/element_locations/compound_locations": {
+        "merged": 2,
+        "rows_per_draw": [
+          0,
+          2,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          2,
+          0
+        ],
+        "unique_to_one_draw": 2,
+        "in_every_successful_draw": 0,
+        "rows": [
+          {
+            "key": "heme | chloroplast state",
+            "name": "",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "heme | extraplastidic state",
+            "name": "",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          }
+        ]
+      },
+      "/element_locations/element_collection_locations": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/element_locations/nucleic_acid_locations": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/element_locations/protein_locations": {
+        "merged": 4,
+        "rows_per_draw": [
+          1,
+          4,
+          0
+        ],
+        "first_seen_in_draw": [
+          1,
+          3,
+          0
+        ],
+        "unique_to_one_draw": 3,
+        "in_every_successful_draw": 0,
+        "rows": [
+          {
+            "key": "gun1 | plastid state",
+            "name": "",
+            "draws": [
+              1,
+              2
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "A plastidic pentatricopeptide repeat protein, GUN1"
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "cytochrome p450 family | endoplasmic reticulum state",
+            "name": "",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "ascorbate peroxidase | cytosolic state",
+            "name": "",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "executer | plastid state",
+            "name": "",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          }
+        ]
+      },
+      "/processes/reactions": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/processes/reaction_coupled_transports": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/processes/transports": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/processes/interactions": {
+        "merged": 8,
+        "rows_per_draw": [
+          4,
+          8,
+          6
+        ],
+        "first_seen_in_draw": [
+          4,
+          4,
+          0
+        ],
+        "unique_to_one_draw": 2,
+        "in_every_successful_draw": 4,
+        "rows": [
+          {
+            "key": "gun1 | Activation | abi4",
+            "name": "GUN1 activates ABI4",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "GUN1 activates ABI4",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "GUN1 signaling activates ABI4 to downregulate PhANGs"
+              },
+              {
+                "draw": 3,
+                "name": "GUN1 activates ABI4",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "GUN1 signaling activates ABI4 to downregulate PhANGs"
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "gun1 | Inhibition | glk1",
+            "name": "GUN1 downregulates GLK1 expression",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "GUN1 inhibits GLK1",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "GUN1 somehow downregulates GLK1 expression"
+              },
+              {
+                "draw": 3,
+                "name": "GUN1 downregulates GLK1",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "GUN1 somehow downregulates GLK1 expression"
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "mg proto ix | Inhibition | lhcb1 1",
+            "name": "Mg-Proto IX represses LHCB1.1",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "Mg-Proto IX inhibits LHCB1.1",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "Feeding of Mg-Proto IX via roots strongly repressed LHCB1.1 and RBCS expression"
+              },
+              {
+                "draw": 3,
+                "name": "Mg-Proto IX represses LHCB1.1",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "Feeding of Mg-Proto IX via roots strongly repressed LHCB1.1 and RBCS expression"
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "mg proto ix | Inhibition | rbcs",
+            "name": "Mg-Proto IX represses RBCS",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "Mg-Proto IX inhibits RBCS",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "Feeding of Mg-Proto IX via roots strongly repressed LHCB1.1 and RBCS expression"
+              },
+              {
+                "draw": 3,
+                "name": "Mg-Proto IX represses RBCS",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "Feeding of Mg-Proto IX via roots strongly repressed LHCB1.1 and RBCS expression"
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "flagellin 22 | Activation | fc1",
+            "name": "Flagellin 22 activates FC1",
+            "draws": [
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "flagellin 22 induces FC1 expression",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "flagellin 22 induce strong FC1 expression"
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "flagellin 22 | Activation | hema2",
+            "name": "Flagellin 22 activates HEMA2",
+            "draws": [
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "flagellin 22 induces HEMA2 expression",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "flagellin 22 induce weak HEMA2 expression"
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "singlet oxygen | Activation | hema2",
+            "name": "Singlet oxygen activates HEMA2",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "singlet oxygen | Activation | fc1",
+            "name": "Singlet oxygen activates FC1",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          }
+        ]
+      },
+      "/visualizations/bounds": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/visualizations/bound_visualizations": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/visualizations/protein_complex_visualizations": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/visualizations/reaction_visualizations": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/visualizations/reaction_coupled_transport_visualizations": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/visualizations/transport_visualizations": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/visualizations/interaction_visualizations": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/visualizations/sub_pathway_visualizations": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/visualizations/edges": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/visualizations/vacuous/vacuous_compound_visualizations": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/visualizations/vacuous/vacuous_nucleic_acid_visualizations": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/visualizations/vacuous/vacuous_element_collection_visualizations": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/visualizations/vacuous/vacuous_protein_visualizations": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      }
+    },
+    "failed_draws": []
+  }
+]

@@ -1,0 +1,247 @@
+STAGE-1 ENSEMBLE: POOLED REACTIONS
+Draws: 3 of 3 succeeded
+Paper dictionary: 56 abbreviation pair(s); ambiguous, bridging nothing: TPB
+Pooled reactions: 41 (31 found by one draw only; 0 merge(s) flagged for review)
+
+REACTION 1  [1/3 draws: 1]  -- REVIEW: found by one draw only
+  Name: Glu-tRNA reductase reaction
+  Key:  glu trna -> glu 1 semialdehyde
+
+REACTION 2  [3/3 draws: 1, 2, 3]
+  Name: GSA aminotransferase reaction
+  Key:  glu 1 semialdehyde -> 5 aminolevulinate
+  Merged draw 2 row 'GSAT reaction': bridged by abbreviation
+    its quote: 'GSA is converted to ALA by GSA aminotransferase (GSAT)'
+    its entry quote at /modifiers/0/evidence: 'GSA is converted to ALA by GSA aminotransferase (GSAT)'
+  Merged draw 3 row 'GSA to ALA': bridged by abbreviation
+    its quote: 'GSA is converted to ALA by GSA aminotransferase (GSAT)'
+    its entry quote at /modifiers/0/evidence: 'GSA is converted to ALA by GSA aminotransferase (GSAT)'
+
+REACTION 3  [3/3 draws: 1, 2, 3]
+  Name: ALA dehydratase reaction
+  Key:  5 aminolevulinate -> porphobilinogen
+  Merged draw 2 row 'ALAD reaction': bridged by abbreviation
+    its quote: 'two molecules of ALA are condensed asymmetrically to form the monopyrrole porphobilinogen (PBG), which is catalyzed by ALA dehydratase (ALAD)'
+    its entry quote at /modifiers/0/evidence: 'two molecules of ALA are condensed asymmetrically to form the monopyrrole porphobilinogen (PBG), which is catalyzed by ALA dehydratase (ALAD)'
+  Merged draw 3 row 'ALA to PBG': bridged by abbreviation
+    its quote: 'two molecules of ALA are condensed asymmetrically to form the monopyrrole porphobilinogen (PBG), which is catalyzed by ALA dehydratase (ALAD)'
+    its entry quote at /modifiers/0/evidence: 'catalyzed by ALA dehydratase (ALAD)'
+
+REACTION 4  [3/3 draws: 1, 2, 3]
+  Name: PBG deaminase reaction
+  Key:  porphobilinogen -> hydroxymethylbilane
+  Merged draw 2 row 'PBG deaminase reaction': bridged by abbreviation
+    its quote: 'Four PBG molecules are then sequentially polymerized by PBG deaminase to result in the unstable linear tetrapyrrole hydroxymethylbilane (HMB)'
+    its entry quote at /modifiers/0/evidence: 'Four PBG molecules are then sequentially polymerized by PBG deaminase to result in the unstable linear tetrapyrrole hydroxymethylbilane (HMB)'
+  Merged draw 3 row 'PBG to HMB': bridged by abbreviation
+    its quote: 'Four PBG molecules are then sequentially polymerized by PBG deaminase to result in the unstable linear tetrapyrrole hydroxymethylbilane (HMB)'
+    its entry quote at /modifiers/0/evidence: 'polymerized by PBG deaminase'
+
+REACTION 5  [1/3 draws: 1]  -- REVIEW: found by one draw only
+  Name: Urogen III synthase reaction
+  Key:  hydroxymethylbilane -> uroporphyrinogen urogen iii
+
+REACTION 6  [1/3 draws: 1]  -- REVIEW: found by one draw only
+  Name: Urogen III decarboxylase reaction
+  Key:  uroporphyrinogen urogen iii -> coproporphyrinogen coprogen iii
+
+REACTION 7  [1/3 draws: 1]  -- REVIEW: found by one draw only
+  Name: Coprogen III oxidase reaction
+  Key:  coproporphyrinogen coprogen iii -> protoporphyrinogen protogen ix
+
+REACTION 8  [1/3 draws: 1]  -- REVIEW: found by one draw only
+  Name: Protogen IX oxidase reaction
+  Key:  protoporphyrinogen protogen ix -> protoporphyrin proto ix
+
+REACTION 9  [1/3 draws: 1]  -- REVIEW: found by one draw only
+  Name: Mg-chelatase reaction
+  Key:  protoporphyrin proto ix -> mg proto ix
+
+REACTION 10  [2/3 draws: 1, 2]
+  Name: Mg-Proto IX methyltransferase reaction
+  Key:  mg proto ix -> mg proto ix monomethyl ester
+  Merged draw 2 row 'Mg-Proto IX methyltransferase reaction': bridged by abbreviation
+    its quote: 'a methyl group is added to Mg-Proto IX from S-adenosyl L-methionine by Mg-Proto IX methyltransferase, to result in Mg-Proto IX monomethyl ester (Mg-Proto ME)'
+    its entry quote at /modifiers/0/evidence: 'a methyl group is added to Mg-Proto IX from S-adenosyl L-methionine by Mg-Proto IX methyltransferase, to result in Mg-Proto IX monomethyl ester (Mg-Proto ME)'
+  Cofactors added from a merged row: SAM
+
+REACTION 11  [1/3 draws: 1]  -- REVIEW: found by one draw only
+  Name: Mg-Proto ME cyclase reaction
+  Key:  mg proto ix monomethyl ester -> 3 8 divinyl protochlorophyllide
+
+REACTION 12  [2/3 draws: 2, 3]
+  Name: Mg-Proto ME cyclase reaction
+  Key:  mg proto ix monomethyl ester -> 3 8 divinyl protochlorophyllide
+  Merged draw 3 row 'Mg-Proto ME to DV-Pchlide': bridged by abbreviation
+    its quote: 'Mg-Proto ME is converted to 3,8-divinyl-protochlorophyllide (DV-Pchlide) by Mg-Proto ME cyclase'
+    its entry quote at /modifiers/0/evidence: 'by Mg-Proto ME cyclase, which forms a fifth isocyclic ring'
+  Kept apart from 'Mg-Proto ME cyclase reaction' (draws 1): biological_state location 'thylakoid membrane' vs 'plastid'
+
+REACTION 13  [1/3 draws: 1]  -- REVIEW: found by one draw only
+  Name: Pchlide oxidoreductase reaction
+  Key:  3 8 divinyl protochlorophyllide -> 3 8 divinyl chlorophyllide
+
+REACTION 14  [2/3 draws: 2, 3]
+  Name: POR reaction
+  Key:  3 8 divinyl protochlorophyllide -> 3 8 divinyl chlorophyllide
+  Merged draw 3 row 'DV-Pchlide reduction to DV-Chlide': bridged by abbreviation
+    its quote: 'the D ring of DV-Pchlide is reduced by Pchlide oxidoreductase (POR) to form 3,8-divinyl-chlorophyllide (DV-Chlide)'
+    its entry quote at /modifiers/0/evidence: 'reduced by Pchlide oxidoreductase (POR)'
+  Kept apart from 'Pchlide oxidoreductase reaction' (draws 1): different enzymes {pchlide oxidoreductase} vs {porb}
+
+REACTION 15  [1/3 draws: 1]  -- REVIEW: found by one draw only
+  Name: DV-Chlide reductase reaction
+  Key:  3 8 divinyl chlorophyllide -> 3 vinyl chlide a mv chlide a
+
+REACTION 16  [1/3 draws: 1]  -- REVIEW: found by one draw only
+  Name: Geranylgeranyl reductase reaction
+  Key:  geranylgeranyl chain -> phytyl chain
+
+REACTION 17  [1/3 draws: 1]  -- REVIEW: found by one draw only
+  Name: Chl synthase reaction (geranylgeraniol)
+  Key:  3 vinyl chlide a mv chlide a + geranylgeraniol -> chl a
+
+REACTION 18  [1/3 draws: 1]  -- REVIEW: found by one draw only
+  Name: Chl synthase reaction (phytol)
+  Key:  3 vinyl chlide a mv chlide a + phytol -> chl a
+
+REACTION 19  [3/3 draws: 1, 2, 3]
+  Name: Chlide a oxygenase reaction (Chlide)
+  Key:  chlide a -> chlide b
+  Merged draw 2 row 'CAO reaction': bridged by exact
+    its quote: 'Some of Chlide a or Chl a is converted into Chlide b or Chl b by Chlide a oxygenase (CAO)'
+    its entry quote at /modifiers/0/evidence: 'Some of Chlide a or Chl a is converted into Chlide b or Chl b by Chlide a oxygenase (CAO)'
+  Merged draw 3 row 'Chlide a to Chlide b': bridged by exact
+    its quote: 'Some of Chlide a or Chl a is converted into Chlide b or Chl b by Chlide a oxygenase (CAO)'
+    its entry quote at /modifiers/0/evidence: 'by Chlide a oxygenase (CAO)'
+
+REACTION 20  [1/3 draws: 1]  -- REVIEW: found by one draw only
+  Name: Chlide a oxygenase reaction (Chl)
+  Key:  chl a -> chl b
+
+REACTION 21  [1/3 draws: 2]  -- REVIEW: found by one draw only
+  Name: Formation of Glu-tRNAGlu
+  Key:  glu + trnaglu -> glu trnaglu
+
+REACTION 22  [2/3 draws: 2, 3]
+  Name: GluTR reaction
+  Key:  glu trnaglu -> glu 1 semialdehyde
+  Merged draw 3 row 'Glu-tRNAGlu reduction to GSA': bridged by abbreviation
+    its quote: 'Glu-tRNAGlu formed from Glu and tRNAGlu within plastids is reduced to Glu 1-semialdehyde (GSA) by Glu-tRNA reductase (GluTR)'
+    its entry quote at /modifiers/0/evidence: 'Glu-tRNAGlu ... is reduced to Glu 1-semialdehyde (GSA) by Glu-tRNA reductase (GluTR)'
+
+REACTION 23  [2/3 draws: 2, 3]
+  Name: UROS reaction
+  Key:  hydroxymethylbilane -> uroporphyrinogen iii
+  Merged draw 3 row 'HMB to Urogen III': bridged by abbreviation
+    its quote: 'HMB is converted into the first macrocyclic tetrapyrrole, uroporphyrinogen (Urogen) III, by Urogen III synthase (UROS)'
+    its entry quote at /modifiers/0/evidence: 'by Urogen III synthase (UROS)'
+
+REACTION 24  [2/3 draws: 2, 3]
+  Name: UROD reaction
+  Key:  uroporphyrinogen iii -> coproporphyrinogen iii
+  Merged draw 3 row 'Urogen III to Coprogen III': bridged by abbreviation
+    its quote: 'then metabolized to coproporphyrinogen (Coprogen) III by Urogen III decarboxylase (UROD)'
+    its entry quote at /modifiers/0/evidence: 'by Urogen III decarboxylase (UROD)'
+
+REACTION 25  [1/3 draws: 2]  -- REVIEW: found by one draw only
+  Name: CPO reaction
+  Key:  coproporphyrinogen iii -> protoporphyrinogen ix
+
+REACTION 26  [1/3 draws: 3]  -- REVIEW: found by one draw only
+  Name: Coprogen III to Protogen IX
+  Key:  coproporphyrinogen iii -> protoporphyrinogen ix
+  Kept apart from 'CPO reaction' (draws 2): different enzymes {coprogen iii oxidase} vs {cpo1}
+
+REACTION 27  [1/3 draws: 2]  -- REVIEW: found by one draw only
+  Name: PPO reaction
+  Key:  protoporphyrinogen ix -> protoporphyrin ix
+
+REACTION 28  [1/3 draws: 3]  -- REVIEW: found by one draw only
+  Name: Protogen IX to Proto IX
+  Key:  protoporphyrinogen ix -> protoporphyrin ix
+  Kept apart from 'PPO reaction' (draws 2): different enzymes {ppo} vs {ppo1}
+
+REACTION 29  [1/3 draws: 2]  -- REVIEW: found by one draw only
+  Name: Ferrochelatase reaction
+  Key:  protoporphyrin ix -> protoheme
+
+REACTION 30  [1/3 draws: 2]  -- REVIEW: found by one draw only
+  Name: Mg-chelatase reaction
+  Key:  protoporphyrin ix -> mg proto ix
+
+REACTION 31  [1/3 draws: 2]  -- REVIEW: found by one draw only
+  Name: DVR reaction
+  Key:  3 8 divinyl chlorophyllide -> mv chlide a
+
+REACTION 32  [1/3 draws: 2]  -- REVIEW: found by one draw only
+  Name: CHLP reaction
+  Key:  geranylgeranyl -> phytyl
+
+REACTION 33  [1/3 draws: 2]  -- REVIEW: found by one draw only
+  Name: Chl synthase reaction
+  Key:  geranylgeraniol + mv chlide a -> chl a
+
+REACTION 34  [1/3 draws: 2]  -- REVIEW: found by one draw only
+  Name: Heme oxygenase reaction
+  Key:  protoheme -> biliverdin ix
+
+REACTION 35  [1/3 draws: 3]  -- REVIEW: found by one draw only
+  Name: Fe2+ insertion into Proto IX
+  Key:  protoporphyrin ix -> heme b
+
+REACTION 36  [1/3 draws: 3]  -- REVIEW: found by one draw only
+  Name: Mg2+ insertion into Proto IX
+  Key:  protoporphyrin ix -> mg protoporphyrin ix
+
+REACTION 37  [1/3 draws: 3]  -- REVIEW: found by one draw only
+  Name: Mg-Proto IX methylation
+  Key:  mg protoporphyrin ix -> mg proto ix monomethyl ester
+
+REACTION 38  [1/3 draws: 3]  -- REVIEW: found by one draw only
+  Name: DV-Chlide to MV-Chlide a
+  Key:  3 8 divinyl chlorophyllide -> 3 vinyl chlide a
+
+REACTION 39  [1/3 draws: 3]  -- REVIEW: found by one draw only
+  Name: Geranylgeranyl chain reduction
+  Key:  geranylgeraniol -> phytol
+
+REACTION 40  [1/3 draws: 3]  -- REVIEW: found by one draw only
+  Name: Chl a formation
+  Key:  3 vinyl chlide a + geranylgeraniol -> chlorophyll a
+
+REACTION 41  [1/3 draws: 3]  -- REVIEW: found by one draw only
+  Name: Heme b to biliverdin IX
+  Key:  heme b -> biliverdin ix
+
+TYPO SNAPS -- each FLAGGED for review (0)
+
+NAMES REWRITTEN (18)
+  draw 1: 'Glu 1-semialdehyde (GSA)' -> 'Glu 1-semialdehyde' [abbreviation, long (SF)]
+  draw 1: '5-aminolevulinic acid (ALA)' -> '5-aminolevulinic acid' [abbreviation, long (SF)]
+  draw 1: 'porphobilinogen (PBG)' -> 'porphobilinogen' [abbreviation, long (SF)]
+  draw 1: 'hydroxymethylbilane (HMB)' -> 'hydroxymethylbilane' [abbreviation, long (SF)]
+  draw 1: 'Mg-Proto IX monomethyl ester (Mg-Proto ME)' -> 'Mg-Proto IX monomethyl ester' [abbreviation, long (SF)]
+  draw 1: '3,8-divinyl-protochlorophyllide (DV-Pchlide)' -> '3,8-divinyl-protochlorophyllide' [abbreviation, long (SF)]
+  draw 1: '3,8-divinyl-chlorophyllide (DV-Chlide)' -> '3,8-divinyl-chlorophyllide' [abbreviation, long (SF)]
+  draw 2: 'GSA' -> 'Glu 1-semialdehyde' [abbreviation, long (SF)]
+  draw 2: 'ALA' -> '5-aminolevulinic acid' [abbreviation, long (SF)]
+  draw 2: 'PBG' -> 'porphobilinogen' [abbreviation, long (SF)]
+  draw 2: 'HMB' -> 'hydroxymethylbilane' [abbreviation, long (SF)]
+  draw 2: 'Urogen III' -> 'uroporphyrinogen III' [abbreviation, shared_locant]
+  draw 2: 'Coprogen III' -> 'coproporphyrinogen III' [abbreviation, shared_locant]
+  draw 2: 'Protogen IX' -> 'protoporphyrinogen IX' [abbreviation, shared_locant]
+  draw 2: 'Proto IX' -> 'protoporphyrin IX' [abbreviation, shared_locant]
+  draw 2: 'Mg-Proto ME' -> 'Mg-Proto IX monomethyl ester' [abbreviation, long (SF)]
+  draw 2: 'DV-Pchlide' -> '3,8-divinyl-protochlorophyllide' [abbreviation, long (SF)]
+  draw 2: 'DV-Chlide' -> '3,8-divinyl-chlorophyllide' [abbreviation, long (SF)]
+
+STAGE-1 ENSEMBLE: POOLED REACTIONS
+Draws: 3 of 3 succeeded
+Paper dictionary: 8 abbreviation pair(s); ambiguous, bridging nothing: none
+Pooled reactions: 0 (0 found by one draw only; 0 merge(s) flagged for review)
+
+TYPO SNAPS -- each FLAGGED for review (0)
+
+NAMES REWRITTEN (0)
+
