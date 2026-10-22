@@ -1,0 +1,239 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch763\src\t2pw\__init__.py
+============================= test session starts =============================
+platform win32 -- Python 3.13.6, pytest-9.0.3, pluggy-1.6.0 -- C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch763
+configfile: pytest.ini
+plugins: anyio-4.14.2
+collecting ... collected 23 items
+
+tests/test_orch763_nested_locations.py::test_g9_leg_menh_to_meni_duplicates_merge_keeping_cytosol FAILED [  4%]
+tests/test_orch763_nested_locations.py::test_g9_leg_pool_16_to_11 FAILED [  8%]
+tests/test_orch763_nested_locations.py::test_g9_a_row_without_location_does_not_join_two_non_nested_locations FAILED [ 13%]
+tests/test_orch763_nested_locations.py::test_new_the_survivor_takes_the_more_specific_location_when_the_broader_row_came_first FAILED [ 17%]
+tests/test_orch763_nested_locations.py::test_new_a_record_never_joins_two_locations_through_their_common_container FAILED [ 21%]
+tests/test_orch763_nested_locations.py::test_new_rule3_merges_nested_locations_and_flags_the_merge FAILED [ 26%]
+tests/test_orch763_nested_locations.py::test_preserved_rule3_keeps_non_nested_locations_apart PASSED [ 30%]
+tests/test_orch763_nested_locations.py::test_new_the_containment_table_is_a_tree_of_folded_names FAILED [ 34%]
+tests/test_orch763_nested_locations.py::test_preserved_r1_a_reused_label_never_joins_cytosol_and_nucleus PASSED [ 39%]
+tests/test_orch763_nested_locations.py::test_g9_r1_a_label_reused_by_a_later_draw_is_still_compared[S2_membrane] FAILED [ 43%]
+tests/test_orch763_nested_locations.py::test_g9_r1_a_label_reused_by_a_later_draw_is_still_compared[S3_matrix] FAILED [ 47%]
+tests/test_orch763_nested_locations.py::test_preserved_r1_an_unlocated_reused_label_still_merges PASSED [ 52%]
+tests/test_orch763_nested_locations.py::test_preserved_locations_that_do_not_nest_stay_apart[unknown_pair] PASSED [ 56%]
+tests/test_orch763_nested_locations.py::test_preserved_locations_that_do_not_nest_stay_apart[cytosol_vs_matrix] PASSED [ 60%]
+tests/test_orch763_nested_locations.py::test_preserved_locations_that_do_not_nest_stay_apart[cytosol_vs_membrane] PASSED [ 65%]
+tests/test_orch763_nested_locations.py::test_preserved_a_chimeric_pair_stays_apart_even_with_nested_locations[cofactor] PASSED [ 69%]
+tests/test_orch763_nested_locations.py::test_preserved_a_chimeric_pair_stays_apart_even_with_nested_locations[enzyme] PASSED [ 73%]
+tests/test_orch763_nested_locations.py::test_preserved_a_chimeric_pair_stays_apart_even_with_nested_locations[species] PASSED [ 78%]
+tests/test_orch763_nested_locations.py::test_preserved_equal_locations_under_two_names_merge_unflagged PASSED [ 82%]
+tests/test_orch763_nested_locations.py::test_preserved_the_pooled_payload_carries_no_merge_mark PASSED [ 86%]
+tests/test_orch763_nested_locations.py::test_preserved_enterobactin_leg_keeps_5_of_5 PASSED [ 91%]
+tests/test_orch763_nested_locations.py::test_preserved_chlorophyll_repools_without_a_chimera[orch759] PASSED [ 95%]
+tests/test_orch763_nested_locations.py::test_preserved_chlorophyll_repools_without_a_chimera[orch751] PASSED [100%]
+
+================================== FAILURES ===================================
+__________ test_g9_leg_menh_to_meni_duplicates_merge_keeping_cytosol __________
+
+    def test_g9_leg_menh_to_meni_duplicates_merge_keeping_cytosol() -> None:
+        """At base the 5 MenH..MenI rows of draw 3 stay apart from draw 2's on 'cytosol' vs
+        'intracellular' (the ORCH-759 side file: 5 extra rows). At the tip each pair merges, the
+        merge is flagged, and the survivor carries draw 2's state, whose location is cytosol."""
+    
+        draws = _fixture("menaquinone")["draws"]
+        merged, report = merge_draws([_men_steps(draws[1]), _men_steps(draws[2])], paper_text=_paper("PMC12421875"))
+>       assert [r["name"] for r in _reactions(merged)] == list(MEN_STEPS)  # base: 10 rows
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert ['MenH reacti...eaction', ...] == ['MenH reacti...enI reaction']
+E         
+E         Left contains 5 more items, first extra item: 'MenH reaction'
+E         
+E         Full diff:
+E           [
+E               'MenH reaction',
+E               'MenC reaction',...
+E         
+E         ...Full output truncated (9 lines hidden), use '-vv' to show
+
+tests\test_orch763_nested_locations.py:112: AssertionError
+__________________________ test_g9_leg_pool_16_to_11 __________________________
+
+    def test_g9_leg_pool_16_to_11() -> None:
+        """The whole leg: 16 pooled rows at base (orch759_gold_accuracy.txt, Stage 1), 11 at the tip.
+        The other 5 surplus rows were the MenH..MenI pairs; MenA and MenG stay split on DMK/MK (the
+        paper dictionary has no such pair, ORCH-763 (b)). Gold 9/9 is kept."""
+    
+        fixture = _fixture("menaquinone")
+        assert [len(d["processes"]["reactions"]) for d in fixture["draws"]] == [4, 9, 9]  # the leg's rows_per_draw
+        merged, report = merge_draws(fixture["draws"], paper_text=_paper("PMC12421875"))
+>       assert len(_reactions(merged)) == 11
+E       AssertionError: assert 16 == 11
+E        +  where 16 = len([{'biological_state': 'Lactococcus lactis cells', 'enzymes': [{'confidence': 1.0, 'evidence': 'The enzyme MenF catalyzes a reversible reaction converting chorismate to isochorismate', 'protein': 'MenF', 'provenance': 'extracted'}], 'evidence': 'The enzyme MenF catalyzes a reversible reaction converting chorismate to isochorismate', 'inputs': ['chorismate'], ...}, {'biological_state': 'Lactococcus lactis cells', 'enzymes': [{'confidence': 1.0, 'evidence': 'MenD facilitates the conversion of isochorismate (B) to SEPHCHC (C)', 'protein': 'MenD', 'provenance': 'extracted'}], 'evidence': 'MenD facilitates the conversion of isochorismate (B) to SEPHCHC (C)', 'inputs': ['isochorismate'], ...}, {'biological_state': 'Lactococcus lactis cells', 'enzymes': [{'confidence': 1.0, 'evidence': 'MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK)', 'protein': 'MenA', 'provenance': 'extracted'}], 'evidence': 'MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK)', 'inputs': ['1,4-dihydroxy-2-naphthoic acid', 'prenyl diphosphate'], ...}, {'biological_state': 'Lactococcus lactis cells', 'enzymes': [{'confidence': 1.0, 'evidence': 'MenG demethylates DMK to generate MK', 'protein': 'MenG', 'provenance': 'extracted'}], 'evidence': 'MenG demethylates DMK to generate MK', 'inputs': ['demethylmenaquinone (DMK)'], ...}, {'biological_state': 'intracellular state', 'enzymes': [{'confidence': 1.0, 'evidence': 'k_cat_H[MenH][C]/(KM_H+[C])', 'protein': 'MenH', 'provenance': 'extracted'}], 'evidence': 'k_cat_H[MenH][C]/(KM_H+[C])', 'inputs': ['2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate'], ...}, {'biological_state': 'intracellular state', 'enzymes': [{'confidence': 1.0, 'evidence': 'k_cat_C[MenC][D]/(KM_C+[D])', 'protein': 'MenC', 'provenance': 'extracted'}], 'evidence': 'k_cat_C[MenC][D]/(KM_C+[D])', 'inputs': ['SHCHC'], ...}, ...])
+E        +    where [{'biological_state': 'Lactococcus lactis cells', 'enzymes': [{'confidence': 1.0, 'evidence': 'The enzyme MenF catalyzes a reversible reaction converting chorismate to isochorismate', 'protein': 'MenF', 'provenance': 'extracted'}], 'evidence': 'The enzyme MenF catalyzes a reversible reaction converting chorismate to isochorismate', 'inputs': ['chorismate'], ...}, {'biological_state': 'Lactococcus lactis cells', 'enzymes': [{'confidence': 1.0, 'evidence': 'MenD facilitates the conversion of isochorismate (B) to SEPHCHC (C)', 'protein': 'MenD', 'provenance': 'extracted'}], 'evidence': 'MenD facilitates the conversion of isochorismate (B) to SEPHCHC (C)', 'inputs': ['isochorismate'], ...}, {'biological_state': 'Lactococcus lactis cells', 'enzymes': [{'confidence': 1.0, 'evidence': 'MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK)', 'protein': 'MenA', 'provenance': 'extracted'}], 'evidence': 'MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK)', 'inputs': ['1,4-dihydroxy-2-naphthoic acid', 'prenyl diphosphate'], ...}, {'biological_state': 'Lactococcus lactis cells', 'enzymes': [{'confidence': 1.0, 'evidence': 'MenG demethylates DMK to generate MK', 'protein': 'MenG', 'provenance': 'extracted'}], 'evidence': 'MenG demethylates DMK to generate MK', 'inputs': ['demethylmenaquinone (DMK)'], ...}, {'biological_state': 'intracellular state', 'enzymes': [{'confidence': 1.0, 'evidence': 'k_cat_H[MenH][C]/(KM_H+[C])', 'protein': 'MenH', 'provenance': 'extracted'}], 'evidence': 'k_cat_H[MenH][C]/(KM_H+[C])', 'inputs': ['2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate'], ...}, {'biological_state': 'intracellular state', 'enzymes': [{'confidence': 1.0, 'evidence': 'k_cat_C[MenC][D]/(KM_C+[D])', 'protein': 'MenC', 'provenance': 'extracted'}], 'evidence': 'k_cat_C[MenC][D]/(KM_C+[D])', 'inputs': ['SHCHC'], ...}, ...] = _reactions({'biological_states': [{'evidence': 'the lactic acid bacterium Lactococcus lactis', 'name': 'Lactococcus lactis cells', 'species': 'Lactococcus lactis'}, {'compartment_canonical': 'cytosol', 'evidence': 'intracellular DHNA concentration', 'name': 'intracellular state', 'species': 'Lactococcus lactis', ...}, {'evidence': 'extracellular DHNA concentration', 'name': 'extracellular state', 'species': 'Lactococcus lactis', 'subcellular_location': 'extracellular'}, {'evidence': 'intracellular DHNA concentration', 'name': 'Lactococcus lactis intracellular', 'species': 'Lactococcus lactis', 'subcellular_location': 'intracellular'}, {'evidence': 'extracellular DHNA concentration', 'name': 'Lactococcus lactis extracellular', 'species': 'Lactococcus lactis', 'subcellular_location': 'extracellular'}], 'processes': {'reactions': [{'biological_state': 'Lactococcus lactis cells', 'enzymes': [{'confidence': 1.0, 'evidence': 'The enzyme MenF catalyzes a reversible reaction converting chorismate to isochorismate', 'protein': 'MenF', 'provenance': 'extracted'}], 'evidence': 'The enzyme MenF catalyzes a reversible reaction converting chorismate to isochorismate', 'inputs': ['chorismate'], ...}, {'bi...iological_state': 'Lactococcus lactis cells', 'enzymes': [{'confidence': 1.0, 'evidence': 'MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK)', 'protein': 'MenA', 'provenance': 'extracted'}], 'evidence': 'MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK)', 'inputs': ['1,4-dihydroxy-2-naphthoic acid', 'prenyl diphosphate'], ...}, {'biological_state': 'Lactococcus lactis cells', 'enzymes': [{'confidence': 1.0, 'evidence': 'MenG demethylates DMK to generate MK', 'protein': 'MenG', 'provenance': 'extracted'}], 'evidence': 'MenG demethylates DMK to generate MK', 'inputs': ['demethylmenaquinone (DMK)'], ...}, {'biological_state': 'intracellular state', 'enzymes': [{'confidence': 1.0, 'evidence': 'k_cat_H[MenH][C]/(KM_H+[C])', 'protein': 'MenH', 'provenance': 'extracted'}], 'evidence': 'k_cat_H[MenH][C]/(KM_H+[C])', 'inputs': ['2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate'], ...}, {'biological_state': 'intracellular state', 'enzymes': [{'confidence': 1.0, 'evidence': 'k_cat_C[MenC][D]/(KM_C+[D])', 'protein': 'MenC', 'provenance': 'extracted'}], 'evidence': 'k_cat_C[MenC][D]/(KM_C+[D])', 'inputs': ['SHCHC'], ...}, ...]}})
+
+tests\test_orch763_nested_locations.py:133: AssertionError
+____ test_g9_a_row_without_location_does_not_join_two_non_nested_locations ____
+
+    def test_g9_a_row_without_location_does_not_join_two_non_nested_locations() -> None:
+        """At base the record kept the first row's state as its claim: a row stating no location
+        let a cytosol row AND a mitochondrial-matrix row join, one pooled row across two locations
+        that do not nest. At the tip the record claims its narrowest location, so the matrix row
+        is kept apart."""
+    
+        merged, report = merge_draws([_draw(_row("plain", "cell state")), _draw(_row("cyto", "cytosolic state")),
+                                      _draw(_row("matrix", "matrix state"))])
+>       assert [r["name"] for r in _reactions(merged)] == ["plain", "matrix"]  # base: ["plain"]
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert ['plain'] == ['plain', 'matrix']
+E         
+E         Right contains one more item: 'matrix'
+E         
+E         Full diff:
+E           [
+E               'plain',
+E         -     'matrix',
+E           ]
+
+tests\test_orch763_nested_locations.py:149: AssertionError
+_ test_new_the_survivor_takes_the_more_specific_location_when_the_broader_row_came_first _
+
+    def test_new_the_survivor_takes_the_more_specific_location_when_the_broader_row_came_first() -> None:
+        merged, report = merge_draws([_draw(_row("broad", "intracellular state")), _draw(_row("narrow", "cytosolic state"))])
+>       [row] = _reactions(merged)
+        ^^^^^
+E       ValueError: too many values to unpack (expected 1)
+
+tests\test_orch763_nested_locations.py:158: ValueError
+_ test_new_a_record_never_joins_two_locations_through_their_common_container __
+
+    def test_new_a_record_never_joins_two_locations_through_their_common_container() -> None:
+        """intracellular holds both cytosol and nucleus; once cytosol has joined, nucleus may not."""
+    
+        merged, report = merge_draws([_draw(_row("broad", "intracellular state")), _draw(_row("cyto", "cytosolic state")),
+                                      _draw(_row("nuc", "nuclear state"))])
+>       assert [r["name"] for r in _reactions(merged)] == ["broad", "nuc"]
+E       AssertionError: assert ['broad', 'cyto', 'nuc'] == ['broad', 'nuc']
+E         
+E         At index 1 diff: 'cyto' != 'nuc'
+E         Left contains one more item: 'nuc'
+E         
+E         Full diff:
+E           [
+E               'broad',...
+E         
+E         ...Full output truncated (3 lines hidden), use '-vv' to show
+
+tests\test_orch763_nested_locations.py:171: AssertionError
+_________ test_new_rule3_merges_nested_locations_and_flags_the_merge __________
+
+    @pytest.mark.usefixtures("pooled_run")
+    def test_new_rule3_merges_nested_locations_and_flags_the_merge() -> None:
+        payload = _mapped(_row("cyto", "cytosolic state"), {**_row("broad", "intracellular state"), "outputs": ["X2 alias"]})
+        record = merge_on_mapped_identity(payload)[IDENTITY_REPORT_KEY]
+>       [row] = _reactions(payload)
+        ^^^^^
+E       ValueError: too many values to unpack (expected 1)
+
+tests\test_orch763_nested_locations.py:195: ValueError
+__________ test_new_the_containment_table_is_a_tree_of_folded_names ___________
+
+    def test_new_the_containment_table_is_a_tree_of_folded_names() -> None:
+>       parents = E._LOCATION_PARENT
+                  ^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 't2pw.pipeline.stage_one_ensemble' has no attribute '_LOCATION_PARENT'
+
+tests\test_orch763_nested_locations.py:211: AttributeError
+__ test_g9_r1_a_label_reused_by_a_later_draw_is_still_compared[S2_membrane] ___
+
+third = {'subcellular_location': 'membrane'}
+reason = "biological_state location 'cytosol' vs 'membrane'"
+
+    @pytest.mark.parametrize("third, reason", [
+        ({"subcellular_location": "membrane"}, "biological_state location 'cytosol' vs 'membrane'"),
+        ({"compartment_canonical": "mitochondrial_matrix"}, "biological_state location 'cytosol' vs 'mitochondrial matrix'"),
+    ], ids=["S2_membrane", "S3_matrix"])
+    def test_g9_r1_a_label_reused_by_a_later_draw_is_still_compared(third: Dict[str, Any], reason: str) -> None:
+        """S2/S3, G9 CORRECTION (fail at base and at 7189582f, which both pooled one row): draw 1 X
+        states no location, draw 2 Y = cytosol joins it, draw 3 X = membrane / mitochondrial matrix.
+        The draw-3 row reuses the claim's first label, and must still be compared."""
+    
+        merged, report = merge_draws([_sdraw({"name": "X"}, _row("a", "X")),
+                                      _sdraw({"name": "Y", "compartment_canonical": "cytosol"}, _row("b", "Y")),
+                                      _sdraw({"name": "X", **third}, _row("c", "X"))])
+>       assert [r["name"] for r in _reactions(merged)] == ["a", "c"]
+E       AssertionError: assert ['a'] == ['a', 'c']
+E         
+E         Right contains one more item: 'c'
+E         
+E         Full diff:
+E           [
+E               'a',
+E         -     'c',
+E           ]
+
+tests\test_orch763_nested_locations.py:259: AssertionError
+___ test_g9_r1_a_label_reused_by_a_later_draw_is_still_compared[S3_matrix] ____
+
+third = {'compartment_canonical': 'mitochondrial_matrix'}
+reason = "biological_state location 'cytosol' vs 'mitochondrial matrix'"
+
+    @pytest.mark.parametrize("third, reason", [
+        ({"subcellular_location": "membrane"}, "biological_state location 'cytosol' vs 'membrane'"),
+        ({"compartment_canonical": "mitochondrial_matrix"}, "biological_state location 'cytosol' vs 'mitochondrial matrix'"),
+    ], ids=["S2_membrane", "S3_matrix"])
+    def test_g9_r1_a_label_reused_by_a_later_draw_is_still_compared(third: Dict[str, Any], reason: str) -> None:
+        """S2/S3, G9 CORRECTION (fail at base and at 7189582f, which both pooled one row): draw 1 X
+        states no location, draw 2 Y = cytosol joins it, draw 3 X = membrane / mitochondrial matrix.
+        The draw-3 row reuses the claim's first label, and must still be compared."""
+    
+        merged, report = merge_draws([_sdraw({"name": "X"}, _row("a", "X")),
+                                      _sdraw({"name": "Y", "compartment_canonical": "cytosol"}, _row("b", "Y")),
+                                      _sdraw({"name": "X", **third}, _row("c", "X"))])
+>       assert [r["name"] for r in _reactions(merged)] == ["a", "c"]
+E       AssertionError: assert ['a'] == ['a', 'c']
+E         
+E         Right contains one more item: 'c'
+E         
+E         Full diff:
+E           [
+E               'a',
+E         -     'c',
+E           ]
+
+tests\test_orch763_nested_locations.py:259: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_orch763_nested_locations.py::test_g9_leg_menh_to_meni_duplicates_merge_keeping_cytosol
+FAILED tests/test_orch763_nested_locations.py::test_g9_leg_pool_16_to_11 - As...
+FAILED tests/test_orch763_nested_locations.py::test_g9_a_row_without_location_does_not_join_two_non_nested_locations
+FAILED tests/test_orch763_nested_locations.py::test_new_the_survivor_takes_the_more_specific_location_when_the_broader_row_came_first
+FAILED tests/test_orch763_nested_locations.py::test_new_a_record_never_joins_two_locations_through_their_common_container
+FAILED tests/test_orch763_nested_locations.py::test_new_rule3_merges_nested_locations_and_flags_the_merge
+FAILED tests/test_orch763_nested_locations.py::test_new_the_containment_table_is_a_tree_of_folded_names
+FAILED tests/test_orch763_nested_locations.py::test_g9_r1_a_label_reused_by_a_later_draw_is_still_compared[S2_membrane]
+FAILED tests/test_orch763_nested_locations.py::test_g9_r1_a_label_reused_by_a_later_draw_is_still_compared[S3_matrix]
+======================== 9 failed, 14 passed in 0.47s =========================
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch763\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ b4f404abc68906c2c41f97f01fec912e1ea42c22  [git, worktree dirty=True]
+label                   : r1-red-base-src
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-763/19-r1-red-base-src.pin.json -v --basetemp=C:/t/bt-orch763/19-r1-red-base-src-8651 tests/test_orch763_nested_locations.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch763
+root PID / process group: 349460 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 500 s
+duration                : 1.04 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  350076:python.exe
+descendants terminated  : 1  350076
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch763\docs\pwml_recovery_sprint\evidence\g11\ORCH-763\19-r1-red-base-src.json
+json report written     : True
+pre-existing (reported, NEVER killed): 8
+================================================

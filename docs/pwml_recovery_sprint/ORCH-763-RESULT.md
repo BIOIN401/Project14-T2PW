@@ -1,6 +1,6 @@
 # ORCH-763: nested locations are merge-compatible (D-109 § 1); the DMK split
 
-**Status:** implemented on `orch763/merge-compat`, awaiting independent review. Not merged, not pushed.
+**Status:** round 0 REJECTED (finding 1); repair round 1 implemented (§ 12), awaiting re-review. Not merged, not pushed.
 **Charter:** D-109 § 1 (product owner, 2026-10-22). **Base:** `5d1ea64c` (= `sprint/pwml-recovery`, carries D-109).
 **Commits:** `56ca400c` tests and fixtures first, on base code · `fc00253b` the code · docs commit (this file, evidence).
 No LLM call, no pipeline run, no network. Every job ran through `bounded_run.py`; `g11_evidence.py check --task ORCH-763`
@@ -116,7 +116,7 @@ for the reviewer:
 | cell | plasma membrane (GO:0005886) |
 | mitochondrion | mitochondrial matrix (GO:0005759) |
 | plastid | chloroplast (GO:0009507, is_a), etioplast (GO:0009513, is_a) |
-| chloroplast | thylakoid (GO:0009534 chloroplast thylakoid) |
+| chloroplast | thylakoid (the generic GO:0009579; **approximate**: GO puts only GO:0009534 *chloroplast thylakoid* in the chloroplast, so the edge is wrong for cyanobacteria) |
 | thylakoid | thylakoid membrane (GO:0042651) |
 
 **Why these entries.** They are the Stage-1 prompt's canonical compartment vocabulary (`pwml_system.txt:170-172`:
@@ -357,3 +357,66 @@ pair for any change to `_conflict`, `_absorb`, `_fold`, `_state_profile`, `_LOCA
 | `evidence/orch763/chl_rows.py` → `14-chl-rows-tip.log` | chlorophyll-759 tip rows with enzymes. Its draw list repeats the first record for the two same-name ALAD rows; § 6 uses the side-file reasons |
 | `evidence/orch763/probe_open_holes.py` → `15`, `16`, `17` | Q2 |
 | `tests/fixtures/orch763/*_orch759_draws.json` | rebuilt draws; `source` (input sha256s) and `reconstruction` inside each |
+
+## 12. Repair round 1 (review round 0: REJECT, finding 1)
+
+**The finding.** `_absorb` narrowed the claimed location but kept the first state's label. `_conflict` skips every
+state comparison when a joining row carries the claim's label. A state label is defined PER DRAW, so a later draw
+that reused the first label was never compared with the narrowed claim.
+- **S1, a regression this lane caused.** Draw 1 has X = intracellular, draw 2 has Y = cytosol, draw 3 has X =
+  nucleus. Base pools `a[d1,3] | b[d2]`; at base, cytosol and intracellular conflicted. Round 0 pooled all three
+  into one row holding cytosol and nucleus.
+- **S2/S3, my § 3.2 correction was incomplete.** Draw 1 is an unlocated X, draw 2 Y = cytosol, draw 3 X = membrane
+  (S2) or X = mitochondrial matrix (S3). Base and round 0 both merge all three.
+
+**What I believed, and what disproved it.** In round 0 I recorded H2 (one label, two definitions) as pre-existing
+and out of scope (§ 9 Q2), and believed the narrowed claim did not make it worse. S1 disproves that. Nesting lets
+draw 2's cytosol join draw 1's X. The record still answers to the label X, so draw 3's X = nucleus walked in
+unchecked. Base never formed that record.
+
+**The fix** (`fc00253b` → `c5a2f8db`, `_absorb`, +7/−2). It is the one the reviewer verified by monkeypatch. When
+both states are defined and their labels differ, the claim takes a label no row can carry (strict keys contain no
+`\x1f`), so `_conflict` always compares a merged claim's fields:
+
+```python
+la, lb = profile["state"]["label"], other["state"]["label"]
+state = {**state, "location": _narrower(...), "label": la if la == lb else "\x1f".join(sorted({la, lb}))}
+```
+
+The synthetic label never surfaces. `_undefined_state` prints only undefined labels, while a claim is defined; and
+`_conflict` and `_nested_location` print field values. **Rejected, as the reviewer directed:** setting the claim to
+the narrower row's label (F1), which opens an E. coli + B. subtilis species chimera (S5).
+
+**Note 1.** The `thylakoid` comment now cites the generic GO:0009579 and calls the chloroplast edge APPROXIMATE (§ 3.1:
+wrong for cyanobacteria). The edge is unchanged.
+
+**What is still open of H2.** A record whose rows ALL carry one label, defined differently per draw, still merges
+without comparison. That is the base behaviour, unchanged here. It was not observed in any kept draw
+(`17-probe-h2-occurrence`). Q2 stays open for that case only.
+
+**Tests**, committed first on the round-0 code as `b4f404ab`, in `tests/test_orch763_nested_locations.py`:
+
+| test | class | base src (`19`) | round-0 code (`18`) | `c5a2f8db` (`20`) |
+|---|---|---|---|---|
+| `test_preserved_r1_a_reused_label_never_joins_cytosol_and_nucleus` (S1) | preservation | pass | **FAIL** | pass |
+| `test_g9_r1_a_label_reused_by_a_later_draw_is_still_compared[S2_membrane]` | G9 correction | **FAIL** | **FAIL** | pass |
+| `…[S3_matrix]` | G9 correction | **FAIL** | **FAIL** | pass |
+| `test_preserved_r1_an_unlocated_reused_label_still_merges` (S6) | preservation | pass | pass | pass |
+
+Totals: base src (run in the worktree with `git checkout 5d1ea64c -- stage_one_ensemble.py`, restored after; the
+report records `dirty=True`) 9 failed, 14 passed, i.e. round 0's 7 plus S2 and S3. Round-0 code: 3 failed, 20 passed.
+Tip: **23 passed**.
+
+**Gates at `c5a2f8db`** (every report `FINAL SURVIVING COUNT : 0`):
+
+| gate | report | result |
+|---|---|---|
+| G9 / new / preservation file | `20-r1-g9-green` | **23 passed** |
+| affected (the § 7 set) | `21-r1-affected` | **232 passed, 2 skipped** (the same c089 artifact skips) |
+| SMOKE | `22-r1-smoke` | **508 passed** |
+| `tests/test_eval_v2_*.py` | `23-r1-eval-v2` | **89 passed, 1 xfailed** (known) |
+| re-pool, all six draw sets | `24-r1-repool-tip-c5a2f8db` | **identical to round 0's tip report `09`**, line for line before the wrapper block: menaquinone 11 (9/9), enterobactin 6 (5/5), chlorophyll-759 28, ORCH-751 sets 9 / 5 / 29, 0 pairwise conflicts |
+
+**TEST_MATRIX delta, superseding § 10's counts:** the new focused file is **23** tests, so `754a` + ORCH-763 is
+28 + 94 + 23 = **145**. G9 RED: `g11/ORCH-763/18` (round-0 code) and `19` (base src). GREEN: `20`. Affected 232
+passed, 2 skipped (`21`). SMOKE **508** (`22`, unchanged). eval-v2 89 passed, 1 xfailed (`23`).
