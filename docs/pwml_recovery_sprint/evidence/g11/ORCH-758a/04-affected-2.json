@@ -1,0 +1,126 @@
+{
+  "label": "affected-2",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-758a/04-affected-2.pin.json",
+    "-q",
+    "--basetemp=C:/t/bt-orch758a/04-affected-2-28118",
+    "tests/test_rag_graph_delta.py",
+    "tests/test_rag_payload_gate_guardrails.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_rag_reversible_reaction_preservation.py",
+    "tests/test_rag_seed_entity_reimport.py",
+    "tests/test_rag_synthesize.py",
+    "tests/test_rag_typed_gap_resolution.py",
+    "tests/test_rag_typed_resolution_integrity.py",
+    "tests/test_reference_repair.py",
+    "tests/test_research_mode_contracts.py",
+    "tests/test_research_mode_normalizer.py",
+    "tests/test_stage2_mapping_boundary.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_stage_contracts.py",
+    "tests/test_stage_one_boundary.py",
+    "tests/test_stage_one_paper_dictionary.py",
+    "tests/test_streamlit_stage2_orchestration.py",
+    "tests/test_streamlit_stage8_export_contract.py",
+    "tests/test_strict_failure_replay.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_lineage.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_real_artifact_replay.py",
+    "tests/test_strict_quarantine_release_seam.py",
+    "tests/test_strict_quarantine_versioning.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch758a",
+  "started_at": "2026-10-22T03:54:54+00:00",
+  "finished_at": "2026-10-22T03:55:33+00:00",
+  "duration_seconds": 38.20094400001108,
+  "timeout_seconds": 540.0,
+  "root_pid": 1072488,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 1075536,
+      "name": "python.exe",
+      "ppid": 1072488
+    }
+  ],
+  "descendants_terminated": [
+    1075536
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 1033368,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1034392,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1034712,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1034816,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1035124,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1035180,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1043896,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1060644,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1075324,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1075908,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch758a\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-758a\\04-affected-2.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch758a\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch758a",
+    "repo_head": "b043803ada19ed9e063e9c7e6a0bc16fbd8aba2f",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

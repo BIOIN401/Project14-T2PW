@@ -1,0 +1,1398 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch758a\src\t2pw\__init__.py
+FFFFFFFFFFFFF...............                                             [100%]
+================================== FAILURES ===================================
+___ test_g9_strict_normalization_completes_with_charge_notation[Ca++-OTOP1] ___
+
+ion = 'Ca++', transporter = 'OTOP1'
+
+    @pytest.mark.parametrize(
+        "ion, transporter",
+        [
+            ("Ca++", "OTOP1"),  # the ORCH-755 ion, as Stage 1 wrote it
+            ("Fe+++", "OTOP1"),
+            ("Ca ++", "OTOP1"),  # the paper's spaced form
+            ("Ca++", "voltage-gated Ca ++ channels"),  # the ORCH-755 channel name
+            ("Ca++", "voltage-gated Ca++ channels"),
+            ("K+", "Na+/K+-ATPase"),
+            ("Ca2+", "Ca2+-ATPase"),
+        ],
+    )
+    def test_g9_strict_normalization_completes_with_charge_notation(ion: str, transporter: str) -> None:
+>       normalized, report = normalize_process_payload(_transport_payload(ion, transporter), mode="pathwhiz")
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_orch758a_charge_notation_not_composite.py:105: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\t2pw\pipeline\process_normalizer.py:5618: in normalize_process_payload
+    normalize_composites(data, report=report)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+payload = {'biological_states': [{'name': 'apical state', 'species': 'Homo sapiens', 'subcellular_location': 'apical membrane'},...nce': 'Ca++ enters through OTOP1', 'from_biological_state': 'apical state', 'name': 'Ca++ entry through OTOP1', ...}]}}
+
+    def normalize_composites(payload: Dict[str, Any], *, report: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        rep = report if isinstance(report, dict) else _new_report()
+        # Defense-in-depth: strip any " ; "-joined pathway-metadata blob that leaked
+        # in as an entity name before any composite handling runs, so it can never
+        # reach the pre-export gate as one giant name.
+        _quarantine_pathway_metadata_blobs(payload, rep)
+        compounds, proteins, complexes = _entity_lists(payload)
+        _process_lists(payload)
+    
+        for rows in [compounds, proteins, complexes]:
+            for row in rows:
+                if isinstance(row, dict) and isinstance(row.get("name"), str):
+                    row["name"] = _canonical(row["name"])
+    
+        for row in list(complexes):
+            if not isinstance(row, dict):
+                continue
+            name = _canonical(str(row.get("name", "")))
+            if not name:
+                continue
+            if _is_biochemical_colon_name(name):
+                _remove_entity(complexes, name)
+                _ensure_compound(name, payload, rep)
+                continue
+            if _has_plus_token(name):
+                parts = _split_composite(name)
+                if len(parts) >= 2:
+                    if not _is_protein_like(parts[0], payload):
+                        if _research_mode(rep):
+                            # Keep the complex row as the paper stated it rather than
+                            # killing the run over a name PathWhiz cannot model.
+                            _note_research_relaxation(
+                                rep,
+                                action="composite_complex_kept",
+                                pointer="/entities/protein_complexes",
+                                name=name,
+                                left_token=parts[0],
+                                reason="non protein-like left token; strict mode aborts here",
+                            )
+                            continue
+                        raise ValueError(
+                            f"Composite complex '{name}' has non protein-like left token '{parts[0]}'; unsupported."
+                        )
+                    canonical = materialize_complex(
+                        parts[0],
+                        parts[1],
+                        payload,
+                        report=rep,
+                        extra_components=parts[2:],
+                        source_token=name,
+                        caller="normalize_composites",
+                    )
+                    rep["rewrite_map"][_composite_key(name)] = canonical
+                    rep["rewrite_map"][_normalize(name)] = canonical
+                    _remove_entity(complexes, name)
+                    continue
+            parts = _complex_components(name, payload=payload, assume_complex=True)
+            if len(parts) >= 2:
+                row["name"] = ":".join(parts)
+                row["components"] = _dedupe_preserve(parts)
+    
+        kept_compounds: List[Dict[str, Any]] = []
+        for row in compounds:
+            if not isinstance(row, dict):
+                continue
+            name = _canonical(str(row.get("name", "")))
+            if not name:
+                continue
+            if _has_plus_token(name):
+                parts = _split_composite(name)
+                if len(parts) >= 2 and _is_protein_like(parts[0], payload):
+                    canonical = materialize_complex(
+                        parts[0],
+                        parts[1],
+                        payload,
+                        report=rep,
+                        extra_components=parts[2:],
+                        source_token=name,
+                        caller="normalize_composites",
+                    )
+                    rep["rewrite_map"][_composite_key(name)] = canonical
+                    rep["rewrite_map"][_normalize(name)] = canonical
+                    rep["summary"]["entities_moved_out_of_compounds"] += 1
+                    rep["summary"]["composites_rewritten"] += 1
+                    continue
+                if _research_mode(rep):
+                    # Strict mode aborts the whole run here. Research mode keeps the
+                    # compound exactly as extracted -- a "A+B" name is a formatting
+                    # problem for the importer, not evidence that the paper is wrong.
+                    _note_research_relaxation(
+                        rep,
+                        action="composite_compound_kept",
+                        pointer="/entities/compounds",
+                        name=name,
+                        left_token=parts[0] if parts else "",
+                        reason="no protein-like left component; strict mode aborts here",
+                    )
+                    kept_compounds.append(row)
+                    continue
+>               raise ValueError(
+                    f"Composite entity '{name}' in /entities/compounds has no protein-like left component; unsupported."
+                )
+E               ValueError: Composite entity 'Ca++' in /entities/compounds has no protein-like left component; unsupported.
+
+src\t2pw\pipeline\process_normalizer.py:1545: ValueError
+__ test_g9_strict_normalization_completes_with_charge_notation[Fe+++-OTOP1] ___
+
+ion = 'Fe+++', transporter = 'OTOP1'
+
+    @pytest.mark.parametrize(
+        "ion, transporter",
+        [
+            ("Ca++", "OTOP1"),  # the ORCH-755 ion, as Stage 1 wrote it
+            ("Fe+++", "OTOP1"),
+            ("Ca ++", "OTOP1"),  # the paper's spaced form
+            ("Ca++", "voltage-gated Ca ++ channels"),  # the ORCH-755 channel name
+            ("Ca++", "voltage-gated Ca++ channels"),
+            ("K+", "Na+/K+-ATPase"),
+            ("Ca2+", "Ca2+-ATPase"),
+        ],
+    )
+    def test_g9_strict_normalization_completes_with_charge_notation(ion: str, transporter: str) -> None:
+>       normalized, report = normalize_process_payload(_transport_payload(ion, transporter), mode="pathwhiz")
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_orch758a_charge_notation_not_composite.py:105: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\t2pw\pipeline\process_normalizer.py:5618: in normalize_process_payload
+    normalize_composites(data, report=report)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+payload = {'biological_states': [{'name': 'apical state', 'species': 'Homo sapiens', 'subcellular_location': 'apical membrane'},...e': 'Fe+++ enters through OTOP1', 'from_biological_state': 'apical state', 'name': 'Fe+++ entry through OTOP1', ...}]}}
+
+    def normalize_composites(payload: Dict[str, Any], *, report: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        rep = report if isinstance(report, dict) else _new_report()
+        # Defense-in-depth: strip any " ; "-joined pathway-metadata blob that leaked
+        # in as an entity name before any composite handling runs, so it can never
+        # reach the pre-export gate as one giant name.
+        _quarantine_pathway_metadata_blobs(payload, rep)
+        compounds, proteins, complexes = _entity_lists(payload)
+        _process_lists(payload)
+    
+        for rows in [compounds, proteins, complexes]:
+            for row in rows:
+                if isinstance(row, dict) and isinstance(row.get("name"), str):
+                    row["name"] = _canonical(row["name"])
+    
+        for row in list(complexes):
+            if not isinstance(row, dict):
+                continue
+            name = _canonical(str(row.get("name", "")))
+            if not name:
+                continue
+            if _is_biochemical_colon_name(name):
+                _remove_entity(complexes, name)
+                _ensure_compound(name, payload, rep)
+                continue
+            if _has_plus_token(name):
+                parts = _split_composite(name)
+                if len(parts) >= 2:
+                    if not _is_protein_like(parts[0], payload):
+                        if _research_mode(rep):
+                            # Keep the complex row as the paper stated it rather than
+                            # killing the run over a name PathWhiz cannot model.
+                            _note_research_relaxation(
+                                rep,
+                                action="composite_complex_kept",
+                                pointer="/entities/protein_complexes",
+                                name=name,
+                                left_token=parts[0],
+                                reason="non protein-like left token; strict mode aborts here",
+                            )
+                            continue
+                        raise ValueError(
+                            f"Composite complex '{name}' has non protein-like left token '{parts[0]}'; unsupported."
+                        )
+                    canonical = materialize_complex(
+                        parts[0],
+                        parts[1],
+                        payload,
+                        report=rep,
+                        extra_components=parts[2:],
+                        source_token=name,
+                        caller="normalize_composites",
+                    )
+                    rep["rewrite_map"][_composite_key(name)] = canonical
+                    rep["rewrite_map"][_normalize(name)] = canonical
+                    _remove_entity(complexes, name)
+                    continue
+            parts = _complex_components(name, payload=payload, assume_complex=True)
+            if len(parts) >= 2:
+                row["name"] = ":".join(parts)
+                row["components"] = _dedupe_preserve(parts)
+    
+        kept_compounds: List[Dict[str, Any]] = []
+        for row in compounds:
+            if not isinstance(row, dict):
+                continue
+            name = _canonical(str(row.get("name", "")))
+            if not name:
+                continue
+            if _has_plus_token(name):
+                parts = _split_composite(name)
+                if len(parts) >= 2 and _is_protein_like(parts[0], payload):
+                    canonical = materialize_complex(
+                        parts[0],
+                        parts[1],
+                        payload,
+                        report=rep,
+                        extra_components=parts[2:],
+                        source_token=name,
+                        caller="normalize_composites",
+                    )
+                    rep["rewrite_map"][_composite_key(name)] = canonical
+                    rep["rewrite_map"][_normalize(name)] = canonical
+                    rep["summary"]["entities_moved_out_of_compounds"] += 1
+                    rep["summary"]["composites_rewritten"] += 1
+                    continue
+                if _research_mode(rep):
+                    # Strict mode aborts the whole run here. Research mode keeps the
+                    # compound exactly as extracted -- a "A+B" name is a formatting
+                    # problem for the importer, not evidence that the paper is wrong.
+                    _note_research_relaxation(
+                        rep,
+                        action="composite_compound_kept",
+                        pointer="/entities/compounds",
+                        name=name,
+                        left_token=parts[0] if parts else "",
+                        reason="no protein-like left component; strict mode aborts here",
+                    )
+                    kept_compounds.append(row)
+                    continue
+>               raise ValueError(
+                    f"Composite entity '{name}' in /entities/compounds has no protein-like left component; unsupported."
+                )
+E               ValueError: Composite entity 'Fe+++' in /entities/compounds has no protein-like left component; unsupported.
+
+src\t2pw\pipeline\process_normalizer.py:1545: ValueError
+__ test_g9_strict_normalization_completes_with_charge_notation[Ca ++-OTOP1] ___
+
+ion = 'Ca ++', transporter = 'OTOP1'
+
+    @pytest.mark.parametrize(
+        "ion, transporter",
+        [
+            ("Ca++", "OTOP1"),  # the ORCH-755 ion, as Stage 1 wrote it
+            ("Fe+++", "OTOP1"),
+            ("Ca ++", "OTOP1"),  # the paper's spaced form
+            ("Ca++", "voltage-gated Ca ++ channels"),  # the ORCH-755 channel name
+            ("Ca++", "voltage-gated Ca++ channels"),
+            ("K+", "Na+/K+-ATPase"),
+            ("Ca2+", "Ca2+-ATPase"),
+        ],
+    )
+    def test_g9_strict_normalization_completes_with_charge_notation(ion: str, transporter: str) -> None:
+>       normalized, report = normalize_process_payload(_transport_payload(ion, transporter), mode="pathwhiz")
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_orch758a_charge_notation_not_composite.py:105: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\t2pw\pipeline\process_normalizer.py:5618: in normalize_process_payload
+    normalize_composites(data, report=report)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+payload = {'biological_states': [{'name': 'apical state', 'species': 'Homo sapiens', 'subcellular_location': 'apical membrane'},...e': 'Ca ++ enters through OTOP1', 'from_biological_state': 'apical state', 'name': 'Ca ++ entry through OTOP1', ...}]}}
+
+    def normalize_composites(payload: Dict[str, Any], *, report: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        rep = report if isinstance(report, dict) else _new_report()
+        # Defense-in-depth: strip any " ; "-joined pathway-metadata blob that leaked
+        # in as an entity name before any composite handling runs, so it can never
+        # reach the pre-export gate as one giant name.
+        _quarantine_pathway_metadata_blobs(payload, rep)
+        compounds, proteins, complexes = _entity_lists(payload)
+        _process_lists(payload)
+    
+        for rows in [compounds, proteins, complexes]:
+            for row in rows:
+                if isinstance(row, dict) and isinstance(row.get("name"), str):
+                    row["name"] = _canonical(row["name"])
+    
+        for row in list(complexes):
+            if not isinstance(row, dict):
+                continue
+            name = _canonical(str(row.get("name", "")))
+            if not name:
+                continue
+            if _is_biochemical_colon_name(name):
+                _remove_entity(complexes, name)
+                _ensure_compound(name, payload, rep)
+                continue
+            if _has_plus_token(name):
+                parts = _split_composite(name)
+                if len(parts) >= 2:
+                    if not _is_protein_like(parts[0], payload):
+                        if _research_mode(rep):
+                            # Keep the complex row as the paper stated it rather than
+                            # killing the run over a name PathWhiz cannot model.
+                            _note_research_relaxation(
+                                rep,
+                                action="composite_complex_kept",
+                                pointer="/entities/protein_complexes",
+                                name=name,
+                                left_token=parts[0],
+                                reason="non protein-like left token; strict mode aborts here",
+                            )
+                            continue
+                        raise ValueError(
+                            f"Composite complex '{name}' has non protein-like left token '{parts[0]}'; unsupported."
+                        )
+                    canonical = materialize_complex(
+                        parts[0],
+                        parts[1],
+                        payload,
+                        report=rep,
+                        extra_components=parts[2:],
+                        source_token=name,
+                        caller="normalize_composites",
+                    )
+                    rep["rewrite_map"][_composite_key(name)] = canonical
+                    rep["rewrite_map"][_normalize(name)] = canonical
+                    _remove_entity(complexes, name)
+                    continue
+            parts = _complex_components(name, payload=payload, assume_complex=True)
+            if len(parts) >= 2:
+                row["name"] = ":".join(parts)
+                row["components"] = _dedupe_preserve(parts)
+    
+        kept_compounds: List[Dict[str, Any]] = []
+        for row in compounds:
+            if not isinstance(row, dict):
+                continue
+            name = _canonical(str(row.get("name", "")))
+            if not name:
+                continue
+            if _has_plus_token(name):
+                parts = _split_composite(name)
+                if len(parts) >= 2 and _is_protein_like(parts[0], payload):
+                    canonical = materialize_complex(
+                        parts[0],
+                        parts[1],
+                        payload,
+                        report=rep,
+                        extra_components=parts[2:],
+                        source_token=name,
+                        caller="normalize_composites",
+                    )
+                    rep["rewrite_map"][_composite_key(name)] = canonical
+                    rep["rewrite_map"][_normalize(name)] = canonical
+                    rep["summary"]["entities_moved_out_of_compounds"] += 1
+                    rep["summary"]["composites_rewritten"] += 1
+                    continue
+                if _research_mode(rep):
+                    # Strict mode aborts the whole run here. Research mode keeps the
+                    # compound exactly as extracted -- a "A+B" name is a formatting
+                    # problem for the importer, not evidence that the paper is wrong.
+                    _note_research_relaxation(
+                        rep,
+                        action="composite_compound_kept",
+                        pointer="/entities/compounds",
+                        name=name,
+                        left_token=parts[0] if parts else "",
+                        reason="no protein-like left component; strict mode aborts here",
+                    )
+                    kept_compounds.append(row)
+                    continue
+>               raise ValueError(
+                    f"Composite entity '{name}' in /entities/compounds has no protein-like left component; unsupported."
+                )
+E               ValueError: Composite entity 'Ca ++' in /entities/compounds has no protein-like left component; unsupported.
+
+src\t2pw\pipeline\process_normalizer.py:1545: ValueError
+_ test_g9_strict_normalization_completes_with_charge_notation[Ca++-voltage-gated Ca ++ channels] _
+
+ion = 'Ca++', transporter = 'voltage-gated Ca ++ channels'
+
+    @pytest.mark.parametrize(
+        "ion, transporter",
+        [
+            ("Ca++", "OTOP1"),  # the ORCH-755 ion, as Stage 1 wrote it
+            ("Fe+++", "OTOP1"),
+            ("Ca ++", "OTOP1"),  # the paper's spaced form
+            ("Ca++", "voltage-gated Ca ++ channels"),  # the ORCH-755 channel name
+            ("Ca++", "voltage-gated Ca++ channels"),
+            ("K+", "Na+/K+-ATPase"),
+            ("Ca2+", "Ca2+-ATPase"),
+        ],
+    )
+    def test_g9_strict_normalization_completes_with_charge_notation(ion: str, transporter: str) -> None:
+>       normalized, report = normalize_process_payload(_transport_payload(ion, transporter), mode="pathwhiz")
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_orch758a_charge_notation_not_composite.py:105: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\t2pw\pipeline\process_normalizer.py:5618: in normalize_process_payload
+    normalize_composites(data, report=report)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+payload = {'biological_states': [{'name': 'apical state', 'species': 'Homo sapiens', 'subcellular_location': 'apical membrane'},... channels', 'from_biological_state': 'apical state', 'name': 'Ca++ entry through voltage-gated Ca ++ channels', ...}]}}
+
+    def normalize_composites(payload: Dict[str, Any], *, report: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        rep = report if isinstance(report, dict) else _new_report()
+        # Defense-in-depth: strip any " ; "-joined pathway-metadata blob that leaked
+        # in as an entity name before any composite handling runs, so it can never
+        # reach the pre-export gate as one giant name.
+        _quarantine_pathway_metadata_blobs(payload, rep)
+        compounds, proteins, complexes = _entity_lists(payload)
+        _process_lists(payload)
+    
+        for rows in [compounds, proteins, complexes]:
+            for row in rows:
+                if isinstance(row, dict) and isinstance(row.get("name"), str):
+                    row["name"] = _canonical(row["name"])
+    
+        for row in list(complexes):
+            if not isinstance(row, dict):
+                continue
+            name = _canonical(str(row.get("name", "")))
+            if not name:
+                continue
+            if _is_biochemical_colon_name(name):
+                _remove_entity(complexes, name)
+                _ensure_compound(name, payload, rep)
+                continue
+            if _has_plus_token(name):
+                parts = _split_composite(name)
+                if len(parts) >= 2:
+                    if not _is_protein_like(parts[0], payload):
+                        if _research_mode(rep):
+                            # Keep the complex row as the paper stated it rather than
+                            # killing the run over a name PathWhiz cannot model.
+                            _note_research_relaxation(
+                                rep,
+                                action="composite_complex_kept",
+                                pointer="/entities/protein_complexes",
+                                name=name,
+                                left_token=parts[0],
+                                reason="non protein-like left token; strict mode aborts here",
+                            )
+                            continue
+                        raise ValueError(
+                            f"Composite complex '{name}' has non protein-like left token '{parts[0]}'; unsupported."
+                        )
+                    canonical = materialize_complex(
+                        parts[0],
+                        parts[1],
+                        payload,
+                        report=rep,
+                        extra_components=parts[2:],
+                        source_token=name,
+                        caller="normalize_composites",
+                    )
+                    rep["rewrite_map"][_composite_key(name)] = canonical
+                    rep["rewrite_map"][_normalize(name)] = canonical
+                    _remove_entity(complexes, name)
+                    continue
+            parts = _complex_components(name, payload=payload, assume_complex=True)
+            if len(parts) >= 2:
+                row["name"] = ":".join(parts)
+                row["components"] = _dedupe_preserve(parts)
+    
+        kept_compounds: List[Dict[str, Any]] = []
+        for row in compounds:
+            if not isinstance(row, dict):
+                continue
+            name = _canonical(str(row.get("name", "")))
+            if not name:
+                continue
+            if _has_plus_token(name):
+                parts = _split_composite(name)
+                if len(parts) >= 2 and _is_protein_like(parts[0], payload):
+                    canonical = materialize_complex(
+                        parts[0],
+                        parts[1],
+                        payload,
+                        report=rep,
+                        extra_components=parts[2:],
+                        source_token=name,
+                        caller="normalize_composites",
+                    )
+                    rep["rewrite_map"][_composite_key(name)] = canonical
+                    rep["rewrite_map"][_normalize(name)] = canonical
+                    rep["summary"]["entities_moved_out_of_compounds"] += 1
+                    rep["summary"]["composites_rewritten"] += 1
+                    continue
+                if _research_mode(rep):
+                    # Strict mode aborts the whole run here. Research mode keeps the
+                    # compound exactly as extracted -- a "A+B" name is a formatting
+                    # problem for the importer, not evidence that the paper is wrong.
+                    _note_research_relaxation(
+                        rep,
+                        action="composite_compound_kept",
+                        pointer="/entities/compounds",
+                        name=name,
+                        left_token=parts[0] if parts else "",
+                        reason="no protein-like left component; strict mode aborts here",
+                    )
+                    kept_compounds.append(row)
+                    continue
+>               raise ValueError(
+                    f"Composite entity '{name}' in /entities/compounds has no protein-like left component; unsupported."
+                )
+E               ValueError: Composite entity 'Ca++' in /entities/compounds has no protein-like left component; unsupported.
+
+src\t2pw\pipeline\process_normalizer.py:1545: ValueError
+_ test_g9_strict_normalization_completes_with_charge_notation[Ca++-voltage-gated Ca++ channels] _
+
+ion = 'Ca++', transporter = 'voltage-gated Ca++ channels'
+
+    @pytest.mark.parametrize(
+        "ion, transporter",
+        [
+            ("Ca++", "OTOP1"),  # the ORCH-755 ion, as Stage 1 wrote it
+            ("Fe+++", "OTOP1"),
+            ("Ca ++", "OTOP1"),  # the paper's spaced form
+            ("Ca++", "voltage-gated Ca ++ channels"),  # the ORCH-755 channel name
+            ("Ca++", "voltage-gated Ca++ channels"),
+            ("K+", "Na+/K+-ATPase"),
+            ("Ca2+", "Ca2+-ATPase"),
+        ],
+    )
+    def test_g9_strict_normalization_completes_with_charge_notation(ion: str, transporter: str) -> None:
+>       normalized, report = normalize_process_payload(_transport_payload(ion, transporter), mode="pathwhiz")
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_orch758a_charge_notation_not_composite.py:105: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\t2pw\pipeline\process_normalizer.py:5618: in normalize_process_payload
+    normalize_composites(data, report=report)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+payload = {'biological_states': [{'name': 'apical state', 'species': 'Homo sapiens', 'subcellular_location': 'apical membrane'},...+ channels', 'from_biological_state': 'apical state', 'name': 'Ca++ entry through voltage-gated Ca++ channels', ...}]}}
+
+    def normalize_composites(payload: Dict[str, Any], *, report: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        rep = report if isinstance(report, dict) else _new_report()
+        # Defense-in-depth: strip any " ; "-joined pathway-metadata blob that leaked
+        # in as an entity name before any composite handling runs, so it can never
+        # reach the pre-export gate as one giant name.
+        _quarantine_pathway_metadata_blobs(payload, rep)
+        compounds, proteins, complexes = _entity_lists(payload)
+        _process_lists(payload)
+    
+        for rows in [compounds, proteins, complexes]:
+            for row in rows:
+                if isinstance(row, dict) and isinstance(row.get("name"), str):
+                    row["name"] = _canonical(row["name"])
+    
+        for row in list(complexes):
+            if not isinstance(row, dict):
+                continue
+            name = _canonical(str(row.get("name", "")))
+            if not name:
+                continue
+            if _is_biochemical_colon_name(name):
+                _remove_entity(complexes, name)
+                _ensure_compound(name, payload, rep)
+                continue
+            if _has_plus_token(name):
+                parts = _split_composite(name)
+                if len(parts) >= 2:
+                    if not _is_protein_like(parts[0], payload):
+                        if _research_mode(rep):
+                            # Keep the complex row as the paper stated it rather than
+                            # killing the run over a name PathWhiz cannot model.
+                            _note_research_relaxation(
+                                rep,
+                                action="composite_complex_kept",
+                                pointer="/entities/protein_complexes",
+                                name=name,
+                                left_token=parts[0],
+                                reason="non protein-like left token; strict mode aborts here",
+                            )
+                            continue
+                        raise ValueError(
+                            f"Composite complex '{name}' has non protein-like left token '{parts[0]}'; unsupported."
+                        )
+                    canonical = materialize_complex(
+                        parts[0],
+                        parts[1],
+                        payload,
+                        report=rep,
+                        extra_components=parts[2:],
+                        source_token=name,
+                        caller="normalize_composites",
+                    )
+                    rep["rewrite_map"][_composite_key(name)] = canonical
+                    rep["rewrite_map"][_normalize(name)] = canonical
+                    _remove_entity(complexes, name)
+                    continue
+            parts = _complex_components(name, payload=payload, assume_complex=True)
+            if len(parts) >= 2:
+                row["name"] = ":".join(parts)
+                row["components"] = _dedupe_preserve(parts)
+    
+        kept_compounds: List[Dict[str, Any]] = []
+        for row in compounds:
+            if not isinstance(row, dict):
+                continue
+            name = _canonical(str(row.get("name", "")))
+            if not name:
+                continue
+            if _has_plus_token(name):
+                parts = _split_composite(name)
+                if len(parts) >= 2 and _is_protein_like(parts[0], payload):
+                    canonical = materialize_complex(
+                        parts[0],
+                        parts[1],
+                        payload,
+                        report=rep,
+                        extra_components=parts[2:],
+                        source_token=name,
+                        caller="normalize_composites",
+                    )
+                    rep["rewrite_map"][_composite_key(name)] = canonical
+                    rep["rewrite_map"][_normalize(name)] = canonical
+                    rep["summary"]["entities_moved_out_of_compounds"] += 1
+                    rep["summary"]["composites_rewritten"] += 1
+                    continue
+                if _research_mode(rep):
+                    # Strict mode aborts the whole run here. Research mode keeps the
+                    # compound exactly as extracted -- a "A+B" name is a formatting
+                    # problem for the importer, not evidence that the paper is wrong.
+                    _note_research_relaxation(
+                        rep,
+                        action="composite_compound_kept",
+                        pointer="/entities/compounds",
+                        name=name,
+                        left_token=parts[0] if parts else "",
+                        reason="no protein-like left component; strict mode aborts here",
+                    )
+                    kept_compounds.append(row)
+                    continue
+>               raise ValueError(
+                    f"Composite entity '{name}' in /entities/compounds has no protein-like left component; unsupported."
+                )
+E               ValueError: Composite entity 'Ca++' in /entities/compounds has no protein-like left component; unsupported.
+
+src\t2pw\pipeline\process_normalizer.py:1545: ValueError
+_ test_g9_strict_normalization_completes_with_charge_notation[K+-Na+/K+-ATPase] _
+
+ion = 'K+', transporter = 'Na+/K+-ATPase'
+
+    @pytest.mark.parametrize(
+        "ion, transporter",
+        [
+            ("Ca++", "OTOP1"),  # the ORCH-755 ion, as Stage 1 wrote it
+            ("Fe+++", "OTOP1"),
+            ("Ca ++", "OTOP1"),  # the paper's spaced form
+            ("Ca++", "voltage-gated Ca ++ channels"),  # the ORCH-755 channel name
+            ("Ca++", "voltage-gated Ca++ channels"),
+            ("K+", "Na+/K+-ATPase"),
+            ("Ca2+", "Ca2+-ATPase"),
+        ],
+    )
+    def test_g9_strict_normalization_completes_with_charge_notation(ion: str, transporter: str) -> None:
+>       normalized, report = normalize_process_payload(_transport_payload(ion, transporter), mode="pathwhiz")
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_orch758a_charge_notation_not_composite.py:105: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\t2pw\pipeline\process_normalizer.py:5618: in normalize_process_payload
+    normalize_composites(data, report=report)
+src\t2pw\pipeline\process_normalizer.py:1556: in normalize_composites
+    _rewrite_element_locations(payload, _safe_dict(rep.get("rewrite_map")), rep)
+src\t2pw\pipeline\process_normalizer.py:1436: in _rewrite_element_locations
+    rewritten = _rewrite_token(raw_name, payload, report, rewrite_map, f"/element_locations/protein_locations/{idx}/protein")
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+token = 'Na+/K+-ATPase'
+payload = {'biological_states': [{'name': 'apical state', 'species': 'Homo sapiens', 'subcellular_location': 'apical membrane'},...ters through Na+/K+-ATPase', 'from_biological_state': 'apical state', 'name': 'K+ entry through Na+/K+-ATPase', ...}]}}
+report = {'actions': [], 'rewrite_map': {}, 'summary': {'alias_example_mappings': [], 'catalysts_promoted_to_enzymes': 0, 'complex_named_proteins_relocated': 0, 'complexes_created': 0, ...}}
+rewrite_map = {}, pointer = '/element_locations/protein_locations/0/protein'
+
+    def _rewrite_token(
+        token: str,
+        payload: Dict[str, Any],
+        report: Dict[str, Any],
+        rewrite_map: Dict[str, str],
+        pointer: str,
+        *,
+        evidence_text: str = "",
+    ) -> List[str]:
+        text = _canonical(token)
+        if not text:
+            return []
+        direct_norm = _normalize(text)
+        if direct_norm in rewrite_map:
+            return [rewrite_map[direct_norm]]
+        ckey = _composite_key(text)
+        if ckey and ckey in rewrite_map:
+            return [rewrite_map[ckey]]
+    
+        if not _has_plus_token(text):
+            existing_complex = _find_entity_row(_entity_lists(payload)[2], text)
+            if existing_complex is not None:
+                return [_canonical(str(existing_complex.get("name", text)))]
+            if len(_complex_components(text, payload=payload)) >= 2:
+                parts = _complex_components(text, payload=payload)
+                complex_name = materialize_complex(
+                    parts[0],
+                    parts[1],
+                    payload,
+                    report=report,
+                    extra_components=parts[2:],
+                    source_token=text,
+                    evidence_text=evidence_text,
+                    caller="_rewrite_token",
+                )
+                rewrite_map[direct_norm] = complex_name
+                return [complex_name]
+            if _is_protein_like(text, payload):
+                _ensure_protein(text, payload, report)
+            else:
+                _ensure_compound(text, payload, report)
+            return [text]
+    
+        parts = _split_composite(text)
+        if len(parts) < 2:
+            return [text]
+    
+        if _is_protein_like(parts[0], payload):
+            is_reaction_output_pointer = "/processes/reactions/" in pointer and pointer.endswith("/outputs")
+            if is_reaction_output_pointer:
+                right = parts[1] if len(parts) > 1 else ""
+                signal = _reaction_output_complex_evidence(left=parts[0], right=right, evidence_text=evidence_text)
+                supported = bool(signal.get("supported", False))
+                exact_composite = bool(signal.get("exact_composite", False))
+                block_for_byproduct = _is_likely_byproduct(right) and not exact_composite
+                if (not supported) or block_for_byproduct:
+                    out: List[str] = []
+                    for part in parts:
+                        c_part = _canonical(part)
+                        if not c_part:
+                            continue
+                        if _is_protein_like(c_part, payload):
+                            _ensure_protein(c_part, payload, report)
+                        else:
+                            _ensure_compound(c_part, payload, report)
+                        out.append(c_part)
+                    report["actions"].append(
+                        {
+                            "type": "composite_not_materialized_without_evidence",
+                            "json_pointer": pointer,
+                            "from": text,
+                            "to": out,
+                            "supported_by_evidence": supported,
+                            "exact_composite_match": exact_composite,
+                            "blocked_by_byproduct_rule": block_for_byproduct,
+                        }
+                    )
+                    return out
+            complex_name = materialize_complex(
+                parts[0],
+                parts[1],
+                payload,
+                report=report,
+                extra_components=parts[2:],
+                source_token=text,
+                evidence_text=evidence_text,
+                caller="_rewrite_token",
+            )
+            rewrite_map[ckey] = complex_name
+            rewrite_map[direct_norm] = complex_name
+            report["summary"]["composites_rewritten"] += 1
+            report["actions"].append(
+                {
+                    "type": "composite_rewritten_to_complex",
+                    "json_pointer": pointer,
+                    "from": text,
+                    "to": complex_name,
+                }
+            )
+            return [complex_name]
+    
+        if _research_mode(report):
+            # A compound+compound composite has no PathWhiz ``protein_complex``
+            # representation, but that is a limit of the importer's data model, not
+            # a reason to lose the reaction this token appears in. Keep both halves
+            # as their own entities, exactly as the no-evidence branch above does,
+            # and let the process reference them side by side.
+            kept: List[str] = []
+            for part in parts:
+                c_part = _canonical(part)
+                if not c_part:
+                    continue
+                if _is_protein_like(c_part, payload):
+                    _ensure_protein(c_part, payload, report)
+                else:
+                    _ensure_compound(c_part, payload, report)
+                kept.append(c_part)
+            _note_research_relaxation(
+                report,
+                action="composite_kept_unmaterialized",
+                pointer=pointer,
+                reason="no protein-like left component; strict mode aborts here",
+                **{"from": text, "to": kept},
+            )
+            return kept or [text]
+    
+>       raise ValueError(
+            f"Composite token '{text}' at {pointer} has no protein-like left component; "
+            "compound+compound composite materialization is not supported."
+        )
+E       ValueError: Composite token 'Na+/K+-ATPase' at /element_locations/protein_locations/0/protein has no protein-like left component; compound+compound composite materialization is not supported.
+
+src\t2pw\pipeline\process_normalizer.py:1277: ValueError
+_ test_g9_strict_normalization_completes_with_charge_notation[Ca2+-Ca2+-ATPase] _
+
+ion = 'Ca2+', transporter = 'Ca2+-ATPase'
+
+    @pytest.mark.parametrize(
+        "ion, transporter",
+        [
+            ("Ca++", "OTOP1"),  # the ORCH-755 ion, as Stage 1 wrote it
+            ("Fe+++", "OTOP1"),
+            ("Ca ++", "OTOP1"),  # the paper's spaced form
+            ("Ca++", "voltage-gated Ca ++ channels"),  # the ORCH-755 channel name
+            ("Ca++", "voltage-gated Ca++ channels"),
+            ("K+", "Na+/K+-ATPase"),
+            ("Ca2+", "Ca2+-ATPase"),
+        ],
+    )
+    def test_g9_strict_normalization_completes_with_charge_notation(ion: str, transporter: str) -> None:
+>       normalized, report = normalize_process_payload(_transport_payload(ion, transporter), mode="pathwhiz")
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_orch758a_charge_notation_not_composite.py:105: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\t2pw\pipeline\process_normalizer.py:5618: in normalize_process_payload
+    normalize_composites(data, report=report)
+src\t2pw\pipeline\process_normalizer.py:1556: in normalize_composites
+    _rewrite_element_locations(payload, _safe_dict(rep.get("rewrite_map")), rep)
+src\t2pw\pipeline\process_normalizer.py:1436: in _rewrite_element_locations
+    rewritten = _rewrite_token(raw_name, payload, report, rewrite_map, f"/element_locations/protein_locations/{idx}/protein")
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+token = 'Ca2+-ATPase'
+payload = {'biological_states': [{'name': 'apical state', 'species': 'Homo sapiens', 'subcellular_location': 'apical membrane'},...enters through Ca2+-ATPase', 'from_biological_state': 'apical state', 'name': 'Ca2+ entry through Ca2+-ATPase', ...}]}}
+report = {'actions': [], 'rewrite_map': {}, 'summary': {'alias_example_mappings': [], 'catalysts_promoted_to_enzymes': 0, 'complex_named_proteins_relocated': 0, 'complexes_created': 0, ...}}
+rewrite_map = {}, pointer = '/element_locations/protein_locations/0/protein'
+
+    def _rewrite_token(
+        token: str,
+        payload: Dict[str, Any],
+        report: Dict[str, Any],
+        rewrite_map: Dict[str, str],
+        pointer: str,
+        *,
+        evidence_text: str = "",
+    ) -> List[str]:
+        text = _canonical(token)
+        if not text:
+            return []
+        direct_norm = _normalize(text)
+        if direct_norm in rewrite_map:
+            return [rewrite_map[direct_norm]]
+        ckey = _composite_key(text)
+        if ckey and ckey in rewrite_map:
+            return [rewrite_map[ckey]]
+    
+        if not _has_plus_token(text):
+            existing_complex = _find_entity_row(_entity_lists(payload)[2], text)
+            if existing_complex is not None:
+                return [_canonical(str(existing_complex.get("name", text)))]
+            if len(_complex_components(text, payload=payload)) >= 2:
+                parts = _complex_components(text, payload=payload)
+                complex_name = materialize_complex(
+                    parts[0],
+                    parts[1],
+                    payload,
+                    report=report,
+                    extra_components=parts[2:],
+                    source_token=text,
+                    evidence_text=evidence_text,
+                    caller="_rewrite_token",
+                )
+                rewrite_map[direct_norm] = complex_name
+                return [complex_name]
+            if _is_protein_like(text, payload):
+                _ensure_protein(text, payload, report)
+            else:
+                _ensure_compound(text, payload, report)
+            return [text]
+    
+        parts = _split_composite(text)
+        if len(parts) < 2:
+            return [text]
+    
+        if _is_protein_like(parts[0], payload):
+            is_reaction_output_pointer = "/processes/reactions/" in pointer and pointer.endswith("/outputs")
+            if is_reaction_output_pointer:
+                right = parts[1] if len(parts) > 1 else ""
+                signal = _reaction_output_complex_evidence(left=parts[0], right=right, evidence_text=evidence_text)
+                supported = bool(signal.get("supported", False))
+                exact_composite = bool(signal.get("exact_composite", False))
+                block_for_byproduct = _is_likely_byproduct(right) and not exact_composite
+                if (not supported) or block_for_byproduct:
+                    out: List[str] = []
+                    for part in parts:
+                        c_part = _canonical(part)
+                        if not c_part:
+                            continue
+                        if _is_protein_like(c_part, payload):
+                            _ensure_protein(c_part, payload, report)
+                        else:
+                            _ensure_compound(c_part, payload, report)
+                        out.append(c_part)
+                    report["actions"].append(
+                        {
+                            "type": "composite_not_materialized_without_evidence",
+                            "json_pointer": pointer,
+                            "from": text,
+                            "to": out,
+                            "supported_by_evidence": supported,
+                            "exact_composite_match": exact_composite,
+                            "blocked_by_byproduct_rule": block_for_byproduct,
+                        }
+                    )
+                    return out
+            complex_name = materialize_complex(
+                parts[0],
+                parts[1],
+                payload,
+                report=report,
+                extra_components=parts[2:],
+                source_token=text,
+                evidence_text=evidence_text,
+                caller="_rewrite_token",
+            )
+            rewrite_map[ckey] = complex_name
+            rewrite_map[direct_norm] = complex_name
+            report["summary"]["composites_rewritten"] += 1
+            report["actions"].append(
+                {
+                    "type": "composite_rewritten_to_complex",
+                    "json_pointer": pointer,
+                    "from": text,
+                    "to": complex_name,
+                }
+            )
+            return [complex_name]
+    
+        if _research_mode(report):
+            # A compound+compound composite has no PathWhiz ``protein_complex``
+            # representation, but that is a limit of the importer's data model, not
+            # a reason to lose the reaction this token appears in. Keep both halves
+            # as their own entities, exactly as the no-evidence branch above does,
+            # and let the process reference them side by side.
+            kept: List[str] = []
+            for part in parts:
+                c_part = _canonical(part)
+                if not c_part:
+                    continue
+                if _is_protein_like(c_part, payload):
+                    _ensure_protein(c_part, payload, report)
+                else:
+                    _ensure_compound(c_part, payload, report)
+                kept.append(c_part)
+            _note_research_relaxation(
+                report,
+                action="composite_kept_unmaterialized",
+                pointer=pointer,
+                reason="no protein-like left component; strict mode aborts here",
+                **{"from": text, "to": kept},
+            )
+            return kept or [text]
+    
+>       raise ValueError(
+            f"Composite token '{text}' at {pointer} has no protein-like left component; "
+            "compound+compound composite materialization is not supported."
+        )
+E       ValueError: Composite token 'Ca2+-ATPase' at /element_locations/protein_locations/0/protein has no protein-like left component; compound+compound composite materialization is not supported.
+
+src\t2pw\pipeline\process_normalizer.py:1277: ValueError
+________ test_g9_validate_no_composites_accepts_charge_notation[Ca++] _________
+
+name = 'Ca++'
+
+    @pytest.mark.parametrize("name", ["Ca++", "Fe+++", "Ca ++", "voltage-gated Ca ++ channels", "Mg2+/ATP"])
+    def test_g9_validate_no_composites_accepts_charge_notation(name: str) -> None:
+>       validate_no_composites({"entities": {"compounds": [{"name": name}]}, "processes": {}})
+
+tests\test_orch758a_charge_notation_not_composite.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+payload = {'entities': {'compounds': [{'name': 'Ca++'}]}, 'processes': {}}
+
+    def validate_no_composites(payload: Dict[str, Any]) -> None:
+        entities = _safe_dict(payload.get("entities"))
+        processes = _safe_dict(payload.get("processes"))
+        errors: List[str] = []
+    
+        for idx, row in enumerate(_safe_list(entities.get("compounds"))):
+            if isinstance(row, dict) and _has_plus_token(_canonical(str(row.get("name", "")))):
+                errors.append(f"/entities/compounds/{idx}/name has '+' token: {row.get('name', '')}")
+    
+        for ridx, reaction in enumerate(_safe_list(processes.get("reactions"))):
+            if not isinstance(reaction, dict):
+                continue
+            for side in ["inputs", "outputs"]:
+                for tidx, token in enumerate(_safe_list(reaction.get(side))):
+                    if isinstance(token, str) and _has_plus_token(token):
+                        errors.append(f"/processes/reactions/{ridx}/{side}/{tidx} has '+' token: {token}")
+    
+        for tidx, transport in enumerate(_safe_list(processes.get("transports"))):
+            if not isinstance(transport, dict):
+                continue
+            for key in ["cargo", "cargo_complex"]:
+                token = transport.get(key)
+                if isinstance(token, str) and _has_plus_token(token):
+                    errors.append(f"/processes/transports/{tidx}/{key} has '+' token: {token}")
+    
+        if errors:
+>           raise ValueError("Composite validation failed:\n" + "\n".join(errors[:40]))
+E           ValueError: Composite validation failed:
+E           /entities/compounds/0/name has '+' token: Ca++
+
+src\t2pw\pipeline\process_normalizer.py:4318: ValueError
+________ test_g9_validate_no_composites_accepts_charge_notation[Fe+++] ________
+
+name = 'Fe+++'
+
+    @pytest.mark.parametrize("name", ["Ca++", "Fe+++", "Ca ++", "voltage-gated Ca ++ channels", "Mg2+/ATP"])
+    def test_g9_validate_no_composites_accepts_charge_notation(name: str) -> None:
+>       validate_no_composites({"entities": {"compounds": [{"name": name}]}, "processes": {}})
+
+tests\test_orch758a_charge_notation_not_composite.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+payload = {'entities': {'compounds': [{'name': 'Fe+++'}]}, 'processes': {}}
+
+    def validate_no_composites(payload: Dict[str, Any]) -> None:
+        entities = _safe_dict(payload.get("entities"))
+        processes = _safe_dict(payload.get("processes"))
+        errors: List[str] = []
+    
+        for idx, row in enumerate(_safe_list(entities.get("compounds"))):
+            if isinstance(row, dict) and _has_plus_token(_canonical(str(row.get("name", "")))):
+                errors.append(f"/entities/compounds/{idx}/name has '+' token: {row.get('name', '')}")
+    
+        for ridx, reaction in enumerate(_safe_list(processes.get("reactions"))):
+            if not isinstance(reaction, dict):
+                continue
+            for side in ["inputs", "outputs"]:
+                for tidx, token in enumerate(_safe_list(reaction.get(side))):
+                    if isinstance(token, str) and _has_plus_token(token):
+                        errors.append(f"/processes/reactions/{ridx}/{side}/{tidx} has '+' token: {token}")
+    
+        for tidx, transport in enumerate(_safe_list(processes.get("transports"))):
+            if not isinstance(transport, dict):
+                continue
+            for key in ["cargo", "cargo_complex"]:
+                token = transport.get(key)
+                if isinstance(token, str) and _has_plus_token(token):
+                    errors.append(f"/processes/transports/{tidx}/{key} has '+' token: {token}")
+    
+        if errors:
+>           raise ValueError("Composite validation failed:\n" + "\n".join(errors[:40]))
+E           ValueError: Composite validation failed:
+E           /entities/compounds/0/name has '+' token: Fe+++
+
+src\t2pw\pipeline\process_normalizer.py:4318: ValueError
+________ test_g9_validate_no_composites_accepts_charge_notation[Ca ++] ________
+
+name = 'Ca ++'
+
+    @pytest.mark.parametrize("name", ["Ca++", "Fe+++", "Ca ++", "voltage-gated Ca ++ channels", "Mg2+/ATP"])
+    def test_g9_validate_no_composites_accepts_charge_notation(name: str) -> None:
+>       validate_no_composites({"entities": {"compounds": [{"name": name}]}, "processes": {}})
+
+tests\test_orch758a_charge_notation_not_composite.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+payload = {'entities': {'compounds': [{'name': 'Ca ++'}]}, 'processes': {}}
+
+    def validate_no_composites(payload: Dict[str, Any]) -> None:
+        entities = _safe_dict(payload.get("entities"))
+        processes = _safe_dict(payload.get("processes"))
+        errors: List[str] = []
+    
+        for idx, row in enumerate(_safe_list(entities.get("compounds"))):
+            if isinstance(row, dict) and _has_plus_token(_canonical(str(row.get("name", "")))):
+                errors.append(f"/entities/compounds/{idx}/name has '+' token: {row.get('name', '')}")
+    
+        for ridx, reaction in enumerate(_safe_list(processes.get("reactions"))):
+            if not isinstance(reaction, dict):
+                continue
+            for side in ["inputs", "outputs"]:
+                for tidx, token in enumerate(_safe_list(reaction.get(side))):
+                    if isinstance(token, str) and _has_plus_token(token):
+                        errors.append(f"/processes/reactions/{ridx}/{side}/{tidx} has '+' token: {token}")
+    
+        for tidx, transport in enumerate(_safe_list(processes.get("transports"))):
+            if not isinstance(transport, dict):
+                continue
+            for key in ["cargo", "cargo_complex"]:
+                token = transport.get(key)
+                if isinstance(token, str) and _has_plus_token(token):
+                    errors.append(f"/processes/transports/{tidx}/{key} has '+' token: {token}")
+    
+        if errors:
+>           raise ValueError("Composite validation failed:\n" + "\n".join(errors[:40]))
+E           ValueError: Composite validation failed:
+E           /entities/compounds/0/name has '+' token: Ca ++
+
+src\t2pw\pipeline\process_normalizer.py:4318: ValueError
+_ test_g9_validate_no_composites_accepts_charge_notation[voltage-gated Ca ++ channels] _
+
+name = 'voltage-gated Ca ++ channels'
+
+    @pytest.mark.parametrize("name", ["Ca++", "Fe+++", "Ca ++", "voltage-gated Ca ++ channels", "Mg2+/ATP"])
+    def test_g9_validate_no_composites_accepts_charge_notation(name: str) -> None:
+>       validate_no_composites({"entities": {"compounds": [{"name": name}]}, "processes": {}})
+
+tests\test_orch758a_charge_notation_not_composite.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+payload = {'entities': {'compounds': [{'name': 'voltage-gated Ca ++ channels'}]}, 'processes': {}}
+
+    def validate_no_composites(payload: Dict[str, Any]) -> None:
+        entities = _safe_dict(payload.get("entities"))
+        processes = _safe_dict(payload.get("processes"))
+        errors: List[str] = []
+    
+        for idx, row in enumerate(_safe_list(entities.get("compounds"))):
+            if isinstance(row, dict) and _has_plus_token(_canonical(str(row.get("name", "")))):
+                errors.append(f"/entities/compounds/{idx}/name has '+' token: {row.get('name', '')}")
+    
+        for ridx, reaction in enumerate(_safe_list(processes.get("reactions"))):
+            if not isinstance(reaction, dict):
+                continue
+            for side in ["inputs", "outputs"]:
+                for tidx, token in enumerate(_safe_list(reaction.get(side))):
+                    if isinstance(token, str) and _has_plus_token(token):
+                        errors.append(f"/processes/reactions/{ridx}/{side}/{tidx} has '+' token: {token}")
+    
+        for tidx, transport in enumerate(_safe_list(processes.get("transports"))):
+            if not isinstance(transport, dict):
+                continue
+            for key in ["cargo", "cargo_complex"]:
+                token = transport.get(key)
+                if isinstance(token, str) and _has_plus_token(token):
+                    errors.append(f"/processes/transports/{tidx}/{key} has '+' token: {token}")
+    
+        if errors:
+>           raise ValueError("Composite validation failed:\n" + "\n".join(errors[:40]))
+E           ValueError: Composite validation failed:
+E           /entities/compounds/0/name has '+' token: voltage-gated Ca ++ channels
+
+src\t2pw\pipeline\process_normalizer.py:4318: ValueError
+______ test_g9_validate_no_composites_accepts_charge_notation[Mg2+/ATP] _______
+
+name = 'Mg2+/ATP'
+
+    @pytest.mark.parametrize("name", ["Ca++", "Fe+++", "Ca ++", "voltage-gated Ca ++ channels", "Mg2+/ATP"])
+    def test_g9_validate_no_composites_accepts_charge_notation(name: str) -> None:
+>       validate_no_composites({"entities": {"compounds": [{"name": name}]}, "processes": {}})
+
+tests\test_orch758a_charge_notation_not_composite.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+payload = {'entities': {'compounds': [{'name': 'Mg2+/ATP'}]}, 'processes': {}}
+
+    def validate_no_composites(payload: Dict[str, Any]) -> None:
+        entities = _safe_dict(payload.get("entities"))
+        processes = _safe_dict(payload.get("processes"))
+        errors: List[str] = []
+    
+        for idx, row in enumerate(_safe_list(entities.get("compounds"))):
+            if isinstance(row, dict) and _has_plus_token(_canonical(str(row.get("name", "")))):
+                errors.append(f"/entities/compounds/{idx}/name has '+' token: {row.get('name', '')}")
+    
+        for ridx, reaction in enumerate(_safe_list(processes.get("reactions"))):
+            if not isinstance(reaction, dict):
+                continue
+            for side in ["inputs", "outputs"]:
+                for tidx, token in enumerate(_safe_list(reaction.get(side))):
+                    if isinstance(token, str) and _has_plus_token(token):
+                        errors.append(f"/processes/reactions/{ridx}/{side}/{tidx} has '+' token: {token}")
+    
+        for tidx, transport in enumerate(_safe_list(processes.get("transports"))):
+            if not isinstance(transport, dict):
+                continue
+            for key in ["cargo", "cargo_complex"]:
+                token = transport.get(key)
+                if isinstance(token, str) and _has_plus_token(token):
+                    errors.append(f"/processes/transports/{tidx}/{key} has '+' token: {token}")
+    
+        if errors:
+>           raise ValueError("Composite validation failed:\n" + "\n".join(errors[:40]))
+E           ValueError: Composite validation failed:
+E           /entities/compounds/0/name has '+' token: Mg2+/ATP
+
+src\t2pw\pipeline\process_normalizer.py:4318: ValueError
+________ test_g9_orch755_sour_taste_excerpt_normalizes_in_strict_mode _________
+
+    def test_g9_orch755_sour_taste_excerpt_normalizes_in_strict_mode() -> None:
+        """Verbatim rows of the ORCH-755 leg's merged_payload.json.
+    
+        Source: runs_papers/ORCH-755/legs/sour_taste-strict/2026-10-21_0139/papers/
+        PMC7059786/strict/merged_payload.json (sha256 bec156e6...c2f). Kept: transports
+        0, 1, 3, 5 (three OTOP1 H+ rows, the Ca++ channel row), the H+ / Ca++ compounds,
+        the OTOP1 / channel proteins, and the states and locations those rows name.
+        """
+        payload = json.loads(FIXTURE.read_text(encoding="utf-8"))
+        otop1_rows = [t for t in payload["processes"]["transports"] if t["transporters"][0].get("protein") == "OTOP1"]
+        # Still the Stage-1 actor shape that reached the exporter un-normalized.
+        assert len(otop1_rows) == 3 and all("entity" not in t["transporters"][0] for t in otop1_rows)
+    
+>       normalized, report = normalize_process_payload(payload, mode="pathwhiz")
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_orch758a_charge_notation_not_composite.py:137: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\t2pw\pipeline\process_normalizer.py:5618: in normalize_process_payload
+    normalize_composites(data, report=report)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+payload = {'biological_states': [{'cell_type': 'Type III cells', 'evidence': 'permeation of H+ through an apical ion channel', '... of H+ through an apical ion channel subsequently identified as OTOP1', 'name': 'OTOP1-mediated H+ permeation', ...}]}}
+
+    def normalize_composites(payload: Dict[str, Any], *, report: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        rep = report if isinstance(report, dict) else _new_report()
+        # Defense-in-depth: strip any " ; "-joined pathway-metadata blob that leaked
+        # in as an entity name before any composite handling runs, so it can never
+        # reach the pre-export gate as one giant name.
+        _quarantine_pathway_metadata_blobs(payload, rep)
+        compounds, proteins, complexes = _entity_lists(payload)
+        _process_lists(payload)
+    
+        for rows in [compounds, proteins, complexes]:
+            for row in rows:
+                if isinstance(row, dict) and isinstance(row.get("name"), str):
+                    row["name"] = _canonical(row["name"])
+    
+        for row in list(complexes):
+            if not isinstance(row, dict):
+                continue
+            name = _canonical(str(row.get("name", "")))
+            if not name:
+                continue
+            if _is_biochemical_colon_name(name):
+                _remove_entity(complexes, name)
+                _ensure_compound(name, payload, rep)
+                continue
+            if _has_plus_token(name):
+                parts = _split_composite(name)
+                if len(parts) >= 2:
+                    if not _is_protein_like(parts[0], payload):
+                        if _research_mode(rep):
+                            # Keep the complex row as the paper stated it rather than
+                            # killing the run over a name PathWhiz cannot model.
+                            _note_research_relaxation(
+                                rep,
+                                action="composite_complex_kept",
+                                pointer="/entities/protein_complexes",
+                                name=name,
+                                left_token=parts[0],
+                                reason="non protein-like left token; strict mode aborts here",
+                            )
+                            continue
+                        raise ValueError(
+                            f"Composite complex '{name}' has non protein-like left token '{parts[0]}'; unsupported."
+                        )
+                    canonical = materialize_complex(
+                        parts[0],
+                        parts[1],
+                        payload,
+                        report=rep,
+                        extra_components=parts[2:],
+                        source_token=name,
+                        caller="normalize_composites",
+                    )
+                    rep["rewrite_map"][_composite_key(name)] = canonical
+                    rep["rewrite_map"][_normalize(name)] = canonical
+                    _remove_entity(complexes, name)
+                    continue
+            parts = _complex_components(name, payload=payload, assume_complex=True)
+            if len(parts) >= 2:
+                row["name"] = ":".join(parts)
+                row["components"] = _dedupe_preserve(parts)
+    
+        kept_compounds: List[Dict[str, Any]] = []
+        for row in compounds:
+            if not isinstance(row, dict):
+                continue
+            name = _canonical(str(row.get("name", "")))
+            if not name:
+                continue
+            if _has_plus_token(name):
+                parts = _split_composite(name)
+                if len(parts) >= 2 and _is_protein_like(parts[0], payload):
+                    canonical = materialize_complex(
+                        parts[0],
+                        parts[1],
+                        payload,
+                        report=rep,
+                        extra_components=parts[2:],
+                        source_token=name,
+                        caller="normalize_composites",
+                    )
+                    rep["rewrite_map"][_composite_key(name)] = canonical
+                    rep["rewrite_map"][_normalize(name)] = canonical
+                    rep["summary"]["entities_moved_out_of_compounds"] += 1
+                    rep["summary"]["composites_rewritten"] += 1
+                    continue
+                if _research_mode(rep):
+                    # Strict mode aborts the whole run here. Research mode keeps the
+                    # compound exactly as extracted -- a "A+B" name is a formatting
+                    # problem for the importer, not evidence that the paper is wrong.
+                    _note_research_relaxation(
+                        rep,
+                        action="composite_compound_kept",
+                        pointer="/entities/compounds",
+                        name=name,
+                        left_token=parts[0] if parts else "",
+                        reason="no protein-like left component; strict mode aborts here",
+                    )
+                    kept_compounds.append(row)
+                    continue
+>               raise ValueError(
+                    f"Composite entity '{name}' in /entities/compounds has no protein-like left component; unsupported."
+                )
+E               ValueError: Composite entity 'Ca++' in /entities/compounds has no protein-like left component; unsupported.
+
+src\t2pw\pipeline\process_normalizer.py:1545: ValueError
+=========================== short test summary info ===========================
+FAILED tests/test_orch758a_charge_notation_not_composite.py::test_g9_strict_normalization_completes_with_charge_notation[Ca++-OTOP1]
+FAILED tests/test_orch758a_charge_notation_not_composite.py::test_g9_strict_normalization_completes_with_charge_notation[Fe+++-OTOP1]
+FAILED tests/test_orch758a_charge_notation_not_composite.py::test_g9_strict_normalization_completes_with_charge_notation[Ca ++-OTOP1]
+FAILED tests/test_orch758a_charge_notation_not_composite.py::test_g9_strict_normalization_completes_with_charge_notation[Ca++-voltage-gated Ca ++ channels]
+FAILED tests/test_orch758a_charge_notation_not_composite.py::test_g9_strict_normalization_completes_with_charge_notation[Ca++-voltage-gated Ca++ channels]
+FAILED tests/test_orch758a_charge_notation_not_composite.py::test_g9_strict_normalization_completes_with_charge_notation[K+-Na+/K+-ATPase]
+FAILED tests/test_orch758a_charge_notation_not_composite.py::test_g9_strict_normalization_completes_with_charge_notation[Ca2+-Ca2+-ATPase]
+FAILED tests/test_orch758a_charge_notation_not_composite.py::test_g9_validate_no_composites_accepts_charge_notation[Ca++]
+FAILED tests/test_orch758a_charge_notation_not_composite.py::test_g9_validate_no_composites_accepts_charge_notation[Fe+++]
+FAILED tests/test_orch758a_charge_notation_not_composite.py::test_g9_validate_no_composites_accepts_charge_notation[Ca ++]
+FAILED tests/test_orch758a_charge_notation_not_composite.py::test_g9_validate_no_composites_accepts_charge_notation[voltage-gated Ca ++ channels]
+FAILED tests/test_orch758a_charge_notation_not_composite.py::test_g9_validate_no_composites_accepts_charge_notation[Mg2+/ATP]
+FAILED tests/test_orch758a_charge_notation_not_composite.py::test_g9_orch755_sour_taste_excerpt_normalizes_in_strict_mode
+13 failed, 15 passed in 1.66s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch758a\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ c2a88027726e41dac689bbbdecbedce17d90cde8  [git, worktree dirty=False]
+label                   : g9-red
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-758a/01-g9-red.pin.json -q --basetemp=C:/t/bt-orch758a/01-g9-red-12630 tests/test_orch758a_charge_notation_not_composite.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch758a
+root PID / process group: 1072740 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 500 s
+duration                : 2.75 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  1051820:python.exe
+descendants terminated  : 1  1051820
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch758a\docs\pwml_recovery_sprint\evidence\g11\ORCH-758a\01-g9-red.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================

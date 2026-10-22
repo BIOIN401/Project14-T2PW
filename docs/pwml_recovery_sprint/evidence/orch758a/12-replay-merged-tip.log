@@ -1,0 +1,53 @@
+'Ca++' False
+'Ca ++' False
+'Fe+++' False
+'Ca2+' False
+'Ca 2+' False
+'NADH + H+' True
+'A + B' True
+'EntB + EntE' True
+'voltage-gated Ca ++ channels' False
+'voltage-gated Ca++ channels' False
+'H+' False
+'NAD+' False
+gate ok: False errors: [{'path': '/entities/proteins/0', 'reason': "Protein 'OTOP1' is missing a UniProt or DrugBank identifier.", 'detail': {'name': 'OTOP1', 'class': 'protein', 'confidence': 1.0, 'provenance': 'extracted', 'provenance_lineage': [{'stage': 'paper_extraction', 'origin': 'paper_stated', 'support': 'unsupported', 'paper_explicit': 'explicit', 'reason': 'present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary', 'review_required': False, 'uncertainty': '', 'sources': []}], 'organism': 'Homo sapiens'}}, {'path': '/entities/proteins/1', 'reason': "Protein 'Kir2.1' is missing a UniProt or DrugBank identifier.", 'detail': {'name': 'Kir2.1', 'class': 'protein', 'confidence': 1.0, 'provenance': 'extracted', 'provenance_lineage': [{'stage': 'paper_extraction', 'origin': 'paper_stated', 'support': 'unsupported', 'paper_explicit': 'explicit', 'reason': 'present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary', 'review_required': False, 'uncertainty': '', 'sources': []}], 'organism': 'Homo sapiens'}}, {'path': '/entities/proteins/2', 'reason': "Protein 'voltage-gated Ca ++ channels' is missing a UniProt or DrugBank identifier.", 'detail': {'name': 'voltage-gated Ca ++ channels', 'class': 'protein', 'confidence': 1.0, 'provenance': 'extracted', 'provenance_lineage': [{'stage': 'paper_extraction', 'origin': 'paper_stated', 'support': 'unsupported', 'paper_explicit': 'explicit', 'reason': 'present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary', 'review_required': False, 'uncertainty': '', 'sources': []}], 'organism': 'Homo sapiens'}}, {'path': '/entities/proteins/3', 'reason': "Protein '5-HT3 receptor' is missing a UniProt or DrugBank identifier.", 'detail': {'name': '5-HT3 receptor', 'class': 'protein', 'confidence': 1.0, 'provenance': 'extracted', 'provenance_lineage': [{'stage': 'paper_extraction', 'origin': 'paper_stated', 'support': 'unsupported', 'paper_explicit': 'explicit', 'reason': 'present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary', 'review_required': False, 'uncertainty': '', 'sources': []}], 'organism': 'Homo sapiens'}}, {'path': '/entities/proteins/4', 'reason': "Protein 'P2X receptors' is missing a UniProt or DrugBank identifier.", 'detail': {'name': 'P2X receptors', 'class': 'protein', 'confidence': 1.0, 'provenance': 'extracted', 'provenance_lineage': [{'stage': 'paper_extraction', 'origin': 'paper_stated', 'support': 'unsupported', 'paper_explicit': 'explicit', 'reason': 'present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary', 'review_required': False, 'uncertainty': '', 'sources': []}], 'organism': 'Homo sapiens'}}]
+plus remaining 0
+contract keys ['ok', 'stage', 'contract_type', 'effect_on_failure', 'errors', 'warnings', 'summary', 'runtime_schema_report', 'gate_report']
+contract codes {None: 5}
+transports:
+   H+ [{'evidence': 'permeation of H+ through an apical ion channel subsequently identified as OTOP1', 'entity': 'OTOP1', 'entity_type': 'protein', 'protein': 'OTOP1'}]
+   Ca++ [{'evidence': 'activate voltage-gated Ca ++ channels triggering the release of synaptic vesicles', 'entity': 'voltage-gated Ca ++ channels', 'entity_type': 'protein', 'protein': 'voltage-gated Ca ++ channels'}]
+   5-HT []
+   H+ [{'evidence': 'permeation of H + through an apical ion channel subsequently identified as OTOP1', 'entity': 'OTOP1', 'entity_type': 'protein', 'protein': 'OTOP1'}]
+   5-HT []
+   H+ [{'evidence': 'transduction of sour involves permeation of H+ through an apical ion channel', 'entity': 'OTOP1', 'entity_type': 'protein', 'protein': 'OTOP1'}]
+   5-HT []
+compounds: ['H+', 'Ca++', '5-HT', 'ATP', 'voltage-gated Ca ++ channels']
+proteins: ['OTOP1', 'Kir2.1', 'voltage-gated Ca ++ channels', '5-HT3 receptor', 'P2X receptors']
+complexes: []
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch758a\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ b043803ada19ed9e063e9c7e6a0bc16fbd8aba2f  [git, worktree dirty=False]
+label                   : replay-merged-tip
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/orch758a/orch758a_replay.py C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_papers/ORCH-755/legs/sour_taste-strict/2026-10-21_0139/papers/PMC7059786/strict/merged_payload.json
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch758a
+root PID / process group: 1083600 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 0.74 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  1083112:python.exe
+descendants terminated  : 1  1083112
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch758a\docs\pwml_recovery_sprint\evidence\g11\ORCH-758a\12-replay-merged-tip.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================
