@@ -7284,3 +7284,23 @@ dimethylallyl pyrophosphate. Recorded by the Lead Orchestrator at the product ow
    Mapping may give it a class-level database identity (e.g. a ChEBI class) if one exists, and **never** substitutes a specific molecule
    the paper does not state. With no class identity it stays unmapped and is flagged for review, not guessed. This is consistent with
    D-106: no gate is relaxed, and the identity must be honest.
+
+---
+
+## D-110 — Ara dropped from the cohort; sour taste requests *Mus musculus*; the paper's own parenthetical definitions bridge abbreviations · 2026-10-22 · LOCKED
+
+**Decided by the product owner** (2026-10-22, in session, on the ORCH-759 findings). Recorded by the Lead Orchestrator at the product
+owner's standing instruction to record the decisions made.
+
+1. **Ara operon (PMC11983282) is dropped from the hand-comparison cohort.** Stage 0 rejected two different requested names with two
+   different readings: "AraC autoregulation in araBAD operon", then "E. coli L-arabinose (P_BAD) and L-rhamnose (P_Rha) inducible
+   promoter regulation". **Open policy question, registered, not decided:** the scope check rejects paraphrases of the same pathway.
+   Any change to it is a gate change with its own D-entry and lane.
+2. **Sour taste (PMC7059786) requests *Mus musculus*.** The paper is a review of mostly mouse work ("mice"/"mouse" 20 times, "human"
+   twice in `C:/t/eval-fulltext/PMC7059786.txt`), and Stage 0 read *Mus musculus*. The run therefore no longer lines up with PathBank's
+   human pathway PW739181; the product owner compares against the paper.
+3. **Abbreviations (extends D-104 § 3(a)):** when the paper itself writes `long form (SHORT)` and then uses SHORT on its own, that pair
+   bridges even if SHORT's letters do not appear in the long form (Schwartz-Hearst cannot read DMK = demethylmenaquinone or MK =
+   menaquinone). It is still the paper's own dictionary: the pair must be written in the paper and SHORT must recur. Every such bridge
+   is flagged for review. The ambiguity rule (one short form, two long forms → no bridge) and exact-case matching (ORCH-754a B1) still
+   apply.
