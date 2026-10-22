@@ -7245,3 +7245,23 @@ product owner's standing instruction to record the decisions made.
    Stage-6 call. No LLM input changes; the lane proves that against base. The fingerprint moves and is recorded at merge.
 3. Usual gates: one lane, an independent review with the severity standard set before round 0, then merge, a 3-draw re-run proving
    rule 3 and the audit and gap summaries now appear in a real app leg, and main fast-forwarded and pushed.
+
+---
+
+## D-108 — a protein's UniProt identity may come from the same subspecies; never across a subspecies boundary · 2026-10-22 · LOCKED
+
+**Decided by the product owner** (2026-10-22, in session, on `ORCH-761-RESULT.md` Q1). The menaquinone paper's organism is
+*Lactococcus lactis* strain KF147. UniProtKB holds 2 entries for that strain, and its Men enzymes exist only in UniParc, which
+PathWhiz's format check rejects. Same-subspecies strain IL1403 has UniProtKB entries for MenF, MenD, MenH, MenC, MenE, MenB and MenG.
+Recorded by the Lead Orchestrator at the product owner's standing instruction to record the decisions made.
+
+1. **A protein's external identity may be a UniProtKB entry from another strain of the SAME subspecies** when gene and function match.
+   An exact-sequence match within the subspecies also qualifies. The identity requirement itself is unchanged (D-106): the protein
+   still needs a real UniProt or DrugBank id, which is what PathWhiz requires (`smpdb/app/models/.../protein.rb:57,59`).
+2. **Never across a subspecies boundary**, and never across species. The current MenA → A2RHR6 (subsp. *cremoris*), which T2PW counts
+   as verified, is therefore wrong and must go (proved failing at base, G9).
+3. **Every such borrowed identity is flagged** in the human-facing output with its source strain (e.g. "UniProt Q9CHK2, from strain
+   IL1403"), and recorded in the mapping report. It never enters LLM-bound text (D-104 AMENDMENT 2).
+4. Fix package `ORCH-761` FX1-FX6 is authorized: taxonomy-id search, canonical species, PathBank species by taxonomy id, the MenH clash
+   resolved by function, the exact-sequence route through UniParc, and normaliser/mapper agreement on protein vs compound (which
+   recovers EntB). No gate is touched. FX6 is preferred over `ORCH-761` Q2, which lapses if FX6 lands.
