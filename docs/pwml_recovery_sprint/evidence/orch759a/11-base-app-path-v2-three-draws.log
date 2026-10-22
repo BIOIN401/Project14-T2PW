@@ -1,0 +1,81 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759a\src\t2pw\__init__.py
+F                                                                        [100%]
+================================== FAILURES ===================================
+____ test_new_the_fold_fires_through_the_apps_own_stage6_call[three_draws] ____
+
+offline_app = [0], draws = '3'
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000013604308510>
+
+    @pytest.mark.parametrize("draws", ["1", "3"], ids=["one_draw", "three_draws"])
+    def test_new_the_fold_fires_through_the_apps_own_stage6_call(offline_app: List[int], draws: str,
+                                                                monkeypatch: pytest.MonkeyPatch) -> None:
+        from t2pw.curation.interactive_curator import compact_mapping_misses
+        from t2pw.pipeline.gate_reports import FINAL_GATE_REPORT_KEY
+        from t2pw.pipeline.stage_one_ensemble import ENV_VAR
+    
+        monkeypatch.setenv(ENV_VAR, draws)
+        at = _run_post_pipeline(_e1_payload())
+    
+        assert _app_exceptions(at) == []
+        # The Stage-6 call ran once, in a script run where rule 3's gate reads 0 (ORCH-758 D4).
+        assert offline_app == [0]
+        artifacts = at.session_state["post_pipeline_artifacts"]
+        # The final pre-export gate passes and refinement review opens. (Base: this run stops on
+        # "Protein has degree 0 after normalization: glutathione synthase".)
+>       assert at.session_state["refinement_gate_errors"] == []
+E       AssertionError: assert [{'detail': {...ne synthase'}] == []
+E         
+E         Left contains one more item: {'detail': {'is_complex_component': False, 'normalized': 'glutathione synthase', 'protein': 'glutathione synthase', 'p... ...}, 'path': '/entities/proteins/2/name', 'reason': 'Protein has degree 0 after normalization: glutathione synthase'}
+E         Use -v to get more diff
+
+tests\test_orch759a_fold_app_path.py:176: AssertionError
+---------------------------- Captured stderr call -----------------------------
+2026-10-22 13:51:17.805 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 13:51:18.461 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 13:51:18.461 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 13:51:18.461 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 13:51:18.461 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 13:51:18.462 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 13:51:18.462 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 13:51:18.462 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 13:51:18.462 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 13:51:18.462 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 13:51:18.462 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 13:51:18.462 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 13:51:18.462 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 13:51:18.462 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 13:51:18.462 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 13:51:18.462 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 13:51:18.462 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 13:51:18.462 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 13:51:18.462 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-22 13:51:18.463 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+=========================== short test summary info ===========================
+FAILED tests/test_orch759a_fold_app_path.py::test_new_the_fold_fires_through_the_apps_own_stage6_call[three_draws]
+1 failed in 2.58s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759a\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ e346bb6e28fcfad4770166bb9c8c080f0f1d9c01  [git, worktree dirty=True]
+label                   : base-app-path-v2-three-draws
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-759a/11-base-app-path-v2-three-draws.pin.json -q -rA --basetemp=C:/t/bt-orch759a/11-base-app-path-v2-three-draws-14715 tests/test_orch759a_fold_app_path.py::test_new_the_fold_fires_through_the_apps_own_stage6_call[three_draws]
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759a
+root PID / process group: 154920 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 500 s
+duration                : 3.65 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  155728:python.exe
+descendants terminated  : 1  155728
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759a\docs\pwml_recovery_sprint\evidence\g11\ORCH-759a\11-base-app-path-v2-three-draws.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================

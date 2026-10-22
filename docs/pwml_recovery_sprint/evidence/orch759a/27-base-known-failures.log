@@ -1,0 +1,290 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759a\src\t2pw\__init__.py
+FFFFFF                                                                   [100%]
+================================== FAILURES ===================================
+_ test_corpus_the_armed_pass_over_every_committed_artifact_and_its_own_paper __
+
+    def test_corpus_the_armed_pass_over_every_committed_artifact_and_its_own_paper() -> None:
+        """THE LOAD-BEARING EVIDENCE (card section 6.5).
+    
+        ``test_c073_identity_admission.py::test_the_whole_committed_corpus_yields_one_conflict_and_no_collateral``
+        replays the same corpus with NO source index, which exercises pass B alone.
+        This is the other half and the one arming makes real: every committed
+        ``final_mapped.json`` replayed against its OWN ``01_source_text.txt``.
+    
+        Measured at this tip: 70 artifacts, 678 eligible rows, 3 refusals, all three
+        of them hallucinations, 0 collateral. Measured with the ruling's two routes
+        removed -- which is what the C-073 predicate does on its own -- 39 refusals,
+        36 of them legitimate rows. That difference is this card's whole argument.
+    
+        If a newly committed run artifact moves these numbers, TRIAGE the new row as
+        a catch or as collateral before moving the pin. Do not regenerate it.
+        """
+        from t2pw.mapping import identity_admission
+    
+        artifacts = _committed_artifacts()
+        if not artifacts:
+            pytest.skip("no committed final_mapped.json artifacts")
+    
+        examined = 0
+        catches: set = set()
+        for path in artifacts:
+            source = path.parent.parent / "01_source_text.txt"
+            payload = json.loads(path.read_text(encoding="utf-8"))
+            entities = payload.get("entities") or {}
+            if source.exists():
+                payload[identity_admission.SOURCE_INDEX_KEY] = identity_admission.build_source_index(
+                    source.read_text(encoding="utf-8", errors="replace")
+                )
+            report = map_ids._admit_identities(payload, entities)
+            examined += report["counts"]["rows_examined"]
+            for entry in report["withheld"]:
+                if entry["rule"] == identity_admission.RULE_NOT_SUPPORTED:
+                    catches.add((path.parent.parent.name.split("__")[0], path.parent.name,
+                                 entry["name"]))
+    
+        assert len(artifacts) >= 70
+        assert examined >= 678
+>       assert catches == EXPECTED_CATCHES, (
+            f"the armed pass changed over the corpus ({len(artifacts)} artifacts). "
+            f"unexpected: {sorted(catches - EXPECTED_CATCHES)}; "
+            f"no longer caught: {sorted(EXPECTED_CATCHES - catches)}"
+        )
+E       AssertionError: the armed pass changed over the corpus (116 artifacts). unexpected: [('PMC12096016', 'strict', "Pantetheine 4'-phosphate")]; no longer caught: []
+E       assert {('PMC1209601...uccinyl-CoA')} == {('PMC1218015...uccinyl-CoA')}
+E         
+E         Extra items in the left set:
+E         ('PMC12096016', 'strict', "Pantetheine 4'-phosphate")
+E         Use -v to get more diff
+
+tests\test_c075_source_support_armed.py:879: AssertionError
+______ test_5b_the_bare_pathbank_sentinel_name_is_not_a_tolerated_entity ______
+
+    def test_5b_the_bare_pathbank_sentinel_name_is_not_a_tolerated_entity() -> None:
+        """``Unknown`` is not one of the seven, and the scope does not invent an eighth.
+    
+        Measured: the same archived leg carries a PathBank sentinel row literally named
+        ``Unknown`` (``is_pathbank_unknown_protein`` requires that name). D-070 rules the
+        sentinel is PathBank's own record and not a forged identity -- and that ruling is
+        about forgery and species, not about coverage. Pinned here so the consequence is
+        visible rather than discovered later: after C-100 the sentinel produces a
+        coverage finding on this one case.
+        """
+    
+        case = _pinned_case()
+>       assert len(_tolerance_findings(case, "Unknown")) == 1
+E       assert 0 == 1
+E        +  where 0 = len([])
+E        +    where [] = _tolerance_findings(GoldCase(paper_id='PMC12444477', title='The regulation of lipid A biosynthesis', requested_pathway='lipid A biosynthes...ens ('lipid IV A', 'R -3-hydroxymyristoyl-ACP', 'sigma 32'). The MurA-activates-LpxC mechanism is P. aeruginosa only."), 'Unknown')
+
+tests\test_c100_tolerance_scope.py:271: AssertionError
+_____________ test_the_golden_covers_every_committed_leg_fixture ______________
+
+    def test_the_golden_covers_every_committed_leg_fixture() -> None:
+        """NEW ACCEPTANCE. A new committed leg must be ACCOUNTED FOR deliberately.
+    
+        **C-068 widened the accounting set, not the assertion** (F-069). Every
+        committed leg must appear in ``GOLDEN`` -- pinned -- or in ``EXCLUDED`` with
+        a stated reason, which :func:`_excluded` makes structurally impossible to
+        skip. A leg in neither still fails here, and that is the property the test
+        exists for; :func:`test_the_coverage_tripwire_fires_on_an_unaccounted_leg`
+        proves the widened form is not vacuous.
+        """
+        found = {
+            str(path.relative_to(ROOT)).replace("\\", "/")
+            for root in ("runs", "runs_verify")
+            for path in (ROOT / root).rglob("final_mapped.json")
+        }
+        assert found, "no committed leg fixtures found under runs/ or runs_verify/"
+        both = sorted(set(GOLDEN) & set(EXCLUDED))
+        assert not both, f"a leg is BOTH pinned and excluded: {both}"
+        unaccounted, stale = _leg_coverage_gap(found)
+>       assert (unaccounted, stale) == ([], []), (
+            f"unaccounted -- add to GOLDEN, or to EXCLUDED with a reason: "
+            f"{unaccounted}; stale in GOLDEN/EXCLUDED: {stale}"
+        )
+E       AssertionError: unaccounted -- add to GOLDEN, or to EXCLUDED with a reason: ['runs_verify/2026-08-27_1341/papers/PMC12096016/strict/final_mapped.json', 'runs_verify/2026-08-27_1341/papers/PMC12782028/strict/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12096016/research/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12180156/research/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12180156/strict/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12452463/research/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12452463/strict/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12782028/research/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12782028/strict/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12856317/research/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12856317/strict/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC13231680/research/final_mapped.json', 'runs_verify/2026-09-01_1612/papers/PMC12096016/research/final_mapped.json', 'runs_verify/2026-09-01_1612/papers/PMC12096016/strict/final_mapped.json', 'runs_verify/2026-09-01_1612/papers/PMC12180156/research/final_mapped.json', 'runs_verify/2026-09-01_1612/papers/PMC12180156/strict/final_mapped.json', 'runs_verify/2026-09-01_1612/papers/PMC12444477/research/final_mapped.json', 'runs_verify/2026-09-01_1612/papers/PMC12452463/research/final_mapped.json', 'runs_verify/2026-09-01_1612/papers/PMC12452463/strict/final_mapped.json', 'runs_verify/2026-09-01_1612/papers/PMC12782028/research/final_mapped.json', 'runs_verify/2026-09-01_1612/papers/PMC12782028/strict/final_mapped.json', 'runs_verify/2026-09-01_1612/papers/PMC12856317/research/final_mapped.json', 'runs_verify/2026-09-01_1612/papers/PMC12856317/strict/final_mapped.json']; stale in GOLDEN/EXCLUDED: []
+E       assert (['runs_verif...on', ...], []) == ([], [])
+E         
+E         At index 0 diff: ['runs_verify/2026-08-27_1341/papers/PMC12096016/strict/final_mapped.json', 'runs_verify/2026-08-27_1341/papers/PMC12782028/strict/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12096016/research/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12180156/research/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12180156/strict/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12452463/research/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12452463/strict/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12782028/r...
+E         
+E         ...Full output truncated (2 lines hidden), use '-vv' to show
+
+tests\test_compound_resolution_extraction.py:1170: AssertionError
+________ test_the_repaired_coverage_and_digest_pins_themselves_go_red _________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001D969C6CE20>
+
+    def test_the_repaired_coverage_and_digest_pins_themselves_go_red(
+            monkeypatch: Any) -> None:
+        """NON-VACUITY (C-093), permanent, and the strongest form of it.
+    
+        :func:`test_the_coverage_tripwire_fires_on_an_unaccounted_leg` exercises
+        :func:`_leg_coverage_gap`, the predicate. This drives **the two repaired test
+        functions themselves** and asserts they RAISE, which is the only thing that
+        answers "did admitting 56 legs turn the pin into a rubber stamp?":
+    
+        1. drop one leg from ``GOLDEN`` -- the corpus scan must report it unaccounted,
+           so the tripwire has not been widened into an unconditional pass;
+        2. corrupt one digest -- ``build_pwml_ir``'s output pin must still bite, so
+           the 56 admitted digests are load-bearing values and not decoration;
+        3. blank ``EXCLUDED`` -- the excluded leg must come back as unaccounted, so
+           exclusion is a record and not a deletion.
+    
+        (2) is run over a ONE-leg ``GOLDEN`` on purpose: the assertion under test is
+        per-leg, and sweeping all 90 to prove it would cost seconds for no more proof.
+        """
+        real_golden, real_excluded = dict(GOLDEN), dict(EXCLUDED)
+>       test_the_golden_covers_every_committed_leg_fixture()  # control: green
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_compound_resolution_extraction.py:1217: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def test_the_golden_covers_every_committed_leg_fixture() -> None:
+        """NEW ACCEPTANCE. A new committed leg must be ACCOUNTED FOR deliberately.
+    
+        **C-068 widened the accounting set, not the assertion** (F-069). Every
+        committed leg must appear in ``GOLDEN`` -- pinned -- or in ``EXCLUDED`` with
+        a stated reason, which :func:`_excluded` makes structurally impossible to
+        skip. A leg in neither still fails here, and that is the property the test
+        exists for; :func:`test_the_coverage_tripwire_fires_on_an_unaccounted_leg`
+        proves the widened form is not vacuous.
+        """
+        found = {
+            str(path.relative_to(ROOT)).replace("\\", "/")
+            for root in ("runs", "runs_verify")
+            for path in (ROOT / root).rglob("final_mapped.json")
+        }
+        assert found, "no committed leg fixtures found under runs/ or runs_verify/"
+        both = sorted(set(GOLDEN) & set(EXCLUDED))
+        assert not both, f"a leg is BOTH pinned and excluded: {both}"
+        unaccounted, stale = _leg_coverage_gap(found)
+>       assert (unaccounted, stale) == ([], []), (
+            f"unaccounted -- add to GOLDEN, or to EXCLUDED with a reason: "
+            f"{unaccounted}; stale in GOLDEN/EXCLUDED: {stale}"
+        )
+E       AssertionError: unaccounted -- add to GOLDEN, or to EXCLUDED with a reason: ['runs_verify/2026-08-27_1341/papers/PMC12096016/strict/final_mapped.json', 'runs_verify/2026-08-27_1341/papers/PMC12782028/strict/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12096016/research/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12180156/research/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12180156/strict/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12452463/research/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12452463/strict/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12782028/research/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12782028/strict/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12856317/research/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12856317/strict/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC13231680/research/final_mapped.json', 'runs_verify/2026-09-01_1612/papers/PMC12096016/research/final_mapped.json', 'runs_verify/2026-09-01_1612/papers/PMC12096016/strict/final_mapped.json', 'runs_verify/2026-09-01_1612/papers/PMC12180156/research/final_mapped.json', 'runs_verify/2026-09-01_1612/papers/PMC12180156/strict/final_mapped.json', 'runs_verify/2026-09-01_1612/papers/PMC12444477/research/final_mapped.json', 'runs_verify/2026-09-01_1612/papers/PMC12452463/research/final_mapped.json', 'runs_verify/2026-09-01_1612/papers/PMC12452463/strict/final_mapped.json', 'runs_verify/2026-09-01_1612/papers/PMC12782028/research/final_mapped.json', 'runs_verify/2026-09-01_1612/papers/PMC12782028/strict/final_mapped.json', 'runs_verify/2026-09-01_1612/papers/PMC12856317/research/final_mapped.json', 'runs_verify/2026-09-01_1612/papers/PMC12856317/strict/final_mapped.json']; stale in GOLDEN/EXCLUDED: []
+E       assert (['runs_verif...on', ...], []) == ([], [])
+E         
+E         At index 0 diff: ['runs_verify/2026-08-27_1341/papers/PMC12096016/strict/final_mapped.json', 'runs_verify/2026-08-27_1341/papers/PMC12782028/strict/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12096016/research/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12180156/research/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12180156/strict/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12452463/research/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12452463/strict/final_mapped.json', 'runs_verify/2026-08-28_1816/papers/PMC12782028/r...
+E         
+E         ...Full output truncated (2 lines hidden), use '-vv' to show
+
+tests\test_compound_resolution_extraction.py:1170: AssertionError
+___________ test_the_orchestrator_passes_the_merge_base_to_conform ____________
+
+    def test_the_orchestrator_passes_the_merge_base_to_conform():
+        """The S3 seam must hand conform the SAME object it hands ``merge_additions``.
+    
+        ``seed_payload`` defaults to ``None``, which is the pre-fix behaviour, so a
+        caller that forgets it gets a green conform module and a merged payload with
+        every duplicate still in it. That is not hypothetical: the guard landed on
+        2026-07-28 with ``streamlit_app.py`` still calling
+        ``conform_rag_additions_for_merge(rag_result.payload)``, and every number the
+        fix claims -- 88 entity rows -> 66 on PMC12444477/strict, 279 -> 220 across the
+        eight delivered ``merged_payload.json`` with a RAG side -- was unreachable in
+        production until the second argument was added. Every unit test in this file
+        passes the base explicitly, so none of them can catch that.
+    
+        Checked against the SOURCE rather than by running the orchestrator, because
+        importing ``streamlit_app`` executes a Streamlit script. The assertion is
+        stronger than "two arguments were passed": the name given to conform must be
+        the same name given to ``merge_additions`` as its base. Passing the Stage-1
+        seed there instead would type-check, run, and quietly let back every entity
+        that Stage 2 registered and Stage 1 did not ('lipid IV_A precursor',
+        'Kdo-lipid A precursor', 'tetra-acylated disaccharide intermediate' in that
+        same run).
+        """
+        tree = ast.parse(APP_PATH.read_text(encoding="utf-8"))
+    
+        def _calls(name: str) -> List[ast.Call]:
+            return [
+                node
+                for node in ast.walk(tree)
+                if isinstance(node, ast.Call)
+                and isinstance(node.func, ast.Name)
+                and node.func.id == name
+            ]
+    
+        conform_calls = _calls("conform_rag_additions_for_merge")
+        assert len(conform_calls) == 1, "the S3 seam is the only caller; found %d" % len(conform_calls)
+        call = conform_calls[0]
+    
+        base_arg: Any = None
+        if len(call.args) > 1:
+            base_arg = call.args[1]
+        else:
+            base_arg = next((kw.value for kw in call.keywords if kw.arg == "seed_payload"), None)
+        assert isinstance(base_arg, ast.Name), (
+            "conform_rag_additions_for_merge must be given the merge base; without it "
+            "the seed's own entities are re-imported as duplicate rows"
+        )
+    
+        assignment = next(
+            node
+            for node in ast.walk(tree)
+            if isinstance(node, ast.Assign) and node.value is call
+        )
+        envelope_name = assignment.targets[0].id  # type: ignore[union-attr]
+    
+>       merge_call = next(
+            node
+            for node in _calls("merge_additions")
+            if len(node.args) > 1
+            and isinstance(node.args[1], ast.Name)
+            and node.args[1].id == envelope_name
+        )
+E       StopIteration
+
+tests\test_rag_seed_entity_reimport.py:590: StopIteration
+_______ test_the_message_names_the_problem_the_interpreter_and_the_cure _______
+
+    def test_the_message_names_the_problem_the_interpreter_and_the_cure() -> None:
+        """The wrong-interpreter case: the one that actually happened.
+    
+        The cure has to be a command, not advice. "Use the venv" is not actionable at
+        2am; ``C:\\...\\.venv\\Scripts\\python.exe scripts\\batch_run.py`` is, and the
+        root cause -- ``py.exe`` ignoring the active virtualenv -- has to be named or
+        the operator fixes it once and hits it again next week.
+        """
+    
+        venv = runner.venv_python()
+>       assert venv is not None, "this project ships a .venv; the test assumes it"
+E       AssertionError: this project ships a .venv; the test assumes it
+E       assert None is not None
+
+tests\test_batch_preflight.py:616: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_c075_source_support_armed.py::test_corpus_the_armed_pass_over_every_committed_artifact_and_its_own_paper
+FAILED tests/test_c100_tolerance_scope.py::test_5b_the_bare_pathbank_sentinel_name_is_not_a_tolerated_entity
+FAILED tests/test_compound_resolution_extraction.py::test_the_golden_covers_every_committed_leg_fixture
+FAILED tests/test_compound_resolution_extraction.py::test_the_repaired_coverage_and_digest_pins_themselves_go_red
+FAILED tests/test_rag_seed_entity_reimport.py::test_the_orchestrator_passes_the_merge_base_to_conform
+FAILED tests/test_batch_preflight.py::test_the_message_names_the_problem_the_interpreter_and_the_cure
+6 failed in 1.58s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759a\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ e346bb6e28fcfad4770166bb9c8c080f0f1d9c01  [git, worktree dirty=True]
+label                   : base-known-failures
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-759a/27-base-known-failures.pin.json -q -rfE --basetemp=C:/t/bt-orch759a/27-base-known-failures-26620 tests/test_c075_source_support_armed.py::test_corpus_the_armed_pass_over_every_committed_artifact_and_its_own_paper tests/test_c100_tolerance_scope.py::test_5b_the_bare_pathbank_sentinel_name_is_not_a_tolerated_entity tests/test_compound_resolution_extraction.py::test_the_golden_covers_every_committed_leg_fixture tests/test_compound_resolution_extraction.py::test_the_repaired_coverage_and_digest_pins_themselves_go_red tests/test_rag_seed_entity_reimport.py::test_the_orchestrator_passes_the_merge_base_to_conform tests/test_batch_preflight.py::test_the_message_names_the_problem_the_interpreter_and_the_cure
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759a
+root PID / process group: 164032 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 2.16 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  164260:python.exe
+descendants terminated  : 1  164260
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759a\docs\pwml_recovery_sprint\evidence\g11\ORCH-759a\27-base-known-failures.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================

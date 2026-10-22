@@ -1,0 +1,37 @@
+M1 walker reads the record key: INVALID (pattern occurs 0 times)
+M2 survivor need not be referenced: KILLED (pytest exit 1; 1 failed in 0.49s)
+M3 species ignored: KILLED (pytest exit 1; 1 failed in 0.33s)
+M4 references ignored: KILLED (pytest exit 1; 7 failed in 1.44s)
+M5 every alias counts as a reference: KILLED (pytest exit 1; 1 failed, 2 errors in 0.36s)
+M6 raw mapped_ids instead of admitted ids: KILLED (pytest exit 1; 4 failed, 2 passed in 0.36s)
+M7 gated on rule 3's pooled draws: INVALID (pattern occurs 0 times)
+M8 quotes not moved: INVALID (pattern occurs 0 times)
+M9 report pointers not moved: INVALID (pattern occurs 0 times)
+sources restored to HEAD: True
+mutations survived: 4 of 9
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759a\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ e346bb6e28fcfad4770166bb9c8c080f0f1d9c01  [git, worktree dirty=False]
+label                   : mutations
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/orch759a/mutations.py C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.venv/Scripts/python.exe C:/t/bt-orch759a/12-mutations-13451
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759a
+root PID / process group: 155196 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 5.37 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 11  156020:python.exe, 143408:python.exe, 153612:python.exe, 152640:python.exe, 155344:python.exe, 153144:python.exe, 153356:python.exe, 149872:python.exe, 156592:python.exe, 150484:python.exe, 153820:python.exe
+descendants terminated  : 11  143408, 149872, 150484, 152640, 153144, 153356, 153612, 153820, 155344, 156020, 156592
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759a\docs\pwml_recovery_sprint\evidence\g11\ORCH-759a\12-mutations.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================

@@ -1,0 +1,60 @@
+M1 walker reads the record key: KILLED (pytest exit 1; 1 failed in 0.33s)
+    FAILED tests/test_orch759a_duplicate_protein_fold.py::test_new_the_record_key_is_skipped_whatever_it_holds
+M2 survivor need not be referenced: KILLED (pytest exit 1; 1 failed in 0.49s)
+    FAILED tests/test_orch759a_duplicate_protein_fold.py::test_new_two_unreferenced_rows_never_fold_into_each_other
+M3 species ignored: KILLED (pytest exit 1; 1 failed in 0.33s)
+    FAILED tests/test_orch759a_duplicate_protein_fold.py::test_new_a_different_or_unknown_species_never_folds[different_species]
+M4 references ignored: KILLED (pytest exit 1; 7 failed in 1.49s)
+    FAILED tests/test_orch759a_duplicate_protein_fold.py::test_new_a_referenced_duplicate_is_never_folded[reaction_enzyme]
+    FAILED tests/test_orch759a_duplicate_protein_fold.py::test_new_a_referenced_duplicate_is_never_folded[reaction_modifier]
+    FAILED tests/test_orch759a_duplicate_protein_fold.py::test_new_a_referenced_duplicate_is_never_folded[transport]
+    FAILED tests/test_orch759a_duplicate_protein_fold.py::test_new_a_referenced_duplicate_is_never_folded[interaction]
+    FAILED tests/test_orch759a_duplicate_protein_fold.py::test_new_a_referenced_duplicate_is_never_folded[location]
+    FAILED tests/test_orch759a_duplicate_protein_fold.py::test_new_a_referenced_duplicate_is_never_folded[complex_component]
+    FAILED tests/test_orch759a_duplicate_protein_fold.py::test_new_a_referenced_duplicate_is_never_folded[only_alias]
+M5 every alias counts as a reference: KILLED (pytest exit 1; 1 failed, 2 errors in 0.35s)
+    FAILED tests/test_orch759a_duplicate_protein_fold.py::test_new_an_alias_another_row_holds_does_not_count_as_a_reference_to_the_duplicate
+    ERROR tests/test_orch759a_duplicate_protein_fold.py::test_g9_the_stage6_pass_leaves_a_payload_the_final_gate_passes[leg_final_mapped_as_shipped]
+    ERROR tests/test_orch759a_duplicate_protein_fold.py::test_g9_the_stage6_pass_leaves_a_payload_the_final_gate_passes[stage6_input_reconstructed]
+M6 raw mapped_ids instead of admitted ids: KILLED (pytest exit 1; 4 failed, 2 passed in 0.35s)
+    FAILED tests/test_orch759a_duplicate_protein_fold.py::test_new_a_candidate_withheld_or_provisional_accession_never_folds[low_confidence]
+    FAILED tests/test_orch759a_duplicate_protein_fold.py::test_new_a_candidate_withheld_or_provisional_accession_never_folds[best_effort]
+    FAILED tests/test_orch759a_duplicate_protein_fold.py::test_new_a_candidate_withheld_or_provisional_accession_never_folds[placeholder]
+    FAILED tests/test_orch759a_duplicate_protein_fold.py::test_new_a_candidate_withheld_or_provisional_accession_never_folds[unresolved]
+M7 gated on rule 3's pooled draws: KILLED (pytest exit 1; 1 failed, 3 errors in 2.77s)
+    FAILED tests/test_orch759a_fold_app_path.py::test_new_the_fold_fires_through_the_apps_own_stage6_call[three_draws]
+    ERROR tests/test_orch759a_duplicate_protein_fold.py::test_new_the_fold_fires_at_any_draw_count[draws_unset]
+    ERROR tests/test_orch759a_duplicate_protein_fold.py::test_new_the_fold_fires_at_any_draw_count[draws_1]
+    ERROR tests/test_orch759a_duplicate_protein_fold.py::test_new_the_fold_fires_at_any_draw_count[draws_3_not_pooled]
+M8 quotes not moved: KILLED (pytest exit 1; 1 failed in 0.35s)
+    FAILED tests/test_orch759a_duplicate_protein_fold.py::test_new_the_fold_keeps_the_name_and_every_quote_and_records_them
+M9 report pointers not moved: SURVIVED (pytest exit 1; 1 error in 0.33s)
+    ERROR tests/test_orch759a_duplicate_protein_fold.py::test_new_the_report_pointers_follow_the_fold
+sources restored to HEAD: True
+mutations survived: 1 of 9
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759a\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ e346bb6e28fcfad4770166bb9c8c080f0f1d9c01  [git, worktree dirty=False]
+label                   : mutations
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/orch759a/mutations.py C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.venv/Scripts/python.exe C:/t/bt-orch759a/13-mutations-10396
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759a
+root PID / process group: 151136 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 11.47 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 19  156312:python.exe, 153508:python.exe, 153656:python.exe, 153084:python.exe, 153828:python.exe, 153164:python.exe, 155224:python.exe, 156600:python.exe, 156608:python.exe, 140312:python.exe, 149288:python.exe, 153836:python.exe, 155872:python.exe, 151100:python.exe, 156612:python.exe, 150468:python.exe, 152852:python.exe, 116644:python.exe, 153636:python.exe
+descendants terminated  : 19  116644, 140312, 149288, 150468, 151100, 152852, 153084, 153164, 153508, 153636, 153656, 153828, 153836, 155224, 155872, 156312, 156600, 156608, 156612
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759a\docs\pwml_recovery_sprint\evidence\g11\ORCH-759a\13-mutations.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================
