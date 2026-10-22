@@ -461,6 +461,7 @@ def test_new_the_mapping_report_walker_skips_the_flag(runs: Dict[str, Any]) -> N
     from t2pw.curation.interactive_curator import compact_mapping_misses
 
     report = runs["kf147"][0]["stage6"]["report"]
+    assert report[BORROWED_KEY], "nothing to skip: the report must carry the flag first"
     assert not any(marker in json.dumps(compact_mapping_misses(report)) for marker in _FLAG_TEXT)
 
 
