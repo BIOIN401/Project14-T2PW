@@ -1,0 +1,60 @@
+== TIP (code on PYTHONPATH)
+  admitted_payload_hash: sha256:b43803adf2a8f7c9
+  decision_input_hash: sha256:d2ef87f2ae5da361
+  resulting_payload_hash: sha256:be6568f9391467dc
+  ok: True
+  refusal_reasons: []
+  review_reasons: []
+  counts: {'core_accepted': 19, 'auxiliary_accepted': 36, 'quarantined_unmapped_entity': 14, 'quarantined_out_of_scope': 0, 'quarantined_weak_evidence': 0, 'quarantined_broken_reference': 28, 'quarantined_disconnected': 0}
+  entity_type_overlaps: []
+  release.status: review_required | reasons: ['semantic_evaluation_failed:actor_named_in_its_own_cited_span']
+  removed entities: 41
+== BASE EMULATION (one union set for every bucket)
+  admitted_payload_hash: sha256:b43803adf2a8f7c9
+  decision_input_hash: sha256:d2ef87f2ae5da361
+  resulting_payload_hash: sha256:e1f3bec8621d8069
+  ok: False
+  refusal_reasons: ['entity_type_overlap:4']
+  review_reasons: []
+  counts: {'core_accepted': 19, 'auxiliary_accepted': 36, 'quarantined_unmapped_entity': 14, 'quarantined_out_of_scope': 0, 'quarantined_weak_evidence': 0, 'quarantined_broken_reference': 28, 'quarantined_disconnected': 0}
+  entity_type_overlaps: [{'name': 'CAO', 'buckets': 'proteins+nucleic_acids'}, {'name': 'HEMA1', 'buckets': 'proteins+nucleic_acids'}, {'name': 'GUN4', 'buckets': 'proteins+nucleic_acids'}, {'name': 'PORB', 'buckets': 'proteins+nucleic_acids'}]
+  release.status: diagnostic_only | reasons: ['strict_technical_gates_blocked_export']
+  removed entities: 37
+  base emulation == real base resulting hash: True
+  tip == diagnosis counterfactual resulting hash: True
+== ROW DIFF base -> tip
+  only in base: ["entities/nucleic_acids: 'CAO'", "entities/nucleic_acids: 'GUN4'", "entities/nucleic_acids: 'HEMA1'", "entities/nucleic_acids: 'PORB'"]
+  only in tip : []
+  removed only at tip : [('nucleic_acids', 'CAO', 'unreferenced_after_quarantine'), ('nucleic_acids', 'GUN4', 'unreferenced_after_quarantine'), ('nucleic_acids', 'HEMA1', 'unreferenced_after_quarantine'), ('nucleic_acids', 'PORB', 'unreferenced_after_quarantine')]
+  removed only at base: []
+  removed_locations base/tip: 53 53
+  removed_biological_states base/tip: 7 7
+  admissions identical: True
+== STRICT FINAL GATE on tip payload (enforce_all_proteins_connected=True)
+  PASS; connectivity: {"n_reactions": 30, "n_transports": 0, "n_interactions": 25, "n_reaction_coupled_transports": 0, "n_nodes": 148, "n_edges": 213, "n_components": 1, "main_component_size": 148, "largest_component_pct": 100.0, "n_isolated_nodes": 0, "proteins_degree0": 1, "proteins_attached_pct": 95.45}
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 5882136805f1d66895d994c92fbaa9b5f5d4e328  [git, worktree dirty=True]
+label                   : g9-leg-tip
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/orch759c/g9_leg_replay.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759c
+root PID / process group: 269416 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 1.66 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  267652:python.exe
+descendants terminated  : 1  267652
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759c\docs\pwml_recovery_sprint\evidence\g11\ORCH-759c\05-g9-leg-tip.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================

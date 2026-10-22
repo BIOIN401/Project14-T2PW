@@ -1,0 +1,68 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759c\src\t2pw\__init__.py
+FF...                                                                    [100%]
+================================== FAILURES ===================================
+__ test_g9_chlorophyll_leg_releases_review_required_once_orphan_genes_close ___
+
+    def test_g9_chlorophyll_leg_releases_review_required_once_orphan_genes_close() -> None:
+        payload, context = _leg()
+        result = quarantine_and_close(payload, strict_db=True, pathway_context=context, mode="pathwhiz")
+        report = result.quarantine_report
+    
+        # The live decision, replayed: same decision input, same admissions, same counts.
+        assert report["decision_input_hash"] == "sha256:d2ef87f2ae5da361"
+        assert report["counts"] == BASE_COUNTS
+        assert _digest(f"{row['pointer']}|{row['state']}" for row in result.admissions) == BASE_ADMISSIONS_SHA256
+    
+        # Base: ok False, ["entity_type_overlap:4"], diagnostic_only.
+>       assert report["strict_invariants"]["entity_type_overlaps"] == []
+E       AssertionError: assert [{'buckets': ...ame': 'PORB'}] == []
+E         
+E         Left contains 4 more items, first extra item: {'buckets': 'proteins+nucleic_acids', 'name': 'CAO'}
+E         Use -v to get more diff
+
+tests\test_orch759c_quarantine_bucket_closure.py:83: AssertionError
+___ test_g9_component_name_no_longer_keeps_an_unreferenced_same_named_gene ____
+
+    def test_g9_component_name_no_longer_keeps_an_unreferenced_same_named_gene() -> None:
+        result = quarantine_and_close(_payload(), strict_db=False)
+    
+        assert result.states()["HY5 activates HEMA1"] == "quarantined_broken_reference"
+        assert result.states()["A to B"] in {"core_accepted", "auxiliary_accepted"}
+        # Base: [{"name": "HEMA1", "buckets": "proteins+nucleic_acids"}] and a refusal.
+>       assert result.quarantine_report["strict_invariants"]["entity_type_overlaps"] == []
+E       AssertionError: assert [{'buckets': ...me': 'HEMA1'}] == []
+E         
+E         Left contains one more item: {'buckets': 'proteins+nucleic_acids', 'name': 'HEMA1'}
+E         Use -v to get more diff
+
+tests\test_orch759c_quarantine_bucket_closure.py:176: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_orch759c_quarantine_bucket_closure.py::test_g9_chlorophyll_leg_releases_review_required_once_orphan_genes_close
+FAILED tests/test_orch759c_quarantine_bucket_closure.py::test_g9_component_name_no_longer_keeps_an_unreferenced_same_named_gene
+2 failed, 3 passed in 1.32s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 5d1ea64c9e3aabbaa386d0673bcea83dd1e1fb2a  [git, worktree dirty=False]
+label                   : draft-base
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-759c/02-draft-base.pin.json -q --basetemp=C:/t/bt-orch759c/02-draft-base-24119 tests/test_orch759c_quarantine_bucket_closure.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759c
+root PID / process group: 267484 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 2.47 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  267496:python.exe
+descendants terminated  : 1  267496
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759c\docs\pwml_recovery_sprint\evidence\g11\ORCH-759c\02-draft-base.json
+json report written     : True
+pre-existing (reported, NEVER killed): 14
+================================================
