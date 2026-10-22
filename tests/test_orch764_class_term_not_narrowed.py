@@ -151,8 +151,8 @@ def test_g9_prefreeze_keeps_the_paper_class_term_and_flags_it(term: str) -> None
 
 def _same_named_record() -> Dict[str, Any]:
     """CONSTRUCTED, not recorded: a provider answer whose record carries the class term as its own
-    name and DMAPP's identifiers -- the shape a ChEBI/KEGG/HMDB name search can return, since each
-    lists "prenyl diphosphate" among DMAPP's names. The name gate keeps it on the shared tokens."""
+    name and DMAPP's identifiers -- the shape a name search returns from any provider that, like
+    PathBank, files "prenyl diphosphate" under DMAPP. The name gate keeps it on the shared tokens."""
     return {
         "status": "mapped", "provider": "ChEBI/KEGG/HMDB", "source": "api", "confidence": 0.9,
         "chosen_rule": "exact_name", "mapped_ids": dict(DMAPP_IDS),
@@ -161,9 +161,10 @@ def _same_named_record() -> Dict[str, Any]:
     }
 
 
-def test_g9_stage6_refuses_a_specific_record_for_a_class_term() -> None:
-    """G9. Base: the result stays ``mapped`` with CHEBI:16057 / C00235 for "prenyl diphosphate"."""
-    result = _apply_name_plausibility_gate(_same_named_record(), "prenyl diphosphate", kind="compound")
+@pytest.mark.parametrize("term", ["prenyl diphosphate", "prenyl pyrophosphate"])
+def test_g9_stage6_refuses_a_specific_record_for_a_class_term(term: str) -> None:
+    """G9. Base: the result stays ``mapped`` with CHEBI:16057 / C00235 for the class term."""
+    result = _apply_name_plausibility_gate(_same_named_record(), term, kind="compound")
     assert result["status"] == "unmapped"
     assert result["chosen_rule"] == "novel_compound"
     assert not result.get("mapped_ids")

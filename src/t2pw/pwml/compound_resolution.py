@@ -379,6 +379,25 @@ _CORROBORATION_COLUMNS = {
     "hmdb": ("hmdb_id", normalize_hmdb_id),
 }
 
+#: **D-109 § 2 (ORCH-764).** Participant names a paper uses for a CLASS of molecules, as
+#: :func:`is_class_participant_term` keys them (casefold, alphanumeric runs joined by one space).
+#: A database may list such a name as a synonym of ONE member: PathBank compound 874
+#: "Dimethylallylpyrophosphate" (DMAPP, the C5 member) carries "prenyl diphosphate" (measured,
+#: ORCH-759 menaquinone leg), so an exact synonym hit is no evidence the paper meant that member.
+#: PMC12421875 names MenA's co-substrate this way and never states a chain length.
+#: The list is closed and narrow on purpose: an unlisted class name is NOT caught. No committed
+#: source holds a class-level identity for these terms, so a listed term stays unmapped and is
+#: flagged for review -- never guessed.
+CLASS_PARTICIPANT_TERMS = frozenset({"prenyl diphosphate", "prenyl pyrophosphate"})
+
+#: The refusal reason, shared by this gate and Stage 6's name gate (``map_ids``).
+CLASS_TERM_NEVER_NARROWED = "class_term_never_narrowed_to_specific_molecule"
+
+
+def is_class_participant_term(name: Any) -> bool:
+    """True when ``name`` is a listed class term (D-109 § 2). Pure, offline, no lookup."""
+    return " ".join(re.findall(r"[a-z0-9]+", str(name or "").casefold())) in CLASS_PARTICIPANT_TERMS
+
 
 def _db_match_rule_decision(row: Dict[str, Any], match: Dict[str, Any]) -> Dict[str, Any]:
     """Weigh the MATCH: does this rule, at this confidence, justify an identity?
@@ -416,6 +435,12 @@ def _db_match_rule_decision(row: Dict[str, Any], match: Dict[str, Any]) -> Dict[
 
     if match.get("status") != "matched" or not _safe_dict(match.get("chosen")):
         decision["reason"] = "no_match_to_admit"
+        return decision
+
+    # D-109 § 2: a class term is never renamed to, or stamped with, one member -- by any rule,
+    # identifier rules included. Record-only, so the row keeps the paper's term for review.
+    if is_class_participant_term(queried_name):
+        decision["reason"] = CLASS_TERM_NEVER_NARROWED
         return decision
 
     if rule in RECORD_ONLY_MATCH_RULES:
