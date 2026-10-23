@@ -1,0 +1,105 @@
+{
+  "label": "rev-probe-base",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "-m",
+    "pytest",
+    "-q",
+    "-s",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:/t/bt-rev759b/02-rev-probe-base-27722",
+    "C:/t/bt-rev759b/probe_rev759b.py",
+    "-k",
+    "item3"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\rev759b-base",
+  "started_at": "2026-10-22T21:58:11+00:00",
+  "finished_at": "2026-10-22T21:58:17+00:00",
+  "duration_seconds": 5.007137799999327,
+  "timeout_seconds": 500.0,
+  "root_pid": 257296,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 258240,
+      "name": "python.exe",
+      "ppid": 257296
+    }
+  ],
+  "descendants_terminated": [
+    258240
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 233860,
+      "name": "python.exe"
+    },
+    {
+      "pid": 235388,
+      "name": "python.exe"
+    },
+    {
+      "pid": 236168,
+      "name": "python.exe"
+    },
+    {
+      "pid": 237276,
+      "name": "python.exe"
+    },
+    {
+      "pid": 237540,
+      "name": "python.exe"
+    },
+    {
+      "pid": 237916,
+      "name": "python.exe"
+    },
+    {
+      "pid": 240672,
+      "name": "python.exe"
+    },
+    {
+      "pid": 248212,
+      "name": "python.exe"
+    },
+    {
+      "pid": 256308,
+      "name": "python.exe"
+    },
+    {
+      "pid": 273484,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\rev759b-base\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-759b\\02-rev-probe-base.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\rev759b-base\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\rev759b-base",
+    "repo_head": "a2a804dc6e0043ce7c7fb635c505121111e90dc9",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

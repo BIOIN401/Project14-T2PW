@@ -1,0 +1,109 @@
+{
+  "label": "rev-affected-tip",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-759a/37-rev-affected-tip.pin.json",
+    "-q",
+    "--basetemp=C:/t/bt-rev759a/37-rev-affected-tip-3408",
+    "tests/test_c073_identity_admission.py",
+    "tests/test_c079_interactive_prompt_allowlist.py",
+    "tests/test_interactive_curator.py",
+    "tests/test_map_ids.py",
+    "tests/test_map_ids_mapping_lineage.py",
+    "tests/test_orch754c_curator_prompt_reverted.py",
+    "tests/test_orch754c_production_prompt_is_measured_control.py",
+    "tests/test_stage_one_ensemble.py",
+    "tests/test_stage_one_paper_dictionary.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\rev759a-tip",
+  "started_at": "2026-10-22T20:25:25+00:00",
+  "finished_at": "2026-10-22T20:25:29+00:00",
+  "duration_seconds": 3.838887900001282,
+  "timeout_seconds": 530.0,
+  "root_pid": 200156,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 200168,
+      "name": "python.exe",
+      "ppid": 200156
+    }
+  ],
+  "descendants_terminated": [
+    200168
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 153260,
+      "name": "python.exe"
+    },
+    {
+      "pid": 156288,
+      "name": "python.exe"
+    },
+    {
+      "pid": 190812,
+      "name": "python.exe"
+    },
+    {
+      "pid": 191804,
+      "name": "python.exe"
+    },
+    {
+      "pid": 193108,
+      "name": "python.exe"
+    },
+    {
+      "pid": 194176,
+      "name": "python.exe"
+    },
+    {
+      "pid": 194588,
+      "name": "python.exe"
+    },
+    {
+      "pid": 196476,
+      "name": "python.exe"
+    },
+    {
+      "pid": 199844,
+      "name": "python.exe"
+    },
+    {
+      "pid": 199856,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\rev759a-tip\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-759a\\37-rev-affected-tip.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\rev759a-tip\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\rev759a-tip",
+    "repo_head": "493c1a100a40bcdea1b9dd5d61828e5f0f11e68d",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

@@ -1,0 +1,60 @@
+admitted_payload_hash(final_mapped) = sha256:b43803adf2a8f7c9 | leg: sha256:d33121c9650add7b
+
+== A baseline (f392d447 code)
+  admitted_payload_hash: sha256:b43803adf2a8f7c9
+  decision_input_hash: sha256:d2ef87f2ae5da361
+  resulting_payload_hash: sha256:e1f3bec8621d8069
+  ok: False
+  refusal_reasons: ['entity_type_overlap:4']
+  review_reasons: []
+  counts: {'core_accepted': 19, 'auxiliary_accepted': 36, 'quarantined_unmapped_entity': 14, 'quarantined_out_of_scope': 0, 'quarantined_weak_evidence': 0, 'quarantined_broken_reference': 28, 'quarantined_disconnected': 0}
+  strict_invariants: {"entity_type_overlaps": [{"name": "CAO", "buckets": "proteins+nucleic_acids"}, {"name": "HEMA1", "buckets": "proteins+nucleic_acids"}, {"name": "GUN4", "buckets": "proteins+nucleic_acids"}, {"name": "PORB", "buckets": "proteins+nucleic_acids"}], "degree_zero_exports": [], "unexportable_entities": [], "unaccounted_locked_reactions": 0, "closure_converged": true, "ok": false}
+  release.status: diagnostic_only | reasons: ['strict_technical_gates_blocked_export'] | semantic_failed: ['actor_named_in_its_own_cited_span'] | review_reasons: []
+  removed entities: 37
+  surviving buckets: {'species': 1, 'tissues': 1, 'subcellular_locations': 8, 'compounds': 28, 'nucleic_acids': 13, 'proteins': 22, 'protein_complexes': 30} {'reactions': 30, 'interactions': 25, 'transports': 0}
+
+== B counterfactual (bucket-aware component keep)
+  admitted_payload_hash: sha256:b43803adf2a8f7c9
+  decision_input_hash: sha256:d2ef87f2ae5da361
+  resulting_payload_hash: sha256:be6568f9391467dc
+  ok: True
+  refusal_reasons: []
+  review_reasons: []
+  counts: {'core_accepted': 19, 'auxiliary_accepted': 36, 'quarantined_unmapped_entity': 14, 'quarantined_out_of_scope': 0, 'quarantined_weak_evidence': 0, 'quarantined_broken_reference': 28, 'quarantined_disconnected': 0}
+  strict_invariants: {"entity_type_overlaps": [], "degree_zero_exports": [], "unexportable_entities": [], "unaccounted_locked_reactions": 0, "closure_converged": true, "ok": true}
+  release.status: review_required | reasons: ['semantic_evaluation_failed:actor_named_in_its_own_cited_span'] | semantic_failed: ['actor_named_in_its_own_cited_span'] | review_reasons: []
+  removed entities: 41
+  surviving buckets: {'species': 1, 'tissues': 1, 'subcellular_locations': 8, 'compounds': 28, 'nucleic_acids': 9, 'proteins': 22, 'protein_complexes': 30} {'reactions': 30, 'interactions': 25, 'transports': 0}
+  rows removed ONLY by the counterfactual: [('nucleic_acids', 'CAO'), ('nucleic_acids', 'HEMA1'), ('nucleic_acids', 'GUN4'), ('nucleic_acids', 'PORB')]
+  removed in A not in B: []
+  removed in B not in A: [('nucleic_acids', 'CAO'), ('nucleic_acids', 'GUN4'), ('nucleic_acids', 'HEMA1'), ('nucleic_acids', 'PORB')]
+  admissions identical A vs B: True
+
+== B final pre-export gate: PASS; keys: ['connectivity', 'errors', 'normalization_stats']
+   connectivity: {"n_reactions": 30, "n_transports": 0, "n_interactions": 25, "n_reaction_coupled_transports": 0, "n_nodes": 148, "n_edges": 213, "n_components": 1, "main_component_size": 148, "largest_component_pct": 100.0, "n_isolated_nodes": 0, "proteins_degree0": 1, "proteins_attached_pct": 95.45}
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 5d1ea64c9e3aabbaa386d0673bcea83dd1e1fb2a  [git, worktree dirty=True]
+label                   : diag
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/bt-chl759/replay_quarantine.py
+cwd                     : C:\t\bt-chl759
+root PID / process group: 184432 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 1.48 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  184424:python.exe
+descendants terminated  : 1  184424
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/bt-chl759/01-diag.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================

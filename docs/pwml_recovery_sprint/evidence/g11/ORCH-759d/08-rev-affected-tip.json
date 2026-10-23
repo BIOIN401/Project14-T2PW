@@ -1,0 +1,275 @@
+{
+  "label": "rev-affected-tip",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-759d/08-rev-affected-tip.pin.json",
+    "-q",
+    "--basetemp=C:/t/bt-rev759d/08-rev-affected-tip-25592",
+    "tests/test_batch_driver.py",
+    "tests/test_batch_driver_quarantine_artifacts.py",
+    "tests/test_batch_driver_seam_golden.py",
+    "tests/test_batch_fetch.py",
+    "tests/test_batch_pwml_artifact_naming.py",
+    "tests/test_batch_report.py",
+    "tests/test_batch_research_gate_fail_open.py",
+    "tests/test_batch_run.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_c056d_gate_failure_semantic_carry.py",
+    "tests/test_c064_round_cap_reason.py",
+    "tests/test_c073_identity_admission.py",
+    "tests/test_c075_source_support_armed.py",
+    "tests/test_c081_cofactor_role_identity.py",
+    "tests/test_c083_inner_timeout_row.py",
+    "tests/test_c110_negative_control_status.py",
+    "tests/test_c111_timeout_observability.py",
+    "tests/test_c119_g9_base_failure_proof.py",
+    "tests/test_c119_superseded_intermediate_report.py",
+    "tests/test_c126_g9_base_failure_proof.py",
+    "tests/test_deadline_budget.py",
+    "tests/test_deadline_leg_timeout.py",
+    "tests/test_early_failure_replay.py",
+    "tests/test_map_ids_mapping_lineage.py",
+    "tests/test_orch759d_app_timeout.py",
+    "tests/test_paper_eligibility.py",
+    "tests/test_paper_eligibility_corrections.py",
+    "tests/test_rag_loop_controller.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_stage_one_paper_dictionary.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\rev759d-tip",
+  "started_at": "2026-10-22T23:25:40+00:00",
+  "finished_at": "2026-10-22T23:27:21+00:00",
+  "duration_seconds": 100.93610869999975,
+  "timeout_seconds": 500.0,
+  "root_pid": 381892,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 378980,
+      "name": "python.exe",
+      "ppid": 381892
+    },
+    {
+      "pid": 376352,
+      "name": "python.exe",
+      "ppid": 382484
+    },
+    {
+      "pid": 382484,
+      "name": "python.exe",
+      "ppid": 378980
+    },
+    {
+      "pid": 370328,
+      "name": "taskkill.exe",
+      "ppid": 378980
+    },
+    {
+      "pid": 362304,
+      "name": "python.exe",
+      "ppid": 378980
+    },
+    {
+      "pid": 382588,
+      "name": "python.exe",
+      "ppid": 362304
+    },
+    {
+      "pid": 381116,
+      "name": "python.exe",
+      "ppid": 378980
+    },
+    {
+      "pid": 382556,
+      "name": "python.exe",
+      "ppid": 381116
+    },
+    {
+      "pid": 381364,
+      "name": "python.exe",
+      "ppid": 382712
+    },
+    {
+      "pid": 382712,
+      "name": "python.exe",
+      "ppid": 378980
+    },
+    {
+      "pid": 383200,
+      "name": "python.exe",
+      "ppid": 378980
+    },
+    {
+      "pid": 383220,
+      "name": "python.exe",
+      "ppid": 383200
+    },
+    {
+      "pid": 383240,
+      "name": "python.exe",
+      "ppid": 378980
+    },
+    {
+      "pid": 383260,
+      "name": "python.exe",
+      "ppid": 383240
+    },
+    {
+      "pid": 383400,
+      "name": "python.exe",
+      "ppid": 378980
+    },
+    {
+      "pid": 383432,
+      "name": "python.exe",
+      "ppid": 383400
+    },
+    {
+      "pid": 383756,
+      "name": "python.exe",
+      "ppid": 378980
+    },
+    {
+      "pid": 383776,
+      "name": "python.exe",
+      "ppid": 383756
+    },
+    {
+      "pid": 383916,
+      "name": "python.exe",
+      "ppid": 378980
+    },
+    {
+      "pid": 383936,
+      "name": "python.exe",
+      "ppid": 383916
+    },
+    {
+      "pid": 383120,
+      "name": "python.exe",
+      "ppid": 378980
+    },
+    {
+      "pid": 383080,
+      "name": "python.exe",
+      "ppid": 383120
+    },
+    {
+      "pid": 382340,
+      "name": "git.exe",
+      "ppid": 378980
+    },
+    {
+      "pid": 383024,
+      "name": "git.exe",
+      "ppid": 378980
+    },
+    {
+      "pid": 383444,
+      "name": "python.exe",
+      "ppid": 378980
+    },
+    {
+      "pid": 383560,
+      "name": "python.exe",
+      "ppid": 383444
+    },
+    {
+      "pid": 383768,
+      "name": "taskkill.exe",
+      "ppid": 378980
+    },
+    {
+      "pid": 377564,
+      "name": "python.exe",
+      "ppid": 383584
+    },
+    {
+      "pid": 383584,
+      "name": "python.exe",
+      "ppid": 378980
+    }
+  ],
+  "descendants_terminated": [
+    362304,
+    370328,
+    376352,
+    377564,
+    378980,
+    381116,
+    381364,
+    382340,
+    382484,
+    382556,
+    382588,
+    382712,
+    383024,
+    383080,
+    383120,
+    383200,
+    383220,
+    383240,
+    383260,
+    383400,
+    383432,
+    383444,
+    383560,
+    383584,
+    383756,
+    383768,
+    383776,
+    383916,
+    383936
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 338056,
+      "name": "python.exe"
+    },
+    {
+      "pid": 372748,
+      "name": "python.exe"
+    },
+    {
+      "pid": 375172,
+      "name": "python.exe"
+    },
+    {
+      "pid": 375192,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\rev759d-tip\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-759d\\08-rev-affected-tip.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\rev759d-tip\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\rev759d-tip",
+    "repo_head": "cdb95baf64d2b9dd0bd6f4c19a76abcfc9e34de3",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

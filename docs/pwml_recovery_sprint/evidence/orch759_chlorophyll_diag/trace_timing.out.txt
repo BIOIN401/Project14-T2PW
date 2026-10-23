@@ -1,0 +1,19 @@
+EVENT: {"seq": 1, "kind": "leg_begin", "elapsed_seconds": 0.0, "slug": "PMC5130987", "mode": "strict", "paper_id": "PMC5130987", "child_deadline_seconds": 10680.0, "run_dir": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\runs_papers\\ORCH-759\\legs\\chlorophyll-strict\\2026-10-22_1231"}
+EVENT: {"seq": 2, "kind": "stage_begin", "elapsed_seconds": 0.001, "stage": "driver"}
+EVENT: {"seq": 77, "kind": "stage_end", "elapsed_seconds": 5273.541, "stage": "driver", "stage_elapsed_seconds": 5273.54, "status": "fail", "termination_reason": ""}
+EVENT: {"seq": 78, "kind": "stage_begin", "elapsed_seconds": 5273.542, "stage": "artifacts"}
+EVENT: {"seq": 79, "kind": "stage_end", "elapsed_seconds": 5273.556, "stage": "artifacts", "stage_elapsed_seconds": 0.013, "artifact_count": 14}
+EVENT: {"seq": 80, "kind": "leg_end", "elapsed_seconds": 5273.557, "status": "fail", "stage": "post_pipeline", "termination_reason": "", "operational_failure": false, "timeout_source": "none", "counts": {"stage0_observed_pathways": 1, "stage0_observed_organisms": 1, "reactions": 32, "transports": 0, "entit
+
+stage | calls | sum(gap) s | span start-end s | outcomes
+preprocessor | 1 | 52 | 0-52 | {('ok', 'stop'): 1}
+Stage 1 extraction | 6 | 1487 | 52-1539 | {('ok', 'stop'): 6}
+rag_prose_extraction | 21 | 432 | 1539-1971 | {('ok', 'stop'): 21}
+Stage 2 inference | 4 | 644 | 1971-2615 | {('ok', 'stop'): 4}
+chat | 7 | 1021 | 2615-4944 | {('ok', 'stop'): 7}
+audit loop | 3 | 258 | 3122-3380 | {('ok', 'stop'): 3}
+gap resolver | 32 | 1050 | 3380-4493 | {('ok', 'stop'): 32}
+
+calls with gap >= 600 s: []
+max gap: (451.17099999999937, 76, 'chat')
+end elapsed: 5273.557

@@ -1,0 +1,198 @@
+{
+  "label": "rev-smoke-tip",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-763/23-rev-smoke-tip.pin.json",
+    "-q",
+    "--basetemp=C:/t/bt-rev763/23-rev-smoke-tip-23860",
+    "tests/test_reference_repair.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_empty_extraction_payload.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py",
+    "tests/test_c102_coverage_denominator.py",
+    "tests/test_c106_mutation_harness_executable.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\rev763-tip",
+  "started_at": "2026-10-22T22:40:24+00:00",
+  "finished_at": "2026-10-22T22:41:10+00:00",
+  "duration_seconds": 46.32542699999976,
+  "timeout_seconds": 500.0,
+  "root_pid": 325260,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 325236,
+      "name": "python.exe",
+      "ppid": 325260
+    },
+    {
+      "pid": 308724,
+      "name": "python.exe",
+      "ppid": 325236
+    },
+    {
+      "pid": 316320,
+      "name": "python.exe",
+      "ppid": 308724
+    },
+    {
+      "pid": 324676,
+      "name": "python.exe",
+      "ppid": 325596
+    },
+    {
+      "pid": 325596,
+      "name": "python.exe",
+      "ppid": 325236
+    },
+    {
+      "pid": 320084,
+      "name": "python.exe",
+      "ppid": 324824
+    },
+    {
+      "pid": 324824,
+      "name": "python.exe",
+      "ppid": 325236
+    },
+    {
+      "pid": 326080,
+      "name": "python.exe",
+      "ppid": 325236
+    },
+    {
+      "pid": 326100,
+      "name": "python.exe",
+      "ppid": 326080
+    },
+    {
+      "pid": 317788,
+      "name": "git.exe",
+      "ppid": 325236
+    },
+    {
+      "pid": 323496,
+      "name": "git.exe",
+      "ppid": 325236
+    }
+  ],
+  "descendants_terminated": [
+    308724,
+    316320,
+    317788,
+    320084,
+    323496,
+    324676,
+    324824,
+    325236,
+    325596,
+    326080,
+    326100
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 233860,
+      "name": "python.exe"
+    },
+    {
+      "pid": 235388,
+      "name": "python.exe"
+    },
+    {
+      "pid": 236168,
+      "name": "python.exe"
+    },
+    {
+      "pid": 237276,
+      "name": "python.exe"
+    },
+    {
+      "pid": 237540,
+      "name": "python.exe"
+    },
+    {
+      "pid": 237916,
+      "name": "python.exe"
+    },
+    {
+      "pid": 298228,
+      "name": "python.exe"
+    },
+    {
+      "pid": 298256,
+      "name": "python.exe"
+    },
+    {
+      "pid": 324636,
+      "name": "python.exe"
+    },
+    {
+      "pid": 324652,
+      "name": "python.exe"
+    },
+    {
+      "pid": 324820,
+      "name": "python.exe"
+    },
+    {
+      "pid": 324832,
+      "name": "python.exe"
+    },
+    {
+      "pid": 325496,
+      "name": "python.exe"
+    },
+    {
+      "pid": 325504,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\rev763-tip\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-763\\23-rev-smoke-tip.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\rev763-tip\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\rev763-tip",
+    "repo_head": "7189582f779e062e1bac62ad40cf5e6cff3c171a",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

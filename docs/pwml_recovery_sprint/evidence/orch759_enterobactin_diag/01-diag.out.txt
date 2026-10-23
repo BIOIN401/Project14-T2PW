@@ -1,0 +1,42 @@
+[hash] final_mapped sha256 = e72d3a65d689269b1379cafd555c3dbac5e1db08fcda3c8c16701c5af4597d99
+[hash] gate report payload_sha256 = e72d3a65d689269b1379cafd555c3dbac5e1db08fcda3c8c16701c5af4597d99
+[gate] 759 final_mapped as shipped: ok=False errors=1
+     /entities/proteins/7/name | Protein has degree 0 after normalization: enterobactin synthase
+[gate] 759 variant A: wrapper component named back to 'enterobactin synthase': ok=True errors=0
+[gate] 759 variant B: duplicate protein row 'enterobactin synthase' (P11454 == EntF) removed: ok=True errors=0
+[gate] 756 final_mapped (control): ok=True errors=0
+[ids] protein rows carrying P11454: [(4, 'EntF'), (7, 'enterobactin synthase')]
+[ids] EntF synonyms: ['EntF', 'Enterochelin synthase F', 'Nonribosomal peptide synthetase EntF', 'Enterobactin synthase component F']
+[reconcile] component name only -> name='enterobactin synthase'
+[reconcile] component + uniprot P11454 -> name='EntF'
+[norm] proteins: ['EntC', 'EntB', 'EntA', 'EntE', 'EntF', 'EntD', 'TolC', 'enterobactin synthase']
+[norm] complex: EntCB complex None ['EntC', 'EntB']
+[norm] complex: enterobactin synthase complex complex_named_source_entity_wrapper ['enterobactin synthase']
+[norm] gate ok: False ["Protein 'EntC' is missing a UniProt or DrugBank identifier.", "Protein 'EntB' is missing a UniProt or DrugBank identifier.", "Protein 'EntA' is missing a UniProt or DrugBank identifier.", "Protein 'EntE' is missing a UniProt or DrugBank identifier.", "Protein 'EntF' is missing a UniProt or DrugBank identifier.", "Protein 'EntD' is missing a UniProt or DrugBank identifier.", "Protein 'TolC' is missing a UniProt or DrugBank identifier.", "Protein 'enterobactin synthase' is missing species/organism.", "Protein 'enterobactin synthase' is missing a UniProt or DrugBank identifier.", "Generated protein complex 'enterobactin synthase complex' is missing species/organism.", "Generated protein complex 'enterobactin synthase complex' component protein 'enterobactin synthase' is missing species/organism.", "Generated protein complex 'enterobactin synthase complex' component protein 'enterobactin synthase' is missing a UniProt or DrugBank identifier."]
+[norm] complex_named_proteins_relocated: 1 entities_added_as_proteins: 1
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 13f8a5e2b2e32849f7f9502fd018bce89375eb03  [git, worktree dirty=True]
+label                   : diag
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/bt-orch759d/diag759.py
+cwd                     : C:\t\bt-orch759d
+root PID / process group: 80300 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 0.48 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  67052:python.exe
+descendants terminated  : 1  67052
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/bt-orch759d/01-diag.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================

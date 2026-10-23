@@ -1,0 +1,105 @@
+{
+  "label": "rev-app-gated-three-draws",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "-m",
+    "pytest",
+    "-q",
+    "-s",
+    "-p",
+    "rev_plugin_fold_mode",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:/t/bt-rev759a/36-rev-app-gated-three-draws-16621",
+    "tests/test_orch759a_fold_app_path.py::test_new_the_fold_fires_through_the_apps_own_stage6_call[three_draws]"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\rev759a-tip",
+  "started_at": "2026-10-22T20:24:44+00:00",
+  "finished_at": "2026-10-22T20:24:48+00:00",
+  "duration_seconds": 3.6756875999999465,
+  "timeout_seconds": 300.0,
+  "root_pid": 199120,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 199244,
+      "name": "python.exe",
+      "ppid": 199120
+    }
+  ],
+  "descendants_terminated": [
+    199244
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 153260,
+      "name": "python.exe"
+    },
+    {
+      "pid": 156288,
+      "name": "python.exe"
+    },
+    {
+      "pid": 190812,
+      "name": "python.exe"
+    },
+    {
+      "pid": 191804,
+      "name": "python.exe"
+    },
+    {
+      "pid": 193108,
+      "name": "python.exe"
+    },
+    {
+      "pid": 194176,
+      "name": "python.exe"
+    },
+    {
+      "pid": 194588,
+      "name": "python.exe"
+    },
+    {
+      "pid": 196476,
+      "name": "python.exe"
+    },
+    {
+      "pid": 199364,
+      "name": "python.exe"
+    },
+    {
+      "pid": 199384,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\rev759a-tip\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-759a\\36-rev-app-gated-three-draws.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\rev759a-tip\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\rev759a-tip",
+    "repo_head": "493c1a100a40bcdea1b9dd5d61828e5f0f11e68d",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

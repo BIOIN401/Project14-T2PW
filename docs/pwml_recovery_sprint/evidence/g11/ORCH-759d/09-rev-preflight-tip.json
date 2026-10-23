@@ -1,0 +1,173 @@
+{
+  "label": "rev-preflight-tip",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-759d/09-rev-preflight-tip.pin.json",
+    "-q",
+    "--basetemp=C:/t/bt-rev759d/09-rev-preflight-tip-23467",
+    "tests/test_batch_preflight.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\rev759d-tip",
+  "started_at": "2026-10-22T23:27:50+00:00",
+  "finished_at": "2026-10-22T23:27:58+00:00",
+  "duration_seconds": 8.227915100000246,
+  "timeout_seconds": 500.0,
+  "root_pid": 385052,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 381400,
+      "name": "python.exe",
+      "ppid": 385052
+    },
+    {
+      "pid": 385320,
+      "name": "python.exe",
+      "ppid": 381400
+    },
+    {
+      "pid": 385384,
+      "name": "python.exe",
+      "ppid": 385320
+    },
+    {
+      "pid": 384044,
+      "name": "python.exe",
+      "ppid": 381400
+    },
+    {
+      "pid": 385004,
+      "name": "python.exe",
+      "ppid": 384044
+    },
+    {
+      "pid": 376268,
+      "name": "python.exe",
+      "ppid": 381400
+    },
+    {
+      "pid": 384080,
+      "name": "python.exe",
+      "ppid": 376268
+    },
+    {
+      "pid": 385724,
+      "name": "python.exe",
+      "ppid": 381400
+    },
+    {
+      "pid": 385868,
+      "name": "python.exe",
+      "ppid": 385724
+    },
+    {
+      "pid": 384656,
+      "name": "python.exe",
+      "ppid": 381400
+    },
+    {
+      "pid": 385092,
+      "name": "python.exe",
+      "ppid": 384656
+    },
+    {
+      "pid": 379200,
+      "name": "python.exe",
+      "ppid": 385040
+    },
+    {
+      "pid": 385040,
+      "name": "python.exe",
+      "ppid": 385092
+    },
+    {
+      "pid": 385304,
+      "name": "python.exe",
+      "ppid": 386012
+    },
+    {
+      "pid": 386012,
+      "name": "python.exe",
+      "ppid": 381400
+    },
+    {
+      "pid": 364212,
+      "name": "python.exe",
+      "ppid": 384508
+    },
+    {
+      "pid": 384508,
+      "name": "python.exe",
+      "ppid": 385304
+    }
+  ],
+  "descendants_terminated": [
+    364212,
+    376268,
+    379200,
+    381400,
+    384044,
+    384080,
+    384508,
+    384656,
+    385004,
+    385040,
+    385092,
+    385304,
+    385320,
+    385384,
+    385724,
+    385868,
+    386012
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 375172,
+      "name": "python.exe"
+    },
+    {
+      "pid": 375192,
+      "name": "python.exe"
+    },
+    {
+      "pid": 385872,
+      "name": "python.exe"
+    },
+    {
+      "pid": 385924,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\rev759d-tip\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-759d\\09-rev-preflight-tip.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\rev759d-tip\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\rev759d-tip",
+    "repo_head": "cdb95baf64d2b9dd0bd6f4c19a76abcfc9e34de3",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}
