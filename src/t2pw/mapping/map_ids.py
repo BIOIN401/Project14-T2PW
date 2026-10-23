@@ -8202,6 +8202,7 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
     cache: MappingCache,
     global_organism: str,
     only_proteins: Optional[Set[str]] = None,
+    pre_rewrite_actors: Optional[Dict[int, Any]] = None,
 ) -> Dict[str, Any]:
     """Rewrite protein enzyme/modifier references to protein_complex references.
 
@@ -8211,6 +8212,9 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
     ``only_proteins`` (normalized names, ORCH-759e) limits the pass to the actor lists
     and interactions naming one of those proteins, and to those proteins' own actor
     rows; every other row is passed through as it stands. ``None`` is the whole pass.
+    ``pre_rewrite_actors`` (one dict shared by both calls): the whole pass records there each
+    reaction's scope and actor lists before rewriting them; the ``only_proteins`` pass judges
+    F-116 against that record, re-read with today's identities, not against the rewritten lists.
 
     The rewrite exists because the PathWhiz importer refuses a bare protein as a
     reaction enzyme. It is **not** licence to change who catalyses the step: a
@@ -8622,6 +8626,15 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
         # step, and it is what decides whether a PathBank complex may stand in
         # for one of them.
         actor_scope = _reaction_actor_identity_scope(reaction, proteins_by_norm)
+        if pre_rewrite_actors is not None and only_proteins is None:
+            pre_rewrite_actors[id(reaction)] = (
+                actor_scope, {key: list(_safe_list(reaction.get(key))) for key in ("enzymes", "modifiers")}
+            )
+        elif pre_rewrite_actors is not None and id(reaction) in pre_rewrite_actors:
+            # ORCH-759e repair 1: the reaction as written, not as already rewritten (a
+            # sibling now reads "X complex"), with the identities Phase 2 has since added.
+            recorded_scope, recorded_actors = pre_rewrite_actors[id(reaction)]
+            actor_scope = recorded_scope | _reaction_actor_identity_scope(recorded_actors, proteins_by_norm)
         for key in ["modifiers", "enzymes"]:
             rows = _safe_list(reaction.get(key))
             if not rows or (only_proteins is not None and not any(
@@ -11313,12 +11326,16 @@ def map_payload(
             }
         )
 
+    # ORCH-759e repair 1: each reaction's actors as this first rewrite saw them, for the
+    # late pass below to judge F-116 against (never written to the payload or the report).
+    _pre_rewrite_actors: Dict[int, Any] = {}
     if allow_complex_wrapper_creation:
         enzyme_complex_report = _rewrite_reaction_protein_enzymes_to_complexes(
             mapped,
             db=db,
             cache=cache,
             global_organism=global_organism,
+            pre_rewrite_actors=_pre_rewrite_actors,
         )
     else:
         enzyme_complex_report = {
@@ -11348,7 +11365,9 @@ def map_payload(
                 return True
         return False
 
-    if allow_structural_cleanup:
+    def _prune_invalid_complex_components(_targets: List[Any]) -> None:
+        # Phase 1 over ``_targets``; ORCH-759e repair 1 runs it again for the late pass's complexes.
+        nonlocal proteins
         _proteins_current = _safe_list(entities.get("proteins"))
         _p_by_norm: Dict[str, Dict[str, Any]] = {
             _normalize_name(str(_p.get("name") or "")): _p
@@ -11358,7 +11377,7 @@ def map_payload(
 
         # Phase 1: prune invalid components from complexes that have at least one valid one.
         _dropped_norms: Set[str] = set()
-        for _pc in protein_complexes:
+        for _pc in _targets:
             if not isinstance(_pc, dict):
                 continue
             _comps = _safe_list(_pc.get("components"))
@@ -11414,6 +11433,9 @@ def map_payload(
                 _kept_proteins.append(_p)
             entities["proteins"] = _kept_proteins
             proteins = _safe_list(entities.get("proteins"))
+
+    if allow_structural_cleanup:
+        _prune_invalid_complex_components(protein_complexes)
 
     # Phase 2: UniProt API fallback (with gap-model LLM synonym expansion) for every
     # protein that still has no valid id after DB mapping and complex pruning.
@@ -11523,10 +11545,19 @@ def map_payload(
     # again for them alone, here, so their wrappers take the rest of Stage 6 exactly as the
     # main loop's do (complex mapping, then the Unknown fallback). It writes nothing to the
     # report, which reaches an LLM prompt (D-104 amendment 2); the wrapper row records it.
+    # Repair 1: F-116 judges the reaction as the first rewrite saw it, and the complexes this
+    # pass builds or changes take the structural-cleanup Phase 1 that the main loop's took.
     if allow_complex_wrapper_creation and _late_resolved:
+        _components_before = {id(row): deepcopy(_safe_dict(row).get("components")) for row in protein_complexes}
         _rewrite_reaction_protein_enzymes_to_complexes(
-            mapped, db=db, cache=cache, global_organism=global_organism, only_proteins=_late_resolved
+            mapped, db=db, cache=cache, global_organism=global_organism, only_proteins=_late_resolved,
+            pre_rewrite_actors=_pre_rewrite_actors,
         )
+        if allow_structural_cleanup:
+            _prune_invalid_complex_components([
+                row for row in protein_complexes
+                if id(row) not in _components_before or _components_before[id(row)] != _safe_dict(row).get("components")
+            ])
     # ─────────────────────────────────────────────────────────────────────────
 
     for idx, complex_row in enumerate(protein_complexes):
