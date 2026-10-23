@@ -8201,11 +8201,16 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
     db: Optional[PathBankDbResolver],
     cache: MappingCache,
     global_organism: str,
+    only_proteins: Optional[Set[str]] = None,
 ) -> Dict[str, Any]:
     """Rewrite protein enzyme/modifier references to protein_complex references.
 
     Also the protein endpoints of signed interactions (ORCH-754b, D-104): PathWhiz
     has no bare-protein interaction member either, and they take the same wrapper.
+
+    ``only_proteins`` (normalized names, ORCH-759e) limits the pass to the actor lists
+    and interactions naming one of those proteins, and to those proteins' own actor
+    rows; every other row is passed through as it stands. ``None`` is the whole pass.
 
     The rewrite exists because the PathWhiz importer refuses a bare protein as a
     reaction enzyme. It is **not** licence to change who catalyses the step: a
@@ -8402,6 +8407,9 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
             if not isinstance(actor_dict, dict):
                 continue
             name, actor_type, role = _reaction_actor_name_and_type(actor_dict)
+            if only_proteins is not None and _normalize_name(name) not in only_proteins:
+                rewritten.append(actor)
+                continue
             if not name:
                 continue
             name_norm = _normalize_name(name)
@@ -8616,7 +8624,9 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
         actor_scope = _reaction_actor_identity_scope(reaction, proteins_by_norm)
         for key in ["modifiers", "enzymes"]:
             rows = _safe_list(reaction.get(key))
-            if not rows:
+            if not rows or (only_proteins is not None and not any(
+                _normalize_name(_reaction_actor_name_and_type(row)[0]) in only_proteins for row in rows
+            )):
                 continue
             pointer = f"/processes/reactions/{ridx}/{key}"
             reaction[key] = _dedupe_actor_rows(
@@ -8694,7 +8704,9 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
                 shared_name = shared_name or norm in other_kind_names
                 # The wrapper is named after, and holds, the declared protein.
                 endpoints.append((field, _canonical_name(str(row.get("name") or written)), row))
-        if not endpoints or shared_name:
+        if not endpoints or shared_name or (only_proteins is not None and not any(
+            _normalize_name(name) in only_proteins for _field, name, _row in endpoints
+        )):
             continue
         # A complex already named like this protein's wrapper. Its own one-protein
         # wrapper (built for it as an enzyme, or on an earlier pass) is reused as it
@@ -11408,6 +11420,7 @@ def map_payload(
     # Controlled by T2PW_LLM_PROTEIN_FALLBACK env flag (default enabled).
     # Model used for synonym suggestions is OPENROUTER_GAP_MODEL (set in _ai_protein_synonym_lookup).
     _api_fallback_enabled = (os.environ.get("T2PW_LLM_PROTEIN_FALLBACK", "1") or "1").strip() not in ("0", "false", "no", "off")
+    _late_resolved: Set[str] = set()  # ORCH-759e: proteins this fallback gave an identity
     if _api_fallback_enabled:
         for _p_row in _safe_list(entities.get("proteins")):
             if (
@@ -11502,8 +11515,18 @@ def map_payload(
                         else:
                             _p_row["mapping_meta"]["identity_status"] = IDENTITY_VERIFIED
                             proteins_mapped += 1
+                            _late_resolved.add(_normalize_name(_p_name))
             except Exception:
                 pass
+    # ORCH-759e: the wrapper rewrite above ran while these proteins had no identity, so it
+    # left them bare and nothing later wraps a protein that has one. The same rewrite runs
+    # again for them alone, here, so their wrappers take the rest of Stage 6 exactly as the
+    # main loop's do (complex mapping, then the Unknown fallback). It writes nothing to the
+    # report, which reaches an LLM prompt (D-104 amendment 2); the wrapper row records it.
+    if allow_complex_wrapper_creation and _late_resolved:
+        _rewrite_reaction_protein_enzymes_to_complexes(
+            mapped, db=db, cache=cache, global_organism=global_organism, only_proteins=_late_resolved
+        )
     # ─────────────────────────────────────────────────────────────────────────
 
     for idx, complex_row in enumerate(protein_complexes):
