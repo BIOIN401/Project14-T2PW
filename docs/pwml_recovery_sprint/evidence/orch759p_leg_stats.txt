@@ -1,6 +1,10 @@
 runs_papers/ORCH-759p/legs\chlorophyll-strict\2026-10-22_2301\papers\PMC5130987\strict\LEG_TRACE.jsonl
-  last model attempt at 61 s
-  preprocessor                       attempts   1  empty-length   0  other-empty   0  ~    61 s
+  last model attempt at 4735 s
+  preprocessor                       attempts   4  empty-length   0  other-empty   0  ~   192 s
+  Stage 1 extraction                 attempts   7  empty-length   1  other-empty   0  ~  2574 s
+  rag_prose_extraction               attempts  24  empty-length   0  other-empty   0  ~   430 s
+  Stage 2 inference                  attempts   4  empty-length   0  other-empty   0  ~   915 s
+  audit loop                         attempts   2  empty-length   0  other-empty   0  ~   625 s
 runs_papers/ORCH-759p/legs\enterobactin-strict\2026-10-22_2101\papers\PMC12096016\strict\LEG_TRACE.jsonl
   last model attempt at 3109 s
   preprocessor                       attempts   6  empty-length   0  other-empty   0  ~   186 s
@@ -27,4 +31,4 @@ runs_papers/ORCH-759p/legs\sour_taste_v2-strict\2026-10-22_2233\papers\PMC705978
   audit loop                         attempts   3  empty-length   0  other-empty   0  ~   205 s
   gap resolver                       attempts   7  empty-length   0  other-empty   0  ~   145 s
   chat                               attempts   2  empty-length   0  other-empty   0  ~    24 s
-TOTAL model attempts 97, long (>= 1200 s) 1, finish_reason=error 0
+TOTAL model attempts 137, long (>= 1200 s) 1, finish_reason=error 0

@@ -167,10 +167,10 @@ G11 `evidence/g11/ORCH-759p/`, all reports `FINAL SURVIVING COUNT : 0`. Enteroba
 | enterobactin | no PWML (E1) | **PWML**, `review_required`, 5 reactions, 10 interactions, 53 min | `legs/enterobactin-strict/2026-10-22_2101/` |
 | menaquinone | no PWML (species, 16 rows) | no PWML: now **`release_ready`**, 19 reactions, export blocked by the species row (§ 4.7) | `legs/menaquinone-strict/2026-10-22_2154/` |
 | sour taste (*Mus musculus*, `sour_taste_v2`) | `scope_conflict` (organism) | **PWML**, `review_required`, 21 min | `legs/sour_taste_v2-strict/2026-10-22_2233/` |
-| chlorophyll | no PWML (quarantine refusal) | running at the time of writing | `legs/chlorophyll-strict/` |
+| chlorophyll | no PWML (quarantine refusal) | **PWML**, `review_required`, 23 reactions, 31 interactions, 93 min (first chlorophyll PWML in ORCH-755/756/759) | `legs/chlorophyll-strict/2026-10-22_2301/` |
 
 **D-107 proven in a real 3-draw app leg (enterobactin):** rule 3 ran and wrote `ensemble_identity_merge_report.json` (5 → 5
 reactions, nothing to merge) in the Stage-1 run directory `tmp/extraction_diagnostics/run-338be6146e19/`, beside
 `audit_iteration_summary.json` and `gap_iteration_summary.json`; the review pack copied the identity report.
-LLM health over the first three legs: 1 empty-length completion in 96 attempts, 0 provider errors
+LLM health over all four legs: 2 empty-length completions in 137 attempts (Stage 1 1/19, audit 1/12), 0 provider errors, one audit call of ~1,246 s that returned empty at 128k
 (`evidence/orch759p_trace_stats.txt`, `orch759p_leg_stats.txt`).
