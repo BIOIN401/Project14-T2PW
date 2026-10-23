@@ -1,0 +1,134 @@
+legs: 121 | replay errors: {'base': 0, 'tip': 0, 'm1': 0, 'm2_full': 0, 'm1_full': 0}
+legs with a protein the Phase-2 fallback resolved: 5
+legs with none: 116; payload AND report byte-identical in all five runs: 116
+
+== tip vs base: 4 leg(s) change
+  runs_papers/ORCH-759/legs/chlorophyll-strict/2026-10-22_1231/papers/PMC5130987/strict  late=['cpo']  actors in/out base=74/74 tip=74/74
+     base : [['/processes/reactions/6/enzymes', 'CPO1', 'protein_complex'], ['/processes/reactions/6/modifiers', 'CPO1', 'protein_complex'], ['/processes/reactions/22/enzymes', 'CPO', 'protein'], ['/processes/reactions/22/enzymes', 'CPO1', 'protein_complex'], ['/processes/reactions/22/modifiers', 'CPO', 'protein'], ['/processes/reactions/22/modifiers', 'CPO1', 'protein_complex']]
+     tip  : [['/processes/reactions/6/enzymes', 'CPO1', 'protein_complex'], ['/processes/reactions/6/modifiers', 'CPO1', 'protein_complex'], ['/processes/reactions/22/enzymes', 'CPO complex', 'protein_complex'], ['/processes/reactions/22/enzymes', 'CPO1', 'protein_complex'], ['/processes/reactions/22/modifiers', 'CPO complex', 'protein_complex'], ['/processes/reactions/22/modifiers', 'CPO1', 'protein_complex']]
+     base  replay: quarantine ok=True release=review_required core/aux=19/36 broken_ref=28 unmapped=14 | gate=ok | contract=['reaction_enzyme_must_be_protein_complex @ CPO reaction'] | pre_export=['reaction_enzyme_must_be_protein_complex'] | ir=['reaction_enzyme_must_be_protein_complex', 'reaction_enzyme_must_be_protein_complex @ CPO reaction']
+     tip   replay: quarantine ok=True release=review_required core/aux=19/36 broken_ref=28 unmapped=14 | gate=ok | contract=[] | pre_export=ok | ir=[]
+  runs_verify/2026-08-21_2057/papers/PMC12096016/strict  late=['lactate dehydrogenase']  actors in/out base=12/12 tip=12/12
+     base : [['/processes/reactions/5/enzymes', 'lactate dehydrogenase', 'protein'], ['/processes/reactions/5/modifiers', 'lactate dehydrogenase', 'protein']]
+     tip  : [['/processes/reactions/5/enzymes', 'lactate dehydrogenase complex', 'protein_complex'], ['/processes/reactions/5/modifiers', 'lactate dehydrogenase complex', 'protein_complex']]
+     base  replay: quarantine ok=True release=review_required core/aux=11/0 broken_ref=0 unmapped=0 | gate=ok | contract=['reaction_enzyme_must_be_protein_complex @ LDH coupled reaction'] | pre_export=['reaction_enzyme_must_be_protein_complex'] | ir=['reaction_enzyme_must_be_protein_complex', 'reaction_enzyme_must_be_protein_complex @ LDH coupled reaction']
+     tip   replay: quarantine ok=True release=review_required core/aux=11/0 broken_ref=0 unmapped=0 | gate=ok | contract=[] | pre_export=ok | ir=[]
+  runs_verify/2026-09-06_1425/papers/PMC11405693/strict  late=['atcyp73a5']  actors in/out base=12/12 tip=12/12
+     base : [['/processes/reactions/1/enzymes', 'AtCYP73A5', 'protein'], ['/processes/reactions/1/modifiers', 'AtCYP73A5', 'protein'], ['/processes/interactions/0/entity_2', 'AtCYP73A5', 'endpoint']]
+     tip  : [['/processes/reactions/1/enzymes', 'AtCYP73A5 complex', 'protein_complex'], ['/processes/reactions/1/modifiers', 'AtCYP73A5 complex', 'protein_complex'], ['/processes/interactions/0/entity_2', 'AtCYP73A5 complex', 'endpoint']]
+     base  replay: quarantine ok=True release=review_required core/aux=7/0 broken_ref=0 unmapped=0 | gate=ok | contract=['reaction_enzyme_must_be_protein_complex @ C4H hydroxylation'] | pre_export=['reaction_enzyme_must_be_protein_complex'] | ir=['reaction_enzyme_must_be_protein_complex', 'reaction_enzyme_must_be_protein_complex @ C4H hydroxylation']
+     tip   replay: quarantine ok=True release=review_required core/aux=6/1 broken_ref=0 unmapped=0 | gate=ok | contract=[] | pre_export=ok | ir=[]
+  runs_verify/2026-09-06_1425/papers/PMC12376012/strict  late=['ceramide synthase', 'cert']  actors in/out base=21/21 tip=21/21
+     base : [['/processes/reactions/4/enzymes', 'ceramide synthase', 'protein'], ['/processes/reactions/4/modifiers', 'ceramide synthase', 'protein'], ['/processes/transports/0/transporters', 'CERT', 'protein']]
+     tip  : [['/processes/reactions/4/enzymes', 'ceramide synthase complex', 'protein_complex'], ['/processes/reactions/4/modifiers', 'ceramide synthase complex', 'protein_complex'], ['/processes/transports/0/transporters', 'CERT', 'protein']]
+     base  replay: quarantine ok=True release=review_required core/aux=16/0 broken_ref=0 unmapped=0 | gate=ok | contract=['reaction_enzyme_must_be_protein_complex @ ceramide synthase reaction'] | pre_export=['reaction_enzyme_must_be_protein_complex'] | ir=['reaction_enzyme_must_be_protein_complex', 'reaction_enzyme_must_be_protein_complex @ ceramide synthase reaction']
+     tip   replay: quarantine ok=True release=review_required core/aux=16/0 broken_ref=0 unmapped=0 | gate=ok | contract=[] | pre_export=ok | ir=[]
+
+== m1 vs base: 4 leg(s) change
+  runs_papers/ORCH-759/legs/chlorophyll-strict/2026-10-22_1231/papers/PMC5130987/strict  late=['cpo']  actors in/out base=74/74 m1=74/74
+     base : [['/processes/reactions/6/enzymes', 'CPO1', 'protein_complex'], ['/processes/reactions/6/modifiers', 'CPO1', 'protein_complex'], ['/processes/reactions/22/enzymes', 'CPO', 'protein'], ['/processes/reactions/22/enzymes', 'CPO1', 'protein_complex'], ['/processes/reactions/22/modifiers', 'CPO', 'protein'], ['/processes/reactions/22/modifiers', 'CPO1', 'protein_complex']]
+     m1   : [['/processes/reactions/6/enzymes', 'CPO1', 'protein_complex'], ['/processes/reactions/6/modifiers', 'CPO1', 'protein_complex'], ['/processes/reactions/22/enzymes', 'CPO complex', 'protein_complex'], ['/processes/reactions/22/enzymes', 'CPO1', 'protein_complex'], ['/processes/reactions/22/modifiers', 'CPO complex', 'protein_complex'], ['/processes/reactions/22/modifiers', 'CPO1', 'protein_complex']]
+     base  replay: quarantine ok=True release=review_required core/aux=19/36 broken_ref=28 unmapped=14 | gate=ok | contract=['reaction_enzyme_must_be_protein_complex @ CPO reaction'] | pre_export=['reaction_enzyme_must_be_protein_complex'] | ir=['reaction_enzyme_must_be_protein_complex', 'reaction_enzyme_must_be_protein_complex @ CPO reaction']
+     m1    replay: quarantine ok=True release=review_required core/aux=19/36 broken_ref=28 unmapped=14 | gate=ok | contract=[] | pre_export=ok | ir=[]
+  runs_verify/2026-08-21_2057/papers/PMC12096016/strict  late=['lactate dehydrogenase']  actors in/out base=12/12 m1=12/12
+     base : [['/processes/reactions/5/enzymes', 'lactate dehydrogenase', 'protein'], ['/processes/reactions/5/modifiers', 'lactate dehydrogenase', 'protein']]
+     m1   : [['/processes/reactions/5/enzymes', 'lactate dehydrogenase complex', 'protein_complex'], ['/processes/reactions/5/modifiers', 'lactate dehydrogenase complex', 'protein_complex']]
+     base  replay: quarantine ok=True release=review_required core/aux=11/0 broken_ref=0 unmapped=0 | gate=ok | contract=['reaction_enzyme_must_be_protein_complex @ LDH coupled reaction'] | pre_export=['reaction_enzyme_must_be_protein_complex'] | ir=['reaction_enzyme_must_be_protein_complex', 'reaction_enzyme_must_be_protein_complex @ LDH coupled reaction']
+     m1    replay: quarantine ok=True release=review_required core/aux=11/0 broken_ref=0 unmapped=0 | gate=ok | contract=[] | pre_export=ok | ir=[]
+  runs_verify/2026-09-06_1425/papers/PMC11405693/strict  late=['atcyp73a5']  actors in/out base=12/12 m1=12/12
+     base : [['/processes/reactions/1/enzymes', 'AtCYP73A5', 'protein'], ['/processes/reactions/1/modifiers', 'AtCYP73A5', 'protein'], ['/processes/interactions/0/entity_2', 'AtCYP73A5', 'endpoint']]
+     m1   : [['/processes/reactions/1/enzymes', 'AtCYP73A5 complex', 'protein_complex'], ['/processes/reactions/1/modifiers', 'AtCYP73A5 complex', 'protein_complex'], ['/processes/interactions/0/entity_2', 'AtCYP73A5 complex', 'endpoint']]
+     base  replay: quarantine ok=True release=review_required core/aux=7/0 broken_ref=0 unmapped=0 | gate=ok | contract=['reaction_enzyme_must_be_protein_complex @ C4H hydroxylation'] | pre_export=['reaction_enzyme_must_be_protein_complex'] | ir=['reaction_enzyme_must_be_protein_complex', 'reaction_enzyme_must_be_protein_complex @ C4H hydroxylation']
+     m1    replay: quarantine ok=True release=review_required core/aux=6/1 broken_ref=0 unmapped=0 | gate=ok | contract=[] | pre_export=ok | ir=[]
+  runs_verify/2026-09-06_1425/papers/PMC12376012/strict  late=['ceramide synthase', 'cert']  actors in/out base=21/21 m1=21/21
+     base : [['/processes/reactions/4/enzymes', 'ceramide synthase', 'protein'], ['/processes/reactions/4/modifiers', 'ceramide synthase', 'protein'], ['/processes/transports/0/transporters', 'CERT', 'protein']]
+     m1   : [['/processes/reactions/4/enzymes', 'ceramide synthase complex', 'protein_complex'], ['/processes/reactions/4/modifiers', 'ceramide synthase complex', 'protein_complex'], ['/processes/transports/0/transporters', 'CERT', 'protein']]
+     base  replay: quarantine ok=True release=review_required core/aux=16/0 broken_ref=0 unmapped=0 | gate=ok | contract=['reaction_enzyme_must_be_protein_complex @ ceramide synthase reaction'] | pre_export=['reaction_enzyme_must_be_protein_complex'] | ir=['reaction_enzyme_must_be_protein_complex', 'reaction_enzyme_must_be_protein_complex @ ceramide synthase reaction']
+     m1    replay: quarantine ok=True release=review_required core/aux=16/0 broken_ref=0 unmapped=0 | gate=ok | contract=[] | pre_export=ok | ir=[]
+
+== m2_full vs base: 4 leg(s) change
+  runs_papers/ORCH-759/legs/chlorophyll-strict/2026-10-22_1231/papers/PMC5130987/strict  late=['cpo']  actors in/out base=74/74 m2_full=74/72
+     base : [['/processes/reactions/6/enzymes', 'CPO1', 'protein_complex'], ['/processes/reactions/6/modifiers', 'CPO1', 'protein_complex'], ['/processes/reactions/22/enzymes', 'CPO', 'protein'], ['/processes/reactions/22/enzymes', 'CPO1', 'protein_complex'], ['/processes/reactions/22/modifiers', 'CPO', 'protein'], ['/processes/reactions/22/modifiers', 'CPO1', 'protein_complex']]
+     m2_full: [['/processes/reactions/6/enzymes', 'CPO1', 'protein'], ['/processes/reactions/6/modifiers', 'CPO1', 'protein'], ['/processes/reactions/22/enzymes', 'CPO complex', 'protein_complex'], ['/processes/reactions/22/modifiers', 'CPO complex', 'protein_complex']]
+     base  replay: quarantine ok=True release=review_required core/aux=19/36 broken_ref=28 unmapped=14 | gate=ok | contract=['reaction_enzyme_must_be_protein_complex @ CPO reaction'] | pre_export=['reaction_enzyme_must_be_protein_complex'] | ir=['reaction_enzyme_must_be_protein_complex', 'reaction_enzyme_must_be_protein_complex @ CPO reaction']
+     m2_full replay: quarantine ok=True release=review_required core/aux=19/35 broken_ref=29 unmapped=14 | gate=ok | contract=[] | pre_export=ok | ir=[]
+  runs_verify/2026-08-21_2057/papers/PMC12096016/strict  late=['lactate dehydrogenase']  actors in/out base=12/12 m2_full=12/12
+     base : [['/processes/reactions/5/enzymes', 'lactate dehydrogenase', 'protein'], ['/processes/reactions/5/modifiers', 'lactate dehydrogenase', 'protein']]
+     m2_full: [['/processes/reactions/5/enzymes', 'lactate dehydrogenase complex', 'protein_complex'], ['/processes/reactions/5/modifiers', 'lactate dehydrogenase complex', 'protein_complex']]
+     base  replay: quarantine ok=True release=review_required core/aux=11/0 broken_ref=0 unmapped=0 | gate=ok | contract=['reaction_enzyme_must_be_protein_complex @ LDH coupled reaction'] | pre_export=['reaction_enzyme_must_be_protein_complex'] | ir=['reaction_enzyme_must_be_protein_complex', 'reaction_enzyme_must_be_protein_complex @ LDH coupled reaction']
+     m2_full replay: quarantine ok=True release=review_required core/aux=11/0 broken_ref=0 unmapped=0 | gate=ok | contract=[] | pre_export=ok | ir=[]
+  runs_verify/2026-09-06_1425/papers/PMC11405693/strict  late=['atcyp73a5']  actors in/out base=12/12 m2_full=12/12
+     base : [['/processes/reactions/1/enzymes', 'AtCYP73A5', 'protein'], ['/processes/reactions/1/modifiers', 'AtCYP73A5', 'protein'], ['/processes/interactions/0/entity_2', 'AtCYP73A5', 'endpoint']]
+     m2_full: [['/processes/reactions/1/enzymes', 'AtCYP73A5 complex', 'protein_complex'], ['/processes/reactions/1/modifiers', 'AtCYP73A5 complex', 'protein_complex'], ['/processes/interactions/0/entity_2', 'AtCYP73A5 complex', 'endpoint']]
+     base  replay: quarantine ok=True release=review_required core/aux=7/0 broken_ref=0 unmapped=0 | gate=ok | contract=['reaction_enzyme_must_be_protein_complex @ C4H hydroxylation'] | pre_export=['reaction_enzyme_must_be_protein_complex'] | ir=['reaction_enzyme_must_be_protein_complex', 'reaction_enzyme_must_be_protein_complex @ C4H hydroxylation']
+     m2_full replay: quarantine ok=True release=review_required core/aux=6/1 broken_ref=0 unmapped=0 | gate=ok | contract=[] | pre_export=ok | ir=[]
+  runs_verify/2026-09-06_1425/papers/PMC12376012/strict  late=['ceramide synthase', 'cert']  actors in/out base=21/21 m2_full=21/21
+     base : [['/processes/reactions/4/enzymes', 'ceramide synthase', 'protein'], ['/processes/reactions/4/modifiers', 'ceramide synthase', 'protein'], ['/processes/transports/0/transporters', 'CERT', 'protein']]
+     m2_full: [['/processes/reactions/4/enzymes', 'ceramide synthase complex', 'protein_complex'], ['/processes/reactions/4/modifiers', 'ceramide synthase complex', 'protein_complex'], ['/processes/transports/0/transporters', 'CERT', 'protein']]
+     base  replay: quarantine ok=True release=review_required core/aux=16/0 broken_ref=0 unmapped=0 | gate=ok | contract=['reaction_enzyme_must_be_protein_complex @ ceramide synthase reaction'] | pre_export=['reaction_enzyme_must_be_protein_complex'] | ir=['reaction_enzyme_must_be_protein_complex', 'reaction_enzyme_must_be_protein_complex @ ceramide synthase reaction']
+     m2_full replay: quarantine ok=True release=review_required core/aux=16/0 broken_ref=0 unmapped=0 | gate=ok | contract=[] | pre_export=ok | ir=[]
+
+== m1_full vs base: 4 leg(s) change
+  runs_papers/ORCH-759/legs/chlorophyll-strict/2026-10-22_1231/papers/PMC5130987/strict  late=['cpo']  actors in/out base=74/74 m1_full=74/74
+     base : [['/processes/reactions/6/enzymes', 'CPO1', 'protein_complex'], ['/processes/reactions/6/modifiers', 'CPO1', 'protein_complex'], ['/processes/reactions/22/enzymes', 'CPO', 'protein'], ['/processes/reactions/22/enzymes', 'CPO1', 'protein_complex'], ['/processes/reactions/22/modifiers', 'CPO', 'protein'], ['/processes/reactions/22/modifiers', 'CPO1', 'protein_complex']]
+     m1_full: [['/processes/reactions/6/enzymes', 'CPO1', 'protein_complex'], ['/processes/reactions/6/modifiers', 'CPO1', 'protein_complex'], ['/processes/reactions/22/enzymes', 'CPO complex', 'protein_complex'], ['/processes/reactions/22/enzymes', 'CPO1', 'protein_complex'], ['/processes/reactions/22/modifiers', 'CPO complex', 'protein_complex'], ['/processes/reactions/22/modifiers', 'CPO1', 'protein_complex']]
+     base  replay: quarantine ok=True release=review_required core/aux=19/36 broken_ref=28 unmapped=14 | gate=ok | contract=['reaction_enzyme_must_be_protein_complex @ CPO reaction'] | pre_export=['reaction_enzyme_must_be_protein_complex'] | ir=['reaction_enzyme_must_be_protein_complex', 'reaction_enzyme_must_be_protein_complex @ CPO reaction']
+     m1_full replay: quarantine ok=True release=review_required core/aux=19/36 broken_ref=28 unmapped=14 | gate=ok | contract=[] | pre_export=ok | ir=[]
+  runs_verify/2026-08-21_2057/papers/PMC12096016/strict  late=['lactate dehydrogenase']  actors in/out base=12/12 m1_full=12/12
+     base : [['/processes/reactions/5/enzymes', 'lactate dehydrogenase', 'protein'], ['/processes/reactions/5/modifiers', 'lactate dehydrogenase', 'protein']]
+     m1_full: [['/processes/reactions/5/enzymes', 'lactate dehydrogenase complex', 'protein_complex'], ['/processes/reactions/5/modifiers', 'lactate dehydrogenase complex', 'protein_complex']]
+     base  replay: quarantine ok=True release=review_required core/aux=11/0 broken_ref=0 unmapped=0 | gate=ok | contract=['reaction_enzyme_must_be_protein_complex @ LDH coupled reaction'] | pre_export=['reaction_enzyme_must_be_protein_complex'] | ir=['reaction_enzyme_must_be_protein_complex', 'reaction_enzyme_must_be_protein_complex @ LDH coupled reaction']
+     m1_full replay: quarantine ok=True release=review_required core/aux=11/0 broken_ref=0 unmapped=0 | gate=ok | contract=[] | pre_export=ok | ir=[]
+  runs_verify/2026-09-06_1425/papers/PMC11405693/strict  late=['atcyp73a5']  actors in/out base=12/12 m1_full=12/12
+     base : [['/processes/reactions/1/enzymes', 'AtCYP73A5', 'protein'], ['/processes/reactions/1/modifiers', 'AtCYP73A5', 'protein'], ['/processes/interactions/0/entity_2', 'AtCYP73A5', 'endpoint']]
+     m1_full: [['/processes/reactions/1/enzymes', 'AtCYP73A5 complex', 'protein_complex'], ['/processes/reactions/1/modifiers', 'AtCYP73A5 complex', 'protein_complex'], ['/processes/interactions/0/entity_2', 'AtCYP73A5 complex', 'endpoint']]
+     base  replay: quarantine ok=True release=review_required core/aux=7/0 broken_ref=0 unmapped=0 | gate=ok | contract=['reaction_enzyme_must_be_protein_complex @ C4H hydroxylation'] | pre_export=['reaction_enzyme_must_be_protein_complex'] | ir=['reaction_enzyme_must_be_protein_complex', 'reaction_enzyme_must_be_protein_complex @ C4H hydroxylation']
+     m1_full replay: quarantine ok=True release=review_required core/aux=6/1 broken_ref=0 unmapped=0 | gate=ok | contract=[] | pre_export=ok | ir=[]
+  runs_verify/2026-09-06_1425/papers/PMC12376012/strict  late=['ceramide synthase', 'cert']  actors in/out base=21/21 m1_full=21/21
+     base : [['/processes/reactions/4/enzymes', 'ceramide synthase', 'protein'], ['/processes/reactions/4/modifiers', 'ceramide synthase', 'protein'], ['/processes/transports/0/transporters', 'CERT', 'protein']]
+     m1_full: [['/processes/reactions/4/enzymes', 'ceramide synthase complex', 'protein_complex'], ['/processes/reactions/4/modifiers', 'ceramide synthase complex', 'protein_complex'], ['/processes/transports/0/transporters', 'CERT', 'protein']]
+     base  replay: quarantine ok=True release=review_required core/aux=16/0 broken_ref=0 unmapped=0 | gate=ok | contract=['reaction_enzyme_must_be_protein_complex @ ceramide synthase reaction'] | pre_export=['reaction_enzyme_must_be_protein_complex'] | ir=['reaction_enzyme_must_be_protein_complex', 'reaction_enzyme_must_be_protein_complex @ ceramide synthase reaction']
+     m1_full replay: quarantine ok=True release=review_required core/aux=16/0 broken_ref=0 unmapped=0 | gate=ok | contract=[] | pre_export=ok | ir=[]
+
+== live artifact vs base replay (does the replay reproduce the leg?)
+  runs_papers/ORCH-759/legs/chlorophyll-strict/2026-10-22_1231/papers/PMC5130987/strict
+     live       : quarantine ok=True release=review_required core/aux=19/36 broken_ref=28 unmapped=14 | gate=ok | contract=['reaction_enzyme_must_be_protein_complex @ CPO reaction'] | pre_export=['reaction_enzyme_must_be_protein_complex'] | ir=['reaction_enzyme_must_be_protein_complex', 'reaction_enzyme_must_be_protein_complex @ CPO reaction']
+     base replay: quarantine ok=True release=review_required core/aux=19/36 broken_ref=28 unmapped=14 | gate=ok | contract=['reaction_enzyme_must_be_protein_complex @ CPO reaction'] | pre_export=['reaction_enzyme_must_be_protein_complex'] | ir=['reaction_enzyme_must_be_protein_complex', 'reaction_enzyme_must_be_protein_complex @ CPO reaction']
+  runs_verify/2026-08-21_2057/papers/PMC12096016/strict
+     live       : quarantine ok=True release=review_required core/aux=11/0 broken_ref=0 unmapped=0 | gate=ok | contract=['reaction_enzyme_must_be_protein_complex @ LDH coupled reaction'] | pre_export=['reaction_enzyme_must_be_protein_complex'] | ir=['reaction_enzyme_must_be_protein_complex', 'reaction_enzyme_must_be_protein_complex @ LDH coupled reaction']
+     base replay: quarantine ok=True release=review_required core/aux=11/0 broken_ref=0 unmapped=0 | gate=ok | contract=['reaction_enzyme_must_be_protein_complex @ LDH coupled reaction'] | pre_export=['reaction_enzyme_must_be_protein_complex'] | ir=['reaction_enzyme_must_be_protein_complex', 'reaction_enzyme_must_be_protein_complex @ LDH coupled reaction']
+  runs_verify/2026-09-01_1612/papers/PMC12096016/strict
+     live       : quarantine ok=True release=review_required core/aux=9/0 broken_ref=0 unmapped=0 | gate=ok | contract=[] | pre_export=ok | ir=[]
+     base replay: quarantine ok=True release=review_required core/aux=9/0 broken_ref=0 unmapped=0 | gate=ok | contract=[] | pre_export=ok | ir=[]
+  runs_verify/2026-09-06_1425/papers/PMC11405693/strict
+     live       : quarantine ok=True release=review_required core/aux=7/0 broken_ref=0 unmapped=0 | gate=ok | contract=['reaction_enzyme_must_be_protein_complex @ C4H hydroxylation'] | pre_export=['reaction_enzyme_must_be_protein_complex'] | ir=['reaction_enzyme_must_be_protein_complex', 'reaction_enzyme_must_be_protein_complex @ C4H hydroxylation']
+     base replay: quarantine ok=True release=review_required core/aux=7/0 broken_ref=0 unmapped=0 | gate=ok | contract=['reaction_enzyme_must_be_protein_complex @ C4H hydroxylation'] | pre_export=['reaction_enzyme_must_be_protein_complex'] | ir=['reaction_enzyme_must_be_protein_complex', 'reaction_enzyme_must_be_protein_complex @ C4H hydroxylation']
+  runs_verify/2026-09-06_1425/papers/PMC12376012/strict
+     live       : quarantine ok=True release=review_required core/aux=16/0 broken_ref=0 unmapped=0 | gate=ok | contract=['reaction_enzyme_must_be_protein_complex @ ceramide synthase reaction'] | pre_export=['reaction_enzyme_must_be_protein_complex'] | ir=['reaction_enzyme_must_be_protein_complex', 'reaction_enzyme_must_be_protein_complex @ ceramide synthase reaction']
+     base replay: quarantine ok=True release=review_required core/aux=16/0 broken_ref=0 unmapped=0 | gate=ok | contract=['reaction_enzyme_must_be_protein_complex @ ceramide synthase reaction'] | pre_export=['reaction_enzyme_must_be_protein_complex'] | ir=['reaction_enzyme_must_be_protein_complex', 'reaction_enzyme_must_be_protein_complex @ ceramide synthase reaction']
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759e\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ ced62cf4ab129d94262ef6df05053b759d4c5e17  [git, worktree dirty=False]
+label                   : census-compare
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/orch759e/census_compare.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759e
+root PID / process group: 495552 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 200 s
+duration                : 0.30 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  463352:python.exe
+descendants terminated  : 1  463352
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759e\docs\pwml_recovery_sprint\evidence\g11\ORCH-759e\08-census-compare.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================

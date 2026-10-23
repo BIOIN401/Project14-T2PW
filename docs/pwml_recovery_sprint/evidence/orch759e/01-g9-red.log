@@ -1,0 +1,110 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759e\src\t2pw\__init__.py
+FFF.....                                                                 [100%]
+================================== FAILURES ===================================
+_______ test_g9_an_enzyme_resolved_by_the_phase2_fallback_ships_wrapped _______
+
+tmp_path = WindowsPath('C:/t/bt-orch759e/01-g9-red-31411/test_g9_an_enzyme_resolved_by_0')
+
+    def test_g9_an_enzyme_resolved_by_the_phase2_fallback_ships_wrapped(tmp_path: Path) -> None:
+        """The shape of PMC12096016 (lactate dehydrogenase) and PMC11405693 (AtCYP73A5): one
+        enzyme, no identity in the main loop, an accession from the Phase-2 fallback."""
+    
+        name = "lactate dehydrogenase"
+        result = _run(_payload([name], [name]), tmp_path, main={}, phase2={name: _mapped(name, "P52643")})
+        payload = result["payload"]
+    
+        protein = next(r for r in payload["entities"]["proteins"] if r["name"] == name)
+        assert protein["mapped_ids"]["uniprot"] == "P52643"
+        assert protein["mapping_meta"]["chosen_rule"] == "api_uniprot_fallback"
+        # Base: [("lactate dehydrogenase", "protein")] -- the bare enzyme the importer refuses.
+>       assert _actors(payload) == [("lactate dehydrogenase complex", "protein_complex")]
+E       AssertionError: assert [('lactate de...', 'protein')] == [('lactate de...ein_complex')]
+E         
+E         At index 0 diff: ('lactate dehydrogenase', 'protein') != ('lactate dehydrogenase complex', 'protein_complex')
+E         Use -v to get more diff
+
+tests\test_orch759e_rewrap_after_phase2.py:206: AssertionError
+_______ test_g9_the_cpo_shape_wraps_cpo_and_keeps_the_cpo1_placeholder ________
+
+tmp_path = WindowsPath('C:/t/bt-orch759e/01-g9-red-31411/test_g9_the_cpo_shape_wraps_cp0')
+
+    def test_g9_the_cpo_shape_wraps_cpo_and_keeps_the_cpo1_placeholder(tmp_path: Path) -> None:
+        """The ORCH-759 chlorophyll leg: ``CPO reaction`` names CPO and CPO1 as enzymes and as
+        catalyst modifiers. The main loop leaves both without an identity, the Phase-2 fallback
+        finds Q9LR75 for CPO only, and CPO1 takes the Unknown fallback as before."""
+    
+        result = _run(
+            _payload(["CPO", "CPO1"], ["CPO", "CPO1"], mirror_modifiers=True),
+            tmp_path,
+            main={},
+            phase2={"CPO": _mapped("CPO", "Q9LR75", CPO_CANDIDATE)},
+        )
+        payload = result["payload"]
+    
+        # Base: [("CPO", "protein"), ("CPO1", "protein_complex")] in both lists.
+        expected = [("CPO complex", "protein_complex"), ("CPO1", "protein_complex")]
+>       assert _actors(payload, "enzymes") == expected
+E       AssertionError: assert [('CPO', 'pro...ein_complex')] == [('CPO comple...ein_complex')]
+E         
+E         At index 0 diff: ('CPO', 'protein') != ('CPO complex', 'protein_complex')
+E         Use -v to get more diff
+
+tests\test_orch759e_rewrap_after_phase2.py:233: AssertionError
+_ test_g9_an_interaction_endpoint_resolved_by_the_phase2_fallback_is_exported _
+
+tmp_path = WindowsPath('C:/t/bt-orch759e/01-g9-red-31411/test_g9_an_interaction_endpoin0')
+
+    def test_g9_an_interaction_endpoint_resolved_by_the_phase2_fallback_is_exported(tmp_path: Path) -> None:
+        """D-104 § 4 for interactions: both endpoints of a signed row must be wrappable, so a
+        Phase-2-resolved endpoint used to leave the whole row bare and the IR withheld it."""
+    
+        interaction = {"name": "SFXN4 inhibits ALAS2", "entity_1": "SFXN4", "relationship": "inhibits",
+                       "entity_2": "ALAS2", "biological_state": "chloroplast", "evidence": "quote"}
+        result = _run(
+            _payload(["SFXN4", "ALAS2"], [], interactions=[interaction]),
+            tmp_path,
+            main={"ALAS2": _mapped("ALAS2", "P22557")},
+            phase2={"SFXN4": _mapped("SFXN4", "Q6P4A7")},
+        )
+        payload = result["payload"]
+        row = payload["processes"]["interactions"][0]
+    
+        # Base: ("SFXN4", "ALAS2") and the IR withholds the row as ``bare_protein_endpoint``.
+>       assert (row["entity_1"], row["entity_2"]) == ("SFXN4 complex", "ALAS2 complex")
+E       AssertionError: assert ('SFXN4', 'ALAS2') == ('SFXN4 compl...LAS2 complex')
+E         
+E         At index 0 diff: 'SFXN4' != 'SFXN4 complex'
+E         Use -v to get more diff
+
+tests\test_orch759e_rewrap_after_phase2.py:259: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_orch759e_rewrap_after_phase2.py::test_g9_an_enzyme_resolved_by_the_phase2_fallback_ships_wrapped
+FAILED tests/test_orch759e_rewrap_after_phase2.py::test_g9_the_cpo_shape_wraps_cpo_and_keeps_the_cpo1_placeholder
+FAILED tests/test_orch759e_rewrap_after_phase2.py::test_g9_an_interaction_endpoint_resolved_by_the_phase2_fallback_is_exported
+3 failed, 5 passed in 0.33s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759e\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f1f70087a968080d918e3a9f6d13195d5553c5a6  [git, worktree dirty=False]
+label                   : g9-red
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-759e/01-g9-red.pin.json -q --basetemp=C:/t/bt-orch759e/01-g9-red-31411 tests/test_orch759e_rewrap_after_phase2.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759e
+root PID / process group: 493732 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 1.01 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  493744:python.exe
+descendants terminated  : 1  493744
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759e\docs\pwml_recovery_sprint\evidence\g11\ORCH-759e\01-g9-red.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================
