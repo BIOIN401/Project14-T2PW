@@ -1,0 +1,38 @@
+== cpo_shape
+  report key paths only at tip : ['/entities/[]/gap_issues']
+  report key paths only at base: []
+  LLM-view records: base 10, tip 11, identical 9
+  changed record, fields: {'complexes_skipped': (0, 1), 'entities_unmapped': (4, 5), 'generated_wrappers_created': (1, 2), 'protein_complexes_skipped': (0, 1), 'protein_complexes_total': (1, 2)}
+  record only at tip: {'entity_type': 'protein_complex', 'name': 'CPO complex', 'status': 'unmapped', 'reason': 'complex_db_mapping_disabled'}
+== late_enzyme
+  report key paths only at tip : ['/entities/[]/gap_issues']
+  report key paths only at base: []
+  LLM-view records: base 5, tip 6, identical 4
+  changed record, fields: {'complexes_skipped': (0, 1), 'entities_unmapped': (3, 4), 'generated_wrappers_created': (0, 1), 'protein_complexes_skipped': (0, 1), 'protein_complexes_total': (0, 1)}
+  record only at tip: {'entity_type': 'protein_complex', 'name': 'lactate dehydrogenase complex', 'status': 'unmapped', 'reason': 'complex_db_mapping_disabled'}
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759e\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ ced62cf4ab129d94262ef6df05053b759d4c5e17  [git, worktree dirty=False]
+label                   : llm-view-diff
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/orch759e/llm_view_diff.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759e
+root PID / process group: 578728 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 200 s
+duration                : 0.35 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  578808:python.exe
+descendants terminated  : 1  578808
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759e\docs\pwml_recovery_sprint\evidence\g11\ORCH-759e\24-llm-view-diff.json
+json report written     : True
+pre-existing (reported, NEVER killed): 6
+================================================
