@@ -1096,3 +1096,53 @@ Recorded by the sub-orchestrator. Merged tip `6b7766ec` (merges `23753144` 757, 
 
 **SMOKE stays 508. Merge rule 10 unchanged.** The four primary-only known failures of § ORCH-754 were not
 exercised (clean worktree).
+
+## ORCH-759a/b/c/d, ORCH-762, ORCH-763, ORCH-764: test obligations — appended end-of-file by rule · 2026-10-22
+
+Recorded by the ORCH-756-759 sub-orchestrator from the lanes' RESULT docs and the merged-tip integration runs
+(`evidence/g11/ORCH-759i/`, logs `evidence/orch759i/`). Each lane's own "TEST_MATRIX delta" section (in its RESULT)
+holds the full wording; this is the merged summary. **SMOKE is unchanged at 508** on every merged tip
+(`ORCH-759i/34`, `78`, `116`). Merge rule 10 is unchanged.
+
+### New focused selections (collected test counts at merge)
+
+| lane | file | tests | notes |
+|---|---|---|---|
+| `759a` fold duplicate protein (E1 / FX7) | `tests/test_orch759a_duplicate_protein_fold.py` | 37 | run for any change to `map_payload`'s Stage-6 tail, `_fold_unreferenced_duplicate_proteins`, `PROMPT_OMITTED_PAYLOAD_KEYS` |
+| `759a` | `tests/test_orch759a_fold_app_path.py` | 2 | **AppTest: run ALONE**; it hangs a batched run (ORCH-762 `11`) |
+| `759b` recorder re-attach (D-107) | `tests/test_orch759b_recorder_reattach.py` | 7 | **AppTest: run ALONE**; includes the 15-request LLM-input golden |
+| `759c` quarantine bucket closure | `tests/test_orch759c_quarantine_bucket_closure.py` (+ gz fixture of the chlorophyll leg) | 11 | with the strict-quarantine suites and Chunk E |
+| `759d` app interaction timeout | `tests/test_orch759d_app_timeout.py` | 4 | with `tests/test_batch_driver.py` |
+| `762` protein identity FX1-FX6 (D-108) | `tests/test_orch762_protein_identity.py`, `tests/orch762_harness.py`, `tests/fixtures/orch762/` (111 recorded UniProt answers) | 36 | no network at test time; run for any change to UniProt/PathBank lookup, species scope, `reaction_evidence.py` |
+| `763` nested locations (D-109 a) | `tests/test_orch763_nested_locations.py`, `tests/fixtures/orch763/` | 23 | with the ensemble, paper-dictionary and name-key files |
+| `764` class terms never narrowed (D-109 b) | `tests/test_orch764_class_term_not_narrowed.py`, `tests/fixtures/orch764/` | 16 | with `tests/test_prefreeze_third_export_seam.py` (alone) |
+
+### Never batch these AppTest files: two more
+
+Add `tests/test_orch759a_fold_app_path.py` and `tests/test_orch759b_recorder_reattach.py` to the AppTest-heavy files
+that must each run alone in their own process (ORCH-754 list).
+
+### Pins moved deliberately (merge rule 4)
+
+- `759c`: two existing strict-quarantine tests built their overlap with exactly the defect (a compound kept alive only
+  by a component's name); each now gives that compound `"synonyms": ["glycine"]` so it survives by a real reference.
+  Assertions byte-identical; pass on base `src/` and at tip (`ORCH-759c/08`, `09`; reviewer `27`, base `03`). The
+  `_closure_keep_norms` helper in `tests/test_strict_quarantine.py` now builds the per-bucket keep set.
+- `759c` N2: three labelled `test_delta_n2_*` tests pin processes closure now newly quarantines as
+  `stranded_by_closure` (only ever more quarantine; base wrote no PWML in any of the three shapes).
+- `759d`: `DEFAULT_APP_TIMEOUT` deleted from `t2pw.batch.driver` (nothing imported it); `app_timeout` defaults to the
+  leg timeout.
+- No other pin moved.
+
+### Known failures added (pre-existing, not caused by these lanes)
+
+| node | why | evidence |
+|---|---|---|
+| `test_paper_eligibility_corrections.py::test_the_2122_…` | worktree only: reads a cache a worktree does not have; fails identically on base `src/` | `ORCH-762/17`, `ORCH-759d/04` |
+| `test_measurement_tree_pin.py::test_missing_or_wrong_pythonpath_is_refused_before_collection` | worktree only | `ORCH-758b/10` |
+| `test_batch_preflight.py::test_the_message_names_the_problem_the_interpreter_and_the_cure` | worktree only (no `.venv`) | `ORCH-757/22`, `ORCH-759i/37` |
+
+### Collection-order hazards
+
+`tests/test_prefreeze_third_export_seam.py` fails when batched after a file that stubs `streamlit`; it passes alone
+(ORCH-764 reviewer `47`). Run it alone or first.
