@@ -7304,3 +7304,20 @@ owner's standing instruction to record the decisions made.
    menaquinone). It is still the paper's own dictionary: the pair must be written in the paper and SHORT must recur. Every such bridge
    is flagged for review. The ambiguity rule (one short form, two long forms → no bridge) and exact-case matching (ORCH-754a B1) still
    apply.
+
+---
+
+## D-110 AMENDMENT 1 — a parenthetical abbreviation bridges only when a draw wrote it and the paper contains it verbatim · 2026-10-22 · LOCKED
+
+**Decided by the product owner** (2026-10-22, in session, on the `ORCH-765` round-0 review, REJECTED). D-110 § 3 as written ("trust the
+paper's parentheses") also bridged non-definitions: citations (`worldwide (WHO, 2016)`), member lists (`flavins (FMN, FAD)`, which
+turned riboflavin→FMN into riboflavin→flavins in a pooled payload), figure panels (`(A-B)`), 2-letter short forms, and truncations
+(`receptor tyrosine kinase (KIT)`). Recorded by the Lead Orchestrator at the product owner's standing instruction to record the
+decisions made.
+
+1. **Replaces D-110 § 3's rule.** A `long form (SHORT)` pair whose letters do not line up bridges ONLY when a Stage-1 draw itself wrote
+   that pair AND the paper contains that exact text. It stays flagged (`parenthetical_definition_bridge`).
+2. **Backstop:** a parenthetical carrying a year, a number, a citation shape or a figure-panel shape never bridges, even if a draw
+   wrote it.
+3. Chosen over lexical patching of the broad rule, which red-team review historically does not converge on (ORCH-746), and over
+   dropping the fix. Accepted cost: a pair that no draw writes out stays unbridged.
