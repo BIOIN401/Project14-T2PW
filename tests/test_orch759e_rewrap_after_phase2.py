@@ -334,3 +334,117 @@ def test_preservation_the_drop_rule_still_runs_before_phase2(tmp_path: Path) -> 
     assert [r["name"] for r in both["payload"]["entities"]["proteins"]] == ["HEMA1"]
     assert _reaction(both["payload"])["enzymes"] == _reaction(alone["payload"])["enzymes"]
     assert _complex(both["payload"], "HEMA1 complex") == _complex(alone["payload"], "HEMA1 complex")
+
+
+# ── REPAIR ROUND 1 (review round 0): with a PathBank database ─────────────────────────────
+#
+# G9 against the round-0 tip ``ced62cf4`` (and the base ``366b9395``, where nothing is wrapped
+# at all): a late wrapper must be what the main-loop path builds when a PathBank complex is in
+# play. The stub database knows one two-protein complex, LDH holoenzyme = {LDHA, LDHB}, and
+# answers every other enzyme with the database's own novel single-protein wrapper.
+
+
+class _StubPathBank:
+    """A ``PathBankDbResolver`` stand-in: ``map_enzyme_protein_to_complex`` only."""
+
+    last_error = ""
+
+    @classmethod
+    def from_env(cls, *args: Any, **kwargs: Any) -> "_StubPathBank":
+        return cls()
+
+    def available(self) -> bool:
+        return True
+
+    def close(self) -> None:
+        return None
+
+    def map_enzyme_protein_to_complex(self, row: Dict[str, Any], species: str) -> Dict[str, Any]:
+        name = row.get("name")
+        if name == "LDHA":
+            return {"status": "mapped", "provider": "PathBankDB", "source": "db", "confidence": 0.9,
+                    "chosen_rule": "enzyme_component_species", "name": "LDH holoenzyme", "pathbank_complex_id": 777,
+                    "species_id": 4, "candidates": [],
+                    "components": [{"name": "LDHA", "mapped_ids": {"uniprot": "P00338"}, "stoichiometry": 1},
+                                   {"name": "LDHB", "mapped_ids": {"uniprot": "P07195"}, "stoichiometry": 1}],
+                    "resolution": {"status": "matched", "order_step": "enzyme_component_species"}}
+        return {"status": "unmapped", "reason": "novel_complex", "provider": "PathBankDB", "source": "db",
+                "confidence": 0.0, "chosen_rule": "novel_enzyme_single_component_complex", "candidates": [],
+                "name": f"{name} complex", "generated": True, "generation_reason": "single_protein_pathwhiz_wrapper",
+                "species_id": 4, "issues": [],
+                "components": [{"name": name, "mapped_ids": dict(row.get("mapped_ids") or {}), "stoichiometry": 1}],
+                "resolution": {"status": "novel", "issue": "no_db_candidates",
+                               "order_step": "novel_enzyme_single_component_complex"}}
+
+
+def _run_with_pathbank(tmp_path: Path, *, main: Dict[str, Dict[str, Any]],
+                       phase2: Dict[str, Dict[str, Any]]) -> Dict[str, Any]:
+    """Stage 6 on ``enzymes [LDHA], modifiers [LDHB]`` with the stub PathBank database."""
+
+    payload = _payload(["LDHA", "LDHB"], ["LDHA"])
+    _reaction(payload)["modifiers"] = [_actor("LDHB")]
+    unmatched_complex = {"status": "unmapped", "reason": "no_match", "provider": "PathBankDB", "source": "db",
+                         "confidence": 0.0, "candidates": [], "resolution": {"status": "novel", "issue": "no_match"}}
+
+    def main_loop(**kwargs: Any) -> Dict[str, Any]:
+        return deepcopy(main.get(kwargs["name"], _unmapped()))
+
+    def fallback(_client: Any, name: str, _organism: str, **_kwargs: Any) -> Dict[str, Any]:
+        return deepcopy(phase2.get(name, _unmapped()))
+
+    _NoNetwork.calls = []
+    with (
+        patch.object(map_ids, "HttpClient", _NoNetwork),
+        patch.object(map_ids, "PathBankDbResolver", _StubPathBank),
+        patch.object(map_ids, "hydrate_species_references", return_value={"hydrated": 0, "matched": 0, "novel": 0}),
+        patch.object(map_ids, "_map_protein_with_strategy", side_effect=main_loop),
+        patch.object(map_ids, "map_protein_uniprot", side_effect=fallback),
+        patch.object(map_ids, "_map_compound_with_strategy", return_value=_unmapped()),
+        patch.object(map_ids, "_map_complex_with_strategy", return_value=unmatched_complex),
+    ):
+        result = map_ids.map_payload(
+            payload, cache_path=tmp_path / "mapping-cache.json", id_source="hybrid", use_cache=False,
+            allow_complex_wrapper_creation=True, allow_structural_cleanup=True, merge_identity_duplicates=True,
+        )
+    assert _NoNetwork.calls == [], _NoNetwork.calls
+    return result["payload"]
+
+
+def _structure(payload: Dict[str, Any]) -> Dict[str, Any]:
+    """What a wrapper decision is visible in: the actor lists, every complex row, which proteins
+    remain, and what was quarantined. The late protein's own mapping_meta differs by design."""
+
+    return {
+        "reactions": payload["processes"]["reactions"],
+        "protein_complexes": payload["entities"]["protein_complexes"],
+        "proteins": [r["name"] for r in payload["entities"]["proteins"]],
+        "quarantined_proteins": payload.get("quarantined_proteins") or [],
+    }
+
+
+def test_g9_r1_a_late_enzyme_takes_the_pathbank_complex_the_main_loop_takes(tmp_path: Path) -> None:
+    """Mechanism A. LDHB is resolved in the main loop and wrapped first (``LDHB complex``). The
+    late pass then judged LDHA's PathBank complex against the reaction AS REWRITTEN, where LDHB
+    reads ``LDHB complex``, so F-116 refused {LDHA, LDHB} and built ``LDHA complex``. The main
+    loop judges it against the reaction as written and takes ``LDH holoenzyme``."""
+
+    ldhb = {"LDHB": _mapped("LDHB", "P07195")}
+    late = _run_with_pathbank(tmp_path, main=ldhb, phase2={"LDHA": _mapped("LDHA", "P00338")})
+    main = _run_with_pathbank(tmp_path, main={**ldhb, "LDHA": _mapped("LDHA", "P00338")}, phase2={})
+
+    # Round-0 tip: [("LDHA complex", "protein_complex")].
+    assert _actors(late) == [("LDH holoenzyme", "protein_complex")]
+    assert _structure(late) == _structure(main)
+
+
+def test_g9_r1_a_late_pathbank_complex_is_pruned_like_a_main_loop_one(tmp_path: Path) -> None:
+    """Mechanism B. LDHB is never resolved. The main loop's ``LDH holoenzyme`` goes through
+    structural-cleanup Phase 1, which drops the unresolved LDHB component and quarantines the
+    LDHB row; a complex the late pass built after Phase 1 kept both."""
+
+    late = _run_with_pathbank(tmp_path, main={}, phase2={"LDHA": _mapped("LDHA", "P00338")})
+    main = _run_with_pathbank(tmp_path, main={"LDHA": _mapped("LDHA", "P00338")}, phase2={})
+
+    # Round-0 tip: components ["LDHA", "LDHB"], LDHB still a protein row, nothing quarantined.
+    assert [c["name"] for c in _complex(late, "LDH holoenzyme")["components"]] == ["LDHA"]
+    assert _structure(late) == _structure(main)
