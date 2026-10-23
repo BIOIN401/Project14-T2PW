@@ -8,7 +8,8 @@ import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-VARIANTS = ["base", "tip", "m1", "m2_full", "m1_full"]
+#: ``census-<name>.jsonl`` files, base first; argv overrides (repair round 1: ``base tip r1_tip``).
+VARIANTS = sys.argv[1:] or ["base", "tip", "m1", "m2_full", "m1_full"]
 
 
 def load(name):
@@ -37,7 +38,10 @@ def main():
     quiet = [leg for leg in legs if leg not in late]
     same = [leg for leg in quiet if len({runs[v][leg]["payload_digest"] for v in VARIANTS}) == 1
             and len({runs[v][leg]["report_digest"] for v in VARIANTS}) == 1]
-    print(f"legs with none: {len(quiet)}; payload AND report byte-identical in all five runs: {len(same)}")
+    print(f"legs with none: {len(quiet)}; payload AND report byte-identical in all {len(VARIANTS)} runs: {len(same)}")
+    for v in VARIANTS[2:]:
+        same_prev = sum(runs[v][leg]["payload_digest"] == runs[VARIANTS[1]][leg]["payload_digest"] for leg in legs)
+        print(f"{v} payload byte-identical to {VARIANTS[1]} on {same_prev}/{len(legs)} legs")
     for leg in quiet:
         if leg not in same:
             print("   DIFFERS:", leg, {v: runs[v][leg]["payload_digest"] for v in VARIANTS})

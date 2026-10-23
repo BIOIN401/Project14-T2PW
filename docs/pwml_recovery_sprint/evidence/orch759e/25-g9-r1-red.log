@@ -1,0 +1,75 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759e\src\t2pw\__init__.py
+........FF                                                               [100%]
+================================== FAILURES ===================================
+___ test_g9_r1_a_late_enzyme_takes_the_pathbank_complex_the_main_loop_takes ___
+
+tmp_path = WindowsPath('C:/t/bt-orch759e/25-g9-r1-red-12311/test_g9_r1_a_late_enzyme_takes0')
+
+    def test_g9_r1_a_late_enzyme_takes_the_pathbank_complex_the_main_loop_takes(tmp_path: Path) -> None:
+        """Mechanism A. LDHB is resolved in the main loop and wrapped first (``LDHB complex``). The
+        late pass then judged LDHA's PathBank complex against the reaction AS REWRITTEN, where LDHB
+        reads ``LDHB complex``, so F-116 refused {LDHA, LDHB} and built ``LDHA complex``. The main
+        loop judges it against the reaction as written and takes ``LDH holoenzyme``."""
+    
+        ldhb = {"LDHB": _mapped("LDHB", "P07195")}
+        late = _run_with_pathbank(tmp_path, main=ldhb, phase2={"LDHA": _mapped("LDHA", "P00338")})
+        main = _run_with_pathbank(tmp_path, main={**ldhb, "LDHA": _mapped("LDHA", "P00338")}, phase2={})
+    
+        # Round-0 tip: [("LDHA complex", "protein_complex")].
+>       assert _actors(late) == [("LDH holoenzyme", "protein_complex")]
+E       AssertionError: assert [('LDHA compl...ein_complex')] == [('LDH holoen...ein_complex')]
+E         
+E         At index 0 diff: ('LDHA complex', 'protein_complex') != ('LDH holoenzyme', 'protein_complex')
+E         Use -v to get more diff
+
+tests\test_orch759e_rewrap_after_phase2.py:436: AssertionError
+______ test_g9_r1_a_late_pathbank_complex_is_pruned_like_a_main_loop_one ______
+
+tmp_path = WindowsPath('C:/t/bt-orch759e/25-g9-r1-red-12311/test_g9_r1_a_late_pathbank_com0')
+
+    def test_g9_r1_a_late_pathbank_complex_is_pruned_like_a_main_loop_one(tmp_path: Path) -> None:
+        """Mechanism B. LDHB is never resolved. The main loop's ``LDH holoenzyme`` goes through
+        structural-cleanup Phase 1, which drops the unresolved LDHB component and quarantines the
+        LDHB row; a complex the late pass built after Phase 1 kept both."""
+    
+        late = _run_with_pathbank(tmp_path, main={}, phase2={"LDHA": _mapped("LDHA", "P00338")})
+        main = _run_with_pathbank(tmp_path, main={"LDHA": _mapped("LDHA", "P00338")}, phase2={})
+    
+        # Round-0 tip: components ["LDHA", "LDHB"], LDHB still a protein row, nothing quarantined.
+>       assert [c["name"] for c in _complex(late, "LDH holoenzyme")["components"]] == ["LDHA"]
+E       AssertionError: assert ['LDHA', 'LDHB'] == ['LDHA']
+E         
+E         Left contains one more item: 'LDHB'
+E         Use -v to get more diff
+
+tests\test_orch759e_rewrap_after_phase2.py:449: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_orch759e_rewrap_after_phase2.py::test_g9_r1_a_late_enzyme_takes_the_pathbank_complex_the_main_loop_takes
+FAILED tests/test_orch759e_rewrap_after_phase2.py::test_g9_r1_a_late_pathbank_complex_is_pruned_like_a_main_loop_one
+2 failed, 8 passed in 0.43s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759e\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ a525e4297d4b2ce590c74a6f3cb0cdb43d1cc03c  [git, worktree dirty=False]
+label                   : g9-r1-red
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-759e/25-g9-r1-red.pin.json -q --basetemp=C:/t/bt-orch759e/25-g9-r1-red-12311 tests/test_orch759e_rewrap_after_phase2.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759e
+root PID / process group: 617464 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 1.23 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  616484:python.exe
+descendants terminated  : 1  616484
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch759e\docs\pwml_recovery_sprint\evidence\g11\ORCH-759e\25-g9-r1-red.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================

@@ -4,11 +4,11 @@
 |---|---|
 | Lane | `orch759e/rewrap-after-phase2`, worktree `.claude/worktrees/orch759e` |
 | Base | `366b9395` (= `sprint/pwml-recovery` = `main`) |
-| Commits | `f1f70087` test-first · `ced62cf4` code · docs commit (this file, the evidence scripts, reports, logs) |
-| Status | **Implemented and tested. Not reviewed, not merged, not pushed.** |
+| Commits | Round 0: `f1f70087` test-first · `ced62cf4` code · `b4eefd9f` docs. **Repair round 1:** `a525e429` tests · `9bc6fe72` code · docs commit |
+| Status | **Round 0 reviewed: REJECT (one blocking finding, mechanisms A and B). Repair round 1 implemented and tested (§ 12). Not merged, not pushed.** It needs a re-review of the round-1 diff. |
 | Classification | `product_contract_violation`, merge rule 7: a correct `review_required` pathway fails the PWML required-field gate on one enzyme |
-| Files | `src/t2pw/mapping/map_ids.py` (+25 −2), `tests/test_orch759e_rewrap_after_phase2.py` (new, 8 tests) |
-| Reports | `evidence/g11/ORCH-759e/01`–`24`, pins `evidence/g11/pin/ORCH-759e/`, logs `evidence/orch759e/NN-*.log`; every report `FINAL SURVIVING COUNT : 0` |
+| Files | `src/t2pw/mapping/map_ids.py` (+58 −4 against base after round 1), `tests/test_orch759e_rewrap_after_phase2.py` (new, 10 tests) |
+| Reports | `evidence/g11/ORCH-759e/01`–`24` (round 0), `25`–`41` (repair round 1), pins `evidence/g11/pin/ORCH-759e/`, logs `evidence/orch759e/NN-*.log`; every report `FINAL SURVIVING COUNT : 0` |
 
 ## 1. The defect
 
@@ -293,29 +293,99 @@ Every report shows `FINAL SURVIVING COUNT : 0`. No `--heavy-lock`. One job at a 
 ```markdown
 ## ORCH-759e: test obligations — appended end-of-file by rule · 2026-10-22
 
-Lane `orch759e/rewrap-after-phase2` (`f1f70087` test-first, `ced62cf4` code). Reports `evidence/g11/ORCH-759e/01`–`24`.
+Lane `orch759e/rewrap-after-phase2` (`f1f70087` test-first, `ced62cf4` code; repair round 1 `a525e429` tests, `9bc6fe72` code).
+Reports `evidence/g11/ORCH-759e/01`–`41`.
 
-**SMOKE is unchanged at 508** (`g11/ORCH-759e/12`). No pin moved. Merge rule 10 unchanged.
+**SMOKE is unchanged at 508** (`g11/ORCH-759e/12`, round 1 `30`). No pin moved. Merge rule 10 unchanged.
 
 ### New focused selection
 
-`tests/test_orch759e_rewrap_after_phase2.py` (**8**, <1 s): a protein that only the Phase-2 UniProt fallback resolves
+`tests/test_orch759e_rewrap_after_phase2.py` (**10**, <1 s): a protein that only the Phase-2 UniProt fallback resolves
 is wrapped through the existing Stage-6 rewrite, right after Phase 2, exactly as a main-loop enzyme is (wrapper byte-
 identical); the CPO shape keeps its CPO1 Unknown placeholder and drops nothing; a Phase-2-resolved interaction endpoint
-exports. Preservation: one rewrite when nothing is late, the Unknown fallback for a still-unresolved enzyme, research
+exports; with a PathBank database (stub) the late wrapper takes the complex the main loop takes (F-116 judged on
+the reaction as written) and its complex goes through structural-cleanup Phase 1. Preservation: one rewrite when nothing is late, the Unknown fallback for a still-unresolved enzyme, research
 mode, no new report key/counter/action (D-104 amendment 2), the drop rule unchanged. G9: 3 red at base (`01`), 8
-green at tip (`02`). Run it for any change to `_rewrite_reaction_protein_enzymes_to_complexes`, the Phase-2 fallback
+green at round 0 (`02`); the 2 round-1 tests red at round 0 `ced62cf4` (`25`); all 5 G9 red at base (`27`), 10 green (`26`). Run it for any change to `_rewrite_reaction_protein_enzymes_to_complexes`, the Phase-2 fallback
 in `map_payload`, or the order of Stage 6's wrapper / complex-mapping / Unknown-fallback steps.
 
 ### Archive replay
 
 `docs/pwml_recovery_sprint/evidence/orch759e/stage6_replay.py` replays Stage 6 (`map_payload`) offline on every
 archived strict leg with the leg's recorded identity decisions (121 legs, ~3 s), at any SHA; `census_compare.py`
-compares runs. Base/tip: 116 legs byte-identical, the 4 defect legs change and pass contract + IR (`03`–`08`).
+compares runs. Base/tip: 116 legs byte-identical (117 with the late-but-unreferenced holo-EntB leg), the 4 defect
+legs change and pass contract + IR (`03`–`08`); repair round 1 byte-identical to round 0 on 121/121 (`28`, `29`).
 
 ### Known failures
 
-Unchanged from § ORCH-754's list (the 4 non-primary nodes red at base and tip with identical text, `09`/`11`) and
+Unchanged from § ORCH-754's list (the 4 non-primary nodes red at base and tip with identical text, `09`/`11`, round 1 `31`) and
 § ORCH-757's worktree-only `test_batch_preflight.py::test_the_message_names_the_problem_the_interpreter_and_the_cure`
-(`20`).
+(`20`, round 1 `40`).
 ```
+
+## 12. Repair round 1 (review round 0: REJECT under standard item 2)
+
+**The finding.** Round 0 claimed that a late wrapper is what the main loop builds. That held with no PathBank
+database, the census condition, and failed with one. The reviewer measured two mechanisms with a stub database
+(their reports `rev759e-tip 35`–`37`). 56 of 78 archived strict legs carry DB complexes, 18 of them
+multi-component, so both are reachable in production.
+
+- **A. F-116 scope computed after renaming.** The `only_proteins` pass recomputed `actor_scope` from the
+  reaction as the first pass had already rewritten it. A main-loop sibling then reads `LDHB complex`: the token is
+  `name::ldhb complex`, with no `uniprot::p07195`. So the superset refusal turned down LDH holoenzyme = {LDHA, LDHB},
+  which the main loop accepts, and the late pass built `LDHA complex`.
+- **B. Structural-cleanup Phase 1 skipped.** A complex the late pass builds is created after Phase 1 has run. An
+  unresolved component (LDHB, never resolved) therefore stayed in it. The main loop prunes that component and
+  quarantines the LDHB row.
+
+**The repair** (`9bc6fe72`, `map_ids.py` +34 −3 on top of round 0). Nothing else changed: no gate, report key or
+prompt.
+
+- **A.** `map_payload` passes one dict, `_pre_rewrite_actors`, to both rewrite calls (`:11338`, `:11554`).
+  - The whole pass records, for each reaction, the scope it computed and the actor lists before rewriting them
+    (`:8629-8632`).
+  - The `only_proteins` pass judges F-116 against that record (`:8633-8637`): the recorded scope, unioned with the
+    recorded actors re-read against today's protein rows. That is the reaction as the main loop would see it: its
+    names as written, with the identity Phase 2 has since added.
+  - Why re-read and not only reuse the scope: a reaction with two late proteins would otherwise miss the
+    second one's new accession. The judged protein's own accession is added by the refusal function in either case.
+- **B.** The Phase-1 block becomes a nested function, `_prune_invalid_complex_components(targets)`, with its body
+  unchanged.
+  - The "still needed" check still reads every complex.
+  - It is called as before over every complex (`:11438`), and again right after the late pass (`:11556-11560`). The
+    second call covers exactly the complexes the late pass created, or whose components it changed: a snapshot of
+    component lists by row is taken before the call.
+  - It runs only under `allow_structural_cleanup`, like the original.
+
+**One known divergence, deliberate.** The replayed Phase 1 judges validity after Phase 2; the main loop's Phase 1
+judged it before. So a third component that only Phase 2 resolves is kept by the late path, where the main path
+would prune it. This is the direction that drops nothing (merge rule 7). The two new tests do not exercise it.
+
+**Proof (G9, two new tests, stub PathBank database).** `test_g9_r1_a_late_enzyme_takes_the_pathbank_complex_the_main_loop_takes`
+covers A. `test_g9_r1_a_late_pathbank_complex_is_pruned_like_a_main_loop_one` covers B. Each asserts that the late
+run's reactions, complex rows, remaining proteins and quarantined proteins equal the main-loop run's.
+
+| run | report | result |
+|---|---|---|
+| round-0 tip `ced62cf4` code, round-1 tests | `25-g9-r1-red` | **2 failed** (A: `LDHA complex` ≠ `LDH holoenzyme`; B: components `['LDHA', 'LDHB']` ≠ `['LDHA']`), 8 passed |
+| base `366b9395` code | `27-g9-r1-red-base` | **5 failed**: all 5 G9, old and new; 5 preservation passed |
+| repair tip `9bc6fe72` | `26-g9-r1-green` | **10 passed** |
+
+**Gates on the repair tip** (every report `FINAL SURVIVING COUNT : 0`):
+
+| gate | report | result |
+|---|---|---|
+| census, DB off, at tip | `28-census-r1-tip`, `29-census-r1-compare` | 121 legs, 0 errors. **Byte-identical to round 0 on 121/121 legs.** Against base, **117 legs unchanged** (116 with no late protein, plus the holo-EntB leg) and the **4 defect legs fixed**: contract, pre-export and IR clean, `review_required`, final gate ok, actors in = out (nothing dropped). The chlorophyll leg is the first row: `CPO complex`, CPO1 kept, quarantine counts = live |
+| SMOKE | `30-r1-smoke` | **508 passed** |
+| affected batch A / B | `31`, `32` | 861 passed, 1 skipped, 4 failed (the same 4 known nodes, identical to base `11`) / **1100 passed** |
+| `test_eval_v2_*.py` | `33` | 89 passed, 1 xfailed |
+| alone: c052, reaction_evidence_view, orch759a_fold_app_path, c055, orch759d, prefreeze_third, quarantine_boundary | `34`–`39`, `41` | 13, 11, 2, 14, 4, 12, 23 passed |
+| alone: batch_preflight | `40` | 32 passed, 1 known worktree-only failure |
+
+Merge check: `git merge-tree --write-tree HEAD sprint/pwml-recovery` (at `21155be0`, ORCH-764 merged) exits 0 with
+no conflict.
+
+**Not settled, added by this round.** The census cannot see mechanisms A and B: it runs with the database off, so
+every wrapper is single-component. The stub-DB tests are the only proof. A database-on replay of the 18
+multi-component legs would need a recorded PathBank answer per enzyme. The legs do not keep those answers, so the
+replay would have to be built first.
