@@ -1,0 +1,119 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch764\src\t2pw\__init__.py
+...FFFF.........                                                         [100%]
+================================== FAILURES ===================================
+_ test_g9_r1_prefreeze_withholds_a_member_identity_already_on_the_class_row[candidate_only] _
+
+case = 'candidate_only'
+
+    @pytest.mark.parametrize("case", sorted(ARRIVING_IDENTITIES))
+    def test_g9_r1_prefreeze_withholds_a_member_identity_already_on_the_class_row(case: str) -> None:
+        """G9. Base 79080db7 and the round-0 tip: scalar, mapped_ids and candidate-only take the legacy-id
+        branch and ship PathBank 874; kegg/hmdb is admitted and renamed to DMAPP (base) or refused
+        record-only with C00235 / HMDB0001120 still on the row (round 0)."""
+        payload = _class_payload_carrying(case)
+        summary, _ = _prefreeze(payload, _rows())
+    
+        row = _compound(payload, "prenyl diphosphate")
+        assert row["name"] == "prenyl diphosphate"
+        assert summary["rename_map"] == {}
+>       assert not any(row.get(key) not in (None, "", {}) for key in STAMPED), {k: row.get(k) for k in STAMPED}
+E       AssertionError: {'biocyc_id': None, 'cas': None, 'chebi_id': None, 'chemspider_id': None, ...}
+E       assert not True
+E        +  where True = any(<generator object test_g9_r1_prefreeze_withholds_a_member_identity_already_on_the_class_row.<locals>.<genexpr> at 0x000001366CF1DA80>)
+
+tests\test_orch764_class_term_not_narrowed.py:188: AssertionError
+_ test_g9_r1_prefreeze_withholds_a_member_identity_already_on_the_class_row[kegg_hmdb] _
+
+case = 'kegg_hmdb'
+
+    @pytest.mark.parametrize("case", sorted(ARRIVING_IDENTITIES))
+    def test_g9_r1_prefreeze_withholds_a_member_identity_already_on_the_class_row(case: str) -> None:
+        """G9. Base 79080db7 and the round-0 tip: scalar, mapped_ids and candidate-only take the legacy-id
+        branch and ship PathBank 874; kegg/hmdb is admitted and renamed to DMAPP (base) or refused
+        record-only with C00235 / HMDB0001120 still on the row (round 0)."""
+        payload = _class_payload_carrying(case)
+        summary, _ = _prefreeze(payload, _rows())
+    
+        row = _compound(payload, "prenyl diphosphate")
+        assert row["name"] == "prenyl diphosphate"
+        assert summary["rename_map"] == {}
+>       assert not any(row.get(key) not in (None, "", {}) for key in STAMPED), {k: row.get(k) for k in STAMPED}
+E       AssertionError: {'biocyc_id': None, 'cas': None, 'chebi_id': None, 'chemspider_id': None, ...}
+E       assert not True
+E        +  where True = any(<generator object test_g9_r1_prefreeze_withholds_a_member_identity_already_on_the_class_row.<locals>.<genexpr> at 0x000001366CF1D700>)
+
+tests\test_orch764_class_term_not_narrowed.py:188: AssertionError
+_ test_g9_r1_prefreeze_withholds_a_member_identity_already_on_the_class_row[mapped_ids] _
+
+case = 'mapped_ids'
+
+    @pytest.mark.parametrize("case", sorted(ARRIVING_IDENTITIES))
+    def test_g9_r1_prefreeze_withholds_a_member_identity_already_on_the_class_row(case: str) -> None:
+        """G9. Base 79080db7 and the round-0 tip: scalar, mapped_ids and candidate-only take the legacy-id
+        branch and ship PathBank 874; kegg/hmdb is admitted and renamed to DMAPP (base) or refused
+        record-only with C00235 / HMDB0001120 still on the row (round 0)."""
+        payload = _class_payload_carrying(case)
+        summary, _ = _prefreeze(payload, _rows())
+    
+        row = _compound(payload, "prenyl diphosphate")
+        assert row["name"] == "prenyl diphosphate"
+        assert summary["rename_map"] == {}
+>       assert not any(row.get(key) not in (None, "", {}) for key in STAMPED), {k: row.get(k) for k in STAMPED}
+E       AssertionError: {'biocyc_id': None, 'cas': None, 'chebi_id': None, 'chemspider_id': None, ...}
+E       assert not True
+E        +  where True = any(<generator object test_g9_r1_prefreeze_withholds_a_member_identity_already_on_the_class_row.<locals>.<genexpr> at 0x000001366CF1F060>)
+
+tests\test_orch764_class_term_not_narrowed.py:188: AssertionError
+_ test_g9_r1_prefreeze_withholds_a_member_identity_already_on_the_class_row[scalar] _
+
+case = 'scalar'
+
+    @pytest.mark.parametrize("case", sorted(ARRIVING_IDENTITIES))
+    def test_g9_r1_prefreeze_withholds_a_member_identity_already_on_the_class_row(case: str) -> None:
+        """G9. Base 79080db7 and the round-0 tip: scalar, mapped_ids and candidate-only take the legacy-id
+        branch and ship PathBank 874; kegg/hmdb is admitted and renamed to DMAPP (base) or refused
+        record-only with C00235 / HMDB0001120 still on the row (round 0)."""
+        payload = _class_payload_carrying(case)
+        summary, _ = _prefreeze(payload, _rows())
+    
+        row = _compound(payload, "prenyl diphosphate")
+        assert row["name"] == "prenyl diphosphate"
+        assert summary["rename_map"] == {}
+>       assert not any(row.get(key) not in (None, "", {}) for key in STAMPED), {k: row.get(k) for k in STAMPED}
+E       AssertionError: {'biocyc_id': None, 'cas': None, 'chebi_id': None, 'chemspider_id': None, ...}
+E       assert not True
+E        +  where True = any(<generator object test_g9_r1_prefreeze_withholds_a_member_identity_already_on_the_class_row.<locals>.<genexpr> at 0x000001366CF1FAE0>)
+
+tests\test_orch764_class_term_not_narrowed.py:188: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_orch764_class_term_not_narrowed.py::test_g9_r1_prefreeze_withholds_a_member_identity_already_on_the_class_row[candidate_only]
+FAILED tests/test_orch764_class_term_not_narrowed.py::test_g9_r1_prefreeze_withholds_a_member_identity_already_on_the_class_row[kegg_hmdb]
+FAILED tests/test_orch764_class_term_not_narrowed.py::test_g9_r1_prefreeze_withholds_a_member_identity_already_on_the_class_row[mapped_ids]
+FAILED tests/test_orch764_class_term_not_narrowed.py::test_g9_r1_prefreeze_withholds_a_member_identity_already_on_the_class_row[scalar]
+4 failed, 12 passed in 0.43s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch764\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 9ce739ba89c814ad86817093e48e6fe7f20b0293  [git, worktree dirty=True]
+label                   : r1-g9-red-round0-tip
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-764/40-r1-g9-red-round0-tip.pin.json -q --basetemp=C:/t/bt-orch764/40-r1-g9-red-round0-tip-1388 tests/test_orch764_class_term_not_narrowed.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch764
+root PID / process group: 410968 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 530 s
+duration                : 1.37 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  410900:python.exe
+descendants terminated  : 1  410900
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch764\docs\pwml_recovery_sprint\evidence\g11\ORCH-764\40-r1-g9-red-round0-tip.json
+json report written     : True
+pre-existing (reported, NEVER killed): 14
+================================================

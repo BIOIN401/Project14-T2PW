@@ -1,0 +1,95 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch764\src\t2pw\__init__.py
+.FFFF.....                                                               [100%]
+================================== FAILURES ===================================
+_ test_g9_prefreeze_keeps_the_paper_class_term_and_flags_it[prenyl diphosphate] _
+
+term = 'prenyl diphosphate'
+
+    @pytest.mark.parametrize("term", ["prenyl diphosphate", "Prenyl Diphosphate"])
+    def test_g9_prefreeze_keeps_the_paper_class_term_and_flags_it(term: str) -> None:
+        """G9. Base: the row and the MenA reaction come back as Dimethylallylpyrophosphate, DMAPP ids on."""
+        payload = _payload(term)
+        summary, report = _prefreeze(payload, _rows())
+    
+        row = _compound(payload, term)
+>       assert row["name"] == term
+E       AssertionError: assert 'Dimethylallylpyrophosphate' == 'prenyl diphosphate'
+E         
+E         - prenyl diphosphate
+E         + Dimethylallylpyrophosphate
+
+tests\test_orch764_class_term_not_narrowed.py:130: AssertionError
+_ test_g9_prefreeze_keeps_the_paper_class_term_and_flags_it[Prenyl Diphosphate] _
+
+term = 'Prenyl Diphosphate'
+
+    @pytest.mark.parametrize("term", ["prenyl diphosphate", "Prenyl Diphosphate"])
+    def test_g9_prefreeze_keeps_the_paper_class_term_and_flags_it(term: str) -> None:
+        """G9. Base: the row and the MenA reaction come back as Dimethylallylpyrophosphate, DMAPP ids on."""
+        payload = _payload(term)
+        summary, report = _prefreeze(payload, _rows())
+    
+        row = _compound(payload, term)
+>       assert row["name"] == term
+E       AssertionError: assert 'Dimethylallylpyrophosphate' == 'Prenyl Diphosphate'
+E         
+E         - Prenyl Diphosphate
+E         + Dimethylallylpyrophosphate
+
+tests\test_orch764_class_term_not_narrowed.py:130: AssertionError
+__________ test_g9_stage6_refuses_a_specific_record_for_a_class_term __________
+
+    def test_g9_stage6_refuses_a_specific_record_for_a_class_term() -> None:
+        """G9. Base: the result stays ``mapped`` with CHEBI:16057 / C00235 for "prenyl diphosphate"."""
+        result = _apply_name_plausibility_gate(_same_named_record(), "prenyl diphosphate", kind="compound")
+>       assert result["status"] == "unmapped"
+E       AssertionError: assert 'mapped' == 'unmapped'
+E         
+E         - unmapped
+E         ? --
+E         + mapped
+
+tests\test_orch764_class_term_not_narrowed.py:167: AssertionError
+______ test_g9_stage6_strips_a_specific_identity_already_on_a_class_row _______
+
+    def test_g9_stage6_strips_a_specific_identity_already_on_a_class_row() -> None:
+        """G9. An earlier pass (or a patch) left DMAPP's ids on the class row. Base: they stay on it."""
+        row = {"name": "prenyl diphosphate", "mapped_ids": dict(DMAPP_IDS), "mapping_meta": {}}
+        report = _enforce_shipped_identity_names(
+            row, _same_named_record(), kind="compound", entity_name="prenyl diphosphate")
+>       assert report["rejected"] is True
+E       assert False is True
+
+tests\test_orch764_class_term_not_narrowed.py:179: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_orch764_class_term_not_narrowed.py::test_g9_prefreeze_keeps_the_paper_class_term_and_flags_it[prenyl diphosphate]
+FAILED tests/test_orch764_class_term_not_narrowed.py::test_g9_prefreeze_keeps_the_paper_class_term_and_flags_it[Prenyl Diphosphate]
+FAILED tests/test_orch764_class_term_not_narrowed.py::test_g9_stage6_refuses_a_specific_record_for_a_class_term
+FAILED tests/test_orch764_class_term_not_narrowed.py::test_g9_stage6_strips_a_specific_identity_already_on_a_class_row
+4 failed, 6 passed in 0.28s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch764\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 79080db72a1b5ea28733b54786227f695936c0f6  [git, worktree dirty=False]
+label                   : g9-red
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-764/02-g9-red.pin.json -q --basetemp=C:/t/bt-orch764/02-g9-red-30897 tests/test_orch764_class_term_not_narrowed.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch764
+root PID / process group: 329748 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 500 s
+duration                : 0.90 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  328236:python.exe
+descendants terminated  : 1  328236
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch764\docs\pwml_recovery_sprint\evidence\g11\ORCH-764\02-g9-red.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================

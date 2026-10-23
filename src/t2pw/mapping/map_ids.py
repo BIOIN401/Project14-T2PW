@@ -41,6 +41,7 @@ from t2pw.pipeline.lineage import (
     read as read_lineage,
     record as record_lineage,
 )
+from t2pw.pwml.compound_resolution import CLASS_TERM_NEVER_NARROWED, is_class_participant_term
 from t2pw.pwml.interaction_types import interaction_relationship_word, pwml_interaction_type
 from t2pw.pipeline.reference_repair import (
     ReplacementRecord,
@@ -6882,7 +6883,7 @@ def _apply_name_plausibility_gate(
                 result.setdefault("name_gate", verdict["name_gate"])
             return result
         return _novel_result_from_identity_verdict(result, verdict)
-    gate = _name_gate_verdict(
+    gate = _refuse_class_term_identity(_name_gate_verdict(
         entity_name,
         candidates=_safe_list(result.get("candidates")),
         mapped_ids=_safe_dict(result.get("mapped_ids")),
@@ -6890,12 +6891,26 @@ def _apply_name_plausibility_gate(
         organism=organism,
         fallback_name=str(result.get("resolved_name") or ""),
         source=str(result.get("source") or ""),
-    )
+    ), entity_name)
     if gate.get("verdict") != "reject":
         if gate.get("verdict") == "keep":
             result.setdefault("name_gate", gate)
         return result
     return _novel_result_from_name_gate(result, kind=kind, gate=gate)
+
+
+def _refuse_class_term_identity(gate: Dict[str, Any], entity_name: str) -> Dict[str, Any]:
+    """D-109 § 2 (ORCH-764): a compound named as a class never ships one member's identity.
+
+    Only a verdict that would let an identifier through becomes a refusal, so every rejection the
+    name gate already makes keeps its own reason byte for byte; with no identifier there is nothing
+    to refuse. The class test is ``compound_resolution``'s, shared with the pre-freeze gate.
+    """
+    if gate.get("verdict") == "reject" or gate.get("reason") == "no_mapped_ids":
+        return gate
+    if not is_class_participant_term(entity_name):
+        return gate
+    return {**gate, "verdict": "reject", "reason": CLASS_TERM_NEVER_NARROWED}
 
 
 def _strip_rejected_identifiers(
@@ -7111,7 +7126,7 @@ def _enforce_shipped_identity_names(
         meta["candidates"] = []
         return report
 
-    gate = _name_gate_verdict(
+    gate = _refuse_class_term_identity(_name_gate_verdict(
         entity_name,
         candidates=pool,
         mapped_ids=shipped,
@@ -7119,7 +7134,7 @@ def _enforce_shipped_identity_names(
         organism=organism,
         fallback_name=fallback_name,
         source=source_text,
-    )
+    ), entity_name)
     report["gate"] = gate
     if gate.get("verdict") != "reject":
         return report
