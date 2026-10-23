@@ -1146,3 +1146,10 @@ that must each run alone in their own process (ORCH-754 list).
 
 `tests/test_prefreeze_third_export_seam.py` fails when batched after a file that stubs `streamlit`; it passes alone
 (ORCH-764 reviewer `47`). Run it alone or first.
+
+### ORCH-759e (appended 2026-10-22)
+
+`tests/test_orch759e_rewrap_after_phase2.py` (10): a Phase-2-resolved enzyme or interaction endpoint ships wrapped, and the late
+wrapper equals the main-loop wrapper with a stub PathBank DB (scope reuse, Phase-1 replay). Run for any change to
+`map_payload`'s rewrite/Phase-2 ordering. Merged-tip gates `ORCH-759i/123-163`: Chunk D 187/187, SMOKE 508, focused 217.
+SMOKE unchanged at 508. No pin moved.

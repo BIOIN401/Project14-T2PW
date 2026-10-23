@@ -1,0 +1,160 @@
+{
+  "label": "rev-merged-probe",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/bt-rev759e/scripts/run_pytest_print.py",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:/t/bt-rev759e/31-rev-merged-probe-20263",
+    "tests/test_orch759e_rewrap_after_phase2.py",
+    "tests/test_pwml_interaction_protein_wrappers.py",
+    "tests/test_orch762_protein_identity.py",
+    "tests/test_orch759a_duplicate_protein_fold.py",
+    "tests/test_c011_freeze_seam_golden_equivalence.py",
+    "tests/test_map_ids_name_gate.py"
+  ],
+  "cwd": "C:\\t\\bt-rev759e\\merged",
+  "started_at": "2026-10-23T03:21:51+00:00",
+  "finished_at": "2026-10-23T03:22:00+00:00",
+  "duration_seconds": 9.2483729999949,
+  "timeout_seconds": 500.0,
+  "root_pid": 602096,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 602572,
+      "name": "python.exe",
+      "ppid": 602096
+    },
+    {
+      "pid": 596344,
+      "name": "git.exe",
+      "ppid": 602572
+    },
+    {
+      "pid": 600952,
+      "name": "python.exe",
+      "ppid": 603056
+    },
+    {
+      "pid": 603056,
+      "name": "python.exe",
+      "ppid": 602572
+    },
+    {
+      "pid": 598708,
+      "name": "python.exe",
+      "ppid": 602572
+    },
+    {
+      "pid": 600872,
+      "name": "python.exe",
+      "ppid": 598708
+    },
+    {
+      "pid": 601196,
+      "name": "python.exe",
+      "ppid": 602572
+    },
+    {
+      "pid": 601436,
+      "name": "python.exe",
+      "ppid": 601196
+    },
+    {
+      "pid": 556992,
+      "name": "python.exe",
+      "ppid": 602572
+    },
+    {
+      "pid": 602324,
+      "name": "python.exe",
+      "ppid": 556992
+    }
+  ],
+  "descendants_terminated": [
+    556992,
+    596344,
+    598708,
+    600872,
+    600952,
+    601196,
+    601436,
+    602324,
+    602572,
+    603056
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 241804,
+      "name": "python.exe"
+    },
+    {
+      "pid": 580428,
+      "name": "python.exe"
+    },
+    {
+      "pid": 580440,
+      "name": "python.exe"
+    },
+    {
+      "pid": 581248,
+      "name": "python.exe"
+    },
+    {
+      "pid": 581268,
+      "name": "python.exe"
+    },
+    {
+      "pid": 581440,
+      "name": "python.exe"
+    },
+    {
+      "pid": 581468,
+      "name": "python.exe"
+    },
+    {
+      "pid": 589172,
+      "name": "python.exe"
+    },
+    {
+      "pid": 590504,
+      "name": "python.exe"
+    },
+    {
+      "pid": 602356,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\rev759e-tip\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-759e\\31-rev-merged-probe.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\rev759e-tip\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\rev759e-tip",
+    "repo_head": "b4eefd9f6ec3326181450ffd6b2be4e3bd952bb8",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

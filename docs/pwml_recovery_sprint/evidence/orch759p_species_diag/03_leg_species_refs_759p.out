@@ -1,0 +1,23 @@
+== stage1_payload.json species rows: ['Lactococcus lactis', 'Lactococcus lactis subsp. lactis KF147', 'L. lactis subsp. lactis KF147']
+    'Lactococcus lactis' referenced by 2 ['biological_states/3', 'biological_states/4']
+    'Lactococcus lactis subsp. lactis KF147' referenced by 3 ['biological_states/0', 'biological_states/1', 'biological_states/2']
+    'L. lactis subsp. lactis KF147' referenced by 0 []
+== merged_payload.json species rows: ['Lactococcus lactis', 'Lactococcus lactis subsp. lactis KF147', 'L. lactis subsp. lactis KF147']
+    'Lactococcus lactis' referenced by 2 ['biological_states/3', 'biological_states/4']
+    'Lactococcus lactis subsp. lactis KF147' referenced by 16 ['proteins/0.organism', 'proteins/1.organism', 'proteins/2.organism', 'proteins/3.organism', 'proteins/4.organism', 'proteins/5.organism']
+    'L. lactis subsp. lactis KF147' referenced by 0 []
+== final_mapped.json species rows: ['Lactococcus lactis', 'Lactococcus lactis subsp. lactis KF147', 'L. lactis subsp. lactis KF147', 'Arabidopsis thaliana']
+    'Lactococcus lactis' referenced by 2 ['biological_states/3', 'biological_states/4']
+    'Lactococcus lactis subsp. lactis KF147' referenced by 33 ['proteins/0.species', 'proteins/0.organism', 'proteins/0.species_ref', 'proteins/1.species', 'proteins/1.organism', 'proteins/1.species_ref']
+    'L. lactis subsp. lactis KF147' referenced by 0 []
+    'Arabidopsis thaliana' referenced by 6 ['proteins/7.species', 'proteins/7.organism', 'protein_complexes/7.species', 'protein_complexes/7.organism', 'protein_complexes/8.species', 'protein_complexes/8.organism']
+   protein 0 'MenF' species= 'Lactococcus lactis subsp. lactis KF147' species_ref.tax= None query.taxonomy_id= 684738 uniprot= Q9CHJ9
+   protein 1 'MenD' species= 'Lactococcus lactis subsp. lactis KF147' species_ref.tax= None query.taxonomy_id= 684738 uniprot= Q9CHK0
+   protein 2 'MenH' species= 'Lactococcus lactis subsp. lactis KF147' species_ref.tax= None query.taxonomy_id= 684738 uniprot= Q9CHK1
+   protein 3 'MenC' species= 'Lactococcus lactis subsp. lactis KF147' species_ref.tax= None query.taxonomy_id= 684738 uniprot= Q9CHK4
+   protein 4 'MenE' species= 'Lactococcus lactis subsp. lactis KF147' species_ref.tax= None query.taxonomy_id= 684738 uniprot= Q9CHK3
+   protein 5 'MenB' species= 'Lactococcus lactis subsp. lactis KF147' species_ref.tax= None query.taxonomy_id= 684738 uniprot= Q9CHK2
+   protein 6 'MenG' species= 'Lactococcus lactis subsp. lactis KF147' species_ref.tax= None query.taxonomy_id= 684738 uniprot= P49016
+   protein 7 'Unknown' species= 'Arabidopsis thaliana' species_ref.tax= None query.taxonomy_id= None uniprot= UNKNOWN
+   prefreeze_db_resolution keys: ['available']
+   prefreeze species summary: {}

@@ -1,0 +1,14 @@
+== stage1_payload.json species rows: ['Lactococcus lactis', 'L. lactis subsp. lactis KF147']
+    'Lactococcus lactis' referenced by 5 ['biological_states/0', 'biological_states/1', 'biological_states/2', 'biological_states/3', 'biological_states/4']
+    'L. lactis subsp. lactis KF147' referenced by 2 ['biological_states/5', 'biological_states/6']
+== merged_payload.json species rows: ['Lactococcus lactis', 'L. lactis subsp. lactis KF147']
+    'Lactococcus lactis' referenced by 14 ['proteins/0.organism', 'proteins/1.organism', 'proteins/2.organism', 'proteins/3.organism', 'proteins/4.organism', 'proteins/5.organism']
+    'L. lactis subsp. lactis KF147' referenced by 2 ['biological_states/5', 'biological_states/6']
+== final_mapped.json species rows: ['Lactococcus lactis', 'L. lactis subsp. lactis KF147', 'Arabidopsis thaliana']
+    'Lactococcus lactis' referenced by 9 ['proteins/0.species', 'proteins/0.organism', 'proteins/0.species_ref', 'protein_complexes/0.species', 'biological_states/0', 'biological_states/1']
+    'L. lactis subsp. lactis KF147' referenced by 0 []
+    'Arabidopsis thaliana' referenced by 16 ['proteins/1.species', 'proteins/1.organism', 'protein_complexes/1.species', 'protein_complexes/1.organism', 'protein_complexes/2.species', 'protein_complexes/2.organism']
+   protein 0 'MenA' species= 'Lactococcus lactis' species_ref.tax= 1358 query.taxonomy_id= None uniprot= A2RHR6
+   protein 1 'Unknown' species= 'Arabidopsis thaliana' species_ref.tax= None query.taxonomy_id= None uniprot= UNKNOWN
+   prefreeze_db_resolution keys: ['available']
+   prefreeze species summary: {}

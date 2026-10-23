@@ -11101,3 +11101,25 @@ The id ORCH-760 was chosen so that 755-759 stay free for the live ORCH-754 sessi
 **ORCH-759 · 2026-10-22 — FINISHED:** 1 of 7 PWML at 3 draws (WNT PCP); budget fix confirmed (1/309 empty, no 20-min calls). Merged after review into `9f7d64ee`: 759a (E1), 762, 759b (D-107), 763, 759d. In progress: 764, 759c. **D-110:** Ara dropped (scope policy open), sour taste requests *Mus musculus*, the paper's parenthetical definitions bridge abbreviations. Orchestrator approved a read-only diagnosis plus fix lane for chlorophyll's `reaction_enzyme_must_be_protein_complex`.
 
 **ORCH-765 · 2026-10-22 — round 0 REJECTED** (non-definition parentheticals bridged). **D-110 AMENDMENT 1:** a pair bridges only when a draw wrote it and the paper contains it verbatim, with a numeric/citation/panel backstop. 764 approved and merging; 759e resuming.
+
+**`ORCH-759` · 2026-10-22 — 3-draw run DONE (7 strict legs, merged code `f392d447`).** WNT PCP wrote a `review_required` PWML; the other six did not, each cause diagnosed and routed: enterobactin E1 (→ 759a), menaquinone species/identity (→ 762, 763, 764), chlorophyll quarantine closure (→ 759c) then a bare Phase-2 enzyme (→ 759e), Ara reworded and still `scope_conflict` (dropped, D-110), sour taste organism `scope_conflict` (→ *Mus musculus*, D-110), Wnt/Ca2+ the driver's fixed 3,600 s interaction cap (→ 759d). Budget fix holds: 1 empty-length completion in 309 attempts, no 20-min calls. Record: `ORCH-759-RESULT.md`.
+
+**`ORCH-759a` · 2026-10-22 — MERGED `57713a11`** (E1 / ORCH-761 FX7): Stage 6 folds an unreferenced duplicate protein row sharing an ADMITTED accession and species into its survivor (alias and every quote kept, recorded outside prompts), in the real app path regardless of draws. Review REJECT r0 (alias reference, quote keys), APPROVE WITH NOTES r1. Record: `ORCH-759a-RESULT.md`.
+
+**`ORCH-762` · 2026-10-22 — MERGED `9757234d`** (D-106/D-108, ORCH-761 FX1-FX6): taxonomy-scoped UniProt search never across a subspecies, canonical species, PathBank species by taxonomy id, MenH by function, UniParc exact sequence, one kind per name; borrowed identities flagged with source strain. Replay: 7/9 KF147 Men enzymes recovered, MenA no longer A2RHR6, EntB kept. Review REJECT r0 (429 free-text fallback, unflagged borrows), APPROVE WITH NOTES r1. Record: `ORCH-762-RESULT.md`.
+
+**`ORCH-759b` · 2026-10-22 — MERGED `45623ceb`** (D-107): the Stage-1 recorder is re-attached in the post-pipeline run; rule 3 and the audit/gap summaries now run in the app. Protected `streamlit_app.py` +3 lines, fingerprint `28c09117`→`1e0986a5` (blob `52e016d7`→`eef4d804`). Review APPROVE WITH NOTES. Live proof: ORCH-759p enterobactin. Record: `ORCH-759b-RESULT.md`.
+
+**`ORCH-763` · 2026-10-22 — MERGED `2161a9ab`** (D-109 a): nested locations merge-compatible via a committed GO-derived table, fail closed; menaquinone re-pool 16 → 11 rows. Review REJECT r0 (label-skip non-nested merge), APPROVE WITH NOTES r1. Record: `ORCH-763-RESULT.md`.
+
+**`ORCH-759d` · 2026-10-22 — MERGED `9f7d64ee`**: the batch driver's per-interaction app cap follows the leg budget (was a fixed 3,600 s). Review APPROVE WITH NOTES. Record: `ORCH-759d-RESULT.md`.
+
+**`ORCH-759c` · 2026-10-22 — MERGED `45aa9c28`**: strict-quarantine closure is bucket-aware (a component name keeps only protein rows); chlorophyll's `entity_type_overlap:4` refusal gone. Review APPROVE WITH NOTES r0 (N1 invented locations → correction round), APPROVE WITH NOTES r1. Record: `ORCH-759c-RESULT.md`.
+
+**`ORCH-764` · 2026-10-22 — MERGED `38188982`** (D-109 b): a committed list of class terms is never narrowed to a specific molecule (origin: PathBank synonym match in pre-freeze compound resolution); ids already on a class row are withheld. Review REJECT r0, APPROVE WITH NOTES r1. Record: `ORCH-764-RESULT.md`.
+
+**`ORCH-759i` · 2026-10-22 — integration gates green** on `9f7d64ee`, `45aa9c28`, `38188982`: Chunk D 187/187 three times, SMOKE 508 each time, focused and AppTest files alone. `main` = `sprint/pwml-recovery` pushed at `21155be0`. `TEST_MATRIX.md` § ORCH-759a/b/c/d, 762, 763, 764.
+
+**`ORCH-759e` · 2026-10-22 — MERGED `360a6ac5`**: Stage 6 now wraps enzymes (and signed-interaction endpoints) whose identity only the Phase-2 UniProt fallback resolved, reusing the pre-rewrite scope and replaying Phase-1 cleanup; census DB-off 117/121 identical, the 4 defect legs (chlorophyll CPO, LDH, AtCYP73A5, ceramide synthase) fixed, nothing dropped. Review REJECT r0 (late wrapper differed with DB on), APPROVE WITH NOTES r1. Gates on the merged tip `ORCH-759i/123-163` green. Record: `ORCH-759e-RESULT.md`.
+
+**`ORCH-759p` · 2026-10-22 — proof run at 3 draws on the merged fixes:** enterobactin PWML (was none), sour taste as *Mus musculus* PWML, menaquinone `release_ready` with 19 reactions but blocked by an unreferenced abbreviated species row (product question open); chlorophyll running on `360a6ac5`. D-107 proven live (rule-3 report plus audit/gap summaries written). Record: `ORCH-759-RESULT.md` § 7.

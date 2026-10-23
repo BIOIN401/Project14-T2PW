@@ -125,12 +125,52 @@ the proof re-run (§ 7).
    (`entity_type_overlap:4`) and no final gate ran. `product_contract_violation` (merge rule 7). Counterfactual replay:
    `ok`, `review_required`, strict final gate passes (30 reactions, 25 interactions). Lane **ORCH-759c**. A second
    blocker remains on this leg: the required-field contract fails `reaction_enzyme_must_be_protein_complex` on `CPO
-   reaction` (bare protein `CPO` next to a placeholder wrapper `CPO1`), not yet chartered.
+   reaction` (bare protein `CPO` next to a placeholder wrapper `CPO1`). Diagnosed read-only
+   (`evidence/orch759_cpo_diag/`): Stage 6 wrapped reaction enzymes BEFORE the Phase-2 UniProt fallback, so an enzyme
+   resolved only in Phase 2 shipped bare (4 of 121 archived strict legs). Lane **ORCH-759e**, merged `360a6ac5`.
+7. **Menaquinone at 3 draws: an unreferenced, abbreviated species row blocks the export** (read-only diagnosis,
+   `evidence/orch759p_species_diag/`). The 3 draws pooled three species rows; the paper's own spelling "L. lactis subsp.
+   lactis KF147" is referenced by nothing, NCBI cannot match the abbreviated genus, and the C-120 alias pass deliberately
+   refuses strain-suffixed abbreviations (`map_ids.py:3574-3576`, D-098), while its twin row and all 7 Men proteins carry
+   684738. The required-field gate checks every species row (`ir.py:2911-2937`). 2 of 2 three-draw legs. Product
+   question to `main` (options: extend C-120 to suffixed abbreviations; drop unreferenced species rows before the freeze).
 
 ## 5. Incidents
 
-(filled as they happen)
+1. **Runner swap for the reworded Ara topic.** The runner expands its condition list at start, so after enterobactin it
+   was paused (`PAUSE` file), stopped while idle by exact PID (`taskkill /PID 34988`; no leg running, lock free) and
+   relaunched with `ara_operon_v2` (`night.log` RELAUNCH line).
+2. **A parallel session moved the primary HEAD** during legs (docs-only commits by `main`: gold-accuracy scoring,
+   D-106-D-110). Checked each time: no `src/` or `scripts/` change, so the measured code is the start-of-run SHA.
+3. **The machine crashed earlier the same day** during ORCH-756 (recorded in `ORCH-756-RESULT.md` § 5); no ORCH-759 leg
+   was affected.
 
 ## 6. Not settled
 
-(filled at the end)
+1. **The scope check rejects paraphrases** (§ 4.1, 4.3): open policy question for the product owner (D-110: Ara dropped,
+   the check unchanged).
+2. **The menaquinone species row** (§ 4.7): awaiting the product owner's choice.
+3. **ORCH-765** (parenthetical abbreviation bridges, D-110 § 3 / AMENDMENT 1): round 1 reviewed; one-draw corroborated
+   lookalikes (`Optical (OD)`, `Luria (LB)`, `Free radicals (ROS)`, an "and"-list member) still bridge; product owner asked
+   whether to require two corroborating draws. Not merged.
+4. **Long reasoning-model calls persist at 128k:** an ORCH-759p audit attempt ran ~1,246 s and returned an empty
+   `finish_reason=length` (`evidence/orch759p_leg_stats.txt`).
+
+## 7. The proof run (ORCH-759p): 3 draws on the merged fixes
+
+Run `ORCH-759p` from the primary checkout at 3 draws, 10,800 s per leg, review `runs_papers/ORCH-759p/REVIEW/INDEX.txt`,
+G11 `evidence/g11/ORCH-759p/`, all reports `FINAL SURVIVING COUNT : 0`. Enterobactin, menaquinone and sour taste ran on
+`21155be0` (759a, 762, 759b, 763, 759d, 759c, 764 merged); chlorophyll on `360a6ac5` (+ 759e).
+
+| paper | ORCH-759 (before) | ORCH-759p | leg |
+|---|---|---|---|
+| enterobactin | no PWML (E1) | **PWML**, `review_required`, 5 reactions, 10 interactions, 53 min | `legs/enterobactin-strict/2026-10-22_2101/` |
+| menaquinone | no PWML (species, 16 rows) | no PWML: now **`release_ready`**, 19 reactions, export blocked by the species row (§ 4.7) | `legs/menaquinone-strict/2026-10-22_2154/` |
+| sour taste (*Mus musculus*, `sour_taste_v2`) | `scope_conflict` (organism) | **PWML**, `review_required`, 21 min | `legs/sour_taste_v2-strict/2026-10-22_2233/` |
+| chlorophyll | no PWML (quarantine refusal) | running at the time of writing | `legs/chlorophyll-strict/` |
+
+**D-107 proven in a real 3-draw app leg (enterobactin):** rule 3 ran and wrote `ensemble_identity_merge_report.json` (5 → 5
+reactions, nothing to merge) in the Stage-1 run directory `tmp/extraction_diagnostics/run-338be6146e19/`, beside
+`audit_iteration_summary.json` and `gap_iteration_summary.json`; the review pack copied the identity report.
+LLM health over the first three legs: 1 empty-length completion in 96 attempts, 0 provider errors
+(`evidence/orch759p_trace_stats.txt`, `orch759p_leg_stats.txt`).

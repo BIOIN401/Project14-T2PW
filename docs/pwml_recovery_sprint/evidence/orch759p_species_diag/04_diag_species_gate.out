@@ -1,0 +1,42 @@
+1. gate on recorded final_mapped.json: ([('species_missing_taxonomy', '/entities/species/2', 'L. lactis subsp. lactis KF147'), ('species_missing_classification', '/entities/species/2', 'L. lactis subsp. lactis KF147')], ['pathway_missing_name', 'pathway_missing_subject', 'species_missing_taxonomy', 'species_missing_classification'])
+2. eligibility of 'L. lactis subsp. lactis KF147'
+   _abbreviated_binomial_parts -> ('', '')
+   _is_bare_binomial           -> False
+   _binomial_from_organism     -> 'L. lactis'
+   _deterministic_species_name -> 'L. lactis'
+3. donors: [('Lactococcus lactis', '1358', False), ('Lactococcus lactis subsp. lactis KF147', '684738', True)]
+   _species_alias_expansion(offline) -> {}
+4. backfill (stub NCBI, no-match) report: {"enabled": true, "checked": 1, "resolved": 0, "unresolved": ["L. lactis subsp. lactis KF147"]}
+   NCBI queries sent: [('esearch.fcgi', 'L. lactis subsp. lactis KF147[Scientific Name]'), ('esearch.fcgi', 'L. lactis[Scientific Name]'), ('esearch.fcgi', 'L. lactis subsp. lactis KF147'), ('esearch.fcgi', 'L. lactis')]
+   row 3 after: {"name": "L. lactis subsp. lactis KF147"}
+5. 1148-shape backfill report: {"enabled": true, "checked": 1, "resolved": 0, "unresolved": ["L. lactis subsp. lactis KF147"]} queries: [('esearch.fcgi', 'L. lactis subsp. lactis KF147[Scientific Name]'), ('esearch.fcgi', 'L. lactis[Scientific Name]'), ('esearch.fcgi', 'L. lactis subsp. lactis KF147'), ('esearch.fcgi', 'L. lactis')]
+6. gate with row 2 = 684738/Prokaryote: species errors [] all error codes ['pathway_missing_name', 'pathway_missing_subject']
+7. prefreeze rename_map: {'L. lactis subsp. lactis KF147': 'L. lactis'} declined: ['Lactococcus lactis subsp. lactis KF147']
+   names after: [('Lactococcus lactis', '1358'), ('Lactococcus lactis subsp. lactis KF147', '684738'), ('L. lactis', '684738'), ('Arabidopsis thaliana', '3702')]
+   gate after prefreeze: ([], ['pathway_missing_name', 'pathway_missing_subject'])
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 21155be0faba436c7cc7e14c013e026e01ad74a7  [git, worktree dirty=True]
+label                   : diag
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/bt-spc759/04_diag_species_gate.py
+cwd                     : C:\t\bt-spc759
+root PID / process group: 663700 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 3.08 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  663708:python.exe
+descendants terminated  : 1  663708
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/bt-spc759/04-diag.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================
