@@ -1,0 +1,26 @@
+runs_papers/ORCH-759/legs/chlorophyll-strict/2026-10-22_1231/papers/PMC5130987/strict :: CPO
+   ids: {'uniprot': 'Q9LR75'} | rejected: {'uniprot': 'Q9LR75'} | chosen_rule: api_uniprot_fallback | provider/source: PathBankDB db | candidates: 0
+   stored name_gate: reject no_shared_meaningful_token | compared: ['Coproporphyrinogen-III oxidase 1, chloroplastic']
+   identity_verdict.name_gate: keep exact_symbol_identity CPO
+   lineage: [('paper_extraction', 'present in the Stage-1 extraction payload when it reached the Stage-1 '), ('identifier_mapping', 'resolved against a database record via api_uniprot top_unique_candidat'), ('identifier_mapping', 'resolved against a database record via api_uniprot_fallback api_unipro'), ('audit_repair', "an accepted audit patch 'add' operation produced this row's content; i")]
+   RESULT: ['RESULT: FAIL', 'message      : post-pipeline validation failed: 1 blocking issue(s) at final_pre_export_gate_lifecycle [final_gate_report_missing]']
+runs_verify/2026-08-21_2057/papers/PMC12096016/strict :: lactate dehydrogenase
+   ids: {'uniprot': 'P52643'} | rejected: {'uniprot': 'P0A9A0'} | chosen_rule: api_uniprot_fallback | provider/source: PathBankDB db | candidates: 0
+   stored name_gate: None None | compared: None
+   identity_verdict.name_gate: keep shared_meaningful_token None
+   lineage: [('paper_extraction', 'present in the Stage-1 extraction payload when it reached the Stage-1 '), ('identifier_mapping', 'resolved against a database record via api_uniprot_fallback api_unipro'), ('identifier_mapping', 'identity verification could not be completed (not_evaluated)'), ('audit_repair', "an accepted audit patch 'add' operation produced this row's content; i")]
+   gate errors: [('reaction_enzyme_must_be_protein_complex', '/processes/reactions/5/enzymes/0'), ('reaction_enzyme_must_be_protein_complex', '/processes/reactions/5/modifiers/0')]
+   RESULT: ['RESULT: FAIL', 'message      : PWML export failed: PWML required-field gate failed.']
+runs_verify/2026-09-06_1425/papers/PMC11405693/strict :: AtCYP73A5
+   ids: {'uniprot': 'P92994'} | rejected: {'uniprot': 'P92994', 'pathbank_protein_id': '11505', 'gene_name': 'CYP73A5'} | chosen_rule: api_uniprot_fallback | provider/source: PathBankDB db | candidates: 0
+   stored name_gate: reject no_shared_meaningful_token | compared: ['Cinnamate 4-hydroxylase']
+   identity_verdict.name_gate: keep alias_corroborated_by_identity None
+   lineage: [('paper_extraction', 'present in the Stage-1 extraction payload when it reached the Stage-1 '), ('identifier_mapping', 'resolved against a database record via api_uniprot_fallback api_unipro')]
+   gate errors: [('reaction_enzyme_must_be_protein_complex', '/processes/reactions/1/enzymes/0'), ('reaction_enzyme_must_be_protein_complex', '/processes/reactions/1/modifiers/0')]
+   RESULT: ['RESULT: FAIL', 'message      : PWML export failed: PWML required-field gate failed.']
+runs_verify/2026-09-06_1425/papers/PMC12376012/strict :: ceramide synthase
+   ids: {'uniprot': 'Q71RH2'} | rejected: {'uniprot': 'Q71RH2'} | chosen_rule: api_uniprot_fallback | provider/source: PathBankDB db | candidates: 0
+   stored name_gate: None None | compared: None
+   identity_verdict.name_gate: keep shared_meaningful_token None
+   lineage: [('paper_extraction', 'present in the Stage-1 extraction payload when it reached the Stage-1 '), ('identifier_mapping', 'resolved against a database record via api_uniprot_fallback api_unipro'), ('identifier_mapping', 'identity verification could not be completed (not_evaluated)')]
+   RESULT: ['RESULT: FAIL', 'message      : post-pipeline validation failed: 10 blocking issue(s) at final_pre_export_stage3_gates']

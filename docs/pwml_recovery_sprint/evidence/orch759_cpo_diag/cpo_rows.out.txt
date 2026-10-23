@@ -1,0 +1,29 @@
+proteins 28 keys: ['class', 'confidence', 'mapped_ids', 'mapping_meta', 'name', 'organism', 'pathbank_species_id', 'provenance', 'provenance_lineage', 'species', 'species_id', 'species_name', 'species_ref', 'synonyms', 'taxonomy_id']
+  mm keys: ['alias_source', 'candidates', 'chosen_rule', 'confidence', 'identity_status', 'identity_verdict', 'name_gate', 'provider', 'queries_tried', 'query', 'rejected_mapped_ids', 'resolution', 'resolved_name', 'reviewed', 'source', 'species_resolution']
+  row: {"name": "CPO", "class": "protein", "confidence": 1.0, "provenance": "extracted", "provenance_lineage": [{"stage": "paper_extraction", "origin": "paper_stated", "support": "unsupported", "paper_explicit": "explicit", "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary", "review_required": false, "uncertainty": "", "sources": []}, {"stage": "identifier_mapping", "origin": "database_grounded", "support": "direct", "paper_explicit": "not_evaluated", "reason": "resolved against a database record via api_uniprot top_unique_candidate", "review_required": false, "uncertainty": "", "sources": [{"source_id": "3702", "source_type": "taxonomy_id", "uri": "", "locator": "api_uniprot top_unique_candidate"}, {"source_id": "4", "source_type": "pathbank_species_id", "uri": "", "locator": "api_uniprot top_unique_candidate"}, {"source_id": "Q9LR75", "source_type": "uniprot", "uri": "", "locator": "api_uniprot top_unique_candidate"}]}, {"stage": "identifier_mapping", "origin": "database_grounded", "support": "direct", "paper_explicit": "not_evaluated", "reason": "resolved against a database record via api_uniprot_fallback api_uniprot_fallback", "review_required": false, "uncertainty": "", "sources": [{"source_id": "3702", "source_type": "taxonomy_id", "uri": "", "locator": "api_uniprot_fallback api_uniprot_fallback"}, {"source_id": "4", "source_type": "pathbank_species_id", "uri": "", "locator": "api_uniprot_fallback api_uniprot_fallback"}, {"sou
+   mm.query = {"name": "CPO", "organism": "Arabidopsis thaliana"}
+   mm.provider = "PathBankDB"
+   mm.source = "db"
+   mm.chosen_rule = "api_uniprot_fallback"
+   mm.resolution = {"status": "matched", "issue": "api_resolved", "order_step": "api_uniprot_fallback"}
+   mm.identity_status = "verified"
+   mm.species_resolution = {"name": "Arabidopsis thaliana", "pathbank_species_id": 4, "species_id": 4, "taxonomy_id": "3702", "common_name": "Thale cress", "source": "explicit_entity_species", "status": "matched", "confidence": 1.0}
+proteins 32 keys: ['identity_status', 'mapped_ids', 'mapping_meta', 'name', 'organism', 'pathbank_protein_id', 'pathbank_species_id', 'provenance_lineage', 'pw_protein_id', 'species', 'species_id', 'taxonomy_id', 'uniprot_id']
+  mm keys: ['chosen_rule', 'confidence', 'cross_species_placeholder', 'fallback_reason', 'fallback_used', 'identity_status', 'pathbank_protein_id', 'placeholder_target_organisms', 'provider', 'resolution', 'source']
+  row: {"name": "Unknown", "species": "Arabidopsis thaliana", "organism": "Arabidopsis thaliana", "species_id": 4, "pathbank_species_id": 4, "taxonomy_id": "3702", "pathbank_protein_id": 9659, "pw_protein_id": 9659, "uniprot_id": "Unknown", "mapped_ids": {"uniprot": "Unknown", "pathbank_protein_id": 9659}, "identity_status": "placeholder", "provenance_lineage": [{"stage": "identifier_mapping", "origin": "unresolved", "support": "unsupported", "paper_explicit": "not_evaluated", "reason": "the actor ships on the PathBank Unknown-backed placeholder", "review_required": true, "uncertainty": "the biology is preserved but the identity is not established: the record named is a placeholder, not this entity", "sources": []}]}
+   mm.provider = "PathBankDB"
+   mm.source = "db"
+   mm.chosen_rule = "pathbank_unknown_protein_fallback"
+   mm.resolution = {"status": "fallback", "issue": "pathbank_unknown_sentinel", "order_step": "pathbank_unknown_protein_fallback"}
+   mm.identity_status = "placeholder"
+   mm.placeholder_target_organisms = ["Arabidopsis thaliana"]
+protein_complexes 26 keys: ['components', 'generated', 'generation_reason', 'identity_status', 'mapping_meta', 'name', 'organism', 'pathbank_species_id', 'provenance_lineage', 'species', 'species_id']
+  mm keys: ['chosen_rule', 'confidence', 'cross_species_placeholder', 'evidence_digest', 'fallback_reason', 'fallback_used', 'functional_enzyme_name', 'identity_status', 'provenance', 'provider', 'real_mapping_failure_reason', 'resolution', 'role_evidence', 'sentinel_pathbank_protein_id', 'source', 'target_organism']
+  row: {"name": "CPO1", "species": "Arabidopsis thaliana", "organism": "Arabidopsis thaliana", "species_id": 4, "pathbank_species_id": 4, "generated": true, "generation_reason": "single_protein_pathwhiz_wrapper", "components": [{"name": "Unknown", "stoichiometry": 1, "pathbank_protein_id": 9659, "mapped_ids": {"uniprot": "Unknown", "pathbank_protein_id": 9659}}], "identity_status": "placeholder", "provenance_lineage": [{"stage": "identifier_mapping", "origin": "unresolved", "support": "unsupported", "paper_explicit": "not_evaluated", "reason": "the actor ships on the PathBank Unknown-backed placeholder", "review_required": true, "uncertainty": "the biology is preserved but the identity is not established: the record named is a placeholder, not this entity", "sources": []}]}
+   mm.provider = "PathBankDB"
+   mm.source = "db"
+   mm.chosen_rule = "pathbank_unknown_protein_fallback"
+   mm.resolution = {"status": "fallback", "issue": "pathbank_unknown_sentinel_component", "order_step": "pathbank_unknown_protein_fallback"}
+   mm.identity_status = "placeholder"
+   mm.real_mapping_failure_reason = "species_mismatch"
+quarantined_proteins: ['CHLD', 'CHIH', 'FC2', 'CHLI1', 'CHLI2', 'HO1', 'PIF4', 'PIF5', 'GLK2', 'EIL1', 'CHLM', 'EXECUTER', 'EXECUTER1', 'EXECUTER2', 'CHL27']
