@@ -329,6 +329,13 @@ def _id_payload(kind: str) -> Dict[str, Any]:
         # ir._to_int reads the row's "77.0" as PathBank id 77, the writer's key.
         payload["entities"]["species"][1]["pathbank_species_id"] = "77.0"
         protein["species_id"] = 77
+    elif kind in ("species_id_non_integral_float", "species_id_non_integral_text"):
+        # Repair round 1 (B1): ir._to_int TRUNCATES (int(float(text))), so a row's
+        # 77.5 or "77.9" is IR pathwhiz_id 77, and the writer resolves species_id 77
+        # to it.
+        value = 77.5 if kind.endswith("_float") else "77.9"
+        payload["entities"]["species"][1]["pathbank_species_id"] = value
+        protein["species_id"] = 77
     return payload
 
 
@@ -338,6 +345,8 @@ ID_KINDS = (
     "protein_species_ref_ids",
     "state_taxonomy_id",
     "species_id_as_float_text",
+    "species_id_non_integral_float",
+    "species_id_non_integral_text",
 )
 
 
@@ -386,6 +395,8 @@ PINS: Dict[str, str] = {
     "protein_species_ref_ids": "7c1e3de6bea1b6f1b7571d5f46d6ccb64b50aa0f1bca2c12b07b410f79f0c0e3",
     "state_taxonomy_id": "e6d153529ecf084c02c32b0864fae3c7a281660687e0e1e2253edef4190f0122",
     "species_id_as_float_text": "2db9f1a9a351f6df15a28d69b7ec802fbcd0af7febe83f3329a0f50e69aa4fa6",
+    "species_id_non_integral_float": "6440c6d63396b0e02c1801408fea1c1f96e1d163c013e11619bb55bc8bbd03b6",
+    "species_id_non_integral_text": "f121fa42c19fb6def4ac49938f9659d532c03ecffd5065f9c73f86f24c989606",
     "create_default_name": "b484bdf045b6fdd3f45df4ebe51027220626ec8cda70aa1c153793224ce3a66c",
     "first_row": "b8b487797360d5d1047bcd400626d9fba0ccb199b074d586faebe7d9a70bc20f",
     "requested_organism": "d27c947fe574bdde05c76cc1e6f1b4d4c06190470e5b4540e453368040441c48",
@@ -450,3 +461,34 @@ def test_g9_an_id_collision_outside_a_species_field_does_not_keep_a_row() -> Non
     payload["entities"]["compounds"][0]["pubchem_cid"] = "4"
     result = quarantine_and_close(payload, strict_db=True, mode="pathwhiz")
     assert _names(result.payload) == ["Homo sapiens"]
+
+
+# ── Repair round 1: a recorded behaviour change ─────────────────────────────
+
+
+def test_delta_r1_restored_autostate_takes_a_species_the_pathway_references() -> None:
+    """DELTA, labelled: fails at base by design, passes at tip (reviewer note 1, round 0).
+
+    When closure sweeps every state, the F-192 restore (``restore_autostates_if_required``,
+    after the loop) gives the placeholder ``__auto_state__`` the species
+    ``_select_default_species_name`` scores highest among the rows PRESENT. At base an
+    unreferenced row with species-resolution confidence 0.99 wins it; at tip that row
+    has already been removed by the species closure, so the placeholder takes the row
+    the proteins reference. Recorded, not changed (ORCH-766-RESULT.md, repair round 1).
+    """
+
+    payload = _with_extra(
+        {"name": EXTRA, "mapping_meta": {"species_resolution": {"confidence": 0.99}}}
+    )
+    # Nothing references the one state, so closure sweeps it and the restore fires.
+    for reaction in payload["processes"]["reactions"]:
+        reaction.pop("biological_state")
+    payload["element_locations"]["compound_locations"] = []
+    result = quarantine_and_close(payload, strict_db=True, mode="pathwhiz")
+    states = {row["name"]: row for row in result.payload["biological_states"]}
+    assert "cytosol" not in states
+    assert states["__auto_state__"]["species"] == "Homo sapiens"  # base: "Mus musculus"
+    assert _names(result.payload) == ["Homo sapiens"]
+    assert [(r["name"], r["reason"]) for r in _species_removals(result)] == [
+        (EXTRA, "unreferenced_after_quarantine")
+    ]
