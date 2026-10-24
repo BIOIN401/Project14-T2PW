@@ -1,0 +1,33 @@
+pass rate base 51/91 -> tip 52/91
+fixed: ['ORCH-767/chlorophyll-strict/2026-10-23_2328']
+passing legs turned failing: none
+gold recall lost: none
+still failing, at a different step (information): ['runs_verify/2026-08-22_2017/PMC12856317: final_pre_export_stage3_gates -> refinement_review_crash']
+target ORCH-767/chlorophyll-strict/2026-10-23_2328: FIXED
+D-112 § 2: ACCEPT
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769b\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ a3ebd5553a54ab34658387769d428dc691008f6d  [git, worktree dirty=False]
+label                   : corpus-compare
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch768/docs/pwml_recovery_sprint/evidence/orch768_replay_corpus.py compare C:/t/bt-orch769b/corpus-base.json C:/t/bt-orch769b/corpus-tip.json --target ORCH-767/chlorophyll-strict/2026-10-23_2328
+cwd                     : C:/t/bt-orch769b/cwd
+root PID / process group: 798980 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 120 s
+duration                : 0.39 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  799396:python.exe
+descendants terminated  : 1  799396
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769b\docs\pwml_recovery_sprint\evidence\g11\ORCH-769b\15-corpus-compare.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================

@@ -1,0 +1,45 @@
+== runs_papers/ORCH-759p/legs/menaquinone-strict/2026-10-22_2154/papers/PMC12421875/strict
+   input hash sha256:47d5937e59d3da3d | leg resulting_payload_hash sha256:47d5937e59d3da3d
+1. quarantine: ok=True release=release_ready refusals=[] result hash sha256:47d5937e59d3da3d
+   species rows: ['Lactococcus lactis', 'Lactococcus lactis subsp. lactis KF147', 'L. lactis subsp. lactis KF147', 'Arabidopsis thaliana']
+   removed_entity_report.removed_entities: []
+   closure iterations: [(1, [])]
+2. final pre-export Stage-3 gate: PASS
+3. required-field gate: ok=False errors=[('species_missing_taxonomy', '/entities/species/2'), ('species_missing_classification', '/entities/species/2')] outer_errors=['species_missing_taxonomy', 'species_missing_classification']
+4. IR: species=['Lactococcus lactis', 'Lactococcus lactis subsp. lactis KF147', 'L. lactis subsp. lactis KF147', 'Arabidopsis thaliana'] blocking=[] validate_errors=[]
+== runs_papers/ORCH-759/legs/menaquinone-strict/2026-10-22_1148/papers/PMC12421875/strict
+   input hash sha256:d2e46992fada5c51 | leg resulting_payload_hash sha256:d2e46992fada5c51
+1. quarantine: ok=True release=review_required refusals=[] result hash sha256:d2e46992fada5c51
+   species rows: ['Lactococcus lactis', 'L. lactis subsp. lactis KF147', 'Arabidopsis thaliana']
+   removed_entity_report.removed_entities: []
+   closure iterations: [(1, [])]
+2. final pre-export Stage-3 gate: PASS
+3. required-field gate: ok=False errors=[('species_missing_taxonomy', '/entities/species/1'), ('species_missing_classification', '/entities/species/1')] outer_errors=['species_missing_taxonomy', 'species_missing_classification']
+4. IR: species=['Lactococcus lactis', 'L. lactis subsp. lactis KF147', 'Arabidopsis thaliana'] blocking=[] validate_errors=[]
+REPLAY DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch766\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f775f2b3712fffb1ba9ea269e754dbf882e2cef0  [git, worktree dirty=True]
+label                   : replay-base
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/orch766/replay_export_gates.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch766
+root PID / process group: 235496 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 1.45 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  235344:python.exe
+descendants terminated  : 1  235344
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch766\docs\pwml_recovery_sprint\evidence\g11\ORCH-766\14-replay-base.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================

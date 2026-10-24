@@ -1,0 +1,144 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch766\src\t2pw\__init__.py
+FF...................................................FFFF                [100%]
+================================== FAILURES ===================================
+___ test_g9_menaquinone_leg_drops_the_unreferenced_species_row_and_exports ____
+
+    def test_g9_menaquinone_leg_drops_the_unreferenced_species_row_and_exports() -> None:
+        payload, context = _leg()
+        assert admitted_payload_hash(payload) == LEG_RESULTING_PAYLOAD_HASH
+        # Base, on the leg's own payload: the gate refuses on the unreferenced row.
+        assert _species_errors(_gate(payload, context["pathway_name"])) == [
+            ("species_missing_taxonomy", "/entities/species/2", ABBREVIATED),
+            ("species_missing_classification", "/entities/species/2", ABBREVIATED),
+        ]
+    
+        result = quarantine_and_close(payload, strict_db=True, pathway_context=context, mode="pathwhiz")
+    
+        # Exactly that row leaves; nothing else in the payload moves.
+        expected = deepcopy(payload)
+        del expected["entities"]["species"][2]
+>       assert result.payload == expected
+E       AssertionError: assert {'biological_....], ...}, ...} == {'biological_....], ...}, ...}
+E         
+E         Omitting 11 identical items, use -vv to show
+E         Differing items:
+E         {'entities': {'compounds': [{'biocyc_id': 'CPD-9517', 'cas': '617-12-9', 'chebi_id': '17333', 'chemspider_id': '11542'...], ...}, {'class': 'protein', 'confidence': 1.0, 'ec_number': '4.1.3.36', 'ec_numbers': ['4.1.3.36'], ...}, ...], ...}} != {'entities': {'compounds': [{'biocyc_id': 'CPD-9517', 'cas': '617-12-9', 'chebi_id': '17333', 'chemspider_id': '11542'...], ...}, {'class': 'protein', 'confidence': 1.0, 'ec_number': '4.1.3.36', 'ec_numbers': ['4.1.3.36'], ...}, ...], ...}}
+E         Use -v to get more diff
+
+tests\test_orch766_unreferenced_species.py:129: AssertionError
+_____________________ test_g9_tip_output_is_a_fixed_point _____________________
+
+    def test_g9_tip_output_is_a_fixed_point() -> None:
+        payload, context = _leg()
+        first = quarantine_and_close(payload, strict_db=True, pathway_context=context, mode="pathwhiz")
+        second = quarantine_and_close(first.payload, strict_db=True, pathway_context=context, mode="pathwhiz")
+>       assert ABBREVIATED not in _names(first.payload)
+E       AssertionError: assert 'L. lactis subsp. lactis KF147' not in ['Lactococcus lactis', 'Lactococcus lactis subsp. lactis KF147', 'L. lactis subsp. lactis KF147', 'Arabidopsis thaliana']
+E        +  where ['Lactococcus lactis', 'Lactococcus lactis subsp. lactis KF147', 'L. lactis subsp. lactis KF147', 'Arabidopsis thaliana'] = _names({'biological_states': [{'evidence': 'All the L. lactis mutants were derived from the L. lactis subsp. lactis KF147', '....}, {'class': 'protein', 'confidence': 1.0, 'ec_number': '4.1.3.36', 'ec_numbers': ['4.1.3.36'], ...}, ...], ...}, ...})
+E        +    where {'biological_states': [{'evidence': 'All the L. lactis mutants were derived from the L. lactis subsp. lactis KF147', '....}, {'class': 'protein', 'confidence': 1.0, 'ec_number': '4.1.3.36', 'ec_numbers': ['4.1.3.36'], ...}, ...], ...}, ...} = StrictQuarantineResult(payload={'entities': {'species': [{'name': 'Lactococcus lactis', 'provenance_lineage': [{'stage...: 0, 'thresholds': {'min_core_processes': 1, 'min_core_coverage': 0.5}, 'minimum_core_satisfied': True, 'reasons': []}).payload
+
+tests\test_orch766_unreferenced_species.py:153: AssertionError
+_______ test_g9_unreferenced_species_row_is_removed_and_the_gate_passes _______
+
+    def test_g9_unreferenced_species_row_is_removed_and_the_gate_passes() -> None:
+        payload = _with_extra()
+        assert _species_errors(_gate(payload))  # base refuses on it
+        result = quarantine_and_close(payload, strict_db=True, mode="pathwhiz")
+>       assert _names(result.payload) == ["Homo sapiens"]
+E       AssertionError: assert ['Homo sapien...Mus musculus'] == ['Homo sapiens']
+E         
+E         Left contains one more item: 'Mus musculus'
+E         Use -v to get more diff
+
+tests\test_orch766_unreferenced_species.py:440: AssertionError
+_________ test_g9_species_kept_only_by_a_removed_protein_goes_with_it _________
+
+    def test_g9_species_kept_only_by_a_removed_protein_goes_with_it() -> None:
+        payload = _with_extra()
+        payload["entities"]["proteins"].append(
+            {"name": "orphan kinase", "species": EXTRA, "mapped_ids": {"uniprot": "Q00001"}}
+        )
+        result = quarantine_and_close(payload, strict_db=True, mode="pathwhiz")
+        removed = [(r["bucket"], r["name"]) for r in result.removed_entity_report["removed_entities"]]
+>       assert ("proteins", "orphan kinase") in removed and ("species", EXTRA) in removed
+E       AssertionError: assert (('proteins', 'orphan kinase') in [('proteins', 'orphan kinase')] and ('species', 'Mus musculus') in [('proteins', 'orphan kinase')])
+
+tests\test_orch766_unreferenced_species.py:455: AssertionError
+_____ test_g9_an_id_collision_outside_a_species_field_does_not_keep_a_row _____
+
+    def test_g9_an_id_collision_outside_a_species_field_does_not_keep_a_row() -> None:
+        payload = _with_extra({"name": EXTRA, "pathbank_species_id": 4})
+        payload["entities"]["compounds"][0]["pubchem_cid"] = "4"
+        result = quarantine_and_close(payload, strict_db=True, mode="pathwhiz")
+>       assert _names(result.payload) == ["Homo sapiens"]
+E       AssertionError: assert ['Homo sapien...Mus musculus'] == ['Homo sapiens']
+E         
+E         Left contains one more item: 'Mus musculus'
+E         Use -v to get more diff
+
+tests\test_orch766_unreferenced_species.py:463: AssertionError
+___ test_delta_r1_restored_autostate_takes_a_species_the_pathway_references ___
+
+    def test_delta_r1_restored_autostate_takes_a_species_the_pathway_references() -> None:
+        """DELTA, labelled: fails at base by design, passes at tip (reviewer note 1, round 0).
+    
+        When closure sweeps every state, the F-192 restore (``restore_autostates_if_required``,
+        after the loop) gives the placeholder ``__auto_state__`` the species
+        ``_select_default_species_name`` scores highest among the rows PRESENT. At base an
+        unreferenced row with species-resolution confidence 0.99 wins it; at tip that row
+        has already been removed by the species closure, so the placeholder takes the row
+        the proteins reference. Recorded, not changed (ORCH-766-RESULT.md, repair round 1).
+        """
+    
+        payload = _with_extra(
+            {"name": EXTRA, "mapping_meta": {"species_resolution": {"confidence": 0.99}}}
+        )
+        # Nothing references the one state, so closure sweeps it and the restore fires.
+        for reaction in payload["processes"]["reactions"]:
+            reaction.pop("biological_state")
+        payload["element_locations"]["compound_locations"] = []
+        result = quarantine_and_close(payload, strict_db=True, mode="pathwhiz")
+        states = {row["name"]: row for row in result.payload["biological_states"]}
+        assert "cytosol" not in states
+>       assert states["__auto_state__"]["species"] == "Homo sapiens"  # base: "Mus musculus"
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert 'Mus musculus' == 'Homo sapiens'
+E         
+E         - Homo sapiens
+E         + Mus musculus
+
+tests\test_orch766_unreferenced_species.py:490: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_orch766_unreferenced_species.py::test_g9_menaquinone_leg_drops_the_unreferenced_species_row_and_exports
+FAILED tests/test_orch766_unreferenced_species.py::test_g9_tip_output_is_a_fixed_point
+FAILED tests/test_orch766_unreferenced_species.py::test_g9_unreferenced_species_row_is_removed_and_the_gate_passes
+FAILED tests/test_orch766_unreferenced_species.py::test_g9_species_kept_only_by_a_removed_protein_goes_with_it
+FAILED tests/test_orch766_unreferenced_species.py::test_g9_an_id_collision_outside_a_species_field_does_not_keep_a_row
+FAILED tests/test_orch766_unreferenced_species.py::test_delta_r1_restored_autostate_takes_a_species_the_pathway_references
+6 failed, 51 passed in 1.64s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch766\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 0fc6dedad49ddd8a46a37cbaabfa1a91c1d76356  [git, worktree dirty=True]
+label                   : r1-focused-base
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-766/38-r1-focused-base.pin.json -q -p no:cacheprovider --basetemp=C:/t/bt-orch766/38-r1-focused-base-1136 tests/test_orch766_unreferenced_species.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch766
+root PID / process group: 680972 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 2.70 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  681344:python.exe
+descendants terminated  : 1  681344
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch766\docs\pwml_recovery_sprint\evidence\g11\ORCH-766\38-r1-focused-base.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================

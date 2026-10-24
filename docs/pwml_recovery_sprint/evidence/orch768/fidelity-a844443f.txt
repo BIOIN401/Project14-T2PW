@@ -1,0 +1,35 @@
+t2pw resolved: C:\t\bt-orch768\src-a844443f\src\t2pw
+offline probe: {'attempts': {'urlopen_uniprot': 'refused', 'create_connection_loopback': 'refused', 'raw_socket_connect': 'refused'}, 'counted': 3, 'ok': True}
+runs_verify/2026-09-02_2052/PMC12444477                     replayable (final_pre_export_gate_lifecycle)          q=False['unexportable_entity:2']/diagnostic_only gate=None export=None req=None net=0  AS RECORDED
+runs_verify/2026-09-02_2052/PMC12856317                     replayable (upstream_contract_report)                 q=True/review_required gate=True export=None req=None net=0  AS RECORDED
+runs_verify/2026-09-02_2052/PMC12180156                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+runs_verify/2026-09-02_2052/PMC12096016                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+runs_verify/2026-09-02_2052/PMC12452463                     replayable (final_pre_export_stage3_gates)            q=True/review_required gate=False['gate.composite_validation_failed', 'gate.expected_plus_tokens_found'] export=None req=None net=0  AS RECORDED
+runs_verify/2026-09-02_2052/PMC12782028                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+
+SUMMARY (all)
+  strict_legs                    6
+  with_checkpoint                6
+  replay_errors                  0
+  pwml_pass                      3
+  pwml_pass_rate_of_strict       3/6
+  pwml_pass_rate_of_replayed     3/6
+  replayable_failures            3
+  llm_originating_failures       0
+  aborted_not_counted            0
+  verdict_as_recorded            6/6
+  network_refused_total          0
+
+SUMMARY (tier_B)
+  strict_legs                    6
+  with_checkpoint                6
+  replay_errors                  0
+  pwml_pass                      3
+  pwml_pass_rate_of_strict       3/6
+  pwml_pass_rate_of_replayed     3/6
+  replayable_failures            3
+  llm_originating_failures       0
+  aborted_not_counted            0
+  verdict_as_recorded            6/6
+  network_refused_total          0
+GOLD (replayed tail; certified gold only)

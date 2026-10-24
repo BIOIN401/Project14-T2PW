@@ -1,0 +1,36 @@
+t2pw resolved: C:\t\bt-orch768\src-21155be0\src\t2pw
+offline probe: {'attempts': {'urlopen_uniprot': 'refused', 'create_connection_loopback': 'refused', 'raw_socket_connect': 'refused'}, 'counted': 3, 'ok': True}
+ORCH-759p/enterobactin-strict/2026-10-22_2101               pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+                                                            gold: final P1.000 R1.000 F1 1.000 (5/5)  pwml P1.000 R1.000 F1 1.000 (5/5)
+ORCH-759p/menaquinone-strict/2026-10-22_2154                replayable (pwml_export)                              q=True/release_ready gate=True export=False req=False net=0  AS RECORDED
+                                                            gold: final P1.000 R1.000 F1 1.000 (9/9)
+ORCH-759p/sour_taste_v2-strict/2026-10-22_2233              pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+
+SUMMARY (all)
+  strict_legs                    3
+  with_checkpoint                3
+  replay_errors                  0
+  pwml_pass                      2
+  pwml_pass_rate_of_strict       2/3
+  pwml_pass_rate_of_replayed     2/3
+  replayable_failures            1
+  llm_originating_failures       0
+  aborted_not_counted            0
+  verdict_as_recorded            3/3
+  network_refused_total          0
+
+SUMMARY (tier_A)
+  strict_legs                    3
+  with_checkpoint                3
+  replay_errors                  0
+  pwml_pass                      2
+  pwml_pass_rate_of_strict       2/3
+  pwml_pass_rate_of_replayed     2/3
+  replayable_failures            1
+  llm_originating_failures       0
+  aborted_not_counted            0
+  verdict_as_recorded            3/3
+  network_refused_total          0
+GOLD (replayed tail; certified gold only)
+  ORCH-759p/enterobactin-strict/2026-10-22_2101              final P1.000 R1.000 F1 1.000 (5/5)  pwml P1.000 R1.000 F1 1.000 (5/5)
+  ORCH-759p/menaquinone-strict/2026-10-22_2154               final P1.000 R1.000 F1 1.000 (9/9)

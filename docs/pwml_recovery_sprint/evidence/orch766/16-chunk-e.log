@@ -1,0 +1,78 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch766\src\t2pw\__init__.py
+........................................................................ [ 41%]
+........................................................................ [ 82%]
+......................F........                                          [100%]
+================================== FAILURES ===================================
+__________ test_the_full_stack_baseline_is_exactly_what_was_reported __________
+
+    def test_the_full_stack_baseline_is_exactly_what_was_reported() -> None:
+        """Every number in the reported table, asserted against a fresh measurement."""
+    
+        rows = [_full_stack(leg) for leg in _legs()]
+        admitted = [row for row in rows if row["quarantine"] == "ok"]
+        measured = {
+            "legs_examined": len(rows),
+            "quarantine_admitted": len(admitted),
+            "quarantine_refused": len(rows) - len(admitted),
+            "stage3_after_pass": sum(1 for row in admitted if row["stage3_after"] == "pass"),
+            "required_contract_pass": sum(1 for row in admitted if row["required_contract"] == "pass"),
+            "reached_ir": sum(1 for row in admitted if row["ir"] is not None),
+            "ir_pass": sum(1 for row in admitted if row["ir"] == "pass"),
+            "exportable": sum(1 for row in rows if row["exportable"]),
+        }
+    
+        assert measured == FULL_STACK_BASELINE, f"{_REMEASURE} measured={measured}"
+    
+        by_leg = Counter(code for row in admitted for code in set(row["required_codes"]))
+        by_row = Counter(code for row in admitted for code in row["required_codes"])
+    
+        assert dict(by_leg) == RESIDUAL_CODES_BY_LEG, f"{_REMEASURE} by_leg={dict(by_leg)}"
+>       assert dict(by_row) == RESIDUAL_CODES_BY_ROW, f"{_REMEASURE} by_row={dict(by_row)}"
+E       AssertionError: the frozen baseline cohort no longer measures what was pinned. The cohort itself cannot drift (it is tests/data/baseline_cohort_manifest.json, not a glob), so either an artifact under runs/ changed or the pipeline's verdict on one of these legs changed. Establish which, then update the manifest if and only if membership was meant to change, and update BOTH this baseline and the table in docs/change_log.md so they cannot disagree. by_row={'species_missing_taxonomy': 19, 'species_missing_classification': 19}
+E       assert {'species_mis...taxonomy': 19} == {'species_mis...taxonomy': 27}
+E         
+E         Differing items:
+E         {'species_missing_taxonomy': 19} != {'species_missing_taxonomy': 27}
+E         {'species_missing_classification': 19} != {'species_missing_classification': 27}
+E         Use -v to get more diff
+
+tests\test_strict_quarantine_real_artifact_replay.py:940: AssertionError
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.pwml.ir:ir.py:1297 Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Listeria monocytogenes']
+WARNING  t2pw.pwml.ir:ir.py:1297 Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 2 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli', 'Arabidopsis thaliana']
+WARNING  t2pw.pwml.ir:ir.py:1297 Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens']
+WARNING  t2pw.pwml.ir:ir.py:1297 Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 2 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens', 'Arabidopsis thaliana']
+WARNING  t2pw.pwml.ir:ir.py:1297 Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli']
+WARNING  t2pw.pwml.ir:ir.py:1297 Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli']
+WARNING  t2pw.pwml.ir:ir.py:1297 Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 2 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens', 'Arabidopsis thaliana']
+WARNING  t2pw.pwml.ir:ir.py:1297 Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 2 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens', 'Arabidopsis thaliana']
+WARNING  t2pw.pwml.ir:ir.py:1297 Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli']
+=========================== short test summary info ===========================
+FAILED tests/test_strict_quarantine_real_artifact_replay.py::test_the_full_stack_baseline_is_exactly_what_was_reported
+1 failed, 174 passed in 24.81s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch766\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f775f2b3712fffb1ba9ea269e754dbf882e2cef0  [git, worktree dirty=False]
+label                   : chunk-e
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-766/16-chunk-e.pin.json -q -p no:cacheprovider --basetemp=C:/t/bt-orch766/16-chunk-e-1654 tests/test_strict_quarantine_real_artifact_replay.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch766
+root PID / process group: 237708 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 25.64 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  233172:python.exe
+descendants terminated  : 1  233172
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch766\docs\pwml_recovery_sprint\evidence\g11\ORCH-766\16-chunk-e.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================

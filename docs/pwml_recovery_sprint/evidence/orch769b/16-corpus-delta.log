@@ -1,0 +1,77 @@
+legs: 93; replay record identical: 90; only written-file hashes differ: 0; verdict fields differ: 3
+
+== ORCH-767/chlorophyll-strict/2026-10-23_2328
+  class: replayable (final_pre_export_stage3_gates)  ->  pass
+  differing keys: ['canonical_matches_leg', 'canonical_sha256', 'driver', 'export', 'failure_stage', 'final_gate', 'pwml_matches_leg', 'pwml_sha256', 'pwml_written', 'quarantine']
+  [canonical_matches_leg] base: true
+  [canonical_matches_leg] tip : false
+  [canonical_sha256] base: "89ee2d95809aa795bdeb800d4cc52607fd845e431a919a830f83410c34819f99"
+  [canonical_sha256] tip : "2ee9535e021fc9f4edfee0ee7a0a55fd3cc76bd499926b3367ec9c7d19ff5acc"
+  [driver] base: {"codes": ["gate.unknown_protein_modifier_reference"], "contract_errors": 0, "gate_failed": true, "gate_reason": "final_gate_failed", "gate_stage": "final_pre_export_stage3_gates"}
+  [driver] tip : {"codes": [], "contract_errors": 0, "gate_failed": false, "gate_reason": "", "gate_stage": "final_pre_export_stage3_gates"}
+  [export] base: null
+  [export] tip : {"error": "", "ir_blocking": [], "ir_validation": [], "ok": true, "pwml_name": "pathway.review_required.pwml", "quarantine_reused": true, "release": "review_required", "required_gate_codes": [], "required_gate_ok": true, "stage3_contract_codes": []}
+  [failure_stage] base: "final_pre_export_stage3_gates"
+  [failure_stage] tip : null
+  [final_gate] base: {"codes": ["gate.unknown_protein_modifier_reference"], "errors": [["/processes/reactions/17/modifiers/1", "Unknown protein/modifier reference: PIF1"], ["/processes/reactions/17/modifiers/7", "Unknown protein/modifier reference: GBP"], ["/processes/reactions/18/modifiers/0", "Unknown protein/modifier reference: FAR1"], ["/processes/reactions/21/enzymes/3", "Unknown protein/modifier reference: GBP"], ["/processes/reactions/21/modifiers/3", "Unknown protein/modifier reference: GBP"], ["/processes/reactions/22/enzymes/1", "Unknown protein/modifier reference: CPO1"], ["/processes/reactions/22/modifiers/1", "Unknown protein/modifier reference: CPO1"], ["/processes/reactions/23/enzymes/1", "Unknown protein/modifier reference: PPO1"], ["/processes/reactions/23/modifiers/1", "Unknown protein/modifier reference: PPO1"]], "ok": false}
+  [final_gate] tip : {"codes": [], "errors": [], "ok": true}
+  [pwml_matches_leg] base: null
+  [pwml_matches_leg] tip : false
+  [pwml_sha256] base: null
+  [pwml_sha256] tip : "5b40c6ec0ee516277022176d2dcd208977b2e74ffc7f0ab5187a8c779783f070"
+  [pwml_written] base: false
+  [pwml_written] tip : true
+  [quarantine] base: {"admitted_hash_matches_leg": false, "counts": {"auxiliary_accepted": 12, "core_accepted": 20, "quarantined_broken_reference": 0, "quarantined_disconnected": 0, "quarantined_out_of_scope": 0, "quarantined_unmapped_entity": 0, "quarantined_weak_evidence": 0}, "decision_input_hash_matches_leg": true, "ok": true, "refusal": [], "release": "review_required"}
+  [quarantine] tip : {"admitted_hash_matches_leg": false, "counts": {"auxiliary_accepted": 10, "core_accepted": 17, "quarantined_broken_reference": 5, "quarantined_disconnected": 0, "quarantined_out_of_scope": 0, "quarantined_unmapped_entity": 0, "quarantined_weak_evidence": 0}, "decision_input_hash_matches_leg": true, "ok": true, "refusal": [], "release": "review_required"}
+
+== runs_verify/2026-08-22_2017/PMC12856317
+  class: replayable (final_pre_export_stage3_gates)  ->  replayable (refinement_review_crash)
+  differing keys: ['canonical_matches_leg', 'canonical_sha256', 'driver', 'export_if_refinement_opened', 'failure_stage', 'final_gate', 'quarantine', 'refinement_error']
+  [canonical_matches_leg] base: true
+  [canonical_matches_leg] tip : false
+  [canonical_sha256] base: "c921f64fbb87bcbb1adf8dd6cca5689a0ca8e497cf0455b740212437c2e6c03a"
+  [canonical_sha256] tip : "9c25782329a64caf9ee7af7a8a7275d48fede23a874584f3b3a2b8b506a466ff"
+  [driver] base: {"codes": ["gate.unknown_protein_modifier_reference"], "contract_errors": 0, "gate_failed": true, "gate_reason": "final_gate_failed", "gate_stage": "final_pre_export_stage3_gates"}
+  [driver] tip : {"codes": [], "contract_errors": 0, "gate_failed": false, "gate_reason": "", "gate_stage": "final_pre_export_stage3_gates"}
+  [export_if_refinement_opened] base: null
+  [export_if_refinement_opened] tip : {"error": "", "ok": true, "required_gate_codes": []}
+  [failure_stage] base: "final_pre_export_stage3_gates"
+  [failure_stage] tip : "refinement_review_crash"
+  [final_gate] base: {"codes": ["gate.unknown_protein_modifier_reference"], "errors": [["/processes/reactions/0/modifiers/0", "Unknown protein/modifier reference: Pyridoxal 5'-phosphate"]], "ok": false}
+  [final_gate] tip : {"codes": [], "errors": [], "ok": true}
+  [quarantine] base: {"admitted_hash_matches_leg": false, "counts": {"auxiliary_accepted": 0, "core_accepted": 3, "quarantined_broken_reference": 0, "quarantined_disconnected": 0, "quarantined_out_of_scope": 0, "quarantined_unmapped_entity": 0, "quarantined_weak_evidence": 0}, "decision_input_hash_matches_leg": true, "ok": true, "refusal": [], "release": "review_required"}
+  [quarantine] tip : {"admitted_hash_matches_leg": false, "counts": {"auxiliary_accepted": 0, "core_accepted": 2, "quarantined_broken_reference": 1, "quarantined_disconnected": 0, "quarantined_out_of_scope": 0, "quarantined_unmapped_entity": 0, "quarantined_weak_evidence": 0}, "decision_input_hash_matches_leg": true, "ok": true, "refusal": [], "release": "review_required"}
+  [refinement_error] base: null
+  [refinement_error] tip : "RuntimeError: DraftGraph has no reaction nodes \u2014 nothing to render."
+
+== runs_verify/2026-08-24_1203/PMC12856317
+  class: replayable (final_pre_export_gate_lifecycle)  ->  replayable (final_pre_export_gate_lifecycle)
+  differing keys: ['quarantine']
+  [quarantine] base: {"admitted_hash_matches_leg": false, "counts": {"auxiliary_accepted": 0, "core_accepted": 6, "quarantined_broken_reference": 0, "quarantined_disconnected": 0, "quarantined_out_of_scope": 0, "quarantined_unmapped_entity": 0, "quarantined_weak_evidence": 0}, "decision_input_hash_matches_leg": true, "ok": false, "refusal": ["unexportable_entity:2"], "release": "diagnostic_only"}
+  [quarantine] tip : {"admitted_hash_matches_leg": false, "counts": {"auxiliary_accepted": 0, "core_accepted": 5, "quarantined_broken_reference": 1, "quarantined_disconnected": 0, "quarantined_out_of_scope": 0, "quarantined_unmapped_entity": 0, "quarantined_weak_evidence": 0}, "decision_input_hash_matches_leg": true, "ok": false, "refusal": ["unexportable_entity:2"], "release": "diagnostic_only"}
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769b\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ a3ebd5553a54ab34658387769d428dc691008f6d  [git, worktree dirty=False]
+label                   : corpus-delta
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769b/docs/pwml_recovery_sprint/evidence/orch769b/corpus_delta.py C:/t/bt-orch769b/corpus-base.json C:/t/bt-orch769b/corpus-tip.json
+cwd                     : C:/t/bt-orch769b/cwd
+root PID / process group: 799936 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 120 s
+duration                : 0.40 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 0
+descendants terminated  : 0
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769b\docs\pwml_recovery_sprint\evidence\g11\ORCH-769b\16-corpus-delta.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================

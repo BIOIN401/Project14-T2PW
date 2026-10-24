@@ -1,0 +1,494 @@
+{
+ "legs": [
+  {
+   "checkpoint": "pre_freeze",
+   "class": "replayable (final_pre_export_gate_lifecycle)",
+   "fidelity_diffs": [],
+   "id": "ORCH-755/enterobactin-strict/2026-10-20_2201",
+   "paper": "PMC12096016",
+   "recorded": "final_pre_export_gate_lifecycle",
+   "replay": {
+    "canonical_matches_leg": false,
+    "canonical_sha256": null,
+    "checkpoint": "pre_freeze",
+    "checkpoint_sha256": "50c53e428cd08c4f5dcb8b0103e79f3e977860d3690715d47e0cd83c51f9727f",
+    "driver": {
+     "codes": [
+      "gate.gate_lifecycle"
+     ],
+     "contract_errors": 0,
+     "gate_failed": true,
+     "gate_reason": "final_gate_report_missing",
+     "gate_stage": "final_pre_export_gate_lifecycle"
+    },
+    "enrichment": {
+     "ok": true,
+     "summary_digest": "c33cd4ee29960ffa"
+    },
+    "failure_stage": "final_pre_export_gate_lifecycle",
+    "files": {
+     "canonical.json": "44136fa355b3678a",
+     "enrichment_dump.json": "c4bb3dad02342810",
+     "enrichment_report.json": "0cea079103fe8098",
+     "final.enriched.json": "04b8a1dbdfc5c0be",
+     "final.mapped.json": "50c53e428cd08c4f",
+     "outputs/coverage_diagnostics.json": "5e5d2bf9f0a9ce7a",
+     "outputs/coverage_summary.json": "8481ac87d844bddc",
+     "outputs/graph_closure_iterations.json": "bd0af25593ec52f7",
+     "outputs/quarantine_report.json": "f52630dc19650919",
+     "outputs/removed_entity_report.json": "79f1f697ace32f87"
+    },
+    "final_gate": null,
+    "gold": {},
+    "id": "ORCH-755/enterobactin-strict/2026-10-20_2201",
+    "network_refused": [],
+    "paper": "PMC12096016",
+    "prefreeze": {
+     "admitted_hash_matches_leg_with_db_available": false,
+     "db_resolution": {
+      "available": false,
+      "reason": "db_not_configured"
+     },
+     "failures": {
+      "compounds": "resolution_report_not_ok:db_unavailable"
+     },
+     "ok": false
+    },
+    "pwml_written": false,
+    "quarantine": {
+     "admitted_hash_matches_leg": false,
+     "counts": {
+      "auxiliary_accepted": 0,
+      "core_accepted": 11,
+      "quarantined_broken_reference": 0,
+      "quarantined_disconnected": 0,
+      "quarantined_out_of_scope": 0,
+      "quarantined_unmapped_entity": 2,
+      "quarantined_weak_evidence": 0
+     },
+     "decision_input_hash_matches_leg": true,
+     "ok": false,
+     "refusal": [
+      "unexportable_entity:1"
+     ],
+     "release": "diagnostic_only"
+    },
+    "recorded_reports": {
+     "final_gate_errors": [],
+     "required_gate_codes": null
+    }
+   },
+   "src_sha": "a2ed7284",
+   "tier": "A"
+  },
+  {
+   "checkpoint": null,
+   "class": "llm_originating (timeout at unknown: no checkpoint)",
+   "id": "ORCH-755/menaquinone-strict/2026-10-20_2238",
+   "paper": "PMC12421875",
+   "recorded": "other:unknown",
+   "replay": null,
+   "src_sha": "a2ed7284",
+   "tier": "A"
+  },
+  {
+   "checkpoint": null,
+   "class": "llm_originating (timeout at unknown: no checkpoint)",
+   "id": "ORCH-755/chlorophyll-strict/2026-10-20_2338",
+   "paper": "PMC5130987",
+   "recorded": "other:unknown",
+   "replay": null,
+   "src_sha": "a2ed7284",
+   "tier": "A"
+  },
+  {
+   "checkpoint": null,
+   "class": "llm_originating (timeout at unknown: no checkpoint)",
+   "id": "ORCH-755/ara_operon-strict/2026-10-21_0039",
+   "paper": "PMC11983282",
+   "recorded": "other:unknown",
+   "replay": null,
+   "src_sha": "a2ed7284",
+   "tier": "A"
+  },
+  {
+   "checkpoint": "canonical",
+   "class": "replayable (pwml_export)",
+   "fidelity_diffs": [],
+   "id": "ORCH-755/sour_taste-strict/2026-10-21_0139",
+   "paper": "PMC7059786",
+   "recorded": "pwml_export",
+   "replay": {
+    "canonical_matches_leg": true,
+    "canonical_sha256": "2fe1a4ba680d16a3c3f59dc237558c36d2d6d6733794236b9730f5ddb740e38c",
+    "checkpoint": "canonical",
+    "checkpoint_sha256": "fa8b216c319aabfa88390623f9dcd1c8eab2b788608410e604184542aa5623ce",
+    "driver": {
+     "codes": [],
+     "contract_errors": 0,
+     "gate_failed": false,
+     "gate_reason": "",
+     "gate_stage": "final_pre_export_stage3_gates"
+    },
+    "export": {
+     "error": "PWML export stopped by validation-only pre-export Stage 3 revalidation; Stage 8 did not repair the payload.",
+     "ir_blocking": [],
+     "ir_validation": [],
+     "ok": false,
+     "quarantine_reused": true,
+     "required_gate_codes": [],
+     "required_gate_ok": null,
+     "stage3_contract_codes": [
+      "actor_schema_not_canonical"
+     ]
+    },
+    "failure_stage": "pwml_export",
+    "files": {
+     "canonical.json": "6b4f4182411260df",
+     "final.canonical.json": "fa8b216c319aabfa",
+     "outputs/coverage_diagnostics.json": "feb485b679846e13",
+     "outputs/coverage_summary.json": "c3410f1d61942031",
+     "outputs/graph_closure_iterations.json": "6c12fbe83cf595a9",
+     "outputs/pwml_stage3_gate_report.json": "1bc50d5ec23174c7",
+     "outputs/quarantine_report.json": "db64b2f0b9a97e64",
+     "outputs/removed_entity_report.json": "2d5d47dd44e915c5"
+    },
+    "final_gate": {
+     "codes": [],
+     "errors": [],
+     "ok": true
+    },
+    "gold": null,
+    "id": "ORCH-755/sour_taste-strict/2026-10-21_0139",
+    "network_refused": [],
+    "paper": "PMC7059786",
+    "pwml_written": false,
+    "quarantine": {
+     "admitted_hash_matches_leg": false,
+     "counts": {
+      "auxiliary_accepted": 0,
+      "core_accepted": 7,
+      "quarantined_broken_reference": 0,
+      "quarantined_disconnected": 0,
+      "quarantined_out_of_scope": 0,
+      "quarantined_unmapped_entity": 0,
+      "quarantined_weak_evidence": 0
+     },
+     "decision_input_hash_matches_leg": true,
+     "ok": true,
+     "refusal": [],
+     "release": "review_required"
+    },
+    "recorded_reports": {
+     "final_gate_errors": [],
+     "required_gate_codes": null
+    }
+   },
+   "src_sha": "a2ed7284",
+   "tier": "A"
+  },
+  {
+   "checkpoint": null,
+   "class": "llm_originating (timeout at unknown: no checkpoint)",
+   "id": "ORCH-755/wnt_pcp-strict/2026-10-21_0207",
+   "paper": "PMC10425814",
+   "recorded": "other:unknown",
+   "replay": null,
+   "src_sha": "a2ed7284",
+   "tier": "A"
+  },
+  {
+   "checkpoint": null,
+   "class": "llm_originating (fail at stage1: no checkpoint)",
+   "id": "ORCH-755/wnt_ca-strict/2026-10-21_0307",
+   "paper": "PMC10425814",
+   "recorded": "other:stage1",
+   "replay": null,
+   "src_sha": "a2ed7284",
+   "tier": "A"
+  },
+  {
+   "checkpoint": "canonical",
+   "class": "pass",
+   "fidelity_diffs": [],
+   "id": "ORCH-756/enterobactin-strict/2026-10-21_2020",
+   "paper": "PMC12096016",
+   "recorded": "pwml",
+   "replay": {
+    "canonical_matches_leg": true,
+    "canonical_sha256": "acfd30fc759bef93b003a61a0c282b5e53024a053aca81f02c7a257ca3b17384",
+    "checkpoint": "canonical",
+    "checkpoint_sha256": "70014c2694ed8420a7db11ecac0d34bf9d32ec1348765a497165e9b0c8357d86",
+    "driver": {
+     "codes": [],
+     "contract_errors": 0,
+     "gate_failed": false,
+     "gate_reason": "",
+     "gate_stage": "final_pre_export_stage3_gates"
+    },
+    "export": {
+     "error": "",
+     "ir_blocking": [],
+     "ir_validation": [],
+     "ok": true,
+     "pwml_name": "pathway.review_required.pwml",
+     "quarantine_reused": true,
+     "release": "review_required",
+     "required_gate_codes": [],
+     "required_gate_ok": true,
+     "stage3_contract_codes": []
+    },
+    "failure_stage": null,
+    "files": {
+     "canonical.json": "40e617a27d524c5f",
+     "final.canonical.json": "70014c2694ed8420",
+     "outputs/coverage_diagnostics.json": "4866273f392d16c4",
+     "outputs/coverage_summary.json": "b958075a837d5c0a",
+     "outputs/graph_closure_iterations.json": "6c12fbe83cf595a9",
+     "outputs/pathway.pwml": "5245ce32eaecd2cf",
+     "outputs/pwml_prefreeze_resolution_report.streamlit.json": "270a6608c272e68c",
+     "outputs/pwml_required_field_gate_report.json": "3c7100af7b4fd467",
+     "outputs/quarantine_report.json": "a8f1fec406a85820",
+     "outputs/removed_entity_report.json": "2d5d47dd44e915c5",
+     "pathway.review_required.pwml": "5245ce32eaecd2cf",
+     "pwml_ir.json": "d3570b63aa1fed31"
+    },
+    "final_gate": {
+     "codes": [],
+     "errors": [],
+     "ok": true
+    },
+    "gold": {
+     "final": {
+      "F1": 0.8333,
+      "P": 0.7143,
+      "R": 1.0,
+      "gold": 5,
+      "matched": 5,
+      "matched_ids": [
+       "R1",
+       "R2",
+       "R3",
+       "R4",
+       "R5"
+      ]
+     },
+     "pwml": {
+      "F1": 0.8333,
+      "P": 0.7143,
+      "R": 1.0,
+      "gold": 5,
+      "matched": 5,
+      "matched_ids": [
+       "R1",
+       "R2",
+       "R3",
+       "R4",
+       "R5"
+      ]
+     }
+    },
+    "id": "ORCH-756/enterobactin-strict/2026-10-21_2020",
+    "network_refused": [],
+    "paper": "PMC12096016",
+    "pwml_matches_leg": true,
+    "pwml_sha256": "5245ce32eaecd2cfc5f2d4f6bcb51ddb9944368d038efc77cf4484377f8aa641",
+    "pwml_written": true,
+    "quarantine": {
+     "admitted_hash_matches_leg": false,
+     "counts": {
+      "auxiliary_accepted": 0,
+      "core_accepted": 14,
+      "quarantined_broken_reference": 0,
+      "quarantined_disconnected": 0,
+      "quarantined_out_of_scope": 0,
+      "quarantined_unmapped_entity": 0,
+      "quarantined_weak_evidence": 0
+     },
+     "decision_input_hash_matches_leg": true,
+     "ok": true,
+     "refusal": [],
+     "release": "review_required"
+    },
+    "recorded_reports": {
+     "final_gate_errors": [],
+     "required_gate_codes": []
+    }
+   },
+   "src_sha": "a2ed7284",
+   "tier": "A"
+  },
+  {
+   "checkpoint": "canonical",
+   "class": "pass",
+   "fidelity_diffs": [],
+   "id": "ORCH-756/menaquinone-strict/2026-10-21_2048",
+   "paper": "PMC12421875",
+   "recorded": "pwml",
+   "replay": {
+    "canonical_matches_leg": true,
+    "canonical_sha256": "cbb4c7f17840f7a112fb7fbc58bd9acb6f7bafe03dd32bbbdd46e7638583dea8",
+    "checkpoint": "canonical",
+    "checkpoint_sha256": "ad1ec8615abbd8ecdaa31dcb9512f7be5c76fe963e42d2d6de5b7d28c8b01b21",
+    "driver": {
+     "codes": [],
+     "contract_errors": 0,
+     "gate_failed": false,
+     "gate_reason": "",
+     "gate_stage": "final_pre_export_stage3_gates"
+    },
+    "export": {
+     "error": "",
+     "ir_blocking": [],
+     "ir_validation": [],
+     "ok": true,
+     "pwml_name": "pathway.review_required.pwml",
+     "quarantine_reused": true,
+     "release": "review_required",
+     "required_gate_codes": [],
+     "required_gate_ok": true,
+     "stage3_contract_codes": []
+    },
+    "failure_stage": null,
+    "files": {
+     "canonical.json": "d6d8061b70b9d80c",
+     "final.canonical.json": "ad1ec8615abbd8ec",
+     "outputs/coverage_diagnostics.json": "df923c87136c95d8",
+     "outputs/coverage_summary.json": "ee68c0a5d67b7315",
+     "outputs/graph_closure_iterations.json": "6c12fbe83cf595a9",
+     "outputs/pathway.pwml": "510d81f79d9485ec",
+     "outputs/pwml_prefreeze_resolution_report.streamlit.json": "bae854741a47b242",
+     "outputs/pwml_required_field_gate_report.json": "13c7da23dcfa0ce8",
+     "outputs/quarantine_report.json": "9d1dfe9eb02a67d4",
+     "outputs/removed_entity_report.json": "2d5d47dd44e915c5",
+     "pathway.review_required.pwml": "510d81f79d9485ec",
+     "pwml_ir.json": "6f74c5998d248924"
+    },
+    "final_gate": {
+     "codes": [],
+     "errors": [],
+     "ok": true
+    },
+    "gold": {
+     "final": {
+      "F1": 0.8296,
+      "P": 0.8889,
+      "R": 0.7778,
+      "gold": 9,
+      "matched": 7,
+      "matched_ids": [
+       "R1",
+       "R3",
+       "R4",
+       "R5",
+       "R6",
+       "R7",
+       "R9"
+      ]
+     },
+     "pwml": {
+      "F1": 0.8296,
+      "P": 0.8889,
+      "R": 0.7778,
+      "gold": 9,
+      "matched": 7,
+      "matched_ids": [
+       "R1",
+       "R3",
+       "R4",
+       "R5",
+       "R6",
+       "R7",
+       "R9"
+      ]
+     }
+    },
+    "id": "ORCH-756/menaquinone-strict/2026-10-21_2048",
+    "network_refused": [],
+    "paper": "PMC12421875",
+    "pwml_matches_leg": true,
+    "pwml_sha256": "510d81f79d9485ece207ca20f3934483d68d8e111b14e9613ea37985d5d7f2ca",
+    "pwml_written": true,
+    "quarantine": {
+     "admitted_hash_matches_leg": false,
+     "counts": {
+      "auxiliary_accepted": 0,
+      "core_accepted": 10,
+      "quarantined_broken_reference": 0,
+      "quarantined_disconnected": 0,
+      "quarantined_out_of_scope": 0,
+      "quarantined_unmapped_entity": 0,
+      "quarantined_weak_evidence": 0
+     },
+     "decision_input_hash_matches_leg": true,
+     "ok": true,
+     "refusal": [],
+     "release": "review_required"
+    },
+    "recorded_reports": {
+     "final_gate_errors": [],
+     "required_gate_codes": []
+    }
+   },
+   "src_sha": "a2ed7284",
+   "tier": "A"
+  },
+  {
+   "checkpoint": null,
+   "class": "llm_originating (timeout at unknown: no checkpoint)",
+   "id": "ORCH-756/chlorophyll-strict/2026-10-21_2109",
+   "paper": "PMC5130987",
+   "recorded": "other:unknown",
+   "replay": null,
+   "src_sha": "a2ed7284",
+   "tier": "A"
+  }
+ ],
+ "offline_probe": {
+  "attempts": {
+   "create_connection_loopback": "refused",
+   "raw_socket_connect": "refused",
+   "urlopen_uniprot": "refused"
+  },
+  "counted": 3,
+  "ok": true
+ },
+ "src": "t2pw from --src",
+ "summary": {
+  "all": {
+   "aborted_not_counted": 0,
+   "llm_originating_failures": 6,
+   "network_refused_total": 0,
+   "passing_ids": [
+    "ORCH-756/enterobactin-strict/2026-10-21_2020",
+    "ORCH-756/menaquinone-strict/2026-10-21_2048"
+   ],
+   "pwml_pass": 2,
+   "pwml_pass_rate_of_replayed": "2/4",
+   "pwml_pass_rate_of_strict": "2/10",
+   "replay_errors": 0,
+   "replayable_failures": 2,
+   "strict_legs": 10,
+   "verdict_as_recorded": "4/4",
+   "with_checkpoint": 4
+  },
+  "tier_A": {
+   "aborted_not_counted": 0,
+   "llm_originating_failures": 6,
+   "network_refused_total": 0,
+   "passing_ids": [
+    "ORCH-756/enterobactin-strict/2026-10-21_2020",
+    "ORCH-756/menaquinone-strict/2026-10-21_2048"
+   ],
+   "pwml_pass": 2,
+   "pwml_pass_rate_of_replayed": "2/4",
+   "pwml_pass_rate_of_strict": "2/10",
+   "replay_errors": 0,
+   "replayable_failures": 2,
+   "strict_legs": 10,
+   "verdict_as_recorded": "4/4",
+   "with_checkpoint": 4
+  }
+ },
+ "task": "ORCH-768"
+}
