@@ -418,3 +418,56 @@ Until that is ruled, both legs count as corpus passes, because the harness count
 
 **TEST_MATRIX delta, unchanged by the merge:** SMOKE 511, boundary file 24, plus the ORCH-768 acceptance test's pin
 move, applied here in `cdbf46c9`.
+
+## 13. Chunk D baseline move (merge rule 4): `qb` 23 → 24, `TOTAL` 187 → 188
+
+**Why.** On the merged tip the orchestrator's Chunk D run (`int769`, `evidence/g11/ORCH-769i/01-chunkd-outer.json`)
+refused before running: `PARTITION PROOF FAILED -- gate NOT run`.
+
+* `monolithic: parsed=188 expected=187`, `qb: parsed=24 expected=23`;
+* `union=188 missing=0 extra=0 SETS_EQUAL=True`.
+
+The cause is this lane's G9 AppTest. It lives in `tests/test_streamlit_quarantine_boundary.py`, and that file is the
+whole `qb` component, which `chunk_d_gate.py` pins by count. The orchestrator authorized the move in the C-050k form.
+
+**F-8. A miss, recorded.** `tests/test_c082_post_pipeline_seam.py:18-24` documents this exact trap and the convention
+that avoids it: a new AppTest that borrows the boundary harness goes in its own `test_c0NN_*.py` file, so Chunk D's
+partition stays unchanged. I put the test in the boundary file to reuse its fixtures, without checking the gate's pins.
+
+* **The alternative not taken:** move the test to its own file. Chunk D would stay at 187, but the focused selection
+  would change.
+* **The orchestrator chose the move.**
+
+**The change** (`84163903`, `docs/pwml_recovery_sprint/evidence/chunk_d_gate.py` only, +25 −18):
+
+* `COMPONENTS`: `("qb", QB, 23)` becomes `("qb", QB, 24)`. `core` 160 and `s8` 4 are unchanged. `TOTAL` is derived,
+  so it becomes 188.
+* A third numbered entry in the move history beside C-045b and C-050k, with the `+1` node named and the refused
+  partition quoted.
+* The prose that states the current numbers: 187 → 188, the `qb` file's 23 → 24, and the AppTest node count 27 → 28
+  (module docstring, the `APPTEST` comment, the `run` docstring, the `--task` help).
+* **Nothing else pins these counts.** `chunk_d_gate_selftest.py` imports functions only; its `23`s are synthetic
+  `job_verdict` inputs. No test imports `TOTAL` or `COMPONENTS`. The only other mention, `test_c082`'s docstring,
+  describes this very move.
+
+**Proof, at `84163903`:**
+
+| run | G11 | result |
+|---|---|---|
+| `chunk_d_gate_selftest.py` | `40` | **10 passed, 0 failed** |
+| Chunk D, the `TEST_MATRIX.md` § Commands form, `T2PW_OFFLINE_CURATOR=1`, `--heavy-lock ORCH-769c`, `--task ORCH-769c`, launched with `run_in_background` (no `&`) | `41` outer, `42`–`74` inner | partition `monolithic parsed=188 expected=188`; `core 160/160`, `s8 4/4`, `qb 24/24`, `overlap 0`; `union=188 missing=0 extra=0 SETS_EQUAL=True` |
+
+Execution: `jobs=29 executed=188/188 omissions=0 additions=0 failed=none`.
+
+* `core` ran in one process: `160 passed`.
+* The 28 AppTest nodes ran each alone (`s8` node00–03, `qb` node04–27): 28 × `1 passed`. This lane's test is
+  `qb/node11`, ok.
+* The outer wrapper took 136.7 s and exited 0 with 0 survivors.
+* The heavy lock was acquired and released (holder ORCH-769c, root PID 855460), and `C:/t/heavylock` is absent
+  afterwards.
+
+**TEST_MATRIX delta (for the orchestrator; I did not edit it).** § Chunk D and § Commands state `187 = 160 + 4 + 23`
+and "27 per-node AppTest processes". On a tree carrying ORCH-769c these become `188 = 160 + 4 + 24` and 28. The
+`qb` row of the H-007 table becomes "24 AppTest tests, 24 processes". Add a third move to the "moved twice" note.
+
+`g11_evidence.py check --task ORCH-769c`: exit 0, 73 artifacts, 0 non-compliant.
