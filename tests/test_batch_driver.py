@@ -370,7 +370,8 @@ def test_g9_final_zero_counts_replace_the_stale_stage2_counts(tmp_path: Path) ->
 
     Stage 2 had 1 reaction and 2 compounds; the final mapped payload has none of either. The
     driver used to merge the final counts with ``if value``, so a zero never replaced the
-    Stage-2 number and ORCH-767 WNT PCP reported ``reactions = 11`` for a pathway with none.
+    Stage-2 number. (ORCH-767 WNT PCP's ``reactions = 11`` had a different cause, the
+    pre-quarantine count source: see the canonical-payload test below and RESULT F-2.)
     """
 
     artifacts = _artifacts(
