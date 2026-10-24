@@ -1,0 +1,37 @@
+[actor-check] ok = False | 2 actor(s) cite a span that names a different protein (18 examined, 0 carried no comparable name or span)
+    /processes/reactions/4/enzymes/2 | EntE complex | EntF enterobactin synthase reaction three EntF-catalyzed cycles of condensation with L-se
+    /processes/reactions/4/modifiers/2 | EntE complex | EntF enterobactin synthase reaction three EntF-catalyzed cycles of condensation with L-se
+[span-in-paper] 'EntC (isochorismate synthase)' / 'Isochorismate synthase' (extracted): True
+[span-in-paper] 'EntB isochorismatase' / 'isochorismatase' (extracted): True
+[span-in-paper] 'EntA (2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase)' / 'oxidoreductase (entA)' (extracted): True
+[span-in-paper] 'EntE (2,3-dihydroxybenzoyl-AMP ligase)' / 'EntE complex' (extracted): True
+[span-in-paper] 'EntF enterobactin synthase reaction' / 'EntF complex' (extracted): True
+[span-in-paper] 'EntF enterobactin synthase reaction' / 'enterobactin synthase complex' (inferred): False
+[span-in-paper] 'EntF enterobactin synthase reaction' / 'EntE complex' (inferred): False
+[cf-b1] connectivity: {"n_reactions": 5, "n_transports": 4, "n_interactions": 8, "n_reaction_coupled_transports": 0, "n_nodes": 54, "n_edges": 81, "n_components": 2, "main_component_size": 52, "largest_component_pct": 96.3, "n_isolated_nodes": 0, "proteins_degree0": 0, "proteins_attached_pct": 100.0}
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ e3d5b65fd118953a864e55ad31f64bf4029c8b24  [git, worktree dirty=True]
+label                   : diag
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/bt-769a/diag769a_2.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 714528 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 0.36 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  714196:python.exe
+descendants terminated  : 1  714196
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/bt-769a/02-diag.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================

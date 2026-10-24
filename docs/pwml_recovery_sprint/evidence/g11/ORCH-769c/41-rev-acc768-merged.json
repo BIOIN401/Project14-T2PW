@@ -1,0 +1,79 @@
+{
+  "label": "rev-acc768-merged",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "-m",
+    "pytest",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--rootdir=C:/t/bt-rev769c/merged",
+    "--basetemp=C:/t/bt-rev769c/41-rev-acc768-merged-547",
+    "C:/t/bt-rev769c/merged/tests/test_orch768_replay_corpus.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\rev769c-tip",
+  "started_at": "2026-10-24T22:01:08+00:00",
+  "finished_at": "2026-10-24T22:01:13+00:00",
+  "duration_seconds": 4.108952800001134,
+  "timeout_seconds": 300.0,
+  "root_pid": 819428,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 829364,
+      "name": "python.exe",
+      "ppid": 819428
+    }
+  ],
+  "descendants_terminated": [
+    829364
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 813084,
+      "name": "python.exe"
+    },
+    {
+      "pid": 814448,
+      "name": "python.exe"
+    },
+    {
+      "pid": 825580,
+      "name": "python.exe"
+    },
+    {
+      "pid": 831020,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\rev769c-tip\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-769c\\41-rev-acc768-merged.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\rev769c-tip\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\rev769c-tip",
+    "repo_head": "5d15c2f2533b39b63eeebd709ff52cd7d962974a",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

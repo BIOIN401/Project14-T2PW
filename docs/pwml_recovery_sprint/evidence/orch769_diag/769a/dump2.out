@@ -1,0 +1,96 @@
+P 8 {
+ "name": "enterobactin synthase",
+ "organism": "Escherichia coli",
+ "provenance_lineage": [
+  {
+   "stage": "identifier_mapping",
+   "origin": "database_grounded",
+   "support": "direct",
+   "paper_explicit": "not_evaluated",
+   "reason": "resolved against a database record via pathbank_protein_id
+{
+ "name": "enterobactin synthase complex",
+ "class": "protein_complex",
+ "generated": true,
+ "generation_reason": "complex_named_source_entity_wrapper",
+ "confidence": 0.8,
+ "provenance": "inferred",
+ "components": [
+  {
+   "name": "enterobactin synthase",
+   "stoichiometry": null,
+   "organism": "Escherichia coli",
+   "species": "Escherichia coli",
+   "mapped_ids": {},
+   "member_identity": {
+    "name": "enterobactin synthase",
+    "entity_index": 9,
+    "mapping_meta": {
+     "source": "llm_tool",
+     "resolution": {
+      "status": "novel",
+      "issue": "no_safe_db_candidate"
+     }
+    }
+   }
+  }
+ ],
+ "organism": "Escherichia coli",
+ "species": "Escherichia coli",
+ "location": {
+  "biological_state_index": 2,
+  "name": "cytoplasmic state"
+ },
+ "species_name": "Escherichia coli",
+ "pathbank_species_id": 3,
+ "species_id": 3,
+ "taxonomy_id": "562",
+ "species_ref": {
+  "name": "Escherichia coli",
+  "pathbank_species_id": 3,
+  "species_id": 3,
+  "taxonomy_id": "562",
+  "source": "explicit_entity_species",
+  "status": "matched",
+  "confidence": 1.0
+ },
+ "mapping_meta": {
+  "species_resolution": {
+   "name": "Escherichia coli",
+   "pathbank_species_id": 3,
+   "species_id": 3,
+   "taxonomy_id": "562",
+   "source": "explicit_entity_species",
+   "status": "matched",
+   "confidence": 1.0
+  },
+  "route": "complex",
+  "query": {
+   "name": "enterobactin synthase complex",
+   "organism": "Escherichia coli"
+  },
+  "provider": "PathBankDB",
+  "source": "db",
+  "chosen_rule": "",
+  "confidence": 0.7567,
+  "candidates": [
+   {
+    "pathbank_complex_id": 3623,
+    "pathbank_protein_complex_id": 3623,
+    "name": "enterobactin synthase",
+    "species_id": 3,
+    "score": 0.7567
+   }
+  ],
+  "resolution": {
+   "status": "ambiguous",
+   "issue": "ambiguous_complex_name_species",
+   "order_step": "complex_name_species"
+  },
+  "issues": []
+ }
+}
+lineage stages: [('identifier_mapping', 'unresolved'), ('audit_repair', 'audit_modified'), ('audit_repair', 'audit_modified'), ('audit_repair', 'audit_modified'), ('audit_repair', 'audit_modified'), ('audit_repair', 'audit_modified'), ('audit_repair', 'audit_modified'), ('audit_repair', 'audit_modified'), ('audit_repair', 'audit_modified')]
+enterobactin synthase complex 4
+enterobactin synthase 10
+reactions 4 {"inputs": ["2,3-dihydroxybenzoic acid", "L-serine"], "outputs": ["enterobactin"], "locked_reaction_id": "rxn_lock_005", "name": "EntF enterobactin synthase reaction", "enzymes": [{"entity": "EntF complex", "entity_type": "protein_complex", "role": "catalyst", "evidence": "three EntF-catalyzed cycles of condensation with L-serine", "confidence": 1.0, "provenance": "extracted"}, {"entity": "enterobactin synthase complex", "entity_type": "protein_complex", "role": "catalyst", "evidence": "final assembly of three DHB molecules into the cyclic trilactone structure of enterobactin via the EntD/EntE/EntF enzyme complex", "confidence": 0.95, "provenance": "inferred"}, {"entity": "EntE complex", "entity_type": "protein_complex", "role": "catalyst", "evidence": "EntF enterobactin synthase reaction three EntF-catalyzed cycles of condensation with L-se", "confidence": 0.9, "provenance": "inferred"}], "biological_state": "cytoplasmic state", "evidence": "three EntF-catalyzed cycles of condensation with L-serine via the formation of non-ribosomal peptide bonds followed by cyclization and product release", "scope_membership": "core", "provenance_lineage": [{"stage": "paper_extraction", "origin": "paper_stated", "support": "unsupported", "paper_explicit": "explicit", "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary", "review_required": false, "uncertainty": "", "sources": []}], "spontaneous": false, "modifiers": [{"entity": "EntF complex",

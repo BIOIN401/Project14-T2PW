@@ -1,0 +1,38 @@
+===== 759_fail True
+ -- merged_payload.json proteins: ['EntC', 'EntB', 'EntA', 'EntE', 'EntF', 'EntD', 'Fur', 'TolC']
+   PC EntCB complex |gen: None | ["EntC", "EntB"]
+   ref reactions EntF enterobactin synthesis -> enterobactin synthase complex inferred 0.95 | catalyzed by the enterobactin synthase complex, which includes EntD, EntE, and EntF
+   ref reactions EntF enterobactin synthase reaction -> enterobactin synthase complex inferred 0.95 | catalyzed by the enterobactin synthase complex, which includes EntD, EntE, and EntF
+ -- final_mapped.json proteins: ['EntC', 'EntB', 'EntA', 'EntE', 'EntF', 'EntD', 'TolC', 'enterobactin synthase']
+   PC EntCB complex |gen: None | ["EntC", "EntB"]
+   PC enterobactin synthase complex |gen: complex_named_source_entity_wrapper | [{"name": "EntF", "stoichiometry": 1, "uniprot": null, "mapped_ids": {"uniprot": "P11454", "pathbank_protein_id": "6312"}}]
+   PC Isochorismate synthase |gen: None | [{"name": "EntC", "stoichiometry": 1, "uniprot": "P0AEJ2", "mapped_ids": {"uniprot": "P0AEJ2", "pathbank_protein_id": "6238"}}]
+   PC isochorismatase |gen: None | [{"name": "EntB", "stoichiometry": 1, "uniprot": "P0ADI4", "mapped_ids": {"uniprot": "P0ADI4", "pathbank_protein_id": "6224"}}]
+   PC EntD complex |gen: single_protein_pathwhiz_wrapper | [{"name": "EntD", "stoichiometry": 1, "uniprot": null, "mapped_ids": {"uniprot": "P19925", "pathbank_protein_id": "6383", "gene_name": "entD"}}]
+   PC oxidoreductase (entA) |gen: None | [{"name": "EntA", "stoichiometry": 1, "uniprot": "P15047", "mapped_ids": {"uniprot": "P15047", "pathbank_protein_id": "6341"}}]
+   PC EntE complex |gen: single_protein_pathwhiz_wrapper | [{"name": "EntE", "stoichiometry": 1, "uniprot": null, "mapped_ids": {"uniprot": "P10378", "pathbank_protein_id": "6301", "gene_name": "entE"}}]
+   PC EntF complex |gen: single_protein_pathwhiz_wrapper | [{"name": "EntF", "stoichiometry": 1, "uniprot": null, "mapped_ids": {"uniprot": "P11454", "pathbank_protein_id": "6312", "gene_name": "entF"}}]
+   ref reactions EntF enterobactin synthesis -> enterobactin synthase complex inferred 0.95 | catalyzed by the enterobactin synthase complex, which includes EntD, EntE, and EntF
+   ref reactions EntF enterobactin synthase reaction -> enterobactin synthase complex inferred 0.95 | catalyzed by the enterobactin synthase complex, which includes EntD, EntE, and EntF
+  stage1 has 'enterobactin synthase complex': False
+===== 759p_pass True
+ -- merged_payload.json proteins: ['EntB', 'EntC', 'EntA', 'EntE', 'EntF', 'EntD', 'Fur', 'TolC']
+ -- final_mapped.json proteins: ['EntB', 'EntC', 'EntA', 'EntE', 'EntF', 'EntD', 'TolC']
+   PC Isochorismate synthase |gen: None | [{"name": "EntC", "stoichiometry": 1, "uniprot": "P0AEJ2", "mapped_ids": {"uniprot": "P0AEJ2", "pathbank_protein_id": "6238"}}]
+   PC isochorismatase |gen: None | [{"name": "EntB", "stoichiometry": 1, "uniprot": "P0ADI4", "mapped_ids": {"uniprot": "P0ADI4", "pathbank_protein_id": "6224"}}]
+   PC oxidoreductase (entA) |gen: None | [{"name": "EntA", "stoichiometry": 1, "uniprot": "P15047", "mapped_ids": {"uniprot": "P15047", "pathbank_protein_id": "6341"}}]
+   PC EntE complex |gen: single_protein_pathwhiz_wrapper | [{"name": "EntE", "stoichiometry": 1, "uniprot": null, "mapped_ids": {"uniprot": "P10378", "pathbank_protein_id": "6301", "gene_name": "entE"}}]
+   PC EntF complex |gen: single_protein_pathwhiz_wrapper | [{"name": "EntF", "stoichiometry": 1, "uniprot": null, "mapped_ids": {"uniprot": "P11454", "pathbank_protein_id": "6312", "gene_name": "entF"}}]
+  stage1 has 'enterobactin synthase complex': False
+===== 767_fail True
+ -- merged_payload.json proteins: ['EntC', 'EntB', 'EntA', 'EntE', 'EntF', 'EntD', 'Fur', 'TolC', 'TonB']
+   ref reactions EntF enterobactin synthase reaction -> enterobactin synthase complex inferred 0.95 | final assembly of three DHB molecules into the cyclic trilactone structure of enterobactin via the EntD/EntE/EntF enzyme complex
+ -- final_mapped.json proteins: ['EntC', 'EntB', 'EntA', 'EntE', 'EntF', 'EntD', 'TolC', 'TonB', 'enterobactin synthase']
+   PC enterobactin synthase complex |gen: complex_named_source_entity_wrapper | [{"name": "enterobactin synthase", "stoichiometry": null, "uniprot": null, "mapped_ids": {}}]
+   PC Isochorismate synthase |gen: None | [{"name": "EntC", "stoichiometry": 1, "uniprot": "P0AEJ2", "mapped_ids": {"uniprot": "P0AEJ2", "pathbank_protein_id": "6238"}}]
+   PC isochorismatase |gen: None | [{"name": "EntB", "stoichiometry": 1, "uniprot": "P0ADI4", "mapped_ids": {"uniprot": "P0ADI4", "pathbank_protein_id": "6224"}}]
+   PC oxidoreductase (entA) |gen: None | [{"name": "EntA", "stoichiometry": 1, "uniprot": "P15047", "mapped_ids": {"uniprot": "P15047", "pathbank_protein_id": "6341"}}]
+   PC EntE complex |gen: single_protein_pathwhiz_wrapper | [{"name": "EntE", "stoichiometry": 1, "uniprot": null, "mapped_ids": {"uniprot": "P10378", "pathbank_protein_id": "6301", "gene_name": "entE"}}]
+   PC EntF complex |gen: single_protein_pathwhiz_wrapper | [{"name": "EntF", "stoichiometry": 1, "uniprot": null, "mapped_ids": {"uniprot": "P11454", "pathbank_protein_id": "6312", "gene_name": "entF"}}]
+   ref reactions EntF enterobactin synthase reaction -> enterobactin synthase complex inferred 0.95 | final assembly of three DHB molecules into the cyclic trilactone structure of enterobactin via the EntD/EntE/EntF enzyme complex
+  stage1 has 'enterobactin synthase complex': False

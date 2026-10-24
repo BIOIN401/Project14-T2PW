@@ -1,0 +1,40 @@
+[hash] final_mapped payload_sha256 = 47b6fba48b9f7bcc64d168d39178ae6b43442a8fbeae6c0eab0db77b734d867c
+[hash] gate report payload_sha256  = 47b6fba48b9f7bcc64d168d39178ae6b43442a8fbeae6c0eab0db77b734d867c
+[gate] 767 final_mapped as shipped: ok=False errors=1
+     /entities/protein_complexes/0/components/0 | Generated protein complex 'enterobactin synthase complex' component 'enterobactin synthase' is missing positive stoichiometry.
+[gate] CF-A: wrapper component stoichiometry restored to 1 (the normalizer's own value): ok=True errors=0
+[cf-b] actor refs dropped: 2
+[gate] CF-B1: inferred actor + wrapper removed, synthetic protein row kept: ok=True errors=0
+[cf-b] 759a fold on CF-B1: null
+[cf-b] EntE synonyms after fold: ['EntE', '2,3-dihydroxybenzoate-AMP ligase', '2,3-dihydroxybenzoate-AMP synthase', 'Dihydroxybenzoic acid-activating enzyme', 'Enterochelin synthase E', 'Enterobactin synthase component E']
+[gate] CF-B2: CF-B1 after the 759a fold: ok=True errors=0
+[gate] CF-C: inferred actor + wrapper + synthetic row + its location removed: ok=True errors=0
+[ids] rows carrying P10378: [(3, 'EntE'), (8, 'enterobactin synthase')]
+[ids] rows carrying P11454: [(4, 'EntF')]
+[gate] 759p final_mapped (passing control): ok=True errors=0
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ e3d5b65fd118953a864e55ad31f64bf4029c8b24  [git, worktree dirty=True]
+label                   : diag
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/bt-769a/diag769a.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 705380 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 0.51 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  700320:python.exe
+descendants terminated  : 1  700320
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/bt-769a/01-diag.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================

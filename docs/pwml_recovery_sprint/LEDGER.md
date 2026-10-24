@@ -11137,3 +11137,13 @@ The id ORCH-760 was chosen so that 755-759 stay free for the live ORCH-754 sessi
 **`ORCH-765` · 2026-10-24 — NOT MERGED (D-110 AMENDMENT 2 § 3).** Round 2 (FINAL, `9a35cd1b`) still lets `Optical (OD)` and `Luria (LB)` bridge when two draws write them (its own probe table, `test_r2_limit_*`), which fails the fixed standard. No round 3. Branch kept with the orchestrator record (`9fa8f3be`, ORCH-765-RESULT § 14). Menaquinone stays at 11 pooled rows.
 
 **`ORCH-766` · 2026-10-24 — review round 0 REJECT (one blocking, theoretical):** a non-integral numeric species id ("77.5") is truncated by the IR but not matched by the prune, so a referenced row could be removed. Census over 158 legs: 7 change, each by unreferenced species rows only. Repair round 1 routed.
+
+**`ORCH-766` · 2026-10-24 — MERGED `19a6a6ce`** (D-111 § 1): strict-quarantine closure drops a species row nothing references (names, ids as the IR truncates them, every reference kind; first row always kept), recorded like degree-zero removals; no gate changed. Census 158 legs: 7 change, 9 unreferenced rows removed, no verdict moved; Chunk E species-row pin 27 → 19. Review REJECT r0 (non-integral id), APPROVE WITH NOTES r1. Corpus 51 → 53/91 (first measured fix). Record: `ORCH-766-RESULT.md`.
+
+**`ORCH-768` · 2026-10-24 — MERGED `72d04d00`** (D-112 § 1): the frozen replay corpus. 100 legs, 587 inputs pinned by sha256, replay from `final_mapped.json` through quarantine/freeze/IR/writer/gates with no network; fidelity 81/81 at each leg's own code; baseline 51/91 at `e3d5b65f`; `compare` implements D-112 § 2. Review APPROVE WITH NOTES (gold loaded from the measured tree; `PATHBANK_DB_*` must be unset). Record: `ORCH-768-RESULT.md`.
+
+**`ORCH-769b` · 2026-10-24 — MERGED `509fe185`**: quarantine judges enzymes/modifiers/transporters by the final gate's own registry; chlorophyll 767 fixed. Corpus 53 → 54/91, ACCEPT. Review APPROVE WITH NOTES. Record: `ORCH-769b-RESULT.md`.
+
+**`ORCH-769c` · 2026-10-24 — MERGED `ec800370`**: an empty review graph no longer blocks the PWML; the driver reports canonical counts. WNT PCP 767 fixed. Corpus 54 → 56/91, ACCEPT. SMOKE 508 → 511. Review APPROVE WITH NOTES. Record: `ORCH-769c-RESULT.md`.
+
+**`ORCH-769a`, `ORCH-769d` · 2026-10-24 — DIAGNOSED, fixes awaiting product-owner rulings:** (a) enterobactin's Stage-2-inferred wrapper (a new removal rule); (d) the audit patch applier's unrebased indices (rebase or reject). Record: `ORCH-769-RESULT.md`.

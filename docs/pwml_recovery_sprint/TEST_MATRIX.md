@@ -1153,3 +1153,44 @@ that must each run alone in their own process (ORCH-754 list).
 wrapper equals the main-loop wrapper with a stub PathBank DB (scope reuse, Phase-1 replay). Run for any change to
 `map_payload`'s rewrite/Phase-2 ordering. Merged-tip gates `ORCH-759i/123-163`: Chunk D 187/187, SMOKE 508, focused 217.
 SMOKE unchanged at 508. No pin moved.
+
+## ORCH-766, ORCH-768, ORCH-769b/c: test obligations — appended end-of-file by rule · 2026-10-24
+
+Recorded by the sub-orchestrator from the lanes' RESULT docs and the merged-tip runs (`evidence/g11/ORCH-768i/`,
+`ORCH-769i/`).
+
+**SMOKE moves 508 → 511** (merge of ORCH-769c, `ec800370`): `tests/test_batch_driver.py`, a SMOKE file, gained 3 tests
+(final zero counts, canonical-payload counts). Measured `ORCH-769i` smoke report; the 22-file list is unchanged. Merge rule 10
+should read 511 from here on (CLAUDE.md is the Lead Orchestrator's to update).
+
+### New focused selections
+
+| lane | file | notes |
+|---|---|---|
+| `766` | `tests/test_orch766_unreferenced_species.py` (57) + `tests/fixtures/orch766/` | with the strict-quarantine suites and Chunk E |
+| `768` | `tests/test_orch768_replay_corpus.py` (9) + `tests/fixtures/orch768/` | NEW capability; pins three ORCH-767 legs' replay verdicts (moved deliberately by 769c for WNT PCP) |
+| `769b` | `tests/test_orch769b_actor_protein_registry.py` (10) + `tests/fixtures/orch769b/` | with the strict-quarantine suites |
+| `769c` | `tests/test_orch769c_empty_graph_render.py` | contains an AppTest: **run ALONE** |
+
+### Pins moved deliberately (merge rule 4)
+
+- `766`: `tests/test_strict_quarantine_real_artifact_replay.py` species error-row pin 27 → 19 (8 unreferenced rows in 3 legs,
+  verified row by row by the reviewer); `docs/change_log.md`.
+- `769c`: `tests/test_batch_driver_seam_golden.py` 6 of 7 digests move, `row.counts` only; `tests/test_orch768_replay_corpus.py`
+  `EXPECTED[WNT_PCP]` → `{"pwml_written": True, "failure_stage": None}` and its fidelity note; boundary file 23 → 24 tests.
+
+### The D-112 § 2 acceptance check (new obligation for any downstream fix)
+
+Run `docs/pwml_recovery_sprint/evidence/orch768_replay_corpus.py run --src <tree>/src --out <dir> --json <file>` at base and tip
+(bounded, `PATHBANK_DB_*` unset), then `compare base.json tip.json --target <leg>`; exit 0 = ACCEPT. Corpus at `ec800370`: 56/91.
+
+### Chunk D partition 187 → 188 (ORCH-769c follow-up, merged `40122c63`)
+
+`tests/test_streamlit_quarantine_boundary.py` gained a test (23 → 24), a `qb` node, so `chunk_d_gate.py` refused at
+`ec800370` (`ORCH-769i/01`: monolithic 188 vs expected 187, SETS_EQUAL=True, missing 0, extra 0, "PARTITION PROOF FAILED -- gate
+NOT run"). The lane moved COMPONENTS `qb` 23 → 24, TOTAL 187 → 188 (`84163903`, the third numbered move after C-045b and C-050k).
+Proof: Chunk D on that tree, **188 = 160 + 4 + 24, 188/188 executed, failed none, 28 per-node AppTest processes**
+(`ORCH-769c/41` outer, `42-74` inner); selftest 10 passed (`ORCH-769c/40`). Every "187 = 160 + 4 + 23" and "27 AppTest nodes" in
+this file now reads 188 = 160 + 4 + 24 and 28 nodes (the C-050k note above stays as the historical record).
+Lesson (769c F-8): put a new AppTest that borrows the boundary harness in its own file (`test_c082` convention) so the
+partition count does not move.

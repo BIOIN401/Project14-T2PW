@@ -1,0 +1,72 @@
+{
+  "label": "diag",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/bt-769d/replay_wntca_quarantine.py"
+  ],
+  "cwd": "C:\\t\\bt-769d",
+  "started_at": "2026-10-24T20:19:21+00:00",
+  "finished_at": "2026-10-24T20:19:23+00:00",
+  "duration_seconds": 1.9603221000143094,
+  "timeout_seconds": 300.0,
+  "root_pid": 709056,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 709044,
+      "name": "python.exe",
+      "ppid": 709056
+    }
+  ],
+  "descendants_terminated": [
+    709044
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 645924,
+      "name": "python.exe"
+    },
+    {
+      "pid": 655172,
+      "name": "python.exe"
+    },
+    {
+      "pid": 709216,
+      "name": "python.exe"
+    },
+    {
+      "pid": 709360,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/bt-769d/1-diag.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "e3d5b65fd118953a864e55ad31f64bf4029c8b24",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

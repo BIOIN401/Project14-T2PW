@@ -1,0 +1,99 @@
+hash(final_mapped)       = sha256:d6fa0ff69ec9aaf9
+leg admitted_payload_hash = sha256:09f9fd6851c175b2
+leg resulting_payload_hash= sha256:d6fa0ff69ec9aaf9
+leg decision_input_hash   = sha256:6c5f9c8b2410d8af
+leg final gate payload_sha256 = 89ee2d95809aa795bdeb800d4cc52607fd845e431a919a830f83410c34819f99
+
+== A baseline (current src)
+  admitted_payload_hash: sha256:d6fa0ff69ec9aaf9
+  decision_input_hash: sha256:6c5f9c8b2410d8af
+  resulting_payload_hash: sha256:d6fa0ff69ec9aaf9
+  ok: True
+  refusal_reasons: []
+  counts: {'core_accepted': 20, 'auxiliary_accepted': 12, 'quarantined_unmapped_entity': 0, 'quarantined_out_of_scope': 0, 'quarantined_weak_evidence': 0, 'quarantined_broken_reference': 0, 'quarantined_disconnected': 0}
+  release: review_required | strict_gates_passed: True | completeness: 0.933333 | missing_anchors: ['POR (PORB)']
+  strict_invariants.ok: True
+  quarantined reactions: []
+  surviving: {'species': 1, 'tissues': 3, 'subcellular_locations': 9, 'compounds': 35, 'nucleic_acids': 7, 'proteins': 31, 'protein_complexes': 30} {'reactions': 27, 'interactions': 5, 'transports': 0}
+  final gate errors: 9
+     ('/processes/reactions/17/modifiers/1', 'Unknown protein/modifier reference: PIF1')
+     ('/processes/reactions/17/modifiers/7', 'Unknown protein/modifier reference: GBP')
+     ('/processes/reactions/18/modifiers/0', 'Unknown protein/modifier reference: FAR1')
+     ('/processes/reactions/21/enzymes/3', 'Unknown protein/modifier reference: GBP')
+     ('/processes/reactions/21/modifiers/3', 'Unknown protein/modifier reference: GBP')
+     ('/processes/reactions/22/enzymes/1', 'Unknown protein/modifier reference: CPO1')
+     ('/processes/reactions/22/modifiers/1', 'Unknown protein/modifier reference: CPO1')
+     ('/processes/reactions/23/enzymes/1', 'Unknown protein/modifier reference: PPO1')
+     ('/processes/reactions/23/modifiers/1', 'Unknown protein/modifier reference: PPO1')
+  A errors == leg final_stage3_gate_report errors: True
+
+== A2 baseline re-run
+  admitted_payload_hash: sha256:d6fa0ff69ec9aaf9
+  decision_input_hash: sha256:6c5f9c8b2410d8af
+  resulting_payload_hash: sha256:d6fa0ff69ec9aaf9
+  ok: True
+  refusal_reasons: []
+  counts: {'core_accepted': 20, 'auxiliary_accepted': 12, 'quarantined_unmapped_entity': 0, 'quarantined_out_of_scope': 0, 'quarantined_weak_evidence': 0, 'quarantined_broken_reference': 0, 'quarantined_disconnected': 0}
+  release: review_required | strict_gates_passed: True | completeness: 0.933333 | missing_anchors: ['POR (PORB)']
+  strict_invariants.ok: True
+  quarantined reactions: []
+  surviving: {'species': 1, 'tissues': 3, 'subcellular_locations': 9, 'compounds': 35, 'nucleic_acids': 7, 'proteins': 31, 'protein_complexes': 30} {'reactions': 27, 'interactions': 5, 'transports': 0}
+  final gate errors: 9
+     ('/processes/reactions/17/modifiers/1', 'Unknown protein/modifier reference: PIF1')
+     ('/processes/reactions/17/modifiers/7', 'Unknown protein/modifier reference: GBP')
+     ('/processes/reactions/18/modifiers/0', 'Unknown protein/modifier reference: FAR1')
+     ('/processes/reactions/21/enzymes/3', 'Unknown protein/modifier reference: GBP')
+     ('/processes/reactions/21/modifiers/3', 'Unknown protein/modifier reference: GBP')
+     ('/processes/reactions/22/enzymes/1', 'Unknown protein/modifier reference: CPO1')
+     ('/processes/reactions/22/modifiers/1', 'Unknown protein/modifier reference: CPO1')
+     ('/processes/reactions/23/enzymes/1', 'Unknown protein/modifier reference: PPO1')
+     ('/processes/reactions/23/modifiers/1', 'Unknown protein/modifier reference: PPO1')
+  A2 identical to A (hashes, errors): True
+  gate on final_mapped directly: 9 errors
+
+== B counterfactual F1 (actor must resolve to proteins/protein_complexes)
+  admitted_payload_hash: sha256:d6fa0ff69ec9aaf9
+  decision_input_hash: sha256:6c5f9c8b2410d8af
+  resulting_payload_hash: sha256:f312538191a23b1e
+  ok: True
+  refusal_reasons: []
+  counts: {'core_accepted': 17, 'auxiliary_accepted': 10, 'quarantined_unmapped_entity': 0, 'quarantined_out_of_scope': 0, 'quarantined_weak_evidence': 0, 'quarantined_broken_reference': 5, 'quarantined_disconnected': 0}
+  release: review_required | strict_gates_passed: True | completeness: 0.866667 | missing_anchors: ['POR (PORB)', 'GLK1']
+  strict_invariants.ok: True
+  quarantined reactions: [(17, 'GluTR (HEMA1) reaction', 'actor_not_a_protein_in_modifiers:nucleic_acids', 'PIF1'), (18, 'ALAD (HEMB1) reaction', 'actor_not_a_protein_in_modifiers:nucleic_acids', 'FAR1'), (21, 'Glu-tRNAGlu reduction to GSA', 'actor_not_a_protein_in_enzymes:nucleic_acids', 'GBP'), (22, 'Coprogen III to Protogen IX', 'actor_not_a_protein_in_enzymes:nucleic_acids', 'CPO1'), (23, 'Protogen IX to Proto IX', 'actor_not_a_protein_in_enzymes:nucleic_acids', 'PPO1')]
+  surviving: {'species': 1, 'tissues': 3, 'subcellular_locations': 9, 'compounds': 35, 'nucleic_acids': 2, 'proteins': 20, 'protein_complexes': 18} {'reactions': 22, 'interactions': 5, 'transports': 0}
+  final gate errors: 0
+  quarantined r17 'GluTR (HEMA1) reaction' (['arr10 complex', 'arr12 complex', 'fhy3 complex']...) twin survivors: ['GluTR reaction']
+  quarantined r18 'ALAD (HEMB1) reaction' (['5aminolevulinic acid', 'alad hemb1 reaction', 'deltaaminolevulinic acid dehydratase 1 chloroplastic']...) twin survivors: ['ALA dehydratase reaction']
+  quarantined r21 'Glu-tRNAGlu reduction to GSA' (['flu complex', 'gbp', 'glu 1semialdehyde']...) twin survivors: ['GluTR reaction']
+  quarantined r22 'Coprogen III to Protogen IX' (['coprogen iii to protogen ix', 'coproporphyrinogen iii', 'coproporphyrinogeniii oxidase 1 chloroplastic']...) twin survivors: ['Coprogen III oxidase reaction']
+  quarantined r23 'Protogen IX to Proto IX' (['ppo', 'ppo1', 'protogen ix to proto ix']...) twin survivors: ['Protogen IX oxidase reaction']
+  entities removed in B not A: [('nucleic_acids', 'CPO1'), ('nucleic_acids', 'FAR1'), ('nucleic_acids', 'GBP'), ('nucleic_acids', 'PIF1'), ('nucleic_acids', 'PPO1'), ('protein_complexes', 'ARR10 complex'), ('protein_complexes', 'ARR12 complex'), ('protein_complexes', 'Coproporphyrinogen-III oxidase 1, chloroplastic'), ('protein_complexes', 'Delta-aminolevulinic acid dehydratase 1, chloroplastic'), ('protein_complexes', 'FHY3 complex'), ('protein_complexes', 'FLU complex'), ('protein_complexes', 'GLK1 complex'), ('protein_complexes', 'GLK2 complex'), ('protein_complexes', 'HEMA1 complex'), ('protein_complexes', 'HY5 complex'), ('protein_complexes', 'PIF3 complex'), ('protein_complexes', 'PPO'), ('proteins', 'ARR10'), ('proteins', 'ARR12'), ('proteins', 'CPO'), ('proteins', 'FHY3'), ('proteins', 'FLU'), ('proteins', 'GLK1'), ('proteins', 'GLK2'), ('proteins', 'HEMB1'), ('proteins', 'HY5'), ('proteins', 'PIF3'), ('proteins', 'Unknown')]
+  entities removed in A not B: []
+  coverage A: 0.933333 ['POR (PORB)'] | B: 0.866667 ['POR (PORB)', 'GLK1']
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ e3d5b65fd118953a864e55ad31f64bf4029c8b24  [git, worktree dirty=True]
+label                   : diag
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/bt-769b/replay_767.py
+cwd                     : C:\t\bt-769b
+root PID / process group: 705464 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 1.96 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  708620:python.exe
+descendants terminated  : 1  708620
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/bt-769b/01-diag.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================

@@ -1,0 +1,32 @@
+PIF1: remove protein row, gene row kept   -> None
+PIF1: remove protein row AND gene row    -> referential_integrity: remove on /entities/proteins/31 would orphan 1 process reference(s): 'PIF1' at /processes/reactions/17/modifiers/1.
+PIF1: apply_patch_with_policy accepted={'accepted_count': 1, 'rejected_count': 0, 'total': 1} protein row survives=False
+CPO1: remove protein row, gene row kept   -> None
+CPO1: remove protein row AND gene row    -> referential_integrity: remove on /entities/proteins/31 would orphan 1 process reference(s): 'CPO1' at /processes/reactions/22/enzymes/1.
+CPO1: apply_patch_with_policy accepted={'accepted_count': 1, 'rejected_count': 0, 'total': 1} protein row survives=False
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ e3d5b65fd118953a864e55ad31f64bf4029c8b24  [git, worktree dirty=True]
+label                   : diag
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/bt-769b/guard_probe.py
+cwd                     : C:\t\bt-769b
+root PID / process group: 714632 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 0.55 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  713912:python.exe
+descendants terminated  : 1  713912
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/bt-769b/03-diag.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================

@@ -1,0 +1,51 @@
+admitted_payload_hash(final_mapped) = sha256:17305c4234e9a7b6 | leg: sha256:8e9f65cf549f62e0
+
+== A1 baseline
+  admitted_payload_hash: sha256:17305c4234e9a7b6
+  decision_input_hash: sha256:33ddc18fe9ec1f2d
+  resulting_payload_hash: sha256:38fd33e86d7eca1e
+  ok: False
+  refusal_reasons: ['unexportable_entity:1']
+  review_reasons: ['minimum_core:requested_core_coverage_below_minimum:0.429<0.500']
+  counts: {'core_accepted': 19, 'auxiliary_accepted': 3, 'quarantined_unmapped_entity': 26, 'quarantined_out_of_scope': 0, 'quarantined_weak_evidence': 0, 'quarantined_broken_reference': 0, 'quarantined_disconnected': 0}
+  strict_invariants: {"entity_type_overlaps": [], "degree_zero_exports": [], "unexportable_entities": [{"bucket": "proteins", "name": "phosphorylated CAMKII", "reason": "protein_missing_external_identity"}], "unaccounted_locked_reactions": 0, "closure_converged": true, "ok": false}
+  release.status: diagnostic_only | reasons: ['serialization_would_require_invention'] | semantic_failed: ['requested_pathway_anchors_present'] | review_reasons: ['minimum_core:requested_core_coverage_below_minimum:0.429<0.500']
+  surviving entities: {'species': 2, 'subcellular_locations': 10, 'compounds': 2, 'proteins': 11, 'protein_complexes': 6}
+  surviving processes: {'reactions': 0, 'transports': 9, 'interactions': 13}
+  surviving proteins: Traceback (most recent call last):
+  File "C:\t\bt-769d\replay_wntca_quarantine.py", line 77, in <module>
+    summarize("A1 baseline", a1)
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\t\bt-769d\replay_wntca_quarantine.py", line 42, in summarize
+    print("  surviving proteins:", [x.get("name") for x in (p.get("entities") or {}).get("proteins", [])])
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u03b2' in position 139: character maps to <undefined>
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ e3d5b65fd118953a864e55ad31f64bf4029c8b24  [git, worktree dirty=True]
+label                   : diag
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/bt-769d/replay_wntca_quarantine.py
+cwd                     : C:\t\bt-769d
+root PID / process group: 709056 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 1.96 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  709044:python.exe
+descendants terminated  : 1  709044
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/bt-769d/1-diag.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================
