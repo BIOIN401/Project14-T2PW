@@ -7351,3 +7351,29 @@ Lead Orchestrator.
 2. **Tonight's run (ORCH-767):** enterobactin, menaquinone, chlorophyll, sour taste (*Mus musculus*), WNT PCP and Wnt/Ca2+, strict, 3
    draws, on the final merged code. Enterobactin and menaquinone are scored against certified gold, and a one-page morning summary is
    written. The product owner wants results by the morning of 2026-10-24.
+
+---
+
+## D-112 — fixes are measured on a frozen replay corpus of every saved leg before any live re-run · 2026-10-24 · LOCKED
+
+**Decided by the product owner** (2026-10-24, in session, on `runs_papers/ORCH-767/MORNING_SUMMARY.md`). On identical code
+(`360a6ac5` vs `d6849c9e`: no `src/` or `tests/` difference), chlorophyll wrote a PWML in ORCH-759p and failed in ORCH-767. Stage 1 is
+consistently right (enterobactin 5/5 and menaquinone 9/9 in every run). Draw-to-draw variation sends a different payload into the
+downstream stages, and each run surfaces new downstream failure modes, so fixing one leg at a time chases a moving target. Recorded by
+the Lead Orchestrator.
+
+1. **ORCH-768, a replay corpus.** Every saved leg (ORCH-755/756/759/759p/767 and the earlier `runs_verify/` legs where usable) is replayed
+   from its latest checkpoint that needs **no LLM call**: mapping input, quarantine, freeze, IR, writer, gates. The corpus reports per leg
+   whether a PWML is written, its gate verdicts, and gold P/R/F1 where gold exists. Network lookups are served from committed or cached
+   fixtures, so the replay is deterministic. The harness states which failures it can replay and which originate in an LLM stage and
+   need a live confirmation run.
+2. **The acceptance rule for every downstream fix:** it must raise the corpus PWML pass rate, or fix its target leg, **without turning any
+   passing leg into a failure** and without lowering gold recall on any leg. Recorded per fix.
+3. **ORCH-769, the four ORCH-767 failures**, diagnosed and fixed against the corpus:
+   - (a) the enterobactin `enterobactin synthase complex` wrapper component gate
+   - (b) chlorophyll's 9 × `unknown_protein_modifier_reference`
+   - (c) WNT PCP's missing `refinement_generate_pwml`
+   - (d) Wnt/Ca2+ `final_gate_report_missing` / quarantine refusal
+
+   No gate is relaxed (D-106).
+4. Then ORCH-770, one live overnight confirmation run on the merged code.
