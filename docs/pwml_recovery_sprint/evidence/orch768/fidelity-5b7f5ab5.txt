@@ -1,0 +1,35 @@
+t2pw resolved: C:\t\bt-orch768\src-5b7f5ab5\src\t2pw
+offline probe: {'attempts': {'urlopen_uniprot': 'refused', 'create_connection_loopback': 'refused', 'raw_socket_connect': 'refused'}, 'counted': 3, 'ok': True}
+runs_verify/2026-09-06_1425/PMC12071552                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+runs_verify/2026-09-06_1425/PMC11172790                     replayable (upstream_contract_report)                 q=True/review_required gate=True export=None req=None net=0  AS RECORDED
+runs_verify/2026-09-06_1425/PMC12376012                     replayable (upstream_contract_report)                 q=True/review_required gate=True export=None req=None net=0  AS RECORDED
+runs_verify/2026-09-06_1425/PMC7232280                      replayable (upstream_contract_report)                 q=True/review_required gate=True export=None req=None net=0  AS RECORDED
+runs_verify/2026-09-06_1425/PMC11405693                     replayable (pwml_export)                              q=True/review_required gate=True export=False req=False net=0  AS RECORDED
+runs_verify/2026-09-06_1425/PMC8510960                      replayable (upstream_contract_report)                 q=True/review_required gate=True export=None req=None net=0  AS RECORDED
+
+SUMMARY (all)
+  strict_legs                    6
+  with_checkpoint                6
+  replay_errors                  0
+  pwml_pass                      1
+  pwml_pass_rate_of_strict       1/6
+  pwml_pass_rate_of_replayed     1/6
+  replayable_failures            5
+  llm_originating_failures       0
+  aborted_not_counted            0
+  verdict_as_recorded            6/6
+  network_refused_total          0
+
+SUMMARY (tier_B)
+  strict_legs                    6
+  with_checkpoint                6
+  replay_errors                  0
+  pwml_pass                      1
+  pwml_pass_rate_of_strict       1/6
+  pwml_pass_rate_of_replayed     1/6
+  replayable_failures            5
+  llm_originating_failures       0
+  aborted_not_counted            0
+  verdict_as_recorded            6/6
+  network_refused_total          0
+GOLD (replayed tail; certified gold only)

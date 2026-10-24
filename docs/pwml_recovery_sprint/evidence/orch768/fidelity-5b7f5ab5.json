@@ -1,0 +1,485 @@
+{
+ "legs": [
+  {
+   "checkpoint": "canonical",
+   "class": "pass",
+   "fidelity_diffs": [],
+   "id": "runs_verify/2026-09-06_1425/PMC12071552",
+   "paper": "PMC12071552",
+   "recorded": "pwml",
+   "replay": {
+    "canonical_matches_leg": true,
+    "canonical_sha256": "31bd4d71fce6487536c42722231e4d079b125ac26c518993c57d56cca2f40d02",
+    "checkpoint": "canonical",
+    "checkpoint_sha256": "f6ed7a6e362d35e1534f52fb763521a99162b3e7e7315e501699fe00b718410d",
+    "driver": {
+     "codes": [],
+     "contract_errors": 0,
+     "gate_failed": false,
+     "gate_reason": "",
+     "gate_stage": "final_pre_export_stage3_gates"
+    },
+    "export": {
+     "error": "",
+     "ir_blocking": [],
+     "ir_validation": [],
+     "ok": true,
+     "pwml_name": "pathway.review_required.pwml",
+     "quarantine_reused": true,
+     "release": "review_required",
+     "required_gate_codes": [],
+     "required_gate_ok": true,
+     "stage3_contract_codes": []
+    },
+    "failure_stage": null,
+    "files": {
+     "canonical.json": "fb9e7f268bc61fbf",
+     "final.canonical.json": "f6ed7a6e362d35e1",
+     "outputs/coverage_diagnostics.json": "a64fd2d91dfbd1d4",
+     "outputs/coverage_summary.json": "b81033b456743012",
+     "outputs/graph_closure_iterations.json": "6c12fbe83cf595a9",
+     "outputs/pathway.pwml": "23f0fecaf66d5fe2",
+     "outputs/pwml_prefreeze_resolution_report.streamlit.json": "f06a6e00e93d23da",
+     "outputs/pwml_required_field_gate_report.json": "f75736cf68eb6a42",
+     "outputs/quarantine_report.json": "cbd2625aa2a4c4e0",
+     "outputs/removed_entity_report.json": "2d5d47dd44e915c5",
+     "pathway.review_required.pwml": "23f0fecaf66d5fe2",
+     "pwml_ir.json": "efc7dca4408c60ca"
+    },
+    "final_gate": {
+     "codes": [],
+     "errors": [],
+     "ok": true
+    },
+    "gold": null,
+    "id": "runs_verify/2026-09-06_1425/PMC12071552",
+    "network_refused": [],
+    "paper": "PMC12071552",
+    "pwml_matches_leg": true,
+    "pwml_sha256": "23f0fecaf66d5fe2b0a55e2d413ec2dd8e4b536a7cb26813e634d2515a890dc8",
+    "pwml_written": true,
+    "quarantine": {
+     "admitted_hash_matches_leg": false,
+     "counts": {
+      "auxiliary_accepted": 0,
+      "core_accepted": 4,
+      "quarantined_broken_reference": 0,
+      "quarantined_disconnected": 0,
+      "quarantined_out_of_scope": 0,
+      "quarantined_unmapped_entity": 0,
+      "quarantined_weak_evidence": 0
+     },
+     "decision_input_hash_matches_leg": true,
+     "ok": true,
+     "refusal": [],
+     "release": "review_required"
+    },
+    "recorded_reports": {
+     "final_gate_errors": [],
+     "required_gate_codes": []
+    }
+   },
+   "src_sha": "5b7f5ab5",
+   "tier": "B"
+  },
+  {
+   "checkpoint": "canonical",
+   "class": "replayable (upstream_contract_report)",
+   "fidelity_diffs": [],
+   "id": "runs_verify/2026-09-06_1425/PMC11172790",
+   "paper": "PMC11172790",
+   "recorded": "upstream_contract_report",
+   "replay": {
+    "canonical_matches_leg": true,
+    "canonical_sha256": "586eeb9e471fc74452e328685bec858531a0c4a783a2fad6dc3695ad5846de88",
+    "checkpoint": "canonical",
+    "checkpoint_sha256": "eeb7ce6e82d7ae6e2e7fb9a0a1baf275f0e9fa4d82b69bdbf6d7a89a01a02581",
+    "driver": {
+     "codes": [
+      "gate.registry_validation_failed"
+     ],
+     "contract_errors": 1,
+     "gate_failed": false,
+     "gate_reason": "",
+     "gate_stage": "final_pre_export_stage3_gates"
+    },
+    "failure_stage": "upstream_contract_report",
+    "files": {
+     "canonical.json": "ab6077dd7404e6cb",
+     "final.canonical.json": "eeb7ce6e82d7ae6e",
+     "outputs/coverage_diagnostics.json": "836a1eed819c1832",
+     "outputs/coverage_summary.json": "40846fcd60d7f3b8",
+     "outputs/graph_closure_iterations.json": "6c12fbe83cf595a9",
+     "outputs/quarantine_report.json": "259386272149fb68",
+     "outputs/removed_entity_report.json": "2d5d47dd44e915c5"
+    },
+    "final_gate": {
+     "codes": [],
+     "errors": [],
+     "ok": true
+    },
+    "gold": null,
+    "id": "runs_verify/2026-09-06_1425/PMC11172790",
+    "network_refused": [],
+    "paper": "PMC11172790",
+    "pwml_written": false,
+    "quarantine": {
+     "admitted_hash_matches_leg": false,
+     "counts": {
+      "auxiliary_accepted": 1,
+      "core_accepted": 2,
+      "quarantined_broken_reference": 0,
+      "quarantined_disconnected": 0,
+      "quarantined_out_of_scope": 0,
+      "quarantined_unmapped_entity": 0,
+      "quarantined_weak_evidence": 0
+     },
+     "decision_input_hash_matches_leg": true,
+     "ok": true,
+     "refusal": [],
+     "release": "review_required"
+    },
+    "recorded_reports": {
+     "final_gate_errors": [],
+     "required_gate_codes": null
+    }
+   },
+   "src_sha": "5b7f5ab5",
+   "tier": "B"
+  },
+  {
+   "checkpoint": "canonical",
+   "class": "replayable (upstream_contract_report)",
+   "fidelity_diffs": [],
+   "id": "runs_verify/2026-09-06_1425/PMC12376012",
+   "paper": "PMC12376012",
+   "recorded": "upstream_contract_report",
+   "replay": {
+    "canonical_matches_leg": true,
+    "canonical_sha256": "7e9e36ae44dff04afe6b5ea5a6b4a446d3054e134464ceb0d95a962344fe0aaf",
+    "checkpoint": "canonical",
+    "checkpoint_sha256": "62faae699abe6e6364f7550ddc5b2c00dea9009ec6748b3476ebf6cbd159f643",
+    "driver": {
+     "codes": [
+      "gate.protein_ceramidase_is_missing_species_organism",
+      "gate.protein_ceramide_kinase_is_missing_species_organism",
+      "gate.protein_dihydroceramide_desaturase_is_missing_species_organism",
+      "gate.protein_ormdl1_is_missing_a_uniprot_or_drugbank_identifier",
+      "gate.protein_ormdl2_is_missing_a_uniprot_or_drugbank_identifier",
+      "gate.protein_ormdl3_is_missing_a_uniprot_or_drugbank_identifier",
+      "gate.protein_s1p_phosphatase_is_missing_species_organism",
+      "gate.protein_sphingomyelin_synthase_is_missing_species_organism",
+      "gate.protein_sphingomyelinase_is_missing_species_organism",
+      "gate.protein_sphingosine_kinase_is_missing_species_organism"
+     ],
+     "contract_errors": 10,
+     "gate_failed": false,
+     "gate_reason": "",
+     "gate_stage": "final_pre_export_stage3_gates"
+    },
+    "failure_stage": "upstream_contract_report",
+    "files": {
+     "canonical.json": "e418a84260490e85",
+     "final.canonical.json": "62faae699abe6e63",
+     "outputs/coverage_diagnostics.json": "0ff6c7b3cb75ede4",
+     "outputs/coverage_summary.json": "69db1caae9e17e7f",
+     "outputs/graph_closure_iterations.json": "6c12fbe83cf595a9",
+     "outputs/quarantine_report.json": "c9beb4f5593a8e33",
+     "outputs/removed_entity_report.json": "2d5d47dd44e915c5"
+    },
+    "final_gate": {
+     "codes": [],
+     "errors": [],
+     "ok": true
+    },
+    "gold": null,
+    "id": "runs_verify/2026-09-06_1425/PMC12376012",
+    "network_refused": [],
+    "paper": "PMC12376012",
+    "pwml_written": false,
+    "quarantine": {
+     "admitted_hash_matches_leg": false,
+     "counts": {
+      "auxiliary_accepted": 0,
+      "core_accepted": 16,
+      "quarantined_broken_reference": 0,
+      "quarantined_disconnected": 0,
+      "quarantined_out_of_scope": 0,
+      "quarantined_unmapped_entity": 0,
+      "quarantined_weak_evidence": 0
+     },
+     "decision_input_hash_matches_leg": true,
+     "ok": true,
+     "refusal": [],
+     "release": "review_required"
+    },
+    "recorded_reports": {
+     "final_gate_errors": [],
+     "required_gate_codes": null
+    }
+   },
+   "src_sha": "5b7f5ab5",
+   "tier": "B"
+  },
+  {
+   "checkpoint": "canonical",
+   "class": "replayable (upstream_contract_report)",
+   "fidelity_diffs": [],
+   "id": "runs_verify/2026-09-06_1425/PMC7232280",
+   "paper": "PMC7232280",
+   "recorded": "upstream_contract_report",
+   "replay": {
+    "canonical_matches_leg": true,
+    "canonical_sha256": "07464f3a3c9c8f2b7cd90cfe68c200c3758eac19748e291d9ac18b4f00134e54",
+    "checkpoint": "canonical",
+    "checkpoint_sha256": "a90c79245c184ab2776bde1b92712fdd21883c97a7c04e2b941529bfb0ac04e3",
+    "driver": {
+     "codes": [
+      "gate.protein_nite_is_missing_a_uniprot_or_drugbank_identifier",
+      "gate.protein_nitg_is_missing_a_uniprot_or_drugbank_identifier"
+     ],
+     "contract_errors": 2,
+     "gate_failed": false,
+     "gate_reason": "",
+     "gate_stage": "final_pre_export_stage3_gates"
+    },
+    "failure_stage": "upstream_contract_report",
+    "files": {
+     "canonical.json": "24f3aa32b9a3f188",
+     "final.canonical.json": "a90c79245c184ab2",
+     "outputs/coverage_diagnostics.json": "251c643d80db7b07",
+     "outputs/coverage_summary.json": "042fdb7d1201c73c",
+     "outputs/graph_closure_iterations.json": "6c12fbe83cf595a9",
+     "outputs/quarantine_report.json": "6f77e3ed3c190ee4",
+     "outputs/removed_entity_report.json": "2d5d47dd44e915c5"
+    },
+    "final_gate": {
+     "codes": [],
+     "errors": [],
+     "ok": true
+    },
+    "gold": null,
+    "id": "runs_verify/2026-09-06_1425/PMC7232280",
+    "network_refused": [],
+    "paper": "PMC7232280",
+    "pwml_written": false,
+    "quarantine": {
+     "admitted_hash_matches_leg": false,
+     "counts": {
+      "auxiliary_accepted": 0,
+      "core_accepted": 6,
+      "quarantined_broken_reference": 0,
+      "quarantined_disconnected": 0,
+      "quarantined_out_of_scope": 0,
+      "quarantined_unmapped_entity": 0,
+      "quarantined_weak_evidence": 0
+     },
+     "decision_input_hash_matches_leg": true,
+     "ok": true,
+     "refusal": [],
+     "release": "review_required"
+    },
+    "recorded_reports": {
+     "final_gate_errors": [],
+     "required_gate_codes": null
+    }
+   },
+   "src_sha": "5b7f5ab5",
+   "tier": "B"
+  },
+  {
+   "checkpoint": "canonical",
+   "class": "replayable (pwml_export)",
+   "fidelity_diffs": [],
+   "id": "runs_verify/2026-09-06_1425/PMC11405693",
+   "paper": "PMC11405693",
+   "recorded": "pwml_export",
+   "replay": {
+    "canonical_matches_leg": true,
+    "canonical_sha256": "29b675eed8956b76bb9b82bfb7fd3b59eb6974cbf261a2d4a56a5725943a6cde",
+    "checkpoint": "canonical",
+    "checkpoint_sha256": "2e97a39dcd5b9930d12863191406fbc636fc18dbc84ff46eafa9eb4c088580b1",
+    "driver": {
+     "codes": [],
+     "contract_errors": 0,
+     "gate_failed": false,
+     "gate_reason": "",
+     "gate_stage": "final_pre_export_stage3_gates"
+    },
+    "export": {
+     "error": "PWML required-field gate failed.",
+     "ir_blocking": [],
+     "ir_validation": [],
+     "ok": false,
+     "quarantine_reused": true,
+     "required_gate_codes": [
+      "reaction_enzyme_must_be_protein_complex"
+     ],
+     "required_gate_ok": false,
+     "stage3_contract_codes": []
+    },
+    "failure_stage": "pwml_export",
+    "files": {
+     "canonical.json": "60766c7512a38e11",
+     "final.canonical.json": "2e97a39dcd5b9930",
+     "outputs/coverage_diagnostics.json": "b64f4610c3b2b241",
+     "outputs/coverage_summary.json": "43096d0807282560",
+     "outputs/graph_closure_iterations.json": "6c12fbe83cf595a9",
+     "outputs/pwml_required_field_gate_report.json": "c3a462a36b9d8f40",
+     "outputs/quarantine_report.json": "e35cbba4cb1ec88d",
+     "outputs/removed_entity_report.json": "2d5d47dd44e915c5"
+    },
+    "final_gate": {
+     "codes": [],
+     "errors": [],
+     "ok": true
+    },
+    "gold": null,
+    "id": "runs_verify/2026-09-06_1425/PMC11405693",
+    "network_refused": [],
+    "paper": "PMC11405693",
+    "pwml_written": false,
+    "quarantine": {
+     "admitted_hash_matches_leg": false,
+     "counts": {
+      "auxiliary_accepted": 0,
+      "core_accepted": 7,
+      "quarantined_broken_reference": 0,
+      "quarantined_disconnected": 0,
+      "quarantined_out_of_scope": 0,
+      "quarantined_unmapped_entity": 0,
+      "quarantined_weak_evidence": 0
+     },
+     "decision_input_hash_matches_leg": true,
+     "ok": true,
+     "refusal": [],
+     "release": "review_required"
+    },
+    "recorded_reports": {
+     "final_gate_errors": [],
+     "required_gate_codes": [
+      "reaction_enzyme_must_be_protein_complex"
+     ]
+    }
+   },
+   "src_sha": "5b7f5ab5",
+   "tier": "B"
+  },
+  {
+   "checkpoint": "canonical",
+   "class": "replayable (upstream_contract_report)",
+   "fidelity_diffs": [],
+   "id": "runs_verify/2026-09-06_1425/PMC8510960",
+   "paper": "PMC8510960",
+   "recorded": "upstream_contract_report",
+   "replay": {
+    "canonical_matches_leg": true,
+    "canonical_sha256": "d8383f5700c98d97052fe07283750bb22550d5a3d8e3c2113c1a7d062bafa69a",
+    "checkpoint": "canonical",
+    "checkpoint_sha256": "d5e5c671678c01378061759564d871f8cc59cc5bb0a661fe393d5e402269c347",
+    "driver": {
+     "codes": [
+      "gate.protein_crgata1_is_missing_a_uniprot_or_drugbank_identifier",
+      "gate.protein_crnpf2_is_missing_a_uniprot_or_drugbank_identifier",
+      "gate.protein_crpif1_is_missing_a_uniprot_or_drugbank_identifier",
+      "gate.protein_crtpt2_is_missing_a_uniprot_or_drugbank_identifier",
+      "gate.protein_dat_is_missing_a_uniprot_or_drugbank_identifier",
+      "gate.protein_g10h_is_missing_a_uniprot_or_drugbank_identifier",
+      "gate.protein_sgd_is_missing_a_uniprot_or_drugbank_identifier"
+     ],
+     "contract_errors": 7,
+     "gate_failed": false,
+     "gate_reason": "",
+     "gate_stage": "final_pre_export_stage3_gates"
+    },
+    "failure_stage": "upstream_contract_report",
+    "files": {
+     "canonical.json": "4423e4a3d2cb8f46",
+     "final.canonical.json": "d5e5c671678c0137",
+     "outputs/coverage_diagnostics.json": "1ee6c69a4cf07ff0",
+     "outputs/coverage_summary.json": "9c586434c29bce4f",
+     "outputs/graph_closure_iterations.json": "6c12fbe83cf595a9",
+     "outputs/quarantine_report.json": "a389c8b7ec536874",
+     "outputs/removed_entity_report.json": "2d5d47dd44e915c5"
+    },
+    "final_gate": {
+     "codes": [],
+     "errors": [],
+     "ok": true
+    },
+    "gold": null,
+    "id": "runs_verify/2026-09-06_1425/PMC8510960",
+    "network_refused": [],
+    "paper": "PMC8510960",
+    "pwml_written": false,
+    "quarantine": {
+     "admitted_hash_matches_leg": false,
+     "counts": {
+      "auxiliary_accepted": 0,
+      "core_accepted": 7,
+      "quarantined_broken_reference": 0,
+      "quarantined_disconnected": 0,
+      "quarantined_out_of_scope": 0,
+      "quarantined_unmapped_entity": 0,
+      "quarantined_weak_evidence": 0
+     },
+     "decision_input_hash_matches_leg": true,
+     "ok": true,
+     "refusal": [],
+     "release": "review_required"
+    },
+    "recorded_reports": {
+     "final_gate_errors": [],
+     "required_gate_codes": null
+    }
+   },
+   "src_sha": "5b7f5ab5",
+   "tier": "B"
+  }
+ ],
+ "offline_probe": {
+  "attempts": {
+   "create_connection_loopback": "refused",
+   "raw_socket_connect": "refused",
+   "urlopen_uniprot": "refused"
+  },
+  "counted": 3,
+  "ok": true
+ },
+ "src": "t2pw from --src",
+ "summary": {
+  "all": {
+   "aborted_not_counted": 0,
+   "llm_originating_failures": 0,
+   "network_refused_total": 0,
+   "passing_ids": [
+    "runs_verify/2026-09-06_1425/PMC12071552"
+   ],
+   "pwml_pass": 1,
+   "pwml_pass_rate_of_replayed": "1/6",
+   "pwml_pass_rate_of_strict": "1/6",
+   "replay_errors": 0,
+   "replayable_failures": 5,
+   "strict_legs": 6,
+   "verdict_as_recorded": "6/6",
+   "with_checkpoint": 6
+  },
+  "tier_B": {
+   "aborted_not_counted": 0,
+   "llm_originating_failures": 0,
+   "network_refused_total": 0,
+   "passing_ids": [
+    "runs_verify/2026-09-06_1425/PMC12071552"
+   ],
+   "pwml_pass": 1,
+   "pwml_pass_rate_of_replayed": "1/6",
+   "pwml_pass_rate_of_strict": "1/6",
+   "replay_errors": 0,
+   "replayable_failures": 5,
+   "strict_legs": 6,
+   "verdict_as_recorded": "6/6",
+   "with_checkpoint": 6
+  }
+ },
+ "task": "ORCH-768"
+}

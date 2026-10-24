@@ -1,0 +1,39 @@
+t2pw resolved: C:\t\bt-orch768\src-cc8b6ae4\src\t2pw
+offline probe: {'attempts': {'urlopen_uniprot': 'refused', 'create_connection_loopback': 'refused', 'raw_socket_connect': 'refused'}, 'counted': 3, 'ok': True}
+runs_verify/2026-08-24_1203/PMC12856317                     replayable (final_pre_export_gate_lifecycle)          q=False['unexportable_entity:2']/diagnostic_only gate=None export=None req=None net=0  AS RECORDED
+runs_verify/2026-08-24_1203/PMC13231680                     replayable (pwml_export)                              q=True/review_required gate=True export=False req=False net=0  AS RECORDED
+runs_verify/2026-08-24_1203/PMC12096016                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+runs_verify/2026-08-24_1203/PMC12452463                     replayable (upstream_contract_report)                 q=True/review_required gate=True export=None req=None net=0  AS RECORDED
+runs_verify/2026-08-24_1428/PMC12444477                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+runs_verify/2026-08-24_1428/PMC12856317                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+runs_verify/2026-08-24_1428/PMC12180156                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+runs_verify/2026-08-24_1428/PMC12096016                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+runs_verify/2026-08-24_1428/PMC12452463                     replayable (upstream_contract_report)                 q=True/review_required gate=True export=None req=None net=0  AS RECORDED
+runs_verify/2026-08-24_1428/PMC12782028                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+
+SUMMARY (all)
+  strict_legs                    10
+  with_checkpoint                10
+  replay_errors                  0
+  pwml_pass                      6
+  pwml_pass_rate_of_strict       6/10
+  pwml_pass_rate_of_replayed     6/10
+  replayable_failures            4
+  llm_originating_failures       0
+  aborted_not_counted            0
+  verdict_as_recorded            10/10
+  network_refused_total          0
+
+SUMMARY (tier_B)
+  strict_legs                    10
+  with_checkpoint                10
+  replay_errors                  0
+  pwml_pass                      6
+  pwml_pass_rate_of_strict       6/10
+  pwml_pass_rate_of_replayed     6/10
+  replayable_failures            4
+  llm_originating_failures       0
+  aborted_not_counted            0
+  verdict_as_recorded            10/10
+  network_refused_total          0
+GOLD (replayed tail; certified gold only)
