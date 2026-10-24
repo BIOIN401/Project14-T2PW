@@ -2072,11 +2072,10 @@ def _species_ref_keys(value: Any) -> Set[str]:
     text = _canonical(str(value)).casefold()
     keys = {text, re.sub(r"[^0-9a-z]+", "", text)}
     try:
-        number = float(text)
-    except ValueError:
-        number = None
-    if number is not None and number.is_integer():
-        keys.add(str(int(number)))  # ir._to_int reads "77.0" as the id 77
+        # ir._to_int is int(float(text)): it truncates, so "77.0" and "77.9" are id 77.
+        keys.add(str(int(float(text))))
+    except (OverflowError, ValueError):
+        pass
     return {key for key in keys if key}
 
 
