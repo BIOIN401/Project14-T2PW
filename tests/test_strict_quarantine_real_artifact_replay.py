@@ -889,6 +889,23 @@ FULL_STACK_BASELINE: Dict[str, int] = {
 #:
 #: The species-metadata class is untouched: 19 legs / 27 rows before and after.
 #:
+#: **MOVED by ORCH-766 / D-111 section 1, 2026-10-23: rows 27 -> 19, legs unchanged.**
+#: ``quarantine_and_close`` now removes a species row nothing in the pathway names.
+#: Eight such rows sat in three cohort legs, each carrying
+#: ``species_missing_taxonomy`` and ``species_missing_classification`` (16 error rows):
+#: ``runs/2026-07-28_2122/papers/PMC12421875__.../research`` ("L. lactis subsp. lactis
+#: KF147"), ``runs/2026-07-28_2122/papers/PMC12657337__.../strict`` ("Bacillus
+#: subtilis") and ``runs/2026-08-02_2130/papers/PMC12421875/strict`` (six: Lactiplantibacillus
+#: plantarum, Escherichia coli, Staphylococcus aureus, Mycobacterium tuberculosis,
+#: Bacillus subtilis, Flavobacterium meningosepticum). Each is unreferenced by every
+#: independent check -- no scalar of the quarantined payload names it, no IR state
+#: resolves to it, no protein the writer resolves to it, not IR ``species[0]``
+#: (``docs/pwml_recovery_sprint/evidence/orch766/chunk_e_compare.out``). All three legs
+#: keep a REFERENCED species row without taxonomy, so each still fails the
+#: required-field gate: ``RESIDUAL_CODES_BY_LEG`` stays 19 / 19, and
+#: ``FULL_STACK_BASELINE`` does not move (``required_contract_pass`` 9, ``exportable``
+#: 9). No leg's verdict changed and no gate was relaxed (merge rule 6).
+#:
 #: ``docs/change_log.md`` moved with it, in the same commit, because
 #: ``test_the_change_log_baseline_table_agrees_with_the_pinned_values`` renders its
 #: fragments straight out of these dicts and fails if the two disagree. Two lines
@@ -901,8 +918,8 @@ RESIDUAL_CODES_BY_LEG: Dict[str, int] = {
     "species_missing_taxonomy": 19,
 }
 RESIDUAL_CODES_BY_ROW: Dict[str, int] = {
-    "species_missing_classification": 27,
-    "species_missing_taxonomy": 27,
+    "species_missing_classification": 19,
+    "species_missing_taxonomy": 19,
 }
 
 _REMEASURE = (

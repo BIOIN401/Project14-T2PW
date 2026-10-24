@@ -43,7 +43,7 @@ frozen cohort in `tests/data/baseline_cohort_manifest.json`, unchanged:
 That is the whole delta: one cohort leg,
 `runs/2026-08-02_2130/papers/PMC12096016/strict`, moves from refused to admitted
 and clears every later stage (39 legs; 28 admitted / 11 refused; 28/28 Stage 3;
-9/28 required contract; 9/9 IR; 9/28 exportable; by leg 19/19, by row 27/27).
+9/28 required contract; 9/9 IR; 9/28 exportable; by leg 19/19, by row 19/19).
 The residual codes below do not move; that leg contributes none.
 
 ---
@@ -206,8 +206,8 @@ on the strength of Stage 3 alone. Measured full-stack across the 39 cached legs:
 > population spanning `runs/` and `runs_verify/`; the two must not be conflated.
 
 The 19 failures are one class, and quarantine is the wrong place to fix it:
-`species_missing_classification` (19 legs, 27 rows), `species_missing_taxonomy`
-(19 legs, 27 rows). The gate wants a numeric
+`species_missing_classification` (19 legs, 19 rows), `species_missing_taxonomy`
+(19 legs, 19 rows). The gate wants a numeric
 taxonomy id and a Prokaryote/Eukaryote classification on every species row because
 a species with no reference-DB identity is created fresh in Rails; the archived
 payloads carry species rows with neither. Inventing them inside quarantine would
@@ -225,6 +225,14 @@ fail if the gap closes upstream, so the claim cannot drift from the measurement.
 > stays 9 / 28 — one error code stopped being emitted, and nothing was exported that
 > was not exported before. The species-metadata class is untouched at 19 legs / 27
 > rows and remains the next pipeline defect.
+
+> **ORCH-766 / D-111 § 1 moved the row counts 27 -> 19, 2026-10-23; legs stay 19.**
+> `quarantine_and_close` now removes a species row that nothing in the pathway names.
+> Eight such rows sat in three cohort legs (16 error rows); each of those legs keeps a
+> referenced species row without taxonomy and still fails the gate, so `required
+> contract` stays 9 / 28 and `fully exportable` stays 9 / 28. The by-row restatement
+> above moved with it (`by row 27/27` -> `19/19`). Rows and evidence:
+> `docs/pwml_recovery_sprint/ORCH-766-RESULT.md`.
 
 **Also recorded, not fixed.** The app's post-mapping Stage 3 revalidation is
 mode-blind and always has been (unchanged at HEAD). A research run whose enzyme
