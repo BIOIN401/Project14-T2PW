@@ -1,0 +1,35 @@
+G11 C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c\docs\pwml_recovery_sprint\evidence\g11\ORCH-769c\38-int-corpus-compare.json
+pass rate base 54/91 -> tip 56/91
+fixed: ['ORCH-767/wnt_pcp-strict/2026-10-24_0131', 'runs_verify/2026-08-22_2017/PMC12856317']
+passing legs turned failing: none
+gold recall lost: none
+still failing, at a different step (information): none
+target ORCH-767/wnt_pcp-strict/2026-10-24_0131: FIXED
+D-112 § 2: ACCEPT
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 64d400f94f5548fdbb4db63c6ecc49f82217a109  [git, worktree dirty=False]
+label                   : int-corpus-compare
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769c/docs/pwml_recovery_sprint/evidence/orch768_replay_corpus.py compare C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769c/docs/pwml_recovery_sprint/evidence/orch769c/corpus_sprint_509fe185.json C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769c/docs/pwml_recovery_sprint/evidence/orch769c/corpus_int_tip.json --target ORCH-767/wnt_pcp-strict/2026-10-24_0131
+cwd                     : C:/t/bt-orch769c/cwd
+root PID / process group: 844008 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 120 s
+duration                : 0.40 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  844020:python.exe
+descendants terminated  : 1  844020
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c\docs\pwml_recovery_sprint\evidence\g11\ORCH-769c\38-int-corpus-compare.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================
+WRAPPER_EXIT 0

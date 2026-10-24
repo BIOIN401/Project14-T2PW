@@ -353,3 +353,68 @@ Not run: Chunk D (excluded by the brief), and the live pipeline (no LLM, no pipe
   * outputs: `g9_render_legs_{base,tip}.json`, `golden_{base,fixa,tip,delta}.json`, `corpus_{base,tip}.{json,txt}`;
   * one log per G11 job: `NN-<label>.log`.
 * `docs/pwml_recovery_sprint/evidence/g11/ORCH-769c/02-31*.json`, `evidence/g11/pin/ORCH-769c/*.pin.json`
+
+## 12. Integration (after review round 0, APPROVE WITH NOTES)
+
+The orchestrator asked for an integration step before the merge. Everything here ran at `64d400f9`, each job
+through `bounded_run.py` (and `pinned_pytest.py` for pytest), with 0 survivors.
+
+| commit | what |
+|---|---|
+| `bd4ac872` | `git merge --no-ff sprint/pwml-recovery` @ `509fe185`: ORCH-766, ORCH-768, ORCH-769b. Parents `5d15c2f2` and `509fe185`. No conflicts. |
+| `cdbf46c9` | **pin move (merge rule 4)** in `tests/test_orch768_replay_corpus.py`, exactly as § 6 documents. `EXPECTED[WNT_PCP]` becomes `{"pwml_written": True, "failure_stage": None}`, and that leg's fidelity expects `['outcome recorded=refinement_review_crash replay=pwml']`. Nothing else in the file changes. |
+| `64d400f9` | docstring only: `test_g9_final_zero_counts_...` no longer blames WNT PCP's `reactions = 11` on the `if value` filter (F-2) |
+
+After the merge, `git diff 509fe185 64d400f9 -- src` is the same 2 files, +15 −6, as § 3. The harness and the manifest
+are unchanged from `4baa9bd7`.
+
+| rerun | G11 | result |
+|---|---|---|
+| `tests/test_orch768_replay_corpus.py` | `32` | **9 passed** |
+| G9 file, `test_batch_driver.py`, `test_batch_driver_seam_golden.py` | `33` | **66 passed** |
+| SMOKE (22 files) | `34` | **511 passed** |
+| `test_streamlit_quarantine_boundary.py` alone | `35` | **24 passed** |
+| corpus, sprint tip `509fe185` (export, src tree `f64fca5e`) | `36` | **54/91**, 0 network attempts |
+| corpus, merged tip `64d400f9` (src tree `322d398d`) | `37` | **56/91**, 0 network attempts |
+| `compare` sprint → merged, `--target` WNT PCP | `38` | **ACCEPT**: 2 fixed, 0 turned failing, 0 gold recall lost |
+| every leg record, sprint → merged (`corpus_leg_diff.py`) | `39` | 2 of 93 legs changed, the 2 fixed |
+
+`PATHBANK_DB_*` was unset in the shell, every corpus job ran under `env -u PATHBANK_DB_{HOST,PORT,USER,PASSWORD,NAME}`,
+and the worktree has no `.env`.
+
+**The expected count was 54; the measurement is 56.** 54/91 is the *sprint tip itself* (with ORCH-769b), not 53.
+Over that, ORCH-769c fixes two legs:
+
+* `ORCH-767/wnt_pcp-strict/2026-10-24_0131`, as in § 6. Its PWML is the same, `e68f008b…`.
+* **`runs_verify/2026-08-22_2017/PMC12856317`, new on the merged tree.**
+  * At `e3d5b65f` it failed the final gate on `unknown_protein_modifier_reference`.
+  * ORCH-769b now quarantines that reaction (`quarantined_broken_reference: 1`). That leaves 2 interactions and no
+    reaction, so **at the sprint tip it crashes in refinement review with this lane's defect**
+    (`refinement_review_crash`, "DraftGraph has no reaction nodes").
+  * With ORCH-769c it writes `pathway.review_required.pwml` (`8e7d4ed8…`): release `review_required`, required gate
+    ok. Those bytes equal the sprint-tip "export had review opened" record.
+
+**Finding F-7, for § 7 item 1. The new PWML draws no process at all.** The PMC12856317 PWML has 0 reactions and
+0 interactions, and only 2 compounds and 1 protein (ALAS2). The IR withholds both interactions:
+
+* `heme inhibition of ALAS2`: `bare_protein_endpoint`;
+* `ALAS2 cofactor binding`: `untyped_interaction`.
+
+WNT PCP draws 1 of 18. So on the merged tree this lane's default ("export as `review_required`") already ships one
+PWML with **no drawn process**. Contract § 4 calls `review_required` a "valid, useful PWML". The review crash had been
+acting, by accident, as a "nothing drawable" guard. I did not decide it.
+
+The product owner's options are § 7 item 1's, now sharper:
+
+* (a) keep exporting;
+* (b) decline when no reaction or transport survives;
+* (c) a narrower rule: decline when the IR draws no process, and export otherwise. Under (c) WNT PCP (1 drawn
+  interaction) exports and PMC12856317 (0) does not. The cost is a new check after the IR, in the exporter or the
+  driver.
+
+Until that is ruled, both legs count as corpus passes, because the harness counts any written PWML.
+
+`g11_evidence.py check --task ORCH-769c`: exit 0, 38 artifacts (`02`-`39`), 0 non-compliant.
+
+**TEST_MATRIX delta, unchanged by the merge:** SMOKE 511, boundary file 24, plus the ORCH-768 acceptance test's pin
+move, applied here in `cdbf46c9`.
