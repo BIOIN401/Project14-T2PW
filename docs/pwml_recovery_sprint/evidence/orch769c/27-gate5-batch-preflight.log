@@ -1,0 +1,51 @@
+G11 C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c\docs\pwml_recovery_sprint\evidence\g11\ORCH-769c\27-gate5-batch-preflight.json
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c\src\t2pw\__init__.py
+.................Fs....sss...........                                    [100%]
+================================== FAILURES ===================================
+_______ test_the_message_names_the_problem_the_interpreter_and_the_cure _______
+
+    def test_the_message_names_the_problem_the_interpreter_and_the_cure() -> None:
+        """The wrong-interpreter case: the one that actually happened.
+    
+        The cure has to be a command, not advice. "Use the venv" is not actionable at
+        2am; ``C:\\...\\.venv\\Scripts\\python.exe scripts\\batch_run.py`` is, and the
+        root cause -- ``py.exe`` ignoring the active virtualenv -- has to be named or
+        the operator fixes it once and hits it again next week.
+        """
+    
+        venv = runner.venv_python()
+>       assert venv is not None, "this project ships a .venv; the test assumes it"
+E       AssertionError: this project ships a .venv; the test assumes it
+E       assert None is not None
+
+tests\test_batch_preflight.py:616: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_batch_preflight.py::test_the_message_names_the_problem_the_interpreter_and_the_cure
+1 failed, 32 passed, 4 skipped in 8.62s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 9360976c1ac88160de2afa97365473e4304ce01b  [git, worktree dirty=False]
+label                   : gate5-batch-preflight
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769c/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769c/docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-769c/27-gate5-batch-preflight.pin.json -q -p no:cacheprovider --basetemp=C:/t/bt-orch769c/bt-27-gate5-batch-preflight tests/test_batch_preflight.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c
+root PID / process group: 806644 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 9.40 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 18  806572:python.exe, 802768:python.exe, 803592:python.exe, 795492:python.exe, 803104:python.exe, 805048:python.exe, 806432:python.exe, 800788:python.exe, 801752:python.exe, 805840:python.exe, 806092:python.exe, 806368:python.exe, 805020:python.exe, 806848:python.exe, 806360:python.exe, 806396:python.exe, 800176:python.exe, 806648:python.exe
+descendants terminated  : 18  795492, 800176, 800788, 801752, 802768, 803104, 803592, 805020, 805048, 805840, 806092, 806360, 806368, 806396, 806432, 806572, 806648, 806848
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c\docs\pwml_recovery_sprint\evidence\g11\ORCH-769c\27-gate5-batch-preflight.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================
+WRAPPER_EXIT 1

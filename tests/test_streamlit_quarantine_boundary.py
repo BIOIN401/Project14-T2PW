@@ -860,6 +860,62 @@ def test_the_quarantined_payload_exports_a_non_empty_pwml_end_to_end() -> None:
     assert result["counts"]
 
 
+def _interactions_only_payload() -> Dict[str, Any]:
+    """Two identified proteins and one interaction; no reaction, no transport, no compound."""
+
+    payload = _core_payload()
+    payload["entities"]["compounds"] = []
+    payload["entities"]["protein_complexes"] = []
+    payload["element_locations"]["compound_locations"] = []
+    payload["processes"]["reactions"] = []
+    payload["processes"]["interactions"] = [
+        {
+            "name": "glutamate-cysteine ligase binds glutathione synthetase",
+            "entity_1": "glutamate-cysteine ligase",
+            "entity_2": "glutathione synthetase",
+            "relationship": "binds",
+        }
+    ]
+    return payload
+
+
+@pytest.mark.usefixtures("offline_mapping")
+def test_g9_an_interactions_only_pathway_opens_review_and_exports() -> None:
+    """ORCH-769c (D-112 § 3c), G9: fails at base ``e3d5b65f``. Run ALONE in its own process.
+
+    ORCH-767 WNT PCP: quarantine admitted interactions only, the review diagram raised "DraftGraph
+    has no reaction nodes", refinement review never opened, and the "Generate PWML" button was
+    never rendered. At base the button lookup below raises; with nothing to draw the review now
+    opens without a diagram and the pathway exports.
+    """
+
+    _clear_artifacts()
+    at = _app_test().from_file(str(APP_PATH), default_timeout=APP_TIMEOUT)
+    at.run()
+    _seed_finished_pipeline(at, _interactions_only_payload())
+    # Both requested anchors are proteins: the coverage check judges this graph on what it has.
+    at.session_state["pathway_context"] = {
+        **STAGE_ZERO_CONTEXT,
+        "key_compounds": [],
+        "key_proteins": ["glutamate-cysteine ligase", "glutathione synthetase"],
+    }
+    at.run()
+    at.button(key=KEY_POST_PIPELINE).click().run()
+
+    assert at.session_state["quarantine_report"]["ok"] is True  # holds at base: the boundary admits it
+
+    # Base: KeyError. The review diagram raised (the app shows it with st.exception), so review
+    # never opened and the button was never rendered -- the ORCH-767 driver failure exactly.
+    result = _generate_pwml(at)
+
+    assert _app_exceptions(at) == []
+    working = at.session_state["refinement_working_json"]
+    assert working["processes"]["reactions"] == [] and working["processes"]["interactions"]
+    assert at.session_state["refinement_graph_bytes"] == b""
+    assert result["ok"] is True, result.get("error")
+    assert b"glutamate-cysteine ligase" in result["xml_bytes"]
+
+
 @pytest.mark.usefixtures("offline_mapping")
 def test_the_export_reuses_the_boundary_decision_when_the_payload_did_not_move() -> None:
     """No second quarantine pass, and the reviewer's graph is what shipped."""

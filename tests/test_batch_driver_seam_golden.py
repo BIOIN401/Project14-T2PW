@@ -268,14 +268,33 @@ def _observe(tmp_path: Path, leg: str) -> tuple:
 #: * ``operation_timeout`` is not a new verdict invented here. It is the verdict
 #:   ``classify_interaction_timeout`` returned on this fixture on the BASE SHA too;
 #:   the base row simply did not print it, which is F-092 defect 3 in one line.
+#:
+#: **RE-BASELINED AGAIN by ORCH-769c under merge rule 4.** The driver's counts now
+#: describe the payload it writes as ``final_mapped.json`` -- the canonical one when
+#: present -- instead of the PRE-quarantine ``final_mapped_db``, and keep zeros. Every
+#: fixture here carries ``canonical_export_payload = _CANON`` (one reaction, no
+#: entities) beside ``final_mapped_db = _MERGED``, so the counts of the six legs that
+#: reach the counts line move. Derived, not asserted: captures
+#: ``evidence/orch769c/golden_base.json`` (exported base tree ``e3d5b65f``, which
+#: reproduced all seven tuples above byte-identically), ``golden_fixa.json`` (the
+#: zero-count fix alone, ``814d6da8``: also all seven identical), ``golden_tip.json``
+#: (``31c64c6f``), and the difference ``golden_delta.json``. The exact delta:
+#:
+#: * **slot 0** and **slot 1** move on **0 of 7** legs.
+#: * **slot 2** moves on **6 of 7**; ``input_timeout`` never reaches the counts line
+#:   and is byte-identical.
+#: * on every moving leg the ONLY differing observable field is ``row`` and within it
+#:   ONLY ``counts``: ``compounds 2 -> 0``, ``entities 3 -> 0``, ``proteins 1 -> 0``
+#:   (``_CANON`` declares no entity); ``reactions 1`` and ``transports 0`` unchanged.
+#:   Zero keys added, zero dropped.
 GOLDEN: dict = {
     "input_timeout": ("timeout|input|timeout", "extraction did not finish inside the time budget", "b55b50244bef004c31861cc2a72a2799964dc5256badf1cf58cb983983d9b9c3"),
-    "research_pass": ("pass|research_report|", "research run completed; no RAG synthesis in this run, so no citation report was produced", "cfb25c20c9fee6cbf0e60254d3ec0a9db37214df5906e53b264b73da944485b3"),
-    "strict_contract_failure": ("fail|post_pipeline|contract", "post-pipeline validation failed: 1 blocking issue(s) at a stage boundary", "8a5c7a80e4f97e7e62ab21005c6eb21f10d05a7e5980845b497d9f2620595205"),
-    "strict_export_not_ok": ("fail|pwml_export|unknown", "PWML export failed: the gate rejected the payload", "beed6d1d332465d944dd2447914acdf630618b7d94ace556e1062f63f9f9f2f4"),
-    "strict_gate_failure": ("fail|post_pipeline|contract", "post-pipeline validation failed: 1 blocking issue(s) at post_normalization_hard_gates", "3279e51b71a3548bae18b0b1360916f8b4287bda852f10f790f57da0a1a2852b"),
-    "strict_no_pwml_button": ("fail|pwml_export|unknown", "the app never rendered the \"refinement_generate_pwml\" button ('refinement_generate_pwml'), so the review step that unlocks PWML export was not reached", "8ab600ff81d56ec1c9540ab79f1a822079e417b8772a638db89b23b0e8672e14"),
-    "strict_pwml_export": ("pass|pwml_export|", "strict run completed; pathway.review_required.pwml is 43 bytes", "a768148079da3a9ff9de8312ac9255ebe05c26318739fbe6fa2e97543e93e027"),
+    "research_pass": ("pass|research_report|", "research run completed; no RAG synthesis in this run, so no citation report was produced", "c14508c5b88be42d8c8185b0b3f41828bc32b494138b753e05e21569bb33d2fd"),
+    "strict_contract_failure": ("fail|post_pipeline|contract", "post-pipeline validation failed: 1 blocking issue(s) at a stage boundary", "bd16c9c0d60c57c808d1a51778fa87c3cc3e569608688928bba39f580b6b52ec"),
+    "strict_export_not_ok": ("fail|pwml_export|unknown", "PWML export failed: the gate rejected the payload", "0f41d701fe41d2afd11abb7dc9197aeac5dc70b486053f078fd855a6cd70db14"),
+    "strict_gate_failure": ("fail|post_pipeline|contract", "post-pipeline validation failed: 1 blocking issue(s) at post_normalization_hard_gates", "58efbe29ed393c27e56ee84f8d4dc7d98c524241ee09ca50d121caf5d8b9dd58"),
+    "strict_no_pwml_button": ("fail|pwml_export|unknown", "the app never rendered the \"refinement_generate_pwml\" button ('refinement_generate_pwml'), so the review step that unlocks PWML export was not reached", "8a5ca5449ecee9c0e63bbb50a07959a2e2bf27b3a8057410a1a7b6d581f3792b"),
+    "strict_pwml_export": ("pass|pwml_export|", "strict run completed; pathway.review_required.pwml is 43 bytes", "125337219cfb80880d673ace1e2c19b385fbed1bc1c193070abdee604dcd5200"),
 }
 
 

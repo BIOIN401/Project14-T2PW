@@ -346,6 +346,90 @@ def test_strict_fails_when_review_step_never_unlocks_pwml(tmp_path: Path) -> Non
     assert "refinement_generate_pwml" in outcome.message
 
 
+#: ORCH-769c: what the quarantine boundary leaves of a pathway whose every reaction and
+#: transport was withheld -- interactions only (the ORCH-767 WNT PCP shape).
+_INTERACTIONS_ONLY_FINAL = {
+    "entities": {"proteins": [{"name": "MenG"}, {"name": "MenH"}]},
+    "processes": {
+        "reactions": [],
+        "transports": [],
+        "interactions": [{"name": "MenG binds MenH", "entity_1": "MenG", "entity_2": "MenH"}],
+    },
+}
+_PASSING_PWML = {
+    "ok": True,
+    "_xml": "<pathway><name>menaquinone</name></pathway>",
+    "pwml_ir": {"pathway": {"name": "menaquinone"}},
+    "validation_report": {"issues": 0},
+    "quarantine_report": {"release": _RELEASE_READY},
+}
+
+
+def test_g9_final_zero_counts_replace_the_stale_stage2_counts(tmp_path: Path) -> None:
+    """ORCH-769c, G9 (fails at base ``e3d5b65f``). The counts are the FINAL payload's.
+
+    Stage 2 had 1 reaction and 2 compounds; the final mapped payload has none of either. The
+    driver used to merge the final counts with ``if value``, so a zero never replaced the
+    Stage-2 number. (ORCH-767 WNT PCP's ``reactions = 11`` had a different cause, the
+    pre-quarantine count source: see the canonical-payload test below and RESULT F-2.)
+    """
+
+    artifacts = _artifacts(
+        "pathwhiz", final_mapped_db=_INTERACTIONS_ONLY_FINAL, final_mapped=_INTERACTIONS_ONLY_FINAL
+    )
+    app = _write_app(tmp_path, "strict_zero_final", _post_pipeline_body(artifacts, pwml=_PASSING_PWML))
+
+    outcome = _run(app, STRICT)
+
+    assert outcome.status == "pass", outcome.detail
+    assert outcome.counts["reactions"] == 0
+    assert outcome.counts["transports"] == 0
+    assert outcome.counts["compounds"] == 0
+    assert outcome.counts["proteins"] == 2
+
+
+def test_g9_counts_come_from_the_canonical_payload_not_the_pre_quarantine_one(tmp_path: Path) -> None:
+    """ORCH-769c, G9 (fails at base ``e3d5b65f``, and still fails with only the zero fix above).
+
+    The ORCH-767 WNT PCP shape. ``final_mapped_db`` is post-Stage-6 and PRE-quarantine: in that
+    leg it held 11 reactions and 2 transports (the quarantine report's 66 admissions are
+    11 + 2 + 53 interactions). The canonical payload, which the driver itself writes as
+    ``final_mapped.json``, held none. The counts line read ``final_mapped_db`` first, so the
+    report said ``reactions = 11`` whether or not zeros were kept.
+    """
+
+    from t2pw.pipeline.gate_reports import CANONICAL_PAYLOAD_KEY
+
+    artifacts = _artifacts(
+        "pathwhiz",
+        final_mapped_db=_MERGED,
+        final_mapped=_INTERACTIONS_ONLY_FINAL,
+        **{CANONICAL_PAYLOAD_KEY: _INTERACTIONS_ONLY_FINAL},
+    )
+    app = _write_app(tmp_path, "strict_canonical_counts", _post_pipeline_body(artifacts, pwml=_PASSING_PWML))
+
+    outcome = _run(app, STRICT)
+
+    assert outcome.status == "pass", outcome.detail
+    assert json.loads(outcome.artifacts["final_mapped.json"]) == _INTERACTIONS_ONLY_FINAL
+    assert outcome.counts["reactions"] == 0
+    assert outcome.counts["compounds"] == 0
+    assert outcome.counts["proteins"] == 2
+
+
+def test_preservation_an_absent_final_payload_keeps_the_stage2_counts(tmp_path: Path) -> None:
+    """Not G9 (passes at base too): no final payload means "not recorded", never zero."""
+
+    artifacts = _artifacts("pathwhiz", final_mapped_db=None, final_mapped=None)
+    app = _write_app(tmp_path, "strict_no_final", _post_pipeline_body(artifacts, pwml=_PASSING_PWML))
+
+    outcome = _run(app, STRICT)
+
+    assert outcome.status == "pass", outcome.detail
+    assert outcome.counts["reactions"] == 1
+    assert outcome.counts["compounds"] == 2
+
+
 # ---------------------------------------------------------------------------
 # A passing research run.
 # ---------------------------------------------------------------------------

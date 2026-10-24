@@ -1,0 +1,36 @@
+G11 C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c\docs\pwml_recovery_sprint\evidence\g11\ORCH-769c\12-golden-delta.json
+{"slot0": 0, "slot1": 0, "slot2": 6} only_counts_moved: True
+input_timeout            slot2 b55b5024 -> b55b5024  fields [] row []  counts {} -> {}
+research_pass            slot2 cfb25c20 -> c14508c5  fields ['row'] row ['counts']  counts {'blocking_issues': 0, 'compounds': 2, 'entities': 3, 'gate_errors': 0, 'normalization_actions': 0, 'proteins': 1, 'reactions': 1, 'review_flags': 0, 'skipped_format_rules': 0, 'transports': 0} -> {'blocking_issues': 0, 'compounds': 0, 'entities': 0, 'gate_errors': 0, 'normalization_actions': 0, 'proteins': 0, 'reactions': 1, 'review_flags': 0, 'skipped_format_rules': 0, 'transports': 0}
+strict_contract_failure  slot2 8a5c7a80 -> bd16c9c0  fields ['row'] row ['counts']  counts {'blocking_issues': 1, 'compounds': 2, 'contract_errors': 1, 'entities': 3, 'gate_errors': 0, 'proteins': 1, 'reactions': 1, 'transports': 0} -> {'blocking_issues': 1, 'compounds': 0, 'contract_errors': 1, 'entities': 0, 'gate_errors': 0, 'proteins': 0, 'reactions': 1, 'transports': 0}
+strict_export_not_ok     slot2 beed6d1d -> 0f41d701  fields ['row'] row ['counts']  counts {'blocking_issues': 0, 'compounds': 2, 'entities': 3, 'gate_errors': 0, 'proteins': 1, 'reactions': 1, 'transports': 0} -> {'blocking_issues': 0, 'compounds': 0, 'entities': 0, 'gate_errors': 0, 'proteins': 0, 'reactions': 1, 'transports': 0}
+strict_gate_failure      slot2 3279e51b -> 58efbe29  fields ['row'] row ['counts']  counts {'blocking_issues': 1, 'compounds': 2, 'entities': 3, 'gate_errors': 1, 'proteins': 1, 'reactions': 1, 'transports': 0} -> {'blocking_issues': 1, 'compounds': 0, 'entities': 0, 'gate_errors': 1, 'proteins': 0, 'reactions': 1, 'transports': 0}
+strict_no_pwml_button    slot2 8ab600ff -> 8a5ca544  fields ['row'] row ['counts']  counts {'blocking_issues': 0, 'compounds': 2, 'entities': 3, 'gate_errors': 0, 'proteins': 1, 'reactions': 1, 'transports': 0} -> {'blocking_issues': 0, 'compounds': 0, 'entities': 0, 'gate_errors': 0, 'proteins': 0, 'reactions': 1, 'transports': 0}
+strict_pwml_export       slot2 a7681480 -> 12533721  fields ['row'] row ['counts']  counts {'blocking_issues': 0, 'compounds': 2, 'entities': 3, 'gate_errors': 0, 'proteins': 1, 'pwml': {'reactions': 1}, 'pwml_bytes': 43, 'reactions': 1, 'transports': 0} -> {'blocking_issues': 0, 'compounds': 0, 'entities': 0, 'gate_errors': 0, 'proteins': 0, 'pwml': {'reactions': 1}, 'pwml_bytes': 43, 'reactions': 1, 'transports': 0}
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 31c64c6fbd9e54bb626bcd5437955198c2b1b1e8  [git, worktree dirty=False]
+label                   : golden-delta
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769c/docs/pwml_recovery_sprint/evidence/orch769c/golden_delta.py C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769c/docs/pwml_recovery_sprint/evidence/orch769c/golden_base.json C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769c/docs/pwml_recovery_sprint/evidence/orch769c/golden_tip.json C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769c/docs/pwml_recovery_sprint/evidence/orch769c/golden_delta.json
+cwd                     : C:/t/bt-orch769c
+root PID / process group: 795484 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 120 s
+duration                : 0.45 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 0
+descendants terminated  : 0
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c\docs\pwml_recovery_sprint\evidence\g11\ORCH-769c\12-golden-delta.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================
+WRAPPER_EXIT 0

@@ -1,0 +1,56 @@
+G11 C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c\docs\pwml_recovery_sprint\evidence\g11\ORCH-769c\20-corpus-legdiff.json
+legs: 93; legs with any changed field: 1
+  ORCH-767/wnt_pcp-strict/2026-10-24_0131: ['export', 'export_if_refinement_opened', 'failure_stage', 'files', 'pwml_matches_leg', 'pwml_sha256', 'pwml_written', 'refinement_error']
+
+base ORCH-767/wnt_pcp-strict/2026-10-24_0131:
+  failure_stage: "refinement_review_crash"
+  pwml_written: false
+  refinement_error: "RuntimeError: DraftGraph has no reaction nodes \u2014 nothing to render."
+  export_if_refinement_opened: {"error": "", "ok": true, "required_gate_codes": []}
+  export: null
+  pwml_sha256: null
+  pwml_matches_leg: null
+  quarantine: {"admitted_hash_matches_leg": false, "counts": {"auxiliary_accepted": 3, "core_accepted": 15, "quarantined_broken_reference": 0, "quarantined_disconnected": 0, "quarantined_out_of_scope": 0, "quarantined_unmapped_entity": 0, "quarantined_weak_evidence": 0}, "decision_input_hash_matches_leg": true, "ok": true, "refusal": [], "release": "review_required"}
+  final_gate: {"codes": [], "errors": [], "ok": true}
+  network_refused: []
+  files: ['canonical.json', 'final.canonical.json', 'if_refinement_opened/outputs/pathway.pwml', 'if_refinement_opened/outputs/pwml_prefreeze_resolution_report.streamlit.json', 'if_refinement_opened/outputs/pwml_required_field_gate_report.json', 'outputs/coverage_diagnostics.json', 'outputs/coverage_summary.json', 'outputs/graph_closure_iterations.json', 'outputs/quarantine_report.json', 'outputs/removed_entity_report.json']
+
+tip ORCH-767/wnt_pcp-strict/2026-10-24_0131:
+  failure_stage: null
+  pwml_written: true
+  refinement_error: null
+  export_if_refinement_opened: null
+  export: {"error": "", "ir_blocking": [], "ir_validation": [], "ok": true, "pwml_name": "pathway.review_required.pwml", "quarantine_reused": true, "release": "review_required", "required_gate_codes": [], "required_gate_ok": true, "stage3_contract_codes": []}
+  pwml_sha256: "e68f008bf1dfef6f133629e686001a2318635cf04d64c26660753625d1c9821e"
+  pwml_matches_leg: false
+  quarantine: {"admitted_hash_matches_leg": false, "counts": {"auxiliary_accepted": 3, "core_accepted": 15, "quarantined_broken_reference": 0, "quarantined_disconnected": 0, "quarantined_out_of_scope": 0, "quarantined_unmapped_entity": 0, "quarantined_weak_evidence": 0}, "decision_input_hash_matches_leg": true, "ok": true, "refusal": [], "release": "review_required"}
+  final_gate: {"codes": [], "errors": [], "ok": true}
+  network_refused: []
+  files: ['canonical.json', 'final.canonical.json', 'outputs/coverage_diagnostics.json', 'outputs/coverage_summary.json', 'outputs/graph_closure_iterations.json', 'outputs/pathway.pwml', 'outputs/pwml_prefreeze_resolution_report.streamlit.json', 'outputs/pwml_required_field_gate_report.json', 'outputs/quarantine_report.json', 'outputs/removed_entity_report.json', 'pathway.review_required.pwml', 'pwml_ir.json']
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 9360976c1ac88160de2afa97365473e4304ce01b  [git, worktree dirty=False]
+label                   : corpus-legdiff
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769c/docs/pwml_recovery_sprint/evidence/orch769c/corpus_leg_diff.py C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769c/docs/pwml_recovery_sprint/evidence/orch769c/corpus_base.json C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769c/docs/pwml_recovery_sprint/evidence/orch769c/corpus_tip.json ORCH-767/wnt_pcp-strict/2026-10-24_0131
+cwd                     : C:/t/bt-orch769c/cwd
+root PID / process group: 792756 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 120 s
+duration                : 0.40 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 0
+descendants terminated  : 0
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c\docs\pwml_recovery_sprint\evidence\g11\ORCH-769c\20-corpus-legdiff.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================
+WRAPPER_EXIT 0

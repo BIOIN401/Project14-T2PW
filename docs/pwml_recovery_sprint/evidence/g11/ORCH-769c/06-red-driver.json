@@ -1,0 +1,97 @@
+{
+  "label": "red-driver",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769c/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769c/docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-769c/06-red-driver.pin.json",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:/t/bt-orch769c/bt-06-red-driver",
+    "tests/test_batch_driver.py::test_g9_final_zero_counts_replace_the_stale_stage2_counts",
+    "tests/test_batch_driver.py::test_g9_counts_come_from_the_canonical_payload_not_the_pre_quarantine_one",
+    "tests/test_batch_driver.py::test_preservation_an_absent_final_payload_keeps_the_stage2_counts"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch769c",
+  "started_at": "2026-10-24T21:26:44+00:00",
+  "finished_at": "2026-10-24T21:26:47+00:00",
+  "duration_seconds": 3.310793900003773,
+  "timeout_seconds": 300.0,
+  "root_pid": 3064,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 788116,
+      "name": "python.exe",
+      "ppid": 3064
+    }
+  ],
+  "descendants_terminated": [
+    788116
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 738608,
+      "name": "python.exe"
+    },
+    {
+      "pid": 738760,
+      "name": "python.exe"
+    },
+    {
+      "pid": 788560,
+      "name": "python.exe"
+    },
+    {
+      "pid": 788640,
+      "name": "python.exe"
+    },
+    {
+      "pid": 788792,
+      "name": "python.exe"
+    },
+    {
+      "pid": 788900,
+      "name": "python.exe"
+    },
+    {
+      "pid": 790236,
+      "name": "python.exe"
+    },
+    {
+      "pid": 790252,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch769c\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-769c\\06-red-driver.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch769c\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch769c",
+    "repo_head": "1a832f4d0046c40406df2ac0ef625877e34981d0",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

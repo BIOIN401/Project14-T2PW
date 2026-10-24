@@ -1,0 +1,68 @@
+G11 C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c\docs\pwml_recovery_sprint\evidence\g11\ORCH-769c\07-green-a-unit.json
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c\src\t2pw\__init__.py
+....F.                                                                   [100%]
+================================== FAILURES ===================================
+__ test_g9_counts_come_from_the_canonical_payload_not_the_pre_quarantine_one __
+
+tmp_path = WindowsPath('C:/t/bt-orch769c/bt-07-green-a-unit/test_g9_counts_come_from_the_c0')
+
+    def test_g9_counts_come_from_the_canonical_payload_not_the_pre_quarantine_one(tmp_path: Path) -> None:
+        """ORCH-769c, G9 (fails at base ``e3d5b65f``, and still fails with only the zero fix above).
+    
+        The ORCH-767 WNT PCP shape. ``final_mapped_db`` is post-Stage-6 and PRE-quarantine: in that
+        leg it held 11 reactions and 2 transports (the quarantine report's 66 admissions are
+        11 + 2 + 53 interactions). The canonical payload, which the driver itself writes as
+        ``final_mapped.json``, held none. The counts line read ``final_mapped_db`` first, so the
+        report said ``reactions = 11`` whether or not zeros were kept.
+        """
+    
+        from t2pw.pipeline.gate_reports import CANONICAL_PAYLOAD_KEY
+    
+        artifacts = _artifacts(
+            "pathwhiz",
+            final_mapped_db=_MERGED,
+            final_mapped=_INTERACTIONS_ONLY_FINAL,
+            **{CANONICAL_PAYLOAD_KEY: _INTERACTIONS_ONLY_FINAL},
+        )
+        app = _write_app(tmp_path, "strict_canonical_counts", _post_pipeline_body(artifacts, pwml=_PASSING_PWML))
+    
+        outcome = _run(app, STRICT)
+    
+        assert outcome.status == "pass", outcome.detail
+        assert json.loads(outcome.artifacts["final_mapped.json"]) == _INTERACTIONS_ONLY_FINAL
+>       assert outcome.counts["reactions"] == 0
+E       assert 1 == 0
+
+tests\test_batch_driver.py:414: AssertionError
+---------------------------- Captured stderr call -----------------------------
+2026-10-24 15:27:22.088 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+=========================== short test summary info ===========================
+FAILED tests/test_batch_driver.py::test_g9_counts_come_from_the_canonical_payload_not_the_pre_quarantine_one
+1 failed, 5 passed in 2.37s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 814d6da8425d45702e6422b81eccc62676f8268f  [git, worktree dirty=False]
+label                   : green-a-unit
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769c/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769c/docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-769c/07-green-a-unit.pin.json -q -p no:cacheprovider --basetemp=C:/t/bt-orch769c/bt-07-green-a-unit tests/test_orch769c_empty_graph_render.py tests/test_batch_driver.py::test_g9_final_zero_counts_replace_the_stale_stage2_counts tests/test_batch_driver.py::test_g9_counts_come_from_the_canonical_payload_not_the_pre_quarantine_one tests/test_batch_driver.py::test_preservation_an_absent_final_payload_keeps_the_stage2_counts
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c
+root PID / process group: 789512 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 3.58 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  779872:python.exe
+descendants terminated  : 1  779872
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c\docs\pwml_recovery_sprint\evidence\g11\ORCH-769c\07-green-a-unit.json
+json report written     : True
+pre-existing (reported, NEVER killed): 8
+================================================
+WRAPPER_EXIT 1

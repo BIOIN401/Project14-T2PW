@@ -253,13 +253,13 @@ def render_draft_graph_to_png_bytes(
     nodes: List[Dict] = draft_graph_dict.get("nodes", [])
     edges: List[Dict] = draft_graph_dict.get("edges", [])
 
-    if not nodes:
-        raise RuntimeError("DraftGraph has no nodes — nothing to render.")
-
     ordered, node_by_id, rxn_reactants, rxn_products, rxn_enzymes = _parse_graph(nodes, edges)
 
+    # Only reactions and transports are drawn. With none (no nodes at all, or an
+    # interactions-only pathway, ORCH-769c) there is no diagram: b"" is the value every
+    # caller already treats as "no image", where raising stopped refinement review.
     if not ordered:
-        raise RuntimeError("DraftGraph has no reaction nodes — nothing to render.")
+        return b""
 
     # If an explicit reaction_order list of labels is provided (e.g. from the
     # pathway curator), use it to override the topo-sort ordering.

@@ -1,0 +1,143 @@
+G11 C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c\docs\pwml_recovery_sprint\evidence\g11\ORCH-769c\29-base-preflight.json
+T2PW: C:\t\bt-orch769c\basefull\src\t2pw\__init__.py
+.................Fs....sss.......FF..                                    [100%]
+================================== FAILURES ===================================
+_______ test_the_message_names_the_problem_the_interpreter_and_the_cure _______
+
+    def test_the_message_names_the_problem_the_interpreter_and_the_cure() -> None:
+        """The wrong-interpreter case: the one that actually happened.
+    
+        The cure has to be a command, not advice. "Use the venv" is not actionable at
+        2am; ``C:\\...\\.venv\\Scripts\\python.exe scripts\\batch_run.py`` is, and the
+        root cause -- ``py.exe`` ignoring the active virtualenv -- has to be named or
+        the operator fixes it once and hits it again next week.
+        """
+    
+        venv = runner.venv_python()
+>       assert venv is not None, "this project ships a .venv; the test assumes it"
+E       AssertionError: this project ships a .venv; the test assumes it
+E       assert None is not None
+
+tests\test_batch_preflight.py:616: AssertionError
+_______ test_the_prose_docs_the_cli_points_at_really_document_the_code ________
+
+    def test_the_prose_docs_the_cli_points_at_really_document_the_code() -> None:
+        """The CLI docstring cites ``docs/batch_runner.md`` section 2d by name.
+    
+        Raised in review on 2026-07-28: that citation was written before the section
+        existed, so a reader following it landed on a list of 0/1/2 and concluded the
+        3 they were looking at was undefined. A docstring that points at
+        documentation which does not say what it claims is worse than no pointer at
+        all -- it costs the reader the lookup and then tells them nothing. Asserted
+        rather than merely fixed so the two cannot drift apart again.
+        """
+    
+>       text = (ROOT / "docs" / "batch_runner.md").read_text(encoding="utf-8")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_batch_preflight.py:863: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Python313\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Python313\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/t/bt-orch769c/basefull/docs/batch_runner.md'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\t\\bt-orch769c\\basefull\\docs\\batch_runner.md'
+
+C:\Python313\Lib\pathlib\_local.py:537: FileNotFoundError
+___ test_the_launcher_does_not_send_a_refused_night_to_last_nights_summary ____
+
+    def test_the_launcher_does_not_send_a_refused_night_to_last_nights_summary() -> None:
+        """``run_overnight.bat`` is the last thing on screen after a double-click.
+    
+        Raised in review on 2026-07-28. The launcher printed one message for every
+        non-zero code: "exit code N: something did not pass. Read SUMMARY.txt and
+        failures_by_code.txt in the newest runs\\ folder." After a preflight refusal
+        there IS no new run folder, so "the newest" is the PREVIOUS night's -- and the
+        operator is invited to debug a pipeline that never ran, from a summary that
+        describes a different night. That is precisely the "a failed night looks like
+        a night that happened" confusion the preflight exists to prevent, arriving via
+        the one surface a double-click user actually reads.
+    
+        Asserted against the .bat source (structurally, on the branch for
+        ``EXIT_PREFLIGHT``) rather than by executing it, because executing it starts a
+        real ten-hour batch.
+        """
+    
+>       text = (ROOT / "run_overnight.bat").read_text(encoding="utf-8")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_batch_preflight.py:891: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Python313\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Python313\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/t/bt-orch769c/basefull/run_overnight.bat'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\t\\bt-orch769c\\basefull\\run_overnight.bat'
+
+C:\Python313\Lib\pathlib\_local.py:537: FileNotFoundError
+=========================== short test summary info ===========================
+FAILED tests/test_batch_preflight.py::test_the_message_names_the_problem_the_interpreter_and_the_cure
+FAILED tests/test_batch_preflight.py::test_the_prose_docs_the_cli_points_at_really_document_the_code
+FAILED tests/test_batch_preflight.py::test_the_launcher_does_not_send_a_refused_night_to_last_nights_summary
+3 failed, 30 passed, 4 skipped in 9.02s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 9360976c1ac88160de2afa97365473e4304ce01b  [git, worktree dirty=False]
+label                   : base-preflight
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769c/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/bt-orch769c/basefull --pin-verdict C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769c/docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-769c/29-base-preflight.pin.json -q -p no:cacheprovider --basetemp=C:/t/bt-orch769c/bt-29-base-preflight tests/test_batch_preflight.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c
+root PID / process group: 808112 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 9.78 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 18  808124:python.exe, 808260:python.exe, 808280:python.exe, 808484:python.exe, 808504:python.exe, 808556:python.exe, 808576:python.exe, 808636:python.exe, 808700:python.exe, 808772:python.exe, 808928:python.exe, 808948:python.exe, 807608:python.exe, 807864:python.exe, 808020:python.exe, 803180:python.exe, 801716:python.exe, 806560:python.exe
+descendants terminated  : 18  801716, 803180, 806560, 807608, 807864, 808020, 808124, 808260, 808280, 808484, 808504, 808556, 808576, 808636, 808700, 808772, 808928, 808948
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c\docs\pwml_recovery_sprint\evidence\g11\ORCH-769c\29-base-preflight.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================
+WRAPPER_EXIT 1

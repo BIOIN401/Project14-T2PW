@@ -39,7 +39,8 @@ WNT_PCP = "ORCH-767/wnt_pcp-strict/2026-10-24_0131"
 EXPECTED = {
     SOUR: {"pwml_written": True, "failure_stage": None, "pwml_matches_leg": True},
     ENTEROBACTIN: {"pwml_written": False, "failure_stage": "final_pre_export_stage3_gates"},
-    WNT_PCP: {"pwml_written": False, "failure_stage": "refinement_review_crash"},
+    # ORCH-769c (merge rule 4): the review step no longer crashes on an interactions-only graph.
+    WNT_PCP: {"pwml_written": True, "failure_stage": None},
 }
 
 
@@ -106,7 +107,9 @@ def test_replay_reproduces_the_recorded_verdict(corpus, leg_id):
     record = corpus["runs"][0][leg_id]
     assert record["checkpoint"] == "canonical"
     assert record["canonical_matches_leg"] is True
-    assert H.fidelity(corpus["legs"][leg_id], record) == []
+    # ORCH-769c moved WNT PCP on purpose: its one fidelity difference is the outcome.
+    expected_diffs = ["outcome recorded=refinement_review_crash replay=pwml"] if leg_id == WNT_PCP else []
+    assert H.fidelity(corpus["legs"][leg_id], record) == expected_diffs
     for key, value in EXPECTED[leg_id].items():
         assert record.get(key) == value, (leg_id, key, record.get(key))
 

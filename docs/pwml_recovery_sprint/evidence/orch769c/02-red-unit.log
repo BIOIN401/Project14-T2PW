@@ -1,0 +1,132 @@
+G11 C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c\docs\pwml_recovery_sprint\evidence\g11\ORCH-769c\02-red-unit.json
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c\src\t2pw\__init__.py
+FF.F.                                                                    [100%]
+================================== FAILURES ===================================
+__________ test_g9_an_interactions_only_graph_renders_to_empty_bytes __________
+
+    def test_g9_an_interactions_only_graph_renders_to_empty_bytes() -> None:
+        graph = build_draft_graph(_interactions_only()).to_dict()
+        assert any(node["kind"] == "interaction" for node in graph["nodes"])  # not vacuous: there are nodes
+>       assert render_draft_graph_to_png_bytes(graph, dpi=100) == b""
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_orch769c_empty_graph_render.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+draft_graph_dict = {'edges': [{'confidence': 1.0, 'role': 'participant', 'source': 'protein:dvl', 'target': 'interaction:dvl recruits inv..., ...}, {'cls': 'inhibits', 'compartment': '', 'confidence': 1.0, 'id': 'interaction:inversin degrades prickle', ...}]}
+dpi = 100, reaction_order = None
+
+    def render_draft_graph_to_png_bytes(
+        draft_graph_dict: Dict[str, Any],
+        dpi: int = 160,
+        reaction_order: Optional[List[str]] = None,
+    ) -> bytes:
+        try:
+            import matplotlib
+            matplotlib.use("Agg")
+            import matplotlib.pyplot as plt
+        except ImportError as exc:
+            raise RuntimeError("matplotlib is required for graph rendering.") from exc
+    
+        nodes: List[Dict] = draft_graph_dict.get("nodes", [])
+        edges: List[Dict] = draft_graph_dict.get("edges", [])
+    
+        if not nodes:
+            raise RuntimeError("DraftGraph has no nodes \ufffd nothing to render.")
+    
+        ordered, node_by_id, rxn_reactants, rxn_products, rxn_enzymes = _parse_graph(nodes, edges)
+    
+        if not ordered:
+>           raise RuntimeError("DraftGraph has no reaction nodes \ufffd nothing to render.")
+E           RuntimeError: DraftGraph has no reaction nodes \ufffd nothing to render.
+
+src\t2pw\pipeline\draft_graph_render.py:262: RuntimeError
+____________ test_g9_a_graph_with_no_nodes_renders_to_empty_bytes _____________
+
+    def test_g9_a_graph_with_no_nodes_renders_to_empty_bytes() -> None:
+>       assert render_draft_graph_to_png_bytes({"nodes": [], "edges": []}, dpi=100) == b""
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_orch769c_empty_graph_render.py:45: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+draft_graph_dict = {'edges': [], 'nodes': []}, dpi = 100, reaction_order = None
+
+    def render_draft_graph_to_png_bytes(
+        draft_graph_dict: Dict[str, Any],
+        dpi: int = 160,
+        reaction_order: Optional[List[str]] = None,
+    ) -> bytes:
+        try:
+            import matplotlib
+            matplotlib.use("Agg")
+            import matplotlib.pyplot as plt
+        except ImportError as exc:
+            raise RuntimeError("matplotlib is required for graph rendering.") from exc
+    
+        nodes: List[Dict] = draft_graph_dict.get("nodes", [])
+        edges: List[Dict] = draft_graph_dict.get("edges", [])
+    
+        if not nodes:
+>           raise RuntimeError("DraftGraph has no nodes \ufffd nothing to render.")
+E           RuntimeError: DraftGraph has no nodes \ufffd nothing to render.
+
+src\t2pw\pipeline\draft_graph_render.py:257: RuntimeError
+__________ test_g9_final_zero_counts_replace_the_stale_stage2_counts __________
+
+tmp_path = WindowsPath('C:/t/bt-orch769c/bt-02-red-unit/test_g9_final_zero_counts_repl0')
+
+    def test_g9_final_zero_counts_replace_the_stale_stage2_counts(tmp_path: Path) -> None:
+        """ORCH-769c, G9 (fails at base ``e3d5b65f``). The counts are the FINAL payload's.
+    
+        Stage 2 had 1 reaction and 2 compounds; the final mapped payload has none of either. The
+        driver used to merge the final counts with ``if value``, so a zero never replaced the
+        Stage-2 number and ORCH-767 WNT PCP reported ``reactions = 11`` for a pathway with none.
+        """
+    
+        artifacts = _artifacts(
+            "pathwhiz", final_mapped_db=_INTERACTIONS_ONLY_FINAL, final_mapped=_INTERACTIONS_ONLY_FINAL
+        )
+        app = _write_app(tmp_path, "strict_zero_final", _post_pipeline_body(artifacts, pwml=_PASSING_PWML))
+    
+        outcome = _run(app, STRICT)
+    
+        assert outcome.status == "pass", outcome.detail
+>       assert outcome.counts["reactions"] == 0
+E       assert 1 == 0
+
+tests\test_batch_driver.py:384: AssertionError
+---------------------------- Captured stderr call -----------------------------
+2026-10-24 15:22:39.176 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+=========================== short test summary info ===========================
+FAILED tests/test_orch769c_empty_graph_render.py::test_g9_an_interactions_only_graph_renders_to_empty_bytes
+FAILED tests/test_orch769c_empty_graph_render.py::test_g9_a_graph_with_no_nodes_renders_to_empty_bytes
+FAILED tests/test_batch_driver.py::test_g9_final_zero_counts_replace_the_stale_stage2_counts
+3 failed, 2 passed in 2.47s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 7ba7836fecf46ecc5af6858ee944ff800d672ace  [git, worktree dirty=False]
+label                   : red-unit
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769c/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769c/docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-769c/02-red-unit.pin.json -q -p no:cacheprovider --basetemp=C:/t/bt-orch769c/bt-02-red-unit tests/test_orch769c_empty_graph_render.py tests/test_batch_driver.py::test_g9_final_zero_counts_replace_the_stale_stage2_counts tests/test_batch_driver.py::test_preservation_an_absent_final_payload_keeps_the_stage2_counts
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c
+root PID / process group: 736300 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 3.73 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  778388:python.exe
+descendants terminated  : 1  778388
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c\docs\pwml_recovery_sprint\evidence\g11\ORCH-769c\02-red-unit.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================
+WRAPPER_EXIT 1
