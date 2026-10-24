@@ -1,0 +1,162 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch766\src\t2pw\__init__.py
+FF.................................................FFF                   [100%]
+================================== FAILURES ===================================
+___ test_g9_menaquinone_leg_drops_the_unreferenced_species_row_and_exports ____
+
+    def test_g9_menaquinone_leg_drops_the_unreferenced_species_row_and_exports() -> None:
+        payload, context = _leg()
+        assert admitted_payload_hash(payload) == LEG_RESULTING_PAYLOAD_HASH
+        # Base, on the leg's own payload: the gate refuses on the unreferenced row.
+        assert _species_errors(_gate(payload, context["pathway_name"])) == [
+            ("species_missing_taxonomy", "/entities/species/2", ABBREVIATED),
+            ("species_missing_classification", "/entities/species/2", ABBREVIATED),
+        ]
+    
+        result = quarantine_and_close(payload, strict_db=True, pathway_context=context, mode="pathwhiz")
+    
+        # Exactly that row leaves; nothing else in the payload moves.
+        expected = deepcopy(payload)
+        del expected["entities"]["species"][2]
+>       assert result.payload == expected
+E       AssertionError: assert {'biological_....], ...}, ...} == {'biological_....], ...}, ...}
+E         
+E         Omitting 11 identical items, use -vv to show
+E         Differing items:
+E         {'entities': {'compounds': [{'biocyc_id': 'CPD-9517', 'cas': '617-12-9', 'chebi_id': '17333', 'chemspider_id': '11542'...], ...}, {'class': 'protein', 'confidence': 1.0, 'ec_number': '4.1.3.36', 'ec_numbers': ['4.1.3.36'], ...}, ...], ...}} != {'entities': {'compounds': [{'biocyc_id': 'CPD-9517', 'cas': '617-12-9', 'chebi_id': '17333', 'chemspider_id': '11542'...], ...}, {'class': 'protein', 'confidence': 1.0, 'ec_number': '4.1.3.36', 'ec_numbers': ['4.1.3.36'], ...}, ...], ...}}
+E         Use -v to get more diff
+
+tests\test_orch766_unreferenced_species.py:129: AssertionError
+_____________________ test_g9_tip_output_is_a_fixed_point _____________________
+
+    def test_g9_tip_output_is_a_fixed_point() -> None:
+        payload, context = _leg()
+        first = quarantine_and_close(payload, strict_db=True, pathway_context=context, mode="pathwhiz")
+        second = quarantine_and_close(first.payload, strict_db=True, pathway_context=context, mode="pathwhiz")
+>       assert ABBREVIATED not in _names(first.payload)
+E       AssertionError: assert 'L. lactis subsp. lactis KF147' not in ['Lactococcus lactis', 'Lactococcus lactis subsp. lactis KF147', 'L. lactis subsp. lactis KF147', 'Arabidopsis thaliana']
+E        +  where ['Lactococcus lactis', 'Lactococcus lactis subsp. lactis KF147', 'L. lactis subsp. lactis KF147', 'Arabidopsis thaliana'] = _names({'biological_states': [{'evidence': 'All the L. lactis mutants were derived from the L. lactis subsp. lactis KF147', '....}, {'class': 'protein', 'confidence': 1.0, 'ec_number': '4.1.3.36', 'ec_numbers': ['4.1.3.36'], ...}, ...], ...}, ...})
+E        +    where {'biological_states': [{'evidence': 'All the L. lactis mutants were derived from the L. lactis subsp. lactis KF147', '....}, {'class': 'protein', 'confidence': 1.0, 'ec_number': '4.1.3.36', 'ec_numbers': ['4.1.3.36'], ...}, ...], ...}, ...} = StrictQuarantineResult(payload={'entities': {'species': [{'name': 'Lactococcus lactis', 'provenance_lineage': [{'stage...: 0, 'thresholds': {'min_core_processes': 1, 'min_core_coverage': 0.5}, 'minimum_core_satisfied': True, 'reasons': []}).payload
+
+tests\test_orch766_unreferenced_species.py:153: AssertionError
+_______ test_g9_unreferenced_species_row_is_removed_and_the_gate_passes _______
+
+    def test_g9_unreferenced_species_row_is_removed_and_the_gate_passes() -> None:
+        payload = _with_extra()
+        assert _species_errors(_gate(payload))  # base refuses on it
+        result = quarantine_and_close(payload, strict_db=True, mode="pathwhiz")
+>       assert _names(result.payload) == ["Homo sapiens"]
+E       AssertionError: assert ['Homo sapien...Mus musculus'] == ['Homo sapiens']
+E         
+E         Left contains one more item: 'Mus musculus'
+E         Use -v to get more diff
+
+tests\test_orch766_unreferenced_species.py:429: AssertionError
+_________ test_g9_species_kept_only_by_a_removed_protein_goes_with_it _________
+
+    def test_g9_species_kept_only_by_a_removed_protein_goes_with_it() -> None:
+        payload = _with_extra()
+        payload["entities"]["proteins"].append(
+            {"name": "orphan kinase", "species": EXTRA, "mapped_ids": {"uniprot": "Q00001"}}
+        )
+        result = quarantine_and_close(payload, strict_db=True, mode="pathwhiz")
+        removed = [(r["bucket"], r["name"]) for r in result.removed_entity_report["removed_entities"]]
+>       assert ("proteins", "orphan kinase") in removed and ("species", EXTRA) in removed
+E       AssertionError: assert (('proteins', 'orphan kinase') in [('proteins', 'orphan kinase')] and ('species', 'Mus musculus') in [('proteins', 'orphan kinase')])
+
+tests\test_orch766_unreferenced_species.py:444: AssertionError
+_____ test_g9_an_id_collision_outside_a_species_field_does_not_keep_a_row _____
+
+    def test_g9_an_id_collision_outside_a_species_field_does_not_keep_a_row() -> None:
+        payload = _with_extra({"name": EXTRA, "pathbank_species_id": 4})
+        payload["entities"]["compounds"][0]["pubchem_cid"] = "4"
+        result = quarantine_and_close(payload, strict_db=True, mode="pathwhiz")
+>       assert _names(result.payload) == ["Homo sapiens"]
+E       AssertionError: assert ['Homo sapien...Mus musculus'] == ['Homo sapiens']
+E         
+E         Left contains one more item: 'Mus musculus'
+E         Use -v to get more diff
+
+tests\test_orch766_unreferenced_species.py:452: AssertionError
+=================================== PASSES ====================================
+=========================== short test summary info ===========================
+PASSED tests/test_orch766_unreferenced_species.py::test_preservation_menaquinone_resolved_row_684738_is_kept
+PASSED tests/test_orch766_unreferenced_species.py::test_preservation_menaquinone_row_once_referenced_is_kept_and_still_fails_the_gate
+PASSED tests/test_orch766_unreferenced_species.py::test_preservation_research_mode_applies_nothing
+PASSED tests/test_orch766_unreferenced_species.py::test_preservation_referenced_species_row_is_kept_byte_identical[state_species]
+PASSED tests/test_orch766_unreferenced_species.py::test_preservation_referenced_species_row_is_kept_byte_identical[state_organism]
+PASSED tests/test_orch766_unreferenced_species.py::test_preservation_referenced_species_row_is_kept_byte_identical[state_name]
+PASSED tests/test_orch766_unreferenced_species.py::test_preservation_referenced_species_row_is_kept_byte_identical[protein_species]
+PASSED tests/test_orch766_unreferenced_species.py::test_preservation_referenced_species_row_is_kept_byte_identical[protein_organism]
+PASSED tests/test_orch766_unreferenced_species.py::test_preservation_referenced_species_row_is_kept_byte_identical[protein_species_ref_name]
+PASSED tests/test_orch766_unreferenced_species.py::test_preservation_referenced_species_row_is_kept_byte_identical[protein_mapping_meta_species]
+PASSED tests/test_orch766_unreferenced_species.py::test_preservation_referenced_species_row_is_kept_byte_identical[complex_species]
+PASSED tests/test_orch766_unreferenced_species.py::test_preservation_referenced_species_row_is_kept_byte_identical[complex_organism]
+PASSED tests/test_orch766_unreferenced_species.py::test_preservation_referenced_species_row_is_kept_byte_identical[other_entity_species]
+PASSED tests/test_orch766_unreferenced_species.py::test_preservation_referenced_species_row_is_kept_byte_identical[location_row_species]
+PASSED tests/test_orch766_unreferenced_species.py::test_preservation_referenced_species_row_is_kept_byte_identical[pathway_metadata_organism]
+PASSED tests/test_orch766_unreferenced_species.py::test_preservation_referenced_species_row_is_kept_byte_identical[surviving_process_field]
+PASSED tests/test_orch766_unreferenced_species.py::test_preservation_referenced_species_row_is_kept_byte_identical[alias]
+PASSED tests/test_orch766_unreferenced_species.py::test_preservation_referenced_species_row_is_kept_byte_identical[synonym]
+PASSED tests/test_orch766_unreferenced_species.py::test_preservation_referenced_species_row_is_kept_byte_identical[raw_name]
+PASSED tests/test_orch766_unreferenced_species.py::test_preservation_referenced_species_row_is_kept_byte_identical[case_and_punctuation_variant]
+PASSED tests/test_orch766_unreferenced_species.py::test_preservation_referenced_species_row_is_kept_byte_identical[protein_taxonomy_id]
+PASSED tests/test_orch766_unreferenced_species.py::test_preservation_referenced_species_row_is_kept_byte_identical[protein_species_id]
+PASSED tests/test_orch766_unreferenced_species.py::test_preservation_referenced_species_row_is_kept_byte_identical[protein_species_ref_ids]
+PASSED tests/test_orch766_unreferenced_species.py::test_preservation_referenced_species_row_is_kept_byte_identical[state_taxonomy_id]
+PASSED tests/test_orch766_unreferenced_species.py::test_preservation_referenced_species_row_is_kept_byte_identical[species_id_as_float_text]
+PASSED tests/test_orch766_unreferenced_species.py::test_preservation_referenced_species_row_is_kept_byte_identical[create_default_name]
+PASSED tests/test_orch766_unreferenced_species.py::test_preservation_referenced_species_row_is_kept_byte_identical[first_row]
+PASSED tests/test_orch766_unreferenced_species.py::test_preservation_referenced_species_row_is_kept_byte_identical[requested_organism]
+PASSED tests/test_orch766_unreferenced_species.py::test_preservation_referenced_row_without_taxonomy_still_fails_the_gate[state_species]
+PASSED tests/test_orch766_unreferenced_species.py::test_preservation_referenced_row_without_taxonomy_still_fails_the_gate[state_organism]
+PASSED tests/test_orch766_unreferenced_species.py::test_preservation_referenced_row_without_taxonomy_still_fails_the_gate[state_name]
+PASSED tests/test_orch766_unreferenced_species.py::test_preservation_referenced_row_without_taxonomy_still_fails_the_gate[protein_species]
+PASSED tests/test_orch766_unreferenced_species.py::test_preservation_referenced_row_without_taxonomy_still_fails_the_gate[protein_organism]
+PASSED tests/test_orch766_unreferenced_species.py::test_preservation_referenced_row_without_taxonomy_still_fails_the_gate[protein_species_ref_name]
+PASSED tests/test_orch766_unreferenced_species.py::test_preservation_referenced_row_without_taxonomy_still_fails_the_gate[protein_mapping_meta_species]
+PASSED tests/test_orch766_unreferenced_species.py::test_preservation_referenced_row_without_taxonomy_still_fails_the_gate[complex_species]
+PASSED tests/test_orch766_unreferenced_species.py::test_preservation_referenced_row_without_taxonomy_still_fails_the_gate[complex_organism]
+PASSED tests/test_orch766_unreferenced_species.py::test_preservation_referenced_row_without_taxonomy_still_fails_the_gate[other_entity_species]
+PASSED tests/test_orch766_unreferenced_species.py::test_preservation_referenced_row_without_taxonomy_still_fails_the_gate[location_row_species]
+PASSED tests/test_orch766_unreferenced_species.py::test_preservation_referenced_row_without_taxonomy_still_fails_the_gate[pathway_metadata_organism]
+PASSED tests/test_orch766_unreferenced_species.py::test_preservation_referenced_row_without_taxonomy_still_fails_the_gate[surviving_process_field]
+PASSED tests/test_orch766_unreferenced_species.py::test_preservation_referenced_row_without_taxonomy_still_fails_the_gate[alias]
+PASSED tests/test_orch766_unreferenced_species.py::test_preservation_referenced_row_without_taxonomy_still_fails_the_gate[synonym]
+PASSED tests/test_orch766_unreferenced_species.py::test_preservation_referenced_row_without_taxonomy_still_fails_the_gate[raw_name]
+PASSED tests/test_orch766_unreferenced_species.py::test_preservation_referenced_row_without_taxonomy_still_fails_the_gate[case_and_punctuation_variant]
+PASSED tests/test_orch766_unreferenced_species.py::test_preservation_referenced_row_without_taxonomy_still_fails_the_gate[create_default_name]
+PASSED tests/test_orch766_unreferenced_species.py::test_preservation_referenced_row_without_taxonomy_still_fails_the_gate[first_row]
+PASSED tests/test_orch766_unreferenced_species.py::test_preservation_referenced_row_without_taxonomy_still_fails_the_gate[requested_organism]
+PASSED tests/test_orch766_unreferenced_species.py::test_preservation_payload_without_extra_species_is_byte_identical
+FAILED tests/test_orch766_unreferenced_species.py::test_g9_menaquinone_leg_drops_the_unreferenced_species_row_and_exports
+FAILED tests/test_orch766_unreferenced_species.py::test_g9_tip_output_is_a_fixed_point
+FAILED tests/test_orch766_unreferenced_species.py::test_g9_unreferenced_species_row_is_removed_and_the_gate_passes
+FAILED tests/test_orch766_unreferenced_species.py::test_g9_species_kept_only_by_a_removed_protein_goes_with_it
+FAILED tests/test_orch766_unreferenced_species.py::test_g9_an_id_collision_outside_a_species_field_does_not_keep_a_row
+5 failed, 49 passed in 1.40s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch766\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 076675d8acdadd3a8b57075bc148fa0c1868c4de  [git, worktree dirty=True]
+label                   : g9-red
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-766/08-g9-red.pin.json -q -rA --basetemp=C:/t/bt-orch766/08-g9-red-15675 tests/test_orch766_unreferenced_species.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch766
+root PID / process group: 233784 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 500 s
+duration                : 2.16 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  233796:python.exe
+descendants terminated  : 1  233796
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch766\docs\pwml_recovery_sprint\evidence\g11\ORCH-766\08-g9-red.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================
