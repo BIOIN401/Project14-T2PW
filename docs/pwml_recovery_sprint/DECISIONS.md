@@ -7321,3 +7321,33 @@ decisions made.
    wrote it.
 3. Chosen over lexical patching of the broad rule, which red-team review historically does not converge on (ORCH-746), and over
    dropping the fix. Accepted cost: a pair that no draw writes out stays unbridged.
+
+---
+
+## D-110 AMENDMENT 2 — a parenthetical bridge needs two distinct draws; "and"/"or" member lists never bridge · 2026-10-23 · LOCKED
+
+**Decided by the product owner** (2026-10-22/23, in session, on the `ORCH-765` round-1 review). Under AMENDMENT 1 a single draw could
+still bridge `Optical (OD)`, `Luria (LB)`, `Free radicals (ROS)`, and `flavins (FMN)` against the paper's `flavins (FMN, FAD and
+FADH2)`; that last one leaked riboflavin→flavins into the pooled payload. Recorded by the Lead Orchestrator.
+
+1. **Narrows AMENDMENT 1:** a pair bridges only if **at least two distinct Stage-1 draws** wrote `long (SHORT)` AND the paper contains it
+   verbatim. At 1 draw, nothing bridges this way.
+2. A parenthetical holding a member list joined by "and" or "or" never bridges, in addition to the AMENDMENT 1 backstop.
+3. This is ORCH-765's final repair round. If it still blocks, ORCH-765 is not merged, and menaquinone keeps its 2 flagged duplicate rows.
+
+---
+
+## D-111 — unreferenced species rows are dropped before the freeze; tonight's run covers all six papers at 3 draws · 2026-10-23 · LOCKED
+
+**Decided by the product owner** (2026-10-23, in session). The 3-draw menaquinone leg (`ORCH-759p`) reached `release_ready` with 19
+reactions. The required-field gate then failed on a pooled species row, "L. lactis subsp. lactis KF147" (the paper's spelling), that
+nothing references and that cannot get an NCBI taxonomy id. The resolved row (NCBI 684738) carries all 7 Men proteins. Recorded by the
+Lead Orchestrator.
+
+1. **A species row that nothing in the pathway references is removed before the freeze**, and the removal is recorded like the existing
+   degree-zero removals. A referenced row is never removed. No gate is relaxed: the required-field gate still applies to every species
+   row that remains. Chosen over copying a twin's taxonomy id, which would have lifted D-098's deliberate exclusion of strain-suffixed
+   abbreviations and put two rows with one id in the PWML.
+2. **Tonight's run (ORCH-767):** enterobactin, menaquinone, chlorophyll, sour taste (*Mus musculus*), WNT PCP and Wnt/Ca2+, strict, 3
+   draws, on the final merged code. Enterobactin and menaquinone are scored against certified gold, and a one-page morning summary is
+   written. The product owner wants results by the morning of 2026-10-24.
