@@ -1,0 +1,52 @@
+surviving reactions: 22 interactions: 5
+
+r17 'GluTR (HEMA1) reaction'
+  enzymes=['HEMA1 complex']
+  modifiers=['HY5 complex', 'PIF1', 'PIF3 complex', 'GLK1 complex', 'GLK2 complex', 'FHY3 complex', 'FLU complex', 'GBP', 'ARR10 complex', 'ARR12 complex', 'HEMA1 complex']
+  twin 'GluTR reaction': enzymes=['GluTR1 complex'] modifiers=['GluTR1 complex']
+
+r18 'ALAD (HEMB1) reaction'
+  enzymes=['Delta-aminolevulinic acid dehydratase 1, chloroplastic']
+  modifiers=['FAR1', 'Delta-aminolevulinic acid dehydratase 1, chloroplastic']
+  twin 'ALA dehydratase reaction': enzymes=[] modifiers=[]
+
+r21 'Glu-tRNAGlu reduction to GSA'
+  enzymes=['GluTR1 complex', 'HEMA1 complex', 'FLU complex', 'GBP']
+  modifiers=['GluTR1 complex', 'HEMA1 complex', 'FLU complex', 'GBP']
+  twin 'GluTR reaction': enzymes=['GluTR1 complex'] modifiers=['GluTR1 complex']
+
+r22 'Coprogen III to Protogen IX'
+  enzymes=['Coproporphyrinogen-III oxidase 1, chloroplastic', 'CPO1']
+  modifiers=['Coproporphyrinogen-III oxidase 1, chloroplastic', 'CPO1']
+  twin 'Coprogen III oxidase reaction': enzymes=[] modifiers=[]
+
+r23 'Protogen IX to Proto IX'
+  enzymes=['PPO', 'PPO1']
+  modifiers=['PPO', 'PPO1']
+  twin 'Protogen IX oxidase reaction': enzymes=[] modifiers=[]
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769b\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ a3ebd5553a54ab34658387769d428dc691008f6d  [git, worktree dirty=False]
+label                   : twin-probe
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769b/docs/pwml_recovery_sprint/evidence/orch769b/twin_probe.py C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769b/tests/fixtures/orch769b/chlorophyll_PMC5130987_767_final_mapped.json.gz C:/t/bt-orch769b/out-tip/ORCH-767_chlorophyll-strict_2026-10-23_2328/canonical.json
+cwd                     : C:/t/bt-orch769b/cwd
+root PID / process group: 803664 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 120 s
+duration                : 0.43 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  804984:python.exe
+descendants terminated  : 1  804984
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769b\docs\pwml_recovery_sprint\evidence\g11\ORCH-769b\19-twin-probe.json
+json report written     : True
+pre-existing (reported, NEVER killed): 8
+================================================

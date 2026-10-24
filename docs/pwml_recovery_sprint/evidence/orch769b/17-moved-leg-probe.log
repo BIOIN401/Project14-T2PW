@@ -1,0 +1,52 @@
+t2pw: C:\t/bt-orch769b/tree-tip/src\t2pw\__init__.py
+
+== runs_verify/2026-08-22_2017/PMC12856317  pathway: 'heme biosynthesis'
+  input processes: {'reactions': 1, 'interactions': 2, 'transports': 0}
+  /processes/reactions/0           quarantined_broken_reference   non_protein_actor_in_modifiers           "Pyridoxal 5'-phosphate"  'ALAS2-catalyzed ALA formation'
+  /processes/interactions/0        core_accepted                  admitted                                 ''  'heme inhibition of ALAS2'
+  /processes/interactions/1        core_accepted                  admitted                                 ''  'ALAS2 cofactor binding'
+  surviving processes: {'reactions': 0, 'interactions': 2, 'transports': 0}
+  quarantined row: {"name": "ALAS2-catalyzed ALA formation", "inputs": ["Glycine", "succinyl-CoA"], "outputs": ["aminolevulinic acid"], "enzymes": [{"entity": "ALAS2 complex", "entity_type": "protein_complex", "role": "catalyst", "evidence": "mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid", "confidence": 1.0, "provenance": "extracted"}], "modifiers": [{"entity": "Pyridoxal 5'-phosphate", "entity_type": "compound", "role": "cofactor", "confidence": 1.0, "provenance": "extracted", "evidence": "PLP-dependent homodimer enzyme - referenced in reaction evidence"}]}
+  'compounds' rows mentioning pyridoxal: ["Pyridoxal 5'-phosphate"]
+  'proteins' rows mentioning pyridoxal: ['ALAS2']
+  'protein_complexes' rows mentioning pyridoxal: []
+
+== runs_verify/2026-08-24_1203/PMC12856317  pathway: 'heme biosynthesis'
+  input processes: {'reactions': 1, 'interactions': 5, 'transports': 0}
+  /processes/reactions/0           quarantined_broken_reference   non_protein_actor_in_modifiers           'pyridoxal 5-phosphate'  'ALAS2-catalyzed condensation'
+  /processes/interactions/0        core_accepted                  admitted                                 ''  'heme inhibits ALAS2'
+  /processes/interactions/1        core_accepted                  admitted                                 ''  'ALAS2 recruits CLPXP for degradation'
+  /processes/interactions/2        core_accepted                  admitted                                 ''  'ALAS1 degraded by LONP1'
+  /processes/interactions/3        core_accepted                  admitted                                 ''  'ALAS1 degraded by CLPXP'
+  /processes/interactions/4        core_accepted                  admitted                                 ''  'pyridoxal 5-phosphate cofactor of ALAS2'
+  surviving processes: {'reactions': 0, 'interactions': 5, 'transports': 0}
+  quarantined row: {"name": "ALAS2-catalyzed condensation", "inputs": ["glycine", "succinyl-CoA"], "outputs": ["aminolevulinic acid"], "enzymes": [{"entity": "ALAS2 complex", "entity_type": "protein_complex", "role": "catalyst", "evidence": "ALAS2 mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid", "confidence": 1.0, "provenance": "extracted"}], "modifiers": [{"entity": "ALAS2 complex", "entity_type": "protein_complex", "role": "catalyst", "evidence": "ALAS2 mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid", "confidence": 1.0, "provenance": "extracted"}, {"entity": "pyridoxal 5-phosphate", "entity_type": "compound", "role": "cofactor", "evi
+  'compounds' rows mentioning pyridoxal: ['pyridoxal 5-phosphate']
+  'proteins' rows mentioning pyridoxal: []
+  'protein_complexes' rows mentioning pyridoxal: []
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769b\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ a3ebd5553a54ab34658387769d428dc691008f6d  [git, worktree dirty=False]
+label                   : moved-leg-probe
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769b/docs/pwml_recovery_sprint/evidence/orch769b/moved_leg_probe.py C:/t/bt-orch769b/tree-tip/src
+cwd                     : C:/t/bt-orch769b/cwd
+root PID / process group: 590360 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 120 s
+duration                : 2.16 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  800136:python.exe
+descendants terminated  : 1  800136
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769b\docs\pwml_recovery_sprint\evidence\g11\ORCH-769b\17-moved-leg-probe.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================

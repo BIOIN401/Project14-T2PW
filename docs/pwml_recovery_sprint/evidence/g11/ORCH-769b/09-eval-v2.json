@@ -1,0 +1,190 @@
+{
+  "label": "eval-v2",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-769b/09-eval-v2.pin.json",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:/t/bt-orch769b/09-eval-v2",
+    "tests/test_eval_v2_embedding_cache.py",
+    "tests/test_eval_v2_gold_matcher.py",
+    "tests/test_eval_v2_metrics.py",
+    "tests/test_eval_v2_paper_gold.py",
+    "tests/test_eval_v2_pathbank_gold.py",
+    "tests/test_eval_v2_report.py"
+  ],
+  "cwd": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769b",
+  "started_at": "2026-10-24T21:30:08+00:00",
+  "finished_at": "2026-10-24T21:30:30+00:00",
+  "duration_seconds": 22.234907300007762,
+  "timeout_seconds": 540.0,
+  "root_pid": 794188,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 789640,
+      "name": "python.exe",
+      "ppid": 794188
+    },
+    {
+      "pid": 785736,
+      "name": "git.exe",
+      "ppid": 789640
+    },
+    {
+      "pid": 793444,
+      "name": "git.exe",
+      "ppid": 789640
+    },
+    {
+      "pid": 793904,
+      "name": "git.exe",
+      "ppid": 789640
+    },
+    {
+      "pid": 790028,
+      "name": "git.exe",
+      "ppid": 789640
+    },
+    {
+      "pid": 792300,
+      "name": "git.exe",
+      "ppid": 789640
+    },
+    {
+      "pid": 784352,
+      "name": "git.exe",
+      "ppid": 789640
+    },
+    {
+      "pid": 791812,
+      "name": "git.exe",
+      "ppid": 789640
+    },
+    {
+      "pid": 792004,
+      "name": "git.exe",
+      "ppid": 789640
+    },
+    {
+      "pid": 793880,
+      "name": "git.exe",
+      "ppid": 789640
+    },
+    {
+      "pid": 782740,
+      "name": "git.exe",
+      "ppid": 789640
+    },
+    {
+      "pid": 778184,
+      "name": "git.exe",
+      "ppid": 789640
+    },
+    {
+      "pid": 792096,
+      "name": "git.exe",
+      "ppid": 789640
+    },
+    {
+      "pid": 764560,
+      "name": "git.exe",
+      "ppid": 789640
+    },
+    {
+      "pid": 793840,
+      "name": "git.exe",
+      "ppid": 789640
+    },
+    {
+      "pid": 792268,
+      "name": "git.exe",
+      "ppid": 789640
+    }
+  ],
+  "descendants_terminated": [
+    764560,
+    778184,
+    782740,
+    784352,
+    785736,
+    789640,
+    790028,
+    791812,
+    792004,
+    792096,
+    792268,
+    792300,
+    793444,
+    793840,
+    793880,
+    793904
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 738608,
+      "name": "python.exe"
+    },
+    {
+      "pid": 738760,
+      "name": "python.exe"
+    },
+    {
+      "pid": 784008,
+      "name": "python.exe"
+    },
+    {
+      "pid": 791960,
+      "name": "python.exe"
+    },
+    {
+      "pid": 793736,
+      "name": "python.exe"
+    },
+    {
+      "pid": 793924,
+      "name": "python.exe"
+    },
+    {
+      "pid": 793948,
+      "name": "python.exe"
+    },
+    {
+      "pid": 794368,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch769b\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-769b\\09-eval-v2.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch769b\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch769b",
+    "repo_head": "a3ebd5553a54ab34658387769d428dc691008f6d",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}
