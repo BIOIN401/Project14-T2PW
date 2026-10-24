@@ -630,6 +630,10 @@ class _Registry:
     #: these resolves to whichever declaration was registered first, which is an
     #: arbitrary answer to a question the payload does not actually answer.
     buckets_by_norm: Dict[str, Set[str]] = field(default_factory=dict)
+    #: The strict final gate's actor registry, built exactly as it builds it
+    #: (``process_normalizer.run_strict_post_normalization_gates``:
+    #: ``protein_registry_norms``). See :func:`_actor_verdict` (ORCH-769b).
+    protein_norms: Set[str] = field(default_factory=set)
 
     def resolve(self, name: str) -> Optional[Tuple[str, Dict[str, Any]]]:
         return self.by_norm.get(_normalize(_canonical(name)))
@@ -672,6 +676,9 @@ def _build_registry(payload: Mapping[str, Any]) -> _Registry:
                 identity = protein_external_identity(row)
                 if identity:
                     registry.proteins_by_identity.setdefault(identity.casefold(), row)
+    registry.protein_norms = _entity_name_norms(
+        _safe_list(entities.get("proteins"))
+    ) | _entity_name_norms(_safe_list(entities.get("protein_complexes")))
     return registry
 
 
@@ -1340,9 +1347,21 @@ def _actor_verdict(
     """First unusable enzyme/modifier/transporter, or ``None``.
 
     Actors are not essential -- their absence does not change what the reaction
-    is -- but an actor naming nothing declared is precisely the "unknown
-    protein/modifier reference" the strict gate aborts on, so the process still
-    leaves. Quarantining one reaction beats failing the export.
+    is -- but an actor the strict final gate cannot find is its "unknown
+    protein/modifier reference" (or "unknown transporter reference") abort, so
+    the process still leaves. Quarantining one reaction beats failing the export.
+
+    ORCH-769b. Declared is not enough: the gate looks a dict actor up in
+    ``proteins`` and ``protein_complexes`` only (names and synonyms,
+    ``process_normalizer.run_strict_post_normalization_gates``:
+    ``protein_registry_norms``; reactions' ``enzymes``/``modifiers`` and
+    transports' ``transporters``). An actor declared only as a gene, compound or
+    element collection used to resolve here and be admitted, then fail that gate.
+    ``non_protein_actor_in_<slot>`` is that predicate, no wider: a bare-string
+    actor is skipped because the gate skips it, and a
+    ``reaction_coupled_transports`` row, which the gate does not read, never gets
+    here (admission quarantines it first and closure revalidates accepted rows
+    only).
     """
 
     for slot in _ACTOR_SLOTS.get(bucket, ()):
@@ -1360,6 +1379,8 @@ def _actor_verdict(
             resolved = registry.resolve(name)
             if resolved is None:
                 return (QUARANTINED_BROKEN_REFERENCE, f"unresolved_actor_in_{slot}", name)
+            if isinstance(actor, dict) and _normalize(name) not in registry.protein_norms:
+                return (QUARANTINED_BROKEN_REFERENCE, f"non_protein_actor_in_{slot}", name)
             entity_bucket, row = resolved
             ok, reason = _entity_representability(
                 entity_bucket, row, registry, strict_db=strict_db
