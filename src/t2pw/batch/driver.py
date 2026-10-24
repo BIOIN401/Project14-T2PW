@@ -2995,8 +2995,11 @@ def _drive(
         )
         return
 
-    mapped_counts = _payload_counts(artifacts.get("final_mapped_db") or artifacts.get("final_mapped"))
-    outcome.counts.update({key: value for key, value in mapped_counts.items() if value})
+    # Zeros included: a payload whose reactions were all withheld reports 0, not the
+    # Stage-2 number (ORCH-769c). Only an absent payload leaves the counts as they were.
+    mapped = artifacts.get("final_mapped_db") or artifacts.get("final_mapped")
+    if isinstance(mapped, dict) and mapped:
+        outcome.counts.update(_payload_counts(mapped))
 
     gate_fail = _safe_dict(artifacts.get("gate_fail_report"))
     stage3_gate = _safe_dict(artifacts.get(FINAL_GATE_REPORT_KEY))
