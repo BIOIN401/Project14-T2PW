@@ -1,0 +1,49 @@
+== runs_papers/ORCH-759/legs/menaquinone-strict/2026-10-22_1148/papers/PMC12421875/strict [pathwhiz]
+   ok: True -> True
+   release_status: review_required -> review_required
+   refusal_reasons: [] -> []
+   gate_ok: False -> False
+   gate_error_codes: ['pathway_missing_name', 'pathway_missing_subject', 'species_missing_classification', 'species_missing_taxonomy'] -> ['pathway_missing_name', 'pathway_missing_subject']   <-- moved
+   closure_iterations: 1 -> 2   <-- moved
+   base species rows: ['Lactococcus lactis', 'L. lactis subsp. lactis KF147', 'Arabidopsis thaliana']
+   REMOVED 'L. lactis subsp. lactis KF147' (unreferenced_after_quarantine, iteration 1)
+     base facts: tax=None class=None ir_index=1 species0=False ir_state_refs=[] writer_protein_refs=[]
+       name_hits=[] id_hits_species_path=[] id_hits_other_path=[]
+== runs_papers/ORCH-759p/legs/menaquinone-strict/2026-10-22_2154/papers/PMC12421875/strict [pathwhiz]
+   ok: True -> True
+   release_status: release_ready -> release_ready
+   refusal_reasons: [] -> []
+   gate_ok: False -> False
+   gate_error_codes: ['pathway_missing_name', 'pathway_missing_subject', 'species_missing_classification', 'species_missing_taxonomy'] -> ['pathway_missing_name', 'pathway_missing_subject']   <-- moved
+   closure_iterations: 1 -> 2   <-- moved
+   base species rows: ['Lactococcus lactis', 'Lactococcus lactis subsp. lactis KF147', 'L. lactis subsp. lactis KF147', 'Arabidopsis thaliana']
+   REMOVED 'L. lactis subsp. lactis KF147' (unreferenced_after_quarantine, iteration 1)
+     base facts: tax=None class=None ir_index=2 species0=False ir_state_refs=[] writer_protein_refs=[]
+       name_hits=[] id_hits_species_path=[] id_hits_other_path=[]
+== runs_verify/2026-08-24_1203/papers/PMC12452463/strict [pathwhiz]
+   ok: True -> True
+   release_status: review_required -> review_required
+   refusal_reasons: [] -> []
+   gate_ok: False -> False
+   gate_error_codes: ['pathway_missing_name', 'pathway_missing_subject'] -> ['pathway_missing_name', 'pathway_missing_subject']
+   closure_iterations: 1 -> 2   <-- moved
+   base species rows: ['Escherichia coli', 'Arabidopsis thaliana']
+   REMOVED 'Arabidopsis thaliana' (unreferenced_after_quarantine, iteration 1)
+     base facts: tax=3702 class=None ir_index=1 species0=False ir_state_refs=[] writer_protein_refs=[]
+       name_hits=[] id_hits_species_path=[] id_hits_other_path=['/locked_reaction_filter_report/locked_reactions_found']
+== runs_verify/2026-09-16_2152/papers/PMC13534948/strict [pathwhiz]
+   ok: False -> False
+   release_status: diagnostic_only -> diagnostic_only
+   refusal_reasons: ['minimum_core:no_surviving_process', 'minimum_core:core_process_count_below_minimum:0<1', 'minimum_core:requested_core_coverage_below_minimum:0.000<0.500'] -> ['minimum_core:no_surviving_process', 'minimum_core:core_process_count_below_minimum:0<1', 'minimum_core:requested_core_coverage_below_minimum:0.000<0.500']
+   gate_ok: False -> False
+   gate_error_codes: ['no_biological_states', 'pathway_missing_name', 'pathway_missing_subject'] -> ['no_biological_states', 'pathway_missing_name', 'pathway_missing_subject']
+   closure_iterations: 2 -> 2
+   base species rows: ['Hahella chejuensis', 'Hahella chejuensis KCTC 2396']
+   REMOVED 'Hahella chejuensis KCTC 2396' (unreferenced_after_quarantine, iteration 1)
+     base facts: tax=349521 class=Prokaryote ir_index=1 species0=False ir_state_refs=[] writer_protein_refs=[]
+       name_hits=[] id_hits_species_path=[] id_hits_other_path=[]
+
+legs compared: 124; changed: 4; byte-identical quarantine output: 120
+species rows removed: 4
+PROBLEMS: none
+COMPARE DONE

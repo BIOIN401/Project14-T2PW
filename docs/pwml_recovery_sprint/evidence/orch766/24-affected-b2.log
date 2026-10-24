@@ -1,0 +1,64 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch766\src\t2pw\__init__.py
+........................................................................ [  8%]
+........................................................................ [ 17%]
+..............ss.....s.................................................. [ 26%]
+...............s........................................................ [ 35%]
+........................................................................ [ 44%]
+........................................................................ [ 53%]
+........................................................................ [ 62%]
+........................................................................ [ 71%]
+.......................................F................................ [ 79%]
+........................................................................ [ 88%]
+........................................................................ [ 97%]
+...................                                                      [100%]
+================================== FAILURES ===================================
+_______ test_the_2122_evaluation_with_cached_abstracts_beats_title_only _______
+
+    @requires_2122
+    def test_the_2122_evaluation_with_cached_abstracts_beats_title_only() -> None:
+        """The point of persisting inputs: more evidence, better decisions."""
+        module = dry_run_module()
+        titles = module.dry_run(DRY_RUN_PLAN, thresholds=THRESHOLDS, title_only=True)
+        cached = module.dry_run(DRY_RUN_PLAN, thresholds=THRESHOLDS, title_only=False)
+>       assert cached["abstract_sources"] == {
+            "acquisition_cache": 27,
+            "derived_from_stored_full_text": 1,
+        }
+E       AssertionError: assert {'derived_fro...ull_text': 28} == {'acquisition...full_text': 1}
+E         
+E         Differing items:
+E         {'derived_from_stored_full_text': 28} != {'derived_from_stored_full_text': 1}
+E         Right contains 1 more item:
+E         {'acquisition_cache': 27}
+E         Use -v to get more diff
+
+tests\test_paper_eligibility_corrections.py:1209: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_paper_eligibility_corrections.py::test_the_2122_evaluation_with_cached_abstracts_beats_title_only
+1 failed, 806 passed, 4 skipped in 36.04s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch766\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ bcad7547aa6499627e066aae5a15a4b49edaa757  [git, worktree dirty=False]
+label                   : affected-b2
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-766/24-affected-b2.pin.json -q -p no:cacheprovider --basetemp=C:/t/bt-orch766/24-affected-b2-1805 tests/test_entity_admission.py tests/test_entity_identity_contracts.py tests/test_entity_type_gate.py tests/test_eval_v2_metrics.py tests/test_eval_v2_pathbank_gold.py tests/test_extraction_diagnostics.py tests/test_f179_reaction_support.py tests/test_failure_detail.py tests/test_gap_resolver.py tests/test_gap_resolver_agent_tools.py tests/test_gap_resolver_biological_state_resolution.py tests/test_gap_resolver_lineage.py tests/test_gap_resolver_stage3_issues.py tests/test_identity_evidence_hydration.py tests/test_identity_hydration_regression.py tests/test_isolated_collection.py tests/test_locked_noop_quarantine_policy.py tests/test_map_ids.py tests/test_map_ids_mapping_lineage.py tests/test_map_ids_name_gate.py tests/test_orch757_llm_token_budgets.py tests/test_orch758a_charge_notation_not_composite.py tests/test_orch759a_duplicate_protein_fold.py tests/test_orch759e_rewrap_after_phase2.py tests/test_orch762_protein_identity.py tests/test_orch763_nested_locations.py tests/test_orch764_class_term_not_narrowed.py tests/test_paper_eligibility_corrections.py tests/test_pathbank_unknown_fallback.py tests/test_payload_models.py tests/test_pipeline_reaction_rag_provenance.py tests/test_prefreeze_compound_resolution.py tests/test_prefreeze_species_resolution.py tests/test_probe_decimal_normalization.py tests/test_process_normalizer.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch766
+root PID / process group: 243452 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 37.14 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 12  242920:python.exe, 244116:git.exe, 244172:git.exe, 244284:git.exe, 244340:git.exe, 244464:git.exe, 244644:git.exe, 242032:git.exe, 244096:git.exe, 244120:git.exe, 244604:python.exe, 244636:python.exe
+descendants terminated  : 12  242032, 242920, 244096, 244116, 244120, 244172, 244284, 244340, 244464, 244604, 244636, 244644
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch766\docs\pwml_recovery_sprint\evidence\g11\ORCH-766\24-affected-b2.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================

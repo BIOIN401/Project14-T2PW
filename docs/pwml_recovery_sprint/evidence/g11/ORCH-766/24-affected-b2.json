@@ -1,0 +1,203 @@
+{
+  "label": "affected-b2",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-766/24-affected-b2.pin.json",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:/t/bt-orch766/24-affected-b2-1805",
+    "tests/test_entity_admission.py",
+    "tests/test_entity_identity_contracts.py",
+    "tests/test_entity_type_gate.py",
+    "tests/test_eval_v2_metrics.py",
+    "tests/test_eval_v2_pathbank_gold.py",
+    "tests/test_extraction_diagnostics.py",
+    "tests/test_f179_reaction_support.py",
+    "tests/test_failure_detail.py",
+    "tests/test_gap_resolver.py",
+    "tests/test_gap_resolver_agent_tools.py",
+    "tests/test_gap_resolver_biological_state_resolution.py",
+    "tests/test_gap_resolver_lineage.py",
+    "tests/test_gap_resolver_stage3_issues.py",
+    "tests/test_identity_evidence_hydration.py",
+    "tests/test_identity_hydration_regression.py",
+    "tests/test_isolated_collection.py",
+    "tests/test_locked_noop_quarantine_policy.py",
+    "tests/test_map_ids.py",
+    "tests/test_map_ids_mapping_lineage.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_orch757_llm_token_budgets.py",
+    "tests/test_orch758a_charge_notation_not_composite.py",
+    "tests/test_orch759a_duplicate_protein_fold.py",
+    "tests/test_orch759e_rewrap_after_phase2.py",
+    "tests/test_orch762_protein_identity.py",
+    "tests/test_orch763_nested_locations.py",
+    "tests/test_orch764_class_term_not_narrowed.py",
+    "tests/test_paper_eligibility_corrections.py",
+    "tests/test_pathbank_unknown_fallback.py",
+    "tests/test_payload_models.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_prefreeze_compound_resolution.py",
+    "tests/test_prefreeze_species_resolution.py",
+    "tests/test_probe_decimal_normalization.py",
+    "tests/test_process_normalizer.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch766",
+  "started_at": "2026-10-24T04:57:45+00:00",
+  "finished_at": "2026-10-24T04:58:22+00:00",
+  "duration_seconds": 37.14394840000023,
+  "timeout_seconds": 540.0,
+  "root_pid": 243452,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 242920,
+      "name": "python.exe",
+      "ppid": 243452
+    },
+    {
+      "pid": 244116,
+      "name": "git.exe",
+      "ppid": 242920
+    },
+    {
+      "pid": 244172,
+      "name": "git.exe",
+      "ppid": 242920
+    },
+    {
+      "pid": 244284,
+      "name": "git.exe",
+      "ppid": 242920
+    },
+    {
+      "pid": 244340,
+      "name": "git.exe",
+      "ppid": 242920
+    },
+    {
+      "pid": 244464,
+      "name": "git.exe",
+      "ppid": 242920
+    },
+    {
+      "pid": 244644,
+      "name": "git.exe",
+      "ppid": 242920
+    },
+    {
+      "pid": 242032,
+      "name": "git.exe",
+      "ppid": 242920
+    },
+    {
+      "pid": 244096,
+      "name": "git.exe",
+      "ppid": 242920
+    },
+    {
+      "pid": 244120,
+      "name": "git.exe",
+      "ppid": 242920
+    },
+    {
+      "pid": 244604,
+      "name": "python.exe",
+      "ppid": 242920
+    },
+    {
+      "pid": 244636,
+      "name": "python.exe",
+      "ppid": 244604
+    }
+  ],
+  "descendants_terminated": [
+    242032,
+    242920,
+    244096,
+    244116,
+    244120,
+    244172,
+    244284,
+    244340,
+    244464,
+    244604,
+    244636,
+    244644
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 202136,
+      "name": "python.exe"
+    },
+    {
+      "pid": 202180,
+      "name": "python.exe"
+    },
+    {
+      "pid": 209680,
+      "name": "python.exe"
+    },
+    {
+      "pid": 209960,
+      "name": "python.exe"
+    },
+    {
+      "pid": 210540,
+      "name": "python.exe"
+    },
+    {
+      "pid": 210608,
+      "name": "python.exe"
+    },
+    {
+      "pid": 210856,
+      "name": "python.exe"
+    },
+    {
+      "pid": 210928,
+      "name": "python.exe"
+    },
+    {
+      "pid": 240564,
+      "name": "python.exe"
+    },
+    {
+      "pid": 242996,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch766\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-766\\24-affected-b2.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch766\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch766",
+    "repo_head": "bcad7547aa6499627e066aae5a15a4b49edaa757",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

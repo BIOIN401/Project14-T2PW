@@ -27,10 +27,10 @@ Four rules make this safe to put in front of the gates:
 
    Note what this does NOT promise: a payload with nothing *quarantined* is not
    necessarily unchanged. Closure still drops unreferenced compounds, degree-zero
-   proteins and nameless rows, because each of those is a strict-gate failure on
-   its own. What holds is that it never removes a process both gate stacks would
-   have accepted, and never edits a surviving one. Everything it does remove is
-   in ``removed_entity_report.json``.
+   proteins, nameless rows and species rows nothing names (D-111), because each
+   of those is a strict-gate failure on its own. What holds is that it never
+   removes a process both gate stacks would have accepted, and never edits a
+   surviving one. Everything it does remove is in ``removed_entity_report.json``.
 3. **A smaller graph still has to be the requested pathway.** An empty graph, or
    one whose survivors are unrelated to what was asked for, fails
    :func:`evaluate_core_coverage` rather than passing because the invalid
@@ -419,7 +419,8 @@ _PROCESS_KIND_BY_BUCKET: Dict[str, str] = {
 #: subject to closure. Species, subcellular_locations, cell_types and tissues are
 #: deliberately absent: they are referenced by biological_states rather than by
 #: processes, and pruning them on process references would delete the compartment
-#: vocabulary the surviving states are built from.
+#: vocabulary the surviving states are built from. Species rows are closed on
+#: their own rule instead, :func:`_prune_unreferenced_species` (ORCH-766).
 _GRAPH_ENTITY_BUCKETS: Tuple[str, ...] = (
     "compounds",
     "proteins",
@@ -2034,6 +2035,158 @@ def _prune_biological_states(
     return removed
 
 
+# ── Species closure (ORCH-766, D-111 section 1) ────────────────────────────
+#
+# No process names a species, so ``species`` stays out of _GRAPH_ENTITY_BUCKETS and
+# process references cannot decide it. A row is kept if ANY scalar of the pathway
+# names it: every entity bucket but ``species`` itself, every state, location and
+# other top-level field, every SURVIVING process, and the requested context. That
+# is a superset of every field the IR, the writer and the required-field gate read
+# as a species reference (``ORCH-766-RESULT.md`` lists them), so a referenced row is
+# never removed; over-matching only keeps one. An id (taxonomy, PathBank) counts
+# only under a key path naming a species, taxonomy or organism, so a counter that
+# happens to equal a PathBank species id does not keep a row alive.
+
+#: The ids a species row answers to: ``ir._component_record``'s ``pathwhiz_id`` and
+#: ``taxonomy_id``, and the writer's ``species_id_by_external_id`` keys.
+_SPECIES_ID_KEYS: Tuple[str, ...] = (
+    "taxonomy_id",
+    "taxonomy-id",
+    "pathbank_species_id",
+    "pw_species_id",
+    "pathwhiz_id",
+    "species_id",
+)
+_SPECIES_FIELD_RE = re.compile(r"species|taxon|organism", re.IGNORECASE)
+
+
+def _species_ref_keys(value: Any) -> Set[str]:
+    """Match keys for one scalar: casefolded text, and its alphanumerics alone.
+
+    Coarser than both ``ir._norm`` and the writer's ``strip().casefold()``, so any
+    value either one equates with a row also matches here.
+    """
+
+    if isinstance(value, bool) or not isinstance(value, (str, int, float)):
+        return set()
+    text = _canonical(str(value)).casefold()
+    keys = {text, re.sub(r"[^0-9a-z]+", "", text)}
+    try:
+        # ir._to_int is int(float(text)): it truncates, so "77.0" and "77.9" are id 77.
+        keys.add(str(int(float(text))))
+    except (OverflowError, ValueError):
+        pass
+    return {key for key in keys if key}
+
+
+def _species_references(
+    payload: Mapping[str, Any],
+    admissions: Sequence[Mapping[str, Any]],
+    pathway_context: Optional[Mapping[str, Any]],
+) -> Tuple[Set[str], Set[str]]:
+    """``(every scalar's keys, the keys of scalars under a species-naming path)``."""
+
+    names: Set[str] = set()
+    ids: Set[str] = set()
+
+    def walk(value: Any, species_field: bool) -> None:
+        if isinstance(value, dict):
+            for key, child in value.items():
+                walk(child, species_field or bool(_SPECIES_FIELD_RE.search(str(key))))
+        elif isinstance(value, list):
+            for child in value:
+                walk(child, species_field)
+        else:
+            found = _species_ref_keys(value)
+            names.update(found)
+            if species_field:
+                ids.update(found)
+
+    for key, value in payload.items():
+        if key == "processes":
+            continue  # quarantined rows are still in the lists; survivors below
+        if key == "entities" and isinstance(value, dict):
+            for bucket, rows in value.items():
+                if bucket != "species":
+                    walk(rows, False)
+            continue
+        walk(value, bool(_SPECIES_FIELD_RE.search(str(key))))
+    for _bucket, row in _surviving_processes(payload, admissions):
+        walk(row, False)
+    walk(pathway_context or {}, False)
+    return names, ids
+
+
+def _species_row_keys(row: Mapping[str, Any]) -> Tuple[Set[str], Set[str]]:
+    """The names and ids one species row answers to, as the IR resolves it."""
+
+    # Function-local: layering, as in stage_one_ensemble. The IR renames a row
+    # through these defaults, after the freeze, and resolves it under both names.
+    from t2pw.pwml.ir import SPECIES_CREATE_DEFAULTS, _apply_create_defaults
+
+    names: Set[str] = set()
+    ids: Set[str] = set()
+    for source in (row, _apply_create_defaults(dict(row), SPECIES_CREATE_DEFAULTS)):
+        for key in ("name", "display_name", "raw_name"):
+            names |= _species_ref_keys(source.get(key))
+        for key in ("aliases", "synonyms"):
+            for alias in _safe_list(source.get(key)):
+                names |= _species_ref_keys(alias)
+        meta = _safe_dict(source.get("mapping_meta"))
+        candidates = _safe_list(meta.get("candidates"))
+        top = _safe_dict(candidates[0]) if candidates else {}
+        for holder in (source, meta, _safe_dict(source.get("mapped_ids")), top):
+            for key in _SPECIES_ID_KEYS:
+                ids |= _species_ref_keys(holder.get(key))
+    return names, ids
+
+
+def _prune_unreferenced_species(
+    payload: Dict[str, Any],
+    admissions: Sequence[Mapping[str, Any]],
+    pathway_context: Optional[Mapping[str, Any]],
+) -> List[Dict[str, Any]]:
+    """Drop species rows nothing names (D-111 section 1). Returns removals.
+
+    Never a candidate: a row without a string name (left as it was), and the
+    first named row, which the writer emits as the pathway's species and gives to
+    every complex and every protein whose species it cannot resolve.
+    """
+
+    rows = _safe_dict(payload.get("entities")).get("species")
+    if not isinstance(rows, list):
+        return []
+    first = next(
+        (i for i, row in enumerate(rows) if isinstance(row, dict) and _canonical(str(row.get("name") or ""))),
+        None,
+    )
+    references: Optional[Tuple[Set[str], Set[str]]] = None
+    kept: List[Any] = []
+    removed: List[Dict[str, Any]] = []
+    for index, row in enumerate(rows):
+        name = _row_name(row) if isinstance(row, dict) else ""
+        if not name or index == first:
+            kept.append(row)
+            continue
+        if references is None:
+            references = _species_references(payload, admissions, pathway_context)
+        row_names, row_ids = _species_row_keys(row)
+        if row_names & references[0] or row_ids & references[1]:
+            kept.append(row)
+            continue
+        removed.append(
+            {
+                "bucket": "species",
+                "name": name,
+                "reason": "unreferenced_after_quarantine",
+                "had_external_identity": None,
+            }
+        )
+    if removed:
+        payload["entities"]["species"] = kept
+    return removed
+
+
 def _revalidate_surviving_processes(
     payload: Mapping[str, Any],
     admissions: List[Dict[str, Any]],
@@ -2533,6 +2686,9 @@ def quarantine_and_close(
             working, admissions, registry, strict_db=strict_db, iteration=iteration
         )
         removed_states = _prune_biological_states(working, admissions)
+        # ORCH-766 / D-111 section 1. Last: it reads what every prune above left.
+        # Recorded with the entity removals, the degree-zero rows' own record.
+        removed_entities.extend(_prune_unreferenced_species(working, admissions, pathway_context))
 
         changed = bool(removed_entities or removed_locations or removed_states or newly_quarantined)
         all_removed_entities.extend(
