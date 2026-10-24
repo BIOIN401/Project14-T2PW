@@ -4,7 +4,7 @@ Usage (through bounded_run.py, PYTHONPATH=<tree>/src):
 
     python -u census_species.py <out.json>
 
-Reads, never writes, the primary checkout's ``runs_papers/`` and ``runs_verify/``:
+Reads, never writes, the primary checkout's ``runs_papers/``, ``runs_verify/``, ``runs_smoke/`` and ``runs_validation/``:
 every ``final_mapped.json`` with a sibling ``quarantine_report.json``. Each leg is
 replayed with ITS OWN ``export_mode``, ``strict_db`` and ``coverage.requested_context``
 (a wrong mode fabricates removals). No LLM, no network, no pipeline.
@@ -38,7 +38,7 @@ from t2pw.pipeline.strict_quarantine import admitted_payload_hash, quarantine_an
 from t2pw.pwml.ir import build_pwml_ir, validate_required_pwml_contract
 
 PRIMARY = Path("C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW")
-ROOTS = ("runs_papers", "runs_verify")
+ROOTS = ("runs_papers", "runs_verify", "runs_smoke", "runs_validation")  # round 1: + smoke, validation
 NAME_KEYS = ("name", "display_name", "raw_name")
 LIST_NAME_KEYS = ("aliases", "synonyms")
 ID_KEYS = ("taxonomy_id", "taxonomy-id", "pathbank_species_id", "pw_species_id", "pathwhiz_id", "species_id")

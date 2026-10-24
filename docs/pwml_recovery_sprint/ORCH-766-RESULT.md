@@ -49,7 +49,7 @@ the required-field gate, the quarantine's own restoration step and the stage con
 | 10 | the requested organism (`pathway_context.likely_organism`) | semantic organism check, `evaluate_production_semantics` | any scalar of the context | `requested_organism` |
 | 11 | **the pathway's own species, every complex's species, and every protein the writer cannot resolve** | writer: the FIRST IR species row (`writer.py:1003`, `1310`, `2708`, fallback `1214`) | the first named row is never a candidate | `first_row` |
 | 12 | the IR's create-default rename (`SPECIES_CREATE_DEFAULTS`) | `ir.py:449`: the row is renamed after the freeze and resolves under both names | the row's keys include the defaulted name, aliases and ids | `create_default_name` |
-| 13 | the row's ids as the IR projects them | `ir._component_record` `:879`, `_db_id` (row, `mapping_meta`, `mapped_ids`, `candidates[0]`), `_to_int` (`"77.0"` → 77) | id holders and an integral-number key | `species_id_as_float_text` |
+| 13 | the row's ids as the IR projects them | `ir._component_record` `:879`, `_db_id` (row, `mapping_meta`, `mapped_ids`, `candidates[0]`), `_to_int` = `int(float(text))`, which truncates (`"77.0"`, `77.5`, `"77.9"` → 77) | id holders and a truncated-integer key for every finite number (repair round 1, B1) | `species_id_as_float_text`, `species_id_non_integral_float`, `species_id_non_integral_text` |
 | 14 | the auto-state's species | `restore_autostates_if_required` / `_select_default_species_name` (`process_normalizer.py:593`) picks from rows present AFTER closure | runs after the loop, so it only names a kept row | (fixed by ordering) |
 | 15 | "at least one species row" | `stage_contracts.py:130` `species_required` | the first named row is never removed | `first_row` |
 
@@ -64,8 +64,9 @@ above, built so that a missed field can only keep a row and never remove one:
   `taxon` or `organism`. Its ids are the taxonomy and PathBank ids, read from the row, `mapping_meta`, `mapped_ids`
   and `candidates[0]`.
 - **Comparison keys.** Matching uses casefolded text and alphanumerics-only text, so any two values equal under the
-  IR's `_norm` or the writer's `strip().casefold()` also match here. An integral number additionally matches its
-  integer form.
+  IR's `_norm` or the writer's `strip().casefold()` also match here. Every finite number additionally matches
+  `str(int(float(text)))`, exactly as `ir._to_int` truncates it (repair round 1, B1; round 0 did this only for
+  integral numbers).
 - **Never candidates.** The first named row, and any row without a string name.
 
 The two restrictions are deliberate:
@@ -142,6 +143,11 @@ Further G9 tests:
 
 ## 5. Census
 
+> **Repair round 1 extended this census to 158 legs** (+ `runs_smoke/`, `runs_validation/`), at the round-1 tip:
+> **151 byte-identical, 7 changed, 9 rows removed**, all provably unreferenced, no verdict moved. That matches the
+> reviewer's count. The three added legs are `runs_smoke` PMC11487621, PMC4471609 and PMC13438895. Table and
+> reports in § 11 (`41`/`42`, `census_r1_compare.out`). The round-0 text below is the 124-leg run and stays as measured.
+
 `census_species.py` replays `quarantine_and_close` on every `final_mapped.json` with a sibling
 `quarantine_report.json` under the primary checkout's `runs_papers/` and `runs_verify/`. Each leg runs with its own
 `export_mode`, `strict_db` and `requested_context`, once with base `src/` and once at the tip. That is **124 legs**
@@ -202,7 +208,8 @@ Only the row count moves, 27 → 19. That is the pin moved in `bcad7547` (§ 7).
   is named by nothing the writer resolves; the writer gives complexes `species[0]`. A complex's own
   `taxonomy_id` / `species_ref.taxonomy_id` is 562, though, so the payload says the complex is *E. coli*. It is kept.
   That is the "when unsure, keep" direction.
-- **F4. The first-row rule fired zero times.** No archived row is kept *only* because it is the first named row.
+- **F4. The first-row rule fired zero times in the round-0 census** (124 legs). The 158-leg census of repair round 1
+  finds two legs where it does (§ 11).
 - **F5. The census and Chunk E agree with the theory.** Every one of the 12 removed rows is unreferenced by the IR,
   the writer and the scan alike, so the scan never removed a row the real resolvers needed.
 
@@ -273,12 +280,13 @@ affected set.
 
    Implemented: (a).
 2. **The first named row is never removed**, because the writer emits it as the pathway species and as every
-   complex's species. An unreferenced first row would therefore still block. That fired 0 times in 124 + 39 legs.
-   Removing it would change the pathway's species in the PWML, which is a biology decision.
+   complex's species. An unreferenced first row would therefore still block. In the 158-leg census it keeps two
+   otherwise-unreferenced rows (§ 11), both with taxonomy, so neither blocks. Removing it would change the
+   pathway's species in the PWML, which is a biology decision.
 3. **The broad scan keeps a row named by any scalar** (a report field, an evidence string that equals the name
    exactly, the requested organism). It is safe, but a future pooled row that some report field echoes would still
    block. 1 such keep in the census (F3), and it is arguably a real reference.
-4. **`runs_smoke/` and `runs_validation/` were not in the census** (the brief named `runs_papers/` and `runs_verify/`).
+4. ~~`runs_smoke/` and `runs_validation/` were not in the census.~~ Closed in repair round 1 (§ 11): 158 legs.
 5. **ORCH-767 (tonight's run)** measures whatever code it started on. If this lane is not merged before it starts,
    menaquinone will refuse again on the same row.
 
@@ -287,10 +295,10 @@ affected set.
 ```
 ## ORCH-766 (D-111 § 1): test obligations — appended end-of-file by rule · 2026-10-24
 
-Lane `orch766/drop-unreferenced-species` (tests `0f54f3b4`, `076675d8`, `78158f07`; code `f775f2b3`; pin move
-`bcad7547`). Reports `evidence/g11/ORCH-766/01`–`36`.
+Lane `orch766/drop-unreferenced-species` (tests `0f54f3b4`, `076675d8`, `78158f07`, `833ee501`; code `f775f2b3`,
+`9c591d43`; pin move `bcad7547`). Reports `evidence/g11/ORCH-766/01`–`45`.
 
-New focused selection: `tests/test_orch766_unreferenced_species.py` (**54**, ~1.5 s), fixture
+New focused selection: `tests/test_orch766_unreferenced_species.py` (**57**, ~2 s), fixture
 `tests/fixtures/orch766/` (the ORCH-759p menaquinone leg's `final_mapped.json`, gzipped, + its requested context).
 Run it with the strict-quarantine suites and Chunk E for any change to `quarantine_and_close`'s closure loop,
 `_prune_unreferenced_species` / `_species_references` / `_species_row_keys`, the IR's species resolution
@@ -304,6 +312,84 @@ species rows in 3 cohort legs removed; `evidence/orch766/chunk_e_compare.out`). 
 `FULL_STACK_BASELINE` unchanged (required contract 9/28, exportable 9/28). `docs/change_log.md` moved with it, same
 commit. Chunk E: 175 passed at base (`19`) and at tip after the move (`22`).
 
-SMOKE unchanged at **508** (`30`). Merge rule 10 unchanged. No other pin moved. Known failures unchanged
+One labelled delta test, `test_delta_r1_restored_autostate_takes_a_species_the_pathway_references`, fails at base by
+design: the F-192 restore now picks the placeholder's species from rows left after the species closure.
+
+SMOKE unchanged at **508** (`30`; repair round 1 `45`). Merge rule 10 unchanged. No other pin moved. Known failures unchanged
 (§ ORCH-754, § ORCH-759a/b/c/d), red at base with identical messages (`35`/`36`).
 ```
+
+## 11. Repair round 1 (review round 0: REJECT, one blocking finding)
+
+**B1, blocking: a referenced row could be removed.** `_species_ref_keys` added an integer key only for an
+integral number, but `ir._to_int` (`ir.py:309-320`) is `int(float(text))`: it truncates. A species row with
+`pathbank_species_id` `77.5` or `"77.9"` is IR `pathwhiz_id` 77, and the writer (`writer.py:994-1001`) resolves a
+protein's `species_id: 77` to it. The round-0 tip removed that row, so the protein silently fell back to the
+first species. The reviewer proved this with the real `DeterministicPwmlBuilder`.
+
+- **Fix** (`9c591d43`, one hunk): every finite parsed number now also yields `str(int(float(text)))`. That is
+  `ir._to_int` exactly; `OverflowError`/`ValueError` (inf, nan, non-numbers) add nothing.
+- **Tests** (`833ee501`): preservation kinds `species_id_non_integral_float` (row `77.5`) and
+  `species_id_non_integral_text` (row `"77.9"`), each with a protein `species_id: 77`. Pins were taken at base
+  (`37-r1-pins-base.log`; every earlier pin unchanged).
+  - base: they pass (`38`);
+  - round-0 tip `f775f2b3`: **both fail**, the row removed (`39`);
+  - round-1 tip: pass (`40`, 57 passed).
+
+**Reviewer note 1, recorded, not changed: the F-192 restore now sees fewer species rows.**
+`restore_autostates_if_required` runs after the closure loop. When closure sweeps every state, it gives
+`__auto_state__` the species `_select_default_species_name` (`process_normalizer.py:593`) scores highest among
+the rows still present. Before ORCH-766 an unreferenced row could win that score, for example on
+species-resolution confidence 0.99. Now that row has already been removed, so the placeholder takes a species
+the pathway references.
+
+- Pinned by the labelled delta test `test_delta_r1_restored_autostate_takes_a_species_the_pathway_references`:
+  - base: `__auto_state__` → **Mus musculus**, the unreferenced row (`38`: `'Mus musculus' == 'Homo sapiens'`);
+  - tip: → **Homo sapiens**, the row the proteins name, with Mus musculus removed and recorded.
+- It is the only base-failing test outside `test_g9_*`, and it fails there by design.
+- None of the 158 archived legs changed its auto-state species: the census compare finds nothing outside
+  `entities.species` that moved.
+
+**Census extended to 158 legs** (`census_species.py` ROOTS + `runs_smoke/`, `runs_validation/`): base `41`, tip
+`42`, data `census_r1_{base,tip}.json.gz`, diff `census_r1_compare.out` (`PROBLEMS: none`). This matches the
+reviewer's count: **151 legs byte-identical, 7 changed, 9 rows**, every one provably unreferenced (no name or
+species-path id hit, no IR state, no writer protein, not `species[0]`). No verdict moved.
+
+| leg | removed row(s) | taxonomy | verdict | gate effect |
+|---|---|---|---|---|
+| ORCH-759p menaquinone (2154) | L. lactis subsp. lactis KF147 | none | `release_ready` | 2 species errors → 0 |
+| ORCH-759 menaquinone (1148) | L. lactis subsp. lactis KF147 | none | `review_required` | 2 → 0 |
+| `runs_smoke/2026-09-07_2323/…/PMC11487621/strict` | B. subtilis | none | `review_required` | 2 → 0 |
+| `runs_smoke/2026-09-08_1528/…/PMC4471609/strict` | Saccharomyces cerevisiae | 4932 | `review_required` | none (one unreferenced species fewer in the PWML) |
+| `runs_smoke/2026-09-10_1135/…/PMC13438895/strict` | Mycobacterium bovis, Escherichia coli, Arabidopsis thaliana | 1765, 562, 3702 | `review_required` | none (three fewer) |
+| `runs_verify/2026-08-24_1203/…/PMC12452463/strict` | Arabidopsis thaliana | 3702 | `review_required` | none (one fewer) |
+| `runs_verify/2026-09-16_2152/…/PMC13534948/strict` | Hahella chejuensis KCTC 2396 | 349521 | `diagnostic_only` | none (refused anyway) |
+
+Strict legs with `species_*` gate errors go from 4 to 1. The one left is `runs_smoke/2026-09-10_1135/…/PMC13488460`:
+its first row, "Borrelia burgdorferi", is referenced by a state and has no taxonomy, so the gate still refuses it.
+No gate was relaxed.
+
+**F2 widens:** 3 exporting `review_required` legs now lose unreferenced species rows that carry a taxonomy id (§ 9
+item 1). **F4 is superseded:** the first-row rule alone keeps two rows, `runs_validation/…/PMC12071552`
+"Staphylococcus aureus" (1280) and `runs_validation/…/PMC13123502` "Paris polyphylla" (49666). Both carry
+taxonomy, so neither blocks. **F3 widens:** the scan alone keeps five rows that no IR state, writer protein or
+`species[0]` uses:
+- "E. coli" (a complex's `taxonomy_id`);
+- "Borreliella burgdorferi" ×2 (a placeholder's `mapping_meta.target_organism`);
+- "Paris polyphylla var. yunnanensis" (`target_organism`);
+- "Staphylococcus aureus (MRSA N315)" (requested organism);
+- "Mus musculus" in `runs_smoke/…/PMC11016064`, through `quarantined_proteins[1].original_row…judged_candidates[2].organism`,
+  a provenance record. That is the over-keep § 9 item 3 describes.
+
+All of these have taxonomy; none blocks.
+
+### Repair round 1 gates
+
+| gate | report | result |
+|---|---|---|
+| pins for the new kinds, base | `37` | 2 new pins; all 26 earlier pins identical |
+| focused, base / round-0 tip / round-1 tip | `38` / `39` / `40` | 6 failed (5 `test_g9_*` + the delta) + 51 passed / 2 failed (the B1 kinds) + 55 passed / **57 passed** |
+| census, 158 legs, base / tip | `41` / `42` | 7 changed, 9 rows, `PROBLEMS: none` |
+| strict-quarantine suites + 759c + C-011 + Stage-3 lifecycle + `test_pwml_ir` + `test_pwml_writer` + focused | `43` | **327 passed** |
+| Chunk E alone | `44` | **175 passed**, `RESIDUAL_CODES_BY_ROW` 19/19 unchanged |
+| **SMOKE** | `45` | **508 passed** |

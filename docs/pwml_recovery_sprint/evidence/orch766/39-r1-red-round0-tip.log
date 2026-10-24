@@ -1,0 +1,63 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch766\src\t2pw\__init__.py
+...........................FF............................                [100%]
+================================== FAILURES ===================================
+_ test_preservation_referenced_species_row_is_kept_byte_identical[species_id_non_integral_float] _
+
+kind = 'species_id_non_integral_float'
+
+    @pytest.mark.parametrize("kind", ALL_KINDS)
+    def test_preservation_referenced_species_row_is_kept_byte_identical(kind: str) -> None:
+        payload = _kind_payload(kind)
+        result = quarantine_and_close(payload, strict_db=True, pathway_context=_context(kind), mode="pathwhiz")
+>       assert _species_removals(result) == []
+E       AssertionError: assert [{'bucket': '...sculus', ...}] == []
+E         
+E         Left contains one more item: {'bucket': 'species', 'had_external_identity': None, 'iteration': 1, 'name': 'Mus musculus', ...}
+E         Use -v to get more diff
+
+tests\test_orch766_unreferenced_species.py:414: AssertionError
+_ test_preservation_referenced_species_row_is_kept_byte_identical[species_id_non_integral_text] _
+
+kind = 'species_id_non_integral_text'
+
+    @pytest.mark.parametrize("kind", ALL_KINDS)
+    def test_preservation_referenced_species_row_is_kept_byte_identical(kind: str) -> None:
+        payload = _kind_payload(kind)
+        result = quarantine_and_close(payload, strict_db=True, pathway_context=_context(kind), mode="pathwhiz")
+>       assert _species_removals(result) == []
+E       AssertionError: assert [{'bucket': '...sculus', ...}] == []
+E         
+E         Left contains one more item: {'bucket': 'species', 'had_external_identity': None, 'iteration': 1, 'name': 'Mus musculus', ...}
+E         Use -v to get more diff
+
+tests\test_orch766_unreferenced_species.py:414: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_orch766_unreferenced_species.py::test_preservation_referenced_species_row_is_kept_byte_identical[species_id_non_integral_float]
+FAILED tests/test_orch766_unreferenced_species.py::test_preservation_referenced_species_row_is_kept_byte_identical[species_id_non_integral_text]
+2 failed, 55 passed in 2.23s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch766\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 0fc6dedad49ddd8a46a37cbaabfa1a91c1d76356  [git, worktree dirty=True]
+label                   : r1-red-round0-tip
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-766/39-r1-red-round0-tip.pin.json -q -p no:cacheprovider --basetemp=C:/t/bt-orch766/39-r1-red-round0-tip-1149 tests/test_orch766_unreferenced_species.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch766
+root PID / process group: 681048 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 3.63 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  681876:python.exe
+descendants terminated  : 1  681876
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch766\docs\pwml_recovery_sprint\evidence\g11\ORCH-766\39-r1-red-round0-tip.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================
