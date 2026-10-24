@@ -1,0 +1,197 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769b\src\t2pw\__init__.py
+FFFFFF....                                                               [100%]
+================================== FAILURES ===================================
+_ test_g9_leg_quarantines_exactly_the_five_reactions_whose_actor_is_no_protein _
+
+    def test_g9_leg_quarantines_exactly_the_five_reactions_whose_actor_is_no_protein() -> None:
+        payload, context = _leg()
+        result = quarantine_and_close(payload, strict_db=True, pathway_context=context, mode="pathwhiz")
+        report = result.quarantine_report
+    
+        # Same decision input as the live run (no policy-version move; RESULT doc, NOT settled).
+        assert report["decision_input_hash"] == "sha256:6c5f9c8b2410d8af"
+        quarantined = [
+            (row["index"], row["name"], row["reason"], row["essential_participant"])
+            for row in result.admissions
+            if row["state"] not in ACCEPTED_STATES
+        ]
+        # Base: [] -- every one of the 32 processes admitted.
+>       assert quarantined == LEG_QUARANTINED
+E       AssertionError: assert [] == [(17, 'GluTR ...mes', 'PPO1')]
+E         
+E         Right contains 5 more items, first extra item: (17, 'GluTR (HEMA1) reaction', 'non_protein_actor_in_modifiers', 'PIF1')
+E         Use -v to get more diff
+
+tests\test_orch769b_actor_protein_registry.py:107: AssertionError
+__________ test_g9_leg_final_gate_passes_on_the_quarantined_payload ___________
+
+    def test_g9_leg_final_gate_passes_on_the_quarantined_payload() -> None:
+        """Base: the gate raises 9 errors (PIF1, GBP x3, FAR1, CPO1 x2, PPO1 x2)."""
+    
+        payload, context = _leg()
+        assert len(_unknown_actor_errors(payload)) == 9  # the leg's own final gate report
+        result = quarantine_and_close(payload, strict_db=True, pathway_context=context, mode="pathwhiz")
+        assert result.ok
+        # freeze_canonical_payload runs exactly this once quarantine is ok.
+>       assert _gate_errors(result.payload) == []
+E       AssertionError: assert [('/processes...: CPO1'), ...] == []
+E         
+E         Left contains 9 more items, first extra item: ('/processes/reactions/17/modifiers/1', 'Unknown protein/modifier reference: PIF1')
+E         Use -v to get more diff
+
+tests\test_orch769b_actor_protein_registry.py:138: AssertionError
+__________ test_g9_a_modifier_declared_only_as_a_gene_is_quarantined __________
+
+    def test_g9_a_modifier_declared_only_as_a_gene_is_quarantined() -> None:
+        payload = _base()
+        payload["entities"]["nucleic_acids"].append({"name": "PIF1", "species": "Homo sapiens"})
+        payload["processes"]["reactions"][1]["modifiers"] = [{"entity": "PIF1", "role": "activator"}]
+        assert _unknown_actor_errors(payload)  # the gate rejects the input
+    
+        result = quarantine_and_close(payload, strict_db=True)
+    
+        record = _record(result, "glutathione synthesis")
+>       assert (record["state"], record["reason"], record["essential_participant"]) == (
+            QUARANTINED_BROKEN_REFERENCE,
+            "non_protein_actor_in_modifiers",
+            "PIF1",
+        )
+E       AssertionError: assert ('core_accept...admitted', '') == ('quarantined...iers', 'PIF1')
+E         
+E         At index 0 diff: 'core_accepted' != 'quarantined_broken_reference'
+E         Use -v to get more diff
+
+tests\test_orch769b_actor_protein_registry.py:153: AssertionError
+____________ test_g9_a_compound_named_as_a_modifier_is_quarantined ____________
+
+    def test_g9_a_compound_named_as_a_modifier_is_quarantined() -> None:
+        """The gate's registry holds no compounds, so a compound modifier fails it too."""
+    
+        payload = _base()
+        payload["processes"]["reactions"][1]["modifiers"] = [{"entity": "L-cysteine", "role": "inhibitor"}]
+        assert _unknown_actor_errors(payload)
+    
+        result = quarantine_and_close(payload, strict_db=True)
+    
+        record = _record(result, "glutathione synthesis")
+>       assert (record["state"], record["reason"], record["essential_participant"]) == (
+            QUARANTINED_BROKEN_REFERENCE,
+            "non_protein_actor_in_modifiers",
+            "L-cysteine",
+        )
+E       AssertionError: assert ('core_accept...admitted', '') == ('quarantined... 'L-cysteine')
+E         
+E         At index 0 diff: 'core_accepted' != 'quarantined_broken_reference'
+E         Use -v to get more diff
+
+tests\test_orch769b_actor_protein_registry.py:172: AssertionError
+________ test_g9_a_transporter_declared_only_as_a_gene_is_quarantined _________
+
+    def test_g9_a_transporter_declared_only_as_a_gene_is_quarantined() -> None:
+        payload = _base()
+        payload["entities"]["nucleic_acids"].append({"name": "PIF1", "species": "Homo sapiens"})
+        payload["processes"]["transports"] = [
+            {
+                "name": "glutathione efflux",
+                "cargo": "glutathione",
+                "from_biological_state": "cytosol",
+                "to_biological_state": "cytosol",
+                "transporters": [{"entity": "PIF1"}],
+            }
+        ]
+        assert _unknown_actor_errors(payload)
+    
+        result = quarantine_and_close(payload, strict_db=True)
+    
+        record = _record(result, "glutathione efflux")
+>       assert (record["state"], record["reason"], record["essential_participant"]) == (
+            QUARANTINED_BROKEN_REFERENCE,
+            "non_protein_actor_in_transporters",
+            "PIF1",
+        )
+E       AssertionError: assert ('core_accept...admitted', '') == ('quarantined...ters', 'PIF1')
+E         
+E         At index 0 diff: 'core_accepted' != 'quarantined_broken_reference'
+E         Use -v to get more diff
+
+tests\test_orch769b_actor_protein_registry.py:197: AssertionError
+___________ test_g9_closure_revalidation_applies_the_same_predicate ___________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000028D018FE450>
+
+    def test_g9_closure_revalidation_applies_the_same_predicate(monkeypatch: pytest.MonkeyPatch) -> None:
+        """The leg's mechanism, at the closure stage: the protein row goes, a same-named gene stays.
+    
+        ``GSS`` is a synonym of the protein ``glutathione synthetase`` and the name of a gene row,
+        so admission resolves it to the protein (proteins register before nucleic_acids) and
+        admits. A removal behind closure's back then deletes the protein, as the audit did on the
+        leg. Base: revalidation resolves ``GSS`` to the gene and keeps the reaction.
+        """
+    
+        from t2pw.pipeline import strict_quarantine as sq
+    
+        payload = _base()
+        payload["entities"]["proteins"][1]["synonyms"] = ["GSS"]
+        payload["entities"]["nucleic_acids"].append({"name": "GSS", "species": "Homo sapiens"})
+        payload["processes"]["reactions"][1]["enzymes"] = []
+        payload["processes"]["reactions"][1]["modifiers"] = [{"entity": "GSS", "role": "catalyst"}]
+    
+        real_prune = sq._prune_entities
+        calls = {"n": 0}
+    
+        def _prune_and_also_drop_the_protein(working, keep_norms):
+            removed = real_prune(working, keep_norms)
+            calls["n"] += 1
+            if calls["n"] == 1:
+                proteins = working["entities"]["proteins"]
+                working["entities"]["proteins"] = [
+                    row for row in proteins if row.get("name") != "glutathione synthetase"
+                ]
+                removed.append({"bucket": "proteins", "name": "glutathione synthetase", "reason": "simulated"})
+            return removed
+    
+        monkeypatch.setattr(sq, "_prune_entities", _prune_and_also_drop_the_protein)
+        result = sq.quarantine_and_close(payload, strict_db=True)
+    
+        record = _record(result, "glutathione synthesis")
+>       assert record["state"] == QUARANTINED_DISCONNECTED
+E       AssertionError: assert 'core_accepted' == 'quarantined_disconnected'
+E         
+E         - quarantined_disconnected
+E         + core_accepted
+
+tests\test_orch769b_actor_protein_registry.py:240: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_orch769b_actor_protein_registry.py::test_g9_leg_quarantines_exactly_the_five_reactions_whose_actor_is_no_protein
+FAILED tests/test_orch769b_actor_protein_registry.py::test_g9_leg_final_gate_passes_on_the_quarantined_payload
+FAILED tests/test_orch769b_actor_protein_registry.py::test_g9_a_modifier_declared_only_as_a_gene_is_quarantined
+FAILED tests/test_orch769b_actor_protein_registry.py::test_g9_a_compound_named_as_a_modifier_is_quarantined
+FAILED tests/test_orch769b_actor_protein_registry.py::test_g9_a_transporter_declared_only_as_a_gene_is_quarantined
+FAILED tests/test_orch769b_actor_protein_registry.py::test_g9_closure_revalidation_applies_the_same_predicate
+6 failed, 4 passed in 1.80s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769b\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 76e2d5f21709a7b6a1ff5bd75c7e4815bce74a7f  [git, worktree dirty=False]
+label                   : g9-red
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-769b/03-g9-red.pin.json -q --basetemp=C:/t/bt-orch769b/03-g9-red tests/test_orch769b_actor_protein_registry.py
+cwd                     : C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769b
+root PID / process group: 21528 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 3.15 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  784592:python.exe
+descendants terminated  : 1  784592
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769b\docs\pwml_recovery_sprint\evidence\g11\ORCH-769b\03-g9-red.json
+json report written     : True
+pre-existing (reported, NEVER killed): 8
+================================================
