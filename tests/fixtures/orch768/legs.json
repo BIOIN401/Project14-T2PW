@@ -1,0 +1,205 @@
+{
+ "from_manifest": "docs/pwml_recovery_sprint/evidence/orch768_corpus_manifest.json",
+ "legs": [
+  {
+   "checkpoint": "canonical",
+   "checkpoint_reason": "final_mapped.json hashes to the final gate report's payload_sha256: it is the canonical (enriched, quarantined) payload",
+   "condition": "enterobactin-strict",
+   "head": "d6849c9e",
+   "head_source": "runs_papers/ORCH-767/night.log start line <= 2026-10-23_2224",
+   "id": "ORCH-767/enterobactin-strict/2026-10-23_2224",
+   "inputs": {
+    "LEG_TERMINAL.json": {
+     "bytes": 3302,
+     "path": "ORCH-767_enterobactin-strict_2026-10-23_2224/LEG_TERMINAL.json.gz",
+     "sha256": "3008494cf72a5743503ea7c01a3f1265f2e47d6676bbff0ddada9614c7a6a9bd"
+    },
+    "RESULT.txt": {
+     "bytes": 4414,
+     "path": "ORCH-767_enterobactin-strict_2026-10-23_2224/RESULT.txt.gz",
+     "sha256": "4b7490b00165be5b46e99432319bdab681647648789728558b2ed8a3ef86c28e"
+    },
+    "contract_reports.json": {
+     "bytes": 19119,
+     "path": "ORCH-767_enterobactin-strict_2026-10-23_2224/contract_reports.json.gz",
+     "sha256": "12f2e8d2e11984c5d28baf8a75d629dcb46a638976f31511d6887a3148506950"
+    },
+    "final_mapped.json": {
+     "bytes": 290736,
+     "path": "ORCH-767_enterobactin-strict_2026-10-23_2224/final_mapped.json.gz",
+     "sha256": "1b1e1884d5782bc86db8dc83ea21d4ca0c7c22c70d6e8f64cbd455fefdd98e1a"
+    },
+    "final_stage3_gate_report.json": {
+     "bytes": 3821,
+     "path": "ORCH-767_enterobactin-strict_2026-10-23_2224/final_stage3_gate_report.json.gz",
+     "sha256": "84b4f47e827b338e96cd1f573a8be48471a8fc180ce76a5cedc263025b1bbed9"
+    },
+    "quarantine_report.json": {
+     "bytes": 37463,
+     "path": "ORCH-767_enterobactin-strict_2026-10-23_2224/quarantine_report.json.gz",
+     "sha256": "a7b1265dc657a994dcfbf3c2697e63f2050743c7a7e187e022e419d489299fad"
+    }
+   },
+   "leg_dir": ".claude/worktrees/orch767/runs_papers/ORCH-767/legs/enterobactin-strict/2026-10-23_2224/papers/PMC12096016/strict",
+   "mode": "strict",
+   "paper": "PMC12096016",
+   "recorded": {
+    "failure_kind": "contract",
+    "final_gate_ok": false,
+    "issue_codes": [
+     "gate.generated_protein_complex_enterobactin_synthase_complex_componen"
+    ],
+    "message": "post-pipeline validation failed: 1 blocking issue(s) at final_pre_export_stage3_gates",
+    "pwml": [],
+    "quarantine_ok": true,
+    "quarantine_refusal": [],
+    "quarantine_release": "review_required",
+    "release_status": "diagnostic_only",
+    "required_gate_ok": null,
+    "stage": "post_pipeline",
+    "status": "fail"
+   },
+   "run": "ORCH-767",
+   "src_sha": "360a6ac5",
+   "src_tree": "9b1943a8d8369d96cdbadb7ff5aafec6e8b6b13d",
+   "stamp": "2026-10-23_2224",
+   "tier": "A"
+  },
+  {
+   "checkpoint": "canonical",
+   "checkpoint_reason": "final_mapped.json hashes to the final gate report's payload_sha256: it is the canonical (enriched, quarantined) payload",
+   "condition": "sour_taste_v2-strict",
+   "head": "d6849c9e",
+   "head_source": "runs_papers/ORCH-767/night.log start line <= 2026-10-24_0042",
+   "id": "ORCH-767/sour_taste_v2-strict/2026-10-24_0042",
+   "inputs": {
+    "LEG_TERMINAL.json": {
+     "bytes": 4170,
+     "path": "ORCH-767_sour_taste_v2-strict_2026-10-24_0042/LEG_TERMINAL.json.gz",
+     "sha256": "019f3210adcb035b4a40041091ecea8c43c48c5f12cde4aa8989fb771ef99b79"
+    },
+    "RESULT.txt": {
+     "bytes": 2737,
+     "path": "ORCH-767_sour_taste_v2-strict_2026-10-24_0042/RESULT.txt.gz",
+     "sha256": "35e0542cf49fa07319575819480992bda764cb8c268023303f9d1c1414ad03d4"
+    },
+    "contract_reports.json": {
+     "bytes": 42523,
+     "path": "ORCH-767_sour_taste_v2-strict_2026-10-24_0042/contract_reports.json.gz",
+     "sha256": "ca67ef10d5f85e76807b4e2e9b698ba50389553140cae22c5f2b1e352205beee"
+    },
+    "final_mapped.json": {
+     "bytes": 137104,
+     "path": "ORCH-767_sour_taste_v2-strict_2026-10-24_0042/final_mapped.json.gz",
+     "sha256": "38a330fdf2a1281043fbf3d135d86b896a26ec98b8627230a7f4e531cea9892c"
+    },
+    "final_stage3_gate_report.json": {
+     "bytes": 2799,
+     "path": "ORCH-767_sour_taste_v2-strict_2026-10-24_0042/final_stage3_gate_report.json.gz",
+     "sha256": "77370e404c6918135e1fe0c1176d1af99002e764cb1515b56e00549ad93057bc"
+    },
+    "pathway.review_required.pwml": {
+     "bytes": 45928,
+     "path": null,
+     "sha256": "d73219f99a2577e817eb7721e83175230bea23fd70db2df8ad5c03f3436414a4"
+    },
+    "pwml_required_field_gate_report.json": {
+     "bytes": 676,
+     "path": "ORCH-767_sour_taste_v2-strict_2026-10-24_0042/pwml_required_field_gate_report.json.gz",
+     "sha256": "2eaae3a348ae7737b3b6b03abd8896bc5c44fde27d9c95da50be79adb080cc8e"
+    },
+    "quarantine_report.json": {
+     "bytes": 39069,
+     "path": "ORCH-767_sour_taste_v2-strict_2026-10-24_0042/quarantine_report.json.gz",
+     "sha256": "2cbc776c36af8015af9be570eb4e679bd5c6cfc96161f24217ced809367c59dc"
+    }
+   },
+   "leg_dir": ".claude/worktrees/orch767/runs_papers/ORCH-767/legs/sour_taste_v2-strict/2026-10-24_0042/papers/PMC7059786/strict",
+   "mode": "strict",
+   "paper": "PMC7059786",
+   "recorded": {
+    "failure_kind": "",
+    "final_gate_ok": true,
+    "issue_codes": [],
+    "message": "strict run completed; pathway.review_required.pwml is 45928 bytes",
+    "pwml": [
+     "pathway.review_required.pwml"
+    ],
+    "quarantine_ok": true,
+    "quarantine_refusal": [],
+    "quarantine_release": "review_required",
+    "release_status": "review_required",
+    "required_gate_ok": true,
+    "stage": "pwml_export",
+    "status": "pass"
+   },
+   "run": "ORCH-767",
+   "src_sha": "360a6ac5",
+   "src_tree": "9b1943a8d8369d96cdbadb7ff5aafec6e8b6b13d",
+   "stamp": "2026-10-24_0042",
+   "tier": "A"
+  },
+  {
+   "checkpoint": "canonical",
+   "checkpoint_reason": "final_mapped.json hashes to the final gate report's payload_sha256: it is the canonical (enriched, quarantined) payload",
+   "condition": "wnt_pcp-strict",
+   "head": "d6849c9e",
+   "head_source": "runs_papers/ORCH-767/night.log start line <= 2026-10-24_0131",
+   "id": "ORCH-767/wnt_pcp-strict/2026-10-24_0131",
+   "inputs": {
+    "LEG_TERMINAL.json": {
+     "bytes": 3411,
+     "path": "ORCH-767_wnt_pcp-strict_2026-10-24_0131/LEG_TERMINAL.json.gz",
+     "sha256": "3d048176942e179631a0331b3198e3af5c511b4968a34a82efec8f597c90aa5e"
+    },
+    "RESULT.txt": {
+     "bytes": 2947,
+     "path": "ORCH-767_wnt_pcp-strict_2026-10-24_0131/RESULT.txt.gz",
+     "sha256": "543a5fa34478318296e263c443d85ab377371e82b6607d4a00cd3ed42e72e023"
+    },
+    "contract_reports.json": {
+     "bytes": 184290,
+     "path": "ORCH-767_wnt_pcp-strict_2026-10-24_0131/contract_reports.json.gz",
+     "sha256": "fdd76f184982978578aeffea507dd55e8ed4d5fbd604bb91c9cabfd4dca886be"
+    },
+    "final_mapped.json": {
+     "bytes": 354212,
+     "path": "ORCH-767_wnt_pcp-strict_2026-10-24_0131/final_mapped.json.gz",
+     "sha256": "5658510e782d07837d19a9dcb34ddc4a4eb81c3aaa117f5aaaa1f6af39467b49"
+    },
+    "final_stage3_gate_report.json": {
+     "bytes": 2977,
+     "path": "ORCH-767_wnt_pcp-strict_2026-10-24_0131/final_stage3_gate_report.json.gz",
+     "sha256": "499e3c006f8c0f2563b9fceb5205ac108ad6c74e1bd948ebaf66235ae975c705"
+    },
+    "quarantine_report.json": {
+     "bytes": 188044,
+     "path": "ORCH-767_wnt_pcp-strict_2026-10-24_0131/quarantine_report.json.gz",
+     "sha256": "271f4b7650dbc2e065a36b01589fa371faab2836cc8485463d8fc7e81452f5d9"
+    }
+   },
+   "leg_dir": ".claude/worktrees/orch767/runs_papers/ORCH-767/legs/wnt_pcp-strict/2026-10-24_0131/papers/PMC10425814/strict",
+   "mode": "strict",
+   "paper": "PMC10425814",
+   "recorded": {
+    "failure_kind": "crash",
+    "final_gate_ok": true,
+    "issue_codes": [],
+    "message": "the app never rendered the \"refinement_generate_pwml\" button ('refinement_generate_pwml'), so the review step that unlocks PWML export was not reached",
+    "pwml": [],
+    "quarantine_ok": true,
+    "quarantine_refusal": [],
+    "quarantine_release": "review_required",
+    "release_status": null,
+    "required_gate_ok": null,
+    "stage": "pwml_export",
+    "status": "fail"
+   },
+   "run": "ORCH-767",
+   "src_sha": "360a6ac5",
+   "src_tree": "9b1943a8d8369d96cdbadb7ff5aafec6e8b6b13d",
+   "stamp": "2026-10-24_0131",
+   "tier": "A"
+  }
+ ]
+}
