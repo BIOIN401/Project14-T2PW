@@ -1,9 +1,10 @@
 """Deterministic split-process Chunk D gate (authorization CONTROL-PLANE-RECONCILE-001).
 
-Chunk D's monolithic definition runs 187 tests across seven files in ONE process
+Chunk D's monolithic definition runs 188 tests across seven files in ONE process
 (177, then 179 after C-045b's authorized ``core`` 150 -> 152 move, then 187 after
-C-050k's authorized 152 -> 160; see ``TOTAL`` below. **187 holds only on a tree
-carrying C-050k** -- 179 remains correct everywhere else until it merges).
+C-050k's authorized 152 -> 160, then 188 after ORCH-769c's authorized ``qb`` 23 -> 24;
+see ``TOTAL`` below. **188 holds only on a tree carrying ORCH-769c** -- 187 remains
+correct on a tree without it).
 Two of those files drive Streamlit ``AppTest``, and several ``AppTest`` instances
 in one process eventually leave a worker thread without a ``ScriptRunContext``:
 the run dies with ``RuntimeError: FragmentThreadState not initialized``
@@ -20,10 +21,10 @@ a test change: no test body, fixture, assertion, source file or datum is touched
 and no retry is added.
 
 PER-FILE ISOLATION WAS MEASURED INSUFFICIENT (H-007 supersedes the earlier reading
-that no process partition could work). Running the whole 23-test ``qb`` FILE in one
+that no process partition could work). Running the whole 24-test ``qb`` FILE in one
 fresh process leaves the documented cause untouched, because that one process still
-builds 23 ``AppTest`` objects. ``run`` therefore isolates per NODE: the 152 core
-tests keep their single deterministic process, and each of the 27 AppTest node IDs
+builds 24 ``AppTest`` objects. ``run`` therefore isolates per NODE: the 152 core
+tests keep their single deterministic process, and each of the 28 AppTest node IDs
 gets a fresh process that has built exactly one ``AppTest``. See ``TEST_MATRIX.md``
 § "Chunk D" for the standing result; never read a ``qb`` red as expected.
 
@@ -70,11 +71,11 @@ S8 = ["tests/test_streamlit_stage8_export_contract.py"]
 QB = ["tests/test_streamlit_quarantine_boundary.py"]
 #: ``(name, files, expected_count)`` -- ENFORCED by ``run``; ``collect`` only reports.
 COMPONENTS: List[Tuple[str, List[str], int]] = [
-    ("core", CORE, 160), ("s8", S8, 4), ("qb", QB, 23)]
+    ("core", CORE, 160), ("s8", S8, 4), ("qb", QB, 24)]
 #: The original monolithic selection, verbatim -- what the split must equal.
 MONOLITHIC = CORE + S8 + QB
-#: 160 + 4 + 23 = 187. MOVED TWICE, DELIBERATELY, both times under permanent merge
-#: rule 4 with orchestrator authorization.
+#: 160 + 4 + 24 = 188. MOVED THREE TIMES, DELIBERATELY, each time under permanent
+#: merge rule 4 with orchestrator authorization.
 #:
 #: 1. **C-045b, 2026-08-15:** ``core`` 150 -> 152, so the derived ``TOTAL`` followed
 #:    177 -> 179. The two added tests are
@@ -88,17 +89,23 @@ MONOLITHIC = CORE + S8 + QB
 #:    be placed there: measured by literal occurrence, that file previously contained
 #:    **zero** ``resolve_entity`` / ``ambiguous`` / ``synonyms`` coverage, so the whole
 #:    alias surface had no Chunk D coverage at all.
+#: 3. **ORCH-769c, 2026-10-24 (D-112 §3c):** ``qb`` 23 -> 24, ``TOTAL`` 187 -> 188.
+#:    The ``+1`` is ``tests/test_streamlit_quarantine_boundary.py::test_g9_an_
+#:    interactions_only_pathway_opens_review_and_exports``, the lane's G9 AppTest, which
+#:    reuses that module's harness. The merged-tip partition proof refused it
+#:    (``qb: parsed=24 expected=23``, ``SETS_EQUAL=True``, ``missing=0``, ``extra=0``)
+#:    and the orchestrator authorized the move.
 #:
-#: Neither is a weakened gate: the substantive check is ``partition``'s SET equality,
-#: which passed unchanged across BOTH moves (``SETS_EQUAL=True``, ``overlap=0``,
+#: None is a weakened gate: the substantive check is ``partition``'s SET equality,
+#: which passed unchanged across ALL THREE moves (``SETS_EQUAL=True``, ``overlap=0``,
 #: ``missing=0``, ``extra=0``, no deselection). The integer is derived from that set
 #: and has nowhere for a silent regression to hide.
 #:
-#: **187 is correct ONLY on a tree carrying C-050k.** Until that merge lands, 179
-#: remains correct, and a card in flight reporting 187 on a tree without C-050k is
-#: measuring the wrong thing (D-044 §2).
+#: **188 is correct ONLY on a tree carrying ORCH-769c's ``qb`` test.** On a tree
+#: without it 187 remains correct, and a card in flight reporting 188 there is
+#: measuring the wrong thing.
 TOTAL = sum(expect for _n, _f, expect in COMPONENTS)
-#: The two AppTest components. ``run`` executes each of their 27 node IDs ALONE.
+#: The two AppTest components. ``run`` executes each of their 28 node IDs ALONE.
 APPTEST = ("s8", "qb")
 
 #: Permissive after ``::`` on purpose: a parameterised ID may contain spaces.
@@ -264,9 +271,9 @@ def run(alloc: Callable[[str], str], tmp: str, timeout: float, node_timeout: flo
     """Core as ONE process; each AppTest node ALONE in a fresh process, serially.
 
     Isolating the two AppTest FILES was already measured insufficient: the
-    23-test ``qb`` file builds 23 ``AppTest`` objects in one process, which is
+    24-test ``qb`` file builds 24 ``AppTest`` objects in one process, which is
     the documented cause, so a per-FILE partition leaves the fault intact. This
-    gives each of the 27 AppTest nodes a process that has built exactly one.
+    gives each of the 28 AppTest nodes a process that has built exactly one.
 
     ``--only`` still drives one component per call; the partition above is
     proven in full on every call regardless, and the executed node-ID set is
@@ -316,7 +323,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
                         help="G11 report path per label (g11_evidence.py next)")
     parser.add_argument("--task", default=None, metavar="TASK-ID",
                         help="allocate every report --report does not supply, under "
-                             "this task. Required by `run`: 27 isolated nodes plus "
+                             "this task. Required by `run`: 28 isolated nodes plus "
                              "the collection proof is more paths than a CLI can carry")
     parser.add_argument("--report-root", default=None,
                         help="evidence/g11 root for --task (default: this checkout's). "

@@ -1,0 +1,92 @@
+G11 C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c\docs\pwml_recovery_sprint\evidence\g11\ORCH-769c\40-chunkd-selftest.json
+ok   test_ordinary_passing_summary
+ok   test_failures_and_errors
+ok   test_skips_are_not_passes
+ok   test_xfail_and_xpass_are_not_passes
+ok   test_deselection_is_not_coverage
+ok   test_malformed_or_missing_summary_is_never_an_implicit_zero
+ok   test_trailing_merged_stream_shutdown_noise
+ok   test_timeout_is_a_failure_not_a_silent_pass
+ok   test_nonzero_exit_or_an_unaccounted_child_beats_a_valid_summary
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 84163903d37d3a45d80d81ebf995d6f19000a5ec  [git, worktree dirty=False]
+label                   : chunkd-sel-collect
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -m pytest -q --basetemp=C:\Users\Angad\AppData\Local\Temp\cd_24u9dadh\t/sel-collect --collect-only tests/test_payload_models.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c
+root PID / process group: 850744 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 1.10 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  853840:python.exe
+descendants terminated  : 1  853840
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\AppData\Local\Temp\cd_24u9dadh\r\00-sel-collect.json
+json report written     : True
+pre-existing (reported, NEVER killed): 8
+================================================
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 84163903d37d3a45d80d81ebf995d6f19000a5ec  [git, worktree dirty=False]
+label                   : chunkd-sel-node
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -m pytest -q --basetemp=C:\Users\Angad\AppData\Local\Temp\cd_24u9dadh\t/sel-node tests/test_payload_models.py::test_actor_item_must_be_an_object_at_the_exact_actor_pointer
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c
+root PID / process group: 855100 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 1.06 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  852060:python.exe
+descendants terminated  : 1  852060
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\AppData\Local\Temp\cd_24u9dadh\r\01-sel-node.json
+json report written     : True
+pre-existing (reported, NEVER killed): 8
+================================================
+ok   test_absent_basetemp_parent_and_one_real_isolated_node
+
+10 passed, 0 failed
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 84163903d37d3a45d80d81ebf995d6f19000a5ec  [git, worktree dirty=False]
+label                   : chunkd-selftest
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769c/docs/pwml_recovery_sprint/evidence/chunk_d_gate_selftest.py
+cwd                     : C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769c
+root PID / process group: 855680 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 3.52 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 11  852768:python.exe, 851144:python.exe, 855620:python.exe, 855368:git.exe, 850744:python.exe, 853840:python.exe, 853552:python.exe, 853588:python.exe, 852424:git.exe, 852060:python.exe, 855100:python.exe
+descendants terminated  : 11  850744, 851144, 852060, 852424, 852768, 853552, 853588, 853840, 855100, 855368, 855620
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c\docs\pwml_recovery_sprint\evidence\g11\ORCH-769c\40-chunkd-selftest.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================
+WRAPPER_EXIT 0
