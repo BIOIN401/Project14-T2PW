@@ -1,0 +1,51 @@
+.claude/worktrees/orch767/runs_papers/ORCH-767/legs\chlorophyll-strict\2026-10-23_2328\papers\PMC5130987\strict\LEG_TRACE.jsonl
+  last model attempt at 3759 s
+  preprocessor                       attempts   6  empty-length   0  other-empty   0  ~    97 s
+  Stage 1 extraction                 attempts   7  empty-length   1  other-empty   0  ~  1996 s
+  rag_prose_extraction               attempts  24  empty-length   0  other-empty   0  ~   282 s
+  Stage 2 inference                  attempts   4  empty-length   0  other-empty   0  ~   844 s
+  audit loop                         attempts   1  empty-length   0  other-empty   0  ~   540 s
+.claude/worktrees/orch767/runs_papers/ORCH-767/legs\enterobactin-strict\2026-10-23_2224\papers\PMC12096016\strict\LEG_TRACE.jsonl
+  last model attempt at 3609 s
+  preprocessor                       attempts   6  empty-length   0  other-empty   0  ~   173 s
+  Stage 1 extraction                 attempts   3  empty-length   0  other-empty   0  ~   415 s
+  rag_prose_extraction               attempts  18  empty-length   0  other-empty   0  ~   223 s
+  Stage 2 inference                  attempts   5  empty-length   3  other-empty   0  ~  2468 s
+  audit loop                         attempts   3  empty-length   0  other-empty   0  ~   168 s
+  gap resolver                       attempts   6  empty-length   0  other-empty   0  ~   161 s
+.claude/worktrees/orch767/runs_papers/ORCH-767/legs\menaquinone-strict\2026-10-24_0503\papers\PMC12421875\strict\LEG_TRACE.jsonl
+  last model attempt at 3006 s
+  preprocessor                       attempts   8  empty-length   0  other-empty   0  ~   346 s
+  Stage 1 extraction                 attempts   6  empty-length   0  other-empty   0  ~   709 s
+  rag_prose_extraction               attempts  14  empty-length   0  other-empty   0  ~   148 s
+  Stage 2 inference                  attempts   4  empty-length   0  other-empty   0  ~   880 s
+  gap resolver                       attempts  12  empty-length   0  other-empty   0  ~   419 s
+  chat                               attempts   1  empty-length   0  other-empty   0  ~    51 s
+  audit loop                         attempts   3  empty-length   0  other-empty   0  ~   453 s
+.claude/worktrees/orch767/runs_papers/ORCH-767/legs\sour_taste_v2-strict\2026-10-24_0042\papers\PMC7059786\strict\LEG_TRACE.jsonl
+  last model attempt at 2767 s
+  preprocessor                       attempts   1  empty-length   0  other-empty   0  ~    77 s
+  Stage 1 extraction                 attempts   3  empty-length   0  other-empty   0  ~   316 s
+  rag_prose_extraction               attempts   8  empty-length   0  other-empty   0  ~    39 s
+  Stage 2 inference                  attempts   4  empty-length   2  other-empty   0  ~  1940 s
+  audit loop                         attempts   2  empty-length   0  other-empty   0  ~   395 s
+.claude/worktrees/orch767/runs_papers/ORCH-767/legs\wnt_ca-strict\2026-10-24_0314\papers\PMC10425814\strict\LEG_TRACE.jsonl
+  last model attempt at 6102 s
+  preprocessor                       attempts   1  empty-length   0  other-empty   0  ~    42 s
+  Stage 1 extraction                 attempts  15  empty-length   0  other-empty   0  ~  1734 s
+  rag_prose_extraction               attempts  23  empty-length   0  other-empty   0  ~   487 s
+  Stage 2 inference                  attempts   9  empty-length   1  other-empty   0  ~  2521 s
+  audit loop                         attempts   3  empty-length   0  other-empty   0  ~   604 s
+  gap resolver                       attempts  18  empty-length   0  other-empty   0  ~   495 s
+  chat                               attempts   8  empty-length   0  other-empty   0  ~   219 s
+    LONG/ERROR  Stage 2 inference attempt 1: finish_reason=length chars=0 ~1216 s
+.claude/worktrees/orch767/runs_papers/ORCH-767/legs\wnt_pcp-strict\2026-10-24_0131\papers\PMC10425814\strict\LEG_TRACE.jsonl
+  last model attempt at 5438 s
+  preprocessor                       attempts   1  empty-length   0  other-empty   0  ~   111 s
+  Stage 1 extraction                 attempts  17  empty-length   0  other-empty   0  ~   830 s
+  rag_prose_extraction               attempts  17  empty-length   0  other-empty   0  ~   424 s
+  Stage 2 inference                  attempts   8  empty-length   0  other-empty   0  ~   679 s
+  audit loop                         attempts   4  empty-length   1  other-empty   1  ~  3394 s
+    LONG/ERROR  audit loop attempt 1: finish_reason=length chars=0 ~1410 s
+    LONG/ERROR  audit loop attempt 2: finish_reason=error chars=0 ~1277 s
+TOTAL model attempts 273, long (>= 1200 s) 3, finish_reason=error 1

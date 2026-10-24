@@ -1,0 +1,229 @@
+SUMMARY
+  enterobactin stage1  P 1.000  R 0.800  F1 0.889  matched 4/5  predicted 4 (rows 4, dups collapsed 0)  interactions 9 (not scored)
+  enterobactin final   P 1.000  R 1.000  F1 1.000  matched 5/5  predicted 5 (rows 5, dups collapsed 0)  interactions 10 (not scored)
+                       with R-D092-1 lineage (as report.evaluate): P 1.000  R 1.000  F1 1.000  matched 5/5  predicted 5  classes {'target_paper_supported': 5, 'paper_stated_off_pathway': 0, 'paper_stated_summary': 0, 'name_conflict': 0, 'partial_match': 0, 'external_rag_supported': 0, 'indeterminate_external': 0, 'unsupported': 0}  lineage per row ['target_paper_supported', 'target_paper_supported', 'target_paper_supported', 'target_paper_supported', 'indeterminate']
+  enterobactin pwml    P 1.000  R 1.000  F1 1.000  matched 5/5  predicted 5 (rows 5, dups collapsed 0)  interactions 10, 1 drawn / 9 withheld from the PWML (not scored)
+  menaquinone  stage1  P 1.000  R 1.000  F1 1.000  matched 9/9  predicted 12 (rows 21, dups collapsed 9)  interactions 3 (not scored)
+  menaquinone  final   P 1.000  R 1.000  F1 1.000  matched 9/9  predicted 10 (rows 19, dups collapsed 9)  interactions 1 (not scored)
+                       with R-D092-1 lineage (as report.evaluate): P 1.000  R 1.000  F1 1.000  matched 9/9  predicted 10  classes {'target_paper_supported': 10, 'paper_stated_off_pathway': 0, 'paper_stated_summary': 0, 'name_conflict': 0, 'partial_match': 0, 'external_rag_supported': 0, 'indeterminate_external': 0, 'unsupported': 0}  lineage per row ['target_paper_supported', 'target_paper_supported', 'target_paper_supported', 'target_paper_supported', 'target_paper_supported', 'target_paper_supported', 'target_paper_supported', 'target_paper_supported', 'target_paper_supported', 'target_paper_supported', 'target_paper_supported', 'target_paper_supported', 'target_paper_supported', 'target_paper_supported', 'target_paper_supported', 'target_paper_supported', 'target_paper_supported', 'target_paper_supported', 'target_paper_supported']
+  menaquinone  pwml    NOT WRITTEN (no PWML, no pwml_ir.json)
+
+ORCH-759p gold accuracy: legs under runs_papers\ORCH-759p\legs, three levels, eval-v2 score_leg
+reference tables (committed at HEAD): {'data/id_mapping_cache.json': '02b18edd9e83be2720019f449fd3608496eb0232', 'data/enrichment_cache.json': 'a84eb2202741f4a0d66de1f4001e5c2157958dbf', 'data/pathwhiz_id_db.json': '75d2e5f4a1a8c794264c1dad891594778f5b033d'}
+
+=== enterobactin PMC12096016  gold: 5 certified in-scope reactions (+4 off-pathway, 2 summaries)
+leg candidates: ['runs_papers\\ORCH-759p\\legs\\enterobactin-strict\\2026-10-22_2101\\papers\\PMC12096016\\strict']
+scored leg (newest with a PWML): runs_papers\ORCH-759p\legs\enterobactin-strict\2026-10-22_2101\papers\PMC12096016\strict
+PWML: pathway.review_required.pwml; paper text C:\t\eval-fulltext/PMC12096016.txt sha256 matches gold text_sha256 b7d583c0835c64cb
+PWML cross-check: IR rows found in the PWML 5/5; PWML reactions with no IR row 0
+   IR rxn_1 in PWML: EntC isochorismate synthase reaction
+   IR rxn_2 in PWML: EntB isochorismatase reaction
+   IR rxn_3 in PWML: EntA 2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase reaction
+   IR rxn_4 in PWML: EntE adenylation reaction
+   IR rxn_5 in PWML: EntF enterobactin synthase assembly reaction
+baseline: ORCH-747 round 4 per-draw recall (ORCH-747-RESULT.md section 12): control 5,5,4,5,5 /5; ORCH-751 3-draw union (ORCH-751-RESULT.md section 2.1): 4/5 (per draw 4,4,4)
+Stage-1 ensemble report: runs_papers\ORCH-759p\REVIEW\enterobactin\strict\stage1_ensemble_report.json (1 block(s), pooled reactions per block [4])
+
+--- level 1 stage1 (stage1_payload.json)
+enterobactin stage1  P 1.000  R 0.800  F1 0.889  matched 4/5  predicted 4 (rows 4, dups collapsed 0)  interactions 9 (not scored)
+row classes: {'target_paper_supported': 4, 'paper_stated_off_pathway': 0, 'paper_stated_summary': 0, 'name_conflict': 0, 'partial_match': 0, 'external_rag_supported': 0, 'indeterminate_external': 0, 'unsupported': 0}
+transports (not scored): 1
+gold reactions:
+  R1 MATCHED  EntC: chorismate <-> isochorismate [EntC]: chorismate <-> isochorismate
+      by row 0 'EntC isochorismate synthase reaction': chorismate -> isochorismate  enzymes ['EntC'] enzyme_verdict correct  [support 3/3 draws [1, 2, 3]; lock rxn_lock_003; state 'cytoplasmic state'; lineage ['paper_extraction']]
+  R2 MATCHED  EntB isochorismatase: isochorismate -> 2,3-diDHB + pyruvate [EntB]: isochorismate -> 2,3-dihydro-2,3-dihydroxybenzoate + pyruvate
+      by row 1 'EntB isochorismatase reaction': isochorismate -> 2,3-dihydro-2,3-dihydroxybenzoate + pyruvate  enzymes ['EntB'] enzyme_verdict correct  [support 3/3 draws [1, 2, 3]; lock rxn_lock_002; state 'cytoplasmic state'; lineage ['paper_extraction']]
+  R3 MATCHED  EntA: 2,3-diDHB -> 2,3-DHB [EntA]: 2,3-dihydro-2,3-dihydroxybenzoate -> 2,3-dihydroxybenzoic acid
+      by row 2 'EntA 2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase reaction': 2,3-dihydro-2,3-dihydroxybenzoate -> 2,3-dihydroxybenzoic acid  enzymes ['EntA'] enzyme_verdict correct  [support 3/3 draws [1, 2, 3]; lock rxn_lock_001; state 'cytoplasmic state'; lineage ['paper_extraction']]
+  R4 MATCHED  EntE: 2,3-DHB + ATP -> 2,3-dihydroxybenzoyl-AMP [EntE]: 2,3-dihydroxybenzoic acid + ATP [cof] -> 2,3-dihydroxybenzoyl-AMP
+      by row 3 'EntE adenylation reaction': 2,3-dihydroxybenzoic acid + ATP -> 2,3-dihydroxybenzoyl-AMP  enzymes ['EntE'] enzyme_verdict correct  [support 1/3 draws [2]; lock rxn_lock_004; state 'cytoplasmic state'; lineage ['paper_extraction']]
+  R5 missed   EntF: activated 2,3-DHB + L-serine -> enterobactin [EntF]: 2,3-dihydroxybenzoic acid + L-serine -> enterobactin
+unmatched / non-TP rows (0):
+name conflicts for hand review: none
+minor cofactors missing on matched reactions: none
+entity accuracy: substrate 4/6  product 5/6  enzyme 1.000 {'correct': 4, 'reaction_not_matched': 1}  species {'correct': 4}
+evidence verdicts (vs pinned gold text): {'verbatim_in_paper': 3, 'not_in_paper': 1}
+old lenient matcher, same rows: recall 0.800  disagreements none
+
+--- level 2 final (final_mapped.json)
+enterobactin final   P 1.000  R 1.000  F1 1.000  matched 5/5  predicted 5 (rows 5, dups collapsed 0)  interactions 10 (not scored)
+row classes: {'target_paper_supported': 5, 'paper_stated_off_pathway': 0, 'paper_stated_summary': 0, 'name_conflict': 0, 'partial_match': 0, 'external_rag_supported': 0, 'indeterminate_external': 0, 'unsupported': 0}
+transports (not scored): 1
+with R-D092-1 lineage (as report.evaluate): P 1.000  R 1.000  F1 1.000  matched 5/5  predicted 5  classes {'target_paper_supported': 5, 'paper_stated_off_pathway': 0, 'paper_stated_summary': 0, 'name_conflict': 0, 'partial_match': 0, 'external_rag_supported': 0, 'indeterminate_external': 0, 'unsupported': 0}  lineage per row ['target_paper_supported', 'target_paper_supported', 'target_paper_supported', 'target_paper_supported', 'indeterminate']
+gold reactions:
+  R1 MATCHED  EntC: chorismate <-> isochorismate [EntC]: chorismate <-> isochorismate
+      by row 0 'EntC isochorismate synthase reaction': chorismate -> isochorismate  enzymes ['Isochorismate synthase'] enzyme_verdict correct  [support 3/3 draws [1, 2, 3]; lock rxn_lock_003; state 'cytoplasmic state'; lineage ['paper_extraction']]
+  R2 MATCHED  EntB isochorismatase: isochorismate -> 2,3-diDHB + pyruvate [EntB]: isochorismate -> 2,3-dihydro-2,3-dihydroxybenzoate + pyruvate
+      by row 1 'EntB isochorismatase reaction': isochorismate -> 2,3-dihydro-2,3-dihydroxybenzoate + pyruvate  enzymes ['isochorismatase'] enzyme_verdict correct  [support 3/3 draws [1, 2, 3]; lock rxn_lock_002; state 'cytoplasmic state'; lineage ['paper_extraction']]
+  R3 MATCHED  EntA: 2,3-diDHB -> 2,3-DHB [EntA]: 2,3-dihydro-2,3-dihydroxybenzoate -> 2,3-dihydroxybenzoic acid
+      by row 2 'EntA 2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase reaction': 2,3-dihydro-2,3-dihydroxybenzoate -> 2,3-dihydroxybenzoic acid  enzymes ['oxidoreductase (entA)'] enzyme_verdict correct  [support 3/3 draws [1, 2, 3]; lock rxn_lock_001; state 'cytoplasmic state'; lineage ['paper_extraction']]
+  R4 MATCHED  EntE: 2,3-DHB + ATP -> 2,3-dihydroxybenzoyl-AMP [EntE]: 2,3-dihydroxybenzoic acid + ATP [cof] -> 2,3-dihydroxybenzoyl-AMP
+      by row 3 'EntE adenylation reaction': 2,3-dihydroxybenzoic acid + Adenosine triphosphate -> 2,3-dihydroxybenzoyl-AMP  enzymes ['EntE complex'] enzyme_verdict correct  [support 1/3 draws [2]; lock rxn_lock_004; state 'cytoplasmic state'; lineage ['paper_extraction']]
+  R5 MATCHED  EntF: activated 2,3-DHB + L-serine -> enterobactin [EntF]: 2,3-dihydroxybenzoic acid + L-serine -> enterobactin
+      by row 4 'EntF enterobactin synthase assembly reaction': 2,3-dihydroxybenzoyl-AMP + L-serine -> enterobactin  enzymes ['EntF complex', 'EntE complex'] enzyme_verdict correct  [not a pooled Stage-1 row (no lock id); lock None; state 'cytoplasmic state'; lineage []]
+unmatched / non-TP rows (0):
+name conflicts for hand review: none
+minor cofactors missing on matched reactions: none
+entity accuracy: substrate 6/6  product 6/6  enzyme 1.000 {'correct': 5}  species {'correct': 5}
+evidence verdicts (vs pinned gold text): {'verbatim_in_paper': 4, 'not_in_paper': 1}
+old lenient matcher, same rows: recall 1.000  disagreements none
+identifier checks: 21 entities {'correct_identity': 17, 'unresolved_or_novel': 4}  resting on mapper cache only {'correct_identity': 6}
+
+--- level 3 pwml (pwml_ir.json rows drawn in the PWML)
+enterobactin pwml    P 1.000  R 1.000  F1 1.000  matched 5/5  predicted 5 (rows 5, dups collapsed 0)  interactions 10, 1 drawn / 9 withheld from the PWML (not scored)
+row classes: {'target_paper_supported': 5, 'paper_stated_off_pathway': 0, 'paper_stated_summary': 0, 'name_conflict': 0, 'partial_match': 0, 'external_rag_supported': 0, 'indeterminate_external': 0, 'unsupported': 0}
+transports (not scored): 1
+gold reactions:
+  R1 MATCHED  EntC: chorismate <-> isochorismate [EntC]: chorismate <-> isochorismate
+      by row 0 'EntC isochorismate synthase reaction': chorismate -> isochorismate  enzymes ['Isochorismate synthase'] enzyme_verdict correct
+  R2 MATCHED  EntB isochorismatase: isochorismate -> 2,3-diDHB + pyruvate [EntB]: isochorismate -> 2,3-dihydro-2,3-dihydroxybenzoate + pyruvate
+      by row 1 'EntB isochorismatase reaction': isochorismate -> 2,3-dihydro-2,3-dihydroxybenzoate + pyruvate  enzymes ['isochorismatase'] enzyme_verdict correct
+  R3 MATCHED  EntA: 2,3-diDHB -> 2,3-DHB [EntA]: 2,3-dihydro-2,3-dihydroxybenzoate -> 2,3-dihydroxybenzoic acid
+      by row 2 'EntA 2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase reaction': 2,3-dihydro-2,3-dihydroxybenzoate -> 2,3-dihydroxybenzoic acid  enzymes ['oxidoreductase (entA)'] enzyme_verdict correct
+  R4 MATCHED  EntE: 2,3-DHB + ATP -> 2,3-dihydroxybenzoyl-AMP [EntE]: 2,3-dihydroxybenzoic acid + ATP [cof] -> 2,3-dihydroxybenzoyl-AMP
+      by row 3 'EntE adenylation reaction': 2,3-dihydroxybenzoic acid + Adenosine triphosphate -> 2,3-dihydroxybenzoyl-AMP  enzymes ['EntE complex'] enzyme_verdict correct
+  R5 MATCHED  EntF: activated 2,3-DHB + L-serine -> enterobactin [EntF]: 2,3-dihydroxybenzoic acid + L-serine -> enterobactin
+      by row 4 'EntF enterobactin synthase assembly reaction': 2,3-dihydroxybenzoyl-AMP + L-serine -> enterobactin  enzymes ['EntF complex', 'EntE complex'] enzyme_verdict correct
+unmatched / non-TP rows (0):
+name conflicts for hand review: none
+minor cofactors missing on matched reactions: none
+entity accuracy: substrate 6/6  product 6/6  enzyme 1.000 {'correct': 5}  species {'correct': 5}
+evidence verdicts (vs pinned gold text): {'verbatim_in_paper': 4, 'not_in_paper': 1}
+old lenient matcher, same rows: recall 1.000  disagreements none
+identifier checks: 21 entities {'correct_identity': 17, 'unresolved_or_novel': 4}  resting on mapper cache only {'correct_identity': 13}
+
+READER NOTES (ORCH-759p test-runner reading of the leg artifacts, not evaluator output):
+
+=== menaquinone PMC12421875  gold: 9 certified in-scope reactions (+3 off-pathway, 1 summaries)
+leg candidates: ['runs_papers\\ORCH-759p\\legs\\menaquinone-strict\\2026-10-22_2154\\papers\\PMC12421875\\strict']
+scored leg (newest with a Stage-1 payload; NO PWML written): runs_papers\ORCH-759p\legs\menaquinone-strict\2026-10-22_2154\papers\PMC12421875\strict
+PWML: none written; paper text C:\t\eval-fulltext/PMC12421875.txt sha256 matches gold text_sha256 3c5635652c3e8c00
+baseline: ORCH-747 round 4 per-draw recall (ORCH-747-RESULT.md section 12): 4,7,4,9,7 /9; ORCH-751 3-draw union (ORCH-751-RESULT.md section 2.1): 9/9 (per draw 2,9,7)
+Stage-1 ensemble report: runs_papers\ORCH-759p\REVIEW\menaquinone\strict\stage1_ensemble_report.json (2 block(s), pooled reactions per block [21, 0])
+
+--- level 1 stage1 (stage1_payload.json)
+menaquinone  stage1  P 1.000  R 1.000  F1 1.000  matched 9/9  predicted 12 (rows 21, dups collapsed 9)  interactions 3 (not scored)
+row classes: {'target_paper_supported': 12, 'paper_stated_off_pathway': 0, 'paper_stated_summary': 0, 'name_conflict': 0, 'partial_match': 0, 'external_rag_supported': 0, 'indeterminate_external': 0, 'unsupported': 0}
+transports (not scored): 2
+gold reactions:
+  R1 MATCHED  MenF: chorismate <-> isochorismate [MenF]: chorismate <-> isochorismate
+      by row 0 'MenF-catalyzed conversion of chorismate to isochorismate': chorismate -> isochorismate  enzymes ['MenF'] enzyme_verdict correct  [support 2/3 draws [1, 2]; lock rxn_lock_013; state 'L. lactis KF147 state'; lineage ['paper_extraction']]
+      by row 9 'isochorismate to chorismate': isochorismate -> chorismate  enzymes ['MenF'] enzyme_verdict correct  [support 1/3 draws [2]; lock rxn_lock_021; state None; lineage ['paper_extraction']]
+      by row 12 'MenF reaction': chorismate -> isochorismate  enzymes ['MenF'] enzyme_verdict correct  DUPLICATE of 0  [support 1/3 draws [3]; lock rxn_lock_012; state 'Lactococcus lactis intracellular state'; lineage ['paper_extraction']]
+  R2 MATCHED  MenD: isochorismate -> SEPHCHC [MenD]: isochorismate -> SEPHCHC
+      by row 1 'MenD-catalyzed conversion of isochorismate to SEPHCHC': isochorismate -> 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate  enzymes ['MenD'] enzyme_verdict correct  [support 2/3 draws [1, 2]; lock rxn_lock_009; state 'L. lactis KF147 state'; lineage ['paper_extraction']]
+      by row 13 'MenD reaction': isochorismate -> 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate  enzymes ['MenD'] enzyme_verdict correct  DUPLICATE of 1  [support 1/3 draws [3]; lock rxn_lock_008; state 'Lactococcus lactis intracellular state'; lineage ['paper_extraction']]
+  R3 MATCHED  MenH: SEPHCHC -> SHCHC [MenH]: SEPHCHC -> SHCHC
+      by row 2 'MenH-catalyzed conversion of SEPHCHC to SHCHC': 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate -> SHCHC  enzymes ['MenH'] enzyme_verdict correct  [support 2/3 draws [1, 2]; lock rxn_lock_017; state 'L. lactis KF147 state'; lineage ['paper_extraction']]
+      by row 14 'MenH reaction': 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate -> SHCHC  enzymes ['MenH'] enzyme_verdict correct  DUPLICATE of 2  [support 1/3 draws [3]; lock rxn_lock_016; state 'Lactococcus lactis intracellular state'; lineage ['paper_extraction']]
+  R4 MATCHED  MenC: SHCHC -> OSB [MenC]: SHCHC -> OSB
+      by row 3 'MenC-catalyzed conversion of SHCHC to OSB': SHCHC -> OSB  enzymes ['MenC'] enzyme_verdict correct  [support 2/3 draws [1, 2]; lock rxn_lock_007; state 'L. lactis KF147 state'; lineage ['paper_extraction']]
+      by row 15 'MenC reaction': SHCHC -> OSB  enzymes ['MenC'] enzyme_verdict correct  DUPLICATE of 3  [support 1/3 draws [3]; lock rxn_lock_006; state 'Lactococcus lactis intracellular state'; lineage ['paper_extraction']]
+  R5 MATCHED  MenE: OSB -> OSB-CoA [MenE]: OSB -> OSB-CoA
+      by row 4 'MenE-catalyzed conversion of OSB to OSB-CoA': OSB -> OSB-CoA  enzymes ['MenE'] enzyme_verdict correct  [support 2/3 draws [1, 2]; lock rxn_lock_011; state 'L. lactis KF147 state'; lineage ['paper_extraction']]
+      by row 16 'MenE reaction': OSB -> OSB-CoA  enzymes ['MenE'] enzyme_verdict correct  DUPLICATE of 4  [support 1/3 draws [3]; lock rxn_lock_010; state 'Lactococcus lactis intracellular state'; lineage ['paper_extraction']]
+  R6 MATCHED  MenB: OSB-CoA -> DHNA-CoA [MenB]: OSB-CoA -> DHNA-CoA
+      by row 5 'MenB-catalyzed conversion of OSB-CoA to DHNA-CoA': OSB-CoA -> DHNA-CoA  enzymes ['MenB'] enzyme_verdict correct  [support 2/3 draws [1, 2]; lock rxn_lock_005; state 'L. lactis KF147 state'; lineage ['paper_extraction']]
+      by row 17 'MenB reaction': OSB-CoA -> DHNA-CoA  enzymes ['MenB'] enzyme_verdict correct  DUPLICATE of 5  [support 1/3 draws [3]; lock rxn_lock_004; state 'Lactococcus lactis intracellular state'; lineage ['paper_extraction']]
+  R7 MATCHED  MenI: DHNA-CoA -> DHNA [MenI]: DHNA-CoA -> DHNA
+      by row 6 'MenI-catalyzed conversion of DHNA-CoA to DHNA': DHNA-CoA -> 1,4-dihydroxy-2-naphthoic acid  enzymes ['MenI'] enzyme_verdict correct  [support 2/3 draws [1, 2]; lock rxn_lock_019; state 'L. lactis KF147 state'; lineage ['paper_extraction']]
+      by row 18 'MenI reaction': DHNA-CoA -> 1,4-dihydroxy-2-naphthoic acid  enzymes ['MenI'] enzyme_verdict correct  DUPLICATE of 6  [support 1/3 draws [3]; lock rxn_lock_018; state 'Lactococcus lactis intracellular state'; lineage ['paper_extraction']]
+  R8 MATCHED  MenA: DHNA + prenyl diphosphate -> DMK [MenA]: DHNA + prenyl diphosphate -> demethylmenaquinone
+      by row 7 'MenA-catalyzed formation of DMK': 1,4-dihydroxy-2-naphthoic acid + prenyl diphosphate -> DMK  enzymes ['MenA'] enzyme_verdict correct  [support 1/3 draws [1]; lock rxn_lock_003; state 'L. lactis KF147 state'; lineage ['paper_extraction']]
+      by row 10 'DHNA and prenyl diphosphate to demethylmenaquinone': 1,4-dihydroxy-2-naphthoic acid + prenyl diphosphate -> demethylmenaquinone (DMK)  enzymes ['MenA'] enzyme_verdict correct  [support 1/3 draws [2]; lock rxn_lock_001; state None; lineage ['paper_extraction']]
+      by row 19 'MenA reaction': 1,4-dihydroxy-2-naphthoic acid + prenyl diphosphate -> DMK  enzymes ['MenA'] enzyme_verdict correct  DUPLICATE of 7  [support 1/3 draws [3]; lock rxn_lock_002; state 'Lactococcus lactis intracellular state'; lineage ['paper_extraction']]
+  R9 MATCHED  MenG: DMK -> MK [MenG]: demethylmenaquinone -> menaquinone
+      by row 8 'MenG-catalyzed demethylation of DMK to MK': DMK -> MK  enzymes ['MenG'] enzyme_verdict correct  [support 1/3 draws [1]; lock rxn_lock_015; state 'L. lactis KF147 state'; lineage ['paper_extraction']]
+      by row 11 'demethylmenaquinone to menaquinone': demethylmenaquinone (DMK) -> menaquinone (MK)  enzymes ['MenG'] enzyme_verdict correct  [support 1/3 draws [2]; lock rxn_lock_020; state None; lineage ['paper_extraction']]
+      by row 20 'MenG reaction': DMK -> MK  enzymes ['MenG'] enzyme_verdict correct  DUPLICATE of 8  [support 1/3 draws [3]; lock rxn_lock_014; state 'Lactococcus lactis intracellular state'; lineage ['paper_extraction']]
+unmatched / non-TP rows (9):
+  row 12 [DUPLICATE of row 0] gold_ids ['R1'] 'MenF reaction': chorismate -> isochorismate  enzymes ['MenF']  evidence verbatim_in_paper  [support 1/3 draws [3]; lock rxn_lock_012; state 'Lactococcus lactis intracellular state'; lineage ['paper_extraction']]
+      quote: The enzyme MenF catalyzes a reversible reaction converting chorismate (A) to isochorismate (B)
+  row 13 [DUPLICATE of row 1] gold_ids ['R2'] 'MenD reaction': isochorismate -> 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate  enzymes ['MenD']  evidence verbatim_in_paper  [support 1/3 draws [3]; lock rxn_lock_008; state 'Lactococcus lactis intracellular state'; lineage ['paper_extraction']]
+      quote: MenD facilitates the conversion of isochorismate (B) to 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC, C)
+  row 14 [DUPLICATE of row 2] gold_ids ['R3'] 'MenH reaction': 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate -> SHCHC  enzymes ['MenH']  evidence verbatim_in_paper  [support 1/3 draws [3]; lock rxn_lock_016; state 'Lactococcus lactis intracellular state'; lineage ['paper_extraction']]
+      quote: MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA.
+  row 15 [DUPLICATE of row 3] gold_ids ['R4'] 'MenC reaction': SHCHC -> OSB  enzymes ['MenC']  evidence verbatim_in_paper  [support 1/3 draws [3]; lock rxn_lock_006; state 'Lactococcus lactis intracellular state'; lineage ['paper_extraction']]
+      quote: The o-succinylbenzoate synthase MenC catalyzes one of the intermediate reactions
+  row 16 [DUPLICATE of row 4] gold_ids ['R5'] 'MenE reaction': OSB -> OSB-CoA  enzymes ['MenE']  evidence verbatim_in_paper  [support 1/3 draws [3]; lock rxn_lock_010; state 'Lactococcus lactis intracellular state'; lineage ['paper_extraction']]
+      quote: MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA.
+  row 17 [DUPLICATE of row 5] gold_ids ['R6'] 'MenB reaction': OSB-CoA -> DHNA-CoA  enzymes ['MenB']  evidence verbatim_in_paper  [support 1/3 draws [3]; lock rxn_lock_004; state 'Lactococcus lactis intracellular state'; lineage ['paper_extraction']]
+      quote: MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA.
+  row 18 [DUPLICATE of row 6] gold_ids ['R7'] 'MenI reaction': DHNA-CoA -> 1,4-dihydroxy-2-naphthoic acid  enzymes ['MenI']  evidence verbatim_in_paper  [support 1/3 draws [3]; lock rxn_lock_018; state 'Lactococcus lactis intracellular state'; lineage ['paper_extraction']]
+      quote: MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA.
+  row 19 [DUPLICATE of row 7] gold_ids ['R8'] 'MenA reaction': 1,4-dihydroxy-2-naphthoic acid + prenyl diphosphate -> DMK  enzymes ['MenA']  evidence verbatim_in_paper  [support 1/3 draws [3]; lock rxn_lock_002; state 'Lactococcus lactis intracellular state'; lineage ['paper_extraction']]
+      quote: MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK)
+  row 20 [DUPLICATE of row 8] gold_ids ['R9'] 'MenG reaction': DMK -> MK  enzymes ['MenG']  evidence verbatim_in_paper  [support 1/3 draws [3]; lock rxn_lock_014; state 'Lactococcus lactis intracellular state'; lineage ['paper_extraction']]
+      quote: MenG demethylates DMK to generate MK
+name conflicts for hand review: none
+minor cofactors missing on matched reactions: none
+entity accuracy: substrate 10/10  product 9/9  enzyme 1.000 {'correct': 9}  species {'correct': 9, 'unknown': 3}
+evidence verdicts (vs pinned gold text): {'verbatim_in_paper': 8, 'dump_only': 4}
+old lenient matcher, same rows: recall 1.000  disagreements none
+
+--- level 2 final (final_mapped.json)
+menaquinone  final   P 1.000  R 1.000  F1 1.000  matched 9/9  predicted 10 (rows 19, dups collapsed 9)  interactions 1 (not scored)
+row classes: {'target_paper_supported': 10, 'paper_stated_off_pathway': 0, 'paper_stated_summary': 0, 'name_conflict': 0, 'partial_match': 0, 'external_rag_supported': 0, 'indeterminate_external': 0, 'unsupported': 0}
+transports (not scored): 2
+with R-D092-1 lineage (as report.evaluate): P 1.000  R 1.000  F1 1.000  matched 9/9  predicted 10  classes {'target_paper_supported': 10, 'paper_stated_off_pathway': 0, 'paper_stated_summary': 0, 'name_conflict': 0, 'partial_match': 0, 'external_rag_supported': 0, 'indeterminate_external': 0, 'unsupported': 0}  lineage per row ['target_paper_supported', 'target_paper_supported', 'target_paper_supported', 'target_paper_supported', 'target_paper_supported', 'target_paper_supported', 'target_paper_supported', 'target_paper_supported', 'target_paper_supported', 'target_paper_supported', 'target_paper_supported', 'target_paper_supported', 'target_paper_supported', 'target_paper_supported', 'target_paper_supported', 'target_paper_supported', 'target_paper_supported', 'target_paper_supported', 'target_paper_supported']
+gold reactions:
+  R1 MATCHED  MenF: chorismate <-> isochorismate [MenF]: chorismate <-> isochorismate
+      by row 0 'MenF-catalyzed conversion of chorismate to isochorismate': chorismate -> isochorismate  enzymes ['MenF complex'] enzyme_verdict correct  [support 2/3 draws [1, 2]; lock rxn_lock_013; state 'L. lactis KF147 state'; lineage ['paper_extraction']]
+      by row 9 'isochorismate to chorismate': isochorismate -> chorismate  enzymes ['MenF complex'] enzyme_verdict correct  [support 1/3 draws [2]; lock rxn_lock_021; state None; lineage ['paper_extraction']]
+      by row 10 'MenF reaction': chorismate -> isochorismate  enzymes ['MenF complex'] enzyme_verdict correct  DUPLICATE of 0  [support 1/3 draws [3]; lock rxn_lock_012; state 'Lactococcus lactis intracellular state'; lineage ['paper_extraction']]
+  R2 MATCHED  MenD: isochorismate -> SEPHCHC [MenD]: isochorismate -> SEPHCHC
+      by row 1 'MenD-catalyzed conversion of isochorismate to SEPHCHC': isochorismate -> 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate  enzymes ['MenD complex'] enzyme_verdict correct  [support 2/3 draws [1, 2]; lock rxn_lock_009; state 'L. lactis KF147 state'; lineage ['paper_extraction']]
+      by row 11 'MenD reaction': isochorismate -> 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate  enzymes ['MenD complex'] enzyme_verdict correct  DUPLICATE of 1  [support 1/3 draws [3]; lock rxn_lock_008; state 'Lactococcus lactis intracellular state'; lineage ['paper_extraction']]
+  R3 MATCHED  MenH: SEPHCHC -> SHCHC [MenH]: SEPHCHC -> SHCHC
+      by row 2 'MenH-catalyzed conversion of SEPHCHC to SHCHC': 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate -> SHCHC  enzymes ['MenH complex'] enzyme_verdict correct  [support 2/3 draws [1, 2]; lock rxn_lock_017; state 'L. lactis KF147 state'; lineage ['paper_extraction']]
+      by row 12 'MenH reaction': 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate -> SHCHC  enzymes ['MenH complex'] enzyme_verdict correct  DUPLICATE of 2  [support 1/3 draws [3]; lock rxn_lock_016; state 'Lactococcus lactis intracellular state'; lineage ['paper_extraction']]
+  R4 MATCHED  MenC: SHCHC -> OSB [MenC]: SHCHC -> OSB
+      by row 3 'MenC-catalyzed conversion of SHCHC to OSB': SHCHC -> OSB  enzymes ['MenC complex'] enzyme_verdict correct  [support 2/3 draws [1, 2]; lock rxn_lock_007; state 'L. lactis KF147 state'; lineage ['paper_extraction']]
+      by row 13 'MenC reaction': SHCHC -> OSB  enzymes ['MenC complex'] enzyme_verdict correct  DUPLICATE of 3  [support 1/3 draws [3]; lock rxn_lock_006; state 'Lactococcus lactis intracellular state'; lineage ['paper_extraction']]
+  R5 MATCHED  MenE: OSB -> OSB-CoA [MenE]: OSB -> OSB-CoA
+      by row 4 'MenE-catalyzed conversion of OSB to OSB-CoA': OSB -> OSB-CoA  enzymes ['MenE complex'] enzyme_verdict correct  [support 2/3 draws [1, 2]; lock rxn_lock_011; state 'L. lactis KF147 state'; lineage ['paper_extraction']]
+      by row 14 'MenE reaction': OSB -> OSB-CoA  enzymes ['MenE complex'] enzyme_verdict correct  DUPLICATE of 4  [support 1/3 draws [3]; lock rxn_lock_010; state 'Lactococcus lactis intracellular state'; lineage ['paper_extraction']]
+  R6 MATCHED  MenB: OSB-CoA -> DHNA-CoA [MenB]: OSB-CoA -> DHNA-CoA
+      by row 5 'MenB-catalyzed conversion of OSB-CoA to DHNA-CoA': OSB-CoA -> DHNA-CoA  enzymes ['MenB complex', 'MenD complex'] enzyme_verdict correct  [support 2/3 draws [1, 2]; lock rxn_lock_005; state 'L. lactis KF147 state'; lineage ['paper_extraction']]
+      by row 15 'MenB reaction': OSB-CoA -> DHNA-CoA  enzymes ['MenB complex'] enzyme_verdict correct  DUPLICATE of 5  [support 1/3 draws [3]; lock rxn_lock_004; state 'Lactococcus lactis intracellular state'; lineage ['paper_extraction']]
+  R7 MATCHED  MenI: DHNA-CoA -> DHNA [MenI]: DHNA-CoA -> DHNA
+      by row 6 'MenI-catalyzed conversion of DHNA-CoA to DHNA': DHNA-CoA -> 1,4-dihydroxy-2-naphthoic acid  enzymes ['MenI'] enzyme_verdict correct  [support 2/3 draws [1, 2]; lock rxn_lock_019; state 'L. lactis KF147 state'; lineage ['paper_extraction']]
+      by row 16 'MenI reaction': DHNA-CoA -> 1,4-dihydroxy-2-naphthoic acid  enzymes ['MenI'] enzyme_verdict correct  DUPLICATE of 6  [support 1/3 draws [3]; lock rxn_lock_018; state 'Lactococcus lactis intracellular state'; lineage ['paper_extraction']]
+  R8 MATCHED  MenA: DHNA + prenyl diphosphate -> DMK [MenA]: DHNA + prenyl diphosphate -> demethylmenaquinone
+      by row 7 'DHNA and prenyl diphosphate to demethylmenaquinone': 1,4-dihydroxy-2-naphthoic acid + prenyl diphosphate -> DMK  enzymes ['MenA'] enzyme_verdict correct  [support 1/3 draws [2]; lock rxn_lock_001; state 'L. lactis KF147 state'; lineage ['paper_extraction']]
+      by row 17 'MenA reaction': 1,4-dihydroxy-2-naphthoic acid + prenyl diphosphate -> DMK  enzymes ['MenA'] enzyme_verdict correct  DUPLICATE of 7  [support 1/3 draws [3]; lock rxn_lock_002; state 'Lactococcus lactis intracellular state'; lineage ['paper_extraction']]
+  R9 MATCHED  MenG: DMK -> MK [MenG]: demethylmenaquinone -> menaquinone
+      by row 8 'MenG-catalyzed demethylation of DMK to MK': DMK -> MK  enzymes ['MenG complex'] enzyme_verdict correct  [support 1/3 draws [1]; lock rxn_lock_015; state 'L. lactis KF147 state'; lineage ['paper_extraction']]
+      by row 18 'MenG reaction': DMK -> MK  enzymes ['MenG complex'] enzyme_verdict correct  DUPLICATE of 8  [support 1/3 draws [3]; lock rxn_lock_014; state 'Lactococcus lactis intracellular state'; lineage ['paper_extraction']]
+unmatched / non-TP rows (9):
+  row 10 [DUPLICATE of row 0] gold_ids ['R1'] 'MenF reaction': chorismate -> isochorismate  enzymes ['MenF complex']  evidence verbatim_in_paper  [support 1/3 draws [3]; lock rxn_lock_012; state 'Lactococcus lactis intracellular state'; lineage ['paper_extraction']]
+      quote: The enzyme MenF catalyzes a reversible reaction converting chorismate (A) to isochorismate (B)
+  row 11 [DUPLICATE of row 1] gold_ids ['R2'] 'MenD reaction': isochorismate -> 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate  enzymes ['MenD complex']  evidence verbatim_in_paper  [support 1/3 draws [3]; lock rxn_lock_008; state 'Lactococcus lactis intracellular state'; lineage ['paper_extraction']]
+      quote: MenD facilitates the conversion of isochorismate (B) to 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC, C)
+  row 12 [DUPLICATE of row 2] gold_ids ['R3'] 'MenH reaction': 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate -> SHCHC  enzymes ['MenH complex']  evidence verbatim_in_paper  [support 1/3 draws [3]; lock rxn_lock_016; state 'Lactococcus lactis intracellular state'; lineage ['paper_extraction']]
+      quote: MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA.
+  row 13 [DUPLICATE of row 3] gold_ids ['R4'] 'MenC reaction': SHCHC -> OSB  enzymes ['MenC complex']  evidence verbatim_in_paper  [support 1/3 draws [3]; lock rxn_lock_006; state 'Lactococcus lactis intracellular state'; lineage ['paper_extraction']]
+      quote: The o-succinylbenzoate synthase MenC catalyzes one of the intermediate reactions
+  row 14 [DUPLICATE of row 4] gold_ids ['R5'] 'MenE reaction': OSB -> OSB-CoA  enzymes ['MenE complex']  evidence verbatim_in_paper  [support 1/3 draws [3]; lock rxn_lock_010; state 'Lactococcus lactis intracellular state'; lineage ['paper_extraction']]
+      quote: MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA.
+  row 15 [DUPLICATE of row 5] gold_ids ['R6'] 'MenB reaction': OSB-CoA -> DHNA-CoA  enzymes ['MenB complex']  evidence verbatim_in_paper  [support 1/3 draws [3]; lock rxn_lock_004; state 'Lactococcus lactis intracellular state'; lineage ['paper_extraction']]
+      quote: MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA.
+  row 16 [DUPLICATE of row 6] gold_ids ['R7'] 'MenI reaction': DHNA-CoA -> 1,4-dihydroxy-2-naphthoic acid  enzymes ['MenI']  evidence verbatim_in_paper  [support 1/3 draws [3]; lock rxn_lock_018; state 'Lactococcus lactis intracellular state'; lineage ['paper_extraction']]
+      quote: MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA.
+  row 17 [DUPLICATE of row 7] gold_ids ['R8'] 'MenA reaction': 1,4-dihydroxy-2-naphthoic acid + prenyl diphosphate -> DMK  enzymes ['MenA']  evidence verbatim_in_paper  [support 1/3 draws [3]; lock rxn_lock_002; state 'Lactococcus lactis intracellular state'; lineage ['paper_extraction']]
+      quote: MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK)
+  row 18 [DUPLICATE of row 8] gold_ids ['R9'] 'MenG reaction': DMK -> MK  enzymes ['MenG complex']  evidence verbatim_in_paper  [support 1/3 draws [3]; lock rxn_lock_014; state 'Lactococcus lactis intracellular state'; lineage ['paper_extraction']]
+      quote: MenG demethylates DMK to generate MK
+name conflicts for hand review: none
+minor cofactors missing on matched reactions: none
+entity accuracy: substrate 10/10  product 9/9  enzyme 1.000 {'correct': 9}  species {'correct': 9, 'unknown': 1}
+evidence verdicts (vs pinned gold text): {'verbatim_in_paper': 6, 'dump_only': 4}
+old lenient matcher, same rows: recall 1.000  disagreements none
+identifier checks: 28 entities {'correct_identity': 11, 'unresolved_or_novel': 14, 'wrong_identity': 2, 'not_evaluable_no_reference': 1}  resting on mapper cache only {'correct_identity': 2, 'wrong_identity': 2}
+      wrong_identity compounds 'OSB' ['pathbank_compound_id:1111'] independent=False ref=[['FosbFca', 'Phosphoribosyl formamidocarboxamide']]
+      wrong_identity compounds 'DMK' ['pathbank_compound_id:41675'] independent=False ref=[['DMK-7', 'Demethylmenaquinone-7']]
+
+--- level 3 pwml: NOT WRITTEN (no PWML and no pwml_ir.json in the leg)
+
+READER NOTES (ORCH-759p test-runner reading of the leg artifacts, not evaluator output):
+
