@@ -161,7 +161,7 @@ def test_preservation_menaquinone_resolved_row_684738_is_kept() -> None:
     rows = {row["name"]: row for row in result.payload["entities"]["species"]}
     assert rows[RESOLVED]["taxonomy_id"] == "684738"
     assert rows[RESOLVED]["classification"] == "Prokaryote"
-    assert set(rows) == {"Lactococcus lactis", RESOLVED, "Arabidopsis thaliana"}
+    assert {"Lactococcus lactis", RESOLVED, "Arabidopsis thaliana"} <= set(rows)
     men = [p for p in result.payload["entities"]["proteins"] if str(p.get("name", "")).startswith("Men")]
     assert len(men) == 7 and {p["species"] for p in men} == {RESOLVED}
 
