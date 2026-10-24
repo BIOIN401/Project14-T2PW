@@ -1,0 +1,98 @@
+{
+  "label": "green-a-unit",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769c/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769c/docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-769c/07-green-a-unit.pin.json",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:/t/bt-orch769c/bt-07-green-a-unit",
+    "tests/test_orch769c_empty_graph_render.py",
+    "tests/test_batch_driver.py::test_g9_final_zero_counts_replace_the_stale_stage2_counts",
+    "tests/test_batch_driver.py::test_g9_counts_come_from_the_canonical_payload_not_the_pre_quarantine_one",
+    "tests/test_batch_driver.py::test_preservation_an_absent_final_payload_keeps_the_stage2_counts"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch769c",
+  "started_at": "2026-10-24T21:27:19+00:00",
+  "finished_at": "2026-10-24T21:27:23+00:00",
+  "duration_seconds": 3.582761500001652,
+  "timeout_seconds": 300.0,
+  "root_pid": 789512,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 779872,
+      "name": "python.exe",
+      "ppid": 789512
+    }
+  ],
+  "descendants_terminated": [
+    779872
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 738608,
+      "name": "python.exe"
+    },
+    {
+      "pid": 738760,
+      "name": "python.exe"
+    },
+    {
+      "pid": 774040,
+      "name": "python.exe"
+    },
+    {
+      "pid": 783952,
+      "name": "python.exe"
+    },
+    {
+      "pid": 789560,
+      "name": "python.exe"
+    },
+    {
+      "pid": 789728,
+      "name": "python.exe"
+    },
+    {
+      "pid": 789936,
+      "name": "python.exe"
+    },
+    {
+      "pid": 790472,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch769c\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-769c\\07-green-a-unit.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch769c\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch769c",
+    "repo_head": "814d6da8425d45702e6422b81eccc62676f8268f",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

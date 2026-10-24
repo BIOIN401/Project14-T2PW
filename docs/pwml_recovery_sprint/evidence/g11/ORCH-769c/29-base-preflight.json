@@ -1,0 +1,183 @@
+{
+  "label": "base-preflight",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769c/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/bt-orch769c/basefull",
+    "--pin-verdict",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769c/docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-769c/29-base-preflight.pin.json",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:/t/bt-orch769c/bt-29-base-preflight",
+    "tests/test_batch_preflight.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch769c",
+  "started_at": "2026-10-24T21:41:43+00:00",
+  "finished_at": "2026-10-24T21:41:53+00:00",
+  "duration_seconds": 9.778775200000382,
+  "timeout_seconds": 540.0,
+  "root_pid": 808112,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 808124,
+      "name": "python.exe",
+      "ppid": 808112
+    },
+    {
+      "pid": 808260,
+      "name": "python.exe",
+      "ppid": 808124
+    },
+    {
+      "pid": 808280,
+      "name": "python.exe",
+      "ppid": 808260
+    },
+    {
+      "pid": 808484,
+      "name": "python.exe",
+      "ppid": 808124
+    },
+    {
+      "pid": 808504,
+      "name": "python.exe",
+      "ppid": 808484
+    },
+    {
+      "pid": 808556,
+      "name": "python.exe",
+      "ppid": 808124
+    },
+    {
+      "pid": 808576,
+      "name": "python.exe",
+      "ppid": 808556
+    },
+    {
+      "pid": 808636,
+      "name": "python.exe",
+      "ppid": 808124
+    },
+    {
+      "pid": 808700,
+      "name": "python.exe",
+      "ppid": 808124
+    },
+    {
+      "pid": 808772,
+      "name": "python.exe",
+      "ppid": 808700
+    },
+    {
+      "pid": 808928,
+      "name": "python.exe",
+      "ppid": 808124
+    },
+    {
+      "pid": 808948,
+      "name": "python.exe",
+      "ppid": 808928
+    },
+    {
+      "pid": 807608,
+      "name": "python.exe",
+      "ppid": 808948
+    },
+    {
+      "pid": 807864,
+      "name": "python.exe",
+      "ppid": 807608
+    },
+    {
+      "pid": 808020,
+      "name": "python.exe",
+      "ppid": 808124
+    },
+    {
+      "pid": 803180,
+      "name": "python.exe",
+      "ppid": 808020
+    },
+    {
+      "pid": 801716,
+      "name": "python.exe",
+      "ppid": 806560
+    },
+    {
+      "pid": 806560,
+      "name": "python.exe",
+      "ppid": 803180
+    }
+  ],
+  "descendants_terminated": [
+    801716,
+    803180,
+    806560,
+    807608,
+    807864,
+    808020,
+    808124,
+    808260,
+    808280,
+    808484,
+    808504,
+    808556,
+    808576,
+    808636,
+    808700,
+    808772,
+    808928,
+    808948
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 738608,
+      "name": "python.exe"
+    },
+    {
+      "pid": 738760,
+      "name": "python.exe"
+    },
+    {
+      "pid": 784332,
+      "name": "python.exe"
+    },
+    {
+      "pid": 807196,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch769c\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-769c\\29-base-preflight.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch769c\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch769c",
+    "repo_head": "9360976c1ac88160de2afa97365473e4304ce01b",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

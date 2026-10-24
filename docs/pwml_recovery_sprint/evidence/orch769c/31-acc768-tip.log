@@ -1,0 +1,52 @@
+G11 C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c\docs\pwml_recovery_sprint\evidence\g11\ORCH-769c\31-acc768-tip.json
+T2PW: C:\t\bt-orch769c\acc-tip\src\t2pw\__init__.py
+.....F...                                                                [100%]
+================================== FAILURES ===================================
+_ test_replay_reproduces_the_recorded_verdict[ORCH-767/wnt_pcp-strict/2026-10-24_0131] _
+
+corpus = {'H': <module 'orch768_replay_corpus' from 'C:\\t\\bt-orch769c\\acc-tip\\docs\\pwml_recovery_sprint\\evidence\\orch768...6: it is the canonical (enriched, quarantined) payload", 'condition': 'wnt_pcp-strict', 'head': 'd6849c9e', ...}}, ...}
+leg_id = 'ORCH-767/wnt_pcp-strict/2026-10-24_0131'
+
+    @pytest.mark.parametrize("leg_id", sorted(EXPECTED))
+    def test_replay_reproduces_the_recorded_verdict(corpus, leg_id):
+        H = corpus["H"]
+        record = corpus["runs"][0][leg_id]
+        assert record["checkpoint"] == "canonical"
+        assert record["canonical_matches_leg"] is True
+>       assert H.fidelity(corpus["legs"][leg_id], record) == []
+E       AssertionError: assert ['outcome rec... replay=pwml'] == []
+E         
+E         Left contains one more item: 'outcome recorded=refinement_review_crash replay=pwml'
+E         Use -v to get more diff
+
+tests\test_orch768_replay_corpus.py:109: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_orch768_replay_corpus.py::test_replay_reproduces_the_recorded_verdict[ORCH-767/wnt_pcp-strict/2026-10-24_0131]
+1 failed, 8 passed in 3.64s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 9360976c1ac88160de2afa97365473e4304ce01b  [git, worktree dirty=False]
+label                   : acc768-tip
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769c/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/bt-orch769c/acc-tip --pin-verdict C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769c/docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-769c/31-acc768-tip.pin.json -q -p no:cacheprovider --basetemp=C:/t/bt-orch769c/bt-31-acc768-tip C:/t/bt-orch769c/acc-tip/tests/test_orch768_replay_corpus.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c
+root PID / process group: 807624 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 4.76 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  789140:python.exe
+descendants terminated  : 1  789140
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c\docs\pwml_recovery_sprint\evidence\g11\ORCH-769c\31-acc768-tip.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================
+WRAPPER_EXIT 1

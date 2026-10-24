@@ -1,0 +1,39 @@
+G11 C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c\docs\pwml_recovery_sprint\evidence\g11\ORCH-769c\28-base-preflight.json
+T2PW_MEASUREMENT_TREE_REFUSED
+  expected tree   : C:\t\bt-orch769c\basefull
+  t2pw resolved   : C:\t\bt-orch769c\basefull\src\t2pw\__init__.py
+  scripts         : C:\t\bt-orch769c\basefull\scripts
+  cwd             : C:\t\bt-orch769c\basefull
+  cwd at entry    : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c
+  PYTHONPATH      : C:/t/bt-orch769c/basefull/src
+  sys.path[0:4]   : ['C:\\t\\bt-orch769c\\basefull', 'C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch769c\\docs\\pwml_recovery_sprint\\evidence', 'C:\\t\\bt-orch769c\\basefull\\src', 'C:\\Python313\\python313.zip']
+  violations      : EXPECT_TREE_NOT_A_CHECKOUT
+  verdict written : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c\docs\pwml_recovery_sprint\evidence\g11\pin\ORCH-769c\28-base-preflight.pin.json
+REFUSED before collection. No test was run. Exit 98.
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 9360976c1ac88160de2afa97365473e4304ce01b  [git, worktree dirty=False]
+label                   : base-preflight
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769c/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/bt-orch769c/basefull --pin-verdict C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769c/docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-769c/28-base-preflight.pin.json -q -p no:cacheprovider --basetemp=C:/t/bt-orch769c/bt-28-base-preflight tests/test_batch_preflight.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c
+root PID / process group: 807808 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 0.38 s
+exit reason             : nonzero
+exit code (real)        : 98
+returned code           : 98
+descendants observed    : 1  807284:python.exe
+descendants terminated  : 1  807284
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c\docs\pwml_recovery_sprint\evidence\g11\ORCH-769c\28-base-preflight.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================
+WRAPPER_EXIT 98

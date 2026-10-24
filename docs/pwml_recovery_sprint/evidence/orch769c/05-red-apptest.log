@@ -1,0 +1,107 @@
+G11 C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c\docs\pwml_recovery_sprint\evidence\g11\ORCH-769c\05-red-apptest.json
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c\src\t2pw\__init__.py
+F                                                                        [100%]
+================================== FAILURES ===================================
+________ test_g9_an_interactions_only_pathway_opens_review_and_exports ________
+
+    @pytest.mark.usefixtures("offline_mapping")
+    def test_g9_an_interactions_only_pathway_opens_review_and_exports() -> None:
+        """ORCH-769c (D-112 \ufffd 3c), G9: fails at base ``e3d5b65f``. Run ALONE in its own process.
+    
+        ORCH-767 WNT PCP: quarantine admitted interactions only, the review diagram raised "DraftGraph
+        has no reaction nodes", refinement review never opened, and the "Generate PWML" button was
+        never rendered. At base the button lookup below raises; with nothing to draw the review now
+        opens without a diagram and the pathway exports.
+        """
+    
+        _clear_artifacts()
+        at = _app_test().from_file(str(APP_PATH), default_timeout=APP_TIMEOUT)
+        at.run()
+        _seed_finished_pipeline(at, _interactions_only_payload())
+        # Both requested anchors are proteins: the coverage check judges this graph on what it has.
+        at.session_state["pathway_context"] = {
+            **STAGE_ZERO_CONTEXT,
+            "key_compounds": [],
+            "key_proteins": ["glutamate-cysteine ligase", "glutathione synthetase"],
+        }
+        at.run()
+        at.button(key=KEY_POST_PIPELINE).click().run()
+    
+        assert at.session_state["quarantine_report"]["ok"] is True  # holds at base: the boundary admits it
+    
+        # Base: KeyError. The review diagram raised (the app shows it with st.exception), so review
+        # never opened and the button was never rendered -- the ORCH-767 driver failure exactly.
+>       result = _generate_pwml(at)
+                 ^^^^^^^^^^^^^^^^^^
+
+tests\test_streamlit_quarantine_boundary.py:909: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_streamlit_quarantine_boundary.py:824: in _generate_pwml
+    at.button(key=KEY_GENERATE_PWML).click().run()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WidgetList(_list=[Button(key='FormSubmitter:pwml_pipeline-Run pipeline', label='Run pipeline', form_id='pwml_pipeline'...iz_converter_convert_btn', label='Convert'), Button(key='run_legacy_sbml_export_btn', label='Run legacy SBML export')])
+key = 'refinement_generate_pwml'
+
+    def __call__(self, key: str) -> W_co:
+        for e in self._list:
+            if e.key == key:
+                return e
+    
+>       raise KeyError(key)
+E       KeyError: 'refinement_generate_pwml'
+
+..\..\..\.venv\Lib\site-packages\streamlit\testing\v1\element_tree.py:284: KeyError
+---------------------------- Captured stderr call -----------------------------
+2026-10-24 15:24:20.121 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-24 15:24:21.905 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-24 15:24:21.905 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-24 15:24:21.905 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-24 15:24:21.905 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-24 15:24:21.905 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-24 15:24:21.905 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-24 15:24:21.905 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-24 15:24:21.905 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-24 15:24:21.905 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-24 15:24:21.905 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-24 15:24:21.905 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-24 15:24:21.905 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-24 15:24:21.905 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-24 15:24:21.905 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-24 15:24:21.905 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-24 15:24:21.905 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-24 15:24:21.905 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-24 15:24:21.905 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-24 15:24:21.905 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-24 15:24:21.905 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+=========================== short test summary info ===========================
+FAILED tests/test_streamlit_quarantine_boundary.py::test_g9_an_interactions_only_pathway_opens_review_and_exports
+1 failed in 3.87s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 43bf388baba9780edb3befbee6d864b9b583f255  [git, worktree dirty=False]
+label                   : red-apptest
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769c/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769c/docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-769c/05-red-apptest.pin.json -q -p no:cacheprovider --basetemp=C:/t/bt-orch769c/bt-05-red-apptest tests/test_streamlit_quarantine_boundary.py::test_g9_an_interactions_only_pathway_opens_review_and_exports
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c
+root PID / process group: 782868 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 5.65 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  782800:python.exe
+descendants terminated  : 1  782800
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c\docs\pwml_recovery_sprint\evidence\g11\ORCH-769c\05-red-apptest.json
+json report written     : True
+pre-existing (reported, NEVER killed): 8
+================================================
+WRAPPER_EXIT 1

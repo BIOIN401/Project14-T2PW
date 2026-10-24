@@ -1,0 +1,60 @@
+G11 C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c\docs\pwml_recovery_sprint\evidence\g11\ORCH-769c\08-dev-b-driver-golden.json
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c\src\t2pw\__init__.py
+.F.                                                                      [100%]
+================================== FAILURES ===================================
+_____ test_driver_observable_behaviour_is_byte_identical_to_the_base_sha ______
+
+tmp_path = WindowsPath('C:/t/bt-orch769c/bt-08-dev-b-driver-golden/test_driver_observable_behavio0')
+
+    def test_driver_observable_behaviour_is_byte_identical_to_the_base_sha(tmp_path: Path) -> None:
+        """C-012's acceptance criterion: the golden driver-observable diff is EMPTY."""
+    
+>       assert {leg: _observe(tmp_path, leg) for leg in sorted(_legs())} == GOLDEN
+E       AssertionError: assert {'input_timeo...70db14'), ...} == {'input_timeo...f9f2f4'), ...}
+E         
+E         Omitting 1 identical items, use -vv to show
+E         Differing items:
+E         {'strict_contract_failure': ('fail|post_pipeline|contract', 'post-pipeline validation failed: 1 blocking issue(s) at a stage boundary', 'bd16c9c0d60c57c808d1a51778fa87c3cc3e569608688928bba39f580b6b52ec')} != {'strict_contract_failure': ('fail|post_pipeline|contract', 'post-pipeline validation failed: 1 blocking issue(s) at a stage boundary', '8a5c7a80e4f97e7e62ab21005c6eb21f10d05a7e5980845b497d9f2620595205')}
+E         {'strict_export_not_ok': ('fail|pwml_export|unknown', 'PWML export failed: the gate rejected the payload'...
+E         
+E         ...Full output truncated (6 lines hidden), use '-vv' to show
+
+tests\test_batch_driver_seam_golden.py:285: AssertionError
+---------------------------- Captured stderr call -----------------------------
+2026-10-24 15:27:38.900 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-24 15:27:43.103 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-24 15:27:43.330 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-24 15:27:43.562 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-24 15:27:43.790 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-24 15:27:44.043 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-24 15:27:44.264 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+=========================== short test summary info ===========================
+FAILED tests/test_batch_driver_seam_golden.py::test_driver_observable_behaviour_is_byte_identical_to_the_base_sha
+1 failed, 2 passed in 7.07s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 814d6da8425d45702e6422b81eccc62676f8268f  [git, worktree dirty=True]
+label                   : dev-b-driver-golden
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769c/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769c/docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-769c/08-dev-b-driver-golden.pin.json -q -p no:cacheprovider --basetemp=C:/t/bt-orch769c/bt-08-dev-b-driver-golden tests/test_batch_driver.py::test_g9_counts_come_from_the_canonical_payload_not_the_pre_quarantine_one tests/test_batch_driver_seam_golden.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c
+root PID / process group: 791172 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 400 s
+duration                : 8.15 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  791184:python.exe
+descendants terminated  : 1  791184
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769c\docs\pwml_recovery_sprint\evidence\g11\ORCH-769c\08-dev-b-driver-golden.json
+json report written     : True
+pre-existing (reported, NEVER killed): 8
+================================================
+WRAPPER_EXIT 1
