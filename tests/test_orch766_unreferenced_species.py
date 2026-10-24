@@ -325,6 +325,10 @@ def _id_payload(kind: str) -> Dict[str, Any]:
         protein["species_id"] = 77
     elif kind == "protein_species_ref_ids":
         protein["species_ref"] = {"taxonomy_id": 10090, "pathbank_species_id": 77}
+    elif kind == "species_id_as_float_text":
+        # ir._to_int reads the row's "77.0" as PathBank id 77, the writer's key.
+        payload["entities"]["species"][1]["pathbank_species_id"] = "77.0"
+        protein["species_id"] = 77
     return payload
 
 
@@ -333,6 +337,7 @@ ID_KINDS = (
     "protein_species_id",
     "protein_species_ref_ids",
     "state_taxonomy_id",
+    "species_id_as_float_text",
 )
 
 
@@ -380,6 +385,7 @@ PINS: Dict[str, str] = {
     "protein_species_id": "7c34b16541040f12eb209236e9ccbba1212b64eb6d75bfd4e8a71213f49b6d4d",
     "protein_species_ref_ids": "7c1e3de6bea1b6f1b7571d5f46d6ccb64b50aa0f1bca2c12b07b410f79f0c0e3",
     "state_taxonomy_id": "e6d153529ecf084c02c32b0864fae3c7a281660687e0e1e2253edef4190f0122",
+    "species_id_as_float_text": "2db9f1a9a351f6df15a28d69b7ec802fbcd0af7febe83f3329a0f50e69aa4fa6",
     "create_default_name": "b484bdf045b6fdd3f45df4ebe51027220626ec8cda70aa1c153793224ce3a66c",
     "first_row": "b8b487797360d5d1047bcd400626d9fba0ccb199b074d586faebe7d9a70bc20f",
     "requested_organism": "d27c947fe574bdde05c76cc1e6f1b4d4c06190470e5b4540e453368040441c48",
