@@ -1,0 +1,111 @@
+{
+ "legs": [
+  {
+   "checkpoint": "canonical",
+   "class": "replayable (upstream_contract_report)",
+   "fidelity_diffs": [],
+   "id": "runs_verify/2026-08-22_1821/PMC12452463",
+   "paper": "PMC12452463",
+   "recorded": "upstream_contract_report",
+   "replay": {
+    "canonical_matches_leg": true,
+    "canonical_sha256": "811889484a506f9e637444daf793980aa0da83c3cb3a04b8e03c555e5ffe2d3c",
+    "checkpoint": "canonical",
+    "checkpoint_sha256": "8b230e4c0a42a09a30e848ce66cb8d182737213e0c3ff5dd3dadf31901249016",
+    "driver": {
+     "codes": [
+      "gate.generated_protein_complex_enterobactin_synthase_complex_componen",
+      "gate.generated_protein_complex_enterobactin_synthase_complex_is_missi",
+      "gate.protein_enterobactin_synthase_is_missing_species_organism"
+     ],
+     "contract_errors": 3,
+     "gate_failed": false,
+     "gate_reason": "",
+     "gate_stage": "final_pre_export_stage3_gates"
+    },
+    "failure_stage": "upstream_contract_report",
+    "files": {
+     "canonical.json": "be3e7d31c93bdb7c",
+     "final.canonical.json": "8b230e4c0a42a09a",
+     "outputs/coverage_summary.json": "12d6729da735ae75",
+     "outputs/graph_closure_iterations.json": "6c12fbe83cf595a9",
+     "outputs/quarantine_report.json": "685a5ce24f1a733f",
+     "outputs/removed_entity_report.json": "2d5d47dd44e915c5"
+    },
+    "final_gate": {
+     "codes": [],
+     "errors": [],
+     "ok": true
+    },
+    "gold": null,
+    "id": "runs_verify/2026-08-22_1821/PMC12452463",
+    "network_refused": [],
+    "paper": "PMC12452463",
+    "pwml_written": false,
+    "quarantine": {
+     "admitted_hash_matches_leg": false,
+     "counts": {
+      "auxiliary_accepted": 0,
+      "core_accepted": 8,
+      "quarantined_broken_reference": 0,
+      "quarantined_disconnected": 0,
+      "quarantined_out_of_scope": 0,
+      "quarantined_unmapped_entity": 0,
+      "quarantined_weak_evidence": 0
+     },
+     "decision_input_hash_matches_leg": true,
+     "ok": true,
+     "refusal": [],
+     "release": "review_required"
+    },
+    "recorded_reports": {
+     "final_gate_errors": [],
+     "required_gate_codes": null
+    }
+   },
+   "src_sha": "d7f4f966",
+   "tier": "B"
+  }
+ ],
+ "offline_probe": {
+  "attempts": {
+   "create_connection_loopback": "refused",
+   "raw_socket_connect": "refused",
+   "urlopen_uniprot": "refused"
+  },
+  "counted": 3,
+  "ok": true
+ },
+ "src": "t2pw from --src",
+ "summary": {
+  "all": {
+   "aborted_not_counted": 0,
+   "llm_originating_failures": 0,
+   "network_refused_total": 0,
+   "passing_ids": [],
+   "pwml_pass": 0,
+   "pwml_pass_rate_of_replayed": "0/1",
+   "pwml_pass_rate_of_strict": "0/1",
+   "replay_errors": 0,
+   "replayable_failures": 1,
+   "strict_legs": 1,
+   "verdict_as_recorded": "1/1",
+   "with_checkpoint": 1
+  },
+  "tier_B": {
+   "aborted_not_counted": 0,
+   "llm_originating_failures": 0,
+   "network_refused_total": 0,
+   "passing_ids": [],
+   "pwml_pass": 0,
+   "pwml_pass_rate_of_replayed": "0/1",
+   "pwml_pass_rate_of_strict": "0/1",
+   "replay_errors": 0,
+   "replayable_failures": 1,
+   "strict_legs": 1,
+   "verdict_as_recorded": "1/1",
+   "with_checkpoint": 1
+  }
+ },
+ "task": "ORCH-768"
+}

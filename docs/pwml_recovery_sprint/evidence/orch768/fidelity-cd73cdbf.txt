@@ -1,0 +1,37 @@
+t2pw resolved: C:\t\bt-orch768\src-cd73cdbf\src\t2pw
+offline probe: {'attempts': {'urlopen_uniprot': 'refused', 'create_connection_loopback': 'refused', 'raw_socket_connect': 'refused'}, 'counted': 3, 'ok': True}
+runs_verify/2026-09-16_2152/PMC12369002                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+runs_verify/2026-09-16_2152/PMC13534948                     replayable (final_pre_export_gate_lifecycle)          q=False['minimum_core:core_process_count_below_minimum:0<1', 'minimum_core:no_surviving_process', 'minimum_core:requested_core_coverage_below_minimum:0.000<0.500']/diagnostic_only gate=None export=None req=None net=0  AS RECORDED
+runs_verify/2026-09-16_2152/PMC13364408                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+runs_verify/2026-09-16_2152/PMC13170813                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+runs_verify/2026-09-16_2152/PMC13486683                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+runs_verify/2026-09-16_2152/PMC12983300                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+runs_verify/2026-09-16_2152/PMC12505894                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+runs_verify/2026-09-16_2152/PMC12059215                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+
+SUMMARY (all)
+  strict_legs                    8
+  with_checkpoint                8
+  replay_errors                  0
+  pwml_pass                      7
+  pwml_pass_rate_of_strict       7/8
+  pwml_pass_rate_of_replayed     7/8
+  replayable_failures            1
+  llm_originating_failures       0
+  aborted_not_counted            0
+  verdict_as_recorded            8/8
+  network_refused_total          0
+
+SUMMARY (tier_B)
+  strict_legs                    8
+  with_checkpoint                8
+  replay_errors                  0
+  pwml_pass                      7
+  pwml_pass_rate_of_strict       7/8
+  pwml_pass_rate_of_replayed     7/8
+  replayable_failures            1
+  llm_originating_failures       0
+  aborted_not_counted            0
+  verdict_as_recorded            8/8
+  network_refused_total          0
+GOLD (replayed tail; certified gold only)

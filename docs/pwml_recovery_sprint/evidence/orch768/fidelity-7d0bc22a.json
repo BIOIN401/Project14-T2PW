@@ -1,0 +1,196 @@
+{
+ "legs": [
+  {
+   "checkpoint": "canonical",
+   "class": "replayable (pwml_export)",
+   "fidelity_diffs": [],
+   "id": "runs_verify/2026-08-25_1216/PMC12856317",
+   "paper": "PMC12856317",
+   "recorded": "pwml_export",
+   "replay": {
+    "canonical_matches_leg": true,
+    "canonical_sha256": "5872c6d5cbd44056ad7ca0b7a5555dd7487d59fb77e558a59767146ca4647144",
+    "checkpoint": "canonical",
+    "checkpoint_sha256": "153e6873c77d1433a1b0f8948cb59fd17e60abf51611027507a4ad75a16cb7cc",
+    "driver": {
+     "codes": [],
+     "contract_errors": 0,
+     "gate_failed": false,
+     "gate_reason": "",
+     "gate_stage": "final_pre_export_stage3_gates"
+    },
+    "export": {
+     "error": "PWML IR validation failed.",
+     "ir_blocking": [
+      "protein_complex_missing_components"
+     ],
+     "ir_validation": [
+      "protein_complex_missing_components"
+     ],
+     "ok": false,
+     "quarantine_reused": true,
+     "required_gate_codes": [],
+     "required_gate_ok": true,
+     "stage3_contract_codes": []
+    },
+    "failure_stage": "pwml_export",
+    "files": {
+     "canonical.json": "d781fa50b774225d",
+     "final.canonical.json": "153e6873c77d1433",
+     "outputs/coverage_summary.json": "ccab3d1829cb0f3c",
+     "outputs/graph_closure_iterations.json": "6c12fbe83cf595a9",
+     "outputs/pwml_prefreeze_resolution_report.streamlit.json": "c96448dcf55fc2e3",
+     "outputs/pwml_required_field_gate_report.json": "ced08e8f80bd60cf",
+     "outputs/quarantine_report.json": "d79b3079572d7af8",
+     "outputs/removed_entity_report.json": "2d5d47dd44e915c5"
+    },
+    "final_gate": {
+     "codes": [],
+     "errors": [],
+     "ok": true
+    },
+    "gold": null,
+    "id": "runs_verify/2026-08-25_1216/PMC12856317",
+    "network_refused": [],
+    "paper": "PMC12856317",
+    "pwml_written": false,
+    "quarantine": {
+     "admitted_hash_matches_leg": false,
+     "counts": {
+      "auxiliary_accepted": 1,
+      "core_accepted": 4,
+      "quarantined_broken_reference": 0,
+      "quarantined_disconnected": 0,
+      "quarantined_out_of_scope": 0,
+      "quarantined_unmapped_entity": 0,
+      "quarantined_weak_evidence": 0
+     },
+     "decision_input_hash_matches_leg": true,
+     "ok": true,
+     "refusal": [],
+     "release": "review_required"
+    },
+    "recorded_reports": {
+     "final_gate_errors": [],
+     "required_gate_codes": []
+    }
+   },
+   "src_sha": "7d0bc22a",
+   "tier": "B"
+  },
+  {
+   "checkpoint": "canonical",
+   "class": "replayable (upstream_contract_report)",
+   "fidelity_diffs": [],
+   "id": "runs_verify/2026-08-25_1216/PMC12444477",
+   "paper": "PMC12444477",
+   "recorded": "upstream_contract_report",
+   "replay": {
+    "canonical_matches_leg": true,
+    "canonical_sha256": "37e5cc5a621ded3350ee0255105681c457134b086b7f7f86681eda6a1b089dd2",
+    "checkpoint": "canonical",
+    "checkpoint_sha256": "b9edac4dab2de112e59b31943681658d9bff13a91a4b205c49ee23748a934721",
+    "driver": {
+     "codes": [
+      "gate.protein_ftsh_is_missing_a_uniprot_or_drugbank_identifier",
+      "gate.protein_lapb_ycim_is_missing_a_uniprot_or_drugbank_identifier",
+      "gate.protein_lpxa_is_missing_a_uniprot_or_drugbank_identifier",
+      "gate.protein_lpxd_is_missing_a_uniprot_or_drugbank_identifier",
+      "gate.protein_lpxh_is_missing_a_uniprot_or_drugbank_identifier",
+      "gate.protein_lpxl_is_missing_a_uniprot_or_drugbank_identifier",
+      "gate.protein_lpxm_is_missing_a_uniprot_or_drugbank_identifier",
+      "gate.protein_obge_is_missing_a_uniprot_or_drugbank_identifier",
+      "gate.protein_yejm_pbga_is_missing_a_uniprot_or_drugbank_identifier",
+      "gate.registry_validation_failed"
+     ],
+     "contract_errors": 10,
+     "gate_failed": false,
+     "gate_reason": "",
+     "gate_stage": "final_pre_export_stage3_gates"
+    },
+    "failure_stage": "upstream_contract_report",
+    "files": {
+     "canonical.json": "36178f863cc3873b",
+     "final.canonical.json": "b9edac4dab2de112",
+     "outputs/coverage_summary.json": "c2d88007758a9a88",
+     "outputs/graph_closure_iterations.json": "6c12fbe83cf595a9",
+     "outputs/quarantine_report.json": "8cc99f2f43a8e68f",
+     "outputs/removed_entity_report.json": "2d5d47dd44e915c5"
+    },
+    "final_gate": {
+     "codes": [],
+     "errors": [],
+     "ok": true
+    },
+    "gold": null,
+    "id": "runs_verify/2026-08-25_1216/PMC12444477",
+    "network_refused": [],
+    "paper": "PMC12444477",
+    "pwml_written": false,
+    "quarantine": {
+     "admitted_hash_matches_leg": false,
+     "counts": {
+      "auxiliary_accepted": 1,
+      "core_accepted": 13,
+      "quarantined_broken_reference": 0,
+      "quarantined_disconnected": 0,
+      "quarantined_out_of_scope": 0,
+      "quarantined_unmapped_entity": 0,
+      "quarantined_weak_evidence": 0
+     },
+     "decision_input_hash_matches_leg": true,
+     "ok": true,
+     "refusal": [],
+     "release": "review_required"
+    },
+    "recorded_reports": {
+     "final_gate_errors": [],
+     "required_gate_codes": null
+    }
+   },
+   "src_sha": "7d0bc22a",
+   "tier": "B"
+  }
+ ],
+ "offline_probe": {
+  "attempts": {
+   "create_connection_loopback": "refused",
+   "raw_socket_connect": "refused",
+   "urlopen_uniprot": "refused"
+  },
+  "counted": 3,
+  "ok": true
+ },
+ "src": "t2pw from --src",
+ "summary": {
+  "all": {
+   "aborted_not_counted": 0,
+   "llm_originating_failures": 0,
+   "network_refused_total": 0,
+   "passing_ids": [],
+   "pwml_pass": 0,
+   "pwml_pass_rate_of_replayed": "0/2",
+   "pwml_pass_rate_of_strict": "0/2",
+   "replay_errors": 0,
+   "replayable_failures": 2,
+   "strict_legs": 2,
+   "verdict_as_recorded": "2/2",
+   "with_checkpoint": 2
+  },
+  "tier_B": {
+   "aborted_not_counted": 0,
+   "llm_originating_failures": 0,
+   "network_refused_total": 0,
+   "passing_ids": [],
+   "pwml_pass": 0,
+   "pwml_pass_rate_of_replayed": "0/2",
+   "pwml_pass_rate_of_strict": "0/2",
+   "replay_errors": 0,
+   "replayable_failures": 2,
+   "strict_legs": 2,
+   "verdict_as_recorded": "2/2",
+   "with_checkpoint": 2
+  }
+ },
+ "task": "ORCH-768"
+}

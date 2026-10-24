@@ -1,0 +1,704 @@
+{
+ "legs": [
+  {
+   "checkpoint": "canonical",
+   "class": "replayable (final_pre_export_stage3_gates)",
+   "fidelity_diffs": [],
+   "id": "runs_verify/2026-08-22_2017/PMC12856317",
+   "paper": "PMC12856317",
+   "recorded": "final_pre_export_stage3_gates",
+   "replay": {
+    "canonical_matches_leg": true,
+    "canonical_sha256": "c921f64fbb87bcbb1adf8dd6cca5689a0ca8e497cf0455b740212437c2e6c03a",
+    "checkpoint": "canonical",
+    "checkpoint_sha256": "9371e83255ae7b143bb422d9c7296cf38d54532d9b17b5042ec88bc3c5b1c059",
+    "driver": {
+     "codes": [
+      "gate.unknown_protein_modifier_reference"
+     ],
+     "contract_errors": 1,
+     "gate_failed": true,
+     "gate_reason": "final_gate_failed",
+     "gate_stage": "final_pre_export_stage3_gates"
+    },
+    "failure_stage": "final_pre_export_stage3_gates",
+    "files": {
+     "canonical.json": "39731dc5f3b4c9ec",
+     "final.canonical.json": "9371e83255ae7b14",
+     "outputs/coverage_summary.json": "2976cd28328bf6d2",
+     "outputs/graph_closure_iterations.json": "6c12fbe83cf595a9",
+     "outputs/quarantine_report.json": "7cd8959afe2c47be",
+     "outputs/removed_entity_report.json": "2d5d47dd44e915c5"
+    },
+    "final_gate": {
+     "codes": [
+      "gate.unknown_protein_modifier_reference"
+     ],
+     "errors": [
+      [
+       "/processes/reactions/0/modifiers/0",
+       "Unknown protein/modifier reference: Pyridoxal 5'-phosphate"
+      ]
+     ],
+     "ok": false
+    },
+    "gold": null,
+    "id": "runs_verify/2026-08-22_2017/PMC12856317",
+    "network_refused": [],
+    "paper": "PMC12856317",
+    "pwml_written": false,
+    "quarantine": {
+     "admitted_hash_matches_leg": false,
+     "counts": {
+      "auxiliary_accepted": 0,
+      "core_accepted": 3,
+      "quarantined_broken_reference": 0,
+      "quarantined_disconnected": 0,
+      "quarantined_out_of_scope": 0,
+      "quarantined_unmapped_entity": 0,
+      "quarantined_weak_evidence": 0
+     },
+     "decision_input_hash_matches_leg": true,
+     "ok": true,
+     "refusal": [],
+     "release": "review_required"
+    },
+    "recorded_reports": {
+     "final_gate_errors": [
+      [
+       "/processes/reactions/0/modifiers/0",
+       "Unknown protein/modifier reference: Pyridoxal 5'-phosphate"
+      ]
+     ],
+     "required_gate_codes": null
+    }
+   },
+   "src_sha": "61887581",
+   "tier": "B"
+  },
+  {
+   "checkpoint": "canonical",
+   "class": "pass",
+   "fidelity_diffs": [],
+   "id": "runs_verify/2026-08-22_2017/PMC12452463",
+   "paper": "PMC12452463",
+   "recorded": "pwml",
+   "replay": {
+    "canonical_matches_leg": true,
+    "canonical_sha256": "62d76d57def524ab53a2fe644c2ad831d4a3cea33a7d5511d5b32f5b39bc9818",
+    "checkpoint": "canonical",
+    "checkpoint_sha256": "1181a924990b7b5990a431fa06f7ed95063c86d0f466965f83888c8b9ac3be9a",
+    "driver": {
+     "codes": [],
+     "contract_errors": 0,
+     "gate_failed": false,
+     "gate_reason": "",
+     "gate_stage": "final_pre_export_stage3_gates"
+    },
+    "export": {
+     "error": "",
+     "ir_blocking": [],
+     "ir_validation": [],
+     "ok": true,
+     "pwml_name": "pathway.review_required.pwml",
+     "quarantine_reused": true,
+     "release": "review_required",
+     "required_gate_codes": [],
+     "required_gate_ok": true,
+     "stage3_contract_codes": []
+    },
+    "failure_stage": null,
+    "files": {
+     "canonical.json": "f01bbad173fcf801",
+     "final.canonical.json": "1181a924990b7b59",
+     "outputs/coverage_summary.json": "3baf578cb1ef0178",
+     "outputs/graph_closure_iterations.json": "6c12fbe83cf595a9",
+     "outputs/pathway.pwml": "07535fad412c8c1e",
+     "outputs/pwml_prefreeze_resolution_report.streamlit.json": "e77c2cf4fea50f96",
+     "outputs/pwml_required_field_gate_report.json": "2f1864b90ee34896",
+     "outputs/quarantine_report.json": "bef7a9637c858031",
+     "outputs/removed_entity_report.json": "2d5d47dd44e915c5",
+     "pathway.review_required.pwml": "07535fad412c8c1e",
+     "pwml_ir.json": "7e8ed1dbbd69df75"
+    },
+    "final_gate": {
+     "codes": [],
+     "errors": [],
+     "ok": true
+    },
+    "gold": null,
+    "id": "runs_verify/2026-08-22_2017/PMC12452463",
+    "network_refused": [],
+    "paper": "PMC12452463",
+    "pwml_matches_leg": true,
+    "pwml_sha256": "07535fad412c8c1ea915edc721a7da4e5dc9be2eea2d8c78c5bc85e0e8725a0e",
+    "pwml_written": true,
+    "quarantine": {
+     "admitted_hash_matches_leg": false,
+     "counts": {
+      "auxiliary_accepted": 0,
+      "core_accepted": 7,
+      "quarantined_broken_reference": 0,
+      "quarantined_disconnected": 0,
+      "quarantined_out_of_scope": 0,
+      "quarantined_unmapped_entity": 0,
+      "quarantined_weak_evidence": 0
+     },
+     "decision_input_hash_matches_leg": true,
+     "ok": true,
+     "refusal": [],
+     "release": "review_required"
+    },
+    "recorded_reports": {
+     "final_gate_errors": [],
+     "required_gate_codes": []
+    }
+   },
+   "src_sha": "61887581",
+   "tier": "B"
+  },
+  {
+   "checkpoint": "canonical",
+   "class": "pass",
+   "fidelity_diffs": [],
+   "id": "runs_verify/2026-08-22_2147/PMC13231680",
+   "paper": "PMC13231680",
+   "recorded": "pwml",
+   "replay": {
+    "canonical_matches_leg": true,
+    "canonical_sha256": "8c304d9319a92295bedf84b5f7e5ca5b8af6106c436d1878fcc425061c874f7a",
+    "checkpoint": "canonical",
+    "checkpoint_sha256": "546db39493e7309e62f66dcc143fe1d988ed055c43dc71cf5ef9ba603a698e5e",
+    "driver": {
+     "codes": [],
+     "contract_errors": 0,
+     "gate_failed": false,
+     "gate_reason": "",
+     "gate_stage": "final_pre_export_stage3_gates"
+    },
+    "export": {
+     "error": "",
+     "ir_blocking": [],
+     "ir_validation": [],
+     "ok": true,
+     "pwml_name": "pathway.pwml",
+     "quarantine_reused": true,
+     "release": "release_ready",
+     "required_gate_codes": [],
+     "required_gate_ok": true,
+     "stage3_contract_codes": []
+    },
+    "failure_stage": null,
+    "files": {
+     "canonical.json": "3ba22f1a871347e5",
+     "final.canonical.json": "546db39493e7309e",
+     "outputs/coverage_summary.json": "d35caf8d5b86e9e9",
+     "outputs/graph_closure_iterations.json": "6c12fbe83cf595a9",
+     "outputs/pathway.pwml": "c774e1597c7c2c41",
+     "outputs/pwml_prefreeze_resolution_report.streamlit.json": "867be70ef962a3c0",
+     "outputs/pwml_required_field_gate_report.json": "ea0cc816b03f071f",
+     "outputs/quarantine_report.json": "4bc851d9cd9d8c6b",
+     "outputs/removed_entity_report.json": "2d5d47dd44e915c5",
+     "pathway.pwml": "c774e1597c7c2c41",
+     "pwml_ir.json": "19226c84292414a8"
+    },
+    "final_gate": {
+     "codes": [],
+     "errors": [],
+     "ok": true
+    },
+    "gold": null,
+    "id": "runs_verify/2026-08-22_2147/PMC13231680",
+    "network_refused": [],
+    "paper": "PMC13231680",
+    "pwml_matches_leg": true,
+    "pwml_sha256": "c774e1597c7c2c41505c3b2d4cbbfdffa9474e578e801b8da585d1c67e4d6924",
+    "pwml_written": true,
+    "quarantine": {
+     "admitted_hash_matches_leg": true,
+     "counts": {
+      "auxiliary_accepted": 0,
+      "core_accepted": 5,
+      "quarantined_broken_reference": 0,
+      "quarantined_disconnected": 0,
+      "quarantined_out_of_scope": 0,
+      "quarantined_unmapped_entity": 0,
+      "quarantined_weak_evidence": 0
+     },
+     "decision_input_hash_matches_leg": true,
+     "ok": true,
+     "refusal": [],
+     "release": "release_ready"
+    },
+    "recorded_reports": {
+     "final_gate_errors": [],
+     "required_gate_codes": []
+    }
+   },
+   "src_sha": "61887581",
+   "tier": "B"
+  },
+  {
+   "checkpoint": "canonical",
+   "class": "pass",
+   "fidelity_diffs": [],
+   "id": "runs_verify/2026-08-22_2147/PMC12856317",
+   "paper": "PMC12856317",
+   "recorded": "pwml",
+   "replay": {
+    "canonical_matches_leg": true,
+    "canonical_sha256": "b6f0a57af819579711bf75d1b675adb916bb64f283a96874580178f4ed162445",
+    "checkpoint": "canonical",
+    "checkpoint_sha256": "e141db619df4e6a1f81999199a1e3b736e3491abb8265bf09c493248a810ee7c",
+    "driver": {
+     "codes": [],
+     "contract_errors": 0,
+     "gate_failed": false,
+     "gate_reason": "",
+     "gate_stage": "final_pre_export_stage3_gates"
+    },
+    "export": {
+     "error": "",
+     "ir_blocking": [],
+     "ir_validation": [],
+     "ok": true,
+     "pwml_name": "pathway.pwml",
+     "quarantine_reused": true,
+     "release": "release_ready",
+     "required_gate_codes": [],
+     "required_gate_ok": true,
+     "stage3_contract_codes": []
+    },
+    "failure_stage": null,
+    "files": {
+     "canonical.json": "eba3da0faf63f3d7",
+     "final.canonical.json": "e141db619df4e6a1",
+     "outputs/coverage_summary.json": "27b7feb8854cc3e6",
+     "outputs/graph_closure_iterations.json": "6c12fbe83cf595a9",
+     "outputs/pathway.pwml": "058699feb889ea77",
+     "outputs/pwml_prefreeze_resolution_report.streamlit.json": "bb6aa23daf1e9cce",
+     "outputs/pwml_required_field_gate_report.json": "6efe457be04fcbba",
+     "outputs/quarantine_report.json": "6d169de76ee41f38",
+     "outputs/removed_entity_report.json": "2d5d47dd44e915c5",
+     "pathway.pwml": "058699feb889ea77",
+     "pwml_ir.json": "b907c3f9a359caf3"
+    },
+    "final_gate": {
+     "codes": [],
+     "errors": [],
+     "ok": true
+    },
+    "gold": null,
+    "id": "runs_verify/2026-08-22_2147/PMC12856317",
+    "network_refused": [],
+    "paper": "PMC12856317",
+    "pwml_matches_leg": true,
+    "pwml_sha256": "058699feb889ea77f14109a534fe12633417f2aa8040f3b0a7e7a24250010458",
+    "pwml_written": true,
+    "quarantine": {
+     "admitted_hash_matches_leg": true,
+     "counts": {
+      "auxiliary_accepted": 0,
+      "core_accepted": 3,
+      "quarantined_broken_reference": 0,
+      "quarantined_disconnected": 0,
+      "quarantined_out_of_scope": 0,
+      "quarantined_unmapped_entity": 0,
+      "quarantined_weak_evidence": 0
+     },
+     "decision_input_hash_matches_leg": true,
+     "ok": true,
+     "refusal": [],
+     "release": "release_ready"
+    },
+    "recorded_reports": {
+     "final_gate_errors": [],
+     "required_gate_codes": []
+    }
+   },
+   "src_sha": "61887581",
+   "tier": "B"
+  },
+  {
+   "checkpoint": "canonical",
+   "class": "pass",
+   "fidelity_diffs": [],
+   "id": "runs_verify/2026-08-22_2147/PMC12180156",
+   "paper": "PMC12180156",
+   "recorded": "pwml",
+   "replay": {
+    "canonical_matches_leg": true,
+    "canonical_sha256": "f9f0bb5b4c3036eb9763885f8190b29cabb9bf088498cb87f5dae4b704eac68f",
+    "checkpoint": "canonical",
+    "checkpoint_sha256": "dc71e61164b6b1f94528c2d9f3827f5852313c8e99e0c777784921d57875cbaa",
+    "driver": {
+     "codes": [],
+     "contract_errors": 0,
+     "gate_failed": false,
+     "gate_reason": "",
+     "gate_stage": "final_pre_export_stage3_gates"
+    },
+    "export": {
+     "error": "",
+     "ir_blocking": [],
+     "ir_validation": [],
+     "ok": true,
+     "pwml_name": "pathway.review_required.pwml",
+     "quarantine_reused": true,
+     "release": "review_required",
+     "required_gate_codes": [],
+     "required_gate_ok": true,
+     "stage3_contract_codes": []
+    },
+    "failure_stage": null,
+    "files": {
+     "canonical.json": "41b301c96e0b70bf",
+     "final.canonical.json": "dc71e61164b6b1f9",
+     "outputs/coverage_summary.json": "1f1089451bf18601",
+     "outputs/graph_closure_iterations.json": "6c12fbe83cf595a9",
+     "outputs/pathway.pwml": "1f9af323f686ae8b",
+     "outputs/pwml_prefreeze_resolution_report.streamlit.json": "545d0366941a2759",
+     "outputs/pwml_required_field_gate_report.json": "479f3144625ef062",
+     "outputs/quarantine_report.json": "7ebd09b297a04a05",
+     "outputs/removed_entity_report.json": "2d5d47dd44e915c5",
+     "pathway.review_required.pwml": "1f9af323f686ae8b",
+     "pwml_ir.json": "ba8d5aaf8aaff008"
+    },
+    "final_gate": {
+     "codes": [],
+     "errors": [],
+     "ok": true
+    },
+    "gold": null,
+    "id": "runs_verify/2026-08-22_2147/PMC12180156",
+    "network_refused": [],
+    "paper": "PMC12180156",
+    "pwml_matches_leg": true,
+    "pwml_sha256": "1f9af323f686ae8b4df4606e5a8b1a7f4e1af4f11239f92a69055eb6880c8eec",
+    "pwml_written": true,
+    "quarantine": {
+     "admitted_hash_matches_leg": true,
+     "counts": {
+      "auxiliary_accepted": 0,
+      "core_accepted": 5,
+      "quarantined_broken_reference": 0,
+      "quarantined_disconnected": 0,
+      "quarantined_out_of_scope": 0,
+      "quarantined_unmapped_entity": 0,
+      "quarantined_weak_evidence": 0
+     },
+     "decision_input_hash_matches_leg": true,
+     "ok": true,
+     "refusal": [],
+     "release": "review_required"
+    },
+    "recorded_reports": {
+     "final_gate_errors": [],
+     "required_gate_codes": []
+    }
+   },
+   "src_sha": "61887581",
+   "tier": "B"
+  },
+  {
+   "checkpoint": "canonical",
+   "class": "pass",
+   "fidelity_diffs": [],
+   "id": "runs_verify/2026-08-22_2147/PMC12096016",
+   "paper": "PMC12096016",
+   "recorded": "pwml",
+   "replay": {
+    "canonical_matches_leg": true,
+    "canonical_sha256": "dc1aa32af5e622596118c4a4dbd826ebe61a2bfd27869fe50e0585e326f46a80",
+    "checkpoint": "canonical",
+    "checkpoint_sha256": "dda0adb0bbfa6b5cac8dada99c95201a91c04e2c8437a7deb32ef4c6e9f15992",
+    "driver": {
+     "codes": [],
+     "contract_errors": 0,
+     "gate_failed": false,
+     "gate_reason": "",
+     "gate_stage": "final_pre_export_stage3_gates"
+    },
+    "export": {
+     "error": "",
+     "ir_blocking": [],
+     "ir_validation": [],
+     "ok": true,
+     "pwml_name": "pathway.review_required.pwml",
+     "quarantine_reused": true,
+     "release": "review_required",
+     "required_gate_codes": [],
+     "required_gate_ok": true,
+     "stage3_contract_codes": []
+    },
+    "failure_stage": null,
+    "files": {
+     "canonical.json": "9d54e436201290b1",
+     "final.canonical.json": "dda0adb0bbfa6b5c",
+     "outputs/coverage_summary.json": "2ebffda17b0d9083",
+     "outputs/graph_closure_iterations.json": "6c12fbe83cf595a9",
+     "outputs/pathway.pwml": "a0c1117b9c20cfa3",
+     "outputs/pwml_prefreeze_resolution_report.streamlit.json": "8ac8ac2f163997ce",
+     "outputs/pwml_required_field_gate_report.json": "f7045a9a42f52c16",
+     "outputs/quarantine_report.json": "e7c2fda9cb4bc7d1",
+     "outputs/removed_entity_report.json": "2d5d47dd44e915c5",
+     "pathway.review_required.pwml": "a0c1117b9c20cfa3",
+     "pwml_ir.json": "9815559a72db8a3c"
+    },
+    "final_gate": {
+     "codes": [],
+     "errors": [],
+     "ok": true
+    },
+    "gold": null,
+    "id": "runs_verify/2026-08-22_2147/PMC12096016",
+    "network_refused": [],
+    "paper": "PMC12096016",
+    "pwml_matches_leg": true,
+    "pwml_sha256": "a0c1117b9c20cfa3d480e1078056b8cf5b083411be9a0b21dc15995a224231a8",
+    "pwml_written": true,
+    "quarantine": {
+     "admitted_hash_matches_leg": false,
+     "counts": {
+      "auxiliary_accepted": 0,
+      "core_accepted": 8,
+      "quarantined_broken_reference": 0,
+      "quarantined_disconnected": 0,
+      "quarantined_out_of_scope": 0,
+      "quarantined_unmapped_entity": 0,
+      "quarantined_weak_evidence": 0
+     },
+     "decision_input_hash_matches_leg": true,
+     "ok": true,
+     "refusal": [],
+     "release": "review_required"
+    },
+    "recorded_reports": {
+     "final_gate_errors": [],
+     "required_gate_codes": []
+    }
+   },
+   "src_sha": "61887581",
+   "tier": "B"
+  },
+  {
+   "checkpoint": "canonical",
+   "class": "pass",
+   "fidelity_diffs": [],
+   "id": "runs_verify/2026-08-22_2147/PMC12452463",
+   "paper": "PMC12452463",
+   "recorded": "pwml",
+   "replay": {
+    "canonical_matches_leg": true,
+    "canonical_sha256": "dccb6cc4b176e1cf9934f33cc01ef2b60140410197d993a5d21468e2b63f3adc",
+    "checkpoint": "canonical",
+    "checkpoint_sha256": "1db8cc0237db19f07e8098047703afe6ae33b4959d078671e5bba183f5ef3b68",
+    "driver": {
+     "codes": [],
+     "contract_errors": 0,
+     "gate_failed": false,
+     "gate_reason": "",
+     "gate_stage": "final_pre_export_stage3_gates"
+    },
+    "export": {
+     "error": "",
+     "ir_blocking": [],
+     "ir_validation": [],
+     "ok": true,
+     "pwml_name": "pathway.review_required.pwml",
+     "quarantine_reused": true,
+     "release": "review_required",
+     "required_gate_codes": [],
+     "required_gate_ok": true,
+     "stage3_contract_codes": []
+    },
+    "failure_stage": null,
+    "files": {
+     "canonical.json": "c9eac014413c496c",
+     "final.canonical.json": "1db8cc0237db19f0",
+     "outputs/coverage_summary.json": "b0709622aeed3a0d",
+     "outputs/graph_closure_iterations.json": "6c12fbe83cf595a9",
+     "outputs/pathway.pwml": "b37e8443ace9b803",
+     "outputs/pwml_prefreeze_resolution_report.streamlit.json": "07685ff5d0c26d00",
+     "outputs/pwml_required_field_gate_report.json": "7df8fd5ed98d8c10",
+     "outputs/quarantine_report.json": "ce6ba91d9e85f348",
+     "outputs/removed_entity_report.json": "2d5d47dd44e915c5",
+     "pathway.review_required.pwml": "b37e8443ace9b803",
+     "pwml_ir.json": "55b651e0fa61f34f"
+    },
+    "final_gate": {
+     "codes": [],
+     "errors": [],
+     "ok": true
+    },
+    "gold": null,
+    "id": "runs_verify/2026-08-22_2147/PMC12452463",
+    "network_refused": [],
+    "paper": "PMC12452463",
+    "pwml_matches_leg": true,
+    "pwml_sha256": "b37e8443ace9b80343c0cdee5fab73ec8a201a74d813d4d30601488dbd1b831a",
+    "pwml_written": true,
+    "quarantine": {
+     "admitted_hash_matches_leg": false,
+     "counts": {
+      "auxiliary_accepted": 0,
+      "core_accepted": 9,
+      "quarantined_broken_reference": 0,
+      "quarantined_disconnected": 0,
+      "quarantined_out_of_scope": 0,
+      "quarantined_unmapped_entity": 0,
+      "quarantined_weak_evidence": 0
+     },
+     "decision_input_hash_matches_leg": true,
+     "ok": true,
+     "refusal": [],
+     "release": "review_required"
+    },
+    "recorded_reports": {
+     "final_gate_errors": [],
+     "required_gate_codes": []
+    }
+   },
+   "src_sha": "61887581",
+   "tier": "B"
+  },
+  {
+   "checkpoint": "canonical",
+   "class": "pass",
+   "fidelity_diffs": [],
+   "id": "runs_verify/2026-08-22_2147/PMC12782028",
+   "paper": "PMC12782028",
+   "recorded": "pwml",
+   "replay": {
+    "canonical_matches_leg": true,
+    "canonical_sha256": "3b79fc8ea7196d80235539d5a76a5af71680a9944939add1380869677d06723e",
+    "checkpoint": "canonical",
+    "checkpoint_sha256": "5be33fd6f802ada4129986ddc864ddab9eef302dc2be520833247800669a2cf8",
+    "driver": {
+     "codes": [],
+     "contract_errors": 0,
+     "gate_failed": false,
+     "gate_reason": "",
+     "gate_stage": "final_pre_export_stage3_gates"
+    },
+    "export": {
+     "error": "",
+     "ir_blocking": [],
+     "ir_validation": [],
+     "ok": true,
+     "pwml_name": "pathway.review_required.pwml",
+     "quarantine_reused": true,
+     "release": "review_required",
+     "required_gate_codes": [],
+     "required_gate_ok": true,
+     "stage3_contract_codes": []
+    },
+    "failure_stage": null,
+    "files": {
+     "canonical.json": "237d4dca970c6cbf",
+     "final.canonical.json": "5be33fd6f802ada4",
+     "outputs/coverage_summary.json": "89c22a3a3e7e0b19",
+     "outputs/graph_closure_iterations.json": "6c12fbe83cf595a9",
+     "outputs/pathway.pwml": "a169a4e119cc8cbb",
+     "outputs/pwml_prefreeze_resolution_report.streamlit.json": "871686ac50f222cd",
+     "outputs/pwml_required_field_gate_report.json": "9f9fc694259b673f",
+     "outputs/quarantine_report.json": "0b8bc630c902e589",
+     "outputs/removed_entity_report.json": "2d5d47dd44e915c5",
+     "pathway.review_required.pwml": "a169a4e119cc8cbb",
+     "pwml_ir.json": "b5ae3c87a4780adf"
+    },
+    "final_gate": {
+     "codes": [],
+     "errors": [],
+     "ok": true
+    },
+    "gold": null,
+    "id": "runs_verify/2026-08-22_2147/PMC12782028",
+    "network_refused": [],
+    "paper": "PMC12782028",
+    "pwml_matches_leg": true,
+    "pwml_sha256": "a169a4e119cc8cbbaee24bbc1254dfb4f80f83c84c342620ab4146688f83874d",
+    "pwml_written": true,
+    "quarantine": {
+     "admitted_hash_matches_leg": false,
+     "counts": {
+      "auxiliary_accepted": 0,
+      "core_accepted": 3,
+      "quarantined_broken_reference": 0,
+      "quarantined_disconnected": 0,
+      "quarantined_out_of_scope": 0,
+      "quarantined_unmapped_entity": 0,
+      "quarantined_weak_evidence": 0
+     },
+     "decision_input_hash_matches_leg": true,
+     "ok": true,
+     "refusal": [],
+     "release": "review_required"
+    },
+    "recorded_reports": {
+     "final_gate_errors": [],
+     "required_gate_codes": []
+    }
+   },
+   "src_sha": "61887581",
+   "tier": "B"
+  }
+ ],
+ "offline_probe": {
+  "attempts": {
+   "create_connection_loopback": "refused",
+   "raw_socket_connect": "refused",
+   "urlopen_uniprot": "refused"
+  },
+  "counted": 3,
+  "ok": true
+ },
+ "src": "t2pw from --src",
+ "summary": {
+  "all": {
+   "aborted_not_counted": 0,
+   "llm_originating_failures": 0,
+   "network_refused_total": 0,
+   "passing_ids": [
+    "runs_verify/2026-08-22_2017/PMC12452463",
+    "runs_verify/2026-08-22_2147/PMC12096016",
+    "runs_verify/2026-08-22_2147/PMC12180156",
+    "runs_verify/2026-08-22_2147/PMC12452463",
+    "runs_verify/2026-08-22_2147/PMC12782028",
+    "runs_verify/2026-08-22_2147/PMC12856317",
+    "runs_verify/2026-08-22_2147/PMC13231680"
+   ],
+   "pwml_pass": 7,
+   "pwml_pass_rate_of_replayed": "7/8",
+   "pwml_pass_rate_of_strict": "7/8",
+   "replay_errors": 0,
+   "replayable_failures": 1,
+   "strict_legs": 8,
+   "verdict_as_recorded": "8/8",
+   "with_checkpoint": 8
+  },
+  "tier_B": {
+   "aborted_not_counted": 0,
+   "llm_originating_failures": 0,
+   "network_refused_total": 0,
+   "passing_ids": [
+    "runs_verify/2026-08-22_2017/PMC12452463",
+    "runs_verify/2026-08-22_2147/PMC12096016",
+    "runs_verify/2026-08-22_2147/PMC12180156",
+    "runs_verify/2026-08-22_2147/PMC12452463",
+    "runs_verify/2026-08-22_2147/PMC12782028",
+    "runs_verify/2026-08-22_2147/PMC12856317",
+    "runs_verify/2026-08-22_2147/PMC13231680"
+   ],
+   "pwml_pass": 7,
+   "pwml_pass_rate_of_replayed": "7/8",
+   "pwml_pass_rate_of_strict": "7/8",
+   "replay_errors": 0,
+   "replayable_failures": 1,
+   "strict_legs": 8,
+   "verdict_as_recorded": "8/8",
+   "with_checkpoint": 8
+  }
+ },
+ "task": "ORCH-768"
+}

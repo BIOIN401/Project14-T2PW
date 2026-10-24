@@ -1,0 +1,722 @@
+{
+ "legs": [
+  {
+   "checkpoint": "canonical",
+   "class": "pass",
+   "fidelity_diffs": [],
+   "id": "ORCH-759p/chlorophyll-strict/2026-10-22_2301",
+   "paper": "PMC5130987",
+   "recorded": "pwml",
+   "replay": {
+    "canonical_matches_leg": true,
+    "canonical_sha256": "752a186420a5d80c2461f6cf68418fe4fc42b1828e74a4b40008e058247146c1",
+    "checkpoint": "canonical",
+    "checkpoint_sha256": "c33b89d3ff32a427a0dd3b289fef0d2531c2c02ee852cd681907520ad174cb56",
+    "driver": {
+     "codes": [],
+     "contract_errors": 0,
+     "gate_failed": false,
+     "gate_reason": "",
+     "gate_stage": "final_pre_export_stage3_gates"
+    },
+    "export": {
+     "error": "",
+     "ir_blocking": [],
+     "ir_validation": [],
+     "ok": true,
+     "pwml_name": "pathway.review_required.pwml",
+     "quarantine_reused": true,
+     "release": "review_required",
+     "required_gate_codes": [],
+     "required_gate_ok": true,
+     "stage3_contract_codes": []
+    },
+    "failure_stage": null,
+    "files": {
+     "canonical.json": "17eda0c2dd8be329",
+     "final.canonical.json": "c33b89d3ff32a427",
+     "outputs/coverage_diagnostics.json": "86dce5a612c8d48b",
+     "outputs/coverage_summary.json": "bd424d4b9ddd3684",
+     "outputs/graph_closure_iterations.json": "6c12fbe83cf595a9",
+     "outputs/pathway.pwml": "1009c1837fcb12cd",
+     "outputs/pwml_prefreeze_resolution_report.streamlit.json": "88b9fa9c541eb574",
+     "outputs/pwml_required_field_gate_report.json": "f3798d0cf7ac07cc",
+     "outputs/quarantine_report.json": "d97d1d9ce96e6db5",
+     "outputs/removed_entity_report.json": "2d5d47dd44e915c5",
+     "pathway.review_required.pwml": "1009c1837fcb12cd",
+     "pwml_ir.json": "98e450f09d7c393f"
+    },
+    "final_gate": {
+     "codes": [],
+     "errors": [],
+     "ok": true
+    },
+    "gold": null,
+    "id": "ORCH-759p/chlorophyll-strict/2026-10-22_2301",
+    "network_refused": [],
+    "paper": "PMC5130987",
+    "pwml_matches_leg": true,
+    "pwml_sha256": "1009c1837fcb12cd0504b9b884ec9c440e2778e924079242be3631bb7ee6ef67",
+    "pwml_written": true,
+    "quarantine": {
+     "admitted_hash_matches_leg": false,
+     "counts": {
+      "auxiliary_accepted": 20,
+      "core_accepted": 34,
+      "quarantined_broken_reference": 0,
+      "quarantined_disconnected": 0,
+      "quarantined_out_of_scope": 0,
+      "quarantined_unmapped_entity": 0,
+      "quarantined_weak_evidence": 0
+     },
+     "decision_input_hash_matches_leg": true,
+     "ok": true,
+     "refusal": [],
+     "release": "review_required"
+    },
+    "recorded_reports": {
+     "final_gate_errors": [],
+     "required_gate_codes": []
+    }
+   },
+   "src_sha": "360a6ac5",
+   "tier": "A"
+  },
+  {
+   "checkpoint": "canonical",
+   "class": "replayable (final_pre_export_stage3_gates)",
+   "fidelity_diffs": [],
+   "id": "ORCH-767/enterobactin-strict/2026-10-23_2224",
+   "paper": "PMC12096016",
+   "recorded": "final_pre_export_stage3_gates",
+   "replay": {
+    "canonical_matches_leg": true,
+    "canonical_sha256": "47b6fba48b9f7bcc64d168d39178ae6b43442a8fbeae6c0eab0db77b734d867c",
+    "checkpoint": "canonical",
+    "checkpoint_sha256": "1b1e1884d5782bc86db8dc83ea21d4ca0c7c22c70d6e8f64cbd455fefdd98e1a",
+    "driver": {
+     "codes": [
+      "gate.generated_protein_complex_enterobactin_synthase_complex_componen"
+     ],
+     "contract_errors": 0,
+     "gate_failed": true,
+     "gate_reason": "final_gate_failed",
+     "gate_stage": "final_pre_export_stage3_gates"
+    },
+    "failure_stage": "final_pre_export_stage3_gates",
+    "files": {
+     "canonical.json": "b8882edfba14e75b",
+     "final.canonical.json": "1b1e1884d5782bc8",
+     "outputs/coverage_diagnostics.json": "579fe6692a36e5f6",
+     "outputs/coverage_summary.json": "f09d2f5188938e70",
+     "outputs/graph_closure_iterations.json": "6c12fbe83cf595a9",
+     "outputs/quarantine_report.json": "9c84e4675806f7a8",
+     "outputs/removed_entity_report.json": "2d5d47dd44e915c5"
+    },
+    "final_gate": {
+     "codes": [
+      "gate.generated_protein_complex_enterobactin_synthase_complex_componen"
+     ],
+     "errors": [
+      [
+       "/entities/protein_complexes/0/components/0",
+       "Generated protein complex 'enterobactin synthase complex' component 'enterobactin synthase' is missing positive stoichiometry."
+      ]
+     ],
+     "ok": false
+    },
+    "gold": {
+     "final": {
+      "F1": 1.0,
+      "P": 1.0,
+      "R": 1.0,
+      "gold": 5,
+      "matched": 5,
+      "matched_ids": [
+       "R1",
+       "R2",
+       "R3",
+       "R4",
+       "R5"
+      ]
+     }
+    },
+    "id": "ORCH-767/enterobactin-strict/2026-10-23_2224",
+    "network_refused": [],
+    "paper": "PMC12096016",
+    "pwml_written": false,
+    "quarantine": {
+     "admitted_hash_matches_leg": false,
+     "counts": {
+      "auxiliary_accepted": 0,
+      "core_accepted": 17,
+      "quarantined_broken_reference": 0,
+      "quarantined_disconnected": 0,
+      "quarantined_out_of_scope": 0,
+      "quarantined_unmapped_entity": 0,
+      "quarantined_weak_evidence": 0
+     },
+     "decision_input_hash_matches_leg": true,
+     "ok": true,
+     "refusal": [],
+     "release": "review_required"
+    },
+    "recorded_reports": {
+     "final_gate_errors": [
+      [
+       "/entities/protein_complexes/0/components/0",
+       "Generated protein complex 'enterobactin synthase complex' component 'enterobactin synthase' is missing positive stoichiometry."
+      ]
+     ],
+     "required_gate_codes": null
+    }
+   },
+   "src_sha": "360a6ac5",
+   "tier": "A"
+  },
+  {
+   "checkpoint": "canonical",
+   "class": "replayable (final_pre_export_stage3_gates)",
+   "fidelity_diffs": [],
+   "id": "ORCH-767/chlorophyll-strict/2026-10-23_2328",
+   "paper": "PMC5130987",
+   "recorded": "final_pre_export_stage3_gates",
+   "replay": {
+    "canonical_matches_leg": true,
+    "canonical_sha256": "89ee2d95809aa795bdeb800d4cc52607fd845e431a919a830f83410c34819f99",
+    "checkpoint": "canonical",
+    "checkpoint_sha256": "5805a848ac81e4eafcd7f12d401f63fb63aaf84d3168f75c7174ed9fd3484f8c",
+    "driver": {
+     "codes": [
+      "gate.unknown_protein_modifier_reference"
+     ],
+     "contract_errors": 0,
+     "gate_failed": true,
+     "gate_reason": "final_gate_failed",
+     "gate_stage": "final_pre_export_stage3_gates"
+    },
+    "failure_stage": "final_pre_export_stage3_gates",
+    "files": {
+     "canonical.json": "b6dd516bc73df0ec",
+     "final.canonical.json": "5805a848ac81e4ea",
+     "outputs/coverage_diagnostics.json": "0db55dd15141aedf",
+     "outputs/coverage_summary.json": "bc67844a32b06a56",
+     "outputs/graph_closure_iterations.json": "6c12fbe83cf595a9",
+     "outputs/quarantine_report.json": "045c3b077e4df3c1",
+     "outputs/removed_entity_report.json": "2d5d47dd44e915c5"
+    },
+    "final_gate": {
+     "codes": [
+      "gate.unknown_protein_modifier_reference"
+     ],
+     "errors": [
+      [
+       "/processes/reactions/17/modifiers/1",
+       "Unknown protein/modifier reference: PIF1"
+      ],
+      [
+       "/processes/reactions/17/modifiers/7",
+       "Unknown protein/modifier reference: GBP"
+      ],
+      [
+       "/processes/reactions/18/modifiers/0",
+       "Unknown protein/modifier reference: FAR1"
+      ],
+      [
+       "/processes/reactions/21/enzymes/3",
+       "Unknown protein/modifier reference: GBP"
+      ],
+      [
+       "/processes/reactions/21/modifiers/3",
+       "Unknown protein/modifier reference: GBP"
+      ],
+      [
+       "/processes/reactions/22/enzymes/1",
+       "Unknown protein/modifier reference: CPO1"
+      ],
+      [
+       "/processes/reactions/22/modifiers/1",
+       "Unknown protein/modifier reference: CPO1"
+      ],
+      [
+       "/processes/reactions/23/enzymes/1",
+       "Unknown protein/modifier reference: PPO1"
+      ],
+      [
+       "/processes/reactions/23/modifiers/1",
+       "Unknown protein/modifier reference: PPO1"
+      ]
+     ],
+     "ok": false
+    },
+    "gold": null,
+    "id": "ORCH-767/chlorophyll-strict/2026-10-23_2328",
+    "network_refused": [],
+    "paper": "PMC5130987",
+    "pwml_written": false,
+    "quarantine": {
+     "admitted_hash_matches_leg": false,
+     "counts": {
+      "auxiliary_accepted": 12,
+      "core_accepted": 20,
+      "quarantined_broken_reference": 0,
+      "quarantined_disconnected": 0,
+      "quarantined_out_of_scope": 0,
+      "quarantined_unmapped_entity": 0,
+      "quarantined_weak_evidence": 0
+     },
+     "decision_input_hash_matches_leg": true,
+     "ok": true,
+     "refusal": [],
+     "release": "review_required"
+    },
+    "recorded_reports": {
+     "final_gate_errors": [
+      [
+       "/processes/reactions/17/modifiers/1",
+       "Unknown protein/modifier reference: PIF1"
+      ],
+      [
+       "/processes/reactions/17/modifiers/7",
+       "Unknown protein/modifier reference: GBP"
+      ],
+      [
+       "/processes/reactions/18/modifiers/0",
+       "Unknown protein/modifier reference: FAR1"
+      ],
+      [
+       "/processes/reactions/21/enzymes/3",
+       "Unknown protein/modifier reference: GBP"
+      ],
+      [
+       "/processes/reactions/21/modifiers/3",
+       "Unknown protein/modifier reference: GBP"
+      ],
+      [
+       "/processes/reactions/22/enzymes/1",
+       "Unknown protein/modifier reference: CPO1"
+      ],
+      [
+       "/processes/reactions/22/modifiers/1",
+       "Unknown protein/modifier reference: CPO1"
+      ],
+      [
+       "/processes/reactions/23/enzymes/1",
+       "Unknown protein/modifier reference: PPO1"
+      ],
+      [
+       "/processes/reactions/23/modifiers/1",
+       "Unknown protein/modifier reference: PPO1"
+      ]
+     ],
+     "required_gate_codes": null
+    }
+   },
+   "src_sha": "360a6ac5",
+   "tier": "A"
+  },
+  {
+   "checkpoint": "canonical",
+   "class": "pass",
+   "fidelity_diffs": [],
+   "id": "ORCH-767/sour_taste_v2-strict/2026-10-24_0042",
+   "paper": "PMC7059786",
+   "recorded": "pwml",
+   "replay": {
+    "canonical_matches_leg": true,
+    "canonical_sha256": "c5204149011a737134fdcc9975de983a572285070a6ddf0788d3070c06c555ec",
+    "checkpoint": "canonical",
+    "checkpoint_sha256": "38a330fdf2a1281043fbf3d135d86b896a26ec98b8627230a7f4e531cea9892c",
+    "driver": {
+     "codes": [],
+     "contract_errors": 0,
+     "gate_failed": false,
+     "gate_reason": "",
+     "gate_stage": "final_pre_export_stage3_gates"
+    },
+    "export": {
+     "error": "",
+     "ir_blocking": [],
+     "ir_validation": [],
+     "ok": true,
+     "pwml_name": "pathway.review_required.pwml",
+     "quarantine_reused": true,
+     "release": "review_required",
+     "required_gate_codes": [],
+     "required_gate_ok": true,
+     "stage3_contract_codes": []
+    },
+    "failure_stage": null,
+    "files": {
+     "canonical.json": "6c6f4d3239f7e6b4",
+     "final.canonical.json": "38a330fdf2a12810",
+     "outputs/coverage_diagnostics.json": "163db2ce9f6ce5b8",
+     "outputs/coverage_summary.json": "be118cc7e722a401",
+     "outputs/graph_closure_iterations.json": "6c12fbe83cf595a9",
+     "outputs/pathway.pwml": "d73219f99a2577e8",
+     "outputs/pwml_prefreeze_resolution_report.streamlit.json": "640aa88d654fbe9e",
+     "outputs/pwml_required_field_gate_report.json": "2eaae3a348ae7737",
+     "outputs/quarantine_report.json": "fdf30c5edd7335c6",
+     "outputs/removed_entity_report.json": "2d5d47dd44e915c5",
+     "pathway.review_required.pwml": "d73219f99a2577e8",
+     "pwml_ir.json": "27813a5d39b2e897"
+    },
+    "final_gate": {
+     "codes": [],
+     "errors": [],
+     "ok": true
+    },
+    "gold": null,
+    "id": "ORCH-767/sour_taste_v2-strict/2026-10-24_0042",
+    "network_refused": [],
+    "paper": "PMC7059786",
+    "pwml_matches_leg": true,
+    "pwml_sha256": "d73219f99a2577e817eb7721e83175230bea23fd70db2df8ad5c03f3436414a4",
+    "pwml_written": true,
+    "quarantine": {
+     "admitted_hash_matches_leg": false,
+     "counts": {
+      "auxiliary_accepted": 0,
+      "core_accepted": 7,
+      "quarantined_broken_reference": 0,
+      "quarantined_disconnected": 0,
+      "quarantined_out_of_scope": 0,
+      "quarantined_unmapped_entity": 0,
+      "quarantined_weak_evidence": 0
+     },
+     "decision_input_hash_matches_leg": true,
+     "ok": true,
+     "refusal": [],
+     "release": "review_required"
+    },
+    "recorded_reports": {
+     "final_gate_errors": [],
+     "required_gate_codes": []
+    }
+   },
+   "src_sha": "360a6ac5",
+   "tier": "A"
+  },
+  {
+   "checkpoint": "canonical",
+   "class": "replayable (refinement_review_crash)",
+   "fidelity_diffs": [],
+   "id": "ORCH-767/wnt_pcp-strict/2026-10-24_0131",
+   "paper": "PMC10425814",
+   "recorded": "refinement_review_crash",
+   "replay": {
+    "canonical_matches_leg": true,
+    "canonical_sha256": "01b142f1e48ffaaed36488caeca7e523fe3a59da1e863a28770ec904a15f74a1",
+    "checkpoint": "canonical",
+    "checkpoint_sha256": "5658510e782d07837d19a9dcb34ddc4a4eb81c3aaa117f5aaaa1f6af39467b49",
+    "driver": {
+     "codes": [],
+     "contract_errors": 0,
+     "gate_failed": false,
+     "gate_reason": "",
+     "gate_stage": "final_pre_export_stage3_gates"
+    },
+    "export_if_refinement_opened": {
+     "error": "",
+     "ok": true,
+     "required_gate_codes": []
+    },
+    "failure_stage": "refinement_review_crash",
+    "files": {
+     "canonical.json": "1ae217fe08773d56",
+     "final.canonical.json": "5658510e782d0783",
+     "if_refinement_opened/outputs/pathway.pwml": "e68f008bf1dfef6f",
+     "if_refinement_opened/outputs/pwml_prefreeze_resolution_report.streamlit.json": "961e51c277628a1d",
+     "if_refinement_opened/outputs/pwml_required_field_gate_report.json": "7cf316f2ec0abd0e",
+     "outputs/coverage_diagnostics.json": "ea5ab6da749625b4",
+     "outputs/coverage_summary.json": "c7b4c78bb003f4a7",
+     "outputs/graph_closure_iterations.json": "6c12fbe83cf595a9",
+     "outputs/quarantine_report.json": "7e8a443c9e0ee0c5",
+     "outputs/removed_entity_report.json": "2d5d47dd44e915c5"
+    },
+    "final_gate": {
+     "codes": [],
+     "errors": [],
+     "ok": true
+    },
+    "gold": null,
+    "id": "ORCH-767/wnt_pcp-strict/2026-10-24_0131",
+    "network_refused": [],
+    "paper": "PMC10425814",
+    "pwml_written": false,
+    "quarantine": {
+     "admitted_hash_matches_leg": false,
+     "counts": {
+      "auxiliary_accepted": 3,
+      "core_accepted": 15,
+      "quarantined_broken_reference": 0,
+      "quarantined_disconnected": 0,
+      "quarantined_out_of_scope": 0,
+      "quarantined_unmapped_entity": 0,
+      "quarantined_weak_evidence": 0
+     },
+     "decision_input_hash_matches_leg": true,
+     "ok": true,
+     "refusal": [],
+     "release": "review_required"
+    },
+    "recorded_reports": {
+     "final_gate_errors": [],
+     "required_gate_codes": null
+    },
+    "refinement_error": "RuntimeError: DraftGraph has no reaction nodes \u2014 nothing to render."
+   },
+   "src_sha": "360a6ac5",
+   "tier": "A"
+  },
+  {
+   "checkpoint": "pre_freeze",
+   "class": "replayable (final_pre_export_gate_lifecycle)",
+   "fidelity_diffs": [],
+   "id": "ORCH-767/wnt_ca-strict/2026-10-24_0314",
+   "paper": "PMC10425814",
+   "recorded": "final_pre_export_gate_lifecycle",
+   "replay": {
+    "canonical_matches_leg": false,
+    "canonical_sha256": null,
+    "checkpoint": "pre_freeze",
+    "checkpoint_sha256": "a3009ebd994018c3d5b808fc8002eb477d1f72615f381f892b1cc940f17866d7",
+    "driver": {
+     "codes": [
+      "gate.gate_lifecycle"
+     ],
+     "contract_errors": 0,
+     "gate_failed": true,
+     "gate_reason": "final_gate_report_missing",
+     "gate_stage": "final_pre_export_gate_lifecycle"
+    },
+    "enrichment": {
+     "ok": true,
+     "summary_digest": "8b87d2ec5ef3738e"
+    },
+    "failure_stage": "final_pre_export_gate_lifecycle",
+    "files": {
+     "canonical.json": "44136fa355b3678a",
+     "enrichment_dump.json": "854401d7250a2e57",
+     "enrichment_report.json": "fccd131f31f2ac49",
+     "final.enriched.json": "228390a01bee765f",
+     "final.mapped.json": "a3009ebd994018c3",
+     "outputs/coverage_diagnostics.json": "8d987b895d87128b",
+     "outputs/coverage_summary.json": "20170e2a22744ae7",
+     "outputs/graph_closure_iterations.json": "c4561045b908463f",
+     "outputs/quarantine_report.json": "e6815b347653bc7c",
+     "outputs/removed_entity_report.json": "625e99e81c0a6811"
+    },
+    "final_gate": null,
+    "gold": null,
+    "id": "ORCH-767/wnt_ca-strict/2026-10-24_0314",
+    "network_refused": [],
+    "paper": "PMC10425814",
+    "prefreeze": {
+     "admitted_hash_matches_leg_with_db_available": false,
+     "db_resolution": {
+      "available": false,
+      "reason": "db_not_configured"
+     },
+     "failures": {
+      "compounds": "resolution_report_not_ok:db_unavailable"
+     },
+     "ok": false
+    },
+    "pwml_written": false,
+    "quarantine": {
+     "admitted_hash_matches_leg": false,
+     "counts": {
+      "auxiliary_accepted": 3,
+      "core_accepted": 19,
+      "quarantined_broken_reference": 0,
+      "quarantined_disconnected": 0,
+      "quarantined_out_of_scope": 0,
+      "quarantined_unmapped_entity": 26,
+      "quarantined_weak_evidence": 0
+     },
+     "decision_input_hash_matches_leg": true,
+     "ok": false,
+     "refusal": [
+      "unexportable_entity:1"
+     ],
+     "release": "diagnostic_only"
+    },
+    "recorded_reports": {
+     "final_gate_errors": [],
+     "required_gate_codes": null
+    }
+   },
+   "src_sha": "360a6ac5",
+   "tier": "A"
+  },
+  {
+   "checkpoint": "canonical",
+   "class": "pass",
+   "fidelity_diffs": [],
+   "id": "ORCH-767/menaquinone-strict/2026-10-24_0503",
+   "paper": "PMC12421875",
+   "recorded": "pwml",
+   "replay": {
+    "canonical_matches_leg": true,
+    "canonical_sha256": "d910da1763902a0265792acfccdda611b1e8167751feac50cdf1e458e5b63fbb",
+    "checkpoint": "canonical",
+    "checkpoint_sha256": "6899246ccf3c425f676bafd7aa1bc560f829359a0bf4aa80812b840e3f304d0d",
+    "driver": {
+     "codes": [],
+     "contract_errors": 0,
+     "gate_failed": false,
+     "gate_reason": "",
+     "gate_stage": "final_pre_export_stage3_gates"
+    },
+    "export": {
+     "error": "",
+     "ir_blocking": [],
+     "ir_validation": [],
+     "ok": true,
+     "pwml_name": "pathway.review_required.pwml",
+     "quarantine_reused": true,
+     "release": "review_required",
+     "required_gate_codes": [],
+     "required_gate_ok": true,
+     "stage3_contract_codes": []
+    },
+    "failure_stage": null,
+    "files": {
+     "canonical.json": "efa7ccd8b99d3ccf",
+     "final.canonical.json": "6899246ccf3c425f",
+     "outputs/coverage_diagnostics.json": "3685374da2b75fc5",
+     "outputs/coverage_summary.json": "bccfcc6db0c19264",
+     "outputs/graph_closure_iterations.json": "6c12fbe83cf595a9",
+     "outputs/pathway.pwml": "ca717ea45bff1cae",
+     "outputs/pwml_prefreeze_resolution_report.streamlit.json": "9519dd933eb7de46",
+     "outputs/pwml_required_field_gate_report.json": "a755f9c5f7fb2c07",
+     "outputs/quarantine_report.json": "57919082e0304693",
+     "outputs/removed_entity_report.json": "2d5d47dd44e915c5",
+     "pathway.review_required.pwml": "ca717ea45bff1cae",
+     "pwml_ir.json": "55352f05af846027"
+    },
+    "final_gate": {
+     "codes": [],
+     "errors": [],
+     "ok": true
+    },
+    "gold": {
+     "final": {
+      "F1": 0.9524,
+      "P": 0.9091,
+      "R": 1.0,
+      "gold": 9,
+      "matched": 9,
+      "matched_ids": [
+       "R1",
+       "R2",
+       "R3",
+       "R4",
+       "R5",
+       "R6",
+       "R7",
+       "R8",
+       "R9"
+      ]
+     },
+     "pwml": {
+      "F1": 0.9524,
+      "P": 0.9091,
+      "R": 1.0,
+      "gold": 9,
+      "matched": 9,
+      "matched_ids": [
+       "R1",
+       "R2",
+       "R3",
+       "R4",
+       "R5",
+       "R6",
+       "R7",
+       "R8",
+       "R9"
+      ]
+     }
+    },
+    "id": "ORCH-767/menaquinone-strict/2026-10-24_0503",
+    "network_refused": [],
+    "paper": "PMC12421875",
+    "pwml_matches_leg": true,
+    "pwml_sha256": "ca717ea45bff1cae1afc192319724154c33fc8f629316f4e389f38fbc1c411be",
+    "pwml_written": true,
+    "quarantine": {
+     "admitted_hash_matches_leg": false,
+     "counts": {
+      "auxiliary_accepted": 4,
+      "core_accepted": 10,
+      "quarantined_broken_reference": 0,
+      "quarantined_disconnected": 0,
+      "quarantined_out_of_scope": 0,
+      "quarantined_unmapped_entity": 0,
+      "quarantined_weak_evidence": 0
+     },
+     "decision_input_hash_matches_leg": true,
+     "ok": true,
+     "refusal": [],
+     "release": "review_required"
+    },
+    "recorded_reports": {
+     "final_gate_errors": [],
+     "required_gate_codes": []
+    }
+   },
+   "src_sha": "360a6ac5",
+   "tier": "A"
+  }
+ ],
+ "offline_probe": {
+  "attempts": {
+   "create_connection_loopback": "refused",
+   "raw_socket_connect": "refused",
+   "urlopen_uniprot": "refused"
+  },
+  "counted": 3,
+  "ok": true
+ },
+ "src": "t2pw from --src",
+ "summary": {
+  "all": {
+   "aborted_not_counted": 0,
+   "llm_originating_failures": 0,
+   "network_refused_total": 0,
+   "passing_ids": [
+    "ORCH-759p/chlorophyll-strict/2026-10-22_2301",
+    "ORCH-767/menaquinone-strict/2026-10-24_0503",
+    "ORCH-767/sour_taste_v2-strict/2026-10-24_0042"
+   ],
+   "pwml_pass": 3,
+   "pwml_pass_rate_of_replayed": "3/7",
+   "pwml_pass_rate_of_strict": "3/7",
+   "replay_errors": 0,
+   "replayable_failures": 4,
+   "strict_legs": 7,
+   "verdict_as_recorded": "7/7",
+   "with_checkpoint": 7
+  },
+  "tier_A": {
+   "aborted_not_counted": 0,
+   "llm_originating_failures": 0,
+   "network_refused_total": 0,
+   "passing_ids": [
+    "ORCH-759p/chlorophyll-strict/2026-10-22_2301",
+    "ORCH-767/menaquinone-strict/2026-10-24_0503",
+    "ORCH-767/sour_taste_v2-strict/2026-10-24_0042"
+   ],
+   "pwml_pass": 3,
+   "pwml_pass_rate_of_replayed": "3/7",
+   "pwml_pass_rate_of_strict": "3/7",
+   "replay_errors": 0,
+   "replayable_failures": 4,
+   "strict_legs": 7,
+   "verdict_as_recorded": "7/7",
+   "with_checkpoint": 7
+  }
+ },
+ "task": "ORCH-768"
+}

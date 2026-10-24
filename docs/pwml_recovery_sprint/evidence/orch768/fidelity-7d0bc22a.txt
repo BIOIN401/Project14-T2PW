@@ -1,0 +1,31 @@
+t2pw resolved: C:\t\bt-orch768\src-7d0bc22a\src\t2pw
+offline probe: {'attempts': {'urlopen_uniprot': 'refused', 'create_connection_loopback': 'refused', 'raw_socket_connect': 'refused'}, 'counted': 3, 'ok': True}
+runs_verify/2026-08-25_1216/PMC12856317                     replayable (pwml_export)                              q=True/review_required gate=True export=False req=True net=0  AS RECORDED
+runs_verify/2026-08-25_1216/PMC12444477                     replayable (upstream_contract_report)                 q=True/review_required gate=True export=None req=None net=0  AS RECORDED
+
+SUMMARY (all)
+  strict_legs                    2
+  with_checkpoint                2
+  replay_errors                  0
+  pwml_pass                      0
+  pwml_pass_rate_of_strict       0/2
+  pwml_pass_rate_of_replayed     0/2
+  replayable_failures            2
+  llm_originating_failures       0
+  aborted_not_counted            0
+  verdict_as_recorded            2/2
+  network_refused_total          0
+
+SUMMARY (tier_B)
+  strict_legs                    2
+  with_checkpoint                2
+  replay_errors                  0
+  pwml_pass                      0
+  pwml_pass_rate_of_strict       0/2
+  pwml_pass_rate_of_replayed     0/2
+  replayable_failures            2
+  llm_originating_failures       0
+  aborted_not_counted            0
+  verdict_as_recorded            2/2
+  network_refused_total          0
+GOLD (replayed tail; certified gold only)

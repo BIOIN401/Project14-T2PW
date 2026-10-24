@@ -1,0 +1,43 @@
+t2pw resolved: C:\t\bt-orch768\src-a2ed7284\src\t2pw
+offline probe: {'attempts': {'urlopen_uniprot': 'refused', 'create_connection_loopback': 'refused', 'raw_socket_connect': 'refused'}, 'counted': 3, 'ok': True}
+ORCH-755/enterobactin-strict/2026-10-20_2201                replayable (final_pre_export_gate_lifecycle)          q=False['unexportable_entity:1']/diagnostic_only gate=None export=None req=None net=0  AS RECORDED
+ORCH-755/menaquinone-strict/2026-10-20_2238                 llm_originating (timeout at unknown: no checkpoint) 
+ORCH-755/chlorophyll-strict/2026-10-20_2338                 llm_originating (timeout at unknown: no checkpoint) 
+ORCH-755/ara_operon-strict/2026-10-21_0039                  llm_originating (timeout at unknown: no checkpoint) 
+ORCH-755/sour_taste-strict/2026-10-21_0139                  replayable (pwml_export)                              q=True/review_required gate=True export=False req=None net=0  AS RECORDED
+ORCH-755/wnt_pcp-strict/2026-10-21_0207                     llm_originating (timeout at unknown: no checkpoint) 
+ORCH-755/wnt_ca-strict/2026-10-21_0307                      llm_originating (fail at stage1: no checkpoint)     
+ORCH-756/enterobactin-strict/2026-10-21_2020                pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+                                                            gold: final P0.714 R1.000 F1 0.833 (5/5)  pwml P0.714 R1.000 F1 0.833 (5/5)
+ORCH-756/menaquinone-strict/2026-10-21_2048                 pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+                                                            gold: final P0.889 R0.778 F1 0.830 (7/9)  pwml P0.889 R0.778 F1 0.830 (7/9)
+ORCH-756/chlorophyll-strict/2026-10-21_2109                 llm_originating (timeout at unknown: no checkpoint) 
+
+SUMMARY (all)
+  strict_legs                    10
+  with_checkpoint                4
+  replay_errors                  0
+  pwml_pass                      2
+  pwml_pass_rate_of_strict       2/10
+  pwml_pass_rate_of_replayed     2/4
+  replayable_failures            2
+  llm_originating_failures       6
+  aborted_not_counted            0
+  verdict_as_recorded            4/4
+  network_refused_total          0
+
+SUMMARY (tier_A)
+  strict_legs                    10
+  with_checkpoint                4
+  replay_errors                  0
+  pwml_pass                      2
+  pwml_pass_rate_of_strict       2/10
+  pwml_pass_rate_of_replayed     2/4
+  replayable_failures            2
+  llm_originating_failures       6
+  aborted_not_counted            0
+  verdict_as_recorded            4/4
+  network_refused_total          0
+GOLD (replayed tail; certified gold only)
+  ORCH-756/enterobactin-strict/2026-10-21_2020               final P0.714 R1.000 F1 0.833 (5/5)  pwml P0.714 R1.000 F1 0.833 (5/5)
+  ORCH-756/menaquinone-strict/2026-10-21_2048                final P0.889 R0.778 F1 0.830 (7/9)  pwml P0.889 R0.778 F1 0.830 (7/9)
