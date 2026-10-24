@@ -902,11 +902,13 @@ def test_g9_an_interactions_only_pathway_opens_review_and_exports() -> None:
     at.run()
     at.button(key=KEY_POST_PIPELINE).click().run()
 
-    assert _app_exceptions(at) == []
     assert at.session_state["quarantine_report"]["ok"] is True  # holds at base: the boundary admits it
 
-    result = _generate_pwml(at)  # base: KeyError, the button was never rendered
+    # Base: KeyError. The review diagram raised (the app shows it with st.exception), so review
+    # never opened and the button was never rendered -- the ORCH-767 driver failure exactly.
+    result = _generate_pwml(at)
 
+    assert _app_exceptions(at) == []
     working = at.session_state["refinement_working_json"]
     assert working["processes"]["reactions"] == [] and working["processes"]["interactions"]
     assert at.session_state["refinement_graph_bytes"] == b""
