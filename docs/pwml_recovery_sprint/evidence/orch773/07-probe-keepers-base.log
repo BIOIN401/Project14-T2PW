@@ -1,0 +1,113 @@
+## ORCH-755_enterobactin-strict_2026-10-20_2201 ok=False refusal=['unexportable_entity:1']
+
+[proteins] 'EntB' synonyms=[] generated=None generation_reason=None provenance=extracted
+   components: None
+   component of complex 'isochorismatase' generated=None
+      complex keeper: /processes/reactions/1 'EntB isochorismatase reaction' enzymes='isochorismatase' prov=extracted resolves->('protein_complexes', 'isochorismatase')
+      complex keeper: /processes/reactions/1 'EntB isochorismatase reaction' modifiers='isochorismatase' prov=extracted resolves->('protein_complexes', 'isochorismatase')
+      complex keeper: /processes/interactions/0 '2,3-DHB competitive inhibition of EntB' entity_2='isochorismatase' prov=None resolves->('protein_complexes', 'isochorismatase')
+## ORCH-767_wnt_ca-strict_2026-10-24_0314 ok=False refusal=['unexportable_entity:1']
+
+[proteins] 'phosphorylated CAMKII' synonyms=['calcineurin B'] generated=None generation_reason=None provenance=extracted
+   components: None
+   direct keeper: /processes/interactions/12 'calcineurin B component of calcineurin complex' entity_1='calcineurin B' prov=None resolves->('proteins', 'calcineurin B')
+## runs_verify_2026-08-24_1203_PMC12856317 ok=False refusal=['unexportable_entity:2']
+
+[proteins] 'ATP-dependent Clp protease ATP-binding subunit clpX-like, mitochondrial' synonyms=[] generated=None generation_reason=None provenance=None
+   components: None
+   component of complex 'CLPXP' generated=None
+      complex keeper: /processes/interactions/1 'ALAS2 recruits CLPXP for degradation' entity_2='CLPXP' prov=None resolves->('protein_complexes', 'CLPXP')
+      complex keeper: /processes/interactions/3 'ALAS1 degraded by CLPXP' entity_2='CLPXP' prov=None resolves->('protein_complexes', 'CLPXP')
+
+[proteins] 'Putative ATP-dependent Clp protease proteolytic subunit, mitochondrial' synonyms=[] generated=None generation_reason=None provenance=None
+   components: None
+   component of complex 'CLPXP' generated=None
+      complex keeper: /processes/interactions/1 'ALAS2 recruits CLPXP for degradation' entity_2='CLPXP' prov=None resolves->('protein_complexes', 'CLPXP')
+      complex keeper: /processes/interactions/3 'ALAS1 degraded by CLPXP' entity_2='CLPXP' prov=None resolves->('protein_complexes', 'CLPXP')
+## runs_verify_2026-09-02_2052_PMC12444477 ok=False refusal=['unexportable_entity:2']
+
+[proteins] 'FtsH' synonyms=[] generated=None generation_reason=None provenance=extracted
+   components: None
+   component of complex 'FtsH/YciM complex' generated=None
+      complex keeper: /processes/interactions/0 'FtsH/YciM complex degrades LpxC' entity_1='FtsH/YciM complex' prov=None resolves->('protein_complexes', 'FtsH/YciM complex')
+
+[proteins] 'LapB' synonyms=[] generated=None generation_reason=None provenance=extracted
+   components: None
+   component of complex 'FtsH/YciM complex' generated=None
+      complex keeper: /processes/interactions/0 'FtsH/YciM complex degrades LpxC' entity_1='FtsH/YciM complex' prov=None resolves->('protein_complexes', 'FtsH/YciM complex')
+## ORCH-759_enterobactin-strict_2026-10-22_1037 ok=True refusal=[]
+
+[proteins] 'enterobactin synthase' synonyms=['enterobactin synthase complex', 'Enterochelin synthase F', 'Nonribosomal peptide synthetase EntF', 'entF', 'Enterobactin synthase component F'] generated=None generation_reason=None provenance=None
+   components: None
+   direct keeper: /processes/reactions/4 'EntF enterobactin synthesis' enzymes='enterobactin synthase complex' prov=inferred resolves->('proteins', 'enterobactin synthase')
+   direct keeper: /processes/reactions/4 'EntF enterobactin synthesis' modifiers='enterobactin synthase complex' prov=inferred resolves->('proteins', 'enterobactin synthase')
+   direct keeper: /processes/reactions/5 'EntF enterobactin synthase reaction' enzymes='enterobactin synthase complex' prov=inferred resolves->('proteins', 'enterobactin synthase')
+   direct keeper: /processes/reactions/5 'EntF enterobactin synthase reaction' modifiers='enterobactin synthase complex' prov=inferred resolves->('proteins', 'enterobactin synthase')
+   component of complex 'enterobactin synthase complex' generated=True
+      complex keeper: /processes/reactions/4 'EntF enterobactin synthesis' enzymes='enterobactin synthase complex' prov=inferred resolves->('proteins', 'enterobactin synthase')
+      complex keeper: /processes/reactions/4 'EntF enterobactin synthesis' modifiers='enterobactin synthase complex' prov=inferred resolves->('proteins', 'enterobactin synthase')
+      complex keeper: /processes/reactions/5 'EntF enterobactin synthase reaction' enzymes='enterobactin synthase complex' prov=inferred resolves->('proteins', 'enterobactin synthase')
+      complex keeper: /processes/reactions/5 'EntF enterobactin synthase reaction' modifiers='enterobactin synthase complex' prov=inferred resolves->('proteins', 'enterobactin synthase')
+   component of complex 'EntF complex' generated=True
+      complex keeper: /processes/reactions/4 'EntF enterobactin synthesis' enzymes='EntF complex' prov=extracted resolves->('protein_complexes', 'EntF complex')
+      complex keeper: /processes/reactions/4 'EntF enterobactin synthesis' modifiers='EntF complex' prov=extracted resolves->('protein_complexes', 'EntF complex')
+      complex keeper: /processes/reactions/5 'EntF enterobactin synthase reaction' enzymes='EntF complex' prov=extracted resolves->('protein_complexes', 'EntF complex')
+      complex keeper: /processes/reactions/5 'EntF enterobactin synthase reaction' modifiers='EntF complex' prov=extracted resolves->('protein_complexes', 'EntF complex')
+## runs_verify_2026-08-18_1328_PMC12452463 ok=True refusal=[]
+
+[proteins] 'Isochorismatase (EntB)' synonyms=['Enterobactin biosynthesis bifunctional protein EntB', 'Enterochelin synthase B', 'entB', 'entG', 'Enterobactin synthase component B'] generated=None generation_reason=None provenance=None
+   components: None
+   component of complex 'isochorismatase' generated=None
+      complex keeper: /processes/reactions/1 'isochorismate to 2,3-dihydro-2,3-dihydroxybenzoate' enzymes='isochorismatase' prov=extracted resolves->('protein_complexes', 'isochorismatase')
+      complex keeper: /processes/reactions/1 'isochorismate to 2,3-dihydro-2,3-dihydroxybenzoate' modifiers='isochorismatase' prov=extracted resolves->('protein_complexes', 'isochorismatase')
+      complex keeper: /processes/reactions/3 'isochorismate -> 2,3-dihydro-2,3-dihydroxybenzoate (DHB)' enzymes='isochorismatase' prov=extracted resolves->('protein_complexes', 'isochorismatase')
+      complex keeper: /processes/reactions/3 'isochorismate -> 2,3-dihydro-2,3-dihydroxybenzoate (DHB)' modifiers='isochorismatase' prov=extracted resolves->('protein_complexes', 'isochorismatase')
+## ORCH-767_enterobactin-strict_2026-10-23_2224 ok=True refusal=[]
+
+[protein_complexes] 'enterobactin synthase complex' synonyms=None generated=True generation_reason=complex_named_source_entity_wrapper provenance=inferred
+   components: [{"mapped_ids": {}, "member_identity": {"entity_index": 9, "mapping_meta": {"resolution": {"issue": "no_safe_db_candidate", "status": "novel"}, "source": "llm_tool"}, "name": "enterobactin synthase"}, "name": "enterobactin synthase", "organism": "Escherichia coli", "species": "Escherichia coli", "stoichiometry": null}]
+   direct keeper: /processes/reactions/4 'EntF enterobactin synthase reaction' enzymes='enterobactin synthase complex' prov=inferred resolves->('protein_complexes', 'enterobactin synthase complex')
+   direct keeper: /processes/reactions/4 'EntF enterobactin synthase reaction' modifiers='enterobactin synthase complex' prov=inferred resolves->('protein_complexes', 'enterobactin synthase complex')
+## runs_verify_2026-08-21_2057_PMC12452463 ok=True refusal=[]
+
+[protein_complexes] 'enterobactin synthase complex' synonyms=None generated=True generation_reason=complex_inferred_from_evidence provenance=inferred
+   components: [{"mapped_ids": {"pathbank_protein_id": "6383", "uniprot": "P19925"}, "mapping_status": "mapped", "name": "EntD", "pathbank_protein_id": 6383}, {"mapped_ids": {"pathbank_protein_id": "6301", "uniprot": "P10378"}, "mapping_status": "mapped", "name": "EntE", "pathbank_protein_id": 6301}, {"mapped_ids": {"pathbank_protein_id": "6312", "uniprot": "P11454"}, "mapping_status": "mapped", "name": "EntF", 
+   direct keeper: /processes/reactions/3 'enterobactin synthase complex reaction' enzymes='enterobactin synthase complex' prov=extracted resolves->('protein_complexes', 'enterobactin synthase complex')
+   direct keeper: /processes/reactions/3 'enterobactin synthase complex reaction' modifiers='enterobactin synthase complex' prov=extracted resolves->('protein_complexes', 'enterobactin synthase complex')
+## runs_verify_2026-08-25_1216_PMC12444477 ok=True refusal=[]
+
+[protein_complexes] 'FtsH/YciM complex' synonyms=None generated=None generation_reason=None provenance=extracted
+   components: ["FtsH", "YciM"]
+   direct keeper: /processes/interactions/0 'FtsH/YciM complex regulation of LpxC' entity_1='FtsH/YciM complex' prov=None resolves->('protein_complexes', 'FtsH/YciM complex')
+## runs_verify_2026-08-25_1216_PMC12856317 ok=True refusal=[]
+
+[protein_complexes] 'LONP1' synonyms=None generated=None generation_reason=None provenance=inferred
+   components: [{"gene_name": "LONP1", "name": "Lon protease homolog 1, mitochondrial", "species": "Homo sapiens", "species_id": 1, "stoichiometry": 1}]
+   direct keeper: /processes/interactions/3 'LONP1 degrades ALAS1' entity_1='LONP1' prov=None resolves->('protein_complexes', 'LONP1')
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 3ef3fa9c6e00e1d65300a80224cf9a0ce2b3e1df  [git, worktree dirty=False]
+label                   : probe-keepers-base
+command                 : C:\Program Files\Git\usr\bin\bash.exe C:/t/orch773/keepers.sh
+cwd                     : C:/t/orch773/cwd
+root PID / process group: 92864 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 13.91 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 30  92772:bash.exe, 92996:python.exe, 93032:python.exe, 92824:python.exe, 92840:bash.exe, 92696:python.exe, 86972:python.exe, 91712:bash.exe, 92352:python.exe, 77888:bash.exe, 92780:python.exe, 92980:python.exe, 90920:bash.exe, 91268:python.exe, 91388:python.exe, 92204:python.exe, 93024:python.exe, 93152:bash.exe, 89624:python.exe, 91740:python.exe, 93168:bash.exe, 93004:bash.exe, 92892:python.exe, 93028:python.exe, 85500:bash.exe, 91524:python.exe, 86160:python.exe, 85540:python.exe, 85816:python.exe, 92880:bash.exe
+descendants terminated  : 30  77888, 85500, 85540, 85816, 86160, 86972, 89624, 90920, 91268, 91388, 91524, 91712, 91740, 92204, 92352, 92696, 92772, 92780, 92824, 92840, 92880, 92892, 92980, 92996, 93004, 93024, 93028, 93032, 93152, 93168
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\docs\pwml_recovery_sprint\evidence\g11\ORCH-773\07-probe-keepers-base.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH-773  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

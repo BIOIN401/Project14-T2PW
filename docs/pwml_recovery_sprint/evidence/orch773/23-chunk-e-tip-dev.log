@@ -1,0 +1,60 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\src\t2pw\__init__.py
+........................................................................ [ 39%]
+........................................................................ [ 78%]
+..................................F..F..                                 [100%]
+================================== FAILURES ===================================
+_ test_replay_reproduces_the_recorded_verdict[ORCH-767/enterobactin-strict/2026-10-23_2224] _
+
+corpus = {'H': <module 'orch768_replay_corpus' from 'C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees...6: it is the canonical (enriched, quarantined) payload", 'condition': 'wnt_pcp-strict', 'head': 'd6849c9e', ...}}, ...}
+leg_id = 'ORCH-767/enterobactin-strict/2026-10-23_2224'
+
+    @pytest.mark.parametrize("leg_id", sorted(EXPECTED))
+    def test_replay_reproduces_the_recorded_verdict(corpus, leg_id):
+        H = corpus["H"]
+        record = corpus["runs"][0][leg_id]
+        assert record["checkpoint"] == "canonical"
+>       assert record["canonical_matches_leg"] is True
+E       assert False is True
+
+tests\test_orch768_replay_corpus.py:109: AssertionError
+____ test_enterobactin_fails_on_the_wrapper_component_exactly_as_recorded _____
+
+corpus = {'H': <module 'orch768_replay_corpus' from 'C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees...6: it is the canonical (enriched, quarantined) payload", 'condition': 'wnt_pcp-strict', 'head': 'd6849c9e', ...}}, ...}
+
+    def test_enterobactin_fails_on_the_wrapper_component_exactly_as_recorded(corpus):
+        record = corpus["runs"][0][ENTEROBACTIN]
+>       assert record["final_gate"]["ok"] is False
+E       assert True is False
+
+tests\test_orch768_replay_corpus.py:119: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_orch768_replay_corpus.py::test_replay_reproduces_the_recorded_verdict[ORCH-767/enterobactin-strict/2026-10-23_2224]
+FAILED tests/test_orch768_replay_corpus.py::test_enterobactin_fails_on_the_wrapper_component_exactly_as_recorded
+2 failed, 182 passed in 29.62s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 3ef3fa9c6e00e1d65300a80224cf9a0ce2b3e1df  [git, worktree dirty=True]
+label                   : chunk-e-tip-dev
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch773/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch773/docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-773/23-chunk-e-tip-dev.pin.json -q --basetemp=C:/t/orch773/bt-23-chunk-e-tip-dev tests/test_strict_quarantine_real_artifact_replay.py tests/test_orch768_replay_corpus.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773
+root PID / process group: 114964 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 580 s
+duration                : 30.55 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  114976:python.exe
+descendants terminated  : 1  114976
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\docs\pwml_recovery_sprint\evidence\g11\ORCH-773\23-chunk-e-tip-dev.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH-773  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================
