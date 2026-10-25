@@ -38,7 +38,7 @@ for c in enterobactin chlorophyll sour_taste_v2 wnt_pcp wnt_ca menaquinone; do
   esac
 done
 "$PY" "$EV/orch770_morning_summary.py" --task "$TASK" --legs "$WT/runs_papers/$TASK/legs" --out-dir "$OUT" \
-  --gold "$GOLD" --compare "ORCH-767=$EV/orch767_gold_accuracy.txt" \
+  --src "$WT/src" --gold "$GOLD" --compare "ORCH-767=$EV/orch767_gold_accuracy.txt" \
   --compare "ORCH-759p=$EV/orch759p_gold_accuracy.txt" --compare "ORCH-756=$EV/orch756_gold_accuracy.txt" \
   > "$OUT/logs/morning_summary.log" 2>&1
 note "$TASK NIGHT DONE summary_exit=$? -> $OUT/MORNING_SUMMARY.md"

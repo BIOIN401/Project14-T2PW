@@ -23,6 +23,7 @@ import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))  # orch772b_no_pwml_cause, beside this script
 GOLD_LINE = re.compile(r"^\s*(enterobactin|menaquinone)\s+(stage1|final|pwml)\s+(.*)$")
 
 
@@ -71,18 +72,25 @@ def failure_line(leg: Path) -> str:
 
 
 def coverage(leg: Path) -> str:
-    """'drawn/total (pct)' from the leg's own artifacts; never raises."""
+    """From the leg's own artifacts: the headline (KI-008 left out, D-114 AMENDMENT 2), the full count beside it, and,
+    for a leg with no PWML, the known issue of its recorded cause (ORCH-772b). Never raises."""
     try:
-        from t2pw.app.reaction_evidence import build_report, load_run_artifacts
+        from orch772b_no_pwml_cause import recorded_no_pwml_cause
+        from t2pw.app.reaction_evidence import build_report, known_issue_id, load_run_artifacts
 
-        cov = build_report(load_run_artifacts(leg)).get("pwml_coverage") if leg.is_dir() else None
+        report = build_report(load_run_artifacts(leg), no_pwml_cause=recorded_no_pwml_cause(leg)) if leg.is_dir() else {}
+        cov = report.get("pwml_coverage")
     except Exception as exc:  # the summary must still be written
         return f"n/a ({type(exc).__name__})"
     if not cov:
         return "n/a"
     if cov["drawn"] is None:
         return f"not recorded of {cov['total']}"
-    return f"{cov['drawn']}/{cov['total']} ({100 * cov['drawn'] / cov['total']:.0f}%)" if cov["total"] else "0/0"
+    drawn, full = cov["drawn"], cov["total"]
+    head = full - cov["by_design_withheld"]
+    pct = lambda total: f"{100 * drawn / total:.0f}%" if total else "n/a"  # noqa: E731
+    text = f"{drawn}/{head} ({pct(head)}); full count {drawn}/{full} ({pct(full)})"
+    return text if cov["pwml_written"] else f"{text}; no PWML: {known_issue_id(cov['no_pwml_cause'])}"
 
 
 def main() -> int:
@@ -107,7 +115,9 @@ def main() -> int:
          f"Written by the runner at the end of the run (`evidence/orch770_morning_summary.py`). Legs: `{a.legs}`.", "",
          "## Per paper", "",
          "PWML coverage = processes drawn in the PWML / processes in the text record (D-114; target 75%), "
-         "from each leg's directory by `t2pw.app.reaction_evidence`.", "",
+         "from each leg's directory by `t2pw.app.reaction_evidence`. Headline first: the interactions PathWhiz cannot "
+         "carry (KI-008) are left out (D-114 AMENDMENT 2); the full count follows. A leg with no PWML names the known "
+         "issue of its recorded cause.", "",
          "| paper | PWML | PWML coverage | release | reactions / interactions | min | code |", "|---|---|---|---|---|---|---|"]
     for r in rows:
         L.append(f"| {r['cond']} | **{'yes' if str(r.get('pwml', '')).endswith('.pwml') else 'no'}** | "

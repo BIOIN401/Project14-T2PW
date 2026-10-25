@@ -24,8 +24,11 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT / "src"))
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from t2pw.app.reaction_evidence import build_report, load_run_artifacts, render_text  # noqa: E402
+# ORCH-772b: a leg with no PWML names its recorded cause in reaction_evidence.txt (D-114 § 3 "exact reason").
+from orch772b_no_pwml_cause import recorded_no_pwml_cause  # noqa: E402
 
 DIAG_ROOT = ROOT / "tmp" / "extraction_diagnostics"
 SIDE_FILES = ("stage1_ensemble_report.json", "stage1_ensemble_report.txt",
@@ -74,7 +77,7 @@ def main() -> int:
                 shutil.copy2(p, dest / p.name)
         row["pwml"] = ", ".join(pwmls) or "none written"
         try:
-            report = build_report(load_run_artifacts(leg))
+            report = build_report(load_run_artifacts(leg), no_pwml_cause=recorded_no_pwml_cause(leg))
             (dest / "reaction_evidence.txt").write_text(render_text(report), encoding="utf-8")
             row.update(reactions=len(report.get("reactions") or []),
                        interactions=report.get("interaction_count"),
