@@ -7426,3 +7426,23 @@ Recorded by the Lead Orchestrator.
    (fixed / open / by design), workaround, and the fix planned for future work. Durable ones are also added to `FINDINGS.md`. The text
    output's omission reasons cite these ids.
 6. ORCH-769a (invented wrapper) and ORCH-769d (audit index rebase) continue, as instances of § 2 and a plain correctness fix.
+
+---
+
+## D-114 AMENDMENT 1 — when one actor fails: reactions are omitted whole; transports keep the process and lose only the bad transporter · 2026-10-25 · LOCKED
+
+**Decided by the product owner** (2026-10-25, in session, on the ORCH-773 phase-1 question). Of the 18 processes ORCH-773 omits, 12
+leave because ONE actor fails: 6 enzymes and 6 transporters. Recorded by the Lead Orchestrator.
+
+PathWhiz's own validation decides it:
+- a reaction with no enzyme must be `spontaneous`, otherwise it fails (`smpdb/app/models/data/reactions/reaction.rb:93-94`,
+  `check_spontaneous`);
+- a transport has no transporter requirement (`transports/transport.rb:29-33`).
+
+1. **Reaction with a failing enzyme: omit the whole reaction**, recorded and listed in the text output. Keeping it without its enzyme
+   would either fail import (`spontaneous=false`) or falsely claim it is spontaneous. Either breaks D-114 § 2 ("everything in the PWML
+   imports").
+2. **Transport with a failing transporter: keep the transport and drop only that transporter.** The transport is marked
+   `review_required`, and the dropped transporter is listed in the text output's "Omitted from the PWML" section with its reason, for the
+   user to add by hand. If the transport fails for any other reason, it is omitted whole.
+3. Interactions with a bad endpoint stay omitted whole: an interaction needs both ends (`interaction.rb`).
