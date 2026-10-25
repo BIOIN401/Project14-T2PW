@@ -1194,3 +1194,47 @@ Proof: Chunk D on that tree, **188 = 160 + 4 + 24, 188/188 executed, failed none
 this file now reads 188 = 160 + 4 + 24 and 28 nodes (the C-050k note above stays as the historical record).
 Lesson (769c F-8): put a new AppTest that borrows the boundary harness in its own file (`test_c082` convention) so the
 partition count does not move.
+
+## ORCH-771, ORCH-772, ORCH-769d: test obligations — appended end-of-file by rule · 2026-10-25
+
+Recorded by the D-114 sub-orchestrator from the lanes' RESULT docs (`ORCH-772-RESULT.md` § 13, `ORCH-769d-RESULT.md` § 9) and
+the merged-tip integration run on `00eb12d3` in a clean worktree (`.claude/worktrees/integ772`, no `.env`), heavy lock `ORCH-772i`,
+reports `evidence/g11/ORCH-772i/01`–`06`. `ORCH-771` is docs only (no test obligation).
+
+**SMOKE is unchanged at 511** (`ORCH-772i/01`, 511 passed in 46.04 s). Merge rule 10 unchanged.
+
+| gate on `00eb12d3` | report | result |
+|---|---|---|
+| SMOKE (22 files) | `01` | 511 passed |
+| affected: `test_reaction_evidence.py`, `test_orch772_pwml_coverage.py`, `test_orch768_replay_corpus.py`, the 13 applier files, `test_orch769d_audit_patch_rebase.py`, `test_completeness_audit.py` | `02` | 718 passed |
+| `tests/test_eval_v2_*.py` | `03` | 89 passed, 1 xfailed |
+| AppTest alone: `test_reaction_evidence_view.py`, `test_reaction_evidence_app_hook.py`, `test_orch759b_recorder_reattach.py` | `04`–`06` | 11 / 1 / 7 passed |
+
+Chunk D was not run here (final integration only, after ORCH-773).
+
+### New focused selections
+
+| lane | file | notes |
+|---|---|---|
+| `772` | `tests/test_orch772_pwml_coverage.py` (30, ~3 s; replays the three ORCH-768 fixture legs once) | run for any change to `src/t2pw/app/reaction_evidence.py`, to `PWML_KNOWN_ISSUES.md`'s appendix or workaround cells (test 1 parses the appendix and fails until `KNOWN_ISSUES` matches it), or to `evidence/orch768_replay_corpus.py`. Add it to the `reaction_evidence.py` obligation beside `test_orch762_protein_identity.py` and `test_pwml_interaction_protein_wrappers.py` |
+| `769d` | `tests/test_orch769d_audit_patch_rebase.py` (7) | in no chunk, not in SMOKE; run for any change to `apply_audit_patch.apply_patch_with_policy` or its pointer helpers, together with the 13 applier files (`test_apply_audit_patch_lineage`, `_lock_policy`, `_referential_integrity`, `test_audit_json_llm_payload`, `test_c105_actor_role_evidence`, `test_c107_actor_cue_calibration`, `test_c108_f155_class`, `test_curation_patch_transaction`, `test_curator_offline_mode`, `test_interactive_curator`, `test_orch757_llm_token_budgets`, `test_orch759a_duplicate_protein_fold`, `test_streamlit_stage2_orchestration`) |
+
+### Pins moved deliberately (merge rule 4)
+
+- `772`: `tests/test_reaction_evidence.py` test 3, `"Coverage: Not recorded"` → `"Core-term coverage: Not recorded"`;
+  `docs/reaction_evidence_sample.txt` regenerated (`evidence/orch772_reaction_evidence_sample.diff`); the four fixture bundles in
+  `tests/fixtures/reaction_evidence/` gain only the keys the new section reads (5, 35, 6, 15), copied verbatim from their legs
+  (`evidence/orch772_retrim_reaction_evidence_bundles.py`, `ORCH-772/03`). A new rendered field must re-trim those bundles the same
+  way, or tests 2 and 13 of `test_reaction_evidence.py` fail.
+- `769d`: `tests/test_apply_audit_patch_referential_integrity.py::test_index_drift_across_two_removals_is_judged_against_the_live_payload`,
+  same input, accepted 1 / rejected 1 → accepted 2 / rejected 0 (the old pin encoded the KI-018 defect); count unchanged.
+
+### Collection-order hazard (adds to § ORCH-757)
+
+`tests/test_orch758b_empty_chunk.py` fails with `ImportError` (`t2pw.llm`) when collected after the gap-resolver test files
+(`ORCH-769d/08`); put it first or run it alone.
+
+### The D-112 § 2 acceptance check for a lane that changes no verdict
+
+`compare` prints REJECT when the pass rate does not rise. For a lane that by design changes no verdict (ORCH-772), the acceptance
+used was: every replay record identical apart from the new field, every PWML sha256 identical (reviewer `ORCH-772/41`–`46`).
