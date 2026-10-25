@@ -11159,3 +11159,5 @@ The id ORCH-760 was chosen so that 755-759 stay free for the live ORCH-754 sessi
 **2026-10-25 — ORCH-771 merged** (`3ef3fa9c`, KI-001..064). **ORCH-773 phase 1:** corpus 56 → 72/91, ACCEPT, all 56 passing legs byte-identical. **D-114 AMENDMENT 1:** a reaction with a failing enzyme is omitted whole; a transport keeps its process and loses only the bad transporter.
 
 **2026-10-25 — ORCH-771, 772 and 769d merged at sprint `00eb12d3`** (gates running). Coverage at `main`: 91 legs, mean 38.1%, median 28.6%, 22/91 at ≥ 75%. **D-114 AMENDMENT 2:** KI-008 excluded from the headline denominator, with the full count shown beside it; target judged on all 91 legs; no zero-process decline.
+
+**2026-10-25 — process deviation (main):** main's docs-only push of `c53f62c9` also published the sub-orchestrator's reviewed but not yet integration-gated merges of ORCH-772 and ORCH-769d (`a3b95065`, `00eb12d3`) to `origin/sprint`. `main` was unaffected (`b16a45e7`). If the gates fail: fix forward, no force-push. From here on, main commits docs locally only and the sub-orchestrator pushes after its gates.
