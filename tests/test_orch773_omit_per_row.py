@@ -9,6 +9,12 @@ is recorded as omitted). ``test_preservation_*`` pass at base and at tip: they f
 reaches further than the gates. ``test_new_release_cap`` is a NEW acceptance test of a new function (it
 fails at base on its import, which is inside the test) and claims no base failure as G9.
 
+Round 1 (D-114 AMENDMENT 1; orchestrator reading of D-114 section 2): a transport whose transporter fails keeps
+the transport and loses only that transporter (``test_g9_stage8_non_canonical_transporter_*``, and the two
+Wnt/Ca2+ transports); and any omitted process or dropped actor in the frozen record caps the release at
+``review_required``, including a process quarantined at admission
+(``test_g9_a_process_quarantined_at_admission_caps_a_release_ready_pathway``, on a small payload).
+
 Each fixture is the exact ``{"payload", "pathway_context"}`` the ORCH-768 replay corpus hands
 ``freeze_canonical_payload`` on that leg (``tests/fixtures/orch773/README.md``). ``_refusals`` runs what the
 freeze and ``run_pwml_export`` run after the quarantine, in their order, with the export's own pre-freeze
@@ -118,7 +124,7 @@ def _omitted(result) -> List[Tuple[str, str, str, str, str, str]]:
 
 
 def _removed(result) -> List[Tuple[str, str, str]]:
-    """(bucket, name, reason) of every entity the per-row pass removed."""
+    """(bucket, name, reason) of every entity removed and every transporter dropped by the per-row pass."""
 
     return [
         (row["bucket"], row["name"], row["reason"])
@@ -127,12 +133,28 @@ def _removed(result) -> List[Tuple[str, str, str]]:
     ]
 
 
-def _review_required_with_the_omission(result) -> None:
-    release = result.quarantine_report["release"]
+def _dropped_transporters(result) -> List[Tuple[str, str, str]]:
+    """(transport name, transporter name, reason) of every transporter dropped from a kept transport."""
+
+    return [
+        (entry["process_name"], row["name"], row["reason"])
+        for row in result.removed_entity_report["removed_entities"]
+        if row["bucket"] == "transporters"
+        for entry in row["detail"]["actor_removed_from"]
+    ]
+
+
+def _review_required(result, actors: int = 0) -> None:
+    """``review_required``, never strict success; and the cap reason exactly when something was omitted."""
+
+    report = result.quarantine_report
+    release = report["release"]
     assert release["status"] == "review_required"
     assert release["strict_acceptance_eligible"] is False
-    assert any(r.startswith("per_row_omissions_removed_from_pwml:") for r in release["reasons"])
-    assert any(r.startswith("per_row_omissions_removed_from_pwml:") for r in result.quarantine_report["review_reasons"])
+    processes = sum(1 for row in report["admissions"] if row["state"] not in ("core_accepted", "auxiliary_accepted"))
+    expected = [f"omitted_from_pwml:{processes}_processes+{actors}_actors"] if processes or actors else []
+    assert [r for r in release["reasons"] if r.startswith("omitted_from_pwml:")] == expected
+    assert [r for r in report["review_reasons"] if r.startswith("omitted_from_pwml:")] == expected
 
 
 def _surviving(result, bucket: str) -> List[Dict[str, Any]]:
@@ -149,7 +171,8 @@ def test_g9_unexportable_component_takes_its_complex_and_processes_not_the_pathw
     payload, context = _leg("ORCH-755_enterobactin-strict_2026-10-20_2201")
     result = _quarantine(payload, context)
     assert _refusals(result) == []
-    reason = "protein_complex_component_unrepresentable:EntB:protein_missing_external_identity"
+    # Round 1 (N1): the declared complex left because its component was omitted, which the reason now says.
+    reason = "protein_complex_component_omitted:EntB:protein_missing_external_identity"
     assert _omitted(result) == [
         ("EntB isochorismatase reaction", QUARANTINED_UNMAPPED_ENTITY, reason, "actor", "enzymes", "isochorismatase"),
         ("2,3-DHB competitive inhibition of EntB", QUARANTINED_UNMAPPED_ENTITY, reason, "process", "entity_2", "isochorismatase"),
@@ -158,25 +181,35 @@ def test_g9_unexportable_component_takes_its_complex_and_processes_not_the_pathw
         ("protein_complexes", "isochorismatase", reason),
         ("proteins", "EntB", "protein_missing_external_identity"),
     ]
-    _review_required_with_the_omission(result)
+    # A reaction whose enzyme fails is still omitted whole (D-114 AMENDMENT 1 s1).
+    _review_required(result)
 
 
 def test_g9_unexportable_row_kept_only_by_a_synonym_is_removed_alone() -> None:
     """ORCH-767 Wnt/Ca2+: 'phosphorylated CAMKII' (no identity, KI-018) survives only because it carries the
     synonym 'calcineurin B', which every process resolves to the real 'calcineurin B' row. Base: refusal.
-    The next round then meets the Stage-8 contract: two transports with a non-canonical transporter."""
+    The next round then meets the Stage-8 contract: two transports with a non-canonical transporter, which
+    keep the transport and lose only that transporter (D-114 AMENDMENT 1 s2)."""
 
     payload, context = _leg("ORCH-767_wnt_ca-strict_2026-10-24_0314")
     result = _quarantine(payload, context)
     assert _refusals(result) == []
-    assert _removed(result) == [("proteins", "phosphorylated CAMKII", "protein_missing_external_identity")]
     insp3r = "inositol-1,4,5-trisphosphate receptor (InsP3R)"
-    assert _omitted(result) == [
-        ("IP3-induced Ca2+ release", QUARANTINED_BROKEN_REFERENCE, "actor_schema_not_canonical", "actor", "transporters", insp3r),
-        ("SERCA pumps Ca2+ into ER", QUARANTINED_BROKEN_REFERENCE, "actor_schema_not_canonical", "actor", "transporters", insp3r),
+    assert _removed(result) == [
+        ("proteins", "phosphorylated CAMKII", "protein_missing_external_identity"),
+        ("transporters", insp3r, "actor_schema_not_canonical"),
+        ("transporters", insp3r, "actor_schema_not_canonical"),
     ]
+    assert _dropped_transporters(result) == [
+        ("IP3-induced Ca2+ release", insp3r, "actor_schema_not_canonical"),
+        ("SERCA pumps Ca2+ into ER", insp3r, "actor_schema_not_canonical"),
+    ]
+    assert _omitted(result) == []
+    transports = {row["name"]: row for row in _surviving(result, "transports")}
+    for name in ("IP3-induced Ca2+ release", "SERCA pumps Ca2+ into ER"):
+        assert transports[name]["transporters"] == []
     assert "calcineurin B component of calcineurin complex" in {row["name"] for row in _surviving(result, "interactions")}
-    _review_required_with_the_omission(result)
+    _review_required(result, actors=2)
 
 
 # ── G9: the final pre-export gate (freeze) ─────────────────────────────────
@@ -195,7 +228,7 @@ def test_g9_final_gate_degree_zero_protein_is_removed_and_every_reaction_stays()
     ]
     assert _omitted(result) == []
     assert len(_surviving(result, "reactions")) == reactions_in
-    _review_required_with_the_omission(result)
+    _review_required(result)
 
 
 def test_g9_d113_inferred_wrapper_leaves_its_reaction_and_the_paper_catalyst_stays() -> None:
@@ -220,7 +253,7 @@ def test_g9_d113_inferred_wrapper_leaves_its_reaction_and_the_paper_catalyst_sta
     enzymes = [actor.get("entity") for actor in reaction["enzymes"]]
     assert "EntF complex" in enzymes and "enterobactin synthase complex" not in enzymes
     assert len(_surviving(result, "reactions")) == reactions_in
-    _review_required_with_the_omission(result)
+    _review_required(result, actors=1)
 
 
 def test_g9_final_gate_wrapper_with_no_other_catalyst_omits_its_reaction() -> None:
@@ -237,23 +270,29 @@ def test_g9_final_gate_wrapper_with_no_other_catalyst_omits_its_reaction() -> No
          "enterobactin synthase complex"),
     ]
     assert _removed(result) == [("protein_complexes", "enterobactin synthase complex", message)]
-    _review_required_with_the_omission(result)
+    _review_required(result)
 
 
 # ── G9: the export's gates ─────────────────────────────────────────────────
 
 
-def test_g9_stage8_non_canonical_transporter_omits_its_transport() -> None:
-    """ORCH-755 sour taste (KI-023): three transports name OTOP1 in Stage-1 shape. Base: Stage-8 stop."""
+def test_g9_stage8_non_canonical_transporter_is_dropped_and_its_transport_stays() -> None:
+    """ORCH-755 sour taste (KI-023): three transports name OTOP1 in Stage-1 shape. Base: Stage-8 stop.
+    D-114 AMENDMENT 1 s2: each transport stays and loses only that transporter, recorded with the gate's code."""
 
     payload, context = _leg("ORCH-755_sour_taste-strict_2026-10-21_0139")
+    names = ("OTOP1-mediated H+ transport", "H+ permeation through OTOP1", "OTOP1-mediated H+ permeation")
     result = _quarantine(payload, context)
     assert _refusals(result) == []
-    assert _omitted(result) == [
-        (name, QUARANTINED_BROKEN_REFERENCE, "actor_schema_not_canonical", "actor", "transporters", "OTOP1")
-        for name in ("OTOP1-mediated H+ transport", "H+ permeation through OTOP1", "OTOP1-mediated H+ permeation")
+    assert _omitted(result) == []
+    assert _dropped_transporters(result) == [(name, "OTOP1", "actor_schema_not_canonical") for name in names]
+    dropped = [row for row in result.removed_entity_report["removed_entities"] if row["bucket"] == "transporters"]
+    assert [row["detail"]["actor"] for row in dropped] == [
+        transport["transporters"][0] for transport in payload["processes"]["transports"] if transport["name"] in names
     ]
-    _review_required_with_the_omission(result)
+    transports = {row["name"]: row for row in _surviving(result, "transports")}
+    assert all(transports[name]["transporters"] == [] for name in names)
+    _review_required(result, actors=3)
 
 
 def test_g9_required_gate_bare_protein_enzyme_omits_its_reaction() -> None:
@@ -267,7 +306,7 @@ def test_g9_required_gate_bare_protein_enzyme_omits_its_reaction() -> None:
         ("LDH coupled reaction", QUARANTINED_BROKEN_REFERENCE, "reaction_enzyme_must_be_protein_complex", "actor",
          "enzymes", "lactate dehydrogenase"),
     ]
-    _review_required_with_the_omission(result)
+    _review_required(result)
 
 
 def test_g9_ir_complex_without_components_omits_its_interaction() -> None:
@@ -282,7 +321,51 @@ def test_g9_ir_complex_without_components_omits_its_interaction() -> None:
          "entity_1", "LONP1"),
     ]
     assert _removed(result) == [("protein_complexes", "LONP1", "protein_complex_missing_components")]
-    _review_required_with_the_omission(result)
+    _review_required(result)
+
+
+# ── G9: the release cap (orchestrator reading of D-114 s2) ─────────────────
+
+
+def _cap_toy(*, quarantined_reaction: bool) -> Dict[str, Any]:
+    """The contract-alignment pathway (release_ready on its own), optionally with one reaction admission
+    quarantines: its input names nothing declared."""
+
+    from test_strict_quarantine_contract_alignment import _base
+
+    payload = _base()
+    if quarantined_reaction:
+        payload["processes"]["reactions"].append(
+            {"name": "glutathione export", "inputs": ["glutathione", "an undeclared carrier"],
+             "outputs": ["glycine"], "enzymes": [], "biological_state": "cytosol"}
+        )
+    return payload
+
+
+def test_g9_a_process_quarantined_at_admission_caps_a_release_ready_pathway() -> None:
+    """Base: a pathway that omits a process at admission is still ``release_ready`` (a bare ``pathway.pwml``).
+    Tip: any omitted process in the frozen record caps it at ``review_required``."""
+
+    control = _quarantine(_cap_toy(quarantined_reaction=False), None)
+    assert control.quarantine_report["release"]["status"] == "release_ready"
+    assert not any(r.startswith("omitted_from_pwml") for r in control.quarantine_report["release"]["reasons"])
+
+    result = _quarantine(_cap_toy(quarantined_reaction=True), None)
+    assert [row["state"] for row in result.admissions] == ["core_accepted", "core_accepted", QUARANTINED_UNMAPPED_ENTITY]
+    assert result.ok
+    _review_required(result)
+
+
+def test_preservation_an_entity_only_removal_does_not_cap_the_release() -> None:
+    """An unreferenced species row is removed (D-111) and nothing else: the release stays ``release_ready``."""
+
+    payload = _cap_toy(quarantined_reaction=False)
+    payload["entities"]["species"].append({"name": "Mus musculus", "taxonomy_id": "10090", "classification": "Eukaryote"})
+    result = _quarantine(payload, None)
+    assert [row["name"] for row in result.removed_entity_report["removed_entities"] if row["bucket"] == "species"] == [
+        "Mus musculus"
+    ]
+    assert result.quarantine_report["release"]["status"] == "release_ready"
 
 
 # ── Preservation ───────────────────────────────────────────────────────────
@@ -321,7 +404,6 @@ def test_preservation_a_passing_leg_is_untouched() -> None:
     assert _omitted(result) == [] and _removed(result) == []
     assert result.quarantine_report["resulting_payload_hash"] == recorded["resulting_payload_hash"]
     assert result.quarantine_report["release"]["status"] == recorded["release"]["status"]
-    assert not any(r.startswith("per_row_omissions") for r in result.quarantine_report["review_reasons"])
     assert _refusals(result) == []
 
 
@@ -352,12 +434,12 @@ def test_preservation_an_omission_that_would_leave_nothing_is_rolled_back() -> N
 def test_new_release_cap() -> None:
     """``_cap_release_for_omissions`` is monotone: ``release_ready`` -> ``review_required`` only."""
 
-    from t2pw.pipeline.strict_quarantine import PER_ROW_OMISSION_REASON, _cap_release_for_omissions
+    from t2pw.pipeline.strict_quarantine import OMITTED_FROM_PWML_REASON, _cap_release_for_omissions
 
+    reason = f"{OMITTED_FROM_PWML_REASON}:2_processes+0_actors"
     ready = {"status": "release_ready", "strict_acceptance_eligible": True, "reasons": []}
-    capped = _cap_release_for_omissions(ready, f"{PER_ROW_OMISSION_REASON}:2")
-    assert capped == {"status": "review_required", "strict_acceptance_eligible": False,
-                      "reasons": [f"{PER_ROW_OMISSION_REASON}:2"]}
+    capped = _cap_release_for_omissions(ready, reason)
+    assert capped == {"status": "review_required", "strict_acceptance_eligible": False, "reasons": [reason]}
     assert ready["status"] == "release_ready"  # not mutated
     assert _cap_release_for_omissions(ready, "") is ready
     blocked = {"status": "diagnostic_only", "strict_acceptance_eligible": False, "reasons": ["x"]}

@@ -79,6 +79,9 @@ from t2pw.pipeline.failure_detail import row_digest, scrub_detail
 # entity_identity._normalize strips -- a complex named "A:B" resolves under one
 # and not the other.
 from t2pw.pipeline.process_normalizer import (  # noqa: E402
+    COMPLEX_NAMED_SOURCE_WRAPPER_REASON,
+    DEGREE_ZERO_PROTEIN_MESSAGE,
+    ISOLATED_LOCATED_PROTEIN_MESSAGE,
     GateValidationError,
     _actor_name_from_row as _actor_name,
     _canonical,
@@ -2568,15 +2571,18 @@ def _degree_zero_exports(
 # The unit is the process (rule 1 above): an entity a gate refuses leaves with
 # every process that resolves a reference to it, and a complex that resolves a
 # component to it leaves whole, because dropping the row alone would rewrite
-# what the complex is. Two narrower cases: a protein the final gate calls
-# attached to nothing leaves on its own (no process attaches to it, by that
-# gate's own test), and D-113 section 1's inferred wrapper leaves its reaction's
-# actor list while the paper's catalyst and the reaction stay.
+# what the complex is. Three narrower cases leave the process in place: a
+# protein the final gate calls attached to nothing leaves on its own (no process
+# attaches to it, by that gate's own test); D-113 section 1's inferred wrapper
+# leaves its reaction's actor list while the paper's catalyst and the reaction
+# stay; and a transport whose transporter fails keeps the transport and loses
+# only that transporter (D-114 AMENDMENT 1 section 2). A reaction whose enzyme
+# fails and an interaction with a failing endpoint still leave whole.
 #
 # An omission is kept only when it buys a PWML. Strict mode only (research
 # applies nothing); and if the rounds end on a refusal that names no row, on a
 # check that could not run, or on an empty graph, every round is rolled back and
-# the pathway is refused exactly as before this pass existed (D-113 section 3).
+# the pathway is refused exactly as before this pass existed.
 
 _GATE_QUARANTINE = "strict_quarantine_unexportable_entity"
 _GATE_FINAL = "final_pre_export_stage3_gates"
@@ -2584,9 +2590,19 @@ _GATE_STAGE8 = "pre_export_stage3_revalidation"
 _GATE_REQUIRED = "required_field_gate"
 _GATE_IR = "pwml_ir_validation"
 
-#: On ``review_reasons`` and the release whenever anything was omitted: a PWML
-#: with an omission is ``review_required``, never ``release_ready`` (D-114 s2).
-PER_ROW_OMISSION_REASON = "per_row_omissions_removed_from_pwml"
+#: On ``review_reasons`` and the release whenever the frozen record omits a
+#: process (whenever it was quarantined) or dropped an actor: such a PWML is
+#: ``review_required``, never ``release_ready`` (D-114 s2, orchestrator reading).
+#: An entity-only removal does not count.
+OMITTED_FROM_PWML_REASON = "omitted_from_pwml"
+
+#: D-114 AMENDMENT 1 section 2: the one actor slot whose failure costs the actor,
+#: not the process.
+_TRANSPORTER_SLOT = "transporters"
+
+#: ``<prefix><component>:<its reason>``: a complex (and its processes) left because
+#: one of its components was omitted.
+_COMPONENT_OMITTED_PREFIX = "protein_complex_component_omitted:"
 
 
 def _cap_release_for_omissions(release: Dict[str, Any], reason: str) -> Dict[str, Any]:
@@ -2611,15 +2627,9 @@ def _cap_release_for_omissions(release: Dict[str, Any], reason: str) -> Dict[str
 
 _ROW_POINTER = re.compile(r"^/(processes|entities)/([a-z_]+)/(\d+)(?:/([a-z_]+)/(\d+))?")
 _LOCATED_PROTEIN_POINTER = re.compile(r"^/element_locations/protein_locations/(\d+)/protein$")
-#: The final gate's two messages for a protein attached to nothing.
-_UNATTACHED_PROTEIN_MESSAGES: Tuple[str, ...] = (
-    "Protein has degree 0 after normalization:",
-    "Located protein is isolated in connectivity graph:",
-)
+#: The final gate's two messages for a protein attached to nothing, from the gate's own module.
+_UNATTACHED_PROTEIN_MESSAGES: Tuple[str, ...] = (DEGREE_ZERO_PROTEIN_MESSAGE, ISOLATED_LOCATED_PROTEIN_MESSAGE)
 _ACTOR_SLOT_NAMES = frozenset(slot for slots in _ACTOR_SLOTS.values() for slot in slots)
-#: D-113 section 1: the wrapper ``relocate_complex_named_proteins`` builds for a
-#: Stage-2 protein whose name ends in " complex".
-_INVENTED_WRAPPER_GENERATION_REASON = "complex_named_source_entity_wrapper"
 
 
 def _freeze_candidate(
@@ -2762,14 +2772,15 @@ def _row_failures(
         records = by_position.get(bucket) or []
         if index >= len(records):
             return []
-        slot, name = match.group(4) or "", ""
+        slot, name, position = match.group(4) or "", "", None
         if slot and match.group(5) is not None:
             row = _safe_dict(_safe_list(_safe_dict(candidate.get("processes")).get(bucket))[index])
             items = _safe_list(row.get(slot))
             position = int(match.group(5))
             item = items[position] if position < len(items) else None
             name = _actor_name(item) if isinstance(item, dict) else (_canonical(item) if isinstance(item, str) else "")
-        return [{"kind": "process", "record": records[index], "slot": slot, "name": name, "reason": reason, "gate": gate}]
+        return [{"kind": "process", "record": records[index], "slot": slot, "position": position, "name": name,
+                 "reason": reason, "gate": gate}]
     if bucket not in _GRAPH_ENTITY_BUCKETS:
         return []
     rows = _safe_list(entities.get(bucket))
@@ -2841,7 +2852,7 @@ def _invented_wrapper_slots(
     if (
         bucket != "reactions"
         or not is_generated_complex_wrapper(complex_row)
-        or complex_row.get("generation_reason") != _INVENTED_WRAPPER_GENERATION_REASON
+        or complex_row.get("generation_reason") != COMPLEX_NAMED_SOURCE_WRAPPER_REASON
     ):
         return [], []
     slots: Set[str] = set()
@@ -2867,8 +2878,11 @@ def _apply_per_row_failures(
     admissions: Sequence[Dict[str, Any]],
     *,
     iteration: int,
-) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
-    """Omit what ``failures`` name. Returns ``(omitted process records, removed entity rows)``."""
+) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]], int]:
+    """Omit what ``failures`` name.
+
+    Returns ``(omitted process records, removed rows, actors dropped from a kept process)``.
+    """
 
     registry = _build_registry(working)
     processes = _safe_dict(working.get("processes"))
@@ -2876,6 +2890,12 @@ def _apply_per_row_failures(
     omitted: List[Dict[str, Any]] = []
     removed: List[Dict[str, Any]] = []
     dropped: Set[int] = set()
+    actor_drops = 0
+
+    def resolves_to(actor: Any, row: Mapping[str, Any]) -> bool:
+        ref = _actor_name(actor) if not isinstance(actor, str) else _canonical(actor)
+        resolved = registry.resolve(ref) if ref else None
+        return resolved is not None and resolved[1] is row
 
     def process_row(record: Mapping[str, Any]) -> Dict[str, Any]:
         rows = _safe_list(processes.get(str(record.get("bucket") or "")))
@@ -2903,14 +2923,21 @@ def _apply_per_row_failures(
         )
         omitted.append(record)
 
+    def removal(record: Mapping[str, Any], slots: List[str], decision: str, **extra: Any) -> Dict[str, Any]:
+        return {"process": str(record.get("pointer") or ""), "process_name": str(record.get("name") or ""),
+                "slots": slots, **extra, "decision": decision}
+
     def drop_entity(bucket: str, row: Dict[str, Any], reason: str, gate: str, attached: bool) -> None:
+        nonlocal actor_drops
         rows = _safe_list(entities.get(bucket))
         if id(row) in dropped or not any(r is row for r in rows):
             return
         dropped.add(id(row))
         name = _row_name(row) or "<unnamed>"
         failing = {"bucket": bucket, "name": name}
-        # A complex resolving a component to this row leaves whole.
+        # A complex resolving a component to this row leaves whole, with its
+        # processes: the component was omitted, so the complex cannot be drawn
+        # as declared (not a verdict of _entity_representability on the complex).
         for complex_row in list(_safe_list(entities.get("protein_complexes"))):
             if complex_row is row or not isinstance(complex_row, dict):
                 continue
@@ -2920,7 +2947,7 @@ def _apply_per_row_failures(
                 if resolved is not None and resolved[1] is row:
                     drop_entity(
                         "protein_complexes", complex_row,
-                        f"protein_complex_component_unrepresentable:{name}:{reason}", gate, True,
+                        f"{_COMPONENT_OMITTED_PREFIX}{name}:{reason}", gate, True,
                     )
                     break
         actor_removals: List[Dict[str, Any]] = []
@@ -2944,19 +2971,16 @@ def _apply_per_row_failures(
                 )
                 if slots:
                     for slot in slots:
-                        process[slot] = [
-                            actor
-                            for actor in _safe_list(process.get(slot))
-                            if not (
-                                (ref := _actor_name(actor) if not isinstance(actor, str) else _canonical(actor))
-                                and (resolved := registry.resolve(ref)) is not None
-                                and resolved[1] is row
-                            )
-                        ]
-                    actor_removals.append(
-                        {"process": str(record.get("pointer") or ""), "process_name": str(record.get("name") or ""),
-                         "slots": slots, "catalysts_kept": kept, "decision": "D-113 s1"}
-                    )
+                        process[slot] = [a for a in _safe_list(process.get(slot)) if not resolves_to(a, row)]
+                    actor_removals.append(removal(record, slots, "D-113 s1", catalysts_kept=kept))
+                    actor_drops += 1
+                    continue
+                if process_bucket == "transports" and all(slot == _TRANSPORTER_SLOT for slot, _ in hits):
+                    process[_TRANSPORTER_SLOT] = [
+                        a for a in _safe_list(process.get(_TRANSPORTER_SLOT)) if not resolves_to(a, row)
+                    ]
+                    actor_removals.append(removal(record, [_TRANSPORTER_SLOT], "D-114 AMENDMENT 1 s2"))
+                    actor_drops += 1
                     continue
                 slot, ref = next((hit for hit in hits if hit[0] not in _ACTOR_SLOT_NAMES), hits[0])
                 omit(record, QUARANTINED_UNMAPPED_ENTITY, reason, slot, ref, gate, failing)
@@ -2975,14 +2999,51 @@ def _apply_per_row_failures(
             }
         )
 
+    by_record: Dict[int, List[Mapping[str, Any]]] = {}
     for failure in failures:
         if failure["kind"] == "process":
-            omit(failure["record"], QUARANTINED_BROKEN_REFERENCE, failure["reason"], failure["slot"],
-                 failure["name"], failure["gate"])
+            by_record.setdefault(id(failure["record"]), []).append(failure)
+    for group in by_record.values():
+        record = group[0]["record"]
+        if record.get("state") not in ACCEPTED_STATES:
+            continue
+        if record.get("bucket") == "transports" and all(
+            f["slot"] == _TRANSPORTER_SLOT and f.get("position") is not None for f in group
+        ):
+            # D-114 AMENDMENT 1 section 2: the transport stays, the failing transporters go.
+            process = process_row(record)
+            actors = _safe_list(process.get(_TRANSPORTER_SLOT))
+            first_by_position: Dict[int, Mapping[str, Any]] = {}
+            for f in group:
+                if f["position"] < len(actors):
+                    first_by_position.setdefault(f["position"], f)
+            for position, f in sorted(first_by_position.items()):
+                removed.append(
+                    {
+                        "bucket": _TRANSPORTER_SLOT,
+                        "name": f["name"] or "<unnamed>",
+                        "reason": f["reason"],
+                        "had_external_identity": None,
+                        # The dropped actor verbatim, as ``original_process`` keeps an omitted
+                        # process verbatim: it is what a reviewer adds back by hand.
+                        "detail": {
+                            **scrub_detail(
+                                {"gate": f["gate"], "omission": "transporter_dropped_per_row",
+                                 "actor_removed_from": [removal(record, [_TRANSPORTER_SLOT], "D-114 AMENDMENT 1 s2")]}
+                            ),
+                            "actor": deepcopy(actors[position]),
+                        },
+                    }
+                )
+            process[_TRANSPORTER_SLOT] = [a for i, a in enumerate(actors) if i not in first_by_position]
+            actor_drops += len(first_by_position)
+            continue
+        first = group[0]
+        omit(record, QUARANTINED_BROKEN_REFERENCE, first["reason"], first["slot"], first["name"], first["gate"])
     for failure in failures:
         if failure["kind"] == "entity":
             drop_entity(failure["bucket"], failure["row"], failure["reason"], failure["gate"], failure["attached"])
-    return omitted, removed
+    return omitted, removed, actor_drops
 
 
 # ── Result ──────────────────────────────────────────────────────────────────
@@ -3121,7 +3182,7 @@ def quarantine_and_close(
     converged = False
     # ORCH-773: once closure settles, a per-row omission round (see the section
     # above _freeze_candidate). ``rollback`` is the state before the first one.
-    omission_count = 0
+    actor_drop_count = 0
     rollback: Optional[Tuple[Any, ...]] = None
 
     for iteration in range(1, int(max_iterations) + 1):
@@ -3203,8 +3264,8 @@ def quarantine_and_close(
                         (working, admissions, iterations, all_removed_entities,
                          all_removed_locations, all_removed_states)
                     )
-                omitted, removed = _apply_per_row_failures(failures, working, admissions, iteration=iteration)
-                omission_count += len(omitted) + len(removed)
+                omitted, removed, drops = _apply_per_row_failures(failures, working, admissions, iteration=iteration)
+                actor_drop_count += drops
                 changed = bool(omitted or removed)
                 all_removed_entities.extend({**row, "iteration": iteration} for row in removed)
                 iterations[-1]["changed"] = changed
@@ -3216,7 +3277,7 @@ def quarantine_and_close(
                 # The omissions did not buy a PWML: undo every round.
                 (working, admissions, iterations, all_removed_entities,
                  all_removed_locations, all_removed_states) = rollback
-                omission_count = 0
+                actor_drop_count = 0
                 changed = False
         if not changed:
             converged = True
@@ -3226,7 +3287,7 @@ def quarantine_and_close(
         # The iteration cap ran out after an omission round: undo every round.
         (working, admissions, iterations, all_removed_entities,
          all_removed_locations, all_removed_states) = rollback
-        omission_count = 0
+        actor_drop_count = 0
         converged = True
 
     if not converged:
@@ -3378,7 +3439,18 @@ def quarantine_and_close(
     # pre-D-002 order. Research mode reports exactly this and is otherwise
     # untouched by any of the above.
     would_have_refused: List[str] = coverage_reasons + structural_reasons
-    omission_reason = f"{PER_ROW_OMISSION_REASON}:{omission_count}" if omission_count else ""
+    # D-114 s2, orchestrator reading: any process the frozen record omits (whenever it
+    # was quarantined) or any actor dropped from a kept process makes the PWML
+    # review_required. Research applies nothing, so it omits nothing; and a refused
+    # graph has no PWML to cap, so its review and release reasons do not move.
+    omitted_processes = 0 if is_research(mode) else sum(
+        1 for record in admissions if record.get("state") in QUARANTINE_STATES
+    )
+    omission_reason = (
+        f"{OMITTED_FROM_PWML_REASON}:{omitted_processes}_processes+{actor_drop_count}_actors"
+        if (omitted_processes or actor_drop_count) and not refusal_reasons
+        else ""
+    )
     if omission_reason:
         review_reasons = [*review_reasons, omission_reason]
 
