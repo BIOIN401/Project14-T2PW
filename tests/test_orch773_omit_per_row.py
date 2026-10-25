@@ -15,6 +15,9 @@ Wnt/Ca2+ transports); and any omitted process or dropped actor in the frozen rec
 ``review_required``, including a process quarantined at admission
 (``test_g9_a_process_quarantined_at_admission_caps_a_release_ready_pathway``, on a small payload).
 
+Phase 2: ``test_new_text_record_lists_every_actor_left_out_of_a_drawn_process`` is a NEW acceptance test of
+new output (the Reaction Evidence .txt names each dropped actor in OMITTED FROM THE PWML).
+
 Each fixture is the exact ``{"payload", "pathway_context"}`` the ORCH-768 replay corpus hands
 ``freeze_canonical_payload`` on that leg (``tests/fixtures/orch773/README.md``). ``_refusals`` runs what the
 freeze and ``run_pwml_export`` run after the quarantine, in their order, with the export's own pre-freeze
@@ -29,6 +32,8 @@ import json
 from copy import deepcopy
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
+
+import pytest
 
 from t2pw.pipeline.process_normalizer import GateValidationError, run_strict_post_normalization_gates
 from t2pw.pipeline.stage_contracts import StageContractError, validate_post_normalization, validate_pre_export
@@ -444,3 +449,68 @@ def test_new_release_cap() -> None:
     assert _cap_release_for_omissions(ready, "") is ready
     blocked = {"status": "diagnostic_only", "strict_acceptance_eligible": False, "reasons": ["x"]}
     assert _cap_release_for_omissions(blocked, "r")["status"] == "diagnostic_only"
+
+
+# ── NEW acceptance test, phase 2: the text record names every actor left out ──
+# The OMITTED ACTOR block is new output (D-114 s3 for a D-113 s1 / D-114 AMENDMENT 1 s2 drop); it fails on
+# values at the pre-phase-2 tip fa26fbc2 (G11 ORCH-773 phase-2 red run), and claims no base failure.
+
+_OTOP1 = ("OTOP1-mediated H+ transport", "H+ permeation through OTOP1", "OTOP1-mediated H+ permeation")
+_INSP3R = "inositol-1,4,5-trisphosphate receptor (InsP3R)"
+_WRAPPER = ("Generated protein complex 'enterobactin synthase complex' component 'enterobactin synthase' "
+            "is missing positive stoichiometry.")
+_TRANSPORTER = ("transporters", "actor_schema_not_canonical", "KI-023", "D-114 AMENDMENT 1 s2")
+
+
+def _text_record(result, pwml: bool = True):
+    from t2pw.app.reaction_evidence import build_report, render_text
+
+    arts = {"final_mapped.json": result.payload, "quarantine_report.json": result.quarantine_report,
+            "removed_entity_report.json": result.removed_entity_report}
+    if pwml:
+        export = deepcopy(result.payload)
+        run_prefreeze_resolution(export, strict_db=True)
+        arts["pwml_ir.json"], _ = build_pwml_ir(export, pathway_name="Generated Pathway", pathway_subject="Metabolic",
+                                                strict_db=True, width=3200, height=1400)
+        arts["pathway.review_required.pwml"] = True
+    report = build_report(arts)
+    return report, render_text(report)
+
+
+@pytest.mark.parametrize(
+    "slug, title, expected",
+    [
+        ("ORCH-755_sour_taste-strict_2026-10-21_0139", "3 actors",
+         [(name, "OTOP1", *_TRANSPORTER) for name in _OTOP1]),
+        ("ORCH-767_wnt_ca-strict_2026-10-24_0314", "2 actors",
+         [(name, _INSP3R, *_TRANSPORTER) for name in ("IP3-induced Ca2+ release", "SERCA pumps Ca2+ into ER")]),
+        ("ORCH-767_enterobactin-strict_2026-10-23_2224", "1 actors",
+         [("EntF enterobactin synthase reaction", "enterobactin synthase complex", "enzymes, modifiers", _WRAPPER,
+           "KI-012", "D-113 s1")]),
+    ],
+)
+def test_new_text_record_lists_every_actor_left_out_of_a_drawn_process(slug, title, expected) -> None:
+    payload, context = _orch768_leg(slug)[:2] if slug.startswith("ORCH-767_enterobactin") else _leg(slug)
+    result = _quarantine(payload, context)
+    report, text = _text_record(result)
+    section = text[text.index("\nOMITTED FROM THE PWML ("):]
+    assert section.splitlines()[1].endswith(f"; {title} left out of processes still drawn)")
+    blocks = [dict(line.split(": ", 1) for line in block.splitlines()[1:])
+              for block in section.split("\n\n") if block.startswith("OMITTED ACTOR ")]
+    assert [(b["Process"], b["Actor"], b["Slot"], b["Reason"], b["Known issue"], b["Decision"]) for b in blocks] == expected
+    for block, (process, actor, *_rest) in zip(blocks, expected):
+        assert block["Gate"] and block["Add by hand"]
+        assert ("Catalysts kept" in block) is (block["Decision"] == "D-113 s1")
+        if block["Decision"] == "D-113 s1":
+            assert "EntF complex" in block["Catalysts kept"]
+        else:
+            assert f"\"{actor}\" as a transporter of \"{process}\"" in block["Add by hand"]
+    # The process is drawn and counted as drawn; only the actor is left out.
+    omitted = {e["name"] for e in report["omitted"]}
+    assert not omitted & {process for process, *_ in expected}
+    assert report["pwml_coverage"]["drawn"] is not None
+    assert "catalysts kept" not in "".join(line for line in section.splitlines() if "transporters" in line)
+    # Without a PWML nothing is drawn, and the text does not say otherwise.
+    _report, bare = _text_record(result, pwml=False)
+    assert f"; {title} left out of processes kept (no PWML written: nothing is drawn))\n" in bare
+    assert "still drawn" not in bare
