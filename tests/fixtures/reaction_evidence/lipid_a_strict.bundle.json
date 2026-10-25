@@ -208,7 +208,10 @@
        "review_required": true,
        "sources": []
       }
-     ]
+     ],
+     "entity_1": "FtsH",
+     "entity_2": "LpxC",
+     "relationship": "degrades"
     }
    },
    {
@@ -236,7 +239,10 @@
        "review_required": true,
        "sources": []
       }
-     ]
+     ],
+     "entity_1": "LapB",
+     "entity_2": "LpxC",
+     "relationship": "binds"
     }
    },
    {
@@ -264,7 +270,10 @@
        "review_required": true,
        "sources": []
       }
-     ]
+     ],
+     "entity_1": "YejM",
+     "entity_2": "LapB",
+     "relationship": "binds"
     }
    },
    {
@@ -292,7 +301,10 @@
        "review_required": true,
        "sources": []
       }
-     ]
+     ],
+     "entity_1": "YejM",
+     "entity_2": "LPS",
+     "relationship": "binds"
     }
    },
    {
@@ -313,7 +325,10 @@
        "review_required": true,
        "sources": []
       }
-     ]
+     ],
+     "entity_1": "LapB",
+     "entity_2": "FtsH",
+     "relationship": "binds"
     }
    },
    {
@@ -334,7 +349,10 @@
        "review_required": true,
        "sources": []
       }
-     ]
+     ],
+     "entity_1": "Kdo-lipid IVA",
+     "entity_2": "LpxL",
+     "relationship": "acylated_by"
     }
    },
    {
@@ -355,7 +373,10 @@
        "review_required": true,
        "sources": []
       }
-     ]
+     ],
+     "entity_1": "Kdo-lipid IVA",
+     "entity_2": "LpxM",
+     "relationship": "acylated_by"
     }
    },
    {
@@ -376,7 +397,10 @@
        "review_required": true,
        "sources": []
       }
-     ]
+     ],
+     "entity_1": "LpxL",
+     "entity_2": "Kdo-lipid A",
+     "relationship": "catalyzes"
     }
    },
    {
@@ -397,7 +421,10 @@
        "review_required": true,
        "sources": []
       }
-     ]
+     ],
+     "entity_1": "LpxM",
+     "entity_2": "Kdo-lipid A",
+     "relationship": "catalyzes"
     }
    }
   ]
@@ -827,10 +854,16 @@
    ],
    "transports": [
     {
-     "name": "MsbA-mediated core-lipid A flip"
+     "name": "MsbA-mediated core-lipid A flip",
+     "cargo": "core-lipid A",
+     "from_biological_state": "cytoplasmic leaflet of IM state",
+     "to_biological_state": "periplasmic leaflet of IM state"
     },
     {
-     "name": "Lpt system transport of core-lipid A to OM"
+     "name": "Lpt system transport of core-lipid A to OM",
+     "cargo": "core-lipid A",
+     "from_biological_state": "periplasmic leaflet of IM state",
+     "to_biological_state": "outer membrane state"
     }
    ],
    "interactions": [
@@ -1242,6 +1275,25 @@
     {
      "name": "LpxA acylates UDP-GlcNAc",
      "interaction_type": "catalyzes"
+    }
+   ],
+   "reactions": [
+    {
+     "name": "LpxA reaction"
+    },
+    {
+     "name": "LpxB reaction"
+    },
+    {
+     "name": "WaaA reaction"
+    }
+   ],
+   "transports": [
+    {
+     "name": "MsbA-mediated core-lipid A flip"
+    },
+    {
+     "name": "Lpt system transport of core-lipid A to OM"
     }
    ]
   }

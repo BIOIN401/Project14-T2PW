@@ -126,7 +126,8 @@ def test_committed_sample_is_this_module_run_over_the_committed_leg(leg):
 def test_missing_optional_artifacts_read_not_recorded(tmp_path):
     empty = build_report(load_run_artifacts(tmp_path))
     text = render_text(empty)
-    for line in ("Paper: Not recorded", "Coverage: Not recorded", "Minimum core satisfied: Not recorded",
+    # ORCH-772 (merge rule 4): the core-term line is relabelled so it cannot be read as PWML coverage.
+    for line in ("Paper: Not recorded", "Core-term coverage: Not recorded", "Minimum core satisfied: Not recorded",
                  "QUARANTINED / REJECTED (Not recorded)", "REMOVED ENTITIES (Not recorded)",
                  "Matched: Not recorded", "Surviving reactions read from: Not recorded"):
         assert line in text

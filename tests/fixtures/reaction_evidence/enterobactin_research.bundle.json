@@ -586,10 +586,16 @@
    ],
    "transports": [
     {
-     "name": "enterobactin secretion"
+     "name": "enterobactin secretion",
+     "cargo": "enterobactin",
+     "from_biological_state": "cytoplasmic state",
+     "to_biological_state": "__auto_state__"
     },
     {
-     "name": "ferric-enterobactin import"
+     "name": "ferric-enterobactin import",
+     "cargo": "ferric enterobactin",
+     "from_biological_state": "__auto_state__",
+     "to_biological_state": "__auto_state__"
     }
    ],
    "interactions": [
