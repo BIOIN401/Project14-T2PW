@@ -114,7 +114,7 @@ def main():
             print(f"  {i}: {fmt(gb) or '-'}  ->  {fmt(gt) or '-'}")
 
     print("\n== omissions at tip, per leg ==")
-    causes, slots, kis, d113 = Counter(), Counter(), Counter(), 0
+    causes, slots, kis, drops = Counter(), Counter(), Counter(), Counter()
     legs_with = 0
     for i in sorted(t):
         r = t[i].get("replay")
@@ -145,11 +145,29 @@ def main():
             d = x["detail"]
             ki = ki_for(x.get("reason") or "", rules)
             kis[ki] += 1
-            d113 += len(d.get("actor_removed_from") or [])
-            print(f"    ENTITY {x.get('bucket')} {x.get('name')!r}: reason={x.get('reason')!r} KI={ki} gate={d.get('gate')}"
+            for entry in d.get("actor_removed_from") or []:
+                drops[entry.get("decision")] += 1
+            kind = "TRANSPORTER DROPPED" if x.get("bucket") == "transporters" else "ENTITY"
+            print(f"    {kind} {x.get('bucket')} {x.get('name')!r}: reason={x.get('reason')!r} KI={ki} gate={d.get('gate')}"
                   + (f" actor_removed_from={d.get('actor_removed_from')}" if d.get("actor_removed_from") else ""))
+        print(f"    release reasons: {[r for r in (q.get('release') or {}).get('reasons') or [] if r.startswith(('omitted_from_pwml', 'per_row'))]}")
     print(f"\n== totals: {legs_with} legs with omissions; process omissions by cause {dict(causes)}; "
-          f"actor slots {dict(slots)}; D-113 actor removals {d113}; KI ids {dict(kis)}")
+          f"actor slots {dict(slots)}; actors dropped from a kept process by decision {dict(drops)}; KI ids {dict(kis)}")
+
+    print("\n== release status base -> tip, and the omission cap reason at tip ==")
+    capped = 0
+    for i in sorted(t):
+        rb, rt = (b[i].get("replay") or {}), (t[i].get("replay") or {})
+        sb, st = (rb.get("quarantine") or {}).get("release"), (rt.get("quarantine") or {}).get("release")
+        wt = out_t / slug(i) / "outputs" / "quarantine_report.json"
+        reasons = [r for r in ((load(wt).get("release") or {}).get("reasons") or [])
+                   if r.startswith("omitted_from_pwml")] if wt.exists() else []
+        capped += bool(reasons)
+        if sb != st:
+            print(f"  RELEASE MOVED {i}: {sb} -> {st} {reasons}")
+        elif reasons:
+            print(f"  cap reason, release unchanged ({st}) {i}: {reasons}")
+    print(f"  legs whose frozen record carries omitted_from_pwml: {capped}")
 
     print("\n== every quarantine/removal record that differs base -> tip (closure consequences included) ==")
     for i in sorted(t):

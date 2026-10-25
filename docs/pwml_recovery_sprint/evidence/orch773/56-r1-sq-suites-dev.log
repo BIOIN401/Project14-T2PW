@@ -1,0 +1,64 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\src\t2pw\__init__.py
+........................................................................ [ 16%]
+..............................................F......................... [ 33%]
+........................................................................ [ 50%]
+........................................................................ [ 67%]
+........................................................................ [ 83%]
+.....................................................................    [100%]
+================================== FAILURES ===================================
+_______ test_an_empty_graph_is_still_diagnostic_only_and_still_refuses ________
+
+    def test_an_empty_graph_is_still_diagnostic_only_and_still_refuses() -> None:
+        """**A5.** ``no_surviving_process`` is not a shortfall. It is an absence.
+    
+        ``release_status.py`` draws the distinction and it is consumed, not
+        re-derived: an empty core has no defensible connected core, so the coverage
+        reason stays a REFUSAL reason here rather than becoming a review reason.
+        """
+    
+        payload = _base()
+        payload.pop("metadata", None)
+        for reaction in payload["processes"]["reactions"]:
+            reaction["scope_membership"] = "out_of_scope"
+    
+        result = quarantine_and_close(payload, strict_db=True)
+    
+        assert result.ok is False
+        assert "minimum_core:no_surviving_process" in result.refusal_reasons
+>       assert result.quarantine_report["review_reasons"] == []
+E       AssertionError: assert ['omitted_fro...ses+0_actors'] == []
+E         
+E         Left contains one more item: 'omitted_from_pwml:2_processes+0_actors'
+E         Use -v to get more diff
+
+tests\test_strict_quarantine_release_seam.py:487: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_strict_quarantine_release_seam.py::test_an_empty_graph_is_still_diagnostic_only_and_still_refuses
+1 failed, 428 passed in 48.53s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f35de933f29399c4d81ef53594e987c7ddabdedb  [git, worktree dirty=True]
+label                   : r1-sq-suites-dev
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch773/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch773/docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-773/56-r1-sq-suites-dev.pin.json -q --basetemp=C:/t/orch773/bt-56-r1-sq-suites-dev tests/test_strict_quarantine.py tests/test_strict_quarantine_contract_alignment.py tests/test_strict_quarantine_lineage.py tests/test_strict_quarantine_locks_and_scope.py tests/test_strict_quarantine_release_seam.py tests/test_strict_quarantine_versioning.py tests/test_orch766_unreferenced_species.py tests/test_orch769b_actor_protein_registry.py tests/test_orch759c_quarantine_bucket_closure.py tests/test_strict_quarantine_real_artifact_replay.py tests/test_orch768_replay_corpus.py tests/test_d088_coverage_diagnostics.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773
+root PID / process group: 206896 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 590 s
+duration                : 49.72 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 2  207280:python.exe, 212476:git.exe
+descendants terminated  : 2  207280, 212476
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\docs\pwml_recovery_sprint\evidence\g11\ORCH-773\56-r1-sq-suites-dev.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH-773  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

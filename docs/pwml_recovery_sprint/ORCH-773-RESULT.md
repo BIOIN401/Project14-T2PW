@@ -4,11 +4,11 @@
 |---|---|
 | Lane | `orch773/omit-per-row`, worktree `.claude/worktrees/orch773` |
 | Base | `3ef3fa9c` (sprint tip; `src` tree `322d398d`, identical to `main` `b16a45e7`) |
-| Commits | `0971487b` code and tests · docs commit (this file, evidence, G11 reports) |
-| Status | **Implemented and measured. Not reviewed, not merged, not pushed.** Needs an independent review of the diff. Phase 2 (coverage per leg, ORCH-772's metric) waits for the orchestrator. |
-| Boundary | `src/t2pw/pipeline/strict_quarantine.py` only (no gate module edited); tests; this file; evidence. `streamlit_app.py`, `reaction_evidence.py`, `reaction_evidence_view.py`, `apply_audit_patch.py`, `evidence/orch768_replay_corpus.py`: **untouched** (`git diff 3ef3fa9c 0971487b --stat -- src` lists one file). |
-| D-112 § 2 | **ACCEPT.** PWML **56/91 → 72/91** (56/81 → 72/81 replayed). 16 legs fixed, none broken, no gold recall lost. **56/56** base-passing legs write a **byte-identical** PWML. Enterobactin ORCH-767 writes a PWML with gold **5/5**. |
-| G11 | `evidence/g11/ORCH-773/01`–`48`, all `FINAL SURVIVING COUNT : 0`, every job under `--heavy-lock ORCH-773`; `g11_evidence.py check --task ORCH-773`: 48 artifacts, 0 non-compliant, exit 0. Logs `evidence/orch773/NN-*.log`. |
+| Commits | phase 1: `0971487b` code and tests · `f35de933` docs. Round 1 (§ R1): `1a0fc159` code and tests · the docs commit after it |
+| Status | **Phase 1 reviewed (r0: APPROVE WITH NOTES, 0 blocking). Round 1 implemented and measured, awaiting the round-1 review.** Not merged, not pushed. Phase 2 (coverage per leg, ORCH-772's metric) waits for the orchestrator. |
+| Boundary | `src/t2pw/pipeline/strict_quarantine.py`; in round 1 also `process_normalizer.py`, three shared constants only (review note N4, asked for by the orchestrator; the gate's messages are byte-identical); tests; this file; evidence. `streamlit_app.py`, `reaction_evidence.py`, `reaction_evidence_view.py`, `apply_audit_patch.py`, `evidence/orch768_replay_corpus.py`: **untouched**. |
+| D-112 § 2 | **ACCEPT** (phase 1 and round 1). PWML **56/91 → 72/91** (56/81 → 72/81 replayed). 16 legs fixed, none broken, no gold recall lost. **56/56** base-passing legs write a **byte-identical** PWML. Enterobactin ORCH-767 writes a PWML with gold **5/5**. Round 1 keeps the 6 transports whose transporter failed (§ R1.3). |
+| G11 | `evidence/g11/ORCH-773/01`–`76`, all `FINAL SURVIVING COUNT : 0`, every job under `--heavy-lock ORCH-773`; `g11_evidence.py check --task ORCH-773` exit 0. Logs `evidence/orch773/NN-*.log`. |
 
 ## 0. Outcome in one table
 
@@ -360,6 +360,9 @@ before and after every job; no exit 95 occurred.
 
 ## 12. Not settled (for the product owner)
 
+Items 1, 2 and 10 were ruled after phase 1 (§ R1.1): item 1 by D-114 AMENDMENT 1, item 2 (keep the bump) and item 10
+(cap on any omission) by the orchestrator. The open items for round 1 are in § R1.7.
+
 1. **Whole-process omission vs dropping only the failing actor.** Today: 12 processes leave because one actor fails
    (§ 4.2). Options: (a) keep (this lane); (b) drop the actor, keep the process, flag it: restores 12 processes in 8
    legs (755 enterobactin back to gold 5/5) at the price of exporting uncatalysed reactions and transports without a
@@ -395,10 +398,189 @@ before and after every job; no exit 95 occurred.
 11. **ORCH-772 rendering.** The per-row detail (gate, cause, slot, D-113 actor removal) is in `detail` of the existing
     rows; the current text renders state, reason and participant only. ORCH-772 may want `detail.omission`.
 
+## R1. Round 1 (D-114 AMENDMENT 1, the release-cap reading, review r0 notes)
+
+Review r0 (`C:/t/rev773/REVIEW-r0.md`, reviewer reports `ORCH-773/49`–`66` in its own worktree): **APPROVE WITH NOTES**, 0
+blocking, 19 notes. The product owner ruled on § 12 item 1 as **D-114 AMENDMENT 1** (DECISIONS.md, sprint tip
+`88fdbabd`). Round-1 code: `1a0fc159`; this file and evidence: the docs commit after it.
+
+### R1.1 Rulings recorded
+
+* **D-114 AMENDMENT 1** (product owner): (1) a reaction whose enzyme fails is omitted whole (PathWhiz
+  `reaction.rb:93-94` `check_spontaneous`); (2) a transport whose transporter fails keeps the transport and loses only
+  that transporter (`transport.rb:29-33`: no transporter requirement); a transport failing for any other reason is
+  omitted whole; (3) an interaction with a bad endpoint is omitted whole.
+* **Release cap, orchestrator reading of D-114 § 2:** any omitted process or dropped actor in the frozen record caps
+  the release at `review_required`, including processes quarantined before this lane (§ 12 item 10). An entity-only
+  removal (unreferenced species, degree-0 protein) does not cap it on its own.
+* **`QUARANTINE_POLICY_VERSION` bump stays** (orchestrator ruling: it follows the module's own rule; § 12 item 2).
+* **ORCH-755 enterobactin stays at gold 4/5** under amendment § 1 (its `EntB isochorismatase reaction` loses its only
+  enzyme complex, whose subunit EntB has no identity, KI-017); the product owner accepted this.
+
+### R1.2 What changed
+
+`src/t2pw/pipeline/strict_quarantine.py`:
+
+1. **Transporter drop** (`_apply_per_row_failures`). A gate error naming a transport's `transporters/<j>` (the
+   Stage-8 `actor_schema_not_canonical`, the final gate's "Unknown transporter reference", a required-field error on
+   that slot) drops that transporter and keeps the transport, when every error naming that transport names a
+   transporter; otherwise the transport is omitted whole, as before. When a refused entity is reached by a transport
+   only through `transporters`, those transporters are dropped and the transport stays. Each drop is recorded the
+   D-113 § 1 way: a `removed_entities[]` row (`bucket` `transporters`, `name` the transporter, `reason` the gate's
+   exact code) with `detail.actor_removed_from` = `{process, process_name, slots: [transporters], decision: "D-114
+   AMENDMENT 1 s2"}` and the dropped actor row verbatim in `detail.actor` (outside the bounded `scrub_detail`, like
+   `original_process`). A transport left with no transporter meets every gate again on the next round; if one refused
+   it, the transport would be omitted whole by the ordinary process rule (no gate does, § R1.3).
+2. **Release cap** (`omitted_from_pwml:<p>_processes+<a>_actors`, `OMITTED_FROM_PWML_REASON`): `<p>` counts every
+   quarantined process of the frozen record, `<a>` every actor dropped from a kept process (D-113 § 1 wrapper,
+   transporters). Recorded on `review_reasons` and `release.reasons` and capping `release_ready`, only when the graph
+   is not refused (a refused graph has no PWML to cap, so its records do not move) and never in research mode. The
+   phase-1 reason `per_row_omissions_removed_from_pwml` is gone.
+3. **N1:** a complex that leaves because a component it resolves was omitted now carries
+   `protein_complex_component_omitted:<component>:<reason>` (it said `protein_complex_component_unrepresentable:…`,
+   a code `_entity_representability` never emits for a declared complex).
+4. **N4:** the generation reason and the final gate's two "attached to nothing" messages are constants in the gate's
+   own module, `process_normalizer.py` (`COMPLEX_NAMED_SOURCE_WRAPPER_REASON`, `DEGREE_ZERO_PROTEIN_MESSAGE`,
+   `ISOLATED_LOCATED_PROTEIN_MESSAGE`), used by the gate's f-strings and by the quarantine. The messages are
+   byte-identical: the corpus' final-gate errors and every gate test are unchanged. This is the only gate-module edit,
+   asked for by the orchestrator.
+5. **N6:** the rollback comment no longer cites D-113 § 3.
+
+### R1.3 The six transports (each in case (i): kept, transporter dropped, exported)
+
+| leg | transport | transporter dropped | reason → KI | kept in canonical / PWML IR | transporters left |
+|---|---|---|---|---|---|
+| ORCH-755 sour taste | `OTOP1-mediated H+ transport` | OTOP1 | `actor_schema_not_canonical` → KI-023 | yes / yes | none |
+| ORCH-755 sour taste | `H+ permeation through OTOP1` | OTOP1 | same | yes / yes | none |
+| ORCH-755 sour taste | `OTOP1-mediated H+ permeation` | OTOP1 | same | yes / yes | none |
+| ORCH-767 Wnt/Ca2+ | `IP3-induced Ca2+ release` | inositol-1,4,5-trisphosphate receptor (InsP3R) | same | yes / yes | none |
+| ORCH-767 Wnt/Ca2+ | `SERCA pumps Ca2+ into ER` | InsP3R | same | yes / yes | none |
+| rv 09-02_2052 PMC12452463 | `ferri-enterobactin import via FepA` | FepA | same | yes / yes | none |
+
+None landed in case (ii) (a gate refusing a transport with no transporter) or case (iii) (failing for another reason).
+Source: `transport_cases.py`, first section of `63-r1-analysis.log`. OTOP1 and FepA, referenced by nothing else, then
+fall to the ordinary closure prune (`degree_zero_after_quarantine`); InsP3R stays, because other Wnt/Ca2+ processes
+still reference it.
+
+### R1.4 Corpus
+
+Base `01-corpus-base` (unchanged) vs round-1 tip `60-r1-corpus-tip`, both under the wrapper, `PATHBANK_DB_*` unset.
+Records: `evidence/orch773/corpus-r1-tip.{json,txt}`.
+
+**Base → round 1** (`61-r1-corpus-compare`, exit 0):
+
+```
+pass rate base 56/91 -> tip 72/91
+fixed: [the same 16 legs as phase 1]
+passing legs turned failing: none
+gold recall lost: none
+still failing, at a different step (information): none
+target ORCH-767/enterobactin-strict/2026-10-23_2224: FIXED
+D-112 § 2: ACCEPT
+```
+
+* **56/56 base-passing legs write a byte-identical PWML** (name and bytes; `63-r1-analysis`, base → round-1 section).
+* Gold unchanged on every base row; ORCH-767 enterobactin PWML **5/5**; ORCH-755 enterobactin **4/5** (accepted, § R1.1).
+* No `release_ready` record moved. The four legs that move `diagnostic_only` → `review_required` are four of the 16
+  fixed legs. 17 frozen records carry `omitted_from_pwml:…`: 15 fixed legs (not ORCH-759 enterobactin, whose only
+  removal is a protein) and two base-passing legs already `review_required` (ORCH-767 chlorophyll, 5 processes;
+  rv 08-22_2017 PMC12856317, 1 process), whose PWML bytes and names are unchanged.
+
+**The transport delta, separately: phase 1 → round 1** (`62-r1-corpus-compare-phase1`; `63-r1-analysis`, phase-1
+section):
+
+* the pass rate stays 72/91; passing legs turned failing: none; gold recall lost: none. (`compare` prints REJECT
+  because its rule needs the pass rate to rise or a target leg to be fixed, and no new leg can be fixed by keeping a
+  transport inside a leg that already writes a PWML; exit 1 is that rule, not a regression.)
+* **69 of the 72 phase-1 PWMLs are byte-identical; the 3 that differ are exactly the three transporter legs**
+  (ORCH-755 sour taste, ORCH-767 Wnt/Ca2+, rv 09-02_2052 PMC12452463), each now carrying its transports (§ R1.3).
+
+### R1.5 Counts after round 1
+
+| | phase 1 | round 1 |
+|---|---|---|
+| processes omitted by the pass | 18 | **12**: 6 reactions via one enzyme (actor), 6 interactions via an endpoint (process) |
+| actors dropped from a kept process | 1 (D-113 § 1) | **7**: 6 transporters (D-114 AMENDMENT 1 § 2), 1 wrapper (D-113 § 1) |
+| entities removed by the pass | 15 | 15 |
+| legs fixed | 16 | 16 |
+
+### R1.6 Tests (round 1)
+
+| gate | report | result |
+|---|---|---|
+| focused `test_orch773_omit_per_row.py`, base tree (`C:/t/orch773/basetree`, `3ef3fa9c` + the new test and fixtures) | `58` | **10 failed, 6 passed**: the 8 phase-1 G9 tests on their refusal values; the new `test_g9_a_process_quarantined_at_admission_caps_a_release_ready_pathway` on `'release_ready' == 'review_required'`; `test_new_release_cap` on its in-test import (NEW). 6 preservation pass |
+| same, tip | `59` | **16 passed** |
+| strict-quarantine suites + ORCH-766/769b/759c + Chunk E + ORCH-768 + `test_d088` | `64` | 429 passed |
+| SMOKE (22 files) | `65` | **511 passed** |
+| affected sweep, 30 files, before the fixture move | `66` | 9 failed (all `test_strict_failure_replay.py`, the release-cap pins below), 672 passed, 8 skipped |
+| affected sweep, after the fixture move | `73` | **681 passed, 8 skipped** (phase 1: 679 + the 2 new focused tests) |
+| Chunk E alone, after the fixture move (it reads the same fixture's payloads) | `74` | **175 passed** (unchanged) |
+| `test_strict_failure_replay.py -rs` | `75` | 40 passed, 8 skipped: `:234` (2) and `:249` (6), the known data-driven skips |
+| `tests/test_eval_v2_*.py` | `67` | 89 passed, 1 xfailed |
+| alone: streamlit boundary / c052 / 769c / c055 / c030a | `68`–`72` | 24 / 13 / 3 / 14 / 10 passed |
+
+**Pins moved in round 1 (merge rule 4)**, all in `tests/fixtures/strict_failures/cases.json`, all by the release cap
+(orchestrator reading of D-114 § 2), each case quarantining exactly one process (two for the last):
+
+| case | `release_status` | `strict_acceptance_eligible` | `review_reasons` |
+|---|---|---|---|
+| `reaction_inflation_unresolvable_participant` | `release_ready` → `review_required` | true → false | `[]` → `["omitted_from_pwml:1_processes+0_actors"]` |
+| `colon_split_metabolite_as_protein_complex` | same | same | same |
+| `enzyme_without_external_identity` | same | same | same |
+| `reaction_coupled_transport_is_not_exportable` | same | same | same |
+| `only_unrelated_reactions_survive` | unchanged (`review_required`) | unchanged (false) | + `"omitted_from_pwml:2_processes+0_actors"` after the two `minimum_core:` reasons |
+
+Each moved case carries a `release_status_note` with the old value. `unknown_backed_functional_complex`,
+`degree_zero_mapped_protein` (an entity-only removal) and `primary_transport_and_interaction_shapes_survive` stay
+`release_ready`, so `test_the_fixture_covers_both_verdicts` still sees all three classifications. Nothing else moved:
+the 429 of `64` and SMOKE needed no change.
+
+### R1.7 Not settled (round 1)
+
+1. **Admission-time transport quarantines.** Amendment § 2 is applied to this pass's omissions. Admission
+   (`_actor_verdict`: `unnamed_/unresolved_/non_protein_actor_in_transporters`, and a transporter whose entity is
+   unrepresentable) still quarantines the whole transport, as before this lane; extending the amendment there would
+   change base-passing PWMLs. Priced on the corpus legs' own recorded (live-run) quarantine reports
+   (`admission_transporter_quarantines.py` → `76`): **4 transports in 3 legs** were quarantined at admission for their
+   transporter, all `protein_missing_external_identity`: ORCH-755 sour taste (`voltage-gated Ca++ channel-mediated
+   Ca++ influx`, transporter `voltage-gated Ca ++ channels`), ORCH-767 sour taste v2 (`K+ efflux via Kir2.1`, Kir2.1),
+   ORCH-767 Wnt/Ca2+ (`SOCE via Orai`, `Store-operated Ca2+ entry`, Orai). All three legs write a PWML at tip. The
+   corpus cannot measure the change: a canonical replay starts from a payload the live quarantine already reduced.
+   Options: (a) keep (this lane); (b) apply amendment § 2 at admission too (`_actor_verdict`'s transporter
+   branch), measurable only live, and it changes the PWML of a base-passing leg (ORCH-767 sour taste v2).
+2. **KI appendix row** for the new reason `protein_complex_component_omitted:<component>:<reason>` (prefix; KI-015,
+   then label by `<reason>`, as for `protein_complex_component_unrepresentable:`). Until it is added, ORCH-772's
+   mapping labels those 8 rows `unclassified` (`corpus_delta.py` KI census). The catalogue is outside this lane.
+3. **`removed_entities` bucket `transporters`** names a process slot, not an entity bucket; the transport it was
+   dropped from is in `detail.actor_removed_from`. ORCH-772 renders the latter in phase 2.
+4. Reviewer notes F-2 (the cascade also runs for a degree-0 protein), F-3 (the export's re-quarantine branch) and F-5
+   (two calls outside the try) were not in this round's charge; unchanged.
+
+### R1.8 Orphan sweeps (round 1)
+
+After every job, `Get-CimInstance Win32_Process -Filter "Name='python.exe'"`. No process of this lane survived any job
+and **none was killed**. Two kinds of foreign process appeared and were left alone, because CLAUDE.md limits cleanup
+to the PIDs a job created:
+
+* PIDs 195392 and 189168, `.venv\Scripts\python.exe -` (stdin), started 14:49 by another session's shell in
+  `.claude/worktrees/rev769d-tip` (`... cat orch769d/run_when_free.sh; python - 2>/dev/null; ...`), still alive at every
+  later sweep: a hung `python -` of that reviewer, not of this lane. Reported to the orchestrator.
+* The ORCH-769d reviewer's live wrapped job (`bounded_run.py --heavy-lock ORCH-769d-rev`, PIDs 216252, 226016,
+  227520, 227532), owned by its wrapper.
+
+The heavy lock was held by `ORCH-772-rev` (twice) and `ORCH-769d-rev` during this round: one of this lane's jobs was
+refused with exit 95 before its child started (`54-r1-transport-cases-dev`, no report promoted, its `.staging`
+reservation left uncommitted); every later job waited for `C:/t/heavylock/holder.json` to disappear
+(`C:/t/orch773/queue.sh`: each job still runs through `bounded_run.py --heavy-lock ORCH-773`).
+
+**Incident (rule 1).** While listing the readers of the strict-failure fixture, one shell command also ran
+`python3 -c "print(1)"` outside the wrapper, by mistake (no stdin pipe; it printed and exited at once; the sweep after
+it shows no process of this lane).
+
 ## 13. LEDGER row (proposed; this lane does not edit LEDGER.md)
 
 ```
-| ORCH-773 | D-114 s2 per-row omission pre-freeze (strict_quarantine) | orch773/omit-per-row, code 0971487b + docs commit | IMPLEMENTED, awaiting independent review | corpus 56/91 -> 72/91 ACCEPT, 56/56 base PWML byte-identical, enterobactin 767 PWML 5/5; SMOKE 511; Chunk E 175; G11 ORCH-773/01-48 | ORCH-773-RESULT.md |
+| ORCH-773 | D-114 s2 per-row omission pre-freeze + D-114 AMENDMENT 1 (transporter drop) + release cap on any omission (strict_quarantine) | orch773/omit-per-row: phase 1 code 0971487b, round 1 code 1a0fc159 + docs commits | ROUND 1 IMPLEMENTED, awaiting round-1 review | corpus 56/91 -> 72/91 ACCEPT; 56/56 base PWML byte-identical; 6/6 transports kept (transporter dropped), 69/72 phase-1 PWMLs identical, 3 = the transporter legs; enterobactin 767 PWML 5/5, 755 enterobactin 4/5 (PO accepted); SMOKE 511; Chunk E 175; G11 ORCH-773/01-76 | ORCH-773-RESULT.md |
 ```
 
 ## 14. TEST_MATRIX delta (proposed; append at end of file)
@@ -406,28 +588,29 @@ before and after every job; no exit 95 occurred.
 ```markdown
 ## ORCH-773: test obligations, appended end-of-file by rule · 2026-10-25
 
-Lane `orch773/omit-per-row` (code `0971487b`). Reports `evidence/g11/ORCH-773/01`–`48`.
+Lane `orch773/omit-per-row` (phase 1 `0971487b`, round 1 `1a0fc159`). Reports `evidence/g11/ORCH-773/01`–`76`.
 
-**SMOKE stays 511** (`g11/ORCH-773/40`). Merge rule 10 unchanged. No chunk count moves.
+**SMOKE stays 511** (`g11/ORCH-773/40`, round 1 `65`). Merge rule 10 unchanged. No chunk count moves.
 
 ### New focused selection
 
-`tests/test_orch773_omit_per_row.py` (14, ~2 s), fixtures `tests/fixtures/orch773/` (8 corpus freeze inputs,
-gzipped, sha256 asserted). In no chunk, not in SMOKE. G9: 8 `test_g9_*` red at base (`33`), 5 preservation green
-there, `test_new_release_cap` NEW; 14 green at tip (`34`). Run it for any change to `strict_quarantine`'s per-row
-omission section, `_entity_representability`, `_referenced_entity_norms`, or to the freeze gate, the Stage-8
-contract, the required-field gate or the IR checks it calls.
+`tests/test_orch773_omit_per_row.py` (16, ~2 s), fixtures `tests/fixtures/orch773/` (8 corpus freeze inputs,
+gzipped, sha256 asserted). In no chunk, not in SMOKE. G9: 9 `test_g9_*` red at base (round 1 `58`), 6 preservation
+green there, `test_new_release_cap` NEW; 16 green at tip (`59`). Run it for any change to `strict_quarantine`'s
+per-row omission section, `_entity_representability`, `_referenced_entity_norms`, the release cap, or to the freeze
+gate, the Stage-8 contract, the required-field gate or the IR checks it calls.
 
 ### Pinned tests moved (merge rule 4; exact deltas in ORCH-773-RESULT.md § 6)
 
-`test_orch768_replay_corpus.py` (enterobactin verdict), `test_orch766_unreferenced_species.py` PINS (version fields
-only), `test_orch769b_actor_protein_registry.py` and `test_orch759c_quarantine_bucket_closure.py`
+Phase 1: `test_orch768_replay_corpus.py` (enterobactin verdict), `test_orch766_unreferenced_species.py` PINS (version
+fields only), `test_orch769b_actor_protein_registry.py` and `test_orch759c_quarantine_bucket_closure.py`
 (`decision_input_hash`), `test_strict_quarantine_lineage.py` (removed_entity_report schema 2),
-`test_d088_coverage_diagnostics.py` (archived legs' policy version). Chunk E 175 unchanged (`39`).
+`test_d088_coverage_diagnostics.py` (archived legs' policy version). Round 1: none outside the focused file.
+Chunk E 175 unchanged (`39`, `64`).
 
 ### Known failures
 
-None new. Affected sweep, 30 files: 679 passed, 8 skipped (`test_strict_failure_replay.py` data-driven, `47`, `48`).
+None new. Affected sweep, 30 files: 679 passed, 8 skipped in phase 1 (`47`); 681 passed, 8 skipped in round 1 (`73`).
 ```
 
 ## 15. Evidence index (`docs/pwml_recovery_sprint/evidence/`)
@@ -449,3 +632,8 @@ None new. Affected sweep, 30 files: 679 passed, 8 skipped (`test_strict_failure_
 | `g11/ORCH-773/10`, `13`, `14`, `17`, `19`–`23`, `26`–`32` | development runs (superseded by the final runs, kept on the record) |
 | `g11/ORCH-773/33`–`48` | final runs (§ 5, § 7) |
 | `g11/pin/ORCH-773/` | pin verdicts of every pytest run |
+| `orch773/corpus-r1-tip.{json,txt}` | the round-1 corpus record (`60`) |
+| `orch773/transport_cases.py`, `corpus_delta.py` (round-1 sections) → `63` | where each of the 6 transports lands; base → round 1 and phase 1 → round 1 deltas, release moves, cap reasons |
+| `orch773/admission_transporter_quarantines.py` → `76` | the price of applying amendment § 2 at admission (§ R1.7 item 1) |
+| `g11/ORCH-773/49`–`57` | round-1 development runs (`54`: refused with exit 95 by the heavy lock, child never started) |
+| `g11/ORCH-773/58`–`76` | round-1 final runs (§ R1.4, § R1.6); `66` is the sweep before the fixture move |
