@@ -892,6 +892,13 @@ def coverage_summary(records: List[Dict[str, Any]]) -> Dict[str, Any]:
                 "at_or_above_target": sum(v >= 75 for v in known),
                 "share_at_or_above_target": f"{sum(v >= 75 for v in known)}/{len(known)}",
             }
+    # Where the missing processes go, over the replayed legs: per known issue, and lost with a whole leg.
+    by_ki: Dict[str, int] = {}
+    for r in replayed:
+        for n, ki, group, _reason in r["replay"]["pwml_coverage"]["omitted_by_reason"]:
+            key = "no PWML written (whole leg)" if group == "no_pwml" else ki
+            by_ki[key] = by_ki.get(key, 0) + n
+    out["omitted_processes_by_known_issue"] = dict(sorted(by_ki.items(), key=lambda kv: (-kv[1], kv[0])))
     return out
 
 
@@ -906,11 +913,15 @@ def print_coverage(coverage: Dict[str, Any], records: List[Dict[str, Any]], emit
             median = "n/a" if s["median"] is None else f"{s['median']:.1f}%"
             emit(f"  {key:48s} legs {s['legs']:3d} measured {s['measured']:3d}  mean {mean:>7s}  median {median:>7s}"
                  f"  >= 75%: {s['share_at_or_above_target']}")
-    emit("LOWEST COVERAGE (replayed legs)")
+    emit("  omitted processes by known issue (replayed legs): "
+         + "; ".join(f"{k} {n}" for k, n in coverage["omitted_processes_by_known_issue"].items()))
     ranked = sorted((r for r in records if r["replay"] and not r["replay"].get("error") and leg_percent(r) is not None),
                     key=lambda r: (leg_percent(r), r["id"]))
-    for r in ranked[:10]:
-        emit(f"  {r['id']:58s} {fmt_cov(r)}")
+    for title, rows in (("LOWEST COVERAGE (replayed legs)", ranked),
+                        ("LOWEST COVERAGE (replayed legs that write a PWML)", [r for r in ranked if r["replay"]["pwml_written"]])):
+        emit(title)
+        for r in rows[:10]:
+            emit(f"  {r['id']:58s} {r['class']:40s} {fmt_cov(r)}")
 
 
 def compare(args: argparse.Namespace) -> int:
