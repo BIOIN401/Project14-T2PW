@@ -10415,3 +10415,244 @@ The cheapest and narrowest of the three repeated mechanisms in that cohort, and 
 a genuine defect rather than a safeguard behaving correctly (`f179` ×2) or a database coverage gap
 (`identity_resolution` ×2). Candidate for one narrow card **if the product owner reopens
 reliability**; nothing here charters it.
+
+**Second instance, `ORCH-756` / `ORCH-759` (recorded by `ORCH-771`):** the check also rejects a paraphrase
+of the same pathway. Ara operon (PMC11983282): Stage 0 read "AraC autoregulation in araBAD operon" against
+the requested "Ara operon inactivation (autoregulation of AraC)", then, after the request was reworded,
+"E. coli L-arabinose (P_BAD) and L-rhamnose (P_Rha) inducible promoter regulation" against "AraC
+autoregulation of the ara operon". The ORCH-755 Ara leg passed Stage 0 on another draw, so the verdict
+depends on the Stage-0 wording. Registered as an open policy question by D-110 § 1; Ara dropped from the
+cohort. `PWML_KNOWN_ISSUES.md` KI-025.
+
+---
+
+## `F-204` — PathWhiz never refuses a pathway over a bad protein: it skips the element, cascades the loss, and reports success · ORCH-761
+
+**Class: importer contract (PathWhiz side). Durable. `PWML_KNOWN_ISSUES.md` KI-034; it is why KI-001
+exists.**
+
+A protein row PathWhiz creates needs a UniProt or a DrugBank id
+(`smpdb/app/models/data/protein_complexes/protein.rb:57,59`). When one fails to save, the importer records
+the error, skips the element and carries on; the upload response returns only the pathway id
+(`pathways_controller.rb:225-241`). The loss cascades: the complex loses its component, and a reaction
+written with `<spontaneous>false</spontaneous>` and no enzyme left fails (`reaction.rb:90-96`). On create,
+`check_uniprot` overwrites the protein's name and species from UniProt, and an empty species defaults to
+*Homo sapiens* (`schema.rb:702`).
+
+**Consequence:** a "successful" import proves nothing about completeness. T2PW's strict identity gate is
+the only place the loss is visible; it is not stricter than PathWhiz on the rule, only in refusing to hide
+the consequence. **Not established:** no PathWhiz import was run; this is a static reading of the Ruby
+(`ORCH-761-RESULT.md` § 10). Full record: `ORCH-761-RESULT.md` §§ 0-2.
+
+---
+
+## `F-205` — A ContextVar set in one Streamlit script run is empty in the next, and the batch drives the app as two runs · ORCH-758 D4, ORCH-759b
+
+**Class: runtime architecture. FIXED for the Stage-1 recorder (`45623ceb`, ORCH-759b, D-107); the
+mechanism applies to any future state kept in a ContextVar. KI-045.**
+
+The batch driver presses "Run pipeline" (Stages 0-2) and then the post-pipeline button (audit, Stage 6,
+freeze, export) as two AppTest script runs. Each run gets a new `ScriptRunner` thread, and on Python 3.13 a
+new thread starts with an empty context. Everything Stage 1 put in `current_diagnostics()` was gone at
+Stage 6: D-104 rule 3 saw zero pooled draws and silently returned `{}` in every app leg; the audit and gap
+rounds went into a detached recorder with no artifact directory; and the post-pipeline's `finally` published
+that recorder over Stage 0/1's, so 186 leg directories hold audit summaries with `run_id ""` and none of
+Stage 0/1's records.
+
+**The trap:** an offline test that calls both stages in one thread passes. Only an AppTest probe driving
+two script runs (`evidence/orch758_rule3_probe_app.py`) shows the loss. The live UI serves each rerun from a
+ScriptRunner thread too; it was not driven in a browser. Full record: `ORCH-758-RESULT.md` § 4 D4;
+`ORCH-759b-RESULT.md` § 1, § 8 F1.
+
+---
+
+## `F-206` — When the normalizer and the mapper disagree about a name's kind, identity admission takes a verified accession away from everyone · ORCH-758 D1, ORCH-761 761-B
+
+**Class: identity integrity. FIXED on the mapper side (`9757234d`, ORCH-762 FX6). KI-017.**
+
+A Stage-2 location row named `holo-EntB`, an entity nobody declared. The normalizer
+(`process_normalizer._rewrite_token` → `_ensure_compound`) filed the name as a **compound**; the mapper
+(`entity_identity.known_protein_like`) called it **protein-like**, routed it to UniProt and gave it EntB's
+P0ADI4 through the literature alias "EntB". Identity admission then saw one accession on a compound and a
+protein and shipped it on neither (`accession_claimed_across_incompatible_entity_kinds`), so the verified
+EntB lost its accession and the strict quarantine refused the pathway (`unexportable_entity:1`). Removing
+the `holo-EntB` row later did not restore EntB's accession, because admission had already run.
+
+**Durable point:** any two components that decide an entity's kind independently can recreate this. The fix
+keeps one kind per name on the mapper side; admission still does not restore a withheld accession when the
+conflicting claimant is later removed (ORCH-758 § 9 item 2 (c), not built). Full record:
+`ORCH-758-RESULT.md` § 4 D1; `ORCH-761-RESULT.md` § 6 761-B.
+
+---
+
+## `F-207` — A strict normalization exception does not abort the run; the app continues un-normalized and the export's schema check stops a correct pathway · ORCH-758 D2, ORCH-758a Q1
+
+**Class: error handling in the protected app. OPEN. KI-023.**
+
+`normalize_composites` raises in strict mode under a comment that says "Strict mode aborts the whole run
+here". It does not abort: `streamlit_app.py` catches the exception (`:3655` at `8b074dda`) and continues
+with `normalized_input = stage2_payload`. `normalize_process_actor_schema` never runs, rows stay in Stage-1
+shape (`{"protein": "OTOP1"}`), quarantine and the final gate pass (they validate, they do not normalize),
+the release is correctly `review_required`, and the export's validation-only revalidation then refuses
+`actor_schema_not_canonical`. The same findings were "informational, not blocking" in the post-audit
+report: two consumers of one contract disagree. ORCH-758a removed one trigger (`Ca++`, `e9c852a5`); any
+other exception inside normalization reproduces the chain. A fix needs a D-entry for the protected file
+(`ORCH-758a-RESULT.md` § 8 Q1).
+
+---
+
+## `F-208` — The strict quarantine and the final gate disagree about what an entity or a reference is, in three places · ORCH-759a, ORCH-759b, ORCH-759c
+
+**Class: gate alignment. Durable pattern. KI-004, KI-011, KI-013.**
+
+| where | quarantine | final gate | outcome |
+|---|---|---|---|
+| protein references (`_prune_entities`, `_degree_zero_exports`) | name **or any synonym** referenced | name only | an orphan kept by a synonym fails the gate late; **open** (ORCH-759a § 7 item 3) |
+| actor slots (`_actor_verdict`) | any of five buckets | proteins ∪ complexes | a gene-only actor admitted, then "Unknown protein/modifier reference"; **fixed** `509fe185` |
+| closure keep set (`quarantine_and_close`) | component names kept a row in **every** bucket | — | gene rows kept alive by a same-named protein component, `entity_type_overlap:4`; **fixed** `45aa9c28` |
+
+**The rule that worked:** ORCH-769b mirrored the gate by importing its own `_entity_name_norms`, `_normalize`
+and `_actor_name_from_row` and building the registry over the same two lists. A quarantine rule written as a
+paraphrase of the gate drifts; one built from the gate's functions does not. None of these verdict-changing
+lanes bumped `QUARANTINE_POLICY_VERSION` (ORCH-769b F5).
+
+---
+
+## `F-209` — The audit patch applier applies later ops by their pre-patch indices after a remove · ORCH-769 (d)
+
+**Class: curation correctness. OPEN (ORCH-769d; orchestrator ruling under D-113: rebase). KI-018.**
+
+`apply_audit_patch.apply_patch_with_policy` (`:2680-2746`) applies an accepted `remove`, then applies the
+patch's later ops at the indices they had before the remove, so every synonym written after the removed row
+lands one row later. On ORCH-767 Wnt/Ca2+ that put `calcineurin B` on `phosphorylated CAMKII`, which kept an
+unidentified protein referenced, and the quarantine refused the pathway. Dropping the cross-row synonyms gives
+`review_required` and a passing gate (`evidence/orch769_diag/769d/2-diag.out.txt`). A second applier
+defect: `/-` on a missing key creates a dict. Every multi-op audit patch with a remove or insert is exposed,
+and the symptom (a wrong synonym, then an unrelated-looking identity refusal) does not point at the applier.
+
+---
+
+## `F-210` — The replay corpus cannot see a fix in Stage 3 or Stage 6 · ORCH-768 F-6
+
+**Class: measurement limit. Durable. KI-058.**
+
+The corpus's no-LLM checkpoint is `final_mapped.json`, downstream of normalization and mapping. A fix there
+cannot move a corpus leg even when the failure it fixes is replayable: ORCH-759e (`360a6ac5`) changed no
+verdict, and ORCH-759 chlorophyll still fails `reaction_enzyme_must_be_protein_complex` on the corpus because
+its Stage-6 output is frozen from `f392d447`. ORCH-759a, ORCH-762 and ORCH-758a are in the same position.
+**Standing rule for D-112 § 2:** a Stage-3/Stage-6 lane is judged on its own G9 proof plus a live leg; its
+corpus "no change" is evidence neither way. The per-leg recording cache that would make Stage 6 replayable
+(ORCH-768 § 11 item 1 (a)) is not built.
+
+---
+
+## `F-211` — An AppTest timeout fires only when the pipeline yields, so a cap overruns by the work in flight · ORCH-759d F1
+
+**Class: batch runtime. Durable. KI-028.**
+
+ORCH-759 Wnt/Ca2+ was offered 3,600 s per app interaction but recorded the timeout at 5,296 s: Stage-2 calls
+kept returning `ok` for about 1,690 s after the cap, because AppTest stops a script only when it next gets
+control back from the pipeline. ORCH-759d made the cap follow the leg budget (`9f7d64ee`); the overrun is
+unchanged, so a leg that reaches its child deadline mid-Stage-2 overruns the 120 s grace and is killed by
+the parent, losing its artifacts (`outer_parent_kill`). No pipeline call checks a deadline before it starts
+(P2-04).
+
+---
+
+## `F-212` — Two compound identity gates judge the same PathBank answer differently · ORCH-764 § 1, § 7 Q4
+
+**Class: identity consistency. OPEN in general; closed for listed class terms (`38188982`). KI-029.**
+
+Stage 6's name gate (`map_ids._name_gate_verdict`) refused PathBank compound 874 (DMAPP) for "prenyl
+diphosphate" (no shared meaningful token). Pre-freeze compound resolution, which runs later and queries
+PathBank directly, matched the same row through its synonym column (`exact_short_name_or_synonym`, 0.70);
+D-028 admitted it and renamed the participant. C-078's veto could not see the Stage-6 refusal, because
+`map_payload` writes `rejected_mapped_ids` only when it strips ids from a row. **A refusal that is not
+persisted onto the row does not exist for the next gate.** Persisting it generally changes `mapping_meta`,
+which the audit LLM reads, so it needs a D-104 AMENDMENT 2 ruling first.
+
+---
+
+## `F-213` — With the small budgets gone, reasoning still exhausts 128,000 tokens on some calls, after 20 minutes or more · ORCH-756, ORCH-759, ORCH-767 · extends `F-199`
+
+**Class: provider/model delivery. OPEN. KI-054, KI-055.**
+
+D-105 and ORCH-757 (`23753144`) raised every stage to 128,000 (extraction 64,000). Empty
+`finish_reason=length` completions fell from Stage 2 65/95, audit 35/38, curator 42/43 (ORCH-755) to 1 in
+309 attempts (ORCH-759), but did not go away: ORCH-767 had Stage 2 6/34 empty and three calls of 20+ minutes
+(Stage 2 1,216 s empty; audit 1,410 s empty; audit 1,277 s `finish_reason=error`), and ORCH-756 chlorophyll's
+Stage 2 got a provider `error` after 1,585 s. At the small budgets no call reached 20 minutes and provider
+errors came within 20 s. **The new cost shape:** an empty answer now costs up to 26 minutes, not seconds.
+`F-199`'s measured remedy (disable reasoning on a call) is untested at these budgets, and the client has no
+per-call timeout. Evidence: `evidence/orch755_trace_stats.txt`, `orch759_trace_stats.txt`,
+`orch767_trace_stats.txt`, `orch756_leg_stats.txt`, `orch767_leg_stats.txt`.
+
+---
+
+## `F-214` — A gene and a protein under one bare symbol cost every process that names it · ORCH-759c § 10 item 3, ORCH-769b F3
+
+**Class: entity typing. OPEN upstream; the quarantine behaviour is by design (D-106). KI-011, KI-004.**
+
+Stage 1 often declares a gene row and a protein row with one symbol (chlorophyll: `HEMA1`, `CAO`, `GUN4`,
+`PORB`; then PIF1, GBP, FAR1, CPO1, PPO1). Admission correctly quarantines every process naming the bare
+symbol (`ambiguous_entity_type:nucleic_acids+proteins`), so gene-regulation steps such as `HY5 activates
+HEMA1` never reach a PWML; and when the audit deletes the protein twin (its guard pools buckets,
+`apply_audit_patch.py:861,882-903`) the reaction loses its catalyst as well. Every fix so far made the
+consequence safe; none stops the ambiguity being created. Naming gene rows distinctly before admission is
+not chartered.
+
+---
+
+## `F-215` — One Stage-2-inferred complex-named wrapper produced three different failures on one paper · ORCH-759 E1, ORCH-767, ORCH-769 (a)
+
+**Class: Stage-2 inference. Product decision D-113 § 1; ORCH-769a not merged. KI-012, KI-013, KI-031.**
+
+On enterobactin, Stage 2 repeatedly inferred `enterobactin synthase complex` (its evidence sentence is not in
+the paper), and `relocate_complex_named_proteins` made a generated wrapper around a new protein row
+`enterobactin synthase`. What happened next depended on the draw: the audit tied the row to EntF and Stage 6
+orphaned it (ORCH-759, degree 0); the audit nulled its stoichiometry and Stage 6 gave it EntE's P10378
+(ORCH-767, positive-stoichiometry gate); or it shipped as an extra catalyst beside EntF and EntE complex
+(ORCH-767 final payload). Across 5,195 historical `final_mapped.json`, `complex_named_source_entity_wrapper`
+occurs only on the two enterobactin papers (ORCH-759 § 4 item 2). Fixing each downstream symptom (ORCH-759a
+fixed the first) leaves the others; D-113 § 1 removes the row at its source.
+
+---
+
+## `F-216` — Concurrent agents' Python jobs can make a 31 GB workstation unresponsive · LEDGER 2026-10-25
+
+**Class: operations. OPEN (cause likely, not measured). KI-061.**
+
+On 2026-10-25 the machine stopped responding and the product owner forced a shutdown (first logged as a
+crash; the System log shows no BugCheck and no resource-exhaustion event). After the reboot, with no sprint
+work running, about 17.7 of 31.2 GB RAM was already in use by other applications. The likely cause is several
+agents each running Python jobs that load the large caches (`data/enrichment_cache.json` alone is 39 MB on
+disk), pushing the machine into swap. Operating rules recorded the same day: one sprint Python job at a time
+machine-wide (every job takes the heavy lock), at most 2 subagents alive, a job starts only with at least 6 GB
+RAM free, an orphan sweep after every job, no `python -` stdin scripts. The crashes of 2026-10-16 and
+2026-10-22 were never diagnosed (KI-062).
+
+---
+
+## `F-217` — A subagent's own Agent dispatch blocks its tool round until the child finishes, even in the background · ORCH-767
+
+**Class: orchestration tooling. Durable. KI-063.**
+
+The ORCH-767 sub-orchestrator meant to write the morning-summary script during the night. It dispatched the
+ORCH-766 implementer, and its tool round stayed blocked until that child finished about 15 h later, although
+the dispatch was `run_in_background: true`. The night driver called the summary script, which did not exist
+(`night.log` `summary_exit=2`), and the summary came 8 h late. **Rule adopted:** anything an unattended run
+must produce at its end is written into the runner before launch (ORCH-770's runner, `b16a45e7`), never left
+for an orchestrator to write later.
+
+---
+
+## `F-218` — The writer's fabricated `pwp-id` values collide with existing PathBank complexes · ORCH-761 § 9
+
+**Class: export artifact. OPEN (observed, not adjudicated). KI-035.**
+
+`pwml/writer.py:1311` writes each complex's `pwp-id` as `PW_P{document id:06d}`. PathWhiz keeps a non-blank
+`pwp_id` as given, with no unique index (`protein_complex.rb:383-389`). The PathBank database already holds
+`PW_P040000` on complex 40000 and on complexes 431773 "Hexokinase complex", 431796 and 431802, and likewise
+`PW_P040001-3`; the colliding rows are named like T2PW wrappers. Only six ids were checked (the census query
+timed out, `evidence/orch761_pathbank_probe5.txt`). Whether a collision breaks anything in PathWhiz is not
+established.
