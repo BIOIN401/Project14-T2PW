@@ -1,0 +1,167 @@
+{
+  "t2pw": "C:\\t\\orch769d\\base\\src\\t2pw",
+  "applier_sha256": "de21d64c0218054d8499c91abe5a8a427a66a8d02dfd01dacb00e6677cab0ec0",
+  "leg": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch767\\runs_papers\\ORCH-767\\legs\\wnt_ca-strict\\2026-10-24_0314\\papers\\PMC10425814\\strict",
+  "apply_summary": {
+    "accepted_count": 15,
+    "rejected_count": 0,
+    "total": 15
+  },
+  "apply_committed": true,
+  "apply_rejected": [],
+  "applied_paths": {},
+  "protein_synonyms_after_apply": {
+    "G protein": [
+      "G protein"
+    ],
+    "phospholipase C (PLC)": [
+      "PLC"
+    ],
+    "PKC": [
+      "PKC"
+    ],
+    "inositol-1,4,5-trisphosphate receptor (InsP3R)": [
+      "InsP3R"
+    ],
+    "STIM1/2": [
+      "STIM1/2"
+    ],
+    "Orai": [
+      "Orai"
+    ],
+    "Sarcoplasmic/ER Ca2+ ATPases": [
+      "SERCA"
+    ],
+    "\u03b2-catenin": [
+      "TCF"
+    ],
+    "calmodulin": [
+      "\u03b2-catenin"
+    ],
+    "calcineurin B": [
+      "calcineurin A"
+    ],
+    "phosphorylated CAMKII": [
+      "calcineurin B"
+    ],
+    "phosphorylated TCF4": [
+      "phosphorylated CAMKII"
+    ],
+    "NF-ATp": [
+      "phosphorylated TCF4"
+    ]
+  },
+  "compound_3_synonyms_after_apply": {
+    "-": "Ca2"
+  },
+  "reproduces_recording": {
+    "protein_rows_equal_ignoring_lineage": true,
+    "protein_lineage_stage_multisets_equal": true,
+    "compounds_equal_ignoring_lineage": true,
+    "rows_differing": []
+  },
+  "cross_row_synonyms": [
+    [
+      "\u03b2-catenin",
+      "TCF"
+    ],
+    [
+      "calmodulin",
+      "\u03b2-catenin"
+    ],
+    [
+      "calcineurin B",
+      "calcineurin A"
+    ],
+    [
+      "phosphorylated CAMKII",
+      "calcineurin B"
+    ],
+    [
+      "phosphorylated TCF4",
+      "phosphorylated CAMKII"
+    ],
+    [
+      "NF-ATp",
+      "phosphorylated TCF4"
+    ]
+  ],
+  "quarantine": {
+    "ok": false,
+    "refusal_reasons": [
+      "unexportable_entity:1"
+    ],
+    "review_reasons": [
+      "minimum_core:requested_core_coverage_below_minimum:0.429<0.500"
+    ],
+    "unexportable_entities": [
+      {
+        "bucket": "proteins",
+        "name": "phosphorylated CAMKII",
+        "reason": "protein_missing_external_identity"
+      }
+    ],
+    "release_status": "diagnostic_only",
+    "release_reasons": [
+      "serialization_would_require_invention"
+    ],
+    "counts": {
+      "core_accepted": 19,
+      "auxiliary_accepted": 3,
+      "quarantined_unmapped_entity": 26,
+      "quarantined_out_of_scope": 0,
+      "quarantined_weak_evidence": 0,
+      "quarantined_broken_reference": 0,
+      "quarantined_disconnected": 0
+    },
+    "surviving_processes": {
+      "reactions": 0,
+      "transports": 9,
+      "interactions": 13
+    },
+    "surviving_proteins": [
+      "Wnt5a",
+      "Frizzled2",
+      "inositol-1,4,5-trisphosphate receptor (InsP3R)",
+      "Sarcoplasmic/ER Ca2+ ATPases",
+      "Nemo-like kinase (NLK)",
+      "TCF",
+      "\u03b2-catenin",
+      "calmodulin",
+      "calcineurin B",
+      "phosphorylated CAMKII",
+      "Unknown"
+    ]
+  },
+  "final_gate": {
+    "result": "not run (quarantine refused)"
+  }
+}
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769d\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 2b0ea179239f5401074757714ba2e38b1baf79a6  [git, worktree dirty=False]
+label                   : wntca-replay-base
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769d/docs/pwml_recovery_sprint/evidence/orch769d/replay_wntca_audit_patch.py --leg C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch767/runs_papers/ORCH-767/legs/wnt_ca-strict/2026-10-24_0314/papers/PMC10425814/strict --out C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769d/docs/pwml_recovery_sprint/evidence/orch769d/10-wntca-replay-base.result.json
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769d
+root PID / process group: 159512 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 1.78 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  150740:python.exe
+descendants terminated  : 1  150740
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769d/docs/pwml_recovery_sprint/evidence/g11/ORCH-769d/10-wntca-replay-base.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH-769d  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================
+RC=0 freeKB_before=15261912
