@@ -1,0 +1,170 @@
+PATHWAY EVIDENCE REPORT
+=======================
+PWML coverage: 0 of 6 processes (0.0%) -- target 75%
+  By kind, drawn of total (total = final payload + omitted before the freeze): reactions 0 of 1; transports 0 of 0; interactions 0 of 5
+  Excluding the 2 interactions PathWhiz cannot type (KI-008, withheld by design): 0 of 4 (0.0%)
+  Every process left out, with its reason: section OMITTED FROM THE PWML, below.
+Paper: Not recorded
+Pathway: heme biosynthesis
+Requested organism (Stage 0): Homo sapiens
+Species (final payload): Homo sapiens (taxonomy 9606)
+Core-term coverage: 0.454545
+Minimum core satisfied: false
+Surviving processes: 3
+Quarantined processes: 3
+Release status: review_required
+Export mode: pathwhiz
+Quarantine ok: true
+Reactions itemised: 0; interactions itemised: 3 (transports: 0; counted above, not itemised)
+Surviving reactions read from: final_mapped.json
+Artifacts read: coverage_summary.json, final_mapped.json, pathway.review_required.pwml, pwml_ir.json, quarantine_report.json, removed_entity_report.json
+
+SURVIVING REACTIONS (0)
+-----------------------
+None recorded
+
+INTERACTIONS (3) -- PWML verdicts read from: pwml_ir.json
+---------------------------------------------------------
+INTERACTION 1  [final payload /processes/interactions/0]
+Name: heme inhibits ALAS2
+Relationship (as extracted): inhibits
+Source: heme
+Target: ALAS2
+State: mitochondrial matrix state
+PWML: withheld -- bare_protein_endpoint: a protein endpoint is not wrapped in a single-protein complex in this payload, and PathWhiz has no bare-protein interaction member
+Evidence:
+  1. "heme binds mature human ALAS2 with high affinity, acting as a reversible mixed inhibitor"
+
+INTERACTION 2  [final payload /processes/interactions/1]
+Name: ALAS1 degraded by LONP1
+Relationship (as extracted): degraded_by
+Source: ALAS1
+Target: LONP1
+State: mitochondrial matrix state
+PWML: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Evidence:
+  1. "heme binding to mitochondrial ALAS1 results in either LONP1- or CLPXP-mediated degradation."
+
+INTERACTION 3  [final payload /processes/interactions/2]
+Name: pyridoxal 5-phosphate cofactor of ALAS2
+Relationship (as extracted): cofactor_of
+Source: Pyridoxal 5'-phosphate
+Target: ALAS2
+State: mitochondrial matrix state
+PWML: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Evidence:
+  1. "a PLP-dependent homodimer enzyme"
+
+QUARANTINED / REJECTED (3)
+--------------------------
+From quarantine_report.json quarantined: 3
+From final payload quarantined_locked_reactions: 1 (1 already listed from quarantine_report.json by lock id: rxn_lock_001)
+
+QUARANTINED 1  [pre-quarantine /processes/reactions/0; reaction; lock rxn_lock_001]
+Name: ALAS2-catalyzed condensation
+Equation: Glycine + succinyl-CoA -> aminolevulinic acid
+State: quarantined_broken_reference
+Reason: non_protein_actor_in_modifiers
+Essential participant: Pyridoxal 5'-phosphate
+Evidence:
+  1. "condensation of glycine and succinyl-CoA to produce aminolevulinic acid"
+  2. "ALAS2 mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid"
+
+QUARANTINED 2  [pre-quarantine /processes/interactions/1; interaction]
+Name: ALAS2 recruits CLPXP for degradation
+State: quarantined_unmapped_entity
+Reason: protein_complex_component_omitted:ATP-dependent Clp protease ATP-binding subunit clpX-like, mitochondrial:protein_missing_external_identity
+Essential participant: CLPXP
+Evidence:
+  1. "heme-bound ALAS2 recruits the CLPXP protease via an adaptor protein to trigger degradation."
+
+QUARANTINED 3  [pre-quarantine /processes/interactions/3; interaction]
+Name: ALAS1 degraded by CLPXP
+State: quarantined_unmapped_entity
+Reason: protein_complex_component_omitted:ATP-dependent Clp protease ATP-binding subunit clpX-like, mitochondrial:protein_missing_external_identity
+Essential participant: CLPXP
+Evidence:
+  1. "heme binding to mitochondrial ALAS1 results in either LONP1- or CLPXP-mediated degradation."
+
+REMOVED ENTITIES (7)
+--------------------
+- compounds Glycine: unreferenced_after_quarantine
+- compounds succinyl-CoA: unreferenced_after_quarantine
+- compounds aminolevulinic acid: unreferenced_after_quarantine
+- protein_complexes ALAS2 complex: degree_zero_after_quarantine
+- protein_complexes CLPXP: protein_complex_component_omitted:ATP-dependent Clp protease ATP-binding subunit clpX-like, mitochondrial:protein_missing_external_identity
+- proteins ATP-dependent Clp protease ATP-binding subunit clpX-like, mitochondrial: protein_missing_external_identity
+- proteins Putative ATP-dependent Clp protease proteolytic subunit, mitochondrial: protein_missing_external_identity
+
+OMITTED FROM THE PWML (6)
+-------------------------
+Known-issue ids: docs/pwml_recovery_sprint/PWML_KNOWN_ISSUES.md, appendix "Reason code -> KI id".
+
+OMITTED 1  [quarantine_report.json quarantined; pre-quarantine /processes/reactions/0; lock rxn_lock_001]
+Kind: reaction
+Name: ALAS2-catalyzed condensation
+Equation: Glycine + succinyl-CoA -> aminolevulinic acid
+Reason: non_protein_actor_in_modifiers
+Known issue: KI-004
+Add by hand: For each listed reaction, add the enzyme in PathWhiz as a protein (with its UniProt id) and attach it; the text record names the actor that was refused.
+
+OMITTED 2  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/1]
+Kind: interaction
+Name: ALAS2 recruits CLPXP for degradation
+Endpoints: ALAS2 -[recruits]-> CLPXP
+Reason: protein_complex_component_omitted:ATP-dependent Clp protease ATP-binding subunit clpX-like, mitochondrial:protein_missing_external_identity
+Omission: gate=strict_quarantine_unexportable_entity; cause=process; slot=entity_2; name=CLPXP; failing entity=protein_complexes CLPXP
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 3  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/3]
+Kind: interaction
+Name: ALAS1 degraded by CLPXP
+Endpoints: ALAS1 -[degraded_by]-> CLPXP
+Reason: protein_complex_component_omitted:ATP-dependent Clp protease ATP-binding subunit clpX-like, mitochondrial:protein_missing_external_identity
+Omission: gate=strict_quarantine_unexportable_entity; cause=process; slot=entity_2; name=CLPXP; failing entity=protein_complexes CLPXP
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 4  [pwml_ir.json; final payload /processes/interactions/0]
+Kind: interaction
+Name: heme inhibits ALAS2
+Endpoints: heme -[inhibits]-> ALAS2
+Reason: bare_protein_endpoint
+Verdict: withheld -- bare_protein_endpoint: a protein endpoint is not wrapped in a single-protein complex in this payload, and PathWhiz has no bare-protein interaction member
+Known issue: KI-009
+Add by hand: Give the protein its UniProt id and species in PathWhiz, make a one-protein complex of it, and draw the interaction from or to that complex.
+
+OMITTED 5  [pwml_ir.json; final payload /processes/interactions/1]
+Kind: interaction
+Name: ALAS1 degraded by LONP1
+Endpoints: ALAS1 -[degraded_by]-> LONP1
+Reason: untyped_interaction
+Verdict: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Known issue: KI-008
+Add by hand: None inside PathWhiz's model: it has no type for these relations. Read them in the text record, and add an Activation or Inhibition by hand only where the paper states the direction.
+
+OMITTED 6  [pwml_ir.json; final payload /processes/interactions/2]
+Kind: interaction
+Name: pyridoxal 5-phosphate cofactor of ALAS2
+Endpoints: Pyridoxal 5'-phosphate -[cofactor_of]-> ALAS2
+Reason: untyped_interaction
+Verdict: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Known issue: KI-008
+Add by hand: None inside PathWhiz's model: it has no type for these relations. Read them in the text record, and add an Activation or Inhibition by hand only where the paper states the direction.
+
+Entities left out (7), from removed_entity_report.json:
+- compounds Glycine: unreferenced_after_quarantine (unclassified)
+- compounds succinyl-CoA: unreferenced_after_quarantine (unclassified)
+- compounds aminolevulinic acid: unreferenced_after_quarantine (unclassified)
+- protein_complexes ALAS2 complex: degree_zero_after_quarantine (unclassified)
+- protein_complexes CLPXP: protein_complex_component_omitted:ATP-dependent Clp protease ATP-binding subunit clpX-like, mitochondrial:protein_missing_external_identity (KI-001); gate strict_quarantine_unexportable_entity
+- proteins ATP-dependent Clp protease ATP-binding subunit clpX-like, mitochondrial: protein_missing_external_identity (KI-001); gate strict_quarantine_unexportable_entity
+- proteins Putative ATP-dependent Clp protease proteolytic subunit, mitochondrial: protein_missing_external_identity (KI-001); gate strict_quarantine_unexportable_entity
+
+CORE COVERAGE
+-------------
+Requested (11): heme, aminolevulinic acid, glycine, succinyl-CoA, pyridoxal 5-phosphate, hemin, ALAS2, ALAS1, PLP, CLPXP, LONP1
+Matched (5): heme, pyridoxal 5-phosphate, ALAS2, ALAS1, LONP1
+Unmatched (6): aminolevulinic acid, glycine, succinyl-CoA, hemin, PLP, CLPXP
+Reasons: requested_core_coverage_below_minimum:0.455<0.500
