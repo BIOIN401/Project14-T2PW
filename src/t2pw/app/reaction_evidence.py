@@ -87,6 +87,9 @@ MERGED_DUPLICATE_KI = "KI-014"
 #: An interaction the IR withholds with this id cannot be typed in PathWhiz at all. It counts
 #: in the headline; one secondary line leaves it out (orchestrator ruling, ORCH-772).
 BY_DESIGN_KI = "KI-008"
+#: D-114 AMENDMENT 2 § 1: the HEADLINE coverage leaves those interactions out of the denominator (no user can add
+#: them to a PathWhiz pathway); the full count, with them, is always printed beside it. False restores the old headline.
+HEADLINE_EXCLUDES_BY_DESIGN = True
 KI_UNCLASSIFIED = "unclassified"
 KNOWN_ISSUES_DOC = "docs/pwml_recovery_sprint/PWML_KNOWN_ISSUES.md"
 
@@ -1107,20 +1110,21 @@ def pwml_coverage_lines(report: Mapping[str, Any]) -> List[str]:
     """D-114 § 3: the coverage headline, printed right under the title."""
 
     cov = report["pwml_coverage"]
-    drawn, total = cov["drawn"], cov["total"]
+    drawn, full, uncarried = cov["drawn"], cov["total"], cov["by_design_withheld"]
+    total = full - uncarried if HEADLINE_EXCLUDES_BY_DESIGN else full
+    rule = (f" (D-114 AMENDMENT 2: the {uncarried} interactions PathWhiz cannot carry, {BY_DESIGN_KI}, are not counted)"
+            if HEADLINE_EXCLUDES_BY_DESIGN else "")
     head = f"PWML coverage: {_of(drawn, total)} processes ({_percent(drawn, total)})"
     if cov["not_recorded"]:
         head = f"PWML coverage: {NOT_RECORDED} ({cov['not_recorded']}); {total} processes in the text record"
     kinds = "; ".join(f"{kind}s {_of(v['drawn'], v['total'])}" for kind, v in cov["by_kind"].items())
+    other, label = (full, f"Full count, the {uncarried} {BY_DESIGN_KI} interactions included") if HEADLINE_EXCLUDES_BY_DESIGN \
+        else (full - uncarried, f"Excluding the {uncarried} interactions PathWhiz cannot carry ({BY_DESIGN_KI})")
     lines = [
-        f"{head} -- target {COVERAGE_TARGET_PERCENT}%",
-        f"  By kind, drawn of total (total = final payload + omitted before the freeze): {kinds}",
+        f"{head} -- target {COVERAGE_TARGET_PERCENT}%{rule}",
+        f"  {label}: {_of(drawn, other)} ({_percent(drawn, other)})",
+        f"  By kind, drawn of full count (total = final payload + omitted before the freeze): {kinds}",
     ]
-    rest = total - cov["by_design_withheld"]
-    lines.append(
-        f"  Excluding the {cov['by_design_withheld']} interactions PathWhiz cannot type ({BY_DESIGN_KI}, withheld by design): "
-        f"{_of(drawn, rest)} ({_percent(drawn, rest)})"
-    )
     if not cov["pwml_written"]:
         lines.append(f"  No PWML written: {cov['no_pwml_cause']}")
     if cov["not_counted"]:
