@@ -601,7 +601,8 @@ def test_closure_removed_rows_are_recorded_but_not_lineage_attributed() -> None:
 
     assert lineage.LINEAGE_KEY not in json.dumps(report)
     # The removal is still recorded -- this is a lineage gap, never a silent drop.
-    assert report["schema_version"] == 1
+    # 2 since ORCH-773: a per-row omission's removal record carries ``detail`` (merge rule 4; was 1).
+    assert report["schema_version"] == 2
     assert set(report) >= {
         "removed_entities",
         "removed_locations",

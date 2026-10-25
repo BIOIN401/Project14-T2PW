@@ -95,8 +95,9 @@ def test_g9_chlorophyll_leg_releases_review_required_once_orphan_genes_close() -
     result = quarantine_and_close(payload, strict_db=True, pathway_context=context, mode="pathwhiz")
     report = result.quarantine_report
 
-    # The live decision, replayed: same decision input, same admissions, same counts.
-    assert report["decision_input_hash"] == "sha256:d2ef87f2ae5da361"
+    # The live decision, replayed: same admissions, same counts. Its decision input was
+    # sha256:d2ef87f2ae5da361; ORCH-773's QUARANTINE_POLICY_VERSION bump moves it and nothing else.
+    assert report["decision_input_hash"] == "sha256:8b2be66a5cacc344"
     assert report["counts"] == BASE_COUNTS
     assert _digest(f"{row['pointer']}|{row['state']}" for row in result.admissions) == BASE_ADMISSIONS_SHA256
 
