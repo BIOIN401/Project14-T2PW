@@ -26,6 +26,7 @@ D. Duplicate rows and merge quality: KI-039 to KI-045 ·
 E. Extraction and the early stages: KI-046 to KI-053 ·
 F. LLM, runtime and harness: KI-054 to KI-060 ·
 G. Operations: KI-061 to KI-064 ·
+H. Added after ORCH-771: KI-065 ·
 Appendix: Reason code → KI id.
 
 ---
@@ -309,9 +310,9 @@ whole pathway when the offending entity survives (see KI-016).
 | **Cause** | The batch driver declines a payload with no reaction and no transport at Stage 2, while the quarantine admits one that becomes interactions-only later. |
 | **Papers and legs hit** | ORCH-767 WNT PCP; `runs_verify` PMC12856317 (draws none) |
 | **Evidence** | `ORCH-769c-RESULT.md` § 7 item 1; `ORCH-769-RESULT.md` § (c) |
-| **Status** | **product decision** D-113 § 3: export as `review_required`. Orchestrator reading for the product owner to confirm: decline (`no_drawable_process`) when the IR draws no process at all. The Stage-2 decline is unchanged (inconsistent) |
+| **Status** | **product decision D-114 AMENDMENT 2: export** (§ 3: no decline for a PWML that draws zero processes; this overrules the D-113 § 3 reading, so `no_drawable_process` is not built). Such a leg is KI-065. The Stage-2 `no_reactions` decline is unchanged (inconsistent) |
 | **User workaround** | Expect a thin PWML: add the withheld interactions (KI-008) by hand where the paper gives a direction. |
-| **Planned fix** | ORCH-773 (with D-113 § 3) |
+| **Planned fix** | none for a decline (D-114 AMENDMENT 2 § 3). Updated by ORCH-772b; was "ORCH-773 (with D-113 § 3)" |
 
 ### KI-022 — No reaction carries defensible reaction-level support
 
@@ -896,6 +897,23 @@ kept apart, and which were once wrongly merged. A kept-apart duplicate reaches t
 | **Status** | **open**; the `python -` pattern is now forbidden by the 2026-10-25 operating rules |
 | **User workaround** | Operator: watch an unattended agent's transcript modification time, not its output file; never pipe into `python -`. |
 | **Planned fix** | none planned |
+
+---
+
+## H. Added after ORCH-771
+
+### KI-065 — A written PWML that draws no process (heme, PMC12856317)
+
+| | |
+|---|---|
+| **Symptom** | The leg writes `pathway.review_required.pwml`, but the file's `<reactions/>`, `<transports/>` and `<interactions/>` are empty. The text record shows PWML coverage 0 of 2 (0 of 3 full count) and lists all three processes as omitted. |
+| **Reason codes** | none of its own: the three omission reasons below, and release `review_required` |
+| **Cause** | Each of the three processes in the text record is left out for its own catalogued reason. (1) The only reaction, "ALAS2-catalyzed ALA formation" (glycine + succinyl-CoA → aminolevulinic acid), carries the compound cofactor pyridoxal 5'-phosphate in its modifier slot. It is removed before the freeze, `non_protein_actor_in_modifiers` (KI-004; cause KI-005), and its enzyme wrapper `ALAS2 complex` leaves with it (`degree_zero_after_quarantine`). (2) "heme inhibition of ALAS2" names the bare protein `ALAS2`, so it is withheld, `bare_protein_endpoint` (KI-009). The leg's Stage 6 ran on a tree from 2026-08-22, before interaction endpoints were wrapped (ORCH-754b, `c711d859`), and the corpus replays from that frozen post-Stage-6 payload (KI-058). (3) "ALAS2 cofactor binding" (ALAS2 -cofactor-> PLP) is withheld, `untyped_interaction` (KI-008). Nothing is left to draw. The export still writes the file, because D-114 AMENDMENT 2 § 3 rules that a zero-process PWML is not declined. |
+| **Papers and legs hit** | `runs_verify/2026-08-22_2017` PMC12856317 on the replay corpus at `main` (`00eb12d3`): the only zero-process PWML among the 56 corpus legs that write one. At its own tree the leg wrote no PWML: the final gate reported "Unknown protein/modifier reference" (KI-004, before ORCH-769b). |
+| **Evidence** | `ORCH-772-RESULT.md` § 8 F-2; `evidence/orch772/REVIEW-r0.md` §§ 3.2-3.3; `ORCH-772b-RESULT.md` § 4 (the replay's PWML has 0 `<reaction>`, 0 `<transport>`, 0 `<interaction>`; its payload has `protein_complexes: []` and the endpoint `ALAS2`) |
+| **Status** | **product decision** D-114 AMENDMENT 2 § 3: exported as `review_required`, with 0 % coverage shown and every process listed in the text record. **Open:** the KI-005 cofactor rule. A live run on current Stage 6 would wrap the `ALAS2` endpoint (KI-009 fix), which is **not measurable offline**. |
+| **User workaround** | Build the pathway from the text record. Re-create the ALAS2 reaction with ALAS2 as a one-protein complex (UniProt id) and PLP as a participant (KI-005), then draw "heme inhibits ALAS2" to that complex (KI-009). The cofactor binding has no PathWhiz type (KI-008). |
+| **Planned fix** | none planned. Sketch: KI-005's re-filing of a `role: cofactor` compound as a participant would keep the reaction and its wrapper. |
 
 ---
 
