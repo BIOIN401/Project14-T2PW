@@ -293,11 +293,16 @@ def test_compensating_add_below_its_own_threshold_does_not_license_the_removal()
 
 
 def test_index_drift_across_two_removals_is_judged_against_the_live_payload() -> None:
-    """Why the guard runs post-application rather than inside _should_accept:
-    that function is handed the pre-batch payload, so after the first removal
-    every later index addresses a different row than it did originally. Here the
-    second op says /entities/compounds/1, which is the unreferenced "spectator"
-    row before the first removal and the referenced "meropenem" row after it.
+    """Both ops are written against the pre-patch payload, so the second op's
+    /entities/compounds/1 is the unreferenced "spectator" row.
+
+    MOVED DELIBERATELY by ORCH-769d (D-113 orchestrator ruling (a)). Until then
+    the applier did not rebase: the second op hit "meropenem", the row that slid
+    into index 1, and this test pinned that the guard refused it (accepted 1,
+    rejected 1, spectator kept). Now the op is rebased to the row it was written
+    for, removes "spectator", and nothing is refused. That the guard still judges
+    the live, rebased row is pinned by
+    test_orch769d_audit_patch_rebase.py::test_g9_the_integrity_guard_judges_the_rebased_row.
     """
     payload = {
         "entities": {
@@ -322,13 +327,13 @@ def test_index_drift_across_two_removals_is_judged_against_the_live_payload() ->
 
     patched, report = apply_patch_with_policy(payload, patch)
 
-    assert report["summary"] == {"accepted_count": 1, "rejected_count": 1, "total": 2}
-    assert report["rejected"][0]["reason"].startswith(REFERENTIAL_INTEGRITY_REASON_PREFIX)
+    assert report["summary"] == {"accepted_count": 2, "rejected_count": 0, "total": 2}
+    assert report["accepted"][1]["applied_path"] == "/entities/compounds/0"
     assert [row["name"] for row in patched["entities"]["compounds"]] == [
-        "spectator",
         "meropenem",
         "hydrolyzed meropenem",
     ]
+    validate_registry_references(patched)
 
 
 def test_non_entity_and_non_shrinking_entity_ops_are_untouched() -> None:
