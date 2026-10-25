@@ -1,0 +1,748 @@
+PATHWAY EVIDENCE REPORT
+=======================
+PWML coverage: 6 of 42 processes (14.3%) -- target 75%
+  By kind, drawn of total (total = final payload + omitted before the freeze): reactions 3 of 8; transports 2 of 3; interactions 1 of 31
+  Excluding the 8 interactions PathWhiz cannot type (KI-008, withheld by design): 6 of 34 (17.6%)
+  Every process left out, with its reason: section OMITTED FROM THE PWML, below.
+Paper: PMC10425814
+Pathway: Noncanonical WNT/PCP signaling
+Requested organism (Stage 0): Homo sapiens
+Species (final payload): Homo sapiens (taxonomy 9606)
+Core-term coverage: 0.666667
+Minimum core satisfied: true
+Surviving processes: 16
+Quarantined processes: 26
+Release status: review_required
+Export mode: pathwhiz
+Quarantine ok: true
+Reactions itemised: 3; interactions itemised: 11 (transports: 2; counted above, not itemised)
+Surviving reactions read from: final_mapped.json
+Artifacts read: coverage_summary.json, final_mapped.json, LEG_TRACE.jsonl, pathway.review_required.pwml, pwml_ir.json, quarantine_report.json, removed_entity_report.json
+
+SURVIVING REACTIONS (3)
+-----------------------
+REACTION 1  [final payload /processes/reactions/0; lock rxn_lock_003]
+Name: Rac1/RhoA GDP/GTP exchange
+Equation: GTP -> GDP
+Substrates: GTP
+Products: GDP
+Enzyme(s): Not recorded
+Species: Not recorded
+Status: admission=core_accepted; scope=auxiliary
+Lineage: paper_extraction/paper_stated (paper_explicit=explicit)
+Mapping:
+  - GTP: matched; db_status=legacy_id_unverified; pathbank_compound_id=986, chebi_id=15996, kegg_id=C00044, hmdb_id=HMDB0001273
+  - GDP: matched; db_status=legacy_id_unverified; pathbank_compound_id=936, chebi_id=17552, kegg_id=C00035, hmdb_id=HMDB0001201
+Evidence:
+  1. "The exchange of GDP for GTP is mediated by Guanine Nucleotide Exchange Factors"
+Source:
+  - supplied paper PMC10425814 via paper_extraction
+WARNING: Possible duplicate reaction (same substrates and products as reaction 3)
+
+REACTION 2  [final payload /processes/reactions/1; lock rxn_lock_002]
+Name: Profilin-facilitated actin nucleotide exchange
+Equation: Adenosine triphosphate -> Adenosine diphosphate
+Substrates: Adenosine triphosphate
+Products: Adenosine diphosphate
+Enzyme(s): Not recorded
+Species: Not recorded
+Status: admission=auxiliary_accepted; scope=auxiliary
+Lineage: paper_extraction/paper_stated (paper_explicit=explicit)
+Mapping:
+  - Adenosine triphosphate: matched; db_status=matched_offline_name_index; pathbank_compound_id=414, chebi_id=15422, kegg_id=C00002, hmdb_id=HMDB0000538
+  - Adenosine diphosphate: matched; db_status=matched_offline_name_index; pathbank_compound_id=1034, chebi_id=16761, kegg_id=C00008, hmdb_id=HMDB0001341
+Evidence:
+  1. "Profilin also facilitates the exchange of ADP for ATP on actin monomers"
+Source:
+  - supplied paper PMC10425814 via paper_extraction
+
+REACTION 3  [final payload /processes/reactions/2; lock rxn_lock_001]
+Name: Cdc42 GTP hydrolysis
+Equation: GTP -> GDP
+Substrates: GTP
+Products: GDP
+Enzyme(s): Cdc42 complex (protein_complex; components: Cdc42)
+Species: Homo sapiens
+Status: admission=core_accepted; scope=core
+Lineage: paper_extraction/paper_stated (paper_explicit=explicit)
+Mapping:
+  - GTP: matched; db_status=legacy_id_unverified; pathbank_compound_id=986, chebi_id=15996, kegg_id=C00044, hmdb_id=HMDB0001273
+  - GDP: matched; db_status=legacy_id_unverified; pathbank_compound_id=936, chebi_id=17552, kegg_id=C00035, hmdb_id=HMDB0001201
+  - Cdc42 complex: ambiguous; no identifier recorded
+Evidence:
+  1. "Cdc42 is a hydrolase that can hydrolyze the GTP to GDP in the presence of GAP"
+Source:
+  - supplied paper PMC10425814 via paper_extraction
+WARNING: Possible duplicate reaction (same substrates and products as reaction 1)
+
+INTERACTIONS (11) -- PWML verdicts read from: pwml_ir.json
+----------------------------------------------------------
+INTERACTION 1  [final payload /processes/interactions/0]
+Name: Dvl associates with DAAM
+Relationship (as extracted): binding
+Source: Dishevelled (Dvl)
+Target: DAAM
+State: Not recorded
+PWML: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Evidence:
+  1. "enables Dvl to associate with the Dvl-associated activator of morphogenesis"
+
+INTERACTION 2  [final payload /processes/interactions/1]
+Name: Celsr1 activates Dvl
+Relationship (as extracted): activation
+Source: Cadherin EGF LAG seven-pass G-type receptor 1
+Target: Segment polarity protein dishevelled homolog DVL-1 (DVL1)
+State: Not recorded
+PWML: withheld -- bare_protein_endpoint: a protein endpoint is not wrapped in a single-protein complex in this payload, and PathWhiz has no bare-protein interaction member
+Evidence:
+  1. "The Celsr1 receptor appears to function similarly to the Fz receptor, where Wnt binding ultimately causes activation of Dvl"
+
+INTERACTION 3  [final payload /processes/interactions/2]
+Name: Dvl binds Inversin (Invs)
+Relationship (as extracted): binding
+Source: Dishevelled (Dvl)
+Target: Inversin
+State: Not recorded
+PWML: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Evidence:
+  1. "Inv also formed a protein complex with Dvl"
+
+INTERACTION 4  [final payload /processes/interactions/3]
+Name: Vangl2 inhibits Dvl-Prickle-Intu complex
+Relationship (as extracted): inhibition
+Source: SCRIB-VANGL2 complex
+Target: complex of Dvl, Prickle, and inturned
+State: Not recorded
+PWML: drawn as Inhibition
+Evidence:
+  1. "the binding of Wnt on Vangl2 causes dissociation of a complex of Dvl, Prickle, and inturned (Intu)"
+
+INTERACTION 5  [final payload /processes/interactions/4]
+Name: Inversin (Invs) binds Prickle (Pk)
+Relationship (as extracted): binding
+Source: Inversin
+Target: Prickle
+State: Not recorded
+PWML: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Evidence:
+  1. "Inv also participates in the noncanonical pathway, interacting with the planar cell polarity (PCP) pathway proteins Strabismus (Stbm) and Prickle (Pk)"
+
+INTERACTION 6  [final payload /processes/interactions/5]
+Name: Rac1 binds GTP
+Relationship (as extracted): binding
+Source: Rac1
+Target: GTP
+State: Not recorded
+PWML: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Evidence:
+  1. "The binding of GTP to Rac1 causes two regions to undergo a conformational change"
+
+INTERACTION 7  [final payload /processes/interactions/6]
+Name: Celsr1 activates Dvl
+Relationship (as extracted): activates
+Source: Cadherin EGF LAG seven-pass G-type receptor 1
+Target: Segment polarity protein dishevelled homolog DVL-1 (DVL1)
+State: Not recorded
+PWML: withheld -- bare_protein_endpoint: a protein endpoint is not wrapped in a single-protein complex in this payload, and PathWhiz has no bare-protein interaction member
+Evidence:
+  1. "Celsr1 stimulates Dvl due to Wnt binding like the Fz receptor"
+
+INTERACTION 8  [final payload /processes/interactions/7]
+Name: Dvl associates with Invs
+Relationship (as extracted): associates_with
+Source: Dishevelled (Dvl)
+Target: Invs
+State: Not recorded
+PWML: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Evidence:
+  1. "Dvl can then bind to Invs"
+
+INTERACTION 9  [final payload /processes/interactions/8]
+Name: Dishevelled associates with DAAM1
+Relationship (as extracted): associates_with
+Source: Dishevelled
+Target: DAAM1
+State: Not recorded
+PWML: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Evidence:
+  1. "Dvl can then associate with DAAM"
+
+INTERACTION 10  [final payload /processes/interactions/9]
+Name: Dishevelled binds Inversin
+Relationship (as extracted): binds
+Source: Dishevelled
+Target: Inversin
+State: Not recorded
+PWML: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Evidence:
+  1. "enabling Dvl to complex with Invs"
+
+INTERACTION 11  [final payload /processes/interactions/10]
+Name: inturned (Intu) component_of Dvl-Prickle-Intu complex
+Relationship (as extracted): component_of
+Source: Inturned
+Target: complex of Dvl, Prickle, and inturned
+State: Not recorded
+PWML: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Evidence:
+  1. "a complex of Dvl, Prickle, and inturned (Intu)"
+
+QUARANTINED / REJECTED (26)
+---------------------------
+From quarantine_report.json quarantined: 26
+From final payload quarantined_locked_reactions: 0
+
+QUARANTINED 1  [pre-quarantine /processes/reactions/3; reaction]
+Name: JNK phosphorylates c-Jun
+Equation: c-Jun -> phosphorylated c-Jun
+State: quarantined_unmapped_entity
+Reason: protein_missing_external_identity
+Essential participant: c-Jun
+Evidence:
+  1. "Rac1 activates JNK, which phosphorylates and activates c-Jun to go to the nucleus and initiate gene expression"
+
+QUARANTINED 2  [pre-quarantine /processes/reactions/4; reaction]
+Name: JNK phosphorylates CapZIP
+Equation: CapZ-interacting protein (CapZIP) -> phosphorylated CapZIP
+State: quarantined_unmapped_entity
+Reason: protein_missing_external_identity
+Essential participant: phosphorylated CapZIP
+Evidence:
+  1. "JNK also activates CapZIP-interacting protein (CapZIP) via phosphorylation"
+  2. "JNK phosphorylates CapZIP JNK also activates CapZIP-interacting protein (CapZIP) via phosphorylation"
+
+QUARANTINED 3  [pre-quarantine /processes/reactions/5; reaction]
+Name: JNK phosphorylation of c-Jun
+Equation: Adenosine triphosphate -> phosphorylated c-Jun + Adenosine diphosphate
+State: quarantined_unmapped_entity
+Reason: protein_missing_external_identity
+Essential participant: phosphorylated c-Jun
+Evidence:
+  1. "JNK phosphorylates c-Jun"
+
+QUARANTINED 4  [pre-quarantine /processes/reactions/6; reaction]
+Name: JNK phosphorylation of CapZIP
+Equation: Adenosine triphosphate -> phosphorylated CapZIP + Adenosine diphosphate
+State: quarantined_unmapped_entity
+Reason: protein_missing_external_identity
+Essential participant: phosphorylated CapZIP
+Evidence:
+  1. "JNK phosphorylates CapZIP"
+
+QUARANTINED 5  [pre-quarantine /processes/reactions/7; reaction]
+Name: ROCK phosphorylation of MRLC
+Equation: Adenosine triphosphate -> phosphorylated MRLC + Adenosine diphosphate
+State: quarantined_unmapped_entity
+Reason: protein_missing_external_identity
+Essential participant: phosphorylated MRLC
+Evidence:
+  1. "ROCK activates the myosin II regulatory light chain (MRLC)"
+
+QUARANTINED 6  [pre-quarantine /processes/transports/0; transport]
+Name: c-Jun translocation to nucleus
+State: quarantined_unmapped_entity
+Reason: protein_missing_external_identity
+Essential participant: c-Jun
+Evidence:
+  1. "c-Jun then goes to the nucleus to stimulate gene transcription"
+
+QUARANTINED 7  [pre-quarantine /processes/interactions/0; interaction]
+Name: Frizzled (Fz) activates Dvl
+State: quarantined_unmapped_entity
+Reason: protein_missing_external_identity
+Essential participant: Frizzled
+Evidence:
+  1. "The Fz receptors in this pathway bind Wnt ligands and phosphorylate Dvl"
+
+QUARANTINED 8  [pre-quarantine /processes/interactions/1; interaction]
+Name: Par6 interacts with Dvl
+State: quarantined_unmapped_entity
+Reason: protein_missing_external_identity
+Essential participant: Par6
+Evidence:
+  1. "The polarity protein Par6 interacts with Dvl"
+
+QUARANTINED 9  [pre-quarantine /processes/interactions/2; interaction]
+Name: Smurf binds Par6
+State: quarantined_unmapped_entity
+Reason: protein_missing_external_identity
+Essential participant: Smurf
+Evidence:
+  1. "Smurf is recruited by the phosphorylated Dvl and binds to Par6"
+
+QUARANTINED 10  [pre-quarantine /processes/interactions/3; interaction]
+Name: Smurf ubiquitinates Prickle (Pk)
+State: quarantined_unmapped_entity
+Reason: protein_missing_external_identity
+Essential participant: Smurf
+Evidence:
+  1. "Smurf then ubiquitinates Prickle"
+
+QUARANTINED 11  [pre-quarantine /processes/interactions/5; interaction]
+Name: JNK activates CapZ-interacting protein (CapZIP)
+State: quarantined_unmapped_entity
+Reason: undeclared_entity_in_entity_1
+Essential participant: JNK
+Evidence:
+  1. "JNK also activates CapZ-interacting protein (CapZIP) via phosphorylation"
+
+QUARANTINED 12  [pre-quarantine /processes/interactions/6; interaction]
+Name: RhoA activates DIA1
+State: quarantined_unmapped_entity
+Reason: undeclared_entity_in_entity_2
+Essential participant: DIA1
+Evidence:
+  1. "RhoA activates RHO-associated coiled-coil-containing protein kinase (ROCK) and diaphanous 1 (DIA1)"
+
+QUARANTINED 13  [pre-quarantine /processes/interactions/7; interaction]
+Name: ROCK activates myosin II regulatory light chain (MRLC)
+State: quarantined_unmapped_entity
+Reason: undeclared_entity_in_entity_1
+Essential participant: ROCK
+Evidence:
+  1. "ROCK activates the myosin II regulatory light chain (MRLC)"
+
+QUARANTINED 14  [pre-quarantine /processes/interactions/8; interaction]
+Name: DIA1 activates myosin II regulatory light chain (MRLC)
+State: quarantined_unmapped_entity
+Reason: undeclared_entity_in_entity_1
+Essential participant: DIA1
+Evidence:
+  1. "RhoA activates ROCK and DIA1, with the latter activating MRLC"
+
+QUARANTINED 15  [pre-quarantine /processes/interactions/12; interaction]
+Name: Smurf inhibits Prickle
+State: quarantined_unmapped_entity
+Reason: protein_missing_external_identity
+Essential participant: Smurf
+Evidence:
+  1. "Smurf then ubiquitinates Prickle, a protein that normally inhibits Wnt/PCP signaling"
+
+QUARANTINED 16  [pre-quarantine /processes/interactions/13; interaction]
+Name: Frizzled (Fz) binds Wnt ligands
+State: quarantined_unmapped_entity
+Reason: protein_missing_external_identity
+Essential participant: Frizzled
+Evidence:
+  1. "The Fz receptors in this pathway bind Wnt ligands and phosphorylate Dvl"
+
+QUARANTINED 17  [pre-quarantine /processes/interactions/14; interaction]
+Name: Wnt ligands bind Vangl2
+State: quarantined_unmapped_entity
+Reason: protein_missing_external_identity
+Essential participant: Wnt ligands
+Evidence:
+  1. "the binding of Wnt on Vangl2 causes dissociation of a complex of Dvl, Prickle, and inturned (Intu)"
+
+QUARANTINED 18  [pre-quarantine /processes/interactions/15; interaction]
+Name: Inversin (Invs) binds Strabismus (Stbm)
+State: quarantined_unmapped_entity
+Reason: protein_missing_external_identity
+Essential participant: Strabismus (Stbm)
+Evidence:
+  1. "Inv also participates in the noncanonical pathway, interacting with the planar cell polarity (PCP) pathway proteins Strabismus (Stbm) and Prickle (Pk)"
+
+QUARANTINED 19  [pre-quarantine /processes/interactions/18; interaction]
+Name: RhoA binds DIA1
+State: quarantined_unmapped_entity
+Reason: undeclared_entity_in_entity_2
+Essential participant: DIA1
+Evidence:
+  1. "the binding of RhoA relieves this inhibition"
+
+QUARANTINED 20  [pre-quarantine /processes/interactions/19; interaction]
+Name: DIA1 binds G-actin
+State: quarantined_unmapped_entity
+Reason: undeclared_entity_in_entity_1
+Essential participant: DIA1
+Evidence:
+  1. "DIA1 also has an FH1 domain that binds profilin-bound G-actin"
+
+QUARANTINED 21  [pre-quarantine /processes/interactions/20; interaction]
+Name: Smurf ubiquitinates Prickle
+State: quarantined_unmapped_entity
+Reason: protein_missing_external_identity
+Essential participant: Smurf
+Evidence:
+  1. "Smurf ubiquitinates the inhibitory protein Prickle"
+
+QUARANTINED 22  [pre-quarantine /processes/interactions/21; interaction]
+Name: JNK phosphorylates c-Jun
+State: quarantined_unmapped_entity
+Reason: undeclared_entity_in_entity_1
+Essential participant: JNK
+Evidence:
+  1. "JNK phosphorylates and activates c-Jun"
+
+QUARANTINED 23  [pre-quarantine /processes/interactions/22; interaction]
+Name: JNK phosphorylates CapZIP
+State: quarantined_unmapped_entity
+Reason: undeclared_entity_in_entity_1
+Essential participant: JNK
+Evidence:
+  1. "JNK also activates CapZ-interacting protein (CapZIP) via phosphorylation"
+
+QUARANTINED 24  [pre-quarantine /processes/interactions/23; interaction]
+Name: RhoA activates DIA1
+State: quarantined_unmapped_entity
+Reason: undeclared_entity_in_entity_2
+Essential participant: DIA1
+Evidence:
+  1. "RhoA activates ROCK and DIA1"
+
+QUARANTINED 25  [pre-quarantine /processes/interactions/26; interaction]
+Name: Par6 interacts with Dishevelled
+State: quarantined_unmapped_entity
+Reason: protein_missing_external_identity
+Essential participant: Par6
+Evidence:
+  1. "The polarity protein Par6 interacts with Dvl"
+
+QUARANTINED 26  [pre-quarantine /processes/interactions/27; interaction]
+Name: Smurf1 binds Par6
+State: quarantined_unmapped_entity
+Reason: protein_missing_external_identity
+Essential participant: Par6
+Evidence:
+  1. "Smurf binds to Par6"
+
+REMOVED ENTITIES (14)
+---------------------
+- proteins Frizzled: degree_zero_after_quarantine
+- proteins Par6: degree_zero_after_quarantine
+- proteins Smurf: degree_zero_after_quarantine
+- proteins c-Jun: degree_zero_after_quarantine
+- proteins CapZ-interacting protein (CapZIP): degree_zero_after_quarantine
+- proteins Wnt ligands: degree_zero_after_quarantine
+- proteins Strabismus (Stbm): degree_zero_after_quarantine
+- proteins Dkk1: degree_zero_after_quarantine
+- proteins G-actin: degree_zero_after_quarantine
+- proteins phosphorylated c-Jun: degree_zero_after_quarantine
+- proteins phosphorylated CapZIP: degree_zero_after_quarantine
+- proteins phosphorylated MRLC: degree_zero_after_quarantine
+- protein_complexes Dickkopf-related protein 1 (DKK1): degree_zero_after_quarantine
+- protein_complexes CapZ-interacting protein (CapZIP) complex: degree_zero_after_quarantine
+
+OMITTED FROM THE PWML (36)
+--------------------------
+Known-issue ids: docs/pwml_recovery_sprint/PWML_KNOWN_ISSUES.md, appendix "Reason code -> KI id".
+
+OMITTED 1  [quarantine_report.json quarantined; pre-quarantine /processes/reactions/3]
+Kind: reaction
+Name: JNK phosphorylates c-Jun
+Equation: c-Jun -> phosphorylated c-Jun
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 2  [quarantine_report.json quarantined; pre-quarantine /processes/reactions/4]
+Kind: reaction
+Name: JNK phosphorylates CapZIP
+Equation: CapZ-interacting protein (CapZIP) -> phosphorylated CapZIP
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 3  [quarantine_report.json quarantined; pre-quarantine /processes/reactions/5]
+Kind: reaction
+Name: JNK phosphorylation of c-Jun
+Equation: Adenosine triphosphate -> phosphorylated c-Jun + Adenosine diphosphate
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 4  [quarantine_report.json quarantined; pre-quarantine /processes/reactions/6]
+Kind: reaction
+Name: JNK phosphorylation of CapZIP
+Equation: Adenosine triphosphate -> phosphorylated CapZIP + Adenosine diphosphate
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 5  [quarantine_report.json quarantined; pre-quarantine /processes/reactions/7]
+Kind: reaction
+Name: ROCK phosphorylation of MRLC
+Equation: Adenosine triphosphate -> phosphorylated MRLC + Adenosine diphosphate
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 6  [quarantine_report.json quarantined; pre-quarantine /processes/transports/0]
+Kind: transport
+Name: c-Jun translocation to nucleus
+Cargo: c-Jun: __auto_state__ -> nuclear state
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 7  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/0]
+Kind: interaction
+Name: Frizzled (Fz) activates Dvl
+Endpoints: Frizzled -[activation]-> Dishevelled (Dvl)
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 8  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/1]
+Kind: interaction
+Name: Par6 interacts with Dvl
+Endpoints: Par6 -[binding]-> Dishevelled (Dvl)
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 9  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/2]
+Kind: interaction
+Name: Smurf binds Par6
+Endpoints: Smurf -[binding]-> Par6
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 10  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/3]
+Kind: interaction
+Name: Smurf ubiquitinates Prickle (Pk)
+Endpoints: Smurf -[interaction]-> Prickle
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 11  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/5]
+Kind: interaction
+Name: JNK activates CapZ-interacting protein (CapZIP)
+Endpoints: JNK -[activation]-> CapZ-interacting protein (CapZIP) complex
+Reason: undeclared_entity_in_entity_1
+Known issue: KI-015
+Add by hand: Read the process in the text record and draw it in PathWhiz if the quote supports it.
+
+OMITTED 12  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/6]
+Kind: interaction
+Name: RhoA activates DIA1
+Endpoints: GNAQ-GEFT-RHOA complex -[activation]-> DIA1
+Reason: undeclared_entity_in_entity_2
+Known issue: KI-015
+Add by hand: Read the process in the text record and draw it in PathWhiz if the quote supports it.
+
+OMITTED 13  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/7]
+Kind: interaction
+Name: ROCK activates myosin II regulatory light chain (MRLC)
+Endpoints: ROCK -[activation]-> MRLC
+Reason: undeclared_entity_in_entity_1
+Known issue: KI-015
+Add by hand: Read the process in the text record and draw it in PathWhiz if the quote supports it.
+
+OMITTED 14  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/8]
+Kind: interaction
+Name: DIA1 activates myosin II regulatory light chain (MRLC)
+Endpoints: DIA1 -[activation]-> MRLC
+Reason: undeclared_entity_in_entity_1
+Known issue: KI-015
+Add by hand: Read the process in the text record and draw it in PathWhiz if the quote supports it.
+
+OMITTED 15  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/12]
+Kind: interaction
+Name: Smurf inhibits Prickle
+Endpoints: Smurf -[inhibition]-> Prickle
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 16  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/13]
+Kind: interaction
+Name: Frizzled (Fz) binds Wnt ligands
+Endpoints: Frizzled -[binding]-> Wnt ligands
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 17  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/14]
+Kind: interaction
+Name: Wnt ligands bind Vangl2
+Endpoints: Wnt ligands -[binding]-> Vangl2
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 18  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/15]
+Kind: interaction
+Name: Inversin (Invs) binds Strabismus (Stbm)
+Endpoints: Inversin -[binding]-> Strabismus (Stbm)
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 19  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/18]
+Kind: interaction
+Name: RhoA binds DIA1
+Endpoints: RhoA -[binding]-> DIA1
+Reason: undeclared_entity_in_entity_2
+Known issue: KI-015
+Add by hand: Read the process in the text record and draw it in PathWhiz if the quote supports it.
+
+OMITTED 20  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/19]
+Kind: interaction
+Name: DIA1 binds G-actin
+Endpoints: DIA1 -[binding]-> G-actin
+Reason: undeclared_entity_in_entity_1
+Known issue: KI-015
+Add by hand: Read the process in the text record and draw it in PathWhiz if the quote supports it.
+
+OMITTED 21  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/20]
+Kind: interaction
+Name: Smurf ubiquitinates Prickle
+Endpoints: Smurf -[ubiquitinates]-> Prickle
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 22  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/21]
+Kind: interaction
+Name: JNK phosphorylates c-Jun
+Endpoints: JNK -[phosphorylates]-> c-Jun
+Reason: undeclared_entity_in_entity_1
+Known issue: KI-015
+Add by hand: Read the process in the text record and draw it in PathWhiz if the quote supports it.
+
+OMITTED 23  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/22]
+Kind: interaction
+Name: JNK phosphorylates CapZIP
+Endpoints: JNK -[phosphorylates]-> CapZ-interacting protein (CapZIP)
+Reason: undeclared_entity_in_entity_1
+Known issue: KI-015
+Add by hand: Read the process in the text record and draw it in PathWhiz if the quote supports it.
+
+OMITTED 24  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/23]
+Kind: interaction
+Name: RhoA activates DIA1
+Endpoints: GNAQ-GEFT-RHOA complex -[activates]-> DIA1
+Reason: undeclared_entity_in_entity_2
+Known issue: KI-015
+Add by hand: Read the process in the text record and draw it in PathWhiz if the quote supports it.
+
+OMITTED 25  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/26]
+Kind: interaction
+Name: Par6 interacts with Dishevelled
+Endpoints: Par6 -[interacts_with]-> Dishevelled
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 26  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/27]
+Kind: interaction
+Name: Smurf1 binds Par6
+Endpoints: Smurf1 -[binds]-> Par6
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 27  [pwml_ir.json; final payload /processes/interactions/0]
+Kind: interaction
+Name: Dvl associates with DAAM
+Endpoints: Dishevelled (Dvl) -[binding]-> DAAM
+Reason: untyped_interaction
+Verdict: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Known issue: KI-008
+Add by hand: None inside PathWhiz's model: it has no type for these relations. Read them in the text record, and add an Activation or Inhibition by hand only where the paper states the direction.
+
+OMITTED 28  [pwml_ir.json; final payload /processes/interactions/1]
+Kind: interaction
+Name: Celsr1 activates Dvl
+Endpoints: Cadherin EGF LAG seven-pass G-type receptor 1 -[activation]-> Segment polarity protein dishevelled homolog DVL-1 (DVL1)
+Reason: bare_protein_endpoint
+Verdict: withheld -- bare_protein_endpoint: a protein endpoint is not wrapped in a single-protein complex in this payload, and PathWhiz has no bare-protein interaction member
+Known issue: KI-009
+Add by hand: Give the protein its UniProt id and species in PathWhiz, make a one-protein complex of it, and draw the interaction from or to that complex.
+
+OMITTED 29  [pwml_ir.json; final payload /processes/interactions/2]
+Kind: interaction
+Name: Dvl binds Inversin (Invs)
+Endpoints: Dishevelled (Dvl) -[binding]-> Inversin
+Reason: untyped_interaction
+Verdict: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Known issue: KI-008
+Add by hand: None inside PathWhiz's model: it has no type for these relations. Read them in the text record, and add an Activation or Inhibition by hand only where the paper states the direction.
+
+OMITTED 30  [pwml_ir.json; final payload /processes/interactions/4]
+Kind: interaction
+Name: Inversin (Invs) binds Prickle (Pk)
+Endpoints: Inversin -[binding]-> Prickle
+Reason: untyped_interaction
+Verdict: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Known issue: KI-008
+Add by hand: None inside PathWhiz's model: it has no type for these relations. Read them in the text record, and add an Activation or Inhibition by hand only where the paper states the direction.
+
+OMITTED 31  [pwml_ir.json; final payload /processes/interactions/5]
+Kind: interaction
+Name: Rac1 binds GTP
+Endpoints: Rac1 -[binding]-> GTP
+Reason: untyped_interaction
+Verdict: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Known issue: KI-008
+Add by hand: None inside PathWhiz's model: it has no type for these relations. Read them in the text record, and add an Activation or Inhibition by hand only where the paper states the direction.
+
+OMITTED 32  [pwml_ir.json; final payload /processes/interactions/6]
+Kind: interaction
+Name: Celsr1 activates Dvl
+Endpoints: Cadherin EGF LAG seven-pass G-type receptor 1 -[activates]-> Segment polarity protein dishevelled homolog DVL-1 (DVL1)
+Reason: bare_protein_endpoint
+Verdict: withheld -- bare_protein_endpoint: a protein endpoint is not wrapped in a single-protein complex in this payload, and PathWhiz has no bare-protein interaction member
+Known issue: KI-009
+Add by hand: Give the protein its UniProt id and species in PathWhiz, make a one-protein complex of it, and draw the interaction from or to that complex.
+
+OMITTED 33  [pwml_ir.json; final payload /processes/interactions/7]
+Kind: interaction
+Name: Dvl associates with Invs
+Endpoints: Dishevelled (Dvl) -[associates_with]-> Invs
+Reason: untyped_interaction
+Verdict: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Known issue: KI-008
+Add by hand: None inside PathWhiz's model: it has no type for these relations. Read them in the text record, and add an Activation or Inhibition by hand only where the paper states the direction.
+
+OMITTED 34  [pwml_ir.json; final payload /processes/interactions/8]
+Kind: interaction
+Name: Dishevelled associates with DAAM1
+Endpoints: Dishevelled -[associates_with]-> DAAM1
+Reason: untyped_interaction
+Verdict: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Known issue: KI-008
+Add by hand: None inside PathWhiz's model: it has no type for these relations. Read them in the text record, and add an Activation or Inhibition by hand only where the paper states the direction.
+
+OMITTED 35  [pwml_ir.json; final payload /processes/interactions/9]
+Kind: interaction
+Name: Dishevelled binds Inversin
+Endpoints: Dishevelled -[binds]-> Inversin
+Reason: untyped_interaction
+Verdict: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Known issue: KI-008
+Add by hand: None inside PathWhiz's model: it has no type for these relations. Read them in the text record, and add an Activation or Inhibition by hand only where the paper states the direction.
+
+OMITTED 36  [pwml_ir.json; final payload /processes/interactions/10]
+Kind: interaction
+Name: inturned (Intu) component_of Dvl-Prickle-Intu complex
+Endpoints: Inturned -[component_of]-> complex of Dvl, Prickle, and inturned
+Reason: untyped_interaction
+Verdict: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Known issue: KI-008
+Add by hand: None inside PathWhiz's model: it has no type for these relations. Read them in the text record, and add an Activation or Inhibition by hand only where the paper states the direction.
+
+Entities left out (14), from removed_entity_report.json:
+- proteins Frizzled: degree_zero_after_quarantine (unclassified)
+- proteins Par6: degree_zero_after_quarantine (unclassified)
+- proteins Smurf: degree_zero_after_quarantine (unclassified)
+- proteins c-Jun: degree_zero_after_quarantine (unclassified)
+- proteins CapZ-interacting protein (CapZIP): degree_zero_after_quarantine (unclassified)
+- proteins Wnt ligands: degree_zero_after_quarantine (unclassified)
+- proteins Strabismus (Stbm): degree_zero_after_quarantine (unclassified)
+- proteins Dkk1: degree_zero_after_quarantine (unclassified)
+- proteins G-actin: degree_zero_after_quarantine (unclassified)
+- proteins phosphorylated c-Jun: degree_zero_after_quarantine (unclassified)
+- proteins phosphorylated CapZIP: degree_zero_after_quarantine (unclassified)
+- proteins phosphorylated MRLC: degree_zero_after_quarantine (unclassified)
+- protein_complexes Dickkopf-related protein 1 (DKK1): degree_zero_after_quarantine (unclassified)
+- protein_complexes CapZ-interacting protein (CapZIP) complex: degree_zero_after_quarantine (unclassified)
+
+CORE COVERAGE
+-------------
+Requested (12): GTP, GDP, Frizzled (Fz), Dishevelled (Dvl), Inversin (Invs), Par6, Smurf (Smurf1/Smurf2), Prickle (Pk), DAAM (DAAM1), RhoA, Rac1, JNK
+Matched (8): GTP, GDP, Dishevelled (Dvl), Inversin (Invs), Prickle (Pk), DAAM (DAAM1), RhoA, Rac1
+Unmatched (4): Frizzled (Fz), Par6, Smurf (Smurf1/Smurf2), JNK

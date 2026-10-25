@@ -24,6 +24,13 @@ guessed. A missing artifact (``Not recorded``) and a recorded empty list
 The duplicate check is a REVIEWER WARNING only: two surviving reactions with the
 same normalized substrates and products are flagged "Possible duplicate
 reaction" and both stay in the report exactly as the pathway has them.
+
+D-114 (ORCH-772): the PWML coverage at the top (processes drawn in the PWML / processes
+in the text record) and the section "OMITTED FROM THE PWML", each left-out process with
+its recorded reason, the known-issue id that reason maps to (:data:`KNOWN_ISSUES`, a copy
+of the ``PWML_KNOWN_ISSUES.md`` appendix) and the catalogue's workaround. "Drawn" is read
+from the IR only when a PWML was written. This text is for people only: no LLM input is
+built from this module (D-104 AMENDMENT 2).
 """
 
 from __future__ import annotations
@@ -67,6 +74,239 @@ NOT_RECORDED = "Not recorded"
 NONE_RECORDED = "None recorded"
 DUPLICATE_WARNING = "Possible duplicate reaction"
 LOCKED_RECORD = "final payload quarantined_locked_reactions"
+
+# ── D-114: PWML coverage and the omission record (ORCH-772) ─────────────────────────────
+#: Coverage = processes drawn in the PWML / processes in the text record. The headline counts
+#: these kinds; an omitted row of another kind (a reaction-coupled transport, a sub-pathway) is
+#: listed but not counted. Orchestrator ruling, ORCH-772 (the product owner may overrule).
+COVERAGE_KINDS = ("reaction", "transport", "interaction")
+COVERAGE_TARGET_PERCENT = 75
+#: A pre-freeze removal labelled with this id is a duplicate folded into a kept row: listed,
+#: not counted (orchestrator ruling, ORCH-772).
+MERGED_DUPLICATE_KI = "KI-014"
+#: An interaction the IR withholds with this id cannot be typed in PathWhiz at all. It counts
+#: in the headline; one secondary line leaves it out (orchestrator ruling, ORCH-772).
+BY_DESIGN_KI = "KI-008"
+KI_UNCLASSIFIED = "unclassified"
+KNOWN_ISSUES_DOC = "docs/pwml_recovery_sprint/PWML_KNOWN_ISSUES.md"
+
+#: ``PWML_KNOWN_ISSUES.md``, appendix "Reason code -> KI id", as data. ``codes`` rows are
+#: (code as the appendix writes it, match, patterns, KI id, then label by the inner reason);
+#: ``messages`` rows are (the quoted message patterns, KI id); ``workarounds`` is each such KI
+#: entry's "User workaround" cell, verbatim. ``tests/test_orch772_pwml_coverage.py`` parses the
+#: catalogue and fails when this copy and the catalogue disagree.
+KNOWN_ISSUES: Dict[str, Any] = {
+    "codes": (
+        ("<bucket>_missing_name", "suffix", ("_missing_name",), "KI-015", False),
+        ("accession_claimed_across_incompatible_entity_kinds", "exact",
+         ("accession_claimed_across_incompatible_entity_kinds",), "KI-017", False),
+        ("actor_schema_not_canonical", "exact", ("actor_schema_not_canonical",), "KI-023", False),
+        ("ambiguous_entity_type:<bucket>+<bucket>", "prefix", ("ambiguous_entity_type:",), "KI-011", False),
+        ("ambiguous_protein_endpoint", "exact", ("ambiguous_protein_endpoint",), "KI-010", False),
+        ("bare_protein_endpoint", "exact", ("bare_protein_endpoint",), "KI-009", False),
+        ("budget_exhausted", "exact", ("budget_exhausted",), "KI-028", False),
+        ("budget_indeterminate", "exact", ("budget_indeterminate",), "KI-056", False),
+        ("class_term_never_narrowed_to_specific_molecule", "exact",
+         ("class_term_never_narrowed_to_specific_molecule",), "KI-029", False),
+        ("closure_not_converged:<n>", "prefix", ("closure_not_converged:",), "KI-016", False),
+        ("complex_named_source_entity_wrapper", "exact", ("complex_named_source_entity_wrapper",), "KI-012", False),
+        ("component_protein_unresolved", "exact", ("component_protein_unresolved",), "KI-015", False),
+        ("confidence_below_floor:<x><<y>", "prefix", ("confidence_below_floor:",), "KI-015", False),
+        ("degree_zero_export:<n>", "prefix", ("degree_zero_export:",), "KI-016", False),
+        ("diagnostic_only", "exact", ("diagnostic_only",), "KI-016", False),
+        ("duplicate_locked_reaction", "exact", ("duplicate_locked_reaction",), "KI-014", False),
+        ("entity_type_overlap:<n>", "prefix", ("entity_type_overlap:",), "KI-011", False),
+        ("explicit_out_of_scope_verdict", "exact", ("explicit_out_of_scope_verdict",), "KI-015", False),
+        ("final_gate_report_missing", "exact", ("final_gate_report_missing",), "KI-016", False),
+        ("final_pre_export_gate_lifecycle", "exact", ("final_pre_export_gate_lifecycle",), "KI-016", False),
+        ("final_pre_export_stage3_gates", "exact", ("final_pre_export_stage3_gates",), "KI-004", False),
+        ("gate.generated_protein_complex_<...>", "prefix", ("gate.generated_protein_complex_",), "KI-012", False),
+        ("gate.protein_<name>_is_missing_a_uniprot_or_drugbank_identifier", "prefix+suffix",
+         ("gate.protein_", "_is_missing_a_uniprot_or_drugbank_identifier"), "KI-001", False),
+        ("gate.protein_has_degree_after_normalization", "exact",
+         ("gate.protein_has_degree_after_normalization",), "KI-013", False),
+        ("gate.unknown_protein_modifier_reference", "exact", ("gate.unknown_protein_modifier_reference",), "KI-004", False),
+        ("gate.unknown_transporter_reference", "exact", ("gate.unknown_transporter_reference",), "KI-004", False),
+        ("generated_complex_component_missing_external_identity", "exact",
+         ("generated_complex_component_missing_external_identity",), "KI-001", False),
+        ("generated_complex_component_missing_species", "exact",
+         ("generated_complex_component_missing_species",), "KI-003", False),
+        ("generated_wrapper_reason_invalid", "exact", ("generated_wrapper_reason_invalid",), "KI-012", False),
+        ("identity_refused_review_required", "exact", ("identity_refused_review_required",), "KI-029", False),
+        ("implausible_name_match", "exact", ("implausible_name_match",), "KI-001", False),
+        ("in_process_deadline", "exact", ("in_process_deadline",), "KI-028", False),
+        ("interaction_withheld_from_pwml", "exact", ("interaction_withheld_from_pwml",), "KI-008", True),
+        ("malformed_participant_in_<slot>", "prefix", ("malformed_participant_in_",), "KI-015", False),
+        ("malformed_placeholder:<claim>", "prefix", ("malformed_placeholder:",), "KI-015", False),
+        ("minimum_core:requested_core_coverage_below_minimum:<x><<y>", "prefix", ("minimum_core:",), "KI-038", False),
+        ("missing_<slot>", "prefix", ("missing_",), "KI-015", False),
+        ("nested_location_merged", "exact", ("nested_location_merged",), "KI-043", False),
+        ("no_defensible_reaction_support", "exact", ("no_defensible_reaction_support",), "KI-022", False),
+        ("no_drawable_process", "exact", ("no_drawable_process",), "KI-021", False),
+        ("no_reactions", "exact", ("no_reactions",), "KI-021", False),
+        ("no_shared_meaningful_token", "exact", ("no_shared_meaningful_token",), "KI-006", False),
+        ("non_protein_actor_in_<slot>", "prefix", ("non_protein_actor_in_",), "KI-004", False),
+        ("operation_timeout", "exact", ("operation_timeout",), "KI-028", False),
+        ("outer_parent_kill", "exact", ("outer_parent_kill",), "KI-028", False),
+        ("parenthetical_definition_bridge", "exact", ("parenthetical_definition_bridge",), "KI-041", False),
+        ("process_row_not_an_object", "exact", ("process_row_not_an_object",), "KI-015", False),
+        ("process_row_vanished_during_closure", "exact", ("process_row_vanished_during_closure",), "KI-015", False),
+        ("protein_complex_component_cycle", "exact", ("protein_complex_component_cycle",), "KI-015", False),
+        ("protein_complex_component_unnamed", "exact", ("protein_complex_component_unnamed",), "KI-015", False),
+        ("protein_complex_component_unrepresentable:<name>:<reason>", "prefix",
+         ("protein_complex_component_unrepresentable:",), "KI-015", True),
+        ("protein_complex_component_unresolved:<name>", "prefix", ("protein_complex_component_unresolved:",), "KI-015", False),
+        ("protein_complex_missing_components", "exact", ("protein_complex_missing_components",), "KI-015", False),
+        ("protein_complex_missing_species", "exact", ("protein_complex_missing_species",), "KI-003", False),
+        ("protein_endpoint_missing_external_identity", "exact",
+         ("protein_endpoint_missing_external_identity",), "KI-009", False),
+        ("protein_endpoint_missing_species", "exact", ("protein_endpoint_missing_species",), "KI-009", False),
+        ("protein_endpoint_missing_species_and_external_identity", "exact",
+         ("protein_endpoint_missing_species_and_external_identity",), "KI-009", False),
+        ("protein_missing_external_identity", "exact", ("protein_missing_external_identity",), "KI-001", False),
+        ("protein_missing_species", "exact", ("protein_missing_species",), "KI-003", False),
+        ("reaction_coupled_transport_has_no_exportable_ir_representation", "exact",
+         ("reaction_coupled_transport_has_no_exportable_ir_representation",), "KI-015", False),
+        ("reaction_enzyme_complex_wrapper_skipped_invalid_component", "exact",
+         ("reaction_enzyme_complex_wrapper_skipped_invalid_component",), "KI-006", False),
+        ("reaction_enzyme_must_be_protein_complex", "exact", ("reaction_enzyme_must_be_protein_complex",), "KI-006", False),
+        ("reaction_enzyme_proteins_dropped_no_external_id", "exact",
+         ("reaction_enzyme_proteins_dropped_no_external_id",), "KI-007", False),
+        ("refinement_review_crash", "exact", ("refinement_review_crash",), "KI-020", False),
+        ("requested_core_coverage_below_minimum:<x><<y>", "prefix", ("requested_core_coverage_below_minimum",), "KI-038", False),
+        ("scope_conflict", "exact", ("scope_conflict",), "KI-025", False),
+        ("serialization_would_require_invention", "exact", ("serialization_would_require_invention",), "KI-016", False),
+        ("species_mismatch", "exact", ("species_mismatch",), "KI-002", False),
+        ("species_missing_classification", "exact", ("species_missing_classification",), "KI-019", False),
+        ("species_missing_taxonomy", "exact", ("species_missing_taxonomy",), "KI-019", False),
+        ("species_not_found:<species>", "prefix", ("species_not_found:",), "KI-002", False),
+        ("stage0_scope_conflict_stopped_the_run_before_serialization", "exact",
+         ("stage0_scope_conflict_stopped_the_run_before_serialization",), "KI-025", False),
+        ("stage1_empty_chunk", "exact", ("stage1_empty_chunk",), "KI-027", False),
+        ("typo_snapped", "exact", ("typo_snapped",), "KI-039", False),
+        ("unaccounted_locked_reactions:<n>", "prefix", ("unaccounted_locked_reactions:",), "KI-016", False),
+        ("undeclared_entity_in_<slot>", "prefix", ("undeclared_entity_in_",), "KI-015", False),
+        ("undefined_state_treated_as_absent", "exact", ("undefined_state_treated_as_absent",), "KI-039", False),
+        ("unexportable_entity:<n>", "prefix", ("unexportable_entity:",), "KI-016", False),
+        ("unnamed_actor_in_<slot>", "prefix", ("unnamed_actor_in_",), "KI-015", False),
+        ("unresolved_actor_in_<slot>", "prefix", ("unresolved_actor_in_",), "KI-015", False),
+        ("untyped_interaction", "exact", ("untyped_interaction",), "KI-008", False),
+        ("valid_json_zero_processes", "exact", ("valid_json_zero_processes",), "KI-027", False),
+    ),
+    "messages": (
+        (("Chunk <n> failed to produce valid JSON.",), "KI-027"),
+        (("Composite entity '<name>' in /entities/compounds has no protein-like left component; unsupported.",), "KI-024"),
+        (("Composite token '<text>' at <pointer> has no protein-like left component; ...",), "KI-024"),
+        (("DraftGraph has no reaction nodes — nothing to render.",), "KI-020"),
+        (("extraction did not finish inside the time budget", "audit and DB mapping ...", "PWML export ..."), "KI-028"),
+        (("AppTest script run timed out after 3600.0(s)",), "KI-028"),
+        (("LLM returned an empty completion for <stage> (model <m>, finish_reason=length, ...)",), "KI-054"),
+        (("Generated protein complex '<c>' component '<p>' is missing positive stoichiometry.",), "KI-012"),
+        (("Generated protein complex '<c>' component protein '<p>' is missing a UniProt or DrugBank identifier.",), "KI-001"),
+        (("No refinement graph image is available.",), "KI-020"),
+        (("no UniProt or DrugBank identifier; other enzymes remain",), "KI-007"),
+        (("Protein '<name>' is missing a UniProt or DrugBank identifier.",), "KI-001"),
+        (("Protein has degree 0 after normalization: <name>",), "KI-013"),
+        (("PWML export stopped by the quarantine boundary: <reasons>",), "KI-016"),
+        (("PWML export stopped by validation-only pre-export Stage 3 revalidation; Stage 8 did not repair the payload.",),
+         "KI-023"),
+        (("PWML required-field gate failed.",), "KI-006"),
+        (("Unknown protein/modifier reference: <name>",), "KI-004"),
+        (("Unknown transporter reference: <name>",), "KI-004"),
+        (("UniProt <acc>, from strain <strain>",), "KI-033"),
+    ),
+    "workarounds": {
+        "KI-001": "Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in "
+                  "PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed "
+                  "process. If none exists, PathWhiz cannot hold the protein; leave the process out.",
+        "KI-002": "MenI and MenA: add them in PathWhiz by hand only if you accept an IL1403 record (UniProt Q9CHK5 for "
+                  "MenI is the identical sequence; ORCH-761 § 0 item 3); otherwise leave them out.",
+        "KI-003": "Add the protein in PathWhiz under the paper's organism, then attach it to the listed process.",
+        "KI-004": "For each listed reaction, add the enzyme in PathWhiz as a protein (with its UniProt id) and attach "
+                  "it; the text record names the actor that was refused.",
+        "KI-006": "In PathWhiz, create a one-protein complex for the enzyme (same UniProt id) and set it as the "
+                  "reaction's enzyme.",
+        "KI-007": "Compare the enzymes named in the text record's quote with the PWML's; add any missing enzyme in "
+                  "PathWhiz.",
+        "KI-008": "None inside PathWhiz's model: it has no type for these relations. Read them in the text record, and "
+                  "add an Activation or Inhibition by hand only where the paper states the direction.",
+        "KI-009": "Give the protein its UniProt id and species in PathWhiz, make a one-protein complex of it, and draw "
+                  "the interaction from or to that complex.",
+        "KI-010": "Read the quote: if the paper means the protein, draw the interaction from the protein's complex; if "
+                  "it means the gene (e.g. \"Fur represses entD\"), draw it to the gene.",
+        "KI-011": "Add the gene (nucleic acid) and the protein as separate elements in PathWhiz, and redraw each listed "
+                  "regulation to the one the quote means.",
+        "KI-012": "Delete the \"enterobactin synthase complex\" catalyst; the paper's own enzyme (EntF) is the catalyst.",
+        "KI-013": "Delete the stray protein element from the PathWhiz pathway; it has no reactions.",
+        "KI-014": "None needed; check that the kept twin is in the PWML.",
+        "KI-015": "Read the process in the text record and draw it in PathWhiz if the quote supports it.",
+        "KI-016": "None for a user (no file is written). Operator: read `quarantine_report.json` `strict_invariants` "
+                  "for the entity named, and see its cause entry.",
+        "KI-017": "If a PWML shows EntB (or another protein) without its UniProt id, set it in PathWhiz (EntB: P0ADI4).",
+        "KI-019": "None needed after the fix.",
+        "KI-020": "Batch runs are unaffected. In the app, refine such a pathway by hand rather than with \"Submit "
+                  "Changes to AI\".",
+        "KI-021": "Expect a thin PWML: add the withheld interactions (KI-008) by hand where the paper gives a direction.",
+        "KI-022": "None for a user (no file). Operator: check whether the leg's reactions lost their "
+                  "`provenance_lineage` (an indeterminate carrier is not refused).",
+        "KI-023": "None for a user (no file).",
+        "KI-024": "Check ions in the PWML (e.g. `Ca2+`) keep their charge; correct the compound in PathWhiz if not.",
+        "KI-025": "Re-run with the requested pathway written in the paper's own phrase.",
+        "KI-027": "None needed after the fix.",
+        "KI-028": "None for a user. Operator: give long papers 10,800 s and re-run a timed-out leg.",
+        "KI-029": "In PathWhiz, keep the compound as \"prenyl diphosphate\" (or attach the polyprenyl diphosphate class "
+                  "if you curate one); do not accept DMAPP.",
+        "KI-033": "Review each flagged protein; keep it if the ortholog is acceptable for your curation, otherwise "
+                  "remove its accession and treat it as KI-001.",
+        "KI-038": "None needed in PathWhiz; read the coverage figure as a lower bound.",
+        "KI-039": "In the text record, rows marked 1/3 support are the likely duplicates; delete a PWML reaction that "
+                  "repeats another with a different spelling.",
+        "KI-041": "Merge the two MenA rows and the two MenG rows by hand in PathWhiz (delete the `DMK` duplicates).",
+        "KI-043": "None needed; review merges flagged `nested_location_merged`.",
+        "KI-054": "Operator: keep `LLM_MAX_TOKENS` and the stage variables at 128,000 (extraction 64,000).",
+        "KI-056": "None.",
+    },
+}
+
+
+def _matches(text: str, match: str, patterns: tuple) -> bool:
+    if match == "exact":
+        return text == patterns[0]
+    if match == "prefix":
+        return text.startswith(patterns[0])
+    if match == "suffix":
+        return text.endswith(patterns[0])
+    return text.startswith(patterns[0]) and text.endswith(patterns[1])  # prefix+suffix
+
+
+def _message_regex(pattern: str) -> "re.Pattern[str]":
+    # A ``<placeholder>`` or a trailing ``...`` stands for the varying text; the rest is fixed words.
+    parts = re.split(r"<[^<>]*>|\.\.\.", pattern)
+    return re.compile(".*?".join(map(re.escape, parts)), re.S)
+
+
+#: Exact codes first, then the longest pattern; messages with the most fixed text first, so a broad
+#: pattern ("PWML export ...") never takes a message a narrower one names.
+_CODE_ORDER = sorted(KNOWN_ISSUES["codes"], key=lambda r: (r[1] != "exact", -len("".join(r[2])), r[0]))
+_MESSAGE_ORDER = sorted(
+    ((_message_regex(p), len(re.sub(r"<[^<>]*>|\.\.\.", "", p)), ki) for ps, ki in KNOWN_ISSUES["messages"] for p in ps),
+    key=lambda r: -r[1],
+)
+
+
+def known_issue_id(reason: Any) -> str:
+    """The catalogue id of one recorded reason, matched as the appendix says; never guessed."""
+
+    text = _text(reason)
+    for _code, match, patterns, ki, inner in _CODE_ORDER:
+        if text and _matches(text, match, patterns):
+            # "then label by <reason>": the code wraps another reason, after its last colon.
+            refined = known_issue_id(text.rsplit(":", 1)[1]) if inner and ":" in text else KI_UNCLASSIFIED
+            return refined if refined != KI_UNCLASSIFIED else ki
+    for regex, _fixed, ki in _MESSAGE_ORDER:
+        if text and regex.fullmatch(text):
+            return ki
+    return KI_UNCLASSIFIED
 
 #: Identifier fields shown verbatim, by their payload key, so nothing is relabelled.
 _ID_FIELDS = (
@@ -355,6 +595,9 @@ def _interactions(payload: Mapping[str, Any], ir: Any, ir_source: str, no_pwml: 
     out: List[Dict[str, Any]] = []
     for k, (index, row) in enumerate(rows, 1):
         ir_row = _dict(ir_rows[k - 1]) if lined_up else {}
+        # D-114: True only where the IR's own verdict says drawn in a written PWML; no PWML -> False;
+        # None = not recorded (the verdict line says why).
+        drawn: Optional[bool] = False if no_pwml else None
         if ir_rows is None:
             verdict = f"{NOT_RECORDED} (no {PWML_IR_FILENAME}: no PWML IR was built for this run)"
         elif not lined_up:
@@ -371,6 +614,7 @@ def _interactions(payload: Mapping[str, Any], ir: Any, ir_source: str, no_pwml: 
             verdict = f"{NOT_RECORDED} ({ir_source} row {k} was built from a different relationship or endpoints)"
         else:
             verdict = _pwml_verdict(ir_row)
+            drawn = _text(ir_row.get("export_status")) == "exportable"
         out.append(
             {
                 "number": k,
@@ -381,10 +625,181 @@ def _interactions(payload: Mapping[str, Any], ir: Any, ir_source: str, no_pwml: 
                 "target": _text(row.get("entity_2") or row.get("right") or row.get("target")),
                 "state": _text(row.get("biological_state")),
                 "pwml": verdict,
+                "drawn": drawn,
+                "withheld_reason": "" if drawn is not False or no_pwml else _text(_dict(ir_row.get("withheld")).get("reason")),
                 "evidence": _quotes(row),
             }
         )
     return out
+
+
+_KIND_OF_BUCKET = {"reactions": "reaction", "transports": "transport", "interactions": "interaction"}
+_TEXT_LABEL = {"interaction": "Endpoints", "transport": "Cargo"}
+
+
+def _process_text(kind: str, row: Mapping[str, Any]) -> str:
+    """Equation (reaction), endpoints (interaction) or cargo and states (transport), display only."""
+
+    if kind == "interaction":
+        ends = [_text(row.get(a) or row.get(b) or row.get(c)) or NOT_RECORDED
+                for a, b, c in (("entity_1", "left", "source"), ("entity_2", "right", "target"))]
+        word = _text(row.get("relationship") or row.get("interaction_type")) or NOT_RECORDED
+        return f"{ends[0]} -[{word}]-> {ends[1]}"
+    if kind == "transport":
+        cargo = [_text(_dict(c).get("element") or _dict(c).get("cargo") or _dict(c).get("name")) if isinstance(c, dict)
+                 else _text(c) for c in _list(row.get("transport_elements"))] or [_text(row.get("cargo") or row.get("cargo_complex"))]
+        states = [_text(row.get(k)) or NOT_RECORDED for k in ("from_biological_state", "to_biological_state")]
+        return f"{', '.join(c for c in cargo if c) or '(no cargo recorded)'}: {states[0]} -> {states[1]}"
+    inputs, outputs = _side(row, "inputs"), _side(row, "outputs")
+    return _equation(inputs, outputs) if (inputs or outputs) else ""
+
+
+def _omission_detail(row: Mapping[str, Any]) -> str:
+    """``detail.omission`` as strict quarantine records it (ORCH-773), verbatim, or ``""``."""
+
+    cause = _dict(_dict(row.get("detail")).get("omission"))
+    parts = [f"{key}={_show(cause.get(key))}" for key in ("gate", "cause", "slot", "name") if key in cause]
+    failing = cause.get("failing_entity")
+    if isinstance(failing, dict):
+        parts.append(f"failing entity={_show(failing.get('bucket'))} {_show(failing.get('name'))}")
+    elif failing:
+        parts.append(f"failing entity={_show(failing)}")
+    return "; ".join(parts)
+
+
+def _entry(kind: str, name: Any, where: str, text: str, source: str, reason: str, message: str = "",
+           omission: str = "", group: str = "pre_freeze", ki_of: Optional[str] = None) -> Dict[str, Any]:
+    ki = known_issue_id(reason if ki_of is None else ki_of)
+    return {
+        "kind": kind, "name": _text(name), "where": where, "text": text, "source": source,
+        "reason": reason, "message": message, "omission": omission, "ki": ki,
+        # pre_freeze | ir (a written PWML does not draw it) | no_pwml | not_recorded
+        "group": group,
+        "counted": kind in COVERAGE_KINDS and ki != MERGED_DUPLICATE_KI,
+        "merged_duplicate": ki == MERGED_DUPLICATE_KI,
+    }
+
+
+def _same_ir_rows(ir: Any, bucket: str, rows: List[Dict[str, Any]], label: str) -> bool:
+    """The IR keeps one row per dict row, in order (``ir.build_pwml_ir``); else it is another payload's."""
+
+    ir_rows = _list(_dict(_dict(ir).get("processes")).get(bucket)) if isinstance(ir, dict) else None
+    return ir_rows is not None and len(ir_rows) == len(rows) and all(
+        _text(_dict(v).get("name")) == (" ".join(_text(r.get("name")).split()) or f"{label} {k}")
+        for k, (r, v) in enumerate(zip(rows, ir_rows), 1)
+    )
+
+
+def _omissions(
+    payload: Mapping[str, Any],
+    quarantine: Any,
+    removed: Any,
+    ir: Any,
+    ir_source: str,
+    interactions: List[Dict[str, Any]],
+    no_pwml: str,
+) -> Dict[str, Any]:
+    """D-114 §§ 1, 3: every process of the text record the PWML does not draw, and the coverage.
+
+    Pre-freeze removals are the strict quarantine's ``quarantined[]`` rows (only when it was
+    applied: research mode and a refusal leave them in the payload read) and the payload's
+    ``quarantined_locked_reactions`` entries it does not already list. A payload process is
+    drawn only when a PWML was written and the IR says so; nothing here recomputes a verdict.
+    """
+
+    research = _dict(quarantine).get("research_mode")
+    applied = (isinstance(quarantine, dict) and quarantine.get("ok") is not False
+               and not (isinstance(research, dict) and research.get("applied") is False))
+    entries: List[Dict[str, Any]] = []
+    strict_locks = set()
+    for row in map(_dict, _list(_dict(quarantine).get("quarantined"))):
+        original = _dict(row.get("original_process"))
+        lock = _text(original.get("locked_reaction_id"))
+        strict_locks.add(lock)
+        if applied:
+            kind = _text(row.get("process_kind")) or NOT_RECORDED
+            where = "; ".join(p for p in (f"pre-quarantine {_text(row.get('pointer'))}" if _text(row.get("pointer")) else "",
+                                          f"lock {lock}" if lock else "") if p)
+            entries.append(_entry(kind, row.get("name") or original.get("name"), where, _process_text(kind, original),
+                                  f"{QUARANTINE_REPORT_FILENAME} quarantined", _text(row.get("reason")),
+                                  omission=_omission_detail(row)))
+    for record in map(_dict, _list(payload.get("quarantined_locked_reactions"))):
+        original = _dict(record.get("original_reaction"))
+        lock = _text(record.get("locked_reaction_id") or original.get("locked_reaction_id"))
+        if lock and lock in strict_locks:
+            continue
+        where = "; ".join(p for p in (f"json_pointer {_text(record.get('json_pointer'))}" if _text(record.get("json_pointer")) else "",
+                                      f"lock {lock}" if lock else "") if p)
+        entries.append(_entry("reaction", record.get("reaction_name") or original.get("name"), where,
+                              _process_text("reaction", original), LOCKED_RECORD, _text(record.get("reason"))))
+
+    processes = _dict(payload.get("processes"))
+    for bucket, label in (("reactions", "Reaction"), ("transports", "Transport")):
+        rows = [r for r in _list(processes.get(bucket)) if isinstance(r, dict)]
+        if no_pwml:
+            group, message = "no_pwml", f"no PWML written: {no_pwml}"
+        elif _same_ir_rows(ir, bucket, rows, label):
+            continue  # the writer draws every IR reaction and transport row
+        elif not isinstance(ir, dict):
+            group, message = "not_recorded", f"{NOT_RECORDED} (no {PWML_IR_FILENAME}: no PWML IR was built for this run)"
+        else:
+            group, message = "not_recorded", f"{NOT_RECORDED} ({ir_source} does not line up with the {bucket} of the final payload)"
+        kind = _KIND_OF_BUCKET[bucket]
+        for index, row in enumerate(_list(processes.get(bucket))):
+            if isinstance(row, dict):
+                entries.append(_entry(kind, row.get("name"), f"final payload /processes/{bucket}/{index}",
+                                      _process_text(kind, row), "", "", message, group=group,
+                                      ki_of=no_pwml if no_pwml else ""))
+    for item, row in zip(interactions, (r for r in _list(processes.get("interactions")) if isinstance(r, dict))):
+        if item["drawn"] is True:
+            continue
+        group = "no_pwml" if no_pwml else ("ir" if item["drawn"] is False else "not_recorded")
+        reason = item["withheld_reason"] or (NOT_RECORDED if group == "ir" else "")
+        message = f"no PWML written: {no_pwml}" if no_pwml else item["pwml"]
+        entries.append(_entry("interaction", item["name"], f"final payload {item['pointer']}",
+                              _process_text("interaction", row), ir_source if group == "ir" else "",
+                              reason, message, group=group, ki_of=no_pwml if no_pwml else None))
+
+    drawn: Optional[int] = 0
+    total = 0
+    by_kind: Dict[str, Dict[str, Any]] = {}
+    for bucket, kind in _KIND_OF_BUCKET.items():
+        in_payload = sum(isinstance(r, dict) for r in _list(processes.get(bucket)))
+        mine = [e for e in entries if e["kind"] == kind and e["counted"]]
+        removed_before = sum(e["group"] == "pre_freeze" for e in mine)
+        unknown = any(e["group"] == "not_recorded" for e in mine)
+        drawn_k = None if unknown else in_payload - sum(e["group"] != "pre_freeze" for e in mine)
+        by_kind[kind] = {"drawn": drawn_k, "total": in_payload + removed_before, "omitted_before_freeze": removed_before}
+        total += in_payload + removed_before
+        drawn = None if drawn is None or drawn_k is None else drawn + drawn_k
+    why = ""
+    if not payload:
+        drawn, why = None, f"no final payload ({FINAL_MAPPED_FILENAME})"
+    elif drawn is None:
+        why = "the PWML verdict of some process is not recorded; they are listed below"
+    by_design = sum(e["counted"] and e["ki"] == BY_DESIGN_KI and e["group"] == "ir" for e in entries)
+    entities = [
+        {
+            "bucket": _show(e.get("bucket")), "name": _show(e.get("name")), "reason": _show(e.get("reason")),
+            "ki": known_issue_id(e.get("reason")), "gate": _text(_dict(e.get("detail")).get("gate")),
+            "actor_removed_from": [
+                f"{_show(a.get('process_name'))} ({_show(a.get('process'))}): {', '.join(_texts(a.get('slots')) or [])}"
+                f"; catalysts kept: {', '.join(_texts(a.get('catalysts_kept')) or []) or 'none'}"
+                for a in map(_dict, _list(_dict(e.get("detail")).get("actor_removed_from")))
+            ],
+        }
+        for e in map(_dict, _list(_dict(removed).get("removed_entities")))
+    ] if isinstance(removed, dict) else None
+    return {
+        "coverage": {
+            "pwml_written": not no_pwml, "no_pwml_cause": no_pwml, "drawn": drawn, "total": total, "not_recorded": why,
+            "by_kind": by_kind, "by_design_withheld": by_design,
+            "merged_duplicates": sum(e["merged_duplicate"] for e in entries),
+            "not_counted": sum(not e["counted"] for e in entries),
+        },
+        "omitted": entries,
+        "omitted_entities": entities,
+    }
 
 
 def load_run_artifacts(directory: Any) -> Dict[str, Any]:
@@ -579,6 +994,15 @@ def build_report(
             for e in map(_dict, _list(removed.get("removed_entities")))
         ]
 
+    # A run directory says by its files; the app says by its export result.
+    no_pwml = (
+        ""
+        if (any(name in artifacts for name in PWML_FILENAMES) if pwml_written is None else pwml_written)
+        else (no_pwml_cause or f"neither {' nor '.join(PWML_FILENAMES)} is in this run")
+    )
+    interactions = _interactions(payload, artifacts.get(PWML_IR_FILENAME), ir_source, no_pwml)
+    omissions = _omissions(payload, quarantine, removed, artifacts.get(PWML_IR_FILENAME), ir_source, interactions, no_pwml)
+
     return {
         "paper_id": paper_id,
         "pathway": _show(context.get("pathway_name")),
@@ -623,18 +1047,13 @@ def build_report(
             f" route {_show(row.get('route'))}"
             for row in map(_dict, _list(payload.get(BORROWED_PROTEIN_IDENTITIES_KEY)))
         ],
-        "interactions": _interactions(
-            payload,
-            artifacts.get(PWML_IR_FILENAME),
-            ir_source,
-            # A run directory says by its files; the app says by its export result.
-            ""
-            if (any(name in artifacts for name in PWML_FILENAMES) if pwml_written is None else pwml_written)
-            else (no_pwml_cause or f"neither {' nor '.join(PWML_FILENAMES)} is in this run"),
-        ),
+        "interactions": interactions,
         "ir_source": ir_source if PWML_IR_FILENAME in artifacts else NOT_RECORDED,
         "quarantined": quarantined,
         "removed_entities": removed_entities,
+        "pwml_coverage": omissions["coverage"],
+        "omitted": omissions["omitted"],
+        "omitted_entities": omissions["omitted_entities"],
     }
 
 
@@ -661,7 +1080,7 @@ def header_lines(report: Mapping[str, Any]) -> List[str]:
         f"Pathway: {report['pathway']}",
         f"Requested organism (Stage 0): {report['requested_organism']}",
         f"Species (final payload): {', '.join(report['species']) or NOT_RECORDED}",
-        f"Coverage: {report['coverage_ratio']}",
+        f"Core-term coverage: {report['coverage_ratio']}",
         f"Minimum core satisfied: {report['minimum_core_satisfied']}",
         f"Surviving processes: {report['surviving_processes']}",
         f"Quarantined processes: {report['quarantined_processes']}",
@@ -674,6 +1093,98 @@ def header_lines(report: Mapping[str, Any]) -> List[str]:
         f"Surviving reactions read from: {report['payload_source']}",
         f"Artifacts read: {', '.join(report['artifacts']) or 'none'}",
     ]
+
+
+def _percent(drawn: Optional[int], total: int) -> str:
+    return f"{100 * drawn / total:.1f}%" if drawn is not None and total else "n/a"
+
+
+def _of(drawn: Optional[int], total: int) -> str:
+    return f"{NOT_RECORDED if drawn is None else drawn} of {total}"
+
+
+def pwml_coverage_lines(report: Mapping[str, Any]) -> List[str]:
+    """D-114 § 3: the coverage headline, printed right under the title."""
+
+    cov = report["pwml_coverage"]
+    drawn, total = cov["drawn"], cov["total"]
+    head = f"PWML coverage: {_of(drawn, total)} processes ({_percent(drawn, total)})"
+    if cov["not_recorded"]:
+        head = f"PWML coverage: {NOT_RECORDED} ({cov['not_recorded']}); {total} processes in the text record"
+    kinds = "; ".join(f"{kind}s {_of(v['drawn'], v['total'])}" for kind, v in cov["by_kind"].items())
+    lines = [
+        f"{head} -- target {COVERAGE_TARGET_PERCENT}%",
+        f"  By kind, drawn of total (total = final payload + omitted before the freeze): {kinds}",
+    ]
+    rest = total - cov["by_design_withheld"]
+    lines.append(
+        f"  Excluding the {cov['by_design_withheld']} interactions PathWhiz cannot type ({BY_DESIGN_KI}, withheld by design): "
+        f"{_of(drawn, rest)} ({_percent(drawn, rest)})"
+    )
+    if not cov["pwml_written"]:
+        lines.append(f"  No PWML written: {cov['no_pwml_cause']}")
+    if cov["not_counted"]:
+        lines.append(f"  Listed but not counted: {cov['not_counted']} (merged duplicates: {cov['merged_duplicates']})")
+    lines.append("  Every process left out, with its reason: section OMITTED FROM THE PWML, below.")
+    return lines
+
+
+def _workaround(ki: str) -> str:
+    return KNOWN_ISSUES["workarounds"].get(ki) or f"{NOT_RECORDED} (this reason has no catalogue entry)"
+
+
+def omitted_lines(report: Mapping[str, Any]) -> List[str]:
+    """D-114 § 3: "Omitted from the PWML", every process the text record holds and the PWML does not draw."""
+
+    counted = [e for e in report["omitted"] if e["counted"] and e["group"] in ("pre_freeze", "ir")]
+    no_pwml = [e for e in report["omitted"] if e["counted"] and e["group"] == "no_pwml"]
+    unknown = [e for e in report["omitted"] if e["counted"] and e["group"] == "not_recorded"]
+    others = [e for e in report["omitted"] if not e["counted"]]
+    lines = _section(f"OMITTED FROM THE PWML ({len(counted) + len(no_pwml)})")
+    lines.append(f"Known-issue ids: {KNOWN_ISSUES_DOC}, appendix \"Reason code -> KI id\".")
+    if not report["pwml_coverage"]["pwml_written"]:
+        cause = report["pwml_coverage"]["no_pwml_cause"]
+        lines.append(f"No PWML written: {cause} (known issue: {known_issue_id(cause)}). "
+                     f"Nothing is drawn; the {len(no_pwml)} processes of the final payload are listed after the removals.")
+    lines.append("")
+    for number, e in enumerate(counted, 1):
+        lines += [
+            f"OMITTED {number}  [{'; '.join(p for p in (e['source'], e['where']) if p)}]",
+            f"Kind: {e['kind']}",
+            f"Name: {e['name'] or NOT_RECORDED}",
+            *([f"{_TEXT_LABEL.get(e['kind'], 'Equation')}: {e['text']}"] if e["text"] else []),
+            f"Reason: {e['reason'] or NOT_RECORDED}",
+            *([f"Verdict: {e['message']}"] if e["message"] else []),
+            *([f"Omission: {e['omission']}"] if e["omission"] else []),
+            f"Known issue: {e['ki']}",
+            f"Add by hand: {_workaround(e['ki'])}",
+            "",
+        ]
+    if no_pwml:
+        lines.append(f"Not drawn because no PWML was written ({len(no_pwml)}):")
+        lines += [f"- {e['kind']} {e['name'] or NOT_RECORDED}: {e['text'] or NOT_RECORDED}  [{e['where']}]" for e in no_pwml]
+        lines.append("")
+    if unknown:  # not called omitted: whether the PWML draws them is not recorded
+        lines.append(f"Whether the PWML draws these is not recorded ({len(unknown)}):")
+        lines += [f"- {e['kind']} {e['name'] or NOT_RECORDED}: {e['text'] or NOT_RECORDED}  [{e['where']}]: {e['message']}"
+                  for e in unknown]
+        lines.append("")
+    if others:
+        lines.append(f"Listed, not counted ({len(others)}):")
+        for e in others:
+            label = "merged duplicate, not counted" if e["merged_duplicate"] else f"{e['kind']}, not a counted kind"
+            where = "; ".join(p for p in (e["source"], e["where"]) if p)
+            lines.append(f"- {label}: {e['name'] or NOT_RECORDED}  [{where}]: {e['reason'] or NOT_RECORDED} ({e['ki']})")
+        lines.append("")
+    entities = report["omitted_entities"]
+    lines.append(f"Entities left out ({_count(entities)}), from {REMOVED_ENTITY_REPORT_FILENAME}:")
+    for e in entities or []:
+        gate = f"; gate {e['gate']}" if e["gate"] else ""
+        lines.append(f"- {e['bucket']} {e['name']}: {e['reason']} ({e['ki']}){gate}")
+        lines += [f"    removed from {a}" for a in e["actor_removed_from"]]
+    if not entities:
+        lines.append(NOT_RECORDED if entities is None else NONE_RECORDED)
+    return lines + [""]
 
 
 def _evidence(quotes: List[str]) -> List[str]:
@@ -768,7 +1279,7 @@ def _absent(rows: Optional[List[Any]]) -> List[str]:
 def render_text(report: Mapping[str, Any]) -> str:
     """The .txt export: a pure function of ``report``, so same artifacts give the same bytes."""
 
-    lines = ["PATHWAY EVIDENCE REPORT", "=======================", *header_lines(report), ""]
+    lines = ["PATHWAY EVIDENCE REPORT", "=======================", *pwml_coverage_lines(report), *header_lines(report), ""]
     lines += _section(surviving_title(report))
     for reaction in report["reactions"]:
         lines += [*reaction_lines(reaction), ""]
@@ -790,5 +1301,6 @@ def render_text(report: Mapping[str, Any]) -> str:
     removed = report["removed_entities"]
     lines += _section(f"REMOVED ENTITIES ({_count(removed)})")
     lines += [*(f"- {e}" for e in removed), ""] if removed else _absent(removed)
+    lines += omitted_lines(report)
     lines += [*_section("CORE COVERAGE"), *coverage_lines(report)]
     return "\n".join(lines) + "\n"

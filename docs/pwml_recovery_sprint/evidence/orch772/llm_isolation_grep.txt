@@ -1,0 +1,43 @@
+ORCH-772: no Reaction Evidence text reaches an LLM input (D-104 AMENDMENT 2). Base 3ef3fa9c, tip 43445214.
+
+## 1. src files changed base..tip
+ src/t2pw/app/reaction_evidence.py | 534 +++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 523 insertions(+), 11 deletions(-)
+
+## 2. the protected streamlit_app.py: byte-identical
+git diff --quiet: identical
+ed5d55367d6adaac8c7b7c613a783d80254ee895
+ed5d55367d6adaac8c7b7c613a783d80254ee895
+
+## 3. who imports t2pw.app.reaction_evidence (src, tip)
+43445214:src/t2pw/app/reaction_evidence_view.py:3:Everything shown comes from :mod:`t2pw.app.reaction_evidence`, which reads the
+43445214:src/t2pw/app/reaction_evidence_view.py:31:from t2pw.app.reaction_evidence import (
+43445214:src/t2pw/app/streamlit_app.py:7279:from t2pw.app.reaction_evidence_view import render_reaction_evidence  # noqa: E402
+43445214:src/t2pw/pwml/interaction_types.py:3:Standard library only, so a presentation module (``app.reaction_evidence``) can check that an
+43445214:src/t2pw/pwml/ir.py:45:    (``app.reaction_evidence``) reads the verdict back out of the built IR.
+
+## 4. who imports the view (src, tip)
+43445214:src/t2pw/app/streamlit_app.py:7279:from t2pw.app.reaction_evidence_view import render_reaction_evidence  # noqa: E402
+
+## 5. the new names appear only in reaction_evidence.py (src, tip)
+43445214:src/t2pw/app/reaction_evidence.py:27
+
+## 6. the LLM-fed reaction_summary.txt: producer and readers (src, tip); none imports reaction_evidence
+Binary file 43445214:src/__pycache__/pipeline.cpython-313.pyc matches
+43445214:src/t2pw/app/streamlit_app.py:890:#: (``tmp/draft_graph.json``, ``tmp/qa_report.json``, ``tmp/reaction_summary.txt``).
+43445214:src/t2pw/app/streamlit_app.py:1096:        # writes draft_graph.json, qa_report.json and reaction_summary.txt next to
+43445214:src/t2pw/app/streamlit_app.py:5926:            "Download reaction_summary.txt",
+43445214:src/t2pw/app/streamlit_app.py:5928:            file_name="reaction_summary.txt",
+43445214:src/t2pw/pipeline/pipeline.py:1290:    ``tmp/reaction_summary.txt``.
+43445214:src/t2pw/pipeline/pipeline.py:1350:    summary_path = output_path.parent / "reaction_summary.txt"
+43445214:src/t2pw/pipeline/reaction_summary.py:22:def generate_reaction_summary(draft_graph: Any, qa_report: Dict[str, Any]) -> str:
+43445214:src/t2pw/pipeline/stage_one_ensemble.py:91:``reaction_summary.txt`` feeds the curator and the enrichment agent, and this merge's
+43445214:src/t2pw/pipeline/stage_one_ensemble.py:1024:    point -- ``reaction_summary.txt`` feeds the curator and the enrichment agent, and the
+
+## 7. reaction_evidence in the LLM call sites (curation/, llm/, rag/, pipeline/reaction_summary.py, pipeline/draft_graph.py): no import; each hit is explained below
+43445214:src/t2pw/curation/gap_resolver.py:333:    reaction_evidence: List[Dict[str, Any]] = []
+43445214:src/t2pw/curation/gap_resolver.py:342:            reaction_evidence.append(
+43445214:src/t2pw/curation/gap_resolver.py:355:        "reaction_evidence": reaction_evidence[:6],
+(rag/research_report.py:777 is a sentence in research-mode text pointing a reader at the strict run's reaction_evidence.txt; it imports nothing)
+(the tracked src/__pycache__/pipeline.cpython-313.pyc in section 6 is pre-existing and not touched)
+(gap_resolver.py:333-355: a local list variable named reaction_evidence, built from the payload's own evidence strings; it does not import t2pw.app.reaction_evidence, and its source is unchanged base..tip: identical)

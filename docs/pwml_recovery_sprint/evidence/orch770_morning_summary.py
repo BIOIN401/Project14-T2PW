@@ -1,7 +1,11 @@
 """ORCH-770 (D-112 § 4): write the one-page MORNING_SUMMARY.md for an overnight paper run, from its artifacts only.
 
-Stdlib only, no t2pw import, no network. Called by the night runner as its LAST step (process rule from the ORCH-767
+Stdlib only, no network. Called by the night runner as its LAST step (process rule from the ORCH-767
 incident: the runner writes its own summary). Safe to re-run by hand.
+
+ORCH-772 (D-114 § 1): the per-paper table carries the PWML coverage of each leg, computed from the leg's directory by
+``t2pw.app.reaction_evidence`` (read-only, offline) of the tree named by ``--src`` (default: the tree this script lives
+in). A tree without it, or an error, shows ``n/a``; the summary is written regardless.
 
     python orch770_morning_summary.py --task ORCH-770 --legs <worktree>/runs_papers/ORCH-770/legs \
         --out-dir <primary>/runs_papers/ORCH-770 --gold <primary>/docs/.../evidence/orch770_gold_accuracy.txt \
@@ -66,6 +70,21 @@ def failure_line(leg: Path) -> str:
     return f"{(msg.group(1) if msg else '?')[:200]} [{(codes.group(1) if codes else '').strip()[:80]}]"
 
 
+def coverage(leg: Path) -> str:
+    """'drawn/total (pct)' from the leg's own artifacts; never raises."""
+    try:
+        from t2pw.app.reaction_evidence import build_report, load_run_artifacts
+
+        cov = build_report(load_run_artifacts(leg)).get("pwml_coverage") if leg.is_dir() else None
+    except Exception as exc:  # the summary must still be written
+        return f"n/a ({type(exc).__name__})"
+    if not cov:
+        return "n/a"
+    if cov["drawn"] is None:
+        return f"not recorded of {cov['total']}"
+    return f"{cov['drawn']}/{cov['total']} ({100 * cov['drawn'] / cov['total']:.0f}%)" if cov["total"] else "0/0"
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--task", required=True)
@@ -74,7 +93,9 @@ def main() -> int:
     ap.add_argument("--gold", required=True)
     ap.add_argument("--compare", action="append", default=[], help="LABEL=path to another run's gold accuracy txt")
     ap.add_argument("--extra-review", action="append", default=[], help="LABEL=review dir of an extra leg set (e.g. 770b)")
+    ap.add_argument("--src", default=str(HERE.parents[2] / "src"), help="tree whose reaction_evidence computes coverage")
     a = ap.parse_args()
+    sys.path.insert(0, a.src)
     out = Path(a.out_dir)
     review = out / "REVIEW"
     rows = []
@@ -84,9 +105,13 @@ def main() -> int:
     shas = leg_sha(out / "night.log")
     L = [f"# {a.task} — overnight run, morning summary", "",
          f"Written by the runner at the end of the run (`evidence/orch770_morning_summary.py`). Legs: `{a.legs}`.", "",
-         "## Per paper", "", "| paper | PWML | release | reactions / interactions | min | code |", "|---|---|---|---|---|---|"]
+         "## Per paper", "",
+         "PWML coverage = processes drawn in the PWML / processes in the text record (D-114; target 75%), "
+         "from each leg's directory by `t2pw.app.reaction_evidence`.", "",
+         "| paper | PWML | PWML coverage | release | reactions / interactions | min | code |", "|---|---|---|---|---|---|---|"]
     for r in rows:
-        L.append(f"| {r['cond']} | **{'yes' if str(r.get('pwml', '')).endswith('.pwml') else 'no'}** | {r.get('release', '-')} | "
+        L.append(f"| {r['cond']} | **{'yes' if str(r.get('pwml', '')).endswith('.pwml') else 'no'}** | "
+                 f"{coverage(Path(r.get('leg_dir', '')))} | {r.get('release', '-')} | "
                  f"{r.get('reactions', '-')} / {r.get('interactions', '-')} | {r.get('minutes', '-')} | `{shas.get(r['cond'], '?')}` |")
     sets = [(a.task, gold_rows(a.gold))] + [(x.split("=", 1)[0], gold_rows(x.split("=", 1)[1])) for x in a.compare]
     L += ["", "## Gold accuracy (eval-v2 score_leg)", "", "| paper / level | " + " | ".join(s for s, _ in sets) + " |",

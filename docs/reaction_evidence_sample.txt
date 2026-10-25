@@ -1,10 +1,14 @@
 PATHWAY EVIDENCE REPORT
 =======================
+PWML coverage: Not recorded (the PWML verdict of some process is not recorded; they are listed below); 10 processes in the text record -- target 75%
+  By kind, drawn of total (total = final payload + omitted before the freeze): reactions 5 of 6; transports 1 of 1; interactions Not recorded of 3
+  Excluding the 0 interactions PathWhiz cannot type (KI-008, withheld by design): Not recorded of 10 (n/a)
+  Every process left out, with its reason: section OMITTED FROM THE PWML, below.
 Paper: PMC12096016
 Pathway: enterobactin biosynthesis
 Requested organism (Stage 0): Escherichia coli
 Species (final payload): Escherichia coli (taxonomy 562)
-Coverage: 0.75
+Core-term coverage: 0.75
 Minimum core satisfied: true
 Surviving processes: 9
 Quarantined processes: 1
@@ -168,6 +172,28 @@ REMOVED ENTITIES (3)
 - compounds NADH: unreferenced_after_quarantine
 - proteins apo-EntB: degree_zero_after_quarantine
 - protein_complexes EntD complex: degree_zero_after_quarantine
+
+OMITTED FROM THE PWML (1)
+-------------------------
+Known-issue ids: docs/pwml_recovery_sprint/PWML_KNOWN_ISSUES.md, appendix "Reason code -> KI id".
+
+OMITTED 1  [quarantine_report.json quarantined; pre-quarantine /processes/reactions/5; lock rxn_lock_004]
+Kind: reaction
+Name: EntD-catalyzed phosphopantetheinylation of EntB
+Equation: apo-EntB -> holo-EntB
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+Whether the PWML draws these is not recorded (3):
+- interaction 2,3-DHB competitive inhibition of EntB isochorismatase: 2,3-dihydroxybenzoic acid -[inhibits]-> EntB  [final payload /processes/interactions/0]: Not recorded (this IR predates per-row export verdicts)
+- interaction 2,3-DHB binding to EntE: 2,3-dihydroxybenzoic acid -[binds]-> EntE  [final payload /processes/interactions/1]: Not recorded (this IR predates per-row export verdicts)
+- interaction EntC-EntB interaction for isochorismate channeling: EntC -[interacts_with]-> EntB  [final payload /processes/interactions/2]: Not recorded (this IR predates per-row export verdicts)
+
+Entities left out (3), from removed_entity_report.json:
+- compounds NADH: unreferenced_after_quarantine (unclassified)
+- proteins apo-EntB: degree_zero_after_quarantine (unclassified)
+- protein_complexes EntD complex: degree_zero_after_quarantine (unclassified)
 
 CORE COVERAGE
 -------------
