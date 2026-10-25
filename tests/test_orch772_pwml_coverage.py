@@ -340,8 +340,16 @@ def test_each_replayed_leg_carries_the_measured_trees_coverage(replayed):
             assert cov["drawn"] == 0, leg_id
         assert sum(n for n, *_ in record["pwml_coverage"]["omitted_by_reason"]) == cov["total"] - cov["drawn"], leg_id
         assert record["network_refused"] == [], leg_id
-    enterobactin = replayed.records["ORCH-767/enterobactin-strict/2026-10-23_2224"]["pwml_coverage"]
-    assert enterobactin["pwml_written"] is False and enterobactin["drawn"] == 0
+    got = {i: (r["pwml_coverage"]["drawn"], r["pwml_coverage"]["total"], r["pwml_coverage"]["by_design_withheld"])
+           for i, r in replayed.records.items()}
+    # Enterobactin and sour taste equal what their own leg directories give (0/21, 7/12): on a canonical
+    # checkpoint the leg's recorded pre-freeze removals are carried (4 and 5 rows). WNT PCP writes a PWML at
+    # this tree (ORCH-769c) and draws 1 of 66; 17 of its interactions are untyped (KI-008).
+    assert got == {
+        "ORCH-767/enterobactin-strict/2026-10-23_2224": (0, 21, 0),
+        "ORCH-767/sour_taste_v2-strict/2026-10-24_0042": (7, 12, 0),
+        "ORCH-767/wnt_pcp-strict/2026-10-24_0131": (1, 66, 17),
+    }
 
 
 def test_a_tree_without_coverage_reports_na_and_the_aggregates_say_so(replayed):
@@ -351,6 +359,11 @@ def test_a_tree_without_coverage_reports_na_and_the_aggregates_say_so(replayed):
     rows = [{"id": i, "recorded": "pwml", "replay": copy.deepcopy(r)} for i, r in replayed.records.items()]
     summary = H.coverage_summary(rows)
     assert summary["replayed.headline"]["legs"] == 3 and summary["replayed.headline"]["measured"] == 3
+    for row in rows:
+        row["class"] = H.classify({"recorded": None}, row["replay"])
+    printed: list = []
+    H.print_coverage(summary, rows, printed.append)
+    assert printed[1].lstrip().startswith("strict_legs_with_an_outcome.headline") and "omitted processes by known issue" in printed[5]
     rows[0]["replay"]["pwml_coverage"] = None
     assert "n/a" in H.coverage_summary(rows)
     # An LLM-originating leg (no replay) is 0% on the strict denominator and absent from the replayed one.
