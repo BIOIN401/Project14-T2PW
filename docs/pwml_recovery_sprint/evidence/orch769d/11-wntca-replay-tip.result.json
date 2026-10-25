@@ -1,0 +1,312 @@
+{
+  "t2pw": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch769d\\src\\t2pw",
+  "applier_sha256": "c528216b731c75c0d853ba4649c38a53338f93f5b33e06a8d8bd36352a4ad627",
+  "leg": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch767\\runs_papers\\ORCH-767\\legs\\wnt_ca-strict\\2026-10-24_0314\\papers\\PMC10425814\\strict",
+  "patch": [
+    {
+      "op": "remove",
+      "path": "/entities/proteins/10",
+      "confidence": 0.97,
+      "evidence": "Entity 'calcineurin' is declared as both a protein and a protein_complex."
+    },
+    {
+      "op": "add",
+      "path": "/entities/proteins/2/synonyms",
+      "value": [
+        "G protein"
+      ],
+      "confidence": 0.9,
+      "evidence": "reconstructed (ORCH-769d)"
+    },
+    {
+      "op": "add",
+      "path": "/entities/proteins/3/synonyms",
+      "value": [
+        "PLC"
+      ],
+      "confidence": 0.9,
+      "evidence": "reconstructed (ORCH-769d)"
+    },
+    {
+      "op": "add",
+      "path": "/entities/proteins/4/synonyms",
+      "value": [
+        "PKC"
+      ],
+      "confidence": 0.9,
+      "evidence": "reconstructed (ORCH-769d)"
+    },
+    {
+      "op": "add",
+      "path": "/entities/proteins/6/synonyms",
+      "value": [
+        "InsP3R"
+      ],
+      "confidence": 0.9,
+      "evidence": "reconstructed (ORCH-769d)"
+    },
+    {
+      "op": "add",
+      "path": "/entities/proteins/7/synonyms",
+      "value": [
+        "STIM1/2"
+      ],
+      "confidence": 0.9,
+      "evidence": "reconstructed (ORCH-769d)"
+    },
+    {
+      "op": "add",
+      "path": "/entities/proteins/8/synonyms",
+      "value": [
+        "Orai"
+      ],
+      "confidence": 0.9,
+      "evidence": "reconstructed (ORCH-769d)"
+    },
+    {
+      "op": "add",
+      "path": "/entities/proteins/9/synonyms",
+      "value": [
+        "SERCA"
+      ],
+      "confidence": 0.9,
+      "evidence": "reconstructed (ORCH-769d)"
+    },
+    {
+      "op": "add",
+      "path": "/entities/proteins/13/synonyms",
+      "value": [
+        "TCF"
+      ],
+      "confidence": 0.9,
+      "evidence": "reconstructed (ORCH-769d)"
+    },
+    {
+      "op": "add",
+      "path": "/entities/proteins/14/synonyms",
+      "value": [
+        "\u03b2-catenin"
+      ],
+      "confidence": 0.9,
+      "evidence": "reconstructed (ORCH-769d)"
+    },
+    {
+      "op": "add",
+      "path": "/entities/proteins/17/synonyms",
+      "value": [
+        "calcineurin A"
+      ],
+      "confidence": 0.9,
+      "evidence": "reconstructed (ORCH-769d)"
+    },
+    {
+      "op": "add",
+      "path": "/entities/proteins/18/synonyms",
+      "value": [
+        "calcineurin B"
+      ],
+      "confidence": 0.9,
+      "evidence": "reconstructed (ORCH-769d)"
+    },
+    {
+      "op": "add",
+      "path": "/entities/proteins/19/synonyms",
+      "value": [
+        "phosphorylated CAMKII"
+      ],
+      "confidence": 0.9,
+      "evidence": "reconstructed (ORCH-769d)"
+    },
+    {
+      "op": "add",
+      "path": "/entities/proteins/20/synonyms",
+      "value": [
+        "phosphorylated TCF4"
+      ],
+      "confidence": 0.9,
+      "evidence": "reconstructed (ORCH-769d)"
+    },
+    {
+      "op": "add",
+      "path": "/entities/compounds/3/synonyms/-",
+      "value": "Ca2",
+      "confidence": 0.9,
+      "evidence": "reconstructed (ORCH-769d)"
+    }
+  ],
+  "apply_summary": {
+    "accepted_count": 15,
+    "rejected_count": 0,
+    "total": 15
+  },
+  "apply_committed": true,
+  "apply_rejected": [],
+  "applied_paths": {
+    "8": "/entities/proteins/12/synonyms",
+    "9": "/entities/proteins/13/synonyms",
+    "10": "/entities/proteins/16/synonyms",
+    "11": "/entities/proteins/17/synonyms",
+    "12": "/entities/proteins/18/synonyms",
+    "13": "/entities/proteins/19/synonyms"
+  },
+  "protein_synonyms_after_apply": {
+    "G protein": [
+      "G protein"
+    ],
+    "phospholipase C (PLC)": [
+      "PLC"
+    ],
+    "PKC": [
+      "PKC"
+    ],
+    "inositol-1,4,5-trisphosphate receptor (InsP3R)": [
+      "InsP3R"
+    ],
+    "STIM1/2": [
+      "STIM1/2"
+    ],
+    "Orai": [
+      "Orai"
+    ],
+    "Sarcoplasmic/ER Ca2+ ATPases": [
+      "SERCA"
+    ],
+    "TCF": [
+      "TCF"
+    ],
+    "\u03b2-catenin": [
+      "\u03b2-catenin"
+    ],
+    "calcineurin A": [
+      "calcineurin A"
+    ],
+    "calcineurin B": [
+      "calcineurin B"
+    ],
+    "phosphorylated CAMKII": [
+      "phosphorylated CAMKII"
+    ],
+    "phosphorylated TCF4": [
+      "phosphorylated TCF4"
+    ]
+  },
+  "compound_3_synonyms_after_apply": {
+    "-": "Ca2"
+  },
+  "reproduces_recording": {
+    "protein_rows_equal_ignoring_lineage": false,
+    "protein_lineage_stage_multisets_equal": false,
+    "compounds_equal_ignoring_lineage": true,
+    "rows_differing": [
+      {
+        "name": "TCF",
+        "recorded": null,
+        "replayed": [
+          "TCF"
+        ]
+      },
+      {
+        "name": "\u03b2-catenin",
+        "recorded": [
+          "TCF"
+        ],
+        "replayed": [
+          "\u03b2-catenin"
+        ]
+      },
+      {
+        "name": "calmodulin",
+        "recorded": [
+          "\u03b2-catenin"
+        ],
+        "replayed": null
+      },
+      {
+        "name": "calcineurin A",
+        "recorded": null,
+        "replayed": [
+          "calcineurin A"
+        ]
+      },
+      {
+        "name": "calcineurin B",
+        "recorded": [
+          "calcineurin A"
+        ],
+        "replayed": [
+          "calcineurin B"
+        ]
+      },
+      {
+        "name": "phosphorylated CAMKII",
+        "recorded": [
+          "calcineurin B"
+        ],
+        "replayed": [
+          "phosphorylated CAMKII"
+        ]
+      },
+      {
+        "name": "phosphorylated TCF4",
+        "recorded": [
+          "phosphorylated CAMKII"
+        ],
+        "replayed": [
+          "phosphorylated TCF4"
+        ]
+      },
+      {
+        "name": "NF-ATp",
+        "recorded": [
+          "phosphorylated TCF4"
+        ],
+        "replayed": null
+      }
+    ]
+  },
+  "cross_row_synonyms": [],
+  "quarantine": {
+    "ok": true,
+    "refusal_reasons": [],
+    "review_reasons": [
+      "minimum_core:requested_core_coverage_below_minimum:0.429<0.500"
+    ],
+    "unexportable_entities": [],
+    "release_status": "review_required",
+    "release_reasons": [
+      "requested_core_coverage_below_minimum:0.429<0.500"
+    ],
+    "counts": {
+      "core_accepted": 19,
+      "auxiliary_accepted": 3,
+      "quarantined_unmapped_entity": 26,
+      "quarantined_out_of_scope": 0,
+      "quarantined_weak_evidence": 0,
+      "quarantined_broken_reference": 0,
+      "quarantined_disconnected": 0
+    },
+    "surviving_processes": {
+      "reactions": 0,
+      "transports": 9,
+      "interactions": 13
+    },
+    "surviving_proteins": [
+      "Wnt5a",
+      "Frizzled2",
+      "inositol-1,4,5-trisphosphate receptor (InsP3R)",
+      "Sarcoplasmic/ER Ca2+ ATPases",
+      "Nemo-like kinase (NLK)",
+      "TCF",
+      "\u03b2-catenin",
+      "calmodulin",
+      "calcineurin B",
+      "Unknown"
+    ]
+  },
+  "final_gate": {
+    "result": "PASS",
+    "n_reactions": 0,
+    "n_transports": 9,
+    "n_interactions": 13
+  }
+}

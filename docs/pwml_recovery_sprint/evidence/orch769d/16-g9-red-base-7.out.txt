@@ -1,0 +1,194 @@
+T2PW: C:\t\orch769d\base\src\t2pw\__init__.py
+FFFFFFF                                                                  [100%]
+================================== FAILURES ===================================
+______ test_g9_a_later_op_hits_the_row_it_was_written_for_after_a_remove ______
+
+    def test_g9_a_later_op_hits_the_row_it_was_written_for_after_a_remove() -> None:
+        """[remove /x/1, replace /x/2/...]: /x/2 was C when the patch was written."""
+        patched, report = apply_patch_with_policy(
+            _four_proteins(),
+            [_op("remove", "/entities/proteins/1"), _op("replace", "/entities/proteins/2/note", "written for C")],
+        )
+    
+>       assert {row["name"]: row["note"] for row in _rows(patched)} == {"A": "", "C": "written for C", "D": ""}
+E       AssertionError: assert {'A': '', 'C'...ritten for C'} == {'A': '', 'C'...r C', 'D': ''}
+E         
+E         Omitting 1 identical items, use -vv to show
+E         Differing items:
+E         {'D': 'written for C'} != {'D': ''}
+E         {'C': ''} != {'C': 'written for C'}
+E         Use -v to get more diff
+
+tests\test_orch769d_audit_patch_rebase.py:54: AssertionError
+______ test_g9_an_op_aimed_at_the_removed_row_is_rejected_not_redirected ______
+
+    def test_g9_an_op_aimed_at_the_removed_row_is_rejected_not_redirected() -> None:
+        patched, report = apply_patch_with_policy(
+            _four_proteins(),
+            [_op("remove", "/entities/proteins/1"), _op("replace", "/entities/proteins/1/note", "written for dup")],
+        )
+    
+        # Base wrote this onto C, the row that slid into index 1.
+>       assert {row["name"]: row["note"] for row in _rows(patched)} == {"A": "", "C": "", "D": ""}
+E       AssertionError: assert {'A': '', 'C'...dup', 'D': ''} == {'A': '', 'C': '', 'D': ''}
+E         
+E         Omitting 2 identical items, use -vv to show
+E         Differing items:
+E         {'C': 'written for dup'} != {'C': ''}
+E         Use -v to get more diff
+
+tests\test_orch769d_audit_patch_rebase.py:68: AssertionError
+___________ test_g9_a_repeated_remove_does_not_delete_the_neighbour ___________
+
+    def test_g9_a_repeated_remove_does_not_delete_the_neighbour() -> None:
+        patched, report = apply_patch_with_policy(
+            _four_proteins(),
+            [_op("remove", "/entities/proteins/1"), _op("remove", "/entities/proteins/1")],
+        )
+    
+        # Base deleted C as well.
+>       assert [row["name"] for row in _rows(patched)] == ["A", "C", "D"]
+E       AssertionError: assert ['A', 'D'] == ['A', 'C', 'D']
+E         
+E         At index 1 diff: 'D' != 'C'
+E         Right contains one more item: 'D'
+E         Use -v to get more diff
+
+tests\test_orch769d_audit_patch_rebase.py:82: AssertionError
+____ test_g9_an_op_aimed_at_the_removed_row_cannot_compensate_the_removal _____
+
+    def test_g9_an_op_aimed_at_the_removed_row_cannot_compensate_the_removal() -> None:
+        """The look-ahead credits a later op's names to an earlier removal. Base let the
+        later op land on the neighbour, which kept the removed name covered and committed
+        the batch with the synonym on the wrong row. Now the op is rejected, the name is
+        orphaned, and the whole batch rolls back (the existing transaction rule)."""
+        payload = {
+            "entities": {"proteins": [{"name": "A"}, {"name": "X"}, {"name": "B"}]},
+            "processes": {"interactions": [{"entity_1": "X", "entity_2": "A"}]},
+        }
+    
+        patched, report = apply_patch_with_policy(
+            payload, [_op("remove", "/entities/proteins/1"), _op("add", "/entities/proteins/1/synonyms", ["X"])]
+        )
+    
+>       assert patched == payload  # base: [A, B with synonyms ["X"]]
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       assert {'entities': ...ty_2': 'A'}]}} == {'entities': ...ty_2': 'A'}]}}
+E         
+E         Omitting 1 identical items, use -vv to show
+E         Differing items:
+E         {'entities': {'proteins': [{'name': 'A'}, {'name': 'B', 'provenance_lineage': [{'origin': 'audit_modified', 'paper_exp...ched no row in this container immediately before the operation", 'review_required': False, ...}], 'synonyms': ['X']}]}} != {'entities': {'proteins': [{'name': 'A'}, {'name': 'X'}, {'name': 'B'}]}}
+E         Use -v to get more diff
+
+tests\test_orch769d_audit_patch_rebase.py:101: AssertionError
+____ test_g9_ops_before_the_removed_row_and_inserts_are_rebased_correctly _____
+
+    def test_g9_ops_before_the_removed_row_and_inserts_are_rebased_correctly() -> None:
+        """Indices below a remove do not move; an insert moves the rows at and after it."""
+        patched, report = apply_patch_with_policy(
+            _four_proteins(),
+            [
+                _op("remove", "/entities/proteins/1"),
+                _op("add", "/entities/proteins/3", {"name": "new", "note": ""}),  # before D, as written
+                _op("replace", "/entities/proteins/0/note", "written for A"),
+                _op("replace", "/entities/proteins/3/note", "written for D"),
+            ],
+        )
+    
+>       assert [(row["name"], row["note"]) for row in _rows(patched)] == [
+            ("A", "written for A"),
+            ("C", ""),
+            ("new", ""),
+            ("D", "written for D"),
+        ]
+E       AssertionError: assert [('A', 'writt...itten for D')] == [('A', 'writt...itten for D')]
+E         
+E         At index 2 diff: ('D', '') != ('new', '')
+E         Use -v to get more diff
+
+tests\test_orch769d_audit_patch_rebase.py:118: AssertionError
+_____________ test_g9_the_integrity_guard_judges_the_rebased_row ______________
+
+    def test_g9_the_integrity_guard_judges_the_rebased_row() -> None:
+        """The referential-integrity guard must be handed the op as applied.
+    
+        /entities/compounds/2 is meropenem in the snapshot. Base removed
+        'hydrolyzed meropenem' instead and refused it for the wrong reference.
+        """
+        payload = {
+            "entities": {
+                "compounds": [
+                    {"name": "orphan-a"},
+                    {"name": "spectator"},
+                    {"name": "meropenem"},
+                    {"name": "hydrolyzed meropenem"},
+                ]
+            },
+            "processes": {
+                "reactions": [
+                    {"name": "Meropenem hydrolysis", "inputs": ["meropenem"], "outputs": ["hydrolyzed meropenem"]}
+                ]
+            },
+        }
+    
+        patched, report = apply_patch_with_policy(
+            payload, [_op("remove", "/entities/compounds/0"), _op("remove", "/entities/compounds/2")]
+        )
+    
+        reason = report["rejected"][0]["reason"]
+        assert reason.startswith("referential_integrity")
+>       assert "'meropenem' at /processes/reactions/0/inputs/0" in reason
+E       assert "'meropenem' at /processes/reactions/0/inputs/0" in "referential_integrity: remove on /entities/compounds/2 would orphan 1 process reference(s): 'hydrolyzed meropenem' at /processes/reactions/0/outputs/0."
+
+tests\test_orch769d_audit_patch_rebase.py:155: AssertionError
+______ test_g9_wnt_ca_reconstruction_every_synonym_lands_on_its_own_row _______
+
+    def test_g9_wnt_ca_reconstruction_every_synonym_lands_on_its_own_row() -> None:
+        patched, report = apply_patch_with_policy(_wnt_ca_payload(), _wnt_ca_patch())
+    
+        synonyms = {row["name"]: row.get("synonyms") for row in _rows(patched)}
+        # The row that kept an unidentified protein alive on the leg (diagnosis variant C).
+>       assert synonyms["phosphorylated CAMKII"] == ["phosphorylated CAMKII"]
+E       AssertionError: assert ['calcineurin B'] == ['phosphorylated CAMKII']
+E         
+E         At index 0 diff: 'calcineurin B' != 'phosphorylated CAMKII'
+E         Use -v to get more diff
+
+tests\test_orch769d_audit_patch_rebase.py:252: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_orch769d_audit_patch_rebase.py::test_g9_a_later_op_hits_the_row_it_was_written_for_after_a_remove
+FAILED tests/test_orch769d_audit_patch_rebase.py::test_g9_an_op_aimed_at_the_removed_row_is_rejected_not_redirected
+FAILED tests/test_orch769d_audit_patch_rebase.py::test_g9_a_repeated_remove_does_not_delete_the_neighbour
+FAILED tests/test_orch769d_audit_patch_rebase.py::test_g9_an_op_aimed_at_the_removed_row_cannot_compensate_the_removal
+FAILED tests/test_orch769d_audit_patch_rebase.py::test_g9_ops_before_the_removed_row_and_inserts_are_rebased_correctly
+FAILED tests/test_orch769d_audit_patch_rebase.py::test_g9_the_integrity_guard_judges_the_rebased_row
+FAILED tests/test_orch769d_audit_patch_rebase.py::test_g9_wnt_ca_reconstruction_every_synonym_lands_on_its_own_row
+7 failed in 0.09s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769d\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ c03ab59fd073eb84e81f69060f8f067b821405d6  [git, worktree dirty=False]
+label                   : g9-red-base-7
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769d/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/orch769d/base --pin-verdict C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769d/docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-769d/16-g9-red-base-7.pin.json -q -p no:cacheprovider --basetemp=C:/t/orch769d/bt-16 tests/test_orch769d_audit_patch_rebase.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769d
+root PID / process group: 165384 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 0.64 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  167456:python.exe
+descendants terminated  : 1  167456
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769d/docs/pwml_recovery_sprint/evidence/g11/ORCH-769d/16-g9-red-base-7.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH-769d  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================
+RC=1 freeKB_before=15396472

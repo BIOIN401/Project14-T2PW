@@ -1,0 +1,83 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769d\src\t2pw\__init__.py
+............................F........................................... [ 11%]
+........................................................................ [ 23%]
+........................................................................ [ 34%]
+........................................................................ [ 46%]
+........................................................................ [ 58%]
+........................................................................ [ 69%]
+........................................................................ [ 81%]
+........................................................................ [ 92%]
+............................................                             [100%]
+================================== FAILURES ===================================
+___ test_index_drift_across_two_removals_is_judged_against_the_live_payload ___
+
+    def test_index_drift_across_two_removals_is_judged_against_the_live_payload() -> None:
+        """Why the guard runs post-application rather than inside _should_accept:
+        that function is handed the pre-batch payload, so after the first removal
+        every later index addresses a different row than it did originally. Here the
+        second op says /entities/compounds/1, which is the unreferenced "spectator"
+        row before the first removal and the referenced "meropenem" row after it.
+        """
+        payload = {
+            "entities": {
+                "compounds": [
+                    {"name": "orphan-a"},
+                    {"name": "spectator"},
+                    {"name": "meropenem"},
+                    {"name": "hydrolyzed meropenem"},
+                ]
+            },
+            "processes": {
+                "reactions": [
+                    {
+                        "name": "Meropenem hydrolysis",
+                        "inputs": ["meropenem"],
+                        "outputs": ["hydrolyzed meropenem"],
+                    }
+                ]
+            },
+        }
+        patch = [_remove("/entities/compounds/0"), _remove("/entities/compounds/1")]
+    
+        patched, report = apply_patch_with_policy(payload, patch)
+    
+>       assert report["summary"] == {"accepted_count": 1, "rejected_count": 1, "total": 2}
+E       AssertionError: assert {'accepted_co...0, 'total': 2} == {'accepted_co...1, 'total': 2}
+E         
+E         Omitting 1 identical items, use -vv to show
+E         Differing items:
+E         {'rejected_count': 0} != {'rejected_count': 1}
+E         {'accepted_count': 2} != {'accepted_count': 1}
+E         Use -v to get more diff
+
+tests\test_apply_audit_patch_referential_integrity.py:325: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_apply_audit_patch_referential_integrity.py::test_index_drift_across_two_removals_is_judged_against_the_live_payload
+1 failed, 619 passed in 8.09s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769d\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 2a791f692883aa312a6247e645137627add46ad4  [git, worktree dirty=False]
+label                   : applier-existing-tip-unchanged
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769d/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769d/docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-769d/05-applier-existing-tip-unchanged.pin.json -q -p no:cacheprovider --basetemp=C:/t/orch769d/bt-05 tests/test_apply_audit_patch_lineage.py tests/test_apply_audit_patch_lock_policy.py tests/test_apply_audit_patch_referential_integrity.py tests/test_audit_json_llm_payload.py tests/test_c105_actor_role_evidence.py tests/test_c107_actor_cue_calibration.py tests/test_c108_f155_class.py tests/test_curation_patch_transaction.py tests/test_curator_offline_mode.py tests/test_interactive_curator.py tests/test_orch757_llm_token_budgets.py tests/test_orch759a_duplicate_protein_fold.py tests/test_streamlit_stage2_orchestration.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769d
+root PID / process group: 139924 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 580 s
+duration                : 8.72 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  153660:python.exe
+descendants terminated  : 1  153660
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769d/docs/pwml_recovery_sprint/evidence/g11/ORCH-769d/05-applier-existing-tip-unchanged.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH-769d  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================
