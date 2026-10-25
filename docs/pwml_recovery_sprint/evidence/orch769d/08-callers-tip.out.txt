@@ -1,0 +1,46 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769d\src\t2pw\__init__.py
+
+=================================== ERRORS ====================================
+_____________ ERROR collecting tests/test_orch758b_empty_chunk.py _____________
+ImportError while importing test module 'C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769d\tests\test_orch758b_empty_chunk.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Python313\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_orch758b_empty_chunk.py:47: in <module>
+    import t2pw.llm.client as client_mod  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   ImportError: cannot import name 'llm' from 't2pw' (C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769d\src\t2pw\__init__.py)
+=========================== short test summary info ===========================
+ERROR tests/test_orch758b_empty_chunk.py
+!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 1.33s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769d\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 2b0ea179239f5401074757714ba2e38b1baf79a6  [git, worktree dirty=False]
+label                   : callers-tip
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769d/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769d/docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-769d/08-callers-tip.pin.json -q -p no:cacheprovider --basetemp=C:/t/orch769d/bt-08 tests/test_focused_repair.py tests/test_gap_resolver.py tests/test_gap_resolver_agent_tools.py tests/test_gap_resolver_biological_state_resolution.py tests/test_gap_resolver_lineage.py tests/test_gap_resolver_stage3_issues.py tests/test_orch754c_curator_prompt_reverted.py tests/test_rag_typed_gap_resolution.py tests/test_c099_wrapper_species_preservation.py tests/test_c120_identity.py tests/test_c124_species_creation.py tests/test_db_resolver_primitives.py tests/test_orch758b_empty_chunk.py tests/test_orch762_protein_identity.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769d
+root PID / process group: 160404 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 580 s
+duration                : 1.90 s
+exit reason             : nonzero
+exit code (real)        : 2
+returned code           : 2
+descendants observed    : 1  160124:python.exe
+descendants terminated  : 1  160124
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769d/docs/pwml_recovery_sprint/evidence/g11/ORCH-769d/08-callers-tip.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH-769d  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================
+RC=2 freeKB_before=15183252

@@ -826,9 +826,10 @@ def _apply_single_op(working: Dict[str, Any], op: Dict[str, Any]) -> None:
 # WHY THIS RUNS AFTER APPLICATION AND NOT INSIDE _should_accept(): _should_accept
 # is handed `source_payload`, not the live `working` copy (see the call site in
 # apply_patch_with_policy). For a multi-op patch that payload is stale -- after the
-# first "remove /entities/compounds/3" every later index has shifted by one, so a
-# pre-application check would inspect the wrong row and refuse (or clear) the wrong
-# entity. Diffing the payload immediately before and after the op is the only way
+# first "remove /entities/compounds/3" the registry has already lost a row, so a
+# pre-application check would judge coverage that no longer exists and refuse (or
+# clear) the wrong entity. (Indices are rebased to the live payload since ORCH-769d;
+# see "Index rebasing".) Diffing the payload immediately before and after the op is the only way
 # to know what the op actually cost, and it makes the guard shape-agnostic: it
 # catches a whole-row remove, a whole-bucket remove, a "remove /entities/compounds/3/name"
 # and a shortening "replace /entities/compounds" with one predicate instead of four.
@@ -2645,12 +2646,110 @@ def _should_accept(
     if actor_role_rejection is not None:
         return False, actor_role_rejection
     # Removals under /entities are intentionally NOT judged here. _is_core_semantics_path
-    # covers only /processes/*, and widening it would still leave this function blind:
-    # `source_payload` is the pre-batch payload, so after any earlier entity removal the
-    # indices in `path` no longer address the rows this function would inspect. The
-    # referential-integrity guard runs in apply_patch_with_policy against the live
-    # before/after pair instead -- see _referential_integrity_rejection.
+    # covers only /processes/*. `source_payload` is the pre-batch payload and `op` is
+    # the op as written, in pre-patch indices, so both address the row the author meant
+    # (ORCH-769d: apply_patch_with_policy rebases the op before applying it, and hands
+    # this function the unrebased op). The referential-integrity guard still runs in
+    # apply_patch_with_policy against the live before/after pair -- see
+    # _referential_integrity_rejection.
     return True, "accepted"
+
+
+# ---------------------------------------------------------------------------
+# Index rebasing (ORCH-769d, D-113 orchestrator ruling (a)).
+#
+# Every op in one patch is written against the payload its author saw: the
+# pre-patch snapshot. The auditor, the curator and the gap resolver all show the
+# model one payload and take one patch back; the curator and gap resolver dedupe
+# ops on (op, path) as if a path named one row, and the audit candidate scorer
+# reads remove paths as snapshot indices. (The deterministic auditor emits its own
+# removals in descending index order, which means the same rows either way.) Applying such a
+# patch op by op without translation is wrong after any remove or insert: on
+# ORCH-767 Wnt/Ca2+ the auditor removed /entities/proteins/10 and six later
+# synonym adds each landed one row late, so "calcineurin B" became a synonym of
+# "phosphorylated CAMKII" and kept an unidentified protein alive (KI-018).
+#
+# So after an accepted remove of, or insert into, an array, later ops are
+# translated to the live payload. An op that runs through, or targets, a row an
+# earlier op removed is rejected and recorded, never redirected to a neighbour.
+# A patch with no accepted array remove or insert is applied exactly as before:
+# _rebase_op returns the op object itself.
+#
+# Shifts are keyed by the array's path in PRE-PATCH coordinates, and each holds
+# the live index at which it happened, so applying them in order walks an
+# original index through every intermediate coordinate system.
+# ---------------------------------------------------------------------------
+
+REMOVED_TARGET_REASON_PREFIX = "removed_target"
+
+
+def _encode_pointer(tokens: Sequence[str]) -> str:
+    return "".join("/" + token.replace("~", "~0").replace("/", "~1") for token in tokens)
+
+
+def _rebase_op(
+    op: Dict[str, Any], shifts: Dict[Tuple[str, ...], List[Tuple[str, int]]]
+) -> Tuple[Dict[str, Any], Optional[str]]:
+    """``op`` in live-payload indices, plus a rejection reason when it addresses a removed row."""
+    if not shifts:
+        return op, None
+    try:
+        tokens = _decode_pointer(str(op.get("path", "")))
+    except Exception:  # noqa: BLE001 - an unparseable path is the policy's to reject
+        return op, None
+    action = str(op.get("op", "")).lower()
+    live = list(tokens)
+    for depth, token in enumerate(tokens):
+        events = shifts.get(tuple(tokens[:depth]))
+        if not events or not _is_array_index(token):
+            continue
+        # An add's last index is an insertion POSITION, not a row: removing the row
+        # that sat there leaves the position valid.
+        position = action == "add" and depth == len(tokens) - 1
+        index = int(token)
+        for kind, at in events:
+            if kind == "remove":
+                if index == at and not position:
+                    return op, (
+                        f"{REMOVED_TARGET_REASON_PREFIX}: {action} on {op.get('path')} addresses "
+                        f"{_encode_pointer(tokens[: depth + 1])}, a row an earlier op in this patch "
+                        "removed; it is not redirected to a neighbouring row."
+                    )
+                if index > at:
+                    index -= 1
+            elif index >= at:
+                index += 1
+        live[depth] = str(index)
+    if live == tokens:
+        return op, None
+    return {**op, "path": _encode_pointer(live)}, None
+
+
+def _record_index_shift(
+    shifts: Dict[Tuple[str, ...], List[Tuple[str, int]]],
+    before: Dict[str, Any],
+    op: Dict[str, Any],
+    live_op: Dict[str, Any],
+) -> None:
+    """Note what an accepted op did to the indices of later ops. ``before`` is the pre-op payload."""
+    try:
+        tokens = tuple(_decode_pointer(str(op.get("path", ""))))
+        live = _decode_pointer(str(live_op.get("path", "")))
+        leaf = live[-1]
+        parent = _get_value_at_pointer(before, _encode_pointer(live[:-1]))
+    except Exception:  # noqa: BLE001 - nothing addressable shifted
+        return
+    action = str(op.get("op", "")).lower()
+    if action in {"add", "remove"} and isinstance(parent, list) and _is_array_index(leaf):
+        shifts.setdefault(tokens[:-1], []).append((action, int(leaf)))
+        return
+    # Anything else rewrites the node at `tokens` wholesale (or appends, which moves
+    # nothing). Arrays under a rewritten node hold new content, so earlier shifts
+    # recorded for them no longer describe it.
+    # ponytail: later ops into rewritten content are applied as written, which is
+    # what base did; a snapshot op cannot name a row of content that did not exist.
+    for key in [key for key in shifts if key[: len(tokens)] == tokens]:
+        del shifts[key]
 
 
 def apply_patch_with_policy(
@@ -2676,6 +2775,8 @@ def apply_patch_with_policy(
     # arrives as "remove /entities/proteins/N" followed by "add /entities/compounds/-",
     # and the remove is only safe in light of the add that has not run yet.
     pending_entity_names = _pending_entity_name_norms(patch_ops)
+    # Index shifts made by accepted ops so far; see "Index rebasing" above.
+    shifts: Dict[Tuple[str, ...], List[Tuple[str, int]]] = {}
 
     for idx, raw_op in enumerate(patch_ops):
         if not isinstance(raw_op, dict):
@@ -2685,11 +2786,16 @@ def apply_patch_with_policy(
             continue
         # Accept both the internal format (op/evidence) and the enrichment format (action/reason)
         op = _normalize_patch_op(raw_op)
-        if lock_context is not None:
-            lock_rejection = _validate_lock_pre_op(working, op, lock_context)
+        # `op` stays as written (pre-patch indices) for the policy and the records;
+        # `live_op` addresses the same row in `working`. They are one object unless
+        # an earlier accepted op moved this op's row.
+        live_op, removed_target = _rebase_op(op, shifts)
+        rebased = {} if live_op is op else {"applied_path": live_op["path"]}
+        if lock_context is not None and removed_target is None:
+            lock_rejection = _validate_lock_pre_op(working, live_op, lock_context)
             if lock_rejection is not None:
                 reason, locked_reaction_id = lock_rejection
-                record = {"index": idx, "reason": reason, "op": op}
+                record = {"index": idx, "reason": reason, "op": op, **rebased}
                 if locked_reaction_id:
                     record["locked_reaction_id"] = locked_reaction_id
                 rejected.append(record)
@@ -2702,16 +2808,19 @@ def apply_patch_with_policy(
             major_topology_confidence_threshold=major_topology_confidence_threshold,
             enforce_major_topology_threshold=enforce_major_topology_threshold,
         )
-        record = {"index": idx, "reason": reason, "op": op}
+        # After the policy, so an op the policy refuses keeps the policy's reason.
+        if allow and removed_target is not None:
+            allow, reason = False, removed_target
+        record = {"index": idx, "reason": reason, "op": op, **rebased}
         if not allow:
             rejected.append(record)
             rejected_log_records.append(_patch_log_record(stage, op, reason))
             continue
         try:
             next_working = deepcopy(working)
-            _apply_single_op(next_working, op)
+            _apply_single_op(next_working, live_op)
             if lock_context is not None:
-                lock_rejection = _validate_lock_post_op(working, next_working, op, lock_context)
+                lock_rejection = _validate_lock_post_op(working, next_working, live_op, lock_context)
                 if lock_rejection is not None:
                     reason, locked_reaction_id = lock_rejection
                     record["reason"] = reason
@@ -2726,7 +2835,7 @@ def apply_patch_with_policy(
             # no lock manifest covers (PMC12444477/research had no manifest entry
             # for either of the two entities behind its 24 dangling references).
             integrity_rejection = _referential_integrity_rejection(
-                working, next_working, op, pending_entity_names[idx]
+                working, next_working, live_op, pending_entity_names[idx]
             )
             if integrity_rejection is not None:
                 record["reason"] = integrity_rejection
@@ -2738,11 +2847,14 @@ def apply_patch_with_policy(
             # op's own logging, so nothing that decides or reports on this op --
             # including _locked_id_for_reaction below, which reads a value the
             # payload may alias -- can observe them.
-            lineage_rows = _rows_written_by_op(working, next_working, op)
+            lineage_rows = _rows_written_by_op(working, next_working, live_op)
+            _record_index_shift(shifts, working, op, live_op)
             working = next_working
             accepted.append(record)
             touched_lock_id = _locked_id_for_reaction(op.get("value"), lock_context) if lock_context is not None else ""
-            applied_log_records.append(_patch_log_record(stage, op, "accepted", touched_lock_id))
+            applied_log_records.append(
+                {**_patch_log_record(stage, op, "accepted", touched_lock_id), **rebased}
+            )
             _record_audit_lineage(lineage_rows, str(op.get("op", "")).lower())
         except Exception as exc:  # noqa: BLE001
             record["reason"] = f"Application failed: {exc}"

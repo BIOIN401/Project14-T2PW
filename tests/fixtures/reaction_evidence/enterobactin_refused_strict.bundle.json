@@ -163,7 +163,10 @@
     "essential_participant": "Fur",
     "original_process": {
      "name": "Fur binds Fe2+",
-     "evidence": "Fur binds ferrous iron (Fe2+) to form a complex"
+     "evidence": "Fur binds ferrous iron (Fe2+) to form a complex",
+     "entity_1": "Fur",
+     "entity_2": "Fe2+",
+     "relationship": "binds"
     }
    },
    {
@@ -175,7 +178,10 @@
     "essential_participant": "RyhB",
     "original_process": {
      "name": "RyhB inhibits EntC",
-     "evidence": "RyhB sRNA binds with complementarity to the mRNA of key biosynthetic genes entC and entF ... leading to the inhibition of their translation"
+     "evidence": "RyhB sRNA binds with complementarity to the mRNA of key biosynthetic genes entC and entF ... leading to the inhibition of their translation",
+     "entity_1": "RyhB",
+     "entity_2": "EntC",
+     "relationship": "inhibits"
     }
    },
    {
@@ -187,7 +193,10 @@
     "essential_participant": "RyhB",
     "original_process": {
      "name": "RyhB inhibits EntF",
-     "evidence": "RyhB sRNA binds with complementarity to the mRNA of key biosynthetic genes entC and entF ... leading to the inhibition of their translation"
+     "evidence": "RyhB sRNA binds with complementarity to the mRNA of key biosynthetic genes entC and entF ... leading to the inhibition of their translation",
+     "entity_1": "RyhB",
+     "entity_2": "EntF",
+     "relationship": "inhibits"
     }
    }
   ]
@@ -712,10 +721,16 @@
    ],
    "transports": [
     {
-     "name": "ferric-enterobactin import via FepA"
+     "name": "ferric-enterobactin import via FepA",
+     "cargo": "ferric-enterobactin",
+     "from_biological_state": "__auto_state__",
+     "to_biological_state": "Escherichia coli outer membrane"
     },
     {
-     "name": "enterobactin secretion"
+     "name": "enterobactin secretion",
+     "cargo": "enterobactin",
+     "from_biological_state": "__auto_state__",
+     "to_biological_state": "Escherichia coli extracellular"
     }
    ],
    "interactions": [

@@ -1,0 +1,102 @@
+{
+  "label": "applier-existing-tip-unchanged",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769d/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769d/docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-769d/05-applier-existing-tip-unchanged.pin.json",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:/t/orch769d/bt-05",
+    "tests/test_apply_audit_patch_lineage.py",
+    "tests/test_apply_audit_patch_lock_policy.py",
+    "tests/test_apply_audit_patch_referential_integrity.py",
+    "tests/test_audit_json_llm_payload.py",
+    "tests/test_c105_actor_role_evidence.py",
+    "tests/test_c107_actor_cue_calibration.py",
+    "tests/test_c108_f155_class.py",
+    "tests/test_curation_patch_transaction.py",
+    "tests/test_curator_offline_mode.py",
+    "tests/test_interactive_curator.py",
+    "tests/test_orch757_llm_token_budgets.py",
+    "tests/test_orch759a_duplicate_protein_fold.py",
+    "tests/test_streamlit_stage2_orchestration.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch769d",
+  "started_at": "2026-10-25T20:09:24+00:00",
+  "finished_at": "2026-10-25T20:09:32+00:00",
+  "duration_seconds": 8.71814330000052,
+  "timeout_seconds": 580.0,
+  "root_pid": 139924,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 153660,
+      "name": "python.exe",
+      "ppid": 139924
+    }
+  ],
+  "descendants_terminated": [
+    153660
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 137436,
+      "name": "python.exe"
+    },
+    {
+      "pid": 137476,
+      "name": "python.exe"
+    },
+    {
+      "pid": 154212,
+      "name": "python.exe"
+    },
+    {
+      "pid": 154288,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769d/docs/pwml_recovery_sprint/evidence/g11/ORCH-769d/05-applier-existing-tip-unchanged.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch769d\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch769d",
+    "repo_head": "2a791f692883aa312a6247e645137627add46ad4",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-769d",
+    "token": "ORCH-769d:154288:64c548c131fef6cf",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

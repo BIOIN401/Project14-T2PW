@@ -1,0 +1,91 @@
+{
+  "label": "rev-oracle3-base",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/rev769d/oracle_fuzz3.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\rev769d-base",
+  "started_at": "2026-10-25T21:13:51+00:00",
+  "finished_at": "2026-10-25T21:13:55+00:00",
+  "duration_seconds": 3.0603307999990648,
+  "timeout_seconds": 400.0,
+  "root_pid": 220612,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 229804,
+      "name": "python.exe",
+      "ppid": 220612
+    }
+  ],
+  "descendants_terminated": [
+    229804
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 189168,
+      "name": "python.exe"
+    },
+    {
+      "pid": 195392,
+      "name": "python.exe"
+    },
+    {
+      "pid": 196816,
+      "name": "python.exe"
+    },
+    {
+      "pid": 198792,
+      "name": "python.exe"
+    },
+    {
+      "pid": 232744,
+      "name": "python.exe"
+    },
+    {
+      "pid": 232868,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/rev769d-tip/docs/pwml_recovery_sprint/evidence/g11/ORCH-769d/36-rev-oracle3-base.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\rev769d-tip\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\rev769d-tip",
+    "repo_head": "22a306a0819a9143c759d10125fbbbdc1b233381",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-769d-rev",
+    "token": "ORCH-769d-rev:232744:7fd2e8d899bbcd75",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

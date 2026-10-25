@@ -1,0 +1,46 @@
+entities compounds 3 'Ca2+' syn= {'-': 'Ca2'} | audit entries: ['"an accepted audit patch \'add\' operation produced this row\'s']
+entities compounds 4 '/calmodulin-dependent kinase II' syn= None | audit entries: ['"an accepted audit patch \'add\' operation produced this row\'s']
+entities proteins 2 'G protein' syn= ['G protein'] | audit entries: ['"an accepted audit patch \'add\' operation produced this row\'s']
+entities proteins 3 'phospholipase C (PLC)' syn= ['PLC'] | audit entries: ['"an accepted audit patch \'add\' operation produced this row\'s']
+entities proteins 4 'PKC' syn= ['PKC'] | audit entries: ['"an accepted audit patch \'add\' operation produced this row\'s']
+entities proteins 6 'inositol-1,4,5-trisphosphate receptor (InsP3R)' syn= ['InsP3R'] | audit entries: ['"an accepted audit patch \'add\' operation produced this row\'s']
+entities proteins 7 'STIM1/2' syn= ['STIM1/2'] | audit entries: ['"an accepted audit patch \'add\' operation produced this row\'s']
+entities proteins 8 'Orai' syn= ['Orai'] | audit entries: ['"an accepted audit patch \'add\' operation produced this row\'s']
+entities proteins 9 'Sarcoplasmic/ER Ca2+ ATPases' syn= ['SERCA'] | audit entries: ['"an accepted audit patch \'add\' operation produced this row\'s']
+entities proteins 13 '\u03b2-catenin' syn= ['TCF'] | audit entries: ['"an accepted audit patch \'add\' operation produced this row\'s']
+entities proteins 14 'calmodulin' syn= ['\u03b2-catenin'] | audit entries: ['"an accepted audit patch \'add\' operation produced this row\'s']
+entities proteins 17 'calcineurin B' syn= ['calcineurin A'] | audit entries: ['"an accepted audit patch \'add\' operation produced this row\'s']
+entities proteins 18 'phosphorylated CAMKII' syn= ['calcineurin B'] | audit entries: ['"an accepted audit patch \'add\' operation produced this row\'s']
+entities proteins 19 'phosphorylated TCF4' syn= ['phosphorylated CAMKII'] | audit entries: ['"an accepted audit patch \'add\' operation produced this row\'s']
+entities proteins 20 'NF-ATp' syn= ['phosphorylated TCF4'] | audit entries: ['"an accepted audit patch \'add\' operation produced this row\'s']
+processes reactions 3 'CAMKII autophosphorylation' syn= None | audit entries: ['"an accepted audit patch \'replace\' operation produced this r']
+processes transports 9 'IP3-induced Ca2+ release' syn= None | audit entries: ['"an accepted audit patch \'add\' operation produced this row\'s']
+processes transports 10 'SERCA pumps Ca2+ into ER' syn= None | audit entries: ['"an accepted audit patch \'add\' operation produced this row\'s']
+stages seen on protein rows: ['audit_repair', 'gap_resolution', 'identifier_mapping', 'paper_extraction']
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769d\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 3ef3fa9c6e00e1d65300a80224cf9a0ce2b3e1df  [git, worktree dirty=False]
+label                   : peek-lineage
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/orch769d/peek_lineage.py C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch767/runs_papers/ORCH-767/legs/wnt_ca-strict/2026-10-24_0314/papers/PMC10425814/strict
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769d
+root PID / process group: 147320 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 120 s
+duration                : 0.16 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  147108:python.exe
+descendants terminated  : 1  147108
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : docs/pwml_recovery_sprint/evidence/g11/ORCH-769d/02-peek-lineage.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH-769d  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

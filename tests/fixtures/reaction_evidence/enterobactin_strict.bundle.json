@@ -814,7 +814,10 @@
    ],
    "transports": [
     {
-     "name": "Enterobactin secretion via TolC"
+     "name": "Enterobactin secretion via TolC",
+     "cargo": "enterobactin",
+     "from_biological_state": "cytoplasmic state",
+     "to_biological_state": "extracellular state"
     }
    ],
    "interactions": [
@@ -906,6 +909,28 @@
     {
      "name": "EntC-EntB interaction for isochorismate channeling",
      "interaction_type": "interacts_with"
+    }
+   ],
+   "reactions": [
+    {
+     "name": "EntC-catalyzed isomerization of chorismate to isochorismate"
+    },
+    {
+     "name": "EntB isochorismatase conversion of isochorismate to 2,3-diDHB and pyruvate"
+    },
+    {
+     "name": "EntA dehydrogenase conversion of 2,3-diDHB to 2,3-DHB"
+    },
+    {
+     "name": "EntE adenylation of 2,3-DHB"
+    },
+    {
+     "name": "EntF-catalyzed enterobactin synthesis"
+    }
+   ],
+   "transports": [
+    {
+     "name": "Enterobactin secretion via TolC"
     }
    ]
   }

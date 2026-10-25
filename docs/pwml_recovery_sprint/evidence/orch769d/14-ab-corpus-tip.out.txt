@@ -1,0 +1,34 @@
+no_shift cases 3000 with an accepted remove/insert: 0
+apply_patch_with_policy: referential_integrity: operation set rolled back; applying it would orphan 1 process reference(s): 'C0' at /processes/reactions/1/inputs/1.
+apply_patch_with_policy: referential_integrity: operation set rolled back; applying it would orphan 1 process reference(s): 'C0' at /processes/reactions/0/inputs/1.
+apply_patch_with_policy: referential_integrity: operation set rolled back; applying it would orphan 1 process reference(s): 'C0' at /processes/reactions/0/inputs/1.
+apply_patch_with_policy: referential_integrity: operation set rolled back; applying it would orphan 1 process reference(s): 'C0' at /processes/reactions/0/inputs/1.
+shift cases 3000 with an accepted remove/insert: 1014
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769d\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 2b0ea179239f5401074757714ba2e38b1baf79a6  [git, worktree dirty=False]
+label                   : ab-corpus-tip
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769d/docs/pwml_recovery_sprint/evidence/orch769d/ab_no_shift_corpus.py --out C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769d/docs/pwml_recovery_sprint/evidence/orch769d/14-ab-corpus-tip.hashes.json
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch769d
+root PID / process group: 157612 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 500 s
+duration                : 1.66 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  163852:python.exe
+descendants terminated  : 1  163852
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch769d/docs/pwml_recovery_sprint/evidence/g11/ORCH-769d/14-ab-corpus-tip.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH-769d  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================
+RC=0 freeKB_before=15527076

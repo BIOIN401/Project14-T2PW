@@ -43,6 +43,10 @@ Usage (always through ``bounded_run.py``; ``--src`` names the tree under measure
 
 ``run`` prints the per-leg table, the PWML pass rate, the replayable count and gold, and writes
 ``--json`` (byte-identical across runs of the same tree: no clock, no absolute output path).
+
+ORCH-772 (D-114 § 1): each replayed leg also carries ``pwml_coverage``, computed by the MEASURED tree's
+``t2pw.app.reaction_evidence`` on the replay's own artifacts (n/a for a tree without it), and ``run``
+prints the mean, median and share of legs at or above 75% on both denominators.
 """
 
 from __future__ import annotations
@@ -355,8 +359,12 @@ def load_tree(src: Optional[Path]) -> SimpleNamespace:
     from t2pw.pipeline import strict_quarantine
     from t2pw.pwml.prefreeze_resolution import run_prefreeze_resolution
 
+    try:  # ORCH-772: PWML coverage is the measured tree's own Reaction Evidence model, or n/a
+        from t2pw.app import reaction_evidence
+    except ImportError:
+        reaction_evidence = None
     return SimpleNamespace(app=app, driver=driver, gr=gate_reports, sq=strict_quarantine, prefreeze=run_prefreeze_resolution,
-                           t2pw=resolved, root=resolved.parents[1])
+                           t2pw=resolved, root=resolved.parents[1], evidence=reaction_evidence)
 
 
 # ── one leg ──────────────────────────────────────────────────────────────────────────────
@@ -491,7 +499,7 @@ def _replay_leg(T: SimpleNamespace, leg: Dict[str, Any], work: Path, primary: Pa
     out["driver"] = {"gate_failed": bool(verdict.failed), "gate_stage": verdict.stage, "gate_reason": verdict.reason,
                      "contract_errors": contract_errors, "codes": sorted(codes)}
 
-    stage, pwml = None, None
+    stage, pwml, ir = None, None, None
     if verdict.failed or contract_errors:
         # The driver names the gate stage in both cases; a passing final gate blocked only by an upstream
         # *_contract_report is a different failure, and one the replay carries as recorded.
@@ -538,6 +546,7 @@ def _replay_leg(T: SimpleNamespace, leg: Dict[str, Any], work: Path, primary: Pa
             if name:
                 pwml = work / name
                 pwml.write_bytes(xml)
+                ir = res.get("pwml_ir")
                 (work / "pwml_ir.json").write_text(json.dumps(res.get("pwml_ir"), indent=1, default=str), encoding="utf-8")
             else:
                 stage = "pwml_withheld_diagnostic_only"
@@ -548,8 +557,57 @@ def _replay_leg(T: SimpleNamespace, leg: Dict[str, Any], work: Path, primary: Pa
     (work / "canonical.json").write_text(json.dumps(canonical, sort_keys=True, indent=1, ensure_ascii=False), encoding="utf-8")
     out["network_refused"] = Offline.refused[refused_before:]
     out["gold"] = gold_scores(leg, canonical, work) if leg["paper"] in GOLD_PAPERS else None
+    # A refused quarantine leaves no canonical payload; the leg's final_mapped.json is then the payload the
+    # quarantine was given (batch.driver._add_identity_artifacts), and so is this.
+    out["pwml_coverage"] = pwml_coverage(T, qres, canonical or payload, ir, pwml.name if pwml else None,
+                                         recorded_removals=qrec.get("quarantined") if kind == "canonical" else None)
     out["files"] = _tree_digest(work)
     return out
+
+
+def pwml_coverage(T: SimpleNamespace, qres: Dict[str, Any], payload: Dict[str, Any], ir: Any,
+                  pwml_name: Optional[str], recorded_removals: Optional[List[Any]] = None) -> Optional[Dict[str, Any]]:
+    """ORCH-772 (D-114 § 1): the MEASURED tree's ``reaction_evidence`` on this replay's artifacts, the same
+    set a leg directory holds. ``None`` (n/a) for a tree whose model carries no ``pwml_coverage``.
+
+    ``recorded_removals``: on a CANONICAL checkpoint the replay re-quarantines a payload the leg already
+    quarantined, so its own ``quarantined[]`` holds only what the measured tree removes on top; the leg's
+    pre-freeze removals are the recorded report's rows, carried as recorded (as the upstream contract reports
+    are) and listed before the replay's own. A canonical replay whose quarantine refused would leave those rows
+    in no known place, so its coverage is not recorded (0 such legs at ORCH-772)."""
+
+    E = T.evidence
+    if E is None:
+        return None
+    arts: Dict[str, Any] = {}
+    for name, path in sorted((qres.get("quarantine_artifacts") or {}).items()):
+        if name in (E.COVERAGE_REPORT_FILENAME, E.QUARANTINE_REPORT_FILENAME, E.REMOVED_ENTITY_REPORT_FILENAME):
+            arts[name] = load(Path(path))
+    if recorded_removals:
+        quarantine = arts.get(E.QUARANTINE_REPORT_FILENAME)
+        if not isinstance(quarantine, dict) or quarantine.get("ok") is not True:
+            return {"drawn": None, "total": None, "by_kind": {}, "by_design_withheld": 0, "merged_duplicates": 0,
+                    "not_counted": 0, "pwml_written": bool(pwml_name), "omitted_by_reason": [],
+                    "not_recorded": "canonical checkpoint whose replayed quarantine did not pass: the recorded "
+                                    "removals cannot be placed"}
+        quarantine["quarantined"] = [*recorded_removals, *(quarantine.get("quarantined") or [])]
+    if payload:
+        arts[E.FINAL_MAPPED_FILENAME] = payload
+    if pwml_name:  # the IR is read only when a PWML was written (the module's own rule)
+        arts[E.PWML_IR_FILENAME] = ir
+        arts[pwml_name] = True
+    report = E.build_report(arts)
+    cov = report.get("pwml_coverage")
+    if cov is None:
+        return None
+    reasons: Dict[tuple, int] = {}
+    for e in report["omitted"]:
+        if e["counted"]:
+            key = (e["ki"], e["group"], e["reason"] or e["message"][:120])
+            reasons[key] = reasons.get(key, 0) + 1
+    return {**{k: cov[k] for k in ("drawn", "total", "by_kind", "by_design_withheld", "merged_duplicates", "not_counted",
+                                     "not_recorded", "pwml_written")},
+            "omitted_by_reason": [[n, *key] for key, n in sorted(reasons.items(), key=lambda kv: (-kv[1], kv[0]))]}
 
 
 def gold_scores(leg: Dict[str, Any], canonical: Dict[str, Any], work: Path) -> Dict[str, Any]:
@@ -709,8 +767,10 @@ def run(args: argparse.Namespace) -> int:
     for tier in sorted({r["tier"] for r in records if r.get("tier")}):
         summary[f"tier_{tier}"] = summarize([r for r in records if r.get("tier") == tier])
     print_summary(summary, records, emit)
+    coverage = coverage_summary(records)
+    print_coverage(coverage, records, emit)
     doc = {"task": "ORCH-768", "src": "t2pw from --src" if args.src else "t2pw from sys.path", "offline_probe": probe,
-           "summary": summary, "legs": records}
+           "summary": summary, "pwml_coverage": coverage, "legs": records}
     if args.json:
         Path(args.json).write_text(json.dumps(doc, indent=1, sort_keys=True, default=str) + "\n", encoding="utf-8")
     if args.txt:
@@ -737,6 +797,7 @@ def line_for(row: Dict[str, Any]) -> str:
         cf = r["export_if_refinement_opened"]
         bits.append(f"[info: export had review opened: ok={cf['ok']} {cf['error'][:60]}]")
     bits.append(fid_s)
+    bits.append(f"cov={fmt_cov(row)}")
     g = fmt_gold(r.get("gold"))
     return "  ".join(b for b in bits if b) + (f"\n{'':60s}gold: {g}" if g else "")
 
@@ -776,6 +837,93 @@ def print_summary(summary: Dict[str, Any], records: List[Dict[str, Any]], emit: 
             emit(f"  {r['id']:58s} {fmt_gold(g)}")
 
 
+# ── ORCH-772 (D-114 § 1): PWML coverage per leg and over the corpus ─────────────────────
+
+
+def leg_percent(row: Dict[str, Any], exclude_by_design: bool = False) -> Optional[float]:
+    """The leg's coverage in percent. A strict leg with no replay (LLM-originating) or a replay error drew
+    nothing: 0. ``None`` when the measured tree carries no coverage, or the leg's is not recorded."""
+
+    r = row["replay"]
+    if r is None or r.get("error"):
+        return 0.0
+    cov = r.get("pwml_coverage")
+    if not cov or cov["drawn"] is None:
+        return None
+    total = cov["total"] - (cov["by_design_withheld"] if exclude_by_design else 0)
+    return round(100.0 * cov["drawn"] / total, 4) if total else 0.0
+
+
+def fmt_cov(row: Dict[str, Any]) -> str:
+    r = row["replay"]
+    if r is None:
+        return "0 (no replay: LLM-originating or aborted)"
+    if r.get("error"):
+        return "0 (replay error)"
+    cov = r.get("pwml_coverage")
+    if not cov:
+        return "n/a (the measured tree has no reaction_evidence pwml_coverage)"
+    if cov["drawn"] is None:
+        return f"not recorded of {cov['total']} ({cov['not_recorded']})"
+    top = "; ".join(f"{n}x {ki} {reason[:60]}" for n, ki, _group, reason in cov["omitted_by_reason"][:2])
+    return (f"{cov['drawn']}/{cov['total']} ({leg_percent(row):.1f}%; ex-by-design {leg_percent(row, True):.1f}%)"
+            + (f" omitted: {top}" if top else ""))
+
+
+def coverage_summary(records: List[Dict[str, Any]]) -> Dict[str, Any]:
+    """Mean, median and share of legs >= 75%, on both denominators (D-113 rulings), both variants."""
+
+    import statistics
+
+    strict = [r for r in records if r["recorded"] != "aborted"]
+    replayed = [r for r in strict if r["replay"] and not r["replay"].get("error")]
+    out: Dict[str, Any] = {"target_percent": 75}
+    if any(not r["replay"].get("pwml_coverage") for r in replayed):
+        out["n/a"] = "the measured tree's reaction_evidence carries no pwml_coverage"
+        return out
+    for name, legs in (("strict_legs_with_an_outcome", strict), ("replayed", replayed)):
+        for variant, ex in (("headline", False), ("excluding_by_design", True)):
+            values = [leg_percent(r, ex) for r in legs]
+            known = [v for v in values if v is not None]
+            out[f"{name}.{variant}"] = {
+                "legs": len(legs), "measured": len(known), "not_measured": len(values) - len(known),
+                "mean": round(statistics.fmean(known), 4) if known else None,
+                "median": round(statistics.median(known), 4) if known else None,
+                "at_or_above_target": sum(v >= 75 for v in known),
+                "share_at_or_above_target": f"{sum(v >= 75 for v in known)}/{len(known)}",
+            }
+    # Where the missing processes go, over the replayed legs: per known issue, and lost with a whole leg.
+    by_ki: Dict[str, int] = {}
+    for r in replayed:
+        for n, ki, group, _reason in r["replay"]["pwml_coverage"]["omitted_by_reason"]:
+            key = "no PWML written (whole leg)" if group == "no_pwml" else ki
+            by_ki[key] = by_ki.get(key, 0) + n
+    out["omitted_processes_by_known_issue"] = dict(sorted(by_ki.items(), key=lambda kv: (-kv[1], kv[0])))
+    return out
+
+
+def print_coverage(coverage: Dict[str, Any], records: List[Dict[str, Any]], emit: Any = print) -> None:
+    emit("\nPWML COVERAGE (D-114 § 1: processes drawn in the PWML / processes in the text record; target 75%)")
+    if "n/a" in coverage:
+        emit(f"  n/a: {coverage['n/a']}")
+        return
+    for key, s in coverage.items():
+        if isinstance(s, dict) and "mean" in s:
+            mean ="n/a" if s["mean"] is None else f"{s['mean']:.1f}%"
+            median = "n/a" if s["median"] is None else f"{s['median']:.1f}%"
+            emit(f"  {key:48s} legs {s['legs']:3d} measured {s['measured']:3d}  mean {mean:>7s}  median {median:>7s}"
+                 f"  >= 75%: {s['share_at_or_above_target']}")
+    emit("  omitted processes by known issue (replayed legs): "
+         + "; ".join(f"{k} {n}" for k, n in coverage["omitted_processes_by_known_issue"].items()))
+    ranked = sorted((r for r in records if r["replay"] and not r["replay"].get("error") and leg_percent(r) is not None),
+                    key=lambda r: (leg_percent(r), r["id"]))
+    for title, rows in (("LOWEST COVERAGE (replayed legs)", ranked),
+                        ("LOWEST COVERAGE (replayed legs that write a PWML)", [r for r in ranked if r["replay"]["pwml_written"]])):
+        emit(title)
+        for r in rows[:10]:
+            emit(f"  {r['id']:58s} {r['class']:40s} {fmt_cov(r)}")
+
+
 def compare(args: argparse.Namespace) -> int:
     """D-112 § 2: pass rate up OR the target leg fixed; no passing leg turns failing; no gold recall lost."""
 
@@ -805,6 +953,13 @@ def compare(args: argparse.Namespace) -> int:
     moved = sorted(f"{i}: {stage(b[i])} -> {stage(t[i])}" for i in b
                    if not passing(b[i]) and not passing(t[i]) and stage(b[i]) != stage(t[i]))
     print(f"still failing, at a different step (information): {moved or 'none'}")
+    # ORCH-772 (information): did anything but the coverage record move? Every verdict, PWML hash and
+    # output-file digest is in the replay record, so equal records mean nothing else moved.
+    strip = lambda r: json.dumps({k: v for k, v in (r["replay"] or {}).items() if k != "pwml_coverage"},  # noqa: E731
+                                 sort_keys=True, default=str)
+    differing = sorted(i for i in b if strip(b[i]) != strip(t[i]))
+    print(f"replay records differing, ignoring pwml_coverage (information): {differing or 'none'} "
+          f"({len(b) - len(differing)}/{len(b)} identical)")
     if args.target:
         print(f"target {args.target}: {'FIXED' if target_fixed else 'not fixed'}")
     print("D-112 § 2:", "ACCEPT" if ok else "REJECT")
