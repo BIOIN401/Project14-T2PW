@@ -908,8 +908,8 @@ def print_coverage(coverage: Dict[str, Any], records: List[Dict[str, Any]], emit
         emit(f"  n/a: {coverage['n/a']}")
         return
     for key, s in coverage.items():
-        if isinstance(s, dict):
-            mean = "n/a" if s["mean"] is None else f"{s['mean']:.1f}%"
+        if isinstance(s, dict) and "mean" in s:
+            mean ="n/a" if s["mean"] is None else f"{s['mean']:.1f}%"
             median = "n/a" if s["median"] is None else f"{s['median']:.1f}%"
             emit(f"  {key:48s} legs {s['legs']:3d} measured {s['measured']:3d}  mean {mean:>7s}  median {median:>7s}"
                  f"  >= 75%: {s['share_at_or_above_target']}")
