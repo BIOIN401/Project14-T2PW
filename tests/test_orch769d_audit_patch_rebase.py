@@ -84,6 +84,25 @@ def test_g9_a_repeated_remove_does_not_delete_the_neighbour() -> None:
     assert report["rejected"][0]["reason"].startswith("removed_target:")
 
 
+def test_g9_an_op_aimed_at_the_removed_row_cannot_compensate_the_removal() -> None:
+    """The look-ahead credits a later op's names to an earlier removal. Base let the
+    later op land on the neighbour, which kept the removed name covered and committed
+    the batch with the synonym on the wrong row. Now the op is rejected, the name is
+    orphaned, and the whole batch rolls back (the existing transaction rule)."""
+    payload = {
+        "entities": {"proteins": [{"name": "A"}, {"name": "X"}, {"name": "B"}]},
+        "processes": {"interactions": [{"entity_1": "X", "entity_2": "A"}]},
+    }
+
+    patched, report = apply_patch_with_policy(
+        payload, [_op("remove", "/entities/proteins/1"), _op("add", "/entities/proteins/1/synonyms", ["X"])]
+    )
+
+    assert patched == payload  # base: [A, B with synonyms ["X"]]
+    assert report["transaction"]["rolled_back"] is True
+    assert report["rejected"][0]["reason"].startswith("removed_target:")
+
+
 def test_g9_ops_before_the_removed_row_and_inserts_are_rebased_correctly() -> None:
     """Indices below a remove do not move; an insert moves the rows at and after it."""
     patched, report = apply_patch_with_policy(
