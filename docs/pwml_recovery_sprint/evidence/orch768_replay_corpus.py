@@ -559,15 +559,22 @@ def _replay_leg(T: SimpleNamespace, leg: Dict[str, Any], work: Path, primary: Pa
     out["gold"] = gold_scores(leg, canonical, work) if leg["paper"] in GOLD_PAPERS else None
     # A refused quarantine leaves no canonical payload; the leg's final_mapped.json is then the payload the
     # quarantine was given (batch.driver._add_identity_artifacts), and so is this.
-    out["pwml_coverage"] = pwml_coverage(T, qres, canonical or payload, ir, pwml.name if pwml else None)
+    out["pwml_coverage"] = pwml_coverage(T, qres, canonical or payload, ir, pwml.name if pwml else None,
+                                         recorded_removals=qrec.get("quarantined") if kind == "canonical" else None)
     out["files"] = _tree_digest(work)
     return out
 
 
 def pwml_coverage(T: SimpleNamespace, qres: Dict[str, Any], payload: Dict[str, Any], ir: Any,
-                  pwml_name: Optional[str]) -> Optional[Dict[str, Any]]:
+                  pwml_name: Optional[str], recorded_removals: Optional[List[Any]] = None) -> Optional[Dict[str, Any]]:
     """ORCH-772 (D-114 § 1): the MEASURED tree's ``reaction_evidence`` on this replay's artifacts, the same
-    set a leg directory holds. ``None`` (n/a) for a tree whose model carries no ``pwml_coverage``."""
+    set a leg directory holds. ``None`` (n/a) for a tree whose model carries no ``pwml_coverage``.
+
+    ``recorded_removals``: on a CANONICAL checkpoint the replay re-quarantines a payload the leg already
+    quarantined, so its own ``quarantined[]`` holds only what the measured tree removes on top; the leg's
+    pre-freeze removals are the recorded report's rows, carried as recorded (as the upstream contract reports
+    are) and listed before the replay's own. A canonical replay whose quarantine refused would leave those rows
+    in no known place, so its coverage is not recorded (0 such legs at ORCH-772)."""
 
     E = T.evidence
     if E is None:
@@ -576,6 +583,14 @@ def pwml_coverage(T: SimpleNamespace, qres: Dict[str, Any], payload: Dict[str, A
     for name, path in sorted((qres.get("quarantine_artifacts") or {}).items()):
         if name in (E.COVERAGE_REPORT_FILENAME, E.QUARANTINE_REPORT_FILENAME, E.REMOVED_ENTITY_REPORT_FILENAME):
             arts[name] = load(Path(path))
+    if recorded_removals:
+        quarantine = arts.get(E.QUARANTINE_REPORT_FILENAME)
+        if not isinstance(quarantine, dict) or quarantine.get("ok") is not True:
+            return {"drawn": None, "total": None, "by_kind": {}, "by_design_withheld": 0, "merged_duplicates": 0,
+                    "not_counted": 0, "pwml_written": bool(pwml_name), "omitted_by_reason": [],
+                    "not_recorded": "canonical checkpoint whose replayed quarantine did not pass: the recorded "
+                                    "removals cannot be placed"}
+        quarantine["quarantined"] = [*recorded_removals, *(quarantine.get("quarantined") or [])]
     if payload:
         arts[E.FINAL_MAPPED_FILENAME] = payload
     if pwml_name:  # the IR is read only when a PWML was written (the module's own rule)
