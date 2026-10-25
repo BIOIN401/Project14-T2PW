@@ -7398,3 +7398,31 @@ Lead Orchestrator.
 - ORCH-769d: audit-patch index rebasing, option (a), so later ops are rebased to the snapshot after a remove.
 - The corpus is reported on both denominators, with 91 as the headline (LLM-originating failures count as failures).
 - One read-only PathBank DB session is approved to record fixtures for the 8 legs the corpus refused.
+
+---
+
+## D-114 — change of goal: a PWML that imports and carries at least 75% of the text pathway; everything left out is listed with its reason · 2026-10-25 · LOCKED
+
+**Decided by the product owner** (2026-10-25, in session): *"shoot for like 75% accuracy for the pwml, by that I mean 75% of what we
+extracted in our text pathway ends up in the pwml so it imports, and then a user only has to bridge that gap … in the text based
+output we can show what was missed, what reactions had to be omitted … make sure all errors are added to the correct docs."*
+Recorded by the Lead Orchestrator.
+
+1. **The goal is now PWML coverage**, not a perfect strict export:
+   **coverage = processes drawn in the PWML ÷ processes in the text pathway** (reactions + interactions + transports in the final
+   text record, surviving plus omitted). **Target: ≥ 75% per paper**, measured on the replay corpus (ORCH-768) and in live runs.
+2. **A process that fails a per-row export requirement is OMITTED from the PWML, not allowed to sink the whole pathway.** It is removed
+   pre-freeze (merge rule 8) and recorded, and the PWML is written with everything that passes. Examples: a protein with no
+   UniProt/DrugBank id, an invented wrapper, an unknown modifier reference, an unsigned interaction. **No gate is relaxed**
+   (D-106): everything that IS in the PWML still meets every requirement, so the file imports. A PWML with any omission is
+   `review_required`.
+3. **The text output is the complete record.** The human-facing Reaction Evidence `.txt` carries a section **"Omitted from the PWML"**
+   listing every left-out process with its exact reason, a catalogue id (§ 5), and what the user must add by hand. Coverage % is printed
+   at the top. LLM-bound text is unchanged (D-104 AMENDMENT 2).
+4. **Orchestrator reading, for the product owner to confirm or overrule:** 75% is a **target, not an export gate**. A PWML below 75% is
+   still written (`review_required`, coverage shown) whenever at least one process is drawn (D-113 § 3). Whole-pathway requirements
+   (species identity, a valid file) still apply, and are fixed upstream.
+5. **Every failure mode is catalogued** in `docs/pwml_recovery_sprint/PWML_KNOWN_ISSUES.md`: id, symptom, cause, evidence, status
+   (fixed / open / by design), workaround, and the fix planned for future work. Durable ones are also added to `FINDINGS.md`. The text
+   output's omission reasons cite these ids.
+6. ORCH-769a (invented wrapper) and ORCH-769d (audit index rebase) continue, as instances of § 2 and a plain correctness fix.
