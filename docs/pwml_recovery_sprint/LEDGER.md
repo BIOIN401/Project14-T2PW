@@ -11147,3 +11147,5 @@ The id ORCH-760 was chosen so that 755-759 stay free for the live ORCH-754 sessi
 **`ORCH-769c` · 2026-10-24 — MERGED `ec800370`**: an empty review graph no longer blocks the PWML; the driver reports canonical counts. WNT PCP 767 fixed. Corpus 54 → 56/91, ACCEPT. SMOKE 508 → 511. Review APPROVE WITH NOTES. Record: `ORCH-769c-RESULT.md`.
 
 **`ORCH-769a`, `ORCH-769d` · 2026-10-24 — DIAGNOSED, fixes awaiting product-owner rulings:** (a) enterobactin's Stage-2-inferred wrapper (a new removal rule); (d) the audit patch applier's unrebased indices (rebase or reject). Record: `ORCH-769-RESULT.md`.
+
+**2026-10-25 11:32 — D-113 recorded.** Corpus at 56/91 on `7eeef63f` (766, 768, 769b, 769c merged; SMOKE 511; Chunk D 188). ORCH-770 did NOT run on 10-24: the sub-orchestrator hit a usage limit before its 18:45 default. Plan: 769a + 769d implemented, reviewed and merged today, then ORCH-770 launched this afternoon.

@@ -7377,3 +7377,24 @@ the Lead Orchestrator.
 
    No gate is relaxed (D-106).
 4. Then ORCH-770, one live overnight confirmation run on the merged code.
+
+---
+
+## D-113 — invented single-protein wrappers are quarantined when the paper's catalyst remains; the generated-wrapper count rule stays; interaction-only pathways export · 2026-10-25 · LOCKED
+
+**Decided by the product owner** (2026-10-24, in session, on the sub-orchestrator's ORCH-769a and ORCH-769c questions). Recorded by the
+Lead Orchestrator.
+
+1. **ORCH-769a (enterobactin):** when Stage 2 infers a complex-named wrapper (here "enterobactin synthase complex", whose only component
+   got EntE's accession) and the reaction still keeps a catalyst extracted from the paper, the inferred wrapper is **quarantined and
+   recorded**. The paper's enzyme stays. Gold must stay 5/5.
+2. **The generated-wrapper count gate stays strict**: a positive stoichiometry is still required on generated wrappers, although
+   PathWhiz allows null. This is consistent with D-106.
+3. **ORCH-769c F-7:** a pathway with interactions and no reactions **exports as `review_required`**.
+   **Orchestrator reading, for the product owner to confirm or overrule:** a pathway whose IR draws **no process at all** is declined
+   (`no_drawable_process`), not exported as an empty PWML (`runs_verify` PMC12856317). A PWML that draws at least one process exports.
+
+**Orchestrator rulings in the same round (operational, not product):**
+- ORCH-769d: audit-patch index rebasing, option (a), so later ops are rebased to the snapshot after a remove.
+- The corpus is reported on both denominators, with 91 as the headline (LLM-originating failures count as failures).
+- One read-only PathBank DB session is approved to record fixtures for the 8 legs the corpus refused.
