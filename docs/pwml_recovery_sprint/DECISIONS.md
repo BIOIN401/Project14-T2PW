@@ -7446,3 +7446,19 @@ PathWhiz's own validation decides it:
    `review_required`, and the dropped transporter is listed in the text output's "Omitted from the PWML" section with its reason, for the
    user to add by hand. If the transport fails for any other reason, it is omitted whole.
 3. Interactions with a bad endpoint stay omitted whole: an interaction needs both ends (`interaction.rb`).
+
+---
+
+## D-114 AMENDMENT 2 — how coverage is scored · 2026-10-25 · LOCKED
+
+**Decided by the product owner** (2026-10-25, in session, on the ORCH-772 coverage numbers). At `main`, on the replay corpus: 91 strict
+legs, mean 38.1%, median 28.6%, 22/91 at ≥ 75%; on the 56 legs that write a PWML, median 61.8%. Recorded by the Lead Orchestrator.
+
+1. **The headline coverage excludes interactions PathWhiz cannot carry** (KI-008: not Activation/Inhibition, or unsigned). No user can
+   add those to a PathWhiz pathway either. **The full-count coverage is always reported beside it.** Those interactions stay in the
+   text output (D-104 § 4).
+2. **The 75% target is judged on every strict leg**; a leg that writes no PWML counts as 0%. The PWML pass rate is reported alongside.
+3. **No decline for a PWML that draws zero processes. This overrules the orchestrator reading in D-113 § 3.** The product owner: "all
+   pathways would lead to some type of PWML". Such a leg (today only `runs_verify` PMC12856317, 0/3) exports as `review_required`, with
+   0% coverage shown and every process listed in the text output. Why it draws nothing is tracked as a known issue. No protected-file
+   change is made.

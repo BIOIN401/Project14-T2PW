@@ -11157,3 +11157,5 @@ The id ORCH-760 was chosen so that 755-759 stay free for the live ORCH-754 sessi
 **2026-10-25 — the product owner lifted the 2-agent cap:** many agents are fine; the freezes come mainly from the machine going days without a restart. One sprint Python job at a time (heavy lock), at least 6 GB free RAM, the orphan sweep, and no `python -` stay in force.
 
 **2026-10-25 — ORCH-771 merged** (`3ef3fa9c`, KI-001..064). **ORCH-773 phase 1:** corpus 56 → 72/91, ACCEPT, all 56 passing legs byte-identical. **D-114 AMENDMENT 1:** a reaction with a failing enzyme is omitted whole; a transport keeps its process and loses only the bad transporter.
+
+**2026-10-25 — ORCH-771, 772 and 769d merged at sprint `00eb12d3`** (gates running). Coverage at `main`: 91 legs, mean 38.1%, median 28.6%, 22/91 at ≥ 75%. **D-114 AMENDMENT 2:** KI-008 excluded from the headline denominator, with the full count shown beside it; target judged on all 91 legs; no zero-process decline.
