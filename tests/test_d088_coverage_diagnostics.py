@@ -161,7 +161,9 @@ def test_the_coverage_verdict_is_byte_identical_to_base_on_archived_legs(leg: st
     assert SQ._D088_DIAGNOSTICS_ATTR not in dict(produced)
     # The one route by which a verdict key could move a decision id is the policy
     # version, which IS a decision input and this card must not have touched it.
-    assert SQ.QUARANTINE_POLICY_VERSION == report["policy_version"]
+    # ORCH-773 bumped the LIVE version on purpose (2026-07-31.1 -> 2026-10-25.1, the
+    # module's own rule; merge rule 4): every archived leg was decided under the old one.
+    assert report["policy_version"] == "2026-07-31.1"
     assert SQ.decision_identifier(report) == report["decision_id"], f"{leg}: decision id"
 
 

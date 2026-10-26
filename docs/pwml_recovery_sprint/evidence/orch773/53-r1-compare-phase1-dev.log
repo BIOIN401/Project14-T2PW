@@ -1,0 +1,33 @@
+pass rate base 72/91 -> tip 72/91
+fixed: []
+passing legs turned failing: none
+gold recall lost: none
+still failing, at a different step (information): none
+D-112 § 2: REJECT
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f35de933f29399c4d81ef53594e987c7ddabdedb  [git, worktree dirty=True]
+label                   : r1-compare-phase1-dev
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch773/docs/pwml_recovery_sprint/evidence/orch768_replay_corpus.py compare C:/t/orch773/tip.json C:/t/orch773/r1.json
+cwd                     : C:/t/orch773/cwd
+root PID / process group: 203568 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 120 s
+duration                : 0.20 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  202964:python.exe
+descendants terminated  : 1  202964
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\docs\pwml_recovery_sprint\evidence\g11\ORCH-773\53-r1-compare-phase1-dev.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH-773  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

@@ -1,0 +1,171 @@
+{
+  "label": "eval-v2",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/integ772/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/integ772/docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-772i/03-eval-v2.pin.json",
+    "-q",
+    "--basetemp=C:/t/orch-sub/bt-ORCH-772i-03-eval-v2",
+    "tests/test_eval_v2_embedding_cache.py",
+    "tests/test_eval_v2_gold_matcher.py",
+    "tests/test_eval_v2_metrics.py",
+    "tests/test_eval_v2_paper_gold.py",
+    "tests/test_eval_v2_pathbank_gold.py",
+    "tests/test_eval_v2_report.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\integ772",
+  "started_at": "2026-10-25T21:25:02+00:00",
+  "finished_at": "2026-10-25T21:25:22+00:00",
+  "duration_seconds": 20.414700999999695,
+  "timeout_seconds": 540.0,
+  "root_pid": 234616,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 243456,
+      "name": "python.exe",
+      "ppid": 234616
+    },
+    {
+      "pid": 227700,
+      "name": "git.exe",
+      "ppid": 243456
+    },
+    {
+      "pid": 242452,
+      "name": "git.exe",
+      "ppid": 243456
+    },
+    {
+      "pid": 244512,
+      "name": "git.exe",
+      "ppid": 243456
+    },
+    {
+      "pid": 243432,
+      "name": "git.exe",
+      "ppid": 243456
+    },
+    {
+      "pid": 240492,
+      "name": "git.exe",
+      "ppid": 243456
+    },
+    {
+      "pid": 188304,
+      "name": "git.exe",
+      "ppid": 243456
+    },
+    {
+      "pid": 242072,
+      "name": "git.exe",
+      "ppid": 243456
+    },
+    {
+      "pid": 244196,
+      "name": "git.exe",
+      "ppid": 243456
+    },
+    {
+      "pid": 244800,
+      "name": "git.exe",
+      "ppid": 243456
+    },
+    {
+      "pid": 245512,
+      "name": "git.exe",
+      "ppid": 243456
+    },
+    {
+      "pid": 245004,
+      "name": "git.exe",
+      "ppid": 243456
+    },
+    {
+      "pid": 245312,
+      "name": "git.exe",
+      "ppid": 243456
+    },
+    {
+      "pid": 244924,
+      "name": "git.exe",
+      "ppid": 243456
+    }
+  ],
+  "descendants_terminated": [
+    188304,
+    227700,
+    240492,
+    242072,
+    242452,
+    243432,
+    243456,
+    244196,
+    244512,
+    244800,
+    244924,
+    245004,
+    245312,
+    245512
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 185276,
+      "name": "python.exe"
+    },
+    {
+      "pid": 238428,
+      "name": "python.exe"
+    },
+    {
+      "pid": 240188,
+      "name": "python.exe"
+    },
+    {
+      "pid": 240768,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\integ772\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-772i\\03-eval-v2.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\integ772\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\integ772",
+    "repo_head": "00eb12d3181822de933fc74f75a1a5a4752d4e11",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-772i",
+    "token": "ORCH-772i:240768:9749fe9807c27ad0",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

@@ -4603,6 +4603,13 @@ def _unknown_reference_detail(
     )
 
 
+#: The gate's two messages for a protein attached to nothing, each followed by
+#: one space and the name. Shared so ``strict_quarantine``'s per-row pass reads
+#: the gate's own wording (ORCH-773); the messages are byte-identical to before.
+DEGREE_ZERO_PROTEIN_MESSAGE = "Protein has degree 0 after normalization:"
+ISOLATED_LOCATED_PROTEIN_MESSAGE = "Located protein is isolated in connectivity graph:"
+
+
 def run_strict_post_normalization_gates(
     payload: Dict[str, Any],
     *,
@@ -5067,7 +5074,7 @@ def run_strict_post_normalization_gates(
         if norm in located_norm_to_pointers:
             _add_error(
                 located_norm_to_pointers[norm][0],
-                f"Located protein is isolated in connectivity graph: {protein_name}",
+                f"{ISOLATED_LOCATED_PROTEIN_MESSAGE} {protein_name}",
                 # A protein given a subcellular location but no edge means its
                 # reactions reference it under a different spelling. The near
                 # misses among nodes that DO have edges are the candidates.
@@ -5105,7 +5112,7 @@ def run_strict_post_normalization_gates(
                     continue
                 _add_error(
                     protein_pointer_by_norm.get(pnorm, f"/entities/proteins/{protein_name}"),
-                    f"Protein has degree 0 after normalization: {protein_name}",
+                    f"{DEGREE_ZERO_PROTEIN_MESSAGE} {protein_name}",
                     build_detail(
                         protein=protein_name,
                         normalized=pnorm,
@@ -5135,6 +5142,11 @@ def run_strict_post_normalization_gates(
     if errors:
         raise GateValidationError("Hard-gate validation failed after normalization.", details=details)
     return details
+
+
+#: ``generation_reason`` of the wrapper :func:`relocate_complex_named_proteins`
+#: builds; ``strict_quarantine`` reads it for D-113 section 1 (ORCH-773).
+COMPLEX_NAMED_SOURCE_WRAPPER_REASON = "complex_named_source_entity_wrapper"
 
 
 def relocate_complex_named_proteins(
@@ -5202,7 +5214,7 @@ def relocate_complex_named_proteins(
                     "name": complex_name,
                     "class": "protein_complex",
                     "generated": True,
-                    "generation_reason": "complex_named_source_entity_wrapper",
+                    "generation_reason": COMPLEX_NAMED_SOURCE_WRAPPER_REASON,
                     "confidence": 0.8,
                     "provenance": "inferred",
                     "components": [],

@@ -1,0 +1,755 @@
+PATHWAY EVIDENCE REPORT
+=======================
+PWML coverage: 15 of 48 processes (31.2%) -- target 75%
+  By kind, drawn of total (total = final payload + omitted before the freeze): reactions 0 of 4; transports 9 of 11; interactions 6 of 33
+  Excluding the 7 interactions PathWhiz cannot type (KI-008, withheld by design): 15 of 41 (36.6%)
+  Listed but not counted: 3 (merged duplicates: 3)
+  Every process left out, with its reason: section OMITTED FROM THE PWML, below.
+Paper: Not recorded
+Pathway: Noncanonical Wnt/Ca2+ signaling pathway
+Requested organism (Stage 0): Homo sapiens
+Species (final payload): Homo sapiens (taxonomy 9606), Arabidopsis thaliana (taxonomy 3702)
+Core-term coverage: 0.428571
+Minimum core satisfied: false
+Surviving processes: 22
+Quarantined processes: 26
+Release status: review_required
+Export mode: pathwhiz
+Quarantine ok: true
+Reactions itemised: 0; interactions itemised: 13 (transports: 9; counted above, not itemised)
+Surviving reactions read from: final_mapped.json
+Artifacts read: coverage_summary.json, final_mapped.json, pathway.review_required.pwml, pwml_ir.json, quarantine_report.json, removed_entity_report.json
+
+SURVIVING REACTIONS (0)
+-----------------------
+None recorded
+
+INTERACTIONS (13) -- PWML verdicts read from: pwml_ir.json
+----------------------------------------------------------
+INTERACTION 1  [final payload /processes/interactions/0]
+Name: Wnt5a binds Fzd2
+Relationship (as extracted): binding
+Source: Wnt5a
+Target: Frizzled2
+State: plasma membrane state
+PWML: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Evidence:
+  1. "The Wnt/Ca2+ pathway is predominantly activated by the Wnt5a ligand and Fzd2 receptor"
+
+INTERACTION 2  [final payload /processes/interactions/1]
+Name: IP3 binds InsP3R
+Relationship (as extracted): activation
+Source: IP3
+Target: inositol-1,4,5-trisphosphate receptor (InsP3R) complex
+State: ER state
+PWML: drawn as Activation
+Evidence:
+  1. "IP3 binds to inositol-1,4,5-trisphosphate receptors (InsP3Rs) on the membrane of the ER, stimulating Ca2+ release"
+
+INTERACTION 3  [final payload /processes/interactions/2]
+Name: Ca2+ activates calcineurin
+Relationship (as extracted): activation
+Source: Ca2+
+Target: calcineurin
+State: cytoplasmic state
+PWML: drawn as Activation
+Evidence:
+  1. "The increased cytosolic Ca2+ from IP3 binding to InsP3R not only stimulates PKC but also stimulates calcineurin and CAMKII"
+
+INTERACTION 4  [final payload /processes/interactions/3]
+Name: NLK inhibits β-catenin/TCF complex
+Relationship (as extracted): inhibition
+Source: STAT3-NLK-MAP3K7 complex
+Target: β-catenin/TCF complex
+State: Not recorded
+PWML: drawn as Inhibition
+Evidence:
+  1. "NLK phosphorylates TCF, inhibiting the β-catenin/TCF complex and preventing gene transcription"
+
+INTERACTION 5  [final payload /processes/interactions/4]
+Name: Ca2+ binds calmodulin
+Relationship (as extracted): binding
+Source: Ca2+
+Target: calmodulin
+State: cytosolic state
+PWML: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Evidence:
+  1. "Upon Ca2+/CAM binding to the regulatory domain"
+
+INTERACTION 6  [final payload /processes/interactions/5]
+Name: calmodulin activates CAMKII
+Relationship (as extracted): activates
+Source: calmodulin complex
+Target: Ca2+/calmodulin-dependent kinase II
+State: Not recorded
+PWML: drawn as Activation
+Evidence:
+  1. "Upon Ca2+/CAM binding to the regulatory domain, the regulatory segment is removed, enabling progressive autophosphorylation"
+
+INTERACTION 7  [final payload /processes/interactions/6]
+Name: Ca2+ activates CAMKII
+Relationship (as extracted): activates
+Source: Ca2+
+Target: Ca2+/calmodulin-dependent kinase II
+State: Not recorded
+PWML: drawn as Activation
+Evidence:
+  1. "Upon Ca2+/CAM binding to the regulatory domain, the regulatory segment is removed"
+
+INTERACTION 8  [final payload /processes/interactions/7]
+Name: Ca2+ activates calcineurin
+Relationship (as extracted): activates
+Source: Ca2+
+Target: calcineurin
+State: Not recorded
+PWML: drawn as Activation
+Evidence:
+  1. "CaN is a conserved Ser/Thr phosphatase that is activated by increased intracellular Ca2+"
+
+INTERACTION 9  [final payload /processes/interactions/8]
+Name: Wnt5a-Frizzled2 binding
+Relationship (as extracted): binds
+Source: Wnt5a
+Target: Frizzled2
+State: Not recorded
+PWML: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Evidence:
+  1. "The binding of the Wnt5a ligand to Fzd2 triggers G protein to activate phospholipase C (PLC)."
+
+INTERACTION 10  [final payload /processes/interactions/9]
+Name: IP3-InsP3R binding
+Relationship (as extracted): binds
+Source: IP3
+Target: inositol-1,4,5-trisphosphate receptor (InsP3R)
+State: endoplasmic_reticulum
+PWML: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Evidence:
+  1. "IP3 binds to inositol-1,4,5-trisphosphate receptors (InsP3Rs) on the membrane of the ER"
+
+INTERACTION 11  [final payload /processes/interactions/10]
+Name: β-catenin component of β-catenin/TCF complex
+Relationship (as extracted): component_of
+Source: β-catenin
+Target: β-catenin/TCF complex
+State: Not recorded
+PWML: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Evidence:
+  1. "NLK phosphorylates TCF, inhibiting the β-catenin/TCF complex and preventing gene transcription"
+
+INTERACTION 12  [final payload /processes/interactions/11]
+Name: TCF component of β-catenin/TCF complex
+Relationship (as extracted): component_of
+Source: TCF
+Target: β-catenin/TCF complex
+State: Not recorded
+PWML: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Evidence:
+  1. "NLK phosphorylates TCF, inhibiting the β-catenin/TCF complex and preventing gene transcription"
+
+INTERACTION 13  [final payload /processes/interactions/12]
+Name: calcineurin B component of calcineurin complex
+Relationship (as extracted): component_of
+Source: calcineurin B
+Target: calcineurin
+State: Not recorded
+PWML: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Evidence:
+  1. "CaN is a heterodimer consisting of calcineurin A (the catalytic subunit) and calcineurin B (the regulatory subunit)."
+
+QUARANTINED / REJECTED (29)
+---------------------------
+From quarantine_report.json quarantined: 26
+From final payload quarantined_locked_reactions: 7 (4 already listed from quarantine_report.json by lock id: rxn_lock_005, rxn_lock_002, rxn_lock_007, rxn_lock_001)
+
+QUARANTINED 1  [pre-quarantine /processes/reactions/0; reaction; lock rxn_lock_005]
+Name: PLC cleavage of PIP2
+Equation: PIP2 -> IP3 + diacylglycerol
+State: quarantined_unmapped_entity
+Reason: protein_missing_external_identity
+Essential participant: phospholipase C (PLC)
+Evidence:
+  1. "PLC cleaves PIP2 into IP3, which can then induce the intracellular release of Ca2+."
+  2. "PLC cleaves PIP2 into IP3"
+
+QUARANTINED 2  [pre-quarantine /processes/reactions/1; reaction; lock rxn_lock_002]
+Name: NLK phosphorylates TCF4
+Equation: TCF4 -> phosphorylated TCF4
+State: quarantined_unmapped_entity
+Reason: protein_missing_external_identity
+Essential participant: phosphorylated TCF4
+Evidence:
+  1. "NLK can phosphorylate TCF4 to prevent the β-catenin/TCF complex from binding to DNA"
+
+QUARANTINED 3  [pre-quarantine /processes/reactions/2; reaction; lock rxn_lock_007]
+Name: calcineurin dephosphorylates NF-ATp
+Equation: NF-ATp -> NFAT
+State: quarantined_unmapped_entity
+Reason: protein_missing_external_identity
+Essential participant: NFAT
+Evidence:
+  1. "dephosphorylating the transcription factor NF-ATp in response to an increase in intracellular Ca2+"
+  2. "dephosphorylating the transcription factor NF-ATp"
+
+QUARANTINED 4  [pre-quarantine /processes/reactions/3; reaction; lock rxn_lock_001]
+Name: CAMKII autophosphorylation
+Equation: Ca2 + /calmodulin-dependent kinase II -> phosphorylated CAMKII
+State: quarantined_unmapped_entity
+Reason: undeclared_entity_in_inputs
+Essential participant: Ca2
+Evidence:
+  1. "enabling progressive autophosphorylation of the T286 site and increasing CAMKII activity"
+  2. "enabling progressive autophosphorylation of the T286 site"
+
+QUARANTINED 5  [pre-quarantine /processes/transports/1; transport]
+Name: SOCE via Orai
+State: quarantined_unmapped_entity
+Reason: protein_missing_external_identity
+Essential participant: Orai
+Evidence:
+  1. "STIM1/2 detects the decrease in Ca2+ in the endoplasmic reticulum (ER) and activates Orai family proteins (Orai1, Orai2, or Orai3) on the plasma membrane to mediate store-operated Ca2+ entry (SOCE)"
+
+QUARANTINED 6  [pre-quarantine /processes/transports/6; transport]
+Name: Store-operated Ca2+ entry
+State: quarantined_unmapped_entity
+Reason: protein_missing_external_identity
+Essential participant: Orai
+Evidence:
+  1. "activates Orai family proteins on the plasma membrane to mediate store-operated Ca2+ entry"
+
+QUARANTINED 7  [pre-quarantine /processes/interactions/1; interaction]
+Name: DAG activates PKC
+State: quarantined_unmapped_entity
+Reason: protein_missing_external_identity
+Essential participant: PKC
+Evidence:
+  1. "DAG, along with Ca2+, activates protein kinase C (PKC)"
+
+QUARANTINED 8  [pre-quarantine /processes/interactions/2; interaction]
+Name: Ca2+ activates PKC
+State: quarantined_unmapped_entity
+Reason: protein_missing_external_identity
+Essential participant: PKC
+Evidence:
+  1. "DAG, along with Ca2+, activates protein kinase C (PKC)"
+
+QUARANTINED 9  [pre-quarantine /processes/interactions/3; interaction]
+Name: PKC activates Cdc42
+State: quarantined_unmapped_entity
+Reason: protein_missing_external_identity
+Essential participant: PKC
+Evidence:
+  1. "PKC can stimulate Cdc42"
+
+QUARANTINED 10  [pre-quarantine /processes/interactions/6; interaction]
+Name: Ca2+ activates CAMKII
+State: quarantined_unmapped_entity
+Reason: undeclared_entity_in_entity_2
+Essential participant: CAMKII
+Evidence:
+  1. "The increased cytosolic Ca2+ from IP3 binding to InsP3R not only stimulates PKC but also stimulates calcineurin and CAMKII"
+
+QUARANTINED 11  [pre-quarantine /processes/interactions/7; interaction]
+Name: CAMKII activates TAK1
+State: quarantined_unmapped_entity
+Reason: undeclared_entity_in_entity_1
+Essential participant: CAMKII
+Evidence:
+  1. "CAMKII stimulates TGF-β-activated protein kinase 1 (TAK1)"
+
+QUARANTINED 12  [pre-quarantine /processes/interactions/9; interaction]
+Name: STIM1/2 activates Orai
+State: quarantined_unmapped_entity
+Reason: protein_missing_external_identity
+Essential participant: STIM1/2
+Evidence:
+  1. "STIM1/2 detects the decrease in Ca2+ in the endoplasmic reticulum (ER) and activates Orai family proteins (Orai1, Orai2, or Orai3) on the plasma membrane to mediate store-operated Ca2+ entry (SOCE)"
+
+QUARANTINED 13  [pre-quarantine /processes/interactions/10; interaction]
+Name: Frizzled2 activates G protein
+State: quarantined_unmapped_entity
+Reason: protein_missing_external_identity
+Essential participant: G protein
+Evidence:
+  1. "binding of the Wnt5a ligand to Fzd2 triggers G protein to activate phospholipase C"
+
+QUARANTINED 14  [pre-quarantine /processes/interactions/11; interaction]
+Name: G protein activates PLC
+State: quarantined_unmapped_entity
+Reason: protein_missing_external_identity
+Essential participant: G protein
+Evidence:
+  1. "triggers G protein to activate phospholipase C (PLC)"
+
+QUARANTINED 15  [pre-quarantine /processes/interactions/12; interaction]
+Name: Calcineurin activates NFAT
+State: quarantined_unmapped_entity
+Reason: protein_missing_external_identity
+Essential participant: NFAT
+Evidence:
+  1. "Calcineurin activates the nuclear factor of activated T cells (NFAT)"
+
+QUARANTINED 16  [pre-quarantine /processes/interactions/13; interaction]
+Name: TAK1 activates NLK
+State: quarantined_unmapped_entity
+Reason: undeclared_entity_in_entity_1
+Essential participant: TAK1
+Evidence:
+  1. "TAK1, which then activates Nemo-like kinase (NLK)"
+
+QUARANTINED 17  [pre-quarantine /processes/interactions/15; interaction]
+Name: CAM activates CAMKII
+State: quarantined_unmapped_entity
+Reason: undeclared_entity_in_entity_2
+Essential participant: CAMKII
+Evidence:
+  1. "Upon Ca2+/CAM binding to the regulatory domain, the regulatory segment is removed, enabling progressive autophosphorylation of the T286 site and increasing CAMKII activity."
+
+QUARANTINED 18  [pre-quarantine /processes/interactions/16; interaction]
+Name: DAG activates PKC
+State: quarantined_unmapped_entity
+Reason: protein_missing_external_identity
+Essential participant: PKC
+Evidence:
+  1. "DAG, which serves as a secondary messenger to activate Ca2+-dependent protein kinase C (PKC)"
+
+QUARANTINED 19  [pre-quarantine /processes/interactions/18; interaction]
+Name: CAMKII activates TAK1
+State: quarantined_unmapped_entity
+Reason: undeclared_entity_in_entity_2
+Essential participant: TAK1
+Evidence:
+  1. "CAMKII from the noncanonical Wnt/Ca2+ pathway activates TAK1"
+
+QUARANTINED 20  [pre-quarantine /processes/interactions/21; interaction]
+Name: TAK1 activates NLK
+State: quarantined_unmapped_entity
+Reason: undeclared_entity_in_entity_1
+Essential participant: TAK1
+Evidence:
+  1. "TAK1 can also stimulate NLK to phosphorylate TCF4"
+
+QUARANTINED 21  [pre-quarantine /processes/interactions/23; interaction]
+Name: Frizzled2 activates phospholipase C
+State: quarantined_unmapped_entity
+Reason: protein_missing_external_identity
+Essential participant: phospholipase C (PLC)
+Evidence:
+  1. "The binding of the Wnt5a ligand to Fzd2 triggers G protein to activate phospholipase C (PLC)."
+
+QUARANTINED 22  [pre-quarantine /processes/interactions/24; interaction]
+Name: Ca2+ activates PKC
+State: quarantined_unmapped_entity
+Reason: protein_missing_external_identity
+Essential participant: PKC
+Evidence:
+  1. "DAG, along with Ca2+, activates protein kinase C (PKC) to stimulate cell–division cycle 42 (Cdc42)"
+
+QUARANTINED 23  [pre-quarantine /processes/interactions/25; interaction]
+Name: PKC activates Cdc42
+State: quarantined_unmapped_entity
+Reason: protein_missing_external_identity
+Essential participant: PKC
+Evidence:
+  1. "DAG, along with Ca2+, activates protein kinase C (PKC) to stimulate cell–division cycle 42 (Cdc42)"
+
+QUARANTINED 24  [pre-quarantine /processes/interactions/26; interaction]
+Name: Ca2+ activates CaMKII
+State: quarantined_unmapped_entity
+Reason: undeclared_entity_in_entity_2
+Essential participant: CAMKII
+Evidence:
+  1. "The increased cytosolic Ca2+ from IP3 binding to InsP3R not only stimulates PKC but also stimulates calcineurin and CAMKII."
+
+QUARANTINED 25  [pre-quarantine /processes/interactions/28; interaction]
+Name: STIM1/2-Orai activation
+State: quarantined_unmapped_entity
+Reason: protein_missing_external_identity
+Essential participant: STIM1/2
+Evidence:
+  1. "Stromal interaction molecule 1/2 (STIM1/2) detects the decrease in Ca2+ in the endoplasmic reticulum (ER) and activates Orai family proteins"
+
+QUARANTINED 26  [pre-quarantine /processes/interactions/31; interaction]
+Name: calcineurin A component of calcineurin complex
+State: quarantined_unmapped_entity
+Reason: protein_missing_external_identity
+Essential participant: calcineurin A
+Evidence:
+  1. "CaN is a heterodimer consisting of calcineurin A (the catalytic subunit) and calcineurin B (the regulatory subunit)."
+
+QUARANTINED 27  [final payload quarantined_locked_reactions; json_pointer /processes/reactions/1; lock rxn_lock_004]
+Name: PLC cleavage of PIP2
+Equation: PIP2 -> diacylglycerol + IP3
+Reason: duplicate_locked_reaction
+Action: quarantined_from_active_reactions
+Evidence:
+  1. "PLC then cleaves phosphatidylinositol-4,5-bisphosphate (PtdInsP2 or PIP2) into diacylglycerol (DAG) and inositol-1,4,5-trisphosphate (InsP3 or IP3)."
+  2. "PLC then cleaves phosphatidylinositol-4,5-bisphosphate"
+
+QUARANTINED 28  [final payload quarantined_locked_reactions; json_pointer /processes/reactions/3; lock rxn_lock_006]
+Name: PLC-mediated PIP2 cleavage
+Equation: PIP2 -> IP3 + diacylglycerol
+Reason: duplicate_locked_reaction
+Action: quarantined_from_active_reactions
+Evidence:
+  1. "PLC cleaves PIP2 into IP3, which can then induce the intracellular release of Ca2+"
+  2. "PLC cleaves PIP2 into IP3"
+
+QUARANTINED 29  [final payload quarantined_locked_reactions; json_pointer /processes/reactions/0; lock rxn_lock_003]
+Name: PLC cleavage of PIP2
+Equation: PIP2 -> diacylglycerol + IP3
+Reason: duplicate_locked_reaction
+Action: quarantined_from_active_reactions
+Evidence:
+  1. "PLC then cleaves phosphatidylinositol-4,5-bisphosphate (PIP2) into diacylglycerol (DAG) and inositol-1,4,5-trisphosphate (IP3)"
+
+REMOVED ENTITIES (18)
+---------------------
+- compounds PIP2: unreferenced_after_quarantine
+- compounds diacylglycerol: unreferenced_after_quarantine
+- compounds /calmodulin-dependent kinase II: unreferenced_after_quarantine
+- proteins G protein: degree_zero_after_quarantine
+- proteins phospholipase C (PLC): degree_zero_after_quarantine
+- proteins PKC: degree_zero_after_quarantine
+- proteins Cdc42: degree_zero_after_quarantine
+- proteins STIM1/2: degree_zero_after_quarantine
+- proteins Orai: degree_zero_after_quarantine
+- proteins NFAT: degree_zero_after_quarantine
+- proteins TCF4: degree_zero_after_quarantine
+- proteins calcineurin A: degree_zero_after_quarantine
+- proteins phosphorylated TCF4: degree_zero_after_quarantine
+- proteins NF-ATp: degree_zero_after_quarantine
+- protein_complexes inositol-1,4,5-trisphosphate receptors: degree_zero_after_quarantine
+- proteins phosphorylated CAMKII: protein_missing_external_identity
+- transporters inositol-1,4,5-trisphosphate receptor (InsP3R): actor_schema_not_canonical
+- transporters inositol-1,4,5-trisphosphate receptor (InsP3R): actor_schema_not_canonical
+
+OMITTED FROM THE PWML (33; 2 actors left out of processes still drawn)
+----------------------------------------------------------------------
+Known-issue ids: docs/pwml_recovery_sprint/PWML_KNOWN_ISSUES.md, appendix "Reason code -> KI id".
+
+OMITTED 1  [quarantine_report.json quarantined; pre-quarantine /processes/reactions/0; lock rxn_lock_005]
+Kind: reaction
+Name: PLC cleavage of PIP2
+Equation: PIP2 -> IP3 + diacylglycerol
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 2  [quarantine_report.json quarantined; pre-quarantine /processes/reactions/1; lock rxn_lock_002]
+Kind: reaction
+Name: NLK phosphorylates TCF4
+Equation: TCF4 -> phosphorylated TCF4
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 3  [quarantine_report.json quarantined; pre-quarantine /processes/reactions/2; lock rxn_lock_007]
+Kind: reaction
+Name: calcineurin dephosphorylates NF-ATp
+Equation: NF-ATp -> NFAT
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 4  [quarantine_report.json quarantined; pre-quarantine /processes/reactions/3; lock rxn_lock_001]
+Kind: reaction
+Name: CAMKII autophosphorylation
+Equation: Ca2 + /calmodulin-dependent kinase II -> phosphorylated CAMKII
+Reason: undeclared_entity_in_inputs
+Known issue: KI-015
+Add by hand: Read the process in the text record and draw it in PathWhiz if the quote supports it.
+
+OMITTED 5  [quarantine_report.json quarantined; pre-quarantine /processes/transports/1]
+Kind: transport
+Name: SOCE via Orai
+Cargo: Ca2+: extracellular state -> cytoplasmic state
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 6  [quarantine_report.json quarantined; pre-quarantine /processes/transports/6]
+Kind: transport
+Name: Store-operated Ca2+ entry
+Cargo: Ca2+: extracellular state -> cytosolic state
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 7  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/1]
+Kind: interaction
+Name: DAG activates PKC
+Endpoints: diacylglycerol -[activation]-> PKC
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 8  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/2]
+Kind: interaction
+Name: Ca2+ activates PKC
+Endpoints: Ca2+ -[activation]-> PKC
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 9  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/3]
+Kind: interaction
+Name: PKC activates Cdc42
+Endpoints: PKC -[activation]-> Cdc42
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 10  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/6]
+Kind: interaction
+Name: Ca2+ activates CAMKII
+Endpoints: Ca2+ -[activation]-> CAMKII
+Reason: undeclared_entity_in_entity_2
+Known issue: KI-015
+Add by hand: Read the process in the text record and draw it in PathWhiz if the quote supports it.
+
+OMITTED 11  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/7]
+Kind: interaction
+Name: CAMKII activates TAK1
+Endpoints: CAMKII -[activation]-> TAK1
+Reason: undeclared_entity_in_entity_1
+Known issue: KI-015
+Add by hand: Read the process in the text record and draw it in PathWhiz if the quote supports it.
+
+OMITTED 12  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/9]
+Kind: interaction
+Name: STIM1/2 activates Orai
+Endpoints: STIM1/2 -[activation]-> Orai
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 13  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/10]
+Kind: interaction
+Name: Frizzled2 activates G protein
+Endpoints: Frizzled2 -[activation]-> G protein
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 14  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/11]
+Kind: interaction
+Name: G protein activates PLC
+Endpoints: G protein -[activation]-> phospholipase C (PLC)
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 15  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/12]
+Kind: interaction
+Name: Calcineurin activates NFAT
+Endpoints: calcineurin -[activation]-> NFAT
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 16  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/13]
+Kind: interaction
+Name: TAK1 activates NLK
+Endpoints: TAK1 -[activation]-> STAT3-NLK-MAP3K7 complex
+Reason: undeclared_entity_in_entity_1
+Known issue: KI-015
+Add by hand: Read the process in the text record and draw it in PathWhiz if the quote supports it.
+
+OMITTED 17  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/15]
+Kind: interaction
+Name: CAM activates CAMKII
+Endpoints: calmodulin complex -[activation]-> CAMKII
+Reason: undeclared_entity_in_entity_2
+Known issue: KI-015
+Add by hand: Read the process in the text record and draw it in PathWhiz if the quote supports it.
+
+OMITTED 18  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/16]
+Kind: interaction
+Name: DAG activates PKC
+Endpoints: diacylglycerol -[activates]-> PKC
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 19  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/18]
+Kind: interaction
+Name: CAMKII activates TAK1
+Endpoints: Ca2+/calmodulin-dependent kinase II -[activates]-> TAK1
+Reason: undeclared_entity_in_entity_2
+Known issue: KI-015
+Add by hand: Read the process in the text record and draw it in PathWhiz if the quote supports it.
+
+OMITTED 20  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/21]
+Kind: interaction
+Name: TAK1 activates NLK
+Endpoints: TAK1 -[activates]-> STAT3-NLK-MAP3K7 complex
+Reason: undeclared_entity_in_entity_1
+Known issue: KI-015
+Add by hand: Read the process in the text record and draw it in PathWhiz if the quote supports it.
+
+OMITTED 21  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/23]
+Kind: interaction
+Name: Frizzled2 activates phospholipase C
+Endpoints: Frizzled2 -[activates]-> phospholipase C (PLC)
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 22  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/24]
+Kind: interaction
+Name: Ca2+ activates PKC
+Endpoints: Ca2+ -[activates]-> PKC
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 23  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/25]
+Kind: interaction
+Name: PKC activates Cdc42
+Endpoints: PKC -[activates]-> Cdc42
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 24  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/26]
+Kind: interaction
+Name: Ca2+ activates CaMKII
+Endpoints: Ca2+ -[activates]-> CAMKII
+Reason: undeclared_entity_in_entity_2
+Known issue: KI-015
+Add by hand: Read the process in the text record and draw it in PathWhiz if the quote supports it.
+
+OMITTED 25  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/28]
+Kind: interaction
+Name: STIM1/2-Orai activation
+Endpoints: STIM1/2 -[activates]-> Orai
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 26  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/31]
+Kind: interaction
+Name: calcineurin A component of calcineurin complex
+Endpoints: calcineurin A -[component_of]-> calcineurin
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 27  [pwml_ir.json; final payload /processes/interactions/0]
+Kind: interaction
+Name: Wnt5a binds Fzd2
+Endpoints: Wnt5a -[binding]-> Frizzled2
+Reason: untyped_interaction
+Verdict: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Known issue: KI-008
+Add by hand: None inside PathWhiz's model: it has no type for these relations. Read them in the text record, and add an Activation or Inhibition by hand only where the paper states the direction.
+
+OMITTED 28  [pwml_ir.json; final payload /processes/interactions/4]
+Kind: interaction
+Name: Ca2+ binds calmodulin
+Endpoints: Ca2+ -[binding]-> calmodulin
+Reason: untyped_interaction
+Verdict: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Known issue: KI-008
+Add by hand: None inside PathWhiz's model: it has no type for these relations. Read them in the text record, and add an Activation or Inhibition by hand only where the paper states the direction.
+
+OMITTED 29  [pwml_ir.json; final payload /processes/interactions/8]
+Kind: interaction
+Name: Wnt5a-Frizzled2 binding
+Endpoints: Wnt5a -[binds]-> Frizzled2
+Reason: untyped_interaction
+Verdict: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Known issue: KI-008
+Add by hand: None inside PathWhiz's model: it has no type for these relations. Read them in the text record, and add an Activation or Inhibition by hand only where the paper states the direction.
+
+OMITTED 30  [pwml_ir.json; final payload /processes/interactions/9]
+Kind: interaction
+Name: IP3-InsP3R binding
+Endpoints: IP3 -[binds]-> inositol-1,4,5-trisphosphate receptor (InsP3R)
+Reason: untyped_interaction
+Verdict: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Known issue: KI-008
+Add by hand: None inside PathWhiz's model: it has no type for these relations. Read them in the text record, and add an Activation or Inhibition by hand only where the paper states the direction.
+
+OMITTED 31  [pwml_ir.json; final payload /processes/interactions/10]
+Kind: interaction
+Name: β-catenin component of β-catenin/TCF complex
+Endpoints: β-catenin -[component_of]-> β-catenin/TCF complex
+Reason: untyped_interaction
+Verdict: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Known issue: KI-008
+Add by hand: None inside PathWhiz's model: it has no type for these relations. Read them in the text record, and add an Activation or Inhibition by hand only where the paper states the direction.
+
+OMITTED 32  [pwml_ir.json; final payload /processes/interactions/11]
+Kind: interaction
+Name: TCF component of β-catenin/TCF complex
+Endpoints: TCF -[component_of]-> β-catenin/TCF complex
+Reason: untyped_interaction
+Verdict: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Known issue: KI-008
+Add by hand: None inside PathWhiz's model: it has no type for these relations. Read them in the text record, and add an Activation or Inhibition by hand only where the paper states the direction.
+
+OMITTED 33  [pwml_ir.json; final payload /processes/interactions/12]
+Kind: interaction
+Name: calcineurin B component of calcineurin complex
+Endpoints: calcineurin B -[component_of]-> calcineurin
+Reason: untyped_interaction
+Verdict: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Known issue: KI-008
+Add by hand: None inside PathWhiz's model: it has no type for these relations. Read them in the text record, and add an Activation or Inhibition by hand only where the paper states the direction.
+
+OMITTED ACTOR 1  [removed_entity_report.json removed_entities; process /processes/transports/9]
+Kind: actor left out of a transport that is still drawn
+Process: IP3-induced Ca2+ release
+Actor: inositol-1,4,5-trisphosphate receptor (InsP3R)
+Slot: transporters
+Reason: actor_schema_not_canonical
+Gate: pre_export_stage3_revalidation
+Decision: D-114 AMENDMENT 1 s2
+Known issue: KI-023
+Add by hand: Add "inositol-1,4,5-trisphosphate receptor (InsP3R)" as a transporter of "IP3-induced Ca2+ release" in PathWhiz if the paper supports it; the dropped row is kept verbatim in removed_entity_report.json (detail.actor).
+
+OMITTED ACTOR 2  [removed_entity_report.json removed_entities; process /processes/transports/10]
+Kind: actor left out of a transport that is still drawn
+Process: SERCA pumps Ca2+ into ER
+Actor: inositol-1,4,5-trisphosphate receptor (InsP3R)
+Slot: transporters
+Reason: actor_schema_not_canonical
+Gate: pre_export_stage3_revalidation
+Decision: D-114 AMENDMENT 1 s2
+Known issue: KI-023
+Add by hand: Add "inositol-1,4,5-trisphosphate receptor (InsP3R)" as a transporter of "SERCA pumps Ca2+ into ER" in PathWhiz if the paper supports it; the dropped row is kept verbatim in removed_entity_report.json (detail.actor).
+
+Listed, not counted (3):
+- merged duplicate, not counted: PLC cleavage of PIP2  [final payload quarantined_locked_reactions; json_pointer /processes/reactions/1; lock rxn_lock_004]: duplicate_locked_reaction (KI-014)
+- merged duplicate, not counted: PLC-mediated PIP2 cleavage  [final payload quarantined_locked_reactions; json_pointer /processes/reactions/3; lock rxn_lock_006]: duplicate_locked_reaction (KI-014)
+- merged duplicate, not counted: PLC cleavage of PIP2  [final payload quarantined_locked_reactions; json_pointer /processes/reactions/0; lock rxn_lock_003]: duplicate_locked_reaction (KI-014)
+
+Entities left out (18), from removed_entity_report.json:
+- compounds PIP2: unreferenced_after_quarantine (unclassified)
+- compounds diacylglycerol: unreferenced_after_quarantine (unclassified)
+- compounds /calmodulin-dependent kinase II: unreferenced_after_quarantine (unclassified)
+- proteins G protein: degree_zero_after_quarantine (unclassified)
+- proteins phospholipase C (PLC): degree_zero_after_quarantine (unclassified)
+- proteins PKC: degree_zero_after_quarantine (unclassified)
+- proteins Cdc42: degree_zero_after_quarantine (unclassified)
+- proteins STIM1/2: degree_zero_after_quarantine (unclassified)
+- proteins Orai: degree_zero_after_quarantine (unclassified)
+- proteins NFAT: degree_zero_after_quarantine (unclassified)
+- proteins TCF4: degree_zero_after_quarantine (unclassified)
+- proteins calcineurin A: degree_zero_after_quarantine (unclassified)
+- proteins phosphorylated TCF4: degree_zero_after_quarantine (unclassified)
+- proteins NF-ATp: degree_zero_after_quarantine (unclassified)
+- protein_complexes inositol-1,4,5-trisphosphate receptors: degree_zero_after_quarantine (unclassified)
+- proteins phosphorylated CAMKII: protein_missing_external_identity (KI-001); gate strict_quarantine_unexportable_entity
+- transporters inositol-1,4,5-trisphosphate receptor (InsP3R): actor_schema_not_canonical (KI-023); gate pre_export_stage3_revalidation
+    removed from IP3-induced Ca2+ release (/processes/transports/9): transporters
+- transporters inositol-1,4,5-trisphosphate receptor (InsP3R): actor_schema_not_canonical (KI-023); gate pre_export_stage3_revalidation
+    removed from SERCA pumps Ca2+ into ER (/processes/transports/10): transporters
+
+CORE COVERAGE
+-------------
+Requested (14): phosphatidylinositol-4,5-bisphosphate (PIP2), diacylglycerol (DAG), inositol-1,4,5-trisphosphate (IP3), Ca2+, Wnt5a, Frizzled2 (Fzd2), phospholipase C (PLC), protein kinase C (PKC), Cdc42, Ca2+/calmodulin-dependent protein kinase II (CAMKII), TGF-β-activated kinase 1 (TAK1), Nemo-like kinase (NLK), calcineurin (CaN), nuclear factor of activated T-cells (NFAT)
+Matched (6): inositol-1,4,5-trisphosphate (IP3), Ca2+, Wnt5a, Frizzled2 (Fzd2), Ca2+/calmodulin-dependent protein kinase II (CAMKII), calcineurin (CaN)
+Unmatched (8): phosphatidylinositol-4,5-bisphosphate (PIP2), diacylglycerol (DAG), phospholipase C (PLC), protein kinase C (PKC), Cdc42, TGF-β-activated kinase 1 (TAK1), Nemo-like kinase (NLK), nuclear factor of activated T-cells (NFAT)
+Reasons: requested_core_coverage_below_minimum:0.429<0.500

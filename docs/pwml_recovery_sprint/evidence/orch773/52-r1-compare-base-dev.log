@@ -1,0 +1,33 @@
+pass rate base 56/91 -> tip 72/91
+fixed: ['ORCH-755/enterobactin-strict/2026-10-20_2201', 'ORCH-755/sour_taste-strict/2026-10-21_0139', 'ORCH-759/chlorophyll-strict/2026-10-22_1231', 'ORCH-759/enterobactin-strict/2026-10-22_1037', 'ORCH-767/enterobactin-strict/2026-10-23_2224', 'ORCH-767/wnt_ca-strict/2026-10-24_0314', 'runs_verify/2026-08-18_1328/PMC12452463', 'runs_verify/2026-08-21_2057/PMC12096016', 'runs_verify/2026-08-21_2057/PMC12452463', 'runs_verify/2026-08-24_1203/PMC12856317', 'runs_verify/2026-08-25_1216/PMC12444477', 'runs_verify/2026-08-25_1216/PMC12856317', 'runs_verify/2026-09-02_2052/PMC12444477', 'runs_verify/2026-09-02_2052/PMC12452463', 'runs_verify/2026-09-06_1425/PMC11405693', 'runs_verify/2026-09-06_1425/PMC12376012']
+passing legs turned failing: none
+gold recall lost: none
+still failing, at a different step (information): none
+D-112 § 2: ACCEPT
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f35de933f29399c4d81ef53594e987c7ddabdedb  [git, worktree dirty=True]
+label                   : r1-compare-base-dev
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch773/docs/pwml_recovery_sprint/evidence/orch768_replay_corpus.py compare C:/t/orch773/base.json C:/t/orch773/r1.json
+cwd                     : C:/t/orch773/cwd
+root PID / process group: 203432 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 120 s
+duration                : 0.19 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  203636:python.exe
+descendants terminated  : 1  203636
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\docs\pwml_recovery_sprint\evidence\g11\ORCH-773\52-r1-compare-base-dev.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH-773  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

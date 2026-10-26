@@ -1,0 +1,274 @@
+--- entities/protein_complexes/1
+{
+ "class": "protein_complex",
+ "components": [
+  {
+   "mapped_ids": {
+    "pathbank_protein_id": "6312",
+    "uniprot": "P11454"
+   },
+   "name": "EntF",
+   "pathbank_protein_id": 6312,
+   "stoichiometry": 1
+  }
+ ],
+ "confidence": 0.8,
+ "generated": true,
+ "generation_reason": "complex_named_source_entity_wrapper",
+ "name": "enterobactin synthase complex",
+ "organism": "Escherichia coli",
+ "pathbank_species_id": 3,
+ "provenance": "inferred",
+ "species": "Escherichia coli",
+ "species_id": 3,
+ "species_name": "Escherichia coli",
+ "species_ref": {
+  "confidence": 1.0,
+  "name": "Escherichia coli",
+  "pathbank_species_id": 3,
+  "source": "explicit_entity_species",
+  "species_id": 3,
+  "status": "matched",
+  "taxonomy_id": "562"
+ },
+ "taxonomy_id": "562"
+}
+--- entities/protein_complexes/7
+{
+ "components": [
+  {
+   "mapped_ids": {
+    "gene_name": "entF",
+    "pathbank_protein_id": "6312",
+    "uniprot": "P11454"
+   },
+   "name": "EntF",
+   "pathbank_protein_id": 6312,
+   "stoichiometry": 1
+  }
+ ],
+ "generated": true,
+ "generation_reason": "single_protein_pathwhiz_wrapper",
+ "name": "EntF complex",
+ "species": "Escherichia coli",
+ "species_id": 3
+}
+--- entities/proteins/4
+{
+ "class": "protein",
+ "confidence": 1.0,
+ "ec_number": "6.3.2.14",
+ "ec_numbers": [
+  "6.3.2.14",
+  "6.2.1.72"
+ ],
+ "enrichment": {
+  "protein": {
+   "uniprot": {
+    "alternative_names": [
+     "Enterochelin synthase F",
+     "Nonribosomal peptide synthetase EntF"
+    ],
+    "catalytic_activity": [
+     "3 2,3-dihydroxybenzoate + 3 L-serine + 6 ATP = enterobactin + 6 AMP + 6 diphosphate + 4 H(+)",
+     "holo-[peptidyl-carrier protein] + L-serine + ATP = L-seryl-[peptidyl-carrier protein] + AMP + diphosphate"
+    ],
+    "enzyme_commission": [
+     "6.3.2.14",
+     "6.2.1.72"
+    ],
+    "function_text": "Involved in the biosynthesis of the siderophore enterobactin (enterochelin), which is a macrocyclic trimeric lactone of N-(2,3-dihydroxybenzoyl)-serine (PubMed:1338974, PubMed:1826089, PubMed:216414, PubMed:9485415). EntF catalyzes the activation of L-serine via ATP-dependent PPi exchange reaction to form seryladenylate (PubMed:10688898, PubMed:1338974, PubMed:1826089, PubMed:9485415). Activated L-serine is loaded onto the peptidyl carrier domain via a thioester linkage to the phosphopanthetheine moiety, forming seryl-S-Ppant-EntF (PubMed:9485415). EntF acts then as the sole catalyst for the formation of the three amide and three ester linkages found in enterobactin, using seryladenylate and 2,3-dihydroxybenzoate-S-Ppant-EntB (DHB-S-Ppant-EntB) as substrates, via the formation of a DHB-Ser-S-Ppant-EntF intermediate (PubMed:9485415)",
+    "gene_names": [
+     "entF"
+    ],
+    "go_bp_ids": [
+     "GO:0043041",
+     "GO:0009239"
+    ],
+    "go_cellular_component_ids": [
+     "GO:0005737",
+     "GO:0005829",
+     "GO:0009366",
+     "GO:0005886"
+    ],
+    "go_mf_ids": [
+     "GO:0047527",
+     "GO:0005524",
+     "GO:0016779",
+     "GO:0031177"
+    ],
+    "keywords": [
+     "3D-structure",
+     "ATP-binding",
+     "Cytoplasm",
+     "Direct protein sequencing",
+     "Enterobactin biosynthesis",
+     "Ligase",
+     "Multifunctional enzyme",
+     "Nucleotide-binding",
+     "Phosphopantetheine",
+     "Phosphoprotein",
+     "Reference proteome",
+     "Transferase"
+    ],
+    "organism": "Escherichia coli (strain K12)",
+    "pathways": [
+     "Siderophore biosynthesis; enterobactin biosynthesis"
+    ],
+    "pdb_ids": [
+     "2ROQ",
+     "3TEJ",
+     "5JA1",
+     "5JA2",
+     "5T3D"
+    ],
+    "protein_existence": "1: Evidence at protein level",
+    "provenance": {
+     "query": "P11454",
+     "retrieved_at": "2026-08-05T00:19:30Z",
+     "source": "UniProt",
+     "source_url": "https://rest.uniprot.org/uniprotkb/P11454.json"
+    },
+    "reactome_ids": [],
+    "recommended_name": "Enterobactin synthase component F",
+    "sequence_length": 1293,
+    "signal_peptide": {
+     "present": false,
+     "region": ""
+    },
+    "status": "ok",
+    "string_id": "511145.b0586",
+    "subcellular_locations": [
+     "Cytoplasm"
+    ],
+    "taxonomy_id": "83333",
+    "transmembrane_regions_count": 0,
+    "uniprot_id": "P11454"
+   }
+  }
+ },
+ "gene_name": "entF",
+ "mapped_i
+--- entities/proteins/7
+{
+ "class": "protein",
+ "ec_number": "6.3.2.14",
+ "ec_numbers": [
+  "6.3.2.14",
+  "6.2.1.72"
+ ],
+ "enrichment": {
+  "protein": {
+   "uniprot": {
+    "alternative_names": [
+     "Enterochelin synthase F",
+     "Nonribosomal peptide synthetase EntF"
+    ],
+    "catalytic_activity": [
+     "3 2,3-dihydroxybenzoate + 3 L-serine + 6 ATP = enterobactin + 6 AMP + 6 diphosphate + 4 H(+)",
+     "holo-[peptidyl-carrier protein] + L-serine + ATP = L-seryl-[peptidyl-carrier protein] + AMP + diphosphate"
+    ],
+    "enzyme_commission": [
+     "6.3.2.14",
+     "6.2.1.72"
+    ],
+    "function_text": "Involved in the biosynthesis of the siderophore enterobactin (enterochelin), which is a macrocyclic trimeric lactone of N-(2,3-dihydroxybenzoyl)-serine (PubMed:1338974, PubMed:1826089, PubMed:216414, PubMed:9485415). EntF catalyzes the activation of L-serine via ATP-dependent PPi exchange reaction to form seryladenylate (PubMed:10688898, PubMed:1338974, PubMed:1826089, PubMed:9485415). Activated L-serine is loaded onto the peptidyl carrier domain via a thioester linkage to the phosphopanthetheine moiety, forming seryl-S-Ppant-EntF (PubMed:9485415). EntF acts then as the sole catalyst for the formation of the three amide and three ester linkages found in enterobactin, using seryladenylate and 2,3-dihydroxybenzoate-S-Ppant-EntB (DHB-S-Ppant-EntB) as substrates, via the formation of a DHB-Ser-S-Ppant-EntF intermediate (PubMed:9485415)",
+    "gene_names": [
+     "entF"
+    ],
+    "go_bp_ids": [
+     "GO:0043041",
+     "GO:0009239"
+    ],
+    "go_cellular_component_ids": [
+     "GO:0005737",
+     "GO:0005829",
+     "GO:0009366",
+     "GO:0005886"
+    ],
+    "go_mf_ids": [
+     "GO:0047527",
+     "GO:0005524",
+     "GO:0016779",
+     "GO:0031177"
+    ],
+    "keywords": [
+     "3D-structure",
+     "ATP-binding",
+     "Cytoplasm",
+     "Direct protein sequencing",
+     "Enterobactin biosynthesis",
+     "Ligase",
+     "Multifunctional enzyme",
+     "Nucleotide-binding",
+     "Phosphopantetheine",
+     "Phosphoprotein",
+     "Reference proteome",
+     "Transferase"
+    ],
+    "organism": "Escherichia coli (strain K12)",
+    "pathways": [
+     "Siderophore biosynthesis; enterobactin biosynthesis"
+    ],
+    "pdb_ids": [
+     "2ROQ",
+     "3TEJ",
+     "5JA1",
+     "5JA2",
+     "5T3D"
+    ],
+    "protein_existence": "1: Evidence at protein level",
+    "provenance": {
+     "query": "P11454",
+     "retrieved_at": "2026-08-05T00:19:30Z",
+     "source": "UniProt",
+     "source_url": "https://rest.uniprot.org/uniprotkb/P11454.json"
+    },
+    "reactome_ids": [],
+    "recommended_name": "Enterobactin synthase component F",
+    "sequence_length": 1293,
+    "signal_peptide": {
+     "present": false,
+     "region": ""
+    },
+    "status": "ok",
+    "string_id": "511145.b0586",
+    "subcellular_locations": [
+     "Cytoplasm"
+    ],
+    "taxonomy_id": "83333",
+    "transmembrane_regions_count": 0,
+    "uniprot_id": "P11454"
+   }
+  }
+ },
+ "gene_name": "entF",
+ "mapped_ids": {
+  "gene_name"
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 3ef3fa9c6e00e1d65300a80224cf9a0ce2b3e1df  [git, worktree dirty=False]
+label                   : dump-759-enterobactin
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch773/docs/pwml_recovery_sprint/evidence/orch773/dump_rows.py C:/t/orch773/cap-base/ORCH-759_enterobactin-strict_2026-10-22_1037/freeze_input.json protein_complexes:enterobactin synthase complex protein_complexes:EntF complex proteins:EntF proteins:enterobactin synthase
+cwd                     : C:/t/orch773/cwd
+root PID / process group: 91284 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 120 s
+duration                : 0.17 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 0
+descendants terminated  : 0
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\docs\pwml_recovery_sprint\evidence\g11\ORCH-773\08-dump-759-enterobactin.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH-773  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

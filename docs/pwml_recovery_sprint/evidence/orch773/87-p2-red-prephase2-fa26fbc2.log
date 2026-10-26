@@ -1,0 +1,38 @@
+T2PW_MEASUREMENT_TREE_REFUSED
+  expected tree   : C:\t\orch773\redtree-fa26
+  t2pw resolved   : C:\t\orch773\redtree-fa26\src\t2pw\__init__.py
+  scripts         : <not importable>
+  cwd             : C:\t\orch773\redtree-fa26
+  cwd at entry    : C:\t\orch773\redtree-fa26
+  PYTHONPATH      : C:/t/orch773/redtree-fa26/src
+  sys.path[0:4]   : ['C:\\t\\orch773\\redtree-fa26', 'C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch773\\docs\\pwml_recovery_sprint\\evidence', 'C:\\t\\orch773\\redtree-fa26\\src', 'C:\\Python313\\python313.zip']
+  violations      : EXPECT_TREE_NOT_A_CHECKOUT
+  verdict written : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\docs\pwml_recovery_sprint\evidence\g11\pin\ORCH-773\87-p2-red-prephase2-fa26fbc2.pin.json
+REFUSED before collection. No test was run. Exit 98.
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ fa26fbc25e4f2d9580d58a9ddb76b23469f4543e  [git, worktree dirty=True]
+label                   : p2-red-prephase2-fa26fbc2
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch773/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/orch773/redtree-fa26 --pin-verdict C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch773/docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-773/87-p2-red-prephase2-fa26fbc2.pin.json -q --basetemp=C:/t/orch773/bt-87-p2-red-prephase2-fa26fbc2 tests/test_orch773_omit_per_row.py::test_new_text_record_lists_every_actor_left_out_of_a_drawn_process tests/test_orch772_pwml_coverage.py::test_the_code_table_is_the_catalogue_appendix tests/test_orch772_pwml_coverage.py::test_a_reason_is_labelled_as_the_appendix_says
+cwd                     : C:\t\orch773\redtree-fa26
+root PID / process group: 261852 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 590 s
+duration                : 0.21 s
+exit reason             : nonzero
+exit code (real)        : 98
+returned code           : 98
+descendants observed    : 1  261840:python.exe
+descendants terminated  : 1  261840
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\docs\pwml_recovery_sprint\evidence\g11\ORCH-773\87-p2-red-prephase2-fa26fbc2.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH-773  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

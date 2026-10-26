@@ -155,6 +155,8 @@ KNOWN_ISSUES: Dict[str, Any] = {
         ("process_row_not_an_object", "exact", ("process_row_not_an_object",), "KI-015", False),
         ("process_row_vanished_during_closure", "exact", ("process_row_vanished_during_closure",), "KI-015", False),
         ("protein_complex_component_cycle", "exact", ("protein_complex_component_cycle",), "KI-015", False),
+        ("protein_complex_component_omitted:<component>:<reason>", "prefix",
+         ("protein_complex_component_omitted:",), "KI-015", True),
         ("protein_complex_component_unnamed", "exact", ("protein_complex_component_unnamed",), "KI-015", False),
         ("protein_complex_component_unrepresentable:<name>:<reason>", "prefix",
          ("protein_complex_component_unrepresentable:",), "KI-015", True),
@@ -210,6 +212,7 @@ KNOWN_ISSUES: Dict[str, Any] = {
         (("no UniProt or DrugBank identifier; other enzymes remain",), "KI-007"),
         (("Protein '<name>' is missing a UniProt or DrugBank identifier.",), "KI-001"),
         (("Protein has degree 0 after normalization: <name>",), "KI-013"),
+        (("Located protein is isolated in connectivity graph: <name>",), "KI-013"),
         (("PWML export stopped by the quarantine boundary: <reasons>",), "KI-016"),
         (("PWML export stopped by validation-only pre-export Stage 3 revalidation; Stage 8 did not repair the payload.",),
          "KI-023"),
@@ -787,12 +790,27 @@ def _omissions(
             "ki": known_issue_id(e.get("reason")), "gate": _text(_dict(e.get("detail")).get("gate")),
             "actor_removed_from": [
                 f"{_show(a.get('process_name'))} ({_show(a.get('process'))}): {', '.join(_texts(a.get('slots')) or [])}"
-                f"; catalysts kept: {', '.join(_texts(a.get('catalysts_kept')) or []) or 'none'}"
+                + (f"; catalysts kept: {', '.join(_texts(a.get('catalysts_kept')) or []) or 'none'}"
+                   if "catalysts_kept" in a else "")
                 for a in map(_dict, _list(_dict(e.get("detail")).get("actor_removed_from")))
             ],
         }
         for e in map(_dict, _list(_dict(removed).get("removed_entities")))
     ] if isinstance(removed, dict) else None
+    # ORCH-773: an actor left out of a process that is still drawn (D-113 s1 inferred wrapper,
+    # D-114 AMENDMENT 1 s2 transporter). Listed under OMITTED; the process counts as drawn.
+    actors = [
+        {
+            "process": _show(a.get("process_name")), "where": _text(a.get("process")),
+            "kind": "transport" if "transporters" in (_texts(a.get("slots")) or []) else "reaction",
+            "actor": _show(e.get("name")), "slots": ", ".join(_texts(a.get("slots")) or []) or NOT_RECORDED,
+            "reason": _show(e.get("reason")), "ki": known_issue_id(e.get("reason")),
+            "gate": _text(_dict(e.get("detail")).get("gate")), "decision": _text(a.get("decision")),
+            "kept": _texts(a.get("catalysts_kept")),
+        }
+        for e in map(_dict, _list(_dict(removed).get("removed_entities")))
+        for a in map(_dict, _list(_dict(e.get("detail")).get("actor_removed_from")))
+    ] if isinstance(removed, dict) else []
     return {
         "coverage": {
             "pwml_written": not no_pwml, "no_pwml_cause": no_pwml, "drawn": drawn, "total": total, "not_recorded": why,
@@ -802,6 +820,7 @@ def _omissions(
         },
         "omitted": entries,
         "omitted_entities": entities,
+        "omitted_actors": actors,
     }
 
 
@@ -1057,6 +1076,7 @@ def build_report(
         "pwml_coverage": omissions["coverage"],
         "omitted": omissions["omitted"],
         "omitted_entities": omissions["omitted_entities"],
+        "omitted_actors": omissions["omitted_actors"],
     }
 
 
@@ -1137,6 +1157,18 @@ def _workaround(ki: str) -> str:
     return KNOWN_ISSUES["workarounds"].get(ki) or f"{NOT_RECORDED} (this reason has no catalogue entry)"
 
 
+def _actor_hand_fix(a: Mapping[str, Any]) -> str:
+    """ORCH-773: the process is in the PWML, so the fix is about the one actor, not the KI's whole-file workaround."""
+
+    if a["decision"] == "D-114 AMENDMENT 1 s2":
+        return (f"Add \"{a['actor']}\" as a transporter of \"{a['process']}\" in PathWhiz if the paper supports it; "
+                f"the dropped row is kept verbatim in {REMOVED_ENTITY_REPORT_FILENAME} (detail.actor).")
+    if a["decision"] == "D-113 s1":
+        return ("None needed: the wrapper is inferred, not named by the paper (D-113 s1); "
+                "check that the kept catalysts are drawn.")
+    return _workaround(a["ki"])
+
+
 def omitted_lines(report: Mapping[str, Any]) -> List[str]:
     """D-114 § 3: "Omitted from the PWML", every process the text record holds and the PWML does not draw."""
 
@@ -1144,7 +1176,10 @@ def omitted_lines(report: Mapping[str, Any]) -> List[str]:
     no_pwml = [e for e in report["omitted"] if e["counted"] and e["group"] == "no_pwml"]
     unknown = [e for e in report["omitted"] if e["counted"] and e["group"] == "not_recorded"]
     others = [e for e in report["omitted"] if not e["counted"]]
-    lines = _section(f"OMITTED FROM THE PWML ({len(counted) + len(no_pwml)})")
+    actors = report.get("omitted_actors") or []
+    kept = "still drawn" if report["pwml_coverage"]["pwml_written"] else "kept (no PWML written: nothing is drawn)"
+    title = f"{len(counted) + len(no_pwml)}" + (f"; {len(actors)} actors left out of processes {kept}" if actors else "")
+    lines = _section(f"OMITTED FROM THE PWML ({title})")
     lines.append(f"Known-issue ids: {KNOWN_ISSUES_DOC}, appendix \"Reason code -> KI id\".")
     if not report["pwml_coverage"]["pwml_written"]:
         cause = report["pwml_coverage"]["no_pwml_cause"]
@@ -1162,6 +1197,21 @@ def omitted_lines(report: Mapping[str, Any]) -> List[str]:
             *([f"Omission: {e['omission']}"] if e["omission"] else []),
             f"Known issue: {e['ki']}",
             f"Add by hand: {_workaround(e['ki'])}",
+            "",
+        ]
+    for number, a in enumerate(actors, 1):  # ORCH-773: the process is drawn and counted as drawn
+        lines += [
+            f"OMITTED ACTOR {number}  [{REMOVED_ENTITY_REPORT_FILENAME} removed_entities; process {a['where'] or NOT_RECORDED}]",
+            f"Kind: actor left out of a {a['kind']} that is {kept}",
+            f"Process: {a['process']}",
+            f"Actor: {a['actor']}",
+            f"Slot: {a['slots']}",
+            f"Reason: {a['reason']}",
+            *([f"Gate: {a['gate']}"] if a["gate"] else []),
+            *([f"Decision: {a['decision']}"] if a["decision"] else []),
+            *([f"Catalysts kept: {', '.join(a['kept']) or 'none'}"] if a["kept"] is not None else []),
+            f"Known issue: {a['ki']}",
+            f"Add by hand: {_actor_hand_fix(a)}",
             "",
         ]
     if no_pwml:

@@ -1,0 +1,266 @@
+T2PW: C:\t\orch773\redtree-fa26\src\t2pw\__init__.py
+FFFF.........FFF..........                                               [100%]
+================================== FAILURES ===================================
+_ test_new_text_record_lists_every_actor_left_out_of_a_drawn_process[ORCH-755_sour_taste-strict_2026-10-21_0139-3 actors-expected0] _
+
+slug = 'ORCH-755_sour_taste-strict_2026-10-21_0139', title = '3 actors'
+expected = [('OTOP1-mediated H+ transport', 'OTOP1', 'transporters', 'actor_schema_not_canonical', 'KI-023', 'D-114 AMENDMENT 1 s...TOP1-mediated H+ permeation', 'OTOP1', 'transporters', 'actor_schema_not_canonical', 'KI-023', 'D-114 AMENDMENT 1 s2')]
+
+    @pytest.mark.parametrize(
+        "slug, title, expected",
+        [
+            ("ORCH-755_sour_taste-strict_2026-10-21_0139", "3 actors",
+             [(name, "OTOP1", *_TRANSPORTER) for name in _OTOP1]),
+            ("ORCH-767_wnt_ca-strict_2026-10-24_0314", "2 actors",
+             [(name, _INSP3R, *_TRANSPORTER) for name in ("IP3-induced Ca2+ release", "SERCA pumps Ca2+ into ER")]),
+            ("ORCH-767_enterobactin-strict_2026-10-23_2224", "1 actors",
+             [("EntF enterobactin synthase reaction", "enterobactin synthase complex", "enzymes, modifiers", _WRAPPER,
+               "KI-012", "D-113 s1")]),
+        ],
+    )
+    def test_new_text_record_lists_every_actor_left_out_of_a_drawn_process(slug, title, expected) -> None:
+        payload, context = _orch768_leg(slug)[:2] if slug.startswith("ORCH-767_enterobactin") else _leg(slug)
+        report, text = _text_record(_quarantine(payload, context))
+        section = text[text.index("\nOMITTED FROM THE PWML ("):]
+>       assert section.splitlines()[1].endswith(f"; {title} left out of processes still drawn)")
+E       AssertionError: assert False
+E        +  where False = <built-in method endswith of str object at 0x0000018ED9DC44E0>('; 3 actors left out of processes still drawn)')
+E        +    where <built-in method endswith of str object at 0x0000018ED9DC44E0> = 'OMITTED FROM THE PWML (1)'.endswith
+
+tests\test_orch773_omit_per_row.py:494: AssertionError
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.pwml.ir:ir.py:1297 Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens']
+_ test_new_text_record_lists_every_actor_left_out_of_a_drawn_process[ORCH-767_wnt_ca-strict_2026-10-24_0314-2 actors-expected1] _
+
+slug = 'ORCH-767_wnt_ca-strict_2026-10-24_0314', title = '2 actors'
+expected = [('IP3-induced Ca2+ release', 'inositol-1,4,5-trisphosphate receptor (InsP3R)', 'transporters', 'actor_schema_not_cano...,4,5-trisphosphate receptor (InsP3R)', 'transporters', 'actor_schema_not_canonical', 'KI-023', 'D-114 AMENDMENT 1 s2')]
+
+    @pytest.mark.parametrize(
+        "slug, title, expected",
+        [
+            ("ORCH-755_sour_taste-strict_2026-10-21_0139", "3 actors",
+             [(name, "OTOP1", *_TRANSPORTER) for name in _OTOP1]),
+            ("ORCH-767_wnt_ca-strict_2026-10-24_0314", "2 actors",
+             [(name, _INSP3R, *_TRANSPORTER) for name in ("IP3-induced Ca2+ release", "SERCA pumps Ca2+ into ER")]),
+            ("ORCH-767_enterobactin-strict_2026-10-23_2224", "1 actors",
+             [("EntF enterobactin synthase reaction", "enterobactin synthase complex", "enzymes, modifiers", _WRAPPER,
+               "KI-012", "D-113 s1")]),
+        ],
+    )
+    def test_new_text_record_lists_every_actor_left_out_of_a_drawn_process(slug, title, expected) -> None:
+        payload, context = _orch768_leg(slug)[:2] if slug.startswith("ORCH-767_enterobactin") else _leg(slug)
+        report, text = _text_record(_quarantine(payload, context))
+        section = text[text.index("\nOMITTED FROM THE PWML ("):]
+>       assert section.splitlines()[1].endswith(f"; {title} left out of processes still drawn)")
+E       AssertionError: assert False
+E        +  where False = <built-in method endswith of str object at 0x0000018EE1D36740>('; 2 actors left out of processes still drawn)')
+E        +    where <built-in method endswith of str object at 0x0000018EE1D36740> = 'OMITTED FROM THE PWML (33)'.endswith
+
+tests\test_orch773_omit_per_row.py:494: AssertionError
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.pwml.ir:ir.py:1297 Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 2 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens', 'Arabidopsis thaliana']
+WARNING  t2pw.pwml.ir:ir.py:1297 Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 2 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens', 'Arabidopsis thaliana']
+_ test_new_text_record_lists_every_actor_left_out_of_a_drawn_process[ORCH-767_enterobactin-strict_2026-10-23_2224-1 actors-expected2] _
+
+slug = 'ORCH-767_enterobactin-strict_2026-10-23_2224', title = '1 actors'
+expected = [('EntF enterobactin synthase reaction', 'enterobactin synthase complex', 'enzymes, modifiers', "Generated protein com...obactin synthase complex' component 'enterobactin synthase' is missing positive stoichiometry.", 'KI-012', 'D-113 s1')]
+
+    @pytest.mark.parametrize(
+        "slug, title, expected",
+        [
+            ("ORCH-755_sour_taste-strict_2026-10-21_0139", "3 actors",
+             [(name, "OTOP1", *_TRANSPORTER) for name in _OTOP1]),
+            ("ORCH-767_wnt_ca-strict_2026-10-24_0314", "2 actors",
+             [(name, _INSP3R, *_TRANSPORTER) for name in ("IP3-induced Ca2+ release", "SERCA pumps Ca2+ into ER")]),
+            ("ORCH-767_enterobactin-strict_2026-10-23_2224", "1 actors",
+             [("EntF enterobactin synthase reaction", "enterobactin synthase complex", "enzymes, modifiers", _WRAPPER,
+               "KI-012", "D-113 s1")]),
+        ],
+    )
+    def test_new_text_record_lists_every_actor_left_out_of_a_drawn_process(slug, title, expected) -> None:
+        payload, context = _orch768_leg(slug)[:2] if slug.startswith("ORCH-767_enterobactin") else _leg(slug)
+        report, text = _text_record(_quarantine(payload, context))
+        section = text[text.index("\nOMITTED FROM THE PWML ("):]
+>       assert section.splitlines()[1].endswith(f"; {title} left out of processes still drawn)")
+E       AssertionError: assert False
+E        +  where False = <built-in method endswith of str object at 0x0000018ED9DC44E0>('; 1 actors left out of processes still drawn)')
+E        +    where <built-in method endswith of str object at 0x0000018ED9DC44E0> = 'OMITTED FROM THE PWML (7)'.endswith
+
+tests\test_orch773_omit_per_row.py:494: AssertionError
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.pwml.ir:ir.py:1297 Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli']
+________________ test_the_code_table_is_the_catalogue_appendix ________________
+
+    def test_the_code_table_is_the_catalogue_appendix():
+        codes, messages, workarounds = _catalogue()
+        # The appendix as ORCH-771 wrote it (82, 19), plus ORCH-773's two rows: the
+        # ``protein_complex_component_omitted:`` code and the "Located protein is isolated" message.
+>       assert len(codes) == 83 and len(messages) == 20
+E       AssertionError: assert (82 == 83)
+E        +  where 82 = len([('<bucket>_missing_name', 'suffix', ('_missing_name',), 'KI-015', False), ('accession_claimed_across_incompatible_ent...in_endpoint',), 'KI-010', False), ('bare_protein_endpoint', 'exact', ('bare_protein_endpoint',), 'KI-009', False), ...])
+
+tests\test_orch772_pwml_coverage.py:79: AssertionError
+_ test_a_reason_is_labelled_as_the_appendix_says[protein_complex_component_omitted:EntB:protein_missing_external_identity-KI-001] _
+
+reason = 'protein_complex_component_omitted:EntB:protein_missing_external_identity'
+ki = 'KI-001'
+
+    @pytest.mark.parametrize(
+        "reason, ki",
+        [
+            ("protein_missing_external_identity", "KI-001"),
+            ("ambiguous_entity_type:nucleic_acids+proteins", "KI-011"),
+            ("protein_missing_name", "KI-015"),  # suffix
+            ("missing_inputs", "KI-015"),  # prefix
+            ("gate.protein_menx_is_missing_a_uniprot_or_drugbank_identifier", "KI-001"),  # prefix and suffix
+            ("gate.protein_has_degree_after_normalization", "KI-013"),
+            ("gate.generated_protein_complex_enterobactin_synthase_complex_componen", "KI-012"),
+            ("protein_complex_component_unrepresentable:EntB:protein_missing_external_identity", "KI-001"),  # inner reason
+            ("protein_complex_component_unrepresentable:EntB:no_such_reason", "KI-015"),
+            # ORCH-773 rows (NEW acceptance): labelled by the omitted component's own cause, else KI-015.
+            ("protein_complex_component_omitted:EntB:protein_missing_external_identity", "KI-001"),
+            ("protein_complex_component_omitted:EntB:no_such_reason", "KI-015"),
+            ("Located protein is isolated in connectivity graph: EntX", "KI-013"),
+            ("untyped_interaction", "KI-008"),
+            ("duplicate_locked_reaction", "KI-014"),
+            ("Generated protein complex 'enterobactin synthase complex' component 'enterobactin synthase' is missing "
+             "positive stoichiometry.", "KI-012"),
+            ("Generated protein complex 'X complex' component protein 'X' is missing a UniProt or DrugBank identifier.", "KI-001"),
+            ("Protein 'MenD' is missing a UniProt or DrugBank identifier.", "KI-001"),
+            ("Unknown protein/modifier reference: PIF1", "KI-004"),
+            # The narrower message wins over the broad "PWML export ..." of KI-028.
+            ("PWML export stopped by the quarantine boundary: unexportable_entity:1", "KI-016"),
+            ("PWML export did not finish inside the time budget", "KI-028"),
+            ("coarse_grained_same_entity_transformation", "unclassified"),
+            ("", "unclassified"),
+        ],
+    )
+    def test_a_reason_is_labelled_as_the_appendix_says(reason, ki):
+>       assert known_issue_id(reason) == ki
+E       AssertionError: assert 'unclassified' == 'KI-001'
+E         
+E         - KI-001
+E         + unclassified
+
+tests\test_orch772_pwml_coverage.py:120: AssertionError
+_ test_a_reason_is_labelled_as_the_appendix_says[protein_complex_component_omitted:EntB:no_such_reason-KI-015] _
+
+reason = 'protein_complex_component_omitted:EntB:no_such_reason', ki = 'KI-015'
+
+    @pytest.mark.parametrize(
+        "reason, ki",
+        [
+            ("protein_missing_external_identity", "KI-001"),
+            ("ambiguous_entity_type:nucleic_acids+proteins", "KI-011"),
+            ("protein_missing_name", "KI-015"),  # suffix
+            ("missing_inputs", "KI-015"),  # prefix
+            ("gate.protein_menx_is_missing_a_uniprot_or_drugbank_identifier", "KI-001"),  # prefix and suffix
+            ("gate.protein_has_degree_after_normalization", "KI-013"),
+            ("gate.generated_protein_complex_enterobactin_synthase_complex_componen", "KI-012"),
+            ("protein_complex_component_unrepresentable:EntB:protein_missing_external_identity", "KI-001"),  # inner reason
+            ("protein_complex_component_unrepresentable:EntB:no_such_reason", "KI-015"),
+            # ORCH-773 rows (NEW acceptance): labelled by the omitted component's own cause, else KI-015.
+            ("protein_complex_component_omitted:EntB:protein_missing_external_identity", "KI-001"),
+            ("protein_complex_component_omitted:EntB:no_such_reason", "KI-015"),
+            ("Located protein is isolated in connectivity graph: EntX", "KI-013"),
+            ("untyped_interaction", "KI-008"),
+            ("duplicate_locked_reaction", "KI-014"),
+            ("Generated protein complex 'enterobactin synthase complex' component 'enterobactin synthase' is missing "
+             "positive stoichiometry.", "KI-012"),
+            ("Generated protein complex 'X complex' component protein 'X' is missing a UniProt or DrugBank identifier.", "KI-001"),
+            ("Protein 'MenD' is missing a UniProt or DrugBank identifier.", "KI-001"),
+            ("Unknown protein/modifier reference: PIF1", "KI-004"),
+            # The narrower message wins over the broad "PWML export ..." of KI-028.
+            ("PWML export stopped by the quarantine boundary: unexportable_entity:1", "KI-016"),
+            ("PWML export did not finish inside the time budget", "KI-028"),
+            ("coarse_grained_same_entity_transformation", "unclassified"),
+            ("", "unclassified"),
+        ],
+    )
+    def test_a_reason_is_labelled_as_the_appendix_says(reason, ki):
+>       assert known_issue_id(reason) == ki
+E       AssertionError: assert 'unclassified' == 'KI-015'
+E         
+E         - KI-015
+E         + unclassified
+
+tests\test_orch772_pwml_coverage.py:120: AssertionError
+_ test_a_reason_is_labelled_as_the_appendix_says[Located protein is isolated in connectivity graph: EntX-KI-013] _
+
+reason = 'Located protein is isolated in connectivity graph: EntX'
+ki = 'KI-013'
+
+    @pytest.mark.parametrize(
+        "reason, ki",
+        [
+            ("protein_missing_external_identity", "KI-001"),
+            ("ambiguous_entity_type:nucleic_acids+proteins", "KI-011"),
+            ("protein_missing_name", "KI-015"),  # suffix
+            ("missing_inputs", "KI-015"),  # prefix
+            ("gate.protein_menx_is_missing_a_uniprot_or_drugbank_identifier", "KI-001"),  # prefix and suffix
+            ("gate.protein_has_degree_after_normalization", "KI-013"),
+            ("gate.generated_protein_complex_enterobactin_synthase_complex_componen", "KI-012"),
+            ("protein_complex_component_unrepresentable:EntB:protein_missing_external_identity", "KI-001"),  # inner reason
+            ("protein_complex_component_unrepresentable:EntB:no_such_reason", "KI-015"),
+            # ORCH-773 rows (NEW acceptance): labelled by the omitted component's own cause, else KI-015.
+            ("protein_complex_component_omitted:EntB:protein_missing_external_identity", "KI-001"),
+            ("protein_complex_component_omitted:EntB:no_such_reason", "KI-015"),
+            ("Located protein is isolated in connectivity graph: EntX", "KI-013"),
+            ("untyped_interaction", "KI-008"),
+            ("duplicate_locked_reaction", "KI-014"),
+            ("Generated protein complex 'enterobactin synthase complex' component 'enterobactin synthase' is missing "
+             "positive stoichiometry.", "KI-012"),
+            ("Generated protein complex 'X complex' component protein 'X' is missing a UniProt or DrugBank identifier.", "KI-001"),
+            ("Protein 'MenD' is missing a UniProt or DrugBank identifier.", "KI-001"),
+            ("Unknown protein/modifier reference: PIF1", "KI-004"),
+            # The narrower message wins over the broad "PWML export ..." of KI-028.
+            ("PWML export stopped by the quarantine boundary: unexportable_entity:1", "KI-016"),
+            ("PWML export did not finish inside the time budget", "KI-028"),
+            ("coarse_grained_same_entity_transformation", "unclassified"),
+            ("", "unclassified"),
+        ],
+    )
+    def test_a_reason_is_labelled_as_the_appendix_says(reason, ki):
+>       assert known_issue_id(reason) == ki
+E       AssertionError: assert 'unclassified' == 'KI-013'
+E         
+E         - KI-013
+E         + unclassified
+
+tests\test_orch772_pwml_coverage.py:120: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_orch773_omit_per_row.py::test_new_text_record_lists_every_actor_left_out_of_a_drawn_process[ORCH-755_sour_taste-strict_2026-10-21_0139-3 actors-expected0]
+FAILED tests/test_orch773_omit_per_row.py::test_new_text_record_lists_every_actor_left_out_of_a_drawn_process[ORCH-767_wnt_ca-strict_2026-10-24_0314-2 actors-expected1]
+FAILED tests/test_orch773_omit_per_row.py::test_new_text_record_lists_every_actor_left_out_of_a_drawn_process[ORCH-767_enterobactin-strict_2026-10-23_2224-1 actors-expected2]
+FAILED tests/test_orch772_pwml_coverage.py::test_the_code_table_is_the_catalogue_appendix
+FAILED tests/test_orch772_pwml_coverage.py::test_a_reason_is_labelled_as_the_appendix_says[protein_complex_component_omitted:EntB:protein_missing_external_identity-KI-001]
+FAILED tests/test_orch772_pwml_coverage.py::test_a_reason_is_labelled_as_the_appendix_says[protein_complex_component_omitted:EntB:no_such_reason-KI-015]
+FAILED tests/test_orch772_pwml_coverage.py::test_a_reason_is_labelled_as_the_appendix_says[Located protein is isolated in connectivity graph: EntX-KI-013]
+7 failed, 19 passed in 2.12s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ fa26fbc25e4f2d9580d58a9ddb76b23469f4543e  [git, worktree dirty=True]
+label                   : p2-red-prephase2-fa26fbc2
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch773/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/orch773/redtree-fa26 --pin-verdict C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch773/docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-773/88-p2-red-prephase2-fa26fbc2.pin.json -q --basetemp=C:/t/orch773/bt-88-p2-red-prephase2-fa26fbc2 tests/test_orch773_omit_per_row.py::test_new_text_record_lists_every_actor_left_out_of_a_drawn_process tests/test_orch772_pwml_coverage.py::test_the_code_table_is_the_catalogue_appendix tests/test_orch772_pwml_coverage.py::test_a_reason_is_labelled_as_the_appendix_says
+cwd                     : C:\t\orch773\redtree-fa26
+root PID / process group: 262792 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 590 s
+duration                : 3.10 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  262804:python.exe
+descendants terminated  : 1  262804
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\docs\pwml_recovery_sprint\evidence\g11\ORCH-773\88-p2-red-prephase2-fa26fbc2.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH-773  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

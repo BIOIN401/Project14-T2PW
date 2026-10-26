@@ -1,0 +1,659 @@
+t2pw resolved: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\src\t2pw
+offline probe: {'attempts': {'urlopen_uniprot': 'refused', 'create_connection_loopback': 'refused', 'raw_socket_connect': 'refused'}, 'counted': 3, 'ok': True}
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens']
+
+##### ORCH-755/sour_taste-strict/2026-10-21_0139  pwml_written=True  coverage=6/14  -> C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\docs\pwml_recovery_sprint\evidence\orch773\p2-txt\ORCH-755_sour_taste-strict_2026-10-21_0139.txt
+OMITTED FROM THE PWML (8; 3 actors left out of processes still drawn)
+---------------------------------------------------------------------
+Known-issue ids: docs/pwml_recovery_sprint/PWML_KNOWN_ISSUES.md, appendix "Reason code -> KI id".
+
+OMITTED 1  [quarantine_report.json quarantined; pre-quarantine /processes/transports/1]
+Kind: transport
+Name: voltage-gated Ca ++ channel-mediated Ca++ influx
+Cargo: Ca++: apical side state -> Type III cell cytoplasm state
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 2  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/0]
+Kind: interaction
+Name: H+ inhibition of Kir2.1
+Endpoints: H+ -[inhibition]-> Kir2.1
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 3  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/1]
+Kind: interaction
+Name: 5-HT activation of 5-HT3 receptor
+Endpoints: 5-HT -[activation]-> 5-HT3 receptor
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 4  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/2]
+Kind: interaction
+Name: ATP activation of P2X receptors
+Endpoints: Adenosine triphosphate -[activation]-> P2X receptors
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 5  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/3]
+Kind: interaction
+Name: 5-HT interaction with 5-HT3 receptor
+Endpoints: 5-HT -[interaction]-> 5-HT3 receptor
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 6  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/4]
+Kind: interaction
+Name: ATP interaction with P2X receptors
+Endpoints: Adenosine triphosphate -[interaction]-> P2X receptors
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 7  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/6]
+Kind: interaction
+Name: voltage-gated Ca ++ channels is voltage-gated Ca++ channels
+Endpoints: voltage-gated Ca ++ channels -[SAME_AS]-> voltage-gated Ca++ channels
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 8  [pwml_ir.json; final payload /processes/interactions/0]
+Kind: interaction
+Name: serotonin is 5-HT
+Endpoints: serotonin -[SAME_AS]-> 5-HT
+Reason: untyped_interaction
+Verdict: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Known issue: KI-008
+Add by hand: None inside PathWhiz's model: it has no type for these relations. Read them in the text record, and add an Activation or Inhibition by hand only where the paper states the direction.
+
+OMITTED ACTOR 1  [removed_entity_report.json removed_entities; process /processes/transports/0]
+Kind: actor left out of a transport that is still drawn
+Process: OTOP1-mediated H+ transport
+Actor: OTOP1
+Slot: transporters
+Reason: actor_schema_not_canonical
+Gate: pre_export_stage3_revalidation
+Decision: D-114 AMENDMENT 1 s2
+Known issue: KI-023
+Add by hand: Add "OTOP1" as a transporter of "OTOP1-mediated H+ transport" in PathWhiz if the paper supports it; the dropped row is kept verbatim in removed_entity_report.json (detail.actor).
+
+OMITTED ACTOR 2  [removed_entity_report.json removed_entities; process /processes/transports/2]
+Kind: actor left out of a transport that is still drawn
+Process: H+ permeation through OTOP1
+Actor: OTOP1
+Slot: transporters
+Reason: actor_schema_not_canonical
+Gate: pre_export_stage3_revalidation
+Decision: D-114 AMENDMENT 1 s2
+Known issue: KI-023
+Add by hand: Add "OTOP1" as a transporter of "H+ permeation through OTOP1" in PathWhiz if the paper supports it; the dropped row is kept verbatim in removed_entity_report.json (detail.actor).
+
+OMITTED ACTOR 3  [removed_entity_report.json removed_entities; process /processes/transports/4]
+Kind: actor left out of a transport that is still drawn
+Process: OTOP1-mediated H+ permeation
+Actor: OTOP1
+Slot: transporters
+Reason: actor_schema_not_canonical
+Gate: pre_export_stage3_revalidation
+Decision: D-114 AMENDMENT 1 s2
+Known issue: KI-023
+Add by hand: Add "OTOP1" as a transporter of "OTOP1-mediated H+ permeation" in PathWhiz if the paper supports it; the dropped row is kept verbatim in removed_entity_report.json (detail.actor).
+
+Entities left out (4), from removed_entity_report.json:
+- transporters OTOP1: actor_schema_not_canonical (KI-023); gate pre_export_stage3_revalidation
+    removed from OTOP1-mediated H+ transport (/processes/transports/0): transporters
+- transporters OTOP1: actor_schema_not_canonical (KI-023); gate pre_export_stage3_revalidation
+    removed from H+ permeation through OTOP1 (/processes/transports/2): transporters
+- transporters OTOP1: actor_schema_not_canonical (KI-023); gate pre_export_stage3_revalidation
+    removed from OTOP1-mediated H+ permeation (/processes/transports/4): transporters
+- proteins OTOP1: degree_zero_after_quarantine (unclassified)
+
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 2 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens', 'Arabidopsis thaliana']
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 2 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens', 'Arabidopsis thaliana']
+
+##### ORCH-767/wnt_ca-strict/2026-10-24_0314  pwml_written=True  coverage=15/48  -> C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\docs\pwml_recovery_sprint\evidence\orch773\p2-txt\ORCH-767_wnt_ca-strict_2026-10-24_0314.txt
+OMITTED FROM THE PWML (33; 2 actors left out of processes still drawn)
+----------------------------------------------------------------------
+Known-issue ids: docs/pwml_recovery_sprint/PWML_KNOWN_ISSUES.md, appendix "Reason code -> KI id".
+
+OMITTED 1  [quarantine_report.json quarantined; pre-quarantine /processes/reactions/0; lock rxn_lock_005]
+Kind: reaction
+Name: PLC cleavage of PIP2
+Equation: PIP2 -> IP3 + diacylglycerol
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 2  [quarantine_report.json quarantined; pre-quarantine /processes/reactions/1; lock rxn_lock_002]
+Kind: reaction
+Name: NLK phosphorylates TCF4
+Equation: TCF4 -> phosphorylated TCF4
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 3  [quarantine_report.json quarantined; pre-quarantine /processes/reactions/2; lock rxn_lock_007]
+Kind: reaction
+Name: calcineurin dephosphorylates NF-ATp
+Equation: NF-ATp -> NFAT
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 4  [quarantine_report.json quarantined; pre-quarantine /processes/reactions/3; lock rxn_lock_001]
+Kind: reaction
+Name: CAMKII autophosphorylation
+Equation: Ca2 + /calmodulin-dependent kinase II -> phosphorylated CAMKII
+Reason: undeclared_entity_in_inputs
+Known issue: KI-015
+Add by hand: Read the process in the text record and draw it in PathWhiz if the quote supports it.
+
+OMITTED 5  [quarantine_report.json quarantined; pre-quarantine /processes/transports/1]
+Kind: transport
+Name: SOCE via Orai
+Cargo: Ca2+: extracellular state -> cytoplasmic state
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 6  [quarantine_report.json quarantined; pre-quarantine /processes/transports/6]
+Kind: transport
+Name: Store-operated Ca2+ entry
+Cargo: Ca2+: extracellular state -> cytosolic state
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 7  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/1]
+Kind: interaction
+Name: DAG activates PKC
+Endpoints: diacylglycerol -[activation]-> PKC
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 8  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/2]
+Kind: interaction
+Name: Ca2+ activates PKC
+Endpoints: Ca2+ -[activation]-> PKC
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 9  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/3]
+Kind: interaction
+Name: PKC activates Cdc42
+Endpoints: PKC -[activation]-> Cdc42
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 10  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/6]
+Kind: interaction
+Name: Ca2+ activates CAMKII
+Endpoints: Ca2+ -[activation]-> CAMKII
+Reason: undeclared_entity_in_entity_2
+Known issue: KI-015
+Add by hand: Read the process in the text record and draw it in PathWhiz if the quote supports it.
+
+OMITTED 11  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/7]
+Kind: interaction
+Name: CAMKII activates TAK1
+Endpoints: CAMKII -[activation]-> TAK1
+Reason: undeclared_entity_in_entity_1
+Known issue: KI-015
+Add by hand: Read the process in the text record and draw it in PathWhiz if the quote supports it.
+
+OMITTED 12  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/9]
+Kind: interaction
+Name: STIM1/2 activates Orai
+Endpoints: STIM1/2 -[activation]-> Orai
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 13  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/10]
+Kind: interaction
+Name: Frizzled2 activates G protein
+Endpoints: Frizzled2 -[activation]-> G protein
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 14  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/11]
+Kind: interaction
+Name: G protein activates PLC
+Endpoints: G protein -[activation]-> phospholipase C (PLC)
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 15  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/12]
+Kind: interaction
+Name: Calcineurin activates NFAT
+Endpoints: calcineurin -[activation]-> NFAT
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 16  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/13]
+Kind: interaction
+Name: TAK1 activates NLK
+Endpoints: TAK1 -[activation]-> STAT3-NLK-MAP3K7 complex
+Reason: undeclared_entity_in_entity_1
+Known issue: KI-015
+Add by hand: Read the process in the text record and draw it in PathWhiz if the quote supports it.
+
+OMITTED 17  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/15]
+Kind: interaction
+Name: CAM activates CAMKII
+Endpoints: calmodulin complex -[activation]-> CAMKII
+Reason: undeclared_entity_in_entity_2
+Known issue: KI-015
+Add by hand: Read the process in the text record and draw it in PathWhiz if the quote supports it.
+
+OMITTED 18  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/16]
+Kind: interaction
+Name: DAG activates PKC
+Endpoints: diacylglycerol -[activates]-> PKC
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 19  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/18]
+Kind: interaction
+Name: CAMKII activates TAK1
+Endpoints: Ca2+/calmodulin-dependent kinase II -[activates]-> TAK1
+Reason: undeclared_entity_in_entity_2
+Known issue: KI-015
+Add by hand: Read the process in the text record and draw it in PathWhiz if the quote supports it.
+
+OMITTED 20  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/21]
+Kind: interaction
+Name: TAK1 activates NLK
+Endpoints: TAK1 -[activates]-> STAT3-NLK-MAP3K7 complex
+Reason: undeclared_entity_in_entity_1
+Known issue: KI-015
+Add by hand: Read the process in the text record and draw it in PathWhiz if the quote supports it.
+
+OMITTED 21  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/23]
+Kind: interaction
+Name: Frizzled2 activates phospholipase C
+Endpoints: Frizzled2 -[activates]-> phospholipase C (PLC)
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 22  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/24]
+Kind: interaction
+Name: Ca2+ activates PKC
+Endpoints: Ca2+ -[activates]-> PKC
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 23  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/25]
+Kind: interaction
+Name: PKC activates Cdc42
+Endpoints: PKC -[activates]-> Cdc42
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 24  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/26]
+Kind: interaction
+Name: Ca2+ activates CaMKII
+Endpoints: Ca2+ -[activates]-> CAMKII
+Reason: undeclared_entity_in_entity_2
+Known issue: KI-015
+Add by hand: Read the process in the text record and draw it in PathWhiz if the quote supports it.
+
+OMITTED 25  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/28]
+Kind: interaction
+Name: STIM1/2-Orai activation
+Endpoints: STIM1/2 -[activates]-> Orai
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 26  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/31]
+Kind: interaction
+Name: calcineurin A component of calcineurin complex
+Endpoints: calcineurin A -[component_of]-> calcineurin
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 27  [pwml_ir.json; final payload /processes/interactions/0]
+Kind: interaction
+Name: Wnt5a binds Fzd2
+Endpoints: Wnt5a -[binding]-> Frizzled2
+Reason: untyped_interaction
+Verdict: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Known issue: KI-008
+Add by hand: None inside PathWhiz's model: it has no type for these relations. Read them in the text record, and add an Activation or Inhibition by hand only where the paper states the direction.
+
+OMITTED 28  [pwml_ir.json; final payload /processes/interactions/4]
+Kind: interaction
+Name: Ca2+ binds calmodulin
+Endpoints: Ca2+ -[binding]-> calmodulin
+Reason: untyped_interaction
+Verdict: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Known issue: KI-008
+Add by hand: None inside PathWhiz's model: it has no type for these relations. Read them in the text record, and add an Activation or Inhibition by hand only where the paper states the direction.
+
+OMITTED 29  [pwml_ir.json; final payload /processes/interactions/8]
+Kind: interaction
+Name: Wnt5a-Frizzled2 binding
+Endpoints: Wnt5a -[binds]-> Frizzled2
+Reason: untyped_interaction
+Verdict: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Known issue: KI-008
+Add by hand: None inside PathWhiz's model: it has no type for these relations. Read them in the text record, and add an Activation or Inhibition by hand only where the paper states the direction.
+
+OMITTED 30  [pwml_ir.json; final payload /processes/interactions/9]
+Kind: interaction
+Name: IP3-InsP3R binding
+Endpoints: IP3 -[binds]-> inositol-1,4,5-trisphosphate receptor (InsP3R)
+Reason: untyped_interaction
+Verdict: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Known issue: KI-008
+Add by hand: None inside PathWhiz's model: it has no type for these relations. Read them in the text record, and add an Activation or Inhibition by hand only where the paper states the direction.
+
+OMITTED 31  [pwml_ir.json; final payload /processes/interactions/10]
+Kind: interaction
+Name: \u03b2-catenin component of \u03b2-catenin/TCF complex
+Endpoints: \u03b2-catenin -[component_of]-> \u03b2-catenin/TCF complex
+Reason: untyped_interaction
+Verdict: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Known issue: KI-008
+Add by hand: None inside PathWhiz's model: it has no type for these relations. Read them in the text record, and add an Activation or Inhibition by hand only where the paper states the direction.
+
+OMITTED 32  [pwml_ir.json; final payload /processes/interactions/11]
+Kind: interaction
+Name: TCF component of \u03b2-catenin/TCF complex
+Endpoints: TCF -[component_of]-> \u03b2-catenin/TCF complex
+Reason: untyped_interaction
+Verdict: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Known issue: KI-008
+Add by hand: None inside PathWhiz's model: it has no type for these relations. Read them in the text record, and add an Activation or Inhibition by hand only where the paper states the direction.
+
+OMITTED 33  [pwml_ir.json; final payload /processes/interactions/12]
+Kind: interaction
+Name: calcineurin B component of calcineurin complex
+Endpoints: calcineurin B -[component_of]-> calcineurin
+Reason: untyped_interaction
+Verdict: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Known issue: KI-008
+Add by hand: None inside PathWhiz's model: it has no type for these relations. Read them in the text record, and add an Activation or Inhibition by hand only where the paper states the direction.
+
+OMITTED ACTOR 1  [removed_entity_report.json removed_entities; process /processes/transports/9]
+Kind: actor left out of a transport that is still drawn
+Process: IP3-induced Ca2+ release
+Actor: inositol-1,4,5-trisphosphate receptor (InsP3R)
+Slot: transporters
+Reason: actor_schema_not_canonical
+Gate: pre_export_stage3_revalidation
+Decision: D-114 AMENDMENT 1 s2
+Known issue: KI-023
+Add by hand: Add "inositol-1,4,5-trisphosphate receptor (InsP3R)" as a transporter of "IP3-induced Ca2+ release" in PathWhiz if the paper supports it; the dropped row is kept verbatim in removed_entity_report.json (detail.actor).
+
+OMITTED ACTOR 2  [removed_entity_report.json removed_entities; process /processes/transports/10]
+Kind: actor left out of a transport that is still drawn
+Process: SERCA pumps Ca2+ into ER
+Actor: inositol-1,4,5-trisphosphate receptor (InsP3R)
+Slot: transporters
+Reason: actor_schema_not_canonical
+Gate: pre_export_stage3_revalidation
+Decision: D-114 AMENDMENT 1 s2
+Known issue: KI-023
+Add by hand: Add "inositol-1,4,5-trisphosphate receptor (InsP3R)" as a transporter of "SERCA pumps Ca2+ into ER" in PathWhiz if the paper supports it; the dropped row is kept verbatim in removed_entity_report.json (detail.actor).
+
+Listed, not counted (3):
+- merged duplicate, not counted: PLC cleavage of PIP2  [final payload quarantined_locked_reactions; json_pointer /processes/reactions/1; lock rxn_lock_004]: duplicate_locked_reaction (KI-014)
+- merged duplicate, not counted: PLC-mediated PIP2 cleavage  [final payload quarantined_locked_reactions; json_pointer /processes/reactions/3; lock rxn_lock_006]: duplicate_locked_reaction (KI-014)
+- merged duplicate, not counted: PLC cleavage of PIP2  [final payload quarantined_locked_reactions; json_pointer /processes/reactions/0; lock rxn_lock_003]: duplicate_locked_reaction (KI-014)
+
+Entities left out (18), from removed_entity_report.json:
+- compounds PIP2: unreferenced_after_quarantine (unclassified)
+- compounds diacylglycerol: unreferenced_after_quarantine (unclassified)
+- compounds /calmodulin-dependent kinase II: unreferenced_after_quarantine (unclassified)
+- proteins G protein: degree_zero_after_quarantine (unclassified)
+- proteins phospholipase C (PLC): degree_zero_after_quarantine (unclassified)
+- proteins PKC: degree_zero_after_quarantine (unclassified)
+- proteins Cdc42: degree_zero_after_quarantine (unclassified)
+- proteins STIM1/2: degree_zero_after_quarantine (unclassified)
+- proteins Orai: degree_zero_after_quarantine (unclassified)
+- proteins NFAT: degree_zero_after_quarantine (unclassified)
+- proteins TCF4: degree_zero_after_quarantine (unclassified)
+- proteins calcineurin A: degree_zero_after_quarantine (unclassified)
+- proteins phosphorylated TCF4: degree_zero_after_quarantine (unclassified)
+- proteins NF-ATp: degree_zero_after_quarantine (unclassified)
+- protein_complexes inositol-1,4,5-trisphosphate receptors: degree_zero_after_quarantine (unclassified)
+- proteins phosphorylated CAMKII: protein_missing_external_identity (KI-001); gate strict_quarantine_unexportable_entity
+- transporters inositol-1,4,5-trisphosphate receptor (InsP3R): actor_schema_not_canonical (KI-023); gate pre_export_stage3_revalidation
+    removed from IP3-induced Ca2+ release (/processes/transports/9): transporters
+- transporters inositol-1,4,5-trisphosphate receptor (InsP3R): actor_schema_not_canonical (KI-023); gate pre_export_stage3_revalidation
+    removed from SERCA pumps Ca2+ into ER (/processes/transports/10): transporters
+
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli']
+
+##### ORCH-767/enterobactin-strict/2026-10-23_2224  pwml_written=True  coverage=10/21  -> C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\docs\pwml_recovery_sprint\evidence\orch773\p2-txt\ORCH-767_enterobactin-strict_2026-10-23_2224.txt
+OMITTED FROM THE PWML (11; 1 actors left out of processes still drawn)
+----------------------------------------------------------------------
+Known-issue ids: docs/pwml_recovery_sprint/PWML_KNOWN_ISSUES.md, appendix "Reason code -> KI id".
+
+OMITTED 1  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/1]
+Kind: interaction
+Name: Fur repression of ent gene clusters
+Endpoints: Fur -[inhibition]-> ent gene clusters
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 2  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/2]
+Kind: interaction
+Name: Fur repression of ent gene clusters
+Endpoints: Fur -[inhibition]-> ent gene cluster promoters
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 3  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/10]
+Kind: interaction
+Name: Fur binding to Fe2+
+Endpoints: Fur -[binding]-> Fe2+
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 4  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/11]
+Kind: interaction
+Name: Fur binding to ent gene cluster promoters
+Endpoints: Fur -[binding]-> ent gene cluster promoters
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 5  [pwml_ir.json; final payload /processes/interactions/1]
+Kind: interaction
+Name: 2,3-DHB binding to EntE
+Endpoints: 2,3-dihydroxybenzoic acid -[binding]-> EntE
+Reason: untyped_interaction
+Verdict: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Known issue: KI-008
+Add by hand: None inside PathWhiz's model: it has no type for these relations. Read them in the text record, and add an Activation or Inhibition by hand only where the paper states the direction.
+
+OMITTED 6  [pwml_ir.json; final payload /processes/interactions/2]
+Kind: interaction
+Name: EntC-EntB channeling
+Endpoints: EntC -[binding]-> EntB
+Reason: untyped_interaction
+Verdict: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Known issue: KI-008
+Add by hand: None inside PathWhiz's model: it has no type for these relations. Read them in the text record, and add an Activation or Inhibition by hand only where the paper states the direction.
+
+OMITTED 7  [pwml_ir.json; final payload /processes/interactions/3]
+Kind: interaction
+Name: EntB-EntA interaction
+Endpoints: EntB -[binding]-> EntA
+Reason: untyped_interaction
+Verdict: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Known issue: KI-008
+Add by hand: None inside PathWhiz's model: it has no type for these relations. Read them in the text record, and add an Activation or Inhibition by hand only where the paper states the direction.
+
+OMITTED 8  [pwml_ir.json; final payload /processes/interactions/4]
+Kind: interaction
+Name: EntB-EntE interaction
+Endpoints: EntB -[binding]-> EntE
+Reason: untyped_interaction
+Verdict: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Known issue: KI-008
+Add by hand: None inside PathWhiz's model: it has no type for these relations. Read them in the text record, and add an Activation or Inhibition by hand only where the paper states the direction.
+
+OMITTED 9  [pwml_ir.json; final payload /processes/interactions/5]
+Kind: interaction
+Name: EntB-EntF interaction
+Endpoints: EntB -[binding]-> EntF
+Reason: untyped_interaction
+Verdict: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Known issue: KI-008
+Add by hand: None inside PathWhiz's model: it has no type for these relations. Read them in the text record, and add an Activation or Inhibition by hand only where the paper states the direction.
+
+OMITTED 10  [pwml_ir.json; final payload /processes/interactions/6]
+Kind: interaction
+Name: EntD modification of EntB
+Endpoints: EntD -[modification]-> EntB
+Reason: untyped_interaction
+Verdict: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Known issue: KI-008
+Add by hand: None inside PathWhiz's model: it has no type for these relations. Read them in the text record, and add an Activation or Inhibition by hand only where the paper states the direction.
+
+OMITTED 11  [pwml_ir.json; final payload /processes/interactions/7]
+Kind: interaction
+Name: EntD modification of EntF
+Endpoints: EntD -[modification]-> EntF
+Reason: untyped_interaction
+Verdict: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Known issue: KI-008
+Add by hand: None inside PathWhiz's model: it has no type for these relations. Read them in the text record, and add an Activation or Inhibition by hand only where the paper states the direction.
+
+OMITTED ACTOR 1  [removed_entity_report.json removed_entities; process /processes/reactions/4]
+Kind: actor left out of a reaction that is still drawn
+Process: EntF enterobactin synthase reaction
+Actor: enterobactin synthase complex
+Slot: enzymes, modifiers
+Reason: Generated protein complex 'enterobactin synthase complex' component 'enterobactin synthase' is missing positive stoichiometry.
+Gate: final_pre_export_stage3_gates
+Decision: D-113 s1
+Catalysts kept: EntF complex
+Known issue: KI-012
+Add by hand: None needed: the wrapper is inferred, not named by the paper (D-113 s1); check that the kept catalysts are drawn.
+
+Entities left out (1), from removed_entity_report.json:
+- protein_complexes enterobactin synthase complex: Generated protein complex 'enterobactin synthase complex' component 'enterobactin synthase' is missing positive stoichiometry. (KI-012); gate final_pre_export_stage3_gates
+    removed from EntF enterobactin synthase reaction (/processes/reactions/4): enzymes, modifiers; catalysts kept: EntF complex
+
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens']
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens']
+
+##### runs_verify/2026-08-24_1203/PMC12856317  pwml_written=True  coverage=0/6  -> C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\docs\pwml_recovery_sprint\evidence\orch773\p2-txt\runs_verify_2026-08-24_1203_PMC12856317.txt
+OMITTED FROM THE PWML (6)
+-------------------------
+Known-issue ids: docs/pwml_recovery_sprint/PWML_KNOWN_ISSUES.md, appendix "Reason code -> KI id".
+
+OMITTED 1  [quarantine_report.json quarantined; pre-quarantine /processes/reactions/0; lock rxn_lock_001]
+Kind: reaction
+Name: ALAS2-catalyzed condensation
+Equation: Glycine + succinyl-CoA -> aminolevulinic acid
+Reason: non_protein_actor_in_modifiers
+Known issue: KI-004
+Add by hand: For each listed reaction, add the enzyme in PathWhiz as a protein (with its UniProt id) and attach it; the text record names the actor that was refused.
+
+OMITTED 2  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/1]
+Kind: interaction
+Name: ALAS2 recruits CLPXP for degradation
+Endpoints: ALAS2 -[recruits]-> CLPXP
+Reason: protein_complex_component_omitted:ATP-dependent Clp protease ATP-binding subunit clpX-like, mitochondrial:protein_missing_external_identity
+Omission: gate=strict_quarantine_unexportable_entity; cause=process; slot=entity_2; name=CLPXP; failing entity=protein_complexes CLPXP
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 3  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/3]
+Kind: interaction
+Name: ALAS1 degraded by CLPXP
+Endpoints: ALAS1 -[degraded_by]-> CLPXP
+Reason: protein_complex_component_omitted:ATP-dependent Clp protease ATP-binding subunit clpX-like, mitochondrial:protein_missing_external_identity
+Omission: gate=strict_quarantine_unexportable_entity; cause=process; slot=entity_2; name=CLPXP; failing entity=protein_complexes CLPXP
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 4  [pwml_ir.json; final payload /processes/interactions/0]
+Kind: interaction
+Name: heme inhibits ALAS2
+Endpoints: heme -[inhibits]-> ALAS2
+Reason: bare_protein_endpoint
+Verdict: withheld -- bare_protein_endpoint: a protein endpoint is not wrapped in a single-protein complex in this payload, and PathWhiz has no bare-protein interaction member
+Known issue: KI-009
+Add by hand: Give the protein its UniProt id and species in PathWhiz, make a one-protein complex of it, and draw the interaction from or to that complex.
+
+OMITTED 5  [pwml_ir.json; final payload /processes/interactions/1]
+Kind: interaction
+Name: ALAS1 degraded by LONP1
+Endpoints: ALAS1 -[degraded_by]-> LONP1
+Reason: untyped_interaction
+Verdict: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Known issue: KI-008
+Add by hand: None inside PathWhiz's model: it has no type for these relations. Read them in the text record, and add an Activation or Inhibition by hand only where the paper states the direction.
+
+OMITTED 6  [pwml_ir.json; final payload /processes/interactions/2]
+Kind: interaction
+Name: pyridoxal 5-phosphate cofactor of ALAS2
+Endpoints: Pyridoxal 5'-phosphate -[cofactor_of]-> ALAS2
+Reason: untyped_interaction
+Verdict: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Known issue: KI-008
+Add by hand: None inside PathWhiz's model: it has no type for these relations. Read them in the text record, and add an Activation or Inhibition by hand only where the paper states the direction.
+
+Entities left out (7), from removed_entity_report.json:
+- compounds Glycine: unreferenced_after_quarantine (unclassified)
+- compounds succinyl-CoA: unreferenced_after_quarantine (unclassified)
+- compounds aminolevulinic acid: unreferenced_after_quarantine (unclassified)
+- protein_complexes ALAS2 complex: degree_zero_after_quarantine (unclassified)
+- protein_complexes CLPXP: protein_complex_component_omitted:ATP-dependent Clp protease ATP-binding subunit clpX-like, mitochondrial:protein_missing_external_identity (KI-001); gate strict_quarantine_unexportable_entity
+- proteins ATP-dependent Clp protease ATP-binding subunit clpX-like, mitochondrial: protein_missing_external_identity (KI-001); gate strict_quarantine_unexportable_entity
+- proteins Putative ATP-dependent Clp protease proteolytic subunit, mitochondrial: protein_missing_external_identity (KI-001); gate strict_quarantine_unexportable_entity
+
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 52313f0c8796632a7dbc586464cb012d41a07e08  [git, worktree dirty=False]
+label                   : p2-render-tip
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch773/docs/pwml_recovery_sprint/evidence/orch773/render_leg_txt.py --src C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch773/src --out C:/t/orch773/render-tip --txt-dir C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch773/docs/pwml_recovery_sprint/evidence/orch773/p2-txt ORCH-755/sour_taste-strict/2026-10-21_0139 ORCH-767/wnt_ca-strict/2026-10-24_0314 ORCH-767/enterobactin-strict/2026-10-23_2224 runs_verify/2026-08-24_1203/PMC12856317
+cwd                     : C:/t/orch773/cwd
+root PID / process group: 261888 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 590 s
+duration                : 5.04 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  271216:python.exe
+descendants terminated  : 1  271216
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\docs\pwml_recovery_sprint\evidence\g11\ORCH-773\101-p2-render-tip.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH-773  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

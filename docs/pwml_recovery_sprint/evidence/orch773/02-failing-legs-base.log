@@ -1,0 +1,168 @@
+
+## 1. ORCH-755/enterobactin-strict/2026-10-20_2201  stage=final_pre_export_gate_lifecycle  checkpoint=pre_freeze
+   quarantine ok=False refusal=['unexportable_entity:1'] release=diagnostic_only counts={'auxiliary_accepted': 0, 'core_accepted': 11, 'quarantined_broken_reference': 0, 'quarantined_disconnected': 0, 'quarantined_out_of_scope': 0, 'quarantined_unmapped_entity': 2, 'quarantined_weak_evidence': 0}
+   invariant unexportable_entities: {'bucket': 'proteins', 'name': 'EntB', 'reason': 'protein_missing_external_identity'}
+
+## 2. ORCH-755/sour_taste-strict/2026-10-21_0139  stage=pwml_export  checkpoint=canonical
+   quarantine ok=True refusal=[] release=review_required counts={'auxiliary_accepted': 0, 'core_accepted': 7, 'quarantined_broken_reference': 0, 'quarantined_disconnected': 0, 'quarantined_out_of_scope': 0, 'quarantined_unmapped_entity': 0, 'quarantined_weak_evidence': 0}
+   export ok=False error='PWML export stopped by validation-only pre-export Stage 3 revalidation; Stage 8 did not repair the payload.'
+   stage3_contract_codes=['actor_schema_not_canonical'] required_gate_codes=[] ir_blocking=[] ir_validation=[]
+   stage8 contract: actor_schema_not_canonical None Normalized actor rows must include non-empty entity and entity_type fields.
+   stage8 contract: actor_schema_not_canonical None Normalized actor rows must include non-empty entity and entity_type fields.
+   stage8 contract: actor_schema_not_canonical None Normalized actor rows must include non-empty entity and entity_type fields.
+
+## 3. ORCH-759/enterobactin-strict/2026-10-22_1037  stage=final_pre_export_stage3_gates  checkpoint=canonical
+   quarantine ok=True refusal=[] release=review_required counts={'auxiliary_accepted': 0, 'core_accepted': 11, 'quarantined_broken_reference': 0, 'quarantined_disconnected': 0, 'quarantined_out_of_scope': 0, 'quarantined_unmapped_entity': 0, 'quarantined_weak_evidence': 0}
+   final gate: ['/entities/proteins/7/name', 'Protein has degree 0 after normalization: enterobactin synthase']
+
+## 4. ORCH-759/chlorophyll-strict/2026-10-22_1231  stage=pwml_export  checkpoint=pre_freeze
+   quarantine ok=True refusal=[] release=review_required counts={'auxiliary_accepted': 36, 'core_accepted': 19, 'quarantined_broken_reference': 28, 'quarantined_disconnected': 0, 'quarantined_out_of_scope': 0, 'quarantined_unmapped_entity': 14, 'quarantined_weak_evidence': 0}
+   export ok=False error='PWML required-field gate failed.'
+   stage3_contract_codes=[] required_gate_codes=['reaction_enzyme_must_be_protein_complex'] ir_blocking=[] ir_validation=[]
+   required: reaction_enzyme_must_be_protein_complex None Reaction 'CPO reaction' enzyme/modifier 'CPO' must reference a protein_complex entity.
+   required: reaction_enzyme_must_be_protein_complex None Reaction 'CPO reaction' enzyme/modifier 'CPO' must reference a protein_complex entity.
+
+## 5. ORCH-767/enterobactin-strict/2026-10-23_2224  stage=final_pre_export_stage3_gates  checkpoint=canonical
+   quarantine ok=True refusal=[] release=review_required counts={'auxiliary_accepted': 0, 'core_accepted': 17, 'quarantined_broken_reference': 0, 'quarantined_disconnected': 0, 'quarantined_out_of_scope': 0, 'quarantined_unmapped_entity': 0, 'quarantined_weak_evidence': 0}
+   final gate: ['/entities/protein_complexes/0/components/0', "Generated protein complex 'enterobactin synthase complex' component 'enterobactin synthase' is missing positive stoichiometry."]
+
+## 6. ORCH-767/wnt_ca-strict/2026-10-24_0314  stage=final_pre_export_gate_lifecycle  checkpoint=pre_freeze
+   quarantine ok=False refusal=['unexportable_entity:1'] release=diagnostic_only counts={'auxiliary_accepted': 3, 'core_accepted': 19, 'quarantined_broken_reference': 0, 'quarantined_disconnected': 0, 'quarantined_out_of_scope': 0, 'quarantined_unmapped_entity': 26, 'quarantined_weak_evidence': 0}
+   invariant unexportable_entities: {'bucket': 'proteins', 'name': 'phosphorylated CAMKII', 'reason': 'protein_missing_external_identity'}
+
+## 7. runs_verify/2026-08-18_1328/PMC12452463  stage=final_pre_export_stage3_gates  checkpoint=pre_freeze
+   quarantine ok=True refusal=[] release=review_required counts={'auxiliary_accepted': 0, 'core_accepted': 6, 'quarantined_broken_reference': 2, 'quarantined_disconnected': 0, 'quarantined_out_of_scope': 0, 'quarantined_unmapped_entity': 3, 'quarantined_weak_evidence': 0}
+   final gate: ['/entities/proteins/4/name', 'Protein has degree 0 after normalization: Isochorismatase (EntB)']
+
+## 8. runs_verify/2026-08-21_2057/PMC12452463  stage=final_pre_export_stage3_gates  checkpoint=canonical
+   quarantine ok=True refusal=[] release=review_required counts={'auxiliary_accepted': 0, 'core_accepted': 7, 'quarantined_broken_reference': 0, 'quarantined_disconnected': 0, 'quarantined_out_of_scope': 0, 'quarantined_unmapped_entity': 0, 'quarantined_weak_evidence': 0}
+   final gate: ['/entities/protein_complexes/0/components/0', "Generated protein complex 'enterobactin synthase complex' component 'EntD' is missing positive stoichiometry."]
+   final gate: ['/entities/protein_complexes/0/components/1', "Generated protein complex 'enterobactin synthase complex' component 'EntE' is missing positive stoichiometry."]
+   final gate: ['/entities/protein_complexes/0/components/2', "Generated protein complex 'enterobactin synthase complex' component 'EntF' is missing positive stoichiometry."]
+
+## 9. runs_verify/2026-08-21_2057/PMC12096016  stage=pwml_export  checkpoint=canonical
+   quarantine ok=True refusal=[] release=review_required counts={'auxiliary_accepted': 0, 'core_accepted': 11, 'quarantined_broken_reference': 0, 'quarantined_disconnected': 0, 'quarantined_out_of_scope': 0, 'quarantined_unmapped_entity': 0, 'quarantined_weak_evidence': 0}
+   export ok=False error='PWML required-field gate failed.'
+   stage3_contract_codes=[] required_gate_codes=['reaction_enzyme_must_be_protein_complex'] ir_blocking=[] ir_validation=[]
+   required: reaction_enzyme_must_be_protein_complex None Reaction 'LDH coupled reaction' enzyme/modifier 'lactate dehydrogenase' must reference a protein_complex entity.
+   required: reaction_enzyme_must_be_protein_complex None Reaction 'LDH coupled reaction' enzyme/modifier 'lactate dehydrogenase' must reference a protein_complex entity.
+
+## 10. runs_verify/2026-08-21_2239/PMC12180156  stage=pwml_export  checkpoint=canonical
+   quarantine ok=True refusal=[] release=review_required counts={'auxiliary_accepted': 0, 'core_accepted': 1, 'quarantined_broken_reference': 0, 'quarantined_disconnected': 0, 'quarantined_out_of_scope': 0, 'quarantined_unmapped_entity': 0, 'quarantined_weak_evidence': 0}
+   export ok=False error='PWML required-field gate failed.'
+   stage3_contract_codes=[] required_gate_codes=['no_defensible_reaction_support'] ir_blocking=[] ir_validation=[]
+   required: no_defensible_reaction_support None No exported reaction has defensible reaction-level support: the provenance carrier is active in this payload, yet NONE of its 1 reaction(s) 
+
+## 11. runs_verify/2026-08-22_2147/PMC13231680  stage=pwml_export  checkpoint=canonical
+   quarantine ok=True refusal=[] release=review_required counts={'auxiliary_accepted': 0, 'core_accepted': 5, 'quarantined_broken_reference': 0, 'quarantined_disconnected': 0, 'quarantined_out_of_scope': 0, 'quarantined_unmapped_entity': 0, 'quarantined_weak_evidence': 0}
+   export ok=False error='PWML required-field gate failed.'
+   stage3_contract_codes=[] required_gate_codes=['no_defensible_reaction_support'] ir_blocking=[] ir_validation=[]
+   required: no_defensible_reaction_support None No exported reaction has defensible reaction-level support: the provenance carrier is active in this payload, yet NONE of its 1 reaction(s) 
+
+## 12. runs_verify/2026-08-22_2147/PMC12180156  stage=pwml_export  checkpoint=canonical
+   quarantine ok=True refusal=[] release=review_required counts={'auxiliary_accepted': 0, 'core_accepted': 5, 'quarantined_broken_reference': 0, 'quarantined_disconnected': 0, 'quarantined_out_of_scope': 0, 'quarantined_unmapped_entity': 0, 'quarantined_weak_evidence': 0}
+   export ok=False error='PWML required-field gate failed.'
+   stage3_contract_codes=[] required_gate_codes=['no_defensible_reaction_support'] ir_blocking=[] ir_validation=[]
+   required: no_defensible_reaction_support None No exported reaction has defensible reaction-level support: the provenance carrier is active in this payload, yet NONE of its 2 reaction(s) 
+
+## 13. runs_verify/2026-08-24_1203/PMC12856317  stage=final_pre_export_gate_lifecycle  checkpoint=pre_freeze
+   quarantine ok=False refusal=['unexportable_entity:2'] release=diagnostic_only counts={'auxiliary_accepted': 0, 'core_accepted': 5, 'quarantined_broken_reference': 1, 'quarantined_disconnected': 0, 'quarantined_out_of_scope': 0, 'quarantined_unmapped_entity': 0, 'quarantined_weak_evidence': 0}
+   invariant unexportable_entities: {'bucket': 'proteins', 'name': 'ATP-dependent Clp protease ATP-binding subunit clpX-like, mitochondrial', 'reason': 'protein_missing_external_identity'}
+   invariant unexportable_entities: {'bucket': 'proteins', 'name': 'Putative ATP-dependent Clp protease proteolytic subunit, mitochondrial', 'reason': 'protein_missing_external_identity'}
+
+## 14. runs_verify/2026-08-24_1203/PMC13231680  stage=pwml_export  checkpoint=canonical
+   quarantine ok=True refusal=[] release=review_required counts={'auxiliary_accepted': 0, 'core_accepted': 3, 'quarantined_broken_reference': 0, 'quarantined_disconnected': 0, 'quarantined_out_of_scope': 0, 'quarantined_unmapped_entity': 0, 'quarantined_weak_evidence': 0}
+   export ok=False error='PWML required-field gate failed.'
+   stage3_contract_codes=[] required_gate_codes=['no_defensible_reaction_support'] ir_blocking=[] ir_validation=[]
+   required: no_defensible_reaction_support None No exported reaction has defensible reaction-level support: the provenance carrier is active in this payload, yet NONE of its 1 reaction(s) 
+
+## 15. runs_verify/2026-08-24_1428/PMC12180156  stage=pwml_export  checkpoint=canonical
+   quarantine ok=True refusal=[] release=review_required counts={'auxiliary_accepted': 0, 'core_accepted': 3, 'quarantined_broken_reference': 0, 'quarantined_disconnected': 0, 'quarantined_out_of_scope': 0, 'quarantined_unmapped_entity': 0, 'quarantined_weak_evidence': 0}
+   export ok=False error='PWML required-field gate failed.'
+   stage3_contract_codes=[] required_gate_codes=['no_defensible_reaction_support'] ir_blocking=[] ir_validation=[]
+   required: no_defensible_reaction_support None No exported reaction has defensible reaction-level support: the provenance carrier is active in this payload, yet NONE of its 1 reaction(s) 
+
+## 16. runs_verify/2026-08-25_1216/PMC12856317  stage=pwml_export  checkpoint=canonical
+   quarantine ok=True refusal=[] release=review_required counts={'auxiliary_accepted': 1, 'core_accepted': 4, 'quarantined_broken_reference': 0, 'quarantined_disconnected': 0, 'quarantined_out_of_scope': 0, 'quarantined_unmapped_entity': 0, 'quarantined_weak_evidence': 0}
+   export ok=False error='PWML IR validation failed.'
+   stage3_contract_codes=[] required_gate_codes=[] ir_blocking=['protein_complex_missing_components'] ir_validation=['protein_complex_missing_components']
+
+## 17. runs_verify/2026-08-25_1216/PMC12444477  stage=pwml_export  checkpoint=canonical
+   quarantine ok=True refusal=[] release=review_required counts={'auxiliary_accepted': 1, 'core_accepted': 13, 'quarantined_broken_reference': 0, 'quarantined_disconnected': 0, 'quarantined_out_of_scope': 0, 'quarantined_unmapped_entity': 0, 'quarantined_weak_evidence': 0}
+   export ok=False error='PWML IR validation failed.'
+   stage3_contract_codes=[] required_gate_codes=[] ir_blocking=['protein_complex_missing_components'] ir_validation=['protein_complex_missing_components']
+
+## 18. runs_verify/2026-08-28_1816/PMC12180156  stage=pwml_export  checkpoint=canonical
+   quarantine ok=True refusal=[] release=review_required counts={'auxiliary_accepted': 0, 'core_accepted': 2, 'quarantined_broken_reference': 0, 'quarantined_disconnected': 0, 'quarantined_out_of_scope': 0, 'quarantined_unmapped_entity': 0, 'quarantined_weak_evidence': 0}
+   export ok=False error='PWML required-field gate failed.'
+   stage3_contract_codes=[] required_gate_codes=['no_defensible_reaction_support'] ir_blocking=[] ir_validation=[]
+   required: no_defensible_reaction_support None No exported reaction has defensible reaction-level support: the provenance carrier is active in this payload, yet NONE of its 1 reaction(s) 
+
+## 19. runs_verify/2026-09-01_1612/PMC12180156  stage=pwml_export  checkpoint=canonical
+   quarantine ok=True refusal=[] release=review_required counts={'auxiliary_accepted': 0, 'core_accepted': 5, 'quarantined_broken_reference': 0, 'quarantined_disconnected': 0, 'quarantined_out_of_scope': 0, 'quarantined_unmapped_entity': 0, 'quarantined_weak_evidence': 0}
+   export ok=False error='PWML required-field gate failed.'
+   stage3_contract_codes=[] required_gate_codes=['no_defensible_reaction_support'] ir_blocking=[] ir_validation=[]
+   required: no_defensible_reaction_support None No exported reaction has defensible reaction-level support: the provenance carrier is active in this payload, yet NONE of its 2 reaction(s) 
+
+## 20. runs_verify/2026-09-02_2052/PMC12444477  stage=final_pre_export_gate_lifecycle  checkpoint=pre_freeze
+   quarantine ok=False refusal=['unexportable_entity:2'] release=diagnostic_only counts={'auxiliary_accepted': 2, 'core_accepted': 8, 'quarantined_broken_reference': 0, 'quarantined_disconnected': 0, 'quarantined_out_of_scope': 0, 'quarantined_unmapped_entity': 4, 'quarantined_weak_evidence': 0}
+   invariant unexportable_entities: {'bucket': 'proteins', 'name': 'FtsH', 'reason': 'protein_missing_external_identity'}
+   invariant unexportable_entities: {'bucket': 'proteins', 'name': 'LapB', 'reason': 'protein_missing_external_identity'}
+
+## 21. runs_verify/2026-09-02_2052/PMC12180156  stage=pwml_export  checkpoint=canonical
+   quarantine ok=True refusal=[] release=review_required counts={'auxiliary_accepted': 0, 'core_accepted': 2, 'quarantined_broken_reference': 0, 'quarantined_disconnected': 0, 'quarantined_out_of_scope': 0, 'quarantined_unmapped_entity': 0, 'quarantined_weak_evidence': 0}
+   export ok=False error='PWML required-field gate failed.'
+   stage3_contract_codes=[] required_gate_codes=['no_defensible_reaction_support'] ir_blocking=[] ir_validation=[]
+   required: no_defensible_reaction_support None No exported reaction has defensible reaction-level support: the provenance carrier is active in this payload, yet NONE of its 1 reaction(s) 
+
+## 22. runs_verify/2026-09-02_2052/PMC12452463  stage=pwml_export  checkpoint=canonical
+   quarantine ok=True refusal=[] release=review_required counts={'auxiliary_accepted': 0, 'core_accepted': 9, 'quarantined_broken_reference': 0, 'quarantined_disconnected': 0, 'quarantined_out_of_scope': 0, 'quarantined_unmapped_entity': 0, 'quarantined_weak_evidence': 0}
+   export ok=False error='PWML export stopped by validation-only pre-export Stage 3 revalidation; Stage 8 did not repair the payload.'
+   stage3_contract_codes=['actor_schema_not_canonical'] required_gate_codes=[] ir_blocking=[] ir_validation=[]
+   stage8 contract: actor_schema_not_canonical None Normalized actor rows must include non-empty entity and entity_type fields.
+
+## 23. runs_verify/2026-09-06_1425/PMC12376012  stage=pwml_export  checkpoint=canonical
+   quarantine ok=True refusal=[] release=review_required counts={'auxiliary_accepted': 0, 'core_accepted': 16, 'quarantined_broken_reference': 0, 'quarantined_disconnected': 0, 'quarantined_out_of_scope': 0, 'quarantined_unmapped_entity': 0, 'quarantined_weak_evidence': 0}
+   export ok=False error='PWML required-field gate failed.'
+   stage3_contract_codes=[] required_gate_codes=['reaction_enzyme_must_be_protein_complex'] ir_blocking=[] ir_validation=[]
+   required: reaction_enzyme_must_be_protein_complex None Reaction 'ceramide synthase reaction' enzyme/modifier 'ceramide synthase' must reference a protein_complex entity.
+   required: reaction_enzyme_must_be_protein_complex None Reaction 'ceramide synthase reaction' enzyme/modifier 'ceramide synthase' must reference a protein_complex entity.
+
+## 24. runs_verify/2026-09-06_1425/PMC11405693  stage=pwml_export  checkpoint=canonical
+   quarantine ok=True refusal=[] release=review_required counts={'auxiliary_accepted': 0, 'core_accepted': 7, 'quarantined_broken_reference': 0, 'quarantined_disconnected': 0, 'quarantined_out_of_scope': 0, 'quarantined_unmapped_entity': 0, 'quarantined_weak_evidence': 0}
+   export ok=False error='PWML required-field gate failed.'
+   stage3_contract_codes=[] required_gate_codes=['reaction_enzyme_must_be_protein_complex'] ir_blocking=[] ir_validation=[]
+   required: reaction_enzyme_must_be_protein_complex None Reaction 'C4H hydroxylation' enzyme/modifier 'AtCYP73A5' must reference a protein_complex entity.
+   required: reaction_enzyme_must_be_protein_complex None Reaction 'C4H hydroxylation' enzyme/modifier 'AtCYP73A5' must reference a protein_complex entity.
+
+## 25. runs_verify/2026-09-16_2152/PMC13534948  stage=final_pre_export_gate_lifecycle  checkpoint=pre_freeze
+   quarantine ok=False refusal=['minimum_core:core_process_count_below_minimum:0<1', 'minimum_core:no_surviving_process', 'minimum_core:requested_core_coverage_below_minimum:0.000<0.500'] release=diagnostic_only counts={'auxiliary_accepted': 0, 'core_accepted': 0, 'quarantined_broken_reference': 0, 'quarantined_disconnected': 0, 'quarantined_out_of_scope': 0, 'quarantined_unmapped_entity': 3, 'quarantined_weak_evidence': 0}
+
+25 failing legs with a checkpoint
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 3ef3fa9c6e00e1d65300a80224cf9a0ce2b3e1df  [git, worktree dirty=False]
+label                   : failing-legs-base
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch773/docs/pwml_recovery_sprint/evidence/orch773/failing_legs.py C:/t/orch773/base.json C:/t/orch773/out-base
+cwd                     : C:/t/orch773/cwd
+root PID / process group: 78236 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 0.15 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  80888:python.exe
+descendants terminated  : 1  80888
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\docs\pwml_recovery_sprint\evidence\g11\ORCH-773\02-failing-legs-base.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH-773  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

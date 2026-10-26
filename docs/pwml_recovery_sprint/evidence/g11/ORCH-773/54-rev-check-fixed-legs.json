@@ -1,0 +1,101 @@
+{
+  "label": "rev-check-fixed-legs",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/rev773/scripts/check_fixed_legs.py",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/rev773-tip/src",
+    "C:/t/rev773/chk",
+    "ORCH-755/enterobactin-strict/2026-10-20_2201",
+    "ORCH-755/sour_taste-strict/2026-10-21_0139",
+    "ORCH-759/chlorophyll-strict/2026-10-22_1231",
+    "ORCH-759/enterobactin-strict/2026-10-22_1037",
+    "ORCH-767/enterobactin-strict/2026-10-23_2224",
+    "ORCH-767/wnt_ca-strict/2026-10-24_0314",
+    "runs_verify/2026-08-18_1328/PMC12452463",
+    "runs_verify/2026-08-21_2057/PMC12096016",
+    "runs_verify/2026-08-21_2057/PMC12452463",
+    "runs_verify/2026-08-24_1203/PMC12856317",
+    "runs_verify/2026-08-25_1216/PMC12444477",
+    "runs_verify/2026-08-25_1216/PMC12856317",
+    "runs_verify/2026-09-02_2052/PMC12444477",
+    "runs_verify/2026-09-02_2052/PMC12452463",
+    "runs_verify/2026-09-06_1425/PMC11405693",
+    "runs_verify/2026-09-06_1425/PMC12376012"
+  ],
+  "cwd": "C:/t/rev773/cwd",
+  "started_at": "2026-10-25T20:07:49+00:00",
+  "finished_at": "2026-10-25T20:08:00+00:00",
+  "duration_seconds": 11.208830300000045,
+  "timeout_seconds": 540.0,
+  "root_pid": 149284,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 150180,
+      "name": "python.exe",
+      "ppid": 149284
+    }
+  ],
+  "descendants_terminated": [
+    150180
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 137436,
+      "name": "python.exe"
+    },
+    {
+      "pid": 137476,
+      "name": "python.exe"
+    },
+    {
+      "pid": 150472,
+      "name": "python.exe"
+    },
+    {
+      "pid": 151176,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\rev773-tip\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-773\\54-rev-check-fixed-legs.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\rev773-tip\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\rev773-tip",
+    "repo_head": "0971487bd617f27a6d6946599503560905bd08c6",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-773-rev",
+    "token": "ORCH-773-rev:150472:bc9814a472dd7c97",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

@@ -1,0 +1,260 @@
+{
+  "label": "probe-keepers-base",
+  "command": [
+    "C:\\Program Files\\Git\\usr\\bin\\bash.exe",
+    "C:/t/orch773/keepers.sh"
+  ],
+  "cwd": "C:/t/orch773/cwd",
+  "started_at": "2026-10-25T18:51:08+00:00",
+  "finished_at": "2026-10-25T18:51:22+00:00",
+  "duration_seconds": 13.905804299999545,
+  "timeout_seconds": 300.0,
+  "root_pid": 92864,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 92772,
+      "name": "bash.exe",
+      "ppid": 92864
+    },
+    {
+      "pid": 92996,
+      "name": "python.exe",
+      "ppid": 93032
+    },
+    {
+      "pid": 93032,
+      "name": "python.exe",
+      "ppid": 92772
+    },
+    {
+      "pid": 92824,
+      "name": "python.exe",
+      "ppid": 92840
+    },
+    {
+      "pid": 92840,
+      "name": "bash.exe",
+      "ppid": 92864
+    },
+    {
+      "pid": 92696,
+      "name": "python.exe",
+      "ppid": 92824
+    },
+    {
+      "pid": 86972,
+      "name": "python.exe",
+      "ppid": 92352
+    },
+    {
+      "pid": 91712,
+      "name": "bash.exe",
+      "ppid": 92864
+    },
+    {
+      "pid": 92352,
+      "name": "python.exe",
+      "ppid": 91712
+    },
+    {
+      "pid": 77888,
+      "name": "bash.exe",
+      "ppid": 92864
+    },
+    {
+      "pid": 92780,
+      "name": "python.exe",
+      "ppid": 77888
+    },
+    {
+      "pid": 92980,
+      "name": "python.exe",
+      "ppid": 92780
+    },
+    {
+      "pid": 90920,
+      "name": "bash.exe",
+      "ppid": 92864
+    },
+    {
+      "pid": 91268,
+      "name": "python.exe",
+      "ppid": 90920
+    },
+    {
+      "pid": 91388,
+      "name": "python.exe",
+      "ppid": 91268
+    },
+    {
+      "pid": 92204,
+      "name": "python.exe",
+      "ppid": 93152
+    },
+    {
+      "pid": 93024,
+      "name": "python.exe",
+      "ppid": 92204
+    },
+    {
+      "pid": 93152,
+      "name": "bash.exe",
+      "ppid": 92864
+    },
+    {
+      "pid": 89624,
+      "name": "python.exe",
+      "ppid": 91740
+    },
+    {
+      "pid": 91740,
+      "name": "python.exe",
+      "ppid": 93168
+    },
+    {
+      "pid": 93168,
+      "name": "bash.exe",
+      "ppid": 92864
+    },
+    {
+      "pid": 93004,
+      "name": "bash.exe",
+      "ppid": 92864
+    },
+    {
+      "pid": 92892,
+      "name": "python.exe",
+      "ppid": 93028
+    },
+    {
+      "pid": 93028,
+      "name": "python.exe",
+      "ppid": 93004
+    },
+    {
+      "pid": 85500,
+      "name": "bash.exe",
+      "ppid": 92864
+    },
+    {
+      "pid": 91524,
+      "name": "python.exe",
+      "ppid": 85500
+    },
+    {
+      "pid": 86160,
+      "name": "python.exe",
+      "ppid": 91524
+    },
+    {
+      "pid": 85540,
+      "name": "python.exe",
+      "ppid": 92880
+    },
+    {
+      "pid": 85816,
+      "name": "python.exe",
+      "ppid": 85540
+    },
+    {
+      "pid": 92880,
+      "name": "bash.exe",
+      "ppid": 92864
+    }
+  ],
+  "descendants_terminated": [
+    77888,
+    85500,
+    85540,
+    85816,
+    86160,
+    86972,
+    89624,
+    90920,
+    91268,
+    91388,
+    91524,
+    91712,
+    91740,
+    92204,
+    92352,
+    92696,
+    92772,
+    92780,
+    92824,
+    92840,
+    92880,
+    92892,
+    92980,
+    92996,
+    93004,
+    93024,
+    93028,
+    93032,
+    93152,
+    93168
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 21548,
+      "name": "python.exe"
+    },
+    {
+      "pid": 87860,
+      "name": "python.exe"
+    },
+    {
+      "pid": 87900,
+      "name": "python.exe"
+    },
+    {
+      "pid": 92568,
+      "name": "python.exe"
+    },
+    {
+      "pid": 93172,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch773\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-773\\07-probe-keepers-base.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch773\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch773",
+    "repo_head": "3ef3fa9c6e00e1d65300a80224cf9a0ce2b3e1df",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-773",
+    "token": "ORCH-773:93172:501fb1151a1f9d2b",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

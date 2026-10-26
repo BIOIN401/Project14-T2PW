@@ -74,7 +74,9 @@ def _catalogue():
 
 def test_the_code_table_is_the_catalogue_appendix():
     codes, messages, workarounds = _catalogue()
-    assert len(codes) == 82 and len(messages) == 19  # the appendix as ORCH-771 wrote it
+    # The appendix as ORCH-771 wrote it (82, 19), plus ORCH-773's two rows: the
+    # ``protein_complex_component_omitted:`` code and the "Located protein is isolated" message.
+    assert len(codes) == 83 and len(messages) == 20
     assert list(KNOWN_ISSUES["codes"]) == codes
     assert list(KNOWN_ISSUES["messages"]) == messages
     labels = {row[3] for row in codes} | {ki for _patterns, ki in messages}
@@ -96,6 +98,10 @@ def test_the_code_table_is_the_catalogue_appendix():
         ("gate.generated_protein_complex_enterobactin_synthase_complex_componen", "KI-012"),
         ("protein_complex_component_unrepresentable:EntB:protein_missing_external_identity", "KI-001"),  # inner reason
         ("protein_complex_component_unrepresentable:EntB:no_such_reason", "KI-015"),
+        # ORCH-773 rows (NEW acceptance): labelled by the omitted component's own cause, else KI-015.
+        ("protein_complex_component_omitted:EntB:protein_missing_external_identity", "KI-001"),
+        ("protein_complex_component_omitted:EntB:no_such_reason", "KI-015"),
+        ("Located protein is isolated in connectivity graph: EntX", "KI-013"),
         ("untyped_interaction", "KI-008"),
         ("duplicate_locked_reaction", "KI-014"),
         ("Generated protein complex 'enterobactin synthase complex' component 'enterobactin synthase' is missing "
@@ -345,11 +351,13 @@ def test_each_replayed_leg_carries_the_measured_trees_coverage(replayed):
         assert record["network_refused"] == [], leg_id
     got = {i: (r["pwml_coverage"]["drawn"], r["pwml_coverage"]["total"], r["pwml_coverage"]["by_design_withheld"])
            for i, r in replayed.records.items()}
-    # Enterobactin and sour taste equal what their own leg directories give (0/21, 7/12): on a canonical
-    # checkpoint the leg's recorded pre-freeze removals are carried (4 and 5 rows). WNT PCP writes a PWML at
-    # this tree (ORCH-769c) and draws 1 of 66; 17 of its interactions are untyped (KI-008).
+    # Sour taste equals what its own leg directory gives (7/12): on a canonical checkpoint the leg's recorded
+    # pre-freeze removals are carried (5 rows). WNT PCP writes a PWML at this tree (ORCH-769c) and draws 1 of
+    # 66; 17 of its interactions are untyped (KI-008). Enterobactin was 0/21 (no PWML, as its leg directory
+    # gives) until ORCH-773: the inferred wrapper leaves its reaction (D-113 s1), a PWML is written, and it
+    # draws 10 of 21; 7 of its interactions are untyped (KI-008).
     assert got == {
-        "ORCH-767/enterobactin-strict/2026-10-23_2224": (0, 21, 0),
+        "ORCH-767/enterobactin-strict/2026-10-23_2224": (10, 21, 7),
         "ORCH-767/sour_taste_v2-strict/2026-10-24_0042": (7, 12, 0),
         "ORCH-767/wnt_pcp-strict/2026-10-24_0131": (1, 66, 17),
     }

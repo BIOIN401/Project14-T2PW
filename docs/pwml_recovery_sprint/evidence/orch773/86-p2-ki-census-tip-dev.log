@@ -1,0 +1,61 @@
+reaction_evidence: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\src\t2pw\app\reaction_evidence.py
+
+== ORCH-773 rows (detail.omission set): 33 rows, 16 distinct ==
+     6  KI-023        removed_entity_report.json    actor_schema_not_canonical
+     6  KI-001        removed_entity_report.json    protein_missing_external_identity
+     4  KI-006        quarantine_report.json        reaction_enzyme_must_be_protein_complex
+     2  KI-001        quarantine_report.json        protein_complex_component_omitted:ATP-dependent Clp protease ATP-binding subunit clpX-like, mitochondrial:prot
+     2  KI-001        quarantine_report.json        protein_complex_component_omitted:EntB:protein_missing_external_identity
+     2  KI-015        quarantine_report.json        protein_complex_missing_components
+     2  KI-015        removed_entity_report.json    protein_complex_missing_components
+     1  KI-012        quarantine_report.json        Generated protein complex 'enterobactin synthase complex' component 'EntD' is missing positive stoichiometry.
+     1  KI-001        quarantine_report.json        protein_complex_component_omitted:FtsH:protein_missing_external_identity
+     1  KI-012        removed_entity_report.json    Generated protein complex 'enterobactin synthase complex' component 'EntD' is missing positive stoichiometry.
+     1  KI-012        removed_entity_report.json    Generated protein complex 'enterobactin synthase complex' component 'enterobactin synthase' is missing positiv
+     1  KI-013        removed_entity_report.json    Protein has degree 0 after normalization: Isochorismatase (EntB)
+     1  KI-013        removed_entity_report.json    Protein has degree 0 after normalization: enterobactin synthase
+     1  KI-001        removed_entity_report.json    protein_complex_component_omitted:ATP-dependent Clp protease ATP-binding subunit clpX-like, mitochondrial:prot
+     1  KI-001        removed_entity_report.json    protein_complex_component_omitted:EntB:protein_missing_external_identity
+     1  KI-001        removed_entity_report.json    protein_complex_component_omitted:FtsH:protein_missing_external_identity
+
+== other rows: 228 rows, 11 distinct ==
+    75  unclassified  removed_entity_report.json    unreferenced_after_quarantine
+    64  unclassified  removed_entity_report.json    degree_zero_after_quarantine
+    32  KI-001        quarantine_report.json        protein_missing_external_identity
+    27  KI-011        quarantine_report.json        ambiguous_entity_type:nucleic_acids+proteins
+    15  KI-015        quarantine_report.json        undeclared_entity_in_entity_1
+     4  KI-004        quarantine_report.json        non_protein_actor_in_modifiers
+     4  KI-015        quarantine_report.json        undeclared_entity_in_entity_2
+     3  KI-004        quarantine_report.json        non_protein_actor_in_enzymes
+     2  KI-011        quarantine_report.json        ambiguous_entity_type:protein_complexes+proteins
+     1  KI-011        quarantine_report.json        ambiguous_entity_type:compounds+nucleic_acids
+     1  KI-015        quarantine_report.json        undeclared_entity_in_inputs
+
+ORCH-773 rows labelled unclassified: 0
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ fa26fbc25e4f2d9580d58a9ddb76b23469f4543e  [git, worktree dirty=True]
+label                   : p2-ki-census-tip-dev
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch773/docs/pwml_recovery_sprint/evidence/orch773/ki_census.py --src C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch773/src --out C:/t/orch773/out-p2-tip
+cwd                     : C:/t/orch773/cwd
+root PID / process group: 250620 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 0.34 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  259576:python.exe
+descendants terminated  : 1  259576
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\docs\pwml_recovery_sprint\evidence\g11\ORCH-773\86-p2-ki-census-tip-dev.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH-773  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

@@ -1,0 +1,253 @@
+t2pw resolved: C:\t\orch773\base\src\t2pw
+offline probe: {'attempts': {'urlopen_uniprot': 'refused', 'create_connection_loopback': 'refused', 'raw_socket_connect': 'refused'}, 'counted': 3, 'ok': True}
+ORCH-755/enterobactin-strict/2026-10-20_2201                replayable (final_pre_export_gate_lifecycle)          q=False['unexportable_entity:1']/diagnostic_only gate=None export=None req=None net=0  AS RECORDED
+ORCH-755/menaquinone-strict/2026-10-20_2238                 llm_originating (timeout at unknown: no checkpoint) 
+ORCH-755/chlorophyll-strict/2026-10-20_2338                 llm_originating (timeout at unknown: no checkpoint) 
+ORCH-755/ara_operon-strict/2026-10-21_0039                  llm_originating (timeout at unknown: no checkpoint) 
+ORCH-755/sour_taste-strict/2026-10-21_0139                  replayable (pwml_export)                              q=True/review_required gate=True export=False req=None net=0  AS RECORDED
+ORCH-755/wnt_pcp-strict/2026-10-21_0207                     llm_originating (timeout at unknown: no checkpoint) 
+ORCH-755/wnt_ca-strict/2026-10-21_0307                      llm_originating (fail at stage1: no checkpoint)     
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli']
+ORCH-756/enterobactin-strict/2026-10-21_2020                pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+                                                            gold: final P0.714 R1.000 F1 0.833 (5/5)  pwml P0.714 R1.000 F1 0.833 (5/5)
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 2 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Lactococcus lactis', 'Arabidopsis thaliana']
+ORCH-756/menaquinone-strict/2026-10-21_2048                 pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+                                                            gold: final P0.889 R0.778 F1 0.830 (7/9)  pwml P0.889 R0.778 F1 0.830 (7/9)
+ORCH-756/chlorophyll-strict/2026-10-21_2109                 llm_originating (timeout at unknown: no checkpoint) 
+ORCH-756/ara_operon-strict/2026-10-22_0947                  aborted (stopped before it reported; no outcome)    
+ORCH-756/ara_operon-strict/2026-10-22_1018                  llm_originating (scope_conflict at stage1: no checkpoint)
+ORCH-756/sour_taste-strict/2026-10-22_1035                  aborted (stopped before it reported; no outcome)    
+ORCH-759/enterobactin-strict/2026-10-22_1037                replayable (final_pre_export_stage3_gates)            q=True/review_required gate=False['gate.protein_has_degree_after_normalization'] export=None req=None net=0  AS RECORDED
+                                                            gold: final P1.000 R1.000 F1 1.000 (5/5)
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 2 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Lactococcus lactis', 'Arabidopsis thaliana']
+ORCH-759/menaquinone-strict/2026-10-22_1148                 pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=pwml_export replay=pwml; required_gate_ok recorded=False replay=True; required_gate_codes recorded=['species_missing_classification', 'species_missing_taxonomy'] replay=[]
+                                                            gold: final P0.875 R0.778 F1 0.824 (7/9)  pwml P0.875 R0.778 F1 0.824 (7/9)
+ORCH-759/chlorophyll-strict/2026-10-22_1231                 replayable (pwml_export)                              q=True/review_required gate=True export=False req=False net=0  CHANGED vs recorded: outcome recorded=final_pre_export_gate_lifecycle replay=pwml_export; quarantine_ok recorded=False replay=True; refusal recorded=['entity_type_overlap:4'] replay=[]; release recorded=diagnostic_only replay=review_required
+ORCH-759/ara_operon_v2-strict/2026-10-22_1359               llm_originating (scope_conflict at stage1: no checkpoint)
+ORCH-759/sour_taste-strict/2026-10-22_1421                  llm_originating (scope_conflict at stage1: no checkpoint)
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens']
+ORCH-759/wnt_pcp-strict/2026-10-22_1432                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+ORCH-759/wnt_ca-strict/2026-10-22_1528                      llm_originating (timeout at input: no checkpoint)   
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli']
+ORCH-759p/enterobactin-strict/2026-10-22_2101               pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+                                                            gold: final P1.000 R1.000 F1 1.000 (5/5)  pwml P1.000 R1.000 F1 1.000 (5/5)
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 2 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Lactococcus lactis', 'Arabidopsis thaliana']
+ORCH-759p/menaquinone-strict/2026-10-22_2154                pass                                                  q=True/release_ready gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=pwml_export replay=pwml; required_gate_ok recorded=False replay=True; required_gate_codes recorded=['species_missing_classification', 'species_missing_taxonomy'] replay=[]
+                                                            gold: final P1.000 R1.000 F1 1.000 (9/9)  pwml P1.000 R1.000 F1 1.000 (9/9)
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Mus musculus']
+ORCH-759p/sour_taste_v2-strict/2026-10-22_2233              pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Arabidopsis thaliana']
+ORCH-759p/chlorophyll-strict/2026-10-22_2301                pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+ORCH-767/enterobactin-strict/2026-10-23_2224                replayable (final_pre_export_stage3_gates)            q=True/review_required gate=False['gate.generated_protein_complex_enterobactin_synthase_complex_componen'] export=None req=None net=0  AS RECORDED
+                                                            gold: final P1.000 R1.000 F1 1.000 (5/5)
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Arabidopsis thaliana']
+ORCH-767/chlorophyll-strict/2026-10-23_2328                 pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=final_pre_export_stage3_gates replay=pwml; final_gate_ok recorded=False replay=True; final_gate_errors recorded=[['/processes/reactions/17/modifiers/1', 'Unknown protein/modifier reference: PIF1'], ['/processes/reactions/17/modifiers/7', 'Unknown protein/modifier reference: GBP'], ['/processes/reactions/18/modifiers/0', 'Unknown protein/modifier reference: FAR1'], ['/processes/reactions/21/enzymes/3', 'Unknown protein/modifier reference: GBP'], ['/processes/reactions/21/modifiers/3', 'Unknown protein/modifier reference: GBP'], ['/processes/reactions/22/enzymes/1', 'Unknown protein/modifier reference: CPO1'], ['/processes/reactions/22/modifiers/1', 'Unknown protein/modifier reference: CPO1'], ['/processes/reactions/23/enzymes/1', 'Unknown protein/modifier reference: PPO1'], ['/processes/reactions/23/modifiers/1', 'Unknown protein/modifier reference: PPO1']] replay=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Mus musculus']
+ORCH-767/sour_taste_v2-strict/2026-10-24_0042               pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+ORCH-767/wnt_pcp-strict/2026-10-24_0131                     pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=refinement_review_crash replay=pwml
+ORCH-767/wnt_ca-strict/2026-10-24_0314                      replayable (final_pre_export_gate_lifecycle)          q=False['unexportable_entity:1']/diagnostic_only gate=None export=None req=None net=0  AS RECORDED
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 2 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Lactococcus lactis', 'Arabidopsis thaliana']
+ORCH-767/menaquinone-strict/2026-10-24_0503                 pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+                                                            gold: final P0.909 R1.000 F1 0.952 (9/9)  pwml P0.909 R1.000 F1 0.952 (9/9)
+runs_verify/2026-08-18_1328/PMC12452463                     replayable (final_pre_export_stage3_gates)            q=True/review_required gate=False['gate.protein_has_degree_after_normalization'] export=None req=None net=0  CHANGED vs recorded: outcome recorded=final_pre_export_gate_lifecycle replay=final_pre_export_stage3_gates; quarantine_ok recorded=False replay=True; refusal recorded=['degree_zero_export:1'] replay=[]; release recorded=diagnostic_only replay=review_required; final_gate_errors recorded=[] replay=[['/entities/proteins/4/name', 'Protein has degree 0 after normalization: Isochorismatase (EntB)']]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli']
+runs_verify/2026-08-18_1328/PMC12096016                     pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=final_pre_export_gate_lifecycle replay=pwml; quarantine_ok recorded=False replay=True; refusal recorded=['degree_zero_export:1'] replay=[]; release recorded=diagnostic_only replay=review_required
+                                                            gold: final P0.833 R1.000 F1 0.909 (5/5)  pwml P0.833 R1.000 F1 0.909 (5/5)
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens']
+runs_verify/2026-08-21_1822/PMC12782028                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Listeria monocytogenes']
+runs_verify/2026-08-21_2014/PMC12312563                     pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=pwml_export replay=pwml; required_gate_ok recorded=False replay=True; required_gate_codes recorded=['visible_entity_missing_location_state'] replay=[]
+runs_verify/2026-08-21_2057/PMC12452463                     replayable (final_pre_export_stage3_gates)            q=True/review_required gate=False['gate.generated_protein_complex_enterobactin_synthase_complex_componen'] export=None req=None net=0  AS RECORDED
+runs_verify/2026-08-21_2057/PMC12096016                     replayable (pwml_export)                              q=True/review_required gate=True export=False req=False net=0  AS RECORDED
+                                                            gold: final P0.833 R1.000 F1 0.909 (5/5)
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens']
+runs_verify/2026-08-21_2239/PMC12856317                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+runs_verify/2026-08-21_2239/PMC12180156                     replayable (pwml_export)                              q=True/review_required gate=True export=False req=False net=0  CHANGED vs recorded: outcome recorded=pwml replay=pwml_export; required_gate_ok recorded=True replay=False; required_gate_codes recorded=[] replay=['no_defensible_reaction_support']
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli']
+runs_verify/2026-08-21_2239/PMC12096016                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+                                                            gold: final P1.000 R1.000 F1 1.000 (5/5)  pwml P1.000 R1.000 F1 1.000 (5/5)
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli']
+runs_verify/2026-08-21_2239/PMC12452463                     pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: release recorded=release_ready replay=review_required; pwml_name recorded=['pathway.pwml'] replay=pathway.review_required.pwml
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens']
+runs_verify/2026-08-21_2239/PMC12782028                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 2 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli', 'Arabidopsis thaliana']
+runs_verify/2026-08-22_1821/PMC12452463                     pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=upstream_contract_report replay=pwml
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens']
+runs_verify/2026-08-22_2017/PMC12856317                     pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=final_pre_export_stage3_gates replay=pwml; final_gate_ok recorded=False replay=True; final_gate_errors recorded=[['/processes/reactions/0/modifiers/0', "Unknown protein/modifier reference: Pyridoxal 5'-phosphate"]] replay=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli']
+runs_verify/2026-08-22_2017/PMC12452463                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+runs_verify/2026-08-22_2147/PMC13231680                     replayable (pwml_export)                              q=True/review_required gate=True export=False req=False net=0  CHANGED vs recorded: outcome recorded=pwml replay=pwml_export; release recorded=release_ready replay=review_required; required_gate_ok recorded=True replay=False; required_gate_codes recorded=[] replay=['no_defensible_reaction_support']
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens']
+runs_verify/2026-08-22_2147/PMC12856317                     pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: release recorded=release_ready replay=review_required; pwml_name recorded=['pathway.pwml'] replay=pathway.review_required.pwml
+runs_verify/2026-08-22_2147/PMC12180156                     replayable (pwml_export)                              q=True/review_required gate=True export=False req=False net=0  CHANGED vs recorded: outcome recorded=pwml replay=pwml_export; required_gate_ok recorded=True replay=False; required_gate_codes recorded=[] replay=['no_defensible_reaction_support']
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli']
+runs_verify/2026-08-22_2147/PMC12096016                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+                                                            gold: final P1.000 R1.000 F1 1.000 (5/5)  pwml P1.000 R1.000 F1 1.000 (5/5)
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli']
+runs_verify/2026-08-22_2147/PMC12452463                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens']
+runs_verify/2026-08-22_2147/PMC12782028                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+runs_verify/2026-08-24_1203/PMC12856317                     replayable (final_pre_export_gate_lifecycle)          q=False['unexportable_entity:2']/diagnostic_only gate=None export=None req=None net=0  AS RECORDED
+runs_verify/2026-08-24_1203/PMC13231680                     replayable (pwml_export)                              q=True/review_required gate=True export=False req=False net=0  CHANGED vs recorded: required_gate_codes recorded=['visible_entity_missing_location_state'] replay=['no_defensible_reaction_support']
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli']
+runs_verify/2026-08-24_1203/PMC12096016                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+                                                            gold: final P0.857 R1.000 F1 0.923 (5/5)  pwml P0.857 R1.000 F1 0.923 (5/5)
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli']
+runs_verify/2026-08-24_1203/PMC12452463                     pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=upstream_contract_report replay=pwml
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 1 compound(s) and 3 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=['Kdo-lipid IVA']; species=['Escherichia coli', 'E. coli', 'Arabidopsis thaliana']
+runs_verify/2026-08-24_1428/PMC12444477                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens']
+runs_verify/2026-08-24_1428/PMC12856317                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+runs_verify/2026-08-24_1428/PMC12180156                     replayable (pwml_export)                              q=True/review_required gate=True export=False req=False net=0  CHANGED vs recorded: outcome recorded=pwml replay=pwml_export; required_gate_ok recorded=True replay=False; required_gate_codes recorded=[] replay=['no_defensible_reaction_support']
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli']
+runs_verify/2026-08-24_1428/PMC12096016                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+                                                            gold: final P1.000 R1.000 F1 1.000 (5/5)  pwml P1.000 R1.000 F1 1.000 (5/5)
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli']
+runs_verify/2026-08-24_1428/PMC12452463                     pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=upstream_contract_report replay=pwml
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens']
+runs_verify/2026-08-24_1428/PMC12782028                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens']
+runs_verify/2026-08-25_1216/PMC12856317                     replayable (pwml_export)                              q=True/review_required gate=True export=False req=True net=0  AS RECORDED
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 2 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli', 'Arabidopsis thaliana']
+runs_verify/2026-08-25_1216/PMC12444477                     replayable (pwml_export)                              q=True/review_required gate=True export=False req=True net=0  CHANGED vs recorded: outcome recorded=upstream_contract_report replay=pwml_export
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 2 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli', 'Arabidopsis thaliana']
+runs_verify/2026-08-27_1341/PMC12096016                     pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=upstream_contract_report replay=pwml
+                                                            gold: final P0.571 R0.800 F1 0.667 (4/5)  pwml P0.571 R0.800 F1 0.667 (4/5)
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens']
+runs_verify/2026-08-27_1341/PMC12782028                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens']
+runs_verify/2026-08-28_1816/PMC12856317                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+runs_verify/2026-08-28_1816/PMC12180156                     replayable (pwml_export)                              q=True/review_required gate=True export=False req=False net=0  CHANGED vs recorded: outcome recorded=upstream_contract_report replay=pwml_export
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 2 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli', 'Arabidopsis thaliana']
+runs_verify/2026-08-28_1816/PMC12452463                     pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=upstream_contract_report replay=pwml
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens']
+runs_verify/2026-08-28_1816/PMC12782028                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 2 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens', 'Arabidopsis thaliana']
+runs_verify/2026-09-01_1612/PMC12856317                     pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=upstream_contract_report replay=pwml
+runs_verify/2026-09-01_1612/PMC12180156                     replayable (pwml_export)                              q=True/review_required gate=True export=False req=False net=0  CHANGED vs recorded: outcome recorded=upstream_contract_report replay=pwml_export
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli']
+runs_verify/2026-09-01_1612/PMC12096016                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+                                                            gold: final P1.000 R1.000 F1 1.000 (5/5)  pwml P1.000 R1.000 F1 1.000 (5/5)
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 2 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli', 'Arabidopsis thaliana']
+runs_verify/2026-09-01_1612/PMC12452463                     pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=upstream_contract_report replay=pwml
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens']
+runs_verify/2026-09-01_1612/PMC12782028                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+runs_verify/2026-09-02_2052/PMC12444477                     replayable (final_pre_export_gate_lifecycle)          q=False['unexportable_entity:2']/diagnostic_only gate=None export=None req=None net=0  AS RECORDED
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens']
+runs_verify/2026-09-02_2052/PMC12856317                     pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=upstream_contract_report replay=pwml
+runs_verify/2026-09-02_2052/PMC12180156                     replayable (pwml_export)                              q=True/review_required gate=True export=False req=False net=0  CHANGED vs recorded: outcome recorded=pwml replay=pwml_export; required_gate_ok recorded=True replay=False; required_gate_codes recorded=[] replay=['no_defensible_reaction_support']
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli']
+runs_verify/2026-09-02_2052/PMC12096016                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+                                                            gold: final P0.600 R0.600 F1 0.600 (3/5)  pwml P0.600 R0.600 F1 0.600 (3/5)
+runs_verify/2026-09-02_2052/PMC12452463                     replayable (pwml_export)                              q=True/review_required gate=True export=False req=None net=0  CHANGED vs recorded: outcome recorded=final_pre_export_stage3_gates replay=pwml_export; final_gate_ok recorded=False replay=True; final_gate_errors recorded=[['/normalization_stats/n_plus_tokens_remaining', 'Expected 0 plus tokens, found 1.'], ['/processes', "Composite validation failed: Composite validation failed:\n/entities/compounds/5/name has '+' token: ferric iron (Fe3+)"]] replay=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens']
+runs_verify/2026-09-02_2052/PMC12782028                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Staphylococcus aureus']
+runs_verify/2026-09-06_1425/PMC12071552                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Pseudomonas aeruginosa']
+runs_verify/2026-09-06_1425/PMC11172790                     pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=upstream_contract_report replay=pwml
+runs_verify/2026-09-06_1425/PMC12376012                     replayable (pwml_export)                              q=True/review_required gate=True export=False req=False net=0  CHANGED vs recorded: outcome recorded=upstream_contract_report replay=pwml_export
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 2 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Neurospora crassa', 'Arabidopsis thaliana']
+runs_verify/2026-09-06_1425/PMC7232280                      pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=upstream_contract_report replay=pwml
+runs_verify/2026-09-06_1425/PMC11405693                     replayable (pwml_export)                              q=True/review_required gate=True export=False req=False net=0  AS RECORDED
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 2 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Catharanthus roseus', 'Arabidopsis thaliana']
+runs_verify/2026-09-06_1425/PMC8510960                      pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=upstream_contract_report replay=pwml
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 2 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Campylobacter jejuni', 'Arabidopsis thaliana']
+runs_verify/2026-09-16_2152/PMC12369002                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+runs_verify/2026-09-16_2152/PMC13534948                     replayable (final_pre_export_gate_lifecycle)          q=False['minimum_core:core_process_count_below_minimum:0<1', 'minimum_core:no_surviving_process', 'minimum_core:requested_core_coverage_below_minimum:0.000<0.500']/diagnostic_only gate=None export=None req=None net=0  AS RECORDED
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 2 compound(s) and 2 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=['7-demethylsuberosin (DMS)', 'columbianetin']; species=['Apium graveolens', 'Arabidopsis thaliana']
+runs_verify/2026-09-16_2152/PMC13364408                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 2 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Hordeum vulgare', 'Arabidopsis thaliana']
+runs_verify/2026-09-16_2152/PMC13170813                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 2 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Petunia hybrida', 'Arabidopsis thaliana']
+runs_verify/2026-09-16_2152/PMC13486683                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 1 compound(s) and 2 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=['cyclo-L-Trp-L-Leu']; species=['Penicillium polonicum', 'Arabidopsis thaliana']
+runs_verify/2026-09-16_2152/PMC12983300                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Candida albicans']
+runs_verify/2026-09-16_2152/PMC12505894                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Mus musculus']
+runs_verify/2026-09-16_2152/PMC12059215                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+
+SUMMARY (all)
+  strict_legs                    91
+  with_checkpoint                81
+  replay_errors                  0
+  pwml_pass                      56
+  pwml_pass_rate_of_strict       56/91
+  pwml_pass_rate_of_replayed     56/81
+  replayable_failures            25
+  llm_originating_failures       10
+  aborted_not_counted            2
+  verdict_as_recorded            48/81
+  network_refused_total          0
+
+SUMMARY (tier_A)
+  strict_legs                    28
+  with_checkpoint                18
+  replay_errors                  0
+  pwml_pass                      12
+  pwml_pass_rate_of_strict       12/28
+  pwml_pass_rate_of_replayed     12/18
+  replayable_failures            6
+  llm_originating_failures       10
+  aborted_not_counted            2
+  verdict_as_recorded            13/18
+  network_refused_total          0
+
+SUMMARY (tier_B)
+  strict_legs                    63
+  with_checkpoint                63
+  replay_errors                  0
+  pwml_pass                      44
+  pwml_pass_rate_of_strict       44/63
+  pwml_pass_rate_of_replayed     44/63
+  replayable_failures            19
+  llm_originating_failures       0
+  aborted_not_counted            0
+  verdict_as_recorded            35/63
+  network_refused_total          0
+GOLD (replayed tail; certified gold only)
+  ORCH-756/enterobactin-strict/2026-10-21_2020               final P0.714 R1.000 F1 0.833 (5/5)  pwml P0.714 R1.000 F1 0.833 (5/5)
+  ORCH-756/menaquinone-strict/2026-10-21_2048                final P0.889 R0.778 F1 0.830 (7/9)  pwml P0.889 R0.778 F1 0.830 (7/9)
+  ORCH-759/enterobactin-strict/2026-10-22_1037               final P1.000 R1.000 F1 1.000 (5/5)
+  ORCH-759/menaquinone-strict/2026-10-22_1148                final P0.875 R0.778 F1 0.824 (7/9)  pwml P0.875 R0.778 F1 0.824 (7/9)
+  ORCH-759p/enterobactin-strict/2026-10-22_2101              final P1.000 R1.000 F1 1.000 (5/5)  pwml P1.000 R1.000 F1 1.000 (5/5)
+  ORCH-759p/menaquinone-strict/2026-10-22_2154               final P1.000 R1.000 F1 1.000 (9/9)  pwml P1.000 R1.000 F1 1.000 (9/9)
+  ORCH-767/enterobactin-strict/2026-10-23_2224               final P1.000 R1.000 F1 1.000 (5/5)
+  ORCH-767/menaquinone-strict/2026-10-24_0503                final P0.909 R1.000 F1 0.952 (9/9)  pwml P0.909 R1.000 F1 0.952 (9/9)
+  runs_verify/2026-08-18_1328/PMC12096016                    final P0.833 R1.000 F1 0.909 (5/5)  pwml P0.833 R1.000 F1 0.909 (5/5)
+  runs_verify/2026-08-21_2057/PMC12096016                    final P0.833 R1.000 F1 0.909 (5/5)
+  runs_verify/2026-08-21_2239/PMC12096016                    final P1.000 R1.000 F1 1.000 (5/5)  pwml P1.000 R1.000 F1 1.000 (5/5)
+  runs_verify/2026-08-22_2147/PMC12096016                    final P1.000 R1.000 F1 1.000 (5/5)  pwml P1.000 R1.000 F1 1.000 (5/5)
+  runs_verify/2026-08-24_1203/PMC12096016                    final P0.857 R1.000 F1 0.923 (5/5)  pwml P0.857 R1.000 F1 0.923 (5/5)
+  runs_verify/2026-08-24_1428/PMC12096016                    final P1.000 R1.000 F1 1.000 (5/5)  pwml P1.000 R1.000 F1 1.000 (5/5)
+  runs_verify/2026-08-27_1341/PMC12096016                    final P0.571 R0.800 F1 0.667 (4/5)  pwml P0.571 R0.800 F1 0.667 (4/5)
+  runs_verify/2026-09-01_1612/PMC12096016                    final P1.000 R1.000 F1 1.000 (5/5)  pwml P1.000 R1.000 F1 1.000 (5/5)
+  runs_verify/2026-09-02_2052/PMC12096016                    final P0.600 R0.600 F1 0.600 (3/5)  pwml P0.600 R0.600 F1 0.600 (3/5)
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 3ef3fa9c6e00e1d65300a80224cf9a0ce2b3e1df  [git, worktree dirty=False]
+label                   : corpus-base
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch773/docs/pwml_recovery_sprint/evidence/orch768_replay_corpus.py run --src C:/t/orch773/base/src --out C:/t/orch773/out-base --json C:/t/orch773/base.json --txt C:/t/orch773/base.txt
+cwd                     : C:/t/orch773/cwd
+root PID / process group: 78152 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 25.86 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  78664:python.exe
+descendants terminated  : 1  78664
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch773/docs/pwml_recovery_sprint/evidence/g11/ORCH-773/01-corpus-base.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH-773  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

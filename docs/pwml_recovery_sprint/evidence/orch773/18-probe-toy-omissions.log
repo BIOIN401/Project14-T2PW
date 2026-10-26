@@ -1,0 +1,42 @@
+quarantine_and_close: per-row omission check raised UnresolvedCompoundRowError: PWML_IR_COMPOUND_VERDICT_MISSING: 5 compound row(s) at /entities/compounds carry no 'db_status' resolution verdict, so compound resolution never ran on them before the canonical payload was frozen. The PWML exporter does not resolve identity after the freeze (D-015, PRODUCT_CONTRACT section 5). Run t2pw.pwml.prefreeze_resolution.run_prefreeze_resolution on the payload first. Offending rows: L-glutamate (key=cmp_1), L-cysteine (key=cmp_2), gamma-glutamylcysteine (key=cmp_3), glycine (key=cmp_4), glutathione (key=cmp_5)
+
+## contract_alignment._base: ok=True refusal=[]
+quarantine_and_close: per-row omission check raised UnresolvedCompoundRowError: PWML_IR_COMPOUND_VERDICT_MISSING: 5 compound row(s) at /entities/compounds carry no 'db_status' resolution verdict, so compound resolution never ran on them before the canonical payload was frozen. The PWML exporter does not resolve identity after the freeze (D-015, PRODUCT_CONTRACT section 5). Run t2pw.pwml.prefreeze_resolution.run_prefreeze_resolution on the payload first. Offending rows: L-glutamate (key=cmp_1), L-cysteine (key=cmp_2), gamma-glutamylcysteine (key=cmp_3), glycine (key=cmp_4), glutathione (key=cmp_5)
+
+## orch766._kind_payload(state_species): ok=True refusal=[]
+quarantine_and_close: per-row omission check raised UnresolvedCompoundRowError: PWML_IR_COMPOUND_VERDICT_MISSING: 5 compound row(s) at /entities/compounds carry no 'db_status' resolution verdict, so compound resolution never ran on them before the canonical payload was frozen. The PWML exporter does not resolve identity after the freeze (D-015, PRODUCT_CONTRACT section 5). Run t2pw.pwml.prefreeze_resolution.run_prefreeze_resolution on the payload first. Offending rows: L-glutamate (key=cmp_1), L-cysteine (key=cmp_2), gamma-glutamylcysteine (key=cmp_3), glycine (key=cmp_4), glutathione (key=cmp_5)
+
+## orch766._kind_payload(state_organism): ok=True refusal=[]
+quarantine_and_close: per-row omission check raised UnresolvedCompoundRowError: PWML_IR_COMPOUND_VERDICT_MISSING: 5 compound row(s) at /entities/compounds carry no 'db_status' resolution verdict, so compound resolution never ran on them before the canonical payload was frozen. The PWML exporter does not resolve identity after the freeze (D-015, PRODUCT_CONTRACT section 5). Run t2pw.pwml.prefreeze_resolution.run_prefreeze_resolution on the payload first. Offending rows: L-glutamate (key=cmp_1), L-cysteine (key=cmp_2), gamma-glutamylcysteine (key=cmp_3), glycine (key=cmp_4), glutathione (key=cmp_5)
+
+## orch766._kind_payload(state_name): ok=True refusal=[]
+quarantine_and_close: per-row omission check raised UnresolvedCompoundRowError: PWML_IR_COMPOUND_VERDICT_MISSING: 5 compound row(s) at /entities/compounds carry no 'db_status' resolution verdict, so compound resolution never ran on them before the canonical payload was frozen. The PWML exporter does not resolve identity after the freeze (D-015, PRODUCT_CONTRACT section 5). Run t2pw.pwml.prefreeze_resolution.run_prefreeze_resolution on the payload first. Offending rows: L-glutamate (key=cmp_1), L-cysteine (key=cmp_2), gamma-glutamylcysteine (key=cmp_3), glycine (key=cmp_4), glutathione (key=cmp_5)
+
+## contract_alignment._base strict_db=False: ok=True refusal=[]
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 3ef3fa9c6e00e1d65300a80224cf9a0ce2b3e1df  [git, worktree dirty=True]
+label                   : probe-toy-omissions
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch773/docs/pwml_recovery_sprint/evidence/orch773/probe_toy_omissions.py --src C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch773/src --tests C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch773/tests
+cwd                     : C:/t/orch773/cwd
+root PID / process group: 109320 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 200 s
+duration                : 1.76 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  105232:python.exe
+descendants terminated  : 1  105232
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\docs\pwml_recovery_sprint\evidence\g11\ORCH-773\18-probe-toy-omissions.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH-773  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================
