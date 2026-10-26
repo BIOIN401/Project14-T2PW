@@ -1238,3 +1238,38 @@ Chunk D was not run here (final integration only, after ORCH-773).
 
 `compare` prints REJECT when the pass rate does not rise. For a lane that by design changes no verdict (ORCH-772), the acceptance
 used was: every replay record identical apart from the new field, every PWML sha256 identical (reviewer `ORCH-772/41`–`46`).
+
+## ORCH-773, ORCH-772b: test obligations — appended end-of-file by rule · 2026-10-25
+
+Recorded by the D-114 sub-orchestrator. The lanes' own deltas are the full wording: `ORCH-773-RESULT.md` § 14 (and § R1, § P2.6),
+`ORCH-772b-RESULT.md` §§ 6, 13. Merged-tip gates: `bab79db6` (773) in `evidence/g11/ORCH-773i/`, final tip `b4126702` (773 + 772b)
+in `evidence/g11/ORCH-774i/`.
+
+**SMOKE is unchanged at 511** (`ORCH-773i/01`, `ORCH-774i/01`). Merge rule 10 unchanged.
+**Chunk D at the final integration `b4126702`: 188/188 executed, failed none** (`ORCH-774i/06` outer plus its per-node reports),
+`T2PW_OFFLINE_CURATOR=1`, partition unchanged (188 = 160 + 4 + 24).
+
+| gate | report | result |
+|---|---|---|
+| `bab79db6`: affected (the ORCH-773 30-file sweep + Chunk E + reaction evidence, ORCH-772, 762, wrappers, 769d, applier integrity) | `ORCH-773i/02` | 993 passed, 8 known skips (`test_strict_failure_replay.py`) |
+| `bab79db6`: eval_v2 | `ORCH-773i/09` (`03` refused by the lock, no report) | 89 passed, 1 xfailed |
+| `bab79db6`: alone boundary / c052 / 769c / view / app hook | `ORCH-773i/04`–`08` | 24 / 13 / 3 / 11 / 1 |
+| `b4126702`: focused (772b, 772, 773, reaction evidence, 768, 762, wrappers, 757 budgets, paper dictionary) | `ORCH-774i/02` | 298 passed |
+| `b4126702`: alone view / app hook / 759b | `ORCH-774i/03`–`05` | 11 / 1 / 7 |
+
+### New focused selections
+
+| lane | file | notes |
+|---|---|---|
+| `773` | `tests/test_orch773_omit_per_row.py` + `tests/fixtures/orch773/` | with the strict-quarantine suites; the 30-file affected sweep is listed in `ORCH-773-RESULT.md` § 7 |
+| `772b` | `tests/test_orch772b_no_pwml_cause.py` (9) | with `tests/test_orch772_pwml_coverage.py` for any change to the cause reader, `reaction_evidence.py` `known_issue_id`, or the catalogue's message rows |
+
+### Pins moved deliberately (merge rule 4), summary
+
+- `773`: `QUARANTINE_POLICY_VERSION` → `2026-10-25.1` (orchestrator ruling: the module's own rule) moves the version fields of 28
+  `test_orch766` PINS (digests identical with the version stripped), two `decision_input_hash` values (769b, 759c), the lineage
+  `removed_entity_report` schema 1 → 2 and C-114's `test_d088` policy line; `test_orch768_replay_corpus.py` `EXPECTED` for enterobactin
+  767; `tests/fixtures/strict_failures/cases.json` four cases `release_ready` → `review_required` (release cap) and one review reason
+  added; `test_orch772_pwml_coverage.py` appendix count 82/19 → 83/20 and the 767 enterobactin replay coverage (0, 21, 0) → (10, 21, 7).
+- `772b`: `test_orch772_pwml_coverage.py` tests 3, 6 (headline lines, D-114 AMENDMENT 2) and 11 (corpus layout; pass rate 2/3 → 3/3
+  after 773); `docs/reaction_evidence_sample.txt` coverage lines; the KI-028 message row narrowed to the driver's time-budget message.

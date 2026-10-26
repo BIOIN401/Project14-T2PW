@@ -1,0 +1,136 @@
+{
+  "label": "focused",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/integ774/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/integ774/docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-774i/02-focused.pin.json",
+    "-q",
+    "--basetemp=C:/t/orch-sub/bt-ORCH-774i-02-focused",
+    "tests/test_orch772b_no_pwml_cause.py",
+    "tests/test_orch772_pwml_coverage.py",
+    "tests/test_orch773_omit_per_row.py",
+    "tests/test_reaction_evidence.py",
+    "tests/test_orch768_replay_corpus.py",
+    "tests/test_orch762_protein_identity.py",
+    "tests/test_pwml_interaction_protein_wrappers.py",
+    "tests/test_orch757_llm_token_budgets.py",
+    "tests/test_stage_one_paper_dictionary.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\integ774",
+  "started_at": "2026-10-26T04:25:49+00:00",
+  "finished_at": "2026-10-26T04:26:01+00:00",
+  "duration_seconds": 11.568096399998467,
+  "timeout_seconds": 400.0,
+  "root_pid": 440428,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 441204,
+      "name": "python.exe",
+      "ppid": 440428
+    },
+    {
+      "pid": 440760,
+      "name": "python.exe",
+      "ppid": 441204
+    },
+    {
+      "pid": 439968,
+      "name": "python.exe",
+      "ppid": 440760
+    },
+    {
+      "pid": 437256,
+      "name": "python.exe",
+      "ppid": 437556
+    },
+    {
+      "pid": 437556,
+      "name": "python.exe",
+      "ppid": 441204
+    }
+  ],
+  "descendants_terminated": [
+    437256,
+    437556,
+    439968,
+    440760,
+    441204
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 406780,
+      "name": "python.exe"
+    },
+    {
+      "pid": 406808,
+      "name": "python.exe"
+    },
+    {
+      "pid": 433580,
+      "name": "python.exe"
+    },
+    {
+      "pid": 436380,
+      "name": "python.exe"
+    },
+    {
+      "pid": 436480,
+      "name": "python.exe"
+    },
+    {
+      "pid": 436952,
+      "name": "python.exe"
+    },
+    {
+      "pid": 437000,
+      "name": "python.exe"
+    },
+    {
+      "pid": 440008,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\integ774\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-774i\\02-focused.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\integ774\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\integ774",
+    "repo_head": "b4126702be35569c44304b268640dd84f40b189e",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-774i",
+    "token": "ORCH-774i:440008:b5a9be194c5fc129",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
