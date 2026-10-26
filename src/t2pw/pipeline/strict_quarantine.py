@@ -220,7 +220,8 @@ DEFAULT_MIN_CORE_COVERAGE = 0.5
 #: bump invalidates every stored decision instead of letting a report produced by
 #: the old rules authorize an export judged by the new ones.
 #: 2026-10-25.1 (ORCH-773): per-row export failures are omitted, not refused.
-QUARANTINE_POLICY_VERSION = "2026-10-25.1"
+#: 2026-10-26.1 (ORCH-780): the no-support refusal omits its unsupported reactions instead (D-116).
+QUARANTINE_POLICY_VERSION = "2026-10-26.1"
 
 
 def _canonical_requested_core(
@@ -2817,8 +2818,10 @@ def _degree_zero_exports(
 # meets them, the final pre-export gate (freeze), the Stage-8 contract, the
 # required-field gate and the IR -- on the graph this module is about to hand
 # over, and maps every error that names ONE row back to that row. An error that
-# names no row (pathway metadata, species, "no reaction has support", a
-# validator exception) maps to nothing and still refuses exactly as before.
+# names no row (pathway metadata, species, a validator exception) maps to
+# nothing and still refuses exactly as before. "No reaction has support" maps
+# to the reactions the support gate's own row predicate calls unsupported
+# (D-116 s1, ``_unsupported_reactions``): they leave, and the rest exports.
 #
 # The unit is the process (rule 1 above): an entity a gate refuses leaves with
 # every process that resolves a reference to it, and a complex that resolves a
@@ -2989,6 +2992,10 @@ def _row_failures(
 ) -> List[Dict[str, Any]]:
     """The rows one gate error names, as omission requests. ``[]`` = names no row."""
 
+    from t2pw.pipeline.reaction_support import CODE_NO_DEFENSIBLE_REACTION_SUPPORT
+
+    if gate == _GATE_REQUIRED and reason == CODE_NO_DEFENSIBLE_REACTION_SUPPORT:
+        return _unsupported_reactions(candidate, by_position, gate)
     entities = _safe_dict(working.get("entities"))
 
     def rows_named(bucket: str, name: str) -> List[Dict[str, Any]]:
@@ -3056,6 +3063,30 @@ def _row_failures(
     if index >= min(len(rows), len(candidate_rows)) or _row_name(rows[index]) != _row_name(candidate_rows[index]):
         return []
     return [entity(bucket, rows[index], attached)]
+
+
+def _unsupported_reactions(
+    candidate: Mapping[str, Any], by_position: Mapping[str, Sequence[Mapping[str, Any]]], gate: str
+) -> List[Dict[str, Any]]:
+    """D-116 s1 (ORCH-780): the rows behind the support gate's whole-pathway refusal.
+
+    ``no_defensible_reaction_support`` names ``/processes/reactions``, no row. Its rows
+    are the reactions the gate's own row predicate,
+    ``reaction_support.reaction_support_class(row) is None``, calls unsupported: on a
+    payload the gate refuses that is every reaction. The gate and its verdict are
+    untouched, and a reaction is judged only when the gate refuses (D-116 s2: "only
+    the whole-pathway refusal goes").
+    """
+
+    from t2pw.pipeline.reaction_support import CODE_NO_DEFENSIBLE_REACTION_SUPPORT, reaction_support_class
+
+    rows = _safe_list(_safe_dict(candidate.get("processes")).get("reactions"))
+    return [
+        {"kind": "process", "record": record, "slot": "", "position": None, "name": "",
+         "reason": CODE_NO_DEFENSIBLE_REACTION_SUPPORT, "gate": gate}
+        for record, row in zip(by_position.get("reactions") or [], rows)
+        if isinstance(row, Mapping) and reaction_support_class(row) is None
+    ]
 
 
 def _per_row_failures(
