@@ -191,6 +191,8 @@ needs the live run. Variant B changed both legs' replay records; the per-row det
   elapsed with no job able to run**, so the time box ended this lane unfinished.
 * **Dead end.** Variant B: per-row enforcement of the support predicate on every leg. It was measured, and REJECTED for loss
   of gold recall (§ 4.1). It is kept as `evidence/orch780/variant-b.diff`.
+* **`g11_evidence.py check --task ORCH-780` was NOT run.** At 13:20 available RAM was still 523 MB, under the 3 GB floor.
+  The four G11 artifacts (`01`-`04`) each report `FINAL SURVIVING COUNT : 0`. The check is owed before any merge.
 * Orphan sweeps after each job: 0 survivors. Nothing was killed.
 * Lock: never held outside the wrapper and never deleted.
 
