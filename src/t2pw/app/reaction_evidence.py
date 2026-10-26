@@ -87,6 +87,9 @@ MERGED_DUPLICATE_KI = "KI-014"
 #: An interaction the IR withholds with this id cannot be typed in PathWhiz at all. It counts
 #: in the headline; one secondary line leaves it out (orchestrator ruling, ORCH-772).
 BY_DESIGN_KI = "KI-008"
+#: D-114 AMENDMENT 2 § 1: the HEADLINE coverage leaves those interactions out of the denominator (no user can add
+#: them to a PathWhiz pathway); the full count, with them, is always printed beside it. False restores the old headline.
+HEADLINE_EXCLUDES_BY_DESIGN = True
 KI_UNCLASSIFIED = "unclassified"
 KNOWN_ISSUES_DOC = "docs/pwml_recovery_sprint/PWML_KNOWN_ISSUES.md"
 
@@ -200,7 +203,8 @@ KNOWN_ISSUES: Dict[str, Any] = {
         (("Composite entity '<name>' in /entities/compounds has no protein-like left component; unsupported.",), "KI-024"),
         (("Composite token '<text>' at <pointer> has no protein-like left component; ...",), "KI-024"),
         (("DraftGraph has no reaction nodes — nothing to render.",), "KI-020"),
-        (("extraction did not finish inside the time budget", "audit and DB mapping ...", "PWML export ..."), "KI-028"),
+        (("extraction did not finish inside the time budget", "audit and DB mapping ...",
+          "PWML export did not finish inside the time budget"), "KI-028"),
         (("AppTest script run timed out after 3600.0(s)",), "KI-028"),
         (("LLM returned an empty completion for <stage> (model <m>, finish_reason=length, ...)",), "KI-054"),
         (("Generated protein complex '<c>' component '<p>' is missing positive stoichiometry.",), "KI-012"),
@@ -289,7 +293,7 @@ def _message_regex(pattern: str) -> "re.Pattern[str]":
 
 
 #: Exact codes first, then the longest pattern; messages with the most fixed text first, so a broad
-#: pattern ("PWML export ...") never takes a message a narrower one names.
+#: pattern ("audit and DB mapping ...") never takes a message a narrower one names.
 _CODE_ORDER = sorted(KNOWN_ISSUES["codes"], key=lambda r: (r[1] != "exact", -len("".join(r[2])), r[0]))
 _MESSAGE_ORDER = sorted(
     ((_message_regex(p), len(re.sub(r"<[^<>]*>|\.\.\.", "", p)), ki) for ps, ki in KNOWN_ISSUES["messages"] for p in ps),
@@ -309,6 +313,12 @@ def known_issue_id(reason: Any) -> str:
     for regex, _fixed, ki in _MESSAGE_ORDER:
         if text and regex.fullmatch(text):
             return ki
+    # ORCH-772b: a recorded list ("species_missing_taxonomy, species_missing_classification") that matches nothing
+    # whole is labelled by its first item that maps, as the appendix labels a code with several causes by the first.
+    parts = [p for p in re.split(r"[;,]\s+", text) if p]
+    for part in parts if len(parts) > 1 else []:
+        if known_issue_id(part) != KI_UNCLASSIFIED:
+            return known_issue_id(part)
     return KI_UNCLASSIFIED
 
 #: Identifier fields shown verbatim, by their payload key, so nothing is relabelled.
@@ -1127,20 +1137,21 @@ def pwml_coverage_lines(report: Mapping[str, Any]) -> List[str]:
     """D-114 § 3: the coverage headline, printed right under the title."""
 
     cov = report["pwml_coverage"]
-    drawn, total = cov["drawn"], cov["total"]
+    drawn, full, uncarried = cov["drawn"], cov["total"], cov["by_design_withheld"]
+    total = full - uncarried if HEADLINE_EXCLUDES_BY_DESIGN else full
+    rule = (f" (D-114 AMENDMENT 2: the {uncarried} interactions PathWhiz cannot carry, {BY_DESIGN_KI}, are not counted)"
+            if HEADLINE_EXCLUDES_BY_DESIGN else "")
     head = f"PWML coverage: {_of(drawn, total)} processes ({_percent(drawn, total)})"
     if cov["not_recorded"]:
         head = f"PWML coverage: {NOT_RECORDED} ({cov['not_recorded']}); {total} processes in the text record"
     kinds = "; ".join(f"{kind}s {_of(v['drawn'], v['total'])}" for kind, v in cov["by_kind"].items())
+    other, label = (full, f"Full count, the {uncarried} {BY_DESIGN_KI} interactions included") if HEADLINE_EXCLUDES_BY_DESIGN \
+        else (full - uncarried, f"Excluding the {uncarried} interactions PathWhiz cannot carry ({BY_DESIGN_KI})")
     lines = [
-        f"{head} -- target {COVERAGE_TARGET_PERCENT}%",
-        f"  By kind, drawn of total (total = final payload + omitted before the freeze): {kinds}",
+        f"{head} -- target {COVERAGE_TARGET_PERCENT}%{rule}",
+        f"  {label}: {_of(drawn, other)} ({_percent(drawn, other)})",
+        f"  By kind, drawn of full count (total = final payload + omitted before the freeze): {kinds}",
     ]
-    rest = total - cov["by_design_withheld"]
-    lines.append(
-        f"  Excluding the {cov['by_design_withheld']} interactions PathWhiz cannot type ({BY_DESIGN_KI}, withheld by design): "
-        f"{_of(drawn, rest)} ({_percent(drawn, rest)})"
-    )
     if not cov["pwml_written"]:
         lines.append(f"  No PWML written: {cov['no_pwml_cause']}")
     if cov["not_counted"]:

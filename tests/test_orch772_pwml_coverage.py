@@ -192,12 +192,14 @@ def _block(text: str, name: str) -> str:
 def test_coverage_is_printed_right_under_the_title_with_the_by_design_line():
     report = build_report(_artifacts())
     lines = render_text(report).splitlines()
+    # ORCH-772b (D-114 AMENDMENT 2 § 1; merge rule 4): the headline leaves the KI-008 interaction out of the
+    # denominator, the full count follows it. Before: "3 of 6 processes (50.0%)" headline, "3 of 5" secondary.
     assert lines[:3] == ["PATHWAY EVIDENCE REPORT", "=======================",
-                         "PWML coverage: 3 of 6 processes (50.0%) -- target 75%"]
-    assert lines[3] == ("  By kind, drawn of total (total = final payload + omitted before the freeze): "
+                         "PWML coverage: 3 of 5 processes (60.0%) -- target 75% (D-114 AMENDMENT 2: the 1 interactions "
+                         "PathWhiz cannot carry, KI-008, are not counted)"]
+    assert lines[3] == "  Full count, the 1 KI-008 interactions included: 3 of 6 (50.0%)"
+    assert lines[4] == ("  By kind, drawn of full count (total = final payload + omitted before the freeze): "
                         "reactions 1 of 3; transports 1 of 1; interactions 1 of 2")
-    assert lines[4] == ("  Excluding the 1 interactions PathWhiz cannot type (KI-008, withheld by design): "
-                        "3 of 5 (60.0%)")
     assert lines[5] == "  Listed but not counted: 2 (merged duplicates: 1)"
     assert "Core-term coverage: Not recorded" in lines  # the core-term line stays, relabelled
     cov = report["pwml_coverage"]
@@ -247,9 +249,10 @@ def test_no_pwml_written_draws_nothing_and_lists_every_payload_process():
     arts = _artifacts(pwml=False)
     report = build_report(arts)
     text = render_text(report)
-    assert text.splitlines()[2] == "PWML coverage: 0 of 6 processes (0.0%) -- target 75%"
+    assert text.splitlines()[2] == ("PWML coverage: 0 of 6 processes (0.0%) -- target 75% (D-114 AMENDMENT 2: the 0 "
+                                    "interactions PathWhiz cannot carry, KI-008, are not counted)")
     # The IR's verdicts are not read without a PWML, so nothing is "withheld by design" either.
-    assert "  Excluding the 0 interactions PathWhiz cannot type (KI-008, withheld by design): 0 of 6 (0.0%)" in text
+    assert "  Full count, the 0 KI-008 interactions included: 0 of 6 (0.0%)" in text
     assert "OMITTED FROM THE PWML (6)\n" in text
     assert "Not drawn because no PWML was written (4):\n" in text
     for line in ("- reaction R1: A -> B  [final payload /processes/reactions/0]",
@@ -371,7 +374,13 @@ def test_a_tree_without_coverage_reports_na_and_the_aggregates_say_so(replayed):
         row["class"] = H.classify({"recorded": None}, row["replay"])
     printed: list = []
     H.print_coverage(summary, rows, printed.append)
-    assert printed[1].lstrip().startswith("strict_legs_with_an_outcome.headline") and "omitted processes by known issue" in printed[5]
+    # ORCH-772b (D-114 AMENDMENT 2 § 2; merge rule 4): the target line on every strict leg comes first, with the PWML
+    # pass rate; then 91 / replayed / PWML-writing legs, headline and full count. Before: the stats lines came first.
+    assert printed[1].lstrip().startswith("TARGET (D-114 AMENDMENT 2, every strict leg, no PWML = 0%): legs >= 75%: ")
+    assert "PWML pass rate 3/3" in printed[1]  # round 1: ORCH-773 makes the enterobactin fixture leg export (was 2/3)
+    assert [p.split()[0] for p in printed[2:8]] == [f"{d}.{v}" for d in ("strict_legs_with_an_outcome", "replayed", "pwml_written")
+                                                     for v in ("headline", "full_count")]
+    assert "omitted processes by known issue" in printed[8]
     rows[0]["replay"]["pwml_coverage"] = None
     assert "n/a" in H.coverage_summary(rows)
     # An LLM-originating leg (no replay) is 0% on the strict denominator and absent from the replayed one.

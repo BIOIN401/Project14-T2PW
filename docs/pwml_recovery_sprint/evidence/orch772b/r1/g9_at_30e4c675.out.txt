@@ -1,0 +1,12 @@
+                     RESULT__txt=RESULT.format(message="PWML export failed: PWML IR validation failed.", codes="(none reported)"))
+E       AssertionError: assert 'PWML export ...ation failed.' == 'protein_comp...ng_components'
+E         
+E         - protein_complex_missing_components
+E         + PWML export failed: PWML IR validation failed.
+E       AssertionError: assert 'unclassified' == 'KI-019'
+E         
+E         - KI-019
+E         + unclassified
+FAILED tests/test_orch772b_no_pwml_cause.py::test_g9_r1_an_ir_validation_failure_is_read_from_its_report_not_labelled_a_time_limit
+FAILED tests/test_orch772b_no_pwml_cause.py::test_g9_r1_a_cause_listing_several_exact_codes_is_labelled_by_the_first_that_maps
+2 failed, 7 deselected in 0.24s

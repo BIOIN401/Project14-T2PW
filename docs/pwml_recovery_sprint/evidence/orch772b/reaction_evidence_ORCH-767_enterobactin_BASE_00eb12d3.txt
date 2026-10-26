@@ -1,0 +1,322 @@
+PATHWAY EVIDENCE REPORT
+=======================
+PWML coverage: 0 of 21 processes (0.0%) -- target 75%
+  By kind, drawn of total (total = final payload + omitted before the freeze): reactions 0 of 5; transports 0 of 4; interactions 0 of 12
+  Excluding the 0 interactions PathWhiz cannot type (KI-008, withheld by design): 0 of 21 (0.0%)
+  No PWML written: neither pathway.pwml nor pathway.review_required.pwml is in this run
+  Every process left out, with its reason: section OMITTED FROM THE PWML, below.
+Paper: PMC12096016
+Pathway: enterobactin biosynthesis
+Requested organism (Stage 0): Escherichia coli
+Species (final payload): Escherichia coli (taxonomy 562)
+Core-term coverage: 0.823529
+Minimum core satisfied: true
+Surviving processes: 17
+Quarantined processes: 4
+Release status: review_required
+Export mode: pathwhiz
+Quarantine ok: true
+Reactions itemised: 5; interactions itemised: 8 (transports: 4; counted above, not itemised)
+Surviving reactions read from: final_mapped.json
+Artifacts read: coverage_summary.json, final_mapped.json, LEG_TRACE.jsonl, quarantine_report.json, removed_entity_report.json
+
+SURVIVING REACTIONS (5)
+-----------------------
+REACTION 1  [final payload /processes/reactions/0; lock rxn_lock_003]
+Name: EntC (isochorismate synthase)
+Equation: chorismate -> isochorismate
+Substrates: chorismate
+Products: isochorismate
+Enzyme(s): Isochorismate synthase (protein_complex; components: EntC)
+Species: Escherichia coli
+Status: admission=core_accepted; scope=core
+Lineage: paper_extraction/paper_stated (paper_explicit=explicit)
+Mapping:
+  - chorismate: matched; db_status=legacy_id_unverified; pathbank_compound_id=7748, chebi_id=17333, kegg_id=C00251, hmdb_id=HMDB0012199
+  - isochorismate: matched; db_status=legacy_id_unverified; pathbank_compound_id=40741, chebi_id=29780, kegg_id=C00885
+  - Isochorismate synthase: matched; pathbank_protein_complex_id=1143
+Evidence:
+  1. "EntC-catalyzed isomerization of chorismate to isochorismate"
+  2. "EntC (isochorismate synthase; EC 5.4.4.2)"
+Source:
+  - supplied paper PMC12096016 via paper_extraction
+
+REACTION 2  [final payload /processes/reactions/1; lock rxn_lock_002]
+Name: EntB isochorismatase
+Equation: isochorismate -> 2,3-dihydro-2,3-dihydroxybenzoate + pyruvate
+Substrates: isochorismate
+Products: 2,3-dihydro-2,3-dihydroxybenzoate, pyruvate
+Enzyme(s): isochorismatase (protein_complex; components: EntB)
+Species: Escherichia coli
+Status: admission=core_accepted; scope=core
+Lineage: paper_extraction/paper_stated (paper_explicit=explicit)
+Mapping:
+  - isochorismate: matched; db_status=legacy_id_unverified; pathbank_compound_id=40741, chebi_id=29780, kegg_id=C00885
+  - 2,3-dihydro-2,3-dihydroxybenzoate: novel; db_status=ambiguous; no identifier recorded
+  - pyruvate: matched; db_status=legacy_id_unverified; pathbank_compound_id=108870
+  - isochorismatase: matched; pathbank_protein_complex_id=1189
+Evidence:
+  1. "isochorismate is converted to 2,3-dihydro-2,3-dihydroxybenzoate and pyruvate by EntB isochorismatase activity"
+  2. "the N-terminal isochorismatase (IC) domain of EntB (EC 3.3.2.1)"
+Source:
+  - supplied paper PMC12096016 via paper_extraction
+
+REACTION 3  [final payload /processes/reactions/2; lock rxn_lock_001]
+Name: EntA (2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase)
+Equation: 2,3-dihydro-2,3-dihydroxybenzoate -> 2,3-dihydroxybenzoic acid
+Substrates: 2,3-dihydro-2,3-dihydroxybenzoate
+Products: 2,3-dihydroxybenzoic acid
+Enzyme(s): oxidoreductase (entA) (protein_complex; components: EntA)
+Species: Escherichia coli
+Status: admission=core_accepted; scope=core
+Lineage: paper_extraction/paper_stated (paper_explicit=explicit)
+Mapping:
+  - 2,3-dihydro-2,3-dihydroxybenzoate: novel; db_status=ambiguous; no identifier recorded
+  - 2,3-dihydroxybenzoic acid: matched; db_status=legacy_id_unverified; pathbank_compound_id=40792, chebi_id=18026
+  - oxidoreductase (entA): matched; pathbank_protein_complex_id=1190
+Evidence:
+  1. "EntA (2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase; EC 1.3.1.28)"
+Source:
+  - supplied paper PMC12096016 via paper_extraction
+
+REACTION 4  [final payload /processes/reactions/3; lock rxn_lock_004]
+Name: EntE (2,3-dihydroxybenzoyl-AMP ligase)
+Equation: 2,3-dihydroxybenzoic acid + Adenosine triphosphate -> 2,3-dihydroxybenzoyl-AMP
+Substrates: 2,3-dihydroxybenzoic acid, Adenosine triphosphate
+Products: 2,3-dihydroxybenzoyl-AMP
+Enzyme(s): EntE complex (protein_complex; components: EntE)
+Species: Escherichia coli
+Status: admission=core_accepted; scope=core
+Lineage: paper_extraction/paper_stated (paper_explicit=explicit)
+Mapping:
+  - 2,3-dihydroxybenzoic acid: matched; db_status=legacy_id_unverified; pathbank_compound_id=40792, chebi_id=18026
+  - Adenosine triphosphate: matched; db_status=matched_offline_name_index; pathbank_compound_id=414, chebi_id=15422, kegg_id=C00002, hmdb_id=HMDB0000538
+  - 2,3-dihydroxybenzoyl-AMP: novel; db_status=unmatched; no identifier recorded
+  - EntE complex: ambiguous; no identifier recorded
+Evidence:
+  1. "2,3-DHB is adenylated by EntE (2,3-dihydroxybenzoyl-AMP ligase; EC 6.2.1.71) in an ATP-dependent reaction"
+  2. "EntE (2,3-dihydroxybenzoyl-AMP ligase; EC 6.2.1.71)"
+Source:
+  - supplied paper PMC12096016 via paper_extraction
+
+REACTION 5  [final payload /processes/reactions/4; lock rxn_lock_005]
+Name: EntF enterobactin synthase reaction
+Equation: 2,3-dihydroxybenzoic acid + L-serine -> enterobactin
+Substrates: 2,3-dihydroxybenzoic acid, L-serine
+Products: enterobactin
+Enzyme(s): EntF complex (protein_complex; components: EntF); enterobactin synthase complex (protein_complex; components: enterobactin synthase); EntE complex (protein_complex; components: EntE)
+Species: Escherichia coli
+Status: admission=core_accepted; scope=core
+Lineage: paper_extraction/paper_stated (paper_explicit=explicit)
+Mapping:
+  - 2,3-dihydroxybenzoic acid: matched; db_status=legacy_id_unverified; pathbank_compound_id=40792, chebi_id=18026
+  - L-serine: matched; db_status=legacy_id_unverified; pathbank_compound_id=120, chebi_id=17115, kegg_id=C00065, hmdb_id=HMDB0000187
+  - enterobactin: matched; db_status=legacy_id_unverified; pathbank_compound_id=40793, chebi_id=28855
+  - EntF complex: novel; no identifier recorded
+  - enterobactin synthase complex: ambiguous; no identifier recorded
+  - EntE complex: ambiguous; no identifier recorded
+Evidence:
+  1. "three EntF-catalyzed cycles of condensation with L-serine via the formation of non-ribosomal peptide bonds followed by cyclization and product release"
+  2. "three EntF-catalyzed cycles of condensation with L-serine"
+  3. "final assembly of three DHB molecules into the cyclic trilactone structure of enterobactin via the EntD/EntE/EntF enzyme complex"
+  4. "EntF enterobactin synthase reaction three EntF-catalyzed cycles of condensation with L-se"
+Source:
+  - supplied paper PMC12096016 via paper_extraction
+
+INTERACTIONS (8) -- PWML verdicts read from: Not recorded
+---------------------------------------------------------
+INTERACTION 1  [final payload /processes/interactions/0]
+Name: 2,3-DHB competitive inhibition of EntB
+Relationship (as extracted): inhibition
+Source: 2,3-dihydroxybenzoic acid
+Target: isochorismatase
+State: cytoplasmic
+PWML: Not recorded (no pwml_ir.json: no PWML IR was built for this run)
+Evidence:
+  1. "2,3-DHB is a competitive inhibitor of EntB isochorismatase"
+
+INTERACTION 2  [final payload /processes/interactions/1]
+Name: 2,3-DHB binding to EntE
+Relationship (as extracted): binding
+Source: 2,3-dihydroxybenzoic acid
+Target: EntE
+State: cytoplasmic state
+PWML: Not recorded (no pwml_ir.json: no PWML IR was built for this run)
+Evidence:
+  1. "2,3-DHB binds to EntE as a natural substrate with high affinity"
+
+INTERACTION 3  [final payload /processes/interactions/2]
+Name: EntC-EntB channeling
+Relationship (as extracted): binding
+Source: EntC
+Target: EntB
+State: cytoplasmic
+PWML: Not recorded (no pwml_ir.json: no PWML IR was built for this run)
+Evidence:
+  1. "EntC and EntB interact to form a dynamic channeling system"
+
+INTERACTION 4  [final payload /processes/interactions/3]
+Name: EntB-EntA interaction
+Relationship (as extracted): binding
+Source: EntB
+Target: EntA
+State: cytoplasmic
+PWML: Not recorded (no pwml_ir.json: no PWML IR was built for this run)
+Evidence:
+  1. "EntB forms pairwise interactions with other enzymes in the pathway (EntC, EntA, EntE, EntF)"
+
+INTERACTION 5  [final payload /processes/interactions/4]
+Name: EntB-EntE interaction
+Relationship (as extracted): binding
+Source: EntB
+Target: EntE
+State: cytoplasmic
+PWML: Not recorded (no pwml_ir.json: no PWML IR was built for this run)
+Evidence:
+  1. "EntB forms pairwise interactions with other enzymes in the pathway (EntC, EntA, EntE, EntF)"
+
+INTERACTION 6  [final payload /processes/interactions/5]
+Name: EntB-EntF interaction
+Relationship (as extracted): binding
+Source: EntB
+Target: EntF
+State: cytoplasmic
+PWML: Not recorded (no pwml_ir.json: no PWML IR was built for this run)
+Evidence:
+  1. "EntB forms pairwise interactions with other enzymes in the pathway (EntC, EntA, EntE, EntF)"
+
+INTERACTION 7  [final payload /processes/interactions/6]
+Name: EntD modification of EntB
+Relationship (as extracted): modification
+Source: EntD
+Target: EntB
+State: cytoplasmic state
+PWML: Not recorded (no pwml_ir.json: no PWML IR was built for this run)
+Evidence:
+  1. "EntD is a phosphopantetheinyl transferase that modifies EntB"
+
+INTERACTION 8  [final payload /processes/interactions/7]
+Name: EntD modification of EntF
+Relationship (as extracted): modification
+Source: EntD
+Target: EntF
+State: cytoplasmic state
+PWML: Not recorded (no pwml_ir.json: no PWML IR was built for this run)
+Evidence:
+  1. "EntD is a phosphopantetheinyl transferase that modifies EntB and EntF"
+
+QUARANTINED / REJECTED (4)
+--------------------------
+From quarantine_report.json quarantined: 4
+From final payload quarantined_locked_reactions: 0
+
+QUARANTINED 1  [pre-quarantine /processes/interactions/1; interaction]
+Name: Fur repression of ent gene clusters
+State: quarantined_unmapped_entity
+Reason: protein_missing_external_identity
+Essential participant: Fur
+Evidence:
+  1. "holo-Fur binds to the promoters of three ent gene clusters, silencing gene expression"
+
+QUARANTINED 2  [pre-quarantine /processes/interactions/2; interaction]
+Name: Fur repression of ent gene clusters
+State: quarantined_unmapped_entity
+Reason: protein_missing_external_identity
+Essential participant: Fur
+Evidence:
+  1. "holo-Fur binds to the promoters of three ent gene clusters, silencing gene expression"
+
+QUARANTINED 3  [pre-quarantine /processes/interactions/10; interaction]
+Name: Fur binding to Fe2+
+State: quarantined_unmapped_entity
+Reason: protein_missing_external_identity
+Essential participant: Fur
+Evidence:
+  1. "Fur binds ferrous iron (Fe2+) to form a complex"
+
+QUARANTINED 4  [pre-quarantine /processes/interactions/11; interaction]
+Name: Fur binding to ent gene cluster promoters
+State: quarantined_unmapped_entity
+Reason: protein_missing_external_identity
+Essential participant: Fur
+Evidence:
+  1. "binds to the Fur binding site in the promoter region of the ent operon"
+
+REMOVED ENTITIES (6)
+--------------------
+- compounds NADH: unreferenced_after_quarantine
+- compounds NAD+: unreferenced_after_quarantine
+- compounds Fe2+: unreferenced_after_quarantine
+- proteins Fur: degree_zero_after_quarantine
+- nucleic_acids ent gene clusters: unreferenced_after_quarantine
+- nucleic_acids ent gene cluster promoters: unreferenced_after_quarantine
+
+OMITTED FROM THE PWML (21)
+--------------------------
+Known-issue ids: docs/pwml_recovery_sprint/PWML_KNOWN_ISSUES.md, appendix "Reason code -> KI id".
+No PWML written: neither pathway.pwml nor pathway.review_required.pwml is in this run (known issue: unclassified). Nothing is drawn; the 17 processes of the final payload are listed after the removals.
+
+OMITTED 1  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/1]
+Kind: interaction
+Name: Fur repression of ent gene clusters
+Endpoints: Fur -[inhibition]-> ent gene clusters
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 2  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/2]
+Kind: interaction
+Name: Fur repression of ent gene clusters
+Endpoints: Fur -[inhibition]-> ent gene cluster promoters
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 3  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/10]
+Kind: interaction
+Name: Fur binding to Fe2+
+Endpoints: Fur -[binding]-> Fe2+
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 4  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/11]
+Kind: interaction
+Name: Fur binding to ent gene cluster promoters
+Endpoints: Fur -[binding]-> ent gene cluster promoters
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+Not drawn because no PWML was written (17):
+- reaction EntC (isochorismate synthase): chorismate -> isochorismate  [final payload /processes/reactions/0]
+- reaction EntB isochorismatase: isochorismate -> 2,3-dihydro-2,3-dihydroxybenzoate + pyruvate  [final payload /processes/reactions/1]
+- reaction EntA (2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase): 2,3-dihydro-2,3-dihydroxybenzoate -> 2,3-dihydroxybenzoic acid  [final payload /processes/reactions/2]
+- reaction EntE (2,3-dihydroxybenzoyl-AMP ligase): 2,3-dihydroxybenzoic acid + Adenosine triphosphate -> 2,3-dihydroxybenzoyl-AMP  [final payload /processes/reactions/3]
+- reaction EntF enterobactin synthase reaction: 2,3-dihydroxybenzoic acid + L-serine -> enterobactin  [final payload /processes/reactions/4]
+- transport Enterobactin secretion: enterobactin: cytoplasmic -> extracellular  [final payload /processes/transports/0]
+- transport Ferric enterobactin import: ferric enterobactin: extracellular -> cytoplasmic  [final payload /processes/transports/1]
+- transport Enterobactin secretion: enterobactin: cytoplasmic state -> extracellular state  [final payload /processes/transports/2]
+- transport Ferric enterobactin import: ferric enterobactin: extracellular state -> cytoplasmic state  [final payload /processes/transports/3]
+- interaction 2,3-DHB competitive inhibition of EntB: 2,3-dihydroxybenzoic acid -[inhibition]-> isochorismatase  [final payload /processes/interactions/0]
+- interaction 2,3-DHB binding to EntE: 2,3-dihydroxybenzoic acid -[binding]-> EntE  [final payload /processes/interactions/1]
+- interaction EntC-EntB channeling: EntC -[binding]-> EntB  [final payload /processes/interactions/2]
+- interaction EntB-EntA interaction: EntB -[binding]-> EntA  [final payload /processes/interactions/3]
+- interaction EntB-EntE interaction: EntB -[binding]-> EntE  [final payload /processes/interactions/4]
+- interaction EntB-EntF interaction: EntB -[binding]-> EntF  [final payload /processes/interactions/5]
+- interaction EntD modification of EntB: EntD -[modification]-> EntB  [final payload /processes/interactions/6]
+- interaction EntD modification of EntF: EntD -[modification]-> EntF  [final payload /processes/interactions/7]
+
+Entities left out (6), from removed_entity_report.json:
+- compounds NADH: unreferenced_after_quarantine (unclassified)
+- compounds NAD+: unreferenced_after_quarantine (unclassified)
+- compounds Fe2+: unreferenced_after_quarantine (unclassified)
+- proteins Fur: degree_zero_after_quarantine (unclassified)
+- nucleic_acids ent gene clusters: unreferenced_after_quarantine (unclassified)
+- nucleic_acids ent gene cluster promoters: unreferenced_after_quarantine (unclassified)
+
+CORE COVERAGE
+-------------
+Requested (17): chorismate, isochorismate, 2,3-dihydroxybenzoic acid (2,3-DHB), 2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB), pyruvate, NADH, NAD+, enterobactin, ferric enterobactin, L-serine, EntB, EntC, EntA, EntE, EntF, EntD, Fur
+Matched (14): chorismate, isochorismate, 2,3-dihydroxybenzoic acid (2,3-DHB), 2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB), pyruvate, enterobactin, ferric enterobactin, L-serine, EntB, EntC, EntA, EntE, EntF, EntD
+Unmatched (3): NADH, NAD+, Fur

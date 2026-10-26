@@ -1,0 +1,163 @@
+{
+  "label": "rev1-smoke",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/rev772b-tip/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/rev772b-tip/docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-772b/47-rev1-smoke.pin.json",
+    "-q",
+    "--basetemp=C:/t/rev772b/r1/bt-smoke",
+    "tests/test_reference_repair.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_empty_extraction_payload.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py",
+    "tests/test_c102_coverage_denominator.py",
+    "tests/test_c106_mutation_harness_executable.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\rev772b-tip",
+  "started_at": "2026-10-26T04:18:21+00:00",
+  "finished_at": "2026-10-26T04:19:07+00:00",
+  "duration_seconds": 46.44430710000597,
+  "timeout_seconds": 580.0,
+  "root_pid": 433084,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 433096,
+      "name": "python.exe",
+      "ppid": 433084
+    },
+    {
+      "pid": 432568,
+      "name": "python.exe",
+      "ppid": 433096
+    },
+    {
+      "pid": 432720,
+      "name": "python.exe",
+      "ppid": 432568
+    },
+    {
+      "pid": 431744,
+      "name": "python.exe",
+      "ppid": 432732
+    },
+    {
+      "pid": 432732,
+      "name": "python.exe",
+      "ppid": 433096
+    },
+    {
+      "pid": 432960,
+      "name": "python.exe",
+      "ppid": 433096
+    },
+    {
+      "pid": 432852,
+      "name": "python.exe",
+      "ppid": 432960
+    },
+    {
+      "pid": 432424,
+      "name": "python.exe",
+      "ppid": 432484
+    },
+    {
+      "pid": 432484,
+      "name": "python.exe",
+      "ppid": 433096
+    },
+    {
+      "pid": 430632,
+      "name": "git.exe",
+      "ppid": 433096
+    }
+  ],
+  "descendants_terminated": [
+    430632,
+    431744,
+    432424,
+    432484,
+    432568,
+    432720,
+    432732,
+    432852,
+    432960,
+    433096
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 406780,
+      "name": "python.exe"
+    },
+    {
+      "pid": 406808,
+      "name": "python.exe"
+    },
+    {
+      "pid": 432772,
+      "name": "python.exe"
+    },
+    {
+      "pid": 432784,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\rev772b-tip\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-772b\\47-rev1-smoke.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\rev772b-tip\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\rev772b-tip",
+    "repo_head": "1f223061bd4e5039f2d087e43b21026c551d06c6",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-772b-rev",
+    "token": "ORCH-772b-rev:432784:9e5ff6022df6640b",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

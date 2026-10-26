@@ -1,0 +1,23 @@
+E       assert "\n  No PWML written: Generated protein complex 'enterobactin synthase complex' component 'enterobactin synthase' is missing positive stoichiometry.\n" in 'PATHWAY EVIDENCE REPORT\n=======================\nPWML coverage: 0 of 21 processes (0.0%) -- target 75%\n  By kind, d...ot record
+E       AssertionError: assert '0/21 (0%)' == '0/21 (0%); f... PWML: KI-012'
+E         
+E         - 0/21 (0%); full count 0/21 (0%); no PWML: KI-012
+E         + 0/21 (0%)
+E       assert '--src "$WT/src"' in '"$EV/orch770_morning_summary.py" --task "$TASK" --legs "$WT/runs_papers/$TASK/legs" --out-dir "$OUT" \\\n  --gold "$G...pare "ORCH-759p=$EV/orch759p_gold_accuracy.txt" --compare "ORCH-756=$EV/orch756_gold_accuracy.txt" \\\n  > "$OUT/logs/'
+E       AssertionError: assert [[17, 'unclas...', 'no_pwml']] == [[17, 'KI-012', 'no_pwml']]
+E         
+E         At index 0 diff: [17, 'unclassified', 'no_pwml'] != [17, 'KI-012', 'no_pwml']
+E         Use -v to get more diff
+E       AssertionError: assert False
+E        +  where False = <built-in method startswith of str object at 0x000001ADD4C32CD0>('PWML coverage: 1 of 1 processes (100.0%) -- target 75% (D-114 AMENDMENT 2')
+E        +    where <built-in method startswith of str object at 0x000001ADD4C32CD0> = 'PWML coverage: 1 of 2 processes (50.0%) -- target 75%'.startswith
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\t\\orch772b\\base\\docs\\pwml_recovery_sprint\\evidence\\orch772b_no_pwml_cause.py'
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\t\\orch772b\\base\\docs\\pwml_recovery_sprint\\evidence\\orch772b_no_pwml_cause.py'
+FAILED tests/test_orch772b_no_pwml_cause.py::test_g9_the_review_pack_writes_the_legs_recorded_cause_and_its_known_issue
+FAILED tests/test_orch772b_no_pwml_cause.py::test_g9_the_morning_summary_names_the_known_issue_of_a_leg_with_no_pwml
+FAILED tests/test_orch772b_no_pwml_cause.py::test_g9_the_night_runner_measures_coverage_with_the_pinned_worktrees_code
+FAILED tests/test_orch772b_no_pwml_cause.py::test_g9_the_corpus_replay_records_its_own_cause_for_each_process_lost_with_the_leg
+FAILED tests/test_orch772b_no_pwml_cause.py::test_g9_the_headline_leaves_out_the_interactions_pathwhiz_cannot_carry
+FAILED tests/test_orch772b_no_pwml_cause.py::test_new_the_reader_takes_the_first_recorded_stop_in_pipeline_order
+FAILED tests/test_orch772b_no_pwml_cause.py::test_new_the_reader_on_the_committed_leg_returns_the_final_gates_own_message
+7 failed in 2.13s
