@@ -7,6 +7,10 @@ ORCH-772 (D-114 § 1): the per-paper table carries the PWML coverage of each leg
 ``t2pw.app.reaction_evidence`` (read-only, offline) of the tree named by ``--src`` (default: the tree this script lives
 in). A tree without it, or an error, shows ``n/a``; the summary is written regardless.
 
+ORCH-774s: per paper, the omitted processes and actors with their KI ids (from the same report model), the count of
+reactions the written PWML exports with no enzyme and ``spontaneous=false`` (PathWhiz drops them on import; counted in
+the XML), and a "would import" coverage beside the headline and the full count.
+
     python orch770_morning_summary.py --task ORCH-770 --legs <worktree>/runs_papers/ORCH-770/legs \
         --out-dir <primary>/runs_papers/ORCH-770 --gold <primary>/docs/.../evidence/orch770_gold_accuracy.txt \
         --compare ORCH-767=<...>/orch767_gold_accuracy.txt --compare ORCH-759p=<...> --compare ORCH-756=<...>
@@ -20,6 +24,7 @@ import json
 import re
 import subprocess
 import sys
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -71,26 +76,74 @@ def failure_line(leg: Path) -> str:
     return f"{(msg.group(1) if msg else '?')[:200]} [{(codes.group(1) if codes else '').strip()[:80]}]"
 
 
-def coverage(leg: Path) -> str:
-    """From the leg's own artifacts: the headline (KI-008 left out, D-114 AMENDMENT 2), the full count beside it, and,
-    for a leg with no PWML, the known issue of its recorded cause (ORCH-772b). Never raises."""
+PWML_NAMES = ("pathway.pwml", "pathway.review_required.pwml")  # what the batch driver writes (reaction_evidence)
+
+
+def leg_report(leg: Path):
+    """``(report, "")`` from the --src tree's ``reaction_evidence.build_report`` on the leg's own artifacts, with the
+    leg's recorded no-PWML cause (ORCH-772b); ``(None, why)`` when it cannot be built. Never raises."""
     try:
         from orch772b_no_pwml_cause import recorded_no_pwml_cause
-        from t2pw.app.reaction_evidence import build_report, known_issue_id, load_run_artifacts
+        from t2pw.app.reaction_evidence import build_report, load_run_artifacts
 
-        report = build_report(load_run_artifacts(leg), no_pwml_cause=recorded_no_pwml_cause(leg)) if leg.is_dir() else {}
-        cov = report.get("pwml_coverage")
+        if not leg.is_dir():
+            return None, "n/a (no leg directory)"
+        return build_report(load_run_artifacts(leg), no_pwml_cause=recorded_no_pwml_cause(leg)), ""
     except Exception as exc:  # the summary must still be written
-        return f"n/a ({type(exc).__name__})"
-    if not cov:
-        return "n/a"
+        return None, f"n/a ({type(exc).__name__})"
+
+
+def no_enzyme_reactions(leg: Path):
+    """ORCH-774s: reactions in the leg's written PWML that PathWhiz drops on import (``reaction.rb`` ``check_spontaneous``,
+    ORCH-773 r1 reviewer N1): a ``<reaction>`` whose ``<spontaneous>`` is not ``true`` and whose ``<reaction-enzymes>``
+    holds no ``<reaction-enzyme>``. Read from the XML file itself. ``None`` when no PWML was written or it does not parse."""
+    for name in PWML_NAMES:
+        if (leg / name).is_file():
+            try:
+                root = ET.parse(leg / name).getroot()
+            except ET.ParseError:
+                return None
+            return sum(1 for r in root.iter("reaction")
+                       if (r.findtext("spontaneous") or "").strip() != "true" and r.find("reaction-enzymes/reaction-enzyme") is None)
+    return None
+
+
+def coverage(leg: Path) -> str:
+    """From the leg's own artifacts: the headline (KI-008 left out, D-114 AMENDMENT 2), the full count beside it, for a
+    leg with no PWML the known issue of its recorded cause (ORCH-772b), and for a written PWML the coverage that would
+    survive import: (drawn - reactions PathWhiz drops) / the headline denominator (ORCH-774s). Never raises."""
+    report, why = leg_report(leg)
+    cov = (report or {}).get("pwml_coverage")
+    if why or not cov:
+        return why or "n/a"
+    from t2pw.app.reaction_evidence import known_issue_id
+
     if cov["drawn"] is None:
         return f"not recorded of {cov['total']}"
     drawn, full = cov["drawn"], cov["total"]
     head = full - cov["by_design_withheld"]
-    pct = lambda total: f"{100 * drawn / total:.0f}%" if total else "n/a"  # noqa: E731
-    text = f"{drawn}/{head} ({pct(head)}); full count {drawn}/{full} ({pct(full)})"
-    return text if cov["pwml_written"] else f"{text}; no PWML: {known_issue_id(cov['no_pwml_cause'])}"
+    pct = lambda n, total: f"{100 * n / total:.0f}%" if total else "n/a"  # noqa: E731
+    text = f"{drawn}/{head} ({pct(drawn, head)}); full count {drawn}/{full} ({pct(drawn, full)})"
+    if not cov["pwml_written"]:
+        return f"{text}; no PWML: {known_issue_id(cov['no_pwml_cause'])}"
+    dropped = no_enzyme_reactions(leg)
+    return text if dropped is None else f"{text}; would import {drawn - dropped}/{head} ({pct(drawn - dropped, head)})"
+
+
+def omitted_lines(cond: str, leg: Path) -> list:
+    """ORCH-774s: every omitted process (kind, name, KI) and every omitted actor of a kept process, with counts by KI."""
+    report, why = leg_report(leg)
+    if report is None:
+        return [f"### {cond}", "", why, ""]
+    rows = [e for e in report.get("omitted") or [] if e.get("counted")]
+    actors = report.get("omitted_actors") or []
+    by_ki: dict = {}
+    for ki in [e["ki"] for e in rows] + [a["ki"] for a in actors]:
+        by_ki[ki] = by_ki.get(ki, 0) + 1
+    counts = ", ".join(f"{k} {n}" for k, n in sorted(by_ki.items(), key=lambda kv: (-kv[1], kv[0]))) or "none"
+    return [f"### {cond}: {len(rows)} processes, {len(actors)} actors left out", "", f"By KI: {counts}", "",
+            *[f"- {e['kind']} {e['name'] or '(unnamed)'}: {e['ki']}" for e in rows],
+            *[f"- actor {a['actor']} of {a['kind']} {a['process']}: {a['ki']}" for a in actors], ""]
 
 
 def main() -> int:
@@ -117,12 +170,18 @@ def main() -> int:
          "PWML coverage = processes drawn in the PWML / processes in the text record (D-114; target 75%), "
          "from each leg's directory by `t2pw.app.reaction_evidence`. Headline first: the interactions PathWhiz cannot "
          "carry (KI-008) are left out (D-114 AMENDMENT 2); the full count follows. A leg with no PWML names the known "
-         "issue of its recorded cause.", "",
-         "| paper | PWML | PWML coverage | release | reactions / interactions | min | code |", "|---|---|---|---|---|---|---|"]
+         "issue of its recorded cause. \"would import\" leaves out the reactions PathWhiz drops on import: those the "
+         "written PWML exports with no enzyme and `spontaneous=false` (column \"dropped on import\", counted in the XML).", "",
+         "| paper | PWML | PWML coverage | dropped on import | release | reactions / interactions | min | code |",
+         "|---|---|---|---|---|---|---|---|"]
     for r in rows:
+        dropped = no_enzyme_reactions(Path(r.get("leg_dir", "")))
         L.append(f"| {r['cond']} | **{'yes' if str(r.get('pwml', '')).endswith('.pwml') else 'no'}** | "
-                 f"{coverage(Path(r.get('leg_dir', '')))} | {r.get('release', '-')} | "
+                 f"{coverage(Path(r.get('leg_dir', '')))} | {'-' if dropped is None else dropped} | {r.get('release', '-')} | "
                  f"{r.get('reactions', '-')} / {r.get('interactions', '-')} | {r.get('minutes', '-')} | `{shas.get(r['cond'], '?')}` |")
+    L += ["", "## Omitted from the PWML, per paper (kind, name, known issue)", ""]
+    for r in rows:
+        L += omitted_lines(r["cond"], Path(r.get("leg_dir", "")))
     sets = [(a.task, gold_rows(a.gold))] + [(x.split("=", 1)[0], gold_rows(x.split("=", 1)[1])) for x in a.compare]
     L += ["", "## Gold accuracy (eval-v2 score_leg)", "", "| paper / level | " + " | ".join(s for s, _ in sets) + " |",
           "|---|" + "---|" * len(sets)]
