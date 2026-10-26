@@ -11193,3 +11193,5 @@ The id ORCH-760 was chosen so that 755-759 stay free for the live ORCH-754 sessi
 **ORCH-774 · 2026-10-26 — DONE:** 5 of 6 PWMLs (ORCH-767: 2 of 6) on `329d81b2`. Coverage (headline / full count): enterobactin 80/47 (gold 5/5, F1 1.000), menaquinone 100/100 (gold 9/9, F1 1.000), sour taste 67/67, chlorophyll 31/31, Wnt/Ca2+ 16/15, WNT PCP none (KI-022). 2 of 6 at >= 75%. **ORCH-775 DONE** (enzyme-less reactions). **D-115** recorded. Three `.env` copies in finished run worktrees deleted by main (orch756, 767, 774).
 
 **2026-10-26 — D-116 recorded** (KI-022 becomes per-row). Next round chartered: D-115 §§ 1-4 and D-116, measured on the corpus, then a live 6-paper run tonight.
+
+**ORCH-781 · 2026-10-26 15:35 — LAUNCHED by main** on `main` `954d4942` (the D-114 round; NOT lanes 776-780) from pinned worktree `orch781` via `orch770_night.sh`: 6 papers, strict, 3 draws. Every agent hit the usage limit at 15:30. Lanes 776-780 are unmerged: 778 measured; 776, 777, 779 and 780 have committed and uncommitted work in their worktrees, and resume when usage allows. The `.env` copy is deleted by the launch command at run end.
