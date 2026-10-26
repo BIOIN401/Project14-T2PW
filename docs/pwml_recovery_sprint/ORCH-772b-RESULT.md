@@ -273,3 +273,108 @@ No other pin moved. `tests/test_orch768_replay_corpus.py` is unchanged and green
   `orch768_replay_corpus.py`, `orch772b_no_pwml_cause.py` or `reaction_evidence.pwml_coverage_lines`.
 * **Pins moved:** § 6. **SMOKE unchanged at 511** (G11 `16`).
 * **A G9 run at a base export must use the base tree's own `pinned_pytest.py`**; the worktree's launcher refuses with exit 98.
+
+---
+
+## 13. Review round 1 (r0 REJECT: B-1; plus N-1 / F-2)
+
+The review is at `C:/t/rev772b/REVIEW-r0.md` (reviewer scratch, not committed). Round 1 was time-boxed (hand-back by 22:30).
+
+**Commits:**
+* `b1c046a1`: merge of `sprint/pwml-recovery` @ `bab79db6` (it includes ORCH-773). No textual conflict.
+* `06684ac2`: the reader (evidence script).
+* `429acee0`: `reaction_evidence.py`, tests, and the one appendix row the drift test ties to the code table.
+* A docs commit with this section and the evidence.
+
+**Fixes:**
+* **B-1.** `orch772b_no_pwml_cause.py`: when `pwml_ir_validation.json` has `ok: false`, the reader now takes its `errors[].code`
+  verbatim, joined with `"; "`. This comes after the `RESULT.txt` issue codes and before the message.
+* **Root fix for B-1** (boundary granted for exactly this). In `KNOWN_ISSUES["messages"]` and the appendix row, the shorthand
+  `"PWML export ..."` is narrowed to the driver's own `"PWML export did not finish inside the time budget"` (`driver.py:3176`). No
+  `PWML export failed: …` message reads as KI-028 any more. The sibling shorthand `"audit and DB mapping ..."` is left as it was,
+  because only the PWML row was granted (§ 13 Q-r1).
+* **F-2 / N-1** (boundary granted for exactly this). In `known_issue_id`, a recorded list (`a, b` or `a; b`) that matches nothing as
+  a whole is labelled by the first item that maps. A whole match still wins, so a message containing commas (KI-054) is labelled
+  whole. The cause text itself stays verbatim. The OMITTED rendering is not touched.
+
+**Live legs the review named** (G11 `33`, `evidence/orch772b/r1/live_leg_probe.out.txt`):
+* `2026-08-25_1216/PMC12856317`: cause `protein_complex_missing_components` → **KI-015**. It was KI-028 in r0, and now matches
+  the corpus.
+* ORCH-759 and ORCH-759p menaquinone: `species_missing_taxonomy, species_missing_classification` → **KI-019**. It was
+  `unclassified`.
+
+**Pins moved because the merge changed outcomes** (merge rule 4). At `bab79db6` the ORCH-767 enterobactin fixture leg writes a PWML
+(ORCH-773).
+* `test_orch772_pwml_coverage.py` test 11: "PWML pass rate 2/3" → "3/3".
+* `test_g9_the_corpus_replay_…`: it now drives `replay_no_pwml_cause` with the stop the leg recorded at `00eb12d3` (its final-gate
+  error), and `pwml_coverage` with the leg's payload. The round-0 base-red proof (G11 `06`) stands as recorded.
+
+**Tests at the tip `429acee0`:**
+
+| run | G11 | result |
+|---|---|---|
+| focused on the merged tree: 772b file (9), 772 file, `test_reaction_evidence.py`, `test_orch773_omit_per_row.py`, `test_orch768_replay_corpus.py` | `25` | **89 passed** |
+| SMOKE, 22 files | `31` | **511 passed** |
+| ALONE `test_reaction_evidence_view.py` | `32` | 11 passed |
+| G9: the two `test_g9_r1_*` at `30e4c675` (that tree's own launcher) | `35` | **2 failed** on values: the reader returns the bare message; the list labels `unclassified` |
+
+`34` was a launcher import error (`tree_pin` missing from the export) and ran no test. `21`, `23` and `24` hit the heavy lock
+(exit 95, no report; the reservations are in the git-ignored `.staging`). `g11_evidence.py check --task ORCH-772b`: 31 artifacts,
+0 non-compliant.
+
+**Proof** (base `bab79db6` with its own harness, G11 `26`, vs tip, `27`/`28`):
+* `orch772b_compare_coverage.py` (G11 `29`, `evidence/orch772b/r1/coverage_compare_base_to_tip.txt`), **93 legs**:
+  * replay records outside `pwml_coverage` identical (every verdict, PWML sha256, file digest);
+  * every coverage number identical;
+  * every omission row identical except the no-PWML rows. Label moves on other rows: **none**; the `known_issue_id` fallback
+    moved no row of a PWML-writing leg.
+* **Only label changes:** 9 no-PWML legs, 29 processes, from `unclassified` to their cause's id:
+
+| leg | processes | KI |
+|---|---|---|
+| `2026-08-21_2239/PMC12180156` | 1 | KI-022 |
+| `2026-08-22_2147/PMC12180156` | 5 | KI-022 |
+| `2026-08-22_2147/PMC13231680` | 5 | KI-022 |
+| `2026-08-24_1203/PMC13231680` | 3 | KI-022 |
+| `2026-08-24_1428/PMC12180156` | 3 | KI-022 |
+| `2026-08-28_1816/PMC12180156` | 2 | KI-022 |
+| `2026-09-01_1612/PMC12180156` | 5 | KI-022 |
+| `2026-09-02_2052/PMC12180156` | 2 | KI-022 |
+| `2026-09-16_2152/PMC13534948` | 3 | KI-038 |
+
+* `compare` (G11 `30`): pass rate **72/91 → 72/91**, 91/91 records identical apart from `pwml_coverage`. REJECT only because
+  D-112 § 2 asks for a gain.
+* Tip seeds 1 and 2: byte-identical JSON (`91399ca8…`) and text (`45f63591…`).
+
+**Coverage at the merged tip** (sprint `bab79db6` + this lane; `evidence/orch772b_corpus_coverage.{json,txt}` now holds this
+run):
+* Target line: **32/91 headline, 23/91 full count; PWML pass rate 72/91.**
+* 91 legs: headline mean 53.3 %, median 58.3 %; full count 47.3 %, 46.7 %.
+* 81 replayed: headline 59.8 % / 64.3 % / 32/81; full count 53.2 % / 50.0 % / 23/81.
+* 72 PWML-writing: headline 67.3 % / 69.6 % / 32/72; full count 59.8 % / 59.2 % / 23/72.
+
+The § 1 table (`00eb12d3`, before ORCH-773) stays as it was measured.
+
+**New observation (follow-up, not edited tonight).** At `bab79db6` a second leg writes a zero-process PWML:
+`runs_verify/2026-08-24_1203/PMC12856317`, 0/4 (headline), first omission `protein_complex_component_omitted:…` (KI-001).
+KI-065 says "the only one" as measured at `00eb12d3`; it needs a line for this leg.
+
+**Q-r1 (not settled):**
+* Narrow `"audit and DB mapping ..."` the same way.
+* Read the N-2 timeout message's trailing `(budget_exhausted)`.
+* KI-065's second leg.
+
+None of these was granted tonight.
+
+**LEDGER row (round 1):**
+> **`ORCH-772b` round 1 · 2026-10-25 — REPAIRED, awaiting re-review, `orch772b/no-pwml-cause` @ `429acee0` (+ docs).** Merged
+> sprint `bab79db6`.
+> * B-1: the reader takes `pwml_ir_validation.json` codes, and "PWML export ..." is narrowed to the time-budget message, so the IR
+>   leg labels KI-015.
+> * F-2: a list of exact codes is labelled by its first mapped item, so menaquinone labels KI-019.
+>
+> On 93 corpus legs, verdicts, PWML hashes and coverage numbers are identical; only 9 no-PWML legs (29 processes) were relabelled.
+> At the merged tip: 32/91 ≥ 75 % headline, 23/91 full count, pass 72/91. SMOKE 511; view 11.
+
+**TEST_MATRIX delta (round 1):** `tests/test_orch772b_no_pwml_cause.py` is now 9 tests. A base-tree G9 export needs
+`evidence/tree_pin.py` beside `pinned_pytest.py`. SMOKE unchanged at 511.
