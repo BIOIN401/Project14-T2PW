@@ -5,6 +5,7 @@ Read from the leg directory only. The first record, in pipeline order, that says
 1. ``quarantine_report.json`` with ``ok: false``: its ``refusal_reasons`` (the boundary refused; no gate ran after it);
 2. ``final_stage3_gate_report.json`` with ``ok: false``: the ``reason`` of each error (the final pre-export gate);
 3. ``RESULT.txt`` ``issue codes`` line (the driver's codes for the step that failed, e.g. the required-field gate);
+3b. ``pwml_ir_validation.json`` with ``ok: false``: the ``code`` of each error (round 1, review r0 B-1);
 4. ``RESULT.txt`` ``message`` line.
 
 Report items are joined with ``"; "``, a ``RESULT.txt`` line is taken as written; nothing is reworded or inferred.
@@ -46,4 +47,14 @@ def recorded_no_pwml_cause(leg) -> str:
         reasons = [str(e.get("reason")) for e in gate.get("errors") or [] if isinstance(e, dict) and e.get("reason")]
         if reasons:
             return "; ".join(dict.fromkeys(reasons))
-    return _result_line(leg, "issue codes") or _result_line(leg, "message")
+    codes = _result_line(leg, "issue codes")
+    if codes:
+        return codes
+    # Round 1 (review r0 B-1): IR validation runs after the required-field gate, and the driver puts its errors in no
+    # "issue codes" line (driver.py 3187-3190), so its own report is read before the bare message.
+    validation = _load(leg / "pwml_ir_validation.json")
+    if isinstance(validation, dict) and validation.get("ok") is False:
+        found = [str(e.get("code")) for e in validation.get("errors") or [] if isinstance(e, dict) and e.get("code")]
+        if found:
+            return "; ".join(dict.fromkeys(found))
+    return _result_line(leg, "message")
