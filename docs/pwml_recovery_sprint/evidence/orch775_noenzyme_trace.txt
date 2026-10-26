@@ -1,0 +1,227 @@
+====================================================================================================
+ORCH-756_enterobactin-strict_2026-10-21_2020 | paper PMC12096016 | checkpoint canonical | leg_dir .claude/worktrees/orch756/runs_papers/ORCH-756/legs/enterobactin-strict/2026-10-21_2020/papers/PMC12096016/strict
+  recorded quarantine_ok: True
+  tip pwml sha256 5245ce32eaecd2cfc5f2d4f6bcb51ddb9944368d038efc77cf4484377f8aa641
+  tip canonical reactions 7 enzyme-less 1
+----------------------------------------------------------------------------------------------------
+  [1] canonical idx 5 pwml id 50006
+   CANON {"name": "LDH-catalyzed reduction of pyruvate to lactate", "in": ["pyruvate", "NADH"], "out": ["lactate", "NAD+"], "enzymes": [], "modifiers": [], "evidence": "LDH‐catalyzed conversion of pyruvate to lactate is then monitored by loss of OD 340 following oxidation of NADH to NAD+.", "spontaneous": false, "carriers": {}, "lineage": []}
+    stage1_payload.json no match
+    merged_payload.json name {"name": "LDH-catalyzed reduction of pyruvate to lactate", "in": ["pyruvate", "NADH"], "out": ["lactate", "NAD"], "enzymes": [], "modifiers": [], "evidence": "LDH‐catalyzed conversion of pyruvate to lactate is then monitored by loss of OD 340 following oxidation of NADH to NAD+.", "spontaneous": null, "carriers": {}, "lineage": []}
+    final_mapped.json name {"name": "LDH-catalyzed reduction of pyruvate to lactate", "in": ["pyruvate", "NADH"], "out": ["lactate", "NAD+"], "enzymes": [], "modifiers": [], "evidence": "LDH‐catalyzed conversion of pyruvate to lactate is then monitored by loss of OD 340 following oxidation of NADH to NAD+.", "spontaneous": false, "carriers": {}, "lineage": []}
+====================================================================================================
+ORCH-767_chlorophyll-strict_2026-10-23_2328 | paper PMC5130987 | checkpoint canonical | leg_dir .claude/worktrees/orch767/runs_papers/ORCH-767/legs/chlorophyll-strict/2026-10-23_2328/papers/PMC5130987/strict
+  recorded quarantine_ok: True
+  tip pwml sha256 5b40c6ec0ee516277022176d2dcd208977b2e74ffc7f0ab5187a8c779783f070
+  tip canonical reactions 22 enzyme-less 7
+----------------------------------------------------------------------------------------------------
+  [2] canonical idx 1 pwml id 50002
+   CANON {"name": "GSAT reaction", "in": ["Glu 1-semialdehyde"], "out": ["5-aminolevulinic acid"], "enzymes": [], "modifiers": [], "evidence": "GSA is converted to ALA by GSA aminotransferase (GSAT)", "spontaneous": false, "carriers": {}, "lineage": [["paper_extraction", "paper_stated", "explicit"], ["audit_repair", "audit_modified", "not_evaluated"], ["audit_repair", "audit_modified", "not_evaluated"]]}
+    stage1_payload.json name {"name": "GSAT reaction", "in": ["Glu 1-semialdehyde"], "out": ["5-aminolevulinic acid"], "enzymes": ["GSAT"], "modifiers": [], "evidence": "GSA is converted to ALA by GSA aminotransferase (GSAT)", "spontaneous": null, "carriers": {}, "lineage": [["paper_extraction", "paper_stated", "explicit"]]}
+    merged_payload.json name {"name": "GSAT reaction", "in": ["Glu 1-semialdehyde"], "out": ["5-aminolevulinic acid"], "enzymes": ["GSAT"], "modifiers": [], "evidence": "GSA is converted to ALA by GSA aminotransferase (GSAT)", "spontaneous": null, "carriers": {}, "lineage": [["paper_extraction", "paper_stated", "explicit"]]}
+    final_mapped.json name {"name": "GSAT reaction", "in": ["Glu 1-semialdehyde"], "out": ["5-aminolevulinic acid"], "enzymes": [], "modifiers": [], "evidence": "GSA is converted to ALA by GSA aminotransferase (GSAT)", "spontaneous": false, "carriers": {}, "lineage": [["paper_extraction", "paper_stated", "explicit"], ["audit_repair", "audit_modified", "not_evaluated"], ["audit_repair", "audit_modified", "not_evaluated"]]}
+----------------------------------------------------------------------------------------------------
+  [3] canonical idx 2 pwml id 50003
+   CANON {"name": "ALA dehydratase reaction", "in": ["5-aminolevulinic acid"], "out": ["porphobilinogen"], "enzymes": [], "modifiers": [], "evidence": "two molecules of ALA are condensed asymmetrically to form PBG, catalyzed by ALAD", "spontaneous": false, "carriers": {}, "lineage": [["paper_extraction", "paper_stated", "explicit"], ["audit_repair", "audit_modified", "not_evaluated"], ["audit_repair", "audit_modified", "not_evaluated"]]}
+    stage1_payload.json name {"name": "ALA dehydratase reaction", "in": ["5-aminolevulinic acid"], "out": ["porphobilinogen"], "enzymes": ["ALAD"], "modifiers": [], "evidence": "two molecules of ALA are condensed asymmetrically to form PBG, catalyzed by ALAD", "spontaneous": null, "carriers": {}, "lineage": [["paper_extraction", "paper_stated", "explicit"]]}
+    stage1_payload.json io {"name": "ALAD (HEMB1) reaction", "in": ["5-aminolevulinic acid"], "out": ["porphobilinogen"], "enzymes": ["HEMB1"], "modifiers": [], "evidence": "Then two molecules of ALA are condensed asymmetrically to form the monopyrrole porphobilinogen (PBG), which is catalyzed by ALA dehydratase (ALAD; also known as PBG synthase).", "spontaneous": null, "carriers": {}, "lineage": [["paper_extraction", "paper_stated", "explicit"]]}
+    merged_payload.json name {"name": "ALA dehydratase reaction", "in": ["5-aminolevulinic acid"], "out": ["porphobilinogen"], "enzymes": ["ALAD"], "modifiers": [], "evidence": "two molecules of ALA are condensed asymmetrically to form PBG, catalyzed by ALAD", "spontaneous": null, "carriers": {}, "lineage": [["paper_extraction", "paper_stated", "explicit"]]}
+    merged_payload.json io {"name": "ALAD (HEMB1) reaction", "in": ["5-aminolevulinic acid"], "out": ["porphobilinogen"], "enzymes": ["HEMB1", "ALAD", "POR"], "modifiers": [], "evidence": "Then two molecules of ALA are condensed asymmetrically to form the monopyrrole porphobilinogen (PBG), which is catalyzed by ALA dehydratase (ALAD; also known as PBG synthase).", "spontaneous": null, "carriers": {}, "lineage": [["paper_extraction", "paper_stated", "explicit"]]}
+    final_mapped.json name {"name": "ALA dehydratase reaction", "in": ["5-aminolevulinic acid"], "out": ["porphobilinogen"], "enzymes": [], "modifiers": [], "evidence": "two molecules of ALA are condensed asymmetrically to form PBG, catalyzed by ALAD", "spontaneous": false, "carriers": {}, "lineage": [["paper_extraction", "paper_stated", "explicit"], ["audit_repair", "audit_modified", "not_evaluated"], ["audit_repair", "audit_modified", "not_evaluated"]]}
+    final_mapped.json io {"name": "ALAD (HEMB1) reaction", "in": ["5-aminolevulinic acid"], "out": ["porphobilinogen"], "enzymes": ["Delta-aminolevulinic acid dehydratase 1, chloroplastic"], "modifiers": ["FAR1", "Delta-aminolevulinic acid dehydratase 1, chloroplastic"], "evidence": "Then two molecules of ALA are condensed asymmetrically to form the monopyrrole porphobilinogen (PBG), which is catalyzed by ALA dehydratase (ALAD; also known as PBG synthase).", "spontaneous": false, "carriers": {}, "lineage": [["paper_extraction", "paper_stated", "explicit"]]}
+----------------------------------------------------------------------------------------------------
+  [4] canonical idx 3 pwml id 50004
+   CANON {"name": "PBG deaminase reaction", "in": ["porphobilinogen"], "out": ["hydroxymethylbilane"], "enzymes": [], "modifiers": [], "evidence": "Four PBG molecules are polymerized by PBG deaminase to result in HMB", "spontaneous": false, "carriers": {}, "lineage": [["paper_extraction", "paper_stated", "explicit"], ["audit_repair", "audit_modified", "not_evaluated"], ["audit_repair", "audit_modified", "not_evaluated"]]}
+    stage1_payload.json name {"name": "PBG deaminase reaction", "in": ["porphobilinogen"], "out": ["hydroxymethylbilane"], "enzymes": ["PBG deaminase"], "modifiers": [], "evidence": "Four PBG molecules are polymerized by PBG deaminase to result in HMB", "spontaneous": null, "carriers": {}, "lineage": [["paper_extraction", "paper_stated", "explicit"]]}
+    merged_payload.json name {"name": "PBG deaminase reaction", "in": ["porphobilinogen"], "out": ["hydroxymethylbilane"], "enzymes": ["PBG deaminase"], "modifiers": [], "evidence": "Four PBG molecules are polymerized by PBG deaminase to result in HMB", "spontaneous": null, "carriers": {}, "lineage": [["paper_extraction", "paper_stated", "explicit"]]}
+    final_mapped.json name {"name": "PBG deaminase reaction", "in": ["porphobilinogen"], "out": ["hydroxymethylbilane"], "enzymes": [], "modifiers": [], "evidence": "Four PBG molecules are polymerized by PBG deaminase to result in HMB", "spontaneous": false, "carriers": {}, "lineage": [["paper_extraction", "paper_stated", "explicit"], ["audit_repair", "audit_modified", "not_evaluated"], ["audit_repair", "audit_modified", "not_evaluated"]]}
+----------------------------------------------------------------------------------------------------
+  [5] canonical idx 5 pwml id 50006
+   CANON {"name": "Urogen III decarboxylase reaction", "in": ["uroporphyrinogen III"], "out": ["coproporphyrinogen III"], "enzymes": [], "modifiers": [], "evidence": "Urogen III is metabolized to Coprogen III by Urogen III decarboxylase (UROD)", "spontaneous": false, "carriers": {}, "lineage": [["paper_extraction", "paper_stated", "explicit"], ["audit_repair", "audit_modified", "not_evaluated"], ["audit_repair", "audit_modified", "not_evaluated"]]}
+    stage1_payload.json name {"name": "Urogen III decarboxylase reaction", "in": ["uroporphyrinogen III"], "out": ["coproporphyrinogen III"], "enzymes": ["UROD"], "modifiers": [], "evidence": "Urogen III is metabolized to Coprogen III by Urogen III decarboxylase (UROD)", "spontaneous": null, "carriers": {}, "lineage": [["paper_extraction", "paper_stated", "explicit"]]}
+    merged_payload.json name {"name": "Urogen III decarboxylase reaction", "in": ["uroporphyrinogen III"], "out": ["coproporphyrinogen III"], "enzymes": ["UROD"], "modifiers": [], "evidence": "Urogen III is metabolized to Coprogen III by Urogen III decarboxylase (UROD)", "spontaneous": null, "carriers": {}, "lineage": [["paper_extraction", "paper_stated", "explicit"]]}
+    final_mapped.json name {"name": "Urogen III decarboxylase reaction", "in": ["uroporphyrinogen III"], "out": ["coproporphyrinogen III"], "enzymes": [], "modifiers": [], "evidence": "Urogen III is metabolized to Coprogen III by Urogen III decarboxylase (UROD)", "spontaneous": false, "carriers": {}, "lineage": [["paper_extraction", "paper_stated", "explicit"], ["audit_repair", "audit_modified", "not_evaluated"], ["audit_repair", "audit_modified", "not_evaluated"]]}
+----------------------------------------------------------------------------------------------------
+  [6] canonical idx 6 pwml id 50007
+   CANON {"name": "Coprogen III oxidase reaction", "in": ["coproporphyrinogen III"], "out": ["protoporphyrinogen IX"], "enzymes": [], "modifiers": [], "evidence": "Coprogen III is oxidized by Coprogen III oxidase (CPO) to form Protogen IX", "spontaneous": false, "carriers": {}, "lineage": [["paper_extraction", "paper_stated", "explicit"], ["audit_repair", "audit_modified", "not_evaluated"], ["audit_repair", "audit_modified", "not_evaluated"]]}
+    stage1_payload.json name {"name": "Coprogen III oxidase reaction", "in": ["coproporphyrinogen III"], "out": ["protoporphyrinogen IX"], "enzymes": ["CPO1"], "modifiers": [], "evidence": "Coprogen III is oxidized by Coprogen III oxidase (CPO) to form Protogen IX", "spontaneous": null, "carriers": {}, "lineage": [["paper_extraction", "paper_stated", "explicit"]]}
+    stage1_payload.json io {"name": "Coprogen III to Protogen IX", "in": ["coproporphyrinogen III"], "out": ["protoporphyrinogen IX"], "enzymes": ["CPO"], "modifiers": [], "evidence": "Coprogen III is oxidized by Coprogen III oxidase (CPO) to form protoporphyrinogen (Protogen) IX", "spontaneous": null, "carriers": {}, "lineage": [["paper_extraction", "paper_stated", "explicit"]]}
+    merged_payload.json name {"name": "Coprogen III oxidase reaction", "in": ["coproporphyrinogen III"], "out": ["protoporphyrinogen IX"], "enzymes": ["CPO1"], "modifiers": [], "evidence": "Coprogen III is oxidized by Coprogen III oxidase (CPO) to form Protogen IX", "spontaneous": null, "carriers": {}, "lineage": [["paper_extraction", "paper_stated", "explicit"]]}
+    merged_payload.json io {"name": "Coprogen III to Protogen IX", "in": ["coproporphyrinogen III"], "out": ["protoporphyrinogen IX"], "enzymes": ["CPO", "CPO1"], "modifiers": [], "evidence": "Coprogen III is oxidized by Coprogen III oxidase (CPO) to form protoporphyrinogen (Protogen) IX", "spontaneous": null, "carriers": {}, "lineage": [["paper_extraction", "paper_stated", "explicit"]]}
+    final_mapped.json name {"name": "Coprogen III oxidase reaction", "in": ["coproporphyrinogen III"], "out": ["protoporphyrinogen IX"], "enzymes": [], "modifiers": [], "evidence": "Coprogen III is oxidized by Coprogen III oxidase (CPO) to form Protogen IX", "spontaneous": false, "carriers": {}, "lineage": [["paper_extraction", "paper_stated", "explicit"], ["audit_repair", "audit_modified", "not_evaluated"], ["audit_repair", "audit_modified", "not_evaluated"]]}
+    final_mapped.json io {"name": "Coprogen III to Protogen IX", "in": ["coproporphyrinogen III"], "out": ["protoporphyrinogen IX"], "enzymes": ["Coproporphyrinogen-III oxidase 1, chloroplastic", "CPO1"], "modifiers": ["Coproporphyrinogen-III oxidase 1, chloroplastic", "CPO1"], "evidence": "Coprogen III is oxidized by Coprogen III oxidase (CPO) to form protoporphyrinogen (Protogen) IX", "spontaneous": false, "carriers": {}, "lineage": [["paper_extraction", "paper_stated", "explicit"]]}
+----------------------------------------------------------------------------------------------------
+  [7] canonical idx 7 pwml id 50008
+   CANON {"name": "Protogen IX oxidase reaction", "in": ["protoporphyrinogen IX"], "out": ["protoporphyrin IX"], "enzymes": [], "modifiers": [], "evidence": "Protogen IX is oxidized by Protogen IX oxidase (PPO) to result in Proto IX", "spontaneous": false, "carriers": {}, "lineage": [["paper_extraction", "paper_stated", "explicit"], ["audit_repair", "audit_modified", "not_evaluated"], ["audit_repair", "audit_modified", "not_evaluated"]]}
+    stage1_payload.json name {"name": "Protogen IX oxidase reaction", "in": ["protoporphyrinogen IX"], "out": ["protoporphyrin IX"], "enzymes": ["PPO1"], "modifiers": [], "evidence": "Protogen IX is oxidized by Protogen IX oxidase (PPO) to result in Proto IX", "spontaneous": null, "carriers": {}, "lineage": [["paper_extraction", "paper_stated", "explicit"]]}
+    stage1_payload.json io {"name": "Protogen IX to Proto IX", "in": ["protoporphyrinogen IX"], "out": ["protoporphyrin IX"], "enzymes": ["PPO"], "modifiers": [], "evidence": "which is further oxidized by Protogen IX oxidase (PPO) to result in protoporphyrin (Proto) IX", "spontaneous": null, "carriers": {}, "lineage": [["paper_extraction", "paper_stated", "explicit"]]}
+    merged_payload.json name {"name": "Protogen IX oxidase reaction", "in": ["protoporphyrinogen IX"], "out": ["protoporphyrin IX"], "enzymes": ["PPO1"], "modifiers": [], "evidence": "Protogen IX is oxidized by Protogen IX oxidase (PPO) to result in Proto IX", "spontaneous": null, "carriers": {}, "lineage": [["paper_extraction", "paper_stated", "explicit"]]}
+    merged_payload.json io {"name": "Protogen IX to Proto IX", "in": ["protoporphyrinogen IX"], "out": ["protoporphyrin IX"], "enzymes": ["PPO", "PPO1"], "modifiers": [], "evidence": "which is further oxidized by Protogen IX oxidase (PPO) to result in protoporphyrin (Proto) IX", "spontaneous": null, "carriers": {}, "lineage": [["paper_extraction", "paper_stated", "explicit"]]}
+    final_mapped.json name {"name": "Protogen IX oxidase reaction", "in": ["protoporphyrinogen IX"], "out": ["protoporphyrin IX"], "enzymes": [], "modifiers": [], "evidence": "Protogen IX is oxidized by Protogen IX oxidase (PPO) to result in Proto IX", "spontaneous": false, "carriers": {}, "lineage": [["paper_extraction", "paper_stated", "explicit"], ["audit_repair", "audit_modified", "not_evaluated"], ["audit_repair", "audit_modified", "not_evaluated"]]}
+    final_mapped.json io {"name": "Protogen IX to Proto IX", "in": ["protoporphyrinogen IX"], "out": ["protoporphyrin IX"], "enzymes": ["PPO", "PPO1"], "modifiers": ["PPO", "PPO1"], "evidence": "which is further oxidized by Protogen IX oxidase (PPO) to result in protoporphyrin (Proto) IX", "spontaneous": false, "carriers": {}, "lineage": [["paper_extraction", "paper_stated", "explicit"]]}
+----------------------------------------------------------------------------------------------------
+  [8] canonical idx 20 pwml id 50021
+   CANON {"name": "singlet oxygen generation from Pchlide", "in": ["Pchlide"], "out": ["singlet oxygen"], "enzymes": [], "modifiers": ["glutamyl-tRNA reductase", "FC1 complex"], "evidence": "With light exposure, Pchlide accumulated in the mutant generates singlet oxygen", "spontaneous": false, "carriers": {}, "lineage": []}
+    stage1_payload.json no match
+    merged_payload.json name {"name": "singlet oxygen generation from Pchlide", "in": ["Pchlide"], "out": ["singlet oxygen"], "enzymes": [], "modifiers": [], "evidence": "With light exposure, Pchlide accumulated in the mutant generates singlet oxygen", "spontaneous": null, "carriers": {}, "lineage": []}
+    final_mapped.json name {"name": "singlet oxygen generation from Pchlide", "in": ["Pchlide"], "out": ["singlet oxygen"], "enzymes": [], "modifiers": ["glutamyl-tRNA reductase", "FC1 complex"], "evidence": "With light exposure, Pchlide accumulated in the mutant generates singlet oxygen", "spontaneous": false, "carriers": {}, "lineage": []}
+====================================================================================================
+runs_verify_2026-08-18_1328_PMC12452463 | paper PMC12452463 | checkpoint pre_freeze | leg_dir runs_verify/2026-08-18_1328/papers/PMC12452463/strict
+  recorded quarantine_ok: False
+  tip pwml sha256 d26d0288f212e83597a05e87752b622ad80b4fce8529a54915bbe6f287f749e6
+  tip canonical reactions 4 enzyme-less 1
+----------------------------------------------------------------------------------------------------
+  [9] canonical idx 2 pwml id 50003
+   CANON {"name": "enterobactin iron binding", "in": ["enterobactin", "Fe3"], "out": ["ferric-enterobactin"], "enzymes": [], "modifiers": [], "evidence": "Enterobactin is secreted by bacteria into the extracellular environment, where it binds ferric iron with high affinity", "spontaneous": false, "carriers": {}, "lineage": []}
+    stage1_payload.json no match
+    merged_payload.json name {"name": "enterobactin iron binding", "in": ["enterobactin", "Fe3"], "out": ["ferric-enterobactin"], "enzymes": [], "modifiers": [], "evidence": "Enterobactin is secreted by bacteria into the extracellular environment, where it binds ferric iron with high affinity", "spontaneous": null, "carriers": {}, "lineage": []}
+    final_mapped.json name {"name": "enterobactin iron binding", "in": ["enterobactin", "Fe3"], "out": ["ferric-enterobactin"], "enzymes": [], "modifiers": [], "evidence": "Enterobactin is secreted by bacteria into the extracellular environment, where it binds ferric iron with high affinity", "spontaneous": false, "carriers": {}, "lineage": []}
+====================================================================================================
+runs_verify_2026-08-21_2239_PMC12452463 | paper PMC12452463 | checkpoint canonical | leg_dir runs_verify/2026-08-21_2239/papers/PMC12452463/strict
+  recorded quarantine_ok: True
+  tip pwml sha256 64418ecb20fd3b8fac5d21fbb0bf750474e4fe8cb51994055839aa9d100b6e61
+  tip canonical reactions 3 enzyme-less 1
+----------------------------------------------------------------------------------------------------
+  [10] canonical idx 2 pwml id 50003
+   CANON {"name": "Enterobactin iron binding", "in": ["enterobactin", "Fe3"], "out": ["ferric-enterobactin"], "enzymes": [], "modifiers": [], "evidence": "Enterobactin binds ferric iron with high affinity, forming ferric-enterobactin", "spontaneous": false, "carriers": {}, "lineage": []}
+    stage1_payload.json no match
+    merged_payload.json name {"name": "Enterobactin iron binding", "in": ["enterobactin", "Fe3"], "out": ["ferric-enterobactin"], "enzymes": [], "modifiers": [], "evidence": "Enterobactin binds ferric iron with high affinity, forming ferric-enterobactin", "spontaneous": null, "carriers": {}, "lineage": []}
+    final_mapped.json name {"name": "Enterobactin iron binding", "in": ["enterobactin", "Fe3"], "out": ["ferric-enterobactin"], "enzymes": [], "modifiers": [], "evidence": "Enterobactin binds ferric iron with high affinity, forming ferric-enterobactin", "spontaneous": false, "carriers": {}, "lineage": []}
+====================================================================================================
+runs_verify_2026-08-22_2147_PMC12452463 | paper PMC12452463 | checkpoint canonical | leg_dir runs_verify/2026-08-22_2147/papers/PMC12452463/strict
+  recorded quarantine_ok: True
+  tip pwml sha256 c763c6aebfe9fe744a329949d8a01ff67c77b32f5b0476744bc40445155d20b3
+  tip canonical reactions 4 enzyme-less 1
+----------------------------------------------------------------------------------------------------
+  [11] canonical idx 3 pwml id 50004
+   CANON {"name": "Enterobactin binding to ferric iron", "in": ["enterobactin", "Fe3+"], "out": ["ferri-enterobactin"], "enzymes": [], "modifiers": [], "evidence": "Enterobactin is secreted by bacteria into the extracellular environment, where it binds ferric iron with high affinity.", "spontaneous": false, "carriers": {}, "lineage": []}
+    stage1_payload.json no match
+    merged_payload.json name {"name": "Enterobactin binding to ferric iron", "in": ["enterobactin", "ferric iron"], "out": ["ferri-enterobactin"], "enzymes": [], "modifiers": [], "evidence": "Enterobactin is secreted by bacteria into the extracellular environment, where it binds ferric iron with high affinity.", "spontaneous": null, "carriers": {}, "lineage": []}
+    final_mapped.json name {"name": "Enterobactin binding to ferric iron", "in": ["enterobactin", "Fe3+"], "out": ["ferri-enterobactin"], "enzymes": [], "modifiers": [], "evidence": "Enterobactin is secreted by bacteria into the extracellular environment, where it binds ferric iron with high affinity.", "spontaneous": false, "carriers": {}, "lineage": []}
+====================================================================================================
+runs_verify_2026-08-24_1203_PMC12096016 | paper PMC12096016 | checkpoint canonical | leg_dir runs_verify/2026-08-24_1203/papers/PMC12096016/strict
+  recorded quarantine_ok: True
+  tip pwml sha256 b00e300f377341ddadc04aefb0ad4092205928ff3df09bb59b062bf83d033f68
+  tip canonical reactions 7 enzyme-less 1
+----------------------------------------------------------------------------------------------------
+  [12] canonical idx 6 pwml id 50007
+   CANON {"name": "Enterobactin chelation of ferric iron", "in": ["enterobactin", "Fe3"], "out": ["ferric-enterobactin complex"], "enzymes": [], "modifiers": [], "evidence": "enterobactin chelates extracellular ferric iron", "spontaneous": false, "carriers": {}, "lineage": []}
+    stage1_payload.json no match
+    merged_payload.json name {"name": "Enterobactin chelation of ferric iron", "in": ["enterobactin", "Fe3"], "out": ["ferric-enterobactin complex"], "enzymes": [], "modifiers": [], "evidence": "enterobactin chelates extracellular ferric iron", "spontaneous": null, "carriers": {}, "lineage": []}
+    final_mapped.json name {"name": "Enterobactin chelation of ferric iron", "in": ["enterobactin", "Fe3"], "out": ["ferric-enterobactin complex"], "enzymes": [], "modifiers": [], "evidence": "enterobactin chelates extracellular ferric iron", "spontaneous": false, "carriers": {}, "lineage": []}
+====================================================================================================
+runs_verify_2026-08-27_1341_PMC12782028 | paper PMC12782028 | checkpoint canonical | leg_dir runs_verify/2026-08-27_1341/papers/PMC12782028/strict
+  recorded quarantine_ok: True
+  tip pwml sha256 2fd72a96f581d67f530d9f5d7b82d7116886fa944298446ecd7d8b7302c07d3e
+  tip canonical reactions 4 enzyme-less 1
+----------------------------------------------------------------------------------------------------
+  [13] canonical idx 3 pwml id 50004
+   CANON {"name": "cholesterol oxidation to oxysterols", "in": ["cholesterol"], "out": ["oxysterols"], "enzymes": [], "modifiers": [], "evidence": "Excess cholesterol can be oxidized to form oxysterols", "spontaneous": false, "carriers": {}, "lineage": [["audit_repair", "audit_modified", "not_evaluated"]]}
+    stage1_payload.json no match
+    merged_payload.json name {"name": "cholesterol oxidation to oxysterols", "in": ["cholesterol"], "out": ["oxysterols"], "enzymes": [], "modifiers": [], "evidence": "Excess cholesterol can be oxidized to form oxysterols", "spontaneous": null, "carriers": {}, "lineage": []}
+    final_mapped.json name {"name": "cholesterol oxidation to oxysterols", "in": ["cholesterol"], "out": ["oxysterols"], "enzymes": [], "modifiers": [], "evidence": "Excess cholesterol can be oxidized to form oxysterols", "spontaneous": false, "carriers": {}, "lineage": [["audit_repair", "audit_modified", "not_evaluated"]]}
+====================================================================================================
+runs_verify_2026-08-28_1816_PMC12452463 | paper PMC12452463 | checkpoint canonical | leg_dir runs_verify/2026-08-28_1816/papers/PMC12452463/strict
+  recorded quarantine_ok: True
+  tip pwml sha256 63a66915c169650d1acf4a57b865346f9524243cb7fd72649cd2667ce9f3e080
+  tip canonical reactions 5 enzyme-less 1
+----------------------------------------------------------------------------------------------------
+  [14] canonical idx 4 pwml id 50005
+   CANON {"name": "Enterobactin binding Fe3+", "in": ["enterobactin", "Fe3"], "out": ["ferri-enterobactin"], "enzymes": [], "modifiers": [], "evidence": "Enterobactin is secreted by bacteria into the extracellular environment, where it binds ferric iron with high affinity.", "spontaneous": false, "carriers": {}, "lineage": []}
+    stage1_payload.json no match
+    merged_payload.json name {"name": "Enterobactin binding Fe3+", "in": ["enterobactin", "Fe3"], "out": ["ferri-enterobactin"], "enzymes": [], "modifiers": [], "evidence": "Enterobactin is secreted by bacteria into the extracellular environment, where it binds ferric iron with high affinity.", "spontaneous": null, "carriers": {}, "lineage": []}
+    final_mapped.json name {"name": "Enterobactin binding Fe3+", "in": ["enterobactin", "Fe3"], "out": ["ferri-enterobactin"], "enzymes": [], "modifiers": [], "evidence": "Enterobactin is secreted by bacteria into the extracellular environment, where it binds ferric iron with high affinity.", "spontaneous": false, "carriers": {}, "lineage": []}
+====================================================================================================
+runs_verify_2026-09-06_1425_PMC12376012 | paper PMC12376012 | checkpoint canonical | leg_dir runs_verify/2026-09-06_1425/papers/PMC12376012/strict
+  recorded quarantine_ok: True
+  tip pwml sha256 7a386aa97e758c1654fbc3971eafc1f1db3c188921737595ab31bbb2d95eb43c
+  tip canonical reactions 14 enzyme-less 5
+----------------------------------------------------------------------------------------------------
+  [15] canonical idx 2 pwml id 50003
+   CANON {"name": "Ceramide synthase reaction", "in": ["Sphinganine"], "out": ["ceramide"], "enzymes": [], "modifiers": [], "evidence": "Dihydrosphingosine is N-acylated by the ceramide synthases", "spontaneous": false, "carriers": {}, "lineage": [["paper_extraction", "paper_stated", "explicit"]]}
+   CANON-SIBLING(same outputs) {"name": "dihydroceramide desaturase reaction", "in": ["dihydroceramide"], "out": ["ceramide"], "enzymes": ["dihydroceramide Δ4-desaturase 1"], "modifiers": ["dihydroceramide Δ4-desaturase 1"], "evidence": "Dihydroceramide Desaturase introduces the 4,5-Trans-Double Bond of Sphingosine at the level of Dihydroceramide", "spontaneous": false, "carriers": {}, "lineage": [["paper_extraction", "paper_stated", "explicit"]]}
+   CANON-SIBLING(same outputs) {"name": "Sphingomyelin hydrolysis", "in": ["sphingomyelin"], "out": ["ceramide"], "enzymes": [], "modifiers": [], "evidence": "sphingomyelin can be hydrolyzed by one of several sphingomyelinases to generate ceramide", "spontaneous": false, "carriers": {}, "lineage": []}
+   CANON-SIBLING(same outputs) {"name": "Glucosylceramide hydrolysis", "in": ["glucosylceramide"], "out": ["ceramide"], "enzymes": [], "modifiers": [], "evidence": "Glycosphingolipids undergo hydrolysis to ceramide, principally in the lysosome.", "spontaneous": false, "carriers": {}, "lineage": []}
+    stage1_payload.json name {"name": "Ceramide synthase reaction", "in": ["dihydrosphingosine"], "out": ["ceramide"], "enzymes": [], "modifiers": [], "evidence": "Dihydrosphingosine is N-acylated by the ceramide synthases", "spontaneous": null, "carriers": {}, "lineage": [["paper_extraction", "paper_stated", "explicit"]]}
+    stage1_payload.json name {"name": "ceramide synthase reaction", "in": ["dihydrosphingosine"], "out": ["dihydroceramide"], "enzymes": ["ceramide synthase"], "modifiers": [], "evidence": "Ceramide Synthases in Biomedical Research", "spontaneous": null, "carriers": {}, "lineage": [["paper_extraction", "paper_stated", "explicit"]]}
+    merged_payload.json name {"name": "Ceramide synthase reaction", "in": ["dihydrosphingosine"], "out": ["ceramide"], "enzymes": [], "modifiers": [], "evidence": "Dihydrosphingosine is N-acylated by the ceramide synthases", "spontaneous": null, "carriers": {}, "lineage": [["paper_extraction", "paper_stated", "explicit"]]}
+    merged_payload.json name {"name": "ceramide synthase reaction", "in": ["dihydrosphingosine"], "out": ["dihydroceramide"], "enzymes": ["ceramide synthase"], "modifiers": [], "evidence": "Ceramide Synthases in Biomedical Research", "spontaneous": null, "carriers": {}, "lineage": [["paper_extraction", "paper_stated", "explicit"]]}
+    final_mapped.json name {"name": "Ceramide synthase reaction", "in": ["Sphinganine"], "out": ["ceramide"], "enzymes": [], "modifiers": [], "evidence": "Dihydrosphingosine is N-acylated by the ceramide synthases", "spontaneous": false, "carriers": {}, "lineage": [["paper_extraction", "paper_stated", "explicit"]]}
+    final_mapped.json name {"name": "ceramide synthase reaction", "in": ["Sphinganine"], "out": ["dihydroceramide"], "enzymes": ["ceramide synthase"], "modifiers": ["ceramide synthase"], "evidence": "Ceramide Synthases in Biomedical Research", "spontaneous": false, "carriers": {}, "lineage": [["paper_extraction", "paper_stated", "explicit"]]}
+----------------------------------------------------------------------------------------------------
+  [16] canonical idx 5 pwml id 50006
+   CANON {"name": "Sphingomyelin synthase reaction", "in": ["ceramide"], "out": ["sphingomyelin"], "enzymes": [], "modifiers": [], "evidence": "sphingomyelin is produced from ceramide by sphingomyelin synthase 1", "spontaneous": false, "carriers": {}, "lineage": []}
+   CANON-SIBLING(same outputs) {"name": "sphingomyelin synthase 1 reaction", "in": ["ceramide", "phosphorylcholine"], "out": ["sphingomyelin"], "enzymes": ["sphingomyelin synthase 1"], "modifiers": ["sphingomyelin synthase 1"], "evidence": "At the medial Golgi, sphingomyelin is produced from ceramide by sphingomyelin synthase 1", "spontaneous": false, "carriers": {}, "lineage": []}
+    stage1_payload.json no match
+    merged_payload.json name {"name": "Sphingomyelin synthase reaction", "in": ["ceramide"], "out": ["sphingomyelin"], "enzymes": [], "modifiers": [], "evidence": "sphingomyelin is produced from ceramide by sphingomyelin synthase 1", "spontaneous": null, "carriers": {}, "lineage": []}
+    merged_payload.json io {"name": "sphingomyelin synthase 1 reaction", "in": ["ceramide", "phosphorylcholine"], "out": ["sphingomyelin"], "enzymes": ["sphingomyelin synthase 1"], "modifiers": [], "evidence": "At the medial Golgi, sphingomyelin is produced from ceramide by sphingomyelin synthase 1", "spontaneous": null, "carriers": {}, "lineage": []}
+    final_mapped.json name {"name": "Sphingomyelin synthase reaction", "in": ["ceramide"], "out": ["sphingomyelin"], "enzymes": [], "modifiers": [], "evidence": "sphingomyelin is produced from ceramide by sphingomyelin synthase 1", "spontaneous": false, "carriers": {}, "lineage": []}
+    final_mapped.json io {"name": "sphingomyelin synthase 1 reaction", "in": ["ceramide", "phosphorylcholine"], "out": ["sphingomyelin"], "enzymes": ["sphingomyelin synthase 1"], "modifiers": ["sphingomyelin synthase 1"], "evidence": "At the medial Golgi, sphingomyelin is produced from ceramide by sphingomyelin synthase 1", "spontaneous": false, "carriers": {}, "lineage": []}
+----------------------------------------------------------------------------------------------------
+  [17] canonical idx 6 pwml id 50007
+   CANON {"name": "Glucosylceramide synthase reaction", "in": ["ceramide"], "out": ["glucosylceramide"], "enzymes": [], "modifiers": [], "evidence": "ceramide may be converted to glucosylceramide or galactosylceramide in the trans-Golgi", "spontaneous": false, "carriers": {}, "lineage": []}
+    stage1_payload.json no match
+    merged_payload.json name {"name": "Glucosylceramide synthase reaction", "in": ["ceramide"], "out": ["glucosylceramide"], "enzymes": [], "modifiers": [], "evidence": "ceramide may be converted to glucosylceramide or galactosylceramide in the trans-Golgi", "spontaneous": null, "carriers": {}, "lineage": []}
+    final_mapped.json name {"name": "Glucosylceramide synthase reaction", "in": ["ceramide"], "out": ["glucosylceramide"], "enzymes": [], "modifiers": [], "evidence": "ceramide may be converted to glucosylceramide or galactosylceramide in the trans-Golgi", "spontaneous": false, "carriers": {}, "lineage": []}
+----------------------------------------------------------------------------------------------------
+  [18] canonical idx 8 pwml id 50009
+   CANON {"name": "Sphingomyelin hydrolysis", "in": ["sphingomyelin"], "out": ["ceramide"], "enzymes": [], "modifiers": [], "evidence": "sphingomyelin can be hydrolyzed by one of several sphingomyelinases to generate ceramide", "spontaneous": false, "carriers": {}, "lineage": []}
+   CANON-SIBLING(same outputs) {"name": "Ceramide synthase reaction", "in": ["Sphinganine"], "out": ["ceramide"], "enzymes": [], "modifiers": [], "evidence": "Dihydrosphingosine is N-acylated by the ceramide synthases", "spontaneous": false, "carriers": {}, "lineage": [["paper_extraction", "paper_stated", "explicit"]]}
+   CANON-SIBLING(same outputs) {"name": "dihydroceramide desaturase reaction", "in": ["dihydroceramide"], "out": ["ceramide"], "enzymes": ["dihydroceramide Δ4-desaturase 1"], "modifiers": ["dihydroceramide Δ4-desaturase 1"], "evidence": "Dihydroceramide Desaturase introduces the 4,5-Trans-Double Bond of Sphingosine at the level of Dihydroceramide", "spontaneous": false, "carriers": {}, "lineage": [["paper_extraction", "paper_stated", "explicit"]]}
+   CANON-SIBLING(same outputs) {"name": "Glucosylceramide hydrolysis", "in": ["glucosylceramide"], "out": ["ceramide"], "enzymes": [], "modifiers": [], "evidence": "Glycosphingolipids undergo hydrolysis to ceramide, principally in the lysosome.", "spontaneous": false, "carriers": {}, "lineage": []}
+    stage1_payload.json no match
+    merged_payload.json name {"name": "Sphingomyelin hydrolysis", "in": ["sphingomyelin"], "out": ["ceramide"], "enzymes": [], "modifiers": [], "evidence": "sphingomyelin can be hydrolyzed by one of several sphingomyelinases to generate ceramide", "spontaneous": null, "carriers": {}, "lineage": []}
+    final_mapped.json name {"name": "Sphingomyelin hydrolysis", "in": ["sphingomyelin"], "out": ["ceramide"], "enzymes": [], "modifiers": [], "evidence": "sphingomyelin can be hydrolyzed by one of several sphingomyelinases to generate ceramide", "spontaneous": false, "carriers": {}, "lineage": []}
+----------------------------------------------------------------------------------------------------
+  [19] canonical idx 9 pwml id 50010
+   CANON {"name": "Glucosylceramide hydrolysis", "in": ["glucosylceramide"], "out": ["ceramide"], "enzymes": [], "modifiers": [], "evidence": "Glycosphingolipids undergo hydrolysis to ceramide, principally in the lysosome.", "spontaneous": false, "carriers": {}, "lineage": []}
+   CANON-SIBLING(same outputs) {"name": "Ceramide synthase reaction", "in": ["Sphinganine"], "out": ["ceramide"], "enzymes": [], "modifiers": [], "evidence": "Dihydrosphingosine is N-acylated by the ceramide synthases", "spontaneous": false, "carriers": {}, "lineage": [["paper_extraction", "paper_stated", "explicit"]]}
+   CANON-SIBLING(same outputs) {"name": "dihydroceramide desaturase reaction", "in": ["dihydroceramide"], "out": ["ceramide"], "enzymes": ["dihydroceramide Δ4-desaturase 1"], "modifiers": ["dihydroceramide Δ4-desaturase 1"], "evidence": "Dihydroceramide Desaturase introduces the 4,5-Trans-Double Bond of Sphingosine at the level of Dihydroceramide", "spontaneous": false, "carriers": {}, "lineage": [["paper_extraction", "paper_stated", "explicit"]]}
+   CANON-SIBLING(same outputs) {"name": "Sphingomyelin hydrolysis", "in": ["sphingomyelin"], "out": ["ceramide"], "enzymes": [], "modifiers": [], "evidence": "sphingomyelin can be hydrolyzed by one of several sphingomyelinases to generate ceramide", "spontaneous": false, "carriers": {}, "lineage": []}
+    stage1_payload.json no match
+    merged_payload.json name {"name": "Glucosylceramide hydrolysis", "in": ["glucosylceramide"], "out": ["ceramide"], "enzymes": [], "modifiers": [], "evidence": "Glycosphingolipids undergo hydrolysis to ceramide, principally in the lysosome.", "spontaneous": null, "carriers": {}, "lineage": []}
+    final_mapped.json name {"name": "Glucosylceramide hydrolysis", "in": ["glucosylceramide"], "out": ["ceramide"], "enzymes": [], "modifiers": [], "evidence": "Glycosphingolipids undergo hydrolysis to ceramide, principally in the lysosome.", "spontaneous": false, "carriers": {}, "lineage": []}
+====================================================================================================
+runs_verify_2026-09-16_2152_PMC13170813 | paper PMC13170813 | checkpoint canonical | leg_dir runs_verify/2026-09-16_2152/papers/PMC13170813/strict
+  recorded quarantine_ok: True
+  tip pwml sha256 726acb8e87bc5ba3a457b912550ea5c3e654561f1b3389e54f70f3ad2b9dd6c9
+  tip canonical reactions 5 enzyme-less 2
+----------------------------------------------------------------------------------------------------
+  [20] canonical idx 3 pwml id 50004
+   CANON {"name": "hordatine B formation", "in": ["p-coumaroylagmatine", "feruloylagmatine"], "out": ["hordatine B"], "enzymes": [], "modifiers": [], "evidence": "hordatine B (HB) is a heterodimer of pCA and FA", "spontaneous": false, "carriers": {}, "lineage": []}
+    stage1_payload.json no match
+    merged_payload.json name {"name": "hordatine B formation", "in": ["p-coumaroylagmatine", "feruloylagmatine"], "out": ["hordatine B"], "enzymes": [], "modifiers": [], "evidence": "hordatine B (HB) is a heterodimer of pCA and FA", "spontaneous": null, "carriers": {}, "lineage": []}
+    final_mapped.json name {"name": "hordatine B formation", "in": ["p-coumaroylagmatine", "feruloylagmatine"], "out": ["hordatine B"], "enzymes": [], "modifiers": [], "evidence": "hordatine B (HB) is a heterodimer of pCA and FA", "spontaneous": false, "carriers": {}, "lineage": []}
+----------------------------------------------------------------------------------------------------
+  [21] canonical idx 4 pwml id 50005
+   CANON {"name": "hordatine C formation", "in": ["feruloylagmatine"], "out": ["hordatine C"], "enzymes": [], "modifiers": [], "evidence": "Hordatines A and C (HA and HC) are homodimers of p-coumaroylagmatine (pCA) and feruloylagmatine (FA), respectively", "spontaneous": false, "carriers": {}, "lineage": []}
+    stage1_payload.json no match
+    merged_payload.json name {"name": "hordatine C formation", "in": ["feruloylagmatine"], "out": ["hordatine C"], "enzymes": [], "modifiers": [], "evidence": "Hordatines A and C (HA and HC) are homodimers of p-coumaroylagmatine (pCA) and feruloylagmatine (FA), respectively", "spontaneous": null, "carriers": {}, "lineage": []}
+    final_mapped.json name {"name": "hordatine C formation", "in": ["feruloylagmatine"], "out": ["hordatine C"], "enzymes": [], "modifiers": [], "evidence": "Hordatines A and C (HA and HC) are homodimers of p-coumaroylagmatine (pCA) and feruloylagmatine (FA), respectively", "spontaneous": false, "carriers": {}, "lineage": []}
+TOTAL enzyme-less tip reactions: 21
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f3c330a4b60f0ee40076e79ab9cf022560da5fc8  [git, worktree dirty=True]
+label                   : orch775-trace
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/orch775_noenzyme_trace.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 421484 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 0.28 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  418032:python.exe
+descendants terminated  : 1  418032
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/bt-orch775/01-trace.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================

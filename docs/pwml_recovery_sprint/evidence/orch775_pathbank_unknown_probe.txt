@@ -1,0 +1,254 @@
+
+### schema: columns of the tables used below  (0.3s, 8 rows)
+SQL: SELECT table_name, GROUP_CONCAT(column_name ORDER BY ordinal_position) AS cols FROM information_schema.columns WHERE table_schema = DATABASE() AND table_name IN (%s,%s,%s,%s,%s,%s,%s,%s) GROUP BY table_name | params: ['reactions', 'reaction_enzymes', 'protein_complex_proteins', 'protein_complexes', 'pathway_elements', 'super_pathway_visualizations', 'pathways', 'proteins']
+   {"table_name": "pathways", "cols": "id,name,description,created_at,updated_at,subject,user_id,primary_spv,private_pathway,example_id,guest_identifier,species_id,locked,status"}
+   {"table_name": "pathway_elements", "cols": "id,pathway_id,element_id,created_at,updated_at,element_type,biological_state_id,process_type,process_id"}
+   {"table_name": "proteins", "cols": "id,name,created_at,updated_at,uniprot_id,description,hmdbp_id,gene_name,locus,drugbank_id,genbank_id,user_id,species_id,ec_numbers,synonyms"}
+   {"table_name": "protein_complexes", "cols": "id,name,created_at,updated_at,user_id,species_id,signature,pwp_id"}
+   {"table_name": "protein_complex_proteins", "cols": "id,protein_complex_id,protein_id,stoichiometry,created_at,updated_at"}
+   {"table_name": "reactions", "cols": "id,direction,created_at,updated_at,spontaneous,source_db,source_id,signature,user_id,pwr_id"}
+   {"table_name": "reaction_enzymes", "cols": "id,reaction_id,protein_complex_id,enzyme_class"}
+   {"table_name": "super_pathway_visualizations", "cols": "id,smpdb_id,named_for_id,named_for_type,created_at,updated_at,rank,kegg_id,export,cached_name,cached_description,cached_subject,drug_metabolism,user_id,pw_id,private_pathway,last_images,image_status,greyscale_vector_image_file_name,greyscale_vector_image_content_type,greyscale_vector_image_file_size,greyscale_vector_image_updated_at,simple_vector_image_file_name,simple_vector_image_content_type,simple_vector_image_file_size,simple_vector_image_updated_at,full_vector_image_file_name,full_vector_image_content_type,full_vector_image_file_size,full_vector_image_updated_at,full_raster_image_file_name,full_raster_image_content_type,full_raster_image_file_size,full_raster_image_updated_at,pwml_markup_file_name,pwml_markup_content_type,pwml_markup_file_size,pwml_markup_updated_at,sbml_markup_file_name,sbml_markup_content_type,sbml_markup_file_size,sbml_markup_updated_at,sbgn_markup_file_name,sbgn_markup_content_type,sbgn_markup_file_size,sbgn_markup_updated_at,owl_markup_file_name,owl_markup_content_type,owl_markup_f"}
+
+### record 9659  (0.1s, 1 rows)
+SQL: SELECT p.id, p.name, p.uniprot_id, p.drugbank_id, p.gene_name, p.species_id, s.name AS species, s.taxonomy_id, p.created_at, p.updated_at FROM proteins p LEFT JOIN species s ON s.id = p.species_id WHERE p.id = %s | params: [9659]
+   {"id": 9659, "name": "Unknown", "uniprot_id": "Unknown", "drugbank_id": null, "gene_name": null, "species_id": 4, "species": "Arabidopsis thaliana", "taxonomy_id": "3702", "created_at": "2015-04-10 16:31:14", "updated_at": "2021-05-17 18:25:41"}
+
+### species rows for the paper organisms (taxa 3702 Arabidopsis, 9606 human, 562 and 83333 E. coli, 4513 barley, 10090 mouse)  (0.1s, 6 rows)
+SQL: SELECT id, name, taxonomy_id FROM species WHERE taxonomy_id IN (%s,%s,%s,%s,%s,%s) ORDER BY id | params: [3702, 9606, 562, 83333, 4513, 10090]
+   {"id": 1, "name": "Homo sapiens", "taxonomy_id": "9606"}
+   {"id": 3, "name": "Escherichia coli", "taxonomy_id": "562"}
+   {"id": 4, "name": "Arabidopsis thaliana", "taxonomy_id": "3702"}
+   {"id": 12, "name": "Mus musculus", "taxonomy_id": "10090"}
+   {"id": 25, "name": "Escherichia coli (strain K12)", "taxonomy_id": "83333"}
+   {"id": 151, "name": "Hordeum vulgare", "taxonomy_id": "4513"}
+
+### Unknown protein rows in those species  (0.3s, 38 rows)
+SQL: SELECT p.id, p.name, p.uniprot_id, p.species_id, p.created_at FROM proteins p JOIN species s ON s.id = p.species_id WHERE p.name = %s AND s.taxonomy_id IN (%s,%s,%s,%s,%s,%s) ORDER BY p.species_id, p.id | params: ['Unknown', 3702, 9606, 562, 83333, 4513, 10090]
+   {"id": 7866, "name": "Unknown", "uniprot_id": "Unknown", "species_id": 1, "created_at": "2015-03-26 20:23:07"}
+   {"id": 10207, "name": "Unknown", "uniprot_id": "Unknown", "species_id": 1, "created_at": "2015-06-12 03:20:01"}
+   {"id": 27280, "name": "Unknown", "uniprot_id": "Unknown", "species_id": 1, "created_at": "2024-06-11 22:48:19"}
+   {"id": 7738, "name": "Unknown", "uniprot_id": "Unknown", "species_id": 3, "created_at": "2024-10-15 15:46:37"}
+   {"id": 7739, "name": "Unknown", "uniprot_id": "Unknown", "species_id": 3, "created_at": "2015-02-20 21:04:25"}
+   {"id": 7740, "name": "Unknown", "uniprot_id": "Unknown", "species_id": 3, "created_at": "2015-02-20 21:06:29"}
+   {"id": 7741, "name": "Unknown", "uniprot_id": "Unknown", "species_id": 3, "created_at": "2015-02-20 21:08:52"}
+   {"id": 7742, "name": "Unknown", "uniprot_id": "Unknown", "species_id": 3, "created_at": "2015-02-20 21:11:03"}
+   {"id": 7743, "name": "Unknown", "uniprot_id": "Unknown", "species_id": 3, "created_at": "2015-02-20 21:17:51"}
+   {"id": 7744, "name": "Unknown", "uniprot_id": "Unknown", "species_id": 3, "created_at": "2015-02-20 21:20:31"}
+   {"id": 7745, "name": "Unknown", "uniprot_id": "Unknown", "species_id": 3, "created_at": "2015-02-20 21:25:07"}
+   {"id": 7746, "name": "Unknown", "uniprot_id": "Unknown", "species_id": 3, "created_at": "2015-02-20 21:26:56"}
+   {"id": 7747, "name": "Unknown", "uniprot_id": "Unknown", "species_id": 3, "created_at": "2015-02-20 21:28:12"}
+   {"id": 7748, "name": "Unknown", "uniprot_id": "Unknown", "species_id": 3, "created_at": "2015-02-20 21:31:29"}
+   {"id": 7749, "name": "Unknown", "uniprot_id": "Unknown", "species_id": 3, "created_at": "2015-02-20 21:33:08"}
+   {"id": 7750, "name": "Unknown", "uniprot_id": "Unknown", "species_id": 3, "created_at": "2015-02-20 21:39:45"}
+   {"id": 7751, "name": "Unknown", "uniprot_id": "Unknown", "species_id": 3, "created_at": "2015-02-20 21:41:35"}
+   {"id": 7752, "name": "Unknown", "uniprot_id": "Unknown", "species_id": 3, "created_at": "2015-02-20 21:45:09"}
+   {"id": 7753, "name": "Unknown", "uniprot_id": "Unknown", "species_id": 3, "created_at": "2015-02-20 21:49:14"}
+   {"id": 7754, "name": "Unknown", "uniprot_id": "Unknown", "species_id": 3, "created_at": "2015-02-20 22:14:08"}
+   {"id": 7755, "name": "Unknown", "uniprot_id": "Unknown", "species_id": 3, "created_at": "2015-02-20 22:19:47"}
+   {"id": 7756, "name": "Unknown", "uniprot_id": "Unknown", "species_id": 3, "created_at": "2015-02-20 22:23:16"}
+   {"id": 28697, "name": "Unknown", "uniprot_id": "Unknown", "species_id": 3, "created_at": "2024-10-30 16:09:13"}
+   {"id": 28781, "name": "Unknown", "uniprot_id": "Unknown", "species_id": 3, "created_at": "2024-10-30 16:10:26"}
+   {"id": 9659, "name": "Unknown", "uniprot_id": "Unknown", "species_id": 4, "created_at": "2015-04-10 16:31:14"}
+   {"id": 7725, "name": "Unknown", "uniprot_id": "Z00Z00", "species_id": 12, "created_at": "2015-02-16 21:56:30"}
+   {"id": 7736, "name": "Unknown", "uniprot_id": "Unknown", "species_id": 12, "created_at": "2015-02-16 22:16:50"}
+   {"id": 7774, "name": "Unknown", "uniprot_id": "Unknown", "species_id": 12, "created_at": "2015-03-01 04:39:20"}
+   {"id": 7775, "name": "Unknown", "uniprot_id": "Unknown", "species_id": 12, "created_at": "2015-03-01 04:39:20"}
+   {"id": 7776, "name": "Unknown", "uniprot_id": "Unknown", "species_id": 12, "created_at": "2015-03-01 04:39:20"}
+   {"id": 7777, "name": "Unknown", "uniprot_id": "Unknown", "species_id": 12, "created_at": "2015-03-01 04:39:20"}
+   {"id": 7778, "name": "Unknown", "uniprot_id": "Unknown", "species_id": 12, "created_at": "2015-03-01 04:39:21"}
+   {"id": 7779, "name": "Unknown", "uniprot_id": "Unknown", "species_id": 12, "created_at": "2015-03-01 04:39:21"}
+   {"id": 7780, "name": "Unknown", "uniprot_id": "Unknown", "species_id": 12, "created_at": "2015-03-01 04:39:21"}
+   {"id": 7781, "name": "Unknown", "uniprot_id": "Unknown", "species_id": 12, "created_at": "2015-03-01 04:39:21"}
+   {"id": 7782, "name": "Unknown", "uniprot_id": "Unknown", "species_id": 12, "created_at": "2015-03-01 04:39:21"}
+   {"id": 7783, "name": "Unknown", "uniprot_id": "Unknown", "species_id": 12, "created_at": "2015-03-01 04:39:22"}
+   {"id": 11484, "name": "Unknown", "uniprot_id": "Unknown", "species_id": 25, "created_at": "2017-02-04 21:59:09"}
+
+### Unknown protein rows overall  (0.1s, 1 rows)
+SQL: SELECT COUNT(*) AS n_rows, COUNT(DISTINCT species_id) AS n_species, SUM(uniprot_id = %s) AS uniprot_literal_unknown FROM proteins WHERE name = %s | params: ['Unknown', 'Unknown']
+   {"n_rows": 2196, "n_species": 2144, "uniprot_literal_unknown": "2195"}
+
+### protein complexes NAMED Unknown  (0.5s, 1 rows)
+SQL: SELECT COUNT(*) AS n, COUNT(DISTINCT species_id) AS n_species FROM protein_complexes WHERE name = %s | params: ['Unknown']
+   {"n": 1037, "n_species": 1037}
+
+### examples of complexes named Unknown  (0.1s, 8 rows)
+SQL: SELECT id, name, species_id, pwp_id FROM protein_complexes WHERE name = %s ORDER BY id LIMIT 8 | params: ['Unknown']
+   {"id": 14138, "name": "Unknown", "species_id": 10, "pwp_id": "PW_P014138"}
+   {"id": 14277, "name": "Unknown", "species_id": 4, "pwp_id": "PW_P014277"}
+   {"id": 14972, "name": "Unknown", "species_id": 1, "pwp_id": "PW_P014972"}
+   {"id": 15024, "name": "Unknown", "species_id": 213, "pwp_id": "PW_P015024"}
+   {"id": 15947, "name": "Unknown", "species_id": 209, "pwp_id": "PW_P015947"}
+   {"id": 28615, "name": "Unknown", "species_id": 10661, "pwp_id": "PW_P028615"}
+   {"id": 29691, "name": "Unknown", "species_id": 10668, "pwp_id": "PW_P029691"}
+   {"id": 125997, "name": "Unknown", "species_id": 255, "pwp_id": "PW_P125997"}
+
+### complexes with at least one Unknown component, and with ONLY Unknown components  (6.6s, 1 rows)
+SQL: SELECT COUNT(*) AS complexes_with_unknown, SUM(u = n) AS complexes_only_unknown FROM (SELECT pcp.protein_complex_id, SUM(p.name = %s) AS u, COUNT(*) AS n FROM protein_complex_proteins pcp JOIN proteins p ON p.id = pcp.protein_id GROUP BY pcp.protein_complex_id HAVING SUM(p.name = %s) > 0) t | params: ['Unknown', 'Unknown']
+   {"complexes_with_unknown": 326336, "complexes_only_unknown": "323420"}
+
+### complexes that contain record 9659  (0.1s, 1 rows)
+SQL: SELECT COUNT(DISTINCT protein_complex_id) AS n FROM protein_complex_proteins WHERE protein_id = %s | params: [9659]
+   {"n": 220}
+
+### examples: complexes containing 9659  (0.1s, 25 rows)
+SQL: SELECT pc.id, pc.name, pc.species_id, pc.pwp_id FROM protein_complex_proteins pcp JOIN protein_complexes pc ON pc.id = pcp.protein_complex_id WHERE pcp.protein_id = %s ORDER BY pc.id LIMIT 25 | params: [9659]
+   {"id": 3445, "name": "Aldose 1-epimerase", "species_id": 4, "pwp_id": "PW_P003445"}
+   {"id": 3446, "name": "Glucose-6-phosphate isomerase", "species_id": 4, "pwp_id": "PW_P003446"}
+   {"id": 3447, "name": "6-phosphofructokinase, muscle type", "species_id": 4, "pwp_id": "PW_P003447"}
+   {"id": 3451, "name": "Glucose-6-phosphatase", "species_id": 4, "pwp_id": "PW_P003451"}
+   {"id": 3453, "name": "Bisphosphoglycerate mutase", "species_id": 4, "pwp_id": "PW_P003453"}
+   {"id": 3456, "name": "Phosphoglycerate mutase 1", "species_id": 4, "pwp_id": "PW_P003456"}
+   {"id": 3457, "name": "Phosphoglycerate mutase 2", "species_id": 4, "pwp_id": "PW_P003457"}
+   {"id": 3458, "name": "Alpha-enolase", "species_id": 4, "pwp_id": "PW_P003458"}
+   {"id": 4806, "name": "phosphoenolpyruvate carboxykinase (ATP)", "species_id": 4, "pwp_id": "PW_P004806"}
+   {"id": 4809, "name": "phosphoenolpyruvate synthetase", "species_id": 4, "pwp_id": "PW_P004809"}
+   {"id": 4810, "name": "enolase", "species_id": 4, "pwp_id": "PW_P004810"}
+   {"id": 4811, "name": "2,3-bisphosphoglycerate-independent phosphoglycerate mutase", "species_id": 4, "pwp_id": "PW_P004811"}
+   {"id": 4812, "name": "phosphoglycerate kinase", "species_id": 4, "pwp_id": "PW_P004812"}
+   {"id": 4813, "name": "Glyceraldehyde 3-phosphate dehydrogenase", "species_id": 4, "pwp_id": "PW_P004813"}
+   {"id": 4814, "name": "fructose bisphosphate aldolase class I", "species_id": 4, "pwp_id": "PW_P004814"}
+   {"id": 4815, "name": "fructose bisphosphate aldolase class II", "species_id": 4, "pwp_id": "PW_P004815"}
+   {"id": 4816, "name": " fructose-1,6-bisphosphatase", "species_id": 4, "pwp_id": "PW_P004816"}
+   {"id": 4816, "name": " fructose-1,6-bisphosphatase", "species_id": 4, "pwp_id": "PW_P004816"}
+   {"id": 4816, "name": " fructose-1,6-bisphosphatase", "species_id": 4, "pwp_id": "PW_P004816"}
+   {"id": 4816, "name": " fructose-1,6-bisphosphatase", "species_id": 4, "pwp_id": "PW_P004816"}
+   {"id": 4817, "name": "phosphoglucose isomerase", "species_id": 4, "pwp_id": "PW_P004817"}
+   {"id": 4818, "name": "C4 dicarboxylate / orotate:H+ symporter", "species_id": 4, "pwp_id": "PW_P004818"}
+   {"id": 4819, "name": "dicarboxylate transporter", "species_id": 4, "pwp_id": "PW_P004819"}
+   {"id": 4819, "name": "dicarboxylate transporter", "species_id": 4, "pwp_id": "PW_P004819"}
+   {"id": 4819, "name": "dicarboxylate transporter", "species_id": 4, "pwp_id": "PW_P004819"}
+
+### reactions whose enzyme complex has an Unknown component  (4.3s, 1 rows)
+SQL: SELECT COUNT(DISTINCT re.reaction_id) AS reactions, COUNT(DISTINCT re.protein_complex_id) AS complexes FROM reaction_enzymes re JOIN protein_complex_proteins pcp ON pcp.protein_complex_id = re.protein_complex_id JOIN proteins p ON p.id = pcp.protein_id WHERE p.name = %s | params: ['Unknown']
+   {"reactions": 231287, "complexes": 83333}
+
+### reactions whose enzyme complex contains record 9659  (0.1s, 1 rows)
+SQL: SELECT COUNT(DISTINCT re.reaction_id) AS reactions, COUNT(DISTINCT re.protein_complex_id) AS complexes FROM reaction_enzymes re JOIN protein_complex_proteins pcp ON pcp.protein_complex_id = re.protein_complex_id WHERE pcp.protein_id = %s | params: [9659]
+   {"reactions": 315, "complexes": 116}
+
+### pathways drawing a reaction catalysed by an Unknown-component complex  (35.1s, 1 rows)
+SQL: SELECT COUNT(DISTINCT pe.pathway_id) AS pathways FROM pathway_elements pe JOIN reaction_enzymes re ON re.reaction_id = pe.process_id JOIN protein_complex_proteins pcp ON pcp.protein_complex_id = re.protein_complex_id JOIN proteins p ON p.id = pcp.protein_id WHERE pe.process_type = %s AND p.name = %s | params: ['Reaction', 'Unknown']
+   {"pathways": 32529}
+
+### pathways drawing a reaction catalysed by a complex containing 9659  (28.2s, 1 rows)
+SQL: SELECT COUNT(DISTINCT pe.pathway_id) AS pathways FROM pathway_elements pe JOIN reaction_enzymes re ON re.reaction_id = pe.process_id JOIN protein_complex_proteins pcp ON pcp.protein_complex_id = re.protein_complex_id WHERE pe.process_type = %s AND pcp.protein_id = %s | params: ['Reaction', 9659]
+   {"pathways": 1773}
+
+### examples (9659): PW id via spv.pw_id, pathway, species, enzyme complex  (74.9s, 15 rows)
+SQL: SELECT DISTINCT spv.pw_id, pw.id AS pathway_id, pw.name AS pathway, s.name AS species, pc.id AS complex_id, pc.name AS complex, re.reaction_id FROM protein_complex_proteins pcp JOIN protein_complexes pc ON pc.id = pcp.protein_complex_id JOIN reaction_enzymes re ON re.protein_complex_id = pc.id JOIN pathway_elements pe ON pe.process_type = %s AND pe.process_id = re.reaction_id JOIN pathways pw ON pw.id = pe.pathway_id LEFT JOIN species s ON s.id = pw.species_id LEFT JOIN super_pathway_visualizations spv ON spv.named_for_type = %s AND spv.named_for_id = pw.id WHERE pcp.protein_id = %s ORDER BY pw.id LIMIT 15 | params: ['Reaction', 'Pathway', 9659]
+   {"pw_id": "PW000839", "pathway_id": 603, "pathway": "Glycolysis", "species": "Arabidopsis thaliana", "complex_id": 3445, "complex": "Aldose 1-epimerase", "reaction_id": 3096}
+   {"pw_id": "PW000839", "pathway_id": 603, "pathway": "Glycolysis", "species": "Arabidopsis thaliana", "complex_id": 3446, "complex": "Glucose-6-phosphate isomerase", "reaction_id": 3098}
+   {"pw_id": "PW000839", "pathway_id": 603, "pathway": "Glycolysis", "species": "Arabidopsis thaliana", "complex_id": 3446, "complex": "Glucose-6-phosphate isomerase", "reaction_id": 3099}
+   {"pw_id": "PW000839", "pathway_id": 603, "pathway": "Glycolysis", "species": "Arabidopsis thaliana", "complex_id": 3447, "complex": "6-phosphofructokinase, muscle type", "reaction_id": 3100}
+   {"pw_id": "PW000839", "pathway_id": 603, "pathway": "Glycolysis", "species": "Arabidopsis thaliana", "complex_id": 3451, "complex": "Glucose-6-phosphatase", "reaction_id": 3103}
+   {"pw_id": "PW000839", "pathway_id": 603, "pathway": "Glycolysis", "species": "Arabidopsis thaliana", "complex_id": 3453, "complex": "Bisphosphoglycerate mutase", "reaction_id": 3105}
+   {"pw_id": "PW000839", "pathway_id": 603, "pathway": "Glycolysis", "species": "Arabidopsis thaliana", "complex_id": 3456, "complex": "Phosphoglycerate mutase 1", "reaction_id": 3107}
+   {"pw_id": "PW000839", "pathway_id": 603, "pathway": "Glycolysis", "species": "Arabidopsis thaliana", "complex_id": 3453, "complex": "Bisphosphoglycerate mutase", "reaction_id": 3108}
+   {"pw_id": "PW000839", "pathway_id": 603, "pathway": "Glycolysis", "species": "Arabidopsis thaliana", "complex_id": 3457, "complex": "Phosphoglycerate mutase 2", "reaction_id": 3109}
+   {"pw_id": "PW000839", "pathway_id": 603, "pathway": "Glycolysis", "species": "Arabidopsis thaliana", "complex_id": 3458, "complex": "Alpha-enolase", "reaction_id": 3110}
+   {"pw_id": "PW002518", "pathway_id": 2293, "pathway": "Gluconeogenesis from L-Malic Acid ", "species": "Arabidopsis thaliana", "complex_id": 4811, "complex": "2,3-bisphosphoglycerate-independent phosphoglycerate mutase", "reaction_id": 7105}
+   {"pw_id": "PW002518", "pathway_id": 2293, "pathway": "Gluconeogenesis from L-Malic Acid ", "species": "Arabidopsis thaliana", "complex_id": 4812, "complex": "phosphoglycerate kinase", "reaction_id": 7106}
+   {"pw_id": "PW002518", "pathway_id": 2293, "pathway": "Gluconeogenesis from L-Malic Acid ", "species": "Arabidopsis thaliana", "complex_id": 4813, "complex": "Glyceraldehyde 3-phosphate dehydrogenase", "reaction_id": 7107}
+   {"pw_id": "PW002518", "pathway_id": 2293, "pathway": "Gluconeogenesis from L-Malic Acid ", "species": "Arabidopsis thaliana", "complex_id": 4814, "complex": "fructose bisphosphate aldolase class I", "reaction_id": 7109}
+   {"pw_id": "PW002518", "pathway_id": 2293, "pathway": "Gluconeogenesis from L-Malic Acid ", "species": "Arabidopsis thaliana", "complex_id": 4815, "complex": "fructose bisphosphate aldolase class II", "reaction_id": 7109}
+
+### examples (any Unknown component, pathway species 1 human, 3 E. coli, 4 Arabidopsis): PW id, pathway, enzyme complex  (32.1s, 15 rows)
+SQL: SELECT DISTINCT spv.pw_id, pw.id AS pathway_id, pw.name AS pathway, s.name AS species, pc.name AS complex, p.id AS unknown_protein_id FROM proteins p JOIN protein_complex_proteins pcp ON pcp.protein_id = p.id JOIN protein_complexes pc ON pc.id = pcp.protein_complex_id JOIN reaction_enzymes re ON re.protein_complex_id = pc.id JOIN pathway_elements pe ON pe.process_type = %s AND pe.process_id = re.reaction_id JOIN pathways pw ON pw.id = pe.pathway_id LEFT JOIN species s ON s.id = pw.species_id LEFT JOIN super_pathway_visualizations spv ON spv.named_for_type = %s AND spv.named_for_id = pw.id WHERE p.name = %s AND pw.species_id IN (%s,%s,%s) ORDER BY pw.id LIMIT 15 | params: ['Reaction', 'Pathway', 'Unknown', 1, 3, 4]
+   {"pw_id": "PW000760", "pathway_id": 524, "pathway": "Biosynthesis of Siderophore Group Nonribosomal Peptides", "species": "Escherichia coli", "complex": "ferric enterobactin ABC transporter", "unknown_protein_id": 11484}
+   {"pw_id": "PW000794", "pathway_id": 558, "pathway": "Proline Metabolism", "species": "Escherichia coli", "complex": "Unknown", "unknown_protein_id": 7752}
+   {"pw_id": "PW000795", "pathway_id": 559, "pathway": "D-Glucarate and D-Galactarate Degradation", "species": "Escherichia coli", "complex": "Pyruvate dehydrogenase complex", "unknown_protein_id": 7738}
+   {"pw_id": "PW000795", "pathway_id": 559, "pathway": "D-Glucarate and D-Galactarate Degradation", "species": "Escherichia coli", "complex": "Pyruvate dehydrogenase complex", "unknown_protein_id": 7739}
+   {"pw_id": "PW000795", "pathway_id": 559, "pathway": "D-Glucarate and D-Galactarate Degradation", "species": "Escherichia coli", "complex": "Pyruvate dehydrogenase complex", "unknown_protein_id": 7740}
+   {"pw_id": "PW000809", "pathway_id": 573, "pathway": "Serine Biosynthesis and Metabolism", "species": "Escherichia coli", "complex": "Pyruvate dehydrogenase complex", "unknown_protein_id": 7738}
+   {"pw_id": "PW000809", "pathway_id": 573, "pathway": "Serine Biosynthesis and Metabolism", "species": "Escherichia coli", "complex": "Pyruvate dehydrogenase complex", "unknown_protein_id": 7739}
+   {"pw_id": "PW000809", "pathway_id": 573, "pathway": "Serine Biosynthesis and Metabolism", "species": "Escherichia coli", "complex": "Pyruvate dehydrogenase complex", "unknown_protein_id": 7740}
+   {"pw_id": "PW000812", "pathway_id": 576, "pathway": "Valine Biosynthesis", "species": "Escherichia coli", "complex": "Unknown", "unknown_protein_id": 7752}
+   {"pw_id": "PW000815", "pathway_id": 579, "pathway": "Tryptophan Metabolism", "species": "Escherichia coli", "complex": "Pyruvate dehydrogenase complex", "unknown_protein_id": 7738}
+   {"pw_id": "PW000815", "pathway_id": 579, "pathway": "Tryptophan Metabolism", "species": "Escherichia coli", "complex": "Pyruvate dehydrogenase complex", "unknown_protein_id": 7739}
+   {"pw_id": "PW000815", "pathway_id": 579, "pathway": "Tryptophan Metabolism", "species": "Escherichia coli", "complex": "Pyruvate dehydrogenase complex", "unknown_protein_id": 7740}
+   {"pw_id": "PW000819", "pathway_id": 583, "pathway": "Gluconeogenesis from L-Malic Acid", "species": "Escherichia coli", "complex": "Malate dehydrogenase, cytoplasmic", "unknown_protein_id": 7748}
+   {"pw_id": "PW000828", "pathway_id": 592, "pathway": "Pantothenate and CoA Biosynthesis", "species": "Escherichia coli", "complex": "pantothenoylcysteine decarboxylase", "unknown_protein_id": 7752}
+   {"pw_id": "PW000828", "pathway_id": 592, "pathway": "Pantothenate and CoA Biosynthesis", "species": "Escherichia coli", "complex": "Pantetheinase", "unknown_protein_id": 7738}
+
+### most frequent names of Unknown-component enzyme complexes  (7.1s, 15 rows)
+SQL: SELECT pc.name, COUNT(DISTINCT pc.id) AS complexes FROM proteins p JOIN protein_complex_proteins pcp ON pcp.protein_id = p.id JOIN protein_complexes pc ON pc.id = pcp.protein_complex_id JOIN reaction_enzymes re ON re.protein_complex_id = pc.id WHERE p.name = %s GROUP BY pc.name ORDER BY complexes DESC LIMIT 15 | params: ['Unknown']
+   {"name": "2-aminobenzoylacetyl-CoA thioesterase", "complexes": 1377}
+   {"name": "Anthranilate synthase component 1", "complexes": 1377}
+   {"name": "2-heptyl-3-hydroxy-4(1H)-quinolone synthase", "complexes": 1377}
+   {"name": "Anthranilate--CoA ligase", "complexes": 1377}
+   {"name": "2-heptyl-4(1H)-quinolone synthase subunit PqsB", "complexes": 1377}
+   {"name": "Anthraniloyl-CoA anthraniloyltransferase", "complexes": 1377}
+   {"name": "Unknown", "complexes": 1033}
+   {"name": "phosphatidylserine decarboxylase", "complexes": 811}
+   {"name": "glycerol-3-phosphate acyltransferase", "complexes": 808}
+   {"name": "phosphatidylserine synthase", "complexes": 797}
+   {"name": "CDP-diglyceride synthetase", "complexes": 796}
+   {"name": "1-acylglycerol-3-phosphate O-acyltransferase", "complexes": 788}
+   {"name": "ethanolamine ammonia-lyase", "complexes": 786}
+   {"name": "glycerophosphoryl diester phosphodiesterase, periplasmic", "complexes": 782}
+   {"name": "glycerol-3-phosphate dehydrogenase (aerobic)", "complexes": 778}
+
+### reactions by spontaneous flag and enzyme presence  (56.2s, 5 rows)
+SQL: SELECT r.spontaneous, (re.reaction_id IS NULL) AS no_enzyme, COUNT(*) AS n FROM reactions r LEFT JOIN (SELECT DISTINCT reaction_id FROM reaction_enzymes) re ON re.reaction_id = r.id GROUP BY r.spontaneous, (re.reaction_id IS NULL) | params: []
+   {"spontaneous": null, "no_enzyme": 0, "n": 603022}
+   {"spontaneous": null, "no_enzyme": 1, "n": 12228}
+   {"spontaneous": 0, "no_enzyme": 0, "n": 300278}
+   {"spontaneous": 0, "no_enzyme": 1, "n": 229}
+   {"spontaneous": 1, "no_enzyme": 1, "n": 456}
+
+### Arabidopsis tetrapyrrole enzymes by gene_name  (0.3s, 7 rows)
+SQL: SELECT p.id, p.name, p.gene_name, p.uniprot_id, p.species_id FROM proteins p JOIN species s ON s.id = p.species_id WHERE s.taxonomy_id = %s AND p.gene_name IN (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ORDER BY p.gene_name | params: [3702, 'GSA1', 'GSA2', 'HEMB1', 'HEMC', 'HEME1', 'HEME2', 'HEMF1', 'CPX1', 'PPOX', 'PPO1']
+   {"id": 161096, "name": "Coproporphyrinogen-III oxidase 1, chloroplastic", "gene_name": "CPX1", "uniprot_id": "Q9LR75", "species_id": 4}
+   {"id": 23653, "name": "Glutamate-1-semialdehyde 2,1-aminomutase 2, chloroplastic", "gene_name": "GSA2", "uniprot_id": "Q42522", "species_id": 4}
+   {"id": 161092, "name": "Delta-aminolevulinic acid dehydratase 1, chloroplastic", "gene_name": "HEMB1", "uniprot_id": "Q9SFH9", "species_id": 4}
+   {"id": 161093, "name": "Porphobilinogen deaminase, chloroplastic", "gene_name": "HEMC", "uniprot_id": "Q43316", "species_id": 4}
+   {"id": 23649, "name": "Porphobilinogen deaminase, chloroplastic", "gene_name": "HEMC", "uniprot_id": "Q43316", "species_id": 4}
+   {"id": 161095, "name": "Uroporphyrinogen decarboxylase 1, chloroplastic", "gene_name": "HEME1", "uniprot_id": "Q93ZB6", "species_id": 4}
+   {"id": 23645, "name": "Uroporphyrinogen decarboxylase 2, chloroplastic", "gene_name": "HEME2", "uniprot_id": "O22886", "species_id": 4}
+
+### human sphingolipid enzymes by gene_name  (0.1s, 15 rows)
+SQL: SELECT p.id, p.name, p.gene_name, p.uniprot_id, p.species_id FROM proteins p WHERE p.species_id = %s AND p.gene_name IN (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ORDER BY p.gene_name, p.id | params: [1, 'CERS1', 'CERS2', 'CERS3', 'CERS4', 'CERS5', 'CERS6', 'SGMS1', 'SGMS2', 'UGCG', 'SMPD1', 'SMPD2', 'SMPD3', 'GBA', 'GBA1', 'GBA2', 'LDHA']
+   {"id": 2093, "name": "Ceramide synthase 1", "gene_name": "CERS1", "uniprot_id": "P27544", "species_id": 1}
+   {"id": 5275, "name": "Ceramide synthase 2", "gene_name": "CERS2", "uniprot_id": "Q96G23", "species_id": 1}
+   {"id": 5276, "name": "Ceramide synthase 3", "gene_name": "CERS3", "uniprot_id": "Q8IU89", "species_id": 1}
+   {"id": 5277, "name": "Ceramide synthase 4", "gene_name": "CERS4", "uniprot_id": "Q9HA82", "species_id": 1}
+   {"id": 5044, "name": "Ceramide synthase 5", "gene_name": "CERS5", "uniprot_id": "Q8N5B7", "species_id": 1}
+   {"id": 5278, "name": "Ceramide synthase 6", "gene_name": "CERS6", "uniprot_id": "Q6ZMG9", "species_id": 1}
+   {"id": 1612, "name": "Glucosylceramidase", "gene_name": "GBA", "uniprot_id": "P04062", "species_id": 1}
+   {"id": 4367, "name": "Non-lysosomal glucosylceramidase", "gene_name": "GBA2", "uniprot_id": "Q9HCG7", "species_id": 1}
+   {"id": 2356, "name": "L-lactate dehydrogenase A chain", "gene_name": "LDHA", "uniprot_id": "P00338", "species_id": 1}
+   {"id": 720, "name": "Phosphatidylcholine:ceramide cholinephosphotransferase 1", "gene_name": "SGMS1", "uniprot_id": "Q86VZ5", "species_id": 1}
+   {"id": 716, "name": "Phosphatidylcholine:ceramide cholinephosphotransferase 2", "gene_name": "SGMS2", "uniprot_id": "Q8NHU3", "species_id": 1}
+   {"id": 721, "name": "Sphingomyelin phosphodiesterase", "gene_name": "SMPD1", "uniprot_id": "P17405", "species_id": 1}
+   {"id": 1024, "name": "Sphingomyelin phosphodiesterase 2", "gene_name": "SMPD2", "uniprot_id": "O60906", "species_id": 1}
+   {"id": 2482, "name": "Sphingomyelin phosphodiesterase 3", "gene_name": "SMPD3", "uniprot_id": "Q9NY59", "species_id": 1}
+   {"id": 790, "name": "Ceramide glucosyltransferase", "gene_name": "UGCG", "uniprot_id": "Q16739", "species_id": 1}
+
+DONE
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f3c330a4b60f0ee40076e79ab9cf022560da5fc8  [git, worktree dirty=True]
+label                   : orch775-pathbank
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/orch775_pathbank_unknown_probe.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 437000 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 247.05 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  436952:python.exe
+descendants terminated  : 1  436952
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/bt-orch775/02-pathbank.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================
