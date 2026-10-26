@@ -1,0 +1,22 @@
+
+BOUNDED_RUN_HEAVY_LOCK_HELD path=C:\t\heavylock holder_attempted=ORCH-773 reason=held
+---- current holder file (C:\t\heavylock\holder.json) ----
+{
+  "token": "ORCH-772b:253748:160f70c204f91e47",
+  "holder": "ORCH-772b",
+  "label": "g9-base-00eb12d3",
+  "pid": 253748,
+  "command": [
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.venv/Scripts/python.exe",
+    "-u",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch772b/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--pin-verdict",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch772b/docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-772b/05-g9-base-00eb12d3.pin.json",
+    "-q",
+    "--basetemp=C:/t/orch772b/bt-05-g9-base-00eb12d3",
+    "tests/test_orch772b_no_pwml_cause.py"
+  ],
+  "cwd": "C:\\t\\orch772b\\base",
+  "acquired_at": "2026-10-25T21:35:10+00:00"
+}
+---- the child was NOT started; nothing was removed ----

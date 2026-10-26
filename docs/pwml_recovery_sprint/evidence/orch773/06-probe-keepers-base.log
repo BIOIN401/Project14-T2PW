@@ -1,0 +1,28 @@
+<3>WSL (9 - Relay) ERROR: CreateProcessCommon:800: execvpe(/bin/bash) failed: No such file or directory
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 3ef3fa9c6e00e1d65300a80224cf9a0ce2b3e1df  [git, worktree dirty=False]
+label                   : probe-keepers-base
+command                 : bash C:/t/orch773/keepers.sh
+cwd                     : C:/t/orch773/cwd
+root PID / process group: 83232 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 2.00 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 2  88572:wsl.exe, 91560:wslhost.exe
+descendants terminated  : 2  88572, 91560
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\docs\pwml_recovery_sprint\evidence\g11\ORCH-773\06-probe-keepers-base.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH-773  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

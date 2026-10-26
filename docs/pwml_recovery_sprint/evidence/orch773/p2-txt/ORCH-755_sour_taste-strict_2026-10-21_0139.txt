@@ -1,0 +1,222 @@
+PATHWAY EVIDENCE REPORT
+=======================
+PWML coverage: 6 of 14 processes (42.9%) -- target 75%
+  By kind, drawn of total (total = final payload + omitted before the freeze): reactions 0 of 0; transports 6 of 7; interactions 0 of 7
+  Excluding the 1 interactions PathWhiz cannot type (KI-008, withheld by design): 6 of 13 (46.2%)
+  Every process left out, with its reason: section OMITTED FROM THE PWML, below.
+Paper: Not recorded
+Pathway: sour taste transduction
+Requested organism (Stage 0): Homo sapiens
+Species (final payload): Homo sapiens (taxonomy 9606)
+Core-term coverage: 0.333333
+Minimum core satisfied: false
+Surviving processes: 7
+Quarantined processes: 0
+Release status: review_required
+Export mode: pathwhiz
+Quarantine ok: true
+Reactions itemised: 0; interactions itemised: 1 (transports: 6; counted above, not itemised)
+Surviving reactions read from: final_mapped.json
+Artifacts read: coverage_summary.json, final_mapped.json, pathway.review_required.pwml, pwml_ir.json, quarantine_report.json, removed_entity_report.json
+
+SURVIVING REACTIONS (0)
+-----------------------
+None recorded
+
+INTERACTIONS (1) -- PWML verdicts read from: pwml_ir.json
+---------------------------------------------------------
+INTERACTION 1  [final payload /processes/interactions/0]
+Name: serotonin is 5-HT
+Relationship (as extracted): SAME_AS
+Source: serotonin
+Target: 5-HT
+State: Not recorded
+PWML: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Evidence:
+  1. "serotonin receptor 5-HT 3"
+
+QUARANTINED / REJECTED (7)
+--------------------------
+From quarantine_report.json quarantined: 7
+From final payload quarantined_locked_reactions: Not recorded
+
+QUARANTINED 1  [pre-quarantine /processes/transports/1; transport]
+Name: voltage-gated Ca ++ channel-mediated Ca++ influx
+State: quarantined_unmapped_entity
+Reason: protein_missing_external_identity
+Essential participant: voltage-gated Ca ++ channels
+Evidence:
+  1. "action potentials that activate voltage-gated Ca ++ channels triggering the release of synaptic vesicles"
+
+QUARANTINED 2  [pre-quarantine /processes/interactions/0; interaction]
+Name: H+ inhibition of Kir2.1
+State: quarantined_unmapped_entity
+Reason: protein_missing_external_identity
+Essential participant: Kir2.1
+Evidence:
+  1. "The entering H+ ions not only directly depolarize the taste cells but also block Kir2.1 K+ channels"
+
+QUARANTINED 3  [pre-quarantine /processes/interactions/1; interaction]
+Name: 5-HT activation of 5-HT3 receptor
+State: quarantined_unmapped_entity
+Reason: protein_missing_external_identity
+Essential participant: 5-HT3 receptor
+Evidence:
+  1. "the contribution of 5-HT acting on neural 5-HT 3 receptors has been elucidated in terms of transmission of sour taste"
+
+QUARANTINED 4  [pre-quarantine /processes/interactions/2; interaction]
+Name: ATP activation of P2X receptors
+State: quarantined_unmapped_entity
+Reason: protein_missing_external_identity
+Essential participant: P2X receptors
+Evidence:
+  1. "transmission of Type III cell taste qualities (for example, sour) is dependent on intact purinergic signaling to P2X receptors"
+
+QUARANTINED 5  [pre-quarantine /processes/interactions/3; interaction]
+Name: 5-HT interaction with 5-HT3 receptor
+State: quarantined_unmapped_entity
+Reason: protein_missing_external_identity
+Essential participant: 5-HT3 receptor
+Evidence:
+  1. "contribution of 5-HT acting on neural 5-HT 3 receptors has been elucidated in terms of transmission of sour taste"
+
+QUARANTINED 6  [pre-quarantine /processes/interactions/4; interaction]
+Name: ATP interaction with P2X receptors
+State: quarantined_unmapped_entity
+Reason: protein_missing_external_identity
+Essential participant: P2X receptors
+Evidence:
+  1. "transmission of Type III cell taste qualities (for example, sour) is dependent on intact purinergic signaling to P2X receptors"
+
+QUARANTINED 7  [pre-quarantine /processes/interactions/6; interaction]
+Name: voltage-gated Ca ++ channels is voltage-gated Ca++ channels
+State: quarantined_unmapped_entity
+Reason: protein_missing_external_identity
+Essential participant: voltage-gated Ca ++ channels
+Evidence:
+  1. "voltage-gated Ca ++ channels triggering the release of synaptic vesicles"
+
+REMOVED ENTITIES (4)
+--------------------
+- transporters OTOP1: actor_schema_not_canonical
+- transporters OTOP1: actor_schema_not_canonical
+- transporters OTOP1: actor_schema_not_canonical
+- proteins OTOP1: degree_zero_after_quarantine
+
+OMITTED FROM THE PWML (8; 3 actors left out of processes still drawn)
+---------------------------------------------------------------------
+Known-issue ids: docs/pwml_recovery_sprint/PWML_KNOWN_ISSUES.md, appendix "Reason code -> KI id".
+
+OMITTED 1  [quarantine_report.json quarantined; pre-quarantine /processes/transports/1]
+Kind: transport
+Name: voltage-gated Ca ++ channel-mediated Ca++ influx
+Cargo: Ca++: apical side state -> Type III cell cytoplasm state
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 2  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/0]
+Kind: interaction
+Name: H+ inhibition of Kir2.1
+Endpoints: H+ -[inhibition]-> Kir2.1
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 3  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/1]
+Kind: interaction
+Name: 5-HT activation of 5-HT3 receptor
+Endpoints: 5-HT -[activation]-> 5-HT3 receptor
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 4  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/2]
+Kind: interaction
+Name: ATP activation of P2X receptors
+Endpoints: Adenosine triphosphate -[activation]-> P2X receptors
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 5  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/3]
+Kind: interaction
+Name: 5-HT interaction with 5-HT3 receptor
+Endpoints: 5-HT -[interaction]-> 5-HT3 receptor
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 6  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/4]
+Kind: interaction
+Name: ATP interaction with P2X receptors
+Endpoints: Adenosine triphosphate -[interaction]-> P2X receptors
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 7  [quarantine_report.json quarantined; pre-quarantine /processes/interactions/6]
+Kind: interaction
+Name: voltage-gated Ca ++ channels is voltage-gated Ca++ channels
+Endpoints: voltage-gated Ca ++ channels -[SAME_AS]-> voltage-gated Ca++ channels
+Reason: protein_missing_external_identity
+Known issue: KI-001
+Add by hand: Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out.
+
+OMITTED 8  [pwml_ir.json; final payload /processes/interactions/0]
+Kind: interaction
+Name: serotonin is 5-HT
+Endpoints: serotonin -[SAME_AS]-> 5-HT
+Reason: untyped_interaction
+Verdict: withheld -- untyped_interaction: the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores
+Known issue: KI-008
+Add by hand: None inside PathWhiz's model: it has no type for these relations. Read them in the text record, and add an Activation or Inhibition by hand only where the paper states the direction.
+
+OMITTED ACTOR 1  [removed_entity_report.json removed_entities; process /processes/transports/0]
+Kind: actor left out of a transport that is still drawn
+Process: OTOP1-mediated H+ transport
+Actor: OTOP1
+Slot: transporters
+Reason: actor_schema_not_canonical
+Gate: pre_export_stage3_revalidation
+Decision: D-114 AMENDMENT 1 s2
+Known issue: KI-023
+Add by hand: Add "OTOP1" as a transporter of "OTOP1-mediated H+ transport" in PathWhiz if the paper supports it; the dropped row is kept verbatim in removed_entity_report.json (detail.actor).
+
+OMITTED ACTOR 2  [removed_entity_report.json removed_entities; process /processes/transports/2]
+Kind: actor left out of a transport that is still drawn
+Process: H+ permeation through OTOP1
+Actor: OTOP1
+Slot: transporters
+Reason: actor_schema_not_canonical
+Gate: pre_export_stage3_revalidation
+Decision: D-114 AMENDMENT 1 s2
+Known issue: KI-023
+Add by hand: Add "OTOP1" as a transporter of "H+ permeation through OTOP1" in PathWhiz if the paper supports it; the dropped row is kept verbatim in removed_entity_report.json (detail.actor).
+
+OMITTED ACTOR 3  [removed_entity_report.json removed_entities; process /processes/transports/4]
+Kind: actor left out of a transport that is still drawn
+Process: OTOP1-mediated H+ permeation
+Actor: OTOP1
+Slot: transporters
+Reason: actor_schema_not_canonical
+Gate: pre_export_stage3_revalidation
+Decision: D-114 AMENDMENT 1 s2
+Known issue: KI-023
+Add by hand: Add "OTOP1" as a transporter of "OTOP1-mediated H+ permeation" in PathWhiz if the paper supports it; the dropped row is kept verbatim in removed_entity_report.json (detail.actor).
+
+Entities left out (4), from removed_entity_report.json:
+- transporters OTOP1: actor_schema_not_canonical (KI-023); gate pre_export_stage3_revalidation
+    removed from OTOP1-mediated H+ transport (/processes/transports/0): transporters
+- transporters OTOP1: actor_schema_not_canonical (KI-023); gate pre_export_stage3_revalidation
+    removed from H+ permeation through OTOP1 (/processes/transports/2): transporters
+- transporters OTOP1: actor_schema_not_canonical (KI-023); gate pre_export_stage3_revalidation
+    removed from OTOP1-mediated H+ permeation (/processes/transports/4): transporters
+- proteins OTOP1: degree_zero_after_quarantine (unclassified)
+
+CORE COVERAGE
+-------------
+Requested (12): H+, ATP, serotonin (5-HT), Ca2+, OTOP1, PKD2L1, Kir2.1, SCN2A, voltage-gated calcium channels, SNARE proteins, 5-HT3 receptor, P2X receptors
+Matched (4): H+, serotonin (5-HT), OTOP1, 5-HT3 receptor
+Unmatched (8): ATP, Ca2+, PKD2L1, Kir2.1, SCN2A, voltage-gated calcium channels, SNARE proteins, P2X receptors
+Reasons: requested_core_coverage_below_minimum:0.333<0.500

@@ -1,0 +1,171 @@
+t2pw resolved: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\src\t2pw
+offline probe: {'attempts': {'urlopen_uniprot': 'refused', 'create_connection_loopback': 'refused', 'raw_socket_connect': 'refused'}, 'counted': 3, 'ok': True}
+ORCH-755/enterobactin-strict/2026-10-20_2201                pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=final_pre_export_gate_lifecycle replay=pwml; quarantine_ok recorded=False replay=True; refusal recorded=['unexportable_entity:1'] replay=[]; release recorded=diagnostic_only replay=review_required
+                                                            gold: final P1.000 R0.800 F1 0.889 (4/5)  pwml P1.000 R0.800 F1 0.889 (4/5)
+ORCH-755/menaquinone-strict/2026-10-20_2238                 llm_originating (timeout at unknown: no checkpoint) 
+ORCH-755/chlorophyll-strict/2026-10-20_2338                 llm_originating (timeout at unknown: no checkpoint) 
+ORCH-755/ara_operon-strict/2026-10-21_0039                  llm_originating (timeout at unknown: no checkpoint) 
+ORCH-755/sour_taste-strict/2026-10-21_0139                  pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=pwml_export replay=pwml
+ORCH-755/wnt_pcp-strict/2026-10-21_0207                     llm_originating (timeout at unknown: no checkpoint) 
+ORCH-755/wnt_ca-strict/2026-10-21_0307                      llm_originating (fail at stage1: no checkpoint)     
+ORCH-756/enterobactin-strict/2026-10-21_2020                pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+                                                            gold: final P0.714 R1.000 F1 0.833 (5/5)  pwml P0.714 R1.000 F1 0.833 (5/5)
+ORCH-756/menaquinone-strict/2026-10-21_2048                 pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+                                                            gold: final P0.889 R0.778 F1 0.830 (7/9)  pwml P0.889 R0.778 F1 0.830 (7/9)
+ORCH-756/chlorophyll-strict/2026-10-21_2109                 llm_originating (timeout at unknown: no checkpoint) 
+ORCH-756/ara_operon-strict/2026-10-22_0947                  aborted (stopped before it reported; no outcome)    
+ORCH-756/ara_operon-strict/2026-10-22_1018                  llm_originating (scope_conflict at stage1: no checkpoint)
+ORCH-756/sour_taste-strict/2026-10-22_1035                  aborted (stopped before it reported; no outcome)    
+ORCH-759/enterobactin-strict/2026-10-22_1037                pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=final_pre_export_stage3_gates replay=pwml; final_gate_ok recorded=False replay=True; final_gate_errors recorded=[['/entities/proteins/7/name', 'Protein has degree 0 after normalization: enterobactin synthase']] replay=[]
+                                                            gold: final P1.000 R1.000 F1 1.000 (5/5)  pwml P1.000 R1.000 F1 1.000 (5/5)
+ORCH-759/menaquinone-strict/2026-10-22_1148                 pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=pwml_export replay=pwml; required_gate_ok recorded=False replay=True; required_gate_codes recorded=['species_missing_classification', 'species_missing_taxonomy'] replay=[]
+                                                            gold: final P0.875 R0.778 F1 0.824 (7/9)  pwml P0.875 R0.778 F1 0.824 (7/9)
+ORCH-759/chlorophyll-strict/2026-10-22_1231                 pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=final_pre_export_gate_lifecycle replay=pwml; quarantine_ok recorded=False replay=True; refusal recorded=['entity_type_overlap:4'] replay=[]; release recorded=diagnostic_only replay=review_required
+ORCH-759/ara_operon_v2-strict/2026-10-22_1359               llm_originating (scope_conflict at stage1: no checkpoint)
+ORCH-759/sour_taste-strict/2026-10-22_1421                  llm_originating (scope_conflict at stage1: no checkpoint)
+ORCH-759/wnt_pcp-strict/2026-10-22_1432                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+ORCH-759/wnt_ca-strict/2026-10-22_1528                      llm_originating (timeout at input: no checkpoint)   
+ORCH-759p/enterobactin-strict/2026-10-22_2101               pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+                                                            gold: final P1.000 R1.000 F1 1.000 (5/5)  pwml P1.000 R1.000 F1 1.000 (5/5)
+ORCH-759p/menaquinone-strict/2026-10-22_2154                pass                                                  q=True/release_ready gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=pwml_export replay=pwml; required_gate_ok recorded=False replay=True; required_gate_codes recorded=['species_missing_classification', 'species_missing_taxonomy'] replay=[]
+                                                            gold: final P1.000 R1.000 F1 1.000 (9/9)  pwml P1.000 R1.000 F1 1.000 (9/9)
+ORCH-759p/sour_taste_v2-strict/2026-10-22_2233              pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+ORCH-759p/chlorophyll-strict/2026-10-22_2301                pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+ORCH-767/enterobactin-strict/2026-10-23_2224                pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=final_pre_export_stage3_gates replay=pwml; final_gate_ok recorded=False replay=True; final_gate_errors recorded=[['/entities/protein_complexes/0/components/0', "Generated protein complex 'enterobactin synthase complex' component 'enterobactin synthase' is missing positive stoichiometry."]] replay=[]
+                                                            gold: final P1.000 R1.000 F1 1.000 (5/5)  pwml P1.000 R1.000 F1 1.000 (5/5)
+ORCH-767/chlorophyll-strict/2026-10-23_2328                 pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=final_pre_export_stage3_gates replay=pwml; final_gate_ok recorded=False replay=True; final_gate_errors recorded=[['/processes/reactions/17/modifiers/1', 'Unknown protein/modifier reference: PIF1'], ['/processes/reactions/17/modifiers/7', 'Unknown protein/modifier reference: GBP'], ['/processes/reactions/18/modifiers/0', 'Unknown protein/modifier reference: FAR1'], ['/processes/reactions/21/enzymes/3', 'Unknown protein/modifier reference: GBP'], ['/processes/reactions/21/modifiers/3', 'Unknown protein/modifier reference: GBP'], ['/processes/reactions/22/enzymes/1', 'Unknown protein/modifier reference: CPO1'], ['/processes/reactions/22/modifiers/1', 'Unknown protein/modifier reference: CPO1'], ['/processes/reactions/23/enzymes/1', 'Unknown protein/modifier reference: PPO1'], ['/processes/reactions/23/modifiers/1', 'Unknown protein/modifier reference: PPO1']] replay=[]
+ORCH-767/sour_taste_v2-strict/2026-10-24_0042               pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+ORCH-767/wnt_pcp-strict/2026-10-24_0131                     pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=refinement_review_crash replay=pwml
+ORCH-767/wnt_ca-strict/2026-10-24_0314                      pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=final_pre_export_gate_lifecycle replay=pwml; quarantine_ok recorded=False replay=True; refusal recorded=['unexportable_entity:1'] replay=[]; release recorded=diagnostic_only replay=review_required
+ORCH-767/menaquinone-strict/2026-10-24_0503                 pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+                                                            gold: final P0.909 R1.000 F1 0.952 (9/9)  pwml P0.909 R1.000 F1 0.952 (9/9)
+runs_verify/2026-08-18_1328/PMC12452463                     pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=final_pre_export_gate_lifecycle replay=pwml; quarantine_ok recorded=False replay=True; refusal recorded=['degree_zero_export:1'] replay=[]; release recorded=diagnostic_only replay=review_required
+runs_verify/2026-08-18_1328/PMC12096016                     pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=final_pre_export_gate_lifecycle replay=pwml; quarantine_ok recorded=False replay=True; refusal recorded=['degree_zero_export:1'] replay=[]; release recorded=diagnostic_only replay=review_required
+                                                            gold: final P0.833 R1.000 F1 0.909 (5/5)  pwml P0.833 R1.000 F1 0.909 (5/5)
+runs_verify/2026-08-21_1822/PMC12782028                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+runs_verify/2026-08-21_2014/PMC12312563                     pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=pwml_export replay=pwml; required_gate_ok recorded=False replay=True; required_gate_codes recorded=['visible_entity_missing_location_state'] replay=[]
+runs_verify/2026-08-21_2057/PMC12452463                     pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=final_pre_export_stage3_gates replay=pwml; final_gate_ok recorded=False replay=True; final_gate_errors recorded=[['/entities/protein_complexes/0/components/0', "Generated protein complex 'enterobactin synthase complex' component 'EntD' is missing positive stoichiometry."], ['/entities/protein_complexes/0/components/1', "Generated protein complex 'enterobactin synthase complex' component 'EntE' is missing positive stoichiometry."], ['/entities/protein_complexes/0/components/2', "Generated protein complex 'enterobactin synthase complex' component 'EntF' is missing positive stoichiometry."]] replay=[]
+runs_verify/2026-08-21_2057/PMC12096016                     pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=pwml_export replay=pwml; required_gate_ok recorded=False replay=True; required_gate_codes recorded=['reaction_enzyme_must_be_protein_complex'] replay=[]
+                                                            gold: final P1.000 R1.000 F1 1.000 (5/5)  pwml P1.000 R1.000 F1 1.000 (5/5)
+runs_verify/2026-08-21_2239/PMC12856317                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+runs_verify/2026-08-21_2239/PMC12180156                     replayable (pwml_export)                              q=True/review_required gate=True export=False req=False net=0  CHANGED vs recorded: outcome recorded=pwml replay=pwml_export; required_gate_ok recorded=True replay=False; required_gate_codes recorded=[] replay=['no_defensible_reaction_support']
+runs_verify/2026-08-21_2239/PMC12096016                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+                                                            gold: final P1.000 R1.000 F1 1.000 (5/5)  pwml P1.000 R1.000 F1 1.000 (5/5)
+runs_verify/2026-08-21_2239/PMC12452463                     pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: release recorded=release_ready replay=review_required; pwml_name recorded=['pathway.pwml'] replay=pathway.review_required.pwml
+runs_verify/2026-08-21_2239/PMC12782028                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+runs_verify/2026-08-22_1821/PMC12452463                     pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=upstream_contract_report replay=pwml
+runs_verify/2026-08-22_2017/PMC12856317                     pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=final_pre_export_stage3_gates replay=pwml; final_gate_ok recorded=False replay=True; final_gate_errors recorded=[['/processes/reactions/0/modifiers/0', "Unknown protein/modifier reference: Pyridoxal 5'-phosphate"]] replay=[]
+runs_verify/2026-08-22_2017/PMC12452463                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+runs_verify/2026-08-22_2147/PMC13231680                     replayable (pwml_export)                              q=True/review_required gate=True export=False req=False net=0  CHANGED vs recorded: outcome recorded=pwml replay=pwml_export; release recorded=release_ready replay=review_required; required_gate_ok recorded=True replay=False; required_gate_codes recorded=[] replay=['no_defensible_reaction_support']
+runs_verify/2026-08-22_2147/PMC12856317                     pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: release recorded=release_ready replay=review_required; pwml_name recorded=['pathway.pwml'] replay=pathway.review_required.pwml
+runs_verify/2026-08-22_2147/PMC12180156                     replayable (pwml_export)                              q=True/review_required gate=True export=False req=False net=0  CHANGED vs recorded: outcome recorded=pwml replay=pwml_export; required_gate_ok recorded=True replay=False; required_gate_codes recorded=[] replay=['no_defensible_reaction_support']
+runs_verify/2026-08-22_2147/PMC12096016                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+                                                            gold: final P1.000 R1.000 F1 1.000 (5/5)  pwml P1.000 R1.000 F1 1.000 (5/5)
+runs_verify/2026-08-22_2147/PMC12452463                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+runs_verify/2026-08-22_2147/PMC12782028                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+runs_verify/2026-08-24_1203/PMC12856317                     pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=final_pre_export_gate_lifecycle replay=pwml; quarantine_ok recorded=False replay=True; refusal recorded=['unexportable_entity:2'] replay=[]; release recorded=diagnostic_only replay=review_required
+runs_verify/2026-08-24_1203/PMC13231680                     replayable (pwml_export)                              q=True/review_required gate=True export=False req=False net=0  CHANGED vs recorded: required_gate_codes recorded=['visible_entity_missing_location_state'] replay=['no_defensible_reaction_support']
+runs_verify/2026-08-24_1203/PMC12096016                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+                                                            gold: final P0.857 R1.000 F1 0.923 (5/5)  pwml P0.857 R1.000 F1 0.923 (5/5)
+runs_verify/2026-08-24_1203/PMC12452463                     pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=upstream_contract_report replay=pwml
+runs_verify/2026-08-24_1428/PMC12444477                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+runs_verify/2026-08-24_1428/PMC12856317                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+runs_verify/2026-08-24_1428/PMC12180156                     replayable (pwml_export)                              q=True/review_required gate=True export=False req=False net=0  CHANGED vs recorded: outcome recorded=pwml replay=pwml_export; required_gate_ok recorded=True replay=False; required_gate_codes recorded=[] replay=['no_defensible_reaction_support']
+runs_verify/2026-08-24_1428/PMC12096016                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+                                                            gold: final P1.000 R1.000 F1 1.000 (5/5)  pwml P1.000 R1.000 F1 1.000 (5/5)
+runs_verify/2026-08-24_1428/PMC12452463                     pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=upstream_contract_report replay=pwml
+runs_verify/2026-08-24_1428/PMC12782028                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+runs_verify/2026-08-25_1216/PMC12856317                     pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=pwml_export replay=pwml
+runs_verify/2026-08-25_1216/PMC12444477                     pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=upstream_contract_report replay=pwml
+runs_verify/2026-08-27_1341/PMC12096016                     pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=upstream_contract_report replay=pwml
+                                                            gold: final P0.571 R0.800 F1 0.667 (4/5)  pwml P0.571 R0.800 F1 0.667 (4/5)
+runs_verify/2026-08-27_1341/PMC12782028                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+runs_verify/2026-08-28_1816/PMC12856317                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+runs_verify/2026-08-28_1816/PMC12180156                     replayable (pwml_export)                              q=True/review_required gate=True export=False req=False net=0  CHANGED vs recorded: outcome recorded=upstream_contract_report replay=pwml_export
+runs_verify/2026-08-28_1816/PMC12452463                     pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=upstream_contract_report replay=pwml
+runs_verify/2026-08-28_1816/PMC12782028                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+runs_verify/2026-09-01_1612/PMC12856317                     pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=upstream_contract_report replay=pwml
+runs_verify/2026-09-01_1612/PMC12180156                     replayable (pwml_export)                              q=True/review_required gate=True export=False req=False net=0  CHANGED vs recorded: outcome recorded=upstream_contract_report replay=pwml_export
+runs_verify/2026-09-01_1612/PMC12096016                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+                                                            gold: final P1.000 R1.000 F1 1.000 (5/5)  pwml P1.000 R1.000 F1 1.000 (5/5)
+runs_verify/2026-09-01_1612/PMC12452463                     pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=upstream_contract_report replay=pwml
+runs_verify/2026-09-01_1612/PMC12782028                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+runs_verify/2026-09-02_2052/PMC12444477                     pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=final_pre_export_gate_lifecycle replay=pwml; quarantine_ok recorded=False replay=True; refusal recorded=['unexportable_entity:2'] replay=[]; release recorded=diagnostic_only replay=review_required
+runs_verify/2026-09-02_2052/PMC12856317                     pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=upstream_contract_report replay=pwml
+runs_verify/2026-09-02_2052/PMC12180156                     replayable (pwml_export)                              q=True/review_required gate=True export=False req=False net=0  CHANGED vs recorded: outcome recorded=pwml replay=pwml_export; required_gate_ok recorded=True replay=False; required_gate_codes recorded=[] replay=['no_defensible_reaction_support']
+runs_verify/2026-09-02_2052/PMC12096016                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+                                                            gold: final P0.600 R0.600 F1 0.600 (3/5)  pwml P0.600 R0.600 F1 0.600 (3/5)
+runs_verify/2026-09-02_2052/PMC12452463                     pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=final_pre_export_stage3_gates replay=pwml; final_gate_ok recorded=False replay=True; final_gate_errors recorded=[['/normalization_stats/n_plus_tokens_remaining', 'Expected 0 plus tokens, found 1.'], ['/processes', "Composite validation failed: Composite validation failed:\n/entities/compounds/5/name has '+' token: ferric iron (Fe3+)"]] replay=[]
+runs_verify/2026-09-02_2052/PMC12782028                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+runs_verify/2026-09-06_1425/PMC12071552                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+runs_verify/2026-09-06_1425/PMC11172790                     pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=upstream_contract_report replay=pwml
+runs_verify/2026-09-06_1425/PMC12376012                     pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=upstream_contract_report replay=pwml
+runs_verify/2026-09-06_1425/PMC7232280                      pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=upstream_contract_report replay=pwml
+runs_verify/2026-09-06_1425/PMC11405693                     pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=pwml_export replay=pwml; required_gate_ok recorded=False replay=True; required_gate_codes recorded=['reaction_enzyme_must_be_protein_complex'] replay=[]
+runs_verify/2026-09-06_1425/PMC8510960                      pass                                                  q=True/review_required gate=True export=True req=True net=0  CHANGED vs recorded: outcome recorded=upstream_contract_report replay=pwml
+runs_verify/2026-09-16_2152/PMC12369002                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+runs_verify/2026-09-16_2152/PMC13534948                     replayable (final_pre_export_gate_lifecycle)          q=False['minimum_core:core_process_count_below_minimum:0<1', 'minimum_core:no_surviving_process', 'minimum_core:requested_core_coverage_below_minimum:0.000<0.500']/diagnostic_only gate=None export=None req=None net=0  AS RECORDED
+runs_verify/2026-09-16_2152/PMC13364408                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+runs_verify/2026-09-16_2152/PMC13170813                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+runs_verify/2026-09-16_2152/PMC13486683                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+runs_verify/2026-09-16_2152/PMC12983300                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+runs_verify/2026-09-16_2152/PMC12505894                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+runs_verify/2026-09-16_2152/PMC12059215                     pass                                                  q=True/review_required gate=True export=True req=True net=0  AS RECORDED
+
+SUMMARY (all)
+  strict_legs                    91
+  with_checkpoint                81
+  replay_errors                  0
+  pwml_pass                      72
+  pwml_pass_rate_of_strict       72/91
+  pwml_pass_rate_of_replayed     72/81
+  replayable_failures            9
+  llm_originating_failures       10
+  aborted_not_counted            2
+  verdict_as_recorded            37/81
+  network_refused_total          0
+
+SUMMARY (tier_A)
+  strict_legs                    28
+  with_checkpoint                18
+  replay_errors                  0
+  pwml_pass                      18
+  pwml_pass_rate_of_strict       18/28
+  pwml_pass_rate_of_replayed     18/18
+  replayable_failures            0
+  llm_originating_failures       10
+  aborted_not_counted            2
+  verdict_as_recorded            8/18
+  network_refused_total          0
+
+SUMMARY (tier_B)
+  strict_legs                    63
+  with_checkpoint                63
+  replay_errors                  0
+  pwml_pass                      54
+  pwml_pass_rate_of_strict       54/63
+  pwml_pass_rate_of_replayed     54/63
+  replayable_failures            9
+  llm_originating_failures       0
+  aborted_not_counted            0
+  verdict_as_recorded            29/63
+  network_refused_total          0
+GOLD (replayed tail; certified gold only)
+  ORCH-755/enterobactin-strict/2026-10-20_2201               final P1.000 R0.800 F1 0.889 (4/5)  pwml P1.000 R0.800 F1 0.889 (4/5)
+  ORCH-756/enterobactin-strict/2026-10-21_2020               final P0.714 R1.000 F1 0.833 (5/5)  pwml P0.714 R1.000 F1 0.833 (5/5)
+  ORCH-756/menaquinone-strict/2026-10-21_2048                final P0.889 R0.778 F1 0.830 (7/9)  pwml P0.889 R0.778 F1 0.830 (7/9)
+  ORCH-759/enterobactin-strict/2026-10-22_1037               final P1.000 R1.000 F1 1.000 (5/5)  pwml P1.000 R1.000 F1 1.000 (5/5)
+  ORCH-759/menaquinone-strict/2026-10-22_1148                final P0.875 R0.778 F1 0.824 (7/9)  pwml P0.875 R0.778 F1 0.824 (7/9)
+  ORCH-759p/enterobactin-strict/2026-10-22_2101              final P1.000 R1.000 F1 1.000 (5/5)  pwml P1.000 R1.000 F1 1.000 (5/5)
+  ORCH-759p/menaquinone-strict/2026-10-22_2154               final P1.000 R1.000 F1 1.000 (9/9)  pwml P1.000 R1.000 F1 1.000 (9/9)
+  ORCH-767/enterobactin-strict/2026-10-23_2224               final P1.000 R1.000 F1 1.000 (5/5)  pwml P1.000 R1.000 F1 1.000 (5/5)
+  ORCH-767/menaquinone-strict/2026-10-24_0503                final P0.909 R1.000 F1 0.952 (9/9)  pwml P0.909 R1.000 F1 0.952 (9/9)
+  runs_verify/2026-08-18_1328/PMC12096016                    final P0.833 R1.000 F1 0.909 (5/5)  pwml P0.833 R1.000 F1 0.909 (5/5)
+  runs_verify/2026-08-21_2057/PMC12096016                    final P1.000 R1.000 F1 1.000 (5/5)  pwml P1.000 R1.000 F1 1.000 (5/5)
+  runs_verify/2026-08-21_2239/PMC12096016                    final P1.000 R1.000 F1 1.000 (5/5)  pwml P1.000 R1.000 F1 1.000 (5/5)
+  runs_verify/2026-08-22_2147/PMC12096016                    final P1.000 R1.000 F1 1.000 (5/5)  pwml P1.000 R1.000 F1 1.000 (5/5)
+  runs_verify/2026-08-24_1203/PMC12096016                    final P0.857 R1.000 F1 0.923 (5/5)  pwml P0.857 R1.000 F1 0.923 (5/5)
+  runs_verify/2026-08-24_1428/PMC12096016                    final P1.000 R1.000 F1 1.000 (5/5)  pwml P1.000 R1.000 F1 1.000 (5/5)
+  runs_verify/2026-08-27_1341/PMC12096016                    final P0.571 R0.800 F1 0.667 (4/5)  pwml P0.571 R0.800 F1 0.667 (4/5)
+  runs_verify/2026-09-01_1612/PMC12096016                    final P1.000 R1.000 F1 1.000 (5/5)  pwml P1.000 R1.000 F1 1.000 (5/5)
+  runs_verify/2026-09-02_2052/PMC12096016                    final P0.600 R0.600 F1 0.600 (3/5)  pwml P0.600 R0.600 F1 0.600 (3/5)

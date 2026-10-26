@@ -1,0 +1,211 @@
+T2PW: C:\t\orch773\basetree\src\t2pw\__init__.py
+FFFFFFFFF......F                                                         [100%]
+================================== FAILURES ===================================
+_ test_g9_unexportable_component_takes_its_complex_and_processes_not_the_pathway _
+
+    def test_g9_unexportable_component_takes_its_complex_and_processes_not_the_pathway() -> None:
+        """ORCH-755 enterobactin: EntB (no UniProt id, KI-017) is a component of the declared complex
+        'isochorismatase'. Base: ``unexportable_entity:1``, no PWML."""
+    
+        payload, context = _leg("ORCH-755_enterobactin-strict_2026-10-20_2201")
+        result = _quarantine(payload, context)
+>       assert _refusals(result) == []
+E       AssertionError: assert ['quarantine:...ble_entity:1'] == []
+E         
+E         Left contains one more item: 'quarantine:unexportable_entity:1'
+E         Use -v to get more diff
+
+tests\test_orch773_omit_per_row.py:173: AssertionError
+______ test_g9_unexportable_row_kept_only_by_a_synonym_is_removed_alone _______
+
+    def test_g9_unexportable_row_kept_only_by_a_synonym_is_removed_alone() -> None:
+        """ORCH-767 Wnt/Ca2+: 'phosphorylated CAMKII' (no identity, KI-018) survives only because it carries the
+        synonym 'calcineurin B', which every process resolves to the real 'calcineurin B' row. Base: refusal.
+        The next round then meets the Stage-8 contract: two transports with a non-canonical transporter, which
+        keep the transport and lose only that transporter (D-114 AMENDMENT 1 s2)."""
+    
+        payload, context = _leg("ORCH-767_wnt_ca-strict_2026-10-24_0314")
+        result = _quarantine(payload, context)
+>       assert _refusals(result) == []
+E       AssertionError: assert ['quarantine:...ble_entity:1'] == []
+E         
+E         Left contains one more item: 'quarantine:unexportable_entity:1'
+E         Use -v to get more diff
+
+tests\test_orch773_omit_per_row.py:196: AssertionError
+_ test_g9_final_gate_degree_zero_protein_is_removed_and_every_reaction_stays __
+
+    def test_g9_final_gate_degree_zero_protein_is_removed_and_every_reaction_stays() -> None:
+        """ORCH-759 enterobactin: the stray row 'enterobactin synthase' (KI-013) is attached to nothing by the
+        final gate's own test. Base: "Protein has degree 0 after normalization", no PWML."""
+    
+        payload, context = _leg("ORCH-759_enterobactin-strict_2026-10-22_1037")
+        reactions_in = len(payload["processes"]["reactions"])
+        result = _quarantine(payload, context)
+>       assert _refusals(result) == []
+E       AssertionError: assert ['final:Prote...tin synthase'] == []
+E         
+E         Left contains one more item: 'final:Protein has degree 0 after normalization: enterobactin synthase'
+E         Use -v to get more diff
+
+tests\test_orch773_omit_per_row.py:225: AssertionError
+_ test_g9_d113_inferred_wrapper_leaves_its_reaction_and_the_paper_catalyst_stays _
+
+    def test_g9_d113_inferred_wrapper_leaves_its_reaction_and_the_paper_catalyst_stays() -> None:
+        """ORCH-767 enterobactin (ORCH-769a, D-113 s1): Stage 2 inferred 'enterobactin synthase complex', whose
+        component has no stoichiometry; the reaction keeps the paper's 'EntF complex'. Base: final gate, no PWML."""
+    
+        payload, context, _recorded = _orch768_leg("ORCH-767_enterobactin-strict_2026-10-23_2224")
+        reactions_in = len(payload["processes"]["reactions"])
+        result = _quarantine(payload, context)
+>       assert _refusals(result) == []
+E       assert ['final:Gener...oichiometry.'] == []
+E         
+E         Left contains one more item: "final:Generated protein complex 'enterobactin synthase complex' component 'enterobactin synthase' is missing positive stoichiometry."
+E         Use -v to get more diff
+
+tests\test_orch773_omit_per_row.py:241: AssertionError
+____ test_g9_final_gate_wrapper_with_no_other_catalyst_omits_its_reaction _____
+
+    def test_g9_final_gate_wrapper_with_no_other_catalyst_omits_its_reaction() -> None:
+        """runs_verify 2026-08-21_2057 PMC12452463: a generated 'enterobactin synthase complex' (EntD/EntE/EntF,
+        no stoichiometry) is its reaction's only catalyst, so D-113 s1 does not apply: the process leaves."""
+    
+        payload, context = _leg("runs_verify_2026-08-21_2057_PMC12452463")
+        result = _quarantine(payload, context)
+>       assert _refusals(result) == []
+E       assert ['final:Gener...oichiometry.'] == []
+E         
+E         Left contains 3 more items, first extra item: "final:Generated protein complex 'enterobactin synthase complex' component 'EntD' is missing positive stoichiometry."
+E         Use -v to get more diff
+
+tests\test_orch773_omit_per_row.py:265: AssertionError
+_ test_g9_stage8_non_canonical_transporter_is_dropped_and_its_transport_stays _
+
+    def test_g9_stage8_non_canonical_transporter_is_dropped_and_its_transport_stays() -> None:
+        """ORCH-755 sour taste (KI-023): three transports name OTOP1 in Stage-1 shape. Base: Stage-8 stop.
+        D-114 AMENDMENT 1 s2: each transport stays and loses only that transporter, recorded with the gate's code."""
+    
+        payload, context = _leg("ORCH-755_sour_taste-strict_2026-10-21_0139")
+        names = ("OTOP1-mediated H+ transport", "H+ permeation through OTOP1", "OTOP1-mediated H+ permeation")
+        result = _quarantine(payload, context)
+>       assert _refusals(result) == []
+E       AssertionError: assert ['stage8:acto...ot_canonical'] == []
+E         
+E         Left contains 3 more items, first extra item: 'stage8:actor_schema_not_canonical'
+E         Use -v to get more diff
+
+tests\test_orch773_omit_per_row.py:286: AssertionError
+________ test_g9_required_gate_bare_protein_enzyme_omits_its_reaction _________
+
+    def test_g9_required_gate_bare_protein_enzyme_omits_its_reaction() -> None:
+        """runs_verify 2026-08-21_2057 PMC12096016 (KI-006): 'lactate dehydrogenase' is a bare protein enzyme.
+        Base: "PWML required-field gate failed", no PWML."""
+    
+        payload, context = _leg("runs_verify_2026-08-21_2057_PMC12096016")
+        result = _quarantine(payload, context)
+>       assert _refusals(result) == []
+E       AssertionError: assert ['required:re...tein_complex'] == []
+E         
+E         Left contains 2 more items, first extra item: 'required:reaction_enzyme_must_be_protein_complex'
+E         Use -v to get more diff
+
+tests\test_orch773_omit_per_row.py:304: AssertionError
+_________ test_g9_ir_complex_without_components_omits_its_interaction _________
+
+    def test_g9_ir_complex_without_components_omits_its_interaction() -> None:
+        """runs_verify 2026-08-25_1216 PMC12856317: the IR resolves none of 'LONP1''s components.
+        Base: "PWML IR validation failed", no PWML."""
+    
+        payload, context = _leg("runs_verify_2026-08-25_1216_PMC12856317")
+        result = _quarantine(payload, context)
+>       assert _refusals(result) == []
+E       AssertionError: assert ['ir:protein_...g_components'] == []
+E         
+E         Left contains 2 more items, first extra item: 'ir:protein_complex_missing_components'
+E         Use -v to get more diff
+
+tests\test_orch773_omit_per_row.py:318: AssertionError
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.pwml.ir:ir.py:1297 Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens']
+___ test_g9_a_process_quarantined_at_admission_caps_a_release_ready_pathway ___
+
+    def test_g9_a_process_quarantined_at_admission_caps_a_release_ready_pathway() -> None:
+        """Base: a pathway that omits a process at admission is still ``release_ready`` (a bare ``pathway.pwml``).
+        Tip: any omitted process in the frozen record caps it at ``review_required``."""
+    
+        control = _quarantine(_cap_toy(quarantined_reaction=False), None)
+        assert control.quarantine_report["release"]["status"] == "release_ready"
+        assert not any(r.startswith("omitted_from_pwml") for r in control.quarantine_report["release"]["reasons"])
+    
+        result = _quarantine(_cap_toy(quarantined_reaction=True), None)
+        assert [row["state"] for row in result.admissions] == ["core_accepted", "core_accepted", QUARANTINED_UNMAPPED_ENTITY]
+        assert result.ok
+>       _review_required(result)
+
+tests\test_orch773_omit_per_row.py:356: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+result = StrictQuarantineResult(payload={'metadata': {'pw_id': 'PW000000', 'pathway_name': 'Glutathione biosynthesis', 'name': ...: 1, 'thresholds': {'min_core_processes': 1, 'min_core_coverage': 0.5}, 'minimum_core_satisfied': True, 'reasons': []})
+actors = 0
+
+    def _review_required(result, actors: int = 0) -> None:
+        """``review_required``, never strict success; and the cap reason exactly when something was omitted."""
+    
+        report = result.quarantine_report
+        release = report["release"]
+>       assert release["status"] == "review_required"
+E       AssertionError: assert 'release_ready' == 'review_required'
+E         
+E         - review_required
+E         + release_ready
+
+tests\test_orch773_omit_per_row.py:152: AssertionError
+____________________________ test_new_release_cap _____________________________
+
+    def test_new_release_cap() -> None:
+        """``_cap_release_for_omissions`` is monotone: ``release_ready`` -> ``review_required`` only."""
+    
+>       from t2pw.pipeline.strict_quarantine import OMITTED_FROM_PWML_REASON, _cap_release_for_omissions
+E       ImportError: cannot import name 'OMITTED_FROM_PWML_REASON' from 't2pw.pipeline.strict_quarantine' (C:\t\orch773\basetree\src\t2pw\pipeline\strict_quarantine.py)
+
+tests\test_orch773_omit_per_row.py:437: ImportError
+=========================== short test summary info ===========================
+FAILED tests/test_orch773_omit_per_row.py::test_g9_unexportable_component_takes_its_complex_and_processes_not_the_pathway
+FAILED tests/test_orch773_omit_per_row.py::test_g9_unexportable_row_kept_only_by_a_synonym_is_removed_alone
+FAILED tests/test_orch773_omit_per_row.py::test_g9_final_gate_degree_zero_protein_is_removed_and_every_reaction_stays
+FAILED tests/test_orch773_omit_per_row.py::test_g9_d113_inferred_wrapper_leaves_its_reaction_and_the_paper_catalyst_stays
+FAILED tests/test_orch773_omit_per_row.py::test_g9_final_gate_wrapper_with_no_other_catalyst_omits_its_reaction
+FAILED tests/test_orch773_omit_per_row.py::test_g9_stage8_non_canonical_transporter_is_dropped_and_its_transport_stays
+FAILED tests/test_orch773_omit_per_row.py::test_g9_required_gate_bare_protein_enzyme_omits_its_reaction
+FAILED tests/test_orch773_omit_per_row.py::test_g9_ir_complex_without_components_omits_its_interaction
+FAILED tests/test_orch773_omit_per_row.py::test_g9_a_process_quarantined_at_admission_caps_a_release_ready_pathway
+FAILED tests/test_orch773_omit_per_row.py::test_new_release_cap - ImportError...
+10 failed, 6 passed in 2.38s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f35de933f29399c4d81ef53594e987c7ddabdedb  [git, worktree dirty=True]
+label                   : r1-g9-red-base
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch773/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/orch773/basetree --pin-verdict C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch773/docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-773/58-r1-g9-red-base.pin.json -q --basetemp=C:/t/orch773/bt-58-r1-g9-red-base tests/test_orch773_omit_per_row.py
+cwd                     : C:\t\orch773\basetree
+root PID / process group: 217112 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 3.26 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  217124:python.exe
+descendants terminated  : 1  217124
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\docs\pwml_recovery_sprint\evidence\g11\ORCH-773\58-r1-g9-red-base.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH-773  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

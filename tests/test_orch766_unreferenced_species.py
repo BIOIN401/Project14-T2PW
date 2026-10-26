@@ -370,36 +370,40 @@ def _kind_payload(kind: str) -> Dict[str, Any]:
 
 ALL_KINDS = (*NAME_KINDS, *ID_KINDS, "create_default_name", "first_row", "requested_organism")
 
-#: ``_digest`` of each payload's quarantine output AT THE BASE SHA (see module doc).
+#: ``_digest`` of each payload's quarantine output (see module doc). Moved by ORCH-773 (merge rule 4): the
+#: only bytes that differ from the ORCH-766 base-SHA pins are five version fields
+#: (QUARANTINE_POLICY_VERSION 2026-07-31.1 -> 2026-10-25.1, so decision_inputs, decision_input_hash and
+#: decision_id; removed_entity_report schema_version 1 -> 2). ``evidence/orch773/pins_delta.py`` strips those
+#: five and gets identical digests at base and tip (G11 ORCH-773/24, /25); the old pins are in ORCH-773-RESULT.
 PINS: Dict[str, str] = {
-    "base": "a429b8e8515837272ac8ad7e7275c33ff67e73af559bae8641222ca6f6e3ba40",
-    "state_species": "03e1cbf66e42a20fccd59c60ef0780596905bb9c182e8e80bb7a682257f41557",
-    "state_organism": "ba2c8c305553dc45b96e3f2527d48c900fe277e2ef5bdfaecc37f566000946e6",
-    "state_name": "5091f4d10f8a32cbe2d904cb1373dacd0fc8d47f32b2eba336c8c07d94df36d7",
-    "protein_species": "2a0278e974f25fb1797b175f4d51b35cd3c232fd0e7abd8d3096c04e259e9ae3",
-    "protein_organism": "585a9b79aafa68f62c918daae73f7c48f093d3c3d3eeaa190f7b1ebdbb264f15",
-    "protein_species_ref_name": "3741602c7b4b3b8a806bbad944f608e3ecb7836c21c475405df1f20a008de591",
-    "protein_mapping_meta_species": "b3e2f4736e11865103f8a00feba0fb9b275f1a4b12f41af62c2d8d59f7cc997c",
-    "complex_species": "c3f053deae02228413bf7aa6fe9702478d38ee2e53fecc948f2aa899ef03579d",
-    "complex_organism": "85b51015f53024e0dc9404c044312fae90f033dcd3dbb9a8e11fb1cf242d873e",
-    "other_entity_species": "b90e8262fce929f6b9884ff6ed0580268b32d50b41ec89886e081d90f07946c5",
-    "location_row_species": "7fc8bb133b57d449728d867ac0c268d92b1acdd7693845c26bab5923f44946fa",
-    "pathway_metadata_organism": "54cd3b41e660b87806e7ff8020e2b725f0022d350abba441cf5331226ec19825",
-    "surviving_process_field": "246cc23d472883c7eb9b21a884734545415d1387a890d6b85266348287e30fc9",
-    "alias": "57ab20ace974df3bb337a6f8e058ed2b543997345cf8e7f0882842ad1ef4488b",
-    "synonym": "57bfe1bd89b57d7ac83d57ddb18aa01d4149edf6f8fd748093aa3f87fa32c344",
-    "raw_name": "31e8bc8d091d6098960409e33e6c0ed150178bf8c24c39c868777ff1f332cb4c",
-    "case_and_punctuation_variant": "ac25d5c69d3e65c172cc30e40461665dfefc359ae107964bc6acc525e225260b",
-    "protein_taxonomy_id": "19b97b854c42f7a92e776c76e394b6e75a1aec373e630ea6f5c0c86e691f5631",
-    "protein_species_id": "7c34b16541040f12eb209236e9ccbba1212b64eb6d75bfd4e8a71213f49b6d4d",
-    "protein_species_ref_ids": "7c1e3de6bea1b6f1b7571d5f46d6ccb64b50aa0f1bca2c12b07b410f79f0c0e3",
-    "state_taxonomy_id": "e6d153529ecf084c02c32b0864fae3c7a281660687e0e1e2253edef4190f0122",
-    "species_id_as_float_text": "2db9f1a9a351f6df15a28d69b7ec802fbcd0af7febe83f3329a0f50e69aa4fa6",
-    "species_id_non_integral_float": "6440c6d63396b0e02c1801408fea1c1f96e1d163c013e11619bb55bc8bbd03b6",
-    "species_id_non_integral_text": "f121fa42c19fb6def4ac49938f9659d532c03ecffd5065f9c73f86f24c989606",
-    "create_default_name": "b484bdf045b6fdd3f45df4ebe51027220626ec8cda70aa1c153793224ce3a66c",
-    "first_row": "b8b487797360d5d1047bcd400626d9fba0ccb199b074d586faebe7d9a70bc20f",
-    "requested_organism": "d27c947fe574bdde05c76cc1e6f1b4d4c06190470e5b4540e453368040441c48",
+    "base": "32f3a34e079148f70808ce6d7fb33df6e6480d15aecb6d08c41fd66a4c7eed1b",
+    "state_species": "59c95f8350b5cd6a4cb423fb887192cfbe487391b695ea6ab4dc8a50d9647613",
+    "state_organism": "7bcc8be85e7ba7684777147309fad447db2de5a5aa8919a78d4dc3325e6f1f70",
+    "state_name": "6ed999a521ec69e13009e2be64b1efb2185d7e7269489006ecfb30831999e054",
+    "protein_species": "0c49a4c54b1606539d26678508774ff1b3c043d64ad78848f7a30ef440ed358a",
+    "protein_organism": "4369288701c8c61ef50ded62ea3baa3de1b8edb9bb5efeffea591ad28c241f4e",
+    "protein_species_ref_name": "403562c2b097bbfc8bcb3282661bcc1501e47fdf98eac89f20554511a86694f9",
+    "protein_mapping_meta_species": "b242c789b8a250ffa13e779e0a94329bbccfa943cacfc1fb37338eb5042f6902",
+    "complex_species": "06bca968108862db2a2f0b22bdb48db2851f4434433d8ecf274089050e11c452",
+    "complex_organism": "78ca9bcc0d6bc07178fa5d297ae492d945aab381635bdaf0c32cb08e43241549",
+    "other_entity_species": "45fdda53937884e6cd04b5362ff81400072746827610999728a721a60076f6b5",
+    "location_row_species": "ddae74b65ee9a429ec323f9940fa45595f87530759f9aab84bdcaa9f4f33908b",
+    "pathway_metadata_organism": "4396f5fb751358b4c76ee7c0e0f48e4e744bf1a3597a66dd746e0f7cf7279c68",
+    "surviving_process_field": "d38f6f140d6a3ee49f9053aba6b222aee1f2f12c83d8b1346163681367828460",
+    "alias": "266c611e6bf5151c3788b08774757016d73231d21d04a10d7f402415a117fa60",
+    "synonym": "85b1f3ec0b42ef805589495f4f8ffdda8771aede07ce6c0ecec7ddeb0042c419",
+    "raw_name": "e09541ee1e977c5f365398258a0b4e3d88ca3d13c77d0cbe02b4c9cbe1ec549f",
+    "case_and_punctuation_variant": "04e9132d1a1bad5c9f71dff1baaf0d6338f8a865c5e3b1091347f2978ca0bd44",
+    "protein_taxonomy_id": "65df837b8b64a3d34011ccefa770fe8132a0be162279307b638bd1802f8cbe7e",
+    "protein_species_id": "90d7763ccb739ebd43d73198a4acda632a4aada3c06e6d890faa8657abe89b4f",
+    "protein_species_ref_ids": "0022b4494c4a6f4922ea9e5f24a32beec50ca5160860bd022c199c4f1a17f431",
+    "state_taxonomy_id": "64d40b43afb29bfa813b558facd0f8bd45c32d4c0f77575cab4a726af2e46c19",
+    "species_id_as_float_text": "70eaa1f6f37eae6b7a820323c2ec8f1cf7ff76bfa3e6ee95aa50050d9c5420b0",
+    "species_id_non_integral_float": "22a120807c87d803434cb56554332574ad6ace8181e445ee0c29c74f219a30c3",
+    "species_id_non_integral_text": "c3ca99976a23bef32ed1d147e348b3884e88ade72c4a7bcb5f1942608acb261f",
+    "create_default_name": "0ca5c0c3e75f63455ac3aa7e23b6b12c3407bc504ecbd9fcb374e270a2170cc8",
+    "first_row": "22a5965ac1c5a503231a477963ff6eec1c6b198e199c77a580167f5675194efa",
+    "requested_organism": "f7dc73d4b23db3e81893881cd65a1861942c6ed5bb1710c081b2d843922101e3",
 }
 
 

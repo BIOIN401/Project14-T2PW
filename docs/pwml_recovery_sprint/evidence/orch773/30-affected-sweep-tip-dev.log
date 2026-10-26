@@ -1,0 +1,181 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\src\t2pw\__init__.py
+........................................................................ [ 10%]
+........................................................................ [ 20%]
+...................................................FFFF................. [ 31%]
+........................................................................ [ 41%]
+........................................................................ [ 52%]
+........................................................................ [ 62%]
+........................................................................ [ 73%]
+.ss...s..sss.ss......................................................... [ 83%]
+........................................................................ [ 94%]
+.......................................                                  [100%]
+================================== FAILURES ===================================
+_ test_the_coverage_verdict_is_byte_identical_to_base_on_archived_legs[runs_verify/2026-09-01_1612/papers/PMC12096016/strict] _
+
+leg = 'runs_verify/2026-09-01_1612/papers/PMC12096016/strict'
+
+    @pytest.mark.parametrize("leg", ARCHIVED_LEGS)
+    def test_the_coverage_verdict_is_byte_identical_to_base_on_archived_legs(leg: str) -> None:
+        """NEW ACCEPTANCE TEST (G9). THE test of this card: replaying each leg's own
+        committed inputs reproduces the coverage document production wrote, BYTE FOR BYTE
+        under the writer's serializer, with no sixteenth key -- a reorder, a re-rounded
+        ratio or an added key all fail here."""
+    
+        _require(leg)
+        archived, report, produced = _replay(leg)
+    
+        assert list(produced) == list(PRE_EXISTING_KEYS), f"{leg}: verdict shape moved"
+        assert len(produced) == 15 and dict(produced) == archived, f"{leg}: a value moved"
+        assert _serialize(produced) == (ROOT / leg / COVERAGE_REPORT_FILENAME).read_text(
+            encoding="utf-8"), f"{leg}: the verdict's serialized bytes moved"
+    
+        # The diagnostics exist and are invisible to serialization -- both halves matter.
+        assert getattr(produced, SQ._D088_DIAGNOSTICS_ATTR, None) is not None
+        assert "d088" not in _serialize(produced)
+        assert SQ._D088_DIAGNOSTICS_ATTR not in dict(produced)
+        # The one route by which a verdict key could move a decision id is the policy
+        # version, which IS a decision input and this card must not have touched it.
+>       assert SQ.QUARANTINE_POLICY_VERSION == report["policy_version"]
+E       AssertionError: assert '2026-10-25.1' == '2026-07-31.1'
+E         
+E         - 2026-07-31.1
+E         ?       - ^^
+E         + 2026-10-25.1
+E         ?      +  ^^
+
+tests\test_d088_coverage_diagnostics.py:164: AssertionError
+_ test_the_coverage_verdict_is_byte_identical_to_base_on_archived_legs[runs_verify/2026-09-01_1612/papers/PMC12782028/strict] _
+
+leg = 'runs_verify/2026-09-01_1612/papers/PMC12782028/strict'
+
+    @pytest.mark.parametrize("leg", ARCHIVED_LEGS)
+    def test_the_coverage_verdict_is_byte_identical_to_base_on_archived_legs(leg: str) -> None:
+        """NEW ACCEPTANCE TEST (G9). THE test of this card: replaying each leg's own
+        committed inputs reproduces the coverage document production wrote, BYTE FOR BYTE
+        under the writer's serializer, with no sixteenth key -- a reorder, a re-rounded
+        ratio or an added key all fail here."""
+    
+        _require(leg)
+        archived, report, produced = _replay(leg)
+    
+        assert list(produced) == list(PRE_EXISTING_KEYS), f"{leg}: verdict shape moved"
+        assert len(produced) == 15 and dict(produced) == archived, f"{leg}: a value moved"
+        assert _serialize(produced) == (ROOT / leg / COVERAGE_REPORT_FILENAME).read_text(
+            encoding="utf-8"), f"{leg}: the verdict's serialized bytes moved"
+    
+        # The diagnostics exist and are invisible to serialization -- both halves matter.
+        assert getattr(produced, SQ._D088_DIAGNOSTICS_ATTR, None) is not None
+        assert "d088" not in _serialize(produced)
+        assert SQ._D088_DIAGNOSTICS_ATTR not in dict(produced)
+        # The one route by which a verdict key could move a decision id is the policy
+        # version, which IS a decision input and this card must not have touched it.
+>       assert SQ.QUARANTINE_POLICY_VERSION == report["policy_version"]
+E       AssertionError: assert '2026-10-25.1' == '2026-07-31.1'
+E         
+E         - 2026-07-31.1
+E         ?       - ^^
+E         + 2026-10-25.1
+E         ?      +  ^^
+
+tests\test_d088_coverage_diagnostics.py:164: AssertionError
+_ test_the_coverage_verdict_is_byte_identical_to_base_on_archived_legs[runs_verify/2026-09-01_1612/papers/PMC12452463/strict] _
+
+leg = 'runs_verify/2026-09-01_1612/papers/PMC12452463/strict'
+
+    @pytest.mark.parametrize("leg", ARCHIVED_LEGS)
+    def test_the_coverage_verdict_is_byte_identical_to_base_on_archived_legs(leg: str) -> None:
+        """NEW ACCEPTANCE TEST (G9). THE test of this card: replaying each leg's own
+        committed inputs reproduces the coverage document production wrote, BYTE FOR BYTE
+        under the writer's serializer, with no sixteenth key -- a reorder, a re-rounded
+        ratio or an added key all fail here."""
+    
+        _require(leg)
+        archived, report, produced = _replay(leg)
+    
+        assert list(produced) == list(PRE_EXISTING_KEYS), f"{leg}: verdict shape moved"
+        assert len(produced) == 15 and dict(produced) == archived, f"{leg}: a value moved"
+        assert _serialize(produced) == (ROOT / leg / COVERAGE_REPORT_FILENAME).read_text(
+            encoding="utf-8"), f"{leg}: the verdict's serialized bytes moved"
+    
+        # The diagnostics exist and are invisible to serialization -- both halves matter.
+        assert getattr(produced, SQ._D088_DIAGNOSTICS_ATTR, None) is not None
+        assert "d088" not in _serialize(produced)
+        assert SQ._D088_DIAGNOSTICS_ATTR not in dict(produced)
+        # The one route by which a verdict key could move a decision id is the policy
+        # version, which IS a decision input and this card must not have touched it.
+>       assert SQ.QUARANTINE_POLICY_VERSION == report["policy_version"]
+E       AssertionError: assert '2026-10-25.1' == '2026-07-31.1'
+E         
+E         - 2026-07-31.1
+E         ?       - ^^
+E         + 2026-10-25.1
+E         ?      +  ^^
+
+tests\test_d088_coverage_diagnostics.py:164: AssertionError
+_ test_the_coverage_verdict_is_byte_identical_to_base_on_archived_legs[runs_verify/2026-08-21_2239/papers/PMC12782028/strict] _
+
+leg = 'runs_verify/2026-08-21_2239/papers/PMC12782028/strict'
+
+    @pytest.mark.parametrize("leg", ARCHIVED_LEGS)
+    def test_the_coverage_verdict_is_byte_identical_to_base_on_archived_legs(leg: str) -> None:
+        """NEW ACCEPTANCE TEST (G9). THE test of this card: replaying each leg's own
+        committed inputs reproduces the coverage document production wrote, BYTE FOR BYTE
+        under the writer's serializer, with no sixteenth key -- a reorder, a re-rounded
+        ratio or an added key all fail here."""
+    
+        _require(leg)
+        archived, report, produced = _replay(leg)
+    
+        assert list(produced) == list(PRE_EXISTING_KEYS), f"{leg}: verdict shape moved"
+        assert len(produced) == 15 and dict(produced) == archived, f"{leg}: a value moved"
+        assert _serialize(produced) == (ROOT / leg / COVERAGE_REPORT_FILENAME).read_text(
+            encoding="utf-8"), f"{leg}: the verdict's serialized bytes moved"
+    
+        # The diagnostics exist and are invisible to serialization -- both halves matter.
+        assert getattr(produced, SQ._D088_DIAGNOSTICS_ATTR, None) is not None
+        assert "d088" not in _serialize(produced)
+        assert SQ._D088_DIAGNOSTICS_ATTR not in dict(produced)
+        # The one route by which a verdict key could move a decision id is the policy
+        # version, which IS a decision input and this card must not have touched it.
+>       assert SQ.QUARANTINE_POLICY_VERSION == report["policy_version"]
+E       AssertionError: assert '2026-10-25.1' == '2026-07-31.1'
+E         
+E         - 2026-07-31.1
+E         ?       - ^^
+E         + 2026-10-25.1
+E         ?      +  ^^
+
+tests\test_d088_coverage_diagnostics.py:164: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_d088_coverage_diagnostics.py::test_the_coverage_verdict_is_byte_identical_to_base_on_archived_legs[runs_verify/2026-09-01_1612/papers/PMC12096016/strict]
+FAILED tests/test_d088_coverage_diagnostics.py::test_the_coverage_verdict_is_byte_identical_to_base_on_archived_legs[runs_verify/2026-09-01_1612/papers/PMC12782028/strict]
+FAILED tests/test_d088_coverage_diagnostics.py::test_the_coverage_verdict_is_byte_identical_to_base_on_archived_legs[runs_verify/2026-09-01_1612/papers/PMC12452463/strict]
+FAILED tests/test_d088_coverage_diagnostics.py::test_the_coverage_verdict_is_byte_identical_to_base_on_archived_legs[runs_verify/2026-08-21_2239/papers/PMC12782028/strict]
+4 failed, 675 passed, 8 skipped in 48.85s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 3ef3fa9c6e00e1d65300a80224cf9a0ce2b3e1df  [git, worktree dirty=True]
+label                   : affected-sweep-tip-dev
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch773/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch773/docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-773/30-affected-sweep-tip-dev.pin.json -q --basetemp=C:/t/orch773/bt-30-affected-sweep-tip-dev tests/test_batch_driver_quarantine_artifacts.py tests/test_batch_pwml_artifact_naming.py tests/test_c011_freeze_seam_golden_equivalence.py tests/test_c030_canonical_identity_fallback.py tests/test_c056b_semantic_denominators.py tests/test_c056c_semantic_evaluability.py tests/test_c056d_gate_failure_semantic_carry.py tests/test_c074_strict_core_floor.py tests/test_c080_production_gate_kind_aware.py tests/test_c082_species_rename_declination.py tests/test_c121_autostate_lifecycle.py tests/test_d088_coverage_diagnostics.py tests/test_orch759a_duplicate_protein_fold.py tests/test_orch759c_quarantine_bucket_closure.py tests/test_orch766_unreferenced_species.py tests/test_orch768_replay_corpus.py tests/test_orch769b_actor_protein_registry.py tests/test_orch773_omit_per_row.py tests/test_prefreeze_compound_resolution.py tests/test_release_status_classification.py tests/test_semantic_release_gating.py tests/test_stage3_gate_report_lifecycle.py tests/test_streamlit_stage2_orchestration.py tests/test_strict_failure_replay.py tests/test_strict_quarantine.py tests/test_strict_quarantine_contract_alignment.py tests/test_strict_quarantine_lineage.py tests/test_strict_quarantine_locks_and_scope.py tests/test_strict_quarantine_release_seam.py tests/test_strict_quarantine_versioning.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773
+root PID / process group: 119136 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 590 s
+duration                : 50.43 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 24  123100:python.exe, 121328:git.exe, 64076:git.exe, 114328:git.exe, 116192:python.exe, 121476:python.exe, 108856:python.exe, 123052:python.exe, 120248:git.exe, 95636:python.exe, 108444:python.exe, 120508:python.exe, 120624:python.exe, 92180:python.exe, 123676:python.exe, 114296:python.exe, 122404:python.exe, 120620:git.exe, 115648:git.exe, 115480:git.exe, 116768:git.exe, 91428:git.exe, 123936:git.exe, 124212:git.exe
+descendants terminated  : 24  64076, 91428, 92180, 95636, 108444, 108856, 114296, 114328, 115480, 115648, 116192, 116768, 120248, 120508, 120620, 120624, 121328, 121476, 122404, 123052, 123100, 123676, 123936, 124212
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\docs\pwml_recovery_sprint\evidence\g11\ORCH-773\30-affected-sweep-tip-dev.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH-773  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

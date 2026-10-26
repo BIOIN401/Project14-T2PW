@@ -1,0 +1,68 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\src\t2pw\__init__.py
+..................................................F....................  [100%]
+================================== FAILURES ===================================
+_________ test_each_replayed_leg_carries_the_measured_trees_coverage __________
+
+replayed = namespace(H=<module 'orch768_replay_corpus_772' from 'C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\...rc_sha': '360a6ac5', 'src_tree': '9b1943a8d8369d96cdbadb7ff5aafec6e8b6b13d', 'stamp': '2026-10-24_0131', 'tier': 'A'}])
+
+    def test_each_replayed_leg_carries_the_measured_trees_coverage(replayed):
+        assert Path(replayed.T.evidence.__file__).resolve() == (ROOT / "src" / "t2pw" / "app" / "reaction_evidence.py").resolve()
+        for leg_id, record in replayed.records.items():
+            cov = record["pwml_coverage"]
+            assert cov["pwml_written"] is record["pwml_written"], leg_id
+            assert cov["drawn"] is not None and 0 <= cov["drawn"] <= cov["total"], leg_id
+            if not record["pwml_written"]:
+                assert cov["drawn"] == 0, leg_id
+            assert sum(n for n, *_ in record["pwml_coverage"]["omitted_by_reason"]) == cov["total"] - cov["drawn"], leg_id
+            assert record["network_refused"] == [], leg_id
+        got = {i: (r["pwml_coverage"]["drawn"], r["pwml_coverage"]["total"], r["pwml_coverage"]["by_design_withheld"])
+               for i, r in replayed.records.items()}
+        # Enterobactin and sour taste equal what their own leg directories give (0/21, 7/12): on a canonical
+        # checkpoint the leg's recorded pre-freeze removals are carried (4 and 5 rows). WNT PCP writes a PWML at
+        # this tree (ORCH-769c) and draws 1 of 66; 17 of its interactions are untyped (KI-008).
+>       assert got == {
+            "ORCH-767/enterobactin-strict/2026-10-23_2224": (0, 21, 0),
+            "ORCH-767/sour_taste_v2-strict/2026-10-24_0042": (7, 12, 0),
+            "ORCH-767/wnt_pcp-strict/2026-10-24_0131": (1, 66, 17),
+        }
+E       AssertionError: assert {'ORCH-767/en...: (1, 66, 17)} == {'ORCH-767/en...: (1, 66, 17)}
+E         
+E         Omitting 2 identical items, use -vv to show
+E         Differing items:
+E         {'ORCH-767/enterobactin-strict/2026-10-23_2224': (10, 21, 7)} != {'ORCH-767/enterobactin-strict/2026-10-23_2224': (0, 21, 0)}
+E         Use -v to get more diff
+
+tests\test_orch772_pwml_coverage.py:354: AssertionError
+----------------------------- Captured log setup ------------------------------
+WARNING  t2pw.pwml.ir:ir.py:1297 Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli']
+WARNING  t2pw.pwml.ir:ir.py:1297 Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Mus musculus']
+=========================== short test summary info ===========================
+FAILED tests/test_orch772_pwml_coverage.py::test_each_replayed_leg_carries_the_measured_trees_coverage
+1 failed, 70 passed in 5.04s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ fa26fbc25e4f2d9580d58a9ddb76b23469f4543e  [git, worktree dirty=True]
+label                   : p2-focused-dev
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch773/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch773/docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-773/77-p2-focused-dev.pin.json -q --basetemp=C:/t/orch773/bt-77-p2-focused-dev tests/test_orch773_omit_per_row.py tests/test_orch772_pwml_coverage.py tests/test_reaction_evidence.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773
+root PID / process group: 253448 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 590 s
+duration                : 6.04 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 3  253460:python.exe, 253056:python.exe, 253076:python.exe
+descendants terminated  : 3  253056, 253076, 253460
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\docs\pwml_recovery_sprint\evidence\g11\ORCH-773\77-p2-focused-dev.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH-773  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

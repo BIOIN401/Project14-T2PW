@@ -9,7 +9,8 @@ corpus manifest's sha256:
 1. **fidelity** -- the legs ran on ``d6849c9e``, whose ``src`` tree is ``main``'s (``e3d5b65f``), so at this tree
    the replay must reproduce each recorded verdict: sour taste writes ``pathway.review_required.pwml``
    byte-identical to the leg's; enterobactin fails the final pre-export gate on the "enterobactin synthase
-   complex" wrapper component; WNT PCP crashes opening refinement review (no reaction nodes to draw);
+   complex" wrapper component (since ORCH-773 the wrapper is omitted and the leg writes a PWML); WNT PCP
+   crashes opening refinement review (no reaction nodes to draw; since ORCH-769c it writes a PWML);
 2. **determinism** -- two replays give identical records and identical output files;
 3. **offline** -- every socket connect and DNS lookup is refused while the harness runs; the probe proves the
    block and the legs attempt none.
@@ -38,7 +39,8 @@ ENTEROBACTIN = "ORCH-767/enterobactin-strict/2026-10-23_2224"
 WNT_PCP = "ORCH-767/wnt_pcp-strict/2026-10-24_0131"
 EXPECTED = {
     SOUR: {"pwml_written": True, "failure_stage": None, "pwml_matches_leg": True},
-    ENTEROBACTIN: {"pwml_written": False, "failure_stage": "final_pre_export_stage3_gates"},
+    # ORCH-773 (merge rule 4): the inferred wrapper is omitted before the freeze (D-113 s1, D-114 s2).
+    ENTEROBACTIN: {"pwml_written": True, "failure_stage": None, "canonical_matches_leg": False},
     # ORCH-769c (merge rule 4): the review step no longer crashes on an interactions-only graph.
     WNT_PCP: {"pwml_written": True, "failure_stage": None},
 }
@@ -106,20 +108,30 @@ def test_replay_reproduces_the_recorded_verdict(corpus, leg_id):
     H = corpus["H"]
     record = corpus["runs"][0][leg_id]
     assert record["checkpoint"] == "canonical"
-    assert record["canonical_matches_leg"] is True
+    assert record["canonical_matches_leg"] is EXPECTED[leg_id].get("canonical_matches_leg", True)
     # ORCH-769c moved WNT PCP on purpose: its one fidelity difference is the outcome.
-    expected_diffs = ["outcome recorded=refinement_review_crash replay=pwml"] if leg_id == WNT_PCP else []
+    # ORCH-773 moved enterobactin on purpose: the outcome and the final gate's verdict.
+    expected_diffs = {
+        WNT_PCP: ["outcome recorded=refinement_review_crash replay=pwml"],
+        ENTEROBACTIN: [
+            "outcome recorded=final_pre_export_stage3_gates replay=pwml",
+            "final_gate_ok recorded=False replay=True",
+            f"final_gate_errors recorded={record['recorded_reports']['final_gate_errors']} replay=[]",
+        ],
+    }.get(leg_id, [])
     assert H.fidelity(corpus["legs"][leg_id], record) == expected_diffs
     for key, value in EXPECTED[leg_id].items():
         assert record.get(key) == value, (leg_id, key, record.get(key))
 
 
-def test_enterobactin_fails_on_the_wrapper_component_exactly_as_recorded(corpus):
+def test_enterobactin_wrapper_component_recorded_failure_is_omitted_not_refused(corpus):
+    """The leg's own final gate failed on the wrapper component; the replay omits the wrapper (ORCH-773)."""
+
     record = corpus["runs"][0][ENTEROBACTIN]
-    assert record["final_gate"]["ok"] is False
-    assert record["final_gate"]["errors"] == record["recorded_reports"]["final_gate_errors"]
-    (path, reason), = record["final_gate"]["errors"]
+    (path, reason), = record["recorded_reports"]["final_gate_errors"]
     assert "enterobactin synthase complex" in reason.lower()
+    assert record["final_gate"] == {"ok": True, "codes": [], "errors": []}
+    assert record["quarantine"]["release"] == "review_required"
 
 
 def test_the_fidelity_check_bites(corpus):
@@ -131,9 +143,11 @@ def test_the_fidelity_check_bites(corpus):
     sour["recorded"]["message"] = "post-pipeline validation failed: 1 blocking issue(s) at final_pre_export_stage3_gates"
     sour["recorded"]["stage"] = "post_pipeline"
     assert any(d.startswith("outcome ") for d in H.fidelity(sour, corpus["runs"][0][SOUR]))
-    entero = json.loads(json.dumps(corpus["runs"][0][ENTEROBACTIN]))
-    entero["final_gate"]["errors"] = []
-    assert any(d.startswith("final_gate_errors ") for d in H.fidelity(corpus["legs"][ENTEROBACTIN], entero))
+    # ORCH-773: enterobactin's final gate now differs from its record by design, so the bite is shown on sour.
+    sour_run = json.loads(json.dumps(corpus["runs"][0][SOUR]))
+    assert not any(d.startswith("final_gate_errors ") for d in H.fidelity(corpus["legs"][SOUR], sour_run))
+    sour_run["final_gate"]["errors"] = [["/entities/proteins/0", "injected"]]
+    assert any(d.startswith("final_gate_errors ") for d in H.fidelity(corpus["legs"][SOUR], sour_run))
     pcp = json.loads(json.dumps(corpus["runs"][0][WNT_PCP]))
     pcp["quarantine"]["release"] = "release_ready"
     assert any(d.startswith("release ") for d in H.fidelity(corpus["legs"][WNT_PCP], pcp))

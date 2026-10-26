@@ -1,0 +1,343 @@
+t2pw: C:\t\orch773\base\src\t2pw
+
+## ORCH-755_enterobactin-strict_2026-10-20_2201  quarantine ok=False refusal=['unexportable_entity:1']
+   invariant unexportable_entities: {'bucket': 'proteins', 'name': 'EntB', 'reason': 'protein_missing_external_identity'}
+   G1 final  /entities/proteins/1 | Protein 'EntB' is missing a UniProt or DrugBank identifier. | row name='EntB'
+   G3 req    /entities/proteins/1 | protein_missing_external_identity | Protein 'EntB' is missing a UniProt or DrugBank identifier. | row name='EntB'
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli']
+
+## ORCH-755_sour_taste-strict_2026-10-21_0139  quarantine ok=True refusal=[]
+   G2 stage8 /processes/transports/0/transporters/0 | actor_schema_not_canonical | row name='OTOP1-mediated H+ transport' transporters[0]={"evidence": "permeation of H+ through an apical ion channel subsequently identified as OTOP1", "protein": "OTOP1"}
+   G2 stage8 /processes/transports/2/transporters/0 | actor_schema_not_canonical | row name='H+ permeation through OTOP1' transporters[0]={"evidence": "permeation of H + through an apical ion channel subsequently identified as OTOP1", "protein": "OTOP1"}
+   G2 stage8 /processes/transports/4/transporters/0 | actor_schema_not_canonical | row name='OTOP1-mediated H+ permeation' transporters[0]={"evidence": "transduction of sour involves permeation of H+ through an apical ion channel", "protein": "OTOP1"}
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens']
+
+## ORCH-756_enterobactin-strict_2026-10-21_2020  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli']
+
+## ORCH-756_menaquinone-strict_2026-10-21_2048  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 2 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Lactococcus lactis', 'Arabidopsis thaliana']
+
+## ORCH-759_chlorophyll-strict_2026-10-22_1231  quarantine ok=True refusal=[]
+   G3 req    /processes/reactions/21/enzymes/0 | reaction_enzyme_must_be_protein_complex | Reaction 'CPO reaction' enzyme/modifier 'CPO' must reference a protein_complex entity. | row name='CPO reaction' enzymes[0]={"confidence": 1.0, "entity": "CPO", "entity_type": "protein", "evidence": "Coprogen III oxidase (CPO)", "provenance": "extracted", "role": "catalyst"}
+   G3 req    /processes/reactions/21/modifiers/0 | reaction_enzyme_must_be_protein_complex | Reaction 'CPO reaction' enzyme/modifier 'CPO' must reference a protein_complex entity. | row name='CPO reaction' modifiers[0]={"confidence": 1.0, "entity": "CPO", "entity_type": "protein", "evidence": "Coprogen III oxidase (CPO)", "provenance": "extracted", "role": "catalyst"}
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 4 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=['Glu 1-semialdehyde', 'Mg-Proto IX monomethyl ester', '3,8-divinyl-protochlorophyllide', 'geranylgeraniol']; species=['Arabidopsis thaliana']
+   G4 irrep  /processes/reactions/21/enzymes/0 | reaction_enzyme_must_be_protein_complex | Reaction enzyme 'CPO' is still a bare protein; Stage 6 must create its PathWhiz protein-complex wrapper before export. | {"pointer": "/processes/reactions/21/enzymes/0", "protein_key": "prot_20", "protein_name": "CPO", "entity_type": "protein"}
+   G4 irrep  /processes/reactions/21/enzymes/2 | reaction_enzyme_must_be_protein_complex | Reaction enzyme 'CPO' is still a bare protein; Stage 6 must create its PathWhiz protein-complex wrapper before export. | {"pointer": "/processes/reactions/21/enzymes/2", "protein_key": "prot_20", "protein_name": "CPO", "entity_type": "protein"}
+   G4 irrep  /processes/reactions/21/enzymes/0 | reaction_enzyme_must_be_protein_complex | Reaction enzyme must reference a protein_complex entity. | {"pointer": "/processes/reactions/21/enzymes/0"}
+   G4 irval  /processes/reactions/21/enzymes/0 | reaction_enzyme_must_be_protein_complex | Reaction enzyme must reference a protein_complex entity.
+
+## ORCH-759_enterobactin-strict_2026-10-22_1037  quarantine ok=True refusal=[]
+   G1 final  /entities/proteins/7/name | Protein has degree 0 after normalization: enterobactin synthase | row name='enterobactin synthase'
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli']
+
+## ORCH-759_menaquinone-strict_2026-10-22_1148  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 2 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Lactococcus lactis', 'Arabidopsis thaliana']
+
+## ORCH-759_wnt_pcp-strict_2026-10-22_1432  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens']
+
+## ORCH-759p_chlorophyll-strict_2026-10-22_2301  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Arabidopsis thaliana']
+
+## ORCH-759p_enterobactin-strict_2026-10-22_2101  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli']
+
+## ORCH-759p_menaquinone-strict_2026-10-22_2154  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 2 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Lactococcus lactis', 'Arabidopsis thaliana']
+
+## ORCH-759p_sour_taste_v2-strict_2026-10-22_2233  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Mus musculus']
+
+## ORCH-767_chlorophyll-strict_2026-10-23_2328  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Arabidopsis thaliana']
+
+## ORCH-767_enterobactin-strict_2026-10-23_2224  quarantine ok=True refusal=[]
+   G1 final  /entities/protein_complexes/0/components/0 | Generated protein complex 'enterobactin synthase complex' component 'enterobactin synthase' is missing positive stoichiometry. | row name='enterobactin synthase complex' components[0]={"mapped_ids": {}, "member_identity": {"entity_index": 9, "mapping_meta": {"resolution": {"issue": "no_safe_db_candidate", "status": "novel"}, "source": "llm_tool"}, "name": "enterobactin synthase"}, "name": "enterobacti
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli']
+
+## ORCH-767_menaquinone-strict_2026-10-24_0503  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 2 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Lactococcus lactis', 'Arabidopsis thaliana']
+
+## ORCH-767_sour_taste_v2-strict_2026-10-24_0042  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Mus musculus']
+
+## ORCH-767_wnt_ca-strict_2026-10-24_0314  quarantine ok=False refusal=['unexportable_entity:1']
+   invariant unexportable_entities: {'bucket': 'proteins', 'name': 'phosphorylated CAMKII', 'reason': 'protein_missing_external_identity'}
+   G1 final  /entities/proteins/9 | Protein 'phosphorylated CAMKII' is missing a UniProt or DrugBank identifier. | row name='phosphorylated CAMKII'
+   G2 stage8 /processes/transports/7/transporters/0 | actor_schema_not_canonical | row name='IP3-induced Ca2+ release' transporters[0]={"confidence": 0.9, "entity": "inositol-1,4,5-trisphosphate receptor (InsP3R)", "role": "transporter"}
+   G2 stage8 /processes/transports/8/transporters/0 | actor_schema_not_canonical | row name='SERCA pumps Ca2+ into ER' transporters[0]={"confidence": 0.9, "entity": "inositol-1,4,5-trisphosphate receptor (InsP3R)", "role": "transporter"}
+   G3 req    /entities/proteins/9 | protein_missing_external_identity | Protein 'phosphorylated CAMKII' is missing a UniProt or DrugBank identifier. | row name='phosphorylated CAMKII'
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 2 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens', 'Arabidopsis thaliana']
+
+## ORCH-767_wnt_pcp-strict_2026-10-24_0131  quarantine ok=True refusal=[]
+
+## runs_verify_2026-08-18_1328_PMC12096016  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli']
+
+## runs_verify_2026-08-18_1328_PMC12452463  quarantine ok=True refusal=[]
+   G1 final  /entities/proteins/4/name | Protein has degree 0 after normalization: Isochorismatase (EntB) | row name='Isochorismatase (EntB)'
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli']
+
+## runs_verify_2026-08-21_1822_PMC12782028  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens']
+
+## runs_verify_2026-08-21_2014_PMC12312563  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Listeria monocytogenes']
+
+## runs_verify_2026-08-21_2057_PMC12096016  quarantine ok=True refusal=[]
+   G3 req    /processes/reactions/5/enzymes/0 | reaction_enzyme_must_be_protein_complex | Reaction 'LDH coupled reaction' enzyme/modifier 'lactate dehydrogenase' must reference a protein_complex entity. | row name='LDH coupled reaction' enzymes[0]={"confidence": 1.0, "entity": "lactate dehydrogenase", "entity_type": "protein", "evidence": "LDH-catalyzed conversion of pyruvate to lactate", "provenance": "extracted", "role": "catalyst"}
+   G3 req    /processes/reactions/5/modifiers/0 | reaction_enzyme_must_be_protein_complex | Reaction 'LDH coupled reaction' enzyme/modifier 'lactate dehydrogenase' must reference a protein_complex entity. | row name='LDH coupled reaction' modifiers[0]={"confidence": 1.0, "entity": "lactate dehydrogenase", "entity_type": "protein", "evidence": "LDH-catalyzed conversion of pyruvate to lactate", "provenance": "extracted", "role": "catalyst"}
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli']
+   G4 irrep  /processes/reactions/5/enzymes/0 | reaction_enzyme_must_be_protein_complex | Reaction enzyme 'lactate dehydrogenase' is still a bare protein; Stage 6 must create its PathWhiz protein-complex wrapper before export. | {"pointer": "/processes/reactions/5/enzymes/0", "protein_key": "prot_7", "protein_name": "lactate dehydrogenase", "entity_type": "protein"}
+   G4 irrep  /processes/reactions/5/enzymes/1 | reaction_enzyme_must_be_protein_complex | Reaction enzyme 'lactate dehydrogenase' is still a bare protein; Stage 6 must create its PathWhiz protein-complex wrapper before export. | {"pointer": "/processes/reactions/5/enzymes/1", "protein_key": "prot_7", "protein_name": "lactate dehydrogenase", "entity_type": "protein"}
+   G4 irrep  /processes/reactions/5/enzymes/0 | reaction_enzyme_must_be_protein_complex | Reaction enzyme must reference a protein_complex entity. | {"pointer": "/processes/reactions/5/enzymes/0"}
+   G4 irval  /processes/reactions/5/enzymes/0 | reaction_enzyme_must_be_protein_complex | Reaction enzyme must reference a protein_complex entity.
+
+## runs_verify_2026-08-21_2057_PMC12452463  quarantine ok=True refusal=[]
+   G1 final  /entities/protein_complexes/0/components/0 | Generated protein complex 'enterobactin synthase complex' component 'EntD' is missing positive stoichiometry. | row name='enterobactin synthase complex' components[0]={"mapped_ids": {"pathbank_protein_id": "6383", "uniprot": "P19925"}, "mapping_status": "mapped", "name": "EntD", "pathbank_protein_id": 6383}
+   G1 final  /entities/protein_complexes/0/components/1 | Generated protein complex 'enterobactin synthase complex' component 'EntE' is missing positive stoichiometry. | row name='enterobactin synthase complex' components[1]={"mapped_ids": {"pathbank_protein_id": "6301", "uniprot": "P10378"}, "mapping_status": "mapped", "name": "EntE", "pathbank_protein_id": 6301}
+   G1 final  /entities/protein_complexes/0/components/2 | Generated protein complex 'enterobactin synthase complex' component 'EntF' is missing positive stoichiometry. | row name='enterobactin synthase complex' components[2]={"mapped_ids": {"pathbank_protein_id": "6312", "uniprot": "P11454"}, "mapping_status": "mapped", "name": "EntF", "pathbank_protein_id": 6312}
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli']
+
+## runs_verify_2026-08-21_2239_PMC12096016  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli']
+
+## runs_verify_2026-08-21_2239_PMC12180156  quarantine ok=True refusal=[]
+   G3 req    /processes/reactions | no_defensible_reaction_support | No exported reaction has defensible reaction-level support: the provenance carrier is active in this payload, yet NONE o | 
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens']
+
+## runs_verify_2026-08-21_2239_PMC12452463  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli']
+
+## runs_verify_2026-08-21_2239_PMC12782028  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens']
+
+## runs_verify_2026-08-21_2239_PMC12856317  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens']
+
+## runs_verify_2026-08-22_1821_PMC12452463  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 2 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli', 'Arabidopsis thaliana']
+
+## runs_verify_2026-08-22_2017_PMC12452463  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli']
+
+## runs_verify_2026-08-22_2017_PMC12856317  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens']
+
+## runs_verify_2026-08-22_2147_PMC12096016  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli']
+
+## runs_verify_2026-08-22_2147_PMC12180156  quarantine ok=True refusal=[]
+   G3 req    /processes/reactions | no_defensible_reaction_support | No exported reaction has defensible reaction-level support: the provenance carrier is active in this payload, yet NONE o | 
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 2 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens', 'Arabidopsis thaliana']
+
+## runs_verify_2026-08-22_2147_PMC12452463  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli']
+
+## runs_verify_2026-08-22_2147_PMC12782028  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens']
+
+## runs_verify_2026-08-22_2147_PMC12856317  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens']
+
+## runs_verify_2026-08-22_2147_PMC13231680  quarantine ok=True refusal=[]
+   G3 req    /processes/reactions | no_defensible_reaction_support | No exported reaction has defensible reaction-level support: the provenance carrier is active in this payload, yet NONE o | 
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli']
+
+## runs_verify_2026-08-24_1203_PMC12096016  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli']
+
+## runs_verify_2026-08-24_1203_PMC12452463  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli']
+
+## runs_verify_2026-08-24_1203_PMC12856317  quarantine ok=False refusal=['unexportable_entity:2']
+   invariant unexportable_entities: {'bucket': 'proteins', 'name': 'ATP-dependent Clp protease ATP-binding subunit clpX-like, mitochondrial', 'reason': 'protein_missing_external_identity'}
+   invariant unexportable_entities: {'bucket': 'proteins', 'name': 'Putative ATP-dependent Clp protease proteolytic subunit, mitochondrial', 'reason': 'protein_missing_external_identity'}
+   G1 final  /entities/proteins/3 | Protein 'ATP-dependent Clp protease ATP-binding subunit clpX-like, mitochondrial' is missing a UniProt or DrugBank identifier. | row name='ATP-dependent Clp protease ATP-binding subunit clpX-like, mitochondrial'
+   G1 final  /entities/proteins/4 | Protein 'Putative ATP-dependent Clp protease proteolytic subunit, mitochondrial' is missing a UniProt or DrugBank identifier. | row name='Putative ATP-dependent Clp protease proteolytic subunit, mitochondrial'
+   G3 req    /entities/proteins/3 | protein_missing_external_identity | Protein 'ATP-dependent Clp protease ATP-binding subunit clpX-like, mitochondrial' is missing a UniProt or DrugBank ident | row name='ATP-dependent Clp protease ATP-binding subunit clpX-like, mitochondrial'
+   G3 req    /entities/proteins/4 | protein_missing_external_identity | Protein 'Putative ATP-dependent Clp protease proteolytic subunit, mitochondrial' is missing a UniProt or DrugBank identi | row name='Putative ATP-dependent Clp protease proteolytic subunit, mitochondrial'
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens']
+
+## runs_verify_2026-08-24_1203_PMC13231680  quarantine ok=True refusal=[]
+   G3 req    /processes/reactions | no_defensible_reaction_support | No exported reaction has defensible reaction-level support: the provenance carrier is active in this payload, yet NONE o | 
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli']
+
+## runs_verify_2026-08-24_1428_PMC12096016  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli']
+
+## runs_verify_2026-08-24_1428_PMC12180156  quarantine ok=True refusal=[]
+   G3 req    /processes/reactions | no_defensible_reaction_support | No exported reaction has defensible reaction-level support: the provenance carrier is active in this payload, yet NONE o | 
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens']
+
+## runs_verify_2026-08-24_1428_PMC12444477  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 1 compound(s) and 3 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=['Kdo-lipid IVA']; species=['Escherichia coli', 'E. coli', 'Arabidopsis thaliana']
+
+## runs_verify_2026-08-24_1428_PMC12452463  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli']
+
+## runs_verify_2026-08-24_1428_PMC12782028  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens']
+
+## runs_verify_2026-08-24_1428_PMC12856317  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens']
+
+## runs_verify_2026-08-25_1216_PMC12444477  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 2 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli', 'Arabidopsis thaliana']
+   G4 irrep  /entities/protein_complexes/0/components | protein_complex_missing_components | Protein complex 'FtsH/YciM complex' has no protein components. | {"pointer": "/entities/protein_complexes/0/components"}
+   G4 irval  /entities/protein_complexes/0/components | protein_complex_missing_components | Protein complex 'FtsH/YciM complex' has no protein components.
+
+## runs_verify_2026-08-25_1216_PMC12856317  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens']
+   G4 irrep  /entities/protein_complexes/1/components | protein_complex_missing_components | Protein complex 'LONP1' has no protein components. | {"pointer": "/entities/protein_complexes/1/components"}
+   G4 irval  /entities/protein_complexes/1/components | protein_complex_missing_components | Protein complex 'LONP1' has no protein components.
+
+## runs_verify_2026-08-27_1341_PMC12096016  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 2 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli', 'Arabidopsis thaliana']
+
+## runs_verify_2026-08-27_1341_PMC12782028  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens']
+
+## runs_verify_2026-08-28_1816_PMC12180156  quarantine ok=True refusal=[]
+   G3 req    /processes/reactions | no_defensible_reaction_support | No exported reaction has defensible reaction-level support: the provenance carrier is active in this payload, yet NONE o | 
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens']
+
+## runs_verify_2026-08-28_1816_PMC12452463  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 2 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli', 'Arabidopsis thaliana']
+
+## runs_verify_2026-08-28_1816_PMC12782028  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens']
+
+## runs_verify_2026-08-28_1816_PMC12856317  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens']
+
+## runs_verify_2026-09-01_1612_PMC12096016  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli']
+
+## runs_verify_2026-09-01_1612_PMC12180156  quarantine ok=True refusal=[]
+   G3 req    /processes/reactions | no_defensible_reaction_support | No exported reaction has defensible reaction-level support: the provenance carrier is active in this payload, yet NONE o | 
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens']
+
+## runs_verify_2026-09-01_1612_PMC12452463  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 2 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli', 'Arabidopsis thaliana']
+
+## runs_verify_2026-09-01_1612_PMC12782028  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens']
+
+## runs_verify_2026-09-01_1612_PMC12856317  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 2 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens', 'Arabidopsis thaliana']
+
+## runs_verify_2026-09-02_2052_PMC12096016  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli']
+
+## runs_verify_2026-09-02_2052_PMC12180156  quarantine ok=True refusal=[]
+   G3 req    /processes/reactions | no_defensible_reaction_support | No exported reaction has defensible reaction-level support: the provenance carrier is active in this payload, yet NONE o | 
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens']
+
+## runs_verify_2026-09-02_2052_PMC12444477  quarantine ok=False refusal=['unexportable_entity:2']
+   invariant unexportable_entities: {'bucket': 'proteins', 'name': 'FtsH', 'reason': 'protein_missing_external_identity'}
+   invariant unexportable_entities: {'bucket': 'proteins', 'name': 'LapB', 'reason': 'protein_missing_external_identity'}
+   G1 final  /entities/proteins/6 | Protein 'FtsH' is missing a UniProt or DrugBank identifier. | row name='FtsH'
+   G1 final  /entities/proteins/7 | Protein 'LapB' is missing a UniProt or DrugBank identifier. | row name='LapB'
+   G3 req    /entities/proteins/6 | protein_missing_external_identity | Protein 'FtsH' is missing a UniProt or DrugBank identifier. | row name='FtsH'
+   G3 req    /entities/proteins/7 | protein_missing_external_identity | Protein 'LapB' is missing a UniProt or DrugBank identifier. | row name='LapB'
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 2 compound(s) and 2 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=['Kdo-lipid IVA', 'Kdo-lipid A']; species=['Escherichia coli', 'Arabidopsis thaliana']
+
+## runs_verify_2026-09-02_2052_PMC12452463  quarantine ok=True refusal=[]
+   G2 stage8 /processes/transports/1/transporters/0 | actor_schema_not_canonical | row name='ferri-enterobactin import via FepA' transporters[0]={"evidence": "outer membrane receptors (e.g. FepA) which transport it into the bacterial cell", "protein": "FepA"}
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli']
+
+## runs_verify_2026-09-02_2052_PMC12782028  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens']
+
+## runs_verify_2026-09-02_2052_PMC12856317  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens']
+
+## runs_verify_2026-09-06_1425_PMC11172790  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Pseudomonas aeruginosa']
+
+## runs_verify_2026-09-06_1425_PMC11405693  quarantine ok=True refusal=[]
+   G3 req    /processes/reactions/1/enzymes/0 | reaction_enzyme_must_be_protein_complex | Reaction 'C4H hydroxylation' enzyme/modifier 'AtCYP73A5' must reference a protein_complex entity. | row name='C4H hydroxylation' enzymes[0]={"confidence": 1.0, "entity": "AtCYP73A5", "entity_type": "protein", "evidence": "hydroxylated at position 4 by the cinnamic acid 4-hydroxylase (C4H) to generate para-coumaric acid", "provenance": "extracted", "role": "c
+   G3 req    /processes/reactions/1/modifiers/0 | reaction_enzyme_must_be_protein_complex | Reaction 'C4H hydroxylation' enzyme/modifier 'AtCYP73A5' must reference a protein_complex entity. | row name='C4H hydroxylation' modifiers[0]={"confidence": 1.0, "entity": "AtCYP73A5", "entity_type": "protein", "evidence": "hydroxylated at position 4 by the cinnamic acid 4-hydroxylase (C4H) to generate para-coumaric acid", "provenance": "extracted", "role": "c
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Arabidopsis thaliana']
+   G4 irrep  /processes/reactions/1/enzymes/0 | reaction_enzyme_must_be_protein_complex | Reaction enzyme 'AtCYP73A5' is still a bare protein; Stage 6 must create its PathWhiz protein-complex wrapper before export. | {"pointer": "/processes/reactions/1/enzymes/0", "protein_key": "prot_1", "protein_name": "AtCYP73A5", "entity_type": "protein"}
+   G4 irrep  /processes/reactions/1/enzymes/1 | reaction_enzyme_must_be_protein_complex | Reaction enzyme 'AtCYP73A5' is still a bare protein; Stage 6 must create its PathWhiz protein-complex wrapper before export. | {"pointer": "/processes/reactions/1/enzymes/1", "protein_key": "prot_1", "protein_name": "AtCYP73A5", "entity_type": "protein"}
+   G4 irrep  /processes/reactions/1/enzymes/0 | reaction_enzyme_must_be_protein_complex | Reaction enzyme must reference a protein_complex entity. | {"pointer": "/processes/reactions/1/enzymes/0"}
+   G4 irval  /processes/reactions/1/enzymes/0 | reaction_enzyme_must_be_protein_complex | Reaction enzyme must reference a protein_complex entity.
+
+## runs_verify_2026-09-06_1425_PMC12071552  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Staphylococcus aureus']
+
+## runs_verify_2026-09-06_1425_PMC12376012  quarantine ok=True refusal=[]
+   G3 req    /processes/reactions/4/enzymes/0 | reaction_enzyme_must_be_protein_complex | Reaction 'ceramide synthase reaction' enzyme/modifier 'ceramide synthase' must reference a protein_complex entity. | row name='ceramide synthase reaction' enzymes[0]={"confidence": 1.0, "entity": "ceramide synthase", "entity_type": "protein", "evidence": "Ceramide Synthases in Biomedical Research", "provenance": "extracted", "role": "catalyst"}
+   G3 req    /processes/reactions/4/modifiers/0 | reaction_enzyme_must_be_protein_complex | Reaction 'ceramide synthase reaction' enzyme/modifier 'ceramide synthase' must reference a protein_complex entity. | row name='ceramide synthase reaction' modifiers[0]={"confidence": 1.0, "entity": "ceramide synthase", "entity_type": "protein", "evidence": "Ceramide Synthases in Biomedical Research", "provenance": "extracted", "role": "catalyst"}
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 2 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens', 'Arabidopsis thaliana']
+   G4 irrep  /processes/reactions/4/enzymes/0 | reaction_enzyme_must_be_protein_complex | Reaction enzyme 'ceramide synthase' is still a bare protein; Stage 6 must create its PathWhiz protein-complex wrapper before export. | {"pointer": "/processes/reactions/4/enzymes/0", "protein_key": "prot_6", "protein_name": "ceramide synthase", "entity_type": "protein"}
+   G4 irrep  /processes/reactions/4/enzymes/1 | reaction_enzyme_must_be_protein_complex | Reaction enzyme 'ceramide synthase' is still a bare protein; Stage 6 must create its PathWhiz protein-complex wrapper before export. | {"pointer": "/processes/reactions/4/enzymes/1", "protein_key": "prot_6", "protein_name": "ceramide synthase", "entity_type": "protein"}
+   G4 irrep  /processes/reactions/4/enzymes/0 | reaction_enzyme_must_be_protein_complex | Reaction enzyme must reference a protein_complex entity. | {"pointer": "/processes/reactions/4/enzymes/0"}
+   G4 irval  /processes/reactions/4/enzymes/0 | reaction_enzyme_must_be_protein_complex | Reaction enzyme must reference a protein_complex entity.
+
+## runs_verify_2026-09-06_1425_PMC7232280  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 2 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Neurospora crassa', 'Arabidopsis thaliana']
+
+## runs_verify_2026-09-06_1425_PMC8510960  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 2 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Catharanthus roseus', 'Arabidopsis thaliana']
+
+## runs_verify_2026-09-16_2152_PMC12059215  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Mus musculus']
+
+## runs_verify_2026-09-16_2152_PMC12369002  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 2 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Campylobacter jejuni', 'Arabidopsis thaliana']
+
+## runs_verify_2026-09-16_2152_PMC12505894  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Candida albicans']
+
+## runs_verify_2026-09-16_2152_PMC12983300  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 1 compound(s) and 2 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=['cyclo-L-Trp-L-Leu']; species=['Penicillium polonicum', 'Arabidopsis thaliana']
+
+## runs_verify_2026-09-16_2152_PMC13170813  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 2 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Hordeum vulgare', 'Arabidopsis thaliana']
+
+## runs_verify_2026-09-16_2152_PMC13364408  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 2 compound(s) and 2 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=['7-demethylsuberosin (DMS)', 'columbianetin']; species=['Apium graveolens', 'Arabidopsis thaliana']
+
+## runs_verify_2026-09-16_2152_PMC13486683  quarantine ok=True refusal=[]
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 2 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Petunia hybrida', 'Arabidopsis thaliana']
+
+## runs_verify_2026-09-16_2152_PMC13534948  quarantine ok=False refusal=['minimum_core:no_surviving_process', 'minimum_core:core_process_count_below_minimum:0<1', 'minimum_core:requested_core_coverage_below_minimum:0.000<0.500']
+   G3 req    None | no_biological_states | No biological_states defined; export requires an explicit state. | 
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Hahella chejuensis']
+   G4 irrep  /biological_states/0 | biological_state_missing_species | Biological state 'Default state' has no resolved species reference. | {"pointer": "/biological_states/0", "biological_state_key": "bs_1"}
+   G4 irrep  /biological_states/0 | biological_state_missing_subcellular_location | Biological state 'Default state' has no resolved subcellular location reference. | {"pointer": "/biological_states/0", "biological_state_key": "bs_1"}
+   G4 irrep  /biological_states/0 | biological_state_missing_species | Biological state 'Default state' is missing species_key. | {"pointer": "/biological_states/0"}
+   G4 irrep  /biological_states/0 | biological_state_missing_subcellular_location | Biological state 'Default state' is missing subcellular_location_key. | {"pointer": "/biological_states/0"}
+   G4 irval  /biological_states/0 | biological_state_missing_species | Biological state 'Default state' is missing species_key.
+   G4 irval  /biological_states/0 | biological_state_missing_subcellular_location | Biological state 'Default state' is missing subcellular_location_key.
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 3ef3fa9c6e00e1d65300a80224cf9a0ce2b3e1df  [git, worktree dirty=False]
+label                   : probe-gate-rows-base
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch773/docs/pwml_recovery_sprint/evidence/orch773/probe_gate_rows.py --src C:/t/orch773/base/src --cap C:/t/orch773/cap-base
+cwd                     : C:/t/orch773/cwd
+root PID / process group: 84384 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 500 s
+duration                : 4.13 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  84212:python.exe
+descendants terminated  : 1  84212
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\docs\pwml_recovery_sprint\evidence\g11\ORCH-773\04-probe-gate-rows-base.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH-773  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

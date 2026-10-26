@@ -959,6 +959,7 @@ status, listed so that it is never mistaken for one. Codes are verified against 
 | `process_row_not_an_object` | exact | KI-015 | `strict_quarantine` admission loop |
 | `process_row_vanished_during_closure` | exact | KI-015 | `strict_quarantine` closure revalidation |
 | `protein_complex_component_cycle` | exact | KI-015 | `strict_quarantine._entity_representability` |
+| `protein_complex_component_omitted:<component>:<reason>` (ORCH-773: a complex left out because a component it resolves to was omitted per row) | prefix `protein_complex_component_omitted:`; then label by `<reason>`, the component's own cause (seen: KI-001) | KI-015 (the sibling `protein_complex_component_unrepresentable` row; no closer entry) | `strict_quarantine._apply_per_row_failures` |
 | `protein_complex_component_unnamed` | exact | KI-015 | `strict_quarantine._entity_representability` |
 | `protein_complex_component_unrepresentable:<name>:<reason>` | prefix `protein_complex_component_unrepresentable:`; then label by `<reason>` (e.g. KI-001) | KI-015 | `strict_quarantine._entity_representability` |
 | `protein_complex_component_unresolved:<name>` | prefix `protein_complex_component_unresolved:` | KI-015 | `strict_quarantine._entity_representability` |
@@ -1010,6 +1011,7 @@ status, listed so that it is never mistaken for one. Codes are verified against 
 | "no UniProt or DrugBank identifier; other enzymes remain" | KI-007 | `map_ids._rewrite_reaction_protein_enzymes_to_complexes` |
 | "Protein '`<name>`' is missing a UniProt or DrugBank identifier." | KI-001 | `process_normalizer.run_strict_post_normalization_gates` |
 | "Protein has degree 0 after normalization: `<name>`" | KI-013 | `process_normalizer.run_strict_post_normalization_gates` |
+| "Located protein is isolated in connectivity graph: `<name>`" (ORCH-773 omits the protein; closest entry KI-013, the same unattached-protein family) | KI-013 | `process_normalizer.run_strict_post_normalization_gates` |
 | "PWML export stopped by the quarantine boundary: `<reasons>`" | KI-016 | `streamlit_app.run_pwml_export` |
 | "PWML export stopped by validation-only pre-export Stage 3 revalidation; Stage 8 did not repair the payload." | KI-023 | `streamlit_app.run_pwml_export` |
 | "PWML required-field gate failed." | KI-006 or KI-019 (read the IR codes) | `streamlit_app.run_pwml_export` |

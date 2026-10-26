@@ -1,0 +1,57 @@
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\src\t2pw\__init__.py
+.....F..........                                                         [100%]
+================================== FAILURES ===================================
+_ test_g9_stage8_non_canonical_transporter_is_dropped_and_its_transport_stays _
+
+    def test_g9_stage8_non_canonical_transporter_is_dropped_and_its_transport_stays() -> None:
+        """ORCH-755 sour taste (KI-023): three transports name OTOP1 in Stage-1 shape. Base: Stage-8 stop.
+        D-114 AMENDMENT 1 s2: each transport stays and loses only that transporter, recorded with the gate's code."""
+    
+        payload, context = _leg("ORCH-755_sour_taste-strict_2026-10-21_0139")
+        names = ("OTOP1-mediated H+ transport", "H+ permeation through OTOP1", "OTOP1-mediated H+ permeation")
+        result = _quarantine(payload, context)
+        assert _refusals(result) == []
+        assert _omitted(result) == []
+        assert _dropped_transporters(result) == [(name, "OTOP1", "actor_schema_not_canonical") for name in names]
+        dropped = [row for row in result.removed_entity_report["removed_entities"] if row["bucket"] == "transporters"]
+>       assert [row["detail"]["actor"] for row in dropped] == [
+            transport["transporters"][0] for transport in payload["processes"]["transports"] if transport["name"] in names
+        ]
+E       AssertionError: assert [{'evidence':...in': 'OTOP1'}] == [{'evidence':...in': 'OTOP1'}]
+E         
+E         At index 0 diff: {'evidence': '79 chars elided', 'protein': 'OTOP1'} != {'evidence': 'permeation of H+ through an apical ion channel subsequently identified as OTOP1', 'protein': 'OTOP1'}
+E         Use -v to get more diff
+
+tests\test_orch773_omit_per_row.py:290: AssertionError
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.pwml.ir:ir.py:1297 Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens']
+=========================== short test summary info ===========================
+FAILED tests/test_orch773_omit_per_row.py::test_g9_stage8_non_canonical_transporter_is_dropped_and_its_transport_stays
+1 failed, 15 passed in 2.51s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f35de933f29399c4d81ef53594e987c7ddabdedb  [git, worktree dirty=True]
+label                   : r1-focused-tip-dev
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch773/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch773/docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-773/49-r1-focused-tip-dev.pin.json -q --basetemp=C:/t/orch773/bt-49-r1-focused-tip-dev tests/test_orch773_omit_per_row.py
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773
+root PID / process group: 199104 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 3.37 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  199216:python.exe
+descendants terminated  : 1  199216
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch773\docs\pwml_recovery_sprint\evidence\g11\ORCH-773\49-r1-focused-tip-dev.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH-773  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================
