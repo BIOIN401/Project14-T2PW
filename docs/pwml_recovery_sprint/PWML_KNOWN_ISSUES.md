@@ -1020,7 +1020,7 @@ status, listed so that it is never mistaken for one. Codes are verified against 
 | "Composite entity '`<name>`' in /entities/compounds has no protein-like left component; unsupported." | KI-024 | `process_normalizer.normalize_composites` |
 | "Composite token '`<text>`' at `<pointer>` has no protein-like left component; ..." | KI-024 | `process_normalizer._rewrite_token` |
 | "DraftGraph has no reaction nodes — nothing to render." | KI-020 | removed by ORCH-769c; at `e3d5b65f` in `draft_graph_render.render_draft_graph_to_png_bytes` |
-| "extraction did not finish inside the time budget" (also "audit and DB mapping ...", "PWML export ...") | KI-028 | `driver._drive` |
+| "extraction did not finish inside the time budget" (also "audit and DB mapping ...", "PWML export did not finish inside the time budget") | KI-028 | `driver._drive` |
 | "AppTest script run timed out after 3600.0(s)" (leg `RESULT.txt` DETAIL; Streamlit's message) | KI-028 | Streamlit AppTest, reached through `driver.run_one` |
 | "LLM returned an empty completion for `<stage>` (model `<m>`, finish_reason=length, ...)" | KI-054 (KI-055 at 128k) | `llm/client.chat_detailed` |
 | "Generated protein complex '`<c>`' component '`<p>`' is missing positive stoichiometry." | KI-012 | `process_normalizer.run_strict_post_normalization_gates` |

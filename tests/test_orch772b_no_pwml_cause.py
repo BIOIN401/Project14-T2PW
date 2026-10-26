@@ -21,8 +21,9 @@ import sys
 from pathlib import Path
 
 import pytest
+from types import SimpleNamespace
 
-from t2pw.app.reaction_evidence import build_report, render_text
+from t2pw.app.reaction_evidence import build_report, known_issue_id, render_text
 
 ROOT = Path(__file__).resolve().parents[1]
 EV = ROOT / "docs" / "pwml_recovery_sprint" / "evidence"
@@ -82,25 +83,23 @@ def test_g9_the_night_runner_measures_coverage_with_the_pinned_worktrees_code():
     assert '--src "$WT/src"' in call[: call.index("morning_summary.log")]
 
 
-def test_g9_the_corpus_replay_records_its_own_cause_for_each_process_lost_with_the_leg(tmp_path):
+def test_g9_the_corpus_replay_records_its_own_cause_for_each_process_lost_with_the_leg(leg_dir):
+    """Round 1 (merge rule 4): after ORCH-773 the fixture leg writes a PWML at this tree, so the replay path is driven
+    with the stop the leg recorded at 00eb12d3 (its final-gate error) and the leg's own canonical payload."""
+
     H = _load("orch768_replay_corpus.py")
-    leg = json.loads(json.dumps(_fixture_leg()))
-    for meta in leg["inputs"].values():
-        if meta["path"]:
-            raw = meta["path"][: -len(".gz")]
-            (tmp_path / raw).parent.mkdir(parents=True, exist_ok=True)
-            (tmp_path / raw).write_bytes(gzip.decompress((FIXTURE / meta["path"]).read_bytes()))
-            meta["path"] = raw
-    try:
-        record = H.replay_leg(H.load_tree(None), leg, tmp_path / "out", primary=tmp_path)
-    finally:
-        H.Offline.uninstall()
-    assert record["failure_stage"] == "final_pre_export_stage3_gates" and record["network_refused"] == []
-    lost = [row for row in record["pwml_coverage"]["omitted_by_reason"] if row[2] == "no_pwml"]
+    out = {"failure_stage": "final_pre_export_stage3_gates",
+           "final_gate": {"errors": [["/entities/protein_complexes/0/components/0", CAUSE]]}}
+    assert H.replay_no_pwml_cause(out) == CAUSE
+    import t2pw.app.reaction_evidence as evidence
+
+    payload = json.loads((leg_dir / "final_mapped.json").read_text(encoding="utf-8"))
+    cov = H.pwml_coverage(SimpleNamespace(evidence=evidence), {}, payload, None, None,
+                          no_pwml_cause=H.replay_no_pwml_cause(out))
+    lost = [row for row in cov["omitted_by_reason"] if row[2] == "no_pwml"]
     assert [row[:3] for row in lost] == [[17, "KI-012", "no_pwml"]]
     assert lost[0][3] == f"no PWML written: {CAUSE}"[:120]
-    # The count is the ORCH-772 one: only the reason and its id changed.
-    assert (record["pwml_coverage"]["drawn"], record["pwml_coverage"]["total"]) == (0, 21)
+    assert (cov["drawn"], cov["total"]) == (0, 17)  # no quarantine set passed here: the payload's 17 processes
 
 
 def test_g9_the_headline_leaves_out_the_interactions_pathwhiz_cannot_carry():
@@ -152,3 +151,29 @@ def test_new_the_reader_takes_the_first_recorded_stop_in_pipeline_order(tmp_path
 
 def test_new_the_reader_on_the_committed_leg_returns_the_final_gates_own_message(leg_dir):
     assert _load("orch772b_no_pwml_cause.py").recorded_no_pwml_cause(leg_dir) == CAUSE
+
+
+# review round 1 (r0 B-1, N-1): G9 regression proofs, each fails behaviourally at 30e4c675 ------------------------
+def test_g9_r1_an_ir_validation_failure_is_read_from_its_report_not_labelled_a_time_limit(tmp_path):
+    """The shape of runs_verify/2026-08-25_1216/papers/PMC12856317/strict: no issue codes, IR validation ok=false."""
+
+    cause = _load("orch772b_no_pwml_cause.py").recorded_no_pwml_cause
+    leg = _write(tmp_path / "leg", quarantine_report__json={"ok": True}, final_stage3_gate_report__json={"ok": True},
+                 pwml_ir_validation__json={"ok": False, "errors": [
+                     {"code": "protein_complex_missing_components", "message": "Protein complex 'LONP1' has no protein components.",
+                      "pointer": "/entities/protein_complexes/1/components"}]},
+                 RESULT__txt=RESULT.format(message="PWML export failed: PWML IR validation failed.", codes="(none reported)"))
+    assert cause(leg) == "protein_complex_missing_components"
+    assert known_issue_id(cause(leg)) == "KI-015"
+    # The bare messages are no longer read as KI-028's time-limit message, which only the driver's own wording names.
+    assert known_issue_id("PWML export failed: PWML IR validation failed.") == "unclassified"
+    assert known_issue_id("PWML export failed: PWML required-field gate failed.") == "unclassified"
+    assert known_issue_id("PWML export did not finish inside the time budget") == "KI-028"
+
+
+def test_g9_r1_a_cause_listing_several_exact_codes_is_labelled_by_the_first_that_maps():
+    assert known_issue_id("species_missing_taxonomy, species_missing_classification") == "KI-019"
+    assert known_issue_id("pathway_missing_pw_id; species_missing_classification") == "KI-019"
+    assert known_issue_id("no_such_code, another_one") == "unclassified"
+    # A whole match still wins: a message with commas is labelled whole, never by a piece.
+    assert known_issue_id("LLM returned an empty completion for stage1 (model m, finish_reason=length, tokens 0)") == "KI-054"

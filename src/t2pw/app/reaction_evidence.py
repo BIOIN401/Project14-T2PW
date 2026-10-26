@@ -203,7 +203,8 @@ KNOWN_ISSUES: Dict[str, Any] = {
         (("Composite entity '<name>' in /entities/compounds has no protein-like left component; unsupported.",), "KI-024"),
         (("Composite token '<text>' at <pointer> has no protein-like left component; ...",), "KI-024"),
         (("DraftGraph has no reaction nodes — nothing to render.",), "KI-020"),
-        (("extraction did not finish inside the time budget", "audit and DB mapping ...", "PWML export ..."), "KI-028"),
+        (("extraction did not finish inside the time budget", "audit and DB mapping ...",
+          "PWML export did not finish inside the time budget"), "KI-028"),
         (("AppTest script run timed out after 3600.0(s)",), "KI-028"),
         (("LLM returned an empty completion for <stage> (model <m>, finish_reason=length, ...)",), "KI-054"),
         (("Generated protein complex '<c>' component '<p>' is missing positive stoichiometry.",), "KI-012"),
@@ -292,7 +293,7 @@ def _message_regex(pattern: str) -> "re.Pattern[str]":
 
 
 #: Exact codes first, then the longest pattern; messages with the most fixed text first, so a broad
-#: pattern ("PWML export ...") never takes a message a narrower one names.
+#: pattern ("audit and DB mapping ...") never takes a message a narrower one names.
 _CODE_ORDER = sorted(KNOWN_ISSUES["codes"], key=lambda r: (r[1] != "exact", -len("".join(r[2])), r[0]))
 _MESSAGE_ORDER = sorted(
     ((_message_regex(p), len(re.sub(r"<[^<>]*>|\.\.\.", "", p)), ki) for ps, ki in KNOWN_ISSUES["messages"] for p in ps),
@@ -312,6 +313,12 @@ def known_issue_id(reason: Any) -> str:
     for regex, _fixed, ki in _MESSAGE_ORDER:
         if text and regex.fullmatch(text):
             return ki
+    # ORCH-772b: a recorded list ("species_missing_taxonomy, species_missing_classification") that matches nothing
+    # whole is labelled by its first item that maps, as the appendix labels a code with several causes by the first.
+    parts = [p for p in re.split(r"[;,]\s+", text) if p]
+    for part in parts if len(parts) > 1 else []:
+        if known_issue_id(part) != KI_UNCLASSIFIED:
+            return known_issue_id(part)
     return KI_UNCLASSIFIED
 
 #: Identifier fields shown verbatim, by their payload key, so nothing is relabelled.

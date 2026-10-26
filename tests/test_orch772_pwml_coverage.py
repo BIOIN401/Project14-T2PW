@@ -377,7 +377,7 @@ def test_a_tree_without_coverage_reports_na_and_the_aggregates_say_so(replayed):
     # ORCH-772b (D-114 AMENDMENT 2 § 2; merge rule 4): the target line on every strict leg comes first, with the PWML
     # pass rate; then 91 / replayed / PWML-writing legs, headline and full count. Before: the stats lines came first.
     assert printed[1].lstrip().startswith("TARGET (D-114 AMENDMENT 2, every strict leg, no PWML = 0%): legs >= 75%: ")
-    assert "PWML pass rate 2/3" in printed[1]
+    assert "PWML pass rate 3/3" in printed[1]  # round 1: ORCH-773 makes the enterobactin fixture leg export (was 2/3)
     assert [p.split()[0] for p in printed[2:8]] == [f"{d}.{v}" for d in ("strict_legs_with_an_outcome", "replayed", "pwml_written")
                                                      for v in ("headline", "full_count")]
     assert "omitted processes by known issue" in printed[8]
