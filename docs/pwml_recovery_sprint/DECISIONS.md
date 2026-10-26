@@ -7493,3 +7493,18 @@ PathBank's "Unknown" protein (9659) backs enzyme complexes in 231,287 PathBank r
    enzyme passes.
 4. **Activators and inhibitors are not exported as enzymes** (`ir.py:2140-2145`, reaction 50020). They export as Activation or Inhibition
    interactions where PathWhiz can carry them; otherwise they appear in the text output only.
+
+---
+
+## D-116 — the "no defensible reaction support" whole-pathway refusal becomes a per-row omission · 2026-10-26 · LOCKED
+
+**Decided by the product owner** (2026-10-26, in session, on `ORCH-774-RESULT.md` § Not settled). WNT PCP wrote no PWML in ORCH-774
+because `no_defensible_reaction_support` (KI-022) refuses the whole pathway when none of its reactions has reaction-level support,
+although it carries 18 interactions that could export. Recorded by the Lead Orchestrator.
+
+1. **KI-022 becomes a per-row omission under D-114 § 2.** Each reaction without reaction-level support is omitted pre-freeze, recorded,
+   and listed in the text output. Everything that passes is exported (`review_required`).
+2. **Unchanged:** an unsupported reaction is still never exported. The support requirement for exported reactions stays exactly as
+   strict (D-106 spirit). Only the whole-pathway refusal goes.
+3. **Next round, tonight:** D-115 §§ 1-4 and D-116 are implemented, reviewed and measured on the replay corpus, then all 6 papers run
+   live overnight with a runner-written morning summary.
