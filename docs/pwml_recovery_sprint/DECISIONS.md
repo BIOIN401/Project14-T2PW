@@ -7462,3 +7462,34 @@ legs, mean 38.1%, median 28.6%, 22/91 at ≥ 75%; on the 56 legs that write a PW
    pathways would lead to some type of PWML". Such a leg (today only `runs_verify` PMC12856317, 0/3) exports as `review_required`, with
    0% coverage shown and every process listed in the text output. Why it draws nothing is tracked as a known issue. No protected-file
    change is made.
+
+---
+
+## D-115 — enzymes: keep what the paper names, fill gaps by retrieval, then the Unknown placeholder; keep a reaction with its good enzyme; activators are not catalysts · 2026-10-26 · LOCKED
+
+**Decided by the product owner** (2026-10-25/26, in session, on `ORCH-775-RESULT.md`). ORCH-775 traced 20 exported reactions with no
+enzyme and `spontaneous=false`, which PathWhiz drops on import (`reaction.rb:90-96`):
+- 6 name their enzyme in the paper (all chlorophyll), but the Stage-4 audit deleted those enzymes because their UniProt lookup had
+  failed;
+- 3 are duplicates;
+- 11 have no enzyme in the paper, mostly rows added at Stage 2A.
+
+PathBank's "Unknown" protein (9659) backs enzyme complexes in 231,287 PathBank reactions; T2PW's Unknown-backed complex already exists
+(D-070 § O-1a/b, `map_ids.py:8916`). Recorded by the Lead Orchestrator.
+
+1. **The audit stops deleting a paper-named enzyme whose only problem is a missing id.** Stage 6 grounds it (PathBank has HEMB1, HEMC,
+   CPX1, GSA2, HEME1/2) or, failing that, wraps it in the existing Unknown-backed complex named after the paper's enzyme (D-070).
+2. **A reaction whose paper names no enzyme:** retrieval (the existing RAG path and its admission gate, with a citation) tries to find
+   the catalysing enzyme. **If retrieval finds none, the reaction is exported with the Unknown placeholder enzyme** (the Unknown-backed
+   complex). The text output flags it: "enzyme unknown, placeholder". This **amends the reading of PRODUCT_CONTRACT § 1** ("no invented
+   enzymes"): the placeholder names no specific enzyme and records the catalyst as unknown, as PathBank does.
+   **Orchestrator guard, for the product owner to confirm or overrule:** this rescue applies only to a reaction with reaction-level
+   support in the paper. A row the paper does not support stays omitted under the existing support gates: for example the LDH assay
+   reagent the gold forbids, or Stage-2A additions with no evidence quote. **Known conflict:** the certified gold for PMC12096016,
+   PMC12452463 and PMC12782028 states no Unknown-backed protein is acceptable, so those gold scores may count a placeholder as an error.
+   Reported, not hidden.
+3. **A reaction with two or more enzymes where one fails is kept with the enzyme(s) that pass.** The failing enzyme is dropped and
+   listed in the text output, and the reaction is `review_required`. This amends D-114 AMENDMENT 1 § 1, which applies now only when NO
+   enzyme passes.
+4. **Activators and inhibitors are not exported as enzymes** (`ir.py:2140-2145`, reaction 50020). They export as Activation or Inhibition
+   interactions where PathWhiz can carry them; otherwise they appear in the text output only.
