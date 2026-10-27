@@ -1,0 +1,118 @@
+{
+  "label": "leg-sour-taste-v2-strict",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "scripts/batch_run.py",
+    "--topics",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/docs/evaluation_v2/paper_runs_orch755/topics/sour_taste_v2.txt",
+    "--modes",
+    "strict",
+    "--out",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch781/runs_papers/ORCH-781/legs/sour_taste_v2-strict",
+    "--fresh",
+    "--timeout",
+    "10800",
+    "--deadline",
+    "3.20"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch781",
+  "started_at": "2026-10-26T23:19:44+00:00",
+  "finished_at": "2026-10-26T23:47:39+00:00",
+  "duration_seconds": 1674.5417099000006,
+  "timeout_seconds": 11400.0,
+  "root_pid": 140768,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 140744,
+      "name": "python.exe",
+      "ppid": 140768
+    },
+    {
+      "pid": 133148,
+      "name": "python.exe",
+      "ppid": 138856
+    },
+    {
+      "pid": 138856,
+      "name": "python.exe",
+      "ppid": 140744
+    },
+    {
+      "pid": 111500,
+      "name": "python.exe",
+      "ppid": 140744
+    },
+    {
+      "pid": 136648,
+      "name": "python.exe",
+      "ppid": 111500
+    }
+  ],
+  "descendants_terminated": [
+    111500,
+    133148,
+    136648,
+    138856,
+    140744
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 107648,
+      "name": "python.exe"
+    },
+    {
+      "pid": 111464,
+      "name": "python.exe"
+    },
+    {
+      "pid": 138524,
+      "name": "python.exe"
+    },
+    {
+      "pid": 139816,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-781\\04-leg-sour-taste-v2-strict.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch781\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch781",
+    "repo_head": "954d4942c09ddebbd08a72cada7511004b8d849d",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-781",
+    "token": "ORCH-781:139816:6ce5d30a03e8c7bd",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

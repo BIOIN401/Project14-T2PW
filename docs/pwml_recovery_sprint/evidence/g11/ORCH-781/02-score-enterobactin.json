@@ -1,0 +1,100 @@
+{
+  "label": "score-enterobactin",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/docs/pwml_recovery_sprint/evidence/orch756_gold_accuracy.py",
+    "--task",
+    "ORCH-781",
+    "--legs",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch781/runs_papers/ORCH-781/legs",
+    "--review",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_papers/ORCH-781/REVIEW",
+    "--papers",
+    "enterobactin",
+    "--out",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/docs/pwml_recovery_sprint/evidence/orch781_gold_accuracy.txt"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+  "started_at": "2026-10-26T22:03:28+00:00",
+  "finished_at": "2026-10-26T22:03:29+00:00",
+  "duration_seconds": 0.7292127000000619,
+  "timeout_seconds": 500.0,
+  "root_pid": 118868,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 101472,
+      "name": "python.exe",
+      "ppid": 118868
+    },
+    {
+      "pid": 121532,
+      "name": "git.exe",
+      "ppid": 101472
+    },
+    {
+      "pid": 116308,
+      "name": "git.exe",
+      "ppid": 101472
+    },
+    {
+      "pid": 121736,
+      "name": "git.exe",
+      "ppid": 101472
+    }
+  ],
+  "descendants_terminated": [
+    101472,
+    116308,
+    121532,
+    121736
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 107648,
+      "name": "python.exe"
+    },
+    {
+      "pid": 111464,
+      "name": "python.exe"
+    },
+    {
+      "pid": 121944,
+      "name": "python.exe"
+    },
+    {
+      "pid": 122628,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-781\\02-score-enterobactin.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "cdb43ddbecdda6ffed49c04989bb95ecb4541bf5",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

@@ -1,0 +1,124 @@
+{
+  "label": "leg-wnt-pcp-strict",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "scripts/batch_run.py",
+    "--topics",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/docs/evaluation_v2/paper_runs_orch755/topics/wnt_pcp.txt",
+    "--modes",
+    "strict",
+    "--out",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch781/runs_papers/ORCH-781/legs/wnt_pcp-strict",
+    "--fresh",
+    "--timeout",
+    "10800",
+    "--deadline",
+    "3.20"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch781",
+  "started_at": "2026-10-26T23:47:40+00:00",
+  "finished_at": "2026-10-27T02:47:43+00:00",
+  "duration_seconds": 10803.628457499999,
+  "timeout_seconds": 11400.0,
+  "root_pid": 148328,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 148340,
+      "name": "python.exe",
+      "ppid": 148328
+    },
+    {
+      "pid": 148360,
+      "name": "python.exe",
+      "ppid": 148340
+    },
+    {
+      "pid": 148380,
+      "name": "python.exe",
+      "ppid": 148360
+    },
+    {
+      "pid": 147516,
+      "name": "python.exe",
+      "ppid": 148340
+    },
+    {
+      "pid": 147544,
+      "name": "python.exe",
+      "ppid": 147516
+    },
+    {
+      "pid": 188880,
+      "name": "taskkill.exe",
+      "ppid": 148340
+    }
+  ],
+  "descendants_terminated": [
+    147516,
+    147544,
+    148340,
+    148360,
+    148380,
+    188880
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 107648,
+      "name": "python.exe"
+    },
+    {
+      "pid": 111464,
+      "name": "python.exe"
+    },
+    {
+      "pid": 148016,
+      "name": "python.exe"
+    },
+    {
+      "pid": 148028,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-781\\05-leg-wnt-pcp-strict.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch781\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch781",
+    "repo_head": "954d4942c09ddebbd08a72cada7511004b8d849d",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-781",
+    "token": "ORCH-781:148028:4c2a606047677d5a",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

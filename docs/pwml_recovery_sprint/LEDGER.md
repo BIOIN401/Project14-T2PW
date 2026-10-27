@@ -11195,3 +11195,5 @@ The id ORCH-760 was chosen so that 755-759 stay free for the live ORCH-754 sessi
 **2026-10-26 — D-116 recorded** (KI-022 becomes per-row). Next round chartered: D-115 §§ 1-4 and D-116, measured on the corpus, then a live 6-paper run tonight.
 
 **ORCH-781 · 2026-10-26 15:35 — LAUNCHED by main** on `main` `954d4942` (the D-114 round; NOT lanes 776-780) from pinned worktree `orch781` via `orch770_night.sh`: 6 papers, strict, 3 draws. Every agent hit the usage limit at 15:30. Lanes 776-780 are unmerged: 778 measured; 776, 777, 779 and 780 have committed and uncommitted work in their worktrees, and resume when usage allows. The `.env` copy is deleted by the launch command at run end.
+
+**ORCH-781 · 2026-10-27 — DONE** (code `954d4942`, 0 empty Stage-2/audit completions of note): 5/6 PWMLs. Coverage headline: menaquinone 100%, enterobactin 70%, sour taste 55%, chlorophyll 29%, Wnt/Ca2+ 28%; WNT PCP timed out at 10,800 s. Summary: `runs_papers/ORCH-781/MORNING_SUMMARY.md`.
