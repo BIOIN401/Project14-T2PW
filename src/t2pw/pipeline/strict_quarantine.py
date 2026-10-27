@@ -1639,8 +1639,12 @@ def _admit_processes(
     strict_db: bool,
     core_terms: Sequence[str],
     confidence_floor: Optional[float],
+    forced: Optional[Mapping[Tuple[str, int], Tuple[str, str, str]]] = None,
 ) -> List[Dict[str, Any]]:
     """One admission record per process, in payload order.
+
+    ``forced`` maps ``(bucket, index)`` to a verdict decided before admission
+    (ORCH-782: :func:`_split_gene_protein_names`); it only ever quarantines.
 
     Writes no payload row's biology: it neither adds, removes nor reorders a
     row, and edits no field any gate, hash or exporter reads. Its one write is
@@ -1708,6 +1712,9 @@ def _admit_processes(
                     _text(process.get("reaction")),
                 )
 
+            if verdict is None and forced:
+                verdict = forced.get((bucket, index))
+
             if verdict is None:
                 verdict = _essential_participant_verdict(
                     bucket, process, registry, strict_db=strict_db
@@ -1752,6 +1759,69 @@ def _admit_processes(
     # census is discarded for the same reason -- see the section 3 note above.
     _attribute_quarantined_processes(processes, records)
     return records
+
+
+# ORCH-782 (KI-011). Wording that makes an interaction's target the gene.
+# ponytail: quote-level, not symbol-local; "transcriptional" (a protein's activity) is
+# deliberately not a cue. Tighten to a symbol-adjacent match if a leg mis-assigns one.
+_GENE_ROLE_CUE = re.compile(r"\b(?:express\w*|promoters?\b|transcription\b|transcribed\b)", re.IGNORECASE)
+GENE_PROTEIN_SPLIT_REASON = "ambiguous_entity_type:nucleic_acids+proteins"
+
+
+def _split_gene_protein_names(working: Dict[str, Any]) -> Dict[Tuple[str, int], Tuple[str, str, str]]:
+    """Name a gene ``"<SYMBOL> gene"`` where it clashes with a protein; resolve references by role.
+
+    ORCH-782, the product-owner ruling on KI-011. Stage 1 declares a gene row and a
+    protein row with the same bare symbol (chlorophyll: HEMA1, CAO, GUN4, PORB), and
+    a process names only the symbol, so admission quarantined EVERY process naming
+    it. Edits ``working`` in place, before the registry is built; no gate changes and
+    ``ambiguous_entity_type`` still backstops any clash this leaves.
+
+    * The gene row and its ``nucleic_acid_locations`` rows take the new name.
+    * An interaction target (right endpoint) whose name or evidence speaks of
+      expression, a promoter or transcription becomes the gene.
+    * Every other reference keeps the bare symbol, which is now the protein's alone:
+      enzymes, modifiers, transporters, complex components, reaction inputs and
+      outputs, transport cargo, and an interaction's regulator (left endpoint).
+    * An interaction target with no such wording, or not a plain string, cannot be
+      decided: that one row is returned as a forced ``GENE_PROTEIN_SPLIT_REASON``
+      quarantine (KI-011 in the text record), never the symbol's other rows.
+    """
+
+    entities = _safe_dict(working.get("entities"))
+    protein_norms = {_normalize(_row_name(row)) for row in _safe_list(entities.get("proteins"))}
+    genes: Dict[str, str] = {}
+    for row in _safe_list(entities.get("nucleic_acids")):
+        name = _row_name(row)
+        if isinstance(row, dict) and name and _normalize(name) in protein_norms:
+            genes[_normalize(name)] = row["name"] = f"{name} gene"
+    if not genes:
+        return {}
+    for location in _safe_list(_safe_dict(working.get("element_locations")).get("nucleic_acid_locations")):
+        if isinstance(location, dict):
+            gene = genes.get(_normalize(_text(location.get("nucleic_acid"))))
+            if gene:
+                location["nucleic_acid"] = gene
+
+    forced: Dict[Tuple[str, int], Tuple[str, str, str]] = {}
+    interactions = _safe_list(_safe_dict(working.get("processes")).get("interactions"))
+    for index, process in enumerate(interactions):
+        if not isinstance(process, dict):
+            continue
+        cue = _GENE_ROLE_CUE.search(f"{_text(process.get('name'))} {_text(process.get('evidence'))}")
+        for key in _INTERACTION_RIGHT_KEYS:
+            value = process.get(key)
+            clashing = [name for name in _participant_names(value) if _normalize(name) in genes]
+            if not clashing:
+                continue
+            if cue and isinstance(value, str):
+                process[key] = genes[_normalize(clashing[0])]
+            else:
+                forced.setdefault(
+                    ("interactions", index),
+                    (QUARANTINED_BROKEN_REFERENCE, GENE_PROTEIN_SPLIT_REASON, clashing[0]),
+                )
+    return forced
 
 
 # ── Graph closure ───────────────────────────────────────────────────────────
@@ -3147,6 +3217,7 @@ def quarantine_and_close(
     """
 
     working: Dict[str, Any] = deepcopy(dict(payload))
+    split_omissions = _split_gene_protein_names(working)
     registry = _build_registry(working)
     core_terms = collect_requested_core_terms(
         working, requested_core=requested_core, pathway_context=pathway_context
@@ -3158,6 +3229,7 @@ def quarantine_and_close(
         strict_db=strict_db,
         core_terms=core_terms,
         confidence_floor=confidence_floor,
+        forced=split_omissions,
     )
     # The audit artifact keeps the row itself, not a digest: requirement 2 says
     # the original process is retained, and a reviewer restoring one needs the

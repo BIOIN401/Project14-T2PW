@@ -63,6 +63,19 @@ BASE_COUNTS = {
     "quarantined_disconnected": 0,
 }
 ORPHAN_GENES = ["CAO", "GUN4", "HEMA1", "PORB"]
+#: ORCH-782 (KI-011) moved the leg pins below deliberately: a gene clashing with a
+#: protein is now "<SYMBOL> gene", 18 gene-regulation rows are admitted, and only the
+#: CAO and PORB genes are still orphans (ORCH-782-RESULT.md, baseline move).
+ORCH782_COUNTS = {
+    **BASE_COUNTS,
+    "core_accepted": 26,
+    "auxiliary_accepted": 47,
+    "quarantined_broken_reference": 10,
+}
+ORCH782_ADMISSIONS_SHA256 = "8cbc88d217d634ec852d48bf416f8fb9437894b9e2db54a5944cbcb365826c7b"
+ORCH782_ORPHAN_GENES = ["CAO gene", "PORB gene"]
+ORCH782_REMOVED = (25, "b995f2cfd0e09ae10e3a5372946142dda8bb0196a504139ee06babe12c330d0b")
+ORCH782_REMOVED_LOCATIONS = (43, "2ef23a5a0a84ef6a393f7382e1457af4d3f733078b4191e06bb5c9b13a7dfd5b")
 #: ``removed_locations`` at base, as ``bucket|name|reason|biological_state`` lines
 #: (``evidence/orch759c/26-r1-probe-base.log``; identical at the round-0 tip, ``24``).
 BASE_REMOVED_LOCATIONS_SHA256 = "66891e59028a1dc0fd2c0919d30e6f77571d612c7e2420de71329cb685bde7ff"
@@ -98,8 +111,8 @@ def test_g9_chlorophyll_leg_releases_review_required_once_orphan_genes_close() -
     # The live decision, replayed: same admissions, same counts. Its decision input was
     # sha256:d2ef87f2ae5da361; ORCH-773's QUARANTINE_POLICY_VERSION bump moves it and nothing else.
     assert report["decision_input_hash"] == "sha256:8b2be66a5cacc344"
-    assert report["counts"] == BASE_COUNTS
-    assert _digest(f"{row['pointer']}|{row['state']}" for row in result.admissions) == BASE_ADMISSIONS_SHA256
+    assert report["counts"] == ORCH782_COUNTS
+    assert _digest(f"{row['pointer']}|{row['state']}" for row in result.admissions) == ORCH782_ADMISSIONS_SHA256
 
     # Base: ok False, ["entity_type_overlap:4"], diagnostic_only.
     assert report["strict_invariants"]["entity_type_overlaps"] == []
@@ -112,23 +125,24 @@ def test_g9_chlorophyll_leg_releases_review_required_once_orphan_genes_close() -
         f"{row['bucket']}|{row['name']}|{row['reason']}"
         for row in result.removed_entity_report["removed_entities"]
     ]
-    orphans = [f"nucleic_acids|{name}|unreferenced_after_quarantine" for name in ORPHAN_GENES]
+    orphans = [f"nucleic_acids|{name}|unreferenced_after_quarantine" for name in ORCH782_ORPHAN_GENES]
     assert sorted(line for line in removed if line in orphans) == orphans
     rest = [line for line in removed if line not in orphans]
-    assert (len(rest), _digest(rest)) == (BASE_REMOVED_COUNT, BASE_REMOVED_SHA256)
+    assert (len(rest), _digest(rest)) == ORCH782_REMOVED
 
     entities = result.payload["entities"]
     assert set(ORPHAN_GENES) <= {row["name"] for row in entities["proteins"]}
     assert not set(ORPHAN_GENES) & {row["name"] for row in entities["nucleic_acids"]}
-    assert len(entities["nucleic_acids"]) == 9
+    assert len(entities["nucleic_acids"]) == 20
     processes = result.payload["processes"]
-    assert (len(processes["reactions"]), len(processes["interactions"])) == (30, 25)
+    assert (len(processes["reactions"]), len(processes["interactions"])) == (30, 43)
 
     # The strict final gate freeze_canonical_payload runs once quarantine is ok.
     details = run_strict_post_normalization_gates(
         deepcopy(result.payload), enforce_all_proteins_connected=True
     )
-    assert details["connectivity"]["n_components"] == 1
+    # ORCH-782: a gene is its own element, so a gene-only regulation can be an island.
+    assert details["connectivity"]["n_components"] == 2
 
 
 def test_g9_r1_leg_no_location_row_moves_to_an_entity_of_another_kind() -> None:
@@ -154,10 +168,13 @@ def test_g9_r1_leg_no_location_row_moves_to_an_entity_of_another_kind() -> None:
         f"{row['bucket']}|{row['name']}|{row['reason']}|{row['biological_state']}"
         for row in result.removed_entity_report["removed_locations"]
     ]
-    new = [f"element_locations/nucleic_acid_locations|{name}|location_entity_removed|nucleus state" for name in ORPHAN_GENES]
+    new = [
+        f"element_locations/nucleic_acid_locations|{name}|location_entity_removed|nucleus state"
+        for name in ORCH782_ORPHAN_GENES
+    ]
     assert sorted(line for line in removed if line in new) == new
     rest = [line for line in removed if line not in new]
-    assert (len(rest), _digest(rest)) == (BASE_REMOVED_LOCATIONS_COUNT, BASE_REMOVED_LOCATIONS_SHA256)
+    assert (len(rest), _digest(rest)) == ORCH782_REMOVED_LOCATIONS
 
     entities = result.payload["entities"]
     cross_kind = []
@@ -178,7 +195,7 @@ def test_g9_r1_leg_no_location_row_moves_to_an_entity_of_another_kind() -> None:
     details = run_strict_post_normalization_gates(
         deepcopy(result.payload), enforce_all_proteins_connected=True
     )
-    assert details["connectivity"]["n_components"] == 1
+    assert details["connectivity"]["n_components"] == 2  # ORCH-782, see above
 
 
 # ── Synthetic, minimal: the same mechanism in eight rows ────────────────────
@@ -248,24 +265,28 @@ def test_g9_component_name_no_longer_keeps_an_unreferenced_same_named_gene() -> 
     assert result.quarantine_report["strict_invariants"]["entity_type_overlaps"] == []
     assert result.refusal_reasons == []
     assert result.ok
-    assert ("nucleic_acids", "HEMA1", "unreferenced_after_quarantine") in _removed(result)
+    assert ("nucleic_acids", "HEMA1 gene", "unreferenced_after_quarantine") in _removed(result)  # ORCH-782 name
     assert _names(result, "nucleic_acids") == []
     assert _names(result, "proteins") == ["HEMA1"]
 
 
-def test_preservation_a_referenced_gene_is_kept_and_its_overlap_still_refuses() -> None:
-    """PRESERVATION (passes at base and tip). No gate is relaxed (D-106)."""
+def test_delta_orch782_a_referenced_gene_is_renamed_and_no_overlap_remains() -> None:
+    """Was ``test_preservation_a_referenced_gene_is_kept_and_its_overlap_still_refuses``.
+
+    DELIBERATE DELTA (ORCH-782; fails at 5e1edb3f, passes at tip): the gene is now named "HEMA1 gene", so this
+    vehicle no longer has an overlap and exports. The overlap gate itself is unchanged
+    and still pinned by ``test_strict_quarantine.py::test_an_entity_type_overlap_that_
+    survives_closure_blocks_the_export`` and ``test_strict_quarantine_release_seam.py``.
+    """
 
     result = quarantine_and_close(_payload(gene_synonym="HEMA1 gene"), strict_db=False)
 
     assert result.states()["HY5 activates HEMA1"] in {"core_accepted", "auxiliary_accepted"}
-    assert _names(result, "nucleic_acids") == ["HEMA1"]
+    assert _names(result, "nucleic_acids") == ["HEMA1 gene"]
     assert _names(result, "proteins") == ["HEMA1", "HY5"]
-    assert result.quarantine_report["strict_invariants"]["entity_type_overlaps"] == [
-        {"name": "HEMA1", "buckets": "proteins+nucleic_acids"}
-    ]
-    assert result.refusal_reasons == ["entity_type_overlap:1"]
-    assert not result.ok
+    assert result.quarantine_report["strict_invariants"]["entity_type_overlaps"] == []
+    assert result.refusal_reasons == []
+    assert result.ok
 
 
 def _no_overlap_payload() -> dict:
