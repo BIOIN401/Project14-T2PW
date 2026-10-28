@@ -87,7 +87,7 @@ running). After the reboot (~13.5 GB free) everything below was run.
 | test | base | tip |
 |---|---|---|
 | `test_new_acceptance_propagation_is_all_or_nothing` | raise, payload unchanged | `gly` unproven (the "Glycine" row has no id): not renamed, marked, no reference moves |
-| `test_c050g_new_acceptance_merged_rows_that_are_referenced_still_stop` | raise | both rows CHEBI:15428 → entity 78: **one row** "Glycerol 3-phosphate", reference rewritten, fold recorded |
+| `test_c050g_new_acceptance_merged_rows_that_are_referenced_still_stop` (renamed `..._referenced_same_entity_spellings_consolidate`, review r1) | raise | both rows CHEBI:15428 → entity 78: **one row** "Glycerol 3-phosphate", reference rewritten, fold recorded |
 | `test_c050h_correction_the_code_is_named_and_names_the_rows_and_spellings` | raise with `details.rows` | row 1 omitted per row; the same `rows` record is on its marker |
 | `test_c050h_correction_the_graph_is_intact_and_no_pwml_is_emitted` | raise, payload unchanged | returns; processes unchanged, no merge, row 1 marked |
 | `test_c050h_correction_the_refusal_is_idempotent` | raises twice | same omission twice, second pass changes nothing |
@@ -121,3 +121,25 @@ running). After the reboot (~13.5 GB free) everything below was run.
    omitted. The alternative is keeping the first, but that picks one identity arbitrarily.
 3. The tip replay reaches export but writes no PWML, because Stage 6 (proteins, species) is not replayed.
    A live chlorophyll leg is the real proof.
+
+## 8. Review round 1 (REJECTED, one blocking finding) and the repair
+- **Finding:** an unproven row is now marked instead of raising, and only the strict quarantine reads
+  the marker. `run_pwml_export`'s seam (`streamlit_app.py:4875`), the writer CLI (`writer.py:2858`) and
+  research mode reach `build_pwml_ir` with no quarantine, so a fail-closed refusal had become a
+  pass-through.
+- **Repair** (`src/t2pw/pwml/ir.py`, `build_pwml_ir` compound section, next to the
+  `PWML_IR_COMPOUND_VERDICT_MISSING` check): a row still carrying the marker adds the blocking IR error
+  `PWML_IR_UNPROVEN_DUPLICATE_COMPOUND_ROW`. Both seams already stop on blocking IR errors in every mode.
+  No other IR validation changed.
+- The reverted row now carries `db_status = identity_refused_review_required` (D-028 record-only), so
+  it reaches that check instead of `PWML_IR_COMPOUND_VERDICT_MISSING`.
+- **New PRESERVATION test** `test_preservation_seam3_an_unproven_row_never_reaches_a_pwml`. On base it
+  passes because the prefreeze step raises; at the tip it passes because the IR reports the blocking
+  error. It also asserts the marker string is the same in `ir` and `strict_quarantine`.
+- **Base** (`17-g9-base-r2`): 1 passed (preservation), 3 failed (the corrections).
+- **Tip** (`18-tip-r2`): the focused file, `test_prefreeze_compound_resolution`,
+  `test_compound_resolution_extraction`, `test_strict_quarantine` and
+  `test_strict_quarantine_contract_alignment` give 141 passed, 2 failed. The 2 failures are the same
+  pre-existing ones as on base (`08`).
+- `test_c050g_new_acceptance_merged_rows_that_are_referenced_still_stop` was renamed
+  `test_c050g_new_acceptance_referenced_same_entity_spellings_consolidate`.
