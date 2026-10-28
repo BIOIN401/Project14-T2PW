@@ -12257,7 +12257,10 @@ def map_payload(
             cache=cache,
             db=db if db is not None and db.available() else None,
         )
-        enzyme_complex_report.setdefault("summary", {}).update(_safe_dict(family_report.get("summary")))
+        # Counters only when nonzero: a payload with no family maps byte-identically.
+        enzyme_complex_report.setdefault("summary", {}).update(
+            {k: v for k, v in _safe_dict(family_report.get("summary")).items() if v}
+        )
         enzyme_complex_report.setdefault("actions", []).extend(_safe_list(family_report.get("actions")))
         unknown_fallback_report = _apply_pathbank_unknown_enzyme_fallback(mapped)
         enzyme_complex_report.setdefault("summary", {}).update(
