@@ -10998,13 +10998,28 @@ def _admit_identities(payload: Dict[str, Any], entities: Dict[str, Any]) -> Dict
         },
     }
 
+    # D-118 § 1: the members of each slash list a row is named by AND the paper writes.
+    # Exact token run, not ``index.contains``: that skips the bare "2" and would let
+    # "STIM1" alone vouch for STIM2. ponytail: the index has no slashes, so "STIM1 2"
+    # in running text also counts; keep the raw text in the index if that ever bites.
+    listed_members: Dict[str, str] = {}
+    if index is not None:
+        haystack = f" {index.normalized} "
+        for bucket_rows in entities.values():
+            for named in _safe_list(bucket_rows):
+                list_name = str(_safe_dict(named).get("name") or "")
+                members = _paper_named_members(list_name)
+                if members and f" {identity_admission.normalize_text(list_name)} " in haystack:
+                    for member in members:
+                        listed_members.setdefault(identity_admission.normalize_name_key(member), list_name)
+
     # ── pass A ───────────────────────────────────────────────────────────────
     for bucket, row in rows:
         shipping = _identity_admission_eligible(row)
         if not shipping:
             continue
         report["counts"]["rows_examined"] += 1
-        support = identity_admission.identity_support(row, index)
+        support = identity_admission.identity_support(row, index, listed_members)
         if support["status"] == identity_admission.STATUS_SUPPORTED:
             report["counts"]["supported"] += 1
             continue
