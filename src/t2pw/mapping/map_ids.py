@@ -6,6 +6,7 @@ import json
 import os
 import re
 import time
+from collections import Counter
 from copy import deepcopy
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Tuple
@@ -10054,6 +10055,348 @@ def _apply_pathbank_unknown_complex_fallback(mapped: Dict[str, Any]) -> Dict[str
     return {"summary": summary, "actions": actions}
 
 
+# ORCH-783 (KI-001, family/complex subset). A paper naming a protein FAMILY
+# ("PKC", "Orai family proteins", "STIM1/2") has no single UniProt id, so the row
+# failed identity and every process naming it was omitted.
+_FAMILY_TERMS = frozenset(
+    _normalize_name(term)
+    for term in (
+        "PKC", "protein kinase C", "PLC", "phospholipase C", "G protein", "G proteins",
+        "heterotrimeric G protein", "calcineurin", "NFAT", "VGCC", "VGCCs",
+        "voltage-gated calcium channel", "voltage-gated calcium channels",
+        "P2X receptor", "P2X receptors", "5-HT3 receptor", "5-HT3 receptors",
+    )
+)
+_FAMILY_WORDS = re.compile(r"\b(family|subfamily|isoforms?|isozymes?|subunits|paralogs)\b")
+_FAMILY_QUERY_STRIP = re.compile(
+    r"\b(family|subfamily|proteins?|members?|isoforms?|isozymes?|subunits?|paralogs?)\b", re.IGNORECASE
+)
+_SLASH_MEMBER = re.compile(r"^([A-Za-z][A-Za-z0-9-]*?)(\d+[A-Za-z]?)$")
+_FAMILY_MEMBER_CAP = 3
+_FAMILY_UNIPROT_CACHE_SECTION = "family_complex_uniprot"
+FAMILY_COMPLEX_PROVENANCE_KEY = "family_complex_provenance"
+
+
+def _paper_named_members(name: str) -> List[str]:
+    """``"STIM1/2"`` -> ``["STIM1", "STIM2"]``, ``"P2X2/P2X3"`` -> both; else ``[]``.
+
+    Every part after the first is a bare number suffix or repeats the first part's
+    prefix, so ``"PI3K/AKT"`` (two different proteins) and ``"Ca2+/calmodulin"`` are
+    not member lists.
+    """
+
+    parts = [part.strip() for part in str(name or "").split("/")]
+    head = _SLASH_MEMBER.match(parts[0]) if len(parts) >= 2 else None
+    if not head:
+        return []
+    prefix = head.group(1)
+    members = [parts[0]]
+    for part in parts[1:]:
+        if re.fullmatch(r"\d+[A-Za-z]?", part):
+            members.append(prefix + part)
+        elif part.casefold().startswith(prefix.casefold()) and _SLASH_MEMBER.match(part):
+            members.append(part)
+        else:
+            return []
+    return members
+
+
+def is_family_or_complex_term(name: str) -> bool:
+    """Does ``name`` name a protein FAMILY or multi-subunit complex, not one protein?
+
+    Deliberately narrow and lexical, so a single named protein whose lookup merely
+    failed (``NLK``, ``Cdc42``, ``TCF4``, ``PIF1``) is never caught. True only when:
+
+    1. the name is a slash member list (:func:`_paper_named_members`), or
+    2. it carries family wording: family, subfamily, isoform(s), isozyme(s),
+       subunits, paralogs (``"Orai family proteins"``), or
+    3. it is one of :data:`_FAMILY_TERMS`, the family names seen in the sprint
+       corpus (PKC, PLC, G protein, calcineurin, NFAT, VGCC, P2X / 5-HT3 receptor).
+
+    UniProt is NOT asked to confirm a family: ``family:"Cdc42"`` matches the CDC42
+    subfamily and would turn a single protein into a family.
+    """
+
+    norm = _normalize_name(str(name or ""))
+    return bool(norm) and (
+        norm in _FAMILY_TERMS or bool(_FAMILY_WORDS.search(norm)) or bool(_paper_named_members(name))
+    )
+
+
+def _uniprot_reviewed_hits(
+    client: Any, cache: Optional[MappingCache], query: str, taxonomy_id: str
+) -> List[Dict[str, str]]:
+    """Reviewed UniProt hits for ``query`` in one taxon, cached; ``[]`` on any failure.
+
+    A failed request is not cached (a lookup failure is not evidence); a 200 answer is,
+    empty or not.
+    """
+
+    full = f"{query} AND organism_id:{taxonomy_id} AND reviewed:true"
+    hit = cache.get(_FAMILY_UNIPROT_CACHE_SECTION, full) if cache is not None else None
+    if hit is not None:
+        return [dict(row) for row in _safe_list(hit.get("hits")) if isinstance(row, dict)]
+    try:
+        resp = client.get(
+            _UNIPROT_SEARCH_URL,
+            params={"query": full, "fields": "accession,gene_primary,organism_id", "format": "tsv", "size": 25},
+        )
+        if resp.status_code != 200:
+            return []
+        lines = str(resp.text or "").splitlines()
+    except Exception:  # noqa: BLE001 - no answer is no members, never a refutation
+        return []
+    hits = []
+    for line in lines[1:]:
+        cols = [col.strip() for col in line.split("\t")]
+        if len(cols) >= 3 and cols[0]:
+            hits.append({"accession": cols[0], "gene": cols[1], "taxonomy_id": cols[2]})
+    if cache is not None:
+        cache.set(_FAMILY_UNIPROT_CACHE_SECTION, full, {"hits": hits})
+    return hits
+
+
+def _apply_family_complexes(
+    mapped: Dict[str, Any],
+    *,
+    client: Any = None,
+    cache: Optional[MappingCache] = None,
+    db: Any = None,
+) -> Dict[str, Any]:
+    """Turn an unresolved family-named protein into a protein complex named after it.
+
+    PO ruling for ORCH-783. Members come from the FIRST source that yields any:
+    1. the members the paper names (``"STIM1/2"``);
+    2. a PathBank complex with exactly that name in the pathway species;
+    3. UniProt family search, ``family:"<core> family"`` then ``"<core> subfamily"``,
+       reviewed, in the pathway taxon, keeping only the most common 3-letter gene
+       prefix (drops PKN1-3 from the PKC subfamily).
+    At most :data:`_FAMILY_MEMBER_CAP` members, each with a UniProt accession whose
+    taxon is the pathway's. With none, the complex is left with no components and
+    the existing Unknown-backed fallbacks (D-070) fill it, for whatever role the
+    family plays. The protein-identity requirement is untouched (D-106): every member
+    carries a real accession, and the complex is ``generated`` so the strict gates
+    check each one. The source is recorded in ``mapping_meta.family_complex.note``.
+    """
+
+    entities = _safe_dict(mapped.setdefault("entities", {}))
+    proteins = _safe_list(entities.setdefault("proteins", []))
+    complexes = _safe_list(entities.setdefault("protein_complexes", []))
+    processes = _safe_dict(mapped.get("processes"))
+    summary = {"family_complexes_with_members": 0, "family_complexes_unknown_fallback": 0}
+    actions: List[Dict[str, Any]] = []
+    organism = _extract_global_organism(mapped)
+    if not organism:
+        return {"summary": summary, "actions": actions}
+    species_row = next(
+        (
+            row
+            for row in _safe_list(entities.get("species"))
+            if isinstance(row, dict) and _normalize_name(str(row.get("name") or "")) == _normalize_name(organism)
+        ),
+        {},
+    )
+    taxonomy_id = str(species_row.get("taxonomy_id") or "").strip()
+    species_fields: Dict[str, Any] = {"species": organism, "organism": organism}
+    if taxonomy_id:
+        species_fields["taxonomy_id"] = taxonomy_id
+    for key in ("species_id", "pathbank_species_id"):
+        if _to_positive_int(species_row.get(key)):
+            species_fields[key] = species_row[key]
+
+    complex_norms = {_normalize_name(str(row.get("name") or "")) for row in complexes if isinstance(row, dict)}
+    component_norms = {
+        _normalize_name(_component_name(item))
+        for row in complexes
+        if isinstance(row, dict)
+        for item in _safe_list(row.get("components"))
+    }
+
+    def _real(row: Any) -> bool:
+        return has_protein_external_identity(row) and not is_pathbank_unknown_protein(row)
+
+    def _uniprot(row: Dict[str, Any]) -> str:
+        return str(row.get("uniprot_id") or _safe_dict(row.get("mapped_ids")).get("uniprot") or "").strip()
+
+    def _same_species(row: Dict[str, Any]) -> bool:
+        return _normalize_name(str(row.get("species") or row.get("organism") or "")) == _normalize_name(organism)
+
+    def _paper_members(name: str) -> List[Dict[str, Any]]:
+        out = []
+        for member in _paper_named_members(name)[:_FAMILY_MEMBER_CAP]:
+            existing = next(
+                (
+                    row
+                    for row in proteins
+                    if isinstance(row, dict)
+                    and _normalize_name(str(row.get("name") or "")) == _normalize_name(member)
+                    and _real(row)
+                    and _same_species(row)
+                ),
+                None,
+            )
+            if existing is not None:
+                out.append({"name": existing["name"], "accession": _uniprot(existing), "row": existing})
+                continue
+            if client is None or not taxonomy_id:
+                continue
+            hits = [h for h in _uniprot_reviewed_hits(client, cache, f"gene_exact:{member}", taxonomy_id)
+                    if h["taxonomy_id"] == taxonomy_id]
+            if len(hits) == 1:
+                out.append({"name": member, "accession": hits[0]["accession"]})
+        return out
+
+    def _pathbank_members(name: str) -> Tuple[List[Dict[str, Any]], str]:
+        if db is None:
+            return [], ""
+        try:
+            result = db.map_protein_complex(name, organism)
+            candidates = _safe_list(result.get("candidates"))
+            if result.get("status") != "mapped" or not candidates:
+                return [], ""
+            if _normalize_name(str(_safe_dict(candidates[0]).get("name") or "")) != _normalize_name(name):
+                return [], ""
+            db._find_species_ids(organism)
+            species_meta = _safe_dict(getattr(db, "_species_meta", {}))
+        except Exception:  # noqa: BLE001 - an unreachable DB yields no members
+            return [], ""
+        out = []
+        for component in _safe_list(result.get("components")):
+            meta = _safe_dict(species_meta.get(_to_positive_int(_safe_dict(component).get("species_id"))))
+            taxon_ok = (
+                str(meta.get("taxonomy_id") or "") == taxonomy_id
+                if taxonomy_id
+                else _normalize_name(str(meta.get("name") or "")) == _normalize_name(organism)
+            )
+            accession = str(component.get("uniprot") or "").strip()
+            if accession and taxon_ok:
+                out.append({
+                    "name": str(component.get("gene_name") or component.get("name") or accession),
+                    "accession": accession,
+                    "pathbank_protein_id": component.get("pathbank_protein_id"),
+                })
+        return out[:_FAMILY_MEMBER_CAP], f"PathBank complex {result.get('pathbank_complex_id')} '{candidates[0].get('name')}'"
+
+    def _uniprot_family_members(name: str) -> Tuple[List[Dict[str, Any]], str]:
+        if client is None or not taxonomy_id:
+            return [], ""
+        core = _FAMILY_QUERY_STRIP.sub(" ", name.replace('"', " "))
+        core = re.sub(r"\b(receptor|channel|kinase)s\b", r"\1", core, flags=re.IGNORECASE)
+        core = re.sub(r"\s+", " ", core).strip(" -,")
+        if not core:
+            return [], ""
+        for query in (f'family:"{core} family"', f'family:"{core} subfamily"'):
+            hits = [h for h in _uniprot_reviewed_hits(client, cache, query, taxonomy_id)
+                    if h["taxonomy_id"] == taxonomy_id and h["gene"]]
+            if not hits:
+                continue
+            # ponytail: majority 3-letter gene prefix stands in for "exact family";
+            # use UniProt's family text per hit if a family ever mixes prefixes.
+            top = Counter(h["gene"][:3].upper() for h in hits).most_common(1)[0][0]
+            kept = sorted((h for h in hits if h["gene"][:3].upper() == top), key=lambda h: h["gene"])
+            members = [{"name": h["gene"], "accession": h["accession"]} for h in kept[:_FAMILY_MEMBER_CAP]]
+            return members, f"UniProt family search {query}, first {len(members)} of {len(kept)} reviewed same-taxon hits"
+        return [], ""
+
+    for idx in range(len(proteins) - 1, -1, -1):
+        row = proteins[idx]
+        if not isinstance(row, dict):
+            continue
+        name = _canonical_name(str(row.get("name") or ""))
+        norm = _normalize_name(name)
+        if (
+            not is_family_or_complex_term(name)
+            or _real(row)
+            or is_pathbank_unknown_protein(row)
+            or norm in complex_norms
+            or norm in component_norms
+        ):
+            continue
+        members = _paper_members(name)
+        source = "members named by the paper" if members else ""
+        if not members:
+            members, source = _pathbank_members(name)
+            source = f"members from {source}, not the paper" if members else ""
+        if not members:
+            members, source = _uniprot_family_members(name)
+            source = f"members from {source}, not the paper" if members else ""
+
+        complex_row: Dict[str, Any] = {"name": name}
+        for key in ("provenance", "provenance_lineage", "evidence", "source_refs", "species_ref"):
+            if key in row:
+                complex_row[key] = deepcopy(row[key])
+        components = []
+        for member in members:
+            existing = member.get("row") or next(
+                (r for r in proteins if isinstance(r, dict) and _real(r) and _uniprot(r) == member["accession"]),
+                None,
+            )
+            if existing is None:
+                existing = {
+                    "name": member["name"],
+                    "uniprot_id": member["accession"],
+                    "mapped_ids": {"uniprot": member["accession"]},
+                    **species_fields,
+                    FAMILY_COMPLEX_PROVENANCE_KEY: {"family": name, "source": source},
+                    "mapping_meta": {
+                        "provider": "PathBankDB" if member.get("pathbank_protein_id") else "UniProt",
+                        "chosen_rule": "family_complex_member",
+                        "resolution": {"status": "matched", "order_step": "family_complex_member"},
+                    },
+                }
+                if member.get("pathbank_protein_id"):
+                    existing["pathbank_protein_id"] = member["pathbank_protein_id"]
+                    existing["mapped_ids"]["pathbank_protein_id"] = str(member["pathbank_protein_id"])
+                proteins.append(existing)
+            components.append({"name": existing["name"], "stoichiometry": 1, "uniprot": member["accession"]})
+        if components:
+            complex_row.update(species_fields)
+            note = source
+            summary["family_complexes_with_members"] += 1
+        else:
+            # D-070 fallback, now for any role: the Unknown-backed fallbacks fill this
+            # empty generated complex, with the sentinel's species unless this row's
+            # species was source-supported (``_wrapper_species_fields``).
+            for key in ("species", "organism", "taxonomy_id", "species_id", "pathbank_species_id"):
+                if key in row:
+                    complex_row[key] = row[key]
+            resolution = _safe_dict(row.get("mapping_meta")).get("species_resolution")
+            if resolution:
+                complex_row["mapping_meta"] = {"species_resolution": deepcopy(resolution)}
+            complex_row.update(_wrapper_species_fields(complex_row))
+            note = "no members found in the paper, PathBank or UniProt; PathBank Unknown placeholder member"
+            summary["family_complexes_unknown_fallback"] += 1
+        complex_row.update({
+            "generated": True,
+            "generation_reason": "single_protein_pathwhiz_wrapper",
+            "components": components,
+        })
+        complex_row.setdefault("mapping_meta", {})["family_complex"] = {
+            "family": name,
+            "members": [c["name"] for c in components],
+            "note": note,
+        }
+        del proteins[idx]
+        complexes.append(complex_row)
+        complex_norms.add(norm)
+        for bucket, field in (("reactions", "enzymes"), ("transports", "transporters")):
+            for process in _safe_list(processes.get(bucket)):
+                for actor in _safe_list(_safe_dict(process).get(field)):
+                    if (
+                        isinstance(actor, dict)
+                        and actor.get("entity_type") == "protein"
+                        and _normalize_name(str(actor.get("entity") or "")) == norm
+                    ):
+                        actor["entity_type"] = "protein_complex"
+        actions.append({
+            "type": "family_protein_converted_to_complex",
+            "protein": name,
+            "members": [c["name"] for c in components],
+            "note": note,
+        })
+    return {"summary": summary, "actions": actions}
+
+
 def _invalidate_cache_entries(cache: MappingCache, invalidate_cache_keys: Any = None) -> int:
     if not invalidate_cache_keys:
         return 0
@@ -11906,6 +12249,16 @@ def map_payload(
         )
 
     if allow_complex_wrapper_creation:
+        # ORCH-783: family-named proteins become complexes first, so the Unknown
+        # fallbacks below only see the families no member source could fill.
+        family_report = _apply_family_complexes(
+            mapped,
+            client=client if source_mode != "db" else None,
+            cache=cache,
+            db=db if db is not None and db.available() else None,
+        )
+        enzyme_complex_report.setdefault("summary", {}).update(_safe_dict(family_report.get("summary")))
+        enzyme_complex_report.setdefault("actions", []).extend(_safe_list(family_report.get("actions")))
         unknown_fallback_report = _apply_pathbank_unknown_enzyme_fallback(mapped)
         enzyme_complex_report.setdefault("summary", {}).update(
             _safe_dict(unknown_fallback_report.get("summary"))

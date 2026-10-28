@@ -489,6 +489,9 @@ def _mapping(name: str, entity: Mapping[str, Any], borrowed: str = "") -> str:
     parts.append(", ".join(ids) or "no identifier recorded")
     if borrowed:
         parts.append(f"borrowed identity: {borrowed}")
+    family = _dict(_dict(entity.get("mapping_meta")).get("family_complex"))
+    if _text(family.get("note")):  # ORCH-783: where a family complex's members came from
+        parts.append(f"family complex: {_text(family['note'])}")
     return f"{name}: " + "; ".join(parts)
 
 
