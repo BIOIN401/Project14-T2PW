@@ -10397,6 +10397,68 @@ def _apply_family_complexes(
     return {"summary": summary, "actions": actions}
 
 
+def _drop_unidentified_family_members(mapped: Dict[str, Any], report: Dict[str, Any]) -> None:
+    """ORCH-786: a family-complex member with no UniProt/DrugBank id is dropped.
+
+    Runs after identity admission, which may withhold a reused member's accession.
+    Members are resolved the way ``validate_post_remap`` resolves them (normalized
+    name, last row wins). A complex left with no member falls back to the
+    Unknown-backed complex (D-070, D-117 § 2 step 4), species via
+    ``_wrapper_species_fields`` exactly as a family that never had members. Each drop
+    is noted on ``mapping_meta.family_complex.note`` (printed in the text record) with
+    KI-001. If even the fallback is refused, the complex stays empty and post_remap
+    still stops -- see ORCH-786-RESULT.md, open question 1.
+    """
+
+    entities = _safe_dict(mapped.get("entities"))
+    by_name = {
+        " ".join(str(row.get("name") or "").casefold().split()): row
+        for row in _safe_list(entities.get("proteins"))
+        if isinstance(row, dict) and str(row.get("name") or "").strip()
+    }
+    emptied = False
+    for complex_row in _safe_list(entities.get("protein_complexes")):
+        family = _safe_dict(_safe_dict(_safe_dict(complex_row).get("mapping_meta")).get("family_complex"))
+        if not family or not complex_row.get("generated"):
+            continue
+        kept, dropped = [], []
+        for component in _safe_list(complex_row.get("components")):
+            name = _component_name(component)
+            row = by_name.get(" ".join(name.casefold().split()))
+            if row is not None and not has_protein_external_identity(row):
+                dropped.append(name)
+            else:
+                kept.append(component)
+        if not dropped:
+            continue
+        complex_row["components"] = kept
+        family["members"] = [_component_name(c) for c in kept]
+        family["note"] = (
+            f"{family.get('note') or ''}; members dropped (KI-001, no UniProt/DrugBank id "
+            f"after identity admission): {', '.join(dropped)}"
+        ).lstrip("; ")
+        if not kept:
+            for key in ("species", "organism", "taxonomy_id", "species_id", "pathbank_species_id"):
+                complex_row.pop(key, None)
+            complex_row.update(_wrapper_species_fields(complex_row))
+            family["note"] += "; PathBank Unknown placeholder member"
+            emptied = True
+        report.setdefault("actions", []).append({
+            "type": "family_complex_member_dropped",
+            "protein_complex": complex_row.get("name"),
+            "dropped": dropped,
+            "known_issue": "KI-001",
+        })
+        summary = report.setdefault("summary", {})
+        summary["family_complex_members_dropped"] = summary.get("family_complex_members_dropped", 0) + len(dropped)
+    if emptied:
+        fallback = _apply_pathbank_unknown_complex_fallback(mapped)
+        report["actions"].extend(_safe_list(fallback.get("actions")))
+        summary = report["summary"]
+        for key, value in _safe_dict(fallback.get("summary")).items():
+            summary[key] = summary.get(key, 0) + value
+
+
 def _invalidate_cache_entries(cache: MappingCache, invalidate_cache_keys: Any = None) -> int:
     if not invalidate_cache_keys:
         return 0
@@ -12292,6 +12354,10 @@ def map_payload(
     # is the thing § 3 attributes. It is still inside mapping and still
     # pre-freeze, which is what merge rule 8 requires of a biological refusal.
     identity_admission_report = _admit_identities(mapped, entities)
+    if allow_complex_wrapper_creation:
+        # ORCH-786: admission can withhold a reused family member's accession
+        # ("STIM2" from "STIM1/2"), which would stop the whole pathway at post_remap.
+        _drop_unidentified_family_members(mapped, enzyme_complex_report)
 
     # PRODUCT_CONTRACT § 3 attribution for this stage, deliberately last and
     # deliberately after ``cache.save()``: every mapping decision is already
