@@ -29,8 +29,8 @@ http = h.ReplayHttp({})
 # The leg's Stage-6 live UniProt answer for STIM2 was not persisted (use_cache=False);
 # it is injected here as the reviewed human entry, the ORCH-759a resolution technique.
 STIM2 = {"STIM2": {"status": "mapped", "mapped_ids": {"uniprot": "Q9P246"}, "provider": "UniProt",
-         "source": "api", "confidence": 1.0, "chosen_rule": "uniprot_exact_gene",
-         "candidates": [], "resolution": {"status": "matched"}, "identity_verdict": None, "resolved_name": "STIM2"}}
+         "source": "api", "confidence": 1.0, "chosen_rule": "uniprot_exact_gene", "candidates": [{"name": "STIM2", "gene_name": "STIM2", "uniprot": "Q9P246", "organism": "Homo sapiens", "taxonomy_id": "9606", "score": 1.0}],
+         "resolution": {"status": "matched"}, "identity_verdict": None, "resolved_name": "STIM2"}}
 with h.Doors(http, resolutions=STIM2) as doors:
     out = h.replay(payload, work)
 final = out["stage6"]["payload"]

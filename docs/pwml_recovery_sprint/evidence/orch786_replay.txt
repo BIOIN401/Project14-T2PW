@@ -1,0 +1,53 @@
+ORCH-786 offline replay of ORCH-784 wnt_ca-strict merged_payload.json (docs/pwml_recovery_sprint/evidence/orch786_replay.py)
+No network (every HTTP 404), no PathBank DB, no LLM; Stage-2 cache copied from the orch784run run; STIM2's Stage-6 UniProt answer (Q9P246) injected because the leg never saved it. Audit/curator rounds not run.
+Wrapper reports: evidence/g11/ORCH-786/03-replay-base.json, 04-replay-tip.json
+
+===== base
+tree: C:\t\orch786\base
+http requests answered 404 (offline): 385 | ai calls: 87
+entity counts: {'species': 2, 'subcellular_locations': 6, 'compounds': 4, 'proteins': 24, 'protein_complexes': 13}
+  generated complex: TCF4 complex | components: ['TCF4'] | family: False
+  generated complex: NLK complex | components: ['NLK'] | family: False
+  generated complex: STIM1 complex | components: ['STIM1'] | family: False
+  generated complex: Orai1 complex | components: ['Orai1'] | family: False
+  generated complex: STIM2 complex | components: ['STIM2'] | family: False
+  generated complex: STIM1/2 | components: ['STIM1', 'STIM2'] | family: True
+  generated complex: NFAT | components: ['Unknown'] | family: True
+  generated complex: protein kinase C | components: ['Unknown'] | family: True
+  generated complex: PLC | components: ['Unknown'] | family: True
+  generated complex: G protein | components: ['Unknown'] | family: True
+POST_REMAP: STOP (StageContractError)
+  error: generated_wrapper_component_missing_external_identity /entities/protein_complexes/7/components/0 STIM2
+  error: generated_wrapper_component_missing_external_identity /entities/protein_complexes/8/components/1 STIM2
+  family note: STIM1/2 -> members named by the paper
+  family note: NFAT -> no members found in the paper, PathBank or UniProt; PathBank Unknown placeholder member
+  family note: protein kinase C -> no members found in the paper, PathBank or UniProt; PathBank Unknown placeholder member
+  family note: PLC -> no members found in the paper, PathBank or UniProt; PathBank Unknown placeholder member
+  family note: G protein -> no members found in the paper, PathBank or UniProt; PathBank Unknown placeholder member
+admission withheld: [('STIM2', 'identity_not_supported_by_source')]
+exit code (real)        : 0
+FINAL SURVIVING COUNT   : 0
+
+===== tip
+tree: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch786
+http requests answered 404 (offline): 385 | ai calls: 87
+entity counts: {'species': 2, 'subcellular_locations': 6, 'compounds': 4, 'proteins': 24, 'protein_complexes': 13}
+  generated complex: TCF4 complex | components: ['TCF4'] | family: False
+  generated complex: NLK complex | components: ['NLK'] | family: False
+  generated complex: STIM1 complex | components: ['STIM1'] | family: False
+  generated complex: Orai1 complex | components: ['Orai1'] | family: False
+  generated complex: STIM2 complex | components: ['STIM2'] | family: False
+  generated complex: STIM1/2 | components: ['STIM1', 'STIM2'] | family: True
+  generated complex: NFAT | components: ['Unknown'] | family: True
+  generated complex: protein kinase C | components: ['Unknown'] | family: True
+  generated complex: PLC | components: ['Unknown'] | family: True
+  generated complex: G protein | components: ['Unknown'] | family: True
+POST_REMAP: PASS  errors= 0
+  family note: STIM1/2 -> members named by the paper
+  family note: NFAT -> no members found in the paper, PathBank or UniProt; PathBank Unknown placeholder member
+  family note: protein kinase C -> no members found in the paper, PathBank or UniProt; PathBank Unknown placeholder member
+  family note: PLC -> no members found in the paper, PathBank or UniProt; PathBank Unknown placeholder member
+  family note: G protein -> no members found in the paper, PathBank or UniProt; PathBank Unknown placeholder member
+admission withheld: []
+exit code (real)        : 0
+FINAL SURVIVING COUNT   : 0
