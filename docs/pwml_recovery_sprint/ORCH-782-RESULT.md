@@ -123,3 +123,16 @@ Same chlorophyll input, base → tip:
 6. **Not re-run end to end.** SMOKE and a live chlorophyll leg are still owed.
 7. **Base worktree `C:/t/orch782/base` is left registered.** It is clean, but `git worktree remove` was refused by the
    permission classifier in this session. The orchestrator should remove it.
+
+## 7. Orchestrator addendum: review, merge tests, open questions
+
+- **Review:** pwml-reviewer, one round: APPROVE, no blocking findings. It verified the G9 exit codes and the § 4 pin delta against the diff.
+- **Merge tests:** the integration tree (782 + 783) ran 12 affected files: 315 passed, and the 2 failures were both ORCH-783's (see ORCH-783-RESULT § 5). SMOKE ran on the final merged tree `cac97171`: **511 passed** (`evidence/g11/ORCH-783/06-smoke-final.json`, 0 survivors). This closes § 6 item 6 except for the live chlorophyll leg, which the ORCH-784 paper run covers.
+
+### Open questions for the product owner (orchestrator additions)
+
+1. **"transcription" also matches "transcription factor".** The cue `transcription\b` is matched over the whole quote. A protein-protein interaction whose quote calls the regulator a transcription factor would wrongly make the target the gene. This widens § 6 item 2.
+   - (a) Accept.
+   - (b) Exclude "transcription factor" from the cue. Cost: one more lexical rule.
+2. **Gene-only island.** The PWML is now 2 components instead of 1 (§ 6 item 5).
+3. **`C:/t/orch782/base`** is still registered. The Lead is raising its removal with the user; it was not retried.

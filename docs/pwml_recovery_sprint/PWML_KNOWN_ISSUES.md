@@ -48,7 +48,7 @@ whole pathway when the offending entity survives (see KI-016).
 | **Evidence** | `ORCH-758-RESULT.md` § 4 D8; `evidence/orch756_gold_accuracy.txt` (reader notes, menaquinone); `ORCH-754b-RESULT.md` § 3, § 12 item 2, `evidence/orch754b_unwrappable_endpoints.txt`; `ORCH-761-RESULT.md` § 1.2, § 2 |
 | **Status** | **by design** (D-106). Per-row omission instead of pathway refusal is **product decision** D-114 § 2, not yet built |
 | **User workaround** | Search UniProt for the protein in the paper's organism. If an entry exists, create the protein in PathWhiz with that accession and attach it as the enzyme (or interaction partner) of the listed process. If none exists, PathWhiz cannot hold the protein; leave the process out. |
-| **Planned fix** | ORCH-773 (omit the row, keep the pathway); ORCH-772 (list it with this id) |
+| **Planned fix** | ORCH-773 (omit the row, keep the pathway); ORCH-772 (list it with this id). **Family / multi-subunit subset (PKC, PLC, G protein, Orai family, STIM1/2, P2X receptor, VGCC...): fixed by ORCH-783 (D-117 § 2, merged `cac97171`)**: a protein complex named after the family, members from the paper, else a same-species PathBank complex, else UniProt family search (max 3, species must match), else the Unknown-backed complex for any role; the text record names the member source. A single named protein whose lookup failed (PIF1, NLK, Cdc42, TCF4) stays here. Live effect: ORCH-784 |
 
 ### KI-002 — Strain-named proteins looked up by free text (menaquinone, *L. lactis* KF147)
 
@@ -176,9 +176,9 @@ whole pathway when the offending entity survives (see KI-016).
 | **Cause** | Stage 1 declared gene rows `HEMA1`, `CAO`, `GUN4`, `PORB` beside proteins of the same names. Admission correctly quarantines every process naming the bare symbol. The closure then kept the gene rows alive through a same-named protein component, and `_entity_type_overlaps` refused the pathway. |
 | **Papers and legs hit** | ORCH-759 chlorophyll (28 processes quarantined, 4 overlaps) |
 | **Evidence** | `ORCH-759-RESULT.md` § 4 item 6; `evidence/orch759_chlorophyll_diag/`; `ORCH-759c-RESULT.md` § 1, § 10 item 3 |
-| **Status** | refusal **fixed** `45aa9c28` (ORCH-759c, closure is bucket-aware). The quarantine of the processes is **by design** (D-106: no gate relaxed); the lost gene-regulation biology is **open** |
+| **Status** | refusal **fixed** `45aa9c28` (ORCH-759c, closure is bucket-aware). Lost gene-regulation biology **fixed** by ORCH-782 (D-117 § 1, merged `cac97171`): a clashing gene row becomes `<SYMBOL> gene` and each reference resolves by role; on the ORCH-759c chlorophyll fixture broken-reference quarantines went 28 -> 10. A row with no gene-level wording (e.g. "interacts with") is still omitted per row under this id. Live effect: ORCH-784 |
 | **User workaround** | Add the gene (nucleic acid) and the protein as separate elements in PathWhiz, and redraw each listed regulation to the one the quote means. |
-| **Planned fix** | none planned. Sketch: an upstream lane names gene rows distinctly (e.g. `HEMA1 gene`) before admission (ORCH-759c § 10 item 3 (b)) |
+| **Planned fix** | done: ORCH-782 (`strict_quarantine._split_gene_protein_names`). Residual open questions: ORCH-782-RESULT § 6 and § 7 |
 
 ### KI-012 — An invented single-protein wrapper (Stage 2 infers a complex-named enzyme)
 

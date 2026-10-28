@@ -7508,3 +7508,35 @@ although it carries 18 interactions that could export. Recorded by the Lead Orch
    strict (D-106 spirit). Only the whole-pathway refusal goes.
 3. **Next round, tonight:** D-115 §§ 1-4 and D-116 are implemented, reviewed and measured on the replay corpus, then all 6 papers run
    live overnight with a runner-written morning summary.
+
+---
+
+## D-117 — gene rows get their own name and references resolve by role (KI-011); protein families become complexes with at most 3 species-matched members (KI-001) · 2026-10-27 · LOCKED
+
+**Decided by the product owner** (2026-10-27, in session, on `runs_papers/ORCH-781/MORNING_SUMMARY.md`: 41 of chlorophyll's omissions are
+KI-011, 45 omissions across Wnt/Ca2+ and sour taste are KI-001 families). The product owner instructed that this be recorded; recorded
+by the sub-orchestrator. Implemented by ORCH-782 (§ 1) and ORCH-783 (§ 2).
+
+1. **KI-011, gene and protein with one bare symbol.** In PathWhiz a gene is a separate type (nucleic acid; name globally unique, DNA/RNA,
+   no database id needed: `smpdb app/models/data/nucleic_acid.rb`), so the clash is purely T2PW's.
+   - A gene row that shares its bare name with a protein row gets a distinct name: "`<SYMBOL>` gene" (e.g. "HEMA1 gene").
+   - Each process reference to the symbol is resolved by role. Target of promoter binding, expression, transcription or gene regulation
+     (judged from the quote's wording) -> the gene. Enzyme, transporter, complex member or substrate-level role -> the protein.
+   - Genuinely ambiguous -> only that one row is omitted (per-row omission, D-114 § 2), recorded as KI-011 in the text record. Never
+     the whole symbol.
+2. **KI-001, a protein family or multi-subunit complex with no single UniProt id** ("PKC", "PLC", "G protein", "Orai family",
+   "STIM1/2", "Calcineurin", "P2X receptor", "5-HT3 receptor", "VGCC"). PathWhiz needs a protein complex to carry name + species + at
+   least one member protein (`smpdb app/models/data/protein_complexes/protein_complex.rb:45-47`), and each member still needs a UniProt
+   or DrugBank id: **the protein-id requirement is not relaxed (D-106).** A protein complex named after the family is built, its
+   members chosen in this order, **stopping at the first source that yields members**:
+   1. the members the paper itself names ("STIM1/2" -> STIM1, STIM2; "P2X2/P2X3");
+   2. an existing PathBank complex of that name and the same species (PathBank read-only);
+   3. UniProt family search (`family:"<family>" AND organism_id:<taxid> AND reviewed:true`), filtered to the family proper (e.g. the
+      PKC subfamily without PKN1-3);
+   4. fallback: the existing Unknown-backed complex (D-070) named after the family, **now allowed for every role** (interaction
+      endpoints, transporters, etc.), not only enzymes.
+   **For every source: at most 3 member proteins, and every member's species must match the pathway species.** The text record states
+   the source (e.g. "members from UniProt family search, not the paper"). Members from sources 2 and 3 are by construction not in the
+   paper; the paper-support check therefore abstains for them, and the record says so.
+3. **Not covered:** a single named protein whose lookup merely failed (PIF1, NLK, Cdc42, TCF4). That is a separate lookup gap and stays
+   KI-001 as before.

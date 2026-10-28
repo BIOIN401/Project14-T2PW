@@ -36,7 +36,7 @@ Calibration probes (curl, 2026-10-27, human):
 - `NFAT family`, `NFAT subfamily`, `PKC family` and `P2X receptor subfamily` return 0.
 - Bare `family:"G protein"` returns GNG and ADGR entries, and bare `family:"calcineurin"` returns PPP3R, CHP and TESC entries. Both are too loose, so the bare form is not used.
 
-## 2. G9 / acceptance — NOT RUN
+## 2. G9 / acceptance — run by the orchestrator, see § 5
 
 | test | label | base `5e1edb3f` | tip |
 |---|---|---|---|
@@ -73,3 +73,36 @@ Reports go to `evidence/g11/ORCH-783/` (`01-focused` is already reserved).
    - G protein, PLC, NFAT, VGCC and 5-HT3 receptor get the Unknown member;
    - calcineurin was already a PathBank complex.
 6. **Base export not removed.** The base worktree `C:/t/orch783/base` is left in place for the G9 run.
+
+## 5. Tests run (orchestrator, after the build; all bounded with `--heavy-lock`, 0 survivors)
+
+The Lead lowered the RAM floor to 3 GB for normal jobs and 2 GB for short focused gates, so these ran at 3.8-4.2 GB free.
+
+| report | tree | selection | result |
+|---|---|---|---|
+| `evidence/g11/ORCH-783/01-g9-base.json` | `C:/t/orch783/base` (5e1edb3f + the test file) | `tests/test_orch783_family_complex.py` | 20 failed. The G9 test fails **on its value** ("the family must not stay a bare, identity-less protein endpoint"), not on a missing symbol. The new-acceptance tests fail on a missing symbol, which is expected for new capability. |
+| `evidence/g11/ORCH-783/02-focused-affected.json` | integration `9f7e5207` (782 + 783) | 12 files: both focused files, ORCH-759c, map_ids, mapping lineage, c073, c075, orch762, reaction_evidence, orch772, orch773, interaction wrappers | 315 passed, **2 failed**: (a) mapping-lineage base golden; (b) c075 corpus |
+| `evidence/g11/ORCH-783/03-smoke.json` | integration `9f7e5207` | SMOKE, 22 files | **511 passed** |
+| `evidence/g11/ORCH-783/04-tip-affected.json` | lane `f94291e2` | focused + mapping lineage + c075 | 87 passed, 1 failed (c075, see below) |
+| `evidence/g11/ORCH-783/05-base-c075.json` | `C:/t/orch783/base` | `tests/test_c075_source_support_armed.py` | 1 failed, **identical message on base** |
+| `evidence/g11/ORCH-783/06-smoke-final.json` | integration `cac97171` (final merged tree) | SMOKE, 22 files | **511 passed** |
+
+Pass counts come from the piped wrapper logs in `C:/t/orch784/` and `C:/t/orch783/`, because the JSON reports carry no stdout.
+
+**Failure (a), mapping-lineage golden. Fixed in `f94291e2`.** `map_payload` always wrote `family_complexes_unknown_fallback: 0` and `family_complexes_with_members: 0` into the summary. It now writes them only when they are nonzero, so a payload with no family maps byte-identically to base. The golden did not move.
+
+**Failure (b), c075 corpus. Pre-existing; expectation NOT changed.** The test fails with "unexpected: [('PMC12096016', 'strict', "Pantetheine 4'-phosphate")]".
+- It fails identically on base `5e1edb3f` (`05`).
+- It replays `_admit_identities` over committed artifacts. ORCH-783 adds only a route key there, which can only remove refusals, and this row has no route key.
+- Verdict: catching the row is **correct**. The row's name does not appear in its own source text (`runs_verify/2026-08-27_1341/.../PMC12096016/strict/final_mapped.json`, committed in `0beda95f`), so the armed pass is right to flag it, and `EXPECTED_CATCHES` is stale.
+- Updating the list needs a triage of that row, which is outside this lane. Not in SMOKE.
+
+## 6. Open questions for the product owner (orchestrator additions)
+
+1. **Slash lists of distinct proteins.** `_paper_named_members` accepts any shared-prefix pair, so "IL-4/IL-13", "CD4/CD8" and "H2A/H2B" would become a complex of two different proteins. "P2X2/P2X3" is the same lexical shape, so no lexical guard separates them cleanly.
+   - (a) Accept.
+   - (b) Accept only a digit-only second part ("STIM1/2"). Cost: loses "P2X2/P2X3".
+2. **Family terms beyond the ruling.** `_FAMILY_TERMS` includes NFAT, which the ruling does not list, and the family-word list matches "isoform" ("PKM2 isoform" would become a family). Confirm or strike.
+3. **Arabidopsis species** on an Unknown-backed family complex (§ 4 item 2). The D-117 rule "species must match" is stated for members, and the Unknown placeholder is not a species-specific protein. Rule whether the complex's own species should be the pathway species.
+4. **Identity-admission route** (§ 4 item 1). Reviewer verdict: the route is stamped only on member rows newly built from sources 1-3, so it is no wider than the ruling requires. Recorded in D-117 § 2.
+5. **Effect on ORCH-781 rows**: to be measured by the ORCH-784 paper run.
