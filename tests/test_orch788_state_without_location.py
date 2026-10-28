@@ -12,6 +12,7 @@ from __future__ import annotations
 
 from typing import Any, Dict
 
+from helpers_prefreeze import prefrozen
 from test_orch773_omit_per_row import _quarantine, _refusals
 from test_strict_quarantine_contract_alignment import _base
 
@@ -30,7 +31,7 @@ def _toy(*, process_in_bad_state: bool = False) -> Dict[str, Any]:
             {"name": "glutathione synthesis in the bad state", "inputs": ["gamma-glutamylcysteine", "glycine"],
              "outputs": ["glutathione"], "enzymes": [], "biological_state": BAD}
         )
-    return payload
+    return prefrozen(payload)  # production order: compound verdicts exist before the quarantine's IR check
 
 
 def _removed(result):
@@ -58,13 +59,12 @@ def test_g9_a_process_placed_in_the_state_is_omitted_whole_and_the_rest_exports(
     assert result.quarantine_report["release"]["status"] == "review_required"
     assert len(result.payload["processes"]["reactions"]) == len(_base()["processes"]["reactions"])
 
-
 def test_preservation_a_state_named_after_a_resolved_location_is_kept() -> None:
     """The IR already places a state named after a resolved location there: same identity, nothing omitted."""
 
     payload = _base()
     payload["biological_states"] = [{"name": "cytosol", "species": "Homo sapiens"}]
-    result = _quarantine(payload, None)
+    result = _quarantine(prefrozen(payload), None)
     assert _refusals(result) == []
     assert [s["name"] for s in result.payload["biological_states"]] == ["cytosol"]
     assert not [r for r in _removed(result) if r[2] == CODE]
