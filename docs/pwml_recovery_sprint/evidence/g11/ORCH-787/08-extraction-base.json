@@ -1,0 +1,88 @@
+{
+  "label": "extraction-base",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:/t/orch787/bt-extraction-base",
+    "tests/test_compound_resolution_extraction.py"
+  ],
+  "cwd": "C:\\t\\orch787\\base",
+  "started_at": "2026-10-28T23:26:14+00:00",
+  "finished_at": "2026-10-28T23:26:20+00:00",
+  "duration_seconds": 5.97027920000005,
+  "timeout_seconds": 900.0,
+  "root_pid": 54388,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 42360,
+      "name": "python.exe",
+      "ppid": 54388
+    }
+  ],
+  "descendants_terminated": [
+    42360
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 31056,
+      "name": "python.exe"
+    },
+    {
+      "pid": 31164,
+      "name": "python.exe"
+    },
+    {
+      "pid": 47372,
+      "name": "python.exe"
+    },
+    {
+      "pid": 49368,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch787/docs/pwml_recovery_sprint/evidence/g11/ORCH-787/08-extraction-base.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\orch787\\base\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\orch787\\base",
+    "repo_head": "22538deef5a905ecc80889de7e75e66492b30e8e",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-787",
+    "token": "ORCH-787:47372:d9d08b86b8c9de62",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

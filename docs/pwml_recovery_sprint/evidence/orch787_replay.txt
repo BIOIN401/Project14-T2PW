@@ -1,0 +1,31 @@
+ORCH-787 offline replay: ORCH-784 chlorophyll-strict (PMC5130987) from the pre-freeze seam.
+Script: docs/pwml_recovery_sprint/evidence/orch787_replay.py. PathBank answers: docs/pwml_recovery_sprint/evidence/orch787/pathbank_compound_queries.json (recorded once, read-only, G11 02-replay-record).
+Stage 6 is not replayable (KI-058): Stage-6 compound stamps carried as recorded by the same paper's ORCH-781 leg; proteins and species are NOT, so the tip's export stops at the required-field gate on those (species taxonomy/classification, no reaction left with support) -- not on this change.
+
+=== BASE 22538dee (G11 03-replay-base) ===
+tree: C:\t\orch787\base\src\t2pw
+leg: .claude/worktrees/orch784run/runs_papers/ORCH-784/legs/chlorophyll-strict/2026-10-27_2027/papers/PMC5130987/strict merged_payload.json
+compound rows in: 46
+Stage-6 stamps carried as recorded by ORCH-781 (11): 5-aminolevulinic acid=894, porphobilinogen=166, hydroxymethylbilane=887, uroporphyrinogen III=854, protoporphyrinogen IX=863, protoporphyrin IX=163, Mg-Proto IX=285208, phytol=1353, geranylgeranyl pyrophosphate=2145, phytyl pyrophosphate=104757, heme=1799
+PREFREEZE RAISED: PREFREEZE_DUPLICATE_CANONICAL_ROWS: PREFREEZE_DUPLICATE_CANONICAL_ROWS: canonicalization puts 2 compound rows on the single canonical name 'heme' (['protoheme', 'heme']); consolidating them would require proof that they are the same biological entity, which this stage does not perform
+pathway stops here: no freeze, no PWML
+db queries served: 236; unrecorded: 0
+network refused: 0
+=== TIP (G11 04-replay-tip) ===
+tree: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch787\src\t2pw
+leg: .claude/worktrees/orch784run/runs_papers/ORCH-784/legs/chlorophyll-strict/2026-10-27_2027/papers/PMC5130987/strict merged_payload.json
+compound rows in: 46
+Stage-6 stamps carried as recorded by ORCH-781 (11): 5-aminolevulinic acid=894, porphobilinogen=166, hydroxymethylbilane=887, uroporphyrinogen III=854, protoporphyrinogen IX=863, protoporphyrin IX=163, Mg-Proto IX=285208, phytol=1353, geranylgeranyl pyrophosphate=2145, phytyl pyrophosphate=104757, heme=1799
+prefreeze ok=False failures={'compounds': 'resolution_report_not_ok'}
+rows_consolidated=[{"name": "protoheme", "merged_into": "heme", "db_id": 1799, "reason": "duplicate_canonical_row_consolidated_same_db_entity"}]
+compound rows out: 45
+survivor: {"name": "heme", "class": "cofactor", "db_status": "legacy_id_unverified", "pathbank_compound_id": 1799, "chebi_id": "17627", "hmdb_id": "HMDB0003178", "kegg_id": "C00032", "synonyms": ["protoheme"]}
+freeze: quarantine_ok=True refusal=[] release=review_required
+export: ok=False error='PWML required-field gate failed.' pwml_bytes=0 required_gate_codes=['no_defensible_reaction_support', 'species_missing_classification', 'species_missing_taxonomy']
+canonical payload: compounds=21 reactions=1 interactions=13 quarantined=101
+text record coverage: drawn=0 total=115 merged_duplicates=1
+text record lines naming the consolidation:
+    Listed but not counted: 1 (merged duplicates: 1)
+  - merged duplicate, not counted: protoheme  [final_mapped.json prefreeze_compound_rows_consolidated; merged into heme]: duplicate_canonical_row_consolidated_same_db_entity (KI-045)
+db queries served: 236; unrecorded: 0
+network refused: 0
