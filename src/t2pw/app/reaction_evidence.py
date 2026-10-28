@@ -107,6 +107,8 @@ KNOWN_ISSUES: Dict[str, Any] = {
         ("ambiguous_entity_type:<bucket>+<bucket>", "prefix", ("ambiguous_entity_type:",), "KI-011", False),
         ("ambiguous_protein_endpoint", "exact", ("ambiguous_protein_endpoint",), "KI-010", False),
         ("bare_protein_endpoint", "exact", ("bare_protein_endpoint",), "KI-009", False),
+        ("biological_state_missing_subcellular_location", "exact",
+         ("biological_state_missing_subcellular_location",), "KI-015", False),
         ("budget_exhausted", "exact", ("budget_exhausted",), "KI-028", False),
         ("budget_indeterminate", "exact", ("budget_indeterminate",), "KI-056", False),
         ("class_term_never_narrowed_to_specific_molecule", "exact",

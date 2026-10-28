@@ -934,6 +934,7 @@ status, listed so that it is never mistaken for one. Codes are verified against 
 | `ambiguous_entity_type:<bucket>+<bucket>` (seen: `ambiguous_entity_type:nucleic_acids+proteins`) | prefix `ambiguous_entity_type:` | KI-011 | `strict_quarantine._essential_participant_verdict`, `_actor_verdict` |
 | `ambiguous_protein_endpoint` | exact | KI-010 | `ir.interaction_pwml_verdict` |
 | `bare_protein_endpoint` | exact | KI-009 | `ir.interaction_pwml_verdict` |
+| `biological_state_missing_subcellular_location` | exact | KI-015 | `strict_quarantine.STATE_MISSING_LOCATION_REASON` (ORCH-788: the state and its element placements are omitted pre-freeze); `ir.validate_required_pwml_contract` |
 | `budget_exhausted` | exact | KI-028 | `deadline.BUDGET_EXHAUSTED` |
 | `budget_indeterminate` | exact | KI-056 (also seen in KI-027) | `extraction_ladder.SKIP_BUDGET_INDETERMINATE` |
 | `class_term_never_narrowed_to_specific_molecule` | exact | KI-029 | `compound_resolution._db_match_rule_decision`; `map_ids._refuse_class_term_identity` |
