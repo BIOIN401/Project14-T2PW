@@ -74,6 +74,9 @@ def record(args) -> int:
     from t2pw.mapping.map_ids import PathBankDbResolver
     from t2pw.pwml.prefreeze_resolution import PrefreezeResolutionError, run_prefreeze_resolution
 
+    from dotenv import load_dotenv
+
+    load_dotenv(PRIMARY / ".env")  # a worktree has no .env; credentials are read, never printed
     db = PathBankDbResolver.from_env()
     if db is None:
         raise SystemExit("PathBank DB not configured")
@@ -139,8 +142,9 @@ def replay(args) -> int:
     lines += [f"prefreeze ok={pf.get('ok')} failures={pf.get('failures')}",
               f"rows_consolidated={json.dumps(comp.get('rows_consolidated'))}",
               f"compound rows out: {len(payload['entities']['compounds'])}"]
+    survivors = {str(r.get("merged_into")).lower() for r in comp.get("rows_consolidated") or []}
     for row in payload["entities"]["compounds"]:
-        if row.get("consolidated_rows"):
+        if str(row.get("name")).lower() in survivors:
             lines.append("survivor: " + json.dumps({k: row.get(k) for k in (
                 "name", "class", "db_status", "pathbank_compound_id", "chebi_id", "hmdb_id", "kegg_id", "synonyms")}))
     ctx = (load(CTX_FROM).get("coverage") or {}).get("requested_context")
@@ -158,7 +162,12 @@ def replay(args) -> int:
                                     pathway_context=ctx, export_mode=C.MODE, **C.EXPORT_ARGS)
         xml = T.driver._xml_bytes(res)
         lines.append(f"export: ok={bool(res.get('ok'))} error={str(res.get('error') or '')[:200]!r} "
-                     f"pwml_bytes={len(xml or b'')}")
+                     f"pwml_bytes={len(xml or b'')} required_gate_codes="
+                     f"{sorted({str(e.get('code')) for e in (res.get('required_gate_report') or {}).get('errors') or []})}")
+        lines.append(f"canonical payload: compounds={len(canonical['entities'].get('compounds') or [])} "
+                     f"reactions={len((canonical.get('processes') or {}).get('reactions') or [])} "
+                     f"interactions={len((canonical.get('processes') or {}).get('interactions') or [])} "
+                     f"quarantined={len(qrep.get('quarantined') or [])}")
         if res.get("ok") and xml:
             pwml_name, ir = "pathway.pwml", res.get("pwml_ir")
             (work / pwml_name).write_bytes(xml)

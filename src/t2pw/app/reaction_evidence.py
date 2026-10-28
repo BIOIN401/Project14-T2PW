@@ -88,6 +88,10 @@ MERGED_DUPLICATE_KI = "KI-014"
 #: (``protoheme`` / ``heme``). KI-045 is the catalogued synonym-duplicate entry; the reason code
 #: is not yet in the appendix (ORCH-787-RESULT open question), so it is labelled here, not guessed.
 COMPOUND_MERGE_KI = "KI-045"
+#: ORCH-787 (D-118 § 2): reason codes the pipeline emits that the appendix does not list yet, with
+#: the entry KI-015 says to use "until a specific entry exists". Consulted only when the appendix
+#: matches nothing, so the catalogue still wins the day it lists the code.
+PENDING_CATALOGUE_CODES = {"duplicate_canonical_row_identity_not_proven": "KI-015"}
 #: An interaction the IR withholds with this id cannot be typed in PathWhiz at all. It counts
 #: in the headline; one secondary line leaves it out (orchestrator ruling, ORCH-772).
 BY_DESIGN_KI = "KI-008"
@@ -323,7 +327,7 @@ def known_issue_id(reason: Any) -> str:
     for part in parts if len(parts) > 1 else []:
         if known_issue_id(part) != KI_UNCLASSIFIED:
             return known_issue_id(part)
-    return KI_UNCLASSIFIED
+    return PENDING_CATALOGUE_CODES.get(text, KI_UNCLASSIFIED)
 
 #: Identifier fields shown verbatim, by their payload key, so nothing is relabelled.
 _ID_FIELDS = (
@@ -753,12 +757,11 @@ def _omissions(
         entries.append(_entry("reaction", record.get("reaction_name") or original.get("name"), where,
                               _process_text("reaction", original), LOCKED_RECORD, _text(record.get("reason"))))
     # ORCH-787: a compound row consolidated pre-freeze into a row proven to be the same PathBank entity.
-    for index, row in enumerate(map(_dict, _list(_dict(payload.get("entities")).get("compounds")))):
-        for merged in map(_dict, _list(row.get("consolidated_rows"))):
-            entry = _entry("compound", merged.get("name"), f"final payload /entities/compounds/{index}",
-                           f"merged into {_show(merged.get('merged_into'))} (PathBank compound {_show(merged.get('db_id'))})",
-                           f"{FINAL_MAPPED_FILENAME} consolidated_rows", _text(merged.get("reason")))
-            entries.append({**entry, "ki": COMPOUND_MERGE_KI, "merged_duplicate": True})
+    for merged in map(_dict, _list(payload.get("prefreeze_compound_rows_consolidated"))):
+        entry = _entry("compound", merged.get("name"), f"merged into {_show(merged.get('merged_into'))}",
+                       f"PathBank compound {_show(merged.get('db_id'))}",
+                       f"{FINAL_MAPPED_FILENAME} prefreeze_compound_rows_consolidated", _text(merged.get("reason")))
+        entries.append({**entry, "ki": COMPOUND_MERGE_KI, "merged_duplicate": True})
 
     processes = _dict(payload.get("processes"))
     for bucket, label in (("reactions", "Reaction"), ("transports", "Transport")):

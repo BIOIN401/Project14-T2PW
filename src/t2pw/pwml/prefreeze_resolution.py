@@ -72,6 +72,10 @@ from t2pw.pwml.ir import (
     _dedupe_aliases,
 )
 from t2pw.pwml.name_index import default_name_index
+from t2pw.pipeline.strict_quarantine import (
+    DUPLICATE_ROW_NOT_PROVEN_REASON,
+    PREFREEZE_DUPLICATE_OMISSION_FIELD,
+)
 
 #: ``ir.py``'s compound ``entity_spec`` db-key list and its ``db_field``. ``ir._entity_record``
 #: projects ``_db_id(row, COMPOUND_DB_KEYS)`` onto both of these while building the IR --
@@ -80,9 +84,12 @@ from t2pw.pwml.name_index import default_name_index
 COMPOUND_DB_KEYS: Tuple[str, ...] = ("pathbank_compound_id", "pw_compound_id", "pathwhiz_id")
 COMPOUND_DB_FIELD = "pathbank_compound_id"
 
-#: ORCH-787: the reason a compound row folded into a proven-identical row carries
-#: (``consolidated_rows`` on the survivor, ``rows_consolidated`` in the report).
+#: ORCH-787: the reason a compound row folded into a proven-identical row carries, and the
+#: payload-level list that records each fold (also ``rows_consolidated`` in the report). Top
+#: level, beside ``PREFREEZE_DB_RESOLUTION_FIELD``, so it outlives a survivor the quarantine
+#: later removes and reaches the text record.
 DUPLICATE_ROWS_CONSOLIDATED_REASON = "duplicate_canonical_row_consolidated_same_db_entity"
+PREFREEZE_COMPOUNDS_CONSOLIDATED_FIELD = "prefreeze_compound_rows_consolidated"
 
 #: How many times resolution may be re-applied while hunting its fixed point.
 _MAX_RESOLUTION_PASSES = 4
@@ -465,8 +472,32 @@ def resolve_compounds_prefreeze(
     # gives a name to a row that had none needs no rename-map entry to create a
     # duplicate, and ``AMBIGUOUS_RENAME_TARGET`` must keep its own name where it
     # already fires (D-035 clause 8).
-    consolidate = _reject_duplicate_canonical_rows(
-        payload, rename_map, before_names, after_names, rows, resolved)
+    # D-118 § 2: an unproven group is omitted per row, not refused. Its
+    # conflicting rows go back to their extraction row (no rename, no identity
+    # from this resolution) and carry the omission marker; detection then runs
+    # again, since a reverted name can meet another row's rename. Terminates:
+    # each pass reverts at least one renamed row, and a reverted row never arrives.
+    summary["rows_omitted_duplicate"] = []
+    while True:
+        consolidate, unproven = _reject_duplicate_canonical_rows(
+            payload, rename_map, before_names, after_names, rows, resolved)
+        if not unproven:
+            break
+        for group in unproven:
+            for index in group["omitted"]:
+                row = deepcopy(rows[index])
+                row[PREFREEZE_DUPLICATE_OMISSION_FIELD] = {
+                    "reason": DUPLICATE_ROW_NOT_PROVEN_REASON,
+                    "canonical_key": group["canonical_key"], "group": group["rows"]}
+                resolved[index] = row
+                after_names[index] = _canonical(row.get("name"))
+                summary["rows_omitted_duplicate"].append({
+                    "row": index, "name": before_names[index], "canonical_key": group["canonical_key"],
+                    "reason": DUPLICATE_ROW_NOT_PROVEN_REASON})
+        renamed = {b for b, a in zip(before_names, after_names) if b and a and b != a}
+        rename_map = {old: new for old, new in rename_map.items() if old in renamed}
+        summary["rename_map"] = dict(rename_map)
+        summary["renamed"] = len(rename_map)
 
     # ---- stage 3: propagate on a staged copy of the whole payload ----------
     staged_payload = deepcopy(payload)
@@ -510,6 +541,9 @@ def resolve_compounds_prefreeze(
                 "the committed payload did not match the validated staged payload",
                 rename_map=dict(rename_map),
             )
+        if summary["rows_consolidated"]:  # last, so a raise above leaves no trace of it
+            payload[PREFREEZE_COMPOUNDS_CONSOLIDATED_FIELD] = [
+                *_safe_list(payload.get(PREFREEZE_COMPOUNDS_CONSOLIDATED_FIELD)), *summary["rows_consolidated"]]
     except Exception:
         for container, key, value in reversed(undo):
             container[key] = value
@@ -871,14 +905,20 @@ def _reject_duplicate_canonical_rows(
     after_names: Sequence[str],
     rows: Sequence[Any],
     resolved: Sequence[Any],
-) -> List[Dict[str, Any]]:
-    """D-035 clause 6 / D-036 clause 1 -- the refusal path, named.
+) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+    """D-035 clause 6 / D-036 clause 1 -- the detection, named. Returns
+    ``(proven groups, unproven groups)``; it no longer raises.
 
     **ORCH-787 (D-035 clauses 3 and 5, D-036's reopening trigger met by
-    ``ORCH-784`` chlorophyll: ``protoheme`` / ``heme``).** A group that
-    :func:`_proven_same_entity` proves to be ONE database entity is no longer
-    refused: it is returned, and the caller consolidates it. Every other group
-    refuses exactly as below; the paragraphs that follow describe that path.
+    ``ORCH-784`` chlorophyll: ``protoheme`` / ``heme``; D-118 § 2 amending D-035
+    clause 7).** A group that :func:`_proven_same_entity` proves to be ONE
+    database entity is consolidated by the caller. Every other group is returned
+    with the diagnostic ``rows`` record below and becomes a **per-row omission**:
+    its conflicting rows (the canonicalized ones when a member already held the
+    name, else all) keep their extraction name, carry
+    ``PREFREEZE_DUPLICATE_OMISSION_FIELD``, and the strict quarantine omits them
+    and every process naming them. The paragraphs below describe the detection,
+    unchanged; where they say "refuses", read "is omitted per row".
 
     Refuses when canonicalization leaves **two or more compound rows sharing one
     ``_norm`` name**, at least one of them (``arrived``) did not already hold that
@@ -947,6 +987,7 @@ def _reject_duplicate_canonical_rows(
     }
 
     proven: List[Dict[str, Any]] = []
+    unproven: List[Dict[str, Any]] = []
     for key, members in sorted(groups.items()):
         if len(members) < 2 or key not in referenced:
             continue
@@ -979,18 +1020,10 @@ def _reject_duplicate_canonical_rows(
                 "canonicalized": index in arrived,
                 "identifiers": identifiers,
             })
-        raise PrefreezeResolutionError(
-            "PREFREEZE_DUPLICATE_CANONICAL_ROWS",
-            f"canonicalization puts {len(members)} compound rows on the single "
-            f"canonical name {key!r} ({[item['name_before'] for item in detail]}); "
-            "consolidating them would require proof that they are the same "
-            "biological entity, which this stage does not perform",
-            canonical_key=key,
-            reason="equivalence_not_proven",
-            rows=detail,
-            canonicalized_rows=list(arrived),
-        )
-    return proven
+        held = [index for index in members if index not in arrived]
+        unproven.append({"canonical_key": key, "reason": "equivalence_not_proven", "rows": detail,
+                         "omitted": list(arrived) if held else list(members)})
+    return proven, unproven
 
 
 #: Stable identifier namespaces compared for D-035 clause 3b, each read from the
@@ -1020,21 +1053,24 @@ def _proven_same_entity(
 
     seen: Dict[str, set] = {}
     for index in members:
+        mine: Dict[str, set] = {}
         for source in (_safe_dict(rows[index]), _safe_dict(resolved[index])):
-            holders = (source, _safe_dict(source.get("mapped_ids")))
-            for namespace, keys, normalize in _STABLE_ID_NAMESPACES:
-                for holder in holders:
+            for holder in (source, _safe_dict(source.get("mapped_ids"))):
+                for namespace, keys, normalize in _STABLE_ID_NAMESPACES:
                     for key in keys:
-                        if holder.get(key) not in (None, ""):
-                            value = normalize(holder[key])
-                            if value not in (None, ""):
-                                seen.setdefault(namespace, set()).add(str(value))
+                        value = normalize(holder[key]) if holder.get(key) not in (None, "") else None
+                        if value not in (None, ""):
+                            mine.setdefault(namespace, set()).add(str(value))
         db_row_id = _to_int(_safe_dict(_safe_dict(resolved[index]).get("db_row")).get("id"))
         if db_row_id is not None:
-            seen.setdefault("pathbank", set()).add(str(db_row_id))
+            mine.setdefault("pathbank", set()).add(str(db_row_id))
         elif index in arrived:
             return None
-    if len(seen.get("pathbank", ())) != 1 or any(len(values) > 1 for values in seen.values()):
+        if not mine.get("pathbank"):  # 3c is per row: a member with no PathBank id proves nothing
+            return None
+        for namespace, values in mine.items():
+            seen.setdefault(namespace, set()).update(values)
+    if len(seen["pathbank"]) != 1 or any(len(values) > 1 for values in seen.values()):
         return None
     return int(next(iter(seen["pathbank"])))
 
@@ -1046,8 +1082,7 @@ def _consolidate_rows(
 
     Returns ``(rows kept, old token -> new token, record)``. Every spelling stays a
     synonym, identifiers and provenance are unioned (3b proved they agree), and the
-    survivor names what it absorbed under ``consolidated_rows`` so the record of
-    the collapse travels with the frozen payload.
+    record names exactly which rows collapsed and why (D-035 clause 5).
     """
 
     absorbed: Dict[int, int] = {}
@@ -1069,7 +1104,6 @@ def _consolidate_rows(
             lineage += [entry for entry in _safe_list(row.get("provenance_lineage")) if entry not in lineage]
             entry = {"name": before_names[index], "merged_into": _canonical(survivor.get("name")),
                      "db_id": group["db_id"], "reason": DUPLICATE_ROWS_CONSOLIDATED_REASON}
-            survivor.setdefault("consolidated_rows", []).append(entry)
             record.append(entry)
         survivor["synonyms"] = synonyms
         if lineage:

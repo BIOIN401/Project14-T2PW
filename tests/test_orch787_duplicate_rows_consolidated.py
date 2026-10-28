@@ -6,8 +6,9 @@ G9 labelling.
   whole-pathway refusal) and the test fails on that raise; at the tip it passes.
 * ``test_new_acceptance_text_record_lists_the_merge`` is an explicitly labelled **NEW ACCEPTANCE**
   test (the text record has no consolidation to list before this change).
-* ``test_control_conflicting_identifier_still_refuses`` is a **CONTROL** that passes on both: the
-  gate is not weakened for rows whose identity is not proven (D-035 clauses 3b, 6, 7).
+* ``test_correction_unproven_group_is_omitted_per_row`` is a **CORRECTION** (D-118 § 2): at base the
+  same shape with a conflicting identifier refuses the whole pathway; at the tip nothing merges and only
+  the conflicting row and the process naming it are omitted, listed with a KI id.
 
 The DB is a stub answering the two queries PathBank answers for these names (compound 1799 "Heme"
 lists "Protoheme" as a synonym, as the committed ``tests/fixtures/c119`` payload records).
@@ -15,12 +16,10 @@ lists "Protoheme" as a synonym, as the committed ``tests/fixtures/c119`` payload
 
 from __future__ import annotations
 
-from copy import deepcopy
 from typing import Any, Dict, List
 
-import pytest
 
-from t2pw.pwml.prefreeze_resolution import PrefreezeResolutionError, run_prefreeze_resolution
+from t2pw.pwml.prefreeze_resolution import run_prefreeze_resolution
 
 HEME = {"id": 1799, "name": "Heme", "short_name": "Heme", "hmdb_id": "HMDB0003178", "kegg_id": "C00032",
         "chebi_id": "CHEBI:17627", "pubchem_cid": "3334", "synonyms": "Haem; Protoheme; Heme B; Protoheme IX"}
@@ -76,21 +75,44 @@ def test_correction_protoheme_and_heme_consolidate() -> None:
     survivor = payload["entities"]["compounds"][1]
     assert survivor["class"] == "cofactor" and survivor["pathbank_compound_id"] == 1799
     assert "protoheme" in survivor["synonyms"]
-    assert survivor["consolidated_rows"] == [{
+    assert payload["prefreeze_compound_rows_consolidated"] == [{
         "name": "protoheme", "merged_into": "heme", "db_id": 1799,
         "reason": "duplicate_canonical_row_consolidated_same_db_entity"}]
-    assert report["compounds"]["rows_consolidated"] == survivor["consolidated_rows"]
+    assert report["compounds"]["rows_consolidated"] == payload["prefreeze_compound_rows_consolidated"]
     reactions = payload["processes"]["reactions"]
     assert reactions[0]["outputs"] == ["Heme"] and reactions[1]["inputs"] == ["heme"]
 
 
-def test_control_conflicting_identifier_still_refuses() -> None:
-    payload = _payload(kegg_id="C99999")  # heme row disagrees with the entity protoheme resolved to
-    original = deepcopy(payload)
-    with pytest.raises(PrefreezeResolutionError) as excinfo:
-        _run(payload)
-    assert excinfo.value.code == "PREFREEZE_DUPLICATE_CANONICAL_ROWS"
-    assert payload == original
+def test_correction_unproven_group_is_omitted_per_row() -> None:
+    """CORRECTION (D-118 § 2): base raises ``PREFREEZE_DUPLICATE_CANONICAL_ROWS`` for the whole pathway.
+
+    The ``heme`` row's KEGG id disagrees with the entity ``protoheme`` resolved to, so identity is not
+    proven: nothing merges. ``protoheme`` keeps its extraction name, gains no identity, is marked, and the
+    strict quarantine omits it and the one process naming it; ``heme`` and R2 survive.
+    """
+
+    from t2pw.app import reaction_evidence as E
+    from t2pw.pipeline.strict_quarantine import quarantine_and_close
+
+    payload = _payload(kegg_id="C99999")
+    report = _run(payload)  # base: raises
+    rows = payload["entities"]["compounds"]
+    assert [row["name"] for row in rows] == ["protoporphyrin IX", "protoheme", "heme", "biliverdin"]
+    assert rows[1]["prefreeze_duplicate_omission"]["reason"] == "duplicate_canonical_row_identity_not_proven"
+    assert "pathbank_compound_id" not in rows[1]
+    assert [r["name"] for r in report["compounds"]["rows_omitted_duplicate"]] == ["protoheme"]
+    assert payload["processes"]["reactions"][0]["outputs"] == ["protoheme"]
+
+    result = quarantine_and_close(payload, strict_db=False)
+    assert [r["name"] for r in result.payload["processes"]["reactions"]] == ["R2"]
+    assert "protoheme" not in [r["name"] for r in result.payload["entities"]["compounds"]]
+    quarantined = result.quarantine_report["quarantined"]
+    assert [(q["name"], q["reason"]) for q in quarantined] == [("R1", "duplicate_canonical_row_identity_not_proven")]
+
+    text_report = E.build_report({E.QUARANTINE_REPORT_FILENAME: result.quarantine_report,
+                                  E.FINAL_MAPPED_FILENAME: result.payload}, no_pwml_cause="test")
+    assert [(e["name"], e["ki"], e["counted"]) for e in text_report["omitted"] if e["group"] == "pre_freeze"] == [
+        ("R1", "KI-015", True)]
 
 
 def test_new_acceptance_text_record_lists_the_merge() -> None:
