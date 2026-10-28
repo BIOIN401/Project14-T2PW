@@ -1227,7 +1227,7 @@ def test_c050g_new_acceptance_the_record_is_empty_when_nothing_merged() -> None:
     assert summary["rename_sources_collapsed"] == []
 
 
-def test_c050g_new_acceptance_merged_rows_that_are_referenced_still_stop() -> None:
+def test_c050g_new_acceptance_referenced_same_entity_spellings_consolidate() -> None:
     """NEW ACCEPTANCE, and the honest record of what this card does NOT fix.
 
     The guard no longer miscounts the spellings -- but the two rows now share one

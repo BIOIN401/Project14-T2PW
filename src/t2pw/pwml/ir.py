@@ -121,6 +121,13 @@ COMPOUND_RESOLUTION_VERDICT_FIELD = "db_status"
 #: into the IR, so the emitted PWML is unchanged.
 PREFREEZE_DB_RESOLUTION_FIELD = "prefreeze_db_resolution"
 
+#: ORCH-787 (D-118 § 2). The marker ``strict_quarantine.PREFREEZE_DUPLICATE_OMISSION_FIELD``
+#: (same string, asserted equal in ``tests/test_orch787_duplicate_rows_consolidated.py``;
+#: a literal so this module's imports do not change) and the blocking IR error a row
+#: still carrying it raises.
+UNPROVEN_DUPLICATE_MARKER_FIELD = "prefreeze_duplicate_omission"
+UNPROVEN_DUPLICATE_ROW_CODE = "PWML_IR_UNPROVEN_DUPLICATE_COMPOUND_ROW"
+
 
 class UnresolvedCompoundRowError(RuntimeError):
     """A compound row reached the exporter carrying no resolution verdict.
@@ -1544,6 +1551,21 @@ def build_pwml_ir(
                 raise UnresolvedCompoundRowError(
                     unresolved_rows, pointer_prefix=f"/entities/{source_key}"
                 )
+            # ORCH-787 (D-118 § 2). A row the pre-freeze seam could not prove to be
+            # the entity whose canonical name it collided with is marked for the
+            # strict quarantine to omit. A path that reaches the IR without that
+            # quarantine (``run_pwml_export``'s seam, the writer CLI, research mode)
+            # still carries it, and must refuse exactly as the pre-freeze raise did.
+            for index, row in enumerate(rows):
+                if _safe_dict(row.get(UNPROVEN_DUPLICATE_MARKER_FIELD)):
+                    _add_issue(
+                        report, "error", UNPROVEN_DUPLICATE_ROW_CODE,
+                        f"Compound '{_canonical(row.get('name'))}' collided with another row's "
+                        "canonical name and is not proven the same entity; it was marked for "
+                        "per-row omission by the strict quarantine, which this path did not run.",
+                        pointer=f"/entities/{source_key}/{index}",
+                        name=_canonical(row.get("name")),
+                    )
         bucket = ENTITY_BUCKETS[entity_type]
         for row in rows:
             rec = _entity_record(row, row["key"], db_keys, db_field)

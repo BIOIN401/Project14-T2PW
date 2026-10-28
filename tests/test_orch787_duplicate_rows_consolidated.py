@@ -9,6 +9,8 @@ G9 labelling.
 * ``test_correction_unproven_group_is_omitted_per_row`` is a **CORRECTION** (D-118 § 2): at base the
   same shape with a conflicting identifier refuses the whole pathway; at the tip nothing merges and only
   the conflicting row and the process naming it are omitted, listed with a KI id.
+* ``test_preservation_seam3_an_unproven_row_never_reaches_a_pwml`` is a **PRESERVATION** test that
+  passes on both: a path with no strict quarantine still cannot build a PWML from an unproven row.
 
 The DB is a stub answering the two queries PathBank answers for these names (compound 1799 "Heme"
 lists "Protoheme" as a synonym, as the committed ``tests/fixtures/c119`` payload records).
@@ -126,3 +128,33 @@ def test_new_acceptance_text_record_lists_the_merge() -> None:
         ("protoheme", "KI-045", False, True)]
     text = E.render_text(report)
     assert "- merged duplicate, not counted: protoheme" in text and "(KI-045)" in text
+
+
+def test_preservation_seam3_an_unproven_row_never_reaches_a_pwml() -> None:
+    """PRESERVATION (G9): passes at base 22538dee and at the tip.
+
+    ``run_pwml_export``'s seam and the writer CLI run the pre-freeze sequence and go straight to
+    ``build_pwml_ir`` with no strict quarantine (research mode removes nothing either). Base refused
+    the whole pathway at the pre-freeze raise; the tip marks the row instead, so the IR must refuse it
+    with a blocking error. Either way no PWML can be written from this payload.
+    """
+
+    from t2pw.pwml.ir import build_pwml_ir
+    from t2pw.pwml.prefreeze_resolution import PrefreezeResolutionError
+    from t2pw.pwml.writer import blocking_pwml_ir_errors
+
+    payload = _payload(kegg_id="C99999")
+    try:
+        _run(payload)
+    except PrefreezeResolutionError as exc:  # base: the whole-pathway refusal
+        assert exc.code == "PREFREEZE_DUPLICATE_CANONICAL_ROWS"
+        return
+    _ir, ir_report = build_pwml_ir(payload, strict_db=False)
+    blocking = [e for e in blocking_pwml_ir_errors(ir_report)
+                if e["code"] == "PWML_IR_UNPROVEN_DUPLICATE_COMPOUND_ROW"]
+    assert [(e["name"], e["pointer"]) for e in blocking] == [("protoheme", "/entities/compounds/1")]
+
+    from t2pw.pipeline.strict_quarantine import PREFREEZE_DUPLICATE_OMISSION_FIELD
+    from t2pw.pwml.ir import UNPROVEN_DUPLICATE_MARKER_FIELD
+
+    assert UNPROVEN_DUPLICATE_MARKER_FIELD == PREFREEZE_DUPLICATE_OMISSION_FIELD

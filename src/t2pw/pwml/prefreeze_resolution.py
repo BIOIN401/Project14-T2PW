@@ -60,12 +60,14 @@ from t2pw.pwml.compound_resolution import (
     ensure_resolution_report,
 )
 from t2pw.pwml.db_resolver import (
+    IDENTITY_REFUSED_STATUS,
     normalize_chebi_id,
     normalize_hmdb_id,
     normalize_kegg_id,
     normalize_pubchem_cid,
 )
 from t2pw.pwml.ir import (
+    COMPOUND_RESOLUTION_VERDICT_FIELD,
     PREFREEZE_DB_RESOLUTION_FIELD,
     SPECIES_CANONICALIZATION_FIELD,
     _canonicalize_species_offline,
@@ -489,6 +491,9 @@ def resolve_compounds_prefreeze(
                 row[PREFREEZE_DUPLICATE_OMISSION_FIELD] = {
                     "reason": DUPLICATE_ROW_NOT_PROVEN_REASON,
                     "canonical_key": group["canonical_key"], "group": group["rows"]}
+                # The verdict ``ir`` requires on every compound row: the D-028
+                # record-only status -- extraction name kept, no identity admitted.
+                row[COMPOUND_RESOLUTION_VERDICT_FIELD] = IDENTITY_REFUSED_STATUS
                 resolved[index] = row
                 after_names[index] = _canonical(row.get("name"))
                 summary["rows_omitted_duplicate"].append({
