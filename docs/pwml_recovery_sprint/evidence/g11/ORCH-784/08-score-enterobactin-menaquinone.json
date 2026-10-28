@@ -1,0 +1,94 @@
+{
+  "label": "score-enterobactin-menaquinone",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/docs/pwml_recovery_sprint/evidence/orch756_gold_accuracy.py",
+    "--task",
+    "ORCH-784",
+    "--legs",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch784run/runs_papers/ORCH-784/legs",
+    "--review",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_papers/ORCH-784/REVIEW",
+    "--papers",
+    "enterobactin,menaquinone",
+    "--out",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/docs/pwml_recovery_sprint/evidence/orch784_gold_accuracy.txt"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+  "started_at": "2026-10-28T09:02:24+00:00",
+  "finished_at": "2026-10-28T09:02:26+00:00",
+  "duration_seconds": 1.5923445000080392,
+  "timeout_seconds": 500.0,
+  "root_pid": 810164,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 810176,
+      "name": "python.exe",
+      "ppid": 810164
+    },
+    {
+      "pid": 810252,
+      "name": "git.exe",
+      "ppid": 810176
+    },
+    {
+      "pid": 810392,
+      "name": "git.exe",
+      "ppid": 810176
+    }
+  ],
+  "descendants_terminated": [
+    810176,
+    810252,
+    810392
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 601840,
+      "name": "python.exe"
+    },
+    {
+      "pid": 605936,
+      "name": "python.exe"
+    },
+    {
+      "pid": 805744,
+      "name": "python.exe"
+    },
+    {
+      "pid": 809368,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-784\\08-score-enterobactin-menaquinone.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "9312999cea672c90ee88e5a8a6c44c676a0ca724",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}
