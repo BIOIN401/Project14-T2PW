@@ -11205,3 +11205,13 @@ The id ORCH-760 was chosen so that 755-759 stay free for the live ORCH-754 sessi
 **ORCH-784 · 2026-10-27 — LAUNCHED** on merged `cac97171` from pinned worktree `orch784run` via `orch770_night.sh`: 6 papers, strict. Summary will land at `runs_papers/ORCH-784/MORNING_SUMMARY.md`.
 
 **ORCH-784 · 2026-10-28 03:02 — DONE** (code `9312999c`, G11 `evidence/g11/ORCH-784/01-08`, 0 survivors): 3/6 PWMLs. Coverage: menaquinone 88%, enterobactin 67%, WNT PCP 8% (it finished this time). **No PWML for chlorophyll, Wnt/Ca2+ and sour taste**, all from whole-pathway stops: wnt_ca `generated_wrapper_component_missing_external_identity` (an ORCH-783 regression); chlorophyll `PREFREEZE_DUPLICATE_CANONICAL_ROWS` heme/protoheme; sour taste IR validation, biological states with no location. Record `ORCH-784-RESULT.md`; summary `runs_papers/ORCH-784/MORNING_SUMMARY.md`. Next: three per-row fixes, then ORCH-785 re-runs the 3 legs.
+
+**ORCH-786 · 2026-10-28 — MERGED** in `dd099ac7` (lane `orch786/fix` `1cfbbf59`): an id-less family-complex member (STIM2 inside "STIM1/2") is dropped, with the Unknown fallback if none is left (KI-001). D-118 § 1: a slash list is paper support for each member it names. Replay of wnt_ca: base STOP at post_remap, tip PASS (`evidence/orch786_replay.txt`). G9 `g11/ORCH-786/01` base fails, `02` tip passes. pwml-reviewer APPROVE.
+
+**ORCH-787 · 2026-10-28 — MERGED** in `dd099ac7` (lane `orch787/fix` `a8cacb09`), D-118 § 2. A duplicate-canonical group proven to be one entity merges (protoheme into heme, PathBank 1799); an unproven group is omitted per row. The IR refuses a marked row on the non-quarantine seams (`PWML_IR_UNPROVEN_DUPLICATE_COMPOUND_ROW`). Replay of chlorophyll: base raises, tip merges and reaches export (`evidence/orch787_replay.txt`). Pins moved with exact deltas: `ORCH-787-RESULT.md` § 5, § 8. Review: REJECT on the seam-2/3 pass-through, fixed in `4fcc5ce5`, then APPROVE.
+
+**ORCH-788 · 2026-10-28 — MERGED** in `dd099ac7` (lane `orch788/fix` `7e4ac582`): a biological state with no location, and its placements, are omitted per row before the freeze (KI-015 catalogue row added). Replay of sour taste: base no PWML, tip PWML at 10/18 (`evidence/orch788_replay.txt`). pwml-reviewer APPROVE.
+
+**Integration `dd099ac7`:** `g11/ORCH-785/01` focused + affected: 292 passed, 3 failed. All 3 are pre-existing on base (c075 corpus; compound_resolution_extraction golden x2). `02` SMOKE: **511 passed**, 0 survivors.
+
+**ORCH-785 · 2026-10-28 — LAUNCHED** on `dd099ac7`+docs from pinned worktree `orch785run`: only chlorophyll, wnt_ca and sour_taste_v2, strict. Summary will land at `runs_papers/ORCH-785/MORNING_SUMMARY.md`.
