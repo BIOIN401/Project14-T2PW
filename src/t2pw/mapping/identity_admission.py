@@ -257,7 +257,13 @@ EXTERNAL_ACCESSION_KEYS: frozenset = frozenset({
 #: succinyl-coenzyme A ...") that its own paper does not contain -- so reading
 #: ``source_refs`` as a route would walk the hallucination out through the door
 #: built for legitimate imports.
-PROVENANCE_ROUTE_KEYS: Tuple[str, ...] = ("rag_provenance", "source_papers")
+#:
+#: ORCH-783 adds ``family_complex_provenance``: a member protein of a family the
+#: paper names ("PKC" -> PRKCA), found by the PO-ruled member ladder (PathBank
+#: complex or UniProt family search, same taxon). The paper names the family, not
+#: the member, so this route abstains rather than refuses; the row says which
+#: family and which source (``map_ids._apply_family_complexes``).
+PROVENANCE_ROUTE_KEYS: Tuple[str, ...] = ("rag_provenance", "source_papers", "family_complex_provenance")
 
 #: The ``rag_provenance.source_id`` a synthesized row carries when the chunk it
 #: was matched against came from the SEED PAPER's own text rather than from a
