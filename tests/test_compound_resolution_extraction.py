@@ -512,7 +512,12 @@ GOLDEN = {
     # the only one that moves**, and no other leg's stops change. After this move no
     # configuration of this leg builds an IR at all, so its digest is now composed
     # purely of configuration names and stop/refusal codes.
-    "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict/final_mapped.json": "d22b58c8b308cbd83f0fd10327c7453405fd542e3d997e0c7179e4120de44bd1",
+    #
+    # ORCH-787 (D-118 § 2) delta: d22b58c8… -> 7579c65d…. A / C / D no longer stop
+    # pre-freeze: the unproven G3P group is omitted per row (marked for the strict
+    # quarantine) and the build reaches the IR, which refuses the lipid IV_A pair
+    # with ``PWML_IR_DUPLICATE_NAMED_ROW`` exactly as B / E already did. Still no IR.
+    "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict/final_mapped.json": "7579c65dc24f731ebe970d01a56ce115755e876bc3401f4d57e5ad3c4f8a227e",
     "runs/2026-07-28_0919/papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict/final_mapped.json": "e64f42db94c40e1eebe681674fdff2262ce971ed0970bc61c90176fef8592dc8",
     "runs/2026-08-02_2130/papers/PMC12096016/research/final_mapped.json": "e5e027d9e7272dffb033e39392fbe79e55ceda4fc2c43b1d80d3b618345ca505",
     "runs/2026-08-02_2130/papers/PMC12096016/strict/final_mapped.json": "c0b2e21db349c0e28209b0e821080511792d6fce9360b7e959bd137ac811b93d",
@@ -910,12 +915,10 @@ EXCLUDED: Dict[str, str] = _excluded(
 #: stopped stopping and no built IR moved -- including PMC13278307 · C_canned
 #: below, still raising ``AMBIGUOUS_RENAME_TARGET`` on two genuinely distinct
 #: compounds as D-035 clause 7 requires.
+#: ORCH-787 (D-118 § 2): PMC12444477 · A, C, D left this table -- an unproven
+#: duplicate-canonical group is now a per-row omission, not a stop -- and moved to
+#: GOLDEN_IR_REFUSALS below.
 GOLDEN_PREFREEZE_STOPS: Dict[str, Dict[str, str]] = {
-    "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict/final_mapped.json": {
-        "A_dbdown_defaultindex_strict": "PREFREEZE_DUPLICATE_CANONICAL_ROWS",
-        "C_canned_defaultindex_lenient": "PREFREEZE_DUPLICATE_CANONICAL_ROWS",
-        "D_emptydb_defaultindex_strict": "PREFREEZE_DUPLICATE_CANONICAL_ROWS",
-    },
     "runs/2026-07-28_0919/papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict/final_mapped.json": {
         "C_canned_defaultindex_lenient": "AMBIGUOUS_RENAME_TARGET",
     },
@@ -964,6 +967,10 @@ IR_REFUSAL_PREFIX = "ir_refusal:"
 #: ``taxonomy_id``. That residual is **F-046**, owned by **C-050j**.
 GOLDEN_IR_REFUSALS: Dict[str, Dict[str, str]] = {
     "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict/final_mapped.json": {
+        # ORCH-787 (D-118 § 2): A, C, D added; they stopped pre-freeze before.
+        "A_dbdown_defaultindex_strict": "PWML_IR_DUPLICATE_NAMED_ROW",
+        "C_canned_defaultindex_lenient": "PWML_IR_DUPLICATE_NAMED_ROW",
+        "D_emptydb_defaultindex_strict": "PWML_IR_DUPLICATE_NAMED_ROW",
         "B_dbdown_noindex_strict": "PWML_IR_DUPLICATE_NAMED_ROW",
         "E_fromenv_raises_emptyindex_lenient": "PWML_IR_DUPLICATE_NAMED_ROW",
     },

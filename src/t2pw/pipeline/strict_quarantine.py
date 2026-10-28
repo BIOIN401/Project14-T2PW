@@ -407,6 +407,14 @@ _ACTOR_SLOTS: Dict[str, Tuple[str, ...]] = {
 #: three errors later. Quarantining it says so at the point the decision is made.
 RCT_NOT_EXPORTABLE_REASON = "reaction_coupled_transport_has_no_exportable_ir_representation"
 
+#: ORCH-787 (D-118 § 2). A compound row the pre-freeze seam
+#: (``prefreeze_resolution.resolve_compounds_prefreeze``) could not prove to be the
+#: entity whose canonical name it collided with keeps its extraction name and carries
+#: this field. It is unrepresentable here, so admission omits it and every process
+#: naming it, per row, with this reason -- never the whole pathway.
+PREFREEZE_DUPLICATE_OMISSION_FIELD = "prefreeze_duplicate_omission"
+DUPLICATE_ROW_NOT_PROVEN_REASON = "duplicate_canonical_row_identity_not_proven"
+
 #: Stamped on a research-mode report so no reader mistakes it for a strict one.
 RESEARCH_DIAGNOSTIC_NOTE = (
     "research mode: quarantine ran diagnostically. Nothing was removed and the "
@@ -734,6 +742,9 @@ def _entity_representability(
 
     if not _row_name(row):
         return False, f"{bucket.rstrip('s')}_missing_name"
+
+    if _safe_dict(row.get(PREFREEZE_DUPLICATE_OMISSION_FIELD)):
+        return False, DUPLICATE_ROW_NOT_PROVEN_REASON
 
     claim = placeholder_claims_real_identity(row)
     if claim:

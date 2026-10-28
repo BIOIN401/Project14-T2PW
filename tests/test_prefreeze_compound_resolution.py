@@ -201,11 +201,17 @@ def test_new_acceptance_propagation_is_all_or_nothing() -> None:
     payload["entities"]["compounds"].append(_compound("Glycine"))
     original = deepcopy(payload)
 
-    with pytest.raises(PrefreezeResolutionError) as excinfo:
-        _run(payload, _glycine_index())
+    # ORCH-787 (D-118 § 2, amending D-035 clause 7) moved this pin deliberately: base raised PREFREEZE_DUPLICATE_CANONICAL_ROWS. The added
+    # "Glycine" row carries no id, so identity is unproven: ``gly`` is not renamed
+    # (it keeps its row, marked for per-row omission) and NO reference moves --
+    # still all-or-nothing, now "nothing".
+    summary = _run(payload, _glycine_index())
 
-    assert excinfo.value.code == "PREFREEZE_DUPLICATE_CANONICAL_ROWS"
-    assert payload == original, "the payload was mutated despite a named failure"
+    assert summary["rename_map"] == {}
+    assert payload["processes"] == original["processes"]
+    assert payload["entities"]["compounds"][0]["name"] == "gly"
+    assert payload["entities"]["compounds"][0]["prefreeze_duplicate_omission"]["canonical_key"] == "glycine"
+    assert [row["name"] for row in summary["rows_omitted_duplicate"]] == ["gly"]
 
 
 # --------------------------------------------------------------------------
@@ -1221,7 +1227,7 @@ def test_c050g_new_acceptance_the_record_is_empty_when_nothing_merged() -> None:
     assert summary["rename_sources_collapsed"] == []
 
 
-def test_c050g_new_acceptance_merged_rows_that_are_referenced_still_stop() -> None:
+def test_c050g_new_acceptance_referenced_same_entity_spellings_consolidate() -> None:
     """NEW ACCEPTANCE, and the honest record of what this card does NOT fix.
 
     The guard no longer miscounts the spellings -- but the two rows now share one
@@ -1254,15 +1260,22 @@ def test_c050g_new_acceptance_merged_rows_that_are_referenced_still_stop() -> No
             {"name": "R1", "inputs": ["sn -glycerol 3-phosphate"], "outputs": []},
         ]},
     }
-    original = deepcopy(payload)
     index = _StubNameIndex(
         {"15428": {"id": 78, "name": "Glycerol 3-phosphate", "matched_on": "chebi"}})
 
-    with pytest.raises(PrefreezeResolutionError) as excinfo:
-        _run(payload, index)
+    # ORCH-787 (D-118 § 2, amending D-035 clause 7) moved this pin deliberately. Delta, exact: base raised
+    # ``PREFREEZE_DUPLICATE_CANONICAL_ROWS`` with the payload unchanged; the tip
+    # CONSOLIDATES -- both rows carry CHEBI:15428 and resolve to the one entity 78
+    # with no conflicting id (D-035 clause 3) -- into ONE row, the reference
+    # rewritten, the spelling kept as a synonym and the fold recorded.
+    summary = _run(payload, index)
 
-    assert excinfo.value.code == "PREFREEZE_DUPLICATE_CANONICAL_ROWS"
-    assert payload == original, "nothing may be committed on a refusal"
+    assert [row["name"] for row in payload["entities"]["compounds"]] == ["Glycerol 3-phosphate"]
+    assert payload["processes"]["reactions"][0]["inputs"] == ["Glycerol 3-phosphate"]
+    assert "sn-glycerol 3-phosphate" in payload["entities"]["compounds"][0]["synonyms"]
+    assert summary["rows_consolidated"] == payload["prefreeze_compound_rows_consolidated"] == [{
+        "name": "sn-glycerol 3-phosphate", "merged_into": "Glycerol 3-phosphate", "db_id": 78,
+        "reason": "duplicate_canonical_row_consolidated_same_db_entity"}]
 
 
 def test_c050g_new_acceptance_a_collision_with_an_untouched_row_is_invisible_here() -> None:
@@ -1378,15 +1391,19 @@ def test_c050h_correction_the_code_is_named_and_names_the_rows_and_spellings() -
 
     payload = _g3p_payload(referenced=True)
 
-    with pytest.raises(PrefreezeResolutionError) as excinfo:
-        _run(payload, _g3p_index())
+    # ORCH-787 (D-118 § 2, amending D-035 clause 7) moved this pin deliberately: base raised DUPLICATE_ROWS with these details. Row 0
+    # carries no id, so the group is unproven and is omitted per row: row 1 (the
+    # one canonicalization moved) keeps its extraction name and carries the SAME
+    # diagnostic record on its marker; nothing raises.
+    summary = _run(payload, _g3p_index())
 
-    assert excinfo.value.code == DUPLICATE_ROWS
-    details = excinfo.value.details
-    assert details["canonical_key"] == "glycerol 3 phosphate"
-    assert details["reason"] == "equivalence_not_proven"
-    assert details["canonicalized_rows"] == [1]
-    assert details["rows"] == [
+    assert summary["rows_omitted_duplicate"] == [{
+        "row": 1, "name": "sn-glycerol 3-phosphate", "canonical_key": "glycerol 3 phosphate",
+        "reason": "duplicate_canonical_row_identity_not_proven"}]
+    marker = payload["entities"]["compounds"][1]["prefreeze_duplicate_omission"]
+    assert marker["canonical_key"] == "glycerol 3 phosphate"
+    assert payload["entities"]["compounds"][1]["name"] == "sn-glycerol 3-phosphate"
+    assert marker["group"] == [
         {"row": 0, "name_before": "glycerol-3-phosphate",
          "name_after": "glycerol-3-phosphate", "canonicalized": False,
          "identifiers": {}},
@@ -1411,14 +1428,20 @@ def test_c050h_correction_the_graph_is_intact_and_no_pwml_is_emitted() -> None:
     payload = _g3p_payload(referenced=True)
     original = deepcopy(payload)
 
-    with pytest.raises(PrefreezeResolutionError) as excinfo:
-        run_prefreeze_resolution(
-            payload, strict_db=False, db_resolver=_OfflineResolver(),
-            name_index=_g3p_index(),
-        )
+    # ORCH-787 (D-118 § 2, amending D-035 clause 7) moved this pin deliberately: base raised DUPLICATE_ROWS, payload byte-identical. Now the
+    # stage returns; the graph is still intact -- no reference moved, no row merged,
+    # both rows keep their names -- and the unproven row is marked so the strict
+    # quarantine omits it (per row) before any PWML is built.
+    run_prefreeze_resolution(
+        payload, strict_db=False, db_resolver=_OfflineResolver(),
+        name_index=_g3p_index(),
+    )
 
-    assert excinfo.value.code == DUPLICATE_ROWS
-    assert payload == original, "nothing may be committed on a refusal"
+    assert payload["processes"] == original["processes"]
+    assert [row["name"] for row in payload["entities"]["compounds"]] == [
+        "glycerol-3-phosphate", "sn-glycerol 3-phosphate"]
+    assert "prefreeze_duplicate_omission" in payload["entities"]["compounds"][1]
+    assert "prefreeze_duplicate_omission" not in payload["entities"]["compounds"][0]
 
 
 def test_c050h_correction_the_refusal_is_idempotent() -> None:
@@ -1426,13 +1449,14 @@ def test_c050h_correction_the_refusal_is_idempotent() -> None:
     attempt reported something else would make the diagnosis unreproducible."""
 
     payload = _g3p_payload(referenced=True)
-    codes = []
-    for _ in range(2):
-        with pytest.raises(PrefreezeResolutionError) as excinfo:
-            _run(payload, _g3p_index())
-        codes.append(excinfo.value.code)
+    # ORCH-787 (D-118 § 2, amending D-035 clause 7) moved this pin deliberately: base raised DUPLICATE_ROWS twice. The omission is as
+    # reproducible: the second pass records the same omission and changes nothing.
+    first = _run(payload, _g3p_index())["rows_omitted_duplicate"]
+    after_first = deepcopy(payload)
+    second = _run(payload, _g3p_index())["rows_omitted_duplicate"]
 
-    assert codes == [DUPLICATE_ROWS, DUPLICATE_ROWS]
+    assert first == second and len(first) == 1
+    assert payload == after_first
 
 
 def test_c050h_correction_the_d034_leg_still_refuses_on_committed_data() -> None:
@@ -1448,22 +1472,28 @@ def test_c050h_correction_the_d034_leg_still_refuses_on_committed_data() -> None
     payload = json.loads(D034_LEG.read_text(encoding="utf-8"))
     original = deepcopy(payload)
 
-    with pytest.raises(PrefreezeResolutionError) as excinfo:
-        run_prefreeze_resolution(
-            payload, strict_db=True, db_resolver=_OfflineResolver(),
-            name_index=default_name_index(),
-        )
+    # ORCH-787 (D-118 § 2, amending D-035 clause 7) moved this pin deliberately: base raised DUPLICATE_ROWS. The group is still NOT proven
+    # (KEGG C03189 against C00093), so nothing merges: rows 36 and 38 are omitted
+    # per row with the same diagnostic, row 20 keeps the name, no reference moves.
+    report = run_prefreeze_resolution(
+        payload, strict_db=True, db_resolver=_OfflineResolver(),
+        name_index=default_name_index(),
+    )
 
-    assert excinfo.value.code == DUPLICATE_ROWS
-    assert payload == original
-    details = excinfo.value.details
-    assert details["canonical_key"] == "glycerol 3 phosphate"
-    assert [item["row"] for item in details["rows"]] == [20, 36, 38]
-    assert [item["name_before"] for item in details["rows"]] == [
+    omitted = report["compounds"]["rows_omitted_duplicate"]
+    assert [(item["row"], item["canonical_key"]) for item in omitted] == [
+        (36, "glycerol 3 phosphate"), (38, "glycerol 3 phosphate")]
+    assert report["compounds"]["rows_consolidated"] == []
+    compounds = payload["entities"]["compounds"]
+    assert len(compounds) == len(original["entities"]["compounds"])
+    details = compounds[36]["prefreeze_duplicate_omission"]
+    assert [item["row"] for item in details["group"]] == [20, 36, 38]
+    assert [item["name_before"] for item in details["group"]] == [
         "glycerol-3-phosphate", "sn -glycerol 3-phosphate", "sn-glycerol 3-phosphate"]
-    assert details["canonicalized_rows"] == [36, 38]
-    assert details["rows"][0]["identifiers"]["kegg"] == "C03189"
-    assert details["rows"][1]["identifiers"]["kegg"] == "C00093"
+    assert details["group"][0]["identifiers"]["kegg"] == "C03189"
+    assert details["group"][1]["identifiers"]["kegg"] == "C00093"
+    assert [compounds[i]["name"] for i in (20, 36, 38)] == [
+        "glycerol-3-phosphate", "sn -glycerol 3-phosphate", "sn-glycerol 3-phosphate"]
 
 
 def test_c050h_new_acceptance_a_genuinely_distinct_pair_still_refuses() -> None:
@@ -1553,16 +1583,17 @@ def test_c050h_new_acceptance_a_pre_existing_group_renamed_en_bloc_refuses() -> 
             {"name": "R1", "inputs": ["lipid IV_A"], "outputs": []},
         ]},
     }
-    original = deepcopy(payload)
     index = _StubNameIndex({"9": {"id": 78, "name": "Lipid IVA", "matched_on": "chebi"}})
 
-    with pytest.raises(PrefreezeResolutionError) as excinfo:
-        _run(payload, index)
+    # ORCH-787 (D-118 § 2, amending D-035 clause 7) moved this pin deliberately: base raised DUPLICATE_ROWS (canonicalized rows [0, 1]).
+    # Both rows carry ChEBI 9 and resolve to the one entity 78 with nothing
+    # conflicting, so D-035 clause 3 holds: ONE row, not two on one name and not a
+    # refusal. (Distinct rows with conflicting ids are omitted per row instead.)
+    summary = _run(payload, index)
 
-    assert excinfo.value.code == DUPLICATE_ROWS
-    assert excinfo.value.details["canonical_key"] == "lipid iva"
-    assert excinfo.value.details["canonicalized_rows"] == [0, 1]
-    assert payload == original, "nothing may be committed on a refusal"
+    assert [row["name"] for row in payload["entities"]["compounds"]] == ["Lipid IVA"]
+    assert payload["processes"]["reactions"][0]["inputs"] == ["Lipid IVA"]
+    assert [(r["name"], r["db_id"]) for r in summary["rows_consolidated"]] == [("lipid IV A", 78)]
 
 
 def test_c050h_new_acceptance_an_unreferenced_created_duplicate_is_not_refused() -> None:
