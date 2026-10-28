@@ -76,7 +76,7 @@ def test_the_code_table_is_the_catalogue_appendix():
     codes, messages, workarounds = _catalogue()
     # The appendix as ORCH-771 wrote it (82, 19), plus ORCH-773's two rows: the
     # ``protein_complex_component_omitted:`` code and the "Located protein is isolated" message.
-    assert len(codes) == 83 and len(messages) == 20
+    assert len(codes) == 84 and len(messages) == 20  # ORCH-788 (89038702): + biological_state_missing_subcellular_location
     assert list(KNOWN_ISSUES["codes"]) == codes
     assert list(KNOWN_ISSUES["messages"]) == messages
     labels = {row[3] for row in codes} | {ki for _patterns, ki in messages}

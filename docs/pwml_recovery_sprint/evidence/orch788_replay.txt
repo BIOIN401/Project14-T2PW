@@ -1,0 +1,52 @@
+ORCH-788 offline replay of ORCH-784 sour_taste_v2-strict (PMC7059786), strict/pathwhiz mode, ORCH-768 harness replay_leg.
+Script: docs/pwml_recovery_sprint/evidence/orch788_replay.py. G11: g11/ORCH-788/01-replay-base.json, 02-replay-tip.json.
+
+===== BASE 22538dee (C:/t/orch788/base/src) =====
+t2pw resolved: C:\t\orch788\base\src\t2pw
+offline probe: {'attempts': {'urlopen_uniprot': 'refused', 'create_connection_loopback': 'refused', 'raw_socket_connect': 'refused'}, 'counted': 3, 'ok': True}
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Mus musculus']
+checkpoint: "canonical"
+quarantine: {"ok": true, "refusal": [], "release": "review_required", "decision_input_hash_matches_leg": true, "admitted_hash_matches_leg": false, "counts": {"core_accepted": 10, "auxiliary_accepted": 0, "quarantined_unmapped_entity": 0, "quarantined_out_of_scope": 0, "quarantined_weak_evidence": 0, "quarantined_broken_reference": 0, "quarantined_disconnected": 0}}
+driver: {"gate_failed": false, "gate_stage": "final_pre_export_stage3_gates", "gate_reason": "", "contract_errors": 0, "codes": []}
+export: {"ok": false, "error": "PWML IR validation failed.", "quarantine_reused": true, "stage3_contract_codes": [], "required_gate_ok": true, "required_gate_codes": [], "ir_blocking": ["biological_state_missing_subcellular_location"], "ir_validation": ["biological_state_missing_subcellular_location"]}
+pwml_written: false
+failure_stage: "pwml_export"
+network_refused: []
+coverage: {"drawn": 0, "total": 18, "pwml_written": false, "no_pwml_cause": "biological_state_missing_subcellular_location"}
+60:No PWML written: biological_state_missing_subcellular_location (known issue: unclassified). Nothing is drawn; the 10 processes of the final payload are listed after the removals.
+61-
+--
+74:Entities left out (0), from removed_entity_report.json:
+75-None recorded
+
+===== TIP (orch788/fix @ 89038702) =====
+t2pw resolved: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch788\src\t2pw
+offline probe: {'attempts': {'urlopen_uniprot': 'refused', 'create_connection_loopback': 'refused', 'raw_socket_connect': 'refused'}, 'counted': 3, 'ok': True}
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 1 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Mus musculus']
+checkpoint: "canonical"
+quarantine: {"ok": true, "refusal": [], "release": "review_required", "decision_input_hash_matches_leg": true, "admitted_hash_matches_leg": false, "counts": {"core_accepted": 10, "auxiliary_accepted": 0, "quarantined_unmapped_entity": 0, "quarantined_out_of_scope": 0, "quarantined_weak_evidence": 0, "quarantined_broken_reference": 0, "quarantined_disconnected": 0}}
+driver: {"gate_failed": false, "gate_stage": "final_pre_export_stage3_gates", "gate_reason": "", "contract_errors": 0, "codes": []}
+export: {"ok": true, "error": "", "quarantine_reused": true, "stage3_contract_codes": [], "required_gate_ok": true, "required_gate_codes": [], "ir_blocking": [], "ir_validation": [], "release": "review_required", "pwml_name": "pathway.review_required.pwml"}
+pwml_written: true
+failure_stage: null
+network_refused: []
+coverage: {"drawn": 10, "total": 18, "pwml_written": true, "no_pwml_cause": ""}
+REMOVED ENTITIES (4)
+--------------------
+- element_locations/compound_locations 5-HT in Type III taste cell state: biological_state_missing_subcellular_location
+- biological_states Type III taste cell state: biological_state_missing_subcellular_location
+- element_locations/protein_locations P2X receptors in afferent nerve state: biological_state_missing_subcellular_location
+- biological_states afferent nerve state: biological_state_missing_subcellular_location
+
+OMITTED FROM THE PWML (0)
+-------------------------
+Known-issue ids: docs/pwml_recovery_sprint/PWML_KNOWN_ISSUES.md, appendix "Reason code -> KI id".
+
+Entities left out (4), from removed_entity_report.json:
+- element_locations/compound_locations 5-HT in Type III taste cell state: biological_state_missing_subcellular_location (KI-015); gate pwml_ir_validation
+- biological_states Type III taste cell state: biological_state_missing_subcellular_location (KI-015); gate pwml_ir_validation
+- element_locations/protein_locations P2X receptors in afferent nerve state: biological_state_missing_subcellular_location (KI-015); gate pwml_ir_validation
+- biological_states afferent nerve state: biological_state_missing_subcellular_location (KI-015); gate pwml_ir_validation
+
+
+

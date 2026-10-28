@@ -2696,6 +2696,9 @@ def _cap_release_for_omissions(release: Dict[str, Any], reason: str) -> Dict[str
 
 
 _ROW_POINTER = re.compile(r"^/(processes|entities)/([a-z_]+)/(\d+)(?:/([a-z_]+)/(\d+))?")
+_STATE_POINTER = re.compile(r"^/biological_states/(\d+)$")
+#: ORCH-788: the IR code (``ir.build_pwml_ir`` / ``ir.validate_pwml_ir``) for a state with no location.
+STATE_MISSING_LOCATION_REASON = "biological_state_missing_subcellular_location"
 _LOCATED_PROTEIN_POINTER = re.compile(r"^/element_locations/protein_locations/(\d+)/protein$")
 #: The final gate's two messages for a protein attached to nothing, from the gate's own module.
 _UNATTACHED_PROTEIN_MESSAGES: Tuple[str, ...] = (DEGREE_ZERO_PROTEIN_MESSAGE, ISOLATED_LOCATED_PROTEIN_MESSAGE)
@@ -2817,6 +2820,19 @@ def _row_failures(
         return {"kind": "entity", "bucket": bucket, "row": row, "reason": reason, "gate": gate, "attached": attached}
 
     if ir is not None:
+        # ORCH-788: a state the IR could place in no resolved subcellular location
+        # (the IR already uses a location the state is named after). The state is
+        # omitted; it maps back by name, IR state i being payload state i.
+        state = _STATE_POINTER.match(pointer)
+        if state and reason == STATE_MISSING_LOCATION_REASON:
+            records = _safe_list(_safe_dict(ir).get("biological_states"))
+            index = int(state.group(1))
+            norm = _normalize(_row_name(records[index])) if index < len(records) else ""
+            return [
+                {"kind": "state", "row": row, "reason": reason, "gate": gate}
+                for row in _safe_list(working.get("biological_states"))
+                if isinstance(row, dict) and norm and _normalize(_row_name(row)) == norm
+            ]
         # IR pointers address the IR's own lists; an entity maps back by name.
         match = _ROW_POINTER.match(pointer)
         if not match or match.group(1) != "entities" or match.group(2) not in ("proteins", "protein_complexes"):
@@ -3069,6 +3085,48 @@ def _apply_per_row_failures(
             }
         )
 
+    def names_state(value: Any, norm: str) -> bool:
+        """Any ``*biological_state`` field, at any depth, naming the state."""
+
+        if isinstance(value, dict):
+            return any(
+                (key.endswith("biological_state") and _normalize(_text(item)) == norm) or names_state(item, norm)
+                for key, item in value.items()
+            )
+        return isinstance(value, list) and any(names_state(item, norm) for item in value)
+
+    def drop_state(row: Dict[str, Any], reason: str, gate: str) -> None:
+        """ORCH-788: omit a state with no location, and what is placed in it.
+
+        A process placed in it leaves whole: the IR would put it in the default
+        state instead, a location the paper never gave it. An element placed in
+        it loses that one placement. Nothing is moved to another location.
+        """
+
+        name = _row_name(row) or "<unnamed>"
+        norm = _normalize(name)
+        for record in admissions:
+            if record.get("state") in ACCEPTED_STATES and names_state(process_row(record), norm):
+                omit(record, QUARANTINED_BROKEN_REFERENCE, reason, "biological_state", name, gate)
+        element_locations = _safe_dict(working.get("element_locations"))
+        for bucket, name_field in _LOCATION_BUCKETS.items():
+            rows = element_locations.get(bucket)
+            if not isinstance(rows, list):
+                continue
+            gone = [r for r in rows if isinstance(r, dict) and _normalize(_text(r.get("biological_state"))) == norm]
+            element_locations[bucket] = [r for r in rows if not any(r is g for g in gone)]
+            removed.extend(
+                {"bucket": f"element_locations/{bucket}", "name": f"{_text(r.get(name_field))} in {name}",
+                 "reason": reason, "had_external_identity": None,
+                 "detail": scrub_detail({"gate": gate, "omission": "placement_in_omitted_state"})}
+                for r in gone
+            )
+        working["biological_states"] = [r for r in _safe_list(working.get("biological_states")) if r is not row]
+        removed.append(
+            {"bucket": "biological_states", "name": name, "reason": reason, "had_external_identity": None,
+             "detail": scrub_detail({"gate": gate, "omission": "biological_state_omitted_per_row"})}
+        )
+
     by_record: Dict[int, List[Mapping[str, Any]]] = {}
     for failure in failures:
         if failure["kind"] == "process":
@@ -3113,6 +3171,10 @@ def _apply_per_row_failures(
     for failure in failures:
         if failure["kind"] == "entity":
             drop_entity(failure["bucket"], failure["row"], failure["reason"], failure["gate"], failure["attached"])
+    for failure in failures:
+        if failure["kind"] == "state" and id(failure["row"]) not in dropped:
+            dropped.add(id(failure["row"]))
+            drop_state(failure["row"], failure["reason"], failure["gate"])
     return omitted, removed, actor_drops
 
 
