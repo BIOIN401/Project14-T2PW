@@ -583,7 +583,9 @@ def external_accessions(row: Any) -> Dict[str, str]:
     }
 
 
-def identity_support(row: Any, index: Optional[SourceIndex]) -> Dict[str, Any]:
+def identity_support(
+    row: Any, index: Optional[SourceIndex], listed_members: Optional[Dict[str, str]] = None
+) -> Dict[str, Any]:
     """Is this row's identity locatable in the source paper? Never raises.
 
     Returns ``{"status", "reason", "matched", "evaluated", "route"}`` where
@@ -632,6 +634,13 @@ def identity_support(row: Any, index: Optional[SourceIndex]) -> Dict[str, Any]:
     if not evaluated:
         return {"status": STATUS_NOT_EVALUATED, "reason": NOT_EVALUATED_NO_NAME,
                 "matched": "", "evaluated": 0, "route": ""}
+    # D-118 § 1 (ORCH-786): a slash list the paper writes ("STIM1/2") supports each
+    # member it expands to, exactly. ``listed_members``: member name key -> the list.
+    for candidate in candidate_names(row):
+        listed = (listed_members or {}).get(normalize_name_key(candidate))
+        if listed:
+            return {"status": STATUS_SUPPORTED, "reason": "", "matched": f"{candidate} (from '{listed}')",
+                    "evaluated": evaluated, "route": ""}
     route = provenance_route(row)
     if route:
         return {"status": STATUS_NOT_EVALUATED, "reason": NOT_EVALUATED_OTHER_PROVENANCE,
