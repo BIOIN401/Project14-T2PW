@@ -7540,3 +7540,20 @@ by the sub-orchestrator. Implemented by ORCH-782 (§ 1) and ORCH-783 (§ 2).
    paper; the paper-support check therefore abstains for them, and the record says so.
 3. **Not covered:** a single named protein whose lookup merely failed (PIF1, NLK, Cdc42, TCF4). That is a separate lookup gap and stays
    KI-001 as before.
+
+---
+
+## D-118 — a slash list is paper support for each member it names; an unproven duplicate-canonical group is omitted per row (amends D-035 clause 7) · 2026-10-28 · LOCKED
+
+**Decided by the product owner** (2026-10-28, in session, on the ORCH-786 and ORCH-787 open questions: "use your recommendations").
+Relayed by the Lead Orchestrator and recorded by the sub-orchestrator.
+
+1. **Slash and shorthand lists count as paper support.** A slash or shorthand list written in the paper ("STIM1/2", "P2X2/P2X3")
+   counts, for identity admission, as paper support for each member it expands to: STIM1/2 → STIM1 and STIM2. Expansion covers
+   exactly what is written and never goes beyond it. Implemented narrowly in ORCH-786. The drop-member fallback stays: a member with
+   no id is dropped, and if none is left the complex falls back to Unknown (D-117 § 2 step 4).
+2. **Amends D-035 clause 7.** A duplicate-canonical group (`PREFREEZE_DUPLICATE_CANONICAL_ROWS`) that is **not** proven to be one
+   entity no longer refuses the whole pathway. It becomes a per-row omission: the conflicting rows and every process naming them are
+   omitted, and the text record lists them with a KI id (D-114 § 2, D-116). A group proven to be one entity (same database identity,
+   no conflicting identifier) still merges as ORCH-787 built it. The `test_c050g` pin moves deliberately, with its exact delta
+   recorded in `ORCH-787-RESULT.md`. Implemented in ORCH-787.
