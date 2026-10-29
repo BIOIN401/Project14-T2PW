@@ -324,14 +324,21 @@ def test_preservation_the_drop_rule_still_runs_before_phase2(tmp_path: Path) -> 
     the rewrite, beside one that has an identity, is dropped there ("other enzymes remain")
     and its row removed, so the Phase-2 fallback never sees it. Unchanged; recorded in
     ``ORCH-759e-RESULT.md`` under "Not settled". The resolved sibling is wrapped exactly as
-    when it stands alone."""
+    when it stands alone.
+
+    PIN MOVED by ORCH-792 (KI-007, ``ORCH-792-RESULT.md`` "Pins moved"): the actor still leaves
+    this list before Phase 2, but the ROW is no longer deleted unrecorded -- it stays (the
+    Phase-2 fallback resolves it) and ``quarantined_proteins`` records the actor drop.
+    Before: proteins == ["HEMA1"]. After: ["HEMA1", "CPO"]."""
 
     names = ["HEMA1", "CPO"]
     alone = _run(_payload(["HEMA1"], ["HEMA1"]), tmp_path, main={"HEMA1": _mapped("HEMA1", "P42804")}, phase2={})
     both = _run(_payload(names, names), tmp_path, main={"HEMA1": _mapped("HEMA1", "P42804")},
                 phase2={"CPO": _mapped("CPO", "Q9LR75", CPO_CANDIDATE)})
     assert _actors(both["payload"]) == [("HEMA1 complex", "protein_complex")]
-    assert [r["name"] for r in both["payload"]["entities"]["proteins"]] == ["HEMA1"]
+    assert [r["name"] for r in both["payload"]["entities"]["proteins"]] == ["HEMA1", "CPO"]
+    assert [(r["name"], r["action"]) for r in both["payload"]["quarantined_proteins"]] == [
+        ("CPO", "dropped_from_reaction_actor_list")]
     assert _reaction(both["payload"])["enzymes"] == _reaction(alone["payload"])["enzymes"]
     assert _complex(both["payload"], "HEMA1 complex") == _complex(alone["payload"], "HEMA1 complex")
 

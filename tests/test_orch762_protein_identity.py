@@ -482,11 +482,19 @@ def test_preservation_the_uniprot_tier_for_e_coli_judges_the_same_records(runs: 
 
     judged = {"EntC": "P0AEJ2", "EntB": "P0ADI4", "EntA": "P15047", "EntE": "P10378", "EntF": "P11454",
               "EntD": "P19925", "Fur": "P0A9A9", "TolC": "P02930", "TonB": "P02929", "MenD": "P17109"}
+    # PIN MOVED by ORCH-793 (D-119 s2; ``ORCH-793-RESULT.md`` "Pins moved"). The tie was between
+    # curated records of ONE gene in different strains of the requested species, which the
+    # paper's name is the primary gene name of; they are now one answer, so the same judged
+    # K-12 record ships. Before: nothing shipped, every verdict ambiguous_insufficient_margin.
     rows = _rows(_payload(runs, "ecoli_uniprot", "stage2"))
-    assert not any(H.shipped_uniprot(_payload(runs, "ecoli_uniprot", "stage2")).values())
+    shipped = H.shipped_uniprot(_payload(runs, "ecoli_uniprot", "stage2"))
+    refused = {"TonB"}
+    assert {name: shipped[name] for name in judged if name not in refused} == {
+        name: accession for name, accession in judged.items() if name not in refused}
     for name, accession in judged.items():
         verdict = rows[name]["mapping_meta"]["identity_verdict"]
-        assert (verdict["reason"], verdict["judged_candidate"]["accession"]) == ("ambiguous_insufficient_margin", accession), name
+        expected = "ambiguous_insufficient_margin" if name in refused else "verified_real_protein"
+        assert (verdict["reason"], verdict["judged_candidate"]["accession"]) == (expected, accession), name
 
 
 @pytest.mark.parametrize("scenario,paper,count", [("kf147", "PMC12421875", 9), ("lactis_species", "PMC12421875", 9),

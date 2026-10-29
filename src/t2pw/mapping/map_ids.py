@@ -6292,6 +6292,37 @@ def _candidate_primary_gene_symbols(candidate: Any) -> Set[str]:
     return {norm for norm in (_normalize_name(value) for value in declared) if norm}
 
 
+def _same_gene_record_in_species(judged: Any, other: Any, organism: str) -> bool:
+    """ORCH-793 (D-119 s2): two curated records of ONE gene in the pathway species.
+
+    *E. coli* Fur is P0A9A9 (K-12), P0A9B0 (CFT073) and P0A9B1 (O157:H7): all reviewed, one
+    primary gene ``fur``, one protein name, each a strain of the requested species (with
+    unreviewed strain records such as B7MFV0 beside them). Asked for "Fur" in *Escherichia
+    coli*, they are one answer, not rivals. Required: review status as below, a shared PRIMARY
+    gene symbol, the same recommended protein name, and both ``ok`` (never
+    ``genus_level``) against the requested organism -- so nothing crosses a species boundary.
+    The caller only asks when the paper's name is that primary gene name.
+    """
+
+    a, b = _safe_dict(judged), _safe_dict(other)
+    # The judged record is curated; the other is curated or uncurated (the same Swiss-Prot
+    # superset direction _is_same_protein_record_duplicate allows). Silence on review status
+    # licenses nothing, and two uncurated records never collapse.
+    if a.get("reviewed") is not True or b.get("reviewed") not in (True, False):
+        return False
+    if not (_candidate_primary_gene_symbols(a) & _candidate_primary_gene_symbols(b)):
+        return False
+    name_a = _normalize_name(str(a.get("protein_name") or a.get("name") or ""))
+    if not name_a or name_a != _normalize_name(str(b.get("protein_name") or b.get("name") or "")):
+        return False
+    # Two STRAINS: one organism written twice is two claims to one protein, which the
+    # ladder keeps refusing (test_c122 EnzX, WDG1); this is never that case.
+    org_a = _normalize_name(str(a.get("organism") or a.get("species") or ""))
+    if not org_a or org_a == _normalize_name(str(b.get("organism") or b.get("species") or "")):
+        return False
+    return _candidate_species_verdict(a, organism) == "ok" and _candidate_species_verdict(b, organism) == "ok"
+
+
 def _is_same_protein_record_duplicate(judged: Any, other: Any) -> bool:
     """Whether ``other`` is a redundant UniProt RECORD of the protein ``judged`` names.
 
@@ -6653,6 +6684,9 @@ def verify_real_protein_identity(
         checks["score"] = "ok"
 
     rivals: List[Tuple[float, str]] = []
+    entity_norm = _normalize_name(entity_name)
+    judged_names_primary_gene = bool(entity_norm) and entity_norm in _candidate_primary_gene_symbols(candidate)
+    outranked_by_gene_name: List[str] = []
     #: Rows set aside as further UniProt records of the protein the judged
     #: candidate already names -- same gene symbol, same organism. Recorded, not
     #: discarded: the reader of a verdict must be able to see which accessions
@@ -6682,8 +6716,21 @@ def verify_real_protein_identity(
             # _is_same_protein_record_duplicate for what "same record" requires.
             collapsed_duplicates.append(accession)
             continue
+        if judged_names_primary_gene:
+            # ORCH-793 (D-119 s2). The paper's name is UniProt's own PRIMARY gene name of the
+            # judged entry, in the pathway species. A rival that carries it only as a gene
+            # synonym or a name word (PIF1 -> CLF's synonym, "PIF1 helicase") does not contest
+            # it; a rival whose primary gene name it also is still does.
+            if entity_norm not in _candidate_primary_gene_symbols(other):
+                outranked_by_gene_name.append(accession)
+                continue
+            if _same_gene_record_in_species(candidate, other, organism):
+                collapsed_duplicates.append(accession)
+                continue
         rivals.append((_candidate_score(other, {}), accession))
 
+    if outranked_by_gene_name:
+        verdict["outranked_by_primary_gene_name"] = sorted(set(outranked_by_gene_name))[:8]
     if collapsed_duplicates:
         verdict["collapsed_duplicate_accessions"] = sorted(set(collapsed_duplicates))[:8]
 
@@ -6800,6 +6847,7 @@ def _resolve_ambiguous_protein_candidates(
                     "pathbank_protein_id": pathbank_id,
                     "accession": accession,
                     "identity_verdict": verdict,
+                    "_candidate": candidate,
                 }
             )
         else:
@@ -6812,10 +6860,30 @@ def _resolve_ambiguous_protein_candidates(
         "verified_accessions": sorted(distinct)[:8],
         "rejections": rejections[:8],
     }
+    survivors = [row.pop("_candidate") for row in verified]
     if not verified:
         ambiguity["reason"] = "no_candidate_passed_identity_verification"
         return None, ambiguity
     if len(distinct) > 1:
+        # ORCH-793 (D-119 s2): survivors that are all curated records of the one gene the
+        # paper names, in the pathway species (Fur: P0A9A9/P0A9B0/P0A9B1), are one answer.
+        # The pick is a stable order -- best score, then accession -- never list order.
+        entity_norm = _normalize_name(entity_name)
+        anchor = next((row for row in survivors if row.get("reviewed") is True), None)
+        if entity_norm and anchor is not None and all(
+            entity_norm in _candidate_primary_gene_symbols(row)
+            and (row is anchor or _same_gene_record_in_species(anchor, row, organism))
+            for row in survivors
+        ):
+            ranked = sorted(
+                zip(survivors, verified),
+                key=lambda pair: (pair[0].get("reviewed") is not True,
+                                  -float(pair[1]["identity_verdict"].get("score") or 0.0),
+                                  pair[1]["accession"].casefold()),
+            )
+            chosen = ranked[0][1]
+            ambiguity["reason"] = "same_gene_records_in_species_resolved_by_stable_order"
+            return chosen, ambiguity
         ambiguity["reason"] = "multiple_candidates_passed_identity_verification"
         return None, ambiguity
     ambiguity["reason"] = "single_candidate_passed_identity_verification"
@@ -8449,31 +8517,31 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
                 continue
             protein_row = proteins_by_norm.get(name_norm)
             if name_norm in dropped_protein_norms:
+                # ORCH-792: folded into its wrapper in another actor list. Here the wrapper
+                # takes its place (once); before, this list silently lost the enzyme.
+                wrapper = dropped_protein_wrappers.get(name_norm, "")
+                row_norms = {
+                    _normalize_name(_reaction_actor_name_and_type(
+                        other if isinstance(other, dict) else {"entity": other}
+                    )[0])
+                    for other in rows
+                } | {_normalize_name(str(_safe_dict(done).get("entity") or "")) for done in rewritten}
+                if wrapper and _normalize_name(wrapper) not in row_norms:
+                    folded = {"entity": wrapper, "entity_type": "protein_complex", "role": role or "catalyst"}
+                    for keep_key in ["evidence", "confidence", "provenance", "biological_state"]:
+                        if keep_key in actor_dict:
+                            folded[keep_key] = actor_dict[keep_key]
+                    rewritten.append(folded)
                 continue
             if actor_type not in {"protein", ""} or protein_row is None:
                 rewritten.append(dict(actor_dict))
                 continue
             # Drop proteins that have no external ID when other resolved
-            # proteins exist in the same enzyme/modifier list.
+            # proteins exist in the same enzyme/modifier list. ORCH-792: the ROW is removed
+            # only when a complex in this same list carries the protein as a component (the
+            # wrapper below: it is redundant there); otherwise only the actor goes (next block).
+            wrapper = ""
             if not has_protein_external_identity(protein_row) and resolved_protein_count > 0:
-                if protein_row in proteins:
-                    proteins.remove(protein_row)
-                proteins_by_norm.pop(name_norm, None)
-                dropped_protein_norms.add(name_norm)
-                dropped_protein_names.setdefault(name_norm, name)
-                # WHERE THIS PROTEIN'S FUNCTION WENT. This is the drop that
-                # orphaned PMC12856317's four ``entity_2: ALAS2`` interactions:
-                # the reaction listed both ``ALAS2`` (no accession) and the
-                # complex ``ALAS2 homodimer``, so the protein was removed here as
-                # redundant -- and nothing outside this actor list was told.
-                #
-                # The replacement is decided STRUCTURALLY, never by name
-                # similarity: the wrapper is the complex in this same actor list
-                # that carries the dropped protein as a component. Exactly one
-                # such complex is a replacement; zero or several is a question
-                # this frame cannot answer, and it records "" so the repair
-                # leaves those references for strict validation to reject
-                # clearly rather than reattributing the claim to a guess.
                 wrappers = {
                     _canonical_name(str(complexes_by_norm[actor_norm].get("name") or ""))
                     for actor_norm in (
@@ -8491,6 +8559,42 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
                     )
                 }
                 wrapper = wrappers.pop() if len(wrappers) == 1 else ""
+            if wrapper:
+                if protein_row in proteins:
+                    proteins.remove(protein_row)
+                    # ORCH-792: the removal is recorded, as every other Stage-6 removal is.
+                    _bucket = mapped.get("quarantined_proteins")
+                    if not isinstance(_bucket, list):
+                        _bucket = []
+                        mapped["quarantined_proteins"] = _bucket
+                    _bucket.append(
+                        {
+                            "name": _canonical_name(name),
+                            "reason": "reaction_enzyme_protein_dropped_no_external_id",
+                            "pass": "map_payload.enzyme_complex_rewrite",
+                            "action": "folded_into_wrapper_complex",
+                            "functional_replacement": wrapper,
+                            "had_external_identity": False,
+                            "original_row": deepcopy(protein_row),
+                        }
+                    )
+                proteins_by_norm.pop(name_norm, None)
+                dropped_protein_norms.add(name_norm)
+                dropped_protein_names.setdefault(name_norm, name)
+                # WHERE THIS PROTEIN'S FUNCTION WENT. This is the drop that
+                # orphaned PMC12856317's four ``entity_2: ALAS2`` interactions:
+                # the reaction listed both ``ALAS2`` (no accession) and the
+                # complex ``ALAS2 homodimer``, so the protein was removed here as
+                # redundant -- and nothing outside this actor list was told.
+                #
+                # The replacement is decided STRUCTURALLY, never by name
+                # similarity: the wrapper is the complex in this same actor list
+                # that carries the dropped protein as a component. Exactly one
+                # such complex is a replacement; zero or several is a question
+                # this frame cannot answer, and it records "" so the repair
+                # leaves those references for strict validation to reject
+                # clearly rather than reattributing the claim to a guess.
+                # (ORCH-792: zero or several now keeps the row; only the actor leaves, below.)
                 if name_norm in dropped_protein_wrappers:
                     if dropped_protein_wrappers[name_norm] != wrapper:
                         # Two actor lists put the same protein into different
@@ -8505,6 +8609,39 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
                         "json_pointer": f"{pointer_prefix}/{idx}",
                         "protein": name,
                         "reason": "no UniProt or DrugBank identifier; other enzymes remain",
+                    }
+                )
+                continue
+            if not has_protein_external_identity(protein_row) and resolved_protein_count > 0:
+                # ORCH-792 (KI-007, D-115 s3): no wrapper carries it, so it leaves THIS actor
+                # list only (the reaction keeps the enzymes that resolved) and the ROW STAYS:
+                # its interactions, its other reactions (lone there: D-070 Unknown-backed
+                # complex) and the family conversion (PKC) still see it, and strict quarantine
+                # records whatever becomes of it. Before, the row was deleted here unrecorded.
+                _bucket = mapped.get("quarantined_proteins")
+                if not isinstance(_bucket, list):
+                    _bucket = []
+                    mapped["quarantined_proteins"] = _bucket
+                _bucket.append(
+                    {
+                        "name": _canonical_name(name),
+                        "reason": "reaction_enzyme_protein_dropped_no_external_id",
+                        "pass": "map_payload.enzyme_complex_rewrite",
+                        "action": "dropped_from_reaction_actor_list",
+                        "process": str(reaction.get("name") or ""),
+                        "json_pointer": f"{pointer_prefix}/{idx}",
+                        "row_kept": True,
+                        "had_external_identity": False,
+                    }
+                )
+                summary["reaction_enzyme_proteins_dropped_no_external_id"] += 1
+                actions.append(
+                    {
+                        "type": "reaction_enzyme_protein_dropped_no_external_id",
+                        "json_pointer": f"{pointer_prefix}/{idx}",
+                        "protein": name,
+                        "reason": "no UniProt or DrugBank identifier; other enzymes remain",
+                        "row_kept": True,
                     }
                 )
                 continue
@@ -11841,6 +11978,9 @@ def map_payload(
             for _comp in _safe_list(_pc.get("components")):
                 _cname = str(_comp if isinstance(_comp, str) else _safe_dict(_comp).get("name") or "")
                 _still_needed.add(_normalize_name(_cname))
+        # ORCH-792 (ORCH-789 D4): a process that names the protein needs it too (TCF, named by
+        # two interactions). Removing it here left those processes on an undeclared entity.
+        _still_needed.update(_normalize_name(_text) for _text in _strings(mapped.get("processes")))
 
         _remove_norms = _dropped_norms - _still_needed
         if _remove_norms:
