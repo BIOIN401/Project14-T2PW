@@ -1,0 +1,125 @@
+{
+  "label": "affected-tip-r1",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch794/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch794",
+    "--pin-verdict",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch794/docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-794/09-affected-tip-r1.pin.json",
+    "-q",
+    "--basetemp=C:/t/orch79x/bt/ORCH-794-09-affected-tip-r1",
+    "tests/test_orch772_pwml_coverage.py",
+    "tests/test_orch772b_no_pwml_cause.py",
+    "tests/test_reaction_evidence.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_orch773_omit_per_row.py",
+    "tests/test_orch782_gene_protein_split.py",
+    "tests/test_orch788_state_without_location.py",
+    "tests/test_orch768_replay_corpus.py",
+    "tests/test_orch759c_quarantine_bucket_closure.py",
+    "tests/test_orch794_one_name_two_kinds.py",
+    "tests/test_orch795_headline_unsigned.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch794",
+  "started_at": "2026-10-29T17:08:33+00:00",
+  "finished_at": "2026-10-29T17:08:44+00:00",
+  "duration_seconds": 10.986046999998507,
+  "timeout_seconds": 1500.0,
+  "root_pid": 383652,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 383668,
+      "name": "python.exe",
+      "ppid": 383652
+    },
+    {
+      "pid": 382592,
+      "name": "python.exe",
+      "ppid": 383668
+    },
+    {
+      "pid": 382980,
+      "name": "python.exe",
+      "ppid": 382592
+    },
+    {
+      "pid": 383960,
+      "name": "python.exe",
+      "ppid": 383980
+    },
+    {
+      "pid": 383980,
+      "name": "python.exe",
+      "ppid": 383668
+    }
+  ],
+  "descendants_terminated": [
+    382592,
+    382980,
+    383668,
+    383960,
+    383980
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 347996,
+      "name": "python.exe"
+    },
+    {
+      "pid": 355452,
+      "name": "python.exe"
+    },
+    {
+      "pid": 362784,
+      "name": "python.exe"
+    },
+    {
+      "pid": 382516,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch794\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-794\\09-affected-tip-r1.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch794\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch794",
+    "repo_head": "f3a80e094a8755718944d77151e87c1d7cf57b59",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-794",
+    "token": "ORCH-794:382516:1b04bff44e6916ee",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

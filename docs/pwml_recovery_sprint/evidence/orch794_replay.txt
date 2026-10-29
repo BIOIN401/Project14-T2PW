@@ -1,0 +1,138 @@
+ORCH-794 offline tail replay (reconstruction, see the script docstring) of ORCH-785 chlorophyll + wnt_ca strict legs. Script: docs/pwml_recovery_sprint/evidence/orch794_replay.py. Base C:/t/orch794/base (f3a80e09); tip orch794/fix @ 483f4098. G11: g11/ORCH-794/31-replay-base-final.json, 32-replay-tip-final.json.
+
+===== base (log ORCH-794-31-replay-base-final.log)
+t2pw resolved: C:\t\orch794\base\src\t2pw
+offline probe: {'attempts': {'urlopen_uniprot': 'refused', 'create_connection_loopback': 'refused', 'raw_socket_connect': 'refused'}, 'counted': 3, 'ok': True}
+
+===== chlorophyll: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch785run\runs_papers\ORCH-785\legs\chlorophyll-strict\2026-10-28_1743\papers\PMC5130987\strict
+put back reactions 'GluTR1 reaction' (was /processes/reactions/0, ambiguous_entity_type:compounds+nucleic_acids); from verbatim original_process
+put back reactions 'GluTR reaction' (was /processes/reactions/16, ambiguous_entity_type:compounds+nucleic_acids); from verbatim original_process
+put back reactions 'Glu-tRNAGlu reduction to GSA' (was /processes/reactions/20, ambiguous_entity_type:compounds+nucleic_acids); from verbatim original_process
+put back reactions 'Glu-tRNAGlu formation' (was /processes/reactions/27, ambiguous_entity_type:compounds+nucleic_acids); from verbatim original_process
+dropped 3 stale quarantined_locked_reactions entries: ['rxn_lock_016', 'rxn_lock_017', 'rxn_lock_018']
+put back entity compounds 'Glu' (closure: unreferenced_after_quarantine); from: merged_payload
+put back entity compounds 'Glu-tRNAGlu' (closure: unreferenced_after_quarantine); from: merged_payload
+put back entity compounds 'tRNAGlu' (closure: unreferenced_after_quarantine); from: merged_payload
+put back entity proteins 'HEMA1' (closure: degree_zero_after_quarantine); from: merged_payload + uniprot P42804 from the run's id cache (top_unique_candidate)
+put back entity protein_complexes 'FLU complex' (closure: degree_zero_after_quarantine); from: Stage-6 wrapper shape of 'GluTR1 complex', renamed, component 'FLU'
+put back entity protein_complexes 'HEMA1 complex' (closure: degree_zero_after_quarantine); from: Stage-6 wrapper shape of 'GluTR1 complex', renamed, component 'HEMA1'
+put back entity protein_complexes 'GluTR' (closure: degree_zero_after_quarantine); from: name and class only
+put back entity nucleic_acids 'tRNAGlu' (closure: unreferenced_after_quarantine); from: merged_payload
+put back entity nucleic_acids 'Glu-tRNAGlu' (closure: unreferenced_after_quarantine); from: merged_payload
+put back location compound_locations 'Glu-tRNAGlu' @ 'plastid state'
+put back location compound_locations 'Glu-tRNAGlu' @ 'plastid'
+put back location compound_locations 'Glu' @ 'plastid state'
+put back location nucleic_acid_locations 'Glu-tRNAGlu' @ 'plastid state'
+put back location nucleic_acid_locations 'tRNAGlu' @ 'plastid state'
+checkpoint: "canonical"
+quarantine: {"ok": true, "refusal": [], "release": "review_required", "decision_input_hash_matches_leg": true, "admitted_hash_matches_leg": false, "counts": {"core_accepted": 19, "auxiliary_accepted": 61, "quarantined_unmapped_entity": 0, "quarantined_out_of_scope": 0, "quarantined_weak_evidence": 0, "quarantined_broken_reference": 4, "quarantined_disconnected": 0}}
+export: {"ok": true, "error": "", "quarantine_reused": true, "stage3_contract_codes": [], "required_gate_ok": true, "required_gate_codes": [], "ir_blocking": [], "ir_validation": [], "release": "review_required", "pwml_name": "pathway.review_required.pwml"}
+pwml_written: true
+failure_stage: null
+network_refused: []
+coverage: {"drawn": 43, "total": 108, "by_design_withheld": 26, "pwml_written": true, "by_kind": {"reaction": {"drawn": 24, "total": 30, "omitted_before_freeze": 6}, "transport": {"drawn": 0, "total": 0, "omitted_before_freeze": 0}, "interaction": {"drawn": 19, "total": 78, "omitted_before_freeze": 22}}}
+omitted by reason: [[26, "KI-008", "ir", "untyped_interaction"], [15, "KI-001", "pre_freeze", "protein_missing_external_identity"], [11, "KI-009", "ir", "bare_protein_endpoint"], [4, "KI-011", "pre_freeze", "ambiguous_entity_type:compounds+nucleic_acids"], [3, "KI-011", "pre_freeze", "ambiguous_entity_type:nucleic_acids+proteins"], [3, "KI-015", "pre_freeze", "undeclared_entity_in_entity_1"], [2, "KI-015", "pre_freeze", "unresolved_actor_in_enzymes"], [1, "KI-015", "pre_freeze", "undeclared_entity_in_entity_2"]]
+rows put back, their fate at this tree:
+  reactions 'GluTR1 reaction': admission=ambiguous_entity_type:compounds+nucleic_acids; in canonical=False; drawn in PWML=False
+  reactions 'GluTR reaction': admission=ambiguous_entity_type:compounds+nucleic_acids; in canonical=False; drawn in PWML=False
+  reactions 'Glu-tRNAGlu reduction to GSA': admission=ambiguous_entity_type:compounds+nucleic_acids; in canonical=False; drawn in PWML=False
+  reactions 'Glu-tRNAGlu formation': admission=ambiguous_entity_type:compounds+nucleic_acids; in canonical=False; drawn in PWML=False
+recovered (drawn) 0 of 4 put back
+ORCH-794 removals: []
+actors dropped from kept processes: []
+
+===== wnt_ca: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch785run\runs_papers\ORCH-785\legs\wnt_ca-strict\2026-10-28_1910\papers\PMC10425814\strict
+put back transports 'IP3-induced Ca 2+ release from ER' (was /processes/transports/0, ambiguous_entity_type:compounds+proteins); from verbatim original_process
+put back transports 'IP3-stimulated Ca2+ release from ER' (was /processes/transports/3, ambiguous_entity_type:compounds+proteins); from verbatim original_process
+put back transports 'Ca2+ release from ER state to cytosol state' (was /processes/transports/5, ambiguous_entity_type:compounds+proteins); from verbatim original_process
+put back interactions 'IP3 binds InsP3R' (was /processes/interactions/9, ambiguous_entity_type:compounds+proteins); from verbatim original_process
+put back entity compounds 'InsP3R' (closure: unreferenced_after_quarantine); from: name and class only
+put back entity proteins 'InsP3R' (closure: degree_zero_after_quarantine); from: merged_payload
+put back location compound_locations 'InsP3R' @ '__auto_state__'
+put back location protein_locations 'InsP3R' @ 'endoplasmic reticulum membrane state'
+put back location protein_locations 'InsP3R' @ 'ER membrane state'
+checkpoint: "canonical"
+quarantine: {"ok": true, "refusal": [], "release": "review_required", "decision_input_hash_matches_leg": true, "admitted_hash_matches_leg": false, "counts": {"core_accepted": 15, "auxiliary_accepted": 3, "quarantined_unmapped_entity": 0, "quarantined_out_of_scope": 0, "quarantined_weak_evidence": 0, "quarantined_broken_reference": 4, "quarantined_disconnected": 0}}
+export: {"ok": true, "error": "", "quarantine_reused": true, "stage3_contract_codes": [], "required_gate_ok": true, "required_gate_codes": [], "ir_blocking": [], "ir_validation": [], "release": "review_required", "pwml_name": "pathway.review_required.pwml"}
+pwml_written: true
+failure_stage: null
+network_refused: []
+coverage: {"drawn": 10, "total": 46, "by_design_withheld": 7, "pwml_written": true, "by_kind": {"reaction": {"drawn": 1, "total": 2, "omitted_before_freeze": 1}, "transport": {"drawn": 3, "total": 7, "omitted_before_freeze": 4}, "interaction": {"drawn": 6, "total": 37, "omitted_before_freeze": 23}}}
+omitted by reason: [[8, "KI-015", "pre_freeze", "undeclared_entity_in_entity_2"], [7, "KI-001", "pre_freeze", "protein_missing_external_identity"], [7, "KI-008", "ir", "untyped_interaction"], [5, "KI-015", "pre_freeze", "protein_complex_missing_components"], [4, "KI-011", "pre_freeze", "ambiguous_entity_type:compounds+proteins"], [2, "KI-015", "pre_freeze", "protein_complex_component_omitted:ORAI2:Located protein is isolated in connectivity graph: ORAI2"], [1, "KI-006", "pre_freeze", "reaction_enzyme_must_be_protein_complex"], [1, "KI-009", "ir", "bare_protein_endpoint"], [1, "KI-015", "pre_freeze", "undeclared_entity_in_entity_1"]]
+rows put back, their fate at this tree:
+  transports 'IP3-induced Ca 2+ release from ER': admission=ambiguous_entity_type:compounds+proteins; in canonical=False; drawn in PWML=False
+  transports 'IP3-stimulated Ca2+ release from ER': admission=ambiguous_entity_type:compounds+proteins; in canonical=False; drawn in PWML=False
+  transports 'Ca2+ release from ER state to cytosol state': admission=ambiguous_entity_type:compounds+proteins; in canonical=False; drawn in PWML=False
+  interactions 'IP3 binds InsP3R': admission=ambiguous_entity_type:compounds+proteins; in canonical=False; drawn in PWML=False
+recovered (drawn) 0 of 4 put back
+ORCH-794 removals: []
+actors dropped from kept processes: []
+
+===== tip (log ORCH-794-32-replay-tip-final.log)
+t2pw resolved: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch794\src\t2pw
+offline probe: {'attempts': {'urlopen_uniprot': 'refused', 'create_connection_loopback': 'refused', 'raw_socket_connect': 'refused'}, 'counted': 3, 'ok': True}
+
+===== chlorophyll: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch785run\runs_papers\ORCH-785\legs\chlorophyll-strict\2026-10-28_1743\papers\PMC5130987\strict
+put back reactions 'GluTR1 reaction' (was /processes/reactions/0, ambiguous_entity_type:compounds+nucleic_acids); from verbatim original_process
+put back reactions 'GluTR reaction' (was /processes/reactions/16, ambiguous_entity_type:compounds+nucleic_acids); from verbatim original_process
+put back reactions 'Glu-tRNAGlu reduction to GSA' (was /processes/reactions/20, ambiguous_entity_type:compounds+nucleic_acids); from verbatim original_process
+put back reactions 'Glu-tRNAGlu formation' (was /processes/reactions/27, ambiguous_entity_type:compounds+nucleic_acids); from verbatim original_process
+dropped 3 stale quarantined_locked_reactions entries: ['rxn_lock_016', 'rxn_lock_017', 'rxn_lock_018']
+put back entity compounds 'Glu' (closure: unreferenced_after_quarantine); from: merged_payload
+put back entity compounds 'Glu-tRNAGlu' (closure: unreferenced_after_quarantine); from: merged_payload
+put back entity compounds 'tRNAGlu' (closure: unreferenced_after_quarantine); from: merged_payload
+put back entity proteins 'HEMA1' (closure: degree_zero_after_quarantine); from: merged_payload + uniprot P42804 from the run's id cache (top_unique_candidate)
+put back entity protein_complexes 'FLU complex' (closure: degree_zero_after_quarantine); from: Stage-6 wrapper shape of 'GluTR1 complex', renamed, component 'FLU'
+put back entity protein_complexes 'HEMA1 complex' (closure: degree_zero_after_quarantine); from: Stage-6 wrapper shape of 'GluTR1 complex', renamed, component 'HEMA1'
+put back entity protein_complexes 'GluTR' (closure: degree_zero_after_quarantine); from: name and class only
+put back entity nucleic_acids 'tRNAGlu' (closure: unreferenced_after_quarantine); from: merged_payload
+put back entity nucleic_acids 'Glu-tRNAGlu' (closure: unreferenced_after_quarantine); from: merged_payload
+put back location compound_locations 'Glu-tRNAGlu' @ 'plastid state'
+put back location compound_locations 'Glu-tRNAGlu' @ 'plastid'
+put back location compound_locations 'Glu' @ 'plastid state'
+put back location nucleic_acid_locations 'Glu-tRNAGlu' @ 'plastid state'
+put back location nucleic_acid_locations 'tRNAGlu' @ 'plastid state'
+checkpoint: "canonical"
+quarantine: {"ok": true, "refusal": [], "release": "review_required", "decision_input_hash_matches_leg": true, "admitted_hash_matches_leg": false, "counts": {"core_accepted": 20, "auxiliary_accepted": 63, "quarantined_unmapped_entity": 1, "quarantined_out_of_scope": 0, "quarantined_weak_evidence": 0, "quarantined_broken_reference": 0, "quarantined_disconnected": 0}}
+export: {"ok": true, "error": "", "quarantine_reused": true, "stage3_contract_codes": [], "required_gate_ok": true, "required_gate_codes": [], "ir_blocking": [], "ir_validation": [], "release": "review_required", "pwml_name": "pathway.review_required.pwml"}
+pwml_written: true
+failure_stage: null
+network_refused: []
+coverage: {"drawn": 46, "total": 108, "by_design_withheld": 40, "pwml_written": true, "by_kind": {"reaction": {"drawn": 27, "total": 30, "omitted_before_freeze": 3}, "transport": {"drawn": 0, "total": 0, "omitted_before_freeze": 0}, "interaction": {"drawn": 19, "total": 78, "omitted_before_freeze": 22}}}
+omitted by reason: [[26, "KI-008", "ir", "untyped_interaction"], [15, "KI-001", "pre_freeze", "protein_missing_external_identity"], [11, "KI-009", "ir", "bare_protein_endpoint"], [3, "KI-011", "pre_freeze", "ambiguous_entity_type:nucleic_acids+proteins"], [3, "KI-015", "pre_freeze", "undeclared_entity_in_entity_1"], [2, "KI-015", "pre_freeze", "unresolved_actor_in_enzymes"], [1, "KI-003", "pre_freeze", "protein_complex_missing_species"], [1, "KI-015", "pre_freeze", "undeclared_entity_in_entity_2"]]
+rows put back, their fate at this tree:
+  reactions 'GluTR1 reaction': admission=admitted; in canonical=True; drawn in PWML=True
+  reactions 'GluTR reaction': admission=protein_complex_missing_species; in canonical=False; drawn in PWML=False
+  reactions 'Glu-tRNAGlu reduction to GSA': admission=admitted; in canonical=True; drawn in PWML=True
+  reactions 'Glu-tRNAGlu formation': admission=admitted; in canonical=True; drawn in PWML=True
+recovered (drawn) 3 of 4 put back
+ORCH-794 removals: [('compounds', 'Glu-tRNAGlu', 'same_name_declared_as_another_kind:nucleic_acids', 'name_wording'), ('compounds', 'tRNAGlu', 'same_name_declared_as_another_kind:nucleic_acids', 'name_wording')]
+actors dropped from kept processes: []
+
+===== wnt_ca: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch785run\runs_papers\ORCH-785\legs\wnt_ca-strict\2026-10-28_1910\papers\PMC10425814\strict
+put back transports 'IP3-induced Ca 2+ release from ER' (was /processes/transports/0, ambiguous_entity_type:compounds+proteins); from verbatim original_process
+put back transports 'IP3-stimulated Ca2+ release from ER' (was /processes/transports/3, ambiguous_entity_type:compounds+proteins); from verbatim original_process
+put back transports 'Ca2+ release from ER state to cytosol state' (was /processes/transports/5, ambiguous_entity_type:compounds+proteins); from verbatim original_process
+put back interactions 'IP3 binds InsP3R' (was /processes/interactions/9, ambiguous_entity_type:compounds+proteins); from verbatim original_process
+put back entity compounds 'InsP3R' (closure: unreferenced_after_quarantine); from: name and class only
+put back entity proteins 'InsP3R' (closure: degree_zero_after_quarantine); from: merged_payload
+put back location compound_locations 'InsP3R' @ '__auto_state__'
+put back location protein_locations 'InsP3R' @ 'endoplasmic reticulum membrane state'
+put back location protein_locations 'InsP3R' @ 'ER membrane state'
+checkpoint: "canonical"
+quarantine: {"ok": true, "refusal": [], "release": "review_required", "decision_input_hash_matches_leg": true, "admitted_hash_matches_leg": false, "counts": {"core_accepted": 15, "auxiliary_accepted": 3, "quarantined_unmapped_entity": 4, "quarantined_out_of_scope": 0, "quarantined_weak_evidence": 0, "quarantined_broken_reference": 0, "quarantined_disconnected": 0}}
+export: {"ok": true, "error": "", "quarantine_reused": true, "stage3_contract_codes": [], "required_gate_ok": true, "required_gate_codes": [], "ir_blocking": [], "ir_validation": [], "release": "review_required", "pwml_name": "pathway.review_required.pwml"}
+pwml_written: true
+failure_stage: null
+network_refused: []
+coverage: {"drawn": 10, "total": 46, "by_design_withheld": 15, "pwml_written": true, "by_kind": {"reaction": {"drawn": 1, "total": 2, "omitted_before_freeze": 1}, "transport": {"drawn": 3, "total": 7, "omitted_before_freeze": 4}, "interaction": {"drawn": 6, "total": 37, "omitted_before_freeze": 23}}}
+omitted by reason: [[11, "KI-001", "pre_freeze", "protein_missing_external_identity"], [8, "KI-015", "pre_freeze", "undeclared_entity_in_entity_2"], [7, "KI-008", "ir", "untyped_interaction"], [5, "KI-015", "pre_freeze", "protein_complex_missing_components"], [2, "KI-015", "pre_freeze", "protein_complex_component_omitted:ORAI2:Located protein is isolated in connectivity graph: ORAI2"], [1, "KI-006", "pre_freeze", "reaction_enzyme_must_be_protein_complex"], [1, "KI-009", "ir", "bare_protein_endpoint"], [1, "KI-015", "pre_freeze", "undeclared_entity_in_entity_1"]]
+rows put back, their fate at this tree:
+  transports 'IP3-induced Ca 2+ release from ER': admission=protein_missing_external_identity; in canonical=False; drawn in PWML=False
+  transports 'IP3-stimulated Ca2+ release from ER': admission=protein_missing_external_identity; in canonical=False; drawn in PWML=False
+  transports 'Ca2+ release from ER state to cytosol state': admission=protein_missing_external_identity; in canonical=False; drawn in PWML=False
+  interactions 'IP3 binds InsP3R': admission=protein_missing_external_identity; in canonical=False; drawn in PWML=False
+recovered (drawn) 0 of 4 put back
+ORCH-794 removals: [('compounds', 'InsP3R', 'same_name_declared_as_another_kind:proteins', 'protein_only_role')]
+actors dropped from kept processes: []
+
