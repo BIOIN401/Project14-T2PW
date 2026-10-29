@@ -11217,3 +11217,12 @@ The id ORCH-760 was chosen so that 755-759 stay free for the live ORCH-754 sessi
 **ORCH-785 · 2026-10-28 — LAUNCHED** on `dd099ac7`+docs from pinned worktree `orch785run`: only chlorophyll, wnt_ca and sour_taste_v2, strict. Summary will land at `runs_papers/ORCH-785/MORNING_SUMMARY.md`.
 
 **ORCH-785 · 2026-10-28 21:45 — DONE** (code `9a4dc617`, G11 `evidence/g11/ORCH-785/03-05`, 0 survivors): **3/3 PWMLs**, no whole-pathway refusal. Coverage: chlorophyll 52% (was 29% in ORCH-781; KI-011 down from 41 to 7), sour taste 60%, Wnt/Ca2+ 26% (KI-001 down from 24 to 7; KI-015 17 not triaged). Record `ORCH-785-RESULT.md`; summary `runs_papers/ORCH-785/MORNING_SUMMARY.md`.
+
+**ORCH-789 · 2026-10-28 — DONE (read-only diagnosis, docs only)** at `edb29557`. Every omitted process on the six latest legs was classified by its actual cause (ORCH-785 chlorophyll/wnt_ca/sour taste; ORCH-784 enterobactin/menaquinone/wnt_pcp). Two read-only scripts ran through `bounded_run --heavy-lock ORCH-789`, 0 survivors (`evidence/g11/ORCH-789/01-02`, outputs `evidence/orch789/`). Top causes by signed rows recovered:
+- C2 family names outside the ORCH-783 detector: 18;
+- C1 Stage-6 endpoint wrap runs before the gene split and family conversion: 12 (chlorophyll 11);
+- C3 protein rows vanish silently before quarantine (PKC, MenA, Frizzled...; site not pinned): 12;
+- C4 alias identity refusals (PIF1, TAK1, c-Jun, Fur, Kir2.1): 9;
+- C7 cross-kind duplicates (tRNA, InsP3R): 7.
+
+Denominator: 66 unsigned interactions quarantined before the IR stay in the headline (`reaction_evidence.py:812`), 41 of them on wnt_pcp. Defect D1: "G protein" maps to EIF3G, which is written in the wnt_ca PWML. Stand-in labels from 787/788 cost 0 rows. PO questions: `ORCH-789-RESULT.md` § 8.

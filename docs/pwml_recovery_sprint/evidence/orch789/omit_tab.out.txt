@@ -1,0 +1,517 @@
+
+######## chlorophyll@785
+Q|reactions|GluTR1 reaction|ambiguous_entity_type:compounds+nucleic_acids|ess=Glu-tRNAGlu|rel=None
+    enzymes=GluTR1 complex: final:protein_complexes(comps=GluTR1)
+    modifiers=FLU complex: removed:protein_complexes:degree_zero_after_quarantine
+    inputs=Glu-tRNAGlu: merged:compounds; merged:nucleic_acids; removed:compounds:unreferenced_after_quarantine; removed:nucleic_acids:unreferenced_after_quarantine
+    outputs=Glu 1-semialdehyde: merged:compounds; final:compounds
+Q|reactions|POR reaction|unresolved_actor_in_enzymes|ess=LPOR|rel=None
+    enzymes=POR complex: final:protein_complexes(comps=POR)
+    enzymes=LPOR: merged:proteins
+    inputs=3,8-divinyl-protochlorophyllide: merged:compounds; final:compounds
+    outputs=3,8-divinyl-chlorophyllide: merged:compounds; final:compounds
+Q|reactions|GluTR reaction|ambiguous_entity_type:compounds+nucleic_acids|ess=Glu-tRNAGlu|rel=None
+    enzymes=GluTR: merged:proteins; removed:protein_complexes:degree_zero_after_quarantine
+    inputs=Glu-tRNAGlu: merged:compounds; merged:nucleic_acids; removed:compounds:unreferenced_after_quarantine; removed:nucleic_acids:unreferenced_after_quarantine
+    outputs=Glu 1-semialdehyde: merged:compounds; final:compounds
+Q|reactions|ferrochelatase reaction|unresolved_actor_in_enzymes|ess=ferrochelatase|rel=None
+    enzymes=ferrochelatase: merged:proteins
+    inputs=protoporphyrin IX: merged:compounds; final:compounds
+    inputs=Fe2: merged:compounds; final:compounds; removed:compounds:unreferenced_after_quarantine
+    outputs=protoheme (heme b): merged:compounds; final:compounds
+Q|reactions|Glu-tRNAGlu reduction to GSA|ambiguous_entity_type:compounds+nucleic_acids|ess=Glu-tRNAGlu|rel=None
+    enzymes=HEMA1 complex: removed:protein_complexes:degree_zero_after_quarantine
+    enzymes=glutamyl-tRNA reductase: final:protein_complexes(comps=HEMA2)
+    enzymes=FLU complex: removed:protein_complexes:degree_zero_after_quarantine
+    enzymes=GluTR1 complex: final:protein_complexes(comps=GluTR1)
+    inputs=Glu-tRNAGlu: merged:compounds; merged:nucleic_acids; removed:compounds:unreferenced_after_quarantine; removed:nucleic_acids:unreferenced_after_quarantine
+    outputs=Glu 1-semialdehyde: merged:compounds; final:compounds
+Q|reactions|Glu-tRNAGlu formation|ambiguous_entity_type:compounds+nucleic_acids|ess=tRNAGlu|rel=None
+    inputs=Glu: merged:compounds; removed:compounds:unreferenced_after_quarantine
+    inputs=tRNAGlu: merged:compounds; merged:nucleic_acids; removed:compounds:unreferenced_after_quarantine; removed:nucleic_acids:unreferenced_after_quarantine
+    outputs=Glu-tRNAGlu: merged:compounds; merged:nucleic_acids; removed:compounds:unreferenced_after_quarantine; removed:nucleic_acids:unreferenced_after_quarantine
+Q|interactions|PIF1 inhibits HEMA1|protein_missing_external_identity|ess=PIF1|rel=inhibition
+    entity_1=PIF1: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    entity_2=HEMA1 gene: final:nucleic_acids
+Q|interactions|PIF1 inhibits CHLH|protein_missing_external_identity|ess=PIF1|rel=inhibition
+    entity_1=PIF1: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    entity_2=CHLH gene: final:nucleic_acids
+Q|interactions|PIF1 binds CHLH promoter|protein_missing_external_identity|ess=PIF1|rel=binding
+    entity_1=PIF1: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    entity_2=CHLH promoter: merged:nucleic_acids; final:nucleic_acids
+Q|interactions|FHY3 activates HEMA1|ambiguous_entity_type:nucleic_acids+proteins|ess=HEMA1|rel=activation
+    entity_1=FHY3: merged:proteins; final:proteins(uniprot=Q9LIE5)
+    entity_2=HEMA1: merged:nucleic_acids; merged:proteins; removed:proteins:degree_zero_after_quarantine
+Q|interactions|GBP binds GluTR1|undeclared_entity_in_entity_1|ess=GBP|rel=binding
+    entity_1=GBP: merged:proteins
+    entity_2=GluTR1: merged:proteins; final:proteins(uniprot=P42804)
+Q|interactions|FAR1 binds HY5|protein_missing_external_identity|ess=FAR1|rel=binding
+    entity_1=FAR1: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    entity_2=HY5: merged:proteins; final:proteins(uniprot=O24646)
+Q|interactions|PIF1 binds PORC promoter|protein_missing_external_identity|ess=PIF1|rel=binding
+    entity_1=PIF1: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    entity_2=PORC promoter: merged:nucleic_acids; final:nucleic_acids
+Q|interactions|PIF1 binds CAO promoter|protein_missing_external_identity|ess=PIF1|rel=binding
+    entity_1=PIF1: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    entity_2=CAO promoter: merged:nucleic_acids; removed:nucleic_acids:unreferenced_after_quarantine
+Q|interactions|FAR1 binds ALAD1/HEMB1 promoter|protein_missing_external_identity|ess=FAR1|rel=binding
+    entity_1=FAR1: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    entity_2=ALAD1/HEMB1 promoter: merged:nucleic_acids; final:nucleic_acids
+Q|interactions|PIF1 inhibits FHY3|protein_missing_external_identity|ess=PIF1|rel=inhibition
+    entity_1=PIF1: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    entity_2=FHY3: merged:proteins; final:proteins(uniprot=Q9LIE5)
+Q|interactions|DELLA inhibits SCL27|protein_missing_external_identity|ess=DELLA|rel=inhibition
+    entity_1=DELLA: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    entity_2=SCL27: merged:proteins; final:proteins(uniprot=Q7XJM8)
+Q|interactions|TOC1 inhibits PIFs|protein_missing_external_identity|ess=PIFs|rel=inhibition
+    entity_1=TOC1: merged:proteins; final:proteins(uniprot=Q9LKL2)
+    entity_2=PIFs: removed:proteins:degree_zero_after_quarantine
+Q|interactions|FLU-GluTR1 interaction|ambiguous_entity_type:nucleic_acids+proteins|ess=HEMA1|rel=interaction
+    entity_1=FLU: merged:proteins; final:proteins(uniprot=Q940U6)
+    entity_2=HEMA1: merged:nucleic_acids; merged:proteins; removed:proteins:degree_zero_after_quarantine
+Q|interactions|GBP-GluTR interaction|ambiguous_entity_type:nucleic_acids+proteins|ess=HEMA1|rel=interaction
+    entity_1=GBP: merged:proteins
+    entity_2=HEMA1: merged:nucleic_acids; merged:proteins; removed:proteins:degree_zero_after_quarantine
+Q|interactions|DELLA-SCL27 interaction|protein_missing_external_identity|ess=DELLA|rel=interaction
+    entity_1=DELLA: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    entity_2=SCL27: merged:proteins; final:proteins(uniprot=Q7XJM8)
+Q|interactions|PIF1-FHY3 interaction|protein_missing_external_identity|ess=PIF1|rel=interaction
+    entity_1=PIF1: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    entity_2=FHY3: merged:proteins; final:proteins(uniprot=Q9LIE5)
+Q|interactions|FAR1-HY5 interaction|protein_missing_external_identity|ess=FAR1|rel=interaction
+    entity_1=FAR1: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    entity_2=HY5: merged:proteins; final:proteins(uniprot=O24646)
+Q|interactions|TOC1-PIF interaction|protein_missing_external_identity|ess=PIF1|rel=interaction
+    entity_1=TOC1: merged:proteins; final:proteins(uniprot=Q9LKL2)
+    entity_2=PIF1: merged:proteins; removed:proteins:degree_zero_after_quarantine
+Q|interactions|PIF1-COP1 interaction|protein_missing_external_identity|ess=PIF1|rel=interaction
+    entity_1=PIF1: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    entity_2=COP1: merged:proteins; final:proteins(uniprot=P43254)
+Q|interactions|GUN4-Mg-chelatase interaction|undeclared_entity_in_entity_2|ess=Mg-chelatase|rel=interaction
+    entity_1=GUN4: merged:nucleic_acids; merged:proteins; final:proteins(uniprot=Q9LX31)
+    entity_2=Mg-chelatase: NOWHERE
+Q|interactions|CHL27 promotes TPB gene expression|undeclared_entity_in_entity_1|ess=CHL27|rel=activation
+    entity_1=CHL27: merged:proteins
+    entity_2=TPB genes: merged:nucleic_acids; final:nucleic_acids
+Q|interactions|CHL27 promotes PhANG expression|undeclared_entity_in_entity_1|ess=CHL27|rel=activation
+    entity_1=CHL27: merged:proteins
+    entity_2=PhANGs: merged:nucleic_acids; final:nucleic_acids
+W|interactions|HY5 activates CHLH|bare_protein_endpoint|raw=activation|L=HY5|R=CHLH gene
+    HY5: merged:proteins; final:proteins(uniprot=O24646)
+    CHLH gene: final:nucleic_acids
+W|interactions|HY5 activates HEMA1|bare_protein_endpoint|raw=activation|L=HY5|R=HEMA1 gene
+    HY5: merged:proteins; final:proteins(uniprot=O24646)
+    HEMA1 gene: final:nucleic_acids
+W|interactions|HY5 activates PORC|bare_protein_endpoint|raw=activation|L=HY5|R=PORC gene
+    HY5: merged:proteins; final:proteins(uniprot=O24646)
+    PORC gene: final:nucleic_acids
+W|interactions|HY5 binds CHLH promoter|untyped_interaction|raw=binding|L=HY5|R=CHLH promoter
+W|interactions|HY5 binds PORC promoter|untyped_interaction|raw=binding|L=HY5|R=PORC promoter
+W|interactions|PIF3 inhibits HEMA1|bare_protein_endpoint|raw=inhibition|L=PIF3|R=HEMA1 gene
+    PIF3: merged:proteins; final:proteins(uniprot=O80536)
+    HEMA1 gene: final:nucleic_acids
+W|interactions|PIF3 inhibits CHLH|bare_protein_endpoint|raw=inhibition|L=PIF3|R=CHLH gene
+    PIF3: merged:proteins; final:proteins(uniprot=O80536)
+    CHLH gene: final:nucleic_acids
+W|interactions|PIF3 binds CHLH promoter|untyped_interaction|raw=binding|L=PIF3|R=CHLH promoter
+W|interactions|FHY3 activates CHLH|bare_protein_endpoint|raw=activation|L=FHY3|R=CHLH gene
+    FHY3: merged:proteins; final:proteins(uniprot=Q9LIE5)
+    CHLH gene: final:nucleic_acids
+W|interactions|FHY3 activates GUN4|bare_protein_endpoint|raw=activation|L=FHY3|R=GUN4 gene
+    FHY3: merged:proteins; final:proteins(uniprot=Q9LIE5)
+    GUN4 gene: final:nucleic_acids
+W|interactions|RVE1 activates PORA|bare_protein_endpoint|raw=activation|L=RVE1|R=PORA gene
+    RVE1: merged:proteins; final:proteins(uniprot=F4KGY6)
+    PORA gene: final:nucleic_acids
+W|interactions|RVE1 binds PORA promoter|untyped_interaction|raw=binding|L=RVE1|R=PORA promoter
+W|interactions|TOC1 inhibits CHLH|bare_protein_endpoint|raw=inhibition|L=TOC1|R=CHLH gene
+    TOC1: merged:proteins; final:proteins(uniprot=Q9LKL2)
+    CHLH gene: final:nucleic_acids
+W|interactions|TOC1 binds CHLH promoter|untyped_interaction|raw=binding|L=TOC1|R=CHLH promoter
+W|interactions|ABI4 activates PORA|bare_protein_endpoint|raw=activation|L=ABI4|R=PORA gene
+    ABI4: merged:proteins; final:proteins(uniprot=A0MES8)
+    PORA gene: final:nucleic_acids
+W|interactions|SCL27 inhibits PORC|bare_protein_endpoint|raw=inhibition|L=SCL27|R=PORC gene
+    SCL27: merged:proteins; final:proteins(uniprot=Q7XJM8)
+    PORC gene: final:nucleic_acids
+W|interactions|SCL27 binds PORC promoter|untyped_interaction|raw=binding|L=SCL27|R=PORC promoter
+W|interactions|FLU interacts with GluTR1|untyped_interaction|raw=interaction|L=FLU|R=GluTR1
+W|interactions|FHY3 binds HY5|untyped_interaction|raw=binding|L=FHY3|R=HY5
+W|interactions|GLK1 binds CHLH promoter|untyped_interaction|raw=binding|L=GLK1|R=CHLH promoter
+W|interactions|FHY3 binds HEMA1 promoter|untyped_interaction|raw=binding|L=FHY3|R=HEMA1 promoter
+W|interactions|FHY3 binds ALAD1/HEMB1 promoter|untyped_interaction|raw=binding|L=FHY3|R=ALAD1/HEMB1 promoter
+W|interactions|CCA1 binds LHCB1.3 promoter|untyped_interaction|raw=binding|L=CCA1|R=LHCB1.3 promoter
+W|interactions|LHY binds LHCB1.3 promoter|untyped_interaction|raw=binding|L=LHY|R=LHCB1.3 promoter
+W|interactions|ARR10 binds HEMA1 promoter|untyped_interaction|raw=binding|L=ARR10|R=HEMA1 promoter
+W|interactions|ARR12 binds HEMA1 promoter|untyped_interaction|raw=binding|L=ARR12|R=HEMA1 promoter
+W|interactions|EIN3 binding to PORA promoter|untyped_interaction|raw=binding|L=EIN3|R=PORA promoter
+W|interactions|ABI4 binding to CCAC sequence|untyped_interaction|raw=binding|L=ABI4|R=CCAC cis-element
+W|interactions|HDA15-PIF3 interaction|untyped_interaction|raw=interaction|L=HDA15|R=PIF3
+W|interactions|FHY3-HY5 interaction|untyped_interaction|raw=interaction|L=FHY3|R=HY5
+W|interactions|CCA1-LHY interaction|untyped_interaction|raw=interaction|L=CCA1|R=LHY
+W|interactions|HY5-CCA1 interaction|untyped_interaction|raw=interaction|L=HY5|R=CCA1
+W|interactions|GLK1-G-box binding factor interaction|untyped_interaction|raw=interaction|L=GLK1|R=HY5
+W|interactions|LIL3:1-CHLP interaction|untyped_interaction|raw=interaction|L=LIL3:1|R=CHLP
+W|interactions|LIL3:2-CHLP interaction|untyped_interaction|raw=interaction|L=LIL3:2|R=CHLP
+W|interactions|EIL1 binds PORA promoter|untyped_interaction|raw=binding|L=EIL1|R=PORA promoter
+W|interactions|CHLP encodes geranylgeranyl reductase|untyped_interaction|raw=encodes|L=CHLP|R=geranylgeranyl reductase
+COUNTS {'ambiguous_entity_type': 7, 'unresolved_actor_in_enzymes': 2, 'protein_missing_external_identity': 15, 'undeclared_entity_in_entity_1': 3, 'undeclared_entity_in_entity_2': 1, 'IR:bare_protein_endpoint': 11, 'IR:untyped_interaction': 26}
+
+######## wnt_ca@785
+Q|reactions|PLC-mediated PIP2 cleavage|reaction_enzyme_must_be_protein_complex|ess=G protein|rel=None
+    enzymes=PLC: merged:proteins; removed:protein_complexes:degree_zero_after_quarantine
+    enzymes=G protein: merged:proteins; final:protein_complexes(comps=EIF3G)
+    inputs=PIP2: merged:compounds; removed:compounds:unreferenced_after_quarantine
+    outputs=IP3: merged:compounds; final:compounds
+    outputs=DAG: merged:compounds; removed:compounds:unreferenced_after_quarantine
+Q|transports|IP3-induced Ca 2+ release from ER|ambiguous_entity_type:compounds+proteins|ess=InsP3R|rel=None
+    transporters=InsP3R: merged:proteins; removed:compounds:unreferenced_after_quarantine; removed:proteins:degree_zero_after_quarantine
+    cargo=C: NOWHERE
+    cargo=a: NOWHERE
+    cargo= : NOWHERE
+    cargo=2: NOWHERE
+Q|transports|IP3-stimulated Ca2+ release from ER|ambiguous_entity_type:compounds+proteins|ess=InsP3R|rel=None
+    cargo=C: NOWHERE
+    cargo=a: NOWHERE
+    cargo= : NOWHERE
+    cargo=2: NOWHERE
+Q|transports|Store-operated Ca2+ entry via Orai|protein_missing_external_identity|ess=Orai|rel=None
+    transporters=Orai: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    cargo=C: NOWHERE
+    cargo=a: NOWHERE
+    cargo= : NOWHERE
+    cargo=2: NOWHERE
+Q|transports|Ca2+ release from ER state to cytosol state|ambiguous_entity_type:compounds+proteins|ess=InsP3R|rel=None
+    transporters=InsP3R: merged:proteins; removed:compounds:unreferenced_after_quarantine; removed:proteins:degree_zero_after_quarantine
+    cargo=C: NOWHERE
+    cargo=a: NOWHERE
+    cargo= : NOWHERE
+    cargo=2: NOWHERE
+Q|interactions|DAG activates PKC|undeclared_entity_in_entity_2|ess=PKC|rel=activation
+    entity_1=DAG: merged:compounds; removed:compounds:unreferenced_after_quarantine
+    entity_2=PKC: merged:proteins
+Q|interactions|Ca 2+ activates PKC|undeclared_entity_in_entity_2|ess=PKC|rel=activation
+    entity_1=Ca 2+: merged:compounds; merged:compounds; final:compounds
+    entity_2=PKC: merged:proteins
+Q|interactions|Ca 2+ activates CAMKII|protein_complex_missing_components|ess=Ca2+/calmodulin-dependent kinase II holoenzyme|rel=activation
+    entity_1=Ca 2+: merged:compounds; merged:compounds; final:compounds
+    entity_2=Ca2+/calmodulin-dependent kinase II holoenzyme: merged:protein_complexes; removed:protein_complexes:protein_complex_missing_components
+Q|interactions|CAMKII activates TAK1|protein_missing_external_identity|ess=TAK1|rel=activation
+    entity_1=Ca2+/calmodulin-dependent kinase II holoenzyme: merged:protein_complexes; removed:protein_complexes:protein_complex_missing_components
+    entity_2=TAK1: merged:proteins; removed:proteins:degree_zero_after_quarantine
+Q|interactions|TAK1 activates NLK|protein_missing_external_identity|ess=TAK1|rel=activation
+    entity_1=TAK1: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    entity_2=NLK: merged:proteins; final:proteins(uniprot=Q9UBE8)
+Q|interactions|IP3 binds InsP3R|ambiguous_entity_type:compounds+proteins|ess=InsP3R|rel=binding
+    entity_1=IP3: merged:compounds; final:compounds
+    entity_2=InsP3R: merged:proteins; removed:compounds:unreferenced_after_quarantine; removed:proteins:degree_zero_after_quarantine
+Q|interactions|STIM1/2 activates Orai1/2/3|protein_complex_component_omitted:ORAI2:Located protein is isolated in connectivity graph: ORAI2|ess=Orai family proteins|rel=activation
+    entity_1=STIM1/2: merged:proteins; removed:protein_complexes:degree_zero_after_quarantine
+    entity_2=Orai family proteins: merged:proteins; removed:protein_complexes:protein_complex_component_omitted:ORAI2:Located protein is isolated in
+Q|interactions|STIM1/2 activates Orai|protein_missing_external_identity|ess=Orai|rel=activation
+    entity_1=STIM1/2: merged:proteins; removed:protein_complexes:degree_zero_after_quarantine
+    entity_2=Orai: merged:proteins; removed:proteins:degree_zero_after_quarantine
+Q|interactions|calmodulin binds CAMKII|protein_complex_missing_components|ess=Ca2+/calmodulin-dependent kinase II holoenzyme|rel=binding
+    entity_1=calmodulin: merged:proteins; final:proteins(uniprot=P0DP23)
+    entity_2=Ca2+/calmodulin-dependent kinase II holoenzyme: merged:protein_complexes; removed:protein_complexes:protein_complex_missing_components
+Q|interactions|calmodulin activates CAMKII|protein_complex_missing_components|ess=Ca2+/calmodulin-dependent kinase II holoenzyme|rel=activation
+    entity_1=calmodulin complex: removed:protein_complexes:degree_zero_after_quarantine
+    entity_2=Ca2+/calmodulin-dependent kinase II holoenzyme: merged:protein_complexes; removed:protein_complexes:protein_complex_missing_components
+Q|interactions|TAB2 binds TAK1|protein_missing_external_identity|ess=TAK1|rel=binding
+    entity_1=TAB2: merged:proteins; final:proteins(uniprot=Q9NYJ8)
+    entity_2=TAK1: merged:proteins; removed:proteins:degree_zero_after_quarantine
+Q|interactions|NLK binds NARF|protein_missing_external_identity|ess=NARF|rel=binding
+    entity_1=NLK: merged:proteins; final:proteins(uniprot=Q9UBE8)
+    entity_2=NARF: merged:proteins; removed:proteins:degree_zero_after_quarantine
+Q|interactions|calmodulin binds CAMKII holoenzyme|protein_complex_missing_components|ess=Ca2+/calmodulin-dependent kinase II holoenzyme|rel=binding
+    entity_1=Ca2+/calmodulin-dependent kinase II holoenzyme: merged:protein_complexes; removed:protein_complexes:protein_complex_missing_components
+    entity_2=calmodulin: merged:proteins; final:proteins(uniprot=P0DP23)
+Q|interactions|calcineurin activates NF-ATp|undeclared_entity_in_entity_2|ess=NF-ATp|rel=activation
+    entity_1=calcineurin: merged:proteins; merged:protein_complexes; final:protein_complexes(comps=Serine/threonine-protein phosphatase 2B catalytic subunit alpha isoform,Calcineurin subunit B type 1)
+    entity_2=NF-ATp: NOWHERE
+Q|interactions|Protein kinase C activates Cdc42|undeclared_entity_in_entity_1|ess=PKC|rel=activates
+    entity_1=PKC: merged:proteins
+    entity_2=Cdc42 complex: final:protein_complexes(comps=Cdc42)
+Q|interactions|Ca2+ activates CaMKII|protein_complex_missing_components|ess=Ca2+/calmodulin-dependent kinase II holoenzyme|rel=activates
+    entity_1=Ca 2+: merged:compounds; merged:compounds; final:compounds
+    entity_2=Ca2+/calmodulin-dependent kinase II holoenzyme: merged:protein_complexes; removed:protein_complexes:protein_complex_missing_components
+Q|interactions|DAG activation of PKC|undeclared_entity_in_entity_2|ess=PKC|rel=activates
+    entity_1=DAG: merged:compounds; removed:compounds:unreferenced_after_quarantine
+    entity_2=PKC: merged:proteins
+Q|interactions|Ca2+ activation of PKC|undeclared_entity_in_entity_2|ess=PKC|rel=activates
+    entity_1=Ca 2+: merged:compounds; merged:compounds; final:compounds
+    entity_2=PKC: merged:proteins
+Q|interactions|STIM1/2 activation of Orai1/2/3|protein_complex_component_omitted:ORAI2:Located protein is isolated in connectivity graph: ORAI2|ess=Orai family proteins|rel=activates
+    entity_1=STIM1/2: merged:proteins; removed:protein_complexes:degree_zero_after_quarantine
+    entity_2=Orai family proteins: merged:proteins; removed:protein_complexes:protein_complex_component_omitted:ORAI2:Located protein is isolated in
+Q|interactions|NLK phosphorylates TCF|undeclared_entity_in_entity_2|ess=TCF|rel=phosphorylates
+    entity_1=NLK: merged:proteins; final:proteins(uniprot=Q9UBE8)
+    entity_2=TCF: merged:proteins; qprot:unresolved_complex_component_no_longer_referenced|map_payload.structural_cleanup|res=novel/implausible_name_match/identity_evidence_missing|cand=7/5
+Q|interactions|\u03b2-catenin binds TCF|undeclared_entity_in_entity_2|ess=TCF|rel=binding
+    entity_1=\u03b2-catenin: merged:proteins; final:proteins(uniprot=P35222)
+    entity_2=TCF: merged:proteins; qprot:unresolved_complex_component_no_longer_referenced|map_payload.structural_cleanup|res=novel/implausible_name_match/identity_evidence_missing|cand=7/5
+Q|interactions|CaN dephosphorylates NF-ATp|undeclared_entity_in_entity_2|ess=NF-ATp|rel=dephosphorylates
+    entity_1=calcineurin: merged:proteins; merged:protein_complexes; final:protein_complexes(comps=Serine/threonine-protein phosphatase 2B catalytic subunit alpha isoform,Calcineurin subunit B type 1)
+    entity_2=NF-ATp: NOWHERE
+Q|interactions|CAMKII holoenzyme activates TAK1|protein_missing_external_identity|ess=TAK1|rel=activates
+    entity_1=Ca2+/calmodulin-dependent kinase II holoenzyme: merged:protein_complexes; removed:protein_complexes:protein_complex_missing_components
+    entity_2=TAK1: merged:proteins; removed:proteins:degree_zero_after_quarantine
+W|interactions|Wnt5a binds Fzd2|untyped_interaction|raw=binding|L=Wnt5a|R=Fzd2
+W|interactions|Ca2+ binds CaN|untyped_interaction|raw=binding|L=Ca 2+|R=calcineurin
+W|interactions|CAM binds CaN|untyped_interaction|raw=binding|L=calmodulin|R=calcineurin
+W|interactions|TAB2 binds NLK|untyped_interaction|raw=binding|L=TAB2|R=NLK
+W|interactions|Fzd2 activates G protein|bare_protein_endpoint|raw=activation|L=Fzd2|R=G protein
+    Fzd2: merged:proteins; final:proteins(uniprot=Q14332)
+    G protein: merged:proteins; final:protein_complexes(comps=EIF3G)
+W|interactions|Ca2+ binds calmodulin|untyped_interaction|raw=binding|L=Ca 2+|R=calmodulin
+W|interactions|Wnt-5a binds Frizzled|untyped_interaction|raw=binds|L=Wnt-5a|R=Frizzled
+W|interactions|NLK phosphorylates TCF4|untyped_interaction|raw=phosphorylates|L=NLK|R=TCF4
+COUNTS {'reaction_enzyme_must_be_protein_complex': 1, 'ambiguous_entity_type': 4, 'protein_missing_external_identity': 7, 'undeclared_entity_in_entity_2': 8, 'protein_complex_missing_components': 5, 'protein_complex_component_omitted': 2, 'undeclared_entity_in_entity_1': 1, 'IR:untyped_interaction': 7, 'IR:bare_protein_endpoint': 1}
+
+######## sour_taste_v2@785
+Q|interactions|H + inhibition of Kir2.1|protein_missing_external_identity|ess=Kir2.1|rel=inhibition
+    entity_1=H +: merged:compounds; merged:compounds; final:compounds; removed:compounds:unreferenced_after_quarantine
+    entity_2=Kir2.1: merged:proteins; removed:proteins:degree_zero_after_quarantine
+Q|interactions|5-HT activation of 5-HT 3 receptors|protein_missing_external_identity|ess=5-HT 3 receptors|rel=activation
+    entity_1=5-HT: merged:compounds; final:compounds
+    entity_2=5-HT 3 receptors: merged:proteins; merged:proteins; removed:proteins:degree_zero_after_quarantine
+COUNTS {'protein_missing_external_identity': 2}
+
+######## enterobactin@784
+Q|interactions|Fur binds to promoters of three ent gene clusters|protein_missing_external_identity|ess=Fur|rel=binding
+    entity_1=Fur: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    entity_2=promoters of three ent gene clusters: merged:nucleic_acids; removed:nucleic_acids:unreferenced_after_quarantine
+Q|interactions|Fur inhibits ent gene clusters|protein_missing_external_identity|ess=Fur|rel=inhibits
+    entity_1=Fur: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    entity_2=ent gene clusters: merged:nucleic_acids; removed:nucleic_acids:unreferenced_after_quarantine
+Q|interactions|Fur inhibits the promoters of three ent gene clusters|protein_missing_external_identity|ess=Fur|rel=inhibition
+    entity_1=Fur: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    entity_2=the promoters of three ent gene clusters: merged:nucleic_acids; removed:nucleic_acids:unreferenced_after_quarantine
+Q|interactions|Fur binds the promoters of three ent gene clusters|protein_missing_external_identity|ess=Fur|rel=binding
+    entity_1=Fur: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    entity_2=the promoters of three ent gene clusters: merged:nucleic_acids; removed:nucleic_acids:unreferenced_after_quarantine
+W|interactions|2,3-dihydroxybenzoic acid binds EntB|untyped_interaction|raw=binding|L=2,3-dihydroxybenzoic acid|R=EntB
+W|interactions|2,3-dihydroxybenzoic acid binds EntE|untyped_interaction|raw=binding|L=2,3-dihydroxybenzoic acid|R=EntE
+W|interactions|EntC binds EntB|untyped_interaction|raw=binding|L=EntC|R=EntB
+W|interactions|EntB interacts with EntC|untyped_interaction|raw=interaction|L=EntB|R=EntC
+W|interactions|EntB interacts with EntA|untyped_interaction|raw=interaction|L=EntB|R=EntA
+W|interactions|EntB interacts with EntE|untyped_interaction|raw=interaction|L=EntB|R=EntE
+W|interactions|EntB interacts with EntF|untyped_interaction|raw=interaction|L=EntB|R=EntF
+W|interactions|EntD phosphopantetheinylates EntB|untyped_interaction|raw=modifies|L=EntD|R=EntB
+W|interactions|EntD phosphopantetheinylates EntF|untyped_interaction|raw=modifies|L=EntD|R=EntF
+COUNTS {'protein_missing_external_identity': 4, 'IR:untyped_interaction': 9}
+
+######## menaquinone@784
+Q|reactions|MenA-catalyzed DHNA prenylation to DMK|unresolved_actor_in_enzymes|ess=MenA|rel=None
+    enzymes=MenA: merged:proteins
+    inputs=1,4-dihydroxy-2-naphthoic acid: merged:compounds; final:compounds
+    inputs=prenyl diphosphate: merged:compounds; final:compounds
+    outputs=demethylmenaquinone (DMK): merged:compounds; final:compounds
+Q|reactions|MenA reaction|unresolved_actor_in_enzymes|ess=MenA|rel=None
+    enzymes=MenA: merged:proteins
+    inputs=1,4-dihydroxy-2-naphthoic acid: merged:compounds; final:compounds
+    inputs=prenyl diphosphate: merged:compounds; final:compounds
+    outputs=demethylmenaquinone (DMK): merged:compounds; final:compounds
+Q|interactions|NoxAB interacts with DHNA|protein_missing_external_identity|ess=NoxAB|rel=interacts_with
+    entity_1=NoxAB: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    entity_2=1,4-dihydroxy-2-naphthoic acid: merged:compounds; final:compounds
+COUNTS {'unresolved_actor_in_enzymes': 2, 'protein_missing_external_identity': 1}
+
+######## wnt_pcp@784
+Q|reactions|GDP-GTP exchange|protein_missing_external_identity|ess=GDI|rel=None
+    enzymes=GDI: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    inputs=GDP: merged:compounds; removed:compounds:unreferenced_after_quarantine
+    outputs=GTP: merged:compounds; removed:compounds:unreferenced_after_quarantine
+Q|reactions|DIA1-mediated actin polymerization|undeclared_entity_in_inputs|ess=G-actin|rel=None
+    enzymes=GNAQ-GEFT-RHOA complex: final:protein_complexes(comps=RhoA)
+    enzymes=CapZIP complex: removed:protein_complexes:degree_zero_after_quarantine
+    inputs=G-actin: merged:proteins
+    outputs=actin filament: merged:element_collections; merged:proteins; removed:proteins:degree_zero_after_quarantine; removed:element_collections:unreferenced_after_quarantine
+Q|transports|Dvl translocation to plasma membrane|unresolved_actor_in_transporters|ess=Wnt|rel=None
+    transporters=Wnt: merged:proteins
+    cargo=D: NOWHERE
+    cargo=v: NOWHERE
+    cargo=l: NOWHERE
+Q|transports|c-Jun nuclear translocation|protein_missing_external_identity|ess=c-Jun|rel=None
+    cargo=c: NOWHERE
+    cargo=-: NOWHERE
+    cargo=J: NOWHERE
+    cargo=u: NOWHERE
+    cargo=n: NOWHERE
+Q|transports|c-Jun translocation to nucleus|protein_missing_external_identity|ess=c-Jun|rel=None
+    cargo=c: NOWHERE
+    cargo=-: NOWHERE
+    cargo=J: NOWHERE
+    cargo=u: NOWHERE
+    cargo=n: NOWHERE
+Q|interactions|Par6 binds Dvl|protein_missing_external_identity|ess=Par6|rel=binding
+    entity_1=Par6: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    entity_2=Dvl: merged:proteins; final:proteins(uniprot=O14640)
+Q|interactions|Smurf binds Par6|undeclared_entity_in_entity_1|ess=Smurf|rel=binding
+    entity_1=Smurf: merged:proteins
+    entity_2=Par6: merged:proteins; removed:proteins:degree_zero_after_quarantine
+Q|interactions|Rac1 activates JNK|protein_missing_external_identity|ess=JNK|rel=activation
+    entity_1=Rac1: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    entity_2=JNK: merged:proteins; removed:proteins:degree_zero_after_quarantine
+Q|interactions|JNK activates c-Jun|protein_missing_external_identity|ess=JNK|rel=activation
+    entity_1=JNK: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    entity_2=c-Jun: merged:proteins; removed:proteins:degree_zero_after_quarantine
+Q|interactions|JNK activates CapZIP|protein_missing_external_identity|ess=JNK|rel=activation
+    entity_1=JNK: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    entity_2=CapZIP: merged:proteins; removed:proteins:degree_zero_after_quarantine
+Q|interactions|RhoA activates ROCK|protein_missing_external_identity|ess=ROCK|rel=activation
+    entity_1=RhoA: merged:proteins; final:proteins(uniprot=P61586)
+    entity_2=ROCK: merged:proteins; removed:proteins:degree_zero_after_quarantine
+Q|interactions|ROCK activates MRLC|protein_missing_external_identity|ess=ROCK|rel=activation
+    entity_1=ROCK: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    entity_2=MRLC: merged:proteins
+Q|interactions|Wnt binds Frizzled|undeclared_entity_in_entity_1|ess=Wnt|rel=binding
+    entity_1=Wnt: merged:proteins
+    entity_2=Frizzled: merged:proteins
+Q|interactions|DIA1 activates MRLC|undeclared_entity_in_entity_1|ess=DIA1|rel=activation
+    entity_1=DIA1: merged:proteins
+    entity_2=MRLC: merged:proteins
+Q|interactions|Wnt binds Vangl2|undeclared_entity_in_entity_1|ess=Wnt|rel=binding
+    entity_1=Wnt: merged:proteins
+    entity_2=Vangl2: merged:proteins; final:proteins(uniprot=Q9ULK5)
+Q|interactions|Fz receptor binds Wnt ligands|undeclared_entity_in_entity_1|ess=Frizzled|rel=binding
+    entity_1=Frizzled: merged:proteins
+    entity_2=Wnt ligands: merged:proteins; removed:proteins:degree_zero_after_quarantine
+Q|interactions|Par6 interacts with Dvl|protein_missing_external_identity|ess=Par6|rel=interaction
+    entity_1=Par6: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    entity_2=Dvl: merged:proteins; final:proteins(uniprot=O14640)
+Q|interactions|GDI inhibits Rac1|protein_missing_external_identity|ess=GDI|rel=inhibition
+    entity_1=GDI: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    entity_2=Rac1: merged:proteins; removed:proteins:degree_zero_after_quarantine
+Q|interactions|GDI inhibits RhoA|protein_missing_external_identity|ess=GDI|rel=inhibition
+    entity_1=GDI: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    entity_2=RhoA: merged:proteins; final:proteins(uniprot=P61586)
+Q|interactions|RhoA binds DIA1|undeclared_entity_in_entity_2|ess=DIA1|rel=binding
+    entity_1=RhoA: merged:proteins; final:proteins(uniprot=P61586)
+    entity_2=DIA1: merged:proteins
+Q|interactions|Dkk1 activates JNK|protein_missing_external_identity|ess=JNK|rel=activation
+    entity_1=Dkk1: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    entity_2=JNK: merged:proteins; removed:proteins:degree_zero_after_quarantine
+Q|interactions|Diego binds Dishevelled|protein_missing_external_identity|ess=Diego|rel=binding
+    entity_1=Diego: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    entity_2=Dishevelled: merged:proteins; final:proteins(uniprot=O14640)
+Q|interactions|Profilin interacts with Daam1|undeclared_entity_in_entity_1|ess=Profilin|rel=interaction
+    entity_1=Profilin: merged:proteins
+    entity_2=Daam1: merged:proteins; final:proteins(uniprot=Q9Y4D1)
+Q|interactions|Dvl binds Par6|protein_missing_external_identity|ess=Par6|rel=binding
+    entity_1=Dvl: merged:proteins; final:proteins(uniprot=O14640)
+    entity_2=Par6: merged:proteins; removed:proteins:degree_zero_after_quarantine
+Q|interactions|Fz receptors phosphorylates Dvl|protein_missing_external_identity|ess=Fz receptors|rel=phosphorylates
+    entity_1=Fz receptors: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    entity_2=Dvl: merged:proteins; final:proteins(uniprot=O14640)
+Q|interactions|Smurf ubiquitinates Prickle|undeclared_entity_in_entity_1|ess=Smurf|rel=ubiquitinates
+    entity_1=Smurf: merged:proteins
+    entity_2=Prickle: merged:proteins; final:proteins(uniprot=Q96MT3)
+Q|interactions|Rac1 activates JNK|protein_missing_external_identity|ess=JNK|rel=activates
+    entity_1=Rac1: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    entity_2=JNK: merged:proteins; removed:proteins:degree_zero_after_quarantine
+Q|interactions|JNK phosphorylates c-Jun|protein_missing_external_identity|ess=JNK|rel=phosphorylates
+    entity_1=JNK: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    entity_2=c-Jun: merged:proteins; removed:proteins:degree_zero_after_quarantine
+Q|interactions|JNK activates CapZIP|protein_missing_external_identity|ess=JNK|rel=activates
+    entity_1=JNK: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    entity_2=CapZIP: merged:proteins; removed:proteins:degree_zero_after_quarantine
+Q|interactions|RhoA activates ROCK|protein_missing_external_identity|ess=ROCK|rel=activates
+    entity_1=RhoA: merged:proteins; final:proteins(uniprot=P61586)
+    entity_2=ROCK: merged:proteins; removed:proteins:degree_zero_after_quarantine
+Q|interactions|ROCK activates MRLC|protein_missing_external_identity|ess=ROCK|rel=activates
+    entity_1=ROCK: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    entity_2=MRLC: merged:proteins
+Q|interactions|Par6 interacts with Dvl|protein_missing_external_identity|ess=Par6|rel=interacts with
+    entity_1=Par6: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    entity_2=Dvl: merged:proteins; final:proteins(uniprot=O14640)
+Q|interactions|Smurf binds Par6|undeclared_entity_in_entity_1|ess=Smurf|rel=binds
+    entity_1=Smurf: merged:proteins
+    entity_2=Par6: merged:proteins; removed:proteins:degree_zero_after_quarantine
+Q|interactions|Smurf recruitment by phosphorylated Dvl|undeclared_entity_in_entity_1|ess=Smurf|rel=recruited by
+    entity_1=Smurf: merged:proteins
+    entity_2=phosphorylated Dvl: removed:proteins:degree_zero_after_quarantine
+Q|interactions|Frizzled binds Wnt ligand|undeclared_entity_in_entity_1|ess=Frizzled|rel=binds
+    entity_1=Frizzled: merged:proteins
+    entity_2=Wnt ligand: NOWHERE
+Q|interactions|Vangl2 binds Wnt ligand|undeclared_entity_in_entity_2|ess=Wnt ligand|rel=binds
+    entity_1=Vangl2: merged:proteins; final:proteins(uniprot=Q9ULK5)
+    entity_2=Wnt ligand: NOWHERE
+Q|interactions|Fz receptors interact with PTK7|protein_missing_external_identity|ess=Fz receptors|rel=interaction
+    entity_1=Fz receptors: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    entity_2=PTK7: merged:proteins; removed:proteins:degree_zero_after_quarantine
+Q|interactions|Fz receptors interact with MUSK|protein_missing_external_identity|ess=Fz receptors|rel=interaction
+    entity_1=Fz receptors: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    entity_2=MUSK: merged:proteins; removed:proteins:degree_zero_after_quarantine
+Q|interactions|Fz receptors interact with ROR1/ROR2|protein_missing_external_identity|ess=Fz receptors|rel=interaction
+    entity_1=Fz receptors: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    entity_2=ROR1/ROR2: merged:proteins; removed:protein_complexes:degree_zero_after_quarantine
+Q|interactions|Fz receptors interact with ROR1|protein_missing_external_identity|ess=Fz receptors|rel=interaction
+    entity_1=Fz receptors: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    entity_2=ROR1: merged:proteins; removed:proteins:degree_zero_after_quarantine
+Q|interactions|Fz receptors interact with ROR2|protein_missing_external_identity|ess=Fz receptors|rel=interaction
+    entity_1=Fz receptors: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    entity_2=ROR2: merged:proteins; removed:proteins:degree_zero_after_quarantine
+Q|interactions|Fz receptors interact with RYK|protein_missing_external_identity|ess=Fz receptors|rel=interaction
+    entity_1=Fz receptors: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    entity_2=RYK: merged:proteins; removed:proteins:degree_zero_after_quarantine
+Q|interactions|Fz receptors interact with syndecan|protein_missing_external_identity|ess=Fz receptors|rel=interaction
+    entity_1=Fz receptors: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    entity_2=syndecan: merged:proteins; removed:proteins:degree_zero_after_quarantine
+Q|interactions|Fz receptors interact with glypican|protein_missing_external_identity|ess=Fz receptors|rel=interaction
+    entity_1=Fz receptors: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    entity_2=glypican: merged:proteins; removed:proteins:degree_zero_after_quarantine
+Q|interactions|Fz receptors interacts with PTK7|protein_missing_external_identity|ess=Fz receptors|rel=interacts with
+    entity_1=Fz receptors: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    entity_2=PTK7: merged:proteins; removed:proteins:degree_zero_after_quarantine
+Q|interactions|Fz receptors interacts with MUSK|protein_missing_external_identity|ess=Fz receptors|rel=interacts with
+    entity_1=Fz receptors: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    entity_2=MUSK: merged:proteins; removed:proteins:degree_zero_after_quarantine
+Q|interactions|Fz receptors interacts with ROR1/ROR2|protein_missing_external_identity|ess=Fz receptors|rel=interacts with
+    entity_1=Fz receptors: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    entity_2=ROR1/ROR2: merged:proteins; removed:protein_complexes:degree_zero_after_quarantine
+Q|interactions|Fz receptors interacts with RYK|protein_missing_external_identity|ess=Fz receptors|rel=interacts with
+    entity_1=Fz receptors: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    entity_2=RYK: merged:proteins; removed:proteins:degree_zero_after_quarantine
+Q|interactions|Fz receptors interacts with syndecan|protein_missing_external_identity|ess=Fz receptors|rel=interacts with
+    entity_1=Fz receptors: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    entity_2=syndecan: merged:proteins; removed:proteins:degree_zero_after_quarantine
+Q|interactions|Fz receptors interacts with glypican|protein_missing_external_identity|ess=Fz receptors|rel=interacts with
+    entity_1=Fz receptors: merged:proteins; removed:proteins:degree_zero_after_quarantine
+    entity_2=glypican: merged:proteins; removed:proteins:degree_zero_after_quarantine
+Q|interactions|Wnt binds Celsr1|undeclared_entity_in_entity_1|ess=Wnt|rel=binds
+    entity_1=Wnt: merged:proteins
+    entity_2=Celsr1: merged:proteins; final:proteins(uniprot=Q9NYQ6)
+Q|interactions|Fz receptor binds PTK7|undeclared_entity_in_entity_1|ess=Frizzled|rel=binding
+    entity_1=Frizzled: merged:proteins
+    entity_2=PTK7: merged:proteins; removed:proteins:degree_zero_after_quarantine
+Q|interactions|Fz receptor binds MUSK|undeclared_entity_in_entity_1|ess=Frizzled|rel=binding
+    entity_1=Frizzled: merged:proteins
+    entity_2=MUSK: merged:proteins; removed:proteins:degree_zero_after_quarantine
+Q|interactions|Fz receptor binds ROR1/ROR2|undeclared_entity_in_entity_1|ess=Frizzled|rel=binding
+    entity_1=Frizzled: merged:proteins
+    entity_2=ROR1/ROR2: merged:proteins; removed:protein_complexes:degree_zero_after_quarantine
+Q|interactions|Fz receptor binds ROR1|undeclared_entity_in_entity_1|ess=Frizzled|rel=binding
+    entity_1=Frizzled: merged:proteins
+    entity_2=ROR1: merged:proteins; removed:proteins:degree_zero_after_quarantine
+Q|interactions|Fz receptor binds ROR2|undeclared_entity_in_entity_1|ess=Frizzled|rel=binding
+    entity_1=Frizzled: merged:proteins
+    entity_2=ROR2: merged:proteins; removed:proteins:degree_zero_after_quarantine
+Q|interactions|Fz receptor binds RYK|undeclared_entity_in_entity_1|ess=Frizzled|rel=binding
+    entity_1=Frizzled: merged:proteins
+    entity_2=RYK: merged:proteins; removed:proteins:degree_zero_after_quarantine
+Q|interactions|Fz receptor binds syndecan|undeclared_entity_in_entity_1|ess=Frizzled|rel=binding
+    entity_1=Frizzled: merged:proteins
+    entity_2=syndecan: merged:proteins; removed:proteins:degree_zero_after_quarantine
+Q|interactions|Fz receptor binds glypican|undeclared_entity_in_entity_1|ess=Frizzled|rel=binding
+    entity_1=Frizzled: merged:proteins
+    entity_2=glypican: merged:proteins; removed:proteins:degree_zero_after_quarantine
+W|interactions|Dvl binds DAAM|untyped_interaction|raw=binding|L=Dvl|R=DAAM
+W|interactions|Dvl binds Invs|untyped_interaction|raw=binding|L=Dvl|R=Inversin
+W|interactions|Prickle binds Dishevelled|untyped_interaction|raw=binding|L=Prickle|R=Dishevelled
+W|interactions|Vangl2 dissociates Dvl-Prickle-Intu complex|untyped_interaction|raw=dissociation|L=Vangl2|R=Dvl-Prickle-Intu complex
+W|interactions|Dvl binds Daam1|untyped_interaction|raw=binds|L=Dvl|R=Daam1
+W|interactions|Vangl2 dissociates Dvl-Prickle-Intu complex|untyped_interaction|raw=dissociates|L=Vangl2|R=Dvl-Prickle-Intu complex
+W|interactions|Dvl binds Invs|untyped_interaction|raw=binds|L=Dvl|R=Inversin
+COUNTS {'protein_missing_external_identity': 36, 'undeclared_entity_in_inputs': 1, 'unresolved_actor_in_transporters': 1, 'undeclared_entity_in_entity_1': 19, 'undeclared_entity_in_entity_2': 2, 'IR:untyped_interaction': 7}
+
