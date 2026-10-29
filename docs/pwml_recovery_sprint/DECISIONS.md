@@ -7580,3 +7580,7 @@ ORCH-790 (§ 1), ORCH-793 (§ 2) and ORCH-794 (§ 3). The PO's standing instruct
 3. **One name declared as two kinds** (tRNA as both compound and nucleic acid; InsP3R as both compound and protein): keep
    the kind the paper's wording supports. When the wording does not decide it, only the affected rows are omitted
    (per-row omission, D-114 § 2), each recorded with a KI id in the text record. Never the whole pathway.
+4. **Merge rule 5 waived for ORCH-790 to ORCH-795** (PO override, 2026-10-28, relayed by the Lead): no independent reviewer
+   round. Every other merge rule holds (G9 proof, focused and affected tests, leg replay, corpus, SMOKE, G11). Each RESULT
+   doc records the waiver. Lanes are combined into three builders: ORCH-790+791 (`orch790/fix`), ORCH-792+793
+   (`orch792/fix`), ORCH-794+795 (`orch794/fix`).
