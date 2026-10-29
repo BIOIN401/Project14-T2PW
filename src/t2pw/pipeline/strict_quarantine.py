@@ -1835,6 +1835,132 @@ def _split_gene_protein_names(working: Dict[str, Any]) -> Dict[Tuple[str, int], 
     return forced
 
 
+# ORCH-794 (D-119 § 3). One name declared as two kinds outside the gene/protein pair.
+#: Reason on the removed row, ``same_name_declared_as_another_kind:<kept bucket>`` (KI-051).
+CROSS_KIND_DROP_REASON = "same_name_declared_as_another_kind"
+_PROTEIN_KINDS: Tuple[str, ...] = ("proteins", "protein_complexes")
+#: Slots only a protein kind can fill (``process_normalizer`` gate: ``protein_registry_norms``). Modifiers are
+#: left out on purpose: a compound cofactor is often written there (KI-005), so they decide nothing.
+_PROTEIN_ONLY_SLOTS: Tuple[str, ...] = ("enzymes", "transporters")
+#: The name itself says what it is. ponytail: name-local word lists; widen only on a leg that needs it.
+_NUCLEIC_ACID_WORDING = re.compile(r"(?<![A-Za-z])(?:[tmr]|sn|mi)?(?:RNA|DNA)")
+_PROTEIN_WORDING = re.compile(r"\b(?:receptor|channel|transporter|pump|kinase)s?\b", re.IGNORECASE)
+_DB_ID_FIELDS: Tuple[str, ...] = (
+    "pathbank_compound_id", "pathbank_nucleic_acid_id", "pw_nucleic_acid_id", "pathwhiz_id",
+    "chebi_id", "kegg_id", "hmdb_id", "pubchem_cid",
+)
+
+
+def _has_db_identity(bucket: str, row: Mapping[str, Any]) -> bool:
+    if bucket in _PROTEIN_KINDS:
+        return has_protein_external_identity(row)
+    return any(row.get(key) for key in _DB_ID_FIELDS) or any(_safe_dict(row.get("mapped_ids")).values())
+
+
+def _paper_kind(name: str, by_bucket: Mapping[str, List[Dict[str, Any]]], role_norms: Set[str]) -> Tuple[str, str]:
+    """``(kept bucket, rule)`` for one name declared in two kinds, or ``("", "")`` when nothing decides it."""
+
+    with_id = [b for b, rows in by_bucket.items() if any(_has_db_identity(b, r) for r in rows)]
+    if len(with_id) == 1:
+        return with_id[0], "db_identity"
+    if with_id:
+        return "", ""  # two kinds, two identities: a conflict, not a choice
+    protein = [b for b in by_bucket if b in _PROTEIN_KINDS]
+    if protein and _normalize(name) in role_norms:
+        return protein[0], "protein_only_role"
+    worded = [
+        b for b in by_bucket
+        if (b == "nucleic_acids" and _NUCLEIC_ACID_WORDING.search(name))
+        or (b in _PROTEIN_KINDS and _PROTEIN_WORDING.search(name))
+    ]
+    return (worded[0], "name_wording") if len(worded) == 1 else ("", "")
+
+
+def _keep_one_kind_per_name(working: Dict[str, Any]) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+    """Keep the kind the paper supports when one name is declared as two kinds; drop the other row.
+
+    D-119 § 3 (ORCH-789 C7): chlorophyll declares ``Glu-tRNAGlu`` / ``tRNAGlu`` as compound AND nucleic acid,
+    Wnt/Ca2+ declares ``InsP3R`` as compound AND protein, so admission quarantined every process naming them
+    (``ambiguous_entity_type``). Edits ``working`` in place, before the registry is built. In order:
+
+    1. exactly one kind carries a database identity -> that kind;
+    2. the paper writes the name as an enzyme, a transporter or a complex component (a role only a protein
+       can fill), and never as a reaction participant or transport cargo -> the protein kind;
+    3. the name's own wording: ``tRNA`` / ``RNA`` / ``DNA`` -> nucleic acid; receptor, channel, transporter,
+       pump, kinase -> protein.
+
+    The other kind's row and its own-kind location rows are removed and returned (removed entities, removed
+    locations), reason :data:`CROSS_KIND_DROP_REASON`. Nothing decides it -> both rows stay and admission omits
+    each process naming the name, per row, as ``ambiguous_entity_type`` (KI-011), never the pathway. The
+    nucleic-acid/protein pair is :func:`_split_gene_protein_names`'s, and two protein kinds are one class:
+    neither is touched here. No gate changes.
+    """
+
+    entities = _safe_dict(working.get("entities"))
+    kinds: Dict[str, Dict[str, List[Dict[str, Any]]]] = {}
+    for bucket in _GRAPH_ENTITY_BUCKETS:
+        for row in _safe_list(entities.get(bucket)):
+            if isinstance(row, dict) and _row_name(row):
+                kinds.setdefault(_normalize(_row_name(row)), {}).setdefault(bucket, []).append(row)
+    clashes = {
+        norm: by_bucket for norm, by_bucket in kinds.items()
+        if len(by_bucket) == 2 and set(by_bucket) not in ({"nucleic_acids", "proteins"}, set(_PROTEIN_KINDS))
+    }
+    if not clashes:
+        return [], []
+    role_norms = {
+        _normalize(_actor_name(actor) if not isinstance(actor, str) else _canonical(actor))
+        for rows in _safe_dict(working.get("processes")).values()
+        for process in _safe_list(rows) if isinstance(process, dict)
+        for slot in _PROTEIN_ONLY_SLOTS
+        for actor in _safe_list(process.get(slot))
+    } | {
+        _normalize(_component_name(component))
+        for row in _safe_list(entities.get("protein_complexes")) if isinstance(row, dict)
+        for component in _safe_list(row.get("components"))
+    }
+    # A name the paper ALSO writes as a reaction participant or transport cargo is not settled by its role
+    # (``OPC-8:0-CoA`` as its own reaction's substrate and catalyst): the role rule abstains for it.
+    role_norms -= {
+        _normalize(name)
+        for bucket in ("reactions", "transports")
+        for process in _safe_list(_safe_dict(working.get("processes")).get(bucket)) if isinstance(process, dict)
+        for _slot, names, _malformed in _essential_participants(bucket, process)
+        for name in names
+    }
+    removed: List[Dict[str, Any]] = []
+    removed_locations: List[Dict[str, Any]] = []
+    element_locations = _safe_dict(working.get("element_locations"))
+    for norm, by_bucket in clashes.items():
+        name = _row_name(next(iter(by_bucket.values()))[0])
+        kept, rule = _paper_kind(name, by_bucket, role_norms)
+        if not kept:
+            continue
+        for bucket, rows in by_bucket.items():
+            if bucket == kept:
+                continue
+            entities[bucket] = [r for r in _safe_list(entities.get(bucket)) if not any(r is x for x in rows)]
+            removed.extend(
+                {"bucket": bucket, "name": _row_name(row), "reason": f"{CROSS_KIND_DROP_REASON}:{kept}",
+                 "had_external_identity": None, "detail": {"kept_kind": kept, "decided_by": rule}}
+                for row in rows
+            )
+            for loc_bucket, name_field in _LOCATION_BUCKETS.items():
+                owners = _LOCATION_ENTITY_BUCKETS[loc_bucket]
+                rows_here = element_locations.get(loc_bucket)
+                if bucket not in owners or kept in owners or not isinstance(rows_here, list):
+                    continue
+                gone = [r for r in rows_here
+                        if isinstance(r, dict) and _normalize(_text(r.get(name_field) or r.get("entity"))) == norm]
+                element_locations[loc_bucket] = [r for r in rows_here if not any(r is g for g in gone)]
+                removed_locations.extend(
+                    {"bucket": f"element_locations/{loc_bucket}", "name": _text(r.get(name_field) or r.get("entity")),
+                     "reason": f"{CROSS_KIND_DROP_REASON}:{kept}", "biological_state": _text(r.get("biological_state"))}
+                    for r in gone
+                )
+    return removed, removed_locations
+
+
 # ── Graph closure ───────────────────────────────────────────────────────────
 
 
@@ -3291,6 +3417,7 @@ def quarantine_and_close(
 
     working: Dict[str, Any] = deepcopy(dict(payload))
     split_omissions = _split_gene_protein_names(working)
+    kind_removed, kind_removed_locations = _keep_one_kind_per_name(working)
     registry = _build_registry(working)
     core_terms = collect_requested_core_terms(
         working, requested_core=requested_core, pathway_context=pathway_context
@@ -3321,8 +3448,8 @@ def quarantine_and_close(
     # declared in its own kind" (ORCH-759c round 1).
     locations_own_kind_at_input = _own_kind_location_norms(working)
     iterations: List[Dict[str, Any]] = []
-    all_removed_entities: List[Dict[str, Any]] = []
-    all_removed_locations: List[Dict[str, Any]] = []
+    all_removed_entities: List[Dict[str, Any]] = [{**row, "iteration": 0} for row in kind_removed]
+    all_removed_locations: List[Dict[str, Any]] = [{**row, "iteration": 0} for row in kind_removed_locations]
     all_removed_states: List[Dict[str, Any]] = []
     converged = False
     # ORCH-773: once closure settles, a per-row omission round (see the section

@@ -122,6 +122,8 @@ KNOWN_ISSUES: Dict[str, Any] = {
         ("class_term_never_narrowed_to_specific_molecule", "exact",
          ("class_term_never_narrowed_to_specific_molecule",), "KI-029", False),
         ("closure_not_converged:<n>", "prefix", ("closure_not_converged:",), "KI-016", False),
+        ("coarse_grained_same_entity_transformation", "exact", ("coarse_grained_same_entity_transformation",),
+         "KI-015", False),
         ("complex_named_source_entity_wrapper", "exact", ("complex_named_source_entity_wrapper",), "KI-012", False),
         ("component_protein_unresolved", "exact", ("component_protein_unresolved",), "KI-015", False),
         ("confidence_below_floor:<x><<y>", "prefix", ("confidence_below_floor:",), "KI-015", False),
@@ -189,6 +191,8 @@ KNOWN_ISSUES: Dict[str, Any] = {
          ("reaction_enzyme_proteins_dropped_no_external_id",), "KI-007", False),
         ("refinement_review_crash", "exact", ("refinement_review_crash",), "KI-020", False),
         ("requested_core_coverage_below_minimum:<x><<y>", "prefix", ("requested_core_coverage_below_minimum",), "KI-038", False),
+        ("same_name_declared_as_another_kind:<bucket>", "prefix", ("same_name_declared_as_another_kind:",),
+         "KI-051", False),
         ("scope_conflict", "exact", ("scope_conflict",), "KI-025", False),
         ("serialization_would_require_invention", "exact", ("serialization_would_require_invention",), "KI-016", False),
         ("species_mismatch", "exact", ("species_mismatch",), "KI-002", False),
@@ -280,6 +284,7 @@ KNOWN_ISSUES: Dict[str, Any] = {
                   "repeats another with a different spelling.",
         "KI-041": "Merge the two MenA rows and the two MenG rows by hand in PathWhiz (delete the `DMK` duplicates).",
         "KI-043": "None needed; review merges flagged `nested_location_merged`.",
+        "KI-051": "Add RyhB in PathWhiz as a nucleic acid (RNA) and draw its interactions from it.",
         "KI-054": "Operator: keep `LLM_MAX_TOKENS` and the stage variables at 128,000 (extraction 64,000).",
         "KI-056": "None.",
     },
@@ -694,9 +699,12 @@ def _omission_detail(row: Mapping[str, Any]) -> str:
 
 
 def _entry(kind: str, name: Any, where: str, text: str, source: str, reason: str, message: str = "",
-           omission: str = "", group: str = "pre_freeze", ki_of: Optional[str] = None) -> Dict[str, Any]:
+           omission: str = "", group: str = "pre_freeze", ki_of: Optional[str] = None,
+           row: Optional[Mapping[str, Any]] = None) -> Dict[str, Any]:
     ki = known_issue_id(reason if ki_of is None else ki_of)
     return {
+        # ORCH-795 (D-114 AMENDMENT 2 § 1): an interaction whose word PathWhiz has no type for, however it was omitted.
+        "uncarried": kind == "interaction" and bool(row) and not pwml_interaction_type(interaction_relationship_word(row)),
         "kind": kind, "name": _text(name), "where": where, "text": text, "source": source,
         "reason": reason, "message": message, "omission": omission, "ki": ki,
         # pre_freeze | ir (a written PWML does not draw it) | no_pwml | not_recorded
@@ -748,7 +756,8 @@ def _omissions(
                                           f"lock {lock}" if lock else "") if p)
             entries.append(_entry(kind, row.get("name") or original.get("name"), where, _process_text(kind, original),
                                   f"{QUARANTINE_REPORT_FILENAME} quarantined", _text(row.get("reason")),
-                                  omission=_omission_detail(row)))
+                                  omission=_omission_detail(row),
+                                  row=original or _dict(_dict(row.get("detail")).get("row"))))
     for record in map(_dict, _list(payload.get("quarantined_locked_reactions"))):
         original = _dict(record.get("original_reaction"))
         lock = _text(record.get("locked_reaction_id") or original.get("locked_reaction_id"))
@@ -790,7 +799,7 @@ def _omissions(
         message = f"no PWML written: {no_pwml}" if no_pwml else item["pwml"]
         entries.append(_entry("interaction", item["name"], f"final payload {item['pointer']}",
                               _process_text("interaction", row), ir_source if group == "ir" else "",
-                              reason, message, group=group, ki_of=no_pwml if no_pwml else None))
+                              reason, message, group=group, ki_of=no_pwml if no_pwml else None, row=row))
 
     drawn: Optional[int] = 0
     total = 0
@@ -809,7 +818,7 @@ def _omissions(
         drawn, why = None, f"no final payload ({FINAL_MAPPED_FILENAME})"
     elif drawn is None:
         why = "the PWML verdict of some process is not recorded; they are listed below"
-    by_design = sum(e["counted"] and e["ki"] == BY_DESIGN_KI and e["group"] == "ir" for e in entries)
+    by_design = sum(e["counted"] and (e["uncarried"] or (e["ki"] == BY_DESIGN_KI and e["group"] == "ir")) for e in entries)
     entities = [
         {
             "bucket": _show(e.get("bucket")), "name": _show(e.get("name")), "reason": _show(e.get("reason")),

@@ -834,10 +834,14 @@ def test_an_entity_type_overlap_that_survives_closure_blocks_the_export() -> Non
     protein, so that no longer keeps a compound (``test_orch759c_*``). It now
     survives the way a real overlap does: a surviving reaction reaches it,
     through a synonym (``glycine``, which still resolves to the glycine row).
+
+    ORCH-794 moved the vehicle again: D-119 § 3 now keeps the protein when only it
+    carries a database identity, so the compound carries one too (two kinds, two
+    identities: nothing decides it, and the overlap gate still refuses).
     """
 
     payload = _glutathione_payload()
-    payload["entities"]["compounds"].append({"name": "GCLC", "synonyms": ["glycine"]})
+    payload["entities"]["compounds"].append({"name": "GCLC", "synonyms": ["glycine"], "chebi_id": "CHEBI:15428"})
     payload["entities"]["proteins"].append(
         {"name": "GCLC", "species": "Homo sapiens", "mapped_ids": {"uniprot": "P48506"}}
     )

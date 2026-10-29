@@ -74,7 +74,8 @@ def test_g9_the_review_pack_writes_the_legs_recorded_cause_and_its_known_issue(l
 
 def test_g9_the_morning_summary_names_the_known_issue_of_a_leg_with_no_pwml(leg_dir):
     summary = _load("orch770_morning_summary.py")
-    assert summary.coverage(leg_dir) == "0/21 (0%); full count 0/21 (0%); no PWML: KI-012"
+    # ORCH-795 (merge rule 4): the 9 unsigned interactions leave the headline whatever their omission. Was "0/21 (0%)".
+    assert summary.coverage(leg_dir) == "0/12 (0%); full count 0/21 (0%); no PWML: KI-012"
 
 
 def test_g9_the_night_runner_measures_coverage_with_the_pinned_worktrees_code():

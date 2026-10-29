@@ -931,7 +931,7 @@ status, listed so that it is never mistaken for one. Codes are verified against 
 | `<bucket>_missing_name` (e.g. `protein_missing_name`) | suffix `_missing_name` | KI-015 | `strict_quarantine._entity_representability`; `ir.validate_required_pwml_contract` |
 | `accession_claimed_across_incompatible_entity_kinds` | exact | KI-017 | `identity_admission.RULE_ACCESSION_KIND_CONFLICT`; `map_ids._admit_identities` |
 | `actor_schema_not_canonical` | exact | KI-023 | `stage_contracts._validate_canonical_actor_rows`; `payload_models._normalized_actor_issues` |
-| `ambiguous_entity_type:<bucket>+<bucket>` (seen: `ambiguous_entity_type:nucleic_acids+proteins`) | prefix `ambiguous_entity_type:` | KI-011 | `strict_quarantine._essential_participant_verdict`, `_actor_verdict` |
+| `ambiguous_entity_type:<bucket>+<bucket>` (seen: `ambiguous_entity_type:nucleic_acids+proteins`; before ORCH-794 also `compounds+nucleic_acids`, `compounds+proteins`, which now stay only when D-119 § 3 cannot decide the kind) | prefix `ambiguous_entity_type:` | KI-011 | `strict_quarantine._essential_participant_verdict`, `_actor_verdict` |
 | `ambiguous_protein_endpoint` | exact | KI-010 | `ir.interaction_pwml_verdict` |
 | `bare_protein_endpoint` | exact | KI-009 | `ir.interaction_pwml_verdict` |
 | `biological_state_missing_subcellular_location` | exact | KI-015 | `strict_quarantine.STATE_MISSING_LOCATION_REASON` (ORCH-788: the state and its element placements are omitted pre-freeze); `ir.validate_required_pwml_contract` |
@@ -939,6 +939,7 @@ status, listed so that it is never mistaken for one. Codes are verified against 
 | `budget_indeterminate` | exact | KI-056 (also seen in KI-027) | `extraction_ladder.SKIP_BUDGET_INDETERMINATE` |
 | `class_term_never_narrowed_to_specific_molecule` | exact | KI-029 | `compound_resolution._db_match_rule_decision`; `map_ids._refuse_class_term_identity` |
 | `closure_not_converged:<n>` | prefix `closure_not_converged:` | KI-016 | `strict_quarantine.quarantine_and_close` |
+| `coarse_grained_same_entity_transformation` (ORCH-795, ORCH-789 F-2: a same-entity "reaction" such as `H -> H`; on sour taste both such rows are also drawn as transports; still counted, no closer entry) | exact | KI-015 (KI-014 would stop counting it: not ruled) | `process_normalizer.dedupe_processes` |
 | `complex_named_source_entity_wrapper` (a `generation_reason`, not an omission) | exact | KI-012 | `process_normalizer.relocate_complex_named_proteins` |
 | `component_protein_unresolved` | exact | KI-015 | `ir.validate_required_pwml_contract`, `ir.build_pwml_ir` |
 | `confidence_below_floor:<x><<y>` | prefix `confidence_below_floor:` | KI-015 | `strict_quarantine._weak_evidence_verdict` |
@@ -995,6 +996,7 @@ status, listed so that it is never mistaken for one. Codes are verified against 
 | `reaction_enzyme_proteins_dropped_no_external_id` (counter) | exact | KI-007 | `map_ids._rewrite_reaction_protein_enzymes_to_complexes` |
 | `refinement_review_crash` (corpus stage label) | exact | KI-020 | `evidence/orch768_replay_corpus.py` (harness, not `src/`) |
 | `requested_core_coverage_below_minimum:<x><<y>` | prefix `requested_core_coverage_below_minimum` | KI-038 | `release_status.COVERAGE_REASON_BELOW_MINIMUM` |
+| `same_name_declared_as_another_kind:<bucket>` (ORCH-794, D-119 § 3: the removed row of a name declared as two kinds; `<bucket>` is the kind kept, `detail.decided_by` the rule) | prefix `same_name_declared_as_another_kind:` | KI-051 | `strict_quarantine._keep_one_kind_per_name` |
 | `scope_conflict` (status) | exact | KI-025 (KI-026 when the conflict is the organism) | `driver._STATUS_SCOPE_CONFLICT` = `rag.eligibility.OUTCOME_SCOPE_CONFLICT` |
 | `serialization_would_require_invention` (release reason) | exact | KI-016 (also KI-018) | `release_status.classify_release_status` |
 | `species_mismatch` (identity verdict) | exact | KI-002 | `map_ids.verify_real_protein_identity` |
