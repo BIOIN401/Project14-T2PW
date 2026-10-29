@@ -1,0 +1,114 @@
+{
+  "label": "tip-affected-r1",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch790/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch790",
+    "--pin-verdict",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch790/docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-790/19-tip-affected-r1.pin.json",
+    "-q",
+    "--basetemp=C:/t/orch79x/bt/ORCH-790-19-tip-affected-r1",
+    "tests/test_orch790_family_and_endpoint_order.py",
+    "tests/test_orch783_family_complex.py",
+    "tests/test_orch786_family_member_identity.py",
+    "tests/test_orch782_gene_protein_split.py",
+    "tests/test_map_ids_mapping_lineage.py",
+    "tests/test_pwml_interaction_protein_wrappers.py",
+    "tests/test_orch762_protein_identity.py",
+    "tests/test_c073_identity_admission.py",
+    "tests/test_c086_superset_complex_promotion.py",
+    "tests/test_c095_wrapper_superset_identity.py",
+    "tests/test_c122_db_first_alias.py",
+    "tests/test_entity_identity_contracts.py",
+    "tests/test_map_ids.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_orch759e_rewrap_after_phase2.py",
+    "tests/test_pathbank_unknown_fallback.py",
+    "tests/test_protein_export_policy.py",
+    "tests/test_rag_payload_gate_guardrails.py",
+    "tests/test_reference_repair.py",
+    "tests/test_gap_resolver.py",
+    "tests/test_gap_resolver_stage3_issues.py",
+    "tests/test_orch759a_duplicate_protein_fold.py",
+    "tests/test_research_mode_tiers.py",
+    "tests/test_stage2_mapping_boundary.py",
+    "tests/test_orch759c_quarantine_bucket_closure.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch790",
+  "started_at": "2026-10-29T17:11:01+00:00",
+  "finished_at": "2026-10-29T17:11:38+00:00",
+  "duration_seconds": 36.01980840000033,
+  "timeout_seconds": 1500.0,
+  "root_pid": 386496,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 386308,
+      "name": "python.exe",
+      "ppid": 386496
+    }
+  ],
+  "descendants_terminated": [
+    386308
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 347996,
+      "name": "python.exe"
+    },
+    {
+      "pid": 355452,
+      "name": "python.exe"
+    },
+    {
+      "pid": 378508,
+      "name": "python.exe"
+    },
+    {
+      "pid": 386088,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch790\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-790\\19-tip-affected-r1.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch790\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch790",
+    "repo_head": "f3a80e094a8755718944d77151e87c1d7cf57b59",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-790",
+    "token": "ORCH-790:386088:2bc77f43eeae42f8",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

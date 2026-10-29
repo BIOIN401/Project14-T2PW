@@ -1,0 +1,186 @@
+ORCH-790/791 Stage-6 + quarantine replay, tip arm. Script: evidence/orch790_replay.py. Wrapper report: evidence/g11/ORCH-790/18-replay-tip-r1.json
+
+tree: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch790 | mode: replay | recorded answers: 297
+PKC rows in the Stage-6 input: ['PKC']
+  at family conversion: PKC {} novel_protein novel
+
+===== wnt_ca  (runs_papers\ORCH-785\legs\wnt_ca-strict\2026-10-28_1910\papers\PMC10425814\strict)  species taxa: ['3702', '9606']
+http: 61 requests, unrecorded 0, mocked 21 | ai calls 0
+EIF3G (O75821) protein rows: none
+stage-6 quarantined_proteins: [('Orai 1', 'not_referenced_by_any_surviving_process'), ('Orai2', 'not_referenced_by_any_surviving_process'), ('Orai3', 'not_referenced_by_any_surviving_process'), ('Wnt-11', 'not_referenced_by_any_surviving_process'), ('NMDAR', 'not_referenced_by_any_surviving_process'), ('TCF', 'unresolved_complex_component_no_longer_referenced')]
+  stage-6 report /species/rows/4: {"entity_type": "protein", "name": "PKC", "json_pointer": "/entities/proteins/4", "source": "explicit_entity_species", "status": "novel", "species": "Homo sapiens", "pathbank_species_id": null, "taxonomy_id": ""}
+  stage-6 report /entities/4: {"entity_type": "protein", "name": "PKC", "json_pointer": "/entities/proteins/4", "status": "unmapped", "reason": "implausible_name_match", "location": "cytosol", "organism": "Homo sapiens", "candidate_count": 0, "source": "api", "provider": "UniProt", "confidence": 0.3875, "chosen_rule": "novel_pro
+  stage-6 report /entities/32: {"entity_type": "protein_complex", "name": "PKC", "json_pointer": "/entities/protein_complexes/7", "status": "unmapped", "reason": "db_unavailable:db_not_configured", "location": "cytosol", "organism": "Homo sapiens", "candidate_count": 0, "source": "db", "provider": "PathBankDB", "confidence": 0.0,
+  stage-6 report /enzyme_complex_conversion/actions/6: {"type": "family_protein_converted_to_complex", "protein": "PKC", "members": ["PRKCA", "PRKCB", "PRKCD"], "note": "members from UniProt family search family:\"PKC subfamily\", first 3 of 9 reviewed same-taxon hits, not the paper"}
+  'PKC' occurrences in the stage-6 report: 4
+PKC rows after stage 6: [('protein_complexes', 'PKC', None)]
+  family complex: Orai -> ['ORAI1', 'ORAI2', 'ORAI3'] | synonyms [] | members from UniProt family search family:"Orai family", first 3 of 3 reviewed same-taxon hits, not the paper
+  family complex: NFAT -> ['Unknown'] | synonyms [] | no members found in the paper, PathBank or UniProt; PathBank Unknown placeholder member
+  family complex: Orai family proteins -> ['ORAI1', 'ORAI2', 'ORAI3'] | synonyms [] | members from UniProt family search family:"Orai family", first 3 of 3 reviewed same-taxon hits, not the paper
+  family complex: STIM1/2 -> ['STIM1', 'STIM2'] | synonyms [] | members named by the paper
+  family complex: PKC -> ['PRKCA', 'PRKCB', 'PRKCD'] | synonyms [] | members from UniProt family search family:"PKC subfamily", first 3 of 9 reviewed same-taxon hits, not the paper
+  family complex: PLC -> ['Unknown'] | synonyms [] | no members found in the paper, PathBank or UniProt; PathBank Unknown placeholder member
+  family complex: G protein -> ['Unknown'] | synonyms [] | no members found in the paper, PathBank or UniProt; PathBank Unknown placeholder member
+signed interactions after quarantine: drawn 11, bare_protein_endpoint 0
+    CAM binds CaN: omitted:ambiguous_entity_type:protein_complexes+proteins
+    CAMKII activates TAK1: omitted:ambiguous_entity_type:protein_complexes+proteins
+    CAMKII holoenzyme activates TAK1: omitted:ambiguous_entity_type:protein_complexes+proteins
+    Ca 2+ activates CAMKII: omitted:ambiguous_entity_type:protein_complexes+proteins
+    Ca 2+ activates PKC: drawn  [Ca 2+ -> PKC]
+    Ca 2+ activates calcineurin: omitted:ambiguous_entity_type:protein_complexes+proteins
+    Ca2+ activates CaMKII: omitted:ambiguous_entity_type:protein_complexes+proteins
+    Ca2+ activates calcineurin: omitted:ambiguous_entity_type:protein_complexes+proteins
+    Ca2+ activation of PKC: drawn  [Ca 2+ -> PKC]
+    Ca2+ binds CaN: omitted:ambiguous_entity_type:protein_complexes+proteins
+    CaN dephosphorylates NF-ATp: omitted:ambiguous_entity_type:protein_complexes+proteins
+    Calcineurin activates NFAT: omitted:ambiguous_entity_type:protein_complexes+proteins
+    Calcineurin activates NFAT: omitted:ambiguous_entity_type:protein_complexes+proteins
+    DAG activates PKC: drawn  [DAG -> PKC]
+    DAG activation of PKC: drawn  [DAG -> PKC]
+    Fzd2 activates G protein: drawn  [Fzd2 complex -> G protein]
+    IP3 binds InsP3R: omitted:ambiguous_entity_type:compounds+proteins
+    IP3 induces Ca2+ release: drawn  [IP3 -> Ca 2+]
+    NLK binds NARF: omitted:protein_missing_external_identity
+    NLK inhibits β-catenin/TCF complex: drawn  [NLK complex -> β-catenin/TCF complex]
+    NLK phosphorylates TCF: omitted:undeclared_entity_in_entity_2
+    Protein kinase C activates Cdc42: drawn  [PKC -> Cdc42 complex]
+    STIM1/2 activates Orai: drawn  [STIM1/2 -> Orai]
+    STIM1/2 activates Orai1/2/3: drawn  [STIM1/2 -> Orai family proteins]
+    STIM1/2 activation of Orai1/2/3: drawn  [STIM1/2 -> Orai family proteins]
+    TAB2 binds TAK1: omitted:protein_missing_external_identity
+    TAK1 activates NLK: omitted:protein_missing_external_identity
+    calcineurin activates NF-ATp: omitted:ambiguous_entity_type:protein_complexes+proteins
+    calmodulin activates CAMKII: omitted:ambiguous_entity_type:protein_complexes+proteins
+    calmodulin binds CAMKII: omitted:ambiguous_entity_type:protein_complexes+proteins
+    calmodulin binds CAMKII holoenzyme: omitted:ambiguous_entity_type:protein_complexes+proteins
+    β-catenin binds TCF: omitted:undeclared_entity_in_entity_2
+
+===== chlorophyll  (runs_papers\ORCH-785\legs\chlorophyll-strict\2026-10-28_1743\papers\PMC5130987\strict)  species taxa: ['3702']
+http: 217 requests, unrecorded 0, mocked 177 | ai calls 0
+EIF3G (O75821) protein rows: none
+stage-6 quarantined_proteins: [('CHLD', 'not_referenced_by_any_surviving_process'), ('CHIH', 'not_referenced_by_any_surviving_process'), ('PIF4', 'not_referenced_by_any_surviving_process'), ('PIF5', 'not_referenced_by_any_surviving_process'), ('HO1', 'not_referenced_by_any_surviving_process'), ('SCL6', 'not_referenced_by_any_surviving_process'), ('SCL22', 'not_referenced_by_any_surviving_process'), ('CHLM', 'not_referenced_by_any_surviving_process')]
+  family complex: DELLA -> ['RGL1', 'RGL2', 'RGL3'] | synonyms [] | members from UniProt family search family:"DELLA subfamily", first 3 of 3 reviewed same-taxon hits, not the paper
+signed interactions after quarantine: drawn 33, bare_protein_endpoint 0
+    ABI4 activates PORA: drawn  [ABI4 complex -> PORA gene]
+    ABI4 downregulates PhANGs: drawn  [ABI4 complex -> PhANGs]
+    CHL27 promotes PhANG expression: drawn  [CHL27 complex -> PhANGs]
+    CHL27 promotes TPB gene expression: drawn  [CHL27 complex -> TPB genes]
+    COP1 inhibits HY5: drawn  [COP1 complex -> HY5 complex]
+    CRY1 activates HY5: drawn  [CRY1 complex -> HY5 complex]
+    DELLA inhibits SCL27: drawn  [DELLA -> SCL27 complex]
+    DET1 inhibits HY5: drawn  [DET1 complex -> HY5 complex]
+    FAR1 binds ALAD1/HEMB1 promoter: omitted:protein_missing_external_identity
+    FAR1 binds HY5: omitted:protein_missing_external_identity
+    FAR1-HY5 interaction: omitted:protein_missing_external_identity
+    FHY3 activates CHLH: drawn  [FHY3 complex -> CHLH gene]
+    FHY3 activates GUN4: drawn  [FHY3 complex -> GUN4 gene]
+    FHY3 activates HEMA1: omitted:ambiguous_entity_type:nucleic_acids+proteins
+    FLU-GluTR1 interaction: omitted:ambiguous_entity_type:nucleic_acids+proteins
+    GBP binds GluTR1: omitted:undeclared_entity_in_entity_1
+    GBP-GluTR interaction: omitted:ambiguous_entity_type:nucleic_acids+proteins
+    GLK1 promotes TPB gene expression: drawn  [GLK1 complex -> TPB genes]
+    GLK2 promotes TPB gene expression: drawn  [GLK2 complex -> TPB genes]
+    GNC activates TPB genes: drawn  [GNC complex -> TPB genes]
+    GNL activates TPB genes: drawn  [GNL complex -> TPB genes]
+    GUN1 activates ABI4: drawn  [GUN1 complex -> ABI4 complex]
+    GUN1 downregulates GLK1: drawn  [GUN1 complex -> GLK1 complex]
+    GUN1 inhibits PhANGs: drawn  [GUN1 complex -> PhANGs]
+    GUN4-Mg-chelatase interaction: omitted:undeclared_entity_in_entity_2
+    HY5 activates CHLH: drawn  [HY5 complex -> CHLH gene]
+    HY5 activates HEMA1: drawn  [HY5 complex -> HEMA1 gene]
+    HY5 activates PORC: drawn  [HY5 complex -> PORC gene]
+    HY5 activates PhANGs: drawn  [HY5 complex -> PhANGs]
+    HY5 inhibits HY5-targeted genes: drawn  [HY5 complex -> HY5-targeted genes]
+    HY5 promotes TPB gene expression: drawn  [HY5 complex -> TPB genes]
+    HY5 represses HY5 target genes: drawn  [HY5 complex -> HY5 target genes]
+    Mg-Proto IX represses LHCB1.1: drawn  [Mg-Proto IX -> LHCB1.1]
+    Mg-Proto IX represses RBCS: drawn  [Mg-Proto IX -> RBCS]
+    PIF1 binds CAO promoter: omitted:protein_missing_external_identity
+    PIF1 binds CHLH promoter: omitted:protein_missing_external_identity
+    PIF1 binds PORC promoter: omitted:protein_missing_external_identity
+    PIF1 inhibits CHLH: omitted:protein_missing_external_identity
+    PIF1 inhibits FHY3: omitted:protein_missing_external_identity
+    PIF1 inhibits HEMA1: omitted:protein_missing_external_identity
+    PIF1-COP1 interaction: omitted:protein_missing_external_identity
+    PIF1-FHY3 interaction: omitted:protein_missing_external_identity
+    PIF3 inhibits CHLH: drawn  [PIF3 complex -> CHLH gene]
+    PIF3 inhibits HEMA1: drawn  [PIF3 complex -> HEMA1 gene]
+    RVE1 activates PORA: drawn  [RVE1 complex -> PORA gene]
+    SCL27 inhibits PORC: drawn  [SCL27 complex -> PORC gene]
+    TOC1 inhibits CHLH: drawn  [TOC1 complex -> CHLH gene]
+    TOC1 inhibits PIFs: omitted:undeclared_entity_in_entity_2
+    TOC1-PIF interaction: omitted:protein_missing_external_identity
+    flagellin 22 activates FC1: drawn  [flagellin 22 -> FC1 complex]
+    flagellin 22 activates HEMA2: drawn  [flagellin 22 -> HEMA2 complex]
+
+===== wnt_pcp  (runs_papers\ORCH-784\legs\wnt_pcp-strict\2026-10-27_2309\papers\PMC10425814\strict)  species taxa: ['9606']
+http: 72 requests, unrecorded 0, mocked 27 | ai calls 0
+EIF3G (O75821) protein rows: none
+stage-6 quarantined_proteins: [('PTH1R', 'not_referenced_by_any_surviving_process'), ('β-catenin', 'not_referenced_by_any_surviving_process'), ('Smad3', 'not_referenced_by_any_surviving_process'), ('SCD1', 'not_referenced_by_any_surviving_process'), ('Porc', 'not_referenced_by_any_surviving_process'), ('Akt', 'not_referenced_by_any_surviving_process'), ('GSK-3β', 'not_referenced_by_any_surviving_process'), ('mTOR', 'not_referenced_by_any_surviving_process'), ('IRS1', 'not_referenced_by_any_surviving_process'), ('Shc', 'not_referenced_by_any_surviving_process'), ('SHIP2', 'not_referenced_by_any_surviving_process'), ('EGFR', 'not_referenced_by_any_surviving_process'), ('insulin', 'not_referenced_by_any_surviving_process'), ('PTH', 'not_referenced_by_any_surviving_process')]
+  family complex: GDI -> ['ARHGDIA', 'ARHGDIB', 'ARHGDIG'] | synonyms [] | members from UniProt family search family:"Rho GDI family", first 3 of 3 reviewed same-taxon hits, not the paper
+  family complex: ROR1/ROR2 -> ['ROR1', 'ROR2'] | synonyms [] | members named by the paper
+  family complex: JNK -> ['Unknown'] | synonyms [] | no members found in the paper, PathBank or UniProt; PathBank Unknown placeholder member
+  family complex: ROCK -> ['Unknown'] | synonyms [] | no members found in the paper, PathBank or UniProt; PathBank Unknown placeholder member
+signed interactions after quarantine: drawn 12, bare_protein_endpoint 0
+    DIA1 activates MRLC: omitted:undeclared_entity_in_entity_1
+    Diego binds Dishevelled: omitted:protein_missing_external_identity
+    Dkk1 activates JNK: drawn  [Dkk1 complex -> JNK]
+    Dvl binds Par6: omitted:protein_missing_external_identity
+    Dvl-DAAM complex activates RhoA: drawn  [Dvl-DAAM complex -> RhoA complex]
+    Dvl-DAAM complex activates RhoA: drawn  [Dvl-DAAM complex -> RhoA complex]
+    Frizzled binds Wnt ligand: omitted:undeclared_entity_in_entity_1
+    Fz receptor binds MUSK: omitted:undeclared_entity_in_entity_1
+    Fz receptor binds PTK7: omitted:undeclared_entity_in_entity_1
+    Fz receptor binds ROR1: omitted:undeclared_entity_in_entity_1
+    Fz receptor binds ROR1/ROR2: omitted:undeclared_entity_in_entity_1
+    Fz receptor binds ROR2: omitted:undeclared_entity_in_entity_1
+    Fz receptor binds RYK: omitted:undeclared_entity_in_entity_1
+    Fz receptor binds Wnt ligands: omitted:undeclared_entity_in_entity_1
+    Fz receptor binds glypican: omitted:undeclared_entity_in_entity_1
+    Fz receptor binds syndecan: omitted:undeclared_entity_in_entity_1
+    Fz receptors interact with MUSK: omitted:protein_missing_external_identity
+    Fz receptors interact with PTK7: omitted:protein_missing_external_identity
+    Fz receptors interact with ROR1: omitted:protein_missing_external_identity
+    Fz receptors interact with ROR1/ROR2: omitted:protein_missing_external_identity
+    Fz receptors interact with ROR2: omitted:protein_missing_external_identity
+    Fz receptors interact with RYK: omitted:protein_missing_external_identity
+    Fz receptors interact with glypican: omitted:protein_missing_external_identity
+    Fz receptors interact with syndecan: omitted:protein_missing_external_identity
+    Fz receptors interacts with MUSK: omitted:protein_missing_external_identity
+    Fz receptors interacts with PTK7: omitted:protein_missing_external_identity
+    Fz receptors interacts with ROR1/ROR2: omitted:protein_missing_external_identity
+    Fz receptors interacts with RYK: omitted:protein_missing_external_identity
+    Fz receptors interacts with glypican: omitted:protein_missing_external_identity
+    Fz receptors interacts with syndecan: omitted:protein_missing_external_identity
+    Fz receptors phosphorylates Dvl: omitted:protein_missing_external_identity
+    GDI inhibits Rac1: drawn  [GDI -> Rac1 complex]
+    GDI inhibits RhoA: drawn  [GDI -> RhoA complex]
+    JNK activates CapZIP: drawn  [JNK -> CapZIP complex]
+    JNK activates CapZIP: drawn  [JNK -> CapZIP complex]
+    JNK activates c-Jun: omitted:protein_missing_external_identity
+    JNK phosphorylates c-Jun: omitted:protein_missing_external_identity
+    Par6 binds Dvl: omitted:protein_missing_external_identity
+    Par6 interacts with Dvl: omitted:protein_missing_external_identity
+    Par6 interacts with Dvl: omitted:protein_missing_external_identity
+    Profilin interacts with Daam1: omitted:undeclared_entity_in_entity_1
+    ROCK activates MRLC: omitted:undeclared_entity_in_entity_2
+    ROCK activates MRLC: omitted:undeclared_entity_in_entity_2
+    Rac1 activates JNK: drawn  [Rac1 complex -> JNK]
+    Rac1 activates JNK: drawn  [Rac1 complex -> JNK]
+    RhoA activates ROCK: drawn  [RhoA complex -> ROCK]
+    RhoA activates ROCK: drawn  [RhoA complex -> ROCK]
+    RhoA binds DIA1: omitted:undeclared_entity_in_entity_2
+    Smurf binds Par6: omitted:undeclared_entity_in_entity_1
+    Smurf binds Par6: omitted:undeclared_entity_in_entity_1
+    Smurf recruitment by phosphorylated Dvl: omitted:undeclared_entity_in_entity_1
+    Smurf ubiquitinates Prickle: omitted:undeclared_entity_in_entity_1
+    Smurf1 inhibits RhoA: drawn  [Smurf1 complex -> RhoA complex]
+    Vangl2 binds Wnt ligand: omitted:undeclared_entity_in_entity_2
+    Wnt binds Celsr1: omitted:undeclared_entity_in_entity_1
+    Wnt binds Frizzled: omitted:undeclared_entity_in_entity_1
+    Wnt binds Vangl2: omitted:undeclared_entity_in_entity_1
+
+================ CLEANUP REPORT ================
+exit reason             : completed
+FINAL SURVIVING COUNT   : 0
+heavy lock              : C:\t\heavylock  holder=ORCH-790  acquired=True  released=True

@@ -54,7 +54,11 @@ class _FakeUniProt:
         query = params["query"].split(" AND organism_id:")[0]
         self.queries.append(query)
         rows = self.answers.get(query, [])
-        text = "Entry\tGene Names (primary)\tOrganism (ID)\n" + "".join(f"{a}\t{g}\t{t}\n" for a, g, t in rows)
+        # ORCH-790: each hit carries its family text, here the queried family itself.
+        family = query.split('"')[1] if query.startswith('family:"') else ""
+        text = "Entry\tGene Names (primary)\tOrganism (ID)\tProtein families\n" + "".join(
+            f"{a}\t{g}\t{t}\t{family}\n" for a, g, t in rows
+        )
         return SimpleNamespace(status_code=200, text=text)
 
 
