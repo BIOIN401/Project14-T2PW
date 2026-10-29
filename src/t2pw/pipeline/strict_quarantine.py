@@ -1958,7 +1958,52 @@ def _keep_one_kind_per_name(working: Dict[str, Any]) -> Tuple[List[Dict[str, Any
                      "reason": f"{CROSS_KIND_DROP_REASON}:{kept}", "biological_state": _text(r.get("biological_state"))}
                     for r in gone
                 )
+        # ORCH-794b: this module's name key is looser than the exporter's (``tRNA^Glu`` and ``tRNAGlu`` are one
+        # name here, two to ``ir._norm``). Every reference to the name now spells the kept row's name, so what
+        # admission accepted the IR resolves (ORCH-796 chlorophyll: an unresolved ``tRNAGlu`` sank the PWML).
+        _spell_references_as(working, norm, _row_name(by_bucket[kept][0]))
     return removed, removed_locations
+
+
+#: Free-text fields of a process or location row: never an entity reference, never rewritten.
+_NOT_A_REFERENCE = frozenset({
+    "evidence", "provenance", "provenance_lineage", "reason", "relationship", "interaction_type", "class",
+    "biological_state", "from_biological_state", "to_biological_state", "side", "role", "entity_type",
+    "locked_reaction_id", "scope_membership", "notes", "description", "pointer", "json_pointer",
+})
+
+
+def _spell_references_as(working: Dict[str, Any], norm: str, name: str) -> None:
+    """Rewrite every process, location and complex-component reference whose name key is ``norm`` to ``name``."""
+
+    def walk(value: Any, top: bool) -> None:
+        items = enumerate(value) if isinstance(value, list) else (
+            ((k, v) for k, v in value.items() if k not in _NOT_A_REFERENCE and not (top and k == "name"))
+            if isinstance(value, dict) else ())
+        for key, item in list(items):
+            if isinstance(item, str):
+                if item != name and _normalize(_canonical(item)) == norm:
+                    value[key] = name
+            else:
+                walk(item, False)
+
+    for rows in _safe_dict(working.get("processes")).values():
+        for row in _safe_list(rows):
+            walk(row, True)
+    element_locations = _safe_dict(working.get("element_locations"))
+    for bucket, rows in element_locations.items():
+        if not isinstance(rows, list):
+            continue
+        for row in rows:
+            walk(row, True)
+        unique: List[Any] = []
+        for row in rows:  # two spellings of one placement are now one row; other rows untouched
+            if row not in unique or not (isinstance(row, dict) and name in row.values()):
+                unique.append(row)
+        element_locations[bucket] = unique
+    for row in _safe_list(_safe_dict(working.get("entities")).get("protein_complexes")):
+        if isinstance(row, dict):
+            walk(row.get("components"), False)
 
 
 # ── Graph closure ───────────────────────────────────────────────────────────
