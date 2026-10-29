@@ -1,0 +1,94 @@
+{
+  "label": "affected-recheck",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch792/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch792",
+    "--pin-verdict",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch792/docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-792/22-affected-recheck.pin.json",
+    "-q",
+    "--basetemp=C:/t/orch79x/bt/ORCH-792-22-affected-recheck",
+    "tests/test_c122_db_first_alias.py",
+    "tests/test_orch759e_rewrap_after_phase2.py",
+    "tests/test_orch762_protein_identity.py",
+    "tests/test_orch792_no_silent_drops.py",
+    "tests/test_orch793_gene_name_identity.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch792",
+  "started_at": "2026-10-29T16:46:16+00:00",
+  "finished_at": "2026-10-29T16:46:20+00:00",
+  "duration_seconds": 3.5735035999969114,
+  "timeout_seconds": 900.0,
+  "root_pid": 361276,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 358540,
+      "name": "python.exe",
+      "ppid": 361276
+    }
+  ],
+  "descendants_terminated": [
+    358540
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 347996,
+      "name": "python.exe"
+    },
+    {
+      "pid": 355452,
+      "name": "python.exe"
+    },
+    {
+      "pid": 360648,
+      "name": "python.exe"
+    },
+    {
+      "pid": 360700,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch792\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-792\\22-affected-recheck.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch792\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch792",
+    "repo_head": "f3a80e094a8755718944d77151e87c1d7cf57b59",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-792",
+    "token": "ORCH-792:360648:b49b9472707fa311",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

@@ -5056,6 +5056,17 @@ def run_strict_post_normalization_gates(
         "proteins_attached_pct": round((100.0 * proteins_attached / proteins_total), 2) if proteins_total else 100.0,
     }
 
+    # Proteins declared as components of any protein_complex are degree-0 by design:
+    # their network connection flows through the complex, not directly from reactions.
+    # ORCH-792 (ORCH-789 C6): the same holds for the located-isolation check below; a
+    # family-complex member with its own location row (ORAI2) is not "isolated".
+    _complex_component_norms: Set[str] = {
+        _normalize(_component_name_from_row(comp))
+        for pc_row in complexes
+        if isinstance(pc_row, dict)
+        for comp in _safe_list(pc_row.get("components"))
+        if _normalize(_component_name_from_row(comp))
+    }
     located_norm_to_pointers: Dict[str, List[str]] = {}
     for idx, prow in enumerate(_safe_list(element_locations.get("protein_locations"))):
         if not isinstance(prow, dict):
@@ -5071,7 +5082,7 @@ def run_strict_post_normalization_gates(
         if deg.get(pnode, 0) > 0:
             continue
         norm = _normalize(protein_name)
-        if norm in located_norm_to_pointers:
+        if norm in located_norm_to_pointers and norm not in _complex_component_norms:
             _add_error(
                 located_norm_to_pointers[norm][0],
                 f"{ISOLATED_LOCATED_PROTEIN_MESSAGE} {protein_name}",
@@ -5094,15 +5105,6 @@ def run_strict_post_normalization_gates(
                 ),
             )
 
-    # Proteins declared as components of any protein_complex are degree-0 by design:
-    # their network connection flows through the complex, not directly from reactions.
-    _complex_component_norms: Set[str] = {
-        _normalize(_component_name_from_row(comp))
-        for pc_row in complexes
-        if isinstance(pc_row, dict)
-        for comp in _safe_list(pc_row.get("components"))
-        if _normalize(_component_name_from_row(comp))
-    }
     if enforce_all_proteins_connected and proteins_degree0 > 0:
         for protein_name in sorted(ents.get("proteins", set())):
             pnode = node("protein", protein_name)

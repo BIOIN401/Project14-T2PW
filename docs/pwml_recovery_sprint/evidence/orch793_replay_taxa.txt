@@ -1,0 +1,237 @@
+# orch792_replay.py (taxonomy ids from final_mapped), BASE f3a80e09 (G11 evidence/g11/ORCH-793/17-final-base-taxa-r1.json)
+######## wnt_ca  tree=base  live-http-404=42 ai=0
+  target 'PKC': stage6 -> complex components=['Unknown']
+  target 'protein kinase C': stage6 -> ABSENT (no row, no record)
+  target 'ORAI2': stage6 -> quarantined_proteins reason=not_referenced_by_any_surviving_process
+  target 'Orai2': stage6 -> quarantined_proteins reason=not_referenced_by_any_surviving_process
+  target 'TCF': stage6 -> protein uniprot=-
+  target 'TAK1': stage6 -> protein uniprot=-
+  omitted reaction 'Cdc42 GTP hydrolysis': protein_missing_external_identity
+  omitted interaction 'CAMKII activates TAK1': ambiguous_entity_type:protein_complexes+proteins
+  omitted interaction 'TAK1 activates NLK': protein_missing_external_identity
+  omitted interaction 'NLK inhibits β-catenin/TCF complex': protein_missing_external_identity
+  omitted interaction 'TAB2 binds TAK1': protein_missing_external_identity
+  omitted interaction 'Protein kinase C activates Cdc42': protein_missing_external_identity
+  omitted interaction 'NLK phosphorylates TCF': protein_missing_external_identity
+  omitted interaction 'β-catenin binds TCF': protein_missing_external_identity
+  omitted interaction 'NLK phosphorylates TCF4': protein_missing_external_identity
+  omitted interaction 'CAMKII holoenzyme activates TAK1': ambiguous_entity_type:protein_complexes+proteins
+  removed_entity proteins 'TAK1': degree_zero_after_quarantine
+  removed_entity proteins 'TCF': degree_zero_after_quarantine
+  processes: accepted=13 omitted=34
+######## chlorophyll  tree=base  live-http-404=91 ai=0
+  target 'GBP': stage6 -> ABSENT (no row, no record)
+  target 'CHL27': stage6 -> protein uniprot=Q9M591
+  target 'LPOR': stage6 -> ABSENT (no row, no record)
+  target 'ferrochelatase': stage6 -> ABSENT (no row, no record)
+  target 'Chl synthase': stage6 -> protein uniprot=Q38833
+  target 'EXECUTER proteins': stage6 -> ABSENT (no row, no record)
+  target 'PIF1': stage6 -> protein uniprot=-
+  omitted reaction 'POR reaction': unresolved_actor_in_enzymes
+  omitted reaction 'ferrochelatase reaction': unresolved_actor_in_enzymes
+  omitted interaction 'PIF1 inhibits HEMA1': protein_missing_external_identity
+  omitted interaction 'PIF1 inhibits CHLH': protein_missing_external_identity
+  omitted interaction 'PIF1 binds CHLH promoter': protein_missing_external_identity
+  omitted interaction 'GBP binds GluTR1': undeclared_entity_in_entity_1
+  omitted interaction 'PIF1 binds PORC promoter': protein_missing_external_identity
+  omitted interaction 'PIF1 binds CAO promoter': protein_missing_external_identity
+  omitted interaction 'PIF1 inhibits FHY3': protein_missing_external_identity
+  omitted interaction 'GBP-GluTR interaction': ambiguous_entity_type:nucleic_acids+proteins
+  omitted interaction 'PIF1-FHY3 interaction': protein_missing_external_identity
+  omitted interaction 'TOC1-PIF interaction': protein_missing_external_identity
+  omitted interaction 'PIF1-COP1 interaction': protein_missing_external_identity
+  removed_entity proteins 'PIF1': degree_zero_after_quarantine
+  processes: accepted=81 omitted=34
+######## wnt_pcp  tree=base  live-http-404=56 ai=0
+  target 'Frizzled': stage6 -> protein uniprot=-
+  target 'Wnt': stage6 -> protein uniprot=-
+  target 'Smurf': stage6 -> protein uniprot=-
+  target 'DIA1': stage6 -> ABSENT (no row, no record)
+  target 'Profilin': stage6 -> ABSENT (no row, no record)
+  target 'MRLC': stage6 -> ABSENT (no row, no record)
+  target 'G-actin': stage6 -> ABSENT (no row, no record)
+  target 'c-Jun': stage6 -> protein uniprot=-
+  omitted reaction 'Profilin-facilitated ADP-ATP exchange': unresolved_actor_in_enzymes
+  omitted reaction 'DIA1-mediated actin polymerization': undeclared_entity_in_inputs
+  omitted reaction 'Dvl-Prickle-Intu complex dissociation': protein_missing_external_identity
+  omitted transport 'Dvl translocation to plasma membrane': protein_missing_external_identity
+  omitted transport 'c-Jun nuclear translocation': protein_missing_external_identity
+  omitted transport 'c-Jun translocation to nucleus': protein_missing_external_identity
+  omitted interaction 'Smurf binds Par6': protein_missing_external_identity
+  omitted interaction 'JNK activates c-Jun': protein_missing_external_identity
+  omitted interaction 'ROCK activates MRLC': protein_missing_external_identity
+  omitted interaction 'Wnt binds Frizzled': protein_missing_external_identity
+  omitted interaction 'DIA1 activates MRLC': undeclared_entity_in_entity_1
+  omitted interaction 'Wnt binds Vangl2': protein_missing_external_identity
+  omitted interaction 'Smurf1 inhibits RhoA': protein_missing_external_identity
+  omitted interaction 'Fz receptor binds Wnt ligands': protein_missing_external_identity
+  omitted interaction 'RhoA binds DIA1': undeclared_entity_in_entity_1
+  omitted interaction 'Profilin interacts with Daam1': undeclared_entity_in_entity_1
+  omitted interaction 'Smurf ubiquitinates Prickle': protein_missing_external_identity
+  omitted interaction 'JNK phosphorylates c-Jun': protein_missing_external_identity
+  omitted interaction 'ROCK activates MRLC': protein_missing_external_identity
+  omitted interaction 'Smurf binds Par6': protein_missing_external_identity
+  omitted interaction 'Smurf recruitment by phosphorylated Dvl': protein_missing_external_identity
+  omitted interaction 'Frizzled binds Wnt ligand': protein_missing_external_identity
+  omitted interaction 'Vangl2 binds Wnt ligand': protein_missing_external_identity
+  omitted interaction 'Wnt binds Celsr1': protein_missing_external_identity
+  omitted interaction 'Fz receptor binds PTK7': protein_missing_external_identity
+  omitted interaction 'Fz receptor binds MUSK': protein_missing_external_identity
+  omitted interaction 'Fz receptor binds ROR1/ROR2': protein_missing_external_identity
+  omitted interaction 'Fz receptor binds ROR1': protein_missing_external_identity
+  omitted interaction 'Fz receptor binds ROR2': protein_missing_external_identity
+  omitted interaction 'Fz receptor binds RYK': protein_missing_external_identity
+  omitted interaction 'Fz receptor binds syndecan': protein_missing_external_identity
+  omitted interaction 'Fz receptor binds glypican': protein_missing_external_identity
+  removed_entity proteins 'Frizzled': degree_zero_after_quarantine
+  removed_entity proteins 'Smurf': degree_zero_after_quarantine
+  removed_entity proteins 'c-Jun': degree_zero_after_quarantine
+  removed_entity proteins 'Wnt': degree_zero_after_quarantine
+  processes: accepted=0 omitted=71
+######## menaquinone  tree=base  live-http-404=39 ai=0
+  target 'MenA': stage6 -> ABSENT (no row, no record)
+  omitted reaction 'MenA-catalyzed DHNA prenylation to DMK': unresolved_actor_in_enzymes
+  omitted reaction 'MenA reaction': unresolved_actor_in_enzymes
+  omitted reaction 'MenA-catalyzed conversion of DHNA and prenyl diphosphate to demethylmenaquinone': unresolved_actor_in_enzymes
+  processes: accepted=23 omitted=4
+######## enterobactin  tree=base  live-http-404=35 ai=0
+  target 'Fur': stage6 -> protein uniprot=-
+  omitted interaction 'Fur binds to promoters of three ent gene clusters': protein_missing_external_identity
+  omitted interaction 'Fur inhibits ent gene clusters': protein_missing_external_identity
+  omitted interaction 'Fur inhibits the promoters of three ent gene clusters': protein_missing_external_identity
+  omitted interaction 'Fur binds the promoters of three ent gene clusters': protein_missing_external_identity
+  removed_entity proteins 'Fur': degree_zero_after_quarantine
+  processes: accepted=4 omitted=18
+######## sour_taste_v2  tree=base  live-http-404=12 ai=0
+  target 'Kir2.1': stage6 -> protein uniprot=-
+  omitted interaction 'H + inhibition of Kir2.1': protein_missing_external_identity
+  removed_entity proteins 'Kir2.1': degree_zero_after_quarantine
+  processes: accepted=6 omitted=2
+
+# TIP (G11 evidence/g11/ORCH-793/22-final-tip-taxa-2-r1.json)
+######## wnt_ca  tree=orch792  live-http-404=42 ai=0
+  target 'PKC': stage6 -> complex components=['Unknown']
+  target 'protein kinase C': stage6 -> ABSENT (no row, no record)
+  target 'ORAI2': stage6 -> quarantined_proteins reason=not_referenced_by_any_surviving_process
+  target 'Orai2': stage6 -> quarantined_proteins reason=not_referenced_by_any_surviving_process
+  target 'TCF': stage6 -> protein uniprot=-
+  target 'TAK1': stage6 -> protein uniprot=-
+  omitted reaction 'Cdc42 GTP hydrolysis': protein_missing_external_identity
+  omitted interaction 'CAMKII activates TAK1': ambiguous_entity_type:protein_complexes+proteins
+  omitted interaction 'TAK1 activates NLK': protein_missing_external_identity
+  omitted interaction 'NLK inhibits β-catenin/TCF complex': protein_missing_external_identity
+  omitted interaction 'TAB2 binds TAK1': protein_missing_external_identity
+  omitted interaction 'Protein kinase C activates Cdc42': protein_missing_external_identity
+  omitted interaction 'NLK phosphorylates TCF': protein_missing_external_identity
+  omitted interaction 'β-catenin binds TCF': protein_missing_external_identity
+  omitted interaction 'NLK phosphorylates TCF4': protein_missing_external_identity
+  omitted interaction 'CAMKII holoenzyme activates TAK1': ambiguous_entity_type:protein_complexes+proteins
+  removed_entity proteins 'TAK1': degree_zero_after_quarantine
+  removed_entity proteins 'TCF': degree_zero_after_quarantine
+  processes: accepted=13 omitted=34
+######## chlorophyll  tree=orch792  live-http-404=98 ai=0
+  target 'GBP': stage6 -> protein uniprot=-
+  target 'CHL27': stage6 -> protein uniprot=Q9M591
+  target 'LPOR': stage6 -> complex components=['Unknown']
+  target 'ferrochelatase': stage6 -> protein uniprot=F4IMT3
+  target 'Chl synthase': stage6 -> protein uniprot=Q38833
+  target 'EXECUTER proteins': stage6 -> protein uniprot=-
+  target 'PIF1': stage6 -> protein uniprot=-
+  omitted interaction 'PIF1 inhibits HEMA1': protein_missing_external_identity
+  omitted interaction 'PIF1 inhibits CHLH': protein_missing_external_identity
+  omitted interaction 'PIF1 binds CHLH promoter': protein_missing_external_identity
+  omitted interaction 'GBP binds GluTR1': protein_missing_external_identity
+  omitted interaction 'PIF1 binds PORC promoter': protein_missing_external_identity
+  omitted interaction 'PIF1 binds CAO promoter': protein_missing_external_identity
+  omitted interaction 'PIF1 inhibits FHY3': protein_missing_external_identity
+  omitted interaction 'GBP-GluTR interaction': ambiguous_entity_type:nucleic_acids+proteins
+  omitted interaction 'PIF1-FHY3 interaction': protein_missing_external_identity
+  omitted interaction 'TOC1-PIF interaction': protein_missing_external_identity
+  omitted interaction 'PIF1-COP1 interaction': protein_missing_external_identity
+  removed_entity proteins 'PIF1': degree_zero_after_quarantine
+  removed_entity proteins 'GBP': degree_zero_after_quarantine
+  removed_entity proteins 'EXECUTER proteins': degree_zero_after_quarantine
+  processes: accepted=84 omitted=31
+######## wnt_pcp  tree=orch792  live-http-404=57 ai=0
+  target 'Frizzled': stage6 -> protein uniprot=-
+  target 'Wnt': stage6 -> protein uniprot=-
+  target 'Smurf': stage6 -> protein uniprot=-
+  target 'DIA1': stage6 -> protein uniprot=-
+  target 'Profilin': stage6 -> protein uniprot=-
+  target 'MRLC': stage6 -> protein uniprot=-
+  target 'G-actin': stage6 -> protein uniprot=-
+  target 'c-Jun': stage6 -> protein uniprot=-
+  omitted reaction 'Profilin-facilitated ADP-ATP exchange': protein_missing_external_identity
+  omitted reaction 'DIA1-mediated actin polymerization': protein_missing_external_identity
+  omitted reaction 'Dvl-Prickle-Intu complex dissociation': protein_missing_external_identity
+  omitted transport 'Dvl translocation to plasma membrane': protein_missing_external_identity
+  omitted transport 'c-Jun nuclear translocation': protein_missing_external_identity
+  omitted transport 'c-Jun translocation to nucleus': protein_missing_external_identity
+  omitted interaction 'Smurf binds Par6': protein_missing_external_identity
+  omitted interaction 'JNK activates c-Jun': protein_missing_external_identity
+  omitted interaction 'ROCK activates MRLC': protein_missing_external_identity
+  omitted interaction 'Wnt binds Frizzled': protein_missing_external_identity
+  omitted interaction 'DIA1 activates MRLC': protein_missing_external_identity
+  omitted interaction 'Wnt binds Vangl2': protein_missing_external_identity
+  omitted interaction 'Smurf1 inhibits RhoA': protein_missing_external_identity
+  omitted interaction 'Fz receptor binds Wnt ligands': protein_missing_external_identity
+  omitted interaction 'RhoA binds DIA1': protein_missing_external_identity
+  omitted interaction 'Profilin interacts with Daam1': protein_missing_external_identity
+  omitted interaction 'Smurf ubiquitinates Prickle': protein_missing_external_identity
+  omitted interaction 'JNK phosphorylates c-Jun': protein_missing_external_identity
+  omitted interaction 'ROCK activates MRLC': protein_missing_external_identity
+  omitted interaction 'Smurf binds Par6': protein_missing_external_identity
+  omitted interaction 'Smurf recruitment by phosphorylated Dvl': protein_missing_external_identity
+  omitted interaction 'Frizzled binds Wnt ligand': protein_missing_external_identity
+  omitted interaction 'Vangl2 binds Wnt ligand': protein_missing_external_identity
+  omitted interaction 'Wnt binds Celsr1': protein_missing_external_identity
+  omitted interaction 'Fz receptor binds PTK7': protein_missing_external_identity
+  omitted interaction 'Fz receptor binds MUSK': protein_missing_external_identity
+  omitted interaction 'Fz receptor binds ROR1/ROR2': protein_missing_external_identity
+  omitted interaction 'Fz receptor binds ROR1': protein_missing_external_identity
+  omitted interaction 'Fz receptor binds ROR2': protein_missing_external_identity
+  omitted interaction 'Fz receptor binds RYK': protein_missing_external_identity
+  omitted interaction 'Fz receptor binds syndecan': protein_missing_external_identity
+  omitted interaction 'Fz receptor binds glypican': protein_missing_external_identity
+  removed_entity proteins 'Frizzled': degree_zero_after_quarantine
+  removed_entity proteins 'Smurf': degree_zero_after_quarantine
+  removed_entity proteins 'Profilin': degree_zero_after_quarantine
+  removed_entity proteins 'c-Jun': degree_zero_after_quarantine
+  removed_entity proteins 'MRLC': degree_zero_after_quarantine
+  removed_entity proteins 'DIA1': degree_zero_after_quarantine
+  removed_entity proteins 'Wnt': degree_zero_after_quarantine
+  removed_entity proteins 'G-actin': degree_zero_after_quarantine
+  processes: accepted=0 omitted=71
+######## menaquinone  tree=orch792  live-http-404=39 ai=0
+  target 'MenA': stage6 -> complex components=['Unknown']
+  processes: accepted=26 omitted=1
+######## enterobactin  tree=orch792  live-http-404=38 ai=0
+  target 'Fur': stage6 -> protein uniprot=P0A9A9
+  processes: accepted=7 omitted=15
+######## sour_taste_v2  tree=orch792  live-http-404=12 ai=0
+  target 'Kir2.1': stage6 -> protein uniprot=-
+  omitted interaction 'H + inhibition of Kir2.1': protein_missing_external_identity
+  removed_entity proteins 'Kir2.1': degree_zero_after_quarantine
+  processes: accepted=6 omitted=2
+
+# orch793_new_ids.py base vs tip (G11 evidence/g11/ORCH-793/23-new-ids-audit-2-r1.json)
+######## chlorophyll: base shipped 38, tip shipped 39
+  NEW  ferrochelatase ('F4IMT3', 'Ferrochelatase', 'Arabidopsis thaliana', 'verified_real_protein', None, None)
+######## enterobactin: base shipped 1, tip shipped 2
+  NEW  Fur ('P0A9A9', 'Ferric uptake regulation protein', 'Escherichia coli (strain K12)', 'verified_real_protein', None, ['a0a0h2yx47', 'a0a0h3eh26', 'a7zj68', 'b7l9m0', 'b7mfv0', 'p0a9b0', 'p0a9b1'])
+######## menaquinone: base shipped 8, tip shipped 8
+######## sour_taste_v2: base shipped 2, tip shipped 2
+######## wnt_ca: base shipped 2, tip shipped 2
+######## wnt_pcp: base shipped 2, tip shipped 2
+
+# superseded audit, BEFORE the NARF correction (G11 evidence/g11/ORCH-793/19-new-ids-audit.json)
+######## chlorophyll: base shipped 38, tip shipped 40
+  NEW  PIF1 ('Q8GZM7', 'Transcription factor PIF1', 'Arabidopsis thaliana', 'verified_real_protein', ['a0mf22', 'f4j4h6', 'f4ka12', 'p93831', 'q45gk3', 'q9sct8'], ['a0a1p8aye4'])
+  NEW  ferrochelatase ('F4IMT3', 'Ferrochelatase', 'Arabidopsis thaliana', 'verified_real_protein', None, None)
+######## enterobactin: base shipped 1, tip shipped 2
+  NEW  Fur ('P0A9A9', 'Ferric uptake regulation protein', 'Escherichia coli (strain K12)', 'verified_real_protein', None, ['a0a0h2yx47', 'a0a0h3eh26', 'a7zj68', 'b7l9m0', 'b7mfv0', 'p0a9b0', 'p0a9b1'])
+######## menaquinone: base shipped 8, tip shipped 8
+######## sour_taste_v2: base shipped 2, tip shipped 2
+######## wnt_ca: base shipped 2, tip shipped 3
+  NEW  NARF ('Q9UHQ1', 'Nuclear prelamin A recognition factor', 'Homo sapiens', 'verified_real_protein', ['q8wvd3'], ['a0aci8spx9', 'a0aci8sq00', 'a0aci8sq68', 'e7ep87', 'e9ph27', 'j3kt43'])
+######## wnt_pcp: base shipped 2, tip shipped 2
