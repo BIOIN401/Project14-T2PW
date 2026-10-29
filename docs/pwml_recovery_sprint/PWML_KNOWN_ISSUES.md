@@ -708,18 +708,18 @@ kept apart, and which were once wrongly merged. A kept-apart duplicate reaches t
 | **User workaround** | Delete `SAME_AS` rows and merge the two names into one element in PathWhiz. |
 | **Planned fix** | none planned |
 
-### KI-051 — An entity of the wrong kind from Stage 1 or 2 (RyhB, a small RNA, typed as a protein)
+### KI-051 — An entity of the wrong kind from Stage 1 or 2 (RyhB, a small RNA, typed as a protein; one name declared as two kinds)
 
 | | |
 |---|---|
-| **Symptom** | Interactions involving RyhB are withheld as a protein with no UniProt id (6 rows). |
-| **Reason codes** | `protein_endpoint_missing_external_identity` (see KI-009) |
-| **Cause** | Entity typing upstream of Stage 6. Wrapping it would have been wrong; withholding is correct. |
-| **Papers and legs hit** | committed enterobactin-family legs in the ORCH-754b replay |
-| **Evidence** | `ORCH-754b-RESULT.md` § 12 item 2 |
-| **Status** | **open** (not routed to an owner) |
-| **User workaround** | Add RyhB in PathWhiz as a nucleic acid (RNA) and draw its interactions from it. |
-| **Planned fix** | none planned |
+| **Symptom** | (a) Interactions involving RyhB are withheld as a protein with no UniProt id (6 rows). (b) Since ORCH-794 (D-119 § 3): an entity row "left out" because the same name was also declared as another kind and the other kind was kept, e.g. compound `tRNAGlu` / `Glu-tRNAGlu` (nucleic acid kept, chlorophyll), compound `InsP3R` (protein kept, Wnt/Ca2+). |
+| **Reason codes** | (a) `protein_endpoint_missing_external_identity` (see KI-009); (b) `same_name_declared_as_another_kind:<kept bucket>` (`strict_quarantine._keep_one_kind_per_name`, `detail.decided_by` = `db_identity`, `protein_only_role` or `name_wording`). An undecided name stays `ambiguous_entity_type:<a>+<b>` (KI-011) |
+| **Cause** | Entity typing upstream of Stage 6 (Stage 1 declares one name in two kinds; for `InsP3R` a step after the audit re-declared the compound). (a) Wrapping it would have been wrong; withholding is correct. (b) Before ORCH-794 the two declarations made admission omit every process naming the name. |
+| **Papers and legs hit** | (a) committed enterobactin-family legs in the ORCH-754b replay; (b) ORCH-785 chlorophyll (4 reactions), ORCH-785 Wnt/Ca2+ (3 transports, 1 interaction), ORCH-759 chlorophyll |
+| **Evidence** | `ORCH-754b-RESULT.md` § 12 item 2; `ORCH-789-RESULT.md` § 2 C7; `ORCH-794-RESULT.md` §§ 1, 4 |
+| **Status** | (a) **open** (not routed to an owner); (b) **fixed** by ORCH-794 (D-119 § 3), not yet merged: chlorophyll replay draws 3 of the 4 reactions; the Wnt/Ca2+ rows now fail on KI-001 |
+| **User workaround** | Add RyhB in PathWhiz as a nucleic acid (RNA) and draw its interactions from it. For a row left out as another kind: nothing to add; the kept kind is in the PWML. |
+| **Planned fix** | (a) none planned; (b) done: ORCH-794. Open questions: `ORCH-794-RESULT.md` § 9 |
 
 ### KI-052 — The live curator prompt allowed ungated interaction adds
 
@@ -943,6 +943,7 @@ status, listed so that it is never mistaken for one. Codes are verified against 
 | `complex_named_source_entity_wrapper` (a `generation_reason`, not an omission) | exact | KI-012 | `process_normalizer.relocate_complex_named_proteins` |
 | `component_protein_unresolved` | exact | KI-015 | `ir.validate_required_pwml_contract`, `ir.build_pwml_ir` |
 | `confidence_below_floor:<x><<y>` | prefix `confidence_below_floor:` | KI-015 | `strict_quarantine._weak_evidence_verdict` |
+| `degree_zero_after_normalization` (a Stage-6 `quarantined_proteins` record; rendered since ORCH-795) | exact | KI-013 | `process_normalizer` (`_quarantine_protein`, degree-0 pass) |
 | `degree_zero_export:<n>` | prefix `degree_zero_export:` | KI-016 (cause: KI-013) | `strict_quarantine.quarantine_and_close` |
 | `diagnostic_only` (release status) | exact | KI-016 (also KI-018, KI-026) | `release_status.DIAGNOSTIC_ONLY` |
 | `duplicate_locked_reaction` | exact | KI-014 | `process_normalizer.dedupe_processes`; `stage_one_ensemble.merge_on_mapped_identity` |
@@ -973,6 +974,7 @@ status, listed so that it is never mistaken for one. Codes are verified against 
 | `no_reactions` (driver kind) | exact | KI-021 | `driver.KIND_NO_REACTIONS`, `driver._classify` |
 | `no_shared_meaningful_token` (name-gate reason) | exact | KI-006 (CPO's accession stripped), KI-029 (DMAPP refused at Stage 6) | `map_ids._name_gate_verdict` |
 | `non_protein_actor_in_<slot>` (`_enzymes`, `_modifiers`, `_transporters`) | prefix `non_protein_actor_in_` | KI-004 (KI-005 when the actor is a compound cofactor) | `strict_quarantine._actor_verdict` |
+| `not_referenced_by_any_surviving_process` (a Stage-6 `quarantined_proteins` record; rendered since ORCH-795) | exact | KI-013 | `process_normalizer.drop_process_orphan_proteins` |
 | `operation_timeout` | exact | KI-028 | `pipeline/deadline.py` |
 | `outer_parent_kill` | exact | KI-028 | `leg_trace.SOURCE_OUTER_PARENT_KILL` |
 | `parenthetical_definition_bridge` (merge flag) | exact | KI-041 | **not on the sprint tip**: unmerged branch `orch765/parenthetical-bridge` |
@@ -993,6 +995,7 @@ status, listed so that it is never mistaken for one. Codes are verified against 
 | `reaction_coupled_transport_has_no_exportable_ir_representation` | exact | KI-015 | `strict_quarantine.RCT_NOT_EXPORTABLE_REASON` |
 | `reaction_enzyme_complex_wrapper_skipped_invalid_component` (mapping action) | exact | KI-006 | `map_ids._rewrite_reaction_protein_enzymes_to_complexes` |
 | `reaction_enzyme_must_be_protein_complex` | exact | KI-006 | `ir.build_pwml_ir`, `ir.validate_required_pwml_contract`; `stage_contracts.validate_pre_export` |
+| `reaction_enzyme_protein_dropped_no_external_id` (a Stage-6 `quarantined_proteins` record: the protein left one reaction's actor list, or was folded into its wrapper; ORCH-792) | exact | KI-007 | `map_ids._rewrite_reaction_protein_enzymes_to_complexes`; `reference_repair` |
 | `reaction_enzyme_proteins_dropped_no_external_id` (counter) | exact | KI-007 | `map_ids._rewrite_reaction_protein_enzymes_to_complexes` |
 | `refinement_review_crash` (corpus stage label) | exact | KI-020 | `evidence/orch768_replay_corpus.py` (harness, not `src/`) |
 | `requested_core_coverage_below_minimum:<x><<y>` | prefix `requested_core_coverage_below_minimum` | KI-038 | `release_status.COVERAGE_REASON_BELOW_MINIMUM` |
@@ -1012,6 +1015,7 @@ status, listed so that it is never mistaken for one. Codes are verified against 
 | `unexportable_entity:<n>` | prefix `unexportable_entity:` | KI-016 (cause: KI-001, KI-017, KI-018) | `strict_quarantine.quarantine_and_close` |
 | `unnamed_actor_in_<slot>` | prefix `unnamed_actor_in_` | KI-015 | `strict_quarantine._actor_verdict` |
 | `unresolved_actor_in_<slot>` | prefix `unresolved_actor_in_` | KI-015 | `strict_quarantine._actor_verdict` |
+| `unresolved_complex_component_no_longer_referenced` (a Stage-6 `quarantined_proteins` record; ORCH-789 D4) | exact | KI-015 | `map_ids.map_payload` structural cleanup (`_prune_invalid_complex_components`) |
 | `untyped_interaction` | exact | KI-008 | `ir.interaction_pwml_verdict` |
 | `valid_json_zero_processes` (attempt outcome) | exact | KI-027 | `extraction_diagnostics.OUTCOME_ZERO_PROCESSES` |
 
