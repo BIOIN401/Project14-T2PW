@@ -66,16 +66,19 @@ ORPHAN_GENES = ["CAO", "GUN4", "HEMA1", "PORB"]
 #: ORCH-782 (KI-011) moved the leg pins below deliberately: a gene clashing with a
 #: protein is now "<SYMBOL> gene", 18 gene-regulation rows are admitted, and only the
 #: CAO and PORB genes are still orphans (ORCH-782-RESULT.md, baseline move).
+#: ORCH-794 (D-119 § 3) moved them again: tRNAGlu, declared as compound and nucleic acid, keeps the nucleic
+#: acid its name says, so "Glu-tRNAGlu reduction to GSA" is admitted (core 26 -> 27, broken-reference 10 -> 9);
+#: the compound row and its location go as same_name_declared_as_another_kind:nucleic_acids (ORCH-794-RESULT.md).
 ORCH782_COUNTS = {
     **BASE_COUNTS,
-    "core_accepted": 26,
+    "core_accepted": 27,
     "auxiliary_accepted": 47,
-    "quarantined_broken_reference": 10,
+    "quarantined_broken_reference": 9,
 }
-ORCH782_ADMISSIONS_SHA256 = "8cbc88d217d634ec852d48bf416f8fb9437894b9e2db54a5944cbcb365826c7b"
+ORCH782_ADMISSIONS_SHA256 = "53355ece7103ffd90afd3042a7b7589d4b719667bf2f28c30c476154c0e17387"
 ORCH782_ORPHAN_GENES = ["CAO gene", "PORB gene"]
-ORCH782_REMOVED = (25, "b995f2cfd0e09ae10e3a5372946142dda8bb0196a504139ee06babe12c330d0b")
-ORCH782_REMOVED_LOCATIONS = (43, "2ef23a5a0a84ef6a393f7382e1457af4d3f733078b4191e06bb5c9b13a7dfd5b")
+ORCH782_REMOVED = (23, "54084dfdd62116c5042768b532f515ce452503502488c4cd38e95c6319e9e45f")
+ORCH782_REMOVED_LOCATIONS = (41, "eda2b5d1b050853b87968f60311cc838fa74d7b23d5d64e1ad571efd4cd9f907")
 #: ``removed_locations`` at base, as ``bucket|name|reason|biological_state`` lines
 #: (``evidence/orch759c/26-r1-probe-base.log``; identical at the round-0 tip, ``24``).
 BASE_REMOVED_LOCATIONS_SHA256 = "66891e59028a1dc0fd2c0919d30e6f77571d612c7e2420de71329cb685bde7ff"
@@ -133,9 +136,9 @@ def test_g9_chlorophyll_leg_releases_review_required_once_orphan_genes_close() -
     entities = result.payload["entities"]
     assert set(ORPHAN_GENES) <= {row["name"] for row in entities["proteins"]}
     assert not set(ORPHAN_GENES) & {row["name"] for row in entities["nucleic_acids"]}
-    assert len(entities["nucleic_acids"]) == 20
+    assert len(entities["nucleic_acids"]) == 21  # ORCH-794: + tRNAGlu
     processes = result.payload["processes"]
-    assert (len(processes["reactions"]), len(processes["interactions"])) == (30, 43)
+    assert (len(processes["reactions"]), len(processes["interactions"])) == (31, 43)  # ORCH-794: + Glu-tRNAGlu reduction
 
     # The strict final gate freeze_canonical_payload runs once quarantine is ok.
     details = run_strict_post_normalization_gates(
@@ -379,7 +382,8 @@ def test_g9_r1_n4_unreferenced_compound_named_like_a_wrapped_protein_is_pruned()
     payload["entities"]["compounds"].append({"name": GS})
     result = quarantine_and_close(payload, strict_db=True)
 
-    _assert_both_reactions_survive_and_only(result, [("compounds", GS, "unreferenced_after_quarantine")])
+    # ORCH-794 (D-119 § 3): the same row goes one step earlier, as the kind GS's UniProt id does not back.
+    _assert_both_reactions_survive_and_only(result, [("compounds", GS, "same_name_declared_as_another_kind:proteins")])
 
 
 def test_g9_r1_n4_unreferenced_element_collection_named_like_a_wrapped_protein_is_pruned() -> None:
@@ -390,7 +394,7 @@ def test_g9_r1_n4_unreferenced_element_collection_named_like_a_wrapped_protein_i
     result = quarantine_and_close(payload, strict_db=True)
 
     _assert_both_reactions_survive_and_only(
-        result, [("element_collections", GS, "unreferenced_after_quarantine")]
+        result, [("element_collections", GS, "same_name_declared_as_another_kind:proteins")]  # ORCH-794, as above
     )
 
 
@@ -416,9 +420,12 @@ def test_delta_n2_compound_shadowing_a_wrapped_protein_without_accession() -> No
     next(row for row in payload["entities"]["proteins"] if row["name"] == GS).pop("mapped_ids")
     result = quarantine_and_close(payload, strict_db=True)
 
-    _assert_glutathione_synthesis_stranded(
-        result, f"protein_complex_component_unrepresentable:{GS}:protein_missing_external_identity"
-    )
+    # ORCH-794 (D-119 § 3): the compound goes before admission (GS is the wrapper's component, a protein-only
+    # role), so admission refuses the reaction for the same component; closure stranded it before.
+    assert _record(result, "glutathione synthesis") == (
+        "quarantined_unmapped_entity", f"protein_complex_component_unrepresentable:{GS}:protein_missing_external_identity")
+    assert _record(result, "gamma-glutamylcysteine synthesis")[0] == "core_accepted"
+    assert result.refusal_reasons == [] and result.ok
 
 
 def test_delta_n2_generated_wrapper_whose_component_names_a_complex() -> None:

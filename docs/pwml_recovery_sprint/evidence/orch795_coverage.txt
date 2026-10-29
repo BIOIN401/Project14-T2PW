@@ -1,0 +1,34 @@
+ORCH-795 coverage headline on the six ORCH-784/785 strict legs. Script: docs/pwml_recovery_sprint/evidence/orch795_coverage.py. Base C:/t/orch794/base (f3a80e09); tip orch794/fix @ 483f4098. G11: g11/ORCH-795/06-coverage-base.json, 07-coverage-tip.json.
+
+===== base (log ORCH-795-06-coverage-base.log)
+t2pw resolved: C:\t\orch794\base\src\t2pw
+offline probe: {'attempts': {'urlopen_uniprot': 'refused', 'create_connection_loopback': 'refused', 'raw_socket_connect': 'refused'}, 'counted': 3, 'ok': True}
+chlorophyll    [ORCH-785] record: headline 43/82 (52.4%) | full 43/108 (39.8%) | excluded from headline 26
+               replay (canonical, pwml_written=True, network_refused=0): headline 43/82 (52.4%) | full 43/108 (39.8%) | excluded from headline 26
+wnt_ca         [ORCH-785] record: headline 10/39 (25.6%) | full 10/46 (21.7%) | excluded from headline 7
+               replay (canonical, pwml_written=True, network_refused=0): headline 10/39 (25.6%) | full 10/46 (21.7%) | excluded from headline 7
+sour_taste_v2  [ORCH-785] record: headline 6/10 (60.0%) | full 6/10 (60.0%) | excluded from headline 0
+               replay (canonical, pwml_written=True, network_refused=0): headline 6/10 (60.0%) | full 6/10 (60.0%) | excluded from headline 0
+enterobactin   [ORCH-784] record: headline 8/12 (66.7%) | full 8/21 (38.1%) | excluded from headline 9
+               replay (canonical, pwml_written=True, network_refused=0): headline 8/12 (66.7%) | full 8/21 (38.1%) | excluded from headline 9
+menaquinone    [ORCH-784] record: headline 22/25 (88.0%) | full 22/25 (88.0%) | excluded from headline 0
+               replay (canonical, pwml_written=True, network_refused=0): headline 22/25 (88.0%) | full 22/25 (88.0%) | excluded from headline 0
+wnt_pcp        [ORCH-784] record: headline 5/64 (7.8%) | full 5/71 (7.0%) | excluded from headline 7
+               replay (canonical, pwml_written=True, network_refused=0): headline 5/64 (7.8%) | full 5/71 (7.0%) | excluded from headline 7
+
+===== tip (log ORCH-795-07-coverage-tip.log)
+t2pw resolved: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch794\src\t2pw
+offline probe: {'attempts': {'urlopen_uniprot': 'refused', 'create_connection_loopback': 'refused', 'raw_socket_connect': 'refused'}, 'counted': 3, 'ok': True}
+chlorophyll    [ORCH-785] record: headline 43/68 (63.2%) | full 43/108 (39.8%) | excluded from headline 40
+               replay (canonical, pwml_written=True, network_refused=0): headline 43/68 (63.2%) | full 43/108 (39.8%) | excluded from headline 40
+wnt_ca         [ORCH-785] record: headline 10/31 (32.3%) | full 10/46 (21.7%) | excluded from headline 15
+               replay (canonical, pwml_written=True, network_refused=0): headline 10/31 (32.3%) | full 10/46 (21.7%) | excluded from headline 15
+sour_taste_v2  [ORCH-785] record: headline 6/10 (60.0%) | full 6/10 (60.0%) | excluded from headline 0
+               replay (canonical, pwml_written=True, network_refused=0): headline 6/10 (60.0%) | full 6/10 (60.0%) | excluded from headline 0
+enterobactin   [ORCH-784] record: headline 8/10 (80.0%) | full 8/21 (38.1%) | excluded from headline 11
+               replay (canonical, pwml_written=True, network_refused=0): headline 8/10 (80.0%) | full 8/21 (38.1%) | excluded from headline 11
+menaquinone    [ORCH-784] record: headline 22/24 (91.7%) | full 22/25 (88.0%) | excluded from headline 1
+               replay (canonical, pwml_written=True, network_refused=0): headline 22/24 (91.7%) | full 22/25 (88.0%) | excluded from headline 1
+wnt_pcp        [ORCH-784] record: headline 5/23 (21.7%) | full 5/71 (7.0%) | excluded from headline 48
+               replay (canonical, pwml_written=True, network_refused=0): headline 5/23 (21.7%) | full 5/71 (7.0%) | excluded from headline 48
+

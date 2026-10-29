@@ -76,7 +76,9 @@ def test_the_code_table_is_the_catalogue_appendix():
     codes, messages, workarounds = _catalogue()
     # The appendix as ORCH-771 wrote it (82, 19), plus ORCH-773's two rows: the
     # ``protein_complex_component_omitted:`` code and the "Located protein is isolated" message.
-    assert len(codes) == 84 and len(messages) == 20  # ORCH-788 (89038702): + biological_state_missing_subcellular_location
+    assert len(codes) == 90 and len(messages) == 20  # ORCH-788 (89038702): + biological_state_missing_subcellular_location;
+    # ORCH-794/795: + same_name_declared_as_another_kind:<bucket> (KI-051), coarse_grained_same_entity_transformation (KI-015);
+    # ORCH-795 follow-up: + the four Stage-6 quarantined_proteins reasons now rendered (KI-007, KI-013 x2, KI-015)
     assert list(KNOWN_ISSUES["codes"]) == codes
     assert list(KNOWN_ISSUES["messages"]) == messages
     labels = {row[3] for row in codes} | {ki for _patterns, ki in messages}
@@ -112,7 +114,8 @@ def test_the_code_table_is_the_catalogue_appendix():
         # The narrower message wins over the broad "PWML export ..." of KI-028.
         ("PWML export stopped by the quarantine boundary: unexportable_entity:1", "KI-016"),
         ("PWML export did not finish inside the time budget", "KI-028"),
-        ("coarse_grained_same_entity_transformation", "unclassified"),
+        ("coarse_grained_same_entity_transformation", "KI-015"),  # ORCH-795 (F-2): was "unclassified"
+        ("same_name_declared_as_another_kind:nucleic_acids", "KI-051"),  # ORCH-794 (NEW acceptance)
         ("", "unclassified"),
     ],
 )
@@ -249,10 +252,11 @@ def test_no_pwml_written_draws_nothing_and_lists_every_payload_process():
     arts = _artifacts(pwml=False)
     report = build_report(arts)
     text = render_text(report)
-    assert text.splitlines()[2] == ("PWML coverage: 0 of 6 processes (0.0%) -- target 75% (D-114 AMENDMENT 2: the 0 "
+    # ORCH-795 (D-114 AMENDMENT 2 § 1, merge rule 4): the IR's verdicts are still not read without a PWML, but the
+    # unsigned "competes with" row leaves the headline by its word, whatever its omission. Before: "0 of 6", "the 0".
+    assert text.splitlines()[2] == ("PWML coverage: 0 of 5 processes (0.0%) -- target 75% (D-114 AMENDMENT 2: the 1 "
                                     "interactions PathWhiz cannot carry, KI-008, are not counted)")
-    # The IR's verdicts are not read without a PWML, so nothing is "withheld by design" either.
-    assert "  Full count, the 0 KI-008 interactions included: 0 of 6 (0.0%)" in text
+    assert "  Full count, the 1 KI-008 interactions included: 0 of 6 (0.0%)" in text
     assert "OMITTED FROM THE PWML (6)\n" in text
     assert "Not drawn because no PWML was written (4):\n" in text
     for line in ("- reaction R1: A -> B  [final payload /processes/reactions/0]",
@@ -356,10 +360,12 @@ def test_each_replayed_leg_carries_the_measured_trees_coverage(replayed):
     # 66; 17 of its interactions are untyped (KI-008). Enterobactin was 0/21 (no PWML, as its leg directory
     # gives) until ORCH-773: the inferred wrapper leaves its reaction (D-113 s1), a PWML is written, and it
     # draws 10 of 21; 7 of its interactions are untyped (KI-008).
+    # ORCH-795 (D-114 AMENDMENT 2 § 1, merge rule 4): the third figure now also counts the unsigned interactions
+    # quarantined BEFORE the IR (for an entity): enterobactin 7 -> 9, WNT PCP 17 -> 51. drawn and total unchanged.
     assert got == {
-        "ORCH-767/enterobactin-strict/2026-10-23_2224": (10, 21, 7),
+        "ORCH-767/enterobactin-strict/2026-10-23_2224": (10, 21, 9),
         "ORCH-767/sour_taste_v2-strict/2026-10-24_0042": (7, 12, 0),
-        "ORCH-767/wnt_pcp-strict/2026-10-24_0131": (1, 66, 17),
+        "ORCH-767/wnt_pcp-strict/2026-10-24_0131": (1, 66, 51),
     }
 
 

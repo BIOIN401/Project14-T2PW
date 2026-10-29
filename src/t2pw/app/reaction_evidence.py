@@ -122,9 +122,12 @@ KNOWN_ISSUES: Dict[str, Any] = {
         ("class_term_never_narrowed_to_specific_molecule", "exact",
          ("class_term_never_narrowed_to_specific_molecule",), "KI-029", False),
         ("closure_not_converged:<n>", "prefix", ("closure_not_converged:",), "KI-016", False),
+        ("coarse_grained_same_entity_transformation", "exact", ("coarse_grained_same_entity_transformation",),
+         "KI-015", False),
         ("complex_named_source_entity_wrapper", "exact", ("complex_named_source_entity_wrapper",), "KI-012", False),
         ("component_protein_unresolved", "exact", ("component_protein_unresolved",), "KI-015", False),
         ("confidence_below_floor:<x><<y>", "prefix", ("confidence_below_floor:",), "KI-015", False),
+        ("degree_zero_after_normalization", "exact", ("degree_zero_after_normalization",), "KI-013", False),
         ("degree_zero_export:<n>", "prefix", ("degree_zero_export:",), "KI-016", False),
         ("diagnostic_only", "exact", ("diagnostic_only",), "KI-016", False),
         ("duplicate_locked_reaction", "exact", ("duplicate_locked_reaction",), "KI-014", False),
@@ -159,6 +162,8 @@ KNOWN_ISSUES: Dict[str, Any] = {
         ("no_reactions", "exact", ("no_reactions",), "KI-021", False),
         ("no_shared_meaningful_token", "exact", ("no_shared_meaningful_token",), "KI-006", False),
         ("non_protein_actor_in_<slot>", "prefix", ("non_protein_actor_in_",), "KI-004", False),
+        ("not_referenced_by_any_surviving_process", "exact", ("not_referenced_by_any_surviving_process",),
+         "KI-013", False),
         ("operation_timeout", "exact", ("operation_timeout",), "KI-028", False),
         ("outer_parent_kill", "exact", ("outer_parent_kill",), "KI-028", False),
         ("parenthetical_definition_bridge", "exact", ("parenthetical_definition_bridge",), "KI-041", False),
@@ -185,10 +190,14 @@ KNOWN_ISSUES: Dict[str, Any] = {
         ("reaction_enzyme_complex_wrapper_skipped_invalid_component", "exact",
          ("reaction_enzyme_complex_wrapper_skipped_invalid_component",), "KI-006", False),
         ("reaction_enzyme_must_be_protein_complex", "exact", ("reaction_enzyme_must_be_protein_complex",), "KI-006", False),
+        ("reaction_enzyme_protein_dropped_no_external_id", "exact",
+         ("reaction_enzyme_protein_dropped_no_external_id",), "KI-007", False),
         ("reaction_enzyme_proteins_dropped_no_external_id", "exact",
          ("reaction_enzyme_proteins_dropped_no_external_id",), "KI-007", False),
         ("refinement_review_crash", "exact", ("refinement_review_crash",), "KI-020", False),
         ("requested_core_coverage_below_minimum:<x><<y>", "prefix", ("requested_core_coverage_below_minimum",), "KI-038", False),
+        ("same_name_declared_as_another_kind:<bucket>", "prefix", ("same_name_declared_as_another_kind:",),
+         "KI-051", False),
         ("scope_conflict", "exact", ("scope_conflict",), "KI-025", False),
         ("serialization_would_require_invention", "exact", ("serialization_would_require_invention",), "KI-016", False),
         ("species_mismatch", "exact", ("species_mismatch",), "KI-002", False),
@@ -205,6 +214,8 @@ KNOWN_ISSUES: Dict[str, Any] = {
         ("unexportable_entity:<n>", "prefix", ("unexportable_entity:",), "KI-016", False),
         ("unnamed_actor_in_<slot>", "prefix", ("unnamed_actor_in_",), "KI-015", False),
         ("unresolved_actor_in_<slot>", "prefix", ("unresolved_actor_in_",), "KI-015", False),
+        ("unresolved_complex_component_no_longer_referenced", "exact",
+         ("unresolved_complex_component_no_longer_referenced",), "KI-015", False),
         ("untyped_interaction", "exact", ("untyped_interaction",), "KI-008", False),
         ("valid_json_zero_processes", "exact", ("valid_json_zero_processes",), "KI-027", False),
     ),
@@ -280,6 +291,8 @@ KNOWN_ISSUES: Dict[str, Any] = {
                   "repeats another with a different spelling.",
         "KI-041": "Merge the two MenA rows and the two MenG rows by hand in PathWhiz (delete the `DMK` duplicates).",
         "KI-043": "None needed; review merges flagged `nested_location_merged`.",
+        "KI-051": "Add RyhB in PathWhiz as a nucleic acid (RNA) and draw its interactions from it. For a row left out "
+                  "as another kind: nothing to add; the kept kind is in the PWML.",
         "KI-054": "Operator: keep `LLM_MAX_TOKENS` and the stage variables at 128,000 (extraction 64,000).",
         "KI-056": "None.",
     },
@@ -694,9 +707,12 @@ def _omission_detail(row: Mapping[str, Any]) -> str:
 
 
 def _entry(kind: str, name: Any, where: str, text: str, source: str, reason: str, message: str = "",
-           omission: str = "", group: str = "pre_freeze", ki_of: Optional[str] = None) -> Dict[str, Any]:
+           omission: str = "", group: str = "pre_freeze", ki_of: Optional[str] = None,
+           row: Optional[Mapping[str, Any]] = None) -> Dict[str, Any]:
     ki = known_issue_id(reason if ki_of is None else ki_of)
     return {
+        # ORCH-795 (D-114 AMENDMENT 2 § 1): an interaction whose word PathWhiz has no type for, however it was omitted.
+        "uncarried": kind == "interaction" and bool(row) and not pwml_interaction_type(interaction_relationship_word(row)),
         "kind": kind, "name": _text(name), "where": where, "text": text, "source": source,
         "reason": reason, "message": message, "omission": omission, "ki": ki,
         # pre_freeze | ir (a written PWML does not draw it) | no_pwml | not_recorded
@@ -748,7 +764,8 @@ def _omissions(
                                           f"lock {lock}" if lock else "") if p)
             entries.append(_entry(kind, row.get("name") or original.get("name"), where, _process_text(kind, original),
                                   f"{QUARANTINE_REPORT_FILENAME} quarantined", _text(row.get("reason")),
-                                  omission=_omission_detail(row)))
+                                  omission=_omission_detail(row),
+                                  row=original or _dict(_dict(row.get("detail")).get("row"))))
     for record in map(_dict, _list(payload.get("quarantined_locked_reactions"))):
         original = _dict(record.get("original_reaction"))
         lock = _text(record.get("locked_reaction_id") or original.get("locked_reaction_id"))
@@ -790,7 +807,7 @@ def _omissions(
         message = f"no PWML written: {no_pwml}" if no_pwml else item["pwml"]
         entries.append(_entry("interaction", item["name"], f"final payload {item['pointer']}",
                               _process_text("interaction", row), ir_source if group == "ir" else "",
-                              reason, message, group=group, ki_of=no_pwml if no_pwml else None))
+                              reason, message, group=group, ki_of=no_pwml if no_pwml else None, row=row))
 
     drawn: Optional[int] = 0
     total = 0
@@ -809,7 +826,7 @@ def _omissions(
         drawn, why = None, f"no final payload ({FINAL_MAPPED_FILENAME})"
     elif drawn is None:
         why = "the PWML verdict of some process is not recorded; they are listed below"
-    by_design = sum(e["counted"] and e["ki"] == BY_DESIGN_KI and e["group"] == "ir" for e in entries)
+    by_design = sum(e["counted"] and (e["uncarried"] or (e["ki"] == BY_DESIGN_KI and e["group"] == "ir")) for e in entries)
     entities = [
         {
             "bucket": _show(e.get("bucket")), "name": _show(e.get("name")), "reason": _show(e.get("reason")),
@@ -837,7 +854,22 @@ def _omissions(
         for e in map(_dict, _list(_dict(removed).get("removed_entities")))
         for a in map(_dict, _list(_dict(e.get("detail")).get("actor_removed_from")))
     ] if isinstance(removed, dict) else []
+    # ORCH-795 follow-up (ORCH-792): Stage 6 records its protein removals in the payload's ``quarantined_proteins``
+    # (KI-007 actor drop, wrapper fold, orphan cleanup). Each is listed once; one removed_entity_report already lists
+    # (same name, same reason) is not repeated. Entities only: no coverage count moves.
+    listed = {(_text(e["name"]).casefold(), e["reason"]) for e in entities or []}
+    stage6: List[Dict[str, Any]] = []
+    seen = set()
+    for q in map(_dict, _list(payload.get("quarantined_proteins"))):
+        name, reason = _show(q.get("name")), _show(q.get("reason"))
+        key = (name.casefold(), reason, _text(q.get("process")), _text(q.get("action")))
+        if key in seen or key[:2] in listed:
+            continue
+        seen.add(key)
+        stage6.append({"name": name, "reason": reason, "ki": known_issue_id(q.get("reason")), "pass": _text(q.get("pass")),
+                       "process": _text(q.get("process")), "into": _text(q.get("functional_replacement"))})
     return {
+        "omitted_stage6_proteins": stage6,
         "coverage": {
             "pwml_written": not no_pwml, "no_pwml_cause": no_pwml, "drawn": drawn, "total": total, "not_recorded": why,
             "by_kind": by_kind, "by_design_withheld": by_design,
@@ -1103,6 +1135,7 @@ def build_report(
         "omitted": omissions["omitted"],
         "omitted_entities": omissions["omitted_entities"],
         "omitted_actors": omissions["omitted_actors"],
+        "omitted_stage6_proteins": omissions["omitted_stage6_proteins"],
     }
 
 
@@ -1264,6 +1297,13 @@ def omitted_lines(report: Mapping[str, Any]) -> List[str]:
         lines += [f"    removed from {a}" for a in e["actor_removed_from"]]
     if not entities:
         lines.append(NOT_RECORDED if entities is None else NONE_RECORDED)
+    stage6 = report.get("omitted_stage6_proteins") or []
+    if stage6:
+        lines.append(f"Proteins left out at Stage 6 ({len(stage6)}), from {FINAL_MAPPED_FILENAME} quarantined_proteins:")
+        for p in stage6:
+            extra = "".join(f"; {label} {p[key]}" for key, label in (("pass", "pass"), ("process", "removed from"),
+                                                                        ("into", "folded into")) if p[key])
+            lines.append(f"- proteins {p['name']}: {p['reason']} ({p['ki']}){extra}")
     return lines + [""]
 
 
