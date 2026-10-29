@@ -1,0 +1,86 @@
+{
+  "label": "g11-check",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/g11/g11_evidence.py",
+    "check",
+    "--task",
+    "ORCH-796"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch79int",
+  "started_at": "2026-10-29T17:51:59+00:00",
+  "finished_at": "2026-10-29T17:51:59+00:00",
+  "duration_seconds": 0.2966740999981994,
+  "timeout_seconds": 120.0,
+  "root_pid": 421140,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 415040,
+      "name": "python.exe",
+      "ppid": 421140
+    }
+  ],
+  "descendants_terminated": [
+    415040
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 414204,
+      "name": "python.exe"
+    },
+    {
+      "pid": 414312,
+      "name": "python.exe"
+    },
+    {
+      "pid": 421480,
+      "name": "python.exe"
+    },
+    {
+      "pid": 421720,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch79int\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-796\\06-g11-check.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch79int\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch79int",
+    "repo_head": "6799af43865bdc521c150f34b804983a3eff2967",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-796",
+    "token": "ORCH-796:421720:3def6d8c6ed583fd",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
