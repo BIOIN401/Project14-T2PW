@@ -1,0 +1,134 @@
+{
+  "label": "affected-tip-1",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch794/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch794",
+    "--pin-verdict",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch794/docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-780/07-affected-tip-1.pin.json",
+    "-q",
+    "--basetemp=C:/t/orch79x/bt/ORCH-780-07-affected-tip-1",
+    "tests/test_orch780_support_per_row.py",
+    "tests/test_orch759c_quarantine_bucket_closure.py",
+    "tests/test_orch766_unreferenced_species.py",
+    "tests/test_orch769b_actor_protein_registry.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_orch773_omit_per_row.py",
+    "tests/test_orch768_replay_corpus.py",
+    "tests/test_strict_failure_replay.py",
+    "tests/test_orch794b_spelling.py",
+    "tests/test_orch794_one_name_two_kinds.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_orch782_gene_protein_split.py",
+    "tests/test_orch788_state_without_location.py",
+    "tests/test_strict_quarantine_real_artifact_replay.py",
+    "tests/test_strict_quarantine_release_seam.py",
+    "tests/test_strict_quarantine_lineage.py",
+    "tests/test_orch772_pwml_coverage.py",
+    "tests/test_orch772b_no_pwml_cause.py",
+    "tests/test_reaction_evidence.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch794",
+  "started_at": "2026-10-29T22:23:05+00:00",
+  "finished_at": "2026-10-29T22:23:43+00:00",
+  "duration_seconds": 37.701295999999274,
+  "timeout_seconds": 1500.0,
+  "root_pid": 560160,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 560248,
+      "name": "python.exe",
+      "ppid": 560160
+    },
+    {
+      "pid": 561316,
+      "name": "python.exe",
+      "ppid": 560248
+    },
+    {
+      "pid": 561432,
+      "name": "python.exe",
+      "ppid": 561316
+    },
+    {
+      "pid": 558972,
+      "name": "python.exe",
+      "ppid": 561428
+    },
+    {
+      "pid": 561428,
+      "name": "python.exe",
+      "ppid": 560248
+    }
+  ],
+  "descendants_terminated": [
+    558972,
+    560248,
+    561316,
+    561428,
+    561432
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 551268,
+      "name": "python.exe"
+    },
+    {
+      "pid": 557432,
+      "name": "python.exe"
+    },
+    {
+      "pid": 558244,
+      "name": "python.exe"
+    },
+    {
+      "pid": 560192,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch794\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-780\\07-affected-tip-1.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch794\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch794",
+    "repo_head": "c512f7834e87f82afcab6b6aa51312476e93a805",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-780",
+    "token": "ORCH-780:560192:da9108c9ec499eff",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

@@ -1,0 +1,86 @@
+diff --git a/src/t2pw/pipeline/strict_quarantine.py b/src/t2pw/pipeline/strict_quarantine.py
+index a9cd5fdf..43406325 100644
+--- a/src/t2pw/pipeline/strict_quarantine.py
++++ b/src/t2pw/pipeline/strict_quarantine.py
+@@ -220,7 +220,8 @@ DEFAULT_MIN_CORE_COVERAGE = 0.5
+ #: bump invalidates every stored decision instead of letting a report produced by
+ #: the old rules authorize an export judged by the new ones.
+ #: 2026-10-25.1 (ORCH-773): per-row export failures are omitted, not refused.
+-QUARANTINE_POLICY_VERSION = "2026-10-25.1"
++#: 2026-10-26.1 (ORCH-780): each reaction without reaction-level support is omitted (D-116).
++QUARANTINE_POLICY_VERSION = "2026-10-26.1"
+ 
+ 
+ def _canonical_requested_core(
+@@ -2565,8 +2566,11 @@ def _degree_zero_exports(
+ # meets them, the final pre-export gate (freeze), the Stage-8 contract, the
+ # required-field gate and the IR -- on the graph this module is about to hand
+ # over, and maps every error that names ONE row back to that row. An error that
+-# names no row (pathway metadata, species, "no reaction has support", a
+-# validator exception) maps to nothing and still refuses exactly as before.
++# names no row (pathway metadata, species, a validator exception) maps to
++# nothing and still refuses exactly as before. Before all of them, each reaction
++# the support gate's own row predicate calls unsupported leaves (D-116 s1,
++# ``_unsupported_reactions``), so "no reaction has support" no longer refuses a
++# pathway that has anything else to draw.
+ #
+ # The unit is the process (rule 1 above): an entity a gate refuses leaves with
+ # every process that resolves a reference to it, and a complex that resolves a
+@@ -2790,6 +2794,38 @@ def _row_failures(
+     return [entity(bucket, rows[index], attached)]
+ 
+ 
++def _unsupported_reactions(
++    candidate: Mapping[str, Any], by_position: Mapping[str, Sequence[Mapping[str, Any]]]
++) -> List[Dict[str, Any]]:
++    """D-116 s1 (ORCH-780): every reaction the support gate's own row predicate calls unsupported.
++
++    The predicate is ``reaction_support.reaction_support_class(row) is None``, the very
++    test ``evaluate_reaction_support`` counts, read where the gate reads it, on the
++    freeze candidate; and, as there, only while ``lineage_carrier_active``: with no
++    carrier, support is unknown rather than absent and the gate abstains, so nothing
++    is omitted. Runs before the other checks whether or not some other reaction is
++    supported, so an unsupported row is always recorded under the gate's own code.
++    The gate is not touched and still refuses a payload in which no reaction is
++    supported (D-116 s2).
++    """
++
++    from t2pw.pipeline.reaction_support import (
++        CODE_NO_DEFENSIBLE_REACTION_SUPPORT,
++        lineage_carrier_active,
++        reaction_support_class,
++    )
++
++    if not lineage_carrier_active(candidate):
++        return []
++    rows = _safe_list(_safe_dict(candidate.get("processes")).get("reactions"))
++    return [
++        {"kind": "process", "record": record, "slot": "", "position": None, "name": "",
++         "reason": CODE_NO_DEFENSIBLE_REACTION_SUPPORT, "gate": _GATE_REQUIRED}
++        for record, row in zip(by_position.get("reactions") or [], rows)
++        if isinstance(row, Mapping) and reaction_support_class(row) is None
++    ]
++
++
+ def _per_row_failures(
+     working: Dict[str, Any],
+     admissions: Sequence[Mapping[str, Any]],
+@@ -2808,6 +2844,10 @@ def _per_row_failures(
+         return [], True
+     if _entity_type_overlaps(working):
+         return [], True
++    candidate, by_position = _freeze_candidate(working, admissions, originals)
++    unsupported = _unsupported_reactions(candidate, by_position)
++    if unsupported:
++        return unsupported, False
+     registry = _build_registry(working)
+     unexportable = _unexportable_entities(working, registry, strict_db=strict_db)
+     if unexportable:
+@@ -2822,7 +2862,6 @@ def _per_row_failures(
+                              "gate": _GATE_QUARANTINE, "attached": True}
+                         )
+         return failures, not failures
+-    candidate, by_position = _freeze_candidate(working, admissions, originals)
+     try:
+         for gate, errors, ir in _downstream_gate_errors(candidate, strict_db=strict_db):
+             if errors is None:

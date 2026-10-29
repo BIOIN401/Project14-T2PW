@@ -111,3 +111,41 @@ the rows meet the next defect (§ 8 item 2).
 ## 10. Proposed LEDGER row
 
 `| ORCH-794 | D-119 § 3 one name in two kinds | orch794/fix @ 483f4098 | built, tested, replayed; rule 5 waived (PO) | G9 26 red / 25 green; affected 967 passed (1 pre-existing); replay chl +3 of 4 (1 unmeasurable offline), wnt_ca +0 (now KI-001, § 9.2) | ORCH-794-RESULT.md |`
+
+## 11. ORCH-794b: regression on the live ORCH-796 chlorophyll leg, fixed
+
+Branch `orch794b/fix`, created at the lead's instruction from the merged tip `55fd55ed`. Code commit `a2762049`. Rule 5 waived
+(D-119 § 4).
+
+**Regression (verified, leg `orch796run/.../chlorophyll-strict/2026-10-29_1213/.../strict`, read-only).** No PWML was written:
+IR `unresolved_entity_reference`, "Process member 'tRNAGlu' was not found", at `/processes/reactions/18/inputs/1`
+(`pwml_ir_report.json`). `_keep_one_kind_per_name` removed compound `tRNA^Glu` and kept nucleic acid `tRNA^Glu`
+(`removed_entity_report.json`, `name_wording`). But a reaction input and a `nucleic_acid_locations` row still wrote `tRNAGlu`.
+This module's name key (`process_normalizer._normalize`) makes `tRNA^Glu` and `tRNAGlu` one name, so admission accepted the
+reaction. The exporter's key (`ir._norm`, `^` becomes a space) makes them two names. At `f3a80e09` both rows stayed, every such
+process was omitted per row, and the PWML was written. ORCH-794 turned 4 per-row omissions into a whole-pathway failure.
+**My § 4 replay missed it:** its reconstructed legs spell every reference exactly as the kept row.
+
+**Fix:**
+- After a decision, new `_spell_references_as` rewrites every process, location and complex-component reference with that
+  name key to the kept row's exact name. Free-text fields (evidence, relationship, states, …) are never touched.
+- Location rows that become identical collapse into one.
+- **The lead's rule 1** (a substrate, product or cargo keeps a kind the IR resolves in that role) already holds: the IR resolves
+  reaction members and transport cargo in every kind (`ir.py` `preferred_order["reaction_member"]`; transport elements use the
+  same role). So the wording decision stands, and no compound preference was added.
+- **The lead's rule 2:** every reference is rewritten to the kept name by construction, so no unresolved spelling is left for a
+  fallback to catch.
+
+| proof | result | G11 (`evidence/g11/ORCH-794/`) |
+|---|---|---|
+| G9 `tests/test_orch794b_spelling.py` (the leg's shape), base = `55fd55ed` content (fix stashed in this worktree) | **1 failed** on `['ir:unresolved_entity_reference'] == []`, preservation passes | `35-b-g9-base-1.json` |
+| same, tip | **2 passed** | `34-b-g9-tip-1.json` |
+| ORCH-794 set + strict-quarantine files (13 files) | **392 passed, 8 skipped** | `38-b-affected-1.json` |
+| leg tail replay (`evidence/orch794b_replay.py`, output `evidence/orch794b_replay.txt`). The input is the leg's payload plus exactly the rows the leg records as removed by this function | base: **no PWML**, `unresolved_entity_reference`, coverage 0/74. Tip: **PWML written** (`review_required`), 54/74 full count; `Glu-tRNAGlu formation` now reads `tRNA^Glu` | `36-b-replay-base-1.json`, `37-b-replay-tip-1.json` |
+
+**Not settled:** the two name keys still disagree everywhere else. A single row `tRNA^Glu` referenced as `tRNAGlu`, with no
+second kind involved, would pass admission and fail the IR in the same way. That case predates ORCH-794 and was not seen on a
+leg. Options:
+- (a) apply the same rewrite to every reference that resolves only under the looser key. Cost: it touches all legs and needs a
+  corpus run.
+- (b) leave it.

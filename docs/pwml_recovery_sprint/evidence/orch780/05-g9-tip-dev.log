@@ -1,0 +1,33 @@
+available RAM MB at job start: 2164 (floor 2048 MB; lead rulings 2026-10-26: >= 3072 per job, >= 2048 for a gate job under 2 min; was 6144)
+G11: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch780\docs\pwml_recovery_sprint\evidence\g11\ORCH-780\05-g9-tip-dev.json
+T2PW: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch780\src\t2pw\__init__.py
+......                                                                   [100%]
+6 passed in 1.57s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch780\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 01da301ee6464d03cbde0393164b33f9912784cc  [git, worktree dirty=False]
+label                   : g9-tip-dev
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch780/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --pin-verdict C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch780/docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-780/05-g9-tip-dev.pin.json -q --basetemp=C:/t/ORCH-780/bt/05-g9-tip-dev C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch780/tests/test_orch780_support_per_row.py
+cwd                     : C:/t/ORCH-780/cwd
+root PID / process group: 960496 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 3.11 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  961172:python.exe
+descendants terminated  : 1  961172
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch780\docs\pwml_recovery_sprint\evidence\g11\ORCH-780\05-g9-tip-dev.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH-780  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================
+exit: 0

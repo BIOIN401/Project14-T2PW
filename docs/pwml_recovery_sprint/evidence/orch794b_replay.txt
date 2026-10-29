@@ -1,0 +1,35 @@
+ORCH-794b tail replay (quarantine through IR) of ORCH-796 chlorophyll-strict, input rebuilt per the script docstring. Script: evidence/orch794b_replay.py. Base = 55fd55ed content (fix stashed), tip = orch794b/fix. G11: g11/ORCH-794/36-b-replay-base-1.json, 37-b-replay-tip-1.json.
+
+===== 36-b-replay-base-1
+t2pw resolved: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch794\src\t2pw
+offline probe: {'attempts': {'urlopen_uniprot': 'refused', 'create_connection_loopback': 'refused', 'raw_socket_connect': 'refused'}, 'counted': 3, 'ok': True}
+put back compounds 'tRNA^Glu' (same_name_declared_as_another_kind:nucleic_acids, decided_by name_wording)
+put back location compound_locations 'tRNAGlu' @ 'plastid state'
+checkpoint: "canonical"
+quarantine: {"ok": true, "refusal": [], "release": "review_required", "decision_input_hash_matches_leg": true, "admitted_hash_matches_leg": false, "counts": {"core_accepted": 25, "auxiliary_accepted": 31, "quarantined_unmapped_entity": 0, "quarantined_out_of_scope": 0, "quarantined_weak_evidence": 0, "quarantined_broken_reference": 0, "quarantined_disconnected": 0}}
+final_gate: {"ok": true, "codes": [], "errors": []}
+export: {"ok": false, "error": "PWML IR validation failed.", "quarantine_reused": true, "stage3_contract_codes": [], "required_gate_ok": true, "required_gate_codes": [], "ir_blocking": ["unresolved_entity_reference"], "ir_validation": []}
+pwml_written: false
+failure_stage: "pwml_export"
+network_refused: []
+coverage: {"drawn": 0, "total": 74, "by_design_withheld": 5, "pwml_written": false, "no_pwml_cause": "unresolved_entity_reference"}
+tRNA reactions in the canonical payload: [["reactions", "Glu-tRNA^Glu formation", ["tRNA^Glu", "Glu-tRNA^Glu"]], ["reactions", "GluTR reaction", ["Glu-tRNA^Glu"]], ["reactions", "Glu-tRNAGlu formation", ["tRNAGlu", "Glu-tRNAGlu"]], ["reactions", "Glu-tRNAGlu reduction to GSA", ["Glu-tRNAGlu"]]]
+nucleic acids named tRNA: ['tRNA^Glu']
+
+
+===== 37-b-replay-tip-1
+t2pw resolved: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch794\src\t2pw
+offline probe: {'attempts': {'urlopen_uniprot': 'refused', 'create_connection_loopback': 'refused', 'raw_socket_connect': 'refused'}, 'counted': 3, 'ok': True}
+put back compounds 'tRNA^Glu' (same_name_declared_as_another_kind:nucleic_acids, decided_by name_wording)
+put back location compound_locations 'tRNAGlu' @ 'plastid state'
+checkpoint: "canonical"
+quarantine: {"ok": true, "refusal": [], "release": "review_required", "decision_input_hash_matches_leg": true, "admitted_hash_matches_leg": false, "counts": {"core_accepted": 25, "auxiliary_accepted": 31, "quarantined_unmapped_entity": 0, "quarantined_out_of_scope": 0, "quarantined_weak_evidence": 0, "quarantined_broken_reference": 0, "quarantined_disconnected": 0}}
+final_gate: {"ok": true, "codes": [], "errors": []}
+export: {"ok": true, "error": "", "quarantine_reused": true, "stage3_contract_codes": [], "required_gate_ok": true, "required_gate_codes": [], "ir_blocking": [], "ir_validation": [], "release": "review_required", "pwml_name": "pathway.review_required.pwml"}
+pwml_written: true
+failure_stage: null
+network_refused: []
+coverage: {"drawn": 54, "total": 74, "by_design_withheld": 5, "pwml_written": true, "no_pwml_cause": ""}
+tRNA reactions in the canonical payload: [["reactions", "Glu-tRNA^Glu formation", ["tRNA^Glu", "Glu-tRNA^Glu"]], ["reactions", "GluTR reaction", ["Glu-tRNA^Glu"]], ["reactions", "Glu-tRNAGlu formation", ["tRNA^Glu", "Glu-tRNAGlu"]], ["reactions", "Glu-tRNAGlu reduction to GSA", ["Glu-tRNAGlu"]]]
+nucleic acids named tRNA: ['tRNA^Glu']
+

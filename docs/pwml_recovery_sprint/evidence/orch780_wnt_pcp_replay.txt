@@ -1,0 +1,27 @@
+ORCH-780 tail replay of ORCH-796 wnt_pcp-strict. Script: evidence/orch780_wnt_pcp_replay.py. Base C:/t/orch794/base @ 55fd55ed; tip orch794b/fix. G11: g11/ORCH-780/10-wntpcp-base-1.json, 11-wntpcp-tip-1.json.
+
+===== 10-wntpcp-base-1
+t2pw resolved: C:\t\orch794\base\src\t2pw
+offline probe: {'attempts': {'urlopen_uniprot': 'refused', 'create_connection_loopback': 'refused', 'raw_socket_connect': 'refused'}, 'counted': 3, 'ok': True}
+checkpoint: "canonical"
+quarantine: {"ok": true, "refusal": [], "release": "review_required", "decision_input_hash_matches_leg": true, "admitted_hash_matches_leg": false, "counts": {"core_accepted": 12, "auxiliary_accepted": 1, "quarantined_unmapped_entity": 0, "quarantined_out_of_scope": 0, "quarantined_weak_evidence": 0, "quarantined_broken_reference": 0, "quarantined_disconnected": 0}}
+export: {"ok": false, "error": "PWML required-field gate failed.", "quarantine_reused": true, "stage3_contract_codes": [], "required_gate_ok": false, "required_gate_codes": ["no_defensible_reaction_support"], "ir_blocking": [], "ir_validation": []}
+pwml_written: false
+failure_stage: "pwml_export"
+network_refused: []
+coverage: {"drawn": 0, "total": 44, "by_design_withheld": 22, "pwml_written": false, "no_pwml_cause": "no_defensible_reaction_support", "by_kind": {"reaction": {"drawn": 0, "total": 2, "omitted_before_freeze": 0}, "transport": {"drawn": 0, "total": 1, "omitted_before_freeze": 1}, "interaction": {"drawn": 0, "total": 41, "omitted_before_freeze": 30}}}
+omitted by the replayed quarantine: []
+
+
+===== 11-wntpcp-tip-1
+t2pw resolved: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch794\src\t2pw
+offline probe: {'attempts': {'urlopen_uniprot': 'refused', 'create_connection_loopback': 'refused', 'raw_socket_connect': 'refused'}, 'counted': 3, 'ok': True}
+checkpoint: "canonical"
+quarantine: {"ok": true, "refusal": [], "release": "review_required", "decision_input_hash_matches_leg": false, "admitted_hash_matches_leg": false, "counts": {"core_accepted": 10, "auxiliary_accepted": 1, "quarantined_unmapped_entity": 0, "quarantined_out_of_scope": 0, "quarantined_weak_evidence": 0, "quarantined_broken_reference": 2, "quarantined_disconnected": 0}}
+export: {"ok": true, "error": "", "quarantine_reused": true, "stage3_contract_codes": [], "required_gate_ok": true, "required_gate_codes": [], "ir_blocking": [], "ir_validation": [], "release": "review_required", "pwml_name": "pathway.review_required.pwml"}
+pwml_written: true
+failure_stage: null
+network_refused: []
+coverage: {"drawn": 5, "total": 44, "by_design_withheld": 22, "pwml_written": true, "no_pwml_cause": "", "by_kind": {"reaction": {"drawn": 0, "total": 2, "omitted_before_freeze": 2}, "transport": {"drawn": 0, "total": 1, "omitted_before_freeze": 1}, "interaction": {"drawn": 5, "total": 41, "omitted_before_freeze": 30}}}
+omitted by the replayed quarantine: [["Vangl2 causes dissociation of Dvl-Prickle-Intu complex", "no_defensible_reaction_support"], ["Cdc42 catalyzes GTP hydrolysis", "no_defensible_reaction_support"]]
+
