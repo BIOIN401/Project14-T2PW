@@ -215,3 +215,28 @@ needs the live run. Variant B changed both legs' replay records; the per-row det
 
 Add the focused selection `tests/test_orch780_support_per_row.py`. Its 1 G9 test and 5 preservation tests are expected to pass
 at the tip; none of them has run yet.
+
+## 11. Rebased onto `55fd55ed` (lead's instruction, 2026-10-29; ported by the ORCH-794 builder)
+
+**Merge rule 5 is waived for ORCH-780 (D-119 § 5, commit `8b7dbf10`): the PO's instruction "do not use an independent review".**
+
+- **Port.** The five lane commits `4a15ef42..6b5e33b1` were cherry-picked onto `orch794b/fix`, which was cut from `55fd55ed`
+  and already carries ORCH-794b. They are now `8a32f02d` (code), `ba8a517e`, `cd6a3cb5`, `000a81d2` and `c512f783` (pins).
+  The lane worktree was not touched: its uncommitted RESULT edits are not in this copy.
+- **One conflict**, in `tests/test_orch759c_quarantine_bucket_closure.py`. I kept this lane's `decision_input_hash`
+  `sha256:6db09994c3616bb6` (the policy-version bump) and the current tip's ORCH-782 and ORCH-794 counts and admissions pins.
+  `strict_quarantine.py` merged without a conflict: ORCH-794 touches the two-kind functions, ORCH-780 `_row_failures` and the
+  new `_unsupported_reactions`.
+- **`QUARANTINE_POLICY_VERSION` stays at `2026-10-26.1`.** It is distinct: `55fd55ed` is still at `2026-10-25.1`, and ORCH-794
+  did not bump it.
+
+| proof (task ORCH-780) | result | G11 (`evidence/g11/ORCH-780/`) |
+|---|---|---|
+| G9 `test_orch780_support_per_row.py`, base `C:/t/orch794/base` detached at `55fd55ed` (file copied in, then removed) | **1 failed**, `['required:no_defensible_reaction_support'] == []`; 5 preservation tests pass | `06-g9-base-1.json` |
+| tip: that file, the lane's pinned files (`test_orch759c`, `test_orch766`, `test_orch769b`, `test_strict_quarantine_versioning`), orch773, orch768, strict-failure replay, the ORCH-794/794b set, the strict-quarantine suites, orch772/772b, `test_reaction_evidence` (21 files) | **561 passed, 8 skipped** | `07-affected-tip-1.json` |
+| `test_streamlit_quarantine_boundary.py` (AppTest, alone) | **24 passed** | `12-apptest-boundary-1.json` |
+| corpus `run` at tip, then `compare` against `55fd55ed`'s `orch79int/.../evidence/orch796/corpus_tip.json` | **D-112 § 2: ACCEPT.** Pass rate 72/91 -> **79/91**. The 7 fixed legs are the KI-022 legs (PMC12180156 ×5, PMC13231680 ×2). No passing leg fails, no gold recall is lost | `08-corpus-tip-1.json`, `09-corpus-compare-1.json`; `evidence/orch780/corpus_tip_rebased.{json,txt}`, `corpus_compare_rebased.txt` |
+| ORCH-796 wnt_pcp leg tail replay (`evidence/orch780_wnt_pcp_replay.py`, output `evidence/orch780_wnt_pcp_replay.txt`) | base: **no PWML**, required-field gate `no_defensible_reaction_support`. Tip: **PWML written** (`review_required`). Both reactions are omitted as `no_defensible_reaction_support` (KI-022); 5 interactions drawn; headline 5/22 | `10-wntpcp-base-1.json`, `11-wntpcp-tip-1.json` |
+| `g11_evidence.py check --task ORCH-780` | exit 0, 12 artifacts, 0 non-compliant | `13-g11-check-r-1.json` |
+
+The 8th KI-022 leg that variant B fixed is still not fixed under A (as § 4 predicted: 7 of 8). The § 8 questions remain open.
