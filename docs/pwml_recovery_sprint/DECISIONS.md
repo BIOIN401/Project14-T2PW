@@ -7584,3 +7584,8 @@ ORCH-790 (§ 1), ORCH-793 (§ 2) and ORCH-794 (§ 3). The PO's standing instruct
    round. Every other merge rule holds (G9 proof, focused and affected tests, leg replay, corpus, SMOKE, G11). Each RESULT
    doc records the waiver. Lanes are combined into three builders: ORCH-790+791 (`orch790/fix`), ORCH-792+793
    (`orch792/fix`), ORCH-794+795 (`orch794/fix`).
+5. **ADDENDUM (2026-10-29): merge rule 5 also waived for ORCH-780 (D-116 § 1, KI-022 per row) and ORCH-794b** (the ORCH-794
+   live regression fix). This applies the PO's instruction "do not use an independent review", given to save usage and relayed by
+   the Lead. ORCH-796 found that wnt_pcp lost its PWML to the whole-pathway `no_defensible_reaction_support` refusal, because the
+   measured ORCH-780 lane (corpus 72/91 → 79/91, D-112 ACCEPT) had never been merged. ORCH-780 is rebased onto the merged tip,
+   re-proven (G9, affected tests, corpus) and merged together with ORCH-794b. Chlorophyll and wnt_pcp are then re-run under ORCH-796.
