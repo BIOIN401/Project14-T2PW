@@ -6686,7 +6686,6 @@ def verify_real_protein_identity(
     rivals: List[Tuple[float, str]] = []
     entity_norm = _normalize_name(entity_name)
     judged_names_primary_gene = bool(entity_norm) and entity_norm in _candidate_primary_gene_symbols(candidate)
-    outranked_by_gene_name: List[str] = []
     #: Rows set aside as further UniProt records of the protein the judged
     #: candidate already names -- same gene symbol, same organism. Recorded, not
     #: discarded: the reader of a verdict must be able to see which accessions
@@ -6716,21 +6715,21 @@ def verify_real_protein_identity(
             # _is_same_protein_record_duplicate for what "same record" requires.
             collapsed_duplicates.append(accession)
             continue
-        if judged_names_primary_gene:
-            # ORCH-793 (D-119 s2). The paper's name is UniProt's own PRIMARY gene name of the
-            # judged entry, in the pathway species. A rival that carries it only as a gene
-            # synonym or a name word (PIF1 -> CLF's synonym, "PIF1 helicase") does not contest
-            # it; a rival whose primary gene name it also is still does.
-            if entity_norm not in _candidate_primary_gene_symbols(other):
-                outranked_by_gene_name.append(accession)
-                continue
-            if _same_gene_record_in_species(candidate, other, organism):
-                collapsed_duplicates.append(accession)
-                continue
+        if (
+            judged_names_primary_gene
+            and entity_norm in _candidate_primary_gene_symbols(other)
+            and _same_gene_record_in_species(candidate, other, organism)
+        ):
+            # ORCH-793 (D-119 s2). The paper's name is the PRIMARY gene name of both, and they
+            # are curated strain records of that one gene in the pathway species (Fur).
+            # Deliberately NOT done: letting a primary gene name outrank another entry's
+            # synonym. It recovers PIF1 (vs CLF's synonym) but on wnt_ca hands NARF to
+            # Q9UHQ1 (nuclear prelamin A recognition factor) over RNF138, whose synonym NARF
+            # the paper means (ORCH-793-RESULT.md, dead ends).
+            collapsed_duplicates.append(accession)
+            continue
         rivals.append((_candidate_score(other, {}), accession))
 
-    if outranked_by_gene_name:
-        verdict["outranked_by_primary_gene_name"] = sorted(set(outranked_by_gene_name))[:8]
     if collapsed_duplicates:
         verdict["collapsed_duplicate_accessions"] = sorted(set(collapsed_duplicates))[:8]
 

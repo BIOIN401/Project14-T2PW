@@ -24,7 +24,7 @@ def _c(acc: str, name: str, genes: List[str], primary: List[str], organism: str,
 
 
 AT = "Arabidopsis thaliana"
-PIF1 = [
+PIF1 = [  # api-v9::pif1::tax:3702>3702
     _c("Q8GZM7", "Transcription factor PIF1", ["BHLH15", "EN101", "PIF1", "PIL5"], ["PIF1"], AT, True, 1.0, "3702"),
     _c("P93831", "Histone-lysine N-methyltransferase CLF", ["CLF", "ICU1", "PIF1", "PIF2", "SDG1", "SET1"], ["CLF"],
        AT, True, 1.0, "3702"),
@@ -51,11 +51,20 @@ def _verify(name: str, candidates: List[Dict[str, Any]], accession: str, organis
                                         organism=organism, source="api")
 
 
-def test_g9_pif1_the_primary_gene_name_is_not_contested_by_a_synonym() -> None:
-    """CLF lists PIF1 only as a gene synonym; Q8GZM7's own gene name is PIF1 (chl x3)."""
+NARF = [
+    _c("Q9UHQ1", "Nuclear prelamin A recognition factor", ["NARF"], ["NARF"], HS, True, 1.0, "9606"),
+    _c("Q8WVD3", "E3 ubiquitin-protein ligase RNF138", ["NARF", "RNF138"], ["RNF138"], HS, True, 1.0, "9606"),
+]
 
-    verdict = _verify("PIF1", PIF1, "Q8GZM7", AT)
-    assert verdict["verified"] is True, verdict["reason"]
+
+def test_preservation_a_primary_gene_name_does_not_outrank_another_entrys_synonym() -> None:
+    """Why PIF1 (chl x3) is NOT recovered: CLF lists PIF1 as a synonym, Q8GZM7 as its gene
+    name, and UniProt's gene fields cannot say which the paper means. "Primary beats synonym"
+    would pick Q8GZM7 here -- and on wnt_ca pick Q9UHQ1 (prelamin A recognition factor) for
+    NARF, which the paper means as RNF138 (NLK-associated RING finger). Both stay refused."""
+
+    assert _verify("PIF1", PIF1, "Q8GZM7", AT)["verified"] is False
+    assert _verify("NARF", NARF, "Q9UHQ1", HS)["verified"] is False
 
 
 def test_g9_fur_strain_records_of_one_gene_in_the_species_are_one_answer() -> None:
