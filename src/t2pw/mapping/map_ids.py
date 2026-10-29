@@ -4558,8 +4558,14 @@ def _uniprot_result_from_candidates(
     queries_tried: List[str],
     literature_aliases: List[Dict[str, str]],
     network_errors: Optional[List[str]] = None,
+    name: str = "",
 ) -> Dict[str, Any]:
-    """The tail of :func:`map_protein_uniprot`, unchanged: accept, else best effort, else ambiguous."""
+    """The tail of :func:`map_protein_uniprot`: accept, else best effort, else ambiguous.
+
+    ORCH-790 (D-119 § 1): a family or generic ``name`` never takes the best-effort
+    guess. "PKC" took Par-3 (Q8TEW0, score 0.39) that way, and a family has no single
+    protein to guess; the row stays unmapped and the family ladder builds its complex.
+    """
 
     candidates = sorted(candidates, key=lambda item: item.get("score", 0.0), reverse=True)
     if not candidates:
@@ -4583,7 +4589,7 @@ def _uniprot_result_from_candidates(
         return accepted
     best = candidates[0]
     best_accession = str(best.get("accession") or "").strip()
-    if best_accession:
+    if best_accession and not is_family_or_complex_term(name):
         return {
             "status": "mapped",
             "reason": "best_effort_fallback",
@@ -4600,7 +4606,8 @@ def _uniprot_result_from_candidates(
         }
     return {
         "status": "unmapped",
-        "reason": "ambiguous",
+        # Not "ambiguous": that sends the candidates to single-protein verification.
+        "reason": "family_name_has_no_single_protein" if best_accession else "ambiguous",
         "query": " | ".join(queries_tried),
         "confidence": best["score"],
         "candidates": candidates[:8],
@@ -4899,7 +4906,7 @@ def _map_protein_uniprot_in_scope(
             ]
             if exact:
                 accepted = _uniprot_result_from_candidates(
-                    exact, organism, queries_tried=list(queries_tried), literature_aliases=[]
+                    exact, organism, queries_tried=list(queries_tried), literature_aliases=[], name=name
                 )
                 if accepted.get("status") == "mapped" and not accepted.get("best_effort"):
                     accepted["queries_tried"] = list(queries_tried)
@@ -4924,6 +4931,7 @@ def _map_protein_uniprot_in_scope(
                     organism,
                     queries_tried=list(queries_tried),
                     literature_aliases=[e for e in _safe_list(result.get("literature_aliases")) if isinstance(e, dict)],
+                    name=name,
                 )
                 candidates = kept
         if candidates:
@@ -4994,6 +5002,7 @@ def _break_gene_synonym_collision(
         organism,
         queries_tried=[str(q) for q in _safe_list(result.get("queries_tried")) if str(q or "").strip()],
         literature_aliases=[e for e in _safe_list(result.get("literature_aliases")) if isinstance(e, dict)],
+        name=name,
     )
     out.setdefault("provider", str(result.get("provider") or "UniProt"))
     out.setdefault("source", str(result.get("source") or "api"))
@@ -5300,6 +5309,7 @@ def map_protein_uniprot(
         queries_tried=queries_tried,
         literature_aliases=literature_aliases_used,
         network_errors=network_errors,
+        name=name,
     )
 
 
@@ -8702,6 +8712,30 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
     # and the exporter withholds it as ``ambiguous_protein_endpoint``. Compared with
     # this stage's own normalization, which is looser than the exporter's, so it
     # refuses at least everything the exporter would call ambiguous.
+    #
+    # ORCH-791 (ORCH-789 C1): a gene and a protein sharing a bare symbol ("CHLH") are
+    # split by ORCH-782's ``_split_gene_protein_names`` in quarantine, after this stage.
+    # Read here unsplit, "HY5 activates CHLH (expression)" named a clash, so its
+    # identified regulator HY5 was left bare and withheld. The split's own decision is
+    # taken on a name-only copy, and the endpoints are judged as quarantine will see
+    # them: a gene-role target is the gene (not wrapped), the bare symbol left over is
+    # the protein's alone, and a row the split cannot decide is skipped as before. The
+    # split itself still runs, and records its omissions, in quarantine.
+    from t2pw.pipeline.strict_quarantine import _split_gene_protein_names
+
+    interactions = _safe_list(processes.get("interactions"))
+    split_view: Dict[str, Any] = {
+        "entities": {
+            bucket: [{"name": row.get("name")} for row in _safe_list(entities.get(bucket)) if isinstance(row, dict)]
+            for bucket in ("proteins", "nucleic_acids")
+        },
+        "processes": {"interactions": deepcopy(interactions)},
+    }
+    split_undecided = {index for _bucket, index in _split_gene_protein_names(split_view)}
+    split_genes = {_normalize_name(str(row.get("name") or "")) for row in _safe_list(entities.get("nucleic_acids"))
+                   if isinstance(row, dict)} - {
+        _normalize_name(str(row.get("name") or "")) for row in split_view["entities"]["nucleic_acids"]
+    }
     other_kind_names = {
         _normalize_name(str(alias))
         for bucket in ("compounds", "nucleic_acids", "element_collections")
@@ -8710,19 +8744,21 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
         for alias in [*(row.get(f) for f in ("name", "raw_name", "short_name", "common_name")),
                       *_safe_list(row.get("synonyms"))]
         if _normalize_name(str(alias or ""))
+        and not (bucket == "nucleic_acids" and alias == row.get("name") and _normalize_name(str(alias)) in split_genes)
     }
 
-    for iidx, interaction in enumerate(_safe_list(processes.get("interactions"))):
-        if not isinstance(interaction, dict) or not pwml_interaction_type(
+    for iidx, interaction in enumerate(interactions):
+        if not isinstance(interaction, dict) or iidx in split_undecided or not pwml_interaction_type(
             interaction_relationship_word(interaction)
         ):
             continue
         endpoints: List[Tuple[str, str, Dict[str, Any]]] = []
         shared_name = False
+        as_split = _safe_dict(split_view["processes"]["interactions"][iidx])
         # The exporter's own field precedence for each side.
         for fields in (("left", "entity_1", "source"), ("right", "entity_2", "target")):
             field = next((f for f in fields if interaction.get(f)), "")
-            written = _canonical_name(str(interaction.get(field) or "")) if field else ""
+            written = _canonical_name(str(as_split.get(field) or "")) if field else ""
             norm = _normalize_name(written)
             if not norm or norm in complexes_by_norm:
                 continue
@@ -10058,19 +10094,33 @@ def _apply_pathbank_unknown_complex_fallback(mapped: Dict[str, Any]) -> Dict[str
 # ORCH-783 (KI-001, family/complex subset). A paper naming a protein FAMILY
 # ("PKC", "Orai family proteins", "STIM1/2") has no single UniProt id, so the row
 # failed identity and every process naming it was omitted.
+def _family_key(name: str) -> str:
+    """ORCH-790 (D-119 § 1): letters and digits only, one plural ``s`` dropped.
+
+    ``"5-HT 3 receptors"`` and ``"5-HT3 receptor"`` share a key, as do ``"PIFs"`` and
+    ``"PIF"``; ``"PIF1"`` does not.
+    """
+
+    key = re.sub(r"[^a-z0-9]+", "", str(name or "").casefold())
+    return key[:-1] if key.endswith("s") and len(key) > 3 else key
+
+
 _FAMILY_TERMS = frozenset(
-    _normalize_name(term)
+    _family_key(term)
     for term in (
-        "PKC", "protein kinase C", "PLC", "phospholipase C", "G protein", "G proteins",
-        "heterotrimeric G protein", "calcineurin", "NFAT", "VGCC", "VGCCs",
-        "voltage-gated calcium channel", "voltage-gated calcium channels",
-        "P2X receptor", "P2X receptors", "5-HT3 receptor", "5-HT3 receptors",
+        "PKC", "protein kinase C", "PLC", "phospholipase C", "G protein",
+        "heterotrimeric G protein", "calcineurin", "NFAT", "VGCC",
+        "voltage-gated calcium channel", "P2X receptor", "5-HT3 receptor",
+        # D-119 § 1
+        "JNK", "ROCK", "GDI", "RhoGDI", "DELLA", "DELLA protein", "PIF", "Orai",
     )
 )
 _FAMILY_WORDS = re.compile(r"\b(family|subfamily|isoforms?|isozymes?|subunits|paralogs)\b")
 _FAMILY_QUERY_STRIP = re.compile(
     r"\b(family|subfamily|proteins?|members?|isoforms?|isozymes?|subunits?|paralogs?)\b", re.IGNORECASE
 )
+# UniProt files RhoGDI as "Rho GDI family"; bare "GDI family" also names the Rab GDIs.
+_FAMILY_QUERY_CORE = {_family_key("GDI"): "Rho GDI", _family_key("RhoGDI"): "Rho GDI"}
 _SLASH_MEMBER = re.compile(r"^([A-Za-z][A-Za-z0-9-]*?)(\d+[A-Za-z]?)$")
 _FAMILY_MEMBER_CAP = 3
 _FAMILY_UNIPROT_CACHE_SECTION = "family_complex_uniprot"
@@ -10111,7 +10161,9 @@ def is_family_or_complex_term(name: str) -> bool:
     2. it carries family wording: family, subfamily, isoform(s), isozyme(s),
        subunits, paralogs (``"Orai family proteins"``), or
     3. it is one of :data:`_FAMILY_TERMS`, the family names seen in the sprint
-       corpus (PKC, PLC, G protein, calcineurin, NFAT, VGCC, P2X / 5-HT3 receptor).
+       corpus (PKC, PLC, G protein, calcineurin, NFAT, VGCC, P2X / 5-HT3 receptor;
+       D-119 adds JNK, ROCK, GDI/RhoGDI, DELLA, PIFs, Orai), matched on
+       :func:`_family_key` so spacing, hyphens and a plural do not matter.
 
     UniProt is NOT asked to confirm a family: ``family:"Cdc42"`` matches the CDC42
     subfamily and would turn a single protein into a family.
@@ -10119,7 +10171,7 @@ def is_family_or_complex_term(name: str) -> bool:
 
     norm = _normalize_name(str(name or ""))
     return bool(norm) and (
-        norm in _FAMILY_TERMS or bool(_FAMILY_WORDS.search(norm)) or bool(_paper_named_members(name))
+        _family_key(name) in _FAMILY_TERMS or bool(_FAMILY_WORDS.search(norm)) or bool(_paper_named_members(name))
     )
 
 
@@ -10133,13 +10185,15 @@ def _uniprot_reviewed_hits(
     """
 
     full = f"{query} AND organism_id:{taxonomy_id} AND reviewed:true"
-    hit = cache.get(_FAMILY_UNIPROT_CACHE_SECTION, full) if cache is not None else None
+    fields = "accession,gene_primary,organism_id,protein_families"
+    cache_key = f"{full} | fields:{fields}"  # ORCH-790: hits now carry their family text
+    hit = cache.get(_FAMILY_UNIPROT_CACHE_SECTION, cache_key) if cache is not None else None
     if hit is not None:
         return [dict(row) for row in _safe_list(hit.get("hits")) if isinstance(row, dict)]
     try:
         resp = client.get(
             _UNIPROT_SEARCH_URL,
-            params={"query": full, "fields": "accession,gene_primary,organism_id", "format": "tsv", "size": 25},
+            params={"query": full, "fields": fields, "format": "tsv", "size": 25},
         )
         if resp.status_code != 200:
             return []
@@ -10150,9 +10204,10 @@ def _uniprot_reviewed_hits(
     for line in lines[1:]:
         cols = [col.strip() for col in line.split("\t")]
         if len(cols) >= 3 and cols[0]:
-            hits.append({"accession": cols[0], "gene": cols[1], "taxonomy_id": cols[2]})
+            hits.append({"accession": cols[0], "gene": cols[1], "taxonomy_id": cols[2],
+                         "families": cols[3] if len(cols) > 3 else ""})
     if cache is not None:
-        cache.set(_FAMILY_UNIPROT_CACHE_SECTION, full, {"hits": hits})
+        cache.set(_FAMILY_UNIPROT_CACHE_SECTION, cache_key, {"hits": hits})
     return hits
 
 
@@ -10214,6 +10269,18 @@ def _apply_family_complexes(
 
     def _real(row: Any) -> bool:
         return has_protein_external_identity(row) and not is_pathbank_unknown_protein(row)
+
+    def _matched_outright(row: Dict[str, Any]) -> bool:
+        # ORCH-790 (ORCH-789 C3/D3): a family name keeps a single-protein accession only
+        # when this pass MATCHED it. The gap resolver wrote Par-3 (Q8TEW0) onto "PKC" as a
+        # best_effort_fallback guess, and that accession used to stop the conversion.
+        meta = _safe_dict(row.get("mapping_meta"))
+        rule = str(meta.get("chosen_rule") or meta.get("reason") or "")
+        return not (
+            meta.get("best_effort") or row.get("best_effort")
+            or rule == "best_effort_fallback" or rule.startswith("stage3_")
+            or _safe_dict(meta.get("resolution")).get("status") != "matched"
+        )
 
     def _uniprot(row: Dict[str, Any]) -> str:
         return str(row.get("uniprot_id") or _safe_dict(row.get("mapped_ids")).get("uniprot") or "").strip()
@@ -10282,18 +10349,29 @@ def _apply_family_complexes(
             return [], ""
         core = _FAMILY_QUERY_STRIP.sub(" ", name.replace('"', " "))
         core = re.sub(r"\b(receptor|channel|kinase)s\b", r"\1", core, flags=re.IGNORECASE)
+        core = re.sub(r"\b([A-Z][A-Za-z0-9]*[A-Z0-9])s\b", r"\1", core)  # "PIFs" -> "PIF"
         core = re.sub(r"\s+", " ", core).strip(" -,")
+        core = _FAMILY_QUERY_CORE.get(_family_key(core), core)
         if not core:
             return [], ""
-        for query in (f'family:"{core} family"', f'family:"{core} subfamily"'):
+        for label in ("family", "subfamily"):
+            query = f'family:"{core} {label}"'
+            # ORCH-790 (D-119 § 1, ORCH-789 D1): UniProt matches the phrase anywhere in
+            # the family text, so "G protein" -> family:"G family" returned EIF3G
+            # ("eIF-3 subunit G family"). A hit counts only when one of its family
+            # levels IS the queried family, exactly.
+            wanted = _normalize_name(f"{core} {label}")
             hits = [h for h in _uniprot_reviewed_hits(client, cache, query, taxonomy_id)
-                    if h["taxonomy_id"] == taxonomy_id and h["gene"]]
+                    if h["taxonomy_id"] == taxonomy_id and h["gene"]
+                    and wanted in {_normalize_name(level) for level in str(h.get("families") or "").split(",")}]
             if not hits:
                 continue
-            # ponytail: majority 3-letter gene prefix stands in for "exact family";
-            # use UniProt's family text per hit if a family ever mixes prefixes.
-            top = Counter(h["gene"][:3].upper() for h in hits).most_common(1)[0][0]
-            kept = sorted((h for h in hits if h["gene"][:3].upper() == top), key=lambda h: h["gene"])
+            # ponytail: majority 3-letter gene prefix stands in for "exact family"
+            # (drops PKN1-3, which UniProt files under the PKC subfamily too).
+            # Ties and order are broken by name, so the same answer gives the same members.
+            prefixes = Counter(h["gene"][:3].upper() for h in hits)
+            top = min(prefixes, key=lambda prefix: (-prefixes[prefix], prefix))
+            kept = sorted((h for h in hits if h["gene"][:3].upper() == top), key=lambda h: (h["gene"], h["accession"]))
             members = [{"name": h["gene"], "accession": h["accession"]} for h in kept[:_FAMILY_MEMBER_CAP]]
             return members, f"UniProt family search {query}, first {len(members)} of {len(kept)} reviewed same-taxon hits"
         return [], ""
@@ -10306,7 +10384,7 @@ def _apply_family_complexes(
         norm = _normalize_name(name)
         if (
             not is_family_or_complex_term(name)
-            or _real(row)
+            or (_real(row) and _matched_outright(row))
             or is_pathbank_unknown_protein(row)
             or norm in complex_norms
             or norm in component_norms
@@ -10322,7 +10400,9 @@ def _apply_family_complexes(
             source = f"members from {source}, not the paper" if members else ""
 
         complex_row: Dict[str, Any] = {"name": name}
-        for key in ("provenance", "provenance_lineage", "evidence", "source_refs", "species_ref"):
+        # ``synonyms`` (ORCH-790, ORCH-789 C8-i): a process naming the family by its
+        # synonym ("NF-ATp" for NFAT) must still find the complex.
+        for key in ("provenance", "provenance_lineage", "evidence", "source_refs", "species_ref", "synonyms"):
             if key in row:
                 complex_row[key] = deepcopy(row[key])
         components = []
@@ -10379,7 +10459,7 @@ def _apply_family_complexes(
         del proteins[idx]
         complexes.append(complex_row)
         complex_norms.add(norm)
-        for bucket, field in (("reactions", "enzymes"), ("transports", "transporters")):
+        for bucket, field in (("reactions", "enzymes"), ("reactions", "modifiers"), ("transports", "transporters")):
             for process in _safe_list(processes.get(bucket)):
                 for actor in _safe_list(_safe_dict(process).get(field)):
                     if (
@@ -11764,7 +11844,20 @@ def map_payload(
     # ORCH-759e repair 1: each reaction's actors as this first rewrite saw them, for the
     # late pass below to judge F-116 against (never written to the payload or the report).
     _pre_rewrite_actors: Dict[int, Any] = {}
+    family_report: Dict[str, Any] = {}
     if allow_complex_wrapper_creation:
+        # ORCH-783 family conversion, moved here by ORCH-791 (ORCH-789 C1 + C3/PKC): it is
+        # an identity step, so it runs before anything that wraps or drops on identity.
+        # Run after the rewrite (its old place), it came too late twice: the rewrite had
+        # already dropped the id-less "PKC" modifier as redundant (KI-007; wnt_ca's 5 PKC
+        # rows then named an undeclared entity) and had judged "Fzd2 activates G protein"
+        # against a bare, identity-less "G protein", leaving the identified Fzd2 bare.
+        family_report = _apply_family_complexes(
+            mapped,
+            client=client if source_mode != "db" else None,
+            cache=cache,
+            db=db if db is not None and db.available() else None,
+        )
         enzyme_complex_report = _rewrite_reaction_protein_enzymes_to_complexes(
             mapped,
             db=db,
@@ -12326,14 +12419,9 @@ def map_payload(
         )
 
     if allow_complex_wrapper_creation:
-        # ORCH-783: family-named proteins become complexes first, so the Unknown
-        # fallbacks below only see the families no member source could fill.
-        family_report = _apply_family_complexes(
-            mapped,
-            client=client if source_mode != "db" else None,
-            cache=cache,
-            db=db if db is not None and db.available() else None,
-        )
+        # ORCH-783: family-named proteins became complexes before the first rewrite
+        # (ORCH-791), so the Unknown fallbacks below only see the families no member
+        # source could fill. Their report entries keep their old place in the report.
         # Counters only when nonzero: a payload with no family maps byte-identically.
         enzyme_complex_report.setdefault("summary", {}).update(
             {k: v for k, v in _safe_dict(family_report.get("summary")).items() if v}
