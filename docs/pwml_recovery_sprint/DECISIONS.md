@@ -7557,3 +7557,26 @@ Relayed by the Lead Orchestrator and recorded by the sub-orchestrator.
    omitted, and the text record lists them with a KI id (D-114 § 2, D-116). A group proven to be one entity (same database identity,
    no conflicting identifier) still merges as ORCH-787 built it. The `test_c050g` pin moves deliberately, with its exact delta
    recorded in `ORCH-787-RESULT.md`. Implemented in ORCH-787.
+
+---
+
+## D-119 — family detection widened and normalised; alias identity from UniProt's own gene names; one name in two kinds keeps the paper's kind · 2026-10-28 · LOCKED
+
+**Decided by the product owner** (2026-10-28, in session, approving the Lead Orchestrator's recommendations on
+`ORCH-789-RESULT.md` § 8). Relayed by the Lead Orchestrator and recorded by the sub-orchestrator. Implemented by
+ORCH-790 (§ 1), ORCH-793 (§ 2) and ORCH-794 (§ 3). The PO's standing instruction for this round: the deterministic code
+(lookups, ordering, quarantine bookkeeping, metrics) is finished completely; LLM extraction quality is a later phase.
+
+1. **Family term list extended, detection normalised (extends D-117 § 2).** JNK, ROCK, GDI (RhoGDI), DELLA, PIFs and bare
+   "Orai" are family terms, and detection is robust to spacing and hyphen variants ("5-HT 3 receptors" = "5-HT3 receptor")
+   and to plurals. Every D-117 § 2 rule still applies unchanged: the member ladder in order, **at most 3 members**,
+   **every member's species matches the pathway species**, and the Unknown-backed fallback (D-070) when no source yields
+   members. A generic or family name must never resolve, by fuzzy or partial match, to an unrelated single protein
+   (ORCH-789 D1: "G protein" → EIF3G).
+2. **Alias identity (amends the identity verifier, not D-106).** The correct UniProt entry is accepted when the paper's
+   name is a documented gene name or gene synonym **of that entry** in UniProt's own record, and the entry's species
+   matches the pathway species (PIF1, TAK1 = MAP3K7, c-Jun = JUN, Fur, Kir2.1 = KCNJ2). A real UniProt or DrugBank id is
+   still **required**; this adds no fuzzy matching and does not relax D-106.
+3. **One name declared as two kinds** (tRNA as both compound and nucleic acid; InsP3R as both compound and protein): keep
+   the kind the paper's wording supports. When the wording does not decide it, only the affected rows are omitted
+   (per-row omission, D-114 § 2), each recorded with a KI id in the text record. Never the whole pathway.
