@@ -11215,3 +11215,5 @@ The id ORCH-760 was chosen so that 755-759 stay free for the live ORCH-754 sessi
 **Integration `dd099ac7`:** `g11/ORCH-785/01` focused + affected: 292 passed, 3 failed. All 3 are pre-existing on base (c075 corpus; compound_resolution_extraction golden x2). `02` SMOKE: **511 passed**, 0 survivors.
 
 **ORCH-785 · 2026-10-28 — LAUNCHED** on `dd099ac7`+docs from pinned worktree `orch785run`: only chlorophyll, wnt_ca and sour_taste_v2, strict. Summary will land at `runs_papers/ORCH-785/MORNING_SUMMARY.md`.
+
+**ORCH-785 · 2026-10-28 21:45 — DONE** (code `9a4dc617`, G11 `evidence/g11/ORCH-785/03-05`, 0 survivors): **3/3 PWMLs**, no whole-pathway refusal. Coverage: chlorophyll 52% (was 29% in ORCH-781; KI-011 down from 41 to 7), sour taste 60%, Wnt/Ca2+ 26% (KI-001 down from 24 to 7; KI-015 17 not triaged). Record `ORCH-785-RESULT.md`; summary `runs_papers/ORCH-785/MORNING_SUMMARY.md`.
