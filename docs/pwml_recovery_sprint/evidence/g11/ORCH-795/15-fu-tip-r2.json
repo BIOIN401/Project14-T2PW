@@ -1,0 +1,117 @@
+{
+  "label": "fu-tip-r2",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch794/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch794",
+    "--pin-verdict",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch794/docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-795/15-fu-tip-r2.pin.json",
+    "-q",
+    "--basetemp=C:/t/orch79x/bt/ORCH-795-15-fu-tip-r2",
+    "tests/test_orch795_headline_unsigned.py",
+    "tests/test_reaction_evidence.py",
+    "tests/test_orch772_pwml_coverage.py",
+    "tests/test_orch772b_no_pwml_cause.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch794",
+  "started_at": "2026-10-29T17:45:09+00:00",
+  "finished_at": "2026-10-29T17:45:14+00:00",
+  "duration_seconds": 5.162992300000042,
+  "timeout_seconds": 900.0,
+  "root_pid": 417564,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 417376,
+      "name": "python.exe",
+      "ppid": 417564
+    },
+    {
+      "pid": 414152,
+      "name": "python.exe",
+      "ppid": 414684
+    },
+    {
+      "pid": 414684,
+      "name": "python.exe",
+      "ppid": 417376
+    },
+    {
+      "pid": 349372,
+      "name": "python.exe",
+      "ppid": 416844
+    },
+    {
+      "pid": 416844,
+      "name": "python.exe",
+      "ppid": 417376
+    }
+  ],
+  "descendants_terminated": [
+    349372,
+    414152,
+    414684,
+    416844,
+    417376
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 407500,
+      "name": "python.exe"
+    },
+    {
+      "pid": 407504,
+      "name": "python.exe"
+    },
+    {
+      "pid": 414204,
+      "name": "python.exe"
+    },
+    {
+      "pid": 414312,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch794\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-795\\15-fu-tip-r2.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch794\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch794",
+    "repo_head": "4cb4854667ce0f27f1ee2f10b62ee8b12003f25c",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-795",
+    "token": "ORCH-795:407504:859ecdf02e0f1544",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

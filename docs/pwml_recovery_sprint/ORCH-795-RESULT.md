@@ -76,6 +76,38 @@ headline moves with this change. `test_orch768_replay_corpus.py` and the corpus 
   3. **Legs with no PWML now exclude unsigned rows from their headline denominator too.** They score 0% either way (D-114 AMENDMENT
      2 § 2). Only the denominator printed changes.
 
+## 6a. Follow-up (lead request after ORCH-792): Stage-6 protein removals reach the text record
+
+Code commit `5423d610`. **Cause:** `reaction_evidence.py` never read the payload's `quarantined_proteins`. Stage 6 records its
+protein removals there: ORCH-792's KI-007 actor drop and wrapper fold, `drop_process_orphan_proteins`, the degree-0 pass and the
+structural cleanup. None of them reached `reaction_evidence.txt`.
+
+| file | change |
+|---|---|
+| `src/t2pw/app/reaction_evidence.py` `_omissions`, `omitted_lines` | every record is listed under "Proteins left out at Stage 6 (N), from final_mapped.json quarantined_proteins", with name, reason, KI id, pass, the process (`removed from`) and wrapper (`folded into`). A repeated record is listed once. A record that `removed_entity_report` already lists (same name, same reason) is skipped. The block is printed only when there is a record. Entity-only: no coverage count moves |
+| appendix + `KNOWN_ISSUES` | `reaction_enzyme_protein_dropped_no_external_id` -> KI-007. These now render, so they also get rows: `not_referenced_by_any_surviving_process` -> KI-013, `degree_zero_after_normalization` -> KI-013, `unresolved_complex_component_no_longer_referenced` -> KI-015 |
+| `PWML_KNOWN_ISSUES.md` KI-051 | entry widened to D-119 § 3 (symptom, codes, cause, legs, status, workaround, plan); the `KNOWN_ISSUES` workaround copy follows |
+
+`family_name_has_no_single_protein` (ORCH-790) gets **no row**: it is a mapping-log `reason` (`map_ids` lookup result), and
+`reaction_evidence.py` reads no mapping log, so it never reaches the text record.
+
+| proof | result | G11 (`evidence/g11/ORCH-795/`) |
+|---|---|---|
+| G9 `test_g9_stage6_protein_removals_reach_the_text_record`, base | red (the file: 2 failed, 1 passed) | `16-fu-g9-base.json` |
+| that file + `test_reaction_evidence.py`, `test_orch772_pwml_coverage.py`, `test_orch772b_no_pwml_cause.py`, tip `5423d610` | **65 passed** | `17-fu-tip-final.json` |
+
+**Pins moved:**
+- appendix 86 -> 90 codes;
+- `docs/reaction_evidence_sample.txt` +2 lines (the leg's `Fur`, `not_referenced_by_any_surviving_process`, KI-013), re-rendered in `14-regen-sample-fu.json`;
+- trimmed bundles `enterobactin_strict` (+`Fur`) and `enterobactin_refused_strict` (+`EntD`) now carry their leg's `quarantined_proteins` records (rendered keys only, `C:/t/orch794/trim_qp.py`, `13-trim-qp.json`), so test 13 still proves trim == leg.
+
+**Dead ends:**
+- `09-add-rows`: the appendix anchor did not match, so only the Python rows were written. The appendix rows went in at `10-`.
+- `11-fu-tip-r1`: 3 failures. One was my test counting a name the removed-entities section also prints. The other two were the bundle and sample pins above.
+
+**Not settled:** closure's own removal reasons `unreferenced_after_quarantine` and `degree_zero_after_quarantine` still print
+"(unclassified)" in "Entities left out" (pre-existing; seen in the sample). Options: (a) rows -> KI-015; (b) leave. Cost of (a): 2 rows and 2 pin moves.
+
 ## 7. Proposed LEDGER row
 
 `| ORCH-795 | D-114 AM2 § 1 headline excludes every unsigned interaction; F-2 catalogue row | orch794/fix @ 483f4098 | built, tested; rule 5 waived (PO) | G9 05 red / 04 green; six legs: chl 52.4->63.2%, wnt_ca 25.6->32.3%, entero 66.7->80.0%, mena 88.0->91.7%, wnt_pcp 7.8->21.7%, sour 60.0% | ORCH-795-RESULT.md |`
