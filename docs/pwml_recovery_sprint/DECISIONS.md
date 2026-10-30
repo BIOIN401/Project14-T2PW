@@ -7589,3 +7589,39 @@ ORCH-790 (§ 1), ORCH-793 (§ 2) and ORCH-794 (§ 3). The PO's standing instruct
    the Lead. ORCH-796 found that wnt_pcp lost its PWML to the whole-pathway `no_defensible_reaction_support` refusal, because the
    measured ORCH-780 lane (corpus 72/91 → 79/91, D-112 ACCEPT) had never been merged. ORCH-780 is rebased onto the merged tip,
    re-proven (G9, affected tests, corpus) and merged together with ORCH-794b. Chlorophyll and wnt_pcp are then re-run under ORCH-796.
+
+---
+
+## D-120 — names equal up to format are one entity; alias identity widened to UniProt protein names; more family terms, detected generically; tRNAs are nucleic acids · 2026-10-30 · LOCKED
+
+**Decided by the Lead Orchestrator under the product owner's delegation** (2026-10-30, relayed to the sub-orchestrator). The PO:
+*"Make the decisions that work the best. They don't have to be the ones that improve it the most, but the ones that are most
+sensible; e.g. if the names differ by punctuation it's probably the same name and should be normalized. Have those small problems
+fixed with agents, then run like 5 new papers to confirm it's all working."* This settles `ORCH-796-RESULT.md` § 4 items 1-4,
+`ORCH-793-RESULT.md` § 7, `ORCH-794-RESULT.md` § 9.1-9.2 and § 11 "Not settled", and ORCH-789 § 8 Q3. Recorded by the
+sub-orchestrator. Implemented by ORCH-797a (§§ 1, 4) and ORCH-797b (§§ 2, 3).
+
+1. **Punctuation and format normalisation.** Names that differ only in case, whitespace, punctuation, hyphens, carets or
+   superscript marks, or a Greek letter versus its spelled form (`tRNAGlu` = `tRNA^Glu` = `tRNA-Glu`; "5-HT 3" = "5-HT3";
+   α = alpha) are ONE entity. They are normalised in one shared name-key function that every reference-resolving caller uses
+   (quarantine, admission, pre-freeze, IR), so no two stages key a name differently. Digits stay identity-bearing (MK-4 ≠ MK-7).
+   An unresolved reference never costs the whole pathway: it becomes a per-row omission with a KI id (D-114 § 2).
+2. **Alias identity (extends D-119 § 2).** A UniProt entry is accepted when the paper's name appears in that entry's gene names,
+   gene synonyms, or recommended or alternative protein names (TAK1 → MAP3K7, c-Jun → JUN, Kir2.1 → KCNJ2, PIF1 → the
+   Arabidopsis PIF1 entry, NARF), and only when the entry's species matches the pathway species. Reviewed entries take
+   precedence. If more than one entry still matches, an exact match on the primary gene name or recommended protein name wins.
+   If it is still ambiguous, the row is omitted with a KI id. A real UniProt or DrugBank id is still required (D-106); no fuzzy
+   matching is added.
+3. **More family terms (extends D-117 § 2 and D-119 § 1).** InsP3R/IP3R (ITPR1-3), SERCA (ATP2A1-3), calmodulin (CALM1-3),
+   Dvl/Dishevelled (DVL1-3), and the others `ORCH-796-RESULT.md` § 2a lists, under D-117's rules unchanged: at most 3 members,
+   same species, sorted deterministically, the Unknown-backed fallback. Detection is made generic where it is safe (a plural or
+   "family" / "isoforms" / "receptor(s)" pattern backed by the UniProt family search) rather than hand-listed. The precision
+   guard stays: a generic or family name never resolves to an unrelated single protein ("G protein" → EIF3G).
+4. **tRNA kind.** A tRNA, charged or not, is a nucleic acid (RNA in PathWhiz). Every reference to it resolves to the
+   nucleic-acid row. This settles ORCH-794 Q1 as option (a).
+5. **Merge rule 5 waived for ORCH-797a and ORCH-797b** (PO instruction, as D-119 §§ 4-5, to save usage): no independent
+   reviewer round. Every other merge rule holds (G9 proof, focused and affected tests, ORCH-796 leg replays, corpus D-112,
+   SMOKE, G11). Each RESULT doc records the waiver.
+6. **Then ORCH-798:** five papers never run before (bacterial metabolic, plant, human signalling, human metabolic, one other
+   organism), strict, 3 draws, at the merged tip. Scored only as text-record processes vs drawn PWML processes (D-114 AMENDMENT 2
+   headline and full count) plus every omission with its KI id; no gold scoring.
