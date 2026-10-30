@@ -51,6 +51,7 @@ import re
 from copy import deepcopy
 from typing import Any, Callable, Dict, Iterator, List, Optional, Sequence, Tuple
 
+from t2pw.pipeline.name_keys import reference_key
 from t2pw.pwml.compound_resolution import (
     DB_RESOLUTION_DISABLED_REASON,
     NO_DB_RESOLVER,
@@ -127,8 +128,7 @@ def _canonical(value: Any) -> str:
 
 
 def _norm(value: Any) -> str:
-    text = _canonical(value).casefold()
-    return re.sub(r"[^a-z0-9:+ ]+", " ", text).strip()
+    return reference_key(value)  # byte-identical to ``ir._norm`` (D-120 § 1, ORCH-797a)
 
 
 def _safe_dict(value: Any) -> Dict[str, Any]:

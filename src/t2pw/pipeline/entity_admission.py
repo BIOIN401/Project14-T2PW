@@ -64,6 +64,7 @@ import re
 from typing import Any, Dict, Iterator, List, Optional, Tuple
 
 from t2pw.mapping import identity_admission
+from t2pw.pipeline.name_keys import reference_key
 from t2pw.pipeline.cofactor_policy import (
     ASSAY_REPORTER,
     COFACTOR_OR_CURRENCY,
@@ -164,8 +165,8 @@ _TYPOGRAPHIC = str.maketrans({
 
 
 def _norm(value: Any) -> str:
-    """Fold a name to a comparison key -- the same fold C-018 uses."""
-    return _STRIP_RE.sub("", str(value or "").casefold())
+    """Fold a name to a comparison key: the one reference key (D-120 § 1, ORCH-797a)."""
+    return reference_key(value)
 
 
 def _squash(value: Any) -> str:
@@ -284,7 +285,7 @@ def _core(row: Any) -> frozenset:
         value = row.get(key)
         for item in value if isinstance(value, list) else []:
             key_norm = _norm(item if isinstance(item, str) else (item or {}).get("name"))
-            if key_norm and key_norm not in _CURRENCY_KEYS:
+            if key_norm and _STRIP_RE.sub("", key_norm) not in _CURRENCY_KEYS:  # VOCABULARY's own fold
                 names.add(key_norm)
     return frozenset(names)
 

@@ -5,6 +5,7 @@ import re
 from collections import defaultdict
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
 
+from t2pw.pipeline.name_keys import reference_key
 from t2pw.pipeline.entity_identity import (
     component_stoichiometry,
     is_generated_complex_wrapper as _is_generated_complex_row,
@@ -309,8 +310,8 @@ def _canonical(value: Any) -> str:
 
 
 def _norm(value: Any) -> str:
-    text = _canonical(value).casefold()
-    return re.sub(r"[^a-z0-9:+ ]+", " ", text).strip()
+    # D-120 § 1 (ORCH-797a): the reference key the quarantine and admission use, so what they admit resolves here.
+    return reference_key(value)
 
 
 def _to_int(value: Any) -> Optional[int]:

@@ -63,6 +63,7 @@ from __future__ import annotations
 import re
 from typing import Any, Dict, Iterable, List, Optional, Sequence
 
+from t2pw.pipeline.name_keys import reference_key
 from t2pw.pwml.db_resolver import (
     PathWhizCompoundResolver,
     _mapped_ids_from_row,
@@ -94,8 +95,7 @@ def _canonical(value: Any) -> str:
 
 
 def _norm(value: Any) -> str:
-    text = _canonical(value).casefold()
-    return re.sub(r"[^a-z0-9:+ ]+", " ", text).strip()
+    return reference_key(value)  # byte-identical to ``ir._norm`` (D-120 § 1, ORCH-797a)
 
 
 def _to_int(value: Any) -> Optional[int]:
@@ -488,7 +488,8 @@ def _db_match_rule_decision(row: Dict[str, Any], match: Dict[str, Any]) -> Dict[
         return decision
 
     if rule in EXACT_NAME_MATCH_RULES:
-        normalized_length = len(_norm(queried_name))
+        # A length gate, not a reference key: measured on the pre-D-120 fold so no name changes side (ORCH-797a).
+        normalized_length = len(re.sub(r"[^a-z0-9:+ ]+", " ", _canonical(queried_name).casefold()).strip())
         decision["normalized_length"] = normalized_length
         if normalized_length > SHORT_ABBREVIATION_MAX_CHARS:
             decision["admitted"] = True

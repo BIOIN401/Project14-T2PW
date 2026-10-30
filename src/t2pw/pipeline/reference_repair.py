@@ -86,6 +86,8 @@ import re
 from dataclasses import dataclass, field
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
 
+from t2pw.pipeline.name_keys import reference_key
+
 __all__ = [
     "REFERENCE_FIELDS",
     "ReferenceRepairError",
@@ -107,8 +109,7 @@ def _canonical(value: Any) -> str:
 
 
 def _normalize(value: Any) -> str:
-    lowered = re.sub(r"\s+", " ", (str(value or "")).strip().casefold())
-    return re.sub(r"[^a-z0-9:+ ]+", "", lowered)
+    return reference_key(value)  # D-120 § 1 (ORCH-797a): one reference key for every stage
 
 
 def _safe_dict(value: Any) -> Dict[str, Any]:

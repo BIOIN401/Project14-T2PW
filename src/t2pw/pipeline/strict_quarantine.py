@@ -1805,7 +1805,8 @@ def _split_gene_protein_names(working: Dict[str, Any]) -> Dict[Tuple[str, int], 
     genes: Dict[str, str] = {}
     for row in _safe_list(entities.get("nucleic_acids")):
         name = _row_name(row)
-        if isinstance(row, dict) and name and _normalize(name) in protein_norms:
+        # A tRNA is never a gene: it keeps its nucleic-acid row (D-120 § 4, :func:`_keep_one_kind_per_name`).
+        if isinstance(row, dict) and name and _normalize(name) in protein_norms and not _TRNA_WORDING.search(name):
             genes[_normalize(name)] = row["name"] = f"{name} gene"
     if not genes:
         return {}
@@ -1846,6 +1847,8 @@ _PROTEIN_ONLY_SLOTS: Tuple[str, ...] = ("enzymes", "transporters")
 #: The name itself says what it is. ponytail: name-local word lists; widen only on a leg that needs it.
 _NUCLEIC_ACID_WORDING = re.compile(r"(?<![A-Za-z])(?:[tmr]|sn|mi)?(?:RNA|DNA)")
 _PROTEIN_WORDING = re.compile(r"\b(?:receptor|channel|transporter|pump|kinase)s?\b", re.IGNORECASE)
+#: D-120 § 4: a tRNA, charged or not (``tRNA^Glu``, ``Glu-tRNAGlu``, ``L-glutamyl-tRNA(Glu)``), is a nucleic acid.
+_TRNA_WORDING = re.compile(r"(?<![A-Za-z])tRNA", re.IGNORECASE)
 _DB_ID_FIELDS: Tuple[str, ...] = (
     "pathbank_compound_id", "pathbank_nucleic_acid_id", "pw_nucleic_acid_id", "pathwhiz_id",
     "chebi_id", "kegg_id", "hmdb_id", "pubchem_cid",
@@ -1861,6 +1864,8 @@ def _has_db_identity(bucket: str, row: Mapping[str, Any]) -> bool:
 def _paper_kind(name: str, by_bucket: Mapping[str, List[Dict[str, Any]]], role_norms: Set[str]) -> Tuple[str, str]:
     """``(kept bucket, rule)`` for one name declared in two kinds, or ``("", "")`` when nothing decides it."""
 
+    if "nucleic_acids" in by_bucket and _TRNA_WORDING.search(name):
+        return "nucleic_acids", "trna_is_nucleic_acid"  # D-120 § 4: before any identity (KEGG files charged tRNAs as compounds)
     with_id = [b for b, rows in by_bucket.items() if any(_has_db_identity(b, r) for r in rows)]
     if len(with_id) == 1:
         return with_id[0], "db_identity"
@@ -1905,7 +1910,8 @@ def _keep_one_kind_per_name(working: Dict[str, Any]) -> Tuple[List[Dict[str, Any
                 kinds.setdefault(_normalize(_row_name(row)), {}).setdefault(bucket, []).append(row)
     clashes = {
         norm: by_bucket for norm, by_bucket in kinds.items()
-        if len(by_bucket) == 2 and set(by_bucket) not in ({"nucleic_acids", "proteins"}, set(_PROTEIN_KINDS))
+        if len(by_bucket) == 2 and set(by_bucket) != set(_PROTEIN_KINDS)
+        and (set(by_bucket) != {"nucleic_acids", "proteins"} or _TRNA_WORDING.search(_row_name(by_bucket["proteins"][0])))
     }
     if not clashes:
         return [], []
@@ -1959,10 +1965,7 @@ def _keep_one_kind_per_name(working: Dict[str, Any]) -> Tuple[List[Dict[str, Any
                      "reason": f"{CROSS_KIND_DROP_REASON}:{kept}", "biological_state": _text(r.get("biological_state"))}
                     for r in gone
                 )
-        # ORCH-794b: this module's name key is looser than the exporter's (``tRNA^Glu`` and ``tRNAGlu`` are one
-        # name here, two to ``ir._norm``). Every reference to the name now spells the kept row's name, so what
-        # admission accepted the IR resolves (ORCH-796 chlorophyll: an unresolved ``tRNAGlu`` sank the PWML).
-        _spell_references_as(working, norm, _row_name(by_bucket[kept][0]))
+    # Every reference to a decided name is respelled as the kept row by :func:`_spell_references_canonically`.
     return removed, removed_locations
 
 
@@ -1974,37 +1977,65 @@ _NOT_A_REFERENCE = frozenset({
 })
 
 
-def _spell_references_as(working: Dict[str, Any], norm: str, name: str) -> None:
-    """Rewrite every process, location and complex-component reference whose name key is ``norm`` to ``name``."""
+def _spell_references_canonically(working: Dict[str, Any]) -> None:
+    """Spell every reference that names an entity row only under the shared key as that row's exact name.
 
-    def walk(value: Any, top: bool) -> None:
+    D-120 § 1 (ORCH-797a; generalises ORCH-794b). ``tRNAGlu`` against the row ``tRNA^Glu``, ``5-HT 3 receptor``
+    against ``5-HT3 receptor``: one entity, so the reference takes the row's spelling and every later stage
+    (IR, writer) sees one name. Pre-freeze only. A key held by rows of two kinds is left alone: admission omits
+    each process naming it, per row (``ambiguous_entity_type``, KI-011). Within one kind the first row is the
+    one the IR keeps (``_dedupe_named_rows``).
+    """
+
+    owners: Dict[str, Tuple[str, str]] = {}
+    clashing: Set[str] = set()
+    entities = _safe_dict(working.get("entities"))
+    for bucket in _GRAPH_ENTITY_BUCKETS:
+        for row in _safe_list(entities.get(bucket)):
+            name = _row_name(row) if isinstance(row, dict) else ""
+            norm = _normalize(name)
+            if norm and owners.setdefault(norm, (bucket, name))[0] != bucket:
+                clashing.add(norm)
+    names = {norm: name for norm, (_bucket, name) in owners.items() if norm not in clashing}
+    if names:
+        _spell_references_as(working, names)
+
+
+def _spell_references_as(working: Dict[str, Any], names: Mapping[str, str]) -> None:
+    """Rewrite every process, location and complex-component reference whose name key is in ``names`` to its name."""
+
+    rewritten: Set[int] = set()
+
+    def walk(value: Any, top: bool, row: Any) -> None:
         items = enumerate(value) if isinstance(value, list) else (
             ((k, v) for k, v in value.items() if k not in _NOT_A_REFERENCE and not (top and k == "name"))
             if isinstance(value, dict) else ())
         for key, item in list(items):
             if isinstance(item, str):
-                if item != name and _normalize(_canonical(item)) == norm:
+                name = names.get(_normalize(_canonical(item)))
+                if name and item != name:
                     value[key] = name
+                    rewritten.add(id(row))
             else:
-                walk(item, False)
+                walk(item, False, row)
 
     for rows in _safe_dict(working.get("processes")).values():
         for row in _safe_list(rows):
-            walk(row, True)
+            walk(row, True, row)
     element_locations = _safe_dict(working.get("element_locations"))
     for bucket, rows in element_locations.items():
         if not isinstance(rows, list):
             continue
         for row in rows:
-            walk(row, True)
+            walk(row, True, row)
         unique: List[Any] = []
         for row in rows:  # two spellings of one placement are now one row; other rows untouched
-            if row not in unique or not (isinstance(row, dict) and name in row.values()):
+            if row not in unique or id(row) not in rewritten:
                 unique.append(row)
         element_locations[bucket] = unique
     for row in _safe_list(_safe_dict(working.get("entities")).get("protein_complexes")):
         if isinstance(row, dict):
-            walk(row.get("components"), False)
+            walk(row.get("components"), False, row)
 
 
 # ── Graph closure ───────────────────────────────────────────────────────────
@@ -3494,6 +3525,7 @@ def quarantine_and_close(
     working: Dict[str, Any] = deepcopy(dict(payload))
     split_omissions = _split_gene_protein_names(working)
     kind_removed, kind_removed_locations = _keep_one_kind_per_name(working)
+    _spell_references_canonically(working)
     registry = _build_registry(working)
     core_terms = collect_requested_core_terms(
         working, requested_core=requested_core, pathway_context=pathway_context
