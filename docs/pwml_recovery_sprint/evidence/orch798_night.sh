@@ -15,7 +15,7 @@ mkdir -p "$OUT/logs"
 note() { echo "$(date '+%F %T') $*" >> "$OUT/night.log"; }
 
 note "$TASK NIGHT START worktree=$WT head=$(git -C "$WT" rev-parse --short HEAD)"
-for c in serine ergosterol staphyloxanthin glucosinolate cgas_sting; do
+for c in serine ergosterol staphyloxanthin glucosinolate hippo; do
   bash "$WT/docs/pwml_recovery_sprint/evidence/orch756_paper_runs.sh" "$WT" "$TASK" strict "$c" 10800
 done
 "$PY" "$EV/orch770_morning_summary.py" --task "$TASK" --legs "$WT/runs_papers/$TASK/legs" --out-dir "$OUT" \

@@ -25,5 +25,5 @@ Five conditions never run before (checked against every PMCID in the repo-root `
 exclusion set and every `runs*/` directory: `C:/t/orch797/excl.txt`, 227 ids). Picked from Europe PMC open-access search for
 diversity; full-text sizes are Europe PMC XML estimates without the reference list:
 `staphyloxanthin` PMC12924280 (bacterial metabolic, ~106k chars), `glucosinolate` PMC5116641 (plant, ~107k),
-`cgas_sting` PMC13586583 (human signalling, ~113k), `serine` PMC6073169 (human metabolic, ~16k),
+`hippo` PMC13162733 (human signalling, ~80k with references). `cgas_sting` PMC13586583 was dropped after staging: its fetched text is 222,842 chars (`g11/ORCH-798/13`), over the ~120k leg budget, `serine` PMC6073169 (human metabolic, ~16k),
 `ergosterol` PMC7397035 (yeast, ~44k). Run: `runs_papers/ORCH-798/`; record `ORCH-798-RESULT.md`.
