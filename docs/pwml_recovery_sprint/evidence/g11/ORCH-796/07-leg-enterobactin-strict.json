@@ -1,0 +1,118 @@
+{
+  "label": "leg-enterobactin-strict",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "scripts/batch_run.py",
+    "--topics",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/docs/evaluation_v2/paper_runs_orch755/topics/enterobactin.txt",
+    "--modes",
+    "strict",
+    "--out",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch796run/runs_papers/ORCH-796/legs/enterobactin-strict",
+    "--fresh",
+    "--timeout",
+    "10800",
+    "--deadline",
+    "3.20"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch796run",
+  "started_at": "2026-10-29T17:53:38+00:00",
+  "finished_at": "2026-10-29T18:13:19+00:00",
+  "duration_seconds": 1180.5403545000008,
+  "timeout_seconds": 11400.0,
+  "root_pid": 425016,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 424120,
+      "name": "python.exe",
+      "ppid": 425016
+    },
+    {
+      "pid": 425036,
+      "name": "python.exe",
+      "ppid": 425128
+    },
+    {
+      "pid": 425128,
+      "name": "python.exe",
+      "ppid": 424120
+    },
+    {
+      "pid": 425252,
+      "name": "python.exe",
+      "ppid": 425268
+    },
+    {
+      "pid": 425268,
+      "name": "python.exe",
+      "ppid": 424120
+    }
+  ],
+  "descendants_terminated": [
+    424120,
+    425036,
+    425128,
+    425252,
+    425268
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 414204,
+      "name": "python.exe"
+    },
+    {
+      "pid": 414312,
+      "name": "python.exe"
+    },
+    {
+      "pid": 425676,
+      "name": "python.exe"
+    },
+    {
+      "pid": 425688,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-796\\07-leg-enterobactin-strict.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch796run\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch796run",
+    "repo_head": "55fd55edf3c5fbbfef5d640a38af3ac1f1b3393f",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-796",
+    "token": "ORCH-796:425688:c94decd771676e1a",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

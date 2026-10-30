@@ -1,0 +1,118 @@
+{
+  "label": "leg-menaquinone-strict",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "scripts/batch_run.py",
+    "--topics",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/docs/evaluation_v2/paper_runs_orch755/topics/menaquinone.txt",
+    "--modes",
+    "strict",
+    "--out",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch796run/runs_papers/ORCH-796/legs/menaquinone-strict",
+    "--fresh",
+    "--timeout",
+    "10800",
+    "--deadline",
+    "3.20"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch796run",
+  "started_at": "2026-10-29T20:51:05+00:00",
+  "finished_at": "2026-10-29T21:21:09+00:00",
+  "duration_seconds": 1804.1994665999955,
+  "timeout_seconds": 11400.0,
+  "root_pid": 491936,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 502892,
+      "name": "python.exe",
+      "ppid": 491936
+    },
+    {
+      "pid": 496092,
+      "name": "python.exe",
+      "ppid": 503236
+    },
+    {
+      "pid": 503236,
+      "name": "python.exe",
+      "ppid": 502892
+    },
+    {
+      "pid": 494192,
+      "name": "python.exe",
+      "ppid": 503056
+    },
+    {
+      "pid": 503056,
+      "name": "python.exe",
+      "ppid": 502892
+    }
+  ],
+  "descendants_terminated": [
+    494192,
+    496092,
+    502892,
+    503056,
+    503236
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 460616,
+      "name": "python.exe"
+    },
+    {
+      "pid": 463688,
+      "name": "python.exe"
+    },
+    {
+      "pid": 493628,
+      "name": "python.exe"
+    },
+    {
+      "pid": 503320,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-796\\13-leg-menaquinone-strict.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch796run\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch796run",
+    "repo_head": "55fd55edf3c5fbbfef5d640a38af3ac1f1b3393f",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-796",
+    "token": "ORCH-796:493628:42264d330294b51b",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
