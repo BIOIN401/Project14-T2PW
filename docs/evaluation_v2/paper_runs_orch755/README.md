@@ -18,3 +18,12 @@ hand comparison against the papers.
 
 A staging dry run (`--stage-only`, zero LLM legs) passed for all seven before launch: every paper was fetched
 in full (36,169 to 200,898 characters), and nothing was skipped (`g11/ORCH-755/01`–`07`).
+
+## ORCH-798: five new papers (2026-10-30)
+
+Five conditions never run before (checked against every PMCID in the repo-root `topics_*.txt`, this folder, the ORCH-724
+exclusion set and every `runs*/` directory: `C:/t/orch797/excl.txt`, 227 ids). Picked from Europe PMC open-access search for
+diversity; full-text sizes are Europe PMC XML estimates without the reference list:
+`staphyloxanthin` PMC12924280 (bacterial metabolic, ~106k chars), `glucosinolate` PMC5116641 (plant, ~107k),
+`cgas_sting` PMC13586583 (human signalling, ~113k), `serine` PMC6073169 (human metabolic, ~16k),
+`ergosterol` PMC7397035 (yeast, ~44k). Run: `runs_papers/ORCH-798/`; record `ORCH-798-RESULT.md`.
