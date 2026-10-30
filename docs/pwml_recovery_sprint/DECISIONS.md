@@ -7625,3 +7625,10 @@ sub-orchestrator. Implemented by ORCH-797a (§§ 1, 4) and ORCH-797b (§§ 2, 3)
 6. **Then ORCH-798:** five papers never run before (bacterial metabolic, plant, human signalling, human metabolic, one other
    organism), strict, 3 draws, at the merged tip. Scored only as text-record processes vs drawn PWML processes (D-114 AMENDMENT 2
    headline and full count) plus every omission with its KI id; no gold scoring.
+7. **ADDENDUM (2026-10-30, accepted by the Lead): the alias tie-break needs paper wording.** § 2's "an exact match on the
+   primary gene name wins" is not applied alone. ORCH-793 § 4 showed it maps NARF to Q9UHQ1 (nuclear prelamin A recognition
+   factor), the wrong protein: the Wnt/Ca2+ paper means RNF138 (Q8WVD3), which carries NARF only as a gene synonym. PIF1
+   (the primary gene of Q8GZM7 and a synonym of CLF) has the same shape. So when two or more reviewed entries in the species
+   carry the paper's name, one entry wins only if words unique to its protein names appear in the paper's evidence
+   sentences for that name. Otherwise the row is omitted with a KI id. A wrong id is worse than an omission
+   (PRODUCT_CONTRACT).
