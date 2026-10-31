@@ -6,6 +6,7 @@ import json
 import os
 import re
 import time
+import unicodedata
 from collections import Counter
 from copy import deepcopy
 from pathlib import Path
@@ -4336,6 +4337,73 @@ def _entity_locations(payload: Dict[str, Any], location_key: str, name_key: str)
 _UNIPROT_SEARCH_FIELDS = "accession,protein_name,gene_names,organism_name,reviewed,organism_id"
 
 
+_NAME_WORD_SPLIT = re.compile(r"[\s,;/()\[\]]+")
+
+
+def _spell_greek(text: str) -> str:
+    """α -> alpha, δ -> delta (D-120 § 1): ``_normalize_name`` would otherwise delete the letter,
+    and "PKCδ" would read as "PKC"."""
+
+    return "".join(
+        unicodedata.name(ch, "x").split()[-1].casefold() if "Ͱ" <= ch <= "Ͽ" else ch
+        for ch in str(text or "")
+    )
+
+
+def _name_in_protein_names(query: str, protein_names: Any) -> bool:
+    """ORCH-797b (D-120 § 2): ``query`` equals a protein name, or is a whole word of one.
+
+    Words are split on spaces, commas, semicolons, slashes and brackets only, so a hyphen
+    joins: "c-Jun" is a word of "Proto-oncogene c-Jun" but not of
+    "C-Jun-amino-terminal kinase-interacting protein 1"; "Kir2.1" is not a word of "...Kir2.10".
+    Compared under ``_normalize_name``. A multi-word query must appear as consecutive words.
+    """
+
+    want = [w for w in (_normalize_name(p) for p in _NAME_WORD_SPLIT.split(_spell_greek(query))) if w]
+    if not want:
+        return False
+    # A plain word ("actin") names a class; only a symbol-like name (a digit, or a capital after the first
+    # letter: "c-Jun", "Kir2.1", "TAK1") identifies one protein inside a longer name. ORCH-797b audit:
+    # "actin" -> ACTC1 via "Alpha-cardiac actin".
+    symbol_like = bool(re.search(r"\d", str(query))) or bool(re.search(r"[A-Z]", str(query).strip()[1:]))
+    for name in _safe_list(protein_names):
+        if not isinstance(name, str):
+            continue
+        words = [w for w in (_normalize_name(p) for p in _NAME_WORD_SPLIT.split(_spell_greek(name))) if w]
+        head = words[: len(words) - len(want)]
+        # The name must be the protein name's HEAD: its last words ("Proto-oncogene c-Jun", "Orphan
+        # nuclear receptor TAK1"), not a modifier ("CaMKII inhibitory protein alpha" is an inhibitor of
+        # CaMKII) and not a prepositional object ("p27Kip1-releasing factor from RhoA"). ORCH-797b audit.
+        if len(words) >= len(want) and words[len(words) - len(want):] == want and (
+            not head
+            or (head[-1] not in _HEAD_BLOCKING_WORDS
+                and (symbol_like or all(word in _NAME_GATE_GENERIC_TOKENS for word in head)))
+        ):
+            return True
+    return False
+
+
+_HEAD_BLOCKING_WORDS = frozenset({"from", "of", "for", "to", "with", "by", "in", "on", "against", "like", "and", "or"})
+
+
+def _name_in_text(query: str, text: str) -> bool:
+    """``query`` occurs in ``text`` as consecutive whole words (quotes naming a protein)."""
+
+    want = [w for w in (_normalize_name(p) for p in _NAME_WORD_SPLIT.split(_spell_greek(query))) if w]
+    words = [w for w in (_normalize_name(p) for p in _NAME_WORD_SPLIT.split(_spell_greek(text))) if w]
+    return bool(want) and any(words[i:i + len(want)] == want for i in range(len(words) - len(want) + 1))
+
+
+def _alias_identity_match(name: str, candidate: Any) -> bool:
+    """D-120 § 2: the paper's name is a gene name, gene synonym or protein name of the entry."""
+
+    norm = _normalize_name(_spell_greek(name))
+    return bool(norm) and (
+        norm in _candidate_gene_symbols(candidate)
+        or _name_in_protein_names(name, _safe_dict(candidate).get("protein_names"))
+    )
+
+
 def _extract_uniprot_candidates(payload: Dict[str, Any], query_name: str, organism: str) -> List[Dict[str, Any]]:
     results = _safe_list(payload.get("results"))
     out: List[Dict[str, Any]] = []
@@ -4356,6 +4424,15 @@ def _extract_uniprot_candidates(payload: Dict[str, Any], query_name: str, organi
         fullname = full_name_value(recommended)
         alt_names = _safe_list(protein_desc.get("alternativeNames"))
         alt_values: List[str] = []
+        # ORCH-797b (D-120 § 2): UniProt's recommended, alternative and short protein names,
+        # kept on the candidate. "c-Jun" is only in "Proto-oncogene c-Jun", "Kir2.1" only in
+        # the alternative name "Inward rectifier K(+) channel Kir2.1".
+        short_values: List[str] = []
+        for named in [recommended] + [alt for alt in alt_names if isinstance(alt, dict)]:
+            for short in _safe_list(named.get("shortNames")):
+                text = _safe_dict(short).get("value")
+                if isinstance(text, str) and text.strip():
+                    short_values.append(text.strip())
         for alt in alt_names:
             if not isinstance(alt, dict):
                 continue
@@ -4399,9 +4476,12 @@ def _extract_uniprot_candidates(payload: Dict[str, Any], query_name: str, organi
         entry_type = str(item.get("entryType", "")).lower()
         reviewed = "reviewed" in entry_type and "unreviewed" not in entry_type
 
-        candidate_names = [v for v in [fullname] if isinstance(v, str)] + alt_values + submission_values + gene_names
+        protein_names = list(dict.fromkeys(([fullname] if fullname else []) + alt_values + short_values))
+        candidate_names = [v for v in [fullname] if isinstance(v, str)] + alt_values + short_values + submission_values + gene_names
         best_name_score = max((_jaccard(query_name, c) for c in candidate_names), default=0.0)
-        exact_name_match = any(_normalize_name(query_name) == _normalize_name(c) for c in candidate_names)
+        exact_name_match = any(_normalize_name(query_name) == _normalize_name(c) for c in candidate_names) or (
+            _name_in_protein_names(query_name, protein_names)
+        )
         exact_gene_match = any(_normalize_name(query_name) == _normalize_name(g) for g in gene_names)
         organism_score = 0.0
         if organism and isinstance(organism_name, str):
@@ -4434,6 +4514,8 @@ def _extract_uniprot_candidates(payload: Dict[str, Any], query_name: str, organi
             parsed["taxonomy_id"] = taxonomy_id
         if primary_gene_names:
             parsed["primary_gene_names"] = primary_gene_names[:8]
+        if protein_names:
+            parsed["protein_names"] = protein_names[:12]
         out.append(parsed)
     out.sort(key=lambda item: item.get("score", 0.0), reverse=True)
     return out
@@ -5013,6 +5095,118 @@ def _break_gene_synonym_collision(
     }
     if out.get("status") == "mapped":
         _with_resolution(out, "matched", order_step="gene_synonym_collision")
+    return out
+
+
+def _payload_evidence_quotes(payload: Any) -> List[str]:
+    """Every ``evidence`` string anywhere in the payload: the paper's own quoted sentences."""
+
+    out: List[str] = []
+
+    def walk(node: Any) -> None:
+        if isinstance(node, dict):
+            for key, value in node.items():
+                if key == "evidence" and isinstance(value, str) and value.strip():
+                    out.append(value.strip())
+                else:
+                    walk(value)
+        elif isinstance(node, list):
+            for item in node:
+                walk(item)
+
+    walk(payload)
+    return list(dict.fromkeys(out))
+
+
+def _wording_words(text: str) -> Set[str]:
+    """Content words of a protein name or a quote. Verb forms never count (lead ruling, ORCH-797b):
+    a word of 6+ letters ending in -ed or -ing ("activated", "interacting", "binding") is dropped;
+    short nouns such as "ring" stay."""
+
+    words = re.split(r"[^a-z0-9]+", _canonical_name(str(text or "")).casefold())
+    return {
+        word for word in words
+        if len(word) >= 3 and not word.isdigit()
+        and word not in _NAME_GATE_STOPWORDS and word not in _NAME_GATE_GENERIC_TOKENS
+        and not (len(word) >= 6 and word.endswith(("ed", "ing")))
+    }
+
+
+def _break_alias_tie_by_paper_wording(
+    result: Dict[str, Any],
+    name: str,
+    paper_quotes: Any,
+    organism: str,
+) -> Dict[str, Any]:
+    """ORCH-797b (D-120 § 2): two curated genes carry the paper's name; the paper's wording picks one.
+
+    "NARF" is the primary gene of Q9UHQ1 (nuclear prelamin A recognition factor) and a synonym
+    of Q8WVD3 (RNF138, "NLK-associated RING finger protein"). "Primary gene wins" picks Q9UHQ1,
+    the wrong protein (ORCH-793 § 4), so neither gene field decides. The paper's own definition
+    of the name does: "NLK-associated RING finger protein (NARF)" holds words of Q8WVD3's
+    protein names and none of Q9UHQ1's. A gene wins only when its DISTINCTIVE protein-name words
+    (shared by no other matching gene; no stopword, generic word, verb form or the name itself)
+    occur in the paper's "LONG FORM (NAME)" definitions and no other matching gene's do; its rivals are then set aside, exactly as
+    FX4 sets them aside, and the survivor still faces the unchanged verdict. Anything else (no
+    wording, both supported) leaves the result as it was, so the margin rung refuses (KI-001).
+    Never for a family name.
+    """
+
+    quotes = [str(q) for q in _safe_list(paper_quotes) if str(q or "").strip()]
+    if not isinstance(result, dict) or not quotes or is_family_or_complex_term(name):
+        return result
+    candidates = [row for row in _safe_list(result.get("candidates")) if isinstance(row, dict)]
+
+    def accession(row: Dict[str, Any]) -> str:
+        return str(row.get("accession") or row.get("uniprot") or "").strip()
+
+    def gene(row: Dict[str, Any]) -> frozenset:
+        return frozenset(_candidate_primary_gene_symbols(row)) or frozenset({accession(row).casefold()})
+
+    matches = [
+        row for row in candidates
+        if accession(row) and _alias_identity_match(name, row) and _candidate_species_verdict(row, organism) == "ok"
+    ]
+    reviewed_genes = sorted({gene(row) for row in matches if row.get("reviewed") is True}, key=sorted)
+    if len(reviewed_genes) < 2:
+        return result
+    own: Dict[frozenset, Set[str]] = {key: set() for key in reviewed_genes}
+    for row in matches:
+        if gene(row) in own and row.get("reviewed") is True:
+            for protein_name in _safe_list(row.get("protein_names")) or [row.get("protein_name")]:
+                own[gene(row)] |= _wording_words(str(protein_name or ""))
+    # Only the paper's own DEFINITION of the name counts: the words just before "(NAME)" -- "NLK-associated
+    # RING finger protein (NARF)", "TGF-beta-activated protein kinase 1 (TAK1)". Any other sentence word
+    # supported the wrong gene by coincidence in the ORCH-797b audit (RhoA -> LAMTOR1 via "factor").
+    defined = re.compile(r"([^()]{1,160})\(\s*" + re.escape(str(name).strip()) + r"\s*\)", re.IGNORECASE)
+    long_forms = [" ".join(m.group(1).split()[-6:]) for quote in quotes for m in defined.finditer(quote)]
+    said = set().union(*(_wording_words(text) for text in long_forms)) - _wording_words(name)
+    support = {
+        key: sorted((words - set().union(*(own[other] for other in own if other != key))) & said)
+        for key, words in own.items()
+    }
+    supported = [key for key in reviewed_genes if support[key]]
+    tie = {"query": name, "genes": [sorted(key) for key in reviewed_genes],
+           "supporting_words": {"/".join(sorted(key)): support[key] for key in reviewed_genes}}
+    if len(supported) != 1:
+        out = dict(result)
+        out["alias_tie_unresolved"] = tie
+        return out
+    winner = supported[0]
+    drop = {accession(row) for row in matches if gene(row) != winner}
+    kept = [row for row in candidates if accession(row) not in drop]
+    out = _uniprot_result_from_candidates(
+        kept,
+        organism,
+        queries_tried=[str(q) for q in _safe_list(result.get("queries_tried")) if str(q or "").strip()],
+        literature_aliases=[e for e in _safe_list(result.get("literature_aliases")) if isinstance(e, dict)],
+        name=name,
+    )
+    out.setdefault("provider", str(result.get("provider") or "UniProt"))
+    out.setdefault("source", str(result.get("source") or "api"))
+    out["alias_tie_break"] = {**tie, "chosen_gene": sorted(winner), "set_aside": sorted(drop)}
+    if out.get("status") == "mapped":
+        _with_resolution(out, "matched", order_step="alias_tie_break")
     return out
 
 
@@ -6055,6 +6249,20 @@ def _name_gate_verdict(
             gate["matched_symbol"] = symbol
             return gate
 
+    # ORCH-797b (D-120 § 2): the name is one of UniProt's own protein names of the entry, or a
+    # whole word of one ("Kir2.1" in "Inward rectifier K(+) channel Kir2.1"), same species.
+    # Never for a family name: a family does not become one of its members.
+    if (
+        kind == "protein"
+        and candidate is not None
+        and not is_family_or_complex_term(entity_name)
+        and _name_in_protein_names(entity_name, _safe_dict(candidate).get("protein_names"))
+        and (not organism or _candidate_species_verdict(candidate, organism) == "ok")
+    ):
+        gate["verdict"] = "keep"
+        gate["reason"] = "uniprot_protein_name_identity"
+        return gate
+
     # C-120 -- gene-symbol family identity. Sits beside the exact-symbol rescue,
     # changes no other rung, threshold or ordering, and carries the same organism
     # guard the alias rescue uses. Multiplicity stays fail-closed downstream: if
@@ -6717,7 +6925,7 @@ def verify_real_protein_identity(
         ) and not any(
             _normalize_name(entity_name) == _normalize_name(symbol)
             for symbol in _candidate_symbol_names(other)
-        ):
+        ) and not _name_in_protein_names(entity_name, other.get("protein_names")):
             continue
         if _is_same_protein_record_duplicate(candidate, other):
             # One gene, one organism, several accessions. Not a biological
@@ -7389,8 +7597,10 @@ def _map_protein_with_strategy(
             # FX1. A scoped answer is keyed by the scope, and no free-text entry is read
             # back: those were answers to a different question (ORCH-761 § 4.1 item 5).
             organism = str(scope["bound_name"] or organism)
+            # v10 (ORCH-797b): the parsed candidate now carries ``protein_names``; a v9 entry has none,
+            # so it could never show the D-120 § 2 protein-name identity. No v9 entry is read back.
             api_key = (
-                f"api-v9::{_normalize_name(name)}::tax:{scope['requested_taxonomy_id']}>{scope['bound_taxonomy_id']}"
+                f"api-v10::{_normalize_name(name)}::tax:{scope['requested_taxonomy_id']}>{scope['bound_taxonomy_id']}"
                 f"::{pathbank_id}::{json.dumps(row_ids, sort_keys=True)}::{alias_key}"
             )
             legacy_api_keys = []
@@ -7434,6 +7644,7 @@ def _map_protein_with_strategy(
                 cache.set("proteins", api_key, api_result)
         # FX4, on the value read, never on what is stored (same rule as the gate below).
         api_result = _break_gene_synonym_collision(api_result, name, context.get("foreign_symbols"), organism)
+        api_result = _break_alias_tie_by_paper_wording(api_result, name, context.get("paper_quotes"), organism)
         gated = _apply_name_plausibility_gate(api_result, name, kind="protein", organism=organism)
         if scope is not None:
             gated = dict(gated)
@@ -10237,8 +10448,13 @@ def _family_key(name: str) -> str:
     ``"PIF"``; ``"PIF1"`` does not.
     """
 
-    key = re.sub(r"[^a-z0-9]+", "", str(name or "").casefold())
+    # ORCH-797b: a Greek letter is spelled, not deleted ("PKCδ" is PRKCD, not the PKC family).
+    key = re.sub(r"[^a-z0-9]+", "", _spell_greek(str(name or "")).casefold())
     return key[:-1] if key.endswith("s") and len(key) > 3 else key
+
+
+def _natural_key(text: str) -> List[Any]:
+    return [int(part) if part.isdigit() else part for part in re.split(r"(\d+)", str(text or "").upper())]
 
 
 _FAMILY_TERMS = frozenset(
@@ -10249,6 +10465,10 @@ _FAMILY_TERMS = frozenset(
         "voltage-gated calcium channel", "P2X receptor", "5-HT3 receptor",
         # D-119 § 1
         "JNK", "ROCK", "GDI", "RhoGDI", "DELLA", "DELLA protein", "PIF", "Orai",
+        # D-120 § 3 (ORCH-797b). Not here: DIA1 (mDia1 = DIAPH1) and GBP (GluTR-binding
+        # protein) are single proteins.
+        "InsP3R", "IP3R", "IP3 receptor", "InsP3 receptor", "inositol 1,4,5-trisphosphate receptor",
+        "SERCA", "calmodulin", "Dvl", "Dishevelled", "Smurf", "Par6", "MRLC", "profilin", "Wnt",
     )
 )
 _FAMILY_WORDS = re.compile(r"\b(family|subfamily|isoforms?|isozymes?|subunits|paralogs)\b")
@@ -10256,7 +10476,26 @@ _FAMILY_QUERY_STRIP = re.compile(
     r"\b(family|subfamily|proteins?|members?|isoforms?|isozymes?|subunits?|paralogs?)\b", re.IGNORECASE
 )
 # UniProt files RhoGDI as "Rho GDI family"; bare "GDI family" also names the Rab GDIs.
-_FAMILY_QUERY_CORE = {_family_key("GDI"): "Rho GDI", _family_key("RhoGDI"): "Rho GDI"}
+_FAMILY_QUERY_CORE = {
+    _family_key(term): core
+    for terms, core in (
+        (("GDI", "RhoGDI"), "Rho GDI"),
+        # ORCH-797b (D-120 § 3): UniProt's own family names.
+        (("InsP3R", "IP3R", "IP3 receptor", "InsP3 receptor", "inositol 1,4,5-trisphosphate receptor"), "InsP3 receptor"),
+        (("Dvl", "Dishevelled"), "DSH"),
+    )
+    for term in terms
+}
+# ORCH-797b (D-120 § 3): families UniProt files under no family name of their own. Members are
+# asked for one by one (``gene_exact``, reviewed, same taxon), as paper-named members are.
+_FAMILY_GENE_MEMBERS = {
+    _family_key("SERCA"): ("ATP2A1", "ATP2A2", "ATP2A3"),
+    _family_key("Smurf"): ("SMURF1", "SMURF2"),
+    _family_key("MRLC"): ("MYL9", "MYL12A", "MYL12B"),
+}
+# ORCH-797b (D-120 § 3, generic detection): a plural of one symbol-like word ("Wnts", "Smads").
+# Converted only when UniProt's exact family match ("<stem> family") yields members.
+_PLURAL_FAMILY = re.compile(r"^([A-Za-z][A-Za-z0-9-]{2,})s$")
 _SLASH_MEMBER = re.compile(r"^([A-Za-z][A-Za-z0-9-]*?)(\d+[A-Za-z]?)$")
 _FAMILY_MEMBER_CAP = 3
 _FAMILY_UNIPROT_CACHE_SECTION = "family_complex_uniprot"
@@ -10307,8 +10546,23 @@ def is_family_or_complex_term(name: str) -> bool:
 
     norm = _normalize_name(str(name or ""))
     return bool(norm) and (
-        _family_key(name) in _FAMILY_TERMS or bool(_FAMILY_WORDS.search(norm)) or bool(_paper_named_members(name))
+        _family_term_part(name) is not None or bool(_FAMILY_WORDS.search(norm)) or bool(_paper_named_members(name))
     )
+
+
+def _family_term_part(name: str) -> Optional[str]:
+    """The part of ``name`` that is a :data:`_FAMILY_TERMS` term, or ``None``.
+
+    ORCH-797b: a paper's "long (SHORT)" form names one thing twice -- "inositol-1,4,5-trisphosphate
+    receptor (InsP3R)", "protein kinase C (PKC)" -- so either half being a family term is enough.
+    """
+
+    text = str(name or "").strip()
+    parts = [text]
+    paren = re.fullmatch(r"(.+?)\s*\(([^()]+)\)", text)
+    if paren:
+        parts += [paren.group(1), paren.group(2)]
+    return next((part for part in parts if _family_key(part) in _FAMILY_TERMS), None)
 
 
 def _uniprot_reviewed_hits(
@@ -10412,6 +10666,11 @@ def _apply_family_complexes(
         # best_effort_fallback guess, and that accession used to stop the conversion.
         meta = _safe_dict(row.get("mapping_meta"))
         rule = str(meta.get("chosen_rule") or meta.get("reason") or "")
+        # ORCH-797b (D-120 § 3 precision guard): a family name matched by a UniProt name search to one
+        # member ("inositol-1,4,5-trisphosphate receptor" -> ITPR1 alone) is narrowed, not matched. Only a
+        # curated PathBank row of that name keeps it single (test_orch790 PLC preservation).
+        if str(meta.get("provider") or "") == "UniProt" and not _to_positive_int(row.get("pathbank_protein_id")):
+            return False
         return not (
             meta.get("best_effort") or row.get("best_effort")
             or rule == "best_effort_fallback" or rule.startswith("stage3_")
@@ -10480,14 +10739,26 @@ def _apply_family_complexes(
                 })
         return out[:_FAMILY_MEMBER_CAP], f"PathBank complex {result.get('pathbank_complex_id')} '{candidates[0].get('name')}'"
 
-    def _uniprot_family_members(name: str) -> Tuple[List[Dict[str, Any]], str]:
+    def _uniprot_family_members(name: str, core: str = "") -> Tuple[List[Dict[str, Any]], str]:
         if client is None or not taxonomy_id:
             return [], ""
-        core = _FAMILY_QUERY_STRIP.sub(" ", name.replace('"', " "))
-        core = re.sub(r"\b(receptor|channel|kinase)s\b", r"\1", core, flags=re.IGNORECASE)
-        core = re.sub(r"\b([A-Z][A-Za-z0-9]*[A-Z0-9])s\b", r"\1", core)  # "PIFs" -> "PIF"
-        core = re.sub(r"\s+", " ", core).strip(" -,")
-        core = _FAMILY_QUERY_CORE.get(_family_key(core), core)
+        name = _family_term_part(name) or name  # "inositol-1,4,5-trisphosphate receptor (InsP3R)" -> one half
+        genes = _FAMILY_GENE_MEMBERS.get(_family_key(name), ())
+        if genes:
+            members = []
+            for gene in genes[:_FAMILY_MEMBER_CAP]:
+                hits = [h for h in _uniprot_reviewed_hits(client, cache, f"gene_exact:{gene}", taxonomy_id)
+                        if h["taxonomy_id"] == taxonomy_id]
+                if len(hits) == 1:
+                    members.append({"name": hits[0]["gene"] or gene, "accession": hits[0]["accession"]})
+            return members, (f"UniProt gene search {'/'.join(genes)} (D-120 family table), "
+                             f"{len(members)} reviewed same-taxon hits") if members else ""
+        if not core:
+            core = _FAMILY_QUERY_STRIP.sub(" ", name.replace('"', " "))
+            core = re.sub(r"\b(receptor|channel|kinase)s\b", r"\1", core, flags=re.IGNORECASE)
+            core = re.sub(r"\b([A-Z][A-Za-z0-9]*[A-Z0-9])s\b", r"\1", core)  # "PIFs" -> "PIF"
+            core = re.sub(r"\s+", " ", core).strip(" -,")
+            core = _FAMILY_QUERY_CORE.get(_family_key(core), core)
         if not core:
             return [], ""
         for label in ("family", "subfamily"):
@@ -10505,9 +10776,15 @@ def _apply_family_complexes(
             # ponytail: majority 3-letter gene prefix stands in for "exact family"
             # (drops PKN1-3, which UniProt files under the PKC subfamily too).
             # Ties and order are broken by name, so the same answer gives the same members.
+            # ORCH-797b: a pseudogene record named after a member (DVL1P1 = DVL1 + "P1") is not a member.
+            genes_upper = {h["gene"].upper() for h in hits}
+            hits = [h for h in hits
+                    if not any(re.fullmatch(re.escape(g) + r"P\d+", h["gene"].upper()) for g in genes_upper)]
             prefixes = Counter(h["gene"][:3].upper() for h in hits)
             top = min(prefixes, key=lambda prefix: (-prefixes[prefix], prefix))
-            kept = sorted((h for h in hits if h["gene"][:3].upper() == top), key=lambda h: (h["gene"], h["accession"]))
+            # Natural order (ORCH-797b): WNT1, WNT2, WNT2B ... rather than WNT1, WNT10A, WNT10B.
+            kept = sorted((h for h in hits if h["gene"][:3].upper() == top),
+                          key=lambda h: (_natural_key(h["gene"]), h["accession"]))
             members = [{"name": h["gene"], "accession": h["accession"]} for h in kept[:_FAMILY_MEMBER_CAP]]
             return members, f"UniProt family search {query}, first {len(members)} of {len(kept)} reviewed same-taxon hits"
         return [], ""
@@ -10518,16 +10795,32 @@ def _apply_family_complexes(
             continue
         name = _canonical_name(str(row.get("name") or ""))
         norm = _normalize_name(name)
+        generic_core = ""
+        if not is_family_or_complex_term(name):
+            plural = _PLURAL_FAMILY.match(name)
+            if plural is not None:
+                generic_core = plural.group(1)
+            elif re.search(r"[Ͱ-Ͽ]$", name) and _family_key(re.sub(r"[Ͱ-Ͽ]+$", "", name)) in _FAMILY_TERMS:
+                # "PLCβ", "PKCδ": a family only if UniProt files a family under that exact name (lead ruling).
+                generic_core = _spell_greek(name)
         if (
-            not is_family_or_complex_term(name)
+            (not is_family_or_complex_term(name) and not generic_core)
             or (_real(row) and _matched_outright(row))
             or is_pathbank_unknown_protein(row)
             or norm in complex_norms
             or norm in component_norms
         ):
             continue
-        members = _paper_members(name)
-        source = "members named by the paper" if members else ""
+        if generic_core:
+            # Generic detection: UniProt's exact family match is the only evidence it is a family;
+            # with no members the row is left exactly as it was.
+            members, source = _uniprot_family_members(name, core=generic_core)
+            if not members:
+                continue
+            source = f"members from {source}, not the paper"
+        else:
+            members = _paper_members(name)
+            source = "members named by the paper" if members else ""
         if not members:
             members, source = _pathbank_members(name)
             source = f"members from {source}, not the paper" if members else ""
@@ -10544,7 +10837,9 @@ def _apply_family_complexes(
         components = []
         for member in members:
             existing = member.get("row") or next(
-                (r for r in proteins if isinstance(r, dict) and _real(r) and _uniprot(r) == member["accession"]),
+                # Never the family row itself (deleted below), even when it carried a member's accession.
+                (r for r in proteins
+                 if isinstance(r, dict) and r is not row and _real(r) and _uniprot(r) == member["accession"]),
                 None,
             )
             if existing is None:
@@ -11739,12 +12034,15 @@ def map_payload(
     # enzyme -> reaction assignment for the FX4 tie-break.
     taxon_memo: Dict[str, Optional[Dict[str, Any]]] = {}
     enzyme_reactions = _enzyme_reaction_signatures(mapped)
+    evidence_quotes = _payload_evidence_quotes(mapped)
 
     def _identity_context(row: Any, row_name: str, row_organism: str) -> Dict[str, Any]:
         return {
             "taxonomy_id": _requested_taxonomy_id(row, entities, row_organism),
             "taxon_memo": taxon_memo,
             "foreign_symbols": _foreign_enzyme_symbols(row_name, enzyme_reactions),
+            # ORCH-797b: the paper's own sentences naming this protein (the alias tie-break).
+            "paper_quotes": [quote for quote in evidence_quotes if _name_in_text(row_name, quote)],
         }
 
     for idx, protein in enumerate(proteins):
@@ -12144,7 +12442,8 @@ def map_payload(
                 _fb_key = f"api-fallback-v1::{_normalize_name(_p_name)}::{_normalize_name(_p_org)}"
                 if _p_scope is not None:
                     _fb_key = (
-                        f"api-fallback-v2::{_normalize_name(_p_name)}"
+                        # v3 (ORCH-797b): same reason as ``api-v10`` (``protein_names``).
+                        f"api-fallback-v3::{_normalize_name(_p_name)}"
                         f"::tax:{_p_scope['requested_taxonomy_id']}>{_p_scope['bound_taxonomy_id']}"
                     )
                 _fb_cached = cache.get("proteins", _fb_key)
@@ -12169,6 +12468,9 @@ def map_payload(
                 # degrades faster than the main one and it needs the check most.
                 _api_result = _break_gene_synonym_collision(
                     _api_result, _p_name, _p_context["foreign_symbols"], _p_org
+                )
+                _api_result = _break_alias_tie_by_paper_wording(
+                    _api_result, _p_name, _p_context["paper_quotes"], _p_org
                 )
                 _api_result = _apply_name_plausibility_gate(
                     _api_result, _p_name, kind="protein", organism=_p_org

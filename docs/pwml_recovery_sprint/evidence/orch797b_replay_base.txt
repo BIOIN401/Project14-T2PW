@@ -1,0 +1,165 @@
+
+######## chlorophyll  tree=base  requests=202 unrecorded=0 ai=0 cache-answers-removed=172 targets=130
+  quarantine (strict): accepted=55 omitted=9
+  shipped: {"ABI4": "A0MES8", "CHIH": "", "CHL27": "Q9M591", "CHLD": "Q9SJE1", "CHLH": "Q9FNB0", "CHLI1": "P16127", "CHLI2": "Q5XF33", "CHLM": "Q9SW18", "CHLP": "Q9CA67", "CPO": "Q9LR75", "CPO1": "", "DVR": "Q1H537", "FC1": "P42043", "FC2": "O04921", "FHY3": "Q9LIE5", "FLU": "Q940U6", "GBP": "", "GLK1": "Q9SIV3", "GLK2": "Q9FFH0", "GUN1": "Q9SIC9", "GUN4": "Q9LX31", "GluTR": "", "GluTR1": "", "HEMA1": "P42804", "HEMA2": "P49294", "HY5": "O24646", "LCAA": "Q9LVM3", "Mg-chelatase": "", "PIF1": "", "PIF3": "O80536", "PIF4": "Q8W2F3", "PIF5": "Q84LH8", "POR": "Q9SMR2", "PORA": "Q42536", "PORB": "P21218", "PORC": "O48741", "RGL1": "Q9C8Y3", "RGL2": "Q8GXW1", "RGL3": "Q9LF53", "RVE1": "F4KGY6", "SCL27": "Q7XJM8", "TOC1": "Q9LKL2", "UROS": "O48721", "Unknown": "Unknown", "[family complex] DELLA": "RGL1=Q9C8Y3,RGL2=Q8GXW1,RGL3=Q9LF53", "ferrochelatase": "F4IMT3"}
+  omitted interaction 'PIF1 inhibits HEMA1': protein_missing_external_identity
+  omitted interaction 'FLU binds HEMA1': ambiguous_entity_type:nucleic_acids+proteins
+  omitted interaction 'DELLA inhibits PIF1': protein_missing_external_identity
+  omitted interaction 'PIF1 inhibits CHLH': ambiguous_entity_type:nucleic_acids+proteins
+  omitted interaction 'FHY3 activates HEMA1': ambiguous_entity_type:nucleic_acids+proteins
+  omitted interaction 'FLU inhibits GluTR1': protein_missing_external_identity
+  omitted interaction 'PIF4 inhibits CHLH': ambiguous_entity_type:nucleic_acids+proteins
+  omitted interaction 'PIF5 inhibits CHLH': ambiguous_entity_type:nucleic_acids+proteins
+  omitted interaction 'GBP binds GluTR': protein_missing_external_identity
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 2 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Arabidopsis thaliana', 'Unknown species']
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 2 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Arabidopsis thaliana', 'Unknown species']
+  tail: {"checkpoint": "pre_freeze", "pwml_written": true, "failure_stage": null, "quarantine": {"ok": true, "refusal": [], "counts": {"core_accepted": 26, "auxiliary_accepted": 29, "quarantined_unmapped_entity": 4, "quarantined_out_of_scope": 0, "quarantined_weak_evidence": 0, "quarantined_broken_reference": 5, "quarantined_disconnected": 0}}, "coverage": {"drawn": 53, "total": 64, "by_design_withheld": 4, "no_pwml_cause": ""}, "export": {"ok": true, "error": "", "required_gate_codes": [], "ir_blocking": []}, "driver_codes": [], "network_refused": 0}
+
+######## wnt_ca  tree=base  requests=165 unrecorded=0 ai=0 cache-answers-removed=172 targets=130
+  quarantine (strict): accepted=26 omitted=37
+  shipped: {"ARHGDIA": "P52565", "ARHGDIB": "P52566", "ARHGDIG": "Q99819", "CAMKII": "", "Calcineurin": "", "Cdc42": "P60953", "Fzd2": "Q14332", "NARF": "", "NF-ATp": "Q13469", "NLK": "Q9UBE8", "ORAI1": "Q96D31", "ORAI2": "Q96SN7", "ORAI3": "Q9BRQ5", "PRKCA": "P17252", "PRKCB": "P05771", "PRKCD": "Q05655", "SERCA": "", "STIM1": "Q13586", "STIM2": "Q9P246", "TAB1": "Q15750", "TAB2": "Q9NYJ8", "TAB3": "Q8N5C8", "TAK1": "", "TAZ": "", "TCF": "", "TCF/LEF": "", "TCF4": "", "Unknown": "Unknown", "Wnt5a": "P41221", "Wnt5b": "Q9H1J7", "YAP": "", "[family complex] G protein": "Unknown=-", "[family complex] GDI": "ARHGDIA=P52565,ARHGDIB=P52566,ARHGDIG=Q99819", "[family complex] NFAT": "Unknown=-", "[family complex] Orai": "ORAI1=Q96D31,ORAI2=Q96SN7,ORAI3=Q9BRQ5", "[family complex] PKC": "PRKCA=P17252,PRKCB=P05771,PRKCD=Q05655", "[family complex] STIM1/2": "STIM1=Q13586,STIM2=Q9P246", "[family complex] phospholipase C": "Unknown=-", "calmodulin": "", "inositol-1,4,5-trisphosphate receptor (InsP3R)": ""}
+  omitted reaction 'NLK phosphorylation of TCF4': protein_missing_external_identity
+  omitted transport 'IP3-induced Ca2+ release from ER': protein_missing_external_identity
+  omitted transport 'SERCA-mediated Ca2+ uptake into ER': protein_missing_external_identity
+  omitted transport 'IP3-induced Ca2+ release from ER to cytosol': protein_missing_external_identity
+  omitted transport 'SERCA pumping Ca2+ back into ER': protein_missing_external_identity
+  omitted transport 'IP3-induced Ca2+ release from ER': protein_missing_external_identity
+  omitted transport 'SERCA Ca2+ pump': protein_missing_external_identity
+  omitted interaction 'Ca2+ activates calcineurin': ambiguous_entity_type:protein_complexes+proteins
+  omitted interaction 'Ca2+ activates CAMKII': ambiguous_entity_type:protein_complexes+proteins
+  omitted interaction 'Calcineurin activates NFAT': ambiguous_entity_type:protein_complexes+proteins
+  omitted interaction 'CAMKII activates TAK1': ambiguous_entity_type:protein_complexes+proteins
+  omitted interaction 'NLK inhibits β-catenin/TCF complex': undeclared_entity_in_entity_2
+  omitted interaction 'IP3 binds InsP3R': protein_missing_external_identity
+  omitted interaction 'IP3 activates InsP3R': protein_missing_external_identity
+  omitted interaction 'TAB1 binds TAK1': protein_missing_external_identity
+  omitted interaction 'TAB2 binds TAK1': protein_missing_external_identity
+  omitted interaction 'TAB3 binds TAK1': protein_missing_external_identity
+  omitted interaction 'NLK binds NARF': protein_missing_external_identity
+  omitted interaction 'calcineurin activates NF-ATp': ambiguous_entity_type:protein_complexes+proteins
+  omitted interaction 'Ca2+ binds calmodulin': protein_missing_external_identity
+  omitted interaction 'calmodulin activates CAMKII': protein_missing_external_identity
+  omitted interaction 'NARF inhibits TCF/LEF': protein_missing_external_identity
+  omitted interaction 'Wnt5a activates YAP': protein_missing_external_identity
+  omitted interaction 'Wnt5a activates TAZ': protein_missing_external_identity
+  omitted interaction 'Wnt5b activates YAP': protein_missing_external_identity
+  omitted interaction 'Wnt5b activates TAZ': protein_missing_external_identity
+  omitted interaction 'NLK phosphorylates TCF': protein_missing_external_identity
+  omitted interaction 'calmodulin binds calcineurin': protein_missing_external_identity
+  omitted interaction 'IP3 binds inositol-1,4,5-trisphosphate receptor': protein_missing_external_identity
+  omitted interaction 'InsP3R transports Ca2+': protein_missing_external_identity
+  omitted interaction 'SERCA transports Ca2+': protein_missing_external_identity
+  omitted interaction 'Ca2+ activates calcineurin': ambiguous_entity_type:protein_complexes+proteins
+  omitted interaction 'Ca2+ activates CAMKII': ambiguous_entity_type:protein_complexes+proteins
+  omitted interaction 'calcineurin A component of calcineurin': ambiguous_entity_type:protein_complexes+proteins
+  omitted interaction 'CAMKII monomers assemble into CAMKII holoenzyme complex': ambiguous_entity_type:protein_complexes+proteins
+  omitted interaction 'CAMKII (calmodulin-dependent protein kinase II) activates TAK1': ambiguous_entity_type:protein_complexes+proteins
+  omitted interaction 'calcineurin activates NFAT': ambiguous_entity_type:protein_complexes+proteins
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 3 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens', 'Unknown species', 'Arabidopsis thaliana']
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 3 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens', 'Unknown species', 'Arabidopsis thaliana']
+  tail: {"checkpoint": "pre_freeze", "pwml_written": true, "failure_stage": null, "quarantine": {"ok": true, "refusal": [], "counts": {"core_accepted": 26, "auxiliary_accepted": 0, "quarantined_unmapped_entity": 26, "quarantined_out_of_scope": 0, "quarantined_weak_evidence": 0, "quarantined_broken_reference": 11, "quarantined_disconnected": 0}}, "coverage": {"drawn": 16, "total": 63, "by_design_withheld": 20, "no_pwml_cause": ""}, "export": {"ok": true, "error": "", "required_gate_codes": [], "ir_blocking": []}, "driver_codes": [], "network_refused": 3}
+
+######## wnt_pcp  tree=base  requests=77 unrecorded=0 ai=0 cache-answers-removed=172 targets=130
+  quarantine (strict): accepted=11 omitted=48
+  shipped: {"CapZIP": "Q6JBY9", "Celsr1": "Q9NYQ6", "DAAM": "", "DAAM1": "Q9Y4D1", "DIA1": "", "Dishevelled": "", "Dkk1": "O94907", "Dvl": "P54792", "Frizzled": "", "G-actin": "", "Inturned": "", "Inversin": "Q9Y283", "MRLC": "", "Par6": "", "Prickle": "", "Profilin": "", "ROR1": "Q01973", "ROR2": "Q01974", "RYK": "P34925", "Rac1": "P63000", "RhoA": "P61586", "Smurf": "", "Smurf1": "Q9HCE7", "Smurf2": "Q9HAU4", "Unknown": "Unknown", "Vangl2": "Q9ULK5", "Wnt": "", "Wnt5a": "P41221", "[family complex] JNK": "Unknown=-", "[family complex] ROCK": "Unknown=-", "actin": "", "c-Jun": ""}
+  omitted reaction 'Wnt binding to Vangl2 dissociates Dvl-Prickle-Intu complex': protein_missing_external_identity
+  omitted transport 'c-Jun translocation to nucleus': protein_missing_external_identity
+  omitted transport 'Dishevelled translocation to plasma membrane': protein_missing_external_identity
+  omitted transport 'c-Jun nuclear import': protein_missing_external_identity
+  omitted interaction 'Wnt binds Frizzled': protein_missing_external_identity
+  omitted interaction 'Frizzled activates Dishevelled': protein_missing_external_identity
+  omitted interaction 'Dishevelled recruits Inversin': protein_missing_external_identity
+  omitted interaction 'Par6 interacts with Dishevelled': protein_missing_external_identity
+  omitted interaction 'Smurf binds to Par6': protein_missing_external_identity
+  omitted interaction 'Dishevelled associates with DAAM': protein_missing_external_identity
+  omitted interaction 'DAAM activates Rac1': protein_missing_external_identity
+  omitted interaction 'DAAM activates Profilin': protein_missing_external_identity
+  omitted interaction 'DAAM activates RhoA': protein_missing_external_identity
+  omitted interaction 'JNK activates c-Jun': protein_missing_external_identity
+  omitted interaction 'RhoA activates DIA1': protein_missing_external_identity
+  omitted interaction 'ROCK activates MRLC': protein_missing_external_identity
+  omitted interaction 'DIA1 activates MRLC': protein_missing_external_identity
+  omitted interaction 'CapZIP stimulates actin polymerization': protein_missing_external_identity
+  omitted interaction 'MRLC stimulates actin polymerization': protein_missing_external_identity
+  omitted interaction 'DIA1 stimulates actin polymerization': protein_missing_external_identity
+  omitted interaction 'Profilin stimulates actin polymerization': protein_missing_external_identity
+  omitted interaction 'Celsr1 activates Dishevelled': protein_missing_external_identity
+  omitted interaction 'Wnt binds Celsr1': protein_missing_external_identity
+  omitted interaction 'Wnt binds Vangl2': protein_missing_external_identity
+  omitted interaction 'Vangl2 activates Dishevelled': protein_missing_external_identity
+  omitted interaction 'Wnt binds Frizzled': protein_missing_external_identity
+  omitted interaction 'Dishevelled binds Inversin': protein_missing_external_identity
+  omitted interaction 'Dishevelled binds Par6': protein_missing_external_identity
+  omitted interaction 'Dishevelled binds Smurf': protein_missing_external_identity
+  omitted interaction 'Smurf binds Par6': protein_missing_external_identity
+  omitted interaction 'Dishevelled binds DAAM': protein_missing_external_identity
+  omitted interaction 'Wnt binds Vangl2': protein_missing_external_identity
+  omitted interaction 'Dvl binds Par6': protein_missing_external_identity
+  omitted interaction 'Dvl binds Smurf': protein_missing_external_identity
+  omitted interaction 'Dvl binds DAAM': protein_missing_external_identity
+  omitted interaction 'RhoA activates DIA1': protein_missing_external_identity
+  omitted interaction 'Prickle inhibits Wnt/PCP signaling': protein_missing_external_identity
+  omitted interaction 'Inturned binds Dvl-Prickle-Intu complex': protein_missing_external_identity
+  omitted interaction 'Profilin binds G-actin': protein_missing_external_identity
+  omitted interaction 'Dvl associated activator of morphogenesis binds Dvl': protein_missing_external_identity
+  omitted interaction 'DAAM activates Profilin': protein_missing_external_identity
+  omitted interaction 'Wnt binds related to tyrosine kinase receptor': protein_missing_external_identity
+  omitted interaction 'Smurf1 ubiquitinates Prickle': protein_missing_external_identity
+  omitted interaction 'Smurf2 ubiquitinates Prickle': protein_missing_external_identity
+  omitted interaction 'Dvl-Inversin complex associates with DAAM': protein_missing_external_identity
+  omitted interaction 'Smurf ubiquitinates Prickle': protein_missing_external_identity
+  omitted interaction 'JNK phosphorylates c-Jun': protein_missing_external_identity
+  omitted interaction 'ROCK phosphorylates MRLC': protein_missing_external_identity
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 3 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens', 'Unknown species', 'Arabidopsis thaliana']
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 3 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Homo sapiens', 'Unknown species', 'Arabidopsis thaliana']
+  tail: {"checkpoint": "pre_freeze", "pwml_written": true, "failure_stage": null, "quarantine": {"ok": true, "refusal": [], "counts": {"core_accepted": 10, "auxiliary_accepted": 0, "quarantined_unmapped_entity": 49, "quarantined_out_of_scope": 0, "quarantined_weak_evidence": 0, "quarantined_broken_reference": 0, "quarantined_disconnected": 0}}, "coverage": {"drawn": 6, "total": 59, "by_design_withheld": 32, "no_pwml_cause": ""}, "export": {"ok": true, "error": "", "required_gate_codes": [], "ir_blocking": []}, "driver_codes": [], "network_refused": 3}
+
+######## sour_taste_v2  tree=base  requests=40 unrecorded=0 ai=0 cache-answers-removed=172 targets=130
+  quarantine (strict): accepted=8 omitted=1
+  shipped: {"Kir2.1": "", "OTOP1": "Q80VM9", "P2rx1": "P51576", "P2rx2": "Q8K3P1", "P2rx3": "Q3UR32", "SNARE": "", "[family complex] P2X receptor": "P2rx1=P51576,P2rx2=Q8K3P1,P2rx3=Q3UR32", "voltage-gated Ca2+ channels": ""}
+  omitted interaction 'Kir2.1 conducts K+': protein_missing_external_identity
+  tail: {"checkpoint": null, "pwml_written": null, "failure_stage": "replay_exception: PrefreezeResolutionError: AMBIGUOUS_RENAME_TARGET: 2 distinct compound names canonicalize to 'potassium'; applying the rename would merge them", "quarantine": {"ok": null, "refusal": null, "counts": null}, "coverage": {"drawn": null, "total": null, "by_design_withheld": null, "no_pwml_cause": null}, "export": {"ok": null, "error": null, "required_gate_codes": null, "ir_blocking": null}, "driver_codes": null, "network_refused": 0}
+
+######## enterobactin  tree=base  requests=37 unrecorded=0 ai=0 cache-answers-removed=172 targets=130
+  quarantine (strict): accepted=9 omitted=0
+  shipped: {"EntA": "P15047", "EntB": "P0ADI4", "EntC": "P0AEJ2", "EntE": "P10378", "Fur": "P0A9A9", "TolC": "P02930", "Unknown": "Unknown"}
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 3 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli', 'Unknown species', 'Arabidopsis thaliana']
+Resolution DB unavailable (db_not_configured) and the offline name index does not cover 0 compound(s) and 3 species; their names may be non-canonical and will collide with existing rows on PathWhiz import. Configure the resolution DB (see docs/setup.md) or refresh the offline index. compounds=[]; species=['Escherichia coli', 'Unknown species', 'Arabidopsis thaliana']
+  tail: {"checkpoint": "pre_freeze", "pwml_written": true, "failure_stage": null, "quarantine": {"ok": true, "refusal": [], "counts": {"core_accepted": 8, "auxiliary_accepted": 1, "quarantined_unmapped_entity": 0, "quarantined_out_of_scope": 0, "quarantined_weak_evidence": 0, "quarantined_broken_reference": 0, "quarantined_disconnected": 0}}, "coverage": {"drawn": 8, "total": 9, "by_design_withheld": 1, "no_pwml_cause": ""}, "export": {"ok": true, "error": "", "required_gate_codes": [], "ir_blocking": []}, "driver_codes": [], "network_refused": 0}
+
+######## menaquinone  tree=base  requests=90 unrecorded=0 ai=0 cache-answers-removed=172 targets=130
+  quarantine (strict): accepted=23 omitted=3
+  shipped: {"MenD": "", "Unknown": "Unknown"}
+  omitted reaction 'MenD reaction': protein_missing_external_identity
+  omitted reaction 'MenD-catalyzed conversion of isochorismate to SEPHCHC': protein_missing_external_identity
+  omitted interaction 'allosteric inhibition of MenD by DHNA': protein_missing_external_identity
+  tail: {"checkpoint": "pre_freeze", "pwml_written": false, "failure_stage": "pwml_export", "quarantine": {"ok": true, "refusal": [], "counts": {"core_accepted": 23, "auxiliary_accepted": 0, "quarantined_unmapped_entity": 3, "quarantined_out_of_scope": 0, "quarantined_weak_evidence": 0, "quarantined_broken_reference": 0, "quarantined_disconnected": 0}}, "coverage": {"drawn": 0, "total": 26, "by_design_withheld": 0, "no_pwml_cause": "species_missing_classification; species_missing_taxonomy"}, "export": {"ok": false, "error": "PWML required-field gate failed.", "required_gate_codes": ["species_missing_classification", "species_missing_taxonomy"], "ir_blocking": []}, "driver_codes": [], "network_refused": 0}
+
+SUMMARY {"chlorophyll": {"accepted": 55, "drawn": 53, "pwml_written": true, "total": 64, "unrecorded": 0}, "enterobactin": {"accepted": 9, "drawn": 8, "pwml_written": true, "total": 9, "unrecorded": 0}, "menaquinone": {"accepted": 23, "drawn": 0, "pwml_written": false, "total": 26, "unrecorded": 0}, "sour_taste_v2": {"accepted": 8, "drawn": null, "pwml_written": null, "total": null, "unrecorded": 0}, "wnt_ca": {"accepted": 26, "drawn": 16, "pwml_written": true, "total": 63, "unrecorded": 0}, "wnt_pcp": {"accepted": 11, "drawn": 6, "pwml_written": true, "total": 59, "unrecorded": 0}}
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch797b\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f95802fc68ab0927ccb8e2a0892fe00c4a180da6  [git, worktree dirty=True]
+label                   : replay-base-all2-r1
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch797b/docs/pwml_recovery_sprint/evidence/orch797b_replay.py C:/t/orch797b/base C:/t/orch797b/rb2 C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch797b/docs/pwml_recovery_sprint/evidence/orch797x/orch797b_uniprot_responses.json
+cwd                     : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch797b
+root PID / process group: 76988 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 3600 s
+duration                : 15.59 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  78200:python.exe
+descendants terminated  : 1  78200
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch797b\docs\pwml_recovery_sprint\evidence\g11\ORCH-797b\16-replay-base-all2-r1.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH-797b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================
