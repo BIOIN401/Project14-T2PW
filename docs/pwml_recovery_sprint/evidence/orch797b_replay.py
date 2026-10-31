@@ -5,11 +5,12 @@ usage: python orch797b_replay.py <tree_root> <workdir> <responses.json> [--recor
 The ORCH-792/793 technique (``evidence/orch792_replay.py``) on the ORCH-796 legs (latest stamp per paper):
 the leg's own ``merged_payload.json`` (its rows and spellings, never rebuilt ones), the run's own
 ``data/id_mapping_cache.json`` (copied) as the recorded answers, taxonomy ids from the leg's ``final_mapped.json``,
-no PathBank DB, no LLM (``tests/orch762_harness.py`` doors). One change: for every protein the leg left WITHOUT a
-UniProt id, the run's cached UniProt answers (``api-v9::<name>::`` and ``api-fallback-v2::<name>::``) are removed from
-both cache copies, so the measured tree's parser re-reads UniProt's answers to the SAME queries. Those answers, and
-any family search the tree issues, come from ``<responses.json>``, recorded once with ``--record`` (live read-only
-UniProt GETs; no tail) and replayed offline by both arms. Offline, an unrecorded request is answered 404 and counted.
+no PathBank DB, no LLM (``tests/orch762_harness.py`` doors). One change: EVERY taxon-scoped UniProt answer of the run
+(``api-v9::`` and ``api-fallback-v2::``; the tip keys them ``api-v10`` / ``api-fallback-v3``) is removed from both cache
+copies, so each measured tree's parser re-reads UniProt's answers itself. Those answers, and any family search a tree
+issues, come from ``<responses.json>``, recorded once with ``--record`` (live read-only UniProt GETs, tip then base;
+no tail) and replayed offline by both arms, so base and tip judge identical answers. PathBank (``db::``), taxonomy
+and the run's family-search answers stay the leg's own. Offline, an unrecorded request is answered 404 and counted.
 
 Tail: the Stage-6 payload is written as the leg's ``final_mapped.json`` with the leg's other files, and replayed
 by ``evidence/orch768_replay_corpus.py`` ``replay_leg`` as a pre-freeze checkpoint (enrichment from the run's cache,
@@ -118,13 +119,12 @@ for leg in legs_wanted or list(LEGS):
     lw.mkdir(parents=True, exist_ok=True)
     merged = json.loads((d / "merged_payload.json").read_text(encoding="utf-8"))
     final = json.loads((d / "final_mapped.json").read_text(encoding="utf-8"))
-    have = {norm(r.get("name")) for r in (final.get("entities") or {}).get("proteins") or []
-            if isinstance(r, dict) and (r.get("mapped_ids") or {}).get("uniprot")}
-    targets = sorted({norm(r.get("name")) for r in (merged.get("entities") or {}).get("proteins") or []
-                      if isinstance(r, dict) and norm(r.get("name")) and norm(r.get("name")) not in have})
     cache = json.loads((RUN / "data/id_mapping_cache.json").read_text(encoding="utf-8"))
     prot = cache.get("proteins") or {}
-    dropped = [k for k in prot if k.startswith(("api-v9::", "api-fallback-v2::")) and k.split("::")[1] in targets]
+    # Every taxon-scoped UniProt answer is re-asked (the tip keys them api-v10 / api-fallback-v3 because the
+    # parsed candidate gained protein_names); PathBank (db::), taxonomy and family-search answers stay the leg's.
+    dropped = [k for k in prot if k.startswith(("api-v9::", "api-fallback-v2::"))]
+    targets = sorted({k.split("::")[1] for k in dropped})
     for k in dropped:
         del prot[k]
     for name in ("id_mapping_cache.json", "id_mapping_cache_stage6.json"):
@@ -158,7 +158,16 @@ for leg in legs_wanted or list(LEGS):
     print("  shipped:", json.dumps(ids, ensure_ascii=False, sort_keys=True))
     for a in omitted:
         print(f"  omitted {a.get('process_kind')} {a.get('name')!r}: {a.get('reason')}")
-    # Tail: the Stage-6 payload as the leg's pre-freeze checkpoint.
+    # Tail: the Stage-6 payload as the leg's pre-freeze checkpoint. NCBI backfill is off offline, so each
+    # species row takes the fields the leg's own backfill wrote (classification etc.), as the taxonomy id did.
+    leg_species = {norm(s.get("name")): s for s in (final.get("entities") or {}).get("species") or [] if isinstance(s, dict)}
+    for s in (st6.get("entities") or {}).get("species") or []:
+        for key, value in (leg_species.get(norm(s.get("name"))) or {}).items():
+            if s.get(key) in (None, "", [], {}):
+                s[key] = deepcopy(value)
+        # The Unknown placeholder's species is PathBank species 4; offline (no DB) it stays "novel".
+        if norm(s.get("name")) == "unknown species" and not s.get("pathbank_species_id"):
+            s["pathbank_species_id"] = s["species_id"] = map_ids._PATHBANK_UNKNOWN_SPECIES_ID
     scratch = lw / "inputs" / "leg"
     scratch.mkdir(parents=True, exist_ok=True)
     for name in H.LEG_FILES:
@@ -168,13 +177,18 @@ for leg in legs_wanted or list(LEGS):
     shutil.copyfile(RUN / "data/enrichment_cache.json", scratch / "enrichment_cache.json")
     names = [n for n in list(H.LEG_FILES) + ["enrichment_cache.json"] if (scratch / n).is_file()]
     inputs = {n: {"path": f"leg/{n}", "sha256": H.sha256_file(scratch / n)} for n in names}
-    r = H.replay_leg(T, {"id": f"ORCH-796/{leg} (ORCH-797b stage-6 replay)", "paper": d.parts[-2], "mode": "strict",
-                         "inputs": inputs}, lw / "work", primary=lw / "inputs")
+    try:
+        r = H.replay_leg(T, {"id": f"ORCH-796/{leg} (ORCH-797b stage-6 replay)", "paper": d.parts[-2], "mode": "strict",
+                             "inputs": inputs}, lw / "work", primary=lw / "inputs")
+    except Exception as exc:  # noqa: BLE001 -- recorded; the next leg still runs
+        r = {"failure_stage": f"replay_exception: {type(exc).__name__}: {str(exc)[:200]}", "pwml_written": None}
     cov = r.get("pwml_coverage") or {}
     tail = {k: r.get(k) for k in ("checkpoint", "pwml_written", "failure_stage")}
     tail["quarantine"] = {k: (r.get("quarantine") or {}).get(k) for k in ("ok", "refusal", "counts")}
     tail["coverage"] = {k: cov.get(k) for k in ("drawn", "total", "by_design_withheld", "no_pwml_cause")}
-    tail["network_refused"] = r.get("network_refused")
+    tail["export"] = {k: (r.get("export") or {}).get(k) for k in ("ok", "error", "required_gate_codes", "ir_blocking")}
+    tail["driver_codes"] = (r.get("driver") or {}).get("codes")
+    tail["network_refused"] = len(r.get("network_refused") or [])
     print("  tail:", json.dumps(tail, default=str))
     summary[leg] = {"accepted": len(kept), "pwml_written": r.get("pwml_written"), "drawn": cov.get("drawn"),
                     "total": cov.get("total"), "unrecorded": len(http.unrecorded)}
