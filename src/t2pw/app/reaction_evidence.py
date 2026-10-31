@@ -199,6 +199,7 @@ KNOWN_ISSUES: Dict[str, Any] = {
         ("requested_core_coverage_below_minimum:<x><<y>", "prefix", ("requested_core_coverage_below_minimum",), "KI-038", False),
         ("same_name_declared_as_another_kind:<bucket>", "prefix", ("same_name_declared_as_another_kind:",),
          "KI-051", False),
+        ("same_entity_name_form:<bucket>", "prefix", ("same_entity_name_form:",), "KI-039", False),
         ("scope_conflict", "exact", ("scope_conflict",), "KI-025", False),
         ("serialization_would_require_invention", "exact", ("serialization_would_require_invention",), "KI-016", False),
         ("species_mismatch", "exact", ("species_mismatch",), "KI-002", False),

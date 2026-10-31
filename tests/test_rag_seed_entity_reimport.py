@@ -242,7 +242,7 @@ def test_the_old_call_shape_is_what_produced_the_duplicates():
         "udpglcnac",
         "ump",
         "kdo",
-        "lipid iva precursor",
+        "lipidivaprecursor",  # ORCH-797a: D-120 key text (was "lipid iva precursor")
         "lpxa",
         "lpxc",
     }
@@ -424,7 +424,8 @@ def test_charge_states_phospho_forms_and_spacing_are_not_false_merged():
     would collapse 'NAD+' into 'NAD' and 'Ca2+' into 'Ca2'. Audited against every
     ``merged_payload.json`` under ``runs/``: with this normalizer every collision
     in the whole corpus is between BYTE-IDENTICAL names; zero distinct names
-    collapse. It under-merges instead ('lipid IV_A' vs 'lipid IV A' stay two rows),
+    collapse. It under-merged ('lipid IV_A' vs 'lipid IV A' stayed two rows) until ORCH-797a: D-120 § 1 makes them
+    one name, so the RAG spelling is now dropped as already present (the expected list lost 'lipid IV A').
     which is the safe direction here and the synonym resolver's problem, not this
     guard's.
     """
@@ -455,7 +456,6 @@ def test_charge_states_phospho_forms_and_spacing_are_not_false_merged():
     assert [c["name"] for c in entities["compounds"]] == [
         "NAD",
         "NADH",
-        "lipid IV A",
         "Ca2",
     ]
     assert [p["name"] for p in entities["proteins"]] == ["phosphorylated PhoP", "PhoP-P"]

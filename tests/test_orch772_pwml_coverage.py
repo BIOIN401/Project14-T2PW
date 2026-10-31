@@ -76,7 +76,8 @@ def test_the_code_table_is_the_catalogue_appendix():
     codes, messages, workarounds = _catalogue()
     # The appendix as ORCH-771 wrote it (82, 19), plus ORCH-773's two rows: the
     # ``protein_complex_component_omitted:`` code and the "Located protein is isolated" message.
-    assert len(codes) == 90 and len(messages) == 20  # ORCH-788 (89038702): + biological_state_missing_subcellular_location;
+    assert len(codes) == 91 and len(messages) == 20  # ORCH-788 (89038702): + biological_state_missing_subcellular_location;
+    # ORCH-797a: 90 -> 91, + same_entity_name_form:<bucket> (KI-039);
     # ORCH-794/795: + same_name_declared_as_another_kind:<bucket> (KI-051), coarse_grained_same_entity_transformation (KI-015);
     # ORCH-795 follow-up: + the four Stage-6 quarantined_proteins reasons now rendered (KI-007, KI-013 x2, KI-015)
     assert list(KNOWN_ISSUES["codes"]) == codes
@@ -116,6 +117,7 @@ def test_the_code_table_is_the_catalogue_appendix():
         ("PWML export did not finish inside the time budget", "KI-028"),
         ("coarse_grained_same_entity_transformation", "KI-015"),  # ORCH-795 (F-2): was "unclassified"
         ("same_name_declared_as_another_kind:nucleic_acids", "KI-051"),  # ORCH-794 (NEW acceptance)
+        ("same_entity_name_form:compounds", "KI-039"),  # ORCH-797a (NEW acceptance)
         ("", "unclassified"),
     ],
 )

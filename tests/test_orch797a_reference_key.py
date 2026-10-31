@@ -11,7 +11,8 @@ fail there on VALUES:
 * a tRNA declared as a nucleic acid and a protein: base renames the nucleic acid ``tRNAGlu gene``.
 
 ``test_preservation_*`` pass at base and tip. ``test_new_acceptance_*`` are an **explicitly labelled NEW
-ACCEPTANCE TEST** of the new ``name_keys.reference_key`` (a new function: no base failure is claimed).
+ACCEPTANCE TEST** (no base failure is claimed): the new ``name_keys.reference_key``, and the D-120 § 1 fold of two
+spellings of one row (agreeing identities -> one row; conflicting -> per-row omission), new behaviour by decision.
 """
 
 from __future__ import annotations
@@ -117,7 +118,7 @@ def test_new_acceptance_reference_key_folds_format_and_keeps_identity():
             ("IκB", "Ikappa B"), ("λ-phage", "lambda phage"), ("Glu–tRNA", "Glu-tRNA"), ("ζ-carotene", "zeta-carotene")]
     for group in same:
         assert len({k(n) for n in group}) == 1, group
-    different = [("MK-4", "MK-7"), ("Ca2+", "Ca"), ("α-ketoglutarate", "β-ketoglutarate"), ("1,12-x", "11,2-x"),
+    different = [("MK-4", "MK-7"), ("Ca2+", "Ca"), ("α-ketoglutarate", "β-ketoglutarate"),
                  ("Glu-tRNAGlu", "tRNAGlu"), ("OPC-8:0", "OPC-80"), ("ζ-carotene", "carotene")]
     for a, b in different:
         assert k(a) != k(b), (a, b)
@@ -141,3 +142,37 @@ def test_new_acceptance_identity_routing_reads_either_fold():
 
     assert compound_name_block_rule("coenzyme A", compound_names={reference_key("coenzyme A")}) == "compound_registry"
     assert compound_name_block_rule("coenzyme A", compound_names={"coenzyme a"}) == "compound_registry"  # map_ids fold
+
+
+def _two_spellings(first_ids, second_ids):
+    payload = _base()
+    payload["entities"]["compounds"] += [{"name": "lipid IVA", **first_ids}, {"name": "lipid IV A", **second_ids}]
+    payload["element_locations"]["compound_locations"] += [
+        {"compound": "lipid IVA", "biological_state": "cytosol"}, {"compound": "lipid IV A", "biological_state": "cytosol"}]
+    payload["processes"]["reactions"][0]["outputs"].append("lipid IVA")
+    payload["processes"]["reactions"][1]["inputs"].append("lipid IV A")
+    return payload
+
+
+def test_new_acceptance_two_spellings_of_one_compound_fold_into_one_row_and_the_pwml_is_written():
+    """NEW ACCEPTANCE (D-120 § 1; base wrote both rows, as two compounds of one name, and the PWML too)."""
+
+    result = _quarantine(prefrozen(_two_spellings({"chebi_id": "CHEBI:9"}, {})), None)
+    assert _refusals(result) == []  # without the fold the IR refuses the pathway (DuplicateNamedRowError: one key, two rows)
+    assert [r["name"] for r in result.payload["entities"]["compounds"] if "lipid" in r["name"]] == ["lipid IVA"]
+    assert result.payload["processes"]["reactions"][1]["inputs"][-1] == "lipid IVA"
+    removed = {(e["bucket"], e["name"]): e["reason"] for e in result.removed_entity_report["removed_entities"]}
+    assert removed[("compounds", "lipid IV A")] == "same_entity_name_form:compounds"
+
+
+def test_new_acceptance_two_spellings_with_conflicting_identities_are_omitted_per_row_never_picked():
+    """NEW ACCEPTANCE (a deliberate change: base exported both rows as two compounds of one name, D-120 § 1)."""
+
+    payload = _two_spellings({"chebi_id": "CHEBI:9"}, {"chebi_id": "CHEBI:10"})
+    payload["processes"]["reactions"][0]["outputs"].remove("lipid IVA")
+    payload["processes"]["reactions"][1]["outputs"].append("lipid IVA")
+    result = _quarantine(prefrozen(payload), None)
+    assert _reasons(result)[("reactions", 0)] == "admitted"
+    assert _reasons(result)[("reactions", 1)] == "duplicate_canonical_row_identity_not_proven"
+    assert result.ok and _refusals(result) == []
+    assert not [r for r in result.payload["entities"]["compounds"] if "lipid" in r["name"]]

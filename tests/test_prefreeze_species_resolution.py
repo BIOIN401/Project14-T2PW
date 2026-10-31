@@ -275,7 +275,9 @@ def test_new_acceptance_two_strains_of_one_species_are_declined_not_merged() -> 
     rows rather than on the whole object.
     """
 
-    other = STRAIN.replace("subsp.", "subsp")
+    # ORCH-797a: was STRAIN.replace("subsp.", "subsp"), which D-120 § 1 makes the SAME name (one strain, renamed
+    # once). Two different strain names keep the guard under test.
+    other = STRAIN.replace("KF147", "IL1403")
     payload = _payload(
         {"name": STRAIN, "taxonomy_id": "1091041"},
         {"name": other, "taxonomy_id": "1091041"},

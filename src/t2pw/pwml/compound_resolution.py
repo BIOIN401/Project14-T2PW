@@ -95,7 +95,15 @@ def _canonical(value: Any) -> str:
 
 
 def _norm(value: Any) -> str:
-    return reference_key(value)  # byte-identical to ``ir._norm`` (D-120 § 1, ORCH-797a)
+    # D-120 § 1 (ORCH-797a): the reference key the quarantine and admission use, so what they admit resolves here.
+    return reference_key(value)
+
+
+def _abbreviation_length(value: Any) -> int:
+    """The D-028 short-abbreviation gate's length: the fold ``_norm`` was before D-120 (separators count as one
+    space), kept so no name crosses the gate because the reference key changed (ORCH-797a). Not a reference key."""
+
+    return len(re.sub(r"[^a-z0-9:+ ]+", " ", _canonical(value).casefold()).strip())
 
 
 def _to_int(value: Any) -> Optional[int]:
@@ -488,8 +496,7 @@ def _db_match_rule_decision(row: Dict[str, Any], match: Dict[str, Any]) -> Dict[
         return decision
 
     if rule in EXACT_NAME_MATCH_RULES:
-        # A length gate, not a reference key: measured on the pre-D-120 fold so no name changes side (ORCH-797a).
-        normalized_length = len(re.sub(r"[^a-z0-9:+ ]+", " ", _canonical(queried_name).casefold()).strip())
+        normalized_length = _abbreviation_length(queried_name)
         decision["normalized_length"] = normalized_length
         if normalized_length > SHORT_ABBREVIATION_MAX_CHARS:
             decision["admitted"] = True

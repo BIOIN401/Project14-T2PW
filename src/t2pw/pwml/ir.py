@@ -354,7 +354,7 @@ def _db_id(row: Dict[str, Any], keys: Sequence[str]) -> Optional[int]:
 
 
 SPECIES_CREATE_DEFAULTS: Dict[str, Dict[str, Any]] = {
-    "narcissus sp aff pseudonarcissus": {
+    "narcissusspaffpseudonarcissus": {  # keyed by _create_default_key (D-120 reference key, ORCH-797a)
         "name": "Narcissus aff. pseudonarcissus MK-2014",
         "taxonomy_id": "1540222",
         "classification": "Eukaryote",

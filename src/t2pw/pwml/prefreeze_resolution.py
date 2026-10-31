@@ -128,7 +128,14 @@ def _canonical(value: Any) -> str:
 
 
 def _norm(value: Any) -> str:
-    return reference_key(value)  # byte-identical to ``ir._norm`` (D-120 § 1, ORCH-797a)
+    # D-120 § 1 (ORCH-797a): the reference key the quarantine and admission use, so what they admit resolves here.
+    return reference_key(value)
+
+
+def _moved_fold(value: Any) -> str:
+    """The pre-D-120 ``_norm``, byte for byte: only for "did canonicalization move this name". Not a key."""
+
+    return re.sub(r"[^a-z0-9:+ ]+", " ", _canonical(value).casefold()).strip()
 
 
 def _safe_dict(value: Any) -> Dict[str, Any]:
@@ -996,7 +1003,10 @@ def _reject_duplicate_canonical_rows(
     for key, members in sorted(groups.items()):
         if len(members) < 2 or key not in referenced:
             continue
-        arrived = [index for index in members if _norm(before_names[index]) != key]
+        # ORCH-797a: "arrived" = canonicalization moved the row's name, judged on the pre-D-120 fold. Two spellings
+        # the D-120 key already joins (``lipid IV_A`` / ``lipid IV A`` -> ``Lipid IVA``) still arrive and are still
+        # consolidated or omitted here; read on the new key they would reach the IR as two rows on one name.
+        arrived = [index for index in members if _moved_fold(before_names[index]) != _moved_fold(after_names[index])]
         if not arrived:
             continue
         db_id = _proven_same_entity(members, arrived, rows, resolved)

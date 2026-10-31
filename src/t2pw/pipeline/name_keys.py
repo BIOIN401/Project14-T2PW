@@ -127,10 +127,10 @@ def mentions(name: str, keyed_text: str, aliases: Iterable[str] = ()) -> bool:
 # ---------------------------------------------------------------------------
 # NOT a copy of the evaluator: production's ONE reference key (D-120 § 1, ORCH-797a).
 # ---------------------------------------------------------------------------
-#: A separator run between two digits is kept as one ``,`` so locants stay apart
-#: (``1,12-x`` != ``11,2-x``); everywhere else punctuation and whitespace vanish.
-_DIGIT_GAP = re.compile(r"(?<=\d)[^a-z0-9:+]+(?=\d)")
-_NOT_REFERENCE_KEY = re.compile(r"[^a-z0-9:+,]+")
+#: Everything outside ``[a-z0-9:+]`` vanishes, so the key is idempotent and a strict coarsening of the quarantine's
+#: pre-D-120 key (``process_normalizer._normalize`` deleted punctuation and kept spaces): an archived report's old
+#: key, keyed again, equals the new key of the name it came from.
+_NOT_REFERENCE_KEY = re.compile(r"[^a-z0-9:+]+")
 
 
 def _spell_greek(char: str) -> str:
@@ -157,7 +157,7 @@ def reference_key(value: Any) -> str:
     """
 
     text = "".join(_spell_greek(c) for c in canonical_text(value)).casefold()
-    return _NOT_REFERENCE_KEY.sub("", _DIGIT_GAP.sub(",", text))
+    return _NOT_REFERENCE_KEY.sub("", text)
 
 
 __all__ = ["mentions", "reference_key", "strict_key", "text_key"]

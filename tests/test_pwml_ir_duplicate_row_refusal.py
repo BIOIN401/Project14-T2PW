@@ -138,7 +138,7 @@ def test_new_acceptance_duplicate_compound_norm_keys_block() -> None:
         _build(payload)
 
     assert excinfo.value.code == "PWML_IR_DUPLICATE_NAMED_ROW"
-    assert excinfo.value.norm_key == "lipid iv a"
+    assert excinfo.value.norm_key == "lipidiva"
     assert excinfo.value.pointer_prefix == "/entities/compounds"
 
 
@@ -196,7 +196,7 @@ def test_new_acceptance_the_diagnostic_identifies_both_conflicting_rows() -> Non
     assert error.keys == ["cmp_1", ""]
     assert error.pointers == ["/entities/compounds/0", "/entities/compounds/1"]
     for fragment in ("lipid IV_A", "lipid IV A", "cmp_1",
-                     "/entities/compounds/0", "/entities/compounds/1", "lipid iv a"):
+                     "/entities/compounds/0", "/entities/compounds/1", "lipidiva"):
         assert fragment in str(error), f"the message does not name {fragment!r}"
 
     # The structured diagnostic is preserved, and promoted warning -> error.
@@ -204,7 +204,7 @@ def test_new_acceptance_the_diagnostic_identifies_both_conflicting_rows() -> Non
     assert not any(i.get("code") == "duplicate_named_record" for i in report["warnings"])
     issues = [i for i in report["errors"] if i.get("code") == "duplicate_named_record"]
     assert len(issues) == 1
-    assert issues[0]["norm_key"] == "lipid iv a"
+    assert issues[0]["norm_key"] == "lipidiva"
     assert issues[0]["rows"] == [
         {"name": "lipid IV_A", "key": "cmp_1", "pointer": "/entities/compounds/0"},
         {"name": "lipid IV A", "key": "", "pointer": "/entities/compounds/1"},
@@ -252,7 +252,7 @@ def test_new_acceptance_a_reference_cannot_be_silently_repointed() -> None:
     can catch it, which is why it must be caught here.
     """
 
-    assert _norm("lipid IV A") == _norm("lipid IV_A") == "lipid iv a", (
+    assert _norm("lipid IV A") == _norm("lipid IV_A") == "lipidiva", (
         "the premise of the whole card: these two spellings share one exporter key")
 
     with pytest.raises(DuplicateNamedRowError) as excinfo:
@@ -426,7 +426,7 @@ def test_new_acceptance_every_entity_bucket_refuses(bucket: str) -> None:
         _build(payload)
 
     assert excinfo.value.pointer_prefix == f"/entities/{bucket}"
-    assert excinfo.value.norm_key == "escherichia coli"
+    assert excinfo.value.norm_key == "escherichiacoli"
     # ``_canonical`` collapses the whitespace run before the name is recorded.
     assert excinfo.value.names == ["Escherichia coli", "escherichia coli"]
 
@@ -478,18 +478,19 @@ def test_new_acceptance_component_buckets_still_warn(bucket: str) -> None:
 @pytest.mark.parametrize(
     "first,second,expected_norm",
     [
+        # ORCH-797a: the expected key is the D-120 reference key ("lipid iv a" -> "lipidiva"); the pairs are unchanged.
         # The real F-039 pair -- underscore against space. MANDATORY.
-        ("lipid IV_A", "lipid IV A", "lipid iv a"),
+        ("lipid IV_A", "lipid IV A", "lipidiva"),
         # Case only: ``_norm`` casefolds.
-        ("Lipid IV A", "lipid iv a", "lipid iv a"),
+        ("Lipid IV A", "lipid iv a", "lipidiva"),
         # Punctuation: the non-``[a-z0-9:+ ]`` class becomes a space.
-        ("lipid-IV-A", "lipid IV A", "lipid iv a"),
+        ("lipid-IV-A", "lipid IV A", "lipidiva"),
         # Whitespace runs: ``_canonical`` collapses them before ``_norm`` sees them.
-        ("lipid  IV   A", "lipid IV A", "lipid iv a"),
+        ("lipid  IV   A", "lipid IV A", "lipidiva"),
         # Trailing/leading punctuation, stripped by ``_norm``.
-        ("(lipid IV A)", "lipid IV A", "lipid iv a"),
+        ("(lipid IV A)", "lipid IV A", "lipidiva"),
         # Mixed: every trick at once.
-        ("  LIPID--IV__a  ", "lipid iv a", "lipid iv a"),
+        ("  LIPID--IV__a  ", "lipid iv a", "lipidiva"),
     ],
 )
 def test_new_acceptance_the_guard_cannot_be_bypassed_by_spelling(
@@ -576,7 +577,7 @@ def test_new_acceptance_aliases_do_not_provide_an_escape_hatch() -> None:
             _compound("lipid IV_A", synonyms=["Lipid IVA"], raw_name="Lipid-IV-A"),
             _compound("lipid IV A", synonyms=["compound 40738"], short_name="LIVA"),
         ]))
-    assert excinfo.value.norm_key == "lipid iv a"
+    assert excinfo.value.norm_key == "lipidiva"
 
     # 2 -- alias-only overlap: distinct ``name`` keys, so no dedupe collision, and
     # the binding follows PAYLOAD ROW ORDER with no diagnostic. Both orders are

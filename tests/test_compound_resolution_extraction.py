@@ -178,7 +178,8 @@ def test_extraction_creates_no_import_cycle() -> None:
             imported.add(node.module)
 
     assert "t2pw.pwml.ir" not in imported, f"cycle: compound_resolution imports {imported}"
-    assert imported == {"__future__", "re", "typing", "t2pw.pwml.db_resolver",
+    # ORCH-797a: + t2pw.pipeline.name_keys (the D-120 reference key; stdlib-only, no cycle).
+    assert imported == {"__future__", "re", "typing", "t2pw.pwml.db_resolver", "t2pw.pipeline.name_keys",
                         "t2pw.pwml.name_index", "t2pw.mapping.map_ids"}
 
 
@@ -681,7 +682,9 @@ GOLDEN = {
     "runs_verify/2026-08-24_1428/papers/PMC12096016/research/final_mapped.json": "3b9b15bd738ccad5de3efbb81da7759618fb8ab9a23ac05ee1d8d10583816703",
     "runs_verify/2026-08-24_1428/papers/PMC12096016/strict/final_mapped.json": "a25e647331057b52481f90418ddd5169eb79e78efaab6d74eb435de8696e8bad",
     "runs_verify/2026-08-24_1428/papers/PMC12180156/strict/final_mapped.json": "72fbf5eebad7d51e32a69f9e5121c596c37ccf16e32bbc7dc885ed44a08cf61a",
-    "runs_verify/2026-08-24_1428/papers/PMC12444477/strict/final_mapped.json": "268d1912b5d63f5ce3a78c392fd9374baa8a21e6f83744a75bbe141fda9e2523",
+    # ORCH-797a: was 268d1912...e2523. One synonym of one compound row ("Kdo-lipid IVA") is now deduped against
+    # "KDO-lipid IV(A)" (one alias under the D-120 key); the only IR difference base vs tip (evidence/orch797a_goldenprobe.py).
+    "runs_verify/2026-08-24_1428/papers/PMC12444477/strict/final_mapped.json": "9f68387db5483bd9216149e432cbbaee4d3cc194a775219a54612d4f4914e8dc",
     "runs_verify/2026-08-24_1428/papers/PMC12452463/research/final_mapped.json": "4b399cfe764df081c65c1f6077c58ac2edf00909112f135a8e3c699f6d0258fc",
     "runs_verify/2026-08-24_1428/papers/PMC12452463/strict/final_mapped.json": "70af28aa537d2c846e02272bd5177cfb780339032593cb2968929b67ca6f4ac4",
     "runs_verify/2026-08-24_1428/papers/PMC12782028/research/final_mapped.json": "b2b111229e3dc06e06747c8a8ff5b06d05cff1d67e324ad8444dda6156d90412",
