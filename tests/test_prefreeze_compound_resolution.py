@@ -1043,7 +1043,8 @@ def test_c050f_a_widened_match_still_stops_at_a_cross_kind_collision() -> None:
     assert payload == original
 
 
-@pytest.mark.parametrize("name", ["---", "α", "-", "??"])
+# ORCH-797a: "α" -> "·". D-120 spells Greek out ("α" keys as "alpha"), so it is no longer an empty-norm name.
+@pytest.mark.parametrize("name", ["---", "·", "-", "??"])
 def test_c050f_an_empty_norm_rename_source_is_matched_not_discarded(name: str) -> None:
     """B-1 (REV-050f): a name normalizing to "" must not fall out of BOTH sets.
 
@@ -1210,9 +1211,9 @@ def test_c050g_new_acceptance_the_collapsed_spellings_are_recorded() -> None:
 
     assert summary["applied"] is True
     assert summary["rename_sources_collapsed"] == [{
-        "target": "glycerol 3 phosphate",
+        "target": "glycerol3phosphate",  # ORCH-797a: the D-120 reference key text (was "glycerol 3 phosphate")
         "sources": ["sn -glycerol 3-phosphate", "sn-glycerol 3-phosphate"],
-        "source_key": "sn glycerol 3 phosphate",
+        "source_key": "snglycerol3phosphate",
     }]
     assert [row["name"] for row in payload["entities"]["compounds"]] == [
         "Glycerol 3-phosphate", "Glycerol 3-phosphate"]
@@ -1272,7 +1273,8 @@ def test_c050g_new_acceptance_referenced_same_entity_spellings_consolidate() -> 
 
     assert [row["name"] for row in payload["entities"]["compounds"]] == ["Glycerol 3-phosphate"]
     assert payload["processes"]["reactions"][0]["inputs"] == ["Glycerol 3-phosphate"]
-    assert "sn-glycerol 3-phosphate" in payload["entities"]["compounds"][0]["synonyms"]
+    # ORCH-797a: the two spellings are one alias under the D-120 key, so the synonym list keeps the first one.
+    assert payload["entities"]["compounds"][0]["synonyms"] == ["sn -glycerol 3-phosphate"]
     assert summary["rows_consolidated"] == payload["prefreeze_compound_rows_consolidated"] == [{
         "name": "sn-glycerol 3-phosphate", "merged_into": "Glycerol 3-phosphate", "db_id": 78,
         "reason": "duplicate_canonical_row_consolidated_same_db_entity"}]
@@ -1398,10 +1400,10 @@ def test_c050h_correction_the_code_is_named_and_names_the_rows_and_spellings() -
     summary = _run(payload, _g3p_index())
 
     assert summary["rows_omitted_duplicate"] == [{
-        "row": 1, "name": "sn-glycerol 3-phosphate", "canonical_key": "glycerol 3 phosphate",
+        "row": 1, "name": "sn-glycerol 3-phosphate", "canonical_key": "glycerol3phosphate",
         "reason": "duplicate_canonical_row_identity_not_proven"}]
     marker = payload["entities"]["compounds"][1]["prefreeze_duplicate_omission"]
-    assert marker["canonical_key"] == "glycerol 3 phosphate"
+    assert marker["canonical_key"] == "glycerol3phosphate"  # ORCH-797a: key text
     assert payload["entities"]["compounds"][1]["name"] == "sn-glycerol 3-phosphate"
     assert marker["group"] == [
         {"row": 0, "name_before": "glycerol-3-phosphate",
@@ -1482,7 +1484,7 @@ def test_c050h_correction_the_d034_leg_still_refuses_on_committed_data() -> None
 
     omitted = report["compounds"]["rows_omitted_duplicate"]
     assert [(item["row"], item["canonical_key"]) for item in omitted] == [
-        (36, "glycerol 3 phosphate"), (38, "glycerol 3 phosphate")]
+        (36, "glycerol3phosphate"), (38, "glycerol3phosphate")]  # ORCH-797a: key text
     assert report["compounds"]["rows_consolidated"] == []
     compounds = payload["entities"]["compounds"]
     assert len(compounds) == len(original["entities"]["compounds"])

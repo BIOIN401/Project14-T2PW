@@ -1000,6 +1000,7 @@ status, listed so that it is never mistaken for one. Codes are verified against 
 | `refinement_review_crash` (corpus stage label) | exact | KI-020 | `evidence/orch768_replay_corpus.py` (harness, not `src/`) |
 | `requested_core_coverage_below_minimum:<x><<y>` | prefix `requested_core_coverage_below_minimum` | KI-038 | `release_status.COVERAGE_REASON_BELOW_MINIMUM` |
 | `same_name_declared_as_another_kind:<bucket>` (ORCH-794, D-119 § 3: the removed row of a name declared as two kinds; `<bucket>` is the kind kept, `detail.decided_by` the rule) | prefix `same_name_declared_as_another_kind:` | KI-051 | `strict_quarantine._keep_one_kind_per_name` |
+| `same_entity_name_form:<bucket>` (ORCH-797a, D-120 § 1: a row of one kind spelled differently from an earlier row under the shared reference key, with agreeing identities, folded into that row pre-freeze; `detail.kept` names it. Conflicting identities are omitted per row as `duplicate_canonical_row_identity_not_proven` instead) | prefix `same_entity_name_form:` | KI-039 | `strict_quarantine._spell_references_canonically` |
 | `scope_conflict` (status) | exact | KI-025 (KI-026 when the conflict is the organism) | `driver._STATUS_SCOPE_CONFLICT` = `rag.eligibility.OUTCOME_SCOPE_CONFLICT` |
 | `serialization_would_require_invention` (release reason) | exact | KI-016 (also KI-018) | `release_status.classify_release_status` |
 | `species_mismatch` (identity verdict) | exact | KI-002 | `map_ids.verify_real_protein_identity` |

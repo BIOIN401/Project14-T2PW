@@ -136,7 +136,7 @@ def test_removing_a_pre_existing_reaction_is_a_violation_and_is_never_repaired()
     after["processes"]["reactions"] = [dict(CORE)]
     result = validate_graph_delta(before, after, record())
     assert result.rules() == (RULE_REMOVED_ELEMENT,)
-    assert result.removed == ("processes.reactions[second step]",)
+    assert result.removed == ("processes.reactions[secondstep]",)  # ORCH-797a: element ids carry the D-120 key
     assert len(after["processes"]["reactions"]) == 1  # reported, never put back
 
 
@@ -211,7 +211,7 @@ CARRIERS = {"evidence": None, "source_papers": None, "rag_provenance": None,
             LINEAGE_KEY: None}
 #: Unrelated text put where the claim's passage was.
 SUBSTITUTE = "Ribosome assembly proceeds through a 30S intermediate."
-RICH_ELEMENT = "processes.reactions[core step]"
+RICH_ELEMENT = "processes.reactions[corestep]"  # ORCH-797a: the D-120 reference key (was "core step")
 
 
 def rewritten(**over):

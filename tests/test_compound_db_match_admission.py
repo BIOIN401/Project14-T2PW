@@ -298,7 +298,8 @@ def test_the_boundary_is_measured_after_the_modules_existing_normalization(
     name: str, expected_length: int,
 ) -> None:
     """``_norm`` is the normalization D-028 refers to; these are its lengths."""
-    assert len(cr._norm(name)) == expected_length
+    # ORCH-797a: ``_norm`` became the D-120 reference key; the gate keeps the pre-D-120 fold, now named.
+    assert cr._abbreviation_length(name) == expected_length
     is_short = expected_length <= cr.SHORT_ABBREVIATION_MAX_CHARS
     row, _ = _resolve({"name": name}, dict(OPC8_MATCH, raw_name=name))
     assert (row["name"] == name) is is_short

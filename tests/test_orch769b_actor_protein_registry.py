@@ -99,7 +99,7 @@ def test_g9_leg_quarantines_exactly_the_five_reactions_whose_actor_is_no_protein
     # The live run's decision input was sha256:6c5f9c8b2410d8af; ORCH-773 bumped QUARANTINE_POLICY_VERSION
     # (2026-07-31.1 -> 2026-10-25.1), which moves it and nothing else (merge rule 4); ORCH-780's bump
     # (-> 2026-10-26.1) moves it again, sha256:0bb36bd9e1f252d9 -> below.
-    assert report["decision_input_hash"] == "sha256:a5cf19b0eebf9c75"
+    assert report["decision_input_hash"] == "sha256:5ee0f01968ff79f3"  # ORCH-797a: context core terms in the D-120 key (was a5cf19b0eebf9c75)
     quarantined = [
         (row["index"], row["name"], row["reason"], row["essential_participant"])
         for row in result.admissions

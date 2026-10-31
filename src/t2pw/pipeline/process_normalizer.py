@@ -7,6 +7,7 @@ from collections import defaultdict
 from copy import deepcopy
 from typing import Any, Callable, Dict, List, Mapping, Optional, Sequence, Set, Tuple
 
+from t2pw.pipeline.name_keys import reference_key
 from t2pw.pipeline.entity_identity import (
     PATHBANK_UNKNOWN_FALLBACK_RULE,
     PATHBANK_UNKNOWN_PROTEIN_ID,
@@ -331,8 +332,8 @@ def _safe_list(value: Any) -> List[Any]:
 
 
 def _normalize(value: str) -> str:
-    lowered = re.sub(r"\s+", " ", (value or "").strip().casefold())
-    return re.sub(r"[^a-z0-9:+ ]+", "", lowered)
+    # D-120 § 1 (ORCH-797a): the one reference key every stage shares (quarantine, admission, pre-freeze, IR).
+    return reference_key(value)
 
 
 def _norm_text(value: Any) -> str:

@@ -124,4 +124,40 @@ def mentions(name: str, keyed_text: str, aliases: Iterable[str] = ()) -> bool:
     return any(k and f" {k} " in keyed_text for k in term_keys(name, aliases))
 
 
-__all__ = ["mentions", "strict_key", "text_key"]
+# ---------------------------------------------------------------------------
+# NOT a copy of the evaluator: production's ONE reference key (D-120 § 1, ORCH-797a).
+# ---------------------------------------------------------------------------
+#: Everything outside ``[a-z0-9:+]`` vanishes, so the key is idempotent and a strict coarsening of the quarantine's
+#: pre-D-120 key (``process_normalizer._normalize`` deleted punctuation and kept spaces): an archived report's old
+#: key, keyed again, equals the new key of the name it came from.
+_NOT_REFERENCE_KEY = re.compile(r"[^a-z0-9:+]+")
+
+
+def _spell_greek(char: str) -> str:
+    """``α`` -> ``alpha`` (any Greek letter, accents ignored; Unicode's ``LAMDA`` is ``lambda``)."""
+
+    name = unicodedata.name(char, "")
+    if not name.startswith("GREEK ") or "LETTER " not in name:
+        return char
+    words = name.split("LETTER ", 1)[1].split()
+    word = words[1] if words[0] == "FINAL" and len(words) > 1 else words[0]
+    return "lambda" if word == "LAMDA" else word.lower()
+
+
+def reference_key(value: Any) -> str:
+    """The key every stage uses to decide whether a reference names an entity row.
+
+    Two names are ONE entity when they differ only in case, whitespace, punctuation,
+    hyphens, carets or superscript marks (NFKC), unicode dashes, or a Greek letter versus
+    its spelled form: ``tRNA^Glu`` = ``tRNAGlu`` = ``tRNA-Glu``, ``5-HT 3`` = ``5-HT3``,
+    ``α`` = ``alpha``. Digits stay identity-bearing (``MK-4`` != ``MK-7``), and so do
+    ``+`` (``Ca2+`` != ``Ca``: the exporter's key always kept it) and ``:``
+    (``OPC-8:0``). Not twinned with the evaluator: :func:`normalize_name` /
+    :func:`strict_key` are, and are untouched.
+    """
+
+    text = "".join(_spell_greek(c) for c in canonical_text(value)).casefold()
+    return _NOT_REFERENCE_KEY.sub("", text)
+
+
+__all__ = ["mentions", "reference_key", "strict_key", "text_key"]

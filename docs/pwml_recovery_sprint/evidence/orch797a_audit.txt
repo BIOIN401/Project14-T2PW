@@ -1,0 +1,21 @@
+ORCH-797a collision audit over the six ORCH-796 legs (final key). Script: evidence/orch797a_audit.py. G11: g11/ORCH-797a/30-audit-final.json.
+===== chlorophyll  names=249 entity rows=169
+  IF '+' DROPPED, MERGES 'fe2': ['Fe2', 'Fe2+']
+  IF '+' DROPPED, MERGES 'mg2': ['Mg2', 'Mg2+']
+===== wnt_ca  names=192 entity rows=74
+===== wnt_pcp  names=143 entity rows=63
+===== sour_taste_v2  names=46 entity rows=21
+  IF '+' DROPPED, MERGES 'ca2': ['Ca2', 'Ca2+']
+  IF '+' DROPPED, MERGES 'h': ['H', 'H+']
+  IF '+' DROPPED, MERGES 'k': ['K', 'K+']
+===== enterobactin  names=44 entity rows=27
+===== menaquinone  names=88 entity rows=36
+merged groups total: 0
+================ CLEANUP REPORT ================
+================================================
+
+Corpus audit over every committed final_mapped.json (evidence/orch797a_pinprobe.py, G11 31-pinprobe-tip-final.json):
+corpus audit: 122 committed legs, 1 groups merged by the new key and not the old
+  MERGED runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict/final_mapped.json [('compounds', 'sn -glycerol 3-phosphate'), ('compounds', 'sn-glycerol 3-phosphate')]
+
+orch766 pin components base vs tip (G11 14-pinprobe-base-r1, 15-pinprobe-tip-r1): payload, removed, closure and quarantine-report-minus-key-fields byte-identical on all 27 kinds; only the quarantine report's key-text fields differ.

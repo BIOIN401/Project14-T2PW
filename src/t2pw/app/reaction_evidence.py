@@ -44,6 +44,7 @@ from typing import Any, Dict, List, Mapping, Optional
 # Standard library only (the sign table, no exporter): used to check that an IR row
 # belongs to the payload row beside it, never to decide a verdict.
 from t2pw.pwml.interaction_types import interaction_relationship_word, pwml_interaction_type
+from t2pw.pipeline.name_keys import reference_key
 
 from t2pw.pipeline.strict_quarantine import (
     COVERAGE_REPORT_FILENAME,
@@ -198,6 +199,7 @@ KNOWN_ISSUES: Dict[str, Any] = {
         ("requested_core_coverage_below_minimum:<x><<y>", "prefix", ("requested_core_coverage_below_minimum",), "KI-038", False),
         ("same_name_declared_as_another_kind:<bucket>", "prefix", ("same_name_declared_as_another_kind:",),
          "KI-051", False),
+        ("same_entity_name_form:<bucket>", "prefix", ("same_entity_name_form:",), "KI-039", False),
         ("scope_conflict", "exact", ("scope_conflict",), "KI-025", False),
         ("serialization_would_require_invention", "exact", ("serialization_would_require_invention",), "KI-016", False),
         ("species_mismatch", "exact", ("species_mismatch",), "KI-002", False),
@@ -587,7 +589,7 @@ def _one_line(value: Any) -> str:
 def _ir_norm(value: Any) -> str:
     # The exporter's name key (``ir._norm``), used only to see whether the entity an IR row
     # was bound to carries the name the payload row writes.
-    return re.sub(r"[^a-z0-9:+ ]+", " ", _one_line(value).casefold()).strip()
+    return reference_key(value)
 
 
 def _same_row(row: Mapping[str, Any], ir_row: Mapping[str, Any], ir_entities: Mapping[str, Any]) -> bool:
