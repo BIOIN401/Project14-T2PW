@@ -413,6 +413,51 @@ def _with_c057_lineage_hashes(before: dict[str, Any], after: dict[str, Any]) -> 
     return document
 
 
+#: C-797's REFERENCE-KEY delta (ORCH-797a merged, registered by ORCH-797c; D-120 § 1): names equal up to format are
+#: one entity, and Greek letters are SPELLED, no longer stripped. Measured base (main + 797b, ``8b0fd98d``) against
+#: the merge (``5a66b2f5``) over all 39 legs by ``evidence/orch797c_c011legs.py`` / ``orch797c_c011payloads.py``
+#: (G11 ``ORCH-797c/02``-``05``): the frozen payload digest moves on 8 legs and nothing else moves except ONE
+#: connectivity block. 2 of the 8 (``PMC12444477``/strict, ``2026-08-02_2130 PMC12096016``/strict) are also C-057
+#: legs: their digest is stated by C-057's helper, which still counts exactly 7. The other 6 are stated here:
+#: format-equal rows folded (``lipid IV_A`` / ``lipid IV A``, ``CPgenIII`` / ``CPgen III``, ``I P P`` / ``IPP``, …),
+#: references respelled to their row, and ``δ-aminolevulinic acid`` no longer folded into ``aminolevulinic acid``.
+#: On ``PMC12856317``/research ``δALA`` stops being the same node as ``ALA`` (the old key stripped ``δ``): 27 -> 28
+#: nodes in the one component. δ-ALA IS 5-aminolevulinate, so the old graph merged them correctly BY ACCIDENT; the
+#: same stripping made ``α-ketoglutarate`` == ``β-ketoglutarate``, so D-120 § 1 stands and the split is stated here.
+_C797_DIGEST_LEGS = (
+    "runs/2026-07-28_2122/papers/PMC12180156__update-of-the-sideroflexin-slc56-gene-family/research",
+    "runs/2026-07-28_2122/papers/PMC12180156__update-of-the-sideroflexin-slc56-gene-family/strict",
+    "runs/2026-07-28_2122/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/research",
+    "runs/2026-07-28_2122/papers/PMC12657337__high-level-production-of-vitamin-k2-in-lt-i-gt/research",
+    "runs/2026-07-28_2122/papers/PMC12856317__a-reversible-feedback-mechanism-regulating-mito/research",
+    "runs/2026-07-28_2122/papers/PMC13233763__glycine-the-missing-link-between-carbohydrate-a/research",
+)
+_C797_CONNECTIVITY_LEG = _C797_DIGEST_LEGS[4]
+
+
+def _with_c797_reference_key(before: dict[str, Any], after: dict[str, Any]) -> dict[str, Any]:
+    """``before`` plus exactly C-797's delta: 6 payload digests and one connectivity block.
+
+    Runs INNERMOST, before :func:`_with_c057_lineage_hashes`, which then still asserts every other field on every
+    leg -- so a reference-key change that had moved anything else fails there instead of being absorbed here.
+    """
+
+    document = copy.deepcopy(before)
+    for name in _C797_DIGEST_LEGS:
+        leg, produced = document["legs"][name], after["legs"][name]
+        report, made = leg["final_stage3_gate_report"], produced["final_stage3_gate_report"]
+        assert leg["canonical_payload_sha256"] == report["payload_sha256"], name
+        assert produced["canonical_payload_sha256"] == made["payload_sha256"] != report["payload_sha256"], name
+        leg["canonical_payload_sha256"] = report["payload_sha256"] = made["payload_sha256"]
+        if name == _C797_CONNECTIVITY_LEG:
+            old, new = report["connectivity"], made["connectivity"]
+            assert {k for k in set(old) | set(new) if old.get(k) != new.get(k)} == {"n_nodes", "main_component_size"}
+            assert (old["n_nodes"], new["n_nodes"], old["main_component_size"], new["main_component_size"]) == (
+                27, 28, 27, 28), name
+            report["connectivity"] = new
+    return document
+
+
 def _without_c052_path_keys(document: dict[str, Any]) -> dict[str, Any]:
     """``document`` reduced to the 9-field projection the FIXTURE stores.
 
@@ -493,6 +538,15 @@ _DELTAS: tuple[_Delta, ...] = (
             "nowhere but in the fixture itself, so once overwritten there is "
             "nothing left to restore it from and no _without_c057_* is "
             "expressible at any price (F-076)",
+    ),
+    _Delta(
+        card="C-797", helper="_with_c797_reference_key",
+        disposition=_ONE_WAY, inverse=None,
+        moves="REPLACES the frozen payload digest on 6 legs and one connectivity block (27 -> 28 nodes, "
+              "PMC12856317/research: dALA no longer the same node as ALA) under the D-120 reference key "
+              "(ORCH-797a, registered by ORCH-797c)",
+        why="the replaced digests and the 27-node block are stored nowhere but in the fixture itself, so no "
+            "_without_c797_* is expressible",
     ),
 )
 
@@ -654,7 +708,7 @@ def test_the_extracted_seam_reproduces_the_before_fixture_byte_for_byte() -> Non
     before = json.loads(_fixture_bytes())
     assert _serialize(before) == _fixture_bytes(), "the fixture is no longer its own bytes"
     expected = _serialize(_with_c052_path_keys(
-        _with_c030_hash_keys(_with_c057_lineage_hashes(before, after), after), after))
+        _with_c030_hash_keys(_with_c057_lineage_hashes(_with_c797_reference_key(before, after), after), after), after))
     assert _serialize(after) == expected
     declared = [e["path"] for e in json.loads(MANIFEST.read_text(encoding="utf-8"))["legs"]]
     assert sorted(after["legs"]) == sorted(declared) == sorted(set(declared))
@@ -676,7 +730,7 @@ def test_the_fixture_regenerates_byte_identically_from_the_base_blob() -> None:
     # delta and C-057's digest delta -- both proved through the same helpers the
     # tip goes through, so the two sides cannot drift apart -- and the fixture
     # bytes themselves never move.
-    before = _with_c057_lineage_hashes(json.loads(_fixture_bytes()), base)
+    before = _with_c057_lineage_hashes(_with_c797_reference_key(json.loads(_fixture_bytes()), base), base)
     assert _serialize(base) == _serialize(_with_c052_path_keys(before, base))
     first = _serialize(_without_c052_path_keys(base))
     assert first == _serialize(before)
@@ -755,7 +809,7 @@ def test_the_override_regenerates_and_absorbs_exactly_the_one_way_delta(
 
     target = tmp_path / "retired.json"
     before = FIXTURE.read_bytes()
-    done = _run_main(f"{WRITE_TO}={target}", f"{OVERRIDE}=C-057")
+    done = _run_main(f"{WRITE_TO}={target}", f"{OVERRIDE}=C-057,C-797")
     assert done.returncode == 0, done.stdout + done.stderr
     assert FIXTURE.read_bytes() == before, "the override wrote to the TRACKED fixture"
     for required in ("RETIRING THE BEFORE BASELINE", "what is being destroyed",
@@ -763,7 +817,7 @@ def test_the_override_regenerates_and_absorbs_exactly_the_one_way_delta(
         assert required in done.stdout, (required, done.stdout)
     rebuilt = json.loads(target.read_bytes())
     assert _serialize(_with_c057_lineage_hashes(
-        json.loads(_fixture_bytes()), rebuilt)) == _serialize(rebuilt)
+        _with_c797_reference_key(json.loads(_fixture_bytes()), rebuilt), rebuilt)) == _serialize(rebuilt)
 
 
 def test_the_override_must_name_exactly_the_standing_one_way_deltas(
@@ -772,15 +826,15 @@ def test_the_override_must_name_exactly_the_standing_one_way_deltas(
 
     target = tmp_path / "must-not-exist.json"
     standing = _standing_one_way_deltas()
-    assert [delta.card for delta in standing] == ["C-057"], standing
-    assert _override_mismatch(["C-057"], standing) is None
-    for wrong in ("", "C-030", "C-057,C-099", "c-057"):
+    assert [delta.card for delta in standing] == ["C-057", "C-797"], standing  # ORCH-797c: + C-797
+    assert _override_mismatch(["C-057", "C-797"], standing) is None
+    for wrong in ("", "C-030", "C-057", "C-057,C-099", "c-057,c-797"):
         assert _override_mismatch([c for c in wrong.split(",") if c],
                                   standing) is not None, wrong
         done = _run_main(f"{WRITE_TO}={target}", f"{OVERRIDE}={wrong}")
         assert done.returncode != 0, wrong
         assert not target.exists(), wrong
-    assert _override_mismatch(["C-057", "C-099"], standing + (
+    assert _override_mismatch(["C-057", "C-797", "C-099"], standing + (
         _Delta("C-099", "_with_c099_x", _ONE_WAY, None, "x", "y"),)) is None
 
 
@@ -811,7 +865,7 @@ def test_the_registry_describes_the_helpers_it_guards(monkeypatch: Any) -> None:
     """Every helper registered, every disposition honest, C-052's path unchanged."""
 
     assert _registry_defects() == []
-    assert {delta.card for delta in _DELTAS} == {"C-030", "C-052", "C-057"}
+    assert {delta.card for delta in _DELTAS} == {"C-030", "C-052", "C-057", "C-797"}  # ORCH-797c: + C-797
     assert all(delta.moves and delta.why for delta in _DELTAS)
     # The inverse composition IS the pre-C-065 regeneration path, read off the
     # registry: identical function, identical order, nothing added.

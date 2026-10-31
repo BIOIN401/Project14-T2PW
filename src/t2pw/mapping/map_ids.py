@@ -45,6 +45,7 @@ from t2pw.pipeline.lineage import (
 )
 from t2pw.pwml.compound_resolution import CLASS_TERM_NEVER_NARROWED, is_class_participant_term
 from t2pw.pwml.interaction_types import interaction_relationship_word, pwml_interaction_type
+from t2pw.pipeline.name_keys import reference_key
 from t2pw.pipeline.reference_repair import (
     ReplacementRecord,
     repair_entity_references,
@@ -5820,6 +5821,8 @@ def map_compound_all(client: HttpClient, name: str) -> Dict[str, Any]:
 
 
 def _collect_protein_like_names(payload: Dict[str, Any]) -> Set[str]:
+    # ORCH-797c (D-120 § 1): folded with the reference key, the key ``entity_identity`` reads this set with. Only
+    # ``route_entity_for_mapping`` reads it; ``_normalize_name`` (cache keys, query strings, token scores) is untouched.
     entities = _safe_dict(payload.get("entities"))
     processes = _safe_dict(payload.get("processes"))
     element_locations = _safe_dict(payload.get("element_locations"))
@@ -5827,16 +5830,16 @@ def _collect_protein_like_names(payload: Dict[str, Any]) -> Set[str]:
     out: Set[str] = set()
     for row in _safe_list(entities.get("proteins")):
         if isinstance(row, dict) and isinstance(row.get("name"), str) and row.get("name").strip():
-            out.add(_normalize_name(row["name"]))
+            out.add(reference_key(row["name"]))
     for row in _safe_list(entities.get("protein_complexes")):
         if not isinstance(row, dict):
             continue
         name = str(row.get("name") or "").strip()
         if name:
-            out.add(_normalize_name(name))
+            out.add(reference_key(name))
         for component in _safe_list(row.get("components")):
             if isinstance(component, str) and component.strip():
-                out.add(_normalize_name(component))
+                out.add(reference_key(component))
     # FX6 (ORCH-762, ORCH-761 761-B). A location row is not a kind declaration. The
     # normaliser files a dangling protein-location token it does not read as a protein
     # (``holo-EntB``) as a COMPOUND row; counting the location here made the compound
@@ -5846,14 +5849,14 @@ def _collect_protein_like_names(payload: Dict[str, Any]) -> Set[str]:
     # protein or complex, keeps its compound route; every other located name is
     # protein-like exactly as before.
     declared_compounds = {
-        _normalize_name(str(row.get("name") or ""))
+        reference_key(str(row.get("name") or ""))
         for row in _safe_list(entities.get("compounds"))
         if isinstance(row, dict) and str(row.get("name") or "").strip()
     } - out
     for row in _safe_list(element_locations.get("protein_locations")):
         if isinstance(row, dict) and isinstance(row.get("protein"), str) and row.get("protein").strip():
-            if _normalize_name(row["protein"]) not in declared_compounds:
-                out.add(_normalize_name(row["protein"]))
+            if reference_key(row["protein"]) not in declared_compounds:
+                out.add(reference_key(row["protein"]))
     for reaction in _safe_list(processes.get("reactions")):
         if not isinstance(reaction, dict):
             continue
@@ -5863,7 +5866,7 @@ def _collect_protein_like_names(payload: Dict[str, Any]) -> Set[str]:
             for key in ["protein", "protein_complex", "name"]:
                 value = str(enzyme.get(key) or "").strip()
                 if value:
-                    out.add(_normalize_name(value))
+                    out.add(reference_key(value))
                     break
     for transport in _safe_list(processes.get("transports")):
         if not isinstance(transport, dict):
@@ -5874,7 +5877,7 @@ def _collect_protein_like_names(payload: Dict[str, Any]) -> Set[str]:
             for key in ["protein", "protein_complex", "name"]:
                 value = str(transporter.get(key) or "").strip()
                 if value:
-                    out.add(_normalize_name(value))
+                    out.add(reference_key(value))
                     break
     return {value for value in out if value}
 
@@ -9311,10 +9314,10 @@ def _apply_pathbank_unknown_enzyme_fallback(mapped: Dict[str, Any]) -> Dict[str,
     processes = _safe_dict(mapped.setdefault("processes", {}))
     reactions = _safe_list(processes.get("reactions"))
     pathway_organism = _extract_global_organism(mapped)
-    compound_names = {
-        _normalize_name(str(row.get("name") or ""))
+    compound_names = {  # ORCH-797c: the reference key, as compound_name_block_rule reads it (D-120 § 1)
+        reference_key(str(row.get("name") or ""))
         for row in _safe_list(entities.get("compounds"))
-        if isinstance(row, dict) and _normalize_name(str(row.get("name") or ""))
+        if isinstance(row, dict) and reference_key(str(row.get("name") or ""))
     }
     summary = {
         "reaction_enzyme_unknown_fallbacks": 0,

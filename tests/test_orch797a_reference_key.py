@@ -136,12 +136,13 @@ def test_new_acceptance_every_reference_resolving_stage_uses_the_one_key():
         assert {key(name) for key in keys} == {reference_key(name)}, name
 
 
-def test_new_acceptance_identity_routing_reads_either_fold():
+def test_new_acceptance_identity_routing_reads_the_reference_key():
     from t2pw.pipeline.entity_identity import compound_name_block_rule
     from t2pw.pipeline.name_keys import reference_key
 
-    assert compound_name_block_rule("coenzyme A", compound_names={reference_key("coenzyme A")}) == "compound_registry"
-    assert compound_name_block_rule("coenzyme A", compound_names={"coenzyme a"}) == "compound_registry"  # map_ids fold
+    assert compound_name_block_rule("lipid IV A", compound_names={reference_key("lipid IV_A")}) == "compound_registry"
+    # ORCH-797c: map_ids folds its sets with the reference key too, so the old-fold bridge (`_named_in`) is gone.
+    assert compound_name_block_rule("lipid IV A", compound_names={"lipid iv a"}) == ""  # the old map_ids fold
 
 
 def _two_spellings(first_ids, second_ids):

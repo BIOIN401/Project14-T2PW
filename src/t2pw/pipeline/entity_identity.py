@@ -57,19 +57,9 @@ def _canonical(value: Any) -> str:
 
 
 def _normalize(value: Any) -> str:
-    lowered = re.sub(r"\s+", " ", _canonical(value).casefold())
-    return re.sub(r"[^a-z0-9 ]+", "", lowered)
-
-
-def _named_in(name: Any, names: Set[str]) -> bool:
-    """Whether ``names`` (a caller's pre-folded name set) holds ``name``.
-
-    The sets arrive in two folds: ``map_ids._normalize_name`` (this module's :func:`_normalize`, twinned with it;
-    ORCH-797b owns that file) and ``process_normalizer._normalize`` (the D-120 reference key). Both are tried, so
-    neither caller's names stop matching (ORCH-797a). ponytail: one fold here once map_ids moves to the reference key.
-    """
-
-    return bool(names) and (_normalize(name) in names or reference_key(name) in names)
+    # D-120 § 1 (ORCH-797c): the one reference key. Every caller that hands this module a pre-folded name set folds
+    # with it too: process_normalizer, map_ids._collect_protein_like_names and the Unknown-fallback compound set.
+    return reference_key(value)
 
 
 def protein_external_identity(row: Any) -> str:
@@ -383,7 +373,7 @@ def _is_explicit_complex_colon_name(name: str, protein_like_names: Set[str]) -> 
     return bool(
         re.search(r"\bcomplex\b", text, flags=re.IGNORECASE)
         or any(_looks_protein_like_name(part) for part in parts)
-        or any(_named_in(part, protein_like_names) for part in parts)
+        or any(_normalize(part) in protein_like_names for part in parts)
     )
 
 
@@ -426,7 +416,7 @@ def route_entity_for_mapping(
         return {"route": "protein", "reason": "type_hint"}
     if not lenient_names and ":" in name and _is_explicit_complex_colon_name(name, protein_like_set):
         return {"route": "complex", "reason": "complex_entity"}
-    if _named_in(name, protein_like_set):
+    if norm in protein_like_set:
         return {"route": "protein", "reason": "known_protein_like"}
     blocked = compound_name_block_rule(name, compound_names=compound_names)
     if blocked:
@@ -455,6 +445,6 @@ def compound_name_block_rule(
     norm = _normalize(name)
     if not norm:
         return ""
-    if _named_in(name, {value for value in (compound_names or set()) if value}):
+    if norm in {value for value in (compound_names or set()) if value}:
         return "compound_registry"
     return compound_moiety_verdict(name)
