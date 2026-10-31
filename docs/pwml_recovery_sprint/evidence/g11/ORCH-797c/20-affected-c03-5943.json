@@ -1,0 +1,133 @@
+{
+  "label": "affected-c03-5943",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch797c/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch797c",
+    "--pin-verdict",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch797c/docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-797c/20-affected-c03-5943.pin.json",
+    "-q",
+    "--basetemp=C:/t/orch79x/bt/ORCH-797c-20-affected-c03-5943",
+    "tests/test_pwml_interaction_protein_wrappers.py",
+    "tests/test_pwml_interaction_type_spellings.py",
+    "tests/test_pwml_ir.py",
+    "tests/test_pwml_ir_duplicate_row_refusal.py",
+    "tests/test_pwml_writer.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_graph_delta.py",
+    "tests/test_rag_payload_gate_guardrails.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_rag_seed_entity_reimport.py",
+    "tests/test_rag_synthesize.py",
+    "tests/test_rag_typed_gap_resolution.py",
+    "tests/test_rag_typed_resolution_integrity.py",
+    "tests/test_reaction_evidence.py",
+    "tests/test_reference_repair.py",
+    "tests/test_release_status_classification.py",
+    "tests/test_research_mode_contracts.py",
+    "tests/test_research_mode_normalizer.py",
+    "tests/test_semantic_release_gating.py",
+    "tests/test_stage2_mapping_boundary.py",
+    "tests/test_stage_one_paper_dictionary.py",
+    "tests/test_streamlit_stage8_export_contract.py",
+    "tests/test_strict_failure_replay.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_lineage.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_real_artifact_replay.py",
+    "tests/test_strict_quarantine_release_seam.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_transport_actor_guards.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch797c",
+  "started_at": "2026-10-31T00:29:46+00:00",
+  "finished_at": "2026-10-31T00:31:03+00:00",
+  "duration_seconds": 77.23187149999967,
+  "timeout_seconds": 2400.0,
+  "root_pid": 128464,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 128572,
+      "name": "python.exe",
+      "ppid": 128464
+    },
+    {
+      "pid": 129208,
+      "name": "python.exe",
+      "ppid": 129300
+    },
+    {
+      "pid": 129300,
+      "name": "python.exe",
+      "ppid": 128572
+    }
+  ],
+  "descendants_terminated": [
+    128572,
+    129208,
+    129300
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 20232,
+      "name": "python.exe"
+    },
+    {
+      "pid": 28324,
+      "name": "python.exe"
+    },
+    {
+      "pid": 127868,
+      "name": "python.exe"
+    },
+    {
+      "pid": 129492,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch797c\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-797c\\20-affected-c03-5943.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch797c\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch797c",
+    "repo_head": "5a66b2f50622b49b7d723777093c0b3157c9175f",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-797c",
+    "token": "ORCH-797c:127868:509654e0ed0b7602",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

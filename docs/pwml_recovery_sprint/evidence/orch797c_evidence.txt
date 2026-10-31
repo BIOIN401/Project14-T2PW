@@ -1,0 +1,148 @@
+ORCH-797c evidence (flat copies of bounded-run outputs; G11 reports in g11/ORCH-797c/).
+
+### c011: which legs move, base = main+797b (8b0fd98d, src extracted to C:/t/orch797c/pre797a) vs 5a66b2f5 (G11 02, 03, 10)
+C-057 legs (fixture != pre-797a): 7
+   runs/2026-07-28_0919/papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict
+   runs/2026-07-28_2122/papers/PMC12421875__the-growth-benefits-and-toxicity-of-quinone-bio/strict
+   runs/2026-07-28_2122/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict
+   runs/2026-07-28_2122/papers/PMC12657337__high-level-production-of-vitamin-k2-in-lt-i-gt/strict
+   runs/2026-07-28_2122/papers/PMC12856317__a-reversible-feedback-mechanism-regulating-mito/strict
+   runs/2026-08-02_2130/papers/PMC12096016/strict
+   runs/2026-08-02_2130/papers/PMC12421875/strict
+797a legs (pre-797a != tip): 8
+   runs/2026-07-28_2122/papers/PMC12180156__update-of-the-sideroflexin-slc56-gene-family/research 
+   runs/2026-07-28_2122/papers/PMC12180156__update-of-the-sideroflexin-slc56-gene-family/strict 
+   runs/2026-07-28_2122/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/research 
+   runs/2026-07-28_2122/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict (also C-057)
+   runs/2026-07-28_2122/papers/PMC12657337__high-level-production-of-vitamin-k2-in-lt-i-gt/research 
+   runs/2026-07-28_2122/papers/PMC12856317__a-reversible-feedback-mechanism-regulating-mito/research 
+   runs/2026-07-28_2122/papers/PMC13233763__glycine-the-missing-link-between-carbohydrate-a/research 
+   runs/2026-08-02_2130/papers/PMC12096016/strict (also C-057)
+connectivity moved: ['runs/2026-07-28_2122/papers/PMC12856317__a-reversible-feedback-mechanism-regulating-mito/research']
+
+### c011: frozen-payload differences on those legs, pre-797a vs 5a66b2f5 (evidence/orch797c_c011payloads.py, G11 04, 05)
+t2pw resolved: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch797c\src\t2pw
+dumped runs/2026-07-28_2122/papers/PMC12180156__update-of-the-sideroflexin-slc56-gene-family/research
+  ENTITIES compounds: only-in-compare ['succinyl-coenzyme A'] | only-here ['δ-aminolevulinic acid']
+dumped runs/2026-07-28_2122/papers/PMC12180156__update-of-the-sideroflexin-slc56-gene-family/strict
+  ENTITIES compounds: only-in-compare ['aminolevulinic acid'] | only-here ['δ-aminolevulinic acid']
+  PROCESS reactions only-in-compare: Iron -> [2Fe–2 S] cluster :: {"inputs": ["Iron", "persulfide intermediate", "ISCU scaffold"], "outputs": ["[2Fe\u20132 S] cluster"]}
+  PROCESS reactions only-here     : Iron -> [2Fe–2 S] cluster :: {"inputs": ["iron", "persulfide intermediate", "ISCU scaffold"], "outputs": ["[2Fe\u20132 S] cluster"]}
+dumped runs/2026-07-28_2122/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/research
+  ENTITIES compounds: only-in-compare ['Kdo-lipid IV A', 'lipid IV A'] | only-here []
+dumped runs/2026-07-28_2122/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict
+  ENTITIES compounds: only-in-compare ['Kdo-lipid IV A', 'lipid IV A'] | only-here ['Kdo-lipid IV_A', 'lipid IV_A']
+  PROCESS reactions only-in-compare: Kdo-lipid IV A -> Kdo-lipid A :: {"inputs": ["Kdo-lipid IV A"], "outputs": ["Kdo-lipid A"]}
+  PROCESS reactions only-in-compare: lipid IV A -> Kdo-lipid IV A :: {"inputs": ["lipid IV A"], "outputs": ["Kdo-lipid IV A"]}
+  PROCESS reactions only-in-compare: tetra-acylated disaccharide intermediate -> lipid IV A :: {"inputs": ["tetra-acylated disaccharide intermediate"], "outputs": ["lipid IV A"]}
+  PROCESS reactions only-here     : Kdo-lipid IV A -> Kdo-lipid A :: {"inputs": ["Kdo-lipid IV_A"], "outputs": ["Kdo-lipid A"]}
+  PROCESS reactions only-here     : lipid IV A -> Kdo-lipid IV A :: {"inputs": ["lipid IV_A"], "outputs": ["Kdo-lipid IV_A"]}
+  PROCESS reactions only-here     : tetra-acylated disaccharide intermediate -> lipid IV A :: {"inputs": ["tetra-acylated disaccharide intermediate"], "outputs": ["lipid IV_A"]}
+dumped runs/2026-07-28_2122/papers/PMC12657337__high-level-production-of-vitamin-k2-in-lt-i-gt/research
+  ENTITIES compounds: only-in-compare ['IPP', 'NADH', 'NADPH', 'dihydroxyacetone phosphate (DHAP)', 'glucose'] | only-here []
+dumped runs/2026-07-28_2122/papers/PMC12657337__high-level-production-of-vitamin-k2-in-lt-i-gt/strict
+  same entities and processes; differing top-level keys: []
+dumped runs/2026-07-28_2122/papers/PMC12856317__a-reversible-feedback-mechanism-regulating-mito/research
+  ENTITIES compounds: only-in-compare [] | only-here ['ALA']
+dumped runs/2026-07-28_2122/papers/PMC12856317__a-reversible-feedback-mechanism-regulating-mito/strict
+  same entities and processes; differing top-level keys: []
+dumped runs/2026-07-28_2122/papers/PMC13233763__glycine-the-missing-link-between-carbohydrate-a/research
+  ENTITIES compounds: only-in-compare ['CPgenIII', 'PPIX'] | only-here []
+dumped runs/2026-08-02_2130/papers/PMC12096016/strict
+  PROCESS reactions only-in-compare: EntA-catalyzed conversion of 2,3-diDHB to 2,3-DHB :: {"enzymes": [{"confidence": 1.0, "entity": "EntA", "entity_type": "protein_complex", "evidence": "EntA (2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase; EC 1.3.1.28)", "provenance": "extracted", "role": "catalyst"}], "inputs": ["2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB)"], "outputs": ["2,3-dihyd
+  PROCESS reactions only-here     : EntA-catalyzed conversion of 2,3-diDHB to 2,3-DHB :: {"enzymes": [{"confidence": 1.0, "entity": "EntA", "entity_type": "protein_complex", "evidence": "EntA (2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase; EC 1.3.1.28)", "provenance": "extracted", "role": "catalyst"}], "inputs": ["2,3-dihydro-2,3-dihydroxybenzoate (2,3-didhb)"], "outputs": ["2,3-dihyd
+
+### PMC12657337 research: why 5 compound rows went (evidence/orch797c_rowtrace.py, G11 06, 07, 09)
+t2pw resolved: C:\t\orch797c\pre797a\src\t2pw
+raw compounds: 102 normalized: 103
+raw watched: ['DHAP', 'dihydroxyacetone-phosphate (DHAP)', 'IPP', 'dihydroxyacetone phosphate (DHAP)', 'NADPH', 'NADH', 'glucose', 'glucose-6-phosphate (G6P)']
+normalized watched: ['DHAP', 'dihydroxyacetone-phosphate (DHAP)', 'IPP', 'dihydroxyacetone phosphate (DHAP)', 'NADPH', 'NADH', 'glucose', 'glucose-6-phosphate (G6P)']
+raw names absent after normalization: ['acetyl-CoA']
+frozen compounds: 103
+frozen watched: ['DHAP', 'dihydroxyacetone-phosphate (DHAP)', 'IPP', 'dihydroxyacetone phosphate (DHAP)', 'NADPH', 'NADH', 'glucose', 'glucose-6-phosphate (G6P)']
+normalized names absent after the seam: []
+t2pw resolved: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch797c\src\t2pw
+raw compounds: 102 normalized: 98
+raw watched: ['DHAP', 'dihydroxyacetone-phosphate (DHAP)', 'IPP', 'dihydroxyacetone phosphate (DHAP)', 'NADPH', 'NADH', 'glucose', 'glucose-6-phosphate (G6P)']
+normalized watched: ['DHAP', 'dihydroxyacetone-phosphate (DHAP)', 'glucose-6-phosphate (G6P)']
+raw names absent after normalization: ['IPP', 'NADH', 'NADPH', 'acetyl-CoA', 'dihydroxyacetone phosphate (DHAP)', 'glucose']
+frozen compounds: 98
+frozen watched: ['DHAP', 'dihydroxyacetone-phosphate (DHAP)', 'glucose-6-phosphate (G6P)']
+normalized names absent after the seam: []
+  PARTNERS of 'IPP' ["'I P P'", "'IPP'"] key 'ipp'
+  PARTNERS of 'dihydroxyacetone phosphate (DHAP)' ["'dihydroxyacetone-phosphate (DHAP)'", "'dihydroxyacetone phosphate (DHAP)'"] key 'dihydroxyacetonephosphatedhap'
+  PARTNERS of 'NADPH' ["'N A D P H'", "'NADPH'"] key 'nadph'
+  PARTNERS of 'NADH' ["'N A D H'", "'NADH'"] key 'nadh'
+  PARTNERS of 'glucose' ["'G l u c o s e'", "'glucose'"] key 'glucose'
+DEDUPE lost ['IPP', 'dihydroxyacetone phosphate (DHAP)', 'NADPH', 'NADH', 'glucose'] kept ['DHAP', 'dihydroxyacetone-phosphate (DHAP)', 'glucose-6-phosphate (G6P)'] via ['<module>', '_normalized', 'normalize_process_payload', 'normalize_composites']
+
+### Item 3 stop condition: Stage-6 routes and the Unknown-fallback output, base 5a66b2f5 vs tip (evidence/orch797c_identity_routes.py, G11 13 base, 14 tip), 6 ORCH-796 legs + 122 committed legs
+t2pw resolved: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch797c\src\t2pw
+chlorophyll {'routes:merged_payload.json': 47, 'routes:final_mapped.json': 39, 'fallback_summary': 2} c8eaceb4e622ed2f
+wnt_ca {'routes:merged_payload.json': 12, 'routes:final_mapped.json': 7, 'fallback_summary': 2} c2fba111b03648a0
+wnt_pcp {'routes:merged_payload.json': 0, 'routes:final_mapped.json': 0, 'fallback_summary': 2} 1751bde008078d2e
+sour_taste_v2 {'routes:merged_payload.json': 5, 'routes:final_mapped.json': 4, 'fallback_summary': 2} 71c6fb2fc44c03c8
+enterobactin {'routes:merged_payload.json': 11, 'routes:final_mapped.json': 6, 'fallback_summary': 2} 5d101dfaf835a493
+menaquinone {'routes:merged_payload.json': 19, 'routes:final_mapped.json': 11, 'fallback_summary': 2} 9f6d096da9e334a5
+written C:/t/orch797c/routes-tip.json
+corpus legs: 122
+written (with corpus) C:/t/orch797c/routes-tip.json
+diff of the two JSON outputs: 0 differing lines
+
+### six-leg tail replay, base 5a66b2f5 vs tip (evidence/orch797a_replay.py, G11 25 base, 26 tip)
+== 25-replay-base
+t2pw resolved: C:\t\orch797c\base\src\t2pw
+===== chlorophyll 2026-10-29_1632 (PMC5130987)
+pwml_written: true
+pwml_matches_leg: true
+coverage: {"drawn": 52, "total": 62, "by_design_withheld": 4, "pwml_written": true, "no_pwml_cause": ""}
+===== wnt_ca 2026-10-29_1941 (PMC10425814)
+pwml_written: true
+pwml_matches_leg: true
+coverage: {"drawn": 22, "total": 61, "by_design_withheld": 20, "pwml_written": true, "no_pwml_cause": ""}
+===== wnt_pcp 2026-10-29_1729 (PMC10425814)
+pwml_written: true
+pwml_matches_leg: true
+coverage: {"drawn": 9, "total": 58, "by_design_withheld": 32, "pwml_written": true, "no_pwml_cause": ""}
+===== sour_taste_v2 2026-10-29_1314 (PMC7059786)
+pwml_written: true
+pwml_matches_leg: true
+coverage: {"drawn": 8, "total": 13, "by_design_withheld": 1, "pwml_written": true, "no_pwml_cause": ""}
+===== enterobactin 2026-10-29_1153 (PMC12096016)
+pwml_written: true
+pwml_matches_leg: true
+coverage: {"drawn": 7, "total": 9, "by_design_withheld": 1, "pwml_written": true, "no_pwml_cause": ""}
+===== menaquinone 2026-10-29_1451 (PMC12421875)
+pwml_written: true
+pwml_matches_leg: true
+coverage: {"drawn": 14, "total": 14, "by_design_withheld": 0, "pwml_written": true, "no_pwml_cause": ""}
+================ CLEANUP REPORT ================
+================================================
+== 26-replay-tip
+t2pw resolved: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.claude\worktrees\orch797c\src\t2pw
+===== chlorophyll 2026-10-29_1632 (PMC5130987)
+pwml_written: true
+pwml_matches_leg: true
+coverage: {"drawn": 52, "total": 62, "by_design_withheld": 4, "pwml_written": true, "no_pwml_cause": ""}
+===== wnt_ca 2026-10-29_1941 (PMC10425814)
+pwml_written: true
+pwml_matches_leg: true
+coverage: {"drawn": 22, "total": 61, "by_design_withheld": 20, "pwml_written": true, "no_pwml_cause": ""}
+===== wnt_pcp 2026-10-29_1729 (PMC10425814)
+pwml_written: true
+pwml_matches_leg: true
+coverage: {"drawn": 9, "total": 58, "by_design_withheld": 32, "pwml_written": true, "no_pwml_cause": ""}
+===== sour_taste_v2 2026-10-29_1314 (PMC7059786)
+pwml_written: true
+pwml_matches_leg: true
+coverage: {"drawn": 8, "total": 13, "by_design_withheld": 1, "pwml_written": true, "no_pwml_cause": ""}
+===== enterobactin 2026-10-29_1153 (PMC12096016)
+pwml_written: true
+pwml_matches_leg: true
+coverage: {"drawn": 7, "total": 9, "by_design_withheld": 1, "pwml_written": true, "no_pwml_cause": ""}
+===== menaquinone 2026-10-29_1451 (PMC12421875)
+pwml_written: true
+pwml_matches_leg: true
+coverage: {"drawn": 14, "total": 14, "by_design_withheld": 0, "pwml_written": true, "no_pwml_cause": ""}
+================ CLEANUP REPORT ================
+================================================

@@ -1,0 +1,133 @@
+{
+  "label": "affected-c02-12586",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch797c/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch797c",
+    "--pin-verdict",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch797c/docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-797c/19-affected-c02-12586.pin.json",
+    "-q",
+    "--basetemp=C:/t/orch79x/bt/ORCH-797c-19-affected-c02-12586",
+    "tests/test_orch759e_rewrap_after_phase2.py",
+    "tests/test_orch762_protein_identity.py",
+    "tests/test_orch763_nested_locations.py",
+    "tests/test_orch764_class_term_not_narrowed.py",
+    "tests/test_orch766_unreferenced_species.py",
+    "tests/test_orch769b_actor_protein_registry.py",
+    "tests/test_orch772_pwml_coverage.py",
+    "tests/test_orch772b_no_pwml_cause.py",
+    "tests/test_orch773_omit_per_row.py",
+    "tests/test_orch780_support_per_row.py",
+    "tests/test_orch782_gene_protein_split.py",
+    "tests/test_orch783_family_complex.py",
+    "tests/test_orch786_family_member_identity.py",
+    "tests/test_orch787_duplicate_rows_consolidated.py",
+    "tests/test_orch788_state_without_location.py",
+    "tests/test_orch790_family_and_endpoint_order.py",
+    "tests/test_orch792_no_silent_drops.py",
+    "tests/test_orch793_gene_name_identity.py",
+    "tests/test_orch794_one_name_two_kinds.py",
+    "tests/test_orch794b_spelling.py",
+    "tests/test_orch795_headline_unsigned.py",
+    "tests/test_orch797a_reference_key.py",
+    "tests/test_orch797b_alias_and_family.py",
+    "tests/test_orch797c_identity_key.py",
+    "tests/test_paper_eligibility_corrections.py",
+    "tests/test_pathbank_unknown_fallback.py",
+    "tests/test_prefreeze_compound_resolution.py",
+    "tests/test_prefreeze_species_resolution.py",
+    "tests/test_prefreeze_third_export_seam.py",
+    "tests/test_process_normalizer.py",
+    "tests/test_protein_export_policy.py",
+    "tests/test_pwml_interaction_export.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch797c",
+  "started_at": "2026-10-31T00:28:57+00:00",
+  "finished_at": "2026-10-31T00:29:44+00:00",
+  "duration_seconds": 47.473220800000036,
+  "timeout_seconds": 2400.0,
+  "root_pid": 128204,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 128216,
+      "name": "python.exe",
+      "ppid": 128204
+    },
+    {
+      "pid": 128656,
+      "name": "python.exe",
+      "ppid": 128216
+    },
+    {
+      "pid": 128724,
+      "name": "python.exe",
+      "ppid": 128656
+    }
+  ],
+  "descendants_terminated": [
+    128216,
+    128656,
+    128724
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 20232,
+      "name": "python.exe"
+    },
+    {
+      "pid": 28324,
+      "name": "python.exe"
+    },
+    {
+      "pid": 127732,
+      "name": "python.exe"
+    },
+    {
+      "pid": 127912,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch797c\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-797c\\19-affected-c02-12586.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch797c\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch797c",
+    "repo_head": "5a66b2f50622b49b7d723777093c0b3157c9175f",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-797c",
+    "token": "ORCH-797c:127732:88bdeda4755a82ab",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
