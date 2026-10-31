@@ -92,6 +92,13 @@ def main():
                 total_pairs += 1
                 tag = "ROW+ROW" if sum(m in rows for m in members) > 1 else ("ROW+REF" if members & rows else "REF+REF")
                 print(f"  MERGED [{tag}] {key!r}: {sorted(members)}")
+        plusless = defaultdict(set)  # what dropping '+' from the key WOULD merge (open item: keep '+'?)
+        for n in names:
+            if reference_key(n):
+                plusless[reference_key(n).replace("+", "")].add(n)
+        for key, members in sorted(plusless.items()):
+            if len({reference_key(m) for m in members}) > 1:
+                print(f"  IF '+' DROPPED, MERGES {key!r}: {sorted(members)}")
         row_pn = {old_pn(r) for r in rows}
         row_ir = {old_ir(r) for r in rows}
         row_new = {reference_key(r): r for r in rows}

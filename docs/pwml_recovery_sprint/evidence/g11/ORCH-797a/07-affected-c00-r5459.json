@@ -1,0 +1,264 @@
+{
+  "label": "affected-c00-r5459",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch797a/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch797a",
+    "--pin-verdict",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch797a/docs/pwml_recovery_sprint/evidence/g11/pin/ORCH-797a/07-affected-c00-r5459.pin.json",
+    "-q",
+    "--basetemp=C:/t/orch79x/bt/ORCH-797a-07-affected-c00-r5459",
+    "tests/test_apply_audit_patch_referential_integrity.py",
+    "tests/test_baseline_regression_2026_07_28.py",
+    "tests/test_batch_driver_quarantine_artifacts.py",
+    "tests/test_batch_pwml_artifact_naming.py",
+    "tests/test_batch_research_gate_fail_open.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_c011_freeze_seam_golden_equivalence.py",
+    "tests/test_c030_canonical_identity_fallback.py",
+    "tests/test_c030a_object_sharing_at_the_freeze_seam.py",
+    "tests/test_c056c_semantic_evaluability.py",
+    "tests/test_c056d_gate_failure_semantic_carry.py",
+    "tests/test_c060a_requested_pathway_wiring.py",
+    "tests/test_c071_actor_evidence_gate.py",
+    "tests/test_c073_identity_admission.py",
+    "tests/test_c074_strict_core_floor.py",
+    "tests/test_c075_source_support_armed.py",
+    "tests/test_c076_alias_holo_apo_identity.py",
+    "tests/test_c078_refusal_durable_through_resolution.py",
+    "tests/test_c079_interactive_prompt_allowlist.py",
+    "tests/test_c080_production_gate_kind_aware.py",
+    "tests/test_c081_cofactor_role_identity.py",
+    "tests/test_c082_post_pipeline_seam.py",
+    "tests/test_c082_species_rename_declination.py",
+    "tests/test_c087_prefreeze_declination_demotes_release_status.py",
+    "tests/test_c089_participant_schema.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch797a",
+  "started_at": "2026-10-30T23:36:04+00:00",
+  "finished_at": "2026-10-30T23:37:16+00:00",
+  "duration_seconds": 72.33172099999996,
+  "timeout_seconds": 2400.0,
+  "root_pid": 45028,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 28620,
+      "name": "python.exe",
+      "ppid": 45028
+    },
+    {
+      "pid": 37452,
+      "name": "git.exe",
+      "ppid": 28620
+    },
+    {
+      "pid": 4256,
+      "name": "python.exe",
+      "ppid": 28620
+    },
+    {
+      "pid": 23520,
+      "name": "python.exe",
+      "ppid": 4256
+    },
+    {
+      "pid": 18008,
+      "name": "python.exe",
+      "ppid": 28620
+    },
+    {
+      "pid": 28716,
+      "name": "python.exe",
+      "ppid": 18008
+    },
+    {
+      "pid": 43068,
+      "name": "git.exe",
+      "ppid": 28716
+    },
+    {
+      "pid": 45928,
+      "name": "python.exe",
+      "ppid": 28620
+    },
+    {
+      "pid": 45948,
+      "name": "python.exe",
+      "ppid": 45928
+    },
+    {
+      "pid": 45288,
+      "name": "python.exe",
+      "ppid": 28620
+    },
+    {
+      "pid": 45336,
+      "name": "python.exe",
+      "ppid": 45288
+    },
+    {
+      "pid": 45792,
+      "name": "python.exe",
+      "ppid": 28620
+    },
+    {
+      "pid": 45820,
+      "name": "python.exe",
+      "ppid": 45792
+    },
+    {
+      "pid": 45740,
+      "name": "python.exe",
+      "ppid": 45776
+    },
+    {
+      "pid": 45776,
+      "name": "python.exe",
+      "ppid": 28620
+    },
+    {
+      "pid": 39392,
+      "name": "git.exe",
+      "ppid": 28620
+    },
+    {
+      "pid": 33112,
+      "name": "git.exe",
+      "ppid": 28620
+    },
+    {
+      "pid": 10512,
+      "name": "git.exe",
+      "ppid": 28620
+    },
+    {
+      "pid": 36468,
+      "name": "git.exe",
+      "ppid": 28620
+    },
+    {
+      "pid": 40196,
+      "name": "git.exe",
+      "ppid": 28620
+    },
+    {
+      "pid": 16696,
+      "name": "git.exe",
+      "ppid": 28620
+    },
+    {
+      "pid": 11360,
+      "name": "git.exe",
+      "ppid": 28620
+    },
+    {
+      "pid": 44560,
+      "name": "git.exe",
+      "ppid": 28620
+    },
+    {
+      "pid": 43236,
+      "name": "git.exe",
+      "ppid": 28620
+    },
+    {
+      "pid": 45344,
+      "name": "git.exe",
+      "ppid": 28620
+    },
+    {
+      "pid": 12628,
+      "name": "git.exe",
+      "ppid": 28620
+    }
+  ],
+  "descendants_terminated": [
+    4256,
+    10512,
+    11360,
+    12628,
+    16696,
+    18008,
+    23520,
+    28620,
+    28716,
+    33112,
+    36468,
+    37452,
+    39392,
+    40196,
+    43068,
+    43236,
+    44560,
+    45288,
+    45336,
+    45344,
+    45740,
+    45776,
+    45792,
+    45820,
+    45928,
+    45948
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 3352,
+      "name": "python.exe"
+    },
+    {
+      "pid": 20232,
+      "name": "python.exe"
+    },
+    {
+      "pid": 28324,
+      "name": "python.exe"
+    },
+    {
+      "pid": 44604,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch797a\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-797a\\07-affected-c00-r5459.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch797a\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch797a",
+    "repo_head": "fa7831baab664db26db18c15f609f66f02ebe456",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-797a",
+    "token": "ORCH-797a:3352:04b7da0c7ea78218",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
