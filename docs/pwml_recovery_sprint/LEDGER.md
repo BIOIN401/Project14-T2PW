@@ -11256,3 +11256,11 @@ Denominator: 66 unsigned interactions quarantined before the IR stay in the head
   - Corpus `orch797/corpus_tip.{json,txt}`: pass rate 79/91 → 79/91, coverage identical (37/91 headline ≥ 75%, 23/91 full count), no passing leg broke, no gold recall lost (`g11/ORCH-797/04`, `05`). The compare prints REJECT only because D-112 § 2 also requires a pass-rate gain, and Stage 6 is not replayed in the corpus (ORCH-796 § 3). The no-loss criterion this round required holds.
   - SMOKE **511 passed** (`06`). G11 check: 6 artifacts, 0 non-compliant (`07`). 0 survivors.
 - **Open:** a compound-only tRNA is not converted (797c § 9.4). A junk spelling can win a fold, e.g. `I P P` over `IPP`. Moving `map_ids._normalize_name` needs a cache-key migration. Three ORCH-796 rows can't be recovered without paper wording: PIF1, DIA1 and TCF4.
+
+## `ORCH-799` — typed single-source stabilization pass · 2026-11-02 · READY FOR MERGE (lead)
+
+- Branch `orch799/typed-core` from `b25327c1`. Record: `ORCH-799-RESULT.md`; research: `ORCH-799-RESEARCH.md`.
+- **799a** `19d45f32` (+ evidence `77be8327`): `process_normalizer.row_is_referenced` single-sources the "row referenced by name or synonym" test at four `strict_quarantine` sites (F-208 row 1, quarantine half). Pure refactor; NEW ACCEPTANCE TEST `tests/test_orch799a_row_is_referenced.py`. Reviewer: **APPROVE WITH NOTES** (equivalence traced; two sites not hit by the new test; deleted ORCH-799a `02` report breaches G11 rule 9 letter, recorded).
+- Gates: focused 330 passed (`g11/ORCH-799a/03`); SMOKE **511 passed** = baseline (`g11/ORCH-799/02`); corpus 79/91 → 79/91, `evidence/orch799/corpus_tip.json` byte-identical to `orch797`'s, all 91 legs identical (`03`-`05`); base-arm equivalence 1 passed on `b25327c1` (`06`). 0 survivors.
+- Not built (PO no-regression instruction): F-208 row 1 gate half, F-209 `/-` leftover, actor-schema twin check, F-212/F-218/F-207. Options and costs in RESULT § 5. FINDINGS F-209 heading corrected (main defect fixed by `2a791f69`).
+- Incidents: `cd`-compound and cross-worktree heredoc permission-prompt hangs, a duplicate runner dispatch, one stray `python -` (RESULT § 6).
