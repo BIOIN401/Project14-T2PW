@@ -258,7 +258,7 @@ C-010's allowlist is unverifiable in an isolated worktree.
 ## Commands
 
 ```bash
-# SMOKE (every merge) — expect 508 passed  (22 files; 503 was stale, see line 514)
+# SMOKE (every merge) — expect 511 passed  (22 files; 508 -> 511 by ORCH-769c, see "SMOKE moves 508 → 511"; 503 was stale, see line 514)
 .venv/Scripts/python.exe -m pytest -q --basetemp=<tmp>/smoke \
   tests/test_reference_repair.py tests/test_strict_quarantine.py \
   tests/test_strict_quarantine_contract_alignment.py \
@@ -792,7 +792,7 @@ nothing. **Correcting the numbers is not the fix; it drifts again.** The anchors
 | Purpose | Anchor |
 |---|---|
 | chunk membership | the first markdown table under the **`## Chunks`** heading; rows `**A**` `**B**` `**C**` `**D-core**` `**D-apptest**` `**E**` |
-| the SMOKE selection | the `bash` block under **`## Commands`** beginning `# SMOKE (every merge) — expect 508 passed` |
+| the SMOKE selection | the `bash` block under **`## Commands`** beginning `# SMOKE (every merge) — expect 511 passed` |
 | Chunk D's file list | `evidence/chunk_d_gate.py`'s **`CORE`** / **`S8`** / **`QB`** / **`MONOLITHIC`** symbols |
 
 **An anchor replaces a *locator*, not a *provenance pin*.** Keep the commit SHA or evidence

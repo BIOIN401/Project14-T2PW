@@ -71,7 +71,7 @@ surviving count (**must be 0**) · cleanup success/failure.
      in `TEST_MATRIX.md`, whose rows are `**A**`, `**B**`, `**C**`, `**D-core**`,
      `**D-apptest**`, `**E**`;
   2. the **SMOKE block** — the `bash` block under the `## Commands` heading in
-     `TEST_MATRIX.md` beginning `# SMOKE (every merge) — expect 503 passed`;
+     `TEST_MATRIX.md` beginning `# SMOKE (every merge) — expect 511 passed`;
   3. `evidence/chunk_d_gate.py`'s **`CORE`**, **`S8`**, **`QB`** and **`MONOLITHIC`**
      symbols — the file list is those literals, not a line range.
 
