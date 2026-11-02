@@ -5,7 +5,7 @@ import json
 import re
 from collections import defaultdict
 from copy import deepcopy
-from typing import Any, Callable, Dict, List, Mapping, Optional, Sequence, Set, Tuple
+from typing import AbstractSet, Any, Callable, Dict, List, Mapping, Optional, Sequence, Set, Tuple
 
 from t2pw.pipeline.name_keys import reference_key
 from t2pw.pipeline.entity_identity import (
@@ -646,6 +646,15 @@ def _entity_name_norms(rows: Sequence[Any]) -> Set[str]:
             if isinstance(synonym, str) and synonym.strip():
                 out.add(_normalize(synonym))
     return out
+
+
+def row_is_referenced(row: Mapping[str, Any], referenced_norms: AbstractSet[str]) -> bool:
+    """ORCH-799a: does ``referenced_norms`` reach ``row`` under its name or any synonym?
+
+    The empty norm never counts (a punctuation-only name normalizes to ``""``).
+    """
+
+    return bool((_entity_name_norms([row]) & referenced_norms) - {""})
 
 
 def _find_entity_row(rows: Sequence[Any], name: str) -> Optional[Dict[str, Any]]:

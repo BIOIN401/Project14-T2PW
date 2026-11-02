@@ -10520,7 +10520,7 @@ lanes bumped `QUARANTINE_POLICY_VERSION` (ORCH-769b F5).
 
 ## `F-209` — The audit patch applier applies later ops by their pre-patch indices after a remove · ORCH-769 (d)
 
-**Class: curation correctness. OPEN (ORCH-769d; orchestrator ruling under D-113: rebase). KI-018.**
+**Class: curation correctness. Main defect FIXED by `2a791f69` (ORCH-769d, rebase under D-113; `apply_audit_patch.py:2659` "Index rebasing", `_rebase_op :2690`, wired `:2778-2800`). Residual OPEN: `/-` on a missing key creates a dict (`_resolve_parent :63`, `_set_value :84`), deferred to the PO in `ORCH-799-RESULT.md` § 5 Q2. Status corrected by ORCH-799 (2026-11-02). KI-018.**
 
 `apply_audit_patch.apply_patch_with_policy` (`:2680-2746`) applies an accepted `remove`, then applies the
 patch's later ops at the indices they had before the remove, so every synonym written after the removed row

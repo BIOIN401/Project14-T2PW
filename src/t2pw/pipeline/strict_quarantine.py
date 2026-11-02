@@ -88,6 +88,7 @@ from t2pw.pipeline.process_normalizer import (  # noqa: E402
     _entity_name_norms,
     _merge_dicts_keep_existing,
     _normalize,
+    row_is_referenced,
     restore_autostates_if_required,
     run_strict_post_normalization_gates,
 )
@@ -2242,8 +2243,7 @@ def _prune_entities(
                 )
                 continue
             name = _row_name(row)
-            norms = {norm for norm in _entity_name_norms([row]) if norm}
-            if norms & bucket_keep:
+            if row_is_referenced(row, bucket_keep):
                 kept.append(row)
                 continue
             reason = (
@@ -2885,7 +2885,7 @@ def _degree_zero_exports(
     surviving_complex_norms = {
         _normalize(_row_name(row))
         for row in _safe_list(_safe_dict(payload.get("entities")).get("protein_complexes"))
-        if isinstance(row, dict) and (_entity_name_norms([row]) & referenced)
+        if isinstance(row, dict) and row_is_referenced(row, referenced)
     }
     exempt = _complex_component_norms(payload, surviving_complex_norms)
     out: List[Dict[str, str]] = []
@@ -2901,8 +2901,7 @@ def _degree_zero_exports(
             # to "has some synonym" would report a row with no name to print.
             if not norm:
                 continue
-            norms = {candidate for candidate in _entity_name_norms([row]) if candidate}
-            if norms & referenced or norms & exempt:
+            if row_is_referenced(row, referenced) or row_is_referenced(row, exempt):
                 continue
             out.append({"bucket": bucket, "name": name})
     return out
@@ -3652,7 +3651,7 @@ def quarantine_and_close(
         surviving_complex_norms = {
             _normalize(_row_name(row))
             for row in _safe_list(_safe_dict(working.get("entities")).get("protein_complexes"))
-            if isinstance(row, dict) and (_entity_name_norms([row]) & referenced)
+            if isinstance(row, dict) and row_is_referenced(row, referenced)
         }
         # ORCH-759c. A component names a PROTEIN: ``_component_name``, ``ir.py``
         # (``proteins_by_name``) and ``writer.py`` (``_protein_complex_members``)
