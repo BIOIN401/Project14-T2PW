@@ -1,0 +1,93 @@
+{
+  "label": "base-focused",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "tests/test_orch804_ir_empty_state.py",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:/t/orch804/bt2",
+    "-q",
+    "--tb=line"
+  ],
+  "cwd": "C:/t/orch804/base",
+  "started_at": "2026-11-04T22:46:39+00:00",
+  "finished_at": "2026-11-04T22:46:40+00:00",
+  "duration_seconds": 0.9200897999980953,
+  "timeout_seconds": 570.0,
+  "root_pid": 410356,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 410368,
+      "name": "python.exe",
+      "ppid": 410356
+    }
+  ],
+  "descendants_terminated": [
+    410368
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 112240,
+      "name": "python.exe"
+    },
+    {
+      "pid": 395128,
+      "name": "python.exe"
+    },
+    {
+      "pid": 403764,
+      "name": "python.exe"
+    },
+    {
+      "pid": 409940,
+      "name": "python.exe"
+    },
+    {
+      "pid": 409952,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch804/docs/pwml_recovery_sprint/evidence/g11/ORCH-804/02-base-focused.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "563d39db19d161f18116c30776e3b24478b53b58",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-804",
+    "token": "ORCH-804:409952:76a4faa9db6da4d2",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
