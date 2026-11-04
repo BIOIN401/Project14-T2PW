@@ -73,12 +73,18 @@ def cue_near_name(text: str, name: str, *, window: int = 80) -> Optional[str]:
     store that snippet as the attachment's evidence, which is what makes an
     injected row auditable: the reader sees the sentence that justified it
     rather than the first 120 characters of whatever the row happened to carry.
+
+    An occurrence counts only when no word character flanks it (ORCH-802): a
+    bare substring test let the gene symbol "DUT" match inside "dUTP" and be
+    injected as the catalyst of CDADC1's dCTP -> dUTP reaction. ``\\b`` is not
+    used because it fails after a name ending in punctuation ("NAD+").
     """
     evidence = collapse_whitespace(text)
     actor_name = collapse_whitespace(name)
     if not evidence or not actor_name:
         return None
-    for match in re.finditer(re.escape(actor_name), evidence, flags=re.IGNORECASE):
+    pattern = r"(?<!\w)" + re.escape(actor_name) + r"(?!\w)"
+    for match in re.finditer(pattern, evidence, flags=re.IGNORECASE):
         start = max(0, match.start() - window)
         end = min(len(evidence), match.end() + window)
         snippet = evidence[start:end].strip()
