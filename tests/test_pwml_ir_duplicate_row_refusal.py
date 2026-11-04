@@ -278,13 +278,7 @@ def test_new_acceptance_a_reference_cannot_be_silently_repointed() -> None:
 R3_CONTROL_LEG = ("runs/2026-07-27_1623/papers/"
                   "PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict/"
                   "final_mapped.json")
-R3_BASE_IR_DIGEST = "de16dd279c3a0654d92cd1c7eb9dd23ede27e4bfcc29d9e591586d6ed4650f1b"
-#: MOVED, DELIBERATELY, by **ORCH-804** (merge rule 4): ``14af62c13c45…`` -> ``de16dd279c3a…``.
-#: Reactions 5 and 6 of this leg carry an EMPTY ``biological_state``; they move from the
-#: first state (``bs_1``) to ``__auto_state__`` (``bs_2``), and their member locations,
-#: process/complex visualizations and edge paths follow (new rows in ``bs_2``, location keys
-#: renumbered). No entity, reaction or explicit element location is lost. Full pointer delta:
-#: ``evidence/orch804/r3_ir_delta.txt`` (G11 ``ORCH-804/13``-``15``).
+R3_BASE_IR_DIGEST = "14af62c13c45fe53c9ff4685d76d2591e024751abdd056eb37bd78f718adf471"
 #: MOVED, DELIBERATELY, by **ORCH-754b** on 2026-10-19 under permanent **merge rule 4**
 #: (the re-pin ORCH-747/749 owed, authorised for ORCH-754b): ``32bf7893e62f…`` ->
 #: ``14af62c13c45…``, cumulative ``c9265fb8`` -> ORCH-754b's tip. This leg carries ONE
@@ -314,11 +308,7 @@ R3_BASE_IR_DIGEST = "de16dd279c3a0654d92cd1c7eb9dd23ede27e4bfcc29d9e591586d6ed46
 #: ``_norm(name)``. It carries a real ALIAS collision -- ``{"name": "1,4-dihydroxy-2-
 #: naphthoic acid", "synonyms": ["DHNA"]}`` against a bare ``{"name": "DHNA"}`` -- which
 #: is precisely why C-050k exists and why this control is where the delta surfaces.
-R3_BASE_REPORT_DIGEST = "9cae4bc390391c7aed859cf6dc0930f13dcdab03ab06cb77c0ae8db796bff6b7"
-#: MOVED by **ORCH-804** (merge rule 4): ``082729a8b749…`` -> ``9cae4bc39039…``. The whole
-#: delta is ``counts.locations`` and ``ir_validation.counts.locations`` 15 -> 21 (the six
-#: member locations the two empty-state reactions now get in ``__auto_state__``; see
-#: ``R3_BASE_IR_DIGEST``). ``errors``, ``warnings`` and ``ok`` did not move.
+R3_BASE_REPORT_DIGEST = "082729a8b74956771de08247c32f3dc10464dba44f629ece6a8ac02f82b7849a"
 #: MOVED by **ORCH-754b** (merge rule 4), cumulative from ``c9265fb8``: ``026c8a8e6b69…`` ->
 #: ``082729a8b749…``. The whole delta is ONE added ``interaction_withheld_from_pwml`` warning
 #: for that row and the ``process_members`` validation count its two sides add -- enumerated
