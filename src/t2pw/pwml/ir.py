@@ -1823,15 +1823,29 @@ def build_pwml_ir(
         state_by_name[_norm(name)] = state
 
     default_bs_key = ir["biological_states"][0]["key"] if ir["biological_states"] else None
-    # ORCH-804: an EMPTY reference goes to the pipeline's neutral state (ensure_autostates'
-    # __auto_state__ / cell), never to whichever paper compartment happens to be first.
-    # No neutral state -> first state, as before, so no leg loses its PWML.
-    empty_bs_key = (state_by_name.get(_norm("__auto_state__")) or {}).get("key") or default_bs_key
+    # ORCH-804: an EMPTY process reference goes to the one state the process's located
+    # participants all share in element_locations (placing, not inventing: the members
+    # are already drawn there); else to the neutral __auto_state__ (cell); else, as
+    # before, the first state, so no leg loses its PWML. Never to an arbitrary compartment.
+    auto_bs_key = (state_by_name.get(_norm("__auto_state__")) or {}).get("key")
+    empty_bs_key = auto_bs_key or default_bs_key
+    # Paper states only: an __auto_state__ row is a placeholder, not a location.
+    explicit_states: Dict[Tuple[str, str], set] = {}  # filled from element_locations below
 
-    def resolve_state(value: Any, pointer: str, *, required: bool = False) -> Optional[str]:
+    def members_state(members: Sequence[Any]) -> Optional[str]:
+        shared: Optional[set] = None
+        for member in members:
+            located = set()
+            for cand in entity_by_name.get(_norm(_canonical(member)), []):
+                located |= explicit_states.get((cand["entity_type"], cand["key"]), set())
+            if located:
+                shared = located if shared is None else shared & located
+        return next(iter(shared)) if shared and len(shared) == 1 else None
+
+    def resolve_state(value: Any, pointer: str, *, required: bool = False, members: Sequence[Any] = ()) -> Optional[str]:
         name = _canonical(value)
         if not name:
-            return empty_bs_key
+            return members_state(members) or empty_bs_key
         found = state_by_name.get(_norm(name))
         if found:
             return str(found["key"])
@@ -2051,6 +2065,8 @@ def build_pwml_ir(
                 continue
             bs_key = resolve_state(raw.get("biological_state"), f"/element_locations/{bucket}/{row_idx}/biological_state")
             explicit_locations_to_register.append((entity["entity_type"], entity["key"], bs_key))
+            if bs_key and bs_key != auto_bs_key:
+                explicit_states.setdefault((entity["entity_type"], entity["key"]), set()).add(bs_key)
 
     process_by_name: Dict[str, Dict[str, Any]] = {}
     process_by_key: Dict[str, Dict[str, Any]] = {}
@@ -2075,7 +2091,13 @@ def build_pwml_ir(
             continue
         reaction_index += 1
         rx_key = f"rxn_{reaction_index}"
-        bs_key = resolve_state(raw.get("biological_state"), f"/processes/reactions/{ridx}/biological_state", required=True)
+        bs_key = resolve_state(
+            raw.get("biological_state"),
+            f"/processes/reactions/{ridx}/biological_state",
+            required=True,
+            members=[p["name"] for k in ("inputs", "outputs") for p in _coerce_participants(raw.get(k))]
+            + [_actor_name_and_hint(a)[0] for a in _safe_list(raw.get("enzymes"))],
+        )
         rx_x, rx_y = process_xy(reaction_index - 1)
         reaction = {
             "key": rx_key,
@@ -2337,6 +2359,7 @@ def build_pwml_ir(
                 actor.get("biological_state") if isinstance(actor, dict) else "",
                 f"/processes/transports/{tidx}/transporters/{aidx}/biological_state",
                 required=True,
+                members=[name],
             )
             transport["transporters"].append(
                 {"key": member_key, "entity_type": entity["entity_type"], "entity_key": entity["key"], "biological_state_key": bs_key}
@@ -2378,7 +2401,12 @@ def build_pwml_ir(
         right_entity = resolve_entity(right_name, "interaction", f"/processes/interactions/{iidx}/entity_2")
         interaction_index += 1
         int_key = f"int_{interaction_index}"
-        bs_key = resolve_state(raw.get("biological_state"), f"/processes/interactions/{iidx}/biological_state", required=True)
+        bs_key = resolve_state(
+            raw.get("biological_state"),
+            f"/processes/interactions/{iidx}/biological_state",
+            required=True,
+            members=[left_name, right_name],
+        )
         raw_type = interaction_relationship_word(raw)
         # Spelling only: "activation" / "activates" -> "Activation", "inhibits" ->
         # "Inhibition". A word not in the table stays as written and is withheld
