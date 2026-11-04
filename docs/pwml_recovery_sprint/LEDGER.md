@@ -11303,3 +11303,14 @@ Open:
 - The two new patterns sit in tension with D-110 AMENDMENT 1/2. The DECISIONS.md carve-out record is pending the PO's answer.
 - The LLM backup for undefined pairs (tb dCtd) is a later lane; its plug-in point is in ORCH-803-RESULT.
 - The salicylic BA-CoA fix is not proven end to end, because the Stage-1 dictionaries are built per chunk.
+
+**ORCH-804 · 2026-11-04 — HELD, not merged** (`orch804/ir-empty-state`, tip includes `4ccaddc1` and the review record). The task was ORCH-801 audit F7: `ir.resolve_state` sends an empty process state to the pathway's first state, which put rice PAL in the peroxisome.
+- v1 used `__auto_state__`. It added 12 new duplicate drawings, so it was refined.
+- v2 uses the members' shared state, else `__auto_state__`. Its evidence:
+  - G9 holds: 2 corrections fail on base and pass at tip (G11 25/26, no stdout committed).
+  - Corpus 79/91 -> 79/91, no passing leg failing, no gold recall lost (G11 27/28).
+  - SMOKE 511 (G11 37).
+  - GOLDEN re-pinned 33 digests (`c8f31a3e`).
+- **Reviewer: REJECT.** The "0 new duplicates" claim came from a set-of-names counter. Recounted by (entity, state): net -18 corpus-wide, but **+1 on `ORCH-759_menaquinone` (MenA complex) and on `runs_verify_2026-08-28_1816_PMC12782028` (lanosterol)**. The rice target leg was not demonstrated.
+- Held under the PO's standing rule: never worsen output, no duplicates. The PO asked to wrap up.
+- Options, with what each costs: `ORCH-804-RESULT.md` § 9.
