@@ -382,3 +382,27 @@ fallback happened to choose.
 - Q1 to Q4 still stand. Q2 (duplicate member nodes) is resolved by v2. For Q1, v2 now also places
   empty-state processes on legs with no `__auto_state__`, wherever their members share a state. I have
   not re-counted how many of the census's 20 legs this reaches.
+
+
+## 9. Review outcome: REJECT, branch HELD and not merged (lead, 2026-11-04)
+
+An independent `pwml-reviewer` reviewed v2 (`4ccaddc1`) and rejected it. The code change itself is small and well-behaved. The rejection rests on the evidence claim in § 8.3 and § 8.5.
+
+- **"0 new duplicate entities" is false.** `evidence/orch804/dup_count.py` (lines 26-27, 35) defines a duplicate only as "the entity is multi-state at all". It diffs sets of entity names, so an entity that was already multi-state at base and gains another drawn state is invisible to it. The reviewer recounted by (entity, state) pairs over `C:/t/orch804/corpus_base` vs `C:/t/orch804/corpus_v2` (79 IRs):
+  - Whole corpus: **489 -> 471** extra drawn copies, net -18.
+  - **Two legs get worse:** `ORCH-759_menaquinone` 24 -> 25 (MenA complex 2 -> 3 states) and `runs_verify_2026-08-28_1816_PMC12782028` 5 -> 6 (lanosterol 2 -> 3).
+  - `ORCH-767_wnt_ca` nets flat: Ca2+ 10 -> 11 and calcineurin 2 -> 3 are offset by removals.
+- **Mechanism:** the Q5 skip-unlocated choice draws an unlocated member, for example `MenA complex` on menaquinone `rxn_16`, in its co-participants' state. That is inference, not placement, and it adds the node.
+- **The target defect is not demonstrated.** The rice PAL leg (PMC12408352) is not in the corpus, and `compare_base_vs_tip_v2.txt` ends `D-112 § 2: REJECT`.
+- **Lower findings:**
+  - No stdout was committed for G11 25, 26 and 36.
+  - Gap-resolver `AutoState_*` states are counted as paper states.
+  - `members_state` takes the union across same-name rows of different types.
+  - The empty-name path also covers `element_locations` and cargo endpoints. That is not observable today.
+- **Lead decision:** the branch is **held**. The PO's standing rule is never to worsen text-to-PWML output and not to create duplicates; a proven +1 on two legs violates it even though the corpus total improves. The PO asked to wrap up rather than iterate.
+
+**Open for the PO, if this is ever resumed:**
+- (a) Accept the trade-off: net -18 duplicate copies corpus-wide against +1 on two legs.
+- (b) Add a "never add a drawn (entity, state) pair" guard and re-measure. This may leave the rice case unfixed, because moving PAL off the peroxisome would draw trans-CA in a new state.
+- (c) Fix the cause upstream instead: `ensure_autostates` should assign processes (Q1a).
+- In every case: run the rice leg to show F7 fixed, and recount duplicates by (entity, state).
