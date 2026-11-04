@@ -170,3 +170,34 @@ Scan limits (what it does not prove):
 4. **Stage-1 dictionaries are per chunk** (pre-existing). Options: (a) leave; (b) build one dictionary from the whole paper and pass it to every chunk's merge. That is a small change but moves every chunked run, so it needs a scan.
 5. **Pre-existing false pair `acyl-CoA -> acetyl-CoA`** (section 5 item 5): plain Schwartz-Hearst accepts a lowercase ordinary word in parentheses as an abbreviation. It was not seen in the scanned corpus. Options: (a) leave; (b) require a short form to contain a capital or digit, which is a Schwartz-Hearst deviation that needs its own scan.
 6. **Transport cargo now enters the rewrite map, so typo snapping (rule 2) also reaches cargo-only names**, under the same safety rules and flagged `typo_snapped`. The scan does not measure Stage-1 renames, because no committed draws are pooled here. Options: (a) accept as within D-104 § 3(a); (b) restrict cargo to rule 1 only, at a few lines' cost.
+
+## 9. Review round 1 (reviewer verdict on `a79dba9e`: APPROVE WITH NOTES)
+
+Code commit `2ee07a80`. Line counts: `map_ids.py` +8/-1, `paper_lexicon.py` +6/-2, test +19.
+
+- **F1 (MEDIUM), the gate rung trusted any display name.** `_candidate_display_names` includes `short_name` and the BioCyc mnemonic. So a record whose `short_name` only *equals* the paper's abbreviation would have been admitted. Example: paper "phosphatidic acid (PA)", record "Hexadecanoate" with short_name "PA".
+  - **Fix:** when the paper pair is matched through its SHORT form, only the candidate's primary `name` counts (the fallback name when there is no candidate row). Long-form matches are unchanged.
+  - cdadc1 still passes, because PathBank 1087's primary name is "dUMP".
+  - **Ceiling:** a record whose *primary* name is the abbreviation of a different molecule would still pass. That is the reviewer's specified bound.
+- **F3 (LOW), the deoxy retry paired phrases:** "nucleotide pool (dNTP)" gave dNTP = "nucleotide pool", and "nucleoside triphosphates (dNTPs)" paired too.
+  - **Fix:** the retry keeps only a **one-word** long form.
+  - **Why this tightening:** the convention the pattern exists for is a nucleoside's single name, where the `d` is the unwritten 2'-deoxy (thymidine to dThd, cytidine to dCyd). A multi-word long form has no such word to carry the implicit prefix, and every multi-word `dN...` case seen is a phrase.
+  - **Cost:** "thymidine monophosphate (dTMP)" no longer pairs through this pattern. No scanned paper writes it that way. "deoxythymidine monophosphate (dTMP)" still pairs through plain Schwartz-Hearst.
+- **Tests:** three new negative twins.
+  - `test_twin_short_name_alone_never_admits_the_papers_long_form`.
+  - `test_twin_deoxy_retry_never_pairs_a_phrase`, run on both dNTP phrases.
+  - These are **not** G9 corrections of base behaviour: base has neither the rung nor the retry, so they pass on base. To show they bite, they were run against the reviewed commit `a79dba9e`: `3 failed, 17 passed in 0.61s`, exactly the 3 new twins.
+
+| Proof | Result (piped wrapper output) | G11 report |
+|---|---|---|
+| focused, tip `2ee07a80` | `20 passed in 0.45s` | `08-r1-focused-tip.json` + `-stdout.txt` |
+| focused, reviewed `a79dba9e` (export `C:/t/orch803/prev`) | `3 failed, 17 passed in 0.61s` (the 3 new twins) | `09-r1-focused-a79dba9e.json` + `-stdout.txt` |
+| no-loss scan, tip vs the unchanged base scan | `pairs removed 1, added 2; records base 681 tip 681; keep_to_reject 0, reject_to_keep 5, other 0`. Same pairs and the same 5 flips as section 4. `scan_tip.json` and `scan_compare.json` are byte-identical to round 0; only `scan_compare.log` changed (wrapper PIDs). | `10-r1-scan-tip.json`, `11-r1-scan-compare.json`, `evidence/orch803/scan_compare.log` |
+| SMOKE | `511 passed in 62.02s (0:01:02)` | `12-r1-smoke.json` + `-stdout.txt` |
+
+Every report shows `FINAL SURVIVING COUNT : 0`. Base was not re-run, because no new test is a G9 correction. The base G9 result in section 3 still stands: the 5 corrections are unchanged.
+
+**Decision record (lead's note, recorded as instructed):**
+- The two new pair patterns, `shared_suffix` and `deoxy_prefix`, sit in tension with D-110 AMENDMENT 1/2.
+- They are covered by the PO's ORCH-801 § 4 option-A ruling.
+- The lead handles the DECISIONS.md record with the PO. This lane did not edit DECISIONS.md.
