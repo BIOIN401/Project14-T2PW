@@ -1,0 +1,118 @@
+{
+  "label": "leg-tb-pyrimidine-strict",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "scripts/batch_run.py",
+    "--topics",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/docs/evaluation_v2/paper_runs_orch755/topics/tb_pyrimidine.txt",
+    "--modes",
+    "strict",
+    "--out",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch801run/runs_papers/ORCH-801/legs/tb_pyrimidine-strict",
+    "--fresh",
+    "--timeout",
+    "10800",
+    "--deadline",
+    "3.20"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch801run",
+  "started_at": "2026-11-04T18:28:11+00:00",
+  "finished_at": "2026-11-04T19:08:13+00:00",
+  "duration_seconds": 2401.4236808999995,
+  "timeout_seconds": 11400.0,
+  "root_pid": 98204,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 98076,
+      "name": "python.exe",
+      "ppid": 98204
+    },
+    {
+      "pid": 97792,
+      "name": "python.exe",
+      "ppid": 98076
+    },
+    {
+      "pid": 97352,
+      "name": "python.exe",
+      "ppid": 97792
+    },
+    {
+      "pid": 97800,
+      "name": "python.exe",
+      "ppid": 98032
+    },
+    {
+      "pid": 98032,
+      "name": "python.exe",
+      "ppid": 98076
+    }
+  ],
+  "descendants_terminated": [
+    97352,
+    97792,
+    97800,
+    98032,
+    98076
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 59408,
+      "name": "python.exe"
+    },
+    {
+      "pid": 59848,
+      "name": "python.exe"
+    },
+    {
+      "pid": 96884,
+      "name": "python.exe"
+    },
+    {
+      "pid": 97380,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-801\\03-leg-tb-pyrimidine-strict.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch801run\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch801run",
+    "repo_head": "53331c83250d65f4caa6276b6eb70814cd451e80",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-801",
+    "token": "ORCH-801:96884:9b64fe1c39a43cc3",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
