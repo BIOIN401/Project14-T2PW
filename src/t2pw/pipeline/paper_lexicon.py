@@ -61,7 +61,7 @@ PATTERN_SHARED_LOCANT = "shared_locant"
 #: ORCH-803: ``benzoyl-CoA (BA-CoA)`` and ``thymidine (dThd)``; see the two helpers' docs.
 PATTERN_SHARED_SUFFIX = "shared_suffix"
 PATTERN_DEOXY_PREFIX = "deoxy_prefix"
-#: A nucleoside/nucleotide short form whose ``d`` is the implicit 2'-deoxy (dThd, dCyd, dTMP).
+#: A nucleoside short form whose ``d`` is the implicit 2'-deoxy (dThd, dCyd, dGuo); one-word long form only.
 _DEOXY_SHORT = re.compile(r"^d[A-Z]")
 
 _PAREN = re.compile(r"\s\(([^()]*)\)")
@@ -178,8 +178,12 @@ def abbreviation_pairs(text: str) -> List[Tuple[str, str, str]]:
             long = _valid_pair(short, long_cand.strip())
         if long is None and pattern == PATTERN_LONG_SHORT and _DEOXY_SHORT.match(short):
             long = _valid_pair(short[1:], long_cand.strip())
-            if long is not None:
+            # Review F3: one word only ("thymidine"); "nucleotide pool (dNTP)" and
+            # "nucleoside triphosphates (dNTPs)" are phrases, not a nucleoside's name.
+            if long is not None and len(long.split()) == 1:
                 pattern = PATTERN_DEOXY_PREFIX
+            else:
+                long = None
         if long is None:
             continue
         if long.startswith("(") and ")" not in long:

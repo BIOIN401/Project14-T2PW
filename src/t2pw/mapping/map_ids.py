@@ -6309,10 +6309,17 @@ def _name_gate_verdict(
     # Last, so it only ever turns a reject into a keep; only the paper of THIS run, and only
     # when its Stage 1 pooled (stage_one_ensemble.paper_defined_pair). Not for proteins.
     if kind != "protein":
-        from t2pw.pipeline.stage_one_ensemble import paper_defined_pair  # function-local: layering
+        from t2pw.pipeline.paper_lexicon import spelling_key  # function-local: layering
+        from t2pw.pipeline.stage_one_ensemble import paper_defined_pair
 
+        # Review F1: a record matched through the paper's SHORT form must carry it as its own
+        # primary name (PathBank 1087 is named "dUMP"); a short_name or BioCyc mnemonic that
+        # merely equals "PA" does not make the record the paper's phosphatidic acid.
+        primary = str(_safe_dict(candidate).get("name") or "").strip() if candidate is not None else names[0]
         for value in names:
             pair = paper_defined_pair(entity_name, value)
+            if pair and spelling_key(value) == spelling_key(pair[0]) and value != primary:
+                continue
             if pair:
                 gate["verdict"] = "keep"
                 gate["reason"] = "paper_abbreviation_identity"

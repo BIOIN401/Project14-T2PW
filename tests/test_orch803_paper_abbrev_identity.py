@@ -156,3 +156,22 @@ def test_twin_gate_needs_this_runs_paper(run_scope) -> None:
 def test_twin_deoxy_fallback_never_overrides_a_full_match() -> None:
     assert _pairs("cells fed deoxyuridine (dUrd) grew")["dUrd"] == "deoxyuridine"
     assert "dCas9" not in _pairs("a catalytically inactive Cas9 (dCas9) was used")
+
+
+# ------------------------------------------------------------------------- review round (F1, F3)
+
+
+def test_twin_short_name_alone_never_admits_the_papers_long_form(run_scope) -> None:
+    _pool("membranes rich in phosphatidic acid (PA) were used")
+    other = {"name": "Hexadecanoate", "short_name": "PA", "pathbank_compound_id": "1087",
+             "mapped_ids": dict(DUMP_IDS)}
+    gate = _name_gate_verdict("phosphatidic acid", candidates=[other], mapped_ids=dict(DUMP_IDS), kind="compound")
+    assert gate["verdict"] == "reject", gate
+
+
+@pytest.mark.parametrize("text, short", [
+    ("the nucleotide pool (dNTP) was depleted", "dNTP"),
+    ("levels of nucleoside triphosphates (dNTPs) fell", "dNTPs"),
+])
+def test_twin_deoxy_retry_never_pairs_a_phrase(text: str, short: str) -> None:
+    assert short not in _pairs(text)
