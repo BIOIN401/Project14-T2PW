@@ -11284,3 +11284,22 @@ Denominator: 66 unsigned interactions quarantined before the IR stay in the head
 - Reviewer: APPROVE WITH NOTES; all 4 notes closed in `918f9ecf`. Integration SMOKE on the merge: **511 passed**, 0 survivors, heavy lock released (`g11/ORCH-802/08`).
 - PO ruling, 2026-11-04 ("yes merge"): ORCH-802-RESULT Q1 option (a). Dropping alias duplicates of a catalyst that stays on the row is not a regression. The duplicates are ALAS/ALAS2, HepPPS/BsHepPPS, MenA/EcMenA, and EntE beside the enterobactin synthase complex.
 - Q2 (MenD on menDHCEB) and Q3 (unifying the enzyme and transporter boundary rules) stay open.
+
+**ORCH-803 · 2026-11-04 — MERGED `d6cc5360`** (lead integration; `orch803/paper-abbrev-identity` into `sprint/pwml-recovery`). An abbreviation and its full name are now one entity when the paper defines them as a pair. This is ORCH-801 finding 5 and audit F2/F6. The change has three parts:
+- `paper_lexicon.abbreviation_pairs` gains the `shared_suffix` and `deoxy_prefix` (one-word long form) patterns.
+- The Stage-1 rewrite map now reads transport cargo, and a run-scoped `paper_defined_pair` was added.
+- A last name-gate rung, `paper_abbreviation_identity`, keeps a match only when this run's paper defines the pair. It applies to non-protein entities only. A short-form match counts only when it equals the record's primary name.
+
+Evidence:
+- Merge `src/` and `tests/` are byte-identical to the reviewed tip `3995ad80`.
+- G9: 5 tests fail on base and pass at tip (`g11/ORCH-803/01`, `02`, `08`).
+- No-loss scan over 34 papers and 681 gate records: 1 pair removed (a wrong BA-CoA long form), 2 correct pairs added, 0 keep->reject, 5 correct reject->keep (dThd, dUMP x2, SEPHCHC x2) (`11`).
+- Reviewer: APPROVE WITH NOTES in rounds 0 and 1; F1 and F3 were closed in `2ee07a80`.
+- Integration SMOKE on the merge: **511 passed**, 0 survivors (`g11/ORCH-803/13`).
+
+PO ruling, 2026-11-04 (verbatim): "use papers defintion and make sure it is unified and we dont make duplciates, asking llm can be kept as bacup in some scenario they use two intercangeabley".
+
+Open:
+- The two new patterns sit in tension with D-110 AMENDMENT 1/2. The DECISIONS.md carve-out record is pending the PO's answer.
+- The LLM backup for undefined pairs (tb dCtd) is a later lane; its plug-in point is in ORCH-803-RESULT.
+- The salicylic BA-CoA fix is not proven end to end, because the Stage-1 dictionaries are built per chunk.
