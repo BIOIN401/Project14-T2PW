@@ -1823,13 +1823,15 @@ def build_pwml_ir(
         state_by_name[_norm(name)] = state
 
     default_bs_key = ir["biological_states"][0]["key"] if ir["biological_states"] else None
+    # ORCH-804: an EMPTY reference goes to the pipeline's neutral state (ensure_autostates'
+    # __auto_state__ / cell), never to whichever paper compartment happens to be first.
+    # No neutral state -> first state, as before, so no leg loses its PWML.
+    empty_bs_key = (state_by_name.get(_norm("__auto_state__")) or {}).get("key") or default_bs_key
 
     def resolve_state(value: Any, pointer: str, *, required: bool = False) -> Optional[str]:
         name = _canonical(value)
         if not name:
-            if required and default_bs_key:
-                return default_bs_key
-            return default_bs_key
+            return empty_bs_key
         found = state_by_name.get(_norm(name))
         if found:
             return str(found["key"])
