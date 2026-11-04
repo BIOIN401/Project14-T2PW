@@ -501,18 +501,8 @@ def test_is_idempotent_and_tolerates_undeduped_unpruned_rows() -> None:
 #: ``withheld/reason``, ``withheld/ambiguous_endpoints``, ``withheld/unwrappable_proteins`` and the
 #: matching warning text; nothing else, no error / ok / stop moved. The new value is pytest's
 #: (``evidence/orch754b_pins_round2_before.pytest.log``).
-#:
-#: **MOVED A NINTH TIME, ON 35 OF 89 LEGS, by ORCH-804** (merge rule 4): an EMPTY
-#: ``biological_state`` reference now resolves to ``__auto_state__`` (cell) instead of the
-#: pathway's first state. Measured base ``563d39db`` -> tip by
-#: ``evidence/orch804/orch804_ir_digest_delta.py`` (``orch804_ir_digest_delta.{json,txt}``,
-#: G11 ``ORCH-804/22``): every moved pointer is a process / transporter
-#: ``biological_state_key`` or what follows it (locations, edges, process and complex
-#: visualizations, location counts); no error, ``ok`` or stop moved on any leg. Old -> new
-#: per leg: ``evidence/orch804/golden_repin_pairs.txt``; new values are pytest's
-#: (``evidence/orch804/golden_before_repin.pytest.log``).
 GOLDEN = {
-    "runs/2026-07-27_1623/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict/final_mapped.json": "d12fb190816ad68c5e427ebb6263a472ef462fe7b42404ad896be071605bc0e8",
+    "runs/2026-07-27_1623/papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict/final_mapped.json": "a8880057346845b22a1be8ce3ef7e5acd2332db0e7893e36beacc14bbba62b59",
     # C-050h delta: f0dd12d5… -> e5a40385…, then the ONLY moved digest again under
     # C-050i: e5a40385… -> d22b58c8…. ``_leg_digest`` hashes each stop's code, and
     # this leg's LAST TWO building configurations (B, E) now refuse post-freeze with
@@ -529,33 +519,33 @@ GOLDEN = {
     # quarantine) and the build reaches the IR, which refuses the lipid IV_A pair
     # with ``PWML_IR_DUPLICATE_NAMED_ROW`` exactly as B / E already did. Still no IR.
     "runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict/final_mapped.json": "7579c65dc24f731ebe970d01a56ce115755e876bc3401f4d57e5ad3c4f8a227e",
-    "runs/2026-07-28_0919/papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict/final_mapped.json": "cfb8ab00d145d7a0cf418d17383e494822504f5211554683e59b80e05c4a0769",
-    "runs/2026-08-02_2130/papers/PMC12096016/research/final_mapped.json": "6ab0af4d7b87d174fa2567086af0c659b5ffc730d3fc8a998bff6649bb905186",
+    "runs/2026-07-28_0919/papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict/final_mapped.json": "e64f42db94c40e1eebe681674fdff2262ce971ed0970bc61c90176fef8592dc8",
+    "runs/2026-08-02_2130/papers/PMC12096016/research/final_mapped.json": "e5e027d9e7272dffb033e39392fbe79e55ceda4fc2c43b1d80d3b618345ca505",
     "runs/2026-08-02_2130/papers/PMC12096016/strict/final_mapped.json": "c0b2e21db349c0e28209b0e821080511792d6fce9360b7e959bd137ac811b93d",
-    "runs/2026-08-02_2130/papers/PMC12180156/research/final_mapped.json": "9ebe13781be184b9b871110ce07ef1b19391e3fd23777f9a59375928ff7c2a2e",
-    "runs/2026-08-02_2130/papers/PMC12180156/strict/final_mapped.json": "f47391b165c5ac22c9038442dcf41ce574ffcf6a2e89264a20be565ffce3e878",
-    "runs/2026-08-02_2130/papers/PMC12444477/research/final_mapped.json": "c9f773853482ad78daf1b042fddfcee4682b3ea396a73efea011dcf980890597",
-    "runs/2026-08-02_2130/papers/PMC12444477/strict/final_mapped.json": "8bec5d2fb79ef270bc64220b377b63267b4a88d2da6246a6cc34b6923185112f",
-    "runs/2026-08-02_2130/papers/PMC12452463/research/final_mapped.json": "71477162d3d650060b824a78ed6151686d5eb71f4574d4685cc4c7276cd4ccfa",
+    "runs/2026-08-02_2130/papers/PMC12180156/research/final_mapped.json": "3c5f9303b234c08d09e670f9d62de3ca580ba34ffe98a84fda321f22a2b808c8",
+    "runs/2026-08-02_2130/papers/PMC12180156/strict/final_mapped.json": "b7b353119c974288b27b4167e2a4ebf9431781d8cc5f1d42d5987ff7fef6d50b",
+    "runs/2026-08-02_2130/papers/PMC12444477/research/final_mapped.json": "b90f294e17729f1a8e2b4e3c20c3b8d6d9bbdb498f8e82e3c3af703a5e23a240",
+    "runs/2026-08-02_2130/papers/PMC12444477/strict/final_mapped.json": "8bf7913e776db4761451f3750f7ff8407318fa3b32adb1322a24b03a9db6a06a",
+    "runs/2026-08-02_2130/papers/PMC12452463/research/final_mapped.json": "7af07be350aded81fc9861171911267f357c130b9b4d9d38f45108f670f6f417",
     "runs/2026-08-02_2130/papers/PMC12782028/strict/final_mapped.json": "5ddfb6c4d04653c58f0332aaeb60d88496c4fce62de27acba8edea1e44c468e0",
     "runs/2026-08-02_2130/papers/PMC12856317/research/final_mapped.json": "4b34a0fac1b710fbc45b52189e6f17c1bafed1cf462642b089f78e8b773cd512",
     "runs/2026-08-02_2130/papers/PMC12856317/strict/final_mapped.json": "1c24675f286c8678407a89610e5901f07d1e580000524a3bc47c720bb39d5c46",
     "runs/2026-08-02_2130/papers/PMC13231680/strict/final_mapped.json": "ce4b7b36597a9ae43bfe0174674f75b2d53224e42708bd32088f87bb27564b50",
     "runs_verify/2026-08-04_1148/papers/PMC13231680/research/final_mapped.json": "c0f61e7a2102a0c9aba81e7ea2a05155defd5acfef51f7bd25b8507da9da25af",
-    "runs_verify/2026-08-04_1207/papers/PMC12452463/strict/final_mapped.json": "2e315d67c64191ed5a3b8dcf0b8bc086d1edea8b0b8299d5034715c9f3cdb765",
-    "runs_verify/2026-08-04_1234/papers/PMC12096016/strict/final_mapped.json": "f8aa4c6116a8ccab9de3e201f413d51455e6ae0ec34e786561fc262d0c78e690",
+    "runs_verify/2026-08-04_1207/papers/PMC12452463/strict/final_mapped.json": "77bea8f6e872d63cd34e7ebe5aa701d96cb4989dc35bbeef818eb0ef9e4e626c",
+    "runs_verify/2026-08-04_1234/papers/PMC12096016/strict/final_mapped.json": "f6d4edb1c14709b73aca3f78070a737aaf85a19e86b47a1c3788bcbbf9e6febe",
     "runs_verify/2026-08-04_1234/papers/PMC12856317/strict/final_mapped.json": "9b45b2f78e0cf8f6f6164c1dc6a24c76708f69762870ce1450bb8dbbb57e399b",
-    "runs_verify/2026-08-04_1306/papers/PMC12096016/research/final_mapped.json": "17f62df11780ae3b3dc8cdbf1f9571bcd0030918ea692839a8a10707b2d031b1",
-    "runs_verify/2026-08-04_1306/papers/PMC12452463/research/final_mapped.json": "a1a8535f1a46e23a823ded4060c46e521694681afe5f9ef9f7b87b8db9c78c19",
-    "runs_verify/2026-08-04_1358/papers/PMC12096016/research/final_mapped.json": "4ecf6d559984094ffcfa30ea6eac84541bebb3df4c74e2843a04a5d627de8c79",
+    "runs_verify/2026-08-04_1306/papers/PMC12096016/research/final_mapped.json": "c6caa117c0b6d0e8499a1f3d7fadd9aefdee2fd0ace73ccb3759724e4c884681",
+    "runs_verify/2026-08-04_1306/papers/PMC12452463/research/final_mapped.json": "b1ae1a97a4f17eb6618cdc3a6a39170f2841d746559a1322a56d477728aaf7e4",
+    "runs_verify/2026-08-04_1358/papers/PMC12096016/research/final_mapped.json": "d8bd9a2c7a94ff10157a6a9133c2c12a559d654c8ddbf928cec9e17a11093347",
     "runs_verify/2026-08-04_1504/papers/PMC12856317/strict/final_mapped.json": "4c9d3c3ee47e0966e577a744b3b262a170f80c55d31ccd5198771c8f2f9be185",
     "runs_verify/2026-08-04_1647/papers/PMC12856317/strict/final_mapped.json": "428fce1aa7e9a21f337158a70ead719a05570b163c0e9b1e3458dd2b60fc460d",
-    "runs_verify/2026-08-04_1754/papers/PMC12096016/research/final_mapped.json": "d2cc9b095a57cee6110ca5f689c6790449bdf5366a0dc609cbec5705cb0e36e9",
-    "runs_verify/2026-08-04_1754/papers/PMC12096016/strict/final_mapped.json": "8ce38092667af31525df29e51572fb6b5633de5deae6ede00bae7ca354c2f0e4",
-    "runs_verify/2026-08-04_1754/papers/PMC12180156/research/final_mapped.json": "2bbe9968b5d89981000967018b84191f995a44c21788f223c3912b552b3486c9",
+    "runs_verify/2026-08-04_1754/papers/PMC12096016/research/final_mapped.json": "6cbe8e113571225f3bfdedfedd84e557f7c01824b4d23c222f679efa92e73212",
+    "runs_verify/2026-08-04_1754/papers/PMC12096016/strict/final_mapped.json": "c12b098c9bcbaf000aed439cd4d8ab53f0e90830e4725139fc36c8361c255be6",
+    "runs_verify/2026-08-04_1754/papers/PMC12180156/research/final_mapped.json": "7c74400d2ec3d9c0e798551712d481ab43f35414a9796f6bf7d6de18cf68bc3b",
     "runs_verify/2026-08-04_1754/papers/PMC12180156/strict/final_mapped.json": "877243c19d5bb6f85b1950c2b0c85d1207bfd7eb9dab7c832e7ad60d34c76935",
-    "runs_verify/2026-08-04_1754/papers/PMC12452463/research/final_mapped.json": "57e3da909de72e5769c00241bdc989d8974dcb48e8dd81c915081ceb847c4040",
-    "runs_verify/2026-08-04_1754/papers/PMC12452463/strict/final_mapped.json": "76ac022b0cea8421e7d28fb068e78a643080554a45803f10b11eb9acc856655f",
+    "runs_verify/2026-08-04_1754/papers/PMC12452463/research/final_mapped.json": "d07b2a2df4a9fc41442bb43e3cbb4003cda0cf796f495b84587a29042e48e8c7",
+    "runs_verify/2026-08-04_1754/papers/PMC12452463/strict/final_mapped.json": "f170a48033af977f578ea80f76c47cb751661b5c57d0ed3d94e348423887c587",
     "runs_verify/2026-08-04_1754/papers/PMC12782028/research/final_mapped.json": "2c8897c47475836b45a581258a211a6b039217b73795b6aed68b1f0085c8ad1e",
     "runs_verify/2026-08-04_1754/papers/PMC12856317/research/final_mapped.json": "2f2387efa1437a551e42bb114475cf92630694188600c82a87098880a37dcd5b",
     "runs_verify/2026-08-04_1754/papers/PMC12856317/strict/final_mapped.json": "fb2aab05be6d25626469307dac4a581cc858989c7cae639d14512ec1e7d1b6fc",
@@ -594,7 +584,7 @@ GOLDEN = {
     # **F-079 is NOT fixed here**: it is unowned and needs its own card and its
     # own current-source measurement. Pinning this digest freezes the defect so
     # that card can prove its fix moved something.
-    "runs_verify/2026-08-18_1328/papers/PMC12096016/research/final_mapped.json": "0d109c3c5b7a5405799c339bb0abddea1b509c21ed7bb9d32535991dc357e926",
+    "runs_verify/2026-08-18_1328/papers/PMC12096016/research/final_mapped.json": "6dd347d33e0d47f3bd972c12b293be61cd3244a83336f1fb9ed62c3646ddb9c6",
     # ── C-093, 2026-08-27: 56 legs admitted, one excluded, on the record ──
     #
     # **MOVED A SIXTH TIME, and this is the largest move this golden has taken.**
@@ -646,22 +636,22 @@ GOLDEN = {
     # dict. It is a standing property of the pipeline, out of C-093's scope, and it is
     # NOT a per-leg exclusion criterion; treating it as one here would have been the
     # blanket rule this card is forbidden to write.
-    "runs_verify/2026-08-21_1822/papers/PMC12782028/research/final_mapped.json": "df357cdebb2baa2f6e4a29cfc0c4dc383f92354d24ff631c31d8d5bcd6d4daab",
+    "runs_verify/2026-08-21_1822/papers/PMC12782028/research/final_mapped.json": "a43a711197c5b943a23563cda5df709b7e4b79a27713021f9c472f8447171e31",
     "runs_verify/2026-08-21_1822/papers/PMC12782028/strict/final_mapped.json": "e2c0857d7255cc66d5bff5065604f6243da720fb283d8875b414dd24b332b0ec",
-    "runs_verify/2026-08-21_2014/papers/PMC12312563/research/final_mapped.json": "724b129364be26830f18467f71cd1d38eae176edc392e3af3c41792a4462a744",
+    "runs_verify/2026-08-21_2014/papers/PMC12312563/research/final_mapped.json": "9c4ad0d7cade5e864a216b1a43477b79b2878465faa0ed673acffa1701ab1af7",
     "runs_verify/2026-08-21_2014/papers/PMC12312563/strict/final_mapped.json": "241791e904540c9e8dd1c45dc6359629d5a7025f93e26617086472eb02251bc8",
     "runs_verify/2026-08-21_2057/papers/PMC12096016/research/final_mapped.json": "c172ba80b243b408b3917b8f6afce092773d26ae5301df810ffcdc37d1331436",
     "runs_verify/2026-08-21_2057/papers/PMC12096016/strict/final_mapped.json": "f363caed4d26993858100e17e02cb9728ad59f1d74382ab487fa69e547fc9f6d",
     "runs_verify/2026-08-21_2057/papers/PMC12452463/research/final_mapped.json": "836f4c80624c0ab529f844c27c626518163e79ec94f37a0972a012dde67e788b",
-    "runs_verify/2026-08-21_2057/papers/PMC12452463/strict/final_mapped.json": "d7d69c2171b7536df195b249c1d6fdcf9bb9ac678fd85562c4356d09cc75b4cb",
-    "runs_verify/2026-08-21_2239/papers/PMC12096016/research/final_mapped.json": "ddf8b8b7e84bc03748467476fae8a6494a791ed59ff2ae66bb4abc30e654e780",
+    "runs_verify/2026-08-21_2057/papers/PMC12452463/strict/final_mapped.json": "c110566b27508e719f07c968335cc74b1c68da19fe638551cfc9b9835d3ab4dc",
+    "runs_verify/2026-08-21_2239/papers/PMC12096016/research/final_mapped.json": "e3c333bf9c55c4d679f508548e6f081b0038e8633a754eba08bde54696a5405e",
     "runs_verify/2026-08-21_2239/papers/PMC12096016/strict/final_mapped.json": "ff40de3bdba44b6b03eb14c3838d41648a00fd0b58aa8f1d9e1805d3185ecb39",
     "runs_verify/2026-08-21_2239/papers/PMC12180156/research/final_mapped.json": "5139cd5226b3cd351cc91b764878753ca2717ba8be586cf996a5c72ab4501342",
     "runs_verify/2026-08-21_2239/papers/PMC12180156/strict/final_mapped.json": "b62b4d50a9db4bd2c3525774bab405e271cc8189f581a45d2a2f52c07565c28b",
     "runs_verify/2026-08-21_2239/papers/PMC12452463/research/final_mapped.json": "2a2ea555db8c5d64a763721d72912d21b255fe6d90fae37a05492d26dbbdd69d",
     "runs_verify/2026-08-21_2239/papers/PMC12452463/strict/final_mapped.json": "b7d1026240b951b1c35e281382ac63188c4e7c7fdc5044437278791f21bec1f1",
-    "runs_verify/2026-08-21_2239/papers/PMC12782028/research/final_mapped.json": "daa71568dc313f9bfb9d893f224eee9ba2f7d9f36e2f27c79cf74d8f524e3311",
-    "runs_verify/2026-08-21_2239/papers/PMC12782028/strict/final_mapped.json": "6bd81bf8e4f71ca02dad3a2d268973713efdc36b9665ae99b02f1ab0b6437636",
+    "runs_verify/2026-08-21_2239/papers/PMC12782028/research/final_mapped.json": "0025be2cc106f8507f9701c1a89a7395824b8b69c95980c374e2715e7656c1df",
+    "runs_verify/2026-08-21_2239/papers/PMC12782028/strict/final_mapped.json": "c0afe61de14749159cac438919a811509e248ebdab90c0f399d8ad08d082d75e",
     "runs_verify/2026-08-21_2239/papers/PMC12856317/research/final_mapped.json": "4803ed3361fdd6e3f4e005cde63341e880412753ea8cc1552cf078a1ee09c12f",
     "runs_verify/2026-08-21_2239/papers/PMC12856317/strict/final_mapped.json": "647e8eb17244cbb2ea553d295dd75e96f6ce2076e767bd4061cda9592e33173d",
     "runs_verify/2026-08-22_1821/papers/PMC12452463/strict/final_mapped.json": "9c16316597690f8915df6f8806468b048d3deb5b22b7b6725f553313fa05ddce",
@@ -669,39 +659,39 @@ GOLDEN = {
     "runs_verify/2026-08-22_2017/papers/PMC12452463/strict/final_mapped.json": "5d02fa2320655f35ea1c0d66f6f20d8a5850af9e800af63d94956d887f49e830",
     "runs_verify/2026-08-22_2017/papers/PMC12856317/research/final_mapped.json": "857e917d68608c0b3c448ca03389bc44e168d412c2f03e657bab15cd850798c0",
     "runs_verify/2026-08-22_2017/papers/PMC12856317/strict/final_mapped.json": "7d05b1d405914846fdadeedd7665e084c2b319027cd00c5c8e2e284774710658",
-    "runs_verify/2026-08-22_2147/papers/PMC12096016/research/final_mapped.json": "5feaeebecb93df3c2cadf74b2168a22146f5d9ed5af02d9eb6920de3fe4b5756",
+    "runs_verify/2026-08-22_2147/papers/PMC12096016/research/final_mapped.json": "0f180147b489367a586cf4d9ff87e7be78c6e11cfc94dbd7597515bf91e521cb",
     "runs_verify/2026-08-22_2147/papers/PMC12096016/strict/final_mapped.json": "129ec6823dd1638f0082dfa48c08c077e43ab2152a4e4c584c033ef613bbf699",
     "runs_verify/2026-08-22_2147/papers/PMC12180156/research/final_mapped.json": "66e2537177be299d96da36a83c641b1744ea22ba1e111094425380f1315b928d",
     "runs_verify/2026-08-22_2147/papers/PMC12180156/strict/final_mapped.json": "bdbf5721c736ab0cdd00a57a44aa70b7e2201cbeec66feb8f1b6ac645e294d66",
-    "runs_verify/2026-08-22_2147/papers/PMC12452463/research/final_mapped.json": "aa36fbafb79119171837af19587e5eb8ccbe41ce8e67e17478220d27cbc81f87",
-    "runs_verify/2026-08-22_2147/papers/PMC12452463/strict/final_mapped.json": "f045b8915f3b03169bf9fb1f103cd83ed6dc3776b7d408542c356c7dfa4dacd6",
+    "runs_verify/2026-08-22_2147/papers/PMC12452463/research/final_mapped.json": "50cd42bd3c11d9a323dd3cbb92d986865ae8074f2da2f7381df79f33597ab751",
+    "runs_verify/2026-08-22_2147/papers/PMC12452463/strict/final_mapped.json": "7e55b2923f54f8348a8e8b60d33ad9bc6aa921696891b16fbbff42f3fffab87d",
     "runs_verify/2026-08-22_2147/papers/PMC12782028/research/final_mapped.json": "53a81d401c8d63cb70011cb0fb01fd30f1409e4c07e9bd3bf4390bbf80c82bf0",
     "runs_verify/2026-08-22_2147/papers/PMC12782028/strict/final_mapped.json": "086bade2ddeb3c55561e279115d5cae0d790fef89ad2bf5aa6e9b218120d709e",
     "runs_verify/2026-08-22_2147/papers/PMC12856317/research/final_mapped.json": "ab9abf0e72137f47ede0299e99eb3378ed3fc6857f8e383def1cc46040d78cc1",
     "runs_verify/2026-08-22_2147/papers/PMC12856317/strict/final_mapped.json": "dd532850ef42306b62c8dc8607825c9eb90b341a2f90fbd63e8582d283339525",
-    "runs_verify/2026-08-22_2147/papers/PMC13231680/research/final_mapped.json": "66da26d4d0422b10c2687b6429e488c57635ae815fbaf53cb3a0088c1ce31209",
-    "runs_verify/2026-08-22_2147/papers/PMC13231680/strict/final_mapped.json": "07cf1ca7c49abd98c49b67c661d58c5f48ab18913580bedf5505c4f96fefc11a",
+    "runs_verify/2026-08-22_2147/papers/PMC13231680/research/final_mapped.json": "2417b7b15fc7494b5655639d921acfb749e1c67eaa147cbafe15c66de8b992b0",
+    "runs_verify/2026-08-22_2147/papers/PMC13231680/strict/final_mapped.json": "d6104ed20299cd949a58b6ce44374d42c36ba0f0116a6d251b6d95e8a8d661af",
     "runs_verify/2026-08-24_1203/papers/PMC12096016/research/final_mapped.json": "1ce8e7a205031c1aab038fc82dd3464d3eddd9e1304021cc84ed6ac336bc7e44",
     "runs_verify/2026-08-24_1203/papers/PMC12096016/strict/final_mapped.json": "42f4f9a2b4805085d030b424ec3b785ea29c24b40585eec46f6bdd12fe5be0e0",
-    "runs_verify/2026-08-24_1203/papers/PMC12452463/research/final_mapped.json": "1417a1d0633fc82b7c61abe0a76e8a35b7841c01ccda3c876261e9cfe2b8f0e8",
+    "runs_verify/2026-08-24_1203/papers/PMC12452463/research/final_mapped.json": "f25fa1e4c3f1e92d3531d4de1b82b98f0f7f5a6342441057dcfd16a30192e46a",
     "runs_verify/2026-08-24_1203/papers/PMC12452463/strict/final_mapped.json": "e68f35aa0355fa536fcf982877da79394dac32368a0e77d15ff7560bb12e2e7f",
     "runs_verify/2026-08-24_1203/papers/PMC12856317/research/final_mapped.json": "bfba6300f2153a9131df3a67018918c6dc5b0fb352e381ab0c2ed816f52dc151",
     "runs_verify/2026-08-24_1203/papers/PMC13231680/strict/final_mapped.json": "04b55d50fea40eec68ac69bfdd85e6036c2d90f985f0896edba2d3d1ec54b0b9",
-    "runs_verify/2026-08-24_1402/papers/PMC12180156/research/final_mapped.json": "dec9bc6d8d4ae7b9216b9eb2f2c3ae9162ec3e2455d96248f318f637a19d3705",
+    "runs_verify/2026-08-24_1402/papers/PMC12180156/research/final_mapped.json": "54f964feeedffdb36394bf70b3da7981d0c52a5b337cfbfc19a329033acd496b",
     "runs_verify/2026-08-24_1402/papers/PMC12782028/research/final_mapped.json": "837983ac4c7725b2583bbe1ce8529099334840964217f9d1ee8986fd8ad0812f",
     "runs_verify/2026-08-24_1428/papers/PMC12096016/research/final_mapped.json": "3b9b15bd738ccad5de3efbb81da7759618fb8ab9a23ac05ee1d8d10583816703",
     "runs_verify/2026-08-24_1428/papers/PMC12096016/strict/final_mapped.json": "a25e647331057b52481f90418ddd5169eb79e78efaab6d74eb435de8696e8bad",
     "runs_verify/2026-08-24_1428/papers/PMC12180156/strict/final_mapped.json": "72fbf5eebad7d51e32a69f9e5121c596c37ccf16e32bbc7dc885ed44a08cf61a",
     # ORCH-797a: was 268d1912...e2523. One synonym of one compound row ("Kdo-lipid IVA") is now deduped against
     # "KDO-lipid IV(A)" (one alias under the D-120 key); the only IR difference base vs tip (evidence/orch797a_goldenprobe.py).
-    "runs_verify/2026-08-24_1428/papers/PMC12444477/strict/final_mapped.json": "a5aae6f00f6ebc5da683f395bb71fa072d86ba2c71938c6a6c49b6bd0536fbf1",
-    "runs_verify/2026-08-24_1428/papers/PMC12452463/research/final_mapped.json": "550d415f3f89bcfb485c42d960ddc7d757f1107fe9e0f6f2628ce24af81d47b8",
+    "runs_verify/2026-08-24_1428/papers/PMC12444477/strict/final_mapped.json": "9f68387db5483bd9216149e432cbbaee4d3cc194a775219a54612d4f4914e8dc",
+    "runs_verify/2026-08-24_1428/papers/PMC12452463/research/final_mapped.json": "4b399cfe764df081c65c1f6077c58ac2edf00909112f135a8e3c699f6d0258fc",
     "runs_verify/2026-08-24_1428/papers/PMC12452463/strict/final_mapped.json": "70af28aa537d2c846e02272bd5177cfb780339032593cb2968929b67ca6f4ac4",
     "runs_verify/2026-08-24_1428/papers/PMC12782028/research/final_mapped.json": "b2b111229e3dc06e06747c8a8ff5b06d05cff1d67e324ad8444dda6156d90412",
     "runs_verify/2026-08-24_1428/papers/PMC12782028/strict/final_mapped.json": "907f26ff79348d31b80058b2304f83b28e37e48a92a7c4bcfafd81dfd81009eb",
     "runs_verify/2026-08-24_1428/papers/PMC12856317/research/final_mapped.json": "11e7794a4c144e1a5ddd48ace812b22f89e5eed735d25051bb138e2049994802",
     "runs_verify/2026-08-24_1428/papers/PMC12856317/strict/final_mapped.json": "11dc2a08cfb41cca4410098bfb88af69a3c0d9537f87d232d733d2dee5edd098",
-    "runs_verify/2026-08-25_1216/papers/PMC12444477/research/final_mapped.json": "76923c6ec6674e6993d5789f3a5183fbe4a78f0306a5234abc2cd04055f81dfc",
+    "runs_verify/2026-08-25_1216/papers/PMC12444477/research/final_mapped.json": "3704d47128ea70aeaaecc7c44cdb00d800a28aae0ebccbe7369ea773bcea0b5b",
     "runs_verify/2026-08-25_1216/papers/PMC12444477/strict/final_mapped.json": "9208f3bb30d1375889b5c28b5a8ea7d58056eee812b0d9b1be1d082455491ff3",
     "runs_verify/2026-08-25_1216/papers/PMC12856317/strict/final_mapped.json": "90c5b5f09444a5a1d5cd16d8f0784e1c4715eedf0870d6ae0bc726960ae910c1",
 }
