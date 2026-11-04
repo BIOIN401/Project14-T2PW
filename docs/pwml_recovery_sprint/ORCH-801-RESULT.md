@@ -16,7 +16,7 @@ three different organisms. None has a gold case: the cohort holds only source ma
 
 | condition | paper | topic line |
 |---|---|---|
-| `salicylic_acid` | PMC12408352, Zhu et al. 2025 Nature | Salicylic acid biosynthesis from phenylalanine, *Oryza sativa* (first written as *Arabidopsis thaliana*, see § 3) |
+| `salicylic_acid` | PMC12408352, Zhu et al. 2025 Nature | Salicylic acid biosynthesis from phenylalanine, *Oryza sativa* (first written as *Arabidopsis thaliana*, see § 3; reworded for attempt 3 to "Salicylic acid biosynthesis", see § 3b) |
 | `cdadc1_gemcitabine` | PMC12184417, Rodriguez et al. 2025 PNAS | dCTP deamination and gemcitabine/decitabine metabolism by CDADC1, *Homo sapiens* |
 | `tb_pyrimidine` | PMC5098729, Leija et al. 2016 PLoS Pathog | Pyrimidine salvage and deoxypyrimidine nucleotide biosynthesis, *Trypanosoma brucei* |
 
@@ -30,6 +30,7 @@ All four legs left 0 surviving processes. `g11_evidence.py check --task ORCH-801
 | cdadc1_gemcitabine | `g11/ORCH-801/02` | PASS (warnings) | yes | 6/6 (100%) | `review_required` | 21.4 |
 | tb_pyrimidine | `g11/ORCH-801/03` | PASS (warnings) | yes | 10/10 (100%) | `review_required` | 40.0 |
 | salicylic_acid, attempt 2 | `g11/ORCH-801/04` | `scope_conflict`: pathway wording | none | - | - | 45.9 |
+| salicylic_acid, attempt 3 (topic "Salicylic acid biosynthesis") | `g11/ORCH-801/05` | PASS (warnings) | yes | 8 reactions, 2 transports | `review_required` | 40.1 |
 
 The per-leg review pack, `MORNING_SUMMARY.md` and the audit are in `runs_papers/ORCH-801/`, which is untracked like
 every earlier `runs_papers/` run. The leg directories are in the `orch801run` worktree.
@@ -57,7 +58,57 @@ every earlier `runs_papers/` run. The leg directories are in the `orch801run` wo
 6. **Arabidopsis appears in the tb PWML's species list.** All 4 tb enzymes are backed by the PathBank "Unknown"
    placeholder, which is tagged *Arabidopsis*. This is the standing `placeholder_backed_proteins` policy question.
 
+## 3b. Follow-up on 2026-11-04, after the PO said: fix 1, re-run the rice paper with reworded topic, explain 3
+
+7. **Finding 2's cause, from reading the code (it is not Stage 0 wording drift).** `rag/eligibility.py`, the scope
+   check near line 2227: when the requested pathway has no lexicon key, it passes only if one of the request's
+   aliases matches the Stage-0 reading. `_pathway_aliases` builds these from the normalized request plus
+   `_pathway_head` + suffix forms. `_pathway_head` strips only *trailing* head words such as "biosynthesis" and
+   "pathway". So "Salicylic acid biosynthesis from phenylalanine" yields no alias shorter than itself, and no
+   reading that omits "from phenylalanine" can match it. **Any topic phrased "X biosynthesis from Y" hits the same
+   false refusal.** Not fixed; it is open for the PO below.
+8. **Attempt 3, with the topic reworded to "Salicylic acid biosynthesis", produced a PWML.** The alias
+   "salicylic acid biosynthesis" is a substring of any Stage-0 reading, so the scope check passed. The bio-auditor
+   audit, read-only, is in `runs_papers/ORCH-801/ACCURACY_AUDIT.md` § 5:
+   - 7 of 8 reactions correct, 1 partly wrong (R8, a redundant lumped beta-oxidation reaction beside R2 + R3), 0 wrong.
+   - All seven scope_note steps are present. The refuted BA -> SA step was correctly not drawn. No invented catalysts.
+   - Transport T2, BA-CoA export from the peroxisome, is **wrong**: the paper cites it as a prior hypothesis and
+     argues against it. Its cargo `BA-CoA` is an unmapped split node beside benzoyl-CoA, although the paper defines
+     "benzoyl-CoA (BA-CoA)". Audit F6, `product_contract_violation`.
+   - **The exporter invents a location.** `src/t2pw/pwml/ir.py:1825-1832` `resolve_state` sends an empty state
+     reference to the pathway's first state, so the stateless PAL reaction lands in the peroxisome. This is the
+     hazard ORCH-788-RESULT.md line 36 recorded, and its first observed instance. Audit F7,
+     `product_contract_violation`, high confidence.
+   - A further F-195 instance: two undeclared compound-location references (F8). The Arabidopsis placeholder tag
+     appears again, here for the one organism the paper shows lacks the pathway (F10, standing policy). Two
+     suspect ChEBI xrefs were inherited from PathBank: CoA CHEBI:1146900 and benzyl salicylate CHEBI:563619 (F11,
+     needs a network check).
+9. **Finding 5's cause, from reading the code. The auditor's hypothesis H is disproved.** H said the "(dThd)(Fig"
+   form defeats the parser. But `paper_lexicon._PAREN` needs only a space before "(", which " (dThd)" has. The
+   lexicon is Schwartz-Hearst (`_best_long_form`): every letter of the short form must appear, in order, in the long
+   form. The leading "d" in "dThd" stands for an implicit "deoxy" that "thymidine" never spells out, so the pair is
+   most likely rejected. dUrd passes because "deoxyuridine" contains the d. This has not been confirmed against the
+   exact sentence. The dUMP strip is a separate gate defect: the name was rewritten to "deoxyuridine monophosphate",
+   and the name gate then refused the correct record, which is named "dUMP".
+10. **Finding 4 is in progress as ORCH-802** (`orch802/enzyme-cue-boundary`). The fix and its proof are done, SMOKE
+    passed 511, and the reviewer gave APPROVE WITH NOTES. It is held on the PO question in ORCH-802-RESULT.md: the
+    fix also drops alias duplicates (ALAS beside ALAS2, HepPPS beside BsHepPPS, MenA beside EcMenA, EntE beside
+    the enterobactin synthase complex), and no row loses its catalyst.
+
 ## 4. Not settled: for the PO
+
+- **(Follow-up) Finding 5 / F6 split nodes:** the lead's recommendation is option A. Let the paper's own
+  abbreviation definition bridge identity: accept the implicit-deoxy "d" in the lexicon, and let the name gate keep
+  a match when the paper dictionary pairs the two names. It is deterministic and would fix dThd, dUMP and BA-CoA,
+  but not dCtd, which the paper never defines. Option B is an LLM equivalence judgement. It also covers dCtd, but it
+  is nondeterministic, costs extra calls, and reopens the LLM-asserted-identity path the gate exists to block. Both
+  change what the gate admits, so either needs a no-loss check.
+- **(Follow-up) Fix F7, the `ir.resolve_state` first-state default?** It is one small exporter lane. Its G9 fixture is
+  already specified in the audit.
+- **(Follow-up) "X biosynthesis from Y" topics** (finding 7): relax the alias generation, or keep phrasing topics
+  without the "from Y"?
+- **(Follow-up) F6 and F9 rulings:** are citation-attributed prior hypotheses acceptable if flagged? Are net
+  reactions acceptable beside their steps?
 
 - **Fix finding 4?** A boundary-aware match, `(?<!\w)…(?!\w)` rather than `\b`, because names end in `+`. This is
   one lane: implementer, reviewer, corpus no-loss check. Its G9 proof is cdadc1 R1 losing DUT. Risk: a real

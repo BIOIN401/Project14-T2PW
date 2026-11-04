@@ -1,0 +1,126 @@
+{
+  "label": "leg-salicylic-acid-strict",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "scripts/batch_run.py",
+    "--topics",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/docs/evaluation_v2/paper_runs_orch755/topics/salicylic_acid.txt",
+    "--modes",
+    "strict",
+    "--out",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch801run/runs_papers/ORCH-801/legs/salicylic_acid-strict",
+    "--fresh",
+    "--timeout",
+    "10800",
+    "--deadline",
+    "3.20"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch801run",
+  "started_at": "2026-11-04T21:34:46+00:00",
+  "finished_at": "2026-11-04T22:14:51+00:00",
+  "duration_seconds": 2405.0298536000046,
+  "timeout_seconds": 11400.0,
+  "root_pid": 305072,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 305040,
+      "name": "python.exe",
+      "ppid": 305072
+    },
+    {
+      "pid": 301840,
+      "name": "python.exe",
+      "ppid": 305040
+    },
+    {
+      "pid": 304848,
+      "name": "python.exe",
+      "ppid": 301840
+    },
+    {
+      "pid": 293788,
+      "name": "python.exe",
+      "ppid": 305040
+    },
+    {
+      "pid": 304540,
+      "name": "python.exe",
+      "ppid": 293788
+    }
+  ],
+  "descendants_terminated": [
+    293788,
+    301840,
+    304540,
+    304848,
+    305040
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 112240,
+      "name": "python.exe"
+    },
+    {
+      "pid": 297920,
+      "name": "python.exe"
+    },
+    {
+      "pid": 300852,
+      "name": "python.exe"
+    },
+    {
+      "pid": 304180,
+      "name": "python.exe"
+    },
+    {
+      "pid": 304224,
+      "name": "python.exe"
+    },
+    {
+      "pid": 304836,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\g11\\ORCH-801\\05-leg-salicylic-acid-strict.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch801run\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch801run",
+    "repo_head": "53331c83250d65f4caa6276b6eb70814cd451e80",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-801",
+    "token": "ORCH-801:304180:8140517d92693c53",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
