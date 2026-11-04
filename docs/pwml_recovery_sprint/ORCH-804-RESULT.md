@@ -1,5 +1,7 @@
 # ORCH-804: an empty state reference must not land in an arbitrary compartment (RESULT)
 
+> **Status:** v2, the lead-requested refinement, is in § 8 and is the version up for review. §§ 3-5 record v1.
+
 Branch `orch804/ir-empty-state`, cut from `sprint/pwml-recovery` @ `563d39db`. Implementer only; the lead
 reviews and merges. Source: ORCH-801 audit finding F7 (`runs_papers/ORCH-801/ACCURACY_AUDIT.md` § 5.2),
 hazard first recorded in `ORCH-788-RESULT.md` line 36.
@@ -241,3 +243,142 @@ stall. It belongs to chunk D, which the brief excludes.
   Same hazard class. Not changed here.
 - **Q4.** Should an empty reference that takes the first-state fallback carry a report warning? Cost: every
   report digest that covers such a leg moves. Benefit: the invented placement becomes reviewable.
+
+## 8. v2: the lead's refinement for the PO's "no duplicates" rule (this is the version up for review)
+
+**§§ 3-5 describe v1 (empty -> `__auto_state__`) and are kept as the record.** v2 replaces them. v2
+commits: `1e604b3a` (code and test), `f75bd2fb` (reverts the v1 R3 re-pin), `8b7d6bc6` (reverts the v1
+GOLDEN re-pin), `c8f31a3e` (re-pins GOLDEN against the base values).
+
+### 8.1 Duplicate measurement on v1 (requested first)
+
+A duplicate here means one entity drawn in two or more biological states in the IR `locations`.
+`evidence/orch804/dup_count.py`, G11 `24`, output `orch804/dup_count_v1.txt`, base vs v1 tip:
+
+| leg | multi-state entities base -> v1 | new dups | dups gone |
+|---|---|---|---|
+| ORCH-759/chlorophyll | 36 -> 35 | 0 | 1 |
+| ORCH-767/wnt_ca | 8 -> 6 | 0 | 2 |
+| runs_verify/08-18_1328/PMC12096016 | 10 -> 12 | 3 (isochorismate, EntE, isochorismatase) | 1 |
+| runs_verify/08-18_1328/PMC12452463 | 3 -> 7 | 4 (DHB, isochorismate, EntE, isochorismatase) | 0 |
+| runs_verify/08-21_2239/PMC12782028 | 3 -> 4 | 2 (cholesterol, lanosterol) | 1 |
+| runs_verify/08-27_1341/PMC12096016 | 1 -> 3 | 2 (NAD+, pyruvate) | 0 |
+| runs_verify/08-28_1816/PMC12782028 | 5 -> 2 | 0 | 3 |
+| runs_verify/09-01_1612/PMC12096016 | 2 -> 3 | 1 (TolC) | 0 |
+| the other 6 changed legs | unchanged | 0 | 0 |
+
+**v1 total: 12 new duplicate entities and 8 removed.** Every new duplicate pairs `__auto_state__` with the
+paper state where element_locations already drew the member.
+
+### 8.2 Rule (v2)
+
+An empty process state (reaction, interaction, or transporter actor) resolves in this order:
+
+1. **The one paper state that all its located participants share**, if they agree on exactly one.
+   - Participants are: for a reaction, its inputs, outputs and `enzymes`; for an interaction, its two
+     endpoints; for a transporter row, the transporter itself.
+   - A participant's states are its `element_locations` rows, already resolved to IR state keys.
+   - Participants with no location row are skipped.
+   - `__auto_state__` rows are ignored, because they are a placeholder and not a paper location.
+2. Otherwise `__auto_state__`, if present.
+3. Otherwise the old first-state fallback. It never raises and never drops a PWML.
+
+**Why this places rather than invents (rule 8).** The state comes only from the frozen payload's own
+`element_locations`, which already draw those members in that state. The exporter adds no location and
+no compartment. It only refuses to draw the members a second time somewhere else. When the members
+disagree, or none is located, there is no shared fact to place by, so the rule goes neutral.
+
+**Participant states were available.** The `element_locations` loop runs before the process loops, so
+`build_pwml_ir` records them in `explicit_states` there, and `members_state` reads them through
+`entity_by_name` without side effects. No new machinery: about 20 lines in `ir.py`.
+
+Ceilings (not built):
+- Reaction `modifiers` with a catalyst role are not counted as participants.
+- An unlocated member of a placed reaction is drawn in the shared state of its co-participants. A
+  stricter variant ("every participant must be located") is Q5 below.
+
+**Dead end inside v2.** The first v2 counted `__auto_state__` rows as evidence. That left **4** new
+duplicates on 08-18 PMC12096016 (isochorismate, isochorismatase) and 08-21_2239 PMC12782028
+(cholesterol, lanosterol). That run's G11 `30` report and `dup_count_v2.txt` were overwritten by the final
+run, so this paragraph is the only record of the 4. On those legs one member sat in a paper state and the
+other in `__auto_state__` (placed there by `ensure_autostates` because it had no location). So the
+intersection was empty and the reaction went neutral. Evidence: `orch804/explain_leg.py`, G11 `31`/`32`,
+output `orch804/explain_remaining_dups.txt`. Ignoring placeholder rows fixed it.
+
+### 8.3 Proofs (all bounded, heavy lock `ORCH-804`, 0 survivors)
+
+- **Focused test, tip:** `4 passed` (G11 `25`).
+- **Focused test, base `563d39db`:** `2 failed, 2 passed` (G11 `26`), with these failures:
+  - `test_empty_reference_does_not_take_the_first_paper_state`: `assert 'peroxisomal state' == '__auto_state__'` (rice fixture, no member locations -> neutral).
+  - `test_empty_reference_takes_the_state_its_located_members_share`: `assert 'cytosolic state' == 'peroxisomal state'` (new: both members in the peroxisome -> the reaction goes there and every entity is drawn once).
+  - Both corrections fail on base and pass at tip (G9).
+
+  G11 `25` is the final code (it was rerun after the placeholder fix, which overwrote the first-v2 report).
+  G11 `26` ran the same test file against base.
+- **Corpus, base vs v2 tip** (G11 `27`, `28`; `orch804/compare_base_vs_tip_v2.txt`): `pass rate base 79/91 -> tip 79/91`,
+  `passing legs turned failing: none`, `gold recall lost: none`, `still failing, at a different step: none`.
+  23 legs changed, 68/91 identical.
+- **Duplicates, base vs v2 tip** (G11 `30`, `orch804/dup_count_v2.txt`): **`total new duplicate entities: 0`**.
+  23 multi-state entities are removed across 17 legs.
+- **Per-leg state diff** (G11 `29`, `orch804/state_diff_base_vs_tip_v2.txt`): on all 23 legs only the
+  PWML/IR files and `pwml_sha256` move (plus `pwml_matches_leg` on 3). The canonical, quarantine,
+  coverage, gates and release are unchanged. `entities with no location left at tip: []` on all 23.
+- **Pins.** R3 is **byte-identical to base** under v2 (IR `14af62c1`, report unchanged; the test passes at
+  the base pins in G11 `34`), so the v1 R3 re-pin was reverted. GOLDEN: 33 of 89 legs move. The
+  instrument (G11 `35`, `orch804/orch804_ir_digest_delta_v2.txt`) shows only state keys and what follows
+  from them; `errors / ok / stops unchanged on every leg: True`. Re-pinned with pytest's values
+  (`golden_repin_pairs_v2.txt`, `golden_before_repin_v2.pytest.log`).
+- **Affected tests after the re-pin** (14 files, G11 `36`): `3 failed, 397 passed`. The 3 failures are
+  the same nodes that fail on base (§ 4.5).
+- **SMOKE** (G11 `37`): **`511 passed in 59.01s`**.
+
+### 8.4 Changed legs under v2 (23), by destination of the moved rows
+
+| leg | rows: from (base first state) -> to | class |
+|---|---|---|
+| ORCH-755/enterobactin | 4 transporter rows: cytoplasmic -> E. coli extracellular (TolC/TonB's own location rows) | placed by members; dup removed (2) |
+| ORCH-759/chlorophyll | 2 interactions: plastid -> `__auto_state__` | neutral; dup removed (1) |
+| ORCH-759/menaquinone | 1 row: L. lactis cells -> intracellular state | placed by members |
+| ORCH-759/wnt_pcp | 5 rows -> `__auto_state__`, 1 -> cytoplasmic (from plasma membrane) | neutral / placed; dup removed (1) |
+| ORCH-759p/enterobactin | 1 transporter: cytoplasmic -> outer membrane | placed; dup removed (1) |
+| ORCH-759p/sour_taste_v2 | 3 OTOP1 transporter rows: Type III cell state -> `__auto_state__` | neutral |
+| ORCH-767/enterobactin | 4 rows: "cytoplasmic" -> "cytoplasmic state" (same-compartment duplicate states) | placed; dup removed (2) |
+| ORCH-767/wnt_ca | 14 -> `__auto_state__`, 1 -> cytosolic state (from cytoplasmic) | neutral / placed; dup removed (2) |
+| ORCH-767/wnt_pcp | 4 rows: cytoplasm -> plasma membrane | placed |
+| runs_verify/08-18_1328/PMC12452463 | FepA -> outer membrane; 1 -> `__auto_state__` (from cytosol) | placed / neutral; dup removed (1) |
+| runs_verify/08-21_2057/PMC12452463 | FepA: cytoplasmic -> outer membrane | placed; dup removed (1) |
+| runs_verify/08-21_2239/PMC12096016 | TolC -> outer membrane, TonB -> inner-membrane AutoState (from cytoplasmic) | placed; dup removed (2) |
+| runs_verify/08-21_2239/PMC12452463 | FepA: cytosolic -> outer membrane | placed; dup removed (1) |
+| runs_verify/08-22_2147/PMC12452463 | FepA: extracellular -> outer membrane | placed; dup removed (1) |
+| runs_verify/08-22_2147/PMC13231680 | 1 interaction: cytoplasm -> `__auto_state__` (IR only, no PWML) | neutral |
+| runs_verify/08-24_1428/PMC12444477 | MsbA: cytoplasmic -> cytoplasmic leaflet of IM | placed; dup removed (1) |
+| runs_verify/08-25_1216/PMC12444477 | 3 MsbA rows: cytoplasmic -> E. coli inner membrane | placed; dup removed (1) |
+| runs_verify/08-28_1816/PMC12452463 | FepA: cytosolic -> outer membrane | placed; dup removed (1) |
+| runs_verify/08-28_1816/PMC12782028 | CYP51A1, DHCR24: ER state -> ER-membrane AutoState (members' explicit rows) | placed; dup removed (3) |
+| runs_verify/09-02_2052/PMC12444477 | MsbA: cytoplasmic -> IM cytoplasmic-leaflet state | placed; dup removed (1) |
+| runs_verify/09-06_1425/PMC12071552 | 2 DltD rows: cytoplasmic -> membrane state | placed; dup removed (1) |
+| runs_verify/09-06_1425/PMC12376012 | 2 reactions: ER state -> Golgi state | placed; dup removed (3) |
+| runs_verify/09-06_1425/PMC8510960 | 1 -> `__auto_state__`, 1 -> leaf surface (from epidermal cell cytosol) | neutral / placed |
+
+Read off `state_diff_base_vs_tip_v2.txt`. Every placed destination is a state the same entities already
+had in `element_locations`. Several are biologically better than the arbitrary first state: FepA, TolC
+and MsbA move from the cytosol to their membranes. Placement does not judge the quality of an
+element_locations row. TolC/TonB go to "E. coli extracellular" in ORCH-755 because that is their only
+paper location row.
+
+Four v1-changed legs are identical to base under v2 (08-18 PMC12096016, 08-21_2239 PMC12782028,
+08-27 PMC12096016, 09-01 PMC12096016). On those legs the located members share the state the first-state
+fallback happened to choose.
+
+### 8.5 Open for the PO (added by v2)
+
+- **Q5. Unlocated participants.** v2 skips unlocated participants when it looks for the shared state.
+  The stricter alternative ("every participant must be located, otherwise neutral") never draws an
+  unlocated member in its co-participants' state, but some duplicates come back. That has not been
+  measured. Cost: a one-line change plus a corpus rerun.
+- **Q6.** Reaction `modifiers` with a catalyst/activator/inhibitor role are not counted as participants.
+  Adding them would mean duplicating the role filter in the reaction loop. No corpus duplicate came from
+  them.
+- Q1 to Q4 still stand. Q2 (duplicate member nodes) is resolved by v2. For Q1, v2 now also places
+  empty-state processes on legs with no `__auto_state__`, wherever their members share a state. I have
+  not re-counted how many of the census's 20 legs this reaches.
