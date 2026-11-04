@@ -5,7 +5,7 @@
 - The fix and its G9 proof are done: base fails, tip passes.
 - The no-loss scan found three injected actor names that are lost and that name a real catalyst: `ALAS`, `HepPPS` and `MenA`. Each one duplicates a catalyst that stays on the same row under the paper's own name.
 - The task brief says that a dropped injection that looks like a real catalyst, plural and digit-suffix losses included, means stop and report.
-- Because of that, the corpus replay (step 4) and SMOKE (step 5) have **not** been run.
+- The corpus replay (step 4) was skipped on the orchestrator's instruction (see 3.2 and 4). SMOKE (step 5) was run afterwards: 511 passed.
 
 | | |
 |---|---|
@@ -147,11 +147,14 @@ The `ALAS`, `HepPPS` and `MenA` (EcMenA) rows are why this task stopped:
 
 These flips occur only in pre-August committed merged payloads. Replay B on the matching Stage-1 payloads does not reproduce them under either matcher; the `HepPPS` / `ALAS` / `MenA` actors are declared after Stage 1. So they are predicate-level losses. I did not show them as losses the current pipeline would deliver.
 
-## 4. Not run
+## 4. SMOKE, and the corpus replay (skipped)
 
-Both are ready, and nothing in the code is pending:
-- **Corpus replay at tip, and the compare against `evidence/orch799/corpus_tip.json`.** Expected identical per 3.2.
-- **SMOKE** (511).
+**SMOKE at tip `2718851e`** (the 22-file block in TEST_MATRIX.md), run after the stop on the orchestrator's instruction:
+- Result: `511 passed in 74.37s (0:01:14)`.
+- Wrapper: exit code 0, `FINAL SURVIVING COUNT : 0`, cleanup success, heavy lock acquired and released.
+- Report: `evidence/g11/ORCH-802/06-smoke.json`.
+
+**Corpus replay: skipped on the orchestrator's instruction.** The argument in 3.2 is the reason: the replay starts at `final_mapped.json`, which is downstream of both cue attachers, and none of its replayed functions reaches `normalize_process_payload`. So it cannot exercise `cue_near_name`. The orchestrator accepted that argument as sufficient. No corpus output exists for this task.
 
 ## 5. Open for the PO
 
