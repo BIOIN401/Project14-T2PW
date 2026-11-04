@@ -3,7 +3,8 @@
 **Status: STOPPED at the no-loss classification.** This is not a merge candidate yet.
 
 - The fix and its G9 proof are done: base fails, tip passes.
-- The no-loss scan found three injected actor names that are lost and that name a real catalyst: `ALAS`, `HepPPS` and `MenA`. Each one duplicates a catalyst that stays on the same row under the paper's own name.
+- The no-loss scan found four injected actor names that are lost and that name a real catalyst: `ALAS`, `HepPPS`, `MenA` (on EcMenA rows), and `EntE` on two rows that name it as a whole word (`EntD/EntE/EntF complex`), which are refused only because the cue is more than 80 characters from that mention. Every one of these rows keeps another catalyst: the paper's own name for the same enzyme, or the enterobactin synthase complex.
+- Reviewer F3's merged-payload replay (3.4) found **0 additions** and 29 drops, all in classes already listed here.
 - The task brief says that a dropped injection that looks like a real catalyst, plural and digit-suffix losses included, means stop and report.
 - The corpus replay (step 4) was skipped on the orchestrator's instruction (see 3.2 and 4). SMOKE (step 5) was run afterwards: 511 passed.
 
@@ -132,20 +133,65 @@ Per-row detail comes from `evidence/orch802/orch802_flip_detail.py`, with output
 | actor | occurs inside | rows (inferred on row) | class |
 |---|---|---|---|
 | `DUT` | "dUTP" | 3 (1) | **false substring**: F1 itself |
-| `EntE` | "enterobactin" / "Enterobactin" | 19 distinct haystacks, 72 occurrences (38 enzyme + 12 modifier inferred rows) | **false substring**. This is the F-058 class: "ente" is a prefix of "enterobactin". Every row keeps `EntF` and/or the enterobactin synthase (complex) |
+| `EntE` | "enterobactin" / "Enterobactin" | 17 distinct haystacks, 67 occurrences, 37 with EntE inferred on the row | **false substring**. This is the F-058 class: "ente" is a prefix of "enterobactin". Every row keeps `EntF` and/or the enterobactin synthase (complex) |
+| `EntE` | whole-word "EntE" in "(EntD/EntE/EntF complex)", but the only cue ("catalyzed") is more than 80 characters away; the old matcher hit "Ent" in "enterobactin, catalyzed" | 2 distinct haystacks, 5 occurrences, 3 inferred (`runs_verify/2026-08-24_1203` PMC12452463 strict r3 and research r3; `noloss_scan.json` lines 77 and 546) | **real enzyme name, dropped** (reviewer F1). Each row keeps the enterobactin synthase complex |
 | `MenA` | "deMethyl**mena**quinone" on BsUbiE / UbiE rows | 4 (1) | **false substring**. MenA is a prenyltransferase, not the methyltransferase. The fix removes a fabricated catalyst |
 | `UbiE` | "Bs**UbiE**" | 3 (0) | predicate-only. Nothing was injected: `BsUbiE` or `UbiE` is already on each row |
 | `MenD` | "**menD**HCEB operon" | 1 (1) | **ambiguous**. MenD is one of the six operon enzymes the sentence names collectively, on a RAG-summary row (`isochorismate -> 1,4-dihydroxy-2-naphthoate`, PMC12421875 research) that already carries `menDHCEB` |
-| `ALAS` | "**ALAS**2-catalyzed" (digit suffix) | 3 (1) | **real enzyme name, redundant duplicate**. The row's own catalyst `ALAS2` is extracted and stays. `ALAS` is the family name of the same enzyme (PMC12856317, run `runs/2026-07-28_2122`) |
+| `ALAS` | "**ALAS**2-catalyzed" (digit suffix) | 3 (1) | **real enzyme name, redundant duplicate**. `ALAS2` stays on every row. On strict r1, the one row where the `ALAS` injection was realized, `ALAS2` is a Stage-2 row (provenance `inferred`, confidence 0.95), not an extraction (reviewer F2). On the other two rows it is extracted (confidence 1.0). `ALAS` is the family name of the same enzyme (PMC12856317, run `runs/2026-07-28_2122`) |
 | `HepPPS` | "Bs**HepPPS**" (species prefix) | 1 (1) | **real enzyme name, redundant duplicate**. `BsHepPPS` is extracted and stays (PMC12657337 research, `runs/2026-07-28_2122`) |
 | `MenA` | "Ec**MenA**" (species prefix) | 2 (2) | **real enzyme name, redundant duplicate**. `EcMenA` is extracted and stays (PMC12657337 strict `runs/2026-08-02_2130`, research `runs/2026-07-28_2122`) |
 
-The `ALAS`, `HepPPS` and `MenA` (EcMenA) rows are why this task stopped:
+**EntE count reconciliation (reviewer F4).** The "38 + 12" figure in the previous version counted actor *entries* at confidence 0.9 only. The scan's `actor_attached_inferred_on_row` sum of 40 counts *rows*. Recounted over `flip_detail_EntE.txt` (72 occurrence blocks): 32 blocks have no inferred EntE, 27 have one in `enzymes` only, and 13 have one in both `enzymes` and `modifiers`. That gives 40 rows and 53 entries: 40 in enzymes (38 at 0.9, 2 at 0.85) and 13 in modifiers (12 at 0.9, 1 at 0.85). The split by class is 37 rows (false substring) plus 3 rows (whole-word, far cue).
+
+The `ALAS`, `HepPPS`, `MenA` (EcMenA) and whole-word `EntE` rows are why this task stopped:
 - Each realized injection has confidence 0.9 and evidence that is a cue window starting with the reaction name. That is the Stage-2 injector's fingerprint.
 - None of them leaves its reaction without a catalyst. The same enzyme stays on the row under the paper's spelling.
 - But the dropped name does identify the real catalyst. The brief says that this counts as a stop.
 
-These flips occur only in pre-August committed merged payloads. Replay B on the matching Stage-1 payloads does not reproduce them under either matcher; the `HepPPS` / `ALAS` / `MenA` actors are declared after Stage 1. So they are predicate-level losses. I did not show them as losses the current pipeline would deliver.
+Replay B on Stage-1 payloads does not reproduce the `HepPPS` / `ALAS` / `MenA` flips, because those actors are declared after Stage 1. The merged-payload replay (3.4) does reproduce them with the current attachers: the old matcher re-injects each one and the new matcher does not. So they are losses the current pipeline would deliver on those inputs. Each is a duplicate of a catalyst that stays.
+
+### 3.4 Merged-payload replay (reviewer F3)
+
+Files:
+- script: `evidence/orch802/orch802_merged_replay.py`
+- output: `evidence/orch802/merged_replay.json`
+- stdout: `evidence/orch802/merged_replay_stdout.txt`
+- G11 report: `evidence/g11/ORCH-802/07-merged-replay.json` (exit 0, `FINAL SURVIVING COUNT : 0`)
+
+Why: production runs the injector on the merged payload (pipeline.py:1260) and the normalizer at Stage 5, both with more declared entities than Stage 1. Under the exactly-one gates, removing a spurious second qualifier could newly *enable* an injection. Replay B (Stage 1 only) could not see that.
+
+**Which rows are stripped before replay.** The rule comes from the code:
+- The injector (pipeline.py:3016) writes a `modifiers` row: confidence 0.9, provenance `inferred`, evidence = the cue window.
+- `apply_post_merge_cleanup` -> `_normalize_reaction_actors` -> `_clean_enzymes` (pipeline.py:815, 1858) folds that row into `enzymes` as `{protein|protein_complex, evidence, provenance, confidence}`. That is the shape stored in `merged_payload.json`.
+- A row is stripped as an injector row only if its provenance is `inferred`, its confidence is 0.9, and its evidence equals **exactly** either the old matcher's window for that actor on that row, or `evidence[:120]` (the pre-hardening injector's slice).
+- The normalizer (process_normalizer.py:3738) writes confidence 0.75 with the cue window as evidence. The same exact-evidence test applies.
+- Stage-2 LLM `inferred` rows do not carry the exact window, so they stay.
+
+Then both attachers ran on each stripped payload, once under the old matcher and once under the new, and the results were diffed.
+
+```
+{"actor_rows_without_carrier_not_stripped": 742, "attacher_rows_stripped": 61, "files": {"committed": 187, "extra_untracked": 3}, "legs_replayed": 178, ..., "reaction_rows_differing": 29, "rows_with_additions": 0, "rows_with_drops": 29, "stripped_by": {"injector": 61, "normalizer": 0}, "stripped_recreated_by_old_replay": 43, "task": "ORCH-802"}
+```
+
+- **Additions: 0.** No injection is newly enabled anywhere.
+- **Drops: 29 rows.** Every one keeps at least one actor (`grep -c '"actors_new": []'` gives 0). By class:
+
+| class | rows |
+|---|---|
+| `EntE`, false substring in "enterobactin". Includes 1 row where EntE is attached to the FepA transport row `FepA-mediated transport of ferric enterobactin` (`runs_verify/2026-08-04_1207` PMC12452463 strict r4), which is plainly a wrong catalyst | 20 |
+| `EntE`, whole-word mention with a far cue (`runs_verify/2026-08-24_1203` PMC12452463 strict r3 and research r3) | 2 |
+| `DUT` inside "dUTP" (ORCH-801 cdadc1 R0; F1) | 1 |
+| `MenA` inside "demethylmenaquinone" on `UbiE reaction` (`runs/2026-08-02_2130` PMC12657337 research r4), a wrong catalyst | 1 |
+| `MenD` on the menDHCEB operon sentence (ambiguous, Q2) | 1 |
+| `ALAS` beside `ALAS2` (real name, duplicate) | 1 |
+| `HepPPS` beside `BsHepPPS` (real name, duplicate) | 1 |
+| `MenA` beside `EcMenA` (real name, duplicate) | 2 |
+
+**Fidelity limits, stated:**
+- The replay input is the *post-cleanup* merged payload. The injector really runs before `screen_additions` and `apply_post_merge_cleanup`.
+- 18 of the 61 stripped rows are **not** re-created by the old-matcher replay; 43 of 61 are. Those 18 produce no diff under either matcher, so they do not affect the result. I did not trace why each was not re-created.
+- 742 actor rows carry neither provenance nor confidence. These are payloads written before 2026-07-29, when `_clean_enzymes` still stripped both. Injector rows among them cannot be told apart from extractions, so none of them was stripped.
 
 ## 4. SMOKE, and the corpus replay (skipped)
 
@@ -158,7 +204,11 @@ These flips occur only in pre-August committed merged payloads. Replay B on the 
 
 ## 5. Open for the PO
 
-**Q1.** Is dropping an injected *alias* of a catalyst that is already attached a regression? The cases are `ALAS` beside `ALAS2`, `HepPPS` beside `BsHepPPS`, and `MenA` beside `EcMenA`.
+**Q1.** Is dropping an injected real-name catalyst a regression when the row keeps another catalyst? The cases:
+- `ALAS` beside `ALAS2`
+- `HepPPS` beside `BsHepPPS`
+- `MenA` beside `EcMenA`
+- `EntE` on the two `(EntD/EntE/EntF complex)` rows, where the whole-word mention is more than 80 characters from the cue and each row keeps the enterobactin synthase complex. The old matcher reached EntE there only through "enterobactin, catalyzed". Under the new matcher the name is still seen, but there is no cue within the window, which is the gate's normal behaviour.
 
 | Option | What happens | Cost |
 |---|---|---|
