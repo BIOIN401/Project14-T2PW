@@ -1,0 +1,107 @@
+FFFFF............                                                        [100%]
+================================== FAILURES ===================================
+___________________ test_g9_tb_dthd_is_the_papers_thymidine ___________________
+
+    def test_g9_tb_dthd_is_the_papers_thymidine() -> None:
+>       assert _pairs(TB).get("dThd") == "thymidine"  # base: no dThd pair at all
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert None == 'thymidine'
+E        +  where None = <built-in method get of dict object at 0x0000017451ECB0C0>('dThd')
+E        +    where <built-in method get of dict object at 0x0000017451ECB0C0> = {'TK': 'Thymidine kinase', 'Urd': 'uridine'}.get
+E        +      where {'TK': 'Thymidine kinase', 'Urd': 'uridine'} = _pairs('However, similar levels of uridine (Urd) ( Fig 4B and S5B Fig ) or thymidine (dThd)( Fig 4C and S5C Fig ) did not restore growth. Thymidine kinase (TK) phosphorylates dThd.')
+
+tests\test_orch803_paper_abbrev_identity.py:79: AssertionError
+________ test_g9_tb_payload_one_node_and_the_duplicate_reaction_merged ________
+
+    def test_g9_tb_payload_one_node_and_the_duplicate_reaction_merged() -> None:
+        d1 = _draw([{"name": "HD 5'-NT", "inputs": ["dTMP"], "outputs": ["dThd"], "enzymes": ["HD-domain 5'-nucleotidase"],
+                     "evidence": "dephosphorylation of dTMP"}], ["dTMP", "dThd"])
+        d2 = _draw([{"name": "5'-NT", "inputs": ["dTMP"], "outputs": ["thymidine"], "enzymes": ["HD-domain 5'-nucleotidase"],
+                     "evidence": "dephosphorylation of dTMP"}], ["dTMP", "thymidine"])
+        merged, _report = merge_draws([d1, d2], paper_text=TB)
+        reactions = merged["processes"]["reactions"]
+>       assert len(reactions) == 1, reactions  # base: 2 (dTMP -> dThd beside dTMP -> thymidine)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: [{'enzymes': ["HD-domain 5'-nucleotidase"], 'evidence': 'dephosphorylation of dTMP', 'inputs': ['dTMP'], 'name': "HD 5...es': ["HD-domain 5'-nucleotidase"], 'evidence': 'dephosphorylation of dTMP', 'inputs': ['dTMP'], 'name': "5'-NT", ...}]
+E       assert 2 == 1
+E        +  where 2 = len([{'enzymes': ["HD-domain 5'-nucleotidase"], 'evidence': 'dephosphorylation of dTMP', 'inputs': ['dTMP'], 'name': "HD 5...es': ["HD-domain 5'-nucleotidase"], 'evidence': 'dephosphorylation of dTMP', 'inputs': ['dTMP'], 'name': "5'-NT", ...}])
+
+tests\test_orch803_paper_abbrev_identity.py:89: AssertionError
+______ test_g9_cdadc1_gate_keeps_the_papers_dump_record_both_directions _______
+
+run_scope = None
+
+    def test_g9_cdadc1_gate_keeps_the_papers_dump_record_both_directions(run_scope) -> None:
+        _pool(CDADC1)
+        long_side = _gate("deoxyuridine monophosphate", "dUMP")  # the ORCH-801 refusal
+>       assert long_side["verdict"] == "keep", long_side  # base: reject, no_shared_meaningful_token
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: {'compared_names': ['dUMP', 'dUMP'], 'entity_name': 'deoxyuridine monophosphate', 'identity': 'chebi:CHEBI:17622, pathbank_compound_id:1087', 'kind': 'compound', ...}
+E       assert 'reject' == 'keep'
+E         
+E         - keep
+E         + reject
+
+tests\test_orch803_paper_abbrev_identity.py:97: AssertionError
+_____________ test_g9_salicylic_ba_coa_is_the_papers_benzoyl_coa ______________
+
+    def test_g9_salicylic_ba_coa_is_the_papers_benzoyl_coa() -> None:
+        # base: 'been shown to convert trans -CA to benzoyl-CoA'
+>       assert _pairs(SALICYLIC).get("BA-CoA") == "benzoyl-CoA"
+E       AssertionError: assert 'been shown t...o benzoyl-CoA' == 'benzoyl-CoA'
+E         
+E         - benzoyl-CoA
+E         + been shown to convert trans -CA to benzoyl-CoA
+
+tests\test_orch803_paper_abbrev_identity.py:105: AssertionError
+____________ test_g9_salicylic_cargo_only_ba_coa_joins_benzoyl_coa ____________
+
+    def test_g9_salicylic_cargo_only_ba_coa_joins_benzoyl_coa() -> None:
+        d1 = _draw([{"name": "KAT", "inputs": ["benzoylacetyl-CoA"], "outputs": ["benzoyl-CoA"], "evidence": "KAT"}],
+                   ["benzoylacetyl-CoA", "benzoyl-CoA"])
+        d2 = _draw([], ["BA-CoA"], transports=[{"name": "export", "cargo": ["BA-CoA"], "from": "peroxisome",
+                                                 "to": "cytosol", "evidence": "BA-CoA may be exported"}])
+        merged, _report = merge_draws([d1, d2], paper_text=SALICYLIC)
+>       assert _compound_names(merged) == ["benzoyl coa", "benzoylacetyl coa"]  # base: + 'ba coa'
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert ['ba coa', 'b...ylacetyl coa'] == ['benzoyl coa...ylacetyl coa']
+E         
+E         At index 0 diff: 'ba coa' != 'benzoyl coa'
+E         Left contains one more item: 'benzoylacetyl coa'
+E         Use -v to get more diff
+
+tests\test_orch803_paper_abbrev_identity.py:114: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_orch803_paper_abbrev_identity.py::test_g9_tb_dthd_is_the_papers_thymidine
+FAILED tests/test_orch803_paper_abbrev_identity.py::test_g9_tb_payload_one_node_and_the_duplicate_reaction_merged
+FAILED tests/test_orch803_paper_abbrev_identity.py::test_g9_cdadc1_gate_keeps_the_papers_dump_record_both_directions
+FAILED tests/test_orch803_paper_abbrev_identity.py::test_g9_salicylic_ba_coa_is_the_papers_benzoyl_coa
+FAILED tests/test_orch803_paper_abbrev_identity.py::test_g9_salicylic_cargo_only_ba_coa_joins_benzoyl_coa
+5 failed, 12 passed in 0.21s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 563d39db19d161f18116c30776e3b24478b53b58  [git, worktree dirty=True]
+label                   : focused-base
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider --basetemp=C:/t/orch803/bt-base2 tests/test_orch803_paper_abbrev_identity.py
+cwd                     : C:/t/orch803/base
+root PID / process group: 433396 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 570 s
+duration                : 1.08 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  436216:python.exe
+descendants terminated  : 1  436216
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch803/docs/pwml_recovery_sprint/evidence/g11/ORCH-803/01-focused-base.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH-803  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

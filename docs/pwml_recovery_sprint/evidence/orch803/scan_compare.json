@@ -1,0 +1,109 @@
+{
+ "pairs_removed": [
+  {
+   "paper": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch801run\\runs_papers\\ORCH-801\\legs\\salicylic_acid-strict\\2026-11-04_1134\\papers\\PMC12408352\\01_source_text.txt",
+   "pair": "BA-CoA\tbeen shown to convert trans -CA to benzoyl-CoA"
+  }
+ ],
+ "pairs_added": [
+  {
+   "paper": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch801run\\runs_papers\\ORCH-801\\legs\\salicylic_acid-strict\\2026-11-04_1134\\papers\\PMC12408352\\01_source_text.txt",
+   "pair": "BA-CoA\tbenzoyl-CoA"
+  },
+  {
+   "paper": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch801run\\runs_papers\\ORCH-801\\legs\\tb_pyrimidine-strict\\2026-11-04_1228\\papers\\PMC5098729\\01_source_text.txt",
+   "pair": "dThd\tthymidine"
+  }
+ ],
+ "records_compared": 681,
+ "records_base": 681,
+ "flips": {
+  "keep_to_reject": [],
+  "reject_to_keep": [
+   {
+    "file": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch803\\runs_verify\\2026-08-21_2014\\papers\\PMC12312563\\research\\final_mapped.json",
+    "source": "name_gate",
+    "entity_name": "SEPHCHC",
+    "compared": [
+     "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate",
+     "sehcc"
+    ],
+    "kind": "compound",
+    "identity": "kegg:C16519",
+    "recorded": "reject",
+    "verdict": "keep",
+    "reason": "paper_abbreviation_identity",
+    "base_verdict": "reject",
+    "base_reason": "no_shared_meaningful_token"
+   },
+   {
+    "file": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch803\\runs_verify\\2026-08-21_2014\\papers\\PMC12312563\\strict\\final_mapped.json",
+    "source": "name_gate",
+    "entity_name": "SEPHCHC",
+    "compared": [
+     "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate",
+     "sehcc"
+    ],
+    "kind": "compound",
+    "identity": "kegg:C16519",
+    "recorded": "reject",
+    "verdict": "keep",
+    "reason": "paper_abbreviation_identity",
+    "base_verdict": "reject",
+    "base_reason": "no_shared_meaningful_token"
+   },
+   {
+    "file": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch801run\\runs_papers\\ORCH-801\\legs\\cdadc1_gemcitabine-strict\\2026-11-04_1206\\papers\\PMC12184417\\strict\\final_mapped.json",
+    "source": "db_match",
+    "entity_name": "deoxyuridine monophosphate",
+    "compared": [
+     "dUMP",
+     "dUMP",
+     "DUMP"
+    ],
+    "kind": "compound",
+    "identity": "chebi:CHEBI:17622, pathbank_compound_id:1087",
+    "recorded": "identity_refused_review_required",
+    "verdict": "keep",
+    "reason": "paper_abbreviation_identity",
+    "base_verdict": "reject",
+    "base_reason": "no_shared_meaningful_token"
+   },
+   {
+    "file": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch801run\\runs_papers\\ORCH-801\\legs\\cdadc1_gemcitabine-strict\\2026-11-04_1206\\papers\\PMC12184417\\strict\\final_mapped.json",
+    "source": "name_gate",
+    "entity_name": "deoxyuridine monophosphate",
+    "compared": [
+     "dUMP",
+     "dUMP",
+     "DUMP"
+    ],
+    "kind": "compound",
+    "identity": "biocyc:DUMP, cas:964-26-1, chebi:CHEBI:17622, chemspider:58574, drugbank:DB03800, hmdb:HMDB0001409, kegg:C00365, pathbank_compound_id:1087, pubchem:65063",
+    "recorded": "reject",
+    "verdict": "keep",
+    "reason": "paper_abbreviation_identity",
+    "base_verdict": "reject",
+    "base_reason": "no_shared_meaningful_token"
+   },
+   {
+    "file": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.claude\\worktrees\\orch801run\\runs_papers\\ORCH-801\\legs\\tb_pyrimidine-strict\\2026-11-04_1228\\papers\\PMC5098729\\strict\\final_mapped.json",
+    "source": "db_match",
+    "entity_name": "dThd",
+    "compared": [
+     "Thymidine",
+     "T",
+     "THYMIDINE"
+    ],
+    "kind": "compound",
+    "identity": "chebi:CHEBI:17748, pathbank_compound_id:187",
+    "recorded": "identity_refused_review_required",
+    "verdict": "keep",
+    "reason": "paper_abbreviation_identity",
+    "base_verdict": "reject",
+    "base_reason": "no_shared_meaningful_token"
+   }
+  ],
+  "other": []
+ }
+}

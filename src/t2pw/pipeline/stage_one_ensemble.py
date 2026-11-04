@@ -106,6 +106,7 @@ import json
 import logging
 import os
 import re
+import weakref
 from copy import deepcopy
 from functools import lru_cache
 from pathlib import Path
@@ -791,10 +792,14 @@ def _rewrite_map(payloads: Sequence[Optional[Dict[str, Any]]], canonical: Canoni
     rewrite: Rewrite = {}
     for payload in payloads:
         processes = payload.get("processes") if isinstance(payload, dict) else None
-        for row in (processes or {}).get("reactions") or []:
+        # ORCH-803: transport cargo is a participant too (D-104 § 3(a)); a ``BA-CoA`` that a
+        # draw wrote only as cargo used to keep its own node beside ``benzoyl-CoA``.
+        rows = [(r, ("inputs", "outputs")) for r in (processes or {}).get("reactions") or []]
+        rows += [(r, ("cargo",)) for r in (processes or {}).get("transports") or []]
+        for row, slots in rows:
             if not isinstance(row, dict):
                 continue
-            for slot in ("inputs", "outputs"):
+            for slot in slots:
                 for _item, name in _participants(row.get(slot)):
                     key = spelling_key(name)
                     if key and key not in rewrite and _strict_key(name) not in CURRENCY_KEYS:
@@ -1104,6 +1109,24 @@ def _write_side_file(artifact_dir: Optional[Path], report: Dict[str, Any]) -> st
     return str(path)
 
 
+#: ORCH-803: the paper dictionary of every pooled Stage-1 pass, keyed by the run's diagnostics
+#: recorder -- the scope :func:`_pooled_draws` already trusts at Stage 6. ``activate()`` starts a
+#: new recorder per run, so one paper's dictionary never answers for another. Memory only.
+_RUN_LEXICONS: "weakref.WeakKeyDictionary[Any, List[PaperLexicon]]" = weakref.WeakKeyDictionary()
+
+
+def paper_defined_pair(a: str, b: str) -> Optional[Tuple[str, str, str]]:
+    """``(short, long, pattern)`` when the paper of the run in progress defines ``a`` and ``b``
+    as one abbreviation pair (:meth:`PaperLexicon.defines`), else ``None``. Always ``None``
+    when this run's Stage 1 did not pool: only :func:`run_ensemble` registers a dictionary."""
+
+    for lexicon in _RUN_LEXICONS.get(current_diagnostics(), ()):
+        pair = lexicon.defines(a, b)
+        if pair:
+            return pair
+    return None
+
+
 def run_ensemble(draw: DrawFn, n: int, *, failure: type,
                  paper_text: Optional[str] = None) -> Tuple[Dict[str, Any], List[Dict[str, Any]]]:
     """Issue ``draw`` ``n`` times, union the successes, raise only when every draw failed.
@@ -1139,6 +1162,8 @@ def run_ensemble(draw: DrawFn, n: int, *, failure: type,
     merged, report = merge_draws(payloads, paper_text=paper_text)
     report["failed_draws"] = _failed_draws(failures)
     diagnostics = current_diagnostics()
+    if paper_text and str(paper_text).strip():
+        _RUN_LEXICONS.setdefault(diagnostics, []).append(PaperLexicon(paper_text))
     report_path = _write_side_file(diagnostics.artifact_dir, report)
     diagnostics.record_boundary(
         stage="extraction",

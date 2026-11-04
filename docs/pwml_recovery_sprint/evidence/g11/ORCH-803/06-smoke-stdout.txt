@@ -1,0 +1,36 @@
+........................................................................ [ 14%]
+........................................................................ [ 28%]
+........................................................................ [ 42%]
+........................................................................ [ 56%]
+........................................................................ [ 70%]
+........................................................................ [ 84%]
+........................................................................ [ 98%]
+.......                                                                  [100%]
+511 passed in 62.97s (0:01:02)
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 563d39db19d161f18116c30776e3b24478b53b58  [git, worktree dirty=True]
+label                   : smoke
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider --basetemp=C:/t/orch803/smoke tests/test_reference_repair.py tests/test_strict_quarantine.py tests/test_strict_quarantine_contract_alignment.py tests/test_strict_quarantine_locks_and_scope.py tests/test_strict_quarantine_versioning.py tests/test_empty_extraction_payload.py tests/test_bench_goldset_and_semantic.py tests/test_bench_acquisition_and_artifacts.py tests/test_bench_controls.py tests/test_completeness_audit.py tests/test_batch_driver.py tests/test_stage3_gate_report_lifecycle.py tests/test_rag_admission_production_path.py tests/test_rag_gap_admission.py tests/test_rag_triage_orchestration.py tests/test_rag_provenance_gates.py tests/test_pipeline_reaction_rag_provenance.py tests/test_research_mode_orchestration.py tests/test_map_ids_name_gate.py tests/test_db_candidate_species_evidence.py tests/test_c102_coverage_denominator.py tests/test_c106_mutation_harness_executable.py
+cwd                     : C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch803
+root PID / process group: 434504 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 570 s
+duration                : 65.33 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 10  436808:python.exe, 438180:python.exe, 438256:python.exe, 437388:python.exe, 437400:python.exe, 438056:python.exe, 438064:python.exe, 437352:python.exe, 433256:python.exe, 424384:git.exe
+descendants terminated  : 10  424384, 433256, 436808, 437352, 437388, 437400, 438056, 438064, 438180, 438256
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch803/docs/pwml_recovery_sprint/evidence/g11/ORCH-803/06-smoke.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH-803  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

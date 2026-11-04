@@ -6304,6 +6304,28 @@ def _name_gate_verdict(
             gate["matched_alias"] = alias
             return gate
 
+    # ORCH-803 -- the paper itself defines the two names as one abbreviation pair
+    # ("deoxyuridine monophosphate (dUMP)" against PathBank's "dUMP"), in either direction.
+    # Last, so it only ever turns a reject into a keep; only the paper of THIS run, and only
+    # when its Stage 1 pooled (stage_one_ensemble.paper_defined_pair). Not for proteins.
+    if kind != "protein":
+        from t2pw.pipeline.paper_lexicon import spelling_key  # function-local: layering
+        from t2pw.pipeline.stage_one_ensemble import paper_defined_pair
+
+        # Review F1: a record matched through the paper's SHORT form must carry it as its own
+        # primary name (PathBank 1087 is named "dUMP"); a short_name or BioCyc mnemonic that
+        # merely equals "PA" does not make the record the paper's phosphatidic acid.
+        primary = str(_safe_dict(candidate).get("name") or "").strip() if candidate is not None else names[0]
+        for value in names:
+            pair = paper_defined_pair(entity_name, value)
+            if pair and spelling_key(value) == spelling_key(pair[0]) and value != primary:
+                continue
+            if pair:
+                gate["verdict"] = "keep"
+                gate["reason"] = "paper_abbreviation_identity"
+                gate["paper_pair"] = [pair[0], pair[1]]
+                return gate
+
     gate["verdict"] = "reject"
     gate["reason"] = "no_shared_meaningful_token"
     return gate

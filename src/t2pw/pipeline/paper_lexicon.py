@@ -12,7 +12,9 @@ the ``SF (long form)`` swap when the parenthetical has more than two words, the
 shortest-long-form backward character match, and its validity limits. ONE extension, kept
 narrow and labelled ``shared_locant`` in every record: the paper writes
 ``uroporphyrinogen (Urogen) III``, which defines ``Urogen III`` as ``uroporphyrinogen III``;
-a roman numeral or single letter directly after the parenthesis extends both forms. An
+a roman numeral or single letter directly after the parenthesis extends both forms. ORCH-803
+adds two more, each labelled the same way: ``shared_suffix`` (``benzoyl-CoA (BA-CoA)``) and
+``deoxy_prefix`` (``thymidine (dThd)``); their helpers say how narrow they are. An
 abbreviation the paper defines with two different long forms is ambiguous and bridges
 nothing.
 
@@ -56,6 +58,11 @@ RULE_DATABASE_ID = "database-id"
 PATTERN_LONG_SHORT = "long (SF)"
 PATTERN_SHORT_LONG = "SF (long)"
 PATTERN_SHARED_LOCANT = "shared_locant"
+#: ORCH-803: ``benzoyl-CoA (BA-CoA)`` and ``thymidine (dThd)``; see the two helpers' docs.
+PATTERN_SHARED_SUFFIX = "shared_suffix"
+PATTERN_DEOXY_PREFIX = "deoxy_prefix"
+#: A nucleoside short form whose ``d`` is the implicit 2'-deoxy (dThd, dCyd, dGuo); one-word long form only.
+_DEOXY_SHORT = re.compile(r"^d[A-Z]")
 
 _PAREN = re.compile(r"\s\(([^()]*)\)")
 _TRAILING_PAREN = re.compile(r"^(?P<outer>.*?)\s*\((?P<inner>[^()]*)\)\s*$")
@@ -121,6 +128,25 @@ def _valid_pair(short: str, long: str) -> Optional[str]:
     return best
 
 
+def _shared_suffix_long(short: str, head: str) -> Optional[str]:
+    """ORCH-803 ``shared_suffix``: ``benzoyl-CoA (BA-CoA)``. The word right before the
+    parenthesis ends in the abbreviation's own hyphenated tail, so that one word is the long
+    form -- Schwartz-Hearst would run on across words (``BA`` abbreviates benzoic acid; there
+    is no ``a`` in benzoyl) and pair ``been shown to ... benzoyl-CoA``. The head must look like
+    an abbreviation (2+ capitals, or 1-3 characters with one) and share its first letter, so
+    ``acetyl-CoA (acyl-CoA)`` and ``BA-CoA (CA-CoA)`` pair nothing."""
+
+    sf_head, _, tail = short.rpartition("-")
+    word = head.rsplit(" ", 1)[-1]
+    if (not sf_head or len(tail) < 2 or not any(c.isalpha() for c in tail)
+            or not word.endswith(f"-{tail}") or len(word) <= len(short)):
+        return None
+    capitals = sum(c.isupper() for c in sf_head)
+    if not sf_head[0].isalpha() or not (capitals >= 2 or (capitals and len(sf_head) <= 3)):
+        return None
+    return word if word[0].lower() == sf_head[0].lower() else None
+
+
 def abbreviation_pairs(text: str) -> List[Tuple[str, str, str]]:
     """Every ``(short form, long form, pattern)`` Schwartz-Hearst finds in ``text``."""
 
@@ -143,7 +169,21 @@ def abbreviation_pairs(text: str) -> List[Tuple[str, str, str]]:
         short = short.strip()
         if not short or not any(c.isalpha() for c in short) or not short[0].isalnum():
             continue
-        long = _valid_pair(short, long_cand.strip())
+        long = None
+        if pattern == PATTERN_LONG_SHORT:
+            long = _shared_suffix_long(short, head)
+            if long is not None:
+                pattern = PATTERN_SHARED_SUFFIX
+        if long is None:
+            long = _valid_pair(short, long_cand.strip())
+        if long is None and pattern == PATTERN_LONG_SHORT and _DEOXY_SHORT.match(short):
+            long = _valid_pair(short[1:], long_cand.strip())
+            # Review F3: one word only ("thymidine"); "nucleotide pool (dNTP)" and
+            # "nucleoside triphosphates (dNTPs)" are phrases, not a nucleoside's name.
+            if long is not None and len(long.split()) == 1:
+                pattern = PATTERN_DEOXY_PREFIX
+            else:
+                long = None
         if long is None:
             continue
         if long.startswith("(") and ")" not in long:
@@ -260,6 +300,17 @@ class PaperLexicon:
                 return pair[1], pair[2]
         return None
 
+    def defines(self, a: str, b: str) -> Optional[Tuple[str, str, str]]:
+        """The paper's ``(short, long, pattern)`` when it defines ``a`` and ``b`` -- in either
+        order -- as one unambiguous abbreviation pair (short form case-sensitive, long form by
+        strict key), else ``None``. ORCH-803: the name gate's paper rung asks this."""
+
+        for short, other in ((a, b), (b, a)):
+            pair = self.pairs.get(spelling_key(short))
+            if pair and _strict_key(pair[1]) == _strict_key(other):
+                return pair
+        return None
+
     def canonical(self, name: str) -> Tuple[str, List[str], str]:
         """``(name to write, rules applied, abbreviation pattern)``: snap, then expand."""
 
@@ -285,7 +336,8 @@ class PaperLexicon:
 
 
 __all__ = [
-    "PATTERN_LONG_SHORT", "PATTERN_SHARED_LOCANT", "PATTERN_SHORT_LONG", "PaperLexicon",
+    "PATTERN_DEOXY_PREFIX", "PATTERN_LONG_SHORT", "PATTERN_SHARED_LOCANT", "PATTERN_SHARED_SUFFIX",
+    "PATTERN_SHORT_LONG", "PaperLexicon",
     "RULE_ABBREVIATION", "RULE_DATABASE_ID", "RULE_EXACT", "RULE_TYPO", "abbreviation_pairs", "spelling_key",
 ]
 

@@ -1,0 +1,79 @@
+.................FFF                                                     [100%]
+================================== FAILURES ===================================
+________ test_twin_short_name_alone_never_admits_the_papers_long_form _________
+
+run_scope = None
+
+    def test_twin_short_name_alone_never_admits_the_papers_long_form(run_scope) -> None:
+        _pool("membranes rich in phosphatidic acid (PA) were used")
+        other = {"name": "Hexadecanoate", "short_name": "PA", "pathbank_compound_id": "1087",
+                 "mapped_ids": dict(DUMP_IDS)}
+        gate = _name_gate_verdict("phosphatidic acid", candidates=[other], mapped_ids=dict(DUMP_IDS), kind="compound")
+>       assert gate["verdict"] == "reject", gate
+E       AssertionError: {'compared_names': ['Hexadecanoate', 'PA'], 'entity_name': 'phosphatidic acid', 'identity': 'chebi:CHEBI:17622, pathbank_compound_id:1087', 'kind': 'compound', ...}
+E       assert 'keep' == 'reject'
+E         
+E         - reject
+E         + keep
+
+tests\test_orch803_paper_abbrev_identity.py:169: AssertionError
+_ test_twin_deoxy_retry_never_pairs_a_phrase[the nucleotide pool (dNTP) was depleted-dNTP] _
+
+text = 'the nucleotide pool (dNTP) was depleted', short = 'dNTP'
+
+    @pytest.mark.parametrize("text, short", [
+        ("the nucleotide pool (dNTP) was depleted", "dNTP"),
+        ("levels of nucleoside triphosphates (dNTPs) fell", "dNTPs"),
+    ])
+    def test_twin_deoxy_retry_never_pairs_a_phrase(text: str, short: str) -> None:
+>       assert short not in _pairs(text)
+E       AssertionError: assert 'dNTP' not in {'dNTP': 'nucleotide pool'}
+E        +  where {'dNTP': 'nucleotide pool'} = _pairs('the nucleotide pool (dNTP) was depleted')
+
+tests\test_orch803_paper_abbrev_identity.py:177: AssertionError
+_ test_twin_deoxy_retry_never_pairs_a_phrase[levels of nucleoside triphosphates (dNTPs) fell-dNTPs] _
+
+text = 'levels of nucleoside triphosphates (dNTPs) fell', short = 'dNTPs'
+
+    @pytest.mark.parametrize("text, short", [
+        ("the nucleotide pool (dNTP) was depleted", "dNTP"),
+        ("levels of nucleoside triphosphates (dNTPs) fell", "dNTPs"),
+    ])
+    def test_twin_deoxy_retry_never_pairs_a_phrase(text: str, short: str) -> None:
+>       assert short not in _pairs(text)
+E       AssertionError: assert 'dNTPs' not in {'dNTPs': 'nucleoside triphosphates'}
+E        +  where {'dNTPs': 'nucleoside triphosphates'} = _pairs('levels of nucleoside triphosphates (dNTPs) fell')
+
+tests\test_orch803_paper_abbrev_identity.py:177: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_orch803_paper_abbrev_identity.py::test_twin_short_name_alone_never_admits_the_papers_long_form
+FAILED tests/test_orch803_paper_abbrev_identity.py::test_twin_deoxy_retry_never_pairs_a_phrase[the nucleotide pool (dNTP) was depleted-dNTP]
+FAILED tests/test_orch803_paper_abbrev_identity.py::test_twin_deoxy_retry_never_pairs_a_phrase[levels of nucleoside triphosphates (dNTPs) fell-dNTPs]
+3 failed, 17 passed in 0.61s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 563d39db19d161f18116c30776e3b24478b53b58  [git, worktree dirty=True]
+label                   : r1-focused-a79dba9e
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider --basetemp=C:/t/orch803/bt-r1prev tests/test_orch803_paper_abbrev_identity.py
+cwd                     : C:/t/orch803/prev
+root PID / process group: 460600 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 570 s
+duration                : 1.48 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  456876:python.exe
+descendants terminated  : 1  456876
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch803/docs/pwml_recovery_sprint/evidence/g11/ORCH-803/09-r1-focused-a79dba9e.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH-803  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================
