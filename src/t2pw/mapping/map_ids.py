@@ -6304,6 +6304,21 @@ def _name_gate_verdict(
             gate["matched_alias"] = alias
             return gate
 
+    # ORCH-803 -- the paper itself defines the two names as one abbreviation pair
+    # ("deoxyuridine monophosphate (dUMP)" against PathBank's "dUMP"), in either direction.
+    # Last, so it only ever turns a reject into a keep; only the paper of THIS run, and only
+    # when its Stage 1 pooled (stage_one_ensemble.paper_defined_pair). Not for proteins.
+    if kind != "protein":
+        from t2pw.pipeline.stage_one_ensemble import paper_defined_pair  # function-local: layering
+
+        for value in names:
+            pair = paper_defined_pair(entity_name, value)
+            if pair:
+                gate["verdict"] = "keep"
+                gate["reason"] = "paper_abbreviation_identity"
+                gate["paper_pair"] = [pair[0], pair[1]]
+                return gate
+
     gate["verdict"] = "reject"
     gate["reason"] = "no_shared_meaningful_token"
     return gate
