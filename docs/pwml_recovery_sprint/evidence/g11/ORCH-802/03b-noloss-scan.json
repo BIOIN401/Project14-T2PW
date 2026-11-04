@@ -1,0 +1,101 @@
+{
+  "label": "noloss-scan-r2",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch802/docs/pwml_recovery_sprint/evidence/orch802/orch802_cue_noloss_scan.py",
+    "--old",
+    "C:/t/orch802/base/src/t2pw/pipeline/enzyme_cues.py",
+    "--new",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch802/src/t2pw/pipeline/enzyme_cues.py",
+    "--repo",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch802",
+    "--out",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch802/docs/pwml_recovery_sprint/evidence/orch802/noloss_scan.json",
+    "--extra-root",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch801run/runs_papers/ORCH-801/legs/cdadc1_gemcitabine-strict",
+    "--extra-root",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch801run/runs_papers/ORCH-801/legs/tb_pyrimidine-strict",
+    "--extra-root",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch801run/runs_papers/ORCH-801/legs/salicylic_acid-strict/2026-11-04_1534"
+  ],
+  "cwd": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch802",
+  "started_at": "2026-11-04T22:16:36+00:00",
+  "finished_at": "2026-11-04T22:16:41+00:00",
+  "duration_seconds": 4.4333434000000125,
+  "timeout_seconds": 570.0,
+  "root_pid": 357904,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 352612,
+      "name": "python.exe",
+      "ppid": 357904
+    }
+  ],
+  "descendants_terminated": [
+    352612
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 112240,
+      "name": "python.exe"
+    },
+    {
+      "pid": 297920,
+      "name": "python.exe"
+    },
+    {
+      "pid": 300852,
+      "name": "python.exe"
+    },
+    {
+      "pid": 363832,
+      "name": "python.exe"
+    },
+    {
+      "pid": 363896,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch802/docs/pwml_recovery_sprint/evidence/g11/ORCH-802/03b-noloss-scan.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "d2e68b87721dc62a134fa64fe9067945ea5db13f",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ORCH-802",
+    "token": "ORCH-802:363832:4a1c73fd2ed8d132",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
