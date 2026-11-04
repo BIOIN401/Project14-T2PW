@@ -63,12 +63,12 @@ Known ceiling: each pooled pass now builds its `PaperLexicon` twice, once inside
 
 | Proof | Command | Result (from the piped wrapper output) | G11 report |
 |---|---|---|---|
-| G9 base | focused file, base export `C:/t/orch803/base` (`git archive 563d39db src tests/conftest.py pytest.ini`) | `5 failed, 12 passed in 0.21s`. The 5 are exactly the `test_g9_*` tests and every failure is an assertion, not a missing symbol: `assert None == 'thymidine'`, `assert 2 == 1` (two reactions), `assert 'reject' == 'keep'`, `assert 'been shown t...o benzoyl-CoA' == 'benzoyl-CoA'`, `['ba coa', ...] == ['benzoyl coa', ...]` | `evidence/g11/ORCH-803/01-focused-base.json` + `.log` |
-| G9 tip | same file at `a79dba9e` | `17 passed in 0.24s` | `02-focused-tip.json` + `.log` |
-| SMOKE | the 22-file block in `TEST_MATRIX.md` § Commands | `511 passed in 62.97s` (unchanged count) | `06-smoke.json` + `.log` |
-| Affected, outside SMOKE | `test_stage_one_paper_dictionary.py test_stage_one_ensemble.py test_c120_identity.py test_orch763_nested_locations.py test_orch758b_empty_chunk.py test_orch759a_duplicate_protein_fold.py`: every test file that imports `merge_draws`/`run_ensemble`/`_name_gate_verdict` | `254 passed in 6.92s` | `07-affected.json` + `.log` |
+| G9 base | focused file, base export `C:/t/orch803/base` (`git archive 563d39db src tests/conftest.py pytest.ini`) | `5 failed, 12 passed in 0.21s`. The 5 are exactly the `test_g9_*` tests and every failure is an assertion, not a missing symbol: `assert None == 'thymidine'`, `assert 2 == 1` (two reactions), `assert 'reject' == 'keep'`, `assert 'been shown t...o benzoyl-CoA' == 'benzoyl-CoA'`, `['ba coa', ...] == ['benzoyl coa', ...]` | `evidence/g11/ORCH-803/01-focused-base.json` + `-stdout.txt` |
+| G9 tip | same file at `a79dba9e` | `17 passed in 0.24s` | `02-focused-tip.json` + `-stdout.txt` |
+| SMOKE | the 22-file block in `TEST_MATRIX.md` § Commands | `511 passed in 62.97s` (unchanged count) | `06-smoke.json` + `-stdout.txt` |
+| Affected, outside SMOKE | `test_stage_one_paper_dictionary.py test_stage_one_ensemble.py test_c120_identity.py test_orch763_nested_locations.py test_orch758b_empty_chunk.py test_orch759a_duplicate_protein_fold.py`: every test file that imports `merge_draws`/`run_ensemble`/`_name_gate_verdict` | `254 passed in 6.92s` | `07-affected.json` + `-stdout.txt` |
 
-Every wrapper report shows `FINAL SURVIVING COUNT : 0`.
+Every wrapper report shows `FINAL SURVIVING COUNT : 0`. The pytest counts come from the piped wrapper output saved as `NN-*-stdout.txt` beside each JSON, because the JSON has no stdout (`.log` is gitignored under `g11/`).
 
 `tests/test_orch759a_fold_app_path.py` also references the ensemble, but it is a Streamlit `AppTest` file. It belongs to chunk D (split-process gate), which the brief excludes, so it was **not run**.
 
@@ -100,7 +100,7 @@ Gate records: every committed `name_gate` record with compared names and an iden
 
 | | count | report |
 |---|---|---|
-| (a) pairs, base / tip | 880 / 881 | `03-scan-tip.log`, `04-scan-base.log` |
+| (a) pairs, base / tip | 880 / 881 | `03-scan-tip-stdout.txt`, `04-scan-base-stdout.txt` |
 | (a) removed | **1, a correction** | `evidence/orch803/scan_compare.json`, `.log`; `05-scan-compare.json` |
 | (a) added | 2, both correct | same |
 | (b) records replayed | 681 base, 681 tip | same |

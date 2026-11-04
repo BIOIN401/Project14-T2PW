@@ -1,0 +1,32 @@
+........................................................................ [ 28%]
+........................................................................ [ 56%]
+........................................................................ [ 85%]
+......................................                                   [100%]
+254 passed in 6.92s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 563d39db19d161f18116c30776e3b24478b53b58  [git, worktree dirty=True]
+label                   : affected
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider --basetemp=C:/t/orch803/aff tests/test_stage_one_paper_dictionary.py tests/test_stage_one_ensemble.py tests/test_c120_identity.py tests/test_orch763_nested_locations.py tests/test_orch758b_empty_chunk.py tests/test_orch759a_duplicate_protein_fold.py
+cwd                     : C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch803
+root PID / process group: 439128 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 570 s
+duration                : 8.27 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  439140:python.exe
+descendants terminated  : 1  439140
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.claude/worktrees/orch803/docs/pwml_recovery_sprint/evidence/g11/ORCH-803/07-affected.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ORCH-803  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================
