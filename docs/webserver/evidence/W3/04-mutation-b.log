@@ -1,0 +1,68 @@
+T2PW: C:\t\ws-W3\src\t2pw\__init__.py
+.....F..                                                                 [100%]
+================================== FAILURES ===================================
+________ test_killed_worker_takes_its_child_tree_and_restart_recovers _________
+
+tmp_path = WindowsPath('C:/t/wsW3tmp/r4/test_killed_worker_takes_its_c0')
+child_env = None
+
+    def test_killed_worker_takes_its_child_tree_and_restart_recovers(tmp_path, child_env):
+        """NEW ACCEPTANCE TEST (W3, new capability): a worker killed mid-run leaves no
+        child or grandchild behind, and the next worker start finishes the orphaned
+        ``running`` item as error/crash without re-running it."""
+        db, work = tmp_path / "jobs.sqlite", tmp_path / "work"
+        s = JobStore(db)
+        s.submit([_req("a"), _req("b")])
+        s.close()
+        proc = subprocess.Popen([sys.executable, "-m", "t2pw.web.worker", "--db", str(db),
+                                 "--work-root", str(work), "--run-fn", f"{MOD}:fake_hang",
+                                 "--poll", "0.1"])
+        pids_file = work / "item-1" / "attempt-1" / "pids.txt"
+        pids = []
+        try:
+            end = time.time() + 30
+            while not pids_file.exists() and time.time() < end and proc.poll() is None:
+                time.sleep(0.1)
+            time.sleep(0.2)
+            pids = [int(p) for p in pids_file.read_text().split()]
+            probe = JobStore(db)
+            pids.append(probe.item(1)["attempts"][0]["child_pid"])
+            probe.close()
+            proc.kill()  # the worker only: simulates a crash
+            proc.wait(timeout=30)
+>           assert wait_dead(pids) == []
+E           assert [857148, 857136, 857164] == []
+E             
+E             Left contains 3 more items, first extra item: 857148
+E             Use -v to get more diff
+
+tests\test_web_worker.py:239: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_web_worker.py::test_killed_worker_takes_its_child_tree_and_restart_recovers
+1 failed, 7 passed in 29.50s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-W3\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ dfb9b327b17ce3b13f442f9ccda749bcf382afa1  [git, worktree dirty=False]
+label                   : w3-mutation-b
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-W3 --pin-verdict docs/webserver/evidence/W3/pin/04-mutation-b.pin.json -q --basetemp=C:/t/wsW3tmp/r4 tests/test_web_worker.py
+cwd                     : C:\t\ws-W3
+root PID / process group: 856828 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 33.04 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 19  856840:python.exe, 856572:python.exe, 856924:python.exe, 855936:python.exe, 856368:python.exe, 857504:python.exe, 857604:python.exe, 857868:python.exe, 857880:python.exe, 51840:python.exe, 813692:python.exe, 843160:python.exe, 856228:python.exe, 857080:python.exe, 857492:python.exe, 857148:python.exe, 857164:python.exe, 851984:taskkill.exe, 858928:taskkill.exe
+descendants terminated  : 19  51840, 813692, 843160, 851984, 855936, 856228, 856368, 856572, 856840, 856924, 857080, 857148, 857164, 857492, 857504, 857604, 857868, 857880, 858928
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : docs/webserver/evidence/W3/04-mutation-b.json
+json report written     : True
+pre-existing (reported, NEVER killed): 13
+================================================

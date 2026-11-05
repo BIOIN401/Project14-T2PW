@@ -1,0 +1,58 @@
+T2PW: C:\t\ws-W3\src\t2pw\__init__.py
+........F.....                                                           [100%]
+================================== FAILURES ===================================
+______________ test_deadline_kills_whole_tree_and_marks_timeout _______________
+
+store = <t2pw.web.jobs.JobStore object at 0x00000202AEA7F750>
+tmp_path = WindowsPath('C:/t/wsW3tmp/r1/test_deadline_kills_whole_tree0')
+child_env = None
+
+    def test_deadline_kills_whole_tree_and_marks_timeout(store, tmp_path, child_env):
+        """NEW ACCEPTANCE TEST (W3, new capability): past its deadline the child AND its
+        grandchild are killed; the item is status=timeout, failure_kind=timeout."""
+        w = _worker(store, tmp_path, "fake_hang", timeout_s=3.0)
+        store.submit([_req()])
+        t0 = time.time()
+        item_id = w.run_one()
+        elapsed = time.time() - t0
+        w.close()
+        pids = [int(p) for p in
+                (tmp_path / "work" / f"item-{item_id}" / "attempt-1" / "pids.txt").read_text().split()]
+        try:
+            assert wait_dead(pids) == []
+        finally:
+            force_kill(pids)
+        item = store.item(item_id)
+>       assert item["attempts"][0]["child_pid"] == pids[0]
+E       assert 848628 == 848560
+
+tests\test_web_worker.py:190: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_web_worker.py::test_deadline_kills_whole_tree_and_marks_timeout
+1 failed, 13 passed in 9.65s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-W3\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ dfb9b327b17ce3b13f442f9ccda749bcf382afa1  [git, worktree dirty=False]
+label                   : w3-focused-01
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-W3 --pin-verdict docs/webserver/evidence/W3/pin/01-focused.pin.json -q --basetemp=C:/t/wsW3tmp/r1 tests/test_web_jobs.py tests/test_web_worker.py
+cwd                     : C:\t\ws-W3
+root PID / process group: 848876 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 12.79 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 19  796776:python.exe, 844660:python.exe, 848604:python.exe, 825564:python.exe, 848536:python.exe, 843032:python.exe, 848376:python.exe, 848560:python.exe, 848628:python.exe, 847188:python.exe, 848328:python.exe, 849008:python.exe, 849020:python.exe, 849324:python.exe, 849432:python.exe, 849544:python.exe, 849556:python.exe, 831872:python.exe, 848932:python.exe
+descendants terminated  : 19  796776, 825564, 831872, 843032, 844660, 847188, 848328, 848376, 848536, 848560, 848604, 848628, 848932, 849008, 849020, 849324, 849432, 849544, 849556
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : docs/webserver/evidence/W3/01-focused.json
+json report written     : True
+pre-existing (reported, NEVER killed): 9
+================================================

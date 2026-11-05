@@ -1,0 +1,29 @@
+T2PW: C:\t\ws-W3\src\t2pw\__init__.py
+...........                                                              [100%]
+11 passed in 42.22s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-W3\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 6a5f1395b85bd6b6c18c14d9734d6e5a7bf83041  [git, worktree dirty=True]
+label                   : w3-mutation-c-control
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-W3 --pin-verdict docs/webserver/evidence/W3/pin/010-mutation-c-control.pin.json -q --basetemp=C:/t/wsW3tmp/m10 tests/test_web_worker.py
+cwd                     : C:\t\ws-W3
+root PID / process group: 926556 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 400 s
+duration                : 47.28 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 25  926672:python.exe, 918668:python.exe, 925656:python.exe, 918356:python.exe, 926200:python.exe, 926700:python.exe, 927480:python.exe, 927056:python.exe, 927028:python.exe, 927104:python.exe, 920672:python.exe, 898292:python.exe, 922052:python.exe, 899800:python.exe, 922068:python.exe, 922576:python.exe, 926188:python.exe, 918372:python.exe, 925844:python.exe, 923868:python.exe, 927052:python.exe, 922600:python.exe, 926812:python.exe, 912176:python.exe, 925300:python.exe
+descendants terminated  : 25  898292, 899800, 912176, 918356, 918372, 918668, 920672, 922052, 922068, 922576, 922600, 923868, 925300, 925656, 925844, 926188, 926200, 926672, 926700, 926812, 927028, 927052, 927056, 927104, 927480
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : docs/webserver/evidence/W3/010-mutation-c-control.json
+json report written     : True
+pre-existing (reported, NEVER killed): 5
+================================================

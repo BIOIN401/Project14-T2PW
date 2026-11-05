@@ -1,0 +1,168 @@
+{
+  "label": "w3-focused-05",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-W3",
+    "--pin-verdict",
+    "docs/webserver/evidence/W3/pin/05-focused.pin.json",
+    "-q",
+    "--basetemp=C:/t/wsW3tmp/r5",
+    "tests/test_web_jobs.py",
+    "tests/test_web_worker.py"
+  ],
+  "cwd": "C:\\t\\ws-W3",
+  "started_at": "2026-11-05T02:23:02+00:00",
+  "finished_at": "2026-11-05T02:23:35+00:00",
+  "duration_seconds": 31.60188709999784,
+  "timeout_seconds": 300.0,
+  "root_pid": 862160,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 861684,
+      "name": "python.exe",
+      "ppid": 862160
+    },
+    {
+      "pid": 862536,
+      "name": "python.exe",
+      "ppid": 861684
+    },
+    {
+      "pid": 862628,
+      "name": "python.exe",
+      "ppid": 862536
+    },
+    {
+      "pid": 863080,
+      "name": "python.exe",
+      "ppid": 861684
+    },
+    {
+      "pid": 862864,
+      "name": "python.exe",
+      "ppid": 861684
+    },
+    {
+      "pid": 827464,
+      "name": "python.exe",
+      "ppid": 862368
+    },
+    {
+      "pid": 862368,
+      "name": "python.exe",
+      "ppid": 861684
+    },
+    {
+      "pid": 854192,
+      "name": "python.exe",
+      "ppid": 861684
+    },
+    {
+      "pid": 863008,
+      "name": "python.exe",
+      "ppid": 854192
+    },
+    {
+      "pid": 844744,
+      "name": "python.exe",
+      "ppid": 861684
+    },
+    {
+      "pid": 855984,
+      "name": "python.exe",
+      "ppid": 844744
+    },
+    {
+      "pid": 863920,
+      "name": "python.exe",
+      "ppid": 855984
+    },
+    {
+      "pid": 864076,
+      "name": "python.exe",
+      "ppid": 863920
+    },
+    {
+      "pid": 863272,
+      "name": "python.exe",
+      "ppid": 863868
+    },
+    {
+      "pid": 863868,
+      "name": "python.exe",
+      "ppid": 861684
+    }
+  ],
+  "descendants_terminated": [
+    827464,
+    844744,
+    854192,
+    855984,
+    861684,
+    862368,
+    862536,
+    862628,
+    862864,
+    863008,
+    863080,
+    863272,
+    863868,
+    863920,
+    864076
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 112240,
+      "name": "python.exe"
+    },
+    {
+      "pid": 778276,
+      "name": "python.exe"
+    },
+    {
+      "pid": 793712,
+      "name": "python.exe"
+    },
+    {
+      "pid": 861760,
+      "name": "python.exe"
+    },
+    {
+      "pid": 861868,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/webserver/evidence/W3/05-focused.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-W3\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-W3",
+    "repo_head": "87190e7d522e8a124d90e7834b802fcf70cb499f",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}
