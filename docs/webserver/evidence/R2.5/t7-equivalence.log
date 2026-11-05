@@ -1,0 +1,36 @@
+T2PW: C:\t\ws-R25\src\t2pw\__init__.py
+...........                                                              [100%]
+============================= slowest 5 durations =============================
+56.80s setup    tests/test_equivalence_app_vs_service.py::test_a_app_runs_offline_from_the_fixture_alone_to_the_recorded_verdict
+0.38s call     tests/test_equivalence_app_vs_service.py::test_fixture_holds_no_secrets
+0.03s call     tests/test_equivalence_app_vs_service.py::test_fixture_was_recorded_from_a_clean_tree_through_to_the_export_step
+
+(2 durations < 0.005s hidden.  Use -vv to show these durations.)
+11 passed in 57.32s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R25\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 47a45647d104e5b34632e49e351a5cc44558ade6  [git, worktree dirty=False]
+label                   : t7-equivalence
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R25/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R25 --pin-verdict C:/t/wsR25tmp/ev4/pin/t7-equivalence.pin.json -q -rs --durations=5 --basetemp=C:/t/wsR25tmp/bt/t7-equivalence tests/test_equivalence_app_vs_service.py
+cwd                     : C:\t\ws-R25
+root PID / process group: 659636 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 560 s
+duration                : 58.93 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  664244:python.exe
+descendants terminated  : 1  664244
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/wsR25tmp/ev4/t7-equivalence.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R2.5  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================
