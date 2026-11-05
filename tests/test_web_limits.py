@@ -5,7 +5,11 @@ exist before; there is no base-SHA behaviour to preserve.
 """
 
 import io
+import os
 import sqlite3
+import subprocess
+import sys
+import time
 
 import pytest
 
@@ -141,9 +145,11 @@ def test_byte_magic_and_page_checks(tmp_path):
     p.write_bytes(_pdf(limits.MAX_PDF_PAGES + 1))
     assert f"{limits.MAX_PDF_PAGES + 1} pages" in limits.check_pdf_pages(p)
     p.write_bytes(b"%PDF-1.4 garbage")
-    assert limits.count_pdf_pages(p) is None
+    with pytest.raises(limits.UploadRejected, match="could not be read"):
+        limits.count_pdf_pages(p)
     assert "could not be read" in limits.check_pdf_pages(p)
-    assert limits.count_pdf_pages(tmp_path / "missing.pdf") is None
+    with pytest.raises(limits.UploadRejected, match="could not be read"):
+        limits.count_pdf_pages(tmp_path / "missing.pdf")
 
 
 def test_messages_never_contain_server_paths(tmp_path):
@@ -225,3 +231,149 @@ def test_save_uploads_all_or_nothing_count_and_total(tmp_path, monkeypatch):
     with pytest.raises(limits.UploadRejected, match="not a PDF"):
         limits.save_uploads([("a.pdf", f()), ("b.pdf", io.BytesIO(b"nope"))], mine)
     assert list(mine.iterdir()) == []
+
+
+# ======================= review round 1 (F1-F8) =======================
+@pytest.fixture(autouse=True)
+def _rate_secret(monkeypatch):
+    monkeypatch.setenv("T2PW_RATE_KEY_SECRET", "test-secret")
+    monkeypatch.delenv("T2PW_TRUSTED_PROXIES", raising=False)
+
+
+def _pid_alive(pid: int) -> bool:
+    if sys.platform == "win32":
+        out = subprocess.run(["tasklist", "/FI", f"PID eq {pid}", "/NH"], capture_output=True, text=True).stdout
+        return f" {pid} " in out
+    try:
+        os.kill(pid, 0)
+    except OSError:
+        return False
+    return True
+
+
+def test_f1_ipv4_mapped_ipv6_is_keyed_as_the_ipv4_address():
+    assert limits.client_key("::ffff:203.0.113.5") == "203.0.113.5"
+    assert limits.client_key("::ffff:203.0.113.5") != limits.client_key("::ffff:198.51.100.9")
+    assert limits.client_key("::ffff:203.0.113.5") == limits.client_key("203.0.113.5")
+    # a mapped trusted-proxy peer is matched as the IPv4 proxy, and its XFF is honoured
+    assert limits.client_key("::ffff:10.0.0.1", "198.51.100.7", trusted_proxies="10.0.0.1") == "198.51.100.7"
+    # ... and a mapped entry in the trusted list matches an IPv4 peer
+    assert limits.client_key("10.0.0.1", "198.51.100.7", trusted_proxies="::ffff:10.0.0.1") == "198.51.100.7"
+    # mapped client entry inside the header
+    assert limits.client_key("10.0.0.1", "::ffff:198.51.100.7", trusted_proxies="10.0.0.1") == "198.51.100.7"
+    assert limits.client_key("::ffff:203.0.113.5", "198.51.100.7", trusted_proxies="10.0.0.1") == "203.0.113.5"
+
+
+def _encrypted_pdf(path):
+    from pypdf import PdfWriter
+
+    w = PdfWriter()
+    w.add_blank_page(72, 72)
+    w.encrypt("pw", algorithm="RC4-128")
+    with open(path, "wb") as fh:
+        w.write(fh)
+
+
+def test_f2_encrypted_pdf_is_rejected_with_a_clear_message(tmp_path):
+    p = tmp_path / "enc.pdf"
+    _encrypted_pdf(p)
+    with pytest.raises(limits.UploadRejected, match="encrypted"):
+        limits.count_pdf_pages(p, "enc.pdf")
+    assert "unencrypted copy" in limits.check_pdf_pages(p, "enc.pdf")
+    up = tmp_path / "up"
+    with pytest.raises(limits.UploadRejected, match="encrypted") as e:
+        limits.save_upload(io.BytesIO(p.read_bytes()), up, display_name="enc.pdf")
+    assert str(tmp_path) not in str(e.value) and list(up.iterdir()) == []
+
+
+def test_f2_a_hanging_counter_is_killed_within_the_timeout_and_leaves_no_process(tmp_path):
+    p = tmp_path / "x.pdf"
+    p.write_bytes(_pdf())
+    hang = "import os, sys, time\nopen(sys.argv[1] + '.pid', 'w').write(str(os.getpid()))\ntime.sleep(120)\n"
+    t0 = time.monotonic()
+    with pytest.raises(limits.UploadRejected, match="took too long") as e:
+        limits.count_pdf_pages(p, "x.pdf", timeout_s=1.5, child_code=hang)
+    assert time.monotonic() - t0 < 15
+    pid = int((tmp_path / "x.pdf.pid").read_text())
+    time.sleep(0.5)
+    assert not _pid_alive(pid)
+    assert str(tmp_path) not in str(e.value)
+
+
+def test_f2_save_upload_uses_the_bounded_counter_and_removes_the_file_on_timeout(tmp_path, monkeypatch):
+    monkeypatch.setattr(limits, "PAGE_COUNT_TIMEOUT_S", 0.001)   # interpreter start-up cannot finish
+    up = tmp_path / "up"
+    with pytest.raises(limits.UploadRejected, match="took too long"):
+        limits.save_upload(io.BytesIO(_pdf()), up, display_name="a.pdf")
+    assert list(up.iterdir()) == []
+
+
+def test_f2_declared_count_cannot_bypass_the_page_cap(tmp_path, monkeypatch):
+    monkeypatch.setattr(limits, "MAX_PDF_PAGES", 2)
+    p = tmp_path / "p.pdf"
+    p.write_bytes(_pdf(3))
+    assert "3 pages" in limits.check_pdf_pages(p)
+
+
+def test_f3_keys_are_hmac_not_plain_hashes_and_depend_on_the_secret(tmp_path):
+    import hashlib
+
+    db = tmp_path / "jobs.db"
+    a = limits.RateLimiter(db, limit=1, secret=b"one")
+    assert a.hit("203.0.113.9")[0] and not a.hit("203.0.113.9")[0]
+    stored = [k for (k,) in sqlite3.connect(db).execute("SELECT key FROM rate_events")]
+    assert stored and hashlib.sha256(b"203.0.113.9").hexdigest() not in stored
+    b = limits.RateLimiter(db, limit=1, secret=b"two")        # other secret: other bucket
+    assert b.hit("203.0.113.9")[0]
+    assert not limits.RateLimiter(db, limit=1, secret=b"one").hit("203.0.113.9")[0]
+
+
+def test_f3_env_secret_is_shared_and_unset_secret_warns_without_leaking(tmp_path, monkeypatch, caplog):
+    import logging
+
+    db = tmp_path / "jobs.db"
+    assert limits.RateLimiter(db, limit=1).hit("k")[0]
+    assert not limits.RateLimiter(db, limit=1).hit("k")[0]    # same env secret in both
+    monkeypatch.delenv("T2PW_RATE_KEY_SECRET")
+    caplog.set_level(logging.WARNING)
+    assert limits.RateLimiter(db, limit=1).hit("k")[0]       # random secret: fresh bucket
+    assert "T2PW_RATE_KEY_SECRET is not set" in caplog.text and "test-secret" not in caplog.text
+
+
+class _Dribble(io.BytesIO):
+    """Returns one byte per read, to prove the magic check needs no full first chunk."""
+
+    def read(self, n=-1):
+        return super().read(1)
+
+
+def test_f7_magic_check_accumulates_across_short_reads(tmp_path):
+    s = limits.save_upload(_Dribble(_pdf()), tmp_path / "up", display_name="a.pdf")
+    assert s.size == len(_pdf())
+    for body in (b"%PD", b"%PDX-1.4", b"<html>", b"%PDF"):
+        with pytest.raises(limits.UploadRejected, match="not a PDF"):
+            limits.save_upload(_Dribble(body), tmp_path / "up", display_name="a.pdf")
+    assert [p.suffix for p in (tmp_path / "up").iterdir()] == [".pdf"]
+
+
+def test_f8_symlinked_upload_dir_is_refused(tmp_path, monkeypatch):
+    real = tmp_path / "real"
+    real.mkdir()
+    link = tmp_path / "link"
+    try:
+        os.symlink(real, link, target_is_directory=True)
+    except (OSError, NotImplementedError):
+        # no symlink privilege here (Windows): make the path report itself as a link instead
+        link.mkdir()
+        monkeypatch.setattr(type(link), "is_symlink", lambda self: self.name == "link")
+    with pytest.raises(limits.UploadRejected, match="not available") as e:
+        limits.save_upload(io.BytesIO(_pdf()), link, display_name="a.pdf")
+    assert str(tmp_path) not in str(e.value) and list(real.iterdir()) == []
+
+
+def test_f8_upload_dir_and_file_modes_on_posix(tmp_path):
+    s = limits.save_upload(io.BytesIO(_pdf()), tmp_path / "new" / "up", display_name="a.pdf")
+    if os.name == "posix":
+        assert (s.path.parent.stat().st_mode & 0o777) == 0o700
+        assert (s.path.stat().st_mode & 0o777) == 0o600
+    assert s.path.exists()

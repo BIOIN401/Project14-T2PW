@@ -49,9 +49,12 @@ def is_valid_email(addr: object) -> bool:
 
 
 def notify_job(to_addr: Optional[str], job_url: str, *, outcome: str = "finished",
+               base_url: Optional[str] = None,
                env: Optional[Mapping[str, str]] = None) -> bool:
     """Email ``to_addr`` the job link; True only if the server accepted the message.
 
+    When ``base_url`` is given, ``job_url`` must start with it (``base_url + "/"``), so a
+    link built from anything but our own site is refused.
     ``outcome`` is ``"finished"`` or ``"failed"`` (whether to send for failures is the
     caller's decision). Returns False, never raises, when email is off, the address or
     link is invalid, or sending fails.
@@ -64,7 +67,8 @@ def notify_job(to_addr: Optional[str], job_url: str, *, outcome: str = "finished
         log.info("job email skipped: SMTP is not configured")
         return False
     if outcome not in SUBJECTS or not is_valid_email(to_addr) or not is_valid_email(sender) \
-            or not isinstance(job_url, str) or not _URL_RE.fullmatch(job_url):
+            or not isinstance(job_url, str) or not _URL_RE.fullmatch(job_url) \
+            or (base_url and not job_url.startswith(base_url.rstrip("/") + "/")):
         log.warning("job email skipped: invalid recipient, sender, link or outcome")
         return False
     try:

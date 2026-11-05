@@ -139,3 +139,32 @@ def test_default_env_is_os_environ(smtp, monkeypatch):
     assert notify.notify_job("a@example.org", URL) is True
     monkeypatch.delenv("T2PW_SMTP_HOST")
     assert notify.notify_job("a@example.org", URL) is False
+
+
+# ======================= review round 1 (F4, F5) =======================
+def test_f4_base_url_pins_the_link_to_our_own_site(smtp):
+    assert notify.notify_job("a@example.org", URL, base_url="https://t2pw.example.org", env=ENV)
+    assert notify.notify_job("a@example.org", URL, base_url="https://t2pw.example.org/", env=ENV)
+    n = len(smtp.instances)
+    for base in ("https://evil.example.net", "https://t2pw.example.org.evil.net",
+                 "http://t2pw.example.org"):
+        assert notify.notify_job("a@example.org", URL, base_url=base, env=ENV) is False
+    assert notify.notify_job("a@example.org", "https://t2pw.example.org.evil.net/x",
+                             base_url="https://t2pw.example.org", env=ENV) is False
+    assert len(smtp.instances) == n
+    assert notify.notify_job("a@example.org", URL, env=ENV)          # base_url is optional
+
+
+def test_f5_starttls_failure_sends_nothing_and_never_logs_in(smtp, monkeypatch, caplog):
+    caplog.set_level(logging.DEBUG)
+
+    def bad_starttls(self, context=None):
+        raise notify.smtplib.SMTPException("STARTTLS refused for user@example.org")
+
+    monkeypatch.setattr(FakeSMTP, "starttls", bad_starttls)
+    assert notify.notify_job("user@example.org", URL, env=ENV) is False
+    (s,) = smtp.instances
+    assert s.calls == [] and s.sent == []                  # no login call, nothing sent
+    assert "SMTPException" in caplog.text
+    for secret in ("user@example.org", "hunter2-SECRET", "mailuser"):
+        assert secret not in caplog.text
