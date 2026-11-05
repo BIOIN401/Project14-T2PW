@@ -1,0 +1,218 @@
+{
+  "label": "BR-batch_run",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-BR-tip",
+    "-q",
+    "--basetemp=C:/t/wsBRtr/batch_run",
+    "tests/test_batch_run.py"
+  ],
+  "cwd": "C:\\t\\ws-BR-tip",
+  "started_at": "2026-11-05T21:31:47+00:00",
+  "finished_at": "2026-11-05T21:32:04+00:00",
+  "duration_seconds": 16.23404650000157,
+  "timeout_seconds": 900.0,
+  "root_pid": 550260,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 550276,
+      "name": "python.exe",
+      "ppid": 550260
+    },
+    {
+      "pid": 550092,
+      "name": "python.exe",
+      "ppid": 550276
+    },
+    {
+      "pid": 550112,
+      "name": "python.exe",
+      "ppid": 550092
+    },
+    {
+      "pid": 549760,
+      "name": "taskkill.exe",
+      "ppid": 550276
+    },
+    {
+      "pid": 550060,
+      "name": "python.exe",
+      "ppid": 550276
+    },
+    {
+      "pid": 550228,
+      "name": "python.exe",
+      "ppid": 550060
+    },
+    {
+      "pid": 550644,
+      "name": "python.exe",
+      "ppid": 550276
+    },
+    {
+      "pid": 550740,
+      "name": "python.exe",
+      "ppid": 550644
+    },
+    {
+      "pid": 542464,
+      "name": "python.exe",
+      "ppid": 550276
+    },
+    {
+      "pid": 550168,
+      "name": "python.exe",
+      "ppid": 542464
+    },
+    {
+      "pid": 487144,
+      "name": "python.exe",
+      "ppid": 550276
+    },
+    {
+      "pid": 30320,
+      "name": "python.exe",
+      "ppid": 487144
+    },
+    {
+      "pid": 213056,
+      "name": "python.exe",
+      "ppid": 496224
+    },
+    {
+      "pid": 496224,
+      "name": "python.exe",
+      "ppid": 550276
+    },
+    {
+      "pid": 30404,
+      "name": "python.exe",
+      "ppid": 550276
+    },
+    {
+      "pid": 470192,
+      "name": "python.exe",
+      "ppid": 30404
+    },
+    {
+      "pid": 205724,
+      "name": "python.exe",
+      "ppid": 546052
+    },
+    {
+      "pid": 546052,
+      "name": "python.exe",
+      "ppid": 550276
+    }
+  ],
+  "descendants_terminated": [
+    30320,
+    30404,
+    205724,
+    213056,
+    470192,
+    487144,
+    496224,
+    542464,
+    546052,
+    549760,
+    550060,
+    550092,
+    550112,
+    550168,
+    550228,
+    550276,
+    550644,
+    550740
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 442728,
+      "name": "python.exe"
+    },
+    {
+      "pid": 460520,
+      "name": "python.exe"
+    },
+    {
+      "pid": 496044,
+      "name": "python.exe"
+    },
+    {
+      "pid": 496252,
+      "name": "python.exe"
+    },
+    {
+      "pid": 525748,
+      "name": "python.exe"
+    },
+    {
+      "pid": 527512,
+      "name": "python.exe"
+    },
+    {
+      "pid": 528928,
+      "name": "python.exe"
+    },
+    {
+      "pid": 529860,
+      "name": "python.exe"
+    },
+    {
+      "pid": 531476,
+      "name": "python.exe"
+    },
+    {
+      "pid": 531504,
+      "name": "python.exe"
+    },
+    {
+      "pid": 537412,
+      "name": "python.exe"
+    },
+    {
+      "pid": 540544,
+      "name": "python.exe"
+    },
+    {
+      "pid": 545168,
+      "name": "python.exe"
+    },
+    {
+      "pid": 545216,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/wsBRtr/reports/batch_run.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-BR-tip\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-BR-tip",
+    "repo_head": "acd9753b69d2b6bbcd68507767651e2f186ad63e",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

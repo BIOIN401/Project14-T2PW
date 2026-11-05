@@ -1,0 +1,197 @@
+{
+  "label": "BR-g2",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-int",
+    "-q",
+    "--basetemp=C:/t/wsINTbr/g2",
+    "tests/test_c011_freeze_seam_golden_equivalence.py"
+  ],
+  "cwd": "C:\\t\\ws-int",
+  "started_at": "2026-11-05T22:03:20+00:00",
+  "finished_at": "2026-11-05T22:04:01+00:00",
+  "duration_seconds": 40.51877660000173,
+  "timeout_seconds": 600.0,
+  "root_pid": 608396,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 607708,
+      "name": "python.exe",
+      "ppid": 608396
+    },
+    {
+      "pid": 609448,
+      "name": "git.exe",
+      "ppid": 607708
+    },
+    {
+      "pid": 609652,
+      "name": "git.exe",
+      "ppid": 607708
+    },
+    {
+      "pid": 609668,
+      "name": "python.exe",
+      "ppid": 607708
+    },
+    {
+      "pid": 608592,
+      "name": "python.exe",
+      "ppid": 609668
+    },
+    {
+      "pid": 609956,
+      "name": "python.exe",
+      "ppid": 607708
+    },
+    {
+      "pid": 609976,
+      "name": "python.exe",
+      "ppid": 609956
+    },
+    {
+      "pid": 596068,
+      "name": "git.exe",
+      "ppid": 609976
+    },
+    {
+      "pid": 603008,
+      "name": "python.exe",
+      "ppid": 607708
+    },
+    {
+      "pid": 604940,
+      "name": "python.exe",
+      "ppid": 603008
+    },
+    {
+      "pid": 600388,
+      "name": "python.exe",
+      "ppid": 607708
+    },
+    {
+      "pid": 601876,
+      "name": "python.exe",
+      "ppid": 600388
+    },
+    {
+      "pid": 605852,
+      "name": "python.exe",
+      "ppid": 606012
+    },
+    {
+      "pid": 606012,
+      "name": "python.exe",
+      "ppid": 607708
+    },
+    {
+      "pid": 598036,
+      "name": "python.exe",
+      "ppid": 607708
+    },
+    {
+      "pid": 609536,
+      "name": "python.exe",
+      "ppid": 598036
+    },
+    {
+      "pid": 598676,
+      "name": "python.exe",
+      "ppid": 609492
+    },
+    {
+      "pid": 609492,
+      "name": "python.exe",
+      "ppid": 607708
+    }
+  ],
+  "descendants_terminated": [
+    596068,
+    598036,
+    598676,
+    600388,
+    601876,
+    603008,
+    604940,
+    605852,
+    606012,
+    607708,
+    608592,
+    609448,
+    609492,
+    609536,
+    609652,
+    609668,
+    609956,
+    609976
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 442728,
+      "name": "python.exe"
+    },
+    {
+      "pid": 460520,
+      "name": "python.exe"
+    },
+    {
+      "pid": 496044,
+      "name": "python.exe"
+    },
+    {
+      "pid": 496252,
+      "name": "python.exe"
+    },
+    {
+      "pid": 607340,
+      "name": "python.exe"
+    },
+    {
+      "pid": 608264,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/wsINTbr/reports/g2.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-int\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-int",
+    "repo_head": "82e0267acbd49fefca9db04ab082baaf65980b7a",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "BR-postmerge",
+    "token": "BR-postmerge:608264:29efce34df33de37",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

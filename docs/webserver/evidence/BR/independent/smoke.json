@@ -1,0 +1,186 @@
+{
+  "label": "BR-smoke",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-BR-tip",
+    "-q",
+    "--basetemp=C:/t/wsBRtr/smoke",
+    "tests/test_reference_repair.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_empty_extraction_payload.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py",
+    "tests/test_c102_coverage_denominator.py",
+    "tests/test_c106_mutation_harness_executable.py"
+  ],
+  "cwd": "C:\\t\\ws-BR-tip",
+  "started_at": "2026-11-05T21:41:34+00:00",
+  "finished_at": "2026-11-05T21:42:31+00:00",
+  "duration_seconds": 56.92562170000019,
+  "timeout_seconds": 1500.0,
+  "root_pid": 571888,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 566672,
+      "name": "python.exe",
+      "ppid": 571888
+    },
+    {
+      "pid": 569652,
+      "name": "python.exe",
+      "ppid": 566672
+    },
+    {
+      "pid": 572096,
+      "name": "python.exe",
+      "ppid": 569652
+    },
+    {
+      "pid": 570532,
+      "name": "python.exe",
+      "ppid": 566672
+    },
+    {
+      "pid": 570880,
+      "name": "python.exe",
+      "ppid": 570532
+    },
+    {
+      "pid": 562328,
+      "name": "python.exe",
+      "ppid": 566672
+    },
+    {
+      "pid": 567924,
+      "name": "python.exe",
+      "ppid": 562328
+    },
+    {
+      "pid": 527112,
+      "name": "python.exe",
+      "ppid": 564908
+    },
+    {
+      "pid": 564908,
+      "name": "python.exe",
+      "ppid": 566672
+    },
+    {
+      "pid": 574424,
+      "name": "git.exe",
+      "ppid": 566672
+    }
+  ],
+  "descendants_terminated": [
+    527112,
+    562328,
+    564908,
+    566672,
+    567924,
+    569652,
+    570532,
+    570880,
+    572096,
+    574424
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 442728,
+      "name": "python.exe"
+    },
+    {
+      "pid": 460520,
+      "name": "python.exe"
+    },
+    {
+      "pid": 496044,
+      "name": "python.exe"
+    },
+    {
+      "pid": 496252,
+      "name": "python.exe"
+    },
+    {
+      "pid": 563288,
+      "name": "python.exe"
+    },
+    {
+      "pid": 563300,
+      "name": "python.exe"
+    },
+    {
+      "pid": 564744,
+      "name": "python.exe"
+    },
+    {
+      "pid": 566984,
+      "name": "python.exe"
+    },
+    {
+      "pid": 571116,
+      "name": "python.exe"
+    },
+    {
+      "pid": 571316,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/wsBRtr/reports/smoke.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-BR-tip\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-BR-tip",
+    "repo_head": "acd9753b69d2b6bbcd68507767651e2f186ad63e",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "BR-smoke",
+    "token": "BR-smoke:571316:e069eb5484fce2f2",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
