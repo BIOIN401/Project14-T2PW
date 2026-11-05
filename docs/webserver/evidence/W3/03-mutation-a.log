@@ -1,0 +1,61 @@
+T2PW: C:\t\ws-W3\src\t2pw\__init__.py
+..F.....                                                                 [100%]
+================================== FAILURES ===================================
+______________ test_deadline_kills_whole_tree_and_marks_timeout _______________
+
+store = <t2pw.web.jobs.JobStore object at 0x000001F8DFD739D0>
+tmp_path = WindowsPath('C:/t/wsW3tmp/r3/test_deadline_kills_whole_tree0')
+child_env = None
+
+    def test_deadline_kills_whole_tree_and_marks_timeout(store, tmp_path, child_env):
+        """NEW ACCEPTANCE TEST (W3, new capability): past its deadline the child AND its
+        grandchild are killed; the item is status=timeout, failure_kind=timeout."""
+        w = _worker(store, tmp_path, "fake_hang", timeout_s=3.0)
+        store.submit([_req()])
+        t0 = time.time()
+        item_id = w.run_one()
+        elapsed = time.time() - t0
+        w.close()
+        pids = [int(p) for p in
+                (tmp_path / "work" / f"item-{item_id}" / "attempt-1" / "pids.txt").read_text().split()]
+        item = store.item(item_id)
+        # On Windows a venv python.exe is a launcher that starts the real interpreter as
+        # ITS child, so the recorded child PID and the run's os.getpid() can differ.
+        pids.append(item["attempts"][0]["child_pid"])
+        try:
+>           assert wait_dead(pids) == []
+E           assert [60204] == []
+E             
+E             Left contains one more item: 60204
+E             Use -v to get more diff
+
+tests\test_web_worker.py:190: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_web_worker.py::test_deadline_kills_whole_tree_and_marks_timeout
+1 failed, 7 passed in 25.95s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-W3\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ dfb9b327b17ce3b13f442f9ccda749bcf382afa1  [git, worktree dirty=False]
+label                   : w3-mutation-a
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-W3 --pin-verdict docs/webserver/evidence/W3/pin/03-mutation-a.pin.json -q --basetemp=C:/t/wsW3tmp/r3 tests/test_web_worker.py
+cwd                     : C:\t\ws-W3
+root PID / process group: 853748 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 29.28 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 20  853432:python.exe, 853056:python.exe, 853528:python.exe, 847264:python.exe, 849196:python.exe, 840180:python.exe, 853168:python.exe, 60204:python.exe, 845796:python.exe, 845660:taskkill.exe, 854396:python.exe, 854444:python.exe, 852836:python.exe, 854464:python.exe, 838788:python.exe, 854476:python.exe, 854404:python.exe, 854836:python.exe, 846232:python.exe, 854076:python.exe
+descendants terminated  : 20  60204, 838788, 840180, 845660, 845796, 846232, 847264, 849196, 852836, 853056, 853168, 853432, 853528, 854076, 854396, 854404, 854444, 854464, 854476, 854836
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : docs/webserver/evidence/W3/03-mutation-a.json
+json report written     : True
+pre-existing (reported, NEVER killed): 11
+================================================

@@ -1,0 +1,221 @@
+{
+  "label": "w3-mutation-a",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-W3",
+    "--pin-verdict",
+    "docs/webserver/evidence/W3/pin/03-mutation-a.pin.json",
+    "-q",
+    "--basetemp=C:/t/wsW3tmp/r3",
+    "tests/test_web_worker.py"
+  ],
+  "cwd": "C:\\t\\ws-W3",
+  "started_at": "2026-11-05T02:21:09+00:00",
+  "finished_at": "2026-11-05T02:21:39+00:00",
+  "duration_seconds": 29.284728800004814,
+  "timeout_seconds": 300.0,
+  "root_pid": 853748,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 853432,
+      "name": "python.exe",
+      "ppid": 853748
+    },
+    {
+      "pid": 853056,
+      "name": "python.exe",
+      "ppid": 853432
+    },
+    {
+      "pid": 853528,
+      "name": "python.exe",
+      "ppid": 853056
+    },
+    {
+      "pid": 847264,
+      "name": "python.exe",
+      "ppid": 849196
+    },
+    {
+      "pid": 849196,
+      "name": "python.exe",
+      "ppid": 853432
+    },
+    {
+      "pid": 840180,
+      "name": "python.exe",
+      "ppid": 853432
+    },
+    {
+      "pid": 853168,
+      "name": "python.exe",
+      "ppid": 840180
+    },
+    {
+      "pid": 60204,
+      "name": "python.exe",
+      "ppid": 853168
+    },
+    {
+      "pid": 845796,
+      "name": "python.exe",
+      "ppid": 60204
+    },
+    {
+      "pid": 845660,
+      "name": "taskkill.exe",
+      "ppid": 853432
+    },
+    {
+      "pid": 854396,
+      "name": "python.exe",
+      "ppid": 853432
+    },
+    {
+      "pid": 854444,
+      "name": "python.exe",
+      "ppid": 854396
+    },
+    {
+      "pid": 852836,
+      "name": "python.exe",
+      "ppid": 854464
+    },
+    {
+      "pid": 854464,
+      "name": "python.exe",
+      "ppid": 853432
+    },
+    {
+      "pid": 838788,
+      "name": "python.exe",
+      "ppid": 853432
+    },
+    {
+      "pid": 854476,
+      "name": "python.exe",
+      "ppid": 838788
+    },
+    {
+      "pid": 854404,
+      "name": "python.exe",
+      "ppid": 854476
+    },
+    {
+      "pid": 854836,
+      "name": "python.exe",
+      "ppid": 854404
+    },
+    {
+      "pid": 846232,
+      "name": "python.exe",
+      "ppid": 854836
+    },
+    {
+      "pid": 854076,
+      "name": "python.exe",
+      "ppid": 853432
+    }
+  ],
+  "descendants_terminated": [
+    60204,
+    838788,
+    840180,
+    845660,
+    845796,
+    846232,
+    847264,
+    849196,
+    852836,
+    853056,
+    853168,
+    853432,
+    853528,
+    854076,
+    854396,
+    854404,
+    854444,
+    854464,
+    854476,
+    854836
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 53020,
+      "name": "python.exe"
+    },
+    {
+      "pid": 112240,
+      "name": "python.exe"
+    },
+    {
+      "pid": 778276,
+      "name": "python.exe"
+    },
+    {
+      "pid": 793712,
+      "name": "python.exe"
+    },
+    {
+      "pid": 846104,
+      "name": "python.exe"
+    },
+    {
+      "pid": 848776,
+      "name": "python.exe"
+    },
+    {
+      "pid": 848920,
+      "name": "python.exe"
+    },
+    {
+      "pid": 852392,
+      "name": "python.exe"
+    },
+    {
+      "pid": 853096,
+      "name": "python.exe"
+    },
+    {
+      "pid": 853156,
+      "name": "python.exe"
+    },
+    {
+      "pid": 853604,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/webserver/evidence/W3/03-mutation-a.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-W3\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-W3",
+    "repo_head": "dfb9b327b17ce3b13f442f9ccda749bcf382afa1",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}
