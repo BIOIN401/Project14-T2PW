@@ -187,7 +187,13 @@ def run_service_arm(app: Dict[str, Any], root: Path, cassette: llm_replay.Casset
         # As the "Run audit and DB mapping" handler: the Stage-2 payload (after propagate_context_organism),
         # the sidebar's settings, and this root's outputs directory.
         post_kwargs["outputs_dir"] = root / "outputs"
-        artifacts = postpipeline.run_post_pipeline_sbml_artifacts(*post_args, **post_kwargs)
+        try:
+            artifacts = postpipeline.run_post_pipeline_sbml_artifacts(*post_args, **post_kwargs)
+        except Exception as exc:  # noqa: BLE001 -- reported by test (c); the app's handler catches it too
+            return {"seconds": round(time.monotonic() - started, 1), "ok": False,
+                    "error": f"run_post_pipeline_sbml_artifacts raised {type(exc).__name__}: {str(exc)[:300]}",
+                    "canonical_payload_sha256": None, "canonical_payload": None, "xml": b"", "pwml_files": {},
+                    "export_verdict": None, "misses": list(cassette.misses), "refused": list(cassette.refused)}
         # As "Generate PWML": refinement review starts from deepcopy(canonical payload)
         # (initialize_refinement_review_state); the boundary's decision rides along
         # (quarantine_session_state); the reference model comes from this root.
