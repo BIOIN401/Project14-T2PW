@@ -63,28 +63,43 @@ def test_content_and_scope_verdicts_never_retry(status, kind):
     assert not decide(_res(status, kind), attempt=1, wall_used_s=0).retry
 
 
-@pytest.mark.parametrize("res", [
-    _res(STATUS_PASS, ""),                    # a pass that wrote no PWML
-    _res(STATUS_FAIL, ""),                    # failed, nothing classified it
-    _res(STATUS_FAIL, KIND_UNKNOWN),          # the driver's "no evidence either way"
-    _res(STATUS_ERROR, KIND_UNKNOWN)])
-def test_no_pwml_without_a_verdict_retries(res):
-    """NEW ACCEPTANCE TEST (W4, new capability): no pwml_path, no content kind and no
-    release classification is a "no PWML" outcome, and retries."""
-    assert res["pwml_path"] is None
+@pytest.mark.parametrize("kind", ["", KIND_UNKNOWN])
+def test_error_with_no_pwml_and_no_verdict_retries(kind):
+    """NEW ACCEPTANCE TEST (W4, new capability, review F1): the only retryable "no PWML"
+    outcome is a run that broke (status error) with no kind, or unknown, no pwml_path
+    and no release classification."""
+    res = _res(STATUS_ERROR, kind)
+    assert res["pwml_path"] is None and res["release_status"] is None
     d = decide(res, attempt=1, wall_used_s=0)
     assert d.retry and "no PWML" in d.reason
 
 
-def test_no_pwml_rule_does_not_override_a_verdict_or_a_pwml(tmp_path):
-    """NEW ACCEPTANCE TEST (W4, new capability): a pass with a PWML is final, and so is
-    a run that reached a release classification without writing one (diagnostic-only
-    is a verdict, not an outage)."""
-    pwml = tmp_path / "pathway.pwml"
-    assert not decide(_res(STATUS_PASS, "", pwml=pwml), 1, 0).retry
+@pytest.mark.parametrize("res", [
+    _res(STATUS_FAIL, KIND_UNKNOWN),          # strict outcome that may be an unnamed gate refusal
+    _res(STATUS_FAIL, ""),
+    _res(STATUS_PASS, ""),                    # research-mode success without a PWML
+    _res(STATUS_PASS, KIND_UNKNOWN)])
+def test_fail_or_pass_without_pwml_is_final(res):
+    """NEW ACCEPTANCE TEST (W4, new capability, review F1, merge gate 6): a fail/unknown
+    (possibly a lexically unnamed gate refusal) and a pass without a PWML are never
+    retried, so a retry cannot re-roll the LLM until a gate passes."""
+    assert res["pwml_path"] is None
+    assert not decide(res, attempt=1, wall_used_s=0).retry
+
+
+@pytest.mark.parametrize("status,kind", [
+    (STATUS_FAIL, KIND_LLM), (STATUS_ERROR, KIND_CRASH), (STATUS_ERROR, KIND_UNKNOWN),
+    (STATUS_TIMEOUT, KIND_TIMEOUT), (STATUS_FAIL, KIND_NETWORK), (STATUS_ERROR, "")])
+def test_any_result_with_a_release_status_is_final(status, kind):
+    """NEW ACCEPTANCE TEST (W4, new capability, review F1): a result that carries a
+    release_status reached a verdict, whatever its failure_kind."""
     ready = ReleaseStatus(status=RELEASE_READY, pipeline_executed=True, strict_gates_passed=True)
-    assert not decide(_res(STATUS_PASS, "", release=ready), 1, 0).retry
-    assert not decide(_res(STATUS_FAIL, KIND_UNKNOWN, release=ready), 1, 0).retry
+    assert not decide(_res(status, kind, release=ready), 1, 0).retry
+
+
+def test_a_pass_with_a_pwml_is_final(tmp_path):
+    """NEW ACCEPTANCE TEST (W4, new capability): success is final."""
+    assert not decide(_res(STATUS_PASS, "", pwml=tmp_path / "pathway.pwml"), 1, 0).retry
 
 
 def test_stops_after_three_attempts():

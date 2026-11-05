@@ -27,6 +27,7 @@ from t2pw.service.pathway import (
     KIND_NO_REACTIONS,
     KIND_TIMEOUT,
     KIND_UNKNOWN,
+    STATUS_ERROR,
     STATUS_PASS,
     STATUS_SCOPE_CONFLICT,
 )
@@ -62,8 +63,8 @@ RETRY_KINDS = frozenset({KIND_TIMEOUT, KIND_CRASH, KIND_LLM, KIND_NETWORK})
 CONTENT_KINDS = frozenset({KIND_CONTRACT, KIND_AMBIGUOUS, KIND_NO_REACTIONS})
 
 #: "Nothing matched": the driver returns UNKNOWN when it has no evidence either way
-#: (1672); an empty kind means the run recorded none. Neither is a verdict, so they
-#: are retried only through the no-PWML rule.
+#: (1672); an empty kind means the run recorded none. Only an ``error`` status with
+#: one of these is retried (the no-PWML rule); ``fail`` / ``pass`` are final.
 NO_EVIDENCE_KINDS = frozenset({"", KIND_UNKNOWN})
 
 
@@ -84,6 +85,8 @@ def decide(result: Dict[str, Any], attempt: int, wall_used_s: float, *,
     status, kind = result.get("status"), result.get("failure_kind") or ""
     if status == STATUS_SCOPE_CONFLICT:
         return Decision(False, "final: scope_conflict is a verdict")
+    if result.get("release_status") is not None:
+        return Decision(False, "final: the run reached a release classification (a verdict)")
     if kind in CONTENT_KINDS:
         return Decision(False, f"final: {kind} is a content verdict")
     if status == STATUS_PASS and result.get("pwml_path"):
@@ -91,12 +94,13 @@ def decide(result: Dict[str, Any], attempt: int, wall_used_s: float, *,
 
     if kind in RETRY_KINDS:
         why = f"retry: infrastructure failure ({kind})"
-    elif kind in NO_EVIDENCE_KINDS and not result.get("pwml_path") \
-            and result.get("release_status") is None:
-        # "No PWML": a non-verdict outcome, no pwml_path, and the run never reached a
-        # release classification (a run that classified itself made a verdict, even
-        # when that verdict is "diagnostic only").
-        why = "retry: no PWML and no verdict"
+    elif status == STATUS_ERROR and kind in NO_EVIDENCE_KINDS and not result.get("pwml_path"):
+        # "No PWML" (narrowed by review F1): the run BROKE (status error) without
+        # reaching any verdict (release_status is None, checked above). A strict
+        # ``fail`` / unknown can be a gate refusal the lexical ``_classify`` could not
+        # name, and a ``pass`` without a PWML is a research-mode success; retrying
+        # either would re-roll the LLM until a gate passes (merge gate 6).
+        why = "retry: errored with no PWML and no verdict"
     else:
         return Decision(False, f"final: {kind or 'no kind'} is not retryable")
 
