@@ -1,0 +1,36 @@
+T2PW: C:\t\ws-int\src\t2pw\__init__.py
+........................................................................ [ 14%]
+........................................................................ [ 28%]
+........................................................................ [ 42%]
+........................................................................ [ 56%]
+........................................................................ [ 70%]
+........................................................................ [ 84%]
+........................................................................ [ 98%]
+.......                                                                  [100%]
+511 passed in 67.52s (0:01:07)
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-int\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 1968937691091842c86e2ef953ab6385599b9846  [git, worktree dirty=False]
+label                   : W8-15-postmerge-smoke
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-int --pin-verdict C:/t/wsint-tr/reports-W84/15-pin.json -q --basetemp=C:/t/wsint-tr/w84-base/s15 tests/test_reference_repair.py tests/test_strict_quarantine.py tests/test_strict_quarantine_contract_alignment.py tests/test_strict_quarantine_locks_and_scope.py tests/test_strict_quarantine_versioning.py tests/test_empty_extraction_payload.py tests/test_bench_goldset_and_semantic.py tests/test_bench_acquisition_and_artifacts.py tests/test_bench_controls.py tests/test_completeness_audit.py tests/test_batch_driver.py tests/test_stage3_gate_report_lifecycle.py tests/test_rag_admission_production_path.py tests/test_rag_gap_admission.py tests/test_rag_triage_orchestration.py tests/test_rag_provenance_gates.py tests/test_pipeline_reaction_rag_provenance.py tests/test_research_mode_orchestration.py tests/test_map_ids_name_gate.py tests/test_db_candidate_species_evidence.py tests/test_c102_coverage_denominator.py tests/test_c106_mutation_harness_executable.py
+cwd                     : C:\t\ws-int
+root PID / process group: 1015468 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 69.80 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 10  1015480:python.exe, 1015344:python.exe, 1015368:python.exe, 1015520:python.exe, 1015544:python.exe, 1015576:python.exe, 1015292:python.exe, 1008464:python.exe, 1015596:python.exe, 1014704:git.exe
+descendants terminated  : 10  1008464, 1014704, 1015292, 1015344, 1015368, 1015480, 1015520, 1015544, 1015576, 1015596
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/wsint-tr/reports-W84/15-w8-postmerge-smoke.json
+json report written     : True
+pre-existing (reported, NEVER killed): 5
+================================================
