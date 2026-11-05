@@ -2,111 +2,111 @@
 
 Project instructions for T2PW (Text-to-PathWhiz) live in **`AGENT_INSTRUCTIONS.md`**
 (pipeline architecture, key source files, stage contracts, conventions). Read that first
-for anything outside the sprint below.
+for anything about how the pipeline itself works.
 
 ---
 
-## PWML Recovery Sprint
+## Active track: T2PW Web Server (NAR Web Server Issue)
 
-An active multi-agent sprint runs on `sprint/pwml-recovery`, cut from `research-mode`
-@ `9e1b9abe7ba8a1a228558fd03ca6c394cc22c31e`.
+Goal: a stand-alone, public T2PW web server, live and working for the NAR Web Server
+Issue letter of intent (**Dec 15, 2026**), and tested ready for the paper (**~Feb 15, 2027**).
 
-**Read before doing any sprint work:**
+Integration branch: **`webserver/refactor`**, cut from `main`. Task branches are
+`ws/<TASK-ID>-<slug>` and merge into `webserver/refactor`. Only the product owner merges
+`webserver/refactor` into `main`.
+
+**Read before doing any web-server work:**
 
 | Document | Why |
 |---|---|
-| [`docs/pwml_recovery_sprint/PRODUCT_CONTRACT.md`](docs/pwml_recovery_sprint/PRODUCT_CONTRACT.md) | What "correct" means. **Outranks any test, benchmark result, or inference from the code.** |
-| [`docs/pwml_recovery_sprint/MASTER_PLAN.md`](docs/pwml_recovery_sprint/MASTER_PLAN.md) | Waves, dependencies, branch register, file-ownership map, standing traps |
-| [`docs/pwml_recovery_sprint/LEDGER.md`](docs/pwml_recovery_sprint/LEDGER.md) | Live task state. The single source of truth for what is dispatched, merged, blocked |
-| [`docs/pwml_recovery_sprint/DECISIONS.md`](docs/pwml_recovery_sprint/DECISIONS.md) | Locked product decisions. Append-only, product owner only |
-| [`docs/pwml_recovery_sprint/TEST_MATRIX.md`](docs/pwml_recovery_sprint/TEST_MATRIX.md) | Test chunks, runtimes, per-branch obligations, benchmark milestones |
+| [`docs/webserver/PLAN.md`](docs/webserver/PLAN.md) | Scope, architecture, the refactor steps (R1–R6), the web workstreams (W1–W9), timeline |
+| [`docs/webserver/DECISIONS.md`](docs/webserver/DECISIONS.md) | Product decisions already made. Product owner only; never append yourself |
+| [`docs/webserver/LEDGER.md`](docs/webserver/LEDGER.md) | Live task state: dispatched, in review, merged, blocked. Single source of truth |
+| [`docs/webserver/ORCHESTRATOR.md`](docs/webserver/ORCHESTRATOR.md) | How the orchestrator runs the track, including model and effort routing |
+| [`docs/pwml_recovery_sprint/PRODUCT_CONTRACT.md`](docs/pwml_recovery_sprint/PRODUCT_CONTRACT.md) | Still the definition of biological correctness. Outranks any test or benchmark |
 
 ### Roles
 
-The main Claude session is the **Lead Orchestrator and Integration Authority**. It
-dispatches, sequences, routes reviews, and merges. **It does not implement coding patches
-and never approves its own work.**
+The main session is the **Orchestrator**. It plans, dispatches, routes reviews and merges.
+**It writes no code and never approves its own work.** The only files it edits are
+`docs/webserver/LEDGER.md` and task RESULT docs.
 
-Subagents: `pwml-implementer` (isolated worktree, one branch) · `pwml-reviewer` (no edit
-tools) · `pwml-test-runner` (fixes nothing) · `pwml-bio-auditor` (read-only adjudication).
+Subagents (`.claude/agents/`):
 
-### Permanent merge rules
+| Agent | Does | Default model / effort |
+|---|---|---|
+| `ws-scout` | Read-only code mapping: find symbols, callers, coupling. Returns short summaries | haiku / low |
+| `ws-implementer` | One task, one branch, isolated worktree, inside a declared file boundary | sonnet / medium |
+| `ws-ui-builder` | Front-end templates, CSS and JS for the public site | sonnet / high |
+| `ws-reviewer` | Independent review of the actual diff. No edit tools | opus / high |
+| `ws-test-runner` | Runs tests through the bounded wrapper, reports numbers. Fixes nothing | haiku / medium |
 
-No patch merges unless **all** of these hold:
+The orchestrator **overrides model and effort per task** using the routing table in
+`docs/webserver/ORCHESTRATOR.md` § 3.
 
-1. Its dependency is already merged.
-2. Its diff stays within the assigned file/function boundary.
-3. Focused tests pass.
-4. Existing affected tests pass — or a pinned baseline moved deliberately, with an exact
-   documented delta.
-5. An independent reviewer approved the **actual diff**, not the report.
-6. It does not weaken a biological gate to increase PWML production.
-7. It preserves incomplete-but-correct pathways as `review_required` rather than dropping
-   them.
-8. It does not allow exporters to repair biology after the canonical graph is frozen.
-9. **G9.** A claimed correction or preservation of pre-existing observable behaviour
-   carries a proof that **fails behaviourally on the base SHA** and passes at the tip;
-   **symbol absence is not proof**. A genuinely new capability or module instead carries an
-   **explicitly labelled new acceptance test** and needs no fabricated base failure.
-   Mislabelling a regression as new functionality is a reject.
-10. The integration smoke suite (**511** tests, ~45 s) passes after the merge.
-    465 was stale from `C-054`; `C-067` moved it to 473, `C-106` to 503, `ORCH-723` to
-    508, and `ORCH-769c` (`ec800370`) to 511 (3 tests in `test_batch_driver.py`;
-    `TEST_MATRIX.md` "SMOKE moves 508 → 511"). Measured 511 at `ORCH-797` and `ORCH-799`.
-11. **Test-process lifecycle holds.** Every test, benchmark, pipeline leg and LLM-backed
-    command ran through the bounded foreground wrapper, and the cleanup report shows
-    **zero surviving owned processes**. A run with survivors is an *infrastructure
-    failure*, not a test result. See `TEST_MATRIX.md` § 0.
+### Merge gates (web-server track)
 
-**A benchmark failure does not by itself justify a code change.** Classify it first as
-`product_contract_violation`, `gold_data_defect`, or `policy_disagreement`, citing the
-gold `relevance_note` / `export_rationale`. Only the first justifies code.
+No task branch merges into `webserver/refactor` unless **all** of these hold:
 
-### Logging is not optional
+1. Its dependencies are merged.
+2. Its diff stays inside the task's declared file boundary.
+3. Its focused tests pass, run through the bounded wrapper with **zero surviving processes**.
+4. The SMOKE suite (**511** tests, ~45 s, command in `docs/pwml_recovery_sprint/TEST_MATRIX.md`
+   "Commands") passes on the merge result.
+5. **Refactor tasks (R-series) change no behaviour.** The golden-seam tests pass unchanged:
+   `test_batch_driver_seam_golden.py`, `test_c011_freeze_seam_golden_equivalence.py`,
+   `test_streamlit_stage8_export_contract.py`, `test_streamlit_quarantine_boundary.py`.
+   From R3 on, the app-vs-`run_pathway` equivalence test also passes. A test that had to be
+   edited to pass is a reject unless the reviewer confirms the edit is only an import path.
+6. **No biology changes.** Logic under `src/t2pw/pipeline/`, `pwml/`, `mapping/`, `rag/`,
+   `curation/` and `llm/prompts/` is not changed by this track. Moving code out of
+   `streamlit_app.py` is allowed; changing what it does is not. If a web feature needs
+   a biology change, stop and record it as an open question for the product owner.
+7. An independent `ws-reviewer` approved the **actual diff**, not the implementer's report.
+8. A RESULT doc exists (`docs/webserver/results/<TASK-ID>.md`) and a LEDGER row was appended.
 
-**Every piece of work is written into its doc before the task is reported done.** Work that
-exists only in a chat transcript is lost: the transcript is not searchable by the next
-session, is not reviewable, and cannot be cited in a merge gate. A task reported complete
-with nothing written down is not complete.
+### Standing rules (carried over from the PWML recovery sprint, still binding)
 
-| what you did | where it goes |
+- **Every test, benchmark and pipeline command runs through the bounded wrapper**
+  `docs/pwml_recovery_sprint/evidence/bounded_run.py`. No detached processes, no `nohup`.
+  Cleanup targets only PIDs the job created; `taskkill /IM python.exe` and `pkill python`
+  are forbidden. One heavy job at a time; never `pytest -n auto`.
+  Full policy: `docs/pwml_recovery_sprint/TEST_MATRIX.md` § 0.
+- **`--basetemp=<dir>` on every pytest run, and create its parent directory first.**
+  Without it, 83 tests error and you will report a false regression. Never run the full
+  suite unchunked (~16 GB).
+- **`T2PW_OFFLINE_CURATOR=1`** on any deterministic AppTest run (see TEST_MATRIX "Commands").
+- **Never commit a cache change.** `data/enrichment_cache.json` is 39 MB and tracked.
+- **Never commit secrets.** `.env` is gitignored and holds the OpenRouter key and the
+  PathBank MySQL credentials. The server gets its own read-only DB user.
+- **Do not rebuild what exists.** `docs/pwml_recovery_sprint/MASTER_PLAN.md` § 2 lists
+  what is already implemented: fetch, RAG, PDF parsing, PWML export, rendering, batch runner.
+- Identical runs give different Stage-1 results at temperature 0. Re-run before calling
+  a single run a regression.
+
+### Logging
+
+Work that only exists in a chat transcript is lost. Before a task is reported done:
+
+| what | where |
 |---|---|
-| a task, start to finish | `docs/pwml_recovery_sprint/ORCH-<id>-RESULT.md` — one per task; the full record, including what failed and why |
-| its live state: dispatched, merged, blocked | a row in `LEDGER.md` (append-only) |
-| a defect, a measurement, a wrong theory you ruled out | a numbered finding in the task's RESULT doc, and `FINDINGS.md` when it outlives the task |
-| a product decision | `DECISIONS.md` — **product owner only.** Never append to it yourself; record the open question in the RESULT doc instead |
-| a test or benchmark obligation that changed | `TEST_MATRIX.md`, in place, with the exact delta |
-| a bounded-run report, proof or verdict | `evidence/g11/<TASK-ID>/` — committed, never pasted (gate G11 rule 9) |
-| evaluation artifacts: gold, variants, run outputs | under `docs/evaluation_v2/`, with a README in the directory |
+| the task record, including what failed and dead ends | `docs/webserver/results/<TASK-ID>.md` |
+| live state | one appended row in `docs/webserver/LEDGER.md` |
+| test reports, proofs, verdicts | `docs/webserver/evidence/<TASK-ID>/`, committed, never pasted |
+| an open product question | the RESULT doc, under **Open questions**, with options and costs |
 
-Three rules about what the entry has to contain:
+Docs-only commits are separate from code commits. Check `git status --porcelain` afterwards.
 
-1. **Record the failures and the dead ends, not just the result.** A theory you tested and
-   disproved is worth more than a conclusion, because it stops the next session re-running
-   it. If you were wrong, write down what you believed and what disproved it.
-2. **Cite the artifact, never the claim.** A number in a doc names the file it came from —
-   a wrapper report, a proof, a payload path. "Tests pass" with no report path is not a
-   record, and under G11 it is not evidence either.
-3. **State what is NOT settled.** Open questions go in the RESULT doc under a heading the
-   product owner can act on, with the options and what each costs. Silence reads as
-   agreement.
+---
 
-Docs-only commits are made separately from code, and `git status --porcelain` is checked
-afterwards to confirm nothing else moved.
+## Archived: PWML Recovery Sprint (closed 2026-11-05)
 
-### Sprint-wide constraints
+The sprint ran on `sprint/pwml-recovery` and is fully merged into `main` (`06a0b8c0`).
+Its documents stay in `docs/pwml_recovery_sprint/` as reference: `PRODUCT_CONTRACT.md`
+(still binding for biology), `TEST_MATRIX.md` (still binding for test discipline),
+`FINDINGS.md`, `DECISIONS.md` and `LEDGER.md` (history). Its `pwml-*` subagents remain
+available for biology work, which is outside the web-server track.
 
-- **Every test, benchmark and pipeline command runs through the bounded foreground
-  wrapper.** No detached processes, no `nohup`, no untracked background jobs. Cleanup
-  targets only PIDs the job created — `taskkill /IM python.exe` and `pkill python` are
-  forbidden. One heavy job at a time; never `pytest -n auto`. `TEST_MATRIX.md` § 0.
-- **`--basetemp=<dir>` on every pytest invocation.** Without it 83 tests error with
-  `PermissionError` and you will report a false regression. Never run the full suite
-  unchunked (~16 GB).
-- **Never commit a cache modification.** `data/enrichment_cache.json` is 39 MB and
-  tracked; `.git` is already 158 MB.
-- **Do not rebuild what exists.** See `MASTER_PLAN.md` § 2 — the UniProt accession fetch,
-  the provenance carrier, alias traversal, the RAG gap detector, the RAG admission gate
-  and several others are already implemented and tested.
-- Identical legs give materially different Stage-1 draws at temperature 0. Re-run a leg
-  before calling a single-leg change a regression.
+Left open at close: `ORCH-804` (`orch804/ir-empty-state`) is **held, not merged** after a
+reviewer REJECT. Its record is on that branch (`ORCH-804-RESULT.md` § 9) and its last
+`LEDGER.md` row is on `main`.
