@@ -16,6 +16,7 @@ import subprocess
 import sys
 import tempfile
 import time
+from dataclasses import fields
 from pathlib import Path
 
 import pytest
@@ -25,6 +26,7 @@ from t2pw.batch.driver import RunOutcome
 from t2pw.batch.fetch import BatchPaper
 from t2pw.pipeline.release_status import (
     DIAGNOSTIC_ONLY,
+    DISPOSITION_EXTRACTED_NOT_SERIALIZED,
     RELEASE_READY,
     ReleaseStatus,
     classify_release_status,
@@ -277,8 +279,15 @@ def test_a_passed_deadline_is_a_retryable_timeout_without_a_run(tmp_path, fake):
 
 
 def test_strict_pass_maps_every_field(tmp_path, fake):
-    record = classify_release_status(strict_gates_passed=True,
-                                     semantic_check_evaluability=[("c", True, "")]).to_dict()
+    # Every ReleaseStatus field set away from its default, so a dropped field shows.
+    record = ReleaseStatus(
+        status=RELEASE_READY, pipeline_executed=True, strict_gates_passed=True,
+        semantic_evaluation="failed", semantic_not_evaluated_reason="why",
+        semantic_failed_checks=("k",), semantic_check_evaluability=(("c", True, ""),),
+        strict_acceptance_eligible=True, completeness=0.9, missing_anchors=("m",),
+        retrieval_attempts=2, expansion_blocked_reason="e", coverage_evaluated=True,
+        reasons=("r",), disposition=DISPOSITION_EXTRACTED_NOT_SERIALIZED).to_dict()
+    assert len(record) == len(fields(ReleaseStatus))
     frozen = {**record, "applied": True, "review_reasons": [], "retrieval_attempts_source": "x"}
     fake.outcome = _pass_outcome(frozen)
     res = br.run_pathway(_req(tmp_path, texts=("t",)))
@@ -307,8 +316,7 @@ def test_strict_pass_maps_every_field(tmp_path, fake):
     json.dumps(d)  # the worker's result.json
     assert not decide(d, 1, 0.0).retry
     item = {"state": "finished", "request": PathwayRequest(), "result": d}
-    if record["status"] == RELEASE_READY:
-        assert curator_queue.qualify({"consent": 1}, item) == (True, "ok")
+    assert curator_queue.qualify({"consent": 1}, item) == (True, "ok")
 
 
 def test_review_required_pwml_is_mapped_and_never_queued(tmp_path, fake):
