@@ -14,7 +14,7 @@ import time
 from pathlib import Path
 
 LOG = Path("C:/t/wsR25tmp/gate.log")
-MINE = ("ws-r25", "wsr25tmp")
+MINE = {"c:/t/ws-r25", "c:/t/wsr25tmp"}
 
 
 def check() -> bool:
@@ -25,9 +25,11 @@ def check() -> bool:
     others = []
     for line in out.splitlines():
         low = line.lower().replace("\\", "/")
-        if ("pytest" in low or "bounded_run" in low) and not any(m in low for m in MINE):
-            trees = sorted(set(re.findall(r"c:/t/[\w.-]+", low))) or ["(no worktree path)"]
-            others.append(f"{line.split(chr(9))[0]} {' '.join(trees)}")
+        if "pytest" in low or "bounded_run" in low:
+            trees = sorted(set(re.findall(r"c:/t/[\w.-]+", low)))
+            # Exact worktree names: C:/t/ws-R25-trial is NOT this worktree (fix: a substring test missed it).
+            if not trees or not set(trees) <= MINE:
+                others.append(f"{line.split(chr(9))[0]} {' '.join(trees) or '(no worktree path)'}")
     holder = Path("C:/t/heavylock/holder.json")
     lock = None
     if holder.exists():
