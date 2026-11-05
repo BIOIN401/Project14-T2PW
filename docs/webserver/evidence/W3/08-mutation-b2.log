@@ -1,0 +1,68 @@
+T2PW: C:\t\ws-W3\src\t2pw\__init__.py
+........F..                                                              [100%]
+================================== FAILURES ===================================
+________ test_killed_worker_takes_its_child_tree_and_restart_recovers _________
+
+tmp_path = WindowsPath('C:/t/wsW3tmp/m8/test_killed_worker_takes_its_c0')
+child_env = None
+
+    def test_killed_worker_takes_its_child_tree_and_restart_recovers(tmp_path, child_env):
+        """NEW ACCEPTANCE TEST (W3, new capability): a worker killed mid-run leaves no
+        child or grandchild behind, and the next worker start finishes the orphaned
+        ``running`` item as error/crash without re-running it."""
+        db, work = tmp_path / "jobs.sqlite", tmp_path / "work"
+        s = JobStore(db)
+        s.submit([_req("a"), _req("b")])
+        s.close()
+        proc = subprocess.Popen([sys.executable, "-m", "t2pw.web.worker", "--db", str(db),
+                                 "--work-root", str(work), "--run-fn", f"{MOD}:fake_hang",
+                                 "--poll", "0.1"])
+        pids_file = work / "item-1" / "attempt-1" / "pids.txt"
+        pids = []
+        try:
+            end = time.time() + 30
+            while not pids_file.exists() and time.time() < end and proc.poll() is None:
+                time.sleep(0.1)
+            time.sleep(0.2)
+            pids = [int(p) for p in pids_file.read_text().split()]
+            probe = JobStore(db)
+            pids.append(probe.item(1)["attempts"][0]["child_pid"])
+            probe.close()
+            proc.kill()  # the worker only: simulates a crash
+            proc.wait(timeout=30)
+>           assert wait_dead(pids) == []
+E           assert [900924, 918764, 916204] == []
+E             
+E             Left contains 3 more items, first extra item: 900924
+E             Use -v to get more diff
+
+tests\test_web_worker.py:301: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_web_worker.py::test_killed_worker_takes_its_child_tree_and_restart_recovers
+1 failed, 10 passed in 51.13s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-W3\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 6a5f1395b85bd6b6c18c14d9734d6e5a7bf83041  [git, worktree dirty=True]
+label                   : w3-mutation-b2
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-W3 --pin-verdict docs/webserver/evidence/W3/pin/08-mutation-b2.pin.json -q --basetemp=C:/t/wsW3tmp/m8 tests/test_web_worker.py
+cwd                     : C:\t\ws-W3
+root PID / process group: 918124 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 400 s
+duration                : 54.37 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 25  919652:python.exe, 905148:python.exe, 920072:python.exe, 920144:python.exe, 920108:python.exe, 916536:python.exe, 920100:python.exe, 920844:python.exe, 920876:python.exe, 921192:python.exe, 921208:python.exe, 917300:python.exe, 919296:python.exe, 921356:python.exe, 921508:python.exe, 919120:python.exe, 921464:python.exe, 448204:python.exe, 916204:python.exe, 920548:python.exe, 900924:python.exe, 917524:taskkill.exe, 920600:taskkill.exe, 915148:python.exe, 922348:python.exe
+descendants terminated  : 25  448204, 900924, 905148, 915148, 916204, 916536, 917300, 917524, 919120, 919296, 919652, 920072, 920100, 920108, 920144, 920548, 920600, 920844, 920876, 921192, 921208, 921356, 921464, 921508, 922348
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : docs/webserver/evidence/W3/08-mutation-b2.json
+json report written     : True
+pre-existing (reported, NEVER killed): 9
+================================================
