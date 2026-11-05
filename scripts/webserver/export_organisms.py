@@ -84,7 +84,16 @@ def render(entries: List[Dict[str, Any]]) -> str:
         "count": len(entries),
         "organisms": entries,
     }
-    return json.dumps(doc, ensure_ascii=False, indent=1) + "\n"
+    head = json.dumps({k: v for k, v in doc.items() if k != "organisms"}, ensure_ascii=False, indent=1)
+    # one compact object per species per line: a re-export diffs one line per species
+    lines = ",\n".join("  " + json.dumps(e, ensure_ascii=False, separators=(",", ":")) for e in entries)
+    return head[:-2] + ',\n "organisms": [\n' + lines + "\n ]\n}\n"
+
+
+def _safe_error(exc: BaseException) -> str:
+    """Exception class name plus an integer errno only; the text can echo host/user."""
+    errno = exc.args[0] if exc.args and isinstance(exc.args[0], int) else None
+    return type(exc).__name__ + (f" (errno {errno})" if errno is not None else "")
 
 
 def main(argv: Optional[List[str]] = None) -> int:
@@ -96,15 +105,12 @@ def main(argv: Optional[List[str]] = None) -> int:
         from dotenv import load_dotenv
 
         load_dotenv(dotenv_path=args.env_file, override=False)
-    from t2pw.bench.eval_v2.pathbank_gold import PathBankExtractError, connect  # repo's own helper
+    from t2pw.bench.eval_v2.pathbank_gold import connect  # repo's own helper
 
     try:
         conn = connect()
-    except PathBankExtractError as exc:
-        print(f"export_organisms: BLOCKED: {exc}", file=sys.stderr)
-        return 2
-    except Exception as exc:  # noqa: BLE001 - connection errors carry host/user, never the password
-        print(f"export_organisms: BLOCKED: {type(exc).__name__}: {exc}", file=sys.stderr)
+    except Exception as exc:  # noqa: BLE001 - pymysql/config texts carry host and user: never echo them
+        print(f"export_organisms: BLOCKED: {_safe_error(exc)}", file=sys.stderr)
         return 2
     try:
         entries = fetch_entries(conn.cursor())  # SELECT only

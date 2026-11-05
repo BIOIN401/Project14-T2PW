@@ -96,3 +96,33 @@ def test_export_logic_with_fake_cursor():
     assert by_id[3]["taxonomy_id"] == "0123" and by_id[7]["common_name"] is None
     assert by_id[1]["has_pathways"] and by_id[7]["has_pathways"] and not by_id[3]["has_pathways"]
     assert export_organisms.render(entries) == export_organisms.render(export_organisms.fetch_entries(FakeCursor(rows[::-1], [7, 1])))
+
+
+@pytest.mark.parametrize("exc", [
+    Exception("Access denied for user 'fakeuser'@'fakehost.example.org'"),
+    RuntimeError(1045, "Access denied for user 'fakeuser'@'fakehost.example.org'"),
+    __import__("t2pw.bench.eval_v2.pathbank_gold", fromlist=["x"]).PathBankExtractError("host fakehost.example.org user fakeuser"),
+])
+def test_connect_failure_never_echoes_host_or_user(monkeypatch, capsys, exc):
+    import t2pw.bench.eval_v2.pathbank_gold as gold
+
+    def boom():
+        raise exc
+
+    monkeypatch.setattr(gold, "connect", boom)
+    assert export_organisms.main(["--out", "unused.json"]) == 2
+    err = capsys.readouterr().err
+    assert "BLOCKED" in err and type(exc).__name__ in err
+    assert "fakehost" not in err and "fakeuser" not in err
+    assert ("errno 1045" in err) == (isinstance(exc.args[0], int))
+
+
+def test_render_is_one_compact_line_per_species_and_matches_committed_file():
+    text = (ROOT / "data" / "webserver" / "organisms.json").read_text(encoding="utf-8")
+    doc = json.loads(text)
+    lines = text.splitlines()
+    start = lines.index(' "organisms": [')
+    body = lines[start + 1:-2]
+    assert len(body) == doc["count"] == 4018 and lines[-2:] == [" ]", "}"]
+    assert [json.loads(l.rstrip(",")) for l in body] == doc["organisms"]  # each line is one whole species
+    assert export_organisms.render(doc["organisms"]) == text.replace("\r\n", "\n")
