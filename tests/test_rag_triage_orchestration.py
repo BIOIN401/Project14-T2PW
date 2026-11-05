@@ -191,7 +191,8 @@ def test_maybe_run_rag_returns_none_and_skips_chain_when_disabled(monkeypatch) -
 
     monkeypatch.setattr(acquire, "search_candidates", _boom)
     # Force the master switch off regardless of the ambient environment.
-    monkeypatch.setattr(app, "rag_config", lambda *a, **k: {"enabled": False})
+    # R2: maybe_run_rag moved; patch rag_config where the function reads it.
+    monkeypatch.setitem(app.maybe_run_rag.__globals__, "rag_config", lambda *a, **k: {"enabled": False})
 
     result = app.maybe_run_rag(
         pathway_context={"scope_clarity_score": 0.1},  # would auto-trigger IF enabled
@@ -212,7 +213,7 @@ def test_maybe_run_rag_returns_none_when_triage_declines(monkeypatch) -> None:
         raise AssertionError("acquire must not run when triage declines")
 
     monkeypatch.setattr(acquire, "search_candidates", _boom)
-    monkeypatch.setattr(app, "rag_config", lambda *a, **k: {"enabled": True})
+    monkeypatch.setitem(app.maybe_run_rag.__globals__, "rag_config", lambda *a, **k: {"enabled": True})  # R2
 
     result = app.maybe_run_rag(
         pathway_context={"scope_clarity_score": 0.95},  # clear scope, no flag
@@ -233,7 +234,7 @@ def test_maybe_run_rag_enters_chain_when_enabled_and_flagged(monkeypatch) -> Non
         raise RuntimeError("network down")  # exercised, then degraded to a result
 
     monkeypatch.setattr(acquire, "search_candidates", _boom)
-    monkeypatch.setattr(app, "rag_config", lambda *a, **k: {"enabled": True})
+    monkeypatch.setitem(app.maybe_run_rag.__globals__, "rag_config", lambda *a, **k: {"enabled": True})  # R2
 
     result = app.maybe_run_rag(
         pathway_context={"pathway_name": "novel pathway"},

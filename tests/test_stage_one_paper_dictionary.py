@@ -811,7 +811,9 @@ def test_only_the_stage6_call_sites_pass_the_keyword() -> None:
     for rel in ("src/t2pw/app/streamlit_app.py", "src/t2pw/pipeline/pipeline.py", "src/t2pw/curation/interactive_curator.py",
                 "src/t2pw/mapping/map_ids.py"):
         # R1: two of the app's three map_payload calls moved to the service module.
-        paths = [rel] + (["src/t2pw/service/postpipeline.py"] if rel == "src/t2pw/app/streamlit_app.py" else [])
+        # R2: the third (the RAG round mapping adapter) moved to rag_orchestration.py.
+        paths = [rel] + (["src/t2pw/service/postpipeline.py", "src/t2pw/service/rag_orchestration.py"]
+                         if rel == "src/t2pw/app/streamlit_app.py" else [])
         for node in (n for p in paths for n in ast.walk(ast.parse((ROOT / p).read_text(encoding="utf-8")))):
             if isinstance(node, ast.Call) and getattr(node.func, "id", getattr(node.func, "attr", "")) in ("map_payload", "run_mapping"):
                 kw = {k.arg: ast.unparse(k.value) for k in node.keywords}
