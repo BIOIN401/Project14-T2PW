@@ -1,0 +1,304 @@
+{
+  "label": "w7-focused-02-fix1",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-W7",
+    "--pin-verdict",
+    "docs/webserver/evidence/W7/pin/02-focused-fix1.pin.json",
+    "-q",
+    "--basetemp=C:/t/wsW7tmp/r2",
+    "tests/test_web_curator_queue.py",
+    "tests/test_web_postrun.py",
+    "tests/test_web_jobs.py",
+    "tests/test_web_worker.py",
+    "tests/test_web_retry.py",
+    "tests/test_web_notify.py"
+  ],
+  "cwd": "C:\\t\\ws-W7",
+  "started_at": "2026-11-05T03:39:21+00:00",
+  "finished_at": "2026-11-05T03:40:11+00:00",
+  "duration_seconds": 48.78650849999394,
+  "timeout_seconds": 580.0,
+  "root_pid": 1057564,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 1058412,
+      "name": "python.exe",
+      "ppid": 1057564
+    },
+    {
+      "pid": 1043968,
+      "name": "python.exe",
+      "ppid": 1058056
+    },
+    {
+      "pid": 1058056,
+      "name": "python.exe",
+      "ppid": 1058412
+    },
+    {
+      "pid": 1058580,
+      "name": "python.exe",
+      "ppid": 1058412
+    },
+    {
+      "pid": 1058228,
+      "name": "python.exe",
+      "ppid": 1058580
+    },
+    {
+      "pid": 1046272,
+      "name": "python.exe",
+      "ppid": 1058544
+    },
+    {
+      "pid": 1058544,
+      "name": "python.exe",
+      "ppid": 1058412
+    },
+    {
+      "pid": 1059200,
+      "name": "python.exe",
+      "ppid": 1058412
+    },
+    {
+      "pid": 1049588,
+      "name": "python.exe",
+      "ppid": 1059200
+    },
+    {
+      "pid": 1059196,
+      "name": "python.exe",
+      "ppid": 1058412
+    },
+    {
+      "pid": 1059336,
+      "name": "python.exe",
+      "ppid": 1059196
+    },
+    {
+      "pid": 1059032,
+      "name": "python.exe",
+      "ppid": 1059336
+    },
+    {
+      "pid": 1059952,
+      "name": "python.exe",
+      "ppid": 1059032
+    },
+    {
+      "pid": 1058160,
+      "name": "python.exe",
+      "ppid": 1058412
+    },
+    {
+      "pid": 1058352,
+      "name": "python.exe",
+      "ppid": 1058160
+    },
+    {
+      "pid": 1060128,
+      "name": "python.exe",
+      "ppid": 1058412
+    },
+    {
+      "pid": 1060048,
+      "name": "python.exe",
+      "ppid": 1060128
+    },
+    {
+      "pid": 1058008,
+      "name": "python.exe",
+      "ppid": 1058412
+    },
+    {
+      "pid": 1058844,
+      "name": "python.exe",
+      "ppid": 1058008
+    },
+    {
+      "pid": 1047844,
+      "name": "python.exe",
+      "ppid": 1055556
+    },
+    {
+      "pid": 1055556,
+      "name": "python.exe",
+      "ppid": 1058844
+    },
+    {
+      "pid": 1060076,
+      "name": "python.exe",
+      "ppid": 1058412
+    },
+    {
+      "pid": 1060364,
+      "name": "python.exe",
+      "ppid": 1060076
+    },
+    {
+      "pid": 1058552,
+      "name": "python.exe",
+      "ppid": 1059500
+    },
+    {
+      "pid": 1059500,
+      "name": "python.exe",
+      "ppid": 1058412
+    },
+    {
+      "pid": 1047044,
+      "name": "python.exe",
+      "ppid": 1058412
+    },
+    {
+      "pid": 1059348,
+      "name": "python.exe",
+      "ppid": 1047044
+    },
+    {
+      "pid": 1053980,
+      "name": "python.exe",
+      "ppid": 1058412
+    },
+    {
+      "pid": 1059080,
+      "name": "python.exe",
+      "ppid": 1053980
+    },
+    {
+      "pid": 1059908,
+      "name": "python.exe",
+      "ppid": 1058412
+    },
+    {
+      "pid": 1055364,
+      "name": "python.exe",
+      "ppid": 1059908
+    },
+    {
+      "pid": 1056128,
+      "name": "python.exe",
+      "ppid": 1058412
+    },
+    {
+      "pid": 1058128,
+      "name": "python.exe",
+      "ppid": 1056128
+    },
+    {
+      "pid": 1053868,
+      "name": "python.exe",
+      "ppid": 1058412
+    },
+    {
+      "pid": 1060604,
+      "name": "python.exe",
+      "ppid": 1053868
+    },
+    {
+      "pid": 1060836,
+      "name": "python.exe",
+      "ppid": 1058412
+    },
+    {
+      "pid": 1056956,
+      "name": "python.exe",
+      "ppid": 1060836
+    }
+  ],
+  "descendants_terminated": [
+    1043968,
+    1046272,
+    1047044,
+    1047844,
+    1049588,
+    1053868,
+    1053980,
+    1055364,
+    1055556,
+    1056128,
+    1056956,
+    1058008,
+    1058056,
+    1058128,
+    1058160,
+    1058228,
+    1058352,
+    1058412,
+    1058544,
+    1058552,
+    1058580,
+    1058844,
+    1059032,
+    1059080,
+    1059196,
+    1059200,
+    1059336,
+    1059348,
+    1059500,
+    1059908,
+    1059952,
+    1060048,
+    1060076,
+    1060128,
+    1060364,
+    1060604,
+    1060836
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 112240,
+      "name": "python.exe"
+    },
+    {
+      "pid": 912348,
+      "name": "python.exe"
+    },
+    {
+      "pid": 925004,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1058016,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1058112,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/webserver/evidence/W7/02-focused-fix1.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-W7\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-W7",
+    "repo_head": "5093ad1e8b24388015bc9b1fbc63935229b99eba",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}
