@@ -4,26 +4,33 @@ Lifecycle of one item:
 
 1. :meth:`JobStore.claim_next` moves the oldest queued item to ``running`` and sets
    its absolute ``deadline`` (now + ``timeout_s``) at dequeue.
-2. The worker starts ``python -m t2pw.web.worker --child <run_fn> <result.json>`` in
-   its own process tree: a Windows Job Object (kill-on-close), or a POSIX session /
-   process group. The request goes to the child on stdin *after* the child is
-   contained, so the run cannot start before the tree is owned.
+2. The worker writes the request to ``<attempt dir>/request.json`` (``out_dir`` is
+   always ``<attempt dir>/out``: the worker owns where an untrusted job writes) and
+   starts ``python -m t2pw.web.worker --child <run_fn> <request.json> <result.json>``
+   already contained:
+
+   * Windows: created SUSPENDED, assigned to a new kill-on-close Job Object, and only
+     then resumed, so no process of the run (a venv launcher's real interpreter
+     included) can exist outside the job. If the job cannot be made, the child is
+     killed before it ever runs and the item is ``error`` / ``crash``.
+   * POSIX: ``start_new_session``, so the child leads a new process group from fork.
+
 3. The child calls ``run_fn(request)`` (default ``t2pw.service.pathway:run_pathway``)
    and writes :func:`result_to_dict` to ``result.json``.
-4. At the deadline the worker kills the child's tree: ``timeout`` / ``timeout``. A
-   child that exits without a result is an ``error`` / ``crash``. The tree is killed
-   on every exit path, so a grandchild cannot outlive its run.
+4. At the deadline the worker kills the child's tree: ``timeout`` / ``timeout``, unless
+   a result was already written. A child that exits without a result is ``error`` /
+   ``crash``. The tree is killed on every exit path, so a grandchild cannot outlive its
+   run.
 
-Only the tree this worker started is ever killed: a Job Object handle it created, a
-process group whose id is its own child's PID, or ``taskkill /T /PID <its child>``.
-Never by image name.
+Only the tree this worker started is ever killed: the Job Object handle it created, or
+the process group whose id is its own, still-unreaped child's PID. Never by image name.
 
-Restart: :meth:`Worker.start` takes an exclusive lock file, then
-:meth:`JobStore.recover_running` finishes every item left ``running`` as ``error`` /
-``crash``. No retry here: that is W4. The orphaned child itself is already dead: on
-Windows the crashed worker's Job Object handle closed with it; on POSIX the child
-watches its parent and kills its own group when re-parented (and systemd's
-``KillMode=control-group`` kills the unit's cgroup anyway).
+Restart: :meth:`Worker.start` takes an exclusive lock on ``<db>.worker.lock`` (one
+worker per database, whatever its work root), then :meth:`JobStore.recover_running`
+finishes every item left ``running`` as ``error`` / ``crash``. No retry here: that is
+W4. The orphaned child itself is already dead: on Windows the crashed worker's Job
+Object handle closed with it; on POSIX the child watches its parent and kills its own
+group when re-parented (and systemd's ``KillMode=control-group`` kills the cgroup).
 
 Must not import ``streamlit`` or ``t2pw.app``.
 """
@@ -40,7 +47,6 @@ import sys
 import threading
 import time
 import traceback
-from dataclasses import replace
 from pathlib import Path
 from typing import IO, Any, Dict, List, Optional, Sequence
 
@@ -61,6 +67,10 @@ DEFAULT_RUN_FN = "t2pw.service.pathway:run_pathway"
 IS_WINDOWS = os.name == "nt"
 
 
+class ContainmentError(RuntimeError):
+    """The child could not be put in a killable tree; it was killed before running."""
+
+
 # ── process-tree containment (pattern from evidence/bounded_run.py) ────────
 
 if IS_WINDOWS:  # pragma: no cover - platform branch
@@ -69,7 +79,8 @@ if IS_WINDOWS:  # pragma: no cover - platform branch
 
     _k32 = ctypes.WinDLL("kernel32", use_last_error=True)
     _k32.CreateJobObjectW.restype = wintypes.HANDLE
-    _k32.OpenProcess.restype = wintypes.HANDLE
+    _ntdll = ctypes.WinDLL("ntdll")
+    CREATE_SUSPENDED = 0x00000004
 
     class _BasicLimits(ctypes.Structure):
         _fields_ = [("PerProcessUserTimeLimit", ctypes.c_longlong),
@@ -90,8 +101,8 @@ if IS_WINDOWS:  # pragma: no cover - platform branch
                     ("PeakProcessMemoryUsed", ctypes.c_size_t),
                     ("PeakJobMemoryUsed", ctypes.c_size_t)]
 
-    def _new_job(pid: int) -> Optional[int]:
-        """A kill-on-close Job Object holding ``pid``, or None if that failed."""
+    def _new_job(process_handle: int) -> Optional[int]:
+        """A kill-on-close Job Object holding the process, or None if that failed."""
 
         job = _k32.CreateJobObjectW(None, None)
         if not job:
@@ -99,12 +110,8 @@ if IS_WINDOWS:  # pragma: no cover - platform branch
         info = _ExtendedLimits()
         info.BasicLimitInformation.LimitFlags = 0x2000  # JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE
         ok = _k32.SetInformationJobObject(  # 9 = JobObjectExtendedLimitInformation
-            wintypes.HANDLE(job), 9, ctypes.byref(info), ctypes.sizeof(info))
-        proc = _k32.OpenProcess(0x0100 | 0x0001, False, pid)  # SET_QUOTA | TERMINATE
-        if proc:
-            ok = ok and _k32.AssignProcessToJobObject(wintypes.HANDLE(job), wintypes.HANDLE(proc))
-            _k32.CloseHandle(wintypes.HANDLE(proc))
-        ok = ok and bool(proc)
+            wintypes.HANDLE(job), 9, ctypes.byref(info), ctypes.sizeof(info)) and \
+            _k32.AssignProcessToJobObject(wintypes.HANDLE(job), wintypes.HANDLE(process_handle))
         if not ok:
             _k32.CloseHandle(wintypes.HANDLE(job))
             return None
@@ -115,35 +122,66 @@ class _Child:
     """One contained child process tree."""
 
     def __init__(self, argv: List[str], log: IO[bytes]) -> None:
-        kwargs: Dict[str, Any] = {"stdin": subprocess.PIPE, "stdout": log,
+        kwargs: Dict[str, Any] = {"stdin": subprocess.DEVNULL, "stdout": log,
                                   "stderr": subprocess.STDOUT}
         if IS_WINDOWS:
-            kwargs["creationflags"] = subprocess.CREATE_NEW_PROCESS_GROUP
+            kwargs["creationflags"] = subprocess.CREATE_NEW_PROCESS_GROUP | CREATE_SUSPENDED
         else:
-            kwargs["start_new_session"] = True  # pgid == pid
+            kwargs["start_new_session"] = True  # pgid == pid, from fork
         self.proc = subprocess.Popen(argv, **kwargs)  # noqa: S603 - argv is ours
-        self.job = _new_job(self.proc.pid) if IS_WINDOWS else None
+        self.job: Optional[int] = None
+        if IS_WINDOWS:
+            # Popen's own process handle (full access, cannot name a recycled PID).
+            handle = int(self.proc._handle)  # noqa: SLF001
+            self.job = _new_job(handle)
+            if self.job is None or _ntdll.NtResumeProcess(wintypes.HANDLE(handle)) != 0:
+                self.kill_tree()  # still suspended: nothing of the run has executed
+                raise ContainmentError("could not place the run in a Job Object")
+
+    def wait_unreaped(self, deadline: float) -> bool:
+        """Wait until the child exits or ``deadline``; True if it exited.
+
+        POSIX leaves the exited child unreaped (``WNOWAIT``), so its PID, and with it
+        our process-group id, cannot be reused before :meth:`kill_tree` signals it.
+        """
+
+        if IS_WINDOWS:
+            try:
+                self.proc.wait(timeout=max(0.0, deadline - time.time()))
+                return True
+            except subprocess.TimeoutExpired:
+                return False
+        flags = os.WEXITED | os.WNOHANG | os.WNOWAIT
+        while time.time() < deadline:
+            if os.waitid(os.P_PID, self.proc.pid, flags) is not None:
+                return True
+            time.sleep(0.2)
+        return os.waitid(os.P_PID, self.proc.pid, flags) is not None
 
     def kill_tree(self) -> None:
-        """Kill this child and every descendant still in its job / group."""
+        """Kill this child and every descendant still in its job / group, then reap."""
 
         if IS_WINDOWS:
             if self.job is not None:
                 _k32.TerminateJobObject(wintypes.HANDLE(self.job), 1)
                 _k32.CloseHandle(wintypes.HANDLE(self.job))
                 self.job = None
-            elif self.proc.poll() is None:  # fallback: walk the tree by OUR child's PID
-                subprocess.run(["taskkill", "/F", "/T", "/PID", str(self.proc.pid)],
-                               capture_output=True, timeout=30, check=False)
+            else:  # never resumed: only the suspended child itself exists
+                self.proc.kill()
         else:
-            try:
+            try:  # the leader is not yet reaped, so this pgid is still ours
                 os.killpg(self.proc.pid, signal.SIGKILL)
             except (ProcessLookupError, PermissionError):
-                pass  # group already empty
+                pass
         self.proc.wait()
 
 
 # ── worker ─────────────────────────────────────────────────────────────────
+
+
+def _crash(message: str) -> Dict[str, Any]:
+    return result_to_dict(PathwayResult(status=STATUS_ERROR, stage=STAGE_INIT,
+                                        failure_kind=KIND_CRASH, message=message))
 
 
 class Worker:
@@ -156,10 +194,11 @@ class Worker:
         self._lock: Optional[IO[bytes]] = None
 
     def start(self) -> List[int]:
-        """Take the single-worker lock, then recover orphaned ``running`` items."""
+        """Take the one-worker-per-database lock, then recover orphaned ``running`` items."""
 
         self.work_root.mkdir(parents=True, exist_ok=True)
-        fh = open(self.work_root / "worker.lock", "a+b")
+        lock_path = Path(str(self.store.path) + ".worker.lock")
+        fh = open(lock_path, "a+b")
         try:
             if IS_WINDOWS:
                 import msvcrt
@@ -170,7 +209,7 @@ class Worker:
                 fcntl.flock(fh, fcntl.LOCK_EX | fcntl.LOCK_NB)
         except OSError:
             fh.close()
-            raise RuntimeError(f"another worker holds {self.work_root / 'worker.lock'}")
+            raise RuntimeError(f"another worker holds {lock_path}")
         self._lock = fh  # released by close(), or by the OS when this process dies
         return self.store.recover_running()
 
@@ -190,42 +229,37 @@ class Worker:
         item_id, attempt, deadline = item["id"], item["attempt"], item["deadline"]
         item_dir = self.work_root / f"item-{item_id}" / f"attempt-{attempt}"
         item_dir.mkdir(parents=True, exist_ok=True)
-        req = item["request"]
-        req = replace(req, deadline=deadline, out_dir=req.out_dir or item_dir / "out")
-        result_path = item_dir / "result.json"
-        argv = [sys.executable, "-m", "t2pw.web.worker", "--child", self.run_fn, str(result_path)]
+        req = request_to_dict(item["request"])
+        req.update(deadline=deadline, out_dir=str(item_dir / "out"))  # a submitted out_dir is ignored
+        request_path, result_path = item_dir / "request.json", item_dir / "result.json"
+        request_path.write_text(json.dumps(req), encoding="utf-8")
+        argv = [sys.executable, "-m", "t2pw.web.worker", "--child", self.run_fn,
+                str(request_path), str(result_path)]
 
-        timed_out, child = False, None
+        exited, child = False, None
         try:
             with open(item_dir / "child.log", "wb") as log:
                 child = _Child(argv, log)
             self.store.set_child_pid(item_id, attempt, child.proc.pid)
-            try:
-                child.proc.stdin.write(json.dumps(request_to_dict(req)).encode("utf-8"))
-                child.proc.stdin.close()
-            except OSError:
-                pass  # child died before reading; reported as a crash below
-            try:
-                child.proc.wait(timeout=max(0.0, deadline - time.time()))
-            except subprocess.TimeoutExpired:
-                timed_out = True
+            exited = child.wait_unreaped(deadline)
+        except ContainmentError as exc:
+            self.store.finish(item_id, attempt, _crash(str(exc)))
+            return item_id
         finally:
             if child is not None:
                 child.kill_tree()
 
-        exit_code = child.proc.returncode
-        if timed_out:
-            result = result_to_dict(PathwayResult(
-                status=STATUS_TIMEOUT, stage=STAGE_INIT, failure_kind=KIND_TIMEOUT,
-                message=f"killed at the deadline ({self.timeout_s:g} s after dequeue)"))
-        else:
-            try:
-                result = json.loads(result_path.read_text(encoding="utf-8"))
-            except (OSError, ValueError):
+        try:  # a result written before the deadline kill still counts
+            result = json.loads(result_path.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            if exited:
+                result = _crash(f"run process exited {child.proc.returncode} without a "
+                                f"result; see {item_dir / 'child.log'}")
+            else:
                 result = result_to_dict(PathwayResult(
-                    status=STATUS_ERROR, stage=STAGE_INIT, failure_kind=KIND_CRASH,
-                    message=f"run process exited {exit_code} without a result; see {item_dir / 'child.log'}"))
-        self.store.finish(item_id, attempt, result, exit_code=exit_code)
+                    status=STATUS_TIMEOUT, stage=STAGE_INIT, failure_kind=KIND_TIMEOUT,
+                    message=f"killed at the deadline ({self.timeout_s:g} s after dequeue)"))
+        self.store.finish(item_id, attempt, result, exit_code=child.proc.returncode)
         return item_id
 
     def run_forever(self, poll_s: float = 5.0) -> None:
@@ -259,31 +293,34 @@ def _die_with_parent() -> None:
     threading.Thread(target=watch, daemon=True).start()
 
 
-def _child_main(run_fn: str, result_path: str) -> int:
+def _child_main(run_fn: str, request_path: str, result_path: str) -> int:
     _die_with_parent()
-    req = request_from_dict(json.loads(sys.stdin.buffer.read()))
     try:
+        req = request_from_dict(json.loads(Path(request_path).read_text(encoding="utf-8")))
         module, _, attr = run_fn.partition(":")
         res = getattr(importlib.import_module(module), attr)(req)
         if not isinstance(res, PathwayResult):
             raise TypeError(f"{run_fn} returned {type(res).__name__}, not PathwayResult")
-        out = result_to_dict(res)
+        # default=str: an odd value in counts / attempt_log must not lose a finished run
+        text = json.dumps(result_to_dict(res), default=str)
     except Exception as exc:  # noqa: BLE001 - every failure becomes a result
         traceback.print_exc()
-        out = result_to_dict(PathwayResult(status=STATUS_ERROR, stage=STAGE_INIT,
-                                           failure_kind=KIND_CRASH,
-                                           message=f"{type(exc).__name__}: {exc}"))
+        text = json.dumps(_crash(f"{type(exc).__name__}: {exc}"))
     tmp = result_path + ".tmp"
     with open(tmp, "w", encoding="utf-8") as fh:
-        json.dump(out, fh)
+        fh.write(text)
     os.replace(tmp, result_path)
     return 0
+
+
+def _exit_on_sigterm(signum: int, frame: Any) -> None:
+    sys.exit(128 + signum)  # unwinds through run_one's finally: the child tree is killed
 
 
 def main(argv: Optional[Sequence[str]] = None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
     if argv[:1] == ["--child"]:
-        return _child_main(argv[1], argv[2])
+        return _child_main(argv[1], argv[2], argv[3])
     ap = argparse.ArgumentParser(prog="python -m t2pw.web.worker")
     ap.add_argument("--db", required=True)
     ap.add_argument("--work-root", required=True)
@@ -291,6 +328,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     ap.add_argument("--timeout", type=float, default=RUN_TIMEOUT_S)
     ap.add_argument("--poll", type=float, default=5.0)
     a = ap.parse_args(argv)
+    signal.signal(signal.SIGTERM, _exit_on_sigterm)
     Worker(JobStore(a.db), a.work_root, run_fn=a.run_fn, timeout_s=a.timeout).run_forever(a.poll)
     return 0
 

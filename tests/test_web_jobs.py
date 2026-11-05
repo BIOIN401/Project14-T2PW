@@ -143,3 +143,32 @@ def test_recover_running_marks_orphan_as_crash(tmp_path):
     assert s2.recover_running() == []
     assert s2.claim_next(100)["position"] == 1  # the queued one is still there
     s2.close()
+
+
+def test_concurrent_claims_exactly_one_wins(tmp_path):
+    """NEW ACCEPTANCE TEST (W3, new capability, review F9): two connections racing for
+    the only queued item: exactly one gets it, with one attempts row."""
+    import threading
+
+    db = tmp_path / "jobs.sqlite"
+    seed = JobStore(db)
+    seed.submit([_req()])
+    seed.close()
+    barrier, got = threading.Barrier(2), [None, None]
+
+    def claim(i):  # one connection per thread, as two processes would have
+        s = JobStore(db)
+        barrier.wait()
+        got[i] = s.claim_next(100)
+        s.close()
+
+    threads = [threading.Thread(target=claim, args=(i,)) for i in range(2)]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join(30)
+    winners = [g for g in got if g is not None]
+    assert len(winners) == 1
+    check = JobStore(db)
+    assert len(check.item(winners[0]["id"])["attempts"]) == 1
+    check.close()

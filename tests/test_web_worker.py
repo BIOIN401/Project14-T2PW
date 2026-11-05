@@ -30,6 +30,7 @@ from t2pw.service.pathway import (
 )
 from t2pw.web import jobs
 from t2pw.web.jobs import JobStore
+from t2pw.web import worker as worker_mod
 from t2pw.web.worker import Worker
 
 TESTS_DIR = Path(__file__).resolve().parent
@@ -54,11 +55,26 @@ def fake_ok(req: PathwayRequest) -> PathwayResult:
 
 
 def fake_hang(req: PathwayRequest) -> PathwayResult:
-    """Starts a grandchild, records both PIDs, then never returns."""
+    """Starts a grandchild as its very first action, records both PIDs, never returns."""
     grandchild = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(120)"])
     (req.out_dir.parent / "pids.txt").write_text(f"{os.getpid()} {grandchild.pid}")
     time.sleep(120)
     raise AssertionError("unreachable")
+
+
+def fake_unserialisable(req: PathwayRequest) -> PathwayResult:
+    res = fake_ok(req)
+    res.counts["odd"] = object()
+    res.attempt_log.append({"when": Path("x")})
+    return res
+
+
+def fake_result_then_hang(req: PathwayRequest) -> PathwayResult:
+    """Returns a result, so it is written, but a non-daemon thread keeps the process
+    alive past the deadline."""
+    import threading
+    threading.Thread(target=time.sleep, args=(120,)).start()
+    return fake_ok(req)
 
 
 def fake_raise(req: PathwayRequest) -> PathwayResult:
@@ -124,6 +140,8 @@ def _req(name: str = "serine biosynthesis", **kw) -> PathwayRequest:
     return PathwayRequest(scope=RequestedScope(requested_pathway=name), **kw)
 
 
+# Deadline tests use 10 s: a child imports this module (and pytest) before the fake
+# runs, which measured 2-5 s per child on the dev machine under load.
 def _worker(store, tmp_path, fake, timeout_s=60.0) -> Worker:
     w = Worker(store, tmp_path / "work", run_fn=f"{MOD}:{fake}", timeout_s=timeout_s)
     assert w.start() == []
@@ -135,9 +153,10 @@ def _worker(store, tmp_path, fake, timeout_s=60.0) -> Worker:
 
 def test_normal_run_persists_result(store, tmp_path, child_env):
     """NEW ACCEPTANCE TEST (W3, new capability): a run in a child process; its
-    PathwayResult (release_status included) is persisted and the child is gone."""
+    PathwayResult (release_status included) is persisted and the child is gone. A
+    submitted out_dir is ignored: the worker always owns where the run writes."""
     w = _worker(store, tmp_path, "fake_ok")
-    store.submit([_req()])
+    store.submit([_req(out_dir=tmp_path / "elsewhere")])
     item_id = w.run_one()
     w.close()
     item = store.item(item_id)
@@ -151,6 +170,48 @@ def test_normal_run_persists_result(store, tmp_path, child_env):
     out_dir = tmp_path / "work" / f"item-{item_id}" / "attempt-1" / "out"
     assert r["counts"]["out_dir"] == str(out_dir)
     assert item["attempts"][0]["exit_code"] == 0
+    assert not (tmp_path / "elsewhere").exists()
+
+
+def test_unserialisable_result_values_keep_the_run(store, tmp_path, child_env):
+    """NEW ACCEPTANCE TEST (W3, new capability, review F4): a non-JSON value in counts
+    or attempt_log is stringified; the run stays a pass and keeps its PWML."""
+    w = _worker(store, tmp_path, "fake_unserialisable")
+    store.submit([_req()])
+    item = store.item(w.run_one())
+    w.close()
+    assert wait_dead([item["attempts"][0]["child_pid"]]) == []
+    assert item["status"] == STATUS_PASS
+    r = item["result"]
+    assert Path(r["pwml_path"]).read_text(encoding="utf-8") == "<fake/>"
+    assert isinstance(r["counts"]["odd"], str)
+    assert r["attempt_log"][-1]["when"] == str(Path("x"))
+
+
+def test_result_written_before_deadline_kill_is_kept(store, tmp_path, child_env):
+    """NEW ACCEPTANCE TEST (W3, new capability, review F8): a child that wrote its
+    result but did not exit by the deadline is killed, and the result is kept."""
+    w = _worker(store, tmp_path, "fake_result_then_hang", timeout_s=10.0)
+    store.submit([_req()])
+    item = store.item(w.run_one())
+    w.close()
+    assert wait_dead([item["attempts"][0]["child_pid"]]) == []
+    assert item["status"] == STATUS_PASS and item["result"]["pwml_path"]
+
+
+@pytest.mark.skipif(os.name != "nt", reason="Job Object containment is Windows-only")
+def test_uncontainable_child_never_runs(store, tmp_path, child_env, monkeypatch):
+    """NEW ACCEPTANCE TEST (W3, new capability, review F2): if the Job Object cannot be
+    made, the suspended child is killed before it runs and the item is error/crash."""
+    monkeypatch.setattr(worker_mod, "_new_job", lambda handle: None)
+    w = _worker(store, tmp_path, "fake_ok")
+    store.submit([_req()])
+    item_id = w.run_one()
+    w.close()
+    item = store.item(item_id)
+    assert item["status"] == STATUS_ERROR and item["failure_kind"] == KIND_CRASH
+    assert "Job Object" in item["result"]["message"]
+    assert not (tmp_path / "work" / f"item-{item_id}" / "attempt-1" / "out").exists()
 
 
 def test_deadline_is_set_at_dequeue_not_submit(store, tmp_path, child_env):
@@ -172,9 +233,10 @@ def test_deadline_is_set_at_dequeue_not_submit(store, tmp_path, child_env):
 
 
 def test_deadline_kills_whole_tree_and_marks_timeout(store, tmp_path, child_env):
-    """NEW ACCEPTANCE TEST (W3, new capability): past its deadline the child AND its
-    grandchild are killed; the item is status=timeout, failure_kind=timeout."""
-    w = _worker(store, tmp_path, "fake_hang", timeout_s=3.0)
+    """NEW ACCEPTANCE TEST (W3, new capability): past its deadline the child AND a
+    grandchild it spawned as its very first action are killed; the item is
+    status=timeout, failure_kind=timeout."""
+    w = _worker(store, tmp_path, "fake_hang", timeout_s=10.0)
     store.submit([_req()])
     t0 = time.time()
     item_id = w.run_one()
@@ -193,7 +255,7 @@ def test_deadline_kills_whole_tree_and_marks_timeout(store, tmp_path, child_env)
     assert item["status"] == STATUS_TIMEOUT and item["failure_kind"] == KIND_TIMEOUT
     assert item["result"]["status"] == STATUS_TIMEOUT
     assert item["attempts"][0]["failure_kind"] == KIND_TIMEOUT
-    assert 3.0 <= elapsed < 30.0
+    assert 10.0 <= elapsed < 40.0
 
 
 @pytest.mark.parametrize("fake", ["fake_raise", "fake_exit"])
@@ -256,17 +318,19 @@ def test_killed_worker_takes_its_child_tree_and_restart_recovers(tmp_path, child
 
 
 def test_single_worker_lock(store, tmp_path):
-    """NEW ACCEPTANCE TEST (W3, new capability): a second worker on the same work root
-    refuses to start, so start-up recovery never touches a live worker's item."""
-    w1 = Worker(store, tmp_path / "work")
+    """NEW ACCEPTANCE TEST (W3, new capability, review F1): a second worker on the same
+    database refuses to start, even with a different work root, so start-up recovery
+    never touches a live worker's item."""
+    w1 = Worker(store, tmp_path / "work-a")
     w1.start()
     other = JobStore(store.path)
     try:
-        with pytest.raises(RuntimeError):
-            Worker(other, tmp_path / "work").start()
+        for root in ("work-a", "work-b"):
+            with pytest.raises(RuntimeError):
+                Worker(other, tmp_path / root).start()
     finally:
         w1.close()
-    w2 = Worker(other, tmp_path / "work")
+    w2 = Worker(other, tmp_path / "work-b")
     w2.start()
     w2.close()
     other.close()
