@@ -90,6 +90,14 @@ def checkout_state() -> Dict[str, Any]:
     return out
 
 
+def export_verdict(result: Dict[str, Any]) -> Dict[str, Any]:
+    """What ``run_pwml_export`` decided, path-free: ok, error, and the required-field gate's findings."""
+
+    gate = result.get("required_gate_report") if isinstance(result.get("required_gate_report"), dict) else {}
+    return {"ok": result.get("ok"), "error": result.get("error"), "issues": result.get("issues"),
+            "required_gate_errors": gate.get("errors"), "required_gate_warnings": gate.get("warnings")}
+
+
 def _pwml_files(root: Path) -> Dict[str, str]:
     return {p.name: sha256(p.read_bytes()) for p in sorted((root / "outputs").glob("*.pwml"))}
 
@@ -142,6 +150,7 @@ def run_app_arm(root: Path, cassette: llm_replay.Cassette, timeout: float) -> Di
         "canonical_payload": deepcopy(artifacts.get(CANONICAL_PAYLOAD_KEY)),
         "xml": driver._xml_bytes(pwml_result),
         "pwml_files": _pwml_files(root),
+        "export_verdict": export_verdict(pwml_result),
         "stage2_payload": deepcopy(driver._ss(at, "final_payload")) if at is not None else None,
         "pathway_context": deepcopy(driver._ss(at, "pathway_context")) if at is not None else None,
         "post_call": captured.get("post_call"),
@@ -164,9 +173,13 @@ def run_service_arm(app: Dict[str, Any], root: Path, cassette: llm_replay.Casset
     from t2pw.pipeline.gate_reports import CANONICAL_PAYLOAD_KEY
     from t2pw.service import postpipeline
 
+    if app["post_call"] is None:  # nothing to start from; the test reports the app arm's own failure
+        return {"seconds": 0.0, "ok": False, "error": "the app arm never reached the post-pipeline",
+                "canonical_payload_sha256": None, "canonical_payload": None, "xml": b"", "pwml_files": {},
+                "export_verdict": None, "misses": [], "refused": []}
     shutil.copytree(app["snapshot"], root)
     (post_args, post_kwargs) = deepcopy(app["post_call"])
-    (export_args, export_kwargs) = deepcopy(app["export_call"])
+    (export_args, export_kwargs) = deepcopy(app["export_call"]) if app["export_call"] else ((), {})
     with pytest.MonkeyPatch.context() as mp:
         cassette.install(mp)
         isolate(mp, root)
@@ -178,14 +191,16 @@ def run_service_arm(app: Dict[str, Any], root: Path, cassette: llm_replay.Casset
         # As "Generate PWML": refinement review starts from deepcopy(canonical payload)
         # (initialize_refinement_review_state); the boundary's decision rides along
         # (quarantine_session_state); the reference model comes from this root.
-        export_kwargs.update(
-            project_root=root,
-            ref_path=root / "reference" / REFERENCE_FILES[0],
-            quarantine_report=artifacts.get("quarantine_report") or {},
-            quarantine_artifacts=artifacts.get("quarantine_artifacts") or {},
-        )
-        result = postpipeline.run_pwml_export(deepcopy(artifacts.get(CANONICAL_PAYLOAD_KEY)),
-                                              *export_args[1:], **export_kwargs)
+        result: Dict[str, Any] = {"error": "the app arm never reached the PWML export"}
+        if app["export_call"]:
+            export_kwargs.update(
+                project_root=root,
+                ref_path=root / "reference" / REFERENCE_FILES[0],
+                quarantine_report=artifacts.get("quarantine_report") or {},
+                quarantine_artifacts=artifacts.get("quarantine_artifacts") or {},
+            )
+            result = postpipeline.run_pwml_export(deepcopy(artifacts.get(CANONICAL_PAYLOAD_KEY)),
+                                                  *export_args[1:], **export_kwargs)
         seconds = time.monotonic() - started
     from t2pw.batch import driver
 
@@ -197,6 +212,7 @@ def run_service_arm(app: Dict[str, Any], root: Path, cassette: llm_replay.Casset
         "canonical_payload": deepcopy(artifacts.get(CANONICAL_PAYLOAD_KEY)),
         "xml": driver._xml_bytes(result),
         "pwml_files": _pwml_files(root),
+        "export_verdict": export_verdict(result),
         "misses": list(cassette.misses),
         "refused": list(cassette.refused),
     }
@@ -252,7 +268,7 @@ def record(env_file: Path, work: Path, timeout: float) -> int:
         assert checkout_state() == before, "the recording run wrote into the checkout"
     finally:
         mp.undo()
-    summary = {k: app[k] for k in ("outcome", "seconds", "canonical_payload_sha256", "pwml_files")}
+    summary = {k: app[k] for k in ("outcome", "seconds", "canonical_payload_sha256", "pwml_files", "export_verdict")}
     summary.update(pwml_sha256=sha256(app["xml"]) if app["xml"] else None, pwml_bytes=len(app["xml"]),
                    counts=cassette.counts(), live_llm_errors=cassette.live_llm_errors, segment=n,
                    served_from_prior=len(prior._served) if prior else 0)
@@ -260,22 +276,49 @@ def record(env_file: Path, work: Path, timeout: float) -> int:
     if not app["xml"] or app["outcome"]["status"] != "pass":
         print("NOT WRITING THE FIXTURE: the run did not reach a strict PWML export")
         return 2
-    models = sorted({row["response"].get("model") for row in cassette.entries["llm"]})
+    write_fixture(cassette.entries, pinned, secrets, summary,
+                  {"tree_head": _git("rev-parse", "HEAD"),
+                   "tree_dirty": bool(_git("status", "--porcelain", "--", "src", "tests/equivalence"))})
+    return 0
+
+
+def write_fixture(entries: Dict[str, Any], pinned: Dict[str, str], secrets: Dict[str, str],
+                  summary: Dict[str, Any], provenance: Dict[str, Any]) -> None:
+    models = sorted({row["response"].get("model") for row in entries["llm"]})
     fixture = {
         "schema": 1,
         "case": CASE,
         "env": pinned,
         "keying": llm_replay.KEYING,
-        "recorded": {**summary, "models": models, "tree_head": _git("rev-parse", "HEAD"),
-                     "tree_dirty": bool(_git("status", "--porcelain", "--", "src", "tests/equivalence")),
-                     "at": time.strftime("%Y-%m-%dT%H:%M:%S%z")},
-        "entries": cassette.entries,
+        "recorded": {**summary, **provenance, "models": models, "at": time.strftime("%Y-%m-%dT%H:%M:%S%z")},
+        "entries": entries,
     }
     text = json.dumps(fixture, indent=1, sort_keys=True, ensure_ascii=False)
     llm_replay.assert_no_secret_values(text, secrets)
     FIXTURE.parent.mkdir(parents=True, exist_ok=True)
     FIXTURE.write_bytes(gzip.compress(text.encode("utf-8"), mtime=0))
     print(f"wrote {FIXTURE} ({FIXTURE.stat().st_size} bytes gz, {len(text)} bytes json)")
+
+
+def assemble(env_file: Path, transcript: Path, live_log: Path, recorded_head: str) -> int:
+    """Write the fixture from a COMPLETED segment's transcript, without any live call: for a completed run
+    that did not reach a PWML (R2.5 attempt 2), so the harness can still pin what that case does.
+
+    The summary is the one the live segment printed to ``live_log``; the replay test then checks the fixture
+    reproduces it. ``recorded_head`` is the commit the wrapper reported for that segment."""
+
+    from dotenv import dotenv_values
+
+    text = live_log.read_text(encoding="utf-8", errors="replace")
+    start = text.index('{\n "outcome"')
+    summary = json.loads(text[start:text.index("\nNOT WRITING", start)])
+    values = dotenv_values(env_file)
+    secrets = {k: str(v) for k, v in values.items() if k in llm_replay.SECRET_ENV and v}
+    entries = llm_replay.load_transcript(transcript)
+    assert {k: len(v) for k, v in entries.items()} == summary["counts"], "transcript and live summary disagree"
+    write_fixture(entries, llm_replay.pinned_env_from(values), secrets, summary,
+                  {"tree_head": recorded_head, "tree_dirty": False,
+                   "assembled_from": f"{transcript.parent.parent.name}/{transcript.parent.name}/{transcript.name}"})
     return 0
 
 
@@ -286,7 +329,14 @@ def main(argv: Optional[list] = None) -> int:
     rec.add_argument("--env-file", type=Path, required=True)
     rec.add_argument("--work", type=Path, required=True)
     rec.add_argument("--timeout", type=float, default=3600.0, help="driver budget; the wrapper bounds wall time")
+    asm = sub.add_parser("assemble")
+    asm.add_argument("--env-file", type=Path, required=True)
+    asm.add_argument("--transcript", type=Path, required=True)
+    asm.add_argument("--live-log", type=Path, required=True)
+    asm.add_argument("--recorded-head", required=True)
     args = parser.parse_args(argv)
+    if args.cmd == "assemble":
+        return assemble(args.env_file, args.transcript, args.live_log, args.recorded_head)
     return record(args.env_file, args.work, args.timeout)
 
 
