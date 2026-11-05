@@ -20,13 +20,16 @@ State values: `DISPATCHED` · `IN_REVIEW` · `CHANGES_REQUESTED` · `APPROVED` �
 | 2026-11-04 | W0 | IN_REVIEW | `ws/W0-pathway-interface` @ `ca09afff` (code `e77d3d81`) | fix round 2 general-purpose as ws-implementer (opus/xhigh); re-review ws-reviewer (opus/high); tests ws-test-runner (haiku/medium) | `evidence/W0/10-focused-fix2.json` (8 passed, 0 survivors) | F5 docstring: 31 driver artifact names in 7 groups, verified by grep; exact-defaults test restored. Diff stat inside boundary (6 files +263/-12). New PO question Q-W0-5 (W7 citation report exists in research mode only) |
 | 2026-11-04 | W0 | APPROVED | `ws/W0-pathway-interface` @ `ca09afff` | ws-reviewer (opus/high), round 3 | reviewer report: all 31 `report_paths` names traced to `driver.py` / `strict_quarantine.py:191-199`; gates all pass | Non-blocking, carried to R5: check whether research-mode runs also write the six "strict mode" PWML-export reports, and fix the docstring label if so. Merge waits for SMOKE at `ca09afff` |
 | 2026-11-04 | W0 | MERGED | `webserver/refactor` @ `c46e88ad` (merge `--no-ff` of `ws/W0-pathway-interface` @ `ac0c1ee1`) | impl ws-implementer (opus/high) rounds 0-1 + general-purpose as ws-implementer (opus/xhigh) round 2; review ws-reviewer (opus/high) APPROVE round 3; tests ws-test-runner (haiku/medium) | pre-merge `evidence/W0/12-smoke-tr3.json` (511 passed); post-merge `evidence/W0/postmerge/13-postmerge-smoke.json` (511 passed, 0 survivors), `14-postmerge-focused.json` (8 passed) | Gates 1-8 hold. Merged paths: `src/t2pw/service/{__init__,pathway}.py`, `tests/test_service_pathway_interface.py`, `results/W0.md`, `evidence/W0/`. W-series unblocked |
+| 2026-11-04 | W3 | DISPATCHED | `ws/W3-job-store` @ `dfb9b327` (worktree `C:/t/ws-W3`) | general-purpose as ws-implementer (opus/high) | `docs/webserver/results/W3.md` (on return) | SQLite job store + one worker + child-process lifecycle against the W0 stub. No new dependencies (psutil not installed) |
+| 2026-11-04 | W5 | DISPATCHED | `ws/W5-design-system` @ `dfb9b327` (worktree `C:/t/ws-W5`) | general-purpose as ws-ui-builder (opus/high) | `docs/webserver/results/W5.md` (on return) | Design system: base template, tokens, light/dark, components. Jinja2 only; FastAPI is not installed (W6 needs it) |
+| 2026-11-04 | W1 | DISPATCHED | `ws/W1-input-adapters` @ `dfb9b327` (worktree `C:/t/ws-W1`) | general-purpose as ws-implementer (sonnet/high) | `docs/webserver/results/W1.md` (on return) | Input adapters: name+organism to TopicSpec, PMID to PMCID (idconv, mocked in tests), PDF to pdf_parser. Reuse batch/fetch.py and extraction/pdf_parser.py |
 
 ## Current state (the orchestrator rewrites this block in place; everything above is append-only)
 
 - Integration branch: `webserver/refactor` @ `c46e88ad` + docs commit, pushed
 - Done: R0 (`results/R0.md`); W0 merged (`c46e88ad`, `results/W0.md`)
-- In flight: —
-- Next up: W3 (opus/high), W5 (ws-ui-builder opus/high), W1 (sonnet/high) in parallel; W2 (sonnet/high) when a slot frees
+- In flight: W3 (opus/high, `C:/t/ws-W3`), W5 (opus/high, `C:/t/ws-W5`), W1 (sonnet/high, `C:/t/ws-W1`); all general-purpose under the ws-* role files
+- Next up: W2 (sonnet/high) when a slot frees; W6 needs FastAPI added (PLAN §2 names it; not installed)
 - Held: R1 (worktree `C:/t/ws-R1` ready), waiting on PO ruling Q-R0-1
 - Blocked: —
 - Carry-forward notes: R5 checks whether research mode also writes the six "strict mode" PWML-export reports (W0 docstring label); W3 sets the absolute `deadline` at dequeue, not at submit
