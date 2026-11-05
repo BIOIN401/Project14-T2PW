@@ -242,9 +242,6 @@ def app_module():
     stub.session_state.__contains__ = lambda _s, _k: False
     sys.modules["streamlit"] = stub
     sys.modules.pop("t2pw.app.streamlit_app", None)
-    # R1: ``run_quarantine_boundary`` now lives here and binds ``st`` at import, so it
-    # must be re-imported under the stub for its session_state writes to reach it.
-    sys.modules.pop("t2pw.service.postpipeline", None)
     before = set(sys.modules)
     import t2pw.app.streamlit_app as app  # noqa: PLC0415
 
