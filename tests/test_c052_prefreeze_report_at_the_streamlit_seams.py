@@ -413,7 +413,8 @@ def test_new_acceptance_the_record_survives_a_failure_below_the_seam(
     def exploding(*_args: Any, **_kwargs: Any) -> Any:
         raise RuntimeError("C-052: IR build blown up on purpose")
 
-    from t2pw.service import postpipeline
+    import importlib
+    postpipeline = importlib.import_module("t2pw.service.postpipeline")
 
     monkeypatch.setattr(postpipeline, "build_pwml_ir", exploding)
 

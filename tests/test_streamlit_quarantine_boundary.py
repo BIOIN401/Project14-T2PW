@@ -342,7 +342,8 @@ def offline_mapping(monkeypatch: pytest.MonkeyPatch) -> None:
         return report
 
     monkeypatch.setattr(enrich_entities, "run_enrichment", _no_enrichment)
-    from t2pw.service import postpipeline  # R1: the moved orchestrator binds these names itself
+    import importlib
+    postpipeline = importlib.import_module("t2pw.service.postpipeline")  # R1: the moved orchestrator binds these names itself
     monkeypatch.setattr(postpipeline, "run_enrichment", _no_enrichment)
 
     def _identity(payload: Dict[str, Any], **_kwargs: Any) -> Dict[str, Any]:
@@ -1128,7 +1129,8 @@ def test_research_mode_keeps_the_unmapped_candidate_and_does_not_block(
         return report
 
     monkeypatch.setattr(enrich_entities, "run_enrichment", _enrichment_that_annotates)
-    from t2pw.service import postpipeline  # R1: the moved orchestrator binds these names itself
+    import importlib
+    postpipeline = importlib.import_module("t2pw.service.postpipeline")  # R1: the moved orchestrator binds these names itself
     monkeypatch.setattr(postpipeline, "run_enrichment", _enrichment_that_annotates)
 
     at = _run_post_pipeline_research(_payload_with_one_bad_peripheral())

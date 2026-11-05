@@ -133,7 +133,8 @@ def offline_app(monkeypatch: pytest.MonkeyPatch) -> List[int]:
 
     monkeypatch.setattr(enrich_entities, "run_enrichment", no_enrichment)
     # R1: the moved post-pipeline code binds these names in its own module.
-    from t2pw.service import postpipeline
+    import importlib
+    postpipeline = importlib.import_module("t2pw.service.postpipeline")
     monkeypatch.setattr(postpipeline, "run_enrichment", no_enrichment)
 
     def audit_stand_in(input_path: Path, output_path: Path, report_path: Path, **_k: Any) -> Dict[str, Any]:
