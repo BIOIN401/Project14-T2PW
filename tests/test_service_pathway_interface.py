@@ -49,8 +49,9 @@ def test_result_fields_and_defaults():
     a, b = PathwayResult(), PathwayResult()
     assert (a.status, a.stage, a.failure_kind, a.message) == ("error", "init", "", "")
     assert a.release_status is None and a.pwml_path is None and a.image_path is None
+    assert a.warnings == [] and a.issue_codes == [] and a.attempt_log == []
+    assert a.counts == {} and a.report_paths == {}
     for name in ("warnings", "issue_codes", "counts", "report_paths", "attempt_log"):
-        assert not getattr(a, name)
         assert getattr(a, name) is not getattr(b, name), name
 
 

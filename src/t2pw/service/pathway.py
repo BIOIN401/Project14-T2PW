@@ -91,17 +91,36 @@ class PathwayResult:
     can pass without producing one of its deliverables; that is a warning,
     and a result with warnings must never be shown as clean.
 
-    ``report_paths`` maps a report filename to where it was written. Keys
-    known today (the batch driver's artifact set): ``stage1_payload.json``,
-    ``merged_payload.json``, ``gate_fail_report.json``,
-    ``initial_stage3_gate_report.json``, ``final_stage3_gate_report.json``,
-    ``contract_reports.json``, ``final_mapped.json``,
-    ``rag_admission_report.json``, the quarantine set
-    (``strict_quarantine.*_FILENAME``), and the diagnostics
-    ``stage0_attempts.json``, ``extraction_boundary_report.json``,
-    ``cleaning_report.json``, ``mapped_failure_snapshot.json``,
-    ``audit_iteration_summary.json``, ``gap_iteration_summary.json``. Only
-    keys whose file exists are present. W7 adds provenance / citation keys.
+    ``report_paths`` maps a filename to the file written under ``out_dir``.
+    Its keys are exactly the filenames ``t2pw.batch.driver`` puts in
+    ``RunOutcome.artifacts`` (its diagnostic artifacts included), except the
+    PWML itself (``pathway.pwml`` / ``pathway.review_required.pwml``), which
+    is ``pwml_path``. Only files actually written are present; which ones
+    depends on the mode and on how far the run got. The driver is the source
+    of truth; today's names, by kind:
+
+    * payloads and gates: ``stage1_payload.json``, ``merged_payload.json``,
+      ``gate_fail_report.json``, ``initial_stage3_gate_report.json``,
+      ``final_stage3_gate_report.json``, ``contract_reports.json``
+    * identity: ``final_mapped.json``, ``rag_admission_report.json``
+    * quarantine: ``quarantine_report.json``, ``removed_entity_report.json``,
+      ``graph_closure_iterations.json``, ``coverage_summary.json``,
+      ``coverage_diagnostics.json``
+    * scope: ``scope_conflict.json``, ``scope_specialization.json``
+    * diagnostics: ``stage0_attempts.json``,
+      ``extraction_boundary_report.json``, ``cleaning_report.json``,
+      ``mapped_failure_snapshot.json``, ``audit_iteration_summary.json``,
+      ``gap_iteration_summary.json``
+    * PWML export (strict mode): ``pwml_ir.json``, ``pwml_ir_report.json``,
+      ``pwml_ir_validation.json``, ``pwml_validation_report.json``,
+      ``pwml_qa.json``, ``pwml_required_field_gate_report.json``
+    * research deliverables (research mode): ``review_flags.json``,
+      ``research_pathway_report.txt``, ``research_pathway_citations.json``,
+      ``research_pathway_elements.csv``
+
+    The citation report already exists: ``research_pathway_citations.json``
+    (with its ``.txt`` and ``.csv`` views), written in research mode only and
+    only when RAG synthesis ran.
 
     ``attempt_log`` holds in-run attempts only: LLM / provider / stage retries
     inside ONE ``run_pathway`` call. Job-level retries (W4) are recorded in the
