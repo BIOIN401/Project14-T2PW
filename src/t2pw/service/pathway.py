@@ -62,6 +62,9 @@ class PathwayRequest:
     pasted ``texts``, ``pdf_paths`` and ``pmids``. ``out_dir=None`` lets the
     implementation choose (today the app writes to ``PROJECT_ROOT/outputs``).
     ``deadline`` is an absolute ``time.time()`` epoch second, ``None`` = no cap.
+    ``extraction_focus`` is the user's own focus / task-context text (the app's
+    "Optional extraction focus" box); empty means R5 derives it from ``scope``,
+    as the batch driver does today.
     Consent, email and job ids are job-store fields, not pipeline inputs.
     """
 
@@ -69,6 +72,7 @@ class PathwayRequest:
     pdf_paths: Tuple[Path, ...] = ()
     pmids: Tuple[str, ...] = ()
     scope: RequestedScope = field(default_factory=RequestedScope)
+    extraction_focus: str = ""
     export_mode: str = MODE_STRICT
     out_dir: Optional[Path] = None
     deadline: Optional[float] = None
@@ -82,13 +86,36 @@ class PathwayResult:
     ``init``, never as a pass. ``release_status`` is the run's own release
     record (release_ready / review_required / diagnostic_only); a consumer
     must read it, never infer it from ``pwml_path``'s filename.
-    ``report_paths`` maps a report filename to where it was written.
+
+    ``warnings``, ``issue_codes`` and ``counts`` mirror ``RunOutcome``. A run
+    can pass without producing one of its deliverables; that is a warning,
+    and a result with warnings must never be shown as clean.
+
+    ``report_paths`` maps a report filename to where it was written. Keys
+    known today (the batch driver's artifact set): ``stage1_payload.json``,
+    ``merged_payload.json``, ``gate_fail_report.json``,
+    ``initial_stage3_gate_report.json``, ``final_stage3_gate_report.json``,
+    ``contract_reports.json``, ``final_mapped.json``,
+    ``rag_admission_report.json``, the quarantine set
+    (``strict_quarantine.*_FILENAME``), and the diagnostics
+    ``stage0_attempts.json``, ``extraction_boundary_report.json``,
+    ``cleaning_report.json``, ``mapped_failure_snapshot.json``,
+    ``audit_iteration_summary.json``, ``gap_iteration_summary.json``. Only
+    keys whose file exists are present. W7 adds provenance / citation keys.
+
+    ``attempt_log`` holds in-run attempts only: LLM / provider / stage retries
+    inside ONE ``run_pathway`` call. Job-level retries (W4) are recorded in the
+    W3 job store, not here. W4 decides a retry from ``failure_kind`` and
+    ``pwml_path is None``.
     """
 
     status: str = STATUS_ERROR
     stage: str = STAGE_INIT
     failure_kind: str = ""
     message: str = ""
+    warnings: List[str] = field(default_factory=list)
+    issue_codes: List[str] = field(default_factory=list)
+    counts: Dict[str, Any] = field(default_factory=dict)
     release_status: Optional[ReleaseStatus] = None
     pwml_path: Optional[Path] = None
     image_path: Optional[Path] = None

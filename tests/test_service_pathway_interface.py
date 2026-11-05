@@ -27,11 +27,13 @@ def _fields(cls):
 
 def test_request_fields_and_defaults():
     assert _fields(PathwayRequest) == [
-        "texts", "pdf_paths", "pmids", "scope", "export_mode", "out_dir", "deadline",
+        "texts", "pdf_paths", "pmids", "scope", "extraction_focus", "export_mode",
+        "out_dir", "deadline",
     ]
     req = PathwayRequest()
     assert req.texts == () and req.pdf_paths == () and req.pmids == ()
     assert req.scope == RequestedScope()
+    assert req.extraction_focus == ""
     assert req.export_mode == pathway.MODE_STRICT
     assert req.out_dir is None and req.deadline is None
     with pytest.raises(dataclasses.FrozenInstanceError):
@@ -40,14 +42,16 @@ def test_request_fields_and_defaults():
 
 def test_result_fields_and_defaults():
     assert _fields(PathwayResult) == [
-        "status", "stage", "failure_kind", "message", "release_status",
-        "pwml_path", "image_path", "report_paths", "attempt_log",
+        "status", "stage", "failure_kind", "message", "warnings", "issue_codes",
+        "counts", "release_status", "pwml_path", "image_path", "report_paths",
+        "attempt_log",
     ]
     a, b = PathwayResult(), PathwayResult()
     assert (a.status, a.stage, a.failure_kind, a.message) == ("error", "init", "", "")
     assert a.release_status is None and a.pwml_path is None and a.image_path is None
-    assert a.report_paths == {} and a.attempt_log == []
-    assert a.report_paths is not b.report_paths and a.attempt_log is not b.attempt_log
+    for name in ("warnings", "issue_codes", "counts", "report_paths", "attempt_log"):
+        assert not getattr(a, name)
+        assert getattr(a, name) is not getattr(b, name), name
 
 
 def test_stub_returns_fixed_error_and_writes_nothing(tmp_path):
