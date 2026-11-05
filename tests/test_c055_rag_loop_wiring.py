@@ -53,6 +53,8 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 APP_PATH = SRC / "t2pw" / "app" / "streamlit_app.py"
+#: R2: maybe_run_rag / run_rag_rounds / build_rag_round_stages now live here.
+RAG_PATH = SRC / "t2pw" / "service" / "rag_orchestration.py"
 
 #: The app's import graph is large; the default 3 s is not enough on a cold run.
 APP_TIMEOUT = 180.0
@@ -245,6 +247,7 @@ def app_module():
     # R1: ``run_quarantine_boundary`` now lives here and binds ``st`` at import, so it
     # must be re-imported under the stub for its session_state writes to reach it.
     sys.modules.pop("t2pw.service.postpipeline", None)
+    sys.modules.pop("t2pw.service.rag_orchestration", None)  # R2: same, for the moved RAG code
     before = set(sys.modules)
     import t2pw.app.streamlit_app as app  # noqa: PLC0415
 
@@ -265,6 +268,7 @@ def app_module():
         # R1: never leave a postpipeline bound to the stub (or to a streamlit instance
         # deleted below); the next importer gets a fresh one.
         sys.modules.pop("t2pw.service.postpipeline", None)
+        sys.modules.pop("t2pw.service.rag_orchestration", None)  # R2
         for name in [n for n in list(sys.modules)
                      if n == "streamlit" or n.startswith("streamlit.")]:
             del sys.modules[name]
@@ -342,9 +346,18 @@ def offline_stages(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Dict[str,
         monkeypatch.setattr(cached, "map_payload", _map)
         monkeypatch.setattr(cached, "normalize_process_payload", _normalize)
         monkeypatch.setattr(cached, "run_strict_post_normalization_gates", _gates)
+    # R2: the same for the RAG round adapters, which moved to t2pw.service.rag_orchestration.
+    cached_rag = sys.modules.get("t2pw.service.rag_orchestration")
+    if cached_rag is not None:
+        monkeypatch.setattr(cached_rag, "normalize_process_payload", _normalize)
+        monkeypatch.setattr(cached_rag, "run_strict_post_normalization_gates", _gates)
+        monkeypatch.setattr(cached_rag, "build_and_save_draft_graph", _persist)
+        monkeypatch.setattr(cached_rag, "map_payload", _map)
     yield calls
     if cached is None:
         sys.modules.pop("t2pw.service.postpipeline", None)
+    if cached_rag is None:
+        sys.modules.pop("t2pw.service.rag_orchestration", None)
 
 
 def _rebind(app, calls_source: str = "") -> None:
@@ -361,11 +374,13 @@ def _rebind(app, calls_source: str = "") -> None:
     import t2pw.pipeline.process_normalizer as normalizer
     import t2pw.pipeline.strict_quarantine as quarantine
 
-    app.normalize_process_payload = normalizer.normalize_process_payload
-    app.run_strict_post_normalization_gates = normalizer.run_strict_post_normalization_gates
-    app.build_and_save_draft_graph = pipeline_module.build_and_save_draft_graph
+    # R2: the round adapters moved; their names are bound in the RAG service module.
+    rag = sys.modules["t2pw.service.rag_orchestration"]
+    rag.normalize_process_payload = normalizer.normalize_process_payload
+    rag.run_strict_post_normalization_gates = normalizer.run_strict_post_normalization_gates
+    rag.build_and_save_draft_graph = pipeline_module.build_and_save_draft_graph
     app.quarantine_and_close = quarantine.quarantine_and_close
-    app.map_payload = map_ids.map_payload
+    rag.map_payload = map_ids.map_payload
 
 
 # ---------------------------------------------------------------------------
@@ -461,7 +476,7 @@ def test_round_two_re_runs_the_chain_on_recomputed_reports(app_module, offline_s
         seeds.append(kwargs.get("seed_payload"))
         return _rag_result("menaquinone methylation", "methylmenaquinone")
 
-    monkeypatch.setattr(app_module, "maybe_run_rag", _chain)
+    monkeypatch.setattr(sys.modules["t2pw.service.rag_orchestration"], "maybe_run_rag", _chain)  # R2
     record = app_module.run_rag_rounds(
         _seed_payload(),
         first_result=_rag_result(),
@@ -497,7 +512,7 @@ def test_the_app_contains_no_hand_rolled_round_loop(app_module):
     version that removed the loop entirely would fail here rather than pass.
     """
 
-    tree = ast.parse(APP_PATH.read_text(encoding="utf-8"))
+    tree = ast.parse(RAG_PATH.read_text(encoding="utf-8"))
     functions = {node.name: node for node in ast.walk(tree)
                  if isinstance(node, ast.FunctionDef)}
     for name in ("maybe_run_rag", "run_rag_rounds", "build_rag_round_stages"):
@@ -532,7 +547,7 @@ def test_a_failed_stage_aborts_the_round_and_keeps_its_checkpoint(app_module, of
         raise OSError(22, "Invalid argument")
 
     monkeypatch.setattr(pipeline_module, "build_and_save_draft_graph", _explode)
-    app_module.build_and_save_draft_graph = _explode
+    sys.modules["t2pw.service.rag_orchestration"].build_and_save_draft_graph = _explode  # R2
 
     record = app_module.run_rag_rounds(
         _seed_payload(),

@@ -1,0 +1,93 @@
+block A (lines 185-251): verbatim, byte-identical
+block B diff:
+--- base:435-1527
++++ rag_orchestration
+@@ -7,0 +8 @@
++    reporter: Optional[Reporter] = None,
+@@ -37 +38,3 @@
+-    status = st.status(
++    if reporter is None:
++        reporter = default_reporter()
++    status = reporter.progress(
+@@ -97 +100 @@
+-            st.warning(f"RAG acquisition fetched 0 candidate papers: {_why}")
++            reporter.warning(f"RAG acquisition fetched 0 candidate papers: {_why}")
+@@ -606,0 +610 @@
++    state: Optional[MutableMapping[str, Any]] = None,
+@@ -714 +718,2 @@
+-        saved = {key: st.session_state.get(key, _MISSING) for key in QUARANTINE_SESSION_KEYS}
++        session = state if state is not None else default_state()
++        saved = {key: session.get(key, _MISSING) for key in QUARANTINE_SESSION_KEYS}
+@@ -721,0 +727 @@
++                state=session,
+@@ -726 +732 @@
+-                    st.session_state.pop(key, None)
++                    session.pop(key, None)
+@@ -728 +734 @@
+-                    st.session_state[key] = value
++                    session[key] = value
+@@ -843,0 +850,2 @@
++    reporter: Optional[Reporter] = None,
++    state: Optional[MutableMapping[str, Any]] = None,
+@@ -946,0 +955 @@
++                reporter=reporter,
+@@ -1023,0 +1033 @@
++                state=state,
+app diff vs base-minus-moved-ranges:
+--- base-minus-moved
++++ app-tip
+@@ -164,0 +165,31 @@
++# R2: the RAG orchestration lives in t2pw.service.rag_orchestration; every moved name is
++# re-imported here under the same name so streamlit_app.<name> keeps resolving.
++from t2pw.service.rag_orchestration import (
++    RagOrchestrationResult,
++    _count_reactions,
++    _post_extraction_error_keys,
++    _post_extraction_new_error_keys,
++    maybe_run_rag,
++    RAG_ROUND_SCRATCH_DIRNAME,
++    RAG_LOOP_MAX_ROUNDS_ENV,
++    RAG_LOOP_DEADLINE_ENV,
++    _MISSING,
++    QUARANTINE_SESSION_KEYS,
++    rag_loop_max_rounds,
++    rag_loop_deadline_seconds,
++    rag_round_scratch_dir,
++    rag_round_mapping_cache_path,
++    rag_round_reports,
++    build_rag_round_stages,
++    rag_round_merge,
++    _rag_round_claims,
++    _rag_round_gap_ids,
++    _rag_reentry_map,
++    run_rag_rounds,
++)
++from t2pw.service.reporter import StreamlitReporter, install_app_defaults
++
++# R2: a caller that reaches the service through this module without passing a reporter
++# or a state mapping keeps today's behaviour: Streamlit calls and st.session_state.
++install_app_defaults(reporter=lambda: StreamlitReporter(st), state=lambda: st.session_state)
++
+@@ -368,0 +400 @@
++    reporter = StreamlitReporter(st)
+@@ -371 +403 @@
+-            st.info(body)
++            reporter.info(body)
+@@ -373 +405 @@
+-            st.warning(body)
++            reporter.warning(body)
+@@ -375 +407 @@
+-            st.error(body)
++            reporter.error(body)
+@@ -377 +409 @@
+-            st.json(body)
++            reporter.json(body)
+@@ -2323,0 +2356 @@
++            reporter=StreamlitReporter(st),
+@@ -2446,0 +2480,2 @@
++            reporter=StreamlitReporter(st),
++            state=st.session_state,
+@@ -3502,0 +3538 @@
++                        state=st.session_state,
+@@ -3947,0 +3984 @@
++                        state=st.session_state,

@@ -1,0 +1,44 @@
+| chunk | tip (0941cd5d) | base (4a41b91c) | failing-node set | survivors tip/base |
+|---|---|---|---|---|
+| g1 | 2 passed | 2 passed | identical, none | 0/0 |
+| g2 | 8 passed | 8 passed | identical, none | 0/0 |
+| g3 | 4 passed | 4 passed | identical, none | 0/0 |
+| g4 | 24 passed | 24 passed | identical, none | 0/0 |
+| 2a | 1 failed, 78 passed | 1 failed, 78 passed | identical (1; sha256 001341c0f369) | 0/0 |
+| 2b | 134 passed | 134 passed | identical, none | 0/0 |
+| 2b-c055 | 14 passed | 14 passed | identical, none | 0/0 |
+| 2c | 1 failed, 101 passed, 3 skipped | 1 failed, 101 passed, 3 skipped | identical (1; sha256 2a9e729a17b1) | 0/0 |
+| 2c-c126 | 2 passed | 2 passed | identical, none | 0/0 |
+| 2d | 1 failed, 413 passed | 1 failed, 413 passed | identical (1; sha256 ae6f5c3feefb) | 0/0 |
+| 2d-stage3 | 28 passed | 28 passed | identical, none | 0/0 |
+| 2d-c119g9 | 3 passed | 3 passed | identical, none | 0/0 |
+| 2e | 44 passed | 44 passed | identical, none | 0/0 |
+| 2e-759b | 7 passed | 7 passed | identical, none | 0/0 |
+| 2e-hook | 1 passed | 1 passed | identical, none | 0/0 |
+| 2e-759afold | 2 passed | 2 passed | identical, none | 0/0 |
+| 2f | 1 failed, 32 passed, 4 skipped | 1 failed, 32 passed, 4 skipped | identical (1; sha256 c4182935743a) | 0/0 |
+| 2f-driver | 61 passed | 61 passed | identical, none | 0/0 |
+| 2f-gate | 14 passed | 14 passed | identical, none | 0/0 |
+| 2g | 162 passed, 8 skipped | 162 passed, 8 skipped | identical, none | 0/0 |
+| 2g-c082pp | 1 passed | 1 passed | identical, none | 0/0 |
+| 2g-c056d | 14 passed | 14 passed | identical, none | 0/0 |
+| 2g-c119sup | 37 passed | 37 passed | identical, none | 0/0 |
+| 2g-759d | 4 passed | 4 passed | identical, none | 0/0 |
+| 2g-revview | 11 passed | 11 passed | identical, none | 0/0 |
+| web | 50 passed | 50 passed | identical, none | 0/0 |
+| new | 8 passed | - | n/a (new file, absent at base) | 0/- |
+
+2a
+  FAILED:
+  tests/test_c052_prefreeze_report_at_the_streamlit_seams.py::test_new_acceptance_the_post_pipeline_seam_returns_its_prefreeze_report
+2c
+  FAILED:
+  tests/test_prefreeze_third_export_seam.py::test_run_pwml_export_runs_the_prefreeze_sequence_once_before_build_pwml_ir
+2d
+  FAILED:
+  tests/test_rag_seed_entity_reimport.py::test_the_orchestrator_passes_the_merge_base_to_conform
+2f
+  FAILED:
+  tests/test_batch_preflight.py::test_the_message_names_the_problem_the_interpreter_and_the_cure
+t wrapper vs HEAD: {'clean  @ 0941cd5d7c057c1035c33016e3c20b92ed1eb471  [git, worktree dirty=False]'}
+b wrapper vs HEAD: {'clean  @ 4a41b91cee4cf1f26acddafc20c24d9779b7e219  [git, worktree dirty=False]'}

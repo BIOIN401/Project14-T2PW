@@ -6,10 +6,9 @@ import shutil
 from copy import deepcopy
 from pathlib import Path
 from types import SimpleNamespace
-from typing import Any, Dict, List, Optional, Tuple, TypedDict
+from typing import Any, Dict, List, MutableMapping, Optional, Tuple, TypedDict
 from uuid import uuid4
 
-import streamlit as st
 from lxml import etree
 
 import t2pw.llm.client as llm_client_module
@@ -101,6 +100,7 @@ def run_quarantine_boundary(
     outputs_dir: Path,
     pathway_context: Optional[Dict[str, Any]] = None,
     mode: ExportMode = DEFAULT_EXPORT_MODE,
+    state: Optional[MutableMapping[str, Any]] = None,
 ) -> Dict[str, Any]:
     """The one place a payload is quarantined. Runs once per PAYLOAD VERSION.
 
@@ -143,11 +143,15 @@ def run_quarantine_boundary(
         mode=mode,
     )
     artifacts = write_quarantine_artifacts(result, outputs_dir)
-    st.session_state["quarantine_report"] = result.quarantine_report
-    st.session_state["quarantine_artifacts"] = artifacts
-    st.session_state["quarantine_coverage"] = result.coverage
-    st.session_state["quarantine_ok"] = bool(result.ok)
-    st.session_state["quarantine_decision_controls"] = {
+    # R2: ``state`` is the session mapping this decision is recorded in. The app passes
+    # ``st.session_state``; a caller that passes nothing gets a throwaway dict.
+    if state is None:
+        state = {}
+    state["quarantine_report"] = result.quarantine_report
+    state["quarantine_artifacts"] = artifacts
+    state["quarantine_coverage"] = result.coverage
+    state["quarantine_ok"] = bool(result.ok)
+    state["quarantine_decision_controls"] = {
         "strict_db": bool(strict_db),
         "export_mode": coerce_mode(mode),
         "pathway_context": deepcopy(_safe_dict(pathway_context)),
@@ -381,6 +385,7 @@ def freeze_canonical_payload(
     export_mode: ExportMode,
     research_mode: bool,
     tmp: Path,
+    state: Optional[MutableMapping[str, Any]] = None,
 ) -> CanonicalFreezeResult:
     """Quarantine, gate, hash and serialize THE canonical payload. Lifted
     verbatim out of :func:`run_post_pipeline_sbml_artifacts`; it still returns
@@ -414,6 +419,7 @@ def freeze_canonical_payload(
             outputs_dir=Path(outputs_dir) if outputs_dir else (PROJECT_ROOT / "outputs"),
             pathway_context=pathway_context,
             mode=export_mode,
+            state=state,
         )
         quarantine_ok = bool(quarantine_result.get("ok"))
     if quarantine_ok:
@@ -515,6 +521,7 @@ def run_post_pipeline_sbml_artifacts(
     strict_db: bool = True,
     pathway_context: Optional[Dict[str, Any]] = None,
     outputs_dir: Optional[Path] = None,
+    state: Optional[MutableMapping[str, Any]] = None,
 ) -> Dict[str, Any]:
     # ``export_mode`` selects the gate policy for this whole run. "pathwhiz" is
     # the default and behaves exactly as before. "research" runs every check but
@@ -1494,7 +1501,7 @@ def run_post_pipeline_sbml_artifacts(
         _freeze = freeze_canonical_payload(
             final_export_payload, strict_db=strict_db, outputs_dir=outputs_dir,
             pathway_context=pathway_context, export_mode=export_mode,
-            research_mode=research_mode, tmp=tmp,
+            research_mode=research_mode, tmp=tmp, state=state,
         )
         canonical_export_payload = _freeze["payload"]
         canonical_payload_hash = _freeze["payload_hash"]

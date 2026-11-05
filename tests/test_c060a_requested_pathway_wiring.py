@@ -42,6 +42,8 @@ from t2pw.pipeline.pipeline import merge_additions  # noqa: E402
 APP_PATH = SRC / "t2pw" / "app" / "streamlit_app.py"
 #: R1: ``_safe_dict`` now lives here.
 SERVICE_PATH = SRC / "t2pw" / "service" / "postpipeline.py"
+#: R2: ``maybe_run_rag`` now lives here.
+RAG_PATH = SRC / "t2pw" / "service" / "rag_orchestration.py"
 PIPELINE_PATH = SRC / "t2pw" / "pipeline" / "pipeline.py"
 #: C-060a's line-range ownership in the app module (WIRING-PACK header): a
 #: concurrent card owns <= 4530, so every statement lifted here is >= this line.
@@ -49,7 +51,10 @@ PIPELINE_PATH = SRC / "t2pw" / "pipeline" / "pipeline.py"
 #: 3539/3594 when 2,069 lines left the app, and the floor must stay below them
 #: and below the gate-module imports at 3537/3592 (no other app import of that
 #: module sits between 2571 and 3537).
-OWNED_FLOOR = 2571
+#: R2: was 2571. Same locator, same selection: 1,131 more lines left the app, the sites
+#: moved 3539/3594 -> 2408/2463 and the gate imports 3537/3592 -> 2406/2461; no other
+#: app import of that module sits between 1440 and 2406.
+OWNED_FLOOR = 1440
 GATE_MODULE = "t2pw.pipeline.entity_admission"
 
 
@@ -337,7 +342,8 @@ def test_new_acceptance_the_factory_reproduces_maybe_run_rags_own_derivation():
     own ``_safe_dict``, and requires the factory to agree field for field. If
     either derivation moves without the other, this fails."""
     named = {
-        node.name: node for node in (*_tree(APP_PATH).body, *_tree(SERVICE_PATH).body)
+        node.name: node for node in (*_tree(APP_PATH).body, *_tree(SERVICE_PATH).body,
+                                     *_tree(RAG_PATH).body)
         if isinstance(node, ast.FunctionDef) and node.name in ("maybe_run_rag", "_safe_dict")
     }
     wanted = {"_requested_pathway", "_requested_organism"}
