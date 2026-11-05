@@ -1,0 +1,190 @@
+{
+  "label": "2f",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/ws-R2-base/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-R2-base",
+    "--pin-verdict",
+    "C:/t/wsR2tmp/ev/pin/b-2f.pin.json",
+    "-q",
+    "--basetemp=C:/t/wsR2tmp/b-2f",
+    "tests/test_batch_preflight.py"
+  ],
+  "cwd": "C:\\t\\ws-R2-base",
+  "started_at": "2026-11-05T19:30:49+00:00",
+  "finished_at": "2026-11-05T19:30:57+00:00",
+  "duration_seconds": 8.34280519999993,
+  "timeout_seconds": 560.0,
+  "root_pid": 376236,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 375916,
+      "name": "python.exe",
+      "ppid": 376236
+    },
+    {
+      "pid": 377192,
+      "name": "python.exe",
+      "ppid": 375916
+    },
+    {
+      "pid": 377264,
+      "name": "python.exe",
+      "ppid": 377192
+    },
+    {
+      "pid": 377552,
+      "name": "python.exe",
+      "ppid": 375916
+    },
+    {
+      "pid": 377640,
+      "name": "python.exe",
+      "ppid": 377552
+    },
+    {
+      "pid": 371212,
+      "name": "python.exe",
+      "ppid": 371980
+    },
+    {
+      "pid": 371980,
+      "name": "python.exe",
+      "ppid": 375916
+    },
+    {
+      "pid": 375832,
+      "name": "python.exe",
+      "ppid": 375916
+    },
+    {
+      "pid": 376800,
+      "name": "python.exe",
+      "ppid": 375832
+    },
+    {
+      "pid": 63788,
+      "name": "python.exe",
+      "ppid": 375916
+    },
+    {
+      "pid": 367520,
+      "name": "python.exe",
+      "ppid": 63788
+    },
+    {
+      "pid": 377168,
+      "name": "python.exe",
+      "ppid": 367520
+    },
+    {
+      "pid": 374568,
+      "name": "python.exe",
+      "ppid": 377168
+    },
+    {
+      "pid": 354456,
+      "name": "python.exe",
+      "ppid": 376860
+    },
+    {
+      "pid": 376860,
+      "name": "python.exe",
+      "ppid": 375916
+    },
+    {
+      "pid": 374900,
+      "name": "python.exe",
+      "ppid": 354456
+    },
+    {
+      "pid": 377252,
+      "name": "python.exe",
+      "ppid": 374900
+    }
+  ],
+  "descendants_terminated": [
+    63788,
+    354456,
+    367520,
+    371212,
+    371980,
+    374568,
+    374900,
+    375832,
+    375916,
+    376800,
+    376860,
+    377168,
+    377192,
+    377252,
+    377264,
+    377552,
+    377640
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 59512,
+      "name": "python.exe"
+    },
+    {
+      "pid": 294940,
+      "name": "python.exe"
+    },
+    {
+      "pid": 295232,
+      "name": "python.exe"
+    },
+    {
+      "pid": 376724,
+      "name": "python.exe"
+    },
+    {
+      "pid": 376820,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/wsR2tmp/ev/b-2f.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-R2-base\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-R2-base",
+    "repo_head": "4a41b91cee4cf1f26acddafc20c24d9779b7e219",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ws-R2",
+    "token": "ws-R2:376820:abee5580d9f10734",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
