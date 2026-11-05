@@ -229,6 +229,7 @@ class Worker:
         ids = self.store.recover_running(self._should_retry)
         for i in ids:
             postrun.run(self.store, i, self.postrun_cfg)  # W7: no-op for a re-queued item
+        postrun.sweep(self.store, self.postrun_cfg)  # W7: curator enqueue a crash may have skipped
         return ids
 
     def _should_retry(self, item_id: int, attempt: int, result: Dict[str, Any]) -> bool:

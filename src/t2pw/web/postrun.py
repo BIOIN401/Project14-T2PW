@@ -121,3 +121,29 @@ def run(store: JobStore, item_id: int, cfg: PostRunConfig) -> Dict[str, Any]:
     except Exception as exc:  # noqa: BLE001
         log.warning("job email step failed for item %s: %s", item_id, type(exc).__name__)
     return out
+
+
+def sweep(store: JobStore, cfg: PostRunConfig) -> int:
+    """Start-up catch-up for a crash between ``store.finish`` and :func:`run`: curator
+    enqueue ONLY (idempotent) for finished ``pass`` items with no queue row. It never sends
+    email, so history is not mailed. Never raises; returns how many items it enqueued."""
+
+    n = 0
+    try:
+        q = CuratorQueue(store.path, cfg.queue_dir)
+        try:
+            ids = [r[0] for r in q._db.execute(
+                "SELECT i.id FROM items i LEFT JOIN curator_queue c ON c.item_id = i.id "
+                "WHERE i.state = 'finished' AND i.status = ? AND c.item_id IS NULL ORDER BY i.id",
+                (STATUS_PASS,))]
+            for iid in ids:
+                try:
+                    item = store.item(iid)
+                    n += q.enqueue(store.submission(item["submission_id"]), item, cfg.work_root) is not None
+                except Exception as exc:  # noqa: BLE001
+                    log.warning("curator sweep failed for item %s: %s", iid, type(exc).__name__)
+        finally:
+            q.close()
+    except Exception as exc:  # noqa: BLE001
+        log.warning("curator sweep failed: %s", type(exc).__name__)
+    return n

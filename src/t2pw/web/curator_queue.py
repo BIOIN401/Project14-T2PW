@@ -31,7 +31,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 from t2pw.pipeline.release_status import RELEASE_READY
-from t2pw.service.pathway import MODE_STRICT
+from t2pw.service.pathway import MODE_STRICT, STATUS_PASS
 
 log = logging.getLogger("t2pw.web.curator_queue")
 
@@ -86,6 +86,8 @@ def qualify(submission: Dict[str, Any], item: Dict[str, Any],
     if item["request"].export_mode != MODE_STRICT:
         return False, "not strict mode"
     res = item.get("result") or {}
+    if res.get("status") != STATUS_PASS:
+        return False, "status not pass"
     if (res.get("release_status") or {}).get("status") != RELEASE_READY:
         return False, "not release_ready"
     pwml = res.get("pwml_path")
@@ -138,6 +140,9 @@ class CuratorQueue:
         scope = item["request"].scope
         name = f"entry-{item['id']}"
         final = self.queue_dir / name
+        if final.exists() and not self._matches(final, submission, item):
+            # ids restart after a DB reset: another job's folder. Move aside, never delete.
+            os.rename(final, self.queue_dir / f".stale-{int(time.time())}-{uuid.uuid4().hex[:8]}-{name}")
         if not final.exists():
             self._stage(final, submission, item, source_root)
         self._db.execute(
@@ -146,6 +151,14 @@ class CuratorQueue:
             (item["id"], submission["id"], scope.requested_organism or None,
              scope.requested_pathway or None, name, time.time()))
         return self.get(item["id"])
+
+    @staticmethod
+    def _matches(entry: Path, submission: Dict[str, Any], item: Dict[str, Any]) -> bool:
+        try:
+            man = json.loads((entry / "manifest.json").read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            return False
+        return man.get("item_id") == item["id"] and man.get("submission_id") == submission["id"]
 
     def _stage(self, final: Path, submission: Dict[str, Any], item: Dict[str, Any],
                source_root: Optional[Path]) -> None:

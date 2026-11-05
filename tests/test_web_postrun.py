@@ -255,3 +255,32 @@ def test_config_from_env(tmp_path):
     assert c.base_url == "https://x.org" and c.queue_dir == tmp_path / "curator_queue"
     c = PostRunConfig.from_env(tmp_path / "j.sqlite", env={"T2PW_CURATOR_QUEUE_DIR": str(tmp_path / "q")})
     assert c.base_url is None and c.queue_dir == tmp_path / "q"
+
+
+def test_startup_sweep_enqueues_an_item_the_hook_missed_and_sends_no_email(store, tmp_path, cfg, notify):
+    """NEW ACCEPTANCE TEST (W7, new capability; review N2): the process died between
+    store.finish and the hook. At the next start the curator enqueue happens exactly once
+    (a second start adds nothing) and no email is sent."""
+    submit(store)
+    item = store.claim_next(60)
+    assert store.finish(item["id"], item["attempt"], result(tmp_path, item["id"]))  # hook skipped
+    q = curator_queue.CuratorQueue(store.path, cfg.queue_dir)
+    assert q.list_entries() == []
+    for _ in range(2):
+        w = Worker(store, tmp_path / "work", postrun_cfg=cfg)
+        assert w.start() == []
+        w.close()
+    assert [r["item_id"] for r in q.list_entries()] == [item["id"]] and q.verify(item["id"])
+    assert notify.calls == []
+
+
+def test_startup_recovery_with_retries_left_does_neither(store, tmp_path, cfg, notify):
+    """NEW ACCEPTANCE TEST (W7, new capability; review N5): a crashed running item that the
+    retry policy re-queues is not final: start() enqueues nothing and sends no email."""
+    submit(store)
+    item = store.claim_next(60)
+    w = Worker(store, tmp_path / "work", max_retries=2, postrun_cfg=cfg)
+    assert w.start() == [item["id"]]
+    w.close()
+    assert store.item(item["id"])["state"] == "queued"
+    assert notify.calls == [] and not cfg.queue_dir.exists()

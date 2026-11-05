@@ -193,3 +193,31 @@ def test_nothing_is_written_outside_the_queue_directory(store, tmp_path, work):
     assert snapshot(tmp_path, queue) == before
     added = [p for p in tmp_path.rglob("*") if p.is_file() and queue in p.parents]
     assert added and all(not p.name.endswith(".tmp") for p in added)
+
+
+def test_stale_folder_from_another_job_is_moved_aside_not_adopted(store, tmp_path, work):
+    """NEW ACCEPTANCE TEST (W7, new capability; review N1): after a DB reset ids restart; an
+    entry-<id> folder whose manifest names another submission is moved aside (never
+    deleted) and the entry is rebuilt from this job's files."""
+    queue = tmp_path / "queue"
+    sid, iid = make_final(store, work)
+    stale = queue / f"entry-{iid}"
+    stale.mkdir(parents=True)
+    (stale / "manifest.json").write_text(json.dumps({"item_id": iid, "submission_id": "other"}), encoding="utf-8")
+    (stale / "pathway.pwml").write_text("OTHER JOB", encoding="utf-8")
+    q = CuratorQueue(store.path, queue)
+    q.enqueue(*parts(store, sid, iid), work)
+    assert q.manifest(iid)["submission_id"] == sid and q.verify(iid)
+    assert "OTHER JOB" not in (queue / f"entry-{iid}" / "pathway.pwml").read_text(encoding="utf-8")
+    (moved,) = queue.glob(".stale-*")
+    assert (moved / "pathway.pwml").read_text(encoding="utf-8") == "OTHER JOB"
+
+
+def test_non_pass_status_does_not_qualify(store, tmp_path, work):
+    """NEW ACCEPTANCE TEST (W7, new capability; review N4): a result that is not status
+    pass never qualifies, whatever else it carries."""
+    sid, iid = make_final(store, work)
+    sub, item = parts(store, sid, iid)
+    assert qualify(sub, item, work)[0]
+    item["result"]["status"] = "fail"
+    assert qualify(sub, item, work) == (False, "status not pass")
