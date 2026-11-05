@@ -1,0 +1,130 @@
+{
+  "label": "R2tr-2a",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/ws-R2-tip/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-R2-tip",
+    "--pin-verdict",
+    "C:/t/wsR2tr/pin/2a.pin.json",
+    "-q",
+    "--basetemp=C:/t/wsR2tr/bt/2a",
+    "tests/test_c030a_object_sharing_at_the_freeze_seam.py",
+    "tests/test_c030_canonical_identity_fallback.py",
+    "tests/test_c052_prefreeze_report_at_the_streamlit_seams.py"
+  ],
+  "cwd": "C:\\t\\ws-R2-tip",
+  "started_at": "2026-11-05T21:07:11+00:00",
+  "finished_at": "2026-11-05T21:07:26+00:00",
+  "duration_seconds": 14.470305400000143,
+  "timeout_seconds": 580.0,
+  "root_pid": 495212,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 495216,
+      "name": "python.exe",
+      "ppid": 495212
+    },
+    {
+      "pid": 495068,
+      "name": "git.exe",
+      "ppid": 495216
+    },
+    {
+      "pid": 469144,
+      "name": "git.exe",
+      "ppid": 495216
+    },
+    {
+      "pid": 493844,
+      "name": "git.exe",
+      "ppid": 495216
+    },
+    {
+      "pid": 486732,
+      "name": "git.exe",
+      "ppid": 495216
+    },
+    {
+      "pid": 473256,
+      "name": "git.exe",
+      "ppid": 495216
+    }
+  ],
+  "descendants_terminated": [
+    469144,
+    473256,
+    486732,
+    493844,
+    495068,
+    495216
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 294940,
+      "name": "python.exe"
+    },
+    {
+      "pid": 295232,
+      "name": "python.exe"
+    },
+    {
+      "pid": 442728,
+      "name": "python.exe"
+    },
+    {
+      "pid": 460520,
+      "name": "python.exe"
+    },
+    {
+      "pid": 494816,
+      "name": "python.exe"
+    },
+    {
+      "pid": 494868,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/wsR2tr/reports/2a.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-R2-tip\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-R2-tip",
+    "repo_head": "a3ff4681381f0aa7ca8153819e961b173d8434ad",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ws-R2-tr",
+    "token": "ws-R2-tr:494816:6729cb9bb941e1d1",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

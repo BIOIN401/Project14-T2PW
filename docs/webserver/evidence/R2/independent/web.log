@@ -1,0 +1,33 @@
+T2PW: C:\t\ws-R2-tip\src\t2pw\__init__.py
+........................................................................ [ 27%]
+........................................................................ [ 55%]
+........................................................................ [ 82%]
+.............................................                            [100%]
+261 passed in 47.34s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R2-tip\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ a3ff4681381f0aa7ca8153819e961b173d8434ad  [git, worktree dirty=False]
+label                   : R2tr-web
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R2-tip/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R2-tip --pin-verdict C:/t/wsR2tr/pin/web.pin.json -q --basetemp=C:/t/wsR2tr/bt/web tests/test_service_pathway_interface.py tests/test_service_inputs.py tests/test_service_organisms.py tests/test_web_jobs.py tests/test_web_worker.py tests/test_web_retry.py tests/test_web_limits.py tests/test_web_notify.py tests/test_web_design_system.py tests/test_web_curator_queue.py tests/test_web_postrun.py tests/test_web_app.py
+cwd                     : C:\t\ws-R2-tip
+root PID / process group: 520104 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 580 s
+duration                : 49.34 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 112  529676:python.exe, 467048:python.exe, 527148:python.exe, 529728:python.exe, 531388:python.exe, 510868:python.exe, 529736:python.exe, 501460:python.exe, 528248:python.exe, 518072:python.exe, 531432:python.exe, 527788:python.exe, 530168:python.exe, 524880:python.exe, 529996:python.exe, 525680:python.exe, 530392:python.exe, 517272:python.exe, 525500:python.exe, 528852:python.exe, 523112:python.exe, 525260:python.exe, 531316:python.exe, 529340:python.exe, 530768:python.exe, 474776:python.exe, 475276:python.exe, 531048:python.exe, 531068:python.exe, 531252:python.exe, 531280:python.exe, 527736:python.exe, 531084:python.exe, 480232:python.exe, 482280:python.exe, 524496:python.exe, 526020:python.exe, 530140:python.exe, 530256:python.exe, 511728:python.exe, 524856:python.exe, 519264:python.exe, 522992:python.exe, 479580:python.exe, 523520:python.exe, 527472:python.exe, 528700:python.exe, 528728:python.exe, 531452:python.exe, 525384:python.exe, 530740:python.exe, 463176:python.exe, 525256:python.exe, 529720:python.exe, 520504:python.exe, 530924:python.exe, 526376:python.exe, 529368:python.exe, 530064:python.exe, 519944:python.exe, 530368:python.exe, 530124:python.exe, 530556:python.exe, 526988:python.exe, 528856:python.exe, 524136:python.exe, 525184:python.exe, 517948:python.exe, 528936:python.exe, 531212:python.exe, 531248:python.exe, 531060:python.exe, 524316:python.exe, 519276:python.exe, 529800:python.exe, 474160:python.exe, 523920:python.exe, 525564:python.exe, 530684:python.exe, 529016:python.exe, 531028:python.exe, 528636:python.exe, 514652:python.exe, 475036:python.exe, 528756:python.exe, 529584:python.exe, 530108:python.exe, 528548:python.exe, 530260:python.exe, 529968:python.exe, 529920:python.exe, 523640:python.exe, 530096:python.exe, 527684:python.exe, 527976:python.exe, 529252:python.exe, 529536:python.exe, 514124:tasklist.exe, 529472:python.exe, 530604:python.exe, 474732:python.exe, 529092:python.exe, 509776:python.exe, 530156:python.exe, 528428:python.exe, 528456:python.exe, 528324:python.exe, 528944:python.exe, 479484:python.exe, 524920:python.exe, 529752:python.exe, 531072:python.exe
+descendants terminated  : 112  463176, 467048, 474160, 474732, 474776, 475036, 475276, 479484, 479580, 480232, 482280, 501460, 509776, 510868, 511728, 514124, 514652, 517272, 517948, 518072, 519264, 519276, 519944, 520504, 522992, 523112, 523520, 523640, 523920, 524136, 524316, 524496, 524856, 524880, 524920, 525184, 525256, 525260, 525384, 525500, 525564, 525680, 526020, 526376, 526988, 527148, 527472, 527684, 527736, 527788, 527976, 528248, 528324, 528428, 528456, 528548, 528636, 528700, 528728, 528756, 528852, 528856, 528936, 528944, 529016, 529092, 529252, 529340, 529368, 529472, 529536, 529584, 529676, 529720, 529728, 529736, 529752, 529800, 529920, 529968, 529996, 530064, 530096, 530108, 530124, 530140, 530156, 530168, 530256, 530260, 530368, 530392, 530556, 530604, 530684, 530740, 530768, 530924, 531028, 531048, 531060, 531068, 531072, 531084, 531212, 531248, 531252, 531280, 531316, 531388, 531432, 531452
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/wsR2tr/reports/web.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R2-tr  acquired=True  released=True
+pre-existing (reported, NEVER killed): 8
+================================================

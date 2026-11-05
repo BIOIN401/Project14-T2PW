@@ -1,0 +1,102 @@
+{
+  "label": "R2tr-g1",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/ws-R2-tip/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-R2-tip",
+    "--pin-verdict",
+    "C:/t/wsR2tr/pin/g1.pin.json",
+    "-q",
+    "--basetemp=C:/t/wsR2tr/bt/g1",
+    "tests/test_batch_driver_seam_golden.py"
+  ],
+  "cwd": "C:\\t\\ws-R2-tip",
+  "started_at": "2026-11-05T21:04:18+00:00",
+  "finished_at": "2026-11-05T21:04:31+00:00",
+  "duration_seconds": 11.794896899999003,
+  "timeout_seconds": 300.0,
+  "root_pid": 485664,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 485524,
+      "name": "python.exe",
+      "ppid": 485664
+    }
+  ],
+  "descendants_terminated": [
+    485524
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 294940,
+      "name": "python.exe"
+    },
+    {
+      "pid": 295232,
+      "name": "python.exe"
+    },
+    {
+      "pid": 442728,
+      "name": "python.exe"
+    },
+    {
+      "pid": 483368,
+      "name": "python.exe"
+    },
+    {
+      "pid": 483600,
+      "name": "python.exe"
+    },
+    {
+      "pid": 484716,
+      "name": "python.exe"
+    },
+    {
+      "pid": 486284,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/wsR2tr/reports/g1.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-R2-tip\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-R2-tip",
+    "repo_head": "a3ff4681381f0aa7ca8153819e961b173d8434ad",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ws-R2-tr",
+    "token": "ws-R2-tr:483368:f67f06a072e80909",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

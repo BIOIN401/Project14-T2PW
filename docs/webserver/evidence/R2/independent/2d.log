@@ -1,0 +1,80 @@
+T2PW: C:\t\ws-R2-tip\src\t2pw\__init__.py
+........................................................................ [ 17%]
+........................................................................ [ 34%]
+........................................................................ [ 52%]
+....................F................................................... [ 69%]
+........................................................................ [ 86%]
+......................................................                   [100%]
+================================== FAILURES ===================================
+___________ test_the_orchestrator_passes_the_merge_base_to_conform ____________
+
+    def test_the_orchestrator_passes_the_merge_base_to_conform():
+        """The S3 seam must hand conform the SAME object it hands ``merge_additions``.
+    
+        ``seed_payload`` defaults to ``None``, which is the pre-fix behaviour, so a
+        caller that forgets it gets a green conform module and a merged payload with
+        every duplicate still in it. That is not hypothetical: the guard landed on
+        2026-07-28 with ``streamlit_app.py`` still calling
+        ``conform_rag_additions_for_merge(rag_result.payload)``, and every number the
+        fix claims -- 88 entity rows -> 66 on PMC12444477/strict, 279 -> 220 across the
+        eight delivered ``merged_payload.json`` with a RAG side -- was unreachable in
+        production until the second argument was added. Every unit test in this file
+        passes the base explicitly, so none of them can catch that.
+    
+        Checked against the SOURCE rather than by running the orchestrator, because
+        importing ``streamlit_app`` executes a Streamlit script. The assertion is
+        stronger than "two arguments were passed": the name given to conform must be
+        the same name given to ``merge_additions`` as its base. Passing the Stage-1
+        seed there instead would type-check, run, and quietly let back every entity
+        that Stage 2 registered and Stage 1 did not ('lipid IV_A precursor',
+        'Kdo-lipid A precursor', 'tetra-acylated disaccharide intermediate' in that
+        same run).
+        """
+        tree = ast.parse(APP_PATH.read_text(encoding="utf-8"))
+    
+        def _calls(name: str) -> List[ast.Call]:
+            return [
+                node
+                for node in ast.walk(tree)
+                if isinstance(node, ast.Call)
+                and isinstance(node.func, ast.Name)
+                and node.func.id == name
+            ]
+    
+        conform_calls = _calls("conform_rag_additions_for_merge")
+>       assert len(conform_calls) == 1, "the S3 seam is the only caller; found %d" % len(conform_calls)
+E       AssertionError: the S3 seam is the only caller; found 0
+E       assert 0 == 1
+E        +  where 0 = len([])
+
+tests\test_rag_seed_entity_reimport.py:570: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_rag_seed_entity_reimport.py::test_the_orchestrator_passes_the_merge_base_to_conform
+1 failed, 413 passed in 75.41s (0:01:15)
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R2-tip\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ a3ff4681381f0aa7ca8153819e961b173d8434ad  [git, worktree dirty=False]
+label                   : R2tr-2d
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R2-tip/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R2-tip --pin-verdict C:/t/wsR2tr/pin/2d.pin.json -q --basetemp=C:/t/wsR2tr/bt/2d tests/test_strict_quarantine.py tests/test_strict_quarantine_real_artifact_replay.py tests/test_stage0_case_c_retry_clobber.py tests/test_rag_seed_entity_reimport.py tests/test_reaction_evidence.py tests/test_rag_admission_production_path.py tests/test_rag_triage_orchestration.py tests/test_rag_differential_gate.py tests/test_stage0_scope_fallback.py tests/test_orch757_llm_token_budgets.py tests/test_orch759a_duplicate_protein_fold.py tests/test_entity_admission.py
+cwd                     : C:\t\ws-R2-tip
+root PID / process group: 522892 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 580 s
+duration                : 76.71 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 3  522904:python.exe, 523912:python.exe, 523932:python.exe
+descendants terminated  : 3  522904, 523912, 523932
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/wsR2tr/reports/2d.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R2-tr  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

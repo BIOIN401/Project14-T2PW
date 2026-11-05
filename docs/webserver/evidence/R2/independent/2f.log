@@ -1,0 +1,50 @@
+T2PW: C:\t\ws-R2-tip\src\t2pw\__init__.py
+.................Fs....sss...........                                    [100%]
+================================== FAILURES ===================================
+_______ test_the_message_names_the_problem_the_interpreter_and_the_cure _______
+
+    def test_the_message_names_the_problem_the_interpreter_and_the_cure() -> None:
+        """The wrong-interpreter case: the one that actually happened.
+    
+        The cure has to be a command, not advice. "Use the venv" is not actionable at
+        2am; ``C:\\...\\.venv\\Scripts\\python.exe scripts\\batch_run.py`` is, and the
+        root cause -- ``py.exe`` ignoring the active virtualenv -- has to be named or
+        the operator fixes it once and hits it again next week.
+        """
+    
+        venv = runner.venv_python()
+>       assert venv is not None, "this project ships a .venv; the test assumes it"
+E       AssertionError: this project ships a .venv; the test assumes it
+E       assert None is not None
+
+tests\test_batch_preflight.py:616: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_batch_preflight.py::test_the_message_names_the_problem_the_interpreter_and_the_cure
+1 failed, 32 passed, 4 skipped in 9.01s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R2-tip\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ a3ff4681381f0aa7ca8153819e961b173d8434ad  [git, worktree dirty=False]
+label                   : R2tr-2f
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R2-tip/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R2-tip --pin-verdict C:/t/wsR2tr/pin/2f.pin.json -q --basetemp=C:/t/wsR2tr/bt/2f tests/test_batch_preflight.py
+cwd                     : C:\t\ws-R2-tip
+root PID / process group: 522656 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 580 s
+duration                : 10.08 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 17  523916:python.exe, 520036:python.exe, 527128:python.exe, 508460:python.exe, 509336:python.exe, 514372:python.exe, 518148:python.exe, 526460:python.exe, 526340:python.exe, 526824:python.exe, 526840:python.exe, 513660:python.exe, 526820:python.exe, 524064:python.exe, 526440:python.exe, 526788:python.exe, 526980:python.exe
+descendants terminated  : 17  508460, 509336, 513660, 514372, 518148, 520036, 523916, 524064, 526340, 526440, 526460, 526788, 526820, 526824, 526840, 526980, 527128
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/wsR2tr/reports/2f.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R2-tr  acquired=True  released=True
+pre-existing (reported, NEVER killed): 10
+================================================
