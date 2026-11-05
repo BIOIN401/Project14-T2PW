@@ -23,15 +23,17 @@ State values: `DISPATCHED` · `IN_REVIEW` · `CHANGES_REQUESTED` · `APPROVED` �
 | 2026-11-04 | W3 | DISPATCHED | `ws/W3-job-store` @ `dfb9b327` (worktree `C:/t/ws-W3`) | general-purpose as ws-implementer (opus/high) | `docs/webserver/results/W3.md` (on return) | SQLite job store + one worker + child-process lifecycle against the W0 stub. No new dependencies (psutil not installed) |
 | 2026-11-04 | W5 | DISPATCHED | `ws/W5-design-system` @ `dfb9b327` (worktree `C:/t/ws-W5`) | general-purpose as ws-ui-builder (opus/high) | `docs/webserver/results/W5.md` (on return) | Design system: base template, tokens, light/dark, components. Jinja2 only; FastAPI is not installed (W6 needs it) |
 | 2026-11-04 | W1 | DISPATCHED | `ws/W1-input-adapters` @ `dfb9b327` (worktree `C:/t/ws-W1`) | general-purpose as ws-implementer (sonnet/high) | `docs/webserver/results/W1.md` (on return) | Input adapters: name+organism to TopicSpec, PMID to PMCID (idconv, mocked in tests), PDF to pdf_parser. Reuse batch/fetch.py and extraction/pdf_parser.py |
+| 2026-11-04 | W1 | IN_REVIEW | `ws/W1-input-adapters` @ `5e71a5d1` (code `736da95f`) | impl general-purpose as ws-implementer (sonnet/high); review ws-reviewer (sonnet/high); tests ws-test-runner (haiku/medium) | `evidence/W1/01-focused.json` (22 passed, 0 survivors) | Diff stat inside boundary (6 files +694/-0). Reviewer asked to judge the import of private `mapping/map_ids.py` helpers. Test-runner adds one bounded live idconv probe (PMID 23193287): the endpoint and response shape came from NCBI docs, not a live call |
+| 2026-11-04 | W2 | DISPATCHED | `ws/W2-organism-list` @ `16dfb6b2` (worktree `C:/t/ws-W2`) | general-purpose as ws-implementer (sonnet/high) | `docs/webserver/results/W2.md` (on return) | Export script (read-only PathBank DB, dev `.env` by path, never copied) to `data/webserver/organisms.json` + `service/organisms.py` loader |
 
 ## Current state (the orchestrator rewrites this block in place; everything above is append-only)
 
-- Integration branch: `webserver/refactor` @ `c46e88ad` + docs commit, pushed
+- Integration branch: `webserver/refactor` @ `16dfb6b2`, pushed
 - Done: R0 (`results/R0.md`); W0 merged (`c46e88ad`, `results/W0.md`)
-- In flight: W3 (opus/high, `C:/t/ws-W3`), W5 (opus/high, `C:/t/ws-W5`), W1 (sonnet/high, `C:/t/ws-W1`); all general-purpose under the ws-* role files
-- Next up: W2 (sonnet/high) when a slot frees; W6 needs FastAPI added (PLAN §2 names it; not installed)
+- In flight: W3 impl (opus/high, `C:/t/ws-W3`); W5 impl (opus/high, `C:/t/ws-W5`); W2 impl (sonnet/high, `C:/t/ws-W2`); W1 in review (tests + reviewer, `5e71a5d1`). All implementers run as general-purpose under the ws-* role files
+- Next up: W1 merge if green; then W4, W7, W8 after W3; W6 after W3 + W5 (needs FastAPI added: PLAN §2 names it, not installed)
 - Held: R1 (worktree `C:/t/ws-R1` ready), waiting on PO ruling Q-R0-1
 - Blocked: —
-- Carry-forward notes: R5 checks whether research mode also writes the six "strict mode" PWML-export reports (W0 docstring label); W3 sets the absolute `deadline` at dequeue, not at submit
-- Tooling notes: use repo `.venv` python for every run (system C:/Python313 has no streamlit). `ws-implementer` isolation may be refused; fall back to general-purpose in a pre-made `C:/t/ws-<ID>` worktree. Post-merge SMOKE runs in detached worktree `C:/t/ws-int`
-- Open PO questions: Q-R0-1 (gate 5 vs source-reading golden-seam tests; holds R1); Q-W0-2 (deadline form); Q-W0-3 (what W7 counts as strict PWML); Q-W0-5 (citation report is research-mode only); hosting location; server DB user
+- Carry-forward notes: R5 checks whether research mode also writes the six "strict mode" PWML-export reports (W0 docstring label); W3 sets the absolute `deadline` at dequeue, not at submit; R5 decides whether W1 adapter texts feed `PathwayRequest.texts` directly
+- Tooling notes: use repo `.venv` python for every run (system C:/Python313 has no streamlit). `ws-implementer`/`ws-ui-builder` isolation may be refused; use general-purpose in a pre-made `C:/t/ws-<ID>` worktree. Post-merge SMOKE runs in a detached worktree (`C:/t/ws-int`)
+- Open PO questions: Q-R0-1 (gate 5 vs source-reading golden-seam tests; holds R1); FastAPI dependency for W6; Q-W0-2 (deadline form); Q-W0-3 (what W7 counts as strict PWML); Q-W0-5 (citation report is research-mode only); hosting location; server DB user
