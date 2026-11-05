@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+{#- T2PW public base layout (W5).
+    Context, all optional:
+      theme       "light" | "dark" | "" (default: follow the system setting)
+      static_url  prefix for static files (default "/static")
+      active_nav  key of the current nav item: submit | examples | help | about
+      site_name   wordmark text (default "T2PW")
+    Blocks: title, head, header_extra, content, footer, scripts (empty in W5;
+    W6 adds HTMX there).
+-#}
+{%- set static_url = static_url | default("/static") -%}
+{%- set theme = theme | default("") -%}
+{%- set active_nav = active_nav | default("") -%}
+{%- set site_name = site_name | default("T2PW") -%}
+{%- set nav_items = [
+  ("submit", "Submit", "/"),
+  ("examples", "Examples", "/examples"),
+  ("help", "Help", "/help"),
+  ("about", "About / Cite", "/about"),
+] -%}
+<html lang="en"{% if theme in ("light", "dark") %} data-theme="{{ theme }}"{% endif %}>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>{% block title %}{% endblock %}{% if self.title() %} · {% endif %}{{ site_name }}</title>
+  <link rel="stylesheet" href="{{ static_url }}/css/tokens.css">
+  <link rel="stylesheet" href="{{ static_url }}/css/site.css">
+  {%- block head %}{% endblock %}
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header">
+    <div class="container">
+      <a class="brand" href="/">
+        <span class="brand__name">{{ site_name }}</span>
+        <span class="brand__tagline">Text to PathWhiz</span>
+      </a>
+      <nav class="site-nav" aria-label="Main">
+        <ul>
+          {%- for key, label, href in nav_items %}
+          <li><a href="{{ href }}"{% if key == active_nav %} aria-current="page"{% endif %}>{{ label }}</a></li>
+          {%- endfor %}
+        </ul>
+      </nav>
+      {%- block header_extra %}{% endblock %}
+    </div>
+  </header>
+  <main id="main" class="site-main" tabindex="-1">
+    <div class="container">
+      {%- block content %}{% endblock %}
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="container">
+      {%- block footer %}
+      <p><strong>How to cite:</strong> [Citation placeholder: added on publication.]</p>
+      <p>[Lab credit placeholder.]</p>
+      {%- endblock %}
+    </div>
+  </footer>
+  {%- block scripts %}{% endblock %}
+</body>
+</html>

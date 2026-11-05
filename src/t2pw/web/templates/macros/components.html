@@ -1,0 +1,248 @@
+{#- T2PW UI components (W5). Import with:
+      {% import "macros/components.html" as c %}
+    Class names are styled in static/css/site.css. `attrs` is a dict of extra
+    HTML attributes (e.g. hx-* for W6), rendered with xmlattr.
+
+    NOTES FOR W6 (security and packaging):
+    * `href` values, `attrs` keys, `variant` and `heading_level` must be built by
+      the server, never taken from user data. Autoescaping stops markup
+      injection, but not a javascript: URL in an href, an event-handler key in
+      attrs, or a forged class or tag name.
+    * Autoescape must stay on for .html templates (the Jinja2Templates default).
+      The macros rely on it to escape labels, values and unknown statuses.
+    * templates/ and static/ are not Python files: add them as package data
+      (pyproject / MANIFEST) before the server is installed from a wheel. W5
+      does not do this.
+-#}
+
+{#- Button. A link when href is given, else a <button>.
+    variant: primary | secondary | ghost | danger;  size: "" | sm -#}
+{% macro button(label, variant="primary", type="button", href=None, size="", disabled=False, attrs={}) -%}
+{%- set cls = "btn btn--" ~ variant ~ (" btn--" ~ size if size else "") -%}
+{%- if href -%}
+<a class="{{ cls }}" href="{{ href }}"{% if disabled %} aria-disabled="true" tabindex="-1"{% endif %}{{ attrs | xmlattr }}>{{ label }}</a>
+{%- else -%}
+<button class="{{ cls }}" type="{{ type }}"{% if disabled %} disabled{% endif %}{{ attrs | xmlattr }}>{{ label }}</button>
+{%- endif -%}
+{%- endmacro %}
+
+{#- Shared label / hint / error pieces for the field macros. -#}
+{% macro _label(id, label, required) -%}
+<label class="field__label" for="{{ id }}">{{ label }}{% if required %}<span class="field__req">required</span>{% endif %}</label>
+{%- endmacro %}
+
+{% macro _describedby(id, hint, error) -%}
+{%- set ids = [] -%}
+{%- if hint %}{% set _ = ids.append(id ~ "-hint") %}{% endif -%}
+{%- if error %}{% set _ = ids.append(id ~ "-error") %}{% endif -%}
+{%- if ids %} aria-describedby="{{ ids | join(' ') }}"{% endif -%}
+{%- if error %} aria-invalid="true"{% endif -%}
+{%- endmacro %}
+
+{% macro _hint(id, hint) -%}
+{%- if hint %}<span class="field__hint" id="{{ id }}-hint">{{ hint }}</span>{% endif -%}
+{%- endmacro %}
+
+{% macro _error(id, error) -%}
+{%- if error %}<span class="field__error" id="{{ id }}-error">{{ error }}</span>{% endif -%}
+{%- endmacro %}
+
+{#- Single-line input. type: text | email | url | number | search ... -#}
+{% macro text_field(name, label, value="", type="text", id=None, hint=None, error=None, required=False, placeholder=None, autocomplete=None, attrs={}) -%}
+{%- set id = id or name -%}
+<div class="field">
+  {{ _label(id, label, required) }}
+  {{ _hint(id, hint) }}
+  <input class="input" type="{{ type }}" id="{{ id }}" name="{{ name }}" value="{{ value }}"
+    {%- if placeholder %} placeholder="{{ placeholder }}"{% endif %}
+    {%- if autocomplete %} autocomplete="{{ autocomplete }}"{% endif %}
+    {%- if required %} required{% endif %}{{ _describedby(id, hint, error) }}{{ attrs | xmlattr }}>
+  {{ _error(id, error) }}
+</div>
+{%- endmacro %}
+
+{% macro textarea_field(name, label, value="", id=None, hint=None, error=None, required=False, rows=6, placeholder=None, attrs={}) -%}
+{%- set id = id or name -%}
+<div class="field">
+  {{ _label(id, label, required) }}
+  {{ _hint(id, hint) }}
+  <textarea class="input" id="{{ id }}" name="{{ name }}" rows="{{ rows }}"
+    {%- if placeholder %} placeholder="{{ placeholder }}"{% endif %}
+    {%- if required %} required{% endif %}{{ _describedby(id, hint, error) }}{{ attrs | xmlattr }}>{{ value }}</textarea>
+  {{ _error(id, error) }}
+</div>
+{%- endmacro %}
+
+{#- options: list of strings or (value, label) pairs. -#}
+{% macro select_field(name, label, options, selected=None, id=None, hint=None, error=None, required=False, placeholder=None, attrs={}) -%}
+{%- set id = id or name -%}
+<div class="field">
+  {{ _label(id, label, required) }}
+  {{ _hint(id, hint) }}
+  <select class="input" id="{{ id }}" name="{{ name }}"
+    {%- if required %} required{% endif %}{{ _describedby(id, hint, error) }}{{ attrs | xmlattr }}>
+    {%- if placeholder %}
+    <option value=""{% if not selected %} selected{% endif %}>{{ placeholder }}</option>
+    {%- endif %}
+    {%- for opt in options %}
+    {%- set value, text = (opt if opt is not string else (opt, opt)) %}
+    <option value="{{ value }}"{% if value == selected %} selected{% endif %}>{{ text }}</option>
+    {%- endfor %}
+  </select>
+  {{ _error(id, error) }}
+</div>
+{%- endmacro %}
+
+{% macro checkbox_field(name, label, checked=False, value="1", id=None, hint=None, error=None, attrs={}) -%}
+{%- set id = id or name -%}
+<div class="field">
+  <div class="check">
+    <input type="checkbox" id="{{ id }}" name="{{ name }}" value="{{ value }}"
+      {%- if checked %} checked{% endif %}{{ _describedby(id, hint, error) }}{{ attrs | xmlattr }}>
+    <div>
+      <label for="{{ id }}">{{ label }}</label>
+      {{ _hint(id, hint) }}
+    </div>
+  </div>
+  {{ _error(id, error) }}
+</div>
+{%- endmacro %}
+
+{#- Radio group in a fieldset (e.g. an input-mode switch).
+    options: list of strings or (value, label) pairs. -#}
+{% macro radio_group(name, legend, options, selected=None, id=None, hint=None, inline=True, attrs={}) -%}
+{%- set id = id or name -%}
+<fieldset class="choices{{ ' choices--inline' if inline else '' }}"{% if hint %} aria-describedby="{{ id }}-hint"{% endif %}>
+  <legend>{{ legend }}</legend>
+  {{ _hint(id, hint) }}
+  <div class="choices__items">
+    {%- for opt in options %}
+    {%- set value, text = (opt if opt is not string else (opt, opt)) %}
+    <div class="check">
+      <input type="radio" id="{{ id }}-{{ loop.index }}" name="{{ name }}" value="{{ value }}"{% if value == selected %} checked{% endif %}{{ attrs | xmlattr }}>
+      <label for="{{ id }}-{{ loop.index }}">{{ text }}</label>
+    </div>
+    {%- endfor %}
+  </div>
+</fieldset>
+{%- endmacro %}
+
+{% macro file_field(name, label, accept=None, multiple=False, id=None, hint=None, error=None, required=False, attrs={}) -%}
+{%- set id = id or name -%}
+<div class="field">
+  {{ _label(id, label, required) }}
+  {{ _hint(id, hint) }}
+  <input class="input" type="file" id="{{ id }}" name="{{ name }}"
+    {%- if accept %} accept="{{ accept }}"{% endif %}
+    {%- if multiple %} multiple{% endif %}
+    {%- if required %} required{% endif %}{{ _describedby(id, hint, error) }}{{ attrs | xmlattr }}>
+  {{ _error(id, error) }}
+</div>
+{%- endmacro %}
+
+{#- Card. Body comes from {% call c.card("Title") %}...{% endcall %}. -#}
+{% macro card(title=None, heading_level=2, raised=False, attrs={}) -%}
+<section class="card{{ ' card--raised' if raised else '' }}"{{ attrs | xmlattr }}>
+  {%- if title %}
+  <div class="card__header"><h{{ heading_level }} class="card__title">{{ title }}</h{{ heading_level }}></div>
+  {%- endif %}
+  <div class="card__body">{{ caller() }}</div>
+</section>
+{%- endmacro %}
+
+{#- Job / pathway status badge. The text label carries the meaning; colour is
+    secondary. Accepts the job states and, as aliases, the PathwayResult.status
+    values (t2pw.service.pathway STATUS_*). Anything else renders as a neutral
+    badge whose text is the escaped value and whose class is badge--unknown. -#}
+{% macro status_badge(status, label=None) -%}
+{%- set known = {
+  "queued": ("neutral", "Queued"),
+  "running": ("info", "Running"),
+  "done": ("success", "Done"),
+  "failed": ("error", "Failed"),
+  "review_required": ("warning", "Review required"),
+  "pass": ("success", "Passed"),
+  "fail": ("error", "Failed"),
+  "timeout": ("error", "Timed out"),
+  "error": ("error", "Error"),
+  "scope_conflict": ("warning", "Scope conflict"),
+} -%}
+{%- set tone, default_label = known.get(status, ("neutral", status)) -%}
+<span class="badge badge--{{ tone }} badge--{{ status if status in known else 'unknown' }}">{{ label or default_label }}</span>
+{%- endmacro %}
+
+{#- Stage-by-stage progress. steps: list of dicts {label, state, detail?}.
+    state: done | current | failed | skipped | pending -#}
+{% macro steps(items, label="Progress") -%}
+{%- set state_text = {
+  "done": "completed", "current": "in progress", "failed": "failed",
+  "skipped": "skipped", "pending": "not started",
+} -%}
+<ol class="steps" aria-label="{{ label }}">
+  {%- for s in items %}
+  {%- set state = s.get("state") or "pending" %}
+  <li class="step step--{{ state }}"{% if state == "current" %} aria-current="step"{% endif %}>
+    <span class="step__marker" aria-hidden="true"></span>
+    <span class="step__body">
+      <span class="step__label">{{ s.label }}</span>
+      <span class="visually-hidden">({{ state_text.get(state, state) }})</span>
+      {%- if s.get("detail") %}
+      <span class="step__detail">{{ s.detail }}</span>
+      {%- endif %}
+    </span>
+  </li>
+  {%- endfor %}
+</ol>
+{%- endmacro %}
+
+{#- Alert. kind: info | warning | error. Body from {% call %}. Errors use
+    role="alert" so they are announced when inserted (W6 / HTMX). -#}
+{% macro alert(kind="info", title=None) -%}
+{%- set prefix = {"info": "Note", "warning": "Warning", "error": "Error"}.get(kind, "Note") -%}
+<div class="alert alert--{{ kind }}"{% if kind == "error" %} role="alert"{% endif %}>
+  {%- if title %}
+  <p class="alert__title"><span class="visually-hidden">{{ prefix }}: </span>{{ title }}</p>
+  {%- else %}
+  <span class="visually-hidden">{{ prefix }}: </span>
+  {%- endif %}
+  {{ caller() }}
+</div>
+{%- endmacro %}
+
+{#- Table. columns: header strings; rows: lists of cells (cells may be
+    macro output). The wrapper scrolls sideways on narrow screens and is
+    keyboard-focusable for that reason. -#}
+{% macro data_table(columns, rows, caption) -%}
+<div class="table-wrap" role="region" aria-label="{{ caption }}" tabindex="0">
+  <table class="table">
+    <caption>{{ caption }}</caption>
+    <thead>
+      <tr>{% for col in columns %}<th scope="col">{{ col }}</th>{% endfor %}</tr>
+    </thead>
+    <tbody>
+      {%- for row in rows %}
+      <tr>{% for cell in row %}<td>{{ cell }}</td>{% endfor %}</tr>
+      {%- endfor %}
+    </tbody>
+  </table>
+</div>
+{%- endmacro %}
+
+{#- Download link. filename sets the download attribute; meta is shown muted
+    (e.g. "PWML · 48 KB"). -#}
+{% macro download_link(href, label, filename=None, meta=None) -%}
+<a class="download" href="{{ href }}"{% if filename %} download="{{ filename }}"{% else %} download{% endif %}>
+  <span>{{ label }}</span>
+  {%- if meta %}<span class="download__meta">{{ meta }}</span>{% endif %}
+</a>
+{%- endmacro %}
+
+{#- Code or accession chip. kind: code | accession. A link when href is given. -#}
+{% macro chip(text, kind="code", href=None, title=None) -%}
+{%- set cls = "chip chip--" ~ kind -%}
+{%- if href -%}
+<a class="{{ cls }}" href="{{ href }}"{% if title %} title="{{ title }}"{% endif %}>{{ text }}</a>
+{%- else -%}
+<code class="{{ cls }}"{% if title %} title="{{ title }}"{% endif %}>{{ text }}</code>
+{%- endif -%}
+{%- endmacro %}
