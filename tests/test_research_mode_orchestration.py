@@ -19,6 +19,8 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "src"
 APP_PATH = SRC / "t2pw" / "app" / "streamlit_app.py"
+#: R1: the moved functions now live here.
+SERVICE_PATH = SRC / "t2pw" / "service" / "postpipeline.py"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
@@ -30,7 +32,7 @@ from t2pw.pipeline.export_mode import (  # noqa: E402
 
 
 def _function(name: str) -> ast.FunctionDef:
-    tree = ast.parse(APP_PATH.read_text(encoding="utf-8"))
+    tree = ast.parse(SERVICE_PATH.read_text(encoding="utf-8"))
     return next(
         node
         for node in ast.walk(tree)

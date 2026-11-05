@@ -1,0 +1,182 @@
+{
+  "label": "E4batch",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/ws-R1/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-R1",
+    "--pin-verdict",
+    "C:/t/ws-R1/docs/webserver/evidence/R1/pin/f8-E4batch.pin.json",
+    "-q",
+    "--basetemp=C:/t/wsR1tmp/f8-E4batch",
+    "-rf",
+    "tests/test_batch_driver.py",
+    "tests/test_batch_preflight.py",
+    "tests/test_batch_research_gate_fail_open.py"
+  ],
+  "cwd": "C:\\t\\ws-R1",
+  "started_at": "2026-11-05T17:29:12+00:00",
+  "finished_at": "2026-11-05T17:29:51+00:00",
+  "duration_seconds": 38.08954420000009,
+  "timeout_seconds": 280.0,
+  "root_pid": 139044,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 137220,
+      "name": "python.exe",
+      "ppid": 139044
+    },
+    {
+      "pid": 139216,
+      "name": "python.exe",
+      "ppid": 137220
+    },
+    {
+      "pid": 139120,
+      "name": "python.exe",
+      "ppid": 139216
+    },
+    {
+      "pid": 139508,
+      "name": "python.exe",
+      "ppid": 137220
+    },
+    {
+      "pid": 65408,
+      "name": "python.exe",
+      "ppid": 139508
+    },
+    {
+      "pid": 134636,
+      "name": "python.exe",
+      "ppid": 139872
+    },
+    {
+      "pid": 139872,
+      "name": "python.exe",
+      "ppid": 137220
+    },
+    {
+      "pid": 125444,
+      "name": "python.exe",
+      "ppid": 137220
+    },
+    {
+      "pid": 139740,
+      "name": "python.exe",
+      "ppid": 125444
+    },
+    {
+      "pid": 14184,
+      "name": "python.exe",
+      "ppid": 137220
+    },
+    {
+      "pid": 139108,
+      "name": "python.exe",
+      "ppid": 14184
+    },
+    {
+      "pid": 137140,
+      "name": "python.exe",
+      "ppid": 139532
+    },
+    {
+      "pid": 139532,
+      "name": "python.exe",
+      "ppid": 139108
+    },
+    {
+      "pid": 138876,
+      "name": "python.exe",
+      "ppid": 137220
+    },
+    {
+      "pid": 140008,
+      "name": "python.exe",
+      "ppid": 138876
+    },
+    {
+      "pid": 14420,
+      "name": "python.exe",
+      "ppid": 139184
+    },
+    {
+      "pid": 139184,
+      "name": "python.exe",
+      "ppid": 140008
+    }
+  ],
+  "descendants_terminated": [
+    14184,
+    14420,
+    65408,
+    125444,
+    134636,
+    137140,
+    137220,
+    138876,
+    139108,
+    139120,
+    139184,
+    139216,
+    139508,
+    139532,
+    139740,
+    139872,
+    140008
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 20528,
+      "name": "python.exe"
+    },
+    {
+      "pid": 25472,
+      "name": "python.exe"
+    },
+    {
+      "pid": 59512,
+      "name": "python.exe"
+    },
+    {
+      "pid": 138688,
+      "name": "python.exe"
+    },
+    {
+      "pid": 138800,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/ws-R1/docs/webserver/evidence/R1/f8-E4batch.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-R1\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-R1",
+    "repo_head": "65798c7a102f742391d9301b4eaf2ee00aa40d64",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

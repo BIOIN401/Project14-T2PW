@@ -1,0 +1,311 @@
+T2PW: C:\t\ws-R1\src\t2pw\__init__.py
+FFFFFFFFFF.............................................................F [ 91%]
+FF.FFF.                                                                  [100%]
+================================== FAILURES ===================================
+________ test_a0c7_guard_the_artifact_set_shares_one_canonical_object _________
+tests\test_c030a_object_sharing_at_the_freeze_seam.py:369: in test_a0c7_guard_the_artifact_set_shares_one_canonical_object
+    result, seen = _run(tmp_path)
+                   ^^^^^^^^^^^^^^
+tests\test_c030a_object_sharing_at_the_freeze_seam.py:286: in _run
+    function, seen = _harness(tmp_path, **kwargs)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_c030a_object_sharing_at_the_freeze_seam.py:263: in _harness
+    function, _observed = orchestration._orchestration_harness(tmp_path)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_streamlit_stage2_orchestration.py:482: in _orchestration_harness
+    _load_function(helper, namespace)
+tests\test_streamlit_stage2_orchestration.py:89: in _load_function
+    _function_node(name),
+    ^^^^^^^^^^^^^^^^^^^^
+tests\test_streamlit_stage2_orchestration.py:78: in _function_node
+    return next(
+E   StopIteration
+________ test_a0c7_guard_the_shared_object_is_the_one_that_was_hashed _________
+tests\test_c030a_object_sharing_at_the_freeze_seam.py:385: in test_a0c7_guard_the_shared_object_is_the_one_that_was_hashed
+    result, seen = _run(tmp_path)
+                   ^^^^^^^^^^^^^^
+tests\test_c030a_object_sharing_at_the_freeze_seam.py:286: in _run
+    function, seen = _harness(tmp_path, **kwargs)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_c030a_object_sharing_at_the_freeze_seam.py:263: in _harness
+    function, _observed = orchestration._orchestration_harness(tmp_path)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_streamlit_stage2_orchestration.py:482: in _orchestration_harness
+    _load_function(helper, namespace)
+tests\test_streamlit_stage2_orchestration.py:89: in _load_function
+    _function_node(name),
+    ^^^^^^^^^^^^^^^^^^^^
+tests\test_streamlit_stage2_orchestration.py:78: in _function_node
+    return next(
+E   StopIteration
+_______ test_a0c7_guard_a_refusal_publishes_the_pre_seam_object_itself ________
+tests\test_c030a_object_sharing_at_the_freeze_seam.py:408: in test_a0c7_guard_a_refusal_publishes_the_pre_seam_object_itself
+    result, seen = _run(tmp_path, refuse=True)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_c030a_object_sharing_at_the_freeze_seam.py:286: in _run
+    function, seen = _harness(tmp_path, **kwargs)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_c030a_object_sharing_at_the_freeze_seam.py:263: in _harness
+    function, _observed = orchestration._orchestration_harness(tmp_path)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_streamlit_stage2_orchestration.py:482: in _orchestration_harness
+    _load_function(helper, namespace)
+tests\test_streamlit_stage2_orchestration.py:89: in _load_function
+    _function_node(name),
+    ^^^^^^^^^^^^^^^^^^^^
+tests\test_streamlit_stage2_orchestration.py:78: in _function_node
+    return next(
+E   StopIteration
+_ test_a0c7_mutant_a_copy_at_one_publication_site_goes_red[copy-at-final_mapped] _
+tests\test_c030a_object_sharing_at_the_freeze_seam.py:472: in test_a0c7_mutant_a_copy_at_one_publication_site_goes_red
+    result, seen = _run(tmp_path, mutant=_CopyAtKeys([site], CANONICAL_LOCAL))
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_c030a_object_sharing_at_the_freeze_seam.py:286: in _run
+    function, seen = _harness(tmp_path, **kwargs)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_c030a_object_sharing_at_the_freeze_seam.py:263: in _harness
+    function, _observed = orchestration._orchestration_harness(tmp_path)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_streamlit_stage2_orchestration.py:482: in _orchestration_harness
+    _load_function(helper, namespace)
+tests\test_streamlit_stage2_orchestration.py:89: in _load_function
+    _function_node(name),
+    ^^^^^^^^^^^^^^^^^^^^
+tests\test_streamlit_stage2_orchestration.py:78: in _function_node
+    return next(
+E   StopIteration
+_ test_a0c7_mutant_a_copy_at_one_publication_site_goes_red[copy-at-final_mapped_quarantined] _
+tests\test_c030a_object_sharing_at_the_freeze_seam.py:472: in test_a0c7_mutant_a_copy_at_one_publication_site_goes_red
+    result, seen = _run(tmp_path, mutant=_CopyAtKeys([site], CANONICAL_LOCAL))
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_c030a_object_sharing_at_the_freeze_seam.py:286: in _run
+    function, seen = _harness(tmp_path, **kwargs)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_c030a_object_sharing_at_the_freeze_seam.py:263: in _harness
+    function, _observed = orchestration._orchestration_harness(tmp_path)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_streamlit_stage2_orchestration.py:482: in _orchestration_harness
+    _load_function(helper, namespace)
+tests\test_streamlit_stage2_orchestration.py:89: in _load_function
+    _function_node(name),
+    ^^^^^^^^^^^^^^^^^^^^
+tests\test_streamlit_stage2_orchestration.py:78: in _function_node
+    return next(
+E   StopIteration
+_ test_a0c7_mutant_a_copy_at_one_publication_site_goes_red[copy-at-final_export_input] _
+tests\test_c030a_object_sharing_at_the_freeze_seam.py:472: in test_a0c7_mutant_a_copy_at_one_publication_site_goes_red
+    result, seen = _run(tmp_path, mutant=_CopyAtKeys([site], CANONICAL_LOCAL))
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_c030a_object_sharing_at_the_freeze_seam.py:286: in _run
+    function, seen = _harness(tmp_path, **kwargs)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_c030a_object_sharing_at_the_freeze_seam.py:263: in _harness
+    function, _observed = orchestration._orchestration_harness(tmp_path)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_streamlit_stage2_orchestration.py:482: in _orchestration_harness
+    _load_function(helper, namespace)
+tests\test_streamlit_stage2_orchestration.py:89: in _load_function
+    _function_node(name),
+    ^^^^^^^^^^^^^^^^^^^^
+tests\test_streamlit_stage2_orchestration.py:78: in _function_node
+    return next(
+E   StopIteration
+_ test_a0c7_mutant_a_copy_at_one_publication_site_goes_red[copy-at-canonical-payload-key] _
+tests\test_c030a_object_sharing_at_the_freeze_seam.py:472: in test_a0c7_mutant_a_copy_at_one_publication_site_goes_red
+    result, seen = _run(tmp_path, mutant=_CopyAtKeys([site], CANONICAL_LOCAL))
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_c030a_object_sharing_at_the_freeze_seam.py:286: in _run
+    function, seen = _harness(tmp_path, **kwargs)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_c030a_object_sharing_at_the_freeze_seam.py:263: in _harness
+    function, _observed = orchestration._orchestration_harness(tmp_path)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_streamlit_stage2_orchestration.py:482: in _orchestration_harness
+    _load_function(helper, namespace)
+tests\test_streamlit_stage2_orchestration.py:89: in _load_function
+    _function_node(name),
+    ^^^^^^^^^^^^^^^^^^^^
+tests\test_streamlit_stage2_orchestration.py:78: in _function_node
+    return next(
+E   StopIteration
+____________ test_a0c7_mutant_a_copy_at_the_seam_binding_goes_red _____________
+tests\test_c030a_object_sharing_at_the_freeze_seam.py:500: in test_a0c7_mutant_a_copy_at_the_seam_binding_goes_red
+    result, seen = _run(tmp_path, mutant=_CopyAtSeamBinding())
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_c030a_object_sharing_at_the_freeze_seam.py:286: in _run
+    function, seen = _harness(tmp_path, **kwargs)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_c030a_object_sharing_at_the_freeze_seam.py:263: in _harness
+    function, _observed = orchestration._orchestration_harness(tmp_path)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_streamlit_stage2_orchestration.py:482: in _orchestration_harness
+    _load_function(helper, namespace)
+tests\test_streamlit_stage2_orchestration.py:89: in _load_function
+    _function_node(name),
+    ^^^^^^^^^^^^^^^^^^^^
+tests\test_streamlit_stage2_orchestration.py:78: in _function_node
+    return next(
+E   StopIteration
+__________ test_a0c7_mutant_a_copy_in_the_refusal_fallback_goes_red ___________
+tests\test_c030a_object_sharing_at_the_freeze_seam.py:520: in test_a0c7_mutant_a_copy_in_the_refusal_fallback_goes_red
+    result, seen = _run(
+tests\test_c030a_object_sharing_at_the_freeze_seam.py:286: in _run
+    function, seen = _harness(tmp_path, **kwargs)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_c030a_object_sharing_at_the_freeze_seam.py:263: in _harness
+    function, _observed = orchestration._orchestration_harness(tmp_path)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_streamlit_stage2_orchestration.py:482: in _orchestration_harness
+    _load_function(helper, namespace)
+tests\test_streamlit_stage2_orchestration.py:89: in _load_function
+    _function_node(name),
+    ^^^^^^^^^^^^^^^^^^^^
+tests\test_streamlit_stage2_orchestration.py:78: in _function_node
+    return next(
+E   StopIteration
+___ test_a0c7_mutant_the_tautological_assertion_survives_every_one_of_them ____
+tests\test_c030a_object_sharing_at_the_freeze_seam.py:541: in test_a0c7_mutant_the_tautological_assertion_survives_every_one_of_them
+    result, seen = _run(tmp_path, mutant=_CopyAtSeamBinding())
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_c030a_object_sharing_at_the_freeze_seam.py:286: in _run
+    function, seen = _harness(tmp_path, **kwargs)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_c030a_object_sharing_at_the_freeze_seam.py:263: in _harness
+    function, _observed = orchestration._orchestration_harness(tmp_path)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_streamlit_stage2_orchestration.py:482: in _orchestration_harness
+    _load_function(helper, namespace)
+tests\test_streamlit_stage2_orchestration.py:89: in _load_function
+    _function_node(name),
+    ^^^^^^^^^^^^^^^^^^^^
+tests\test_streamlit_stage2_orchestration.py:78: in _function_node
+    return next(
+E   StopIteration
+___ test_new_acceptance_the_post_pipeline_seam_returns_its_prefreeze_report ___
+tests\test_c052_prefreeze_report_at_the_streamlit_seams.py:461: in test_new_acceptance_the_post_pipeline_seam_returns_its_prefreeze_report
+    result = _ep1(tmp_path, payload)(payload, **_ep1_kwargs(tmp_path))
+             ^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_c052_prefreeze_report_at_the_streamlit_seams.py:257: in _ep1
+    function, _observed = orchestration._orchestration_harness(
+tests\test_streamlit_stage2_orchestration.py:482: in _orchestration_harness
+    _load_function(helper, namespace)
+tests\test_streamlit_stage2_orchestration.py:89: in _load_function
+    _function_node(name),
+    ^^^^^^^^^^^^^^^^^^^^
+tests\test_streamlit_stage2_orchestration.py:78: in _function_node
+    return next(
+E   StopIteration
+____ test_new_acceptance_the_post_pipeline_seam_adds_keys_and_changes_none ____
+tests\test_c052_prefreeze_report_at_the_streamlit_seams.py:498: in test_new_acceptance_the_post_pipeline_seam_adds_keys_and_changes_none
+    result = _ep1(tmp_path, payload)(payload, **_ep1_kwargs(tmp_path))
+             ^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_c052_prefreeze_report_at_the_streamlit_seams.py:257: in _ep1
+    function, _observed = orchestration._orchestration_harness(
+tests\test_streamlit_stage2_orchestration.py:482: in _orchestration_harness
+    _load_function(helper, namespace)
+tests\test_streamlit_stage2_orchestration.py:89: in _load_function
+    _function_node(name),
+    ^^^^^^^^^^^^^^^^^^^^
+tests\test_streamlit_stage2_orchestration.py:78: in _function_node
+    return next(
+E   StopIteration
+_ test_new_acceptance_no_added_key_makes_the_batch_driver_misread_the_export __
+tests\test_c052_prefreeze_report_at_the_streamlit_seams.py:524: in test_new_acceptance_no_added_key_makes_the_batch_driver_misread_the_export
+    result = _ep1(tmp_path, payload)(payload, **_ep1_kwargs(tmp_path))
+             ^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_c052_prefreeze_report_at_the_streamlit_seams.py:257: in _ep1
+    function, _observed = orchestration._orchestration_harness(
+tests\test_streamlit_stage2_orchestration.py:482: in _orchestration_harness
+    _load_function(helper, namespace)
+tests\test_streamlit_stage2_orchestration.py:89: in _load_function
+    _function_node(name),
+    ^^^^^^^^^^^^^^^^^^^^
+tests\test_streamlit_stage2_orchestration.py:78: in _function_node
+    return next(
+E   StopIteration
+_____ test_a0c8_guard_the_sbml_build_reads_the_object_the_freeze_returned _____
+tests\test_c052_prefreeze_report_at_the_streamlit_seams.py:599: in test_a0c8_guard_the_sbml_build_reads_the_object_the_freeze_returned
+    function = _ep1(tmp_path, payload)
+               ^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_c052_prefreeze_report_at_the_streamlit_seams.py:257: in _ep1
+    function, _observed = orchestration._orchestration_harness(
+tests\test_streamlit_stage2_orchestration.py:482: in _orchestration_harness
+    _load_function(helper, namespace)
+tests\test_streamlit_stage2_orchestration.py:89: in _load_function
+    _function_node(name),
+    ^^^^^^^^^^^^^^^^^^^^
+tests\test_streamlit_stage2_orchestration.py:78: in _function_node
+    return next(
+E   StopIteration
+____ test_new_acceptance_the_post_pipeline_seam_publishes_both_path_names _____
+tests\test_c052_prefreeze_report_at_the_streamlit_seams.py:644: in test_new_acceptance_the_post_pipeline_seam_publishes_both_path_names
+    function = _ep1(tmp_path, payload)
+               ^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_c052_prefreeze_report_at_the_streamlit_seams.py:257: in _ep1
+    function, _observed = orchestration._orchestration_harness(
+tests\test_streamlit_stage2_orchestration.py:482: in _orchestration_harness
+    _load_function(helper, namespace)
+tests\test_streamlit_stage2_orchestration.py:89: in _load_function
+    _function_node(name),
+    ^^^^^^^^^^^^^^^^^^^^
+tests\test_streamlit_stage2_orchestration.py:78: in _function_node
+    return next(
+E   StopIteration
+__ test_new_acceptance_the_published_names_follow_the_freeze_not_a_constant ___
+tests\test_c052_prefreeze_report_at_the_streamlit_seams.py:665: in test_new_acceptance_the_published_names_follow_the_freeze_not_a_constant
+    function = _ep1(tmp_path, payload)
+               ^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_c052_prefreeze_report_at_the_streamlit_seams.py:257: in _ep1
+    function, _observed = orchestration._orchestration_harness(
+tests\test_streamlit_stage2_orchestration.py:482: in _orchestration_harness
+    _load_function(helper, namespace)
+tests\test_streamlit_stage2_orchestration.py:89: in _load_function
+    _function_node(name),
+    ^^^^^^^^^^^^^^^^^^^^
+tests\test_streamlit_stage2_orchestration.py:78: in _function_node
+    return next(
+E   StopIteration
+=========================== short test summary info ===========================
+FAILED tests/test_c030a_object_sharing_at_the_freeze_seam.py::test_a0c7_guard_the_artifact_set_shares_one_canonical_object
+FAILED tests/test_c030a_object_sharing_at_the_freeze_seam.py::test_a0c7_guard_the_shared_object_is_the_one_that_was_hashed
+FAILED tests/test_c030a_object_sharing_at_the_freeze_seam.py::test_a0c7_guard_a_refusal_publishes_the_pre_seam_object_itself
+FAILED tests/test_c030a_object_sharing_at_the_freeze_seam.py::test_a0c7_mutant_a_copy_at_one_publication_site_goes_red[copy-at-final_mapped]
+FAILED tests/test_c030a_object_sharing_at_the_freeze_seam.py::test_a0c7_mutant_a_copy_at_one_publication_site_goes_red[copy-at-final_mapped_quarantined]
+FAILED tests/test_c030a_object_sharing_at_the_freeze_seam.py::test_a0c7_mutant_a_copy_at_one_publication_site_goes_red[copy-at-final_export_input]
+FAILED tests/test_c030a_object_sharing_at_the_freeze_seam.py::test_a0c7_mutant_a_copy_at_one_publication_site_goes_red[copy-at-canonical-payload-key]
+FAILED tests/test_c030a_object_sharing_at_the_freeze_seam.py::test_a0c7_mutant_a_copy_at_the_seam_binding_goes_red
+FAILED tests/test_c030a_object_sharing_at_the_freeze_seam.py::test_a0c7_mutant_a_copy_in_the_refusal_fallback_goes_red
+FAILED tests/test_c030a_object_sharing_at_the_freeze_seam.py::test_a0c7_mutant_the_tautological_assertion_survives_every_one_of_them
+FAILED tests/test_c052_prefreeze_report_at_the_streamlit_seams.py::test_new_acceptance_the_post_pipeline_seam_returns_its_prefreeze_report
+FAILED tests/test_c052_prefreeze_report_at_the_streamlit_seams.py::test_new_acceptance_the_post_pipeline_seam_adds_keys_and_changes_none
+FAILED tests/test_c052_prefreeze_report_at_the_streamlit_seams.py::test_new_acceptance_no_added_key_makes_the_batch_driver_misread_the_export
+FAILED tests/test_c052_prefreeze_report_at_the_streamlit_seams.py::test_a0c8_guard_the_sbml_build_reads_the_object_the_freeze_returned
+FAILED tests/test_c052_prefreeze_report_at_the_streamlit_seams.py::test_new_acceptance_the_post_pipeline_seam_publishes_both_path_names
+FAILED tests/test_c052_prefreeze_report_at_the_streamlit_seams.py::test_new_acceptance_the_published_names_follow_the_freeze_not_a_constant
+16 failed, 63 passed in 4.76s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R1\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 65798c7a102f742391d9301b4eaf2ee00aa40d64  [git, worktree dirty=True]
+label                   : sweepB2
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R1/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R1 --pin-verdict C:/t/ws-R1/docs/webserver/evidence/R1/pin/s3-sweepB2.pin.json -q --basetemp=C:/t/wsR1tmp/s3-sweepB2 --tb=short -rf tests/test_c030a_object_sharing_at_the_freeze_seam.py tests/test_c030_canonical_identity_fallback.py tests/test_c052_prefreeze_report_at_the_streamlit_seams.py
+cwd                     : C:\t\ws-R1
+root PID / process group: 75324 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 500 s
+duration                : 5.91 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 7  75336:python.exe, 75056:git.exe, 51900:git.exe, 71932:git.exe, 75660:git.exe, 75628:git.exe, 75192:git.exe
+descendants terminated  : 7  51900, 71932, 75056, 75192, 75336, 75628, 75660
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ws-R1/docs/webserver/evidence/R1/s3-sweepB2.json
+json report written     : True
+pre-existing (reported, NEVER killed): 5
+================================================

@@ -1,0 +1,75 @@
+T2PW: C:\t\ws-R1\src\t2pw\__init__.py
+............F..............FFFF.FFFF.........................ss.....s.   [100%]
+================================== FAILURES ===================================
+E   assert [1, 1, 2, 1, 0] == [1, 1, 2, 1, 1]
+      
+      At index 4 diff: 0 != 1
+      Use -v to get more diff
+C:\t\ws-R1\tests\test_c055_rag_loop_wiring.py:385: assert [1, 1, 2, 1, 0] == [1, 1, 2, 1, 1]
+E   AssertionError: expected two owned app merge sites: []
+    assert 0 == 2
+     +  where 0 = len([])
+C:\t\ws-R1\tests\test_c060a_requested_pathway_wiring.py:70: AssertionError: expected two owned app merge sites: []
+E   AssertionError: expected two owned app merge sites: []
+    assert 0 == 2
+     +  where 0 = len([])
+C:\t\ws-R1\tests\test_c060a_requested_pathway_wiring.py:70: AssertionError: expected two owned app merge sites: []
+E   AssertionError: expected two owned app merge sites: []
+    assert 0 == 2
+     +  where 0 = len([])
+C:\t\ws-R1\tests\test_c060a_requested_pathway_wiring.py:70: AssertionError: expected two owned app merge sites: []
+E   AssertionError: expected two owned app merge sites: []
+    assert 0 == 2
+     +  where 0 = len([])
+C:\t\ws-R1\tests\test_c060a_requested_pathway_wiring.py:70: AssertionError: expected two owned app merge sites: []
+E   AssertionError: expected two owned app merge sites: []
+    assert 0 == 2
+     +  where 0 = len([])
+C:\t\ws-R1\tests\test_c060a_requested_pathway_wiring.py:70: AssertionError: expected two owned app merge sites: []
+E   AssertionError: expected two owned app merge sites: []
+    assert 0 == 2
+     +  where 0 = len([])
+C:\t\ws-R1\tests\test_c060a_requested_pathway_wiring.py:70: AssertionError: expected two owned app merge sites: []
+E   AssertionError: expected two owned app merge sites: []
+    assert 0 == 2
+     +  where 0 = len([])
+C:\t\ws-R1\tests\test_c060a_requested_pathway_wiring.py:70: AssertionError: expected two owned app merge sites: []
+E   KeyError: '_safe_dict'
+C:\t\ws-R1\tests\test_c060a_requested_pathway_wiring.py:353: KeyError: '_safe_dict'
+=========================== short test summary info ===========================
+FAILED tests/test_c055_rag_loop_wiring.py::test_one_round_re_enters_all_five_stages_and_merges
+FAILED tests/test_c060a_requested_pathway_wiring.py::test_g9_f4_currency_orphans_close_through_the_app_stage_two_merge
+FAILED tests/test_c060a_requested_pathway_wiring.py::test_g9_f4_currency_orphans_close_through_the_app_rag_remerge
+FAILED tests/test_c060a_requested_pathway_wiring.py::test_new_acceptance_f1_and_f3_still_close_through_both_app_sites
+FAILED tests/test_c060a_requested_pathway_wiring.py::test_new_acceptance_no_over_removal_when_the_currency_is_the_subject
+FAILED tests/test_c060a_requested_pathway_wiring.py::test_new_acceptance_a0_c5_ordering_survives_the_wiring
+FAILED tests/test_c060a_requested_pathway_wiring.py::test_new_acceptance_the_two_pass_ledger_stays_idempotent_once_wired
+FAILED tests/test_c060a_requested_pathway_wiring.py::test_new_acceptance_every_production_call_site_builds_a_real_pathway_context
+FAILED tests/test_c060a_requested_pathway_wiring.py::test_new_acceptance_the_factory_reproduces_maybe_run_rags_own_derivation
+9 failed, 58 passed, 3 skipped in 14.44s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R1\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 65798c7a102f742391d9301b4eaf2ee00aa40d64  [git, worktree dirty=True]
+label                   : sweepC
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R1/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R1 --pin-verdict C:/t/ws-R1/docs/webserver/evidence/R1/pin/s5-sweepC.pin.json -q --basetemp=C:/t/wsR1tmp/s5-sweepC --tb=line -rf tests/test_streamlit_stage2_orchestration.py tests/test_c055_rag_loop_wiring.py tests/test_c060a_requested_pathway_wiring.py tests/test_c082_species_rename_declination.py tests/test_c126_g9_base_failure_proof.py tests/test_f179_reaction_support.py
+cwd                     : C:\t\ws-R1
+root PID / process group: 76760 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 500 s
+duration                : 16.47 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  74192:python.exe
+descendants terminated  : 1  74192
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ws-R1/docs/webserver/evidence/R1/s5-sweepC.json
+json report written     : True
+pre-existing (reported, NEVER killed): 5
+================================================

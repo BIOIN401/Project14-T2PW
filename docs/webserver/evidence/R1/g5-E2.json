@@ -1,0 +1,109 @@
+{
+  "label": "E2",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/ws-R1-base/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-R1-base",
+    "--pin-verdict",
+    "C:/t/ws-R1/docs/webserver/evidence/R1/pin/g5-E2.pin.json",
+    "-q",
+    "--basetemp=C:/t/wsR1tmp/g5-E2",
+    "-rf",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_real_artifact_replay.py",
+    "tests/test_stage0_case_c_retry_clobber.py",
+    "tests/test_rag_seed_entity_reimport.py",
+    "tests/test_reaction_evidence.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_differential_gate.py",
+    "tests/test_stage0_scope_fallback.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_c119_g9_base_failure_proof.py",
+    "tests/test_orch757_llm_token_budgets.py",
+    "tests/test_orch759a_duplicate_protein_fold.py",
+    "tests/test_entity_admission.py"
+  ],
+  "cwd": "C:\\t\\ws-R1-base",
+  "started_at": "2026-11-05T17:26:37+00:00",
+  "finished_at": "2026-11-05T17:27:47+00:00",
+  "duration_seconds": 70.20125040000039,
+  "timeout_seconds": 280.0,
+  "root_pid": 134184,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 134524,
+      "name": "python.exe",
+      "ppid": 134184
+    },
+    {
+      "pid": 132508,
+      "name": "python.exe",
+      "ppid": 134524
+    },
+    {
+      "pid": 136048,
+      "name": "python.exe",
+      "ppid": 132508
+    }
+  ],
+  "descendants_terminated": [
+    132508,
+    134524,
+    136048
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 20528,
+      "name": "python.exe"
+    },
+    {
+      "pid": 25472,
+      "name": "python.exe"
+    },
+    {
+      "pid": 59512,
+      "name": "python.exe"
+    },
+    {
+      "pid": 127440,
+      "name": "python.exe"
+    },
+    {
+      "pid": 133672,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/ws-R1/docs/webserver/evidence/R1/g5-E2.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-R1-base\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-R1-base",
+    "repo_head": "65798c7a102f742391d9301b4eaf2ee00aa40d64",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

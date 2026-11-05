@@ -1,0 +1,123 @@
+{
+  "label": "sweepB",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/ws-R1/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-R1",
+    "--pin-verdict",
+    "C:/t/ws-R1/docs/webserver/evidence/R1/pin/s2-sweepB.pin.json",
+    "-q",
+    "--basetemp=C:/t/wsR1tmp/s2-sweepB",
+    "--tb=line",
+    "-rf",
+    "tests/test_c030a_object_sharing_at_the_freeze_seam.py",
+    "tests/test_c030_canonical_identity_fallback.py",
+    "tests/test_c052_prefreeze_report_at_the_streamlit_seams.py"
+  ],
+  "cwd": "C:\\t\\ws-R1",
+  "started_at": "2026-11-05T16:58:03+00:00",
+  "finished_at": "2026-11-05T16:58:14+00:00",
+  "duration_seconds": 9.93980949999991,
+  "timeout_seconds": 500.0,
+  "root_pid": 63688,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 73500,
+      "name": "python.exe",
+      "ppid": 63688
+    },
+    {
+      "pid": 73948,
+      "name": "git.exe",
+      "ppid": 73500
+    },
+    {
+      "pid": 36048,
+      "name": "git.exe",
+      "ppid": 73500
+    },
+    {
+      "pid": 73484,
+      "name": "git.exe",
+      "ppid": 73500
+    },
+    {
+      "pid": 72956,
+      "name": "git.exe",
+      "ppid": 73500
+    },
+    {
+      "pid": 68416,
+      "name": "git.exe",
+      "ppid": 73500
+    },
+    {
+      "pid": 73168,
+      "name": "git.exe",
+      "ppid": 73500
+    }
+  ],
+  "descendants_terminated": [
+    36048,
+    68416,
+    72956,
+    73168,
+    73484,
+    73500,
+    73948
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 20528,
+      "name": "python.exe"
+    },
+    {
+      "pid": 25472,
+      "name": "python.exe"
+    },
+    {
+      "pid": 59512,
+      "name": "python.exe"
+    },
+    {
+      "pid": 74652,
+      "name": "python.exe"
+    },
+    {
+      "pid": 74732,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/ws-R1/docs/webserver/evidence/R1/s2-sweepB.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-R1\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-R1",
+    "repo_head": "65798c7a102f742391d9301b4eaf2ee00aa40d64",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

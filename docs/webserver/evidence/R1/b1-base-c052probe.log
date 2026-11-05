@@ -1,0 +1,37 @@
+T2PW: C:\t\ws-R1-base\src\t2pw\__init__.py
+.....F.......                                                            [100%]
+================================== FAILURES ===================================
+E   AssertionError: assert [{'source_key...l3phosphate'}] == [{'source_key...3 phosphate'}]
+      
+      At index 0 diff: {'target': 'glycerol3phosphate', 'sources': ['sn -glycerol 3-phosphate', 'sn-glycerol 3-phosphate'], 'source_key': 'snglycerol3phosphate'} != {'target': 'glycerol 3 phosphate', 'sources': ['sn -glycerol 3-phosphate', 'sn-glycerol 3-phosphate'], 'source_key': 'sn glycerol 3 phosphate'}
+      Use -v to get more diff
+C:\t\ws-R1-base\tests\test_c052_prefreeze_report_at_the_streamlit_seams.py:462: AssertionError: assert [{'source_key...l3phosphate'}] == [{'source_key...3 phosphate'}]
+=========================== short test summary info ===========================
+FAILED tests/test_c052_prefreeze_report_at_the_streamlit_seams.py::test_new_acceptance_the_post_pipeline_seam_returns_its_prefreeze_report
+1 failed, 12 passed in 8.02s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R1-base\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 65798c7a102f742391d9301b4eaf2ee00aa40d64  [git, worktree dirty=False]
+label                   : base-c052probe
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R1-base/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R1-base --pin-verdict C:/t/ws-R1/docs/webserver/evidence/R1/pin/b1-base-c052probe.pin.json -q --basetemp=C:/t/wsR1tmp/b1-base-c052probe --tb=line -rf tests/test_c052_prefreeze_report_at_the_streamlit_seams.py
+cwd                     : C:\t\ws-R1-base
+root PID / process group: 79800 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 9.30 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  79432:python.exe
+descendants terminated  : 1  79432
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ws-R1/docs/webserver/evidence/R1/b1-base-c052probe.json
+json report written     : True
+pre-existing (reported, NEVER killed): 5
+================================================

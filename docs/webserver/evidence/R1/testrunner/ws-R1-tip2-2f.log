@@ -1,0 +1,50 @@
+T2PW: C:\t\ws-R1-tip2\src\t2pw\__init__.py
+........................................................................ [ 64%]
+......Fs....sss.........................                                 [100%]
+================================== FAILURES ===================================
+_______ test_the_message_names_the_problem_the_interpreter_and_the_cure _______
+
+    def test_the_message_names_the_problem_the_interpreter_and_the_cure() -> None:
+        """The wrong-interpreter case: the one that actually happened.
+    
+        The cure has to be a command, not advice. "Use the venv" is not actionable at
+        2am; ``C:\\...\\.venv\\Scripts\\python.exe scripts\\batch_run.py`` is, and the
+        root cause -- ``py.exe`` ignoring the active virtualenv -- has to be named or
+        the operator fixes it once and hits it again next week.
+        """
+    
+        venv = runner.venv_python()
+>       assert venv is not None, "this project ships a .venv; the test assumes it"
+E       AssertionError: this project ships a .venv; the test assumes it
+E       assert None is not None
+
+tests\test_batch_preflight.py:616: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_batch_preflight.py::test_the_message_names_the_problem_the_interpreter_and_the_cure
+1 failed, 107 passed, 4 skipped in 41.65s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R1-tip2\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ c626a9b0ed2d46aeef2cc7ae7c22c46140d0e072  [git, worktree dirty=False]
+label                   : R1-ws-R1-tip2-2f
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe C:/t/ws-R1-tip2/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R1-tip2 -q -p no:cacheprovider --basetemp=C:/t/wsR1tip2-tr/base/2f-3207 tests/test_batch_driver.py tests/test_batch_preflight.py tests/test_batch_research_gate_fail_open.py
+cwd                     : C:\t\ws-R1-tip2
+root PID / process group: 242196 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 43.01 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 18  242200:python.exe, 230036:python.exe, 241600:python.exe, 234852:python.exe, 242532:python.exe, 236524:python.exe, 242672:python.exe, 240936:python.exe, 209676:python.exe, 235368:python.exe, 233372:python.exe, 242356:python.exe, 209144:python.exe, 219784:python.exe, 241284:python.exe, 240876:python.exe, 235068:python.exe, 240796:python.exe
+descendants terminated  : 18  209144, 209676, 219784, 230036, 233372, 234852, 235068, 235368, 236524, 240796, 240876, 240936, 241284, 241600, 242200, 242356, 242532, 242672
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/wsR1tip2-tr/reports/ws-R1-tip2-2f.json
+json report written     : True
+pre-existing (reported, NEVER killed): 5
+================================================

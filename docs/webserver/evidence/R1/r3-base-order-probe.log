@@ -1,0 +1,458 @@
+T2PW: C:\t\ws-R1-base\src\t2pw\__init__.py
+.......................FFFFFF..F....                                     [100%]
+================================== FAILURES ===================================
+_______ test_new_acceptance_the_third_seam_writes_its_prefreeze_record ________
+
+tmp_path = WindowsPath('C:/t/wsR1tmp/r3-base-order-probe/test_new_acceptance_the_third_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002643838E040>
+
+    def test_new_acceptance_the_third_seam_writes_its_prefreeze_record(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """Fails at base: the report is captured at the seam and then dropped.
+    
+        The record is the seam's own report, WHOLE -- not a summary of it -- so a
+        diagnostic added to the report in future reaches the operator without this
+        card being edited again. Asserted by comparing the file against the exact
+        object the seam returned, which is why the spy records objects rather than
+        the test restating an expected shape.
+        """
+    
+        seen = _offline_prefreeze_spy(monkeypatch, name_index=_ChebiNameIndex({}))
+>       from t2pw.app.streamlit_app import run_pwml_export
+
+tests\test_c052_prefreeze_report_at_the_streamlit_seams.py:320: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\t2pw\app\streamlit_app.py:7281: in <module>
+    render_reaction_evidence()
+src\t2pw\app\reaction_evidence_view.py:102: in render_reaction_evidence
+    st.info(f"Reaction Evidence could not be rendered: {exc}")
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\metrics_util.py:628: in wrapped_func
+    result = non_optional_func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:365: in info
+    processed_body, processed_icon = _process_alert_body_and_icon(body, icon)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:51: in _process_alert_body_and_icon
+    extracted_icon, remaining_body = extract_leading_icon(cleaned_body)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:193: in extract_leading_icon
+    return extract_leading_emoji(text)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+text = "Reaction Evidence could not be rendered: No module named 'streamlit.runtime'; 'streamlit' is not a package"
+
+    def extract_leading_emoji(text: str) -> tuple[str, str]:
+        """Return a tuple containing the first emoji found in the given string and
+        the rest of the string (minus an optional separator between the two).
+        """
+    
+        if not _contains_special_chars(text):
+            # If the string only contains basic alphanumerical chars and/or
+            # underscores, hyphen & whitespaces, then it's guaranteed that there
+            # is no emoji in the string.
+            return "", text
+    
+>       from streamlit.emojis import EMOJI_EXTRACTION_REGEX
+E       ModuleNotFoundError: No module named 'streamlit.emojis'; 'streamlit' is not a package
+
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:146: ModuleNotFoundError
+---------------------------- Captured stderr call -----------------------------
+2026-11-05 11:58:44.935 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:58:44.935 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:58:44.935 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:58:44.935 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:58:44.935 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:58:44.935 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:58:44.935 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:58:44.935 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:58:44.935 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+______ test_new_acceptance_the_third_seams_record_says_it_is_post_freeze ______
+
+tmp_path = WindowsPath('C:/t/wsR1tmp/r3-base-order-probe/test_new_acceptance_the_third_1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000026494F4A890>
+
+    def test_new_acceptance_the_third_seams_record_says_it_is_post_freeze(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """The label is mandatory, top level, and cannot be shadowed.
+    
+        This seam runs on a deepcopy taken after the hash; the post-pipeline seam's
+        report describes a pre-freeze canonicalization of a different object.
+        Persisting both under one undifferentiated name would tell the operator they
+        are the same record. Asserted by writing a report that already carries a
+        ``seam`` key: the label must still win.
+        """
+    
+        real = prefreeze_module.run_prefreeze_resolution
+    
+        def shadowing(payload: Dict[str, Any], **kwargs: Any) -> Dict[str, Any]:
+            kwargs.setdefault("db_resolver", _OfflineResolver())
+            kwargs.setdefault("name_index", _ChebiNameIndex({}))
+            report = real(payload, **kwargs)
+            report["seam"] = "SHADOWED"
+            return report
+    
+        monkeypatch.setattr(prefreeze_module, "run_prefreeze_resolution", shadowing)
+>       from t2pw.app.streamlit_app import run_pwml_export
+
+tests\test_c052_prefreeze_report_at_the_streamlit_seams.py:361: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\t2pw\app\streamlit_app.py:7281: in <module>
+    render_reaction_evidence()
+src\t2pw\app\reaction_evidence_view.py:102: in render_reaction_evidence
+    st.info(f"Reaction Evidence could not be rendered: {exc}")
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\metrics_util.py:628: in wrapped_func
+    result = non_optional_func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:365: in info
+    processed_body, processed_icon = _process_alert_body_and_icon(body, icon)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:51: in _process_alert_body_and_icon
+    extracted_icon, remaining_body = extract_leading_icon(cleaned_body)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:193: in extract_leading_icon
+    return extract_leading_emoji(text)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+text = "Reaction Evidence could not be rendered: No module named 'streamlit.runtime'; 'streamlit' is not a package"
+
+    def extract_leading_emoji(text: str) -> tuple[str, str]:
+        """Return a tuple containing the first emoji found in the given string and
+        the rest of the string (minus an optional separator between the two).
+        """
+    
+        if not _contains_special_chars(text):
+            # If the string only contains basic alphanumerical chars and/or
+            # underscores, hyphen & whitespaces, then it's guaranteed that there
+            # is no emoji in the string.
+            return "", text
+    
+>       from streamlit.emojis import EMOJI_EXTRACTION_REGEX
+E       ModuleNotFoundError: No module named 'streamlit.emojis'; 'streamlit' is not a package
+
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:146: ModuleNotFoundError
+---------------------------- Captured stderr call -----------------------------
+2026-11-05 11:58:45.158 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:58:45.158 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:58:45.158 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:58:45.158 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:58:45.158 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:58:45.158 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:58:45.158 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:58:45.158 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:58:45.158 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+______ test_new_acceptance_the_third_seam_never_writes_the_cli_filename _______
+
+tmp_path = WindowsPath('C:/t/wsR1tmp/r3-base-order-probe/test_new_acceptance_the_third_2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000026494995CC0>
+
+    def test_new_acceptance_the_third_seam_never_writes_the_cli_filename(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """The CLI's default output path is ``outputs/`` + the name below.
+    
+        Sharing it means whichever writer ran last wins, silently, and a CLI test
+        pins that path. Measured on disk rather than read off the source, and the
+        two names are re-derived from the CLI module so a change there fails here.
+        """
+    
+        _offline_prefreeze_spy(monkeypatch, name_index=_ChebiNameIndex({}))
+>       from t2pw.app.streamlit_app import run_pwml_export
+
+tests\test_c052_prefreeze_report_at_the_streamlit_seams.py:382: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\t2pw\app\streamlit_app.py:7281: in <module>
+    render_reaction_evidence()
+src\t2pw\app\reaction_evidence_view.py:102: in render_reaction_evidence
+    st.info(f"Reaction Evidence could not be rendered: {exc}")
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\metrics_util.py:628: in wrapped_func
+    result = non_optional_func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:365: in info
+    processed_body, processed_icon = _process_alert_body_and_icon(body, icon)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:51: in _process_alert_body_and_icon
+    extracted_icon, remaining_body = extract_leading_icon(cleaned_body)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:193: in extract_leading_icon
+    return extract_leading_emoji(text)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+text = "Reaction Evidence could not be rendered: No module named 'streamlit.runtime'; 'streamlit' is not a package"
+
+    def extract_leading_emoji(text: str) -> tuple[str, str]:
+        """Return a tuple containing the first emoji found in the given string and
+        the rest of the string (minus an optional separator between the two).
+        """
+    
+        if not _contains_special_chars(text):
+            # If the string only contains basic alphanumerical chars and/or
+            # underscores, hyphen & whitespaces, then it's guaranteed that there
+            # is no emoji in the string.
+            return "", text
+    
+>       from streamlit.emojis import EMOJI_EXTRACTION_REGEX
+E       ModuleNotFoundError: No module named 'streamlit.emojis'; 'streamlit' is not a package
+
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:146: ModuleNotFoundError
+---------------------------- Captured stderr call -----------------------------
+2026-11-05 11:58:45.280 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:58:45.280 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:58:45.280 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:58:45.280 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:58:45.280 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:58:45.280 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:58:45.280 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:58:45.280 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:58:45.280 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+______ test_new_acceptance_the_record_survives_a_failure_below_the_seam _______
+
+tmp_path = WindowsPath('C:/t/wsR1tmp/r3-base-order-probe/test_new_acceptance_the_record0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000026494C19DA0>
+
+    def test_new_acceptance_the_record_survives_a_failure_below_the_seam(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """The catch-all wraps everything below the seam.
+    
+        A failure in the IR build, the deterministic builder or the PWML write would
+        lose the report entirely -- and the export that most needs a resolution
+        record is exactly the one that failed. The write is therefore placed above
+        ``build_pwml_ir``, which is what this measures: the export fails, and the
+        record is on disk anyway.
+        """
+    
+        _offline_prefreeze_spy(monkeypatch, name_index=_ChebiNameIndex({}))
+>       from t2pw.app import streamlit_app
+
+tests\test_c052_prefreeze_report_at_the_streamlit_seams.py:409: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\t2pw\app\streamlit_app.py:7281: in <module>
+    render_reaction_evidence()
+src\t2pw\app\reaction_evidence_view.py:102: in render_reaction_evidence
+    st.info(f"Reaction Evidence could not be rendered: {exc}")
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\metrics_util.py:628: in wrapped_func
+    result = non_optional_func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:365: in info
+    processed_body, processed_icon = _process_alert_body_and_icon(body, icon)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:51: in _process_alert_body_and_icon
+    extracted_icon, remaining_body = extract_leading_icon(cleaned_body)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:193: in extract_leading_icon
+    return extract_leading_emoji(text)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+text = "Reaction Evidence could not be rendered: No module named 'streamlit.runtime'; 'streamlit' is not a package"
+
+    def extract_leading_emoji(text: str) -> tuple[str, str]:
+        """Return a tuple containing the first emoji found in the given string and
+        the rest of the string (minus an optional separator between the two).
+        """
+    
+        if not _contains_special_chars(text):
+            # If the string only contains basic alphanumerical chars and/or
+            # underscores, hyphen & whitespaces, then it's guaranteed that there
+            # is no emoji in the string.
+            return "", text
+    
+>       from streamlit.emojis import EMOJI_EXTRACTION_REGEX
+E       ModuleNotFoundError: No module named 'streamlit.emojis'; 'streamlit' is not a package
+
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:146: ModuleNotFoundError
+---------------------------- Captured stderr call -----------------------------
+2026-11-05 11:58:45.397 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:58:45.397 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:58:45.397 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:58:45.397 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:58:45.397 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:58:45.397 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:58:45.397 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:58:45.397 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:58:45.397 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+_______ test_new_acceptance_the_third_seams_result_surfaces_the_record ________
+
+tmp_path = WindowsPath('C:/t/wsR1tmp/r3-base-order-probe/test_new_acceptance_the_third_3')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000264949C9FD0>
+
+    def test_new_acceptance_the_third_seams_result_surfaces_the_record(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """Persisted AND surfaced: the caller gets the document and the path."""
+    
+        seen = _offline_prefreeze_spy(monkeypatch, name_index=_ChebiNameIndex({}))
+>       from t2pw.app.streamlit_app import run_pwml_export
+
+tests\test_c052_prefreeze_report_at_the_streamlit_seams.py:432: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\t2pw\app\streamlit_app.py:7281: in <module>
+    render_reaction_evidence()
+src\t2pw\app\reaction_evidence_view.py:102: in render_reaction_evidence
+    st.info(f"Reaction Evidence could not be rendered: {exc}")
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\metrics_util.py:628: in wrapped_func
+    result = non_optional_func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:365: in info
+    processed_body, processed_icon = _process_alert_body_and_icon(body, icon)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:51: in _process_alert_body_and_icon
+    extracted_icon, remaining_body = extract_leading_icon(cleaned_body)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:193: in extract_leading_icon
+    return extract_leading_emoji(text)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+text = "Reaction Evidence could not be rendered: No module named 'streamlit.runtime'; 'streamlit' is not a package"
+
+    def extract_leading_emoji(text: str) -> tuple[str, str]:
+        """Return a tuple containing the first emoji found in the given string and
+        the rest of the string (minus an optional separator between the two).
+        """
+    
+        if not _contains_special_chars(text):
+            # If the string only contains basic alphanumerical chars and/or
+            # underscores, hyphen & whitespaces, then it's guaranteed that there
+            # is no emoji in the string.
+            return "", text
+    
+>       from streamlit.emojis import EMOJI_EXTRACTION_REGEX
+E       ModuleNotFoundError: No module named 'streamlit.emojis'; 'streamlit' is not a package
+
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:146: ModuleNotFoundError
+---------------------------- Captured stderr call -----------------------------
+2026-11-05 11:58:45.517 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:58:45.517 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:58:45.517 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:58:45.517 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:58:45.517 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:58:45.517 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:58:45.517 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:58:45.517 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:58:45.517 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+___ test_new_acceptance_the_post_pipeline_seam_returns_its_prefreeze_report ___
+
+tmp_path = WindowsPath('C:/t/wsR1tmp/r3-base-order-probe/test_new_acceptance_the_post_p0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000264949A6190>
+
+    def test_new_acceptance_the_post_pipeline_seam_returns_its_prefreeze_report(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """Fails at base: the report is captured, never returned, and the temp
+        directory it could have been written into is swept in ``finally``."""
+    
+        seen = _offline_prefreeze_spy(monkeypatch, name_index=_collapsing_index())
+        payload = _collapsing_payload()
+    
+        result = _ep1(tmp_path, payload)(payload, **_ep1_kwargs(tmp_path))
+    
+        assert seen, "the pre-freeze seam never ran; this test would assert nothing"
+        assert result["prefreeze_resolution_report"] is seen[-1]
+        assert result["prefreeze_review_required"] == seen[-1]["review_required"]
+>       assert result["prefreeze_resolution_report"]["compounds"][
+            "rename_sources_collapsed"] == [{
+                "target": "glycerol 3 phosphate",
+                "sources": ["sn -glycerol 3-phosphate", "sn-glycerol 3-phosphate"],
+                "source_key": "sn glycerol 3 phosphate",
+            }]
+E       AssertionError: assert [{'source_key...l3phosphate'}] == [{'source_key...3 phosphate'}]
+E         
+E         At index 0 diff: {'target': 'glycerol3phosphate', 'sources': ['sn -glycerol 3-phosphate', 'sn-glycerol 3-phosphate'], 'source_key': 'snglycerol3phosphate'} != {'target': 'glycerol 3 phosphate', 'sources': ['sn -glycerol 3-phosphate', 'sn-glycerol 3-phosphate'], 'source_key': 'sn glycerol 3 phosphate'}
+E         Use -v to get more diff
+
+tests\test_c052_prefreeze_report_at_the_streamlit_seams.py:462: AssertionError
+_____ test_new_acceptance_the_artifact_panel_offers_the_prefreeze_report ______
+
+    def test_new_acceptance_the_artifact_panel_offers_the_prefreeze_report() -> None:
+        """The post-pipeline seam writes no file, so this panel is the only route."""
+    
+>       from t2pw.app.streamlit_app import _json_artifact_entries
+
+tests\test_c052_prefreeze_report_at_the_streamlit_seams.py:546: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\t2pw\app\streamlit_app.py:7281: in <module>
+    render_reaction_evidence()
+src\t2pw\app\reaction_evidence_view.py:102: in render_reaction_evidence
+    st.info(f"Reaction Evidence could not be rendered: {exc}")
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\metrics_util.py:628: in wrapped_func
+    result = non_optional_func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:365: in info
+    processed_body, processed_icon = _process_alert_body_and_icon(body, icon)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:51: in _process_alert_body_and_icon
+    extracted_icon, remaining_body = extract_leading_icon(cleaned_body)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:193: in extract_leading_icon
+    return extract_leading_emoji(text)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+text = "Reaction Evidence could not be rendered: No module named 'streamlit.runtime'; 'streamlit' is not a package"
+
+    def extract_leading_emoji(text: str) -> tuple[str, str]:
+        """Return a tuple containing the first emoji found in the given string and
+        the rest of the string (minus an optional separator between the two).
+        """
+    
+        if not _contains_special_chars(text):
+            # If the string only contains basic alphanumerical chars and/or
+            # underscores, hyphen & whitespaces, then it's guaranteed that there
+            # is no emoji in the string.
+            return "", text
+    
+>       from streamlit.emojis import EMOJI_EXTRACTION_REGEX
+E       ModuleNotFoundError: No module named 'streamlit.emojis'; 'streamlit' is not a package
+
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:146: ModuleNotFoundError
+---------------------------- Captured stderr call -----------------------------
+2026-11-05 11:58:47.147 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:58:47.147 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:58:47.148 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:58:47.148 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:58:47.148 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:58:47.148 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:58:47.148 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:58:47.148 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:58:47.148 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+=========================== short test summary info ===========================
+FAILED tests/test_c052_prefreeze_report_at_the_streamlit_seams.py::test_new_acceptance_the_third_seam_writes_its_prefreeze_record
+FAILED tests/test_c052_prefreeze_report_at_the_streamlit_seams.py::test_new_acceptance_the_third_seams_record_says_it_is_post_freeze
+FAILED tests/test_c052_prefreeze_report_at_the_streamlit_seams.py::test_new_acceptance_the_third_seam_never_writes_the_cli_filename
+FAILED tests/test_c052_prefreeze_report_at_the_streamlit_seams.py::test_new_acceptance_the_record_survives_a_failure_below_the_seam
+FAILED tests/test_c052_prefreeze_report_at_the_streamlit_seams.py::test_new_acceptance_the_third_seams_result_surfaces_the_record
+FAILED tests/test_c052_prefreeze_report_at_the_streamlit_seams.py::test_new_acceptance_the_post_pipeline_seam_returns_its_prefreeze_report
+FAILED tests/test_c052_prefreeze_report_at_the_streamlit_seams.py::test_new_acceptance_the_artifact_panel_offers_the_prefreeze_report
+7 failed, 29 passed in 31.04s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R1-base\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 65798c7a102f742391d9301b4eaf2ee00aa40d64  [git, worktree dirty=False]
+label                   : base-order-probe
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R1-base/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R1-base --pin-verdict C:/t/ws-R1/docs/webserver/evidence/R1/pin/r3-base-order-probe.pin.json -q --basetemp=C:/t/wsR1tmp/r3-base-order-probe -rf tests/test_c055_rag_loop_wiring.py tests/test_orch759a_fold_app_path.py tests/test_orch759b_recorder_reattach.py tests/test_c052_prefreeze_report_at_the_streamlit_seams.py
+cwd                     : C:\t\ws-R1-base
+root PID / process group: 195400 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 400 s
+duration                : 32.60 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  199612:python.exe
+descendants terminated  : 1  199612
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ws-R1/docs/webserver/evidence/R1/r3-base-order-probe.json
+json report written     : True
+pre-existing (reported, NEVER killed): 11
+================================================

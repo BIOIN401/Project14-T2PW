@@ -80,6 +80,8 @@ import test_prefreeze_third_export_seam as third_seam  # noqa: E402
 import test_streamlit_stage2_orchestration as orchestration  # noqa: E402
 
 APP_REL = "src/t2pw/app/streamlit_app.py"
+#: R1: the moved functions now live here.
+SERVICE_REL = "src/t2pw/service/postpipeline.py"
 EP1 = "run_post_pipeline_sbml_artifacts"
 EP3 = "run_pwml_export"
 
@@ -294,7 +296,7 @@ def _dict_literal_keys(source: str, function_name: str) -> List[str]:
 
 def _source_at(ref: Optional[str]) -> str:
     if ref is None:
-        return (ROOT / APP_REL).read_text(encoding="utf-8")
+        return (ROOT / SERVICE_REL).read_text(encoding="utf-8")
     shown = subprocess.run(
         ["git", "show", f"{ref}:{APP_REL}"], cwd=ROOT, capture_output=True, check=True
     )
@@ -411,7 +413,10 @@ def test_new_acceptance_the_record_survives_a_failure_below_the_seam(
     def exploding(*_args: Any, **_kwargs: Any) -> Any:
         raise RuntimeError("C-052: IR build blown up on purpose")
 
-    monkeypatch.setattr(streamlit_app, "build_pwml_ir", exploding)
+    import importlib
+    postpipeline = importlib.import_module("t2pw.service.postpipeline")
+
+    monkeypatch.setattr(postpipeline, "build_pwml_ir", exploding)
 
     result = streamlit_app.run_pwml_export(
         _exportable_payload(), **_export_kwargs(tmp_path))

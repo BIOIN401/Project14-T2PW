@@ -1,0 +1,192 @@
+{
+  "label": "R1-ws-R1-base-2f",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "C:/t/ws-R1-base/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-R1-base",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:/t/wsR1tip2-tr/base/2f-24656",
+    "tests/test_batch_driver.py",
+    "tests/test_batch_preflight.py",
+    "tests/test_batch_research_gate_fail_open.py"
+  ],
+  "cwd": "C:\\t\\ws-R1-base",
+  "started_at": "2026-11-05T18:34:01+00:00",
+  "finished_at": "2026-11-05T18:34:40+00:00",
+  "duration_seconds": 38.966579300000376,
+  "timeout_seconds": 900.0,
+  "root_pid": 252144,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 252184,
+      "name": "python.exe",
+      "ppid": 252144
+    },
+    {
+      "pid": 254540,
+      "name": "python.exe",
+      "ppid": 252184
+    },
+    {
+      "pid": 254560,
+      "name": "python.exe",
+      "ppid": 254540
+    },
+    {
+      "pid": 254856,
+      "name": "python.exe",
+      "ppid": 252184
+    },
+    {
+      "pid": 254884,
+      "name": "python.exe",
+      "ppid": 254856
+    },
+    {
+      "pid": 254468,
+      "name": "python.exe",
+      "ppid": 254516
+    },
+    {
+      "pid": 254516,
+      "name": "python.exe",
+      "ppid": 252184
+    },
+    {
+      "pid": 248240,
+      "name": "python.exe",
+      "ppid": 254588
+    },
+    {
+      "pid": 254588,
+      "name": "python.exe",
+      "ppid": 252184
+    },
+    {
+      "pid": 254640,
+      "name": "python.exe",
+      "ppid": 252184
+    },
+    {
+      "pid": 254684,
+      "name": "python.exe",
+      "ppid": 254640
+    },
+    {
+      "pid": 250848,
+      "name": "python.exe",
+      "ppid": 252184
+    },
+    {
+      "pid": 251548,
+      "name": "python.exe",
+      "ppid": 250848
+    },
+    {
+      "pid": 254064,
+      "name": "python.exe",
+      "ppid": 254120
+    },
+    {
+      "pid": 254120,
+      "name": "python.exe",
+      "ppid": 251548
+    },
+    {
+      "pid": 249896,
+      "name": "python.exe",
+      "ppid": 252184
+    },
+    {
+      "pid": 254600,
+      "name": "python.exe",
+      "ppid": 249896
+    },
+    {
+      "pid": 254048,
+      "name": "python.exe",
+      "ppid": 254700
+    },
+    {
+      "pid": 254700,
+      "name": "python.exe",
+      "ppid": 254600
+    }
+  ],
+  "descendants_terminated": [
+    248240,
+    249896,
+    250848,
+    251548,
+    252184,
+    254048,
+    254064,
+    254120,
+    254468,
+    254516,
+    254540,
+    254560,
+    254588,
+    254600,
+    254640,
+    254684,
+    254700,
+    254856,
+    254884
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 59512,
+      "name": "python.exe"
+    },
+    {
+      "pid": 165332,
+      "name": "python.exe"
+    },
+    {
+      "pid": 165388,
+      "name": "python.exe"
+    },
+    {
+      "pid": 243196,
+      "name": "python.exe"
+    },
+    {
+      "pid": 247048,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/wsR1tip2-tr/reports/ws-R1-base-2f.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-R1-base\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-R1-base",
+    "repo_head": "65798c7a102f742391d9301b4eaf2ee00aa40d64",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

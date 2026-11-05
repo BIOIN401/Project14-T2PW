@@ -1,0 +1,726 @@
+T2PW: C:\t\ws-R1\src\t2pw\__init__.py
+........................................................................ [ 30%]
+.............................................................ss...s..sss [ 60%]
+.ss..............FFFFFFFFFF..................F.......................... [ 91%]
+......FFFF..FFFFFFF.F                                                    [100%]
+================================== FAILURES ===================================
+_ test_the_manifest_row_now_carries_the_boundarys_semantic_verdict[PMC12452463] _
+
+tmp_path = WindowsPath('C:/t/wsR1tmp/f9-E5fgroup/test_the_manifest_row_now_carr0')
+paper_id = 'PMC12452463'
+
+    @pytest.mark.parametrize("paper_id", GATE_FAILED_LEGS)
+    def test_the_manifest_row_now_carries_the_boundarys_semantic_verdict(
+        tmp_path: Path, paper_id: str
+    ) -> None:
+        """RED AT BASE: the row records ``not_evaluated`` beside a boundary ``failed``.
+    
+        Driven end to end through ``run_one`` with the COMMITTED boundary record of a
+        real gate-failed leg, so what is asserted is what an offline reader gets out of
+        ``manifest.jsonl``.
+        """
+    
+        boundary = _committed_release(paper_id)
+        outcome = _drive_gate_failure(tmp_path, f"carry_{paper_id}", {"release": boundary})
+    
+>       assert outcome.status == "fail"
+E       AssertionError: assert 'error' == 'fail'
+E         
+E         - fail
+E         + error
+
+tests\test_c056d_gate_failure_semantic_carry.py:141: AssertionError
+---------------------------- Captured stdout call -----------------------------
+\x1b[31m\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m \x1b[0m\x1b[1;31mTraceback \x1b[0m\x1b[1;2;31m(most recent call last)\x1b[0m\x1b[31m \x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\exec_code.py:136 in exec_func_with_error_handling               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\script_runner.py:837 in code_to_exec                            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\wsR1tmp\\f9-E5fgroup\\test_the_manifest_row_now_carr0\\carry_PMC12452463.py:6 in   \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m <module>                                                                             \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 3 \x1b[0m                                                                                \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 4 \x1b[0mst.radio(\x1b[33m"\x1b[0m\x1b[33mExport mode\x1b[0m\x1b[33m"\x1b[0m, [\x1b[33m"\x1b[0m\x1b[33mStrict PWML\x1b[0m\x1b[33m"\x1b[0m, \x1b[33m"\x1b[0m\x1b[33mResearch (relaxed)\x1b[0m\x1b[33m"\x1b[0m], key=\x1b[33m"\x1b[0m\x1b[33mexport_mode\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 5 \x1b[0mst.radio(\x1b[33m"\x1b[0m\x1b[33mInput mode\x1b[0m\x1b[33m"\x1b[0m, [\x1b[33m"\x1b[0m\x1b[33mPaste text\x1b[0m\x1b[33m"\x1b[0m, \x1b[33m"\x1b[0m\x1b[33mUpload PDF\x1b[0m\x1b[33m"\x1b[0m, \x1b[33m"\x1b[0m\x1b[33mText + PDF\x1b[0m\x1b[33m"\x1b[0m], key=\x1b[33m"\x1b[0m\x1b[33minput_m\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m 6 \x1b[94mwith\x1b[0m \x1b[1;4mst.form(\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4;33mpwml_pipeline\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4m)\x1b[0m:                                                  \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 7 \x1b[0m\x1b[2m\u2502   \x1b[0mst.text_area(\x1b[33m"\x1b[0m\x1b[33mPaste pathway description:\x1b[0m\x1b[33m"\x1b[0m, key=\x1b[33m"\x1b[0m\x1b[33mpathway_text_0\x1b[0m\x1b[33m"\x1b[0m)            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 8 \x1b[0m\x1b[2m\u2502   \x1b[0muser_task_context = st.text_area(                                           \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 9 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m\x1b[33m"\x1b[0m\x1b[33mOptional extraction focus / task context\x1b[0m\x1b[33m"\x1b[0m,                             \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\metrics_util.py:628 in wrapped_func                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m elements\\form.py:217 in form                                                         \x1b[31m \x1b[0m\n\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\n\x1b[1;91mStreamlitAPIException: \x1b[0mForms cannot be nested in other forms.
+---------------------------- Captured stderr call -----------------------------
+2026-11-05 11:30:45.499 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+_ test_the_manifest_row_now_carries_the_boundarys_semantic_verdict[PMC12096016] _
+
+tmp_path = WindowsPath('C:/t/wsR1tmp/f9-E5fgroup/test_the_manifest_row_now_carr1')
+paper_id = 'PMC12096016'
+
+    @pytest.mark.parametrize("paper_id", GATE_FAILED_LEGS)
+    def test_the_manifest_row_now_carries_the_boundarys_semantic_verdict(
+        tmp_path: Path, paper_id: str
+    ) -> None:
+        """RED AT BASE: the row records ``not_evaluated`` beside a boundary ``failed``.
+    
+        Driven end to end through ``run_one`` with the COMMITTED boundary record of a
+        real gate-failed leg, so what is asserted is what an offline reader gets out of
+        ``manifest.jsonl``.
+        """
+    
+        boundary = _committed_release(paper_id)
+        outcome = _drive_gate_failure(tmp_path, f"carry_{paper_id}", {"release": boundary})
+    
+>       assert outcome.status == "fail"
+E       AssertionError: assert 'error' == 'fail'
+E         
+E         - fail
+E         + error
+
+tests\test_c056d_gate_failure_semantic_carry.py:141: AssertionError
+---------------------------- Captured stdout call -----------------------------
+\x1b[31m\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m \x1b[0m\x1b[1;31mTraceback \x1b[0m\x1b[1;2;31m(most recent call last)\x1b[0m\x1b[31m \x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\exec_code.py:136 in exec_func_with_error_handling               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\script_runner.py:837 in code_to_exec                            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\wsR1tmp\\f9-E5fgroup\\test_the_manifest_row_now_carr1\\carry_PMC12096016.py:6 in   \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m <module>                                                                             \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 3 \x1b[0m                                                                                \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 4 \x1b[0mst.radio(\x1b[33m"\x1b[0m\x1b[33mExport mode\x1b[0m\x1b[33m"\x1b[0m, [\x1b[33m"\x1b[0m\x1b[33mStrict PWML\x1b[0m\x1b[33m"\x1b[0m, \x1b[33m"\x1b[0m\x1b[33mResearch (relaxed)\x1b[0m\x1b[33m"\x1b[0m], key=\x1b[33m"\x1b[0m\x1b[33mexport_mode\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 5 \x1b[0mst.radio(\x1b[33m"\x1b[0m\x1b[33mInput mode\x1b[0m\x1b[33m"\x1b[0m, [\x1b[33m"\x1b[0m\x1b[33mPaste text\x1b[0m\x1b[33m"\x1b[0m, \x1b[33m"\x1b[0m\x1b[33mUpload PDF\x1b[0m\x1b[33m"\x1b[0m, \x1b[33m"\x1b[0m\x1b[33mText + PDF\x1b[0m\x1b[33m"\x1b[0m], key=\x1b[33m"\x1b[0m\x1b[33minput_m\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m 6 \x1b[94mwith\x1b[0m \x1b[1;4mst.form(\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4;33mpwml_pipeline\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4m)\x1b[0m:                                                  \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 7 \x1b[0m\x1b[2m\u2502   \x1b[0mst.text_area(\x1b[33m"\x1b[0m\x1b[33mPaste pathway description:\x1b[0m\x1b[33m"\x1b[0m, key=\x1b[33m"\x1b[0m\x1b[33mpathway_text_0\x1b[0m\x1b[33m"\x1b[0m)            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 8 \x1b[0m\x1b[2m\u2502   \x1b[0muser_task_context = st.text_area(                                           \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 9 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m\x1b[33m"\x1b[0m\x1b[33mOptional extraction focus / task context\x1b[0m\x1b[33m"\x1b[0m,                             \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\metrics_util.py:628 in wrapped_func                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m elements\\form.py:217 in form                                                         \x1b[31m \x1b[0m\n\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\n\x1b[1;91mStreamlitAPIException: \x1b[0mForms cannot be nested in other forms.
+---------------------------- Captured stderr call -----------------------------
+2026-11-05 11:30:45.718 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+______________ test_c056cs_evaluability_travels_with_the_verdict ______________
+
+tmp_path = WindowsPath('C:/t/wsR1tmp/f9-E5fgroup/test_c056cs_evaluability_trave0')
+
+    def test_c056cs_evaluability_travels_with_the_verdict(tmp_path: Path) -> None:
+        """RED AT BASE: the carrier arrived empty on every gate-failed leg."""
+    
+        evaluability = [
+            {"check": "requested_pathway_anchors_present", "applicable": True, "inapplicable_reason": ""},
+            {"check": "organism_compatible", "applicable": True, "inapplicable_reason": ""},
+            {"check": "no_rejected_rag_reaction_reintroduced", "applicable": False,
+             "inapplicable_reason": "no admission report exists at this seam"},
+        ]
+        release = {
+            "status": DIAGNOSTIC_ONLY,
+            "semantic_evaluation": SEMANTIC_FAILED,
+            "semantic_failed_checks": ["no_real_id_or_name_conflict"],
+            "semantic_check_evaluability": evaluability,
+        }
+        outcome = _drive_gate_failure(tmp_path, "evaluability", {"release": release})
+    
+>       assert outcome.to_dict()["release_status"]["semantic_check_evaluability"] == evaluability
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'release_status'
+
+tests\test_c056d_gate_failure_semantic_carry.py:171: KeyError
+---------------------------- Captured stdout call -----------------------------
+\x1b[31m\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m \x1b[0m\x1b[1;31mTraceback \x1b[0m\x1b[1;2;31m(most recent call last)\x1b[0m\x1b[31m \x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\exec_code.py:136 in exec_func_with_error_handling               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\script_runner.py:837 in code_to_exec                            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\wsR1tmp\\f9-E5fgroup\\test_c056cs_evaluability_trave0\\evaluability.py:6 in        \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m <module>                                                                             \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 3 \x1b[0m                                                                                \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 4 \x1b[0mst.radio(\x1b[33m"\x1b[0m\x1b[33mExport mode\x1b[0m\x1b[33m"\x1b[0m, [\x1b[33m"\x1b[0m\x1b[33mStrict PWML\x1b[0m\x1b[33m"\x1b[0m, \x1b[33m"\x1b[0m\x1b[33mResearch (relaxed)\x1b[0m\x1b[33m"\x1b[0m], key=\x1b[33m"\x1b[0m\x1b[33mexport_mode\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 5 \x1b[0mst.radio(\x1b[33m"\x1b[0m\x1b[33mInput mode\x1b[0m\x1b[33m"\x1b[0m, [\x1b[33m"\x1b[0m\x1b[33mPaste text\x1b[0m\x1b[33m"\x1b[0m, \x1b[33m"\x1b[0m\x1b[33mUpload PDF\x1b[0m\x1b[33m"\x1b[0m, \x1b[33m"\x1b[0m\x1b[33mText + PDF\x1b[0m\x1b[33m"\x1b[0m], key=\x1b[33m"\x1b[0m\x1b[33minput_m\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m 6 \x1b[94mwith\x1b[0m \x1b[1;4mst.form(\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4;33mpwml_pipeline\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4m)\x1b[0m:                                                  \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 7 \x1b[0m\x1b[2m\u2502   \x1b[0mst.text_area(\x1b[33m"\x1b[0m\x1b[33mPaste pathway description:\x1b[0m\x1b[33m"\x1b[0m, key=\x1b[33m"\x1b[0m\x1b[33mpathway_text_0\x1b[0m\x1b[33m"\x1b[0m)            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 8 \x1b[0m\x1b[2m\u2502   \x1b[0muser_task_context = st.text_area(                                           \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 9 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m\x1b[33m"\x1b[0m\x1b[33mOptional extraction focus / task context\x1b[0m\x1b[33m"\x1b[0m,                             \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\metrics_util.py:628 in wrapped_func                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m elements\\form.py:217 in form                                                         \x1b[31m \x1b[0m\n\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\n\x1b[1;91mStreamlitAPIException: \x1b[0mForms cannot be nested in other forms.
+---------------------------- Captured stderr call -----------------------------
+2026-11-05 11:30:45.904 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+____ test_removing_the_boundary_report_puts_the_honest_not_evaluated_back _____
+
+tmp_path = WindowsPath('C:/t/wsR1tmp/f9-E5fgroup/test_removing_the_boundary_rep0')
+
+    def test_removing_the_boundary_report_puts_the_honest_not_evaluated_back(
+        tmp_path: Path,
+    ) -> None:
+        """Delete the record the carry reads and the row must degrade, not invent.
+    
+        This is the arm that proves the assertions above are not vacuous: the same
+        fixture, the same gate failure, with only the boundary's document withheld.
+        """
+    
+        outcome = _drive_gate_failure(tmp_path, "no_report", None)
+    
+        assert QUARANTINE_REPORT_FILENAME not in outcome.artifacts
+>       row = outcome.to_dict()["release_status"]
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'release_status'
+
+tests\test_c056d_gate_failure_semantic_carry.py:189: KeyError
+---------------------------- Captured stdout call -----------------------------
+\x1b[31m\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m \x1b[0m\x1b[1;31mTraceback \x1b[0m\x1b[1;2;31m(most recent call last)\x1b[0m\x1b[31m \x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\exec_code.py:136 in exec_func_with_error_handling               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\script_runner.py:837 in code_to_exec                            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\wsR1tmp\\f9-E5fgroup\\test_removing_the_boundary_rep0\\no_report.py:6 in <module>  \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 3 \x1b[0m                                                                                \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 4 \x1b[0mst.radio(\x1b[33m"\x1b[0m\x1b[33mExport mode\x1b[0m\x1b[33m"\x1b[0m, [\x1b[33m"\x1b[0m\x1b[33mStrict PWML\x1b[0m\x1b[33m"\x1b[0m, \x1b[33m"\x1b[0m\x1b[33mResearch (relaxed)\x1b[0m\x1b[33m"\x1b[0m], key=\x1b[33m"\x1b[0m\x1b[33mexport_mode\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 5 \x1b[0mst.radio(\x1b[33m"\x1b[0m\x1b[33mInput mode\x1b[0m\x1b[33m"\x1b[0m, [\x1b[33m"\x1b[0m\x1b[33mPaste text\x1b[0m\x1b[33m"\x1b[0m, \x1b[33m"\x1b[0m\x1b[33mUpload PDF\x1b[0m\x1b[33m"\x1b[0m, \x1b[33m"\x1b[0m\x1b[33mText + PDF\x1b[0m\x1b[33m"\x1b[0m], key=\x1b[33m"\x1b[0m\x1b[33minput_m\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m 6 \x1b[94mwith\x1b[0m \x1b[1;4mst.form(\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4;33mpwml_pipeline\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4m)\x1b[0m:                                                  \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 7 \x1b[0m\x1b[2m\u2502   \x1b[0mst.text_area(\x1b[33m"\x1b[0m\x1b[33mPaste pathway description:\x1b[0m\x1b[33m"\x1b[0m, key=\x1b[33m"\x1b[0m\x1b[33mpathway_text_0\x1b[0m\x1b[33m"\x1b[0m)            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 8 \x1b[0m\x1b[2m\u2502   \x1b[0muser_task_context = st.text_area(                                           \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 9 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m\x1b[33m"\x1b[0m\x1b[33mOptional extraction focus / task context\x1b[0m\x1b[33m"\x1b[0m,                             \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\metrics_util.py:628 in wrapped_func                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m elements\\form.py:217 in form                                                         \x1b[31m \x1b[0m\n\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\n\x1b[1;91mStreamlitAPIException: \x1b[0mForms cannot be nested in other forms.
+---------------------------- Captured stderr call -----------------------------
+2026-11-05 11:30:46.081 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+_ test_an_uninterpretable_document_is_discarded_rather_than_trusted[unparseable] _
+
+tmp_path = WindowsPath('C:/t/wsR1tmp/f9-E5fgroup/test_an_uninterpretable_docume0')
+document = '{not json at all'
+
+    @pytest.mark.parametrize(
+        "document",
+        [
+            "{not json at all",
+            json.dumps({"release": {"semantic_evaluation": "probably_fine"}}),
+            json.dumps({"release": "a string where a record should be"}),
+            json.dumps({"no_release_key": True}),
+            "",
+        ],
+        ids=["unparseable", "fourth_verdict_string", "release_not_a_record", "no_release", "empty"],
+    )
+    def test_an_uninterpretable_document_is_discarded_rather_than_trusted(
+        tmp_path: Path, document: str
+    ) -> None:
+        """A record this code cannot interpret is the same predicament as having none."""
+    
+        outcome = _drive_gate_failure(tmp_path, "junk", document)
+    
+>       row = outcome.to_dict()["release_status"]
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'release_status'
+
+tests\test_c056d_gate_failure_semantic_carry.py:213: KeyError
+---------------------------- Captured stdout call -----------------------------
+\x1b[31m\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m \x1b[0m\x1b[1;31mTraceback \x1b[0m\x1b[1;2;31m(most recent call last)\x1b[0m\x1b[31m \x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\exec_code.py:136 in exec_func_with_error_handling               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\script_runner.py:837 in code_to_exec                            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\wsR1tmp\\f9-E5fgroup\\test_an_uninterpretable_docume0\\junk.py:6 in <module>       \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 3 \x1b[0m                                                                                \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 4 \x1b[0mst.radio(\x1b[33m"\x1b[0m\x1b[33mExport mode\x1b[0m\x1b[33m"\x1b[0m, [\x1b[33m"\x1b[0m\x1b[33mStrict PWML\x1b[0m\x1b[33m"\x1b[0m, \x1b[33m"\x1b[0m\x1b[33mResearch (relaxed)\x1b[0m\x1b[33m"\x1b[0m], key=\x1b[33m"\x1b[0m\x1b[33mexport_mode\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 5 \x1b[0mst.radio(\x1b[33m"\x1b[0m\x1b[33mInput mode\x1b[0m\x1b[33m"\x1b[0m, [\x1b[33m"\x1b[0m\x1b[33mPaste text\x1b[0m\x1b[33m"\x1b[0m, \x1b[33m"\x1b[0m\x1b[33mUpload PDF\x1b[0m\x1b[33m"\x1b[0m, \x1b[33m"\x1b[0m\x1b[33mText + PDF\x1b[0m\x1b[33m"\x1b[0m], key=\x1b[33m"\x1b[0m\x1b[33minput_m\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m 6 \x1b[94mwith\x1b[0m \x1b[1;4mst.form(\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4;33mpwml_pipeline\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4m)\x1b[0m:                                                  \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 7 \x1b[0m\x1b[2m\u2502   \x1b[0mst.text_area(\x1b[33m"\x1b[0m\x1b[33mPaste pathway description:\x1b[0m\x1b[33m"\x1b[0m, key=\x1b[33m"\x1b[0m\x1b[33mpathway_text_0\x1b[0m\x1b[33m"\x1b[0m)            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 8 \x1b[0m\x1b[2m\u2502   \x1b[0muser_task_context = st.text_area(                                           \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 9 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m\x1b[33m"\x1b[0m\x1b[33mOptional extraction focus / task context\x1b[0m\x1b[33m"\x1b[0m,                             \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\metrics_util.py:628 in wrapped_func                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m elements\\form.py:217 in form                                                         \x1b[31m \x1b[0m\n\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\n\x1b[1;91mStreamlitAPIException: \x1b[0mForms cannot be nested in other forms.
+---------------------------- Captured stderr call -----------------------------
+2026-11-05 11:30:46.266 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+_ test_an_uninterpretable_document_is_discarded_rather_than_trusted[fourth_verdict_string] _
+
+tmp_path = WindowsPath('C:/t/wsR1tmp/f9-E5fgroup/test_an_uninterpretable_docume1')
+document = '{"release": {"semantic_evaluation": "probably_fine"}}'
+
+    @pytest.mark.parametrize(
+        "document",
+        [
+            "{not json at all",
+            json.dumps({"release": {"semantic_evaluation": "probably_fine"}}),
+            json.dumps({"release": "a string where a record should be"}),
+            json.dumps({"no_release_key": True}),
+            "",
+        ],
+        ids=["unparseable", "fourth_verdict_string", "release_not_a_record", "no_release", "empty"],
+    )
+    def test_an_uninterpretable_document_is_discarded_rather_than_trusted(
+        tmp_path: Path, document: str
+    ) -> None:
+        """A record this code cannot interpret is the same predicament as having none."""
+    
+        outcome = _drive_gate_failure(tmp_path, "junk", document)
+    
+>       row = outcome.to_dict()["release_status"]
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'release_status'
+
+tests\test_c056d_gate_failure_semantic_carry.py:213: KeyError
+---------------------------- Captured stdout call -----------------------------
+\x1b[31m\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m \x1b[0m\x1b[1;31mTraceback \x1b[0m\x1b[1;2;31m(most recent call last)\x1b[0m\x1b[31m \x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\exec_code.py:136 in exec_func_with_error_handling               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\script_runner.py:837 in code_to_exec                            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\wsR1tmp\\f9-E5fgroup\\test_an_uninterpretable_docume1\\junk.py:6 in <module>       \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 3 \x1b[0m                                                                                \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 4 \x1b[0mst.radio(\x1b[33m"\x1b[0m\x1b[33mExport mode\x1b[0m\x1b[33m"\x1b[0m, [\x1b[33m"\x1b[0m\x1b[33mStrict PWML\x1b[0m\x1b[33m"\x1b[0m, \x1b[33m"\x1b[0m\x1b[33mResearch (relaxed)\x1b[0m\x1b[33m"\x1b[0m], key=\x1b[33m"\x1b[0m\x1b[33mexport_mode\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 5 \x1b[0mst.radio(\x1b[33m"\x1b[0m\x1b[33mInput mode\x1b[0m\x1b[33m"\x1b[0m, [\x1b[33m"\x1b[0m\x1b[33mPaste text\x1b[0m\x1b[33m"\x1b[0m, \x1b[33m"\x1b[0m\x1b[33mUpload PDF\x1b[0m\x1b[33m"\x1b[0m, \x1b[33m"\x1b[0m\x1b[33mText + PDF\x1b[0m\x1b[33m"\x1b[0m], key=\x1b[33m"\x1b[0m\x1b[33minput_m\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m 6 \x1b[94mwith\x1b[0m \x1b[1;4mst.form(\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4;33mpwml_pipeline\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4m)\x1b[0m:                                                  \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 7 \x1b[0m\x1b[2m\u2502   \x1b[0mst.text_area(\x1b[33m"\x1b[0m\x1b[33mPaste pathway description:\x1b[0m\x1b[33m"\x1b[0m, key=\x1b[33m"\x1b[0m\x1b[33mpathway_text_0\x1b[0m\x1b[33m"\x1b[0m)            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 8 \x1b[0m\x1b[2m\u2502   \x1b[0muser_task_context = st.text_area(                                           \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 9 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m\x1b[33m"\x1b[0m\x1b[33mOptional extraction focus / task context\x1b[0m\x1b[33m"\x1b[0m,                             \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\metrics_util.py:628 in wrapped_func                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m elements\\form.py:217 in form                                                         \x1b[31m \x1b[0m\n\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\n\x1b[1;91mStreamlitAPIException: \x1b[0mForms cannot be nested in other forms.
+---------------------------- Captured stderr call -----------------------------
+2026-11-05 11:30:46.448 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+_ test_an_uninterpretable_document_is_discarded_rather_than_trusted[release_not_a_record] _
+
+tmp_path = WindowsPath('C:/t/wsR1tmp/f9-E5fgroup/test_an_uninterpretable_docume2')
+document = '{"release": "a string where a record should be"}'
+
+    @pytest.mark.parametrize(
+        "document",
+        [
+            "{not json at all",
+            json.dumps({"release": {"semantic_evaluation": "probably_fine"}}),
+            json.dumps({"release": "a string where a record should be"}),
+            json.dumps({"no_release_key": True}),
+            "",
+        ],
+        ids=["unparseable", "fourth_verdict_string", "release_not_a_record", "no_release", "empty"],
+    )
+    def test_an_uninterpretable_document_is_discarded_rather_than_trusted(
+        tmp_path: Path, document: str
+    ) -> None:
+        """A record this code cannot interpret is the same predicament as having none."""
+    
+        outcome = _drive_gate_failure(tmp_path, "junk", document)
+    
+>       row = outcome.to_dict()["release_status"]
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'release_status'
+
+tests\test_c056d_gate_failure_semantic_carry.py:213: KeyError
+---------------------------- Captured stdout call -----------------------------
+\x1b[31m\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m \x1b[0m\x1b[1;31mTraceback \x1b[0m\x1b[1;2;31m(most recent call last)\x1b[0m\x1b[31m \x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\exec_code.py:136 in exec_func_with_error_handling               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\script_runner.py:837 in code_to_exec                            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\wsR1tmp\\f9-E5fgroup\\test_an_uninterpretable_docume2\\junk.py:6 in <module>       \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 3 \x1b[0m                                                                                \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 4 \x1b[0mst.radio(\x1b[33m"\x1b[0m\x1b[33mExport mode\x1b[0m\x1b[33m"\x1b[0m, [\x1b[33m"\x1b[0m\x1b[33mStrict PWML\x1b[0m\x1b[33m"\x1b[0m, \x1b[33m"\x1b[0m\x1b[33mResearch (relaxed)\x1b[0m\x1b[33m"\x1b[0m], key=\x1b[33m"\x1b[0m\x1b[33mexport_mode\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 5 \x1b[0mst.radio(\x1b[33m"\x1b[0m\x1b[33mInput mode\x1b[0m\x1b[33m"\x1b[0m, [\x1b[33m"\x1b[0m\x1b[33mPaste text\x1b[0m\x1b[33m"\x1b[0m, \x1b[33m"\x1b[0m\x1b[33mUpload PDF\x1b[0m\x1b[33m"\x1b[0m, \x1b[33m"\x1b[0m\x1b[33mText + PDF\x1b[0m\x1b[33m"\x1b[0m], key=\x1b[33m"\x1b[0m\x1b[33minput_m\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m 6 \x1b[94mwith\x1b[0m \x1b[1;4mst.form(\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4;33mpwml_pipeline\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4m)\x1b[0m:                                                  \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 7 \x1b[0m\x1b[2m\u2502   \x1b[0mst.text_area(\x1b[33m"\x1b[0m\x1b[33mPaste pathway description:\x1b[0m\x1b[33m"\x1b[0m, key=\x1b[33m"\x1b[0m\x1b[33mpathway_text_0\x1b[0m\x1b[33m"\x1b[0m)            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 8 \x1b[0m\x1b[2m\u2502   \x1b[0muser_task_context = st.text_area(                                           \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 9 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m\x1b[33m"\x1b[0m\x1b[33mOptional extraction focus / task context\x1b[0m\x1b[33m"\x1b[0m,                             \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\metrics_util.py:628 in wrapped_func                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m elements\\form.py:217 in form                                                         \x1b[31m \x1b[0m\n\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\n\x1b[1;91mStreamlitAPIException: \x1b[0mForms cannot be nested in other forms.
+---------------------------- Captured stderr call -----------------------------
+2026-11-05 11:30:46.628 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+_ test_an_uninterpretable_document_is_discarded_rather_than_trusted[no_release] _
+
+tmp_path = WindowsPath('C:/t/wsR1tmp/f9-E5fgroup/test_an_uninterpretable_docume3')
+document = '{"no_release_key": true}'
+
+    @pytest.mark.parametrize(
+        "document",
+        [
+            "{not json at all",
+            json.dumps({"release": {"semantic_evaluation": "probably_fine"}}),
+            json.dumps({"release": "a string where a record should be"}),
+            json.dumps({"no_release_key": True}),
+            "",
+        ],
+        ids=["unparseable", "fourth_verdict_string", "release_not_a_record", "no_release", "empty"],
+    )
+    def test_an_uninterpretable_document_is_discarded_rather_than_trusted(
+        tmp_path: Path, document: str
+    ) -> None:
+        """A record this code cannot interpret is the same predicament as having none."""
+    
+        outcome = _drive_gate_failure(tmp_path, "junk", document)
+    
+>       row = outcome.to_dict()["release_status"]
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'release_status'
+
+tests\test_c056d_gate_failure_semantic_carry.py:213: KeyError
+---------------------------- Captured stdout call -----------------------------
+\x1b[31m\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m \x1b[0m\x1b[1;31mTraceback \x1b[0m\x1b[1;2;31m(most recent call last)\x1b[0m\x1b[31m \x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\exec_code.py:136 in exec_func_with_error_handling               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\script_runner.py:837 in code_to_exec                            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\wsR1tmp\\f9-E5fgroup\\test_an_uninterpretable_docume3\\junk.py:6 in <module>       \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 3 \x1b[0m                                                                                \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 4 \x1b[0mst.radio(\x1b[33m"\x1b[0m\x1b[33mExport mode\x1b[0m\x1b[33m"\x1b[0m, [\x1b[33m"\x1b[0m\x1b[33mStrict PWML\x1b[0m\x1b[33m"\x1b[0m, \x1b[33m"\x1b[0m\x1b[33mResearch (relaxed)\x1b[0m\x1b[33m"\x1b[0m], key=\x1b[33m"\x1b[0m\x1b[33mexport_mode\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 5 \x1b[0mst.radio(\x1b[33m"\x1b[0m\x1b[33mInput mode\x1b[0m\x1b[33m"\x1b[0m, [\x1b[33m"\x1b[0m\x1b[33mPaste text\x1b[0m\x1b[33m"\x1b[0m, \x1b[33m"\x1b[0m\x1b[33mUpload PDF\x1b[0m\x1b[33m"\x1b[0m, \x1b[33m"\x1b[0m\x1b[33mText + PDF\x1b[0m\x1b[33m"\x1b[0m], key=\x1b[33m"\x1b[0m\x1b[33minput_m\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m 6 \x1b[94mwith\x1b[0m \x1b[1;4mst.form(\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4;33mpwml_pipeline\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4m)\x1b[0m:                                                  \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 7 \x1b[0m\x1b[2m\u2502   \x1b[0mst.text_area(\x1b[33m"\x1b[0m\x1b[33mPaste pathway description:\x1b[0m\x1b[33m"\x1b[0m, key=\x1b[33m"\x1b[0m\x1b[33mpathway_text_0\x1b[0m\x1b[33m"\x1b[0m)            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 8 \x1b[0m\x1b[2m\u2502   \x1b[0muser_task_context = st.text_area(                                           \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 9 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m\x1b[33m"\x1b[0m\x1b[33mOptional extraction focus / task context\x1b[0m\x1b[33m"\x1b[0m,                             \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\metrics_util.py:628 in wrapped_func                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m elements\\form.py:217 in form                                                         \x1b[31m \x1b[0m\n\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\n\x1b[1;91mStreamlitAPIException: \x1b[0mForms cannot be nested in other forms.
+---------------------------- Captured stderr call -----------------------------
+2026-11-05 11:30:46.816 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+__ test_an_uninterpretable_document_is_discarded_rather_than_trusted[empty] ___
+
+tmp_path = WindowsPath('C:/t/wsR1tmp/f9-E5fgroup/test_an_uninterpretable_docume4')
+document = ''
+
+    @pytest.mark.parametrize(
+        "document",
+        [
+            "{not json at all",
+            json.dumps({"release": {"semantic_evaluation": "probably_fine"}}),
+            json.dumps({"release": "a string where a record should be"}),
+            json.dumps({"no_release_key": True}),
+            "",
+        ],
+        ids=["unparseable", "fourth_verdict_string", "release_not_a_record", "no_release", "empty"],
+    )
+    def test_an_uninterpretable_document_is_discarded_rather_than_trusted(
+        tmp_path: Path, document: str
+    ) -> None:
+        """A record this code cannot interpret is the same predicament as having none."""
+    
+        outcome = _drive_gate_failure(tmp_path, "junk", document)
+    
+>       row = outcome.to_dict()["release_status"]
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'release_status'
+
+tests\test_c056d_gate_failure_semantic_carry.py:213: KeyError
+---------------------------- Captured stdout call -----------------------------
+\x1b[31m\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m \x1b[0m\x1b[1;31mTraceback \x1b[0m\x1b[1;2;31m(most recent call last)\x1b[0m\x1b[31m \x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\exec_code.py:136 in exec_func_with_error_handling               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\script_runner.py:837 in code_to_exec                            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\wsR1tmp\\f9-E5fgroup\\test_an_uninterpretable_docume4\\junk.py:6 in <module>       \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 3 \x1b[0m                                                                                \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 4 \x1b[0mst.radio(\x1b[33m"\x1b[0m\x1b[33mExport mode\x1b[0m\x1b[33m"\x1b[0m, [\x1b[33m"\x1b[0m\x1b[33mStrict PWML\x1b[0m\x1b[33m"\x1b[0m, \x1b[33m"\x1b[0m\x1b[33mResearch (relaxed)\x1b[0m\x1b[33m"\x1b[0m], key=\x1b[33m"\x1b[0m\x1b[33mexport_mode\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 5 \x1b[0mst.radio(\x1b[33m"\x1b[0m\x1b[33mInput mode\x1b[0m\x1b[33m"\x1b[0m, [\x1b[33m"\x1b[0m\x1b[33mPaste text\x1b[0m\x1b[33m"\x1b[0m, \x1b[33m"\x1b[0m\x1b[33mUpload PDF\x1b[0m\x1b[33m"\x1b[0m, \x1b[33m"\x1b[0m\x1b[33mText + PDF\x1b[0m\x1b[33m"\x1b[0m], key=\x1b[33m"\x1b[0m\x1b[33minput_m\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m 6 \x1b[94mwith\x1b[0m \x1b[1;4mst.form(\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4;33mpwml_pipeline\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4m)\x1b[0m:                                                  \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 7 \x1b[0m\x1b[2m\u2502   \x1b[0mst.text_area(\x1b[33m"\x1b[0m\x1b[33mPaste pathway description:\x1b[0m\x1b[33m"\x1b[0m, key=\x1b[33m"\x1b[0m\x1b[33mpathway_text_0\x1b[0m\x1b[33m"\x1b[0m)            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 8 \x1b[0m\x1b[2m\u2502   \x1b[0muser_task_context = st.text_area(                                           \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 9 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m\x1b[33m"\x1b[0m\x1b[33mOptional extraction focus / task context\x1b[0m\x1b[33m"\x1b[0m,                             \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\metrics_util.py:628 in wrapped_func                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m elements\\form.py:217 in form                                                         \x1b[31m \x1b[0m\n\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\n\x1b[1;91mStreamlitAPIException: \x1b[0mForms cannot be nested in other forms.
+---------------------------- Captured stderr call -----------------------------
+2026-11-05 11:30:47.018 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+_____________ test_the_carry_cannot_manufacture_a_strict_success ______________
+
+tmp_path = WindowsPath('C:/t/wsR1tmp/f9-E5fgroup/test_the_carry_cannot_manufact0')
+
+    def test_the_carry_cannot_manufacture_a_strict_success(tmp_path: Path) -> None:
+        """A boundary record claiming release_ready + passed must NOT lift this leg.
+    
+        The boundary's ``strict_gates_passed`` is its own closure/lock invariant set and
+        is computed BEFORE the final pre-export Stage-3 suite runs, so a leg those later
+        gates blocked can carry a boundary record that still reads ``release_ready``.
+        Carrying the record WHOLESALE would put ``strict_acceptance_eligible: true`` on a
+        leg that produced no PWML -- TRAP-1. Only the semantic fields travel.
+        """
+    
+        release = {
+            "status": "release_ready",
+            "strict_gates_passed": True,
+            "strict_acceptance_eligible": True,
+            "semantic_evaluation": SEMANTIC_PASSED,
+            "completeness": 1.0,
+        }
+        outcome = _drive_gate_failure(tmp_path, "no_inflation", {"release": release})
+    
+>       row = outcome.to_dict()["release_status"]
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'release_status'
+
+tests\test_c056d_gate_failure_semantic_carry.py:240: KeyError
+---------------------------- Captured stdout call -----------------------------
+\x1b[31m\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m \x1b[0m\x1b[1;31mTraceback \x1b[0m\x1b[1;2;31m(most recent call last)\x1b[0m\x1b[31m \x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\exec_code.py:136 in exec_func_with_error_handling               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\script_runner.py:837 in code_to_exec                            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\wsR1tmp\\f9-E5fgroup\\test_the_carry_cannot_manufact0\\no_inflation.py:6 in        \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m <module>                                                                             \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 3 \x1b[0m                                                                                \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 4 \x1b[0mst.radio(\x1b[33m"\x1b[0m\x1b[33mExport mode\x1b[0m\x1b[33m"\x1b[0m, [\x1b[33m"\x1b[0m\x1b[33mStrict PWML\x1b[0m\x1b[33m"\x1b[0m, \x1b[33m"\x1b[0m\x1b[33mResearch (relaxed)\x1b[0m\x1b[33m"\x1b[0m], key=\x1b[33m"\x1b[0m\x1b[33mexport_mode\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 5 \x1b[0mst.radio(\x1b[33m"\x1b[0m\x1b[33mInput mode\x1b[0m\x1b[33m"\x1b[0m, [\x1b[33m"\x1b[0m\x1b[33mPaste text\x1b[0m\x1b[33m"\x1b[0m, \x1b[33m"\x1b[0m\x1b[33mUpload PDF\x1b[0m\x1b[33m"\x1b[0m, \x1b[33m"\x1b[0m\x1b[33mText + PDF\x1b[0m\x1b[33m"\x1b[0m], key=\x1b[33m"\x1b[0m\x1b[33minput_m\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m 6 \x1b[94mwith\x1b[0m \x1b[1;4mst.form(\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4;33mpwml_pipeline\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4m)\x1b[0m:                                                  \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 7 \x1b[0m\x1b[2m\u2502   \x1b[0mst.text_area(\x1b[33m"\x1b[0m\x1b[33mPaste pathway description:\x1b[0m\x1b[33m"\x1b[0m, key=\x1b[33m"\x1b[0m\x1b[33mpathway_text_0\x1b[0m\x1b[33m"\x1b[0m)            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 8 \x1b[0m\x1b[2m\u2502   \x1b[0muser_task_context = st.text_area(                                           \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 9 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m\x1b[33m"\x1b[0m\x1b[33mOptional extraction focus / task context\x1b[0m\x1b[33m"\x1b[0m,                             \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\metrics_util.py:628 in wrapped_func                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m elements\\form.py:217 in form                                                         \x1b[31m \x1b[0m\n\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\n\x1b[1;91mStreamlitAPIException: \x1b[0mForms cannot be nested in other forms.
+---------------------------- Captured stderr call -----------------------------
+2026-11-05 11:30:47.216 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+__ test_the_superseded_count_reaches_the_row_on_a_leg_that_is_still_refused ___
+
+tmp_path = WindowsPath('C:/t/wsR1tmp/f9-E5fgroup/test_the_superseded_count_reac0')
+
+    def test_the_superseded_count_reaches_the_row_on_a_leg_that_is_still_refused(
+        tmp_path: Path,
+    ) -> None:
+        """The finding does not vanish on the paths that DO refuse.
+    
+        ``PMC12452463`` @ 2026-09-02 is refused by the GATE channel, which this card
+        does not touch, so it never reaches the export seam where the review reason and
+        the warning are written. The neutral count is written BEFORE the blocking
+        decision instead, so a reader of that leg's manifest row still learns that its
+        contract channel carried 8 superseded errors -- which at the base SHA arrived as
+        8 blocking contract errors in ``codes`` and ``detail``.
+    
+        It is a COUNT and not the export path's sentence on purpose: that sentence says
+        the leg was serialized, and here it was not. And it is written only when there
+        is something to say, so a leg with no superseded snapshot has a byte-identical
+        row.
+        """
+    
+        data = _bundle("PMC12452463_strict_2026-09-02")
+        reassembled = _artifacts("PMC12452463_strict_2026-09-02")
+        assert gate_verdict(reassembled).failed is True  # still refused, by the gate
+    
+        artifacts_path = tmp_path / "artifacts.json"
+        artifacts_path.write_text(
+            json.dumps(
+                {
+                    **data["contract_reports"],
+                    FINAL_GATE_REPORT_KEY: data["final_stage3_gate_report"],
+                    CANONICAL_PAYLOAD_KEY: data["canonical_export_payload"],
+                    "artifact_set_version": 1,
+                    "export_mode": "pathwhiz",
+                    "final_mapped": data["canonical_export_payload"],
+                    "final_mapped_db": data["canonical_export_payload"],
+                },
+                ensure_ascii=False,
+            ),
+            encoding="utf-8",
+        )
+        body = f'''
+    import json
+    if submitted:
+        st.session_state["pipeline_ready"] = True
+        st.session_state["stage_one"] = {{"entities": {{}}, "processes": {{"reactions": []}}}}
+        with open(r"{artifacts_path}", encoding="utf-8") as fh:
+            st.session_state["final_payload"] = json.load(fh)["final_mapped"]
+    if st.session_state.get("pipeline_ready"):
+        if st.button("Run audit and DB mapping", key="pwml_generate_btn"):
+            with open(r"{artifacts_path}", encoding="utf-8") as fh:
+                st.session_state["post_pipeline_artifacts"] = json.load(fh)
+    '''
+        app = _write_app(tmp_path, "c119_pmc12452463_0902", body)
+        outcome = run_one(PAPER, STRICT, app_path=app, timeout=180.0, app_timeout=90.0)
+    
+>       assert outcome.status == "fail"
+E       AssertionError: assert 'error' == 'fail'
+E         
+E         - fail
+E         + error
+
+tests\test_c119_superseded_intermediate_report.py:314: AssertionError
+---------------------------- Captured stdout call -----------------------------
+\x1b[31m\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m \x1b[0m\x1b[1;31mTraceback \x1b[0m\x1b[1;2;31m(most recent call last)\x1b[0m\x1b[31m \x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\exec_code.py:136 in exec_func_with_error_handling               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\script_runner.py:837 in code_to_exec                            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\wsR1tmp\\f9-E5fgroup\\test_the_superseded_count_reac0\\c119_pmc12452463_0902.py:6  \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m in <module>                                                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 3 \x1b[0m                                                                                \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 4 \x1b[0mst.radio(\x1b[33m"\x1b[0m\x1b[33mExport mode\x1b[0m\x1b[33m"\x1b[0m, [\x1b[33m"\x1b[0m\x1b[33mStrict PWML\x1b[0m\x1b[33m"\x1b[0m, \x1b[33m"\x1b[0m\x1b[33mResearch (relaxed)\x1b[0m\x1b[33m"\x1b[0m], key=\x1b[33m"\x1b[0m\x1b[33mexport_mode\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 5 \x1b[0mst.radio(\x1b[33m"\x1b[0m\x1b[33mInput mode\x1b[0m\x1b[33m"\x1b[0m, [\x1b[33m"\x1b[0m\x1b[33mPaste text\x1b[0m\x1b[33m"\x1b[0m, \x1b[33m"\x1b[0m\x1b[33mUpload PDF\x1b[0m\x1b[33m"\x1b[0m, \x1b[33m"\x1b[0m\x1b[33mText + PDF\x1b[0m\x1b[33m"\x1b[0m], key=\x1b[33m"\x1b[0m\x1b[33minput_m\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m 6 \x1b[94mwith\x1b[0m \x1b[1;4mst.form(\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4;33mpwml_pipeline\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4m)\x1b[0m:                                                  \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 7 \x1b[0m\x1b[2m\u2502   \x1b[0mst.text_area(\x1b[33m"\x1b[0m\x1b[33mPaste pathway description:\x1b[0m\x1b[33m"\x1b[0m, key=\x1b[33m"\x1b[0m\x1b[33mpathway_text_0\x1b[0m\x1b[33m"\x1b[0m)            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 8 \x1b[0m\x1b[2m\u2502   \x1b[0muser_task_context = st.text_area(                                           \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 9 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m\x1b[33m"\x1b[0m\x1b[33mOptional extraction focus / task context\x1b[0m\x1b[33m"\x1b[0m,                             \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\metrics_util.py:628 in wrapped_func                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m elements\\form.py:217 in form                                                         \x1b[31m \x1b[0m\n\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\n\x1b[1;91mStreamlitAPIException: \x1b[0mForms cannot be nested in other forms.
+---------------------------- Captured stderr call -----------------------------
+2026-11-05 11:30:47.456 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+_____________ test_g9_a_4000s_submit_finishes_inside_a_10800s_leg _____________
+
+tmp_path = WindowsPath('C:/t/wsR1tmp/f9-E5fgroup/test_g9_a_4000s_submit_finishe0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000166D7863930>
+
+    def test_g9_a_4000s_submit_finishes_inside_a_10800s_leg(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """**BASE: ``timeout`` at 3,600 s, "extraction did not finish". TIP: ``pass``.**"""
+    
+        row, calls = _leg(tmp_path, monkeypatch, cost=4000.0, deadline=CHILD_DEADLINE)
+    
+>       assert row["status"] == "pass", (row["status"], row["message"], calls)
+E       AssertionError: ('error', 'the app raised while loading, before any input was given', [{'cost': 1.0, 'start': 0.0, 'timeout': 10680.0}])
+E       assert 'error' == 'pass'
+E         
+E         - pass
+E         + error
+
+tests\test_orch759d_app_timeout.py:126: AssertionError
+---------------------------- Captured stdout call -----------------------------
+\x1b[31m\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m \x1b[0m\x1b[1;31mTraceback \x1b[0m\x1b[1;2;31m(most recent call last)\x1b[0m\x1b[31m \x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\exec_code.py:136 in exec_func_with_error_handling               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\script_runner.py:837 in code_to_exec                            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\wsR1tmp\\f9-E5fgroup\\test_g9_a_4000s_submit_finishe0\\slow_submit.py:6 in         \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m <module>                                                                             \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 3 \x1b[0m                                                                                \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 4 \x1b[0mst.radio(\x1b[33m"\x1b[0m\x1b[33mExport mode\x1b[0m\x1b[33m"\x1b[0m, [\x1b[33m"\x1b[0m\x1b[33mStrict PWML\x1b[0m\x1b[33m"\x1b[0m, \x1b[33m"\x1b[0m\x1b[33mResearch (relaxed)\x1b[0m\x1b[33m"\x1b[0m], key=\x1b[33m"\x1b[0m\x1b[33mexport_mode\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 5 \x1b[0mst.radio(\x1b[33m"\x1b[0m\x1b[33mInput mode\x1b[0m\x1b[33m"\x1b[0m, [\x1b[33m"\x1b[0m\x1b[33mPaste text\x1b[0m\x1b[33m"\x1b[0m, \x1b[33m"\x1b[0m\x1b[33mUpload PDF\x1b[0m\x1b[33m"\x1b[0m, \x1b[33m"\x1b[0m\x1b[33mText + PDF\x1b[0m\x1b[33m"\x1b[0m], key=\x1b[33m"\x1b[0m\x1b[33minput_m\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m 6 \x1b[94mwith\x1b[0m \x1b[1;4mst.form(\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4;33mpwml_pipeline\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4m)\x1b[0m:                                                  \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 7 \x1b[0m\x1b[2m\u2502   \x1b[0mst.text_area(\x1b[33m"\x1b[0m\x1b[33mPaste pathway description:\x1b[0m\x1b[33m"\x1b[0m, key=\x1b[33m"\x1b[0m\x1b[33mpathway_text_0\x1b[0m\x1b[33m"\x1b[0m)            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 8 \x1b[0m\x1b[2m\u2502   \x1b[0muser_task_context = st.text_area(                                           \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 9 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m\x1b[33m"\x1b[0m\x1b[33mOptional extraction focus / task context\x1b[0m\x1b[33m"\x1b[0m,                             \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\metrics_util.py:628 in wrapped_func                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m elements\\form.py:217 in form                                                         \x1b[31m \x1b[0m\n\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\n\x1b[1;91mStreamlitAPIException: \x1b[0mForms cannot be nested in other forms.
+---------------------------- Captured stderr call -----------------------------
+2026-11-05 11:30:47.843 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+_ test_preservation_the_leg_deadline_still_caps_an_interaction[3000.0-4000.0] _
+
+tmp_path = WindowsPath('C:/t/wsR1tmp/f9-E5fgroup/test_preservation_the_leg_dead0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001671A025240>
+deadline = 3000.0, cost = 4000.0
+
+    @pytest.mark.parametrize(
+        ("deadline", "cost"),
+        [
+            (3_000.0, 4_000.0),  # leg shorter than the old cap: identical at base and tip
+            (CHILD_DEADLINE, 20_000.0),  # the 10,800 s leg: the uncapped slice still stops
+        ],
+    )
+    def test_preservation_the_leg_deadline_still_caps_an_interaction(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch, deadline: float, cost: float
+    ) -> None:
+        """An interaction that outruns the leg times out AT OR BEFORE the child deadline,
+        so the parent's finalization reserve (the 120 s grace) is never touched."""
+    
+        row, calls = _leg(tmp_path, monkeypatch, cost=cost, deadline=deadline)
+    
+>       assert row["status"] == "timeout"
+E       AssertionError: assert 'error' == 'timeout'
+E         
+E         - timeout
+E         + error
+
+tests\test_orch759d_app_timeout.py:150: AssertionError
+---------------------------- Captured stdout call -----------------------------
+\x1b[31m\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m \x1b[0m\x1b[1;31mTraceback \x1b[0m\x1b[1;2;31m(most recent call last)\x1b[0m\x1b[31m \x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\exec_code.py:136 in exec_func_with_error_handling               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\script_runner.py:837 in code_to_exec                            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\wsR1tmp\\f9-E5fgroup\\test_preservation_the_leg_dead0\\slow_submit.py:6 in         \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m <module>                                                                             \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 3 \x1b[0m                                                                                \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 4 \x1b[0mst.radio(\x1b[33m"\x1b[0m\x1b[33mExport mode\x1b[0m\x1b[33m"\x1b[0m, [\x1b[33m"\x1b[0m\x1b[33mStrict PWML\x1b[0m\x1b[33m"\x1b[0m, \x1b[33m"\x1b[0m\x1b[33mResearch (relaxed)\x1b[0m\x1b[33m"\x1b[0m], key=\x1b[33m"\x1b[0m\x1b[33mexport_mode\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 5 \x1b[0mst.radio(\x1b[33m"\x1b[0m\x1b[33mInput mode\x1b[0m\x1b[33m"\x1b[0m, [\x1b[33m"\x1b[0m\x1b[33mPaste text\x1b[0m\x1b[33m"\x1b[0m, \x1b[33m"\x1b[0m\x1b[33mUpload PDF\x1b[0m\x1b[33m"\x1b[0m, \x1b[33m"\x1b[0m\x1b[33mText + PDF\x1b[0m\x1b[33m"\x1b[0m], key=\x1b[33m"\x1b[0m\x1b[33minput_m\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m 6 \x1b[94mwith\x1b[0m \x1b[1;4mst.form(\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4;33mpwml_pipeline\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4m)\x1b[0m:                                                  \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 7 \x1b[0m\x1b[2m\u2502   \x1b[0mst.text_area(\x1b[33m"\x1b[0m\x1b[33mPaste pathway description:\x1b[0m\x1b[33m"\x1b[0m, key=\x1b[33m"\x1b[0m\x1b[33mpathway_text_0\x1b[0m\x1b[33m"\x1b[0m)            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 8 \x1b[0m\x1b[2m\u2502   \x1b[0muser_task_context = st.text_area(                                           \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 9 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m\x1b[33m"\x1b[0m\x1b[33mOptional extraction focus / task context\x1b[0m\x1b[33m"\x1b[0m,                             \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\metrics_util.py:628 in wrapped_func                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m elements\\form.py:217 in form                                                         \x1b[31m \x1b[0m\n\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\n\x1b[1;91mStreamlitAPIException: \x1b[0mForms cannot be nested in other forms.
+---------------------------- Captured stderr call -----------------------------
+2026-11-05 11:30:48.031 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+_ test_preservation_the_leg_deadline_still_caps_an_interaction[10680.0-20000.0] _
+
+tmp_path = WindowsPath('C:/t/wsR1tmp/f9-E5fgroup/test_preservation_the_leg_dead1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000166D7B99B70>
+deadline = 10680.0, cost = 20000.0
+
+    @pytest.mark.parametrize(
+        ("deadline", "cost"),
+        [
+            (3_000.0, 4_000.0),  # leg shorter than the old cap: identical at base and tip
+            (CHILD_DEADLINE, 20_000.0),  # the 10,800 s leg: the uncapped slice still stops
+        ],
+    )
+    def test_preservation_the_leg_deadline_still_caps_an_interaction(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch, deadline: float, cost: float
+    ) -> None:
+        """An interaction that outruns the leg times out AT OR BEFORE the child deadline,
+        so the parent's finalization reserve (the 120 s grace) is never touched."""
+    
+        row, calls = _leg(tmp_path, monkeypatch, cost=cost, deadline=deadline)
+    
+>       assert row["status"] == "timeout"
+E       AssertionError: assert 'error' == 'timeout'
+E         
+E         - timeout
+E         + error
+
+tests\test_orch759d_app_timeout.py:150: AssertionError
+---------------------------- Captured stdout call -----------------------------
+\x1b[31m\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m \x1b[0m\x1b[1;31mTraceback \x1b[0m\x1b[1;2;31m(most recent call last)\x1b[0m\x1b[31m \x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\exec_code.py:136 in exec_func_with_error_handling               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\script_runner.py:837 in code_to_exec                            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\wsR1tmp\\f9-E5fgroup\\test_preservation_the_leg_dead1\\slow_submit.py:6 in         \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m <module>                                                                             \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 3 \x1b[0m                                                                                \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 4 \x1b[0mst.radio(\x1b[33m"\x1b[0m\x1b[33mExport mode\x1b[0m\x1b[33m"\x1b[0m, [\x1b[33m"\x1b[0m\x1b[33mStrict PWML\x1b[0m\x1b[33m"\x1b[0m, \x1b[33m"\x1b[0m\x1b[33mResearch (relaxed)\x1b[0m\x1b[33m"\x1b[0m], key=\x1b[33m"\x1b[0m\x1b[33mexport_mode\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 5 \x1b[0mst.radio(\x1b[33m"\x1b[0m\x1b[33mInput mode\x1b[0m\x1b[33m"\x1b[0m, [\x1b[33m"\x1b[0m\x1b[33mPaste text\x1b[0m\x1b[33m"\x1b[0m, \x1b[33m"\x1b[0m\x1b[33mUpload PDF\x1b[0m\x1b[33m"\x1b[0m, \x1b[33m"\x1b[0m\x1b[33mText + PDF\x1b[0m\x1b[33m"\x1b[0m], key=\x1b[33m"\x1b[0m\x1b[33minput_m\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m 6 \x1b[94mwith\x1b[0m \x1b[1;4mst.form(\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4;33mpwml_pipeline\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4m)\x1b[0m:                                                  \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 7 \x1b[0m\x1b[2m\u2502   \x1b[0mst.text_area(\x1b[33m"\x1b[0m\x1b[33mPaste pathway description:\x1b[0m\x1b[33m"\x1b[0m, key=\x1b[33m"\x1b[0m\x1b[33mpathway_text_0\x1b[0m\x1b[33m"\x1b[0m)            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 8 \x1b[0m\x1b[2m\u2502   \x1b[0muser_task_context = st.text_area(                                           \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 9 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m\x1b[33m"\x1b[0m\x1b[33mOptional extraction focus / task context\x1b[0m\x1b[33m"\x1b[0m,                             \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\metrics_util.py:628 in wrapped_func                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m elements\\form.py:217 in form                                                         \x1b[31m \x1b[0m\n\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\n\x1b[1;91mStreamlitAPIException: \x1b[0mForms cannot be nested in other forms.
+---------------------------- Captured stderr call -----------------------------
+2026-11-05 11:30:48.225 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+____ test_preservation_an_explicit_app_timeout_still_caps_each_interaction ____
+
+tmp_path = WindowsPath('C:/t/wsR1tmp/f9-E5fgroup/test_preservation_an_explicit_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000166B93B1FD0>
+
+    def test_preservation_an_explicit_app_timeout_still_caps_each_interaction(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """A caller that passes ``app_timeout`` keeps exactly the cap it asked for."""
+    
+        calls = _fake_wall_time(monkeypatch)
+        app = _app(tmp_path, 4000.0)
+    
+        outcome = run_one(PAPER, STRICT, app_path=app, timeout=CHILD_DEADLINE, app_timeout=3600.0)
+    
+>       assert outcome.status == "timeout"
+E       AssertionError: assert 'error' == 'timeout'
+E         
+E         - timeout
+E         + error
+
+tests\test_orch759d_app_timeout.py:175: AssertionError
+---------------------------- Captured stdout call -----------------------------
+\x1b[31m\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m \x1b[0m\x1b[1;31mTraceback \x1b[0m\x1b[1;2;31m(most recent call last)\x1b[0m\x1b[31m \x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\exec_code.py:136 in exec_func_with_error_handling               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\script_runner.py:837 in code_to_exec                            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\wsR1tmp\\f9-E5fgroup\\test_preservation_an_explicit_0\\slow_submit.py:6 in         \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m <module>                                                                             \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 3 \x1b[0m                                                                                \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 4 \x1b[0mst.radio(\x1b[33m"\x1b[0m\x1b[33mExport mode\x1b[0m\x1b[33m"\x1b[0m, [\x1b[33m"\x1b[0m\x1b[33mStrict PWML\x1b[0m\x1b[33m"\x1b[0m, \x1b[33m"\x1b[0m\x1b[33mResearch (relaxed)\x1b[0m\x1b[33m"\x1b[0m], key=\x1b[33m"\x1b[0m\x1b[33mexport_mode\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 5 \x1b[0mst.radio(\x1b[33m"\x1b[0m\x1b[33mInput mode\x1b[0m\x1b[33m"\x1b[0m, [\x1b[33m"\x1b[0m\x1b[33mPaste text\x1b[0m\x1b[33m"\x1b[0m, \x1b[33m"\x1b[0m\x1b[33mUpload PDF\x1b[0m\x1b[33m"\x1b[0m, \x1b[33m"\x1b[0m\x1b[33mText + PDF\x1b[0m\x1b[33m"\x1b[0m], key=\x1b[33m"\x1b[0m\x1b[33minput_m\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m 6 \x1b[94mwith\x1b[0m \x1b[1;4mst.form(\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4;33mpwml_pipeline\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4m)\x1b[0m:                                                  \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 7 \x1b[0m\x1b[2m\u2502   \x1b[0mst.text_area(\x1b[33m"\x1b[0m\x1b[33mPaste pathway description:\x1b[0m\x1b[33m"\x1b[0m, key=\x1b[33m"\x1b[0m\x1b[33mpathway_text_0\x1b[0m\x1b[33m"\x1b[0m)            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 8 \x1b[0m\x1b[2m\u2502   \x1b[0muser_task_context = st.text_area(                                           \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 9 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m\x1b[33m"\x1b[0m\x1b[33mOptional extraction focus / task context\x1b[0m\x1b[33m"\x1b[0m,                             \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\metrics_util.py:628 in wrapped_func                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m elements\\form.py:217 in form                                                         \x1b[31m \x1b[0m\n\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\n\x1b[1;91mStreamlitAPIException: \x1b[0mForms cannot be nested in other forms.
+---------------------------- Captured stderr call -----------------------------
+2026-11-05 11:30:48.412 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+__________________ test_missing_artifacts_read_not_recorded ___________________
+
+tmp_path = WindowsPath('C:/t/wsR1tmp/f9-E5fgroup/test_missing_artifacts_read_no0')
+
+    def test_missing_artifacts_read_not_recorded(tmp_path):
+        at = _app().run()
+        at.text_input[0].input(str(tmp_path)).run()
+        _silent_to_the_batch_driver(at)
+        assert _texts(at.info)[0].startswith("None of coverage_summary.json, quarantine_report.json")
+    
+        write_leg(tmp_path, names={"coverage_summary.json"})
+        at.run()
+        assert not at.exception
+>       assert [m.value for m in at.metric] == ["0.75", "true", "9", "1"]
+E       AssertionError: assert [] == ['0.75', 'true', '9', '1']
+E         
+E         Right contains 4 more items, first extra item: '0.75'
+E         Use -v to get more diff
+
+tests\test_reaction_evidence_view.py:86: AssertionError
+---------------------------- Captured stderr call -----------------------------
+2026-11-05 11:30:48.980 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+_____ test_leg_directory_renders_header_reactions_quarantine_and_download _____
+
+leg = WindowsPath('C:/t/wsR1tmp/f9-E5fgroup/test_leg_directory_renders_hea0/leg')
+
+    def test_leg_directory_renders_header_reactions_quarantine_and_download(leg):
+        at = _app().run()
+        at.text_input[0].input(str(leg)).run()
+        assert not at.exception
+>       assert [b.label for b in at.download_button] == [DOWNLOAD_LABEL]
+E       AssertionError: assert [] == ['Download Re...dence (.txt)']
+E         
+E         Right contains one more item: 'Download Reaction Evidence (.txt)'
+E         Use -v to get more diff
+
+tests\test_reaction_evidence_view.py:100: AssertionError
+---------------------------- Captured stderr call -----------------------------
+2026-11-05 11:30:49.162 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+_ test_session_run_directory_uses_session_payload_when_no_final_mapped_on_disk _
+
+tmp_path = WindowsPath('C:/t/wsR1tmp/f9-E5fgroup/test_session_run_directory_use0')
+
+    def test_session_run_directory_uses_session_payload_when_no_final_mapped_on_disk(tmp_path):
+        write_leg(tmp_path, names={"coverage_summary.json", "quarantine_report.json", "removed_entity_report.json"})
+        payload = json.loads(BUNDLE.read_text(encoding="utf-8"))[FINAL_MAPPED_FILENAME]
+        at = _app()
+        at.session_state["quarantine_artifacts"] = {"coverage_summary.json": str(tmp_path / "coverage_summary.json")}
+        at.session_state["post_pipeline_artifacts"] = {"canonical_export_payload": payload}
+        at.run()
+        assert not at.exception
+        assert at.text_input[0].value == str(tmp_path)
+>       assert len([e for e in at.expander if e.label.startswith("Reaction ")]) == 5
+E       assert 0 == 5
+E        +  where 0 = len([])
+
+tests\test_reaction_evidence_view.py:128: AssertionError
+---------------------------- Captured stderr call -----------------------------
+2026-11-05 11:30:49.352 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:30:49.352 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:30:49.352 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+_ test_session_run_directory_reads_the_verdicts_from_the_sessions_own_export_ir _
+
+tmp_path = WindowsPath('C:/t/wsR1tmp/f9-E5fgroup/test_session_run_directory_rea0')
+
+    def test_session_run_directory_reads_the_verdicts_from_the_sessions_own_export_ir(tmp_path):
+        """ORCH-754b, NEW ACCEPTANCE: an interactive run writes no pwml_ir.json, so the verdicts
+        come from the IR this session's export built, read as it stands, and say so."""
+    
+        write_leg(tmp_path, names={"coverage_summary.json", "quarantine_report.json", "removed_entity_report.json"})
+        bundle = json.loads(BUNDLE.read_text(encoding="utf-8"))
+        ir = json.loads(json.dumps(bundle["pwml_ir.json"]))
+        ir["processes"]["interactions"][1].update(_withheld_binds())
+        at = _session_app(tmp_path, bundle, {"ok": True, "pwml_ir": ir, "output_path": str(tmp_path / "pathway.pwml"),
+                                             "xml_bytes": b"<pwml/>"})
+        _silent_to_the_batch_driver(at)
+        labels = [e.label for e in at.expander]
+>       assert "INTERACTIONS (3) -- PWML verdicts read from: session pwml_export_result[pwml_ir]" in labels
+E       AssertionError: assert 'INTERACTIONS (3) -- PWML verdicts read from: session pwml_export_result[pwml_ir]' in []
+
+tests\test_reaction_evidence_view.py:145: AssertionError
+---------------------------- Captured stderr call -----------------------------
+2026-11-05 11:30:49.533 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:30:49.533 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:30:49.533 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:30:49.533 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+_________ test_an_export_that_wrote_no_pwml_shows_no_verdict_app_path _________
+
+tmp_path = WindowsPath('C:/t/wsR1tmp/f9-E5fgroup/test_an_export_that_wrote_no_p0')
+
+    def test_an_export_that_wrote_no_pwml_shows_no_verdict_app_path(tmp_path):
+        """REGRESSION (G9): fails behaviourally at ``9da8358e``. On an IR-validation failure the
+        app returns ``ok: False`` and ``output_path: ""`` but still carries ``pwml_ir``; the page
+        took the IR's ``export_status`` at its word and said a row was drawn in no PWML at all."""
+    
+        bundle = json.loads(BUNDLE.read_text(encoding="utf-8"))
+        ir = json.loads(json.dumps(bundle["pwml_ir.json"]))
+        ir["processes"]["interactions"][0].update(export_status="exportable", interaction_type="Inhibition")
+        ir["processes"]["interactions"][1].update(_withheld_binds())
+        at = _session_app(tmp_path, bundle, {"ok": False, "error": "PWML IR validation failed.", "output_path": "",
+                                             "pwml_ir": ir})
+        _silent_to_the_batch_driver(at)
+        codes = "\n".join(_texts(at.code))
+        assert "drawn as" not in codes and "withheld --" not in codes
+>       assert codes.count("PWML: Not recorded (no PWML written: PWML IR validation failed.)") == 2
+E       AssertionError: assert 0 == 2
+E        +  where 0 = <built-in method count of str object at 0x00007FFD6D15C6C0>('PWML: Not recorded (no PWML written: PWML IR validation failed.)')
+E        +    where <built-in method count of str object at 0x00007FFD6D15C6C0> = ''.count
+
+tests\test_reaction_evidence_view.py:179: AssertionError
+---------------------------- Captured stderr call -----------------------------
+2026-11-05 11:30:49.799 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:30:49.799 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:30:49.799 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:30:49.799 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+______ test_section_follows_a_run_that_completes_after_the_first_render _______
+
+leg = WindowsPath('C:/t/wsR1tmp/f9-E5fgroup/test_section_follows_a_run_tha0/leg')
+
+    def test_section_follows_a_run_that_completes_after_the_first_render(leg):
+        """The page is usually open BEFORE the run: the field must pick up the new directory."""
+    
+        at = _app().run()
+        assert _texts(at.info) == [NO_RUN_MESSAGE]
+        at.session_state["quarantine_artifacts"] = {"coverage_summary.json": str(leg / "coverage_summary.json")}
+        at.run()
+        assert not at.exception
+        assert at.text_input[0].value == str(leg)
+>       assert len([e for e in at.expander if e.label.startswith("Reaction ")]) == 5
+E       assert 0 == 5
+E        +  where 0 = len([])
+
+tests\test_reaction_evidence_view.py:192: AssertionError
+---------------------------- Captured stderr call -----------------------------
+2026-11-05 11:30:49.990 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 11:30:50.152 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+__________________ test_duplicate_reaction_warning_is_shown ___________________
+
+leg = WindowsPath('C:/t/wsR1tmp/f9-E5fgroup/test_duplicate_reaction_warnin0/leg')
+
+    def test_duplicate_reaction_warning_is_shown(leg):
+        path = leg / FINAL_MAPPED_FILENAME
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        payload["processes"]["reactions"].append(dict(payload["processes"]["reactions"][0], name="twin"))
+        path.write_text(json.dumps(payload), encoding="utf-8")
+        at = _app().run()
+        at.text_input[0].input(str(leg)).run()
+        _silent_to_the_batch_driver(at)
+        flags = [m for m in _texts(at.markdown) if DUPLICATE_WARNING in m]
+>       assert flags == [
+            f":orange[**Reaction 1: {DUPLICATE_WARNING}** (same substrates and products as reaction 6)]",
+            f":orange[**Reaction 6: {DUPLICATE_WARNING}** (same substrates and products as reaction 1)]",
+        ]
+E       AssertionError: assert [] == [':orange[**R...reaction 1)]']
+E         
+E         Right contains 2 more items, first extra item: ':orange[**Reaction 1: Possible duplicate reaction** (same substrates and products as reaction 6)]'
+E         Use -v to get more diff
+
+tests\test_reaction_evidence_view.py:204: AssertionError
+---------------------------- Captured stderr call -----------------------------
+2026-11-05 11:30:50.178 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+________ test_research_leg_headings_say_the_quarantine_was_not_applied ________
+
+tmp_path = WindowsPath('C:/t/wsR1tmp/f9-E5fgroup/test_research_leg_headings_say0')
+
+    def test_research_leg_headings_say_the_quarantine_was_not_applied(tmp_path):
+        """REPAIR ROUND 1 (B2), NEW ACCEPTANCE TEST: research_mode.applied=false is on the page."""
+    
+        leg = write_leg(tmp_path / "leg", bundle=BUNDLE.with_name("enterobactin_research.bundle.json"))
+        at = _app().run()
+        at.text_input[0].input(str(leg)).run()
+        _silent_to_the_batch_driver(at)
+        heading = "**Surviving reactions (6) -- research_mode.applied=false: quarantine removed nothing; "
+>       assert any(m.startswith(heading) for m in _texts(at.markdown))
+E       assert False
+E        +  where False = any(<generator object test_research_leg_headings_say_the_quarantine_was_not_applied.<locals>.<genexpr> at 0x00000166D6A43CA0>)
+
+tests\test_reaction_evidence_view.py:232: AssertionError
+---------------------------- Captured stderr call -----------------------------
+2026-11-05 11:30:50.546 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+=========================== short test summary info ===========================
+FAILED tests/test_c056d_gate_failure_semantic_carry.py::test_the_manifest_row_now_carries_the_boundarys_semantic_verdict[PMC12452463]
+FAILED tests/test_c056d_gate_failure_semantic_carry.py::test_the_manifest_row_now_carries_the_boundarys_semantic_verdict[PMC12096016]
+FAILED tests/test_c056d_gate_failure_semantic_carry.py::test_c056cs_evaluability_travels_with_the_verdict
+FAILED tests/test_c056d_gate_failure_semantic_carry.py::test_removing_the_boundary_report_puts_the_honest_not_evaluated_back
+FAILED tests/test_c056d_gate_failure_semantic_carry.py::test_an_uninterpretable_document_is_discarded_rather_than_trusted[unparseable]
+FAILED tests/test_c056d_gate_failure_semantic_carry.py::test_an_uninterpretable_document_is_discarded_rather_than_trusted[fourth_verdict_string]
+FAILED tests/test_c056d_gate_failure_semantic_carry.py::test_an_uninterpretable_document_is_discarded_rather_than_trusted[release_not_a_record]
+FAILED tests/test_c056d_gate_failure_semantic_carry.py::test_an_uninterpretable_document_is_discarded_rather_than_trusted[no_release]
+FAILED tests/test_c056d_gate_failure_semantic_carry.py::test_an_uninterpretable_document_is_discarded_rather_than_trusted[empty]
+FAILED tests/test_c056d_gate_failure_semantic_carry.py::test_the_carry_cannot_manufacture_a_strict_success
+FAILED tests/test_c119_superseded_intermediate_report.py::test_the_superseded_count_reaches_the_row_on_a_leg_that_is_still_refused
+FAILED tests/test_orch759d_app_timeout.py::test_g9_a_4000s_submit_finishes_inside_a_10800s_leg
+FAILED tests/test_orch759d_app_timeout.py::test_preservation_the_leg_deadline_still_caps_an_interaction[3000.0-4000.0]
+FAILED tests/test_orch759d_app_timeout.py::test_preservation_the_leg_deadline_still_caps_an_interaction[10680.0-20000.0]
+FAILED tests/test_orch759d_app_timeout.py::test_preservation_an_explicit_app_timeout_still_caps_each_interaction
+FAILED tests/test_reaction_evidence_view.py::test_missing_artifacts_read_not_recorded
+FAILED tests/test_reaction_evidence_view.py::test_leg_directory_renders_header_reactions_quarantine_and_download
+FAILED tests/test_reaction_evidence_view.py::test_session_run_directory_uses_session_payload_when_no_final_mapped_on_disk
+FAILED tests/test_reaction_evidence_view.py::test_session_run_directory_reads_the_verdicts_from_the_sessions_own_export_ir
+FAILED tests/test_reaction_evidence_view.py::test_an_export_that_wrote_no_pwml_shows_no_verdict_app_path
+FAILED tests/test_reaction_evidence_view.py::test_section_follows_a_run_that_completes_after_the_first_render
+FAILED tests/test_reaction_evidence_view.py::test_duplicate_reaction_warning_is_shown
+FAILED tests/test_reaction_evidence_view.py::test_research_leg_headings_say_the_quarantine_was_not_applied
+23 failed, 206 passed, 8 skipped in 14.87s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R1\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 65798c7a102f742391d9301b4eaf2ee00aa40d64  [git, worktree dirty=True]
+label                   : E5fgroup
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R1/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R1 --pin-verdict C:/t/ws-R1/docs/webserver/evidence/R1/pin/f9-E5fgroup.pin.json -q --basetemp=C:/t/wsR1tmp/f9-E5fgroup -rf tests/test_c082_post_pipeline_seam.py tests/test_orch759c_quarantine_bucket_closure.py tests/test_orch766_unreferenced_species.py tests/test_orch768_replay_corpus.py tests/test_orch769b_actor_protein_registry.py tests/test_orch773_omit_per_row.py tests/test_orch787_duplicate_rows_consolidated.py tests/test_strict_failure_replay.py tests/test_c056d_gate_failure_semantic_carry.py tests/test_c119_superseded_intermediate_report.py tests/test_c083_inner_timeout_row.py tests/test_orch759d_app_timeout.py tests/test_reaction_evidence_view.py
+cwd                     : C:\t\ws-R1
+root PID / process group: 141740 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 280 s
+duration                : 16.36 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  141340:python.exe
+descendants terminated  : 1  141340
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ws-R1/docs/webserver/evidence/R1/f9-E5fgroup.json
+json report written     : True
+pre-existing (reported, NEVER killed): 5
+================================================

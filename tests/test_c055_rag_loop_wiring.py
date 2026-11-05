@@ -242,6 +242,9 @@ def app_module():
     stub.session_state.__contains__ = lambda _s, _k: False
     sys.modules["streamlit"] = stub
     sys.modules.pop("t2pw.app.streamlit_app", None)
+    # R1: ``run_quarantine_boundary`` now lives here and binds ``st`` at import, so it
+    # must be re-imported under the stub for its session_state writes to reach it.
+    sys.modules.pop("t2pw.service.postpipeline", None)
     before = set(sys.modules)
     import t2pw.app.streamlit_app as app  # noqa: PLC0415
 
@@ -259,6 +262,9 @@ def app_module():
             if name == "t2pw" or name.startswith("t2pw."):
                 del sys.modules[name]
         sys.modules.pop("t2pw.app.streamlit_app", None)
+        # R1: never leave a postpipeline bound to the stub (or to a streamlit instance
+        # deleted below); the next importer gets a fresh one.
+        sys.modules.pop("t2pw.service.postpipeline", None)
         for name in [n for n in list(sys.modules)
                      if n == "streamlit" or n.startswith("streamlit.")]:
             del sys.modules[name]
@@ -326,7 +332,19 @@ def offline_stages(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Dict[str,
     monkeypatch.setattr(pipeline_module, "build_and_save_draft_graph", _persist)
     monkeypatch.setattr(quarantine, "quarantine_and_close", _quarantine)
     monkeypatch.setattr(map_ids, "map_payload", _map)
-    return calls
+    # R1: the moved post-pipeline code binds these names in its own module
+    # (``t2pw.service.postpipeline``). If that module is already cached it must be
+    # patched there. If it is not, the app's first import binds the patched source
+    # modules above, and it is dropped again afterwards so the stubs cannot leak.
+    cached = sys.modules.get("t2pw.service.postpipeline")
+    if cached is not None:
+        monkeypatch.setattr(cached, "quarantine_and_close", _quarantine)
+        monkeypatch.setattr(cached, "map_payload", _map)
+        monkeypatch.setattr(cached, "normalize_process_payload", _normalize)
+        monkeypatch.setattr(cached, "run_strict_post_normalization_gates", _gates)
+    yield calls
+    if cached is None:
+        sys.modules.pop("t2pw.service.postpipeline", None)
 
 
 def _rebind(app, calls_source: str = "") -> None:

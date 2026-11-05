@@ -65,6 +65,8 @@ from t2pw.pipeline import gate_reports as gr  # noqa: E402
 from t2pw.pwml import ir  # noqa: E402
 
 APP_REL = "src/t2pw/app/streamlit_app.py"
+#: R1: the moved functions now live here.
+SERVICE_REL = "src/t2pw/service/postpipeline.py"
 #: The worked counterexample: ``isochorismate`` carries no identifier of its own
 #: and no ``mapped_ids``, so the 40741 that is exported comes from candidate 0.
 COUNTEREXAMPLE = ROOT / "runs/2026-08-02_2130/papers/PMC12096016/strict/final_mapped.json"
@@ -895,7 +897,7 @@ def test_provenance_beside_the_consumed_value_stays_out_of_the_graph_hash() -> N
 
 def _seam() -> Any:
     """``freeze_canonical_payload`` alone, the way the AST harnesses load it."""
-    source = (ROOT / APP_REL).read_text(encoding="utf-8")
+    source = (ROOT / SERVICE_REL).read_text(encoding="utf-8")
     node = next(n for n in ast.parse(source).body
                 if isinstance(n, ast.FunctionDef) and n.name == "freeze_canonical_payload")
     module = ast.Module(body=[ast.ImportFrom(
@@ -912,7 +914,7 @@ def test_the_seam_resolves_its_hash_schema_import_when_exec_d_alone() -> None:
     proof). The import is function-local precisely so the harnesses, which exec
     this FunctionDef with a hand-built globals dict, can still run it."""
     assert _seam() is not None
-    body = ast.parse((ROOT / APP_REL).read_text(encoding="utf-8"))
+    body = ast.parse((ROOT / SERVICE_REL).read_text(encoding="utf-8"))
     node = next(n for n in body.body if isinstance(n, ast.FunctionDef)
                 and n.name == "freeze_canonical_payload")
     imports = [n for n in ast.walk(node) if isinstance(n, ast.ImportFrom)]

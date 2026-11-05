@@ -79,6 +79,8 @@ from t2pw.pwml import prefreeze_resolution as prefreeze_module  # noqa: E402
 import test_streamlit_stage2_orchestration as orchestration  # noqa: E402
 
 APP_PATH = ROOT / "src" / "t2pw" / "app" / "streamlit_app.py"
+#: R1: the moved functions now live here.
+SERVICE_PATH = ROOT / "src" / "t2pw" / "service" / "postpipeline.py"
 EP1 = "run_post_pipeline_sbml_artifacts"
 SEAM = "freeze_canonical_payload"
 
@@ -167,7 +169,7 @@ def _refusing_quarantine_boundary(payload: Dict[str, Any], **_kwargs: Any) -> Di
 
 
 def _orchestrator_node() -> ast.FunctionDef:
-    source = APP_PATH.read_text(encoding="utf-8")
+    source = SERVICE_PATH.read_text(encoding="utf-8")
     return next(node for node in ast.parse(source).body
                 if isinstance(node, ast.FunctionDef) and node.name == EP1)
 

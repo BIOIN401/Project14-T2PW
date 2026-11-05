@@ -1,0 +1,39 @@
+T2PW: C:\t\ws-R1\src\t2pw\__init__.py
+F............................                                            [100%]
+================================== FAILURES ===================================
+E   AssertionError: ['build_pwml_ir', 'run_prefreeze_resolution', 'resolve_compounds_prefreeze', '_resolve_compound_rows', '_resolve_compound_rows', 'resolve_species_prefreeze', ...]
+    assert 1 < 0
+     +  where 1 = <built-in method index of list object at 0x0000028D49CC88C0>('run_prefreeze_resolution')
+     +    where <built-in method index of list object at 0x0000028D49CC88C0> = ['build_pwml_ir', 'run_prefreeze_resolution', 'resolve_compounds_prefreeze', '_resolve_compound_rows', '_resolve_compound_rows', 'resolve_species_prefreeze', ...].index
+     +  and   0 = <built-in method index of list object at 0x0000028D49CC88C0>('build_pwml_ir')
+     +    where <built-in method index of list object at 0x0000028D49CC88C0> = ['build_pwml_ir', 'run_prefreeze_resolution', 'resolve_compounds_prefreeze', '_resolve_compound_rows', '_resolve_compound_rows', 'resolve_species_prefreeze', ...].index
+C:\t\ws-R1\tests\test_prefreeze_third_export_seam.py:311: AssertionError: ['build_pwml_ir', 'run_prefreeze_resolution', 'resolve_compounds_prefreeze', '_resolve_compound_rows', '_resolve_compound_rows', 'resolve_species_prefreeze', ...]
+=========================== short test summary info ===========================
+FAILED tests/test_prefreeze_third_export_seam.py::test_run_pwml_export_runs_the_prefreeze_sequence_once_before_build_pwml_ir
+1 failed, 28 passed in 1.56s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R1\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 65798c7a102f742391d9301b4eaf2ee00aa40d64  [git, worktree dirty=True]
+label                   : third-alone
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R1/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R1 --pin-verdict C:/t/ws-R1/docs/webserver/evidence/R1/pin/s7-third-alone.pin.json -q --basetemp=C:/t/wsR1tmp/s7-third-alone --tb=line -rf tests/test_prefreeze_third_export_seam.py tests/test_research_mode_orchestration.py
+cwd                     : C:\t\ws-R1
+root PID / process group: 86972 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 2.47 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  86984:python.exe
+descendants terminated  : 1  86984
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ws-R1/docs/webserver/evidence/R1/s7-third-alone.json
+json report written     : True
+pre-existing (reported, NEVER killed): 5
+================================================

@@ -1,0 +1,50 @@
+T2PW: C:\t\ws-R1\src\t2pw\__init__.py
+........................................................................ [ 64%]
+......Fs....sss.........................                                 [100%]
+================================== FAILURES ===================================
+_______ test_the_message_names_the_problem_the_interpreter_and_the_cure _______
+
+    def test_the_message_names_the_problem_the_interpreter_and_the_cure() -> None:
+        """The wrong-interpreter case: the one that actually happened.
+    
+        The cure has to be a command, not advice. "Use the venv" is not actionable at
+        2am; ``C:\\...\\.venv\\Scripts\\python.exe scripts\\batch_run.py`` is, and the
+        root cause -- ``py.exe`` ignoring the active virtualenv -- has to be named or
+        the operator fixes it once and hits it again next week.
+        """
+    
+        venv = runner.venv_python()
+>       assert venv is not None, "this project ships a .venv; the test assumes it"
+E       AssertionError: this project ships a .venv; the test assumes it
+E       assert None is not None
+
+tests\test_batch_preflight.py:616: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_batch_preflight.py::test_the_message_names_the_problem_the_interpreter_and_the_cure
+1 failed, 107 passed, 4 skipped in 36.64s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R1\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 65798c7a102f742391d9301b4eaf2ee00aa40d64  [git, worktree dirty=True]
+label                   : E4batch
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R1/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R1 --pin-verdict C:/t/ws-R1/docs/webserver/evidence/R1/pin/f8-E4batch.pin.json -q --basetemp=C:/t/wsR1tmp/f8-E4batch -rf tests/test_batch_driver.py tests/test_batch_preflight.py tests/test_batch_research_gate_fail_open.py
+cwd                     : C:\t\ws-R1
+root PID / process group: 139044 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 280 s
+duration                : 38.09 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 17  137220:python.exe, 139216:python.exe, 139120:python.exe, 139508:python.exe, 65408:python.exe, 134636:python.exe, 139872:python.exe, 125444:python.exe, 139740:python.exe, 14184:python.exe, 139108:python.exe, 137140:python.exe, 139532:python.exe, 138876:python.exe, 140008:python.exe, 14420:python.exe, 139184:python.exe
+descendants terminated  : 17  14184, 14420, 65408, 125444, 134636, 137140, 137220, 138876, 139108, 139120, 139184, 139216, 139508, 139532, 139740, 139872, 140008
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ws-R1/docs/webserver/evidence/R1/f8-E4batch.json
+json report written     : True
+pre-existing (reported, NEVER killed): 5
+================================================

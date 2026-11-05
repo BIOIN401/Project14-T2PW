@@ -1,0 +1,86 @@
+{
+  "label": "R1-ws-R1-base-2c",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "C:/t/ws-R1-base/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-R1-base",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:/t/wsR1tip2-tr/base/2c-30390",
+    "tests/test_c082_species_rename_declination.py",
+    "tests/test_c126_g9_base_failure_proof.py",
+    "tests/test_f179_reaction_support.py",
+    "tests/test_prefreeze_compound_resolution.py",
+    "tests/test_prefreeze_third_export_seam.py"
+  ],
+  "cwd": "C:\\t\\ws-R1-base",
+  "started_at": "2026-11-05T18:32:40+00:00",
+  "finished_at": "2026-11-05T18:32:44+00:00",
+  "duration_seconds": 3.8303336999997555,
+  "timeout_seconds": 900.0,
+  "root_pid": 244960,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 238864,
+      "name": "python.exe",
+      "ppid": 244960
+    }
+  ],
+  "descendants_terminated": [
+    238864
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 59512,
+      "name": "python.exe"
+    },
+    {
+      "pid": 165332,
+      "name": "python.exe"
+    },
+    {
+      "pid": 165388,
+      "name": "python.exe"
+    },
+    {
+      "pid": 244600,
+      "name": "python.exe"
+    },
+    {
+      "pid": 249756,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/wsR1tip2-tr/reports/ws-R1-base-2c.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-R1-base\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-R1-base",
+    "repo_head": "65798c7a102f742391d9301b4eaf2ee00aa40d64",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}
