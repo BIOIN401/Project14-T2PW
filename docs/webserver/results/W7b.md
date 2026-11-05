@@ -25,3 +25,7 @@ Email URL path `/jobs/<sid>` -> `/job/<sid>`. The legacy `/jobs/<sid>` route is 
 
 ## Open questions
 None.
+
+## Dead ends
+
+None.
