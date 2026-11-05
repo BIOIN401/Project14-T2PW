@@ -1,0 +1,180 @@
+{
+  "label": "W7-18-postmerge-smoke",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-int",
+    "--pin-verdict",
+    "C:/t/wsint-tr/reports-W7/18-pin.json",
+    "-q",
+    "--basetemp=C:/t/wsint-tr/w7-base/s18",
+    "tests/test_reference_repair.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_empty_extraction_payload.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py",
+    "tests/test_c102_coverage_denominator.py",
+    "tests/test_c106_mutation_harness_executable.py"
+  ],
+  "cwd": "C:\\t\\ws-int",
+  "started_at": "2026-11-05T03:44:32+00:00",
+  "finished_at": "2026-11-05T03:46:31+00:00",
+  "duration_seconds": 118.29180429999542,
+  "timeout_seconds": 540.0,
+  "root_pid": 1073852,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 1073476,
+      "name": "python.exe",
+      "ppid": 1073852
+    },
+    {
+      "pid": 1074864,
+      "name": "python.exe",
+      "ppid": 1073476
+    },
+    {
+      "pid": 1074960,
+      "name": "python.exe",
+      "ppid": 1074864
+    },
+    {
+      "pid": 1074248,
+      "name": "python.exe",
+      "ppid": 1073476
+    },
+    {
+      "pid": 1075112,
+      "name": "python.exe",
+      "ppid": 1074248
+    },
+    {
+      "pid": 1073752,
+      "name": "python.exe",
+      "ppid": 1073476
+    },
+    {
+      "pid": 1075108,
+      "name": "python.exe",
+      "ppid": 1073752
+    },
+    {
+      "pid": 1075844,
+      "name": "python.exe",
+      "ppid": 1073476
+    },
+    {
+      "pid": 1076056,
+      "name": "python.exe",
+      "ppid": 1075844
+    },
+    {
+      "pid": 1078424,
+      "name": "git.exe",
+      "ppid": 1073476
+    },
+    {
+      "pid": 1078292,
+      "name": "git.exe",
+      "ppid": 1073476
+    }
+  ],
+  "descendants_terminated": [
+    1073476,
+    1073752,
+    1074248,
+    1074864,
+    1074960,
+    1075108,
+    1075112,
+    1075844,
+    1076056,
+    1078292,
+    1078424
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 112240,
+      "name": "python.exe"
+    },
+    {
+      "pid": 912348,
+      "name": "python.exe"
+    },
+    {
+      "pid": 925004,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1066388,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1071988,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1073548,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1073868,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1073980,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1074068,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/wsint-tr/reports-W7/18-w7-postmerge-smoke.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-int\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-int",
+    "repo_head": "158a589a1a90da97327b7f4ccfb884538febba42",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}
