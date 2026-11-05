@@ -771,7 +771,11 @@ def test_the_boundary_is_the_only_unguarded_quarantine_call_in_the_app() -> None
 
     # R1: scan the app AND the module the moved code lives in, so an unguarded
     # call added to either file fails this test.
-    trees = [ast.parse(path.read_text(encoding="utf-8")) for path in (APP_PATH, SERVICE_PATH)]
+    # R2-F2 (PO addendum 2): widen to every module under t2pw/service, so a
+    # caller added to any service file (e.g. rag_orchestration.py) also fails.
+    paths = [APP_PATH, *sorted((SRC / "t2pw" / "service").glob("*.py"))]
+    assert {"postpipeline.py", "rag_orchestration.py"} <= {p.name for p in paths}
+    trees = [ast.parse(path.read_text(encoding="utf-8")) for path in paths]
     callers = {
         node.name
         for tree in trees
