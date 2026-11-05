@@ -16,3 +16,10 @@ Until then, this file is the citation for the tasks that rely on them.
 Q-W0-2 (deadline form); W2 species scope (4,018 vs the 1,127 with pathways); Q-W3-1..6;
 Q-W4-2..5; Q-W8-1..7; W5 branding, and squash vs `--no-ff` for binary-heavy branches; hosting;
 the server DB user; the SMTP provider.
+
+## Addendum, 2026-11-05 (R1 review)
+
+| ref | question | ruling | relied on by |
+|---|---|---|---|
+| R1-F1 | After the move, the golden-seam test `test_streamlit_quarantine_boundary` parses only `service/postpipeline.py`. A future unguarded quarantine call in `streamlit_app.py` would no longer fail it. | **Fix: the test parses both files** (`APP_PATH` and `SERVICE_PATH`), restoring its original coverage. This is the one permitted golden-seam edit beyond a path, and it must be reviewed. | R1 |
+| R1-F6 | Under `streamlit run`, the moved code logs as the literal `t2pw.app.streamlit_app` rather than `__main__` (3 `logger.debug` lines, dropped at the default WARNING level). | **Accept the literal name.** It is documented in R1.md and needs no added code. | R1 |
