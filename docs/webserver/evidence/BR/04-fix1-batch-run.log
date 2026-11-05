@@ -1,0 +1,29 @@
+T2PW: C:\t\ws-BR\src\t2pw\__init__.py
+.................................................................        [100%]
+65 passed in 9.78s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-BR\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ e4c312761a4201f2f64f5c928cddb28b4fdf9628  [git, worktree dirty=False]
+label                   : br-fix1-batch-run
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-BR --pin-verdict docs/webserver/evidence/BR/pin/04-fix1-batch-run.pin.json -q --basetemp=C:/t/wsBRtmp/f04 tests/test_batch_run.py
+cwd                     : C:\t\ws-BR
+root PID / process group: 583112 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 590 s
+duration                : 10.48 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 18  579024:python.exe, 583024:python.exe, 583044:python.exe, 583304:taskkill.exe, 584552:python.exe, 584684:python.exe, 578928:python.exe, 583364:python.exe, 581964:python.exe, 576780:python.exe, 584220:python.exe, 584240:python.exe, 583028:python.exe, 580784:python.exe, 564288:python.exe, 581972:python.exe, 583980:python.exe, 584280:python.exe
+descendants terminated  : 18  564288, 576780, 578928, 579024, 580784, 581964, 581972, 583024, 583028, 583044, 583304, 583364, 583980, 584220, 584240, 584280, 584552, 584684
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : docs/webserver/evidence/BR/04-fix1-batch-run.json
+json report written     : True
+pre-existing (reported, NEVER killed): 12
+================================================

@@ -1,0 +1,33 @@
+T2PW: C:\t\ws-BR\src\t2pw\__init__.py
+........................................................................ [ 23%]
+........................................................................ [ 47%]
+........................................................................ [ 71%]
+........................................................................ [ 95%]
+.............                                                            [100%]
+301 passed in 46.01s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-BR\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ e4c312761a4201f2f64f5c928cddb28b4fdf9628  [git, worktree dirty=False]
+label                   : br-fix1-focused
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-BR --pin-verdict docs/webserver/evidence/BR/pin/03-fix1-focused.pin.json -q --basetemp=C:/t/wsBRtmp/f03 tests/test_service_driver_bridge.py tests/test_service_pathway_interface.py tests/test_service_inputs.py tests/test_service_organisms.py tests/test_web_jobs.py tests/test_web_worker.py tests/test_web_retry.py tests/test_web_limits.py tests/test_web_notify.py tests/test_web_design_system.py tests/test_web_curator_queue.py tests/test_web_postrun.py tests/test_web_app.py
+cwd                     : C:\t\ws-BR
+root PID / process group: 581948 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 590 s
+duration                : 47.19 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 116  582772:python.exe, 535388:python.exe, 582460:python.exe, 578184:python.exe, 581084:python.exe, 582912:python.exe, 583212:python.exe, 583160:python.exe, 583188:python.exe, 583632:python.exe, 583652:python.exe, 579060:python.exe, 582672:python.exe, 577732:python.exe, 581980:python.exe, 583136:python.exe, 575408:python.exe, 576604:python.exe, 583660:python.exe, 578388:python.exe, 582280:python.exe, 567100:python.exe, 582800:python.exe, 577112:python.exe, 582076:python.exe, 579860:python.exe, 582304:python.exe, 582744:python.exe, 569432:python.exe, 578804:python.exe, 581944:python.exe, 577420:python.exe, 583332:python.exe, 576640:python.exe, 581656:python.exe, 580852:python.exe, 581308:python.exe, 582920:python.exe, 583520:python.exe, 569240:python.exe, 582752:python.exe, 580824:python.exe, 579032:python.exe, 577036:python.exe, 583480:python.exe, 580664:python.exe, 565136:python.exe, 581020:python.exe, 583300:python.exe, 570648:python.exe, 578136:python.exe, 577588:python.exe, 582624:python.exe, 582496:python.exe, 578076:python.exe, 578576:python.exe, 582124:python.exe, 583316:python.exe, 583348:python.exe, 565576:python.exe, 578164:python.exe, 577404:python.exe, 578976:python.exe, 581912:python.exe, 578272:python.exe, 576408:python.exe, 583628:python.exe, 562336:python.exe, 582620:python.exe, 574396:python.exe, 581068:python.exe, 582956:python.exe, 572868:python.exe, 573788:python.exe, 577688:python.exe, 577668:python.exe, 580288:python.exe, 583692:python.exe, 583744:python.exe, 583768:python.exe, 583788:python.exe, 583888:python.exe, 583956:python.exe, 584000:python.exe, 584028:python.exe, 584120:python.exe, 584144:python.exe, 584164:python.exe, 584184:python.exe, 584216:python.exe, 584236:python.exe, 584284:python.exe, 584304:python.exe, 584324:python.exe, 584344:python.exe, 584364:python.exe, 584384:python.exe, 584412:python.exe, 584432:python.exe, 584588:python.exe, 584612:python.exe, 584148:tasklist.exe, 584492:python.exe, 584500:python.exe, 584580:python.exe, 584672:python.exe, 571460:python.exe, 580228:python.exe, 584428:python.exe, 584504:python.exe, 582692:python.exe, 584292:python.exe, 583732:python.exe, 584080:python.exe, 582408:python.exe, 584224:python.exe
+descendants terminated  : 116  535388, 562336, 565136, 565576, 567100, 569240, 569432, 570648, 571460, 572868, 573788, 574396, 575408, 576408, 576604, 576640, 577036, 577112, 577404, 577420, 577588, 577668, 577688, 577732, 578076, 578136, 578164, 578184, 578272, 578388, 578576, 578804, 578976, 579032, 579060, 579860, 580228, 580288, 580664, 580824, 580852, 581020, 581068, 581084, 581308, 581656, 581912, 581944, 581980, 582076, 582124, 582280, 582304, 582408, 582460, 582496, 582620, 582624, 582672, 582692, 582744, 582752, 582772, 582800, 582912, 582920, 582956, 583136, 583160, 583188, 583212, 583300, 583316, 583332, 583348, 583480, 583520, 583628, 583632, 583652, 583660, 583692, 583732, 583744, 583768, 583788, 583888, 583956, 584000, 584028, 584080, 584120, 584144, 584148, 584164, 584184, 584216, 584224, 584236, 584284, 584292, 584304, 584324, 584344, 584364, 584384, 584412, 584428, 584432, 584492, 584500, 584504, 584580, 584588, 584612, 584672
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : docs/webserver/evidence/BR/03-fix1-focused.json
+json report written     : True
+pre-existing (reported, NEVER killed): 14
+================================================

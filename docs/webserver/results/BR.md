@@ -65,7 +65,7 @@ The app's multi-paper RAG then runs inside that leg as usual (D-W03). See Q-BR-2
 | `pmids` | W1 `resolve_pmids`, Europe PMC text with `use_cache=False` (W1 Q3: a failed download is otherwise cached as empty), joined | `lookup_failed` -> `error` / `network` (W4 retries); `no_pmcid` / `no_full_text` -> `fail` / `no_reactions`; `invalid` -> `error` / `contract`. W1's message is the result message. The job fails; the other PMIDs are not run without it |
 | `pdf_paths` | W1 `read_pdfs`, app defaults (OCR off), joined | `empty` -> `fail` / `no_reactions`; `error` (unreadable, not a PDF, parser error) -> `error` / `contract`. Same as the app, which stops on a PDF error; stricter than the app for an empty PDF, which the app skips silently |
 | `scope.requested_pathway` | `paper["requested_pathway"]` (source mode) or the fetched `BatchPaper` (name mode). The driver derives the extraction focus and Stage-0 reconciliation from it | - |
-| `scope.requested_organism` | `paper["requested_organism"]`; reaches the app through the focus box (`"<pathway> in <organism>"`) | organism with no pathway name: `error` / `contract` "add the pathway name". The driver pins a paper with no pathway name, and a pinned paper's organism reaches the pipeline nowhere (no focus, no reconciliation). See Q-BR-1 |
+| `scope.requested_organism` | `paper["requested_organism"]`; reaches the app through the focus box (`"<pathway> in <organism>"`) | organism with no pathway name: `error` / `contract` "add the pathway name". The driver pins a paper with no pathway name, and a pinned paper's organism reaches the pipeline nowhere (no focus, no reconciliation). See Q-BR-1. Since fix round 1 the public form also requires the name in every mode, so this refusal is defence in depth |
 | `scope.pinned` | the driver derives `pinned = not requested_pathway` | `pinned=True` with a pathway name: `error` / `contract` |
 | `extraction_focus` | accepted only when equal to the focus the driver derives (`driver._extraction_focus`) | anything else: `error` / `contract`. The driver types its own focus |
 | `export_mode` | passed to `run_one` | not exactly `strict` / `research`: `error` / `contract`. `driver._resolve_mode` would silently turn any other string into strict |
@@ -78,7 +78,18 @@ refused request (every refusal test asserts this).
 
 When several inputs fail, one kind is reported, the most final first: `contract`, then
 `no_reactions`, then `network`. Retrying cannot fix a permanent problem, so a retryable kind
-never wins. The messages of all inputs of that kind are joined.
+never wins. The messages of all failed inputs are joined, highest-ranked first (fix round 1,
+F7; before that, only the messages of the winning kind were kept).
+
+Line endings (fix round 1, F3): the text handed to `run_one`, in both name mode and source
+mode, gets the same round trip a batch leg's text gets: `runner._write_text` writes in text
+mode (`\n` -> `os.linesep`) and `runner._read_text_or_error` reads with universal newlines.
+So the driver's input is byte-identical to a benchmark leg's. Note: on Windows that round
+trip turns a `\r\n` in the source into `\n\n` (written as `\r\r\n`, read as two newlines), not
+into `\n`. That is what the benchmark legs saw, so the bridge does the same. The test
+compares against the runner's own write and read on a real file, not against a
+hand-written rule. Europe PMC text goes through an XML parser, which already normalises
+line ends, so this rarely changes anything in practice.
 
 ### `RunOutcome` -> `PathwayResult`
 
@@ -108,8 +119,8 @@ Checked against the consumers, through `jobs.result_to_dict`:
 ## Per-job isolation (requirement 3)
 
 - The result is built only from this call's in-memory `RunOutcome`: artifacts are `bytes`/`str`
-  and the PWML is the exporter's `xml_bytes` from session state. The bridge never reads
-  `outputs/` or `tmp/`. `pwml_path` and `report_paths` name only files this call wrote, so a
+  and the PWML is the exporter's `xml_bytes` from session state. The bridge module never reads
+  `outputs/` or `tmp/`, but the driver it calls does (see below). `pwml_path` and `report_paths` name only files this call wrote, so a
   stale file already in `out_dir` is never reported (tested with a stale `pathway.pwml` and
   `final_mapped.json`).
 - Filenames pass through `write_artifacts`, which keeps only `Path(name).name`, so an
@@ -118,11 +129,16 @@ Checked against the consumers, through `jobs.result_to_dict`:
   only files under that directory.
 - **What this relies on.** The app itself still writes the fixed `PROJECT_ROOT/outputs/` and
   `tmp/`, and clears `outputs/` at the start of a run (`reset_quarantine_state`). The driver
-  reads the quarantine report files back from paths this run's session state names. So two
-  pipeline runs at the same time **in the same checkout** could clobber each other's working
-  files. The bridge relies on one pipeline run per checkout at a time: one worker (D-W05,
-  the worker's per-database lock) and no batch run or Streamlit session running pipeline
-  jobs on the server's checkout. The batch has always run on the same rule. See Q-BR-3.
+  reads the quarantine report files back from there (`batch/driver.py:1898-1906`,
+  `:1955-1963`, paths named by this run's session state). So two pipeline runs at the same
+  time **in the same checkout** could clobber each other's working files. The real
+  requirement is **one pipeline run per checkout at a time**, and nothing enforces it.
+  (Corrected in fix round 1: D-W05 says jobs are asynchronous, not one at a time, and the
+  worker's lock, `web/worker.py:217`, is per database, not per checkout.) The batch has
+  always run on the same rule. See Q-BR-3.
+- **W9 runbook item:** on the server's checkout, run exactly one worker, and no batch run or
+  Streamlit session that runs the pipeline. A second worker with its own database would
+  share `outputs/` and `tmp/` with the first.
 
 ## Imports (requirement 4)
 
@@ -188,7 +204,7 @@ brief (the independent test-runner owns it). No live LLM job (the orchestrator s
 
 ## Open questions
 
-**Q-BR-1. PMID / PDF jobs with an organism and no pathway name are refused.** The web form
+**Q-BR-1. PMID / PDF jobs with an organism and no pathway name are refused.** RULED 2026-11-05: option A, done in fix round 1. The web form
 requires an organism in every mode but a pathway name only in name mode (`web/app.py`). The
 driver uses the organism only together with a pathway name, so the bridge refuses such a job
 ("add the pathway name and submit again") rather than drop the organism silently.
@@ -199,7 +215,7 @@ driver uses the organism only together with a pathway name, so the bridge refuse
 | B | Bridge: run anyway, with a warning that the organism was not used. One-line change. The result is never shown as clean, but the user's organism has no effect |
 | C | Bridge: type `"in <organism>"` alone into the focus box. Not a batch-measured shape, so it changes what reaches the pipeline relative to every benchmark. Needs a PO ruling (no-regression rule) |
 
-**Q-BR-2. Name mode runs one fetched paper (`count=1`).** This is exactly one batch leg.
+**Q-BR-2. Name mode runs one fetched paper (`count=1`).** RULED 2026-11-05: keep A (no change). This is exactly one batch leg.
 
 | option | cost |
 |---|---|
@@ -214,7 +230,7 @@ bridge, the batch runner and the app, which edits `batch/` and `streamlit_app.py
 each job its own `PROJECT_ROOT`, which is R5's `out_dir` threading (Q-W0-1 A). Recommended: A
 now, C through R5 and A7.
 
-**Q-BR-4. Kind for an unsupported request.** The bridge uses `error` / `contract`. W4 treats it
+**Q-BR-4. Kind for an unsupported request.** RULED 2026-11-05: option B, done in fix round 1. The bridge uses `error` / `contract`. W4 treats it
 as final, which is the point. But the W6 failure text for `contract` reads "did not pass the
 quality checks ... A different or richer source may help", which is wrong for "add a pathway
 name". The specific message is still shown above it. Options: (A) keep it, at zero cost;
@@ -235,3 +251,56 @@ orchestrator's live end-to-end run is the first check.
 download is no longer cached as empty. But `fetch_full_text` still swallows errors into `""`,
 so a Europe PMC outage still reads as "no open-access full text" (`no_reactions`, final, not
 retried). Fixing that needs an `acquire.py` change, which is outside the web-server boundary.
+
+## Fix round 1 (review APPROVE WITH NOTES; PO rulings Q-BR-1/2/4)
+
+Code commit `e4c31276`, on top of the docs commit `acd9753b`. The boundary was extended by
+the orchestrator for this round to include `web/app.py` (form validation only), the form and
+result templates, `web/views.py` (message mapping only) and `tests/test_web_app.py`.
+
+| item | what was done |
+|---|---|
+| Q-BR-1 (PO: name required in every mode) | `web/app.py`: an empty pathway name is a field error in every mode. Name mode keeps "Enter the pathway name."; PMID and PDF mode say "Enter the pathway name these papers describe; it is needed to use the organism." PMID and PDF validation still runs, so both errors show at once. `submit.html`: the row-1 name field carries the `required` marker (as the organism field already did) and the hint now reads "Required for every option. With PubMed IDs or PDFs it names the pathway the papers describe." The bridge refusal (`driver_bridge._unsupported`) is kept as defence in depth |
+| Q-BR-2 | no change (`count=1` kept) |
+| Q-BR-4 (PO: a specific message) | `web/views._failure_text`: a result whose `issue_codes` holds `bridge_unsupported_request` reads "This pathway was not run because the request cannot be used as given: <the bridge's message, scrubbed>." A real `contract` failure keeps the generic "did not pass the quality checks" text. The code is imported from `driver_bridge.CODE_UNSUPPORTED`, so there is one source for it (`driver_bridge` imports only `service.pathway` and `release_status`; the cheap-import test still passes) |
+| F2 | The isolation docstring now says the module does not read `outputs/` / `tmp/` but the driver it calls does, and the real rule is one pipeline run per checkout, which the per-database lock does not enforce. BR.md: the D-W05 misattribution is corrected, and the rule is added as a W9 runbook item (§ Per-job isolation) |
+| F3 | `_as_batch_reads`: the batch's text-mode write plus universal-newline read, applied to the name-mode `BatchPaper.full_text` (through `dataclasses.replace`, so the fetched record is not mutated) and to the joined source-mode text. See the "Line endings" paragraph under the field mapping for the Windows `\r\n` -> `\n\n` detail. Two tests compare against `runner._write_text` / `_read_text_or_error` on a real file |
+| F4 | The tripwire reads every `*.py` under `src/t2pw/app/` and `src/t2pw/service/`, excluding `driver_bridge.py` itself so the bridge cannot vouch for its own rule. A pure R3 move still passes |
+| F6 | A failed `run_outcome.json` write adds the warning "the run record run_outcome.json could not be written" and returns the mapped result. Test: a gate refusal with that write blocked stays `fail` / `contract` with its `ReleaseStatus`, so W4 does not retry it |
+| F7 | `_worst` keeps every failed input's message, highest-ranked first (e.g. "no oa; down") |
+
+### Web tests changed, and why
+
+| test | change | why the expectation changed |
+|---|---|---|
+| `test_pmid_mode_stores_raw_ids_without_resolving` | dropped `name_1=""` from both submissions (the form default `glycolysis` is used) | Q-BR-1: a PMID submission without a name is now a 400, so the success case needs a name. The invalid-ID case still asserts the PMID error |
+| `test_pdf_mode_saves_uploads_under_the_server_dir` | dropped `name_1=""` from both submissions | same; the upload and not-a-PDF assertions are unchanged |
+| `test_queue_full_is_a_503_and_cleans_up_the_upload` | dropped `name_1=""` | same: without a name the request is now refused with a 400 before the queue check, so the 503 path would not be reached |
+
+New: `test_pathway_name_is_required_in_every_mode` (PMID and PDF, parametrised: 400, the new
+message, no submission stored, the `required` marker and hint on the form) and
+`test_unsupported_request_gets_its_own_failure_text` (the specific text for the bridge code,
+the generic text for a real contract failure). New in the bridge file:
+`test_name_mode_text_is_byte_identical_to_a_batch_leg`,
+`test_source_mode_text_is_byte_identical_to_a_batch_leg` and
+`test_a_failed_run_record_write_keeps_the_mapped_result`. The name-mode test now compares the
+paper by equality, not identity, because the bridge passes a copy with the round-tripped
+text.
+
+### Fix round 1 tests
+
+Same setup as before (venv interpreter, `PYTHONPATH=C:/t/ws-BR/src`,
+`T2PW_OFFLINE_CURATOR=1`, `--expect-tree C:/t/ws-BR`, fresh `--basetemp`, foreground, no
+heavy lock).
+
+| run | selection | result | tree | survivors | evidence |
+|---|---|---|---|---|---|
+| 03 focused | the bridge file + the 12 web-layer files | **301 passed** in 46.0 s (was 295: +3 bridge tests, +3 web tests) | clean @ `e4c31276` | 0 | `docs/webserver/evidence/BR/03-fix1-focused.*`, `pin/03-fix1-focused.pin.json` |
+| 04 batch runner | `tests/test_batch_run.py` | **65 passed** in 9.8 s | clean @ `e4c31276` | 0 | `docs/webserver/evidence/BR/04-fix1-batch-run.*`, `pin/04-fix1-batch-run.pin.json` |
+
+One dev run on the uncommitted tree (bridge + web_app files, 74 passed, survivors 0) came
+first and is not kept. No SMOKE (other runners hold the heavy lock).
+
+Dead end this round: replacing `name_1=""` in the web tests with a `python -c` string
+replace failed on `\n` escaping (the assertion stopped it before any write). The Edit tool
+was used instead.
