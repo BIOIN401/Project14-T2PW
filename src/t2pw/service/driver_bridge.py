@@ -21,12 +21,19 @@ Input rules (each refusal is a result with an explicit kind, never a dropped inp
   request it would silently re-read (an organism with no pathway name, a pinned request
   that names a pathway, a custom ``extraction_focus``, an unknown ``export_mode``) is
   refused with ``failure_kind="contract"``, which W4 never retries.
+* Line endings: the text handed to the driver is what a batch leg reads back from its
+  ``01_source_text.txt`` (written in text mode, read with universal newlines), so the
+  driver's input is byte-identical to a benchmark leg's.
 
 Isolation: the result is built only from the ``RunOutcome`` in memory (artifacts are
-bytes/str, the PWML is the exporter's ``xml_bytes``) and written under ``out_dir``. The
-app's fixed ``outputs/`` and ``tmp/`` are never read here. The app itself still writes
-there and clears ``outputs/`` at the start of a run, so this relies on one pipeline run
-per checkout at a time (D-W05, the worker's per-database lock).
+bytes/str, the PWML is the exporter's ``xml_bytes``) and written under ``out_dir``; this
+module never reads ``outputs/`` or ``tmp/``. But the app writes the fixed
+``PROJECT_ROOT/outputs/`` and ``tmp/`` and clears ``outputs/`` at the start of a run, and
+the driver this module calls reads the quarantine report files back from there
+(``batch/driver.py`` ``_add_identity_artifacts``). So the real requirement is ONE PIPELINE
+RUN PER CHECKOUT at a time. Nothing enforces it: the worker's lock is per database, not
+per checkout, so it holds only while one worker and no batch run or Streamlit session run
+the pipeline in the same checkout (a W9 runbook item).
 
 Import-light: ``t2pw.batch.*`` and ``t2pw.service.inputs`` are imported inside the
 functions, so importing this module loads no streamlit, no app and no driver.
@@ -34,8 +41,10 @@ functions, so importing this module loads no streamlit, no app and no driver.
 
 from __future__ import annotations
 
+import dataclasses
 import functools
 import json
+import os
 import tempfile
 import time
 from dataclasses import fields
@@ -61,7 +70,7 @@ from t2pw.service.pathway import (
 
 #: The app's joiner for several text parts (``streamlit_app.py``, ``text = ...join``).
 APP_JOIN = "\n\n"
-#: Papers a name-mode job runs: one batch leg. Open question Q-BR-2.
+#: Papers a name-mode job runs: one batch leg (PO ruling on Q-BR-2, 2026-11-05).
 NAME_MODE_COUNT = 1
 #: The driver's own manifest row (``RunOutcome.to_dict()``, ``detail`` included),
 #: written beside the artifacts. Not a ``report_paths`` key: those are public downloads.
@@ -115,13 +124,28 @@ def _unsupported(req: PathwayRequest) -> Optional[_Problem]:
 
 
 def _worst(problems: List[_Problem]) -> Optional[_Problem]:
-    """One refusal for several bad inputs: a permanent kind wins over a retryable one."""
+    """One refusal for several bad inputs: a permanent kind wins over a retryable one.
 
-    for kind in (KIND_CONTRACT, KIND_NO_REACTIONS, KIND_NETWORK):
-        hits = [p for p in problems if p[1] == kind]
-        if hits:
-            return hits[0][0], kind, "; ".join(p[2] for p in hits), hits[0][3]
-    return None
+    The message keeps every input's own message, highest-ranked first.
+    """
+
+    if not problems:
+        return None
+    rank = (KIND_CONTRACT, KIND_NO_REACTIONS, KIND_NETWORK)
+    ranked = sorted(problems, key=lambda p: rank.index(p[1]))  # stable: input order kept
+    status, kind, _, code = ranked[0]
+    return status, kind, "; ".join(p[2] for p in ranked), code
+
+
+def _as_batch_reads(text: str) -> str:
+    """``text`` as a batch leg reads it back from ``01_source_text.txt``.
+
+    ``runner._write_text`` writes in text mode (``\\n`` -> ``os.linesep``) and
+    ``runner._read_text_or_error`` reads with universal newlines (``\\r\\n`` and ``\\r``
+    -> ``\\n``). Same round trip, in memory, on the same platform.
+    """
+
+    return text.replace("\n", os.linesep).replace("\r\n", "\n").replace("\r", "\n")
 
 
 def _paper(req: PathwayRequest) -> Tuple[Any, Optional[_Problem]]:
@@ -137,7 +161,8 @@ def _paper(req: PathwayRequest) -> Tuple[Any, Optional[_Problem]]:
         except ValueError as exc:
             return None, _contract(str(exc))
         if got.papers:
-            return got.papers[0], None
+            paper = got.papers[0]
+            return dataclasses.replace(paper, full_text=_as_batch_reads(paper.full_text)), None
         outage = any(isinstance(r, dict) and r.get("reason") in inputs._SEARCH_ERRORS  # noqa: SLF001
                      for r in got.skipped)
         if outage:
@@ -180,7 +205,7 @@ def _paper(req: PathwayRequest) -> Tuple[Any, Optional[_Problem]]:
         return None, (STATUS_FAIL, KIND_NO_REACTIONS, "the texts given are empty", CODE_NO_INPUT)
     return {
         "paper_id": "web:" + "+".join(ids),
-        "full_text": APP_JOIN.join(parts),
+        "full_text": _as_batch_reads(APP_JOIN.join(parts)),
         "requested_pathway": sc.requested_pathway,
         "requested_organism": sc.requested_organism,
     }, None
@@ -239,8 +264,11 @@ def _to_result(outcome: Any, out_dir: Path) -> PathwayResult:
 
     row = outcome.to_dict()
     row["bridge_files"] = written
-    (out_dir / OUTCOME_NAME).write_text(
-        json.dumps(row, indent=2, ensure_ascii=False, default=str), encoding="utf-8")
+    try:  # a disk fault here must not turn a final verdict into a retried crash
+        (out_dir / OUTCOME_NAME).write_text(
+            json.dumps(row, indent=2, ensure_ascii=False, default=str), encoding="utf-8")
+    except OSError:
+        res.warnings.append(f"the run record {OUTCOME_NAME} could not be written")
     entry = {k: v for k, v in row.items() if k not in ("detail", "bridge_files")}
     res.attempt_log = [{"attempt": 1, "runner": "t2pw.batch.driver.run_one", **entry}]
     return res

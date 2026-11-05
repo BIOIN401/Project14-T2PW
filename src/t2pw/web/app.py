@@ -271,9 +271,10 @@ def _process_submission(app: FastAPI, form, remote: str, forwarded_for: Optional
                 " Did you mean: " + "; ".join(o.label for o in near) + "?" if near else
                 " Start typing a species name and pick one of the suggestions."))
         ids: List[str] = []
-        if mode == "name" and not name:
-            err["name"] = "Enter the pathway name."
-        elif mode == "pmids":
+        if not name:  # every mode (PO, Q-BR-1): the run uses the organism only with a name
+            err["name"] = ("Enter the pathway name." if mode == "name" else
+                           "Enter the pathway name these papers describe; it is needed to use the organism.")
+        if mode == "pmids":
             if pm_long:
                 err["pmids"] = "Too long: enter up to %d PubMed IDs." % limits.MAX_PMIDS
             else:

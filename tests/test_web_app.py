@@ -159,22 +159,22 @@ def test_consent_off_and_several_pathways(site):
 
 
 def test_pmid_mode_stores_raw_ids_without_resolving(site):
-    r = site.submit(site.form(mode="pmids", name_1="", pmids_1="PMID:123, 456\n123;789"))
+    r = site.submit(site.form(mode="pmids", pmids_1="PMID:123, 456\n123;789"))
     sub = site.store().submission(SID_RX.search(r.headers["location"]).group(1))
     assert sub["items"][0]["request"].pmids == ("123", "456", "789")
-    bad = site.submit(site.form(mode="pmids", name_1="", pmids_1="12x4"))
+    bad = site.submit(site.form(mode="pmids", pmids_1="12x4"))
     assert bad.status_code == 400 and "not PubMed IDs" in bad.text
 
 
 def test_pdf_mode_saves_uploads_under_the_server_dir(site):
     files = [("pdfs_1", ("../../evil name.pdf", _pdf(), "application/pdf"))]
-    r = site.submit(site.form(mode="pdfs", name_1=""), files=files)
+    r = site.submit(site.form(mode="pdfs"), files=files)
     assert r.status_code == 303, r.text
     req = site.store().submission(SID_RX.search(r.headers["location"]).group(1))["items"][0]["request"]
     (path,) = req.pdf_paths
     assert path.is_file() and path.resolve().is_relative_to((site.work / "uploads").resolve())
     assert "evil" not in path.name
-    bad = site.submit(site.form(mode="pdfs", name_1=""),
+    bad = site.submit(site.form(mode="pdfs"),
                       files=[("pdfs_1", ("x.pdf", b"not a pdf at all", "application/pdf"))])
     assert bad.status_code == 400 and "x.pdf is not a PDF file." in bad.text
     assert str(site.tmp) not in bad.text
@@ -199,6 +199,33 @@ def test_nothing_to_submit_is_rejected(site):
     assert site.store()._db.execute("SELECT COUNT(*) FROM submissions").fetchone()[0] == 0
 
 
+@pytest.mark.parametrize("mode,extra", [("pmids", {"pmids_1": "123"}), ("pdfs", {})])
+def test_pathway_name_is_required_in_every_mode(site, mode, extra):
+    """NEW (BR, PO ruling Q-BR-1): the run uses the organism only with a pathway name."""
+    files = [("pdfs_1", ("a.pdf", _pdf(), "application/pdf"))] if mode == "pdfs" else None
+    r = site.submit(site.form(mode=mode, name_1="", **extra), files=files)
+    assert r.status_code == 400 and "Enter the pathway name these papers describe" in r.text
+    assert site.store()._db.execute("SELECT COUNT(*) FROM submissions").fetchone()[0] == 0
+    html = site.client.get("/").text
+    assert re.search(r'name="name_1"[^>]*\srequired', html), "row 1 name must be marked required"
+    assert "Required for every option" in html
+
+
+def test_unsupported_request_gets_its_own_failure_text(site):
+    """NEW (BR, PO ruling Q-BR-4): a bridge refusal says what was wrong; a real quality-gate
+    failure keeps the generic contract text."""
+    msg = "the organism can only be used together with a pathway name; add the pathway name"
+    sid = site.new_job()
+    site.run_to(sid, dict(fields=dict(status="error", failure_kind="contract", message=msg,
+                                      issue_codes=["bridge_unsupported_request"])))
+    html = site.client.get(f"/job/{sid}/0").text
+    assert "This pathway was not run because the request cannot be used as given: " + msg + "." in html
+    assert "did not pass the quality checks" not in html
+    sid2 = site.new_job()
+    site.run_to(sid2, dict(fields=dict(status="fail", failure_kind="contract", message="gate")))
+    assert "did not pass the quality checks" in site.client.get(f"/job/{sid2}/0").text
+
+
 def test_rate_limit_and_validation_errors_cost_no_slot(tmp_path):
     s = Site(tmp_path, rate_limit=3)
     for _ in range(6):  # six invalid attempts: none may use a slot
@@ -221,7 +248,7 @@ def test_queue_full_is_a_503_and_cleans_up_the_upload(tmp_path):
     for _ in range(4):
         s.new_job(**{"name_2": "a", "organism_2": s.org.label, "name_3": "b", "organism_3": s.org.label,
                      "name_4": "c", "organism_4": s.org.label, "name_5": "d", "organism_5": s.org.label})
-    r = s.submit(s.form(mode="pdfs", name_1=""), files=[("pdfs_1", ("a.pdf", _pdf(), "application/pdf"))])
+    r = s.submit(s.form(mode="pdfs"), files=[("pdfs_1", ("a.pdf", _pdf(), "application/pdf"))])
     assert r.status_code == 503 and "queue is full" in r.text
     left = [p for p in (s.work / "uploads").rglob("*") if p.is_file()] if (s.work / "uploads").exists() else []
     assert left == []

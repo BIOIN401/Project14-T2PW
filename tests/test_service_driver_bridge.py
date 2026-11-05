@@ -54,7 +54,6 @@ from t2pw.web.jobs import request_to_dict, result_to_dict
 from t2pw.web.retry import decide
 
 SRC_DIR = Path(__file__).resolve().parent.parent / "src"
-APP_PATH = SRC_DIR / "t2pw" / "app" / "streamlit_app.py"
 SCOPE = RequestedScope(requested_pathway="lipid A biosynthesis",
                        requested_organism="Escherichia coli")
 
@@ -173,8 +172,15 @@ def test_several_articles_are_joined_exactly_as_the_app_joins_them(tmp_path, fak
 
 
 def test_app_still_joins_text_parts_that_way():
-    """Guard: if the app's combining rule changes, the bridge must change with it."""
-    src = APP_PATH.read_text(encoding="utf-8")
+    """Guard: if the app's combining rule changes, the bridge must change with it.
+
+    Searches the app package and the service package, so a pure R3 move of the handler
+    out of ``streamlit_app.py`` still passes and a rule change still fails.
+    """
+    pkg = SRC_DIR / "t2pw"
+    src = "\n".join(p.read_text(encoding="utf-8")
+                    for d in ("app", "service") for p in sorted((pkg / d).rglob("*.py"))
+                    if p.name != "driver_bridge.py")  # never let the bridge vouch for itself
     assert 'text_parts = [entry.strip() for entry in text_entries if entry.strip()]' in src
     assert 'text_parts.append(_pdf["text"].strip())' in src
     assert 'text = "\\n\\n".join(text_parts)' in src
@@ -195,7 +201,7 @@ def test_name_mode_runs_one_fetched_paper_unchanged(tmp_path, fake, monkeypatch)
     br.run_pathway(_req(tmp_path))
     assert seen == {"pathway": SCOPE.requested_pathway, "organism": SCOPE.requested_organism,
                     "count": 1}
-    assert fake.calls[0][0] is paper and fake.calls[0][1] == "strict"
+    assert fake.calls[0][0] == paper and fake.calls[0][1] == "strict"  # same record, same text
 
 
 @pytest.mark.parametrize("skipped,status,kind,retry", [
@@ -251,6 +257,52 @@ def test_a_permanent_input_problem_outranks_a_retryable_one(tmp_path, fake, monk
         inputs.PmidResult("2", inputs.NO_FULL_TEXT, message="no oa")])
     res = br.run_pathway(_req(tmp_path, pmids=("1", "2")))
     assert res.failure_kind == KIND_NO_REACTIONS and not _retry(res)
+    assert res.message == "no oa; down"  # both inputs' messages, highest-ranked first
+
+
+def _batch_leg_text(tmp_path, text: str) -> str:
+    """What a batch leg hands the driver: the runner's own write, then its own read."""
+    from t2pw.batch import runner
+
+    path = tmp_path / "01_source_text.txt"
+    runner._write_text(path, text)
+    got, err = runner._read_text_or_error(path)
+    assert err == ""
+    return got
+
+
+RAW = "line one\r\nline two\rline three\nend\r\n\r\nlast"
+
+
+def test_name_mode_text_is_byte_identical_to_a_batch_leg(tmp_path, fake, monkeypatch):
+    """Review F3: the batch reads its source text back with universal newlines."""
+    paper = BatchPaper(paper_id="PMC1", requested_pathway="x", topic="x", full_text=RAW)
+    monkeypatch.setattr(inputs, "resolve_name", lambda *a, **k: inputs.NameInputs(
+        spec=None, scope=None, papers=[paper]))
+    br.run_pathway(_req(tmp_path, scope=RequestedScope(requested_pathway="x")))
+    sent = fake.calls[0][0]
+    assert sent.full_text == _batch_leg_text(tmp_path, RAW) and "\r" not in sent.full_text
+    assert paper.full_text == RAW  # the fetched record itself is not mutated
+
+
+def test_source_mode_text_is_byte_identical_to_a_batch_leg(tmp_path, fake):
+    br.run_pathway(_req(tmp_path, texts=(RAW, "second\r\npart")))
+    joined = br.APP_JOIN.join([RAW.strip(), "second\r\npart"])
+    assert fake.calls[0][0]["full_text"] == _batch_leg_text(tmp_path, joined)
+    assert "\r" not in fake.calls[0][0]["full_text"]
+
+
+def test_a_failed_run_record_write_keeps_the_mapped_result(tmp_path, fake):
+    """Review F6: a disk fault on run_outcome.json must not turn a final gate refusal
+    into a retried crash."""
+    rs = classify_release_status(pipeline_executed=True, strict_gates_passed=False)
+    fake.outcome = RunOutcome(status=STATUS_FAIL, failure_kind=KIND_CONTRACT, message="gate",
+                              release_status=rs)
+    (tmp_path / "out" / br.OUTCOME_NAME).mkdir(parents=True)  # the write cannot happen
+    res = br.run_pathway(_req(tmp_path, texts=("t",)))
+    assert (res.status, res.failure_kind, res.release_status) == (STATUS_FAIL, KIND_CONTRACT, rs)
+    assert f"the run record {br.OUTCOME_NAME} could not be written" in res.warnings
+    assert res.attempt_log and not _retry(res)
 
 
 @pytest.mark.parametrize("status,kind", [(inputs.EMPTY, KIND_NO_REACTIONS),

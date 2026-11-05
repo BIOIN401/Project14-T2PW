@@ -31,6 +31,7 @@ from t2pw.service.pathway import (
     STATUS_SCOPE_CONFLICT,
     STATUS_TIMEOUT,
 )
+from t2pw.service.driver_bridge import CODE_UNSUPPORTED
 from t2pw.web.retry import MAX_RETRIES
 
 MAX_ATTEMPTS = MAX_RETRIES + 1
@@ -147,6 +148,9 @@ def _failure_text(res: Dict[str, Any], attempts: int) -> str:
     if status == STATUS_SCOPE_CONFLICT:
         return ("The papers found appear to describe a different pathway or organism than the one "
                 "you asked for, so no PWML was produced.")
+    if CODE_UNSUPPORTED in (res.get("issue_codes") or []):  # BR: refused before any run
+        return ("This pathway was not run because the request cannot be used as given: "
+                f"{scrub(res.get('message')).rstrip('.')}.")
     if kind == KIND_NO_REACTIONS:
         return "No reactions could be extracted from the sources, so no PWML was produced."
     if kind in (KIND_CONTRACT, KIND_AMBIGUOUS):
