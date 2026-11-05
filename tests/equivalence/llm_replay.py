@@ -47,6 +47,7 @@ import os
 import re
 import socket
 import threading
+import time
 from collections import defaultdict
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Tuple
@@ -217,6 +218,7 @@ class Cassette:
         self.misses: List[Dict[str, Any]] = []
         self.refused: List[str] = []
         self.live_llm_errors: List[str] = []
+        self._t0 = time.monotonic()
 
     # -- bookkeeping ---------------------------------------------------------------------------
     def _scrub(self, text: str) -> str:
@@ -231,6 +233,11 @@ class Cassette:
             if self._sink is not None:  # flushed per answer: a killed segment keeps everything it got
                 self._sink.write(json.dumps({"kind": kind, **row}, ensure_ascii=False) + "\n")
                 self._sink.flush()
+
+    def _progress(self, line: str) -> None:
+        """Record mode: one line per live answer or error on stdout (no payloads), for the wrapper log."""
+
+        print(f"[cassette +{time.monotonic() - self._t0:.0f}s] {line}", flush=True)
 
     def _take(self, kind: str, key: str) -> Tuple[Optional[Dict[str, Any]], int, int]:
         with self._lock:
@@ -288,12 +295,17 @@ class Cassette:
             row = cassette._lookup("llm", key, request)
             if row is not None:
                 return ChatCompletion.model_validate(row["response"])
+            started = time.monotonic()
             try:
                 resp = real_create(**kwargs)
             except Exception as exc:  # noqa: BLE001 -- noted, then the client's own retry runs
                 cassette.live_llm_errors.append(f"{type(exc).__name__}: {cassette._scrub(str(exc))[:200]}")
+                cassette._progress(f"llm ERROR {type(exc).__name__} after {time.monotonic() - started:.0f}s key={key[:10]}")
                 raise
             cassette._record("llm", key, request, {"response": resp.model_dump(mode="json")})
+            usage = getattr(resp, "usage", None)
+            cassette._progress(f"llm live {time.monotonic() - started:.0f}s key={key[:10]} "
+                               f"max_tokens={kwargs.get('max_tokens')} completion_tokens={getattr(usage, 'completion_tokens', None)}")
             return resp
 
         def request(session: Any, method: str, url: str, params: Any = None, data: Any = None,
@@ -405,7 +417,8 @@ def load_transcript(path: Path) -> Dict[str, List[Dict[str, Any]]]:
             row = json.loads(line)
         except json.JSONDecodeError:
             continue
-        entries[row.pop("kind")].append(row)
+        if row.get("kind") in entries:
+            entries[row.pop("kind")].append(row)
     return entries
 
 

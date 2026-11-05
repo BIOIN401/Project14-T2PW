@@ -222,7 +222,7 @@ def _git(*args: str) -> str:
 #: (R2.5 attempt 1). So a recording is made in SEGMENTS: each one is a fresh process and a fresh root that
 #: replays everything the previous segment got (seconds) and goes live only beyond it. The fixture is
 #: written only by the segment whose run completes, and holds exactly that run's answers.
-MAX_SEGMENTS = 5
+MAX_SEGMENTS = 8
 
 
 def record(env_file: Path, work: Path, timeout: float) -> int:
