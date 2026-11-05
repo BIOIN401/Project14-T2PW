@@ -1,0 +1,158 @@
+{
+  "label": "w2-smoke-prem",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-W2-tr",
+    "--pin-verdict",
+    "C:/t/wsW2-tr/reports/02-smoke.pin.json",
+    "-q",
+    "--basetemp=C:/t/wsW2-tr/smoke1",
+    "tests/test_reference_repair.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_empty_extraction_payload.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py",
+    "tests/test_c102_coverage_denominator.py",
+    "tests/test_c106_mutation_harness_executable.py"
+  ],
+  "cwd": "C:\\t\\ws-W2-tr",
+  "started_at": "2026-11-05T02:32:11+00:00",
+  "finished_at": "2026-11-05T02:35:33+00:00",
+  "duration_seconds": 201.48646830000507,
+  "timeout_seconds": 540.0,
+  "root_pid": 894820,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 894516,
+      "name": "python.exe",
+      "ppid": 894820
+    },
+    {
+      "pid": 889052,
+      "name": "python.exe",
+      "ppid": 894516
+    },
+    {
+      "pid": 896056,
+      "name": "python.exe",
+      "ppid": 889052
+    },
+    {
+      "pid": 896356,
+      "name": "python.exe",
+      "ppid": 894516
+    },
+    {
+      "pid": 896396,
+      "name": "python.exe",
+      "ppid": 896356
+    },
+    {
+      "pid": 896908,
+      "name": "python.exe",
+      "ppid": 894516
+    },
+    {
+      "pid": 896164,
+      "name": "python.exe",
+      "ppid": 896908
+    },
+    {
+      "pid": 896216,
+      "name": "python.exe",
+      "ppid": 896836
+    },
+    {
+      "pid": 896836,
+      "name": "python.exe",
+      "ppid": 894516
+    },
+    {
+      "pid": 901088,
+      "name": "git.exe",
+      "ppid": 894516
+    }
+  ],
+  "descendants_terminated": [
+    889052,
+    894516,
+    896056,
+    896164,
+    896216,
+    896356,
+    896396,
+    896836,
+    896908,
+    901088
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 112240,
+      "name": "python.exe"
+    },
+    {
+      "pid": 778276,
+      "name": "python.exe"
+    },
+    {
+      "pid": 793712,
+      "name": "python.exe"
+    },
+    {
+      "pid": 894068,
+      "name": "python.exe"
+    },
+    {
+      "pid": 894240,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/wsW2-tr/reports/02-smoke.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-W2-tr\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-W2-tr",
+    "repo_head": "dca5057fa677cced04a4fa5ed2f6730e8b4969d2",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}
