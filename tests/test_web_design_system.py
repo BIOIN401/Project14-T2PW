@@ -162,7 +162,37 @@ def test_button_link_and_disabled():
 def test_status_badge_labels_and_unknown_status():
     assert ">Review required<" in _macro('{{ c.status_badge("review_required") }}')
     unknown = _macro('{{ c.status_badge("<odd>") }}')
-    assert "badge--neutral" in unknown and "&lt;odd&gt;" in unknown  # escaped
+    assert 'class="badge badge--neutral badge--unknown"' in unknown
+    assert ">&lt;odd&gt;<" in unknown and "<odd>" not in unknown  # escaped text, never a class
+
+
+def _status_badge(status: str) -> str:
+    return _env().from_string(
+        '{% import "macros/components.html" as c %}{{ c.status_badge(s) }}'
+    ).render(s=status)
+
+
+def test_status_badge_accepts_every_pathway_result_status():
+    """Every PathwayResult.status value is a known badge, so a new value added to
+    t2pw.service.pathway (W0 vocabulary) without a badge mapping fails here."""
+    from t2pw.service import pathway
+
+    statuses = {v for k, v in vars(pathway).items() if k.startswith("STATUS_")}
+    assert statuses == {"pass", "fail", "timeout", "error", "scope_conflict"}
+    expected_tone = {
+        pathway.STATUS_PASS: "success",
+        pathway.STATUS_FAIL: "error",
+        pathway.STATUS_TIMEOUT: "error",
+        pathway.STATUS_ERROR: "error",
+        pathway.STATUS_SCOPE_CONFLICT: "warning",
+    }
+    labels = set()
+    for status in statuses:
+        html = _status_badge(status)
+        assert f"badge--{expected_tone[status]}" in html, (status, html)
+        assert f"badge--{status}" in html and "badge--unknown" not in html, (status, html)
+        labels.add(re.search(r">([^<]+)</span>", html).group(1))
+    assert len(labels) == len(statuses)  # fail / timeout / error keep their own text
 
 
 def test_steps_mark_current_and_state_text():

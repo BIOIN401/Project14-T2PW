@@ -2,6 +2,17 @@
       {% import "macros/components.html" as c %}
     Class names are styled in static/css/site.css. `attrs` is a dict of extra
     HTML attributes (e.g. hx-* for W6), rendered with xmlattr.
+
+    NOTES FOR W6 (security and packaging):
+    * `href` values, `attrs` keys, `variant` and `heading_level` must be built by
+      the server, never taken from user data. Autoescaping stops markup
+      injection, but not a javascript: URL in an href, an event-handler key in
+      attrs, or a forged class or tag name.
+    * Autoescape must stay on for .html templates (the Jinja2Templates default).
+      The macros rely on it to escape labels, values and unknown statuses.
+    * templates/ and static/ are not Python files: add them as package data
+      (pyproject / MANIFEST) before the server is installed from a wheel. W5
+      does not do this.
 -#}
 
 {#- Button. A link when href is given, else a <button>.
@@ -140,7 +151,9 @@
 {%- endmacro %}
 
 {#- Job / pathway status badge. The text label carries the meaning; colour is
-    secondary. Unknown statuses render as neutral with the raw text. -#}
+    secondary. Accepts the job states and, as aliases, the PathwayResult.status
+    values (t2pw.service.pathway STATUS_*). Anything else renders as a neutral
+    badge whose text is the escaped value and whose class is badge--unknown. -#}
 {% macro status_badge(status, label=None) -%}
 {%- set known = {
   "queued": ("neutral", "Queued"),
@@ -148,9 +161,14 @@
   "done": ("success", "Done"),
   "failed": ("error", "Failed"),
   "review_required": ("warning", "Review required"),
+  "pass": ("success", "Passed"),
+  "fail": ("error", "Failed"),
+  "timeout": ("error", "Timed out"),
+  "error": ("error", "Error"),
+  "scope_conflict": ("warning", "Scope conflict"),
 } -%}
 {%- set tone, default_label = known.get(status, ("neutral", status)) -%}
-<span class="badge badge--{{ tone }} badge--{{ status }}">{{ label or default_label }}</span>
+<span class="badge badge--{{ tone }} badge--{{ status if status in known else 'unknown' }}">{{ label or default_label }}</span>
 {%- endmacro %}
 
 {#- Stage-by-stage progress. steps: list of dicts {label, state, detail?}.
