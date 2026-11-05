@@ -82,17 +82,17 @@ State values: `DISPATCHED` · `IN_REVIEW` · `CHANGES_REQUESTED` · `APPROVED` �
 
 ## Current state (the orchestrator rewrites this block in place; everything above is append-only)
 
-- Integration branch: `webserver/refactor` @ `158a589a` + docs, pushed
-- Done: R0; W0 (`c46e88ad`), W1 (`110accca`), W2 (`76eb0dcd`), W5 (`962c80ff`), W3 (`fb2d99a6`), W8 (`19689376`), W4 (`090d4855`) merged; post-merge SMOKE 511 each. W7 (`158a589a`). Web-layer baseline: 225 passed (`evidence/W7/postmerge/19-web-all-focused.json`)
-- In flight: R1 impl (sonnet/medium), W6 impl (sonnet/high), W7 merged (post-merge SMOKE 511, web baseline 225). All general-purpose under the ws-* role files
+- Integration branch: `webserver/refactor` @ `f5a135e4`, pushed
+- Done: R0. Merged with post-merge SMOKE 511 each: W0 (`c46e88ad`), W1 (`110accca`), W2 (`76eb0dcd`), W5 (`962c80ff`), W3 (`fb2d99a6`), W8 (`19689376`), W4 (`090d4855`), W7 (`158a589a`). Web-layer baseline: 225 passed (`evidence/W7/postmerge/19-web-all-focused.json`)
+- In flight: R1 impl (sonnet/medium, `C:/t/ws-R1`); W6 impl (sonnet/high, `C:/t/ws-W6`). Both general-purpose under the ws-* role files
+- Next: review + tests for R1 (reviewer opus/high), then R2 + R2.5; W6 review + tests, then W7b (match the email link to W6's job route; land before SMTP is enabled); W9 once the PO answers hosting / DB user / SMTP
 - Held on the PO: W9 (hosting, server DB user, SMTP provider)
 - Blocked: —
-- Schedule: Dec 6 end-to-end needs R1-R6, none started. Proposed fallback if Q-R0-1 stays open: start W6 against the W0 stub so the site is demonstrable, and wire it to the real run_pathway when R5 lands
 - Carry-forward notes:
-  - W7b (after W6 + W7 merge): postrun email link must match W6's canonical job_url route (the sid is already uuid4, so not guessable); land before SMTP is enabled
   - R5: check whether research mode also writes the six "strict mode" PWML-export reports; decide whether W1 texts feed `PathwayRequest.texts`; pass `use_cache=False` or a `fetch_text_fn` to the W1 full-text fetch; enforce input caps
   - W1 follow-ups: idconv errmsg tightening ("Identifier not found in PMC"), Unicode test cases, path comment, per-chunk throttle
-  - W6: the W5 gaps (datalist, figure, `<details>`, review_required mapping, forced-colors, package-data); the W5 safety notes (server-built hrefs/attrs, autoescape on); W8 wiring (one long-lived RateLimiter, validate before hit(), pass base_url to notify_job, one email per submission after retries are exhausted); W4 attempt_history for the job page
-  - W9: set NCBI_EMAIL and T2PW_RATE_KEY_SECRET; manual Linux kill / `systemctl stop` check (the W3 POSIX path has never run); init for a containerised worker; upload cleanup and quotas
-- Tooling notes: use the repo `.venv` python for every run. The `ws-implementer`/`ws-ui-builder` isolation may be refused: use general-purpose in a pre-made `C:/t/ws-<ID>` worktree. Test-runner sonnet/medium; wrapper in the foreground, Bash timeout 600000. Post-merge SMOKE in the detached worktree `C:/t/ws-int`. Implementers running test chunks do not take the heavy lock: never schedule SMOKE while an R-task implementer is testing
-- Open PO questions (rulings of 2026-11-04 in `results/PO-RULINGS-2026-11-04.md`, to copy into DECISIONS.md): Q-W0-2 (deadline form); W2 species scope (4,018 vs 1,127 with pathways); Q-W3-1..6 (queue cap, restart, Linux kill, FIFO, Windows worker); Q-W4-2..5; Q-W8-1..7 (limits, SMTP, failure email, PDF-count cost); W5 branding + squash vs --no-ff; hosting; server DB user
+  - W6: the W5 gaps (datalist, figure, `<details>`, review_required mapping, forced-colors, package-data); the W5 safety notes (server-built hrefs/attrs, autoescape on); W8 wiring (one long-lived RateLimiter, validate before hit(), pass base_url); W4 attempt_history
+  - W9: set NCBI_EMAIL, T2PW_RATE_KEY_SECRET, T2PW_BASE_URL, SMTP (configure before real jobs: an unconfigured send is recorded not_sent permanently); manual Linux kill / `systemctl stop` check (the W3 POSIX path has never run); init for a containerised worker; upload and queue cleanup/quotas
+- Tooling notes: use the repo `.venv` python for every run. The `ws-implementer`/`ws-ui-builder` isolation may be refused: use general-purpose in a pre-made `C:/t/ws-<ID>` worktree. Test-runner sonnet/medium; wrapper in the foreground, Bash timeout 600000. Post-merge SMOKE runs in the detached worktree `C:/t/ws-int`. Implementers running test chunks do not take the heavy lock, so never schedule SMOKE while an R-task implementer is testing
+- PO rulings 2026-11-04: `results/PO-RULINGS-2026-11-04.md` (Q-R0-1, FastAPI, Q-W4-1, W7 queue rule). The PO is to copy them into DECISIONS.md
+- Open PO questions: Q-W0-2 (deadline form); W2 species scope (4,018 vs the 1,127 with pathways); Q-W3-1..6; Q-W4-2..5; Q-W7-1..5 + confirm the 10 provenance keys; Q-W8-1..7; W5 branding + squash vs --no-ff for binary-heavy branches; hosting; server DB user; SMTP provider
