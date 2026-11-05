@@ -23,6 +23,12 @@ in recording and replay alike (``harness.AUDIT_TIMEOUT_SECONDS``). The post-pipe
 wall-clock time against that budget, so at 240 s the round it stops at depends on live LLM latency and no
 replay can follow it (docs/webserver/results/R2.5.md sec. 8).
 
+CLOCK FREEZE (PO ruling 2026-11-05): during replay ``enrich_entities._utc_now_iso`` reads
+``harness.FROZEN_UTC``, because enrichment stamps wall-clock ``retrieved_at`` times into the canonical payload.
+The frozen arms (app1, app2, service) must then agree on the FULL canonical hash. Against the live run, which
+carries real times, the comparison is PWML bytes plus every canonical field except ``retrieved_at``; an
+unfrozen control arm proves the freeze is effective and touches only those stamps.
+
 Each arm has its own project root, output dir and empty caches (``tests/equivalence/harness.py``).
 From R3, arm (c) starts from the text instead (see ``run_service_arm``'s TODO).
 
@@ -83,8 +89,12 @@ def arms(tmp_path_factory):
         app1 = harness.run_app_arm(base / "app1", llm_replay.Cassette("replay", fixture["entries"]), APP_TIMEOUT, case)
         app2 = harness.run_app_arm(base / "app2", llm_replay.Cassette("replay", fixture["entries"]), APP_TIMEOUT, case)
         service = harness.run_service_arm(app1, base / "service", llm_replay.Cassette("replay", fixture["entries"]))
+        # The control: the same replay with the real clock, to prove the freeze is what makes the hashes equal.
+        unfrozen = harness.run_app_arm(base / "unfrozen", llm_replay.Cassette("replay", fixture["entries"]),
+                                       APP_TIMEOUT, case, freeze=False)
         after = harness.checkout_state()
-        yield {"fixture": fixture, "app1": app1, "app2": app2, "service": service, "before": before, "after": after}
+        yield {"fixture": fixture, "app1": app1, "app2": app2, "service": service, "unfrozen": unfrozen,
+               "before": before, "after": after}
     finally:
         mp.undo()
 
@@ -135,11 +145,38 @@ def test_b_two_app_runs_are_identical(arms):
     assert app1["pwml_files"] == app2["pwml_files"]
 
 
+def _is_stamp(path: str) -> bool:
+    return path.endswith("/retrieved_at")
+
+
 def test_b_replay_reproduces_the_recorded_live_run(arms):
+    """Against the LIVE run: PWML bytes exactly, and the canonical payload field by field EXCEPT the
+    ``retrieved_at`` stamps, which in the live run are real wall-clock times (PO ruling 2026-11-05). The live
+    canonical hash is therefore not compared; the frozen arms compare full hashes in test_b/test_c."""
+
+    from t2pw.pipeline.gate_reports import payload_sha256
+
     recorded = arms["fixture"]["recorded"]
-    assert arms["app1"]["canonical_payload_sha256"] == recorded["canonical_payload_sha256"]
-    assert (harness.sha256(arms["app1"]["xml"]) if arms["app1"]["xml"] else None) == recorded["pwml_sha256"]
+    assert harness.sha256(arms["app1"]["xml"]) == recorded["pwml_sha256"]
     assert arms["app1"]["pwml_files"] == recorded["pwml_files"]
+    live_payload = recorded["canonical_payload"]
+    assert payload_sha256(live_payload) == recorded["canonical_payload_sha256"]  # it IS the live run's payload
+    live, replay = harness.leaves(live_payload), harness.leaves(arms["app1"]["canonical_payload"])
+    assert set(live) == set(replay)
+    differing = sorted(k for k in live if live[k] != replay[k])
+    assert differing and all(_is_stamp(k) for k in differing), differing[:10]
+    assert {replay[k] for k in differing} == {harness.FROZEN_UTC}
+
+
+def test_the_clock_freeze_is_effective_and_touches_only_retrieved_at(arms):
+    frozen, unfrozen = arms["app1"], arms["unfrozen"]
+    assert frozen["frozen_bindings"] >= 1 and unfrozen["frozen_bindings"] == 0
+    assert unfrozen["canonical_payload_sha256"] != frozen["canonical_payload_sha256"]
+    a, b = harness.leaves(frozen["canonical_payload"]), harness.leaves(unfrozen["canonical_payload"])
+    assert set(a) == set(b)
+    differing = sorted(k for k in a if a[k] != b[k])
+    assert differing and all(_is_stamp(k) for k in differing), differing[:10]
+    assert unfrozen["xml"] == frozen["xml"]
 
 
 def test_c_service_post_pipeline_equals_the_app(arms):

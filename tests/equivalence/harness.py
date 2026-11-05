@@ -59,6 +59,41 @@ MODE = "strict"
 #: At 1800 s the loop ends by its own data-driven conditions for any audit that finishes in under ~28 min.
 AUDIT_TIMEOUT_SECONDS = 1800
 AUDIT_TIMEOUT_KEY = "post_audit_timeout_seconds"
+#: The one instant every ``retrieved_at`` stamp reads during a replay (PO ruling 2026-11-05, option (a)).
+#: ``t2pw.mapping.enrich_entities._utc_now_iso`` stamps wall-clock UTC seconds into enrichment provenance
+#: (lines 502-1173), and the canonical payload hash covers them, so without this no two runs -- the live one
+#: included -- share a canonical hash. It is the only clock that reaches the canonical payload (R2.5 sec. 12.4).
+FROZEN_UTC = "1970-01-01T00:00:00Z"
+
+
+def freeze_clock(mp: pytest.MonkeyPatch) -> int:
+    """Point every binding of ``enrich_entities._utc_now_iso`` at :data:`FROZEN_UTC`. Returns how many.
+
+    Every stamping site resolves the module global at call time; the scan also catches any module that
+    bound the function by name (none does today: ``src/enrich_entities.py``'s star import skips ``_`` names).
+    """
+
+    import t2pw.mapping.enrich_entities as enrich_entities
+
+    real = enrich_entities._utc_now_iso
+    bound = 0
+    for module in list(sys.modules.values()):
+        if module is not None and getattr(module, "_utc_now_iso", None) is real:
+            mp.setattr(module, "_utc_now_iso", lambda: FROZEN_UTC)
+            bound += 1
+    return bound
+
+
+def leaves(value: Any, path: str = "") -> Dict[str, Any]:
+    """Every leaf of a JSON value by its pointer path, for a field-by-field comparison."""
+
+    if isinstance(value, dict):
+        return {k: v for key, item in value.items() for k, v in leaves(item, f"{path}/{key}").items()}
+    if isinstance(value, list):
+        return {k: v for i, item in enumerate(value) for k, v in leaves(item, f"{path}/{i}").items()}
+    return {path: value}
+
+
 #: The driver fields of a batch paper the app path reads (``_paper_text``, ``_extraction_focus``,
 #: ``_requested_scope``, ``_paper_id``).
 CASE_FIELDS = ("paper_id", "title", "full_text", "requested_pathway", "requested_organism", "topic")
@@ -123,7 +158,8 @@ def _pwml_files(root: Path) -> Dict[str, str]:
     return {p.name: sha256(p.read_bytes()) for p in sorted((root / "outputs").glob("*.pwml"))}
 
 
-def run_app_arm(root: Path, cassette: llm_replay.Cassette, timeout: float, case: Dict[str, Any]) -> Dict[str, Any]:
+def run_app_arm(root: Path, cassette: llm_replay.Cassette, timeout: float, case: Dict[str, Any],
+                freeze: bool = True) -> Dict[str, Any]:
     from streamlit.testing.v1 import AppTest
 
     from t2pw.batch import driver
@@ -135,6 +171,8 @@ def run_app_arm(root: Path, cassette: llm_replay.Cassette, timeout: float, case:
     with pytest.MonkeyPatch.context() as mp:
         cassette.install(mp)
         isolate(mp, root)
+        # Replay only: a recording keeps the real clock (its stamps are the live times).
+        captured["frozen_bindings"] = freeze_clock(mp) if freeze and cassette.mode == "replay" else 0
         real_from_file = AppTest.from_file
         real_post = postpipeline.run_post_pipeline_sbml_artifacts
         real_export = postpipeline.run_pwml_export
@@ -182,6 +220,7 @@ def run_app_arm(root: Path, cassette: llm_replay.Cassette, timeout: float, case:
         "misses": list(cassette.misses),
         "refused": list(cassette.refused),
         "unused": cassette.unused() if cassette.mode == "replay" else [],
+        "frozen_bindings": captured["frozen_bindings"],
     }
 
 
@@ -206,6 +245,7 @@ def run_service_arm(app: Dict[str, Any], root: Path, cassette: llm_replay.Casset
     with pytest.MonkeyPatch.context() as mp:
         cassette.install(mp)
         isolate(mp, root)
+        frozen_bindings = freeze_clock(mp)
         started = time.monotonic()
         # As the "Run audit and DB mapping" handler: the Stage-2 payload (after propagate_context_organism),
         # the sidebar's settings, and this root's outputs directory.
@@ -244,6 +284,7 @@ def run_service_arm(app: Dict[str, Any], root: Path, cassette: llm_replay.Casset
         "export_verdict": export_verdict(result),
         "misses": list(cassette.misses),
         "refused": list(cassette.refused),
+        "frozen_bindings": frozen_bindings,
     }
 
 
