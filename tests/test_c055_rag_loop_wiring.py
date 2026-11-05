@@ -242,6 +242,9 @@ def app_module():
     stub.session_state.__contains__ = lambda _s, _k: False
     sys.modules["streamlit"] = stub
     sys.modules.pop("t2pw.app.streamlit_app", None)
+    # R1: ``run_quarantine_boundary`` now lives here and binds ``st`` at import, so it
+    # must be re-imported under the stub for its session_state writes to reach it.
+    sys.modules.pop("t2pw.service.postpipeline", None)
     before = set(sys.modules)
     import t2pw.app.streamlit_app as app  # noqa: PLC0415
 
@@ -331,6 +334,9 @@ def offline_stages(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Dict[str,
     import t2pw.service.postpipeline as postpipeline
 
     monkeypatch.setattr(postpipeline, "quarantine_and_close", _quarantine)
+    monkeypatch.setattr(postpipeline, "map_payload", _map)
+    monkeypatch.setattr(postpipeline, "normalize_process_payload", _normalize)
+    monkeypatch.setattr(postpipeline, "run_strict_post_normalization_gates", _gates)
     return calls
 
 

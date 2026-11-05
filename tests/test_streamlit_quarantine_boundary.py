@@ -768,9 +768,12 @@ def test_the_boundary_is_the_only_unguarded_quarantine_call_in_the_app() -> None
 
     import ast
 
-    tree = ast.parse(SERVICE_PATH.read_text(encoding="utf-8"))
+    # R1: scan the app AND the module the moved code lives in, so an unguarded
+    # call added to either file fails this test.
+    trees = [ast.parse(path.read_text(encoding="utf-8")) for path in (APP_PATH, SERVICE_PATH)]
     callers = {
         node.name
+        for tree in trees
         for node in ast.walk(tree)
         if isinstance(node, ast.FunctionDef)
         and any(
