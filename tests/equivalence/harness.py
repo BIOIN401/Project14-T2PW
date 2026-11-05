@@ -40,18 +40,39 @@ if str(ROOT / "tests") not in sys.path:
 
 from equivalence import llm_replay  # noqa: E402
 
-FIXTURE = ROOT / "tests" / "fixtures" / "equivalence" / "heme_ferrochelatase_strict.json.gz"
+FIXTURE = ROOT / "tests" / "fixtures" / "equivalence" / "sour_taste_v2_strict.json.gz"
 #: Copied into every isolated root: the app's PWML exporter reads its reference model from
 #: ``PROJECT_ROOT/reference`` (``_pwml_reference_path``).
 REFERENCE_FILES = ("PW000001.pwml", "PW012926.pwml")
-#: The case: tests/test_orch759b_recorder_reattach.py ``PAPER`` (SENTENCE_1 + SENTENCE_2), verbatim.
-CASE = {
-    "paper_id": "equivalence-heme-ferrochelatase",
-    "text": "Ferrochelatase inserts Fe2+ into protoporphyrin IX to form protoheme. "
-            "The same enzyme converts protoporphyrin IX and Fe2+ into heme b.",
-    "mode": "strict",
-    "source": "tests/test_orch759b_recorder_reattach.py::PAPER",
-}
+#: The case, verbatim from docs/evaluation_v2/paper_runs_orch755/topics/sour_taste_v2.txt (a pinned id with
+#: scope). Committed evidence that strict mode exported a PWML from it: docs/pwml_recovery_sprint/
+#: ORCH-767-RESULT.md (sour taste: PWML yes, review_required) and tests/fixtures/orch768 (the
+#: ORCH-767/sour_taste_v2-strict leg wrote pathway.review_required.pwml; test_orch768_replay_corpus.py pins
+#: that its replay at this tree still writes it). Its full text is fetched ONCE at record time, exactly as
+#: the batch runner fetches it (``t2pw.batch.fetch.fetch_papers``), and stored in the fixture.
+TOPIC_LINE = "PMC7059786 | Taste transduction: sour | Mus musculus"
+MODE = "strict"
+#: The equivalence test runs at a NON-DEFAULT "Audit repair timeout": the sidebar's maximum, 1800 s, instead
+#: of 240 s, identically when recording and replaying. ``run_post_pipeline_sbml_artifacts`` branches on wall
+#: clock time against this budget (postpipeline.py:920/940/976/1131), so at 240 s the audit round a run
+#: stops at depends on live LLM latency and a replay (which is fast) takes a different path (R2.5 sec. 8).
+#: At 1800 s the loop ends by its own data-driven conditions for any audit that finishes in under ~28 min.
+AUDIT_TIMEOUT_SECONDS = 1800
+AUDIT_TIMEOUT_KEY = "post_audit_timeout_seconds"
+#: The driver fields of a batch paper the app path reads (``_paper_text``, ``_extraction_focus``,
+#: ``_requested_scope``, ``_paper_id``).
+CASE_FIELDS = ("paper_id", "title", "full_text", "requested_pathway", "requested_organism", "topic")
+
+
+def fetch_case(cache_dir: Path) -> Dict[str, Any]:
+    from t2pw.batch.fetch import fetch_papers
+
+    papers, skipped = fetch_papers(TOPIC_LINE, limit=1, cache_dir=cache_dir, use_cache=True, screen=False)
+    assert papers and papers[0].paper_id == TOPIC_LINE.split("|")[0].strip(), skipped
+    case = {name: str(getattr(papers[0], name, "") or "") for name in CASE_FIELDS}
+    case.update(mode=MODE, topic_line=TOPIC_LINE, full_text_sha256=sha256(case["full_text"].encode("utf-8")),
+                source="docs/evaluation_v2/paper_runs_orch755/topics/sour_taste_v2.txt")
+    return case
 
 
 def sha256(data: bytes) -> str:
@@ -102,7 +123,7 @@ def _pwml_files(root: Path) -> Dict[str, str]:
     return {p.name: sha256(p.read_bytes()) for p in sorted((root / "outputs").glob("*.pwml"))}
 
 
-def run_app_arm(root: Path, cassette: llm_replay.Cassette, timeout: float) -> Dict[str, Any]:
+def run_app_arm(root: Path, cassette: llm_replay.Cassette, timeout: float, case: Dict[str, Any]) -> Dict[str, Any]:
     from streamlit.testing.v1 import AppTest
 
     from t2pw.batch import driver
@@ -120,6 +141,7 @@ def run_app_arm(root: Path, cassette: llm_replay.Cassette, timeout: float) -> Di
 
         def from_file(*a: Any, **k: Any) -> Any:
             captured["at"] = real_from_file(*a, **k)
+            captured["at"].session_state[AUDIT_TIMEOUT_KEY] = AUDIT_TIMEOUT_SECONDS  # see AUDIT_TIMEOUT_SECONDS
             return captured["at"]
 
         def post_spy(*a: Any, **k: Any) -> Any:
@@ -137,7 +159,8 @@ def run_app_arm(root: Path, cassette: llm_replay.Cassette, timeout: float) -> Di
         mp.setattr(postpipeline, "run_post_pipeline_sbml_artifacts", post_spy)
         mp.setattr(postpipeline, "run_pwml_export", export_spy)
         started = time.monotonic()
-        outcome = driver.run_one({"paper_id": CASE["paper_id"], "text": CASE["text"]}, CASE["mode"], timeout=timeout)
+        paper = {name: case[name] for name in CASE_FIELDS}
+        outcome = driver.run_one(paper, case["mode"], timeout=timeout)
         seconds = time.monotonic() - started
     at = captured.get("at")
     artifacts = driver._safe_dict(driver._ss(at, "post_pipeline_artifacts")) if at is not None else {}
@@ -165,7 +188,7 @@ def run_app_arm(root: Path, cassette: llm_replay.Cassette, timeout: float) -> Di
 def run_service_arm(app: Dict[str, Any], root: Path, cassette: llm_replay.Cassette) -> Dict[str, Any]:
     """The post-pipeline half, called directly on the service module, from the app's Stage-2 payload.
 
-    TODO(R3): once ``run_extraction(request, reporter, state)`` exists, start this arm from ``CASE["text"]``
+    TODO(R3): once ``run_extraction(request, reporter, state)`` exists, start this arm from ``case["full_text"]``
     instead of ``app["post_call"]``'s payload; from R5 call ``run_pathway(PathwayRequest(...))`` and compare
     its ``PathwayResult`` (PWML path bytes, canonical hash) to the app arm the same way.
     """
@@ -244,7 +267,7 @@ def _git(*args: str) -> str:
 #: (R2.5 attempt 1). So a recording is made in SEGMENTS: each one is a fresh process and a fresh root that
 #: replays everything the previous segment got (seconds) and goes live only beyond it. The fixture is
 #: written only by the segment whose run completes, and holds exactly that run's answers.
-MAX_SEGMENTS = 8
+MAX_SEGMENTS = 20
 
 
 def record(env_file: Path, work: Path, timeout: float) -> int:
@@ -270,7 +293,12 @@ def record(env_file: Path, work: Path, timeout: float) -> int:
                                        sink=segments / f"seg-{n:02d}.jsonl")
         before = checkout_state()
         print(f"segment {n}: prior answers {prior.counts() if prior else {}}", flush=True)
-        app = run_app_arm(work / f"record-{n:02d}", cassette, timeout)
+        case_file = work / "case.json"
+        if not case_file.exists():  # fetched once, then reused verbatim by every later segment
+            case_file.write_text(json.dumps(fetch_case(work / "fetch_cache"), ensure_ascii=False), encoding="utf-8")
+        case = json.loads(case_file.read_text(encoding="utf-8"))
+        print(f"case {case['paper_id']}: {len(case['full_text'])} chars, sha256 {case['full_text_sha256'][:16]}", flush=True)
+        app = run_app_arm(work / f"record-{n:02d}", cassette, timeout, case)
         assert checkout_state() == before, "the recording run wrote into the checkout"
     finally:
         mp.undo()
@@ -282,18 +310,19 @@ def record(env_file: Path, work: Path, timeout: float) -> int:
     if not app["xml"] or app["outcome"]["status"] != "pass":
         print("NOT WRITING THE FIXTURE: the run did not reach a strict PWML export")
         return 2
-    write_fixture(cassette.entries, pinned, secrets, summary,
+    write_fixture(cassette.entries, pinned, secrets, summary, case,
                   {"tree_head": _git("rev-parse", "HEAD"),
                    "tree_dirty": bool(_git("status", "--porcelain", "--", "src", "tests/equivalence"))})
     return 0
 
 
 def write_fixture(entries: Dict[str, Any], pinned: Dict[str, str], secrets: Dict[str, str],
-                  summary: Dict[str, Any], provenance: Dict[str, Any]) -> None:
+                  summary: Dict[str, Any], case: Dict[str, Any], provenance: Dict[str, Any]) -> None:
     models = sorted({row["response"].get("model") for row in entries["llm"]})
     fixture = {
         "schema": 1,
-        "case": CASE,
+        "case": case,
+        "audit_timeout_seconds": AUDIT_TIMEOUT_SECONDS,
         "env": pinned,
         "keying": llm_replay.KEYING,
         "recorded": {**summary, **provenance, "models": models, "at": time.strftime("%Y-%m-%dT%H:%M:%S%z")},
@@ -322,7 +351,8 @@ def assemble(env_file: Path, transcript: Path, live_log: Path, recorded_head: st
     secrets = {k: str(v) for k, v in values.items() if k in llm_replay.SECRET_ENV and v}
     entries = llm_replay.load_transcript(transcript)
     assert {k: len(v) for k, v in entries.items()} == summary["counts"], "transcript and live summary disagree"
-    write_fixture(entries, llm_replay.pinned_env_from(values), secrets, summary,
+    case = json.loads((transcript.parent.parent / "case.json").read_text(encoding="utf-8"))
+    write_fixture(entries, llm_replay.pinned_env_from(values), secrets, summary, case,
                   {"tree_head": recorded_head, "tree_dirty": False,
                    "assembled_from": f"{transcript.parent.parent.name}/{transcript.parent.name}/{transcript.name}"})
     return 0

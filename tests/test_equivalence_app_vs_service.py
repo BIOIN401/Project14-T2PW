@@ -1,7 +1,7 @@
 """NEW ACCEPTANCE TEST (R2.5, new capability): the app and the service agree, byte for byte, on one
 recorded case.
 
-Under the recorded fixture ``tests/fixtures/equivalence/heme_ferrochelatase_strict.json.gz`` (LLM, HTTP and
+Under the recorded fixture ``tests/fixtures/equivalence/sour_taste_v2_strict.json.gz`` (LLM, HTTP and
 PathBank DB answers, replayed by ``tests/equivalence/llm_replay.py``; every non-loopback socket refused)
 and the offline flags (``T2PW_OFFLINE_CURATOR=1``, ``T2PW_SPECIES_LLM=0``, ``T2PW_SPECIES_NCBI=0``):
 
@@ -14,15 +14,14 @@ and the offline flags (``T2PW_OFFLINE_CURATOR=1``, ``T2PW_SPECIES_LLM=0``, ``T2P
     payload the app reached, gives the same canonical hash and payload, the same export verdict and the
     same PWML bytes as the app. Nothing is normalised.
 
-KNOWN RED (R2.5 needs-decision, see docs/webserver/results/R2.5.md). The committed fixture is one complete
-live run (attempt 2), and it does not yet support (a)-(c):
-1. its case names no organism, so strict export refuses it ("Unknown species"): there are no PWML bytes, and
-   ``test_pwml_bytes_are_produced_and_equal_in_all_three_arms`` SKIPS rather than passing vacuously;
-2. the post-pipeline audit loop stops on WALL-CLOCK time (``audit_timeout_seconds``, default 240 s): the
-   live run timed out after audit round 1, while a replay is fast and starts round 2, whose requests were
-   never recorded. So the replay-fidelity tests fail with the unrecorded audit requests listed.
-Both need a re-record the orchestrator has to authorise (open questions 1 and 2). The assertions are
-already in place for it.
+The case is a full open-access paper, pinned with scope (``harness.TOPIC_LINE``, from
+docs/evaluation_v2/paper_runs_orch755/topics/sour_taste_v2.txt), with committed evidence that strict mode
+exports a PWML from it (ORCH-767-RESULT.md; tests/fixtures/orch768). No short text has such evidence.
+
+NON-DEFAULT SETTING: the app runs with the sidebar's "Audit repair timeout" at 1800 s (its maximum), not 240 s,
+in recording and replay alike (``harness.AUDIT_TIMEOUT_SECONDS``). The post-pipeline audit loop branches on
+wall-clock time against that budget, so at 240 s the round it stops at depends on live LLM latency and no
+replay can follow it (docs/webserver/results/R2.5.md sec. 8).
 
 Each arm has its own project root, output dir and empty caches (``tests/equivalence/harness.py``).
 From R3, arm (c) starts from the text instead (see ``run_service_arm``'s TODO).
@@ -61,8 +60,15 @@ SECRET_PATTERNS = {
 }
 
 
-def _secret_hits(text: str) -> dict:
-    return {name: pattern.findall(text)[:3] for name, pattern in SECRET_PATTERNS.items() if pattern.search(text)}
+def _secret_hits(text: str, public: frozenset = frozenset()) -> dict:
+    """Pattern hits, minus strings in ``public`` (e-mail addresses printed in the source paper itself)."""
+
+    hits = {}
+    for name, pattern in SECRET_PATTERNS.items():
+        found = [m.group(0) for m in pattern.finditer(text) if m.group(0) not in public]
+        if found:
+            hits[name] = found[:3]
+    return hits
 
 
 @pytest.fixture(scope="module")
@@ -73,8 +79,9 @@ def arms(tmp_path_factory):
         harness.replay_env(mp, fixture)
         before = harness.checkout_state()
         base = tmp_path_factory.mktemp("equivalence")
-        app1 = harness.run_app_arm(base / "app1", llm_replay.Cassette("replay", fixture["entries"]), APP_TIMEOUT)
-        app2 = harness.run_app_arm(base / "app2", llm_replay.Cassette("replay", fixture["entries"]), APP_TIMEOUT)
+        case = fixture["case"]
+        app1 = harness.run_app_arm(base / "app1", llm_replay.Cassette("replay", fixture["entries"]), APP_TIMEOUT, case)
+        app2 = harness.run_app_arm(base / "app2", llm_replay.Cassette("replay", fixture["entries"]), APP_TIMEOUT, case)
         service = harness.run_service_arm(app1, base / "service", llm_replay.Cassette("replay", fixture["entries"]))
         after = harness.checkout_state()
         yield {"fixture": fixture, "app1": app1, "app2": app2, "service": service, "before": before, "after": after}
@@ -84,7 +91,11 @@ def arms(tmp_path_factory):
 
 def test_fixture_holds_no_secrets():
     text = gzip.decompress(harness.FIXTURE.read_bytes()).decode("utf-8")
-    assert _secret_hits(text) == {}
+    # The case is a published open-access paper: an address printed in it (a corresponding author's) is public
+    # paper text, carried into every prompt. Only those exact strings are exempt; any other address fails.
+    paper = harness.load_fixture()["case"]["full_text"]
+    public = frozenset(m.group(0) for m in SECRET_PATTERNS["email address"].finditer(paper))
+    assert _secret_hits(text, public) == {}
     # The scan bites: each shape is caught when present.
     planted = ('"sk-or-' + 'v1-0123456789abcdef" "Authorization" Bearer abcdefghijkl a.b@example.org '
                'PATHBANK_DB_PASSWORD "password": api_key=XYZ12345 "set-cookie" X-Title')
@@ -149,11 +160,11 @@ def test_c_service_post_pipeline_equals_the_app(arms):
 
 
 def test_pwml_bytes_are_produced_and_equal_in_all_three_arms(arms):
-    if not arms["fixture"]["recorded"]["pwml_bytes"]:
-        pytest.skip("the fixture's case is refused by strict export (Unknown species), so no PWML bytes exist "
-                    "to compare: PWML byte equality is NOT proven by this fixture (R2.5 open question 1)")
+    # Not skippable: a fixture whose case writes no PWML cannot prove byte equality, so it fails here.
+    assert arms["fixture"]["recorded"]["pwml_bytes"] > 0, "the fixture's case wrote no PWML"
     xml = arms["app1"]["xml"]
     assert xml and arms["app2"]["xml"] == xml and arms["service"]["xml"] == xml
+    assert harness.sha256(xml) == arms["fixture"]["recorded"]["pwml_sha256"]
 
 
 def test_isolation_left_the_checkout_untouched(arms):
