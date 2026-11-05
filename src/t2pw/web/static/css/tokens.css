@@ -1,0 +1,171 @@
+/* T2PW design tokens (W5).
+ *
+ * Theme-independent tokens live in the first :root block. Colour and shadow
+ * tokens live in the three theme blocks below, which must define the same
+ * token set (tests/test_web_design_system.py checks it):
+ *
+ *   1. light            :root, [data-theme="light"]
+ *   2. dark (system)    @media (prefers-color-scheme: dark) :root:not([data-theme="light"])
+ *   3. dark (override)  [data-theme="dark"]
+ *
+ * Blocks 2 and 3 must be identical; CSS cannot share one rule between a media
+ * query and a plain selector. Manual override hook: put data-theme="light" or
+ * data-theme="dark" on <html> (or on any element, to theme only that subtree).
+ * Colour values are #rrggbb so the test can check WCAG AA contrast.
+ */
+
+:root {
+  /* Type */
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "Cascadia Mono", "Segoe UI Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  --leading-tight: 1.25;
+  --leading-normal: 1.55;
+  --weight-normal: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* Spacing (4 px base) */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+
+  /* Radii */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+  --radius-pill: 999px;
+
+  /* Layout */
+  --container-max: 72rem;
+  --measure: 68ch;
+  --focus-width: 3px;
+  --duration-fast: 120ms;
+}
+
+/* 1. Light */
+:root,
+[data-theme="light"] {
+  color-scheme: light;
+  --color-bg: #f6f7f9;
+  --color-surface: #ffffff;
+  --color-surface-muted: #eef1f4;
+  --color-border: #d5dbe1;
+  --color-border-strong: #7b8794;
+  --color-text: #18212b;
+  --color-text-muted: #4a5663;
+  --color-primary: #0b5f7f;
+  --color-primary-hover: #084a63;
+  --color-primary-subtle: #e3f1f6;
+  --color-on-primary: #ffffff;
+  --color-focus: #1a6fd8;
+  --color-danger: #b42318;
+  --color-danger-hover: #912018;
+  --color-on-danger: #ffffff;
+  --color-neutral-fg: #3f4a56;
+  --color-neutral-bg: #eceff3;
+  --color-neutral-border: #c9d0d8;
+  --color-info-fg: #0b4f8a;
+  --color-info-bg: #e6f0fa;
+  --color-info-border: #a9c8ea;
+  --color-success-fg: #1d5e2e;
+  --color-success-bg: #e5f3e8;
+  --color-success-border: #a7d3b2;
+  --color-warning-fg: #7a4a00;
+  --color-warning-bg: #fdf3dc;
+  --color-warning-border: #ebc77a;
+  --color-error-fg: #a1221b;
+  --color-error-bg: #fbe9e7;
+  --color-error-border: #eeb1aa;
+  --shadow-sm: 0 1px 2px rgb(16 24 40 / 0.06), 0 1px 3px rgb(16 24 40 / 0.1);
+  --shadow-md: 0 4px 12px rgb(16 24 40 / 0.08), 0 2px 4px rgb(16 24 40 / 0.06);
+}
+
+/* 2. Dark, from the system setting (keep identical to block 3) */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --color-bg: #0e1318;
+    --color-surface: #151b22;
+    --color-surface-muted: #1c242d;
+    --color-border: #2a343f;
+    --color-border-strong: #6c7a89;
+    --color-text: #e4e9ee;
+    --color-text-muted: #a3afbc;
+    --color-primary: #5bb8d6;
+    --color-primary-hover: #84cbe2;
+    --color-primary-subtle: #12313d;
+    --color-on-primary: #06212c;
+    --color-focus: #8ab4ff;
+    --color-danger: #c9372c;
+    --color-danger-hover: #a82c23;
+    --color-on-danger: #ffffff;
+    --color-neutral-fg: #c3ccd5;
+    --color-neutral-bg: #232c36;
+    --color-neutral-border: #3a4652;
+    --color-info-fg: #9cc8f5;
+    --color-info-bg: #10263b;
+    --color-info-border: #24496b;
+    --color-success-fg: #94d3a5;
+    --color-success-bg: #0f2a19;
+    --color-success-border: #24553a;
+    --color-warning-fg: #f2c46b;
+    --color-warning-bg: #2e2210;
+    --color-warning-border: #5c4518;
+    --color-error-fg: #f5a39b;
+    --color-error-bg: #34140f;
+    --color-error-border: #6b2a22;
+    --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.5);
+    --shadow-md: 0 6px 16px rgb(0 0 0 / 0.45), 0 2px 4px rgb(0 0 0 / 0.4);
+  }
+}
+
+/* 3. Dark, manual override (keep identical to block 2) */
+[data-theme="dark"] {
+  color-scheme: dark;
+  --color-bg: #0e1318;
+  --color-surface: #151b22;
+  --color-surface-muted: #1c242d;
+  --color-border: #2a343f;
+  --color-border-strong: #6c7a89;
+  --color-text: #e4e9ee;
+  --color-text-muted: #a3afbc;
+  --color-primary: #5bb8d6;
+  --color-primary-hover: #84cbe2;
+  --color-primary-subtle: #12313d;
+  --color-on-primary: #06212c;
+  --color-focus: #8ab4ff;
+  --color-danger: #c9372c;
+  --color-danger-hover: #a82c23;
+  --color-on-danger: #ffffff;
+  --color-neutral-fg: #c3ccd5;
+  --color-neutral-bg: #232c36;
+  --color-neutral-border: #3a4652;
+  --color-info-fg: #9cc8f5;
+  --color-info-bg: #10263b;
+  --color-info-border: #24496b;
+  --color-success-fg: #94d3a5;
+  --color-success-bg: #0f2a19;
+  --color-success-border: #24553a;
+  --color-warning-fg: #f2c46b;
+  --color-warning-bg: #2e2210;
+  --color-warning-border: #5c4518;
+  --color-error-fg: #f5a39b;
+  --color-error-bg: #34140f;
+  --color-error-border: #6b2a22;
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.5);
+  --shadow-md: 0 6px 16px rgb(0 0 0 / 0.45), 0 2px 4px rgb(0 0 0 / 0.4);
+}

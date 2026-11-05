@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+{% import "macros/components.html" as c %}
+{#- W5 styleguide: every component, rendered side by side in the light and the
+    dark theme (via the data-theme hook). Copy here is placeholder; real page
+    copy belongs to W6. -#}
+
+{% block title %}Styleguide{% endblock %}
+
+{% block head %}
+<style>
+  .sg-themes { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-5); }
+  @media (min-width: 70rem) { .sg-themes { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .sg-panel { min-width: 0; padding: var(--space-5); border: 1px solid var(--color-border); border-radius: var(--radius-lg); }
+  .sg-panel > h2 { padding-bottom: var(--space-3); border-bottom: 1px solid var(--color-border); }
+  .sg-section { margin-top: var(--space-6); }
+  .sg-section > h3 { font-size: var(--text-lg); margin-bottom: var(--space-4); }
+  .sg-swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr)); gap: var(--space-2); list-style: none; padding: 0; }
+  .sg-swatch { display: flex; align-items: center; gap: var(--space-2); font-size: var(--text-xs); font-family: var(--font-mono); }
+  .sg-chip { flex: none; width: 1.5rem; height: 1.5rem; border-radius: var(--radius-sm); border: 1px solid var(--color-border-strong); }
+  .sg-type p { margin-bottom: var(--space-2); line-height: var(--leading-tight); }
+  .sg-row { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; margin-bottom: var(--space-4); }
+  .container { max-width: 96rem; }
+</style>
+{% endblock %}
+
+{% macro specimens(p) %}
+{%- set colour_tokens = [
+  "bg", "surface", "surface-muted", "border", "border-strong", "text", "text-muted",
+  "primary", "primary-hover", "primary-subtle", "on-primary", "focus",
+  "danger", "danger-hover", "on-danger",
+  "neutral-fg", "neutral-bg", "neutral-border",
+  "info-fg", "info-bg", "info-border",
+  "success-fg", "success-bg", "success-border",
+  "warning-fg", "warning-bg", "warning-border",
+  "error-fg", "error-bg", "error-border",
+] %}
+
+<div class="sg-section">
+  <h3>Colour tokens</h3>
+  <ul class="sg-swatches">
+    {%- for t in colour_tokens %}
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-{{ t }})"></span>{{ t }}</li>
+    {%- endfor %}
+  </ul>
+</div>
+
+<div class="sg-section sg-type">
+  <h3>Type scale</h3>
+  <p style="font-size: var(--text-4xl)">4xl Heading</p>
+  <p style="font-size: var(--text-3xl)">3xl Heading</p>
+  <p style="font-size: var(--text-2xl)">2xl Heading</p>
+  <p style="font-size: var(--text-xl)">xl Heading</p>
+  <p style="font-size: var(--text-lg)">lg Lead text</p>
+  <p style="font-size: var(--text-base)">base Body text, placeholder sentence.</p>
+  <p style="font-size: var(--text-sm)" class="muted">sm Secondary text</p>
+  <p style="font-size: var(--text-xs)" class="muted">xs Fine print</p>
+  <p>Body with a <a href="#">text link</a> and inline <code>code</code>.</p>
+  <pre><code>&lt;example&gt;preformatted block&lt;/example&gt;</code></pre>
+</div>
+
+<div class="sg-section">
+  <h3>Buttons</h3>
+  <div class="btn-row">
+    {{ c.button("Primary", type="submit") }}
+    {{ c.button("Secondary", variant="secondary") }}
+    {{ c.button("Ghost", variant="ghost") }}
+    {{ c.button("Danger", variant="danger") }}
+  </div>
+  <div class="btn-row" style="margin-top: var(--space-3)">
+    {{ c.button("Small", size="sm") }}
+    {{ c.button("Small secondary", variant="secondary", size="sm") }}
+    {{ c.button("Link button", variant="secondary", href="#") }}
+    {{ c.button("Disabled", disabled=True) }}
+  </div>
+</div>
+
+<div class="sg-section">
+  <h3>Form fields</h3>
+  {{ c.radio_group(p ~ "-mode", "Input mode", [("a", "Option A"), ("b", "Option B"), ("c", "Option C")], selected="a", id=p ~ "-mode", hint="Radio group in a fieldset.") }}
+  {{ c.text_field("name", "Text field", id=p ~ "-name", hint="Hint text sits under the label.", required=True, placeholder="Placeholder") }}
+  {{ c.text_field("email", "Email field", type="email", id=p ~ "-email", autocomplete="email") }}
+  {{ c.text_field("bad", "Field with an error", value="invalid value", id=p ~ "-bad", error="Error message explaining how to fix the value.") }}
+  {{ c.textarea_field("ids", "Textarea", id=p ~ "-ids", rows=3, hint="Multi-line input.") }}
+  {{ c.select_field("pick", "Select", ["First option", "Second option", "Third option"], id=p ~ "-pick", placeholder="Choose one") }}
+  {{ c.checkbox_field("agree", "Checkbox, checked by default", checked=True, id=p ~ "-agree", hint="One line of explanation for the checkbox.") }}
+  {{ c.file_field("files", "File upload", accept=".pdf", multiple=True, id=p ~ "-files", hint="Accepts multiple files.") }}
+</div>
+
+<div class="sg-section">
+  <h3>Status badges</h3>
+  <div class="sg-row">
+    {{ c.status_badge("queued") }}
+    {{ c.status_badge("running") }}
+    {{ c.status_badge("done") }}
+    {{ c.status_badge("failed") }}
+    {{ c.status_badge("review_required") }}
+  </div>
+</div>
+
+<div class="sg-section">
+  <h3>Step indicator</h3>
+  {{ c.steps([
+    {"label": "input", "state": "done"},
+    {"label": "stage1", "state": "done", "detail": "Example detail line"},
+    {"label": "post_pipeline", "state": "current", "detail": "Example detail line"},
+    {"label": "pwml_export", "state": "pending"},
+  ], label="Example progress") }}
+  {{ c.steps([
+    {"label": "Step one", "state": "done"},
+    {"label": "Step two", "state": "failed", "detail": "Failed state"},
+    {"label": "Step three", "state": "skipped", "detail": "Skipped state"},
+  ], label="Example progress with a failure") }}
+</div>
+
+<div class="sg-section">
+  <h3>Alerts</h3>
+  {% call c.alert("info", title="Information") %}<p>Neutral placeholder text for an informational message.</p>{% endcall %}
+  {% call c.alert("warning", title="Warning") %}<p>Neutral placeholder text for a warning.</p>{% endcall %}
+  {% call c.alert("error", title="Error") %}<p>Neutral placeholder text for an error.</p>{% endcall %}
+  {% call c.alert("info") %}<p>An alert without a title.</p>{% endcall %}
+</div>
+
+<div class="sg-section">
+  <h3>Card</h3>
+  {% call c.card("Card title", heading_level=4) %}
+    <p>Card body with placeholder text.</p>
+    {{ c.button("Action", variant="secondary", size="sm") }}
+  {% endcall %}
+  {% call c.card(raised=True) %}<p>Raised card without a header.</p>{% endcall %}
+</div>
+
+<div class="sg-section">
+  <h3>Table</h3>
+  {{ c.data_table(["Item", "Status", "Identifier"], [
+    ["Row one", c.status_badge("done"), c.chip("ID:0001", kind="accession")],
+    ["Row two", c.status_badge("review_required"), c.chip("ID:0002", kind="accession")],
+    ["Row three", c.status_badge("failed"), "—"],
+  ], caption="Example table") }}
+</div>
+
+<div class="sg-section">
+  <h3>Download links</h3>
+  <div class="sg-row">
+    {{ c.download_link("#", "Download file", filename="example.pwml", meta="PWML · size") }}
+    {{ c.download_link("#", "Download report", meta="JSON") }}
+  </div>
+</div>
+
+<div class="sg-section">
+  <h3>Code and accession chips</h3>
+  <div class="sg-row">
+    {{ c.chip("example_code") }}
+    {{ c.chip("ID:0001", kind="accession") }}
+    {{ c.chip("ID:0002", kind="accession", href="#", title="Linked accession") }}
+  </div>
+</div>
+{% endmacro %}
+
+{% block content %}
+<h1>Design system</h1>
+<p class="muted">Every W5 component in the light and the dark theme. The page chrome follows
+the system setting or the <code>data-theme</code> override on <code>&lt;html&gt;</code>; each
+panel below forces its own theme.</p>
+<div class="sg-themes">
+  <section class="sg-panel" data-theme="light" aria-labelledby="sg-light">
+    <h2 id="sg-light">Light theme</h2>
+    {{ specimens("light") }}
+  </section>
+  <section class="sg-panel" data-theme="dark" aria-labelledby="sg-dark">
+    <h2 id="sg-dark">Dark theme</h2>
+    {{ specimens("dark") }}
+  </section>
+</div>
+{% endblock %}
