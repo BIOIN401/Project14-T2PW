@@ -1,0 +1,213 @@
+{
+  "label": "br-fix1-batch-run",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-BR",
+    "--pin-verdict",
+    "docs/webserver/evidence/BR/pin/04-fix1-batch-run.pin.json",
+    "-q",
+    "--basetemp=C:/t/wsBRtmp/f04",
+    "tests/test_batch_run.py"
+  ],
+  "cwd": "C:\\t\\ws-BR",
+  "started_at": "2026-11-05T21:47:08+00:00",
+  "finished_at": "2026-11-05T21:47:19+00:00",
+  "duration_seconds": 10.483294099998602,
+  "timeout_seconds": 590.0,
+  "root_pid": 583112,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 579024,
+      "name": "python.exe",
+      "ppid": 583112
+    },
+    {
+      "pid": 583024,
+      "name": "python.exe",
+      "ppid": 583044
+    },
+    {
+      "pid": 583044,
+      "name": "python.exe",
+      "ppid": 579024
+    },
+    {
+      "pid": 583304,
+      "name": "taskkill.exe",
+      "ppid": 579024
+    },
+    {
+      "pid": 584552,
+      "name": "python.exe",
+      "ppid": 579024
+    },
+    {
+      "pid": 584684,
+      "name": "python.exe",
+      "ppid": 584552
+    },
+    {
+      "pid": 578928,
+      "name": "python.exe",
+      "ppid": 579024
+    },
+    {
+      "pid": 583364,
+      "name": "python.exe",
+      "ppid": 578928
+    },
+    {
+      "pid": 581964,
+      "name": "python.exe",
+      "ppid": 579024
+    },
+    {
+      "pid": 576780,
+      "name": "python.exe",
+      "ppid": 581964
+    },
+    {
+      "pid": 584220,
+      "name": "python.exe",
+      "ppid": 579024
+    },
+    {
+      "pid": 584240,
+      "name": "python.exe",
+      "ppid": 584220
+    },
+    {
+      "pid": 583028,
+      "name": "python.exe",
+      "ppid": 579024
+    },
+    {
+      "pid": 580784,
+      "name": "python.exe",
+      "ppid": 583028
+    },
+    {
+      "pid": 564288,
+      "name": "python.exe",
+      "ppid": 579024
+    },
+    {
+      "pid": 581972,
+      "name": "python.exe",
+      "ppid": 564288
+    },
+    {
+      "pid": 583980,
+      "name": "python.exe",
+      "ppid": 584280
+    },
+    {
+      "pid": 584280,
+      "name": "python.exe",
+      "ppid": 579024
+    }
+  ],
+  "descendants_terminated": [
+    564288,
+    576780,
+    578928,
+    579024,
+    580784,
+    581964,
+    581972,
+    583024,
+    583028,
+    583044,
+    583304,
+    583364,
+    583980,
+    584220,
+    584240,
+    584280,
+    584552,
+    584684
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 442728,
+      "name": "python.exe"
+    },
+    {
+      "pid": 460520,
+      "name": "python.exe"
+    },
+    {
+      "pid": 496044,
+      "name": "python.exe"
+    },
+    {
+      "pid": 496252,
+      "name": "python.exe"
+    },
+    {
+      "pid": 564744,
+      "name": "python.exe"
+    },
+    {
+      "pid": 566984,
+      "name": "python.exe"
+    },
+    {
+      "pid": 573432,
+      "name": "python.exe"
+    },
+    {
+      "pid": 579184,
+      "name": "python.exe"
+    },
+    {
+      "pid": 581732,
+      "name": "python.exe"
+    },
+    {
+      "pid": 582108,
+      "name": "python.exe"
+    },
+    {
+      "pid": 582428,
+      "name": "python.exe"
+    },
+    {
+      "pid": 584356,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/webserver/evidence/BR/04-fix1-batch-run.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-BR\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-BR",
+    "repo_head": "e4c312761a4201f2f64f5c928cddb28b4fdf9628",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

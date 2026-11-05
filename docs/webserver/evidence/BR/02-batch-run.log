@@ -1,0 +1,29 @@
+T2PW: C:\t\ws-BR\src\t2pw\__init__.py
+.................................................................        [100%]
+65 passed in 10.98s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-BR\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 1f24168441a9e4733c617959506363195be4a5ad  [git, worktree dirty=False]
+label                   : br-batch-run
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-BR --pin-verdict docs/webserver/evidence/BR/pin/02-batch-run.pin.json -q --basetemp=C:/t/wsBRtmp/f02 tests/test_batch_run.py
+cwd                     : C:\t\ws-BR
+root PID / process group: 539656 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 590 s
+duration                : 11.83 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 18  538840:python.exe, 537324:python.exe, 535460:python.exe, 540944:taskkill.exe, 537336:python.exe, 533024:python.exe, 541464:python.exe, 541488:python.exe, 537320:python.exe, 541596:python.exe, 541580:python.exe, 541616:python.exe, 541152:python.exe, 540924:python.exe, 533656:python.exe, 541284:python.exe, 533016:python.exe, 540008:python.exe
+descendants terminated  : 18  533016, 533024, 533656, 535460, 537320, 537324, 537336, 538840, 540008, 540924, 540944, 541152, 541284, 541464, 541488, 541580, 541596, 541616
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : docs/webserver/evidence/BR/02-batch-run.json
+json report written     : True
+pre-existing (reported, NEVER killed): 14
+================================================

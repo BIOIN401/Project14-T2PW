@@ -5,8 +5,8 @@
 {#- One pathway row. Fields for the other input modes are hidden by CSS (:has) and
     simply ignored by the server, so the form also works where :has is unsupported. -#}
 {% macro row_fields(r) %}
-  {{ c.text_field("name_" ~ r.n, "Pathway name", value=r.name,
-        hint="Required for the Pathway name option; optional otherwise (it focuses the extraction).",
+  {{ c.text_field("name_" ~ r.n, "Pathway name", value=r.name, required=(r.n == 1),
+        hint="Required for every option. With PubMed IDs or PDFs it names the pathway the papers describe.",
         error=r.errors.get("name"), placeholder="e.g. glycolysis") }}
   {{ c.text_field("organism_" ~ r.n, "Organism", value=r.organism, required=(r.n == 1),
         hint="Start typing a species name and pick one from the suggestions.",
