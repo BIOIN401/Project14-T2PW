@@ -1,0 +1,132 @@
+{
+  "label": "w6-shot2-results-done",
+  "command": [
+    "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+    "--headless=new",
+    "--disable-gpu",
+    "--hide-scrollbars",
+    "--user-data-dir=C:/t/wsW6tmp/chrome2-results-done",
+    "--force-device-scale-factor=1",
+    "--window-size=1280,1700",
+    "--screenshot=C:/t/wsW6tmp/pages/results-done-raw.png",
+    "file:///C:/t/wsW6tmp/pages/results-done-light.html"
+  ],
+  "cwd": "C:\\t\\ws-W6",
+  "started_at": "2026-11-05T16:47:22+00:00",
+  "finished_at": "2026-11-05T16:47:23+00:00",
+  "duration_seconds": 0.7151672999999903,
+  "timeout_seconds": 120.0,
+  "root_pid": 42228,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 42492,
+      "name": "chrome.exe",
+      "ppid": 42228
+    },
+    {
+      "pid": 40500,
+      "name": "chrome.exe",
+      "ppid": 42228
+    },
+    {
+      "pid": 40892,
+      "name": "chrome.exe",
+      "ppid": 42228
+    },
+    {
+      "pid": 41208,
+      "name": "chrome.exe",
+      "ppid": 42228
+    },
+    {
+      "pid": 41484,
+      "name": "chrome.exe",
+      "ppid": 42228
+    },
+    {
+      "pid": 41568,
+      "name": "chrome.exe",
+      "ppid": 42228
+    },
+    {
+      "pid": 41664,
+      "name": "chrome.exe",
+      "ppid": 42228
+    },
+    {
+      "pid": 41808,
+      "name": "chrome.exe",
+      "ppid": 42228
+    },
+    {
+      "pid": 41968,
+      "name": "chrome.exe",
+      "ppid": 42228
+    },
+    {
+      "pid": 42088,
+      "name": "chrome.exe",
+      "ppid": 42228
+    }
+  ],
+  "descendants_terminated": [
+    40500,
+    40892,
+    41208,
+    41484,
+    41568,
+    41664,
+    41808,
+    41968,
+    42088,
+    42492
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 20528,
+      "name": "python.exe"
+    },
+    {
+      "pid": 25472,
+      "name": "python.exe"
+    },
+    {
+      "pid": 42876,
+      "name": "python.exe"
+    },
+    {
+      "pid": 42888,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/webserver/evidence/W6/shot-results-done.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-W6\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-W6",
+    "repo_head": "7a35ed5d9f1d81a6bb7e03ccf65768256943f0ba",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}
