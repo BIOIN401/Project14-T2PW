@@ -332,16 +332,19 @@ def offline_stages(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Dict[str,
     monkeypatch.setattr(pipeline_module, "build_and_save_draft_graph", _persist)
     monkeypatch.setattr(quarantine, "quarantine_and_close", _quarantine)
     monkeypatch.setattr(map_ids, "map_payload", _map)
-    # R1: ``run_quarantine_boundary`` moved to the service module, which binds
-    # ``quarantine_and_close`` itself, so the patch must reach it there.
-    import importlib
-    postpipeline = importlib.import_module("t2pw.service.postpipeline")
-
-    monkeypatch.setattr(postpipeline, "quarantine_and_close", _quarantine)
-    monkeypatch.setattr(postpipeline, "map_payload", _map)
-    monkeypatch.setattr(postpipeline, "normalize_process_payload", _normalize)
-    monkeypatch.setattr(postpipeline, "run_strict_post_normalization_gates", _gates)
-    return calls
+    # R1: the moved post-pipeline code binds these names in its own module
+    # (``t2pw.service.postpipeline``). If that module is already cached it must be
+    # patched there. If it is not, the app's first import binds the patched source
+    # modules above, and it is dropped again afterwards so the stubs cannot leak.
+    cached = sys.modules.get("t2pw.service.postpipeline")
+    if cached is not None:
+        monkeypatch.setattr(cached, "quarantine_and_close", _quarantine)
+        monkeypatch.setattr(cached, "map_payload", _map)
+        monkeypatch.setattr(cached, "normalize_process_payload", _normalize)
+        monkeypatch.setattr(cached, "run_strict_post_normalization_gates", _gates)
+    yield calls
+    if cached is None:
+        sys.modules.pop("t2pw.service.postpipeline", None)
 
 
 def _rebind(app, calls_source: str = "") -> None:
