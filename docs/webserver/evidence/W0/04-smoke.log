@@ -1,0 +1,2275 @@
+T2PW: C:\t\ws-W0\src\t2pw\__init__.py
+........................................................................ [ 14%]
+........................................................................ [ 28%]
+........................................................................ [ 42%]
+...................................................................EEEEE [ 56%]
+EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE................ [ 70%]
+....EEEEEEEE............................................................ [ 84%]
+........................................................................ [ 98%]
+.......                                                                  [100%]
+=================================== ERRORS ====================================
+_________ ERROR at setup of test_strict_pass_writes_pwml_and_reports __________
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+_____ ERROR at setup of test_strict_fails_when_pwml_export_reports_not_ok _____
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+___ ERROR at setup of test_strict_fails_when_review_step_never_unlocks_pwml ___
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+_ ERROR at setup of test_g9_final_zero_counts_replace_the_stale_stage2_counts _
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+_ ERROR at setup of test_g9_counts_come_from_the_canonical_payload_not_the_pre_quarantine_one _
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+_ ERROR at setup of test_preservation_an_absent_final_payload_keeps_the_stage2_counts _
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+_ ERROR at setup of test_research_pass_builds_citation_report_from_pre_merge_payload _
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+____ ERROR at setup of test_research_without_rag_still_passes_and_says_why ____
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+___ ERROR at setup of test_a_research_run_with_a_report_carries_no_warning ____
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+____ ERROR at setup of test_stage1_error_and_stop_is_a_classified_failure _____
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+_ ERROR at setup of test_stage1_failure_still_lands_its_diagnostics_in_the_leg _
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+__ ERROR at setup of test_diagnostic_artifacts_reach_disk_through_the_runner __
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+_ ERROR at setup of test_a_leg_that_publishes_nothing_gains_no_empty_diagnostic_files _
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+_ ERROR at setup of test_a_hostile_diagnostics_key_cannot_write_outside_the_leg _
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+_________ ERROR at setup of test_network_wording_outranks_llm_wording _________
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+______ ERROR at setup of test_empty_pathway_is_no_reactions_not_unknown _______
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+_____ ERROR at setup of test_paper_without_full_text_never_starts_the_app _____
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+__ ERROR at setup of test_ambiguous_review_scope_is_read_from_pipeline_error __
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+______ ERROR at setup of test_contract_report_issue_codes_are_extracted _______
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+_ ERROR at setup of test_gate_failure_without_codes_gets_groupable_synthetic_codes _
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+_ ERROR at setup of test_missing_post_pipeline_artifacts_reads_the_stage_contract_error _
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+______ ERROR at setup of test_app_script_raising_becomes_a_crash_outcome ______
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+__ ERROR at setup of test_app_raising_on_first_render_is_reported_not_raised __
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+__ ERROR at setup of test_a_hanging_extraction_becomes_a_timeout_not_a_crash __
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+______ ERROR at setup of test_detail_is_capped_and_says_what_was_dropped ______
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+______ ERROR at setup of test_a_short_detail_is_passed_through_untouched ______
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+_______ ERROR at setup of test_missing_app_path_is_reported_not_raised ________
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+_____ ERROR at setup of test_garbage_paper_object_is_reported_not_raised ______
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+_ ERROR at setup of test_unknown_mode_never_silently_relaxes_the_gates[Strict PWML-strict] _
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+_ ERROR at setup of test_unknown_mode_never_silently_relaxes_the_gates[strict-strict] _
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+_ ERROR at setup of test_unknown_mode_never_silently_relaxes_the_gates[pathwhiz-strict] _
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+_ ERROR at setup of test_unknown_mode_never_silently_relaxes_the_gates[-strict] _
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+_ ERROR at setup of test_unknown_mode_never_silently_relaxes_the_gates[None-strict] _
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+_ ERROR at setup of test_unknown_mode_never_silently_relaxes_the_gates[Research (relaxed)-research0] _
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+_ ERROR at setup of test_unknown_mode_never_silently_relaxes_the_gates[research-research] _
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+_ ERROR at setup of test_unknown_mode_never_silently_relaxes_the_gates[Research (relaxed)-research1] _
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+_ ERROR at setup of test_the_paper_topic_is_typed_into_the_unkeyed_focus_box[lipid A biosynthesis-Escherichia coli-lipid A biosynthesis in Escherichia coli] _
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+_ ERROR at setup of test_the_paper_topic_is_typed_into_the_unkeyed_focus_box[menaquinone biosynthesis--menaquinone biosynthesis] _
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+_ ERROR at setup of test_the_paper_topic_is_typed_into_the_unkeyed_focus_box[lipid A biosynthesis in Escherichia coli-Escherichia coli-lipid A biosynthesis in Escherichia coli] _
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+______ ERROR at setup of test_a_pinned_paper_leaves_the_focus_box_empty _______
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+______ ERROR at setup of test_a_missing_focus_box_degrades_to_a_warning _______
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+_ ERROR at setup of test_a_missing_focus_box_is_silent_when_there_was_nothing_to_type _
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+___ ERROR at setup of test_a_nested_runtime_schema_report_never_fails_a_run ___
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+_ ERROR at setup of test_many_schema_findings_are_capped_but_counted_in_full __
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+_ ERROR at setup of test_a_real_contract_error_still_fails_alongside_schema_findings _
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+_ ERROR at setup of test_structural_guard_wording_is_a_contract_failure_with_its_code _
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+_ ERROR at setup of test_every_structural_guard_message_maps_to_its_code[Extraction boundary failed: Payload must be a dict.-invalid_payload] _
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+_ ERROR at setup of test_every_structural_guard_message_maps_to_its_code[Extraction boundary failed: Payload must include an entities object.-entities_required] _
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+_ ERROR at setup of test_every_structural_guard_message_maps_to_its_code[Extraction boundary failed: Entity rows must be objects.-entity_not_object] _
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+_ ERROR at setup of test_every_structural_guard_message_maps_to_its_code[Extraction boundary failed: Process rows must be objects.-process_not_object] _
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+_ ERROR at setup of test_genuine_llm_wording_is_not_reclassified_as_a_contract_failure _
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+__ ERROR at setup of test_dict_and_candidate_paper_shapes_are_both_accepted ___
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+_ ERROR at setup of test_a_contradictory_stage0_pathway_persists_a_scope_conflict _
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+_ ERROR at setup of test_a_contradictory_stage0_organism_alone_is_a_scope_conflict _
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+_____ ERROR at setup of test_a_scope_conflict_is_not_counted_as_a_failure _____
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+_ ERROR at setup of test_an_agreeing_stage0_reading_records_observations_and_runs_on _
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+_ ERROR at setup of test_a_related_species_from_stage0_is_not_a_scope_conflict _
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+_____ ERROR at setup of test_a_pinned_paper_has_no_request_to_contradict ______
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+_ ERROR at setup of test_an_app_that_stores_no_stage0_context_changes_nothing _
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+_____ ERROR at setup of test_the_conflict_can_be_downgraded_to_a_warning ______
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+_ ERROR at setup of test_a_legacy_plan_record_still_supplies_the_requested_scope _
+
+    @pytest.fixture(autouse=True)
+    def real_streamlit():
+        """Guarantee the genuine ``streamlit`` package for the duration of each test.
+    
+        ``tests/test_stage0_scope_fallback.py`` and the two ``test_rag_*`` modules
+        install a ``MagicMock`` as ``sys.modules["streamlit"]`` at *import* time --
+        they must, because ``t2pw.app.streamlit_app`` executes a Streamlit script on
+        import. Pytest imports every test module during collection, so by the time
+        this module's tests run the stub is already in place and ``AppTest`` would be
+        a MagicMock returning MagicMocks: every assertion here would then pass or
+        fail for reasons unrelated to the driver.
+    
+        Whatever was in ``sys.modules`` is restored afterwards, so those modules keep
+        the stub they captured and this file stays invisible to the rest of the suite
+        regardless of collection order.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_batch_driver.py:81: ModuleNotFoundError
+____ ERROR at setup of test_the_driver_files_a_repaired_strict_leg_as_pass ____
+
+    @pytest.fixture
+    def real_streamlit():
+        """The genuine ``streamlit`` package for the duration of one test.
+    
+        Several modules in this suite install a ``MagicMock`` as
+        ``sys.modules["streamlit"]`` at import time -- they must, since importing
+        ``t2pw.app.streamlit_app`` executes a Streamlit script -- and pytest imports
+        every module during collection. Without this fixture the ``AppTest`` below
+        would be a MagicMock returning MagicMocks and every assertion here would pass
+        for the wrong reason.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_stage3_gate_report_lifecycle.py:112: ModuleNotFoundError
+_ ERROR at setup of test_the_driver_still_fails_a_strict_leg_whose_final_payload_fails _
+
+    @pytest.fixture
+    def real_streamlit():
+        """The genuine ``streamlit`` package for the duration of one test.
+    
+        Several modules in this suite install a ``MagicMock`` as
+        ``sys.modules["streamlit"]`` at import time -- they must, since importing
+        ``t2pw.app.streamlit_app`` executes a Streamlit script -- and pytest imports
+        every module during collection. Without this fixture the ``AppTest`` below
+        would be a MagicMock returning MagicMocks and every assertion here would pass
+        for the wrong reason.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_stage3_gate_report_lifecycle.py:112: ModuleNotFoundError
+_ ERROR at setup of test_the_driver_fails_closed_when_a_current_run_has_no_final_report _
+
+    @pytest.fixture
+    def real_streamlit():
+        """The genuine ``streamlit`` package for the duration of one test.
+    
+        Several modules in this suite install a ``MagicMock`` as
+        ``sys.modules["streamlit"]`` at import time -- they must, since importing
+        ``t2pw.app.streamlit_app`` executes a Streamlit script -- and pytest imports
+        every module during collection. Without this fixture the ``AppTest`` below
+        would be a MagicMock returning MagicMocks and every assertion here would pass
+        for the wrong reason.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_stage3_gate_report_lifecycle.py:112: ModuleNotFoundError
+__ ERROR at setup of test_the_driver_fails_closed_on_a_payload_hash_mismatch __
+
+    @pytest.fixture
+    def real_streamlit():
+        """The genuine ``streamlit`` package for the duration of one test.
+    
+        Several modules in this suite install a ``MagicMock`` as
+        ``sys.modules["streamlit"]`` at import time -- they must, since importing
+        ``t2pw.app.streamlit_app`` executes a Streamlit script -- and pytest imports
+        every module during collection. Without this fixture the ``AppTest`` below
+        would be a MagicMock returning MagicMocks and every assertion here would pass
+        for the wrong reason.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_stage3_gate_report_lifecycle.py:112: ModuleNotFoundError
+_ ERROR at setup of test_the_driver_reports_one_blocking_issue_for_one_row_seen_twice _
+
+    @pytest.fixture
+    def real_streamlit():
+        """The genuine ``streamlit`` package for the duration of one test.
+    
+        Several modules in this suite install a ``MagicMock`` as
+        ``sys.modules["streamlit"]`` at import time -- they must, since importing
+        ``t2pw.app.streamlit_app`` executes a Streamlit script -- and pytest imports
+        every module during collection. Without this fixture the ``AppTest`` below
+        would be a MagicMock returning MagicMocks and every assertion here would pass
+        for the wrong reason.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_stage3_gate_report_lifecycle.py:112: ModuleNotFoundError
+_ ERROR at setup of test_research_mode_continues_past_a_failing_gate_without_rewriting_it _
+
+    @pytest.fixture
+    def real_streamlit():
+        """The genuine ``streamlit`` package for the duration of one test.
+    
+        Several modules in this suite install a ``MagicMock`` as
+        ``sys.modules["streamlit"]`` at import time -- they must, since importing
+        ``t2pw.app.streamlit_app`` executes a Streamlit script -- and pytest imports
+        every module during collection. Without this fixture the ``AppTest`` below
+        would be a MagicMock returning MagicMocks and every assertion here would pass
+        for the wrong reason.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_stage3_gate_report_lifecycle.py:112: ModuleNotFoundError
+_ ERROR at setup of test_the_initial_failure_reaches_the_run_directory_under_a_historical_name _
+
+    @pytest.fixture
+    def real_streamlit():
+        """The genuine ``streamlit`` package for the duration of one test.
+    
+        Several modules in this suite install a ``MagicMock`` as
+        ``sys.modules["streamlit"]`` at import time -- they must, since importing
+        ``t2pw.app.streamlit_app`` executes a Streamlit script -- and pytest imports
+        every module during collection. Without this fixture the ``AppTest`` below
+        would be a MagicMock returning MagicMocks and every assertion here would pass
+        for the wrong reason.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_stage3_gate_report_lifecycle.py:112: ModuleNotFoundError
+______ ERROR at setup of test_final_mapped_json_is_the_canonical_payload ______
+
+    @pytest.fixture
+    def real_streamlit():
+        """The genuine ``streamlit`` package for the duration of one test.
+    
+        Several modules in this suite install a ``MagicMock`` as
+        ``sys.modules["streamlit"]`` at import time -- they must, since importing
+        ``t2pw.app.streamlit_app`` executes a Streamlit script -- and pytest imports
+        every module during collection. Without this fixture the ``AppTest`` below
+        would be a MagicMock returning MagicMocks and every assertion here would pass
+        for the wrong reason.
+        """
+    
+        def _streamlit_keys():
+            return [n for n in list(sys.modules) if n == "streamlit" or n.startswith("streamlit.")]
+    
+        saved = {name: sys.modules[name] for name in _streamlit_keys()}
+        stubbed = not _is_real_streamlit(sys.modules.get("streamlit"))
+        if stubbed:
+            for name in saved:
+                del sys.modules[name]
+>       import streamlit  # noqa: F401,PLC0415
+        ^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'streamlit'
+
+tests\test_stage3_gate_report_lifecycle.py:112: ModuleNotFoundError
+=========================== short test summary info ===========================
+ERROR tests/test_batch_driver.py::test_strict_pass_writes_pwml_and_reports - ...
+ERROR tests/test_batch_driver.py::test_strict_fails_when_pwml_export_reports_not_ok
+ERROR tests/test_batch_driver.py::test_strict_fails_when_review_step_never_unlocks_pwml
+ERROR tests/test_batch_driver.py::test_g9_final_zero_counts_replace_the_stale_stage2_counts
+ERROR tests/test_batch_driver.py::test_g9_counts_come_from_the_canonical_payload_not_the_pre_quarantine_one
+ERROR tests/test_batch_driver.py::test_preservation_an_absent_final_payload_keeps_the_stage2_counts
+ERROR tests/test_batch_driver.py::test_research_pass_builds_citation_report_from_pre_merge_payload
+ERROR tests/test_batch_driver.py::test_research_without_rag_still_passes_and_says_why
+ERROR tests/test_batch_driver.py::test_a_research_run_with_a_report_carries_no_warning
+ERROR tests/test_batch_driver.py::test_stage1_error_and_stop_is_a_classified_failure
+ERROR tests/test_batch_driver.py::test_stage1_failure_still_lands_its_diagnostics_in_the_leg
+ERROR tests/test_batch_driver.py::test_diagnostic_artifacts_reach_disk_through_the_runner
+ERROR tests/test_batch_driver.py::test_a_leg_that_publishes_nothing_gains_no_empty_diagnostic_files
+ERROR tests/test_batch_driver.py::test_a_hostile_diagnostics_key_cannot_write_outside_the_leg
+ERROR tests/test_batch_driver.py::test_network_wording_outranks_llm_wording
+ERROR tests/test_batch_driver.py::test_empty_pathway_is_no_reactions_not_unknown
+ERROR tests/test_batch_driver.py::test_paper_without_full_text_never_starts_the_app
+ERROR tests/test_batch_driver.py::test_ambiguous_review_scope_is_read_from_pipeline_error
+ERROR tests/test_batch_driver.py::test_contract_report_issue_codes_are_extracted
+ERROR tests/test_batch_driver.py::test_gate_failure_without_codes_gets_groupable_synthetic_codes
+ERROR tests/test_batch_driver.py::test_missing_post_pipeline_artifacts_reads_the_stage_contract_error
+ERROR tests/test_batch_driver.py::test_app_script_raising_becomes_a_crash_outcome
+ERROR tests/test_batch_driver.py::test_app_raising_on_first_render_is_reported_not_raised
+ERROR tests/test_batch_driver.py::test_a_hanging_extraction_becomes_a_timeout_not_a_crash
+ERROR tests/test_batch_driver.py::test_detail_is_capped_and_says_what_was_dropped
+ERROR tests/test_batch_driver.py::test_a_short_detail_is_passed_through_untouched
+ERROR tests/test_batch_driver.py::test_missing_app_path_is_reported_not_raised
+ERROR tests/test_batch_driver.py::test_garbage_paper_object_is_reported_not_raised
+ERROR tests/test_batch_driver.py::test_unknown_mode_never_silently_relaxes_the_gates[Strict PWML-strict]
+ERROR tests/test_batch_driver.py::test_unknown_mode_never_silently_relaxes_the_gates[strict-strict]
+ERROR tests/test_batch_driver.py::test_unknown_mode_never_silently_relaxes_the_gates[pathwhiz-strict]
+ERROR tests/test_batch_driver.py::test_unknown_mode_never_silently_relaxes_the_gates[-strict]
+ERROR tests/test_batch_driver.py::test_unknown_mode_never_silently_relaxes_the_gates[None-strict]
+ERROR tests/test_batch_driver.py::test_unknown_mode_never_silently_relaxes_the_gates[Research (relaxed)-research0]
+ERROR tests/test_batch_driver.py::test_unknown_mode_never_silently_relaxes_the_gates[research-research]
+ERROR tests/test_batch_driver.py::test_unknown_mode_never_silently_relaxes_the_gates[Research (relaxed)-research1]
+ERROR tests/test_batch_driver.py::test_the_paper_topic_is_typed_into_the_unkeyed_focus_box[lipid A biosynthesis-Escherichia coli-lipid A biosynthesis in Escherichia coli]
+ERROR tests/test_batch_driver.py::test_the_paper_topic_is_typed_into_the_unkeyed_focus_box[menaquinone biosynthesis--menaquinone biosynthesis]
+ERROR tests/test_batch_driver.py::test_the_paper_topic_is_typed_into_the_unkeyed_focus_box[lipid A biosynthesis in Escherichia coli-Escherichia coli-lipid A biosynthesis in Escherichia coli]
+ERROR tests/test_batch_driver.py::test_a_pinned_paper_leaves_the_focus_box_empty
+ERROR tests/test_batch_driver.py::test_a_missing_focus_box_degrades_to_a_warning
+ERROR tests/test_batch_driver.py::test_a_missing_focus_box_is_silent_when_there_was_nothing_to_type
+ERROR tests/test_batch_driver.py::test_a_nested_runtime_schema_report_never_fails_a_run
+ERROR tests/test_batch_driver.py::test_many_schema_findings_are_capped_but_counted_in_full
+ERROR tests/test_batch_driver.py::test_a_real_contract_error_still_fails_alongside_schema_findings
+ERROR tests/test_batch_driver.py::test_structural_guard_wording_is_a_contract_failure_with_its_code
+ERROR tests/test_batch_driver.py::test_every_structural_guard_message_maps_to_its_code[Extraction boundary failed: Payload must be a dict.-invalid_payload]
+ERROR tests/test_batch_driver.py::test_every_structural_guard_message_maps_to_its_code[Extraction boundary failed: Payload must include an entities object.-entities_required]
+ERROR tests/test_batch_driver.py::test_every_structural_guard_message_maps_to_its_code[Extraction boundary failed: Entity rows must be objects.-entity_not_object]
+ERROR tests/test_batch_driver.py::test_every_structural_guard_message_maps_to_its_code[Extraction boundary failed: Process rows must be objects.-process_not_object]
+ERROR tests/test_batch_driver.py::test_genuine_llm_wording_is_not_reclassified_as_a_contract_failure
+ERROR tests/test_batch_driver.py::test_dict_and_candidate_paper_shapes_are_both_accepted
+ERROR tests/test_batch_driver.py::test_a_contradictory_stage0_pathway_persists_a_scope_conflict
+ERROR tests/test_batch_driver.py::test_a_contradictory_stage0_organism_alone_is_a_scope_conflict
+ERROR tests/test_batch_driver.py::test_a_scope_conflict_is_not_counted_as_a_failure
+ERROR tests/test_batch_driver.py::test_an_agreeing_stage0_reading_records_observations_and_runs_on
+ERROR tests/test_batch_driver.py::test_a_related_species_from_stage0_is_not_a_scope_conflict
+ERROR tests/test_batch_driver.py::test_a_pinned_paper_has_no_request_to_contradict
+ERROR tests/test_batch_driver.py::test_an_app_that_stores_no_stage0_context_changes_nothing
+ERROR tests/test_batch_driver.py::test_the_conflict_can_be_downgraded_to_a_warning
+ERROR tests/test_batch_driver.py::test_a_legacy_plan_record_still_supplies_the_requested_scope
+ERROR tests/test_stage3_gate_report_lifecycle.py::test_the_driver_files_a_repaired_strict_leg_as_pass
+ERROR tests/test_stage3_gate_report_lifecycle.py::test_the_driver_still_fails_a_strict_leg_whose_final_payload_fails
+ERROR tests/test_stage3_gate_report_lifecycle.py::test_the_driver_fails_closed_when_a_current_run_has_no_final_report
+ERROR tests/test_stage3_gate_report_lifecycle.py::test_the_driver_fails_closed_on_a_payload_hash_mismatch
+ERROR tests/test_stage3_gate_report_lifecycle.py::test_the_driver_reports_one_blocking_issue_for_one_row_seen_twice
+ERROR tests/test_stage3_gate_report_lifecycle.py::test_research_mode_continues_past_a_failing_gate_without_rewriting_it
+ERROR tests/test_stage3_gate_report_lifecycle.py::test_the_initial_failure_reaches_the_run_directory_under_a_historical_name
+ERROR tests/test_stage3_gate_report_lifecycle.py::test_final_mapped_json_is_the_canonical_payload
+442 passed, 69 errors in 28.53s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-W0\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 5d0e647766b6ae11aa3d2aafb4b043801c9dace2  [git, worktree dirty=False]
+label                   : w0-smoke-tr
+command                 : C:\Python313\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-W0 --pin-verdict docs/webserver/evidence/W0/pin/04-smoke.pin.json -q --basetemp=C:/t/wsW0-tr/smoke1 tests/test_reference_repair.py tests/test_strict_quarantine.py tests/test_strict_quarantine_contract_alignment.py tests/test_strict_quarantine_locks_and_scope.py tests/test_strict_quarantine_versioning.py tests/test_empty_extraction_payload.py tests/test_bench_goldset_and_semantic.py tests/test_bench_acquisition_and_artifacts.py tests/test_bench_controls.py tests/test_completeness_audit.py tests/test_batch_driver.py tests/test_stage3_gate_report_lifecycle.py tests/test_rag_admission_production_path.py tests/test_rag_gap_admission.py tests/test_rag_triage_orchestration.py tests/test_rag_provenance_gates.py tests/test_pipeline_reaction_rag_provenance.py tests/test_research_mode_orchestration.py tests/test_map_ids_name_gate.py tests/test_db_candidate_species_evidence.py tests/test_c102_coverage_denominator.py tests/test_c106_mutation_harness_executable.py
+cwd                     : C:\t\ws-W0
+root PID / process group: 768164 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 30.71 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 5  765324:python.exe, 773940:python.exe, 769516:python.exe, 746428:python.exe, 774428:git.exe
+descendants terminated  : 5  746428, 765324, 769516, 773940, 774428
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ws-W0/docs/webserver/evidence/W0/04-smoke.json
+json report written     : True
+pre-existing (reported, NEVER killed): 4
+================================================
