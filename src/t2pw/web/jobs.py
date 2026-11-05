@@ -9,7 +9,8 @@ Item states: ``queued`` -> ``running`` -> ``finished``. ``finished`` says the it
 no longer being worked on; how it ended is the persisted result's ``status`` and
 ``failure_kind`` (the ``t2pw.service.pathway`` vocabulary). Every claim bumps the
 item's ``attempt`` and opens one ``attempts`` row, so W4 can re-queue a finished item
-(``state='queued'``) without a schema change. W3 itself never retries.
+(``state='queued'``) without a schema change. W4 does exactly that: ``finish(...,
+requeue=True)`` (policy: ``t2pw.web.retry``).
 
 stdlib only. Every write is one ``BEGIN IMMEDIATE`` transaction, so the web process
 and the worker process can share the file; the queue-cap check and the insert it
@@ -24,7 +25,7 @@ import time
 import uuid
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Any, Dict, Iterator, List, Optional, Sequence
+from typing import Any, Callable, Dict, Iterator, List, Optional, Sequence
 
 from t2pw.rag.eligibility import RequestedScope
 from t2pw.service.pathway import (
@@ -201,11 +202,14 @@ class JobStore:
                 [(sid, i, json.dumps(request_to_dict(r)), now) for i, r in enumerate(requests)])
         return sid
 
-    def claim_next(self, timeout_s: float) -> Optional[Dict[str, Any]]:
+    def claim_next(self, timeout_s: float,
+                   wall_cap_s: Optional[float] = None) -> Optional[Dict[str, Any]]:
         """Oldest queued item -> ``running``, next attempt, deadline = now + ``timeout_s``.
 
         The deadline is set here, at dequeue, so time spent queued never eats the
-        run's wall-clock cap.
+        run's wall-clock cap. With ``wall_cap_s`` it is also capped by what is left of
+        the item's per-pathway wall budget (:meth:`wall_used`), so a retry can never
+        run past it. A retried item keeps its id, so it is claimed before newer items.
         """
 
         with self._tx() as db:
@@ -214,6 +218,8 @@ class JobStore:
             if row is None:
                 return None
             now = time.time()
+            if wall_cap_s is not None:
+                timeout_s = min(timeout_s, max(0.0, wall_cap_s - self._wall_used(db, row["id"], now)))
             attempt, deadline = row["attempt"] + 1, now + timeout_s
             db.execute("UPDATE items SET state = 'running', attempt = ?, deadline = ?, "
                        "started_at = ?, finished_at = NULL WHERE id = ?",
@@ -228,16 +234,29 @@ class JobStore:
                        (pid, item_id, attempt))
 
     def finish(self, item_id: int, attempt: int, result: Dict[str, Any],
-               exit_code: Optional[int] = None) -> bool:
+               exit_code: Optional[int] = None, *, requeue: bool = False) -> bool:
         """Persist ``result`` (a :func:`result_to_dict` dict). False if the item is not
-        running this attempt (a stale write), and then nothing changes."""
+        running this attempt (a stale write), and then nothing changes.
+
+        ``requeue=True`` (the retry policy said retry) closes the attempt's row as usual
+        but puts the item back to ``queued`` with no item-level result: the failed
+        attempt is history in ``attempts``, not the item's outcome.
+        """
 
         now = time.time()
         with self._tx() as db:
-            cur = db.execute(
-                "UPDATE items SET state = 'finished', status = ?, failure_kind = ?, "
-                "result_json = ?, finished_at = ? WHERE id = ? AND attempt = ? AND state = 'running'",
-                (result["status"], result["failure_kind"], json.dumps(result), now, item_id, attempt))
+            if requeue:
+                cur = db.execute(
+                    "UPDATE items SET state = 'queued', status = NULL, failure_kind = NULL, "
+                    "result_json = NULL, finished_at = NULL "
+                    "WHERE id = ? AND attempt = ? AND state = 'running'", (item_id, attempt))
+            else:
+                cur = db.execute(
+                    "UPDATE items SET state = 'finished', status = ?, failure_kind = ?, "
+                    "result_json = ?, finished_at = ? "
+                    "WHERE id = ? AND attempt = ? AND state = 'running'",
+                    (result["status"], result["failure_kind"], json.dumps(result), now,
+                     item_id, attempt))
             if cur.rowcount != 1:
                 return False
             db.execute("UPDATE attempts SET finished_at = ?, exit_code = ?, status = ?, "
@@ -246,11 +265,14 @@ class JobStore:
                         result["message"], item_id, attempt))
         return True
 
-    def recover_running(self) -> List[int]:
+    def recover_running(self, should_retry: Optional[Callable[[int, int, Dict[str, Any]], bool]]
+                        = None) -> List[int]:
         """Finish every item left ``running`` as an error / ``crash``; returns their ids.
 
         Call only when no worker is running (the worker calls it at start-up, holding
-        its lock). Nothing is re-queued: that is W4's retry decision.
+        its lock). Without ``should_retry`` nothing is re-queued. With it, called as
+        ``should_retry(item_id, attempt, crash_result)``, a True answer re-queues the
+        item (the crash stays in its attempts row); the worker passes the W4 policy.
         """
 
         ids = []
@@ -259,11 +281,45 @@ class JobStore:
             result = result_to_dict(PathwayResult(
                 status=STATUS_ERROR, stage=STAGE_INIT, failure_kind=KIND_CRASH,
                 message=RECOVERED_MESSAGE.format(attempt=row["attempt"])))
-            if self.finish(row["id"], row["attempt"], result):
+            again = bool(should_retry and should_retry(row["id"], row["attempt"], result))
+            if self.finish(row["id"], row["attempt"], result, requeue=again):
                 ids.append(row["id"])
         return ids
 
     # reads
+
+    @staticmethod
+    def _wall_used(db: sqlite3.Connection, item_id: int, now: float) -> float:
+        # An attempt still open counts to ``now`` but never past its own deadline: the
+        # worker kills at the deadline, so an attempt left open by a dead worker cannot
+        # have run longer (it may have run less: downtime is then charged to the item).
+        (used,) = db.execute(
+            "SELECT COALESCE(SUM(MIN(COALESCE(finished_at, ?), COALESCE(deadline, ?)) - started_at), 0) "
+            "FROM attempts WHERE item_id = ?", (now, now, item_id)).fetchone()
+        return float(used)
+
+    def wall_used(self, item_id: int, now: Optional[float] = None) -> float:
+        """Seconds of run time this item has used across all its attempts (queue waits excluded)."""
+
+        return self._wall_used(self._db, item_id, time.time() if now is None else now)
+
+    def attempt_history(self, item_id: int) -> List[Dict[str, Any]]:
+        """One dict per attempt, oldest first, for the job page (W6).
+
+        Keys: ``attempt``, ``started_at``, ``finished_at`` (None while running),
+        ``status``, ``failure_kind``, ``message``, ``retried`` (a later attempt
+        exists), ``will_retry`` (it failed and the item is queued for the next one).
+        """
+
+        item = self._db.execute("SELECT state, attempt FROM items WHERE id = ?", (item_id,)).fetchone()
+        if item is None:
+            return []
+        rows = self._db.execute(
+            "SELECT attempt, started_at, finished_at, status, failure_kind, message "
+            "FROM attempts WHERE item_id = ? ORDER BY attempt", (item_id,))
+        return [dict(r, retried=r["attempt"] < item["attempt"],
+                     will_retry=item["state"] == QUEUED and r["attempt"] == item["attempt"])
+                for r in rows]
 
     def item(self, item_id: int) -> Optional[Dict[str, Any]]:
         row = self._db.execute("SELECT * FROM items WHERE id = ?", (item_id,)).fetchone()

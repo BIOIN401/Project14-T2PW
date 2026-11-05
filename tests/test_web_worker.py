@@ -19,10 +19,14 @@ import pytest
 from t2pw.pipeline.release_status import RELEASE_READY, ReleaseStatus
 from t2pw.rag.eligibility import RequestedScope
 from t2pw.service.pathway import (
+    KIND_CONTRACT,
     KIND_CRASH,
+    KIND_LLM,
     KIND_TIMEOUT,
     STAGE_PWML_EXPORT,
+    STAGE_STAGE1,
     STATUS_ERROR,
+    STATUS_FAIL,
     STATUS_PASS,
     STATUS_TIMEOUT,
     PathwayRequest,
@@ -31,6 +35,7 @@ from t2pw.service.pathway import (
 from t2pw.web import jobs
 from t2pw.web.jobs import JobStore
 from t2pw.web import worker as worker_mod
+from t2pw.web.retry import MAX_RETRIES
 from t2pw.web.worker import Worker
 
 TESTS_DIR = Path(__file__).resolve().parent
@@ -83,6 +88,21 @@ def fake_raise(req: PathwayRequest) -> PathwayResult:
 
 def fake_exit(req: PathwayRequest) -> PathwayResult:
     os._exit(3)
+
+
+def fake_llm(req: PathwayRequest) -> PathwayResult:
+    return PathwayResult(status=STATUS_FAIL, stage=STAGE_STAGE1, failure_kind=KIND_LLM,
+                         message="empty LLM reply")
+
+
+def fake_llm_then_ok(req: PathwayRequest) -> PathwayResult:
+    """Fails with an LLM error on attempt 1 only (out_dir is .../attempt-<n>/out)."""
+    return fake_llm(req) if req.out_dir.parent.name == "attempt-1" else fake_ok(req)
+
+
+def fake_contract(req: PathwayRequest) -> PathwayResult:
+    return PathwayResult(status=STATUS_FAIL, stage=STAGE_STAGE1, failure_kind=KIND_CONTRACT,
+                         message="stage boundary contract violated")
 
 
 # ── helpers ────────────────────────────────────────────────────────────────
@@ -142,8 +162,11 @@ def _req(name: str = "serine biosynthesis", **kw) -> PathwayRequest:
 
 # Deadline tests use 10 s: a child imports this module (and pytest) before the fake
 # runs, which measured 2-5 s per child on the dev machine under load.
-def _worker(store, tmp_path, fake, timeout_s=60.0) -> Worker:
-    w = Worker(store, tmp_path / "work", run_fn=f"{MOD}:{fake}", timeout_s=timeout_s)
+# W4: the W3 tests assert the outcome of a single attempt, so they run with retries off
+# (max_retries=0); the W4 tests below pass retry.MAX_RETRIES.
+def _worker(store, tmp_path, fake, timeout_s=60.0, max_retries=0) -> Worker:
+    w = Worker(store, tmp_path / "work", run_fn=f"{MOD}:{fake}", timeout_s=timeout_s,
+               max_retries=max_retries)
     assert w.start() == []
     return w
 
@@ -336,8 +359,11 @@ def test_killed_worker_takes_its_child_tree_and_restart_recovers(tmp_path, child
     w = Worker(s, work)
     assert w.start() == [1]
     item = s.item(1)
-    assert item["state"] == jobs.FINISHED
-    assert item["status"] == STATUS_ERROR and item["failure_kind"] == KIND_CRASH
+    # W4: the recovered crash now goes through the retry policy and is re-queued (W3
+    # asserted FINISHED here). It is still not re-run: attempt stays 1.
+    assert item["state"] == jobs.QUEUED and item["result"] is None
+    assert item["attempts"][0]["status"] == STATUS_ERROR
+    assert item["attempts"][0]["failure_kind"] == KIND_CRASH
     assert item["attempt"] == 1 and len(item["attempts"]) == 1
     assert s.item(2)["state"] == jobs.QUEUED
     w.close()
@@ -372,3 +398,93 @@ def test_worker_imports_no_streamlit_or_app():
     done = subprocess.run([sys.executable, "-c", code], env=env, capture_output=True,
                           text=True, timeout=60)
     assert done.returncode == 0, done.stdout + done.stderr
+
+
+# ── W4: auto-retry ─────────────────────────────────────────────────────────
+
+
+def test_infrastructure_failure_is_retried_with_a_fresh_attempt(store, tmp_path, child_env):
+    """NEW ACCEPTANCE TEST (W4, new capability): an LLM failure re-queues the item; the
+    next run_one is attempt 2 with its own directory and deadline, and passes."""
+    w = _worker(store, tmp_path, "fake_llm_then_ok", timeout_s=500.0, max_retries=MAX_RETRIES)
+    store.submit([_req()])
+    item_id = w.run_one()
+    mid = store.item(item_id)
+    assert mid["state"] == jobs.QUEUED and mid["result"] is None and mid["attempt"] == 1
+    assert store.attempt_history(item_id)[0]["will_retry"] is True
+    assert w.run_one() == item_id
+    w.close()
+    item = store.item(item_id)
+    assert item["state"] == jobs.FINISHED and item["status"] == STATUS_PASS and item["attempt"] == 2
+    assert item["result"]["counts"]["out_dir"].endswith(os.path.join("attempt-2", "out"))
+    assert item["result"]["counts"]["deadline"] == pytest.approx(item["started_at"] + 500.0)
+    hist = store.attempt_history(item_id)
+    assert [(h["attempt"], h["failure_kind"], h["status"], h["retried"]) for h in hist] == [
+        (1, KIND_LLM, STATUS_FAIL, True), (2, "", STATUS_PASS, False)]
+    assert wait_dead([a["child_pid"] for a in item["attempts"]]) == []
+
+
+def test_content_verdict_is_final_on_the_first_attempt(store, tmp_path, child_env):
+    """NEW ACCEPTANCE TEST (W4, new capability): a contract verdict is persisted as the
+    item's outcome and never re-queued."""
+    w = _worker(store, tmp_path, "fake_contract", max_retries=MAX_RETRIES)
+    store.submit([_req()])
+    item_id = w.run_one()
+    assert w.run_one() is None
+    w.close()
+    item = store.item(item_id)
+    assert item["state"] == jobs.FINISHED and item["failure_kind"] == KIND_CONTRACT
+    assert len(item["attempts"]) == 1
+    assert store.attempt_history(item_id)[0]["retried"] is False
+
+
+def test_stops_at_three_attempts(store, tmp_path, child_env):
+    """NEW ACCEPTANCE TEST (W4, new capability): a run that keeps failing is attempted
+    three times (MAX_RETRIES = 2) and the third failure is the final outcome."""
+    w = _worker(store, tmp_path, "fake_llm", max_retries=MAX_RETRIES)
+    store.submit([_req()])
+    ids = [w.run_one() for _ in range(4)]
+    w.close()
+    item = store.item(ids[0])
+    assert ids[:3] == [ids[0]] * 3 and ids[3] is None
+    assert item["state"] == jobs.FINISHED and item["attempt"] == 3
+    assert item["status"] == STATUS_FAIL and item["failure_kind"] == KIND_LLM
+    assert [h["retried"] for h in store.attempt_history(ids[0])] == [True, True, False]
+    assert wait_dead([a["child_pid"] for a in item["attempts"]]) == []
+
+
+def test_wall_cap_shapes_the_retry_deadline_and_stops_retries(store, tmp_path, child_env):
+    """NEW ACCEPTANCE TEST (W4, new capability): with 7000 s of the 7200 s wall cap used
+    by attempt 1, attempt 2 gets a deadline of the ~200 s left (not RUN_TIMEOUT_S), and
+    its failure is final because less than MIN_RETRY_BUDGET_S remains."""
+    w = _worker(store, tmp_path, "fake_llm", timeout_s=3600.0, max_retries=MAX_RETRIES)
+    store.submit([_req()])
+    item_id = w.run_one()
+    assert store.item(item_id)["state"] == jobs.QUEUED
+    store._db.execute("UPDATE attempts SET started_at = started_at - 7000")  # 7000 s used
+    w.run_one()
+    w.close()
+    item = store.item(item_id)
+    assert 100 < item["deadline"] - item["started_at"] < 200
+    assert item["state"] == jobs.FINISHED and item["attempt"] == 2
+    assert item["failure_kind"] == KIND_LLM
+    assert store.wall_used(item_id) > 7000
+
+
+def test_restart_crash_goes_through_the_policy_and_is_bounded(store, tmp_path):
+    """NEW ACCEPTANCE TEST (W4, new capability): an item the worker died on is a crash
+    that the policy re-queues; a run that keeps killing the worker is final after the
+    third attempt, not an endless loop."""
+    store.submit([_req()])
+    for n in (1, 2, 3):
+        item = store.claim_next(60)            # a worker takes it ...
+        assert item["attempt"] == n
+        w = Worker(store, tmp_path / "work")   # ... and dies; the next start recovers
+        assert w.start() == [item["id"]]
+        w.close()
+        state = store.item(item["id"])["state"]
+        assert state == (jobs.QUEUED if n < 3 else jobs.FINISHED)
+    final = store.item(item["id"])
+    assert final["status"] == STATUS_ERROR and final["failure_kind"] == KIND_CRASH
+    assert [a["failure_kind"] for a in final["attempts"]] == [KIND_CRASH] * 3
+    assert store.claim_next(60) is None
