@@ -214,6 +214,33 @@ def test_uncontainable_child_never_runs(store, tmp_path, child_env, monkeypatch)
     assert not (tmp_path / "work" / f"item-{item_id}" / "attempt-1" / "out").exists()
 
 
+@pytest.mark.skipif(os.name != "nt", reason="Job Object containment is Windows-only")
+def test_exception_during_containment_kills_suspended_child(store, tmp_path, child_env,
+                                                             monkeypatch):
+    """NEW ACCEPTANCE TEST (W3, new capability, review round 2 item 9): an exception
+    between Popen and the job assignment kills the suspended child; none is leaked."""
+    import ctypes
+    seen = []
+
+    def boom(handle):
+        seen.append(ctypes.WinDLL("kernel32").GetProcessId(ctypes.c_void_p(handle)))
+        raise KeyboardInterrupt
+
+    monkeypatch.setattr(worker_mod, "_new_job", boom)
+    w = _worker(store, tmp_path, "fake_ok")
+    store.submit([_req()])
+    try:
+        with pytest.raises(KeyboardInterrupt):
+            w.run_one()
+    finally:
+        w.close()
+    assert len(seen) == 1 and seen[0] > 0
+    try:
+        assert wait_dead(seen) == []
+    finally:
+        force_kill(seen)
+
+
 def test_deadline_is_set_at_dequeue_not_submit(store, tmp_path, child_env):
     """NEW ACCEPTANCE TEST (W3, new capability): the child sees the deadline set at
     dequeue (now + timeout); a deadline on the submitted request is overwritten."""

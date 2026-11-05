@@ -130,13 +130,20 @@ class _Child:
             kwargs["start_new_session"] = True  # pgid == pid, from fork
         self.proc = subprocess.Popen(argv, **kwargs)  # noqa: S603 - argv is ours
         self.job: Optional[int] = None
-        if IS_WINDOWS:
-            # Popen's own process handle (full access, cannot name a recycled PID).
-            handle = int(self.proc._handle)  # noqa: SLF001
-            self.job = _new_job(handle)
-            if self.job is None or _ntdll.NtResumeProcess(wintypes.HANDLE(handle)) != 0:
-                self.kill_tree()  # still suspended: nothing of the run has executed
-                raise ContainmentError("could not place the run in a Job Object")
+        try:
+            ok = True
+            if IS_WINDOWS:
+                # Popen's own process handle (full access, cannot name a recycled PID).
+                handle = int(self.proc._handle)  # noqa: SLF001
+                self.job = _new_job(handle)
+                ok = self.job is not None and \
+                    _ntdll.NtResumeProcess(wintypes.HANDLE(handle)) == 0
+        except BaseException:  # e.g. KeyboardInterrupt: never leak a suspended child
+            self.kill_tree()
+            raise
+        if not ok:
+            self.kill_tree()  # still suspended: nothing of the run has executed
+            raise ContainmentError("could not place the run in a Job Object")
 
     def wait_unreaped(self, deadline: float) -> bool:
         """Wait until the child exits or ``deadline``; True if it exited.
