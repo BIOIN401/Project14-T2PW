@@ -1,0 +1,123 @@
+{
+  "label": "br-mut-ocr",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-BR",
+    "--pin-verdict",
+    "C:/t/wsBRtmp/mut-ocr.pin.json",
+    "-q",
+    "--basetemp=C:/t/wsBRtmp/mut-ocr",
+    "tests/test_service_driver_bridge.py"
+  ],
+  "cwd": "C:\\t\\ws-BR",
+  "started_at": "2026-11-05T21:25:06+00:00",
+  "finished_at": "2026-11-05T21:25:07+00:00",
+  "duration_seconds": 1.429462699998112,
+  "timeout_seconds": 300.0,
+  "root_pid": 533740,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 530592,
+      "name": "python.exe",
+      "ppid": 533740
+    },
+    {
+      "pid": 533924,
+      "name": "python.exe",
+      "ppid": 533952
+    },
+    {
+      "pid": 533952,
+      "name": "python.exe",
+      "ppid": 530592
+    }
+  ],
+  "descendants_terminated": [
+    530592,
+    533924,
+    533952
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 442728,
+      "name": "python.exe"
+    },
+    {
+      "pid": 460520,
+      "name": "python.exe"
+    },
+    {
+      "pid": 496044,
+      "name": "python.exe"
+    },
+    {
+      "pid": 496252,
+      "name": "python.exe"
+    },
+    {
+      "pid": 525748,
+      "name": "python.exe"
+    },
+    {
+      "pid": 527512,
+      "name": "python.exe"
+    },
+    {
+      "pid": 528928,
+      "name": "python.exe"
+    },
+    {
+      "pid": 529860,
+      "name": "python.exe"
+    },
+    {
+      "pid": 531476,
+      "name": "python.exe"
+    },
+    {
+      "pid": 531504,
+      "name": "python.exe"
+    },
+    {
+      "pid": 534420,
+      "name": "python.exe"
+    },
+    {
+      "pid": 534456,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/wsBRtmp/mut-ocr.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-BR\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-BR",
+    "repo_head": "100070d8b7d1d8179202ad66e70fe6c22bb1681c",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}
