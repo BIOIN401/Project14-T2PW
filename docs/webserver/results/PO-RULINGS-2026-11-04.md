@@ -23,3 +23,11 @@ the server DB user; the SMTP provider.
 |---|---|---|---|
 | R1-F1 | After the move, the golden-seam test `test_streamlit_quarantine_boundary` parses only `service/postpipeline.py`. A future unguarded quarantine call in `streamlit_app.py` would no longer fail it. | **Fix: the test parses both files** (`APP_PATH` and `SERVICE_PATH`), restoring its original coverage. This is the one permitted golden-seam edit beyond a path, and it must be reviewed. | R1 |
 | R1-F6 | Under `streamlit run`, the moved code logs as the literal `t2pw.app.streamlit_app` rather than `__main__` (3 `logger.debug` lines, dropped at the default WARNING level). | **Accept the literal name.** It is documented in R1.md and needs no added code. | R1 |
+
+## Addendum 2, 2026-11-05 (R2 review, schedule)
+
+| ref | question | ruling | relied on by |
+|---|---|---|---|
+| R2-F2 | Since R2 the golden-seam test `test_streamlit_quarantine_boundary` (:773) parses only the app and `service/postpipeline.py`, not the new `service/rag_orchestration.py`. There is no `quarantine_and_close` call in that file today, so the test still passes, but the guard is weaker. | **Widen the parse set to every `src/t2pw/service/*.py`.** A second permitted golden-seam edit beyond a path, like R1-F1. Done as a follow-up task after R2 merges, and reviewed. | R2-F2 follow-up; R3-R6 |
+| SCHED-F1 | Driver bridge (BR): the server's run function wraps `batch/driver.run_one` behind the W0 interface, taking R3-R6 off the LOI path. | **Approved.** Dispatched as task BR. A7 swaps back to `run_pathway` only after the equivalence test passes. | BR, A7, W9 |
+| Hosting / DB | Where the public server runs and how it reaches PathBank. | **Deferred by the PO**: "I will work out getting access … to the db and all of that stuff later." W9 stays held. Reminder for that request: per CLAUDE.md the server gets its own **read-only** DB user. | W9, B1, D2 |
