@@ -29,6 +29,7 @@ from t2pw.service.pathway import STATUS_PASS
 from t2pw.web.curator_queue import CuratorQueue
 from t2pw.web.jobs import FINISHED, JobStore
 from t2pw.web.notify import notify_job
+from t2pw.web.views import job_url
 
 log = logging.getLogger("t2pw.web.postrun")
 
@@ -111,7 +112,7 @@ def run(store: JobStore, item_id: int, cfg: PostRunConfig) -> Dict[str, Any]:
             sid = sub["id"]
             if _claim(store.path, sid, outcome):
                 try:
-                    sent = bool(cfg.notify(sub["email"], f"{cfg.base_url.rstrip('/')}/jobs/{sid}",
+                    sent = bool(cfg.notify(sub["email"], job_url(cfg.base_url, sid),
                                            outcome=outcome, base_url=cfg.base_url))
                 except Exception as exc:  # noqa: BLE001
                     log.warning("job email failed for submission %s: %s", sid, type(exc).__name__)

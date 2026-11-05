@@ -25,6 +25,7 @@ from t2pw.service.pathway import (
 from t2pw.web import curator_queue, postrun
 from t2pw.web.jobs import JobStore, result_to_dict
 from t2pw.web.postrun import PostRunConfig
+from t2pw.web.views import job_url
 from t2pw.web.worker import Worker
 
 EMAIL, BASE = "someone@example.org", "https://t2pw.example.org"
@@ -93,7 +94,7 @@ def test_final_qualifying_item_is_enqueued_and_single_item_job_is_notified(store
     sid = submit(store)
     iid, _, out = settle(store, tmp_path, cfg)
     assert out == {"enqueued": True, "notified": True}
-    assert notify.calls == [(EMAIL, f"{BASE}/jobs/{sid}", "finished", BASE)]
+    assert notify.calls == [(EMAIL, job_url(BASE, sid), "finished", BASE)]
     q = curator_queue.CuratorQueue(store.path, cfg.queue_dir)
     assert [r["item_id"] for r in q.list_pending()] == [iid] and q.verify(iid)
 
@@ -106,7 +107,7 @@ def test_notify_once_per_submission_only_after_all_items_final(store, tmp_path, 
         assert settle(store, tmp_path, cfg)[2]["notified"] is None
         assert notify.calls == [], f"emailed after item {n}"
     assert settle(store, tmp_path, cfg)[2]["notified"] is True
-    assert [c[1] for c in notify.calls] == [f"{BASE}/jobs/{sid}"]
+    assert [c[1] for c in notify.calls] == [job_url(BASE, sid)]
 
 
 def test_no_email_while_a_retry_is_pending(store, tmp_path, cfg, notify):
@@ -146,7 +147,7 @@ def test_recovery_at_worker_start_settles_a_crashed_final_item(store, tmp_path, 
         w = Worker(store, tmp_path / "work", max_retries=0, postrun_cfg=cfg)
         w.start()
         w.close()
-    assert [c[1:3] for c in notify.calls] == [(f"{BASE}/jobs/{sid}", "failed")]
+    assert [c[1:3] for c in notify.calls] == [(job_url(BASE, sid), "failed")]
 
 
 def test_outcome_failed_when_no_item_passed(store, tmp_path, cfg, notify):
@@ -284,3 +285,29 @@ def test_startup_recovery_with_retries_left_does_neither(store, tmp_path, cfg, n
     w.close()
     assert store.item(item["id"])["state"] == "queued"
     assert notify.calls == [] and not cfg.queue_dir.exists()
+
+
+def test_email_link_is_views_job_url_and_the_site_serves_it(store, tmp_path, cfg, notify):
+    """NEW (W7b): the e-mailed link is exactly views.job_url and the W6 app serves it."""
+    from urllib.parse import urlsplit
+
+    from fastapi.testclient import TestClient
+
+    from t2pw.web.app import create_app
+
+    sid = submit(store)
+    settle(store, tmp_path, cfg)
+    link = notify.calls[0][1]
+    assert link == job_url(BASE, sid)
+    app = create_app(store.path, tmp_path / "work2", BASE, rate_secret=b"k")
+    r = TestClient(app, follow_redirects=False).get(urlsplit(link).path)
+    assert r.status_code == 200 or (r.status_code == 303 and r.headers["location"] == f"/job/{sid}")
+
+
+def test_postrun_import_does_not_pull_fastapi():
+    """NEW (W7b): importing postrun (and so views.job_url) must not import FastAPI."""
+    import subprocess
+    import sys
+
+    code = "import sys, t2pw.web.postrun; sys.exit(1 if any(m == 'fastapi' or m.startswith('fastapi.') for m in sys.modules) else 0)"
+    assert subprocess.run([sys.executable, "-c", code], timeout=120).returncode == 0
