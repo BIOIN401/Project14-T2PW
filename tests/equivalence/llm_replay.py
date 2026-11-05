@@ -21,7 +21,8 @@ answers are served first and only what lies beyond them goes live (see ``harness
 
 * LLM: every ``create`` kwarg EXCEPT ``model``, ``timeout``, ``extra_headers``, ``extra_query`` and
   ``extra_body`` -- i.e. messages, temperature, max_tokens, response_format, tools, tool_choice. The key is
-  model-agnostic; the model actually answering is kept in the stored response only.
+  model-agnostic, but each entry stores the ``requested_model`` and a replay asks for exactly it or fails
+  (a ``llm-model`` miss); the model actually answering is kept in the stored response.
 * HTTP: method, the fully prepared URL (``params`` merged in, in the caller's order) and the body
   (``data``/``json``). Headers, timeouts, ``verify`` and the session are ignored. The VALUES of the query
   parameters in :data:`SECRET_PARAMS` are replaced with ``<redacted>`` in the key and in storage.
@@ -294,6 +295,14 @@ class Cassette:
             key, request = llm_key(kwargs)
             row = cassette._lookup("llm", key, request)
             if row is not None:
+                if cassette.mode == "replay" and row.get("requested_model") != kwargs.get("model"):
+                    # Not keyed (the key is model-agnostic), but asserted: a replay under a different model
+                    # configuration is not the recorded run (review F3).
+                    miss = {"kind": "llm-model", "key": key, "recorded": row.get("requested_model"),
+                            "asked": kwargs.get("model")}
+                    with cassette._lock:
+                        cassette.misses.append(miss)
+                    raise ReplayMiss(f"model mismatch for {key[:12]}: recorded {miss['recorded']!r}, asked {miss['asked']!r}")
                 return ChatCompletion.model_validate(row["response"])
             started = time.monotonic()
             try:
@@ -302,7 +311,8 @@ class Cassette:
                 cassette.live_llm_errors.append(f"{type(exc).__name__}: {cassette._scrub(str(exc))[:200]}")
                 cassette._progress(f"llm ERROR {type(exc).__name__} after {time.monotonic() - started:.0f}s key={key[:10]}")
                 raise
-            cassette._record("llm", key, request, {"response": resp.model_dump(mode="json")})
+            cassette._record("llm", key, request, {"requested_model": kwargs.get("model"),
+                                                   "response": resp.model_dump(mode="json")})
             usage = getattr(resp, "usage", None)
             cassette._progress(f"llm live {time.monotonic() - started:.0f}s key={key[:10]} "
                                f"max_tokens={kwargs.get('max_tokens')} completion_tokens={getattr(usage, 'completion_tokens', None)}")

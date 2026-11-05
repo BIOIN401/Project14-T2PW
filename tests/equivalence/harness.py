@@ -84,6 +84,64 @@ def freeze_clock(mp: pytest.MonkeyPatch) -> int:
     return bound
 
 
+#: The service functions the app arm observes. One spy per function per PROCESS, recording into whichever
+#: arm is current (:data:`_ARM`). ``install_spies`` points every ``sys.modules`` binding of the real function
+#: (or of the spy, left behind by an earlier arm) at the spy, the way :func:`freeze_clock` does, so a binding
+#: made by ``from t2pw.service.postpipeline import ...`` in a module that stays loaded is reached too, not
+#: only the attribute the app script re-imports on every AppTest run (review F1).
+SPIED = ("run_post_pipeline_sbml_artifacts", "run_pwml_export")
+_SPIES: Dict[Any, Any] = {}  # real function -> its spy
+_ARM: Dict[str, Any] = {"current": None}  # the arm's capture dict while an arm runs, else None
+
+
+def _on_call(name: str, args: Any, kwargs: Any) -> None:
+    arm = _ARM["current"]
+    if arm is None:
+        return
+    if name == "run_post_pipeline_sbml_artifacts" and "post_call" not in arm:
+        arm["post_call"] = deepcopy((args, kwargs))
+        snapshot = arm["root"].with_name(arm["root"].name + ".at_post_pipeline")
+        shutil.copytree(arm["root"], snapshot)  # the on-disk state the app's post-pipeline starts from
+        arm["snapshot"] = snapshot
+    elif name == "run_pwml_export" and "export_call" not in arm:
+        arm["export_call"] = deepcopy((args, kwargs))
+
+
+def _spy(name: str, real: Any) -> Any:
+    if real not in _SPIES:
+        def spy(*args: Any, **kwargs: Any) -> Any:
+            _on_call(name, args, kwargs)
+            return real(*args, **kwargs)
+
+        spy.__wrapped__ = real  # type: ignore[attr-defined]
+        _SPIES[real] = spy
+    return _SPIES[real]
+
+
+def real_function(fn: Any) -> Any:
+    """``fn`` itself, or the real function behind one of our spies."""
+
+    return getattr(fn, "__wrapped__", fn) if fn in _SPIES.values() else fn
+
+
+def install_spies(mp: pytest.MonkeyPatch, arm: Dict[str, Any], source: Any = None,
+                  names: tuple = SPIED) -> list:
+    """Make ``arm`` current and bind the spies everywhere. Returns the ``module.name`` bindings patched."""
+
+    if source is None:
+        from t2pw.service import postpipeline as source
+    mp.setitem(_ARM, "current", arm)
+    patched = []
+    for name in names:
+        real = real_function(getattr(source, name))
+        spy = _spy(name, real)
+        for mod_name, module in list(sys.modules.items()):
+            if module is not None and getattr(module, name, None) in (real, spy):
+                mp.setattr(module, name, spy)
+                patched.append(f"{mod_name}.{name}")
+    return sorted(patched)
+
+
 def leaves(value: Any, path: str = "") -> Dict[str, Any]:
     """Every leaf of a JSON value by its pointer path, for a field-by-field comparison."""
 
@@ -164,7 +222,6 @@ def run_app_arm(root: Path, cassette: llm_replay.Cassette, timeout: float, case:
 
     from t2pw.batch import driver
     from t2pw.pipeline.gate_reports import CANONICAL_PAYLOAD_KEY
-    from t2pw.service import postpipeline
 
     new_root(root)
     captured: Dict[str, Any] = {}
@@ -174,28 +231,15 @@ def run_app_arm(root: Path, cassette: llm_replay.Cassette, timeout: float, case:
         # Replay only: a recording keeps the real clock (its stamps are the live times).
         captured["frozen_bindings"] = freeze_clock(mp) if freeze and cassette.mode == "replay" else 0
         real_from_file = AppTest.from_file
-        real_post = postpipeline.run_post_pipeline_sbml_artifacts
-        real_export = postpipeline.run_pwml_export
 
         def from_file(*a: Any, **k: Any) -> Any:
             captured["at"] = real_from_file(*a, **k)
             captured["at"].session_state[AUDIT_TIMEOUT_KEY] = AUDIT_TIMEOUT_SECONDS  # see AUDIT_TIMEOUT_SECONDS
             return captured["at"]
 
-        def post_spy(*a: Any, **k: Any) -> Any:
-            captured["post_call"] = deepcopy((a, k))
-            snapshot = root.with_name(root.name + ".at_post_pipeline")
-            shutil.copytree(root, snapshot)  # the on-disk state the app's post-pipeline starts from
-            captured["snapshot"] = snapshot
-            return real_post(*a, **k)
-
-        def export_spy(*a: Any, **k: Any) -> Any:
-            captured["export_call"] = deepcopy((a, k))
-            return real_export(*a, **k)
-
+        captured["root"] = root
+        captured["spied"] = install_spies(mp, captured)
         mp.setattr(AppTest, "from_file", from_file)
-        mp.setattr(postpipeline, "run_post_pipeline_sbml_artifacts", post_spy)
-        mp.setattr(postpipeline, "run_pwml_export", export_spy)
         started = time.monotonic()
         paper = {name: case[name] for name in CASE_FIELDS}
         outcome = driver.run_one(paper, case["mode"], timeout=timeout)
@@ -221,6 +265,7 @@ def run_app_arm(root: Path, cassette: llm_replay.Cassette, timeout: float, case:
         "refused": list(cassette.refused),
         "unused": cassette.unused() if cassette.mode == "replay" else [],
         "frozen_bindings": captured["frozen_bindings"],
+        "spied": captured["spied"],
     }
 
 
@@ -251,7 +296,7 @@ def run_service_arm(app: Dict[str, Any], root: Path, cassette: llm_replay.Casset
         # the sidebar's settings, and this root's outputs directory.
         post_kwargs["outputs_dir"] = root / "outputs"
         try:
-            artifacts = postpipeline.run_post_pipeline_sbml_artifacts(*post_args, **post_kwargs)
+            artifacts = real_function(postpipeline.run_post_pipeline_sbml_artifacts)(*post_args, **post_kwargs)
         except Exception as exc:  # noqa: BLE001 -- reported by test (c); the app's handler catches it too
             return {"seconds": round(time.monotonic() - started, 1), "ok": False,
                     "error": f"run_post_pipeline_sbml_artifacts raised {type(exc).__name__}: {str(exc)[:300]}",
@@ -268,7 +313,7 @@ def run_service_arm(app: Dict[str, Any], root: Path, cassette: llm_replay.Casset
                 quarantine_report=artifacts.get("quarantine_report") or {},
                 quarantine_artifacts=artifacts.get("quarantine_artifacts") or {},
             )
-            result = postpipeline.run_pwml_export(deepcopy(artifacts.get(CANONICAL_PAYLOAD_KEY)),
+            result = real_function(postpipeline.run_pwml_export)(deepcopy(artifacts.get(CANONICAL_PAYLOAD_KEY)),
                                                   *export_args[1:], **export_kwargs)
         seconds = time.monotonic() - started
     from t2pw.batch import driver

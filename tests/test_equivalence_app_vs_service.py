@@ -41,6 +41,7 @@ configuration. Runtime: see docs/webserver/results/R2.5.md.
 from __future__ import annotations
 
 import gzip
+import types
 import re
 import sys
 from pathlib import Path
@@ -51,6 +52,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from equivalence import harness, llm_replay  # noqa: E402
 
 APP_TIMEOUT = 240.0
+PREBOUND = "_r25_prebound_service_user"
 
 #: Secret SHAPES the committed fixture must not contain (record mode separately refuses the actual values).
 SECRET_PATTERNS = {
@@ -83,6 +85,12 @@ def arms(tmp_path_factory):
     mp = pytest.MonkeyPatch()
     try:
         harness.replay_env(mp, fixture)
+        # Review F1: a module that binds the service functions by name and stays loaded, imported before any
+        # arm runs. The spies must reach it (``app1["spied"]``), not only the attribute the app re-imports.
+        prebound = types.ModuleType(PREBOUND)
+        exec("from t2pw.service.postpipeline import run_post_pipeline_sbml_artifacts, run_pwml_export",
+             prebound.__dict__)
+        mp.setitem(sys.modules, PREBOUND, prebound)
         before = harness.checkout_state()
         base = tmp_path_factory.mktemp("equivalence")
         case = fixture["case"]
@@ -171,6 +179,9 @@ def test_b_replay_reproduces_the_recorded_live_run(arms):
 def test_the_clock_freeze_is_effective_and_touches_only_retrieved_at(arms):
     frozen, unfrozen = arms["app1"], arms["unfrozen"]
     assert frozen["frozen_bindings"] >= 1 and unfrozen["frozen_bindings"] == 0
+    assert unfrozen["misses"] == [] and unfrozen["refused"] == []
+    assert unfrozen["outcome"] == frozen["outcome"]
+    assert unfrozen["export_verdict"] == frozen["export_verdict"]
     assert unfrozen["canonical_payload_sha256"] != frozen["canonical_payload_sha256"]
     a, b = harness.leaves(frozen["canonical_payload"]), harness.leaves(unfrozen["canonical_payload"])
     assert set(a) == set(b)
@@ -188,6 +199,9 @@ def test_c_service_post_pipeline_equals_the_app(arms):
     assert app1["canonical_payload_sha256"], "the app arm produced no canonical payload"
     (post_args, _kwargs) = app1["post_call"]
     assert post_args[0] == propagate_context_organism(app1["stage2_payload"], app1["pathway_context"])
+    # Review F2: the non-default audit timeout is what the app handed the post-pipeline, so the service ran
+    # under it too. (The default 240 s branch is NOT covered here; see R2.5.md, Notes.)
+    assert _kwargs["audit_timeout_seconds"] == harness.AUDIT_TIMEOUT_SECONDS
     assert service["misses"] == [] and service["refused"] == []
     assert service["canonical_payload_sha256"] == app1["canonical_payload_sha256"]
     assert service["canonical_payload"] == app1["canonical_payload"]
@@ -220,6 +234,64 @@ def test_an_unrecorded_request_fails_loudly(arms):
             __import__("socket").create_connection(("example.org", 443), timeout=1)
     assert [m["kind"] for m in cassette.misses] == ["llm"]
     assert cassette.refused
+
+
+def test_the_spies_reach_a_binding_made_before_the_arms_ran(arms):
+    """Review F1, on the real service module: the module imported before the arms (``PREBOUND``, which did
+    ``from t2pw.service.postpipeline import ...``) was rebound to the spies in every app arm."""
+
+    for name in ("app1", "app2", "unfrozen"):
+        assert {f"{PREBOUND}.{fn}" for fn in harness.SPIED} <= set(arms[name]["spied"]), (name, arms[name]["spied"])
+        assert arms[name]["post_call"] is not None and arms[name]["export_call"] is not None, name
+
+
+def test_one_spy_per_process_records_into_the_current_arm(monkeypatch):
+    """Review F1, the mechanism: a name bound BEFORE the spies are installed is reached, and a spy left bound
+    by an earlier arm (a module imported mid-arm) records into the CURRENT arm, not the earlier one."""
+
+    source = types.ModuleType("_r25_stub_source")
+    source.run_pwml_export = lambda payload: ("exported", payload)
+    monkeypatch.setitem(sys.modules, source.__name__, source)
+    early = types.ModuleType("_r25_stub_early")
+    exec("from _r25_stub_source import run_pwml_export", early.__dict__)  # bound before any arm
+    monkeypatch.setitem(sys.modules, early.__name__, early)
+
+    arm1: dict = {}
+    with pytest.MonkeyPatch.context() as mp:
+        assert harness.install_spies(mp, arm1, source=source, names=("run_pwml_export",)) == sorted(
+            ["_r25_stub_early.run_pwml_export", "_r25_stub_source.run_pwml_export"])
+        assert early.run_pwml_export("p1") == ("exported", "p1")
+        late = types.ModuleType("_r25_stub_late")
+        exec("from _r25_stub_source import run_pwml_export", late.__dict__)  # binds the SPY, and stays
+        monkeypatch.setitem(sys.modules, late.__name__, late)
+    assert arm1["export_call"] == (("p1",), {})
+    assert early.run_pwml_export is not late.run_pwml_export  # undo restored early; late still holds the spy
+
+    arm2: dict = {}
+    with pytest.MonkeyPatch.context() as mp:
+        assert "_r25_stub_late.run_pwml_export" in harness.install_spies(mp, arm2, source=source,
+                                                                         names=("run_pwml_export",))
+        assert late.run_pwml_export("p2") == ("exported", "p2")
+    assert arm2["export_call"] == (("p2",), {}) and arm1["export_call"] == (("p1",), {})
+    assert late.run_pwml_export("p3") == ("exported", "p3")  # no arm current: straight through, recorded nowhere
+    assert arm2["export_call"] == (("p2",), {})
+
+
+def test_every_llm_entry_carries_its_requested_model_and_replay_asserts_it(arms):
+    """Review F3: the key stays model-agnostic, but each entry records the requested model and a replay
+    under another model is a loud ``llm-model`` miss."""
+
+    import t2pw.llm.client as client
+
+    entries = arms["fixture"]["entries"]
+    assert all(row.get("requested_model") for row in entries["llm"])
+    row = entries["llm"][0]
+    cassette = llm_replay.Cassette("replay", {"llm": [row]})
+    with pytest.MonkeyPatch.context() as mp:
+        cassette.install(mp)
+        with pytest.raises(llm_replay.ReplayMiss, match="model mismatch"):
+            client._client.chat.completions.create(model="some/other-model", **row["request"])
+    assert [m["kind"] for m in cassette.misses] == ["llm-model"]
 
 
 def test_keying_ignores_the_model_and_the_timeout_only():
