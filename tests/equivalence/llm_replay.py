@@ -14,6 +14,8 @@ caller already routes through, so no importer's bound name is missed:
 ``record`` calls through and saves request -> response pairs; ``replay`` answers from the fixture, raises
 :class:`ReplayMiss` on anything unrecorded (and lists it in ``misses``), and refuses every non-loopback
 socket connect and DNS lookup (listed in ``refused``) as ``tests/test_orch768_replay_corpus.py`` does.
+A recording may RESUME from an interrupted segment's JSONL transcript (``prior``/``sink``): the prior
+answers are served first and only what lies beyond them goes live (see ``harness.MAX_SEGMENTS``).
 
 **Keying** (see :data:`KEYING`): sha256 of a canonical JSON of what decides the answer.
 
@@ -46,6 +48,7 @@ import re
 import socket
 import threading
 from collections import defaultdict
+from pathlib import Path
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Tuple
 
 KEYING = {
@@ -192,9 +195,15 @@ class Cassette:
     """One arm's view of the fixture. ``mode`` is ``"record"`` or ``"replay"``; cursors start at zero."""
 
     def __init__(self, mode: str, entries: Optional[Dict[str, List[Dict[str, Any]]]] = None,
-                 redact: Iterable[str] = ()) -> None:
+                 redact: Iterable[str] = (), prior: Optional["Cassette"] = None,
+                 sink: Optional[Path] = None) -> None:
         assert mode in ("record", "replay"), mode
+        assert prior is None or mode == "record", "only a recording resumes from a prior segment"
         self.mode = mode
+        #: Record mode only: an interrupted earlier segment. Its answers are served first, in order; only
+        #: what it does not hold goes live. Every answer, served or live, lands in THIS transcript.
+        self.prior = prior
+        self._sink = open(sink, "a", encoding="utf-8") if sink else None
         self.entries: Dict[str, List[Dict[str, Any]]] = {"llm": [], "http": [], "db": []}
         self._index: Dict[Tuple[str, str], List[int]] = defaultdict(list)
         for kind, rows in (entries or {}).items():
@@ -216,21 +225,40 @@ class Cassette:
         return text
 
     def _record(self, kind: str, key: str, request: Any, answer: Dict[str, Any]) -> None:
+        row = {"key": key, "request": request, **answer}
         with self._lock:
-            self.entries[kind].append({"key": key, "request": request, **answer})
+            self.entries[kind].append(row)
+            if self._sink is not None:  # flushed per answer: a killed segment keeps everything it got
+                self._sink.write(json.dumps({"kind": kind, **row}, ensure_ascii=False) + "\n")
+                self._sink.flush()
 
-    def _answer(self, kind: str, key: str, request: Any) -> Dict[str, Any]:
+    def _take(self, kind: str, key: str) -> Tuple[Optional[Dict[str, Any]], int, int]:
         with self._lock:
             slots = self._index.get((kind, key), [])
             n = self._cursor[(kind, key)]
             if n < len(slots):
                 self._cursor[(kind, key)] = n + 1
                 self._served.add((kind, slots[n]))
-                return self.entries[kind][slots[n]]
-            miss = {"kind": kind, "key": key, "asked": n + 1, "recorded": len(slots),
-                    "request": json.dumps(request, ensure_ascii=False)[:600]}
+                return self.entries[kind][slots[n]], n, len(slots)
+            return None, n, len(slots)
+
+    def _lookup(self, kind: str, key: str, request: Any) -> Optional[Dict[str, Any]]:
+        """Replay: the next recorded answer or a loud :class:`ReplayMiss`. Record: the prior segment's next
+        answer (re-logged into this transcript), or ``None`` meaning "call the real service"."""
+
+        if self.mode == "record":
+            row = self.prior._take(kind, key)[0] if self.prior is not None else None
+            if row is not None:
+                self._record(kind, key, request, {k: v for k, v in row.items() if k not in ("key", "request")})
+            return row
+        row, n, recorded = self._take(kind, key)
+        if row is not None:
+            return row
+        miss = {"kind": kind, "key": key, "asked": n + 1, "recorded": recorded,
+                "request": json.dumps(request, ensure_ascii=False)[:600]}
+        with self._lock:
             self.misses.append(miss)
-        raise ReplayMiss(f"unrecorded {kind} request (ask #{n + 1}, {len(slots)} recorded): {miss['request']}")
+        raise ReplayMiss(f"unrecorded {kind} request (ask #{n + 1}, {recorded} recorded): {miss['request']}")
 
     def unused(self) -> List[Tuple[str, int]]:
         return [(kind, i) for kind, rows in self.entries.items() for i in range(len(rows)) if (kind, i) not in self._served]
@@ -257,22 +285,24 @@ class Cassette:
         def create(*args: Any, **kwargs: Any) -> Any:
             assert not args, "chat.completions.create is keyword-only"
             key, request = llm_key(kwargs)
-            if cassette.mode == "record":
-                try:
-                    resp = real_create(**kwargs)
-                except Exception as exc:  # noqa: BLE001 -- noted, then the client's own retry runs
-                    cassette.live_llm_errors.append(f"{type(exc).__name__}: {cassette._scrub(str(exc))[:200]}")
-                    raise
-                cassette._record("llm", key, request, {"response": resp.model_dump(mode="json")})
-                return resp
-            return ChatCompletion.model_validate(cassette._answer("llm", key, request)["response"])
+            row = cassette._lookup("llm", key, request)
+            if row is not None:
+                return ChatCompletion.model_validate(row["response"])
+            try:
+                resp = real_create(**kwargs)
+            except Exception as exc:  # noqa: BLE001 -- noted, then the client's own retry runs
+                cassette.live_llm_errors.append(f"{type(exc).__name__}: {cassette._scrub(str(exc))[:200]}")
+                raise
+            cassette._record("llm", key, request, {"response": resp.model_dump(mode="json")})
+            return resp
 
         def request(session: Any, method: str, url: str, params: Any = None, data: Any = None,
                     headers: Any = None, *args: Any, json: Any = None, **kwargs: Any) -> Any:
             prepared = requests.Request(method.upper(), url, params=params).prepare().url or url
             req = {"method": method.upper(), "url": redact_url(prepared), "body": _body(data, json)}
             key = _sha(req)
-            if cassette.mode == "record":
+            row = cassette._lookup("http", key, req)
+            if row is None:
                 try:
                     resp = real_request(session, method, url, params, data, headers, *args, json=json, **kwargs)
                 except Exception as exc:  # noqa: BLE001 -- replayed as the same exception type
@@ -290,7 +320,6 @@ class Cassette:
                     "headers": {k: v for k, v in resp.headers.items() if k.lower() not in DROPPED_RESPONSE_HEADERS},
                     **body}})
                 return resp
-            row = cassette._answer("http", key, req)
             if "error" in row:
                 exc_type = getattr(requests.exceptions, row["error"]["type"], requests.exceptions.RequestException)
                 raise exc_type(row["error"]["message"])
@@ -310,14 +339,14 @@ class Cassette:
         def _query(resolver: Any, sql: str, params: Any) -> List[Dict[str, Any]]:
             req = {"sql": sql, "params": _encode_db(list(params or ()))}
             key = _sha(req)
-            if cassette.mode == "record":
+            row = cassette._lookup("db", key, req)
+            if row is None:
                 before = resolver.last_error
                 rows = real_query(resolver, sql, params)
                 error = resolver.last_error if resolver.last_error != before else None
                 cassette._record("db", key, req, {"rows": _encode_db(rows),
                                                   "error": cassette._scrub(str(error)) if error else None})
                 return rows
-            row = cassette._answer("db", key, req)
             if row.get("error"):
                 resolver.last_error = row["error"]
             return _decode_db(row["rows"])
@@ -364,6 +393,20 @@ class Cassette:
         mp.setattr(socket.socket, "connect_ex", connect_ex)
         mp.setattr(socket, "create_connection", create_connection)
         mp.setattr(socket, "getaddrinfo", getaddrinfo)
+
+
+def load_transcript(path: Path) -> Dict[str, List[Dict[str, Any]]]:
+    """A segment's JSONL transcript as fixture ``entries``. A torn last line (the segment was killed
+    mid-write) is dropped."""
+
+    entries: Dict[str, List[Dict[str, Any]]] = {"llm": [], "http": [], "db": []}
+    for line in path.read_text(encoding="utf-8").splitlines():
+        try:
+            row = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        entries[row.pop("kind")].append(row)
+    return entries
 
 
 def assert_no_secret_values(text: str, secrets: Mapping[str, str]) -> None:

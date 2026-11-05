@@ -12,7 +12,8 @@
   ``outputs/pathway.pwml``, ``tmp/``, ``out/`` and the ``data/`` mapping and enrichment caches (which start
   EMPTY, so every lookup is a recorded call) therefore never touch the checkout.
 
-Record once (live LLM, live HTTP, live PathBank DB; through the bounded wrapper, heavy lock):
+Record (live LLM, live HTTP, live PathBank DB; through the bounded wrapper, heavy lock). Repeat the same
+command until it writes the fixture; each call is one segment (see :data:`MAX_SEGMENTS`):
 
     python tests/equivalence/harness.py record --env-file <primary .env> --work <scratch dir>
 """
@@ -217,26 +218,44 @@ def _git(*args: str) -> str:
     return subprocess.run(["git", "-C", str(ROOT), *args], capture_output=True, text=True, check=True).stdout.strip()
 
 
+#: A live run of this case outlasts one bounded foreground window (585 s): Stage 2 alone took longer
+#: (R2.5 attempt 1). So a recording is made in SEGMENTS: each one is a fresh process and a fresh root that
+#: replays everything the previous segment got (seconds) and goes live only beyond it. The fixture is
+#: written only by the segment whose run completes, and holds exactly that run's answers.
+MAX_SEGMENTS = 5
+
+
 def record(env_file: Path, work: Path, timeout: float) -> int:
-    """One live run of the app arm; writes :data:`FIXTURE` only if it reached a PWML and leaks nothing."""
+    """One segment of the live recording; writes :data:`FIXTURE` if this segment's run reaches a PWML."""
 
     from dotenv import dotenv_values
 
+    segments = work / "segments"
+    segments.mkdir(parents=True, exist_ok=True)
+    done = sorted(segments.glob("seg-*.jsonl"))
+    if len(done) >= MAX_SEGMENTS:
+        print(f"segment cap ({MAX_SEGMENTS}) reached; not recording")
+        return 3
+    n = len(done) + 1
+    prior = llm_replay.Cassette("replay", llm_replay.load_transcript(done[-1])) if done else None
     values = dotenv_values(env_file)
     secrets = {k: str(v) for k, v in values.items() if k in llm_replay.SECRET_ENV and v}
     pinned = llm_replay.pinned_env_from(values)
     mp = pytest.MonkeyPatch()
     try:
         llm_replay.apply_env(mp, pinned, secrets)
-        cassette = llm_replay.Cassette("record", redact=secrets.values())
+        cassette = llm_replay.Cassette("record", redact=secrets.values(), prior=prior,
+                                       sink=segments / f"seg-{n:02d}.jsonl")
         before = checkout_state()
-        app = run_app_arm(work / "record", cassette, timeout)
+        print(f"segment {n}: prior answers {prior.counts() if prior else {}}", flush=True)
+        app = run_app_arm(work / f"record-{n:02d}", cassette, timeout)
         assert checkout_state() == before, "the recording run wrote into the checkout"
     finally:
         mp.undo()
     summary = {k: app[k] for k in ("outcome", "seconds", "canonical_payload_sha256", "pwml_files")}
     summary.update(pwml_sha256=sha256(app["xml"]) if app["xml"] else None, pwml_bytes=len(app["xml"]),
-                   counts=cassette.counts(), live_llm_errors=cassette.live_llm_errors)
+                   counts=cassette.counts(), live_llm_errors=cassette.live_llm_errors, segment=n,
+                   served_from_prior=len(prior._served) if prior else 0)
     print(json.dumps(summary, indent=1))
     if not app["xml"] or app["outcome"]["status"] != "pass":
         print("NOT WRITING THE FIXTURE: the run did not reach a strict PWML export")
@@ -266,7 +285,7 @@ def main(argv: Optional[list] = None) -> int:
     rec = sub.add_parser("record")
     rec.add_argument("--env-file", type=Path, required=True)
     rec.add_argument("--work", type=Path, required=True)
-    rec.add_argument("--timeout", type=float, default=540.0)
+    rec.add_argument("--timeout", type=float, default=3600.0, help="driver budget; the wrapper bounds wall time")
     args = parser.parse_args(argv)
     return record(args.env_file, args.work, args.timeout)
 
