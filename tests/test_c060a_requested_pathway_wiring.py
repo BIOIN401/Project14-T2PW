@@ -40,10 +40,16 @@ from t2pw.pipeline.cofactor_policy import PathwayContext, classify_entity  # noq
 from t2pw.pipeline.pipeline import merge_additions  # noqa: E402
 
 APP_PATH = SRC / "t2pw" / "app" / "streamlit_app.py"
+#: R1: ``_safe_dict`` now lives here.
+SERVICE_PATH = SRC / "t2pw" / "service" / "postpipeline.py"
 PIPELINE_PATH = SRC / "t2pw" / "pipeline" / "pipeline.py"
 #: C-060a's line-range ownership in the app module (WIRING-PACK header): a
 #: concurrent card owns <= 4530, so every statement lifted here is >= this line.
-OWNED_FLOOR = 4640
+#: R1: was 4640. Line locator only: the two merge sites moved from 5608/5663 to
+#: 3539/3594 when 2,069 lines left the app, and the floor must stay below them
+#: and below the gate-module imports at 3537/3592 (no other app import of that
+#: module sits between 2571 and 3537).
+OWNED_FLOOR = 2571
 GATE_MODULE = "t2pw.pipeline.entity_admission"
 
 
@@ -331,7 +337,7 @@ def test_new_acceptance_the_factory_reproduces_maybe_run_rags_own_derivation():
     own ``_safe_dict``, and requires the factory to agree field for field. If
     either derivation moves without the other, this fails."""
     named = {
-        node.name: node for node in _tree(APP_PATH).body
+        node.name: node for node in (*_tree(APP_PATH).body, *_tree(SERVICE_PATH).body)
         if isinstance(node, ast.FunctionDef) and node.name in ("maybe_run_rag", "_safe_dict")
     }
     wanted = {"_requested_pathway", "_requested_organism"}

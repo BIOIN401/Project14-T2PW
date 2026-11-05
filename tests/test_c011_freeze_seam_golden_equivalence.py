@@ -51,6 +51,8 @@ from t2pw.pipeline.strict_quarantine import (  # noqa: E402
 import test_strict_quarantine_real_artifact_replay as replay  # noqa: E402
 
 APP_REL = "src/t2pw/app/streamlit_app.py"
+#: R1: where the tip keeps the moved code. BASE refs keep reading APP_REL via ``git show``.
+SERVICE_REL = "src/t2pw/service/postpipeline.py"
 ORIGIN_SHA = "9e1b9abe7ba8a1a228558fd03ca6c394cc22c31e"
 BASE_SHA = "72ee20f54b713c8477dc28d38f8053141f239307"
 ORCHESTRATOR = "run_post_pipeline_sbml_artifacts"
@@ -93,7 +95,7 @@ def {seam}(final_export_payload, *, strict_db, outputs_dir, pathway_context,
 
 def _source(ref: str | None) -> str:
     if ref is None:
-        return (ROOT / APP_REL).read_text(encoding="utf-8")
+        return (ROOT / SERVICE_REL).read_text(encoding="utf-8")
     shown = subprocess.run(["git", "show", f"{ref}:{APP_REL}"], cwd=ROOT,
                            capture_output=True, check=True)
     return shown.stdout.decode("utf-8")

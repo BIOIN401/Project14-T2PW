@@ -132,6 +132,9 @@ def offline_app(monkeypatch: pytest.MonkeyPatch) -> List[int]:
         return {"summary": {"enrichment_skipped_for_test": True}}
 
     monkeypatch.setattr(enrich_entities, "run_enrichment", no_enrichment)
+    # R1: the moved post-pipeline code binds these names in its own module.
+    from t2pw.service import postpipeline
+    monkeypatch.setattr(postpipeline, "run_enrichment", no_enrichment)
 
     def audit_stand_in(input_path: Path, output_path: Path, report_path: Path, **_k: Any) -> Dict[str, Any]:
         payload = json.loads(Path(input_path).read_text(encoding="utf-8"))
@@ -145,6 +148,7 @@ def offline_app(monkeypatch: pytest.MonkeyPatch) -> List[int]:
         return report
 
     monkeypatch.setattr(pathway_curator, "run_pathway_curator", audit_stand_in)
+    monkeypatch.setattr(postpipeline, "run_pathway_curator", audit_stand_in)
 
     pooled: List[int] = []
     real_rule3 = ensemble.merge_on_mapped_identity

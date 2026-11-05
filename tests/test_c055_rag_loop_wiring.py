@@ -326,6 +326,11 @@ def offline_stages(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Dict[str,
     monkeypatch.setattr(pipeline_module, "build_and_save_draft_graph", _persist)
     monkeypatch.setattr(quarantine, "quarantine_and_close", _quarantine)
     monkeypatch.setattr(map_ids, "map_payload", _map)
+    # R1: ``run_quarantine_boundary`` moved to the service module, which binds
+    # ``quarantine_and_close`` itself, so the patch must reach it there.
+    import t2pw.service.postpipeline as postpipeline
+
+    monkeypatch.setattr(postpipeline, "quarantine_and_close", _quarantine)
     return calls
 
 

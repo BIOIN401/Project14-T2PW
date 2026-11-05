@@ -45,6 +45,8 @@ from t2pw.pipeline.strict_quarantine import (  # noqa: E402
 )
 
 APP_PATH = SRC / "t2pw" / "app" / "streamlit_app.py"
+#: R1: the moved functions now live here.
+SERVICE_PATH = SRC / "t2pw" / "service" / "postpipeline.py"
 OUTPUTS = ROOT / "outputs"
 
 #: One app interaction here is pure Python -- no LLM, no DB -- but the app's own
@@ -340,6 +342,8 @@ def offline_mapping(monkeypatch: pytest.MonkeyPatch) -> None:
         return report
 
     monkeypatch.setattr(enrich_entities, "run_enrichment", _no_enrichment)
+    from t2pw.service import postpipeline  # R1: the moved orchestrator binds these names itself
+    monkeypatch.setattr(postpipeline, "run_enrichment", _no_enrichment)
 
     def _identity(payload: Dict[str, Any], **_kwargs: Any) -> Dict[str, Any]:
         # A pipeline run that dies BEFORE the quarantine boundary, on demand. The
@@ -365,6 +369,7 @@ def offline_mapping(monkeypatch: pytest.MonkeyPatch) -> None:
         return {"payload": mapped, "report": {"summary": {}, "unmapped": []}}
 
     monkeypatch.setattr(map_ids, "map_payload", _identity)
+    monkeypatch.setattr(postpipeline, "map_payload", _identity)
 
 
 def _clear_artifacts() -> None:
@@ -720,7 +725,7 @@ def test_the_exporter_only_quarantines_when_no_decision_reached_it() -> None:
 
     import ast
 
-    tree = ast.parse(APP_PATH.read_text(encoding="utf-8"))
+    tree = ast.parse(SERVICE_PATH.read_text(encoding="utf-8"))
     exporter = next(
         node
         for node in tree.body
@@ -763,7 +768,7 @@ def test_the_boundary_is_the_only_unguarded_quarantine_call_in_the_app() -> None
 
     import ast
 
-    tree = ast.parse(APP_PATH.read_text(encoding="utf-8"))
+    tree = ast.parse(SERVICE_PATH.read_text(encoding="utf-8"))
     callers = {
         node.name
         for node in ast.walk(tree)
@@ -1120,6 +1125,8 @@ def test_research_mode_keeps_the_unmapped_candidate_and_does_not_block(
         return report
 
     monkeypatch.setattr(enrich_entities, "run_enrichment", _enrichment_that_annotates)
+    from t2pw.service import postpipeline  # R1: the moved orchestrator binds these names itself
+    monkeypatch.setattr(postpipeline, "run_enrichment", _enrichment_that_annotates)
 
     at = _run_post_pipeline_research(_payload_with_one_bad_peripheral())
 

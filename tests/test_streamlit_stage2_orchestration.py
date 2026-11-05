@@ -17,6 +17,8 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 APP_PATH = ROOT / "src" / "t2pw" / "app" / "streamlit_app.py"
+#: R1: the moved functions now live here.
+SERVICE_PATH = ROOT / "src" / "t2pw" / "service" / "postpipeline.py"
 
 SRC = ROOT / "src"
 if str(SRC) not in sys.path:
@@ -77,7 +79,10 @@ def _source_tree() -> ast.Module:
 def _function_node(name: str) -> ast.FunctionDef:
     return next(
         node
-        for node in _source_tree().body
+        for node in (
+            *_source_tree().body,
+            *ast.parse(SERVICE_PATH.read_text(encoding="utf-8")).body,
+        )
         if isinstance(node, ast.FunctionDef) and node.name == name
     )
 

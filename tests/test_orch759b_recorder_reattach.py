@@ -166,6 +166,10 @@ def offline_app(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Dict[str, An
     monkeypatch.setattr(client, "_model", "orch759b-test-model")
     monkeypatch.setattr(client, "PROVIDER", "local")
     monkeypatch.setattr(paths, "PROJECT_ROOT", tmp_path)
+    # R1: the moved post-pipeline code binds these names in its own module.
+    from t2pw.service import postpipeline
+
+    monkeypatch.setattr(postpipeline, "PROJECT_ROOT", tmp_path)
     monkeypatch.setattr(pipeline_module, "TMP_DIR", tmp_path / "tmp")
     monkeypatch.setattr(render_module, "TMP_DIR", tmp_path / "tmp")
     monkeypatch.setattr(map_ids, "_map_compound_with_strategy", _resolve_compound)
@@ -174,6 +178,7 @@ def offline_app(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Dict[str, An
     monkeypatch.setattr(map_ids.HttpClient, "get", _offline)
     monkeypatch.setattr(requests.Session, "request", _offline)
     monkeypatch.setattr(enrich_entities, "run_enrichment", _copy_enrichment)
+    monkeypatch.setattr(postpipeline, "run_enrichment", _copy_enrichment)
     return {"wire": wire, "root": tmp_path}
 
 

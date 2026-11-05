@@ -8,6 +8,8 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 APP_PATH = ROOT / "src" / "t2pw" / "app" / "streamlit_app.py"
+#: R1: the moved functions now live here.
+SERVICE_PATH = ROOT / "src" / "t2pw" / "service" / "postpipeline.py"
 
 # C-051 / D-015 (LOCKED): the exporter no longer resolves compound identity
 # after the canonical freeze; the fixture below is taken through the stage that
@@ -16,7 +18,7 @@ from helpers_prefreeze import prefrozen_when_compounded  # noqa: E402
 
 
 def _load_stage8_validator() -> Any:
-    source = APP_PATH.read_text(encoding="utf-8")
+    source = SERVICE_PATH.read_text(encoding="utf-8")
     tree = ast.parse(source)
     function = next(
         node
@@ -42,7 +44,7 @@ def _load_stage8_validator() -> Any:
     }
     module = ast.Module(body=[function], type_ignores=[])
     ast.fix_missing_locations(module)
-    exec(compile(module, APP_PATH, "exec"), namespace)
+    exec(compile(module, SERVICE_PATH, "exec"), namespace)
     return namespace["_validate_stage8_export_payload"]
 
 
@@ -195,7 +197,7 @@ def test_stage8_bare_protein_actor_fails_ir_without_wrapper_repair() -> None:
 
 
 def test_run_pwml_export_has_no_stage8_normalization_or_autostate_calls() -> None:
-    tree = ast.parse(APP_PATH.read_text(encoding="utf-8"))
+    tree = ast.parse(SERVICE_PATH.read_text(encoding="utf-8"))
     function = next(
         node
         for node in tree.body

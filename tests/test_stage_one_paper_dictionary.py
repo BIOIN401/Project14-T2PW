@@ -810,7 +810,9 @@ def test_only_the_stage6_call_sites_pass_the_keyword() -> None:
     found = []
     for rel in ("src/t2pw/app/streamlit_app.py", "src/t2pw/pipeline/pipeline.py", "src/t2pw/curation/interactive_curator.py",
                 "src/t2pw/mapping/map_ids.py"):
-        for node in ast.walk(ast.parse((ROOT / rel).read_text(encoding="utf-8"))):
+        # R1: two of the app's three map_payload calls moved to the service module.
+        paths = [rel] + (["src/t2pw/service/postpipeline.py"] if rel == "src/t2pw/app/streamlit_app.py" else [])
+        for node in (n for p in paths for n in ast.walk(ast.parse((ROOT / p).read_text(encoding="utf-8")))):
             if isinstance(node, ast.Call) and getattr(node.func, "id", getattr(node.func, "attr", "")) in ("map_payload", "run_mapping"):
                 kw = {k.arg: ast.unparse(k.value) for k in node.keywords}
                 found.append((rel, node.lineno, kw.get("merge_identity_duplicates"), kw.get("use_cache")))
