@@ -1,0 +1,186 @@
+{
+  "label": "R1-ws-R1-tip2-2f",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "C:/t/ws-R1-tip2/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-R1-tip2",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:/t/wsR1tip2-tr/base/2f-3207",
+    "tests/test_batch_driver.py",
+    "tests/test_batch_preflight.py",
+    "tests/test_batch_research_gate_fail_open.py"
+  ],
+  "cwd": "C:\\t\\ws-R1-tip2",
+  "started_at": "2026-11-05T18:29:30+00:00",
+  "finished_at": "2026-11-05T18:30:13+00:00",
+  "duration_seconds": 43.0060639000003,
+  "timeout_seconds": 900.0,
+  "root_pid": 242196,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 242200,
+      "name": "python.exe",
+      "ppid": 242196
+    },
+    {
+      "pid": 230036,
+      "name": "python.exe",
+      "ppid": 242200
+    },
+    {
+      "pid": 241600,
+      "name": "python.exe",
+      "ppid": 230036
+    },
+    {
+      "pid": 234852,
+      "name": "python.exe",
+      "ppid": 242532
+    },
+    {
+      "pid": 242532,
+      "name": "python.exe",
+      "ppid": 242200
+    },
+    {
+      "pid": 236524,
+      "name": "python.exe",
+      "ppid": 242200
+    },
+    {
+      "pid": 242672,
+      "name": "python.exe",
+      "ppid": 236524
+    },
+    {
+      "pid": 240936,
+      "name": "python.exe",
+      "ppid": 242200
+    },
+    {
+      "pid": 209676,
+      "name": "python.exe",
+      "ppid": 235368
+    },
+    {
+      "pid": 235368,
+      "name": "python.exe",
+      "ppid": 242200
+    },
+    {
+      "pid": 233372,
+      "name": "python.exe",
+      "ppid": 242200
+    },
+    {
+      "pid": 242356,
+      "name": "python.exe",
+      "ppid": 233372
+    },
+    {
+      "pid": 209144,
+      "name": "python.exe",
+      "ppid": 219784
+    },
+    {
+      "pid": 219784,
+      "name": "python.exe",
+      "ppid": 242356
+    },
+    {
+      "pid": 241284,
+      "name": "python.exe",
+      "ppid": 242200
+    },
+    {
+      "pid": 240876,
+      "name": "python.exe",
+      "ppid": 241284
+    },
+    {
+      "pid": 235068,
+      "name": "python.exe",
+      "ppid": 240796
+    },
+    {
+      "pid": 240796,
+      "name": "python.exe",
+      "ppid": 240876
+    }
+  ],
+  "descendants_terminated": [
+    209144,
+    209676,
+    219784,
+    230036,
+    233372,
+    234852,
+    235068,
+    235368,
+    236524,
+    240796,
+    240876,
+    240936,
+    241284,
+    241600,
+    242200,
+    242356,
+    242532,
+    242672
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 59512,
+      "name": "python.exe"
+    },
+    {
+      "pid": 165332,
+      "name": "python.exe"
+    },
+    {
+      "pid": 165388,
+      "name": "python.exe"
+    },
+    {
+      "pid": 235856,
+      "name": "python.exe"
+    },
+    {
+      "pid": 241676,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/wsR1tip2-tr/reports/ws-R1-tip2-2f.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-R1-tip2\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-R1-tip2",
+    "repo_head": "c626a9b0ed2d46aeef2cc7ae7c22c46140d0e072",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

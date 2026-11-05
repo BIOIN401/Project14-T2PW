@@ -1,0 +1,58 @@
+T2PW: C:\t\ws-R1-base\src\t2pw\__init__.py
+........................ss.....s........................................ [ 67%]
+.......................F...........                                      [100%]
+================================== FAILURES ===================================
+_ test_run_pwml_export_runs_the_prefreeze_sequence_once_before_build_pwml_ir __
+
+tmp_path = WindowsPath('C:/t/wsR1tip2-tr/base/2c-30390/test_run_pwml_export_runs_the_0')
+
+    def test_run_pwml_export_runs_the_prefreeze_sequence_once_before_build_pwml_ir(
+        tmp_path: Path,
+    ) -> None:
+        """D-033 clause 2. Measured by frame trace, not by reading the source.
+    
+        Fails at base: the trace is ``['build_pwml_ir']`` -- zero pre-freeze calls.
+        """
+    
+        result, trace, _payload = _export_with_trace(tmp_path)
+    
+        assert trace.count("run_prefreeze_resolution") == 1, trace
+        assert "build_pwml_ir" in trace, trace
+>       assert trace.index("run_prefreeze_resolution") < trace.index("build_pwml_ir"), trace
+E       AssertionError: ['build_pwml_ir', 'run_prefreeze_resolution', 'resolve_compounds_prefreeze', '_resolve_compound_rows', '_resolve_compound_rows', 'resolve_species_prefreeze', ...]
+E       assert 1 < 0
+E        +  where 1 = <built-in method index of list object at 0x00000241B67561C0>('run_prefreeze_resolution')
+E        +    where <built-in method index of list object at 0x00000241B67561C0> = ['build_pwml_ir', 'run_prefreeze_resolution', 'resolve_compounds_prefreeze', '_resolve_compound_rows', '_resolve_compound_rows', 'resolve_species_prefreeze', ...].index
+E        +  and   0 = <built-in method index of list object at 0x00000241B67561C0>('build_pwml_ir')
+E        +    where <built-in method index of list object at 0x00000241B67561C0> = ['build_pwml_ir', 'run_prefreeze_resolution', 'resolve_compounds_prefreeze', '_resolve_compound_rows', '_resolve_compound_rows', 'resolve_species_prefreeze', ...].index
+
+tests\test_prefreeze_third_export_seam.py:311: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_prefreeze_third_export_seam.py::test_run_pwml_export_runs_the_prefreeze_sequence_once_before_build_pwml_ir
+1 failed, 103 passed, 3 skipped in 2.68s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R1-base\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 65798c7a102f742391d9301b4eaf2ee00aa40d64  [git, worktree dirty=False]
+label                   : R1-ws-R1-base-2c
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe C:/t/ws-R1-base/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R1-base -q -p no:cacheprovider --basetemp=C:/t/wsR1tip2-tr/base/2c-30390 tests/test_c082_species_rename_declination.py tests/test_c126_g9_base_failure_proof.py tests/test_f179_reaction_support.py tests/test_prefreeze_compound_resolution.py tests/test_prefreeze_third_export_seam.py
+cwd                     : C:\t\ws-R1-base
+root PID / process group: 244960 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 3.83 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  238864:python.exe
+descendants terminated  : 1  238864
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/wsR1tip2-tr/reports/ws-R1-base-2c.json
+json report written     : True
+pre-existing (reported, NEVER killed): 5
+================================================
