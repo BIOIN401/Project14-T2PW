@@ -1,0 +1,147 @@
+T2PW: C:\t\ws-W4\src\t2pw\__init__.py
+...................................F..FFF......F.                        [100%]
+================================== FAILURES ===================================
+_____________________ test_uncontainable_child_never_runs _____________________
+
+store = <t2pw.web.jobs.JobStore object at 0x00000180B3245270>
+tmp_path = WindowsPath('C:/t/wsW4tmp/r1/test_uncontainable_child_never0')
+child_env = None
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000180B3088DE0>
+
+    @pytest.mark.skipif(os.name != "nt", reason="Job Object containment is Windows-only")
+    def test_uncontainable_child_never_runs(store, tmp_path, child_env, monkeypatch):
+        """NEW ACCEPTANCE TEST (W3, new capability, review F2): if the Job Object cannot be
+        made, the suspended child is killed before it runs and the item is error/crash."""
+        monkeypatch.setattr(worker_mod, "_new_job", lambda handle: None)
+        w = _worker(store, tmp_path, "fake_ok")
+        store.submit([_req()])
+        item_id = w.run_one()
+        w.close()
+        item = store.item(item_id)
+>       assert item["status"] == STATUS_ERROR and item["failure_kind"] == KIND_CRASH
+E       AssertionError: assert (None == 'error')
+
+tests\test_web_worker.py:231: AssertionError
+______________ test_deadline_kills_whole_tree_and_marks_timeout _______________
+
+store = <t2pw.web.jobs.JobStore object at 0x00000180B34FA450>
+tmp_path = WindowsPath('C:/t/wsW4tmp/r1/test_deadline_kills_whole_tree0')
+child_env = None
+
+    def test_deadline_kills_whole_tree_and_marks_timeout(store, tmp_path, child_env):
+        """NEW ACCEPTANCE TEST (W3, new capability): past its deadline the child AND a
+        grandchild it spawned as its very first action are killed; the item is
+        status=timeout, failure_kind=timeout."""
+        w = _worker(store, tmp_path, "fake_hang", timeout_s=10.0)
+        store.submit([_req()])
+        t0 = time.time()
+        item_id = w.run_one()
+        elapsed = time.time() - t0
+        w.close()
+        pids = [int(p) for p in
+                (tmp_path / "work" / f"item-{item_id}" / "attempt-1" / "pids.txt").read_text().split()]
+        item = store.item(item_id)
+        # On Windows a venv python.exe is a launcher that starts the real interpreter as
+        # ITS child, so the recorded child PID and the run's os.getpid() can differ.
+        pids.append(item["attempts"][0]["child_pid"])
+        try:
+            assert wait_dead(pids) == []
+        finally:
+            force_kill(pids)
+>       assert item["status"] == STATUS_TIMEOUT and item["failure_kind"] == KIND_TIMEOUT
+E       AssertionError: assert (None == 'timeout')
+
+tests\test_web_worker.py:301: AssertionError
+__________________ test_child_failure_is_a_crash[fake_raise] __________________
+
+store = <t2pw.web.jobs.JobStore object at 0x00000180B3259710>
+tmp_path = WindowsPath('C:/t/wsW4tmp/r1/test_child_failure_is_a_crash_0')
+child_env = None, fake = 'fake_raise'
+
+    @pytest.mark.parametrize("fake", ["fake_raise", "fake_exit"])
+    def test_child_failure_is_a_crash(store, tmp_path, child_env, fake):
+        """NEW ACCEPTANCE TEST (W3, new capability): a raising run, or a child that exits
+        without a result, is persisted as status=error, failure_kind=crash."""
+        w = _worker(store, tmp_path, fake)
+        store.submit([_req()])
+        item = store.item(w.run_one())
+        w.close()
+        assert wait_dead([item["attempts"][0]["child_pid"]]) == []
+>       assert item["status"] == STATUS_ERROR and item["failure_kind"] == KIND_CRASH
+E       AssertionError: assert (None == 'error')
+
+tests\test_web_worker.py:316: AssertionError
+__________________ test_child_failure_is_a_crash[fake_exit] ___________________
+
+store = <t2pw.web.jobs.JobStore object at 0x00000180B32594E0>
+tmp_path = WindowsPath('C:/t/wsW4tmp/r1/test_child_failure_is_a_crash_1')
+child_env = None, fake = 'fake_exit'
+
+    @pytest.mark.parametrize("fake", ["fake_raise", "fake_exit"])
+    def test_child_failure_is_a_crash(store, tmp_path, child_env, fake):
+        """NEW ACCEPTANCE TEST (W3, new capability): a raising run, or a child that exits
+        without a result, is persisted as status=error, failure_kind=crash."""
+        w = _worker(store, tmp_path, fake)
+        store.submit([_req()])
+        item = store.item(w.run_one())
+        w.close()
+        assert wait_dead([item["attempts"][0]["child_pid"]]) == []
+>       assert item["status"] == STATUS_ERROR and item["failure_kind"] == KIND_CRASH
+E       AssertionError: assert (None == 'error')
+
+tests\test_web_worker.py:316: AssertionError
+__________ test_wall_cap_shapes_the_retry_deadline_and_stops_retries __________
+
+store = <t2pw.web.jobs.JobStore object at 0x00000180B323B5F0>
+tmp_path = WindowsPath('C:/t/wsW4tmp/r1/test_wall_cap_shapes_the_retry0')
+child_env = None
+
+    def test_wall_cap_shapes_the_retry_deadline_and_stops_retries(store, tmp_path, child_env):
+        """NEW ACCEPTANCE TEST (W4, new capability): with 7000 s of the 7200 s wall cap used
+        by attempt 1, attempt 2 gets a deadline of the ~200 s left (not RUN_TIMEOUT_S), and
+        its failure is final because less than MIN_RETRY_BUDGET_S remains."""
+        w = _worker(store, tmp_path, "fake_llm")
+        store.submit([_req()])
+        item_id = w.run_one()
+        assert store.item(item_id)["state"] == jobs.QUEUED
+        store._db.execute("UPDATE attempts SET started_at = started_at - 7000")  # 7000 s used
+        w.run_one()
+        w.close()
+        item = store.item(item_id)
+>       assert 100 < item["deadline"] - item["started_at"] < 200
+E       assert 100 < (1793848105.6391857 - 1793848045.6391857)
+
+tests\test_web_worker.py:464: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_web_worker.py::test_uncontainable_child_never_runs - Assert...
+FAILED tests/test_web_worker.py::test_deadline_kills_whole_tree_and_marks_timeout
+FAILED tests/test_web_worker.py::test_child_failure_is_a_crash[fake_raise] - ...
+FAILED tests/test_web_worker.py::test_child_failure_is_a_crash[fake_exit] - A...
+FAILED tests/test_web_worker.py::test_wall_cap_shapes_the_retry_deadline_and_stops_retries
+5 failed, 44 passed in 31.93s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-W4\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 9f55ac867f8e799d31deec98bd6a1f9fdd64e149  [git, worktree dirty=True]
+label                   : w4-focused-01
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-W4 --pin-verdict docs/webserver/evidence/W4/pin/01-focused.pin.json -q --basetemp=C:/t/wsW4tmp/r1 tests/test_web_retry.py tests/test_web_jobs.py tests/test_web_worker.py
+cwd                     : C:\t\ws-W4
+root PID / process group: 980248 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 500 s
+duration                : 34.21 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 41  971928:python.exe, 980672:python.exe, 980936:python.exe, 974696:python.exe, 980104:python.exe, 980616:python.exe, 980788:python.exe, 969920:python.exe, 980928:python.exe, 969784:python.exe, 980312:python.exe, 980544:python.exe, 980652:python.exe, 969960:python.exe, 973748:python.exe, 979652:python.exe, 979760:python.exe, 975916:python.exe, 979932:python.exe, 980032:python.exe, 980340:python.exe, 981164:python.exe, 981208:python.exe, 981252:python.exe, 981296:python.exe, 981452:python.exe, 981576:python.exe, 981832:python.exe, 981848:python.exe, 981448:python.exe, 974432:python.exe, 959248:python.exe, 981020:python.exe, 981320:python.exe, 981360:python.exe, 981080:python.exe, 981136:python.exe, 978884:python.exe, 981428:python.exe, 981852:python.exe, 981892:python.exe
+descendants terminated  : 41  959248, 969784, 969920, 969960, 971928, 973748, 974432, 974696, 975916, 978884, 979652, 979760, 979932, 980032, 980104, 980312, 980340, 980544, 980616, 980652, 980672, 980788, 980928, 980936, 981020, 981080, 981136, 981164, 981208, 981252, 981296, 981320, 981360, 981428, 981448, 981452, 981576, 981832, 981848, 981852, 981892
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : docs/webserver/evidence/W4/01-focused.json
+json report written     : True
+pre-existing (reported, NEVER killed): 5
+================================================

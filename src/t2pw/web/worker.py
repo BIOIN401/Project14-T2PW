@@ -25,10 +25,14 @@ Lifecycle of one item:
 Only the tree this worker started is ever killed: the Job Object handle it created, or
 the process group whose id is its own, still-unreaped child's PID. Never by image name.
 
+Retry (W4): when an attempt ends, :func:`t2pw.web.retry.decide` says retry or final. A
+retry puts the item back to ``queued``; the next claim opens attempt + 1 with a fresh
+deadline, capped by the item's remaining wall budget.
+
 Restart: :meth:`Worker.start` takes an exclusive lock on ``<db>.worker.lock`` (one
 worker per database, whatever its work root), then :meth:`JobStore.recover_running`
-finishes every item left ``running`` as ``error`` / ``crash``. No retry here: that is
-W4. The orphaned child itself is already dead: on Windows the crashed worker's Job
+finishes every item left ``running`` as ``error`` / ``crash``, and the same retry policy
+decides whether that crash is re-queued. The orphaned child itself is already dead: on Windows the crashed worker's Job
 Object handle closed with it; on POSIX the child watches its parent and kills its own
 group when re-parented (and systemd's ``KillMode=control-group`` kills the cgroup).
 
@@ -59,10 +63,7 @@ from t2pw.service.pathway import (
     PathwayResult,
 )
 from t2pw.web.jobs import JobStore, request_from_dict, request_to_dict, result_to_dict
-
-#: Wall-clock cap per item, from dequeue. The batch driver's leg timeout is also 60 min.
-#: W4 owns the final number (D-W07).
-RUN_TIMEOUT_S = 60 * 60
+from t2pw.web.retry import MAX_RETRIES, PER_ITEM_WALL_CAP_S, RUN_TIMEOUT_S, decide
 DEFAULT_RUN_FN = "t2pw.service.pathway:run_pathway"
 IS_WINDOWS = os.name == "nt"
 
@@ -193,7 +194,10 @@ def _crash(message: str) -> Dict[str, Any]:
 
 class Worker:
     def __init__(self, store: JobStore, work_root: Path | str, *,
-                 run_fn: str = DEFAULT_RUN_FN, timeout_s: float = RUN_TIMEOUT_S) -> None:
+                 run_fn: str = DEFAULT_RUN_FN, timeout_s: float = RUN_TIMEOUT_S,
+                 max_retries: int = MAX_RETRIES, wall_cap_s: float = PER_ITEM_WALL_CAP_S) -> None:
+        self.max_retries = max_retries
+        self.wall_cap_s = wall_cap_s
         self.store = store
         self.work_root = Path(work_root)
         self.run_fn = run_fn
@@ -218,7 +222,17 @@ class Worker:
             fh.close()
             raise RuntimeError(f"another worker holds {lock_path}")
         self._lock = fh  # released by close(), or by the OS when this process dies
-        return self.store.recover_running()
+        return self.store.recover_running(self._should_retry)
+
+    def _should_retry(self, item_id: int, attempt: int, result: Dict[str, Any]) -> bool:
+        used = self.store.wall_used(item_id)
+        return decide(result, attempt, used, max_retries=self.max_retries,
+                      wall_cap_s=self.wall_cap_s).retry
+
+    def _finish(self, item_id: int, attempt: int, result: Dict[str, Any],
+                exit_code: Optional[int] = None) -> None:
+        self.store.finish(item_id, attempt, result, exit_code,
+                          requeue=self._should_retry(item_id, attempt, result))
 
     def close(self) -> None:
         if self._lock is not None:
@@ -230,7 +244,7 @@ class Worker:
 
         if self._lock is None:
             raise RuntimeError("call start() first")
-        item = self.store.claim_next(self.timeout_s)
+        item = self.store.claim_next(self.timeout_s, self.wall_cap_s)
         if item is None:
             return None
         item_id, attempt, deadline = item["id"], item["attempt"], item["deadline"]
@@ -250,7 +264,7 @@ class Worker:
             self.store.set_child_pid(item_id, attempt, child.proc.pid)
             exited = child.wait_unreaped(deadline)
         except ContainmentError as exc:
-            self.store.finish(item_id, attempt, _crash(str(exc)))
+            self._finish(item_id, attempt, _crash(str(exc)))
             return item_id
         finally:
             if child is not None:
@@ -265,8 +279,8 @@ class Worker:
             else:
                 result = result_to_dict(PathwayResult(
                     status=STATUS_TIMEOUT, stage=STAGE_INIT, failure_kind=KIND_TIMEOUT,
-                    message=f"killed at the deadline ({self.timeout_s:g} s after dequeue)"))
-        self.store.finish(item_id, attempt, result, exit_code=child.proc.returncode)
+                    message=f"killed at the deadline ({deadline - item['started_at']:g} s after dequeue)"))
+        self._finish(item_id, attempt, result, child.proc.returncode)
         return item_id
 
     def run_forever(self, poll_s: float = 5.0) -> None:
