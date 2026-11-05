@@ -47,6 +47,12 @@ def test_name_mode_nothing_found_says_so_and_bad_input_rejected():
         si.name_to_spec("x", count=0)
 
 
+def test_name_mode_search_outage_is_not_reported_as_no_open_access():
+    for reason in ("search_failed", "fetch_failed"):
+        out = si.resolve_name("serine biosynthesis", "", fetch_fn=lambda specs, **kw: ([], [{"reason": reason}]))
+        assert "try again later" in out.message and "no open-access" not in out.message
+
+
 # -- PMID mode ----------------------------------------------------------------
 class _Resp:
     def __init__(self, payload, status=200):
@@ -67,12 +73,17 @@ class _Client:
         return _Resp({"status": "ok", "records": self.records}, self.status)
 
 
-@pytest.mark.parametrize("bad", ["", "abc", "12 34", "0123", "-5", "1.5", "PMC123", "1234567890", None, "12345678; DROP"])
+@pytest.mark.parametrize("bad", ["", "abc", "12 34", "0123", "-5", "1.5", "PMC123", "1234567890", None, "12345678; DROP", "１２３", "١٢٣", "12\n3"])
 def test_bad_pmid_formats_rejected(bad):
     with pytest.raises(ValueError):
         si.validate_pmid(bad)
     res = si.resolve_pmids([bad], client=_Client())
     assert [(r.status, r.text) for r in res] == [(si.INVALID, "")] and res[0].message
+
+
+def test_invalid_pmid_echo_is_truncated():
+    res = si.resolve_pmids(["9" * 500 + "x"], client=_Client())
+    assert res[0].status == si.INVALID and len(res[0].pmid) <= 40 and len(res[0].message) < 200
 
 
 def test_pmid_with_pmcid_returns_text_and_sends_tool_param(monkeypatch):
@@ -85,11 +96,41 @@ def test_pmid_with_pmcid_returns_text_and_sends_tool_param(monkeypatch):
 
 
 def test_pmid_without_pmcid_is_a_user_facing_outcome_not_a_drop():
-    client = _Client([{"pmid": "111"}, {"pmid": "222", "status": "error", "errmsg": "invalid article id"}])
+    client = _Client([
+        {"pmid": "111"},
+        {"pmid": "222", "status": "error", "errmsg": "invalid article id"},
+        {"requested-id": "333", "status": "error", "errmsg": "invalid article id"},
+    ])
     res = si.resolve_pmids(["111", "222", "333"], client=client, fetch_text_fn=lambda p: pytest.fail("no fetch"))
     assert [r.pmid for r in res] == ["111", "222", "333"]
     assert all(r.status == si.NO_PMCID and not r.ok for r in res)
     assert res[0].message == "no open-access full text found for PMID 111; please upload the PDF"
+
+
+def test_pmid_absent_from_a_200_reply_is_lookup_failed_not_no_pmcid():
+    client = _Client([{"pmid": "111", "pmcid": "PMC1"}])
+    res = si.resolve_pmids(["111", "999"], client=client, fetch_text_fn=lambda p: "t")
+    assert [(r.pmid, r.status) for r in res] == [("111", si.OK), ("999", si.LOOKUP_FAILED)]
+    assert "no open-access" not in res[1].message
+
+
+class _RawClient:
+    def __init__(self, payload):
+        self.payload = payload
+
+    def get(self, url, params=None, headers=None):
+        return _Resp(self.payload)
+
+
+@pytest.mark.parametrize("payload", [
+    {"status": "error", "message": "bad request", "records": [{"pmid": "7"}]},
+    {"status": "ok", "records": "nope"},
+    {"status": "ok"},
+    ["not", "a", "dict"],
+])
+def test_malformed_or_error_idconv_reply_is_lookup_failed(payload):
+    res = si.resolve_pmids(["7"], client=_RawClient(payload), fetch_text_fn=lambda p: pytest.fail("no fetch"))
+    assert res[0].status == si.LOOKUP_FAILED
 
 
 def test_pmcid_but_no_open_access_full_text():
@@ -116,12 +157,32 @@ def test_idconv_outage_is_lookup_failed_not_crash_or_no_oa(client):
     assert "no open-access" not in res[0].message  # an outage must not be reported as "no OA"
 
 
+SECRET = "https://eutils/x?api_key=SECRET&email=x@y"
+
+
+def _user_facing(res):
+    return " ".join([res.message, res.text, res.pmid, getattr(res, "pmcid", "")])
+
+
+def test_exception_text_never_reaches_user_facing_fields():
+    res = si.resolve_pmids(["555"], client=_Client(exc=RuntimeError(SECRET)))
+    assert res[0].status == si.LOOKUP_FAILED and res[0].detail == "RuntimeError"
+    assert "SECRET" not in _user_facing(res[0]) and "x@y" not in _user_facing(res[0])
+
+    def boom(pmcid):
+        raise OSError(SECRET)
+
+    res = si.resolve_pmids(["666"], client=_Client([{"pmid": "666", "pmcid": "PMC6"}]), fetch_text_fn=boom)
+    assert res[0].detail == "OSError"
+    assert "SECRET" not in _user_facing(res[0]) and "x@y" not in _user_facing(res[0])
+
+
 def test_full_text_fetch_error_is_lookup_failed():
     def boom(pmcid):
         raise OSError("down")
 
     res = si.resolve_pmids(["666"], client=_Client([{"pmid": "666", "pmcid": "PMC6"}]), fetch_text_fn=boom)
-    assert res[0].status == si.LOOKUP_FAILED and res[0].pmcid == "PMC6"
+    assert res[0].status == si.LOOKUP_FAILED and res[0].pmcid == "PMC6" and "upload the PDF" in res[0].message
 
 
 # -- PDF mode -----------------------------------------------------------------
@@ -154,19 +215,25 @@ def test_pdf_adapter_reads_real_tiny_fixture_pdfs(tmp_path):
     res = si.read_pdfs([a, str(b)])  # real pdf_parser.parse_pdf, no mock
     assert [r.status for r in res] == [si.OK, si.OK]
     assert "Glycine cleavage enzyme" in res[0].text and "Serine hydroxymethyltransferase" in res[1].text
-    assert res[0].method in {"pdfplumber", "pypdf"}
+    assert res[0].method in {"pdfplumber", "pypdf"} and res[0].path == str(a)
 
 
 def test_pdf_adapter_failure_modes_are_reported_not_dropped(tmp_path):
     good, notpdf = tmp_path / "g.pdf", tmp_path / "x.pdf"
     good.write_bytes(b"%PDF-1.4 stub")
     notpdf.write_text("hello")
-    replies = iter([{"text": "", "method": "ocr", "warnings": ["w"]}, {"text": "", "error": "File not found"}])
+    replies = iter([
+        {"text": "", "method": "ocr", "warnings": ["pdfplumber failed: /srv/uploads/x.pdf"]},
+        {"text": "", "error": "File not found: /srv/uploads/x.pdf"},
+    ])
     res = si.read_pdfs([good, notpdf, tmp_path / "missing.pdf", good], parse_fn=lambda p: next(replies))
     assert [r.status for r in res] == [si.EMPTY, si.ERROR, si.ERROR, si.ERROR]
-    assert res[0].warnings == ["w"] and "no text could be extracted" in res[0].message
+    assert res[0].ocr_used and "no text could be extracted from g.pdf" in res[0].message
     assert "not a PDF" in res[1].message and "missing.pdf" in res[2].message
-    assert "File not found" in res[3].message
+    assert res[3].message == "could not read g.pdf" and res[3].detail == "parser_error"
+    for r in res:  # no absolute path in anything a user could see
+        shown = " ".join([r.message, r.text, r.method])
+        assert "/srv/uploads" not in shown and str(tmp_path) not in shown
 
 
 def test_pdf_adapter_parser_exception_is_an_outcome(tmp_path):
@@ -174,7 +241,8 @@ def test_pdf_adapter_parser_exception_is_an_outcome(tmp_path):
     f.write_bytes(b"%PDF-1.4")
 
     def boom(p):
-        raise ValueError("corrupt")
+        raise ValueError("corrupt /srv/uploads/x.pdf")
 
     res = si.read_pdfs([f], parse_fn=boom)
-    assert res[0].status == si.ERROR and "corrupt" in res[0].message
+    assert res[0].status == si.ERROR and res[0].detail == "ValueError"
+    assert "corrupt" not in res[0].message and str(tmp_path) not in res[0].message
