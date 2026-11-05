@@ -1,0 +1,132 @@
+{
+  "label": "w5-shot-mobile",
+  "command": [
+    "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+    "--headless=new",
+    "--disable-gpu",
+    "--no-first-run",
+    "--user-data-dir=C:/t/wsW5tmp/chrome",
+    "--hide-scrollbars",
+    "--allow-file-access-from-files",
+    "--force-device-scale-factor=2",
+    "--window-size=360,5600",
+    "--screenshot=C:/t/ws-W5/docs/webserver/evidence/W5/styleguide-mobile-light.png",
+    "file:///C:/t/wsW5tmp/frame360.html"
+  ],
+  "cwd": "C:\\t\\ws-W5",
+  "started_at": "2026-11-05T02:22:40+00:00",
+  "finished_at": "2026-11-05T02:22:51+00:00",
+  "duration_seconds": 8.721916999988025,
+  "timeout_seconds": 120.0,
+  "root_pid": 860976,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 859304,
+      "name": "chrome.exe",
+      "ppid": 860976
+    },
+    {
+      "pid": 860176,
+      "name": "chrome.exe",
+      "ppid": 860976
+    },
+    {
+      "pid": 860348,
+      "name": "chrome.exe",
+      "ppid": 860976
+    },
+    {
+      "pid": 860368,
+      "name": "chrome.exe",
+      "ppid": 860976
+    },
+    {
+      "pid": 860388,
+      "name": "chrome.exe",
+      "ppid": 860976
+    },
+    {
+      "pid": 860528,
+      "name": "chrome.exe",
+      "ppid": 860976
+    },
+    {
+      "pid": 860880,
+      "name": "chrome.exe",
+      "ppid": 860976
+    },
+    {
+      "pid": 861052,
+      "name": "chrome.exe",
+      "ppid": 860976
+    },
+    {
+      "pid": 861128,
+      "name": "chrome.exe",
+      "ppid": 860976
+    }
+  ],
+  "descendants_terminated": [
+    859304,
+    860176,
+    860348,
+    860368,
+    860388,
+    860528,
+    860880,
+    861052,
+    861128
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 112240,
+      "name": "python.exe"
+    },
+    {
+      "pid": 778276,
+      "name": "python.exe"
+    },
+    {
+      "pid": 793712,
+      "name": "python.exe"
+    },
+    {
+      "pid": 836100,
+      "name": "python.exe"
+    },
+    {
+      "pid": 859720,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/webserver/evidence/W5/shot-mobile-light.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-W5\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-W5",
+    "repo_head": "dfb9b327b17ce3b13f442f9ccda749bcf382afa1",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

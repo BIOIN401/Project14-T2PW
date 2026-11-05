@@ -1,0 +1,51 @@
+T2PW: C:\t\ws-W5\src\t2pw\__init__.py
+.................F..                                                     [100%]
+================================== FAILURES ===================================
+____________________ test_wcag_aa_contrast[dark_override] _____________________
+
+theme = 'dark_override'
+
+    @pytest.mark.parametrize("theme", ["light", "dark_override"])
+    def test_wcag_aa_contrast(theme):
+        tokens = _theme_blocks()[theme]
+        colour = lambda name: tokens[f"--color-{name}"]  # noqa: E731
+        failures = []
+        for pairs, minimum in ((TEXT_PAIRS, 4.5), (NON_TEXT_PAIRS, 3.0)):
+            for fg, bg in pairs:
+                ratio = _contrast(colour(fg), colour(bg))
+                if ratio < minimum:
+                    failures.append(f"{fg} on {bg}: {ratio:.2f} < {minimum}")
+>       assert not failures, failures
+E       AssertionError: ['on-danger on danger-hover: 4.05 < 4.5']
+E       assert not ['on-danger on danger-hover: 4.05 < 4.5']
+
+tests\test_web_design_system.py:262: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_web_design_system.py::test_wcag_aa_contrast[dark_override]
+1 failed, 19 passed in 1.45s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-W5\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ dfb9b327b17ce3b13f442f9ccda749bcf382afa1  [git, worktree dirty=False]
+label                   : w5-focused
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-W5 --pin-verdict docs/webserver/evidence/W5/pin/01-focused.pin.json -q --basetemp=C:/t/wsW5tmp/r1 tests/test_web_design_system.py
+cwd                     : C:\t\ws-W5
+root PID / process group: 840076 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 4.96 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  847440:python.exe
+descendants terminated  : 1  847440
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : docs/webserver/evidence/W5/01-focused.json
+json report written     : True
+pre-existing (reported, NEVER killed): 11
+================================================

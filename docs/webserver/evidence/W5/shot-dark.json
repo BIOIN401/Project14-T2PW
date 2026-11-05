@@ -1,0 +1,133 @@
+{
+  "label": "w5-shot-dark",
+  "command": [
+    "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+    "--headless=new",
+    "--disable-gpu",
+    "--no-first-run",
+    "--user-data-dir=C:/t/wsW5tmp/chrome",
+    "--hide-scrollbars",
+    "--force-device-scale-factor=2",
+    "--window-size=1440,4250",
+    "--screenshot=C:/t/ws-W5/docs/webserver/evidence/W5/styleguide-dark.png",
+    "file:///C:/t/ws-W5/docs/webserver/evidence/W5/styleguide-dark.html"
+  ],
+  "cwd": "C:\\t\\ws-W5",
+  "started_at": "2026-11-05T02:23:49+00:00",
+  "finished_at": "2026-11-05T02:24:04+00:00",
+  "duration_seconds": 13.239221499999985,
+  "timeout_seconds": 120.0,
+  "root_pid": 870316,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 861492,
+      "name": "chrome.exe",
+      "ppid": 870316
+    },
+    {
+      "pid": 865904,
+      "name": "chrome.exe",
+      "ppid": 870316
+    },
+    {
+      "pid": 869748,
+      "name": "chrome.exe",
+      "ppid": 870316
+    },
+    {
+      "pid": 869944,
+      "name": "chrome.exe",
+      "ppid": 870316
+    },
+    {
+      "pid": 870060,
+      "name": "chrome.exe",
+      "ppid": 870316
+    },
+    {
+      "pid": 870092,
+      "name": "chrome.exe",
+      "ppid": 870316
+    },
+    {
+      "pid": 870200,
+      "name": "chrome.exe",
+      "ppid": 870316
+    },
+    {
+      "pid": 870684,
+      "name": "chrome.exe",
+      "ppid": 870316
+    }
+  ],
+  "descendants_terminated": [
+    861492,
+    865904,
+    869748,
+    869944,
+    870060,
+    870092,
+    870200,
+    870684
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 112240,
+      "name": "python.exe"
+    },
+    {
+      "pid": 778276,
+      "name": "python.exe"
+    },
+    {
+      "pid": 793712,
+      "name": "python.exe"
+    },
+    {
+      "pid": 864436,
+      "name": "python.exe"
+    },
+    {
+      "pid": 865388,
+      "name": "python.exe"
+    },
+    {
+      "pid": 865444,
+      "name": "python.exe"
+    },
+    {
+      "pid": 865948,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/webserver/evidence/W5/shot-dark.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-W5\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-W5",
+    "repo_head": "dfb9b327b17ce3b13f442f9ccda749bcf382afa1",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

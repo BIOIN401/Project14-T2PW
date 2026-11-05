@@ -1,0 +1,637 @@
+<!DOCTYPE html><html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Styleguide · T2PW</title>
+  <link rel="stylesheet" href="../../../../src/t2pw/web/static/css/tokens.css">
+  <link rel="stylesheet" href="../../../../src/t2pw/web/static/css/site.css">
+<style>
+  .sg-themes { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-5); }
+  @media (min-width: 70rem) { .sg-themes { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .sg-panel { min-width: 0; padding: var(--space-5); border: 1px solid var(--color-border); border-radius: var(--radius-lg); }
+  .sg-panel > h2 { padding-bottom: var(--space-3); border-bottom: 1px solid var(--color-border); }
+  .sg-section { margin-top: var(--space-6); }
+  .sg-section > h3 { font-size: var(--text-lg); margin-bottom: var(--space-4); }
+  .sg-swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr)); gap: var(--space-2); list-style: none; padding: 0; }
+  .sg-swatch { display: flex; align-items: center; gap: var(--space-2); font-size: var(--text-xs); font-family: var(--font-mono); }
+  .sg-chip { flex: none; width: 1.5rem; height: 1.5rem; border-radius: var(--radius-sm); border: 1px solid var(--color-border-strong); }
+  .sg-type p { margin-bottom: var(--space-2); line-height: var(--leading-tight); }
+  .sg-row { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; margin-bottom: var(--space-4); }
+  .container { max-width: 96rem; }
+</style>
+
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header">
+    <div class="container">
+      <a class="brand" href="/">
+        <span class="brand__name">T2PW</span>
+        <span class="brand__tagline">Text to PathWhiz</span>
+      </a>
+      <nav class="site-nav" aria-label="Main">
+        <ul>
+          <li><a href="/">Submit</a></li>
+          <li><a href="/examples">Examples</a></li>
+          <li><a href="/help">Help</a></li>
+          <li><a href="/about">About / Cite</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <main id="main" class="site-main" tabindex="-1">
+    <div class="container">
+<h1>Design system</h1>
+<p class="muted">Every W5 component in the light and the dark theme. The page chrome follows
+the system setting or the <code>data-theme</code> override on <code>&lt;html&gt;</code>; each
+panel below forces its own theme.</p>
+<div class="sg-themes">
+  <section class="sg-panel" data-theme="light" aria-labelledby="sg-light">
+    <h2 id="sg-light">Light theme</h2>
+    
+
+<div class="sg-section">
+  <h3>Colour tokens</h3>
+  <ul class="sg-swatches">
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-bg)"></span>bg</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-surface)"></span>surface</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-surface-muted)"></span>surface-muted</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-border)"></span>border</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-border-strong)"></span>border-strong</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-text)"></span>text</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-text-muted)"></span>text-muted</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-primary)"></span>primary</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-primary-hover)"></span>primary-hover</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-primary-subtle)"></span>primary-subtle</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-on-primary)"></span>on-primary</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-focus)"></span>focus</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-danger)"></span>danger</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-danger-hover)"></span>danger-hover</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-on-danger)"></span>on-danger</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-neutral-fg)"></span>neutral-fg</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-neutral-bg)"></span>neutral-bg</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-neutral-border)"></span>neutral-border</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-info-fg)"></span>info-fg</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-info-bg)"></span>info-bg</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-info-border)"></span>info-border</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-success-fg)"></span>success-fg</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-success-bg)"></span>success-bg</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-success-border)"></span>success-border</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-warning-fg)"></span>warning-fg</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-warning-bg)"></span>warning-bg</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-warning-border)"></span>warning-border</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-error-fg)"></span>error-fg</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-error-bg)"></span>error-bg</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-error-border)"></span>error-border</li>
+  </ul>
+</div>
+
+<div class="sg-section sg-type">
+  <h3>Type scale</h3>
+  <p style="font-size: var(--text-4xl)">4xl Heading</p>
+  <p style="font-size: var(--text-3xl)">3xl Heading</p>
+  <p style="font-size: var(--text-2xl)">2xl Heading</p>
+  <p style="font-size: var(--text-xl)">xl Heading</p>
+  <p style="font-size: var(--text-lg)">lg Lead text</p>
+  <p style="font-size: var(--text-base)">base Body text, placeholder sentence.</p>
+  <p style="font-size: var(--text-sm)" class="muted">sm Secondary text</p>
+  <p style="font-size: var(--text-xs)" class="muted">xs Fine print</p>
+  <p>Body with a <a href="#">text link</a> and inline <code>code</code>.</p>
+  <pre><code>&lt;example&gt;preformatted block&lt;/example&gt;</code></pre>
+</div>
+
+<div class="sg-section">
+  <h3>Buttons</h3>
+  <div class="btn-row">
+    <button class="btn btn--primary" type="submit">Primary</button>
+    <button class="btn btn--secondary" type="button">Secondary</button>
+    <button class="btn btn--ghost" type="button">Ghost</button>
+    <button class="btn btn--danger" type="button">Danger</button>
+  </div>
+  <div class="btn-row" style="margin-top: var(--space-3)">
+    <button class="btn btn--primary btn--sm" type="button">Small</button>
+    <button class="btn btn--secondary btn--sm" type="button">Small secondary</button>
+    <a class="btn btn--secondary" href="#">Link button</a>
+    <button class="btn btn--primary" type="button" disabled>Disabled</button>
+  </div>
+</div>
+
+<div class="sg-section">
+  <h3>Form fields</h3>
+  <fieldset class="choices choices--inline" aria-describedby="light-mode-hint">
+  <legend>Input mode</legend>
+  <span class="field__hint" id="light-mode-hint">Radio group in a fieldset.</span>
+  <div class="choices__items">
+    <div class="check">
+      <input type="radio" id="light-mode-1" name="light-mode" value="a" checked>
+      <label for="light-mode-1">Option A</label>
+    </div>
+    <div class="check">
+      <input type="radio" id="light-mode-2" name="light-mode" value="b">
+      <label for="light-mode-2">Option B</label>
+    </div>
+    <div class="check">
+      <input type="radio" id="light-mode-3" name="light-mode" value="c">
+      <label for="light-mode-3">Option C</label>
+    </div>
+  </div>
+</fieldset>
+  <div class="field">
+  <label class="field__label" for="light-name">Text field<span class="field__req">required</span></label>
+  <span class="field__hint" id="light-name-hint">Hint text sits under the label.</span>
+  <input class="input" type="text" id="light-name" name="name" value="" placeholder="Placeholder" required aria-describedby="light-name-hint">
+  
+</div>
+  <div class="field">
+  <label class="field__label" for="light-email">Email field</label>
+  
+  <input class="input" type="email" id="light-email" name="email" value="" autocomplete="email">
+  
+</div>
+  <div class="field">
+  <label class="field__label" for="light-bad">Field with an error</label>
+  
+  <input class="input" type="text" id="light-bad" name="bad" value="invalid value" aria-describedby="light-bad-error" aria-invalid="true">
+  <span class="field__error" id="light-bad-error">Error message explaining how to fix the value.</span>
+</div>
+  <div class="field">
+  <label class="field__label" for="light-ids">Textarea</label>
+  <span class="field__hint" id="light-ids-hint">Multi-line input.</span>
+  <textarea class="input" id="light-ids" name="ids" rows="3" aria-describedby="light-ids-hint"></textarea>
+  
+</div>
+  <div class="field">
+  <label class="field__label" for="light-pick">Select</label>
+  
+  <select class="input" id="light-pick" name="pick">
+    <option value="" selected>Choose one</option>
+    <option value="First option">First option</option>
+    <option value="Second option">Second option</option>
+    <option value="Third option">Third option</option>
+  </select>
+  
+</div>
+  <div class="field">
+  <div class="check">
+    <input type="checkbox" id="light-agree" name="agree" value="1" checked aria-describedby="light-agree-hint">
+    <div>
+      <label for="light-agree">Checkbox, checked by default</label>
+      <span class="field__hint" id="light-agree-hint">One line of explanation for the checkbox.</span>
+    </div>
+  </div>
+  
+</div>
+  <div class="field">
+  <label class="field__label" for="light-files">File upload</label>
+  <span class="field__hint" id="light-files-hint">Accepts multiple files.</span>
+  <input class="input" type="file" id="light-files" name="files" accept=".pdf" multiple aria-describedby="light-files-hint">
+  
+</div>
+</div>
+
+<div class="sg-section">
+  <h3>Status badges</h3>
+  <div class="sg-row">
+    <span class="badge badge--neutral badge--queued">Queued</span>
+    <span class="badge badge--info badge--running">Running</span>
+    <span class="badge badge--success badge--done">Done</span>
+    <span class="badge badge--error badge--failed">Failed</span>
+    <span class="badge badge--warning badge--review_required">Review required</span>
+  </div>
+</div>
+
+<div class="sg-section">
+  <h3>Step indicator</h3>
+  <ol class="steps" aria-label="Example progress">
+  <li class="step step--done">
+    <span class="step__marker" aria-hidden="true"></span>
+    <span class="step__body">
+      <span class="step__label">input</span>
+      <span class="visually-hidden">(completed)</span>
+    </span>
+  </li>
+  <li class="step step--done">
+    <span class="step__marker" aria-hidden="true"></span>
+    <span class="step__body">
+      <span class="step__label">stage1</span>
+      <span class="visually-hidden">(completed)</span>
+      <span class="step__detail">Example detail line</span>
+    </span>
+  </li>
+  <li class="step step--current" aria-current="step">
+    <span class="step__marker" aria-hidden="true"></span>
+    <span class="step__body">
+      <span class="step__label">post_pipeline</span>
+      <span class="visually-hidden">(in progress)</span>
+      <span class="step__detail">Example detail line</span>
+    </span>
+  </li>
+  <li class="step step--pending">
+    <span class="step__marker" aria-hidden="true"></span>
+    <span class="step__body">
+      <span class="step__label">pwml_export</span>
+      <span class="visually-hidden">(not started)</span>
+    </span>
+  </li>
+</ol>
+  <ol class="steps" aria-label="Example progress with a failure">
+  <li class="step step--done">
+    <span class="step__marker" aria-hidden="true"></span>
+    <span class="step__body">
+      <span class="step__label">Step one</span>
+      <span class="visually-hidden">(completed)</span>
+    </span>
+  </li>
+  <li class="step step--failed">
+    <span class="step__marker" aria-hidden="true"></span>
+    <span class="step__body">
+      <span class="step__label">Step two</span>
+      <span class="visually-hidden">(failed)</span>
+      <span class="step__detail">Failed state</span>
+    </span>
+  </li>
+  <li class="step step--skipped">
+    <span class="step__marker" aria-hidden="true"></span>
+    <span class="step__body">
+      <span class="step__label">Step three</span>
+      <span class="visually-hidden">(skipped)</span>
+      <span class="step__detail">Skipped state</span>
+    </span>
+  </li>
+</ol>
+</div>
+
+<div class="sg-section">
+  <h3>Alerts</h3>
+  <div class="alert alert--info">
+  <p class="alert__title"><span class="visually-hidden">Note: </span>Information</p>
+  <p>Neutral placeholder text for an informational message.</p>
+</div>
+  <div class="alert alert--warning">
+  <p class="alert__title"><span class="visually-hidden">Warning: </span>Warning</p>
+  <p>Neutral placeholder text for a warning.</p>
+</div>
+  <div class="alert alert--error" role="alert">
+  <p class="alert__title"><span class="visually-hidden">Error: </span>Error</p>
+  <p>Neutral placeholder text for an error.</p>
+</div>
+  <div class="alert alert--info">
+  <span class="visually-hidden">Note: </span>
+  <p>An alert without a title.</p>
+</div>
+</div>
+
+<div class="sg-section">
+  <h3>Card</h3>
+  <section class="card">
+  <div class="card__header"><h4 class="card__title">Card title</h4></div>
+  <div class="card__body">
+    <p>Card body with placeholder text.</p>
+    <button class="btn btn--secondary btn--sm" type="button">Action</button>
+  </div>
+</section>
+  <section class="card card--raised">
+  <div class="card__body"><p>Raised card without a header.</p></div>
+</section>
+</div>
+
+<div class="sg-section">
+  <h3>Table</h3>
+  <div class="table-wrap" role="region" aria-label="Example table" tabindex="0">
+  <table class="table">
+    <caption>Example table</caption>
+    <thead>
+      <tr><th scope="col">Item</th><th scope="col">Status</th><th scope="col">Identifier</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Row one</td><td><span class="badge badge--success badge--done">Done</span></td><td><code class="chip chip--accession">ID:0001</code></td></tr>
+      <tr><td>Row two</td><td><span class="badge badge--warning badge--review_required">Review required</span></td><td><code class="chip chip--accession">ID:0002</code></td></tr>
+      <tr><td>Row three</td><td><span class="badge badge--error badge--failed">Failed</span></td><td>—</td></tr>
+    </tbody>
+  </table>
+</div>
+</div>
+
+<div class="sg-section">
+  <h3>Download links</h3>
+  <div class="sg-row">
+    <a class="download" href="#" download="example.pwml">
+  <span>Download file</span><span class="download__meta">PWML · size</span>
+</a>
+    <a class="download" href="#" download>
+  <span>Download report</span><span class="download__meta">JSON</span>
+</a>
+  </div>
+</div>
+
+<div class="sg-section">
+  <h3>Code and accession chips</h3>
+  <div class="sg-row">
+    <code class="chip chip--code">example_code</code>
+    <code class="chip chip--accession">ID:0001</code>
+    <a class="chip chip--accession" href="#" title="Linked accession">ID:0002</a>
+  </div>
+</div>
+
+  </section>
+  <section class="sg-panel" data-theme="dark" aria-labelledby="sg-dark">
+    <h2 id="sg-dark">Dark theme</h2>
+    
+
+<div class="sg-section">
+  <h3>Colour tokens</h3>
+  <ul class="sg-swatches">
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-bg)"></span>bg</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-surface)"></span>surface</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-surface-muted)"></span>surface-muted</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-border)"></span>border</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-border-strong)"></span>border-strong</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-text)"></span>text</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-text-muted)"></span>text-muted</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-primary)"></span>primary</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-primary-hover)"></span>primary-hover</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-primary-subtle)"></span>primary-subtle</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-on-primary)"></span>on-primary</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-focus)"></span>focus</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-danger)"></span>danger</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-danger-hover)"></span>danger-hover</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-on-danger)"></span>on-danger</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-neutral-fg)"></span>neutral-fg</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-neutral-bg)"></span>neutral-bg</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-neutral-border)"></span>neutral-border</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-info-fg)"></span>info-fg</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-info-bg)"></span>info-bg</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-info-border)"></span>info-border</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-success-fg)"></span>success-fg</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-success-bg)"></span>success-bg</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-success-border)"></span>success-border</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-warning-fg)"></span>warning-fg</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-warning-bg)"></span>warning-bg</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-warning-border)"></span>warning-border</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-error-fg)"></span>error-fg</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-error-bg)"></span>error-bg</li>
+    <li class="sg-swatch"><span class="sg-chip" style="background: var(--color-error-border)"></span>error-border</li>
+  </ul>
+</div>
+
+<div class="sg-section sg-type">
+  <h3>Type scale</h3>
+  <p style="font-size: var(--text-4xl)">4xl Heading</p>
+  <p style="font-size: var(--text-3xl)">3xl Heading</p>
+  <p style="font-size: var(--text-2xl)">2xl Heading</p>
+  <p style="font-size: var(--text-xl)">xl Heading</p>
+  <p style="font-size: var(--text-lg)">lg Lead text</p>
+  <p style="font-size: var(--text-base)">base Body text, placeholder sentence.</p>
+  <p style="font-size: var(--text-sm)" class="muted">sm Secondary text</p>
+  <p style="font-size: var(--text-xs)" class="muted">xs Fine print</p>
+  <p>Body with a <a href="#">text link</a> and inline <code>code</code>.</p>
+  <pre><code>&lt;example&gt;preformatted block&lt;/example&gt;</code></pre>
+</div>
+
+<div class="sg-section">
+  <h3>Buttons</h3>
+  <div class="btn-row">
+    <button class="btn btn--primary" type="submit">Primary</button>
+    <button class="btn btn--secondary" type="button">Secondary</button>
+    <button class="btn btn--ghost" type="button">Ghost</button>
+    <button class="btn btn--danger" type="button">Danger</button>
+  </div>
+  <div class="btn-row" style="margin-top: var(--space-3)">
+    <button class="btn btn--primary btn--sm" type="button">Small</button>
+    <button class="btn btn--secondary btn--sm" type="button">Small secondary</button>
+    <a class="btn btn--secondary" href="#">Link button</a>
+    <button class="btn btn--primary" type="button" disabled>Disabled</button>
+  </div>
+</div>
+
+<div class="sg-section">
+  <h3>Form fields</h3>
+  <fieldset class="choices choices--inline" aria-describedby="dark-mode-hint">
+  <legend>Input mode</legend>
+  <span class="field__hint" id="dark-mode-hint">Radio group in a fieldset.</span>
+  <div class="choices__items">
+    <div class="check">
+      <input type="radio" id="dark-mode-1" name="dark-mode" value="a" checked>
+      <label for="dark-mode-1">Option A</label>
+    </div>
+    <div class="check">
+      <input type="radio" id="dark-mode-2" name="dark-mode" value="b">
+      <label for="dark-mode-2">Option B</label>
+    </div>
+    <div class="check">
+      <input type="radio" id="dark-mode-3" name="dark-mode" value="c">
+      <label for="dark-mode-3">Option C</label>
+    </div>
+  </div>
+</fieldset>
+  <div class="field">
+  <label class="field__label" for="dark-name">Text field<span class="field__req">required</span></label>
+  <span class="field__hint" id="dark-name-hint">Hint text sits under the label.</span>
+  <input class="input" type="text" id="dark-name" name="name" value="" placeholder="Placeholder" required aria-describedby="dark-name-hint">
+  
+</div>
+  <div class="field">
+  <label class="field__label" for="dark-email">Email field</label>
+  
+  <input class="input" type="email" id="dark-email" name="email" value="" autocomplete="email">
+  
+</div>
+  <div class="field">
+  <label class="field__label" for="dark-bad">Field with an error</label>
+  
+  <input class="input" type="text" id="dark-bad" name="bad" value="invalid value" aria-describedby="dark-bad-error" aria-invalid="true">
+  <span class="field__error" id="dark-bad-error">Error message explaining how to fix the value.</span>
+</div>
+  <div class="field">
+  <label class="field__label" for="dark-ids">Textarea</label>
+  <span class="field__hint" id="dark-ids-hint">Multi-line input.</span>
+  <textarea class="input" id="dark-ids" name="ids" rows="3" aria-describedby="dark-ids-hint"></textarea>
+  
+</div>
+  <div class="field">
+  <label class="field__label" for="dark-pick">Select</label>
+  
+  <select class="input" id="dark-pick" name="pick">
+    <option value="" selected>Choose one</option>
+    <option value="First option">First option</option>
+    <option value="Second option">Second option</option>
+    <option value="Third option">Third option</option>
+  </select>
+  
+</div>
+  <div class="field">
+  <div class="check">
+    <input type="checkbox" id="dark-agree" name="agree" value="1" checked aria-describedby="dark-agree-hint">
+    <div>
+      <label for="dark-agree">Checkbox, checked by default</label>
+      <span class="field__hint" id="dark-agree-hint">One line of explanation for the checkbox.</span>
+    </div>
+  </div>
+  
+</div>
+  <div class="field">
+  <label class="field__label" for="dark-files">File upload</label>
+  <span class="field__hint" id="dark-files-hint">Accepts multiple files.</span>
+  <input class="input" type="file" id="dark-files" name="files" accept=".pdf" multiple aria-describedby="dark-files-hint">
+  
+</div>
+</div>
+
+<div class="sg-section">
+  <h3>Status badges</h3>
+  <div class="sg-row">
+    <span class="badge badge--neutral badge--queued">Queued</span>
+    <span class="badge badge--info badge--running">Running</span>
+    <span class="badge badge--success badge--done">Done</span>
+    <span class="badge badge--error badge--failed">Failed</span>
+    <span class="badge badge--warning badge--review_required">Review required</span>
+  </div>
+</div>
+
+<div class="sg-section">
+  <h3>Step indicator</h3>
+  <ol class="steps" aria-label="Example progress">
+  <li class="step step--done">
+    <span class="step__marker" aria-hidden="true"></span>
+    <span class="step__body">
+      <span class="step__label">input</span>
+      <span class="visually-hidden">(completed)</span>
+    </span>
+  </li>
+  <li class="step step--done">
+    <span class="step__marker" aria-hidden="true"></span>
+    <span class="step__body">
+      <span class="step__label">stage1</span>
+      <span class="visually-hidden">(completed)</span>
+      <span class="step__detail">Example detail line</span>
+    </span>
+  </li>
+  <li class="step step--current" aria-current="step">
+    <span class="step__marker" aria-hidden="true"></span>
+    <span class="step__body">
+      <span class="step__label">post_pipeline</span>
+      <span class="visually-hidden">(in progress)</span>
+      <span class="step__detail">Example detail line</span>
+    </span>
+  </li>
+  <li class="step step--pending">
+    <span class="step__marker" aria-hidden="true"></span>
+    <span class="step__body">
+      <span class="step__label">pwml_export</span>
+      <span class="visually-hidden">(not started)</span>
+    </span>
+  </li>
+</ol>
+  <ol class="steps" aria-label="Example progress with a failure">
+  <li class="step step--done">
+    <span class="step__marker" aria-hidden="true"></span>
+    <span class="step__body">
+      <span class="step__label">Step one</span>
+      <span class="visually-hidden">(completed)</span>
+    </span>
+  </li>
+  <li class="step step--failed">
+    <span class="step__marker" aria-hidden="true"></span>
+    <span class="step__body">
+      <span class="step__label">Step two</span>
+      <span class="visually-hidden">(failed)</span>
+      <span class="step__detail">Failed state</span>
+    </span>
+  </li>
+  <li class="step step--skipped">
+    <span class="step__marker" aria-hidden="true"></span>
+    <span class="step__body">
+      <span class="step__label">Step three</span>
+      <span class="visually-hidden">(skipped)</span>
+      <span class="step__detail">Skipped state</span>
+    </span>
+  </li>
+</ol>
+</div>
+
+<div class="sg-section">
+  <h3>Alerts</h3>
+  <div class="alert alert--info">
+  <p class="alert__title"><span class="visually-hidden">Note: </span>Information</p>
+  <p>Neutral placeholder text for an informational message.</p>
+</div>
+  <div class="alert alert--warning">
+  <p class="alert__title"><span class="visually-hidden">Warning: </span>Warning</p>
+  <p>Neutral placeholder text for a warning.</p>
+</div>
+  <div class="alert alert--error" role="alert">
+  <p class="alert__title"><span class="visually-hidden">Error: </span>Error</p>
+  <p>Neutral placeholder text for an error.</p>
+</div>
+  <div class="alert alert--info">
+  <span class="visually-hidden">Note: </span>
+  <p>An alert without a title.</p>
+</div>
+</div>
+
+<div class="sg-section">
+  <h3>Card</h3>
+  <section class="card">
+  <div class="card__header"><h4 class="card__title">Card title</h4></div>
+  <div class="card__body">
+    <p>Card body with placeholder text.</p>
+    <button class="btn btn--secondary btn--sm" type="button">Action</button>
+  </div>
+</section>
+  <section class="card card--raised">
+  <div class="card__body"><p>Raised card without a header.</p></div>
+</section>
+</div>
+
+<div class="sg-section">
+  <h3>Table</h3>
+  <div class="table-wrap" role="region" aria-label="Example table" tabindex="0">
+  <table class="table">
+    <caption>Example table</caption>
+    <thead>
+      <tr><th scope="col">Item</th><th scope="col">Status</th><th scope="col">Identifier</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Row one</td><td><span class="badge badge--success badge--done">Done</span></td><td><code class="chip chip--accession">ID:0001</code></td></tr>
+      <tr><td>Row two</td><td><span class="badge badge--warning badge--review_required">Review required</span></td><td><code class="chip chip--accession">ID:0002</code></td></tr>
+      <tr><td>Row three</td><td><span class="badge badge--error badge--failed">Failed</span></td><td>—</td></tr>
+    </tbody>
+  </table>
+</div>
+</div>
+
+<div class="sg-section">
+  <h3>Download links</h3>
+  <div class="sg-row">
+    <a class="download" href="#" download="example.pwml">
+  <span>Download file</span><span class="download__meta">PWML · size</span>
+</a>
+    <a class="download" href="#" download>
+  <span>Download report</span><span class="download__meta">JSON</span>
+</a>
+  </div>
+</div>
+
+<div class="sg-section">
+  <h3>Code and accession chips</h3>
+  <div class="sg-row">
+    <code class="chip chip--code">example_code</code>
+    <code class="chip chip--accession">ID:0001</code>
+    <a class="chip chip--accession" href="#" title="Linked accession">ID:0002</a>
+  </div>
+</div>
+
+  </section>
+</div>
+
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="container">
+      <p><strong>How to cite:</strong> [Citation placeholder: added on publication.]</p>
+      <p>[Lab credit placeholder.]</p>
+    </div>
+  </footer>
+</body>
+</html>
