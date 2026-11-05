@@ -1,0 +1,228 @@
+{
+  "label": "W3-14-postmerge-focused",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-int",
+    "--pin-verdict",
+    "C:/t/wsint-tr/reports-W3/14-pin.json",
+    "-q",
+    "--basetemp=C:/t/wsint-tr/w3-base/focused",
+    "tests/test_web_jobs.py",
+    "tests/test_web_worker.py"
+  ],
+  "cwd": "C:\\t\\ws-int",
+  "started_at": "2026-11-05T02:59:38+00:00",
+  "finished_at": "2026-11-05T03:00:06+00:00",
+  "duration_seconds": 27.19738720000896,
+  "timeout_seconds": 540.0,
+  "root_pid": 966512,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 965756,
+      "name": "python.exe",
+      "ppid": 966512
+    },
+    {
+      "pid": 966752,
+      "name": "python.exe",
+      "ppid": 965756
+    },
+    {
+      "pid": 966768,
+      "name": "python.exe",
+      "ppid": 966752
+    },
+    {
+      "pid": 966848,
+      "name": "python.exe",
+      "ppid": 965756
+    },
+    {
+      "pid": 966908,
+      "name": "python.exe",
+      "ppid": 966848
+    },
+    {
+      "pid": 966992,
+      "name": "python.exe",
+      "ppid": 965756
+    },
+    {
+      "pid": 967012,
+      "name": "python.exe",
+      "ppid": 966992
+    },
+    {
+      "pid": 966984,
+      "name": "python.exe",
+      "ppid": 967612
+    },
+    {
+      "pid": 967612,
+      "name": "python.exe",
+      "ppid": 965756
+    },
+    {
+      "pid": 962568,
+      "name": "python.exe",
+      "ppid": 965756
+    },
+    {
+      "pid": 966572,
+      "name": "python.exe",
+      "ppid": 962568
+    },
+    {
+      "pid": 967300,
+      "name": "python.exe",
+      "ppid": 966572
+    },
+    {
+      "pid": 967504,
+      "name": "python.exe",
+      "ppid": 967300
+    },
+    {
+      "pid": 968024,
+      "name": "python.exe",
+      "ppid": 965756
+    },
+    {
+      "pid": 968036,
+      "name": "python.exe",
+      "ppid": 968024
+    },
+    {
+      "pid": 968228,
+      "name": "python.exe",
+      "ppid": 965756
+    },
+    {
+      "pid": 968296,
+      "name": "python.exe",
+      "ppid": 968228
+    },
+    {
+      "pid": 968468,
+      "name": "python.exe",
+      "ppid": 965756
+    },
+    {
+      "pid": 968484,
+      "name": "python.exe",
+      "ppid": 968468
+    },
+    {
+      "pid": 968512,
+      "name": "python.exe",
+      "ppid": 968484
+    },
+    {
+      "pid": 968524,
+      "name": "python.exe",
+      "ppid": 968512
+    },
+    {
+      "pid": 968544,
+      "name": "python.exe",
+      "ppid": 968524
+    },
+    {
+      "pid": 968556,
+      "name": "python.exe",
+      "ppid": 968544
+    },
+    {
+      "pid": 967304,
+      "name": "python.exe",
+      "ppid": 968640
+    },
+    {
+      "pid": 968640,
+      "name": "python.exe",
+      "ppid": 965756
+    }
+  ],
+  "descendants_terminated": [
+    962568,
+    965756,
+    966572,
+    966752,
+    966768,
+    966848,
+    966908,
+    966984,
+    966992,
+    967012,
+    967300,
+    967304,
+    967504,
+    967612,
+    968024,
+    968036,
+    968228,
+    968296,
+    968468,
+    968484,
+    968512,
+    968524,
+    968544,
+    968556,
+    968640
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 112240,
+      "name": "python.exe"
+    },
+    {
+      "pid": 778276,
+      "name": "python.exe"
+    },
+    {
+      "pid": 793712,
+      "name": "python.exe"
+    },
+    {
+      "pid": 874352,
+      "name": "python.exe"
+    },
+    {
+      "pid": 956144,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/wsint-tr/reports-W3/14-postmerge-focused.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-int\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-int",
+    "repo_head": "fb2d99a651374a9ef80a43bb00cfdebb2c3d8c8b",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}
