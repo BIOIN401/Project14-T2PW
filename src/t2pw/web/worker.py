@@ -62,6 +62,7 @@ from t2pw.service.pathway import (
     STATUS_TIMEOUT,
     PathwayResult,
 )
+from t2pw.web import postrun
 from t2pw.web.jobs import JobStore, request_from_dict, request_to_dict, result_to_dict
 from t2pw.web.retry import MAX_RETRIES, PER_ITEM_WALL_CAP_S, RUN_TIMEOUT_S, decide
 DEFAULT_RUN_FN = "t2pw.service.pathway:run_pathway"
@@ -195,11 +196,14 @@ def _crash(message: str) -> Dict[str, Any]:
 class Worker:
     def __init__(self, store: JobStore, work_root: Path | str, *,
                  run_fn: str = DEFAULT_RUN_FN, timeout_s: float = RUN_TIMEOUT_S,
-                 max_retries: int = MAX_RETRIES, wall_cap_s: float = PER_ITEM_WALL_CAP_S) -> None:
+                 max_retries: int = MAX_RETRIES, wall_cap_s: float = PER_ITEM_WALL_CAP_S,
+                 postrun_cfg: Optional[postrun.PostRunConfig] = None) -> None:
         self.max_retries = max_retries
         self.wall_cap_s = wall_cap_s
         self.store = store
         self.work_root = Path(work_root)
+        # W7: post-final actions (curator queue, job email); env T2PW_BASE_URL, T2PW_CURATOR_QUEUE_DIR
+        self.postrun_cfg = postrun_cfg or postrun.PostRunConfig.from_env(store.path, self.work_root)
         self.run_fn = run_fn
         self.timeout_s = timeout_s
         self._lock: Optional[IO[bytes]] = None
@@ -222,7 +226,10 @@ class Worker:
             fh.close()
             raise RuntimeError(f"another worker holds {lock_path}")
         self._lock = fh  # released by close(), or by the OS when this process dies
-        return self.store.recover_running(self._should_retry)
+        ids = self.store.recover_running(self._should_retry)
+        for i in ids:
+            postrun.run(self.store, i, self.postrun_cfg)  # W7: no-op for a re-queued item
+        return ids
 
     def _should_retry(self, item_id: int, attempt: int, result: Dict[str, Any]) -> bool:
         used = self.store.wall_used(item_id)
@@ -233,6 +240,7 @@ class Worker:
                 exit_code: Optional[int] = None) -> None:
         self.store.finish(item_id, attempt, result, exit_code,
                           requeue=self._should_retry(item_id, attempt, result))
+        postrun.run(self.store, item_id, self.postrun_cfg)  # W7: acts only if now final; never raises
 
     def close(self) -> None:
         if self._lock is not None:
