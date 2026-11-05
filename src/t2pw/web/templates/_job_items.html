@@ -1,0 +1,9 @@
+{#- The polled fragment. While anything is unfinished it carries hx-* attributes that
+    re-request it every 10 s (outerHTML swap restarts the timer); once everything is
+    finished it has none, so polling stops. -#}
+{% import "macros/job.html" as j %}
+<div id="job-items"{% if not all_done %} hx-get="/job/{{ sid }}/status" hx-trigger="every 10s" hx-swap="outerHTML"{% endif %}>
+  {%- for it in items %}
+  {{ j.item_card(it) }}
+  {%- endfor %}
+</div>

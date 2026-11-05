@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% import "macros/components.html" as c %}
+{% block title %}Examples{% endblock %}
+{% block content %}
+<h1>Examples</h1>
+{#- TODO(PO): replace this card with 3-4 curated examples (plan: W6/W9, Dec 7-14). Each
+    needs a real, previously verified input and a precomputed result. Do not invent
+    example data here. -#}
+{% call c.alert("info", title="Placeholder") %}
+<p>[TODO for the product owner: 3 to 4 curated, verified examples will be listed here, each
+with its input and a finished result you can open.]</p>
+{% endcall %}
+<p>Until then, try the <a href="/">submit page</a> with a pathway name and an organism.</p>
+{% endblock %}

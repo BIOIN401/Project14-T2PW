@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% import "macros/components.html" as c %}
+{% block title %}Job status{% endblock %}
+{% block page_head %}{% if not all_done %}
+  <noscript><meta http-equiv="refresh" content="30"></noscript>{% endif %}{% endblock %}
+{% block content %}
+<h1>Job status</h1>
+{% call c.alert("info", title="Keep this link") %}
+<p>This page is your job. Bookmark it: <code class="job-url">{{ job_url }}</code></p>
+<p>Anyone who has the link can see the results, so share it with care.
+{% if has_email %}We will also email you when it finishes.{% endif %}</p>
+{% endcall %}
+<p class="muted">Submitted {{ submitted }}.
+{% if not all_done %}This page updates itself every 10 seconds.{% endif %}</p>
+{% include "_job_items.html" %}
+<p class="muted">
+{% if consent %}You agreed that a finished, release-ready result may be passed to PathBank curators for review.
+{% else %}You did not agree to pass results to PathBank; nothing will be sent.{% endif %}</p>
+{% endblock %}

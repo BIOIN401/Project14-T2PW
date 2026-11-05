@@ -1,0 +1,10 @@
+{#- W6 page layout: base.html plus the page stylesheet and the one script (HTMX).
+    htmx-config turns off everything the CSP would block anyway (inline indicator
+    styles, eval, script tags in swapped HTML). -#}
+{% extends "base.html" %}
+{% block head %}
+  <link rel="stylesheet" href="{{ static_url }}/css/pages.css">
+  <meta name="htmx-config" content='{"includeIndicatorStyles":false,"allowEval":false,"allowScriptTags":false}'>
+  {%- block page_head %}{% endblock %}
+{% endblock %}
+{% block scripts %}{{ htmx_script() }}{% endblock %}

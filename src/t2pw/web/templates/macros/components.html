@@ -246,3 +246,15 @@
 <code class="{{ cls }}"{% if title %} title="{{ title }}"{% endif %}>{{ text }}</code>
 {%- endif -%}
 {%- endmacro %}
+
+
+{#- Figure (W6): an image with a caption. `src` must be a server-built URL and
+    `alt` is required text (escaped). -#}
+{% macro figure(src, alt, caption=None) -%}
+<figure class="figure">
+  <img class="figure__img" src="{{ src }}" alt="{{ alt }}">
+  {%- if caption %}
+  <figcaption class="figure__caption">{{ caption }}</figcaption>
+  {%- endif %}
+</figure>
+{%- endmacro %}
