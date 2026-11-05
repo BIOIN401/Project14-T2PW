@@ -17,9 +17,11 @@ app imported the defaults are a :class:`LoggingReporter` and a fresh ``dict``.
 
 from __future__ import annotations
 
+import contextlib
 import json
 import logging
-from typing import Any, Callable, Dict, MutableMapping, Optional, Protocol
+from typing import (Any, Callable, ContextManager, Dict, Iterator, MutableMapping, Optional,
+                    Protocol)
 
 
 class Progress(Protocol):
@@ -44,6 +46,18 @@ class Reporter(Protocol):
 
     def progress(self, label: str, **kwargs: Any) -> Progress: ...
 
+    # R3a: the input-assembly messages (st.success / caption / text and the
+    # st.spinner / st.expander context managers).
+    def success(self, body: Any) -> Any: ...
+
+    def caption(self, body: Any) -> Any: ...
+
+    def text(self, body: Any) -> Any: ...
+
+    def spinner(self, text: str, **kwargs: Any) -> ContextManager[Any]: ...
+
+    def expander(self, label: str, **kwargs: Any) -> ContextManager[Any]: ...
+
 
 class StreamlitReporter:
     """Forwards each call to the given ``streamlit`` module, arguments untouched."""
@@ -66,6 +80,21 @@ class StreamlitReporter:
     def progress(self, label: str, **kwargs: Any) -> Any:
         # ``st.status`` returns the container whose ``write`` / ``update`` the caller uses.
         return self._st.status(label, **kwargs)
+
+    def success(self, body: Any) -> Any:
+        return self._st.success(body)
+
+    def caption(self, body: Any) -> Any:
+        return self._st.caption(body)
+
+    def text(self, body: Any) -> Any:
+        return self._st.text(body)
+
+    def spinner(self, text: str, **kwargs: Any) -> Any:
+        return self._st.spinner(text, **kwargs)
+
+    def expander(self, label: str, **kwargs: Any) -> Any:
+        return self._st.expander(label, **kwargs)
 
 
 class _LoggedProgress:
@@ -106,6 +135,25 @@ class LoggingReporter:
 
     def progress(self, label: str, **_kwargs: Any) -> _LoggedProgress:
         return _LoggedProgress(self._logger, label)
+
+    def success(self, body: Any) -> None:
+        self._logger.info("%s", body)
+
+    def caption(self, body: Any) -> None:
+        self._logger.info("%s", body)
+
+    def text(self, body: Any) -> None:
+        self._logger.info("%s", body)
+
+    @contextlib.contextmanager
+    def spinner(self, text: str, **_kwargs: Any) -> Iterator[None]:
+        self._logger.info("%s", text)
+        yield
+
+    @contextlib.contextmanager
+    def expander(self, label: str, **_kwargs: Any) -> Iterator[None]:
+        self._logger.info("%s", label)
+        yield
 
 
 _APP_DEFAULTS: Dict[str, Callable[[], Any]] = {}
