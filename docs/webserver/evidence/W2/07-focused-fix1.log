@@ -1,0 +1,46 @@
+T2PW: C:\t\ws-W2\src\t2pw\__init__.py
+........F                                                                [100%]
+================================== FAILURES ===================================
+___ test_render_is_one_compact_line_per_species_and_matches_committed_file ____
+
+    def test_render_is_one_compact_line_per_species_and_matches_committed_file():
+        text = (ROOT / "data" / "webserver" / "organisms.json").read_text(encoding="utf-8")
+        doc = json.loads(text)
+        lines = text.splitlines()
+        start = lines.index(' "organisms": [')
+        body = lines[start + 1:-2]
+        assert len(body) == doc["count"] == 4018 and lines[-2:] == [" ]", "}"]
+>       assert all(l.startswith("  {") and " " not in l.split('"label":', 1)[0] for l in body)
+E       assert False
+E        +  where False = all(<generator object test_render_is_one_compact_line_per_species_and_matches_committed_file.<locals>.<genexpr> at 0x0000021E6FC6D000>)
+
+tests\test_service_organisms.py:127: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_organisms.py::test_render_is_one_compact_line_per_species_and_matches_committed_file
+1 failed, 8 passed in 0.77s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-W2\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f41c378f910da90832f82936593258ce73925f33  [git, worktree dirty=True]
+label                   : w2-focused-fix1
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-W2 --pin-verdict docs/webserver/evidence/W2/pin/07-focused-fix1.pin.json -q --basetemp=C:/t/wsW2tmp/r7 tests/test_service_organisms.py
+cwd                     : C:\t\ws-W2
+root PID / process group: 876780 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 2.18 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 2  876704:python.exe, 877716:python.exe
+descendants terminated  : 2  876704, 877716
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : docs/webserver/evidence/W2/07-focused-fix1.json
+json report written     : True
+pre-existing (reported, NEVER killed): 5
+================================================
