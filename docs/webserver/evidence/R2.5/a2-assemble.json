@@ -1,0 +1,105 @@
+{
+  "label": "a2-assemble",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "tests/equivalence/harness.py",
+    "assemble",
+    "--env-file",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.env",
+    "--transcript",
+    "C:/t/wsR25tmp/rec2/segments/seg-02.jsonl",
+    "--live-log",
+    "C:/t/wsR25tmp/a2-seg02.log",
+    "--recorded-head",
+    "e7705a91b005cf7829e61ada3b659d39cacb7ede"
+  ],
+  "cwd": "C:\\t\\ws-R25",
+  "started_at": "2026-11-05T21:43:50+00:00",
+  "finished_at": "2026-11-05T21:43:51+00:00",
+  "duration_seconds": 0.6481913999996323,
+  "timeout_seconds": 120.0,
+  "root_pid": 577508,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 568380,
+      "name": "python.exe",
+      "ppid": 577508
+    }
+  ],
+  "descendants_terminated": [
+    568380
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 442728,
+      "name": "python.exe"
+    },
+    {
+      "pid": 460520,
+      "name": "python.exe"
+    },
+    {
+      "pid": 496044,
+      "name": "python.exe"
+    },
+    {
+      "pid": 496252,
+      "name": "python.exe"
+    },
+    {
+      "pid": 564744,
+      "name": "python.exe"
+    },
+    {
+      "pid": 566984,
+      "name": "python.exe"
+    },
+    {
+      "pid": 574172,
+      "name": "python.exe"
+    },
+    {
+      "pid": 575932,
+      "name": "python.exe"
+    },
+    {
+      "pid": 576232,
+      "name": "python.exe"
+    },
+    {
+      "pid": 577212,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/ws-R25/docs/webserver/evidence/R2.5/a2-assemble.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-R25\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-R25",
+    "repo_head": "e7705a91b005cf7829e61ada3b659d39cacb7ede",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

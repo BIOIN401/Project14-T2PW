@@ -1,0 +1,100 @@
+{
+  "label": "t9-equivalence",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/ws-R25/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-R25",
+    "--pin-verdict",
+    "C:/t/wsR25tmp/ev5/pin/t9-equivalence.pin.json",
+    "-q",
+    "-rs",
+    "--durations=5",
+    "--basetemp=C:/t/wsR25tmp/bt/t9-equivalence",
+    "tests/test_equivalence_app_vs_service.py"
+  ],
+  "cwd": "C:\\t\\ws-R25",
+  "started_at": "2026-11-05T23:09:03+00:00",
+  "finished_at": "2026-11-05T23:10:03+00:00",
+  "duration_seconds": 60.30870759999743,
+  "timeout_seconds": 560.0,
+  "root_pid": 685440,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 683676,
+      "name": "python.exe",
+      "ppid": 685440
+    }
+  ],
+  "descendants_terminated": [
+    683676
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 442728,
+      "name": "python.exe"
+    },
+    {
+      "pid": 460520,
+      "name": "python.exe"
+    },
+    {
+      "pid": 613520,
+      "name": "python.exe"
+    },
+    {
+      "pid": 613612,
+      "name": "python.exe"
+    },
+    {
+      "pid": 688712,
+      "name": "python.exe"
+    },
+    {
+      "pid": 688824,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/wsR25tmp/ev5/t9-equivalence.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-R25\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-R25",
+    "repo_head": "8855f6de542bd4321b4369d338fd8406e508993a",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "R2.5",
+    "token": "R2.5:688824:72741bada6dcb8d8",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

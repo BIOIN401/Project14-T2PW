@@ -1,0 +1,84 @@
+T2PW: C:\t\ws-R25\src\t2pw\__init__.py
+...FFF....                                                               [100%]
+================================== FAILURES ===================================
+______________________ test_b_two_app_runs_are_identical ______________________
+
+arms = {'after': {'data/enrichment_cache.json': (35407855, 1793904100243749400), 'data/id_mapping_cache.json': (4230034, 1793...t/enrichment_dump.json': (33986, 1793904105931443300), 'outputs/pathway.pwml': (23487, 1793904105939148300), ...}, ...}
+
+    def test_b_two_app_runs_are_identical(arms):
+        app1, app2 = arms["app1"], arms["app2"]
+>       assert app1["canonical_payload_sha256"] and app1["canonical_payload_sha256"] == app2["canonical_payload_sha256"]
+E       AssertionError: assert ('10609619e47eb8887dceaa7671768de0c99ed50f84814ed6d56b980ce454d136' and '10609619e47e...b980ce454d136' == '27f37959eb2f...208b323e03abc'
+E         
+E         - 27f37959eb2f5bfca1b46a3aefbb8f873e5c5cb8c1586654218208b323e03abc
+E         + 10609619e47eb8887dceaa7671768de0c99ed50f84814ed6d56b980ce454d136)
+
+tests\test_equivalence_app_vs_service.py:131: AssertionError
+_______________ test_b_replay_reproduces_the_recorded_live_run ________________
+
+arms = {'after': {'data/enrichment_cache.json': (35407855, 1793904100243749400), 'data/id_mapping_cache.json': (4230034, 1793...t/enrichment_dump.json': (33986, 1793904105931443300), 'outputs/pathway.pwml': (23487, 1793904105939148300), ...}, ...}
+
+    def test_b_replay_reproduces_the_recorded_live_run(arms):
+        recorded = arms["fixture"]["recorded"]
+>       assert arms["app1"]["canonical_payload_sha256"] == recorded["canonical_payload_sha256"]
+E       AssertionError: assert '10609619e47e...b980ce454d136' == '846d8fb0bd31...c4e3a852e7550'
+E         
+E         - 846d8fb0bd31ba9707e754b583b57db6d78ca2593daae58c73bc4e3a852e7550
+E         + 10609619e47eb8887dceaa7671768de0c99ed50f84814ed6d56b980ce454d136
+
+tests\test_equivalence_app_vs_service.py:140: AssertionError
+_________________ test_c_service_post_pipeline_equals_the_app _________________
+
+arms = {'after': {'data/enrichment_cache.json': (35407855, 1793904100243749400), 'data/id_mapping_cache.json': (4230034, 1793...t/enrichment_dump.json': (33986, 1793904105931443300), 'outputs/pathway.pwml': (23487, 1793904105939148300), ...}, ...}
+
+    def test_c_service_post_pipeline_equals_the_app(arms):
+        app1, service = arms["app1"], arms["service"]
+        # The Stage-2 payload the service started from is the one the app's session held.
+        from t2pw.pipeline.pipeline import propagate_context_organism
+    
+        assert app1["post_call"] and app1["export_call"], "the app arm never reached the post-pipeline and export"
+        assert app1["canonical_payload_sha256"], "the app arm produced no canonical payload"
+        (post_args, _kwargs) = app1["post_call"]
+        assert post_args[0] == propagate_context_organism(app1["stage2_payload"], app1["pathway_context"])
+        assert service["misses"] == [] and service["refused"] == []
+>       assert service["canonical_payload_sha256"] == app1["canonical_payload_sha256"]
+E       AssertionError: assert '16bdc52c287e...0f8de8eb15ebc' == '10609619e47e...b980ce454d136'
+E         
+E         - 10609619e47eb8887dceaa7671768de0c99ed50f84814ed6d56b980ce454d136
+E         + 16bdc52c287e3930d36744d71fea3ebc8fd23ab3a9090e6133b0f8de8eb15ebc
+
+tests\test_equivalence_app_vs_service.py:155: AssertionError
+============================= slowest 5 durations =============================
+42.96s setup    tests/test_equivalence_app_vs_service.py::test_a_app_runs_offline_from_the_fixture_alone_to_the_recorded_verdict
+0.38s call     tests/test_equivalence_app_vs_service.py::test_fixture_holds_no_secrets
+0.02s call     tests/test_equivalence_app_vs_service.py::test_fixture_was_recorded_from_a_clean_tree_through_to_the_export_step
+
+(2 durations < 0.005s hidden.  Use -vv to show these durations.)
+3 failed, 7 passed in 43.52s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R25\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 482da7c762010e25a73fabb8150d7ef74e6b0cb1  [git, worktree dirty=False]
+label                   : t5-equivalence
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R25/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R25 --pin-verdict C:/t/wsR25tmp/ev3/pin/t5-equivalence.pin.json -q -rs --durations=5 --basetemp=C:/t/wsR25tmp/bt/t5-equivalence tests/test_equivalence_app_vs_service.py
+cwd                     : C:\t\ws-R25
+root PID / process group: 641388 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 560 s
+duration                : 45.26 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  640088:python.exe
+descendants terminated  : 1  640088
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/wsR25tmp/ev3/t5-equivalence.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R2.5  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

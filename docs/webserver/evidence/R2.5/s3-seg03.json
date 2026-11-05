@@ -1,0 +1,102 @@
+{
+  "label": "s3-seg03",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/ws-R25/tests/equivalence/harness.py",
+    "record",
+    "--env-file",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.env",
+    "--work",
+    "C:/t/wsR25tmp/rec3"
+  ],
+  "cwd": "C:\\t\\ws-R25",
+  "started_at": "2026-11-05T22:35:35+00:00",
+  "finished_at": "2026-11-05T22:37:21+00:00",
+  "duration_seconds": 106.21497250000175,
+  "timeout_seconds": 575.0,
+  "root_pid": 644152,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 644176,
+      "name": "python.exe",
+      "ppid": 644152
+    },
+    {
+      "pid": 644820,
+      "name": "git.exe",
+      "ppid": 644176
+    }
+  ],
+  "descendants_terminated": [
+    644176,
+    644820
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 442728,
+      "name": "python.exe"
+    },
+    {
+      "pid": 460520,
+      "name": "python.exe"
+    },
+    {
+      "pid": 613520,
+      "name": "python.exe"
+    },
+    {
+      "pid": 613612,
+      "name": "python.exe"
+    },
+    {
+      "pid": 644828,
+      "name": "python.exe"
+    },
+    {
+      "pid": 644904,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/wsR25tmp/ev3/s3-seg03.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-R25\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-R25",
+    "repo_head": "e1b711eb9b7574bd1838293df8d8f4542c02b7cc",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "R2.5",
+    "token": "R2.5:644904:447ca40035a09436",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

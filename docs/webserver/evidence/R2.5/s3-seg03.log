@@ -1,0 +1,106 @@
+segment 3: prior answers {'llm': 17, 'http': 28, 'db': 44}
+case PMC7059786: 35999 chars, sha256 7f24b4f3045ae9eb
+2026-11-05 16:35:37.542 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 16:35:37.542 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 16:35:41.139 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-05 16:35:41.140 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-05 16:35:41.141 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-05 16:35:41.311 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-05 16:35:41.312 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-05 16:35:41.312 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+[cassette +72s] llm live 54s key=db1f629a4d max_tokens=128000 completion_tokens=5461
+[cassette +82s] llm live 10s key=7790ac14a0 max_tokens=128000 completion_tokens=1003
+2026-11-05 16:37:20.760 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+{
+ "outcome": {
+  "status": "pass",
+  "failure_kind": "",
+  "stage": "pwml_export",
+  "message": "strict run completed; pathway.review_required.pwml is 53474 bytes",
+  "detail": "8 QA issues need review.\nQA warnings:\nChEBI ID '15378' is missing the 'CHEBI:' prefix.\nChEBI ID '28790' is missing the 'CHEBI:' prefix."
+ },
+ "seconds": 103.3,
+ "canonical_payload_sha256": "846d8fb0bd31ba9707e754b583b57db6d78ca2593daae58c73bc4e3a852e7550",
+ "pwml_files": {
+  "pathway.pwml": "76617a0d5063a582b5f769c26be253ea1e669049e44dcee9fd26882502ed1f37"
+ },
+ "export_verdict": {
+  "ok": true,
+  "error": null,
+  "issues": 0,
+  "required_gate_errors": [],
+  "required_gate_warnings": [
+   {
+    "code": "pathway_missing_pw_id",
+    "message": "Pathway has no pw_id / pathbank_pathway_id.",
+    "pointer": "/metadata/pw_id"
+   }
+  ]
+ },
+ "pwml_sha256": "76617a0d5063a582b5f769c26be253ea1e669049e44dcee9fd26882502ed1f37",
+ "pwml_bytes": 53474,
+ "counts": {
+  "llm": 19,
+  "http": 56,
+  "db": 98
+ },
+ "live_llm_errors": [],
+ "segment": 3,
+ "served_from_prior": 89
+}
+wrote C:\t\ws-R25\tests\fixtures\equivalence\sour_taste_v2_strict.json.gz (1230749 bytes gz, 5507540 bytes json)
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R25\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ e1b711eb9b7574bd1838293df8d8f4542c02b7cc  [git, worktree dirty=False]
+label                   : s3-seg03
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R25/tests/equivalence/harness.py record --env-file C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.env --work C:/t/wsR25tmp/rec3
+cwd                     : C:\t\ws-R25
+root PID / process group: 644152 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 575 s
+duration                : 106.21 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 2  644176:python.exe, 644820:git.exe
+descendants terminated  : 2  644176, 644820
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/wsR25tmp/ev3/s3-seg03.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R2.5  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

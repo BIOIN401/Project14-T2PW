@@ -1,0 +1,182 @@
+T2PW: C:\t\ws-R25\src\t2pw\__init__.py
+..FFFFs...                                                               [100%]
+================================== FAILURES ===================================
+___ test_a_app_runs_offline_from_the_fixture_alone_to_the_recorded_verdict ____
+
+arms = {'after': {'data/enrichment_cache.json': (35407855, 1793904100243749400), 'data/id_mapping_cache.json': (4230034, 1793...t/enrichment_dump.json': (33986, 1793904105931443300), 'outputs/pathway.pwml': (23487, 1793904105939148300), ...}, ...}
+
+    def test_a_app_runs_offline_from_the_fixture_alone_to_the_recorded_verdict(arms):
+        recorded = arms["fixture"]["recorded"]
+        for name in ("app1", "app2"):
+            arm = arms[name]
+>           assert arm["misses"] == [], (name, arm["misses"][:3])
+E           AssertionError: ('app1', [{'asked': 1, 'key': 'c43d9849a03545f8cd9b9a130e094c0f80974d9c19368ce5983086a8f59e1949', 'kind': 'llm', 'reco...ed': 1, 'key': '98787bf1492b518fb21b6d473e3d96bb4da9fa7c0902d98dfae3e16371fe4dbc', 'kind': 'llm', 'recorded': 0, ...}])
+E           assert [{'asked': 1,... 0, ...}, ...] == []
+E             
+E             Left contains 17 more items, first extra item: {'asked': 1, 'key': 'c43d9849a03545f8cd9b9a130e094c0f80974d9c19368ce5983086a8f59e1949', 'kind': 'llm', 'recorded': 0, ...}
+E             Use -v to get more diff
+
+tests\test_equivalence_app_vs_service.py:112: AssertionError
+---------------------------- Captured stderr setup ----------------------------
+2026-11-05 16:06:25.874 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 16:06:27.291 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-05 16:06:27.292 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-05 16:06:27.294 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-05 16:06:27.294 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-05 16:06:27.465 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-05 16:06:27.466 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-05 16:06:27.467 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-05 16:06:27.467 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-05 16:06:49.307 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 16:06:49.970 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-05 16:06:49.971 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-05 16:06:49.971 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-05 16:06:49.972 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-05 16:06:50.135 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-05 16:06:50.135 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-05 16:06:50.136 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-05 16:06:50.136 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+----------------------------- Captured log setup ------------------------------
+WARNING  t2pw.curation.audit_json_llm:audit_json_llm.py:1465 LLM audit failed: unrecorded llm request (ask #1, 0 recorded): {"max_tokens": 128000, "messages": [{"role": "system", "content": "You are a strict JSON auditor and repair planner for PWML-like pathway payloads.\nYour job is to produce a safe, minimal patch plan that improves SBML conversion readiness.\n\nPriorities (highest to lowest):\n1) Structural validity (required fields/object/list shapes)\n2) Process coherence (reaction/transport references, no impossible links)\n3) Location/compartment readiness\n4) ID-mapping readiness\n5) Cosmetic consistency\n\nHard constraints:\n- Output ONLY valid JSON, no markdown, no prose outside JSON.\n- Do not invent bio
+WARNING  t2pw.curation.audit_json_llm:audit_json_llm.py:1465 LLM audit failed: unrecorded llm request (ask #1, 0 recorded): {"max_tokens": 128000, "messages": [{"role": "system", "content": "You are a strict JSON auditor and repair planner for PWML-like pathway payloads.\nYour job is to produce a safe, minimal patch plan that improves SBML conversion readiness.\n\nPriorities (highest to lowest):\n1) Structural validity (required fields/object/list shapes)\n2) Process coherence (reaction/transport references, no impossible links)\n3) Location/compartment readiness\n4) ID-mapping readiness\n5) Cosmetic consistency\n\nHard constraints:\n- Output ONLY valid JSON, no markdown, no prose outside JSON.\n- Do not invent bio
+WARNING  t2pw.curation.audit_json_llm:audit_json_llm.py:1465 LLM audit failed: unrecorded llm request (ask #1, 0 recorded): {"max_tokens": 128000, "messages": [{"role": "system", "content": "You are a strict JSON auditor and repair planner for PWML-like pathway payloads.\nYour job is to produce a safe, minimal patch plan that improves SBML conversion readiness.\n\nPriorities (highest to lowest):\n1) Structural validity (required fields/object/list shapes)\n2) Process coherence (reaction/transport references, no impossible links)\n3) Location/compartment readiness\n4) ID-mapping readiness\n5) Cosmetic consistency\n\nHard constraints:\n- Output ONLY valid JSON, no markdown, no prose outside JSON.\n- Do not invent bio
+WARNING  t2pw.curation.audit_json_llm:audit_json_llm.py:1465 LLM audit failed: unrecorded llm request (ask #1, 0 recorded): {"max_tokens": 128000, "messages": [{"role": "system", "content": "You are a strict JSON auditor and repair planner for PWML-like pathway payloads.\nYour job is to produce a safe, minimal patch plan that improves SBML conversion readiness.\n\nPriorities (highest to lowest):\n1) Structural validity (required fields/object/list shapes)\n2) Process coherence (reaction/transport references, no impossible links)\n3) Location/compartment readiness\n4) ID-mapping readiness\n5) Cosmetic consistency\n\nHard constraints:\n- Output ONLY valid JSON, no markdown, no prose outside JSON.\n- Do not invent bio
+WARNING  t2pw.curation.audit_json_llm:audit_json_llm.py:1465 LLM audit failed: unrecorded llm request (ask #1, 0 recorded): {"max_tokens": 128000, "messages": [{"role": "system", "content": "You are a strict JSON auditor and repair planner for PWML-like pathway payloads.\nYour job is to produce a safe, minimal patch plan that improves SBML conversion readiness.\n\nPriorities (highest to lowest):\n1) Structural validity (required fields/object/list shapes)\n2) Process coherence (reaction/transport references, no impossible links)\n3) Location/compartment readiness\n4) ID-mapping readiness\n5) Cosmetic consistency\n\nHard constraints:\n- Output ONLY valid JSON, no markdown, no prose outside JSON.\n- Do not invent bio
+WARNING  t2pw.curation.audit_json_llm:audit_json_llm.py:1465 LLM audit failed: unrecorded llm request (ask #1, 0 recorded): {"max_tokens": 128000, "messages": [{"role": "system", "content": "You are a strict JSON auditor and repair planner for PWML-like pathway payloads.\nYour job is to produce a safe, minimal patch plan that improves SBML conversion readiness.\n\nPriorities (highest to lowest):\n1) Structural validity (required fields/object/list shapes)\n2) Process coherence (reaction/transport references, no impossible links)\n3) Location/compartment readiness\n4) ID-mapping readiness\n5) Cosmetic consistency\n\nHard constraints:\n- Output ONLY valid JSON, no markdown, no prose outside JSON.\n- Do not invent bio
+WARNING  t2pw.curation.audit_json_llm:audit_json_llm.py:1465 LLM audit failed: unrecorded llm request (ask #1, 0 recorded): {"max_tokens": 128000, "messages": [{"role": "system", "content": "You are a strict JSON auditor and repair planner for PWML-like pathway payloads.\nYour job is to produce a safe, minimal patch plan that improves SBML conversion readiness.\n\nPriorities (highest to lowest):\n1) Structural validity (required fields/object/list shapes)\n2) Process coherence (reaction/transport references, no impossible links)\n3) Location/compartment readiness\n4) ID-mapping readiness\n5) Cosmetic consistency\n\nHard constraints:\n- Output ONLY valid JSON, no markdown, no prose outside JSON.\n- Do not invent bio
+WARNING  t2pw.curation.audit_json_llm:audit_json_llm.py:1465 LLM audit failed: unrecorded llm request (ask #1, 0 recorded): {"max_tokens": 128000, "messages": [{"role": "system", "content": "You are a strict JSON auditor and repair planner for PWML-like pathway payloads.\nYour job is to produce a safe, minimal patch plan that improves SBML conversion readiness.\n\nPriorities (highest to lowest):\n1) Structural validity (required fields/object/list shapes)\n2) Process coherence (reaction/transport references, no impossible links)\n3) Location/compartment readiness\n4) ID-mapping readiness\n5) Cosmetic consistency\n\nHard constraints:\n- Output ONLY valid JSON, no markdown, no prose outside JSON.\n- Do not invent bio
+WARNING  t2pw.curation.audit_json_llm:audit_json_llm.py:1465 LLM audit failed: unrecorded llm request (ask #1, 0 recorded): {"max_tokens": 128000, "messages": [{"role": "system", "content": "You are a strict JSON auditor and repair planner for PWML-like pathway payloads.\nYour job is to produce a safe, minimal patch plan that improves SBML conversion readiness.\n\nPriorities (highest to lowest):\n1) Structural validity (required fields/object/list shapes)\n2) Process coherence (reaction/transport references, no impossible links)\n3) Location/compartment readiness\n4) ID-mapping readiness\n5) Cosmetic consistency\n\nHard constraints:\n- Output ONLY valid JSON, no markdown, no prose outside JSON.\n- Do not invent bio
+______________________ test_b_two_app_runs_are_identical ______________________
+
+arms = {'after': {'data/enrichment_cache.json': (35407855, 1793904100243749400), 'data/id_mapping_cache.json': (4230034, 1793...t/enrichment_dump.json': (33986, 1793904105931443300), 'outputs/pathway.pwml': (23487, 1793904105939148300), ...}, ...}
+
+    def test_b_two_app_runs_are_identical(arms):
+        app1, app2 = arms["app1"], arms["app2"]
+>       assert app1["canonical_payload_sha256"] and app1["canonical_payload_sha256"] == app2["canonical_payload_sha256"]
+E       assert (None)
+
+tests\test_equivalence_app_vs_service.py:120: AssertionError
+_______________ test_b_replay_reproduces_the_recorded_live_run ________________
+
+arms = {'after': {'data/enrichment_cache.json': (35407855, 1793904100243749400), 'data/id_mapping_cache.json': (4230034, 1793...t/enrichment_dump.json': (33986, 1793904105931443300), 'outputs/pathway.pwml': (23487, 1793904105939148300), ...}, ...}
+
+    def test_b_replay_reproduces_the_recorded_live_run(arms):
+        recorded = arms["fixture"]["recorded"]
+>       assert arms["app1"]["canonical_payload_sha256"] == recorded["canonical_payload_sha256"]
+E       AssertionError: assert None == 'f19083c68a6227ccbe2751d43e05380f3b41373295ca54c20fc3583a1a1f65fe'
+
+tests\test_equivalence_app_vs_service.py:129: AssertionError
+_________________ test_c_service_post_pipeline_equals_the_app _________________
+
+arms = {'after': {'data/enrichment_cache.json': (35407855, 1793904100243749400), 'data/id_mapping_cache.json': (4230034, 1793...t/enrichment_dump.json': (33986, 1793904105931443300), 'outputs/pathway.pwml': (23487, 1793904105939148300), ...}, ...}
+
+    def test_c_service_post_pipeline_equals_the_app(arms):
+        app1, service = arms["app1"], arms["service"]
+        # The Stage-2 payload the service started from is the one the app's session held.
+        from t2pw.pipeline.pipeline import propagate_context_organism
+    
+>       assert app1["post_call"] and app1["export_call"], "the app arm never reached the post-pipeline and export"
+E       AssertionError: the app arm never reached the post-pipeline and export
+E       assert ((({'biological_states': [], 'element_locations': {}, 'entities': {'compounds': [{'class': 'compound', 'confidence': 1....,), {'audit_candidate_count': 3, 'audit_max_rounds': 4, 'audit_timeout_seconds': 240, 'build_legacy_sbml': False, ...}) and None)
+
+tests\test_equivalence_app_vs_service.py:139: AssertionError
+============================= slowest 5 durations =============================
+69.64s setup    tests/test_equivalence_app_vs_service.py::test_a_app_runs_offline_from_the_fixture_alone_to_the_recorded_verdict
+0.11s call     tests/test_equivalence_app_vs_service.py::test_fixture_holds_no_secrets
+0.01s call     tests/test_equivalence_app_vs_service.py::test_fixture_was_recorded_from_a_clean_tree_through_to_the_export_step
+
+(2 durations < 0.005s hidden.  Use -vv to show these durations.)
+=========================== short test summary info ===========================
+SKIPPED [1] tests\test_equivalence_app_vs_service.py:153: the fixture's case is refused by strict export (Unknown species), so no PWML bytes exist to compare: PWML byte equality is NOT proven by this fixture (R2.5 open question 1)
+4 failed, 5 passed, 1 skipped in 69.89s (0:01:09)
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R25\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 42d46fcc197e2279d15955ba7ac3b00866b5f03c  [git, worktree dirty=False]
+label                   : t3-equivalence
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R25/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R25 --pin-verdict C:/t/wsR25tmp/ev/pin/t3-equivalence.pin.json -q -rs --durations=5 --basetemp=C:/t/wsR25tmp/bt/t3-equivalence tests/test_equivalence_app_vs_service.py
+cwd                     : C:\t\ws-R25
+root PID / process group: 610416 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 560 s
+duration                : 71.41 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  610044:python.exe
+descendants terminated  : 1  610044
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/wsR25tmp/ev/t3-equivalence.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R2.5  acquired=True  released=True
+pre-existing (reported, NEVER killed): 8
+================================================

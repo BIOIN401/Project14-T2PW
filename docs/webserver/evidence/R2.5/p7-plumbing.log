@@ -1,0 +1,140 @@
+2026-11-05 15:07:03.409 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+Preprocessor call failed: unrecorded llm request (ask #1, 0 recorded): {"max_tokens": 65536, "messages": [{"role": "system", "content": "You are a biological pathway context extractor.\n\nTASK\nGiven a scientific text, identify what pathway or biological process it describes and output a concise structured summary. This summary will be used to guide a downstream PWML extraction engine \ufffd it is NOT the extraction itself.\n\n\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\nSTEP 1 \ufffd CLASSIFY DOCUMENT TYPE AND CONTEXT TYPE\n\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\nSet \"document_type\" to one of:\n  primary_research              \ufffd a s
++------------------------- Traceback (most recent call last) --------------------------+
+| C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ |
+| runtime\scriptrunner\exec_code.py:136 in exec_func_with_error_handling               |
+|                                                                                      |
+| C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\ |
+| runtime\scriptrunner\script_runner.py:837 in code_to_exec                            |
+|                                                                                      |
+| C:\t\ws-R25\src\t2pw\app\streamlit_app.py:3390 in <module>                           |
+|                                                                                      |
+|   3387     # Stage 1: strict extraction with auto-repair                             |
+|   3388     try:                                                                      |
+|   3389         with st.spinner("Running Stage 1 extraction..."):                     |
+| > 3390             stage_one, chunk_details = run_stage_one_with_chunking(           |
+|   3391                 text,                                                         |
+|   3392                 pathway_context=pathway_context,                              |
+|   3393                 user_task_context=user_task_context,                          |
+|                                                                                      |
+| C:\t\ws-R25\src\t2pw\pipeline\pipeline.py:2747 in run_stage_one_with_chunking        |
+|                                                                                      |
+|   2744     use_chunks = enable_chunking and len(words) > chunk_word_limit            |
+|   2745                                                                               |
+|   2746     if not use_chunks:                                                        |
+| > 2747         output, attempts = run_extraction_pipeline(                           |
+|   2748             input_text,                                                       |
+|   2749             pathway_context=pathway_context,                                  |
+|   2750             user_task_context=user_task_context,                              |
+|                                                                                      |
+| C:\t\ws-R25\src\t2pw\pipeline\pipeline.py:298 in run_extraction_pipeline             |
+|                                                                                      |
+|    295                                                                               |
+|    296     count = extraction_draws(draws)                                           |
+|    297     if count == 1:                                                            |
+| >  298         return _draw()                                                        |
+|    299     # The input text is the paper the draws read: D-104 makes it the merge's  |
+|    300     return run_ensemble(_draw, count, failure=PipelineFailure, paper_text=inp |
+|    301                                                                               |
+|                                                                                      |
+| C:\t\ws-R25\src\t2pw\pipeline\pipeline.py:278 in _draw                               |
+|                                                                                      |
+|    275         max_tokens = configured_max_tokens("OPENROUTER_EXTRACTION_MAX_TOKENS" |
+|    276                                                                               |
+|    277     def _draw() -> Tuple[Dict[str, Any], AttemptLogs]:                        |
+| >  278         return _run_json_stage(                                               |
+|    279             stage_name="extraction",                                          |
+|    280             model_env_var="OPENROUTER_EXTRACTION_MODEL",                      |
+|    281             system_prompt=(PROMPTS_DIR / "pwml_system.txt").read_text(encodin |
+|                                                                                      |
+| C:\t\ws-R25\src\t2pw\pipeline\pipeline.py:3965 in _run_json_stage                    |
+|                                                                                      |
+|   3962                     budget_refusal = decision                                 |
+|   3963                 break                                                         |
+|   3964                                                                               |
+| > 3965         completion = _issue(messages, model_env_var)                          |
+|   3966         raw = completion.text                                                 |
+|   3967         call_diag = completion.diagnostics.to_dict()                          |
+|   3968         if ladder is not None:                                                |
+|                                                                                      |
+| C:\t\ws-R25\src\t2pw\pipeline\pipeline.py:3855 in _issue                             |
+|                                                                                      |
+|   3852         """                                                                   |
+|   3853                                                                               |
+|   3854         try:                                                                  |
+| > 3855             return chat_detailed(                                             |
+|   3856                 messages,                                                     |
+|   3857                 temperature=temperature,                                      |
+|   3858                 max_tokens=max_tokens,                                        |
+|                                                                                      |
+| C:\t\ws-R25\src\t2pw\llm\client.py:747 in chat_detailed                              |
+|                                                                                      |
+|    744                                                                               |
+|    745     for attempt in range(max_retries):                                        |
+|    746         try:                                                                  |
+| >  747             resp = _client.chat.completions.create(**kwargs)                  |
+|    748             _record_usage(resp)                                               |
+|    749             time.sleep(spacing)                                               |
+|    750                                                                               |
+|                                                                                      |
+| C:\t\ws-R25\tests\equivalence\llm_replay.py:268 in create                            |
+|                                                                                      |
+|   265                     raise                                                      |
+|   266                 cassette._record("llm", key, request, {"response": resp.model_ |
+|   267                 return resp                                                    |
+| > 268             return ChatCompletion.model_validate(cassette._answer("llm", key,  |
+|   269                                                                                |
+|   270         def request(session: Any, method: str, url: str, params: Any = None, d |
+|   271                     headers: Any = None, *args: Any, json: Any = None, **kwarg |
+|                                                                                      |
+| C:\t\ws-R25\tests\equivalence\llm_replay.py:233 in _answer                           |
+|                                                                                      |
+|   230             miss = {"kind": kind, "key": key, "asked": n + 1, "recorded": len( |
+|   231                     "request": json.dumps(request, ensure_ascii=False)[:600]}  |
+|   232             self.misses.append(miss)                                           |
+| > 233         raise ReplayMiss(f"unrecorded {kind} request (ask #{n + 1}, {len(slots |
+|   234                                                                                |
+|   235     def unused(self) -> List[Tuple[str, int]]:                                 |
+|   236         return [(kind, i) for kind, rows in self.entries.items() for i in rang |
++--------------------------------------------------------------------------------------+
+ReplayMiss: unrecorded llm request (ask #1, 0 recorded): {"max_tokens": 64000, 
+"messages": [{"role": "system", "content": "You are a PWML builder extraction 
+engine.\n\nPATHWAY SCOPE\nWhen the user supplies a <pathway_scope> block it names the 
+specific pathway being modelled\n(e.g. \"TCA cycle\", \"glycolysis\", 
+\"beta-oxidation\").  Use that scope to classify every\nreaction you extract with 
+exactly one of these labels in the required \"scope_membership\" field:\n\n  core       
+\ufffd a defining, central reaction of the named pathway\n  anaplerotic   \ufffd feeds metabolites
+INTO the named pathway from an external route\n  cataplerotic  \ufffd drains metabolite
+OUTCOME error stage1 extraction did not complete and the app reported no error
+SECONDS 2.8
+MISSES 2 ['llm', 'llm']
+FIRST_MISS {"max_tokens": 65536, "messages": [{"role": "system", "content": "You are a biological pathway context extractor.\n\nTASK\nGiven a scientific text, identify what pathway or biological process it describes and output a concise structured summary. This summary will be used to guide a downstream PWML e
+REFUSED []
+CHECKOUT_UNCHANGED True
+ROOT_FILES ['reference\\PW000001.pwml', 'reference\\PW012926.pwml', 'tmp\\extraction_diagnostics\\run-a6c4e23a10ec\\stage0_attempts.json']
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R25\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 6e5da69f028c21e811b83b18777202a85a55ffb2  [git, worktree dirty=False]
+label                   : p7-plumbing
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/wsR25tmp/plumbing.py C:/t/wsR25tmp/p7root
+cwd                     : C:\t\ws-R25
+root PID / process group: 493408 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 200 s
+duration                : 6.60 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  494524:python.exe
+descendants terminated  : 1  494524
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/wsR25tmp/p7-plumbing.json
+json report written     : True
+pre-existing (reported, NEVER killed): 10
+================================================

@@ -1,0 +1,99 @@
+2026-11-05 15:52:03.857 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-05 15:52:05.747 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-05 15:52:05.748 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-05 15:52:05.766 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-05 15:52:05.767 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-05 15:52:05.961 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-05 15:52:05.962 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-05 15:52:05.962 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-05 15:52:05.963 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+LLM audit failed: unrecorded llm request (ask #1, 0 recorded): {"max_tokens": 128000, "messages": [{"role": "system", "content": "You are a strict JSON auditor and repair planner for PWML-like pathway payloads.\nYour job is to produce a safe, minimal patch plan that improves SBML conversion readiness.\n\nPriorities (highest to lowest):\n1) Structural validity (required fields/object/list shapes)\n2) Process coherence (reaction/transport references, no impossible links)\n3) Location/compartment readiness\n4) ID-mapping readiness\n5) Cosmetic consistency\n\nHard constraints:\n- Output ONLY valid JSON, no markdown, no prose outside JSON.\n- Do not invent bio
+LLM audit failed: unrecorded llm request (ask #1, 0 recorded): {"max_tokens": 128000, "messages": [{"role": "system", "content": "You are a strict JSON auditor and repair planner for PWML-like pathway payloads.\nYour job is to produce a safe, minimal patch plan that improves SBML conversion readiness.\n\nPriorities (highest to lowest):\n1) Structural validity (required fields/object/list shapes)\n2) Process coherence (reaction/transport references, no impossible links)\n3) Location/compartment readiness\n4) ID-mapping readiness\n5) Cosmetic consistency\n\nHard constraints:\n- Output ONLY valid JSON, no markdown, no prose outside JSON.\n- Do not invent bio
+LLM audit failed: unrecorded llm request (ask #1, 0 recorded): {"max_tokens": 128000, "messages": [{"role": "system", "content": "You are a strict JSON auditor and repair planner for PWML-like pathway payloads.\nYour job is to produce a safe, minimal patch plan that improves SBML conversion readiness.\n\nPriorities (highest to lowest):\n1) Structural validity (required fields/object/list shapes)\n2) Process coherence (reaction/transport references, no impossible links)\n3) Location/compartment readiness\n4) ID-mapping readiness\n5) Cosmetic consistency\n\nHard constraints:\n- Output ONLY valid JSON, no markdown, no prose outside JSON.\n- Do not invent bio
+OUTCOME error post_pipeline misses 17 ['llm', 'llm', 'llm', 'llm', 'http', 'http', 'http', 'http', 'http', 'http', 'http', 'http', 'http', 'http', 'http', 'http', 'db']
+FIRST MISS kind llm {'max_tokens': 128000, 'messages': 2, 'response_format': {'type': 'json_object'}, 'temperature': 0.15}
+recorded same-system temps: [0.0, 0.14, 0.28]
+system equal: True user len 28734 37317
+insert REC: ' ambiguous counts.\nrepair_rationale must be short and concrete.\nRetry context: Post-normalization gate failures are expe'
+   REP: ' ambiguous counts.\nrepair_rationale must be short and concrete.\nRetry context: Previous attempt unresolved: errors=1, warnin'
+insert REC: 'ambiguous counts.\nrepair_rationale must be short and concrete.\nRetry context: Post-normalization gate failures are expec'
+   REP: 'guous counts.\nrepair_rationale must be short and concrete.\nRetry context: Previous attempt unresolved: errors=1, warnings'
+insert REC: 'mbiguous counts.\nrepair_rationale must be short and concrete.\nRetry context: Post-normalization gate failures are expect'
+   REP: 'ous counts.\nrepair_rationale must be short and concrete.\nRetry context: Previous attempt unresolved: errors=1, warnings=6,'
+replace REC: 'biguous counts.\nrepair_rationale must be short and concrete.\nRetry context: Post-normalization gate failures are expected'
+   REP: ' counts.\nrepair_rationale must be short and concrete.\nRetry context: Previous attempt unresolved: errors=1, warnings=6, accepte'
+insert REC: 'guous counts.\nrepair_rationale must be short and concrete.\nRetry context: Post-normalization gate failures are expected '
+   REP: '\nrepair_rationale must be short and concrete.\nRetry context: Previous attempt unresolved: errors=1, warnings=6, accepted_patches=1, g'
+replace REC: 'ous counts.\nrepair_rationale must be short and concrete.\nRetry context: Post-normalization gate failures are expected aud'
+   REP: 'le must be short and concrete.\nRetry context: Previous attempt unresolved: errors=1, warnings=6, accepted_patches=1, gap_paylo'
+replace REC: 's counts.\nrepair_rationale must be short and concrete.\nRetry context: Post-normalization gate failures are expected audit'
+   REP: ' be short and concrete.\nRetry context: Previous attempt unresolved: errors=1, warnings=6, accepted_patches=1, gap_payload_'
+replace REC: 'counts.\nrepair_rationale must be short and concrete.\nRetry context: Post-normalization gate failures are expected audit i'
+   REP: ' short and concrete.\nRetry context: Previous attempt unresolved: errors=1, warnings=6, accepted_patches=1, gap_payload_changed=True. Prio'
+replace REC: 'nts.\nrepair_rationale must be short and concrete.\nRetry context: Post-normalization gate failures are expected audit inputs'
+   REP: '.\nRetry context: Previous attempt unresolved: errors=1, warnings=6, accepted_patches=1, gap_payload_changed=True. Prioritize re'
+insert REC: 'epair_rationale must be short and concrete.\nRetry context: Post-normalization gate failures are expected audit inputs. R'
+   REP: "ntext: Previous attempt unresolved: errors=1, warnings=6, accepted_patches=1, gap_payload_changed=True. Prioritize remaining issues: Protein 'Ferroche"
+insert REC: 'pair_rationale must be short and concrete.\nRetry context: Post-normalization gate failures are expected audit inputs. Re'
+   REP: "ved: errors=1, warnings=6, accepted_patches=1, gap_payload_changed=True. Prioritize remaining issues: Protein 'Ferrochelat"
+replace REC: 'ir_rationale must be short and concrete.\nRetry context: Post-normalization gate failures are expected audit inputs. Repai'
+   REP: " errors=1, warnings=6, accepted_patches=1, gap_payload_changed=True. Prioritize remaining issues: Protein 'Ferrochelatase' "
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R25\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ e7705a91b005cf7829e61ada3b659d39cacb7ede  [git, worktree dirty=True]
+label                   : diag2
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/wsR25tmp/diag.py C:/t/wsR25tmp/diag2root
+cwd                     : C:\t\ws-R25
+root PID / process group: 594496 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 54.07 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  594016:python.exe
+descendants terminated  : 1  594016
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/wsR25tmp/diag2.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R2.5  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================
