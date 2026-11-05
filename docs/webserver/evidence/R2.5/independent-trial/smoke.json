@@ -1,0 +1,171 @@
+{
+  "label": "R25-smoke",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-R25-trial",
+    "-q",
+    "--basetemp=C:/t/wsR25tr/smoke",
+    "tests/test_reference_repair.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_empty_extraction_payload.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py",
+    "tests/test_c102_coverage_denominator.py",
+    "tests/test_c106_mutation_harness_executable.py"
+  ],
+  "cwd": "C:\\t\\ws-R25-trial",
+  "started_at": "2026-11-05T23:01:57+00:00",
+  "finished_at": "2026-11-05T23:02:54+00:00",
+  "duration_seconds": 56.225802799999656,
+  "timeout_seconds": 590.0,
+  "root_pid": 679828,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 679844,
+      "name": "python.exe",
+      "ppid": 679828
+    },
+    {
+      "pid": 674436,
+      "name": "python.exe",
+      "ppid": 679844
+    },
+    {
+      "pid": 677160,
+      "name": "python.exe",
+      "ppid": 674436
+    },
+    {
+      "pid": 620728,
+      "name": "python.exe",
+      "ppid": 679844
+    },
+    {
+      "pid": 666076,
+      "name": "python.exe",
+      "ppid": 620728
+    },
+    {
+      "pid": 679720,
+      "name": "python.exe",
+      "ppid": 679844
+    },
+    {
+      "pid": 675308,
+      "name": "python.exe",
+      "ppid": 679720
+    },
+    {
+      "pid": 678260,
+      "name": "python.exe",
+      "ppid": 678524
+    },
+    {
+      "pid": 678524,
+      "name": "python.exe",
+      "ppid": 679844
+    },
+    {
+      "pid": 672704,
+      "name": "git.exe",
+      "ppid": 679844
+    }
+  ],
+  "descendants_terminated": [
+    620728,
+    666076,
+    672704,
+    674436,
+    675308,
+    677160,
+    678260,
+    678524,
+    679720,
+    679844
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 442728,
+      "name": "python.exe"
+    },
+    {
+      "pid": 460520,
+      "name": "python.exe"
+    },
+    {
+      "pid": 613520,
+      "name": "python.exe"
+    },
+    {
+      "pid": 613612,
+      "name": "python.exe"
+    },
+    {
+      "pid": 675344,
+      "name": "python.exe"
+    },
+    {
+      "pid": 679372,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/wsR25tr/reports/smoke.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-R25-trial\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-R25-trial",
+    "repo_head": "e7e5c89b304908e2d639b789557973d856965812",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "R25-trial-smoke",
+    "token": "R25-trial-smoke:679372:ed58b0cd7d8975df",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
