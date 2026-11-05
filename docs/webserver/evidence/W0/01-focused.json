@@ -1,0 +1,83 @@
+{
+  "label": "w0-focused",
+  "command": [
+    "python",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-W0",
+    "--pin-verdict",
+    "docs/webserver/evidence/W0/pin/01-focused.pin.json",
+    "-q",
+    "--basetemp=C:/t/wsW0tmp/r1",
+    "tests/test_service_pathway_interface.py"
+  ],
+  "cwd": "C:\\t\\ws-W0",
+  "started_at": "2026-11-05T01:48:26+00:00",
+  "finished_at": "2026-11-05T01:48:28+00:00",
+  "duration_seconds": 2.3495128999929875,
+  "timeout_seconds": 300.0,
+  "root_pid": 764244,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 764136,
+      "name": "python.exe",
+      "ppid": 764244
+    }
+  ],
+  "descendants_terminated": [
+    764136
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 112240,
+      "name": "python.exe"
+    },
+    {
+      "pid": 488972,
+      "name": "python.exe"
+    },
+    {
+      "pid": 502604,
+      "name": "python.exe"
+    },
+    {
+      "pid": 764620,
+      "name": "python.exe"
+    },
+    {
+      "pid": 764632,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/webserver/evidence/W0/01-focused.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-W0\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-W0",
+    "repo_head": "146e24bbc44757b3f74183570dd60b2c5b7440d2",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}
