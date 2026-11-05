@@ -1,0 +1,80 @@
+{
+  "label": "w2-06-export-compact-rerun",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "scripts/webserver/export_organisms.py",
+    "--env-file",
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.env",
+    "--out",
+    "C:/t/wsW2tmp/organisms.rerun2.json"
+  ],
+  "cwd": "C:\\t\\ws-W2",
+  "started_at": "2026-11-05T02:27:07+00:00",
+  "finished_at": "2026-11-05T02:27:09+00:00",
+  "duration_seconds": 1.9294116999953985,
+  "timeout_seconds": 300.0,
+  "root_pid": 870668,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 860224,
+      "name": "python.exe",
+      "ppid": 870668
+    }
+  ],
+  "descendants_terminated": [
+    860224
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 112240,
+      "name": "python.exe"
+    },
+    {
+      "pid": 778276,
+      "name": "python.exe"
+    },
+    {
+      "pid": 793712,
+      "name": "python.exe"
+    },
+    {
+      "pid": 864656,
+      "name": "python.exe"
+    },
+    {
+      "pid": 866600,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/webserver/evidence/W2/06-export-compact-rerun.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-W2\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-W2",
+    "repo_head": "f41c378f910da90832f82936593258ce73925f33",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}
