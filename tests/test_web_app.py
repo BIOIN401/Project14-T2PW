@@ -471,3 +471,47 @@ def test_templates_and_static_ship_as_package_data():
     for pattern in ("templates/*.html", "templates/macros/*.html", "static/css/*.css", "static/js/*.js"):
         assert f'"{pattern}"' in text and list(web.glob(pattern)), pattern
     assert "fastapi" in (root / "requirements.txt").read_text(encoding="utf-8")
+
+
+# ── review round 1 ──────────────────────────────────────────────────────────────────
+
+
+def test_layout_has_the_literal_htmx_tag_and_no_jinja_global(site):
+    layout = (Path(__file__).resolve().parents[1] / "src" / "t2pw" / "web" / "templates" / "layout.html")
+    text = layout.read_text(encoding="utf-8")
+    assert text.count('<script src="/static/js/htmx.min.js" defer></script>') == 1
+    assert "htmx_script" not in site.app.state.templates.env.globals
+
+
+def test_cross_site_post_is_refused_and_costs_no_slot(tmp_path):
+    s = Site(tmp_path, rate_limit=1)
+    for headers in ({"Sec-Fetch-Site": "cross-site"}, {"Origin": "https://evil.example"},
+                    {"Origin": "null"}, {"Origin": "https://evil.example", "Sec-Fetch-Site": "same-origin"}):
+        r = s.submit(headers=headers)
+        assert r.status_code == 403 and "Request blocked" in r.text, headers
+    assert s.store()._db.execute("SELECT COUNT(*) FROM submissions").fetchone()[0] == 0
+    # same-origin variants are accepted; the single slot was still free, so this one succeeds
+    assert s.submit(headers={"Sec-Fetch-Site": "same-origin", "Origin": "http://testserver"}).status_code == 303
+    assert s.submit(headers={"Origin": "https://t2pw.test"}).status_code == 429  # base_url host is allowed too: rate-limited, not 403
+    assert s.submit().status_code == 429  # no Origin / Sec-Fetch-Site (curl) is not blocked
+
+
+def test_trailing_newline_in_a_job_id_is_a_404(site):
+    sid = site.new_job()
+    for url in (f"/job/{sid}%0A", f"/job/{sid}%0A/status", f"/job/{sid}%0A/0", f"/jobs/{sid}%0A",
+                f"/job/{sid}/0%0A"):
+        assert site.client.get(url).status_code == 404, url
+    with pytest.raises(ValueError):
+        views.job_url("https://t2pw.test", sid + "\n")
+
+
+def test_all_x_forwarded_for_lines_are_used(tmp_path):
+    s = Site(tmp_path, rate_limit=1, trusted_proxies="10.0.0.0/8")
+    s.client = TestClient(s.app, follow_redirects=False, client=("10.0.0.1", 50000))
+    first = s.submit(headers=[("x-forwarded-for", "1.1.1.1"), ("x-forwarded-for", "203.0.113.7")])
+    assert first.status_code == 303
+    # same real client (last hop on the LAST line), different spoofed first line: same bucket
+    again = s.submit(headers=[("x-forwarded-for", "2.2.2.2"), ("x-forwarded-for", "203.0.113.7")])
+    assert again.status_code == 429
+    other = s.submit(headers=[("x-forwarded-for", "2.2.2.2"), ("x-forwarded-for", "203.0.113.8")])
+    assert other.status_code == 303

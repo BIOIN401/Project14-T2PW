@@ -295,14 +295,22 @@ def test_wcag_aa_contrast(theme):
 # ── Hygiene and accessibility basics ─────────────────────────────────────
 
 
+HTMX_TAG = '<script src="/static/js/htmx.min.js" defer></script>'
+
+
 def test_no_script_no_external_urls():
     files = sorted(TEMPLATES.rglob("*.html")) + sorted(CSS_DIR.glob("*.css"))
     assert len(files) >= 5
     texts = {p.name: p.read_text(encoding="utf-8") for p in files}
+    assert "layout.html" in texts  # W6 carve-out: the one page layout must exist and is checked below
     texts["rendered styleguide"] = _render("styleguide.html")
     texts["rendered base"] = _render("base.html", theme="dark")
     for name, text in texts.items():
-        assert not re.search(r"<script", text, re.I), name
+        if name == "layout.html":
+            # W6 carve-out: the page layout carries exactly one script, the vendored htmx tag.
+            assert text.count("<script") == 1 and text.count(HTMX_TAG) == 1, name
+        else:
+            assert not re.search(r"<script", text, re.I), name
         assert not re.search(r"https?:", text, re.I), name
         assert not re.search(r"""(?:src|href)\s*=\s*["']//""", text, re.I), name
         assert not re.search(r"@import|url\(", text, re.I), name

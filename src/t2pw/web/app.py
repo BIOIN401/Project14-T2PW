@@ -25,13 +25,13 @@ import uuid
 from contextlib import contextmanager
 from pathlib import Path
 from typing import Any, Dict, Iterator, List, Optional, Tuple
+from urllib.parse import urlsplit
 
 from fastapi import FastAPI, Request
 from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from jinja2 import StrictUndefined
-from markupsafe import Markup
 from starlette.concurrency import run_in_threadpool
 from starlette.datastructures import UploadFile
 from starlette.exceptions import HTTPException as StarletteHTTPException
@@ -135,9 +135,6 @@ def create_app(db_path: Path | str, work_root: Path | str, base_url: str = "", *
 
     templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
     templates.env.undefined = StrictUndefined
-    # The one <script> tag on the site, built here (static prefix is server config).
-    templates.env.globals["htmx_script"] = lambda: Markup(
-        '<script src="/static/js/htmx.min.js" defer></script>')
     templates.env.filters["scrub"] = views.scrub
     s.templates = templates
 
@@ -159,11 +156,12 @@ def create_app(db_path: Path | str, work_root: Path | str, base_url: str = "", *
 
     @app.exception_handler(StarletteHTTPException)
     async def http_error(request: Request, exc: StarletteHTTPException):
-        titles = {404: "Page not found", 413: "Request too large"}
+        titles = {403: "Request blocked", 404: "Page not found", 413: "Request too large"}
+        messages = {403: "This form was sent from another site, so it was not accepted. Use the form on this site.",
+                    404: "There is nothing at this address. Check the link you were given."}
         return _page(request, "error.html", status=exc.status_code,
                      title=titles.get(exc.status_code, "Something went wrong"),
-                     message={404: "There is nothing at this address. Check the link you were given.",
-                              }.get(exc.status_code, "The request could not be completed."))
+                     message=messages.get(exc.status_code, "The request could not be completed."))
 
     _routes(app)
     return app
@@ -223,7 +221,7 @@ def _submit_ctx(**kw: Any) -> Dict[str, Any]:
 
 
 def _sid_ok(sid: str) -> bool:
-    return bool(views.SID_RE.match(sid))
+    return bool(views.SID_RE.fullmatch(sid))
 
 
 # -- submission ------------------------------------------------------------------------
@@ -368,6 +366,22 @@ def _discard(upload_dir: Path, saved) -> None:
 # -- routes ----------------------------------------------------------------------------
 
 
+def _cross_site(request: Request) -> bool:
+    """CSRF guard for the one state-changing route. There is no cookie or login, so this is
+    abuse control (a third-party page making visitors' browsers spend their rate slots or
+    fill the queue). Rejects ``Sec-Fetch-Site: cross-site`` and any ``Origin`` whose host is
+    neither the request's ``Host`` nor the configured ``base_url`` host (``Origin: null``
+    included). A request with neither header (curl, old browsers) is allowed."""
+    if request.headers.get("sec-fetch-site", "").lower() == "cross-site":
+        return True
+    origin = request.headers.get("origin")
+    if origin is None:
+        return False
+    allowed = {request.headers.get("host", "").lower(), urlsplit(request.app.state.base_url).netloc.lower()}
+    allowed.discard("")
+    return urlsplit(origin).netloc.lower() not in allowed
+
+
 def _routes(app: FastAPI) -> None:
     @app.get("/", response_class=HTMLResponse)
     def home(request: Request):
@@ -375,11 +389,14 @@ def _routes(app: FastAPI) -> None:
 
     @app.post("/submit")
     async def submit(request: Request):
+        if _cross_site(request):  # before the body is read, and before any rate slot
+            raise StarletteHTTPException(403)
         form = await request.form()
         try:
             remote = request.client.host if request.client else ""
-            out = await run_in_threadpool(
-                _process_submission, request.app, form, remote, request.headers.get("x-forwarded-for"))
+            # every X-Forwarded-For line, joined: client_key walks the joined chain right to left
+            xff = ", ".join(request.headers.getlist("x-forwarded-for")) or None
+            out = await run_in_threadpool(_process_submission, request.app, form, remote, xff)
         finally:
             await form.close()
         if out[0] == "ok":

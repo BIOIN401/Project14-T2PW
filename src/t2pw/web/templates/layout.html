@@ -7,4 +7,4 @@
   <meta name="htmx-config" content='{"includeIndicatorStyles":false,"allowEval":false,"allowScriptTags":false}'>
   {%- block page_head %}{% endblock %}
 {% endblock %}
-{% block scripts %}{{ htmx_script() }}{% endblock %}
+{% block scripts %}<script src="/static/js/htmx.min.js" defer></script>{% endblock %}

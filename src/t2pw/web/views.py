@@ -34,7 +34,7 @@ from t2pw.service.pathway import (
 from t2pw.web.retry import MAX_RETRIES
 
 MAX_ATTEMPTS = MAX_RETRIES + 1
-SID_RE = re.compile(r"^[0-9a-f]{32}$")
+SID_RE = re.compile(r"[0-9a-f]{32}")  # always .fullmatch: "$" would accept a trailing newline
 
 def job_url(base_url: str, submission_id: str) -> str:
     """THE canonical link to a job page; use it for every job link (pages, emails).
@@ -43,7 +43,7 @@ def job_url(base_url: str, submission_id: str) -> str:
     uuid4 hex string, so it is unguessable and is the job's credential. (Item integer ids
     are never put in a URL.) Pure: no app, no I/O.
     """
-    if not SID_RE.match(str(submission_id)):
+    if not SID_RE.fullmatch(str(submission_id)):
         raise ValueError("not a submission id")
     return f"{base_url.rstrip('/')}/job/{submission_id}"
 
