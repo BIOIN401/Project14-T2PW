@@ -1,0 +1,36 @@
+T2PW: C:\t\ws-R1\src\t2pw\__init__.py
+........................................................................ [ 64%]
+......Fs....sss.........................                                 [100%]
+================================== FAILURES ===================================
+E   AssertionError: this project ships a .venv; the test assumes it
+    assert None is not None
+C:\t\ws-R1\tests\test_batch_preflight.py:616: AssertionError: this project ships a .venv; the test assumes it
+=========================== short test summary info ===========================
+FAILED tests/test_batch_preflight.py::test_the_message_names_the_problem_the_interpreter_and_the_cure
+1 failed, 107 passed, 4 skipped in 42.08s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R1\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 65798c7a102f742391d9301b4eaf2ee00aa40d64  [git, worktree dirty=True]
+label                   : batchA
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R1/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R1 --pin-verdict C:/t/ws-R1/docs/webserver/evidence/R1/pin/s11-batchA.pin.json -q --basetemp=C:/t/wsR1tmp/s11-batchA --tb=line -rf tests/test_batch_driver.py tests/test_batch_preflight.py tests/test_batch_research_gate_fail_open.py
+cwd                     : C:\t\ws-R1
+root PID / process group: 96184 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 570 s
+duration                : 43.54 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 19  96172:python.exe, 93708:python.exe, 96604:python.exe, 96436:python.exe, 96984:python.exe, 90892:python.exe, 96712:python.exe, 95240:python.exe, 97180:python.exe, 93820:python.exe, 95324:python.exe, 94304:python.exe, 95864:python.exe, 88976:python.exe, 96408:python.exe, 95584:python.exe, 96260:python.exe, 95600:python.exe, 96380:python.exe
+descendants terminated  : 19  88976, 90892, 93708, 93820, 94304, 95240, 95324, 95584, 95600, 95864, 96172, 96260, 96380, 96408, 96436, 96604, 96712, 96984, 97180
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ws-R1/docs/webserver/evidence/R1/s11-batchA.json
+json report written     : True
+pre-existing (reported, NEVER killed): 5
+================================================

@@ -1,0 +1,61 @@
+T2PW: C:\t\ws-R1\src\t2pw\__init__.py
+.......................................................................F [ 79%]
+................F.F                                                      [100%]
+================================== FAILURES ===================================
+___ test_new_acceptance_the_post_pipeline_seam_returns_its_prefreeze_report ___
+tests\test_c052_prefreeze_report_at_the_streamlit_seams.py:466: in test_new_acceptance_the_post_pipeline_seam_returns_its_prefreeze_report
+    assert result["prefreeze_resolution_report"]["compounds"][
+E   AssertionError: assert [{'source_key...l3phosphate'}] == [{'source_key...3 phosphate'}]
+E     
+E     At index 0 diff: {'target': 'glycerol3phosphate', 'sources': ['sn -glycerol 3-phosphate', 'sn-glycerol 3-phosphate'], 'source_key': 'snglycerol3phosphate'} != {'target': 'glycerol 3 phosphate', 'sources': ['sn -glycerol 3-phosphate', 'sn-glycerol 3-phosphate'], 'source_key': 'sn glycerol 3 phosphate'}
+E     Use -v to get more diff
+___ test_stage_contract_failure_renderer_exposes_complete_structured_report ___
+tests\test_streamlit_stage2_orchestration.py:858: in test_stage_contract_failure_renderer_exposes_complete_structured_report
+    _load_function("_render_issue_detail", namespace)
+tests\test_streamlit_stage2_orchestration.py:91: in _load_function
+    _function_node(name),
+    ^^^^^^^^^^^^^^^^^^^^
+tests\test_streamlit_stage2_orchestration.py:80: in _function_node
+    return next(
+E   StopIteration
+_ test_stage2_artifacts_are_visible_and_both_ui_paths_share_the_orchestrator __
+tests\test_streamlit_stage2_orchestration.py:998: in test_stage2_artifacts_are_visible_and_both_ui_paths_share_the_orchestrator
+    entries_function = _load_function("_json_artifact_entries", namespace)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_streamlit_stage2_orchestration.py:91: in _load_function
+    _function_node(name),
+    ^^^^^^^^^^^^^^^^^^^^
+tests\test_streamlit_stage2_orchestration.py:80: in _function_node
+    return next(
+E   StopIteration
+=========================== short test summary info ===========================
+FAILED tests/test_c052_prefreeze_report_at_the_streamlit_seams.py::test_new_acceptance_the_post_pipeline_seam_returns_its_prefreeze_report
+FAILED tests/test_streamlit_stage2_orchestration.py::test_stage_contract_failure_renderer_exposes_complete_structured_report
+FAILED tests/test_streamlit_stage2_orchestration.py::test_stage2_artifacts_are_visible_and_both_ui_paths_share_the_orchestrator
+3 failed, 88 passed in 9.49s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R1\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 65798c7a102f742391d9301b4eaf2ee00aa40d64  [git, worktree dirty=True]
+label                   : sweepB3
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R1/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R1 --pin-verdict C:/t/ws-R1/docs/webserver/evidence/R1/pin/s4-sweepB3.pin.json -q --basetemp=C:/t/wsR1tmp/s4-sweepB3 --tb=short -rf tests/test_c030a_object_sharing_at_the_freeze_seam.py tests/test_c030_canonical_identity_fallback.py tests/test_c052_prefreeze_report_at_the_streamlit_seams.py tests/test_streamlit_stage2_orchestration.py
+cwd                     : C:\t\ws-R1
+root PID / process group: 78056 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 500 s
+duration                : 11.12 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 8  77908:python.exe, 72716:git.exe, 76816:git.exe, 77536:git.exe, 78012:git.exe, 54100:git.exe, 65488:git.exe, 78708:git.exe
+descendants terminated  : 8  54100, 65488, 72716, 76816, 77536, 77908, 78012, 78708
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ws-R1/docs/webserver/evidence/R1/s4-sweepB3.json
+json report written     : True
+pre-existing (reported, NEVER killed): 5
+================================================

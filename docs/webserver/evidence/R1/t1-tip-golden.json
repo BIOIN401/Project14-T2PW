@@ -1,0 +1,183 @@
+{
+  "label": "tip-golden",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/ws-R1/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-R1",
+    "--pin-verdict",
+    "C:/t/ws-R1/docs/webserver/evidence/R1/pin/t1-tip-golden.pin.json",
+    "-q",
+    "--basetemp=C:/t/wsR1tmp/t1-tip-golden",
+    "-rf",
+    "tests/test_batch_driver_seam_golden.py",
+    "tests/test_c011_freeze_seam_golden_equivalence.py",
+    "tests/test_streamlit_stage8_export_contract.py",
+    "tests/test_streamlit_quarantine_boundary.py"
+  ],
+  "cwd": "C:\\t\\ws-R1",
+  "started_at": "2026-11-05T17:07:12+00:00",
+  "finished_at": "2026-11-05T17:08:47+00:00",
+  "duration_seconds": 94.9953278999999,
+  "timeout_seconds": 590.0,
+  "root_pid": 99964,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 99952,
+      "name": "python.exe",
+      "ppid": 99964
+    },
+    {
+      "pid": 100768,
+      "name": "git.exe",
+      "ppid": 99952
+    },
+    {
+      "pid": 99740,
+      "name": "git.exe",
+      "ppid": 99952
+    },
+    {
+      "pid": 85756,
+      "name": "python.exe",
+      "ppid": 100756
+    },
+    {
+      "pid": 100756,
+      "name": "python.exe",
+      "ppid": 99952
+    },
+    {
+      "pid": 81620,
+      "name": "python.exe",
+      "ppid": 99952
+    },
+    {
+      "pid": 97748,
+      "name": "python.exe",
+      "ppid": 81620
+    },
+    {
+      "pid": 101488,
+      "name": "python.exe",
+      "ppid": 101880
+    },
+    {
+      "pid": 101880,
+      "name": "python.exe",
+      "ppid": 99952
+    },
+    {
+      "pid": 102252,
+      "name": "python.exe",
+      "ppid": 102284
+    },
+    {
+      "pid": 102284,
+      "name": "python.exe",
+      "ppid": 99952
+    },
+    {
+      "pid": 100688,
+      "name": "python.exe",
+      "ppid": 102232
+    },
+    {
+      "pid": 102232,
+      "name": "python.exe",
+      "ppid": 99952
+    },
+    {
+      "pid": 99528,
+      "name": "python.exe",
+      "ppid": 100820
+    },
+    {
+      "pid": 100820,
+      "name": "python.exe",
+      "ppid": 99952
+    },
+    {
+      "pid": 80528,
+      "name": "python.exe",
+      "ppid": 99952
+    },
+    {
+      "pid": 99476,
+      "name": "python.exe",
+      "ppid": 80528
+    }
+  ],
+  "descendants_terminated": [
+    80528,
+    81620,
+    85756,
+    97748,
+    99476,
+    99528,
+    99740,
+    99952,
+    100688,
+    100756,
+    100768,
+    100820,
+    101488,
+    101880,
+    102232,
+    102252,
+    102284
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 18844,
+      "name": "python.exe"
+    },
+    {
+      "pid": 20528,
+      "name": "python.exe"
+    },
+    {
+      "pid": 25472,
+      "name": "python.exe"
+    },
+    {
+      "pid": 59512,
+      "name": "python.exe"
+    },
+    {
+      "pid": 99660,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/ws-R1/docs/webserver/evidence/R1/t1-tip-golden.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-R1\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-R1",
+    "repo_head": "65798c7a102f742391d9301b4eaf2ee00aa40d64",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

@@ -1,0 +1,195 @@
+{
+  "label": "tip-golden2",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/ws-R1/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-R1",
+    "--pin-verdict",
+    "C:/t/ws-R1/docs/webserver/evidence/R1/pin/t3-tip-golden2.pin.json",
+    "-q",
+    "--basetemp=C:/t/wsR1tmp/t3-tip-golden2",
+    "-rf",
+    "tests/test_batch_driver_seam_golden.py",
+    "tests/test_c011_freeze_seam_golden_equivalence.py",
+    "tests/test_streamlit_stage8_export_contract.py",
+    "tests/test_streamlit_quarantine_boundary.py"
+  ],
+  "cwd": "C:\\t\\ws-R1",
+  "started_at": "2026-11-05T17:11:40+00:00",
+  "finished_at": "2026-11-05T17:13:33+00:00",
+  "duration_seconds": 113.19109320000007,
+  "timeout_seconds": 590.0,
+  "root_pid": 115536,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 115532,
+      "name": "python.exe",
+      "ppid": 115536
+    },
+    {
+      "pid": 116584,
+      "name": "git.exe",
+      "ppid": 115532
+    },
+    {
+      "pid": 106464,
+      "name": "python.exe",
+      "ppid": 107608
+    },
+    {
+      "pid": 107608,
+      "name": "python.exe",
+      "ppid": 115532
+    },
+    {
+      "pid": 113692,
+      "name": "python.exe",
+      "ppid": 115532
+    },
+    {
+      "pid": 115376,
+      "name": "python.exe",
+      "ppid": 113692
+    },
+    {
+      "pid": 115448,
+      "name": "git.exe",
+      "ppid": 115376
+    },
+    {
+      "pid": 100860,
+      "name": "git.exe",
+      "ppid": 115376
+    },
+    {
+      "pid": 115088,
+      "name": "git.exe",
+      "ppid": 115376
+    },
+    {
+      "pid": 95784,
+      "name": "python.exe",
+      "ppid": 115532
+    },
+    {
+      "pid": 118048,
+      "name": "python.exe",
+      "ppid": 95784
+    },
+    {
+      "pid": 117968,
+      "name": "python.exe",
+      "ppid": 117980
+    },
+    {
+      "pid": 117980,
+      "name": "python.exe",
+      "ppid": 115532
+    },
+    {
+      "pid": 104124,
+      "name": "python.exe",
+      "ppid": 106968
+    },
+    {
+      "pid": 106968,
+      "name": "python.exe",
+      "ppid": 115532
+    },
+    {
+      "pid": 93584,
+      "name": "python.exe",
+      "ppid": 113292
+    },
+    {
+      "pid": 113292,
+      "name": "python.exe",
+      "ppid": 115532
+    },
+    {
+      "pid": 104244,
+      "name": "python.exe",
+      "ppid": 115700
+    },
+    {
+      "pid": 115700,
+      "name": "python.exe",
+      "ppid": 115532
+    }
+  ],
+  "descendants_terminated": [
+    93584,
+    95784,
+    100860,
+    104124,
+    104244,
+    106464,
+    106968,
+    107608,
+    113292,
+    113692,
+    115088,
+    115376,
+    115448,
+    115532,
+    115700,
+    116584,
+    117968,
+    117980,
+    118048
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 20528,
+      "name": "python.exe"
+    },
+    {
+      "pid": 25472,
+      "name": "python.exe"
+    },
+    {
+      "pid": 59512,
+      "name": "python.exe"
+    },
+    {
+      "pid": 106500,
+      "name": "python.exe"
+    },
+    {
+      "pid": 115120,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/ws-R1/docs/webserver/evidence/R1/t3-tip-golden2.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-R1\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-R1",
+    "repo_head": "65798c7a102f742391d9301b4eaf2ee00aa40d64",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

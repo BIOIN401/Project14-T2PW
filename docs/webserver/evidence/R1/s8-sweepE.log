@@ -1,0 +1,48 @@
+T2PW: C:\t\ws-R1\src\t2pw\__init__.py
+........................................................................ [ 13%]
+........................................................................ [ 26%]
+........................................................................ [ 40%]
+....................F................................................... [ 53%]
+................................................F....................... [ 66%]
+........................................................................ [ 80%]
+........................................................................ [ 93%]
+...................................                                      [100%]
+================================== FAILURES ===================================
+E   StopIteration
+C:\t\ws-R1\tests\test_rag_seed_entity_reimport.py:590: StopIteration
+E   AssertionError: assert [('src/t2pw/p... 'use_cache')] == [('src/t2pw/a... 'use_cache')]
+      
+      At index 0 diff: ('src/t2pw/pipeline/pipeline.py', 'True', None) != ('src/t2pw/app/streamlit_app.py', 'True', 'False')
+      Right contains one more item: ('src/t2pw/mapping/map_ids.py', 'merge_identity_duplicates', 'use_cache')
+      Use -v to get more diff
+C:\t\ws-R1\tests\test_stage_one_paper_dictionary.py:818: AssertionError: assert [('src/t2pw/p... 'use_cache')] == [('src/t2pw/a... 'use_cache')]
+=========================== short test summary info ===========================
+FAILED tests/test_rag_seed_entity_reimport.py::test_the_orchestrator_passes_the_merge_base_to_conform
+FAILED tests/test_stage_one_paper_dictionary.py::test_only_the_stage6_call_sites_pass_the_keyword
+2 failed, 537 passed in 85.18s (0:01:25)
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R1\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 65798c7a102f742391d9301b4eaf2ee00aa40d64  [git, worktree dirty=True]
+label                   : sweepE
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R1/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R1 --pin-verdict C:/t/ws-R1/docs/webserver/evidence/R1/pin/s8-sweepE.pin.json -q --basetemp=C:/t/wsR1tmp/s8-sweepE --tb=line -rf tests/test_strict_quarantine.py tests/test_strict_quarantine_real_artifact_replay.py tests/test_stage0_case_c_retry_clobber.py tests/test_rag_seed_entity_reimport.py tests/test_reaction_evidence.py tests/test_stage_one_paper_dictionary.py tests/test_rag_admission_production_path.py tests/test_rag_triage_orchestration.py tests/test_rag_differential_gate.py tests/test_stage0_scope_fallback.py tests/test_stage3_gate_report_lifecycle.py tests/test_c119_g9_base_failure_proof.py tests/test_orch757_llm_token_budgets.py tests/test_orch759a_duplicate_protein_fold.py tests/test_entity_admission.py
+cwd                     : C:\t\ws-R1
+root PID / process group: 84260 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 550 s
+duration                : 86.34 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 3  73504:python.exe, 80096:python.exe, 88724:python.exe
+descendants terminated  : 3  73504, 80096, 88724
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ws-R1/docs/webserver/evidence/R1/s8-sweepE.json
+json report written     : True
+pre-existing (reported, NEVER killed): 5
+================================================

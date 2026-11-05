@@ -1,0 +1,89 @@
+T2PW: C:\t\ws-R1\src\t2pw\__init__.py
+FFFFFFFFFF......................................................F....F.F [ 91%]
+FF.FFFF                                                                  [100%]
+================================== FAILURES ===================================
+E   StopIteration
+C:\t\ws-R1\tests\test_streamlit_stage2_orchestration.py:78: StopIteration
+E   StopIteration
+C:\t\ws-R1\tests\test_streamlit_stage2_orchestration.py:78: StopIteration
+E   StopIteration
+C:\t\ws-R1\tests\test_streamlit_stage2_orchestration.py:78: StopIteration
+E   StopIteration
+C:\t\ws-R1\tests\test_streamlit_stage2_orchestration.py:78: StopIteration
+E   StopIteration
+C:\t\ws-R1\tests\test_streamlit_stage2_orchestration.py:78: StopIteration
+E   StopIteration
+C:\t\ws-R1\tests\test_streamlit_stage2_orchestration.py:78: StopIteration
+E   StopIteration
+C:\t\ws-R1\tests\test_streamlit_stage2_orchestration.py:78: StopIteration
+E   StopIteration
+C:\t\ws-R1\tests\test_streamlit_stage2_orchestration.py:78: StopIteration
+E   StopIteration
+C:\t\ws-R1\tests\test_streamlit_stage2_orchestration.py:78: StopIteration
+E   StopIteration
+C:\t\ws-R1\tests\test_streamlit_stage2_orchestration.py:78: StopIteration
+E   StopIteration
+C:\t\ws-R1\tests\test_c030_canonical_identity_fallback.py:899: StopIteration
+E   assert True is False
+C:\t\ws-R1\tests\test_c052_prefreeze_report_at_the_streamlit_seams.py:419: assert True is False
+E   StopIteration
+C:\t\ws-R1\tests\test_streamlit_stage2_orchestration.py:78: StopIteration
+E   StopIteration
+C:\t\ws-R1\tests\test_c052_prefreeze_report_at_the_streamlit_seams.py:277: StopIteration
+E   StopIteration
+C:\t\ws-R1\tests\test_streamlit_stage2_orchestration.py:78: StopIteration
+E   StopIteration
+C:\t\ws-R1\tests\test_streamlit_stage2_orchestration.py:78: StopIteration
+E   StopIteration
+C:\t\ws-R1\tests\test_streamlit_stage2_orchestration.py:78: StopIteration
+E   StopIteration
+C:\t\ws-R1\tests\test_streamlit_stage2_orchestration.py:78: StopIteration
+E   StopIteration
+C:\t\ws-R1\tests\test_c052_prefreeze_report_at_the_streamlit_seams.py:693: StopIteration
+=========================== short test summary info ===========================
+FAILED tests/test_c030a_object_sharing_at_the_freeze_seam.py::test_a0c7_guard_the_artifact_set_shares_one_canonical_object
+FAILED tests/test_c030a_object_sharing_at_the_freeze_seam.py::test_a0c7_guard_the_shared_object_is_the_one_that_was_hashed
+FAILED tests/test_c030a_object_sharing_at_the_freeze_seam.py::test_a0c7_guard_a_refusal_publishes_the_pre_seam_object_itself
+FAILED tests/test_c030a_object_sharing_at_the_freeze_seam.py::test_a0c7_mutant_a_copy_at_one_publication_site_goes_red[copy-at-final_mapped]
+FAILED tests/test_c030a_object_sharing_at_the_freeze_seam.py::test_a0c7_mutant_a_copy_at_one_publication_site_goes_red[copy-at-final_mapped_quarantined]
+FAILED tests/test_c030a_object_sharing_at_the_freeze_seam.py::test_a0c7_mutant_a_copy_at_one_publication_site_goes_red[copy-at-final_export_input]
+FAILED tests/test_c030a_object_sharing_at_the_freeze_seam.py::test_a0c7_mutant_a_copy_at_one_publication_site_goes_red[copy-at-canonical-payload-key]
+FAILED tests/test_c030a_object_sharing_at_the_freeze_seam.py::test_a0c7_mutant_a_copy_at_the_seam_binding_goes_red
+FAILED tests/test_c030a_object_sharing_at_the_freeze_seam.py::test_a0c7_mutant_a_copy_in_the_refusal_fallback_goes_red
+FAILED tests/test_c030a_object_sharing_at_the_freeze_seam.py::test_a0c7_mutant_the_tautological_assertion_survives_every_one_of_them
+FAILED tests/test_c030_canonical_identity_fallback.py::test_the_seam_resolves_its_hash_schema_import_when_exec_d_alone
+FAILED tests/test_c052_prefreeze_report_at_the_streamlit_seams.py::test_new_acceptance_the_record_survives_a_failure_below_the_seam
+FAILED tests/test_c052_prefreeze_report_at_the_streamlit_seams.py::test_new_acceptance_the_post_pipeline_seam_returns_its_prefreeze_report
+FAILED tests/test_c052_prefreeze_report_at_the_streamlit_seams.py::test_new_acceptance_the_post_pipeline_seam_adds_keys_and_changes_none
+FAILED tests/test_c052_prefreeze_report_at_the_streamlit_seams.py::test_new_acceptance_no_added_key_makes_the_batch_driver_misread_the_export
+FAILED tests/test_c052_prefreeze_report_at_the_streamlit_seams.py::test_a0c8_guard_the_sbml_build_reads_the_object_the_freeze_returned
+FAILED tests/test_c052_prefreeze_report_at_the_streamlit_seams.py::test_new_acceptance_the_post_pipeline_seam_publishes_both_path_names
+FAILED tests/test_c052_prefreeze_report_at_the_streamlit_seams.py::test_new_acceptance_the_published_names_follow_the_freeze_not_a_constant
+FAILED tests/test_c052_prefreeze_report_at_the_streamlit_seams.py::test_a0c8_measured_limitation_the_cohort_never_exercises_the_sbml_build
+19 failed, 60 passed in 7.29s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R1\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 65798c7a102f742391d9301b4eaf2ee00aa40d64  [git, worktree dirty=True]
+label                   : sweepB
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R1/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R1 --pin-verdict C:/t/ws-R1/docs/webserver/evidence/R1/pin/s2-sweepB.pin.json -q --basetemp=C:/t/wsR1tmp/s2-sweepB --tb=line -rf tests/test_c030a_object_sharing_at_the_freeze_seam.py tests/test_c030_canonical_identity_fallback.py tests/test_c052_prefreeze_report_at_the_streamlit_seams.py
+cwd                     : C:\t\ws-R1
+root PID / process group: 63688 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 500 s
+duration                : 9.94 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 7  73500:python.exe, 73948:git.exe, 36048:git.exe, 73484:git.exe, 72956:git.exe, 68416:git.exe, 73168:git.exe
+descendants terminated  : 7  36048, 68416, 72956, 73168, 73484, 73500, 73948
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ws-R1/docs/webserver/evidence/R1/s2-sweepB.json
+json report written     : True
+pre-existing (reported, NEVER killed): 5
+================================================

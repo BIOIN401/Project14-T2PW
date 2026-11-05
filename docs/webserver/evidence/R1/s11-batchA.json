@@ -1,0 +1,195 @@
+{
+  "label": "batchA",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/ws-R1/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-R1",
+    "--pin-verdict",
+    "C:/t/ws-R1/docs/webserver/evidence/R1/pin/s11-batchA.pin.json",
+    "-q",
+    "--basetemp=C:/t/wsR1tmp/s11-batchA",
+    "--tb=line",
+    "-rf",
+    "tests/test_batch_driver.py",
+    "tests/test_batch_preflight.py",
+    "tests/test_batch_research_gate_fail_open.py"
+  ],
+  "cwd": "C:\\t\\ws-R1",
+  "started_at": "2026-11-05T17:05:00+00:00",
+  "finished_at": "2026-11-05T17:05:44+00:00",
+  "duration_seconds": 43.5447858,
+  "timeout_seconds": 570.0,
+  "root_pid": 96184,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 96172,
+      "name": "python.exe",
+      "ppid": 96184
+    },
+    {
+      "pid": 93708,
+      "name": "python.exe",
+      "ppid": 96604
+    },
+    {
+      "pid": 96604,
+      "name": "python.exe",
+      "ppid": 96172
+    },
+    {
+      "pid": 96436,
+      "name": "python.exe",
+      "ppid": 96984
+    },
+    {
+      "pid": 96984,
+      "name": "python.exe",
+      "ppid": 96172
+    },
+    {
+      "pid": 90892,
+      "name": "python.exe",
+      "ppid": 96172
+    },
+    {
+      "pid": 96712,
+      "name": "python.exe",
+      "ppid": 90892
+    },
+    {
+      "pid": 95240,
+      "name": "python.exe",
+      "ppid": 96172
+    },
+    {
+      "pid": 97180,
+      "name": "python.exe",
+      "ppid": 95240
+    },
+    {
+      "pid": 93820,
+      "name": "python.exe",
+      "ppid": 95324
+    },
+    {
+      "pid": 95324,
+      "name": "python.exe",
+      "ppid": 96172
+    },
+    {
+      "pid": 94304,
+      "name": "python.exe",
+      "ppid": 96172
+    },
+    {
+      "pid": 95864,
+      "name": "python.exe",
+      "ppid": 94304
+    },
+    {
+      "pid": 88976,
+      "name": "python.exe",
+      "ppid": 95864
+    },
+    {
+      "pid": 96408,
+      "name": "python.exe",
+      "ppid": 88976
+    },
+    {
+      "pid": 95584,
+      "name": "python.exe",
+      "ppid": 96172
+    },
+    {
+      "pid": 96260,
+      "name": "python.exe",
+      "ppid": 95584
+    },
+    {
+      "pid": 95600,
+      "name": "python.exe",
+      "ppid": 96260
+    },
+    {
+      "pid": 96380,
+      "name": "python.exe",
+      "ppid": 95600
+    }
+  ],
+  "descendants_terminated": [
+    88976,
+    90892,
+    93708,
+    93820,
+    94304,
+    95240,
+    95324,
+    95584,
+    95600,
+    95864,
+    96172,
+    96260,
+    96380,
+    96408,
+    96436,
+    96604,
+    96712,
+    96984,
+    97180
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 20528,
+      "name": "python.exe"
+    },
+    {
+      "pid": 25472,
+      "name": "python.exe"
+    },
+    {
+      "pid": 59512,
+      "name": "python.exe"
+    },
+    {
+      "pid": 95000,
+      "name": "python.exe"
+    },
+    {
+      "pid": 95484,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/ws-R1/docs/webserver/evidence/R1/s11-batchA.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-R1\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-R1",
+    "repo_head": "65798c7a102f742391d9301b4eaf2ee00aa40d64",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}
