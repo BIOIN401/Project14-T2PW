@@ -1,0 +1,95 @@
+{
+  "label": "F2-s8",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-int",
+    "-q",
+    "--basetemp=C:/t/wsINTf2/s8",
+    "tests/test_streamlit_stage8_export_contract.py"
+  ],
+  "cwd": "C:\\t\\ws-int",
+  "started_at": "2026-11-05T21:54:12+00:00",
+  "finished_at": "2026-11-05T21:54:14+00:00",
+  "duration_seconds": 1.2453366999980062,
+  "timeout_seconds": 400.0,
+  "root_pid": 597680,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 597768,
+      "name": "python.exe",
+      "ppid": 597680
+    }
+  ],
+  "descendants_terminated": [
+    597768
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 442728,
+      "name": "python.exe"
+    },
+    {
+      "pid": 460520,
+      "name": "python.exe"
+    },
+    {
+      "pid": 496044,
+      "name": "python.exe"
+    },
+    {
+      "pid": 496252,
+      "name": "python.exe"
+    },
+    {
+      "pid": 597252,
+      "name": "python.exe"
+    },
+    {
+      "pid": 597300,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/wsINTf2/reports/s8.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-int\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-int",
+    "repo_head": "3429ce62e03dcf903ba1a758a699fd9fafec445e",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "F2POST",
+    "token": "F2POST:597252:8ef062ce0ea6f884",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

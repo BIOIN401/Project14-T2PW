@@ -1,0 +1,191 @@
+{
+  "label": "F2-c011",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-int",
+    "-q",
+    "--basetemp=C:/t/wsINTf2/c011",
+    "tests/test_c011_freeze_seam_golden_equivalence.py"
+  ],
+  "cwd": "C:\\t\\ws-int",
+  "started_at": "2026-11-05T21:53:33+00:00",
+  "finished_at": "2026-11-05T21:54:11+00:00",
+  "duration_seconds": 37.39459379999971,
+  "timeout_seconds": 400.0,
+  "root_pid": 595964,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 591812,
+      "name": "python.exe",
+      "ppid": 595964
+    },
+    {
+      "pid": 589084,
+      "name": "git.exe",
+      "ppid": 591812
+    },
+    {
+      "pid": 575496,
+      "name": "python.exe",
+      "ppid": 593276
+    },
+    {
+      "pid": 593276,
+      "name": "python.exe",
+      "ppid": 591812
+    },
+    {
+      "pid": 592416,
+      "name": "python.exe",
+      "ppid": 591812
+    },
+    {
+      "pid": 575632,
+      "name": "python.exe",
+      "ppid": 592416
+    },
+    {
+      "pid": 596560,
+      "name": "git.exe",
+      "ppid": 575632
+    },
+    {
+      "pid": 597308,
+      "name": "python.exe",
+      "ppid": 597328
+    },
+    {
+      "pid": 597328,
+      "name": "python.exe",
+      "ppid": 591812
+    },
+    {
+      "pid": 597352,
+      "name": "python.exe",
+      "ppid": 597364
+    },
+    {
+      "pid": 597364,
+      "name": "python.exe",
+      "ppid": 591812
+    },
+    {
+      "pid": 597424,
+      "name": "python.exe",
+      "ppid": 591812
+    },
+    {
+      "pid": 597444,
+      "name": "python.exe",
+      "ppid": 597424
+    },
+    {
+      "pid": 597464,
+      "name": "python.exe",
+      "ppid": 591812
+    },
+    {
+      "pid": 597484,
+      "name": "python.exe",
+      "ppid": 597464
+    },
+    {
+      "pid": 591100,
+      "name": "python.exe",
+      "ppid": 591812
+    },
+    {
+      "pid": 596028,
+      "name": "python.exe",
+      "ppid": 591100
+    }
+  ],
+  "descendants_terminated": [
+    575496,
+    575632,
+    589084,
+    591100,
+    591812,
+    592416,
+    593276,
+    596028,
+    596560,
+    597308,
+    597328,
+    597352,
+    597364,
+    597424,
+    597444,
+    597464,
+    597484
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 442728,
+      "name": "python.exe"
+    },
+    {
+      "pid": 460520,
+      "name": "python.exe"
+    },
+    {
+      "pid": 496044,
+      "name": "python.exe"
+    },
+    {
+      "pid": 496252,
+      "name": "python.exe"
+    },
+    {
+      "pid": 596056,
+      "name": "python.exe"
+    },
+    {
+      "pid": 596108,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/wsINTf2/reports/c011.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-int\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-int",
+    "repo_head": "3429ce62e03dcf903ba1a758a699fd9fafec445e",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "F2POST",
+    "token": "F2POST:596056:878984e4e95d3c92",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
