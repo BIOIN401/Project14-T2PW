@@ -1,0 +1,72 @@
+{% extends "layout.html" %}
+{% import "macros/components.html" as c %}
+{% block title %}Submit{% endblock %}
+
+{#- One pathway row. Fields for the other input modes are hidden by CSS (:has) and
+    simply ignored by the server, so the form also works where :has is unsupported. -#}
+{% macro row_fields(r) %}
+  {{ c.text_field("name_" ~ r.n, "Pathway name", value=r.name,
+        hint="Required for the Pathway name option; optional otherwise (it focuses the extraction).",
+        error=r.errors.get("name"), placeholder="e.g. glycolysis") }}
+  {{ c.text_field("organism_" ~ r.n, "Organism", value=r.organism, required=(r.n == 1),
+        hint="Start typing a species name and pick one from the suggestions.",
+        error=r.errors.get("organism"), autocomplete="off",
+        attrs={"list": "organism-options", "hx-get": "/organisms", "hx-trigger": "input changed delay:250ms",
+               "hx-target": "#organism-options", "hx-swap": "innerHTML"}) }}
+  <div class="only-pmids">
+    {{ c.textarea_field("pmids_" ~ r.n, "PubMed IDs", value=r.pmids, rows=3,
+          hint="Digits only, separated by commas, spaces or new lines. Only open-access full text can be read; if a paper has none, upload its PDF instead.",
+          error=r.errors.get("pmids")) }}
+  </div>
+  <div class="only-pdfs">
+    {{ c.file_field("pdfs_" ~ r.n, "PDF files", accept="application/pdf,.pdf", multiple=True,
+          hint="Up to " ~ max_pdf_mb ~ " MB and " ~ max_pdf_pages ~ " pages each. Re-select your files if the form is shown again.",
+          error=r.errors.get("pdfs")) }}
+  </div>
+{% endmacro %}
+
+{% block content %}
+<h1>Build a pathway from the literature</h1>
+<p class="lead">Give a pathway name, PubMed IDs or PDF files. T2PW reads the papers and returns a
+PathWhiz pathway file (PWML) for you to review. A run takes <strong>20 to 60 minutes</strong>; you
+get a private link to come back to, and can leave an email address to be told when it is done.</p>
+
+{% if problems %}
+{% call c.alert("error", title="This submission was not accepted") %}
+<ul>{% for p in problems %}<li>{{ p }}</li>{% endfor %}</ul>
+{% endcall %}
+{% endif %}
+
+<form class="submit" method="post" action="/submit" enctype="multipart/form-data">
+  {{ c.radio_group("mode", "What are you starting from?", modes, selected=mode,
+        hint="One choice for the whole submission.") }}
+
+  <datalist id="organism-options"></datalist>
+
+  <div class="rows">
+    {% for r in rows %}
+    {% if r.n == 1 %}
+    {% call c.card("Pathway 1", heading_level=2) %}{{ row_fields(r) }}{% endcall %}
+    {% else %}
+    <details class="disclosure"{% if r.open %} open{% endif %}>
+      <summary>Pathway {{ r.n }} (optional)</summary>
+      <div class="disclosure__body">
+        {{ row_fields(r) }}
+        <p class="muted">To remove this pathway, clear its fields.</p>
+      </div>
+    </details>
+    {% endif %}
+    {% endfor %}
+  </div>
+  <p class="muted">Up to {{ max_items }} pathways per submission. Rows left empty are ignored.</p>
+
+  {{ c.checkbox_field("consent", "OK to add this pathway to PathBank", checked=consent,
+        hint="If ticked, a finished and release-ready result may be passed to PathBank curators for review. Nothing is added to PathBank automatically.") }}
+  {{ c.text_field("email", "Email (optional)", type="email", value=email, error=email_error or None,
+        hint="Used once, to tell you when the job has finished.", autocomplete="email") }}
+
+  <div class="btn-row">{{ c.button("Submit", type="submit") }}</div>
+  <p class="muted">Limits: {{ rate_per_day }} submissions per day per visitor, up to {{ max_pdf_files }} PDFs
+  ({{ max_total_mb }} MB in total) and {{ max_pmids }} PubMed IDs per submission.</p>
+</form>
+{% endblock %}

@@ -1,0 +1,28 @@
+{#- Job-page pieces (W6). Every link is built by the server from the validated job id
+    and the item position (views.item_view); nothing here reads a path. -#}
+{% import "macros/components.html" as c %}
+
+{% macro attempts(it) %}
+{%- if it.attempt_rows %}
+{{ c.data_table(["Attempt", "Started", "Ended", "Outcome"], it.attempt_rows, "Attempts for pathway " ~ it.number) }}
+{%- endif %}
+{% endmacro %}
+
+{% macro item_card(it) %}
+<article class="job-item" aria-labelledby="item-{{ it.number }}-title">
+  <header class="job-item__head">
+    <h2 class="job-item__title" id="item-{{ it.number }}-title">{{ it.title }}</h2>
+    {{ c.status_badge(it.badge, it.badge_label) }}
+  </header>
+  <p class="muted">{{ it.organism }} · {{ it.inputs }}</p>
+  <p><strong>{{ it.headline }}.</strong> {{ it.detail }}</p>
+  {{ c.steps(it.steps, "Progress for pathway " ~ it.number) }}
+  {%- if it.warnings %}
+  {% call c.alert("warning", title="Warnings") %}<ul>{% for w in it.warnings %}<li>{{ w }}</li>{% endfor %}</ul>{% endcall %}
+  {%- endif %}
+  {{ attempts(it) }}
+  {%- if it.finished %}
+  <p class="btn-row">{{ c.button("View results", href=it.href, variant="secondary", size="sm") }}</p>
+  {%- endif %}
+</article>
+{% endmacro %}

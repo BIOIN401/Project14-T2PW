@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+{% import "macros/components.html" as c %}
+{% import "macros/job.html" as j %}
+{% block title %}Results: {{ it.title }}{% endblock %}
+{% block page_head %}{% if not it.finished %}
+  <meta http-equiv="refresh" content="30">{% endif %}{% endblock %}
+{% block content %}
+<p><a href="/job/{{ sid }}">&larr; All pathways in this job</a></p>
+<h1>{{ it.title }}</h1>
+<p class="job-item__head">{{ c.status_badge(it.badge, it.badge_label) }}
+<span class="muted">{{ it.organism }} · {{ it.inputs }}</span></p>
+<p><strong>{{ it.headline }}.</strong> {{ it.detail }}</p>
+
+{% if it.review_required %}
+{% call c.alert("warning", title="Review required before use") %}
+<p>Open the PWML in PathWhiz and check it against the sources. Do not treat it as final.</p>
+{% endcall %}
+{% endif %}
+{% if it.warnings %}
+{% call c.alert("warning", title="Warnings") %}<ul>{% for w in it.warnings %}<li>{{ w }}</li>{% endfor %}</ul>{% endcall %}
+{% endif %}
+{% if it.failed %}
+{% call c.alert("error", title="No PWML was produced") %}<p>{{ it.detail }}</p>{% endcall %}
+{% endif %}
+
+{% if not it.finished %}
+{{ c.steps(it.steps, "Progress") }}
+<p class="muted">This page reloads every 30 seconds.</p>
+{% endif %}
+
+{% if it.downloads.pwml %}
+<h2>Download</h2>
+<p>{{ c.download_link(it.downloads.pwml.href, "Download PWML", filename=it.downloads.pwml.name, meta="PathWhiz pathway file") }}</p>
+{% endif %}
+{% if it.downloads.image %}
+<h2>Pathway diagram</h2>
+{{ c.figure(it.downloads.image.href, "Rendered diagram of " ~ it.title, caption="Rendered from the PWML above.") }}
+{% endif %}
+{% if it.downloads.reports %}
+<details class="disclosure">
+  <summary>Reports and diagnostic files ({{ it.downloads.reports | length }})</summary>
+  <div class="disclosure__body"><ul class="plain">
+    {% for r in it.downloads.reports %}<li>{{ c.download_link(r.href, r.name, filename=r.name) }}</li>{% endfor %}
+  </ul></div>
+</details>
+{% endif %}
+{% if it.message %}
+<details class="disclosure">
+  <summary>Technical message</summary>
+  <div class="disclosure__body"><p>{{ it.message }}</p></div>
+</details>
+{% endif %}
+{% if it.attempt_rows %}<h2>Attempts</h2>{{ j.attempts(it) }}{% endif %}
+{% endblock %}

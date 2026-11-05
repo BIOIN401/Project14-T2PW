@@ -1,0 +1,8 @@
+{% extends "layout.html" %}
+{% import "macros/components.html" as c %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<h1>{{ title }}</h1>
+<p>{{ message }}</p>
+<p>{{ c.button("Back to the submit page", href="/", variant="secondary") }}</p>
+{% endblock %}

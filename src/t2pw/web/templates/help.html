@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+{% import "macros/components.html" as c %}
+{% block title %}Help{% endblock %}
+{% block content %}
+<h1>Help</h1>
+<h2>Three ways to start</h2>
+<ul>
+  <li><strong>Pathway name.</strong> Give a name and an organism. T2PW looks for open-access papers
+  itself. Not every paper has open-access full text, and if too little is found the job says so.</li>
+  <li><strong>PubMed IDs.</strong> Only open-access full text can be read. For a paper without it, upload the PDF.</li>
+  <li><strong>PDF files.</strong> Up to {{ max_pdf_files }} files per submission, {{ max_pdf_mb }} MB and
+  {{ max_pdf_pages }} pages each ({{ max_total_mb }} MB in total). Encrypted PDFs are refused.</li>
+</ul>
+<p>A submission holds up to {{ max_items }} pathways, each with its own organism.</p>
+
+<h2>What happens next</h2>
+<p>Your submission is queued and the pathways run one at a time, 20 to 60 minutes each. You are taken to
+a private job page that updates itself. If a run fails for a temporary reason (a service did not
+answer, the run timed out) it is retried automatically, up to two more times; the job page lists every attempt.</p>
+
+<h2>Statuses</h2>
+<dl class="defs">
+  <dt>{{ c.status_badge("queued") }}</dt><dd>Waiting for its turn.</dd>
+  <dt>{{ c.status_badge("running") }}</dt><dd>Being built now.</dd>
+  <dt>{{ c.status_badge("done") }}</dt><dd>Built, and it passed the strict checks.</dd>
+  <dt>{{ c.status_badge("review_required") }}</dt><dd>A PWML was produced but must be checked by a person before use.</dd>
+  <dt>{{ c.status_badge("failed") }}</dt><dd>No usable PWML. The job page says why, in plain words.</dd>
+</dl>
+
+<h2>Your data and the job link</h2>
+<p>There is no login. The job link is the only key to your results, so keep it private.
+Uploaded PDFs are stored on the server only to run your job.
+[TODO for the product owner: how long jobs and uploads are kept.]</p>
+<p>Ticking &ldquo;OK to add this pathway to PathBank&rdquo; lets PathBank curators see a finished, release-ready result.
+They review it first; nothing is written to PathBank automatically. You may untick it.</p>
+<p>Each visitor can make {{ rate_per_day }} submissions per day.</p>
+{% endblock %}
