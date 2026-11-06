@@ -1,0 +1,168 @@
+{
+  "label": "R3b-pm-smoke",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-int",
+    "-q",
+    "--basetemp=C:/t/bt/R3bpm/smoke",
+    "tests/test_reference_repair.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_empty_extraction_payload.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py",
+    "tests/test_c102_coverage_denominator.py",
+    "tests/test_c106_mutation_harness_executable.py"
+  ],
+  "cwd": "C:\\t\\ws-int",
+  "started_at": "2026-11-06T16:58:56+00:00",
+  "finished_at": "2026-11-06T16:59:41+00:00",
+  "duration_seconds": 45.112148899999966,
+  "timeout_seconds": 600.0,
+  "root_pid": 44124,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 6896,
+      "name": "python.exe",
+      "ppid": 44124
+    },
+    {
+      "pid": 47248,
+      "name": "python.exe",
+      "ppid": 48892
+    },
+    {
+      "pid": 48892,
+      "name": "python.exe",
+      "ppid": 6896
+    },
+    {
+      "pid": 45480,
+      "name": "python.exe",
+      "ppid": 6896
+    },
+    {
+      "pid": 48360,
+      "name": "python.exe",
+      "ppid": 45480
+    },
+    {
+      "pid": 8680,
+      "name": "python.exe",
+      "ppid": 43240
+    },
+    {
+      "pid": 43240,
+      "name": "python.exe",
+      "ppid": 6896
+    },
+    {
+      "pid": 48752,
+      "name": "python.exe",
+      "ppid": 48784
+    },
+    {
+      "pid": 48784,
+      "name": "python.exe",
+      "ppid": 6896
+    },
+    {
+      "pid": 49672,
+      "name": "git.exe",
+      "ppid": 6896
+    },
+    {
+      "pid": 49484,
+      "name": "git.exe",
+      "ppid": 6896
+    }
+  ],
+  "descendants_terminated": [
+    6896,
+    8680,
+    43240,
+    45480,
+    47248,
+    48360,
+    48752,
+    48784,
+    48892,
+    49484,
+    49672
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 13996,
+      "name": "python.exe"
+    },
+    {
+      "pid": 14604,
+      "name": "python.exe"
+    },
+    {
+      "pid": 26984,
+      "name": "python.exe"
+    },
+    {
+      "pid": 26988,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/evidence/R3b/postmerge/smoke.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-int\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-int",
+    "repo_head": "4ea3524a8862be462652b38145b7249e649eec20",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "R3b-pm-smoke",
+    "token": "R3b-pm-smoke:13996:1b97d78bff818674",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

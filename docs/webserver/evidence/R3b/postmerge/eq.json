@@ -1,0 +1,87 @@
+{
+  "label": "R3b-pm-eq",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-int",
+    "-q",
+    "--basetemp=C:/t/bt/R3bpm/eq",
+    "tests/test_equivalence_app_vs_service.py"
+  ],
+  "cwd": "C:\\t\\ws-int",
+  "started_at": "2026-11-06T16:57:09+00:00",
+  "finished_at": "2026-11-06T16:58:07+00:00",
+  "duration_seconds": 57.925061299999925,
+  "timeout_seconds": 600.0,
+  "root_pid": 42388,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 41272,
+      "name": "python.exe",
+      "ppid": 42388
+    }
+  ],
+  "descendants_terminated": [
+    41272
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 26984,
+      "name": "python.exe"
+    },
+    {
+      "pid": 26988,
+      "name": "python.exe"
+    },
+    {
+      "pid": 41140,
+      "name": "python.exe"
+    },
+    {
+      "pid": 45336,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/evidence/R3b/postmerge/eq.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-int\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-int",
+    "repo_head": "4ea3524a8862be462652b38145b7249e649eec20",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "R3b-pm-eq",
+    "token": "R3b-pm-eq:45336:c7bf451069fac2cd",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
