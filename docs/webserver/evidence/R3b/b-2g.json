@@ -1,0 +1,105 @@
+{
+  "label": "2g",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/ws-R3b-base/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-R3b-base",
+    "--pin-verdict",
+    "C:/t/wsR3btmp/ev/pin/b-2g.pin.json",
+    "-q",
+    "--basetemp=C:/t/wsR3btmp/b-2g",
+    "tests/test_orch759c_quarantine_bucket_closure.py",
+    "tests/test_orch766_unreferenced_species.py",
+    "tests/test_orch768_replay_corpus.py",
+    "tests/test_orch769b_actor_protein_registry.py",
+    "tests/test_orch773_omit_per_row.py",
+    "tests/test_orch787_duplicate_rows_consolidated.py",
+    "tests/test_strict_failure_replay.py",
+    "tests/test_c083_inner_timeout_row.py"
+  ],
+  "cwd": "C:\\t\\ws-R3b-base",
+  "started_at": "2026-11-06T03:56:08+00:00",
+  "finished_at": "2026-11-06T03:56:20+00:00",
+  "duration_seconds": 11.644999799995276,
+  "timeout_seconds": 560.0,
+  "root_pid": 1026560,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 1021100,
+      "name": "python.exe",
+      "ppid": 1026560
+    }
+  ],
+  "descendants_terminated": [
+    1021100
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 442728,
+      "name": "python.exe"
+    },
+    {
+      "pid": 460520,
+      "name": "python.exe"
+    },
+    {
+      "pid": 921044,
+      "name": "python.exe"
+    },
+    {
+      "pid": 922176,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1026612,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1026716,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/wsR3btmp/ev/b-2g.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-R3b-base\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-R3b-base",
+    "repo_head": "220b16215e5a3776bcd42ab1eed86f98802ce04a",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ws-R3b",
+    "token": "ws-R3b:1026612:032b5bafb56e0b8a",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

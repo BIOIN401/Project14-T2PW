@@ -1,8 +1,8 @@
 #!/bin/bash
-# usage: compare.sh EVDIR   -> per chunk: tip summary | base summary | failing-node sets identical? | survivors
-EV=$1
-for t in "$EV"/t-*.log; do
-  id=$(basename "$t" .log); id=${id#t-}; b="$EV/b-$id.log"
+# usage: compare.sh EVDIR [TIP_PREFIX=t]   -> per chunk: tip summary | base summary | failing-node sets identical? | survivors
+EV=$1; P=${2:-t}
+for t in "$EV"/$P-*.log; do
+  id=$(basename "$t" .log); id=${id#$P-}; b="$EV/b-$id.log"
   ts=$(grep -E "^[0-9]+ (passed|failed)|^=+ .*(passed|failed)" "$t" | tail -1 | sed 's/ in [0-9.]*s.*//; s/=//g')
   tsv=$(grep -o "FINAL SURVIVING COUNT *: *[0-9]*" "$t" | grep -o "[0-9]*$")
   tf=$(grep -E "^FAILED|^ERROR" "$t" | sed 's/ - .*//' | sort)

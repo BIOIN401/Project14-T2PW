@@ -1,8 +1,12 @@
 # R3b - the submit block's Stage 0 moves to `service.extraction.run_stage_zero`
 
 - **Branch:** `ws/R3b-stage-zero` from `webserver/refactor` @ `220b1621` (R3a merged).
-- **Code commits:** `b7830ed2` (the move and the new test file), `1df7b6b2` (the new tests also pin the post-Stage-0 sync; see section 6, item 3). Docs commit: this file plus `evidence/R3b/`.
-- **Status:** **needs-decision.** The move is complete and proven equivalent, but 4 **unedited** source-reading tests in `tests/test_preprocessor.py` fail at the tip (section 5a). Making them pass needs a path-only repoint of those tests (Open question 0), which the brief says to stop and report rather than do. Every other suite matches base.
+- **Code commits:**
+  - `b7830ed2`: the move and the new test file.
+  - `1df7b6b2`: the new tests also pin the post-Stage-0 sync (section 6, item 3).
+  - `623ab02b`: test path repoint under PO ruling Q-R0-1 (section 4).
+- **Docs commits:** `b747cf17` (needs-decision version) and this update.
+- **Status:** done, pending independent review. The first report was needs-decision, because 4 source-reading tests in `tests/test_preprocessor.py` failed. The orchestrator authorised a path-only repoint of those tests under PO ruling Q-R0-1, made in `623ab02b` (section 4). After it, every chunk's failing-node set equals base.
 - **Behaviour change:** none intended. Two invisible differences are listed in section 3, items 4 and 5.
 - **NEW TESTS (R3b, new module):** `tests/test_service_extraction_stage0.py`, 19 tests.
 - **Scope:** R3b only, from the scout's split (`results/R3-scout.md` section 7). Stage 1 onwards is untouched.
@@ -74,7 +78,7 @@ No message text, order or condition changed. `reporter.py` is unchanged: `info`,
 |---|---|---|
 | `test_stage0_case_c_retry_clobber.py` calls `app._run_stage_zero_with_retry` 8 times, reads `app._PREPROCESS_RETRY_CHARS`, `app._has_usable_context` and `app._stage0_context_rank`, and **patches `app.preprocess`** | the shim passes the app's `preprocess` global at call time, so the patch lands. The three other names are re-imported | file unedited, 8 passed (solo). Mutation `app-shim-ignores-app-preprocess` (the shim passes a stub instead) fails 7 of its 8 tests |
 | the same file **lifts the ambiguous-review `if` block out of APP by AST** (`_ambiguous_review_gate`: exactly one `If` whose test is `is_ambiguous_multi_example_review_context(pathway_context)` and whose source contains `ambiguous_review_scope`), then execs it with only `st`, `pathway_context` and that predicate in scope | the gate stays in APP, byte-identical | the same run |
-| **`test_preprocessor.py`: four tests read the app SOURCE** for the two `preprocess(` calls, the transient-warning guard, `describe_preprocess_status(pathway_context)` and `preprocess_was_recovered(pathway_context)` | **nothing: they fail at the tip.** I found them only in the 2e run | section 5a, Open question 0 |
+| **`test_preprocessor.py`: four tests read the app SOURCE** for the two `preprocess(` calls, the transient-warning guard, `describe_preprocess_status(pathway_context)` and `preprocess_was_recovered(pathway_context)` | they failed at `1df7b6b2`. I found them only in the 2e run. **Repointed to `service/extraction.py` in `623ab02b` (Q-R0-1)** | section 4; 2e: 44 passed at `623ab02b` |
 | `test_stage0_scope_fallback.py` does `from t2pw.app.streamlit_app import _has_usable_context, _seed_context_from_user_scope` | re-imported | unedited, passes solo |
 | `test_c055:722` reads `app_module.REFINEMENT_STATE_DEFAULTS` | not moved | 2b-c055 |
 | `test_orch759b` patches `paths.PROJECT_ROOT` (and `postpipeline.PROJECT_ROOT`) before AppTest, then reads `extraction_diagnostics_dir` from session state | EXT reads `paths.PROJECT_ROOT` at call time, so the diagnostics land under the patched root as before | 2e-759b |
@@ -101,74 +105,99 @@ No message text, order or condition changed. `reporter.py` is unchanged: `info`,
 
 ## 4. Test edits (Q-R0-1)
 
-**None made.** `git diff 220b1621..HEAD --stat -- tests` lists only the new file. One path-only repoint is **needed** (section 5a, Open question 0) and was not made.
+**One edit: commit `623ab02b`, `tests/test_preprocessor.py`, 4 lines changed (`git show --numstat`: `4 4`).**
+
+- **Authority:** PO ruling **Q-R0-1** (`docs/webserver/results/PO-RULINGS-2026-11-04.md`, line 9): "Pointing a source-reading test (or a patch target) at the new file counts as an import-path edit." The orchestrator authorised it for R3b. The reviewer must confirm that the edit changes only paths.
+- **The change, in each of four tests:** `app_path = ROOT / "src" / "t2pw" / "app" / "streamlit_app.py"` becomes `app_path = ROOT / "src" / "t2pw" / "service" / "extraction.py"`. The tests are:
+
+  | line | test |
+  |---|---|
+  | 149 | `test_streamlit_forwards_user_task_context_to_every_preprocess_call` |
+  | 171 | `test_streamlit_suppresses_transient_warning_for_ambiguous_reviews` |
+  | 344 | `test_streamlit_stage_zero_warning_reports_the_reason` |
+  | 603 | `test_streamlit_surfaces_a_recovered_stage_zero_context` |
+
+- Nothing else changed: no assertion, no test name and not the `ROOT` line. The proof copy in `evidence/R3b/repoint/` pins `ROOT` to the tree; that line is **not** in the commit. `test_streamlit_strips_diagnostics_before_the_completeness_audit_prompt` still reads `streamlit_app.py`, because that code did not move.
+- **Before/after:**
+
+  | chunk 2e (`test_preprocessor.py`) | result |
+  |---|---|
+  | base `220b1621` | 44 passed |
+  | tip `1df7b6b2` (before the edit) | 40 passed, 4 failed (the four above) |
+  | tip `623ab02b` (after the edit) | 44 passed |
+
+  Survivors were 0 on all three runs.
+- **How it was missed:** `test_preprocessor.py` **was in my pre-move grep hit list** (it matched `describe_preprocess_status`), but I did not open it. I took it for a unit-test file of the preprocessor module. Every other hit was opened and checked (section 2).
+- No other existing test was edited: `git diff 220b1621..HEAD --stat -- tests` shows this file and the new `test_service_extraction_stage0.py`.
 
 ## 5. Tests: tip vs base
 
 All runs used `bounded_run.py` in the foreground, with the venv python for both the wrapper and the child.
 
 - Environment: `PYTHONPATH=<tree>/src`, `pinned_pytest --expect-tree <tree>` with no `--`, `T2PW_OFFLINE_CURATOR=1`.
-- Each run had a fresh `--basetemp=C:/t/wsR3btmp/<t|b>-<chunk>` whose parent was created first.
-- `--heavy-lock ws-R3b` was passed on every chunk except `web`.
-- Helpers: `evidence/R3b/scripts/run.sh`, `chunks.sh` (which holds the chunk lists: R2 2a-2g with the AppTest files split out, as in R3a) and `compare.sh`.
+- Each run had a fresh `--basetemp=C:/t/wsR3btmp/<pfx>-<chunk>` whose parent was created first.
+- `--heavy-lock ws-R3b` was passed on every chunk except `web`. Every heavy run was gated (section 6, item 7).
+- Helpers: `evidence/R3b/scripts/run.sh` and `chunks.sh` (the chunk lists: R2 2a-2g with the AppTest files split out, as in R3a), and `compare.sh EVDIR [prefix]`. The full table is in `compare.txt`.
 
-**Tip** = `C:/t/ws-R3b` @ `1df7b6b2`. **Base** = detached `C:/t/ws-R3b-base` @ `220b1621`. Every report shows `worktree dirty=False`. **Survivors were 0 on every run**: all 69 JSON reports, mutation runs included, have `final_surviving_count: 0`.
+**Trees and survivors:**
 
-Reports are in `evidence/R3b/{t,b}-<chunk>.{json,log}`, pin verdicts in `pin/`, the table in `compare.txt`.
+- **Tip `t-`:** `C:/t/ws-R3b` @ `1df7b6b2`, the code as reviewed. Every chunk ran.
+- **Tip `t2-`:** the same tree @ `623ab02b`, after the test repoint. 2e, the golden files, eq, the new file and the solo Stage-0 files were re-run.
+  - `623ab02b` differs from `1df7b6b2` only in `tests/test_preprocessor.py`, so the other `t-` results stand for it.
+- **Base `b-`:** detached `C:/t/ws-R3b-base` @ `220b1621`. **Every chunk ran.**
+- Every report shows `worktree dirty=False`.
+- **Survivors were 0 on every run:** all 113 `final_surviving_count` fields (91 run reports plus 22 mutation reports) are 0.
 
-| chunk | tip @ 1df7b6b2 | base @ 220b1621 | failing-node set |
+| chunk | tip | base @ 220b1621 | failing-node set |
 |---|---|---|---|
-| g1 batch_driver_seam_golden | 2 passed | not re-run (see below) | none |
-| g2 c011 | 8 passed | not re-run | none |
-| g3 stage8_export_contract | 4 passed | not re-run | none |
-| g4 quarantine_boundary | 24 passed | not re-run | none |
-| **eq** equivalence, alone | **14 passed** | not re-run | none |
-| 2a | 78 passed, 1 failed | 78 passed, 1 failed | identical (c052) |
-| 2b (incl. c060a) | 134 passed | not re-run | none |
-| 2b-c055 | 14 passed | not re-run | none |
+| g1 batch_driver_seam_golden | 2 passed (t, t2) | 2 passed | identical (none) |
+| g2 c011 | 8 passed (t, t2) | 8 passed | identical |
+| g3 stage8_export_contract | 4 passed (t, t2) | 4 passed | identical |
+| g4 quarantine_boundary | 24 passed (t, t2) | 24 passed | identical |
+| **eq** equivalence, alone | **14 passed** (t, t2) | 14 passed | identical |
+| 2a | 78 passed, 1 failed | same | identical (c052) |
+| 2b (incl. c060a) | 134 passed | 134 passed | identical |
+| 2b-c055 | 14 passed (t, t2) | 14 passed | identical |
 | 2c | 101 passed, 3 skipped, 1 failed | same | identical (prefreeze_third) |
-| 2c-c126 | 2 passed | not re-run | none |
-| 2d (incl. clobber, scope_fallback, 759a) | 413 passed, 1 failed | 413 passed, 1 failed | identical (rag_seed) |
-| 2d-stage3 | 28 passed | not re-run | none |
-| 2d-c119g9 | 3 passed | not re-run | none |
-| **2e test_preprocessor** | **40 passed, 4 failed** | **44 passed** | **DIFFERENT: 4 new failures, section 5a** |
-| 2e-759b | 7 passed | not re-run | none |
-| 2e-hook | 1 passed | not re-run | none |
-| 2e-759afold | 2 passed | not re-run | none |
+| 2c-c126 | 2 passed | 2 passed | identical |
+| 2d (incl. clobber, scope_fallback, 759a) | 413 passed, 1 failed | same | identical (rag_seed) |
+| 2d-stage3 | 28 passed | 28 passed | identical |
+| 2d-c119g9 | 3 passed | 3 passed | identical |
+| **2e test_preprocessor** | t: 40 passed, 4 failed. **t2: 44 passed** | 44 passed | **t2: identical**. t: the 4 Q-R0-1 tests, section 4 |
+| 2e-759b | 7 passed (t, t2) | 7 passed | identical |
+| 2e-hook | 1 passed | 1 passed | identical |
+| 2e-759afold | 2 passed (t, t2) | 2 passed | identical |
 | 2f | 32 passed, 4 skipped, 1 failed | same | identical (batch_preflight) |
-| 2f-driver | 61 passed | not re-run | none |
-| 2f-gate | 14 passed | not re-run | none |
-| 2g | 162 passed, 8 skipped | not re-run | none |
-| 2g-c082pp / c056d / c119sup / 759d / revview | 1 / 14 / 37 / 4 / 11 passed | not re-run | none |
-| at-c052 (alone) | 12 passed, 1 failed | 12 passed, 1 failed | identical (c052) |
-| at-c082sr / at-c083 / at-bridge (alone) | 8 / 12 / 37 passed | not re-run | none |
-| at-pf3 (alone) | 11 passed, 1 failed | 11 passed, 1 failed | identical |
-| web (13 files) | 301 passed | not re-run | none |
-| ext: test_service_extraction + test_service_reporter | 37 passed | not re-run | none |
-| solo: clobber / scope_fallback / c060a / 759a duplicate_protein_fold | 8 / 5 / 11 / 37 passed | not re-run | none |
-| **new** test_service_extraction_stage0 | **19 passed** | n/a (file absent) | - |
-| repoint check (section 5a) | 44 passed | - | - |
+| 2f-driver | 61 passed | 61 passed | identical |
+| 2f-gate | 14 passed | 14 passed | identical |
+| 2g | 162 passed, 8 skipped | same | identical |
+| 2g-c082pp / c056d / c119sup / revview | 1 / 14 / 37 / 11 passed | same | identical |
+| 2g-759d | 4 passed (t, t2) | 4 passed | identical |
+| at-c052 (alone) | 12 passed, 1 failed | same | identical (c052) |
+| at-c082sr / at-c083 / at-bridge (alone) | 8 / 12 / 37 passed | same | identical |
+| at-pf3 (alone) | 11 passed, 1 failed | same | identical |
+| web (13 files) | 301 passed | 301 passed | identical |
+| ext: test_service_extraction + test_service_reporter | 37 passed | 37 passed | identical |
+| solo clobber / scope_fallback / c060a / 759a duplicate_protein_fold | 8 / 5 / 11 / 37 passed (clobber, c060a, 759a also t2) | same | identical |
+| **new** test_service_extraction_stage0 | **19 passed** (t, t2) | n/a (file absent) | - |
 
-- **Base was re-run only for the chunks that fail on the tip.** I stopped there because of the blocker in 5a: the branch needs a decision, and the full base comparison has to be redone on whatever tip results from it.
-  - For every chunk that passes on the tip, the base result is already on record. R3a's base run (`evidence/R3a/b-*`, at `480b2384`) and the post-merge independent run at `220b1621` (merge commit message) both report the same chunk results: golden 38, equivalence 14, SMOKE 511, web+bridge 301.
-- The four known pre-existing failures have identical node ids on tip and base.
+- **Golden 38 passed on tip and base.** The golden files are unchanged.
+- The four known pre-existing failures (c052, prefreeze_third, rag_seed, batch_preflight) have identical node ids on tip and base.
+- **SMOKE was not run.** That is the independent runner's job.
 
-### 5a. The blocker: 4 unedited tests in `tests/test_preprocessor.py` read the app source
+### 5a. How the four `test_preprocessor.py` failures were found and proven path-only
 
-| test | what it reads from `streamlit_app.py` | why it fails at the tip |
+| test | what it reads | why it failed at `1df7b6b2` |
 |---|---|---|
-| `test_streamlit_forwards_user_task_context_to_every_preprocess_call` | AST: exactly 2 `preprocess(...)` Name-calls, each with a `user_task_context=` kwarg | both calls moved with `_run_stage_zero_with_retry`; the app has 0 |
-| `test_streamlit_suppresses_transient_warning_for_ambiguous_reviews` | AST: an `if` containing "transient LLM failure" whose test names both `is_ambiguous_multi_example_review_context` and `_has_usable_context` | that `if` moved into `run_stage_zero` |
-| `test_streamlit_stage_zero_warning_reports_the_reason` | text: `describe_preprocess_status(pathway_context)` and `Stage 0 failed:` | moved |
-| `test_streamlit_surfaces_a_recovered_stage_zero_context` | text: `preprocess_was_recovered(pathway_context)` and `Stage 0 partially recovered` | moved |
+| `..._forwards_user_task_context_to_every_preprocess_call` | AST: exactly 2 `preprocess(...)` Name-calls, each with `user_task_context=` | both calls moved with `_run_stage_zero_with_retry` |
+| `..._suppresses_transient_warning_for_ambiguous_reviews` | AST: an `if` containing "transient LLM failure" whose test names `is_ambiguous_multi_example_review_context` and `_has_usable_context` | that `if` moved into `run_stage_zero` |
+| `..._stage_zero_warning_reports_the_reason` | text `describe_preprocess_status(pathway_context)` and `Stage 0 failed:` | moved |
+| `..._surfaces_a_recovered_stage_zero_context` | text `preprocess_was_recovered(pathway_context)` and `Stage 0 partially recovered` | moved |
 
-- **I missed these in my pre-move grep.** `test_preprocessor.py` was in the hit list for `describe_preprocess_status`, but I read it as a unit-test file for the preprocessor module and did not open it.
-- **Proof that a path-only repoint is enough:** `evidence/R3b/repoint/repointed_preprocessor_check.py` is a copy of `tests/test_preprocessor.py` with exactly 5 lines changed (`repoint-proof.diff`):
-  - `ROOT` is pinned to the tree, because the copy lives outside `tests/`;
-  - the 4 `app_path = ... "app" / "streamlit_app.py"` lines become `... "service" / "extraction.py"`.
-
-  Run explicitly through the wrapper at the tip, it gives **44 passed**, survivors 0 (`t-repoint.*`). The file name has no `test_` prefix, so suite discovery does not pick it up.
-- **The tracked test file is not edited.** That needs a decision (Open question 0).
+- **The proof before the ruling:** `evidence/R3b/repoint/repointed_preprocessor_check.py` is an untracked-by-the-suite copy (no `test_` prefix), with `repoint-proof.diff` showing the change.
+  - It has the same 4 path lines changed, plus `ROOT` pinned to the tree, because the copy lives outside `tests/`.
+  - Run explicitly through the wrapper at `1df7b6b2`, it gave 44 passed (`t-repoint.*`).
+- The committed edit (`623ab02b`) has only the 4 path lines.
 
 ## 6. What failed, dead ends, incidents
 
@@ -183,31 +212,29 @@ Reports are in `evidence/R3b/{t,b}-<chunk>.{json,log}`, pin verdicts in `pin/`, 
 5. The first ivm run failed its own sanity assert: `"run_stage_zero" not in old` also matches `_run_stage_zero_with_retry`. I tightened it to `"= run_stage_zero("`.
 6. The first tip golden/eq batch took more than 180 s, and the harness moved the foreground Bash call to the background. The wrapper was not detached: it was the same process tree, the call was awaited to completion, and survivors were 0. After that I kept each batch under 180 s.
 
-7. **Heavy-run gate and waits** (`scripts/waitfree.py`, log in `evidence/R3b/waits.log`): 57 gate observations, 54 of them free at the first look.
-   - At 20:51 the gate before `t-2a` found the orchestrator's E2E-2 live job: PIDs 941404/940044, `bounded_run --timeout 7200 --label e2e-2-live`, `c:/t/ws-e2e` / `c:/t/e2e2`. The gate stopped the batch (exit 3).
-   - A foreground waiter on those PIDs logged `wait-start 20:53:47` and `wait-end 21:26:50`, so the wait was **about 33 minutes**. I used it to write this doc and the compare script.
-   - After that, every gate was free. No run exited 95.
+7. **Heavy-run gate and waits** (`scripts/waitfree.py`, log in `evidence/R3b/waits.log`): 111 gate observations, 97 of them free.
+   - **E2E-2 (orchestrator live job), about 33 minutes.** At 20:51 the gate before `t-2a` found PIDs 941404/940044: `bounded_run --timeout 7200 --label e2e-2-live`, in `c:/t/ws-e2e` / `c:/t/e2e2`. The batch stopped (exit 3). A foreground waiter on those PIDs logged `wait-start 20:53:47` and `wait-end 21:26:50`. I used the time for this doc and the compare script.
+   - **W4b runs in `c:/t/ws-w4b`:** busy at the first look before `t2-new` (21:48), `b-2b` (21:53), `b-2f-driver` (21:57) and `b-solo-clobber` (21:59). Each cleared within one 55 s poll.
+   - **`c:/t/ws-w4b-trial` (with `c:/t/bt`):**
+     - before `b-g1`: busy 22:02-22:04, the gate gave up (exit 3); the retry was free at 22:04:18 after one more busy look;
+     - before `b-eq`: busy 22:07-22:09, the gate gave up; the retry was free.
+   - No run started while another worktree's pytest or bounded_run was alive. No run exited 95.
 
-## 7. Open questions (for the product owner or orchestrator)
+## 7. Open questions and carry-forward
 
-0. **BLOCKING: the four `test_preprocessor.py` source readers (section 5a).**
+0. **Resolved:** the four `test_preprocessor.py` source readers. The orchestrator authorised the repoint under PO ruling Q-R0-1, made in `623ab02b` (section 4).
 
-   | option | what | cost |
-   |---|---|---|
-   | (a) approve a path-only repoint | in the 4 tests, `app_path` points at `src/t2pw/service/extraction.py` instead of `streamlit_app.py`. Nothing else changes; the assertions are the same. Proven to give 44 passed | edits an existing test. It is the source-path equivalent of an import repoint. Gate 5 needs the reviewer to confirm it is only a path |
-   | (b) revert the Stage-0 move and keep only the diagnostics start/sync move | no test edit | R3b would then move almost nothing, and the web worker still has no headless Stage 0. Stage 0 stays in the app until someone approves (a) |
-   | (c) read both files | each test reads app + service | larger test edit than (a). Not recommended |
+**Carry-forward to R3c/R3d** (orchestrator decision: keep these as they are in R3b):
 
-   I recommend (a), applied as a separate commit on this branch once approved. With (a), the chunk 2e failing set equals base, and every other chunk already matches.
-
-1. **Where should the ambiguous-review gate live?** It still writes `pipeline_ready`, `pathway_context` and `pipeline_error` and calls `st.stop()` inline in the app.
-
-   | option | what | cost |
-   |---|---|---|
-   | (a) keep it in the app (done) | the app owns the stop and the session writes, as the brief allows ("the app publishes them") | the display (`st.error` / `subheader` / `json` / `warning`) does not go through the Reporter. A web worker must rebuild the `pipeline_error` dict, or R3d/R5 adds a service helper that the app gate does not use |
-   | (b) move it, and repoint the clobber test's AST lift at `service/extraction.py` | display through the Reporter (needs an additive `subheader`). `run_stage_zero` returns a failure of kind `ambiguous_review_scope` | **edits an existing test** beyond an import path, so it needs reviewer and PO approval. The lift must also change shape: the namespace would need `state` / `reporter` instead of `st` |
-   | (c) service helper `ambiguous_review_error(ctx)` returning the dict and messages, used by a web worker | one source of truth for the web side | the app gate cannot call it without breaking the AST test, so the dict exists twice. Not recommended |
-
-   I recommend (a) now, and (b) as its own small task with an approved test edit, before R5 needs the gate headless.
-2. **`preprocess_fn`.** Keep it (one optional parameter, used only by the app) or, when the clobber test is next touched, patch `t2pw.service.extraction` instead and drop it? It does not block R3c.
-3. **`reset_refinement_state`** stays in the app as UI state. If the web worker should mirror it, that is an R5 decision: it has no refinement panel.
+1. **The ambiguous-review gate stays in the app** (APP 1902-1926, byte-identical to base 2168-2192).
+   - It writes `pipeline_ready`, `pathway_context` and `pipeline_error`, displays through `st` (`error` / `subheader` / `json` / `warning`) rather than the Reporter, and calls `st.stop()`.
+   - `test_stage0_case_c_retry_clobber.py` lifts it from `streamlit_app.py` by AST and execs it with only `st`, `pathway_context` and the predicate in scope. So moving it needs more than a Q-R0-1 path repoint: the exec namespace must change too.
+   - R3d/R5 must decide how a headless worker gets this refusal. The options:
+     - a separate task with an approved test edit, adding a Reporter `subheader` and returning a failure of kind `ambiguous_review_scope`;
+     - or a service helper that builds the `pipeline_error` dict.
+2. **`reset_refinement_state()` stays in the app**, as the refinement panel's UI state (`REFINEMENT_STATE_DEFAULTS` is read on the app module by `test_c055:722`). The web worker has no refinement panel. R5 decides whether it needs an equivalent.
+3. **`preprocess_fn`** stays as implemented, for the reviewer to judge.
+   - It is an optional parameter on `_run_stage_zero_with_retry` and `run_stage_zero`. `None` means `t2pw.pipeline.preprocessor.preprocess`, looked up at call time.
+   - The app passes its own `preprocess` binding, so the clobber test's patch of `streamlit_app.preprocess` still lands and the app calls exactly the binding it called before.
+   - When the clobber test is next touched, it could patch `t2pw.service.extraction` instead (a Q-R0-1 patch-target edit), and the parameter could go.
+4. **For R3c:** the app keeps `_sync_extraction_diagnostics()` as a no-arg shim over the moved function. Its 4 remaining call sites are in Stage 1 and post-pipeline. `_last_cleaning_report` is still in the app.
