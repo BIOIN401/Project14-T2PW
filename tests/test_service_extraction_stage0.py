@@ -236,7 +236,7 @@ def test_helpers_rank_and_usable():
 # ── diagnostics and state ────────────────────────────────────────────────────
 def test_diagnostics_open_before_stage_zero_and_land_under_project_root(root):
     order: List[str] = []
-    real_activate = ex.activate_extraction_diagnostics
+    real_activate = diag.activate
 
     def activate(**kw):
         order.append("activate")
@@ -247,13 +247,13 @@ def test_diagnostics_open_before_stage_zero_and_land_under_project_root(root):
         diag.current().record_stage0_attempt({"outcome": "ok", "attempt": 1})
         return _usable()
 
-    ex.activate_extraction_diagnostics = activate
+    diag.activate = activate
     try:
         state: Dict[str, Any] = {}
         res = ex.run_stage_zero(SHORT, temperature=0.0, user_task_context=None, state=state,
                                 reporter=RecordingReporter(), preprocess_fn=preprocess)
     finally:
-        ex.activate_extraction_diagnostics = real_activate
+        diag.activate = real_activate
     assert order == ["activate", "preprocess"]
     base = root / "tmp" / ex.DIAGNOSTICS_DIRNAME
     assert res.diagnostics_dir.parent == base  # unique=True: its own subdirectory
@@ -268,7 +268,7 @@ def test_start_falls_back_to_tmp_when_the_recorder_has_no_dir(root, monkeypatch)
     class _Rec:
         artifact_dir = None
 
-    monkeypatch.setattr(ex, "activate_extraction_diagnostics", lambda **_: _Rec())
+    monkeypatch.setattr(diag, "activate", lambda **_: _Rec())
     state: Dict[str, Any] = {}
     assert ex._start_extraction_diagnostics("t", state=state) == root / "tmp"
     assert state == {ex.EXTRACTION_DIAGNOSTICS_KEY: {}, ex.EXTRACTION_DIAGNOSTICS_DIR_KEY: ""}
@@ -278,7 +278,7 @@ def test_sync_never_raises_and_leaves_state_alone(monkeypatch):
     def boom():
         raise RuntimeError("no recorder")
 
-    monkeypatch.setattr(ex, "current_extraction_diagnostics", boom)
+    monkeypatch.setattr(diag, "current", boom)
     state = {"keep": 1}
     assert ex._sync_extraction_diagnostics(state=state) == {}
     assert state == {"keep": 1}
@@ -297,6 +297,42 @@ def test_state_and_reporter_are_required_keywords():
 def test_the_service_has_no_project_root_copy():
     """The equivalence harness isolates through ``t2pw.paths``; a by-value copy here would escape it."""
     assert not hasattr(ex, "PROJECT_ROOT") and not hasattr(ex, "TMP_DIR")
+
+
+def test_patches_on_the_source_modules_reach_run_stage_zero(root, monkeypatch):
+    """R3b review F1: the diagnostics and Stage-0 names are looked up at call time.
+
+    Before R3b the app script re-ran ``from ... import`` on every AppTest run, so a test
+    patching ``extraction_diagnostics.payload_hash`` (R3a's tripwire does) or
+    ``preprocessor.preprocess`` reached them. The moved code must keep that.
+    """
+    seen: List[str] = []
+    real_activate, real_current = diag.activate, diag.current
+
+    def payload_hash(value):
+        seen.append("payload_hash")
+        return "sha256:patched"
+
+    def activate(**kw):
+        seen.append("activate")
+        return real_activate(**kw)
+
+    def current():
+        seen.append("current")
+        return real_current()
+
+    def preprocess(text, **_):
+        seen.append("preprocess")
+        return _usable()
+
+    monkeypatch.setattr(diag, "payload_hash", payload_hash)
+    monkeypatch.setattr(diag, "activate", activate)
+    monkeypatch.setattr(diag, "current", current)
+    monkeypatch.setattr(preprocessor, "preprocess", preprocess)
+    ex.run_stage_zero(SHORT, temperature=0.0, user_task_context=None, state={},
+                      reporter=RecordingReporter())
+    assert seen == ["payload_hash", "activate", "preprocess", "current"]
+    assert real_current().run_id == "sha256:patched"
 
 
 # ── the real app ─────────────────────────────────────────────────────────────
@@ -326,12 +362,16 @@ def test_real_app_case_c_opens_diagnostics_then_stops_at_the_ambiguous_gate(monk
         at = AppTest.from_file(str(APP_PATH), default_timeout=300).run()
         assert not at.exception
         at.text_area(key="pathway_text_0").set_value(SHORT)
+        focus = next(t for t in at.text_area if t.label.startswith("Optional extraction focus"))
+        focus.set_value("  lipid A biosynthesis  ")
         next(b for b in at.button if b.label == "Run pipeline").click().run()
     finally:
         diag.deactivate()
 
     assert [str(e.value) for e in at.exception] == []
     assert len(seen) == 1
+    # F2: the focus box, stripped as the submit block does, reaches Stage 0
+    assert seen[0][1]["user_task_context"] == "lipid A biosynthesis"
     assert any("Ambiguous review scope" in str(e.value) for e in at.error)
     assert at.session_state["pipeline_error"]["status"] == "ambiguous_review_scope"
     assert at.session_state["pipeline_ready"] is False

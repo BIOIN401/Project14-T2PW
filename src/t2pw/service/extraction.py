@@ -21,12 +21,11 @@ from typing import Any, Callable, Dict, Iterable, MutableMapping, Optional, Sequ
 
 import t2pw.paths as paths  # PROJECT_ROOT read at call time: the harness patches it
 from t2pw.extraction.pdf_parser import SKIP_SECTIONS, parse_pdf
+# Module imports, so these are looked up at call time as the app script's per-run
+# ``from ... import`` did: a test patch of ``preprocessor.preprocess`` or of
+# ``extraction_diagnostics.payload_hash`` / ``activate`` / ``current`` reaches them.
+from t2pw.pipeline import extraction_diagnostics as _diag
 from t2pw.pipeline import preprocessor as _preprocessor
-from t2pw.pipeline.extraction_diagnostics import (
-    activate as activate_extraction_diagnostics,
-    current as current_extraction_diagnostics,
-    payload_hash as diagnostic_payload_hash,
-)
 from t2pw.pipeline.preprocessor import (
     describe_preprocess_status,
     is_ambiguous_multi_example_review_context,
@@ -385,8 +384,8 @@ def _start_extraction_diagnostics(source_text: str, *, state: MutableMapping[str
     is surfaced in the failure message so an operator knows where to look.
     """
 
-    run_id = diagnostic_payload_hash(source_text)
-    recorder = activate_extraction_diagnostics(
+    run_id = _diag.payload_hash(source_text)
+    recorder = _diag.activate(
         run_id=run_id,
         artifact_dir=paths.PROJECT_ROOT / "tmp" / DIAGNOSTICS_DIRNAME,
         unique=True,
@@ -407,7 +406,7 @@ def _sync_extraction_diagnostics(*, state: MutableMapping[str, Any]) -> Dict[str
     """
 
     try:
-        artifacts = current_extraction_diagnostics().artifacts()
+        artifacts = _diag.current().artifacts()
     except Exception:  # noqa: BLE001 - diagnostics must never break the run
         logger.debug("extraction diagnostics could not be published", exc_info=True)
         return {}
