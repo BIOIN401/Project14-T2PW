@@ -1,0 +1,30 @@
+run_fn t2pw.service.driver_bridge:run_pathway scope RequestedScope(requested_pathway='Taste transduction: sour', requested_organism='Mus musculus', pinned=False)
+submission bfaa78efc4f041f09c5fcfbbffcb6f0d
+recovered []
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-e2e\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 480b23844ff5b0830dfdde9d057ec9b0617f39cd  [git, worktree dirty=False]
+label                   : E2E-live-pmid32185015-strict
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe C:/t/e2e/drive.py
+cwd                     : C:/t/ws-e2e
+root PID / process group: 715536 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 3600 s
+duration                : 3609.66 s
+exit reason             : timeout
+exit code (real)        : None
+returned code           : 124
+descendants observed    : 3  715624:python.exe, 713528:python.exe, 714960:python.exe
+descendants terminated  : 3  713528, 714960, 715624
+graceful attempted      : True
+forced                  : True
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/e2e/evidence/E2E-wrapper.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=E2E-live  acquired=True  released=True
+pre-existing (reported, NEVER killed): 10
+================================================

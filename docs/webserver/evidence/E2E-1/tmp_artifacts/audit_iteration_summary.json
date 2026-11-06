@@ -1,0 +1,44 @@
+{
+  "run_id": "sha256:7f24b4f3045ae9eb",
+  "round_count": 1,
+  "rounds": [
+    {
+      "round": 1,
+      "temperature": 0.14,
+      "max_tokens": 128000,
+      "candidate_count": 3,
+      "selected_candidate_index": 2,
+      "selected_score": [
+        0,
+        6,
+        4,
+        3,
+        -3,
+        6
+      ],
+      "retrieval_selected_count": 0,
+      "retrieval_top_k": 3,
+      "error_count": 4,
+      "warning_count": 17,
+      "patch_count": 6,
+      "accepted_patch_count": 3,
+      "rejected_patch_count": 3,
+      "llm_ok": true,
+      "llm_error": "",
+      "llm_repair_rationale": "The four unresolved protein-family identifiers cannot be safely auto-assigned because the payload names families rather than single gene products, so they are reported as manual-curation errors. Safe structural patches remove the dangling P… (+133 chars elided)",
+      "top_errors": [
+        "Protein 'voltage-gated Ca2+ channels' is missing a UniProt or DrugBank identifier.",
+        "Protein 'SNARE proteins' is missing a UniProt or DrugBank identifier.",
+        "Protein '5-HT3 receptor' is missing a UniProt or DrugBank identifier."
+      ],
+      "gap_mapped_ids_added": 0,
+      "gap_locations_added": 0,
+      "gap_location_states_filled": 0,
+      "audit_payload_changed": true,
+      "gap_payload_changed": false,
+      "settled_payload_changed": true,
+      "actionable_issues_remain": true,
+      "…": "+9 more key(s) elided"
+    }
+  ]
+}

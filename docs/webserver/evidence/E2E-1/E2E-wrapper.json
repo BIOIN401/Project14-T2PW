@@ -1,0 +1,118 @@
+{
+  "label": "E2E-live-pmid32185015-strict",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "C:/t/e2e/drive.py"
+  ],
+  "cwd": "C:/t/ws-e2e",
+  "started_at": "2026-11-05T23:26:12+00:00",
+  "finished_at": "2026-11-06T00:26:22+00:00",
+  "duration_seconds": 3609.6557599000007,
+  "timeout_seconds": 3600.0,
+  "root_pid": 715536,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "timeout",
+  "exit_code": null,
+  "returned_code": 124,
+  "descendants_observed": [
+    {
+      "pid": 715624,
+      "name": "python.exe",
+      "ppid": 715536
+    },
+    {
+      "pid": 713528,
+      "name": "python.exe",
+      "ppid": 715624
+    },
+    {
+      "pid": 714960,
+      "name": "python.exe",
+      "ppid": 713528
+    }
+  ],
+  "descendants_terminated": [
+    713528,
+    714960,
+    715624
+  ],
+  "graceful_attempted": true,
+  "forced": true,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 442728,
+      "name": "python.exe"
+    },
+    {
+      "pid": 460520,
+      "name": "python.exe"
+    },
+    {
+      "pid": 687252,
+      "name": "python.exe"
+    },
+    {
+      "pid": 689064,
+      "name": "python.exe"
+    },
+    {
+      "pid": 693576,
+      "name": "python.exe"
+    },
+    {
+      "pid": 709124,
+      "name": "python.exe"
+    },
+    {
+      "pid": 709136,
+      "name": "python.exe"
+    },
+    {
+      "pid": 712460,
+      "name": "python.exe"
+    },
+    {
+      "pid": 715484,
+      "name": "python.exe"
+    },
+    {
+      "pid": 715676,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/e2e/evidence/E2E-wrapper.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-e2e\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-e2e",
+    "repo_head": "480b23844ff5b0830dfdde9d057ec9b0617f39cd",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "E2E-live",
+    "token": "E2E-live:715484:496a36dabc5d6bdc",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
