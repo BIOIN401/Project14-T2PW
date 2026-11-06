@@ -57,7 +57,7 @@ log = logging.getLogger("t2pw.web.limits")
 from t2pw.web.jobs import MAX_ITEMS_PER_SUBMISSION  # the max-5-pathways rule lives there
 
 # -- limits (conservative defaults; open question Q-W8-1 in results/W8.md) ----------
-#: Submissions per client per rolling window. A run is 20-60 min and the store holds
+#: Submissions per client per rolling window. A run is 20-60 min (stopped at 90) and the store holds
 #: 20 open items, so one client should not be able to fill the queue in a day.
 RATE_LIMIT_SUBMISSIONS = 5
 RATE_LIMIT_WINDOW_S = 24 * 3600

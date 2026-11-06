@@ -35,28 +35,29 @@ from t2pw.service.pathway import (
 #: Retries after the first attempt, so at most ``MAX_RETRIES + 1`` = 3 attempts.
 MAX_RETRIES = 2
 
-#: Wall-clock cap for ONE attempt, from dequeue. PLAN s1: a run takes ~18-60 min and
-#: the batch driver's leg timeout is 60 min; a run that needs longer is not one the
-#: public site should keep a single worker busy with.
-RUN_TIMEOUT_S = 60 * 60
+#: Wall-clock cap for ONE attempt, from dequeue: 90 min (PO ruling Q-E2E-1,
+#: docs/webserver/results/PO-RULINGS-2026-11-04.md). History: median 18 min, p90 43 min,
+#: 15 of 280 legs over 60 min; E2E-1 timed out at 60 min and E2E-2 passed in 35 min on
+#: the same input, so a timeout is LLM-latency variance, not a defect.
+RUN_TIMEOUT_S = 90 * 60
 
-#: Hard cap per pathway, summed over the run time of all its attempts (queue waits
-#: are not counted). 2 h = two full-length attempts: a first attempt that times out
-#: at 60 min still leaves a full 60 min for its retry. A cap of 3 x 60 min would
-#: bound nothing the attempt cap does not already bound.
-PER_ITEM_WALL_CAP_S = 2 * RUN_TIMEOUT_S
+#: Hard cap per pathway, summed over the run time of all its attempts (queue waits are
+#: not counted). Equal to one attempt: the single worker is held at most 90 min per
+#: pathway, retries (crash / network / LLM) included. A timeout is not retried, because a
+#: restart doubles the cost of a slow run without making it less likely to be slow.
+PER_ITEM_WALL_CAP_S = RUN_TIMEOUT_S
 
 #: A retry is not started with less than this left of the wall cap: the fastest runs
 #: take ~18 min, so a shorter budget only buys a certain timeout.
 MIN_RETRY_BUDGET_S = 15 * 60
 
-#: Interrupted, not judged. driver.py: KIND_TIMEOUT (164-168) "a timeout is an
-#: operational fact, never a biological verdict" (2429-2432); KIND_CRASH is the
+#: Interrupted, not judged. KIND_TIMEOUT is deliberately absent (Q-E2E-1: one 90 min
+#: try, a timeout is final). driver.py: KIND_CRASH is the
 #: driver's own wrapper for an exception, not a finding (2365-2368, 3112-3120);
 #: KIND_NETWORK / KIND_LLM are the transport and unparseable / empty / truncated /
 #: rate-limited reply markers (268-318), and ``_classify`` (1637-1672) tests the
 #: content markers first, so a contract problem is never reported as llm / network.
-RETRY_KINDS = frozenset({KIND_TIMEOUT, KIND_CRASH, KIND_LLM, KIND_NETWORK})
+RETRY_KINDS = frozenset({KIND_CRASH, KIND_LLM, KIND_NETWORK})
 
 #: Verdicts. driver.py ``_classify`` 1653-1663: structured evidence of a scope or
 #: contract finding, or no reactions in the source. Never retried.

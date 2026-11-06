@@ -454,21 +454,21 @@ def test_stops_at_three_attempts(store, tmp_path, child_env):
 
 
 def test_wall_cap_shapes_the_retry_deadline_and_stops_retries(store, tmp_path, child_env):
-    """NEW ACCEPTANCE TEST (W4, new capability): with 7000 s of the 7200 s wall cap used
+    """NEW ACCEPTANCE TEST (W4, new capability): with 5200 s of the 5400 s wall cap used
     by attempt 1, attempt 2 gets a deadline of the ~200 s left (not RUN_TIMEOUT_S), and
     its failure is final because less than MIN_RETRY_BUDGET_S remains."""
     w = _worker(store, tmp_path, "fake_llm", timeout_s=3600.0, max_retries=MAX_RETRIES)
     store.submit([_req()])
     item_id = w.run_one()
     assert store.item(item_id)["state"] == jobs.QUEUED
-    store._db.execute("UPDATE attempts SET started_at = started_at - 7000")  # 7000 s used
+    store._db.execute("UPDATE attempts SET started_at = started_at - 5200")  # 5200 s used
     w.run_one()
     w.close()
     item = store.item(item_id)
     assert 100 < item["deadline"] - item["started_at"] < 200
     assert item["state"] == jobs.FINISHED and item["attempt"] == 2
     assert item["failure_kind"] == KIND_LLM
-    assert store.wall_used(item_id) > 7000
+    assert store.wall_used(item_id) > 5200
 
 
 def test_restart_crash_goes_through_the_policy_and_is_bounded(store, tmp_path):

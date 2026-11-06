@@ -38,7 +38,7 @@ from t2pw.service.pathway import (
 
 MAX_ITEMS_PER_SUBMISSION = 5
 
-#: Total open items (queued + running) the store accepts. A run takes 20-60 min on one
+#: Total open items (queued + running) the store accepts. A run takes 20-60 min (stopped at 90) on one
 #: worker, so 20 items is roughly 7-20 hours of backlog. Open question Q-W3-1.
 MAX_QUEUED_ITEMS = 20
 
