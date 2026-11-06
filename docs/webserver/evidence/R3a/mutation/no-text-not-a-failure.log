@@ -1,0 +1,54 @@
+T2PW: C:\t\ws-R3a\src\t2pw\__init__.py
+........FFF................                                              [100%]
+================================== FAILURES ===================================
+___________ test_no_text_at_all_is_the_no_text_failure[Paste text] ____________
+
+fake_parse = ([], []), mode = 'Paste text'
+
+    @pytest.mark.parametrize("mode", ["Paste text", "Text + PDF"])
+    def test_no_text_at_all_is_the_no_text_failure(fake_parse, mode):
+        res, calls = _run(["", "  "], [], mode=mode)
+>       assert res.failure == ex.InputFailure(ex.KIND_NO_TEXT, NO_TEXT)
+E       AssertionError: assert None == InputFailure(kind='no_text', message='No text to process. Paste text, upload one or more PDFs, or use both.')
+E        +  where None = AssembledInputs(text='', failure=None).failure
+E        +  and   InputFailure(kind='no_text', message='No text to process. Paste text, upload one or more PDFs, or use both.') = <class 't2pw.service.extraction.InputFailure'>('no_text', 'No text to process. Paste text, upload one or more PDFs, or use both.')
+E        +    where <class 't2pw.service.extraction.InputFailure'> = ex.InputFailure
+E        +    and   'no_text' = ex.KIND_NO_TEXT
+
+tests\test_service_extraction.py:180: AssertionError
+___________ test_no_text_at_all_is_the_no_text_failure[Text + PDF] ____________
+
+fake_parse = ([], []), mode = 'Text + PDF'
+
+    @pytest.mark.parametrize("mode", ["Paste text", "Text + PDF"])
+    def test_no_text_at_all_is_the_no_text_failure(fake_parse, mode):
+        res, calls = _run(["", "  "], [], mode=mode)
+>       assert res.failure == ex.InputFailure(ex.KIND_NO_TEXT, NO_TEXT)
+E       AssertionError: assert None == InputFailure(kind='no_text', message='No text to process. Paste text, upload one or more PDFs, or use both.')
+E        +  where None = AssembledInputs(text='', failure=None).failure
+E        +  and   InputFailure(kind='no_text', message='No text to process. Paste text, upload one or more PDFs, or use both.') = <class 't2pw.service.extraction.InputFailure'>('no_text', 'No text to process. Paste text, upload one or more PDFs, or use both.')
+E        +    where <class 't2pw.service.extraction.InputFailure'> = ex.InputFailure
+E        +    and   'no_text' = ex.KIND_NO_TEXT
+
+tests\test_service_extraction.py:180: AssertionError
+__________ test_an_empty_pdf_is_dropped_and_then_the_no_text_failure __________
+
+fake_parse = ([{'data': b'x', 'enable_ocr_fallback': False, 'page_end': None, 'page_start': 1, ...}], [])
+
+    def test_an_empty_pdf_is_dropped_and_then_the_no_text_failure(fake_parse):
+        _, queue = fake_parse
+        queue.append(_pdf_result("  \n "))
+        res, calls = _run([], [("scan.pdf", b"x")], mode="Upload PDF")
+>       assert res.failure == ex.InputFailure(ex.KIND_NO_TEXT, NO_TEXT)
+E       AssertionError: assert None == InputFailure(kind='no_text', message='No text to process. Paste text, upload one or more PDFs, or use both.')
+E        +  where None = AssembledInputs(text='', failure=None).failure
+E        +  and   InputFailure(kind='no_text', message='No text to process. Paste text, upload one or more PDFs, or use both.') = <class 't2pw.service.extraction.InputFailure'>('no_text', 'No text to process. Paste text, upload one or more PDFs, or use both.')
+E        +    where <class 't2pw.service.extraction.InputFailure'> = ex.InputFailure
+E        +    and   'no_text' = ex.KIND_NO_TEXT
+
+tests\test_service_extraction.py:188: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction.py::test_no_text_at_all_is_the_no_text_failure[Paste text]
+FAILED tests/test_service_extraction.py::test_no_text_at_all_is_the_no_text_failure[Text + PDF]
+FAILED tests/test_service_extraction.py::test_an_empty_pdf_is_dropped_and_then_the_no_text_failure
+3 failed, 24 passed, 2 deselected in 0.38s

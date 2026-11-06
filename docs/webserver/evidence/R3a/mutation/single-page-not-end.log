@@ -1,0 +1,30 @@
+T2PW: C:\t\ws-R3a\src\t2pw\__init__.py
+................F..........                                              [100%]
+================================== FAILURES ===================================
+______________ test_page_range_reaches_parse_pdf[ 5 -5-5-False] _______________
+
+fake_parse = ([{'data': b'1', 'enable_ocr_fallback': False, 'page_end': None, 'page_start': 5, ...}, {'data': b'2', 'enable_ocr_fallback': False, 'page_end': None, 'page_start': 5, ...}], [])
+page_range = ' 5 ', start = 5, end = 5, warned = False
+
+    @pytest.mark.parametrize("page_range,start,end,warned", [
+        ("", 1, None, False),
+        ("   ", 1, None, False),
+        ("3-7", 3, 7, False),
+        (" 5 ", 5, 5, False),
+        ("x-2", 1, None, True),
+        ("2-x", 2, None, True),  # the start is kept when only the end is bad, as before
+    ])
+    def test_page_range_reaches_parse_pdf(fake_parse, page_range, start, end, warned):
+        seen, _ = fake_parse
+        _, calls = _run([], [("a.pdf", b"1"), ("b.pdf", b"2")], mode="Upload PDF",
+                        page_range=page_range)
+>       assert [(s["page_start"], s["page_end"]) for s in seen] == [(start, end)] * 2
+E       assert [(5, None), (5, None)] == [(5, 5), (5, 5)]
+E         
+E         At index 0 diff: (5, None) != (5, 5)
+E         Use -v to get more diff
+
+tests\test_service_extraction.py:231: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction.py::test_page_range_reaches_parse_pdf[ 5 -5-5-False]
+1 failed, 26 passed, 2 deselected in 0.39s

@@ -188,6 +188,7 @@ from t2pw.service.rag_orchestration import (
     run_rag_rounds,
 )
 from t2pw.service.reporter import StreamlitReporter, install_app_defaults
+from t2pw.service.extraction import assemble_inputs
 
 # R2: a caller that reaches the service through this module without passing a reporter
 # or a state mapping keeps today's behaviour: Streamlit calls and st.session_state.
@@ -2081,85 +2082,23 @@ with st.form("pwml_pipeline"):
     submit = st.form_submit_button("Run pipeline")
 
 if submit:
-    text_parts = [entry.strip() for entry in text_entries if entry.strip()]
     user_task_context = (user_task_context or "").strip() or None
 
-    # PDF extraction runs here — outside the form, so uploaded_pdf is accessible
-    if uses_pdf_input:
-        if not uploaded_pdfs:
-            if input_mode == "Upload PDF":
-                st.warning("Please upload one or more PDFs using the file uploader above.")
-                st.stop()
-            uploaded_pdfs = []
-
-        import tempfile
-        import os
-
-        # Parse page range once and apply it to every uploaded PDF.
-        _ps, _pe = 1, None
-        _pr = (pdf_page_range or "").strip()
-        if _pr:
-            _parts = _pr.split("-")
-            try:
-                _ps = int(_parts[0])
-                _pe = int(_parts[1]) if len(_parts) > 1 else _ps
-            except ValueError:
-                st.warning(f"Invalid page range '{_pr}'; extracting all pages.")
-
-        _skip = SKIP_SECTIONS if pdf_skip_refs else set()
-
-        for uploaded_pdf in uploaded_pdfs:
-            with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as _tmp:
-                _tmp.write(uploaded_pdf.read())
-                _tmp_path = _tmp.name
-
-            try:
-                with st.spinner(f"Extracting text from {uploaded_pdf.name}..."):
-                    _pdf = parse_pdf(
-                        _tmp_path,
-                        page_start=_ps,
-                        page_end=_pe,
-                        skip_sections=_skip,
-                        enable_ocr_fallback=bool(pdf_ocr),
-                    )
-            finally:
-                try:
-                    os.unlink(_tmp_path)
-                except Exception:
-                    pass
-
-            if _pdf["error"]:
-                st.error(f"PDF extraction failed for {uploaded_pdf.name}: {_pdf['error']}")
-                st.stop()
-
-            if _pdf["text"].strip():
-                text_parts.append(_pdf["text"].strip())
-
-            for _w in _pdf.get("warnings", []):
-                st.warning(f"{uploaded_pdf.name}: {_w}")
-
-            st.success(
-                f"{uploaded_pdf.name}: extracted **{_pdf['pages_used']}** of **{_pdf['total_pages']}** pages "
-                f"via **{_pdf['method']}**. "
-                f"Sections: {', '.join(_pdf['sections'].keys()) or 'none'}"
-            )
-            _meta = _pdf.get("metadata", {})
-            _mp = [p for p in [
-                f"Title: {_meta['title']}"     if _meta.get("title")  else "",
-                f"Author(s): {_meta['author']}" if _meta.get("author") else "",
-                f"DOI: {_meta['doi']}"          if _meta.get("doi")    else "",
-            ] if p]
-            if _mp:
-                st.caption(" | ".join(_mp))
-
-            with st.expander(f"Preview extracted text from {uploaded_pdf.name} (first 1000 chars)", expanded=False):
-                _preview = _pdf["text"][:1000] + ("..." if len(_pdf["text"]) > 1000 else "")
-                st.text(_preview)
-
-    text = "\n\n".join(text_parts)
-    if not text.strip():
-        st.warning("No text to process. Paste text, upload one or more PDFs, or use both.")
+    # R3a: input assembly lives in t2pw.service.extraction.assemble_inputs; each
+    # returned failure is one of the st.stop() points that used to be inline here.
+    _assembled = assemble_inputs(
+        text_entries,
+        [(_up.name, _up.read()) for _up in (uploaded_pdfs or [])],
+        uses_pdf_input=uses_pdf_input,
+        input_mode=input_mode,
+        pdf_page_range=pdf_page_range,
+        pdf_skip_refs=pdf_skip_refs,
+        pdf_ocr=pdf_ocr,
+        reporter=StreamlitReporter(st),
+    )
+    if _assembled.failure is not None:
         st.stop()
+    text = _assembled.text
 
     reset_refinement_state()
 

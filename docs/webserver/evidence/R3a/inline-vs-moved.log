@@ -1,0 +1,38 @@
+text-only          IDENTICAL  st-calls=0 stopped=False parse-calls=0
+empty-paste        IDENTICAL  st-calls=2 stopped=True parse-calls=0
+upload-none        IDENTICAL  st-calls=2 stopped=True parse-calls=0
+tp-none-badrange   IDENTICAL  st-calls=1 stopped=False parse-calls=0
+tp-none-empty      IDENTICAL  st-calls=2 stopped=True parse-calls=0
+two-pdfs           IDENTICAL  st-calls=18 stopped=False parse-calls=2
+pdf-error-mid      IDENTICAL  st-calls=13 stopped=True parse-calls=2
+empty-pdf          IDENTICAL  st-calls=10 stopped=True parse-calls=1
+range-half-bad     IDENTICAL  st-calls=9 stopped=False parse-calls=1
+range-bad-start    IDENTICAL  st-calls=9 stopped=False parse-calls=1
+meta-author        IDENTICAL  st-calls=9 stopped=False parse-calls=1
+11/11 scenarios identical
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3a\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 480b23844ff5b0830dfdde9d057ec9b0617f39cd  [git, worktree dirty=True]
+label                   : R3a-inline-vs-moved
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/wsR3atmp/inline_vs_moved.py C:/t/ws-R3a-base C:/t/ws-R3a
+cwd                     : C:\t\ws-R3a
+root PID / process group: 725324 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 120 s
+duration                : 0.50 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  726492:python.exe
+descendants terminated  : 1  726492
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/wsR3atmp/ev/inline-vs-moved.json
+json report written     : True
+pre-existing (reported, NEVER killed): 14
+================================================

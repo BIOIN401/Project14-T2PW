@@ -1,0 +1,28 @@
+T2PW: C:\t\ws-R3a\src\t2pw\__init__.py
+.....F.....................                                              [100%]
+================================== FAILURES ===================================
+____________ test_mixed_texts_come_first_then_pdfs_in_upload_order ____________
+
+fake_parse = ([{'data': b'a', 'enable_ocr_fallback': False, 'page_end': None, 'page_start': 1, ...}, {'data': b'b', 'enable_ocr_fal...None, 'page_start': 1, ...}, {'data': b'c', 'enable_ocr_fallback': False, 'page_end': None, 'page_start': 1, ...}], [])
+
+    def test_mixed_texts_come_first_then_pdfs_in_upload_order(fake_parse):
+        _, queue = fake_parse
+        queue.extend([_pdf_result("\nP1\n"), _pdf_result("   "), _pdf_result("P3")])
+        res, _ = _run([" T1 ", "T2"], [("1.pdf", b"a"), ("2.pdf", b"b"), ("3.pdf", b"c")])
+>       assert res.text == "T1\n\nT2\n\nP1\n\nP3"  # the empty-text PDF adds no part
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert 'P3\n\nP1\n\nT1\n\nT2' == 'T1\n\nT2\n\nP1\n\nP3'
+E         
+E         + P3
+E         - T1
+E         - 
+E         - T2
+E           
+E           P1...
+E         
+E         ...Full output truncated (5 lines hidden), use '-vv' to show
+
+tests\test_service_extraction.py:159: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction.py::test_mixed_texts_come_first_then_pdfs_in_upload_order
+1 failed, 26 passed, 2 deselected in 0.36s

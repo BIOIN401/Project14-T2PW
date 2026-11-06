@@ -1,0 +1,23 @@
+T2PW: C:\t\ws-R3a\src\t2pw\__init__.py
+...........F...............                                              [100%]
+================================== FAILURES ===================================
+__________________ test_an_unreadable_pdf_stops_at_that_pdf ___________________
+
+fake_parse = ([{'data': b'1', 'enable_ocr_fallback': False, 'page_end': None, 'page_start': 1, ...}, {'data': b'2', 'enable_ocr_fal...None, 'page_start': 1, ...}, {'data': b'3', 'enable_ocr_fallback': False, 'page_end': None, 'page_start': 1, ...}], [])
+
+    def test_an_unreadable_pdf_stops_at_that_pdf(fake_parse):
+        seen, queue = fake_parse
+        queue.extend([_pdf_result("good"), _pdf_result("", error="cannot open"), _pdf_result("never")])
+        res, calls = _run(["t"], [("a.pdf", b"1"), ("b.pdf", b"2"), ("c.pdf", b"3")])
+        msg = "PDF extraction failed for b.pdf: cannot open"
+>       assert res.failure == ex.InputFailure(ex.KIND_PDF_FAILED, msg)
+E       AssertionError: assert None == InputFailure(kind='pdf_extraction_failed', message='PDF extraction failed for b.pdf: cannot open')
+E        +  where None = AssembledInputs(text='t\n\ngood\n\nnever', failure=None).failure
+E        +  and   InputFailure(kind='pdf_extraction_failed', message='PDF extraction failed for b.pdf: cannot open') = <class 't2pw.service.extraction.InputFailure'>('pdf_extraction_failed', 'PDF extraction failed for b.pdf: cannot open')
+E        +    where <class 't2pw.service.extraction.InputFailure'> = ex.InputFailure
+E        +    and   'pdf_extraction_failed' = ex.KIND_PDF_FAILED
+
+tests\test_service_extraction.py:198: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction.py::test_an_unreadable_pdf_stops_at_that_pdf
+1 failed, 26 passed, 2 deselected in 0.38s

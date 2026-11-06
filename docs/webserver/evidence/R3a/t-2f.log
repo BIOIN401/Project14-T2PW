@@ -1,0 +1,50 @@
+T2PW: C:\t\ws-R3a\src\t2pw\__init__.py
+.................Fs....sss...........                                    [100%]
+================================== FAILURES ===================================
+_______ test_the_message_names_the_problem_the_interpreter_and_the_cure _______
+
+    def test_the_message_names_the_problem_the_interpreter_and_the_cure() -> None:
+        """The wrong-interpreter case: the one that actually happened.
+    
+        The cure has to be a command, not advice. "Use the venv" is not actionable at
+        2am; ``C:\\...\\.venv\\Scripts\\python.exe scripts\\batch_run.py`` is, and the
+        root cause -- ``py.exe`` ignoring the active virtualenv -- has to be named or
+        the operator fixes it once and hits it again next week.
+        """
+    
+        venv = runner.venv_python()
+>       assert venv is not None, "this project ships a .venv; the test assumes it"
+E       AssertionError: this project ships a .venv; the test assumes it
+E       assert None is not None
+
+tests\test_batch_preflight.py:616: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_batch_preflight.py::test_the_message_names_the_problem_the_interpreter_and_the_cure
+1 failed, 32 passed, 4 skipped in 8.60s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3a\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ d043e263a60b557fec934988eaf14c8e643075ae  [git, worktree dirty=False]
+label                   : 2f
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3a/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3a --pin-verdict C:/t/wsR3atmp/ev/pin/t-2f.pin.json -q --basetemp=C:/t/wsR3atmp/t-2f tests/test_batch_preflight.py
+cwd                     : C:\t\ws-R3a
+root PID / process group: 784592 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 560 s
+duration                : 9.60 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 18  789308:python.exe, 724916:python.exe, 791108:python.exe, 724376:python.exe, 790300:python.exe, 790936:python.exe, 790628:python.exe, 790980:python.exe, 787388:python.exe, 791464:python.exe, 791000:python.exe, 791024:python.exe, 786988:python.exe, 790592:python.exe, 784460:python.exe, 787484:python.exe, 783276:python.exe, 791064:python.exe
+descendants terminated  : 18  724376, 724916, 783276, 784460, 786988, 787388, 787484, 789308, 790300, 790592, 790628, 790936, 790980, 791000, 791024, 791064, 791108, 791464
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/wsR3atmp/ev/t-2f.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R3a  acquired=True  released=True
+pre-existing (reported, NEVER killed): 8
+================================================

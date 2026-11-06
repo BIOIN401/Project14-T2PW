@@ -1,0 +1,20 @@
+T2PW: C:\t\ws-R3a\src\t2pw\__init__.py
+......F....................                                              [100%]
+================================== FAILURES ===================================
+___________ test_upload_mode_with_no_pdf_stops_before_anything_else ___________
+
+fake_parse = ([], [])
+
+    def test_upload_mode_with_no_pdf_stops_before_anything_else(fake_parse):
+        res, calls = _run(["ignored"], [], mode="Upload PDF", page_range="bad")
+>       assert res.failure == ex.InputFailure(ex.KIND_NO_PDF, NO_PDF)
+E       AssertionError: assert None == InputFailure(kind='no_pdf_uploaded', message='Please upload one or more PDFs using the file uploader above.')
+E        +  where None = AssembledInputs(text='ignored', failure=None).failure
+E        +  and   InputFailure(kind='no_pdf_uploaded', message='Please upload one or more PDFs using the file uploader above.') = <class 't2pw.service.extraction.InputFailure'>('no_pdf_uploaded', 'Please upload one or more PDFs using the file uploader above.')
+E        +    where <class 't2pw.service.extraction.InputFailure'> = ex.InputFailure
+E        +    and   'no_pdf_uploaded' = ex.KIND_NO_PDF
+
+tests\test_service_extraction.py:166: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction.py::test_upload_mode_with_no_pdf_stops_before_anything_else
+1 failed, 26 passed, 2 deselected in 0.39s
