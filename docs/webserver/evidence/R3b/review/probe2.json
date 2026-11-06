@@ -1,0 +1,92 @@
+{
+  "label": "r3b-rev2-probe",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-I",
+    "-c",
+    "import sys; sys.path.insert(0, r'C:/t/ws-R3b/src'); exec(open(r'C:/Users/Angad/AppData/Local/Temp/claude/794608653e0228a8/b6b1502a-4103-45b2-8a2e-76eaa3f38d0e/scratchpad/probe_r3b2.py').read())"
+  ],
+  "cwd": "C:\\t\\ws-R3b",
+  "started_at": "2026-11-06T04:37:43+00:00",
+  "finished_at": "2026-11-06T04:37:45+00:00",
+  "duration_seconds": 2.1441000000049826,
+  "timeout_seconds": 90.0,
+  "root_pid": 1111256,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 1106096,
+      "name": "python.exe",
+      "ppid": 1111256
+    }
+  ],
+  "descendants_terminated": [
+    1106096
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 28984,
+      "name": "python.exe"
+    },
+    {
+      "pid": 442728,
+      "name": "python.exe"
+    },
+    {
+      "pid": 460520,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1063548,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1063644,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1101092,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/Users/Angad/AppData/Local/Temp/claude/794608653e0228a8/b6b1502a-4103-45b2-8a2e-76eaa3f38d0e/scratchpad/probe2.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-R3b\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-R3b",
+    "repo_head": "e9f9820c926f1d5a8cb35b0e35f5716619c47c5e",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "R3b-review",
+    "token": "R3b-review:28984:2bbd8b27960d2881",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

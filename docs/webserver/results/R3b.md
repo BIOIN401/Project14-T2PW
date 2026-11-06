@@ -305,3 +305,50 @@ All runs went through the bounded wrapper, with the heavy lock, gated, each chun
 - The 2a-2g set was not repeated: only these lookups changed (the brief's condition).
 - Gate: 126 observations in `waits.log`. The independent runner in `C:/t/ws-R3b-trial` and other worktrees (`ws-int`, `bt`) were seen busy before `d3-svc3` and `r1-svc3`, and each cleared within one poll. No run exited 95.
 - Incident this round: once more, a `sed` with `#` as delimiter broke on a `#` in its replacement. Nothing was written; I redid the edit with the Edit tool.
+
+## 9. Independent run, review and merge (added by the orchestrator)
+
+**Review round 0:** ws-reviewer (opus/high) reviewed the diff `220b1621..bdd8aaac` and returned **CHANGES_REQUESTED**.
+
+- **F1 (blocking).** The diagnostics names were bound at import, which disarmed R3a's tripwire patch. See § 8 for the fix.
+- **F2 (note, done).** The `user_task_context` hand-off had no assertion. One was added.
+- **F3-F7 (notes).** All accepted:
+  - the unbound `_diagnostics_dir` on raise;
+  - the logger name;
+  - the `preprocess_fn` default, which is dependency injection and not a state fallback;
+  - the reviewer's own inline-vs-moved re-run, 24/24;
+  - import without streamlit.
+
+  The Q-R0-1 edit to `test_preprocessor.py` was confirmed to be path-only (4/4 lines). The 4 tests still guard what they guarded at base.
+
+**Review round 1:** the same reviewer reviewed the diff `bdd8aaac..e9f9820c` and returned **APPROVE WITH NOTES**.
+
+- **F1 resolved.** The reviewer's own probe on `e9f9820c` showed that patches of `diag.payload_hash`, `activate` and `current` are each reached. With the stop removed, the tripwire fails again. The 4 new mutations were all killed.
+- **F2 resolved.**
+- **F3 (note).** The audit of bound names is complete. `parse_pdf` and `SKIP_SECTIONS` stay bound, because R3a's tests patch `parse_pdf` on the service module itself. The rest are never patched.
+- **F4 (note).** The only test changes are the new file and the Q-R0-1 4-line repoint.
+- **F5 (note).** `test_service_extraction_stage0.py:250-256` patches by direct assignment and restores in `finally`. This is tidiness only.
+- **F7 (carried to R3d/R5).** The ambiguous-review gate and `reset_refinement_state` stay in the app, and the gate's display still goes to `st`.
+
+**Independent run:** ws-test-runner (sonnet/medium) ran on the trial merge `0586a3fb` of `e9f9820c` onto `68470cfc`, in `C:/t/ws-R3b-trial`. All 17 runs exited 0 with 0 survivors and a gate wait of 0 s. Results:
+
+| run | passed |
+|---|---|
+| golden | 2 + 8 + 4 + 24 = 38 |
+| equivalence (alone) | 14 |
+| `test_preprocessor` | 44 |
+| service | 57 |
+| web+bridge | 301 |
+| clobber | 8 |
+| c060a | 11 |
+| c055 | 14 |
+| 759d | 4 |
+| 759b | 7 |
+| 759a protein | 37 |
+| 759a fold | 2 |
+| scope_fallback | 5 |
+| SMOKE | 511 |
+
+The census count is 83. The reports are in `docs/webserver/evidence/R3b/independent/`. An earlier, unfinished run on the stale `bdd8aaac` is kept under `independent/old-bdd8aaac/`. It was interrupted by a machine restart.
+
+**Merge:** `4ea3524a` (`--no-ff` into `webserver/refactor`). Its code tree is byte-identical to the trial merge that was tested. The post-merge result is recorded in the LEDGER.
