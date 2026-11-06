@@ -321,10 +321,10 @@ def test_deadline_becomes_the_driver_timeout_less_the_batch_grace(tmp_path, fake
     assert 1000 - br.GRACE_S - 5 < timeout <= 1000 - br.GRACE_S
 
 
-def test_a_passed_deadline_is_a_retryable_timeout_without_a_run(tmp_path, fake):
+def test_a_passed_deadline_is_a_final_timeout_without_a_run(tmp_path, fake):
     res = br.run_pathway(_req(tmp_path, texts=("t",), deadline=time.time() - 1))
     assert (res.status, res.failure_kind) == (STATUS_TIMEOUT, KIND_TIMEOUT)
-    assert _retry(res) and not fake.calls
+    assert not _retry(res) and not fake.calls  # Q-E2E-1: a timeout is final
 
 
 # ── RunOutcome -> result ──────────────────────────────────────────────────
@@ -395,7 +395,7 @@ def test_gate_failure_keeps_its_release_object_and_is_final(tmp_path, fake):
 
 
 @pytest.mark.parametrize("status,kind,retry", [
-    (STATUS_TIMEOUT, KIND_TIMEOUT, True), (STATUS_ERROR, KIND_CRASH, True),
+    (STATUS_TIMEOUT, KIND_TIMEOUT, False), (STATUS_ERROR, KIND_CRASH, True),
     (STATUS_ERROR, "", True), (STATUS_FAIL, "unknown", False)])
 def test_failed_outcome_kinds_pass_through_for_the_retry_rule(tmp_path, fake, status, kind, retry):
     fake.outcome = RunOutcome(status=status, failure_kind=kind, message="m")

@@ -37,16 +37,22 @@ def _res(status=STATUS_FAIL, kind="", pwml=None, release=None) -> dict:
 def test_constants_are_the_decided_defaults():
     """NEW ACCEPTANCE TEST (W4, new capability): D-W07 defaults and the cap arithmetic."""
     assert retry.MAX_RETRIES == 2
-    assert retry.RUN_TIMEOUT_S == 3600
-    assert retry.PER_ITEM_WALL_CAP_S == 7200
-    assert retry.PER_ITEM_WALL_CAP_S >= retry.RUN_TIMEOUT_S + retry.MIN_RETRY_BUDGET_S
+    assert retry.RUN_TIMEOUT_S == 90 * 60          # Q-E2E-1
+    assert retry.PER_ITEM_WALL_CAP_S == retry.RUN_TIMEOUT_S
+    assert KIND_TIMEOUT not in retry.RETRY_KINDS
+
+
+def test_a_timeout_is_final():
+    """Q-E2E-1: one 90 min try; a timeout is never re-queued, even with budget left."""
+    d = decide(_res(STATUS_TIMEOUT, KIND_TIMEOUT), attempt=1, wall_used_s=60)
+    assert not d.retry and "not retryable" in d.reason
 
 
 @pytest.mark.parametrize("status,kind", [
-    (STATUS_TIMEOUT, KIND_TIMEOUT), (STATUS_ERROR, KIND_CRASH),
+    (STATUS_ERROR, KIND_CRASH),
     (STATUS_FAIL, KIND_LLM), (STATUS_ERROR, KIND_LLM), (STATUS_FAIL, KIND_NETWORK)])
 def test_each_infrastructure_kind_retries(status, kind):
-    """NEW ACCEPTANCE TEST (W4, new capability): timeout, crash, llm and network retry."""
+    """NEW ACCEPTANCE TEST (W4, new capability): crash, llm and network retry (not timeout)."""
     d = decide(_res(status, kind), attempt=1, wall_used_s=60)
     assert d.retry and kind in d.reason
 
@@ -119,5 +125,5 @@ def test_wall_cap_stops_further_attempts():
     d = decide(crash, 1, cap - floor + 1)
     assert not d.retry and "wall-clock" in d.reason
     assert not decide(crash, 1, 99, wall_cap_s=100).retry
-    # a full-length timeout leaves exactly one full-length retry under the defaults
-    assert decide(_res(STATUS_TIMEOUT, KIND_TIMEOUT), 1, retry.RUN_TIMEOUT_S).retry
+    # one attempt's worth of run time is the whole cap: nothing is left to retry with
+    assert not decide(crash, 1, retry.RUN_TIMEOUT_S).retry
