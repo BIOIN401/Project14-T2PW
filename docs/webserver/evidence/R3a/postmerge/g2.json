@@ -1,0 +1,217 @@
+{
+  "label": "R3apm-g2",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-int",
+    "-q",
+    "--basetemp=C:/t/bt/R3apm/g2",
+    "tests/test_c011_freeze_seam_golden_equivalence.py"
+  ],
+  "cwd": "C:\\t\\ws-int",
+  "started_at": "2026-11-06T01:01:37+00:00",
+  "finished_at": "2026-11-06T01:02:27+00:00",
+  "duration_seconds": 49.92131710000103,
+  "timeout_seconds": 300.0,
+  "root_pid": 832796,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 832868,
+      "name": "python.exe",
+      "ppid": 832796
+    },
+    {
+      "pid": 833280,
+      "name": "git.exe",
+      "ppid": 832868
+    },
+    {
+      "pid": 833356,
+      "name": "git.exe",
+      "ppid": 832868
+    },
+    {
+      "pid": 833424,
+      "name": "git.exe",
+      "ppid": 832868
+    },
+    {
+      "pid": 832596,
+      "name": "git.exe",
+      "ppid": 832868
+    },
+    {
+      "pid": 831396,
+      "name": "python.exe",
+      "ppid": 833076
+    },
+    {
+      "pid": 833076,
+      "name": "python.exe",
+      "ppid": 832868
+    },
+    {
+      "pid": 826684,
+      "name": "python.exe",
+      "ppid": 832868
+    },
+    {
+      "pid": 825300,
+      "name": "python.exe",
+      "ppid": 826684
+    },
+    {
+      "pid": 824176,
+      "name": "git.exe",
+      "ppid": 825300
+    },
+    {
+      "pid": 834068,
+      "name": "python.exe",
+      "ppid": 832868
+    },
+    {
+      "pid": 834144,
+      "name": "python.exe",
+      "ppid": 834068
+    },
+    {
+      "pid": 833908,
+      "name": "python.exe",
+      "ppid": 832868
+    },
+    {
+      "pid": 833888,
+      "name": "python.exe",
+      "ppid": 833908
+    },
+    {
+      "pid": 834204,
+      "name": "python.exe",
+      "ppid": 832868
+    },
+    {
+      "pid": 834228,
+      "name": "python.exe",
+      "ppid": 834204
+    },
+    {
+      "pid": 820916,
+      "name": "python.exe",
+      "ppid": 832868
+    },
+    {
+      "pid": 829712,
+      "name": "python.exe",
+      "ppid": 820916
+    },
+    {
+      "pid": 826504,
+      "name": "python.exe",
+      "ppid": 832868
+    },
+    {
+      "pid": 832572,
+      "name": "python.exe",
+      "ppid": 826504
+    }
+  ],
+  "descendants_terminated": [
+    820916,
+    824176,
+    825300,
+    826504,
+    826684,
+    829712,
+    831396,
+    832572,
+    832596,
+    832868,
+    833076,
+    833280,
+    833356,
+    833424,
+    833888,
+    833908,
+    834068,
+    834144,
+    834204,
+    834228
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 442728,
+      "name": "python.exe"
+    },
+    {
+      "pid": 460520,
+      "name": "python.exe"
+    },
+    {
+      "pid": 709124,
+      "name": "python.exe"
+    },
+    {
+      "pid": 709136,
+      "name": "python.exe"
+    },
+    {
+      "pid": 816900,
+      "name": "python.exe"
+    },
+    {
+      "pid": 819108,
+      "name": "python.exe"
+    },
+    {
+      "pid": 830584,
+      "name": "python.exe"
+    },
+    {
+      "pid": 832004,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/evidence/R3a/postmerge/g2.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-int\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-int",
+    "repo_head": "220b16215e5a3776bcd42ab1eed86f98802ce04a",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "R3apm-g2",
+    "token": "R3apm-g2:830584:482a781f630d5885",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
