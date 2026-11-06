@@ -58,6 +58,11 @@ class Reporter(Protocol):
 
     def expander(self, label: str, **kwargs: Any) -> ContextManager[Any]: ...
 
+    # R3c: the Stage-1 attempts listing (``render_attempts``: st.markdown / st.code).
+    def markdown(self, body: Any) -> Any: ...
+
+    def code(self, body: Any, **kwargs: Any) -> Any: ...
+
 
 class StreamlitReporter:
     """Forwards each call to the given ``streamlit`` module, arguments untouched."""
@@ -95,6 +100,12 @@ class StreamlitReporter:
 
     def expander(self, label: str, **kwargs: Any) -> Any:
         return self._st.expander(label, **kwargs)
+
+    def markdown(self, body: Any) -> Any:
+        return self._st.markdown(body)
+
+    def code(self, body: Any, **kwargs: Any) -> Any:
+        return self._st.code(body, **kwargs)
 
 
 class _LoggedProgress:
@@ -154,6 +165,12 @@ class LoggingReporter:
     def expander(self, label: str, **_kwargs: Any) -> Iterator[None]:
         self._logger.info("%s", label)
         yield
+
+    def markdown(self, body: Any) -> None:
+        self._logger.info("%s", body)
+
+    def code(self, body: Any, **_kwargs: Any) -> None:
+        self._logger.info("%s", body)
 
 
 _APP_DEFAULTS: Dict[str, Callable[[], Any]] = {}
