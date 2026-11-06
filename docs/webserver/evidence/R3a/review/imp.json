@@ -1,0 +1,104 @@
+{
+  "label": "R3a-review-import",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-c",
+    "import sys, t2pw.service.extraction as e; print('ST', sorted(n for n in sys.modules if n.startswith('streamlit') or n.startswith('t2pw.app'))); from t2pw.service.reporter import LoggingReporter, Reporter; import inspect; print(inspect.signature(e.assemble_inputs).parameters['reporter'].default is inspect.Parameter.empty)"
+  ],
+  "cwd": "C:\\t\\ws-R3a",
+  "started_at": "2026-11-06T00:53:35+00:00",
+  "finished_at": "2026-11-06T00:53:36+00:00",
+  "duration_seconds": 0.441485700001067,
+  "timeout_seconds": 120.0,
+  "root_pid": 820636,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 479824,
+      "name": "python.exe",
+      "ppid": 820636
+    }
+  ],
+  "descendants_terminated": [
+    479824
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 442728,
+      "name": "python.exe"
+    },
+    {
+      "pid": 460520,
+      "name": "python.exe"
+    },
+    {
+      "pid": 709124,
+      "name": "python.exe"
+    },
+    {
+      "pid": 709136,
+      "name": "python.exe"
+    },
+    {
+      "pid": 779824,
+      "name": "python.exe"
+    },
+    {
+      "pid": 816900,
+      "name": "python.exe"
+    },
+    {
+      "pid": 819108,
+      "name": "python.exe"
+    },
+    {
+      "pid": 819868,
+      "name": "python.exe"
+    },
+    {
+      "pid": 820376,
+      "name": "python.exe"
+    },
+    {
+      "pid": 820576,
+      "name": "python.exe"
+    },
+    {
+      "pid": 820812,
+      "name": "python.exe"
+    },
+    {
+      "pid": 821060,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/Users/Angad/AppData/Local/Temp/claude/794608653e0228a8/b6b1502a-4103-45b2-8a2e-76eaa3f38d0e/scratchpad/ivm/imp.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-R3a\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-R3a",
+    "repo_head": "14a64d4d53d84a25d7e73e8687ec36828c3fc735",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

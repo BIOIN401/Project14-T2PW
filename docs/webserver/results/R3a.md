@@ -177,3 +177,32 @@ Reports are in `evidence/R3a/{t,b}-<chunk>.{json,log}`, pin verdicts in `pin/`, 
    I recommend (b).
 2. **Failure kinds.** `no_pdf_uploaded`, `pdf_extraction_failed` and `no_text` are new strings, used today only by the app (which just stops). Should R5 map them to the web error kinds (for example `no_text` to a user-input error), or should R3d fold them into `ExtractionResult`? It does not block R3b.
 3. **Up-front PDF read** (section 3, item 1). If the reviewer wants the per-PDF lazy read kept exactly, the alternative is to pass the upload objects and call `.read()` inside the loop. The cost is that the service then depends on a `.name`/`.read()` duck type instead of bytes.
+
+## 8. Independent run, review and merge (added by the orchestrator)
+
+**Independent run:** ws-test-runner (sonnet/medium), detached `C:/t/ws-R3a-ind` @ `14a64d4d`. Every run exited 0 with 0 survivors, and the gate waited 0 s. Reports are in `docs/webserver/evidence/R3a/independent/`.
+
+| run | result |
+|---|---|
+| golden | 2 + 8 + 4 + 24 = 38 passed |
+| equivalence | 14 passed (run alone) |
+| `test_service_extraction` + `test_service_reporter` | 37 passed |
+| web+bridge | 301 passed |
+| c060a, c055, orch759d, stage0_case_c, c082 (2 files), c083 | 11, 14, 4, 8, 1 + 8, 12 passed |
+| SMOKE | 511 passed |
+
+Two notes on the run:
+
+- The runner's first attempts at g2-g4 left out the wrapper's timeout argument, so pytest collected all of `tests/` and exited 2. These were invocation errors, not test results, and the corrected reruns are the ones above.
+- g1 ran without `--heavy-lock`.
+
+**Review:** ws-reviewer (opus/high) on the actual diff `480b2384..14a64d4d`. Verdict **APPROVE WITH NOTES**. Every gate passed: boundary, no biology, behaviour preserved, tests, evidence, secrets and the RESULT doc.
+
+- **N1 (note).** `evidence/R3a/inline-vs-moved.log` was produced on the dirty pre-commit tree. The reviewer re-ran `scripts/inline_vs_moved.py` through the bounded wrapper on clean `14a64d4d` against `480b2384`: **11/11 scenarios identical, 0 survivors**. The reviewer's reports are in `docs/webserver/evidence/R3a/review/` (`ivm.json`; `imp.json` is the import-without-streamlit probe).
+- **N2 (note).** Reading all the PDF bytes up front is accepted as no behaviour change. Two invisible differences remain:
+  - Peak memory holds every upload's bytes at once.
+  - If a read raised on file k, the messages for files before k would not appear. Reads are in memory, so this is not realistic.
+- **N3 (note).** The real-app AppTest covers only the no-text and no-PDF stops, because AppTest cannot drive `file_uploader`. The PDF paths are covered by the unit tests and the exec-based proof. **Carry to R3d.**
+- **N4 (note).** The `Reporter` protocol gained `success`, `caption`, `text`, `spinner` and `expander`. An R2-only reporter would raise `AttributeError` in `assemble_inputs`, so the R5 web worker must use `LoggingReporter` or implement all five. This ties to open question 1 (b). **Carry to R5.**
+
+**Merge:** `220b1621` (`--no-ff` into `webserver/refactor`). Its code tree is byte-identical to the tested tip `14a64d4d`. Post-merge results are recorded in the LEDGER.

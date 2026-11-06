@@ -1,0 +1,103 @@
+{
+  "label": "R3a-ind-a7",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-R3a-ind",
+    "-q",
+    "--basetemp=C:/t/bt/R3aind/a7",
+    "tests/test_c083_inner_timeout_row.py"
+  ],
+  "cwd": "C:\\t\\ws-R3a-ind",
+  "started_at": "2026-11-06T00:58:18+00:00",
+  "finished_at": "2026-11-06T00:58:20+00:00",
+  "duration_seconds": 1.1989337999984855,
+  "timeout_seconds": 580.0,
+  "root_pid": 826532,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 828192,
+      "name": "python.exe",
+      "ppid": 826532
+    }
+  ],
+  "descendants_terminated": [
+    828192
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 442728,
+      "name": "python.exe"
+    },
+    {
+      "pid": 460520,
+      "name": "python.exe"
+    },
+    {
+      "pid": 709124,
+      "name": "python.exe"
+    },
+    {
+      "pid": 709136,
+      "name": "python.exe"
+    },
+    {
+      "pid": 816900,
+      "name": "python.exe"
+    },
+    {
+      "pid": 819108,
+      "name": "python.exe"
+    },
+    {
+      "pid": 826544,
+      "name": "python.exe"
+    },
+    {
+      "pid": 828012,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/evidence/R3a/independent/a7.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-R3a-ind\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-R3a-ind",
+    "repo_head": "14a64d4d53d84a25d7e73e8687ec36828c3fc735",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "R3a-ind-a7",
+    "token": "R3a-ind-a7:828012:b84cf4ce152dd6ac",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

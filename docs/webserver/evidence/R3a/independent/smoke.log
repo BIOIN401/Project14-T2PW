@@ -1,0 +1,37 @@
+T2PW: C:\t\ws-R3a-ind\src\t2pw\__init__.py
+........................................................................ [ 14%]
+........................................................................ [ 28%]
+........................................................................ [ 42%]
+........................................................................ [ 56%]
+........................................................................ [ 70%]
+........................................................................ [ 84%]
+........................................................................ [ 98%]
+.......                                                                  [100%]
+511 passed in 57.13s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3a-ind\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 14a64d4d53d84a25d7e73e8687ec36828c3fc735  [git, worktree dirty=False]
+label                   : R3a-ind-smoke
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3a-ind -q --basetemp=C:/t/bt/R3aind/smoke tests/test_reference_repair.py tests/test_strict_quarantine.py tests/test_strict_quarantine_contract_alignment.py tests/test_strict_quarantine_locks_and_scope.py tests/test_strict_quarantine_versioning.py tests/test_empty_extraction_payload.py tests/test_bench_goldset_and_semantic.py tests/test_bench_acquisition_and_artifacts.py tests/test_bench_controls.py tests/test_completeness_audit.py tests/test_batch_driver.py tests/test_stage3_gate_report_lifecycle.py tests/test_rag_admission_production_path.py tests/test_rag_gap_admission.py tests/test_rag_triage_orchestration.py tests/test_rag_provenance_gates.py tests/test_pipeline_reaction_rag_provenance.py tests/test_research_mode_orchestration.py tests/test_map_ids_name_gate.py tests/test_db_candidate_species_evidence.py tests/test_c102_coverage_denominator.py tests/test_c106_mutation_harness_executable.py
+cwd                     : C:\t\ws-R3a-ind
+root PID / process group: 823020 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 580 s
+duration                : 59.05 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 11  827560:python.exe, 828860:python.exe, 828880:python.exe, 829000:python.exe, 829128:python.exe, 829216:python.exe, 829236:python.exe, 826416:python.exe, 828516:python.exe, 827888:git.exe, 827816:git.exe
+descendants terminated  : 11  826416, 827560, 827816, 827888, 828516, 828860, 828880, 829000, 829128, 829216, 829236
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/evidence/R3a/independent/smoke.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R3a-ind-smoke  acquired=True  released=True
+pre-existing (reported, NEVER killed): 8
+================================================
