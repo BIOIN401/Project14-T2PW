@@ -1,0 +1,1 @@
+(Get-CimInstance Win32_Process | Where-Object { $_.Name -match 'python' -and $_.CommandLine -match 'pytest|bounded_run' -and $_.CommandLine -notmatch 'Pylance' -and $_.CommandLine -notmatch 'C:/t/ws-int' -and $_.CommandLine -notmatch 'C:\t\ws-int' } | Measure-Object).Count
