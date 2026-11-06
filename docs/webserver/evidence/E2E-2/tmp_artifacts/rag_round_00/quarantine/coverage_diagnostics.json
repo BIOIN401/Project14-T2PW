@@ -1,0 +1,143 @@
+{
+  "d088_diagnostics_version": 1,
+  "diagnostics_rule": "f167_census_v1",
+  "diagnostics_computed": true,
+  "unmatched_terms": [
+    "H+",
+    "ATP",
+    "OTOP1",
+    "PKD2L1",
+    "Kir2.1",
+    "SCN2A",
+    "voltage-gated calcium channels",
+    "P2X receptors"
+  ],
+  "unmatched_anchor_diagnostics": [
+    {
+      "term": "H+",
+      "in_payload": false,
+      "payload_names": [],
+      "wired_to_admitted_core": false,
+      "subprocess_aligned": false,
+      "aligned_subprocesses": []
+    },
+    {
+      "term": "ATP",
+      "in_payload": false,
+      "payload_names": [],
+      "wired_to_admitted_core": false,
+      "subprocess_aligned": true,
+      "aligned_subprocesses": [
+        "purinergic signaling via ATP to P2X receptors"
+      ]
+    },
+    {
+      "term": "OTOP1",
+      "in_payload": false,
+      "payload_names": [],
+      "wired_to_admitted_core": false,
+      "subprocess_aligned": true,
+      "aligned_subprocesses": [
+        "proton permeation via OTOP1"
+      ]
+    },
+    {
+      "term": "PKD2L1",
+      "in_payload": false,
+      "payload_names": [],
+      "wired_to_admitted_core": false,
+      "subprocess_aligned": false,
+      "aligned_subprocesses": []
+    },
+    {
+      "term": "Kir2.1",
+      "in_payload": false,
+      "payload_names": [],
+      "wired_to_admitted_core": false,
+      "subprocess_aligned": true,
+      "aligned_subprocesses": [
+        "Kir2.1 channel block"
+      ]
+    },
+    {
+      "term": "SCN2A",
+      "in_payload": false,
+      "payload_names": [],
+      "wired_to_admitted_core": false,
+      "subprocess_aligned": true,
+      "aligned_subprocesses": [
+        "action potential generation via SCN2A"
+      ]
+    },
+    {
+      "term": "voltage-gated calcium channels",
+      "in_payload": false,
+      "payload_names": [],
+      "wired_to_admitted_core": false,
+      "subprocess_aligned": false,
+      "aligned_subprocesses": []
+    },
+    {
+      "term": "P2X receptors",
+      "in_payload": false,
+      "payload_names": [],
+      "wired_to_admitted_core": false,
+      "subprocess_aligned": true,
+      "aligned_subprocesses": [
+        "purinergic signaling via ATP to P2X receptors"
+      ]
+    }
+  ],
+  "subprocess_coverage": [
+    {
+      "subprocess": "proton permeation via OTOP1",
+      "covered": false,
+      "covering_processes": []
+    },
+    {
+      "subprocess": "Kir2.1 channel block",
+      "covered": false,
+      "covering_processes": []
+    },
+    {
+      "subprocess": "depolarization",
+      "covered": false,
+      "covering_processes": []
+    },
+    {
+      "subprocess": "action potential generation via SCN2A",
+      "covered": false,
+      "covering_processes": []
+    },
+    {
+      "subprocess": "voltage-gated calcium channel activation",
+      "covered": false,
+      "covering_processes": []
+    },
+    {
+      "subprocess": "synaptic vesicle exocytosis",
+      "covered": false,
+      "covering_processes": []
+    },
+    {
+      "subprocess": "serotonin release",
+      "covered": true,
+      "covering_processes": [
+        "5-HT release from Type III cell",
+        "5-HT is serotonin"
+      ]
+    },
+    {
+      "subprocess": "activation of 5-HT3 receptors on nerves",
+      "covered": false,
+      "covering_processes": []
+    },
+    {
+      "subprocess": "purinergic signaling via ATP to P2X receptors",
+      "covered": false,
+      "covering_processes": []
+    }
+  ],
+  "subprocess_coverage_ratio": 0.111111,
+  "subprocess_source_declared": true
+}

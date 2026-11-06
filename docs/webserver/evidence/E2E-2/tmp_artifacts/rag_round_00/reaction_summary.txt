@@ -1,0 +1,141 @@
+=== PATHWAY: Unnamed Pathway ===
+Organism: Mus musculus
+Processes: 0 reaction(s), 6 transport(s), 16 interaction(s)
+
+TRANSPORT 1: H+ permeation through OTOP1
+  From: taste bud lumen
+  To:   Type III taste cell
+  Cargo: H+ [Type III cell apical membrane]
+  Transporter: OTOP1 [Type III cell apical membrane] (role=transporter, confidence=1.0)
+  QA flags:  none
+
+TRANSPORT 2: 5-HT release from Type III cells
+  From: Type III taste cell
+  To:   afferent nerve fiber
+  Cargo: 5-HT [Type III taste cell]
+  Transporter: MISSING
+  QA flags:  none
+
+TRANSPORT 3: H+ influx via OTOP1
+  From: extracellular space
+  To:   Type III taste cell cytosol
+  Cargo: H+ [Type III cell apical membrane]
+  Transporter: OTOP1 [Type III cell apical membrane] (role=transporter, confidence=1.0)
+  QA flags:  none
+
+TRANSPORT 4: Ca++ influx via voltage-gated calcium channels
+  From: extracellular space
+  To:   Type III taste cell cytosol
+  Cargo: Ca++ [extracellular space]
+  Transporter: voltage-gated calcium channels [Type III taste cell] (role=transporter, confidence=1.0), voltage-gated Ca++ channels [Type III taste cell] (role=transporter, confidence=1.0)
+  QA flags:  none
+
+TRANSPORT 5: 5-HT release from Type III cell
+  From: Type III taste cell synaptic vesicles
+  To:   extracellular space
+  Cargo: serotonin [Type III taste cell synaptic vesicles]
+  Transporter: MISSING
+  QA flags:  none
+
+TRANSPORT 6: H+ influx through OTOP1
+  From: saliva
+  To:   Type III taste cell
+  Cargo: H+ [Type III cell apical membrane]
+  Transporter: OTOP1 [Type III cell apical membrane] (role=transporter, confidence=1.0)
+  QA flags:  none
+
+INTERACTION 1: H+ inhibition of Kir2.1
+  Relationship: inhibition
+  Source: H+ [Type III cell apical membrane]
+  Target: Kir2.1 [Type III taste cell]
+  QA flags:  none
+
+INTERACTION 2: 5-HT activation of 5-HT3 receptor
+  Relationship: activation
+  Source: 5-HT [Type III taste cell]
+  Target: 5-HT3 receptor [afferent nerve fiber]
+  QA flags:  none
+
+INTERACTION 3: ATP activation of P2X receptors
+  Relationship: activation
+  Source: ATP [extracellular space]
+  Target: P2X receptors [afferent nerve fiber]
+  QA flags:  none
+
+INTERACTION 4: 5-HT activates 5-HT3 receptor
+  Relationship: activates
+  Source: serotonin [Type III taste cell synaptic vesicles]
+  Target: 5-HT3 receptor [afferent nerve fiber]
+  QA flags:  none
+
+INTERACTION 5: 5-HT activates 5-HT3 receptor
+  Relationship: activation
+  Source: serotonin (5-HT) [synaptic vesicle]
+  Target: 5-HT3 receptor [afferent nerve fiber]
+  QA flags:  none
+
+INTERACTION 6: ATP activates P2X receptor
+  Relationship: activation
+  Source: ATP [extracellular space]
+  Target: P2X receptor [afferent nerve fiber]
+  QA flags:  none
+
+INTERACTION 7: 5-HT is serotonin
+  Relationship: SAME_AS
+  Source: 5-HT [Type III taste cell]
+  Target: serotonin [Type III taste cell synaptic vesicles]
+  QA flags:  none
+
+INTERACTION 8: voltage-gated Ca++ channels are voltage-gated calcium channels
+  Relationship: SAME_AS
+  Source: voltage-gated Ca++ channels [Type III taste cell]
+  Target: voltage-gated calcium channels [Type III taste cell]
+  QA flags:  none
+
+INTERACTION 9: voltage-gated calcium channel is voltage-gated calcium channels
+  Relationship: SAME_AS
+  Source: voltage-gated calcium channel [Type III taste cell]
+  Target: voltage-gated calcium channels [Type III taste cell]
+  QA flags:  none
+
+INTERACTION 10: Ca++ triggers 5-HT release from Type III cells
+  Relationship: triggers_release
+  Source: Ca++ [extracellular space]
+  Target: 5-HT [Type III taste cell]
+  QA flags:  none
+
+INTERACTION 11: SNARE proteins facilitate 5-HT release from Type III cells
+  Relationship: facilitates_release
+  Source: SNARE proteins [Type III taste cell]
+  Target: 5-HT [Type III taste cell]
+  QA flags:  none
+
+INTERACTION 12: PKD2L1 expression in Type III taste cell
+  Relationship: expressed_in
+  Source: PKD2L1 [Type III taste cell]
+  Target: Type III taste cell [unknown]
+  QA flags:  none
+
+INTERACTION 13: Type III cell apical membrane is Type III taste cell apical membrane
+  Relationship: SAME_AS
+  Source: Type III cell apical membrane [unknown]
+  Target: Type III taste cell apical membrane [unknown]
+  QA flags:  none
+
+INTERACTION 14: serotonin (5-HT) is 5-HT
+  Relationship: SAME_AS
+  Source: serotonin (5-HT) [synaptic vesicle]
+  Target: 5-HT [Type III taste cell]
+  QA flags:  none
+
+INTERACTION 15: P2X receptors is P2X receptor
+  Relationship: SAME_AS
+  Source: P2X receptors [afferent nerve fiber]
+  Target: P2X receptor [afferent nerve fiber]
+  QA flags:  none
+
+INTERACTION 16: voltage-gated Ca++ channels is voltage-gated calcium channel
+  Relationship: SAME_AS
+  Source: voltage-gated Ca++ channels [Type III taste cell]
+  Target: voltage-gated calcium channel [Type III taste cell]
+  QA flags:  none

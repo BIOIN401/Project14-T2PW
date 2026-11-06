@@ -1,0 +1,43 @@
+{
+  "run_id": "sha256:7f24b4f3045ae9eb",
+  "round_count": 1,
+  "rounds": [
+    {
+      "round": 1,
+      "temperature": 0.28,
+      "max_tokens": 128000,
+      "candidate_count": 3,
+      "selected_candidate_index": 3,
+      "selected_score": [
+        0,
+        5,
+        2,
+        1,
+        -4,
+        5
+      ],
+      "retrieval_selected_count": 0,
+      "retrieval_top_k": 3,
+      "error_count": 2,
+      "warning_count": 11,
+      "patch_count": 5,
+      "accepted_patch_count": 4,
+      "rejected_patch_count": 1,
+      "llm_ok": true,
+      "llm_error": "",
+      "llm_repair_rationale": "Removed interaction referencing cell type as entity (invalid for SBML) and duplicate interaction. Missing protein identifiers are flagged as warnings; no patch possible without external data.",
+      "top_errors": [
+        "Stage 3 registry reference validation failed: unknown entity: Type III taste cell",
+        "entity_2 'Type III taste cell' is a cell type, not a valid entity type for interactions (expected protein, compound, or complex). Registry validation fails."
+      ],
+      "gap_mapped_ids_added": 6,
+      "gap_locations_added": 0,
+      "gap_location_states_filled": 0,
+      "audit_payload_changed": true,
+      "gap_payload_changed": true,
+      "settled_payload_changed": true,
+      "actionable_issues_remain": true,
+      "…": "+9 more key(s) elided"
+    }
+  ]
+}

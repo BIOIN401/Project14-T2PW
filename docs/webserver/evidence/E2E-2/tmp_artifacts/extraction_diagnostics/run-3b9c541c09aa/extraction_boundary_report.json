@@ -1,0 +1,288 @@
+{
+  "run_id": "sha256:7f24b4f3045ae9eb",
+  "boundary_count": 7,
+  "outcomes": [
+    "ok",
+    "valid_json_zero_processes"
+  ],
+  "boundaries": [
+    {
+      "stage": "extraction",
+      "boundary": "stage1_extraction",
+      "outcome": "ok",
+      "model": "deepseek/deepseek-v4-flash",
+      "finish_reason": "stop",
+      "attempts": 1,
+      "response_status": "ok",
+      "raw_entity_counts": {
+        "cell_types": 1,
+        "species": 1,
+        "tissues": 1,
+        "subcellular_locations": 3,
+        "compounds": 4,
+        "element_collections": 0,
+        "nucleic_acids": 0,
+        "proteins": 7,
+        "protein_complexes": 0,
+        "total": 17
+      },
+      "raw_process_counts": {
+        "reactions": 0,
+        "reaction_coupled_transports": 0,
+        "transports": 2,
+        "interactions": 3,
+        "total": 5
+      },
+      "request_hash": "sha256:16b155cd13826e29",
+      "response_hash": "sha256:8fc1d3662d95e887",
+      "raw_chars": 10113,
+      "attempt_log": [
+        {
+          "attempt": 1,
+          "status": "ok",
+          "content_chars": 10113,
+          "finish_reason": "stop"
+        }
+      ]
+    },
+    {
+      "stage": "extraction",
+      "boundary": "stage1_extraction",
+      "outcome": "ok",
+      "model": "deepseek/deepseek-v4-flash",
+      "finish_reason": "stop",
+      "attempts": 1,
+      "response_status": "ok",
+      "raw_entity_counts": {
+        "cell_types": 1,
+        "species": 1,
+        "tissues": 1,
+        "subcellular_locations": 4,
+        "compounds": 4,
+        "element_collections": 0,
+        "nucleic_acids": 0,
+        "proteins": 7,
+        "protein_complexes": 0,
+        "total": 18
+      },
+      "raw_process_counts": {
+        "reactions": 0,
+        "reaction_coupled_transports": 0,
+        "transports": 3,
+        "interactions": 3,
+        "total": 6
+      },
+      "request_hash": "sha256:16b155cd13826e29",
+      "response_hash": "sha256:6145af760398e1f1",
+      "raw_chars": 11019,
+      "attempt_log": [
+        {
+          "attempt": 1,
+          "status": "ok",
+          "content_chars": 11019,
+          "finish_reason": "stop"
+        }
+      ]
+    },
+    {
+      "stage": "extraction",
+      "boundary": "stage1_extraction",
+      "outcome": "ok",
+      "model": "deepseek/deepseek-v4-flash",
+      "finish_reason": "stop",
+      "attempts": 1,
+      "response_status": "ok",
+      "raw_entity_counts": {
+        "cell_types": 2,
+        "species": 1,
+        "tissues": 1,
+        "subcellular_locations": 4,
+        "compounds": 3,
+        "element_collections": 0,
+        "nucleic_acids": 0,
+        "proteins": 8,
+        "protein_complexes": 0,
+        "total": 19
+      },
+      "raw_process_counts": {
+        "reactions": 0,
+        "reaction_coupled_transports": 0,
+        "transports": 1,
+        "interactions": 3,
+        "total": 4
+      },
+      "request_hash": "sha256:16b155cd13826e29",
+      "response_hash": "sha256:94480ca0ca3731ef",
+      "raw_chars": 9232,
+      "attempt_log": [
+        {
+          "attempt": 1,
+          "status": "ok",
+          "content_chars": 9232,
+          "finish_reason": "stop"
+        }
+      ]
+    },
+    {
+      "stage": "extraction",
+      "boundary": "stage1_ensemble",
+      "outcome": "ok",
+      "model": "",
+      "finish_reason": "",
+      "attempts": 3,
+      "response_status": "",
+      "ensemble": {
+        "draws_requested": 3,
+        "draws_succeeded": 3,
+        "draws_failed": 0,
+        "failed_draws": [],
+        "merged_rows": 40,
+        "unique_to_one_draw": 23,
+        "in_every_successful_draw": 12,
+        "rows_per_draw": [
+          22,
+          24,
+          23
+        ],
+        "first_seen_in_draw": [
+          22,
+          9,
+          9
+        ],
+        "by_bucket": {
+          "/entities/cell_types": {
+            "merged": 3,
+            "unique_to_one_draw": 2
+          },
+          "/entities/species": {
+            "merged": 1,
+            "unique_to_one_draw": 0
+          },
+          "/entities/tissues": {
+            "merged": 1,
+            "unique_to_one_draw": 0
+          },
+          "/entities/subcellular_locations": {
+            "merged": 6,
+            "unique_to_one_draw": 3
+          },
+          "/entities/compounds": {
+            "merged": 6,
+            "unique_to_one_draw": 3
+          },
+          "/entities/element_collections": {
+            "merged": 0,
+            "unique_to_one_draw": 0
+          },
+          "/entities/nucleic_acids": {
+            "merged": 0,
+            "unique_to_one_draw": 0
+          },
+          "/entities/proteins": {
+            "merged": 11,
+            "unique_to_one_draw": 5
+          },
+          "/entities/protein_complexes": {
+            "merged": 0,
+            "unique_to_one_draw": 0
+          },
+          "/processes/reactions": {
+            "merged": 0,
+            "unique_to_one_draw": 0
+          },
+          "/processes/reaction_coupled_transports": {
+            "merged": 0,
+            "unique_to_one_draw": 0
+          },
+          "/processes/transports": {
+            "merged": 6,
+            "unique_to_one_draw": 6
+          },
+          "/processes/interactions": {
+            "merged": 6,
+            "unique_to_one_draw": 4
+          }
+        },
+        "report_path": "C:\\t\\ws-e2e\\tmp\\extraction_diagnostics\\run-3b9c541c09aa\\stage1_ensemble_report.json"
+      }
+    },
+    {
+      "stage": "extraction",
+      "boundary": "stage1_extraction",
+      "outcome": "ok",
+      "model": "",
+      "finish_reason": "",
+      "attempts": 0,
+      "response_status": "",
+      "raw_entity_counts": {
+        "cell_types": 3,
+        "species": 1,
+        "tissues": 1,
+        "subcellular_locations": 6,
+        "compounds": 6,
+        "proteins": 11,
+        "total": 28
+      },
+      "raw_process_counts": {
+        "transports": 6,
+        "interactions": 6,
+        "total": 12
+      },
+      "response_hash": "sha256:1e83cb9281672445",
+      "contract_ok": true,
+      "note": "stage_one_boundary_settled"
+    },
+    {
+      "stage": "inference",
+      "boundary": "stage2_inference",
+      "outcome": "valid_json_zero_processes",
+      "model": "deepseek/deepseek-v4-flash",
+      "finish_reason": "stop",
+      "attempts": 1,
+      "response_status": "ok",
+      "raw_entity_counts": {
+        "total": 0
+      },
+      "raw_process_counts": {
+        "total": 0
+      },
+      "request_hash": "sha256:9f1df9a04f538895",
+      "response_hash": "sha256:f9d08c0e331056f0",
+      "raw_chars": 4387,
+      "attempt_log": [
+        {
+          "attempt": 1,
+          "status": "ok",
+          "content_chars": 4387,
+          "finish_reason": "stop"
+        }
+      ]
+    },
+    {
+      "stage": "inference",
+      "boundary": "stage2_inference",
+      "outcome": "valid_json_zero_processes",
+      "model": "deepseek/deepseek-v4-flash",
+      "finish_reason": "stop",
+      "attempts": 1,
+      "response_status": "ok",
+      "raw_entity_counts": {
+        "total": 0
+      },
+      "raw_process_counts": {
+        "total": 0
+      },
+      "request_hash": "sha256:2b5946cfdc40a533",
+      "response_hash": "sha256:c947b58afb0ab542",
+      "raw_chars": 3933,
+      "attempt_log": [
+        {
+          "attempt": 1,
+          "status": "ok",
+          "content_chars": 3933,
+          "finish_reason": "stop"
+        }
+      ]
+    }
+  ]
+}

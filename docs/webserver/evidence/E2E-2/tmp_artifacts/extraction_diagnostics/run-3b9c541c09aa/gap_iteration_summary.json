@@ -1,0 +1,1085 @@
+{
+  "run_id": "sha256:7f24b4f3045ae9eb",
+  "round_count": 1,
+  "rounds": [
+    {
+      "round": 1,
+      "summary": {
+        "mapped_ids_added": 6,
+        "organisms_added": 0,
+        "locations_added": 0,
+        "location_states_filled": 0,
+        "complex_components_structured": 0,
+        "complex_components_resolved": 0,
+        "complex_stoichiometry_issues_deferred": 0,
+        "items_considered": 6,
+        "enrichment_patches_accepted": 0,
+        "enrichment_patches_rejected": 0
+      },
+      "db": {
+        "available": true,
+        "last_error": ""
+      },
+      "stage3": {
+        "issues": [
+          {
+            "issue_key": "protein:voltagegated ca channels",
+            "entity_type": "protein",
+            "name": "voltage-gated Ca++ channels",
+            "path": "/entities/proteins/3",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping"
+            ]
+          },
+          {
+            "issue_key": "protein:5ht3 receptor",
+            "entity_type": "protein",
+            "name": "5-HT3 receptor",
+            "path": "/entities/proteins/4",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping"
+            ]
+          },
+          {
+            "issue_key": "protein:p2x receptor",
+            "entity_type": "protein",
+            "name": "P2X receptor",
+            "path": "/entities/proteins/5",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping"
+            ]
+          },
+          {
+            "issue_key": "protein:snare proteins",
+            "entity_type": "protein",
+            "name": "SNARE proteins",
+            "path": "/entities/proteins/6",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": false,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping"
+            ]
+          },
+          {
+            "issue_key": "compound:h",
+            "entity_type": "compound",
+            "name": "H+",
+            "path": "/entities/compounds/0",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": true,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "compound_unmapped_after_db_pass"
+            ]
+          },
+          {
+            "issue_key": "compound:ca",
+            "entity_type": "compound",
+            "name": "Ca++",
+            "path": "/entities/compounds/3",
+            "needs_id_mapping": true,
+            "needs_location_link": false,
+            "needs_location_state_fill": false,
+            "visible_entity_missing_location": false,
+            "needs_organism": false,
+            "needs_species": false,
+            "compound_missing_class_type": false,
+            "compound_unmapped_after_db_pass": true,
+            "missing_fields": [
+              "mapped_ids"
+            ],
+            "reasons": [
+              "entity_missing_id_mapping",
+              "compound_unmapped_after_db_pass"
+            ]
+          }
+        ],
+        "planner": {
+          "source": "llm",
+          "error": "",
+          "raw": {
+            "chars": 500,
+            "hash": "sha256:ae17a94ef8ee2b04",
+            "preview": "{ \"operations\": [ { \"issue_key\": \"protein:voltagegated ca channels\", \"resolve_ids\": { \"strategy\": \"db_then_api\", \"resolve_location\": { \"strategy\": \"skip\" }, \"background\": { \"api_lookup\": \"auto\", \"hmdb… (+194 chars elided)"
+          }
+        },
+        "operations": [
+          {
+            "issue_key": "protein:voltagegated ca channels",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": ""
+          },
+          {
+            "issue_key": "protein:5ht3 receptor",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": ""
+          },
+          {
+            "issue_key": "protein:p2x receptor",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": ""
+          },
+          {
+            "issue_key": "protein:snare proteins",
+            "resolve_ids": {
+              "strategy": "db_then_api"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": false,
+              "max_results": 6
+            },
+            "rationale": ""
+          },
+          {
+            "issue_key": "compound:h",
+            "resolve_ids": {
+              "strategy": "api_then_db"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": ""
+          },
+          {
+            "issue_key": "compound:ca",
+            "resolve_ids": {
+              "strategy": "api_then_db"
+            },
+            "resolve_location": {
+              "strategy": "db_then_default"
+            },
+            "background": {
+              "api_lookup": "auto",
+              "hmdb_lookup": true,
+              "max_results": 6
+            },
+            "rationale": ""
+          }
+        ],
+        "executions": [
+          {
+            "issue_key": "protein:voltagegated ca channels",
+            "entity_type": "protein",
+            "name": "voltage-gated Ca++ channels",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "voltage-gated Ca++ channels",
+                "organism": "Mus musculus",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "best_effort_fallback",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:7dee39d982ec787d",
+                  "preview": "{\"uniprot\": \"A0A6I8RK79\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 612,
+                  "hash": "sha256:2216689efb19419a",
+                  "preview": "[\"(protein_name:\\\"voltage-gated Ca++ channels\\\" OR gene:\\\"voltage-gated Ca++ channels\\\") AND organism_name:\\\"Mus musculus\\\"\", \"(protein_name:\\\"voltage gated Ca++ channels\\\" OR gene:\\\"voltage gated Ca+… (+412 chars elided)",
+                  "items": 8
+                },
+                "candidates": {
+                  "chars": 1020,
+                  "hash": "sha256:7b3b793805a162f5",
+                  "preview": "[{\"accession\": \"A0A6I8RK79\", \"protein_name\": \"Voltage-dependent L-type calcium channel subunit beta-3\", \"organism\": \"Xenopus tropicalis\", \"reviewed\": false, \"score\": 0.68}, {\"accession\": \"A0A8J0Q9K1\",… (+820 chars elided)",
+                  "items": 6
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 107,
+                  "hash": "sha256:00cac1fd54d96ba4",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_db_match\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"candidates\": []}",
+                  "keys": 5
+                },
+                {
+                  "chars": 5937,
+                  "hash": "sha256:4e398c1ffaaec393",
+                  "preview": "{\"status\": \"mapped\", \"reason\": \"best_effort_fallback\", \"query\": \"(protein_name:\\\"voltage-gated Ca++ channels\\\" OR gene:\\\"voltage-gated Ca++ channels\\\") AND organism_name:\\\"Mus musculus\\\" | (protein_na… (+5737 chars elided)",
+                  "keys": 14
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.68,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:7dee39d982ec787d",
+                  "preview": "{\"uniprot\": \"A0A6I8RK79\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "best_effort_fallback"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.68,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:23e942907d968c1f",
+                  "preview": "{\"uniprot\": \"A0A8J0Q9K1\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.68,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:b8ed1698bf5b063a",
+                  "preview": "{\"uniprot\": \"A0A8J0SDP2\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.68,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:7dbdb9fd33068a1b",
+                  "preview": "{\"uniprot\": \"A0A8J1M4Y4\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.68,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:3b943dc098982a11",
+                  "preview": "{\"uniprot\": \"A0A8J0PN15\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.68,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:a25d92eedaef3318",
+                  "preview": "{\"uniprot\": \"A0A8J0PMZ3\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.646,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:706d97e9f1b35e7f",
+                  "preview": "{\"uniprot\": \"A0A8J1MBB5\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.646,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:14289882f84e8726",
+                  "preview": "{\"uniprot\": \"A0A8J1MB04\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 0.68,
+              "reason": "llm_invalid_index_fallback",
+              "source": "llm_fallback"
+            }
+          },
+          {
+            "issue_key": "protein:5ht3 receptor",
+            "entity_type": "protein",
+            "name": "5-HT3 receptor",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "5-HT3 receptor",
+                "organism": "Mus musculus",
+                "provider": "uniprot",
+                "status": "unmapped",
+                "reason": "family_name_has_no_single_protein",
+                "candidate_count": 3,
+                "mapped_ids": {
+                  "chars": 2,
+                  "hash": "sha256:44136fa355b3678a",
+                  "preview": "{}",
+                  "keys": 0
+                },
+                "queries_tried": {
+                  "chars": 326,
+                  "hash": "sha256:daf20a9ffc1849d2",
+                  "preview": "[\"(protein_name:\\\"5-HT3 receptor\\\" OR gene:\\\"5-HT3 receptor\\\") AND organism_name:\\\"Mus musculus\\\"\", \"(protein_name:\\\"5 HT3 receptor\\\" OR gene:\\\"5 HT3 receptor\\\") AND organism_name:\\\"Mus musculus\\\"\", \"… (+126 chars elided)",
+                  "items": 4
+                },
+                "candidates": {
+                  "chars": 382,
+                  "hash": "sha256:65383548294eaad9",
+                  "preview": "[{\"accession\": \"P70471\", \"protein_name\": \"5-HT3 receptor\", \"organism\": \"Rattus norvegicus\", \"reviewed\": false, \"score\": 0.51}, {\"accession\": \"P70472\", \"protein_name\": \"5-HT3 receptor\", \"organism\": \"Ra… (+182 chars elided)",
+                  "items": 3
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 107,
+                  "hash": "sha256:00cac1fd54d96ba4",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_db_match\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"candidates\": []}",
+                  "keys": 5
+                },
+                {
+                  "chars": 1610,
+                  "hash": "sha256:a437cf6753a14ebb",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"family_name_has_no_single_protein\", \"query\": \"(protein_name:\\\"5-HT3 receptor\\\" OR gene:\\\"5-HT3 receptor\\\") AND organism_name:\\\"Mus musculus\\\" | (protein_name:\\\"5 HT3 … (+1410 chars elided)",
+                  "keys": 8
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.51,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:9a5e6d047135cb04",
+                  "preview": "{\"uniprot\": \"P70471\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.51,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:f2ce07bc23835112",
+                  "preview": "{\"uniprot\": \"P70472\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.51,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:0e99adf2720c803b",
+                  "preview": "{\"uniprot\": \"Q9XSC8\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 0.51,
+              "reason": "llm_invalid_index_fallback",
+              "source": "llm_fallback"
+            }
+          },
+          {
+            "issue_key": "protein:p2x receptor",
+            "entity_type": "protein",
+            "name": "P2X receptor",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "P2X receptor",
+                "organism": "Mus musculus",
+                "provider": "uniprot",
+                "status": "unmapped",
+                "reason": "family_name_has_no_single_protein",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 2,
+                  "hash": "sha256:44136fa355b3678a",
+                  "preview": "{}",
+                  "keys": 0
+                },
+                "queries_tried": {
+                  "chars": 155,
+                  "hash": "sha256:03a2ddf12b26a6d3",
+                  "preview": "[\"(protein_name:\\\"P2X receptor\\\" OR gene:\\\"P2X receptor\\\") AND organism_name:\\\"Mus musculus\\\"\", \"(protein_name:\\\"P2X receptor\\\" OR gene:\\\"P2X receptor\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 831,
+                  "hash": "sha256:6fd1e8438c34b75b",
+                  "preview": "[{\"accession\": \"A0AAN7TKK0\", \"protein_name\": \"P2X receptor\", \"organism\": \"Dictyostelium firmibasis\", \"reviewed\": false, \"score\": 0.51}, {\"accession\": \"A0A0D2WIR0\", \"protein_name\": \"P2X receptor\", \"org… (+631 chars elided)",
+                  "items": 6
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 107,
+                  "hash": "sha256:00cac1fd54d96ba4",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_db_match\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"candidates\": []}",
+                  "keys": 5
+                },
+                {
+                  "chars": 2874,
+                  "hash": "sha256:0af6a39562c21ae8",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"family_name_has_no_single_protein\", \"query\": \"(protein_name:\\\"P2X receptor\\\" OR gene:\\\"P2X receptor\\\") AND organism_name:\\\"Mus musculus\\\" | (protein_name:\\\"P2X recept… (+2674 chars elided)",
+                  "keys": 8
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.51,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:da325b8246e536d3",
+                  "preview": "{\"uniprot\": \"A0AAN7TKK0\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.51,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:5711ed8d28e7dc0e",
+                  "preview": "{\"uniprot\": \"A0A0D2WIR0\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.51,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:65233789d68691cc",
+                  "preview": "{\"uniprot\": \"A0A2P6NI69\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.51,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:b5e63b090063add4",
+                  "preview": "{\"uniprot\": \"A0A8J4UXM0\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.51,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:8f6a98cf5831e3a8",
+                  "preview": "{\"uniprot\": \"A0AAN7U4M6\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 21,
+                  "hash": "sha256:7c3f52b9d5db726b",
+                  "preview": "{\"uniprot\": \"Q553Y1\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 0.51,
+              "reason": "llm_invalid_index_fallback",
+              "source": "llm_fallback"
+            }
+          },
+          {
+            "issue_key": "protein:snare proteins",
+            "entity_type": "protein",
+            "name": "SNARE proteins",
+            "status": "ok",
+            "background": {
+              "protein_api": {
+                "query": "SNARE proteins",
+                "organism": "Mus musculus",
+                "provider": "uniprot",
+                "status": "mapped",
+                "reason": "best_effort_fallback",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:992592f698bc2fcb",
+                  "preview": "{\"uniprot\": \"A0A9Q0Q933\"}",
+                  "keys": 1
+                },
+                "queries_tried": {
+                  "chars": 163,
+                  "hash": "sha256:11df5ffd1ec40732",
+                  "preview": "[\"(protein_name:\\\"SNARE proteins\\\" OR gene:\\\"SNARE proteins\\\") AND organism_name:\\\"Mus musculus\\\"\", \"(protein_name:\\\"SNARE proteins\\\" OR gene:\\\"SNARE proteins\\\")\"]",
+                  "items": 2
+                },
+                "candidates": {
+                  "chars": 770,
+                  "hash": "sha256:7987e7951eb74d08",
+                  "preview": "[{\"accession\": \"A0A9Q0Q933\", \"protein_name\": \"SNARE PROTEINS\", \"organism\": \"Salix koriyanagi\", \"reviewed\": false, \"score\": 0.51}, {\"accession\": \"A0A9Q0T2A2\", \"protein_name\": \"SNARE PROTEINS\", \"organis… (+570 chars elided)",
+                  "items": 6
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "db_then_api",
+              "attempts": [
+                {
+                  "chars": 107,
+                  "hash": "sha256:00cac1fd54d96ba4",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_db_match\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"candidates\": []}",
+                  "keys": 5
+                },
+                {
+                  "chars": 2583,
+                  "hash": "sha256:a10e859b6df8f05e",
+                  "preview": "{\"status\": \"mapped\", \"reason\": \"best_effort_fallback\", \"query\": \"(protein_name:\\\"SNARE proteins\\\" OR gene:\\\"SNARE proteins\\\") AND organism_name:\\\"Mus musculus\\\" | (protein_name:\\\"SNARE proteins\\\" OR g… (+2383 chars elided)",
+                  "keys": 14
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.51,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:992592f698bc2fcb",
+                  "preview": "{\"uniprot\": \"A0A9Q0Q933\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "best_effort_fallback"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.51,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:f0ec41d0d122ecf7",
+                  "preview": "{\"uniprot\": \"A0A9Q0T2A2\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.51,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:ff4c8e606e2d3362",
+                  "preview": "{\"uniprot\": \"A0A9Q0UFM9\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.51,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:12642394b684d387",
+                  "preview": "{\"uniprot\": \"A0A9Q0VAZ6\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.51,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:b9b32d1a4cd50b21",
+                  "preview": "{\"uniprot\": \"A0A9Q0WTD0\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.51,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:5e61da21b1279809",
+                  "preview": "{\"uniprot\": \"A0A9Q0NQE3\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "UniProt",
+                "confidence": 0.4845,
+                "mapped_ids": {
+                  "chars": 25,
+                  "hash": "sha256:1214360a93656797",
+                  "preview": "{\"uniprot\": \"A0A9Q0PVP1\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 0.51,
+              "reason": "llm_invalid_index_fallback",
+              "source": "llm_fallback"
+            }
+          },
+          {
+            "issue_key": "compound:h",
+            "entity_type": "compound",
+            "name": "H+",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "H+",
+                "provider": "compound_api_bundle",
+                "status": "mapped",
+                "reason": "",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:17692f37b8d3df42",
+                  "preview": "{\"kegg\": \"C00080\"}",
+                  "keys": 1
+                },
+                "candidates": {
+                  "chars": 462,
+                  "hash": "sha256:4cf28d7d20c844a1",
+                  "preview": "[{\"database\": \"kegg\", \"id\": \"C00080\", \"name\": \"H+\", \"score\": 0.95}, {\"database\": \"kegg\", \"id\": \"C00120\", \"name\": \"Biotin\", \"score\": 0.65}, {\"database\": \"kegg\", \"id\": \"C00982\", \"name\": \"Renilla lucifer… (+262 chars elided)",
+                  "items": 6
+                }
+              },
+              "hmdb": {
+                "query": "H+",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "api_then_db",
+              "attempts": [
+                {
+                  "chars": 947,
+                  "hash": "sha256:be71f91180b9cd31",
+                  "preview": "{\"status\": \"mapped\", \"mapped_ids\": {\"kegg\": \"C00080\"}, \"confidence\": 0.95, \"chosen_rule\": \"top_unique_candidate\", \"candidates\": [{\"database\": \"kegg\", \"id\": \"C00080\", \"name\": \"H+\", \"score\": 0.95}, {\"da… (+747 chars elided)",
+                  "keys": 7
+                },
+                {
+                  "chars": 909,
+                  "hash": "sha256:d66ae19b8f5b7e88",
+                  "preview": "{\"status\": \"mapped\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"mapped_ids\": {\"hmdb\": \"HMDB0059597\", \"kegg\": \"C00080\", \"chebi\": \"CHEBI:15378\", \"pubchem\": \"1038\", \"chemspider\": \"1010\", \"pathbank_compou… (+707 chars elided)",
+                  "keys": 8
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "db",
+                "provider": "PathBankDB",
+                "confidence": 1.0,
+                "mapped_ids": {
+                  "chars": 139,
+                  "hash": "sha256:f0958230e623df9e",
+                  "preview": "{\"hmdb\": \"HMDB0059597\", \"kegg\": \"C00080\", \"chebi\": \"CHEBI:15378\", \"pubchem\": \"1038\", \"chemspider\": \"1010\", \"pathbank_compound_id\": \"40034\"}",
+                  "keys": 6
+                },
+                "chosen_rule": "db_top_candidate_relaxed"
+              },
+              {
+                "source": "api",
+                "provider": "ChEBI/KEGG/HMDB",
+                "confidence": 0.95,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:17692f37b8d3df42",
+                  "preview": "{\"kegg\": \"C00080\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "top_unique_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.65,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:ba73f646a89ca8cf",
+                  "preview": "{\"kegg\": \"C00120\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.65,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:ea8a47a24d9c2ebe",
+                  "preview": "{\"kegg\": \"C00982\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.65,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:2ce78b5ca67df3b3",
+                  "preview": "{\"kegg\": \"C01491\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.65,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:d4b873e4131ff3ba",
+                  "preview": "{\"kegg\": \"C02008\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.65,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:57751763d966b0f6",
+                  "preview": "{\"kegg\": \"C03717\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "ChEBI/KEGG/HMDB",
+                "confidence": 0.6174999999999999,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:b0fe337670ff34b0",
+                  "preview": "{\"kegg\": \"C08799\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_attempt_candidate_promotion"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 0,
+              "confidence": 1.0,
+              "reason": "Candidate 0 exactly matches the compound entity H+ with comprehensive database-backed identifiers (KEGG C00080, ChEBI CHEBI:15378, PubChem 1038), and no type, organism, or scope conflicts are present.",
+              "source": "llm",
+              "raw": {
+                "chars": 254,
+                "hash": "sha256:742b13c263901f70",
+                "preview": "{\"selected_index\": 0, \"confidence\": 1.0, \"reason\": \"Candidate 0 exactly matches the compound entity H+ with comprehensive database-backed identifiers (KEGG C00080, ChEBI CHEBI:15378, PubChem 1038), an… (+54 chars elided)"
+              }
+            }
+          },
+          {
+            "issue_key": "compound:ca",
+            "entity_type": "compound",
+            "name": "Ca++",
+            "status": "ok",
+            "background": {
+              "compound_api": {
+                "query": "Ca++",
+                "provider": "compound_api_bundle",
+                "status": "unmapped",
+                "reason": "ambiguous",
+                "candidate_count": 6,
+                "mapped_ids": {
+                  "chars": 2,
+                  "hash": "sha256:44136fa355b3678a",
+                  "preview": "{}",
+                  "keys": 0
+                },
+                "candidates": {
+                  "chars": 440,
+                  "hash": "sha256:db389161ba337eac",
+                  "preview": "[{\"database\": \"kegg\", \"id\": \"C00011\", \"name\": \"CO2\", \"score\": 0.35}, {\"database\": \"kegg\", \"id\": \"C00038\", \"name\": \"Zinc cation\", \"score\": 0.35}, {\"database\": \"kegg\", \"id\": \"C00060\", \"name\": \"Carboxyla… (+240 chars elided)",
+                  "items": 6
+                }
+              },
+              "hmdb": {
+                "query": "Ca++",
+                "provider": "hmdb",
+                "candidate_count": 0,
+                "candidates": {
+                  "chars": 2,
+                  "hash": "sha256:4f53cda18c2baa0c",
+                  "preview": "[]",
+                  "items": 0
+                }
+              }
+            },
+            "id_execution": {
+              "strategy": "api_then_db",
+              "attempts": [
+                {
+                  "chars": 855,
+                  "hash": "sha256:91eab143ac4e53a3",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"ambiguous\", \"confidence\": 0.35, \"candidates\": [{\"database\": \"kegg\", \"id\": \"C00011\", \"name\": \"CO2\", \"score\": 0.35}, {\"database\": \"kegg\", \"id\": \"C00038\", \"name\": \"Zinc … (+655 chars elided)",
+                  "keys": 6
+                },
+                {
+                  "chars": 107,
+                  "hash": "sha256:00cac1fd54d96ba4",
+                  "preview": "{\"status\": \"unmapped\", \"reason\": \"no_db_match\", \"provider\": \"PathBankDB\", \"source\": \"db\", \"candidates\": []}",
+                  "keys": 5
+                }
+              ]
+            },
+            "id_candidates": [
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:b10c913e17b268ab",
+                  "preview": "{\"kegg\": \"C00011\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:f1c41f1244272eec",
+                  "preview": "{\"kegg\": \"C00038\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:8f46cd13f812b426",
+                  "preview": "{\"kegg\": \"C00060\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:8c9523768a8d87ed",
+                  "preview": "{\"kegg\": \"C00076\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:09adf06147fb069d",
+                  "preview": "{\"kegg\": \"C00086\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              },
+              {
+                "source": "api",
+                "provider": "CompoundAPI",
+                "confidence": 0.42,
+                "mapped_ids": {
+                  "chars": 18,
+                  "hash": "sha256:1b1e301d542a0d04",
+                  "preview": "{\"kegg\": \"C00089\"}",
+                  "keys": 1
+                },
+                "chosen_rule": "stage3_api_background_candidate"
+              }
+            ],
+            "id_choice": {
+              "selected_index": 3,
+              "confidence": 0.42,
+              "reason": "The entity 'Ca++' is a common abbreviation for calcium ion. Among the candidates, 'Calcium cation' (KEGG C00076) is the exact expanded-name match, making it the best choice despite the ambiguous API status.",
+              "source": "llm",
+              "raw": {
+                "chars": 269,
+                "hash": "sha256:8fe9fea7e5f1b6c4",
+                "preview": "{ \"selected_index\": 3, \"confidence\": 0.42, \"reason\": \"The entity 'Ca++' is a common abbreviation for calcium ion. Among the candidates, 'Calcium cation' (KEGG C00076) is the exact expanded-name match,… (+63 chars elided)"
+              }
+            }
+          }
+        ],
+        "unresolved_issues": []
+      },
+      "payload_changed": true,
+      "actionable_issue_count": 0
+    }
+  ]
+}

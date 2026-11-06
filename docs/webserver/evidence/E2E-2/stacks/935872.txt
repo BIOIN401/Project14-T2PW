@@ -1,0 +1,352 @@
+HEADER pid=935872 argv=['-m', '--child', 't2pw.service.driver_bridge:run_pathway', 'C:\\t\\e2e2\\work\\item-1\\attempt-1\\request.json', 'C:\\t\\e2e2\\work\\item-1\\attempt-1\\result.json'] time=2026-11-05 20:51:08
+Timeout (0:05:00)!
+Thread 0x000e4970 (most recent call first):
+  File "C:\Python313\Lib\ssl.py", line 1140 in read
+  File "C:\Python313\Lib\ssl.py", line 1285 in recv
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpcore2\_backends\sync.py", line 127 in read
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpcore2\_sync\http11.py", line 200 in _receive_event
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpcore2\_sync\http11.py", line 188 in _receive_response_body
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpcore2\_sync\http11.py", line 312 in __iter__
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpcore2\_sync\connection_pool.py", line 426 in __iter__
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpx2\_transports\default.py", line 124 in __iter__
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpx2\_client.py", line 143 in __iter__
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpx2\_models.py", line 947 in iter_raw
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpx2\_models.py", line 892 in iter_bytes
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpx2\_models.py", line 876 in read
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpx2\_client.py", line 988 in send
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\_base_client.py", line 1009 in _send_request
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\_client.py", line 539 in _send_with_auth_retry
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\_client.py", line 560 in _send_request
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\_base_client.py", line 1086 in request
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\_base_client.py", line 1381 in post
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\resources\chat\completions\completions.py", line 1296 in create
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\_utils\_utils.py", line 298 in wrapper
+  File "C:\t\ws-e2e\src\t2pw\llm\client.py", line 747 in chat_detailed
+  File "C:\t\ws-e2e\src\t2pw\pipeline\pipeline.py", line 3855 in _issue
+  File "C:\t\ws-e2e\src\t2pw\pipeline\pipeline.py", line 3965 in _run_json_stage
+  File "C:\t\ws-e2e\src\t2pw\pipeline\pipeline.py", line 278 in _draw
+  File "C:\t\ws-e2e\src\t2pw\pipeline\stage_one_ensemble.py", line 1146 in run_ensemble
+  File "C:\t\ws-e2e\src\t2pw\pipeline\pipeline.py", line 300 in run_extraction_pipeline
+  File "C:\t\ws-e2e\src\t2pw\pipeline\pipeline.py", line 2747 in run_stage_one_with_chunking
+  File "C:\t\ws-e2e\src\t2pw\app\streamlit_app.py", line 2258 in <module>
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 837 in code_to_exec
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\exec_code.py", line 136 in exec_func_with_error_handling
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 862 in _run_script
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 417 in _run_script_thread
+  File "C:\Python313\Lib\threading.py", line 994 in run
+  File "C:\Python313\Lib\threading.py", line 1043 in _bootstrap_inner
+  File "C:\Python313\Lib\threading.py", line 1014 in _bootstrap
+
+Thread 0x000e5d9c (most recent call first):
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\testing\v1\local_script_runner.py", line 195 in require_widgets_deltas
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\testing\v1\local_script_runner.py", line 158 in run
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\testing\v1\app_test.py", line 407 in _run
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\testing\v1\element_tree.py", line 2531 in run
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\testing\v1\app_test.py", line 463 in run
+  File "C:\t\ws-e2e\src\t2pw\batch\driver.py", line 2400 in _run_app
+  File "C:\t\ws-e2e\src\t2pw\batch\driver.py", line 2819 in _drive
+  File "C:\t\ws-e2e\src\t2pw\batch\driver.py", line 2364 in run_one
+  File "C:\t\ws-e2e\src\t2pw\service\driver_bridge.py", line 302 in run_pathway
+  File "C:\t\ws-e2e\src\t2pw\web\worker.py", line 333 in _child_main
+  File "C:\t\ws-e2e\src\t2pw\web\worker.py", line 355 in main
+  File "C:\t\ws-e2e\src\t2pw\web\worker.py", line 369 in <module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 198 in _run_module_as_main
+Timeout (0:05:00)!
+Thread 0x000e4970 (most recent call first):
+  File "C:\Python313\Lib\ssl.py", line 1140 in read
+  File "C:\Python313\Lib\ssl.py", line 1285 in recv
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpcore2\_backends\sync.py", line 127 in read
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpcore2\_sync\http11.py", line 200 in _receive_event
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpcore2\_sync\http11.py", line 188 in _receive_response_body
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpcore2\_sync\http11.py", line 312 in __iter__
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpcore2\_sync\connection_pool.py", line 426 in __iter__
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpx2\_transports\default.py", line 124 in __iter__
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpx2\_client.py", line 143 in __iter__
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpx2\_models.py", line 947 in iter_raw
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpx2\_models.py", line 892 in iter_bytes
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpx2\_models.py", line 876 in read
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpx2\_client.py", line 988 in send
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\_base_client.py", line 1009 in _send_request
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\_client.py", line 539 in _send_with_auth_retry
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\_client.py", line 560 in _send_request
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\_base_client.py", line 1086 in request
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\_base_client.py", line 1381 in post
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\resources\chat\completions\completions.py", line 1296 in create
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\_utils\_utils.py", line 298 in wrapper
+  File "C:\t\ws-e2e\src\t2pw\llm\client.py", line 747 in chat_detailed
+  File "C:\t\ws-e2e\src\t2pw\pipeline\pipeline.py", line 3855 in _issue
+  File "C:\t\ws-e2e\src\t2pw\pipeline\pipeline.py", line 3965 in _run_json_stage
+  File "C:\t\ws-e2e\src\t2pw\pipeline\pipeline.py", line 408 in run_inference_pipeline
+  File "C:\t\ws-e2e\src\t2pw\pipeline\pipeline.py", line 502 in run_stage_two_with_chunking
+  File "C:\t\ws-e2e\src\t2pw\pipeline\pipeline.py", line 718 in run_stage_two_with_feedback_loop
+  File "C:\t\ws-e2e\src\t2pw\app\streamlit_app.py", line 2378 in <module>
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 837 in code_to_exec
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\exec_code.py", line 136 in exec_func_with_error_handling
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 862 in _run_script
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 417 in _run_script_thread
+  File "C:\Python313\Lib\threading.py", line 994 in run
+  File "C:\Python313\Lib\threading.py", line 1043 in _bootstrap_inner
+  File "C:\Python313\Lib\threading.py", line 1014 in _bootstrap
+
+Thread 0x000e5d9c (most recent call first):
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\testing\v1\local_script_runner.py", line 195 in require_widgets_deltas
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\testing\v1\local_script_runner.py", line 158 in run
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\testing\v1\app_test.py", line 407 in _run
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\testing\v1\element_tree.py", line 2531 in run
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\testing\v1\app_test.py", line 463 in run
+  File "C:\t\ws-e2e\src\t2pw\batch\driver.py", line 2400 in _run_app
+  File "C:\t\ws-e2e\src\t2pw\batch\driver.py", line 2819 in _drive
+  File "C:\t\ws-e2e\src\t2pw\batch\driver.py", line 2364 in run_one
+  File "C:\t\ws-e2e\src\t2pw\service\driver_bridge.py", line 302 in run_pathway
+  File "C:\t\ws-e2e\src\t2pw\web\worker.py", line 333 in _child_main
+  File "C:\t\ws-e2e\src\t2pw\web\worker.py", line 355 in main
+  File "C:\t\ws-e2e\src\t2pw\web\worker.py", line 369 in <module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 198 in _run_module_as_main
+Timeout (0:05:00)!
+Thread 0x000e8848 (most recent call first):
+  File "C:\Python313\Lib\ssl.py", line 1140 in read
+  File "C:\Python313\Lib\ssl.py", line 1285 in recv
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpcore2\_backends\sync.py", line 127 in read
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpcore2\_sync\http11.py", line 200 in _receive_event
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpcore2\_sync\http11.py", line 188 in _receive_response_body
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpcore2\_sync\http11.py", line 312 in __iter__
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpcore2\_sync\connection_pool.py", line 426 in __iter__
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpx2\_transports\default.py", line 124 in __iter__
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpx2\_client.py", line 143 in __iter__
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpx2\_models.py", line 947 in iter_raw
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpx2\_models.py", line 892 in iter_bytes
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpx2\_models.py", line 876 in read
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpx2\_client.py", line 988 in send
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\_base_client.py", line 1009 in _send_request
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\_client.py", line 539 in _send_with_auth_retry
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\_client.py", line 560 in _send_request
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\_base_client.py", line 1086 in request
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\_base_client.py", line 1381 in post
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\resources\chat\completions\completions.py", line 1296 in create
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\_utils\_utils.py", line 298 in wrapper
+  File "C:\t\ws-e2e\src\t2pw\llm\client.py", line 747 in chat_detailed
+  File "C:\t\ws-e2e\src\t2pw\llm\client.py", line 654 in chat
+  File "C:\t\ws-e2e\src\t2pw\curation\audit_json_llm.py", line 1440 in audit_payload
+  File "C:\t\ws-e2e\src\t2pw\curation\audit_json_llm.py", line 1536 in run_audit
+  File "C:\t\ws-e2e\src\t2pw\service\postpipeline.py", line 996 in run_post_pipeline_sbml_artifacts
+  File "C:\t\ws-e2e\src\t2pw\app\streamlit_app.py", line 3501 in <module>
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 837 in code_to_exec
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\exec_code.py", line 136 in exec_func_with_error_handling
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 862 in _run_script
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 417 in _run_script_thread
+  File "C:\Python313\Lib\threading.py", line 994 in run
+  File "C:\Python313\Lib\threading.py", line 1043 in _bootstrap_inner
+  File "C:\Python313\Lib\threading.py", line 1014 in _bootstrap
+
+Thread 0x000e5d9c (most recent call first):
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\testing\v1\local_script_runner.py", line 195 in require_widgets_deltas
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\testing\v1\local_script_runner.py", line 158 in run
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\testing\v1\app_test.py", line 407 in _run
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\testing\v1\element_tree.py", line 2531 in run
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\testing\v1\app_test.py", line 463 in run
+  File "C:\t\ws-e2e\src\t2pw\batch\driver.py", line 2400 in _run_app
+  File "C:\t\ws-e2e\src\t2pw\batch\driver.py", line 2921 in _drive
+  File "C:\t\ws-e2e\src\t2pw\batch\driver.py", line 2364 in run_one
+  File "C:\t\ws-e2e\src\t2pw\service\driver_bridge.py", line 302 in run_pathway
+  File "C:\t\ws-e2e\src\t2pw\web\worker.py", line 333 in _child_main
+  File "C:\t\ws-e2e\src\t2pw\web\worker.py", line 355 in main
+  File "C:\t\ws-e2e\src\t2pw\web\worker.py", line 369 in <module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 198 in _run_module_as_main
+Timeout (0:05:00)!
+Thread 0x000e8848 (most recent call first):
+  File "C:\Python313\Lib\ssl.py", line 1140 in read
+  File "C:\Python313\Lib\ssl.py", line 1285 in recv
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpcore2\_backends\sync.py", line 127 in read
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpcore2\_sync\http11.py", line 200 in _receive_event
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpcore2\_sync\http11.py", line 188 in _receive_response_body
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpcore2\_sync\http11.py", line 312 in __iter__
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpcore2\_sync\connection_pool.py", line 426 in __iter__
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpx2\_transports\default.py", line 124 in __iter__
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpx2\_client.py", line 143 in __iter__
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpx2\_models.py", line 947 in iter_raw
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpx2\_models.py", line 892 in iter_bytes
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpx2\_models.py", line 876 in read
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpx2\_client.py", line 988 in send
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\_base_client.py", line 1009 in _send_request
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\_client.py", line 539 in _send_with_auth_retry
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\_client.py", line 560 in _send_request
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\_base_client.py", line 1086 in request
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\_base_client.py", line 1381 in post
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\resources\chat\completions\completions.py", line 1296 in create
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\_utils\_utils.py", line 298 in wrapper
+  File "C:\t\ws-e2e\src\t2pw\llm\client.py", line 962 in _call_once
+  File "C:\t\ws-e2e\src\t2pw\llm\client.py", line 1053 in chat_with_tools
+  File "C:\t\ws-e2e\src\t2pw\curation\pathway_curator.py", line 316 in run_pathway_curator
+  File "C:\t\ws-e2e\src\t2pw\service\postpipeline.py", line 1370 in run_post_pipeline_sbml_artifacts
+  File "C:\t\ws-e2e\src\t2pw\app\streamlit_app.py", line 3501 in <module>
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 837 in code_to_exec
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\exec_code.py", line 136 in exec_func_with_error_handling
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 862 in _run_script
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 417 in _run_script_thread
+  File "C:\Python313\Lib\threading.py", line 994 in run
+  File "C:\Python313\Lib\threading.py", line 1043 in _bootstrap_inner
+  File "C:\Python313\Lib\threading.py", line 1014 in _bootstrap
+
+Thread 0x000e5d9c (most recent call first):
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\testing\v1\local_script_runner.py", line 195 in require_widgets_deltas
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\testing\v1\local_script_runner.py", line 158 in run
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\testing\v1\app_test.py", line 407 in _run
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\testing\v1\element_tree.py", line 2531 in run
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\testing\v1\app_test.py", line 463 in run
+  File "C:\t\ws-e2e\src\t2pw\batch\driver.py", line 2400 in _run_app
+  File "C:\t\ws-e2e\src\t2pw\batch\driver.py", line 2921 in _drive
+  File "C:\t\ws-e2e\src\t2pw\batch\driver.py", line 2364 in run_one
+  File "C:\t\ws-e2e\src\t2pw\service\driver_bridge.py", line 302 in run_pathway
+  File "C:\t\ws-e2e\src\t2pw\web\worker.py", line 333 in _child_main
+  File "C:\t\ws-e2e\src\t2pw\web\worker.py", line 355 in main
+  File "C:\t\ws-e2e\src\t2pw\web\worker.py", line 369 in <module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 198 in _run_module_as_main
+Timeout (0:05:00)!
+Thread 0x000e8848 (most recent call first):
+  File "C:\Python313\Lib\ssl.py", line 1140 in read
+  File "C:\Python313\Lib\ssl.py", line 1285 in recv
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpcore2\_backends\sync.py", line 127 in read
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpcore2\_sync\http11.py", line 200 in _receive_event
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpcore2\_sync\http11.py", line 188 in _receive_response_body
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpcore2\_sync\http11.py", line 312 in __iter__
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpcore2\_sync\connection_pool.py", line 426 in __iter__
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpx2\_transports\default.py", line 124 in __iter__
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpx2\_client.py", line 143 in __iter__
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpx2\_models.py", line 947 in iter_raw
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpx2\_models.py", line 892 in iter_bytes
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpx2\_models.py", line 876 in read
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpx2\_client.py", line 988 in send
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\_base_client.py", line 1009 in _send_request
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\_client.py", line 539 in _send_with_auth_retry
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\_client.py", line 560 in _send_request
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\_base_client.py", line 1086 in request
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\_base_client.py", line 1381 in post
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\resources\chat\completions\completions.py", line 1296 in create
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\_utils\_utils.py", line 298 in wrapper
+  File "C:\t\ws-e2e\src\t2pw\llm\client.py", line 962 in _call_once
+  File "C:\t\ws-e2e\src\t2pw\llm\client.py", line 1053 in chat_with_tools
+  File "C:\t\ws-e2e\src\t2pw\curation\pathway_curator.py", line 316 in run_pathway_curator
+  File "C:\t\ws-e2e\src\t2pw\service\postpipeline.py", line 1370 in run_post_pipeline_sbml_artifacts
+  File "C:\t\ws-e2e\src\t2pw\app\streamlit_app.py", line 3501 in <module>
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 837 in code_to_exec
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\exec_code.py", line 136 in exec_func_with_error_handling
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 862 in _run_script
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 417 in _run_script_thread
+  File "C:\Python313\Lib\threading.py", line 994 in run
+  File "C:\Python313\Lib\threading.py", line 1043 in _bootstrap_inner
+  File "C:\Python313\Lib\threading.py", line 1014 in _bootstrap
+
+Thread 0x000e5d9c (most recent call first):
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\testing\v1\local_script_runner.py", line 195 in require_widgets_deltas
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\testing\v1\local_script_runner.py", line 158 in run
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\testing\v1\app_test.py", line 407 in _run
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\testing\v1\element_tree.py", line 2531 in run
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\testing\v1\app_test.py", line 463 in run
+  File "C:\t\ws-e2e\src\t2pw\batch\driver.py", line 2400 in _run_app
+  File "C:\t\ws-e2e\src\t2pw\batch\driver.py", line 2921 in _drive
+  File "C:\t\ws-e2e\src\t2pw\batch\driver.py", line 2364 in run_one
+  File "C:\t\ws-e2e\src\t2pw\service\driver_bridge.py", line 302 in run_pathway
+  File "C:\t\ws-e2e\src\t2pw\web\worker.py", line 333 in _child_main
+  File "C:\t\ws-e2e\src\t2pw\web\worker.py", line 355 in main
+  File "C:\t\ws-e2e\src\t2pw\web\worker.py", line 369 in <module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 198 in _run_module_as_main
+Timeout (0:05:00)!
+Thread 0x000e8848 (most recent call first):
+  File "C:\Python313\Lib\ssl.py", line 1140 in read
+  File "C:\Python313\Lib\ssl.py", line 1285 in recv
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpcore2\_backends\sync.py", line 127 in read
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpcore2\_sync\http11.py", line 200 in _receive_event
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpcore2\_sync\http11.py", line 188 in _receive_response_body
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpcore2\_sync\http11.py", line 312 in __iter__
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpcore2\_sync\connection_pool.py", line 426 in __iter__
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpx2\_transports\default.py", line 124 in __iter__
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpx2\_client.py", line 143 in __iter__
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpx2\_models.py", line 947 in iter_raw
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpx2\_models.py", line 892 in iter_bytes
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpx2\_models.py", line 876 in read
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\httpx2\_client.py", line 988 in send
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\_base_client.py", line 1009 in _send_request
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\_client.py", line 539 in _send_with_auth_retry
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\_client.py", line 560 in _send_request
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\_base_client.py", line 1086 in request
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\_base_client.py", line 1381 in post
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\resources\chat\completions\completions.py", line 1296 in create
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\_utils\_utils.py", line 298 in wrapper
+  File "C:\t\ws-e2e\src\t2pw\llm\client.py", line 962 in _call_once
+  File "C:\t\ws-e2e\src\t2pw\llm\client.py", line 1053 in chat_with_tools
+  File "C:\t\ws-e2e\src\t2pw\curation\pathway_curator.py", line 316 in run_pathway_curator
+  File "C:\t\ws-e2e\src\t2pw\service\postpipeline.py", line 1370 in run_post_pipeline_sbml_artifacts
+  File "C:\t\ws-e2e\src\t2pw\app\streamlit_app.py", line 3501 in <module>
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 837 in code_to_exec
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\exec_code.py", line 136 in exec_func_with_error_handling
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 862 in _run_script
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 417 in _run_script_thread
+  File "C:\Python313\Lib\threading.py", line 994 in run
+  File "C:\Python313\Lib\threading.py", line 1043 in _bootstrap_inner
+  File "C:\Python313\Lib\threading.py", line 1014 in _bootstrap
+
+Thread 0x000e5d9c (most recent call first):
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\testing\v1\local_script_runner.py", line 195 in require_widgets_deltas
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\testing\v1\local_script_runner.py", line 158 in run
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\testing\v1\app_test.py", line 407 in _run
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\testing\v1\element_tree.py", line 2531 in run
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\testing\v1\app_test.py", line 463 in run
+  File "C:\t\ws-e2e\src\t2pw\batch\driver.py", line 2400 in _run_app
+  File "C:\t\ws-e2e\src\t2pw\batch\driver.py", line 2921 in _drive
+  File "C:\t\ws-e2e\src\t2pw\batch\driver.py", line 2364 in run_one
+  File "C:\t\ws-e2e\src\t2pw\service\driver_bridge.py", line 302 in run_pathway
+  File "C:\t\ws-e2e\src\t2pw\web\worker.py", line 333 in _child_main
+  File "C:\t\ws-e2e\src\t2pw\web\worker.py", line 355 in main
+  File "C:\t\ws-e2e\src\t2pw\web\worker.py", line 369 in <module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 198 in _run_module_as_main
+Timeout (0:05:00)!
+Thread 0x000e8848 (most recent call first):
+  File "C:\Python313\Lib\ssl.py", line 1138 in read
+  File "C:\Python313\Lib\ssl.py", line 1304 in recv_into
+  File "C:\Python313\Lib\socket.py", line 719 in readinto
+  File "C:\Python313\Lib\http\client.py", line 292 in _read_status
+  File "C:\Python313\Lib\http\client.py", line 331 in begin
+  File "C:\Python313\Lib\http\client.py", line 1430 in getresponse
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\urllib3\connection.py", line 571 in getresponse
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\urllib3\connectionpool.py", line 534 in _make_request
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\urllib3\connectionpool.py", line 788 in urlopen
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\requests\adapters.py", line 696 in send
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\requests\sessions.py", line 784 in send
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\requests\sessions.py", line 651 in request
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\requests\sessions.py", line 671 in get
+  File "C:\t\ws-e2e\src\t2pw\mapping\map_ids.py", line 787 in get
+  File "C:\t\ws-e2e\src\t2pw\mapping\map_ids.py", line 10609 in _uniprot_reviewed_hits
+  File "C:\t\ws-e2e\src\t2pw\mapping\map_ids.py", line 10796 in _uniprot_family_members
+  File "C:\t\ws-e2e\src\t2pw\mapping\map_ids.py", line 10853 in _apply_family_complexes
+  File "C:\t\ws-e2e\src\t2pw\mapping\map_ids.py", line 12314 in map_payload
+  File "C:\t\ws-e2e\src\t2pw\service\postpipeline.py", line 1386 in run_post_pipeline_sbml_artifacts
+  File "C:\t\ws-e2e\src\t2pw\app\streamlit_app.py", line 3501 in <module>
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 837 in code_to_exec
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\exec_code.py", line 136 in exec_func_with_error_handling
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 862 in _run_script
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 417 in _run_script_thread
+  File "C:\Python313\Lib\threading.py", line 994 in run
+  File "C:\Python313\Lib\threading.py", line 1043 in _bootstrap_inner
+  File "C:\Python313\Lib\threading.py", line 1014 in _bootstrap
+
+Thread 0x000e5d9c (most recent call first):
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\testing\v1\local_script_runner.py", line 195 in require_widgets_deltas
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\testing\v1\local_script_runner.py", line 158 in run
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\testing\v1\app_test.py", line 407 in _run
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\testing\v1\element_tree.py", line 2531 in run
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\testing\v1\app_test.py", line 463 in run
+  File "C:\t\ws-e2e\src\t2pw\batch\driver.py", line 2400 in _run_app
+  File "C:\t\ws-e2e\src\t2pw\batch\driver.py", line 2921 in _drive
+  File "C:\t\ws-e2e\src\t2pw\batch\driver.py", line 2364 in run_one
+  File "C:\t\ws-e2e\src\t2pw\service\driver_bridge.py", line 302 in run_pathway
+  File "C:\t\ws-e2e\src\t2pw\web\worker.py", line 333 in _child_main
+  File "C:\t\ws-e2e\src\t2pw\web\worker.py", line 355 in main
+  File "C:\t\ws-e2e\src\t2pw\web\worker.py", line 369 in <module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 198 in _run_module_as_main

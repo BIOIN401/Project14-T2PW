@@ -1,0 +1,103 @@
+{
+  "label": "E2E-2-live",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/e2e2/drive.py"
+  ],
+  "cwd": "C:/t/ws-e2e",
+  "started_at": "2026-11-06T02:51:07+00:00",
+  "finished_at": "2026-11-06T03:26:30+00:00",
+  "duration_seconds": 2122.5192085000017,
+  "timeout_seconds": 7200.0,
+  "root_pid": 940248,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 941444,
+      "name": "python.exe",
+      "ppid": 940248
+    },
+    {
+      "pid": 935872,
+      "name": "python.exe",
+      "ppid": 941484
+    },
+    {
+      "pid": 941484,
+      "name": "python.exe",
+      "ppid": 941444
+    }
+  ],
+  "descendants_terminated": [
+    935872,
+    941444,
+    941484
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 442728,
+      "name": "python.exe"
+    },
+    {
+      "pid": 460520,
+      "name": "python.exe"
+    },
+    {
+      "pid": 921044,
+      "name": "python.exe"
+    },
+    {
+      "pid": 922176,
+      "name": "python.exe"
+    },
+    {
+      "pid": 940044,
+      "name": "python.exe"
+    },
+    {
+      "pid": 941404,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/e2e2/report/E2E-2-wrapper.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "7229e8993a174ec74440bd2047ab6d5570f6fdf3",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "E2E-2",
+    "token": "E2E-2:940044:dd02427eeb55d502",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

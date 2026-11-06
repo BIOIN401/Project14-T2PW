@@ -1,0 +1,1717 @@
+[
+  {
+    "draws_requested": 3,
+    "draws_succeeded": 3,
+    "draws_failed": 0,
+    "paper_lexicon": {
+      "paper_chars": 35999,
+      "abbreviation_pairs": 7,
+      "ambiguous_abbreviations": {}
+    },
+    "names_rewritten": [],
+    "typo_snapped": [],
+    "buckets": {
+      "/compartments": {
+        "merged": 9,
+        "rows_per_draw": [
+          3,
+          4,
+          4
+        ],
+        "first_seen_in_draw": [
+          3,
+          3,
+          3
+        ],
+        "unique_to_one_draw": 7,
+        "in_every_successful_draw": 0,
+        "rows": [
+          {
+            "key": "apical membrane",
+            "name": "apical membrane",
+            "draws": [
+              1,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "apical membrane",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "synaptic vesicles",
+            "name": "synaptic vesicles",
+            "draws": [
+              1,
+              2
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "synaptic_vesicles",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "afferent nerve fibers",
+            "name": "afferent nerve fibers",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "extracellular",
+            "name": "extracellular",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "cytosol",
+            "name": "cytosol",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "plasma membrane",
+            "name": "plasma_membrane",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "saliva",
+            "name": "saliva",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "synaptic vesicle",
+            "name": "synaptic vesicle",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "afferent nerve fiber",
+            "name": "afferent nerve fiber",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          }
+        ]
+      },
+      "/entities/cell_types": {
+        "merged": 3,
+        "rows_per_draw": [
+          1,
+          1,
+          2
+        ],
+        "first_seen_in_draw": [
+          1,
+          1,
+          1
+        ],
+        "unique_to_one_draw": 2,
+        "in_every_successful_draw": 0,
+        "rows": [
+          {
+            "key": "type iii cells",
+            "name": "Type III cells",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "type iii taste cell",
+            "name": "Type III taste cell",
+            "draws": [
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "Type III taste cell",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "afferent nerve fiber",
+            "name": "afferent nerve fiber",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          }
+        ]
+      },
+      "/entities/species": {
+        "merged": 1,
+        "rows_per_draw": [
+          1,
+          1,
+          1
+        ],
+        "first_seen_in_draw": [
+          1,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 1,
+        "rows": [
+          {
+            "key": "mus musculus",
+            "name": "Mus musculus",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "Mus musculus",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "Mus musculus",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          }
+        ]
+      },
+      "/entities/tissues": {
+        "merged": 1,
+        "rows_per_draw": [
+          1,
+          1,
+          1
+        ],
+        "first_seen_in_draw": [
+          1,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 1,
+        "rows": [
+          {
+            "key": "taste bud",
+            "name": "taste bud",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "taste bud",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "taste bud",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          }
+        ]
+      },
+      "/entities/subcellular_locations": {
+        "merged": 6,
+        "rows_per_draw": [
+          3,
+          4,
+          4
+        ],
+        "first_seen_in_draw": [
+          3,
+          2,
+          1
+        ],
+        "unique_to_one_draw": 3,
+        "in_every_successful_draw": 2,
+        "rows": [
+          {
+            "key": "apical membrane",
+            "name": "apical membrane",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "apical membrane",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "apical ion channel"
+              },
+              {
+                "draw": 3,
+                "name": "apical membrane",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "apical ion channel"
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "synaptic vesicles",
+            "name": "synaptic vesicles",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "synaptic vesicles",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "release of synaptic vesicles"
+              },
+              {
+                "draw": 3,
+                "name": "synaptic vesicles",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "release of synaptic vesicles"
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "afferent nerve fibers",
+            "name": "afferent nerve fibers",
+            "draws": [
+              1,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "afferent nerve fibers",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "activate the afferent nerves"
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "cytosol",
+            "name": "cytosol",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "extracellular",
+            "name": "extracellular",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "saliva",
+            "name": "saliva",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          }
+        ]
+      },
+      "/entities/compounds": {
+        "merged": 6,
+        "rows_per_draw": [
+          4,
+          4,
+          3
+        ],
+        "first_seen_in_draw": [
+          4,
+          1,
+          1
+        ],
+        "unique_to_one_draw": 3,
+        "in_every_successful_draw": 2,
+        "rows": [
+          {
+            "key": "h",
+            "name": "H+",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "H+",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "H+",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "5 ht",
+            "name": "5-HT",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "atp",
+            "name": "ATP",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "ATP",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "ATP",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "ca",
+            "name": "Ca++",
+            "draws": [
+              1,
+              2
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "Ca++",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "serotonin",
+            "name": "serotonin",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "serotonin 5 ht",
+            "name": "serotonin (5-HT)",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          }
+        ]
+      },
+      "/entities/element_collections": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/entities/nucleic_acids": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/entities/proteins": {
+        "merged": 11,
+        "rows_per_draw": [
+          7,
+          7,
+          8
+        ],
+        "first_seen_in_draw": [
+          7,
+          1,
+          3
+        ],
+        "unique_to_one_draw": 5,
+        "in_every_successful_draw": 5,
+        "rows": [
+          {
+            "key": "otop1",
+            "name": "OTOP1",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "OTOP1",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "OTOP1",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "pkd2l1",
+            "name": "PKD2L1",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "PKD2L1",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "PKD2L1",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "kir2 1",
+            "name": "Kir2.1",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "Kir2.1",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "Kir2.1",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "scn2a",
+            "name": "SCN2A",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "SCN2A",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "SCN2A",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "voltage gated ca channels",
+            "name": "voltage-gated Ca++ channels",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "5 ht3 receptor",
+            "name": "5-HT3 receptor",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "5-HT3 receptor",
+                "bridged_by": [
+                  "exact"
+                ]
+              },
+              {
+                "draw": 3,
+                "name": "5-HT3 receptor",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "p2x receptors",
+            "name": "P2X receptors",
+            "draws": [
+              1,
+              2
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "P2X receptors",
+                "bridged_by": [
+                  "exact"
+                ]
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "voltage gated calcium channels",
+            "name": "voltage-gated calcium channels",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "voltage gated calcium channel",
+            "name": "voltage-gated calcium channel",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "p2x receptor",
+            "name": "P2X receptor",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "snare proteins",
+            "name": "SNARE proteins",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          }
+        ]
+      },
+      "/entities/protein_complexes": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/biological_states": {
+        "merged": 10,
+        "rows_per_draw": [
+          4,
+          6,
+          5
+        ],
+        "first_seen_in_draw": [
+          4,
+          4,
+          2
+        ],
+        "unique_to_one_draw": 7,
+        "in_every_successful_draw": 2,
+        "rows": [
+          {
+            "key": "type iii taste cell",
+            "name": "Type III taste cell",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "Type III taste cell",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "sour detection depended on cells expressing PKD2L1"
+              },
+              {
+                "draw": 3,
+                "name": "Type III taste cell",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "sour detection depended on cells expressing PKD2L1—cells subsequently identified as a subset of Type III cells"
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "type iii cell apical membrane",
+            "name": "Type III cell apical membrane",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "taste bud lumen",
+            "name": "taste bud lumen",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "afferent nerve fiber",
+            "name": "afferent nerve fiber",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "afferent nerve fiber",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "afferent nerve fibers"
+              },
+              {
+                "draw": 3,
+                "name": "afferent nerve fiber",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "activate the afferent nerves"
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "extracellular space",
+            "name": "extracellular space",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "type iii taste cell cytosol",
+            "name": "Type III taste cell cytosol",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "type iii taste cell apical membrane",
+            "name": "Type III taste cell apical membrane",
+            "draws": [
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "Type III taste cell apical membrane",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "apical ion channel"
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "type iii taste cell synaptic vesicles",
+            "name": "Type III taste cell synaptic vesicles",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "saliva",
+            "name": "saliva",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "synaptic vesicle",
+            "name": "synaptic vesicle",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          }
+        ]
+      },
+      "/element_locations/compound_locations": {
+        "merged": 12,
+        "rows_per_draw": [
+          3,
+          7,
+          3
+        ],
+        "first_seen_in_draw": [
+          3,
+          7,
+          2
+        ],
+        "unique_to_one_draw": 11,
+        "in_every_successful_draw": 0,
+        "rows": [
+          {
+            "key": "h | type iii cell apical membrane",
+            "name": "",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "h | type iii taste cell",
+            "name": "",
+            "draws": [
+              1,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "entering H+ ions"
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "5 ht | type iii taste cell",
+            "name": "",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "h | extracellular space",
+            "name": "",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "h | type iii taste cell cytosol",
+            "name": "",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "atp | extracellular space",
+            "name": "",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "serotonin | type iii taste cell synaptic vesicles",
+            "name": "",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "serotonin | extracellular space",
+            "name": "",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "ca | extracellular space",
+            "name": "",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "ca | type iii taste cell cytosol",
+            "name": "",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "h | saliva",
+            "name": "",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "serotonin 5 ht | synaptic vesicle",
+            "name": "",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          }
+        ]
+      },
+      "/element_locations/element_collection_locations": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/element_locations/nucleic_acid_locations": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/element_locations/protein_locations": {
+        "merged": 12,
+        "rows_per_draw": [
+          7,
+          7,
+          8
+        ],
+        "first_seen_in_draw": [
+          7,
+          2,
+          3
+        ],
+        "unique_to_one_draw": 6,
+        "in_every_successful_draw": 4,
+        "rows": [
+          {
+            "key": "otop1 | type iii cell apical membrane",
+            "name": "",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "pkd2l1 | type iii taste cell",
+            "name": "",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "cells expressing PKD2L1"
+              },
+              {
+                "draw": 3,
+                "name": "",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "cells expressing PKD2L1"
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "kir2 1 | type iii taste cell",
+            "name": "",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "block Kir2.1 K+ channels"
+              },
+              {
+                "draw": 3,
+                "name": "",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "block Kir2.1 K+ channels"
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "scn2a | type iii taste cell",
+            "name": "",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "voltage-gated Na+ channels (SCN2A)"
+              },
+              {
+                "draw": 3,
+                "name": "",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "voltage-gated Na+ channels (SCN2A)"
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "voltage gated ca channels | type iii taste cell",
+            "name": "",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "5 ht3 receptor | afferent nerve fiber",
+            "name": "",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "5-HT3 receptors"
+              },
+              {
+                "draw": 3,
+                "name": "",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "5-HT acting on neural 5-HT3 receptors"
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "p2x receptors | afferent nerve fiber",
+            "name": "",
+            "draws": [
+              1,
+              2
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "P2X receptors"
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "otop1 | type iii taste cell apical membrane",
+            "name": "",
+            "draws": [
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 3,
+                "name": "",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "apical ion channel subsequently identified as OTOP1"
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "voltage gated calcium channels | type iii taste cell",
+            "name": "",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "voltage gated calcium channel | type iii taste cell",
+            "name": "",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "p2x receptor | afferent nerve fiber",
+            "name": "",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "snare proteins | type iii taste cell",
+            "name": "",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          }
+        ]
+      },
+      "/processes/reactions": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/processes/reaction_coupled_transports": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/processes/transports": {
+        "merged": 6,
+        "rows_per_draw": [
+          2,
+          3,
+          1
+        ],
+        "first_seen_in_draw": [
+          2,
+          3,
+          1
+        ],
+        "unique_to_one_draw": 6,
+        "in_every_successful_draw": 0,
+        "rows": [
+          {
+            "key": "h | taste bud lumen | type iii taste cell",
+            "name": "H+ permeation through OTOP1",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "5 ht | type iii taste cell | afferent nerve fiber",
+            "name": "5-HT release from Type III cells",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "h | extracellular space | type iii taste cell cytosol",
+            "name": "H+ influx via OTOP1",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "ca | extracellular space | type iii taste cell cytosol",
+            "name": "Ca++ influx via voltage-gated calcium channels",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "serotonin | type iii taste cell synaptic vesicles | extracellular space",
+            "name": "5-HT release from Type III cell",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "h | saliva | type iii taste cell",
+            "name": "H+ influx through OTOP1",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          }
+        ]
+      },
+      "/processes/interactions": {
+        "merged": 6,
+        "rows_per_draw": [
+          3,
+          3,
+          3
+        ],
+        "first_seen_in_draw": [
+          3,
+          1,
+          2
+        ],
+        "unique_to_one_draw": 4,
+        "in_every_successful_draw": 1,
+        "rows": [
+          {
+            "key": "h | Inhibition | kir2 1",
+            "name": "H+ inhibition of Kir2.1",
+            "draws": [
+              1,
+              2,
+              3
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "H+ inhibits Kir2.1",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "block Kir2.1 K+ channels"
+              },
+              {
+                "draw": 3,
+                "name": "H+ inhibits Kir2.1",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "The entering H+ ions not only directly depolarize the taste cells but also block Kir2.1 K+ channels"
+              }
+            ],
+            "support": "3/3"
+          },
+          {
+            "key": "5 ht | Activation | 5 ht3 receptor",
+            "name": "5-HT activation of 5-HT3 receptor",
+            "draws": [
+              1
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "atp | Activation | p2x receptors",
+            "name": "ATP activation of P2X receptors",
+            "draws": [
+              1,
+              2
+            ],
+            "merges": [
+              {
+                "draw": 2,
+                "name": "ATP activates P2X receptors",
+                "bridged_by": [
+                  "exact"
+                ],
+                "evidence": "purinergic signaling to P2X receptors"
+              }
+            ],
+            "support": "2/3"
+          },
+          {
+            "key": "serotonin | Activation | 5 ht3 receptor",
+            "name": "5-HT activates 5-HT3 receptor",
+            "draws": [
+              2
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "serotonin 5 ht | Activation | 5 ht3 receptor",
+            "name": "5-HT activates 5-HT3 receptor",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          },
+          {
+            "key": "atp | Activation | p2x receptor",
+            "name": "ATP activates P2X receptor",
+            "draws": [
+              3
+            ],
+            "support": "1/3",
+            "review_required": "found by one draw only"
+          }
+        ]
+      },
+      "/visualizations/bounds": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/visualizations/bound_visualizations": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/visualizations/protein_complex_visualizations": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/visualizations/reaction_visualizations": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/visualizations/reaction_coupled_transport_visualizations": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/visualizations/transport_visualizations": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/visualizations/interaction_visualizations": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/visualizations/sub_pathway_visualizations": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/visualizations/edges": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/visualizations/vacuous/vacuous_compound_visualizations": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/visualizations/vacuous/vacuous_nucleic_acid_visualizations": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/visualizations/vacuous/vacuous_element_collection_visualizations": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      },
+      "/visualizations/vacuous/vacuous_protein_visualizations": {
+        "merged": 0,
+        "rows_per_draw": [
+          0,
+          0,
+          0
+        ],
+        "first_seen_in_draw": [
+          0,
+          0,
+          0
+        ],
+        "unique_to_one_draw": 0,
+        "in_every_successful_draw": 0,
+        "rows": []
+      }
+    },
+    "failed_draws": []
+  }
+]

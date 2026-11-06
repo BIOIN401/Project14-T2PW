@@ -1,0 +1,283 @@
+{
+  "schema_version": 1,
+  "requested_core_terms": [
+    "H+",
+    "ATP",
+    "serotonin (5-HT)",
+    "OTOP1",
+    "PKD2L1",
+    "Kir2.1",
+    "SCN2A",
+    "voltage-gated calcium channels",
+    "5-HT3 receptor (Htr3a)",
+    "P2X receptors"
+  ],
+  "requested_core_declared": true,
+  "requested_context": {
+    "pathway_name": "sour taste transduction",
+    "likely_organism": "Mus musculus",
+    "key_compounds": [
+      "H+",
+      "ATP",
+      "serotonin (5-HT)"
+    ],
+    "key_proteins": [
+      "OTOP1",
+      "PKD2L1",
+      "Kir2.1",
+      "SCN2A",
+      "voltage-gated calcium channels",
+      "5-HT3 receptor (Htr3a)",
+      "P2X receptors"
+    ],
+    "likely_compartments": [
+      "taste bud",
+      "Type III taste cell",
+      "apical membrane",
+      "synaptic vesicles",
+      "afferent nerve fibers"
+    ],
+    "main_subprocesses": [
+      "proton permeation via OTOP1",
+      "Kir2.1 channel block",
+      "depolarization",
+      "action potential generation via SCN2A",
+      "voltage-gated calcium channel activation",
+      "synaptic vesicle exocytosis",
+      "serotonin release",
+      "activation of 5-HT3 receptors on nerves",
+      "purinergic signaling via ATP to P2X receptors"
+    ],
+    "relevant_sections": [
+      "abstract",
+      "introduction",
+      "Sour section",
+      "Peripheral neurotransmission",
+      "Tuning specificity",
+      "Table 1",
+      "Figure 2"
+    ],
+    "pathway_relevance_score": 0.5,
+    "document_type": "multi_example_review",
+    "context_type": "multi_example_review",
+    "scope_status": "targeted",
+    "scope_clarity_score": 1.0,
+    "selected_example": "sour taste transduction in Mus musculus",
+    "candidate_examples": [
+      {
+        "name": "sour taste transduction",
+        "organism": "Mus musculus",
+        "key_compounds": [
+          "H+",
+          "ATP",
+          "serotonin (5-HT)"
+        ],
+        "key_proteins": [
+          "OTOP1",
+          "PKD2L1",
+          "Kir2.1",
+          "SCN2A",
+          "voltage-gated calcium channels",
+          "5-HT3 receptor (Htr3a)",
+          "P2X receptors"
+        ],
+        "main_subprocesses": [
+          "proton permeation via OTOP1",
+          "Kir2.1 channel block",
+          "depolarization",
+          "action potential generation via SCN2A",
+          "voltage-gated calcium channel activation",
+          "synaptic vesicle exocytosis",
+          "serotonin release",
+          "activation of 5-HT3 receptors on nerves",
+          "purinergic signaling via ATP to P2X receptors"
+        ],
+        "evidence": "Sour detection depended on cells expressing PKD2L1... transduction of sour involves permeation of H+ through an apical ion channel subsequently identified as OTOP1."
+      },
+      {
+        "name": "sweet taste transduction",
+        "organism": "Mus musculus",
+        "key_compounds": [
+          "sugars",
+          "sweeteners",
+          "ATP",
+          "glucose"
+        ],
+        "key_proteins": [
+          "T1R2",
+          "T1R3",
+          "TRPM5",
+          "TRPM4",
+          "SCN2A",
+          "SCN3A",
+          "SCN9A",
+          "CALHM1",
+          "CALHM3",
+          "PLCβ2",
+          "IP3R3"
+        ],
+        "main_subprocesses": [
+          "receptor binding to T1R2/T1R3",
+          "G protein activation",
+          "PLC activation",
+          "IP3 production",
+          "Ca2+ release",
+          "TRPM5/4 activation",
+          "depolarization",
+          "action potential",
+          "CALHM1/3 ATP release"
+        ],
+        "evidence": "Type II cells use G protein–coupled receptors for sweet (T1R2 + T1R3) ... to initiate a transduction cascade culminating in the activation of the Ca++-responsive channels TRPM5 and TRPM4."
+      },
+      {
+        "name": "umami taste transduction",
+        "organism": "Mus musculus",
+        "key_compounds": [
+          "glutamate",
+          "ATP"
+        ],
+        "key_proteins": [
+          "T1R1",
+          "T1R3",
+          "TRPM5",
+          "TRPM4",
+          "CALHM1",
+          "CALHM3"
+        ],
+        "main_subprocesses": [
+          "receptor binding to T1R1/T1R3",
+          "same cascade as sweet"
+        ],
+        "evidence": "umami (T1R1 + T1R3)"
+      },
+      {
+        "name": "bitter taste transduction",
+        "organism": "Mus musculus",
+        "key_compounds": [
+          "bitter compounds",
+          "ATP"
+        ],
+        "key_proteins": [
+          "T2Rs",
+          "TRPM5",
+          "TRPM4",
+          "CALHM1",
+          "CALHM3"
+        ],
+        "main_subprocesses": [
+          "receptor binding to T2Rs",
+          "same cascade as sweet"
+        ],
+        "evidence": "bitter (T2Rs)"
+      },
+      {
+        "name": "salty taste transduction",
+        "organism": "Mus musculus",
+        "key_compounds": [
+          "Na+",
+          "Cl-",
+          "amiloride"
+        ],
+        "key_proteins": [
+          "ENaC",
+          "unknown AI channels"
+        ],
+        "main_subprocesses": [
+          "amiloride-sensitive Na+ influx via ENaC",
+          "amiloride-insensitive mechanism involving Type II and Type III cells"
+        ],
+        "evidence": "molecular correlate of AS salt, the epithelial sodium channel (ENaC) and AI salt detection ... relies on a subpopulation of the bitter-responsive Type II cells and a subset of the sour-responsive Type III cells"
+      },
+      {
+        "name": "fat taste transduction",
+        "organism": "Mus musculus",
+        "key_compounds": [
+          "linoleic acid",
+          "fatty acids"
+        ],
+        "key_proteins": [
+          "GPR120",
+          "CD36"
+        ],
+        "main_subprocesses": [
+          "receptor binding to GPR120 or CD36",
+          "activation of F-fibers"
+        ],
+        "evidence": "Potential fat receptors GPR120 and CD36 were identified molecularly in taste buds and population of nerve fibers (F-fibers) ... respond uniquely to a fatty acid, linoleic acid"
+      },
+      {
+        "name": "water taste transduction",
+        "organism": "Mus musculus",
+        "key_compounds": [
+          "water"
+        ],
+        "key_proteins": [
+          "PKD2L1"
+        ],
+        "main_subprocesses": [
+          "unknown mechanism"
+        ],
+        "evidence": "Zocchi et al. suggest that a subset of PKD2L1-expressing cells may convey a specific 'water taste'"
+      }
+    ],
+    "excluded_examples": [
+      "sweet taste transduction",
+      "umami taste transduction",
+      "bitter taste transduction",
+      "salty taste transduction",
+      "fat taste transduction",
+      "water taste transduction"
+    ],
+    "warning": "",
+    "preprocess_status": {
+      "status": "ok",
+      "recovered": false,
+      "detail": "Stage 0 returned a JSON object.",
+      "model": "deepseek/deepseek-v4-flash",
+      "stage": "preprocessor",
+      "attempts": 1,
+      "finish_reason": "stop",
+      "response_status": "ok",
+      "terminal_reason": "",
+      "request_hash": "sha256:37f4cc37feafab45",
+      "response_hash": "sha256:9565a20e9c07b128",
+      "raw_chars": 5230,
+      "attempt_log": [
+        {
+          "attempt": 1,
+          "status": "ok",
+          "content_chars": 5230,
+          "finish_reason": "stop"
+        }
+      ]
+    }
+  },
+  "requested_core_source": "pathway_context",
+  "matched_terms": [
+    "serotonin (5-HT)",
+    "5-HT3 receptor (Htr3a)"
+  ],
+  "unmatched_terms": [
+    "H+",
+    "ATP",
+    "OTOP1",
+    "PKD2L1",
+    "Kir2.1",
+    "SCN2A",
+    "voltage-gated calcium channels",
+    "P2X receptors"
+  ],
+  "coverage_ratio": 0.2,
+  "core_accepted_processes": 5,
+  "auxiliary_accepted_processes": 0,
+  "surviving_processes": 5,
+  "quarantined_processes": 17,
+  "thresholds": {
+    "min_core_processes": 1,
+    "min_core_coverage": 0.5
+  },
+  "minimum_core_satisfied": false,
+  "reasons": [
+    "requested_core_coverage_below_minimum:0.200<0.500"
+  ]
+}
