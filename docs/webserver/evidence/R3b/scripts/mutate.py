@@ -15,11 +15,13 @@ TREE = "C:/t/ws-R3b"
 PY = "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.venv/Scripts/python.exe"
 SVC = Path(TREE, "src/t2pw/service/extraction.py")
 APP = Path(TREE, "src/t2pw/app/streamlit_app.py")
-EV = Path(TREE, "docs/webserver/evidence/R3b/mutation")
+EV = Path(TREE, "docs/webserver/evidence/R3b/mutation-r1")  # review round 1; the first 22 wrote to mutation/
 EV.mkdir(parents=True, exist_ok=True)
 Path("C:/t/wsR3btmp/mut-tmp").mkdir(parents=True, exist_ok=True)  # the --basetemp parent must exist
 NEW = ["tests/test_service_extraction_stage0.py"]
 CLOBBER = ["tests/test_stage0_case_c_retry_clobber.py"]
+TRIPWIRE = ["tests/test_service_extraction.py::test_real_app_warns_and_stops_before_stage_zero"]
+IMPORT = "from t2pw.pipeline import preprocessor as _preprocessor\n"
 
 MUTATIONS = {  # name: (file, old, new, tests)
     "retry-reads-full-text": (SVC, "        text[:_PREPROCESS_RETRY_CHARS],\n", "        text,\n", NEW),
@@ -57,6 +59,19 @@ MUTATIONS = {  # name: (file, old, new, tests)
                               "        state={},\n        reporter=StreamlitReporter(st),\n        preprocess_fn=preprocess,\n", NEW),
     "app-shim-ignores-app-preprocess": (APP, "        preprocess_fn=preprocess,\n    )\n\n\ndef emit_rag_loop_messages",
                                         "        preprocess_fn=lambda *a, **k: {},\n    )\n\n\ndef emit_rag_loop_messages", CLOBBER),
+    # R3b review F1: revert one call-time lookup to an import-time binding.
+    "f1-bound-payload_hash": (SVC, [IMPORT, "run_id = _diag.payload_hash(source_text)"],
+                              [IMPORT + "from t2pw.pipeline.extraction_diagnostics import payload_hash as _bound\n",
+                               "run_id = _bound(source_text)"], NEW),
+    "f1-bound-activate": (SVC, [IMPORT, "recorder = _diag.activate("],
+                          [IMPORT + "from t2pw.pipeline.extraction_diagnostics import activate as _bound\n",
+                           "recorder = _bound("], NEW),
+    "f1-bound-current": (SVC, [IMPORT, "artifacts = _diag.current().artifacts()"],
+                         [IMPORT + "from t2pw.pipeline.extraction_diagnostics import current as _bound\n",
+                          "artifacts = _bound().artifacts()"], NEW),
+    # R3a's tripwire, re-armed by F1: drop the app's input-assembly stop.
+    "f1-app-input-stop-dropped": (APP, "    if _assembled.failure is not None:\n        st.stop()\n",
+                                  "    if _assembled.failure is not None:\n        pass\n", TRIPWIRE),
 }
 
 if len(sys.argv) > 1:  # optional subset by index range, e.g. 0:11
@@ -67,8 +82,11 @@ results = {}
 try:
     for name, (target, old, new, tests) in MUTATIONS.items():
         src = originals[target].decode("utf-8")
-        assert src.count(old) == 1, (name, src.count(old))
-        target.write_bytes(src.replace(old, new).encode("utf-8"))
+        # ``old``/``new`` may be lists: several replacements make one mutation
+        for o, n in (zip(old, new) if isinstance(old, list) else [(old, new)]):
+            assert src.count(o) == 1, (name, o[:50], src.count(o))
+            src = src.replace(o, n)
+        target.write_bytes(src.encode("utf-8"))
         env = dict(os.environ, PYTHONPATH=f"{TREE}/src", T2PW_OFFLINE_CURATOR="1")
         cmd = [PY, f"{TREE}/docs/pwml_recovery_sprint/evidence/bounded_run.py", "--label", f"mut-{name}",
                "--timeout", "300", "--heavy-lock", "ws-R3b", "--json", str(EV / f"{name}.json"), "--",

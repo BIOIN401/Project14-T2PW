@@ -5,10 +5,11 @@
   - `b7830ed2`: the move and the new test file.
   - `1df7b6b2`: the new tests also pin the post-Stage-0 sync (section 6, item 3).
   - `623ab02b`: test path repoint under PO ruling Q-R0-1 (section 4).
-- **Docs commits:** `b747cf17` (needs-decision version) and this update.
+  - `d6b903b1`: review round 1, F1 and F2 (section 8).
+- **Docs commits:** `b747cf17` (needs-decision version), `bdd8aaac`, and the round-1 update.
 - **Status:** done, pending independent review. The first report was needs-decision, because 4 source-reading tests in `tests/test_preprocessor.py` failed. The orchestrator authorised a path-only repoint of those tests under PO ruling Q-R0-1, made in `623ab02b` (section 4). After it, every chunk's failing-node set equals base.
 - **Behaviour change:** none intended. Two invisible differences are listed in section 3, items 4 and 5.
-- **NEW TESTS (R3b, new module):** `tests/test_service_extraction_stage0.py`, 19 tests.
+- **NEW TESTS (R3b, new module):** `tests/test_service_extraction_stage0.py`, 19 tests (20 after review round 1).
 - **Scope:** R3b only, from the scout's split (`results/R3-scout.md` section 7). Stage 1 onwards is untouched.
 - **Deviation from the brief:** the ambiguous-review early exit **stays in the app**. `tests/test_stage0_case_c_retry_clobber.py` lifts that exact `if` block out of `streamlit_app.py` by AST and execs it. See section 3, item 1, and Open question 1.
 
@@ -60,7 +61,7 @@ _diagnostics_dir = _stage_zero.diagnostics_dir
 - `_run_stage_zero_with_retry(..., preprocess_fn=None)`: `None` means `t2pw.pipeline.preprocessor.preprocess`, looked up **at call time**. The app always passes its own binding.
 - `PROJECT_ROOT` is read as `t2pw.paths.PROJECT_ROOT` at call time. EXT holds no `PROJECT_ROOT`/`TMP_DIR` attribute, so the harness's `isolate` reaches it through `paths` (a test pins this).
 - The recorder is still the single `t2pw.pipeline.extraction_diagnostics` context-var recorder: `activate(..., unique=True)` and `current()`. No second instance exists.
-- Imports: `t2pw.paths`, `t2pw.pipeline.preprocessor` (module and three names) and three `extraction_diagnostics` names. EXT imports neither streamlit nor `t2pw.app`; R3a's subprocess test `test_importing_the_module_loads_neither_streamlit_nor_the_app` passes.
+- Imports: `t2pw.paths` (module), `t2pw.pipeline.preprocessor` (the module, plus three names nobody patches) and `t2pw.pipeline.extraction_diagnostics` (the module only, as `_diag`, since review round 1; section 8). EXT imports neither streamlit nor `t2pw.app`; R3a's subprocess test `test_importing_the_module_loads_neither_streamlit_nor_the_app` passes.
 
 **Verbatim proof:** `evidence/R3b/verbatim-diff.txt` diffs the three base ranges against EXT (CR stripped, block dedented). The only changed lines are:
 
@@ -84,7 +85,7 @@ No message text, order or condition changed. `reporter.py` is unchanged: `info`,
 | `test_orch759b` patches `paths.PROJECT_ROOT` (and `postpipeline.PROJECT_ROOT`) before AppTest, then reads `extraction_diagnostics_dir` from session state | EXT reads `paths.PROJECT_ROOT` at call time, so the diagnostics land under the patched root as before | 2e-759b |
 | equivalence harness `isolate` patches `paths.PROJECT_ROOT`/`TMP_DIR` and every `t2pw*` module that has those attributes | EXT has neither attribute and reads through `paths` | `eq` 14 passed. Unit test `test_the_service_has_no_project_root_copy`. Mutation `diagnostics-root-not-paths` is killed |
 | AppTest re-execs the script each run, so `from t2pw.pipeline.preprocessor import preprocess` rebinds every run | the app passes that binding as `preprocess_fn`, so the source is the same as base | new real-app test patches `preprocessor.preprocess` and sees exactly one call |
-| other `monkeypatch.setattr` on a moved name | grep: no test patches `_has_usable_context`, `_seed_context_from_user_scope`, `_stage0_context_rank`, `_run_stage_zero_with_retry`, the diagnostics helpers or `is_ambiguous_*` / `describe_*` / `preprocess_was_recovered` on any module. `preprocess` is patched only on `app` (clobber) and on `rag.select` (unrelated) | - |
+| other `monkeypatch.setattr` on a moved name | **CORRECTED in review round 1.** The original claim ("no test patches the diagnostics helpers") was **wrong**: R3a's `tests/test_service_extraction.py:316` patches `extraction_diagnostics.payload_hash` on its source module, and the import-time binding in `b7830ed2` silently disarmed that tripwire. I grepped for the helpers' own names and missed the callees' source-module names. The full per-name check is in section 8 | section 8 (F1) |
 | `install_app_defaults` | the new code never resolves a default. The app passes `StreamlitReporter(st)` and `st.session_state` explicitly | unit test `test_state_and_reporter_are_required_keywords`. Mutation `state-and-reporter-defaulted` is killed |
 | `user_task_context` value and order | unchanged: APP 1868 strips it before `assemble_inputs`, and it is passed straight through | ivm scenarios; unit tests assert the kwargs of every `preprocess` call |
 
@@ -238,3 +239,69 @@ All runs used `bounded_run.py` in the foreground, with the venv python for both 
    - The app passes its own `preprocess` binding, so the clobber test's patch of `streamlit_app.preprocess` still lands and the app calls exactly the binding it called before.
    - When the clobber test is next touched, it could patch `t2pw.service.extraction` instead (a Q-R0-1 patch-target edit), and the parameter could go.
 4. **For R3c:** the app keeps `_sync_extraction_diagnostics()` as a no-arg shim over the moved function. Its 4 remaining call sites are in Stage 1 and post-pipeline. `_last_cleaning_report` is still in the app.
+
+## 8. Review round 1: F1, F2
+
+The review of `bdd8aaac` returned CHANGES_REQUESTED with one blocking finding (F1) and one note (F2). Both are fixed in code commit `d6b903b1`. No existing test was edited.
+
+### F1 (blocking): diagnostics names bound at import disarmed R3a's tripwire
+
+- **What was wrong:** `service/extraction.py` did `from t2pw.pipeline.extraction_diagnostics import activate, current, payload_hash` once, at import.
+  - Before R3b, the app script ran that `from ... import` on every AppTest run, so `monkeypatch.setattr(diag, "payload_hash", ...)` reached the call.
+  - After R3b it did not. R3a's `test_real_app_warns_and_stops_before_stage_zero` uses that patch as the tripwire behind the input-assembly `st.stop()`. With the patch unreachable, deleting the stop no longer failed the test deterministically.
+- **The fix:** `from t2pw.pipeline import extraction_diagnostics as _diag`, then `_diag.payload_hash(...)`, `_diag.activate(...)` and `_diag.current()` at call time. This is the same pattern as `paths.PROJECT_ROOT` and `_preprocessor.preprocess`.
+  - The three `from`-import aliases are gone from EXT. The app keeps its own imports of them.
+  - My new tests and the ivm script now patch `diag.*` instead of the removed EXT aliases.
+- **Every `from X import name` in EXT, checked against `tests/`:** I grepped for `setattr(` / `patch(` / `patch.object(` with the name as a string attribute, and for direct `X.name =` assignment. I also checked the dynamic `setattr(module, name, ...)` sites (`equivalence/harness.py` spies on postpipeline functions only; the others are unrelated).
+
+  | module X | name | patched on X by a test? | action |
+  |---|---|---|---|
+  | `t2pw.pipeline.extraction_diagnostics` | `payload_hash` | **yes**, `test_service_extraction.py:316` | now `_diag.payload_hash` at call time |
+  | same | `activate` | no | converted with it (reviewer's request; same module) |
+  | same | `current` | no | converted with it |
+  | `t2pw.pipeline.preprocessor` | `preprocess` | `app.preprocess` (clobber) and source-module patches in my tests | already call-time via `_preprocessor.preprocess`, or the app's `preprocess_fn` |
+  | same | `describe_preprocess_status`, `is_ambiguous_multi_example_review_context`, `preprocess_was_recovered` | no | left bound |
+  | `t2pw.extraction.pdf_parser` | `parse_pdf`, `SKIP_SECTIONS` | no. `parse_pdf` is patched **on EXT** (`test_service_extraction.py:80,212`), which needs the EXT-level binding | left bound; converting it would break those R3a tests |
+  | `t2pw.service.reporter` | `Reporter` | no (a type) | left |
+
+- **Probe, before/after** (`evidence/R3b/probe-f1.txt`, script `scripts/probe_f1.py`, run through the wrapper, survivors 0). It patches each name on `extraction_diagnostics` and calls `_start_extraction_diagnostics` and `_sync_extraction_diagnostics`:
+
+  | name | `bdd8aaac` (before) | `d6b903b1` (after) |
+  |---|---|---|
+  | `diag.payload_hash` patch reaches service | **False** | **True** |
+  | `diag.activate` patch reaches service | False | True |
+  | `diag.current` patch reaches service | False | True |
+
+- **New unit test** `test_patches_on_the_source_modules_reach_run_stage_zero`. It patches `diag.payload_hash`, `diag.activate`, `diag.current` and `preprocessor.preprocess`, then asserts all four are called in order (`payload_hash`, `activate`, `preprocess`, `current`), and that the recorder carries the patched run id.
+- **Mutations** (`evidence/R3b/mutation-r1/`, survivors 0 on each):
+
+  | mutation | what it does | result |
+  |---|---|---|
+  | `f1-bound-payload_hash` | reverts that one name to an import-time `from` binding | 1 failed |
+  | `f1-bound-activate` | same, for `activate` | 3 failed |
+  | `f1-bound-current` | same, for `current` | 2 failed |
+  | `f1-app-input-stop-dropped` | removes the app's input-assembly `st.stop()` (`if _assembled.failure is not None:`), with **R3a's tripwire** as the test | **2 failed** (both parametrizations) with "the run went past the input-assembly stop" |
+
+  The tripwire is armed again. Afterwards `git status -- src tests` was clean.
+
+### F2 (note): the focus box reaches Stage 0 in the real app
+
+`test_real_app_case_c_opens_diagnostics_then_stops_at_the_ambiguous_gate` now types `"  lipid A biosynthesis  "` into "Optional extraction focus / task context". It asserts that the one `preprocess` call received `user_task_context == "lipid A biosynthesis"` (stripped, as APP 1868 does).
+
+### Round-1 runs on `d6b903b1`
+
+All runs went through the bounded wrapper, with the heavy lock, gated, each chunk in its own process, `worktree dirty=False`, survivors 0. Reports are `evidence/R3b/r1-*`, and the comparison is in `compare.txt` under "review round 1".
+
+| chunk | tip @ d6b903b1 | base @ 220b1621 |
+|---|---|---|
+| svc3: `test_service_extraction` + `test_service_extraction_stage0` + `test_service_reporter` | 57 passed (29 + 20 + 8) | n/a (the stage0 file is new) |
+| tripwire: `test_service_extraction.py::test_real_app_warns_and_stops_before_stage_zero` | 2 passed. With the stop removed: 2 failed | - |
+| g1 / g2 / g3 / g4, own processes | 2 / 8 / 4 / 24 (38) | same |
+| eq, alone | 14 passed | 14 |
+| 2e `test_preprocessor` | 44 passed | 44 |
+| clobber / c060a / c055, own processes | 8 / 11 / 14 | same |
+| inline-vs-moved on the committed tip | 24/24 (22 identical, 2 SAME-EXCEPT-UNBOUND-GLOBAL), 0 unexplained | - |
+
+- The 2a-2g set was not repeated: only these lookups changed (the brief's condition).
+- Gate: 126 observations in `waits.log`. The independent runner in `C:/t/ws-R3b-trial` and other worktrees (`ws-int`, `bt`) were seen busy before `d3-svc3` and `r1-svc3`, and each cleared within one poll. No run exited 95.
+- Incident this round: once more, a `sed` with `#` as delimiter broke on a `#` in its replacement. Nothing was written; I redid the edit with the Edit tool.

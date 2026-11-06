@@ -36,6 +36,8 @@ C[solo-scope]="tests/test_stage0_scope_fallback.py"; L[solo-scope]=1
 C[solo-c060a]="tests/test_c060a_requested_pathway_wiring.py"; L[solo-c060a]=1
 C[solo-759a]="tests/test_orch759a_duplicate_protein_fold.py"; L[solo-759a]=1
 C[new]="tests/test_service_extraction_stage0.py"; L[new]=1
+C[svc3]="tests/test_service_extraction.py tests/test_service_extraction_stage0.py tests/test_service_reporter.py"; L[svc3]=1
+C[tripwire]="tests/test_service_extraction.py::test_real_app_warns_and_stops_before_stage_zero"; L[tripwire]=1
 C[eq]="tests/test_equivalence_app_vs_service.py"; L[eq]=1
 C[at-c052]="tests/test_c052_prefreeze_report_at_the_streamlit_seams.py"; L[at-c052]=1
 C[at-c082sr]="tests/test_c082_species_rename_declination.py"; L[at-c082sr]=1

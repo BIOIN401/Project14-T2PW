@@ -1,0 +1,98 @@
+T2PW: C:\t\ws-R3b\src\t2pw\__init__.py
+...............F..F.                                                     [100%]
+================================== FAILURES ===================================
+________________ test_sync_never_raises_and_leaves_state_alone ________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001F5B254AD00>
+
+    def test_sync_never_raises_and_leaves_state_alone(monkeypatch):
+        def boom():
+            raise RuntimeError("no recorder")
+    
+        monkeypatch.setattr(diag, "current", boom)
+        state = {"keep": 1}
+        assert ex._sync_extraction_diagnostics(state=state) == {}
+>       assert state == {"keep": 1}
+E       AssertionError: assert {'extraction_...{}, 'keep': 1} == {'keep': 1}
+E         
+E         Omitting 1 identical items, use -vv to show
+E         Left contains 1 more item:
+E         {'extraction_diagnostics': {}}
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage0.py:284: AssertionError
+___________ test_patches_on_the_source_modules_reach_run_stage_zero ___________
+
+root = WindowsPath('C:/t/wsR3btmp/mut-tmp/f1-bound-current/test_patches_on_the_source_mod0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001F5B257F920>
+
+    def test_patches_on_the_source_modules_reach_run_stage_zero(root, monkeypatch):
+        """R3b review F1: the diagnostics and Stage-0 names are looked up at call time.
+    
+        Before R3b the app script re-ran ``from ... import`` on every AppTest run, so a test
+        patching ``extraction_diagnostics.payload_hash`` (R3a's tripwire does) or
+        ``preprocessor.preprocess`` reached them. The moved code must keep that.
+        """
+        seen: List[str] = []
+        real_activate, real_current = diag.activate, diag.current
+    
+        def payload_hash(value):
+            seen.append("payload_hash")
+            return "sha256:patched"
+    
+        def activate(**kw):
+            seen.append("activate")
+            return real_activate(**kw)
+    
+        def current():
+            seen.append("current")
+            return real_current()
+    
+        def preprocess(text, **_):
+            seen.append("preprocess")
+            return _usable()
+    
+        monkeypatch.setattr(diag, "payload_hash", payload_hash)
+        monkeypatch.setattr(diag, "activate", activate)
+        monkeypatch.setattr(diag, "current", current)
+        monkeypatch.setattr(preprocessor, "preprocess", preprocess)
+        ex.run_stage_zero(SHORT, temperature=0.0, user_task_context=None, state={},
+                          reporter=RecordingReporter())
+>       assert seen == ["payload_hash", "activate", "preprocess", "current"]
+E       AssertionError: assert ['payload_has... 'preprocess'] == ['payload_has...s', 'current']
+E         
+E         Right contains one more item: 'current'
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage0.py:334: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage0.py::test_sync_never_raises_and_leaves_state_alone
+FAILED tests/test_service_extraction_stage0.py::test_patches_on_the_source_modules_reach_run_stage_zero
+2 failed, 18 passed in 3.46s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3b\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ d6b903b19bd5d8e57f75bae46a7aea1d8a1fed16  [git, worktree dirty=True]
+label                   : mut-f1-bound-current
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3b/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3b -q -p no:cacheprovider --basetemp=C:/t/wsR3btmp/mut-tmp/f1-bound-current tests/test_service_extraction_stage0.py
+cwd                     : C:\t\ws-R3b
+root PID / process group: 1094516 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 5.59 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  1087684:python.exe
+descendants terminated  : 1  1087684
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\ws-R3b\docs\webserver\evidence\R3b\mutation-r1\f1-bound-current.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R3b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 8
+================================================

@@ -39,6 +39,7 @@ from t2pw.service.reporter import StreamlitReporter  # noqa: E402
 
 assert ex.__file__.replace("\\", "/").startswith(tip_tree.replace("\\", "/")), ex.__file__
 ROOT = Path(tempfile.mkdtemp(prefix="r3b-ivm-"))
+REAL_ACTIVATE, REAL_CURRENT = xd.activate, xd.current
 HEX = re.compile(r"run-[0-9a-f]{12}")
 
 
@@ -188,14 +189,14 @@ def run(arm, scen):
         return d
 
     def activate(**kw):
-        rec = xd.activate(**kw)
+        rec = REAL_ACTIVATE(**kw)
         activations.append([norm(kw), norm(str(rec.artifact_dir))])
         return rec
 
     def current():
         if sync_raises:
             raise RuntimeError("no recorder")
-        return xd.current()
+        return REAL_CURRENT()
 
     ns = dict(st=st, text=text, temperature=temp, user_task_context=utc, preprocess=preprocess,
               is_ambiguous_multi_example_review_context=is_ambiguous_multi_example_review_context,
@@ -208,7 +209,7 @@ def run(arm, scen):
                   diagnostic_payload_hash=xd.payload_hash, current_extraction_diagnostics=current)
         exec(BASE_HELPERS, ns)
     else:
-        ex.activate_extraction_diagnostics, ex.current_extraction_diagnostics = activate, current
+        xd.activate, xd.current = activate, current  # the tip looks these up at call time
         ns.update(run_stage_zero=ex.run_stage_zero, StreamlitReporter=StreamlitReporter)
         exec(TIP_HELPERS, ns)
     outcome = "completed"
@@ -219,8 +220,7 @@ def run(arm, scen):
     except Exception as exc:  # noqa: BLE001 - the raise itself is compared
         outcome = f"raised {type(exc).__name__}: {exc}"
     finally:
-        ex.activate_extraction_diagnostics = xd.activate
-        ex.current_extraction_diagnostics = xd.current
+        xd.activate, xd.current = REAL_ACTIVATE, REAL_CURRENT
         xd.deactivate()
     return {"st": st.log, "outcome": outcome, "preprocess": calls, "activate": activations,
             "pathway_context": norm(ns.get("pathway_context")),
