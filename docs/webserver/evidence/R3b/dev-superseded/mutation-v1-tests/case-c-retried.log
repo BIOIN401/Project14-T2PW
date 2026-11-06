@@ -1,0 +1,63 @@
+T2PW: C:\t\ws-R3b\src\t2pw\__init__.py
+.....F.............                                                      [100%]
+================================== FAILURES ===================================
+_________________ test_case_c_is_quiet_and_returned_untouched _________________
+
+root = WindowsPath('C:/t/wsR3btmp/mut-tmp/case-c-retried/test_case_c_is_quiet_and_retur0')
+
+    def test_case_c_is_quiet_and_returned_untouched(root):
+        first = _case_c()
+>       res, rep, _, seen = _run(LONG, [first], utc="lipid A biosynthesis")
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_service_extraction_stage0.py:171: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_service_extraction_stage0.py:105: in _run
+    res = ex.run_stage_zero(text, temperature=0.25, user_task_context=utc, state=state,
+src\t2pw\service\extraction.py:457: in run_stage_zero
+    pathway_context = _run_stage_zero_with_retry(
+src\t2pw\service\extraction.py:335: in _run_stage_zero_with_retry
+    retry_context = preprocess(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+text = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+kwargs = {'temperature': 0.25, 'user_task_context': 'lipid A biosynthesis'}
+@py_format1 = 'preprocess called more often than staged\n>assert []'
+
+    def preprocess(text: str, **kwargs: Any) -> Any:
+        seen.append((text, kwargs))
+>       assert queue, "preprocess called more often than staged"
+E       AssertionError: preprocess called more often than staged
+E       assert []
+
+tests\test_service_extraction_stage0.py:89: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage0.py::test_case_c_is_quiet_and_returned_untouched
+1 failed, 18 passed in 2.37s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3b\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ b7830ed22b91c0b62ce7b957cbc14a34f2dbf97d  [git, worktree dirty=True]
+label                   : mut-case-c-retried
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3b/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3b -q -p no:cacheprovider --basetemp=C:/t/wsR3btmp/mut-tmp/case-c-retried tests/test_service_extraction_stage0.py
+cwd                     : C:\t\ws-R3b
+root PID / process group: 923620 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 3.66 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  924468:python.exe
+descendants terminated  : 1  924468
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\ws-R3b\docs\webserver\evidence\R3b\mutation\case-c-retried.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R3b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 8
+================================================

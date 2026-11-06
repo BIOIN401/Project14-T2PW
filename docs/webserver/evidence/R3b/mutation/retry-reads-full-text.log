@@ -1,0 +1,48 @@
+T2PW: C:\t\ws-R3b\src\t2pw\__init__.py
+......F............                                                      [100%]
+================================== FAILURES ===================================
+___ test_retry_on_long_failed_text_reads_the_head_and_adopts_a_better_draw ____
+
+root = WindowsPath('C:/t/wsR3btmp/mut-tmp/retry-reads-full-text/test_retry_on_long_failed_text0')
+
+    def test_retry_on_long_failed_text_reads_the_head_and_adopts_a_better_draw(root):
+        second = _usable()
+        res, rep, _, seen = _run(LONG, [_failed(), second], utc="u")
+>       assert [t for t, _ in seen] == [LONG, LONG[: ex._PREPROCESS_RETRY_CHARS]]
+E       AssertionError: assert ['xxxxxxxxxxx...xxxxxxxxxxxx'] == ['xxxxxxxxxxx...xxxxxxxxxxxx']
+E         
+E         At index 1 diff: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...
+E         
+E         ...Full output truncated (2 lines hidden), use '-vv' to show
+
+tests\test_service_extraction_stage0.py:181: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage0.py::test_retry_on_long_failed_text_reads_the_head_and_adopts_a_better_draw
+1 failed, 18 passed in 2.82s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3b\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 1df7b6b24200ed571e522faaeea13e2bd71ae9d8  [git, worktree dirty=True]
+label                   : mut-retry-reads-full-text
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3b/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3b -q -p no:cacheprovider --basetemp=C:/t/wsR3btmp/mut-tmp/retry-reads-full-text tests/test_service_extraction_stage0.py
+cwd                     : C:\t\ws-R3b
+root PID / process group: 924200 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 4.34 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  928756:python.exe
+descendants terminated  : 1  928756
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\ws-R3b\docs\webserver\evidence\R3b\mutation\retry-reads-full-text.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R3b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 8
+================================================

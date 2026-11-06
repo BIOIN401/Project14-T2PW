@@ -1,0 +1,50 @@
+2a             | tip: 1 failed, 78 passed                      surv=0 | base: 1 failed, 78 passed                      surv=0 | failing sets: identical
+      tip  FAILED tests/test_c052_prefreeze_report_at_the_streamlit_seams.py::test_new_acceptance_the_post_pipeline_seam_returns_its_prefreeze_report
+2b-c055        | tip: 14 passed                                surv=0 | base: n/a                                      surv=- | failing sets: -
+2b             | tip: 134 passed                               surv=0 | base: n/a                                      surv=- | failing sets: -
+2c-c126        | tip: 2 passed                                 surv=0 | base: n/a                                      surv=- | failing sets: -
+2c             | tip: 1 failed, 101 passed, 3 skipped          surv=0 | base: 1 failed, 101 passed, 3 skipped          surv=0 | failing sets: identical
+      tip  FAILED tests/test_prefreeze_third_export_seam.py::test_run_pwml_export_runs_the_prefreeze_sequence_once_before_build_pwml_ir
+2d-c119g9      | tip: 3 passed                                 surv=0 | base: n/a                                      surv=- | failing sets: -
+2d-stage3      | tip: 28 passed                                surv=0 | base: n/a                                      surv=- | failing sets: -
+2d             | tip: 1 failed, 413 passed                     surv=0 | base: 1 failed, 413 passed                     surv=0 | failing sets: identical
+      tip  FAILED tests/test_rag_seed_entity_reimport.py::test_the_orchestrator_passes_the_merge_base_to_conform
+2e-759afold    | tip: 2 passed                                 surv=0 | base: n/a                                      surv=- | failing sets: -
+2e-759b        | tip: 7 passed                                 surv=0 | base: n/a                                      surv=- | failing sets: -
+2e-hook        | tip: 1 passed                                 surv=0 | base: n/a                                      surv=- | failing sets: -
+2e             | tip: 4 failed, 40 passed                      surv=0 | base: 44 passed                                surv=0 | failing sets: DIFFERENT
+      tip  FAILED tests/test_preprocessor.py::test_streamlit_forwards_user_task_context_to_every_preprocess_call
+      tip  FAILED tests/test_preprocessor.py::test_streamlit_stage_zero_warning_reports_the_reason
+      tip  FAILED tests/test_preprocessor.py::test_streamlit_suppresses_transient_warning_for_ambiguous_reviews
+      tip  FAILED tests/test_preprocessor.py::test_streamlit_surfaces_a_recovered_stage_zero_context
+      base 
+2f-driver      | tip: 61 passed                                surv=0 | base: n/a                                      surv=- | failing sets: -
+2f-gate        | tip: 14 passed                                surv=0 | base: n/a                                      surv=- | failing sets: -
+2f             | tip: 1 failed, 32 passed, 4 skipped           surv=0 | base: 1 failed, 32 passed, 4 skipped           surv=0 | failing sets: identical
+      tip  FAILED tests/test_batch_preflight.py::test_the_message_names_the_problem_the_interpreter_and_the_cure
+2g-759d        | tip: 4 passed                                 surv=0 | base: n/a                                      surv=- | failing sets: -
+2g-c056d       | tip: 14 passed                                surv=0 | base: n/a                                      surv=- | failing sets: -
+2g-c082pp      | tip: 1 passed                                 surv=0 | base: n/a                                      surv=- | failing sets: -
+2g-c119sup     | tip: 37 passed                                surv=0 | base: n/a                                      surv=- | failing sets: -
+2g-revview     | tip: 11 passed                                surv=0 | base: n/a                                      surv=- | failing sets: -
+2g             | tip: 162 passed, 8 skipped                    surv=0 | base: n/a                                      surv=- | failing sets: -
+at-bridge      | tip: 37 passed                                surv=0 | base: n/a                                      surv=- | failing sets: -
+at-c052        | tip: 1 failed, 12 passed                      surv=0 | base: 1 failed, 12 passed                      surv=0 | failing sets: identical
+      tip  FAILED tests/test_c052_prefreeze_report_at_the_streamlit_seams.py::test_new_acceptance_the_post_pipeline_seam_returns_its_prefreeze_report
+at-c082sr      | tip: 8 passed                                 surv=0 | base: n/a                                      surv=- | failing sets: -
+at-c083        | tip: 12 passed                                surv=0 | base: n/a                                      surv=- | failing sets: -
+at-pf3         | tip: 1 failed, 11 passed                      surv=0 | base: 1 failed, 11 passed                      surv=0 | failing sets: identical
+      tip  FAILED tests/test_prefreeze_third_export_seam.py::test_run_pwml_export_runs_the_prefreeze_sequence_once_before_build_pwml_ir
+eq             | tip: 14 passed                                surv=0 | base: n/a                                      surv=- | failing sets: -
+ext            | tip: 37 passed                                surv=0 | base: n/a                                      surv=- | failing sets: -
+g1             | tip: 2 passed                                 surv=0 | base: n/a                                      surv=- | failing sets: -
+g2             | tip: 8 passed                                 surv=0 | base: n/a                                      surv=- | failing sets: -
+g3             | tip: 4 passed                                 surv=0 | base: n/a                                      surv=- | failing sets: -
+g4             | tip: 24 passed                                surv=0 | base: n/a                                      surv=- | failing sets: -
+new            | tip: 19 passed                                surv=0 | base: n/a                                      surv=- | failing sets: -
+repoint        | tip: 44 passed                                surv=0 | base: n/a                                      surv=- | failing sets: -
+solo-759a      | tip: 37 passed                                surv=0 | base: n/a                                      surv=- | failing sets: -
+solo-c060a     | tip: 11 passed                                surv=0 | base: n/a                                      surv=- | failing sets: -
+solo-clobber   | tip: 8 passed                                 surv=0 | base: n/a                                      surv=- | failing sets: -
+solo-scope     | tip: 5 passed                                 surv=0 | base: n/a                                      surv=- | failing sets: -
+web            | tip: 301 passed                               surv=0 | base: n/a                                      surv=- | failing sets: -

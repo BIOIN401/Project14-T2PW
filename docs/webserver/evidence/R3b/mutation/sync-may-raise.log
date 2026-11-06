@@ -1,0 +1,58 @@
+T2PW: C:\t\ws-R3b\src\t2pw\__init__.py
+...............F...                                                      [100%]
+================================== FAILURES ===================================
+________________ test_sync_never_raises_and_leaves_state_alone ________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001D77CC7ADB0>
+
+    def test_sync_never_raises_and_leaves_state_alone(monkeypatch):
+        def boom():
+            raise RuntimeError("no recorder")
+    
+        monkeypatch.setattr(ex, "current_extraction_diagnostics", boom)
+        state = {"keep": 1}
+>       assert ex._sync_extraction_diagnostics(state=state) == {}
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_service_extraction_stage0.py:283: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\t2pw\service\extraction.py:410: in _sync_extraction_diagnostics
+    artifacts = current_extraction_diagnostics().artifacts()
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def boom():
+>       raise RuntimeError("no recorder")
+E       RuntimeError: no recorder
+
+tests\test_service_extraction_stage0.py:279: RuntimeError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage0.py::test_sync_never_raises_and_leaves_state_alone
+1 failed, 18 passed in 2.68s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3b\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 1df7b6b24200ed571e522faaeea13e2bd71ae9d8  [git, worktree dirty=True]
+label                   : mut-sync-may-raise
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3b/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3b -q -p no:cacheprovider --basetemp=C:/t/wsR3btmp/mut-tmp/sync-may-raise tests/test_service_extraction_stage0.py
+cwd                     : C:\t\ws-R3b
+root PID / process group: 931688 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 4.41 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  931308:python.exe
+descendants terminated  : 1  931308
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\ws-R3b\docs\webserver\evidence\R3b\mutation\sync-may-raise.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R3b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 8
+================================================

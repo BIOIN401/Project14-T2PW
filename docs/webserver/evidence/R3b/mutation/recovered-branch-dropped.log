@@ -1,0 +1,54 @@
+T2PW: C:\t\ws-R3b\src\t2pw\__init__.py
+....F..............                                                      [100%]
+================================== FAILURES ===================================
+________________________ test_recovered_context_warns _________________________
+
+root = WindowsPath('C:/t/wsR3btmp/mut-tmp/recovered-branch-dropped/test_recovered_context_warns0')
+
+    def test_recovered_context_warns(root):
+        first = _recovered()
+        res, rep, _, _ = _run(SHORT, [first])
+        assert res.pathway_context is first
+>       assert rep.calls == SPIN + [
+            ("warning", ("Stage 0 partially recovered: ok (recovered from a truncated reply) - cut at 800\n\n"
+                         "The reply was cut off and repaired, so some context fields (e.g. candidate "
+                         "examples, key compounds) may be missing. Re-run if the context below looks "
+                         "incomplete.",)),
+            ("spinner:exit",)]
+E       AssertionError: assert [('spinner', ...inner:exit',)] == [('spinner', ...inner:exit',)]
+E         
+E         At index 2 diff: ('spinner:exit',) != ('warning', ('Stage 0 partially recovered: ok (recovered from a truncated reply) - cut at 800\n\nThe reply was cut off and repaired, so some context fields (e.g. candidate examples, key compounds) may be missing. Re-run if the context below looks incomplete.',))
+E         Right contains one more item: ('spinner:exit',)
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage0.py:161: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage0.py::test_recovered_context_warns
+1 failed, 18 passed in 2.38s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3b\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 1df7b6b24200ed571e522faaeea13e2bd71ae9d8  [git, worktree dirty=True]
+label                   : mut-recovered-branch-dropped
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3b/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3b -q -p no:cacheprovider --basetemp=C:/t/wsR3btmp/mut-tmp/recovered-branch-dropped tests/test_service_extraction_stage0.py
+cwd                     : C:\t\ws-R3b
+root PID / process group: 931440 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 3.69 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  931456:python.exe
+descendants terminated  : 1  931456
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\ws-R3b\docs\webserver\evidence\R3b\mutation\recovered-branch-dropped.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R3b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 8
+================================================

@@ -1,0 +1,125 @@
+### R3b verbatim diff: base 220b1621 streamlit_app.py vs tip service/extraction.py (CR stripped)
+
+## (1) helpers: base APP 217-395 vs tip extraction.py 164-347
+--- /dev/fd/63	2026-11-05 20:54:00.000000000 -0600
++++ /dev/fd/62	2026-11-05 20:54:00.000000000 -0600
+@@ -103,6 +103,7 @@
+     *,
+     temperature: float,
+     user_task_context: Optional[str],
++    preprocess_fn: Optional[Callable[..., Any]] = None,
+ ) -> Dict[str, Any]:
+     """Run Stage 0, retrying once on a bounded head only when that can help.
+ 
+@@ -146,7 +147,11 @@
+     only when ``_stage0_context_rank`` says it is strictly better. A second draw
+     can now still rescue a genuinely failed Stage 0, but it can no longer degrade
+     the context it was meant to improve.
++    R3b: ``preprocess_fn`` is the Stage-0 call. ``None`` means
++    ``t2pw.pipeline.preprocessor.preprocess``, looked up at call time; the app passes
++    its own ``preprocess`` binding so a patch of ``streamlit_app.preprocess`` still lands.
+     """
++    preprocess = preprocess_fn if preprocess_fn is not None else _preprocessor.preprocess
+     first_context = preprocess(
+         text, temperature=temperature, user_task_context=user_task_context
+     )
+
+## (2) diagnostics: base APP 756-760 + 786-846 vs tip extraction.py 350-415
+--- /dev/fd/63	2026-11-05 20:54:01.000000000 -0600
++++ /dev/fd/62	2026-11-05 20:54:01.000000000 -0600
+@@ -19,7 +19,7 @@
+ DIAGNOSTICS_DIRNAME = "extraction_diagnostics"
+ 
+ 
+-def _start_extraction_diagnostics(source_text: str) -> Path:
++def _start_extraction_diagnostics(source_text: str, *, state: MutableMapping[str, Any]) -> Path:
+     """Begin a fresh diagnostics record for one pipeline run. Returns its directory.
+ 
+     Called once, before Stage 0. Replacing the recorder rather than clearing it
+@@ -39,15 +39,15 @@
+     run_id = diagnostic_payload_hash(source_text)
+     recorder = activate_extraction_diagnostics(
+         run_id=run_id,
+-        artifact_dir=PROJECT_ROOT / "tmp" / DIAGNOSTICS_DIRNAME,
++        artifact_dir=paths.PROJECT_ROOT / "tmp" / DIAGNOSTICS_DIRNAME,
+         unique=True,
+     )
+-    st.session_state[EXTRACTION_DIAGNOSTICS_KEY] = {}
+-    st.session_state[EXTRACTION_DIAGNOSTICS_DIR_KEY] = str(recorder.artifact_dir or "")
+-    return Path(recorder.artifact_dir) if recorder.artifact_dir else PROJECT_ROOT / "tmp"
++    state[EXTRACTION_DIAGNOSTICS_KEY] = {}
++    state[EXTRACTION_DIAGNOSTICS_DIR_KEY] = str(recorder.artifact_dir or "")
++    return Path(recorder.artifact_dir) if recorder.artifact_dir else paths.PROJECT_ROOT / "tmp"
+ 
+ 
+-def _sync_extraction_diagnostics() -> Dict[str, Any]:
++def _sync_extraction_diagnostics(*, state: MutableMapping[str, Any]) -> Dict[str, Any]:
+     """Publish the diagnostics collected so far into session state.
+ 
+     Called at every point the run can end -- after Stage 0, after Stage 1 on both
+@@ -62,5 +62,5 @@
+     except Exception:  # noqa: BLE001 - diagnostics must never break the run
+         logger.debug("extraction diagnostics could not be published", exc_info=True)
+         return {}
+-    st.session_state[EXTRACTION_DIAGNOSTICS_KEY] = artifacts
++    state[EXTRACTION_DIAGNOSTICS_KEY] = artifacts
+     return artifacts
+
+## (3) submit block: base APP 2105-2166 (dedented 4) vs tip run_stage_zero body extraction.py 443-505
+--- /dev/fd/63	2026-11-05 20:54:02.000000000 -0600
++++ /dev/fd/62	2026-11-05 20:54:02.000000000 -0600
+@@ -2,10 +2,10 @@
+ # diagnosed. Everything recorded from here on is flushed to disk as it is
+ # recorded, so a run that dies inside Stage 0 has already written
+ # stage0_attempts.json by the time the error is rendered.
+-_diagnostics_dir = _start_extraction_diagnostics(text)
++_diagnostics_dir = _start_extraction_diagnostics(text, state=state)
+ 
+ # Preprocessing: lightweight context summary to guide extraction and inference
+-with st.spinner("Running preprocessor..."):
++with reporter.spinner("Running preprocessor..."):
+     # Stage 0 plus its at-most-one bounded-head retry. The retry's guards
+     # (skip a deliberate Case C; adopt the second draw only on a strict
+     # improvement) live inside the helper because the inline version ran the
+@@ -13,7 +13,8 @@
+     # unconditionally — see _run_stage_zero_with_retry for the run that
+     # exposed it.
+     pathway_context = _run_stage_zero_with_retry(
+-        text, temperature=temperature, user_task_context=user_task_context
++        text, temperature=temperature, user_task_context=user_task_context,
++        preprocess_fn=preprocess_fn,
+     )
+     # A deliberate Case C ambiguous multi-example review also has blank
+     # pathway fields, but that is the prompt's guardrail, not a flaky call:
+@@ -30,7 +31,7 @@
+         if seeded_context is not None:
+             pathway_context = seeded_context
+             _seed_org = str(seeded_context.get("likely_organism") or "").strip()
+-            st.info(
++            reporter.info(
+                 "Stage 0 returned no usable context, so the pipeline is falling "
+                 "back to the scope you provided — pathway "
+                 f"\"{seeded_context.get('pathway_name', '')}\""
+@@ -39,7 +40,7 @@
+                 "rather the preprocessor try to read the scope from the paper again."
+             )
+         else:
+-            st.warning(
++            reporter.warning(
+                 f"Stage 0 failed: {describe_preprocess_status(pathway_context)}\n\n"
+                 "It returned no usable context — no pathway name, "
+                 "organism, compounds or proteins, and no scope was provided in the "
+@@ -52,11 +53,11 @@
+     elif preprocess_was_recovered(pathway_context):
+         # Not an error: the context is real. But it came from a reply that
+         # was cut off mid-JSON, so fields the model never wrote are absent.
+-        st.warning(
++        reporter.warning(
+             f"Stage 0 partially recovered: {describe_preprocess_status(pathway_context)}\n\n"
+             "The reply was cut off and repaired, so some context fields "
+             "(e.g. candidate examples, key compounds) may be missing. Re-run "
+             "if the context below looks incomplete."
+         )
+ 
+-_sync_extraction_diagnostics()
++_sync_extraction_diagnostics(state=state)

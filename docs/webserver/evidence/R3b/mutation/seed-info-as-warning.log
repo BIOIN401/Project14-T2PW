@@ -1,0 +1,72 @@
+T2PW: C:\t\ws-R3b\src\t2pw\__init__.py
+.F........F........                                                      [100%]
+================================== FAILURES ===================================
+__________________ test_seeded_from_user_scope_with_organism __________________
+
+root = WindowsPath('C:/t/wsR3btmp/mut-tmp/seed-info-as-warning/test_seeded_from_user_scope_wi0')
+
+    def test_seeded_from_user_scope_with_organism(root):
+        res, rep, _, seen = _run(SHORT, [_failed()], utc="menaquinone biosynthesis in Lactococcus lactis")
+        assert len(seen) == 1  # short text: no retry
+        assert res.pathway_context["pathway_name"] == "menaquinone biosynthesis"
+        assert res.pathway_context["likely_organism"] == "Lactococcus lactis"
+        assert res.pathway_context[PREPROCESS_STATUS_KEY] == _failed()[PREPROCESS_STATUS_KEY]
+>       assert rep.calls == SPIN + [
+            ("info", ("Stage 0 returned no usable context, so the pipeline is falling back to the scope "
+                      "you provided \ufffd pathway \"menaquinone biosynthesis\", organism \"Lactococcus lactis\". "
+                      "Extraction and multi-paper RAG will use it. Re-run if you'd rather the preprocessor "
+                      "try to read the scope from the paper again.",)),
+            ("spinner:exit",)]
+E       assert [('spinner', ...inner:exit',)] == [('spinner', ...inner:exit',)]
+E         
+E         At index 2 diff: ('warning', ('Stage 0 returned no usable context, so the pipeline is falling back to the scope you provided \ufffd pathway "menaquinone biosynthesis", organism "Lactococcus lactis". Extraction and multi-paper RAG will use it. Re-run if you\'d rather the preprocessor try to read the scope from the paper again.',)) != ('info', ('Stage 0 returned no usable context, so the pipeline is falling back to the scope you provided \ufffd pathway "menaquinone biosynthesis", organism "Lactococcus lactis". Extraction and multi-paper RAG will use it. Re-run if you\'d rather the ...
+E         
+E         ...Full output truncated (2 lines hidden), use '-vv' to show
+
+tests\test_service_extraction_stage0.py:128: AssertionError
+_____________________ test_seed_runs_after_a_failed_retry _____________________
+
+root = WindowsPath('C:/t/wsR3btmp/mut-tmp/seed-info-as-warning/test_seed_runs_after_a_failed_0')
+
+    def test_seed_runs_after_a_failed_retry(root):
+        res, rep, _, seen = _run(LONG, [_failed(), _failed()], utc="heme biosynthesis in yeast")
+        assert len(seen) == 2
+        assert res.pathway_context["likely_organism"] == "yeast"
+>       assert rep.calls[2][0] == "info"
+E       AssertionError: assert 'warning' == 'info'
+E         
+E         - info
+E         + warning
+
+tests\test_service_extraction_stage0.py:210: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage0.py::test_seeded_from_user_scope_with_organism
+FAILED tests/test_service_extraction_stage0.py::test_seed_runs_after_a_failed_retry
+2 failed, 17 passed in 2.33s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3b\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 1df7b6b24200ed571e522faaeea13e2bd71ae9d8  [git, worktree dirty=True]
+label                   : mut-seed-info-as-warning
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3b/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3b -q -p no:cacheprovider --basetemp=C:/t/wsR3btmp/mut-tmp/seed-info-as-warning tests/test_service_extraction_stage0.py
+cwd                     : C:\t\ws-R3b
+root PID / process group: 929196 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 3.80 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  927004:python.exe
+descendants terminated  : 1  927004
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\ws-R3b\docs\webserver\evidence\R3b\mutation\seed-info-as-warning.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R3b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 8
+================================================
