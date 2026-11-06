@@ -204,7 +204,7 @@ def item_view(item: Dict[str, Any], history: List[Dict[str, Any]], sid: str) -> 
     if state == "queued" and item["attempt"] == 0:
         view["headline"] = "Waiting in the queue"
         view["detail"] = ("It starts when earlier pathways finish. Once started, a run takes "
-                          "about 20 to 60 minutes.")
+                          "about 20 to 60 minutes, and is stopped after 90.")
     elif state == "queued":
         last = history[-1] if history else {}
         view["headline"] = "Retrying automatically"
@@ -213,7 +213,7 @@ def item_view(item: Dict[str, Any], history: List[Dict[str, Any]], sid: str) -> 
                           f"Attempt {item['attempt'] + 1} is queued.")
     elif state == "running":
         view["headline"] = f"Running (attempt {item['attempt']} of {MAX_ATTEMPTS})"
-        view["detail"] = ("This takes about 20 to 60 minutes. You can close this page and come back "
+        view["detail"] = ("This takes about 20 to 60 minutes (a run is stopped after 90). You can close this page and come back "
                           "to the same link.")
     elif rs == "review_required":
         view["headline"] = "Needs review"
