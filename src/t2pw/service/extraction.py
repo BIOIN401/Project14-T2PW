@@ -1,7 +1,8 @@
 """The "Run pipeline" handler, moved out of ``streamlit_app.py`` step by step (R3).
 
 R3a moved the input assembly: the pasted texts and the uploaded PDFs become the one
-``text`` the stages read. R3b-R3d extend this module with the stages themselves.
+``text`` the stages read. R3b moved Stage 0 (:func:`run_stage_zero`). R3c-R3d extend
+this module with the remaining stages.
 
 Every message goes through the ``reporter`` the caller passes (the app passes
 ``StreamlitReporter(st)``). There is no default: service code never falls back to
@@ -11,13 +12,29 @@ function returns a :class:`InputFailure` instead, and the app calls ``st.stop()`
 
 from __future__ import annotations
 
+import logging
 import os
 import tempfile
 from dataclasses import dataclass
-from typing import Iterable, Optional, Sequence, Tuple
+from pathlib import Path
+from typing import Any, Callable, Dict, Iterable, MutableMapping, Optional, Sequence, Tuple
 
+import t2pw.paths as paths  # PROJECT_ROOT read at call time: the harness patches it
 from t2pw.extraction.pdf_parser import SKIP_SECTIONS, parse_pdf
+from t2pw.pipeline import preprocessor as _preprocessor
+from t2pw.pipeline.extraction_diagnostics import (
+    activate as activate_extraction_diagnostics,
+    current as current_extraction_diagnostics,
+    payload_hash as diagnostic_payload_hash,
+)
+from t2pw.pipeline.preprocessor import (
+    describe_preprocess_status,
+    is_ambiguous_multi_example_review_context,
+    preprocess_was_recovered,
+)
 from t2pw.service.reporter import Reporter
+
+logger = logging.getLogger(__name__)
 
 # Failure kinds, one per former ``st.stop()`` in the input-assembly code.
 KIND_NO_PDF = "no_pdf_uploaded"
@@ -136,3 +153,355 @@ def assemble_inputs(
         return AssembledInputs(text=text, failure=InputFailure(KIND_NO_TEXT, message))
 
     return AssembledInputs(text=text)
+
+
+# ---------------------------------------------------------------------------
+# R3b: Stage 0. Moved from streamlit_app.py: the Stage-0 helpers, the extraction
+# diagnostics start/sync, and the submit block from the diagnostics start through
+# the post-Stage-0 sync. The ambiguous-review gate stays in the app (R3b.md).
+# ---------------------------------------------------------------------------
+
+# Bounded head of the document used when retrying a failed Stage-0 pass. The
+# pathway name / organism / key entities live in the title, abstract and intro,
+# and ``t2pw.rag.select`` already caps this same ``preprocess`` call at 6000
+# chars for exactly this reason.
+_PREPROCESS_RETRY_CHARS = 20000
+
+
+def _has_usable_context(ctx: Any) -> bool:
+    """True when Stage 0 produced at least one term usable as a search anchor.
+
+    Mirrors precisely what ``t2pw.rag.acquire.build_query`` needs: without a
+    pathway name, an organism, or any compound/protein/gap term, the literature
+    query is the empty string and no paper can ever be fetched.
+    """
+    if not isinstance(ctx, dict):
+        return False
+    if str(ctx.get("pathway_name") or "").strip():
+        return True
+    if str(ctx.get("likely_organism") or ctx.get("organism") or "").strip():
+        return True
+    for key in ("key_compounds", "key_proteins", "gap_terms"):
+        value = ctx.get(key)
+        if isinstance(value, list) and any(str(v or "").strip() for v in value):
+            return True
+    return False
+
+
+def _seed_context_from_user_scope(
+    ctx: Any, user_scope: Optional[str]
+) -> Optional[Dict[str, Any]]:
+    """Derive a usable Stage-0 context from an explicit user scope string.
+
+    Stage 0 (the preprocessor LLM) fails CLOSED to an empty context, which
+    silently disables RAG (``build_query`` returns "", so zero papers are ever
+    fetched) and leaves extraction unguided. But the pipeline is not actually
+    blind in that case: the user routinely types the scope into the extraction
+    focus box (e.g. ``"menaquinone biosynthesis in Lactococcus lactis"``). This
+    fallback parses that into a ``pathway_name`` and — from a trailing
+    ``" in <organism>"`` — a ``likely_organism``, so a flaky preprocessor call
+    can no longer nuke a scope the user already provided.
+
+    Returns an augmented COPY of ``ctx`` (all original keys preserved) that
+    ``_has_usable_context`` accepts, or ``None`` when there is no usable scope to
+    seed from. Heuristic and transparent: the caller surfaces exactly what
+    pathway/organism was inferred so a mis-parse is visible, not silent.
+    """
+    scope = str(user_scope or "").strip()
+    if not scope:
+        return None
+    head, sep, tail = scope.rpartition(" in ")
+    # Treat the trailing "in <X>" as the organism only when it is short (organism
+    # names are 1–3 words); otherwise keep the whole scope as the pathway name so
+    # a phrase like "... in vitro reconstitution" is not mistaken for an organism.
+    if sep and head.strip() and 1 <= len(tail.split()) <= 3:
+        pathway_name = head.strip()
+        organism_name = tail.strip()
+    else:
+        pathway_name = scope
+        organism_name = ""
+    seeded = dict(ctx) if isinstance(ctx, dict) else {}
+    seeded["pathway_name"] = pathway_name
+    if organism_name and not str(seeded.get("likely_organism") or "").strip():
+        seeded["likely_organism"] = organism_name
+    if not _has_usable_context(seeded):
+        return None
+    return seeded
+
+
+def _stage0_context_rank(ctx: Any) -> int:
+    """Order two Stage-0 draws so a retry can only ever move the context UPWARD.
+
+    Higher is both more informative and more fail-safe:
+
+    * ``2`` — a well-formed **Case C**: ``document_type == "multi_example_review"``
+      with a blank ``selected_example``. This is the Stage-0 prompt's own refusal
+      verdict, and it is the strongest state precisely because it is the only one
+      that stops the run. It outranks a usable context on purpose: if one draw
+      says "this document is a multi-example review and I could not pick a
+      target" and another says "the pathway is X", the safe reading is the
+      refusal — extracting X from a review that describes six unrelated examples
+      is how a mixed-pathway payload gets built. A second draw must never be able
+      to disarm the refusal gate.
+    * ``1`` — a usable context: ``_has_usable_context`` accepts it, so extraction
+      is guided and ``t2pw.rag.acquire.build_query`` can form a non-empty query.
+    * ``0`` — neither: Stage 0 failed closed (swallowed LLM error, unparseable
+      reply) and left every field blank.
+
+    Note that Case C and rank 0 look IDENTICAL to ``_has_usable_context``: the
+    Stage-0 prompt mandates that Case C leave pathway_name / likely_organism /
+    key_compounds / key_proteins / gap_terms blank, so the only thing separating a
+    deliberate refusal from a crashed call is ``document_type``. That is exactly
+    what the 2026-07-28 clobber destroyed (see ``_run_stage_zero_with_retry``).
+    """
+    if is_ambiguous_multi_example_review_context(ctx):
+        return 2
+    if _has_usable_context(ctx):
+        return 1
+    return 0
+
+
+def _run_stage_zero_with_retry(
+    text: str,
+    *,
+    temperature: float,
+    user_task_context: Optional[str],
+    preprocess_fn: Optional[Callable[..., Any]] = None,
+) -> Dict[str, Any]:
+    """Run Stage 0, retrying once on a bounded head only when that can help.
+
+    Two separate defects lived in the inline version of this block, and both were
+    load-bearing in run ``runs/2026-07-28_0919``.
+
+    1. *The retry fired on a correct refusal.* Stage 0 fails CLOSED to an empty
+       context (a swallowed LLM error or an unparseable reply are both logged, not
+       raised), and an empty context silently disables RAG — ``build_query()``
+       returns "" so zero papers can ever be fetched. Hence the retry on a bounded
+       head of the document: the pathway name / organism / key entities live in
+       the title, abstract and intro, and the smaller payload also dodges
+       transient failures. But the retry's trigger was ``not
+       _has_usable_context(...)``, and the prompt's Case C — a multi-example
+       review with no target selected — MANDATES those same fields be blank. A
+       CORRECT Case C was therefore indistinguishable from a FAILED Stage 0 and
+       fired the retry every time. With ``_PREPROCESS_RETRY_CHARS`` at 20,000 the
+       length condition is met by essentially every topic-fetched review (the
+       PMC13278307 leg below is 50,377 chars per that run's plan.json), so this
+       was not a rare path.
+
+    2. *The retry's result was adopted unconditionally.* ``pathway_context =
+       preprocess(head)`` overwrote the first draw whatever came back. When the
+       first draw was a Case C and the second was blank, the overwrite dropped
+       ``document_type``, which is the one field
+       ``is_ambiguous_multi_example_review_context`` requires. That disarms the
+       refusal gate further down and lets the run proceed to an unguided
+       extraction over a multi-example review. Because the extraction-focus box is
+       now filled in by the batch driver, such a run no longer aborts loudly — it
+       reports PASS. Leg PMC13278307/strict of ``runs/2026-07-28_0919`` is exactly
+       that shape: the paper is the review "An Overview of Mobile Colistin
+       Resistance (mcr) Genes in Gram-Negative Bacilli", the focus box said
+       ``lipid A biosynthesis``, and the leg came back **pass** in 2098.21s with
+       14 reactions and 0 gate errors — every one of them an mcr / PEtN / L-Ara4N
+       lipid A MODIFICATION step, and not one reaction of the lipid A
+       biosynthesis pathway it was asked for.
+
+    The fix is the two rules below: skip the retry entirely for a deliberate Case
+    C (it is deterministic — re-running never helps, only the user naming a target
+    does), and, whenever a retry does run, keep its result in a LOCAL and adopt it
+    only when ``_stage0_context_rank`` says it is strictly better. A second draw
+    can now still rescue a genuinely failed Stage 0, but it can no longer degrade
+    the context it was meant to improve.
+    R3b: ``preprocess_fn`` is the Stage-0 call. ``None`` means
+    ``t2pw.pipeline.preprocessor.preprocess``, looked up at call time; the app passes
+    its own ``preprocess`` binding so a patch of ``streamlit_app.preprocess`` still lands.
+    """
+    preprocess = preprocess_fn if preprocess_fn is not None else _preprocessor.preprocess
+    first_context = preprocess(
+        text, temperature=temperature, user_task_context=user_task_context
+    )
+    if _has_usable_context(first_context):
+        # Nothing to rescue: extraction is guided and RAG can build a query.
+        return first_context
+    if is_ambiguous_multi_example_review_context(first_context):
+        # Defect 1: a deliberate Case C has blank pathway fields BY DESIGN. The
+        # caller's refusal gate needs the document_type this draw carries, so
+        # return it untouched rather than spending a second LLM call that can only
+        # return the same verdict or something weaker.
+        return first_context
+    if len(text) <= _PREPROCESS_RETRY_CHARS:
+        # The retry re-reads a bounded head; on a document already shorter than
+        # that head it would re-send identical input for an identical answer.
+        return first_context
+
+    retry_context = preprocess(
+        text[:_PREPROCESS_RETRY_CHARS],
+        temperature=temperature,
+        user_task_context=user_task_context,
+    )
+    # Defect 2: adopt only on a strict improvement. ``first_context`` is known to
+    # be rank 0 here, so this admits both a usable retry and a retry that is
+    # itself a well-formed Case C (the head of a review is often enough for Stage
+    # 0 to recognise the review it could not classify from the full text), while
+    # rejecting a second blank draw.
+    if _stage0_context_rank(retry_context) > _stage0_context_rank(first_context):
+        return retry_context
+    return first_context
+
+
+#: Session-state key holding this run's diagnostic artifacts as a
+#: ``{filename: object}`` map. The batch driver reads it to write those files into
+#: the per-leg directory, and it is populated on the FAILURE paths too -- which is
+#: the whole point. The 2026-07-28 legs died with ``files: []`` because every
+#: artifact hand-off in the app sat downstream of an ``st.stop()``.
+EXTRACTION_DIAGNOSTICS_KEY = "extraction_diagnostics"
+
+#: Session-state key holding the directory this invocation's artifacts were
+#: written to. Each run gets its own, so the path has to be reported rather than
+#: assumed -- "look in tmp/extraction_diagnostics" is no longer an instruction
+#: anyone can follow.
+EXTRACTION_DIAGNOSTICS_DIR_KEY = "extraction_diagnostics_dir"
+
+#: Where a run's diagnostics land on disk, under the project ``tmp`` tree the app
+#: already uses for Stage-1 lock artifacts. Writing to disk is independent of the
+#: session-state hand-off on purpose: an interactive user who never runs the batch
+#: driver still gets the files, and a leg that dies before the driver reads
+#: session state still leaves them behind.
+DIAGNOSTICS_DIRNAME = "extraction_diagnostics"
+
+
+def _start_extraction_diagnostics(source_text: str, *, state: MutableMapping[str, Any]) -> Path:
+    """Begin a fresh diagnostics record for one pipeline run. Returns its directory.
+
+    Called once, before Stage 0. Replacing the recorder rather than clearing it
+    means diagnostics from a previous paper can never leak into this run's
+    artifacts -- a real hazard in the batch, where one process drives the app
+    repeatedly.
+
+    ``unique=True`` is not optional here. Streamlit serves every browser session
+    from the same process, so two people (or two batch legs sharing an
+    interpreter) extracting different papers at the same moment would write
+    ``extraction_boundary_report.json`` over each other. The loser would then be
+    diagnosed with the winner's evidence, which is worse than having none: it
+    looks authoritative. Each invocation gets its own subdirectory, and the path
+    is surfaced in the failure message so an operator knows where to look.
+    """
+
+    run_id = diagnostic_payload_hash(source_text)
+    recorder = activate_extraction_diagnostics(
+        run_id=run_id,
+        artifact_dir=paths.PROJECT_ROOT / "tmp" / DIAGNOSTICS_DIRNAME,
+        unique=True,
+    )
+    state[EXTRACTION_DIAGNOSTICS_KEY] = {}
+    state[EXTRACTION_DIAGNOSTICS_DIR_KEY] = str(recorder.artifact_dir or "")
+    return Path(recorder.artifact_dir) if recorder.artifact_dir else paths.PROJECT_ROOT / "tmp"
+
+
+def _sync_extraction_diagnostics(*, state: MutableMapping[str, Any]) -> Dict[str, Any]:
+    """Publish the diagnostics collected so far into session state.
+
+    Called at every point the run can end -- after Stage 0, after Stage 1 on both
+    the pass and the fail path, and after the post-pipeline step -- because
+    ``st.stop()`` means "this script run is over" and anything not in session
+    state by then is lost. Never raises: a diagnostics hand-off that can abort the
+    run defeats its own purpose.
+    """
+
+    try:
+        artifacts = current_extraction_diagnostics().artifacts()
+    except Exception:  # noqa: BLE001 - diagnostics must never break the run
+        logger.debug("extraction diagnostics could not be published", exc_info=True)
+        return {}
+    state[EXTRACTION_DIAGNOSTICS_KEY] = artifacts
+    return artifacts
+
+
+@dataclass(frozen=True)
+class StageZeroResult:
+    """Stage 0's context and the directory this run's diagnostics are written to."""
+
+    pathway_context: Any
+    diagnostics_dir: Path
+
+
+def run_stage_zero(
+    text: str,
+    *,
+    temperature: float,
+    user_task_context: Optional[str],
+    state: MutableMapping[str, Any],
+    reporter: Reporter,
+    preprocess_fn: Optional[Callable[..., Any]] = None,
+) -> StageZeroResult:
+    """Stage 0 exactly as the app's submit block ran it, up to the ambiguous-review gate.
+
+    Opens this run's extraction diagnostics (writing their keys into ``state``), runs
+    the preprocessor with its bounded-head retry, falls back to the user's scope when
+    Stage 0 came back empty, reports what happened through ``reporter``, and publishes
+    the diagnostics into ``state``. Nothing here stops the run.
+    """
+
+    # Opened BEFORE Stage 0, because Stage 0 is one of the boundaries being
+    # diagnosed. Everything recorded from here on is flushed to disk as it is
+    # recorded, so a run that dies inside Stage 0 has already written
+    # stage0_attempts.json by the time the error is rendered.
+    _diagnostics_dir = _start_extraction_diagnostics(text, state=state)
+
+    # Preprocessing: lightweight context summary to guide extraction and inference
+    with reporter.spinner("Running preprocessor..."):
+        # Stage 0 plus its at-most-one bounded-head retry. The retry's guards
+        # (skip a deliberate Case C; adopt the second draw only on a strict
+        # improvement) live inside the helper because the inline version ran the
+        # retry BEFORE the Case-C test below and let it overwrite the context
+        # unconditionally — see _run_stage_zero_with_retry for the run that
+        # exposed it.
+        pathway_context = _run_stage_zero_with_retry(
+            text, temperature=temperature, user_task_context=user_task_context,
+            preprocess_fn=preprocess_fn,
+        )
+        # A deliberate Case C ambiguous multi-example review also has blank
+        # pathway fields, but that is the prompt's guardrail, not a flaky call:
+        # it is deterministic and re-running never helps. The branch below
+        # raises its own error, so stay quiet here.
+        if not _has_usable_context(pathway_context) and not is_ambiguous_multi_example_review_context(
+            pathway_context
+        ):
+            # Stage 0 came back empty. Before disabling RAG, fall back to the scope
+            # the user typed in the extraction-focus box — a flaky preprocessor call
+            # should never nuke a scope we already have. Show exactly what was
+            # inferred so a mis-parse is visible rather than silent.
+            seeded_context = _seed_context_from_user_scope(pathway_context, user_task_context)
+            if seeded_context is not None:
+                pathway_context = seeded_context
+                _seed_org = str(seeded_context.get("likely_organism") or "").strip()
+                reporter.info(
+                    "Stage 0 returned no usable context, so the pipeline is falling "
+                    "back to the scope you provided — pathway "
+                    f"\"{seeded_context.get('pathway_name', '')}\""
+                    + (f", organism \"{_seed_org}\"" if _seed_org else "")
+                    + ". Extraction and multi-paper RAG will use it. Re-run if you'd "
+                    "rather the preprocessor try to read the scope from the paper again."
+                )
+            else:
+                reporter.warning(
+                    f"Stage 0 failed: {describe_preprocess_status(pathway_context)}\n\n"
+                    "It returned no usable context — no pathway name, "
+                    "organism, compounds or proteins, and no scope was provided in the "
+                    "extraction-focus box to fall back to. Extraction will be unguided, "
+                    "and multi-paper RAG cannot build a literature query, so no papers "
+                    "will be fetched. Re-run (usually a transient LLM failure), or type "
+                    "the pathway/organism into the focus box so the pipeline can proceed "
+                    "without the preprocessor."
+                )
+        elif preprocess_was_recovered(pathway_context):
+            # Not an error: the context is real. But it came from a reply that
+            # was cut off mid-JSON, so fields the model never wrote are absent.
+            reporter.warning(
+                f"Stage 0 partially recovered: {describe_preprocess_status(pathway_context)}\n\n"
+                "The reply was cut off and repaired, so some context fields "
+                "(e.g. candidate examples, key compounds) may be missing. Re-run "
+                "if the context below looks incomplete."
+            )
+
+    _sync_extraction_diagnostics(state=state)
+
+    return StageZeroResult(pathway_context=pathway_context, diagnostics_dir=_diagnostics_dir)
