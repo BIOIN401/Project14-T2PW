@@ -1,0 +1,14 @@
+T2PW: C:\t\ws-R3a\src\t2pw\__init__.py
+.......................F...                                              [100%]
+================================== FAILURES ===================================
+________________________ test_the_reporter_is_required ________________________
+
+    def test_the_reporter_is_required():
+>       with pytest.raises(TypeError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'TypeError'>
+
+tests\test_service_extraction.py:246: Failed
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction.py::test_the_reporter_is_required - Fail...
+1 failed, 26 passed, 2 deselected in 0.36s

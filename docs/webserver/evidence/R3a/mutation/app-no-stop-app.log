@@ -1,0 +1,112 @@
+T2PW: C:\t\ws-R3a\src\t2pw\__init__.py
+FF                                                                       [100%]
+================================== FAILURES ===================================
+_ test_real_app_warns_and_stops_before_stage_zero[Paste text-No text to process. Paste text, upload one or more PDFs, or use both.] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000275C88C9A70>
+mode = 'Paste text'
+message = 'No text to process. Paste text, upload one or more PDFs, or use both.'
+
+    @pytest.mark.parametrize("mode,message", [("Paste text", NO_TEXT), ("Upload PDF", NO_PDF)])
+    def test_real_app_warns_and_stops_before_stage_zero(monkeypatch, mode, message):
+        """The app shows the moved warning and still calls ``st.stop()`` there.
+    
+        If it did not stop, the next thing the script does is open the extraction
+        diagnostics (which hashes the text). That hash is replaced by a raiser, so a
+        missing stop shows up as an app exception instead of a real Stage-0 call.
+        """
+    
+        from streamlit.testing.v1 import AppTest
+    
+        import t2pw.pipeline.extraction_diagnostics as diag
+    
+        def _reached(*_a, **_k):
+            raise _ReachedStageZero("the run went past the input-assembly stop")
+    
+        monkeypatch.setattr(diag, "payload_hash", _reached)
+        at = AppTest.from_file(str(APP_PATH), default_timeout=300).run()
+        assert not at.exception
+        at.radio(key="input_mode_radio").set_value(mode).run()
+        next(b for b in at.button if b.label == "Run pipeline").click().run()
+    
+>       assert [str(e.value) for e in at.exception] == []
+E       AssertionError: assert ['the run wen...ssembly stop'] == []
+E         
+E         Left contains one more item: 'the run went past the input-assembly stop'
+E         Use -v to get more diff
+
+tests\test_service_extraction.py:322: AssertionError
+---------------------------- Captured stdout call -----------------------------
+\x1b[31m\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m \x1b[0m\x1b[1;31mTraceback \x1b[0m\x1b[1;2;31m(most recent call last)\x1b[0m\x1b[31m \x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\exec_code.py:136 in exec_func_with_error_handling               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\script_runner.py:837 in code_to_exec                            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\ws-R3a\\src\\t2pw\\app\\streamlit_app.py:2108 in <module>                           \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m2105 \x1b[0m\x1b[2m\u2502   \x1b[0m\x1b[2m# diagnosed. Everything recorded from here on is flushed to disk as it is\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m2106 \x1b[0m\x1b[2m\u2502   \x1b[0m\x1b[2m# recorded, so a run that dies inside Stage 0 has already written\x1b[0m         \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m2107 \x1b[0m\x1b[2m\u2502   \x1b[0m\x1b[2m# stage0_attempts.json by the time the error is rendered.\x1b[0m                 \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m2108 \x1b[2m\u2502   \x1b[0m_diagnostics_dir = \x1b[1;4m_start_extraction_diagnostics(text)\x1b[0m                    \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m2109 \x1b[0m\x1b[2m\u2502   \x1b[0m                                                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m2110 \x1b[0m\x1b[2m\u2502   \x1b[0m\x1b[2m# Preprocessing: lightweight context summary to guide extraction and infe\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m2111 \x1b[0m\x1b[2m\u2502   \x1b[0m\x1b[94mwith\x1b[0m st.spinner(\x1b[33m"\x1b[0m\x1b[33mRunning preprocessor...\x1b[0m\x1b[33m"\x1b[0m):                               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\ws-R3a\\src\\t2pw\\app\\streamlit_app.py:819 in _start_extraction_diagnostics       \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 816 \x1b[0m\x1b[2;33m\u2502   \x1b[0m\x1b[33mis surfaced in the failure message so an operator knows where to look.\x1b[0m    \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 817 \x1b[0m\x1b[2;33m\u2502   \x1b[0m\x1b[33m"""\x1b[0m                                                                       \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 818 \x1b[0m\x1b[2m\u2502   \x1b[0m                                                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m 819 \x1b[2m\u2502   \x1b[0mrun_id = \x1b[1;4mdiagnostic_payload_hash(source_text)\x1b[0m                             \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 820 \x1b[0m\x1b[2m\u2502   \x1b[0mrecorder = activate_extraction_diagnostics(                               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 821 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0mrun_id=run_id,                                                        \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 822 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0martifact_dir=PROJECT_ROOT / \x1b[33m"\x1b[0m\x1b[33mtmp\x1b[0m\x1b[33m"\x1b[0m / DIAGNOSTICS_DIRNAME,              \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\ws-R3a\\tests\\test_service_extraction.py:314 in _reached                         \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m311 \x1b[0m\x1b[2m\u2502   \x1b[0m\x1b[94mimport\x1b[0m\x1b[90m \x1b[0m\x1b[4;96mt2pw\x1b[0m\x1b[4;96m.\x1b[0m\x1b[4;96mpipeline\x1b[0m\x1b[4;96m.\x1b[0m\x1b[4;96mextraction_diagnostics\x1b[0m\x1b[90m \x1b[0m\x1b[94mas\x1b[0m\x1b[90m \x1b[0m\x1b[4;96mdiag\x1b[0m                        \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m312 \x1b[0m\x1b[2m\u2502   \x1b[0m                                                                           \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m313 \x1b[0m\x1b[2m\u2502   \x1b[0m\x1b[94mdef\x1b[0m\x1b[90m \x1b[0m\x1b[92m_reached\x1b[0m(*_a, **_k):                                                   \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m314 \x1b[2m\u2502   \u2502   \x1b[0m\x1b[1;4;94mraise\x1b[0m\x1b[1;4m _ReachedStageZero(\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4;33mthe run went past the input-assembly stop\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4m)\x1b[0m   \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m315 \x1b[0m\x1b[2m\u2502   \x1b[0m                                                                           \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m316 \x1b[0m\x1b[2m\u2502   \x1b[0mmonkeypatch.setattr(diag, \x1b[33m"\x1b[0m\x1b[33mpayload_hash\x1b[0m\x1b[33m"\x1b[0m, _reached)                        \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m317 \x1b[0m\x1b[2m\u2502   \x1b[0mat = AppTest.from_file(\x1b[96mstr\x1b[0m(APP_PATH), default_timeout=\x1b[94m300\x1b[0m).run()           \x1b[31m \x1b[0m\n\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\n\x1b[1;91m_ReachedStageZero: \x1b[0mthe run went past the input-assembly stop
+---------------------------- Captured stderr call -----------------------------
+2026-11-05 18:48:25.044 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+_ test_real_app_warns_and_stops_before_stage_zero[Upload PDF-Please upload one or more PDFs using the file uploader above.] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000275C88C9810>
+mode = 'Upload PDF'
+message = 'Please upload one or more PDFs using the file uploader above.'
+
+    @pytest.mark.parametrize("mode,message", [("Paste text", NO_TEXT), ("Upload PDF", NO_PDF)])
+    def test_real_app_warns_and_stops_before_stage_zero(monkeypatch, mode, message):
+        """The app shows the moved warning and still calls ``st.stop()`` there.
+    
+        If it did not stop, the next thing the script does is open the extraction
+        diagnostics (which hashes the text). That hash is replaced by a raiser, so a
+        missing stop shows up as an app exception instead of a real Stage-0 call.
+        """
+    
+        from streamlit.testing.v1 import AppTest
+    
+        import t2pw.pipeline.extraction_diagnostics as diag
+    
+        def _reached(*_a, **_k):
+            raise _ReachedStageZero("the run went past the input-assembly stop")
+    
+        monkeypatch.setattr(diag, "payload_hash", _reached)
+        at = AppTest.from_file(str(APP_PATH), default_timeout=300).run()
+        assert not at.exception
+        at.radio(key="input_mode_radio").set_value(mode).run()
+        next(b for b in at.button if b.label == "Run pipeline").click().run()
+    
+>       assert [str(e.value) for e in at.exception] == []
+E       AssertionError: assert ['the run wen...ssembly stop'] == []
+E         
+E         Left contains one more item: 'the run went past the input-assembly stop'
+E         Use -v to get more diff
+
+tests\test_service_extraction.py:322: AssertionError
+---------------------------- Captured stdout call -----------------------------
+\x1b[31m\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m \x1b[0m\x1b[1;31mTraceback \x1b[0m\x1b[1;2;31m(most recent call last)\x1b[0m\x1b[31m \x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\exec_code.py:136 in exec_func_with_error_handling               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\script_runner.py:837 in code_to_exec                            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\ws-R3a\\src\\t2pw\\app\\streamlit_app.py:2108 in <module>                           \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m2105 \x1b[0m\x1b[2m\u2502   \x1b[0m\x1b[2m# diagnosed. Everything recorded from here on is flushed to disk as it is\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m2106 \x1b[0m\x1b[2m\u2502   \x1b[0m\x1b[2m# recorded, so a run that dies inside Stage 0 has already written\x1b[0m         \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m2107 \x1b[0m\x1b[2m\u2502   \x1b[0m\x1b[2m# stage0_attempts.json by the time the error is rendered.\x1b[0m                 \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m2108 \x1b[2m\u2502   \x1b[0m_diagnostics_dir = \x1b[1;4m_start_extraction_diagnostics(text)\x1b[0m                    \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m2109 \x1b[0m\x1b[2m\u2502   \x1b[0m                                                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m2110 \x1b[0m\x1b[2m\u2502   \x1b[0m\x1b[2m# Preprocessing: lightweight context summary to guide extraction and infe\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m2111 \x1b[0m\x1b[2m\u2502   \x1b[0m\x1b[94mwith\x1b[0m st.spinner(\x1b[33m"\x1b[0m\x1b[33mRunning preprocessor...\x1b[0m\x1b[33m"\x1b[0m):                               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\ws-R3a\\src\\t2pw\\app\\streamlit_app.py:819 in _start_extraction_diagnostics       \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 816 \x1b[0m\x1b[2;33m\u2502   \x1b[0m\x1b[33mis surfaced in the failure message so an operator knows where to look.\x1b[0m    \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 817 \x1b[0m\x1b[2;33m\u2502   \x1b[0m\x1b[33m"""\x1b[0m                                                                       \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 818 \x1b[0m\x1b[2m\u2502   \x1b[0m                                                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m 819 \x1b[2m\u2502   \x1b[0mrun_id = \x1b[1;4mdiagnostic_payload_hash(source_text)\x1b[0m                             \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 820 \x1b[0m\x1b[2m\u2502   \x1b[0mrecorder = activate_extraction_diagnostics(                               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 821 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0mrun_id=run_id,                                                        \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 822 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0martifact_dir=PROJECT_ROOT / \x1b[33m"\x1b[0m\x1b[33mtmp\x1b[0m\x1b[33m"\x1b[0m / DIAGNOSTICS_DIRNAME,              \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\ws-R3a\\tests\\test_service_extraction.py:314 in _reached                         \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m311 \x1b[0m\x1b[2m\u2502   \x1b[0m\x1b[94mimport\x1b[0m\x1b[90m \x1b[0m\x1b[4;96mt2pw\x1b[0m\x1b[4;96m.\x1b[0m\x1b[4;96mpipeline\x1b[0m\x1b[4;96m.\x1b[0m\x1b[4;96mextraction_diagnostics\x1b[0m\x1b[90m \x1b[0m\x1b[94mas\x1b[0m\x1b[90m \x1b[0m\x1b[4;96mdiag\x1b[0m                        \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m312 \x1b[0m\x1b[2m\u2502   \x1b[0m                                                                           \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m313 \x1b[0m\x1b[2m\u2502   \x1b[0m\x1b[94mdef\x1b[0m\x1b[90m \x1b[0m\x1b[92m_reached\x1b[0m(*_a, **_k):                                                   \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m314 \x1b[2m\u2502   \u2502   \x1b[0m\x1b[1;4;94mraise\x1b[0m\x1b[1;4m _ReachedStageZero(\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4;33mthe run went past the input-assembly stop\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4m)\x1b[0m   \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m315 \x1b[0m\x1b[2m\u2502   \x1b[0m                                                                           \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m316 \x1b[0m\x1b[2m\u2502   \x1b[0mmonkeypatch.setattr(diag, \x1b[33m"\x1b[0m\x1b[33mpayload_hash\x1b[0m\x1b[33m"\x1b[0m, _reached)                        \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m317 \x1b[0m\x1b[2m\u2502   \x1b[0mat = AppTest.from_file(\x1b[96mstr\x1b[0m(APP_PATH), default_timeout=\x1b[94m300\x1b[0m).run()           \x1b[31m \x1b[0m\n\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\n\x1b[1;91m_ReachedStageZero: \x1b[0mthe run went past the input-assembly stop
+---------------------------- Captured stderr call -----------------------------
+2026-11-05 18:48:27.013 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction.py::test_real_app_warns_and_stops_before_stage_zero[Paste text-No text to process. Paste text, upload one or more PDFs, or use both.]
+FAILED tests/test_service_extraction.py::test_real_app_warns_and_stops_before_stage_zero[Upload PDF-Please upload one or more PDFs using the file uploader above.]
+2 failed, 27 deselected in 3.35s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3a\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ d043e263a60b557fec934988eaf14c8e643075ae  [git, worktree dirty=True]
+label                   : app
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3a/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3a --pin-verdict C:/t/wsR3atmp/mut/pin/app-no-stop-app.pin.json -q --basetemp=C:/t/wsR3atmp/app-no-stop-app tests/test_service_extraction.py -k real_app -p no:cacheprovider
+cwd                     : C:\t\ws-R3a
+root PID / process group: 811344 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 4.72 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  809476:python.exe
+descendants terminated  : 1  809476
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/wsR3atmp/mut/app-no-stop-app.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R3a  acquired=True  released=True
+pre-existing (reported, NEVER killed): 8
+================================================

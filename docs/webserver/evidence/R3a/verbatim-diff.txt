@@ -1,0 +1,90 @@
+--- base 480b2384 streamlit_app.py:2084-2162
++++ tip extraction.py:59-136
+@@ -1,16 +1,13 @@
+     text_parts = [entry.strip() for entry in text_entries if entry.strip()]
+-    user_task_context = (user_task_context or "").strip() or None
+ 
+     # PDF extraction runs here — outside the form, so uploaded_pdf is accessible
+     if uses_pdf_input:
+-        if not uploaded_pdfs:
++        if not pdfs:
+             if input_mode == "Upload PDF":
+-                st.warning("Please upload one or more PDFs using the file uploader above.")
+-                st.stop()
+-            uploaded_pdfs = []
+-
+-        import tempfile
+-        import os
++                message = "Please upload one or more PDFs using the file uploader above."
++                reporter.warning(message)
++                return AssembledInputs(failure=InputFailure(KIND_NO_PDF, message))
++            pdfs = []
+ 
+         # Parse page range once and apply it to every uploaded PDF.
+         _ps, _pe = 1, None
+@@ -21,17 +18,17 @@
+                 _ps = int(_parts[0])
+                 _pe = int(_parts[1]) if len(_parts) > 1 else _ps
+             except ValueError:
+-                st.warning(f"Invalid page range '{_pr}'; extracting all pages.")
++                reporter.warning(f"Invalid page range '{_pr}'; extracting all pages.")
+ 
+         _skip = SKIP_SECTIONS if pdf_skip_refs else set()
+ 
+-        for uploaded_pdf in uploaded_pdfs:
++        for name, data in pdfs:
+             with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as _tmp:
+-                _tmp.write(uploaded_pdf.read())
++                _tmp.write(data)
+                 _tmp_path = _tmp.name
+ 
+             try:
+-                with st.spinner(f"Extracting text from {uploaded_pdf.name}..."):
++                with reporter.spinner(f"Extracting text from {name}..."):
+                     _pdf = parse_pdf(
+                         _tmp_path,
+                         page_start=_ps,
+@@ -46,17 +43,18 @@
+                     pass
+ 
+             if _pdf["error"]:
+-                st.error(f"PDF extraction failed for {uploaded_pdf.name}: {_pdf['error']}")
+-                st.stop()
++                message = f"PDF extraction failed for {name}: {_pdf['error']}"
++                reporter.error(message)
++                return AssembledInputs(failure=InputFailure(KIND_PDF_FAILED, message))
+ 
+             if _pdf["text"].strip():
+                 text_parts.append(_pdf["text"].strip())
+ 
+             for _w in _pdf.get("warnings", []):
+-                st.warning(f"{uploaded_pdf.name}: {_w}")
++                reporter.warning(f"{name}: {_w}")
+ 
+-            st.success(
+-                f"{uploaded_pdf.name}: extracted **{_pdf['pages_used']}** of **{_pdf['total_pages']}** pages "
++            reporter.success(
++                f"{name}: extracted **{_pdf['pages_used']}** of **{_pdf['total_pages']}** pages "
+                 f"via **{_pdf['method']}**. "
+                 f"Sections: {', '.join(_pdf['sections'].keys()) or 'none'}"
+             )
+@@ -67,13 +65,14 @@
+                 f"DOI: {_meta['doi']}"          if _meta.get("doi")    else "",
+             ] if p]
+             if _mp:
+-                st.caption(" | ".join(_mp))
++                reporter.caption(" | ".join(_mp))
+ 
+-            with st.expander(f"Preview extracted text from {uploaded_pdf.name} (first 1000 chars)", expanded=False):
++            with reporter.expander(f"Preview extracted text from {name} (first 1000 chars)", expanded=False):
+                 _preview = _pdf["text"][:1000] + ("..." if len(_pdf["text"]) > 1000 else "")
+-                st.text(_preview)
++                reporter.text(_preview)
+ 
+     text = "\n\n".join(text_parts)
+     if not text.strip():
+-        st.warning("No text to process. Paste text, upload one or more PDFs, or use both.")
+-        st.stop()
++        message = "No text to process. Paste text, upload one or more PDFs, or use both."
++        reporter.warning(message)
++        return AssembledInputs(text=text, failure=InputFailure(KIND_NO_TEXT, message))

@@ -1,0 +1,42 @@
+T2PW: C:\t\ws-R3a\src\t2pw\__init__.py
+..F........................                                              [100%]
+================================== FAILURES ===================================
+_______________ test_pdf_only_text_and_exact_reporter_sequence ________________
+
+fake_parse = ([{'data': b'%PDF-bytes', 'enable_ocr_fallback': False, 'page_end': None, 'page_start': 1, ...}], [])
+
+    def test_pdf_only_text_and_exact_reporter_sequence(fake_parse):
+        seen, queue = fake_parse
+        queue.append(_pdf_result("  BODY  ", warnings=["w1", "w2"],
+                                 metadata={"title": "T", "author": "A", "doi": "D"}))
+        res, calls = _run([], [("paper.pdf", b"%PDF-bytes")], mode="Upload PDF")
+    
+        assert res.text == "BODY" and res.failure is None
+        assert seen[0]["data"] == b"%PDF-bytes"
+        assert not os.path.exists(seen[0]["path"])  # temp file removed
+        assert seen[0]["path"].endswith(".pdf")
+>       assert calls == [
+            ("spinner", ("Extracting text from paper.pdf...",)),
+            ("spinner:enter",),
+            ("spinner:exit",),
+            ("warning", ("paper.pdf: w1",)),
+            ("warning", ("paper.pdf: w2",)),
+            ("success", ("paper.pdf: extracted **4** of **10** pages via **pdfplumber**. "
+                         "Sections: abstract, methods",)),
+            ("caption", ("Title: T | Author(s): A | DOI: D",)),
+            ("expander", ("Preview extracted text from paper.pdf (first 1000 chars)",),
+             {"expanded": False}),
+            ("expander:enter",),
+            ("text", ("  BODY  ",)),
+            ("expander:exit",),
+        ]
+E       AssertionError: assert [('spinner', ... False}), ...] == [('spinner', ...hods',)), ...]
+E         
+E         At index 3 diff: ('success', ('paper.pdf: extracted **4** of **10** pages via **pdfplumber**. Sections: abstract, methods',)) != ('warning', ('paper.pdf: w1',))
+E         Right contains 2 more items, first extra item: ('text', ('  BODY  ',))
+E         Use -v to get more diff
+
+tests\test_service_extraction.py:119: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction.py::test_pdf_only_text_and_exact_reporter_sequence
+1 failed, 26 passed, 2 deselected in 0.37s

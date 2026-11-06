@@ -1,0 +1,37 @@
+T2PW: C:\t\ws-R3a\src\t2pw\__init__.py
+....................F.F....                                              [100%]
+================================== FAILURES ===================================
+_____________ test_skip_refs_and_ocr_reach_parse_pdf[False-True] ______________
+
+fake_parse = ([{'data': b'1', 'enable_ocr_fallback': False, 'page_end': None, 'page_start': 1, ...}], [])
+skip_refs = False, ocr = True
+
+    @pytest.mark.parametrize("skip_refs,ocr", [(True, False), (False, True), (False, 0), (True, "on")])
+    def test_skip_refs_and_ocr_reach_parse_pdf(fake_parse, skip_refs, ocr):
+        seen, _ = fake_parse
+        _run([], [("a.pdf", b"1")], mode="Upload PDF", skip_refs=skip_refs, ocr=ocr)
+        assert seen[0]["skip_sections"] == (SKIP_SECTIONS if skip_refs else set())
+>       assert seen[0]["enable_ocr_fallback"] is bool(ocr)
+E       assert False is True
+E        +  where True = bool(True)
+
+tests\test_service_extraction.py:241: AssertionError
+_______________ test_skip_refs_and_ocr_reach_parse_pdf[True-on] _______________
+
+fake_parse = ([{'data': b'1', 'enable_ocr_fallback': False, 'page_end': None, 'page_start': 1, ...}], [])
+skip_refs = True, ocr = 'on'
+
+    @pytest.mark.parametrize("skip_refs,ocr", [(True, False), (False, True), (False, 0), (True, "on")])
+    def test_skip_refs_and_ocr_reach_parse_pdf(fake_parse, skip_refs, ocr):
+        seen, _ = fake_parse
+        _run([], [("a.pdf", b"1")], mode="Upload PDF", skip_refs=skip_refs, ocr=ocr)
+        assert seen[0]["skip_sections"] == (SKIP_SECTIONS if skip_refs else set())
+>       assert seen[0]["enable_ocr_fallback"] is bool(ocr)
+E       AssertionError: assert False is True
+E        +  where True = bool('on')
+
+tests\test_service_extraction.py:241: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction.py::test_skip_refs_and_ocr_reach_parse_pdf[False-True]
+FAILED tests/test_service_extraction.py::test_skip_refs_and_ocr_reach_parse_pdf[True-on]
+2 failed, 25 passed, 2 deselected in 0.36s

@@ -1,0 +1,108 @@
+T2PW: C:\t\ws-R3a\src\t2pw\__init__.py
+FF                                                                       [100%]
+================================== FAILURES ===================================
+_ test_real_app_warns_and_stops_before_stage_zero[Paste text-No text to process. Paste text, upload one or more PDFs, or use both.] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002812C449A70>
+mode = 'Paste text'
+message = 'No text to process. Paste text, upload one or more PDFs, or use both.'
+
+    @pytest.mark.parametrize("mode,message", [("Paste text", NO_TEXT), ("Upload PDF", NO_PDF)])
+    def test_real_app_warns_and_stops_before_stage_zero(monkeypatch, mode, message):
+        """The app shows the moved warning and still calls ``st.stop()`` there.
+    
+        If it did not stop, the next thing the script does is open the extraction
+        diagnostics (which hashes the text). That hash is replaced by a raiser, so a
+        missing stop shows up as an app exception instead of a real Stage-0 call.
+        """
+    
+        from streamlit.testing.v1 import AppTest
+    
+        import t2pw.pipeline.extraction_diagnostics as diag
+    
+        def _reached(*_a, **_k):
+            raise _ReachedStageZero("the run went past the input-assembly stop")
+    
+        monkeypatch.setattr(diag, "payload_hash", _reached)
+        at = AppTest.from_file(str(APP_PATH), default_timeout=300).run()
+        assert not at.exception
+        at.radio(key="input_mode_radio").set_value(mode).run()
+        next(b for b in at.button if b.label == "Run pipeline").click().run()
+    
+        assert [str(e.value) for e in at.exception] == []
+>       assert message in [w.value for w in at.warning]
+E       AssertionError: assert 'No text to process. Paste text, upload one or more PDFs, or use both.' in []
+
+tests\test_service_extraction.py:323: AssertionError
+---------------------------- Captured stderr call -----------------------------
+2026-11-05 18:48:30.981 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.service.reporter:reporter.py:128 No text to process. Paste text, upload one or more PDFs, or use both.
+_ test_real_app_warns_and_stops_before_stage_zero[Upload PDF-Please upload one or more PDFs using the file uploader above.] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002812C449810>
+mode = 'Upload PDF'
+message = 'Please upload one or more PDFs using the file uploader above.'
+
+    @pytest.mark.parametrize("mode,message", [("Paste text", NO_TEXT), ("Upload PDF", NO_PDF)])
+    def test_real_app_warns_and_stops_before_stage_zero(monkeypatch, mode, message):
+        """The app shows the moved warning and still calls ``st.stop()`` there.
+    
+        If it did not stop, the next thing the script does is open the extraction
+        diagnostics (which hashes the text). That hash is replaced by a raiser, so a
+        missing stop shows up as an app exception instead of a real Stage-0 call.
+        """
+    
+        from streamlit.testing.v1 import AppTest
+    
+        import t2pw.pipeline.extraction_diagnostics as diag
+    
+        def _reached(*_a, **_k):
+            raise _ReachedStageZero("the run went past the input-assembly stop")
+    
+        monkeypatch.setattr(diag, "payload_hash", _reached)
+        at = AppTest.from_file(str(APP_PATH), default_timeout=300).run()
+        assert not at.exception
+        at.radio(key="input_mode_radio").set_value(mode).run()
+        next(b for b in at.button if b.label == "Run pipeline").click().run()
+    
+        assert [str(e.value) for e in at.exception] == []
+>       assert message in [w.value for w in at.warning]
+E       AssertionError: assert 'Please upload one or more PDFs using the file uploader above.' in ['Upload one or more PDFs using the file uploader above, then click **Run pipeline**.']
+
+tests\test_service_extraction.py:323: AssertionError
+---------------------------- Captured stderr call -----------------------------
+2026-11-05 18:48:32.750 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.service.reporter:reporter.py:128 Please upload one or more PDFs using the file uploader above.
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction.py::test_real_app_warns_and_stops_before_stage_zero[Paste text-No text to process. Paste text, upload one or more PDFs, or use both.]
+FAILED tests/test_service_extraction.py::test_real_app_warns_and_stops_before_stage_zero[Upload PDF-Please upload one or more PDFs using the file uploader above.]
+2 failed, 27 deselected in 2.91s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3a\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ d043e263a60b557fec934988eaf14c8e643075ae  [git, worktree dirty=True]
+label                   : app
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3a/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3a --pin-verdict C:/t/wsR3atmp/mut/pin/app-logging-reporter-app.pin.json -q --basetemp=C:/t/wsR3atmp/app-logging-reporter-app tests/test_service_extraction.py -k real_app -p no:cacheprovider
+cwd                     : C:\t\ws-R3a
+root PID / process group: 811524 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 4.20 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  811716:python.exe
+descendants terminated  : 1  811716
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/wsR3atmp/mut/app-logging-reporter-app.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R3a  acquired=True  released=True
+pre-existing (reported, NEVER killed): 8
+================================================

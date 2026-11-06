@@ -1,0 +1,67 @@
+T2PW: C:\t\ws-R3a\src\t2pw\__init__.py
+..F........FF..............                                              [100%]
+================================== FAILURES ===================================
+_______________ test_pdf_only_text_and_exact_reporter_sequence ________________
+
+fake_parse = ([{'data': b'%PDF-bytes', 'enable_ocr_fallback': False, 'page_end': None, 'page_start': 1, ...}], [])
+
+    def test_pdf_only_text_and_exact_reporter_sequence(fake_parse):
+        seen, queue = fake_parse
+        queue.append(_pdf_result("  BODY  ", warnings=["w1", "w2"],
+                                 metadata={"title": "T", "author": "A", "doi": "D"}))
+        res, calls = _run([], [("paper.pdf", b"%PDF-bytes")], mode="Upload PDF")
+    
+        assert res.text == "BODY" and res.failure is None
+        assert seen[0]["data"] == b"%PDF-bytes"
+>       assert not os.path.exists(seen[0]["path"])  # temp file removed
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert not True
+E        +  where True = <built-in function _path_exists>('C:\\Users\\Angad\\AppData\\Local\\Temp\\tmpe7hdfqgb.pdf')
+E        +    where <built-in function _path_exists> = <module 'ntpath' (frozen)>.exists
+E        +      where <module 'ntpath' (frozen)> = os.path
+
+tests\test_service_extraction.py:117: AssertionError
+__________________ test_an_unreadable_pdf_stops_at_that_pdf ___________________
+
+fake_parse = ([{'data': b'1', 'enable_ocr_fallback': False, 'page_end': None, 'page_start': 1, ...}, {'data': b'2', 'enable_ocr_fal...page_end': None, 'page_start': 1, ...}], [{'error': '', 'metadata': {}, 'method': 'pdfplumber', 'pages_used': 4, ...}])
+
+    def test_an_unreadable_pdf_stops_at_that_pdf(fake_parse):
+        seen, queue = fake_parse
+        queue.extend([_pdf_result("good"), _pdf_result("", error="cannot open"), _pdf_result("never")])
+        res, calls = _run(["t"], [("a.pdf", b"1"), ("b.pdf", b"2"), ("c.pdf", b"3")])
+        msg = "PDF extraction failed for b.pdf: cannot open"
+        assert res.failure == ex.InputFailure(ex.KIND_PDF_FAILED, msg)
+        assert calls[-1] == ("error", (msg,))
+        assert calls[-2] == ("spinner:exit",)  # nothing else said about b.pdf, c.pdf not touched
+        assert len(seen) == 2
+>       assert not any(os.path.exists(s["path"]) for s in seen)
+E       assert not True
+E        +  where True = any(<generator object test_an_unreadable_pdf_stops_at_that_pdf.<locals>.<genexpr> at 0x00000204561AF5A0>)
+
+tests\test_service_extraction.py:202: AssertionError
+__________ test_the_temp_file_is_removed_even_when_the_parser_raises __________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000204560622D0>
+
+    def test_the_temp_file_is_removed_even_when_the_parser_raises(monkeypatch):
+        paths = []
+    
+        def boom(path, **kw):
+            paths.append(path)
+            raise RuntimeError("parser crashed")
+    
+        monkeypatch.setattr(ex, "parse_pdf", boom)
+        with pytest.raises(RuntimeError, match="parser crashed"):
+            _run([], [("a.pdf", b"1")], mode="Upload PDF")
+>       assert paths and not os.path.exists(paths[0])
+E       AssertionError: assert (['C:\\Users\\Angad\\AppData\\Local\\Temp\\tmp0df6hmn1.pdf'] and not True)
+E        +  where True = <built-in function _path_exists>('C:\\Users\\Angad\\AppData\\Local\\Temp\\tmp0df6hmn1.pdf')
+E        +    where <built-in function _path_exists> = <module 'ntpath' (frozen)>.exists
+E        +      where <module 'ntpath' (frozen)> = os.path
+
+tests\test_service_extraction.py:215: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction.py::test_pdf_only_text_and_exact_reporter_sequence
+FAILED tests/test_service_extraction.py::test_an_unreadable_pdf_stops_at_that_pdf
+FAILED tests/test_service_extraction.py::test_the_temp_file_is_removed_even_when_the_parser_raises
+3 failed, 24 passed, 2 deselected in 0.51s

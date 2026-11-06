@@ -1,0 +1,89 @@
+T2PW: C:\t\ws-R3a\src\t2pw\__init__.py
+...................FFFF....                                              [100%]
+================================== FAILURES ===================================
+_____________ test_skip_refs_and_ocr_reach_parse_pdf[True-False] ______________
+
+fake_parse = ([{'data': b'1', 'enable_ocr_fallback': False, 'page_end': None, 'page_start': 1, ...}], [])
+skip_refs = True, ocr = False
+
+    @pytest.mark.parametrize("skip_refs,ocr", [(True, False), (False, True), (False, 0), (True, "on")])
+    def test_skip_refs_and_ocr_reach_parse_pdf(fake_parse, skip_refs, ocr):
+        seen, _ = fake_parse
+        _run([], [("a.pdf", b"1")], mode="Upload PDF", skip_refs=skip_refs, ocr=ocr)
+>       assert seen[0]["skip_sections"] == (SKIP_SECTIONS if skip_refs else set())
+E       AssertionError: assert set() == {'acknowledge... 'references'}
+E         
+E         Extra items in the right set:
+E         'acknowledgements'
+E         'bibliography'
+E         'acknowledgments'
+E         'references'
+E         Use -v to get more diff
+
+tests\test_service_extraction.py:240: AssertionError
+_____________ test_skip_refs_and_ocr_reach_parse_pdf[False-True] ______________
+
+fake_parse = ([{'data': b'1', 'enable_ocr_fallback': True, 'page_end': None, 'page_start': 1, ...}], [])
+skip_refs = False, ocr = True
+
+    @pytest.mark.parametrize("skip_refs,ocr", [(True, False), (False, True), (False, 0), (True, "on")])
+    def test_skip_refs_and_ocr_reach_parse_pdf(fake_parse, skip_refs, ocr):
+        seen, _ = fake_parse
+        _run([], [("a.pdf", b"1")], mode="Upload PDF", skip_refs=skip_refs, ocr=ocr)
+>       assert seen[0]["skip_sections"] == (SKIP_SECTIONS if skip_refs else set())
+E       AssertionError: assert {'acknowledge... 'references'} == set()
+E         
+E         Extra items in the left set:
+E         'acknowledgements'
+E         'bibliography'
+E         'acknowledgments'
+E         'references'
+E         Use -v to get more diff
+
+tests\test_service_extraction.py:240: AssertionError
+_______________ test_skip_refs_and_ocr_reach_parse_pdf[False-0] _______________
+
+fake_parse = ([{'data': b'1', 'enable_ocr_fallback': False, 'page_end': None, 'page_start': 1, ...}], [])
+skip_refs = False, ocr = 0
+
+    @pytest.mark.parametrize("skip_refs,ocr", [(True, False), (False, True), (False, 0), (True, "on")])
+    def test_skip_refs_and_ocr_reach_parse_pdf(fake_parse, skip_refs, ocr):
+        seen, _ = fake_parse
+        _run([], [("a.pdf", b"1")], mode="Upload PDF", skip_refs=skip_refs, ocr=ocr)
+>       assert seen[0]["skip_sections"] == (SKIP_SECTIONS if skip_refs else set())
+E       AssertionError: assert {'acknowledge... 'references'} == set()
+E         
+E         Extra items in the left set:
+E         'acknowledgements'
+E         'bibliography'
+E         'acknowledgments'
+E         'references'
+E         Use -v to get more diff
+
+tests\test_service_extraction.py:240: AssertionError
+_______________ test_skip_refs_and_ocr_reach_parse_pdf[True-on] _______________
+
+fake_parse = ([{'data': b'1', 'enable_ocr_fallback': True, 'page_end': None, 'page_start': 1, ...}], [])
+skip_refs = True, ocr = 'on'
+
+    @pytest.mark.parametrize("skip_refs,ocr", [(True, False), (False, True), (False, 0), (True, "on")])
+    def test_skip_refs_and_ocr_reach_parse_pdf(fake_parse, skip_refs, ocr):
+        seen, _ = fake_parse
+        _run([], [("a.pdf", b"1")], mode="Upload PDF", skip_refs=skip_refs, ocr=ocr)
+>       assert seen[0]["skip_sections"] == (SKIP_SECTIONS if skip_refs else set())
+E       AssertionError: assert set() == {'acknowledge... 'references'}
+E         
+E         Extra items in the right set:
+E         'acknowledgements'
+E         'bibliography'
+E         'acknowledgments'
+E         'references'
+E         Use -v to get more diff
+
+tests\test_service_extraction.py:240: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction.py::test_skip_refs_and_ocr_reach_parse_pdf[True-False]
+FAILED tests/test_service_extraction.py::test_skip_refs_and_ocr_reach_parse_pdf[False-True]
+FAILED tests/test_service_extraction.py::test_skip_refs_and_ocr_reach_parse_pdf[False-0]
+FAILED tests/test_service_extraction.py::test_skip_refs_and_ocr_reach_parse_pdf[True-on]
+4 failed, 23 passed, 2 deselected in 0.41s

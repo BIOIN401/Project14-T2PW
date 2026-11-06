@@ -1,0 +1,23 @@
+T2PW: C:\t\ws-R3a\src\t2pw\__init__.py
+....F......................                                              [100%]
+================================== FAILURES ===================================
+___________________ test_preview_is_truncated_at_1000_chars ___________________
+
+fake_parse = ([{'data': b'1', 'enable_ocr_fallback': False, 'page_end': None, 'page_start': 1, ...}, {'data': b'2', 'enable_ocr_fallback': False, 'page_end': None, 'page_start': 1, ...}], [])
+
+    def test_preview_is_truncated_at_1000_chars(fake_parse):
+        _, queue = fake_parse
+        queue.extend([_pdf_result("x" * 1001), _pdf_result("y" * 1000)])
+        _, calls = _run([], [("a.pdf", b"1"), ("b.pdf", b"2")], mode="Upload PDF")
+        previews = [c[1][0] for c in calls if c[0] == "text"]
+>       assert previews == ["x" * 1000 + "...", "y" * 1000]
+E       AssertionError: assert ['xxxxxxxxxxx...yyyyyyyyyyyy'] == ['xxxxxxxxxxx...yyyyyyyyyyyy']
+E         
+E         At index 0 diff: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...
+E         
+E         ...Full output truncated (2 lines hidden), use '-vv' to show
+
+tests\test_service_extraction.py:151: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction.py::test_preview_is_truncated_at_1000_chars
+1 failed, 26 passed, 2 deselected in 0.48s
