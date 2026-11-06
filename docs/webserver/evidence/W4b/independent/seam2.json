@@ -1,0 +1,218 @@
+{
+  "label": "W4b-seam2",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-W4b-trial",
+    "-q",
+    "--basetemp=C:/t/bt/W4bind/seam2-1793937806",
+    "tests/test_c011_freeze_seam_golden_equivalence.py"
+  ],
+  "cwd": "C:\\t\\ws-W4b-trial",
+  "started_at": "2026-11-06T04:03:26+00:00",
+  "finished_at": "2026-11-06T04:04:13+00:00",
+  "duration_seconds": 46.50095970000257,
+  "timeout_seconds": 300.0,
+  "root_pid": 1043404,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 1043200,
+      "name": "python.exe",
+      "ppid": 1043404
+    },
+    {
+      "pid": 1023444,
+      "name": "git.exe",
+      "ppid": 1043200
+    },
+    {
+      "pid": 1040020,
+      "name": "git.exe",
+      "ppid": 1043200
+    },
+    {
+      "pid": 1026236,
+      "name": "git.exe",
+      "ppid": 1043200
+    },
+    {
+      "pid": 1040056,
+      "name": "python.exe",
+      "ppid": 1043200
+    },
+    {
+      "pid": 1043460,
+      "name": "python.exe",
+      "ppid": 1040056
+    },
+    {
+      "pid": 1043716,
+      "name": "python.exe",
+      "ppid": 1043200
+    },
+    {
+      "pid": 1043748,
+      "name": "python.exe",
+      "ppid": 1043716
+    },
+    {
+      "pid": 1043836,
+      "name": "git.exe",
+      "ppid": 1043748
+    },
+    {
+      "pid": 1043944,
+      "name": "git.exe",
+      "ppid": 1043748
+    },
+    {
+      "pid": 1030264,
+      "name": "python.exe",
+      "ppid": 1043200
+    },
+    {
+      "pid": 1037220,
+      "name": "python.exe",
+      "ppid": 1030264
+    },
+    {
+      "pid": 1043956,
+      "name": "python.exe",
+      "ppid": 1043200
+    },
+    {
+      "pid": 1044104,
+      "name": "python.exe",
+      "ppid": 1043956
+    },
+    {
+      "pid": 1044308,
+      "name": "python.exe",
+      "ppid": 1043200
+    },
+    {
+      "pid": 1039920,
+      "name": "python.exe",
+      "ppid": 1044308
+    },
+    {
+      "pid": 1043696,
+      "name": "python.exe",
+      "ppid": 1043200
+    },
+    {
+      "pid": 1044120,
+      "name": "python.exe",
+      "ppid": 1043696
+    },
+    {
+      "pid": 1040392,
+      "name": "python.exe",
+      "ppid": 1043200
+    },
+    {
+      "pid": 1042764,
+      "name": "python.exe",
+      "ppid": 1040392
+    }
+  ],
+  "descendants_terminated": [
+    1023444,
+    1026236,
+    1030264,
+    1037220,
+    1039920,
+    1040020,
+    1040056,
+    1040392,
+    1042764,
+    1043200,
+    1043460,
+    1043696,
+    1043716,
+    1043748,
+    1043836,
+    1043944,
+    1043956,
+    1044104,
+    1044120,
+    1044308
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 442728,
+      "name": "python.exe"
+    },
+    {
+      "pid": 460520,
+      "name": "python.exe"
+    },
+    {
+      "pid": 921044,
+      "name": "python.exe"
+    },
+    {
+      "pid": 922176,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1037740,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1038988,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1039092,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1043400,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/evidence/W4b/independent/seam2.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-W4b-trial\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-W4b-trial",
+    "repo_head": "e6a0d19985f1dd3d1a282ec5176cfaaba16f790b",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "W4b-seam2",
+    "token": "W4b-seam2:1043400:8b7acb620e04bea1",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

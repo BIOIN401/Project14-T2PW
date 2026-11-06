@@ -1,0 +1,37 @@
+T2PW: C:\t\ws-W4b-trial\src\t2pw\__init__.py
+........................................................................ [ 14%]
+........................................................................ [ 28%]
+........................................................................ [ 42%]
+........................................................................ [ 56%]
+........................................................................ [ 70%]
+........................................................................ [ 84%]
+........................................................................ [ 98%]
+.......                                                                  [100%]
+511 passed in 55.94s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-W4b-trial\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ e6a0d19985f1dd3d1a282ec5176cfaaba16f790b  [git, worktree dirty=False]
+label                   : W4b-smoke
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-W4b-trial -q --basetemp=C:/t/bt/W4bind/smoke-1793938112 tests/test_reference_repair.py tests/test_strict_quarantine.py tests/test_strict_quarantine_contract_alignment.py tests/test_strict_quarantine_locks_and_scope.py tests/test_strict_quarantine_versioning.py tests/test_empty_extraction_payload.py tests/test_bench_goldset_and_semantic.py tests/test_bench_acquisition_and_artifacts.py tests/test_bench_controls.py tests/test_completeness_audit.py tests/test_batch_driver.py tests/test_stage3_gate_report_lifecycle.py tests/test_rag_admission_production_path.py tests/test_rag_gap_admission.py tests/test_rag_triage_orchestration.py tests/test_rag_provenance_gates.py tests/test_pipeline_reaction_rag_provenance.py tests/test_research_mode_orchestration.py tests/test_map_ids_name_gate.py tests/test_db_candidate_species_evidence.py tests/test_c102_coverage_denominator.py tests/test_c106_mutation_harness_executable.py
+cwd                     : C:\t\ws-W4b-trial
+root PID / process group: 1048276 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 590 s
+duration                : 58.18 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 11  965276:python.exe, 1045300:python.exe, 1048200:python.exe, 1048312:python.exe, 1048388:python.exe, 1048528:python.exe, 1048104:python.exe, 1046540:python.exe, 1048400:python.exe, 1049320:git.exe, 1049388:git.exe
+descendants terminated  : 11  965276, 1045300, 1046540, 1048104, 1048200, 1048312, 1048388, 1048400, 1048528, 1049320, 1049388
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/evidence/W4b/independent/smoke.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=W4b-smoke  acquired=True  released=True
+pre-existing (reported, NEVER killed): 8
+================================================
