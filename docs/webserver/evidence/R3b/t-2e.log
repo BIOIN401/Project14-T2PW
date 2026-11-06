@@ -1,0 +1,108 @@
+T2PW: C:\t\ws-R3b\src\t2pw\__init__.py
+........FF........F....................F....                             [100%]
+================================== FAILURES ===================================
+_____ test_streamlit_forwards_user_task_context_to_every_preprocess_call ______
+
+    def test_streamlit_forwards_user_task_context_to_every_preprocess_call() -> None:
+        """
+        Both Stage 0 call sites (the main call and the long-document retry) must pass
+        the scoping context; if the retry drops it the bug returns on long inputs.
+        """
+        app_path = ROOT / "src" / "t2pw" / "app" / "streamlit_app.py"
+        tree = ast.parse(app_path.read_text(encoding="utf-8"))
+    
+        calls = [
+            node
+            for node in ast.walk(tree)
+            if isinstance(node, ast.Call)
+            and isinstance(node.func, ast.Name)
+            and node.func.id == "preprocess"
+        ]
+    
+>       assert len(calls) == 2, f"expected the main call and the retry, found {len(calls)}"
+E       AssertionError: expected the main call and the retry, found 0
+E       assert 0 == 2
+E        +  where 0 = len([])
+
+tests\test_preprocessor.py:160: AssertionError
+______ test_streamlit_suppresses_transient_warning_for_ambiguous_reviews ______
+
+    def test_streamlit_suppresses_transient_warning_for_ambiguous_reviews() -> None:
+        """
+        The deliberate Case C guardrail is deterministic, so the "transient LLM
+        failure \ufffd re-running often fixes it" warning must not fire for it.
+        """
+        app_path = ROOT / "src" / "t2pw" / "app" / "streamlit_app.py"
+        source = app_path.read_text(encoding="utf-8")
+        tree = ast.parse(source)
+    
+        # The transient-failure phrase may live nested under a fallback branch (e.g.
+        # "seed the scope from the user's input, else warn"), so assert the INVARIANT
+        # directly: at least one `if` enclosing the warning must guard on BOTH an
+        # unusable context and a non-ambiguous review, which makes it unreachable for
+        # a deterministic Case C ambiguous review regardless of nesting depth.
+        phrase = "transient LLM failure"
+        guards = [
+            node
+            for node in ast.walk(tree)
+            if isinstance(node, ast.If)
+            and phrase in (ast.get_source_segment(source, node) or "")
+        ]
+>       assert guards, "transient-failure warning not found"
+E       AssertionError: transient-failure warning not found
+E       assert []
+
+tests\test_preprocessor.py:187: AssertionError
+____________ test_streamlit_stage_zero_warning_reports_the_reason _____________
+
+    def test_streamlit_stage_zero_warning_reports_the_reason() -> None:
+        """The Stage 0 warning must name the cause, not just say 'transient'."""
+        app_path = ROOT / "src" / "t2pw" / "app" / "streamlit_app.py"
+        source = app_path.read_text(encoding="utf-8")
+>       assert "describe_preprocess_status(pathway_context)" in source
+E       AssertionError: assert 'describe_preprocess_status(pathway_context)' in 'import json\nimport logging\nimport os\nimport hashlib\nimport re\nimport sys\nimport time\nimport shutil\nimport cop...y.\nfrom t2pw.app.reaction_evidence_view import render_reaction_evidence  # noqa: E402\n\nrender_reaction_evidence()\n'
+
+tests\test_preprocessor.py:346: AssertionError
+___________ test_streamlit_surfaces_a_recovered_stage_zero_context ____________
+
+    def test_streamlit_surfaces_a_recovered_stage_zero_context() -> None:
+        """A repaired truncation must be visible in the UI, and not as an error."""
+        app_path = ROOT / "src" / "t2pw" / "app" / "streamlit_app.py"
+        source = app_path.read_text(encoding="utf-8")
+>       assert "preprocess_was_recovered(pathway_context)" in source
+E       AssertionError: assert 'preprocess_was_recovered(pathway_context)' in 'import json\nimport logging\nimport os\nimport hashlib\nimport re\nimport sys\nimport time\nimport shutil\nimport cop...y.\nfrom t2pw.app.reaction_evidence_view import render_reaction_evidence  # noqa: E402\n\nrender_reaction_evidence()\n'
+
+tests\test_preprocessor.py:605: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_preprocessor.py::test_streamlit_forwards_user_task_context_to_every_preprocess_call
+FAILED tests/test_preprocessor.py::test_streamlit_suppresses_transient_warning_for_ambiguous_reviews
+FAILED tests/test_preprocessor.py::test_streamlit_stage_zero_warning_reports_the_reason
+FAILED tests/test_preprocessor.py::test_streamlit_surfaces_a_recovered_stage_zero_context
+4 failed, 40 passed in 2.62s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3b\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 1df7b6b24200ed571e522faaeea13e2bd71ae9d8  [git, worktree dirty=False]
+label                   : 2e
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3b/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3b --pin-verdict C:/t/wsR3btmp/ev/pin/t-2e.pin.json -q --basetemp=C:/t/wsR3btmp/t-2e tests/test_preprocessor.py
+cwd                     : C:\t\ws-R3b
+root PID / process group: 980684 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 560 s
+duration                : 4.62 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  980696:python.exe
+descendants terminated  : 1  980696
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/wsR3btmp/ev/t-2e.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R3b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

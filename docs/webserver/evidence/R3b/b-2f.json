@@ -1,0 +1,200 @@
+{
+  "label": "2f",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/ws-R3b-base/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-R3b-base",
+    "--pin-verdict",
+    "C:/t/wsR3btmp/ev/pin/b-2f.pin.json",
+    "-q",
+    "--basetemp=C:/t/wsR3btmp/b-2f",
+    "tests/test_batch_preflight.py"
+  ],
+  "cwd": "C:\\t\\ws-R3b-base",
+  "started_at": "2026-11-06T03:37:27+00:00",
+  "finished_at": "2026-11-06T03:37:41+00:00",
+  "duration_seconds": 13.847105799999554,
+  "timeout_seconds": 560.0,
+  "root_pid": 991832,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 992224,
+      "name": "python.exe",
+      "ppid": 991832
+    },
+    {
+      "pid": 990392,
+      "name": "python.exe",
+      "ppid": 991900
+    },
+    {
+      "pid": 991900,
+      "name": "python.exe",
+      "ppid": 992224
+    },
+    {
+      "pid": 991784,
+      "name": "python.exe",
+      "ppid": 992224
+    },
+    {
+      "pid": 991324,
+      "name": "python.exe",
+      "ppid": 991784
+    },
+    {
+      "pid": 991396,
+      "name": "python.exe",
+      "ppid": 992224
+    },
+    {
+      "pid": 992160,
+      "name": "python.exe",
+      "ppid": 992224
+    },
+    {
+      "pid": 991628,
+      "name": "python.exe",
+      "ppid": 992224
+    },
+    {
+      "pid": 970904,
+      "name": "python.exe",
+      "ppid": 991952
+    },
+    {
+      "pid": 991952,
+      "name": "python.exe",
+      "ppid": 992224
+    },
+    {
+      "pid": 982788,
+      "name": "python.exe",
+      "ppid": 991036
+    },
+    {
+      "pid": 991036,
+      "name": "python.exe",
+      "ppid": 992224
+    },
+    {
+      "pid": 991764,
+      "name": "python.exe",
+      "ppid": 992196
+    },
+    {
+      "pid": 992196,
+      "name": "python.exe",
+      "ppid": 982788
+    },
+    {
+      "pid": 991176,
+      "name": "python.exe",
+      "ppid": 992224
+    },
+    {
+      "pid": 991828,
+      "name": "python.exe",
+      "ppid": 991176
+    },
+    {
+      "pid": 991272,
+      "name": "python.exe",
+      "ppid": 991792
+    },
+    {
+      "pid": 991792,
+      "name": "python.exe",
+      "ppid": 991828
+    }
+  ],
+  "descendants_terminated": [
+    970904,
+    982788,
+    990392,
+    991036,
+    991176,
+    991272,
+    991324,
+    991396,
+    991628,
+    991764,
+    991784,
+    991792,
+    991828,
+    991900,
+    991952,
+    992160,
+    992196,
+    992224
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 442728,
+      "name": "python.exe"
+    },
+    {
+      "pid": 460520,
+      "name": "python.exe"
+    },
+    {
+      "pid": 921044,
+      "name": "python.exe"
+    },
+    {
+      "pid": 922176,
+      "name": "python.exe"
+    },
+    {
+      "pid": 980940,
+      "name": "python.exe"
+    },
+    {
+      "pid": 989212,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/wsR3btmp/ev/b-2f.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-R3b-base\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-R3b-base",
+    "repo_head": "220b16215e5a3776bcd42ab1eed86f98802ce04a",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ws-R3b",
+    "token": "ws-R3b:989212:60b4aec1fffdc548",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

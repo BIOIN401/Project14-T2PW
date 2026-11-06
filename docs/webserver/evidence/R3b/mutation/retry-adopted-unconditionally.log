@@ -1,0 +1,46 @@
+T2PW: C:\t\ws-R3b\src\t2pw\__init__.py
+.......F...........                                                      [100%]
+================================== FAILURES ===================================
+________ test_retry_keeps_the_first_draw_when_the_second_is_no_better _________
+
+root = WindowsPath('C:/t/wsR3btmp/mut-tmp/retry-adopted-unconditionally/test_retry_keeps_the_first_dra0')
+
+    def test_retry_keeps_the_first_draw_when_the_second_is_no_better(root):
+        first = _failed()
+        res, _, _, seen = _run(LONG, [first, _failed()], utc=None)
+        assert len(seen) == 2
+>       assert res.pathway_context is first
+E       AssertionError: assert {'key_compounds': [], 'likely_organism': '', 'pathway_name': '', 'preprocess_status': {'detail': 'timed out', 'status': 'llm_error'}} is {'key_compounds': [], 'likely_organism': '', 'pathway_name': '', 'preprocess_status': {'detail': 'timed out', 'status': 'llm_error'}}
+E        +  where {'key_compounds': [], 'likely_organism': '', 'pathway_name': '', 'preprocess_status': {'detail': 'timed out', 'status': 'llm_error'}} = StageZeroResult(pathway_context={'pathway_name': '', 'likely_organism': '', 'key_compounds': [], 'preprocess_status': ...mp/mut-tmp/retry-adopted-unconditionally/test_retry_keeps_the_first_dra0/tmp/extraction_diagnostics/run-48ed36e9d310')).pathway_context
+
+tests\test_service_extraction_stage0.py:191: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage0.py::test_retry_keeps_the_first_draw_when_the_second_is_no_better
+1 failed, 18 passed in 2.28s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3b\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 1df7b6b24200ed571e522faaeea13e2bd71ae9d8  [git, worktree dirty=True]
+label                   : mut-retry-adopted-unconditionally
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3b/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3b -q -p no:cacheprovider --basetemp=C:/t/wsR3btmp/mut-tmp/retry-adopted-unconditionally tests/test_service_extraction_stage0.py
+cwd                     : C:\t\ws-R3b
+root PID / process group: 926600 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 3.68 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  930776:python.exe
+descendants terminated  : 1  930776
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\ws-R3b\docs\webserver\evidence\R3b\mutation\retry-adopted-unconditionally.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R3b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 8
+================================================

@@ -1,0 +1,56 @@
+T2PW: C:\t\ws-R3b\src\t2pw\__init__.py
+........F...F......                                                      [100%]
+================================== FAILURES ===================================
+_______________________ test_retry_adopts_a_case_c_head _______________________
+
+root = WindowsPath('C:/t/wsR3btmp/mut-tmp/case-c-rank-lowered/test_retry_adopts_a_case_c_hea0')
+
+    def test_retry_adopts_a_case_c_head(root):
+        second = _case_c()
+        res, _, _, _ = _run(LONG, [_failed(), second])
+>       assert res.pathway_context is second
+E       AssertionError: assert {'key_compounds': [], 'likely_organism': '', 'pathway_name': '', 'preprocess_status': {'detail': 'timed out', 'status': 'llm_error'}} is {'candidate_examples': [{'name': 'A'}], 'document_type': 'multi_example_review', 'selected_example': ''}
+E        +  where {'key_compounds': [], 'likely_organism': '', 'pathway_name': '', 'preprocess_status': {'detail': 'timed out', 'status': 'llm_error'}} = StageZeroResult(pathway_context={'pathway_name': '', 'likely_organism': '', 'key_compounds': [], 'preprocess_status': ...:/t/wsR3btmp/mut-tmp/case-c-rank-lowered/test_retry_adopts_a_case_c_hea0/tmp/extraction_diagnostics/run-8c4575c68088')).pathway_context
+
+tests\test_service_extraction_stage0.py:197: AssertionError
+________________________ test_helpers_rank_and_usable _________________________
+
+    def test_helpers_rank_and_usable():
+>       assert ex._stage0_context_rank(_case_c()) == 2
+E       AssertionError: assert 0 == 2
+E        +  where 0 = <function _stage0_context_rank at 0x000001CFC8FF2F20>({'candidate_examples': [{'name': 'A'}], 'document_type': 'multi_example_review', 'selected_example': ''})
+E        +    where <function _stage0_context_rank at 0x000001CFC8FF2F20> = ex._stage0_context_rank
+E        +    and   {'candidate_examples': [{'name': 'A'}], 'document_type': 'multi_example_review', 'selected_example': ''} = _case_c()
+
+tests\test_service_extraction_stage0.py:222: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage0.py::test_retry_adopts_a_case_c_head
+FAILED tests/test_service_extraction_stage0.py::test_helpers_rank_and_usable
+2 failed, 17 passed in 2.21s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3b\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ b7830ed22b91c0b62ce7b957cbc14a34f2dbf97d  [git, worktree dirty=True]
+label                   : mut-case-c-rank-lowered
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3b/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3b -q -p no:cacheprovider --basetemp=C:/t/wsR3btmp/mut-tmp/case-c-rank-lowered tests/test_service_extraction_stage0.py
+cwd                     : C:\t\ws-R3b
+root PID / process group: 923608 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 3.59 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  916740:python.exe
+descendants terminated  : 1  916740
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\ws-R3b\docs\webserver\evidence\R3b\mutation\case-c-rank-lowered.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R3b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 8
+================================================

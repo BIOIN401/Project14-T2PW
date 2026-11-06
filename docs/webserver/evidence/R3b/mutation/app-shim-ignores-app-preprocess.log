@@ -1,0 +1,179 @@
+T2PW: C:\t\ws-R3b\src\t2pw\__init__.py
+FFFFFFF.                                                                 [100%]
+================================== FAILURES ===================================
+______ test_case_c_then_empty_draw_still_ends_in_ambiguous_review_scope _______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000023F5A8F0D60>
+
+    def test_case_c_then_empty_draw_still_ends_in_ambiguous_review_scope(
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        """The exact 2026-07-28 clobber: [Case C, empty] must NOT proceed.
+    
+        Before the fix the blank second draw replaced the Case C, ``document_type``
+        was lost, ``is_ambiguous_multi_example_review_context`` went False and the run
+        walked on into an unguided extraction that reported PASS.
+        """
+        _fake_preprocess(monkeypatch, [_case_c_context(), _failed_context()])
+    
+        pathway_context = app._run_stage_zero_with_retry(
+            LONG_REVIEW_TEXT, temperature=0.0, user_task_context="lipid A biosynthesis"
+        )
+    
+        # The refusal survives: document_type is what the gate keys on.
+>       assert pathway_context.get("document_type") == "multi_example_review"
+E       AssertionError: assert None == 'multi_example_review'
+E        +  where None = <built-in method get of dict object at 0x0000023F5A98B380>('document_type')
+E        +    where <built-in method get of dict object at 0x0000023F5A98B380> = {}.get
+
+tests\test_stage0_case_c_retry_clobber.py:255: AssertionError
+___________________ test_case_c_does_not_spend_a_retry_call ___________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000023F5A8F0E90>
+
+    def test_case_c_does_not_spend_a_retry_call(monkeypatch: pytest.MonkeyPatch) -> None:
+        """The Case-C exclusion must sit BEFORE the retry, not after it.
+    
+        A deliberate Case C is deterministic \ufffd the second draw can only return the
+        same verdict or something weaker, so the second LLM call is pure cost (and,
+        before the fix, pure risk).
+        """
+        seen = _fake_preprocess(monkeypatch, [_case_c_context()])
+    
+        pathway_context = app._run_stage_zero_with_retry(
+            LONG_REVIEW_TEXT, temperature=0.0, user_task_context=None
+        )
+    
+>       assert len(seen) == 1, "the retry fired on a deliberate Case C"
+E       AssertionError: the retry fired on a deliberate Case C
+E       assert 0 == 1
+E        +  where 0 = len([])
+
+tests\test_stage0_case_c_retry_clobber.py:281: AssertionError
+______________ test_retry_rescues_a_genuinely_failed_stage_zero _______________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000023F5879E0F0>
+
+    def test_retry_rescues_a_genuinely_failed_stage_zero(monkeypatch: pytest.MonkeyPatch) -> None:
+        seen = _fake_preprocess(monkeypatch, [_failed_context(), _usable_context()])
+    
+        pathway_context = app._run_stage_zero_with_retry(
+            LONG_REVIEW_TEXT, temperature=0.0, user_task_context=None
+        )
+    
+>       assert len(seen) == 2
+E       assert 0 == 2
+E        +  where 0 = len([])
+
+tests\test_stage0_case_c_retry_clobber.py:295: AssertionError
+______________ test_retry_that_recognises_the_review_is_adopted _______________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000023F5A897570>
+
+    def test_retry_that_recognises_the_review_is_adopted(monkeypatch: pytest.MonkeyPatch) -> None:
+        """A Case C from the retry outranks a blank first draw and re-arms the gate.
+    
+        The head of a review is frequently enough for Stage 0 to classify a document
+        it could not classify from the full text, so this direction has to stay open.
+        """
+        _fake_preprocess(monkeypatch, [_failed_context(), _case_c_context()])
+    
+        pathway_context = app._run_stage_zero_with_retry(
+            LONG_REVIEW_TEXT, temperature=0.0, user_task_context=None
+        )
+    
+>       assert is_ambiguous_multi_example_review_context(pathway_context)
+E       assert False
+E        +  where False = is_ambiguous_multi_example_review_context({})
+
+tests\test_stage0_case_c_retry_clobber.py:314: AssertionError
+____________ test_two_failed_draws_leave_the_first_context_intact _____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000023F5A897350>
+
+    def test_two_failed_draws_leave_the_first_context_intact(
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        """No improvement means no swap \ufffd the downstream scope fallback still runs."""
+        first = _failed_context()
+        first["_marker"] = "first draw"
+        _fake_preprocess(monkeypatch, [first, _failed_context()])
+    
+        pathway_context = app._run_stage_zero_with_retry(
+            LONG_REVIEW_TEXT, temperature=0.0, user_task_context=None
+        )
+    
+>       assert pathway_context["_marker"] == "first draw"
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: '_marker'
+
+tests\test_stage0_case_c_retry_clobber.py:330: KeyError
+___________________ test_usable_first_draw_is_never_retried ___________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000023F5A9ECC50>
+
+    def test_usable_first_draw_is_never_retried(monkeypatch: pytest.MonkeyPatch) -> None:
+        seen = _fake_preprocess(monkeypatch, [_usable_context()])
+    
+        pathway_context = app._run_stage_zero_with_retry(
+            LONG_REVIEW_TEXT, temperature=0.0, user_task_context=None
+        )
+    
+>       assert len(seen) == 1
+E       assert 0 == 1
+E        +  where 0 = len([])
+
+tests\test_stage0_case_c_retry_clobber.py:340: AssertionError
+______________ test_short_document_is_not_re_sent_to_stage_zero _______________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000023F5A9ECF50>
+
+    def test_short_document_is_not_re_sent_to_stage_zero(monkeypatch: pytest.MonkeyPatch) -> None:
+        """Below the head length the retry would re-send identical input."""
+        seen = _fake_preprocess(monkeypatch, [_failed_context()])
+    
+        app._run_stage_zero_with_retry(
+            "short abstract", temperature=0.0, user_task_context=None
+        )
+    
+>       assert len(seen) == 1
+E       assert 0 == 1
+E        +  where 0 = len([])
+
+tests\test_stage0_case_c_retry_clobber.py:352: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_stage0_case_c_retry_clobber.py::test_case_c_then_empty_draw_still_ends_in_ambiguous_review_scope
+FAILED tests/test_stage0_case_c_retry_clobber.py::test_case_c_does_not_spend_a_retry_call
+FAILED tests/test_stage0_case_c_retry_clobber.py::test_retry_rescues_a_genuinely_failed_stage_zero
+FAILED tests/test_stage0_case_c_retry_clobber.py::test_retry_that_recognises_the_review_is_adopted
+FAILED tests/test_stage0_case_c_retry_clobber.py::test_two_failed_draws_leave_the_first_context_intact
+FAILED tests/test_stage0_case_c_retry_clobber.py::test_usable_first_draw_is_never_retried
+FAILED tests/test_stage0_case_c_retry_clobber.py::test_short_document_is_not_re_sent_to_stage_zero
+7 failed, 1 passed in 0.86s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3b\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 1df7b6b24200ed571e522faaeea13e2bd71ae9d8  [git, worktree dirty=True]
+label                   : mut-app-shim-ignores-app-preprocess
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3b/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3b -q -p no:cacheprovider --basetemp=C:/t/wsR3btmp/mut-tmp/app-shim-ignores-app-preprocess tests/test_stage0_case_c_retry_clobber.py
+cwd                     : C:\t\ws-R3b
+root PID / process group: 926548 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 1.94 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  931900:python.exe
+descendants terminated  : 1  931900
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\ws-R3b\docs\webserver\evidence\R3b\mutation\app-shim-ignores-app-preprocess.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R3b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 8
+================================================

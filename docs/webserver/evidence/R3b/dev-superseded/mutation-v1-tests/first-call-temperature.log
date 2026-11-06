@@ -1,0 +1,48 @@
+T2PW: C:\t\ws-R3b\src\t2pw\__init__.py
+F..................                                                      [100%]
+================================== FAILURES ===================================
+___________________ test_usable_context_one_call_no_message ___________________
+
+root = WindowsPath('C:/t/wsR3btmp/mut-tmp/first-call-temperature/test_usable_context_one_call_n0')
+
+    def test_usable_context_one_call_no_message(root):
+        first = _usable()
+        res, rep, state, seen = _run(SHORT, [first], utc="focus")
+        assert res.pathway_context is first
+>       assert seen == [(SHORT, {"temperature": 0.25, "user_task_context": "focus"})]
+E       AssertionError: assert [('a short pa...t': 'focus'})] == [('a short pa...t': 'focus'})]
+E         
+E         At index 0 diff: ('a short paper about menaquinone', {'temperature': 0.0, 'user_task_context': 'focus'}) != ('a short paper about menaquinone', {'temperature': 0.25, 'user_task_context': 'focus'})
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage0.py:118: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage0.py::test_usable_context_one_call_no_message
+1 failed, 18 passed in 2.44s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3b\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ b7830ed22b91c0b62ce7b957cbc14a34f2dbf97d  [git, worktree dirty=True]
+label                   : mut-first-call-temperature
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3b/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3b -q -p no:cacheprovider --basetemp=C:/t/wsR3btmp/mut-tmp/first-call-temperature tests/test_service_extraction_stage0.py
+cwd                     : C:\t\ws-R3b
+root PID / process group: 923084 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 3.78 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  922948:python.exe
+descendants terminated  : 1  922948
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\ws-R3b\docs\webserver\evidence\R3b\mutation\first-call-temperature.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R3b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 8
+================================================

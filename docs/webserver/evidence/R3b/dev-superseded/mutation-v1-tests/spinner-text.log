@@ -1,0 +1,151 @@
+T2PW: C:\t\ws-R3b\src\t2pw\__init__.py
+FF.FFFF............                                                      [100%]
+================================== FAILURES ===================================
+___________________ test_usable_context_one_call_no_message ___________________
+
+root = WindowsPath('C:/t/wsR3btmp/mut-tmp/spinner-text/test_usable_context_one_call_n0')
+
+    def test_usable_context_one_call_no_message(root):
+        first = _usable()
+        res, rep, state, seen = _run(SHORT, [first], utc="focus")
+        assert res.pathway_context is first
+        assert seen == [(SHORT, {"temperature": 0.25, "user_task_context": "focus"})]
+>       assert rep.calls == SPIN + [("spinner:exit",)]
+E       AssertionError: assert [('spinner', ...inner:exit',)] == [('spinner', ...inner:exit',)]
+E         
+E         At index 0 diff: ('spinner', ('Running preprocessor',)) != ('spinner', ('Running preprocessor...',))
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage0.py:119: AssertionError
+__________________ test_seeded_from_user_scope_with_organism __________________
+
+root = WindowsPath('C:/t/wsR3btmp/mut-tmp/spinner-text/test_seeded_from_user_scope_wi0')
+
+    def test_seeded_from_user_scope_with_organism(root):
+        res, rep, _, seen = _run(SHORT, [_failed()], utc="menaquinone biosynthesis in Lactococcus lactis")
+        assert len(seen) == 1  # short text: no retry
+        assert res.pathway_context["pathway_name"] == "menaquinone biosynthesis"
+        assert res.pathway_context["likely_organism"] == "Lactococcus lactis"
+        assert res.pathway_context[PREPROCESS_STATUS_KEY] == _failed()[PREPROCESS_STATUS_KEY]
+>       assert rep.calls == SPIN + [
+            ("info", ("Stage 0 returned no usable context, so the pipeline is falling back to the scope "
+                      "you provided \ufffd pathway \"menaquinone biosynthesis\", organism \"Lactococcus lactis\". "
+                      "Extraction and multi-paper RAG will use it. Re-run if you'd rather the preprocessor "
+                      "try to read the scope from the paper again.",)),
+            ("spinner:exit",)]
+E       AssertionError: assert [('spinner', ...inner:exit',)] == [('spinner', ...inner:exit',)]
+E         
+E         At index 0 diff: ('spinner', ('Running preprocessor',)) != ('spinner', ('Running preprocessor...',))
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage0.py:128: AssertionError
+_______________ test_failed_without_scope_warns_with_the_status _______________
+
+root = WindowsPath('C:/t/wsR3btmp/mut-tmp/spinner-text/test_failed_without_scope_warn0')
+
+    def test_failed_without_scope_warns_with_the_status(root):
+        first = _failed()
+        res, rep, _, _ = _run(SHORT, [first], utc=None)
+        assert res.pathway_context is first
+>       assert rep.calls == SPIN + [
+            ("warning", ("Stage 0 failed: llm_error - timed out\n\nIt returned no usable context \ufffd no "
+                         "pathway name, organism, compounds or proteins, and no scope was provided in the "
+                         "extraction-focus box to fall back to. Extraction will be unguided, and multi-paper "
+                         "RAG cannot build a literature query, so no papers will be fetched. Re-run (usually "
+                         "a transient LLM failure), or type the pathway/organism into the focus box so the "
+                         "pipeline can proceed without the preprocessor.",)),
+            ("spinner:exit",)]
+E       AssertionError: assert [('spinner', ...inner:exit',)] == [('spinner', ...inner:exit',)]
+E         
+E         At index 0 diff: ('spinner', ('Running preprocessor',)) != ('spinner', ('Running preprocessor...',))
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage0.py:147: AssertionError
+________________________ test_recovered_context_warns _________________________
+
+root = WindowsPath('C:/t/wsR3btmp/mut-tmp/spinner-text/test_recovered_context_warns0')
+
+    def test_recovered_context_warns(root):
+        first = _recovered()
+        res, rep, _, _ = _run(SHORT, [first])
+        assert res.pathway_context is first
+>       assert rep.calls == SPIN + [
+            ("warning", ("Stage 0 partially recovered: ok (recovered from a truncated reply) - cut at 800\n\n"
+                         "The reply was cut off and repaired, so some context fields (e.g. candidate "
+                         "examples, key compounds) may be missing. Re-run if the context below looks "
+                         "incomplete.",)),
+            ("spinner:exit",)]
+E       AssertionError: assert [('spinner', ...inner:exit',)] == [('spinner', ...inner:exit',)]
+E         
+E         At index 0 diff: ('spinner', ('Running preprocessor',)) != ('spinner', ('Running preprocessor...',))
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage0.py:161: AssertionError
+_________________ test_case_c_is_quiet_and_returned_untouched _________________
+
+root = WindowsPath('C:/t/wsR3btmp/mut-tmp/spinner-text/test_case_c_is_quiet_and_retur0')
+
+    def test_case_c_is_quiet_and_returned_untouched(root):
+        first = _case_c()
+        res, rep, _, seen = _run(LONG, [first], utc="lipid A biosynthesis")
+        assert res.pathway_context is first
+        assert len(seen) == 1  # no retry on a deliberate Case C, even on a long text
+>       assert rep.calls == SPIN + [("spinner:exit",)]
+E       AssertionError: assert [('spinner', ...inner:exit',)] == [('spinner', ...inner:exit',)]
+E         
+E         At index 0 diff: ('spinner', ('Running preprocessor',)) != ('spinner', ('Running preprocessor...',))
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage0.py:174: AssertionError
+___ test_retry_on_long_failed_text_reads_the_head_and_adopts_a_better_draw ____
+
+root = WindowsPath('C:/t/wsR3btmp/mut-tmp/spinner-text/test_retry_on_long_failed_text0')
+
+    def test_retry_on_long_failed_text_reads_the_head_and_adopts_a_better_draw(root):
+        second = _usable()
+        res, rep, _, seen = _run(LONG, [_failed(), second], utc="u")
+        assert [t for t, _ in seen] == [LONG, LONG[: ex._PREPROCESS_RETRY_CHARS]]
+        assert seen[1][1] == {"temperature": 0.25, "user_task_context": "u"}
+        assert res.pathway_context is second
+>       assert rep.calls == SPIN + [("spinner:exit",)]
+E       AssertionError: assert [('spinner', ...inner:exit',)] == [('spinner', ...inner:exit',)]
+E         
+E         At index 0 diff: ('spinner', ('Running preprocessor',)) != ('spinner', ('Running preprocessor...',))
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage0.py:184: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage0.py::test_usable_context_one_call_no_message
+FAILED tests/test_service_extraction_stage0.py::test_seeded_from_user_scope_with_organism
+FAILED tests/test_service_extraction_stage0.py::test_failed_without_scope_warns_with_the_status
+FAILED tests/test_service_extraction_stage0.py::test_recovered_context_warns
+FAILED tests/test_service_extraction_stage0.py::test_case_c_is_quiet_and_returned_untouched
+FAILED tests/test_service_extraction_stage0.py::test_retry_on_long_failed_text_reads_the_head_and_adopts_a_better_draw
+6 failed, 13 passed in 3.29s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3b\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ b7830ed22b91c0b62ce7b957cbc14a34f2dbf97d  [git, worktree dirty=True]
+label                   : mut-spinner-text
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3b/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3b -q -p no:cacheprovider --basetemp=C:/t/wsR3btmp/mut-tmp/spinner-text tests/test_service_extraction_stage0.py
+cwd                     : C:\t\ws-R3b
+root PID / process group: 926068 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 5.50 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  926168:python.exe
+descendants terminated  : 1  926168
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\ws-R3b\docs\webserver\evidence\R3b\mutation\spinner-text.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R3b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 8
+================================================

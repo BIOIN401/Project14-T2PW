@@ -1,0 +1,56 @@
+T2PW: C:\t\ws-R3b\src\t2pw\__init__.py
+...F...............                                                      [100%]
+================================== FAILURES ===================================
+_______________ test_failed_without_scope_warns_with_the_status _______________
+
+root = WindowsPath('C:/t/wsR3btmp/mut-tmp/failed-warning-as-info/test_failed_without_scope_warn0')
+
+    def test_failed_without_scope_warns_with_the_status(root):
+        first = _failed()
+        res, rep, _, _ = _run(SHORT, [first], utc=None)
+        assert res.pathway_context is first
+>       assert rep.calls == SPIN + [
+            ("warning", ("Stage 0 failed: llm_error - timed out\n\nIt returned no usable context \ufffd no "
+                         "pathway name, organism, compounds or proteins, and no scope was provided in the "
+                         "extraction-focus box to fall back to. Extraction will be unguided, and multi-paper "
+                         "RAG cannot build a literature query, so no papers will be fetched. Re-run (usually "
+                         "a transient LLM failure), or type the pathway/organism into the focus box so the "
+                         "pipeline can proceed without the preprocessor.",)),
+            ("spinner:exit",)]
+E       AssertionError: assert [('spinner', ...inner:exit',)] == [('spinner', ...inner:exit',)]
+E         
+E         At index 2 diff: ('info', ('Stage 0 failed: llm_error - timed out\n\nIt returned no usable context \ufffd no pathway name, organism, compounds or proteins, and no scope was provided in the extraction-focus box to fall back to. Extraction will be unguided, and multi-paper RAG cannot build a literature query, so no papers will be fetched. Re-run (usually a transient LLM failure), or type the pathway/organism into the focus box so the pipeline can proceed without the preprocessor.',)) != ('warning', ('Stage 0 failed: llm_error - timed out\n\nIt returned no usable context \ufffd no p...
+E         
+E         ...Full output truncated (2 lines hidden), use '-vv' to show
+
+tests\test_service_extraction_stage0.py:147: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage0.py::test_failed_without_scope_warns_with_the_status
+1 failed, 18 passed in 3.61s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3b\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ b7830ed22b91c0b62ce7b957cbc14a34f2dbf97d  [git, worktree dirty=True]
+label                   : mut-failed-warning-as-info
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3b/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3b -q -p no:cacheprovider --basetemp=C:/t/wsR3btmp/mut-tmp/failed-warning-as-info tests/test_service_extraction_stage0.py
+cwd                     : C:\t\ws-R3b
+root PID / process group: 925360 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 5.65 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  925664:python.exe
+descendants terminated  : 1  925664
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\ws-R3b\docs\webserver\evidence\R3b\mutation\failed-warning-as-info.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R3b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 8
+================================================

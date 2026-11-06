@@ -146,7 +146,7 @@ def test_streamlit_forwards_user_task_context_to_every_preprocess_call() -> None
     Both Stage 0 call sites (the main call and the long-document retry) must pass
     the scoping context; if the retry drops it the bug returns on long inputs.
     """
-    app_path = ROOT / "src" / "t2pw" / "app" / "streamlit_app.py"
+    app_path = ROOT / "src" / "t2pw" / "service" / "extraction.py"
     tree = ast.parse(app_path.read_text(encoding="utf-8"))
 
     calls = [
@@ -168,7 +168,7 @@ def test_streamlit_suppresses_transient_warning_for_ambiguous_reviews() -> None:
     The deliberate Case C guardrail is deterministic, so the "transient LLM
     failure — re-running often fixes it" warning must not fire for it.
     """
-    app_path = ROOT / "src" / "t2pw" / "app" / "streamlit_app.py"
+    app_path = ROOT / "src" / "t2pw" / "service" / "extraction.py"
     source = app_path.read_text(encoding="utf-8")
     tree = ast.parse(source)
 
@@ -341,7 +341,7 @@ def test_format_context_header_ignores_the_diagnostic_key() -> None:
 
 def test_streamlit_stage_zero_warning_reports_the_reason() -> None:
     """The Stage 0 warning must name the cause, not just say 'transient'."""
-    app_path = ROOT / "src" / "t2pw" / "app" / "streamlit_app.py"
+    app_path = ROOT / "src" / "t2pw" / "service" / "extraction.py"
     source = app_path.read_text(encoding="utf-8")
     assert "describe_preprocess_status(pathway_context)" in source
     assert "Stage 0 failed:" in source
@@ -600,7 +600,7 @@ def test_preprocess_was_recovered_is_safe_on_foreign_contexts() -> None:
 
 def test_streamlit_surfaces_a_recovered_stage_zero_context() -> None:
     """A repaired truncation must be visible in the UI, and not as an error."""
-    app_path = ROOT / "src" / "t2pw" / "app" / "streamlit_app.py"
+    app_path = ROOT / "src" / "t2pw" / "service" / "extraction.py"
     source = app_path.read_text(encoding="utf-8")
     assert "preprocess_was_recovered(pathway_context)" in source
     assert "Stage 0 partially recovered" in source

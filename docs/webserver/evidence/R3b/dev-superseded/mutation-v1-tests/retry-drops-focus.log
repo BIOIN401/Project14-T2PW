@@ -1,0 +1,50 @@
+T2PW: C:\t\ws-R3b\src\t2pw\__init__.py
+......F............                                                      [100%]
+================================== FAILURES ===================================
+___ test_retry_on_long_failed_text_reads_the_head_and_adopts_a_better_draw ____
+
+root = WindowsPath('C:/t/wsR3btmp/mut-tmp/retry-drops-focus/test_retry_on_long_failed_text0')
+
+    def test_retry_on_long_failed_text_reads_the_head_and_adopts_a_better_draw(root):
+        second = _usable()
+        res, rep, _, seen = _run(LONG, [_failed(), second], utc="u")
+        assert [t for t, _ in seen] == [LONG, LONG[: ex._PREPROCESS_RETRY_CHARS]]
+>       assert seen[1][1] == {"temperature": 0.25, "user_task_context": "u"}
+E       AssertionError: assert {'temperature...ontext': None} == {'temperature...context': 'u'}
+E         
+E         Omitting 1 identical items, use -vv to show
+E         Differing items:
+E         {'user_task_context': None} != {'user_task_context': 'u'}
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage0.py:182: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage0.py::test_retry_on_long_failed_text_reads_the_head_and_adopts_a_better_draw
+1 failed, 18 passed in 2.73s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3b\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ b7830ed22b91c0b62ce7b957cbc14a34f2dbf97d  [git, worktree dirty=True]
+label                   : mut-retry-drops-focus
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3b/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3b -q -p no:cacheprovider --basetemp=C:/t/wsR3btmp/mut-tmp/retry-drops-focus tests/test_service_extraction_stage0.py
+cwd                     : C:\t\ws-R3b
+root PID / process group: 918608 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 4.34 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  924504:python.exe
+descendants terminated  : 1  924504
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\ws-R3b\docs\webserver\evidence\R3b\mutation\retry-drops-focus.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R3b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 8
+================================================

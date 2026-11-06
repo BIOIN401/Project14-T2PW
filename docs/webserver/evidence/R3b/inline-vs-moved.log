@@ -1,0 +1,53 @@
+usable                       IDENTICAL  outcome=completed                    st-events=19 state-writes=16 preprocess-calls=1
+failed-no-scope              IDENTICAL  outcome=completed                    st-events=20 state-writes=16 preprocess-calls=1
+failed-unparseable           IDENTICAL  outcome=completed                    st-events=20 state-writes=16 preprocess-calls=1
+seeded-organism              IDENTICAL  outcome=completed                    st-events=20 state-writes=16 preprocess-calls=1
+seeded-no-organism           IDENTICAL  outcome=completed                    st-events=20 state-writes=16 preprocess-calls=1
+seeded-long-tail             IDENTICAL  outcome=completed                    st-events=20 state-writes=16 preprocess-calls=1
+seeded-keeps-organism        IDENTICAL  outcome=completed                    st-events=20 state-writes=16 preprocess-calls=1
+not-a-dict                   IDENTICAL  outcome=completed                    st-events=20 state-writes=16 preprocess-calls=1
+not-a-dict-seeded            IDENTICAL  outcome=completed                    st-events=20 state-writes=16 preprocess-calls=1
+recovered                    IDENTICAL  outcome=completed                    st-events=20 state-writes=16 preprocess-calls=1
+ambiguous-exit               IDENTICAL  outcome=stopped                      st-events=27 state-writes=19 preprocess-calls=1
+ambiguous-bare               IDENTICAL  outcome=stopped                      st-events=24 state-writes=19 preprocess-calls=1
+ambiguous-blank-warning      IDENTICAL  outcome=stopped                      st-events=26 state-writes=19 preprocess-calls=1
+ambiguous-nonstr-warning     IDENTICAL  outcome=stopped                      st-events=26 state-writes=19 preprocess-calls=1
+long-case-c-no-retry         IDENTICAL  outcome=stopped                      st-events=27 state-writes=19 preprocess-calls=1
+long-retry-adopted           IDENTICAL  outcome=completed                    st-events=19 state-writes=16 preprocess-calls=2
+long-retry-rejected          IDENTICAL  outcome=completed                    st-events=20 state-writes=16 preprocess-calls=2
+long-retry-rejected-seeded   IDENTICAL  outcome=completed                    st-events=20 state-writes=16 preprocess-calls=2
+long-retry-case-c-exit       IDENTICAL  outcome=stopped                      st-events=27 state-writes=19 preprocess-calls=2
+long-usable-no-retry         IDENTICAL  outcome=completed                    st-events=19 state-writes=16 preprocess-calls=1
+preprocess-raises            SAME-EXCEPT-UNBOUND-GLOBAL  outcome=raised RuntimeError: LLM down st-events=18 state-writes=15 preprocess-calls=1
+  differing fields: ['_diagnostics_dir'] | base _diagnostics_dir: bound | tip _diagnostics_dir: None
+retry-raises                 SAME-EXCEPT-UNBOUND-GLOBAL  outcome=raised RuntimeError: LLM down st-events=18 state-writes=15 preprocess-calls=2
+  differing fields: ['_diagnostics_dir'] | base _diagnostics_dir: bound | tip _diagnostics_dir: None
+sync-raises                  IDENTICAL  outcome=completed                    st-events=18 state-writes=15 preprocess-calls=1
+sync-raises-ambiguous        IDENTICAL  outcome=stopped                      st-events=26 state-writes=18 preprocess-calls=1
+24/24 scenarios identical or known-difference only; 0 unexplained
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3b\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 1df7b6b24200ed571e522faaeea13e2bd71ae9d8  [git, worktree dirty=False]
+label                   : ivm
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/webserver/evidence/R3b/scripts/inline_vs_moved.py C:/t/ws-R3b-base C:/t/ws-R3b
+cwd                     : C:\t\ws-R3b
+root PID / process group: 933208 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 1.75 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  933180:python.exe
+descendants terminated  : 1  933180
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : docs/webserver/evidence/R3b/inline-vs-moved.json
+json report written     : True
+pre-existing (reported, NEVER killed): 6
+================================================

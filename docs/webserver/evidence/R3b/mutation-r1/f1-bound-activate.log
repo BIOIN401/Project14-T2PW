@@ -1,0 +1,129 @@
+T2PW: C:\t\ws-R3b\src\t2pw\__init__.py
+.............FF...F.                                                     [100%]
+================================== FAILURES ===================================
+_____ test_diagnostics_open_before_stage_zero_and_land_under_project_root _____
+
+root = WindowsPath('C:/t/wsR3btmp/mut-tmp/f1-bound-activate/test_diagnostics_open_before_s0')
+
+    def test_diagnostics_open_before_stage_zero_and_land_under_project_root(root):
+        order: List[str] = []
+        real_activate = diag.activate
+    
+        def activate(**kw):
+            order.append("activate")
+            return real_activate(**kw)
+    
+        def preprocess(text, **_):
+            order.append("preprocess")
+            diag.current().record_stage0_attempt({"outcome": "ok", "attempt": 1})
+            return _usable()
+    
+        diag.activate = activate
+        try:
+            state: Dict[str, Any] = {}
+            res = ex.run_stage_zero(SHORT, temperature=0.0, user_task_context=None, state=state,
+                                    reporter=RecordingReporter(), preprocess_fn=preprocess)
+        finally:
+            diag.activate = real_activate
+>       assert order == ["activate", "preprocess"]
+E       AssertionError: assert ['preprocess'] == ['activate', 'preprocess']
+E         
+E         At index 0 diff: 'preprocess' != 'activate'
+E         Right contains one more item: 'preprocess'
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage0.py:257: AssertionError
+__________ test_start_falls_back_to_tmp_when_the_recorder_has_no_dir __________
+
+root = WindowsPath('C:/t/wsR3btmp/mut-tmp/f1-bound-activate/test_start_falls_back_to_tmp_w0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002111E7B8C00>
+
+    def test_start_falls_back_to_tmp_when_the_recorder_has_no_dir(root, monkeypatch):
+        class _Rec:
+            artifact_dir = None
+    
+        monkeypatch.setattr(diag, "activate", lambda **_: _Rec())
+        state: Dict[str, Any] = {}
+>       assert ex._start_extraction_diagnostics("t", state=state) == root / "tmp"
+E       AssertionError: assert WindowsPath('C:/t/wsR3btmp/mut-tmp/f1-bound-activate/test_start_falls_back_to_tmp_w0/tmp/extraction_diagnostics/run-c45deb0906e7') == (WindowsPath('C:/t/wsR3btmp/mut-tmp/f1-bound-activate/test_start_falls_back_to_tmp_w0') / 'tmp')
+E        +  where WindowsPath('C:/t/wsR3btmp/mut-tmp/f1-bound-activate/test_start_falls_back_to_tmp_w0/tmp/extraction_diagnostics/run-c45deb0906e7') = <function _start_extraction_diagnostics at 0x000002111E667100>('t', state={'extraction_diagnostics': {}, 'extraction_diagnostics_dir': 'C:\\t\\wsR3btmp\\mut-tmp\\f1-bound-activate\\test_start_falls_back_to_tmp_w0\\tmp\\extraction_diagnostics\\run-c45deb0906e7'})
+E        +    where <function _start_extraction_diagnostics at 0x000002111E667100> = ex._start_extraction_diagnostics
+
+tests\test_service_extraction_stage0.py:273: AssertionError
+___________ test_patches_on_the_source_modules_reach_run_stage_zero ___________
+
+root = WindowsPath('C:/t/wsR3btmp/mut-tmp/f1-bound-activate/test_patches_on_the_source_mod0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002111E7BFE30>
+
+    def test_patches_on_the_source_modules_reach_run_stage_zero(root, monkeypatch):
+        """R3b review F1: the diagnostics and Stage-0 names are looked up at call time.
+    
+        Before R3b the app script re-ran ``from ... import`` on every AppTest run, so a test
+        patching ``extraction_diagnostics.payload_hash`` (R3a's tripwire does) or
+        ``preprocessor.preprocess`` reached them. The moved code must keep that.
+        """
+        seen: List[str] = []
+        real_activate, real_current = diag.activate, diag.current
+    
+        def payload_hash(value):
+            seen.append("payload_hash")
+            return "sha256:patched"
+    
+        def activate(**kw):
+            seen.append("activate")
+            return real_activate(**kw)
+    
+        def current():
+            seen.append("current")
+            return real_current()
+    
+        def preprocess(text, **_):
+            seen.append("preprocess")
+            return _usable()
+    
+        monkeypatch.setattr(diag, "payload_hash", payload_hash)
+        monkeypatch.setattr(diag, "activate", activate)
+        monkeypatch.setattr(diag, "current", current)
+        monkeypatch.setattr(preprocessor, "preprocess", preprocess)
+        ex.run_stage_zero(SHORT, temperature=0.0, user_task_context=None, state={},
+                          reporter=RecordingReporter())
+>       assert seen == ["payload_hash", "activate", "preprocess", "current"]
+E       AssertionError: assert ['payload_has...s', 'current'] == ['payload_has...s', 'current']
+E         
+E         At index 1 diff: 'preprocess' != 'activate'
+E         Right contains one more item: 'current'
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage0.py:334: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage0.py::test_diagnostics_open_before_stage_zero_and_land_under_project_root
+FAILED tests/test_service_extraction_stage0.py::test_start_falls_back_to_tmp_when_the_recorder_has_no_dir
+FAILED tests/test_service_extraction_stage0.py::test_patches_on_the_source_modules_reach_run_stage_zero
+3 failed, 17 passed in 3.15s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3b\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ d6b903b19bd5d8e57f75bae46a7aea1d8a1fed16  [git, worktree dirty=True]
+label                   : mut-f1-bound-activate
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3b/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3b -q -p no:cacheprovider --basetemp=C:/t/wsR3btmp/mut-tmp/f1-bound-activate tests/test_service_extraction_stage0.py
+cwd                     : C:\t\ws-R3b
+root PID / process group: 1094476 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 4.50 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  1094496:python.exe
+descendants terminated  : 1  1094496
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\ws-R3b\docs\webserver\evidence\R3b\mutation-r1\f1-bound-activate.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R3b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 8
+================================================

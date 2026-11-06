@@ -1,0 +1,53 @@
+T2PW: C:\t\ws-R3b\src\t2pw\__init__.py
+............F......                                                      [100%]
+================================== FAILURES ===================================
+________________________ test_helpers_rank_and_usable _________________________
+
+    def test_helpers_rank_and_usable():
+        assert ex._stage0_context_rank(_case_c()) == 2
+        assert ex._stage0_context_rank(_usable()) == 1
+        assert ex._stage0_context_rank(_failed()) == 0
+        assert ex._has_usable_context({"key_proteins": ["", "MenA"]})
+        assert not ex._has_usable_context({"key_proteins": ["", " "]})
+        # a 4-word tail is not an organism: the whole scope stays the pathway name
+>       assert ex._seed_context_from_user_scope({}, "x in vitro reconstitution of y") == {
+            "pathway_name": "x in vitro reconstitution of y"}
+E       AssertionError: assert {'likely_orga...ay_name': 'x'} == {'pathway_nam...itution of y'}
+E         
+E         Differing items:
+E         {'pathway_name': 'x'} != {'pathway_name': 'x in vitro reconstitution of y'}
+E         Left contains 1 more item:
+E         {'likely_organism': 'vitro reconstitution of y'}
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage0.py:228: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage0.py::test_helpers_rank_and_usable
+1 failed, 18 passed in 2.44s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3b\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ b7830ed22b91c0b62ce7b957cbc14a34f2dbf97d  [git, worktree dirty=True]
+label                   : mut-seed-organism-4-words
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3b/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3b -q -p no:cacheprovider --basetemp=C:/t/wsR3btmp/mut-tmp/seed-organism-4-words tests/test_service_extraction_stage0.py
+cwd                     : C:\t\ws-R3b
+root PID / process group: 924444 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 3.80 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  924436:python.exe
+descendants terminated  : 1  924436
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\ws-R3b\docs\webserver\evidence\R3b\mutation\seed-organism-4-words.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R3b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 8
+================================================

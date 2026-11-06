@@ -1,0 +1,110 @@
+T2PW: C:\t\ws-R3b\src\t2pw\__init__.py
+.............F....F                                                      [100%]
+================================== FAILURES ===================================
+_____ test_diagnostics_open_before_stage_zero_and_land_under_project_root _____
+
+root = WindowsPath('C:/t/wsR3btmp/mut-tmp/diagnostics-not-unique/test_diagnostics_open_before_s0')
+
+    def test_diagnostics_open_before_stage_zero_and_land_under_project_root(root):
+        order: List[str] = []
+        real_activate = ex.activate_extraction_diagnostics
+    
+        def activate(**kw):
+            order.append("activate")
+            return real_activate(**kw)
+    
+        def preprocess(text, **_):
+            order.append("preprocess")
+            return _usable()
+    
+        ex.activate_extraction_diagnostics = activate
+        try:
+            state: Dict[str, Any] = {}
+            res = ex.run_stage_zero(SHORT, temperature=0.0, user_task_context=None, state=state,
+                                    reporter=RecordingReporter(), preprocess_fn=preprocess)
+        finally:
+            ex.activate_extraction_diagnostics = real_activate
+        assert order == ["activate", "preprocess"]
+        base = root / "tmp" / ex.DIAGNOSTICS_DIRNAME
+>       assert res.diagnostics_dir.parent == base  # unique=True: its own subdirectory
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert WindowsPath('C:/t/wsR3btmp/mut-tmp/diagnostics-not-unique/test_diagnostics_open_before_s0/tmp') == WindowsPath('C:/t/wsR3btmp/mut-tmp/diagnostics-not-unique/test_diagnostics_open_before_s0/tmp/extraction_diagnostics')
+E        +  where WindowsPath('C:/t/wsR3btmp/mut-tmp/diagnostics-not-unique/test_diagnostics_open_before_s0/tmp') = WindowsPath('C:/t/wsR3btmp/mut-tmp/diagnostics-not-unique/test_diagnostics_open_before_s0/tmp/extraction_diagnostics').parent
+E        +    where WindowsPath('C:/t/wsR3btmp/mut-tmp/diagnostics-not-unique/test_diagnostics_open_before_s0/tmp/extraction_diagnostics') = StageZeroResult(pathway_context={'pathway_name': 'Menaquinone biosynthesis', 'likely_organism': 'E. coli'}, diagnostic...WindowsPath('C:/t/wsR3btmp/mut-tmp/diagnostics-not-unique/test_diagnostics_open_before_s0/tmp/extraction_diagnostics')).diagnostics_dir
+
+tests\test_service_extraction_stage0.py:258: AssertionError
+___ test_real_app_case_c_opens_diagnostics_then_stops_at_the_ambiguous_gate ___
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001A199C4EF90>
+tmp_path = WindowsPath('C:/t/wsR3btmp/mut-tmp/diagnostics-not-unique/test_real_app_case_c_opens_dia0')
+
+    def test_real_app_case_c_opens_diagnostics_then_stops_at_the_ambiguous_gate(monkeypatch, tmp_path):
+        """The app passes ``st.session_state`` as ``state`` and still stops at its own gate.
+    
+        ``preprocess`` is patched on its source module, which the app's ``from ... import
+        preprocess`` binds on every script run. A Case-C draw must end in the app's
+        ambiguous-review error, with the diagnostics directory the moved code opened
+        (under the patched project root) published in session state.
+        """
+    
+        from streamlit.testing.v1 import AppTest
+    
+        import t2pw.config  # noqa: F401 - bind the real PROJECT_ROOT before it is redirected
+        import t2pw.pwml.writer  # noqa: F401 - reads reference data under the real root
+    
+        fn, seen = _fake([_case_c()])
+        monkeypatch.setattr(preprocessor, "preprocess", fn)
+        monkeypatch.setattr(paths, "PROJECT_ROOT", tmp_path)
+        try:
+            at = AppTest.from_file(str(APP_PATH), default_timeout=300).run()
+            assert not at.exception
+            at.text_area(key="pathway_text_0").set_value(SHORT)
+            next(b for b in at.button if b.label == "Run pipeline").click().run()
+        finally:
+            diag.deactivate()
+    
+        assert [str(e.value) for e in at.exception] == []
+        assert len(seen) == 1
+        assert any("Ambiguous review scope" in str(e.value) for e in at.error)
+        assert at.session_state["pipeline_error"]["status"] == "ambiguous_review_scope"
+        assert at.session_state["pipeline_ready"] is False
+        published = Path(at.session_state[ex.EXTRACTION_DIAGNOSTICS_DIR_KEY])
+>       assert published.parent == tmp_path / "tmp" / ex.DIAGNOSTICS_DIRNAME
+E       AssertionError: assert WindowsPath('C:/t/wsR3btmp/mut-tmp/diagnostics-not-unique/test_real_app_case_c_opens_dia0/tmp') == ((WindowsPath('C:/t/wsR3btmp/mut-tmp/diagnostics-not-unique/test_real_app_case_c_opens_dia0') / 'tmp') / 'extraction_diagnostics')
+E        +  where WindowsPath('C:/t/wsR3btmp/mut-tmp/diagnostics-not-unique/test_real_app_case_c_opens_dia0/tmp') = WindowsPath('C:/t/wsR3btmp/mut-tmp/diagnostics-not-unique/test_real_app_case_c_opens_dia0/tmp/extraction_diagnostics').parent
+E        +  and   'extraction_diagnostics' = ex.DIAGNOSTICS_DIRNAME
+
+tests\test_service_extraction_stage0.py:332: AssertionError
+---------------------------- Captured stderr call -----------------------------
+2026-11-05 20:43:52.644 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage0.py::test_diagnostics_open_before_stage_zero_and_land_under_project_root
+FAILED tests/test_service_extraction_stage0.py::test_real_app_case_c_opens_diagnostics_then_stops_at_the_ambiguous_gate
+2 failed, 17 passed in 2.91s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3b\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ b7830ed22b91c0b62ce7b957cbc14a34f2dbf97d  [git, worktree dirty=True]
+label                   : mut-diagnostics-not-unique
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3b/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3b -q -p no:cacheprovider --basetemp=C:/t/wsR3btmp/mut-tmp/diagnostics-not-unique tests/test_service_extraction_stage0.py
+cwd                     : C:\t\ws-R3b
+root PID / process group: 926468 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 4.69 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  926528:python.exe
+descendants terminated  : 1  926528
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\ws-R3b\docs\webserver\evidence\R3b\mutation\diagnostics-not-unique.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R3b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 8
+================================================
