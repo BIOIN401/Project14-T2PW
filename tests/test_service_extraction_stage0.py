@@ -244,6 +244,7 @@ def test_diagnostics_open_before_stage_zero_and_land_under_project_root(root):
 
     def preprocess(text, **_):
         order.append("preprocess")
+        diag.current().record_stage0_attempt({"outcome": "ok", "attempt": 1})
         return _usable()
 
     ex.activate_extraction_diagnostics = activate
@@ -258,7 +259,8 @@ def test_diagnostics_open_before_stage_zero_and_land_under_project_root(root):
     assert res.diagnostics_dir.parent == base  # unique=True: its own subdirectory
     assert state[ex.EXTRACTION_DIAGNOSTICS_DIR_KEY] == str(res.diagnostics_dir)
     assert diag.current().run_id == diag.payload_hash(SHORT)
-    # the post-Stage-0 sync published the recorder's artifacts
+    # the post-Stage-0 sync published what Stage 0 recorded (the start had set it to {})
+    assert diag.STAGE0_ATTEMPTS_NAME in state[ex.EXTRACTION_DIAGNOSTICS_KEY]
     assert state[ex.EXTRACTION_DIAGNOSTICS_KEY] == diag.current().artifacts()
 
 
@@ -313,7 +315,12 @@ def test_real_app_case_c_opens_diagnostics_then_stops_at_the_ambiguous_gate(monk
     import t2pw.pwml.writer  # noqa: F401 - reads reference data under the real root
 
     fn, seen = _fake([_case_c()])
-    monkeypatch.setattr(preprocessor, "preprocess", fn)
+
+    def recording(text, **kwargs):
+        diag.current().record_stage0_attempt({"outcome": "ok", "attempt": 1})
+        return fn(text, **kwargs)
+
+    monkeypatch.setattr(preprocessor, "preprocess", recording)
     monkeypatch.setattr(paths, "PROJECT_ROOT", tmp_path)
     try:
         at = AppTest.from_file(str(APP_PATH), default_timeout=300).run()
@@ -330,4 +337,5 @@ def test_real_app_case_c_opens_diagnostics_then_stops_at_the_ambiguous_gate(monk
     assert at.session_state["pipeline_ready"] is False
     published = Path(at.session_state[ex.EXTRACTION_DIAGNOSTICS_DIR_KEY])
     assert published.parent == tmp_path / "tmp" / ex.DIAGNOSTICS_DIRNAME
-    assert isinstance(at.session_state[ex.EXTRACTION_DIAGNOSTICS_KEY], dict)
+    # published by the post-Stage-0 sync, before the gate stopped the run
+    assert diag.STAGE0_ATTEMPTS_NAME in at.session_state[ex.EXTRACTION_DIAGNOSTICS_KEY]
