@@ -16,7 +16,7 @@ Branch `ws/W4b-time-budget`, base `6b108aa9`. Ruling: `PO-RULINGS-2026-11-04.md`
 - Web+bridge 13 files: 301 passed (base 301), 0 survivors. `evidence/W4b/web.json`.
 - SMOKE: 510 passed, 1 failed, 0 survivors. `evidence/W4b/smoke.json`.
   The failure, `test_c106_mutation_harness_executable.py::test_08_the_census_pins_still_match_the_committed_corpus`,
-  is NOT from this change: it counts `git ls-files *quarantine_report.json` (84 on base `6b108aa9`)
+  was caused by the orchestrator's own E2E-2 evidence commit (it added a quarantine_report.json) and is fixed on `webserver/refactor` @ `1062ce0d`; it is NOT from this change: it counts `git ls-files *quarantine_report.json` (84 on base `6b108aa9`)
   against the c102 pin (83); W4b touches no such file. Pre-existing on `webserver/refactor`
   (some committed run added a report). Needs the product owner or a census re-pin (F-151).
 
@@ -26,7 +26,11 @@ Branch `ws/W4b-time-budget`, base `6b108aa9`. Ruling: `PO-RULINGS-2026-11-04.md`
 - `test_web_worker.py::test_wall_cap_shapes_the_retry_deadline...`: 7000/7200 s became 5200/5400 s (same shape: ~200 s left).
 - `test_service_driver_bridge.py`: two assertions flipped from "timeout is retryable" to final (passed-deadline test, renamed; parametrize row timeout `True` -> `False`).
 
-## Open questions / reported, not changed
+## Extra edit (authorised by the orchestrator, wording only)
+- `views.py` (two job-page strings) now say a run is stopped after 90 minutes; comment-only wording in `jobs.py:41` and `limits.py:60`. No logic changed; no test pins that wording.
+- Web+bridge 13 files re-run after this edit: 301 passed, 0 survivors (`evidence/W4b/web2.json`). SMOKE not re-run.
+
+## Open questions / reported
 - `src/t2pw/web/views.py` (outside the boundary): job-page copy still says "about 20 to 60 minutes" (two lines), `_kind_text` for timeout says "the run took too long" which is fine, and `MAX_ATTEMPTS`/"Retrying automatically" only ever show for crash/network/LLM now. Suggest the same "stopped after 90 minutes" clause there.
 - `jobs.py:41` and `limits.py:60` comments say "20-60 min" (comment-only, outside boundary).
 - `driver_bridge.py` derives the driver timeout from the request deadline (`deadline - GRACE_S`), no separate budget; nothing shorter than 90 min hard-coded. `app.py` `Retry-After: 3600` is an unrelated HTTP header.
