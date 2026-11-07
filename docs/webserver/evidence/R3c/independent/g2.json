@@ -1,0 +1,200 @@
+{
+  "label": "R3c-ind-g2",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/ws-R3c-trial/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-R3c-trial",
+    "-q",
+    "--basetemp=C:/t/bt/R3cind/g2",
+    "tests/test_c011_freeze_seam_golden_equivalence.py"
+  ],
+  "cwd": "C:\\t\\ws-R3c-trial",
+  "started_at": "2026-11-07T05:59:34+00:00",
+  "finished_at": "2026-11-07T06:00:11+00:00",
+  "duration_seconds": 36.923585399999865,
+  "timeout_seconds": 540.0,
+  "root_pid": 632004,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 627200,
+      "name": "python.exe",
+      "ppid": 632004
+    },
+    {
+      "pid": 633556,
+      "name": "git.exe",
+      "ppid": 627200
+    },
+    {
+      "pid": 635308,
+      "name": "git.exe",
+      "ppid": 627200
+    },
+    {
+      "pid": 635212,
+      "name": "git.exe",
+      "ppid": 627200
+    },
+    {
+      "pid": 635592,
+      "name": "python.exe",
+      "ppid": 635752
+    },
+    {
+      "pid": 635752,
+      "name": "python.exe",
+      "ppid": 627200
+    },
+    {
+      "pid": 632248,
+      "name": "python.exe",
+      "ppid": 635380
+    },
+    {
+      "pid": 635380,
+      "name": "python.exe",
+      "ppid": 627200
+    },
+    {
+      "pid": 634940,
+      "name": "git.exe",
+      "ppid": 632248
+    },
+    {
+      "pid": 629656,
+      "name": "python.exe",
+      "ppid": 631976
+    },
+    {
+      "pid": 631976,
+      "name": "python.exe",
+      "ppid": 627200
+    },
+    {
+      "pid": 603276,
+      "name": "python.exe",
+      "ppid": 627200
+    },
+    {
+      "pid": 632828,
+      "name": "python.exe",
+      "ppid": 603276
+    },
+    {
+      "pid": 625380,
+      "name": "python.exe",
+      "ppid": 634096
+    },
+    {
+      "pid": 634096,
+      "name": "python.exe",
+      "ppid": 627200
+    },
+    {
+      "pid": 634624,
+      "name": "python.exe",
+      "ppid": 634644
+    },
+    {
+      "pid": 634644,
+      "name": "python.exe",
+      "ppid": 627200
+    },
+    {
+      "pid": 635928,
+      "name": "python.exe",
+      "ppid": 627200
+    },
+    {
+      "pid": 635948,
+      "name": "python.exe",
+      "ppid": 635928
+    }
+  ],
+  "descendants_terminated": [
+    603276,
+    625380,
+    627200,
+    629656,
+    631976,
+    632248,
+    632828,
+    633556,
+    634096,
+    634624,
+    634644,
+    634940,
+    635212,
+    635308,
+    635380,
+    635592,
+    635752,
+    635928,
+    635948
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 142892,
+      "name": "python.exe"
+    },
+    {
+      "pid": 615556,
+      "name": "python.exe"
+    },
+    {
+      "pid": 621760,
+      "name": "python.exe"
+    },
+    {
+      "pid": 628064,
+      "name": "python.exe"
+    },
+    {
+      "pid": 634848,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/ev-R3c/independent/g2.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-R3c-trial\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-R3c-trial",
+    "repo_head": "9a0c5bd283c02e212b7a86b35340042e86ad26b2",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ws-R3c-ind",
+    "token": "ws-R3c-ind:628064:98d02c53fc40316d",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

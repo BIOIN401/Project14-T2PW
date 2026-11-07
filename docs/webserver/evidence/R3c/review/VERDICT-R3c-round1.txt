@@ -1,0 +1,29 @@
+TASK: R3c  BRANCH: ws/R3c-stage-one  REVIEWED HEAD: cdf47c54 (code f1238da7, test a24e2b0b; base 4ea3524a)
+VERDICT: APPROVE WITH NOTES
+GATES: boundary OK . no-biology OK . behaviour-preserved OK . tests OK . evidence OK . secrets OK . result-doc OK
+
+Reviewer evidence (all under C:/t/rev-R3c/):
+- block.diff: base app 1928-2039 vs tip run_stage_one body. Only st->reporter, st.session_state->state,
+  name->module.attr, PROJECT_ROOT->paths.PROJECT_ROOT, _diagnostics_dir->diagnostics_dir,
+  st.stop()->return failure (message bound first), sync(state=), render_attempts(reporter=), lazy imports.
+- modcount-ws-R3c-base.txt / modcount-ws-R3c.txt: import t2pw.service.extraction loads 13 t2pw modules, identical set.
+- out-tip/summary.txt (tip worktree, bounded_run + heavy lock + pinned_pytest, survivors 0 each):
+  golden 2/8/4/24 = 38; equivalence 14; focus (s2orch+stage1+c060a+svc x3) 102; c055 14; triage 14.
+- out/summary.txt (scratch-copy mutation probes, bounded_run + heavy lock, survivors 0 each):
+  O1 filter removed, O2 filter before extraction, O3 return raw, O4 Stage 2 raw, O5 merge1 raw: order test FAILS (5/5).
+  E1 app rebinds stage_one_in_scope=_stage_one.stage_one, E2 svc reassigns after filter,
+  E3 RAG seed raw, E4 filter fed pre-settle payload: order test PASSES (escapes), each KILLED by test_service_extraction_stage1.
+  B1 settle_stage_one bound at module import: 17 failed (incl. call-time patch test and import pin).
+
+FINDINGS:
+F1 [note] tests/test_streamlit_stage2_orchestration.py:989-1011 + src/t2pw/app/streamlit_app.py:1926
+   App-side checks are Name-only, so the new rebinding seam escapes: E1 feeds raw Stage 1 to Stage 2 and the
+   order test passes. E2/E4 escape too (same hole the original test had). All killed by the new file.
+   Fix (optional, R3d re-check): assert the app assigns stage_one_in_scope from attribute .stage_one_in_scope.
+F2 [note] docs/webserver/results/R3c.md:287 Option A says the rewrite checks the RAG seed; delivered rewrite
+   (R3c.md:163-168) does not. Ruling does not require it; E3 killed by test_rag_on_seeds_from_the_in_scope_payload...
+F3 [note] SAME-EXCEPT-UNBOUND-GLOBALS (R3c.md:121-125) confirmed unobservable: no on_click/on_change callbacks,
+   no globals()/locals() readers, if submit: (app 1843) is top level with no enclosing try. Only residue: an
+   uncaught exception from run_stage_one shows one extra extraction.py traceback frame. Cosmetic.
+F4 [note] Open questions: Q2 drop shim in R3d. Q3 leave InputFailure, rename in R5 (no alias now).
+   Q4 function-local imports sound (13 same set, B1 killed). Q5 pre-existing on base; ticket it, not R3c.

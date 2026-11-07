@@ -1,0 +1,118 @@
+3,4c3,4
+<     with st.spinner("Running Stage 1 extraction..."):
+<         stage_one, chunk_details = run_stage_one_with_chunking(
+---
+>     with reporter.spinner("Running Stage 1 extraction..."):
+>         stage_one, chunk_details = _pipeline.run_stage_one_with_chunking(
+8c8
+<             artifact_dir=PROJECT_ROOT / "tmp",
+---
+>             artifact_dir=paths.PROJECT_ROOT / "tmp",
+23c23
+<         _boundary = settle_stage_one(
+---
+>         _boundary = _stage_one_boundary.settle_stage_one(
+25c25
+<             mode=coerce_mode(st.session_state.get("export_mode")),
+---
+>             mode=_export_mode.coerce_mode(state.get("export_mode")),
+29,34c29,35
+<         st.session_state["stage_one_boundary"] = _boundary.to_summary()
+< except PipelineFailure as failure:
+<     _sync_extraction_diagnostics()
+<     st.error(f"Extraction failed: {failure}")
+<     render_attempts("Stage 1 attempts", failure.attempts)
+<     st.stop()
+---
+>         state["stage_one_boundary"] = _boundary.to_summary()
+> except _pipeline.PipelineFailure as failure:
+>     _sync_extraction_diagnostics(state=state)
+>     message = f"Extraction failed: {failure}"
+>     reporter.error(message)
+>     render_attempts("Stage 1 attempts", failure.attempts, reporter=reporter)
+>     return StageOneResult(failure=InputFailure(KIND_STAGE_ONE_FAILED, message))
+36,39c37,41
+<     _sync_extraction_diagnostics()
+<     st.error(f"Extraction boundary failed: {failure}")
+<     st.json(failure.report)
+<     st.stop()
+---
+>     _sync_extraction_diagnostics(state=state)
+>     message = f"Extraction boundary failed: {failure}"
+>     reporter.error(message)
+>     reporter.json(failure.report)
+>     return StageOneResult(failure=InputFailure(KIND_STAGE_ONE_BOUNDARY_ERROR, message))
+41c43
+< _sync_extraction_diagnostics()
+---
+> _sync_extraction_diagnostics(state=state)
+45c47
+<     st.error(
+---
+>     message = (
+49c51,52
+<     st.info(
+---
+>     reporter.error(message)
+>     reporter.info(
+54c57
+<         f"cleaning_report.json) are in {_diagnostics_dir}."
+---
+>         f"cleaning_report.json) are in {diagnostics_dir}."
+56c59
+<     st.json(_boundary.to_summary())
+---
+>     reporter.json(_boundary.to_summary())
+58,59c61,62
+<         st.json(_boundary.failure.report)
+<     st.stop()
+---
+>         reporter.json(_boundary.failure.report)
+>     return StageOneResult(failure=InputFailure(KIND_STAGE_ONE_INCOMPLETE, message))
+61c64
+<     st.info(
+---
+>     reporter.info(
+73c76
+< stage_one_in_scope, out_of_scope_removed_reactions = filter_out_of_scope_reactions(stage_one)
+---
+> stage_one_in_scope, out_of_scope_removed_reactions = _pipeline.filter_out_of_scope_reactions(stage_one)
+75c78
+<     st.info(
+---
+>     reporter.info(
+94,96c97,101
+< if rag_config()["enabled"]:
+<     _rag_seed_graph = build_draft_graph(stage_one_in_scope)
+<     rag_result = maybe_run_rag(
+---
+> if _config.rag_config()["enabled"]:
+>     from t2pw.service import rag_orchestration as _rag_orchestration  # only with RAG on
+> 
+>     _rag_seed_graph = _draft_graph.build_draft_graph(stage_one_in_scope)
+>     rag_result = _rag_orchestration.maybe_run_rag(
+100c105
+<         reports={"qa_graph": generate_qa_report(_rag_seed_graph, stage_one_in_scope)},
+---
+>         reports={"qa_graph": _qa_graph.generate_qa_report(_rag_seed_graph, stage_one_in_scope)},
+102c107
+<         reporter=StreamlitReporter(st),
+---
+>         reporter=reporter,
+105c110
+<         st.session_state["rag_result"] = rag_result
+---
+>         state["rag_result"] = rag_result
+112c117,126
+<             st.session_state["rag_evidence_context"] = rag_result.evidence_context  # S2
+---
+>             state["rag_evidence_context"] = rag_result.evidence_context  # S2
+> 
+> return StageOneResult(
+>     stage_one=stage_one,
+>     chunk_details=chunk_details,
+>     stage_one_in_scope=stage_one_in_scope,
+>     out_of_scope_removed_reactions=out_of_scope_removed_reactions,
+>     rag_result=rag_result,
+>     user_task_context=user_task_context,
+> )

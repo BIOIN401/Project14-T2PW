@@ -1,0 +1,94 @@
+{
+  "label": "rev-R3c-g4",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/ws-R3c/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-R3c",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:/t/rev-R3c/bt-tip/g4",
+    "tests/test_streamlit_quarantine_boundary.py"
+  ],
+  "cwd": "C:/t/ws-R3c",
+  "started_at": "2026-11-07T06:07:15+00:00",
+  "finished_at": "2026-11-07T06:07:54+00:00",
+  "duration_seconds": 39.30401130000246,
+  "timeout_seconds": 500.0,
+  "root_pid": 638672,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 647884,
+      "name": "python.exe",
+      "ppid": 638672
+    }
+  ],
+  "descendants_terminated": [
+    647884
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 142892,
+      "name": "python.exe"
+    },
+    {
+      "pid": 615556,
+      "name": "python.exe"
+    },
+    {
+      "pid": 621760,
+      "name": "python.exe"
+    },
+    {
+      "pid": 635552,
+      "name": "python.exe"
+    },
+    {
+      "pid": 643404,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/rev-R3c/out-tip/g4.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-R3c\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-R3c",
+    "repo_head": "cdf47c54bfa24ed60279e6bb428e672177e95d74",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "rev-R3c",
+    "token": "rev-R3c:635552:0b17d87f0d679d26",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

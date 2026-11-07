@@ -297,3 +297,49 @@ All runs went through `bounded_run.py` in the foreground, with the venv python f
    - rename it in R5, which touches R3a's API and tests.
 4. **Function-local imports in `run_stage_one` and `_last_cleaning_report`.** They keep the EXT import graph unchanged and make every lookup call-time. If the reviewer prefers module-level imports, the cost is 24 extra modules on import, and a change in when `postpipeline` is first loaded, which c055's fixtures branch on.
 5. **Observation, not caused here:** `tests/test_service_extraction.py` followed by `tests/test_c055_rag_loop_wiring.py` in one process gives `1 failed, 30 passed, 12 errors` on base `4ea3524a` and on the tip. Each file passes alone. A test-isolation fault, worth a ticket if SMOKE ever co-locates them.
+
+## 9. Ruling, independent run, review and merge (added by the orchestrator)
+
+**PO ruling Q-R3c-1** (`docs/webserver/results/PO-RULINGS-2026-11-04.md`, Addendum 4). The PO authorised a rewrite of `test_out_of_scope_filter_runs_between_stage1_extraction_and_stage2_inference`, of this test only. The rewrite had to keep guarding the same rule. The orchestrator first read the test and confirmed it could not be fixed by a path-only edit: it matched `ast.Name` calls in the app file only. The rewrite is commit `a24e2b0b` (+22/-7, test only).
+
+**Independent run.** ws-test-runner (sonnet/medium) ran on trial merge `9a0c5bd2` (`cdf47c54` onto `e6cf571e`, tree `b18a8ab4`) in `C:/t/ws-R3c-trial`. Every run had 0 survivors. Every run exited 0, except `rag_seed`, which has a known failure on base too.
+
+| run | passed | expected |
+|---|---|---|
+| golden | 2 + 8 + 4 + 24 = 38 | 38 |
+| equivalence (alone) | 14 | 14 |
+| service | 57 | 57 |
+| `test_service_extraction_stage1` (new) | 22 | 22 |
+| `test_streamlit_stage2_orchestration` (includes the rewritten test) | 12 | 12 |
+| `test_preprocessor` | 44 | 44 |
+| c055 (own process) | 14 | 14 |
+| web+bridge | 301 | 301 |
+| clobber, c060a, 759d, 759b, 759a protein, 759a fold, scope_fallback | 8, 11, 4, 7, 37, 2, 5 | same |
+| rag triage, rag admission | 14, 9 | same |
+| rag_seed | 13 + 1 known failure (`test_the_orchestrator_passes_the_merge_base_to_conform`) | same as base |
+| SMOKE | 511 | 511 |
+
+The census count is 83. The runner's own process gate skipped command lines that named the trial path, so it could not see the reviewer's probes. That did not cause overlap. `--heavy-lock HOLDER` sets only a holder label, and every holder shares the one lock directory `C:/t/heavylock` (`bounded_run.py:181`), so the heavy jobs still ran one at a time. The reports are in `docs/webserver/evidence/R3c/independent/`.
+
+**Review round 0.** ws-reviewer (opus/high) reviewed the diff `4ea3524a..cdf47c54` and returned **APPROVE WITH NOTES**. All gates hold: boundary, no biology change, behaviour preserved, tests, evidence, secrets, RESULT doc.
+
+- **The Q-R3c-1 rewrite is confirmed.** It guards the same rule. The reviewer re-ran the four required mutations on a scratch copy, and each fails the test: filter removed, filter before extraction, raw extraction returned, raw `stage_one` passed to Stage 2. A fifth mutation, raw `stage_one` passed to the first `merge_additions`, also fails it.
+- **The move is verbatim.** The reviewer diffed base app 1928-2039 against the `run_stage_one` body (`block.diff`). It shows mechanical substitutions only.
+- **The rebinding covers every value read later.** The six rebound values are everything the rest of the block reads. `rag_incomplete_flag` is set on both branches.
+- **Patched names are looked up at call time.** Every patch target in the tests is reached at call time. Binding `settle_stage_one` at import, as a mutation, fails 17 tests. Importing `extraction.py` loads the same 13 `t2pw` modules on base and tip.
+- **F1 (note).** The app-side order checks match plain names only, so the new rebinding seam is a gap. One app mutation and two service mutations (E1, E2, E4) pass the order test. The original test had the same E2/E4 gap. All three are caught by `test_service_extraction_stage1.py`. Optional fix at the R3d re-check: also assert that the app takes `stage_one_in_scope` from the `run_stage_one` result's attribute.
+- **F2 (note).** The Option A text in § 8 says the rewrite also checks the RAG seed's input. The delivered test does not. The ruling does not require it, and `test_rag_on_seeds_from_the_in_scope_payload...` catches that mutation. This is a wording mismatch in this doc only.
+- **F3 (note).** The 6 "same except unbound script variables" proof cases are confirmed unobservable: the app has no callbacks and no `globals()` readers, and Streamlit discards the script namespace on every rerun. One cosmetic difference: an uncaught exception shows one extra `extraction.py` frame in its traceback, as after R3a and R3b.
+- **F4 (open questions).**
+  - Q2: remove the `render_attempts` shim in R3d.
+  - Q3: keep `InputFailure` and rename it in R5.
+  - Q4: keep the function-local imports.
+  - Q5: the isolation fault between `test_service_extraction.py` and c055 is pre-existing on base; file it as a separate ticket.
+
+The reviewer's files are in `docs/webserver/evidence/R3c/review/`. Its scratch source copy and pytest temp directories are not committed.
+
+**Merge:** `51db01a6` (`--no-ff` into `webserver/refactor`). Its tree differs from the trial merge only in `docs/webserver/LEDGER.md`. The post-merge result is recorded in the LEDGER.
+
+**Carried to R3d:**
+- re-check the order test once Stage 2 moves, including the F1 assertion;
+- remove the `render_attempts` shim.
