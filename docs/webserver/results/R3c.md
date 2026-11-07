@@ -1,9 +1,14 @@
 # R3c - the submit block's Stage 1 and RAG seed move to `service.extraction.run_stage_one`
 
 - **Branch:** `ws/R3c-stage-one` from `webserver/refactor` @ `4ea3524a` (R3a and R3b merged).
-- **Code commit:** `f1238da7`, the move and the new test file.
-- **Docs commit:** this file and `docs/webserver/evidence/R3c/`.
-- **Status: needs-decision.** One existing source-reading test fails at the tip and cannot be fixed by a Q-R0-1 path-only repoint: `tests/test_streamlit_stage2_orchestration.py::test_out_of_scope_filter_runs_between_stage1_extraction_and_stage2_inference` (section 4, Open question 1). **No existing test was edited.** Every other chunk's failing-node set equals base.
+- **Code commits:**
+  - `f1238da7`: the move and the new test file.
+  - `a24e2b0b`: the one test rewrite authorised by PO ruling Q-R3c-1 (section 4a). Test only.
+- **Docs commits:** `25f618ad`, `fac2c317` (the needs-decision version), and the Q-R3c-1 update.
+- **Status:** done, pending independent review.
+  - The first report was needs-decision: one existing source-reading test, `tests/test_streamlit_stage2_orchestration.py::test_out_of_scope_filter_runs_between_stage1_extraction_and_stage2_inference`, failed at `f1238da7`, and a Q-R0-1 path-only repoint could not fix it (section 4).
+  - The PO chose option A (ruling **Q-R3c-1**). The test was rewritten in `a24e2b0b` (section 4a).
+  - After that commit, 2b is 134 and the solo file is 12, both equal to base, so every chunk's failing-node set equals base.
 - **Behaviour change:** none intended. One invisible difference (dead script globals on an early exit), listed in section 3, item 3.
 - **NEW TESTS (R3c, new module):** `tests/test_service_extraction_stage1.py`, 22 tests.
 
@@ -121,7 +126,7 @@ I grepped `tests/` and `tests/equivalence/` for `setattr(` / `patch(` / `patch.o
 4. **The reporter instance passed to `maybe_run_rag`.** Base built a new `StreamlitReporter(st)` for that call; the tip passes the one the app built for `run_stage_one`. `StreamlitReporter` is a stateless forwarder over the same `st`, so this makes no difference. ivm records the reporter's type and `_st is st` for both arms.
 5. **Function-local imports** (section 1). Open question 4.
 
-## 4. The failing source reader (needs-decision; not edited)
+## 4. The failing source reader (needs-decision at `f1238da7`; resolved in 4a)
 
 `tests/test_streamlit_stage2_orchestration.py::test_out_of_scope_filter_runs_between_stage1_extraction_and_stage2_inference` (lines 958-996, in chunk 2b and solo-s2orch). It parses **APP only** and asserts:
 
@@ -150,6 +155,37 @@ At the tip, assertion 1 fails: `assert len(extraction_calls) == 1` gives `assert
 - mutations `seed-from-unfiltered` and `app-in-scope-is-raw` are both killed.
 
 Options are in Open question 1.
+
+### 4a. Resolution: PO ruling Q-R3c-1 (option A), test commit `a24e2b0b`
+
+- **Authority:** PO ruling **Q-R3c-1**, in `docs/webserver/results/PO-RULINGS-2026-11-04.md` Addendum 4 (on `webserver/refactor` @ `e6cf571e`). It authorises rewriting this one test, about 15 lines beyond Q-R0-1, provided it keeps guarding the same rule. The reviewer must confirm that, and **R3d must re-check the test when Stage 2 moves.**
+- **The edit:** commit `a24e2b0b`, test only, in its own commit. It touches `tests/test_streamlit_stage2_orchestration.py`, this one function and nothing else in the file (`git show --stat`: 1 file, +22/-7). No other test and no code changed.
+- **What it asserts now:**
+  1. In `service/extraction.py`, inside `run_stage_one`, there is exactly one call of `run_stage_one_with_chunking`, matched as a Name or as an Attribute (`_pipeline.run_stage_one_with_chunking`).
+  2. In the same function there is exactly one `filter_out_of_scope_reactions` call, also matched either way, and the extraction comes before it (line order).
+  3. The one `stage_one_in_scope=` keyword of `StageOneResult(...)` is the Name the filter's output was assigned to, not the raw extraction.
+  4. In the app, there is exactly one `run_stage_one(` call and exactly one `run_stage_two_with_feedback_loop(` call, in that order.
+  5. **Kept unchanged from the original:** Stage 2's `args[1]` is not the Name `stage_one`, and the first `merge_additions` call's `args[0]` is not `stage_one`. App-side calls are still matched as plain Names only, as before, so "the first `merge_additions`" means the same call as before.
+- **Non-vacuity** (`scripts/order_test_vacuity.py`, `order-test-vacuity/`). Each edit was a temporary change to the committed tree, reverted after its run and never committed; `git status -- src tests` was clean afterwards. Each run went through `bounded_run` with the heavy lock, survivors 0. **5/5 as expected:**
+
+  | temp edit | expected | result | failing assertion |
+  |---|---|---|---|
+  | none (control, untouched tip) | pass | 1 passed | - |
+  | filter call removed (`stage_one_in_scope, ... = stage_one, []`) | fail | 1 failed | `len(filter_calls) == 1` (0 == 1) |
+  | filter moved before the extraction | fail | 1 failed | `extraction_calls[0].lineno < filter_calls[0].lineno` (611 < 607) |
+  | `run_stage_one` returns the raw extraction (`stage_one_in_scope=stage_one`) | fail | 1 failed | `returned[0].id == filtered.elts[0].id` |
+  | the app passes the raw `stage_one` to Stage 2 | fail | 1 failed | `stage_one_arg.id != "stage_one"` |
+
+- **Re-runs at `a24e2b0b`** (`q1-*`; gated, heavy lock, fresh basetemp, `worktree dirty=False`, survivors 0):
+
+  | chunk | result | base |
+  |---|---|---|
+  | 2b | **134 passed** | 134 |
+  | solo test_streamlit_stage2_orchestration | **12 passed** | 12 |
+  | golden g1 / g2 / g3 / g4 | 2 / 8 / 4 / 24 = **38** | 38 |
+  | equivalence, alone | **14 passed** | 14 |
+
+  `a24e2b0b` differs from `f1238da7` only in this test, so the other `t-` results in section 6 stand for it.
 
 ## 5. Proof
 
@@ -201,7 +237,7 @@ All runs went through `bounded_run.py` in the foreground, with the venv python f
 | g1 / g2 / g3 / g4 (own processes) | 2 / 8 / 4 / 24 = **38** | same | identical (none) |
 | **eq** equivalence, alone | **14 passed** | 14 | identical |
 | 2a | 78 passed, 1 failed | same | identical (c052) |
-| **2b** (incl. c060a, s2orch) | **133 passed, 1 failed** | 134 passed | **DIFFERENT: the s2orch reader, section 4** |
+| **2b** (incl. c060a, s2orch) | **133 passed, 1 failed** at `f1238da7`. **134 passed at `a24e2b0b`** | 134 passed | identical at `a24e2b0b` (section 4a) |
 | 2b-c055 | 14 | 14 | identical |
 | 2c | 101 passed, 3 skipped, 1 failed | same | identical (prefreeze_third) |
 | 2c-c126 | 2 | 2 | identical |
@@ -222,7 +258,7 @@ All runs went through `bounded_run.py` in the foreground, with the venv python f
 | solo c060a / clobber / scope_fallback / 759a | 11 / 8 / 5 / 37 | same | identical |
 | solo test_rag_triage_orchestration / test_rag_admission_production_path | 14 / 9 | same | identical |
 | solo test_rag_seed_entity_reimport | 13 passed, 1 failed | same | identical (the known rag_seed failure) |
-| **solo test_streamlit_stage2_orchestration** | **11 passed, 1 failed** | 12 passed | **DIFFERENT: section 4** |
+| **solo test_streamlit_stage2_orchestration** | **11 passed, 1 failed** at `f1238da7`. **12 passed at `a24e2b0b`** | 12 passed | identical at `a24e2b0b` (section 4a) |
 
 - Golden 38 passed on tip and base, and the golden files are unchanged.
 - The four known failures (c052, prefreeze_third, rag_seed, batch_preflight) have identical node ids on tip and base.
@@ -246,7 +282,7 @@ All runs went through `bounded_run.py` in the foreground, with the venv python f
 
 ## 8. Open questions
 
-1. **`test_out_of_scope_filter_runs_between_stage1_extraction_and_stage2_inference` (blocking).** Options:
+1. **Resolved by PO ruling Q-R3c-1: option A**, done in `a24e2b0b` (section 4a). R3d must re-check this test when Stage 2 moves. The options as first reported:
    - **A (recommended): a test edit beyond Q-R0-1.** Parse EXT's `run_stage_one` and APP's submit block.
      - In EXT: exactly one call (Name or Attribute) each of `run_stage_one_with_chunking` and `filter_out_of_scope_reactions`, in that order, and the RAG seed and the return use the filtered name.
      - In APP: exactly one `run_stage_one(` call before the one `run_stage_two_with_feedback_loop` call; Stage 2's `args[1]` is still not `stage_one`; the `merge_additions` base is still not `stage_one`.
