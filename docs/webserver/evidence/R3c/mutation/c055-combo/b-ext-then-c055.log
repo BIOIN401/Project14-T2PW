@@ -1,0 +1,1149 @@
+T2PW: C:\t\ws-R3c-base\src\t2pw\__init__.py
+.............................EEEEEEEEEEEEF.                              [100%]
+=================================== ERRORS ====================================
+____ ERROR at setup of test_one_round_re_enters_all_five_stages_and_merges ____
+
+    @pytest.fixture()
+    def app_module():
+        """``t2pw.app.streamlit_app`` with ``streamlit`` stubbed, as the rag tests do.
+    
+        The module executes a Streamlit script at import, so ``streamlit`` is replaced by a
+        MagicMock exactly the way ``tests/test_rag_triage_orchestration.py`` does it. Only
+        the module-level helpers are exercised here; the script body is exercised through
+        the real ``AppTest`` below.
+        """
+    
+        from unittest.mock import MagicMock
+    
+        saved = {n: sys.modules[n] for n in list(sys.modules)
+                 if n == "streamlit" or n.startswith("streamlit.")}
+        if not isinstance(sys.modules.get("streamlit"), types.ModuleType) or hasattr(
+            sys.modules.get("streamlit"), "__path__"
+        ):
+            for name in list(saved):
+                sys.modules.pop(name, None)
+        stub = MagicMock(name="streamlit")
+        stub.columns.side_effect = lambda spec=1, **_: [
+            MagicMock() for _ in range(spec if isinstance(spec, int) else len(spec))
+        ]
+        stub.tabs.side_effect = lambda labels, **_: [MagicMock() for _ in labels]
+        stub.form_submit_button.return_value = False
+        stub.checkbox.return_value = False
+        stub.session_state = MagicMock()
+        stub.session_state.get.return_value = None
+        stub.session_state.__contains__ = lambda _s, _k: False
+        sys.modules["streamlit"] = stub
+        sys.modules.pop("t2pw.app.streamlit_app", None)
+        # R1: ``run_quarantine_boundary`` now lives here and binds ``st`` at import, so it
+        # must be re-imported under the stub for its session_state writes to reach it.
+        sys.modules.pop("t2pw.service.postpipeline", None)
+        sys.modules.pop("t2pw.service.rag_orchestration", None)  # R2: same, for the moved RAG code
+        before = set(sys.modules)
+>       import t2pw.app.streamlit_app as app  # noqa: PLC0415
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_c055_rag_loop_wiring.py:252: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\t2pw\app\streamlit_app.py:3758: in <module>
+    render_reaction_evidence()
+src\t2pw\app\reaction_evidence_view.py:102: in render_reaction_evidence
+    st.info(f"Reaction Evidence could not be rendered: {exc}")
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\metrics_util.py:628: in wrapped_func
+    result = non_optional_func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:365: in info
+    processed_body, processed_icon = _process_alert_body_and_icon(body, icon)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:51: in _process_alert_body_and_icon
+    extracted_icon, remaining_body = extract_leading_icon(cleaned_body)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:193: in extract_leading_icon
+    return extract_leading_emoji(text)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+text = "Reaction Evidence could not be rendered: No module named 'streamlit.runtime'; 'streamlit' is not a package"
+
+    def extract_leading_emoji(text: str) -> tuple[str, str]:
+        """Return a tuple containing the first emoji found in the given string and
+        the rest of the string (minus an optional separator between the two).
+        """
+    
+        if not _contains_special_chars(text):
+            # If the string only contains basic alphanumerical chars and/or
+            # underscores, hyphen & whitespaces, then it's guaranteed that there
+            # is no emoji in the string.
+            return "", text
+    
+>       from streamlit.emojis import EMOJI_EXTRACTION_REGEX
+E       ModuleNotFoundError: No module named 'streamlit.emojis'; 'streamlit' is not a package
+
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:146: ModuleNotFoundError
+---------------------------- Captured stderr setup ----------------------------
+2026-11-06 15:02:46.414 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:46.414 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:46.414 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:46.414 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:46.414 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:46.415 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:46.415 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:46.415 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:46.415 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+______ ERROR at setup of test_the_checkpoint_is_written_before_the_round ______
+
+    @pytest.fixture()
+    def app_module():
+        """``t2pw.app.streamlit_app`` with ``streamlit`` stubbed, as the rag tests do.
+    
+        The module executes a Streamlit script at import, so ``streamlit`` is replaced by a
+        MagicMock exactly the way ``tests/test_rag_triage_orchestration.py`` does it. Only
+        the module-level helpers are exercised here; the script body is exercised through
+        the real ``AppTest`` below.
+        """
+    
+        from unittest.mock import MagicMock
+    
+        saved = {n: sys.modules[n] for n in list(sys.modules)
+                 if n == "streamlit" or n.startswith("streamlit.")}
+        if not isinstance(sys.modules.get("streamlit"), types.ModuleType) or hasattr(
+            sys.modules.get("streamlit"), "__path__"
+        ):
+            for name in list(saved):
+                sys.modules.pop(name, None)
+        stub = MagicMock(name="streamlit")
+        stub.columns.side_effect = lambda spec=1, **_: [
+            MagicMock() for _ in range(spec if isinstance(spec, int) else len(spec))
+        ]
+        stub.tabs.side_effect = lambda labels, **_: [MagicMock() for _ in labels]
+        stub.form_submit_button.return_value = False
+        stub.checkbox.return_value = False
+        stub.session_state = MagicMock()
+        stub.session_state.get.return_value = None
+        stub.session_state.__contains__ = lambda _s, _k: False
+        sys.modules["streamlit"] = stub
+        sys.modules.pop("t2pw.app.streamlit_app", None)
+        # R1: ``run_quarantine_boundary`` now lives here and binds ``st`` at import, so it
+        # must be re-imported under the stub for its session_state writes to reach it.
+        sys.modules.pop("t2pw.service.postpipeline", None)
+        sys.modules.pop("t2pw.service.rag_orchestration", None)  # R2: same, for the moved RAG code
+        before = set(sys.modules)
+>       import t2pw.app.streamlit_app as app  # noqa: PLC0415
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_c055_rag_loop_wiring.py:252: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\t2pw\app\streamlit_app.py:3758: in <module>
+    render_reaction_evidence()
+src\t2pw\app\reaction_evidence_view.py:102: in render_reaction_evidence
+    st.info(f"Reaction Evidence could not be rendered: {exc}")
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\metrics_util.py:628: in wrapped_func
+    result = non_optional_func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:365: in info
+    processed_body, processed_icon = _process_alert_body_and_icon(body, icon)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:51: in _process_alert_body_and_icon
+    extracted_icon, remaining_body = extract_leading_icon(cleaned_body)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:193: in extract_leading_icon
+    return extract_leading_emoji(text)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+text = "Reaction Evidence could not be rendered: No module named 'streamlit.runtime'; 'streamlit' is not a package"
+
+    def extract_leading_emoji(text: str) -> tuple[str, str]:
+        """Return a tuple containing the first emoji found in the given string and
+        the rest of the string (minus an optional separator between the two).
+        """
+    
+        if not _contains_special_chars(text):
+            # If the string only contains basic alphanumerical chars and/or
+            # underscores, hyphen & whitespaces, then it's guaranteed that there
+            # is no emoji in the string.
+            return "", text
+    
+>       from streamlit.emojis import EMOJI_EXTRACTION_REGEX
+E       ModuleNotFoundError: No module named 'streamlit.emojis'; 'streamlit' is not a package
+
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:146: ModuleNotFoundError
+---------------------------- Captured stderr setup ----------------------------
+2026-11-06 15:02:46.536 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:46.536 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:46.536 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:46.536 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:46.536 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:46.536 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:46.536 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:46.536 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:46.536 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+__ ERROR at setup of test_round_two_re_runs_the_chain_on_recomputed_reports ___
+
+    @pytest.fixture()
+    def app_module():
+        """``t2pw.app.streamlit_app`` with ``streamlit`` stubbed, as the rag tests do.
+    
+        The module executes a Streamlit script at import, so ``streamlit`` is replaced by a
+        MagicMock exactly the way ``tests/test_rag_triage_orchestration.py`` does it. Only
+        the module-level helpers are exercised here; the script body is exercised through
+        the real ``AppTest`` below.
+        """
+    
+        from unittest.mock import MagicMock
+    
+        saved = {n: sys.modules[n] for n in list(sys.modules)
+                 if n == "streamlit" or n.startswith("streamlit.")}
+        if not isinstance(sys.modules.get("streamlit"), types.ModuleType) or hasattr(
+            sys.modules.get("streamlit"), "__path__"
+        ):
+            for name in list(saved):
+                sys.modules.pop(name, None)
+        stub = MagicMock(name="streamlit")
+        stub.columns.side_effect = lambda spec=1, **_: [
+            MagicMock() for _ in range(spec if isinstance(spec, int) else len(spec))
+        ]
+        stub.tabs.side_effect = lambda labels, **_: [MagicMock() for _ in labels]
+        stub.form_submit_button.return_value = False
+        stub.checkbox.return_value = False
+        stub.session_state = MagicMock()
+        stub.session_state.get.return_value = None
+        stub.session_state.__contains__ = lambda _s, _k: False
+        sys.modules["streamlit"] = stub
+        sys.modules.pop("t2pw.app.streamlit_app", None)
+        # R1: ``run_quarantine_boundary`` now lives here and binds ``st`` at import, so it
+        # must be re-imported under the stub for its session_state writes to reach it.
+        sys.modules.pop("t2pw.service.postpipeline", None)
+        sys.modules.pop("t2pw.service.rag_orchestration", None)  # R2: same, for the moved RAG code
+        before = set(sys.modules)
+>       import t2pw.app.streamlit_app as app  # noqa: PLC0415
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_c055_rag_loop_wiring.py:252: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\t2pw\app\streamlit_app.py:3758: in <module>
+    render_reaction_evidence()
+src\t2pw\app\reaction_evidence_view.py:102: in render_reaction_evidence
+    st.info(f"Reaction Evidence could not be rendered: {exc}")
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\metrics_util.py:628: in wrapped_func
+    result = non_optional_func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:365: in info
+    processed_body, processed_icon = _process_alert_body_and_icon(body, icon)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:51: in _process_alert_body_and_icon
+    extracted_icon, remaining_body = extract_leading_icon(cleaned_body)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:193: in extract_leading_icon
+    return extract_leading_emoji(text)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+text = "Reaction Evidence could not be rendered: No module named 'streamlit.runtime'; 'streamlit' is not a package"
+
+    def extract_leading_emoji(text: str) -> tuple[str, str]:
+        """Return a tuple containing the first emoji found in the given string and
+        the rest of the string (minus an optional separator between the two).
+        """
+    
+        if not _contains_special_chars(text):
+            # If the string only contains basic alphanumerical chars and/or
+            # underscores, hyphen & whitespaces, then it's guaranteed that there
+            # is no emoji in the string.
+            return "", text
+    
+>       from streamlit.emojis import EMOJI_EXTRACTION_REGEX
+E       ModuleNotFoundError: No module named 'streamlit.emojis'; 'streamlit' is not a package
+
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:146: ModuleNotFoundError
+---------------------------- Captured stderr setup ----------------------------
+2026-11-06 15:02:46.651 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:46.652 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:46.652 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:46.652 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:46.652 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:46.652 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:46.652 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:46.652 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:46.652 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+______ ERROR at setup of test_the_app_contains_no_hand_rolled_round_loop ______
+
+    @pytest.fixture()
+    def app_module():
+        """``t2pw.app.streamlit_app`` with ``streamlit`` stubbed, as the rag tests do.
+    
+        The module executes a Streamlit script at import, so ``streamlit`` is replaced by a
+        MagicMock exactly the way ``tests/test_rag_triage_orchestration.py`` does it. Only
+        the module-level helpers are exercised here; the script body is exercised through
+        the real ``AppTest`` below.
+        """
+    
+        from unittest.mock import MagicMock
+    
+        saved = {n: sys.modules[n] for n in list(sys.modules)
+                 if n == "streamlit" or n.startswith("streamlit.")}
+        if not isinstance(sys.modules.get("streamlit"), types.ModuleType) or hasattr(
+            sys.modules.get("streamlit"), "__path__"
+        ):
+            for name in list(saved):
+                sys.modules.pop(name, None)
+        stub = MagicMock(name="streamlit")
+        stub.columns.side_effect = lambda spec=1, **_: [
+            MagicMock() for _ in range(spec if isinstance(spec, int) else len(spec))
+        ]
+        stub.tabs.side_effect = lambda labels, **_: [MagicMock() for _ in labels]
+        stub.form_submit_button.return_value = False
+        stub.checkbox.return_value = False
+        stub.session_state = MagicMock()
+        stub.session_state.get.return_value = None
+        stub.session_state.__contains__ = lambda _s, _k: False
+        sys.modules["streamlit"] = stub
+        sys.modules.pop("t2pw.app.streamlit_app", None)
+        # R1: ``run_quarantine_boundary`` now lives here and binds ``st`` at import, so it
+        # must be re-imported under the stub for its session_state writes to reach it.
+        sys.modules.pop("t2pw.service.postpipeline", None)
+        sys.modules.pop("t2pw.service.rag_orchestration", None)  # R2: same, for the moved RAG code
+        before = set(sys.modules)
+>       import t2pw.app.streamlit_app as app  # noqa: PLC0415
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_c055_rag_loop_wiring.py:252: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\t2pw\app\streamlit_app.py:3758: in <module>
+    render_reaction_evidence()
+src\t2pw\app\reaction_evidence_view.py:102: in render_reaction_evidence
+    st.info(f"Reaction Evidence could not be rendered: {exc}")
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\metrics_util.py:628: in wrapped_func
+    result = non_optional_func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:365: in info
+    processed_body, processed_icon = _process_alert_body_and_icon(body, icon)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:51: in _process_alert_body_and_icon
+    extracted_icon, remaining_body = extract_leading_icon(cleaned_body)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:193: in extract_leading_icon
+    return extract_leading_emoji(text)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+text = "Reaction Evidence could not be rendered: No module named 'streamlit.runtime'; 'streamlit' is not a package"
+
+    def extract_leading_emoji(text: str) -> tuple[str, str]:
+        """Return a tuple containing the first emoji found in the given string and
+        the rest of the string (minus an optional separator between the two).
+        """
+    
+        if not _contains_special_chars(text):
+            # If the string only contains basic alphanumerical chars and/or
+            # underscores, hyphen & whitespaces, then it's guaranteed that there
+            # is no emoji in the string.
+            return "", text
+    
+>       from streamlit.emojis import EMOJI_EXTRACTION_REGEX
+E       ModuleNotFoundError: No module named 'streamlit.emojis'; 'streamlit' is not a package
+
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:146: ModuleNotFoundError
+---------------------------- Captured stderr setup ----------------------------
+2026-11-06 15:02:46.796 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:46.796 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:46.796 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:46.797 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:46.797 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:46.797 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:46.797 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:46.797 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:46.797 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+_ ERROR at setup of test_a_failed_stage_aborts_the_round_and_keeps_its_checkpoint _
+
+    @pytest.fixture()
+    def app_module():
+        """``t2pw.app.streamlit_app`` with ``streamlit`` stubbed, as the rag tests do.
+    
+        The module executes a Streamlit script at import, so ``streamlit`` is replaced by a
+        MagicMock exactly the way ``tests/test_rag_triage_orchestration.py`` does it. Only
+        the module-level helpers are exercised here; the script body is exercised through
+        the real ``AppTest`` below.
+        """
+    
+        from unittest.mock import MagicMock
+    
+        saved = {n: sys.modules[n] for n in list(sys.modules)
+                 if n == "streamlit" or n.startswith("streamlit.")}
+        if not isinstance(sys.modules.get("streamlit"), types.ModuleType) or hasattr(
+            sys.modules.get("streamlit"), "__path__"
+        ):
+            for name in list(saved):
+                sys.modules.pop(name, None)
+        stub = MagicMock(name="streamlit")
+        stub.columns.side_effect = lambda spec=1, **_: [
+            MagicMock() for _ in range(spec if isinstance(spec, int) else len(spec))
+        ]
+        stub.tabs.side_effect = lambda labels, **_: [MagicMock() for _ in labels]
+        stub.form_submit_button.return_value = False
+        stub.checkbox.return_value = False
+        stub.session_state = MagicMock()
+        stub.session_state.get.return_value = None
+        stub.session_state.__contains__ = lambda _s, _k: False
+        sys.modules["streamlit"] = stub
+        sys.modules.pop("t2pw.app.streamlit_app", None)
+        # R1: ``run_quarantine_boundary`` now lives here and binds ``st`` at import, so it
+        # must be re-imported under the stub for its session_state writes to reach it.
+        sys.modules.pop("t2pw.service.postpipeline", None)
+        sys.modules.pop("t2pw.service.rag_orchestration", None)  # R2: same, for the moved RAG code
+        before = set(sys.modules)
+>       import t2pw.app.streamlit_app as app  # noqa: PLC0415
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_c055_rag_loop_wiring.py:252: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\t2pw\app\streamlit_app.py:3758: in <module>
+    render_reaction_evidence()
+src\t2pw\app\reaction_evidence_view.py:102: in render_reaction_evidence
+    st.info(f"Reaction Evidence could not be rendered: {exc}")
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\metrics_util.py:628: in wrapped_func
+    result = non_optional_func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:365: in info
+    processed_body, processed_icon = _process_alert_body_and_icon(body, icon)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:51: in _process_alert_body_and_icon
+    extracted_icon, remaining_body = extract_leading_icon(cleaned_body)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:193: in extract_leading_icon
+    return extract_leading_emoji(text)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+text = "Reaction Evidence could not be rendered: No module named 'streamlit.runtime'; 'streamlit' is not a package"
+
+    def extract_leading_emoji(text: str) -> tuple[str, str]:
+        """Return a tuple containing the first emoji found in the given string and
+        the rest of the string (minus an optional separator between the two).
+        """
+    
+        if not _contains_special_chars(text):
+            # If the string only contains basic alphanumerical chars and/or
+            # underscores, hyphen & whitespaces, then it's guaranteed that there
+            # is no emoji in the string.
+            return "", text
+    
+>       from streamlit.emojis import EMOJI_EXTRACTION_REGEX
+E       ModuleNotFoundError: No module named 'streamlit.emojis'; 'streamlit' is not a package
+
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:146: ModuleNotFoundError
+---------------------------- Captured stderr setup ----------------------------
+2026-11-06 15:02:46.939 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:46.939 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:46.939 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:46.939 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:46.939 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:46.939 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:46.939 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:46.939 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:46.939 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+____ ERROR at setup of test_a_budget_that_cannot_afford_a_round_runs_none _____
+
+    @pytest.fixture()
+    def app_module():
+        """``t2pw.app.streamlit_app`` with ``streamlit`` stubbed, as the rag tests do.
+    
+        The module executes a Streamlit script at import, so ``streamlit`` is replaced by a
+        MagicMock exactly the way ``tests/test_rag_triage_orchestration.py`` does it. Only
+        the module-level helpers are exercised here; the script body is exercised through
+        the real ``AppTest`` below.
+        """
+    
+        from unittest.mock import MagicMock
+    
+        saved = {n: sys.modules[n] for n in list(sys.modules)
+                 if n == "streamlit" or n.startswith("streamlit.")}
+        if not isinstance(sys.modules.get("streamlit"), types.ModuleType) or hasattr(
+            sys.modules.get("streamlit"), "__path__"
+        ):
+            for name in list(saved):
+                sys.modules.pop(name, None)
+        stub = MagicMock(name="streamlit")
+        stub.columns.side_effect = lambda spec=1, **_: [
+            MagicMock() for _ in range(spec if isinstance(spec, int) else len(spec))
+        ]
+        stub.tabs.side_effect = lambda labels, **_: [MagicMock() for _ in labels]
+        stub.form_submit_button.return_value = False
+        stub.checkbox.return_value = False
+        stub.session_state = MagicMock()
+        stub.session_state.get.return_value = None
+        stub.session_state.__contains__ = lambda _s, _k: False
+        sys.modules["streamlit"] = stub
+        sys.modules.pop("t2pw.app.streamlit_app", None)
+        # R1: ``run_quarantine_boundary`` now lives here and binds ``st`` at import, so it
+        # must be re-imported under the stub for its session_state writes to reach it.
+        sys.modules.pop("t2pw.service.postpipeline", None)
+        sys.modules.pop("t2pw.service.rag_orchestration", None)  # R2: same, for the moved RAG code
+        before = set(sys.modules)
+>       import t2pw.app.streamlit_app as app  # noqa: PLC0415
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_c055_rag_loop_wiring.py:252: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\t2pw\app\streamlit_app.py:3758: in <module>
+    render_reaction_evidence()
+src\t2pw\app\reaction_evidence_view.py:102: in render_reaction_evidence
+    st.info(f"Reaction Evidence could not be rendered: {exc}")
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\metrics_util.py:628: in wrapped_func
+    result = non_optional_func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:365: in info
+    processed_body, processed_icon = _process_alert_body_and_icon(body, icon)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:51: in _process_alert_body_and_icon
+    extracted_icon, remaining_body = extract_leading_icon(cleaned_body)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:193: in extract_leading_icon
+    return extract_leading_emoji(text)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+text = "Reaction Evidence could not be rendered: No module named 'streamlit.runtime'; 'streamlit' is not a package"
+
+    def extract_leading_emoji(text: str) -> tuple[str, str]:
+        """Return a tuple containing the first emoji found in the given string and
+        the rest of the string (minus an optional separator between the two).
+        """
+    
+        if not _contains_special_chars(text):
+            # If the string only contains basic alphanumerical chars and/or
+            # underscores, hyphen & whitespaces, then it's guaranteed that there
+            # is no emoji in the string.
+            return "", text
+    
+>       from streamlit.emojis import EMOJI_EXTRACTION_REGEX
+E       ModuleNotFoundError: No module named 'streamlit.emojis'; 'streamlit' is not a package
+
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:146: ModuleNotFoundError
+---------------------------- Captured stderr setup ----------------------------
+2026-11-06 15:02:47.055 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.055 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.055 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.055 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.055 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.055 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.055 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.055 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.055 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+_ ERROR at setup of test_a_refused_delta_does_not_advance_the_graph_and_says_which_rule _
+
+    @pytest.fixture()
+    def app_module():
+        """``t2pw.app.streamlit_app`` with ``streamlit`` stubbed, as the rag tests do.
+    
+        The module executes a Streamlit script at import, so ``streamlit`` is replaced by a
+        MagicMock exactly the way ``tests/test_rag_triage_orchestration.py`` does it. Only
+        the module-level helpers are exercised here; the script body is exercised through
+        the real ``AppTest`` below.
+        """
+    
+        from unittest.mock import MagicMock
+    
+        saved = {n: sys.modules[n] for n in list(sys.modules)
+                 if n == "streamlit" or n.startswith("streamlit.")}
+        if not isinstance(sys.modules.get("streamlit"), types.ModuleType) or hasattr(
+            sys.modules.get("streamlit"), "__path__"
+        ):
+            for name in list(saved):
+                sys.modules.pop(name, None)
+        stub = MagicMock(name="streamlit")
+        stub.columns.side_effect = lambda spec=1, **_: [
+            MagicMock() for _ in range(spec if isinstance(spec, int) else len(spec))
+        ]
+        stub.tabs.side_effect = lambda labels, **_: [MagicMock() for _ in labels]
+        stub.form_submit_button.return_value = False
+        stub.checkbox.return_value = False
+        stub.session_state = MagicMock()
+        stub.session_state.get.return_value = None
+        stub.session_state.__contains__ = lambda _s, _k: False
+        sys.modules["streamlit"] = stub
+        sys.modules.pop("t2pw.app.streamlit_app", None)
+        # R1: ``run_quarantine_boundary`` now lives here and binds ``st`` at import, so it
+        # must be re-imported under the stub for its session_state writes to reach it.
+        sys.modules.pop("t2pw.service.postpipeline", None)
+        sys.modules.pop("t2pw.service.rag_orchestration", None)  # R2: same, for the moved RAG code
+        before = set(sys.modules)
+>       import t2pw.app.streamlit_app as app  # noqa: PLC0415
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_c055_rag_loop_wiring.py:252: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\t2pw\app\streamlit_app.py:3758: in <module>
+    render_reaction_evidence()
+src\t2pw\app\reaction_evidence_view.py:102: in render_reaction_evidence
+    st.info(f"Reaction Evidence could not be rendered: {exc}")
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\metrics_util.py:628: in wrapped_func
+    result = non_optional_func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:365: in info
+    processed_body, processed_icon = _process_alert_body_and_icon(body, icon)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:51: in _process_alert_body_and_icon
+    extracted_icon, remaining_body = extract_leading_icon(cleaned_body)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:193: in extract_leading_icon
+    return extract_leading_emoji(text)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+text = "Reaction Evidence could not be rendered: No module named 'streamlit.runtime'; 'streamlit' is not a package"
+
+    def extract_leading_emoji(text: str) -> tuple[str, str]:
+        """Return a tuple containing the first emoji found in the given string and
+        the rest of the string (minus an optional separator between the two).
+        """
+    
+        if not _contains_special_chars(text):
+            # If the string only contains basic alphanumerical chars and/or
+            # underscores, hyphen & whitespaces, then it's guaranteed that there
+            # is no emoji in the string.
+            return "", text
+    
+>       from streamlit.emojis import EMOJI_EXTRACTION_REGEX
+E       ModuleNotFoundError: No module named 'streamlit.emojis'; 'streamlit' is not a package
+
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:146: ModuleNotFoundError
+---------------------------- Captured stderr setup ----------------------------
+2026-11-06 15:02:47.150 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.150 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.150 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.150 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.150 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.150 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.150 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.150 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.150 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+_ ERROR at setup of test_per_round_mapping_never_writes_the_authoritative_cache _
+
+    @pytest.fixture()
+    def app_module():
+        """``t2pw.app.streamlit_app`` with ``streamlit`` stubbed, as the rag tests do.
+    
+        The module executes a Streamlit script at import, so ``streamlit`` is replaced by a
+        MagicMock exactly the way ``tests/test_rag_triage_orchestration.py`` does it. Only
+        the module-level helpers are exercised here; the script body is exercised through
+        the real ``AppTest`` below.
+        """
+    
+        from unittest.mock import MagicMock
+    
+        saved = {n: sys.modules[n] for n in list(sys.modules)
+                 if n == "streamlit" or n.startswith("streamlit.")}
+        if not isinstance(sys.modules.get("streamlit"), types.ModuleType) or hasattr(
+            sys.modules.get("streamlit"), "__path__"
+        ):
+            for name in list(saved):
+                sys.modules.pop(name, None)
+        stub = MagicMock(name="streamlit")
+        stub.columns.side_effect = lambda spec=1, **_: [
+            MagicMock() for _ in range(spec if isinstance(spec, int) else len(spec))
+        ]
+        stub.tabs.side_effect = lambda labels, **_: [MagicMock() for _ in labels]
+        stub.form_submit_button.return_value = False
+        stub.checkbox.return_value = False
+        stub.session_state = MagicMock()
+        stub.session_state.get.return_value = None
+        stub.session_state.__contains__ = lambda _s, _k: False
+        sys.modules["streamlit"] = stub
+        sys.modules.pop("t2pw.app.streamlit_app", None)
+        # R1: ``run_quarantine_boundary`` now lives here and binds ``st`` at import, so it
+        # must be re-imported under the stub for its session_state writes to reach it.
+        sys.modules.pop("t2pw.service.postpipeline", None)
+        sys.modules.pop("t2pw.service.rag_orchestration", None)  # R2: same, for the moved RAG code
+        before = set(sys.modules)
+>       import t2pw.app.streamlit_app as app  # noqa: PLC0415
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_c055_rag_loop_wiring.py:252: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\t2pw\app\streamlit_app.py:3758: in <module>
+    render_reaction_evidence()
+src\t2pw\app\reaction_evidence_view.py:102: in render_reaction_evidence
+    st.info(f"Reaction Evidence could not be rendered: {exc}")
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\metrics_util.py:628: in wrapped_func
+    result = non_optional_func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:365: in info
+    processed_body, processed_icon = _process_alert_body_and_icon(body, icon)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:51: in _process_alert_body_and_icon
+    extracted_icon, remaining_body = extract_leading_icon(cleaned_body)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:193: in extract_leading_icon
+    return extract_leading_emoji(text)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+text = "Reaction Evidence could not be rendered: No module named 'streamlit.runtime'; 'streamlit' is not a package"
+
+    def extract_leading_emoji(text: str) -> tuple[str, str]:
+        """Return a tuple containing the first emoji found in the given string and
+        the rest of the string (minus an optional separator between the two).
+        """
+    
+        if not _contains_special_chars(text):
+            # If the string only contains basic alphanumerical chars and/or
+            # underscores, hyphen & whitespaces, then it's guaranteed that there
+            # is no emoji in the string.
+            return "", text
+    
+>       from streamlit.emojis import EMOJI_EXTRACTION_REGEX
+E       ModuleNotFoundError: No module named 'streamlit.emojis'; 'streamlit' is not a package
+
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:146: ModuleNotFoundError
+---------------------------- Captured stderr setup ----------------------------
+2026-11-06 15:02:47.255 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.255 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.255 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.255 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.255 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.255 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.255 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.255 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.255 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+_ ERROR at setup of test_per_round_persistence_never_writes_the_protected_scratch_files _
+
+    @pytest.fixture()
+    def app_module():
+        """``t2pw.app.streamlit_app`` with ``streamlit`` stubbed, as the rag tests do.
+    
+        The module executes a Streamlit script at import, so ``streamlit`` is replaced by a
+        MagicMock exactly the way ``tests/test_rag_triage_orchestration.py`` does it. Only
+        the module-level helpers are exercised here; the script body is exercised through
+        the real ``AppTest`` below.
+        """
+    
+        from unittest.mock import MagicMock
+    
+        saved = {n: sys.modules[n] for n in list(sys.modules)
+                 if n == "streamlit" or n.startswith("streamlit.")}
+        if not isinstance(sys.modules.get("streamlit"), types.ModuleType) or hasattr(
+            sys.modules.get("streamlit"), "__path__"
+        ):
+            for name in list(saved):
+                sys.modules.pop(name, None)
+        stub = MagicMock(name="streamlit")
+        stub.columns.side_effect = lambda spec=1, **_: [
+            MagicMock() for _ in range(spec if isinstance(spec, int) else len(spec))
+        ]
+        stub.tabs.side_effect = lambda labels, **_: [MagicMock() for _ in labels]
+        stub.form_submit_button.return_value = False
+        stub.checkbox.return_value = False
+        stub.session_state = MagicMock()
+        stub.session_state.get.return_value = None
+        stub.session_state.__contains__ = lambda _s, _k: False
+        sys.modules["streamlit"] = stub
+        sys.modules.pop("t2pw.app.streamlit_app", None)
+        # R1: ``run_quarantine_boundary`` now lives here and binds ``st`` at import, so it
+        # must be re-imported under the stub for its session_state writes to reach it.
+        sys.modules.pop("t2pw.service.postpipeline", None)
+        sys.modules.pop("t2pw.service.rag_orchestration", None)  # R2: same, for the moved RAG code
+        before = set(sys.modules)
+>       import t2pw.app.streamlit_app as app  # noqa: PLC0415
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_c055_rag_loop_wiring.py:252: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\t2pw\app\streamlit_app.py:3758: in <module>
+    render_reaction_evidence()
+src\t2pw\app\reaction_evidence_view.py:102: in render_reaction_evidence
+    st.info(f"Reaction Evidence could not be rendered: {exc}")
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\metrics_util.py:628: in wrapped_func
+    result = non_optional_func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:365: in info
+    processed_body, processed_icon = _process_alert_body_and_icon(body, icon)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:51: in _process_alert_body_and_icon
+    extracted_icon, remaining_body = extract_leading_icon(cleaned_body)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:193: in extract_leading_icon
+    return extract_leading_emoji(text)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+text = "Reaction Evidence could not be rendered: No module named 'streamlit.runtime'; 'streamlit' is not a package"
+
+    def extract_leading_emoji(text: str) -> tuple[str, str]:
+        """Return a tuple containing the first emoji found in the given string and
+        the rest of the string (minus an optional separator between the two).
+        """
+    
+        if not _contains_special_chars(text):
+            # If the string only contains basic alphanumerical chars and/or
+            # underscores, hyphen & whitespaces, then it's guaranteed that there
+            # is no emoji in the string.
+            return "", text
+    
+>       from streamlit.emojis import EMOJI_EXTRACTION_REGEX
+E       ModuleNotFoundError: No module named 'streamlit.emojis'; 'streamlit' is not a package
+
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:146: ModuleNotFoundError
+---------------------------- Captured stderr setup ----------------------------
+2026-11-06 15:02:47.365 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.365 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.366 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.366 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.366 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.366 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.366 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.366 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.366 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+___ ERROR at setup of test_the_loop_record_touches_no_refinement_state_key ____
+
+    @pytest.fixture()
+    def app_module():
+        """``t2pw.app.streamlit_app`` with ``streamlit`` stubbed, as the rag tests do.
+    
+        The module executes a Streamlit script at import, so ``streamlit`` is replaced by a
+        MagicMock exactly the way ``tests/test_rag_triage_orchestration.py`` does it. Only
+        the module-level helpers are exercised here; the script body is exercised through
+        the real ``AppTest`` below.
+        """
+    
+        from unittest.mock import MagicMock
+    
+        saved = {n: sys.modules[n] for n in list(sys.modules)
+                 if n == "streamlit" or n.startswith("streamlit.")}
+        if not isinstance(sys.modules.get("streamlit"), types.ModuleType) or hasattr(
+            sys.modules.get("streamlit"), "__path__"
+        ):
+            for name in list(saved):
+                sys.modules.pop(name, None)
+        stub = MagicMock(name="streamlit")
+        stub.columns.side_effect = lambda spec=1, **_: [
+            MagicMock() for _ in range(spec if isinstance(spec, int) else len(spec))
+        ]
+        stub.tabs.side_effect = lambda labels, **_: [MagicMock() for _ in labels]
+        stub.form_submit_button.return_value = False
+        stub.checkbox.return_value = False
+        stub.session_state = MagicMock()
+        stub.session_state.get.return_value = None
+        stub.session_state.__contains__ = lambda _s, _k: False
+        sys.modules["streamlit"] = stub
+        sys.modules.pop("t2pw.app.streamlit_app", None)
+        # R1: ``run_quarantine_boundary`` now lives here and binds ``st`` at import, so it
+        # must be re-imported under the stub for its session_state writes to reach it.
+        sys.modules.pop("t2pw.service.postpipeline", None)
+        sys.modules.pop("t2pw.service.rag_orchestration", None)  # R2: same, for the moved RAG code
+        before = set(sys.modules)
+>       import t2pw.app.streamlit_app as app  # noqa: PLC0415
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_c055_rag_loop_wiring.py:252: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\t2pw\app\streamlit_app.py:3758: in <module>
+    render_reaction_evidence()
+src\t2pw\app\reaction_evidence_view.py:102: in render_reaction_evidence
+    st.info(f"Reaction Evidence could not be rendered: {exc}")
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\metrics_util.py:628: in wrapped_func
+    result = non_optional_func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:365: in info
+    processed_body, processed_icon = _process_alert_body_and_icon(body, icon)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:51: in _process_alert_body_and_icon
+    extracted_icon, remaining_body = extract_leading_icon(cleaned_body)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:193: in extract_leading_icon
+    return extract_leading_emoji(text)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+text = "Reaction Evidence could not be rendered: No module named 'streamlit.runtime'; 'streamlit' is not a package"
+
+    def extract_leading_emoji(text: str) -> tuple[str, str]:
+        """Return a tuple containing the first emoji found in the given string and
+        the rest of the string (minus an optional separator between the two).
+        """
+    
+        if not _contains_special_chars(text):
+            # If the string only contains basic alphanumerical chars and/or
+            # underscores, hyphen & whitespaces, then it's guaranteed that there
+            # is no emoji in the string.
+            return "", text
+    
+>       from streamlit.emojis import EMOJI_EXTRACTION_REGEX
+E       ModuleNotFoundError: No module named 'streamlit.emojis'; 'streamlit' is not a package
+
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:146: ModuleNotFoundError
+---------------------------- Captured stderr setup ----------------------------
+2026-11-06 15:02:47.458 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.459 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.459 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.459 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.459 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.459 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.459 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.459 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.459 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+_ ERROR at setup of test_the_round_leaves_the_quarantine_boundary_session_record_untouched _
+
+    @pytest.fixture()
+    def app_module():
+        """``t2pw.app.streamlit_app`` with ``streamlit`` stubbed, as the rag tests do.
+    
+        The module executes a Streamlit script at import, so ``streamlit`` is replaced by a
+        MagicMock exactly the way ``tests/test_rag_triage_orchestration.py`` does it. Only
+        the module-level helpers are exercised here; the script body is exercised through
+        the real ``AppTest`` below.
+        """
+    
+        from unittest.mock import MagicMock
+    
+        saved = {n: sys.modules[n] for n in list(sys.modules)
+                 if n == "streamlit" or n.startswith("streamlit.")}
+        if not isinstance(sys.modules.get("streamlit"), types.ModuleType) or hasattr(
+            sys.modules.get("streamlit"), "__path__"
+        ):
+            for name in list(saved):
+                sys.modules.pop(name, None)
+        stub = MagicMock(name="streamlit")
+        stub.columns.side_effect = lambda spec=1, **_: [
+            MagicMock() for _ in range(spec if isinstance(spec, int) else len(spec))
+        ]
+        stub.tabs.side_effect = lambda labels, **_: [MagicMock() for _ in labels]
+        stub.form_submit_button.return_value = False
+        stub.checkbox.return_value = False
+        stub.session_state = MagicMock()
+        stub.session_state.get.return_value = None
+        stub.session_state.__contains__ = lambda _s, _k: False
+        sys.modules["streamlit"] = stub
+        sys.modules.pop("t2pw.app.streamlit_app", None)
+        # R1: ``run_quarantine_boundary`` now lives here and binds ``st`` at import, so it
+        # must be re-imported under the stub for its session_state writes to reach it.
+        sys.modules.pop("t2pw.service.postpipeline", None)
+        sys.modules.pop("t2pw.service.rag_orchestration", None)  # R2: same, for the moved RAG code
+        before = set(sys.modules)
+>       import t2pw.app.streamlit_app as app  # noqa: PLC0415
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_c055_rag_loop_wiring.py:252: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\t2pw\app\streamlit_app.py:3758: in <module>
+    render_reaction_evidence()
+src\t2pw\app\reaction_evidence_view.py:102: in render_reaction_evidence
+    st.info(f"Reaction Evidence could not be rendered: {exc}")
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\metrics_util.py:628: in wrapped_func
+    result = non_optional_func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:365: in info
+    processed_body, processed_icon = _process_alert_body_and_icon(body, icon)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:51: in _process_alert_body_and_icon
+    extracted_icon, remaining_body = extract_leading_icon(cleaned_body)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:193: in extract_leading_icon
+    return extract_leading_emoji(text)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+text = "Reaction Evidence could not be rendered: No module named 'streamlit.runtime'; 'streamlit' is not a package"
+
+    def extract_leading_emoji(text: str) -> tuple[str, str]:
+        """Return a tuple containing the first emoji found in the given string and
+        the rest of the string (minus an optional separator between the two).
+        """
+    
+        if not _contains_special_chars(text):
+            # If the string only contains basic alphanumerical chars and/or
+            # underscores, hyphen & whitespaces, then it's guaranteed that there
+            # is no emoji in the string.
+            return "", text
+    
+>       from streamlit.emojis import EMOJI_EXTRACTION_REGEX
+E       ModuleNotFoundError: No module named 'streamlit.emojis'; 'streamlit' is not a package
+
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:146: ModuleNotFoundError
+---------------------------- Captured stderr setup ----------------------------
+2026-11-06 15:02:47.546 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.546 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.546 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.546 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.546 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.547 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.547 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.547 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.547 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+________ ERROR at setup of test_the_default_round_budget_is_one_round _________
+
+    @pytest.fixture()
+    def app_module():
+        """``t2pw.app.streamlit_app`` with ``streamlit`` stubbed, as the rag tests do.
+    
+        The module executes a Streamlit script at import, so ``streamlit`` is replaced by a
+        MagicMock exactly the way ``tests/test_rag_triage_orchestration.py`` does it. Only
+        the module-level helpers are exercised here; the script body is exercised through
+        the real ``AppTest`` below.
+        """
+    
+        from unittest.mock import MagicMock
+    
+        saved = {n: sys.modules[n] for n in list(sys.modules)
+                 if n == "streamlit" or n.startswith("streamlit.")}
+        if not isinstance(sys.modules.get("streamlit"), types.ModuleType) or hasattr(
+            sys.modules.get("streamlit"), "__path__"
+        ):
+            for name in list(saved):
+                sys.modules.pop(name, None)
+        stub = MagicMock(name="streamlit")
+        stub.columns.side_effect = lambda spec=1, **_: [
+            MagicMock() for _ in range(spec if isinstance(spec, int) else len(spec))
+        ]
+        stub.tabs.side_effect = lambda labels, **_: [MagicMock() for _ in labels]
+        stub.form_submit_button.return_value = False
+        stub.checkbox.return_value = False
+        stub.session_state = MagicMock()
+        stub.session_state.get.return_value = None
+        stub.session_state.__contains__ = lambda _s, _k: False
+        sys.modules["streamlit"] = stub
+        sys.modules.pop("t2pw.app.streamlit_app", None)
+        # R1: ``run_quarantine_boundary`` now lives here and binds ``st`` at import, so it
+        # must be re-imported under the stub for its session_state writes to reach it.
+        sys.modules.pop("t2pw.service.postpipeline", None)
+        sys.modules.pop("t2pw.service.rag_orchestration", None)  # R2: same, for the moved RAG code
+        before = set(sys.modules)
+>       import t2pw.app.streamlit_app as app  # noqa: PLC0415
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_c055_rag_loop_wiring.py:252: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\t2pw\app\streamlit_app.py:3758: in <module>
+    render_reaction_evidence()
+src\t2pw\app\reaction_evidence_view.py:102: in render_reaction_evidence
+    st.info(f"Reaction Evidence could not be rendered: {exc}")
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\metrics_util.py:628: in wrapped_func
+    result = non_optional_func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:365: in info
+    processed_body, processed_icon = _process_alert_body_and_icon(body, icon)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:51: in _process_alert_body_and_icon
+    extracted_icon, remaining_body = extract_leading_icon(cleaned_body)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:193: in extract_leading_icon
+    return extract_leading_emoji(text)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+text = "Reaction Evidence could not be rendered: No module named 'streamlit.runtime'; 'streamlit' is not a package"
+
+    def extract_leading_emoji(text: str) -> tuple[str, str]:
+        """Return a tuple containing the first emoji found in the given string and
+        the rest of the string (minus an optional separator between the two).
+        """
+    
+        if not _contains_special_chars(text):
+            # If the string only contains basic alphanumerical chars and/or
+            # underscores, hyphen & whitespaces, then it's guaranteed that there
+            # is no emoji in the string.
+            return "", text
+    
+>       from streamlit.emojis import EMOJI_EXTRACTION_REGEX
+E       ModuleNotFoundError: No module named 'streamlit.emojis'; 'streamlit' is not a package
+
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:146: ModuleNotFoundError
+---------------------------- Captured stderr setup ----------------------------
+2026-11-06 15:02:47.659 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.659 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.659 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.659 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.659 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.659 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.659 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.659 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:47.659 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+================================== FAILURES ===================================
+_______ test_apptest_rag_on_runs_a_round_that_re_enters_all_five_stages _______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000141E9DBDE10>
+offline_stages = {'classification': [{'biological_states': [], 'element_locations': {}, 'entities': {'compounds': [{'name': 'menaquinon...ts': {'admitted': 0, 'demoted': 0, 'removed': 0}, 'demoted': [], 'removed': [], 'review_reasons': [], ...}, ...}], ...}
+
+    @pytest.mark.usefixtures("real_streamlit", "offline_pipeline", "offline_stages",
+                             "offline_rag_chain")
+    def test_apptest_rag_on_runs_a_round_that_re_enters_all_five_stages(monkeypatch, offline_stages):
+        """NEW acceptance, and this card's central test obligation.
+    
+        ``MASTER_PLAN.md:165`` makes AppTest-driven focused tests mandatory for the
+        ``streamlit_app.py`` script body, and at base NO test anywhere combined a real
+        ``streamlit.testing.v1.AppTest`` run with the RAG path. This drives the real app
+        script: paste text, click Run pipeline, and read what the real ``if submit:`` block
+        left in the real ``st.session_state``.
+        """
+    
+        at = _run_submit(monkeypatch, rag_enabled=True)
+    
+        assert _app_exceptions(at) == []
+        loop = at.session_state["rag_loop"]
+        assert loop["max_rounds"] == 1
+>       assert len(loop["rounds"]) == 1
+E       assert 0 == 1
+E        +  where 0 = len([])
+
+tests\test_c055_rag_loop_wiring.py:931: AssertionError
+---------------------------- Captured stdout call -----------------------------
+\x1b[31m\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m \x1b[0m\x1b[1;31mTraceback \x1b[0m\x1b[1;2;31m(most recent call last)\x1b[0m\x1b[31m \x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\exec_code.py:136 in exec_func_with_error_handling               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\script_runner.py:837 in code_to_exec                            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\ws-R3c-base\\src\\t2pw\\app\\streamlit_app.py:3758 in <module>                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m3755 \x1b[0m\x1b[2m# directory can be reviewed with no run loaded. Presentation only.\x1b[0m            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m3756 \x1b[0m\x1b[94mfrom\x1b[0m\x1b[90m \x1b[0m\x1b[4;96mt2pw\x1b[0m\x1b[4;96m.\x1b[0m\x1b[4;96mapp\x1b[0m\x1b[4;96m.\x1b[0m\x1b[4;96mreaction_evidence_view\x1b[0m\x1b[90m \x1b[0m\x1b[94mimport\x1b[0m render_reaction_evidence  \x1b[2m# noqa:\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m3757 \x1b[0m                                                                              \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m3758 \x1b[1;4mrender_reaction_evidence()\x1b[0m                                                    \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m3759 \x1b[0m                                                                              \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\ws-R3c-base\\src\\t2pw\\app\\reaction_evidence_view.py:92 in                        \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m render_reaction_evidence                                                             \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 89 \x1b[0m                                                                               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 90 \x1b[0m                                                                               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 91 \x1b[0m\x1b[94mdef\x1b[0m\x1b[90m \x1b[0m\x1b[92mrender_reaction_evidence\x1b[0m() -> \x1b[94mNone\x1b[0m:                                        \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m 92 \x1b[2m\u2502   \x1b[0m\x1b[1;4mst.divider()\x1b[0m                                                               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 93 \x1b[0m\x1b[2m\u2502   \x1b[0mst.subheader(\x1b[33m"\x1b[0m\x1b[33mReaction Evidence\x1b[0m\x1b[33m"\x1b[0m)                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 94 \x1b[0m\x1b[2m\u2502   \x1b[0mst.caption(                                                                \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 95 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m\x1b[33m"\x1b[0m\x1b[33mRead-only review of what the run\x1b[0m\x1b[33m'\x1b[0m\x1b[33ms artifacts say the pathway contains\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\metrics_util.py:628 in wrapped_func                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m elements\\markdown.py:452 in divider                                                  \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m delta_generator.py:533 in _enqueue                                                   \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner_utils\\script_run_context.py:174 in get                          \x1b[31m \x1b[0m\n\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\n\x1b[1;91mRuntimeError: \x1b[0mFragmentThreadState not initialized \u2014 \x1b[1;35mScriptRunContext.reset\x1b[0m\x1b[1m(\x1b[0m\x1b[1m)\x1b[0m or \n\x1b[1;35madd_script_run_ctx\x1b[0m\x1b[1m(\x1b[0m\x1b[1m)\x1b[0m must be called on this thread first.\n\x1b[31m\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m \x1b[0m\x1b[1;31mTraceback \x1b[0m\x1b[1;2;31m(most recent call last)\x1b[0m\x1b[31m \x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\exec_code.py:136 in exec_func_with_error_handling               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\script_runner.py:837 in code_to_exec                            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\ws-R3c-base\\src\\t2pw\\app\\streamlit_app.py:3607 in <module>                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m3604 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \u2502   \x1b[0mkey=\x1b[33m"\x1b[0m\x1b[33mdl_completeness_audit\x1b[0m\x1b[33m"\x1b[0m,                                  \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m3605 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \x1b[0m)                                                                 \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m3606 \x1b[0m\x1b[2m\u2502   \x1b[0m                                                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m3607 \x1b[2m\u2502   \x1b[0m\x1b[1;4mrender_pathwhiz_converter_section(llm_client_module)\x1b[0m                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m3608 \x1b[0m\x1b[2m\u2502   \x1b[0m                                                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m3609 \x1b[0m\x1b[2m\u2502   \x1b[0mst.subheader(\x1b[33m"\x1b[0m\x1b[33mConnectivity snapshot\x1b[0m\x1b[33m"\x1b[0m)                                     \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m3610 \x1b[0m\x1b[2m\u2502   \x1b[0mstats = graph_summary(final_payload)                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\ws-R3c-base\\src\\t2pw\\tools\\pathwhiz_converter\\ui.py:26 in                       \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m render_pathwhiz_converter_section                                                    \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 23 \x1b[0m                                                                               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 24 \x1b[0m                                                                               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 25 \x1b[0m\x1b[94mdef\x1b[0m\x1b[90m \x1b[0m\x1b[92mrender_pathwhiz_converter_section\x1b[0m(llm_client) -> \x1b[94mNone\x1b[0m:                     \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m 26 \x1b[2m\u2502   \x1b[0m\x1b[1;4mst.subheader(\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4;33mPathWhiz Converter\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4m)\x1b[0m                                         \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 27 \x1b[0m\x1b[2m\u2502   \x1b[0m                                                                           \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 28 \x1b[0m\x1b[2m\u2502   \x1b[0minput_sbml = st.file_uploader(                                             \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 29 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m\x1b[33m"\x1b[0m\x1b[33mUpload your SBML (.xml)\x1b[0m\x1b[33m"\x1b[0m,                                             \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\metrics_util.py:628 in wrapped_func                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m elements\\heading.py:249 in subheader                                                 \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m delta_generator.py:533 in _enqueue                                                   \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner_utils\\script_run_context.py:174 in get                          \x1b[31m \x1b[0m\n\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\n\x1b[1;91mRuntimeError: \x1b[0mFragmentThreadState not initialized \u2014 \x1b[1;35mScriptRunContext.reset\x1b[0m\x1b[1m(\x1b[0m\x1b[1m)\x1b[0m or \n\x1b[1;35madd_script_run_ctx\x1b[0m\x1b[1m(\x1b[0m\x1b[1m)\x1b[0m must be called on this thread first.
+---------------------------- Captured stderr call -----------------------------
+2026-11-06 15:02:48.275 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:48.854 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 15:02:49.694 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-06 15:02:49.695 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-06 15:02:49.696 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+=========================== short test summary info ===========================
+FAILED tests/test_c055_rag_loop_wiring.py::test_apptest_rag_on_runs_a_round_that_re_enters_all_five_stages
+ERROR tests/test_c055_rag_loop_wiring.py::test_one_round_re_enters_all_five_stages_and_merges
+ERROR tests/test_c055_rag_loop_wiring.py::test_the_checkpoint_is_written_before_the_round
+ERROR tests/test_c055_rag_loop_wiring.py::test_round_two_re_runs_the_chain_on_recomputed_reports
+ERROR tests/test_c055_rag_loop_wiring.py::test_the_app_contains_no_hand_rolled_round_loop
+ERROR tests/test_c055_rag_loop_wiring.py::test_a_failed_stage_aborts_the_round_and_keeps_its_checkpoint
+ERROR tests/test_c055_rag_loop_wiring.py::test_a_budget_that_cannot_afford_a_round_runs_none
+ERROR tests/test_c055_rag_loop_wiring.py::test_a_refused_delta_does_not_advance_the_graph_and_says_which_rule
+ERROR tests/test_c055_rag_loop_wiring.py::test_per_round_mapping_never_writes_the_authoritative_cache
+ERROR tests/test_c055_rag_loop_wiring.py::test_per_round_persistence_never_writes_the_protected_scratch_files
+ERROR tests/test_c055_rag_loop_wiring.py::test_the_loop_record_touches_no_refinement_state_key
+ERROR tests/test_c055_rag_loop_wiring.py::test_the_round_leaves_the_quarantine_boundary_session_record_untouched
+ERROR tests/test_c055_rag_loop_wiring.py::test_the_default_round_budget_is_one_round
+1 failed, 30 passed, 12 errors in 11.61s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3c-base\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 4ea3524a8862be462652b38145b7249e649eec20  [git, worktree dirty=False]
+label                   : ext-then-c055
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3c-base/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3c-base --pin-verdict C:/t/ws-R3c/docs/webserver/evidence/R3c/mutation/c055-combo/pin/b-ext-then-c055.pin.json -q --basetemp=C:/t/wsR3ctmp/b-ext-then-c055 tests/test_service_extraction.py tests/test_c055_rag_loop_wiring.py
+cwd                     : C:\t\ws-R3c-base
+root PID / process group: 245308 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 13.24 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 3  241976:python.exe, 245940:python.exe, 245960:python.exe
+descendants terminated  : 3  241976, 245940, 245960
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ws-R3c/docs/webserver/evidence/R3c/mutation/c055-combo/b-ext-then-c055.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R3c  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

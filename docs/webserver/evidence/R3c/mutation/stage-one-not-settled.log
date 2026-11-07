@@ -1,0 +1,103 @@
+T2PW: C:\t\ws-R3c\src\t2pw\__init__.py
+F...F.....F...........                                                   [100%]
+================================== FAILURES ===================================
+_ test_success_passes_stage_one_its_arguments_and_returns_what_the_block_reads _
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo...e, stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/stage-one-not-settled/test_success_passes_stage_one_0'))
+
+    def test_success_passes_stage_one_its_arguments_and_returns_what_the_block_reads(world):
+        world.chunks = [{"chunk": 1}]
+        res, rep, state = _run(world, state={"export_mode": "research"})
+    
+        name, text, kw = world.calls[0]
+        assert (name, text) == ("stage1", "the paper")
+        assert kw == dict(pathway_context={"pathway_name": "Menaquinone"}, user_task_context="focus",
+                          artifact_dir=world.root / "tmp", enable_chunking=True, chunk_word_limit=1200,
+                          chunk_overlap=200, max_attempts=3, temperature=0.25, max_tokens=8000)
+        assert all(type(kw[k]) is int for k in ("chunk_word_limit", "chunk_overlap", "max_attempts", "max_tokens"))
+        settle = world.calls[2]
+        assert world.calls[1] == ("diag.current",)  # the cleaning report is read after Stage 1 ran
+        assert settle[0] == "settle" and settle[1] == _payload("a")
+        assert settle[2] == {"mode": "research", "cleaning_report": {"pass": 2, "dropped": 3}}
+        assert rep.calls == SPIN
+        assert list(state) == ["export_mode", "stage_one_boundary", ex.EXTRACTION_DIAGNOSTICS_KEY]
+        assert state["stage_one_boundary"] == {"ok": True, "reason": ""}
+        assert state[ex.EXTRACTION_DIAGNOSTICS_KEY] == CLEANING
+        settled = dict(_payload("a"), settled=True)
+        assert res.failure is None
+>       assert res.stage_one == settled and res.stage_one_in_scope == settled
+E       AssertionError: assert ({'entities': ...name': 'a'}]}} == {'entities': ...ettled': True}
+E         
+E         Omitting 2 identical items, use -vv to show
+E         Right contains 1 more item:
+E         {'settled': True}
+E         Use -v to get more diff)
+
+tests\test_service_extraction_stage1.py:179: AssertionError
+____________ test_out_of_scope_reactions_are_removed_and_reported _____________
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo...e, stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/stage-one-not-settled/test_out_of_scope_reactions_ar0'))
+
+    def test_out_of_scope_reactions_are_removed_and_reported(world):
+        world.stage1 = _payload("a", out=("x", "y"))
+        world.boundary = {"reconstruction": {}}
+        res, rep, _state = _run(world)
+        assert res.out_of_scope_removed_reactions == ["x", "y"]
+>       assert res.stage_one_in_scope == dict(_payload("a"), settled=True)
+E       AssertionError: assert {'entities': ...name': 'a'}]}} == {'entities': ...ettled': True}
+E         
+E         Omitting 2 identical items, use -vv to show
+E         Right contains 1 more item:
+E         {'settled': True}
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage1.py:219: AssertionError
+_____ test_rag_on_seeds_from_the_in_scope_payload_and_folds_the_evidence ______
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo...), stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/stage-one-not-settled/test_rag_on_seeds_from_the_in_0'))
+
+    def test_rag_on_seeds_from_the_in_scope_payload_and_folds_the_evidence(world):
+        world.stage1 = _payload("a", out=("x",))
+        world.rag = True
+        world.rag_result = types.SimpleNamespace(evidence_context="PMC1: MenG.")
+        res, rep, state = _run(world, flag=1)
+        in_scope = dict(_payload("a"), settled=True)
+>       assert world.calls[-3:-1] == [("build_draft_graph", in_scope), ("generate_qa_report", "GRAPH", in_scope)]
+E       AssertionError: assert [('build_draf...me': 'a'}]}})] == [('build_draf...tled': True})]
+E         
+E         At index 0 diff: ('build_draft_graph', {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}}) != ('build_draft_graph', {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}, 'settled': True})
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage1.py:286: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage1.py::test_success_passes_stage_one_its_arguments_and_returns_what_the_block_reads
+FAILED tests/test_service_extraction_stage1.py::test_out_of_scope_reactions_are_removed_and_reported
+FAILED tests/test_service_extraction_stage1.py::test_rag_on_seeds_from_the_in_scope_payload_and_folds_the_evidence
+3 failed, 19 passed in 3.41s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f1238da76c51323070578fa2edcf423b585e026d  [git, worktree dirty=True]
+label                   : mut-stage-one-not-settled
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3c/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3c -q -p no:cacheprovider --basetemp=C:/t/wsR3ctmp/mut-tmp/stage-one-not-settled tests/test_service_extraction_stage1.py
+cwd                     : C:\t\ws-R3c
+root PID / process group: 531064 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 4.41 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 3  529948:python.exe, 526424:python.exe, 530868:python.exe
+descendants terminated  : 3  526424, 529948, 530868
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\ws-R3c\docs\webserver\evidence\R3c\mutation\stage-one-not-settled.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R3c  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

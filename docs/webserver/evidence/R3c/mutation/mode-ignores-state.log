@@ -1,0 +1,59 @@
+T2PW: C:\t\ws-R3c\src\t2pw\__init__.py
+F.....................                                                   [100%]
+================================== FAILURES ===================================
+_ test_success_passes_stage_one_its_arguments_and_returns_what_the_block_reads _
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo...None, stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/mode-ignores-state/test_success_passes_stage_one_0'))
+
+    def test_success_passes_stage_one_its_arguments_and_returns_what_the_block_reads(world):
+        world.chunks = [{"chunk": 1}]
+        res, rep, state = _run(world, state={"export_mode": "research"})
+    
+        name, text, kw = world.calls[0]
+        assert (name, text) == ("stage1", "the paper")
+        assert kw == dict(pathway_context={"pathway_name": "Menaquinone"}, user_task_context="focus",
+                          artifact_dir=world.root / "tmp", enable_chunking=True, chunk_word_limit=1200,
+                          chunk_overlap=200, max_attempts=3, temperature=0.25, max_tokens=8000)
+        assert all(type(kw[k]) is int for k in ("chunk_word_limit", "chunk_overlap", "max_attempts", "max_tokens"))
+        settle = world.calls[2]
+        assert world.calls[1] == ("diag.current",)  # the cleaning report is read after Stage 1 ran
+        assert settle[0] == "settle" and settle[1] == _payload("a")
+>       assert settle[2] == {"mode": "research", "cleaning_report": {"pass": 2, "dropped": 3}}
+E       AssertionError: assert {'cleaning_re...': 'pathwhiz'} == {'cleaning_re...': 'research'}
+E         
+E         Omitting 1 identical items, use -vv to show
+E         Differing items:
+E         {'mode': 'pathwhiz'} != {'mode': 'research'}
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage1.py:172: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage1.py::test_success_passes_stage_one_its_arguments_and_returns_what_the_block_reads
+1 failed, 21 passed in 3.41s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f1238da76c51323070578fa2edcf423b585e026d  [git, worktree dirty=True]
+label                   : mut-mode-ignores-state
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3c/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3c -q -p no:cacheprovider --basetemp=C:/t/wsR3ctmp/mut-tmp/mode-ignores-state tests/test_service_extraction_stage1.py
+cwd                     : C:\t\ws-R3c
+root PID / process group: 530472 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 4.34 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 3  530052:python.exe, 528860:python.exe, 18936:python.exe
+descendants terminated  : 3  18936, 528860, 530052
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\ws-R3c\docs\webserver\evidence\R3c\mutation\mode-ignores-state.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R3c  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

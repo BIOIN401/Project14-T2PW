@@ -197,8 +197,11 @@ from t2pw.service.extraction import (
     _run_stage_zero_with_retry as _service_run_stage_zero_with_retry,
     _seed_context_from_user_scope,
     _stage0_context_rank,
+    _last_cleaning_report,
     _sync_extraction_diagnostics as _service_sync_extraction_diagnostics,
     assemble_inputs,
+    render_attempts as _service_render_attempts,
+    run_stage_one,
     run_stage_zero,
 )
 
@@ -564,17 +567,8 @@ for _refinement_key, _refinement_default in REFINEMENT_STATE_DEFAULTS.items():
 
 
 def render_attempts(label: str, attempts: List[Dict[str, Any]]) -> None:
-    with st.expander(label, expanded=False):
-        for log in attempts:
-            status = "success" if not log.get("error") else "retry"
-            phase = log.get("phase")
-            phase_label = f" ({phase})" if phase else ""
-            note = log.get("note")
-            note_label = f" [{note}]" if note else ""
-            st.markdown(f"**Attempt {log['attempt']}{phase_label}** - {status}{note_label}")
-            st.code(log["raw"], language="json")
-            if log.get("error"):
-                st.caption(log["error"])
+    """R3c: moved to ``t2pw.service.extraction``; the app's Stage-2 and chunk listings keep this name."""
+    _service_render_attempts(label, attempts, reporter=StreamlitReporter(st))
 
 
 def qa_summary_line(payload: Dict[str, Any]) -> str:
@@ -627,24 +621,6 @@ def _bounded_env_int(name: str, default: int, *, minimum: int, maximum: int) -> 
 def _sync_extraction_diagnostics() -> Dict[str, Any]:
     """R3b: moved to ``t2pw.service.extraction``; the app's remaining call sites keep this name."""
     return _service_sync_extraction_diagnostics(state=st.session_state)
-
-
-def _last_cleaning_report() -> Dict[str, Any]:
-    """The most recent Stage-1 cleaning pass, or ``{}``.
-
-    The boundary needs exactly one fact from it -- whether cleaning discarded
-    every process row the model returned -- to tell "the model produced nothing"
-    apart from "cleaning removed what it produced". The last recorded pass is the
-    right one: Stage 1 records per chunk and then once for the merge, and the
-    merge is what the boundary is judging.
-    """
-
-    try:
-        artifacts = current_extraction_diagnostics().artifacts()
-    except Exception:  # noqa: BLE001
-        return {}
-    passes = _safe_list(_safe_dict(artifacts.get(CLEANING_REPORT_NAME)).get("passes"))
-    return _safe_dict(passes[-1]) if passes else {}
 
 
 def _render_stage_contract_failure(
@@ -1925,118 +1901,32 @@ if submit:
             st.warning(warning.strip())
         st.stop()
 
-    # Stage 1: strict extraction with auto-repair
-    try:
-        with st.spinner("Running Stage 1 extraction..."):
-            stage_one, chunk_details = run_stage_one_with_chunking(
-                text,
-                pathway_context=pathway_context,
-                user_task_context=user_task_context,
-                artifact_dir=PROJECT_ROOT / "tmp",
-                enable_chunking=enable_chunking,
-                chunk_word_limit=int(chunk_size),
-                chunk_overlap=int(chunk_overlap),
-                max_attempts=int(extract_attempts),
-                temperature=temperature,
-                max_tokens=int(extract_tokens),
-            )
-            # The boundary is settled rather than merely checked: a registry row
-            # the extraction referenced but never declared is reconstructed
-            # deterministically, and rows the contract rejects get a bounded,
-            # localized repair -- neither of which regenerates the pathway. See
-            # t2pw.pipeline.stage_one_boundary. When it cannot be settled the
-            # payload still comes back and the run reports an INCOMPLETE outcome
-            # instead of a pass; nothing is invented to satisfy the contract.
-            _boundary = settle_stage_one(
-                stage_one,
-                mode=coerce_mode(st.session_state.get("export_mode")),
-                cleaning_report=_last_cleaning_report(),
-            )
-            stage_one = _boundary.payload
-            st.session_state["stage_one_boundary"] = _boundary.to_summary()
-    except PipelineFailure as failure:
-        _sync_extraction_diagnostics()
-        st.error(f"Extraction failed: {failure}")
-        render_attempts("Stage 1 attempts", failure.attempts)
+    # R3c: Stage 1 lives in t2pw.service.extraction.run_stage_one: the extraction and
+    # its boundary, the three failure exits (each returned, the app stops), the
+    # out-of-scope filter and the RAG seed with its user_task_context fold.
+    _stage_one = run_stage_one(
+        text,
+        pathway_context=pathway_context,
+        user_task_context=user_task_context,
+        diagnostics_dir=_diagnostics_dir,
+        enable_chunking=enable_chunking,
+        chunk_size=chunk_size,
+        chunk_overlap=chunk_overlap,
+        extract_attempts=extract_attempts,
+        temperature=temperature,
+        extract_tokens=extract_tokens,
+        rag_incomplete_flag=rag_incomplete_flag,
+        state=st.session_state,
+        reporter=StreamlitReporter(st),
+    )
+    if _stage_one.failure is not None:
         st.stop()
-    except StageContractError as failure:
-        _sync_extraction_diagnostics()
-        st.error(f"Extraction boundary failed: {failure}")
-        st.json(failure.report)
-        st.stop()
-
-    _sync_extraction_diagnostics()
-    if not _boundary.ok:
-        # Explicitly incomplete, not a silent pass and not a fabricated pathway.
-        # The artifacts written above are the deliverable for this run.
-        st.error(
-            "Extraction boundary failed and could not be recovered: "
-            f"{_boundary.incomplete_reason}"
-        )
-        st.info(
-            "Localized repair and deterministic registry reconstruction were both "
-            "applied; the payload below is as far as the run got. No reaction was "
-            "invented to satisfy the contract. The diagnostics for this run "
-            f"(stage0_attempts.json, extraction_boundary_report.json, "
-            f"cleaning_report.json) are in {_diagnostics_dir}."
-        )
-        st.json(_boundary.to_summary())
-        if _boundary.failure is not None:
-            st.json(_boundary.failure.report)
-        st.stop()
-    if _boundary.reconstruction:
-        st.info(
-            f"Reconstructed {_boundary.reconstruction.get('shell_count', 0)} unresolved "
-            "entity shell(s) for participants named by reactions but missing from the "
-            "registry. They carry no identifier and no function; every identity gate "
-            "downstream still applies to them."
-        )
-
-    # Stage 1 wrote its raw output (incl. out-of-scope reactions) to disk and the
-    # locked-reaction manifest above, before this filter runs; the manifest never
-    # locked out-of-scope reactions in the first place. Drop them here so Stage 2
-    # does not spend effort linking modifiers to reactions that are about to be
-    # removed, and so out-of-scope material never reaches export.
-    stage_one_in_scope, out_of_scope_removed_reactions = filter_out_of_scope_reactions(stage_one)
-    if out_of_scope_removed_reactions:
-        st.info(
-            f"Removed {len(out_of_scope_removed_reactions)} out-of-scope reaction(s) "
-            f"before Stage 2: {', '.join(out_of_scope_removed_reactions)}"
-        )
-
-    # ── RAG orchestration (seam S5) — WIRING ONLY; identical path when off ───
-    # Guarded on the deploy switch (RAG_ENABLED) ONLY. With RAG_ENABLED off,
-    # nothing here runs and user_task_context / the flow stay exactly as today —
-    # the standard single-paper pipeline, byte-for-byte. With RAG_ENABLED on, the
-    # decision of WHETHER to run the chain is delegated to t2pw.rag triage inside
-    # maybe_run_rag (the separation invariant): the UI toggle is passed through as
-    # user_flag, so an ON toggle force-runs RAG while an OFF toggle lets
-    # should_run_rag auto-decide from the scope/gap guardrails. Only when triage
-    # says run does maybe_run_rag run the whole R1–R5 chain and return its
-    # outputs; the app then folds the retrieved evidence through the existing S1
-    # (user_task_context) and S2 (the audit's retrieval_context, via
-    # session_state) params, and hands the synthesized Payload to the
-    # post-pipeline path (S3) below.
-    rag_result = None
-    if rag_config()["enabled"]:
-        _rag_seed_graph = build_draft_graph(stage_one_in_scope)
-        rag_result = maybe_run_rag(
-            pathway_context=pathway_context,
-            user_flag=bool(rag_incomplete_flag),
-            seed_payload=stage_one_in_scope,
-            reports={"qa_graph": generate_qa_report(_rag_seed_graph, stage_one_in_scope)},
-            seed_text=text,
-            reporter=StreamlitReporter(st),
-        )
-        if rag_result is not None:
-            st.session_state["rag_result"] = rag_result
-            if rag_result.evidence_context:
-                user_task_context = "\n\n".join(
-                    part
-                    for part in (user_task_context, rag_result.evidence_context)
-                    if part
-                )  # S1
-                st.session_state["rag_evidence_context"] = rag_result.evidence_context  # S2
+    stage_one = _stage_one.stage_one
+    chunk_details = _stage_one.chunk_details
+    stage_one_in_scope = _stage_one.stage_one_in_scope
+    out_of_scope_removed_reactions = _stage_one.out_of_scope_removed_reactions
+    rag_result = _stage_one.rag_result
+    user_task_context = _stage_one.user_task_context
 
     final_payload = stage_one_in_scope
     stage_two = None

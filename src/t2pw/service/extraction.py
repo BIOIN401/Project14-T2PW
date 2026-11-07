@@ -1,8 +1,8 @@
 """The "Run pipeline" handler, moved out of ``streamlit_app.py`` step by step (R3).
 
 R3a moved the input assembly: the pasted texts and the uploaded PDFs become the one
-``text`` the stages read. R3b moved Stage 0 (:func:`run_stage_zero`). R3c-R3d extend
-this module with the remaining stages.
+``text`` the stages read. R3b moved Stage 0 (:func:`run_stage_zero`), R3c Stage 1 and
+the RAG seed (:func:`run_stage_one`). R3d extends this module with the remaining stages.
 
 Every message goes through the ``reporter`` the caller passes (the app passes
 ``StreamlitReporter(st)``). There is no default: service code never falls back to
@@ -17,7 +17,7 @@ import os
 import tempfile
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Callable, Dict, Iterable, MutableMapping, Optional, Sequence, Tuple
+from typing import Any, Callable, Dict, Iterable, List, MutableMapping, Optional, Sequence, Tuple
 
 import t2pw.paths as paths  # PROJECT_ROOT read at call time: the harness patches it
 from t2pw.extraction.pdf_parser import SKIP_SECTIONS, parse_pdf
@@ -504,3 +504,229 @@ def run_stage_zero(
     _sync_extraction_diagnostics(state=state)
 
     return StageZeroResult(pathway_context=pathway_context, diagnostics_dir=_diagnostics_dir)
+
+
+# ---------------------------------------------------------------------------
+# R3c: Stage 1 and the RAG seed. Moved from streamlit_app.py: render_attempts,
+# _last_cleaning_report, and the submit block from the Stage-1 spinner through the
+# RAG seed's user_task_context fold, stopping before Stage 2 (R3c.md).
+# ---------------------------------------------------------------------------
+
+# Failure kinds, one per former ``st.stop()`` in the Stage-1 code.
+KIND_STAGE_ONE_FAILED = "stage_one_failed"
+KIND_STAGE_ONE_BOUNDARY_ERROR = "stage_one_boundary_error"
+KIND_STAGE_ONE_INCOMPLETE = "stage_one_incomplete"
+
+
+def render_attempts(label: str, attempts: List[Dict[str, Any]], *, reporter: Reporter) -> None:
+    with reporter.expander(label, expanded=False):
+        for log in attempts:
+            status = "success" if not log.get("error") else "retry"
+            phase = log.get("phase")
+            phase_label = f" ({phase})" if phase else ""
+            note = log.get("note")
+            note_label = f" [{note}]" if note else ""
+            reporter.markdown(f"**Attempt {log['attempt']}{phase_label}** - {status}{note_label}")
+            reporter.code(log["raw"], language="json")
+            if log.get("error"):
+                reporter.caption(log["error"])
+
+
+def _last_cleaning_report() -> Dict[str, Any]:
+    """The most recent Stage-1 cleaning pass, or ``{}``.
+
+    The boundary needs exactly one fact from it -- whether cleaning discarded
+    every process row the model returned -- to tell "the model produced nothing"
+    apart from "cleaning removed what it produced". The last recorded pass is the
+    right one: Stage 1 records per chunk and then once for the merge, and the
+    merge is what the boundary is judging.
+    """
+
+    # Imported here, not at module level, for the reason given in run_stage_one.
+    from t2pw.service.postpipeline import _safe_dict, _safe_list
+
+    try:
+        artifacts = _diag.current().artifacts()
+    except Exception:  # noqa: BLE001
+        return {}
+    passes = _safe_list(_safe_dict(artifacts.get(_diag.CLEANING_REPORT_NAME)).get("passes"))
+    return _safe_dict(passes[-1]) if passes else {}
+
+
+@dataclass(frozen=True)
+class StageOneResult:
+    """What the rest of the submit block reads after Stage 1 and the RAG seed, or the
+    ``failure`` where the app stops the run."""
+
+    stage_one: Any = None
+    chunk_details: Any = None
+    stage_one_in_scope: Any = None
+    out_of_scope_removed_reactions: Any = None
+    rag_result: Any = None
+    user_task_context: Optional[str] = None
+    failure: Optional[InputFailure] = None
+
+
+def run_stage_one(
+    text: str,
+    *,
+    pathway_context: Any,
+    user_task_context: Optional[str],
+    diagnostics_dir: Path,
+    enable_chunking: bool,
+    chunk_size: Any,
+    chunk_overlap: Any,
+    extract_attempts: Any,
+    temperature: float,
+    extract_tokens: Any,
+    rag_incomplete_flag: Any,
+    state: MutableMapping[str, Any],
+    reporter: Reporter,
+) -> StageOneResult:
+    """Stage 1, its boundary, the out-of-scope filter and the RAG seed, exactly as the
+    app's submit block ran them, up to Stage 2.
+
+    ``user_task_context`` in the result is the value Stage 2 reads: the input, with the
+    RAG evidence folded in when the seed returned some.
+    """
+
+    # Imported here, not at module level, so that importing this module loads exactly
+    # what it loaded before R3c. They are module objects, so every name is looked up at
+    # call time, as the app script's per-run ``from ... import`` was: a test patch of
+    # ``pipeline.run_stage_one_with_chunking``, ``stage_one_boundary.settle_stage_one``,
+    # ``draft_graph.build_draft_graph``, ``qa_graph.generate_qa_report`` or
+    # ``rag_orchestration.maybe_run_rag`` on its source module reaches the call.
+    import t2pw.config as _config
+    from t2pw.pipeline import draft_graph as _draft_graph
+    from t2pw.pipeline import export_mode as _export_mode
+    from t2pw.pipeline import pipeline as _pipeline
+    from t2pw.pipeline import qa_graph as _qa_graph
+    from t2pw.pipeline import stage_one_boundary as _stage_one_boundary
+    from t2pw.pipeline.stage_contracts import StageContractError
+
+    # Stage 1: strict extraction with auto-repair
+    try:
+        with reporter.spinner("Running Stage 1 extraction..."):
+            stage_one, chunk_details = _pipeline.run_stage_one_with_chunking(
+                text,
+                pathway_context=pathway_context,
+                user_task_context=user_task_context,
+                artifact_dir=paths.PROJECT_ROOT / "tmp",
+                enable_chunking=enable_chunking,
+                chunk_word_limit=int(chunk_size),
+                chunk_overlap=int(chunk_overlap),
+                max_attempts=int(extract_attempts),
+                temperature=temperature,
+                max_tokens=int(extract_tokens),
+            )
+            # The boundary is settled rather than merely checked: a registry row
+            # the extraction referenced but never declared is reconstructed
+            # deterministically, and rows the contract rejects get a bounded,
+            # localized repair -- neither of which regenerates the pathway. See
+            # t2pw.pipeline.stage_one_boundary. When it cannot be settled the
+            # payload still comes back and the run reports an INCOMPLETE outcome
+            # instead of a pass; nothing is invented to satisfy the contract.
+            _boundary = _stage_one_boundary.settle_stage_one(
+                stage_one,
+                mode=_export_mode.coerce_mode(state.get("export_mode")),
+                cleaning_report=_last_cleaning_report(),
+            )
+            stage_one = _boundary.payload
+            state["stage_one_boundary"] = _boundary.to_summary()
+    except _pipeline.PipelineFailure as failure:
+        _sync_extraction_diagnostics(state=state)
+        message = f"Extraction failed: {failure}"
+        reporter.error(message)
+        render_attempts("Stage 1 attempts", failure.attempts, reporter=reporter)
+        return StageOneResult(failure=InputFailure(KIND_STAGE_ONE_FAILED, message))
+    except StageContractError as failure:
+        _sync_extraction_diagnostics(state=state)
+        message = f"Extraction boundary failed: {failure}"
+        reporter.error(message)
+        reporter.json(failure.report)
+        return StageOneResult(failure=InputFailure(KIND_STAGE_ONE_BOUNDARY_ERROR, message))
+
+    _sync_extraction_diagnostics(state=state)
+    if not _boundary.ok:
+        # Explicitly incomplete, not a silent pass and not a fabricated pathway.
+        # The artifacts written above are the deliverable for this run.
+        message = (
+            "Extraction boundary failed and could not be recovered: "
+            f"{_boundary.incomplete_reason}"
+        )
+        reporter.error(message)
+        reporter.info(
+            "Localized repair and deterministic registry reconstruction were both "
+            "applied; the payload below is as far as the run got. No reaction was "
+            "invented to satisfy the contract. The diagnostics for this run "
+            f"(stage0_attempts.json, extraction_boundary_report.json, "
+            f"cleaning_report.json) are in {diagnostics_dir}."
+        )
+        reporter.json(_boundary.to_summary())
+        if _boundary.failure is not None:
+            reporter.json(_boundary.failure.report)
+        return StageOneResult(failure=InputFailure(KIND_STAGE_ONE_INCOMPLETE, message))
+    if _boundary.reconstruction:
+        reporter.info(
+            f"Reconstructed {_boundary.reconstruction.get('shell_count', 0)} unresolved "
+            "entity shell(s) for participants named by reactions but missing from the "
+            "registry. They carry no identifier and no function; every identity gate "
+            "downstream still applies to them."
+        )
+
+    # Stage 1 wrote its raw output (incl. out-of-scope reactions) to disk and the
+    # locked-reaction manifest above, before this filter runs; the manifest never
+    # locked out-of-scope reactions in the first place. Drop them here so Stage 2
+    # does not spend effort linking modifiers to reactions that are about to be
+    # removed, and so out-of-scope material never reaches export.
+    stage_one_in_scope, out_of_scope_removed_reactions = _pipeline.filter_out_of_scope_reactions(stage_one)
+    if out_of_scope_removed_reactions:
+        reporter.info(
+            f"Removed {len(out_of_scope_removed_reactions)} out-of-scope reaction(s) "
+            f"before Stage 2: {', '.join(out_of_scope_removed_reactions)}"
+        )
+
+    # ── RAG orchestration (seam S5) — WIRING ONLY; identical path when off ───
+    # Guarded on the deploy switch (RAG_ENABLED) ONLY. With RAG_ENABLED off,
+    # nothing here runs and user_task_context / the flow stay exactly as today —
+    # the standard single-paper pipeline, byte-for-byte. With RAG_ENABLED on, the
+    # decision of WHETHER to run the chain is delegated to t2pw.rag triage inside
+    # maybe_run_rag (the separation invariant): the UI toggle is passed through as
+    # user_flag, so an ON toggle force-runs RAG while an OFF toggle lets
+    # should_run_rag auto-decide from the scope/gap guardrails. Only when triage
+    # says run does maybe_run_rag run the whole R1–R5 chain and return its
+    # outputs; the app then folds the retrieved evidence through the existing S1
+    # (user_task_context) and S2 (the audit's retrieval_context, via
+    # session_state) params, and hands the synthesized Payload to the
+    # post-pipeline path (S3) below.
+    rag_result = None
+    if _config.rag_config()["enabled"]:
+        from t2pw.service import rag_orchestration as _rag_orchestration  # only with RAG on
+
+        _rag_seed_graph = _draft_graph.build_draft_graph(stage_one_in_scope)
+        rag_result = _rag_orchestration.maybe_run_rag(
+            pathway_context=pathway_context,
+            user_flag=bool(rag_incomplete_flag),
+            seed_payload=stage_one_in_scope,
+            reports={"qa_graph": _qa_graph.generate_qa_report(_rag_seed_graph, stage_one_in_scope)},
+            seed_text=text,
+            reporter=reporter,
+        )
+        if rag_result is not None:
+            state["rag_result"] = rag_result
+            if rag_result.evidence_context:
+                user_task_context = "\n\n".join(
+                    part
+                    for part in (user_task_context, rag_result.evidence_context)
+                    if part
+                )  # S1
+                state["rag_evidence_context"] = rag_result.evidence_context  # S2
+
+    return StageOneResult(
+        stage_one=stage_one,
+        chunk_details=chunk_details,
+        stage_one_in_scope=stage_one_in_scope,
+        out_of_scope_removed_reactions=out_of_scope_removed_reactions,
+        rag_result=rag_result,
+        user_task_context=user_task_context,
+    )

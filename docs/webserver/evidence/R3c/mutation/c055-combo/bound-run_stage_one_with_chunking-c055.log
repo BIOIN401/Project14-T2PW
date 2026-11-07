@@ -1,0 +1,1163 @@
+T2PW: C:\t\ws-R3c\src\t2pw\__init__.py
+.............................EEEEEEEEEEEEFF                              [100%]
+=================================== ERRORS ====================================
+____ ERROR at setup of test_one_round_re_enters_all_five_stages_and_merges ____
+
+    @pytest.fixture()
+    def app_module():
+        """``t2pw.app.streamlit_app`` with ``streamlit`` stubbed, as the rag tests do.
+    
+        The module executes a Streamlit script at import, so ``streamlit`` is replaced by a
+        MagicMock exactly the way ``tests/test_rag_triage_orchestration.py`` does it. Only
+        the module-level helpers are exercised here; the script body is exercised through
+        the real ``AppTest`` below.
+        """
+    
+        from unittest.mock import MagicMock
+    
+        saved = {n: sys.modules[n] for n in list(sys.modules)
+                 if n == "streamlit" or n.startswith("streamlit.")}
+        if not isinstance(sys.modules.get("streamlit"), types.ModuleType) or hasattr(
+            sys.modules.get("streamlit"), "__path__"
+        ):
+            for name in list(saved):
+                sys.modules.pop(name, None)
+        stub = MagicMock(name="streamlit")
+        stub.columns.side_effect = lambda spec=1, **_: [
+            MagicMock() for _ in range(spec if isinstance(spec, int) else len(spec))
+        ]
+        stub.tabs.side_effect = lambda labels, **_: [MagicMock() for _ in labels]
+        stub.form_submit_button.return_value = False
+        stub.checkbox.return_value = False
+        stub.session_state = MagicMock()
+        stub.session_state.get.return_value = None
+        stub.session_state.__contains__ = lambda _s, _k: False
+        sys.modules["streamlit"] = stub
+        sys.modules.pop("t2pw.app.streamlit_app", None)
+        # R1: ``run_quarantine_boundary`` now lives here and binds ``st`` at import, so it
+        # must be re-imported under the stub for its session_state writes to reach it.
+        sys.modules.pop("t2pw.service.postpipeline", None)
+        sys.modules.pop("t2pw.service.rag_orchestration", None)  # R2: same, for the moved RAG code
+        before = set(sys.modules)
+>       import t2pw.app.streamlit_app as app  # noqa: PLC0415
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_c055_rag_loop_wiring.py:252: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\t2pw\app\streamlit_app.py:3648: in <module>
+    render_reaction_evidence()
+src\t2pw\app\reaction_evidence_view.py:102: in render_reaction_evidence
+    st.info(f"Reaction Evidence could not be rendered: {exc}")
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\metrics_util.py:628: in wrapped_func
+    result = non_optional_func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:365: in info
+    processed_body, processed_icon = _process_alert_body_and_icon(body, icon)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:51: in _process_alert_body_and_icon
+    extracted_icon, remaining_body = extract_leading_icon(cleaned_body)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:193: in extract_leading_icon
+    return extract_leading_emoji(text)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+text = "Reaction Evidence could not be rendered: No module named 'streamlit.runtime'; 'streamlit' is not a package"
+
+    def extract_leading_emoji(text: str) -> tuple[str, str]:
+        """Return a tuple containing the first emoji found in the given string and
+        the rest of the string (minus an optional separator between the two).
+        """
+    
+        if not _contains_special_chars(text):
+            # If the string only contains basic alphanumerical chars and/or
+            # underscores, hyphen & whitespaces, then it's guaranteed that there
+            # is no emoji in the string.
+            return "", text
+    
+>       from streamlit.emojis import EMOJI_EXTRACTION_REGEX
+E       ModuleNotFoundError: No module named 'streamlit.emojis'; 'streamlit' is not a package
+
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:146: ModuleNotFoundError
+---------------------------- Captured stderr setup ----------------------------
+2026-11-06 13:44:49.194 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.194 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.194 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.194 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.194 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.195 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.195 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.195 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.195 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+______ ERROR at setup of test_the_checkpoint_is_written_before_the_round ______
+
+    @pytest.fixture()
+    def app_module():
+        """``t2pw.app.streamlit_app`` with ``streamlit`` stubbed, as the rag tests do.
+    
+        The module executes a Streamlit script at import, so ``streamlit`` is replaced by a
+        MagicMock exactly the way ``tests/test_rag_triage_orchestration.py`` does it. Only
+        the module-level helpers are exercised here; the script body is exercised through
+        the real ``AppTest`` below.
+        """
+    
+        from unittest.mock import MagicMock
+    
+        saved = {n: sys.modules[n] for n in list(sys.modules)
+                 if n == "streamlit" or n.startswith("streamlit.")}
+        if not isinstance(sys.modules.get("streamlit"), types.ModuleType) or hasattr(
+            sys.modules.get("streamlit"), "__path__"
+        ):
+            for name in list(saved):
+                sys.modules.pop(name, None)
+        stub = MagicMock(name="streamlit")
+        stub.columns.side_effect = lambda spec=1, **_: [
+            MagicMock() for _ in range(spec if isinstance(spec, int) else len(spec))
+        ]
+        stub.tabs.side_effect = lambda labels, **_: [MagicMock() for _ in labels]
+        stub.form_submit_button.return_value = False
+        stub.checkbox.return_value = False
+        stub.session_state = MagicMock()
+        stub.session_state.get.return_value = None
+        stub.session_state.__contains__ = lambda _s, _k: False
+        sys.modules["streamlit"] = stub
+        sys.modules.pop("t2pw.app.streamlit_app", None)
+        # R1: ``run_quarantine_boundary`` now lives here and binds ``st`` at import, so it
+        # must be re-imported under the stub for its session_state writes to reach it.
+        sys.modules.pop("t2pw.service.postpipeline", None)
+        sys.modules.pop("t2pw.service.rag_orchestration", None)  # R2: same, for the moved RAG code
+        before = set(sys.modules)
+>       import t2pw.app.streamlit_app as app  # noqa: PLC0415
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_c055_rag_loop_wiring.py:252: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\t2pw\app\streamlit_app.py:3648: in <module>
+    render_reaction_evidence()
+src\t2pw\app\reaction_evidence_view.py:102: in render_reaction_evidence
+    st.info(f"Reaction Evidence could not be rendered: {exc}")
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\metrics_util.py:628: in wrapped_func
+    result = non_optional_func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:365: in info
+    processed_body, processed_icon = _process_alert_body_and_icon(body, icon)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:51: in _process_alert_body_and_icon
+    extracted_icon, remaining_body = extract_leading_icon(cleaned_body)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:193: in extract_leading_icon
+    return extract_leading_emoji(text)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+text = "Reaction Evidence could not be rendered: No module named 'streamlit.runtime'; 'streamlit' is not a package"
+
+    def extract_leading_emoji(text: str) -> tuple[str, str]:
+        """Return a tuple containing the first emoji found in the given string and
+        the rest of the string (minus an optional separator between the two).
+        """
+    
+        if not _contains_special_chars(text):
+            # If the string only contains basic alphanumerical chars and/or
+            # underscores, hyphen & whitespaces, then it's guaranteed that there
+            # is no emoji in the string.
+            return "", text
+    
+>       from streamlit.emojis import EMOJI_EXTRACTION_REGEX
+E       ModuleNotFoundError: No module named 'streamlit.emojis'; 'streamlit' is not a package
+
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:146: ModuleNotFoundError
+---------------------------- Captured stderr setup ----------------------------
+2026-11-06 13:44:49.276 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.276 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.276 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.276 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.276 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.276 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.276 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.276 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.276 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+__ ERROR at setup of test_round_two_re_runs_the_chain_on_recomputed_reports ___
+
+    @pytest.fixture()
+    def app_module():
+        """``t2pw.app.streamlit_app`` with ``streamlit`` stubbed, as the rag tests do.
+    
+        The module executes a Streamlit script at import, so ``streamlit`` is replaced by a
+        MagicMock exactly the way ``tests/test_rag_triage_orchestration.py`` does it. Only
+        the module-level helpers are exercised here; the script body is exercised through
+        the real ``AppTest`` below.
+        """
+    
+        from unittest.mock import MagicMock
+    
+        saved = {n: sys.modules[n] for n in list(sys.modules)
+                 if n == "streamlit" or n.startswith("streamlit.")}
+        if not isinstance(sys.modules.get("streamlit"), types.ModuleType) or hasattr(
+            sys.modules.get("streamlit"), "__path__"
+        ):
+            for name in list(saved):
+                sys.modules.pop(name, None)
+        stub = MagicMock(name="streamlit")
+        stub.columns.side_effect = lambda spec=1, **_: [
+            MagicMock() for _ in range(spec if isinstance(spec, int) else len(spec))
+        ]
+        stub.tabs.side_effect = lambda labels, **_: [MagicMock() for _ in labels]
+        stub.form_submit_button.return_value = False
+        stub.checkbox.return_value = False
+        stub.session_state = MagicMock()
+        stub.session_state.get.return_value = None
+        stub.session_state.__contains__ = lambda _s, _k: False
+        sys.modules["streamlit"] = stub
+        sys.modules.pop("t2pw.app.streamlit_app", None)
+        # R1: ``run_quarantine_boundary`` now lives here and binds ``st`` at import, so it
+        # must be re-imported under the stub for its session_state writes to reach it.
+        sys.modules.pop("t2pw.service.postpipeline", None)
+        sys.modules.pop("t2pw.service.rag_orchestration", None)  # R2: same, for the moved RAG code
+        before = set(sys.modules)
+>       import t2pw.app.streamlit_app as app  # noqa: PLC0415
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_c055_rag_loop_wiring.py:252: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\t2pw\app\streamlit_app.py:3648: in <module>
+    render_reaction_evidence()
+src\t2pw\app\reaction_evidence_view.py:102: in render_reaction_evidence
+    st.info(f"Reaction Evidence could not be rendered: {exc}")
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\metrics_util.py:628: in wrapped_func
+    result = non_optional_func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:365: in info
+    processed_body, processed_icon = _process_alert_body_and_icon(body, icon)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:51: in _process_alert_body_and_icon
+    extracted_icon, remaining_body = extract_leading_icon(cleaned_body)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:193: in extract_leading_icon
+    return extract_leading_emoji(text)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+text = "Reaction Evidence could not be rendered: No module named 'streamlit.runtime'; 'streamlit' is not a package"
+
+    def extract_leading_emoji(text: str) -> tuple[str, str]:
+        """Return a tuple containing the first emoji found in the given string and
+        the rest of the string (minus an optional separator between the two).
+        """
+    
+        if not _contains_special_chars(text):
+            # If the string only contains basic alphanumerical chars and/or
+            # underscores, hyphen & whitespaces, then it's guaranteed that there
+            # is no emoji in the string.
+            return "", text
+    
+>       from streamlit.emojis import EMOJI_EXTRACTION_REGEX
+E       ModuleNotFoundError: No module named 'streamlit.emojis'; 'streamlit' is not a package
+
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:146: ModuleNotFoundError
+---------------------------- Captured stderr setup ----------------------------
+2026-11-06 13:44:49.352 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.352 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.352 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.352 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.352 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.352 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.352 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.352 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.352 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+______ ERROR at setup of test_the_app_contains_no_hand_rolled_round_loop ______
+
+    @pytest.fixture()
+    def app_module():
+        """``t2pw.app.streamlit_app`` with ``streamlit`` stubbed, as the rag tests do.
+    
+        The module executes a Streamlit script at import, so ``streamlit`` is replaced by a
+        MagicMock exactly the way ``tests/test_rag_triage_orchestration.py`` does it. Only
+        the module-level helpers are exercised here; the script body is exercised through
+        the real ``AppTest`` below.
+        """
+    
+        from unittest.mock import MagicMock
+    
+        saved = {n: sys.modules[n] for n in list(sys.modules)
+                 if n == "streamlit" or n.startswith("streamlit.")}
+        if not isinstance(sys.modules.get("streamlit"), types.ModuleType) or hasattr(
+            sys.modules.get("streamlit"), "__path__"
+        ):
+            for name in list(saved):
+                sys.modules.pop(name, None)
+        stub = MagicMock(name="streamlit")
+        stub.columns.side_effect = lambda spec=1, **_: [
+            MagicMock() for _ in range(spec if isinstance(spec, int) else len(spec))
+        ]
+        stub.tabs.side_effect = lambda labels, **_: [MagicMock() for _ in labels]
+        stub.form_submit_button.return_value = False
+        stub.checkbox.return_value = False
+        stub.session_state = MagicMock()
+        stub.session_state.get.return_value = None
+        stub.session_state.__contains__ = lambda _s, _k: False
+        sys.modules["streamlit"] = stub
+        sys.modules.pop("t2pw.app.streamlit_app", None)
+        # R1: ``run_quarantine_boundary`` now lives here and binds ``st`` at import, so it
+        # must be re-imported under the stub for its session_state writes to reach it.
+        sys.modules.pop("t2pw.service.postpipeline", None)
+        sys.modules.pop("t2pw.service.rag_orchestration", None)  # R2: same, for the moved RAG code
+        before = set(sys.modules)
+>       import t2pw.app.streamlit_app as app  # noqa: PLC0415
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_c055_rag_loop_wiring.py:252: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\t2pw\app\streamlit_app.py:3648: in <module>
+    render_reaction_evidence()
+src\t2pw\app\reaction_evidence_view.py:102: in render_reaction_evidence
+    st.info(f"Reaction Evidence could not be rendered: {exc}")
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\metrics_util.py:628: in wrapped_func
+    result = non_optional_func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:365: in info
+    processed_body, processed_icon = _process_alert_body_and_icon(body, icon)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:51: in _process_alert_body_and_icon
+    extracted_icon, remaining_body = extract_leading_icon(cleaned_body)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:193: in extract_leading_icon
+    return extract_leading_emoji(text)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+text = "Reaction Evidence could not be rendered: No module named 'streamlit.runtime'; 'streamlit' is not a package"
+
+    def extract_leading_emoji(text: str) -> tuple[str, str]:
+        """Return a tuple containing the first emoji found in the given string and
+        the rest of the string (minus an optional separator between the two).
+        """
+    
+        if not _contains_special_chars(text):
+            # If the string only contains basic alphanumerical chars and/or
+            # underscores, hyphen & whitespaces, then it's guaranteed that there
+            # is no emoji in the string.
+            return "", text
+    
+>       from streamlit.emojis import EMOJI_EXTRACTION_REGEX
+E       ModuleNotFoundError: No module named 'streamlit.emojis'; 'streamlit' is not a package
+
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:146: ModuleNotFoundError
+---------------------------- Captured stderr setup ----------------------------
+2026-11-06 13:44:49.422 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.422 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.422 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.422 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.422 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.422 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.422 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.422 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.422 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+_ ERROR at setup of test_a_failed_stage_aborts_the_round_and_keeps_its_checkpoint _
+
+    @pytest.fixture()
+    def app_module():
+        """``t2pw.app.streamlit_app`` with ``streamlit`` stubbed, as the rag tests do.
+    
+        The module executes a Streamlit script at import, so ``streamlit`` is replaced by a
+        MagicMock exactly the way ``tests/test_rag_triage_orchestration.py`` does it. Only
+        the module-level helpers are exercised here; the script body is exercised through
+        the real ``AppTest`` below.
+        """
+    
+        from unittest.mock import MagicMock
+    
+        saved = {n: sys.modules[n] for n in list(sys.modules)
+                 if n == "streamlit" or n.startswith("streamlit.")}
+        if not isinstance(sys.modules.get("streamlit"), types.ModuleType) or hasattr(
+            sys.modules.get("streamlit"), "__path__"
+        ):
+            for name in list(saved):
+                sys.modules.pop(name, None)
+        stub = MagicMock(name="streamlit")
+        stub.columns.side_effect = lambda spec=1, **_: [
+            MagicMock() for _ in range(spec if isinstance(spec, int) else len(spec))
+        ]
+        stub.tabs.side_effect = lambda labels, **_: [MagicMock() for _ in labels]
+        stub.form_submit_button.return_value = False
+        stub.checkbox.return_value = False
+        stub.session_state = MagicMock()
+        stub.session_state.get.return_value = None
+        stub.session_state.__contains__ = lambda _s, _k: False
+        sys.modules["streamlit"] = stub
+        sys.modules.pop("t2pw.app.streamlit_app", None)
+        # R1: ``run_quarantine_boundary`` now lives here and binds ``st`` at import, so it
+        # must be re-imported under the stub for its session_state writes to reach it.
+        sys.modules.pop("t2pw.service.postpipeline", None)
+        sys.modules.pop("t2pw.service.rag_orchestration", None)  # R2: same, for the moved RAG code
+        before = set(sys.modules)
+>       import t2pw.app.streamlit_app as app  # noqa: PLC0415
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_c055_rag_loop_wiring.py:252: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\t2pw\app\streamlit_app.py:3648: in <module>
+    render_reaction_evidence()
+src\t2pw\app\reaction_evidence_view.py:102: in render_reaction_evidence
+    st.info(f"Reaction Evidence could not be rendered: {exc}")
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\metrics_util.py:628: in wrapped_func
+    result = non_optional_func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:365: in info
+    processed_body, processed_icon = _process_alert_body_and_icon(body, icon)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:51: in _process_alert_body_and_icon
+    extracted_icon, remaining_body = extract_leading_icon(cleaned_body)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:193: in extract_leading_icon
+    return extract_leading_emoji(text)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+text = "Reaction Evidence could not be rendered: No module named 'streamlit.runtime'; 'streamlit' is not a package"
+
+    def extract_leading_emoji(text: str) -> tuple[str, str]:
+        """Return a tuple containing the first emoji found in the given string and
+        the rest of the string (minus an optional separator between the two).
+        """
+    
+        if not _contains_special_chars(text):
+            # If the string only contains basic alphanumerical chars and/or
+            # underscores, hyphen & whitespaces, then it's guaranteed that there
+            # is no emoji in the string.
+            return "", text
+    
+>       from streamlit.emojis import EMOJI_EXTRACTION_REGEX
+E       ModuleNotFoundError: No module named 'streamlit.emojis'; 'streamlit' is not a package
+
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:146: ModuleNotFoundError
+---------------------------- Captured stderr setup ----------------------------
+2026-11-06 13:44:49.493 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.493 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.493 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.493 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.493 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.493 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.493 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.493 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.493 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+____ ERROR at setup of test_a_budget_that_cannot_afford_a_round_runs_none _____
+
+    @pytest.fixture()
+    def app_module():
+        """``t2pw.app.streamlit_app`` with ``streamlit`` stubbed, as the rag tests do.
+    
+        The module executes a Streamlit script at import, so ``streamlit`` is replaced by a
+        MagicMock exactly the way ``tests/test_rag_triage_orchestration.py`` does it. Only
+        the module-level helpers are exercised here; the script body is exercised through
+        the real ``AppTest`` below.
+        """
+    
+        from unittest.mock import MagicMock
+    
+        saved = {n: sys.modules[n] for n in list(sys.modules)
+                 if n == "streamlit" or n.startswith("streamlit.")}
+        if not isinstance(sys.modules.get("streamlit"), types.ModuleType) or hasattr(
+            sys.modules.get("streamlit"), "__path__"
+        ):
+            for name in list(saved):
+                sys.modules.pop(name, None)
+        stub = MagicMock(name="streamlit")
+        stub.columns.side_effect = lambda spec=1, **_: [
+            MagicMock() for _ in range(spec if isinstance(spec, int) else len(spec))
+        ]
+        stub.tabs.side_effect = lambda labels, **_: [MagicMock() for _ in labels]
+        stub.form_submit_button.return_value = False
+        stub.checkbox.return_value = False
+        stub.session_state = MagicMock()
+        stub.session_state.get.return_value = None
+        stub.session_state.__contains__ = lambda _s, _k: False
+        sys.modules["streamlit"] = stub
+        sys.modules.pop("t2pw.app.streamlit_app", None)
+        # R1: ``run_quarantine_boundary`` now lives here and binds ``st`` at import, so it
+        # must be re-imported under the stub for its session_state writes to reach it.
+        sys.modules.pop("t2pw.service.postpipeline", None)
+        sys.modules.pop("t2pw.service.rag_orchestration", None)  # R2: same, for the moved RAG code
+        before = set(sys.modules)
+>       import t2pw.app.streamlit_app as app  # noqa: PLC0415
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_c055_rag_loop_wiring.py:252: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\t2pw\app\streamlit_app.py:3648: in <module>
+    render_reaction_evidence()
+src\t2pw\app\reaction_evidence_view.py:102: in render_reaction_evidence
+    st.info(f"Reaction Evidence could not be rendered: {exc}")
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\metrics_util.py:628: in wrapped_func
+    result = non_optional_func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:365: in info
+    processed_body, processed_icon = _process_alert_body_and_icon(body, icon)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:51: in _process_alert_body_and_icon
+    extracted_icon, remaining_body = extract_leading_icon(cleaned_body)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:193: in extract_leading_icon
+    return extract_leading_emoji(text)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+text = "Reaction Evidence could not be rendered: No module named 'streamlit.runtime'; 'streamlit' is not a package"
+
+    def extract_leading_emoji(text: str) -> tuple[str, str]:
+        """Return a tuple containing the first emoji found in the given string and
+        the rest of the string (minus an optional separator between the two).
+        """
+    
+        if not _contains_special_chars(text):
+            # If the string only contains basic alphanumerical chars and/or
+            # underscores, hyphen & whitespaces, then it's guaranteed that there
+            # is no emoji in the string.
+            return "", text
+    
+>       from streamlit.emojis import EMOJI_EXTRACTION_REGEX
+E       ModuleNotFoundError: No module named 'streamlit.emojis'; 'streamlit' is not a package
+
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:146: ModuleNotFoundError
+---------------------------- Captured stderr setup ----------------------------
+2026-11-06 13:44:49.563 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.563 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.564 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.564 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.564 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.564 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.564 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.564 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.564 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+_ ERROR at setup of test_a_refused_delta_does_not_advance_the_graph_and_says_which_rule _
+
+    @pytest.fixture()
+    def app_module():
+        """``t2pw.app.streamlit_app`` with ``streamlit`` stubbed, as the rag tests do.
+    
+        The module executes a Streamlit script at import, so ``streamlit`` is replaced by a
+        MagicMock exactly the way ``tests/test_rag_triage_orchestration.py`` does it. Only
+        the module-level helpers are exercised here; the script body is exercised through
+        the real ``AppTest`` below.
+        """
+    
+        from unittest.mock import MagicMock
+    
+        saved = {n: sys.modules[n] for n in list(sys.modules)
+                 if n == "streamlit" or n.startswith("streamlit.")}
+        if not isinstance(sys.modules.get("streamlit"), types.ModuleType) or hasattr(
+            sys.modules.get("streamlit"), "__path__"
+        ):
+            for name in list(saved):
+                sys.modules.pop(name, None)
+        stub = MagicMock(name="streamlit")
+        stub.columns.side_effect = lambda spec=1, **_: [
+            MagicMock() for _ in range(spec if isinstance(spec, int) else len(spec))
+        ]
+        stub.tabs.side_effect = lambda labels, **_: [MagicMock() for _ in labels]
+        stub.form_submit_button.return_value = False
+        stub.checkbox.return_value = False
+        stub.session_state = MagicMock()
+        stub.session_state.get.return_value = None
+        stub.session_state.__contains__ = lambda _s, _k: False
+        sys.modules["streamlit"] = stub
+        sys.modules.pop("t2pw.app.streamlit_app", None)
+        # R1: ``run_quarantine_boundary`` now lives here and binds ``st`` at import, so it
+        # must be re-imported under the stub for its session_state writes to reach it.
+        sys.modules.pop("t2pw.service.postpipeline", None)
+        sys.modules.pop("t2pw.service.rag_orchestration", None)  # R2: same, for the moved RAG code
+        before = set(sys.modules)
+>       import t2pw.app.streamlit_app as app  # noqa: PLC0415
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_c055_rag_loop_wiring.py:252: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\t2pw\app\streamlit_app.py:3648: in <module>
+    render_reaction_evidence()
+src\t2pw\app\reaction_evidence_view.py:102: in render_reaction_evidence
+    st.info(f"Reaction Evidence could not be rendered: {exc}")
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\metrics_util.py:628: in wrapped_func
+    result = non_optional_func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:365: in info
+    processed_body, processed_icon = _process_alert_body_and_icon(body, icon)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:51: in _process_alert_body_and_icon
+    extracted_icon, remaining_body = extract_leading_icon(cleaned_body)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:193: in extract_leading_icon
+    return extract_leading_emoji(text)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+text = "Reaction Evidence could not be rendered: No module named 'streamlit.runtime'; 'streamlit' is not a package"
+
+    def extract_leading_emoji(text: str) -> tuple[str, str]:
+        """Return a tuple containing the first emoji found in the given string and
+        the rest of the string (minus an optional separator between the two).
+        """
+    
+        if not _contains_special_chars(text):
+            # If the string only contains basic alphanumerical chars and/or
+            # underscores, hyphen & whitespaces, then it's guaranteed that there
+            # is no emoji in the string.
+            return "", text
+    
+>       from streamlit.emojis import EMOJI_EXTRACTION_REGEX
+E       ModuleNotFoundError: No module named 'streamlit.emojis'; 'streamlit' is not a package
+
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:146: ModuleNotFoundError
+---------------------------- Captured stderr setup ----------------------------
+2026-11-06 13:44:49.636 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.636 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.637 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.637 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.637 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.637 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.637 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.637 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.637 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+_ ERROR at setup of test_per_round_mapping_never_writes_the_authoritative_cache _
+
+    @pytest.fixture()
+    def app_module():
+        """``t2pw.app.streamlit_app`` with ``streamlit`` stubbed, as the rag tests do.
+    
+        The module executes a Streamlit script at import, so ``streamlit`` is replaced by a
+        MagicMock exactly the way ``tests/test_rag_triage_orchestration.py`` does it. Only
+        the module-level helpers are exercised here; the script body is exercised through
+        the real ``AppTest`` below.
+        """
+    
+        from unittest.mock import MagicMock
+    
+        saved = {n: sys.modules[n] for n in list(sys.modules)
+                 if n == "streamlit" or n.startswith("streamlit.")}
+        if not isinstance(sys.modules.get("streamlit"), types.ModuleType) or hasattr(
+            sys.modules.get("streamlit"), "__path__"
+        ):
+            for name in list(saved):
+                sys.modules.pop(name, None)
+        stub = MagicMock(name="streamlit")
+        stub.columns.side_effect = lambda spec=1, **_: [
+            MagicMock() for _ in range(spec if isinstance(spec, int) else len(spec))
+        ]
+        stub.tabs.side_effect = lambda labels, **_: [MagicMock() for _ in labels]
+        stub.form_submit_button.return_value = False
+        stub.checkbox.return_value = False
+        stub.session_state = MagicMock()
+        stub.session_state.get.return_value = None
+        stub.session_state.__contains__ = lambda _s, _k: False
+        sys.modules["streamlit"] = stub
+        sys.modules.pop("t2pw.app.streamlit_app", None)
+        # R1: ``run_quarantine_boundary`` now lives here and binds ``st`` at import, so it
+        # must be re-imported under the stub for its session_state writes to reach it.
+        sys.modules.pop("t2pw.service.postpipeline", None)
+        sys.modules.pop("t2pw.service.rag_orchestration", None)  # R2: same, for the moved RAG code
+        before = set(sys.modules)
+>       import t2pw.app.streamlit_app as app  # noqa: PLC0415
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_c055_rag_loop_wiring.py:252: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\t2pw\app\streamlit_app.py:3648: in <module>
+    render_reaction_evidence()
+src\t2pw\app\reaction_evidence_view.py:102: in render_reaction_evidence
+    st.info(f"Reaction Evidence could not be rendered: {exc}")
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\metrics_util.py:628: in wrapped_func
+    result = non_optional_func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:365: in info
+    processed_body, processed_icon = _process_alert_body_and_icon(body, icon)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:51: in _process_alert_body_and_icon
+    extracted_icon, remaining_body = extract_leading_icon(cleaned_body)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:193: in extract_leading_icon
+    return extract_leading_emoji(text)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+text = "Reaction Evidence could not be rendered: No module named 'streamlit.runtime'; 'streamlit' is not a package"
+
+    def extract_leading_emoji(text: str) -> tuple[str, str]:
+        """Return a tuple containing the first emoji found in the given string and
+        the rest of the string (minus an optional separator between the two).
+        """
+    
+        if not _contains_special_chars(text):
+            # If the string only contains basic alphanumerical chars and/or
+            # underscores, hyphen & whitespaces, then it's guaranteed that there
+            # is no emoji in the string.
+            return "", text
+    
+>       from streamlit.emojis import EMOJI_EXTRACTION_REGEX
+E       ModuleNotFoundError: No module named 'streamlit.emojis'; 'streamlit' is not a package
+
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:146: ModuleNotFoundError
+---------------------------- Captured stderr setup ----------------------------
+2026-11-06 13:44:49.709 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.709 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.709 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.709 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.709 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.709 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.709 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.709 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.709 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+_ ERROR at setup of test_per_round_persistence_never_writes_the_protected_scratch_files _
+
+    @pytest.fixture()
+    def app_module():
+        """``t2pw.app.streamlit_app`` with ``streamlit`` stubbed, as the rag tests do.
+    
+        The module executes a Streamlit script at import, so ``streamlit`` is replaced by a
+        MagicMock exactly the way ``tests/test_rag_triage_orchestration.py`` does it. Only
+        the module-level helpers are exercised here; the script body is exercised through
+        the real ``AppTest`` below.
+        """
+    
+        from unittest.mock import MagicMock
+    
+        saved = {n: sys.modules[n] for n in list(sys.modules)
+                 if n == "streamlit" or n.startswith("streamlit.")}
+        if not isinstance(sys.modules.get("streamlit"), types.ModuleType) or hasattr(
+            sys.modules.get("streamlit"), "__path__"
+        ):
+            for name in list(saved):
+                sys.modules.pop(name, None)
+        stub = MagicMock(name="streamlit")
+        stub.columns.side_effect = lambda spec=1, **_: [
+            MagicMock() for _ in range(spec if isinstance(spec, int) else len(spec))
+        ]
+        stub.tabs.side_effect = lambda labels, **_: [MagicMock() for _ in labels]
+        stub.form_submit_button.return_value = False
+        stub.checkbox.return_value = False
+        stub.session_state = MagicMock()
+        stub.session_state.get.return_value = None
+        stub.session_state.__contains__ = lambda _s, _k: False
+        sys.modules["streamlit"] = stub
+        sys.modules.pop("t2pw.app.streamlit_app", None)
+        # R1: ``run_quarantine_boundary`` now lives here and binds ``st`` at import, so it
+        # must be re-imported under the stub for its session_state writes to reach it.
+        sys.modules.pop("t2pw.service.postpipeline", None)
+        sys.modules.pop("t2pw.service.rag_orchestration", None)  # R2: same, for the moved RAG code
+        before = set(sys.modules)
+>       import t2pw.app.streamlit_app as app  # noqa: PLC0415
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_c055_rag_loop_wiring.py:252: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\t2pw\app\streamlit_app.py:3648: in <module>
+    render_reaction_evidence()
+src\t2pw\app\reaction_evidence_view.py:102: in render_reaction_evidence
+    st.info(f"Reaction Evidence could not be rendered: {exc}")
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\metrics_util.py:628: in wrapped_func
+    result = non_optional_func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:365: in info
+    processed_body, processed_icon = _process_alert_body_and_icon(body, icon)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:51: in _process_alert_body_and_icon
+    extracted_icon, remaining_body = extract_leading_icon(cleaned_body)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:193: in extract_leading_icon
+    return extract_leading_emoji(text)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+text = "Reaction Evidence could not be rendered: No module named 'streamlit.runtime'; 'streamlit' is not a package"
+
+    def extract_leading_emoji(text: str) -> tuple[str, str]:
+        """Return a tuple containing the first emoji found in the given string and
+        the rest of the string (minus an optional separator between the two).
+        """
+    
+        if not _contains_special_chars(text):
+            # If the string only contains basic alphanumerical chars and/or
+            # underscores, hyphen & whitespaces, then it's guaranteed that there
+            # is no emoji in the string.
+            return "", text
+    
+>       from streamlit.emojis import EMOJI_EXTRACTION_REGEX
+E       ModuleNotFoundError: No module named 'streamlit.emojis'; 'streamlit' is not a package
+
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:146: ModuleNotFoundError
+---------------------------- Captured stderr setup ----------------------------
+2026-11-06 13:44:49.782 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.782 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.782 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.782 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.782 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.782 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.782 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.782 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.782 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+___ ERROR at setup of test_the_loop_record_touches_no_refinement_state_key ____
+
+    @pytest.fixture()
+    def app_module():
+        """``t2pw.app.streamlit_app`` with ``streamlit`` stubbed, as the rag tests do.
+    
+        The module executes a Streamlit script at import, so ``streamlit`` is replaced by a
+        MagicMock exactly the way ``tests/test_rag_triage_orchestration.py`` does it. Only
+        the module-level helpers are exercised here; the script body is exercised through
+        the real ``AppTest`` below.
+        """
+    
+        from unittest.mock import MagicMock
+    
+        saved = {n: sys.modules[n] for n in list(sys.modules)
+                 if n == "streamlit" or n.startswith("streamlit.")}
+        if not isinstance(sys.modules.get("streamlit"), types.ModuleType) or hasattr(
+            sys.modules.get("streamlit"), "__path__"
+        ):
+            for name in list(saved):
+                sys.modules.pop(name, None)
+        stub = MagicMock(name="streamlit")
+        stub.columns.side_effect = lambda spec=1, **_: [
+            MagicMock() for _ in range(spec if isinstance(spec, int) else len(spec))
+        ]
+        stub.tabs.side_effect = lambda labels, **_: [MagicMock() for _ in labels]
+        stub.form_submit_button.return_value = False
+        stub.checkbox.return_value = False
+        stub.session_state = MagicMock()
+        stub.session_state.get.return_value = None
+        stub.session_state.__contains__ = lambda _s, _k: False
+        sys.modules["streamlit"] = stub
+        sys.modules.pop("t2pw.app.streamlit_app", None)
+        # R1: ``run_quarantine_boundary`` now lives here and binds ``st`` at import, so it
+        # must be re-imported under the stub for its session_state writes to reach it.
+        sys.modules.pop("t2pw.service.postpipeline", None)
+        sys.modules.pop("t2pw.service.rag_orchestration", None)  # R2: same, for the moved RAG code
+        before = set(sys.modules)
+>       import t2pw.app.streamlit_app as app  # noqa: PLC0415
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_c055_rag_loop_wiring.py:252: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\t2pw\app\streamlit_app.py:3648: in <module>
+    render_reaction_evidence()
+src\t2pw\app\reaction_evidence_view.py:102: in render_reaction_evidence
+    st.info(f"Reaction Evidence could not be rendered: {exc}")
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\metrics_util.py:628: in wrapped_func
+    result = non_optional_func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:365: in info
+    processed_body, processed_icon = _process_alert_body_and_icon(body, icon)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:51: in _process_alert_body_and_icon
+    extracted_icon, remaining_body = extract_leading_icon(cleaned_body)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:193: in extract_leading_icon
+    return extract_leading_emoji(text)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+text = "Reaction Evidence could not be rendered: No module named 'streamlit.runtime'; 'streamlit' is not a package"
+
+    def extract_leading_emoji(text: str) -> tuple[str, str]:
+        """Return a tuple containing the first emoji found in the given string and
+        the rest of the string (minus an optional separator between the two).
+        """
+    
+        if not _contains_special_chars(text):
+            # If the string only contains basic alphanumerical chars and/or
+            # underscores, hyphen & whitespaces, then it's guaranteed that there
+            # is no emoji in the string.
+            return "", text
+    
+>       from streamlit.emojis import EMOJI_EXTRACTION_REGEX
+E       ModuleNotFoundError: No module named 'streamlit.emojis'; 'streamlit' is not a package
+
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:146: ModuleNotFoundError
+---------------------------- Captured stderr setup ----------------------------
+2026-11-06 13:44:49.858 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.858 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.858 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.858 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.858 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.858 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.858 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.858 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.858 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+_ ERROR at setup of test_the_round_leaves_the_quarantine_boundary_session_record_untouched _
+
+    @pytest.fixture()
+    def app_module():
+        """``t2pw.app.streamlit_app`` with ``streamlit`` stubbed, as the rag tests do.
+    
+        The module executes a Streamlit script at import, so ``streamlit`` is replaced by a
+        MagicMock exactly the way ``tests/test_rag_triage_orchestration.py`` does it. Only
+        the module-level helpers are exercised here; the script body is exercised through
+        the real ``AppTest`` below.
+        """
+    
+        from unittest.mock import MagicMock
+    
+        saved = {n: sys.modules[n] for n in list(sys.modules)
+                 if n == "streamlit" or n.startswith("streamlit.")}
+        if not isinstance(sys.modules.get("streamlit"), types.ModuleType) or hasattr(
+            sys.modules.get("streamlit"), "__path__"
+        ):
+            for name in list(saved):
+                sys.modules.pop(name, None)
+        stub = MagicMock(name="streamlit")
+        stub.columns.side_effect = lambda spec=1, **_: [
+            MagicMock() for _ in range(spec if isinstance(spec, int) else len(spec))
+        ]
+        stub.tabs.side_effect = lambda labels, **_: [MagicMock() for _ in labels]
+        stub.form_submit_button.return_value = False
+        stub.checkbox.return_value = False
+        stub.session_state = MagicMock()
+        stub.session_state.get.return_value = None
+        stub.session_state.__contains__ = lambda _s, _k: False
+        sys.modules["streamlit"] = stub
+        sys.modules.pop("t2pw.app.streamlit_app", None)
+        # R1: ``run_quarantine_boundary`` now lives here and binds ``st`` at import, so it
+        # must be re-imported under the stub for its session_state writes to reach it.
+        sys.modules.pop("t2pw.service.postpipeline", None)
+        sys.modules.pop("t2pw.service.rag_orchestration", None)  # R2: same, for the moved RAG code
+        before = set(sys.modules)
+>       import t2pw.app.streamlit_app as app  # noqa: PLC0415
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_c055_rag_loop_wiring.py:252: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\t2pw\app\streamlit_app.py:3648: in <module>
+    render_reaction_evidence()
+src\t2pw\app\reaction_evidence_view.py:102: in render_reaction_evidence
+    st.info(f"Reaction Evidence could not be rendered: {exc}")
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\metrics_util.py:628: in wrapped_func
+    result = non_optional_func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:365: in info
+    processed_body, processed_icon = _process_alert_body_and_icon(body, icon)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:51: in _process_alert_body_and_icon
+    extracted_icon, remaining_body = extract_leading_icon(cleaned_body)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:193: in extract_leading_icon
+    return extract_leading_emoji(text)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+text = "Reaction Evidence could not be rendered: No module named 'streamlit.runtime'; 'streamlit' is not a package"
+
+    def extract_leading_emoji(text: str) -> tuple[str, str]:
+        """Return a tuple containing the first emoji found in the given string and
+        the rest of the string (minus an optional separator between the two).
+        """
+    
+        if not _contains_special_chars(text):
+            # If the string only contains basic alphanumerical chars and/or
+            # underscores, hyphen & whitespaces, then it's guaranteed that there
+            # is no emoji in the string.
+            return "", text
+    
+>       from streamlit.emojis import EMOJI_EXTRACTION_REGEX
+E       ModuleNotFoundError: No module named 'streamlit.emojis'; 'streamlit' is not a package
+
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:146: ModuleNotFoundError
+---------------------------- Captured stderr setup ----------------------------
+2026-11-06 13:44:49.935 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.935 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.935 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.935 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.935 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.935 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.935 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.935 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:49.935 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+________ ERROR at setup of test_the_default_round_budget_is_one_round _________
+
+    @pytest.fixture()
+    def app_module():
+        """``t2pw.app.streamlit_app`` with ``streamlit`` stubbed, as the rag tests do.
+    
+        The module executes a Streamlit script at import, so ``streamlit`` is replaced by a
+        MagicMock exactly the way ``tests/test_rag_triage_orchestration.py`` does it. Only
+        the module-level helpers are exercised here; the script body is exercised through
+        the real ``AppTest`` below.
+        """
+    
+        from unittest.mock import MagicMock
+    
+        saved = {n: sys.modules[n] for n in list(sys.modules)
+                 if n == "streamlit" or n.startswith("streamlit.")}
+        if not isinstance(sys.modules.get("streamlit"), types.ModuleType) or hasattr(
+            sys.modules.get("streamlit"), "__path__"
+        ):
+            for name in list(saved):
+                sys.modules.pop(name, None)
+        stub = MagicMock(name="streamlit")
+        stub.columns.side_effect = lambda spec=1, **_: [
+            MagicMock() for _ in range(spec if isinstance(spec, int) else len(spec))
+        ]
+        stub.tabs.side_effect = lambda labels, **_: [MagicMock() for _ in labels]
+        stub.form_submit_button.return_value = False
+        stub.checkbox.return_value = False
+        stub.session_state = MagicMock()
+        stub.session_state.get.return_value = None
+        stub.session_state.__contains__ = lambda _s, _k: False
+        sys.modules["streamlit"] = stub
+        sys.modules.pop("t2pw.app.streamlit_app", None)
+        # R1: ``run_quarantine_boundary`` now lives here and binds ``st`` at import, so it
+        # must be re-imported under the stub for its session_state writes to reach it.
+        sys.modules.pop("t2pw.service.postpipeline", None)
+        sys.modules.pop("t2pw.service.rag_orchestration", None)  # R2: same, for the moved RAG code
+        before = set(sys.modules)
+>       import t2pw.app.streamlit_app as app  # noqa: PLC0415
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_c055_rag_loop_wiring.py:252: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\t2pw\app\streamlit_app.py:3648: in <module>
+    render_reaction_evidence()
+src\t2pw\app\reaction_evidence_view.py:102: in render_reaction_evidence
+    st.info(f"Reaction Evidence could not be rendered: {exc}")
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\metrics_util.py:628: in wrapped_func
+    result = non_optional_func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:365: in info
+    processed_body, processed_icon = _process_alert_body_and_icon(body, icon)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\elements\alert.py:51: in _process_alert_body_and_icon
+    extracted_icon, remaining_body = extract_leading_icon(cleaned_body)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:193: in extract_leading_icon
+    return extract_leading_emoji(text)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+text = "Reaction Evidence could not be rendered: No module named 'streamlit.runtime'; 'streamlit' is not a package"
+
+    def extract_leading_emoji(text: str) -> tuple[str, str]:
+        """Return a tuple containing the first emoji found in the given string and
+        the rest of the string (minus an optional separator between the two).
+        """
+    
+        if not _contains_special_chars(text):
+            # If the string only contains basic alphanumerical chars and/or
+            # underscores, hyphen & whitespaces, then it's guaranteed that there
+            # is no emoji in the string.
+            return "", text
+    
+>       from streamlit.emojis import EMOJI_EXTRACTION_REGEX
+E       ModuleNotFoundError: No module named 'streamlit.emojis'; 'streamlit' is not a package
+
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\string_util.py:146: ModuleNotFoundError
+---------------------------- Captured stderr setup ----------------------------
+2026-11-06 13:44:50.008 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:50.008 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:50.008 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:50.008 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:50.008 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:50.008 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:50.008 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:50.008 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:50.008 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+================================== FAILURES ===================================
+_______ test_apptest_rag_on_runs_a_round_that_re_enters_all_five_stages _______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001EFEE8CDFD0>
+offline_stages = {'classification': [], 'gates': [], 'mapping': [], 'normalization': [], ...}
+
+    @pytest.mark.usefixtures("real_streamlit", "offline_pipeline", "offline_stages",
+                             "offline_rag_chain")
+    def test_apptest_rag_on_runs_a_round_that_re_enters_all_five_stages(monkeypatch, offline_stages):
+        """NEW acceptance, and this card's central test obligation.
+    
+        ``MASTER_PLAN.md:165`` makes AppTest-driven focused tests mandatory for the
+        ``streamlit_app.py`` script body, and at base NO test anywhere combined a real
+        ``streamlit.testing.v1.AppTest`` run with the RAG path. This drives the real app
+        script: paste text, click Run pipeline, and read what the real ``if submit:`` block
+        left in the real ``st.session_state``.
+        """
+    
+        at = _run_submit(monkeypatch, rag_enabled=True)
+    
+>       assert _app_exceptions(at) == []
+E       assert ["Bad request...ode': None}}"] == []
+E         
+E         Left contains one more item: 'Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or ...er page or use the \'lms load\' command.", \'type\': \'invalid_request_error\', \'param\': \'model\', \'code\': None}}'
+E         Use -v to get more diff
+
+tests\test_c055_rag_loop_wiring.py:928: AssertionError
+---------------------------- Captured stdout call -----------------------------
+\x1b[31m\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m \x1b[0m\x1b[1;31mTraceback \x1b[0m\x1b[1;2;31m(most recent call last)\x1b[0m\x1b[31m \x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\exec_code.py:136 in exec_func_with_error_handling               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\script_runner.py:837 in code_to_exec                            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\ws-R3c\\src\\t2pw\\app\\streamlit_app.py:3648 in <module>                           \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m3645 \x1b[0m\x1b[2m# directory can be reviewed with no run loaded. Presentation only.\x1b[0m            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m3646 \x1b[0m\x1b[94mfrom\x1b[0m\x1b[90m \x1b[0m\x1b[4;96mt2pw\x1b[0m\x1b[4;96m.\x1b[0m\x1b[4;96mapp\x1b[0m\x1b[4;96m.\x1b[0m\x1b[4;96mreaction_evidence_view\x1b[0m\x1b[90m \x1b[0m\x1b[94mimport\x1b[0m render_reaction_evidence  \x1b[2m# noqa:\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m3647 \x1b[0m                                                                              \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m3648 \x1b[1;4mrender_reaction_evidence()\x1b[0m                                                    \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m3649 \x1b[0m                                                                              \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\ws-R3c\\src\\t2pw\\app\\reaction_evidence_view.py:92 in render_reaction_evidence    \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 89 \x1b[0m                                                                               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 90 \x1b[0m                                                                               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 91 \x1b[0m\x1b[94mdef\x1b[0m\x1b[90m \x1b[0m\x1b[92mrender_reaction_evidence\x1b[0m() -> \x1b[94mNone\x1b[0m:                                        \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m 92 \x1b[2m\u2502   \x1b[0m\x1b[1;4mst.divider()\x1b[0m                                                               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 93 \x1b[0m\x1b[2m\u2502   \x1b[0mst.subheader(\x1b[33m"\x1b[0m\x1b[33mReaction Evidence\x1b[0m\x1b[33m"\x1b[0m)                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 94 \x1b[0m\x1b[2m\u2502   \x1b[0mst.caption(                                                                \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 95 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m\x1b[33m"\x1b[0m\x1b[33mRead-only review of what the run\x1b[0m\x1b[33m'\x1b[0m\x1b[33ms artifacts say the pathway contains\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\metrics_util.py:628 in wrapped_func                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m elements\\markdown.py:452 in divider                                                  \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m delta_generator.py:533 in _enqueue                                                   \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner_utils\\script_run_context.py:174 in get                          \x1b[31m \x1b[0m\n\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\n\x1b[1;91mRuntimeError: \x1b[0mFragmentThreadState not initialized \u2014 \x1b[1;35mScriptRunContext.reset\x1b[0m\x1b[1m(\x1b[0m\x1b[1m)\x1b[0m or \n\x1b[1;35madd_script_run_ctx\x1b[0m\x1b[1m(\x1b[0m\x1b[1m)\x1b[0m must be called on this thread first.\n\x1b[31m\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m \x1b[0m\x1b[1;31mTraceback \x1b[0m\x1b[1;2;31m(most recent call last)\x1b[0m\x1b[31m \x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\x1b[0m\n\x1b[31m \x1b[0m C:\\t\\ws-R3c\\src\\t2pw\\llm\\client.py:747 in chat_detailed                              \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 744 \x1b[0m\x1b[2m\u2502   \x1b[0m                                                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 745 \x1b[0m\x1b[2m\u2502   \x1b[0m\x1b[94mfor\x1b[0m attempt \x1b[95min\x1b[0m \x1b[96mrange\x1b[0m(max_retries):                                        \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 746 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m\x1b[94mtry\x1b[0m:                                                                  \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m 747 \x1b[2m\u2502   \u2502   \u2502   \x1b[0mresp = _client.chat.completions.create(**kwargs)                  \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 748 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \x1b[0m_record_usage(resp)                                               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 749 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \x1b[0mtime.sleep(spacing)                                               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 750 \x1b[0m                                                                              \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\openai\\_ut \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m ils\\_utils.py:298 in wrapper                                                         \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m295 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \u2502   \u2502   \x1b[0m\x1b[94melse\x1b[0m:                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m296 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \u2502   \u2502   \u2502   \x1b[0mmsg = \x1b[33mf\x1b[0m\x1b[33m"\x1b[0m\x1b[33mMissing required argument: \x1b[0m\x1b[33m{\x1b[0mquote(missing[\x1b[94m0\x1b[0m])\x1b[33m}\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m297 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \u2502   \x1b[0m\x1b[94mraise\x1b[0m \x1b[96mTypeError\x1b[0m(msg)                                           \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m298 \x1b[2m\u2502   \u2502   \u2502   \x1b[0m\x1b[94mreturn\x1b[0m \x1b[1;4mfunc(*args, **kwargs)\x1b[0m                                       \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m299 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m                                                                       \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m300 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m\x1b[94mreturn\x1b[0m wrapper  \x1b[2m# type: ignore\x1b[0m                                         \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m301 \x1b[0m                                                                               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\openai\\res \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m ources\\chat\\completions\\completions.py:1296 in create                                \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1293 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0mtimeout: \x1b[96mfloat\x1b[0m | httpx2.Timeout | \x1b[94mNone\x1b[0m | NotGiven = not_given,        \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1294 \x1b[0m\x1b[2m\u2502   \x1b[0m) -> ChatCompletion | Stream[ChatCompletionChunk]:                        \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1295 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0mvalidate_response_format(response_format)                             \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m1296 \x1b[2m\u2502   \u2502   \x1b[0m\x1b[94mreturn\x1b[0m \x1b[1;4;96mself\x1b[0m\x1b[1;4m._post(\x1b[0m                                                    \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1297 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4;33m/chat/completions\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4m,\x1b[0m                                              \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1298 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \x1b[0m\x1b[1;4mbody=maybe_transform(\x1b[0m                                             \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1299 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \u2502   \x1b[0m\x1b[1;4m{\x1b[0m                                                             \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\openai\\_ba \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m se_client.py:1381 in post                                                            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1378 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0mopts = FinalRequestOptions.construct(                                 \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1379 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \x1b[0mmethod=\x1b[33m"\x1b[0m\x1b[33mpost\x1b[0m\x1b[33m"\x1b[0m, url=path, json_data=body, content=content, files=t \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1380 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m)                                                                     \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m1381 \x1b[2m\u2502   \u2502   \x1b[0m\x1b[94mreturn\x1b[0m cast(ResponseT, \x1b[1;4;96mself\x1b[0m\x1b[1;4m.request(cast_to, opts, stream=stream, str\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1382 \x1b[0m\x1b[2m\u2502   \x1b[0m                                                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1383 \x1b[0m\x1b[2m\u2502   \x1b[0m\x1b[94mdef\x1b[0m\x1b[90m \x1b[0m\x1b[92mpatch\x1b[0m(                                                                \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1384 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m\x1b[96mself\x1b[0m,                                                                 \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\openai\\_ba \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m se_client.py:1154 in request                                                         \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1151 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \u2502   \u2502   \x1b[0merr.response.read()                                       \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1152 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \u2502   \x1b[0m                                                              \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1153 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \u2502   \x1b[0mlog.debug(\x1b[33m"\x1b[0m\x1b[33mRe-raising status error\x1b[0m\x1b[33m"\x1b[0m)                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m1154 \x1b[2m\u2502   \u2502   \u2502   \u2502   \x1b[0m\x1b[1;4;94mraise\x1b[0m\x1b[1;4m \x1b[0m\x1b[1;4;96mself\x1b[0m\x1b[1;4m._make_status_error_from_response(err.response) \x1b[0m\x1b[1;4;94mfro\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1155 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \x1b[0m                                                                  \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1156 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \x1b[0m\x1b[94mbreak\x1b[0m                                                             \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1157 \x1b[0m                                                                              \x1b[31m \x1b[0m\n\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\n\x1b[1;91mBadRequestError: \x1b[0mError code: \x1b[1;36m400\x1b[0m - \x1b[1m{\x1b[0m\x1b[32m'error'\x1b[0m: \x1b[1m{\x1b[0m\x1b[32m'message'\x1b[0m: \x1b[32m"No models loaded. Please load \x1b[0m\n\x1b[32ma model in the developer page or use the 'lms load' command."\x1b[0m, \x1b[32m'type'\x1b[0m: \n\x1b[32m'invalid_request_error'\x1b[0m, \x1b[32m'param'\x1b[0m: \x1b[32m'model'\x1b[0m, \x1b[32m'code'\x1b[0m: \x1b[3;35mNone\x1b[0m\x1b[1m}\x1b[0m\x1b[1m}\x1b[0m\n\n\x1b[3mThe above exception was the direct cause of the following exception:\x1b[0m\n\n\x1b[31m\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m \x1b[0m\x1b[1;31mTraceback \x1b[0m\x1b[1;2;31m(most recent call last)\x1b[0m\x1b[31m \x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\exec_code.py:136 in exec_func_with_error_handling               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\script_runner.py:837 in code_to_exec                            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\ws-R3c\\src\\t2pw\\app\\streamlit_app.py:1907 in <module>                           \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1904 \x1b[0m\x1b[2m\u2502   \x1b[0m\x1b[2m# R3c: Stage 1 lives in t2pw.service.extraction.run_stage_one: the extrac\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1905 \x1b[0m\x1b[2m\u2502   \x1b[0m\x1b[2m# its boundary, the three failure exits (each returned, the app stops), t\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1906 \x1b[0m\x1b[2m\u2502   \x1b[0m\x1b[2m# out-of-scope filter and the RAG seed with its user_task_context fold.\x1b[0m   \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m1907 \x1b[2m\u2502   \x1b[0m_stage_one = \x1b[1;4mrun_stage_one(\x1b[0m                                               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1908 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m\x1b[1;4mtext,\x1b[0m                                                                 \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1909 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m\x1b[1;4mpathway_context=pathway_context,\x1b[0m                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1910 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m\x1b[1;4muser_task_context=user_task_context,\x1b[0m                                  \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\ws-R3c\\src\\t2pw\\service\\extraction.py:611 in run_stage_one                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m608 \x1b[0m\x1b[2m\u2502   \x1b[0m\x1b[2m# Stage 1: strict extraction with auto-repair\x1b[0m                              \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m609 \x1b[0m\x1b[2m\u2502   \x1b[0m\x1b[94mtry\x1b[0m:                                                                       \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m610 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m\x1b[94mwith\x1b[0m reporter.spinner(\x1b[33m"\x1b[0m\x1b[33mRunning Stage 1 extraction...\x1b[0m\x1b[33m"\x1b[0m):                \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m611 \x1b[2m\u2502   \u2502   \u2502   \x1b[0mstage_one, chunk_details = _bound(                                 \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m612 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \u2502   \x1b[0mtext,                                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m613 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \u2502   \x1b[0mpathway_context=pathway_context,                               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m614 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \u2502   \x1b[0muser_task_context=user_task_context,                           \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\ws-R3c\\src\\t2pw\\pipeline\\pipeline.py:2747 in run_stage_one_with_chunking        \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m2744 \x1b[0m\x1b[2m\u2502   \x1b[0muse_chunks = enable_chunking \x1b[95mand\x1b[0m \x1b[96mlen\x1b[0m(words) > chunk_word_limit            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m2745 \x1b[0m\x1b[2m\u2502   \x1b[0m                                                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m2746 \x1b[0m\x1b[2m\u2502   \x1b[0m\x1b[94mif\x1b[0m \x1b[95mnot\x1b[0m use_chunks:                                                        \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m2747 \x1b[2m\u2502   \u2502   \x1b[0moutput, attempts = \x1b[1;4mrun_extraction_pipeline(\x1b[0m                           \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m2748 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \x1b[0m\x1b[1;4minput_text,\x1b[0m                                                       \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m2749 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \x1b[0m\x1b[1;4mpathway_context=pathway_context,\x1b[0m                                  \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m2750 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \x1b[0m\x1b[1;4muser_task_context=user_task_context,\x1b[0m                              \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\ws-R3c\\src\\t2pw\\pipeline\\pipeline.py:298 in run_extraction_pipeline             \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 295 \x1b[0m\x1b[2m\u2502   \x1b[0m                                                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 296 \x1b[0m\x1b[2m\u2502   \x1b[0mcount = extraction_draws(draws)                                           \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 297 \x1b[0m\x1b[2m\u2502   \x1b[0m\x1b[94mif\x1b[0m count == \x1b[94m1\x1b[0m:                                                            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m 298 \x1b[2m\u2502   \u2502   \x1b[0m\x1b[94mreturn\x1b[0m \x1b[1;4m_draw()\x1b[0m                                                        \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 299 \x1b[0m\x1b[2m\u2502   \x1b[0m\x1b[2m# The input text is the paper the draws read: D-104 makes it the merge's \x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 300 \x1b[0m\x1b[2m\u2502   \x1b[0m\x1b[94mreturn\x1b[0m run_ensemble(_draw, count, failure=PipelineFailure, paper_text=inp \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 301 \x1b[0m                                                                              \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\ws-R3c\\src\\t2pw\\pipeline\\pipeline.py:278 in _draw                               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 275 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0mmax_tokens = configured_max_tokens(\x1b[33m"\x1b[0m\x1b[33mOPENROUTER_EXTRACTION_MAX_TOKENS\x1b[0m\x1b[33m"\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 276 \x1b[0m\x1b[2m\u2502   \x1b[0m                                                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 277 \x1b[0m\x1b[2m\u2502   \x1b[0m\x1b[94mdef\x1b[0m\x1b[90m \x1b[0m\x1b[92m_draw\x1b[0m() -> Tuple[Dict[\x1b[96mstr\x1b[0m, Any], AttemptLogs]:                        \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m 278 \x1b[2m\u2502   \u2502   \x1b[0m\x1b[94mreturn\x1b[0m \x1b[1;4m_run_json_stage(\x1b[0m                                               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 279 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \x1b[0m\x1b[1;4mstage_name=\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4;33mextraction\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4m,\x1b[0m                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 280 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \x1b[0m\x1b[1;4mmodel_env_var=\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4;33mOPENROUTER_EXTRACTION_MODEL\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4m,\x1b[0m                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 281 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \x1b[0m\x1b[1;4msystem_prompt=(PROMPTS_DIR / \x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4;33mpwml_system.txt\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4m).read_text(encodin\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\ws-R3c\\src\\t2pw\\pipeline\\pipeline.py:3965 in _run_json_stage                    \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m3962 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \u2502   \u2502   \x1b[0mbudget_refusal = decision                                 \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m3963 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \u2502   \x1b[0m\x1b[94mbreak\x1b[0m                                                         \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m3964 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m3965 \x1b[2m\u2502   \u2502   \x1b[0mcompletion = \x1b[1;4m_issue(messages, model_env_var)\x1b[0m                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m3966 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0mraw = completion.text                                                 \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m3967 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0mcall_diag = completion.diagnostics.to_dict()                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m3968 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m\x1b[94mif\x1b[0m ladder \x1b[95mis\x1b[0m \x1b[95mnot\x1b[0m \x1b[94mNone\x1b[0m:                                                \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\ws-R3c\\src\\t2pw\\pipeline\\pipeline.py:3855 in _issue                             \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m3852 \x1b[0m\x1b[2;33m\u2502   \u2502   \x1b[0m\x1b[33m"""\x1b[0m                                                                   \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m3853 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m3854 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m\x1b[94mtry\x1b[0m:                                                                  \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m3855 \x1b[2m\u2502   \u2502   \u2502   \x1b[0m\x1b[94mreturn\x1b[0m chat_detailed(                                             \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m3856 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \u2502   \x1b[0mmessages,                                                     \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m3857 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \u2502   \x1b[0mtemperature=temperature,                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m3858 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \u2502   \x1b[0mmax_tokens=max_tokens,                                        \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\ws-R3c\\src\\t2pw\\llm\\client.py:857 in chat_detailed                              \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 854 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \u2502   \x1b[0mlast_err = e                                                  \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 855 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \u2502   \x1b[0mdiagnostics.note(attempt=attempt + \x1b[94m1\x1b[0m, status=STATUS_ERROR, er \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 856 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \u2502   \x1b[0m\x1b[94mcontinue\x1b[0m                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m 857 \x1b[2m\u2502   \u2502   \u2502   \x1b[0m\x1b[1;4;94mraise\x1b[0m\x1b[1;4m \x1b[0m\x1b[1;4;96mRuntimeError\x1b[0m\x1b[1;4m(\x1b[0m                                               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 858 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \u2502   \x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4;33mBad request (400). This model/provider may not support respo\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 859 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \u2502   \x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4;33mTry OPENROUTER_MODEL=openrouter/free or a different model. \x1b[0m\x1b[1;4;33m"\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 860 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \u2502   \x1b[0m\x1b[1;4;33mf\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4;33mOriginal error: \x1b[0m\x1b[1;4;33m{\x1b[0m\x1b[1;4me\x1b[0m\x1b[1;4;33m}\x1b[0m\x1b[1;4;33m"\x1b[0m                                        \x1b[31m \x1b[0m\n\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\n\x1b[1;91mRuntimeError: \x1b[0mBad request \x1b[1m(\x1b[0m\x1b[1;36m400\x1b[0m\x1b[1m)\x1b[0m. This model/provider may not support response_format \nJSON. Try \x1b[33mOPENROUTER_MODEL\x1b[0m=\x1b[35mopenrouter\x1b[0m/free or a different model. Original error: Error \ncode: \x1b[1;36m400\x1b[0m - \x1b[1m{\x1b[0m\x1b[32m'error'\x1b[0m: \x1b[1m{\x1b[0m\x1b[32m'message'\x1b[0m: \x1b[32m"No models loaded. Please load a model in the \x1b[0m\n\x1b[32mdeveloper page or use the 'lms load' command."\x1b[0m, \x1b[32m'type'\x1b[0m: \x1b[32m'invalid_request_error'\x1b[0m, \n\x1b[32m'param'\x1b[0m: \x1b[32m'model'\x1b[0m, \x1b[32m'code'\x1b[0m: \x1b[3;35mNone\x1b[0m\x1b[1m}\x1b[0m\x1b[1m}\x1b[0m
+---------------------------- Captured stderr call -----------------------------
+2026-11-06 13:44:50.344 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:50.826 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+_________ test_apptest_rag_off_takes_the_untouched_single_paper_path __________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001EFF01D9FD0>
+offline_stages = {'classification': [], 'gates': [], 'mapping': [], 'normalization': [], ...}
+
+    @pytest.mark.usefixtures("real_streamlit", "offline_pipeline", "offline_stages")
+    def test_apptest_rag_off_takes_the_untouched_single_paper_path(monkeypatch, offline_stages):
+        """PRESERVATION claim, labelled as such: this passes at the base SHA **and** at the
+        tip, and is deliberately NOT presented as a base failure.
+    
+        With ``RAG_ENABLED`` off the app must take exactly today's branch \ufffd no loop record,
+        no round, not one of the five stages re-entered in the ``if submit:`` pass, and a
+        ``final_payload`` that is the Stage-1 payload merged with Stage 2 and nothing else.
+        """
+    
+        at = _run_submit(monkeypatch, rag_enabled=False)
+    
+>       assert _app_exceptions(at) == []
+E       assert ["Bad request...ode': None}}"] == []
+E         
+E         Left contains one more item: 'Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or ...er page or use the \'lms load\' command.", \'type\': \'invalid_request_error\', \'param\': \'model\', \'code\': None}}'
+E         Use -v to get more diff
+
+tests\test_c055_rag_loop_wiring.py:960: AssertionError
+---------------------------- Captured stdout call -----------------------------
+\x1b[31m\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m \x1b[0m\x1b[1;31mTraceback \x1b[0m\x1b[1;2;31m(most recent call last)\x1b[0m\x1b[31m \x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\exec_code.py:136 in exec_func_with_error_handling               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\script_runner.py:837 in code_to_exec                            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\ws-R3c\\src\\t2pw\\app\\streamlit_app.py:3648 in <module>                           \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m3645 \x1b[0m\x1b[2m# directory can be reviewed with no run loaded. Presentation only.\x1b[0m            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m3646 \x1b[0m\x1b[94mfrom\x1b[0m\x1b[90m \x1b[0m\x1b[4;96mt2pw\x1b[0m\x1b[4;96m.\x1b[0m\x1b[4;96mapp\x1b[0m\x1b[4;96m.\x1b[0m\x1b[4;96mreaction_evidence_view\x1b[0m\x1b[90m \x1b[0m\x1b[94mimport\x1b[0m render_reaction_evidence  \x1b[2m# noqa:\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m3647 \x1b[0m                                                                              \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m3648 \x1b[1;4mrender_reaction_evidence()\x1b[0m                                                    \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m3649 \x1b[0m                                                                              \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\ws-R3c\\src\\t2pw\\app\\reaction_evidence_view.py:92 in render_reaction_evidence    \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 89 \x1b[0m                                                                               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 90 \x1b[0m                                                                               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 91 \x1b[0m\x1b[94mdef\x1b[0m\x1b[90m \x1b[0m\x1b[92mrender_reaction_evidence\x1b[0m() -> \x1b[94mNone\x1b[0m:                                        \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m 92 \x1b[2m\u2502   \x1b[0m\x1b[1;4mst.divider()\x1b[0m                                                               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 93 \x1b[0m\x1b[2m\u2502   \x1b[0mst.subheader(\x1b[33m"\x1b[0m\x1b[33mReaction Evidence\x1b[0m\x1b[33m"\x1b[0m)                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 94 \x1b[0m\x1b[2m\u2502   \x1b[0mst.caption(                                                                \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 95 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m\x1b[33m"\x1b[0m\x1b[33mRead-only review of what the run\x1b[0m\x1b[33m'\x1b[0m\x1b[33ms artifacts say the pathway contains\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\metrics_util.py:628 in wrapped_func                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m elements\\markdown.py:452 in divider                                                  \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m delta_generator.py:533 in _enqueue                                                   \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner_utils\\script_run_context.py:174 in get                          \x1b[31m \x1b[0m\n\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\n\x1b[1;91mRuntimeError: \x1b[0mFragmentThreadState not initialized \u2014 \x1b[1;35mScriptRunContext.reset\x1b[0m\x1b[1m(\x1b[0m\x1b[1m)\x1b[0m or \n\x1b[1;35madd_script_run_ctx\x1b[0m\x1b[1m(\x1b[0m\x1b[1m)\x1b[0m must be called on this thread first.\n\x1b[31m\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m \x1b[0m\x1b[1;31mTraceback \x1b[0m\x1b[1;2;31m(most recent call last)\x1b[0m\x1b[31m \x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\x1b[0m\n\x1b[31m \x1b[0m C:\\t\\ws-R3c\\src\\t2pw\\llm\\client.py:747 in chat_detailed                              \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 744 \x1b[0m\x1b[2m\u2502   \x1b[0m                                                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 745 \x1b[0m\x1b[2m\u2502   \x1b[0m\x1b[94mfor\x1b[0m attempt \x1b[95min\x1b[0m \x1b[96mrange\x1b[0m(max_retries):                                        \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 746 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m\x1b[94mtry\x1b[0m:                                                                  \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m 747 \x1b[2m\u2502   \u2502   \u2502   \x1b[0mresp = _client.chat.completions.create(**kwargs)                  \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 748 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \x1b[0m_record_usage(resp)                                               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 749 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \x1b[0mtime.sleep(spacing)                                               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 750 \x1b[0m                                                                              \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\openai\\_ut \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m ils\\_utils.py:298 in wrapper                                                         \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m295 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \u2502   \u2502   \x1b[0m\x1b[94melse\x1b[0m:                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m296 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \u2502   \u2502   \u2502   \x1b[0mmsg = \x1b[33mf\x1b[0m\x1b[33m"\x1b[0m\x1b[33mMissing required argument: \x1b[0m\x1b[33m{\x1b[0mquote(missing[\x1b[94m0\x1b[0m])\x1b[33m}\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m297 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \u2502   \x1b[0m\x1b[94mraise\x1b[0m \x1b[96mTypeError\x1b[0m(msg)                                           \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m298 \x1b[2m\u2502   \u2502   \u2502   \x1b[0m\x1b[94mreturn\x1b[0m \x1b[1;4mfunc(*args, **kwargs)\x1b[0m                                       \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m299 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m                                                                       \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m300 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m\x1b[94mreturn\x1b[0m wrapper  \x1b[2m# type: ignore\x1b[0m                                         \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m301 \x1b[0m                                                                               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\openai\\res \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m ources\\chat\\completions\\completions.py:1296 in create                                \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1293 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0mtimeout: \x1b[96mfloat\x1b[0m | httpx2.Timeout | \x1b[94mNone\x1b[0m | NotGiven = not_given,        \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1294 \x1b[0m\x1b[2m\u2502   \x1b[0m) -> ChatCompletion | Stream[ChatCompletionChunk]:                        \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1295 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0mvalidate_response_format(response_format)                             \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m1296 \x1b[2m\u2502   \u2502   \x1b[0m\x1b[94mreturn\x1b[0m \x1b[1;4;96mself\x1b[0m\x1b[1;4m._post(\x1b[0m                                                    \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1297 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4;33m/chat/completions\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4m,\x1b[0m                                              \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1298 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \x1b[0m\x1b[1;4mbody=maybe_transform(\x1b[0m                                             \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1299 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \u2502   \x1b[0m\x1b[1;4m{\x1b[0m                                                             \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\openai\\_ba \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m se_client.py:1381 in post                                                            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1378 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0mopts = FinalRequestOptions.construct(                                 \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1379 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \x1b[0mmethod=\x1b[33m"\x1b[0m\x1b[33mpost\x1b[0m\x1b[33m"\x1b[0m, url=path, json_data=body, content=content, files=t \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1380 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m)                                                                     \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m1381 \x1b[2m\u2502   \u2502   \x1b[0m\x1b[94mreturn\x1b[0m cast(ResponseT, \x1b[1;4;96mself\x1b[0m\x1b[1;4m.request(cast_to, opts, stream=stream, str\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1382 \x1b[0m\x1b[2m\u2502   \x1b[0m                                                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1383 \x1b[0m\x1b[2m\u2502   \x1b[0m\x1b[94mdef\x1b[0m\x1b[90m \x1b[0m\x1b[92mpatch\x1b[0m(                                                                \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1384 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m\x1b[96mself\x1b[0m,                                                                 \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\openai\\_ba \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m se_client.py:1154 in request                                                         \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1151 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \u2502   \u2502   \x1b[0merr.response.read()                                       \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1152 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \u2502   \x1b[0m                                                              \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1153 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \u2502   \x1b[0mlog.debug(\x1b[33m"\x1b[0m\x1b[33mRe-raising status error\x1b[0m\x1b[33m"\x1b[0m)                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m1154 \x1b[2m\u2502   \u2502   \u2502   \u2502   \x1b[0m\x1b[1;4;94mraise\x1b[0m\x1b[1;4m \x1b[0m\x1b[1;4;96mself\x1b[0m\x1b[1;4m._make_status_error_from_response(err.response) \x1b[0m\x1b[1;4;94mfro\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1155 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \x1b[0m                                                                  \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1156 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \x1b[0m\x1b[94mbreak\x1b[0m                                                             \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1157 \x1b[0m                                                                              \x1b[31m \x1b[0m\n\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\n\x1b[1;91mBadRequestError: \x1b[0mError code: \x1b[1;36m400\x1b[0m - \x1b[1m{\x1b[0m\x1b[32m'error'\x1b[0m: \x1b[1m{\x1b[0m\x1b[32m'message'\x1b[0m: \x1b[32m"No models loaded. Please load \x1b[0m\n\x1b[32ma model in the developer page or use the 'lms load' command."\x1b[0m, \x1b[32m'type'\x1b[0m: \n\x1b[32m'invalid_request_error'\x1b[0m, \x1b[32m'param'\x1b[0m: \x1b[32m'model'\x1b[0m, \x1b[32m'code'\x1b[0m: \x1b[3;35mNone\x1b[0m\x1b[1m}\x1b[0m\x1b[1m}\x1b[0m\n\n\x1b[3mThe above exception was the direct cause of the following exception:\x1b[0m\n\n\x1b[31m\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m \x1b[0m\x1b[1;31mTraceback \x1b[0m\x1b[1;2;31m(most recent call last)\x1b[0m\x1b[31m \x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\exec_code.py:136 in exec_func_with_error_handling               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\script_runner.py:837 in code_to_exec                            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\ws-R3c\\src\\t2pw\\app\\streamlit_app.py:1907 in <module>                           \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1904 \x1b[0m\x1b[2m\u2502   \x1b[0m\x1b[2m# R3c: Stage 1 lives in t2pw.service.extraction.run_stage_one: the extrac\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1905 \x1b[0m\x1b[2m\u2502   \x1b[0m\x1b[2m# its boundary, the three failure exits (each returned, the app stops), t\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1906 \x1b[0m\x1b[2m\u2502   \x1b[0m\x1b[2m# out-of-scope filter and the RAG seed with its user_task_context fold.\x1b[0m   \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m1907 \x1b[2m\u2502   \x1b[0m_stage_one = \x1b[1;4mrun_stage_one(\x1b[0m                                               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1908 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m\x1b[1;4mtext,\x1b[0m                                                                 \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1909 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m\x1b[1;4mpathway_context=pathway_context,\x1b[0m                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1910 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m\x1b[1;4muser_task_context=user_task_context,\x1b[0m                                  \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\ws-R3c\\src\\t2pw\\service\\extraction.py:611 in run_stage_one                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m608 \x1b[0m\x1b[2m\u2502   \x1b[0m\x1b[2m# Stage 1: strict extraction with auto-repair\x1b[0m                              \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m609 \x1b[0m\x1b[2m\u2502   \x1b[0m\x1b[94mtry\x1b[0m:                                                                       \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m610 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m\x1b[94mwith\x1b[0m reporter.spinner(\x1b[33m"\x1b[0m\x1b[33mRunning Stage 1 extraction...\x1b[0m\x1b[33m"\x1b[0m):                \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m611 \x1b[2m\u2502   \u2502   \u2502   \x1b[0mstage_one, chunk_details = _bound(                                 \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m612 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \u2502   \x1b[0mtext,                                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m613 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \u2502   \x1b[0mpathway_context=pathway_context,                               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m614 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \u2502   \x1b[0muser_task_context=user_task_context,                           \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\ws-R3c\\src\\t2pw\\pipeline\\pipeline.py:2747 in run_stage_one_with_chunking        \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m2744 \x1b[0m\x1b[2m\u2502   \x1b[0muse_chunks = enable_chunking \x1b[95mand\x1b[0m \x1b[96mlen\x1b[0m(words) > chunk_word_limit            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m2745 \x1b[0m\x1b[2m\u2502   \x1b[0m                                                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m2746 \x1b[0m\x1b[2m\u2502   \x1b[0m\x1b[94mif\x1b[0m \x1b[95mnot\x1b[0m use_chunks:                                                        \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m2747 \x1b[2m\u2502   \u2502   \x1b[0moutput, attempts = \x1b[1;4mrun_extraction_pipeline(\x1b[0m                           \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m2748 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \x1b[0m\x1b[1;4minput_text,\x1b[0m                                                       \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m2749 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \x1b[0m\x1b[1;4mpathway_context=pathway_context,\x1b[0m                                  \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m2750 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \x1b[0m\x1b[1;4muser_task_context=user_task_context,\x1b[0m                              \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\ws-R3c\\src\\t2pw\\pipeline\\pipeline.py:298 in run_extraction_pipeline             \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 295 \x1b[0m\x1b[2m\u2502   \x1b[0m                                                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 296 \x1b[0m\x1b[2m\u2502   \x1b[0mcount = extraction_draws(draws)                                           \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 297 \x1b[0m\x1b[2m\u2502   \x1b[0m\x1b[94mif\x1b[0m count == \x1b[94m1\x1b[0m:                                                            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m 298 \x1b[2m\u2502   \u2502   \x1b[0m\x1b[94mreturn\x1b[0m \x1b[1;4m_draw()\x1b[0m                                                        \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 299 \x1b[0m\x1b[2m\u2502   \x1b[0m\x1b[2m# The input text is the paper the draws read: D-104 makes it the merge's \x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 300 \x1b[0m\x1b[2m\u2502   \x1b[0m\x1b[94mreturn\x1b[0m run_ensemble(_draw, count, failure=PipelineFailure, paper_text=inp \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 301 \x1b[0m                                                                              \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\ws-R3c\\src\\t2pw\\pipeline\\pipeline.py:278 in _draw                               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 275 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0mmax_tokens = configured_max_tokens(\x1b[33m"\x1b[0m\x1b[33mOPENROUTER_EXTRACTION_MAX_TOKENS\x1b[0m\x1b[33m"\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 276 \x1b[0m\x1b[2m\u2502   \x1b[0m                                                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 277 \x1b[0m\x1b[2m\u2502   \x1b[0m\x1b[94mdef\x1b[0m\x1b[90m \x1b[0m\x1b[92m_draw\x1b[0m() -> Tuple[Dict[\x1b[96mstr\x1b[0m, Any], AttemptLogs]:                        \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m 278 \x1b[2m\u2502   \u2502   \x1b[0m\x1b[94mreturn\x1b[0m \x1b[1;4m_run_json_stage(\x1b[0m                                               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 279 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \x1b[0m\x1b[1;4mstage_name=\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4;33mextraction\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4m,\x1b[0m                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 280 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \x1b[0m\x1b[1;4mmodel_env_var=\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4;33mOPENROUTER_EXTRACTION_MODEL\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4m,\x1b[0m                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 281 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \x1b[0m\x1b[1;4msystem_prompt=(PROMPTS_DIR / \x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4;33mpwml_system.txt\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4m).read_text(encodin\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\ws-R3c\\src\\t2pw\\pipeline\\pipeline.py:3965 in _run_json_stage                    \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m3962 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \u2502   \u2502   \x1b[0mbudget_refusal = decision                                 \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m3963 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \u2502   \x1b[0m\x1b[94mbreak\x1b[0m                                                         \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m3964 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m3965 \x1b[2m\u2502   \u2502   \x1b[0mcompletion = \x1b[1;4m_issue(messages, model_env_var)\x1b[0m                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m3966 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0mraw = completion.text                                                 \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m3967 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0mcall_diag = completion.diagnostics.to_dict()                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m3968 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m\x1b[94mif\x1b[0m ladder \x1b[95mis\x1b[0m \x1b[95mnot\x1b[0m \x1b[94mNone\x1b[0m:                                                \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\ws-R3c\\src\\t2pw\\pipeline\\pipeline.py:3855 in _issue                             \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m3852 \x1b[0m\x1b[2;33m\u2502   \u2502   \x1b[0m\x1b[33m"""\x1b[0m                                                                   \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m3853 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m3854 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m\x1b[94mtry\x1b[0m:                                                                  \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m3855 \x1b[2m\u2502   \u2502   \u2502   \x1b[0m\x1b[94mreturn\x1b[0m chat_detailed(                                             \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m3856 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \u2502   \x1b[0mmessages,                                                     \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m3857 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \u2502   \x1b[0mtemperature=temperature,                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m3858 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \u2502   \x1b[0mmax_tokens=max_tokens,                                        \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\ws-R3c\\src\\t2pw\\llm\\client.py:857 in chat_detailed                              \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 854 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \u2502   \x1b[0mlast_err = e                                                  \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 855 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \u2502   \x1b[0mdiagnostics.note(attempt=attempt + \x1b[94m1\x1b[0m, status=STATUS_ERROR, er \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 856 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \u2502   \x1b[0m\x1b[94mcontinue\x1b[0m                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m 857 \x1b[2m\u2502   \u2502   \u2502   \x1b[0m\x1b[1;4;94mraise\x1b[0m\x1b[1;4m \x1b[0m\x1b[1;4;96mRuntimeError\x1b[0m\x1b[1;4m(\x1b[0m                                               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 858 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \u2502   \x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4;33mBad request (400). This model/provider may not support respo\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 859 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \u2502   \x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4;33mTry OPENROUTER_MODEL=openrouter/free or a different model. \x1b[0m\x1b[1;4;33m"\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m 860 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \u2502   \x1b[0m\x1b[1;4;33mf\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4;33mOriginal error: \x1b[0m\x1b[1;4;33m{\x1b[0m\x1b[1;4me\x1b[0m\x1b[1;4;33m}\x1b[0m\x1b[1;4;33m"\x1b[0m                                        \x1b[31m \x1b[0m\n\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\n\x1b[1;91mRuntimeError: \x1b[0mBad request \x1b[1m(\x1b[0m\x1b[1;36m400\x1b[0m\x1b[1m)\x1b[0m. This model/provider may not support response_format \nJSON. Try \x1b[33mOPENROUTER_MODEL\x1b[0m=\x1b[35mopenrouter\x1b[0m/free or a different model. Original error: Error \ncode: \x1b[1;36m400\x1b[0m - \x1b[1m{\x1b[0m\x1b[32m'error'\x1b[0m: \x1b[1m{\x1b[0m\x1b[32m'message'\x1b[0m: \x1b[32m"No models loaded. Please load a model in the \x1b[0m\n\x1b[32mdeveloper page or use the 'lms load' command."\x1b[0m, \x1b[32m'type'\x1b[0m: \x1b[32m'invalid_request_error'\x1b[0m, \n\x1b[32m'param'\x1b[0m: \x1b[32m'model'\x1b[0m, \x1b[32m'code'\x1b[0m: \x1b[3;35mNone\x1b[0m\x1b[1m}\x1b[0m\x1b[1m}\x1b[0m
+---------------------------- Captured stderr call -----------------------------
+2026-11-06 13:44:52.340 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-06 13:44:52.777 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+=========================== short test summary info ===========================
+FAILED tests/test_c055_rag_loop_wiring.py::test_apptest_rag_on_runs_a_round_that_re_enters_all_five_stages
+FAILED tests/test_c055_rag_loop_wiring.py::test_apptest_rag_off_takes_the_untouched_single_paper_path
+ERROR tests/test_c055_rag_loop_wiring.py::test_one_round_re_enters_all_five_stages_and_merges
+ERROR tests/test_c055_rag_loop_wiring.py::test_the_checkpoint_is_written_before_the_round
+ERROR tests/test_c055_rag_loop_wiring.py::test_round_two_re_runs_the_chain_on_recomputed_reports
+ERROR tests/test_c055_rag_loop_wiring.py::test_the_app_contains_no_hand_rolled_round_loop
+ERROR tests/test_c055_rag_loop_wiring.py::test_a_failed_stage_aborts_the_round_and_keeps_its_checkpoint
+ERROR tests/test_c055_rag_loop_wiring.py::test_a_budget_that_cannot_afford_a_round_runs_none
+ERROR tests/test_c055_rag_loop_wiring.py::test_a_refused_delta_does_not_advance_the_graph_and_says_which_rule
+ERROR tests/test_c055_rag_loop_wiring.py::test_per_round_mapping_never_writes_the_authoritative_cache
+ERROR tests/test_c055_rag_loop_wiring.py::test_per_round_persistence_never_writes_the_protected_scratch_files
+ERROR tests/test_c055_rag_loop_wiring.py::test_the_loop_record_touches_no_refinement_state_key
+ERROR tests/test_c055_rag_loop_wiring.py::test_the_round_leaves_the_quarantine_boundary_session_record_untouched
+ERROR tests/test_c055_rag_loop_wiring.py::test_the_default_round_budget_is_one_round
+2 failed, 29 passed, 12 errors in 8.50s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f1238da76c51323070578fa2edcf423b585e026d  [git, worktree dirty=True]
+label                   : mut-bound-run_stage_one_with_chunking-c055
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3c/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3c -q -p no:cacheprovider --basetemp=C:/t/wsR3ctmp/mut-tmp/bound-run_stage_one_with_chunking-c055 tests/test_service_extraction.py tests/test_c055_rag_loop_wiring.py
+cwd                     : C:\t\ws-R3c
+root PID / process group: 179688 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 10.21 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 3  183360:python.exe, 182016:python.exe, 183876:python.exe
+descendants terminated  : 3  182016, 183360, 183876
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\ws-R3c\docs\webserver\evidence\R3c\mutation\bound-run_stage_one_with_chunking-c055.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R3c  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

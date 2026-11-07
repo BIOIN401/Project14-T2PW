@@ -1,0 +1,647 @@
+T2PW: C:\t\ws-R3c\src\t2pw\__init__.py
+..........FFFFFFF....F                                                   [100%]
+================================== FAILURES ===================================
+_____ test_rag_on_seeds_from_the_in_scope_payload_and_folds_the_evidence ______
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo...stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/bound-generate_qa_report/test_rag_on_seeds_from_the_in_0'))
+
+    def test_rag_on_seeds_from_the_in_scope_payload_and_folds_the_evidence(world):
+        world.stage1 = _payload("a", out=("x",))
+        world.rag = True
+        world.rag_result = types.SimpleNamespace(evidence_context="PMC1: MenG.")
+>       res, rep, state = _run(world, flag=1)
+                          ^^^^^^^^^^^^^^^^^^^
+
+tests\test_service_extraction_stage1.py:284: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_service_extraction_stage1.py:151: in _run
+    res = ex.run_stage_one("the paper", **args)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\t2pw\service\extraction.py:712: in run_stage_one
+    reports={"qa_graph": _bound(_rag_seed_graph, stage_one_in_scope)},
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+draft_graph = 'GRAPH'
+payload = {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}, 'settled': True}
+
+    def generate_qa_report(draft_graph: Any, payload: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Generate a machine-readable QA / missingness report from a DraftGraph and raw payload.
+    
+        Parameters
+        ----------
+        draft_graph:
+            A DraftGraph object (from draft_graph.py). Duck-typed: expects .nodes, .edges,
+            and an .orphan_nodes() method.
+        payload:
+            The merged Stage-1 + Stage-2 JSON dict.
+    
+        Returns
+        -------
+        dict with keys:
+            summary  \ufffd total_species, total_reactions, completeness_score
+            flags    \ufffd missing_compartments, missing_modifiers, possible_complexes,
+                       transport_like_reactions, orphan_nodes, missing_ids,
+                       empty_reactions, duplicate_species, inconsistent_class
+        """
+        ENTITY_KINDS = {"compound", "protein", "protein_complex", "nucleic_acid", "element_collection"}
+    
+        MODIFIER_TRIGGERS = re.compile(
+            r"\b(catalysis|catalytic|enzyme[-\s]mediated|enzymatic|phosphorylation|kinase|ase)\b",
+            re.IGNORECASE,
+        )
+        TRANSPORT_RE = re.compile(
+            r"\b(import|export|transport|shuttle|translocation|trafficking)\b",
+            re.IGNORECASE,
+        )
+        COMPLEX_RE = re.compile(r"\b(complex|subunit|hetero|homo)\b|:", re.IGNORECASE)
+        KNOWN_COFACTORS = {
+            "atp", "adp", "amp", "nadh", "nadph", "nad+", "nadp+", "fadh2", "fad",
+            "coenzyme a", "coa", "acetyl-coa", "gtp", "gdp", "h2o", "water", "oxygen",
+        }
+    
+        flags: Dict[str, List[Any]] = {
+            "missing_compartments": [],
+            "missing_modifiers": [],
+            "possible_complexes": [],
+            "transport_like_reactions": [],
+            "orphan_nodes": [],
+            "missing_ids": [],
+            "empty_reactions": [],
+            "duplicate_species": [],
+            "inconsistent_class": [],
+        }
+    
+        # Build node_id -> (kind, label) lookup
+        node_kind_map: Dict[str, Tuple[str, str]] = {
+>           n.id: (n.kind, n.label) for n in draft_graph.nodes
+                                             ^^^^^^^^^^^^^^^^^
+        }
+E       AttributeError: 'str' object has no attribute 'nodes'
+
+src\t2pw\pipeline\qa_graph.py:312: AttributeError
+__________ test_rag_fold_without_a_focus_is_the_evidence_alone[None] __________
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': Non...stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/bound-generate_qa_report/test_rag_fold_without_a_focus_0'))
+utc = None
+
+    @pytest.mark.parametrize("utc", [None, ""])
+    def test_rag_fold_without_a_focus_is_the_evidence_alone(world, utc):
+        world.rag = True
+        world.rag_result = types.SimpleNamespace(evidence_context="E")
+>       res, _rep, _state = _run(world, utc=utc)
+                            ^^^^^^^^^^^^^^^^^^^^
+
+tests\test_service_extraction_stage1.py:304: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_service_extraction_stage1.py:151: in _run
+    res = ex.run_stage_one("the paper", **args)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\t2pw\service\extraction.py:712: in run_stage_one
+    reports={"qa_graph": _bound(_rag_seed_graph, stage_one_in_scope)},
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+draft_graph = 'GRAPH'
+payload = {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}, 'settled': True}
+
+    def generate_qa_report(draft_graph: Any, payload: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Generate a machine-readable QA / missingness report from a DraftGraph and raw payload.
+    
+        Parameters
+        ----------
+        draft_graph:
+            A DraftGraph object (from draft_graph.py). Duck-typed: expects .nodes, .edges,
+            and an .orphan_nodes() method.
+        payload:
+            The merged Stage-1 + Stage-2 JSON dict.
+    
+        Returns
+        -------
+        dict with keys:
+            summary  \ufffd total_species, total_reactions, completeness_score
+            flags    \ufffd missing_compartments, missing_modifiers, possible_complexes,
+                       transport_like_reactions, orphan_nodes, missing_ids,
+                       empty_reactions, duplicate_species, inconsistent_class
+        """
+        ENTITY_KINDS = {"compound", "protein", "protein_complex", "nucleic_acid", "element_collection"}
+    
+        MODIFIER_TRIGGERS = re.compile(
+            r"\b(catalysis|catalytic|enzyme[-\s]mediated|enzymatic|phosphorylation|kinase|ase)\b",
+            re.IGNORECASE,
+        )
+        TRANSPORT_RE = re.compile(
+            r"\b(import|export|transport|shuttle|translocation|trafficking)\b",
+            re.IGNORECASE,
+        )
+        COMPLEX_RE = re.compile(r"\b(complex|subunit|hetero|homo)\b|:", re.IGNORECASE)
+        KNOWN_COFACTORS = {
+            "atp", "adp", "amp", "nadh", "nadph", "nad+", "nadp+", "fadh2", "fad",
+            "coenzyme a", "coa", "acetyl-coa", "gtp", "gdp", "h2o", "water", "oxygen",
+        }
+    
+        flags: Dict[str, List[Any]] = {
+            "missing_compartments": [],
+            "missing_modifiers": [],
+            "possible_complexes": [],
+            "transport_like_reactions": [],
+            "orphan_nodes": [],
+            "missing_ids": [],
+            "empty_reactions": [],
+            "duplicate_species": [],
+            "inconsistent_class": [],
+        }
+    
+        # Build node_id -> (kind, label) lookup
+        node_kind_map: Dict[str, Tuple[str, str]] = {
+>           n.id: (n.kind, n.label) for n in draft_graph.nodes
+                                             ^^^^^^^^^^^^^^^^^
+        }
+E       AttributeError: 'str' object has no attribute 'nodes'
+
+src\t2pw\pipeline\qa_graph.py:312: AttributeError
+____________ test_rag_fold_without_a_focus_is_the_evidence_alone[] ____________
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': '',...stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/bound-generate_qa_report/test_rag_fold_without_a_focus_1'))
+utc = ''
+
+    @pytest.mark.parametrize("utc", [None, ""])
+    def test_rag_fold_without_a_focus_is_the_evidence_alone(world, utc):
+        world.rag = True
+        world.rag_result = types.SimpleNamespace(evidence_context="E")
+>       res, _rep, _state = _run(world, utc=utc)
+                            ^^^^^^^^^^^^^^^^^^^^
+
+tests\test_service_extraction_stage1.py:304: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_service_extraction_stage1.py:151: in _run
+    res = ex.run_stage_one("the paper", **args)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\t2pw\service\extraction.py:712: in run_stage_one
+    reports={"qa_graph": _bound(_rag_seed_graph, stage_one_in_scope)},
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+draft_graph = 'GRAPH'
+payload = {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}, 'settled': True}
+
+    def generate_qa_report(draft_graph: Any, payload: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Generate a machine-readable QA / missingness report from a DraftGraph and raw payload.
+    
+        Parameters
+        ----------
+        draft_graph:
+            A DraftGraph object (from draft_graph.py). Duck-typed: expects .nodes, .edges,
+            and an .orphan_nodes() method.
+        payload:
+            The merged Stage-1 + Stage-2 JSON dict.
+    
+        Returns
+        -------
+        dict with keys:
+            summary  \ufffd total_species, total_reactions, completeness_score
+            flags    \ufffd missing_compartments, missing_modifiers, possible_complexes,
+                       transport_like_reactions, orphan_nodes, missing_ids,
+                       empty_reactions, duplicate_species, inconsistent_class
+        """
+        ENTITY_KINDS = {"compound", "protein", "protein_complex", "nucleic_acid", "element_collection"}
+    
+        MODIFIER_TRIGGERS = re.compile(
+            r"\b(catalysis|catalytic|enzyme[-\s]mediated|enzymatic|phosphorylation|kinase|ase)\b",
+            re.IGNORECASE,
+        )
+        TRANSPORT_RE = re.compile(
+            r"\b(import|export|transport|shuttle|translocation|trafficking)\b",
+            re.IGNORECASE,
+        )
+        COMPLEX_RE = re.compile(r"\b(complex|subunit|hetero|homo)\b|:", re.IGNORECASE)
+        KNOWN_COFACTORS = {
+            "atp", "adp", "amp", "nadh", "nadph", "nad+", "nadp+", "fadh2", "fad",
+            "coenzyme a", "coa", "acetyl-coa", "gtp", "gdp", "h2o", "water", "oxygen",
+        }
+    
+        flags: Dict[str, List[Any]] = {
+            "missing_compartments": [],
+            "missing_modifiers": [],
+            "possible_complexes": [],
+            "transport_like_reactions": [],
+            "orphan_nodes": [],
+            "missing_ids": [],
+            "empty_reactions": [],
+            "duplicate_species": [],
+            "inconsistent_class": [],
+        }
+    
+        # Build node_id -> (kind, label) lookup
+        node_kind_map: Dict[str, Tuple[str, str]] = {
+>           n.id: (n.kind, n.label) for n in draft_graph.nodes
+                                             ^^^^^^^^^^^^^^^^^
+        }
+E       AttributeError: 'str' object has no attribute 'nodes'
+
+src\t2pw\pipeline\qa_graph.py:312: AttributeError
+______ test_rag_without_evidence_records_the_result_and_keeps_the_focus _______
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo...stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/bound-generate_qa_report/test_rag_without_evidence_reco0'))
+
+    def test_rag_without_evidence_records_the_result_and_keeps_the_focus(world):
+        world.rag = True
+        world.rag_result = types.SimpleNamespace(evidence_context="")
+>       res, _rep, state = _run(world)
+                           ^^^^^^^^^^^
+
+tests\test_service_extraction_stage1.py:312: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_service_extraction_stage1.py:151: in _run
+    res = ex.run_stage_one("the paper", **args)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\t2pw\service\extraction.py:712: in run_stage_one
+    reports={"qa_graph": _bound(_rag_seed_graph, stage_one_in_scope)},
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+draft_graph = 'GRAPH'
+payload = {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}, 'settled': True}
+
+    def generate_qa_report(draft_graph: Any, payload: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Generate a machine-readable QA / missingness report from a DraftGraph and raw payload.
+    
+        Parameters
+        ----------
+        draft_graph:
+            A DraftGraph object (from draft_graph.py). Duck-typed: expects .nodes, .edges,
+            and an .orphan_nodes() method.
+        payload:
+            The merged Stage-1 + Stage-2 JSON dict.
+    
+        Returns
+        -------
+        dict with keys:
+            summary  \ufffd total_species, total_reactions, completeness_score
+            flags    \ufffd missing_compartments, missing_modifiers, possible_complexes,
+                       transport_like_reactions, orphan_nodes, missing_ids,
+                       empty_reactions, duplicate_species, inconsistent_class
+        """
+        ENTITY_KINDS = {"compound", "protein", "protein_complex", "nucleic_acid", "element_collection"}
+    
+        MODIFIER_TRIGGERS = re.compile(
+            r"\b(catalysis|catalytic|enzyme[-\s]mediated|enzymatic|phosphorylation|kinase|ase)\b",
+            re.IGNORECASE,
+        )
+        TRANSPORT_RE = re.compile(
+            r"\b(import|export|transport|shuttle|translocation|trafficking)\b",
+            re.IGNORECASE,
+        )
+        COMPLEX_RE = re.compile(r"\b(complex|subunit|hetero|homo)\b|:", re.IGNORECASE)
+        KNOWN_COFACTORS = {
+            "atp", "adp", "amp", "nadh", "nadph", "nad+", "nadp+", "fadh2", "fad",
+            "coenzyme a", "coa", "acetyl-coa", "gtp", "gdp", "h2o", "water", "oxygen",
+        }
+    
+        flags: Dict[str, List[Any]] = {
+            "missing_compartments": [],
+            "missing_modifiers": [],
+            "possible_complexes": [],
+            "transport_like_reactions": [],
+            "orphan_nodes": [],
+            "missing_ids": [],
+            "empty_reactions": [],
+            "duplicate_species": [],
+            "inconsistent_class": [],
+        }
+    
+        # Build node_id -> (kind, label) lookup
+        node_kind_map: Dict[str, Tuple[str, str]] = {
+>           n.id: (n.kind, n.label) for n in draft_graph.nodes
+                                             ^^^^^^^^^^^^^^^^^
+        }
+E       AttributeError: 'str' object has no attribute 'nodes'
+
+src\t2pw\pipeline\qa_graph.py:312: AttributeError
+______________________ test_rag_declined_writes_nothing _______________________
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo...stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/bound-generate_qa_report/test_rag_declined_writes_nothi0'))
+
+    def test_rag_declined_writes_nothing(world):
+        world.rag = True
+>       res, _rep, state = _run(world)
+                           ^^^^^^^^^^^
+
+tests\test_service_extraction_stage1.py:319: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_service_extraction_stage1.py:151: in _run
+    res = ex.run_stage_one("the paper", **args)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\t2pw\service\extraction.py:712: in run_stage_one
+    reports={"qa_graph": _bound(_rag_seed_graph, stage_one_in_scope)},
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+draft_graph = 'GRAPH'
+payload = {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}, 'settled': True}
+
+    def generate_qa_report(draft_graph: Any, payload: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Generate a machine-readable QA / missingness report from a DraftGraph and raw payload.
+    
+        Parameters
+        ----------
+        draft_graph:
+            A DraftGraph object (from draft_graph.py). Duck-typed: expects .nodes, .edges,
+            and an .orphan_nodes() method.
+        payload:
+            The merged Stage-1 + Stage-2 JSON dict.
+    
+        Returns
+        -------
+        dict with keys:
+            summary  \ufffd total_species, total_reactions, completeness_score
+            flags    \ufffd missing_compartments, missing_modifiers, possible_complexes,
+                       transport_like_reactions, orphan_nodes, missing_ids,
+                       empty_reactions, duplicate_species, inconsistent_class
+        """
+        ENTITY_KINDS = {"compound", "protein", "protein_complex", "nucleic_acid", "element_collection"}
+    
+        MODIFIER_TRIGGERS = re.compile(
+            r"\b(catalysis|catalytic|enzyme[-\s]mediated|enzymatic|phosphorylation|kinase|ase)\b",
+            re.IGNORECASE,
+        )
+        TRANSPORT_RE = re.compile(
+            r"\b(import|export|transport|shuttle|translocation|trafficking)\b",
+            re.IGNORECASE,
+        )
+        COMPLEX_RE = re.compile(r"\b(complex|subunit|hetero|homo)\b|:", re.IGNORECASE)
+        KNOWN_COFACTORS = {
+            "atp", "adp", "amp", "nadh", "nadph", "nad+", "nadp+", "fadh2", "fad",
+            "coenzyme a", "coa", "acetyl-coa", "gtp", "gdp", "h2o", "water", "oxygen",
+        }
+    
+        flags: Dict[str, List[Any]] = {
+            "missing_compartments": [],
+            "missing_modifiers": [],
+            "possible_complexes": [],
+            "transport_like_reactions": [],
+            "orphan_nodes": [],
+            "missing_ids": [],
+            "empty_reactions": [],
+            "duplicate_species": [],
+            "inconsistent_class": [],
+        }
+    
+        # Build node_id -> (kind, label) lookup
+        node_kind_map: Dict[str, Tuple[str, str]] = {
+>           n.id: (n.kind, n.label) for n in draft_graph.nodes
+                                             ^^^^^^^^^^^^^^^^^
+        }
+E       AttributeError: 'str' object has no attribute 'nodes'
+
+src\t2pw\pipeline\qa_graph.py:312: AttributeError
+__________________________ test_rag_error_propagates __________________________
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo...one, stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/bound-generate_qa_report/test_rag_error_propagates0'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001CBCA644E10>
+
+    def test_rag_error_propagates(world, monkeypatch):
+        import t2pw.service.rag_orchestration as rag
+    
+        def boom(**_):
+            raise RuntimeError("chain blew up")
+    
+        world.rag = True
+        monkeypatch.setattr(rag, "maybe_run_rag", boom)
+        with pytest.raises(RuntimeError, match="chain blew up"):
+>           _run(world)
+
+tests\test_service_extraction_stage1.py:333: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_service_extraction_stage1.py:151: in _run
+    res = ex.run_stage_one("the paper", **args)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\t2pw\service\extraction.py:712: in run_stage_one
+    reports={"qa_graph": _bound(_rag_seed_graph, stage_one_in_scope)},
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+draft_graph = 'GRAPH'
+payload = {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}, 'settled': True}
+
+    def generate_qa_report(draft_graph: Any, payload: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Generate a machine-readable QA / missingness report from a DraftGraph and raw payload.
+    
+        Parameters
+        ----------
+        draft_graph:
+            A DraftGraph object (from draft_graph.py). Duck-typed: expects .nodes, .edges,
+            and an .orphan_nodes() method.
+        payload:
+            The merged Stage-1 + Stage-2 JSON dict.
+    
+        Returns
+        -------
+        dict with keys:
+            summary  \ufffd total_species, total_reactions, completeness_score
+            flags    \ufffd missing_compartments, missing_modifiers, possible_complexes,
+                       transport_like_reactions, orphan_nodes, missing_ids,
+                       empty_reactions, duplicate_species, inconsistent_class
+        """
+        ENTITY_KINDS = {"compound", "protein", "protein_complex", "nucleic_acid", "element_collection"}
+    
+        MODIFIER_TRIGGERS = re.compile(
+            r"\b(catalysis|catalytic|enzyme[-\s]mediated|enzymatic|phosphorylation|kinase|ase)\b",
+            re.IGNORECASE,
+        )
+        TRANSPORT_RE = re.compile(
+            r"\b(import|export|transport|shuttle|translocation|trafficking)\b",
+            re.IGNORECASE,
+        )
+        COMPLEX_RE = re.compile(r"\b(complex|subunit|hetero|homo)\b|:", re.IGNORECASE)
+        KNOWN_COFACTORS = {
+            "atp", "adp", "amp", "nadh", "nadph", "nad+", "nadp+", "fadh2", "fad",
+            "coenzyme a", "coa", "acetyl-coa", "gtp", "gdp", "h2o", "water", "oxygen",
+        }
+    
+        flags: Dict[str, List[Any]] = {
+            "missing_compartments": [],
+            "missing_modifiers": [],
+            "possible_complexes": [],
+            "transport_like_reactions": [],
+            "orphan_nodes": [],
+            "missing_ids": [],
+            "empty_reactions": [],
+            "duplicate_species": [],
+            "inconsistent_class": [],
+        }
+    
+        # Build node_id -> (kind, label) lookup
+        node_kind_map: Dict[str, Tuple[str, str]] = {
+>           n.id: (n.kind, n.label) for n in draft_graph.nodes
+                                             ^^^^^^^^^^^^^^^^^
+        }
+E       AttributeError: 'str' object has no attribute 'nodes'
+
+src\t2pw\pipeline\qa_graph.py:312: AttributeError
+___________ test_patches_on_the_source_modules_reach_run_stage_one ____________
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo...stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/bound-generate_qa_report/test_patches_on_the_source_mod0'))
+
+    def test_patches_on_the_source_modules_reach_run_stage_one(world):
+        """R3b review F1 rule. Before R3c the app script re-ran ``from ... import`` on every
+        AppTest run, so a patch on the source module (c055 patches
+        ``pipeline.run_stage_one_with_chunking`` and ``stage_one_boundary.settle_stage_one``)
+        reached the call. Every callee of the moved code must still be looked up there."""
+    
+        world.rag = True
+        world.rag_result = types.SimpleNamespace(evidence_context="")
+>       _run(world)
+
+tests\test_service_extraction_stage1.py:345: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_service_extraction_stage1.py:151: in _run
+    res = ex.run_stage_one("the paper", **args)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\t2pw\service\extraction.py:712: in run_stage_one
+    reports={"qa_graph": _bound(_rag_seed_graph, stage_one_in_scope)},
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+draft_graph = 'GRAPH'
+payload = {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}, 'settled': True}
+
+    def generate_qa_report(draft_graph: Any, payload: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Generate a machine-readable QA / missingness report from a DraftGraph and raw payload.
+    
+        Parameters
+        ----------
+        draft_graph:
+            A DraftGraph object (from draft_graph.py). Duck-typed: expects .nodes, .edges,
+            and an .orphan_nodes() method.
+        payload:
+            The merged Stage-1 + Stage-2 JSON dict.
+    
+        Returns
+        -------
+        dict with keys:
+            summary  \ufffd total_species, total_reactions, completeness_score
+            flags    \ufffd missing_compartments, missing_modifiers, possible_complexes,
+                       transport_like_reactions, orphan_nodes, missing_ids,
+                       empty_reactions, duplicate_species, inconsistent_class
+        """
+        ENTITY_KINDS = {"compound", "protein", "protein_complex", "nucleic_acid", "element_collection"}
+    
+        MODIFIER_TRIGGERS = re.compile(
+            r"\b(catalysis|catalytic|enzyme[-\s]mediated|enzymatic|phosphorylation|kinase|ase)\b",
+            re.IGNORECASE,
+        )
+        TRANSPORT_RE = re.compile(
+            r"\b(import|export|transport|shuttle|translocation|trafficking)\b",
+            re.IGNORECASE,
+        )
+        COMPLEX_RE = re.compile(r"\b(complex|subunit|hetero|homo)\b|:", re.IGNORECASE)
+        KNOWN_COFACTORS = {
+            "atp", "adp", "amp", "nadh", "nadph", "nad+", "nadp+", "fadh2", "fad",
+            "coenzyme a", "coa", "acetyl-coa", "gtp", "gdp", "h2o", "water", "oxygen",
+        }
+    
+        flags: Dict[str, List[Any]] = {
+            "missing_compartments": [],
+            "missing_modifiers": [],
+            "possible_complexes": [],
+            "transport_like_reactions": [],
+            "orphan_nodes": [],
+            "missing_ids": [],
+            "empty_reactions": [],
+            "duplicate_species": [],
+            "inconsistent_class": [],
+        }
+    
+        # Build node_id -> (kind, label) lookup
+        node_kind_map: Dict[str, Tuple[str, str]] = {
+>           n.id: (n.kind, n.label) for n in draft_graph.nodes
+                                             ^^^^^^^^^^^^^^^^^
+        }
+E       AttributeError: 'str' object has no attribute 'nodes'
+
+src\t2pw\pipeline\qa_graph.py:312: AttributeError
+___ test_real_app_hands_stage_two_the_filtered_payload_and_the_folded_focus ___
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001CBCA0D10F0>
+tmp_path = WindowsPath('C:/t/wsR3ctmp/mut-tmp/bound-generate_qa_report/test_real_app_hands_stage_two_0')
+
+    def test_real_app_hands_stage_two_the_filtered_payload_and_the_folded_focus(monkeypatch, tmp_path):
+        """The app rebinds what the rest of the block reads from the returned result."""
+    
+        import t2pw.service.rag_orchestration as rag
+    
+        stage2: List[Any] = []
+        evidence = types.SimpleNamespace(evidence_context="PMC1: MenG demethylates.", synthesized=False,
+                                         payload=None)
+    
+        def stage_two(text, payload, **kw):
+            stage2.append((payload, kw))
+            raise pipeline.PipelineFailure("stage2", "stop here", ATTEMPTS[1:])
+    
+        monkeypatch.setattr(pipeline, "run_stage_one_with_chunking",
+                            lambda *_a, **_k: (_payload("a", out=("x",)), [{"chunk": 1}]))
+        monkeypatch.setattr(boundary, "settle_stage_one",
+                            lambda payload, **_k: _Boundary(payload))
+        monkeypatch.setattr(pipeline, "run_stage_two_with_feedback_loop", stage_two)
+        monkeypatch.setattr(draft_graph, "build_draft_graph", lambda payload: "GRAPH")
+        monkeypatch.setattr(qa_graph, "generate_qa_report", lambda graph, payload: {"qa": graph})
+        monkeypatch.setattr(rag, "maybe_run_rag", lambda **_k: evidence)
+        monkeypatch.setenv("RAG_ENABLED", "1")
+        at = _real_app(monkeypatch, tmp_path, focus="  menaquinone  ")
+    
+>       assert [str(e.value) for e in at.exception] == []
+E       assert ["'str' objec...bute 'nodes'"] == []
+E         
+E         Left contains one more item: "'str' object has no attribute 'nodes'"
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage1.py:464: AssertionError
+---------------------------- Captured stdout call -----------------------------
+\x1b[31m\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m \x1b[0m\x1b[1;31mTraceback \x1b[0m\x1b[1;2;31m(most recent call last)\x1b[0m\x1b[31m \x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\exec_code.py:136 in exec_func_with_error_handling               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\script_runner.py:837 in code_to_exec                            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\ws-R3c\\src\\t2pw\\app\\streamlit_app.py:1907 in <module>                           \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1904 \x1b[0m\x1b[2m\u2502   \x1b[0m\x1b[2m# R3c: Stage 1 lives in t2pw.service.extraction.run_stage_one: the extrac\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1905 \x1b[0m\x1b[2m\u2502   \x1b[0m\x1b[2m# its boundary, the three failure exits (each returned, the app stops), t\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1906 \x1b[0m\x1b[2m\u2502   \x1b[0m\x1b[2m# out-of-scope filter and the RAG seed with its user_task_context fold.\x1b[0m   \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m1907 \x1b[2m\u2502   \x1b[0m_stage_one = \x1b[1;4mrun_stage_one(\x1b[0m                                               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1908 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m\x1b[1;4mtext,\x1b[0m                                                                 \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1909 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m\x1b[1;4mpathway_context=pathway_context,\x1b[0m                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1910 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m\x1b[1;4muser_task_context=user_task_context,\x1b[0m                                  \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\ws-R3c\\src\\t2pw\\service\\extraction.py:712 in run_stage_one                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m709 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \x1b[0mpathway_context=pathway_context,                                   \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m710 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \x1b[0muser_flag=\x1b[96mbool\x1b[0m(rag_incomplete_flag),                               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m711 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \x1b[0mseed_payload=stage_one_in_scope,                                   \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m712 \x1b[2m\u2502   \u2502   \u2502   \x1b[0mreports={\x1b[33m"\x1b[0m\x1b[33mqa_graph\x1b[0m\x1b[33m"\x1b[0m: \x1b[1;4m_bound(_rag_seed_graph, stage_one_in_scope)\x1b[0m}, \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m713 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \x1b[0mseed_text=text,                                                    \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m714 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \x1b[0mreporter=reporter,                                                 \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m715 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m)                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\ws-R3c\\src\\t2pw\\pipeline\\qa_graph.py:312 in generate_qa_report                  \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m309 \x1b[0m\x1b[2m\u2502   \x1b[0m                                                                           \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m310 \x1b[0m\x1b[2m\u2502   \x1b[0m\x1b[2m# Build node_id -> (kind, label) lookup\x1b[0m                                    \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m311 \x1b[0m\x1b[2m\u2502   \x1b[0mnode_kind_map: Dict[\x1b[96mstr\x1b[0m, Tuple[\x1b[96mstr\x1b[0m, \x1b[96mstr\x1b[0m]] = {                              \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m312 \x1b[2m\u2502   \u2502   \x1b[0mn.id: (n.kind, n.label) \x1b[94mfor\x1b[0m n \x1b[95min\x1b[0m \x1b[1;4mdraft_graph.nodes\x1b[0m                     \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m313 \x1b[0m\x1b[2m\u2502   \x1b[0m}                                                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m314 \x1b[0m\x1b[2m\u2502   \x1b[0m                                                                           \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m315 \x1b[0m\x1b[2m\u2502   \x1b[0m\x1b[2m# --- missing_compartments ---\x1b[0m                                             \x1b[31m \x1b[0m\n\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\n\x1b[1;91mAttributeError: \x1b[0m\x1b[32m'str'\x1b[0m object has no attribute \x1b[32m'nodes'\x1b[0m
+---------------------------- Captured stderr call -----------------------------
+2026-11-06 12:54:09.821 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage1.py::test_rag_on_seeds_from_the_in_scope_payload_and_folds_the_evidence
+FAILED tests/test_service_extraction_stage1.py::test_rag_fold_without_a_focus_is_the_evidence_alone[None]
+FAILED tests/test_service_extraction_stage1.py::test_rag_fold_without_a_focus_is_the_evidence_alone[]
+FAILED tests/test_service_extraction_stage1.py::test_rag_without_evidence_records_the_result_and_keeps_the_focus
+FAILED tests/test_service_extraction_stage1.py::test_rag_declined_writes_nothing
+FAILED tests/test_service_extraction_stage1.py::test_rag_error_propagates - A...
+FAILED tests/test_service_extraction_stage1.py::test_patches_on_the_source_modules_reach_run_stage_one
+FAILED tests/test_service_extraction_stage1.py::test_real_app_hands_stage_two_the_filtered_payload_and_the_folded_focus
+8 failed, 14 passed in 3.35s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f1238da76c51323070578fa2edcf423b585e026d  [git, worktree dirty=True]
+label                   : mut-bound-generate_qa_report
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3c/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3c -q -p no:cacheprovider --basetemp=C:/t/wsR3ctmp/mut-tmp/bound-generate_qa_report tests/test_service_extraction_stage1.py
+cwd                     : C:\t\ws-R3c
+root PID / process group: 143960 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 4.17 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 3  143776:python.exe, 144576:python.exe, 144784:python.exe
+descendants terminated  : 3  143776, 144576, 144784
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\ws-R3c\docs\webserver\evidence\R3c\mutation\bound-generate_qa_report.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R3c  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

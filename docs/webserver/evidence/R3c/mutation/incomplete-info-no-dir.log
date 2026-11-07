@@ -1,0 +1,86 @@
+T2PW: C:\t\ws-R3c\src\t2pw\__init__.py
+.......FF.............                                                   [100%]
+================================== FAILURES ===================================
+________ test_incomplete_boundary_reports_and_returns_a_failure[None] _________
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo..., stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/incomplete-info-no-dir/test_incomplete_boundary_repor0'))
+failure = None
+
+    @pytest.mark.parametrize("failure", [None, types.SimpleNamespace(report={"errors": ["r"]})])
+    def test_incomplete_boundary_reports_and_returns_a_failure(world, failure):
+        world.boundary = {"ok": False, "reason": "rows rejected", "failure": failure}
+        world.rag = True
+        res, rep, state = _run(world)
+        message = "Extraction boundary failed and could not be recovered: rows rejected"
+        assert res.failure == ex.InputFailure(ex.KIND_STAGE_ONE_INCOMPLETE, message)
+        tail = [("json", ({"errors": ["r"]},))] if failure is not None else []
+>       assert rep.calls == SPIN + [("error", (message,)), ("info", (
+            "Localized repair and deterministic registry reconstruction were both applied; the "
+            "payload below is as far as the run got. No reaction was invented to satisfy the "
+            "contract. The diagnostics for this run (stage0_attempts.json, "
+            "extraction_boundary_report.json, cleaning_report.json) are in "
+            f"{DIAG_DIR}.",)), ("json", ({"ok": False, "reason": "rows rejected"},))] + tail
+E       AssertionError: assert [('spinner', ...rejected'},))] == [('spinner', ...rejected'},))]
+E         
+E         At index 4 diff: ('info', ('Localized repair and deterministic registry reconstruction were both applied; the payload below is as far as the run got. No reaction was invented to satisfy the contract. The diagnostics for this run (stage0_attempts.json, extraction_boundary_report.json, cleaning_report.json) are in tmp.',)) != ('info', ('Localized repair and deterministic registry reconstruction were both applied; the payload below is as far as the run got. No reaction was invented to satisfy the contract. The diagnostics for this run (stage0_attempts.json, extraction_boun...
+E         
+E         ...Full output truncated (2 lines hidden), use '-vv' to show
+
+tests\test_service_extraction_stage1.py:262: AssertionError
+______ test_incomplete_boundary_reports_and_returns_a_failure[failure1] _______
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo..., stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/incomplete-info-no-dir/test_incomplete_boundary_repor1'))
+failure = namespace(report={'errors': ['r']})
+
+    @pytest.mark.parametrize("failure", [None, types.SimpleNamespace(report={"errors": ["r"]})])
+    def test_incomplete_boundary_reports_and_returns_a_failure(world, failure):
+        world.boundary = {"ok": False, "reason": "rows rejected", "failure": failure}
+        world.rag = True
+        res, rep, state = _run(world)
+        message = "Extraction boundary failed and could not be recovered: rows rejected"
+        assert res.failure == ex.InputFailure(ex.KIND_STAGE_ONE_INCOMPLETE, message)
+        tail = [("json", ({"errors": ["r"]},))] if failure is not None else []
+>       assert rep.calls == SPIN + [("error", (message,)), ("info", (
+            "Localized repair and deterministic registry reconstruction were both applied; the "
+            "payload below is as far as the run got. No reaction was invented to satisfy the "
+            "contract. The diagnostics for this run (stage0_attempts.json, "
+            "extraction_boundary_report.json, cleaning_report.json) are in "
+            f"{DIAG_DIR}.",)), ("json", ({"ok": False, "reason": "rows rejected"},))] + tail
+E       AssertionError: assert [('spinner', ...ted'},)), ...] == [('spinner', ...ted'},)), ...]
+E         
+E         At index 4 diff: ('info', ('Localized repair and deterministic registry reconstruction were both applied; the payload below is as far as the run got. No reaction was invented to satisfy the contract. The diagnostics for this run (stage0_attempts.json, extraction_boundary_report.json, cleaning_report.json) are in tmp.',)) != ('info', ('Localized repair and deterministic registry reconstruction were both applied; the payload below is as far as the run got. No reaction was invented to satisfy the contract. The diagnostics for this run (stage0_attempts.json, extraction_boun...
+E         
+E         ...Full output truncated (2 lines hidden), use '-vv' to show
+
+tests\test_service_extraction_stage1.py:262: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage1.py::test_incomplete_boundary_reports_and_returns_a_failure[None]
+FAILED tests/test_service_extraction_stage1.py::test_incomplete_boundary_reports_and_returns_a_failure[failure1]
+2 failed, 20 passed in 3.50s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f1238da76c51323070578fa2edcf423b585e026d  [git, worktree dirty=True]
+label                   : mut-incomplete-info-no-dir
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3c/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3c -q -p no:cacheprovider --basetemp=C:/t/wsR3ctmp/mut-tmp/incomplete-info-no-dir tests/test_service_extraction_stage1.py
+cwd                     : C:\t\ws-R3c
+root PID / process group: 532208 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 4.44 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 3  532220:python.exe, 522860:python.exe, 531528:python.exe
+descendants terminated  : 3  522860, 531528, 532220
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\ws-R3c\docs\webserver\evidence\R3c\mutation\incomplete-info-no-dir.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R3c  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

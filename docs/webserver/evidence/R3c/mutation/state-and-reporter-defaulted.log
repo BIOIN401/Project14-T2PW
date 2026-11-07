@@ -1,0 +1,48 @@
+T2PW: C:\t\ws-R3c\src\t2pw\__init__.py
+..................F...                                                   [100%]
+================================== FAILURES ===================================
+________________ test_state_and_reporter_are_required_keywords ________________
+
+    def test_state_and_reporter_are_required_keywords():
+        params = inspect.signature(ex.run_stage_one).parameters
+        assert list(params)[0] == "text"
+        for name, p in list(params.items())[1:]:
+            assert p.kind is inspect.Parameter.KEYWORD_ONLY, name
+>           assert p.default is inspect.Parameter.empty, name
+E           AssertionError: state
+E           assert None is <class 'inspect._empty'>
+E            +  where None = <Parameter "state: 'MutableMapping[str, Any]' = None">.default
+E            +  and   <class 'inspect._empty'> = <class 'inspect.Parameter'>.empty
+E            +    where <class 'inspect.Parameter'> = inspect.Parameter
+
+tests\test_service_extraction_stage1.py:372: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage1.py::test_state_and_reporter_are_required_keywords
+1 failed, 21 passed in 3.41s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f1238da76c51323070578fa2edcf423b585e026d  [git, worktree dirty=True]
+label                   : mut-state-and-reporter-defaulted
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3c/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3c -q -p no:cacheprovider --basetemp=C:/t/wsR3ctmp/mut-tmp/state-and-reporter-defaulted tests/test_service_extraction_stage1.py
+cwd                     : C:\t\ws-R3c
+root PID / process group: 532568 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 4.42 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 3  532108:python.exe, 532492:python.exe, 533264:python.exe
+descendants terminated  : 3  532108, 532492, 533264
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\ws-R3c\docs\webserver\evidence\R3c\mutation\state-and-reporter-defaulted.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R3c  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

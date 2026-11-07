@@ -1,0 +1,49 @@
+T2PW: C:\t\ws-R3c\src\t2pw\__init__.py
+......F...............                                                   [100%]
+================================== FAILURES ===================================
+_________ test_contract_error_shows_its_report_and_returns_a_failure __________
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo...ad must be a dict.'), root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/contract-not-a-failure/test_contract_error_shows_its_0'))
+
+    def test_contract_error_shows_its_report_and_returns_a_failure(world):
+        world.stage1_raises = StageContractError("post_extraction", "Payload must be a dict.", {"errors": ["e"]})
+        res, rep, state = _run(world)
+>       assert res.failure == ex.InputFailure(ex.KIND_STAGE_ONE_BOUNDARY_ERROR,
+                                              "Extraction boundary failed: Payload must be a dict.")
+E       AssertionError: assert None == InputFailure(kind='stage_one_boundary_error', message='Extraction boundary failed: Payload must be a dict.')
+E        +  where None = StageOneResult(stage_one=None, chunk_details=None, stage_one_in_scope=None, out_of_scope_removed_reactions=None, rag_result=None, user_task_context=None, failure=None).failure
+E        +  and   InputFailure(kind='stage_one_boundary_error', message='Extraction boundary failed: Payload must be a dict.') = <class 't2pw.service.extraction.InputFailure'>('stage_one_boundary_error', 'Extraction boundary failed: Payload must be a dict.')
+E        +    where <class 't2pw.service.extraction.InputFailure'> = ex.InputFailure
+E        +    and   'stage_one_boundary_error' = ex.KIND_STAGE_ONE_BOUNDARY_ERROR
+
+tests\test_service_extraction_stage1.py:247: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage1.py::test_contract_error_shows_its_report_and_returns_a_failure
+1 failed, 21 passed in 3.55s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f1238da76c51323070578fa2edcf423b585e026d  [git, worktree dirty=True]
+label                   : mut-contract-not-a-failure
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3c/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3c -q -p no:cacheprovider --basetemp=C:/t/wsR3ctmp/mut-tmp/contract-not-a-failure tests/test_service_extraction_stage1.py
+cwd                     : C:\t\ws-R3c
+root PID / process group: 525100 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 4.56 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 3  531284:python.exe, 520244:python.exe, 523500:python.exe
+descendants terminated  : 3  520244, 523500, 531284
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\ws-R3c\docs\webserver\evidence\R3c\mutation\contract-not-a-failure.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R3c  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

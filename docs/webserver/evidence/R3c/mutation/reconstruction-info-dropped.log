@@ -1,0 +1,50 @@
+T2PW: C:\t\ws-R3c\src\t2pw\__init__.py
+...F..................                                                   [100%]
+================================== FAILURES ===================================
+_______________________ test_reconstruction_is_reported _______________________
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo...ge1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/reconstruction-info-dropped/test_reconstruction_is_reporte0'))
+
+    def test_reconstruction_is_reported(world):
+        world.boundary = {"reconstruction": {"shell_count": 2}}
+        _res, rep, _state = _run(world)
+>       assert rep.calls == SPIN + [("info", (
+            "Reconstructed 2 unresolved entity shell(s) for participants named by reactions but "
+            "missing from the registry. They carry no identifier and no function; every identity "
+            "gate downstream still applies to them.",))]
+E       AssertionError: assert [('spinner', ...inner:exit',)] == [('spinner', ... to them.',))]
+E         
+E         Right contains one more item: ('info', ('Reconstructed 2 unresolved entity shell(s) for participants named by reactions but missing from the registry. They carry no identifier and no function; every identity gate downstream still applies to them.',))
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage1.py:208: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage1.py::test_reconstruction_is_reported
+1 failed, 21 passed in 3.50s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f1238da76c51323070578fa2edcf423b585e026d  [git, worktree dirty=True]
+label                   : mut-reconstruction-info-dropped
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3c/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3c -q -p no:cacheprovider --basetemp=C:/t/wsR3ctmp/mut-tmp/reconstruction-info-dropped tests/test_service_extraction_stage1.py
+cwd                     : C:\t\ws-R3c
+root PID / process group: 532204 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 4.44 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 3  532116:python.exe, 524924:python.exe, 531616:python.exe
+descendants terminated  : 3  524924, 531616, 532116
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\ws-R3c\docs\webserver\evidence\R3c\mutation\reconstruction-info-dropped.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R3c  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

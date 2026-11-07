@@ -1,0 +1,114 @@
+{
+  "label": "mut-incomplete-failure-json-dropped",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/ws-R3c/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-R3c",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:/t/wsR3ctmp/mut-tmp/incomplete-failure-json-dropped",
+    "tests/test_service_extraction_stage1.py"
+  ],
+  "cwd": "C:\\t\\ws-R3c",
+  "started_at": "2026-11-07T04:08:06+00:00",
+  "finished_at": "2026-11-07T04:08:11+00:00",
+  "duration_seconds": 4.337307499998133,
+  "timeout_seconds": 300.0,
+  "root_pid": 522944,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 530524,
+      "name": "python.exe",
+      "ppid": 522944
+    },
+    {
+      "pid": 528608,
+      "name": "python.exe",
+      "ppid": 530524
+    },
+    {
+      "pid": 531300,
+      "name": "python.exe",
+      "ppid": 528608
+    }
+  ],
+  "descendants_terminated": [
+    528608,
+    530524,
+    531300
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 5620,
+      "name": "python.exe"
+    },
+    {
+      "pid": 142892,
+      "name": "python.exe"
+    },
+    {
+      "pid": 245284,
+      "name": "python.exe"
+    },
+    {
+      "pid": 527524,
+      "name": "python.exe"
+    },
+    {
+      "pid": 530784,
+      "name": "python.exe"
+    },
+    {
+      "pid": 530816,
+      "name": "python.exe"
+    },
+    {
+      "pid": 531216,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\ws-R3c\\docs\\webserver\\evidence\\R3c\\mutation\\incomplete-failure-json-dropped.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-R3c\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-R3c",
+    "repo_head": "f1238da76c51323070578fa2edcf423b585e026d",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "ws-R3c",
+    "token": "ws-R3c:527524:e22d6c5f947d19a6",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

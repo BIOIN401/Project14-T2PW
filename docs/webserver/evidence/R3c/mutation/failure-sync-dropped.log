@@ -1,0 +1,62 @@
+T2PW: C:\t\ws-R3c\src\t2pw\__init__.py
+.....F................                                                   [100%]
+================================== FAILURES ===================================
+________ test_pipeline_failure_reports_attempts_and_returns_a_failure _________
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo...SON after 3 attempts'), root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/failure-sync-dropped/test_pipeline_failure_reports_0'))
+
+    def test_pipeline_failure_reports_attempts_and_returns_a_failure(world):
+        world.stage1_raises = pipeline.PipelineFailure("stage1", "no JSON after 3 attempts", ATTEMPTS)
+        res, rep, state = _run(world)
+        assert res.failure == ex.InputFailure(ex.KIND_STAGE_ONE_FAILED, "Extraction failed: no JSON after 3 attempts")
+        assert res.stage_one is None and res.user_task_context is None
+        assert rep.calls == SPIN + [
+            ("error", ("Extraction failed: no JSON after 3 attempts",)),
+            ("expander", ("Stage 1 attempts",), {"expanded": False}), ("expander:enter",),
+            ("markdown", ("**Attempt 1 (extract)** - retry [cut]",)),
+            ("code", ("{bad",), {"language": "json"}),
+            ("caption", ("Expecting value",)),
+            ("markdown", ("**Attempt 2** - success",)),
+            ("code", ("{}",), {"language": "json"}),
+            ("expander:exit",)]
+>       assert state == {ex.EXTRACTION_DIAGNOSTICS_KEY: CLEANING}  # synced before the exit
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert {} == {'extraction_...'pass': 2}]}}}
+E         
+E         Right contains 1 more item:
+E         {'extraction_diagnostics': {'cleaning_report.json': {'passes': [{'pass': 1},
+E                                                                         {'dropped': 3,
+E                                                                          'pass': 2}]}}}
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage1.py:240: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage1.py::test_pipeline_failure_reports_attempts_and_returns_a_failure
+1 failed, 21 passed in 3.45s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f1238da76c51323070578fa2edcf423b585e026d  [git, worktree dirty=True]
+label                   : mut-failure-sync-dropped
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3c/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3c -q -p no:cacheprovider --basetemp=C:/t/wsR3ctmp/mut-tmp/failure-sync-dropped tests/test_service_extraction_stage1.py
+cwd                     : C:\t\ws-R3c
+root PID / process group: 499140 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 4.43 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 3  527276:python.exe, 494180:python.exe, 531044:python.exe
+descendants terminated  : 3  494180, 527276, 531044
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\ws-R3c\docs\webserver\evidence\R3c\mutation\failure-sync-dropped.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R3c  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

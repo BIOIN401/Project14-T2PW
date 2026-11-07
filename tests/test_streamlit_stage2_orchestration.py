@@ -958,27 +958,42 @@ def test_stage_contract_failure_renderer_exposes_complete_structured_report() ->
 def test_out_of_scope_filter_runs_between_stage1_extraction_and_stage2_inference() -> None:
     tree = _source_tree()
 
-    def _calls_named(name: str) -> list[ast.Call]:
+    def _calls_named(name: str, within: ast.AST = tree, attr: bool = False) -> list[ast.Call]:
         return [
             node
-            for node in ast.walk(tree)
+            for node in ast.walk(within)
             if isinstance(node, ast.Call)
-            and isinstance(node.func, ast.Name)
-            and node.func.id == name
+            and (getattr(node.func, "attr", None) if attr and isinstance(node.func, ast.Attribute)
+                 else getattr(node.func, "id", None)) == name
         ]
 
-    extraction_calls = _calls_named("run_stage_one_with_chunking")
-    filter_calls = _calls_named("filter_out_of_scope_reactions")
+    # Q-R3c-1: Stage 1 and the filter live in service/extraction.py's run_stage_one (R3c),
+    # as call-time ``_pipeline.x(...)`` calls; Stage 2 is still in the app.
+    service = next(node for node in ast.parse((ROOT / "src" / "t2pw" / "service" / "extraction.py")
+                                              .read_text(encoding="utf-8")).body
+                   if isinstance(node, ast.FunctionDef) and node.name == "run_stage_one")
+    extraction_calls = _calls_named("run_stage_one_with_chunking", service, attr=True)
+    filter_calls = _calls_named("filter_out_of_scope_reactions", service, attr=True)
+    stage_one_calls = _calls_named("run_stage_one")
     inference_calls = _calls_named("run_stage_two_with_feedback_loop")
 
     assert len(extraction_calls) == 1
     assert len(filter_calls) == 1
+    assert len(stage_one_calls) == 1
     assert len(inference_calls) == 1
 
     # The filter must run strictly after Stage 1 extraction returns and strictly
     # before its output is handed to Stage 2 inference, so out-of-scope reactions
     # never reach the inference pass.
-    assert extraction_calls[0].lineno < filter_calls[0].lineno < inference_calls[0].lineno
+    assert extraction_calls[0].lineno < filter_calls[0].lineno
+    assert stage_one_calls[0].lineno < inference_calls[0].lineno
+    # ... and what run_stage_one returns as the in-scope payload is the filter's output.
+    filtered = next(node.targets[0] for node in ast.walk(service)
+                    if isinstance(node, ast.Assign) and node.value is filter_calls[0])
+    returned = [kw.value for call in _calls_named("StageOneResult", service)
+                for kw in call.keywords if kw.arg == "stage_one_in_scope"]
+    assert len(returned) == 1 and isinstance(returned[0], ast.Name)
+    assert returned[0].id == filtered.elts[0].id
 
     # Stage 2 inference must be called with the *filtered* Stage 1 payload, not
     # the raw extraction output.

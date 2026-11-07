@@ -1,0 +1,84 @@
+T2PW: C:\t\ws-R3c\src\t2pw\__init__.py
+.....................F                                                   [100%]
+================================== FAILURES ===================================
+___ test_real_app_hands_stage_two_the_filtered_payload_and_the_folded_focus ___
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000237BC098F30>
+tmp_path = WindowsPath('C:/t/wsR3ctmp/mut-tmp/app-focus-not-rebound/test_real_app_hands_stage_two_0')
+
+    def test_real_app_hands_stage_two_the_filtered_payload_and_the_folded_focus(monkeypatch, tmp_path):
+        """The app rebinds what the rest of the block reads from the returned result."""
+    
+        import t2pw.service.rag_orchestration as rag
+    
+        stage2: List[Any] = []
+        evidence = types.SimpleNamespace(evidence_context="PMC1: MenG demethylates.", synthesized=False,
+                                         payload=None)
+    
+        def stage_two(text, payload, **kw):
+            stage2.append((payload, kw))
+            raise pipeline.PipelineFailure("stage2", "stop here", ATTEMPTS[1:])
+    
+        monkeypatch.setattr(pipeline, "run_stage_one_with_chunking",
+                            lambda *_a, **_k: (_payload("a", out=("x",)), [{"chunk": 1}]))
+        monkeypatch.setattr(boundary, "settle_stage_one",
+                            lambda payload, **_k: _Boundary(payload))
+        monkeypatch.setattr(pipeline, "run_stage_two_with_feedback_loop", stage_two)
+        monkeypatch.setattr(draft_graph, "build_draft_graph", lambda payload: "GRAPH")
+        monkeypatch.setattr(qa_graph, "generate_qa_report", lambda graph, payload: {"qa": graph})
+        monkeypatch.setattr(rag, "maybe_run_rag", lambda **_k: evidence)
+        monkeypatch.setenv("RAG_ENABLED", "1")
+        at = _real_app(monkeypatch, tmp_path, focus="  menaquinone  ")
+    
+        assert [str(e.value) for e in at.exception] == []
+        assert [e.value for e in at.error] == ["Inference stage failed: stop here"]
+        # the app's render_attempts shim (Stage 2 still calls it) renders through the service
+        assert [x.label for x in at.expander] == ["stage2 attempts"]
+        assert "**Attempt 2** - success" in [m.value for m in at.markdown]
+        assert "Removed 1 out-of-scope reaction(s) before Stage 2: x" in [i.value for i in at.info]
+        assert len(stage2) == 1
+        payload, kw = stage2[0]
+        assert payload == _payload("a")
+        assert kw["chunk_details"] == [{"chunk": 1}]
+>       assert kw["user_task_context"] == "menaquinone\n\nPMC1: MenG demethylates."
+E       AssertionError: assert 'menaquinone' == 'menaquinone\...demethylates.'
+E         
+E         - menaquinone
+E         ?            -
+E         + menaquinone
+E         - 
+E         - PMC1: MenG demethylates.
+
+tests\test_service_extraction_stage1.py:474: AssertionError
+---------------------------- Captured stderr call -----------------------------
+2026-11-06 22:09:53.896 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage1.py::test_real_app_hands_stage_two_the_filtered_payload_and_the_folded_focus
+1 failed, 21 passed in 3.44s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f1238da76c51323070578fa2edcf423b585e026d  [git, worktree dirty=True]
+label                   : mut-app-focus-not-rebound
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3c/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3c -q -p no:cacheprovider --basetemp=C:/t/wsR3ctmp/mut-tmp/app-focus-not-rebound tests/test_service_extraction_stage1.py
+cwd                     : C:\t\ws-R3c
+root PID / process group: 530756 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 4.43 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 3  529900:python.exe, 530596:python.exe, 532264:python.exe
+descendants terminated  : 3  529900, 530596, 532264
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\ws-R3c\docs\webserver\evidence\R3c\mutation\app-focus-not-rebound.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R3c  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

@@ -1,0 +1,395 @@
+T2PW: C:\t\ws-R3c\src\t2pw\__init__.py
+FFFFF..FFFFFFFFFFF...F                                                   [100%]
+================================== FAILURES ===================================
+_ test_success_passes_stage_one_its_arguments_and_returns_what_the_block_reads _
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo..., stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/bound-settle_stage_one/test_success_passes_stage_one_0'))
+
+    def test_success_passes_stage_one_its_arguments_and_returns_what_the_block_reads(world):
+        world.chunks = [{"chunk": 1}]
+        res, rep, state = _run(world, state={"export_mode": "research"})
+    
+        name, text, kw = world.calls[0]
+        assert (name, text) == ("stage1", "the paper")
+        assert kw == dict(pathway_context={"pathway_name": "Menaquinone"}, user_task_context="focus",
+                          artifact_dir=world.root / "tmp", enable_chunking=True, chunk_word_limit=1200,
+                          chunk_overlap=200, max_attempts=3, temperature=0.25, max_tokens=8000)
+        assert all(type(kw[k]) is int for k in ("chunk_word_limit", "chunk_overlap", "max_attempts", "max_tokens"))
+        settle = world.calls[2]
+        assert world.calls[1] == ("diag.current",)  # the cleaning report is read after Stage 1 ran
+>       assert settle[0] == "settle" and settle[1] == _payload("a")
+E       AssertionError: assert ('diag.current' == 'settle'
+E         
+E         - settle
+E         + diag.current)
+
+tests\test_service_extraction_stage1.py:171: AssertionError
+_____________ test_export_mode_is_coerced_and_defaults_when_unset _____________
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo..., stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/bound-settle_stage_one/test_export_mode_is_coerced_an0'))
+
+    def test_export_mode_is_coerced_and_defaults_when_unset(world):
+        _run(world)
+>       assert [c for c in world.calls if c[0] == "settle"][0][2]["mode"] == "pathwhiz"
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests\test_service_extraction_stage1.py:187: IndexError
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.pipeline.stage_one_boundary:stage_one_boundary.py:528 Stage-1 boundary could not be settled: 1 post-extraction contract error(s) remain (first: reaction_missing_participants); localized row repair ran 1 attempt(s) and recovered 0 row(s): row repair call failed: RuntimeError: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': "No models loaded. Please load a model in the developer page or use the 'lms load' command.", 'type': 'invalid_request_error', 'param': 'model', 'code': None}} (1 contract error(s) remain).
+___ test_cleaning_report_is_empty_when_the_recorder_fails_or_has_no_passes ____
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo..., stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/bound-settle_stage_one/test_cleaning_report_is_empty_0'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000196DE710B90>
+
+    def test_cleaning_report_is_empty_when_the_recorder_fails_or_has_no_passes(world, monkeypatch):
+        world.artifacts = {}
+        _run(world)
+>       assert [c for c in world.calls if c[0] == "settle"][0][2]["cleaning_report"] == {}
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests\test_service_extraction_stage1.py:193: IndexError
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.pipeline.stage_one_boundary:stage_one_boundary.py:528 Stage-1 boundary could not be settled: 1 post-extraction contract error(s) remain (first: reaction_missing_participants); localized row repair ran 1 attempt(s) and recovered 0 row(s): row repair call failed: RuntimeError: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': "No models loaded. Please load a model in the developer page or use the 'lms load' command.", 'type': 'invalid_request_error', 'param': 'model', 'code': None}} (1 contract error(s) remain).
+_______________________ test_reconstruction_is_reported _______________________
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo..., stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/bound-settle_stage_one/test_reconstruction_is_reporte0'))
+
+    def test_reconstruction_is_reported(world):
+        world.boundary = {"reconstruction": {"shell_count": 2}}
+        _res, rep, _state = _run(world)
+>       assert rep.calls == SPIN + [("info", (
+            "Reconstructed 2 unresolved entity shell(s) for participants named by reactions but "
+            "missing from the registry. They carry no identifier and no function; every identity "
+            "gate downstream still applies to them.",))]
+E       assert [('spinner', ... ...},)), ...] == [('spinner', ... to them.',))]
+E         
+E         At index 3 diff: ('error', ('Extraction boundary failed and could not be recovered: 1 post-extraction contract error(s) remain (first: reaction_missing_participants); localized row repair ran 1 attempt(s) and recovered 0 row(s): row repair call failed: RuntimeError: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {\'error\': {\'message\': "No models loaded. Please load a model in the developer page or use the \'lms load\' command.", \'type\': \'inval...
+E         
+E         ...Full output truncated (3 lines hidden), use '-vv' to show
+
+tests\test_service_extraction_stage1.py:208: AssertionError
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.pipeline.stage_one_boundary:stage_one_boundary.py:528 Stage-1 boundary could not be settled: 1 post-extraction contract error(s) remain (first: reaction_missing_participants); localized row repair ran 1 attempt(s) and recovered 0 row(s): row repair call failed: RuntimeError: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': "No models loaded. Please load a model in the developer page or use the 'lms load' command.", 'type': 'invalid_request_error', 'param': 'model', 'code': None}} (1 contract error(s) remain).
+____________ test_out_of_scope_reactions_are_removed_and_reported _____________
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo..., stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/bound-settle_stage_one/test_out_of_scope_reactions_ar0'))
+
+    def test_out_of_scope_reactions_are_removed_and_reported(world):
+        world.stage1 = _payload("a", out=("x", "y"))
+        world.boundary = {"reconstruction": {}}
+        res, rep, _state = _run(world)
+>       assert res.out_of_scope_removed_reactions == ["x", "y"]
+E       assert None == ['x', 'y']
+E        +  where None = StageOneResult(stage_one=None, chunk_details=None, stage_one_in_scope=None, out_of_scope_removed_reactions=None, rag_r... page or use the \'lms load\' command.", \'type\': \'invalid_request_error\', \'param\': \'model\', \'code\': None}}')).out_of_scope_removed_reactions
+
+tests\test_service_extraction_stage1.py:218: AssertionError
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.pipeline.stage_one_boundary:stage_one_boundary.py:528 Stage-1 boundary could not be settled: 3 post-extraction contract error(s) remain (first: reaction_missing_participants); localized row repair ran 1 attempt(s) and recovered 0 row(s): row repair call failed: RuntimeError: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': "No models loaded. Please load a model in the developer page or use the 'lms load' command.", 'type': 'invalid_request_error', 'param': 'model', 'code': None}} (3 contract error(s) remain).
+________ test_incomplete_boundary_reports_and_returns_a_failure[None] _________
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo..., stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/bound-settle_stage_one/test_incomplete_boundary_repor0'))
+failure = None
+
+    @pytest.mark.parametrize("failure", [None, types.SimpleNamespace(report={"errors": ["r"]})])
+    def test_incomplete_boundary_reports_and_returns_a_failure(world, failure):
+        world.boundary = {"ok": False, "reason": "rows rejected", "failure": failure}
+        world.rag = True
+        res, rep, state = _run(world)
+        message = "Extraction boundary failed and could not be recovered: rows rejected"
+>       assert res.failure == ex.InputFailure(ex.KIND_STAGE_ONE_INCOMPLETE, message)
+E       assert InputFailure(...de\': None}}') == InputFailure(...ows rejected')
+E         
+E         Omitting 1 identical items, use -vv to show
+E         Differing attributes:
+E         ['message']
+E         
+E         Drill down into differing attribute message:
+E           message: 'Extraction boundary failed and could not be recovered: 1 post-extraction contract error(s) remain (first: reaction_missing_participants); localized row repair ran 1 attempt(s) and recovered 0 row(s): row repair call failed: RuntimeError: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {\'error\': {\'message\': "No models ...
+E         
+E         ...Full output truncated (4 lines hidden), use '-vv' to show
+
+tests\test_service_extraction_stage1.py:260: AssertionError
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.pipeline.stage_one_boundary:stage_one_boundary.py:528 Stage-1 boundary could not be settled: 1 post-extraction contract error(s) remain (first: reaction_missing_participants); localized row repair ran 1 attempt(s) and recovered 0 row(s): row repair call failed: RuntimeError: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': "No models loaded. Please load a model in the developer page or use the 'lms load' command.", 'type': 'invalid_request_error', 'param': 'model', 'code': None}} (1 contract error(s) remain).
+______ test_incomplete_boundary_reports_and_returns_a_failure[failure1] _______
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo..., stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/bound-settle_stage_one/test_incomplete_boundary_repor1'))
+failure = namespace(report={'errors': ['r']})
+
+    @pytest.mark.parametrize("failure", [None, types.SimpleNamespace(report={"errors": ["r"]})])
+    def test_incomplete_boundary_reports_and_returns_a_failure(world, failure):
+        world.boundary = {"ok": False, "reason": "rows rejected", "failure": failure}
+        world.rag = True
+        res, rep, state = _run(world)
+        message = "Extraction boundary failed and could not be recovered: rows rejected"
+>       assert res.failure == ex.InputFailure(ex.KIND_STAGE_ONE_INCOMPLETE, message)
+E       assert InputFailure(...de\': None}}') == InputFailure(...ows rejected')
+E         
+E         Omitting 1 identical items, use -vv to show
+E         Differing attributes:
+E         ['message']
+E         
+E         Drill down into differing attribute message:
+E           message: 'Extraction boundary failed and could not be recovered: 1 post-extraction contract error(s) remain (first: reaction_missing_participants); localized row repair ran 1 attempt(s) and recovered 0 row(s): row repair call failed: RuntimeError: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {\'error\': {\'message\': "No models ...
+E         
+E         ...Full output truncated (4 lines hidden), use '-vv' to show
+
+tests\test_service_extraction_stage1.py:260: AssertionError
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.pipeline.stage_one_boundary:stage_one_boundary.py:528 Stage-1 boundary could not be settled: 1 post-extraction contract error(s) remain (first: reaction_missing_participants); localized row repair ran 1 attempt(s) and recovered 0 row(s): row repair call failed: RuntimeError: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': "No models loaded. Please load a model in the developer page or use the 'lms load' command.", 'type': 'invalid_request_error', 'param': 'model', 'code': None}} (1 contract error(s) remain).
+__________________________ test_rag_off_runs_no_seed __________________________
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo...=None, stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/bound-settle_stage_one/test_rag_off_runs_no_seed0'))
+
+    def test_rag_off_runs_no_seed(world):
+        res, _rep, state = _run(world, flag=1)
+>       assert [c[0] for c in world.calls] == ["stage1", "diag.current", "settle", "diag.current", "filter"]
+E       AssertionError: assert ['stage1', 'd...diag.current'] == ['stage1', 'd...nt', 'filter']
+E         
+E         At index 2 diff: 'diag.current' != 'settle'
+E         Right contains 2 more items, first extra item: 'diag.current'
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage1.py:275: AssertionError
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.pipeline.stage_one_boundary:stage_one_boundary.py:528 Stage-1 boundary could not be settled: 1 post-extraction contract error(s) remain (first: reaction_missing_participants); localized row repair ran 1 attempt(s) and recovered 0 row(s): row repair call failed: RuntimeError: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': "No models loaded. Please load a model in the developer page or use the 'lms load' command.", 'type': 'invalid_request_error', 'param': 'model', 'code': None}} (1 contract error(s) remain).
+_____ test_rag_on_seeds_from_the_in_scope_payload_and_folds_the_evidence ______
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo..., stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/bound-settle_stage_one/test_rag_on_seeds_from_the_in_0'))
+
+    def test_rag_on_seeds_from_the_in_scope_payload_and_folds_the_evidence(world):
+        world.stage1 = _payload("a", out=("x",))
+        world.rag = True
+        world.rag_result = types.SimpleNamespace(evidence_context="PMC1: MenG.")
+        res, rep, state = _run(world, flag=1)
+        in_scope = dict(_payload("a"), settled=True)
+>       assert world.calls[-3:-1] == [("build_draft_graph", in_scope), ("generate_qa_report", "GRAPH", in_scope)]
+E       AssertionError: assert [('stage1', '...ag.current',)] == [('build_draf...tled': True})]
+E         
+E         At index 0 diff: ('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'focus', 'artifact_dir': WindowsPath('C:/t/wsR3ctmp/mut-tmp/bound-settle_stage_one/test_rag_on_seeds_from_the_in_0/tmp'), 'enable_chunking': True, 'chunk_word_limit': 1200, 'chunk_overlap': 200, 'max_attempts': 3, 'temperature': 0.25, 'max_tokens': 8000}) != ('build_draft_graph', {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}, 'settled': True})
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage1.py:286: AssertionError
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.pipeline.stage_one_boundary:stage_one_boundary.py:528 Stage-1 boundary could not be settled: 2 post-extraction contract error(s) remain (first: reaction_missing_participants); localized row repair ran 1 attempt(s) and recovered 0 row(s): row repair call failed: RuntimeError: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': "No models loaded. Please load a model in the developer page or use the 'lms load' command.", 'type': 'invalid_request_error', 'param': 'model', 'code': None}} (2 contract error(s) remain).
+__________ test_rag_fold_without_a_focus_is_the_evidence_alone[None] __________
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': Non..., stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/bound-settle_stage_one/test_rag_fold_without_a_focus_0'))
+utc = None
+
+    @pytest.mark.parametrize("utc", [None, ""])
+    def test_rag_fold_without_a_focus_is_the_evidence_alone(world, utc):
+        world.rag = True
+        world.rag_result = types.SimpleNamespace(evidence_context="E")
+        res, _rep, _state = _run(world, utc=utc)
+>       assert res.user_task_context == "E"
+E       assert None == 'E'
+E        +  where None = StageOneResult(stage_one=None, chunk_details=None, stage_one_in_scope=None, out_of_scope_removed_reactions=None, rag_r... page or use the \'lms load\' command.", \'type\': \'invalid_request_error\', \'param\': \'model\', \'code\': None}}')).user_task_context
+
+tests\test_service_extraction_stage1.py:305: AssertionError
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.pipeline.stage_one_boundary:stage_one_boundary.py:528 Stage-1 boundary could not be settled: 1 post-extraction contract error(s) remain (first: reaction_missing_participants); localized row repair ran 1 attempt(s) and recovered 0 row(s): row repair call failed: RuntimeError: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': "No models loaded. Please load a model in the developer page or use the 'lms load' command.", 'type': 'invalid_request_error', 'param': 'model', 'code': None}} (1 contract error(s) remain).
+____________ test_rag_fold_without_a_focus_is_the_evidence_alone[] ____________
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': '',..., stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/bound-settle_stage_one/test_rag_fold_without_a_focus_1'))
+utc = ''
+
+    @pytest.mark.parametrize("utc", [None, ""])
+    def test_rag_fold_without_a_focus_is_the_evidence_alone(world, utc):
+        world.rag = True
+        world.rag_result = types.SimpleNamespace(evidence_context="E")
+        res, _rep, _state = _run(world, utc=utc)
+>       assert res.user_task_context == "E"
+E       assert None == 'E'
+E        +  where None = StageOneResult(stage_one=None, chunk_details=None, stage_one_in_scope=None, out_of_scope_removed_reactions=None, rag_r... page or use the \'lms load\' command.", \'type\': \'invalid_request_error\', \'param\': \'model\', \'code\': None}}')).user_task_context
+
+tests\test_service_extraction_stage1.py:305: AssertionError
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.pipeline.stage_one_boundary:stage_one_boundary.py:528 Stage-1 boundary could not be settled: 1 post-extraction contract error(s) remain (first: reaction_missing_participants); localized row repair ran 1 attempt(s) and recovered 0 row(s): row repair call failed: RuntimeError: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': "No models loaded. Please load a model in the developer page or use the 'lms load' command.", 'type': 'invalid_request_error', 'param': 'model', 'code': None}} (1 contract error(s) remain).
+______ test_rag_without_evidence_records_the_result_and_keeps_the_focus _______
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo..., stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/bound-settle_stage_one/test_rag_without_evidence_reco0'))
+
+    def test_rag_without_evidence_records_the_result_and_keeps_the_focus(world):
+        world.rag = True
+        world.rag_result = types.SimpleNamespace(evidence_context="")
+        res, _rep, state = _run(world)
+>       assert res.user_task_context == "focus" and state["rag_result"] is world.rag_result
+E       assert (None == 'focus')
+E        +  where None = StageOneResult(stage_one=None, chunk_details=None, stage_one_in_scope=None, out_of_scope_removed_reactions=None, rag_r... page or use the \'lms load\' command.", \'type\': \'invalid_request_error\', \'param\': \'model\', \'code\': None}}')).user_task_context
+
+tests\test_service_extraction_stage1.py:313: AssertionError
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.pipeline.stage_one_boundary:stage_one_boundary.py:528 Stage-1 boundary could not be settled: 1 post-extraction contract error(s) remain (first: reaction_missing_participants); localized row repair ran 1 attempt(s) and recovered 0 row(s): row repair call failed: RuntimeError: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': "No models loaded. Please load a model in the developer page or use the 'lms load' command.", 'type': 'invalid_request_error', 'param': 'model', 'code': None}} (1 contract error(s) remain).
+______________________ test_rag_declined_writes_nothing _______________________
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo..., stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/bound-settle_stage_one/test_rag_declined_writes_nothi0'))
+
+    def test_rag_declined_writes_nothing(world):
+        world.rag = True
+        res, _rep, state = _run(world)
+>       assert res.rag_result is None and res.user_task_context == "focus"
+E       assert (None is None and None == 'focus')
+E        +  where None = StageOneResult(stage_one=None, chunk_details=None, stage_one_in_scope=None, out_of_scope_removed_reactions=None, rag_r... page or use the \'lms load\' command.", \'type\': \'invalid_request_error\', \'param\': \'model\', \'code\': None}}')).rag_result
+E        +  and   None = StageOneResult(stage_one=None, chunk_details=None, stage_one_in_scope=None, out_of_scope_removed_reactions=None, rag_r... page or use the \'lms load\' command.", \'type\': \'invalid_request_error\', \'param\': \'model\', \'code\': None}}')).user_task_context
+
+tests\test_service_extraction_stage1.py:320: AssertionError
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.pipeline.stage_one_boundary:stage_one_boundary.py:528 Stage-1 boundary could not be settled: 1 post-extraction contract error(s) remain (first: reaction_missing_participants); localized row repair ran 1 attempt(s) and recovered 0 row(s): row repair call failed: RuntimeError: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': "No models loaded. Please load a model in the developer page or use the 'lms load' command.", 'type': 'invalid_request_error', 'param': 'model', 'code': None}} (1 contract error(s) remain).
+__________________________ test_rag_error_propagates __________________________
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo...=None, stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/bound-settle_stage_one/test_rag_error_propagates0'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000196DE6CF540>
+
+    def test_rag_error_propagates(world, monkeypatch):
+        import t2pw.service.rag_orchestration as rag
+    
+        def boom(**_):
+            raise RuntimeError("chain blew up")
+    
+        world.rag = True
+        monkeypatch.setattr(rag, "maybe_run_rag", boom)
+>       with pytest.raises(RuntimeError, match="chain blew up"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'RuntimeError'>
+
+tests\test_service_extraction_stage1.py:332: Failed
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.pipeline.stage_one_boundary:stage_one_boundary.py:528 Stage-1 boundary could not be settled: 1 post-extraction contract error(s) remain (first: reaction_missing_participants); localized row repair ran 1 attempt(s) and recovered 0 row(s): row repair call failed: RuntimeError: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': "No models loaded. Please load a model in the developer page or use the 'lms load' command.", 'type': 'invalid_request_error', 'param': 'model', 'code': None}} (1 contract error(s) remain).
+___________ test_patches_on_the_source_modules_reach_run_stage_one ____________
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo..., stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/bound-settle_stage_one/test_patches_on_the_source_mod0'))
+
+    def test_patches_on_the_source_modules_reach_run_stage_one(world):
+        """R3b review F1 rule. Before R3c the app script re-ran ``from ... import`` on every
+        AppTest run, so a patch on the source module (c055 patches
+        ``pipeline.run_stage_one_with_chunking`` and ``stage_one_boundary.settle_stage_one``)
+        reached the call. Every callee of the moved code must still be looked up there."""
+    
+        world.rag = True
+        world.rag_result = types.SimpleNamespace(evidence_context="")
+        _run(world)
+>       assert [c[0] for c in world.calls] == ["stage1", "diag.current", "settle", "diag.current", "filter",
+                                              "build_draft_graph", "generate_qa_report", "maybe_run_rag"]
+E       AssertionError: assert ['stage1', 'd...diag.current'] == ['stage1', 'd...t_graph', ...]
+E         
+E         At index 2 diff: 'diag.current' != 'settle'
+E         Right contains 5 more items, first extra item: 'diag.current'
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage1.py:346: AssertionError
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.pipeline.stage_one_boundary:stage_one_boundary.py:528 Stage-1 boundary could not be settled: 1 post-extraction contract error(s) remain (first: reaction_missing_participants); localized row repair ran 1 attempt(s) and recovered 0 row(s): row repair call failed: RuntimeError: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': "No models loaded. Please load a model in the developer page or use the 'lms load' command.", 'type': 'invalid_request_error', 'param': 'model', 'code': None}} (1 contract error(s) remain).
+____________ test_importing_the_service_loads_no_stage_one_module _____________
+
+    def test_importing_the_service_loads_no_stage_one_module():
+        """The Stage-1 imports are function-local, so importing the module loads what it did before."""
+    
+        import subprocess
+    
+        code = ("import sys, t2pw.service.extraction\n"
+                "print(sorted(n for n in ('t2pw.pipeline.pipeline', 't2pw.pipeline.stage_one_boundary',"
+                " 't2pw.service.rag_orchestration', 't2pw.service.postpipeline', 't2pw.config')"
+                " if n in sys.modules))\n")
+        import os
+    
+        done = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True,
+                              env=dict(os.environ, PYTHONPATH=str(SRC)), cwd=str(ROOT), timeout=300)
+        assert done.returncode == 0, done.stderr[-2000:]
+>       assert done.stdout.strip().splitlines()[-1] == "[]"
+E       assert "['t2pw.pipel...ne_boundary']" == '[]'
+E         
+E         - []
+E         + ['t2pw.pipeline.stage_one_boundary']
+
+tests\test_service_extraction_stage1.py:364: AssertionError
+___ test_real_app_hands_stage_two_the_filtered_payload_and_the_folded_focus ___
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000196DD899010>
+tmp_path = WindowsPath('C:/t/wsR3ctmp/mut-tmp/bound-settle_stage_one/test_real_app_hands_stage_two_0')
+
+    def test_real_app_hands_stage_two_the_filtered_payload_and_the_folded_focus(monkeypatch, tmp_path):
+        """The app rebinds what the rest of the block reads from the returned result."""
+    
+        import t2pw.service.rag_orchestration as rag
+    
+        stage2: List[Any] = []
+        evidence = types.SimpleNamespace(evidence_context="PMC1: MenG demethylates.", synthesized=False,
+                                         payload=None)
+    
+        def stage_two(text, payload, **kw):
+            stage2.append((payload, kw))
+            raise pipeline.PipelineFailure("stage2", "stop here", ATTEMPTS[1:])
+    
+        monkeypatch.setattr(pipeline, "run_stage_one_with_chunking",
+                            lambda *_a, **_k: (_payload("a", out=("x",)), [{"chunk": 1}]))
+        monkeypatch.setattr(boundary, "settle_stage_one",
+                            lambda payload, **_k: _Boundary(payload))
+        monkeypatch.setattr(pipeline, "run_stage_two_with_feedback_loop", stage_two)
+        monkeypatch.setattr(draft_graph, "build_draft_graph", lambda payload: "GRAPH")
+        monkeypatch.setattr(qa_graph, "generate_qa_report", lambda graph, payload: {"qa": graph})
+        monkeypatch.setattr(rag, "maybe_run_rag", lambda **_k: evidence)
+        monkeypatch.setenv("RAG_ENABLED", "1")
+        at = _real_app(monkeypatch, tmp_path, focus="  menaquinone  ")
+    
+        assert [str(e.value) for e in at.exception] == []
+>       assert [e.value for e in at.error] == ["Inference stage failed: stop here"]
+E       assert ["Extraction ...ode': None}}"] == ['Inference s...d: stop here']
+E         
+E         At index 0 diff: 'Extraction boundary failed and could not be recovered: 2 post-extraction contract error(s) remain (first: reaction_missing_participants); localized row repair ran 1 attempt(s) and recovered 0 row(s): row repair call failed: RuntimeError: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {\'error\': {\'message\': "No models loaded. Please load a model in the developer page or use the \'lms load\' command.", \'type\': \'invalid_request_...
+E         
+E         ...Full output truncated (2 lines hidden), use '-vv' to show
+
+tests\test_service_extraction_stage1.py:465: AssertionError
+---------------------------- Captured stderr call -----------------------------
+2026-11-06 12:53:50.446 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.pipeline.stage_one_boundary:stage_one_boundary.py:528 Stage-1 boundary could not be settled: 2 post-extraction contract error(s) remain (first: reaction_missing_participants); localized row repair ran 1 attempt(s) and recovered 0 row(s): row repair call failed: RuntimeError: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': "No models loaded. Please load a model in the developer page or use the 'lms load' command.", 'type': 'invalid_request_error', 'param': 'model', 'code': None}} (2 contract error(s) remain).
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage1.py::test_success_passes_stage_one_its_arguments_and_returns_what_the_block_reads
+FAILED tests/test_service_extraction_stage1.py::test_export_mode_is_coerced_and_defaults_when_unset
+FAILED tests/test_service_extraction_stage1.py::test_cleaning_report_is_empty_when_the_recorder_fails_or_has_no_passes
+FAILED tests/test_service_extraction_stage1.py::test_reconstruction_is_reported
+FAILED tests/test_service_extraction_stage1.py::test_out_of_scope_reactions_are_removed_and_reported
+FAILED tests/test_service_extraction_stage1.py::test_incomplete_boundary_reports_and_returns_a_failure[None]
+FAILED tests/test_service_extraction_stage1.py::test_incomplete_boundary_reports_and_returns_a_failure[failure1]
+FAILED tests/test_service_extraction_stage1.py::test_rag_off_runs_no_seed - A...
+FAILED tests/test_service_extraction_stage1.py::test_rag_on_seeds_from_the_in_scope_payload_and_folds_the_evidence
+FAILED tests/test_service_extraction_stage1.py::test_rag_fold_without_a_focus_is_the_evidence_alone[None]
+FAILED tests/test_service_extraction_stage1.py::test_rag_fold_without_a_focus_is_the_evidence_alone[]
+FAILED tests/test_service_extraction_stage1.py::test_rag_without_evidence_records_the_result_and_keeps_the_focus
+FAILED tests/test_service_extraction_stage1.py::test_rag_declined_writes_nothing
+FAILED tests/test_service_extraction_stage1.py::test_rag_error_propagates - F...
+FAILED tests/test_service_extraction_stage1.py::test_patches_on_the_source_modules_reach_run_stage_one
+FAILED tests/test_service_extraction_stage1.py::test_importing_the_service_loads_no_stage_one_module
+FAILED tests/test_service_extraction_stage1.py::test_real_app_hands_stage_two_the_filtered_payload_and_the_folded_focus
+17 failed, 5 passed in 3.74s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f1238da76c51323070578fa2edcf423b585e026d  [git, worktree dirty=True]
+label                   : mut-bound-settle_stage_one
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3c/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3c -q -p no:cacheprovider --basetemp=C:/t/wsR3ctmp/mut-tmp/bound-settle_stage_one tests/test_service_extraction_stage1.py
+cwd                     : C:\t\ws-R3c
+root PID / process group: 144424 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 4.66 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 3  144396:python.exe, 144752:python.exe, 144772:python.exe
+descendants terminated  : 3  144396, 144752, 144772
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\ws-R3c\docs\webserver\evidence\R3c\mutation\bound-settle_stage_one.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R3c  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

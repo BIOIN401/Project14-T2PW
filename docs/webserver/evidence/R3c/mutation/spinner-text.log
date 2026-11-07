@@ -1,0 +1,220 @@
+T2PW: C:\t\ws-R3c\src\t2pw\__init__.py
+F..FFFFFF.F...........                                                   [100%]
+================================== FAILURES ===================================
+_ test_success_passes_stage_one_its_arguments_and_returns_what_the_block_reads _
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo...esult=None, stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/spinner-text/test_success_passes_stage_one_0'))
+
+    def test_success_passes_stage_one_its_arguments_and_returns_what_the_block_reads(world):
+        world.chunks = [{"chunk": 1}]
+        res, rep, state = _run(world, state={"export_mode": "research"})
+    
+        name, text, kw = world.calls[0]
+        assert (name, text) == ("stage1", "the paper")
+        assert kw == dict(pathway_context={"pathway_name": "Menaquinone"}, user_task_context="focus",
+                          artifact_dir=world.root / "tmp", enable_chunking=True, chunk_word_limit=1200,
+                          chunk_overlap=200, max_attempts=3, temperature=0.25, max_tokens=8000)
+        assert all(type(kw[k]) is int for k in ("chunk_word_limit", "chunk_overlap", "max_attempts", "max_tokens"))
+        settle = world.calls[2]
+        assert world.calls[1] == ("diag.current",)  # the cleaning report is read after Stage 1 ran
+        assert settle[0] == "settle" and settle[1] == _payload("a")
+        assert settle[2] == {"mode": "research", "cleaning_report": {"pass": 2, "dropped": 3}}
+>       assert rep.calls == SPIN
+E       AssertionError: assert [('spinner', ...inner:exit',)] == [('spinner', ...inner:exit',)]
+E         
+E         At index 0 diff: ('spinner', ('Running Stage 1',)) != ('spinner', ('Running Stage 1 extraction...',))
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage1.py:173: AssertionError
+_______________________ test_reconstruction_is_reported _______________________
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo...esult=None, stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/spinner-text/test_reconstruction_is_reporte0'))
+
+    def test_reconstruction_is_reported(world):
+        world.boundary = {"reconstruction": {"shell_count": 2}}
+        _res, rep, _state = _run(world)
+>       assert rep.calls == SPIN + [("info", (
+            "Reconstructed 2 unresolved entity shell(s) for participants named by reactions but "
+            "missing from the registry. They carry no identifier and no function; every identity "
+            "gate downstream still applies to them.",))]
+E       AssertionError: assert [('spinner', ... to them.',))] == [('spinner', ... to them.',))]
+E         
+E         At index 0 diff: ('spinner', ('Running Stage 1',)) != ('spinner', ('Running Stage 1 extraction...',))
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage1.py:208: AssertionError
+____________ test_out_of_scope_reactions_are_removed_and_reported _____________
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo...esult=None, stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/spinner-text/test_out_of_scope_reactions_ar0'))
+
+    def test_out_of_scope_reactions_are_removed_and_reported(world):
+        world.stage1 = _payload("a", out=("x", "y"))
+        world.boundary = {"reconstruction": {}}
+        res, rep, _state = _run(world)
+        assert res.out_of_scope_removed_reactions == ["x", "y"]
+        assert res.stage_one_in_scope == dict(_payload("a"), settled=True)
+        assert len(res.stage_one["processes"]["reactions"]) == 3  # stage_one keeps the raw output
+        assert [c[0] for c in world.calls] == ["stage1", "diag.current", "settle", "diag.current", "filter"]
+>       assert rep.calls == SPIN + [("info", ("Removed 2 out-of-scope reaction(s) before Stage 2: x, y",))]
+E       AssertionError: assert [('spinner', ...e 2: x, y',))] == [('spinner', ...e 2: x, y',))]
+E         
+E         At index 0 diff: ('spinner', ('Running Stage 1',)) != ('spinner', ('Running Stage 1 extraction...',))
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage1.py:222: AssertionError
+________ test_pipeline_failure_reports_attempts_and_returns_a_failure _________
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo...re('no JSON after 3 attempts'), root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/spinner-text/test_pipeline_failure_reports_0'))
+
+    def test_pipeline_failure_reports_attempts_and_returns_a_failure(world):
+        world.stage1_raises = pipeline.PipelineFailure("stage1", "no JSON after 3 attempts", ATTEMPTS)
+        res, rep, state = _run(world)
+        assert res.failure == ex.InputFailure(ex.KIND_STAGE_ONE_FAILED, "Extraction failed: no JSON after 3 attempts")
+        assert res.stage_one is None and res.user_task_context is None
+>       assert rep.calls == SPIN + [
+            ("error", ("Extraction failed: no JSON after 3 attempts",)),
+            ("expander", ("Stage 1 attempts",), {"expanded": False}), ("expander:enter",),
+            ("markdown", ("**Attempt 1 (extract)** - retry [cut]",)),
+            ("code", ("{bad",), {"language": "json"}),
+            ("caption", ("Expecting value",)),
+            ("markdown", ("**Attempt 2** - success",)),
+            ("code", ("{}",), {"language": "json"}),
+            ("expander:exit",)]
+E       AssertionError: assert [('spinner', ...enter',), ...] == [('spinner', ...enter',), ...]
+E         
+E         At index 0 diff: ('spinner', ('Running Stage 1',)) != ('spinner', ('Running Stage 1 extraction...',))
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage1.py:231: AssertionError
+_________ test_contract_error_shows_its_report_and_returns_a_failure __________
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo...ror('Payload must be a dict.'), root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/spinner-text/test_contract_error_shows_its_0'))
+
+    def test_contract_error_shows_its_report_and_returns_a_failure(world):
+        world.stage1_raises = StageContractError("post_extraction", "Payload must be a dict.", {"errors": ["e"]})
+        res, rep, state = _run(world)
+        assert res.failure == ex.InputFailure(ex.KIND_STAGE_ONE_BOUNDARY_ERROR,
+                                              "Extraction boundary failed: Payload must be a dict.")
+>       assert rep.calls == SPIN + [("error", ("Extraction boundary failed: Payload must be a dict.",)),
+                                    ("json", ({"errors": ["e"]},))]
+E       AssertionError: assert [('spinner', ...s': ['e']},))] == [('spinner', ...s': ['e']},))]
+E         
+E         At index 0 diff: ('spinner', ('Running Stage 1',)) != ('spinner', ('Running Stage 1 extraction...',))
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage1.py:249: AssertionError
+________ test_incomplete_boundary_reports_and_returns_a_failure[None] _________
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo...esult=None, stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/spinner-text/test_incomplete_boundary_repor0'))
+failure = None
+
+    @pytest.mark.parametrize("failure", [None, types.SimpleNamespace(report={"errors": ["r"]})])
+    def test_incomplete_boundary_reports_and_returns_a_failure(world, failure):
+        world.boundary = {"ok": False, "reason": "rows rejected", "failure": failure}
+        world.rag = True
+        res, rep, state = _run(world)
+        message = "Extraction boundary failed and could not be recovered: rows rejected"
+        assert res.failure == ex.InputFailure(ex.KIND_STAGE_ONE_INCOMPLETE, message)
+        tail = [("json", ({"errors": ["r"]},))] if failure is not None else []
+>       assert rep.calls == SPIN + [("error", (message,)), ("info", (
+            "Localized repair and deterministic registry reconstruction were both applied; the "
+            "payload below is as far as the run got. No reaction was invented to satisfy the "
+            "contract. The diagnostics for this run (stage0_attempts.json, "
+            "extraction_boundary_report.json, cleaning_report.json) are in "
+            f"{DIAG_DIR}.",)), ("json", ({"ok": False, "reason": "rows rejected"},))] + tail
+E       AssertionError: assert [('spinner', ...rejected'},))] == [('spinner', ...rejected'},))]
+E         
+E         At index 0 diff: ('spinner', ('Running Stage 1',)) != ('spinner', ('Running Stage 1 extraction...',))
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage1.py:262: AssertionError
+______ test_incomplete_boundary_reports_and_returns_a_failure[failure1] _______
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo...esult=None, stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/spinner-text/test_incomplete_boundary_repor1'))
+failure = namespace(report={'errors': ['r']})
+
+    @pytest.mark.parametrize("failure", [None, types.SimpleNamespace(report={"errors": ["r"]})])
+    def test_incomplete_boundary_reports_and_returns_a_failure(world, failure):
+        world.boundary = {"ok": False, "reason": "rows rejected", "failure": failure}
+        world.rag = True
+        res, rep, state = _run(world)
+        message = "Extraction boundary failed and could not be recovered: rows rejected"
+        assert res.failure == ex.InputFailure(ex.KIND_STAGE_ONE_INCOMPLETE, message)
+        tail = [("json", ({"errors": ["r"]},))] if failure is not None else []
+>       assert rep.calls == SPIN + [("error", (message,)), ("info", (
+            "Localized repair and deterministic registry reconstruction were both applied; the "
+            "payload below is as far as the run got. No reaction was invented to satisfy the "
+            "contract. The diagnostics for this run (stage0_attempts.json, "
+            "extraction_boundary_report.json, cleaning_report.json) are in "
+            f"{DIAG_DIR}.",)), ("json", ({"ok": False, "reason": "rows rejected"},))] + tail
+E       AssertionError: assert [('spinner', ...ted'},)), ...] == [('spinner', ...ted'},)), ...]
+E         
+E         At index 0 diff: ('spinner', ('Running Stage 1',)) != ('spinner', ('Running Stage 1 extraction...',))
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage1.py:262: AssertionError
+_____ test_rag_on_seeds_from_the_in_scope_payload_and_folds_the_evidence ______
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo...1: MenG.'), stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/spinner-text/test_rag_on_seeds_from_the_in_0'))
+
+    def test_rag_on_seeds_from_the_in_scope_payload_and_folds_the_evidence(world):
+        world.stage1 = _payload("a", out=("x",))
+        world.rag = True
+        world.rag_result = types.SimpleNamespace(evidence_context="PMC1: MenG.")
+        res, rep, state = _run(world, flag=1)
+        in_scope = dict(_payload("a"), settled=True)
+        assert world.calls[-3:-1] == [("build_draft_graph", in_scope), ("generate_qa_report", "GRAPH", in_scope)]
+        name, kw = world.calls[-1]
+        assert name == "maybe_run_rag"
+        assert kw == dict(pathway_context={"pathway_name": "Menaquinone"}, user_flag=True,
+                          seed_payload=in_scope, reports={"qa_graph": {"qa": 1}}, seed_text="the paper",
+                          reporter=rep)
+        assert kw["seed_payload"] is res.stage_one_in_scope
+        assert res.rag_result is world.rag_result
+        assert res.user_task_context == "focus\n\nPMC1: MenG."
+        assert list(state)[-2:] == ["rag_result", "rag_evidence_context"]
+        assert state["rag_result"] is world.rag_result and state["rag_evidence_context"] == "PMC1: MenG."
+>       assert rep.calls == SPIN + [("info", ("Removed 1 out-of-scope reaction(s) before Stage 2: x",))]
+E       AssertionError: assert [('spinner', ...tage 2: x',))] == [('spinner', ...tage 2: x',))]
+E         
+E         At index 0 diff: ('spinner', ('Running Stage 1',)) != ('spinner', ('Running Stage 1 extraction...',))
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage1.py:297: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage1.py::test_success_passes_stage_one_its_arguments_and_returns_what_the_block_reads
+FAILED tests/test_service_extraction_stage1.py::test_reconstruction_is_reported
+FAILED tests/test_service_extraction_stage1.py::test_out_of_scope_reactions_are_removed_and_reported
+FAILED tests/test_service_extraction_stage1.py::test_pipeline_failure_reports_attempts_and_returns_a_failure
+FAILED tests/test_service_extraction_stage1.py::test_contract_error_shows_its_report_and_returns_a_failure
+FAILED tests/test_service_extraction_stage1.py::test_incomplete_boundary_reports_and_returns_a_failure[None]
+FAILED tests/test_service_extraction_stage1.py::test_incomplete_boundary_reports_and_returns_a_failure[failure1]
+FAILED tests/test_service_extraction_stage1.py::test_rag_on_seeds_from_the_in_scope_payload_and_folds_the_evidence
+8 failed, 14 passed in 3.13s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f1238da76c51323070578fa2edcf423b585e026d  [git, worktree dirty=True]
+label                   : mut-spinner-text
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3c/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3c -q -p no:cacheprovider --basetemp=C:/t/wsR3ctmp/mut-tmp/spinner-text tests/test_service_extraction_stage1.py
+cwd                     : C:\t\ws-R3c
+root PID / process group: 144796 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 3.95 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 3  110760:python.exe, 145568:python.exe, 145588:python.exe
+descendants terminated  : 3  110760, 145568, 145588
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\ws-R3c\docs\webserver\evidence\R3c\mutation\spinner-text.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R3c  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

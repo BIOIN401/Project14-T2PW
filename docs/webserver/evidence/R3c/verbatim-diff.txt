@@ -1,0 +1,151 @@
+===== render_attempts: base APP vs tip EXT
+--- base/streamlit_app.py
++++ tip/service/extraction.py
+@@ -1,3 +1,3 @@
+-def render_attempts(label: str, attempts: List[Dict[str, Any]]) -> None:
+-    with st.expander(label, expanded=False):
++def render_attempts(label: str, attempts: List[Dict[str, Any]], *, reporter: Reporter) -> None:
++    with reporter.expander(label, expanded=False):
+         for log in attempts:
+@@ -8,5 +8,5 @@
+             note_label = f" [{note}]" if note else ""
+-            st.markdown(f"**Attempt {log['attempt']}{phase_label}** - {status}{note_label}")
+-            st.code(log["raw"], language="json")
++            reporter.markdown(f"**Attempt {log['attempt']}{phase_label}** - {status}{note_label}")
++            reporter.code(log["raw"], language="json")
+             if log.get("error"):
+-                st.caption(log["error"])
++                reporter.caption(log["error"])
+
+===== _last_cleaning_report: base APP vs tip EXT
+--- base/streamlit_app.py
++++ tip/service/extraction.py
+@@ -10,7 +10,10 @@
+ 
++    # Imported here, not at module level, for the reason given in run_stage_one.
++    from t2pw.service.postpipeline import _safe_dict, _safe_list
++
+     try:
+-        artifacts = current_extraction_diagnostics().artifacts()
++        artifacts = _diag.current().artifacts()
+     except Exception:  # noqa: BLE001
+         return {}
+-    passes = _safe_list(_safe_dict(artifacts.get(CLEANING_REPORT_NAME)).get("passes"))
++    passes = _safe_list(_safe_dict(artifacts.get(_diag.CLEANING_REPORT_NAME)).get("passes"))
+     return _safe_dict(passes[-1]) if passes else {}
+
+===== submit block: Stage 1 through the RAG seed: base APP vs tip EXT
+--- base/streamlit_app.py
++++ tip/service/extraction.py
+@@ -2,4 +2,4 @@
+ try:
+-    with st.spinner("Running Stage 1 extraction..."):
+-        stage_one, chunk_details = run_stage_one_with_chunking(
++    with reporter.spinner("Running Stage 1 extraction..."):
++        stage_one, chunk_details = _pipeline.run_stage_one_with_chunking(
+             text,
+@@ -7,3 +7,3 @@
+             user_task_context=user_task_context,
+-            artifact_dir=PROJECT_ROOT / "tmp",
++            artifact_dir=paths.PROJECT_ROOT / "tmp",
+             enable_chunking=enable_chunking,
+@@ -22,5 +22,5 @@
+         # instead of a pass; nothing is invented to satisfy the contract.
+-        _boundary = settle_stage_one(
++        _boundary = _stage_one_boundary.settle_stage_one(
+             stage_one,
+-            mode=coerce_mode(st.session_state.get("export_mode")),
++            mode=_export_mode.coerce_mode(state.get("export_mode")),
+             cleaning_report=_last_cleaning_report(),
+@@ -28,15 +28,17 @@
+         stage_one = _boundary.payload
+-        st.session_state["stage_one_boundary"] = _boundary.to_summary()
+-except PipelineFailure as failure:
+-    _sync_extraction_diagnostics()
+-    st.error(f"Extraction failed: {failure}")
+-    render_attempts("Stage 1 attempts", failure.attempts)
+-    st.stop()
++        state["stage_one_boundary"] = _boundary.to_summary()
++except _pipeline.PipelineFailure as failure:
++    _sync_extraction_diagnostics(state=state)
++    message = f"Extraction failed: {failure}"
++    reporter.error(message)
++    render_attempts("Stage 1 attempts", failure.attempts, reporter=reporter)
++    return StageOneResult(failure=InputFailure(KIND_STAGE_ONE_FAILED, message))
+ except StageContractError as failure:
+-    _sync_extraction_diagnostics()
+-    st.error(f"Extraction boundary failed: {failure}")
+-    st.json(failure.report)
+-    st.stop()
++    _sync_extraction_diagnostics(state=state)
++    message = f"Extraction boundary failed: {failure}"
++    reporter.error(message)
++    reporter.json(failure.report)
++    return StageOneResult(failure=InputFailure(KIND_STAGE_ONE_BOUNDARY_ERROR, message))
+ 
+-_sync_extraction_diagnostics()
++_sync_extraction_diagnostics(state=state)
+ if not _boundary.ok:
+@@ -44,3 +46,3 @@
+     # The artifacts written above are the deliverable for this run.
+-    st.error(
++    message = (
+         "Extraction boundary failed and could not be recovered: "
+@@ -48,3 +50,4 @@
+     )
+-    st.info(
++    reporter.error(message)
++    reporter.info(
+         "Localized repair and deterministic registry reconstruction were both "
+@@ -53,10 +56,10 @@
+         f"(stage0_attempts.json, extraction_boundary_report.json, "
+-        f"cleaning_report.json) are in {_diagnostics_dir}."
++        f"cleaning_report.json) are in {diagnostics_dir}."
+     )
+-    st.json(_boundary.to_summary())
++    reporter.json(_boundary.to_summary())
+     if _boundary.failure is not None:
+-        st.json(_boundary.failure.report)
+-    st.stop()
++        reporter.json(_boundary.failure.report)
++    return StageOneResult(failure=InputFailure(KIND_STAGE_ONE_INCOMPLETE, message))
+ if _boundary.reconstruction:
+-    st.info(
++    reporter.info(
+         f"Reconstructed {_boundary.reconstruction.get('shell_count', 0)} unresolved "
+@@ -72,5 +75,5 @@
+ # removed, and so out-of-scope material never reaches export.
+-stage_one_in_scope, out_of_scope_removed_reactions = filter_out_of_scope_reactions(stage_one)
++stage_one_in_scope, out_of_scope_removed_reactions = _pipeline.filter_out_of_scope_reactions(stage_one)
+ if out_of_scope_removed_reactions:
+-    st.info(
++    reporter.info(
+         f"Removed {len(out_of_scope_removed_reactions)} out-of-scope reaction(s) "
+@@ -93,5 +96,7 @@
+ rag_result = None
+-if rag_config()["enabled"]:
+-    _rag_seed_graph = build_draft_graph(stage_one_in_scope)
+-    rag_result = maybe_run_rag(
++if _config.rag_config()["enabled"]:
++    from t2pw.service import rag_orchestration as _rag_orchestration  # only with RAG on
++
++    _rag_seed_graph = _draft_graph.build_draft_graph(stage_one_in_scope)
++    rag_result = _rag_orchestration.maybe_run_rag(
+         pathway_context=pathway_context,
+@@ -99,8 +104,8 @@
+         seed_payload=stage_one_in_scope,
+-        reports={"qa_graph": generate_qa_report(_rag_seed_graph, stage_one_in_scope)},
++        reports={"qa_graph": _qa_graph.generate_qa_report(_rag_seed_graph, stage_one_in_scope)},
+         seed_text=text,
+-        reporter=StreamlitReporter(st),
++        reporter=reporter,
+     )
+     if rag_result is not None:
+-        st.session_state["rag_result"] = rag_result
++        state["rag_result"] = rag_result
+         if rag_result.evidence_context:
+@@ -111,2 +116,2 @@
+             )  # S1
+-            st.session_state["rag_evidence_context"] = rag_result.evidence_context  # S2
++            state["rag_evidence_context"] = rag_result.evidence_context  # S2
+

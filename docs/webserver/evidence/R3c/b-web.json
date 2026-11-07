@@ -1,0 +1,773 @@
+{
+  "label": "web",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/ws-R3c-base/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-R3c-base",
+    "--pin-verdict",
+    "C:/t/ws-R3c/docs/webserver/evidence/R3c/pin/b-web.pin.json",
+    "-q",
+    "--basetemp=C:/t/wsR3ctmp/b-web",
+    "tests/test_service_driver_bridge.py",
+    "tests/test_service_pathway_interface.py",
+    "tests/test_service_inputs.py",
+    "tests/test_service_organisms.py",
+    "tests/test_web_jobs.py",
+    "tests/test_web_worker.py",
+    "tests/test_web_retry.py",
+    "tests/test_web_limits.py",
+    "tests/test_web_notify.py",
+    "tests/test_web_design_system.py",
+    "tests/test_web_curator_queue.py",
+    "tests/test_web_postrun.py",
+    "tests/test_web_app.py"
+  ],
+  "cwd": "C:\\t\\ws-R3c-base",
+  "started_at": "2026-11-07T04:27:37+00:00",
+  "finished_at": "2026-11-07T04:28:21+00:00",
+  "duration_seconds": 44.230337100001634,
+  "timeout_seconds": 560.0,
+  "root_pid": 556044,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 556036,
+      "name": "python.exe",
+      "ppid": 556044
+    },
+    {
+      "pid": 554648,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 556288,
+      "name": "python.exe",
+      "ppid": 554648
+    },
+    {
+      "pid": 547968,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 556780,
+      "name": "python.exe",
+      "ppid": 547968
+    },
+    {
+      "pid": 554236,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 556504,
+      "name": "python.exe",
+      "ppid": 554236
+    },
+    {
+      "pid": 552564,
+      "name": "python.exe",
+      "ppid": 556568
+    },
+    {
+      "pid": 556568,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 555632,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 556256,
+      "name": "python.exe",
+      "ppid": 555632
+    },
+    {
+      "pid": 556768,
+      "name": "python.exe",
+      "ppid": 556820
+    },
+    {
+      "pid": 556820,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 552388,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 554372,
+      "name": "python.exe",
+      "ppid": 552388
+    },
+    {
+      "pid": 553248,
+      "name": "python.exe",
+      "ppid": 554372
+    },
+    {
+      "pid": 553608,
+      "name": "python.exe",
+      "ppid": 553248
+    },
+    {
+      "pid": 295300,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 540980,
+      "name": "python.exe",
+      "ppid": 295300
+    },
+    {
+      "pid": 539800,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 547292,
+      "name": "python.exe",
+      "ppid": 539800
+    },
+    {
+      "pid": 552756,
+      "name": "python.exe",
+      "ppid": 556424
+    },
+    {
+      "pid": 556424,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 554528,
+      "name": "python.exe",
+      "ppid": 552756
+    },
+    {
+      "pid": 556404,
+      "name": "python.exe",
+      "ppid": 554528
+    },
+    {
+      "pid": 552944,
+      "name": "python.exe",
+      "ppid": 556404
+    },
+    {
+      "pid": 556148,
+      "name": "python.exe",
+      "ppid": 552944
+    },
+    {
+      "pid": 553432,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 556824,
+      "name": "python.exe",
+      "ppid": 553432
+    },
+    {
+      "pid": 555440,
+      "name": "python.exe",
+      "ppid": 556532
+    },
+    {
+      "pid": 556532,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 550220,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 556816,
+      "name": "python.exe",
+      "ppid": 550220
+    },
+    {
+      "pid": 553968,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 556952,
+      "name": "python.exe",
+      "ppid": 553968
+    },
+    {
+      "pid": 552168,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 553960,
+      "name": "python.exe",
+      "ppid": 552168
+    },
+    {
+      "pid": 551916,
+      "name": "python.exe",
+      "ppid": 553296
+    },
+    {
+      "pid": 553296,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 547636,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 555320,
+      "name": "python.exe",
+      "ppid": 547636
+    },
+    {
+      "pid": 522604,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 556604,
+      "name": "python.exe",
+      "ppid": 522604
+    },
+    {
+      "pid": 543604,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 547500,
+      "name": "python.exe",
+      "ppid": 543604
+    },
+    {
+      "pid": 555472,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 556460,
+      "name": "python.exe",
+      "ppid": 555472
+    },
+    {
+      "pid": 554744,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 556104,
+      "name": "python.exe",
+      "ppid": 554744
+    },
+    {
+      "pid": 548148,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 552880,
+      "name": "python.exe",
+      "ppid": 548148
+    },
+    {
+      "pid": 554428,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 555436,
+      "name": "python.exe",
+      "ppid": 554428
+    },
+    {
+      "pid": 556692,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 556912,
+      "name": "python.exe",
+      "ppid": 556692
+    },
+    {
+      "pid": 556800,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 555148,
+      "name": "python.exe",
+      "ppid": 556800
+    },
+    {
+      "pid": 556092,
+      "name": "python.exe",
+      "ppid": 556908
+    },
+    {
+      "pid": 556908,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 552248,
+      "name": "python.exe",
+      "ppid": 556984
+    },
+    {
+      "pid": 556984,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 548180,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 553128,
+      "name": "python.exe",
+      "ppid": 548180
+    },
+    {
+      "pid": 525460,
+      "name": "python.exe",
+      "ppid": 555012
+    },
+    {
+      "pid": 555012,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 551852,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 539756,
+      "name": "python.exe",
+      "ppid": 551852
+    },
+    {
+      "pid": 553268,
+      "name": "python.exe",
+      "ppid": 555240
+    },
+    {
+      "pid": 555240,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 550584,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 556804,
+      "name": "python.exe",
+      "ppid": 550584
+    },
+    {
+      "pid": 554224,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 554836,
+      "name": "python.exe",
+      "ppid": 554224
+    },
+    {
+      "pid": 554324,
+      "name": "python.exe",
+      "ppid": 555776
+    },
+    {
+      "pid": 555776,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 423180,
+      "name": "python.exe",
+      "ppid": 538808
+    },
+    {
+      "pid": 538808,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 556132,
+      "name": "python.exe",
+      "ppid": 556244
+    },
+    {
+      "pid": 556244,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 551520,
+      "name": "python.exe",
+      "ppid": 556608
+    },
+    {
+      "pid": 556608,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 540104,
+      "name": "python.exe",
+      "ppid": 556408
+    },
+    {
+      "pid": 556408,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 555248,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 555592,
+      "name": "python.exe",
+      "ppid": 555248
+    },
+    {
+      "pid": 536192,
+      "name": "python.exe",
+      "ppid": 544336
+    },
+    {
+      "pid": 544336,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 534360,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 550540,
+      "name": "python.exe",
+      "ppid": 534360
+    },
+    {
+      "pid": 556420,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 556708,
+      "name": "python.exe",
+      "ppid": 556420
+    },
+    {
+      "pid": 554320,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 555516,
+      "name": "python.exe",
+      "ppid": 554320
+    },
+    {
+      "pid": 552120,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 556316,
+      "name": "python.exe",
+      "ppid": 552120
+    },
+    {
+      "pid": 555368,
+      "name": "python.exe",
+      "ppid": 555744
+    },
+    {
+      "pid": 555744,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 554336,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 556156,
+      "name": "python.exe",
+      "ppid": 554336
+    },
+    {
+      "pid": 551772,
+      "name": "tasklist.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 549948,
+      "name": "python.exe",
+      "ppid": 552972
+    },
+    {
+      "pid": 552972,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 542684,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 555156,
+      "name": "python.exe",
+      "ppid": 542684
+    },
+    {
+      "pid": 538968,
+      "name": "python.exe",
+      "ppid": 557028
+    },
+    {
+      "pid": 557028,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 557084,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 557112,
+      "name": "python.exe",
+      "ppid": 557084
+    },
+    {
+      "pid": 557320,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 557340,
+      "name": "python.exe",
+      "ppid": 557320
+    },
+    {
+      "pid": 557608,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 557628,
+      "name": "python.exe",
+      "ppid": 557608
+    },
+    {
+      "pid": 557380,
+      "name": "python.exe",
+      "ppid": 556036
+    },
+    {
+      "pid": 557392,
+      "name": "python.exe",
+      "ppid": 557380
+    }
+  ],
+  "descendants_terminated": [
+    295300,
+    423180,
+    522604,
+    525460,
+    534360,
+    536192,
+    538808,
+    538968,
+    539756,
+    539800,
+    540104,
+    540980,
+    542684,
+    543604,
+    544336,
+    547292,
+    547500,
+    547636,
+    547968,
+    548148,
+    548180,
+    549948,
+    550220,
+    550540,
+    550584,
+    551520,
+    551772,
+    551852,
+    551916,
+    552120,
+    552168,
+    552248,
+    552388,
+    552564,
+    552756,
+    552880,
+    552944,
+    552972,
+    553128,
+    553248,
+    553268,
+    553296,
+    553432,
+    553608,
+    553960,
+    553968,
+    554224,
+    554236,
+    554320,
+    554324,
+    554336,
+    554372,
+    554428,
+    554528,
+    554648,
+    554744,
+    554836,
+    555012,
+    555148,
+    555156,
+    555240,
+    555248,
+    555320,
+    555368,
+    555436,
+    555440,
+    555472,
+    555516,
+    555592,
+    555632,
+    555744,
+    555776,
+    556036,
+    556092,
+    556104,
+    556132,
+    556148,
+    556156,
+    556244,
+    556256,
+    556288,
+    556316,
+    556404,
+    556408,
+    556420,
+    556424,
+    556460,
+    556504,
+    556532,
+    556568,
+    556604,
+    556608,
+    556692,
+    556708,
+    556768,
+    556780,
+    556800,
+    556804,
+    556816,
+    556820,
+    556824,
+    556908,
+    556912,
+    556952,
+    556984,
+    557028,
+    557084,
+    557112,
+    557320,
+    557340,
+    557380,
+    557392,
+    557608,
+    557628
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 142892,
+      "name": "python.exe"
+    },
+    {
+      "pid": 524692,
+      "name": "python.exe"
+    },
+    {
+      "pid": 532152,
+      "name": "python.exe"
+    },
+    {
+      "pid": 555772,
+      "name": "python.exe"
+    },
+    {
+      "pid": 556564,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/ws-R3c/docs/webserver/evidence/R3c/b-web.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-R3c-base\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-R3c-base",
+    "repo_head": "4ea3524a8862be462652b38145b7249e649eec20",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {}
+}

@@ -1,0 +1,56 @@
+T2PW: C:\t\ws-R3c\src\t2pw\__init__.py
+..........F.                                                             [100%]
+================================== FAILURES ===================================
+_ test_out_of_scope_filter_runs_between_stage1_extraction_and_stage2_inference _
+
+    def test_out_of_scope_filter_runs_between_stage1_extraction_and_stage2_inference() -> None:
+        tree = _source_tree()
+    
+        def _calls_named(name: str) -> list[ast.Call]:
+            return [
+                node
+                for node in ast.walk(tree)
+                if isinstance(node, ast.Call)
+                and isinstance(node.func, ast.Name)
+                and node.func.id == name
+            ]
+    
+        extraction_calls = _calls_named("run_stage_one_with_chunking")
+        filter_calls = _calls_named("filter_out_of_scope_reactions")
+        inference_calls = _calls_named("run_stage_two_with_feedback_loop")
+    
+>       assert len(extraction_calls) == 1
+E       assert 0 == 1
+E        +  where 0 = len([])
+
+tests\test_streamlit_stage2_orchestration.py:974: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_streamlit_stage2_orchestration.py::test_out_of_scope_filter_runs_between_stage1_extraction_and_stage2_inference
+1 failed, 11 passed in 3.65s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f1238da76c51323070578fa2edcf423b585e026d  [git, worktree dirty=False]
+label                   : solo-s2orch
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3c/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3c --pin-verdict C:/t/ws-R3c/docs/webserver/evidence/R3c/pin/t-solo-s2orch.pin.json -q --basetemp=C:/t/wsR3ctmp/t-solo-s2orch tests/test_streamlit_stage2_orchestration.py
+cwd                     : C:\t\ws-R3c
+root PID / process group: 534668 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 560 s
+duration                : 4.60 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  536824:python.exe
+descendants terminated  : 1  536824
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ws-R3c/docs/webserver/evidence/R3c/t-solo-s2orch.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R3c  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================
