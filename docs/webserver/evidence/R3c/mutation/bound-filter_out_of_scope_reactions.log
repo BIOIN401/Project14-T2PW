@@ -1,0 +1,112 @@
+T2PW: C:\t\ws-R3c\src\t2pw\__init__.py
+....F....F......FF....                                                   [100%]
+================================== FAILURES ===================================
+____________ test_out_of_scope_reactions_are_removed_and_reported _____________
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo...es=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/bound-filter_out_of_scope_reactions/test_out_of_scope_reactions_ar0'))
+
+    def test_out_of_scope_reactions_are_removed_and_reported(world):
+        world.stage1 = _payload("a", out=("x", "y"))
+        world.boundary = {"reconstruction": {}}
+        res, rep, _state = _run(world)
+        assert res.out_of_scope_removed_reactions == ["x", "y"]
+        assert res.stage_one_in_scope == dict(_payload("a"), settled=True)
+        assert len(res.stage_one["processes"]["reactions"]) == 3  # stage_one keeps the raw output
+>       assert [c[0] for c in world.calls] == ["stage1", "diag.current", "settle", "diag.current", "filter"]
+E       AssertionError: assert ['stage1', 'd...diag.current'] == ['stage1', 'd...nt', 'filter']
+E         
+E         Right contains one more item: 'filter'
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage1.py:221: AssertionError
+__________________________ test_rag_off_runs_no_seed __________________________
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo..._raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/bound-filter_out_of_scope_reactions/test_rag_off_runs_no_seed0'))
+
+    def test_rag_off_runs_no_seed(world):
+        res, _rep, state = _run(world, flag=1)
+>       assert [c[0] for c in world.calls] == ["stage1", "diag.current", "settle", "diag.current", "filter"]
+E       AssertionError: assert ['stage1', 'd...diag.current'] == ['stage1', 'd...nt', 'filter']
+E         
+E         Right contains one more item: 'filter'
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage1.py:275: AssertionError
+___________ test_patches_on_the_source_modules_reach_run_stage_one ____________
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo...es=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/bound-filter_out_of_scope_reactions/test_patches_on_the_source_mod0'))
+
+    def test_patches_on_the_source_modules_reach_run_stage_one(world):
+        """R3b review F1 rule. Before R3c the app script re-ran ``from ... import`` on every
+        AppTest run, so a patch on the source module (c055 patches
+        ``pipeline.run_stage_one_with_chunking`` and ``stage_one_boundary.settle_stage_one``)
+        reached the call. Every callee of the moved code must still be looked up there."""
+    
+        world.rag = True
+        world.rag_result = types.SimpleNamespace(evidence_context="")
+        _run(world)
+>       assert [c[0] for c in world.calls] == ["stage1", "diag.current", "settle", "diag.current", "filter",
+                                              "build_draft_graph", "generate_qa_report", "maybe_run_rag"]
+E       AssertionError: assert ['stage1', 'd..._report', ...] == ['stage1', 'd...t_graph', ...]
+E         
+E         At index 4 diff: 'build_draft_graph' != 'filter'
+E         Right contains one more item: 'maybe_run_rag'
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage1.py:346: AssertionError
+____________ test_importing_the_service_loads_no_stage_one_module _____________
+
+    def test_importing_the_service_loads_no_stage_one_module():
+        """The Stage-1 imports are function-local, so importing the module loads what it did before."""
+    
+        import subprocess
+    
+        code = ("import sys, t2pw.service.extraction\n"
+                "print(sorted(n for n in ('t2pw.pipeline.pipeline', 't2pw.pipeline.stage_one_boundary',"
+                " 't2pw.service.rag_orchestration', 't2pw.service.postpipeline', 't2pw.config')"
+                " if n in sys.modules))\n")
+        import os
+    
+        done = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True,
+                              env=dict(os.environ, PYTHONPATH=str(SRC)), cwd=str(ROOT), timeout=300)
+        assert done.returncode == 0, done.stderr[-2000:]
+>       assert done.stdout.strip().splitlines()[-1] == "[]"
+E       assert "['t2pw.pipeline.pipeline']" == '[]'
+E         
+E         - []
+E         + ['t2pw.pipeline.pipeline']
+
+tests\test_service_extraction_stage1.py:364: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage1.py::test_out_of_scope_reactions_are_removed_and_reported
+FAILED tests/test_service_extraction_stage1.py::test_rag_off_runs_no_seed - A...
+FAILED tests/test_service_extraction_stage1.py::test_patches_on_the_source_modules_reach_run_stage_one
+FAILED tests/test_service_extraction_stage1.py::test_importing_the_service_loads_no_stage_one_module
+4 failed, 18 passed in 3.17s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f1238da76c51323070578fa2edcf423b585e026d  [git, worktree dirty=True]
+label                   : mut-bound-filter_out_of_scope_reactions
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3c/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3c -q -p no:cacheprovider --basetemp=C:/t/wsR3ctmp/mut-tmp/bound-filter_out_of_scope_reactions tests/test_service_extraction_stage1.py
+cwd                     : C:\t\ws-R3c
+root PID / process group: 144824 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 3.94 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 3  142024:python.exe, 142160:python.exe, 145364:python.exe
+descendants terminated  : 3  142024, 142160, 145364
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\ws-R3c\docs\webserver\evidence\R3c\mutation\bound-filter_out_of_scope_reactions.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R3c  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

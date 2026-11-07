@@ -1,0 +1,175 @@
+T2PW: C:\t\ws-R3c\src\t2pw\__init__.py
+..........FFFFFFFF....                                                   [100%]
+================================== FAILURES ===================================
+_____ test_rag_on_seeds_from_the_in_scope_payload_and_folds_the_evidence ______
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo...enG.'), stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/bound-rag_config/test_rag_on_seeds_from_the_in_0'))
+
+    def test_rag_on_seeds_from_the_in_scope_payload_and_folds_the_evidence(world):
+        world.stage1 = _payload("a", out=("x",))
+        world.rag = True
+        world.rag_result = types.SimpleNamespace(evidence_context="PMC1: MenG.")
+        res, rep, state = _run(world, flag=1)
+        in_scope = dict(_payload("a"), settled=True)
+>       assert world.calls[-3:-1] == [("build_draft_graph", in_scope), ("generate_qa_report", "GRAPH", in_scope)]
+E       AssertionError: assert [('settle', {...ag.current',)] == [('build_draf...tled': True})]
+E         
+E         At index 0 diff: ('settle', {'entities': {}, 'processes': {'reactions': [{'name': 'a'}, {'name': 'x', 'scope_membership': 'out_of_scope'}]}}, {'mode': 'pathwhiz', 'cleaning_report': {'pass': 2, 'dropped': 3}}) != ('build_draft_graph', {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}, 'settled': True})
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage1.py:286: AssertionError
+__________ test_rag_fold_without_a_focus_is_the_evidence_alone[None] __________
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': Non...t='E'), stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/bound-rag_config/test_rag_fold_without_a_focus_0'))
+utc = None
+
+    @pytest.mark.parametrize("utc", [None, ""])
+    def test_rag_fold_without_a_focus_is_the_evidence_alone(world, utc):
+        world.rag = True
+        world.rag_result = types.SimpleNamespace(evidence_context="E")
+        res, _rep, _state = _run(world, utc=utc)
+>       assert res.user_task_context == "E"
+E       AssertionError: assert None == 'E'
+E        +  where None = StageOneResult(stage_one={'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}, 'settled': True}, chunk_details...e': 'a'}]}, 'settled': True}, out_of_scope_removed_reactions=[], rag_result=None, user_task_context=None, failure=None).user_task_context
+
+tests\test_service_extraction_stage1.py:305: AssertionError
+____________ test_rag_fold_without_a_focus_is_the_evidence_alone[] ____________
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': '',...t='E'), stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/bound-rag_config/test_rag_fold_without_a_focus_1'))
+utc = ''
+
+    @pytest.mark.parametrize("utc", [None, ""])
+    def test_rag_fold_without_a_focus_is_the_evidence_alone(world, utc):
+        world.rag = True
+        world.rag_result = types.SimpleNamespace(evidence_context="E")
+        res, _rep, _state = _run(world, utc=utc)
+>       assert res.user_task_context == "E"
+E       AssertionError: assert '' == 'E'
+E         
+E         - E
+
+tests\test_service_extraction_stage1.py:305: AssertionError
+______ test_rag_without_evidence_records_the_result_and_keeps_the_focus _______
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo...xt=''), stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/bound-rag_config/test_rag_without_evidence_reco0'))
+
+    def test_rag_without_evidence_records_the_result_and_keeps_the_focus(world):
+        world.rag = True
+        world.rag_result = types.SimpleNamespace(evidence_context="")
+        res, _rep, state = _run(world)
+>       assert res.user_task_context == "focus" and state["rag_result"] is world.rag_result
+                                                    ^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'rag_result'
+
+tests\test_service_extraction_stage1.py:313: KeyError
+______________________ test_rag_declined_writes_nothing _______________________
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo...t=None, stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/bound-rag_config/test_rag_declined_writes_nothi0'))
+
+    def test_rag_declined_writes_nothing(world):
+        world.rag = True
+        res, _rep, state = _run(world)
+        assert res.rag_result is None and res.user_task_context == "focus"
+>       assert "rag_result" not in state and "maybe_run_rag" in [c[0] for c in world.calls]
+E       AssertionError: assert ('rag_result' not in {'extraction_diagnostics': {'cleaning_report.json': {'passes': [{'pass': 1}, {'dropped': 3, 'pass': 2}]}}, 'stage_one_boundary': {'ok': True, 'reason': ''}} and 'maybe_run_rag' in ['stage1', 'diag.current', 'settle', 'diag.current', 'filter'])
+
+tests\test_service_extraction_stage1.py:321: AssertionError
+__________________________ test_rag_error_propagates __________________________
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo...result=None, stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/bound-rag_config/test_rag_error_propagates0'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001E61E368B50>
+
+    def test_rag_error_propagates(world, monkeypatch):
+        import t2pw.service.rag_orchestration as rag
+    
+        def boom(**_):
+            raise RuntimeError("chain blew up")
+    
+        world.rag = True
+        monkeypatch.setattr(rag, "maybe_run_rag", boom)
+>       with pytest.raises(RuntimeError, match="chain blew up"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'RuntimeError'>
+
+tests\test_service_extraction_stage1.py:332: Failed
+___________ test_patches_on_the_source_modules_reach_run_stage_one ____________
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo...xt=''), stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/bound-rag_config/test_patches_on_the_source_mod0'))
+
+    def test_patches_on_the_source_modules_reach_run_stage_one(world):
+        """R3b review F1 rule. Before R3c the app script re-ran ``from ... import`` on every
+        AppTest run, so a patch on the source module (c055 patches
+        ``pipeline.run_stage_one_with_chunking`` and ``stage_one_boundary.settle_stage_one``)
+        reached the call. Every callee of the moved code must still be looked up there."""
+    
+        world.rag = True
+        world.rag_result = types.SimpleNamespace(evidence_context="")
+        _run(world)
+>       assert [c[0] for c in world.calls] == ["stage1", "diag.current", "settle", "diag.current", "filter",
+                                              "build_draft_graph", "generate_qa_report", "maybe_run_rag"]
+E       AssertionError: assert ['stage1', 'd...nt', 'filter'] == ['stage1', 'd...t_graph', ...]
+E         
+E         Right contains 3 more items, first extra item: 'build_draft_graph'
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage1.py:346: AssertionError
+____________ test_importing_the_service_loads_no_stage_one_module _____________
+
+    def test_importing_the_service_loads_no_stage_one_module():
+        """The Stage-1 imports are function-local, so importing the module loads what it did before."""
+    
+        import subprocess
+    
+        code = ("import sys, t2pw.service.extraction\n"
+                "print(sorted(n for n in ('t2pw.pipeline.pipeline', 't2pw.pipeline.stage_one_boundary',"
+                " 't2pw.service.rag_orchestration', 't2pw.service.postpipeline', 't2pw.config')"
+                " if n in sys.modules))\n")
+        import os
+    
+        done = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True,
+                              env=dict(os.environ, PYTHONPATH=str(SRC)), cwd=str(ROOT), timeout=300)
+        assert done.returncode == 0, done.stderr[-2000:]
+>       assert done.stdout.strip().splitlines()[-1] == "[]"
+E       assert "['t2pw.config']" == '[]'
+E         
+E         - []
+E         + ['t2pw.config']
+
+tests\test_service_extraction_stage1.py:364: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage1.py::test_rag_on_seeds_from_the_in_scope_payload_and_folds_the_evidence
+FAILED tests/test_service_extraction_stage1.py::test_rag_fold_without_a_focus_is_the_evidence_alone[None]
+FAILED tests/test_service_extraction_stage1.py::test_rag_fold_without_a_focus_is_the_evidence_alone[]
+FAILED tests/test_service_extraction_stage1.py::test_rag_without_evidence_records_the_result_and_keeps_the_focus
+FAILED tests/test_service_extraction_stage1.py::test_rag_declined_writes_nothing
+FAILED tests/test_service_extraction_stage1.py::test_rag_error_propagates - F...
+FAILED tests/test_service_extraction_stage1.py::test_patches_on_the_source_modules_reach_run_stage_one
+FAILED tests/test_service_extraction_stage1.py::test_importing_the_service_loads_no_stage_one_module
+8 failed, 14 passed in 3.15s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f1238da76c51323070578fa2edcf423b585e026d  [git, worktree dirty=True]
+label                   : mut-bound-rag_config
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3c/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3c -q -p no:cacheprovider --basetemp=C:/t/wsR3ctmp/mut-tmp/bound-rag_config tests/test_service_extraction_stage1.py
+cwd                     : C:\t\ws-R3c
+root PID / process group: 144804 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 3.96 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 3  143752:python.exe, 137872:python.exe, 143772:python.exe
+descendants terminated  : 3  137872, 143752, 143772
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\ws-R3c\docs\webserver\evidence\R3c\mutation\bound-rag_config.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R3c  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

@@ -1,0 +1,121 @@
+T2PW: C:\t\ws-R3c\src\t2pw\__init__.py
+...................FFF                                                   [100%]
+================================== FAILURES ===================================
+__________ test_reporter_markdown_and_code_forward_unchanged_and_log __________
+
+caplog = <_pytest.logging.LogCaptureFixture object at 0x0000019D03428AD0>
+
+    def test_reporter_markdown_and_code_forward_unchanged_and_log(caplog):
+        calls = []
+    
+        class FakeSt:
+            def __getattr__(self, name):
+                return lambda *a, **k: calls.append((name, a, k)) or f"<{name}>"
+    
+        rep = StreamlitReporter(FakeSt())
+>       assert rep.markdown("**m**") == "<markdown>"
+E       AssertionError: assert '<text>' == '<markdown>'
+E         
+E         - <markdown>
+E         + <text>
+
+tests\test_service_extraction_stage1.py:385: AssertionError
+_________________ test_real_app_stops_at_a_stage_one_failure __________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000019D02F066D0>
+tmp_path = WindowsPath('C:/t/wsR3ctmp/mut-tmp/reporter-markdown-not-forwarded/test_real_app_stops_at_a_stage0')
+
+    def test_real_app_stops_at_a_stage_one_failure(monkeypatch, tmp_path):
+        """The app calls ``st.stop()`` on the returned failure: Stage 2 never runs."""
+    
+        stage2: List[Any] = []
+    
+        def stage1(*_a, **_k):
+            raise pipeline.PipelineFailure("stage1", "empty reply after 3 attempts", ATTEMPTS)
+    
+        monkeypatch.setattr(pipeline, "run_stage_one_with_chunking", stage1)
+        monkeypatch.setattr(pipeline, "run_stage_two_with_feedback_loop",
+                            lambda *a, **k: stage2.append(a) or ({}, [], []))
+        monkeypatch.setenv("RAG_ENABLED", "0")
+        at = _real_app(monkeypatch, tmp_path)
+    
+        assert [str(e.value) for e in at.exception] == []
+        assert [e.value for e in at.error] == ["Extraction failed: empty reply after 3 attempts"]
+        assert [x.label for x in at.expander] == ["Stage 1 attempts"]
+>       assert "**Attempt 1 (extract)** - retry [cut]" in [m.value for m in at.markdown]
+E       AssertionError: assert '**Attempt 1 (extract)** - retry [cut]' in []
+
+tests\test_service_extraction_stage1.py:435: AssertionError
+---------------------------- Captured stderr call -----------------------------
+2026-11-06 22:10:12.790 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+___ test_real_app_hands_stage_two_the_filtered_payload_and_the_folded_focus ___
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000019D0531F690>
+tmp_path = WindowsPath('C:/t/wsR3ctmp/mut-tmp/reporter-markdown-not-forwarded/test_real_app_hands_stage_two_0')
+
+    def test_real_app_hands_stage_two_the_filtered_payload_and_the_folded_focus(monkeypatch, tmp_path):
+        """The app rebinds what the rest of the block reads from the returned result."""
+    
+        import t2pw.service.rag_orchestration as rag
+    
+        stage2: List[Any] = []
+        evidence = types.SimpleNamespace(evidence_context="PMC1: MenG demethylates.", synthesized=False,
+                                         payload=None)
+    
+        def stage_two(text, payload, **kw):
+            stage2.append((payload, kw))
+            raise pipeline.PipelineFailure("stage2", "stop here", ATTEMPTS[1:])
+    
+        monkeypatch.setattr(pipeline, "run_stage_one_with_chunking",
+                            lambda *_a, **_k: (_payload("a", out=("x",)), [{"chunk": 1}]))
+        monkeypatch.setattr(boundary, "settle_stage_one",
+                            lambda payload, **_k: _Boundary(payload))
+        monkeypatch.setattr(pipeline, "run_stage_two_with_feedback_loop", stage_two)
+        monkeypatch.setattr(draft_graph, "build_draft_graph", lambda payload: "GRAPH")
+        monkeypatch.setattr(qa_graph, "generate_qa_report", lambda graph, payload: {"qa": graph})
+        monkeypatch.setattr(rag, "maybe_run_rag", lambda **_k: evidence)
+        monkeypatch.setenv("RAG_ENABLED", "1")
+        at = _real_app(monkeypatch, tmp_path, focus="  menaquinone  ")
+    
+        assert [str(e.value) for e in at.exception] == []
+        assert [e.value for e in at.error] == ["Inference stage failed: stop here"]
+        # the app's render_attempts shim (Stage 2 still calls it) renders through the service
+        assert [x.label for x in at.expander] == ["stage2 attempts"]
+>       assert "**Attempt 2** - success" in [m.value for m in at.markdown]
+E       AssertionError: assert '**Attempt 2** - success' in []
+
+tests\test_service_extraction_stage1.py:468: AssertionError
+---------------------------- Captured stderr call -----------------------------
+2026-11-06 22:10:13.299 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage1.py::test_reporter_markdown_and_code_forward_unchanged_and_log
+FAILED tests/test_service_extraction_stage1.py::test_real_app_stops_at_a_stage_one_failure
+FAILED tests/test_service_extraction_stage1.py::test_real_app_hands_stage_two_the_filtered_payload_and_the_folded_focus
+3 failed, 19 passed in 3.47s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f1238da76c51323070578fa2edcf423b585e026d  [git, worktree dirty=True]
+label                   : mut-reporter-markdown-not-forwarded
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3c/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3c -q -p no:cacheprovider --basetemp=C:/t/wsR3ctmp/mut-tmp/reporter-markdown-not-forwarded tests/test_service_extraction_stage1.py
+cwd                     : C:\t\ws-R3c
+root PID / process group: 531452 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 4.46 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 3  533656:python.exe, 534508:python.exe, 534484:python.exe
+descendants terminated  : 3  533656, 534484, 534508
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\ws-R3c\docs\webserver\evidence\R3c\mutation\reporter-markdown-not-forwarded.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R3c  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

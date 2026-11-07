@@ -1,0 +1,73 @@
+success                            IDENTICAL  outcome=completed                                    st-events=5 state-writes=2 callee-calls=6 dead-globals base=['_boundary'] tip=['_stage_one']
+success-chunked                    IDENTICAL  outcome=completed                                    st-events=5 state-writes=2 callee-calls=6 dead-globals base=['_boundary'] tip=['_stage_one']
+success-research-mode              IDENTICAL  outcome=completed                                    st-events=5 state-writes=2 callee-calls=6 dead-globals base=['_boundary'] tip=['_stage_one']
+success-bad-mode                   IDENTICAL  outcome=completed                                    st-events=5 state-writes=2 callee-calls=6 dead-globals base=['_boundary'] tip=['_stage_one']
+cleaning-report-last-pass          IDENTICAL  outcome=completed                                    st-events=5 state-writes=2 callee-calls=6 dead-globals base=['_boundary'] tip=['_stage_one']
+diagnostics-current-raises         IDENTICAL  outcome=completed                                    st-events=4 state-writes=1 callee-calls=6 dead-globals base=['_boundary'] tip=['_stage_one']
+reconstruction-info                IDENTICAL  outcome=completed                                    st-events=6 state-writes=2 callee-calls=6 dead-globals base=['_boundary'] tip=['_stage_one']
+reconstruction-no-count            IDENTICAL  outcome=completed                                    st-events=6 state-writes=2 callee-calls=6 dead-globals base=['_boundary'] tip=['_stage_one']
+pipeline-failure                   IDENTICAL  outcome=stopped                                      st-events=16 state-writes=1 callee-calls=2 dead-globals base=[] tip=['_stage_one']
+pipeline-failure-no-attempts       IDENTICAL  outcome=stopped                                      st-events=9 state-writes=1 callee-calls=2 dead-globals base=[] tip=['_stage_one']
+contract-error                     IDENTICAL  outcome=stopped                                      st-events=7 state-writes=1 callee-calls=2 dead-globals base=[] tip=['_stage_one']
+contract-error-in-settle           SAME-EXCEPT-UNBOUND-GLOBALS  (tip unbound: ['chunk_details', 'stage_one'])
+contract-error-in-settle           SAME-EXCEPT-UNBOUND-GLOBALS  outcome=stopped                                      st-events=7 state-writes=1 callee-calls=4 dead-globals base=[] tip=['_stage_one']
+pipeline-failure-in-settle         SAME-EXCEPT-UNBOUND-GLOBALS  (tip unbound: ['chunk_details', 'stage_one'])
+pipeline-failure-in-settle         SAME-EXCEPT-UNBOUND-GLOBALS  outcome=stopped                                      st-events=12 state-writes=1 callee-calls=4 dead-globals base=[] tip=['_stage_one']
+incomplete-no-failure              SAME-EXCEPT-UNBOUND-GLOBALS  (tip unbound: ['chunk_details', 'stage_one'])
+incomplete-no-failure              SAME-EXCEPT-UNBOUND-GLOBALS  outcome=stopped                                      st-events=9 state-writes=2 callee-calls=4 dead-globals base=['_boundary'] tip=['_stage_one']
+incomplete-with-failure            SAME-EXCEPT-UNBOUND-GLOBALS  (tip unbound: ['chunk_details', 'stage_one'])
+incomplete-with-failure            SAME-EXCEPT-UNBOUND-GLOBALS  outcome=stopped                                      st-events=10 state-writes=2 callee-calls=4 dead-globals base=['_boundary'] tip=['_stage_one']
+other-exception                    IDENTICAL  outcome=raised RuntimeError: LLM down                st-events=3 state-writes=0 callee-calls=1 dead-globals base=[] tip=[]
+out-of-scope-removed               IDENTICAL  outcome=completed                                    st-events=6 state-writes=2 callee-calls=6 dead-globals base=['_boundary'] tip=['_stage_one']
+out-of-scope-and-reconstruction    IDENTICAL  outcome=completed                                    st-events=7 state-writes=2 callee-calls=6 dead-globals base=['_boundary'] tip=['_stage_one']
+rag-off                            IDENTICAL  outcome=completed                                    st-events=5 state-writes=2 callee-calls=6 dead-globals base=['_boundary'] tip=['_stage_one']
+rag-on-skip                        IDENTICAL  outcome=completed                                    st-events=5 state-writes=2 callee-calls=9 dead-globals base=['_boundary', '_rag_seed_graph'] tip=['_stage_one']
+rag-on-no-evidence                 IDENTICAL  outcome=completed                                    st-events=6 state-writes=3 callee-calls=9 dead-globals base=['_boundary', '_rag_seed_graph'] tip=['_stage_one']
+rag-on-fold                        DIFFERENT  outcome=completed                                    st-events=8 state-writes=4 callee-calls=9 dead-globals base=['_boundary', '_rag_seed_graph'] tip=['_stage_one']
+  differing fields: ['after']
+   base after {"chunk_details": "[]", "out_of_scope_removed_reactions": "[\"x\"]", "rag_result": "\"<SimpleNamespace>\"", "rag_result_is_returned_object": true, "stage_one": "{\"entities\": {\"compounds\": []}, \"processes\": {\"reactions\": [{\"name\": \"a\"}, {\"name\": \"x\", \"scope_membership\": \" Out_Of_Scope \"}]}, \"settled\": true}", "stage_one_in_scope": "{\"entities\": {\"compounds\": []}, \"processes\": {\"reactions\": [{\"name\": \"a\"}]}, \"settled\": true}", "user_task_context": "\"focus\\n\\nPMC1: MenG.\""}
+   tip  after {"chunk_details": "[]", "out_of_scope_removed_reactions": "[\"x\"]", "rag_result": "\"<SimpleNamespace>\"", "rag_result_is_returned_object": true, "stage_one": "{\"entities\": {\"compounds\": []}, \"processes\": {\"reactions\": [{\"name\": \"a\"}, {\"name\": \"x\", \"scope_membership\": \" Out_Of_Scope \"}]}, \"settled\": true}", "stage_one_in_scope": "{\"entities\": {\"compounds\": []}, \"processes\": {\"reactions\": [{\"name\": \"a\"}]}, \"settled\": true}", "user_task_context": "\"focus\""}
+rag-on-fold-no-utc                 DIFFERENT  outcome=completed                                    st-events=7 state-writes=4 callee-calls=9 dead-globals base=['_boundary', '_rag_seed_graph'] tip=['_stage_one']
+  differing fields: ['after']
+   base after {"chunk_details": "[]", "out_of_scope_removed_reactions": "[]", "rag_result": "\"<SimpleNamespace>\"", "rag_result_is_returned_object": true, "stage_one": "{\"entities\": {\"compounds\": []}, \"processes\": {\"reactions\": [{\"name\": \"a\"}]}, \"settled\": true}", "stage_one_in_scope": "{\"entities\": {\"compounds\": []}, \"processes\": {\"reactions\": [{\"name\": \"a\"}]}, \"settled\": true}", "user_task_context": "\"PMC1: MenG.\""}
+   tip  after {"chunk_details": "[]", "out_of_scope_removed_reactions": "[]", "rag_result": "\"<SimpleNamespace>\"", "rag_result_is_returned_object": true, "stage_one": "{\"entities\": {\"compounds\": []}, \"processes\": {\"reactions\": [{\"name\": \"a\"}]}, \"settled\": true}", "stage_one_in_scope": "{\"entities\": {\"compounds\": []}, \"processes\": {\"reactions\": [{\"name\": \"a\"}]}, \"settled\": true}", "user_task_context": "null"}
+rag-on-fold-empty-utc              DIFFERENT  outcome=completed                                    st-events=7 state-writes=4 callee-calls=9 dead-globals base=['_boundary', '_rag_seed_graph'] tip=['_stage_one']
+  differing fields: ['after']
+   base after {"chunk_details": "[]", "out_of_scope_removed_reactions": "[]", "rag_result": "\"<SimpleNamespace>\"", "rag_result_is_returned_object": true, "stage_one": "{\"entities\": {\"compounds\": []}, \"processes\": {\"reactions\": [{\"name\": \"a\"}]}, \"settled\": true}", "stage_one_in_scope": "{\"entities\": {\"compounds\": []}, \"processes\": {\"reactions\": [{\"name\": \"a\"}]}, \"settled\": true}", "user_task_context": "\"PMC1: MenG.\""}
+   tip  after {"chunk_details": "[]", "out_of_scope_removed_reactions": "[]", "rag_result": "\"<SimpleNamespace>\"", "rag_result_is_returned_object": true, "stage_one": "{\"entities\": {\"compounds\": []}, \"processes\": {\"reactions\": [{\"name\": \"a\"}]}, \"settled\": true}", "stage_one_in_scope": "{\"entities\": {\"compounds\": []}, \"processes\": {\"reactions\": [{\"name\": \"a\"}]}, \"settled\": true}", "user_task_context": "\"\""}
+rag-on-error-degraded              IDENTICAL  outcome=completed                                    st-events=6 state-writes=3 callee-calls=9 dead-globals base=['_boundary', '_rag_seed_graph'] tip=['_stage_one']
+rag-on-raises                      SAME-EXCEPT-UNBOUND-GLOBALS  (tip unbound: ['chunk_details', 'out_of_scope_removed_reactions', 'rag_result', 'stage_one', 'stage_one_in_scope'])
+rag-on-raises                      SAME-EXCEPT-UNBOUND-GLOBALS  outcome=raised RuntimeError: chain blew up           st-events=5 state-writes=2 callee-calls=9 dead-globals base=['_boundary', '_rag_seed_graph'] tip=[]
+rag-on-after-incomplete            SAME-EXCEPT-UNBOUND-GLOBALS  (tip unbound: ['chunk_details', 'stage_one'])
+rag-on-after-incomplete            SAME-EXCEPT-UNBOUND-GLOBALS  outcome=stopped                                      st-events=9 state-writes=2 callee-calls=4 dead-globals base=['_boundary'] tip=['_stage_one']
+render_attempts[Stage 2 attempts]   IDENTICAL st-events=10
+render_attempts[Chunk 1 attempts]   IDENTICAL st-events=3
+render_attempts[x attempts]         IDENTICAL st-events=5
+27/30 identical or known-difference only; 3 unexplained
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f1238da76c51323070578fa2edcf423b585e026d  [git, worktree dirty=True]
+label                   : ivm-app-focus-not-rebound
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3c/docs/webserver/evidence/R3c/scripts/inline_vs_moved.py C:/t/ws-R3c-base C:/t/ws-R3c
+cwd                     : C:\t\ws-R3c
+root PID / process group: 532680 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 1.48 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  534068:python.exe
+descendants terminated  : 1  534068
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\ws-R3c\docs\webserver\evidence\R3c\ivm-sanity\app-focus-not-rebound.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R3c  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

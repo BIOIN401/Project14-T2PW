@@ -1,0 +1,88 @@
+T2PW: C:\t\ws-R3c\src\t2pw\__init__.py
+.....F..............F.                                                   [100%]
+================================== FAILURES ===================================
+________ test_pipeline_failure_reports_attempts_and_returns_a_failure _________
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo...ON after 3 attempts'), root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/attempts-not-rendered/test_pipeline_failure_reports_0'))
+
+    def test_pipeline_failure_reports_attempts_and_returns_a_failure(world):
+        world.stage1_raises = pipeline.PipelineFailure("stage1", "no JSON after 3 attempts", ATTEMPTS)
+        res, rep, state = _run(world)
+        assert res.failure == ex.InputFailure(ex.KIND_STAGE_ONE_FAILED, "Extraction failed: no JSON after 3 attempts")
+        assert res.stage_one is None and res.user_task_context is None
+>       assert rep.calls == SPIN + [
+            ("error", ("Extraction failed: no JSON after 3 attempts",)),
+            ("expander", ("Stage 1 attempts",), {"expanded": False}), ("expander:enter",),
+            ("markdown", ("**Attempt 1 (extract)** - retry [cut]",)),
+            ("code", ("{bad",), {"language": "json"}),
+            ("caption", ("Expecting value",)),
+            ("markdown", ("**Attempt 2** - success",)),
+            ("code", ("{}",), {"language": "json"}),
+            ("expander:exit",)]
+E       AssertionError: assert [('spinner', ... attempts',))] == [('spinner', ...enter',), ...]
+E         
+E         Right contains 8 more items, first extra item: ('expander', ('Stage 1 attempts',), {'expanded': False})
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage1.py:231: AssertionError
+_________________ test_real_app_stops_at_a_stage_one_failure __________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001A81F26A150>
+tmp_path = WindowsPath('C:/t/wsR3ctmp/mut-tmp/attempts-not-rendered/test_real_app_stops_at_a_stage0')
+
+    def test_real_app_stops_at_a_stage_one_failure(monkeypatch, tmp_path):
+        """The app calls ``st.stop()`` on the returned failure: Stage 2 never runs."""
+    
+        stage2: List[Any] = []
+    
+        def stage1(*_a, **_k):
+            raise pipeline.PipelineFailure("stage1", "empty reply after 3 attempts", ATTEMPTS)
+    
+        monkeypatch.setattr(pipeline, "run_stage_one_with_chunking", stage1)
+        monkeypatch.setattr(pipeline, "run_stage_two_with_feedback_loop",
+                            lambda *a, **k: stage2.append(a) or ({}, [], []))
+        monkeypatch.setenv("RAG_ENABLED", "0")
+        at = _real_app(monkeypatch, tmp_path)
+    
+        assert [str(e.value) for e in at.exception] == []
+        assert [e.value for e in at.error] == ["Extraction failed: empty reply after 3 attempts"]
+>       assert [x.label for x in at.expander] == ["Stage 1 attempts"]
+E       AssertionError: assert [] == ['Stage 1 attempts']
+E         
+E         Right contains one more item: 'Stage 1 attempts'
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage1.py:434: AssertionError
+---------------------------- Captured stderr call -----------------------------
+2026-11-06 22:07:45.921 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage1.py::test_pipeline_failure_reports_attempts_and_returns_a_failure
+FAILED tests/test_service_extraction_stage1.py::test_real_app_stops_at_a_stage_one_failure
+2 failed, 20 passed in 3.45s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f1238da76c51323070578fa2edcf423b585e026d  [git, worktree dirty=True]
+label                   : mut-attempts-not-rendered
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3c/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3c -q -p no:cacheprovider --basetemp=C:/t/wsR3ctmp/mut-tmp/attempts-not-rendered tests/test_service_extraction_stage1.py
+cwd                     : C:\t\ws-R3c
+root PID / process group: 528636 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 4.46 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 3  526448:python.exe, 523620:python.exe, 528372:python.exe
+descendants terminated  : 3  523620, 526448, 528372
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\ws-R3c\docs\webserver\evidence\R3c\mutation\attempts-not-rendered.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R3c  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

@@ -1,0 +1,115 @@
+success                            IDENTICAL  outcome=completed                                    st-events=5 state-writes=2 callee-calls=6 dead-globals base=['_boundary'] tip=['_stage_one']
+success-chunked                    IDENTICAL  outcome=completed                                    st-events=5 state-writes=2 callee-calls=6 dead-globals base=['_boundary'] tip=['_stage_one']
+success-research-mode              IDENTICAL  outcome=completed                                    st-events=5 state-writes=2 callee-calls=6 dead-globals base=['_boundary'] tip=['_stage_one']
+success-bad-mode                   IDENTICAL  outcome=completed                                    st-events=5 state-writes=2 callee-calls=6 dead-globals base=['_boundary'] tip=['_stage_one']
+cleaning-report-last-pass          IDENTICAL  outcome=completed                                    st-events=5 state-writes=2 callee-calls=6 dead-globals base=['_boundary'] tip=['_stage_one']
+diagnostics-current-raises         IDENTICAL  outcome=completed                                    st-events=4 state-writes=1 callee-calls=6 dead-globals base=['_boundary'] tip=['_stage_one']
+reconstruction-info                IDENTICAL  outcome=completed                                    st-events=6 state-writes=2 callee-calls=6 dead-globals base=['_boundary'] tip=['_stage_one']
+reconstruction-no-count            IDENTICAL  outcome=completed                                    st-events=6 state-writes=2 callee-calls=6 dead-globals base=['_boundary'] tip=['_stage_one']
+pipeline-failure                   DIFFERENT  outcome=stopped                                      st-events=16 state-writes=1 callee-calls=2 dead-globals base=[] tip=['_stage_one']
+  differing fields: ['st', 'outcome', 'after']
+   base st [["spinner", ["\"Running Stage 1 extraction...\""], {}], ["spinner:enter"], ["spinner:exit"], ["session_state", "extraction_diagnostics", "{\"x.json\": {\"n\": 1}}"], ["error", ["\"Extraction failed: no JSON after 3\""], {}], ["expander", ["\"Stage 1 attempts\""], {"expanded": "false"}], ["expander:enter"], ["markdown", ["\"**Attempt 1 (extract)** - retry [cut]\""], {}], ["code", ["\"{bad\""], {"language": "\"json\""}], ["caption", ["\"Expecting value\""], {}], ["markdown", ["\"**Attempt 2** - success\""], {}], ["code", ["\"{}\""], {"language": "\"json\""}], ["markdown", ["\"**Attempt 3 (repair)** - success\""], {}], ["code", ["\"[]\""], {"language": "\"json\""}], ["expander:exit"], ["stop", [], {}]]
+   tip  st [["spinner", ["\"Running Stage 1 extraction...\""], {}], ["spinner:enter"], ["spinner:exit"], ["session_state", "extraction_diagnostics", "{\"x.json\": {\"n\": 1}}"], ["error", ["\"Extraction failed: no JSON after 3\""], {}], ["expander", ["\"Stage 1 attempts\""], {"expanded": "false"}], ["expander:enter"], ["markdown", ["\"**Attempt 1 (extract)** - retry [cut]\""], {}], ["code", ["\"{bad\""], {"language": "\"json\""}], ["caption", ["\"Expecting value\""], {}], ["markdown", ["\"**Attempt 2** - success\""], {}], ["code", ["\"{}\""], {"language": "\"json\""}], ["markdown", ["\"**Attempt 3 (repair)** - success\""], {}], ["code", ["\"[]\""], {"language": "\"json\""}], ["expander:exit"]]
+   base outcome "stopped"
+   tip  outcome "completed"
+   base after {"chunk_details": "\"<unbound>\"", "out_of_scope_removed_reactions": "\"<unbound>\"", "rag_result": "\"<unbound>\"", "rag_result_is_returned_object": false, "stage_one": "\"<unbound>\"", "stage_one_in_scope": "\"<unbound>\"", "user_task_context": "null"}
+   tip  after {"chunk_details": "null", "out_of_scope_removed_reactions": "null", "rag_result": "null", "rag_result_is_returned_object": false, "stage_one": "null", "stage_one_in_scope": "null", "user_task_context": "null"}
+pipeline-failure-no-attempts       DIFFERENT  outcome=stopped                                      st-events=9 state-writes=1 callee-calls=2 dead-globals base=[] tip=['_stage_one']
+  differing fields: ['st', 'outcome', 'after']
+   base st [["spinner", ["\"Running Stage 1 extraction...\""], {}], ["spinner:enter"], ["spinner:exit"], ["session_state", "extraction_diagnostics", "{\"x.json\": {\"n\": 1}}"], ["error", ["\"Extraction failed: empty\""], {}], ["expander", ["\"Stage 1 attempts\""], {"expanded": "false"}], ["expander:enter"], ["expander:exit"], ["stop", [], {}]]
+   tip  st [["spinner", ["\"Running Stage 1 extraction...\""], {}], ["spinner:enter"], ["spinner:exit"], ["session_state", "extraction_diagnostics", "{\"x.json\": {\"n\": 1}}"], ["error", ["\"Extraction failed: empty\""], {}], ["expander", ["\"Stage 1 attempts\""], {"expanded": "false"}], ["expander:enter"], ["expander:exit"]]
+   base outcome "stopped"
+   tip  outcome "completed"
+   base after {"chunk_details": "\"<unbound>\"", "out_of_scope_removed_reactions": "\"<unbound>\"", "rag_result": "\"<unbound>\"", "rag_result_is_returned_object": false, "stage_one": "\"<unbound>\"", "stage_one_in_scope": "\"<unbound>\"", "user_task_context": "null"}
+   tip  after {"chunk_details": "null", "out_of_scope_removed_reactions": "null", "rag_result": "null", "rag_result_is_returned_object": false, "stage_one": "null", "stage_one_in_scope": "null", "user_task_context": "null"}
+contract-error                     DIFFERENT  outcome=stopped                                      st-events=7 state-writes=1 callee-calls=2 dead-globals base=[] tip=['_stage_one']
+  differing fields: ['st', 'outcome', 'after']
+   base st [["spinner", ["\"Running Stage 1 extraction...\""], {}], ["spinner:enter"], ["spinner:exit"], ["session_state", "extraction_diagnostics", "{\"x.json\": {\"n\": 1}}"], ["error", ["\"Extraction boundary failed: Payload must be a dict.\""], {}], ["json", ["{\"errors\": [\"x\"], \"stage\": \"post_extraction\"}"], {}], ["stop", [], {}]]
+   tip  st [["spinner", ["\"Running Stage 1 extraction...\""], {}], ["spinner:enter"], ["spinner:exit"], ["session_state", "extraction_diagnostics", "{\"x.json\": {\"n\": 1}}"], ["error", ["\"Extraction boundary failed: Payload must be a dict.\""], {}], ["json", ["{\"errors\": [\"x\"], \"stage\": \"post_extraction\"}"], {}]]
+   base outcome "stopped"
+   tip  outcome "completed"
+   base after {"chunk_details": "\"<unbound>\"", "out_of_scope_removed_reactions": "\"<unbound>\"", "rag_result": "\"<unbound>\"", "rag_result_is_returned_object": false, "stage_one": "\"<unbound>\"", "stage_one_in_scope": "\"<unbound>\"", "user_task_context": "null"}
+   tip  after {"chunk_details": "null", "out_of_scope_removed_reactions": "null", "rag_result": "null", "rag_result_is_returned_object": false, "stage_one": "null", "stage_one_in_scope": "null", "user_task_context": "null"}
+contract-error-in-settle           DIFFERENT  outcome=stopped                                      st-events=7 state-writes=1 callee-calls=4 dead-globals base=[] tip=['_stage_one']
+  differing fields: ['st', 'outcome', 'after']
+   base st [["spinner", ["\"Running Stage 1 extraction...\""], {}], ["spinner:enter"], ["spinner:exit"], ["session_state", "extraction_diagnostics", "{\"x.json\": {\"n\": 1}}"], ["error", ["\"Extraction boundary failed: Entity rows must be objects.\""], {}], ["json", ["{\"errors\": [\"e\"]}"], {}], ["stop", [], {}]]
+   tip  st [["spinner", ["\"Running Stage 1 extraction...\""], {}], ["spinner:enter"], ["spinner:exit"], ["session_state", "extraction_diagnostics", "{\"x.json\": {\"n\": 1}}"], ["error", ["\"Extraction boundary failed: Entity rows must be objects.\""], {}], ["json", ["{\"errors\": [\"e\"]}"], {}]]
+   base outcome "stopped"
+   tip  outcome "completed"
+   base after {"chunk_details": "[]", "out_of_scope_removed_reactions": "\"<unbound>\"", "rag_result": "\"<unbound>\"", "rag_result_is_returned_object": false, "stage_one": "{\"entities\": {\"compounds\": []}, \"processes\": {\"reactions\": [{\"name\": \"a\"}]}}", "stage_one_in_scope": "\"<unbound>\"", "user_task_context": "null"}
+   tip  after {"chunk_details": "null", "out_of_scope_removed_reactions": "null", "rag_result": "null", "rag_result_is_returned_object": false, "stage_one": "null", "stage_one_in_scope": "null", "user_task_context": "null"}
+pipeline-failure-in-settle         DIFFERENT  outcome=stopped                                      st-events=12 state-writes=1 callee-calls=4 dead-globals base=[] tip=['_stage_one']
+  differing fields: ['st', 'outcome', 'after']
+   base st [["spinner", ["\"Running Stage 1 extraction...\""], {}], ["spinner:enter"], ["spinner:exit"], ["session_state", "extraction_diagnostics", "{\"x.json\": {\"n\": 1}}"], ["error", ["\"Extraction failed: repair gave up\""], {}], ["expander", ["\"Stage 1 attempts\""], {"expanded": "false"}], ["expander:enter"], ["markdown", ["\"**Attempt 1 (extract)** - retry [cut]\""], {}], ["code", ["\"{bad\""], {"language": "\"json\""}], ["caption", ["\"Expecting value\""], {}], ["expander:exit"], ["stop", [], {}]]
+   tip  st [["spinner", ["\"Running Stage 1 extraction...\""], {}], ["spinner:enter"], ["spinner:exit"], ["session_state", "extraction_diagnostics", "{\"x.json\": {\"n\": 1}}"], ["error", ["\"Extraction failed: repair gave up\""], {}], ["expander", ["\"Stage 1 attempts\""], {"expanded": "false"}], ["expander:enter"], ["markdown", ["\"**Attempt 1 (extract)** - retry [cut]\""], {}], ["code", ["\"{bad\""], {"language": "\"json\""}], ["caption", ["\"Expecting value\""], {}], ["expander:exit"]]
+   base outcome "stopped"
+   tip  outcome "completed"
+   base after {"chunk_details": "[]", "out_of_scope_removed_reactions": "\"<unbound>\"", "rag_result": "\"<unbound>\"", "rag_result_is_returned_object": false, "stage_one": "{\"entities\": {\"compounds\": []}, \"processes\": {\"reactions\": [{\"name\": \"a\"}]}}", "stage_one_in_scope": "\"<unbound>\"", "user_task_context": "null"}
+   tip  after {"chunk_details": "null", "out_of_scope_removed_reactions": "null", "rag_result": "null", "rag_result_is_returned_object": false, "stage_one": "null", "stage_one_in_scope": "null", "user_task_context": "null"}
+incomplete-no-failure              DIFFERENT  outcome=stopped                                      st-events=9 state-writes=2 callee-calls=4 dead-globals base=['_boundary'] tip=['_stage_one']
+  differing fields: ['st', 'outcome', 'after']
+   base st [["spinner", ["\"Running Stage 1 extraction...\""], {}], ["spinner:enter"], ["session_state", "stage_one_boundary", "{\"ok\": false, \"reason\": \"no processes\", \"rec\": {}}"], ["spinner:exit"], ["session_state", "extraction_diagnostics", "{\"x.json\": {\"n\": 1}}"], ["error", ["\"Extraction boundary failed and could not be recovered: no processes\""], {}], ["info", ["\"Localized repair and deterministic registry reconstruction were both applied; the payload below is as far as the run got. No reaction was invented to satisfy the contract. The diagnostics for this run (stage0_attempts.json, extraction_boundary_report.json, cleaning_report.json) are in C:\\\\Users\\\\Angad\\\\AppData\\\\Local\\\\Temp\\\\r3c-ivm-illm6rbw\\\\tmp\\\\extraction_diagnostics\\\\run-X.\""], {}], ["json", ["{\"ok\": false, \"reason\": \"no processes\", \"rec\": {}}"], {}], ["stop", [], {}]]
+   tip  st [["spinner", ["\"Running Stage 1 extraction...\""], {}], ["spinner:enter"], ["session_state", "stage_one_boundary", "{\"ok\": false, \"reason\": \"no processes\", \"rec\": {}}"], ["spinner:exit"], ["session_state", "extraction_diagnostics", "{\"x.json\": {\"n\": 1}}"], ["error", ["\"Extraction boundary failed and could not be recovered: no processes\""], {}], ["info", ["\"Localized repair and deterministic registry reconstruction were both applied; the payload below is as far as the run got. No reaction was invented to satisfy the contract. The diagnostics for this run (stage0_attempts.json, extraction_boundary_report.json, cleaning_report.json) are in C:\\\\Users\\\\Angad\\\\AppData\\\\Local\\\\Temp\\\\r3c-ivm-illm6rbw\\\\tmp\\\\extraction_diagnostics\\\\run-X.\""], {}], ["json", ["{\"ok\": false, \"reason\": \"no processes\", \"rec\": {}}"], {}]]
+   base outcome "stopped"
+   tip  outcome "completed"
+   base after {"chunk_details": "[]", "out_of_scope_removed_reactions": "\"<unbound>\"", "rag_result": "\"<unbound>\"", "rag_result_is_returned_object": false, "stage_one": "{\"entities\": {\"compounds\": []}, \"processes\": {\"reactions\": [{\"name\": \"a\"}]}, \"settled\": true}", "stage_one_in_scope": "\"<unbound>\"", "user_task_context": "null"}
+   tip  after {"chunk_details": "null", "out_of_scope_removed_reactions": "null", "rag_result": "null", "rag_result_is_returned_object": false, "stage_one": "null", "stage_one_in_scope": "null", "user_task_context": "null"}
+incomplete-with-failure            DIFFERENT  outcome=stopped                                      st-events=10 state-writes=2 callee-calls=4 dead-globals base=['_boundary'] tip=['_stage_one']
+  differing fields: ['st', 'outcome', 'after']
+   base st [["spinner", ["\"Running Stage 1 extraction...\""], {}], ["spinner:enter"], ["session_state", "stage_one_boundary", "{\"ok\": false, \"reason\": \"rows rejected\", \"rec\": {}}"], ["spinner:exit"], ["session_state", "extraction_diagnostics", "{\"x.json\": {\"n\": 1}}"], ["error", ["\"Extraction boundary failed and could not be recovered: rows rejected\""], {}], ["info", ["\"Localized repair and deterministic registry reconstruction were both applied; the payload below is as far as the run got. No reaction was invented to satisfy the contract. The diagnostics for this run (stage0_attempts.json, extraction_boundary_report.json, cleaning_report.json) are in C:\\\\Users\\\\Angad\\\\AppData\\\\Local\\\\Temp\\\\r3c-ivm-illm6rbw\\\\tmp\\\\extraction_diagnostics\\\\run-X.\""], {}], ["json", ["{\"ok\": false, \"reason\": \"rows rejected\", \"rec\": {}}"], {}], ["json", ["{\"errors\": [\"r\"]}"], {}], ["stop", [], {}]]
+   tip  st [["spinner", ["\"Running Stage 1 extraction...\""], {}], ["spinner:enter"], ["session_state", "stage_one_boundary", "{\"ok\": false, \"reason\": \"rows rejected\", \"rec\": {}}"], ["spinner:exit"], ["session_state", "extraction_diagnostics", "{\"x.json\": {\"n\": 1}}"], ["error", ["\"Extraction boundary failed and could not be recovered: rows rejected\""], {}], ["info", ["\"Localized repair and deterministic registry reconstruction were both applied; the payload below is as far as the run got. No reaction was invented to satisfy the contract. The diagnostics for this run (stage0_attempts.json, extraction_boundary_report.json, cleaning_report.json) are in C:\\\\Users\\\\Angad\\\\AppData\\\\Local\\\\Temp\\\\r3c-ivm-illm6rbw\\\\tmp\\\\extraction_diagnostics\\\\run-X.\""], {}], ["json", ["{\"ok\": false, \"reason\": \"rows rejected\", \"rec\": {}}"], {}], ["json", ["{\"errors\": [\"r\"]}"], {}]]
+   base outcome "stopped"
+   tip  outcome "completed"
+   base after {"chunk_details": "[]", "out_of_scope_removed_reactions": "\"<unbound>\"", "rag_result": "\"<unbound>\"", "rag_result_is_returned_object": false, "stage_one": "{\"entities\": {\"compounds\": []}, \"processes\": {\"reactions\": [{\"name\": \"a\"}]}, \"settled\": true}", "stage_one_in_scope": "\"<unbound>\"", "user_task_context": "null"}
+   tip  after {"chunk_details": "null", "out_of_scope_removed_reactions": "null", "rag_result": "null", "rag_result_is_returned_object": false, "stage_one": "null", "stage_one_in_scope": "null", "user_task_context": "null"}
+other-exception                    IDENTICAL  outcome=raised RuntimeError: LLM down                st-events=3 state-writes=0 callee-calls=1 dead-globals base=[] tip=[]
+out-of-scope-removed               IDENTICAL  outcome=completed                                    st-events=6 state-writes=2 callee-calls=6 dead-globals base=['_boundary'] tip=['_stage_one']
+out-of-scope-and-reconstruction    IDENTICAL  outcome=completed                                    st-events=7 state-writes=2 callee-calls=6 dead-globals base=['_boundary'] tip=['_stage_one']
+rag-off                            IDENTICAL  outcome=completed                                    st-events=5 state-writes=2 callee-calls=6 dead-globals base=['_boundary'] tip=['_stage_one']
+rag-on-skip                        IDENTICAL  outcome=completed                                    st-events=5 state-writes=2 callee-calls=9 dead-globals base=['_boundary', '_rag_seed_graph'] tip=['_stage_one']
+rag-on-no-evidence                 IDENTICAL  outcome=completed                                    st-events=6 state-writes=3 callee-calls=9 dead-globals base=['_boundary', '_rag_seed_graph'] tip=['_stage_one']
+rag-on-fold                        IDENTICAL  outcome=completed                                    st-events=8 state-writes=4 callee-calls=9 dead-globals base=['_boundary', '_rag_seed_graph'] tip=['_stage_one']
+rag-on-fold-no-utc                 IDENTICAL  outcome=completed                                    st-events=7 state-writes=4 callee-calls=9 dead-globals base=['_boundary', '_rag_seed_graph'] tip=['_stage_one']
+rag-on-fold-empty-utc              IDENTICAL  outcome=completed                                    st-events=7 state-writes=4 callee-calls=9 dead-globals base=['_boundary', '_rag_seed_graph'] tip=['_stage_one']
+rag-on-error-degraded              IDENTICAL  outcome=completed                                    st-events=6 state-writes=3 callee-calls=9 dead-globals base=['_boundary', '_rag_seed_graph'] tip=['_stage_one']
+rag-on-raises                      SAME-EXCEPT-UNBOUND-GLOBALS  (tip unbound: ['chunk_details', 'out_of_scope_removed_reactions', 'rag_result', 'stage_one', 'stage_one_in_scope'])
+rag-on-raises                      SAME-EXCEPT-UNBOUND-GLOBALS  outcome=raised RuntimeError: chain blew up           st-events=5 state-writes=2 callee-calls=9 dead-globals base=['_boundary', '_rag_seed_graph'] tip=[]
+rag-on-after-incomplete            DIFFERENT  outcome=stopped                                      st-events=9 state-writes=2 callee-calls=4 dead-globals base=['_boundary'] tip=['_stage_one']
+  differing fields: ['st', 'outcome', 'after']
+   base st [["spinner", ["\"Running Stage 1 extraction...\""], {}], ["spinner:enter"], ["session_state", "stage_one_boundary", "{\"ok\": false, \"reason\": \"r\", \"rec\": {}}"], ["spinner:exit"], ["session_state", "extraction_diagnostics", "{\"x.json\": {\"n\": 1}}"], ["error", ["\"Extraction boundary failed and could not be recovered: r\""], {}], ["info", ["\"Localized repair and deterministic registry reconstruction were both applied; the payload below is as far as the run got. No reaction was invented to satisfy the contract. The diagnostics for this run (stage0_attempts.json, extraction_boundary_report.json, cleaning_report.json) are in C:\\\\Users\\\\Angad\\\\AppData\\\\Local\\\\Temp\\\\r3c-ivm-illm6rbw\\\\tmp\\\\extraction_diagnostics\\\\run-X.\""], {}], ["json", ["{\"ok\": false, \"reason\": \"r\", \"rec\": {}}"], {}], ["stop", [], {}]]
+   tip  st [["spinner", ["\"Running Stage 1 extraction...\""], {}], ["spinner:enter"], ["session_state", "stage_one_boundary", "{\"ok\": false, \"reason\": \"r\", \"rec\": {}}"], ["spinner:exit"], ["session_state", "extraction_diagnostics", "{\"x.json\": {\"n\": 1}}"], ["error", ["\"Extraction boundary failed and could not be recovered: r\""], {}], ["info", ["\"Localized repair and deterministic registry reconstruction were both applied; the payload below is as far as the run got. No reaction was invented to satisfy the contract. The diagnostics for this run (stage0_attempts.json, extraction_boundary_report.json, cleaning_report.json) are in C:\\\\Users\\\\Angad\\\\AppData\\\\Local\\\\Temp\\\\r3c-ivm-illm6rbw\\\\tmp\\\\extraction_diagnostics\\\\run-X.\""], {}], ["json", ["{\"ok\": false, \"reason\": \"r\", \"rec\": {}}"], {}]]
+   base outcome "stopped"
+   tip  outcome "completed"
+   base after {"chunk_details": "[]", "out_of_scope_removed_reactions": "\"<unbound>\"", "rag_result": "\"<unbound>\"", "rag_result_is_returned_object": false, "stage_one": "{\"entities\": {\"compounds\": []}, \"processes\": {\"reactions\": [{\"name\": \"a\"}]}, \"settled\": true}", "stage_one_in_scope": "\"<unbound>\"", "user_task_context": "null"}
+   tip  after {"chunk_details": "null", "out_of_scope_removed_reactions": "null", "rag_result": "null", "rag_result_is_returned_object": false, "stage_one": "null", "stage_one_in_scope": "null", "user_task_context": "null"}
+render_attempts[Stage 2 attempts]   IDENTICAL st-events=10
+render_attempts[Chunk 1 attempts]   IDENTICAL st-events=3
+render_attempts[x attempts]         IDENTICAL st-events=5
+22/30 identical or known-difference only; 8 unexplained
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f1238da76c51323070578fa2edcf423b585e026d  [git, worktree dirty=True]
+label                   : ivm-app-no-stop-on-failure
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3c/docs/webserver/evidence/R3c/scripts/inline_vs_moved.py C:/t/ws-R3c-base C:/t/ws-R3c
+cwd                     : C:\t\ws-R3c
+root PID / process group: 534632 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 1.60 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  533580:python.exe
+descendants terminated  : 1  533580
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\ws-R3c\docs\webserver\evidence\R3c\ivm-sanity\app-no-stop-on-failure.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R3c  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

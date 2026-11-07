@@ -1,0 +1,57 @@
+T2PW: C:\t\ws-R3c\src\t2pw\__init__.py
+..........F...........                                                   [100%]
+================================== FAILURES ===================================
+_____ test_rag_on_seeds_from_the_in_scope_payload_and_folds_the_evidence ______
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo...'), stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/seed-from-unfiltered/test_rag_on_seeds_from_the_in_0'))
+
+    def test_rag_on_seeds_from_the_in_scope_payload_and_folds_the_evidence(world):
+        world.stage1 = _payload("a", out=("x",))
+        world.rag = True
+        world.rag_result = types.SimpleNamespace(evidence_context="PMC1: MenG.")
+        res, rep, state = _run(world, flag=1)
+        in_scope = dict(_payload("a"), settled=True)
+        assert world.calls[-3:-1] == [("build_draft_graph", in_scope), ("generate_qa_report", "GRAPH", in_scope)]
+        name, kw = world.calls[-1]
+        assert name == "maybe_run_rag"
+>       assert kw == dict(pathway_context={"pathway_name": "Menaquinone"}, user_flag=True,
+                          seed_payload=in_scope, reports={"qa_graph": {"qa": 1}}, seed_text="the paper",
+                          reporter=rep)
+E       AssertionError: assert {'pathway_con...': True}, ...} == {'pathway_con...': True}, ...}
+E         
+E         Omitting 5 identical items, use -vv to show
+E         Differing items:
+E         {'seed_payload': {'entities': {}, 'processes': {'reactions': [{'name': 'a'}, {'name': 'x', 'scope_membership': 'out_of_scope'}]}, 'settled': True}} != {'seed_payload': {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}, 'settled': True}}
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage1.py:289: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage1.py::test_rag_on_seeds_from_the_in_scope_payload_and_folds_the_evidence
+1 failed, 21 passed in 3.48s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f1238da76c51323070578fa2edcf423b585e026d  [git, worktree dirty=True]
+label                   : mut-seed-from-unfiltered
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3c/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3c -q -p no:cacheprovider --basetemp=C:/t/wsR3ctmp/mut-tmp/seed-from-unfiltered tests/test_service_extraction_stage1.py
+cwd                     : C:\t\ws-R3c
+root PID / process group: 531008 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 4.41 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 3  530172:python.exe, 492444:python.exe, 531768:python.exe
+descendants terminated  : 3  492444, 530172, 531768
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\ws-R3c\docs\webserver\evidence\R3c\mutation\seed-from-unfiltered.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R3c  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

@@ -1,0 +1,73 @@
+T2PW: C:\t\ws-R3c\src\t2pw\__init__.py
+..........F.....F.....                                                   [100%]
+================================== FAILURES ===================================
+_____ test_rag_on_seeds_from_the_in_scope_payload_and_folds_the_evidence ______
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo... stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/bound-build_draft_graph/test_rag_on_seeds_from_the_in_0'))
+
+    def test_rag_on_seeds_from_the_in_scope_payload_and_folds_the_evidence(world):
+        world.stage1 = _payload("a", out=("x",))
+        world.rag = True
+        world.rag_result = types.SimpleNamespace(evidence_context="PMC1: MenG.")
+        res, rep, state = _run(world, flag=1)
+        in_scope = dict(_payload("a"), settled=True)
+>       assert world.calls[-3:-1] == [("build_draft_graph", in_scope), ("generate_qa_report", "GRAPH", in_scope)]
+E       AssertionError: assert [('filter', {...tled': True})] == [('build_draf...tled': True})]
+E         
+E         At index 0 diff: ('filter', {'entities': {}, 'processes': {'reactions': [{'name': 'a'}, {'name': 'x', 'scope_membership': 'out_of_scope'}]}, 'settled': True}) != ('build_draft_graph', {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}, 'settled': True})
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage1.py:286: AssertionError
+___________ test_patches_on_the_source_modules_reach_run_stage_one ____________
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo... stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/bound-build_draft_graph/test_patches_on_the_source_mod0'))
+
+    def test_patches_on_the_source_modules_reach_run_stage_one(world):
+        """R3b review F1 rule. Before R3c the app script re-ran ``from ... import`` on every
+        AppTest run, so a patch on the source module (c055 patches
+        ``pipeline.run_stage_one_with_chunking`` and ``stage_one_boundary.settle_stage_one``)
+        reached the call. Every callee of the moved code must still be looked up there."""
+    
+        world.rag = True
+        world.rag_result = types.SimpleNamespace(evidence_context="")
+        _run(world)
+>       assert [c[0] for c in world.calls] == ["stage1", "diag.current", "settle", "diag.current", "filter",
+                                              "build_draft_graph", "generate_qa_report", "maybe_run_rag"]
+E       AssertionError: assert ['stage1', 'd..._report', ...] == ['stage1', 'd...t_graph', ...]
+E         
+E         At index 5 diff: 'generate_qa_report' != 'build_draft_graph'
+E         Right contains one more item: 'maybe_run_rag'
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage1.py:346: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage1.py::test_rag_on_seeds_from_the_in_scope_payload_and_folds_the_evidence
+FAILED tests/test_service_extraction_stage1.py::test_patches_on_the_source_modules_reach_run_stage_one
+2 failed, 20 passed in 3.13s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f1238da76c51323070578fa2edcf423b585e026d  [git, worktree dirty=True]
+label                   : mut-bound-build_draft_graph
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3c/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3c -q -p no:cacheprovider --basetemp=C:/t/wsR3ctmp/mut-tmp/bound-build_draft_graph tests/test_service_extraction_stage1.py
+cwd                     : C:\t\ws-R3c
+root PID / process group: 143116 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 3.95 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 3  144048:python.exe, 138900:python.exe, 144312:python.exe
+descendants terminated  : 3  138900, 144048, 144312
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\ws-R3c\docs\webserver\evidence\R3c\mutation\bound-build_draft_graph.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R3c  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

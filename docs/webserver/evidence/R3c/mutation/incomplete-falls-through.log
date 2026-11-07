@@ -1,0 +1,72 @@
+T2PW: C:\t\ws-R3c\src\t2pw\__init__.py
+.......FF.............                                                   [100%]
+================================== FAILURES ===================================
+________ test_incomplete_boundary_reports_and_returns_a_failure[None] _________
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo...stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/incomplete-falls-through/test_incomplete_boundary_repor0'))
+failure = None
+
+    @pytest.mark.parametrize("failure", [None, types.SimpleNamespace(report={"errors": ["r"]})])
+    def test_incomplete_boundary_reports_and_returns_a_failure(world, failure):
+        world.boundary = {"ok": False, "reason": "rows rejected", "failure": failure}
+        world.rag = True
+        res, rep, state = _run(world)
+        message = "Extraction boundary failed and could not be recovered: rows rejected"
+>       assert res.failure == ex.InputFailure(ex.KIND_STAGE_ONE_INCOMPLETE, message)
+E       AssertionError: assert None == InputFailure(kind='stage_one_incomplete', message='Extraction boundary failed and could not be recovered: rows rejected')
+E        +  where None = StageOneResult(stage_one={'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}, 'settled': True}, chunk_details... 'a'}]}, 'settled': True}, out_of_scope_removed_reactions=[], rag_result=None, user_task_context='focus', failure=None).failure
+E        +  and   InputFailure(kind='stage_one_incomplete', message='Extraction boundary failed and could not be recovered: rows rejected') = <class 't2pw.service.extraction.InputFailure'>('stage_one_incomplete', 'Extraction boundary failed and could not be recovered: rows rejected')
+E        +    where <class 't2pw.service.extraction.InputFailure'> = ex.InputFailure
+E        +    and   'stage_one_incomplete' = ex.KIND_STAGE_ONE_INCOMPLETE
+
+tests\test_service_extraction_stage1.py:260: AssertionError
+______ test_incomplete_boundary_reports_and_returns_a_failure[failure1] _______
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo...stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/incomplete-falls-through/test_incomplete_boundary_repor1'))
+failure = namespace(report={'errors': ['r']})
+
+    @pytest.mark.parametrize("failure", [None, types.SimpleNamespace(report={"errors": ["r"]})])
+    def test_incomplete_boundary_reports_and_returns_a_failure(world, failure):
+        world.boundary = {"ok": False, "reason": "rows rejected", "failure": failure}
+        world.rag = True
+        res, rep, state = _run(world)
+        message = "Extraction boundary failed and could not be recovered: rows rejected"
+>       assert res.failure == ex.InputFailure(ex.KIND_STAGE_ONE_INCOMPLETE, message)
+E       AssertionError: assert None == InputFailure(kind='stage_one_incomplete', message='Extraction boundary failed and could not be recovered: rows rejected')
+E        +  where None = StageOneResult(stage_one={'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}, 'settled': True}, chunk_details... 'a'}]}, 'settled': True}, out_of_scope_removed_reactions=[], rag_result=None, user_task_context='focus', failure=None).failure
+E        +  and   InputFailure(kind='stage_one_incomplete', message='Extraction boundary failed and could not be recovered: rows rejected') = <class 't2pw.service.extraction.InputFailure'>('stage_one_incomplete', 'Extraction boundary failed and could not be recovered: rows rejected')
+E        +    where <class 't2pw.service.extraction.InputFailure'> = ex.InputFailure
+E        +    and   'stage_one_incomplete' = ex.KIND_STAGE_ONE_INCOMPLETE
+
+tests\test_service_extraction_stage1.py:260: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage1.py::test_incomplete_boundary_reports_and_returns_a_failure[None]
+FAILED tests/test_service_extraction_stage1.py::test_incomplete_boundary_reports_and_returns_a_failure[failure1]
+2 failed, 20 passed in 3.42s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f1238da76c51323070578fa2edcf423b585e026d  [git, worktree dirty=True]
+label                   : mut-incomplete-falls-through
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3c/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3c -q -p no:cacheprovider --basetemp=C:/t/wsR3ctmp/mut-tmp/incomplete-falls-through tests/test_service_extraction_stage1.py
+cwd                     : C:\t\ws-R3c
+root PID / process group: 529164 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 4.45 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 3  530484:python.exe, 513228:python.exe, 527740:python.exe
+descendants terminated  : 3  513228, 527740, 530484
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\ws-R3c\docs\webserver\evidence\R3c\mutation\incomplete-falls-through.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R3c  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

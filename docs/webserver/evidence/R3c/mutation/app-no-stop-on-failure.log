@@ -1,0 +1,63 @@
+T2PW: C:\t\ws-R3c\src\t2pw\__init__.py
+....................F.                                                   [100%]
+================================== FAILURES ===================================
+_________________ test_real_app_stops_at_a_stage_one_failure __________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000221EC54DA50>
+tmp_path = WindowsPath('C:/t/wsR3ctmp/mut-tmp/app-no-stop-on-failure/test_real_app_stops_at_a_stage0')
+
+    def test_real_app_stops_at_a_stage_one_failure(monkeypatch, tmp_path):
+        """The app calls ``st.stop()`` on the returned failure: Stage 2 never runs."""
+    
+        stage2: List[Any] = []
+    
+        def stage1(*_a, **_k):
+            raise pipeline.PipelineFailure("stage1", "empty reply after 3 attempts", ATTEMPTS)
+    
+        monkeypatch.setattr(pipeline, "run_stage_one_with_chunking", stage1)
+        monkeypatch.setattr(pipeline, "run_stage_two_with_feedback_loop",
+                            lambda *a, **k: stage2.append(a) or ({}, [], []))
+        monkeypatch.setenv("RAG_ENABLED", "0")
+        at = _real_app(monkeypatch, tmp_path)
+    
+>       assert [str(e.value) for e in at.exception] == []
+E       assert ["'NoneType' ...'setdefault'"] == []
+E         
+E         Left contains one more item: "'NoneType' object has no attribute 'setdefault'"
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage1.py:432: AssertionError
+---------------------------- Captured stdout call -----------------------------
+\x1b[31m\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m \x1b[0m\x1b[1;31mTraceback \x1b[0m\x1b[1;2;31m(most recent call last)\x1b[0m\x1b[31m \x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\exec_code.py:136 in exec_func_with_error_handling               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\script_runner.py:837 in code_to_exec                            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\ws-R3c\\src\\t2pw\\app\\streamlit_app.py:1971 in <module>                           \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1968 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m\x1b[2m# deliberately not supplied -- see the pipeline.py site for why.\x1b[0m      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1969 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m\x1b[94mfrom\x1b[0m\x1b[90m \x1b[0m\x1b[4;96mt2pw\x1b[0m\x1b[4;96m.\x1b[0m\x1b[4;96mpipeline\x1b[0m\x1b[4;96m.\x1b[0m\x1b[4;96mentity_admission\x1b[0m\x1b[90m \x1b[0m\x1b[94mimport\x1b[0m pathway_context_from_stage \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1970 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m1971 \x1b[2m\u2502   \u2502   \x1b[0mfinal_payload = \x1b[1;4mmerge_additions(\x1b[0m                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1972 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \x1b[0m\x1b[1;4mstage_one_in_scope,\x1b[0m                                               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1973 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \x1b[0m\x1b[1;4mstage_two \x1b[0m\x1b[1;4;94mif\x1b[0m\x1b[1;4m \x1b[0m\x1b[1;4;96misinstance\x1b[0m\x1b[1;4m(stage_two, \x1b[0m\x1b[1;4;96mdict\x1b[0m\x1b[1;4m) \x1b[0m\x1b[1;4;94melse\x1b[0m\x1b[1;4m {},\x1b[0m                 \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1974 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \x1b[0m\x1b[1;4mpathway_context=pathway_context_from_stage_zero(pathway_context),\x1b[0m \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\ws-R3c\\src\\t2pw\\pipeline\\pipeline.py:1227 in merge_additions                    \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1224 \x1b[0m\x1b[2m\u2502   \x1b[0m                                                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1225 \x1b[0m\x1b[2m\u2502   \x1b[0mentities_add = additions.get(\x1b[33m"\x1b[0m\x1b[33mentities\x1b[0m\x1b[33m"\x1b[0m, {})                              \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1226 \x1b[0m\x1b[2m\u2502   \x1b[0m\x1b[94mif\x1b[0m \x1b[96misinstance\x1b[0m(entities_add, \x1b[96mdict\x1b[0m):                                        \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m1227 \x1b[2m\u2502   \u2502   \x1b[0m\x1b[1;4mmerged.setdefault\x1b[0m(\x1b[33m"\x1b[0m\x1b[33mentities\x1b[0m\x1b[33m"\x1b[0m, {})                                     \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1228 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0m\x1b[94mfor\x1b[0m key, items \x1b[95min\x1b[0m entities_add.items():                               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1229 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \x1b[0m\x1b[94mif\x1b[0m \x1b[95mnot\x1b[0m \x1b[96misinstance\x1b[0m(items, \x1b[96mlist\x1b[0m):                                   \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m1230 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \u2502   \x1b[0m\x1b[94mcontinue\x1b[0m                                                      \x1b[31m \x1b[0m\n\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\n\x1b[1;91mAttributeError: \x1b[0m\x1b[32m'NoneType'\x1b[0m object has no attribute \x1b[32m'setdefault'\x1b[0m
+---------------------------- Captured stderr call -----------------------------
+2026-11-06 22:09:48.220 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage1.py::test_real_app_stops_at_a_stage_one_failure
+1 failed, 21 passed in 3.63s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f1238da76c51323070578fa2edcf423b585e026d  [git, worktree dirty=True]
+label                   : mut-app-no-stop-on-failure
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3c/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3c -q -p no:cacheprovider --basetemp=C:/t/wsR3ctmp/mut-tmp/app-no-stop-on-failure tests/test_service_extraction_stage1.py
+cwd                     : C:\t\ws-R3c
+root PID / process group: 532660 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 4.70 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 3  521948:python.exe, 532400:python.exe, 531356:python.exe
+descendants terminated  : 3  521948, 531356, 532400
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\ws-R3c\docs\webserver\evidence\R3c\mutation\app-no-stop-on-failure.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R3c  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

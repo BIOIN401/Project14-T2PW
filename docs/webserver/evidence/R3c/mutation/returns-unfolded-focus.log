@@ -1,0 +1,210 @@
+T2PW: C:\t\ws-R3c\src\t2pw\__init__.py
+F........FFFFFF......F                                                   [100%]
+================================== FAILURES ===================================
+_ test_success_passes_stage_one_its_arguments_and_returns_what_the_block_reads _
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo..., stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/returns-unfolded-focus/test_success_passes_stage_one_0'))
+
+    def test_success_passes_stage_one_its_arguments_and_returns_what_the_block_reads(world):
+        world.chunks = [{"chunk": 1}]
+        res, rep, state = _run(world, state={"export_mode": "research"})
+    
+        name, text, kw = world.calls[0]
+        assert (name, text) == ("stage1", "the paper")
+        assert kw == dict(pathway_context={"pathway_name": "Menaquinone"}, user_task_context="focus",
+                          artifact_dir=world.root / "tmp", enable_chunking=True, chunk_word_limit=1200,
+                          chunk_overlap=200, max_attempts=3, temperature=0.25, max_tokens=8000)
+        assert all(type(kw[k]) is int for k in ("chunk_word_limit", "chunk_overlap", "max_attempts", "max_tokens"))
+        settle = world.calls[2]
+        assert world.calls[1] == ("diag.current",)  # the cleaning report is read after Stage 1 ran
+        assert settle[0] == "settle" and settle[1] == _payload("a")
+        assert settle[2] == {"mode": "research", "cleaning_report": {"pass": 2, "dropped": 3}}
+        assert rep.calls == SPIN
+        assert list(state) == ["export_mode", "stage_one_boundary", ex.EXTRACTION_DIAGNOSTICS_KEY]
+        assert state["stage_one_boundary"] == {"ok": True, "reason": ""}
+        assert state[ex.EXTRACTION_DIAGNOSTICS_KEY] == CLEANING
+        settled = dict(_payload("a"), settled=True)
+        assert res.failure is None
+        assert res.stage_one == settled and res.stage_one_in_scope == settled
+        assert res.chunk_details is world.chunks
+        assert res.out_of_scope_removed_reactions == []
+>       assert res.rag_result is None and res.user_task_context == "focus"
+E       AssertionError: assert (None is None and None == 'focus')
+E        +  where None = StageOneResult(stage_one={'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}, 'settled': True}, chunk_details...e': 'a'}]}, 'settled': True}, out_of_scope_removed_reactions=[], rag_result=None, user_task_context=None, failure=None).rag_result
+E        +  and   None = StageOneResult(stage_one={'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}, 'settled': True}, chunk_details...e': 'a'}]}, 'settled': True}, out_of_scope_removed_reactions=[], rag_result=None, user_task_context=None, failure=None).user_task_context
+
+tests\test_service_extraction_stage1.py:182: AssertionError
+__________________________ test_rag_off_runs_no_seed __________________________
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo...=None, stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/returns-unfolded-focus/test_rag_off_runs_no_seed0'))
+
+    def test_rag_off_runs_no_seed(world):
+        res, _rep, state = _run(world, flag=1)
+        assert [c[0] for c in world.calls] == ["stage1", "diag.current", "settle", "diag.current", "filter"]
+>       assert res.rag_result is None and res.user_task_context == "focus"
+E       AssertionError: assert (None is None and None == 'focus')
+E        +  where None = StageOneResult(stage_one={'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}, 'settled': True}, chunk_details...e': 'a'}]}, 'settled': True}, out_of_scope_removed_reactions=[], rag_result=None, user_task_context=None, failure=None).rag_result
+E        +  and   None = StageOneResult(stage_one={'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}, 'settled': True}, chunk_details...e': 'a'}]}, 'settled': True}, out_of_scope_removed_reactions=[], rag_result=None, user_task_context=None, failure=None).user_task_context
+
+tests\test_service_extraction_stage1.py:276: AssertionError
+_____ test_rag_on_seeds_from_the_in_scope_payload_and_folds_the_evidence ______
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo..., stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/returns-unfolded-focus/test_rag_on_seeds_from_the_in_0'))
+
+    def test_rag_on_seeds_from_the_in_scope_payload_and_folds_the_evidence(world):
+        world.stage1 = _payload("a", out=("x",))
+        world.rag = True
+        world.rag_result = types.SimpleNamespace(evidence_context="PMC1: MenG.")
+        res, rep, state = _run(world, flag=1)
+        in_scope = dict(_payload("a"), settled=True)
+        assert world.calls[-3:-1] == [("build_draft_graph", in_scope), ("generate_qa_report", "GRAPH", in_scope)]
+        name, kw = world.calls[-1]
+        assert name == "maybe_run_rag"
+        assert kw == dict(pathway_context={"pathway_name": "Menaquinone"}, user_flag=True,
+                          seed_payload=in_scope, reports={"qa_graph": {"qa": 1}}, seed_text="the paper",
+                          reporter=rep)
+        assert kw["seed_payload"] is res.stage_one_in_scope
+        assert res.rag_result is world.rag_result
+>       assert res.user_task_context == "focus\n\nPMC1: MenG."
+E       AssertionError: assert None == 'focus\n\nPMC1: MenG.'
+E        +  where None = StageOneResult(stage_one={'entities': {}, 'processes': {'reactions': [{'name': 'a'}, {'name': 'x', 'scope_membership':...pe_removed_reactions=['x'], rag_result=namespace(evidence_context='PMC1: MenG.'), user_task_context=None, failure=None).user_task_context
+
+tests\test_service_extraction_stage1.py:294: AssertionError
+__________ test_rag_fold_without_a_focus_is_the_evidence_alone[None] __________
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': Non..., stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/returns-unfolded-focus/test_rag_fold_without_a_focus_0'))
+utc = None
+
+    @pytest.mark.parametrize("utc", [None, ""])
+    def test_rag_fold_without_a_focus_is_the_evidence_alone(world, utc):
+        world.rag = True
+        world.rag_result = types.SimpleNamespace(evidence_context="E")
+        res, _rep, _state = _run(world, utc=utc)
+>       assert res.user_task_context == "E"
+E       AssertionError: assert None == 'E'
+E        +  where None = StageOneResult(stage_one={'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}, 'settled': True}, chunk_details...}, out_of_scope_removed_reactions=[], rag_result=namespace(evidence_context='E'), user_task_context=None, failure=None).user_task_context
+
+tests\test_service_extraction_stage1.py:305: AssertionError
+____________ test_rag_fold_without_a_focus_is_the_evidence_alone[] ____________
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': '',..., stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/returns-unfolded-focus/test_rag_fold_without_a_focus_1'))
+utc = ''
+
+    @pytest.mark.parametrize("utc", [None, ""])
+    def test_rag_fold_without_a_focus_is_the_evidence_alone(world, utc):
+        world.rag = True
+        world.rag_result = types.SimpleNamespace(evidence_context="E")
+        res, _rep, _state = _run(world, utc=utc)
+>       assert res.user_task_context == "E"
+E       AssertionError: assert None == 'E'
+E        +  where None = StageOneResult(stage_one={'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}, 'settled': True}, chunk_details...}, out_of_scope_removed_reactions=[], rag_result=namespace(evidence_context='E'), user_task_context=None, failure=None).user_task_context
+
+tests\test_service_extraction_stage1.py:305: AssertionError
+______ test_rag_without_evidence_records_the_result_and_keeps_the_focus _______
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo..., stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/returns-unfolded-focus/test_rag_without_evidence_reco0'))
+
+    def test_rag_without_evidence_records_the_result_and_keeps_the_focus(world):
+        world.rag = True
+        world.rag_result = types.SimpleNamespace(evidence_context="")
+        res, _rep, state = _run(world)
+>       assert res.user_task_context == "focus" and state["rag_result"] is world.rag_result
+E       AssertionError: assert (None == 'focus')
+E        +  where None = StageOneResult(stage_one={'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}, 'settled': True}, chunk_details...e}, out_of_scope_removed_reactions=[], rag_result=namespace(evidence_context=''), user_task_context=None, failure=None).user_task_context
+
+tests\test_service_extraction_stage1.py:313: AssertionError
+______________________ test_rag_declined_writes_nothing _______________________
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo..., stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/returns-unfolded-focus/test_rag_declined_writes_nothi0'))
+
+    def test_rag_declined_writes_nothing(world):
+        world.rag = True
+        res, _rep, state = _run(world)
+>       assert res.rag_result is None and res.user_task_context == "focus"
+E       AssertionError: assert (None is None and None == 'focus')
+E        +  where None = StageOneResult(stage_one={'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}, 'settled': True}, chunk_details...e': 'a'}]}, 'settled': True}, out_of_scope_removed_reactions=[], rag_result=None, user_task_context=None, failure=None).rag_result
+E        +  and   None = StageOneResult(stage_one={'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}, 'settled': True}, chunk_details...e': 'a'}]}, 'settled': True}, out_of_scope_removed_reactions=[], rag_result=None, user_task_context=None, failure=None).user_task_context
+
+tests\test_service_extraction_stage1.py:320: AssertionError
+___ test_real_app_hands_stage_two_the_filtered_payload_and_the_folded_focus ___
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001B4F72954E0>
+tmp_path = WindowsPath('C:/t/wsR3ctmp/mut-tmp/returns-unfolded-focus/test_real_app_hands_stage_two_0')
+
+    def test_real_app_hands_stage_two_the_filtered_payload_and_the_folded_focus(monkeypatch, tmp_path):
+        """The app rebinds what the rest of the block reads from the returned result."""
+    
+        import t2pw.service.rag_orchestration as rag
+    
+        stage2: List[Any] = []
+        evidence = types.SimpleNamespace(evidence_context="PMC1: MenG demethylates.", synthesized=False,
+                                         payload=None)
+    
+        def stage_two(text, payload, **kw):
+            stage2.append((payload, kw))
+            raise pipeline.PipelineFailure("stage2", "stop here", ATTEMPTS[1:])
+    
+        monkeypatch.setattr(pipeline, "run_stage_one_with_chunking",
+                            lambda *_a, **_k: (_payload("a", out=("x",)), [{"chunk": 1}]))
+        monkeypatch.setattr(boundary, "settle_stage_one",
+                            lambda payload, **_k: _Boundary(payload))
+        monkeypatch.setattr(pipeline, "run_stage_two_with_feedback_loop", stage_two)
+        monkeypatch.setattr(draft_graph, "build_draft_graph", lambda payload: "GRAPH")
+        monkeypatch.setattr(qa_graph, "generate_qa_report", lambda graph, payload: {"qa": graph})
+        monkeypatch.setattr(rag, "maybe_run_rag", lambda **_k: evidence)
+        monkeypatch.setenv("RAG_ENABLED", "1")
+        at = _real_app(monkeypatch, tmp_path, focus="  menaquinone  ")
+    
+        assert [str(e.value) for e in at.exception] == []
+        assert [e.value for e in at.error] == ["Inference stage failed: stop here"]
+        # the app's render_attempts shim (Stage 2 still calls it) renders through the service
+        assert [x.label for x in at.expander] == ["stage2 attempts"]
+        assert "**Attempt 2** - success" in [m.value for m in at.markdown]
+        assert "Removed 1 out-of-scope reaction(s) before Stage 2: x" in [i.value for i in at.info]
+        assert len(stage2) == 1
+        payload, kw = stage2[0]
+        assert payload == _payload("a")
+        assert kw["chunk_details"] == [{"chunk": 1}]
+>       assert kw["user_task_context"] == "menaquinone\n\nPMC1: MenG demethylates."
+E       AssertionError: assert None == 'menaquinone\n\nPMC1: MenG demethylates.'
+
+tests\test_service_extraction_stage1.py:474: AssertionError
+---------------------------- Captured stderr call -----------------------------
+2026-11-06 22:09:29.859 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage1.py::test_success_passes_stage_one_its_arguments_and_returns_what_the_block_reads
+FAILED tests/test_service_extraction_stage1.py::test_rag_off_runs_no_seed - A...
+FAILED tests/test_service_extraction_stage1.py::test_rag_on_seeds_from_the_in_scope_payload_and_folds_the_evidence
+FAILED tests/test_service_extraction_stage1.py::test_rag_fold_without_a_focus_is_the_evidence_alone[None]
+FAILED tests/test_service_extraction_stage1.py::test_rag_fold_without_a_focus_is_the_evidence_alone[]
+FAILED tests/test_service_extraction_stage1.py::test_rag_without_evidence_records_the_result_and_keeps_the_focus
+FAILED tests/test_service_extraction_stage1.py::test_rag_declined_writes_nothing
+FAILED tests/test_service_extraction_stage1.py::test_real_app_hands_stage_two_the_filtered_payload_and_the_folded_focus
+8 failed, 14 passed in 3.59s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f1238da76c51323070578fa2edcf423b585e026d  [git, worktree dirty=True]
+label                   : mut-returns-unfolded-focus
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3c/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3c -q -p no:cacheprovider --basetemp=C:/t/wsR3ctmp/mut-tmp/returns-unfolded-focus tests/test_service_extraction_stage1.py
+cwd                     : C:\t\ws-R3c
+root PID / process group: 532588 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 4.58 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 3  532604:python.exe, 532720:python.exe, 532728:python.exe
+descendants terminated  : 3  532604, 532720, 532728
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\ws-R3c\docs\webserver\evidence\R3c\mutation\returns-unfolded-focus.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R3c  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

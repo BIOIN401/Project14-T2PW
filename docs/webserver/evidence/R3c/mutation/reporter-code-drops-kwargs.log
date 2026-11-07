@@ -1,0 +1,54 @@
+T2PW: C:\t\ws-R3c\src\t2pw\__init__.py
+...................F..                                                   [100%]
+================================== FAILURES ===================================
+__________ test_reporter_markdown_and_code_forward_unchanged_and_log __________
+
+caplog = <_pytest.logging.LogCaptureFixture object at 0x000001C686FF4AD0>
+
+    def test_reporter_markdown_and_code_forward_unchanged_and_log(caplog):
+        calls = []
+    
+        class FakeSt:
+            def __getattr__(self, name):
+                return lambda *a, **k: calls.append((name, a, k)) or f"<{name}>"
+    
+        rep = StreamlitReporter(FakeSt())
+        assert rep.markdown("**m**") == "<markdown>"
+        assert rep.code("{}", language="json") == "<code>"
+>       assert calls == [("markdown", ("**m**",), {}), ("code", ("{}",), {"language": "json"})]
+E       AssertionError: assert [('markdown',... ('{}',), {})] == [('markdown',...ge': 'json'})]
+E         
+E         At index 1 diff: ('code', ('{}',), {}) != ('code', ('{}',), {'language': 'json'})
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage1.py:387: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage1.py::test_reporter_markdown_and_code_forward_unchanged_and_log
+1 failed, 21 passed in 3.44s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f1238da76c51323070578fa2edcf423b585e026d  [git, worktree dirty=True]
+label                   : mut-reporter-code-drops-kwargs
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3c/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3c -q -p no:cacheprovider --basetemp=C:/t/wsR3ctmp/mut-tmp/reporter-code-drops-kwargs tests/test_service_extraction_stage1.py
+cwd                     : C:\t\ws-R3c
+root PID / process group: 534080 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 4.43 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 3  534240:python.exe, 533708:python.exe, 534296:python.exe
+descendants terminated  : 3  533708, 534240, 534296
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\ws-R3c\docs\webserver\evidence\R3c\mutation\reporter-code-drops-kwargs.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R3c  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

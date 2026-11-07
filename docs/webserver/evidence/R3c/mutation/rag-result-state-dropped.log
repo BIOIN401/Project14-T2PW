@@ -1,0 +1,73 @@
+T2PW: C:\t\ws-R3c\src\t2pw\__init__.py
+..........F..F........                                                   [100%]
+================================== FAILURES ===================================
+_____ test_rag_on_seeds_from_the_in_scope_payload_and_folds_the_evidence ______
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo...stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/rag-result-state-dropped/test_rag_on_seeds_from_the_in_0'))
+
+    def test_rag_on_seeds_from_the_in_scope_payload_and_folds_the_evidence(world):
+        world.stage1 = _payload("a", out=("x",))
+        world.rag = True
+        world.rag_result = types.SimpleNamespace(evidence_context="PMC1: MenG.")
+        res, rep, state = _run(world, flag=1)
+        in_scope = dict(_payload("a"), settled=True)
+        assert world.calls[-3:-1] == [("build_draft_graph", in_scope), ("generate_qa_report", "GRAPH", in_scope)]
+        name, kw = world.calls[-1]
+        assert name == "maybe_run_rag"
+        assert kw == dict(pathway_context={"pathway_name": "Menaquinone"}, user_flag=True,
+                          seed_payload=in_scope, reports={"qa_graph": {"qa": 1}}, seed_text="the paper",
+                          reporter=rep)
+        assert kw["seed_payload"] is res.stage_one_in_scope
+        assert res.rag_result is world.rag_result
+        assert res.user_task_context == "focus\n\nPMC1: MenG."
+>       assert list(state)[-2:] == ["rag_result", "rag_evidence_context"]
+E       AssertionError: assert ['extraction_...ence_context'] == ['rag_result'...ence_context']
+E         
+E         At index 0 diff: 'extraction_diagnostics' != 'rag_result'
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage1.py:295: AssertionError
+______ test_rag_without_evidence_records_the_result_and_keeps_the_focus _______
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': 'fo...stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/rag-result-state-dropped/test_rag_without_evidence_reco0'))
+
+    def test_rag_without_evidence_records_the_result_and_keeps_the_focus(world):
+        world.rag = True
+        world.rag_result = types.SimpleNamespace(evidence_context="")
+        res, _rep, state = _run(world)
+>       assert res.user_task_context == "focus" and state["rag_result"] is world.rag_result
+                                                    ^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'rag_result'
+
+tests\test_service_extraction_stage1.py:313: KeyError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage1.py::test_rag_on_seeds_from_the_in_scope_payload_and_folds_the_evidence
+FAILED tests/test_service_extraction_stage1.py::test_rag_without_evidence_records_the_result_and_keeps_the_focus
+2 failed, 20 passed in 3.46s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f1238da76c51323070578fa2edcf423b585e026d  [git, worktree dirty=True]
+label                   : mut-rag-result-state-dropped
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3c/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3c -q -p no:cacheprovider --basetemp=C:/t/wsR3ctmp/mut-tmp/rag-result-state-dropped tests/test_service_extraction_stage1.py
+cwd                     : C:\t\ws-R3c
+root PID / process group: 531448 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 4.42 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 3  531648:python.exe, 530488:python.exe, 532464:python.exe
+descendants terminated  : 3  530488, 531648, 532464
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\ws-R3c\docs\webserver\evidence\R3c\mutation\rag-result-state-dropped.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R3c  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

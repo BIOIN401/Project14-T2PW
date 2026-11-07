@@ -1,0 +1,64 @@
+T2PW: C:\t\ws-R3c\src\t2pw\__init__.py
+...........FF.........                                                   [100%]
+================================== FAILURES ===================================
+__________ test_rag_fold_without_a_focus_is_the_evidence_alone[None] __________
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': Non...'E'), stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/user-flag-not-bool/test_rag_fold_without_a_focus_0'))
+utc = None
+
+    @pytest.mark.parametrize("utc", [None, ""])
+    def test_rag_fold_without_a_focus_is_the_evidence_alone(world, utc):
+        world.rag = True
+        world.rag_result = types.SimpleNamespace(evidence_context="E")
+        res, _rep, _state = _run(world, utc=utc)
+        assert res.user_task_context == "E"
+>       assert [c for c in world.calls if c[0] == "maybe_run_rag"][0][1]["user_flag"] is False
+E       assert 0 is False
+
+tests\test_service_extraction_stage1.py:306: AssertionError
+____________ test_rag_fold_without_a_focus_is_the_evidence_alone[] ____________
+
+world = namespace(calls=[('stage1', 'the paper', {'pathway_context': {'pathway_name': 'Menaquinone'}, 'user_task_context': '',...'E'), stage1_raises=None, root=WindowsPath('C:/t/wsR3ctmp/mut-tmp/user-flag-not-bool/test_rag_fold_without_a_focus_1'))
+utc = ''
+
+    @pytest.mark.parametrize("utc", [None, ""])
+    def test_rag_fold_without_a_focus_is_the_evidence_alone(world, utc):
+        world.rag = True
+        world.rag_result = types.SimpleNamespace(evidence_context="E")
+        res, _rep, _state = _run(world, utc=utc)
+        assert res.user_task_context == "E"
+>       assert [c for c in world.calls if c[0] == "maybe_run_rag"][0][1]["user_flag"] is False
+E       assert 0 is False
+
+tests\test_service_extraction_stage1.py:306: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage1.py::test_rag_fold_without_a_focus_is_the_evidence_alone[None]
+FAILED tests/test_service_extraction_stage1.py::test_rag_fold_without_a_focus_is_the_evidence_alone[]
+2 failed, 20 passed in 3.57s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f1238da76c51323070578fa2edcf423b585e026d  [git, worktree dirty=True]
+label                   : mut-user-flag-not-bool
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3c/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3c -q -p no:cacheprovider --basetemp=C:/t/wsR3ctmp/mut-tmp/user-flag-not-bool tests/test_service_extraction_stage1.py
+cwd                     : C:\t\ws-R3c
+root PID / process group: 530676 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 4.48 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 3  532024:python.exe, 531692:python.exe, 531288:python.exe
+descendants terminated  : 3  531288, 531692, 532024
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\ws-R3c\docs\webserver\evidence\R3c\mutation\user-flag-not-bool.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R3c  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================
