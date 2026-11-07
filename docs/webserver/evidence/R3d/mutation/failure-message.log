@@ -1,0 +1,112 @@
+T2PW: C:\t\ws-R3d\src\t2pw\__init__.py
+....FF.....................F                                             [100%]
+================================== FAILURES ===================================
+_ test_a_stage_two_failure_reports_and_is_returned_before_anything_is_published[stage2-chunk-1-stage2-chunk-1 attempts] _
+
+world = namespace(calls=[('stage2', 'the paper', {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}}, {'chunk_detail...ens': 9000})], additions={'additions': {}, 'qa_hints': {'h': 1}}, raises=PipelineFailure('no JSON after 3'), loop=None)
+stage = 'stage2-chunk-1', label = 'stage2-chunk-1 attempts'
+
+    @pytest.mark.parametrize("stage, label", [("stage2-chunk-1", "stage2-chunk-1 attempts"),
+                                              (None, "Stage 2 attempts")])
+    def test_a_stage_two_failure_reports_and_is_returned_before_anything_is_published(world, stage, label):
+        failure = pipeline.PipelineFailure("stage2", "no JSON after 3", ATTEMPTS)
+        failure.stage = stage
+        world.raises = failure
+        res, rep, state = _run(world)
+    
+        message = "Inference stage failed: no JSON after 3"
+>       assert res == ex.ExtractionResult(failure=ex.InputFailure(ex.KIND_STAGE_TWO_FAILED, message))
+E       AssertionError: assert ExtractionRes...SON after 3')) == ExtractionRes...SON after 3'))
+E         
+E         Omitting 2 identical items, use -vv to show
+E         Differing attributes:
+E         ['failure']
+E         
+E         Drill down into differing attribute failure:
+E           failure: InputFailure(kind='stage_two_failed', message='Stage 2 failed: no JSON after 3') != InputFailure(kind='stage_two_failed', message='Inference stage failed: no JSON after 3')...
+E         
+E         ...Full output truncated (11 lines hidden), use '-vv' to show
+
+tests\test_service_extraction_stage2.py:236: AssertionError
+_ test_a_stage_two_failure_reports_and_is_returned_before_anything_is_published[None-Stage 2 attempts] _
+
+world = namespace(calls=[('stage2', 'the paper', {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}}, {'chunk_detail...ens': 9000})], additions={'additions': {}, 'qa_hints': {'h': 1}}, raises=PipelineFailure('no JSON after 3'), loop=None)
+stage = None, label = 'Stage 2 attempts'
+
+    @pytest.mark.parametrize("stage, label", [("stage2-chunk-1", "stage2-chunk-1 attempts"),
+                                              (None, "Stage 2 attempts")])
+    def test_a_stage_two_failure_reports_and_is_returned_before_anything_is_published(world, stage, label):
+        failure = pipeline.PipelineFailure("stage2", "no JSON after 3", ATTEMPTS)
+        failure.stage = stage
+        world.raises = failure
+        res, rep, state = _run(world)
+    
+        message = "Inference stage failed: no JSON after 3"
+>       assert res == ex.ExtractionResult(failure=ex.InputFailure(ex.KIND_STAGE_TWO_FAILED, message))
+E       AssertionError: assert ExtractionRes...SON after 3')) == ExtractionRes...SON after 3'))
+E         
+E         Omitting 2 identical items, use -vv to show
+E         Differing attributes:
+E         ['failure']
+E         
+E         Drill down into differing attribute failure:
+E           failure: InputFailure(kind='stage_two_failed', message='Stage 2 failed: no JSON after 3') != InputFailure(kind='stage_two_failed', message='Inference stage failed: no JSON after 3')...
+E         
+E         ...Full output truncated (11 lines hidden), use '-vv' to show
+
+tests\test_service_extraction_stage2.py:236: AssertionError
+________ test_real_app_stops_at_a_stage_two_failure_before_the_publish ________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001CE10D6B2A0>
+tmp_path = WindowsPath('C:/t/wsR3dtmp/mut-tmp/failure-message/test_real_app_stops_at_a_stage0')
+
+    def test_real_app_stops_at_a_stage_two_failure_before_the_publish(monkeypatch, tmp_path):
+        def stage_two(*_a, **_k):
+            raise pipeline.PipelineFailure("stage2", "no JSON after 2", ATTEMPTS)
+    
+        monkeypatch.setattr(pipeline, "run_stage_two_with_feedback_loop", stage_two)
+        at = _real_app(monkeypatch, tmp_path, seed={"quarantine_report": {"stale": True}})
+    
+        assert [str(e.value) for e in at.exception] == []
+>       assert [e.value for e in at.error] == ["Inference stage failed: no JSON after 2"]
+E       AssertionError: assert ['Stage 2 fai...JSON after 2'] == ['Inference s...JSON after 2']
+E         
+E         At index 0 diff: 'Stage 2 failed: no JSON after 2' != 'Inference stage failed: no JSON after 2'
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage2.py:557: AssertionError
+---------------------------- Captured stderr call -----------------------------
+2026-11-07 14:26:55.686 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-07 14:26:55.975 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage2.py::test_a_stage_two_failure_reports_and_is_returned_before_anything_is_published[stage2-chunk-1-stage2-chunk-1 attempts]
+FAILED tests/test_service_extraction_stage2.py::test_a_stage_two_failure_reports_and_is_returned_before_anything_is_published[None-Stage 2 attempts]
+FAILED tests/test_service_extraction_stage2.py::test_real_app_stops_at_a_stage_two_failure_before_the_publish
+3 failed, 25 passed in 2.79s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3d\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 590563edbd444f8c972732f3252204cb7b5ac638  [git, worktree dirty=True]
+label                   : mut-failure-message
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3d/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3d -q -p no:cacheprovider --basetemp=C:/t/wsR3dtmp/mut-tmp/failure-message tests/test_service_extraction_stage2.py
+cwd                     : C:\t\ws-R3d
+root PID / process group: 51608 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 3.78 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  52348:python.exe
+descendants terminated  : 1  52348
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR3dtmp\ev\mutation\failure-message.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R3d  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

@@ -1,0 +1,44 @@
+T2PW: C:\t\ws-R3d\src\t2pw\__init__.py
+........F...................                                             [100%]
+================================== FAILURES ===================================
+______ test_strict_db_defaults_to_true_when_the_checkbox_never_rendered _______
+
+world = namespace(calls=[('stage2', 'the paper', {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}}, {'chunk_detail...o', 'i'), ('warning', 'w'), ('error', 'e'), ('json', {'j': 1}), ('other', 'dropped')], 'rounds': [1], 'max_rounds': 1})
+
+    def test_strict_db_defaults_to_true_when_the_checkbox_never_rendered(world):
+        world.loop = deepcopy(LOOP)
+        _run(world, stage_one=_stage_one(rag_result=_rag_result()))
+>       assert world.calls[2][2]["strict_db"] is True
+E       assert False is True
+
+tests\test_service_extraction_stage2.py:290: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage2.py::test_strict_db_defaults_to_true_when_the_checkbox_never_rendered
+1 failed, 27 passed in 2.70s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3d\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 590563edbd444f8c972732f3252204cb7b5ac638  [git, worktree dirty=True]
+label                   : mut-rag-strict-db-default
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3d/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3d -q -p no:cacheprovider --basetemp=C:/t/wsR3dtmp/mut-tmp/rag-strict-db-default tests/test_service_extraction_stage2.py
+cwd                     : C:\t\ws-R3d
+root PID / process group: 51916 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 3.68 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  51888:python.exe
+descendants terminated  : 1  51888
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR3dtmp\ev\mutation\rag-strict-db-default.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R3d  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

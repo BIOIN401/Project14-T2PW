@@ -1,0 +1,51 @@
+T2PW: C:\t\ws-R3d\src\t2pw\__init__.py
+........F..                                                              [100%]
+================================== FAILURES ===================================
+_ test_new_acceptance_every_production_call_site_builds_a_real_pathway_context _
+
+    def test_new_acceptance_every_production_call_site_builds_a_real_pathway_context():
+        """The trap this card exists for, plus the scope line it must not cross.
+    
+        ``_screen_advisory`` gates on ``isinstance(context, PathwayContext)``, so the
+        Stage-0 **dict** in scope at every site would be silently inert: each site
+        must call the shared factory. ``seed_text`` stays absent on purpose -- it is
+        ``_unlocatable``'s only input, and supplying it at ``pipeline.py:723`` would
+        switch evidence-span removal on for every Stage-2 QA round: a pinned-baseline
+        move and a separate chartered decision."""
+        for node in _production_sites():
+            keywords = {kw.arg: kw.value for kw in node.value.keywords}
+>           assert "seed_text" not in keywords, f"line {node.lineno} wired seed_text"
+E           AssertionError: line 931 wired seed_text
+E           assert 'seed_text' not in {'pathway_context': <ast.Call object at 0x000001FAD38B1BD0>, 'seed_text': <ast.Name object at 0x000001FAD38B35D0>}
+
+docs\webserver\evidence\R3d\proposed\c060a_repoint_check.py:332: AssertionError
+=========================== short test summary info ===========================
+FAILED docs/webserver/evidence/R3d/proposed/c060a_repoint_check.py::test_new_acceptance_every_production_call_site_builds_a_real_pathway_context
+1 failed, 10 passed in 1.24s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3d\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ bdd75f05aeb124d593dbd00e36aa965ffa6a2c46  [git, worktree dirty=True]
+label                   : proof-c060a-rag-site-seed-text
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3d/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3d -q -p no:cacheprovider --basetemp=C:/t/wsR3dtmp/proof-tmp/c060a-rag-site-seed-text C:/t/ws-R3d/docs/webserver/evidence/R3d/proposed/c060a_repoint_check.py
+cwd                     : C:\t\ws-R3d
+root PID / process group: 106396 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 2.00 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  102652:python.exe
+descendants terminated  : 1  102652
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR3dtmp\ev\proposed-test-edits\c060a-rag-site-seed-text.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R3d  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

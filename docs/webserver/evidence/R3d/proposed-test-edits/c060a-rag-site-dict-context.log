@@ -1,0 +1,74 @@
+T2PW: C:\t\ws-R3d\src\t2pw\__init__.py
+..F.....F..                                                              [100%]
+================================== FAILURES ===================================
+________ test_g9_f4_currency_orphans_close_through_the_app_rag_remerge ________
+
+    def test_g9_f4_currency_orphans_close_through_the_app_rag_remerge():
+        """F4 through the second app site -- the RAG conform/merge re-entry."""
+        merged = _rag_site(_f4_base(), _f4_additions())
+        assert _reactions(merged) == [GENUINE]
+>       assert _names(merged) == SURVIVORS, (
+            "the app's RAG re-merge admitted currency stranded by the assay composite"
+        )
+E       AssertionError: the app's RAG re-merge admitted currency stranded by the assay composite
+E       assert ['isochorisma...'NADH', 'NAD'] == ['isochorisma...', 'pyruvate']
+E         
+E         Left contains 2 more items, first extra item: 'NADH'
+E         Use -v to get more diff
+
+docs\webserver\evidence\R3d\proposed\c060a_repoint_check.py:241: AssertionError
+_ test_new_acceptance_every_production_call_site_builds_a_real_pathway_context _
+
+    def test_new_acceptance_every_production_call_site_builds_a_real_pathway_context():
+        """The trap this card exists for, plus the scope line it must not cross.
+    
+        ``_screen_advisory`` gates on ``isinstance(context, PathwayContext)``, so the
+        Stage-0 **dict** in scope at every site would be silently inert: each site
+        must call the shared factory. ``seed_text`` stays absent on purpose -- it is
+        ``_unlocatable``'s only input, and supplying it at ``pipeline.py:723`` would
+        switch evidence-span removal on for every Stage-2 QA round: a pinned-baseline
+        move and a separate chartered decision."""
+        for node in _production_sites():
+            keywords = {kw.arg: kw.value for kw in node.value.keywords}
+            assert "seed_text" not in keywords, f"line {node.lineno} wired seed_text"
+            value = keywords.get("pathway_context")
+            assert value is not None, f"line {node.lineno} still passes no context"
+>           assert isinstance(value, ast.Call) and isinstance(value.func, ast.Name), (
+                f"line {node.lineno} does not construct its context")
+E           AssertionError: line 931 does not construct its context
+E           assert (False)
+E            +  where False = isinstance(<ast.Name object at 0x000002C85AB5F090>, <class 'ast.Call'>)
+E            +    where <class 'ast.Call'> = ast.Call
+
+docs\webserver\evidence\R3d\proposed\c060a_repoint_check.py:335: AssertionError
+=========================== short test summary info ===========================
+FAILED docs/webserver/evidence/R3d/proposed/c060a_repoint_check.py::test_g9_f4_currency_orphans_close_through_the_app_rag_remerge
+FAILED docs/webserver/evidence/R3d/proposed/c060a_repoint_check.py::test_new_acceptance_every_production_call_site_builds_a_real_pathway_context
+2 failed, 9 passed in 1.25s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3d\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ bdd75f05aeb124d593dbd00e36aa965ffa6a2c46  [git, worktree dirty=True]
+label                   : proof-c060a-rag-site-dict-context
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3d/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3d -q -p no:cacheprovider --basetemp=C:/t/wsR3dtmp/proof-tmp/c060a-rag-site-dict-context C:/t/ws-R3d/docs/webserver/evidence/R3d/proposed/c060a_repoint_check.py
+cwd                     : C:\t\ws-R3d
+root PID / process group: 107204 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 2.01 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  107120:python.exe
+descendants terminated  : 1  107120
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR3dtmp\ev\proposed-test-edits\c060a-rag-site-dict-context.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R3d  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

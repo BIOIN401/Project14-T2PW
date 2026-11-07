@@ -1,0 +1,232 @@
+T2PW: C:\t\ws-R3d\src\t2pw\__init__.py
+.FFFF.FFF..                                                              [100%]
+================================== FAILURES ===================================
+______ test_g9_f4_currency_orphans_close_through_the_app_stage_two_merge ______
+
+    def test_g9_f4_currency_orphans_close_through_the_app_stage_two_merge():
+        """F4 through the first app site -- the real statement, executed as written."""
+>       merged = _stage_two_site(_f4_base(), _f4_additions())
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_c060a_requested_pathway_wiring.py:226: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_c060a_requested_pathway_wiring.py:175: in _stage_two_site
+    return _run_app_site(0, {
+tests\test_c060a_requested_pathway_wiring.py:108: in _run_app_site
+    sites = _app_sites()
+            ^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def _app_sites() -> list:
+        sites = [n for n in _merge_calls(_tree(APP_PATH)) if n.lineno >= OWNED_FLOOR]
+>       assert len(sites) == 2, f"expected two owned app merge sites: {[s.lineno for s in sites]}"
+E       AssertionError: expected two owned app merge sites: []
+E       assert 0 == 2
+E        +  where 0 = len([])
+
+tests\test_c060a_requested_pathway_wiring.py:81: AssertionError
+________ test_g9_f4_currency_orphans_close_through_the_app_rag_remerge ________
+
+    def test_g9_f4_currency_orphans_close_through_the_app_rag_remerge():
+        """F4 through the second app site -- the RAG conform/merge re-entry."""
+>       merged = _rag_site(_f4_base(), _f4_additions())
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_c060a_requested_pathway_wiring.py:235: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_c060a_requested_pathway_wiring.py:182: in _rag_site
+    return _run_app_site(1, {
+tests\test_c060a_requested_pathway_wiring.py:108: in _run_app_site
+    sites = _app_sites()
+            ^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def _app_sites() -> list:
+        sites = [n for n in _merge_calls(_tree(APP_PATH)) if n.lineno >= OWNED_FLOOR]
+>       assert len(sites) == 2, f"expected two owned app merge sites: {[s.lineno for s in sites]}"
+E       AssertionError: expected two owned app merge sites: []
+E       assert 0 == 2
+E        +  where 0 = len([])
+
+tests\test_c060a_requested_pathway_wiring.py:81: AssertionError
+______ test_new_acceptance_f1_and_f3_still_close_through_both_app_sites _______
+
+    def test_new_acceptance_f1_and_f3_still_close_through_both_app_sites():
+        """Acceptance 1. F1/F3 need no context and closed at base; pin that the
+        wiring disturbed neither."""
+>       first = _stage_two_site(_f1_payload(), {})
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_c060a_requested_pathway_wiring.py:246: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_c060a_requested_pathway_wiring.py:175: in _stage_two_site
+    return _run_app_site(0, {
+tests\test_c060a_requested_pathway_wiring.py:108: in _run_app_site
+    sites = _app_sites()
+            ^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def _app_sites() -> list:
+        sites = [n for n in _merge_calls(_tree(APP_PATH)) if n.lineno >= OWNED_FLOOR]
+>       assert len(sites) == 2, f"expected two owned app merge sites: {[s.lineno for s in sites]}"
+E       AssertionError: expected two owned app merge sites: []
+E       assert 0 == 2
+E        +  where 0 = len([])
+
+tests\test_c060a_requested_pathway_wiring.py:81: AssertionError
+____ test_new_acceptance_no_over_removal_when_the_currency_is_the_subject _____
+
+    def test_new_acceptance_no_over_removal_when_the_currency_is_the_subject():
+        """Acceptance 2. Identical rows and wiring, a pathway that is ABOUT NAD:
+        ``classify_entity`` answers ``participant`` and phase 2 removes nothing. The
+        gate subtracts because of the CONTEXT, never because of the name."""
+        ctx = ea.pathway_context_from_stage_zero(NAD_CTX)
+        assert classify_entity("NADH", ctx).verdict == "participant"
+    
+>       merged = _stage_two_site(_f4_base(), _f4_additions(), NAD_CTX)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_c060a_requested_pathway_wiring.py:259: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_c060a_requested_pathway_wiring.py:175: in _stage_two_site
+    return _run_app_site(0, {
+tests\test_c060a_requested_pathway_wiring.py:108: in _run_app_site
+    sites = _app_sites()
+            ^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def _app_sites() -> list:
+        sites = [n for n in _merge_calls(_tree(APP_PATH)) if n.lineno >= OWNED_FLOOR]
+>       assert len(sites) == 2, f"expected two owned app merge sites: {[s.lineno for s in sites]}"
+E       AssertionError: expected two owned app merge sites: []
+E       assert 0 == 2
+E        +  where 0 = len([])
+
+tests\test_c060a_requested_pathway_wiring.py:81: AssertionError
+___________ test_new_acceptance_a0_c5_ordering_survives_the_wiring ____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001ED4E26CA50>
+
+    def test_new_acceptance_a0_c5_ordering_survives_the_wiring(monkeypatch):
+        """Acceptance 4. Replace the classifier with one returning ``participant`` /
+        ``high`` for EVERYTHING -- the most protective verdict there is -- and drive
+        the wired production statement. hemin still goes, in phase 1, and the
+        classifier never saw it: the hallucination gate runs first and independently."""
+        seen = []
+    
+        def _maximally_protective(name, _context):
+            seen.append(str(name))
+            return classify_entity("succinyl-CoA", PathwayContext("heme biosynthesis"))
+    
+        monkeypatch.setattr(ea, "classify_entity", _maximally_protective)
+>       merged = _stage_two_site(_f1_payload(), {})
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_c060a_requested_pathway_wiring.py:289: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_c060a_requested_pathway_wiring.py:175: in _stage_two_site
+    return _run_app_site(0, {
+tests\test_c060a_requested_pathway_wiring.py:108: in _run_app_site
+    sites = _app_sites()
+            ^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def _app_sites() -> list:
+        sites = [n for n in _merge_calls(_tree(APP_PATH)) if n.lineno >= OWNED_FLOOR]
+>       assert len(sites) == 2, f"expected two owned app merge sites: {[s.lineno for s in sites]}"
+E       AssertionError: expected two owned app merge sites: []
+E       assert 0 == 2
+E        +  where 0 = len([])
+
+tests\test_c060a_requested_pathway_wiring.py:81: AssertionError
+_____ test_new_acceptance_the_two_pass_ledger_stays_idempotent_once_wired _____
+
+    def test_new_acceptance_the_two_pass_ledger_stays_idempotent_once_wired():
+        """Acceptance 3. A RAG leg runs both app sites in sequence and the second
+        call's BASE is the first call's output. The first pass's removals must still
+        be on the record, must not double, and a new removal must still append."""
+>       first = _stage_two_site(_f4_base(), _f4_additions())
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_c060a_requested_pathway_wiring.py:301: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_c060a_requested_pathway_wiring.py:175: in _stage_two_site
+    return _run_app_site(0, {
+tests\test_c060a_requested_pathway_wiring.py:108: in _run_app_site
+    sites = _app_sites()
+            ^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def _app_sites() -> list:
+        sites = [n for n in _merge_calls(_tree(APP_PATH)) if n.lineno >= OWNED_FLOOR]
+>       assert len(sites) == 2, f"expected two owned app merge sites: {[s.lineno for s in sites]}"
+E       AssertionError: expected two owned app merge sites: []
+E       assert 0 == 2
+E        +  where 0 = len([])
+
+tests\test_c060a_requested_pathway_wiring.py:81: AssertionError
+_ test_new_acceptance_every_production_call_site_builds_a_real_pathway_context _
+
+    def test_new_acceptance_every_production_call_site_builds_a_real_pathway_context():
+        """The trap this card exists for, plus the scope line it must not cross.
+    
+        ``_screen_advisory`` gates on ``isinstance(context, PathwayContext)``, so the
+        Stage-0 **dict** in scope at every site would be silently inert: each site
+        must call the shared factory. ``seed_text`` stays absent on purpose -- it is
+        ``_unlocatable``'s only input, and supplying it at ``pipeline.py:723`` would
+        switch evidence-span removal on for every Stage-2 QA round: a pinned-baseline
+        move and a separate chartered decision."""
+>       for node in _production_sites():
+                    ^^^^^^^^^^^^^^^^^^^
+
+tests\test_c060a_requested_pathway_wiring.py:326: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_c060a_requested_pathway_wiring.py:87: in _production_sites
+    sites = _app_sites() + [n for n in _merge_calls(_tree(PIPELINE_PATH)) if n.lineno > 700]
+            ^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def _app_sites() -> list:
+        sites = [n for n in _merge_calls(_tree(APP_PATH)) if n.lineno >= OWNED_FLOOR]
+>       assert len(sites) == 2, f"expected two owned app merge sites: {[s.lineno for s in sites]}"
+E       AssertionError: expected two owned app merge sites: []
+E       assert 0 == 2
+E        +  where 0 = len([])
+
+tests\test_c060a_requested_pathway_wiring.py:81: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_c060a_requested_pathway_wiring.py::test_g9_f4_currency_orphans_close_through_the_app_stage_two_merge
+FAILED tests/test_c060a_requested_pathway_wiring.py::test_g9_f4_currency_orphans_close_through_the_app_rag_remerge
+FAILED tests/test_c060a_requested_pathway_wiring.py::test_new_acceptance_f1_and_f3_still_close_through_both_app_sites
+FAILED tests/test_c060a_requested_pathway_wiring.py::test_new_acceptance_no_over_removal_when_the_currency_is_the_subject
+FAILED tests/test_c060a_requested_pathway_wiring.py::test_new_acceptance_a0_c5_ordering_survives_the_wiring
+FAILED tests/test_c060a_requested_pathway_wiring.py::test_new_acceptance_the_two_pass_ledger_stays_idempotent_once_wired
+FAILED tests/test_c060a_requested_pathway_wiring.py::test_new_acceptance_every_production_call_site_builds_a_real_pathway_context
+7 failed, 4 passed in 2.27s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3d\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 590563edbd444f8c972732f3252204cb7b5ac638  [git, worktree dirty=False]
+label                   : solo-c060a
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3d/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3d --pin-verdict C:/t/wsR3dtmp/ev/pin/t-solo-c060a.pin.json -q --basetemp=C:/t/wsR3dtmp/t-solo-c060a tests/test_c060a_requested_pathway_wiring.py
+cwd                     : C:\t\ws-R3d
+root PID / process group: 699680 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 560 s
+duration                : 4.11 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  699664:python.exe
+descendants terminated  : 1  699664
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/wsR3dtmp/ev/t-solo-c060a.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R3d  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

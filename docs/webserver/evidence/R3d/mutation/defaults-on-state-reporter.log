@@ -1,0 +1,49 @@
+T2PW: C:\t\ws-R3d\src\t2pw\__init__.py
+.................F..........                                             [100%]
+================================== FAILURES ===================================
+________________ test_state_and_reporter_are_required_keywords ________________
+
+    def test_state_and_reporter_are_required_keywords():
+        for fn, positional in ((ex.run_stage_two, ["text", "stage_one_result"]), (ex.run_extraction, ["request"])):
+            params = inspect.signature(fn).parameters
+            assert list(params)[:len(positional)] == positional
+            for name, p in list(params.items())[len(positional):]:
+                assert p.kind is inspect.Parameter.KEYWORD_ONLY, name
+>               assert p.default is inspect.Parameter.empty, name
+E               AssertionError: state
+E               assert None is <class 'inspect._empty'>
+E                +  where None = <Parameter "state: 'MutableMapping[str, Any]' = None">.default
+E                +  and   <class 'inspect._empty'> = <class 'inspect.Parameter'>.empty
+E                +    where <class 'inspect.Parameter'> = inspect.Parameter
+
+tests\test_service_extraction_stage2.py:353: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage2.py::test_state_and_reporter_are_required_keywords
+1 failed, 27 passed in 2.66s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3d\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 590563edbd444f8c972732f3252204cb7b5ac638  [git, worktree dirty=True]
+label                   : mut-defaults-on-state-reporter
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3d/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3d -q -p no:cacheprovider --basetemp=C:/t/wsR3dtmp/mut-tmp/defaults-on-state-reporter tests/test_service_extraction_stage2.py
+cwd                     : C:\t\ws-R3d
+root PID / process group: 55300 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 3.56 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  50632:python.exe
+descendants terminated  : 1  50632
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR3dtmp\ev\mutation\defaults-on-state-reporter.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R3d  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

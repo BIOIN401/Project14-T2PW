@@ -1,0 +1,134 @@
+T2PW: C:\t\ws-R3d\src\t2pw\__init__.py
+.FF....F........F.........F.                                             [100%]
+================================== FAILURES ===================================
+_____________ test_the_publish_writes_every_key_in_the_apps_order _____________
+
+world = namespace(calls=[('stage2', 'the paper', {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}}, {'chunk_detail...qa_hints': {'h': 1}}]}), ('diag.current',)], additions={'additions': {}, 'qa_hints': {'h': 1}}, raises=None, loop=None)
+
+    def test_the_publish_writes_every_key_in_the_apps_order(world):
+        state = RecordingState(draft_graph_png_bytes=b"png", post_pipeline_artifacts={"old": 1}, keep=1)
+        res, _rep, state = _run(world, state=state)
+    
+>       assert [c[0] for c in world.calls] == ["stage2", "merge", "preservation", "draft_graph", "diag.current"]
+E       AssertionError: assert ['stage2', 'm...diag.current'] == ['stage2', 'm...diag.current']
+E         
+E         At index 2 diff: 'draft_graph' != 'preservation'
+E         Right contains one more item: 'diag.current'
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage2.py:188: AssertionError
+_________ test_inference_off_publishes_the_in_scope_payload_untouched _________
+
+world = namespace(calls=[('draft_graph', {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}}), ('diag.current',)], additions={'additions': {}, 'qa_hints': {'h': 1}}, raises=None, loop=None)
+
+    def test_inference_off_publishes_the_in_scope_payload_untouched(world):
+        res, rep, state = _run(world, run_inference=0)
+    
+>       assert [c[0] for c in world.calls] == ["preservation", "draft_graph", "diag.current"]
+E       AssertionError: assert ['draft_graph...diag.current'] == ['preservatio...diag.current']
+E         
+E         At index 0 diff: 'draft_graph' != 'preservation'
+E         Right contains one more item: 'diag.current'
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage2.py:211: AssertionError
+_____ test_a_synthesized_rag_result_runs_the_rounds_on_the_merged_payload _____
+
+world = namespace(calls=[('stage2', 'the paper', {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}}, {'chunk_detail...o', 'i'), ('warning', 'w'), ('error', 'e'), ('json', {'j': 1}), ('other', 'dropped')], 'rounds': [1], 'max_rounds': 1})
+
+    def test_a_synthesized_rag_result_runs_the_rounds_on_the_merged_payload(world):
+        world.loop = deepcopy(LOOP)
+        result = _rag_result()
+        state = RecordingState(pwml_strict_db=0)
+        res, rep, state = _run(world, stage_one=_stage_one(rag_result=result), state=state, rag_incomplete_flag=1,
+                               export_mode="research")
+    
+>       assert [c[0] for c in world.calls] == ["stage2", "merge", "rag_rounds", "preservation", "draft_graph",
+                                              "diag.current"]
+E       AssertionError: assert ['stage2', 'm...diag.current'] == ['stage2', 'm...diag.current']
+E         
+E         At index 3 diff: 'draft_graph' != 'preservation'
+E         Right contains one more item: 'diag.current'
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage2.py:272: AssertionError
+___________ test_patches_on_the_source_modules_reach_run_stage_two ____________
+
+world = namespace(calls=[('stage2', 'the paper', {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}}, {'chunk_detail...o', 'i'), ('warning', 'w'), ('error', 'e'), ('json', {'j': 1}), ('other', 'dropped')], 'rounds': [1], 'max_rounds': 1})
+
+    def test_patches_on_the_source_modules_reach_run_stage_two(world):
+        """R3b review F1 rule: the app script re-ran ``from ... import`` on every AppTest run, so a
+        patch on the source module (c055 patches ``pipeline.run_stage_two_with_feedback_loop`` and
+        ``pipeline.build_and_save_draft_graph``) reached the call. It must still."""
+    
+        world.loop = deepcopy(LOOP)
+        _run(world, stage_one=_stage_one(rag_result=_rag_result()))
+        merge_site = world.calls[2][2]["merge_site"]
+        merge_site({}, {}, {})
+>       assert [c[0] for c in world.calls] == ["stage2", "merge", "rag_rounds", "preservation", "draft_graph",
+                                              "diag.current", "merge"]
+E       AssertionError: assert ['stage2', 'm...ent', 'merge'] == ['stage2', 'm...current', ...]
+E         
+E         At index 3 diff: 'draft_graph' != 'preservation'
+E         Right contains one more item: 'merge'
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage2.py:343: AssertionError
+_ test_real_app_publishes_the_run_then_resets_the_quarantine_and_counts_tokens _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000016ACC9CBE00>
+tmp_path = WindowsPath('C:/t/wsR3dtmp/mut-tmp/bound-write_reaction_preservation_report/test_real_app_publishes_the_ru0')
+
+    def test_real_app_publishes_the_run_then_resets_the_quarantine_and_counts_tokens(monkeypatch, tmp_path):
+        additions = {"additions": {"processes": {"reactions": [{"name": "menaquinone prenylation"}]}}}
+        monkeypatch.setattr(pipeline, "run_stage_two_with_feedback_loop", lambda *_a, **_k: (additions, [], [{"r": 1}]))
+        at = _real_app(monkeypatch, tmp_path, seed={"quarantine_report": {"stale": True},
+                                                    "post_pipeline_artifacts": {"stale": True}})
+    
+        assert [str(e.value) for e in at.exception] == []
+        assert [e.value for e in at.error] == []
+        ss = at.session_state
+        assert ss["pipeline_ready"] is True and ss["run_inference_enabled"] is True
+        assert ss["pathway_context"] == CTX and ss["stage_two"] == additions and ss["stage_two_rounds"] == [{"r": 1}]
+>       assert ss["reaction_preservation_after_stage2"] == {"stage": "after_stage2"}
+E       AssertionError: assert None == {'stage': 'after_stage2'}
+
+tests\test_service_extraction_stage2.py:540: AssertionError
+---------------------------- Captured stderr call -----------------------------
+2026-11-07 14:26:08.540 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-07 14:26:08.948 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-07 14:26:08.948 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage2.py::test_the_publish_writes_every_key_in_the_apps_order
+FAILED tests/test_service_extraction_stage2.py::test_inference_off_publishes_the_in_scope_payload_untouched
+FAILED tests/test_service_extraction_stage2.py::test_a_synthesized_rag_result_runs_the_rounds_on_the_merged_payload
+FAILED tests/test_service_extraction_stage2.py::test_patches_on_the_source_modules_reach_run_stage_two
+FAILED tests/test_service_extraction_stage2.py::test_real_app_publishes_the_run_then_resets_the_quarantine_and_counts_tokens
+5 failed, 23 passed in 2.91s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3d\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 590563edbd444f8c972732f3252204cb7b5ac638  [git, worktree dirty=True]
+label                   : mut-bound-write_reaction_preservation_report
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3d/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3d -q -p no:cacheprovider --basetemp=C:/t/wsR3dtmp/mut-tmp/bound-write_reaction_preservation_report tests/test_service_extraction_stage2.py
+cwd                     : C:\t\ws-R3d
+root PID / process group: 54888 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 4.13 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  41512:python.exe
+descendants terminated  : 1  41512
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR3dtmp\ev\mutation\bound-write_reaction_preservation_report.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R3d  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

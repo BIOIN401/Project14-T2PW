@@ -1,0 +1,265 @@
+T2PW: C:\t\ws-R3d\src\t2pw\__init__.py
+..F.FFFF......                                                           [100%]
+================================== FAILURES ===================================
+___ test_a_app_runs_offline_from_the_fixture_alone_to_the_recorded_verdict ____
+
+arms = {'after': {'data/enrichment_cache.json': (35407855, 1794032284633229500), 'data/id_mapping_cache.json': (4230034, 1794...t/enrichment_dump.json': (33986, 1794032289634297300), 'outputs/pathway.pwml': (23487, 1794033639909671100), ...}, ...}
+
+    def test_a_app_runs_offline_from_the_fixture_alone_to_the_recorded_verdict(arms):
+        recorded = arms["fixture"]["recorded"]
+        for name in ("app1", "app2"):
+            arm = arms[name]
+>           assert arm["misses"] == [], (name, arm["misses"][:3])
+E           AssertionError: ('app1', [{'asked': 1, 'key': '61c5ab9fa6701ec68188c3edb8acda84cdb951bb34ca2b8527f4d81e4c3b7942', 'kind': 'llm', 'reco...ed': 1, 'key': '36a2bce64cce9c155b4fa166355ba3a4b628e43f4a06003d2114707837b24f1b', 'kind': 'llm', 'recorded': 0, ...}])
+E           assert [{'asked': 1,...ded': 0, ...}] == []
+E             
+E             Left contains 6 more items, first extra item: {'asked': 1, 'key': '61c5ab9fa6701ec68188c3edb8acda84cdb951bb34ca2b8527f4d81e4c3b7942', 'kind': 'llm', 'recorded': 0, ...}
+E             Use -v to get more diff
+
+tests\test_equivalence_app_vs_service.py:141: AssertionError
+---------------------------- Captured stderr setup ----------------------------
+2026-11-07 14:31:06.208 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-07 14:31:06.208 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-07 14:31:07.565 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-07 14:31:07.575 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-07 14:31:07.576 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-07 14:31:07.722 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-07 14:31:07.723 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-07 14:31:07.723 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-07 14:31:18.710 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-07 14:31:18.835 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-07 14:31:18.835 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-07 14:31:19.403 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-07 14:31:19.404 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-07 14:31:19.404 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-07 14:31:19.532 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-07 14:31:19.533 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-07 14:31:19.533 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-07 14:31:30.118 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-07 14:31:30.259 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-07 14:31:30.259 Session state does not function when running a script without `streamlit run`
+2026-11-07 14:31:30.265 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-07 14:31:41.092 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-07 14:31:41.092 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-07 14:31:41.880 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-07 14:31:41.880 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-07 14:31:41.881 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-07 14:31:42.064 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-07 14:31:42.065 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-07 14:31:42.065 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-07 14:31:52.687 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+----------------------------- Captured log setup ------------------------------
+WARNING  t2pw.curation.audit_json_llm:audit_json_llm.py:1465 LLM audit failed: unrecorded llm request (ask #1, 0 recorded): {"max_tokens": 128000, "messages": [{"role": "system", "content": "You are a strict JSON auditor and repair planner for PWML-like pathway payloads.\nYour job is to produce a safe, minimal patch plan that improves SBML conversion readiness.\n\nPriorities (highest to lowest):\n1) Structural validity (required fields/object/list shapes)\n2) Process coherence (reaction/transport references, no impossible links)\n3) Location/compartment readiness\n4) ID-mapping readiness\n5) Cosmetic consistency\n\nHard constraints:\n- Output ONLY valid JSON, no markdown, no prose outside JSON.\n- Do not invent bio
+WARNING  t2pw.curation.audit_json_llm:audit_json_llm.py:1465 LLM audit failed: unrecorded llm request (ask #1, 0 recorded): {"max_tokens": 128000, "messages": [{"role": "system", "content": "You are a strict JSON auditor and repair planner for PWML-like pathway payloads.\nYour job is to produce a safe, minimal patch plan that improves SBML conversion readiness.\n\nPriorities (highest to lowest):\n1) Structural validity (required fields/object/list shapes)\n2) Process coherence (reaction/transport references, no impossible links)\n3) Location/compartment readiness\n4) ID-mapping readiness\n5) Cosmetic consistency\n\nHard constraints:\n- Output ONLY valid JSON, no markdown, no prose outside JSON.\n- Do not invent bio
+WARNING  t2pw.curation.audit_json_llm:audit_json_llm.py:1465 LLM audit failed: unrecorded llm request (ask #1, 0 recorded): {"max_tokens": 128000, "messages": [{"role": "system", "content": "You are a strict JSON auditor and repair planner for PWML-like pathway payloads.\nYour job is to produce a safe, minimal patch plan that improves SBML conversion readiness.\n\nPriorities (highest to lowest):\n1) Structural validity (required fields/object/list shapes)\n2) Process coherence (reaction/transport references, no impossible links)\n3) Location/compartment readiness\n4) ID-mapping readiness\n5) Cosmetic consistency\n\nHard constraints:\n- Output ONLY valid JSON, no markdown, no prose outside JSON.\n- Do not invent bio
+WARNING  t2pw.curation.audit_json_llm:audit_json_llm.py:1465 LLM audit failed: unrecorded llm request (ask #1, 0 recorded): {"max_tokens": 128000, "messages": [{"role": "system", "content": "You are a strict JSON auditor and repair planner for PWML-like pathway payloads.\nYour job is to produce a safe, minimal patch plan that improves SBML conversion readiness.\n\nPriorities (highest to lowest):\n1) Structural validity (required fields/object/list shapes)\n2) Process coherence (reaction/transport references, no impossible links)\n3) Location/compartment readiness\n4) ID-mapping readiness\n5) Cosmetic consistency\n\nHard constraints:\n- Output ONLY valid JSON, no markdown, no prose outside JSON.\n- Do not invent bio
+WARNING  t2pw.curation.audit_json_llm:audit_json_llm.py:1465 LLM audit failed: unrecorded llm request (ask #1, 0 recorded): {"max_tokens": 128000, "messages": [{"role": "system", "content": "You are a strict JSON auditor and repair planner for PWML-like pathway payloads.\nYour job is to produce a safe, minimal patch plan that improves SBML conversion readiness.\n\nPriorities (highest to lowest):\n1) Structural validity (required fields/object/list shapes)\n2) Process coherence (reaction/transport references, no impossible links)\n3) Location/compartment readiness\n4) ID-mapping readiness\n5) Cosmetic consistency\n\nHard constraints:\n- Output ONLY valid JSON, no markdown, no prose outside JSON.\n- Do not invent bio
+WARNING  t2pw.curation.audit_json_llm:audit_json_llm.py:1465 LLM audit failed: unrecorded llm request (ask #1, 0 recorded): {"max_tokens": 128000, "messages": [{"role": "system", "content": "You are a strict JSON auditor and repair planner for PWML-like pathway payloads.\nYour job is to produce a safe, minimal patch plan that improves SBML conversion readiness.\n\nPriorities (highest to lowest):\n1) Structural validity (required fields/object/list shapes)\n2) Process coherence (reaction/transport references, no impossible links)\n3) Location/compartment readiness\n4) ID-mapping readiness\n5) Cosmetic consistency\n\nHard constraints:\n- Output ONLY valid JSON, no markdown, no prose outside JSON.\n- Do not invent bio
+WARNING  t2pw.curation.audit_json_llm:audit_json_llm.py:1465 LLM audit failed: unrecorded llm request (ask #1, 0 recorded): {"max_tokens": 128000, "messages": [{"role": "system", "content": "You are a strict JSON auditor and repair planner for PWML-like pathway payloads.\nYour job is to produce a safe, minimal patch plan that improves SBML conversion readiness.\n\nPriorities (highest to lowest):\n1) Structural validity (required fields/object/list shapes)\n2) Process coherence (reaction/transport references, no impossible links)\n3) Location/compartment readiness\n4) ID-mapping readiness\n5) Cosmetic consistency\n\nHard constraints:\n- Output ONLY valid JSON, no markdown, no prose outside JSON.\n- Do not invent bio
+WARNING  t2pw.curation.audit_json_llm:audit_json_llm.py:1465 LLM audit failed: unrecorded llm request (ask #1, 0 recorded): {"max_tokens": 128000, "messages": [{"role": "system", "content": "You are a strict JSON auditor and repair planner for PWML-like pathway payloads.\nYour job is to produce a safe, minimal patch plan that improves SBML conversion readiness.\n\nPriorities (highest to lowest):\n1) Structural validity (required fields/object/list shapes)\n2) Process coherence (reaction/transport references, no impossible links)\n3) Location/compartment readiness\n4) ID-mapping readiness\n5) Cosmetic consistency\n\nHard constraints:\n- Output ONLY valid JSON, no markdown, no prose outside JSON.\n- Do not invent bio
+WARNING  t2pw.curation.audit_json_llm:audit_json_llm.py:1465 LLM audit failed: unrecorded llm request (ask #1, 0 recorded): {"max_tokens": 128000, "messages": [{"role": "system", "content": "You are a strict JSON auditor and repair planner for PWML-like pathway payloads.\nYour job is to produce a safe, minimal patch plan that improves SBML conversion readiness.\n\nPriorities (highest to lowest):\n1) Structural validity (required fields/object/list shapes)\n2) Process coherence (reaction/transport references, no impossible links)\n3) Location/compartment readiness\n4) ID-mapping readiness\n5) Cosmetic consistency\n\nHard constraints:\n- Output ONLY valid JSON, no markdown, no prose outside JSON.\n- Do not invent bio
+WARNING  t2pw.curation.audit_json_llm:audit_json_llm.py:1465 LLM audit failed: unrecorded llm request (ask #1, 0 recorded): {"max_tokens": 128000, "messages": [{"role": "system", "content": "You are a strict JSON auditor and repair planner for PWML-like pathway payloads.\nYour job is to produce a safe, minimal patch plan that improves SBML conversion readiness.\n\nPriorities (highest to lowest):\n1) Structural validity (required fields/object/list shapes)\n2) Process coherence (reaction/transport references, no impossible links)\n3) Location/compartment readiness\n4) ID-mapping readiness\n5) Cosmetic consistency\n\nHard constraints:\n- Output ONLY valid JSON, no markdown, no prose outside JSON.\n- Do not invent bio
+WARNING  t2pw.curation.audit_json_llm:audit_json_llm.py:1465 LLM audit failed: unrecorded llm request (ask #1, 0 recorded): {"max_tokens": 128000, "messages": [{"role": "system", "content": "You are a strict JSON auditor and repair planner for PWML-like pathway payloads.\nYour job is to produce a safe, minimal patch plan that improves SBML conversion readiness.\n\nPriorities (highest to lowest):\n1) Structural validity (required fields/object/list shapes)\n2) Process coherence (reaction/transport references, no impossible links)\n3) Location/compartment readiness\n4) ID-mapping readiness\n5) Cosmetic consistency\n\nHard constraints:\n- Output ONLY valid JSON, no markdown, no prose outside JSON.\n- Do not invent bio
+WARNING  t2pw.curation.audit_json_llm:audit_json_llm.py:1465 LLM audit failed: unrecorded llm request (ask #1, 0 recorded): {"max_tokens": 128000, "messages": [{"role": "system", "content": "You are a strict JSON auditor and repair planner for PWML-like pathway payloads.\nYour job is to produce a safe, minimal patch plan that improves SBML conversion readiness.\n\nPriorities (highest to lowest):\n1) Structural validity (required fields/object/list shapes)\n2) Process coherence (reaction/transport references, no impossible links)\n3) Location/compartment readiness\n4) ID-mapping readiness\n5) Cosmetic consistency\n\nHard constraints:\n- Output ONLY valid JSON, no markdown, no prose outside JSON.\n- Do not invent bio
+WARNING  t2pw.curation.audit_json_llm:audit_json_llm.py:1465 LLM audit failed: unrecorded llm request (ask #1, 0 recorded): {"max_tokens": 128000, "messages": [{"role": "system", "content": "You are a strict JSON auditor and repair planner for PWML-like pathway payloads.\nYour job is to produce a safe, minimal patch plan that improves SBML conversion readiness.\n\nPriorities (highest to lowest):\n1) Structural validity (required fields/object/list shapes)\n2) Process coherence (reaction/transport references, no impossible links)\n3) Location/compartment readiness\n4) ID-mapping readiness\n5) Cosmetic consistency\n\nHard constraints:\n- Output ONLY valid JSON, no markdown, no prose outside JSON.\n- Do not invent bio
+WARNING  t2pw.curation.audit_json_llm:audit_json_llm.py:1465 LLM audit failed: unrecorded llm request (ask #1, 0 recorded): {"max_tokens": 128000, "messages": [{"role": "system", "content": "You are a strict JSON auditor and repair planner for PWML-like pathway payloads.\nYour job is to produce a safe, minimal patch plan that improves SBML conversion readiness.\n\nPriorities (highest to lowest):\n1) Structural validity (required fields/object/list shapes)\n2) Process coherence (reaction/transport references, no impossible links)\n3) Location/compartment readiness\n4) ID-mapping readiness\n5) Cosmetic consistency\n\nHard constraints:\n- Output ONLY valid JSON, no markdown, no prose outside JSON.\n- Do not invent bio
+WARNING  t2pw.curation.audit_json_llm:audit_json_llm.py:1465 LLM audit failed: unrecorded llm request (ask #1, 0 recorded): {"max_tokens": 128000, "messages": [{"role": "system", "content": "You are a strict JSON auditor and repair planner for PWML-like pathway payloads.\nYour job is to produce a safe, minimal patch plan that improves SBML conversion readiness.\n\nPriorities (highest to lowest):\n1) Structural validity (required fields/object/list shapes)\n2) Process coherence (reaction/transport references, no impossible links)\n3) Location/compartment readiness\n4) ID-mapping readiness\n5) Cosmetic consistency\n\nHard constraints:\n- Output ONLY valid JSON, no markdown, no prose outside JSON.\n- Do not invent bio
+WARNING  t2pw.curation.audit_json_llm:audit_json_llm.py:1465 LLM audit failed: unrecorded llm request (ask #1, 0 recorded): {"max_tokens": 128000, "messages": [{"role": "system", "content": "You are a strict JSON auditor and repair planner for PWML-like pathway payloads.\nYour job is to produce a safe, minimal patch plan that improves SBML conversion readiness.\n\nPriorities (highest to lowest):\n1) Structural validity (required fields/object/list shapes)\n2) Process coherence (reaction/transport references, no impossible links)\n3) Location/compartment readiness\n4) ID-mapping readiness\n5) Cosmetic consistency\n\nHard constraints:\n- Output ONLY valid JSON, no markdown, no prose outside JSON.\n- Do not invent bio
+WARNING  t2pw.curation.audit_json_llm:audit_json_llm.py:1465 LLM audit failed: unrecorded llm request (ask #1, 0 recorded): {"max_tokens": 128000, "messages": [{"role": "system", "content": "You are a strict JSON auditor and repair planner for PWML-like pathway payloads.\nYour job is to produce a safe, minimal patch plan that improves SBML conversion readiness.\n\nPriorities (highest to lowest):\n1) Structural validity (required fields/object/list shapes)\n2) Process coherence (reaction/transport references, no impossible links)\n3) Location/compartment readiness\n4) ID-mapping readiness\n5) Cosmetic consistency\n\nHard constraints:\n- Output ONLY valid JSON, no markdown, no prose outside JSON.\n- Do not invent bio
+WARNING  t2pw.curation.audit_json_llm:audit_json_llm.py:1465 LLM audit failed: unrecorded llm request (ask #1, 0 recorded): {"max_tokens": 128000, "messages": [{"role": "system", "content": "You are a strict JSON auditor and repair planner for PWML-like pathway payloads.\nYour job is to produce a safe, minimal patch plan that improves SBML conversion readiness.\n\nPriorities (highest to lowest):\n1) Structural validity (required fields/object/list shapes)\n2) Process coherence (reaction/transport references, no impossible links)\n3) Location/compartment readiness\n4) ID-mapping readiness\n5) Cosmetic consistency\n\nHard constraints:\n- Output ONLY valid JSON, no markdown, no prose outside JSON.\n- Do not invent bio
+WARNING  t2pw.curation.audit_json_llm:audit_json_llm.py:1465 LLM audit failed: unrecorded llm request (ask #1, 0 recorded): {"max_tokens": 128000, "messages": [{"role": "system", "content": "You are a strict JSON auditor and repair planner for PWML-like pathway payloads.\nYour job is to produce a safe, minimal patch plan that improves SBML conversion readiness.\n\nPriorities (highest to lowest):\n1) Structural validity (required fields/object/list shapes)\n2) Process coherence (reaction/transport references, no impossible links)\n3) Location/compartment readiness\n4) ID-mapping readiness\n5) Cosmetic consistency\n\nHard constraints:\n- Output ONLY valid JSON, no markdown, no prose outside JSON.\n- Do not invent bio
+WARNING  t2pw.curation.audit_json_llm:audit_json_llm.py:1465 LLM audit failed: unrecorded llm request (ask #1, 0 recorded): {"max_tokens": 128000, "messages": [{"role": "system", "content": "You are a strict JSON auditor and repair planner for PWML-like pathway payloads.\nYour job is to produce a safe, minimal patch plan that improves SBML conversion readiness.\n\nPriorities (highest to lowest):\n1) Structural validity (required fields/object/list shapes)\n2) Process coherence (reaction/transport references, no impossible links)\n3) Location/compartment readiness\n4) ID-mapping readiness\n5) Cosmetic consistency\n\nHard constraints:\n- Output ONLY valid JSON, no markdown, no prose outside JSON.\n- Do not invent bio
+WARNING  t2pw.curation.audit_json_llm:audit_json_llm.py:1465 LLM audit failed: unrecorded llm request (ask #1, 0 recorded): {"max_tokens": 128000, "messages": [{"role": "system", "content": "You are a strict JSON auditor and repair planner for PWML-like pathway payloads.\nYour job is to produce a safe, minimal patch plan that improves SBML conversion readiness.\n\nPriorities (highest to lowest):\n1) Structural validity (required fields/object/list shapes)\n2) Process coherence (reaction/transport references, no impossible links)\n3) Location/compartment readiness\n4) ID-mapping readiness\n5) Cosmetic consistency\n\nHard constraints:\n- Output ONLY valid JSON, no markdown, no prose outside JSON.\n- Do not invent bio
+WARNING  t2pw.curation.audit_json_llm:audit_json_llm.py:1465 LLM audit failed: unrecorded llm request (ask #1, 0 recorded): {"max_tokens": 128000, "messages": [{"role": "system", "content": "You are a strict JSON auditor and repair planner for PWML-like pathway payloads.\nYour job is to produce a safe, minimal patch plan that improves SBML conversion readiness.\n\nPriorities (highest to lowest):\n1) Structural validity (required fields/object/list shapes)\n2) Process coherence (reaction/transport references, no impossible links)\n3) Location/compartment readiness\n4) ID-mapping readiness\n5) Cosmetic consistency\n\nHard constraints:\n- Output ONLY valid JSON, no markdown, no prose outside JSON.\n- Do not invent bio
+WARNING  t2pw.curation.audit_json_llm:audit_json_llm.py:1465 LLM audit failed: unrecorded llm request (ask #1, 0 recorded): {"max_tokens": 128000, "messages": [{"role": "system", "content": "You are a strict JSON auditor and repair planner for PWML-like pathway payloads.\nYour job is to produce a safe, minimal patch plan that improves SBML conversion readiness.\n\nPriorities (highest to lowest):\n1) Structural validity (required fields/object/list shapes)\n2) Process coherence (reaction/transport references, no impossible links)\n3) Location/compartment readiness\n4) ID-mapping readiness\n5) Cosmetic consistency\n\nHard constraints:\n- Output ONLY valid JSON, no markdown, no prose outside JSON.\n- Do not invent bio
+WARNING  t2pw.curation.audit_json_llm:audit_json_llm.py:1465 LLM audit failed: unrecorded llm request (ask #1, 0 recorded): {"max_tokens": 128000, "messages": [{"role": "system", "content": "You are a strict JSON auditor and repair planner for PWML-like pathway payloads.\nYour job is to produce a safe, minimal patch plan that improves SBML conversion readiness.\n\nPriorities (highest to lowest):\n1) Structural validity (required fields/object/list shapes)\n2) Process coherence (reaction/transport references, no impossible links)\n3) Location/compartment readiness\n4) ID-mapping readiness\n5) Cosmetic consistency\n\nHard constraints:\n- Output ONLY valid JSON, no markdown, no prose outside JSON.\n- Do not invent bio
+_______________ test_b_replay_reproduces_the_recorded_live_run ________________
+
+arms = {'after': {'data/enrichment_cache.json': (35407855, 1794032284633229500), 'data/id_mapping_cache.json': (4230034, 1794...t/enrichment_dump.json': (33986, 1794032289634297300), 'outputs/pathway.pwml': (23487, 1794033639909671100), ...}, ...}
+
+    def test_b_replay_reproduces_the_recorded_live_run(arms):
+        """Against the LIVE run: PWML bytes exactly, and the canonical payload field by field EXCEPT the
+        ``retrieved_at`` stamps, which in the live run are real wall-clock times (PO ruling 2026-11-05). The live
+        canonical hash is therefore not compared; the frozen arms compare full hashes in test_b/test_c."""
+    
+        from t2pw.pipeline.gate_reports import payload_sha256
+    
+        recorded = arms["fixture"]["recorded"]
+>       assert harness.sha256(arms["app1"]["xml"]) == recorded["pwml_sha256"]
+E       AssertionError: assert '3487fb9d0185...b824cdaa97dfa' == '76617a0d5063...6882502ed1f37'
+E         
+E         - 76617a0d5063a582b5f769c26be253ea1e669049e44dcee9fd26882502ed1f37
+E         + 3487fb9d0185d8d47d6ec808063a66ecbfcc871ea8988c8d381b824cdaa97dfa
+
+tests\test_equivalence_app_vs_service.py:168: AssertionError
+______ test_the_clock_freeze_is_effective_and_touches_only_retrieved_at _______
+
+arms = {'after': {'data/enrichment_cache.json': (35407855, 1794032284633229500), 'data/id_mapping_cache.json': (4230034, 1794...t/enrichment_dump.json': (33986, 1794032289634297300), 'outputs/pathway.pwml': (23487, 1794033639909671100), ...}, ...}
+
+    def test_the_clock_freeze_is_effective_and_touches_only_retrieved_at(arms):
+        frozen, unfrozen = arms["app1"], arms["unfrozen"]
+        assert frozen["frozen_bindings"] >= 1 and unfrozen["frozen_bindings"] == 0
+>       assert unfrozen["misses"] == [] and unfrozen["refused"] == []
+E       AssertionError: assert ([{'asked': 1,...ded': 0, ...}] == []
+E         
+E         Left contains 6 more items, first extra item: {'asked': 1, 'key': '61c5ab9fa6701ec68188c3edb8acda84cdb951bb34ca2b8527f4d81e4c3b7942', 'kind': 'llm', 'recorded': 0, ...}
+E         Use -v to get more diff)
+
+tests\test_equivalence_app_vs_service.py:182: AssertionError
+_________________ test_c_service_post_pipeline_equals_the_app _________________
+
+arms = {'after': {'data/enrichment_cache.json': (35407855, 1794032284633229500), 'data/id_mapping_cache.json': (4230034, 1794...t/enrichment_dump.json': (33986, 1794032289634297300), 'outputs/pathway.pwml': (23487, 1794033639909671100), ...}, ...}
+
+    def test_c_service_post_pipeline_equals_the_app(arms):
+        app1, service = arms["app1"], arms["service"]
+        # The Stage-2 payload the service started from is the one the app's session held.
+        from t2pw.pipeline.pipeline import propagate_context_organism
+    
+        assert app1["post_call"] and app1["export_call"], "the app arm never reached the post-pipeline and export"
+        assert app1["canonical_payload_sha256"], "the app arm produced no canonical payload"
+        (post_args, _kwargs) = app1["post_call"]
+        assert post_args[0] == propagate_context_organism(app1["stage2_payload"], app1["pathway_context"])
+        # Review F2: the non-default audit timeout is what the app handed the post-pipeline, so the service ran
+        # under it too. (The default 240 s branch is NOT covered here; see R2.5.md, Notes.)
+        assert _kwargs["audit_timeout_seconds"] == harness.AUDIT_TIMEOUT_SECONDS
+>       assert service["misses"] == [] and service["refused"] == []
+E       AssertionError: assert ([{'asked': 1,...ded': 0, ...}] == []
+E         
+E         Left contains 6 more items, first extra item: {'asked': 1, 'key': '61c5ab9fa6701ec68188c3edb8acda84cdb951bb34ca2b8527f4d81e4c3b7942', 'kind': 'llm', 'recorded': 0, ...}
+E         Use -v to get more diff)
+
+tests\test_equivalence_app_vs_service.py:205: AssertionError
+__________ test_pwml_bytes_are_produced_and_equal_in_all_three_arms ___________
+
+arms = {'after': {'data/enrichment_cache.json': (35407855, 1794032284633229500), 'data/id_mapping_cache.json': (4230034, 1794...t/enrichment_dump.json': (33986, 1794032289634297300), 'outputs/pathway.pwml': (23487, 1794033639909671100), ...}, ...}
+
+    def test_pwml_bytes_are_produced_and_equal_in_all_three_arms(arms):
+        # Not skippable: a fixture whose case writes no PWML cannot prove byte equality, so it fails here.
+        assert arms["fixture"]["recorded"]["pwml_bytes"] > 0, "the fixture's case wrote no PWML"
+        xml = arms["app1"]["xml"]
+        assert xml and arms["app2"]["xml"] == xml and arms["service"]["xml"] == xml
+>       assert harness.sha256(xml) == arms["fixture"]["recorded"]["pwml_sha256"]
+E       AssertionError: assert '3487fb9d0185...b824cdaa97dfa' == '76617a0d5063...6882502ed1f37'
+E         
+E         - 76617a0d5063a582b5f769c26be253ea1e669049e44dcee9fd26882502ed1f37
+E         + 3487fb9d0185d8d47d6ec808063a66ecbfcc871ea8988c8d381b824cdaa97dfa
+
+tests\test_equivalence_app_vs_service.py:218: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_equivalence_app_vs_service.py::test_a_app_runs_offline_from_the_fixture_alone_to_the_recorded_verdict
+FAILED tests/test_equivalence_app_vs_service.py::test_b_replay_reproduces_the_recorded_live_run
+FAILED tests/test_equivalence_app_vs_service.py::test_the_clock_freeze_is_effective_and_touches_only_retrieved_at
+FAILED tests/test_equivalence_app_vs_service.py::test_c_service_post_pipeline_equals_the_app
+FAILED tests/test_equivalence_app_vs_service.py::test_pwml_bytes_are_produced_and_equal_in_all_three_arms
+5 failed, 9 passed in 48.64s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3d\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 590563edbd444f8c972732f3252204cb7b5ac638  [git, worktree dirty=True]
+label                   : mut-eq-merge-no-source-text
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3d/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3d -q -p no:cacheprovider --basetemp=C:/t/wsR3dtmp/mut-tmp/eq-merge-no-source-text tests/test_equivalence_app_vs_service.py
+cwd                     : C:\t\ws-R3d
+root PID / process group: 56884 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 49.99 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  7640:python.exe
+descendants terminated  : 1  7640
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR3dtmp\ev\mutation\eq-merge-no-source-text.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R3d  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

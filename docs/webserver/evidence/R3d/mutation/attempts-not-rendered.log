@@ -1,0 +1,115 @@
+T2PW: C:\t\ws-R3d\src\t2pw\__init__.py
+....FF.....................F                                             [100%]
+================================== FAILURES ===================================
+_ test_a_stage_two_failure_reports_and_is_returned_before_anything_is_published[stage2-chunk-1-stage2-chunk-1 attempts] _
+
+world = namespace(calls=[('stage2', 'the paper', {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}}, {'chunk_detail...ens': 9000})], additions={'additions': {}, 'qa_hints': {'h': 1}}, raises=PipelineFailure('no JSON after 3'), loop=None)
+stage = 'stage2-chunk-1', label = 'stage2-chunk-1 attempts'
+
+    @pytest.mark.parametrize("stage, label", [("stage2-chunk-1", "stage2-chunk-1 attempts"),
+                                              (None, "Stage 2 attempts")])
+    def test_a_stage_two_failure_reports_and_is_returned_before_anything_is_published(world, stage, label):
+        failure = pipeline.PipelineFailure("stage2", "no JSON after 3", ATTEMPTS)
+        failure.stage = stage
+        world.raises = failure
+        res, rep, state = _run(world)
+    
+        message = "Inference stage failed: no JSON after 3"
+        assert res == ex.ExtractionResult(failure=ex.InputFailure(ex.KIND_STAGE_TWO_FAILED, message))
+        assert ex.KIND_STAGE_TWO_FAILED == "stage_two_failed"
+>       assert rep.calls == [
+            ("spinner", ("Running Stage 2 inference...",)), ("spinner:enter",), ("spinner:exit",),
+            ("error", (message,)), ("expander", (label,), {"expanded": False}), ("expander:enter",),
+            ("markdown", ("**Attempt 1 (infer)** - retry",)), ("code", ("{bad",), {"language": "json"}),
+            ("caption", ("Expecting value",)), ("markdown", ("**Attempt 2** - success",)),
+            ("code", ("{}",), {"language": "json"}), ("expander:exit",)]
+E       AssertionError: assert [('spinner', ...N after 3',))] == [('spinner', ...enter',), ...]
+E         
+E         Right contains 8 more items, first extra item: ('expander', ('stage2-chunk-1 attempts',), {'expanded': False})
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage2.py:238: AssertionError
+_ test_a_stage_two_failure_reports_and_is_returned_before_anything_is_published[None-Stage 2 attempts] _
+
+world = namespace(calls=[('stage2', 'the paper', {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}}, {'chunk_detail...ens': 9000})], additions={'additions': {}, 'qa_hints': {'h': 1}}, raises=PipelineFailure('no JSON after 3'), loop=None)
+stage = None, label = 'Stage 2 attempts'
+
+    @pytest.mark.parametrize("stage, label", [("stage2-chunk-1", "stage2-chunk-1 attempts"),
+                                              (None, "Stage 2 attempts")])
+    def test_a_stage_two_failure_reports_and_is_returned_before_anything_is_published(world, stage, label):
+        failure = pipeline.PipelineFailure("stage2", "no JSON after 3", ATTEMPTS)
+        failure.stage = stage
+        world.raises = failure
+        res, rep, state = _run(world)
+    
+        message = "Inference stage failed: no JSON after 3"
+        assert res == ex.ExtractionResult(failure=ex.InputFailure(ex.KIND_STAGE_TWO_FAILED, message))
+        assert ex.KIND_STAGE_TWO_FAILED == "stage_two_failed"
+>       assert rep.calls == [
+            ("spinner", ("Running Stage 2 inference...",)), ("spinner:enter",), ("spinner:exit",),
+            ("error", (message,)), ("expander", (label,), {"expanded": False}), ("expander:enter",),
+            ("markdown", ("**Attempt 1 (infer)** - retry",)), ("code", ("{bad",), {"language": "json"}),
+            ("caption", ("Expecting value",)), ("markdown", ("**Attempt 2** - success",)),
+            ("code", ("{}",), {"language": "json"}), ("expander:exit",)]
+E       AssertionError: assert [('spinner', ...N after 3',))] == [('spinner', ...enter',), ...]
+E         
+E         Right contains 8 more items, first extra item: ('expander', ('Stage 2 attempts',), {'expanded': False})
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage2.py:238: AssertionError
+________ test_real_app_stops_at_a_stage_two_failure_before_the_publish ________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001BA51AE3620>
+tmp_path = WindowsPath('C:/t/wsR3dtmp/mut-tmp/attempts-not-rendered/test_real_app_stops_at_a_stage0')
+
+    def test_real_app_stops_at_a_stage_two_failure_before_the_publish(monkeypatch, tmp_path):
+        def stage_two(*_a, **_k):
+            raise pipeline.PipelineFailure("stage2", "no JSON after 2", ATTEMPTS)
+    
+        monkeypatch.setattr(pipeline, "run_stage_two_with_feedback_loop", stage_two)
+        at = _real_app(monkeypatch, tmp_path, seed={"quarantine_report": {"stale": True}})
+    
+        assert [str(e.value) for e in at.exception] == []
+        assert [e.value for e in at.error] == ["Inference stage failed: no JSON after 2"]
+>       assert [x.label for x in at.expander] == ["stage2 attempts"]
+E       AssertionError: assert [] == ['stage2 attempts']
+E         
+E         Right contains one more item: 'stage2 attempts'
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage2.py:558: AssertionError
+---------------------------- Captured stderr call -----------------------------
+2026-11-07 14:27:11.891 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-07 14:27:12.189 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage2.py::test_a_stage_two_failure_reports_and_is_returned_before_anything_is_published[stage2-chunk-1-stage2-chunk-1 attempts]
+FAILED tests/test_service_extraction_stage2.py::test_a_stage_two_failure_reports_and_is_returned_before_anything_is_published[None-Stage 2 attempts]
+FAILED tests/test_service_extraction_stage2.py::test_real_app_stops_at_a_stage_two_failure_before_the_publish
+3 failed, 25 passed in 2.81s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3d\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 590563edbd444f8c972732f3252204cb7b5ac638  [git, worktree dirty=True]
+label                   : mut-attempts-not-rendered
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3d/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3d -q -p no:cacheprovider --basetemp=C:/t/wsR3dtmp/mut-tmp/attempts-not-rendered tests/test_service_extraction_stage2.py
+cwd                     : C:\t\ws-R3d
+root PID / process group: 55972 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 3.79 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  55852:python.exe
+descendants terminated  : 1  55852
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR3dtmp\ev\mutation\attempts-not-rendered.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R3d  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

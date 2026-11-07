@@ -1,0 +1,98 @@
+T2PW: C:\t\ws-R3d\src\t2pw\__init__.py
+..................F......F..                                             [100%]
+================================== FAILURES ===================================
+________ test_run_extraction_composes_the_four_steps_in_the_apps_order ________
+
+steps = namespace(calls=[('assemble', (['  The paper.  '], []), {'uses_pdf_input': False, 'input_mode': 'Paste text', 'pdf_pag...me': 'Menaquinone biosynthesis', 'likely_organism': 'Escherichia coli'}, diagnostics_dir=WindowsPath('C:/diag/run-1')))
+
+    def test_run_extraction_composes_the_four_steps_in_the_apps_order(steps):
+        rep, state = RecordingReporter(), {}
+        res = ex.run_extraction(_request(), reporter=rep, state=state)
+    
+        assert [c[0] for c in steps.calls] == ["assemble", "zero", "one", "two"]
+>       assert res is steps.stage_two and state == {"export_mode": "research"}
+E       AssertionError: assert (ExtractionResult(pathway_context=None, final_payload={'f': 1}, failure=None) is ExtractionResult(pathway_context=None, final_payload={'f': 1}, failure=None) and {} == {'export_mode': 'research'}
+E        +  where ExtractionResult(pathway_context=None, final_payload={'f': 1}, failure=None) = namespace(calls=[('assemble', (['  The paper.  '], []), {'uses_pdf_input': False, 'input_mode': 'Paste text', 'pdf_pag...me': 'Menaquinone biosynthesis', 'likely_organism': 'Escherichia coli'}, diagnostics_dir=WindowsPath('C:/diag/run-1'))).stage_two
+E         
+E         Right contains 1 more item:
+E         {'export_mode': 'research'}
+E         Use -v to get more diff)
+
+tests\test_service_extraction_stage2.py:398: AssertionError
+___________________ test_run_extraction_end_to_end_offline ____________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000224589AB850>
+tmp_path = WindowsPath('C:/t/wsR3dtmp/mut-tmp/extraction-mode-not-in-state/test_run_extraction_end_to_end0')
+
+    def test_run_extraction_end_to_end_offline(monkeypatch, tmp_path):
+        """The real four steps with only the LLM stages stubbed on their source modules."""
+    
+        monkeypatch.setattr(paths, "PROJECT_ROOT", tmp_path)
+        monkeypatch.setattr(pipeline, "TMP_DIR", tmp_path / "tmp")
+        monkeypatch.setattr(postpipeline, "PROJECT_ROOT", tmp_path)
+        monkeypatch.setattr(preprocessor, "preprocess", lambda *_a, **_k: dict(CTX))
+        seen = {}
+    
+        def stage1(text, **kw):
+            seen["stage1"] = (text, kw["user_task_context"])
+            return _payload("menaquinone demethylation"), []
+    
+        def stage2(text, payload, **kw):
+            seen["stage2"] = (text, payload, kw["user_task_context"])
+            return {}, [], []
+    
+        monkeypatch.setattr(pipeline, "run_stage_one_with_chunking", stage1)
+        monkeypatch.setattr(boundary, "settle_stage_one", lambda payload, **_k: types.SimpleNamespace(
+            ok=True, payload=payload, failure=None, reconstruction=None, incomplete_reason="",
+            to_summary=lambda: {"ok": True}))
+        monkeypatch.setattr(pipeline, "run_stage_two_with_feedback_loop", stage2)
+        monkeypatch.setenv("RAG_ENABLED", "0")
+        state: dict = {}
+        try:
+            res = ex.run_extraction(_request(text_entries=["MenG demethylates."]), reporter=RecordingReporter(),
+                                    state=state)
+        finally:
+            diag.deactivate()
+    
+        assert res.failure is None and res.pathway_context == CTX
+        assert seen["stage1"] == ("MenG demethylates.", "focus")
+        assert seen["stage2"][0] == "MenG demethylates." and seen["stage2"][2] == "focus"
+        assert seen["stage2"][1] == _payload("menaquinone demethylation")  # the settled, filtered Stage-1 payload
+        assert isinstance(res.final_payload, dict) and "processes" in res.final_payload  # the real merge's output
+        assert state["pipeline_ready"] is True and state["final_payload"] is res.final_payload
+>       assert state["stage_one_boundary"] == {"ok": True} and state["export_mode"] == "research"
+                                                               ^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'export_mode'
+
+tests\test_service_extraction_stage2.py:494: KeyError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage2.py::test_run_extraction_composes_the_four_steps_in_the_apps_order
+FAILED tests/test_service_extraction_stage2.py::test_run_extraction_end_to_end_offline
+2 failed, 26 passed in 2.69s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3d\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 590563edbd444f8c972732f3252204cb7b5ac638  [git, worktree dirty=True]
+label                   : mut-extraction-mode-not-in-state
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3d/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3d -q -p no:cacheprovider --basetemp=C:/t/wsR3dtmp/mut-tmp/extraction-mode-not-in-state tests/test_service_extraction_stage2.py
+cwd                     : C:\t\ws-R3d
+root PID / process group: 54588 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 3.67 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  40372:python.exe
+descendants terminated  : 1  40372
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR3dtmp\ev\mutation\extraction-mode-not-in-state.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R3d  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

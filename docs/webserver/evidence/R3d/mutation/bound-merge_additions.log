@@ -1,0 +1,158 @@
+T2PW: C:\t\ws-R3d\src\t2pw\__init__.py
+FF.F...FFF......F...........                                             [100%]
+================================== FAILURES ===================================
+__ test_stage_two_gets_its_arguments_and_the_merge_builds_the_final_payload ___
+
+world = namespace(calls=[('stage2', 'the paper', {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}}, {'chunk_detail...itten', 'length': 9}}}), ('diag.current',)], additions={'additions': {}, 'qa_hints': {'h': 1}}, raises=None, loop=None)
+
+    def test_stage_two_gets_its_arguments_and_the_merge_builds_the_final_payload(world):
+        res, rep, state = _run(world)
+    
+        name, text, payload, kw = world.calls[0]
+        assert (name, text, payload) == ("stage2", "the paper", _payload("a"))
+        assert kw == dict(chunk_details=[{"c": 1}], pathway_context=CTX, user_task_context="focus", qa_rounds=2,
+                          enable_chunking=True, chunk_word_limit=1200, chunk_overlap=200, max_attempts=3,
+                          temperature=0.25, max_tokens=9000)
+        assert all(type(kw[k]) is int for k in ("qa_rounds", "chunk_word_limit", "chunk_overlap", "max_attempts",
+                                                "max_tokens"))
+        merge = world.calls[1]
+>       assert merge[:3] == ("merge", _payload("a"), world.additions)
+E       AssertionError: assert ('preservatio...], ...}, ...}) == ('merge', {'e...s': {'h': 1}})
+E         
+E         At index 0 diff: 'preservation' != 'merge'
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage2.py:176: AssertionError
+_____________ test_the_publish_writes_every_key_in_the_apps_order _____________
+
+world = namespace(calls=[('stage2', 'the paper', {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}}, {'chunk_detail...itten', 'length': 9}}}), ('diag.current',)], additions={'additions': {}, 'qa_hints': {'h': 1}}, raises=None, loop=None)
+
+    def test_the_publish_writes_every_key_in_the_apps_order(world):
+        state = RecordingState(draft_graph_png_bytes=b"png", post_pipeline_artifacts={"old": 1}, keep=1)
+        res, _rep, state = _run(world, state=state)
+    
+>       assert [c[0] for c in world.calls] == ["stage2", "merge", "preservation", "draft_graph", "diag.current"]
+E       AssertionError: assert ['stage2', 'p...diag.current'] == ['stage2', 'm...diag.current']
+E         
+E         At index 1 diff: 'preservation' != 'merge'
+E         Right contains one more item: 'diag.current'
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage2.py:188: AssertionError
+________ test_a_non_dict_stage_two_merges_nothing_and_has_empty_hints _________
+
+world = namespace(calls=[('stage2', 'the paper', {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}}, {'chunk_detail...': 1, 'status': 'written', 'length': 9}}}), ('diag.current',)], additions=['not', 'a', 'dict'], raises=None, loop=None)
+
+    def test_a_non_dict_stage_two_merges_nothing_and_has_empty_hints(world):
+        world.additions = ["not", "a", "dict"]
+        _res, _rep, state = _run(world)
+    
+>       assert world.calls[1][2] == {}
+E       AssertionError: assert {'biological_...[], ...}, ...} == {}
+E         
+E         Left contains 6 more items:
+E         {'biological_states': [],
+E          'element_locations': {},
+E          'entities': {},
+E          'entity_admission_report': {'counts': {'admitted': 0,
+E                                                 'demoted': 0,...
+E         
+E         ...Full output truncated (14 lines hidden), use '-vv' to show
+
+tests\test_service_extraction_stage2.py:222: AssertionError
+_____ test_a_synthesized_rag_result_runs_the_rounds_on_the_merged_payload _____
+
+world = namespace(calls=[('stage2', 'the paper', {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}}, {'chunk_detail...o', 'i'), ('warning', 'w'), ('error', 'e'), ('json', {'j': 1}), ('other', 'dropped')], 'rounds': [1], 'max_rounds': 1})
+
+    def test_a_synthesized_rag_result_runs_the_rounds_on_the_merged_payload(world):
+        world.loop = deepcopy(LOOP)
+        result = _rag_result()
+        state = RecordingState(pwml_strict_db=0)
+        res, rep, state = _run(world, stage_one=_stage_one(rag_result=result), state=state, rag_incomplete_flag=1,
+                               export_mode="research")
+    
+>       assert [c[0] for c in world.calls] == ["stage2", "merge", "rag_rounds", "preservation", "draft_graph",
+                                              "diag.current"]
+E       AssertionError: assert ['stage2', 'r...diag.current'] == ['stage2', 'm...diag.current']
+E         
+E         At index 1 diff: 'rag_rounds' != 'merge'
+E         Right contains one more item: 'diag.current'
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage2.py:272: AssertionError
+______ test_strict_db_defaults_to_true_when_the_checkbox_never_rendered _______
+
+world = namespace(calls=[('stage2', 'the paper', {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}}, {'chunk_detail...o', 'i'), ('warning', 'w'), ('error', 'e'), ('json', {'j': 1}), ('other', 'dropped')], 'rounds': [1], 'max_rounds': 1})
+
+    def test_strict_db_defaults_to_true_when_the_checkbox_never_rendered(world):
+        world.loop = deepcopy(LOOP)
+        _run(world, stage_one=_stage_one(rag_result=_rag_result()))
+>       assert world.calls[2][2]["strict_db"] is True
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'strict_db'
+
+tests\test_service_extraction_stage2.py:290: KeyError
+____ test_the_rag_merge_site_merges_with_a_real_context_and_no_source_text ____
+
+world = namespace(calls=[('stage2', 'the paper', {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}}, {'chunk_detail...o', 'i'), ('warning', 'w'), ('error', 'e'), ('json', {'j': 1}), ('other', 'dropped')], 'rounds': [1], 'max_rounds': 1})
+
+    def test_the_rag_merge_site_merges_with_a_real_context_and_no_source_text(world):
+        world.loop = deepcopy(LOOP)
+        _run(world, stage_one=_stage_one(rag_result=_rag_result()))
+>       merge_site = world.calls[2][2]["merge_site"]
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'merge_site'
+
+tests\test_service_extraction_stage2.py:296: KeyError
+___________ test_patches_on_the_source_modules_reach_run_stage_two ____________
+
+world = namespace(calls=[('stage2', 'the paper', {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}}, {'chunk_detail...o', 'i'), ('warning', 'w'), ('error', 'e'), ('json', {'j': 1}), ('other', 'dropped')], 'rounds': [1], 'max_rounds': 1})
+
+    def test_patches_on_the_source_modules_reach_run_stage_two(world):
+        """R3b review F1 rule: the app script re-ran ``from ... import`` on every AppTest run, so a
+        patch on the source module (c055 patches ``pipeline.run_stage_two_with_feedback_loop`` and
+        ``pipeline.build_and_save_draft_graph``) reached the call. It must still."""
+    
+        world.loop = deepcopy(LOOP)
+        _run(world, stage_one=_stage_one(rag_result=_rag_result()))
+>       merge_site = world.calls[2][2]["merge_site"]
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'merge_site'
+
+tests\test_service_extraction_stage2.py:341: KeyError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage2.py::test_stage_two_gets_its_arguments_and_the_merge_builds_the_final_payload
+FAILED tests/test_service_extraction_stage2.py::test_the_publish_writes_every_key_in_the_apps_order
+FAILED tests/test_service_extraction_stage2.py::test_a_non_dict_stage_two_merges_nothing_and_has_empty_hints
+FAILED tests/test_service_extraction_stage2.py::test_a_synthesized_rag_result_runs_the_rounds_on_the_merged_payload
+FAILED tests/test_service_extraction_stage2.py::test_strict_db_defaults_to_true_when_the_checkbox_never_rendered
+FAILED tests/test_service_extraction_stage2.py::test_the_rag_merge_site_merges_with_a_real_context_and_no_source_text
+FAILED tests/test_service_extraction_stage2.py::test_patches_on_the_source_modules_reach_run_stage_two
+7 failed, 21 passed in 2.88s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3d\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 590563edbd444f8c972732f3252204cb7b5ac638  [git, worktree dirty=True]
+label                   : mut-bound-merge_additions
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3d/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3d -q -p no:cacheprovider --basetemp=C:/t/wsR3dtmp/mut-tmp/bound-merge_additions tests/test_service_extraction_stage2.py
+cwd                     : C:\t\ws-R3d
+root PID / process group: 53284 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 3.91 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  55116:python.exe
+descendants terminated  : 1  55116
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR3dtmp\ev\mutation\bound-merge_additions.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R3d  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

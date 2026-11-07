@@ -1,0 +1,48 @@
+bound-run_stage_two_with_feedback_loop   18 failed, 10 passed in 7.77s  survivors=0
+bound-merge_additions                    7 failed, 21 passed in 2.88s  survivors=0
+bound-build_and_save_draft_graph         5 failed, 23 passed in 2.90s  survivors=0
+bound-write_reaction_preservation_report 5 failed, 23 passed in 2.91s  survivors=0
+bound-run_rag_rounds                     5 failed, 23 passed in 3.32s  survivors=0
+bound-diag-current-publish               4 failed, 24 passed in 2.77s  survivors=0
+spinner-text                             3 failed, 25 passed in 2.77s  survivors=0
+qa-rounds-not-int                        1 failed, 27 passed in 2.74s  survivors=0
+stage-two-raw-payload                    1 failed, 27 passed in 2.74s  survivors=0
+stage-two-unfolded-focus                 3 failed, 25 passed in 2.75s  survivors=0
+killed 10/10; survived: []
+failure-message                          3 failed, 25 passed in 2.79s  survivors=0
+failure-kind                             2 failed, 26 passed in 2.76s  survivors=0
+failure-falls-through                    3 failed, 25 passed in 3.11s  survivors=0
+attempts-label-fallback                  1 failed, 27 passed in 2.70s  survivors=0
+attempts-not-rendered                    3 failed, 25 passed in 2.81s  survivors=0
+qa-hints-default                         1 failed, 27 passed in 2.72s  survivors=0
+merge-base-raw                           2 failed, 26 passed in 2.66s  survivors=0
+merge-no-source-text                     1 failed, 27 passed in 2.73s  survivors=0
+merge-dict-context                       1 failed, 27 passed in 2.69s  survivors=0
+rag-merge-no-context                     1 failed, 27 passed in 2.69s  survivors=0
+rag-strict-db-default                    1 failed, 27 passed in 2.70s  survivors=0
+rag-user-flag-not-bool                   1 failed, 27 passed in 2.69s  survivors=0
+killed 12/12; survived: []
+rag-messages-dropped                     1 failed, 27 passed in 2.66s  survivors=0
+rag-payload-not-taken                    2 failed, 26 passed in 2.72s  survivors=0
+rag-loop-attach-unguarded                1 failed, 27 passed in 2.70s  survivors=0
+session-record-keeps-payload             2 failed, 26 passed in 2.69s  survivors=0
+emit-json-dropped                        2 failed, 26 passed in 2.72s  survivors=0
+publish-order-swapped                    1 failed, 27 passed in 2.66s  survivors=0
+publish-pop-dropped                      2 failed, 26 passed in 2.84s  survivors=0
+publish-inference-flag-raw               1 failed, 27 passed in 2.66s  survivors=0
+publish-raw-stage-one-as-final           2 failed, 26 passed in 2.70s  survivors=0
+preservation-stage-name                  2 failed, 26 passed in 2.70s  survivors=0
+defaults-on-state-reporter               1 failed, 27 passed in 2.66s  survivors=0
+extraction-focus-not-stripped            5 failed, 23 passed in 2.77s  survivors=0
+extraction-mode-not-in-state             2 failed, 26 passed in 2.69s  survivors=0
+extraction-stage-one-failure-ignored     2 failed, 26 passed in 2.75s  survivors=0
+extraction-input-failure-ignored         1 failed, 27 passed in 2.68s  survivors=0
+app-no-stop-on-failure                   1 failed, 27 passed in 2.70s  survivors=0
+app-reset-dropped                        1 failed, 27 passed in 2.80s  survivors=0
+app-token-stats-dropped                  1 failed, 27 passed in 2.73s  survivors=0
+app-state-not-session                    1 failed, 27 passed in 2.44s  survivors=0
+killed 19/19; survived: []
+eq-extraction-one-qa-round               14 passed in 57.55s  survivors=0
+eq-extraction-no-inference               2 failed, 12 passed in 55.04s  survivors=0
+eq-merge-no-source-text                  5 failed, 9 passed in 48.64s  survivors=0
+killed 2/3; survived: ['eq-extraction-one-qa-round']

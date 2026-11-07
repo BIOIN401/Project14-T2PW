@@ -1,0 +1,96 @@
+T2PW: C:\t\ws-R3d\src\t2pw\__init__.py
+.......................FF...                                             [100%]
+================================== FAILURES ===================================
+__ test_run_extraction_returns_each_steps_failure_and_runs_nothing_after_it ___
+
+steps = namespace(calls=[('assemble', (['  The paper.  '], []), {'uses_pdf_input': False, 'input_mode': 'Paste text', 'pdf_pag...me': 'Menaquinone biosynthesis', 'likely_organism': 'Escherichia coli'}, diagnostics_dir=WindowsPath('C:/diag/run-1')))
+
+    def test_run_extraction_returns_each_steps_failure_and_runs_nothing_after_it(steps):
+        steps.assembled = ex.AssembledInputs(failure=ex.InputFailure(ex.KIND_NO_TEXT, "No text"))
+        res = ex.run_extraction(_request(), reporter=RecordingReporter(), state={})
+        assert res == ex.ExtractionResult(failure=steps.assembled.failure)
+        assert [c[0] for c in steps.calls] == ["assemble"]
+    
+        steps.calls.clear()
+        steps.assembled = ex.AssembledInputs(text="The paper.")
+        steps.stage_one = ex.StageOneResult(failure=ex.InputFailure(ex.KIND_STAGE_ONE_FAILED, "Extraction failed: x"))
+        res = ex.run_extraction(_request(), reporter=RecordingReporter(), state={})
+>       assert res == ex.ExtractionResult(failure=steps.stage_one.failure)
+E       AssertionError: assert ExtractionRes... failure=None) == ExtractionRes...n failed: x'))
+E         
+E         Omitting 1 identical items, use -vv to show
+E         Differing attributes:
+E         ['final_payload', 'failure']
+E         
+E         Drill down into differing attribute final_payload:
+E           final_payload: {'f': 1} != None...
+E         
+E         ...Full output truncated (3 lines hidden), use '-vv' to show
+
+tests\test_service_extraction_stage2.py:433: AssertionError
+_ test_run_extraction_refuses_an_ambiguous_review_in_stage_one_before_any_llm_call _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001D29D241D30>
+tmp_path = WindowsPath('C:/t/wsR3dtmp/mut-tmp/extraction-stage-one-failure-ignored/test_run_extraction_refuses_an0')
+
+    def test_run_extraction_refuses_an_ambiguous_review_in_stage_one_before_any_llm_call(monkeypatch, tmp_path):
+        """No ambiguous-review gate in ``run_extraction`` (R3d.md, open question 3): the REAL
+        ``run_stage_one_with_chunking`` refuses a Case-C context before its first LLM call."""
+    
+        case_c = {"document_type": "multi_example_review", "selected_example": "", "candidate_examples": ["A", "B"]}
+        monkeypatch.setattr(paths, "PROJECT_ROOT", tmp_path)
+        monkeypatch.setattr(preprocessor, "preprocess", lambda *_a, **_k: deepcopy(case_c))
+        monkeypatch.setattr(pipeline, "run_extraction_pipeline",
+                            lambda *_a, **_k: pytest.fail("Stage 1 reached the LLM on an ambiguous review"))
+        rep, state = RecordingReporter(), {}
+        try:
+            res = ex.run_extraction(_request(text_entries=["short review"]), reporter=rep, state=state)
+        finally:
+            diag.deactivate()
+    
+>       assert res.failure == ex.InputFailure(
+            ex.KIND_STAGE_ONE_FAILED, "Extraction failed: multi_example_review detected with no selected_example. "
+            "Extraction skipped to prevent mixed-pathway output.")
+E       AssertionError: assert InputFailure(...hway output.') == InputFailure(...hway output.')
+E         
+E         Differing attributes:
+E         ['kind', 'message']
+E         
+E         Drill down into differing attribute kind:
+E           kind: 'stage_two_failed' != 'stage_one_failed'
+E           - stage_one_failed...
+E         
+E         ...Full output truncated (10 lines hidden), use '-vv' to show
+
+tests\test_service_extraction_stage2.py:452: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage2.py::test_run_extraction_returns_each_steps_failure_and_runs_nothing_after_it
+FAILED tests/test_service_extraction_stage2.py::test_run_extraction_refuses_an_ambiguous_review_in_stage_one_before_any_llm_call
+2 failed, 26 passed in 2.75s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3d\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 590563edbd444f8c972732f3252204cb7b5ac638  [git, worktree dirty=True]
+label                   : mut-extraction-stage-one-failure-ignored
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3d/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3d -q -p no:cacheprovider --basetemp=C:/t/wsR3dtmp/mut-tmp/extraction-stage-one-failure-ignored tests/test_service_extraction_stage2.py
+cwd                     : C:\t\ws-R3d
+root PID / process group: 56140 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 3.78 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  55536:python.exe
+descendants terminated  : 1  55536
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR3dtmp\ev\mutation\extraction-stage-one-failure-ignored.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R3d  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

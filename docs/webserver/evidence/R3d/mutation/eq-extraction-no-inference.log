@@ -1,0 +1,74 @@
+T2PW: C:\t\ws-R3d\src\t2pw\__init__.py
+......FF......                                                           [100%]
+================================== FAILURES ===================================
+_________________ test_c_service_post_pipeline_equals_the_app _________________
+
+arms = {'after': {'data/enrichment_cache.json': (35407855, 1794032284633229500), 'data/id_mapping_cache.json': (4230034, 1794...t/enrichment_dump.json': (33986, 1794032289634297300), 'outputs/pathway.pwml': (23487, 1794033639909671100), ...}, ...}
+
+    def test_c_service_post_pipeline_equals_the_app(arms):
+        app1, service = arms["app1"], arms["service"]
+        # The Stage-2 payload the service started from is the one the app's session held.
+        from t2pw.pipeline.pipeline import propagate_context_organism
+    
+        assert app1["post_call"] and app1["export_call"], "the app arm never reached the post-pipeline and export"
+        assert app1["canonical_payload_sha256"], "the app arm produced no canonical payload"
+        (post_args, _kwargs) = app1["post_call"]
+        assert post_args[0] == propagate_context_organism(app1["stage2_payload"], app1["pathway_context"])
+        # Review F2: the non-default audit timeout is what the app handed the post-pipeline, so the service ran
+        # under it too. (The default 240 s branch is NOT covered here; see R2.5.md, Notes.)
+        assert _kwargs["audit_timeout_seconds"] == harness.AUDIT_TIMEOUT_SECONDS
+>       assert service["misses"] == [] and service["refused"] == []
+E       AssertionError: assert ([{'asked': 1,...ded': 0, ...}] == []
+E         
+E         Left contains 6 more items, first extra item: {'asked': 1, 'key': 'c6699baf4d7db673e527873324942a284c70b06546148ebbb14bb6ed2ca2a2dc', 'kind': 'llm', 'recorded': 0, ...}
+E         Use -v to get more diff)
+
+tests\test_equivalence_app_vs_service.py:205: AssertionError
+__________ test_pwml_bytes_are_produced_and_equal_in_all_three_arms ___________
+
+arms = {'after': {'data/enrichment_cache.json': (35407855, 1794032284633229500), 'data/id_mapping_cache.json': (4230034, 1794...t/enrichment_dump.json': (33986, 1794032289634297300), 'outputs/pathway.pwml': (23487, 1794033639909671100), ...}, ...}
+
+    def test_pwml_bytes_are_produced_and_equal_in_all_three_arms(arms):
+        # Not skippable: a fixture whose case writes no PWML cannot prove byte equality, so it fails here.
+        assert arms["fixture"]["recorded"]["pwml_bytes"] > 0, "the fixture's case wrote no PWML"
+        xml = arms["app1"]["xml"]
+>       assert xml and arms["app2"]["xml"] == xml and arms["service"]["xml"] == xml
+E       assert (b'<?xml version=\'1.0\' encoding=\'utf-8\'?>\n<super-pathway-visualization xmlns:option="urn:pathwhiz-option">\n  <nam...lization>\n    </pathway-visualization-context>\n  </pathway-visualization-contexts>\n</super-pathway-visualization>\n' and b'<?xml versi...ualization>\n' == b'<?xml versi...ualization>\n'
+E         
+E         Use -v to get more diff and b'<?xml versi...ualization>\n' == b'<?xml versi...ualization>\n'
+E         
+E         At index 2643 diff: b' ' != b'<'
+E         Use -v to get more diff)
+
+tests\test_equivalence_app_vs_service.py:217: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_equivalence_app_vs_service.py::test_c_service_post_pipeline_equals_the_app
+FAILED tests/test_equivalence_app_vs_service.py::test_pwml_bytes_are_produced_and_equal_in_all_three_arms
+2 failed, 12 passed in 55.04s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3d\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 590563edbd444f8c972732f3252204cb7b5ac638  [git, worktree dirty=True]
+label                   : mut-eq-extraction-no-inference
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3d/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3d -q -p no:cacheprovider --basetemp=C:/t/wsR3dtmp/mut-tmp/eq-extraction-no-inference tests/test_equivalence_app_vs_service.py
+cwd                     : C:\t\ws-R3d
+root PID / process group: 40560 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 56.43 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  38272:python.exe
+descendants terminated  : 1  38272
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR3dtmp\ev\mutation\eq-extraction-no-inference.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R3d  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

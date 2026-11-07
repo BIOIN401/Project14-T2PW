@@ -1,0 +1,76 @@
+T2PW: C:\t\ws-R3d\src\t2pw\__init__.py
+.F........................F.                                             [100%]
+================================== FAILURES ===================================
+_____________ test_the_publish_writes_every_key_in_the_apps_order _____________
+
+world = namespace(calls=[('stage2', 'the paper', {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}}, {'chunk_detail...qa_hints': {'h': 1}}]}), ('diag.current',)], additions={'additions': {}, 'qa_hints': {'h': 1}}, raises=None, loop=None)
+
+    def test_the_publish_writes_every_key_in_the_apps_order(world):
+        state = RecordingState(draft_graph_png_bytes=b"png", post_pipeline_artifacts={"old": 1}, keep=1)
+        res, _rep, state = _run(world, state=state)
+    
+        assert [c[0] for c in world.calls] == ["stage2", "merge", "preservation", "draft_graph", "diag.current"]
+        assert world.calls[2] == ("preservation", "after_stage2", res.final_payload)
+        assert world.calls[3] == ("draft_graph", res.final_payload)
+>       assert state.log == PUBLISH
+E       AssertionError: assert [('set', 'dra..._ready'), ...] == [('set', 'dra..._ready'), ...]
+E         
+E         Right contains one more item: ('pop', 'post_pipeline_artifacts')
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage2.py:191: AssertionError
+_ test_real_app_publishes_the_run_then_resets_the_quarantine_and_counts_tokens _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002B224126F20>
+tmp_path = WindowsPath('C:/t/wsR3dtmp/mut-tmp/publish-pop-dropped/test_real_app_publishes_the_ru0')
+
+    def test_real_app_publishes_the_run_then_resets_the_quarantine_and_counts_tokens(monkeypatch, tmp_path):
+        additions = {"additions": {"processes": {"reactions": [{"name": "menaquinone prenylation"}]}}}
+        monkeypatch.setattr(pipeline, "run_stage_two_with_feedback_loop", lambda *_a, **_k: (additions, [], [{"r": 1}]))
+        at = _real_app(monkeypatch, tmp_path, seed={"quarantine_report": {"stale": True},
+                                                    "post_pipeline_artifacts": {"stale": True}})
+    
+>       assert [str(e.value) for e in at.exception] == []
+E       assert ["'audit_report'"] == []
+E         
+E         Left contains one more item: "'audit_report'"
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage2.py:535: AssertionError
+---------------------------- Captured stdout call -----------------------------
+\x1b[31m\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m \x1b[0m\x1b[1;31mTraceback \x1b[0m\x1b[1;2;31m(most recent call last)\x1b[0m\x1b[31m \x1b[0m\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\x1b[31m\u2500\u2500\x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\exec_code.py:136 in exec_func_with_error_handling               \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Lib\\site-packages\\streamlit\\ \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m runtime\\scriptrunner\\script_runner.py:837 in code_to_exec                            \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m C:\\t\\ws-R3d\\src\\t2pw\\app\\streamlit_app.py:2484 in <module>                           \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m                                                                                      \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m2481 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \x1b[0m)                                                                 \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m2482 \x1b[0m\x1b[2m\u2502   \u2502   \x1b[0mst.download_button(                                                   \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m2483 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \x1b[0m\x1b[33m"\x1b[0m\x1b[33mDownload audit_report.json\x1b[0m\x1b[33m"\x1b[0m,                                     \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m \x1b[31m> \x1b[0m2484 \x1b[2m\u2502   \u2502   \u2502   \x1b[0mjson.dumps(\x1b[1;4mpost_artifacts[\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4;33maudit_report\x1b[0m\x1b[1;4;33m"\x1b[0m\x1b[1;4m]\x1b[0m, indent=\x1b[94m2\x1b[0m),             \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m2485 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \x1b[0mfile_name=\x1b[33m"\x1b[0m\x1b[33maudit_report.json\x1b[0m\x1b[33m"\x1b[0m,                                    \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m2486 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \x1b[0mmime=\x1b[33m"\x1b[0m\x1b[33mapplication/json\x1b[0m\x1b[33m"\x1b[0m,                                          \x1b[31m \x1b[0m\n\x1b[31m \x1b[0m   \x1b[2m2487 \x1b[0m\x1b[2m\u2502   \u2502   \u2502   \x1b[0mkey=\x1b[33m"\x1b[0m\x1b[33mdl_audit_report\x1b[0m\x1b[33m"\x1b[0m,                                            \x1b[31m \x1b[0m\n\x1b[31m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\x1b[0m\n\x1b[1;91mKeyError: \x1b[0m\x1b[32m'audit_report'\x1b[0m
+---------------------------- Captured stderr call -----------------------------
+2026-11-07 14:28:12.291 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-07 14:28:12.687 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-07 14:28:12.687 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage2.py::test_the_publish_writes_every_key_in_the_apps_order
+FAILED tests/test_service_extraction_stage2.py::test_real_app_publishes_the_run_then_resets_the_quarantine_and_counts_tokens
+2 failed, 26 passed in 2.84s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3d\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 590563edbd444f8c972732f3252204cb7b5ac638  [git, worktree dirty=True]
+label                   : mut-publish-pop-dropped
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3d/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3d -q -p no:cacheprovider --basetemp=C:/t/wsR3dtmp/mut-tmp/publish-pop-dropped tests/test_service_extraction_stage2.py
+cwd                     : C:\t\ws-R3d
+root PID / process group: 54024 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 3.84 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  56304:python.exe
+descendants terminated  : 1  56304
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR3dtmp\ev\mutation\publish-pop-dropped.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R3d  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

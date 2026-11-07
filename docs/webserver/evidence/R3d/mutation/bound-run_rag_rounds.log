@@ -1,0 +1,121 @@
+T2PW: C:\t\ws-R3d\src\t2pw\__init__.py
+.......FFFF.....F...........                                             [100%]
+================================== FAILURES ===================================
+_____ test_a_synthesized_rag_result_runs_the_rounds_on_the_merged_payload _____
+
+world = namespace(calls=[('stage2', 'the paper', {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}}, {'chunk_detail...o', 'i'), ('warning', 'w'), ('error', 'e'), ('json', {'j': 1}), ('other', 'dropped')], 'rounds': [1], 'max_rounds': 1})
+
+    def test_a_synthesized_rag_result_runs_the_rounds_on_the_merged_payload(world):
+        world.loop = deepcopy(LOOP)
+        result = _rag_result()
+        state = RecordingState(pwml_strict_db=0)
+        res, rep, state = _run(world, stage_one=_stage_one(rag_result=result), state=state, rag_incomplete_flag=1,
+                               export_mode="research")
+    
+>       assert [c[0] for c in world.calls] == ["stage2", "merge", "rag_rounds", "preservation", "draft_graph",
+                                              "diag.current"]
+E       AssertionError: assert ['stage2', 'm...diag.current'] == ['stage2', 'm...diag.current']
+E         
+E         At index 2 diff: 'merge' != 'rag_rounds'
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage2.py:272: AssertionError
+______ test_strict_db_defaults_to_true_when_the_checkbox_never_rendered _______
+
+world = namespace(calls=[('stage2', 'the paper', {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}}, {'chunk_detail...o', 'i'), ('warning', 'w'), ('error', 'e'), ('json', {'j': 1}), ('other', 'dropped')], 'rounds': [1], 'max_rounds': 1})
+
+    def test_strict_db_defaults_to_true_when_the_checkbox_never_rendered(world):
+        world.loop = deepcopy(LOOP)
+        _run(world, stage_one=_stage_one(rag_result=_rag_result()))
+>       assert world.calls[2][2]["strict_db"] is True
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'strict_db'
+
+tests\test_service_extraction_stage2.py:290: KeyError
+____ test_the_rag_merge_site_merges_with_a_real_context_and_no_source_text ____
+
+world = namespace(calls=[('stage2', 'the paper', {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}}, {'chunk_detail...o', 'i'), ('warning', 'w'), ('error', 'e'), ('json', {'j': 1}), ('other', 'dropped')], 'rounds': [1], 'max_rounds': 1})
+
+    def test_the_rag_merge_site_merges_with_a_real_context_and_no_source_text(world):
+        world.loop = deepcopy(LOOP)
+        _run(world, stage_one=_stage_one(rag_result=_rag_result()))
+>       merge_site = world.calls[2][2]["merge_site"]
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'merge_site'
+
+tests\test_service_extraction_stage2.py:296: KeyError
+____________ test_a_loop_record_that_cannot_be_attached_is_ignored ____________
+
+world = namespace(calls=[('stage2', 'the paper', {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}}, {'chunk_detail...o', 'i'), ('warning', 'w'), ('error', 'e'), ('json', {'j': 1}), ('other', 'dropped')], 'rounds': [1], 'max_rounds': 1})
+
+    def test_a_loop_record_that_cannot_be_attached_is_ignored(world):
+        world.loop = deepcopy(LOOP)
+    
+        class Frozen(types.SimpleNamespace):
+            def __setattr__(self, name, value):
+                if name == "loop":
+                    raise AttributeError("read-only")
+                super().__setattr__(name, value)
+    
+        res, _rep, state = _run(world, stage_one=_stage_one(rag_result=Frozen(synthesized=True, payload={"p": 1})))
+>       assert res.final_payload == {"looped": 1} and "rag_loop" in state
+E       AssertionError: assert ({'merged': [{...': {'h': 1}}]} == {'looped': 1}
+E         
+E         Left contains 1 more item:
+E         {'merged': [{'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}},
+E                     {'additions': {}, 'qa_hints': {'h': 1}}]}
+E         Right contains 1 more item:
+E         {'looped': 1}
+E         Use -v to get more diff)
+
+tests\test_service_extraction_stage2.py:314: AssertionError
+___________ test_patches_on_the_source_modules_reach_run_stage_two ____________
+
+world = namespace(calls=[('stage2', 'the paper', {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}}, {'chunk_detail...o', 'i'), ('warning', 'w'), ('error', 'e'), ('json', {'j': 1}), ('other', 'dropped')], 'rounds': [1], 'max_rounds': 1})
+
+    def test_patches_on_the_source_modules_reach_run_stage_two(world):
+        """R3b review F1 rule: the app script re-ran ``from ... import`` on every AppTest run, so a
+        patch on the source module (c055 patches ``pipeline.run_stage_two_with_feedback_loop`` and
+        ``pipeline.build_and_save_draft_graph``) reached the call. It must still."""
+    
+        world.loop = deepcopy(LOOP)
+        _run(world, stage_one=_stage_one(rag_result=_rag_result()))
+>       merge_site = world.calls[2][2]["merge_site"]
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'merge_site'
+
+tests\test_service_extraction_stage2.py:341: KeyError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage2.py::test_a_synthesized_rag_result_runs_the_rounds_on_the_merged_payload
+FAILED tests/test_service_extraction_stage2.py::test_strict_db_defaults_to_true_when_the_checkbox_never_rendered
+FAILED tests/test_service_extraction_stage2.py::test_the_rag_merge_site_merges_with_a_real_context_and_no_source_text
+FAILED tests/test_service_extraction_stage2.py::test_a_loop_record_that_cannot_be_attached_is_ignored
+FAILED tests/test_service_extraction_stage2.py::test_patches_on_the_source_modules_reach_run_stage_two
+5 failed, 23 passed in 3.32s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3d\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 590563edbd444f8c972732f3252204cb7b5ac638  [git, worktree dirty=True]
+label                   : mut-bound-run_rag_rounds
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3d/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3d -q -p no:cacheprovider --basetemp=C:/t/wsR3dtmp/mut-tmp/bound-run_rag_rounds tests/test_service_extraction_stage2.py
+cwd                     : C:\t\ws-R3d
+root PID / process group: 54904 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 4.38 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  33588:python.exe
+descendants terminated  : 1  33588
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR3dtmp\ev\mutation\bound-run_rag_rounds.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R3d  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================
