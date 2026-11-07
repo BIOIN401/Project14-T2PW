@@ -241,6 +241,8 @@ All runs went through `bounded_run.py` in the foreground, with the venv python f
 5. **Near-miss on the `python -` rule.** One composed command contained `python.exe - 2>/dev/null </dev/null`, a stdin interpreter. **It did not execute:** it sat after a failing `mv` in an `&&` chain. No process was started. Every Python run in this task used a script file or `-c`.
 6. **Heavy-run gate** (`scripts/waitfree.py`, `evidence/R3c/waits.log`): 131 observations, all free. No other worktree's pytest or bounded_run was seen alive before any heavy run, and no run exited 95.
    - The first tip batch (12 chunks) ran past 180 s, and the harness moved the foreground call to the background. It was the same process tree, awaited to completion, with survivors 0. Later batches were kept under 180 s.
+7. **Secret grep ordering slip (docs commit).** The docs-commit secret grep ran in the same command as the commit, without gating it, and matched one file. I checked right after the push: the matches are traceback source lines (`os.getenv('OPENROUTER_API_KEY','')` in `llm/client.py`), and **no key value or key prefix** appears anywhere in `evidence/R3c` (grep for `sk-or-v1-` and `Key starts with: <value>`: no hit). Nothing to remediate. The code commit's grep was gated and clean.
+8. **Mutation `bound-run_stage_one_with_chunking` reached a local LLM endpoint.** With the patch disarmed, the real Stage 1 ran and got `400 No models loaded` from the local LM Studio server (`openai.BadRequestError`, 17 times). No external call, no spend. That is the mutation doing its job: the tests failed because the patch no longer landed.
 
 ## 8. Open questions
 
