@@ -1,0 +1,34 @@
+T2PW: C:\t\ws-R3c-post\src\t2pw\__init__.py
+........................................................................ [ 23%]
+........................................................................ [ 47%]
+........................................................................ [ 71%]
+........................................................................ [ 95%]
+.............                                                            [100%]
+301 passed in 46.52s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3c-post\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 51db01a60e4942697404b2af64da351761ee557e  [git, worktree dirty=False]
+label                   : R3c-post-web
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3c-post/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3c-post -q --basetemp=C:/t/bt/R3cpost/web tests/test_service_driver_bridge.py tests/test_service_pathway_interface.py tests/test_service_inputs.py tests/test_service_organisms.py tests/test_web_jobs.py tests/test_web_worker.py tests/test_web_retry.py tests/test_web_limits.py tests/test_web_notify.py tests/test_web_design_system.py tests/test_web_curator_queue.py tests/test_web_postrun.py tests/test_web_app.py
+cwd                     : C:\t\ws-R3c-post
+root PID / process group: 658456 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 580 s
+duration                : 47.75 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 115  658256:python.exe, 657760:python.exe, 658164:python.exe, 641376:python.exe, 657080:python.exe, 658324:python.exe, 647876:python.exe, 657388:python.exe, 638964:python.exe, 651020:python.exe, 652164:python.exe, 654352:python.exe, 652292:python.exe, 654456:python.exe, 655688:python.exe, 657132:python.exe, 657700:python.exe, 657732:python.exe, 660276:python.exe, 660288:python.exe, 660372:python.exe, 660384:python.exe, 648004:python.exe, 659400:python.exe, 659516:python.exe, 659548:python.exe, 659568:python.exe, 659552:python.exe, 659640:python.exe, 659700:python.exe, 659668:python.exe, 659684:python.exe, 659644:python.exe, 659728:python.exe, 657668:python.exe, 659708:python.exe, 659924:python.exe, 660004:python.exe, 660040:python.exe, 660104:python.exe, 660112:python.exe, 660136:python.exe, 660148:python.exe, 660232:python.exe, 656588:python.exe, 659128:python.exe, 654356:python.exe, 660320:python.exe, 660380:python.exe, 660476:python.exe, 658624:python.exe, 659624:python.exe, 657064:python.exe, 659688:python.exe, 657440:python.exe, 659732:python.exe, 658816:python.exe, 658008:python.exe, 657460:python.exe, 658936:python.exe, 659908:python.exe, 659960:python.exe, 659992:python.exe, 659996:python.exe, 659180:python.exe, 660100:python.exe, 658688:python.exe, 660144:python.exe, 657172:python.exe, 660468:python.exe, 657988:python.exe, 660388:python.exe, 660460:python.exe, 658216:python.exe, 655516:python.exe, 659528:python.exe, 659544:python.exe, 660416:python.exe, 659696:python.exe, 659616:python.exe, 654700:python.exe, 659748:python.exe, 659968:python.exe, 660020:python.exe, 659600:python.exe, 659948:python.exe, 656568:python.exe, 660296:python.exe, 660324:python.exe, 660368:python.exe, 657372:python.exe, 657428:python.exe, 657952:python.exe, 660400:python.exe, 657508:python.exe, 659460:python.exe, 653812:python.exe, 659636:python.exe, 618080:python.exe, 659672:python.exe, 660440:tasklist.exe, 659812:python.exe, 659864:python.exe, 655372:python.exe, 659892:python.exe, 660244:python.exe, 660280:python.exe, 659720:python.exe, 660420:python.exe, 657100:python.exe, 660156:python.exe, 658096:python.exe, 659464:python.exe, 650156:python.exe, 655256:python.exe
+descendants terminated  : 115  618080, 638964, 641376, 647876, 648004, 650156, 651020, 652164, 652292, 653812, 654352, 654356, 654456, 654700, 655256, 655372, 655516, 655688, 656568, 656588, 657064, 657080, 657100, 657132, 657172, 657372, 657388, 657428, 657440, 657460, 657508, 657668, 657700, 657732, 657760, 657952, 657988, 658008, 658096, 658164, 658216, 658256, 658324, 658624, 658688, 658816, 658936, 659128, 659180, 659400, 659460, 659464, 659516, 659528, 659544, 659548, 659552, 659568, 659600, 659616, 659624, 659636, 659640, 659644, 659668, 659672, 659684, 659688, 659696, 659700, 659708, 659720, 659728, 659732, 659748, 659812, 659864, 659892, 659908, 659924, 659948, 659960, 659968, 659992, 659996, 660004, 660020, 660040, 660100, 660104, 660112, 660136, 660144, 660148, 660156, 660232, 660244, 660276, 660280, 660288, 660296, 660320, 660324, 660368, 660372, 660380, 660384, 660388, 660400, 660416, 660420, 660440, 660460, 660468, 660476
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ev-R3c/postmerge/web.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=ws-R3c-post  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================
