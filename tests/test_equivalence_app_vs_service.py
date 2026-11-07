@@ -203,6 +203,8 @@ def test_c_service_post_pipeline_equals_the_app(arms):
     # under it too. (The default 240 s branch is NOT covered here; see R2.5.md, Notes.)
     assert _kwargs["audit_timeout_seconds"] == harness.AUDIT_TIMEOUT_SECONDS
     assert service["misses"] == [] and service["refused"] == []
+    # Q-R3d-3: from R3d the service arm runs from the text, so it must consume every recorded LLM reply.
+    assert [row for row in service.get("unused", []) if row[0] == "llm"] == [], service.get("unused")
     assert service["canonical_payload_sha256"] == app1["canonical_payload_sha256"]
     assert service["canonical_payload"] == app1["canonical_payload"]
     assert service["export_verdict"] == app1["export_verdict"]

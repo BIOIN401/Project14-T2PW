@@ -297,7 +297,8 @@ def run_service_arm(app: Dict[str, Any], root: Path, cassette: llm_replay.Casset
     def failed(error: str, started: Optional[float] = None) -> Dict[str, Any]:
         return {"seconds": round(time.monotonic() - started, 1) if started else 0.0, "ok": False, "error": error,
                 "canonical_payload_sha256": None, "canonical_payload": None, "xml": b"", "pwml_files": {},
-                "export_verdict": None, "misses": list(cassette.misses), "refused": list(cassette.refused)}
+                "export_verdict": None, "misses": list(cassette.misses), "refused": list(cassette.refused),
+                "unused": cassette.unused()}
 
     if app["post_call"] is None:  # no settings to run with; the test reports the app arm's own failure
         return failed("the app arm never reached the post-pipeline")
@@ -378,6 +379,7 @@ def run_service_arm(app: Dict[str, Any], root: Path, cassette: llm_replay.Casset
         "export_verdict": export_verdict(result),
         "misses": list(cassette.misses),
         "refused": list(cassette.refused),
+        "unused": cassette.unused(),
         "frozen_bindings": frozen_bindings,
     }
 

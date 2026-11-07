@@ -967,26 +967,30 @@ def test_out_of_scope_filter_runs_between_stage1_extraction_and_stage2_inference
                  else getattr(node.func, "id", None)) == name
         ]
 
-    # Q-R3c-1: Stage 1 and the filter live in service/extraction.py's run_stage_one (R3c),
-    # as call-time ``_pipeline.x(...)`` calls; Stage 2 is still in the app.
-    service = next(node for node in ast.parse((ROOT / "src" / "t2pw" / "service" / "extraction.py")
-                                              .read_text(encoding="utf-8")).body
+    # Q-R3c-1 / R3d: Stage 1, the filter and Stage 2 live in service/extraction.py (run_stage_one and
+    # run_stage_two), as call-time ``_pipeline.x(...)`` calls; the app calls the two steps in order.
+    service_module = ast.parse((ROOT / "src" / "t2pw" / "service" / "extraction.py").read_text(encoding="utf-8"))
+    service = next(node for node in service_module.body
                    if isinstance(node, ast.FunctionDef) and node.name == "run_stage_one")
+    stage_two_fn = next(node for node in service_module.body
+                        if isinstance(node, ast.FunctionDef) and node.name == "run_stage_two")
     extraction_calls = _calls_named("run_stage_one_with_chunking", service, attr=True)
     filter_calls = _calls_named("filter_out_of_scope_reactions", service, attr=True)
+    inference_calls = _calls_named("run_stage_two_with_feedback_loop", stage_two_fn, attr=True)
     stage_one_calls = _calls_named("run_stage_one")
-    inference_calls = _calls_named("run_stage_two_with_feedback_loop")
+    stage_two_calls = _calls_named("run_stage_two")
 
     assert len(extraction_calls) == 1
     assert len(filter_calls) == 1
-    assert len(stage_one_calls) == 1
     assert len(inference_calls) == 1
+    assert len(stage_one_calls) == 1
+    assert len(stage_two_calls) == 1
 
     # The filter must run strictly after Stage 1 extraction returns and strictly
     # before its output is handed to Stage 2 inference, so out-of-scope reactions
     # never reach the inference pass.
     assert extraction_calls[0].lineno < filter_calls[0].lineno
-    assert stage_one_calls[0].lineno < inference_calls[0].lineno
+    assert stage_one_calls[0].lineno < stage_two_calls[0].lineno
     # ... and what run_stage_one returns as the in-scope payload is the filter's output.
     filtered = next(node.targets[0] for node in ast.walk(service)
                     if isinstance(node, ast.Assign) and node.value is filter_calls[0])
@@ -994,17 +998,26 @@ def test_out_of_scope_filter_runs_between_stage1_extraction_and_stage2_inference
                 for kw in call.keywords if kw.arg == "stage_one_in_scope"]
     assert len(returned) == 1 and isinstance(returned[0], ast.Name)
     assert returned[0].id == filtered.elts[0].id
+    # ... and the app hands that result itself to run_stage_two (review F1).
+    stage_one_result = next(node.targets[0] for node in ast.walk(tree)
+                            if isinstance(node, ast.Assign) and node.value is stage_one_calls[0])
+    assert isinstance(stage_two_calls[0].args[1], ast.Name)
+    assert stage_two_calls[0].args[1].id == stage_one_result.id
 
     # Stage 2 inference must be called with the *filtered* Stage 1 payload, not
-    # the raw extraction output.
-    inference_call = inference_calls[0]
-    stage_one_arg = inference_call.args[1]
+    # the raw extraction output: the name run_stage_two binds from the result's in-scope field.
+    stage_one_arg = inference_calls[0].args[1]
     assert isinstance(stage_one_arg, ast.Name)
     assert stage_one_arg.id != "stage_one"
+    in_scope_from = [node.value for node in ast.walk(stage_two_fn)
+                     if isinstance(node, ast.Assign) and len(node.targets) == 1
+                     and isinstance(node.targets[0], ast.Name) and node.targets[0].id == stage_one_arg.id]
+    assert len(in_scope_from) == 1 and isinstance(in_scope_from[0], ast.Attribute)
+    assert in_scope_from[0].attr == "stage_one_in_scope"
 
     # merge_additions (used to build final_payload when inference ran) must also
     # be seeded from the filtered payload.
-    merge_calls = _calls_named("merge_additions")
+    merge_calls = _calls_named("merge_additions", stage_two_fn)
     assert merge_calls
     merge_base_arg = merge_calls[0].args[0]
     assert isinstance(merge_base_arg, ast.Name)
