@@ -1,0 +1,2592 @@
+{
+ "checks": [
+  {
+   "id": "S1 name mode shows name+organism only",
+   "ok": true,
+   "detail": "{'name_1': True, 'organism_1': True, 'pmids_1': False, 'pdfs_1': False}"
+  },
+  {
+   "id": "S1 PMID mode shows pmids field",
+   "ok": true,
+   "detail": "{'name_1': True, 'organism_1': True, 'pmids_1': True, 'pdfs_1': False}"
+  },
+  {
+   "id": "S1 PDF mode shows file field",
+   "ok": true,
+   "detail": "{'name_1': True, 'organism_1': True, 'pmids_1': False, 'pdfs_1': True}"
+  },
+  {
+   "id": "S1 pasted-text mode exists",
+   "ok": false,
+   "detail": "modes offered: ['name', 'pmids', 'pdfs'] (task list expected 4 incl. pasted text)"
+  },
+  {
+   "id": "S1 five rows",
+   "ok": true,
+   "detail": "5"
+  },
+  {
+   "id": "S2 typing 'escher' on a fresh page fills the datalist",
+   "ok": true,
+   "detail": "30 options, first: ['Escherichia albertii', 'Escherichia albertii KF1', 'Escherichia albertii TW07627']; /organisms requests: 1"
+  },
+  {
+   "id": "S2 chosen organism sticks after blur + 700ms",
+   "ok": true,
+   "detail": "Escherichia albertii"
+  },
+  {
+   "id": "S3a empty submit blocked in browser with a message",
+   "ok": true,
+   "detail": "url=http://127.0.0.1:53460/ validationMessage='Please fill out this field.'"
+  },
+  {
+   "id": "S3b-raw a plain Chromium form POST /submit is accepted (no workaround)",
+   "ok": false,
+   "detail": "'Request blocked\\n\\nThis form was sent from another site, so it was not accepted. Use the form on this site.\\n\\nBack to the s'; request headers seen: [{'origin': 'null', 'sec-fetch-site': 'same-origin', 'referer': None, 'host': '127.0.0.1:53460'}]"
+  },
+  {
+   "id": "S3b empty submit (server) says what to do",
+   "ok": true,
+   "detail": "Build a pathway from the literature  Give a pathway name, PubMed IDs or PDF files. T2PW reads the papers and returns a PathWhiz pathway file (PWML) for you to review. A run takes 20 to 60 minutes for "
+  },
+  {
+   "id": "S3c too-long name: message",
+   "ok": true,
+   "detail": "Build a pathway from the literature  Give a pathway name, PubMed IDs or PDF files. T2PW reads the papers and returns a PathWhiz pathway file (PWML) for you to review. A run takes 20 to 60 minutes for "
+  },
+  {
+   "id": "S3c too-long name: form keeps the value",
+   "ok": true,
+   "detail": "kept 201 of 250 chars; organism kept: 'Mus musculus'"
+  },
+  {
+   "id": "S3d bad PMID: names the bad tokens",
+   "ok": true,
+   "detail": "Build a pathway from the literature  Give a pathway name, PubMed IDs or PDF files. T2PW reads the papers and returns a PathWhiz pathway file (PWML) for you to review. A run takes 20 to 60 minutes for most pathways and is stopped after 90; you get a private link to come back to, and can leave an emai"
+  },
+  {
+   "id": "S3d bad PMID: mode, values retained",
+   "ok": true,
+   "detail": "mode2 checked=True pmids='abc, 123456, 12-34'"
+  },
+  {
+   "id": "S3e organism typo: suggests alternatives",
+   "ok": true,
+   "detail": "Build a pathway from the literature  Give a pathway name, PubMed IDs or PDF files. T2PW reads the papers and returns a PathWhiz pathway file (PWML) for you to review. A run takes 20 to 60 minutes for most pathways and is stopped after 90; you get a private link to come back to, and can leave an emai"
+  },
+  {
+   "id": "S3e bad email: message",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "S3e email value retained",
+   "ok": true,
+   "detail": "not-an-email"
+  },
+  {
+   "id": "S3f PDF mode without file: message",
+   "ok": true,
+   "detail": "Build a pathway from the literature  Give a pathway name, PubMed IDs or PDF files. T2PW reads the papers and returns a PathWhiz pathway file (PWML) for you to review. A run takes 20 to 60 minutes for most pathways and is stopped after 90; you get a p"
+  },
+  {
+   "id": "S3f PDF mode stays selected",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "S3g non-PDF file: clear message",
+   "ok": true,
+   "detail": "Build a pathway from the literature  Give a pathway name, PubMed IDs or PDF files. T2PW reads the papers and returns a PathWhiz pathway file (PWML) for you to review. A run takes 20 to 60 minutes for most pathways and is stopped after 90; you get a private link to come back to, and can leave an emai"
+  },
+  {
+   "id": "S3g non-PDF: other values retained, mode stays",
+   "ok": true,
+   "detail": "name='Glycolysis'"
+  },
+  {
+   "id": "S4 submit redirects to /job/<32 hex>",
+   "ok": true,
+   "detail": "http://127.0.0.1:53460/job/51a645f7787c4af48d2c9906f5a7a8bc"
+  },
+  {
+   "id": "S4 HTMX polls /status by itself (worker still off)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "S4 page was never reloaded (window marker survived)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "S4 DOM was swapped by HTMX",
+   "ok": true,
+   "detail": "7 swaps of #job-items"
+  },
+  {
+   "id": "S4 saw Queued, Running and a finished state without reload",
+   "ok": true,
+   "detail": "6 distinct DOM states"
+  },
+  {
+   "id": "S4 polling stops once all items are finished",
+   "ok": true,
+   "detail": "0 extra /status requests in 13 s"
+  },
+  {
+   "id": "S4 result page of a queued item refreshes itself to the final state",
+   "ok": true,
+   "detail": "before: '\u2190 All pathways in this job\\n\\nFake Flaky Retry\\n\\nQueued\\nEscherichia coli \u00b7 pathway name\\n\\nWaiting in the' / now: '\u2190 All pathways in this job\\n\\nFake Flaky Retry\\n\\nDone\\nEscherichia coli \u00b7 pathway name\\n\\nDone. The pathwa'"
+  },
+  {
+   "id": "S4 'View results' link opens item 1",
+   "ok": true,
+   "detail": "http://127.0.0.1:53460/job/51a645f7787c4af48d2c9906f5a7a8bc/0"
+  },
+  {
+   "id": "S5 item 0 (success): diagram image renders in the browser",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "S5 item 0 (success) GET pwml",
+   "ok": true,
+   "detail": "200 application/xml | attachment; filename=\"pathway.pwml\" | 127 B | csp=sandbox; default-src 'none'"
+  },
+  {
+   "id": "S5 item 0 (success) GET report/coverage_summary.json",
+   "ok": true,
+   "detail": "200 application/json | attachment; filename=\"coverage_summary.json\" | 19 B | csp=sandbox; default-src 'none'"
+  },
+  {
+   "id": "S5 item 0 (success) GET report/final_stage3_gate_report.json",
+   "ok": true,
+   "detail": "200 application/json | attachment; filename=\"final_stage3_gate_report.json\" | 18 B | csp=sandbox; default-src 'none'"
+  },
+  {
+   "id": "S5 item 0 (success) GET report/pwml_qa.json",
+   "ok": true,
+   "detail": "200 application/json | attachment; filename=\"pwml_qa.json\" | 16 B | csp=sandbox; default-src 'none'"
+  },
+  {
+   "id": "S5 item 0 (success) GET report/research_pathway_elements.csv",
+   "ok": true,
+   "detail": "200 text/csv; charset=utf-8 | attachment; filename=\"research_pathway_elements.csv\" | 32 B | csp=sandbox; default-src 'none'"
+  },
+  {
+   "id": "S5 item 0 (success) GET report/research_pathway_report.txt",
+   "ok": true,
+   "detail": "200 text/plain; charset=utf-8 | attachment; filename=\"research_pathway_report.txt\" | 35 B | csp=sandbox; default-src 'none'"
+  },
+  {
+   "id": "S5 item 0 (success): PWML link offered",
+   "ok": true,
+   "detail": "['/job/51a645f7787c4af48d2c9906f5a7a8bc/0/file/pwml', '/job/51a645f7787c4af48d2c9906f5a7a8bc/0/file/report/coverage_summary.json', '/job/51a645f7787c4af48d2c9906f5a7a8bc/0/file/report/final_stage3_gate_report.json', '/job/51a645f7787c4af48d2c9906f5a7a8bc/0/file/report/pwml_qa.json', '/job/51a645f7787c4af48d2c9906f5a7a8bc/0/file/report/research_pathway_elements.csv', '/job/51a645f7787c4af48d2c9906f5a7a8bc/0/file/report/research_pathway_report.txt']"
+  },
+  {
+   "id": "S5 item 0 (success): clicking Download PWML saves the right file",
+   "ok": true,
+   "detail": "pathway.pwml 127 B"
+  },
+  {
+   "id": "S5 item 1 (review): diagram image renders in the browser",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "S5 item 1 (review) GET pwml",
+   "ok": true,
+   "detail": "200 application/xml | attachment; filename=\"pathway.review_required.pwml\" | 123 B | csp=sandbox; default-src 'none'"
+  },
+  {
+   "id": "S5 item 1 (review) GET report/coverage_summary.json",
+   "ok": true,
+   "detail": "200 application/json | attachment; filename=\"coverage_summary.json\" | 19 B | csp=sandbox; default-src 'none'"
+  },
+  {
+   "id": "S5 item 1 (review) GET report/final_stage3_gate_report.json",
+   "ok": true,
+   "detail": "200 application/json | attachment; filename=\"final_stage3_gate_report.json\" | 18 B | csp=sandbox; default-src 'none'"
+  },
+  {
+   "id": "S5 item 1 (review) GET report/pwml_qa.json",
+   "ok": true,
+   "detail": "200 application/json | attachment; filename=\"pwml_qa.json\" | 16 B | csp=sandbox; default-src 'none'"
+  },
+  {
+   "id": "S5 item 1 (review) GET report/research_pathway_elements.csv",
+   "ok": true,
+   "detail": "200 text/csv; charset=utf-8 | attachment; filename=\"research_pathway_elements.csv\" | 32 B | csp=sandbox; default-src 'none'"
+  },
+  {
+   "id": "S5 item 1 (review) GET report/research_pathway_report.txt",
+   "ok": true,
+   "detail": "200 text/plain; charset=utf-8 | attachment; filename=\"research_pathway_report.txt\" | 35 B | csp=sandbox; default-src 'none'"
+  },
+  {
+   "id": "S5 item 1 (review): PWML link offered",
+   "ok": true,
+   "detail": "['/job/51a645f7787c4af48d2c9906f5a7a8bc/1/file/pwml', '/job/51a645f7787c4af48d2c9906f5a7a8bc/1/file/report/coverage_summary.json', '/job/51a645f7787c4af48d2c9906f5a7a8bc/1/file/report/final_stage3_gate_report.json', '/job/51a645f7787c4af48d2c9906f5a7a8bc/1/file/report/pwml_qa.json', '/job/51a645f7787c4af48d2c9906f5a7a8bc/1/file/report/research_pathway_elements.csv', '/job/51a645f7787c4af48d2c9906f5a7a8bc/1/file/report/research_pathway_report.txt']"
+  },
+  {
+   "id": "S5 item 1 (review): clicking Download PWML saves the right file",
+   "ok": true,
+   "detail": "pathway.review_required.pwml 123 B"
+  },
+  {
+   "id": "S5 review_required: warning banner and warnings shown",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "S5 item 2 (fail) GET report/gate_fail_report.json",
+   "ok": true,
+   "detail": "200 application/json | attachment; filename=\"gate_fail_report.json\" | 55 B | csp=sandbox; default-src 'none'"
+  },
+  {
+   "id": "S5 item 2 (fail): PWML link absent",
+   "ok": true,
+   "detail": "['/job/51a645f7787c4af48d2c9906f5a7a8bc/2/file/report/gate_fail_report.json']"
+  },
+  {
+   "id": "S5 failure: plain-language explanation, no PWML",
+   "ok": true,
+   "detail": "\u2190 All pathways in this job  Fake Failure Pathway  Failed Saccharomyces cerevisiae \u00b7 pathway name  Could not build this pathway. The extracted pathway did not pass the quality checks, so no PWML was pr"
+  },
+  {
+   "id": "S5 item 3 (flaky): diagram image renders in the browser",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "S5 item 3 (flaky) GET pwml",
+   "ok": true,
+   "detail": "200 application/xml | attachment; filename=\"pathway.pwml\" | 120 B | csp=sandbox; default-src 'none'"
+  },
+  {
+   "id": "S5 item 3 (flaky) GET report/coverage_summary.json",
+   "ok": true,
+   "detail": "200 application/json | attachment; filename=\"coverage_summary.json\" | 19 B | csp=sandbox; default-src 'none'"
+  },
+  {
+   "id": "S5 item 3 (flaky) GET report/final_stage3_gate_report.json",
+   "ok": true,
+   "detail": "200 application/json | attachment; filename=\"final_stage3_gate_report.json\" | 18 B | csp=sandbox; default-src 'none'"
+  },
+  {
+   "id": "S5 item 3 (flaky) GET report/pwml_qa.json",
+   "ok": true,
+   "detail": "200 application/json | attachment; filename=\"pwml_qa.json\" | 16 B | csp=sandbox; default-src 'none'"
+  },
+  {
+   "id": "S5 item 3 (flaky) GET report/research_pathway_elements.csv",
+   "ok": true,
+   "detail": "200 text/csv; charset=utf-8 | attachment; filename=\"research_pathway_elements.csv\" | 32 B | csp=sandbox; default-src 'none'"
+  },
+  {
+   "id": "S5 item 3 (flaky) GET report/research_pathway_report.txt",
+   "ok": true,
+   "detail": "200 text/plain; charset=utf-8 | attachment; filename=\"research_pathway_report.txt\" | 35 B | csp=sandbox; default-src 'none'"
+  },
+  {
+   "id": "S5 item 3 (flaky): PWML link offered",
+   "ok": true,
+   "detail": "['/job/51a645f7787c4af48d2c9906f5a7a8bc/3/file/pwml', '/job/51a645f7787c4af48d2c9906f5a7a8bc/3/file/report/coverage_summary.json', '/job/51a645f7787c4af48d2c9906f5a7a8bc/3/file/report/final_stage3_gate_report.json', '/job/51a645f7787c4af48d2c9906f5a7a8bc/3/file/report/pwml_qa.json', '/job/51a645f7787c4af48d2c9906f5a7a8bc/3/file/report/research_pathway_elements.csv', '/job/51a645f7787c4af48d2c9906f5a7a8bc/3/file/report/research_pathway_report.txt']"
+  },
+  {
+   "id": "S5 item 3 (flaky): clicking Download PWML saves the right file",
+   "ok": true,
+   "detail": "pathway.pwml 120 B"
+  },
+  {
+   "id": "S5 retried item: attempts table shows 2 attempts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "S5 /job/51a645f7787c4af48d2c9906f5a7a8bc/9 -> 404",
+   "ok": true,
+   "detail": "404"
+  },
+  {
+   "id": "S5 /job/51a645f7787c4af48d2c9906f5a7a8bc/2/file/pwml -> 404",
+   "ok": true,
+   "detail": "404"
+  },
+  {
+   "id": "S5 404 page is the styled error page (/job/51a645f7787c4af48d2c9906f)",
+   "ok": true,
+   "detail": "Page not found\n\nThere is nothing at this address. Check the link you were given.\n\nBack to the submit"
+  },
+  {
+   "id": "S5 /job/00000000000000000000000000000000 -> 404",
+   "ok": true,
+   "detail": "404"
+  },
+  {
+   "id": "S5 /nope -> 404",
+   "ok": true,
+   "detail": "404"
+  },
+  {
+   "id": "S5 404 page is the styled error page (/nope)",
+   "ok": true,
+   "detail": "Page not found\n\nThere is nothing at this address. Check the link you were given.\n\nBack to the submit"
+  },
+  {
+   "id": "S5 /job/51a645f7787c4af48d2c9906f5a7a8bc/0/file/report/..%2F..% -> 404",
+   "ok": true,
+   "detail": "404"
+  },
+  {
+   "id": "S5 /job/51a645f7787c4af48d2c9906f5a7a8bc/0/file/report/request. -> 404",
+   "ok": true,
+   "detail": "404"
+  },
+  {
+   "id": "S5 legacy /jobs/<sid> redirects to the job",
+   "ok": true,
+   "detail": "http://127.0.0.1:53460/job/51a645f7787c4af48d2c9906f5a7a8bc"
+  },
+  {
+   "id": "S6 nav 'Submit' -> /",
+   "ok": true,
+   "detail": "http://127.0.0.1:53460/ current=['Submit']"
+  },
+  {
+   "id": "S6 all internal links on / return 200",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "id": "S6 nav 'Examples' -> /examples",
+   "ok": true,
+   "detail": "http://127.0.0.1:53460/examples current=['Examples']"
+  },
+  {
+   "id": "S6 all internal links on /examples return 200",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "id": "S6 nav 'Help' -> /help",
+   "ok": true,
+   "detail": "http://127.0.0.1:53460/help current=['Help']"
+  },
+  {
+   "id": "S6 all internal links on /help return 200",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "id": "S6 nav 'About / Cite' -> /about",
+   "ok": true,
+   "detail": "http://127.0.0.1:53460/about current=['About / Cite']"
+  },
+  {
+   "id": "S6 all internal links on /about return 200",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "id": "S6 first Tab stop is the skip link",
+   "ok": true,
+   "detail": "{'tag': 'A', 'id': '', 'name': '', 'type': '', 'text': 'Skip to main content', 'outline': 'solid 3px rgb(26, 111, 216)', 'shadow': 'none', 'fv': True, 'inView': True}"
+  },
+  {
+   "id": "S6 skip link moves to #main",
+   "ok": true,
+   "detail": "http://127.0.0.1:53460/help#main"
+  },
+  {
+   "id": "S6 brand link goes home",
+   "ok": true,
+   "detail": "http://127.0.0.1:53460/"
+  },
+  {
+   "id": "S7 form filled and submitted with keyboard only",
+   "ok": true,
+   "detail": "tab stops: 16"
+  },
+  {
+   "id": "S7 every Tab stop shows a focus indicator (outline or shadow)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "id": "S7 arrow keys switch input mode",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "S7b real PDF upload accepted, job page shows the PDF",
+   "ok": true,
+   "detail": "Job status  Note: Keep this link  This page is your job. Bookmark it: http://127.0.0.1:53460/job/18d06234364e4b7d85fa977ef760df1c  Anyone who has the link can see the results, so share it with care.  Submitted 2026-11-08 20:57 UTC. This page updates itself every 10 seconds.  Fake Quick PDF Queued  M"
+  },
+  {
+   "id": "S8 phone-light/home: no horizontal overflow",
+   "ok": true,
+   "detail": "scrollW=390 clientW=390 off=[]"
+  },
+  {
+   "id": "S8 phone-light/home: text contrast >= 4.5 (3 large)",
+   "ok": true,
+   "detail": "0 of 66 low: []"
+  },
+  {
+   "id": "S8 phone-light/job: no horizontal overflow",
+   "ok": true,
+   "detail": "scrollW=390 clientW=390 off=[]"
+  },
+  {
+   "id": "S8 phone-light/job: text contrast >= 4.5 (3 large)",
+   "ok": true,
+   "detail": "0 of 96 low: []"
+  },
+  {
+   "id": "S8 phone-light/res-success: no horizontal overflow",
+   "ok": true,
+   "detail": "scrollW=390 clientW=390 off=[]"
+  },
+  {
+   "id": "S8 phone-light/res-success: text contrast >= 4.5 (3 large)",
+   "ok": true,
+   "detail": "0 of 39 low: []"
+  },
+  {
+   "id": "S8 phone-light/res-review: no horizontal overflow",
+   "ok": true,
+   "detail": "scrollW=390 clientW=390 off=[]"
+  },
+  {
+   "id": "S8 phone-light/res-review: text contrast >= 4.5 (3 large)",
+   "ok": true,
+   "detail": "0 of 44 low: []"
+  },
+  {
+   "id": "S8 phone-light/res-fail: no horizontal overflow",
+   "ok": true,
+   "detail": "scrollW=390 clientW=390 off=[]"
+  },
+  {
+   "id": "S8 phone-light/res-fail: text contrast >= 4.5 (3 large)",
+   "ok": true,
+   "detail": "0 of 32 low: []"
+  },
+  {
+   "id": "S8 phone-light/help: no horizontal overflow",
+   "ok": true,
+   "detail": "scrollW=390 clientW=390 off=[]"
+  },
+  {
+   "id": "S8 phone-light/help: text contrast >= 4.5 (3 large)",
+   "ok": true,
+   "detail": "0 of 36 low: []"
+  },
+  {
+   "id": "S8 phone-light/examples: no horizontal overflow",
+   "ok": true,
+   "detail": "scrollW=390 clientW=390 off=[]"
+  },
+  {
+   "id": "S8 phone-light/examples: text contrast >= 4.5 (3 large)",
+   "ok": true,
+   "detail": "0 of 15 low: []"
+  },
+  {
+   "id": "S8 phone-light/about: no horizontal overflow",
+   "ok": true,
+   "detail": "scrollW=390 clientW=390 off=[]"
+  },
+  {
+   "id": "S8 phone-light/about: text contrast >= 4.5 (3 large)",
+   "ok": true,
+   "detail": "0 of 16 low: []"
+  },
+  {
+   "id": "S8 phone-dark/home: no horizontal overflow",
+   "ok": true,
+   "detail": "scrollW=390 clientW=390 off=[]"
+  },
+  {
+   "id": "S8 phone-dark/home: text contrast >= 4.5 (3 large)",
+   "ok": true,
+   "detail": "0 of 66 low: []"
+  },
+  {
+   "id": "S8 phone-dark/job: no horizontal overflow",
+   "ok": true,
+   "detail": "scrollW=390 clientW=390 off=[]"
+  },
+  {
+   "id": "S8 phone-dark/job: text contrast >= 4.5 (3 large)",
+   "ok": true,
+   "detail": "0 of 96 low: []"
+  },
+  {
+   "id": "S8 phone-dark/res-success: no horizontal overflow",
+   "ok": true,
+   "detail": "scrollW=390 clientW=390 off=[]"
+  },
+  {
+   "id": "S8 phone-dark/res-success: text contrast >= 4.5 (3 large)",
+   "ok": true,
+   "detail": "0 of 39 low: []"
+  },
+  {
+   "id": "S8 phone-dark/res-review: no horizontal overflow",
+   "ok": true,
+   "detail": "scrollW=390 clientW=390 off=[]"
+  },
+  {
+   "id": "S8 phone-dark/res-review: text contrast >= 4.5 (3 large)",
+   "ok": true,
+   "detail": "0 of 44 low: []"
+  },
+  {
+   "id": "S8 phone-dark/res-fail: no horizontal overflow",
+   "ok": true,
+   "detail": "scrollW=390 clientW=390 off=[]"
+  },
+  {
+   "id": "S8 phone-dark/res-fail: text contrast >= 4.5 (3 large)",
+   "ok": true,
+   "detail": "0 of 32 low: []"
+  },
+  {
+   "id": "S8 phone-dark/help: no horizontal overflow",
+   "ok": true,
+   "detail": "scrollW=390 clientW=390 off=[]"
+  },
+  {
+   "id": "S8 phone-dark/help: text contrast >= 4.5 (3 large)",
+   "ok": true,
+   "detail": "0 of 36 low: []"
+  },
+  {
+   "id": "S8 phone-dark/examples: no horizontal overflow",
+   "ok": true,
+   "detail": "scrollW=390 clientW=390 off=[]"
+  },
+  {
+   "id": "S8 phone-dark/examples: text contrast >= 4.5 (3 large)",
+   "ok": true,
+   "detail": "0 of 15 low: []"
+  },
+  {
+   "id": "S8 phone-dark/about: no horizontal overflow",
+   "ok": true,
+   "detail": "scrollW=390 clientW=390 off=[]"
+  },
+  {
+   "id": "S8 phone-dark/about: text contrast >= 4.5 (3 large)",
+   "ok": true,
+   "detail": "0 of 16 low: []"
+  },
+  {
+   "id": "S8 desk-dark/home: text contrast >= 4.5 (3 large)",
+   "ok": true,
+   "detail": "0 of 66 low: []"
+  },
+  {
+   "id": "S8 desk-dark/job: text contrast >= 4.5 (3 large)",
+   "ok": true,
+   "detail": "0 of 96 low: []"
+  },
+  {
+   "id": "S8 desk-dark/res-success: text contrast >= 4.5 (3 large)",
+   "ok": true,
+   "detail": "0 of 39 low: []"
+  },
+  {
+   "id": "S8 desk-dark/res-review: text contrast >= 4.5 (3 large)",
+   "ok": true,
+   "detail": "0 of 44 low: []"
+  },
+  {
+   "id": "S8 desk-dark/res-fail: text contrast >= 4.5 (3 large)",
+   "ok": true,
+   "detail": "0 of 32 low: []"
+  },
+  {
+   "id": "S8 desk-dark/help: text contrast >= 4.5 (3 large)",
+   "ok": true,
+   "detail": "0 of 36 low: []"
+  },
+  {
+   "id": "S8 desk-dark/examples: text contrast >= 4.5 (3 large)",
+   "ok": true,
+   "detail": "0 of 15 low: []"
+  },
+  {
+   "id": "S8 desk-dark/about: text contrast >= 4.5 (3 large)",
+   "ok": true,
+   "detail": "0 of 16 low: []"
+  },
+  {
+   "id": "S8 desk-light/home: text contrast >= 4.5 (3 large)",
+   "ok": true,
+   "detail": "0 of 66 low: []"
+  },
+  {
+   "id": "S8 desk-light/job: text contrast >= 4.5 (3 large)",
+   "ok": true,
+   "detail": "0 of 96 low: []"
+  },
+  {
+   "id": "S8 desk-light/res-success: text contrast >= 4.5 (3 large)",
+   "ok": true,
+   "detail": "0 of 39 low: []"
+  },
+  {
+   "id": "S8 desk-light/res-review: text contrast >= 4.5 (3 large)",
+   "ok": true,
+   "detail": "0 of 44 low: []"
+  },
+  {
+   "id": "S8 desk-light/res-fail: text contrast >= 4.5 (3 large)",
+   "ok": true,
+   "detail": "0 of 32 low: []"
+  },
+  {
+   "id": "S8 desk-light/help: text contrast >= 4.5 (3 large)",
+   "ok": true,
+   "detail": "0 of 36 low: []"
+  },
+  {
+   "id": "S8 desk-light/examples: text contrast >= 4.5 (3 large)",
+   "ok": true,
+   "detail": "0 of 15 low: []"
+  },
+  {
+   "id": "S8 desk-light/about: text contrast >= 4.5 (3 large)",
+   "ok": true,
+   "detail": "0 of 16 low: []"
+  },
+  {
+   "id": "S10 limit message is friendly and says when to retry",
+   "ok": true,
+   "detail": "Build a pathway from the literature  Give a pathway name, PubMed IDs or PDF files. T2PW reads the papers and returns a PathWhiz pathway file (PWML) for you to review. A run takes 20 to 60 minutes for most pathways and is stopped after 90; you get a p"
+  },
+  {
+   "id": "S10 form keeps values after 429",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "id": "S10 429 carries Retry-After",
+   "ok": true,
+   "detail": "{'status': 429, 'retry_after': '86302'}"
+  },
+  {
+   "id": "S10 a 429 happened within 3 more tries after 4 earlier slots",
+   "ok": true,
+   "detail": "[(1, 303, '', 'Job status  Note: Keep this link  This page is your job. Bookmark it: http://127.0.0.1:53460/job/f6e51262ef3b41b08d02e2c2edded665  Anyone who has the link can s'), (2, 429, '86302', 'Build a pathway from the literature  Give a pathway name, PubMed IDs or PDF files. T2PW reads the papers and returns a PathWhiz pathway file (PWML) for you to r')]"
+  }
+ ],
+ "timeline": [
+  {
+   "t": 33.2,
+   "cards": [
+    "Fake Success Glycolysis | Queued | Waiting in the queue.",
+    "Fake Review Pathway | Queued | Waiting in the queue.",
+    "Fake Failure Pathway | Queued | Waiting in the queue.",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 1,
+   "nav": true
+  },
+  {
+   "t": 34.3,
+   "cards": [
+    "Fake Success Glycolysis | Queued | Waiting in the queue.",
+    "Fake Review Pathway | Queued | Waiting in the queue.",
+    "Fake Failure Pathway | Queued | Waiting in the queue.",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 1,
+   "nav": true
+  },
+  {
+   "t": 35.3,
+   "cards": [
+    "Fake Success Glycolysis | Queued | Waiting in the queue.",
+    "Fake Review Pathway | Queued | Waiting in the queue.",
+    "Fake Failure Pathway | Queued | Waiting in the queue.",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 1,
+   "nav": true
+  },
+  {
+   "t": 36.3,
+   "cards": [
+    "Fake Success Glycolysis | Queued | Waiting in the queue.",
+    "Fake Review Pathway | Queued | Waiting in the queue.",
+    "Fake Failure Pathway | Queued | Waiting in the queue.",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 1,
+   "nav": true
+  },
+  {
+   "t": 37.3,
+   "cards": [
+    "Fake Success Glycolysis | Queued | Waiting in the queue.",
+    "Fake Review Pathway | Queued | Waiting in the queue.",
+    "Fake Failure Pathway | Queued | Waiting in the queue.",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 1,
+   "nav": true
+  },
+  {
+   "t": 38.3,
+   "cards": [
+    "Fake Success Glycolysis | Queued | Waiting in the queue.",
+    "Fake Review Pathway | Queued | Waiting in the queue.",
+    "Fake Failure Pathway | Queued | Waiting in the queue.",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 1,
+   "nav": true
+  },
+  {
+   "t": 39.3,
+   "cards": [
+    "Fake Success Glycolysis | Queued | Waiting in the queue.",
+    "Fake Review Pathway | Queued | Waiting in the queue.",
+    "Fake Failure Pathway | Queued | Waiting in the queue.",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 1,
+   "nav": true
+  },
+  {
+   "t": 40.3,
+   "cards": [
+    "Fake Success Glycolysis | Queued | Waiting in the queue.",
+    "Fake Review Pathway | Queued | Waiting in the queue.",
+    "Fake Failure Pathway | Queued | Waiting in the queue.",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 1,
+   "nav": true
+  },
+  {
+   "t": 41.3,
+   "cards": [
+    "Fake Success Glycolysis | Queued | Waiting in the queue.",
+    "Fake Review Pathway | Queued | Waiting in the queue.",
+    "Fake Failure Pathway | Queued | Waiting in the queue.",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 1,
+   "nav": true
+  },
+  {
+   "t": 42.3,
+   "cards": [
+    "Fake Success Glycolysis | Queued | Waiting in the queue.",
+    "Fake Review Pathway | Queued | Waiting in the queue.",
+    "Fake Failure Pathway | Queued | Waiting in the queue.",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 1,
+   "nav": true
+  },
+  {
+   "t": 43.4,
+   "cards": [
+    "Fake Success Glycolysis | Running | Running (attempt 1 of 3).",
+    "Fake Review Pathway | Queued | Waiting in the queue.",
+    "Fake Failure Pathway | Queued | Waiting in the queue.",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 2,
+   "nav": true
+  },
+  {
+   "t": 44.4,
+   "cards": [
+    "Fake Success Glycolysis | Running | Running (attempt 1 of 3).",
+    "Fake Review Pathway | Queued | Waiting in the queue.",
+    "Fake Failure Pathway | Queued | Waiting in the queue.",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 2,
+   "nav": true
+  },
+  {
+   "t": 45.4,
+   "cards": [
+    "Fake Success Glycolysis | Running | Running (attempt 1 of 3).",
+    "Fake Review Pathway | Queued | Waiting in the queue.",
+    "Fake Failure Pathway | Queued | Waiting in the queue.",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 2,
+   "nav": true
+  },
+  {
+   "t": 46.4,
+   "cards": [
+    "Fake Success Glycolysis | Running | Running (attempt 1 of 3).",
+    "Fake Review Pathway | Queued | Waiting in the queue.",
+    "Fake Failure Pathway | Queued | Waiting in the queue.",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 2,
+   "nav": true
+  },
+  {
+   "t": 47.4,
+   "cards": [
+    "Fake Success Glycolysis | Running | Running (attempt 1 of 3).",
+    "Fake Review Pathway | Queued | Waiting in the queue.",
+    "Fake Failure Pathway | Queued | Waiting in the queue.",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 2,
+   "nav": true
+  },
+  {
+   "t": 48.4,
+   "cards": [
+    "Fake Success Glycolysis | Running | Running (attempt 1 of 3).",
+    "Fake Review Pathway | Queued | Waiting in the queue.",
+    "Fake Failure Pathway | Queued | Waiting in the queue.",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 2,
+   "nav": true
+  },
+  {
+   "t": 49.4,
+   "cards": [
+    "Fake Success Glycolysis | Running | Running (attempt 1 of 3).",
+    "Fake Review Pathway | Queued | Waiting in the queue.",
+    "Fake Failure Pathway | Queued | Waiting in the queue.",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 2,
+   "nav": true
+  },
+  {
+   "t": 50.4,
+   "cards": [
+    "Fake Success Glycolysis | Running | Running (attempt 1 of 3).",
+    "Fake Review Pathway | Queued | Waiting in the queue.",
+    "Fake Failure Pathway | Queued | Waiting in the queue.",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 2,
+   "nav": true
+  },
+  {
+   "t": 51.4,
+   "cards": [
+    "Fake Success Glycolysis | Running | Running (attempt 1 of 3).",
+    "Fake Review Pathway | Queued | Waiting in the queue.",
+    "Fake Failure Pathway | Queued | Waiting in the queue.",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 2,
+   "nav": true
+  },
+  {
+   "t": 52.4,
+   "cards": [
+    "Fake Success Glycolysis | Running | Running (attempt 1 of 3).",
+    "Fake Review Pathway | Queued | Waiting in the queue.",
+    "Fake Failure Pathway | Queued | Waiting in the queue.",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 2,
+   "nav": true
+  },
+  {
+   "t": 53.4,
+   "cards": [
+    "Fake Success Glycolysis | Done | Done.",
+    "Fake Review Pathway | Running | Running (attempt 1 of 3).",
+    "Fake Failure Pathway | Queued | Waiting in the queue.",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 3,
+   "nav": true
+  },
+  {
+   "t": 54.4,
+   "cards": [
+    "Fake Success Glycolysis | Done | Done.",
+    "Fake Review Pathway | Running | Running (attempt 1 of 3).",
+    "Fake Failure Pathway | Queued | Waiting in the queue.",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 3,
+   "nav": true
+  },
+  {
+   "t": 55.5,
+   "cards": [
+    "Fake Success Glycolysis | Done | Done.",
+    "Fake Review Pathway | Running | Running (attempt 1 of 3).",
+    "Fake Failure Pathway | Queued | Waiting in the queue.",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 3,
+   "nav": true
+  },
+  {
+   "t": 56.5,
+   "cards": [
+    "Fake Success Glycolysis | Done | Done.",
+    "Fake Review Pathway | Running | Running (attempt 1 of 3).",
+    "Fake Failure Pathway | Queued | Waiting in the queue.",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 3,
+   "nav": true
+  },
+  {
+   "t": 57.5,
+   "cards": [
+    "Fake Success Glycolysis | Done | Done.",
+    "Fake Review Pathway | Running | Running (attempt 1 of 3).",
+    "Fake Failure Pathway | Queued | Waiting in the queue.",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 3,
+   "nav": true
+  },
+  {
+   "t": 58.5,
+   "cards": [
+    "Fake Success Glycolysis | Done | Done.",
+    "Fake Review Pathway | Running | Running (attempt 1 of 3).",
+    "Fake Failure Pathway | Queued | Waiting in the queue.",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 3,
+   "nav": true
+  },
+  {
+   "t": 59.5,
+   "cards": [
+    "Fake Success Glycolysis | Done | Done.",
+    "Fake Review Pathway | Running | Running (attempt 1 of 3).",
+    "Fake Failure Pathway | Queued | Waiting in the queue.",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 3,
+   "nav": true
+  },
+  {
+   "t": 60.5,
+   "cards": [
+    "Fake Success Glycolysis | Done | Done.",
+    "Fake Review Pathway | Running | Running (attempt 1 of 3).",
+    "Fake Failure Pathway | Queued | Waiting in the queue.",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 3,
+   "nav": true
+  },
+  {
+   "t": 61.5,
+   "cards": [
+    "Fake Success Glycolysis | Done | Done.",
+    "Fake Review Pathway | Running | Running (attempt 1 of 3).",
+    "Fake Failure Pathway | Queued | Waiting in the queue.",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 3,
+   "nav": true
+  },
+  {
+   "t": 62.5,
+   "cards": [
+    "Fake Success Glycolysis | Done | Done.",
+    "Fake Review Pathway | Running | Running (attempt 1 of 3).",
+    "Fake Failure Pathway | Queued | Waiting in the queue.",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 3,
+   "nav": true
+  },
+  {
+   "t": 63.5,
+   "cards": [
+    "Fake Success Glycolysis | Done | Done.",
+    "Fake Review Pathway | Review required | Needs review.",
+    "Fake Failure Pathway | Running | Running (attempt 1 of 3).",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 4,
+   "nav": true
+  },
+  {
+   "t": 64.6,
+   "cards": [
+    "Fake Success Glycolysis | Done | Done.",
+    "Fake Review Pathway | Review required | Needs review.",
+    "Fake Failure Pathway | Running | Running (attempt 1 of 3).",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 4,
+   "nav": true
+  },
+  {
+   "t": 65.6,
+   "cards": [
+    "Fake Success Glycolysis | Done | Done.",
+    "Fake Review Pathway | Review required | Needs review.",
+    "Fake Failure Pathway | Running | Running (attempt 1 of 3).",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 4,
+   "nav": true
+  },
+  {
+   "t": 66.6,
+   "cards": [
+    "Fake Success Glycolysis | Done | Done.",
+    "Fake Review Pathway | Review required | Needs review.",
+    "Fake Failure Pathway | Running | Running (attempt 1 of 3).",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 4,
+   "nav": true
+  },
+  {
+   "t": 67.6,
+   "cards": [
+    "Fake Success Glycolysis | Done | Done.",
+    "Fake Review Pathway | Review required | Needs review.",
+    "Fake Failure Pathway | Running | Running (attempt 1 of 3).",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 4,
+   "nav": true
+  },
+  {
+   "t": 68.6,
+   "cards": [
+    "Fake Success Glycolysis | Done | Done.",
+    "Fake Review Pathway | Review required | Needs review.",
+    "Fake Failure Pathway | Running | Running (attempt 1 of 3).",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 4,
+   "nav": true
+  },
+  {
+   "t": 69.6,
+   "cards": [
+    "Fake Success Glycolysis | Done | Done.",
+    "Fake Review Pathway | Review required | Needs review.",
+    "Fake Failure Pathway | Running | Running (attempt 1 of 3).",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 4,
+   "nav": true
+  },
+  {
+   "t": 70.6,
+   "cards": [
+    "Fake Success Glycolysis | Done | Done.",
+    "Fake Review Pathway | Review required | Needs review.",
+    "Fake Failure Pathway | Running | Running (attempt 1 of 3).",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 4,
+   "nav": true
+  },
+  {
+   "t": 71.7,
+   "cards": [
+    "Fake Success Glycolysis | Done | Done.",
+    "Fake Review Pathway | Review required | Needs review.",
+    "Fake Failure Pathway | Running | Running (attempt 1 of 3).",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 4,
+   "nav": true
+  },
+  {
+   "t": 72.7,
+   "cards": [
+    "Fake Success Glycolysis | Done | Done.",
+    "Fake Review Pathway | Review required | Needs review.",
+    "Fake Failure Pathway | Running | Running (attempt 1 of 3).",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 4,
+   "nav": true
+  },
+  {
+   "t": 73.7,
+   "cards": [
+    "Fake Success Glycolysis | Done | Done.",
+    "Fake Review Pathway | Review required | Needs review.",
+    "Fake Failure Pathway | Running | Running (attempt 1 of 3).",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 5,
+   "nav": true
+  },
+  {
+   "t": 74.7,
+   "cards": [
+    "Fake Success Glycolysis | Done | Done.",
+    "Fake Review Pathway | Review required | Needs review.",
+    "Fake Failure Pathway | Running | Running (attempt 1 of 3).",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 5,
+   "nav": true
+  },
+  {
+   "t": 75.7,
+   "cards": [
+    "Fake Success Glycolysis | Done | Done.",
+    "Fake Review Pathway | Review required | Needs review.",
+    "Fake Failure Pathway | Running | Running (attempt 1 of 3).",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 5,
+   "nav": true
+  },
+  {
+   "t": 76.7,
+   "cards": [
+    "Fake Success Glycolysis | Done | Done.",
+    "Fake Review Pathway | Review required | Needs review.",
+    "Fake Failure Pathway | Running | Running (attempt 1 of 3).",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 5,
+   "nav": true
+  },
+  {
+   "t": 77.7,
+   "cards": [
+    "Fake Success Glycolysis | Done | Done.",
+    "Fake Review Pathway | Review required | Needs review.",
+    "Fake Failure Pathway | Running | Running (attempt 1 of 3).",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 5,
+   "nav": true
+  },
+  {
+   "t": 78.7,
+   "cards": [
+    "Fake Success Glycolysis | Done | Done.",
+    "Fake Review Pathway | Review required | Needs review.",
+    "Fake Failure Pathway | Running | Running (attempt 1 of 3).",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 5,
+   "nav": true
+  },
+  {
+   "t": 79.7,
+   "cards": [
+    "Fake Success Glycolysis | Done | Done.",
+    "Fake Review Pathway | Review required | Needs review.",
+    "Fake Failure Pathway | Running | Running (attempt 1 of 3).",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 5,
+   "nav": true
+  },
+  {
+   "t": 80.7,
+   "cards": [
+    "Fake Success Glycolysis | Done | Done.",
+    "Fake Review Pathway | Review required | Needs review.",
+    "Fake Failure Pathway | Running | Running (attempt 1 of 3).",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 5,
+   "nav": true
+  },
+  {
+   "t": 81.8,
+   "cards": [
+    "Fake Success Glycolysis | Done | Done.",
+    "Fake Review Pathway | Review required | Needs review.",
+    "Fake Failure Pathway | Running | Running (attempt 1 of 3).",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 5,
+   "nav": true
+  },
+  {
+   "t": 82.8,
+   "cards": [
+    "Fake Success Glycolysis | Done | Done.",
+    "Fake Review Pathway | Review required | Needs review.",
+    "Fake Failure Pathway | Running | Running (attempt 1 of 3).",
+    "Fake Flaky Retry | Queued | Waiting in the queue."
+   ],
+   "poll": true,
+   "swaps": 5,
+   "nav": true
+  },
+  {
+   "t": 83.8,
+   "cards": [
+    "Fake Success Glycolysis | Done | Done.",
+    "Fake Review Pathway | Review required | Needs review.",
+    "Fake Failure Pathway | Failed | Could not build this pathway.",
+    "Fake Flaky Retry | Running | Running (attempt 2 of 3)."
+   ],
+   "poll": true,
+   "swaps": 6,
+   "nav": true
+  },
+  {
+   "t": 84.8,
+   "cards": [
+    "Fake Success Glycolysis | Done | Done.",
+    "Fake Review Pathway | Review required | Needs review.",
+    "Fake Failure Pathway | Failed | Could not build this pathway.",
+    "Fake Flaky Retry | Running | Running (attempt 2 of 3)."
+   ],
+   "poll": true,
+   "swaps": 6,
+   "nav": true
+  },
+  {
+   "t": 85.8,
+   "cards": [
+    "Fake Success Glycolysis | Done | Done.",
+    "Fake Review Pathway | Review required | Needs review.",
+    "Fake Failure Pathway | Failed | Could not build this pathway.",
+    "Fake Flaky Retry | Running | Running (attempt 2 of 3)."
+   ],
+   "poll": true,
+   "swaps": 6,
+   "nav": true
+  },
+  {
+   "t": 86.8,
+   "cards": [
+    "Fake Success Glycolysis | Done | Done.",
+    "Fake Review Pathway | Review required | Needs review.",
+    "Fake Failure Pathway | Failed | Could not build this pathway.",
+    "Fake Flaky Retry | Running | Running (attempt 2 of 3)."
+   ],
+   "poll": true,
+   "swaps": 6,
+   "nav": true
+  },
+  {
+   "t": 87.8,
+   "cards": [
+    "Fake Success Glycolysis | Done | Done.",
+    "Fake Review Pathway | Review required | Needs review.",
+    "Fake Failure Pathway | Failed | Could not build this pathway.",
+    "Fake Flaky Retry | Running | Running (attempt 2 of 3)."
+   ],
+   "poll": true,
+   "swaps": 6,
+   "nav": true
+  },
+  {
+   "t": 88.9,
+   "cards": [
+    "Fake Success Glycolysis | Done | Done.",
+    "Fake Review Pathway | Review required | Needs review.",
+    "Fake Failure Pathway | Failed | Could not build this pathway.",
+    "Fake Flaky Retry | Running | Running (attempt 2 of 3)."
+   ],
+   "poll": true,
+   "swaps": 6,
+   "nav": true
+  },
+  {
+   "t": 89.9,
+   "cards": [
+    "Fake Success Glycolysis | Done | Done.",
+    "Fake Review Pathway | Review required | Needs review.",
+    "Fake Failure Pathway | Failed | Could not build this pathway.",
+    "Fake Flaky Retry | Running | Running (attempt 2 of 3)."
+   ],
+   "poll": true,
+   "swaps": 6,
+   "nav": true
+  },
+  {
+   "t": 90.9,
+   "cards": [
+    "Fake Success Glycolysis | Done | Done.",
+    "Fake Review Pathway | Review required | Needs review.",
+    "Fake Failure Pathway | Failed | Could not build this pathway.",
+    "Fake Flaky Retry | Running | Running (attempt 2 of 3)."
+   ],
+   "poll": true,
+   "swaps": 6,
+   "nav": true
+  },
+  {
+   "t": 91.9,
+   "cards": [
+    "Fake Success Glycolysis | Done | Done.",
+    "Fake Review Pathway | Review required | Needs review.",
+    "Fake Failure Pathway | Failed | Could not build this pathway.",
+    "Fake Flaky Retry | Running | Running (attempt 2 of 3)."
+   ],
+   "poll": true,
+   "swaps": 6,
+   "nav": true
+  },
+  {
+   "t": 92.9,
+   "cards": [
+    "Fake Success Glycolysis | Done | Done.",
+    "Fake Review Pathway | Review required | Needs review.",
+    "Fake Failure Pathway | Failed | Could not build this pathway.",
+    "Fake Flaky Retry | Running | Running (attempt 2 of 3)."
+   ],
+   "poll": true,
+   "swaps": 6,
+   "nav": true
+  },
+  {
+   "t": 93.9,
+   "cards": [
+    "Fake Success Glycolysis | Done | Done.",
+    "Fake Review Pathway | Review required | Needs review.",
+    "Fake Failure Pathway | Failed | Could not build this pathway.",
+    "Fake Flaky Retry | Done | Done."
+   ],
+   "poll": false,
+   "swaps": 7,
+   "nav": true
+  }
+ ],
+ "console": [
+  {
+   "step": "s3-bad-input",
+   "type": "error",
+   "text": "Failed to load resource: the server responded with a status of 403 (Forbidden)",
+   "loc": "http://127.0.0.1:53460/submit:0"
+  },
+  {
+   "step": "s3-bad-input",
+   "type": "error",
+   "text": "Failed to load resource: the server responded with a status of 400 (Bad Request)",
+   "loc": "http://127.0.0.1:53460/submit:0"
+  },
+  {
+   "step": "s3-bad-input",
+   "type": "error",
+   "text": "Failed to load resource: the server responded with a status of 400 (Bad Request)",
+   "loc": "http://127.0.0.1:53460/submit:0"
+  },
+  {
+   "step": "s3-bad-input",
+   "type": "error",
+   "text": "Failed to load resource: the server responded with a status of 400 (Bad Request)",
+   "loc": "http://127.0.0.1:53460/submit:0"
+  },
+  {
+   "step": "s3-bad-input",
+   "type": "error",
+   "text": "Failed to load resource: the server responded with a status of 400 (Bad Request)",
+   "loc": "http://127.0.0.1:53460/submit:0"
+  },
+  {
+   "step": "s3-bad-input",
+   "type": "error",
+   "text": "Failed to load resource: the server responded with a status of 400 (Bad Request)",
+   "loc": "http://127.0.0.1:53460/submit:0"
+  },
+  {
+   "step": "s3-bad-input",
+   "type": "error",
+   "text": "Failed to load resource: the server responded with a status of 400 (Bad Request)",
+   "loc": "http://127.0.0.1:53460/submit:0"
+  },
+  {
+   "step": "s5-results",
+   "type": "error",
+   "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+   "loc": "http://127.0.0.1:53460/job/51a645f7787c4af48d2c9906f5a7a8bc/9:0"
+  },
+  {
+   "step": "s5-results",
+   "type": "error",
+   "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+   "loc": "http://127.0.0.1:53460/job/51a645f7787c4af48d2c9906f5a7a8bc/2/file/pwml:0"
+  },
+  {
+   "step": "s5-results",
+   "type": "error",
+   "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+   "loc": "http://127.0.0.1:53460/job/00000000000000000000000000000000:0"
+  },
+  {
+   "step": "s5-results",
+   "type": "error",
+   "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+   "loc": "http://127.0.0.1:53460/nope:0"
+  },
+  {
+   "step": "s5-results",
+   "type": "error",
+   "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+   "loc": "http://127.0.0.1:53460/job/51a645f7787c4af48d2c9906f5a7a8bc/0/file/report/..%2F..%2Fx:0"
+  },
+  {
+   "step": "s5-results",
+   "type": "error",
+   "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+   "loc": "http://127.0.0.1:53460/job/51a645f7787c4af48d2c9906f5a7a8bc/0/file/report/request.json:0"
+  },
+  {
+   "step": "s10-rate-limit",
+   "type": "error",
+   "text": "Failed to load resource: the server responded with a status of 429 (Too Many Requests)",
+   "loc": "http://127.0.0.1:53460/submit:0"
+  }
+ ],
+ "failed_requests": [],
+ "bad_responses": [
+  {
+   "step": "s3-bad-input",
+   "status": 403,
+   "url": "http://127.0.0.1:53460/submit",
+   "retry_after": ""
+  },
+  {
+   "step": "s3-bad-input",
+   "status": 400,
+   "url": "http://127.0.0.1:53460/submit",
+   "retry_after": ""
+  },
+  {
+   "step": "s3-bad-input",
+   "status": 400,
+   "url": "http://127.0.0.1:53460/submit",
+   "retry_after": ""
+  },
+  {
+   "step": "s3-bad-input",
+   "status": 400,
+   "url": "http://127.0.0.1:53460/submit",
+   "retry_after": ""
+  },
+  {
+   "step": "s3-bad-input",
+   "status": 400,
+   "url": "http://127.0.0.1:53460/submit",
+   "retry_after": ""
+  },
+  {
+   "step": "s3-bad-input",
+   "status": 400,
+   "url": "http://127.0.0.1:53460/submit",
+   "retry_after": ""
+  },
+  {
+   "step": "s3-bad-input",
+   "status": 400,
+   "url": "http://127.0.0.1:53460/submit",
+   "retry_after": ""
+  },
+  {
+   "step": "s5-results",
+   "status": 404,
+   "url": "http://127.0.0.1:53460/job/51a645f7787c4af48d2c9906f5a7a8bc/9",
+   "retry_after": ""
+  },
+  {
+   "step": "s5-results",
+   "status": 404,
+   "url": "http://127.0.0.1:53460/job/51a645f7787c4af48d2c9906f5a7a8bc/2/file/pwml",
+   "retry_after": ""
+  },
+  {
+   "step": "s5-results",
+   "status": 404,
+   "url": "http://127.0.0.1:53460/job/00000000000000000000000000000000",
+   "retry_after": ""
+  },
+  {
+   "step": "s5-results",
+   "status": 404,
+   "url": "http://127.0.0.1:53460/nope",
+   "retry_after": ""
+  },
+  {
+   "step": "s5-results",
+   "status": 404,
+   "url": "http://127.0.0.1:53460/job/51a645f7787c4af48d2c9906f5a7a8bc/0/file/report/..%2F..%2Fx",
+   "retry_after": ""
+  },
+  {
+   "step": "s5-results",
+   "status": 404,
+   "url": "http://127.0.0.1:53460/job/51a645f7787c4af48d2c9906f5a7a8bc/0/file/report/request.json",
+   "retry_after": ""
+  },
+  {
+   "step": "s10-rate-limit",
+   "status": 429,
+   "url": "http://127.0.0.1:53460/submit",
+   "retry_after": "86302"
+  }
+ ],
+ "keyboard": [
+  {
+   "tag": "A",
+   "id": "",
+   "name": "",
+   "type": "",
+   "text": "Skip to main content",
+   "outline": "solid 3px rgb(26, 111, 216)",
+   "shadow": "none",
+   "fv": true,
+   "inView": true,
+   "ring": true
+  },
+  {
+   "tag": "A",
+   "id": "",
+   "name": "",
+   "type": "",
+   "text": "T2PW\nText to PathWhiz",
+   "outline": "solid 3px rgb(26, 111, 216)",
+   "shadow": "none",
+   "fv": true,
+   "inView": true,
+   "ring": true
+  },
+  {
+   "tag": "A",
+   "id": "",
+   "name": "",
+   "type": "",
+   "text": "Submit",
+   "outline": "solid 3px rgb(26, 111, 216)",
+   "shadow": "none",
+   "fv": true,
+   "inView": true,
+   "ring": true
+  },
+  {
+   "tag": "A",
+   "id": "",
+   "name": "",
+   "type": "",
+   "text": "Examples",
+   "outline": "solid 3px rgb(26, 111, 216)",
+   "shadow": "none",
+   "fv": true,
+   "inView": true,
+   "ring": true
+  },
+  {
+   "tag": "A",
+   "id": "",
+   "name": "",
+   "type": "",
+   "text": "Help",
+   "outline": "solid 3px rgb(26, 111, 216)",
+   "shadow": "none",
+   "fv": true,
+   "inView": true,
+   "ring": true
+  },
+  {
+   "tag": "A",
+   "id": "",
+   "name": "",
+   "type": "",
+   "text": "About / Cite",
+   "outline": "solid 3px rgb(26, 111, 216)",
+   "shadow": "none",
+   "fv": true,
+   "inView": true,
+   "ring": true
+  },
+  {
+   "tag": "INPUT",
+   "id": "mode-1",
+   "name": "mode",
+   "type": "radio",
+   "text": "name",
+   "outline": "solid 3px rgb(26, 111, 216)",
+   "shadow": "none",
+   "fv": true,
+   "inView": true,
+   "ring": true
+  },
+  {
+   "tag": "INPUT",
+   "id": "name_1",
+   "name": "name_1",
+   "type": "text",
+   "text": "",
+   "outline": "solid 3px rgb(26, 111, 216)",
+   "shadow": "none",
+   "fv": true,
+   "inView": true,
+   "ring": true
+  },
+  {
+   "tag": "INPUT",
+   "id": "organism_1",
+   "name": "organism_1",
+   "type": "text",
+   "text": "",
+   "outline": "solid 3px rgb(26, 111, 216)",
+   "shadow": "none",
+   "fv": true,
+   "inView": true,
+   "ring": true
+  },
+  {
+   "tag": "SUMMARY",
+   "id": "",
+   "name": "",
+   "type": "",
+   "text": "Pathway 2 (optional)",
+   "outline": "solid 3px rgb(26, 111, 216)",
+   "shadow": "none",
+   "fv": true,
+   "inView": false,
+   "ring": true
+  },
+  {
+   "tag": "SUMMARY",
+   "id": "",
+   "name": "",
+   "type": "",
+   "text": "Pathway 3 (optional)",
+   "outline": "solid 3px rgb(26, 111, 216)",
+   "shadow": "none",
+   "fv": true,
+   "inView": true,
+   "ring": true
+  },
+  {
+   "tag": "SUMMARY",
+   "id": "",
+   "name": "",
+   "type": "",
+   "text": "Pathway 4 (optional)",
+   "outline": "solid 3px rgb(26, 111, 216)",
+   "shadow": "none",
+   "fv": true,
+   "inView": true,
+   "ring": true
+  },
+  {
+   "tag": "SUMMARY",
+   "id": "",
+   "name": "",
+   "type": "",
+   "text": "Pathway 5 (optional)",
+   "outline": "solid 3px rgb(26, 111, 216)",
+   "shadow": "none",
+   "fv": true,
+   "inView": true,
+   "ring": true
+  },
+  {
+   "tag": "INPUT",
+   "id": "consent",
+   "name": "consent",
+   "type": "checkbox",
+   "text": "1",
+   "outline": "solid 3px rgb(26, 111, 216)",
+   "shadow": "none",
+   "fv": true,
+   "inView": true,
+   "ring": true
+  },
+  {
+   "tag": "INPUT",
+   "id": "email",
+   "name": "email",
+   "type": "email",
+   "text": "",
+   "outline": "solid 3px rgb(26, 111, 216)",
+   "shadow": "none",
+   "fv": true,
+   "inView": true,
+   "ring": true
+  },
+  {
+   "tag": "BUTTON",
+   "id": "",
+   "name": "",
+   "type": "submit",
+   "text": "Submit",
+   "outline": "solid 3px rgb(26, 111, 216)",
+   "shadow": "none",
+   "fv": true,
+   "inView": true,
+   "ring": true
+  }
+ ],
+ "links": {
+  "result0": [
+   "/job/51a645f7787c4af48d2c9906f5a7a8bc/0/file/pwml",
+   "/job/51a645f7787c4af48d2c9906f5a7a8bc/0/file/report/coverage_summary.json",
+   "/job/51a645f7787c4af48d2c9906f5a7a8bc/0/file/report/final_stage3_gate_report.json",
+   "/job/51a645f7787c4af48d2c9906f5a7a8bc/0/file/report/pwml_qa.json",
+   "/job/51a645f7787c4af48d2c9906f5a7a8bc/0/file/report/research_pathway_elements.csv",
+   "/job/51a645f7787c4af48d2c9906f5a7a8bc/0/file/report/research_pathway_report.txt"
+  ],
+  "result1": [
+   "/job/51a645f7787c4af48d2c9906f5a7a8bc/1/file/pwml",
+   "/job/51a645f7787c4af48d2c9906f5a7a8bc/1/file/report/coverage_summary.json",
+   "/job/51a645f7787c4af48d2c9906f5a7a8bc/1/file/report/final_stage3_gate_report.json",
+   "/job/51a645f7787c4af48d2c9906f5a7a8bc/1/file/report/pwml_qa.json",
+   "/job/51a645f7787c4af48d2c9906f5a7a8bc/1/file/report/research_pathway_elements.csv",
+   "/job/51a645f7787c4af48d2c9906f5a7a8bc/1/file/report/research_pathway_report.txt"
+  ],
+  "result2": [
+   "/job/51a645f7787c4af48d2c9906f5a7a8bc/2/file/report/gate_fail_report.json"
+  ],
+  "result3": [
+   "/job/51a645f7787c4af48d2c9906f5a7a8bc/3/file/pwml",
+   "/job/51a645f7787c4af48d2c9906f5a7a8bc/3/file/report/coverage_summary.json",
+   "/job/51a645f7787c4af48d2c9906f5a7a8bc/3/file/report/final_stage3_gate_report.json",
+   "/job/51a645f7787c4af48d2c9906f5a7a8bc/3/file/report/pwml_qa.json",
+   "/job/51a645f7787c4af48d2c9906f5a7a8bc/3/file/report/research_pathway_elements.csv",
+   "/job/51a645f7787c4af48d2c9906f5a7a8bc/3/file/report/research_pathway_report.txt"
+  ],
+  "page/": {
+   "external": [],
+   "bad_internal": [],
+   "total": 5
+  },
+  "page/examples": {
+   "external": [],
+   "bad_internal": [],
+   "total": 5
+  },
+  "page/help": {
+   "external": [],
+   "bad_internal": [],
+   "total": 5
+  },
+  "page/about": {
+   "external": [],
+   "bad_internal": [],
+   "total": 5
+  }
+ },
+ "notes": {
+  "organism_count": 4018,
+  "labels": [
+   "Mus musculus",
+   "Homo sapiens",
+   "Saccharomyces cerevisiae",
+   "Escherichia coli"
+  ],
+  "t2pw_path": "C:\\t\\ws-E2E3\\src\\t2pw\\__init__.py C:\\t\\ws-E2E3\\docs\\webserver\\evidence\\E2E-3\\fake_run.py",
+  "browser": "156.0.8078.4",
+  "modes_offered": [
+   "name",
+   "pmids",
+   "pdfs"
+  ],
+  "htmx_version": "2.0.4",
+  "organism_first_typing_options": 30,
+  "organism_first_typing_requests": 1,
+  "organism_escher_options": [
+   "Escherichia albertii",
+   "Escherichia albertii KF1",
+   "Escherichia albertii TW07627",
+   "Escherichia coli",
+   "Escherichia coli 'BL21-Gold(DE3)pLysS AG'",
+   "Escherichia coli (strain 55989 / EAEC)",
+   "Escherichia coli (strain ATCC 55124 / KO11)",
+   "Escherichia coli (strain ATCC 8739 / DSM 1576 / Crooks)",
+   "Escherichia coli (strain B / BL21-DE3)",
+   "Escherichia coli (strain B / REL606)"
+  ],
+  "organism_value_after_ArrowDown_Enter(headless, informational)": "escher",
+  "organism_typing_experiment": {
+   "e": {
+    "requests": 1,
+    "console_errors": 0,
+    "options": 30
+   },
+   "escher": {
+    "requests": 1,
+    "console_errors": 0,
+    "options": 30
+   },
+   "coli": {
+    "requests": 1,
+    "console_errors": 0,
+    "options": 30
+   },
+   "Mus": {
+    "requests": 1,
+    "console_errors": 0,
+    "options": 30
+   },
+   "zzzzqq": {
+    "requests": 1,
+    "console_errors": 0,
+    "options": 0
+   },
+   "Homo": {
+    "requests": 1,
+    "console_errors": 0,
+    "options": 29
+   }
+  },
+  "organism_search_COLI_options": [
+   "Anaerotruncus colihominis",
+   "Anaerotruncus colihominis DSM 17241",
+   "Campylobacter coli",
+   "Campylobacter coli JV20",
+   "Campylobacter coli RM5611"
+  ],
+  "organism_nonsense_options": 0,
+  "organism_options_after_clearing": 0,
+  "post_headers": [
+   {
+    "origin": "null",
+    "sec-fetch-site": "same-origin",
+    "referer": null,
+    "host": "127.0.0.1:53460"
+   },
+   {
+    "origin": "http://127.0.0.1:53460",
+    "sec-fetch-site": "same-origin",
+    "referer": "http://127.0.0.1:53460/",
+    "host": "127.0.0.1:53460"
+   },
+   {
+    "origin": "http://127.0.0.1:53460",
+    "sec-fetch-site": "same-origin",
+    "referer": "http://127.0.0.1:53460/",
+    "host": "127.0.0.1:53460"
+   },
+   {
+    "origin": "http://127.0.0.1:53460",
+    "sec-fetch-site": "same-origin",
+    "referer": "http://127.0.0.1:53460/",
+    "host": "127.0.0.1:53460"
+   },
+   {
+    "origin": "http://127.0.0.1:53460",
+    "sec-fetch-site": "same-origin",
+    "referer": "http://127.0.0.1:53460/",
+    "host": "127.0.0.1:53460"
+   },
+   {
+    "origin": "http://127.0.0.1:53460",
+    "sec-fetch-site": "same-origin",
+    "referer": "http://127.0.0.1:53460/",
+    "host": "127.0.0.1:53460"
+   },
+   {
+    "origin": "http://127.0.0.1:53460",
+    "sec-fetch-site": "same-origin",
+    "referer": "http://127.0.0.1:53460/",
+    "host": "127.0.0.1:53460"
+   },
+   {
+    "origin": "http://127.0.0.1:53460",
+    "sec-fetch-site": "same-origin",
+    "referer": "http://127.0.0.1:53460/",
+    "host": "127.0.0.1:53460"
+   },
+   {
+    "origin": "http://127.0.0.1:53460",
+    "sec-fetch-site": "same-origin",
+    "referer": "http://127.0.0.1:53460/",
+    "host": "127.0.0.1:53460"
+   },
+   {
+    "origin": "http://127.0.0.1:53460",
+    "sec-fetch-site": "same-origin",
+    "referer": "http://127.0.0.1:53460/",
+    "host": "127.0.0.1:53460"
+   },
+   {
+    "origin": "http://127.0.0.1:53460",
+    "sec-fetch-site": "same-origin",
+    "referer": "http://127.0.0.1:53460/",
+    "host": "127.0.0.1:53460"
+   },
+   {
+    "origin": "http://127.0.0.1:53460",
+    "sec-fetch-site": "same-origin",
+    "referer": "http://127.0.0.1:53460/",
+    "host": "127.0.0.1:53460"
+   }
+  ],
+  "s3_errors": [
+   "",
+   "Error: This submission was not accepted Add at least one pathway to the submission.",
+   "Use at most 200 characters.",
+   "These are not PubMed IDs (digits only): abc, 12-34",
+   "This is not in the organism list. Did you mean: Mus musculus; Mus musculus castaneus? || Enter a valid email address, or leave this blank.",
+   "Choose at least one PDF file.",
+   "Error: This submission was not accepted notes.txt is not a PDF file."
+  ],
+  "non_pdf_file_input_after_error": 0,
+  "main_sid": "51a645f7787c4af48d2c9906f5a7a8bc",
+  "saw_retrying_text": false,
+  "status_request_count": 7,
+  "result0_text": "\u2190 All pathways in this job\n\nFake Success Glycolysis\n\nDone\nMus musculus \u00b7 pathway name\n\nDone. The pathway was built and passed the strict checks.\n\nDownload\n\nDownload PWML\nPathWhiz pathway file\n\nPathway diagram\nRendered from the PWML above.\nReports and diagnostic files (5)\nTechnical message\nAttempts\nAttempts for pathway 1\nAttempt\tStarted\tEnded\tOutcome\n1\t2026-11-08 20:56 UTC\t2026-11-08 20:56 UTC\tPassed",
+  "result1_text": "\u2190 All pathways in this job\n\nFake Review Pathway\n\nReview required\nHomo sapiens \u00b7 pathway name\n\nNeeds review. A PWML was produced, but it is incomplete or uncertain in places and must be checked by a person before use. Read the warnings below.\n\nWarning:\nReview required before use\n\nOpen the PWML in PathWhiz and check it against the sources. Do not treat it as final.\n\nWarning:\nWarnings\n\nFake warning: two reactions have no EC number.\nFake warning: one compound unmapped.\nDownload\n\nDownload PWML\nPathWhiz pathway file\n\nPathway diagram\nRendered from the PWML above.\nReports and diagnostic files (5)\nTechnical message\nAttempts\nAttempts for pathway 2\nAttempt\tStarted\tEnded\tOutcome\n1\t2026-11-08 20:56 UTC\t2",
+  "result2_text": "\u2190 All pathways in this job\n\nFake Failure Pathway\n\nFailed\nSaccharomyces cerevisiae \u00b7 pathway name\n\nCould not build this pathway. The extracted pathway did not pass the quality checks, so no PWML was produced. A different or richer source may help.\n\nError:\nNo PWML was produced\n\nThe extracted pathway did not pass the quality checks, so no PWML was produced. A different or richer source may help.\n\nReports and diagnostic files (1)\nTechnical message\nAttempts\nAttempts for pathway 3\nAttempt\tStarted\tEnded\tOutcome\n1\t2026-11-08 20:57 UTC\t2026-11-08 20:57 UTC\tFailed (an unexpected problem occurred)",
+  "result3_text": "\u2190 All pathways in this job\n\nFake Flaky Retry\n\nDone\nEscherichia coli \u00b7 pathway name\n\nDone. The pathway was built and passed the strict checks.\n\nDownload\n\nDownload PWML\nPathWhiz pathway file\n\nPathway diagram\nRendered from the PWML above.\nReports and diagnostic files (5)\nTechnical message\nAttempts\nAttempts for pathway 4\nAttempt\tStarted\tEnded\tOutcome\n1\t2026-11-08 20:57 UTC\t2026-11-08 20:57 UTC\tError, retried (a network service could not be reached)\n2\t2026-11-08 20:57 UTC\t2026-11-08 20:57 UTC\tPassed",
+  "nav": [
+   [
+    "Submit",
+    "/"
+   ],
+   [
+    "Examples",
+    "/examples"
+   ],
+   [
+    "Help",
+    "/help"
+   ],
+   [
+    "About / Cite",
+    "/about"
+   ]
+  ],
+  "placeholders/": [
+   "[Citation placeholder: added on publication.]",
+   "[Lab credit placeholder.]"
+  ],
+  "placeholders/examples": [
+   "[TODO for the product owner: 3 to 4 curated, verified examples will be listed here, each with its input and a finished result you can open.]",
+   "[Citation placeholder: added on publication.]",
+   "[Lab credit placeholder.]"
+  ],
+  "placeholders/help": [
+   "[TODO for the product owner: how long jobs and uploads are kept.]",
+   "[Citation placeholder: added on publication.]",
+   "[Lab credit placeholder.]"
+  ],
+  "placeholders/about": [
+   "[Placeholder for the product owner: citation text, DOI and year, added on publication.]",
+   "[Placeholder for the product owner: laboratory name, funding line, contact address and licence.]",
+   "[Citation placeholder: added on publication.]",
+   "[Lab credit placeholder.]"
+  ],
+  "kbd_sid": "89b14d5c128946b9964f846bab4265d9",
+  "kbd_stops": [
+   [
+    "A",
+    "",
+    "",
+    "Skip to main content",
+    true
+   ],
+   [
+    "A",
+    "",
+    "",
+    "T2PW\nText to PathWhiz",
+    true
+   ],
+   [
+    "A",
+    "",
+    "",
+    "Submit",
+    true
+   ],
+   [
+    "A",
+    "",
+    "",
+    "Examples",
+    true
+   ],
+   [
+    "A",
+    "",
+    "",
+    "Help",
+    true
+   ],
+   [
+    "A",
+    "",
+    "",
+    "About / Cite",
+    true
+   ],
+   [
+    "INPUT",
+    "mode-1",
+    "radio",
+    "name",
+    true
+   ],
+   [
+    "INPUT",
+    "name_1",
+    "text",
+    "",
+    true
+   ],
+   [
+    "INPUT",
+    "organism_1",
+    "text",
+    "",
+    true
+   ],
+   [
+    "SUMMARY",
+    "",
+    "",
+    "Pathway 2 (optional)",
+    true
+   ],
+   [
+    "SUMMARY",
+    "",
+    "",
+    "Pathway 3 (optional)",
+    true
+   ],
+   [
+    "SUMMARY",
+    "",
+    "",
+    "Pathway 4 (optional)",
+    true
+   ],
+   [
+    "SUMMARY",
+    "",
+    "",
+    "Pathway 5 (optional)",
+    true
+   ],
+   [
+    "INPUT",
+    "consent",
+    "checkbox",
+    "1",
+    true
+   ],
+   [
+    "INPUT",
+    "email",
+    "email",
+    "",
+    true
+   ],
+   [
+    "BUTTON",
+    "",
+    "submit",
+    "Submit",
+    true
+   ]
+  ],
+  "pdf_sid": "18d06234364e4b7d85fa977ef760df1c",
+  "s8": {
+   "phone-light/home": {
+    "overflow": {
+     "scrollW": 390,
+     "clientW": 390,
+     "nOff": 0,
+     "off": []
+    },
+    "contrast": {
+     "checked": 66,
+     "nBad": 0,
+     "bad": []
+    }
+   },
+   "phone-light/job": {
+    "overflow": {
+     "scrollW": 390,
+     "clientW": 390,
+     "nOff": 0,
+     "off": []
+    },
+    "contrast": {
+     "checked": 96,
+     "nBad": 0,
+     "bad": []
+    }
+   },
+   "phone-light/res-success": {
+    "overflow": {
+     "scrollW": 390,
+     "clientW": 390,
+     "nOff": 0,
+     "off": []
+    },
+    "contrast": {
+     "checked": 39,
+     "nBad": 0,
+     "bad": []
+    }
+   },
+   "phone-light/res-review": {
+    "overflow": {
+     "scrollW": 390,
+     "clientW": 390,
+     "nOff": 0,
+     "off": []
+    },
+    "contrast": {
+     "checked": 44,
+     "nBad": 0,
+     "bad": []
+    }
+   },
+   "phone-light/res-fail": {
+    "overflow": {
+     "scrollW": 390,
+     "clientW": 390,
+     "nOff": 0,
+     "off": []
+    },
+    "contrast": {
+     "checked": 32,
+     "nBad": 0,
+     "bad": []
+    }
+   },
+   "phone-light/help": {
+    "overflow": {
+     "scrollW": 390,
+     "clientW": 390,
+     "nOff": 0,
+     "off": []
+    },
+    "contrast": {
+     "checked": 36,
+     "nBad": 0,
+     "bad": []
+    }
+   },
+   "phone-light/examples": {
+    "overflow": {
+     "scrollW": 390,
+     "clientW": 390,
+     "nOff": 0,
+     "off": []
+    },
+    "contrast": {
+     "checked": 15,
+     "nBad": 0,
+     "bad": []
+    }
+   },
+   "phone-light/about": {
+    "overflow": {
+     "scrollW": 390,
+     "clientW": 390,
+     "nOff": 0,
+     "off": []
+    },
+    "contrast": {
+     "checked": 16,
+     "nBad": 0,
+     "bad": []
+    }
+   },
+   "phone-dark/home": {
+    "overflow": {
+     "scrollW": 390,
+     "clientW": 390,
+     "nOff": 0,
+     "off": []
+    },
+    "contrast": {
+     "checked": 66,
+     "nBad": 0,
+     "bad": []
+    }
+   },
+   "phone-dark/job": {
+    "overflow": {
+     "scrollW": 390,
+     "clientW": 390,
+     "nOff": 0,
+     "off": []
+    },
+    "contrast": {
+     "checked": 96,
+     "nBad": 0,
+     "bad": []
+    }
+   },
+   "phone-dark/res-success": {
+    "overflow": {
+     "scrollW": 390,
+     "clientW": 390,
+     "nOff": 0,
+     "off": []
+    },
+    "contrast": {
+     "checked": 39,
+     "nBad": 0,
+     "bad": []
+    }
+   },
+   "phone-dark/res-review": {
+    "overflow": {
+     "scrollW": 390,
+     "clientW": 390,
+     "nOff": 0,
+     "off": []
+    },
+    "contrast": {
+     "checked": 44,
+     "nBad": 0,
+     "bad": []
+    }
+   },
+   "phone-dark/res-fail": {
+    "overflow": {
+     "scrollW": 390,
+     "clientW": 390,
+     "nOff": 0,
+     "off": []
+    },
+    "contrast": {
+     "checked": 32,
+     "nBad": 0,
+     "bad": []
+    }
+   },
+   "phone-dark/help": {
+    "overflow": {
+     "scrollW": 390,
+     "clientW": 390,
+     "nOff": 0,
+     "off": []
+    },
+    "contrast": {
+     "checked": 36,
+     "nBad": 0,
+     "bad": []
+    }
+   },
+   "phone-dark/examples": {
+    "overflow": {
+     "scrollW": 390,
+     "clientW": 390,
+     "nOff": 0,
+     "off": []
+    },
+    "contrast": {
+     "checked": 15,
+     "nBad": 0,
+     "bad": []
+    }
+   },
+   "phone-dark/about": {
+    "overflow": {
+     "scrollW": 390,
+     "clientW": 390,
+     "nOff": 0,
+     "off": []
+    },
+    "contrast": {
+     "checked": 16,
+     "nBad": 0,
+     "bad": []
+    }
+   },
+   "desk-dark/home": {
+    "overflow": {
+     "scrollW": 1280,
+     "clientW": 1280,
+     "nOff": 0,
+     "off": []
+    },
+    "contrast": {
+     "checked": 66,
+     "nBad": 0,
+     "bad": []
+    }
+   },
+   "desk-dark/job": {
+    "overflow": {
+     "scrollW": 1280,
+     "clientW": 1280,
+     "nOff": 0,
+     "off": []
+    },
+    "contrast": {
+     "checked": 96,
+     "nBad": 0,
+     "bad": []
+    }
+   },
+   "desk-dark/res-success": {
+    "overflow": {
+     "scrollW": 1280,
+     "clientW": 1280,
+     "nOff": 0,
+     "off": []
+    },
+    "contrast": {
+     "checked": 39,
+     "nBad": 0,
+     "bad": []
+    }
+   },
+   "desk-dark/res-review": {
+    "overflow": {
+     "scrollW": 1280,
+     "clientW": 1280,
+     "nOff": 0,
+     "off": []
+    },
+    "contrast": {
+     "checked": 44,
+     "nBad": 0,
+     "bad": []
+    }
+   },
+   "desk-dark/res-fail": {
+    "overflow": {
+     "scrollW": 1280,
+     "clientW": 1280,
+     "nOff": 0,
+     "off": []
+    },
+    "contrast": {
+     "checked": 32,
+     "nBad": 0,
+     "bad": []
+    }
+   },
+   "desk-dark/help": {
+    "overflow": {
+     "scrollW": 1280,
+     "clientW": 1280,
+     "nOff": 0,
+     "off": []
+    },
+    "contrast": {
+     "checked": 36,
+     "nBad": 0,
+     "bad": []
+    }
+   },
+   "desk-dark/examples": {
+    "overflow": {
+     "scrollW": 1280,
+     "clientW": 1280,
+     "nOff": 0,
+     "off": []
+    },
+    "contrast": {
+     "checked": 15,
+     "nBad": 0,
+     "bad": []
+    }
+   },
+   "desk-dark/about": {
+    "overflow": {
+     "scrollW": 1280,
+     "clientW": 1280,
+     "nOff": 0,
+     "off": []
+    },
+    "contrast": {
+     "checked": 16,
+     "nBad": 0,
+     "bad": []
+    }
+   },
+   "desk-light/home": {
+    "overflow": {
+     "scrollW": 1280,
+     "clientW": 1280,
+     "nOff": 0,
+     "off": []
+    },
+    "contrast": {
+     "checked": 66,
+     "nBad": 0,
+     "bad": []
+    }
+   },
+   "desk-light/job": {
+    "overflow": {
+     "scrollW": 1280,
+     "clientW": 1280,
+     "nOff": 0,
+     "off": []
+    },
+    "contrast": {
+     "checked": 96,
+     "nBad": 0,
+     "bad": []
+    }
+   },
+   "desk-light/res-success": {
+    "overflow": {
+     "scrollW": 1280,
+     "clientW": 1280,
+     "nOff": 0,
+     "off": []
+    },
+    "contrast": {
+     "checked": 39,
+     "nBad": 0,
+     "bad": []
+    }
+   },
+   "desk-light/res-review": {
+    "overflow": {
+     "scrollW": 1280,
+     "clientW": 1280,
+     "nOff": 0,
+     "off": []
+    },
+    "contrast": {
+     "checked": 44,
+     "nBad": 0,
+     "bad": []
+    }
+   },
+   "desk-light/res-fail": {
+    "overflow": {
+     "scrollW": 1280,
+     "clientW": 1280,
+     "nOff": 0,
+     "off": []
+    },
+    "contrast": {
+     "checked": 32,
+     "nBad": 0,
+     "bad": []
+    }
+   },
+   "desk-light/help": {
+    "overflow": {
+     "scrollW": 1280,
+     "clientW": 1280,
+     "nOff": 0,
+     "off": []
+    },
+    "contrast": {
+     "checked": 36,
+     "nBad": 0,
+     "bad": []
+    }
+   },
+   "desk-light/examples": {
+    "overflow": {
+     "scrollW": 1280,
+     "clientW": 1280,
+     "nOff": 0,
+     "off": []
+    },
+    "contrast": {
+     "checked": 15,
+     "nBad": 0,
+     "bad": []
+    }
+   },
+   "desk-light/about": {
+    "overflow": {
+     "scrollW": 1280,
+     "clientW": 1280,
+     "nOff": 0,
+     "off": []
+    },
+    "contrast": {
+     "checked": 16,
+     "nBad": 0,
+     "bad": []
+    }
+   }
+  },
+  "rate_tries": [
+   [
+    1,
+    303,
+    "",
+    "Job status  Note: Keep this link  This page is your job. Bookmark it: http://127.0.0.1:53460/job/f6e51262ef3b41b08d02e2c2edded665  Anyone who has the link can s"
+   ],
+   [
+    2,
+    429,
+    "86302",
+    "Build a pathway from the literature  Give a pathway name, PubMed IDs or PDF files. T2PW reads the papers and returns a PathWhiz pathway file (PWML) for you to r"
+   ]
+  ],
+  "still_pending_after_wait": [],
+  "survivors_after_stop": []
+ },
+ "section_errors": []
+}
