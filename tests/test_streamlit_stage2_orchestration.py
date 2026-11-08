@@ -1045,13 +1045,25 @@ def test_stage2_artifacts_are_visible_and_both_ui_paths_share_the_orchestrator()
     } <= filenames
 
     tree = _source_tree()
-    live_calls = [
-        node
-        for node in ast.walk(tree)
-        if isinstance(node, ast.Call)
-        and isinstance(node.func, ast.Name)
-        and node.func.id == "run_post_pipeline_sbml_artifacts"
-    ]
+    # R4b (Q-R4-1): the audit handler's call moved to t2pw.service.post_run; the legacy
+    # button's stays here. Both still reach the one orchestrator.
+    post_run_path = ROOT / "src" / "t2pw" / "service" / "post_run.py"
+    post_run_tree = ast.parse(post_run_path.read_text(encoding="utf-8"))
+
+    def orchestrator_calls(module: ast.AST) -> list:
+        return [
+            node
+            for node in ast.walk(module)
+            if isinstance(node, ast.Call)
+            and (
+                (isinstance(node.func, ast.Name) and node.func.id == "run_post_pipeline_sbml_artifacts")
+                or (isinstance(node.func, ast.Attribute) and node.func.attr == "run_post_pipeline_sbml_artifacts")
+            )
+        ]
+
+    assert len(orchestrator_calls(tree)) == 1
+    assert len(orchestrator_calls(post_run_tree)) == 1
+    live_calls = [*orchestrator_calls(tree), *orchestrator_calls(post_run_tree)]
     assert len(live_calls) == 2
     assert {
         next(
@@ -1064,24 +1076,20 @@ def test_stage2_artifacts_are_visible_and_both_ui_paths_share_the_orchestrator()
 
     orchestrator_tries = [
         node
-        for node in ast.walk(tree)
+        for module in (tree, post_run_tree)
+        for node in ast.walk(module)
         if isinstance(node, ast.Try)
-        and any(
-            isinstance(candidate, ast.Call)
-            and isinstance(candidate.func, ast.Name)
-            and candidate.func.id == "run_post_pipeline_sbml_artifacts"
-            for statement in node.body
-            for candidate in ast.walk(statement)
-        )
+        and any(orchestrator_calls(statement) for statement in node.body)
     ]
     assert len(orchestrator_tries) == 2
     for try_node in orchestrator_tries:
         assert isinstance(try_node.handlers[0].type, ast.Name)
         assert try_node.handlers[0].type.id == "StageContractError"
+        # R4b: in the service the handler calls the render callback the app passes (below).
         assert any(
             isinstance(candidate, ast.Call)
             and isinstance(candidate.func, ast.Name)
-            and candidate.func.id == "_render_stage_contract_failure"
+            and candidate.func.id in {"_render_stage_contract_failure", "render_contract_failure"}
             for statement in try_node.handlers[0].body
             for candidate in ast.walk(statement)
         )
@@ -1108,9 +1116,27 @@ def test_stage2_artifacts_are_visible_and_both_ui_paths_share_the_orchestrator()
             and candidate.args[0].value == "post_pipeline_artifacts"
             for candidate in ast.walk(button_branch)
         )
+        if button_label == "Run audit and DB mapping":
+            # R4b: the button's branch reaches the handler, and the handler's stage-contract
+            # failure still renders through the app's shared renderer.
+            handler_call = next(
+                candidate
+                for candidate in ast.walk(button_branch)
+                if isinstance(candidate, ast.Call)
+                and isinstance(candidate.func, ast.Name)
+                and candidate.func.id == "run_post_pipeline"
+            )
+            render_arg = next(keyword.value for keyword in handler_call.keywords
+                              if keyword.arg == "render_contract_failure")
+            assert any(
+                isinstance(candidate, ast.Call)
+                and isinstance(candidate.func, ast.Name)
+                and candidate.func.id == "_render_stage_contract_failure"
+                for candidate in ast.walk(render_arg)
+            )
 
     source = APP_PATH.read_text(encoding="utf-8")
-    assert "Mapped pathway still fails the pre-export Stage 3 revalidation." in source
+    assert "Mapped pathway still fails the pre-export Stage 3 revalidation." in post_run_path.read_text(encoding="utf-8")
     for filename in (
         "stage2.mapped.json",
         "stage2_mapping_report.json",
