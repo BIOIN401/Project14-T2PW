@@ -2,7 +2,8 @@
 
 R3a moved the input assembly: the pasted texts and the uploaded PDFs become the one
 ``text`` the stages read. R3b moved Stage 0 (:func:`run_stage_zero`), R3c Stage 1 and
-the RAG seed (:func:`run_stage_one`). R3d extends this module with the remaining stages.
+the RAG seed (:func:`run_stage_one`), R3d Stage 2 through the session-state publish
+(:func:`run_stage_two`) and the headless composition of all four (:func:`run_extraction`).
 
 Every message goes through the ``reporter`` the caller passes (the app passes
 ``StreamlitReporter(st)``). There is no default: service code never falls back to
@@ -729,4 +730,369 @@ def run_stage_one(
         out_of_scope_removed_reactions=out_of_scope_removed_reactions,
         rag_result=rag_result,
         user_task_context=user_task_context,
+    )
+
+
+# ---------------------------------------------------------------------------
+# R3d: Stage 2 to the end of the run. Moved from streamlit_app.py:
+# emit_rag_loop_messages, rag_loop_session_record, and the submit block from
+# ``final_payload = stage_one_in_scope`` through the session-state publish. The
+# quarantine reset and the token stats stay in the app, after the call (R3d.md).
+# ---------------------------------------------------------------------------
+
+# Failure kind of the former ``st.stop()`` in the Stage-2 code.
+KIND_STAGE_TWO_FAILED = "stage_two_failed"
+
+
+def emit_rag_loop_messages(messages: Any, *, reporter: Reporter) -> None:
+    """Render the loop's collected UI lines. Best-effort UI only."""
+
+    from t2pw.service.postpipeline import _safe_list  # function-local, as in _last_cleaning_report
+
+    for kind, body in _safe_list(messages):
+        if kind == "info":
+            reporter.info(body)
+        elif kind == "warning":
+            reporter.warning(body)
+        elif kind == "error":
+            reporter.error(body)
+        elif kind == "json":
+            reporter.json(body)
+
+
+def rag_loop_session_record(record: Dict[str, Any]) -> Dict[str, Any]:
+    """The JSON-safe half of the loop record, for session state and diagnostics.
+
+    ``payload`` is deliberately excluded: the graph the loop settled on is
+    ``final_payload``, and a second copy under another key would be a second
+    authority for the same fact.
+    """
+
+    from t2pw.service.postpipeline import _safe_dict  # function-local, as in _last_cleaning_report
+
+    return {
+        key: value for key, value in _safe_dict(record).items()
+        if key not in {"payload", "messages"}
+    }
+
+
+@dataclass(frozen=True)
+class ExtractionResult:
+    """The run's Stage-0 context and final payload, or the ``failure`` where the app
+    stops the run. Everything else the run produced is in ``state``, under the keys the
+    app's session state has always used (``stage_one``, ``stage_two``, ``draft_graph``...)."""
+
+    pathway_context: Any = None
+    final_payload: Any = None
+    failure: Optional[InputFailure] = None
+
+
+def run_stage_two(
+    text: str,
+    stage_one_result: StageOneResult,
+    *,
+    pathway_context: Any,
+    run_inference: Any,
+    enable_chunking: bool,
+    chunk_size: Any,
+    chunk_overlap: Any,
+    infer_rounds: Any,
+    infer_attempts: Any,
+    temperature: float,
+    infer_tokens: Any,
+    rag_incomplete_flag: Any,
+    export_mode: Any,
+    state: MutableMapping[str, Any],
+    reporter: Reporter,
+) -> ExtractionResult:
+    """Stage 2, both ``merge_additions`` sites, the RAG rounds, the draft graph and the
+    session-state publish, exactly as the app's submit block ran them after Stage 1.
+
+    ``stage_one_result`` is :func:`run_stage_one`'s result (no failure). ``export_mode`` is
+    the app's own value (the RAG rounds read it); ``pwml_strict_db`` is read from ``state``.
+    """
+
+    # Function-local for the reason given in run_stage_one: every callee is looked up at
+    # call time, so a patch of ``pipeline.run_stage_two_with_feedback_loop`` or
+    # ``pipeline.build_and_save_draft_graph`` on its source module reaches the call.
+    # ``merge_additions`` is imported by name because C-060a lifts the two merge statements
+    # below by AST and runs them with ``merge_additions`` as a plain name; the import still
+    # runs on every call, so a patch of ``pipeline.merge_additions`` reaches it too.
+    from t2pw.pipeline import pipeline as _pipeline
+    from t2pw.pipeline.pipeline import merge_additions
+    from t2pw.service import postpipeline as _postpipeline
+
+    # What the app used to rebind from run_stage_one's result (R3c).
+    stage_one = stage_one_result.stage_one
+    chunk_details = stage_one_result.chunk_details
+    stage_one_in_scope = stage_one_result.stage_one_in_scope
+    out_of_scope_removed_reactions = stage_one_result.out_of_scope_removed_reactions
+    rag_result = stage_one_result.rag_result
+    user_task_context = stage_one_result.user_task_context
+
+    final_payload = stage_one_in_scope
+    stage_two = None
+    stage_two_chunks: List[Dict[str, Any]] = []
+    stage_two_rounds: List[Dict[str, Any]] = []
+    qa_hints = None
+
+    # Stage 2: inference/enrichment + auto-repair
+    if run_inference:
+        try:
+            with reporter.spinner("Running Stage 2 inference..."):
+                stage_two, stage_two_chunks, stage_two_rounds = _pipeline.run_stage_two_with_feedback_loop(
+                    text,
+                    stage_one_in_scope,
+                    chunk_details=chunk_details,
+                    pathway_context=pathway_context,
+                    user_task_context=user_task_context,
+                    qa_rounds=int(infer_rounds),
+                    enable_chunking=enable_chunking,
+                    chunk_word_limit=int(chunk_size),
+                    chunk_overlap=int(chunk_overlap),
+                    max_attempts=int(infer_attempts),
+                    temperature=temperature,
+                    max_tokens=int(infer_tokens),
+                )
+        except _pipeline.PipelineFailure as failure:
+            message = f"Inference stage failed: {failure}"
+            reporter.error(message)
+            label = f"{failure.stage} attempts" if getattr(failure, "stage", None) else "Stage 2 attempts"
+            render_attempts(label, failure.attempts, reporter=reporter)
+            return ExtractionResult(failure=InputFailure(KIND_STAGE_TWO_FAILED, message))
+
+        qa_hints = stage_two.get("qa_hints", {}) if isinstance(stage_two, dict) else {}
+        # The C-060 gate's advisory phase gates on isinstance(context,
+        # PathwayContext) and `pathway_context` here is the Stage-0 DICT, so
+        # forwarding it would type-check and do nothing. The factory builds the
+        # real frozen context from the one derivation maybe_run_rag also uses. An
+        # empty Stage 0 yields PathwayContext(""), which the gate already coerces
+        # a missing context to, so no new refusal path appears. `seed_text` is
+        # deliberately not supplied -- see the pipeline.py site for why.
+        from t2pw.pipeline.entity_admission import pathway_context_from_stage_zero
+
+        final_payload = merge_additions(
+            stage_one_in_scope,
+            stage_two if isinstance(stage_two, dict) else {},
+            pathway_context=pathway_context_from_stage_zero(pathway_context),
+            source_text=text,
+        )
+
+    # S3 — inject R5's synthesized reactions/entities INTO the seed payload rather
+    # than REPLACING it, ONE ROUND AT A TIME. A no-op with RAG off (rag_result is
+    # None): final_payload is untouched and t2pw.rag.controller is never imported.
+    #
+    # RAG's ``to_payload`` emits a thin, reaction-only payload MISSING the rich
+    # Stage-1 shape the post-pipeline assumes (no element_locations, no per-reaction
+    # compartment, no per-entity mapping_meta, evidence as a LIST, participants as
+    # dicts). Replacing the seed with it crashed the downstream audit/DB-mapping
+    # with ``'NoneType' object is not subscriptable``. Instead, conform the RAG
+    # payload to a Stage-2 additions envelope and MERGE it into the seed with the
+    # SAME machinery Stage 2 uses (merge_additions) — so the payload entering the
+    # post-pipeline keeps the seed's rich Stage-1 shape (compartments defaulted by
+    # the existing default_compartment="cell" path) with RAG reactions slotted in.
+    #
+    # That conform/merge/cleanup/schema-gate sequence is unchanged; what changed is
+    # that it is now the body of ONE ROUND of ``t2pw.rag.controller.run_rag_loop``
+    # (``run_rag_rounds`` above) instead of a single straight-line pass. D-008
+    # (LOCKED) and PRODUCT_CONTRACT §10: every RAG round must re-enter normalization,
+    # mapping, gates, persistence and classification, the loop must be deadline-aware,
+    # and it must checkpoint before each round. The controller enforces all of that
+    # structurally; this site supplies only ``stages=``, ``round_runner=``,
+    # ``deadline=`` and ``checkpoint=``, per the separation invariant at :161.
+    #
+    # WHY THE CHAIN STAYS AT :5514 AND THE MERGE HAPPENS HERE. Round 0's chain must
+    # run BEFORE Stage 2, because its ``evidence_context`` is folded into Stage 2's
+    # prompt through S1/S2; the merge must run AFTER it, because the merge base is
+    # Stage 1 PLUS Stage 2 whenever inference ran. So round 0 REUSES the result
+    # computed there, and only rounds 1..N-1 re-enter the chain — against their own
+    # graph and their own recomputed reports.
+    #
+    # ``RAG_LOOP_MAX_ROUNDS`` defaults to 1, so an unchanged environment runs exactly
+    # one round and produces exactly today's merge, today's messages and today's
+    # final_payload.
+    #
+    # THE MERGE STATEMENT STAYS HERE, and the loop calls it. C-060a's wiring test
+    # lifts the app's two ``merge_additions`` statements out of this file BY AST and
+    # executes the real source bytes, to prove each passes a real PathwayContext
+    # (tests/test_c060a_requested_pathway_wiring.py:68-104; both must sit at or
+    # above OWNED_FLOOR = 4640, Stage 2's first). Writing the RAG merge inside a
+    # helper defined above would put it out of that instrument's reach and disarm
+    # C-060a's protection without changing a line of C-060a's test.
+    # R3d: both statements moved here with the rest of the block, verbatim, so C-060a
+    # has to read this file instead of streamlit_app.py (R3d.md, open question 1).
+    def _rag_merge_site(final_payload, rag_envelope, pathway_context):
+        # The RAG leg runs merge_additions a SECOND time, so the same request has
+        # to reach the gate on this pass too. Without it the rows RAG adds are
+        # screened with no context while the Stage-2 rows were screened with one,
+        # and the two passes would disagree about the same species.
+        from t2pw.pipeline.entity_admission import pathway_context_from_stage_zero
+
+        merged = merge_additions(
+            final_payload,
+            rag_envelope,
+            pathway_context=pathway_context_from_stage_zero(pathway_context),
+        )
+        return merged
+
+    if rag_result is not None and rag_result.synthesized and rag_result.payload:
+        from t2pw.service import rag_orchestration as _rag_orchestration  # only with RAG on
+
+        rag_loop_record = _rag_orchestration.run_rag_rounds(
+            final_payload,
+            first_result=rag_result,
+            merge_site=_rag_merge_site,
+            pathway_context=pathway_context,
+            user_flag=bool(rag_incomplete_flag),
+            seed_text=text,
+            export_mode=export_mode,
+            strict_db=bool(state.get("pwml_strict_db", True)),
+            reporter=reporter,
+            state=state,
+        )
+        final_payload = rag_loop_record["payload"]
+        emit_rag_loop_messages(rag_loop_record["messages"], reporter=reporter)
+        # Additive only. ``RagOrchestrationResult`` is a bare SimpleNamespace read
+        # through ``getattr(..., default)``, and ``payload`` keeps its meaning — the
+        # PRE-MERGE synthesized payload the citation report reads. The loop record is
+        # a NEW field beside it, never a redefinition of that one.
+        state["rag_loop"] = rag_loop_session_record(rag_loop_record)
+        try:
+            rag_result.loop = state["rag_loop"]
+        except Exception:  # noqa: BLE001 - a diagnostic attachment is never fatal
+            pass
+
+    stage2_preservation_report = _postpipeline._write_reaction_preservation_report("after_stage2", final_payload)
+
+    draft_graph, qa_report, reaction_summary = _pipeline.build_and_save_draft_graph(final_payload)
+    state["draft_graph"] = draft_graph.to_dict()
+    state.pop("draft_graph_png_bytes", None)
+    state.pop("draft_graph_render_error", None)
+    state["qa_report"] = qa_report
+    state["reaction_summary"] = reaction_summary
+
+    state["pipeline_ready"] = True
+    state["run_inference_enabled"] = bool(run_inference)
+    state["pathway_context"] = pathway_context
+    state["user_task_context"] = user_task_context
+    state["stage_one"] = stage_one
+    state["extraction_diagnostics_recorder"] = _diag.current()
+    state["out_of_scope_removed_reactions"] = out_of_scope_removed_reactions
+    state["chunk_details"] = chunk_details
+    state["stage_two"] = stage_two
+    state["stage_two_chunks"] = stage_two_chunks
+    state["stage_two_rounds"] = stage_two_rounds
+    state["qa_hints"] = qa_hints
+    state["final_payload"] = final_payload
+    state["final_payload_snapshot"] = final_payload
+    state["pipeline_source_text"] = text
+    state["reaction_preservation_after_stage2"] = stage2_preservation_report
+    state.pop("post_pipeline_artifacts", None)
+
+    return ExtractionResult(pathway_context=pathway_context, final_payload=final_payload)
+
+
+@dataclass(frozen=True)
+class ExtractionRequest:
+    """Everything the app's "Run pipeline" form hands the run: the widget values, raw,
+    as the app reads them. No field has a default: the caller states every setting."""
+
+    text_entries: Sequence[str]
+    pdfs: Sequence[Tuple[str, bytes]]
+    uses_pdf_input: bool
+    input_mode: str
+    pdf_page_range: Optional[str]
+    pdf_skip_refs: bool
+    pdf_ocr: bool
+    user_task_context: Optional[str]
+    export_mode: Any
+    temperature: float
+    run_inference: Any
+    enable_chunking: bool
+    chunk_size: Any
+    chunk_overlap: Any
+    extract_attempts: Any
+    infer_attempts: Any
+    infer_rounds: Any
+    extract_tokens: Any
+    infer_tokens: Any
+    rag_incomplete_flag: Any
+
+
+def run_extraction(
+    request: ExtractionRequest,
+    *,
+    reporter: Reporter,
+    state: MutableMapping[str, Any],
+) -> ExtractionResult:
+    """The app's "Run pipeline" submit block without Streamlit: input assembly, Stage 0,
+    Stage 1 and the RAG seed, Stage 2 and the publish into ``state``, composed in the
+    app's order. Each step's failure is returned as it is; nothing else is added.
+
+    The app does not call this: it keeps calling the steps itself, because its
+    ambiguous-review gate (between Stage 0 and Stage 1) and ``reset_refinement_state()``
+    stay in the app, as do the quarantine reset and the token stats after Stage 2. Here
+    there is no gate: an ambiguous Stage-0 context is refused by Stage 1 itself
+    (``run_stage_one_with_chunking`` raises before any LLM call), as a ``stage_one_failed``
+    failure (R3d.md, open question 3).
+    """
+
+    # As the app: the export-mode radio writes the session copy that Stage 1 reads.
+    state["export_mode"] = request.export_mode
+    user_task_context = (request.user_task_context or "").strip() or None
+
+    assembled = assemble_inputs(
+        request.text_entries,
+        request.pdfs,
+        uses_pdf_input=request.uses_pdf_input,
+        input_mode=request.input_mode,
+        pdf_page_range=request.pdf_page_range,
+        pdf_skip_refs=request.pdf_skip_refs,
+        pdf_ocr=request.pdf_ocr,
+        reporter=reporter,
+    )
+    if assembled.failure is not None:
+        return ExtractionResult(failure=assembled.failure)
+    text = assembled.text
+
+    stage_zero = run_stage_zero(
+        text,
+        temperature=request.temperature,
+        user_task_context=user_task_context,
+        state=state,
+        reporter=reporter,
+    )
+    stage_one = run_stage_one(
+        text,
+        pathway_context=stage_zero.pathway_context,
+        user_task_context=user_task_context,
+        diagnostics_dir=stage_zero.diagnostics_dir,
+        enable_chunking=request.enable_chunking,
+        chunk_size=request.chunk_size,
+        chunk_overlap=request.chunk_overlap,
+        extract_attempts=request.extract_attempts,
+        temperature=request.temperature,
+        extract_tokens=request.extract_tokens,
+        rag_incomplete_flag=request.rag_incomplete_flag,
+        state=state,
+        reporter=reporter,
+    )
+    if stage_one.failure is not None:
+        return ExtractionResult(failure=stage_one.failure)
+    return run_stage_two(
+        text,
+        stage_one,
+        pathway_context=stage_zero.pathway_context,
+        run_inference=request.run_inference,
+        enable_chunking=request.enable_chunking,
+        chunk_size=request.chunk_size,
+        chunk_overlap=request.chunk_overlap,
+        infer_rounds=request.infer_rounds,
+        infer_attempts=request.infer_attempts,
+        temperature=request.temperature,
+        infer_tokens=request.infer_tokens,
+        rag_incomplete_flag=request.rag_incomplete_flag,
+        export_mode=request.export_mode,
+        state=state,
+        reporter=reporter,
     )

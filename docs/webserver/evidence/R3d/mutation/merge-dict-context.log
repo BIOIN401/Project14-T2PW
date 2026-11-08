@@ -1,0 +1,55 @@
+T2PW: C:\t\ws-R3d\src\t2pw\__init__.py
+F...........................                                             [100%]
+================================== FAILURES ===================================
+__ test_stage_two_gets_its_arguments_and_the_merge_builds_the_final_payload ___
+
+world = namespace(calls=[('stage2', 'the paper', {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}}, {'chunk_detail...qa_hints': {'h': 1}}]}), ('diag.current',)], additions={'additions': {}, 'qa_hints': {'h': 1}}, raises=None, loop=None)
+
+    def test_stage_two_gets_its_arguments_and_the_merge_builds_the_final_payload(world):
+        res, rep, state = _run(world)
+    
+        name, text, payload, kw = world.calls[0]
+        assert (name, text, payload) == ("stage2", "the paper", _payload("a"))
+        assert kw == dict(chunk_details=[{"c": 1}], pathway_context=CTX, user_task_context="focus", qa_rounds=2,
+                          enable_chunking=True, chunk_word_limit=1200, chunk_overlap=200, max_attempts=3,
+                          temperature=0.25, max_tokens=9000)
+        assert all(type(kw[k]) is int for k in ("qa_rounds", "chunk_word_limit", "chunk_overlap", "max_attempts",
+                                                "max_tokens"))
+        merge = world.calls[1]
+        assert merge[:3] == ("merge", _payload("a"), world.additions)
+        assert set(merge[3]) == {"pathway_context", "source_text"} and merge[3]["source_text"] == "the paper"
+>       assert merge[3]["pathway_context"] == PathwayContext("Menaquinone biosynthesis", "Escherichia coli")
+E       AssertionError: assert {'likely_organism': 'Escherichia coli', 'pathway_name': 'Menaquinone biosynthesis'} == PathwayContext(requested_pathway='Menaquinone biosynthesis', organism='Escherichia coli')
+E        +  where PathwayContext(requested_pathway='Menaquinone biosynthesis', organism='Escherichia coli') = PathwayContext('Menaquinone biosynthesis', 'Escherichia coli')
+
+tests\test_service_extraction_stage2.py:178: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage2.py::test_stage_two_gets_its_arguments_and_the_merge_builds_the_final_payload
+1 failed, 27 passed in 2.69s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3d\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 590563edbd444f8c972732f3252204cb7b5ac638  [git, worktree dirty=True]
+label                   : mut-merge-dict-context
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3d/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3d -q -p no:cacheprovider --basetemp=C:/t/wsR3dtmp/mut-tmp/merge-dict-context tests/test_service_extraction_stage2.py
+cwd                     : C:\t\ws-R3d
+root PID / process group: 53384 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 3.67 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  53320:python.exe
+descendants terminated  : 1  53320
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR3dtmp\ev\mutation\merge-dict-context.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R3d  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

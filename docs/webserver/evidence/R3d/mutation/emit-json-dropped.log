@@ -1,0 +1,75 @@
+T2PW: C:\t\ws-R3d\src\t2pw\__init__.py
+.......F.......F............                                             [100%]
+================================== FAILURES ===================================
+_____ test_a_synthesized_rag_result_runs_the_rounds_on_the_merged_payload _____
+
+world = namespace(calls=[('stage2', 'the paper', {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}}, {'chunk_detail...o', 'i'), ('warning', 'w'), ('error', 'e'), ('json', {'j': 1}), ('other', 'dropped')], 'rounds': [1], 'max_rounds': 1})
+
+    def test_a_synthesized_rag_result_runs_the_rounds_on_the_merged_payload(world):
+        world.loop = deepcopy(LOOP)
+        result = _rag_result()
+        state = RecordingState(pwml_strict_db=0)
+        res, rep, state = _run(world, stage_one=_stage_one(rag_result=result), state=state, rag_incomplete_flag=1,
+                               export_mode="research")
+    
+        assert [c[0] for c in world.calls] == ["stage2", "merge", "rag_rounds", "preservation", "draft_graph",
+                                              "diag.current"]
+        _name, graph, kw = world.calls[2]
+        assert graph == {"merged": [_payload("a"), world.additions]}
+        assert set(kw) == {"first_result", "merge_site", "pathway_context", "user_flag", "seed_text", "export_mode",
+                           "strict_db", "reporter", "state"}
+        assert kw["first_result"] is result and kw["pathway_context"] == CTX and kw["user_flag"] is True
+        assert kw["seed_text"] == "the paper" and kw["export_mode"] == "research" and kw["strict_db"] is False
+        assert kw["reporter"] is rep and kw["state"] is state
+        assert res.final_payload == {"looped": 1}
+>       assert rep.calls[3:] == [("info", ("i",)), ("warning", ("w",)), ("error", ("e",)), ("json", ({"j": 1},))]
+E       AssertionError: assert [('info', ('i...ror', ('e',))] == [('info', ('i... ({'j': 1},))]
+E         
+E         Right contains one more item: ('json', ({'j': 1},))
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage2.py:282: AssertionError
+____________________ test_emit_and_session_record_helpers _____________________
+
+    def test_emit_and_session_record_helpers():
+        rep = RecordingReporter()
+        ex.emit_rag_loop_messages([("info", "i"), ("json", [1]), ("nope", "x")], reporter=rep)
+        ex.emit_rag_loop_messages(None, reporter=rep)
+>       assert rep.calls == [("info", ("i",)), ("json", ([1],))]
+E       AssertionError: assert [('info', ('i',))] == [('info', ('i...son', ([1],))]
+E         
+E         Right contains one more item: ('json', ([1],))
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage2.py:328: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage2.py::test_a_synthesized_rag_result_runs_the_rounds_on_the_merged_payload
+FAILED tests/test_service_extraction_stage2.py::test_emit_and_session_record_helpers
+2 failed, 26 passed in 2.72s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3d\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 590563edbd444f8c972732f3252204cb7b5ac638  [git, worktree dirty=True]
+label                   : mut-emit-json-dropped
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3d/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3d -q -p no:cacheprovider --basetemp=C:/t/wsR3dtmp/mut-tmp/emit-json-dropped tests/test_service_extraction_stage2.py
+cwd                     : C:\t\ws-R3d
+root PID / process group: 53456 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 3.67 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  55328:python.exe
+descendants terminated  : 1  55328
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR3dtmp\ev\mutation\emit-json-dropped.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R3d  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

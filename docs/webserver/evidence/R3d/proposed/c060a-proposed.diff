@@ -1,0 +1,16 @@
+57c57,61
+< OWNED_FLOOR = 1440
+---
+> #: R3d: both merge sites moved with Stage 2 into service/extraction.py (``run_stage_two``,
+> #: 874/931, gate imports 872/929); no other merge_additions assignment or gate import sits
+> #: in that file. Same locator, same selection: the floor is ``def run_stage_two``.
+> OWNED_FLOOR = 790
+> EXTRACTION_PATH = SRC / "t2pw" / "service" / "extraction.py"
+80c84
+<     sites = [n for n in _merge_calls(_tree(APP_PATH)) if n.lineno >= OWNED_FLOOR]
+---
+>     sites = [n for n in _merge_calls(_tree(EXTRACTION_PATH)) if n.lineno >= OWNED_FLOOR]
+111c115
+<         node for node in ast.walk(_tree(APP_PATH))
+---
+>         node for node in ast.walk(_tree(EXTRACTION_PATH))

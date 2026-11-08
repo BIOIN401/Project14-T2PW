@@ -1,0 +1,30 @@
+T2PW: C:\t\ws-R3d-base\src\t2pw\__init__.py
+.........................................................                [100%]
+57 passed in 6.38s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3d-base\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 5af91e07c84605ed5f749cef44698bf51e017a45  [git, worktree dirty=False]
+label                   : svc
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3d-base/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3d-base --pin-verdict C:/t/wsR3dtmp/ev/pin/b-svc.pin.json -q --basetemp=C:/t/wsR3dtmp/b-svc tests/test_service_extraction.py tests/test_service_extraction_stage0.py tests/test_service_reporter.py
+cwd                     : C:\t\ws-R3d-base
+root PID / process group: 40428 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 560 s
+duration                : 7.32 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 5  40472:python.exe, 40036:python.exe, 40432:python.exe, 40836:python.exe, 17352:python.exe
+descendants terminated  : 5  17352, 40036, 40432, 40472, 40836
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/wsR3dtmp/ev/b-svc.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R3d  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

@@ -1,0 +1,106 @@
+T2PW: C:\t\ws-R3d\src\t2pw\__init__.py
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_out_of_scope_filter_runs_between_stage1_extraction_and_stage2_inference _
+
+    def test_out_of_scope_filter_runs_between_stage1_extraction_and_stage2_inference() -> None:
+        tree = _source_tree()
+    
+        def _calls_named(name: str, within: ast.AST = tree, attr: bool = False) -> list[ast.Call]:
+            return [
+                node
+                for node in ast.walk(within)
+                if isinstance(node, ast.Call)
+                and (getattr(node.func, "attr", None) if attr and isinstance(node.func, ast.Attribute)
+                     else getattr(node.func, "id", None)) == name
+            ]
+    
+        # Q-R3c-1 / R3d: Stage 1, the filter and Stage 2 live in service/extraction.py (run_stage_one and
+        # run_stage_two), as call-time ``_pipeline.x(...)`` calls; the app calls the two steps in order.
+        service_module = ast.parse((ROOT / "src" / "t2pw" / "service" / "extraction.py").read_text(encoding="utf-8"))
+        service = next(node for node in service_module.body
+                       if isinstance(node, ast.FunctionDef) and node.name == "run_stage_one")
+        stage_two_fn = next(node for node in service_module.body
+                            if isinstance(node, ast.FunctionDef) and node.name == "run_stage_two")
+        extraction_calls = _calls_named("run_stage_one_with_chunking", service, attr=True)
+        filter_calls = _calls_named("filter_out_of_scope_reactions", service, attr=True)
+        inference_calls = _calls_named("run_stage_two_with_feedback_loop", stage_two_fn, attr=True)
+        stage_one_calls = _calls_named("run_stage_one")
+        stage_two_calls = _calls_named("run_stage_two")
+    
+        assert len(extraction_calls) == 1
+        assert len(filter_calls) == 1
+        assert len(inference_calls) == 1
+        assert len(stage_one_calls) == 1
+        assert len(stage_two_calls) == 1
+    
+        # The filter must run strictly after Stage 1 extraction returns and strictly
+        # before its output is handed to Stage 2 inference, so out-of-scope reactions
+        # never reach the inference pass.
+        assert extraction_calls[0].lineno < filter_calls[0].lineno
+        assert stage_one_calls[0].lineno < stage_two_calls[0].lineno
+        # ... and what run_stage_one returns as the in-scope payload is the filter's output.
+        filtered = next(node.targets[0] for node in ast.walk(service)
+                        if isinstance(node, ast.Assign) and node.value is filter_calls[0])
+        returned = [kw.value for call in _calls_named("StageOneResult", service)
+                    for kw in call.keywords if kw.arg == "stage_one_in_scope"]
+        assert len(returned) == 1 and isinstance(returned[0], ast.Name)
+        assert returned[0].id == filtered.elts[0].id
+        # ... and the app hands that result itself to run_stage_two (review F1).
+        stage_one_result = next(node.targets[0] for node in ast.walk(tree)
+                                if isinstance(node, ast.Assign) and node.value is stage_one_calls[0])
+        assert isinstance(stage_two_calls[0].args[1], ast.Name)
+        assert stage_two_calls[0].args[1].id == stage_one_result.id
+    
+        # Stage 2 inference must be called with the *filtered* Stage 1 payload, not
+        # the raw extraction output: the name run_stage_two binds from the result's in-scope field.
+        stage_one_arg = inference_calls[0].args[1]
+        assert isinstance(stage_one_arg, ast.Name)
+        assert stage_one_arg.id != "stage_one"
+        in_scope_from = [node.value for node in ast.walk(stage_two_fn)
+                         if isinstance(node, ast.Assign) and len(node.targets) == 1
+                         and isinstance(node.targets[0], ast.Name) and node.targets[0].id == stage_one_arg.id]
+        assert len(in_scope_from) == 1 and isinstance(in_scope_from[0], ast.Attribute)
+        assert in_scope_from[0].attr == "stage_one_in_scope"
+    
+        # merge_additions (used to build final_payload when inference ran) must also
+        # be seeded from the filtered payload.
+        merge_calls = _calls_named("merge_additions", stage_two_fn)
+        assert merge_calls
+        merge_base_arg = merge_calls[0].args[0]
+        assert isinstance(merge_base_arg, ast.Name)
+>       assert merge_base_arg.id != "stage_one"
+E       AssertionError: assert 'stage_one' != 'stage_one'
+E        +  where 'stage_one' = <ast.Name object at 0x000002063516A7D0>.id
+
+docs\webserver\evidence\R3d\proposed\s2orch_order_proposed.py:94: AssertionError
+=========================== short test summary info ===========================
+FAILED docs/webserver/evidence/R3d/proposed/s2orch_order_proposed.py::test_out_of_scope_filter_runs_between_stage1_extraction_and_stage2_inference
+1 failed in 0.13s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3d\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ bdd75f05aeb124d593dbd00e36aa965ffa6a2c46  [git, worktree dirty=True]
+label                   : proof-order-merge-base-raw
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3d/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3d -q -p no:cacheprovider --basetemp=C:/t/wsR3dtmp/proof-tmp/order-merge-base-raw C:/t/ws-R3d/docs/webserver/evidence/R3d/proposed/s2orch_order_proposed.py
+cwd                     : C:\t\ws-R3d
+root PID / process group: 103692 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 0.74 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  96980:python.exe
+descendants terminated  : 1  96980
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR3dtmp\ev\proposed-test-edits\order-merge-base-raw.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R3d  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

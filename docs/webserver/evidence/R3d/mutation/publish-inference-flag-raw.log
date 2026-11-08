@@ -1,0 +1,48 @@
+T2PW: C:\t\ws-R3d\src\t2pw\__init__.py
+..F.........................                                             [100%]
+================================== FAILURES ===================================
+_________ test_inference_off_publishes_the_in_scope_payload_untouched _________
+
+world = namespace(calls=[('preservation', 'after_stage2', {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}}), ('dr...ns': [{'name': 'a'}]}}), ('diag.current',)], additions={'additions': {}, 'qa_hints': {'h': 1}}, raises=None, loop=None)
+
+    def test_inference_off_publishes_the_in_scope_payload_untouched(world):
+        res, rep, state = _run(world, run_inference=0)
+    
+        assert [c[0] for c in world.calls] == ["preservation", "draft_graph", "diag.current"]
+        assert rep.calls == []
+        assert res.final_payload == _payload("a") and state["final_payload"] is res.final_payload
+        assert state["stage_two"] is None and state["stage_two_chunks"] == [] and state["stage_two_rounds"] == []
+>       assert state["qa_hints"] is None and state["run_inference_enabled"] is False
+E       assert (None is None and 0 is False)
+
+tests\test_service_extraction_stage2.py:215: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage2.py::test_inference_off_publishes_the_in_scope_payload_untouched
+1 failed, 27 passed in 2.66s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3d\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 590563edbd444f8c972732f3252204cb7b5ac638  [git, worktree dirty=True]
+label                   : mut-publish-inference-flag-raw
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3d/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3d -q -p no:cacheprovider --basetemp=C:/t/wsR3dtmp/mut-tmp/publish-inference-flag-raw tests/test_service_extraction_stage2.py
+cwd                     : C:\t\ws-R3d
+root PID / process group: 24452 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 3.69 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  40388:python.exe
+descendants terminated  : 1  40388
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR3dtmp\ev\mutation\publish-inference-flag-raw.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R3d  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

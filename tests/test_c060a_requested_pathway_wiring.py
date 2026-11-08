@@ -54,7 +54,11 @@ PIPELINE_PATH = SRC / "t2pw" / "pipeline" / "pipeline.py"
 #: R2: was 2571. Same locator, same selection: 1,131 more lines left the app, the sites
 #: moved 3539/3594 -> 2408/2463 and the gate imports 3537/3592 -> 2406/2461; no other
 #: app import of that module sits between 1440 and 2406.
-OWNED_FLOOR = 1440
+#: R3d: both merge sites moved with Stage 2 into service/extraction.py (``run_stage_two``,
+#: 874/931, gate imports 872/929); no other merge_additions assignment or gate import sits
+#: in that file. Same locator, same selection: the floor is ``def run_stage_two``.
+OWNED_FLOOR = 790
+EXTRACTION_PATH = SRC / "t2pw" / "service" / "extraction.py"
 GATE_MODULE = "t2pw.pipeline.entity_admission"
 
 
@@ -77,7 +81,7 @@ def _merge_calls(tree: ast.Module) -> list:
 
 
 def _app_sites() -> list:
-    sites = [n for n in _merge_calls(_tree(APP_PATH)) if n.lineno >= OWNED_FLOOR]
+    sites = [n for n in _merge_calls(_tree(EXTRACTION_PATH)) if n.lineno >= OWNED_FLOOR]
     assert len(sites) == 2, f"expected two owned app merge sites: {[s.lineno for s in sites]}"
     return sites
 
@@ -108,7 +112,7 @@ def _run_app_site(index: int, namespace: dict) -> dict:
     sites = _app_sites()
     site, lower = sites[index], (sites[index - 1].lineno if index else OWNED_FLOOR - 1)
     imports = [
-        node for node in ast.walk(_tree(APP_PATH))
+        node for node in ast.walk(_tree(EXTRACTION_PATH))
         if isinstance(node, ast.ImportFrom) and node.module == GATE_MODULE
         and lower < node.lineno < site.lineno
     ]

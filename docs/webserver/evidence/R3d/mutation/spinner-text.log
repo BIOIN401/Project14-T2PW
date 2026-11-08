@@ -1,0 +1,116 @@
+T2PW: C:\t\ws-R3d\src\t2pw\__init__.py
+F...FF......................                                             [100%]
+================================== FAILURES ===================================
+__ test_stage_two_gets_its_arguments_and_the_merge_builds_the_final_payload ___
+
+world = namespace(calls=[('stage2', 'the paper', {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}}, {'chunk_detail...qa_hints': {'h': 1}}]}), ('diag.current',)], additions={'additions': {}, 'qa_hints': {'h': 1}}, raises=None, loop=None)
+
+    def test_stage_two_gets_its_arguments_and_the_merge_builds_the_final_payload(world):
+        res, rep, state = _run(world)
+    
+        name, text, payload, kw = world.calls[0]
+        assert (name, text, payload) == ("stage2", "the paper", _payload("a"))
+        assert kw == dict(chunk_details=[{"c": 1}], pathway_context=CTX, user_task_context="focus", qa_rounds=2,
+                          enable_chunking=True, chunk_word_limit=1200, chunk_overlap=200, max_attempts=3,
+                          temperature=0.25, max_tokens=9000)
+        assert all(type(kw[k]) is int for k in ("qa_rounds", "chunk_word_limit", "chunk_overlap", "max_attempts",
+                                                "max_tokens"))
+        merge = world.calls[1]
+        assert merge[:3] == ("merge", _payload("a"), world.additions)
+        assert set(merge[3]) == {"pathway_context", "source_text"} and merge[3]["source_text"] == "the paper"
+        assert merge[3]["pathway_context"] == PathwayContext("Menaquinone biosynthesis", "Escherichia coli")
+>       assert rep.calls == [("spinner", ("Running Stage 2 inference...",)), ("spinner:enter",), ("spinner:exit",)]
+E       AssertionError: assert [('spinner', ...inner:exit',)] == [('spinner', ...inner:exit',)]
+E         
+E         At index 0 diff: ('spinner', ('Stage 2',)) != ('spinner', ('Running Stage 2 inference...',))
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage2.py:179: AssertionError
+_ test_a_stage_two_failure_reports_and_is_returned_before_anything_is_published[stage2-chunk-1-stage2-chunk-1 attempts] _
+
+world = namespace(calls=[('stage2', 'the paper', {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}}, {'chunk_detail...ens': 9000})], additions={'additions': {}, 'qa_hints': {'h': 1}}, raises=PipelineFailure('no JSON after 3'), loop=None)
+stage = 'stage2-chunk-1', label = 'stage2-chunk-1 attempts'
+
+    @pytest.mark.parametrize("stage, label", [("stage2-chunk-1", "stage2-chunk-1 attempts"),
+                                              (None, "Stage 2 attempts")])
+    def test_a_stage_two_failure_reports_and_is_returned_before_anything_is_published(world, stage, label):
+        failure = pipeline.PipelineFailure("stage2", "no JSON after 3", ATTEMPTS)
+        failure.stage = stage
+        world.raises = failure
+        res, rep, state = _run(world)
+    
+        message = "Inference stage failed: no JSON after 3"
+        assert res == ex.ExtractionResult(failure=ex.InputFailure(ex.KIND_STAGE_TWO_FAILED, message))
+        assert ex.KIND_STAGE_TWO_FAILED == "stage_two_failed"
+>       assert rep.calls == [
+            ("spinner", ("Running Stage 2 inference...",)), ("spinner:enter",), ("spinner:exit",),
+            ("error", (message,)), ("expander", (label,), {"expanded": False}), ("expander:enter",),
+            ("markdown", ("**Attempt 1 (infer)** - retry",)), ("code", ("{bad",), {"language": "json"}),
+            ("caption", ("Expecting value",)), ("markdown", ("**Attempt 2** - success",)),
+            ("code", ("{}",), {"language": "json"}), ("expander:exit",)]
+E       AssertionError: assert [('spinner', ...enter',), ...] == [('spinner', ...enter',), ...]
+E         
+E         At index 0 diff: ('spinner', ('Stage 2',)) != ('spinner', ('Running Stage 2 inference...',))
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage2.py:238: AssertionError
+_ test_a_stage_two_failure_reports_and_is_returned_before_anything_is_published[None-Stage 2 attempts] _
+
+world = namespace(calls=[('stage2', 'the paper', {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}}, {'chunk_detail...ens': 9000})], additions={'additions': {}, 'qa_hints': {'h': 1}}, raises=PipelineFailure('no JSON after 3'), loop=None)
+stage = None, label = 'Stage 2 attempts'
+
+    @pytest.mark.parametrize("stage, label", [("stage2-chunk-1", "stage2-chunk-1 attempts"),
+                                              (None, "Stage 2 attempts")])
+    def test_a_stage_two_failure_reports_and_is_returned_before_anything_is_published(world, stage, label):
+        failure = pipeline.PipelineFailure("stage2", "no JSON after 3", ATTEMPTS)
+        failure.stage = stage
+        world.raises = failure
+        res, rep, state = _run(world)
+    
+        message = "Inference stage failed: no JSON after 3"
+        assert res == ex.ExtractionResult(failure=ex.InputFailure(ex.KIND_STAGE_TWO_FAILED, message))
+        assert ex.KIND_STAGE_TWO_FAILED == "stage_two_failed"
+>       assert rep.calls == [
+            ("spinner", ("Running Stage 2 inference...",)), ("spinner:enter",), ("spinner:exit",),
+            ("error", (message,)), ("expander", (label,), {"expanded": False}), ("expander:enter",),
+            ("markdown", ("**Attempt 1 (infer)** - retry",)), ("code", ("{bad",), {"language": "json"}),
+            ("caption", ("Expecting value",)), ("markdown", ("**Attempt 2** - success",)),
+            ("code", ("{}",), {"language": "json"}), ("expander:exit",)]
+E       AssertionError: assert [('spinner', ...enter',), ...] == [('spinner', ...enter',), ...]
+E         
+E         At index 0 diff: ('spinner', ('Stage 2',)) != ('spinner', ('Running Stage 2 inference...',))
+E         Use -v to get more diff
+
+tests\test_service_extraction_stage2.py:238: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage2.py::test_stage_two_gets_its_arguments_and_the_merge_builds_the_final_payload
+FAILED tests/test_service_extraction_stage2.py::test_a_stage_two_failure_reports_and_is_returned_before_anything_is_published[stage2-chunk-1-stage2-chunk-1 attempts]
+FAILED tests/test_service_extraction_stage2.py::test_a_stage_two_failure_reports_and_is_returned_before_anything_is_published[None-Stage 2 attempts]
+3 failed, 25 passed in 2.77s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3d\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 590563edbd444f8c972732f3252204cb7b5ac638  [git, worktree dirty=True]
+label                   : mut-spinner-text
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3d/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3d -q -p no:cacheprovider --basetemp=C:/t/wsR3dtmp/mut-tmp/spinner-text tests/test_service_extraction_stage2.py
+cwd                     : C:\t\ws-R3d
+root PID / process group: 51416 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 3.90 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  50636:python.exe
+descendants terminated  : 1  50636
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR3dtmp\ev\mutation\spinner-text.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R3d  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

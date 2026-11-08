@@ -1,0 +1,100 @@
+T2PW: C:\t\ws-R3d\src\t2pw\__init__.py
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_out_of_scope_filter_runs_between_stage1_extraction_and_stage2_inference _
+
+    def test_out_of_scope_filter_runs_between_stage1_extraction_and_stage2_inference() -> None:
+        tree = _source_tree()
+    
+        def _calls_named(name: str, within: ast.AST = tree, attr: bool = False) -> list[ast.Call]:
+            return [
+                node
+                for node in ast.walk(within)
+                if isinstance(node, ast.Call)
+                and (getattr(node.func, "attr", None) if attr and isinstance(node.func, ast.Attribute)
+                     else getattr(node.func, "id", None)) == name
+            ]
+    
+        # Q-R3c-1 / R3d: Stage 1, the filter and Stage 2 live in service/extraction.py (run_stage_one and
+        # run_stage_two), as call-time ``_pipeline.x(...)`` calls; the app calls the two steps in order.
+        service_module = ast.parse((ROOT / "src" / "t2pw" / "service" / "extraction.py").read_text(encoding="utf-8"))
+        service = next(node for node in service_module.body
+                       if isinstance(node, ast.FunctionDef) and node.name == "run_stage_one")
+        stage_two_fn = next(node for node in service_module.body
+                            if isinstance(node, ast.FunctionDef) and node.name == "run_stage_two")
+        extraction_calls = _calls_named("run_stage_one_with_chunking", service, attr=True)
+        filter_calls = _calls_named("filter_out_of_scope_reactions", service, attr=True)
+        inference_calls = _calls_named("run_stage_two_with_feedback_loop", stage_two_fn, attr=True)
+        stage_one_calls = _calls_named("run_stage_one")
+        stage_two_calls = _calls_named("run_stage_two")
+    
+        assert len(extraction_calls) == 1
+        assert len(filter_calls) == 1
+        assert len(inference_calls) == 1
+        assert len(stage_one_calls) == 1
+        assert len(stage_two_calls) == 1
+    
+        # The filter must run strictly after Stage 1 extraction returns and strictly
+        # before its output is handed to Stage 2 inference, so out-of-scope reactions
+        # never reach the inference pass.
+        assert extraction_calls[0].lineno < filter_calls[0].lineno
+        assert stage_one_calls[0].lineno < stage_two_calls[0].lineno
+        # ... and what run_stage_one returns as the in-scope payload is the filter's output.
+        filtered = next(node.targets[0] for node in ast.walk(service)
+                        if isinstance(node, ast.Assign) and node.value is filter_calls[0])
+        returned = [kw.value for call in _calls_named("StageOneResult", service)
+                    for kw in call.keywords if kw.arg == "stage_one_in_scope"]
+        assert len(returned) == 1 and isinstance(returned[0], ast.Name)
+        assert returned[0].id == filtered.elts[0].id
+        # ... and the app hands that result itself to run_stage_two (review F1).
+        stage_one_result = next(node.targets[0] for node in ast.walk(tree)
+                                if isinstance(node, ast.Assign) and node.value is stage_one_calls[0])
+        assert isinstance(stage_two_calls[0].args[1], ast.Name)
+        assert stage_two_calls[0].args[1].id == stage_one_result.id
+    
+        # Stage 2 inference must be called with the *filtered* Stage 1 payload, not
+        # the raw extraction output: the name run_stage_two binds from the result's in-scope field.
+        stage_one_arg = inference_calls[0].args[1]
+        assert isinstance(stage_one_arg, ast.Name)
+        assert stage_one_arg.id != "stage_one"
+        in_scope_from = [node.value for node in ast.walk(stage_two_fn)
+                         if isinstance(node, ast.Assign) and len(node.targets) == 1
+                         and isinstance(node.targets[0], ast.Name) and node.targets[0].id == stage_one_arg.id]
+        assert len(in_scope_from) == 1 and isinstance(in_scope_from[0], ast.Attribute)
+>       assert in_scope_from[0].attr == "stage_one_in_scope"
+E       AssertionError: assert 'stage_one' == 'stage_one_in_scope'
+E         
+E         - stage_one_in_scope
+E         + stage_one
+
+tests\test_streamlit_stage2_orchestration.py:1016: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_streamlit_stage2_orchestration.py::test_out_of_scope_filter_runs_between_stage1_extraction_and_stage2_inference
+1 failed in 1.14s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3d\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 3ade39e37ac4b0ed54380bd1c691979e6014a304  [git, worktree dirty=True]
+label                   : vac-in-scope-bound-from-raw-F1
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3d/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3d -q -p no:cacheprovider --basetemp=C:/t/wsR3dtmp/vac-tmp/in-scope-bound-from-raw-F1 tests/test_streamlit_stage2_orchestration.py::test_out_of_scope_filter_runs_between_stage1_extraction_and_stage2_inference
+cwd                     : C:\t\ws-R3d
+root PID / process group: 129600 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 1.89 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  129512:python.exe
+descendants terminated  : 1  129512
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR3dtmp\ev2\order-test-vacuity\in-scope-bound-from-raw-F1.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R3d  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

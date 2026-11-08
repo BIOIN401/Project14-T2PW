@@ -1,0 +1,63 @@
+T2PW: C:\t\ws-R3d\src\t2pw\__init__.py
+..........................F.                                             [100%]
+================================== FAILURES ===================================
+_ test_real_app_publishes_the_run_then_resets_the_quarantine_and_counts_tokens _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000191F100B690>
+tmp_path = WindowsPath('C:/t/wsR3dtmp/mut-tmp/app-token-stats-dropped/test_real_app_publishes_the_ru0')
+
+    def test_real_app_publishes_the_run_then_resets_the_quarantine_and_counts_tokens(monkeypatch, tmp_path):
+        additions = {"additions": {"processes": {"reactions": [{"name": "menaquinone prenylation"}]}}}
+        monkeypatch.setattr(pipeline, "run_stage_two_with_feedback_loop", lambda *_a, **_k: (additions, [], [{"r": 1}]))
+        at = _real_app(monkeypatch, tmp_path, seed={"quarantine_report": {"stale": True},
+                                                    "post_pipeline_artifacts": {"stale": True}})
+    
+        assert [str(e.value) for e in at.exception] == []
+        assert [e.value for e in at.error] == []
+        ss = at.session_state
+        assert ss["pipeline_ready"] is True and ss["run_inference_enabled"] is True
+        assert ss["pathway_context"] == CTX and ss["stage_two"] == additions and ss["stage_two_rounds"] == [{"r": 1}]
+        assert ss["reaction_preservation_after_stage2"] == {"stage": "after_stage2"}
+        assert ss["pipeline_source_text"] == "MenG demethylates demethylmenaquinone."
+        assert ss["final_payload"] == ss["final_payload_snapshot"]
+        assert (tmp_path / "draft_graph.json").is_file() and "draft_graph" in ss
+        # after the service returned: the app's quarantine reset, then the token stats
+        assert "quarantine_report" not in ss and "post_pipeline_artifacts" not in ss
+>       assert "token_stats" in ss
+E       AssertionError: assert 'token_stats' in {stage_one_boundary: {'ok': True}, $$ID-a7dd520931aea4542e1da138eccdd216-None: 0.0, chunk_details: [], $$ID-b7981d64b4...}}}, $$ID-66b0b2aec34a9ead43a63de181b91a3a-dl_qa_report: False, $$ID-1159f5f86387cf6b670f679e55c50ffe-post_db_user: ''}
+
+tests\test_service_extraction_stage2.py:546: AssertionError
+---------------------------- Captured stderr call -----------------------------
+2026-11-07 14:28:55.210 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-07 14:28:55.848 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-07 14:28:55.848 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage2.py::test_real_app_publishes_the_run_then_resets_the_quarantine_and_counts_tokens
+1 failed, 27 passed in 2.73s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3d\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 590563edbd444f8c972732f3252204cb7b5ac638  [git, worktree dirty=True]
+label                   : mut-app-token-stats-dropped
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3d/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3d -q -p no:cacheprovider --basetemp=C:/t/wsR3dtmp/mut-tmp/app-token-stats-dropped tests/test_service_extraction_stage2.py
+cwd                     : C:\t\ws-R3d
+root PID / process group: 24836 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 3.79 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  42268:python.exe
+descendants terminated  : 1  42268
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR3dtmp\ev\mutation\app-token-stats-dropped.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R3d  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

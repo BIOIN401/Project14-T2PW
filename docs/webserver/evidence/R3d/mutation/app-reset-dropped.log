@@ -1,0 +1,62 @@
+T2PW: C:\t\ws-R3d\src\t2pw\__init__.py
+..........................F.                                             [100%]
+================================== FAILURES ===================================
+_ test_real_app_publishes_the_run_then_resets_the_quarantine_and_counts_tokens _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001AECD40B2A0>
+tmp_path = WindowsPath('C:/t/wsR3dtmp/mut-tmp/app-reset-dropped/test_real_app_publishes_the_ru0')
+
+    def test_real_app_publishes_the_run_then_resets_the_quarantine_and_counts_tokens(monkeypatch, tmp_path):
+        additions = {"additions": {"processes": {"reactions": [{"name": "menaquinone prenylation"}]}}}
+        monkeypatch.setattr(pipeline, "run_stage_two_with_feedback_loop", lambda *_a, **_k: (additions, [], [{"r": 1}]))
+        at = _real_app(monkeypatch, tmp_path, seed={"quarantine_report": {"stale": True},
+                                                    "post_pipeline_artifacts": {"stale": True}})
+    
+        assert [str(e.value) for e in at.exception] == []
+        assert [e.value for e in at.error] == []
+        ss = at.session_state
+        assert ss["pipeline_ready"] is True and ss["run_inference_enabled"] is True
+        assert ss["pathway_context"] == CTX and ss["stage_two"] == additions and ss["stage_two_rounds"] == [{"r": 1}]
+        assert ss["reaction_preservation_after_stage2"] == {"stage": "after_stage2"}
+        assert ss["pipeline_source_text"] == "MenG demethylates demethylmenaquinone."
+        assert ss["final_payload"] == ss["final_payload_snapshot"]
+        assert (tmp_path / "draft_graph.json").is_file() and "draft_graph" in ss
+        # after the service returned: the app's quarantine reset, then the token stats
+>       assert "quarantine_report" not in ss and "post_pipeline_artifacts" not in ss
+E       AssertionError: assert ('quarantine_report' not in {$$ID-1802c6e678176a25e50d81dda1a463e5-None: False, $$ID-0a0009084f57146037e4e7a3ebd64e0c-pwml_strict_db: True, extrac...00, $$ID-32585420727a69512c30137992a93f80-reaction_evidence_dir:: '', $$ID-d1100fe02a55a8f0b023a0f859b76304-None: True})
+
+tests\test_service_extraction_stage2.py:545: AssertionError
+---------------------------- Captured stderr call -----------------------------
+2026-11-07 14:28:51.278 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-07 14:28:51.911 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-07 14:28:51.911 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage2.py::test_real_app_publishes_the_run_then_resets_the_quarantine_and_counts_tokens
+1 failed, 27 passed in 2.80s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3d\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 590563edbd444f8c972732f3252204cb7b5ac638  [git, worktree dirty=True]
+label                   : mut-app-reset-dropped
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3d/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3d -q -p no:cacheprovider --basetemp=C:/t/wsR3dtmp/mut-tmp/app-reset-dropped tests/test_service_extraction_stage2.py
+cwd                     : C:\t\ws-R3d
+root PID / process group: 51264 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 3.79 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  53944:python.exe
+descendants terminated  : 1  53944
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR3dtmp\ev\mutation\app-reset-dropped.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R3d  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

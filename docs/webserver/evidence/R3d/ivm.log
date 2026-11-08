@@ -1,0 +1,73 @@
+static dead-globals check (tip app, after `if submit:`): OK
+infer-success                SAME-EXCEPT-DEAD-GLOBALS  outcome=completed                                st-events=26 state-ops=23 callee-calls=7
+                               differing globals (dead after the block): ['_rag_merge_site', '_stage_two', 'chunk_details', 'draft_graph', 'final_payload', 'out_of_scope_removed_reactions', 'qa_hints', 'qa_report', 'rag_result', 'reaction_summary', 'stage2_preservation_report', 'stage_one', 'stage_one_in_scope', 'stage_two', 'stage_two_chunks', 'stage_two_rounds', 'user_task_context']
+infer-non-dict               SAME-EXCEPT-DEAD-GLOBALS  outcome=completed                                st-events=26 state-ops=23 callee-calls=7
+                               differing globals (dead after the block): ['_rag_merge_site', '_stage_two', 'chunk_details', 'draft_graph', 'final_payload', 'out_of_scope_removed_reactions', 'qa_hints', 'qa_report', 'rag_result', 'reaction_summary', 'stage2_preservation_report', 'stage_one', 'stage_one_in_scope', 'stage_two', 'stage_two_chunks', 'stage_two_rounds', 'user_task_context']
+infer-dict-no-hints          SAME-EXCEPT-DEAD-GLOBALS  outcome=completed                                st-events=26 state-ops=23 callee-calls=7
+                               differing globals (dead after the block): ['_rag_merge_site', '_stage_two', 'chunk_details', 'draft_graph', 'final_payload', 'out_of_scope_removed_reactions', 'qa_hints', 'qa_report', 'rag_result', 'reaction_summary', 'stage2_preservation_report', 'stage_one', 'stage_one_in_scope', 'stage_two', 'stage_two_chunks', 'stage_two_rounds', 'user_task_context']
+infer-off                    SAME-EXCEPT-DEAD-GLOBALS  outcome=completed                                st-events=23 state-ops=23 callee-calls=5
+                               differing globals (dead after the block): ['_rag_merge_site', '_stage_two', 'chunk_details', 'draft_graph', 'final_payload', 'out_of_scope_removed_reactions', 'qa_hints', 'qa_report', 'rag_result', 'reaction_summary', 'stage2_preservation_report', 'stage_one', 'stage_one_in_scope', 'stage_two', 'stage_two_chunks', 'stage_two_rounds', 'user_task_context']
+infer-off-int-zero           SAME-EXCEPT-DEAD-GLOBALS  outcome=completed                                st-events=23 state-ops=23 callee-calls=5
+                               differing globals (dead after the block): ['_rag_merge_site', '_stage_two', 'chunk_details', 'draft_graph', 'final_payload', 'out_of_scope_removed_reactions', 'qa_hints', 'qa_report', 'rag_result', 'reaction_summary', 'stage2_preservation_report', 'stage_one', 'stage_one_in_scope', 'stage_two', 'stage_two_chunks', 'stage_two_rounds', 'user_task_context']
+infer-float-widgets          SAME-EXCEPT-DEAD-GLOBALS  outcome=completed                                st-events=26 state-ops=23 callee-calls=7
+                               differing globals (dead after the block): ['_rag_merge_site', '_stage_two', 'chunk_details', 'draft_graph', 'final_payload', 'out_of_scope_removed_reactions', 'qa_hints', 'qa_report', 'rag_result', 'reaction_summary', 'stage2_preservation_report', 'stage_one', 'stage_one_in_scope', 'stage_two', 'stage_two_chunks', 'stage_two_rounds', 'user_task_context']
+infer-failure-with-stage     SAME-EXCEPT-DEAD-GLOBALS  outcome=stopped                                  st-events=13 state-ops=0 callee-calls=1
+                               differing globals (dead after the block): ['_stage_two', 'chunk_details', 'final_payload', 'label', 'out_of_scope_removed_reactions', 'qa_hints', 'rag_result', 'stage_one', 'stage_one_in_scope', 'stage_two', 'stage_two_chunks', 'stage_two_rounds', 'user_task_context']
+infer-failure-no-stage       SAME-EXCEPT-DEAD-GLOBALS  outcome=stopped                                  st-events=13 state-ops=0 callee-calls=1
+                               differing globals (dead after the block): ['_stage_two', 'chunk_details', 'final_payload', 'label', 'out_of_scope_removed_reactions', 'qa_hints', 'rag_result', 'stage_one', 'stage_one_in_scope', 'stage_two', 'stage_two_chunks', 'stage_two_rounds', 'user_task_context']
+infer-failure-no-attempts    SAME-EXCEPT-DEAD-GLOBALS  outcome=stopped                                  st-events=8 state-ops=0 callee-calls=1
+                               differing globals (dead after the block): ['_stage_two', 'chunk_details', 'final_payload', 'label', 'out_of_scope_removed_reactions', 'qa_hints', 'rag_result', 'stage_one', 'stage_one_in_scope', 'stage_two', 'stage_two_chunks', 'stage_two_rounds', 'user_task_context']
+infer-other-exception        SAME-EXCEPT-DEAD-GLOBALS  outcome=raised RuntimeError: LLM down            st-events=3 state-ops=0 callee-calls=1
+                               differing globals (dead after the block): ['chunk_details', 'final_payload', 'out_of_scope_removed_reactions', 'qa_hints', 'rag_result', 'stage_one', 'stage_one_in_scope', 'stage_two', 'stage_two_chunks', 'stage_two_rounds', 'user_task_context']
+pops-and-stale-keys          SAME-EXCEPT-DEAD-GLOBALS  outcome=completed                                st-events=26 state-ops=23 callee-calls=7
+                               differing globals (dead after the block): ['_rag_merge_site', '_stage_two', 'chunk_details', 'draft_graph', 'final_payload', 'out_of_scope_removed_reactions', 'qa_hints', 'qa_report', 'rag_result', 'reaction_summary', 'stage2_preservation_report', 'stage_one', 'stage_one_in_scope', 'stage_two', 'stage_two_chunks', 'stage_two_rounds', 'user_task_context']
+rag-rounds                   SAME-EXCEPT-DEAD-GLOBALS  outcome=completed                                st-events=31 state-ops=24 callee-calls=9
+                               differing globals (dead after the block): ['_rag_merge_site', '_stage_two', 'chunk_details', 'draft_graph', 'final_payload', 'out_of_scope_removed_reactions', 'qa_hints', 'qa_report', 'rag_loop_record', 'rag_result', 'reaction_summary', 'stage2_preservation_report', 'stage_one', 'stage_one_in_scope', 'stage_two', 'stage_two_chunks', 'stage_two_rounds', 'user_task_context']
+rag-rounds-strict-db-off     SAME-EXCEPT-DEAD-GLOBALS  outcome=completed                                st-events=27 state-ops=24 callee-calls=9
+                               differing globals (dead after the block): ['_rag_merge_site', '_stage_two', 'chunk_details', 'draft_graph', 'final_payload', 'out_of_scope_removed_reactions', 'qa_hints', 'qa_report', 'rag_loop_record', 'rag_result', 'reaction_summary', 'stage2_preservation_report', 'stage_one', 'stage_one_in_scope', 'stage_two', 'stage_two_chunks', 'stage_two_rounds', 'user_task_context']
+rag-rounds-research-mode     SAME-EXCEPT-DEAD-GLOBALS  outcome=completed                                st-events=27 state-ops=24 callee-calls=9
+                               differing globals (dead after the block): ['_rag_merge_site', '_stage_two', 'chunk_details', 'draft_graph', 'final_payload', 'out_of_scope_removed_reactions', 'qa_hints', 'qa_report', 'rag_loop_record', 'rag_result', 'reaction_summary', 'stage2_preservation_report', 'stage_one', 'stage_one_in_scope', 'stage_two', 'stage_two_chunks', 'stage_two_rounds', 'user_task_context']
+rag-rounds-infer-off         SAME-EXCEPT-DEAD-GLOBALS  outcome=completed                                st-events=25 state-ops=24 callee-calls=7
+                               differing globals (dead after the block): ['_rag_merge_site', '_stage_two', 'chunk_details', 'draft_graph', 'final_payload', 'out_of_scope_removed_reactions', 'qa_hints', 'qa_report', 'rag_loop_record', 'rag_result', 'reaction_summary', 'stage2_preservation_report', 'stage_one', 'stage_one_in_scope', 'stage_two', 'stage_two_chunks', 'stage_two_rounds', 'user_task_context']
+rag-rounds-frozen-result     SAME-EXCEPT-DEAD-GLOBALS  outcome=completed                                st-events=27 state-ops=24 callee-calls=9
+                               differing globals (dead after the block): ['_rag_merge_site', '_stage_two', 'chunk_details', 'draft_graph', 'final_payload', 'out_of_scope_removed_reactions', 'qa_hints', 'qa_report', 'rag_loop_record', 'rag_result', 'reaction_summary', 'stage2_preservation_report', 'stage_one', 'stage_one_in_scope', 'stage_two', 'stage_two_chunks', 'stage_two_rounds', 'user_task_context']
+rag-not-synthesized          SAME-EXCEPT-DEAD-GLOBALS  outcome=completed                                st-events=26 state-ops=23 callee-calls=7
+                               differing globals (dead after the block): ['_rag_merge_site', '_stage_two', 'chunk_details', 'draft_graph', 'final_payload', 'out_of_scope_removed_reactions', 'qa_hints', 'qa_report', 'rag_result', 'reaction_summary', 'stage2_preservation_report', 'stage_one', 'stage_one_in_scope', 'stage_two', 'stage_two_chunks', 'stage_two_rounds', 'user_task_context']
+rag-no-payload               SAME-EXCEPT-DEAD-GLOBALS  outcome=completed                                st-events=26 state-ops=23 callee-calls=7
+                               differing globals (dead after the block): ['_rag_merge_site', '_stage_two', 'chunk_details', 'draft_graph', 'final_payload', 'out_of_scope_removed_reactions', 'qa_hints', 'qa_report', 'rag_result', 'reaction_summary', 'stage2_preservation_report', 'stage_one', 'stage_one_in_scope', 'stage_two', 'stage_two_chunks', 'stage_two_rounds', 'user_task_context']
+rag-empty-payload            SAME-EXCEPT-DEAD-GLOBALS  outcome=completed                                st-events=26 state-ops=23 callee-calls=7
+                               differing globals (dead after the block): ['_rag_merge_site', '_stage_two', 'chunk_details', 'draft_graph', 'final_payload', 'out_of_scope_removed_reactions', 'qa_hints', 'qa_report', 'rag_result', 'reaction_summary', 'stage2_preservation_report', 'stage_one', 'stage_one_in_scope', 'stage_two', 'stage_two_chunks', 'stage_two_rounds', 'user_task_context']
+rag-rounds-raise             SAME-EXCEPT-DEAD-GLOBALS  outcome=raised RuntimeError: round 1 blew up     st-events=3 state-ops=0 callee-calls=3
+                               differing globals (dead after the block): ['_rag_merge_site', 'chunk_details', 'final_payload', 'out_of_scope_removed_reactions', 'qa_hints', 'rag_result', 'stage_one', 'stage_one_in_scope', 'stage_two', 'stage_two_chunks', 'stage_two_rounds', 'user_task_context']
+draft-graph-raises           SAME-EXCEPT-DEAD-GLOBALS  outcome=raised RuntimeError: disk full           st-events=3 state-ops=0 callee-calls=4
+                               differing globals (dead after the block): ['_rag_merge_site', 'chunk_details', 'final_payload', 'out_of_scope_removed_reactions', 'qa_hints', 'rag_result', 'stage2_preservation_report', 'stage_one', 'stage_one_in_scope', 'stage_two', 'stage_two_chunks', 'stage_two_rounds', 'user_task_context']
+preservation-none            SAME-EXCEPT-DEAD-GLOBALS  outcome=completed                                st-events=26 state-ops=23 callee-calls=7
+                               differing globals (dead after the block): ['_rag_merge_site', '_stage_two', 'chunk_details', 'draft_graph', 'final_payload', 'out_of_scope_removed_reactions', 'qa_hints', 'qa_report', 'rag_result', 'reaction_summary', 'stage2_preservation_report', 'stage_one', 'stage_one_in_scope', 'stage_two', 'stage_two_chunks', 'stage_two_rounds', 'user_task_context']
+22/22 identical or known-difference only; static check OK; 0 unexplained
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3d\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 590563edbd444f8c972732f3252204cb7b5ac638  [git, worktree dirty=False]
+label                   : ivm
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/wsR3dtmp/scripts/inline_vs_moved.py C:/t/ws-R3d-base C:/t/ws-R3d
+cwd                     : C:\t\ws-R3d
+root PID / process group: 30784 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 1.46 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  49452:python.exe
+descendants terminated  : 1  49452
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/wsR3dtmp/ev/ivm.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R3d  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

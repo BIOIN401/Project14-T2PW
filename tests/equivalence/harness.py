@@ -5,8 +5,9 @@
   "Generate PWML") -- and captures the ``AppTest`` it built, the canonical payload hash and the PWML bytes.
   Two spies on ``t2pw.service.postpipeline`` record the exact arguments the app handed to
   ``run_post_pipeline_sbml_artifacts`` and ``run_pwml_export``; they call straight through.
-* :func:`run_service_arm` starts from the Stage-2 payload the app reached and calls the SERVICE functions
-  directly, as the app does. ``# TODO(R3)`` marks where this becomes ``run_extraction``/``run_pathway``.
+* :func:`run_service_arm` starts from the case's text and calls the SERVICE functions directly, as the app
+  does: ``run_extraction`` (R3d), then the post-pipeline and the export. ``# TODO(R5)`` marks where this
+  becomes ``run_pathway``.
 * Every arm runs in its own project root (:func:`isolate`): ``t2pw.paths.PROJECT_ROOT``/``TMP_DIR`` and
   every loaded ``t2pw`` module's binding of them point at it, and the cwd is it. The fixed
   ``outputs/pathway.pwml``, ``tmp/``, ``out/`` and the ``data/`` mapping and enrichment caches (which start
@@ -270,38 +271,87 @@ def run_app_arm(root: Path, cassette: llm_replay.Cassette, timeout: float, case:
 
 
 def run_service_arm(app: Dict[str, Any], root: Path, cassette: llm_replay.Cassette) -> Dict[str, Any]:
-    """The post-pipeline half, called directly on the service module, from the app's Stage-2 payload.
+    """The whole case on the service, from the case's text (R3d): ``run_extraction``, then the post-pipeline
+    and the export, called directly on the service modules, as the app does.
 
-    TODO(R3): once ``run_extraction(request, reporter, state)`` exists, start this arm from ``case["full_text"]``
-    instead of ``app["post_call"]``'s payload; from R5 call ``run_pathway(PathwayRequest(...))`` and compare
-    its ``PathwayResult`` (PWML path bytes, canonical hash) to the app arm the same way.
+    ``run_extraction`` gets the request the app's form makes for this case: the batch driver's text, focus,
+    export mode and input mode, and every other setting read off the real form's widgets (the app is loaded,
+    never submitted). The post-pipeline and the export get the settings the app handed them
+    (``app["post_call"]`` / ``app["export_call"]``), except what the run itself produced, which comes from
+    the service's own ``state``, where the app's handlers read it from session state.
+
+    TODO(R5): call ``run_pathway(PathwayRequest(...))`` and compare its ``PathwayResult`` (PWML path bytes,
+    canonical hash) to the app arm the same way.
     """
 
-    from t2pw.pipeline.gate_reports import CANONICAL_PAYLOAD_KEY
-    from t2pw.service import postpipeline
+    from streamlit.testing.v1 import AppTest
 
-    if app["post_call"] is None:  # nothing to start from; the test reports the app arm's own failure
-        return {"seconds": 0.0, "ok": False, "error": "the app arm never reached the post-pipeline",
+    from t2pw.batch import driver
+    from t2pw.config import rag_config
+    from t2pw.pipeline.gate_reports import CANONICAL_PAYLOAD_KEY
+    from t2pw.pipeline.pipeline import propagate_context_organism
+    from t2pw.service import postpipeline
+    from t2pw.service.extraction import ExtractionRequest, run_extraction
+    from t2pw.service.reporter import LoggingReporter
+
+    def failed(error: str, started: Optional[float] = None) -> Dict[str, Any]:
+        return {"seconds": round(time.monotonic() - started, 1) if started else 0.0, "ok": False, "error": error,
                 "canonical_payload_sha256": None, "canonical_payload": None, "xml": b"", "pwml_files": {},
-                "export_verdict": None, "misses": [], "refused": []}
-    shutil.copytree(app["snapshot"], root)
+                "export_verdict": None, "misses": list(cassette.misses), "refused": list(cassette.refused),
+                "unused": cassette.unused()}
+
+    if app["post_call"] is None:  # no settings to run with; the test reports the app arm's own failure
+        return failed("the app arm never reached the post-pipeline")
+    new_root(root)
+    case = load_fixture()["case"]
+    paper = {name: case[name] for name in CASE_FIELDS}
     (post_args, post_kwargs) = deepcopy(app["post_call"])
     (export_args, export_kwargs) = deepcopy(app["export_call"]) if app["export_call"] else ((), {})
     with pytest.MonkeyPatch.context() as mp:
         cassette.install(mp)
         isolate(mp, root)
         frozen_bindings = freeze_clock(mp)
+        # The form's settings, as the driver leaves them: load, choose the export and input modes, re-render.
+        form = AppTest.from_file(str(driver.DEFAULT_APP_PATH), default_timeout=120).run()
+        form.radio(key=driver.KEY_EXPORT_MODE).set_value(driver._resolve_mode(case["mode"])[1])
+        form.radio(key=driver.KEY_INPUT_MODE).set_value(driver.INPUT_MODE_PASTE)
+        form.run()
+        widget = {w.label: w.value for kind in (form.checkbox, form.toggle, form.number_input, form.slider)
+                  for w in kind}
+        request = ExtractionRequest(
+            text_entries=[driver._paper_text(paper)], pdfs=[], uses_pdf_input=False,
+            input_mode=driver.INPUT_MODE_PASTE, pdf_page_range="", pdf_skip_refs=True, pdf_ocr=False,
+            user_task_context=driver._extraction_focus(paper), export_mode=form.session_state["export_mode"],
+            temperature=widget["LLM temperature"], run_inference=widget["Run inference/enrichment stage"],
+            enable_chunking=widget["Enable automatic chunking for long inputs"],
+            chunk_size=widget["Chunk size (approx. words)"], chunk_overlap=widget["Chunk overlap (words)"],
+            extract_attempts=widget["Stage 1 auto-repair attempts"],
+            infer_attempts=widget["Stage 2 auto-repair attempts"], infer_rounds=widget["Stage 2 QA rounds"],
+            extract_tokens=widget["Stage 1 max tokens"], infer_tokens=widget["Stage 2 max tokens"],
+            rag_incomplete_flag=widget.get("Multi-paper RAG (novel pathway from multiple papers)", False),
+        )
+        state: Dict[str, Any] = {}
         started = time.monotonic()
-        # As the "Run audit and DB mapping" handler: the Stage-2 payload (after propagate_context_organism),
-        # the sidebar's settings, and this root's outputs directory.
-        post_kwargs["outputs_dir"] = root / "outputs"
+        extraction = run_extraction(request, reporter=LoggingReporter(), state=state)
+        if extraction.failure is not None:
+            return failed(f"run_extraction failed: {extraction.failure}", started)
+        # As the "Run audit and DB mapping" handler: the Stage-2 payload after propagate_context_organism, the
+        # sidebar's settings, the run's own reports and context, and this root's outputs directory.
+        post_kwargs.update(
+            qa_report=state.get("qa_report"),
+            reaction_summary=state.get("reaction_summary"),
+            rag_evidence_context=(state.get("rag_evidence_context") or "") if rag_config()["enabled"] else "",
+            pathway_context=postpipeline._safe_dict(state.get("pathway_context")),
+            outputs_dir=root / "outputs",
+            state=state,
+        )
+        post_payload = propagate_context_organism(extraction.final_payload, state.get("pathway_context"))
         try:
-            artifacts = real_function(postpipeline.run_post_pipeline_sbml_artifacts)(*post_args, **post_kwargs)
+            artifacts = real_function(postpipeline.run_post_pipeline_sbml_artifacts)(
+                post_payload, *post_args[1:], **post_kwargs)
         except Exception as exc:  # noqa: BLE001 -- reported by test (c); the app's handler catches it too
-            return {"seconds": round(time.monotonic() - started, 1), "ok": False,
-                    "error": f"run_post_pipeline_sbml_artifacts raised {type(exc).__name__}: {str(exc)[:300]}",
-                    "canonical_payload_sha256": None, "canonical_payload": None, "xml": b"", "pwml_files": {},
-                    "export_verdict": None, "misses": list(cassette.misses), "refused": list(cassette.refused)}
+            return failed(f"run_post_pipeline_sbml_artifacts raised {type(exc).__name__}: {str(exc)[:300]}",
+                          started)
         # As "Generate PWML": refinement review starts from deepcopy(canonical payload)
         # (initialize_refinement_review_state); the boundary's decision rides along
         # (quarantine_session_state); the reference model comes from this root.
@@ -310,13 +360,13 @@ def run_service_arm(app: Dict[str, Any], root: Path, cassette: llm_replay.Casset
             export_kwargs.update(
                 project_root=root,
                 ref_path=root / "reference" / REFERENCE_FILES[0],
+                pathway_context=postpipeline._safe_dict(state.get("pathway_context")),
                 quarantine_report=artifacts.get("quarantine_report") or {},
                 quarantine_artifacts=artifacts.get("quarantine_artifacts") or {},
             )
             result = real_function(postpipeline.run_pwml_export)(deepcopy(artifacts.get(CANONICAL_PAYLOAD_KEY)),
                                                   *export_args[1:], **export_kwargs)
         seconds = time.monotonic() - started
-    from t2pw.batch import driver
 
     return {
         "seconds": round(seconds, 1),
@@ -329,6 +379,7 @@ def run_service_arm(app: Dict[str, Any], root: Path, cassette: llm_replay.Casset
         "export_verdict": export_verdict(result),
         "misses": list(cassette.misses),
         "refused": list(cassette.refused),
+        "unused": cassette.unused(),
         "frozen_bindings": frozen_bindings,
     }
 

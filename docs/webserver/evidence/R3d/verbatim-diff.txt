@@ -1,0 +1,122 @@
+===== emit_rag_loop_messages + rag_loop_session_record: base APP vs tip EXT
+--- base/streamlit_app.py
++++ tip/service/extraction.py
+@@ -1 +1 @@
+-def emit_rag_loop_messages(messages: Any) -> None:
++def emit_rag_loop_messages(messages: Any, *, reporter: Reporter) -> None:
+@@ -4 +4,2 @@
+-    reporter = StreamlitReporter(st)
++    from t2pw.service.postpipeline import _safe_list  # function-local, as in _last_cleaning_report
++
+@@ -23,0 +25,2 @@
++    from t2pw.service.postpipeline import _safe_dict  # function-local, as in _last_cleaning_report
++
+
+===== submit block: R3c rebinding, Stage 2 through the session-state publish: base APP vs tip EXT
+--- base/streamlit_app.py
++++ tip/service/extraction.py
+@@ -1,6 +1,6 @@
+-stage_one = _stage_one.stage_one
+-chunk_details = _stage_one.chunk_details
+-stage_one_in_scope = _stage_one.stage_one_in_scope
+-out_of_scope_removed_reactions = _stage_one.out_of_scope_removed_reactions
+-rag_result = _stage_one.rag_result
+-user_task_context = _stage_one.user_task_context
++stage_one = stage_one_result.stage_one
++chunk_details = stage_one_result.chunk_details
++stage_one_in_scope = stage_one_result.stage_one_in_scope
++out_of_scope_removed_reactions = stage_one_result.out_of_scope_removed_reactions
++rag_result = stage_one_result.rag_result
++user_task_context = stage_one_result.user_task_context
+@@ -17,2 +17,2 @@
+-        with st.spinner("Running Stage 2 inference..."):
+-            stage_two, stage_two_chunks, stage_two_rounds = run_stage_two_with_feedback_loop(
++        with reporter.spinner("Running Stage 2 inference..."):
++            stage_two, stage_two_chunks, stage_two_rounds = _pipeline.run_stage_two_with_feedback_loop(
+@@ -32,2 +32,3 @@
+-    except PipelineFailure as failure:
+-        st.error(f"Inference stage failed: {failure}")
++    except _pipeline.PipelineFailure as failure:
++        message = f"Inference stage failed: {failure}"
++        reporter.error(message)
+@@ -35,2 +36,2 @@
+-        render_attempts(label, failure.attempts)
+-        st.stop()
++        render_attempts(label, failure.attempts, reporter=reporter)
++        return ExtractionResult(failure=InputFailure(KIND_STAGE_TWO_FAILED, message))
+@@ -95,0 +97,2 @@
++# R3d: both statements moved here with the rest of the block, verbatim, so C-060a
++# has to read this file instead of streamlit_app.py (R3d.md, open question 1).
+@@ -111 +114,3 @@
+-    rag_loop_record = run_rag_rounds(
++    from t2pw.service import rag_orchestration as _rag_orchestration  # only with RAG on
++
++    rag_loop_record = _rag_orchestration.run_rag_rounds(
+@@ -119,3 +124,3 @@
+-        strict_db=bool(st.session_state.get("pwml_strict_db", True)),
+-        reporter=StreamlitReporter(st),
+-        state=st.session_state,
++        strict_db=bool(state.get("pwml_strict_db", True)),
++        reporter=reporter,
++        state=state,
+@@ -124 +129 @@
+-    emit_rag_loop_messages(rag_loop_record["messages"])
++    emit_rag_loop_messages(rag_loop_record["messages"], reporter=reporter)
+@@ -129 +134 @@
+-    st.session_state["rag_loop"] = rag_loop_session_record(rag_loop_record)
++    state["rag_loop"] = rag_loop_session_record(rag_loop_record)
+@@ -131 +136 @@
+-        rag_result.loop = st.session_state["rag_loop"]
++        rag_result.loop = state["rag_loop"]
+@@ -135 +140 @@
+-stage2_preservation_report = _write_reaction_preservation_report("after_stage2", final_payload)
++stage2_preservation_report = _postpipeline._write_reaction_preservation_report("after_stage2", final_payload)
+@@ -137,6 +142,6 @@
+-draft_graph, qa_report, reaction_summary = build_and_save_draft_graph(final_payload)
+-st.session_state["draft_graph"] = draft_graph.to_dict()
+-st.session_state.pop("draft_graph_png_bytes", None)
+-st.session_state.pop("draft_graph_render_error", None)
+-st.session_state["qa_report"] = qa_report
+-st.session_state["reaction_summary"] = reaction_summary
++draft_graph, qa_report, reaction_summary = _pipeline.build_and_save_draft_graph(final_payload)
++state["draft_graph"] = draft_graph.to_dict()
++state.pop("draft_graph_png_bytes", None)
++state.pop("draft_graph_render_error", None)
++state["qa_report"] = qa_report
++state["reaction_summary"] = reaction_summary
+@@ -144,17 +149,17 @@
+-st.session_state["pipeline_ready"] = True
+-st.session_state["run_inference_enabled"] = bool(run_inference)
+-st.session_state["pathway_context"] = pathway_context
+-st.session_state["user_task_context"] = user_task_context
+-st.session_state["stage_one"] = stage_one
+-st.session_state["extraction_diagnostics_recorder"] = current_extraction_diagnostics()
+-st.session_state["out_of_scope_removed_reactions"] = out_of_scope_removed_reactions
+-st.session_state["chunk_details"] = chunk_details
+-st.session_state["stage_two"] = stage_two
+-st.session_state["stage_two_chunks"] = stage_two_chunks
+-st.session_state["stage_two_rounds"] = stage_two_rounds
+-st.session_state["qa_hints"] = qa_hints
+-st.session_state["final_payload"] = final_payload
+-st.session_state["final_payload_snapshot"] = final_payload
+-st.session_state["pipeline_source_text"] = text
+-st.session_state["reaction_preservation_after_stage2"] = stage2_preservation_report
+-st.session_state.pop("post_pipeline_artifacts", None)
++state["pipeline_ready"] = True
++state["run_inference_enabled"] = bool(run_inference)
++state["pathway_context"] = pathway_context
++state["user_task_context"] = user_task_context
++state["stage_one"] = stage_one
++state["extraction_diagnostics_recorder"] = _diag.current()
++state["out_of_scope_removed_reactions"] = out_of_scope_removed_reactions
++state["chunk_details"] = chunk_details
++state["stage_two"] = stage_two
++state["stage_two_chunks"] = stage_two_chunks
++state["stage_two_rounds"] = stage_two_rounds
++state["qa_hints"] = qa_hints
++state["final_payload"] = final_payload
++state["final_payload_snapshot"] = final_payload
++state["pipeline_source_text"] = text
++state["reaction_preservation_after_stage2"] = stage2_preservation_report
++state.pop("post_pipeline_artifacts", None)
+

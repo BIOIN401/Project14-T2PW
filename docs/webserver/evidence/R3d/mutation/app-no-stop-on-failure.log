@@ -1,0 +1,56 @@
+T2PW: C:\t\ws-R3d\src\t2pw\__init__.py
+...........................F                                             [100%]
+================================== FAILURES ===================================
+________ test_real_app_stops_at_a_stage_two_failure_before_the_publish ________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000021A84FBBCB0>
+tmp_path = WindowsPath('C:/t/wsR3dtmp/mut-tmp/app-no-stop-on-failure/test_real_app_stops_at_a_stage0')
+
+    def test_real_app_stops_at_a_stage_two_failure_before_the_publish(monkeypatch, tmp_path):
+        def stage_two(*_a, **_k):
+            raise pipeline.PipelineFailure("stage2", "no JSON after 2", ATTEMPTS)
+    
+        monkeypatch.setattr(pipeline, "run_stage_two_with_feedback_loop", stage_two)
+        at = _real_app(monkeypatch, tmp_path, seed={"quarantine_report": {"stale": True}})
+    
+        assert [str(e.value) for e in at.exception] == []
+        assert [e.value for e in at.error] == ["Inference stage failed: no JSON after 2"]
+        assert [x.label for x in at.expander] == ["stage2 attempts"]
+        ss = at.session_state
+>       assert "pipeline_ready" not in ss and "final_payload" not in ss and "token_stats" not in ss
+E       AssertionError: assert ('pipeline_ready' not in {refinement_mapping_report: None, refinement_last_warnings: [], export_mode: 'pathwhiz', token_stats: {'prompt_tokens'... refinement_last_error: None, $$ID-32585420727a69512c30137992a93f80-reaction_evidence_dir:: '', refinement_history: []} and 'final_payload' not in {refinement_mapping_report: None, refinement_last_warnings: [], export_mode: 'pathwhiz', token_stats: {'prompt_tokens'... refinement_last_error: None, $$ID-32585420727a69512c30137992a93f80-reaction_evidence_dir:: '', refinement_history: []} and 'token_stats' not in {refinement_mapping_report: None, refinement_last_warnings: [], export_mode: 'pathwhiz', token_stats: {'prompt_tokens'... refinement_last_error: None, $$ID-32585420727a69512c30137992a93f80-reaction_evidence_dir:: '', refinement_history: []})
+
+tests\test_service_extraction_stage2.py:560: AssertionError
+---------------------------- Captured stderr call -----------------------------
+2026-11-07 14:28:48.388 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-07 14:28:48.667 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage2.py::test_real_app_stops_at_a_stage_two_failure_before_the_publish
+1 failed, 27 passed in 2.70s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3d\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 590563edbd444f8c972732f3252204cb7b5ac638  [git, worktree dirty=True]
+label                   : mut-app-no-stop-on-failure
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3d/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3d -q -p no:cacheprovider --basetemp=C:/t/wsR3dtmp/mut-tmp/app-no-stop-on-failure tests/test_service_extraction_stage2.py
+cwd                     : C:\t\ws-R3d
+root PID / process group: 30752 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 3.67 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  56236:python.exe
+descendants terminated  : 1  56236
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR3dtmp\ev\mutation\app-no-stop-on-failure.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R3d  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

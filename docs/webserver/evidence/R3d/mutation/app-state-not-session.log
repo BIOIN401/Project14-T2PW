@@ -1,0 +1,154 @@
+T2PW: C:\t\ws-R3d\src\t2pw\__init__.py
+..........................F.                                             [100%]
+================================== FAILURES ===================================
+_ test_real_app_publishes_the_run_then_resets_the_quarantine_and_counts_tokens _
+
+self = SessionState(_old_state={'$$STREAMLIT_INTERNAL_KEY_TESTING': {'$$ID-6c477208cc884576a766c6136105312b-export_mode_radio...ams={}), _persist_tracker=PersistedWidgetTracker(_scopes={}, _widget_pages={}, _value_pages={}, _pending_resets=set()))
+key = 'pipeline_ready'
+
+    def __getitem__(self, key: str) -> Any:
+        wid_key_map = self._key_id_mapper.id_key_mapping
+        widget_id = self._get_widget_id(key)
+    
+        if widget_id in wid_key_map and widget_id == key:
+            # the "key" is a raw widget id, so get its associated user key for lookup
+            key = wid_key_map[widget_id]
+        try:
+>           base_value = self._getitem(widget_id, key)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\state\session_state.py:731: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = SessionState(_old_state={'$$STREAMLIT_INTERNAL_KEY_TESTING': {'$$ID-6c477208cc884576a766c6136105312b-export_mode_radio...ams={}), _persist_tracker=PersistedWidgetTracker(_scopes={}, _widget_pages={}, _value_pages={}, _pending_resets=set()))
+widget_id = 'pipeline_ready', user_key = 'pipeline_ready'
+
+    def _getitem(self, widget_id: str | None, user_key: str | None) -> Any:
+        """Get the value of an entry in Session State, using either the
+        user-provided key or a widget id as appropriate for the internal dict
+        being accessed.
+    
+        At least one of the arguments must have a value.
+        """
+        if user_key is None and widget_id is None:  # pragma: no cover - defensive
+            raise ValueError(
+                "user_key and widget_id cannot both be None. This should never happen."
+            )
+    
+        if user_key is not None:
+            try:
+                return self._new_session_state[user_key]
+            except KeyError:
+                pass
+    
+        if widget_id is not None:
+            try:
+                return self._new_widget_state[widget_id]
+            except KeyError:
+                pass
+    
+        # Typically, there won't be both a widget id and an associated state key in
+        # old state at the same time, so the order we check is arbitrary.
+        # The exception is if session state is set and then a later run has
+        # a widget created, so the widget id entry should be newer.
+        # The opposite case shouldn't happen, because setting the value of a widget
+        # through session state will result in the next widget state reflecting that
+        # value.
+        if widget_id is not None:
+            try:
+                return self._old_state[widget_id]
+            except KeyError:
+                pass
+    
+        if user_key is not None:
+            try:
+                return self._old_state[user_key]
+            except KeyError:
+                pass
+    
+        # We'll never get here
+>       raise KeyError
+E       KeyError
+
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\state\session_state.py:784: KeyError
+
+During handling of the above exception, another exception occurred:
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001E132D2B5B0>
+tmp_path = WindowsPath('C:/t/wsR3dtmp/mut-tmp/app-state-not-session/test_real_app_publishes_the_ru0')
+
+    def test_real_app_publishes_the_run_then_resets_the_quarantine_and_counts_tokens(monkeypatch, tmp_path):
+        additions = {"additions": {"processes": {"reactions": [{"name": "menaquinone prenylation"}]}}}
+        monkeypatch.setattr(pipeline, "run_stage_two_with_feedback_loop", lambda *_a, **_k: (additions, [], [{"r": 1}]))
+        at = _real_app(monkeypatch, tmp_path, seed={"quarantine_report": {"stale": True},
+                                                    "post_pipeline_artifacts": {"stale": True}})
+    
+        assert [str(e.value) for e in at.exception] == []
+        assert [e.value for e in at.error] == []
+        ss = at.session_state
+>       assert ss["pipeline_ready"] is True and ss["run_inference_enabled"] is True
+               ^^^^^^^^^^^^^^^^^^^^
+
+tests\test_service_extraction_stage2.py:538: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\state\safe_session_state.py:104: in __getitem__
+    return self._state[key]
+           ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = SessionState(_old_state={'$$STREAMLIT_INTERNAL_KEY_TESTING': {'$$ID-6c477208cc884576a766c6136105312b-export_mode_radio...ams={}), _persist_tracker=PersistedWidgetTracker(_scopes={}, _widget_pages={}, _value_pages={}, _pending_resets=set()))
+key = 'pipeline_ready'
+
+    def __getitem__(self, key: str) -> Any:
+        wid_key_map = self._key_id_mapper.id_key_mapping
+        widget_id = self._get_widget_id(key)
+    
+        if widget_id in wid_key_map and widget_id == key:
+            # the "key" is a raw widget id, so get its associated user key for lookup
+            key = wid_key_map[widget_id]
+        try:
+            base_value = self._getitem(widget_id, key)
+            return (
+                apply_presenter(self, widget_id, base_value)
+                if widget_id is not None
+                else base_value
+            )
+        except KeyError:
+>           raise KeyError(_missing_key_error_message(key))
+E           KeyError: 'st.session_state has no key "pipeline_ready". Did you forget to initialize it? More info: https://docs.streamlit.io/develop/concepts/architecture/session-state#initialization'
+
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\state\session_state.py:738: KeyError
+---------------------------- Captured stderr call -----------------------------
+2026-11-07 14:28:59.238 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-07 14:28:59.863 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-07 14:28:59.863 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage2.py::test_real_app_publishes_the_run_then_resets_the_quarantine_and_counts_tokens
+1 failed, 27 passed in 2.44s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R3d\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 590563edbd444f8c972732f3252204cb7b5ac638  [git, worktree dirty=True]
+label                   : mut-app-state-not-session
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R3d/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R3d -q -p no:cacheprovider --basetemp=C:/t/wsR3dtmp/mut-tmp/app-state-not-session tests/test_service_extraction_stage2.py
+cwd                     : C:\t\ws-R3d
+root PID / process group: 41164 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 3.34 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  56188:python.exe
+descendants terminated  : 1  56188
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR3dtmp\ev\mutation\app-state-not-session.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R3d  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================
