@@ -52,11 +52,14 @@ def test_e2e2_case_states_why(tmp_path):
     html = r.text
     assert "Why this needs review" in html
     assert "Reactions: <strong>0</strong>" in html and "Transports: <strong>6</strong>" in html
-    assert "No reactions were found in this text." in html
+    assert "The PWML contains no reactions." in html and "found in this text" not in html
     assert "PKD2L1" in html and "SCN2A" in html and "did not place them" in html
     assert "1 process found in the sources left out of the PWML" in html
     # withheld: audit F4/F5
     assert "BLOCKED-REASON-TEXT" not in html and "0.8" not in html
+    assert "retrieval_attempts" not in html and "Retrieval" not in html and "Completeness" not in html
+    assert "semantic_evaluation_failed" not in html and "requested_pathway_anchors_present" not in html
+    assert "See why this needs review below." in html  # detail line points at the card
 
 
 def test_not_review_required_has_no_section(tmp_path):
@@ -86,3 +89,13 @@ def test_report_text_is_escaped_and_paths_scrubbed(tmp_path):
     html = _page(tmp_path, evil).text
     assert "<script>alert(1)</script>" not in html and "&lt;script&gt;" in html
     assert "secret" not in html and "[server path]" in html
+
+
+def test_unknown_reactions_count_is_not_zero():
+    w = views.review_why({"counts": {"transports": 3}})
+    assert w["counts"] == [{"label": "Transports", "n": 3}] and not w["no_reactions"]
+
+
+def test_huge_digit_run_in_omitted_token_cannot_raise():
+    big = "9" * 5000
+    assert views.review_why({"release_status": {"reasons": [f"omitted_from_pwml:{big}_processes+0_actors"]}}) is None

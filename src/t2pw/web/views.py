@@ -178,7 +178,7 @@ def _inputs_line(item: Dict[str, Any]) -> str:
     return ", ".join(bits) or "pathway name"
 
 
-_OMITTED = re.compile(r"omitted_from_pwml:(\d+)_processes\+(\d+)_actors")
+_OMITTED = re.compile(r"omitted_from_pwml:(\d{1,9})_processes\+(\d{1,9})_actors")
 _COUNT_LABELS = (("reactions", "Reactions"), ("transports", "Transports"),
                  ("interactions", "Interactions"), ("proteins", "Proteins"))
 
@@ -268,7 +268,8 @@ def item_view(item: Dict[str, Any], history: List[Dict[str, Any]], sid: str) -> 
     elif rs == "review_required":
         view["headline"] = "Needs review"
         view["detail"] = ("A PWML was produced, but it is incomplete or uncertain in places and must "
-                          "be checked by a person before use. Read the warnings below.")
+                          "be checked by a person before use. "
+                          + ("See why this needs review below." if view["review_why"] else "Read the warnings below."))
     elif rs == "diagnostic_only":
         view["failed"] = True
         view["headline"] = "No usable PWML"
