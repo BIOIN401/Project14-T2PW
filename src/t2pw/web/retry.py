@@ -47,8 +47,9 @@ RUN_TIMEOUT_S = 90 * 60
 #: restart doubles the cost of a slow run without making it less likely to be slow.
 PER_ITEM_WALL_CAP_S = RUN_TIMEOUT_S
 
-#: A retry is not started with less than this left of the wall cap: the fastest runs
-#: take ~18 min, so a shorter budget only buys a certain timeout.
+#: A retry is not started with less than this left of the wall cap. The history median run is
+#: ~18 min (fastest runs are shorter), so this 15 min budget sits below the median: a retry
+#: started with only this much left will often time out. It is a floor, not a promise of success.
 MIN_RETRY_BUDGET_S = 15 * 60
 
 #: Interrupted, not judged. KIND_TIMEOUT is deliberately absent (Q-E2E-1: one 90 min
