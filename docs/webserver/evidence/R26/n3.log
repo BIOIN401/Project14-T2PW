@@ -1,0 +1,37 @@
+T2PW: C:\t\ws-R26\src\t2pw\__init__.py
+........                                                                 [100%]
+============================= slowest 5 durations =============================
+44.96s setup    tests/test_equivalence_second_fixture.py::test_a_app_runs_offline_from_the_fixture_alone
+0.24s call     tests/test_equivalence_second_fixture.py::test_fixture_holds_no_secrets
+0.02s call     tests/test_equivalence_second_fixture.py::test_fixture_is_the_recorded_research_run
+0.01s call     tests/test_equivalence_second_fixture.py::test_b_replay_reproduces_the_recorded_live_run
+
+(1 durations < 0.005s hidden.  Use -vv to show these durations.)
+8 passed in 45.34s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R26\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 3fcce6cf4ec2077309122031bf618e818d62fb27  [git, worktree dirty=False]
+label                   : n3
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R26/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R26 -q -rs --durations=5 --basetemp=C:/t/wsR26tmp/bt/n3 tests/test_equivalence_second_fixture.py
+cwd                     : C:\t\ws-R26
+root PID / process group: 270424 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 340 s
+duration                : 45.93 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 3  270388:python.exe, 254868:python.exe, 270804:python.exe
+descendants terminated  : 3  254868, 270388, 270804
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/wsR26tmp/ev/n3.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R26  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

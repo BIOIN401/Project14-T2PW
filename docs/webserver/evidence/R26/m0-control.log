@@ -1,0 +1,37 @@
+T2PW: C:\t\wsR26tmp\mut\src\t2pw\__init__.py
+........                                                                 [100%]
+============================= slowest 5 durations =============================
+46.16s setup    tests/test_equivalence_second_fixture.py::test_a_app_runs_offline_from_the_fixture_alone
+0.24s call     tests/test_equivalence_second_fixture.py::test_fixture_holds_no_secrets
+0.02s call     tests/test_equivalence_second_fixture.py::test_fixture_is_the_recorded_research_run
+0.01s call     tests/test_equivalence_second_fixture.py::test_b_replay_reproduces_the_recorded_live_run
+
+(1 durations < 0.005s hidden.  Use -vv to show these durations.)
+8 passed in 46.58s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\wsR26tmp\mut\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : m0-control
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/wsR26tmp/mut/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/wsR26tmp/mut -q -rs --durations=5 --basetemp=C:/t/wsR26tmp/bt/m0-control tests/test_equivalence_second_fixture.py
+cwd                     : C:\t\wsR26tmp\mut
+root PID / process group: 271372 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 340 s
+duration                : 47.14 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 3  262852:python.exe, 271524:python.exe, 272876:python.exe
+descendants terminated  : 3  262852, 271524, 272876
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/wsR26tmp/ev/m0-control.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R26  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

@@ -19,3 +19,23 @@ prompts:
 
 The text was fetched with `t2pw.batch.fetch.fetch_papers` and is unmodified. Its sha256 is in the fixture
 (`case.full_text_sha256`).
+
+# Second fixture (R26)
+
+`farnesol_research.json.gz` is the cassette for `tests/test_equivalence_second_fixture.py`: one live
+research-mode run, with Stage 2 additions and out-of-scope reactions. See `docs/webserver/results/R26.md`.
+
+The fixture contains the full text of this article, verbatim, plus copies of it inside the recorded LLM
+prompts:
+
+- **Authors:** Gutzmann DJ, Boone CHT, Toomey BM, Urbin S, Riekhof WR, Hogan DA, Atkin AL, Nickerson KW
+- **Title:** Cwh8 moonlights as a farnesyl pyrophosphate phosphatase and is essential for farnesol biosynthesis
+  in *Candida albicans*
+- **Journal:** mBio, 2025
+- **DOI:** [10.1128/mbio.02290-25](https://doi.org/10.1128/mbio.02290-25)
+- **PMCID:** PMC12505894 (PMID 40919816)
+- **Licence:** Creative Commons Attribution (CC BY), as reported by Europe PMC (`"license": "cc by"`). The raw
+  response is in `docs/webserver/evidence/R26/licence/licence-PMC12505894-europepmc.json`.
+
+The text was fetched with `t2pw.batch.fetch.fetch_papers` and is unmodified. Its sha256 is in the fixture
+(`case.full_text_sha256`).

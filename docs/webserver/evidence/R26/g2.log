@@ -1,0 +1,36 @@
+T2PW: C:\t\ws-R26\src\t2pw\__init__.py
+........                                                                 [100%]
+============================= slowest 5 durations =============================
+14.49s call     tests/test_c011_freeze_seam_golden_equivalence.py::test_the_fixture_regenerates_byte_identically_from_the_base_blob
+8.58s call     tests/test_c011_freeze_seam_golden_equivalence.py::test_the_override_regenerates_and_absorbs_exactly_the_one_way_delta
+8.25s call     tests/test_c011_freeze_seam_golden_equivalence.py::test_the_extracted_seam_reproduces_the_before_fixture_byte_for_byte
+1.37s call     tests/test_c011_freeze_seam_golden_equivalence.py::test_the_override_must_name_exactly_the_standing_one_way_deltas
+0.28s call     tests/test_c011_freeze_seam_golden_equivalence.py::test_regeneration_is_refused_while_a_one_way_delta_is_registered
+8 passed in 33.18s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R26\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 3fcce6cf4ec2077309122031bf618e818d62fb27  [git, worktree dirty=False]
+label                   : g2
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R26/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R26 -q -rs --durations=5 --basetemp=C:/t/wsR26tmp/bt/g2 tests/test_c011_freeze_seam_golden_equivalence.py
+cwd                     : C:\t\ws-R26
+root PID / process group: 272188 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 340 s
+duration                : 33.97 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 17  269368:python.exe, 271596:git.exe, 271312:git.exe, 270656:python.exe, 271608:python.exe, 270484:python.exe, 271616:python.exe, 272996:python.exe, 273016:python.exe, 273044:python.exe, 273064:python.exe, 273092:python.exe, 273112:python.exe, 273212:python.exe, 273232:python.exe, 273332:python.exe, 273352:python.exe
+descendants terminated  : 17  269368, 270484, 270656, 271312, 271596, 271608, 271616, 272996, 273016, 273044, 273064, 273092, 273112, 273212, 273232, 273332, 273352
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/wsR26tmp/ev/g2.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R26  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

@@ -1,0 +1,57 @@
+T2PW: C:\t\ws-R26\src\t2pw\__init__.py
+...F....                                                                 [100%]
+================================== FAILURES ===================================
+________ test_the_case_reaches_the_paths_the_first_fixture_cannot_see _________
+
+arms = {'after': {'data/enrichment_cache.json': (35407855, 1794166040536092900), 'data/id_mapping_cache.json': (4230034, 1794...t/enrichment_dump.json': (33986, 1794166045488627700), 'outputs/pathway.pwml': (23487, 1794166045494219700), ...}, ...}
+
+    def test_the_case_reaches_the_paths_the_first_fixture_cannot_see(arms):
+        """What makes this fixture worth having (R3d review F1): additions, an out-of-scope hit, research mode."""
+    
+        published = arms["app1"]["published"]
+        assert published["export_mode"] == "research"
+        removed = published["out_of_scope_removed_reactions"]
+        assert removed, "the recording has no out-of-scope reaction"
+>       assert set(removed) <= _names(published["stage_one"]) and not set(removed) & _names(published["final_payload"])
+E       AssertionError: assert ({'Cwh8-catalyzed dephosphorylation of dolichyl pyrophosphate to dolichyl phosphate', 'dolichyl pyrophosphate dephosphorylation'} <= {'Cwh8-catalyzed dephosphorylation of dolichyl pyrophosphate to dolichyl phosphate', 'Cwh8-catalyzed dephosphorylation of farnesyl pyrophosphate to farnesyl phosphate', 'dolichyl pyrophosphate dephosphorylation'} and not ({'Cwh8-catalyzed dephosphorylation of dolichyl pyrophosphate to dolichyl phosphate', 'dolichyl pyrophosphate dephosphorylation'} & {'Cwh8-catalyzed dephosphorylation of dolichyl pyrophosphate to dolichyl phosphate', 'Cwh8-catalyzed dephosphorylation of farnesyl pyrophosphate to farnesyl phosphate', 'Dephosphorylation of farnesyl phosphate to farnesol'}))
+E        +  where {'Cwh8-catalyzed dephosphorylation of dolichyl pyrophosphate to dolichyl phosphate', 'dolichyl pyrophosphate dephosphorylation'} = set(['Cwh8-catalyzed dephosphorylation of dolichyl pyrophosphate to dolichyl phosphate', 'dolichyl pyrophosphate dephosphorylation'])
+E        +  and   {'Cwh8-catalyzed dephosphorylation of dolichyl pyrophosphate to dolichyl phosphate', 'Cwh8-catalyzed dephosphorylation of farnesyl pyrophosphate to farnesyl phosphate', 'dolichyl pyrophosphate dephosphorylation'} = _names({'biological_states': [{'evidence': 'luminally oriented active site located in the endoplasmic reticulum', 'name': 'Ca...}], 'evidence': 'farnesol is a secreted autoregulatory molecule', 'from_biological_state': 'cytoplasmic state', ...}]}})
+E        +  and   {'Cwh8-catalyzed dephosphorylation of dolichyl pyrophosphate to dolichyl phosphate', 'dolichyl pyrophosphate dephosphorylation'} = set(['Cwh8-catalyzed dephosphorylation of dolichyl pyrophosphate to dolichyl phosphate', 'dolichyl pyrophosphate dephosphorylation'])
+E        +  and   {'Cwh8-catalyzed dephosphorylation of dolichyl pyrophosphate to dolichyl phosphate', 'Cwh8-catalyzed dephosphorylation of farnesyl pyrophosphate to farnesyl phosphate', 'Dephosphorylation of farnesyl phosphate to farnesol'} = _names({'biological_states': [{'evidence': 'luminally oriented active site located in the endoplasmic reticulum', 'name': 'Ca... {'counts': {'admitted': 0, 'demoted': 0, 'removed': 0}, 'demoted': [], 'removed': [], 'review_reasons': [], ...}, ...})
+
+tests\test_equivalence_second_fixture.py:88: AssertionError
+============================= slowest 5 durations =============================
+45.08s setup    tests/test_equivalence_second_fixture.py::test_a_app_runs_offline_from_the_fixture_alone
+0.24s call     tests/test_equivalence_second_fixture.py::test_fixture_holds_no_secrets
+0.02s call     tests/test_equivalence_second_fixture.py::test_fixture_is_the_recorded_research_run
+0.01s call     tests/test_equivalence_second_fixture.py::test_b_replay_reproduces_the_recorded_live_run
+
+(1 durations < 0.005s hidden.  Use -vv to show these durations.)
+1 failed, 7 passed in 45.52s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R26\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 144d292de78e16446ea11ecfba79749ee3b5e743  [git, worktree dirty=False]
+label                   : n1
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R26/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R26 -q -rs --durations=5 --basetemp=C:/t/wsR26tmp/bt/n1 tests/test_equivalence_second_fixture.py
+cwd                     : C:\t\ws-R26
+root PID / process group: 242212 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 340 s
+duration                : 46.15 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 3  251888:python.exe, 249556:python.exe, 249864:python.exe
+descendants terminated  : 3  249556, 249864, 251888
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/wsR26tmp/ev/n1.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R26  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

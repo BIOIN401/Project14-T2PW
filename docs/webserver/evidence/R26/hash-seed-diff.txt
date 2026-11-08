@@ -1,0 +1,27 @@
+same keys: False {'max_tokens': True, 'messages': False, 'response_format': True, 'temperature': True}
+message 1 user 81782 81782
+15 diff ops
+replace 79921 79924 79921 79925
+  A: '        "protein:Cdr1",\n        "transport:#1"\n      ]\n    },\n    {\n      "size": 1,\n      "nodes": [\n        "compound:ergosterol"\n      ]\n    },\n    {\n      "size": 1,\n      "nodes": [\n        "compound:fluconazole"\n      ]\n    },\n    {\n    '
+  B: '        "protein:Cdr1",\n        "transport:#1"\n      ]\n    },\n    {\n      "size": 1,\n      "nodes": [\n        "compound:fluconazole"\n      ]\n    },\n    {\n      "size": 1,\n      "nodes": [\n        "compound:ergosterol"\n      ]\n    },\n    {\n     '
+replace 79925 79929 79926 79929
+  A: '    "protein:Cdr1",\n        "transport:#1"\n      ]\n    },\n    {\n      "size": 1,\n      "nodes": [\n        "compound:ergosterol"\n      ]\n    },\n    {\n      "size": 1,\n      "nodes": [\n        "compound:fluconazole"\n      ]\n    },\n    {\n      "si'
+  B: '   "protein:Cdr1",\n        "transport:#1"\n      ]\n    },\n    {\n      "size": 1,\n      "nodes": [\n        "compound:fluconazole"\n      ]\n    },\n    {\n      "size": 1,\n      "nodes": [\n        "compound:ergosterol"\n      ]\n    },\n    {\n      "si'
+insert 79931 79931 79931 79932
+  A: 'rotein:Cdr1",\n        "transport:#1"\n      ]\n    },\n    {\n      "size": 1,\n      "nodes": [\n        "compound:ergosterol"\n      ]\n    },\n    {\n      "size": 1,\n      "nodes": [\n        "compound:fluconazole"\n      ]\n    },\n    {\n      "size'
+  B: 'rotein:Cdr1",\n        "transport:#1"\n      ]\n    },\n    {\n      "size": 1,\n      "nodes": [\n        "compound:fluconazole"\n      ]\n    },\n    {\n      "size": 1,\n      "nodes": [\n        "compound:ergosterol"\n      ]\n    },\n    {\n      "size"'
+replace 80006 80010 80007 80010
+  A: '      "nodes": [\n        "compound:ergosterol"\n      ]\n    },\n    {\n      "size": 1,\n      "nodes": [\n        "compound:fluconazole"\n      ]\n    },\n    {\n      "size": 1,\n      "nodes": [\n        "protein:Dpp1"\n      ]\n    },\n    {\n      "size"'
+  B: '     "nodes": [\n        "compound:fluconazole"\n      ]\n    },\n    {\n      "size": 1,\n      "nodes": [\n        "compound:ergosterol"\n      ]\n    },\n    {\n      "size": 1,\n      "nodes": [\n        "protein:Dpp1"\n      ]\n    },\n    {\n      "size"'
+replace 80011 80014 80011 80015
+  A: ' "nodes": [\n        "compound:ergosterol"\n      ]\n    },\n    {\n      "size": 1,\n      "nodes": [\n        "compound:fluconazole"\n      ]\n    },\n    {\n      "size": 1,\n      "nodes": [\n        "protein:Dpp1"\n      ]\n    },\n    {\n      "size": 1,'
+  B: ' "nodes": [\n        "compound:fluconazole"\n      ]\n    },\n    {\n      "size": 1,\n      "nodes": [\n        "compound:ergosterol"\n      ]\n    },\n    {\n      "size": 1,\n      "nodes": [\n        "protein:Dpp1"\n      ]\n    },\n    {\n      "size": 1,\n'
+delete 80016 80017 80017 80017
+  A: 'es": [\n        "compound:ergosterol"\n      ]\n    },\n    {\n      "size": 1,\n      "nodes": [\n        "compound:fluconazole"\n      ]\n    },\n    {\n      "size": 1,\n      "nodes": [\n        "protein:Dpp1"\n      ]\n    },\n    {\n      "size": 1,\n  '
+  B: 's": [\n        "compound:fluconazole"\n      ]\n    },\n    {\n      "size": 1,\n      "nodes": [\n        "compound:ergosterol"\n      ]\n    },\n    {\n      "size": 1,\n      "nodes": [\n        "protein:Dpp1"\n      ]\n    },\n    {\n      "size": 1,\n  '
+replace 80172 80173 80172 80173
+  A: ': 1,\n      "nodes": [\n        "protein:Dpp1"\n      ]\n    },\n    {\n      "size": 1,\n      "nodes": [\n        "protein:Dpp2"\n      ]\n    }\n  ],\n  "dangling_nodes": [\n    {\n      "node": "compound:ergosterol",\n      "degree": 0\n    },\n    {\n   '
+  B: ': 1,\n      "nodes": [\n        "protein:Dpp1"\n      ]\n    },\n    {\n      "size": 1,\n      "nodes": [\n        "protein:Dpp3"\n      ]\n    }\n  ],\n  "dangling_nodes": [\n    {\n      "node": "compound:ergosterol",\n      "degree": 0\n    },\n    {\n   '
+replace 81088 81091 81088 81092
+  A: 'e": "compound:filamentation",\n      "degree": 1\n    }\n  ],\n  "missing_links_suspected": [\n    {\n      "node": "compound:ergosterol",\n      "hint": "compound exists but is disconnected from processes/locations"\n    },\n    {\n      "node": "compo'
+  B: 'e": "compound:filamentation",\n      "degree": 1\n    }\n  ],\n  "missing_links_suspected": [\n    {\n      "node": "compound:fluconazole",\n      "hint": "compound exists but is disconnected from processes/locations"\n    },\n    {\n      "node": "compo'
