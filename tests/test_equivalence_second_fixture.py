@@ -9,45 +9,42 @@ offline, the service arm starting from the case's text.
 Research mode writes no PWML, so the comparison is the canonical payload and what the extraction published.
 PWML bytes stay covered by the first fixture. RAG is off, as in the first fixture (R26.md sec. 8).
 
-RUN IT IN ITS OWN PROCESS, like the first test: ``harness.replay_env`` refuses a process that already
-imported ``t2pw.llm.client``.
+The arms run in a child process (``harness.py replay``) because this case needs a fixed ``PYTHONHASHSEED``:
+the graph QA report inside the Stage-2 prompt lists equal-size components in set order (R26.md sec. 5). The
+seed has to be set when the interpreter starts, so the child sets it and this file needs no special invocation.
 """
 
 from __future__ import annotations
 
 import gzip
+import json
+import os
+import subprocess
 import sys
 from pathlib import Path
 
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from equivalence import harness, llm_replay  # noqa: E402
-from test_equivalence_app_vs_service import APP_TIMEOUT, SECRET_PATTERNS, _is_stamp, _outcome, _secret_hits  # noqa: E402
+from equivalence import harness  # noqa: E402
+from test_equivalence_app_vs_service import SECRET_PATTERNS, _is_stamp, _outcome, _secret_hits  # noqa: E402
 
 FIXTURE = harness.SECOND_CASE["fixture"]
 
 
 @pytest.fixture(scope="module")
 def arms(tmp_path_factory):
-    fixture = harness.load_fixture(FIXTURE)
-    mp = pytest.MonkeyPatch()
-    try:
-        harness.replay_env(mp, fixture)
-        before = harness.checkout_state()
-        base = tmp_path_factory.mktemp("equivalence2")
-        case = fixture["case"]
-
-        def cassette() -> llm_replay.Cassette:
-            return llm_replay.Cassette("replay", fixture["entries"])
-
-        app1 = harness.run_app_arm(base / "app1", cassette(), APP_TIMEOUT, case)
-        app2 = harness.run_app_arm(base / "app2", cassette(), APP_TIMEOUT, case)
-        service = harness.run_service_arm(app1, base / "service", cassette(), case=case)
-        yield {"fixture": fixture, "app1": app1, "app2": app2, "service": service,
-               "before": before, "after": harness.checkout_state()}
-    finally:
-        mp.undo()
+    base = tmp_path_factory.mktemp("equivalence2")
+    before = harness.checkout_state()
+    out = base / "arms.json"
+    env = {**os.environ, "PYTHONHASHSEED": harness.SECOND_CASE["hash_seed"]}
+    done = subprocess.run(
+        [sys.executable, "-u", str(Path(harness.__file__)), "replay", "--case", "farnesol_research",
+         "--base", str(base / "arms"), "--out", str(out)],
+        env=env, capture_output=True, text=True, timeout=500)
+    assert done.returncode == 0, (done.stdout[-3000:], done.stderr[-3000:])
+    yield {**json.loads(out.read_text(encoding="utf-8")), "fixture": harness.load_fixture(FIXTURE),
+           "before": before, "after": harness.checkout_state()}
 
 
 def test_fixture_holds_no_secrets():
@@ -62,6 +59,7 @@ def test_fixture_is_the_recorded_research_run():
     recorded = fixture["recorded"]
     assert fixture["case"]["mode"] == "research" and fixture["env"]["RAG_ENABLED"] == "0"
     assert recorded["tree_dirty"] is False and recorded["tree_head"] and recorded["live_llm_errors"] == []
+    assert recorded["hash_seed"] == harness.SECOND_CASE["hash_seed"]
     assert recorded["outcome"]["status"] == "pass" and recorded["outcome"]["stage"] == "research_report"
     assert recorded["canonical_payload_sha256"]
 
@@ -114,8 +112,8 @@ def test_b_replay_reproduces_the_recorded_live_run(arms):
 
 def test_c_the_service_equals_the_app(arms):
     app1, service = arms["app1"], arms["service"]
-    assert app1["post_call"] and app1["post_call"][1]["export_mode"] == "research"
-    assert app1["export_call"] is None and app1["xml"] == b"", "research mode writes no PWML"
+    assert app1["post_export_mode"] == "research"
+    assert not app1["export_called"] and app1["xml_bytes"] == 0, "research mode writes no PWML"
     assert service["misses"] == [] and service["refused"] == [], (service["misses"][:3], service["refused"][:5])
     assert [row for row in service["unused"] if row[0] == "llm"] == [], service["unused"]
     assert service["canonical_payload_sha256"] and service["canonical_payload_sha256"] == app1["canonical_payload_sha256"]

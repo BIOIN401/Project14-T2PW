@@ -25,6 +25,7 @@ import argparse
 import gzip
 import hashlib
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -81,6 +82,10 @@ SECOND_CASE = {
     # and would stop on the long scope sentence (R26.md sec. 4). The switch is the driver's documented one
     # (annotate and continue); the check lives in the driver, so neither the app nor the service reads it.
     "env": {"RAG_ELIGIBILITY_STAGE0_CONFLICT_ABORTS": "false"},
+    # The graph QA report lists equal-size components in set order, which depends on the process hash seed, and
+    # that report is part of the Stage-2 prompt (R26.md sec. 5). So this case records and replays under one
+    # fixed seed. It is set when the interpreter starts: see :func:`replay_arms`.
+    "hash_seed": "0",
 }
 CASES = {
     "sour_taste_v2": {"fixture": FIXTURE, "topic_line": TOPIC_LINE, "mode": MODE,
@@ -442,6 +447,9 @@ def record(env_file: Path, work: Path, timeout: float, spec: Dict[str, Any] = CA
 
     from dotenv import dotenv_values
 
+    if spec.get("hash_seed") and os.environ.get("PYTHONHASHSEED") != spec["hash_seed"]:
+        print(f"refusing to record: this case needs PYTHONHASHSEED={spec['hash_seed']}")
+        return 4
     segments = work / "segments"
     segments.mkdir(parents=True, exist_ok=True)
     done = sorted(segments.glob("seg-*.jsonl"))
@@ -481,7 +489,8 @@ def record(env_file: Path, work: Path, timeout: float, spec: Dict[str, Any] = CA
         summary["canonical_payload"] = app["canonical_payload"]
     write_fixture(cassette.entries, pinned, secrets, summary, case,
                   {"tree_head": _git("rev-parse", "HEAD"),
-                   "tree_dirty": bool(_git("status", "--porcelain", "--", "src", "tests/equivalence"))},
+                   "tree_dirty": bool(_git("status", "--porcelain", "--", "src", "tests/equivalence")),
+                   "hash_seed": os.environ.get("PYTHONHASHSEED")},
                   path=spec["fixture"])
     return 0
 
@@ -504,6 +513,36 @@ def write_fixture(entries: Dict[str, Any], pinned: Dict[str, str], secrets: Dict
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_bytes(gzip.compress(text.encode("utf-8"), mtime=0))
     print(f"wrote {path} ({path.stat().st_size} bytes gz, {len(text)} bytes json)")
+
+
+def replay_arms(spec: Dict[str, Any], base: Path, out: Path) -> int:
+    """Replay app, app and service for a case that needs a fixed hash seed; write the comparable parts as JSON.
+
+    The seed is read when the interpreter starts, so a test cannot set it for itself: it runs this in a child
+    process (``harness.py replay``). Being a fresh process also satisfies :func:`replay_env`, so the test that
+    calls this has no need to run alone."""
+
+    if os.environ.get("PYTHONHASHSEED") != spec["hash_seed"]:
+        print(f"refusing to replay: this case needs PYTHONHASHSEED={spec['hash_seed']}")
+        return 4
+    fixture = load_fixture(spec["fixture"])
+    case = fixture["case"]
+    mp = pytest.MonkeyPatch()
+    try:
+        replay_env(mp, fixture)
+        arms = {"app1": run_app_arm(base / "app1", llm_replay.Cassette("replay", fixture["entries"]), 240.0, case),
+                "app2": run_app_arm(base / "app2", llm_replay.Cassette("replay", fixture["entries"]), 240.0, case)}
+        arms["service"] = run_service_arm(arms["app1"], base / "service",
+                                          llm_replay.Cassette("replay", fixture["entries"]), case=case)
+    finally:
+        mp.undo()
+    keep = ("outcome", "canonical_payload_sha256", "canonical_payload", "published", "misses", "refused", "unused",
+            "pwml_files", "error")
+    result = {name: {**{k: arm.get(k) for k in keep}, "xml_bytes": len(arm["xml"])} for name, arm in arms.items()}
+    result["app1"].update(post_export_mode=(arms["app1"]["post_call"] or (None, {}))[1].get("export_mode"),
+                          export_called=bool(arms["app1"]["export_call"]))
+    out.write_text(json.dumps(result, ensure_ascii=False), encoding="utf-8")
+    return 0
 
 
 def assemble(env_file: Path, transcript: Path, live_log: Path, recorded_head: str) -> int:
@@ -542,7 +581,13 @@ def main(argv: Optional[list] = None) -> int:
     asm.add_argument("--transcript", type=Path, required=True)
     asm.add_argument("--live-log", type=Path, required=True)
     asm.add_argument("--recorded-head", required=True)
+    rep = sub.add_parser("replay")
+    rep.add_argument("--case", choices=sorted(CASES), required=True)
+    rep.add_argument("--base", type=Path, required=True)
+    rep.add_argument("--out", type=Path, required=True)
     args = parser.parse_args(argv)
+    if args.cmd == "replay":
+        return replay_arms(CASES[args.case], args.base, args.out)
     if args.cmd == "assemble":
         return assemble(args.env_file, args.transcript, args.live_log, args.recorded_head)
     return record(args.env_file, args.work, args.timeout, CASES[args.case])
