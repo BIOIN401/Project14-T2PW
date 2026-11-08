@@ -1,0 +1,132 @@
+{
+ "checks": [
+  {
+   "id": "S1 name mode shows name+organism only",
+   "ok": true,
+   "detail": "{'name_1': True, 'organism_1': True, 'pmids_1': False, 'pdfs_1': False}"
+  },
+  {
+   "id": "S1 PMID mode shows pmids field",
+   "ok": true,
+   "detail": "{'name_1': True, 'organism_1': True, 'pmids_1': True, 'pdfs_1': False}"
+  },
+  {
+   "id": "S1 PDF mode shows file field",
+   "ok": true,
+   "detail": "{'name_1': True, 'organism_1': True, 'pmids_1': False, 'pdfs_1': True}"
+  },
+  {
+   "id": "S1 pasted-text mode exists",
+   "ok": false,
+   "detail": "modes offered: ['name', 'pmids', 'pdfs'] (task list expected 4 incl. pasted text)"
+  },
+  {
+   "id": "S1 five rows",
+   "ok": false,
+   "detail": "10"
+  },
+  {
+   "id": "S2 typing 'escher' fills the datalist",
+   "ok": false,
+   "detail": "0 options, first: []; /organisms requests: 0"
+  },
+  {
+   "id": "S2 ArrowDown+Enter picks a datalist suggestion",
+   "ok": false,
+   "detail": "value now 'escher'"
+  },
+  {
+   "id": "S2 chosen organism sticks after blur + 700ms",
+   "ok": true,
+   "detail": "Mus musculus"
+  },
+  {
+   "id": "S3a empty submit blocked in browser with a message",
+   "ok": true,
+   "detail": "url=http://127.0.0.1:53925/ validationMessage='Please fill out this field.'"
+  },
+  {
+   "id": "S3b empty submit (server) says what to do",
+   "ok": false,
+   "detail": "Request blocked  This form was sent from another site, so it was not accepted. Use the form on this site.  Back to the submit page"
+  }
+ ],
+ "timeline": [],
+ "console": [
+  {
+   "step": "s3-bad-input",
+   "type": "error",
+   "text": "Failed to load resource: the server responded with a status of 403 (Forbidden)",
+   "loc": "http://127.0.0.1:53925/submit:0"
+  },
+  {
+   "step": "s3-bad-input",
+   "type": "error",
+   "text": "Failed to load resource: the server responded with a status of 403 (Forbidden)",
+   "loc": "http://127.0.0.1:53925/submit:0"
+  },
+  {
+   "step": "s4-main-job",
+   "type": "error",
+   "text": "Failed to load resource: the server responded with a status of 403 (Forbidden)",
+   "loc": "http://127.0.0.1:53925/submit:0"
+  }
+ ],
+ "failed_requests": [],
+ "bad_responses": [
+  {
+   "step": "s3-bad-input",
+   "status": 403,
+   "url": "http://127.0.0.1:53925/submit",
+   "retry_after": ""
+  },
+  {
+   "step": "s3-bad-input",
+   "status": 403,
+   "url": "http://127.0.0.1:53925/submit",
+   "retry_after": ""
+  },
+  {
+   "step": "s4-main-job",
+   "status": 403,
+   "url": "http://127.0.0.1:53925/submit",
+   "retry_after": ""
+  }
+ ],
+ "keyboard": [],
+ "links": {},
+ "notes": {
+  "organism_count": 4018,
+  "labels": [
+   "Mus musculus",
+   "Homo sapiens",
+   "Saccharomyces cerevisiae",
+   "Escherichia coli"
+  ],
+  "t2pw_path": "C:\\t\\ws-E2E3\\src\\t2pw\\__init__.py C:\\t\\ws-E2E3\\docs\\webserver\\evidence\\E2E-3\\fake_run.py",
+  "browser": "156.0.8078.4",
+  "modes_offered": [
+   "name",
+   "pmids",
+   "pdfs"
+  ],
+  "organism_escher_options": [],
+  "organism_requests_for_typing_escher": 0,
+  "organism_value_after_ArrowDown_Enter": "escher",
+  "organism_nonsense_options": 0,
+  "organism_options_after_clearing": 0,
+  "survivors_after_stop": []
+ },
+ "section_errors": [
+  {
+   "section": "s3-bad-input",
+   "error": "TimeoutError: Page.input_value: Timeout 15000ms exceeded.\nCall log:\n  - waiting for locator(\"#name_1\")\n",
+   "tb": ", in input_value\n    self._sync(\n    ~~~~~~~~~~^\n        self._impl_obj.input_value(\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n            selector=selector, strict=strict, timeout=to_milliseconds(timeout)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n        )\n        ^\n    )\n    ^\n  File \"C:\\t\\e2e3-venv\\Lib\\site-packages\\playwright\\_impl\\_sync_base.py\", line 111, in _sync\n    return task.result()\n           ~~~~~~~~~~~^^\n  File \"C:\\t\\e2e3-venv\\Lib\\site-packages\\playwright\\_impl\\_page.py\", line 1086, in input_value\n    return await self._main_frame.input_value(**params)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\t\\e2e3-venv\\Lib\\site-packages\\playwright\\_impl\\_frame.py\", line 827, in input_value\n    return await self._channel.send(\n           ^^^^^^^^^^^^^^^^^^^^^^^^^\n        \"inputValue\", self._timeout, locals_to_params(locals())\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"C:\\t\\e2e3-venv\\Lib\\site-packages\\playwright\\_impl\\_connection.py\", line 78, in send\n    return await self._connection.wrap_api_call(\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    ...<3 lines>...\n    )\n    ^\n  File \"C:\\t\\e2e3-venv\\Lib\\site-packages\\playwright\\_impl\\_connection.py\", line 636, in wrap_api_call\n    raise rewrite_error(error, f\"{parsed_st['apiName']}: {error}\") from None\nplaywright._impl._errors.TimeoutError: Page.input_value: Timeout 15000ms exceeded.\nCall log:\n  - waiting for locator(\"#name_1\")\n\n"
+  },
+  {
+   "section": "s4-main-job",
+   "error": "TimeoutError: Timeout 15000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"re.compile('/job/[0-9a-f]{32}$')\" until 'load'\n  navigated to \"http://127.0.0.1:53925/submit\"\n============================================================",
+   "tb": "Traceback (most recent call last):\n  File \"C:\\t\\ws-E2E3\\docs\\webserver\\evidence\\E2E-3\\drive.py\", line 240, in run\n    return fn(*a, **k)\n  File \"C:\\t\\ws-E2E3\\docs\\webserver\\evidence\\E2E-3\\drive.py\", line 415, in s4\n    with page.expect_navigation(url=re.compile(r\"/job/[0-9a-f]{32}$\"), wait_until=\"load\"):\n         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\t\\e2e3-venv\\Lib\\site-packages\\playwright\\_impl\\_sync_base.py\", line 82, in __exit__\n    self._event.value\n  File \"C:\\t\\e2e3-venv\\Lib\\site-packages\\playwright\\_impl\\_sync_base.py\", line 56, in value\n    raise exception\n  File \"C:\\t\\e2e3-venv\\Lib\\site-packages\\playwright\\_impl\\_frame.py\", line 265, in continuation\n    event = await waiter.result()\n            ^^^^^^^^^^^^^^^^^^^^^\nplaywright._impl._errors.TimeoutError: Timeout 15000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"re.compile('/job/[0-9a-f]{32}$')\" until 'load'\n  navigated to \"http://127.0.0.1:53925/submit\"\n============================================================\n"
+  }
+ ]
+}
