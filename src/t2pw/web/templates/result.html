@@ -16,6 +16,16 @@
 <p>Open the PWML in PathWhiz and check it against the sources. Do not treat it as final.</p>
 {% endcall %}
 {% endif %}
+{% if it.review_why %}{% set w = it.review_why %}
+{% call c.card("Why this needs review") %}
+{% if w.counts %}<p>What the PWML contains:</p>
+<ul>{% for n in w.counts %}<li>{{ n.label }}: <strong>{{ n.n }}</strong></li>{% endfor %}</ul>
+{% if w.no_reactions %}<p><strong>No reactions were found in this text.</strong></p>{% endif %}{% endif %}
+{% if w.anchors %}<p>The run looked for these terms but did not place them in this pathway. Check whether they belong:</p>
+<ul>{% for a in w.anchors %}<li>{{ a }}</li>{% endfor %}</ul>{% endif %}
+{% if w.omitted %}<p>{{ w.omitted }}</p>{% endif %}
+{% endcall %}
+{% endif %}
 {% if it.warnings %}
 {% call c.alert("warning", title="Warnings") %}<ul>{% for w in it.warnings %}<li>{{ w }}</li>{% endfor %}</ul>{% endcall %}
 {% endif %}

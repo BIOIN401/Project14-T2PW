@@ -178,6 +178,55 @@ def _inputs_line(item: Dict[str, Any]) -> str:
     return ", ".join(bits) or "pathway name"
 
 
+_OMITTED = re.compile(r"omitted_from_pwml:(\d+)_processes\+(\d+)_actors")
+_COUNT_LABELS = (("reactions", "Reactions"), ("transports", "Transports"),
+                 ("interactions", "Interactions"), ("proteins", "Proteins"))
+
+
+def _count(counts: Dict[str, Any], key: str) -> Optional[int]:
+    """A non-negative int from the result's counts (top level, else its ``pwml`` block)."""
+    pw = counts.get("pwml")
+    for src in (counts, pw if isinstance(pw, dict) else {}):
+        v = src.get(key)
+        if isinstance(v, int) and not isinstance(v, bool) and v >= 0:
+            return v
+    return None
+
+
+def review_why(res: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    """Why a review_required run needs review, from the result's own fields, or ``None``.
+
+    Uses only ``counts`` and ``release_status`` (``missing_anchors``, ``reasons``). It does
+    not read any file. ``expansion_blocked_reason``, ``retrieval_attempts`` and
+    ``completeness`` are deliberately NOT shown: the E2E-2 audit (F4, F5) found them
+    misreporting. Anything missing or malformed is simply left out.
+    """
+    counts = res.get("counts")
+    rs = res.get("release_status")
+    counts = counts if isinstance(counts, dict) else {}
+    rs = rs if isinstance(rs, dict) else {}
+    out: Dict[str, Any] = {"counts": [], "no_reactions": False, "anchors": [], "omitted": ""}
+    for key, label in _COUNT_LABELS:
+        n = _count(counts, key)
+        if n is not None:
+            out["counts"].append({"label": label, "n": n})
+            if key == "reactions" and n == 0:
+                out["no_reactions"] = True
+    anchors = rs.get("missing_anchors")
+    if isinstance(anchors, list):
+        out["anchors"] = [scrub(a, 80) for a in anchors[:20] if isinstance(a, str) and a.strip()]
+    reasons = rs.get("reasons")
+    for r in reasons if isinstance(reasons, list) else []:
+        m = _OMITTED.fullmatch(r) if isinstance(r, str) else None
+        if m and (int(m.group(1)) or int(m.group(2))):
+            procs, actors = int(m.group(1)), int(m.group(2))
+            bits = ([f"{procs} process{'' if procs == 1 else 'es'}"] if procs else []) +                    ([f"{actors} actor{'' if actors == 1 else 's'}"] if actors else [])
+            out["omitted"] = (" and ".join(bits) + " found in the sources "
+                              "left out of the PWML by the strict quality checks.")
+            break
+    return out if (out["counts"] or out["anchors"] or out["omitted"]) else None
+
+
 def item_view(item: Dict[str, Any], history: List[Dict[str, Any]], sid: str) -> Dict[str, Any]:
     """Everything a template needs for one item. Links are server-built from ``sid`` and
     the item position; no stored path ever reaches the result."""
@@ -197,6 +246,7 @@ def item_view(item: Dict[str, Any], history: List[Dict[str, Any]], sid: str) -> 
         "review_required": rs == "review_required",
         "message": scrub(res.get("message")) if res else "",
         "warnings": [scrub(w) for w in res.get("warnings", [])] if res else [],
+        "review_why": review_why(res) if rs == "review_required" and state == "finished" else None,
         "downloads": {"pwml": None, "image": None, "reports": []},
         "failed": False, "headline": "", "detail": "",
     }
