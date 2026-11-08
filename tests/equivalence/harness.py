@@ -77,6 +77,10 @@ SECOND_CASE = {
                    "| Candida albicans"),
     "mode": "research",
     "source": "docs/webserver/results/R26.md",
+    # NON-DEFAULT, for this case only: the batch driver compares Stage 0's pathway name with the requested text
+    # and would stop on the long scope sentence (R26.md sec. 4). The switch is the driver's documented one
+    # (annotate and continue); the check lives in the driver, so neither the app nor the service reads it.
+    "env": {"RAG_ELIGIBILITY_STAGE0_CONFLICT_ABORTS": "false"},
 }
 CASES = {
     "sour_taste_v2": {"fixture": FIXTURE, "topic_line": TOPIC_LINE, "mode": MODE,
@@ -448,7 +452,7 @@ def record(env_file: Path, work: Path, timeout: float, spec: Dict[str, Any] = CA
     prior = llm_replay.Cassette("replay", llm_replay.load_transcript(done[-1])) if done else None
     values = dotenv_values(env_file)
     secrets = {k: str(v) for k, v in values.items() if k in llm_replay.SECRET_ENV and v}
-    pinned = llm_replay.pinned_env_from(values)
+    pinned = {**llm_replay.pinned_env_from(values), **spec.get("env", {})}
     mp = pytest.MonkeyPatch()
     try:
         llm_replay.apply_env(mp, pinned, secrets)
