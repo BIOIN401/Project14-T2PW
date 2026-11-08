@@ -59,3 +59,11 @@ the server DB user; the SMTP provider.
 | Q-R3d-3 | The equivalence test missed one R3d mutation: one Stage 2 QA round instead of two gives byte-identical output on the recorded fixture. A 2-line check that every recorded LLM reply is consumed would catch it. | **Add it.** The 2-line edit to the equivalence test is authorised. It is a strengthening, not an edit needed to pass, so merge gate 5's "edited to pass" reject does not apply. The reviewer must confirm that it only adds the check, and that the test still passes 14 on the tip and on base. | R3d, R4-R6 |
 
 Orchestrator note (not a PO ruling): the c060a edit (`tests/test_c060a_requested_pathway_wiring.py`) points its two parse sites at `service/extraction.py` and moves the `OWNED_FLOOR` locator from 1440 to 790 in that file. The orchestrator authorised it under **Q-R0-1** as a path edit, on condition that the reviewer confirms it selects exactly the same two `merge_additions` statements and gate imports as at base.
+
+## Addendum 6, 2026-11-08 (R3 complete; equivalence coverage)
+
+| ref | question | ruling | relied on by |
+|---|---|---|---|
+| Q-R3d-4 | R3d review F1: the one recorded fixture has no Stage 2 additions, no out-of-scope hits, RAG off and the default export mode, so three mutations pass the equivalence test 14/14. Should a second recording be added? | **Record it alongside R4.** R4 starts now. The second fixture joins the equivalence gate as soon as it works, so R5 and R6 are covered. One heavy job at a time still applies. The Q-R25-2 licence rule applies: CC-BY or CC0 only. | R26, R4-R6 |
+
+Orchestrator note (not a PO ruling): the question put to the PO described the recording as "with RAG on". R2.5 forces `RAG_ENABLED=0` because the cassette does not cover RAG's PubMed and embedding calls, so RAG-on needs harness work, and it could commit retrieved passages whose licences are unknown. Task R26 therefore delivers Stage 2 additions, out-of-scope hits and a non-default export mode first. RAG coverage goes ahead only if it is feasible and every text the fixture stores meets Q-R25-2; otherwise the task stops and reports options and costs to the PO.
