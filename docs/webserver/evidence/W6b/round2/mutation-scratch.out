@@ -1,0 +1,48 @@
+=== mut
+================================== FAILURES ===================================
+>       assert "semantic_evaluation_failed" not in html and "requested_pathway_anchors_present" not in html
+E       AssertionError: assert ('semantic_evaluation_failed' not in '<!DOCTYPE h...dy>\n</html>'
+E         'semantic_evaluation_failed' is contained here:
+E           A</li><li>semantic_evaluation_failed:requested_pathway_anchors_present</li><li>omitted_from_pwml:1_processes+0_actors</li></ul>
+=========================== short test summary info ===========================
+FAILED tests/test_web_review_reasons.py::test_e2e2_case_states_why - Assertio...
+FAILED tests/test_web_review_reasons.py::test_zero_missing_terms_and_plurals
+FAILED tests/test_web_review_reasons.py::test_huge_digit_run_in_omitted_token_cannot_raise
+3 failed, 7 passed in 0.67s
+=== mut2
+================================== FAILURES ===================================
+=========================== short test summary info ===========================
+FAILED tests/test_web_review_reasons.py::test_e2e2_case_states_why - Assertio...
+FAILED tests/test_web_review_reasons.py::test_malformed_report_data_is_left_out[res0]
+FAILED tests/test_web_review_reasons.py::test_malformed_report_data_is_left_out[res1]
+FAILED tests/test_web_review_reasons.py::test_malformed_report_data_is_left_out[res2]
+FAILED tests/test_web_review_reasons.py::test_malformed_report_data_is_left_out[res3]
+FAILED tests/test_web_review_reasons.py::test_huge_digit_run_in_omitted_token_cannot_raise
+6 failed, 4 passed in 0.77s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-W6b\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 276752f6ee9e5304f5b50658ea8c00a351e1c56a  [git, worktree dirty=True]
+label                   : W6b-mut
+command                 : C:\Program Files\Git\usr\bin\bash.exe C:/t/w6b_ev/both.sh
+cwd                     : C:/t/w6b_mut
+root PID / process group: 272516 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 2.73 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 7  291888:bash.exe, 291896:python.exe, 291908:bash.exe, 291996:python.exe, 247304:python.exe, 286712:bash.exe, 291784:python.exe
+descendants terminated  : 7  247304, 286712, 291784, 291888, 291896, 291908, 291996
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/w6b_ev/mut.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=W6b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 8
+================================================

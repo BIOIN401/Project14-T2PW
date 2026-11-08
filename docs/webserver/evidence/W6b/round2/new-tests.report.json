@@ -1,0 +1,96 @@
+{
+  "label": "W6b-new2",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/ws-W6b/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-W6b",
+    "-q",
+    "--basetemp=C:/t/w6b_tmp/new2-10",
+    "tests/test_web_review_reasons.py"
+  ],
+  "cwd": "C:\\t\\ws-W6b",
+  "started_at": "2026-11-08T20:35:47+00:00",
+  "finished_at": "2026-11-08T20:35:49+00:00",
+  "duration_seconds": 1.2780718000003617,
+  "timeout_seconds": 500.0,
+  "root_pid": 207464,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 207476,
+      "name": "python.exe",
+      "ppid": 207464
+    }
+  ],
+  "descendants_terminated": [
+    207476
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 24756,
+      "name": "python.exe"
+    },
+    {
+      "pid": 24880,
+      "name": "python.exe"
+    },
+    {
+      "pid": 177428,
+      "name": "python.exe"
+    },
+    {
+      "pid": 202856,
+      "name": "python.exe"
+    },
+    {
+      "pid": 207068,
+      "name": "python.exe"
+    },
+    {
+      "pid": 207080,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/w6b_ev/new2.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-W6b\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-W6b",
+    "repo_head": "276752f6ee9e5304f5b50658ea8c00a351e1c56a",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "W6b",
+    "token": "W6b:207080:11d711f92be7ef7f",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
