@@ -1,0 +1,36 @@
+T2PW: C:\t\ws-W1F\src\t2pw\__init__.py
+.......................................                                  [100%]
+============================== warnings summary ===============================
+tests\test_service_inputs.py:254
+  C:\t\ws-W1F\tests\test_service_inputs.py:254: SyntaxWarning: invalid escape sequence '\d'
+    """W1F: mixed ASCII/non-ASCII digit strings (the old str.isdigit/\d regex accepted these)."""
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+39 passed, 1 warning in 1.14s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-W1F\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 71cfe7d389d5b50fd4d55c70147e01cf178005be  [git, worktree dirty=True]
+label                   : W1F-focused
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-W1F -q --basetemp=C:/t/wsW1Ftmp/focused2 tests/test_service_inputs.py
+cwd                     : C:\t\ws-W1F
+root PID / process group: 71780 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 1.96 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  71728:python.exe
+descendants terminated  : 1  71728
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : docs/webserver/evidence/W1F/01-focused.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=W1F  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

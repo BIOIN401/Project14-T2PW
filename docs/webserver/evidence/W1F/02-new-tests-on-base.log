@@ -1,0 +1,73 @@
+T2PW: C:\t\ws-W1F\src\t2pw\__init__.py
+....FF                                                                   [100%]
+================================== FAILURES ===================================
+______________ test_w1f_only_known_not_found_errmsg_is_no_pmcid _______________
+
+    def test_w1f_only_known_not_found_errmsg_is_no_pmcid():
+        """W1F: the live "Identifier not found in PMC" errmsg is NO_PMCID; any other per-record error is LOOKUP_FAILED."""
+        client = _Client([
+            {"pmid": 111, "requested-id": "111", "status": "error", "errmsg": "Identifier not found in PMC"},
+            {"pmid": 222, "requested-id": "222", "status": "error", "errmsg": "invalid article id"},
+            {"pmid": 333, "requested-id": "333", "status": "error", "errmsg": "rate limit exceeded"},
+            {"pmid": 444, "requested-id": "444", "status": "error"},
+            {"pmid": 555, "requested-id": "555", "pmcid": "PMC5"},
+        ])
+        res = si.resolve_pmids(["111", "222", "333", "444", "555"], client=client, fetch_text_fn=lambda p: "t")
+>       assert [(r.pmid, r.status) for r in res] == [
+            ("111", si.NO_PMCID), ("222", si.NO_PMCID), ("333", si.LOOKUP_FAILED),
+            ("444", si.LOOKUP_FAILED), ("555", si.OK),
+        ]
+E       AssertionError: assert [('111', 'no_...('555', 'ok')] == [('111', 'no_...('555', 'ok')]
+E         
+E         At index 2 diff: ('333', 'no_pmcid') != ('333', 'lookup_failed')
+E         Use -v to get more diff
+
+tests\test_service_inputs.py:270: AssertionError
+_____ test_w1f_idconv_is_throttled_per_chunk_only_for_the_default_client ______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000021D0B091350>
+
+    def test_w1f_idconv_is_throttled_per_chunk_only_for_the_default_client(monkeypatch):
+        """W1F: one NCBI throttle wait per 100-id request, none when the caller injects a client."""
+        ticks = []
+        monkeypatch.setattr(si, "_ncbi_throttle", lambda: ticks.append(1))
+        monkeypatch.setattr(si, "HttpClient", lambda: _Client())
+        ids = [str(n) for n in range(1, 251)]  # 250 ids -> 3 requests
+        res = si.resolve_pmids(ids)
+>       assert len(res) == 250 and len(ticks) == 3
+E       AssertionError: assert (250 == 250 and 1 == 3)
+E        +  where 250 = len([PmidResult(pmid='1', status='lookup_failed', pmcid='', text='', message='could not look up PMID 1 right now; please t...ssage='could not look up PMID 6 right now; please try again later or upload the PDF', detail='absent_from_reply'), ...])
+E        +  and   1 = len([1])
+
+tests\test_service_inputs.py:285: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_inputs.py::test_w1f_only_known_not_found_errmsg_is_no_pmcid
+FAILED tests/test_service_inputs.py::test_w1f_idconv_is_throttled_per_chunk_only_for_the_default_client
+2 failed, 4 passed, 33 deselected in 0.29s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-W1F\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 71cfe7d389d5b50fd4d55c70147e01cf178005be  [git, worktree dirty=True]
+label                   : W1F-onbase
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-W1F -q --basetemp=C:/t/wsW1Ftmp/base1 tests/test_service_inputs.py -k w1f
+cwd                     : C:\t\ws-W1F
+root PID / process group: 72920 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 0.96 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  72932:python.exe
+descendants terminated  : 1  72932
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : docs/webserver/evidence/W1F/02-new-tests-on-base.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=W1F  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================
