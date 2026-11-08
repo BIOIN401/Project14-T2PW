@@ -187,6 +187,7 @@ from t2pw.service.rag_orchestration import (
     _rag_reentry_map,
     run_rag_rounds,
 )
+from t2pw.service.post_run import PostRunRequest, run_post_pipeline
 from t2pw.service.reporter import StreamlitReporter, install_app_defaults
 from t2pw.service.extraction import (
     DIAGNOSTICS_DIRNAME,
@@ -2889,197 +2890,43 @@ if st.session_state.get("pipeline_ready"):
             # never the thing that has to remember to invalidate.
             reset_quarantine_state(PROJECT_ROOT / "outputs")
             post_artifacts = {}
-            reenter_extraction_diagnostics(st.session_state.get("extraction_diagnostics_recorder"))
-            try:
-                with st.spinner("Running audit and DB mapping..."):
-                    final_payload = propagate_context_organism(
-                        final_payload,
-                        st.session_state.get("pathway_context"),
-                    )
-                    artifacts = run_post_pipeline_sbml_artifacts(
-                        final_payload,
-                        build_legacy_sbml=False,
-                        use_llm_audit=bool(use_llm_audit),
-                        use_sbml_overwatch=bool(use_sbml_overwatch),
-                        default_compartment=(default_compartment or "cell").strip() or "cell",
-                        mapping_cache_path=mapping_cache_text.strip() or "id_mapping_cache.json",
-                        id_source=(id_source_mode or "hybrid").strip().lower(),
-                        db_host=(db_host or "").strip(),
-                        db_port=int(db_port),
-                        db_user=(db_user or "").strip(),
-                        db_password=db_password or "",
-                        db_schema=(db_schema or "pathbank").strip() or "pathbank",
-                        audit_max_rounds=int(audit_max_rounds),
-                        audit_timeout_seconds=int(audit_timeout_seconds),
-                        audit_candidate_count=int(audit_candidate_count),
-                        use_example_retrieval=bool(use_example_retrieval),
-                        example_index_path=(example_index_path or "").strip(),
-                        example_top_k=int(example_top_k),
-                        use_gap_resolver=bool(use_gap_resolver),
-                        use_llm_gap_resolver=bool(use_llm_gap_resolver),
-                        gap_resolver_max_items=int(gap_resolver_max_items),
-                        qa_report=st.session_state.get("qa_report"),
-                        reaction_summary=st.session_state.get("reaction_summary"),
-                        use_stoich_agent=bool(use_stoich_agent),
-                        rag_evidence_context=(
-                            st.session_state.get("rag_evidence_context") or ""
-                            if rag_config()["enabled"]
-                            else ""
-                        ),  # S2 — "" when RAG off, keeping today's path
-                        export_mode=coerce_mode(st.session_state.get("export_mode")),
-                        # The quarantine boundary runs inside the pipeline now, so
-                        # its three inputs travel with the call instead of being
-                        # read from session state after the fact.
-                        strict_db=bool(st.session_state.get("pwml_strict_db", True)),
-                        pathway_context=_safe_dict(st.session_state.get("pathway_context")),
-                        outputs_dir=PROJECT_ROOT / "outputs",
-                        state=st.session_state,
-                    )
-                st.session_state["post_pipeline_artifacts"] = artifacts
-                _pa = _safe_dict(artifacts)
-                if _pa.get("post_audit_qa_report"):
-                    st.session_state["qa_report"] = _pa["post_audit_qa_report"]
-                if _pa.get("post_audit_reaction_summary"):
-                    st.session_state["reaction_summary"] = _pa["post_audit_reaction_summary"]
-                _pa["final_payload_snapshot"] = st.session_state.get("final_payload_snapshot", final_payload)
-                if bool(_pa.get("gate_failed", False)):
-                    st.warning("Post-pipeline stopped at hard-gate validation. Review gate_fail_report.json.")
-                else:
-                    # The quarantine boundary and the pre-export Stage 3 gate both
-                    # ran INSIDE the pipeline call above, on the canonical payload
-                    # -- enriched, then quarantined, then serialized and exported.
-                    # They used to run here, after the function returned, which is
-                    # why the gate judged an object (quarantine of the PRE-
-                    # enrichment payload) that was neither serialized as
-                    # final_mapped.json nor handed to the exporter. This block is
-                    # now presentation over decisions already made and recorded;
-                    # it decides nothing, so a reader never has to ask whether the
-                    # UI and the batch driver saw the same verdict.
-                    final_mapped_payload = _pa.get(CANONICAL_PAYLOAD_KEY) or _pa.get("final_mapped")
-                    mapping_report = _safe_dict(_pa.get("mapping_report"))
-                    if isinstance(final_mapped_payload, dict) and final_mapped_payload:
-                        _quarantine_flags = _safe_list(_pa.get("quarantine_review_flags"))
-                        if _quarantine_flags:
-                            # Research mode: the candidate is untouched and the run
-                            # continues. These are the findings a strict run would
-                            # have acted on, shown so the skip is never invisible.
-                            st.warning(
-                                f"Quarantine review flags ({len(_quarantine_flags)}): "
-                                "research mode kept every process. A strict export "
-                                "would have removed the ones listed below."
-                            )
-                            st.json(_quarantine_flags)
-                        if not bool(_pa.get("quarantine_ok")):
-                            _refusal_reasons = [
-                                str(reason) for reason in _safe_list(_pa.get("quarantine_refusal_reasons"))
-                            ]
-                            st.session_state.refinement_gate_errors = [
-                                {"path": "/processes", "reason": f"quarantine refusal: {reason}"}
-                                for reason in _refusal_reasons
-                            ]
-                            st.error(
-                                "Quarantine could not produce a viable requested-pathway core: "
-                                + "; ".join(_refusal_reasons)
-                            )
-                            # Rendered flat rather than inside an expander. A
-                            # refusal is the reason the run stopped, so it should
-                            # not need a click to read, and st.expander here trips
-                            # FragmentThreadState under AppTest once an earlier
-                            # app run has executed in the same process.
-                            st.caption("Requested-core coverage")
-                            st.json(_safe_dict(_pa.get("quarantine_coverage")))
-                            st.caption("Strict invariants")
-                            st.json(_safe_dict(_pa.get("quarantine_report")).get("strict_invariants"))
-                        else:
-                            final_gate: Dict[str, Any] = _safe_dict(_pa.get(FINAL_GATE_REPORT_KEY))
-                            _stage3_failed = bool(final_gate) and not bool(final_gate.get("ok", False))
-                            if _stage3_failed and is_research(coerce_mode(st.session_state.get("export_mode"))):
-                                # Research mode fails open through the WHOLE
-                                # boundary, not just through quarantine. An
-                                # annotate-only quarantine in front of a mode-blind
-                                # gate is still a blocked run: a novel enzyme with
-                                # no accession fails Stage 3 for the same reason
-                                # quarantine flagged it, refinement review never
-                                # opens, and the mode that exists for exactly that
-                                # pathway delivers nothing. The gate still RAN and
-                                # its findings are kept in full below -- what
-                                # changes is that they annotate instead of block.
-                                # The report itself is already recorded by the
-                                # pipeline, on this branch and on the passing one
-                                # alike; what research mode adds is the flag
-                                # channel, never an edit to the gate's finding.
-                                _pa["research_stage3_review_flags"] = _safe_list(final_gate.get("errors"))
-                                _pa["research_stage3_failed_open"] = True
-                                st.session_state.refinement_gate_errors = []
-                                st.warning(
-                                    "Research mode: the pre-export Stage 3 revalidation FAILED "
-                                    f"({len(_safe_list(final_gate.get('errors')))} error(s)) and was not "
-                                    "enforced. The strict gates did NOT pass — this candidate is not "
-                                    "PathWhiz-exportable as it stands. Refinement review is open so the "
-                                    "findings below can be reviewed against the pathway itself."
-                                )
-                                # Flat, not in an expander: st.expander here trips
-                                # FragmentThreadState under AppTest once an earlier
-                                # app run has executed in the same process.
-                                st.caption("Stage 3 findings retained as review flags")
-                                for _gate_err in _safe_list(final_gate.get("errors")):
-                                    if isinstance(_gate_err, dict):
-                                        st.markdown(
-                                            f"- `{_gate_err.get('path', '')}` — {_gate_err.get('reason', _gate_err)}"
-                                        )
-                                    else:
-                                        st.markdown(f"- {_gate_err}")
-                                st.json(final_gate)
-                                # The candidate, byte for byte. Research quarantine
-                                # returned the payload unchanged, so this is what
-                                # came out of mapping and not a reduced graph.
-                                initialize_refinement_review_state(final_mapped_payload, mapping_report)
-                            elif _stage3_failed:
-                                st.session_state.refinement_gate_errors = _safe_list(final_gate.get("errors"))
-                                st.error(
-                                    "Mapped pathway still fails the pre-export Stage 3 revalidation. "
-                                    "Refinement review was not opened."
-                                )
-                                _gate_errors_for_display = _safe_list(final_gate.get("errors"))
-                                with st.expander(
-                                    f"Why Stage 3 failed ({len(_gate_errors_for_display)} error(s))",
-                                    expanded=True,
-                                ):
-                                    if _gate_errors_for_display:
-                                        for _gate_err in _gate_errors_for_display:
-                                            if isinstance(_gate_err, dict):
-                                                st.markdown(
-                                                    f"- `{_gate_err.get('path', '')}` — {_gate_err.get('reason', _gate_err)}"
-                                                )
-                                                _render_issue_detail(_gate_err.get("detail"))
-                                            else:
-                                                st.markdown(f"- {_gate_err}")
-                                    else:
-                                        st.write("No itemized errors were returned; showing full gate report below.")
-                                    st.json(final_gate)
-                            else:
-                                st.session_state.refinement_gate_errors = []
-                                initialize_refinement_review_state(final_mapped_payload, mapping_report)
-                                st.info("Mapped pathway is ready for review. PWML generation is paused until approval.")
-            except StageContractError as failure:
-                _render_stage_contract_failure(
+            # R4b: re-entering the recorder, the audit and mapping, the verdict messages and
+            # the diagnostics sync now live in t2pw.service.post_run. The callbacks stay here.
+            _post_run = run_post_pipeline(
+                PostRunRequest(
+                    final_payload=final_payload,
+                    use_llm_audit=use_llm_audit,
+                    use_sbml_overwatch=use_sbml_overwatch,
+                    default_compartment=default_compartment,
+                    mapping_cache_text=mapping_cache_text,
+                    id_source_mode=id_source_mode,
+                    db_host=db_host,
+                    db_port=db_port,
+                    db_user=db_user,
+                    db_password=db_password,
+                    db_schema=db_schema,
+                    audit_max_rounds=audit_max_rounds,
+                    audit_timeout_seconds=audit_timeout_seconds,
+                    audit_candidate_count=audit_candidate_count,
+                    use_example_retrieval=use_example_retrieval,
+                    example_index_path=example_index_path,
+                    example_top_k=example_top_k,
+                    use_gap_resolver=use_gap_resolver,
+                    use_llm_gap_resolver=use_llm_gap_resolver,
+                    gap_resolver_max_items=gap_resolver_max_items,
+                    use_stoich_agent=use_stoich_agent,
+                ),
+                state=st.session_state,
+                reporter=StreamlitReporter(st),
+                open_review=initialize_refinement_review_state,
+                render_issue_detail=_render_issue_detail,
+                render_contract_failure=lambda failure: _render_stage_contract_failure(
                     failure,
                     operation_label="Audit and DB mapping",
                     download_key="dl_audit_mapping_stage_contract_error",
-                )
-            except Exception as exc:
-                _record_mapped_failure_snapshot(
-                    final_payload,
-                    stage="post_pipeline",
-                    reason=f"{type(exc).__name__}: {exc}",
-                )
-                st.error(f"Post-pipeline conversion failed: {exc}")
-                st.exception(exc)  # full traceback (file:line) so the cause isn't a mystery
-            finally:
-                # Both the pass and the two failure paths above. The audit and gap
-                # rounds completed before an abort are already on disk; this is
-                # what carries them, and the mapping snapshot, to the batch driver.
-                _sync_extraction_diagnostics()
+                ),
+            )
+            final_payload = _post_run.final_payload
 
     # Rendered from session_state on EVERY pass, not inside the Run button's
     # branch: st.download_button triggers a rerun, so a panel rendered only in
