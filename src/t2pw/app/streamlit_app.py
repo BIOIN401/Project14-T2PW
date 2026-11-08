@@ -188,6 +188,7 @@ from t2pw.service.rag_orchestration import (
     run_rag_rounds,
 )
 from t2pw.service.reporter import StreamlitReporter, install_app_defaults
+from t2pw.service.export import _pwml_reference_path, run_export  # noqa: F401  (R4a: evidence scripts read app._pwml_reference_path)
 from t2pw.service.extraction import (
     DIAGNOSTICS_DIRNAME,
     EXTRACTION_DIAGNOSTICS_DIR_KEY,
@@ -499,15 +500,6 @@ def reset_quarantine_state(outputs_dir: Optional[Path] = None) -> None:
             clear_quarantine_artifacts(outputs_dir)
         except OSError as exc:  # pragma: no cover - a locked file must not kill the run
             logger.warning("reset_quarantine_state: could not clear artifacts: %s", exc)
-
-
-def quarantine_session_state() -> Dict[str, Any]:
-    """The stored boundary decision, for callers downstream of it."""
-
-    return {
-        "quarantine_report": _safe_dict(st.session_state.get("quarantine_report")),
-        "quarantine_artifacts": _safe_dict(st.session_state.get("quarantine_artifacts")),
-    }
 
 
 def initialize_refinement_review_state(
@@ -972,95 +964,6 @@ def _compact_refinement_issue(value: Any) -> str:
     return str(value)
 
 
-def _pwml_reference_path(project_root: Path) -> Path:
-    ref_candidates = [
-        project_root / "reference" / "PW000001.pwml",
-        project_root / "reference" / "PW012926.pwml",
-    ]
-    return next((path for path in ref_candidates if path.exists()), ref_candidates[0])
-
-
-def _write_reviewed_payload_snapshot(working_json: Dict[str, Any], work_dir: str | Path) -> Path:
-    work_path = Path(work_dir)
-    work_path.mkdir(parents=True, exist_ok=True)
-    reviewed_json_path = work_path / "final.mapped.json"
-    reviewed_json_path.write_text(
-        json.dumps(working_json, indent=2, ensure_ascii=False),
-        encoding="utf-8",
-    )
-
-    post_artifacts = st.session_state.get("post_pipeline_artifacts")
-    if isinstance(post_artifacts, dict):
-        reviewed_payload = deepcopy(working_json)
-        post_artifacts["final_mapped_db"] = reviewed_payload
-        post_artifacts["final_export_input"] = deepcopy(reviewed_payload)
-        post_artifacts["reviewed_final_mapped_path"] = str(reviewed_json_path)
-        st.session_state["post_pipeline_artifacts"] = post_artifacts
-
-    return reviewed_json_path
-
-
-def _generate_pwml_from_refinement_working_json(work_dir: str | Path) -> Dict[str, Any]:
-    working_json = st.session_state.get("refinement_working_json")
-    if not isinstance(working_json, dict) or not working_json:
-        return {
-            "ok": False,
-            "error": "No reviewed mapped pathway is available for PWML export.",
-            "counts": {},
-            "issues": 0,
-            "output_path": "",
-            "qa": {},
-            "grounding_report": {},
-        }
-
-    refinement_gate_errors = _safe_list(st.session_state.get("refinement_gate_errors"))
-    if refinement_gate_errors:
-        return {
-            "ok": False,
-            "error": (
-                "PWML export stopped by pre-export Stage 3 revalidation. "
-                "Resolve the refinement gate errors first."
-            ),
-            "counts": {},
-            "issues": len(refinement_gate_errors),
-            "output_path": "",
-            "qa": {},
-            "grounding_report": {},
-            "stage3_gate_errors": refinement_gate_errors,
-            # Carried even here. This return is reached when the boundary refused
-            # OR when Stage 3 failed after it, and the artifacts are the only
-            # record of which -- dropping them makes the two indistinguishable.
-            **quarantine_session_state(),
-        }
-
-    _write_reviewed_payload_snapshot(working_json, work_dir)
-    st.session_state.refinement_pwml_ready = True
-
-    project_root = PROJECT_ROOT
-    grounding_dict = None
-    if bool(st.session_state.get("pwml_grounding", False)):
-        grounding_dict = st.session_state.get("pwml_grounding_dict")
-
-    return run_pwml_export(
-        working_json,
-        pathway_name=str(st.session_state.get("pwml_name") or "Generated Pathway"),
-        pathway_description=str(st.session_state.get("pwml_description") or ""),
-        pathway_subject=str(st.session_state.get("pwml_subject") or "Metabolic"),
-        project_root=project_root,
-        ref_path=_pwml_reference_path(project_root),
-        vis_width=int(st.session_state.get("pwml_width") or 3200),
-        vis_height=int(st.session_state.get("pwml_height") or 1400),
-        background_color=str(st.session_state.get("pwml_bg") or "#FFFFFF"),
-        grounding_dict=grounding_dict,
-        strict_db=bool(st.session_state.get("pwml_strict_db", True)),
-        # The boundary already ran, upstream of the Stage 3 check that gated this
-        # payload into review. Hand its decisions over rather than making new ones.
-        pathway_context=_safe_dict(st.session_state.get("pathway_context")),
-        export_mode=coerce_mode(st.session_state.get("export_mode")),
-        **quarantine_session_state(),
-    )
-
-
 def _render_review_refine_section(
     *,
     mapping_cache_path: str | Path,
@@ -1332,8 +1235,12 @@ def _render_review_refine_section(
         st.rerun()
     if pwml_col.button("Generate PWML", key="refinement_generate_pwml"):
         try:
-            with st.spinner("Building PWML from reviewed pathway JSON..."):
-                _pwml_result = _generate_pwml_from_refinement_working_json(work_dir)
+            _pwml_result = run_export(
+                state=st.session_state,
+                reporter=StreamlitReporter(st),
+                work_dir=work_dir,
+                project_root=PROJECT_ROOT,
+            )
         except Exception as exc:  # noqa: BLE001
             _pwml_result = {
                 "ok": False,
