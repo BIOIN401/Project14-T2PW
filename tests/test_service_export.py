@@ -152,9 +152,11 @@ def test_falsy_settings_take_the_fallbacks(tmp_path, spy) -> None:
     assert kwargs["pathway_context"] == {}
 
 
-@pytest.mark.parametrize("on, expected", [(True, {"g": 1}), (False, None)])
+@pytest.mark.parametrize("on, expected", [(True, {"g": 1}), (False, None), ("<absent>", None)])
 def test_grounding_dict_only_when_grounding_is_on(tmp_path, spy, on, expected) -> None:
-    state = {"refinement_working_json": {"a": 1}, "pwml_grounding": on, "pwml_grounding_dict": {"g": 1}}
+    state: Dict[str, Any] = {"refinement_working_json": {"a": 1}, "pwml_grounding_dict": {"g": 1}}
+    if on != "<absent>":
+        state["pwml_grounding"] = on
     _run(state, tmp_path, spy=spy)
     assert spy.calls[0]["kwargs"]["grounding_dict"] == expected
 
