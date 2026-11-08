@@ -41,3 +41,7 @@ SMOKE was not run (not requested; diff touches one module that nothing outside i
 ## Open questions
 
 None.
+
+## Independent run, review and merge (added by the orchestrator)
+
+Tested together with its sibling task on trial merge `8af4bcae`: golden 38, equivalence 14 alone, `test_service_inputs` 39, web+bridge 307, SMOKE 511, census 83, 0 survivors. Merged into `webserver/refactor` (WC1 `8158f8e7`, W1F `a6d3484b`). Post-merge on `a6d3484b`: the same counts, 0 survivors. Reports and verdicts: `docs/webserver/evidence/WCW1/`. WC1 review (sonnet/medium): APPROVE. W1F review (sonnet/high): APPROVE WITH NOTES (F1 a Unicode test docstring is inaccurate, F2 "invalid article id" is unverified against NCBI, F3 the disclosed empty heredoc). None is blocking. Q-WC1-1 (raise `MIN_RETRY_BUDGET_S` to about 20 min) is left as it is: the floor still lets a fast retry succeed.

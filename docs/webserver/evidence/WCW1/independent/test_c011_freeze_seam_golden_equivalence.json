@@ -1,0 +1,178 @@
+{
+  "label": "WCW1-ind-test_c011_freeze_seam_golden_equivalence",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/ws-WCW1-trial/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-WCW1-trial",
+    "-q",
+    "--basetemp=C:/t/bt/WCW1ind/test_c011_freeze_seam_golden_equivalence",
+    "tests/test_c011_freeze_seam_golden_equivalence.py"
+  ],
+  "cwd": "C:\\t\\ws-WCW1-trial",
+  "started_at": "2026-11-08T19:43:56+00:00",
+  "finished_at": "2026-11-08T19:44:32+00:00",
+  "duration_seconds": 35.87868530000014,
+  "timeout_seconds": 540.0,
+  "root_pid": 102616,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 102776,
+      "name": "python.exe",
+      "ppid": 102616
+    },
+    {
+      "pid": 75000,
+      "name": "git.exe",
+      "ppid": 102776
+    },
+    {
+      "pid": 104964,
+      "name": "python.exe",
+      "ppid": 102776
+    },
+    {
+      "pid": 105052,
+      "name": "python.exe",
+      "ppid": 104964
+    },
+    {
+      "pid": 105240,
+      "name": "python.exe",
+      "ppid": 102776
+    },
+    {
+      "pid": 105268,
+      "name": "python.exe",
+      "ppid": 105240
+    },
+    {
+      "pid": 97688,
+      "name": "python.exe",
+      "ppid": 102776
+    },
+    {
+      "pid": 104360,
+      "name": "python.exe",
+      "ppid": 97688
+    },
+    {
+      "pid": 104576,
+      "name": "python.exe",
+      "ppid": 105464
+    },
+    {
+      "pid": 105464,
+      "name": "python.exe",
+      "ppid": 102776
+    },
+    {
+      "pid": 67032,
+      "name": "python.exe",
+      "ppid": 102776
+    },
+    {
+      "pid": 97440,
+      "name": "python.exe",
+      "ppid": 67032
+    },
+    {
+      "pid": 98628,
+      "name": "python.exe",
+      "ppid": 102776
+    },
+    {
+      "pid": 104840,
+      "name": "python.exe",
+      "ppid": 98628
+    },
+    {
+      "pid": 99044,
+      "name": "python.exe",
+      "ppid": 105164
+    },
+    {
+      "pid": 105164,
+      "name": "python.exe",
+      "ppid": 102776
+    }
+  ],
+  "descendants_terminated": [
+    67032,
+    75000,
+    97440,
+    97688,
+    98628,
+    99044,
+    102776,
+    104360,
+    104576,
+    104840,
+    104964,
+    105052,
+    105164,
+    105240,
+    105268,
+    105464
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 24756,
+      "name": "python.exe"
+    },
+    {
+      "pid": 24880,
+      "name": "python.exe"
+    },
+    {
+      "pid": 96848,
+      "name": "python.exe"
+    },
+    {
+      "pid": 102440,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/ev-WCW1/independent/test_c011_freeze_seam_golden_equivalence.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-WCW1-trial\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-WCW1-trial",
+    "repo_head": "8af4bcae0f47d38822a8dfc90de968c7cf56869c",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "WCW1",
+    "token": "WCW1:96848:b2572834e7f4a9c7",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

@@ -1,0 +1,36 @@
+T2PW: C:\t\ws-WCW1-post\src\t2pw\__init__.py
+.......................................                                  [100%]
+============================== warnings summary ===============================
+tests\test_service_inputs.py:254
+  C:\t\ws-WCW1-post\tests\test_service_inputs.py:254: SyntaxWarning: invalid escape sequence '\d'
+    """W1F: mixed ASCII/non-ASCII digit strings (the old str.isdigit/\d regex accepted these)."""
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+39 passed, 1 warning in 0.79s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-WCW1-post\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ a6d3484b2991b98ceab957000b23fdc364b0dc45  [git, worktree dirty=False]
+label                   : WCW1-post-test_service_inputs
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-WCW1-post/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-WCW1-post -q --basetemp=C:/t/bt/WCW1post/test_service_inputs tests/test_service_inputs.py
+cwd                     : C:\t\ws-WCW1-post
+root PID / process group: 176024 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 1.51 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  150200:python.exe
+descendants terminated  : 1  150200
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ev-WCW1/postmerge/test_service_inputs.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=WCW1-post  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

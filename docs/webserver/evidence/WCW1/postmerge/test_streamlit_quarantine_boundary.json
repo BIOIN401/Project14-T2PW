@@ -1,0 +1,96 @@
+{
+  "label": "WCW1-post-test_streamlit_quarantine_boundary",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/ws-WCW1-post/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-WCW1-post",
+    "-q",
+    "--basetemp=C:/t/bt/WCW1post/test_streamlit_quarantine_boundary",
+    "tests/test_streamlit_quarantine_boundary.py"
+  ],
+  "cwd": "C:\\t\\ws-WCW1-post",
+  "started_at": "2026-11-08T19:53:27+00:00",
+  "finished_at": "2026-11-08T19:54:09+00:00",
+  "duration_seconds": 42.32951909999974,
+  "timeout_seconds": 540.0,
+  "root_pid": 124448,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 124440,
+      "name": "python.exe",
+      "ppid": 124448
+    }
+  ],
+  "descendants_terminated": [
+    124440
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 24756,
+      "name": "python.exe"
+    },
+    {
+      "pid": 24880,
+      "name": "python.exe"
+    },
+    {
+      "pid": 116240,
+      "name": "python.exe"
+    },
+    {
+      "pid": 122148,
+      "name": "python.exe"
+    },
+    {
+      "pid": 122540,
+      "name": "python.exe"
+    },
+    {
+      "pid": 123668,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/ev-WCW1/postmerge/test_streamlit_quarantine_boundary.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-WCW1-post\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-WCW1-post",
+    "repo_head": "a6d3484b2991b98ceab957000b23fdc364b0dc45",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "WCW1-post",
+    "token": "WCW1-post:116240:f86e9383680690d3",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

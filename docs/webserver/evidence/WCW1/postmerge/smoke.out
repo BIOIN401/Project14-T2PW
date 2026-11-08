@@ -1,0 +1,37 @@
+T2PW: C:\t\ws-WCW1-post\src\t2pw\__init__.py
+........................................................................ [ 14%]
+........................................................................ [ 28%]
+........................................................................ [ 42%]
+........................................................................ [ 56%]
+........................................................................ [ 70%]
+........................................................................ [ 84%]
+........................................................................ [ 98%]
+.......                                                                  [100%]
+511 passed in 53.73s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-WCW1-post\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ a6d3484b2991b98ceab957000b23fdc364b0dc45  [git, worktree dirty=False]
+label                   : WCW1-post-smoke
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-WCW1-post/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-WCW1-post -q --basetemp=C:/t/bt/WCW1post/smoke tests/test_reference_repair.py tests/test_strict_quarantine.py tests/test_strict_quarantine_contract_alignment.py tests/test_strict_quarantine_locks_and_scope.py tests/test_strict_quarantine_versioning.py tests/test_empty_extraction_payload.py tests/test_bench_goldset_and_semantic.py tests/test_bench_acquisition_and_artifacts.py tests/test_bench_controls.py tests/test_completeness_audit.py tests/test_batch_driver.py tests/test_stage3_gate_report_lifecycle.py tests/test_rag_admission_production_path.py tests/test_rag_gap_admission.py tests/test_rag_triage_orchestration.py tests/test_rag_provenance_gates.py tests/test_pipeline_reaction_rag_provenance.py tests/test_research_mode_orchestration.py tests/test_map_ids_name_gate.py tests/test_db_candidate_species_evidence.py tests/test_c102_coverage_denominator.py tests/test_c106_mutation_harness_executable.py
+cwd                     : C:\t\ws-WCW1-post
+root PID / process group: 148388 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 55.34 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 9  177240:python.exe, 179832:python.exe, 179852:python.exe, 179872:python.exe, 179892:python.exe, 180068:python.exe, 180088:python.exe, 179240:python.exe, 180216:python.exe
+descendants terminated  : 9  177240, 179240, 179832, 179852, 179872, 179892, 180068, 180088, 180216
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ev-WCW1/postmerge/smoke.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=WCW1-post  acquired=True  released=True
+pre-existing (reported, NEVER killed): 8
+================================================

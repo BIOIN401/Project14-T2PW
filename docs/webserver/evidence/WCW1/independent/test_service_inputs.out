@@ -1,0 +1,36 @@
+T2PW: C:\t\ws-WCW1-trial\src\t2pw\__init__.py
+.......................................                                  [100%]
+============================== warnings summary ===============================
+tests\test_service_inputs.py:254
+  C:\t\ws-WCW1-trial\tests\test_service_inputs.py:254: SyntaxWarning: invalid escape sequence '\d'
+    """W1F: mixed ASCII/non-ASCII digit strings (the old str.isdigit/\d regex accepted these)."""
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+39 passed, 1 warning in 0.70s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-WCW1-trial\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 8af4bcae0f47d38822a8dfc90de968c7cf56869c  [git, worktree dirty=False]
+label                   : WCW1-ind-test_service_inputs
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-WCW1-trial/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-WCW1-trial -q --basetemp=C:/t/bt/WCW1ind/test_service_inputs tests/test_service_inputs.py
+cwd                     : C:\t\ws-WCW1-trial
+root PID / process group: 101792 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 1.41 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  105816:python.exe
+descendants terminated  : 1  105816
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ev-WCW1/independent/test_service_inputs.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=WCW1  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================
