@@ -1,0 +1,5 @@
+51c51,52
+< sys.path.insert(0, str(Path(__file__).resolve().parent))
+---
+> sys.path.insert(0, str(Path(__file__).resolve().parents[4] / "tests"))  # scratch copy in docs/webserver/evidence/R3d/
+> from conftest import _one_extraction_draw_unless_a_test_asks  # noqa: E402,F401  (tests/conftest.py, as in the suite)

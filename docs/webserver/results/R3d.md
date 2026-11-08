@@ -2,8 +2,10 @@
 
 - **Branch:** `ws/R3d-stage-two` from `webserver/refactor` @ `5af91e07` (R3a, R3b and R3c merged).
 - **Code commit:** `590563ed`. It holds the move, `run_extraction`, the equivalence harness's service arm, and the new test file.
-- **Docs commits:** `bdd75f05` (proof scripts and the two proposed test edits, as out-of-suite copies), plus this file and the run evidence.
-- **Status: needs-decision.** The code is done, and every proof is complete on the committed tip. Two existing source-reading tests fail at the tip, and both need a test edit:
+- **Test commit:** `3ade39e3`, the three authorised test edits, test only (section 9).
+- **Docs commits:** `bdd75f05` (proof scripts and the two proposed test edits, as out-of-suite copies), `5f3fa309` (the needs-decision version of this file and the run evidence), and the post-ruling update.
+- **Status: done, pending independent review.** The rulings are in section 9. After `3ade39e3`, every chunk that was re-run equals base. Sections 4 and 8 keep the needs-decision record as first reported.
+- **First report, needs-decision.** The code was done, and every proof was complete on the committed tip. Two existing source-reading tests failed at the tip, and both needed a test edit:
   - `tests/test_c060a_requested_pathway_wiring.py`: 7 of 11 fail. The fix is a path and line-locator repoint, which needs orchestrator authorisation under Q-R0-1 (Open question 1).
   - `tests/test_streamlit_stage2_orchestration.py::test_out_of_scope_filter_runs_between_stage1_extraction_and_stage2_inference`: the Q-R3c-1 test. It needs a rewrite beyond Q-R0-1, so it needs a PO ruling (Open question 2).
 
@@ -298,3 +300,77 @@ All runs went through `bounded_run.py` in the foreground, with the venv python f
    - R3c Q3: `InputFailure` names Stage-1 and Stage-2 failures too; rename it in R5.
    - R3c Q5: the isolation fault between `test_service_extraction.py` and c055, a separate ticket.
    - R3a N3 (PDF paths AppTest cannot drive): **already covered** by the R3a unit tests on `assemble_inputs` in `tests/test_service_extraction.py`. They cover: the PDF-only reporter sequence (109), the caption (136), the preview (146), texts before PDFs (155), upload with no PDF (164), Text+PDF with no PDF (170), an empty PDF (184), an unreadable PDF (193), the temp-file cleanup (205), the page range (227), and `skip_refs`/OCR (237). So no new test was added.
+
+## 9. Rulings, the three test edits and the re-runs
+
+**Authority:** `docs/webserver/results/PO-RULINGS-2026-11-04.md`, Addendum 5 (on `webserver/refactor` @ `3bda46dd`), plus the orchestrator note there for c060a.
+
+| ref | ruling | what was done |
+|---|---|---|
+| Q-R0-1 (orchestrator) | c060a: point its two parse sites at `service/extraction.py` and move `OWNED_FLOOR` from 1440 to 790. The reviewer must confirm it selects the same statements as at base | Applied exactly `proposed/c060a-proposed.diff` |
+| Q-R3d-1 (PO) | Rewrite the order test again, this test only | Applied `proposed/s2orch_order_proposed.py` to that one function |
+| Q-R3d-2 (PO) | Keep what ships for the headless ambiguous-review refusal; map it in R5 and move the gate then. No service copy of `pipeline_error` now | **Deferred to R5.** No code change. Stage 1 refuses before any LLM call, as `stage_one_failed`, pinned by `test_run_extraction_refuses_an_ambiguous_review_in_stage_one_before_any_llm_call` |
+| Q-R3d-3 (PO) | Add the check that every recorded LLM reply is consumed | 2 lines in `test_c`, reading a new `unused` field of the service arm |
+
+**The test commit `3ade39e3`** (test only; `git show --numstat`; made by `scripts/apply_test_edits.py`):
+
+| file | +/- | what |
+|---|---|---|
+| `tests/test_c060a_requested_pathway_wiring.py` | +7/-3 | the two parse sites, `OWNED_FLOOR`, the `EXTRACTION_PATH` constant, 3 comment lines |
+| `tests/test_streamlit_stage2_orchestration.py` | +24/-11 | the one function only |
+| `tests/test_equivalence_app_vs_service.py` | +2/-0 | a comment line and the assertion, in `test_c` after the `misses` / `refused` line |
+| `tests/equivalence/harness.py` | +3/-1 | `"unused": cassette.unused()` on the service arm's two return shapes, which the assertion reads |
+
+The assertion: `assert [row for row in service.get("unused", []) if row[0] == "llm"] == [], service.get("unused")`. It is LLM-only, as the ruling words it.
+
+**The base run proves nothing about this assertion, and I chose to record that rather than change base.** The assertion reads `service.get("unused", [])`, and the `"unused"` keys were added to the harness in the same commit. Base's harness has no such key, so on base the assertion compares `[]` to `[]`. The base result (14 passed) shows only that the added lines do not break the file on base. I did not run base with the harness change: base's service arm starts from the app's Stage-2 payload and never makes the Stage-0-2 calls, so I expect those replies to show as unused and the assertion to fail there. That expectation is reasoning, not a measured result. The proof that the check works is on the tip: it kills the one-QA-round mutation (below).
+
+**Re-runs on the tip `3ade39e3`** (`evidence/R3d/post-rulings/`; bounded, heavy lock R3d, gated, fresh basetemp, foreground, `worktree dirty=False`, survivors 0):
+
+| run | result | required |
+|---|---|---|
+| solo c060a | **11 passed** | 11 |
+| solo s2orch | **12 passed** | 12 |
+| chunk 2b | **134 passed** (first report: 126 + 8 failed) | 134, equal to base |
+| golden g1 / g2 / g3 / g4, each alone | 2 / 8 / 4 / 24 = **38** | 38 |
+| equivalence, alone, tip | **14 passed** | 14 |
+| equivalence, alone, base `5af91e07`, edited test as a scratch copy | **14 passed** (vacuous for the new line, see above) | 14 |
+| new `test_service_extraction_stage2` | **28 passed** | 28 |
+| SMOKE | **511 passed**, census 83 | 511, 83 |
+
+`3ade39e3` changes only those four test files against `590563ed` (plus docs), so section 6's other chunks stand for it. No other chunk runs these four files, except `2b`, the solo runs and the equivalence run above.
+
+The base scratch copy was the committed test with the two differences shown in `post-rulings/eq_check_copy.diff`: the `sys.path` line, and an import of the suite's `conftest` autouse fixture, because the copy lives outside `tests/`. The full copy is not committed: it would only repeat the test, including the fake key shapes `test_fixture_holds_no_secrets` plants, which trip the secret grep. It sat in `C:/t/ws-R3d-base/docs/webserver/evidence/R3d/` for that run and was deleted afterwards; base is clean at `5af91e07`. The wrapper's `worktree dirty=False` on that report does not count an untracked file, so that field says nothing about the copy.
+
+**Vacuity.** Each edit was a temporary change to the committed tip, restored after its run; `git status` was clean afterwards. Each run went through the wrapper with the heavy lock, survivors 0.
+
+| check | temporary edit | expected | result | failing assertion |
+|---|---|---|---|---|
+| order test (`post-rulings/order-test-vacuity/`, **8/8 as expected**) | none, untouched tip | pass | 1 passed | - |
+| | filter removed (required) | fail | 1 failed | `assert 0 == 1` (`len(filter_calls) == 1`) |
+| | filter reordered, before the extraction (required) | fail | 1 failed | `assert 612 < 608` |
+| | `run_stage_one` returns the raw extraction (required) | fail | 1 failed | `returned[0].id == filtered.elts[0].id` |
+| | Stage 2 fed the raw `stage_one` (required) | fail | 1 failed | `stage_one_arg.id != "stage_one"` |
+| | first `merge_additions` fed the raw `stage_one` (required) | fail | 1 failed | `merge_base_arg.id != "stage_one"` |
+| | `run_stage_two` binds `stage_one_in_scope` from `.stage_one` (R3c review F1) | fail | 1 failed | `in_scope_from[0].attr == "stage_one_in_scope"` |
+| | the app hands `run_stage_two` a result other than `run_stage_one`'s | fail | 1 failed | `args[1].id == stage_one_result.id` |
+| equivalence (Q-R3d-3, `post-rulings/mutation-rerun/`) | `run_extraction` passes `infer_rounds=1` (the earlier survivor) | fail | **killed: 1 failed, 13 passed** | `assert [('llm', 5)] == []` |
+
+The equivalence mutation count is now **3/3 killed** (2/3 in the first report).
+
+**c060a selects the same statements** (the orchestrator's condition; `scripts/c060a_selection.py`, `post-rulings/c060a-selection.log`, through the wrapper, survivors 0). It applies c060a's own selection rule to base APP with floor 1440 and tip EXT with floor 790, and compares `ast.unparse` of what it selects:
+
+| site | base lines (import, statement) | tip lines | |
+|---|---|---|---|
+| Stage-2 merge and its gate import | 1969, 1971 | 872, 874 | IDENTICAL |
+| RAG merge and its gate import | 2024, 2026 | 929, 931 | IDENTICAL |
+
+The behavioural bite of the repointed c060a was shown on the proof copy (section 4, rows 2-4).
+
+**Open questions after the rulings:** 1 and 2 are resolved. 3 is deferred to R5 (Q-R3d-2). 4 is done (Q-R3d-3). 5 is unchanged.
+
+**Incidents in this round:**
+
+1. **Machine restart during SMOKE** (12:32). The run `R3d-r-smoke` wrote no JSON report, so it counts for nothing. Its partial log was discarded. The orchestrator verified the stranded lock's holder was dead and cleared the lock; I did not touch it. SMOKE was re-run with a fresh basetemp as `r2-smoke`. Every other post-ruling report was checked first: each is complete, with `final_surviving_count: 0`, at `3ade39e3` (base check at `5af91e07`), so they stand.
+2. The order-vacuity script was first written into the tip's evidence directory, which would have left an untracked file during the runs. I moved it to the scratch directory before running it, and copied it back for this commit.
+3. The secret grep before this docs commit hit one line, in the staged full copy of the equivalence test: the fake key shape its `test_fixture_holds_no_secrets` plants on purpose, not a real value. The gate held the commit. I dropped the full copy from the evidence (the diff stays) and re-ran the grep, which was clean.
