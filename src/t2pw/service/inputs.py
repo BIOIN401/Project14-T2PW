@@ -40,6 +40,9 @@ from t2pw.rag.eligibility import RequestedScope
 # NCBI ID converter (PMC). Not present elsewhere in the repo.
 IDCONV_URL = "https://pmc.ncbi.nlm.nih.gov/tools/idconv/api/v1/articles/"
 _IDCONV_CHUNK = 100  # the service accepts up to 200 ids per call
+# Per-record errmsg values that mean "this PMID has no PMC record" (lower-cased).
+# "identifier not found in pmc" is what the live service returns (W1 raw dump).
+_IDCONV_NOT_FOUND = frozenset({"identifier not found in pmc", "invalid article id"})
 
 # A PMID is a positive integer, at most 9 digits today. Short ids are real (old
 # papers), so unlike batch.fetch._PMID_RE this does not demand 6+ digits.
@@ -150,15 +153,23 @@ def _lookup_failed(pmid: str) -> str:
     return f"could not look up PMID {pmid} right now; please try again later or upload the PDF"
 
 
-def _idconv(pmids: Sequence[str], client: Any) -> Dict[str, str]:
+def _idconv(
+    pmids: Sequence[str], client: Any, throttle: Optional[Callable[[], None]] = None
+) -> Dict[str, str]:
     """PMID -> PMCID ('' when the record says none). Raises on any malformed reply.
 
     A requested PMID with no record in a 200 reply is absent from the result (the
-    caller treats that as a failed lookup, not as "no PMCID").
+    caller treats that as a failed lookup, not as "no PMCID"). The same holds for a
+    per-record ``status: "error"`` whose ``errmsg`` is not a known "no such PMC
+    record" message: only those map to "no PMCID"; anything else (rate limit,
+    server fault, a new wording) stays a failed lookup. ``throttle`` runs before
+    every chunk request, not once per call.
     """
     out: Dict[str, str] = {}
     for i in range(0, len(pmids), _IDCONV_CHUNK):
         chunk = list(pmids[i : i + _IDCONV_CHUNK])
+        if throttle is not None:
+            throttle()
         params = _ncbi_eutils_params({"ids": ",".join(chunk), "idtype": "pmid", "format": "json"})
         resp = client.get(IDCONV_URL, params=params)
         if getattr(resp, "status_code", 0) != 200:
@@ -174,8 +185,12 @@ def _idconv(pmids: Sequence[str], client: Any) -> Dict[str, str]:
                 continue
             # an unknown id comes back as {"requested-id": ..., "status": "error"}
             pmid = str(rec.get("pmid") or rec.get("requested-id") or "")
-            if pmid in chunk:
-                out[pmid] = "" if rec.get("status") == "error" else str(rec.get("pmcid") or "")
+            if pmid not in chunk:
+                continue
+            if rec.get("status") != "error":
+                out[pmid] = str(rec.get("pmcid") or "")
+            elif str(rec.get("errmsg") or "").strip().lower() in _IDCONV_NOT_FOUND:
+                out[pmid] = ""
     return out
 
 
@@ -213,9 +228,7 @@ def resolve_pmids(
     mapping: Dict[str, str] = {}
     if valid:
         try:
-            if client is None:
-                _ncbi_throttle()
-            mapping = _idconv(valid, http)
+            mapping = _idconv(valid, http, _ncbi_throttle if client is None else None)
         except Exception as exc:  # noqa: BLE001
             for pmid in valid:
                 results[pmid].message = _lookup_failed(pmid)
@@ -250,7 +263,7 @@ def resolve_pmids(
 # -- (3) uploaded PDFs --------------------------------------------------------
 @dataclass
 class PdfResult:
-    path: str
+    path: str  # internal key only (the server-owned upload path); never rendered to users, use the base name in ``message``
     status: str  # OK | EMPTY | ERROR
     text: str = ""
     method: str = ""

@@ -246,3 +246,44 @@ def test_pdf_adapter_parser_exception_is_an_outcome(tmp_path):
     res = si.read_pdfs([f], parse_fn=boom)
     assert res[0].status == si.ERROR and res[0].detail == "ValueError"
     assert "corrupt" not in res[0].message and str(tmp_path) not in res[0].message
+
+
+# -- W1F follow-ups (new tests only) ------------------------------------------
+@pytest.mark.parametrize("bad", ["1٢٣", "12٣", "१२३", "1２3"])
+def test_w1f_mixed_ascii_and_unicode_digits_rejected(bad):
+    """W1F: mixed ASCII/non-ASCII digit strings (the old str.isdigit/\d regex accepted these)."""
+    with pytest.raises(ValueError):
+        si.validate_pmid(bad)
+    assert si.resolve_pmids([bad], client=_Client())[0].status == si.INVALID
+
+
+def test_w1f_only_known_not_found_errmsg_is_no_pmcid():
+    """W1F: the live "Identifier not found in PMC" errmsg is NO_PMCID; any other per-record error is LOOKUP_FAILED."""
+    client = _Client([
+        {"pmid": 111, "requested-id": "111", "status": "error", "errmsg": "Identifier not found in PMC"},
+        {"pmid": 222, "requested-id": "222", "status": "error", "errmsg": "invalid article id"},
+        {"pmid": 333, "requested-id": "333", "status": "error", "errmsg": "rate limit exceeded"},
+        {"pmid": 444, "requested-id": "444", "status": "error"},
+        {"pmid": 555, "requested-id": "555", "pmcid": "PMC5"},
+    ])
+    res = si.resolve_pmids(["111", "222", "333", "444", "555"], client=client, fetch_text_fn=lambda p: "t")
+    assert [(r.pmid, r.status) for r in res] == [
+        ("111", si.NO_PMCID), ("222", si.NO_PMCID), ("333", si.LOOKUP_FAILED),
+        ("444", si.LOOKUP_FAILED), ("555", si.OK),
+    ]
+    for r in res[2:4]:
+        assert "no open-access" not in r.message and "try again later" in r.message
+
+
+def test_w1f_idconv_is_throttled_per_chunk_only_for_the_default_client(monkeypatch):
+    """W1F: one NCBI throttle wait per 100-id request, none when the caller injects a client."""
+    ticks = []
+    monkeypatch.setattr(si, "_ncbi_throttle", lambda: ticks.append(1))
+    monkeypatch.setattr(si, "HttpClient", lambda: _Client())
+    ids = [str(n) for n in range(1, 251)]  # 250 ids -> 3 requests
+    res = si.resolve_pmids(ids)
+    assert len(res) == 250 and len(ticks) == 3
+    ticks.clear()
+    client = _Client()
+    si.resolve_pmids(ids, client=client)
+    assert len(client.calls) == 3 and ticks == []
