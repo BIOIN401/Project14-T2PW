@@ -67,3 +67,12 @@ Orchestrator note (not a PO ruling): the c060a edit (`tests/test_c060a_requested
 | Q-R3d-4 | R3d review F1: the one recorded fixture has no Stage 2 additions, no out-of-scope hits, RAG off and the default export mode, so three mutations pass the equivalence test 14/14. Should a second recording be added? | **Record it alongside R4.** R4 starts now. The second fixture joins the equivalence gate as soon as it works, so R5 and R6 are covered. One heavy job at a time still applies. The Q-R25-2 licence rule applies: CC-BY or CC0 only. | R26, R4-R6 |
 
 Orchestrator note (not a PO ruling): the question put to the PO described the recording as "with RAG on". R2.5 forces `RAG_ENABLED=0` because the cassette does not cover RAG's PubMed and embedding calls, so RAG-on needs harness work, and it could commit retrieved passages whose licences are unknown. Task R26 therefore delivers Stage 2 additions, out-of-scope hits and a non-default export mode first. RAG coverage goes ahead only if it is feasible and every text the fixture stores meets Q-R25-2; otherwise the task stops and reports options and costs to the PO.
+
+## Addendum 7, 2026-11-08 (R4 and R5 preparation)
+
+| ref | question | ruling | relied on by |
+|---|---|---|---|
+| Q-R4-1 | `test_streamlit_stage2_orchestration.py::test_stage2_artifacts_are_visible_and_both_ui_paths_share_the_orchestrator` reads the app source for the handler's `run_post_pipeline_sbml_artifacts` call, its try/except shape, the `.pop("post_pipeline_artifacts")` under the button and one message string. It fails once the handler moves (`results/R4-scout.md` § 6). | **Authorised in advance.** That one test only. It must keep guarding the same rule. The reviewer must confirm that, and must verify that deliberately breaking the guarded behaviour still fails it. | R4b |
+| Q-W0-1 | Where a web job writes its files. | **Fixed folder, then copy (option B).** The job runs in `PROJECT_ROOT/outputs`, as the live bridge does, and artifacts are copied to the job's `out_dir` on finish. No `out_dir` parameter is threaded through R1, R2 or R4 code. Safe only with W3's one-worker rule; a second worker would need option A. | R4, R5 |
+| Q-R5-1 | `PathwayResult.image_path` is never filled, though the job page offers the download. | **R5 saves the diagram the pipeline already renders** and fills `image_path`. | R5 |
+| Q-R5-2 | PDF options (page range, skip references, OCR) on the public request. | **No.** The web server uses the app's default PDF settings. `PathwayRequest` does not change. | R5 |
