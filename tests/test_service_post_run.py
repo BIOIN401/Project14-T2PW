@@ -467,6 +467,19 @@ def test_the_handler_does_not_write_the_final_payload_key(world):
     assert "final_payload" not in world.state
 
 
+def test_mode_lookups_are_made_on_the_source_module_at_call_time(world, monkeypatch):
+    """The R3b review F1 rule for the two names the world fixture does not already patch."""
+
+    monkeypatch.setattr(export_mode, "coerce_mode", lambda value: "sentinel-mode")
+    research = []
+    monkeypatch.setattr(export_mode, "is_research", lambda mode: research.append(mode) or True)
+    world.artifacts.update({CANONICAL_PAYLOAD_KEY: {"p": 1}, "quarantine_ok": True,
+                            FINAL_GATE_REPORT_KEY: {"ok": False, "errors": []}})
+    world.run()
+    assert world.call[1]["export_mode"] == "sentinel-mode"
+    assert research == ["sentinel-mode"]
+    assert world.artifacts["research_stage3_failed_open"] is True
+
 def test_the_signature_is_keyword_only_with_no_defaults():
     params = inspect.signature(post_run.run_post_pipeline).parameters
     for name in ("state", "reporter", "open_review", "render_issue_detail", "render_contract_failure"):
@@ -580,3 +593,26 @@ def test_real_app_renders_a_contract_failure_and_keeps_the_rebound_payload(monke
     assert not at.exception
     assert any("Audit and DB mapping stopped at the" in str(e.value) for e in at.error)
     assert "post_pipeline_artifacts" not in at.session_state
+
+
+def test_real_app_reads_the_rebound_payload_after_the_handler(monkeypatch, tmp_path):
+    """Hazard: the failure path's rebound ``final_payload`` is what the rest of the page shows."""
+
+    payload = _graph_payload()
+    seen = []
+    real = postpipeline.graph_summary
+
+    def spy(p):
+        seen.append(p)
+        return real(p)
+
+    monkeypatch.setattr(postpipeline, "graph_summary", spy)
+    monkeypatch.setattr(pipeline, "propagate_context_organism",
+                        lambda p, ctx: {**p, "rebound_marker": True})
+
+    def raise_it():
+        raise StageContractError("post_mapping", "contract broke", {"errors": [], "summary": {}, "stage": "post_mapping"})
+
+    at, _calls = _real_app(monkeypatch, tmp_path, payload=payload, patched=raise_it)
+    assert not at.exception
+    assert seen[-1].get("rebound_marker") is True
