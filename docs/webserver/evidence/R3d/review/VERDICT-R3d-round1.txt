@@ -1,0 +1,14 @@
+TASK: R3d  BRANCH: ws/R3d-stage-two  REVIEWED HEAD: 21417b44 (base 5af91e07)
+VERDICT: APPROVE WITH NOTES
+GATES: boundary OK / no-biology OK / behaviour-preserved OK / tests OK / evidence OK / secrets OK / result-doc OK
+
+Test edits: c060a CONFIRMED; Q-R3d-1 order test CONFIRMED; Q-R3d-3 assertion plus harness unused keys CONFIRMED.
+
+FINDINGS (all notes, none blocking)
+F1 note tests/test_equivalence_app_vs_service.py:206 - the equivalence fixture cannot see Stage-2 additions, the out-of-scope filter, the RAG branch or a non-default mode. Instrumented scratch run: additions=0, out_of_scope=[], mode pathwhiz, RAG_ENABLED=0. Three mutations pass it 14/14: additions replaced by {}, first merge fed raw stage_one, state export_mode None. Not a weakening: the base arm started after Stage 2. Unit tests kill the first two (s2-no-merge 2 failed; merge-base-raw killed); the third is the implementer-reported state-write kill.
+F2 note tests/test_equivalence_app_vs_service.py:207 - .get("unused", []) passes silently if the key is dropped. Needed for the base comparison, which is vacuous as the implementer states. Use service["unused"] from R4.
+F3 note tests/test_streamlit_stage2_orchestration.py:1024 - four mutations pass the order test: final_payload = stage_one at extraction.py:833, rebind after the filter, aliased merge base, run_extraction passing a replaced result. All killed by test_service_extraction_stage1/stage2. The first three are unchanged gaps from R3c.
+F4 note src/t2pw/service/extraction.py:1036 - before any LLM call means any Stage-1 call; Stage 0 has already called the LLM. The headless refusal also leaves state pipeline_ready unset where the app gate sets False. Handle in R5 with the Q-R3d-2 mapping.
+F5 note tests/test_equivalence_app_vs_service.py:13,195 and src/t2pw/service/extraction.py:923 - stale wording only.
+
+See out/ for runs and probes/ for scripts.

@@ -374,3 +374,61 @@ The behavioural bite of the repointed c060a was shown on the proof copy (section
 1. **Machine restart during SMOKE** (12:32). The run `R3d-r-smoke` wrote no JSON report, so it counts for nothing. Its partial log was discarded. The orchestrator verified the stranded lock's holder was dead and cleared the lock; I did not touch it. SMOKE was re-run with a fresh basetemp as `r2-smoke`. Every other post-ruling report was checked first: each is complete, with `final_surviving_count: 0`, at `3ade39e3` (base check at `5af91e07`), so they stand.
 2. The order-vacuity script was first written into the tip's evidence directory, which would have left an untracked file during the runs. I moved it to the scratch directory before running it, and copied it back for this commit.
 3. The secret grep before this docs commit hit one line, in the staged full copy of the equivalence test: the fake key shape its `test_fixture_holds_no_secrets` plants on purpose, not a real value. The gate held the commit. I dropped the full copy from the evidence (the diff stays) and re-ran the grep, which was clean.
+
+## 10. Independent run, review and merge (added by the orchestrator)
+
+**Independent run.** ws-test-runner (sonnet/medium) ran on trial merge `ee35bc4f` (`21417b44` onto `7dd5b1d1`, tree `62cb27ef`) in `C:/t/ws-R3d-trial`. Every run had 0 survivors, and every gate wait was 0 or 1 s. Every run exited 0, except `rag_seed`, which has a known failure on base too.
+
+| run | passed | expected |
+|---|---|---|
+| golden | 2 + 8 + 4 + 24 = 38 | 38 |
+| equivalence (alone) | 14 | 14 |
+| service | 57 | 57 |
+| `test_service_extraction_stage1` | 22 | 22 |
+| `test_service_extraction_stage2` (new) | 28 | 28 |
+| c060a (alone) | 11 | 11 |
+| `test_streamlit_stage2_orchestration` (alone) | 12 | 12 |
+| chunk 2b | 134 | 134 |
+| `test_preprocessor` | 44 | 44 |
+| c055 | 14 | 14 |
+| clobber, 759d, 759b, 759a protein, 759a fold, scope_fallback | 8, 4, 7, 37, 2, 5 | same |
+| rag triage, rag admission | 14, 9 | same |
+| rag_seed | 13 + 1 known failure (`test_the_orchestrator_passes_the_merge_base_to_conform`) | same as base |
+| web+bridge | 301 | 301 |
+| SMOKE | 511 | 511 |
+
+The census count is 83. The reports are in `docs/webserver/evidence/R3d/independent/`.
+
+**Review round 0.** ws-reviewer (opus/high) reviewed the diff `5af91e07..21417b44` and returned **APPROVE WITH NOTES**. All gates hold: boundary, no biology change, behaviour preserved, tests, evidence, secrets, RESULT doc.
+
+Test edits:
+
+- **c060a, confirmed.** The edit changes only the two parse sites, the `OWNED_FLOOR` line locator, the `EXTRACTION_PATH` constant those sites need, and comments. c060a's own selector picks base 1971/2026 (imports 1969/2024) and tip 874/931 (imports 872/929), and `ast.unparse` of the selected statements is identical. The test still fails under mutation of the moved statements.
+- **Q-R3d-1 order test, confirmed.** It guards the same rule. All 5 required mutations fail it on the reviewer's scratch copy.
+- **Q-R3d-3, confirmed.** It only adds the check. The one-QA-round mutation is killed. The base run is vacuous, as § 9 states.
+
+Checks on the move:
+
+- **The harness is not weakened.** The `test_c` assertions are intact, each arm has its own cassette and root, and every run product now comes from the service `state`. The service arm now covers Stages 0-2, so the test is stricter than at base.
+- **State writes.** A normalized diff of base 1924-2083 against the moved body shows only the expected changes. All 22 writes and pops are unchanged in order.
+- **What stayed in the app.** Publish, then reset, then token stats is unchanged. A Stage 2 failure stops before the reset, as at base. The `render_attempts` shim has two remaining callers, both in the display panel, so it stays.
+- **Patch sites.** Every patched name is looked up at call time. No test patches a moved name on the app module.
+- **Secrets and census.** The scan of 470 evidence files found no key shape. It is a shape scan, not a comparison against `.env` values.
+
+Findings, all notes:
+
+- **F1, for the PO.** The recorded fixture cannot see Stage 2 additions, the out-of-scope filter, RAG or a non-default export mode (`additions` 0, `out_of_scope` empty, mode `pathwhiz`, `RAG_ENABLED=0`). Three mutations pass the equivalence test 14/14: additions replaced by `{}`, the first merge fed raw `stage_one`, and `state["export_mode"]=None`. R3d did not weaken anything here, because base's service arm started after Stage 2. The additions and raw-merge-base mutations are killed by unit tests. Equivalence must not be counted as covering these paths for R4-R6. A second fixture is a product call.
+- **F2.** `service.get("unused", [])` at `tests/test_equivalence_app_vs_service.py:207` passes silently if the key is dropped. It was needed for the base run. Use `service["unused"]` from R4.
+- **F3.** Four mutations still pass the order test: `final_payload = stage_one`, rebinding `stage_one_in_scope` after the filter, an aliased merge base, and `run_extraction` passing a replaced result. All four are killed by the stage1 and stage2 suites.
+- **F4, for R5.** "Before any LLM call" means before any Stage 1 call; Stage 0 has already called the LLM. The refusal is the first statement of `run_stage_one_with_chunking`. The app gate is byte-identical to base. The headless path leaves `pipeline_ready` unset where the app sets False, so a reused `state` could stay stale. Handle this in R5 with the Q-R3d-2 mapping.
+- **F5.** Stale wording only (`test_equivalence_app_vs_service.py:13,195`, `extraction.py:923`).
+
+The reviewer's files are in `docs/webserver/evidence/R3d/review/`. Its scratch source copy and pytest temp directories are not committed. The one secret-scan hit in that folder is the regular expression inside the reviewer's own `probes/evidence_check.py`.
+
+**Merge:** `2e3d6a28` (`--no-ff` into `webserver/refactor`). Its tree differs from the trial merge only in `docs/webserver/LEDGER.md`. The post-merge result is recorded in the LEDGER.
+
+**Carried forward:**
+
+- R4: use `service["unused"]` (F2), and fix the stale wording (F5).
+- R5: the Q-R3d-2 mapping, plus the `pipeline_ready` reset for reused state (F4).
+- PO: a second equivalence fixture (F1).
