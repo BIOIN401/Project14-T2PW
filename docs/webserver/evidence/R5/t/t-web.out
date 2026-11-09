@@ -1,0 +1,265 @@
+T2PW: C:\t\ws-R5\src\t2pw\__init__.py
+.FF....................................F................................ [ 23%]
+........................................................................ [ 46%]
+........................................................................ [ 70%]
+........................................................................ [ 93%]
+...................                                                      [100%]
+================================== FAILURES ===================================
+_______ test_worker_default_is_the_bridge_and_the_stub_stays_selectable _______
+
+tmp_path = WindowsPath('C:/t/ws-R5-tmp/bt/t-web-1/test_worker_default_is_the_bri0')
+
+    def test_worker_default_is_the_bridge_and_the_stub_stays_selectable(tmp_path):
+>       assert worker.DEFAULT_RUN_FN == "t2pw.service.driver_bridge:run_pathway"
+E       AssertionError: assert 't2pw.service...y:run_pathway' == 't2pw.service...e:run_pathway'
+E         
+E         - t2pw.service.driver_bridge:run_pathway
+E         + t2pw.service.pathway:run_pathway
+
+tests\test_service_driver_bridge.py:115: AssertionError
+________________ test_worker_child_runs_the_bridge_end_to_end _________________
+
+tmp_path = WindowsPath('C:/t/ws-R5-tmp/bt/t-web-1/test_worker_child_runs_the_bri0')
+fake = <test_service_driver_bridge.FakeDriver object at 0x000001D135503CB0>
+
+    def test_worker_child_runs_the_bridge_end_to_end(tmp_path, fake):
+        """The worker's child entry point, in-process, with the default run function."""
+        fake.outcome = _pass_outcome(classify_release_status(strict_gates_passed=True).to_dict())
+        req = _req(tmp_path, texts=("some text",), deadline=time.time() + 3600)
+        rq, rs = tmp_path / "request.json", tmp_path / "result.json"
+        rq.write_text(json.dumps(request_to_dict(req)), encoding="utf-8")
+        assert worker._child_main(worker.DEFAULT_RUN_FN, str(rq), str(rs)) == 0
+        got = json.loads(rs.read_text(encoding="utf-8"))
+>       assert got["status"] == STATUS_PASS and got["pwml_path"] == str(tmp_path / "out" / "pathway.pwml")
+E       AssertionError: assert ('error' == 'pass'
+E         
+E         - pass
+E         + error)
+
+tests\test_service_driver_bridge.py:132: AssertionError
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.pipeline.preprocessor:preprocessor.py:219 Preprocessor call failed: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': "No models loaded. Please load a model in the developer page or use the 'lms load' command.", 'type': 'invalid_request_error', 'param': 'model', 'code': None}}
+ERROR    t2pw.service.reporter:reporter.py:193 Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': "No models loaded. Please load a model in the developer page or use the 'lms load' command.", 'type': 'invalid_request_error', 'param': 'model', 'code': None}}
+Traceback (most recent call last):
+  File "C:\t\ws-R5\src\t2pw\llm\client.py", line 747, in chat_detailed
+    resp = _client.chat.completions.create(**kwargs)
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\_utils\_utils.py", line 298, in wrapper
+    return func(*args, **kwargs)
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\resources\chat\completions\completions.py", line 1296, in create
+    return self._post(
+           ~~~~~~~~~~^
+        "/chat/completions",
+        ^^^^^^^^^^^^^^^^^^^^
+    ...<53 lines>...
+        stream_cls=Stream[ChatCompletionChunk],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\_base_client.py", line 1381, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\_base_client.py", line 1154, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': "No models loaded. Please load a model in the developer page or use the 'lms load' command.", 'type': 'invalid_request_error', 'param': 'model', 'code': None}}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\t\ws-R5\src\t2pw\service\pathway.py", line 223, in _drive
+    extraction = ex.run_extraction(
+        ex.ExtractionRequest(
+    ...<9 lines>...
+        ),
+        reporter=reporter, state=state)
+  File "C:\t\ws-R5\src\t2pw\service\extraction.py", line 1139, in run_extraction
+    stage_one = run_stage_one(
+        text,
+    ...<11 lines>...
+        reporter=reporter,
+    )
+  File "C:\t\ws-R5\src\t2pw\service\extraction.py", line 673, in run_stage_one
+    stage_one, chunk_details = _pipeline.run_stage_one_with_chunking(
+                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        text,
+        ^^^^^
+    ...<8 lines>...
+        max_tokens=int(extract_tokens),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\t\ws-R5\src\t2pw\pipeline\pipeline.py", line 2747, in run_stage_one_with_chunking
+    output, attempts = run_extraction_pipeline(
+                       ~~~~~~~~~~~~~~~~~~~~~~~^
+        input_text,
+        ^^^^^^^^^^^
+    ...<4 lines>...
+        max_tokens=max_tokens,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\t\ws-R5\src\t2pw\pipeline\pipeline.py", line 298, in run_extraction_pipeline
+    return _draw()
+  File "C:\t\ws-R5\src\t2pw\pipeline\pipeline.py", line 278, in _draw
+    return _run_json_stage(
+        stage_name="extraction",
+    ...<13 lines>...
+        retry_on_empty_payload=True,
+    )
+  File "C:\t\ws-R5\src\t2pw\pipeline\pipeline.py", line 3965, in _run_json_stage
+    completion = _issue(messages, model_env_var)
+  File "C:\t\ws-R5\src\t2pw\pipeline\pipeline.py", line 3855, in _issue
+    return chat_detailed(
+        messages,
+    ...<4 lines>...
+        stage_name=stage_label,
+    )
+  File "C:\t\ws-R5\src\t2pw\llm\client.py", line 857, in chat_detailed
+    raise RuntimeError(
+    ...<3 lines>...
+    ) from e
+RuntimeError: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': "No models loaded. Please load a model in the developer page or use the 'lms load' command.", 'type': 'invalid_request_error', 'param': 'model', 'code': None}}
+______________ test_stub_returns_fixed_error_and_writes_nothing _______________
+
+tmp_path = WindowsPath('C:/t/ws-R5-tmp/bt/t-web-1/test_stub_returns_fixed_error_0')
+
+    def test_stub_returns_fixed_error_and_writes_nothing(tmp_path):
+        out = tmp_path / "out"
+        req = PathwayRequest(
+            texts=("some text",),
+            scope=RequestedScope("glycolysis", "Homo sapiens"),
+            out_dir=out,
+        )
+        result = run_pathway(req)
+>       assert result == run_pathway(PathwayRequest())  # ignores the request
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert PathwayResult...rnings': []}]) == PathwayResult...ttempt_log=[])
+E         
+E         Omitting 6 identical items, use -vv to show
+E         Differing attributes:
+E         ['stage',
+E          'failure_kind',
+E          'message',
+E          'issue_codes',...
+E         
+E         ...Full output truncated (33 lines hidden), use '-vv' to show
+
+tests\test_service_pathway_interface.py:66: AssertionError
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.pipeline.preprocessor:preprocessor.py:219 Preprocessor call failed: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': "No models loaded. Please load a model in the developer page or use the 'lms load' command.", 'type': 'invalid_request_error', 'param': 'model', 'code': None}}
+ERROR    t2pw.service.reporter:reporter.py:193 Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': "No models loaded. Please load a model in the developer page or use the 'lms load' command.", 'type': 'invalid_request_error', 'param': 'model', 'code': None}}
+Traceback (most recent call last):
+  File "C:\t\ws-R5\src\t2pw\llm\client.py", line 747, in chat_detailed
+    resp = _client.chat.completions.create(**kwargs)
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\_utils\_utils.py", line 298, in wrapper
+    return func(*args, **kwargs)
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\resources\chat\completions\completions.py", line 1296, in create
+    return self._post(
+           ~~~~~~~~~~^
+        "/chat/completions",
+        ^^^^^^^^^^^^^^^^^^^^
+    ...<53 lines>...
+        stream_cls=Stream[ChatCompletionChunk],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\_base_client.py", line 1381, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\openai\_base_client.py", line 1154, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': "No models loaded. Please load a model in the developer page or use the 'lms load' command.", 'type': 'invalid_request_error', 'param': 'model', 'code': None}}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\t\ws-R5\src\t2pw\service\pathway.py", line 223, in _drive
+    extraction = ex.run_extraction(
+        ex.ExtractionRequest(
+    ...<9 lines>...
+        ),
+        reporter=reporter, state=state)
+  File "C:\t\ws-R5\src\t2pw\service\extraction.py", line 1139, in run_extraction
+    stage_one = run_stage_one(
+        text,
+    ...<11 lines>...
+        reporter=reporter,
+    )
+  File "C:\t\ws-R5\src\t2pw\service\extraction.py", line 673, in run_stage_one
+    stage_one, chunk_details = _pipeline.run_stage_one_with_chunking(
+                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        text,
+        ^^^^^
+    ...<8 lines>...
+        max_tokens=int(extract_tokens),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\t\ws-R5\src\t2pw\pipeline\pipeline.py", line 2747, in run_stage_one_with_chunking
+    output, attempts = run_extraction_pipeline(
+                       ~~~~~~~~~~~~~~~~~~~~~~~^
+        input_text,
+        ^^^^^^^^^^^
+    ...<4 lines>...
+        max_tokens=max_tokens,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\t\ws-R5\src\t2pw\pipeline\pipeline.py", line 298, in run_extraction_pipeline
+    return _draw()
+  File "C:\t\ws-R5\src\t2pw\pipeline\pipeline.py", line 278, in _draw
+    return _run_json_stage(
+        stage_name="extraction",
+    ...<13 lines>...
+        retry_on_empty_payload=True,
+    )
+  File "C:\t\ws-R5\src\t2pw\pipeline\pipeline.py", line 3965, in _run_json_stage
+    completion = _issue(messages, model_env_var)
+  File "C:\t\ws-R5\src\t2pw\pipeline\pipeline.py", line 3855, in _issue
+    return chat_detailed(
+        messages,
+    ...<4 lines>...
+        stage_name=stage_label,
+    )
+  File "C:\t\ws-R5\src\t2pw\llm\client.py", line 857, in chat_detailed
+    raise RuntimeError(
+    ...<3 lines>...
+    ) from e
+RuntimeError: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': "No models loaded. Please load a model in the developer page or use the 'lms load' command.", 'type': 'invalid_request_error', 'param': 'model', 'code': None}}
+============================== warnings summary ===============================
+tests\test_service_inputs.py:254
+  C:\t\ws-R5\tests\test_service_inputs.py:254: SyntaxWarning: invalid escape sequence '\d'
+    """W1F: mixed ASCII/non-ASCII digit strings (the old str.isdigit/\d regex accepted these)."""
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_service_driver_bridge.py::test_worker_default_is_the_bridge_and_the_stub_stays_selectable
+FAILED tests/test_service_driver_bridge.py::test_worker_child_runs_the_bridge_end_to_end
+FAILED tests/test_service_pathway_interface.py::test_stub_returns_fixed_error_and_writes_nothing
+3 failed, 304 passed, 1 warning in 42.43s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R5\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 10e4b8fe9b3bfce43a2da6f0f7e4b356f7a74bbd  [git, worktree dirty=False]
+label                   : R5-t-web
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R5 -q --basetemp=C:/t/ws-R5-tmp/bt/t-web-1 tests/test_service_driver_bridge.py tests/test_service_pathway_interface.py tests/test_service_inputs.py tests/test_service_organisms.py tests/test_web_jobs.py tests/test_web_worker.py tests/test_web_retry.py tests/test_web_limits.py tests/test_web_notify.py tests/test_web_design_system.py tests/test_web_curator_queue.py tests/test_web_postrun.py tests/test_web_app.py --no-header -p no:cacheprovider
+cwd                     : C:/t/ws-R5
+root PID / process group: 127784 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 280 s
+duration                : 43.57 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 112  127360:python.exe, 125176:python.exe, 127032:python.exe, 126564:python.exe, 127556:python.exe, 126936:python.exe, 127680:python.exe, 125736:python.exe, 9436:python.exe, 126160:python.exe, 123488:python.exe, 124576:python.exe, 126080:python.exe, 128036:python.exe, 128048:python.exe, 128928:python.exe, 128940:python.exe, 128960:python.exe, 128972:python.exe, 127532:python.exe, 128088:python.exe, 128148:python.exe, 128176:python.exe, 128252:python.exe, 128192:python.exe, 128180:python.exe, 128244:python.exe, 128216:python.exe, 128280:python.exe, 128260:python.exe, 128268:python.exe, 128356:python.exe, 128412:python.exe, 127856:python.exe, 128532:python.exe, 128708:python.exe, 128696:python.exe, 128784:python.exe, 128836:python.exe, 128852:python.exe, 128860:python.exe, 128888:python.exe, 128892:python.exe, 128040:python.exe, 128060:python.exe, 121032:python.exe, 128944:python.exe, 126164:python.exe, 128984:python.exe, 128012:python.exe, 128016:python.exe, 107832:python.exe, 128256:python.exe, 127160:python.exe, 128168:python.exe, 125052:python.exe, 128312:python.exe, 128284:python.exe, 128352:python.exe, 124368:python.exe, 128744:python.exe, 128444:python.exe, 128448:python.exe, 117584:python.exe, 128404:python.exe, 128228:python.exe, 128576:python.exe, 128632:python.exe, 128664:python.exe, 128528:python.exe, 128628:python.exe, 122432:python.exe, 128712:python.exe, 128956:python.exe, 128988:python.exe, 125844:python.exe, 128968:python.exe, 126036:python.exe, 127736:python.exe, 127860:python.exe, 128092:python.exe, 126792:python.exe, 128320:python.exe, 118608:python.exe, 123552:python.exe, 99660:python.exe, 126380:python.exe, 128340:python.exe, 128760:python.exe, 128360:python.exe, 128376:python.exe, 128420:python.exe, 128612:python.exe, 128232:python.exe, 128516:python.exe, 113064:python.exe, 122388:python.exe, 125200:tasklist.exe, 120052:python.exe, 121268:python.exe, 121768:python.exe, 124352:python.exe, 128472:python.exe, 128604:python.exe, 128976:python.exe, 128480:python.exe, 114408:python.exe, 125060:python.exe, 105988:python.exe, 128980:python.exe, 126784:python.exe, 128296:python.exe
+descendants terminated  : 112  9436, 99660, 105988, 107832, 113064, 114408, 117584, 118608, 120052, 121032, 121268, 121768, 122388, 122432, 123488, 123552, 124352, 124368, 124576, 125052, 125060, 125176, 125200, 125736, 125844, 126036, 126080, 126160, 126164, 126380, 126564, 126784, 126792, 126936, 127032, 127160, 127360, 127532, 127556, 127680, 127736, 127856, 127860, 128012, 128016, 128036, 128040, 128048, 128060, 128088, 128092, 128148, 128168, 128176, 128180, 128192, 128216, 128228, 128232, 128244, 128252, 128256, 128260, 128268, 128280, 128284, 128296, 128312, 128320, 128340, 128352, 128356, 128360, 128376, 128404, 128412, 128420, 128444, 128448, 128472, 128480, 128516, 128528, 128532, 128576, 128604, 128612, 128628, 128632, 128664, 128696, 128708, 128712, 128744, 128760, 128784, 128836, 128852, 128860, 128888, 128892, 128928, 128940, 128944, 128956, 128960, 128968, 128972, 128976, 128980, 128984, 128988
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ws-R5-tmp/ev/t/t-web.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R5  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

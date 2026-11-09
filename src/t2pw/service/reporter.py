@@ -68,6 +68,9 @@ class Reporter(Protocol):
 
     def write(self, body: Any) -> Any: ...
 
+    # R5: the ambiguous-review refusal (st.subheader).
+    def subheader(self, body: Any) -> Any: ...
+
 
 class StreamlitReporter:
     """Forwards each call to the given ``streamlit`` module, arguments untouched."""
@@ -117,6 +120,9 @@ class StreamlitReporter:
 
     def write(self, body: Any) -> Any:
         return self._st.write(body)
+
+    def subheader(self, body: Any) -> Any:
+        return self._st.subheader(body)
 
 
 class _LoggedProgress:
@@ -188,6 +194,38 @@ class LoggingReporter:
 
     def write(self, body: Any) -> None:
         self._logger.info("%s", body)
+
+    def subheader(self, body: Any) -> None:
+        self._logger.info("%s", body)
+
+
+class CollectingReporter(LoggingReporter):
+    """Logs, and keeps what the batch driver reads off ``AppTest`` to classify a stop: the
+    text of each ``error``, ``exception`` and ``warning`` since the last :meth:`clear`."""
+
+    def __init__(self, logger: Optional[logging.Logger] = None) -> None:
+        super().__init__(logger)
+        self.errors, self.exceptions, self.warnings = [], [], []
+
+    def clear(self) -> None:
+        """Forget earlier messages, as ``at.error`` starts empty on each interaction."""
+        self.errors, self.exceptions, self.warnings = [], [], []
+
+    def error(self, body: Any) -> None:
+        self.errors.append(str(body).strip())
+        super().error(body)
+
+    def exception(self, body: Any) -> None:
+        self.exceptions.append(str(body).strip())
+        super().exception(body)
+
+    def warning(self, body: Any) -> None:
+        self.warnings.append(str(body).strip())
+        super().warning(body)
+
+    def text_seen(self) -> str:
+        """Everything said, joined in ``driver._collect_app_text``'s order."""
+        return "\n".join(t for t in (*self.errors, *self.exceptions, *self.warnings) if t)
 
 
 _APP_DEFAULTS: Dict[str, Callable[[], Any]] = {}

@@ -1,0 +1,47 @@
+T2PW: C:\t\ws-R5-mut\src\t2pw\__init__.py
+............................F
+================================== FAILURES ===================================
+___________ test_the_default_audit_timeout_survives_a_long_deadline ___________
+
+world = <test_service_run_pathway.World object at 0x0000022D7B293280>
+tmp_path = WindowsPath('C:/t/ws-R5-tmp/bt/mut-audit-timeout-always-left-1/test_the_default_audit_timeout0')
+
+    def test_the_default_audit_timeout_survives_a_long_deadline(world, tmp_path):
+        _run(tmp_path, deadline=time.time() + 5000)
+>       assert world.post_requests[0].audit_timeout_seconds == defaults.AUDIT_TIMEOUT_SECONDS
+E       AssertionError: assert 4879 == 240
+E        +  where 4879 = PostRunRequest(final_payload={'processes': {'reactions': [{'name': 'r1'}], 'transports': []}, 'entities': {'compounds'..., example_top_k=3, use_gap_resolver=True, use_llm_gap_resolver=True, gap_resolver_max_items=80, use_stoich_agent=False).audit_timeout_seconds
+E        +  and   240 = defaults.AUDIT_TIMEOUT_SECONDS
+
+tests\test_service_run_pathway.py:304: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_run_pathway.py::test_the_default_audit_timeout_survives_a_long_deadline
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 28 passed in 1.33s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R5-mut\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : R5-mut-audit-timeout-always-left
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R5-mut -q --basetemp=C:/t/ws-R5-tmp/bt/mut-audit-timeout-always-left-1 tests/test_service_run_pathway.py --no-header -p no:cacheprovider -x
+cwd                     : C:/t/ws-R5-mut
+root PID / process group: 143828 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 120 s
+duration                : 2.16 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  146988:python.exe
+descendants terminated  : 1  146988
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ws-R5-tmp/ev/mut/mut-audit-timeout-always-left.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R5  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

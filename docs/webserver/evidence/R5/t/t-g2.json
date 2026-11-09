@@ -1,0 +1,184 @@
+{
+  "label": "R5-t-g2",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-R5",
+    "-q",
+    "--basetemp=C:/t/ws-R5-tmp/bt/t-g2-1",
+    "tests/test_c011_freeze_seam_golden_equivalence.py",
+    "--no-header",
+    "-p",
+    "no:cacheprovider"
+  ],
+  "cwd": "C:/t/ws-R5",
+  "started_at": "2026-11-09T19:11:48+00:00",
+  "finished_at": "2026-11-09T19:12:23+00:00",
+  "duration_seconds": 34.62164110000049,
+  "timeout_seconds": 280.0,
+  "root_pid": 120088,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 120104,
+      "name": "python.exe",
+      "ppid": 120088
+    },
+    {
+      "pid": 118376,
+      "name": "git.exe",
+      "ppid": 120104
+    },
+    {
+      "pid": 117172,
+      "name": "python.exe",
+      "ppid": 120104
+    },
+    {
+      "pid": 119860,
+      "name": "python.exe",
+      "ppid": 117172
+    },
+    {
+      "pid": 116364,
+      "name": "python.exe",
+      "ppid": 120104
+    },
+    {
+      "pid": 118632,
+      "name": "python.exe",
+      "ppid": 116364
+    },
+    {
+      "pid": 117956,
+      "name": "python.exe",
+      "ppid": 118240
+    },
+    {
+      "pid": 118240,
+      "name": "python.exe",
+      "ppid": 120104
+    },
+    {
+      "pid": 117192,
+      "name": "python.exe",
+      "ppid": 118428
+    },
+    {
+      "pid": 118428,
+      "name": "python.exe",
+      "ppid": 120104
+    },
+    {
+      "pid": 118256,
+      "name": "python.exe",
+      "ppid": 120104
+    },
+    {
+      "pid": 120408,
+      "name": "python.exe",
+      "ppid": 118256
+    },
+    {
+      "pid": 120404,
+      "name": "python.exe",
+      "ppid": 120104
+    },
+    {
+      "pid": 120676,
+      "name": "python.exe",
+      "ppid": 120404
+    },
+    {
+      "pid": 120392,
+      "name": "python.exe",
+      "ppid": 120104
+    },
+    {
+      "pid": 110560,
+      "name": "python.exe",
+      "ppid": 120392
+    }
+  ],
+  "descendants_terminated": [
+    110560,
+    116364,
+    117172,
+    117192,
+    117956,
+    118240,
+    118256,
+    118376,
+    118428,
+    118632,
+    119860,
+    120104,
+    120392,
+    120404,
+    120408,
+    120676
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 58320,
+      "name": "python.exe"
+    },
+    {
+      "pid": 77756,
+      "name": "python.exe"
+    },
+    {
+      "pid": 99236,
+      "name": "python.exe"
+    },
+    {
+      "pid": 111992,
+      "name": "python.exe"
+    },
+    {
+      "pid": 118628,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/ws-R5-tmp/ev/t/t-g2.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-R5\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-R5",
+    "repo_head": "10e4b8fe9b3bfce43a2da6f0f7e4b356f7a74bbd",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "R5",
+    "token": "R5:111992:be5bec7efa95985d",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

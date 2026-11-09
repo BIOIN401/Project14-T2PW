@@ -1,0 +1,49 @@
+== gate ==
+--- base-app
++++ tip-service
+@@ -1 +1,12 @@
+-if is_ambiguous_multi_example_review_context(pathway_context):
++def ambiguous_review_gate(
++pathway_context: Any,
++*,
++state: MutableMapping[str, Any],
++reporter: Reporter,
++) -> Optional[InputFailure]:
++"""Stage 0's multi-example-review refusal, or ``None`` when the run may go on.
++The app's gate, moved here unchanged (Q-R3d-2). Stage 1 would refuse the same context
++before its first LLM call, but only with a generic failure and without these writes.
++"""
++if not is_ambiguous_multi_example_review_context(pathway_context):
++return None
+@@ -5,3 +16 @@
+-state["pipeline_error"] = {
+-"status": "ambiguous_review_scope",
+-"message": (
++message = (
+@@ -10 +19,4 @@
+-),
++)
++state["pipeline_error"] = {
++"status": KIND_AMBIGUOUS_REVIEW_SCOPE,
++"message": message,
+@@ -25 +37 @@
+-reporter.stop()
++return InputFailure(KIND_AMBIGUOUS_REVIEW_SCOPE, message)
+== review state ==
+--- base-app
++++ tip-service
+@@ -1 +1 @@
+-def initialize_refinement_review_state(
++def open_refinement_review(
+@@ -3,0 +4,2 @@
++*,
++state: MutableMapping[str, Any],
+@@ -4,0 +7,8 @@
++"""The refinement review state the "Generate PWML" step reads (R5, moved from the app).
++The callees are looked up at call time, as the app script's per-run imports were,
++so a patch on their source module reaches them.
++"""
++from t2pw.curation import interactive_curator as _curator
++from t2pw.pipeline import draft_graph as _draft_graph
++from t2pw.pipeline import draft_graph_render as _render
++from t2pw.pipeline import qa_graph as _qa_graph

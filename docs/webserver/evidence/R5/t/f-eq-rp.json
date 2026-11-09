@@ -1,0 +1,106 @@
+{
+  "label": "R5-f-eq-rp",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-R5",
+    "-q",
+    "--basetemp=C:/t/ws-R5-tmp/bt/f-eq-rp-1",
+    "tests/test_equivalence_run_pathway.py",
+    "--no-header",
+    "-p",
+    "no:cacheprovider"
+  ],
+  "cwd": "C:/t/ws-R5",
+  "started_at": "2026-11-09T19:34:32+00:00",
+  "finished_at": "2026-11-09T19:35:33+00:00",
+  "duration_seconds": 60.79405560000032,
+  "timeout_seconds": 560.0,
+  "root_pid": 150324,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 150384,
+      "name": "python.exe",
+      "ppid": 150324
+    },
+    {
+      "pid": 146748,
+      "name": "python.exe",
+      "ppid": 150384
+    },
+    {
+      "pid": 146908,
+      "name": "python.exe",
+      "ppid": 146748
+    }
+  ],
+  "descendants_terminated": [
+    146748,
+    146908,
+    150384
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 58320,
+      "name": "python.exe"
+    },
+    {
+      "pid": 77756,
+      "name": "python.exe"
+    },
+    {
+      "pid": 99236,
+      "name": "python.exe"
+    },
+    {
+      "pid": 149916,
+      "name": "python.exe"
+    },
+    {
+      "pid": 149932,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/ws-R5-tmp/ev/t/f-eq-rp.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-R5\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-R5",
+    "repo_head": "de7d8c044fa2d3a7daf1019067c0de7ba07835ee",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "R5",
+    "token": "R5:149916:bb533e9cc9abbc67",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

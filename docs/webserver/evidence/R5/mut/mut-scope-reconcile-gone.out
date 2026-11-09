@@ -1,0 +1,54 @@
+T2PW: C:\t\ws-R5-mut\src\t2pw\__init__.py
+..................F
+================================== FAILURES ===================================
+________________ test_a_scope_conflict_stops_before_the_audit _________________
+
+world = <test_service_run_pathway.World object at 0x000001EEDCBBDB20>
+tmp_path = WindowsPath('C:/t/ws-R5-tmp/bt/mut-scope-reconcile-gone-1/test_a_scope_conflict_stops_be0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001EEDCB790A0>
+
+    def test_a_scope_conflict_stops_before_the_audit(world, tmp_path, monkeypatch):
+        def extract(request, reporter, state):
+            state["pathway_context"] = {"pathway_name": "cholesterol biosynthesis", "likely_organism": "Homo sapiens"}
+            return ExtractionResult(final_payload=PAYLOAD)
+        world.extract = extract
+        res = _run(tmp_path, scope=RequestedScope(requested_pathway="lipid A biosynthesis",
+                                                  requested_organism="Escherichia coli"))
+>       assert res.status == "scope_conflict" and world.calls == ["extract"]
+E       AssertionError: assert ('pass' == 'scope_conflict'
+E         
+E         - scope_conflict
+E         + pass)
+
+tests\test_service_run_pathway.py:218: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_run_pathway.py::test_a_scope_conflict_stops_before_the_audit
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 18 passed in 1.23s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R5-mut\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : R5-mut-scope-reconcile-gone
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R5-mut -q --basetemp=C:/t/ws-R5-tmp/bt/mut-scope-reconcile-gone-1 tests/test_service_run_pathway.py --no-header -p no:cacheprovider -x
+cwd                     : C:/t/ws-R5-mut
+root PID / process group: 144888 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 120 s
+duration                : 1.91 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  145048:python.exe
+descendants terminated  : 1  145048
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ws-R5-tmp/ev/mut/mut-scope-reconcile-gone.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R5  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

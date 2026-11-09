@@ -1,0 +1,47 @@
+T2PW: C:\t\ws-R5-mut\src\t2pw\__init__.py
+..................................................F
+================================== FAILURES ===================================
+_ test_each_form_widget_reads_its_shared_default[Chunk size (approx. words)-CHUNK_SIZE] _
+
+label = 'Chunk size (approx. words)', name = 'CHUNK_SIZE'
+
+    @pytest.mark.parametrize("label,name", sorted(FORM.items()))
+    def test_each_form_widget_reads_its_shared_default(label, name):
+>       assert _widget_values()[label] == f"_defaults.{name}"
+E       AssertionError: assert '10000' == '_defaults.CHUNK_SIZE'
+E         
+E         - _defaults.CHUNK_SIZE
+E         + 10000
+
+tests\test_service_run_pathway.py:567: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_run_pathway.py::test_each_form_widget_reads_its_shared_default[Chunk size (approx. words)-CHUNK_SIZE]
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 50 passed in 1.88s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R5-mut\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : R5-mut-form-hardcodes-chunk
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R5-mut -q --basetemp=C:/t/ws-R5-tmp/bt/mut-form-hardcodes-chunk-1 tests/test_service_run_pathway.py --no-header -p no:cacheprovider -x
+cwd                     : C:/t/ws-R5-mut
+root PID / process group: 125580 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 120 s
+duration                : 2.64 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  139896:python.exe
+descendants terminated  : 1  139896
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ws-R5-tmp/ev/mut/mut-form-hardcodes-chunk.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R5  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

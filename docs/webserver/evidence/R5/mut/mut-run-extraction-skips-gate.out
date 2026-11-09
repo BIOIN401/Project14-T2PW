@@ -1,0 +1,117 @@
+T2PW: C:\t\ws-R5-mut\src\t2pw\__init__.py
+...........................................F
+================================== FAILURES ===================================
+____________ test_run_extraction_applies_the_gate_before_stage_one ____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002431CB604B0>
+
+    def test_run_extraction_applies_the_gate_before_stage_one(monkeypatch):
+        monkeypatch.setattr(ex, "assemble_inputs", lambda *a, **k: SimpleNamespace(failure=None, text="t"))
+        monkeypatch.setattr(ex, "run_stage_zero",
+                            lambda *a, **k: SimpleNamespace(pathway_context=AMBIGUOUS, diagnostics_dir=None))
+        monkeypatch.setattr(ex, "run_stage_one", lambda *a, **k: pytest.fail("Stage 1 ran past the gate"))
+        request = SimpleNamespace(export_mode="pathwhiz", user_task_context="", text_entries=[], pdfs=[],
+                                  uses_pdf_input=False, input_mode="Paste text", pdf_page_range="", pdf_skip_refs=True,
+                                  pdf_ocr=False, temperature=0.0)
+>       result = ex.run_extraction(request, reporter=LoggingReporter(), state={})
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_service_run_pathway.py:508: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+request = namespace(export_mode='pathwhiz', user_task_context='', text_entries=[], pdfs=[], uses_pdf_input=False, input_mode='Paste text', pdf_page_range='', pdf_skip_refs=True, pdf_ocr=False, temperature=0.0)
+
+    def run_extraction(
+        request: ExtractionRequest,
+        *,
+        reporter: Reporter,
+        state: MutableMapping[str, Any],
+    ) -> ExtractionResult:
+        """The app's "Run pipeline" submit block without Streamlit: input assembly, Stage 0,
+        Stage 1 and the RAG seed, Stage 2 and the publish into ``state``, composed in the
+        app's order. Each step's failure is returned as it is; nothing else is added.
+    
+        The app does not call this: it keeps calling the steps itself, because
+        ``reset_refinement_state()`` stays in the app, as do the quarantine reset and the token
+        stats after Stage 2. Every step's failure is returned; ``state[DEADLINE_STATE_KEY]`` (absent
+        on the app's path) adds a stop before Stage 1 and Stage 2 once it has passed.
+        """
+    
+        # As the app: the export-mode radio writes the session copy that Stage 1 reads.
+        state["export_mode"] = request.export_mode
+        user_task_context = (request.user_task_context or "").strip() or None
+    
+        assembled = assemble_inputs(
+            request.text_entries,
+            request.pdfs,
+            uses_pdf_input=request.uses_pdf_input,
+            input_mode=request.input_mode,
+            pdf_page_range=request.pdf_page_range,
+            pdf_skip_refs=request.pdf_skip_refs,
+            pdf_ocr=request.pdf_ocr,
+            reporter=reporter,
+        )
+        if assembled.failure is not None:
+            return ExtractionResult(failure=assembled.failure)
+        text = assembled.text
+    
+        stage_zero = run_stage_zero(
+            text,
+            temperature=request.temperature,
+            user_task_context=user_task_context,
+            state=state,
+            reporter=reporter,
+        )
+        expired = _deadline_failure(state)
+        if expired is not None:
+            return ExtractionResult(failure=expired)
+        stage_one = run_stage_one(
+            text,
+            pathway_context=stage_zero.pathway_context,
+            user_task_context=user_task_context,
+            diagnostics_dir=stage_zero.diagnostics_dir,
+>           enable_chunking=request.enable_chunking,
+                            ^^^^^^^^^^^^^^^^^^^^^^^
+            chunk_size=request.chunk_size,
+            chunk_overlap=request.chunk_overlap,
+            extract_attempts=request.extract_attempts,
+            temperature=request.temperature,
+            extract_tokens=request.extract_tokens,
+            rag_incomplete_flag=request.rag_incomplete_flag,
+            state=state,
+            reporter=reporter,
+        )
+E       AttributeError: 'types.SimpleNamespace' object has no attribute 'enable_chunking'
+
+src\t2pw\service\extraction.py:1141: AttributeError
+=========================== short test summary info ===========================
+FAILED tests/test_service_run_pathway.py::test_run_extraction_applies_the_gate_before_stage_one
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 43 passed in 1.56s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R5-mut\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : R5-mut-run-extraction-skips-gate
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R5-mut -q --basetemp=C:/t/ws-R5-tmp/bt/mut-run-extraction-skips-gate-1 tests/test_service_run_pathway.py tests/test_stage0_case_c_retry_clobber.py --no-header -p no:cacheprovider -x
+cwd                     : C:/t/ws-R5-mut
+root PID / process group: 148092 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 120 s
+duration                : 2.39 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  147484:python.exe
+descendants terminated  : 1  147484
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ws-R5-tmp/ev/mut/mut-run-extraction-skips-gate.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R5  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

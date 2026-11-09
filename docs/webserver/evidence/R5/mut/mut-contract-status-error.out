@@ -1,0 +1,53 @@
+T2PW: C:\t\ws-R5-mut\src\t2pw\__init__.py
+........F
+================================== FAILURES ===================================
+_ test_stage_one_verdicts_are_final_contract_failures[stage_one_boundary_error] _
+
+world = <test_service_run_pathway.World object at 0x000001CEC0823250>
+tmp_path = WindowsPath('C:/t/ws-R5-tmp/bt/mut-contract-status-error-1/test_stage_one_verdicts_are_fi0')
+kind = 'stage_one_boundary_error'
+
+    @pytest.mark.parametrize("kind", [ex.KIND_STAGE_ONE_BOUNDARY_ERROR, ex.KIND_STAGE_ONE_INCOMPLETE])
+    def test_stage_one_verdicts_are_final_contract_failures(world, tmp_path, kind):
+        world.extract = _fail(kind, "Extraction boundary failed: nope")
+        res = _run(tmp_path)
+>       assert (res.status, res.failure_kind, res.stage) == ("fail", "contract", "stage1")
+E       AssertionError: assert ('error', 'co...ct', 'stage1') == ('fail', 'contract', 'stage1')
+E         
+E         At index 0 diff: 'error' != 'fail'
+E         Use -v to get more diff
+
+tests\test_service_run_pathway.py:161: AssertionError
+------------------------------ Captured log call ------------------------------
+ERROR    t2pw.service.reporter:reporter.py:159 Extraction boundary failed: nope
+=========================== short test summary info ===========================
+FAILED tests/test_service_run_pathway.py::test_stage_one_verdicts_are_final_contract_failures[stage_one_boundary_error]
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 8 passed in 1.23s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R5-mut\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : R5-mut-contract-status-error
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R5-mut -q --basetemp=C:/t/ws-R5-tmp/bt/mut-contract-status-error-1 tests/test_service_run_pathway.py --no-header -p no:cacheprovider -x
+cwd                     : C:/t/ws-R5-mut
+root PID / process group: 143852 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 120 s
+duration                : 1.92 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  144120:python.exe
+descendants terminated  : 1  144120
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ws-R5-tmp/ev/mut/mut-contract-status-error.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R5  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

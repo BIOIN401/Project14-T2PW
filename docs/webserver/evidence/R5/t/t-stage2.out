@@ -1,0 +1,68 @@
+T2PW: C:\t\ws-R5\src\t2pw\__init__.py
+........................F...                                             [100%]
+================================== FAILURES ===================================
+_ test_run_extraction_refuses_an_ambiguous_review_in_stage_one_before_any_llm_call _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001A92B5AF380>
+tmp_path = WindowsPath('C:/t/ws-R5-tmp/bt/t-stage2-1/test_run_extraction_refuses_an0')
+
+    def test_run_extraction_refuses_an_ambiguous_review_in_stage_one_before_any_llm_call(monkeypatch, tmp_path):
+        """No ambiguous-review gate in ``run_extraction`` (R3d.md, open question 3): the REAL
+        ``run_stage_one_with_chunking`` refuses a Case-C context before its first LLM call."""
+    
+        case_c = {"document_type": "multi_example_review", "selected_example": "", "candidate_examples": ["A", "B"]}
+        monkeypatch.setattr(paths, "PROJECT_ROOT", tmp_path)
+        monkeypatch.setattr(preprocessor, "preprocess", lambda *_a, **_k: deepcopy(case_c))
+        monkeypatch.setattr(pipeline, "run_extraction_pipeline",
+                            lambda *_a, **_k: pytest.fail("Stage 1 reached the LLM on an ambiguous review"))
+        rep, state = RecordingReporter(), {}
+        try:
+            res = ex.run_extraction(_request(text_entries=["short review"]), reporter=rep, state=state)
+        finally:
+            diag.deactivate()
+    
+>       assert res.failure == ex.InputFailure(
+            ex.KIND_STAGE_ONE_FAILED, "Extraction failed: multi_example_review detected with no selected_example. "
+            "Extraction skipped to prevent mixed-pathway output.")
+E       AssertionError: assert InputFailure(...hway output.') == InputFailure(...hway output.')
+E         
+E         Differing attributes:
+E         ['kind', 'message']
+E         
+E         Drill down into differing attribute kind:
+E           kind: 'ambiguous_review_scope' != 'stage_one_failed'
+E           - stage_one_failed...
+E         
+E         ...Full output truncated (7 lines hidden), use '-vv' to show
+
+tests\test_service_extraction_stage2.py:452: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_extraction_stage2.py::test_run_extraction_refuses_an_ambiguous_review_in_stage_one_before_any_llm_call
+1 failed, 27 passed in 2.45s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R5\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 10e4b8fe9b3bfce43a2da6f0f7e4b356f7a74bbd  [git, worktree dirty=False]
+label                   : R5-t-stage2
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R5 -q --basetemp=C:/t/ws-R5-tmp/bt/t-stage2-1 tests/test_service_extraction_stage2.py --no-header -p no:cacheprovider
+cwd                     : C:/t/ws-R5
+root PID / process group: 127172 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 280 s
+duration                : 3.27 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  127152:python.exe
+descendants terminated  : 1  127152
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ws-R5-tmp/ev/t/t-stage2.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R5  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

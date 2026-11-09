@@ -1,0 +1,48 @@
+T2PW: C:\t\ws-R5-mut\src\t2pw\__init__.py
+.........................................F
+================================== FAILURES ===================================
+_______________ test_the_gate_refuses_and_writes_the_apps_state _______________
+
+    def test_the_gate_refuses_and_writes_the_apps_state():
+        state, reporter = {}, CollectingReporter()
+        failure = ex.ambiguous_review_gate(AMBIGUOUS, state=state, reporter=reporter)
+        assert failure.kind == "ambiguous_review_scope"
+>       assert state["pipeline_ready"] is False and state["pathway_context"] is AMBIGUOUS
+               ^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'pipeline_ready'
+
+tests\test_service_run_pathway.py:488: KeyError
+------------------------------ Captured log call ------------------------------
+ERROR    t2pw.service.reporter:reporter.py:159 Ambiguous review scope: this looks like a multi-example review, but no target example was selected. Name the example you want in the "Optional extraction focus / task context" box above (one of the candidate example names below works), then re-run. Re-running without naming a target will produce this same result.
+WARNING  t2pw.service.reporter:reporter.py:156 watch out
+=========================== short test summary info ===========================
+FAILED tests/test_service_run_pathway.py::test_the_gate_refuses_and_writes_the_apps_state
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 41 passed in 1.55s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R5-mut\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : R5-mut-gate-no-pipeline-ready
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R5-mut -q --basetemp=C:/t/ws-R5-tmp/bt/mut-gate-no-pipeline-ready-1 tests/test_service_run_pathway.py tests/test_stage0_case_c_retry_clobber.py --no-header -p no:cacheprovider -x
+cwd                     : C:/t/ws-R5-mut
+root PID / process group: 147812 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 120 s
+duration                : 2.28 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  147328:python.exe
+descendants terminated  : 1  147328
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ws-R5-tmp/ev/mut/mut-gate-no-pipeline-ready.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R5  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

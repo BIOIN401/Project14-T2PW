@@ -1,0 +1,59 @@
+T2PW: C:\t\ws-R5-mut\src\t2pw\__init__.py
+..............................F
+================================== FAILURES ===================================
+____________ test_time_running_out_before_the_audit_stops_cleanly _____________
+
+world = <test_service_run_pathway.World object at 0x0000022FD00E3800>
+tmp_path = WindowsPath('C:/t/ws-R5-tmp/bt/mut-no-pre-audit-deadline-1/test_time_running_out_before_t0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000022FCFFF57F0>
+
+    def test_time_running_out_before_the_audit_stops_cleanly(world, tmp_path, monkeypatch):
+        from t2pw.service import driver_bridge as bridge
+    
+        def extract(request, reporter, state):
+            state[ex.DEADLINE_STATE_KEY] = None  # the run's own copy; the check reads the deadline it was given
+            monkeypatch.setattr(pw.time, "time", lambda: end + 1)
+            return ExtractionResult(final_payload=PAYLOAD)
+        end = time.time() + 5000
+        world.extract = extract
+        res = _run(tmp_path, deadline=end + bridge.GRACE_S)
+>       assert (res.status, res.failure_kind) == ("timeout", "timeout") and world.calls == ["extract"]
+E       AssertionError: assert (('timeout', 'timeout') == ('timeout', 'timeout')
+E         
+E         Use -v to get more diff and ['extract', 'post'] == ['extract']
+E         
+E         Left contains one more item: 'post'
+E         Use -v to get more diff)
+
+tests\test_service_run_pathway.py:323: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_run_pathway.py::test_time_running_out_before_the_audit_stops_cleanly
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 30 passed in 1.36s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R5-mut\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : R5-mut-no-pre-audit-deadline
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R5-mut -q --basetemp=C:/t/ws-R5-tmp/bt/mut-no-pre-audit-deadline-1 tests/test_service_run_pathway.py --no-header -p no:cacheprovider -x
+cwd                     : C:/t/ws-R5-mut
+root PID / process group: 144432 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 120 s
+duration                : 2.16 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  147092:python.exe
+descendants terminated  : 1  147092
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ws-R5-tmp/ev/mut/mut-no-pre-audit-deadline.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R5  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

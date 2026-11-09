@@ -1,0 +1,69 @@
+T2PW: C:\t\ws-R5-mut\src\t2pw\__init__.py
+................................F
+================================== FAILURES ===================================
+_ test_run_extraction_stops_between_stages_when_the_deadline_has_passed[before stage one] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002B6F4439D30>
+step = 'before stage one'
+
+    @pytest.mark.parametrize("step", ["before stage one", "before stage two"])
+    def test_run_extraction_stops_between_stages_when_the_deadline_has_passed(monkeypatch, step):
+        state = {ex.DEADLINE_STATE_KEY: time.time() + 1000}
+        ran = []
+        assembled = SimpleNamespace(failure=None, text="t")
+        monkeypatch.setattr(ex, "assemble_inputs", lambda *a, **k: assembled)
+        monkeypatch.setattr(ex, "run_stage_zero", lambda *a, **k: SimpleNamespace(pathway_context={}, diagnostics_dir=None))
+        monkeypatch.setattr(ex, "ambiguous_review_gate", lambda *a, **k: None)
+    
+        def stage_one(*a, **k):
+            ran.append("one")
+            state[ex.DEADLINE_STATE_KEY] = time.time() - 1
+            return SimpleNamespace(failure=None)
+        if step == "before stage one":
+            state[ex.DEADLINE_STATE_KEY] = time.time() - 1
+        monkeypatch.setattr(ex, "run_stage_one", stage_one)
+        monkeypatch.setattr(ex, "run_stage_two", lambda *a, **k: ran.append("two"))
+        request = SimpleNamespace(export_mode="pathwhiz", user_task_context="", text_entries=[], pdfs=[],
+                                  uses_pdf_input=False, input_mode="Paste text", pdf_page_range="", pdf_skip_refs=True,
+                                  pdf_ocr=False, temperature=0.0, enable_chunking=True, chunk_size=1, chunk_overlap=1,
+                                  extract_attempts=1, extract_tokens=1, rag_incomplete_flag=False)
+        result = ex.run_extraction(request, reporter=LoggingReporter(), state=state)
+        assert result.failure.kind == ex.KIND_DEADLINE_EXCEEDED
+>       assert ran == ([] if step == "before stage one" else ["one"])
+E       AssertionError: assert ['one'] == []
+E         
+E         Left contains one more item: 'one'
+E         Use -v to get more diff
+
+tests\test_service_run_pathway.py:364: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_run_pathway.py::test_run_extraction_stops_between_stages_when_the_deadline_has_passed[before stage one]
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 32 passed in 1.37s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R5-mut\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : R5-mut-no-deadline-before-stage1
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R5-mut -q --basetemp=C:/t/ws-R5-tmp/bt/mut-no-deadline-before-stage1-1 tests/test_service_run_pathway.py --no-header -p no:cacheprovider -x
+cwd                     : C:/t/ws-R5-mut
+root PID / process group: 148372 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 120 s
+duration                : 2.16 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  148400:python.exe
+descendants terminated  : 1  148400
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ws-R5-tmp/ev/mut/mut-no-deadline-before-stage1.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R5  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

@@ -15,7 +15,7 @@ Lifecycle of one item:
      killed before it ever runs and the item is ``error`` / ``crash``.
    * POSIX: ``start_new_session``, so the child leads a new process group from fork.
 
-3. The child calls ``run_fn(request)`` (default :data:`DEFAULT_RUN_FN`, the BR driver bridge)
+3. The child calls ``run_fn(request)`` (default :data:`DEFAULT_RUN_FN`, R5's ``run_pathway``)
    and writes :func:`result_to_dict` to ``result.json``.
 4. At the deadline the worker kills the child's tree: ``timeout`` / ``timeout``, unless
    a result was already written. A child that exits without a result is ``error`` /
@@ -65,9 +65,9 @@ from t2pw.service.pathway import (
 from t2pw.web import postrun
 from t2pw.web.jobs import JobStore, request_from_dict, request_to_dict, result_to_dict
 from t2pw.web.retry import MAX_RETRIES, PER_ITEM_WALL_CAP_S, RUN_TIMEOUT_S, decide
-#: The driver bridge (BR) until A7; the W0 stub stays selectable with
-#: ``--run-fn t2pw.service.pathway:run_pathway`` (or ``Worker(run_fn=...)``).
-DEFAULT_RUN_FN = "t2pw.service.driver_bridge:run_pathway"
+#: R5's implementation; the driver bridge (BR) stays selectable as the cross-check until
+#: R6, with ``--run-fn t2pw.service.driver_bridge:run_pathway`` (or ``Worker(run_fn=...)``).
+DEFAULT_RUN_FN = "t2pw.service.pathway:run_pathway"
 IS_WINDOWS = os.name == "nt"
 
 

@@ -1,0 +1,92 @@
+T2PW: C:\t\rev-R5\fix\tree\src\t2pw\__init__.py
+FF                                                                       [100%]
+================================== FAILURES ===================================
+__ test_time_running_out_during_the_audit_is_a_timeout_not_a_verdict[strict] __
+
+world = <test_service_run_pathway.World object at 0x00000206CF54ABA0>
+tmp_path = WindowsPath('C:/t/bt/R5fix2/rev-F3/test_time_running_out_during_t0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000206D28D0180>
+mode = 'strict'
+
+    @pytest.mark.parametrize("mode", ["strict", "research"])
+    def test_time_running_out_during_the_audit_is_a_timeout_not_a_verdict(world, tmp_path, monkeypatch, mode):
+        from t2pw.service import driver_bridge as bridge
+    
+        end = time.time() + 5000
+    
+        def post(request, state, reporter):  # the audit overruns; what it stored is a failing gate when strict
+            monkeypatch.setattr(pw.time, "time", lambda: end + 1)
+            world.default_post(request, state, reporter)
+            if mode == "strict":
+                state["post_pipeline_artifacts"][FINAL_GATE_REPORT_KEY] = {
+                    "ok": False, "errors": [{"path": "/p", "reason": "bad", "code": "E1"}]}
+            return pr.PostRunResult(final_payload=request.final_payload)
+        world.post = post
+        res = _run(tmp_path, deadline=end + bridge.GRACE_S, export_mode="strict" if mode == "strict" else "research")
+>       assert (res.status, res.failure_kind, res.stage) == ("timeout", "timeout", "post_pipeline")
+E       AssertionError: assert ('fail', 'con...ost_pipeline') == ('timeout', '...ost_pipeline')
+E         
+E         At index 0 diff: 'fail' != 'timeout'
+E         Use -v to get more diff
+
+tests\test_service_run_pathway.py:368: AssertionError
+_ test_time_running_out_during_the_audit_is_a_timeout_not_a_verdict[research] _
+
+world = <test_service_run_pathway.World object at 0x00000206CF59B890>
+tmp_path = WindowsPath('C:/t/bt/R5fix2/rev-F3/test_time_running_out_during_t1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000206D2B30050>
+mode = 'research'
+
+    @pytest.mark.parametrize("mode", ["strict", "research"])
+    def test_time_running_out_during_the_audit_is_a_timeout_not_a_verdict(world, tmp_path, monkeypatch, mode):
+        from t2pw.service import driver_bridge as bridge
+    
+        end = time.time() + 5000
+    
+        def post(request, state, reporter):  # the audit overruns; what it stored is a failing gate when strict
+            monkeypatch.setattr(pw.time, "time", lambda: end + 1)
+            world.default_post(request, state, reporter)
+            if mode == "strict":
+                state["post_pipeline_artifacts"][FINAL_GATE_REPORT_KEY] = {
+                    "ok": False, "errors": [{"path": "/p", "reason": "bad", "code": "E1"}]}
+            return pr.PostRunResult(final_payload=request.final_payload)
+        world.post = post
+        res = _run(tmp_path, deadline=end + bridge.GRACE_S, export_mode="strict" if mode == "strict" else "research")
+>       assert (res.status, res.failure_kind, res.stage) == ("timeout", "timeout", "post_pipeline")
+E       AssertionError: assert ('pass', '', ...earch_report') == ('timeout', '...ost_pipeline')
+E         
+E         At index 0 diff: 'pass' != 'timeout'
+E         Use -v to get more diff
+
+tests\test_service_run_pathway.py:368: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_run_pathway.py::test_time_running_out_during_the_audit_is_a_timeout_not_a_verdict[strict]
+FAILED tests/test_service_run_pathway.py::test_time_running_out_during_the_audit_is_a_timeout_not_a_verdict[research]
+2 failed, 101 deselected in 1.34s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev-R5\fix\tree\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : R5-fix2-rev-F3
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/rev-R5/fix/tree/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/rev-R5/fix/tree -q --basetemp=C:/t/bt/R5fix2/rev-F3 -k during_the_audit tests/test_service_run_pathway.py
+cwd                     : C:\t\rev-R5\fix\tree
+root PID / process group: 221688 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 2.29 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  221004:python.exe
+descendants terminated  : 1  221004
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ws-R5/docs/webserver/evidence/R5/round2/revert/rev-F3.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R5fix2  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

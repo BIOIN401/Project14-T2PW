@@ -1,0 +1,55 @@
+T2PW: C:\t\ws-R5-mut\src\t2pw\__init__.py
+.......................................F
+================================== FAILURES ===================================
+___ test_reset_quarantine_state_clears_the_keys_and_survives_a_locked_file ____
+
+tmp_path = WindowsPath('C:/t/ws-R5-tmp/bt/mut-reset-skips-keys-1/test_reset_quarantine_state_cl0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002777445AD60>
+
+    def test_reset_quarantine_state_clears_the_keys_and_survives_a_locked_file(tmp_path, monkeypatch):
+        state = {key: 1 for key in pr.QUARANTINE_STATE_KEYS} | {"other": 2}
+        pr.reset_quarantine_state(None, state=state)
+>       assert state == {"other": 2}
+E       AssertionError: assert {'other': 2, ...rols': 1, ...} == {'other': 2}
+E         
+E         Omitting 1 identical items, use -vv to show
+E         Left contains 5 more items:
+E         {'quarantine_artifacts': 1,
+E          'quarantine_coverage': 1,
+E          'quarantine_decision_controls': 1,
+E          'quarantine_ok': 1,
+E          'quarantine_report': 1}
+E         Use -v to get more diff
+
+tests\test_service_run_pathway.py:445: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_run_pathway.py::test_reset_quarantine_state_clears_the_keys_and_survives_a_locked_file
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 39 passed in 1.32s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R5-mut\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : R5-mut-reset-skips-keys
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R5-mut -q --basetemp=C:/t/ws-R5-tmp/bt/mut-reset-skips-keys-1 tests/test_service_run_pathway.py --no-header -p no:cacheprovider -x
+cwd                     : C:/t/ws-R5-mut
+root PID / process group: 135172 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 120 s
+duration                : 2.02 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  141424:python.exe
+descendants terminated  : 1  141424
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ws-R5-tmp/ev/mut/mut-reset-skips-keys.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R5  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

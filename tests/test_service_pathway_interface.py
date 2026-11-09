@@ -55,24 +55,6 @@ def test_result_fields_and_defaults():
         assert getattr(a, name) is not getattr(b, name), name
 
 
-def test_stub_returns_fixed_error_and_writes_nothing(tmp_path):
-    out = tmp_path / "out"
-    req = PathwayRequest(
-        texts=("some text",),
-        scope=RequestedScope("glycolysis", "Homo sapiens"),
-        out_dir=out,
-    )
-    result = run_pathway(req)
-    assert result == run_pathway(PathwayRequest())  # ignores the request
-    assert result == PathwayResult(
-        status="error",
-        stage="init",
-        failure_kind="unknown",
-        message="run_pathway is a W0 stub: no pipeline ran. R5 implements it.",
-    )
-    assert not out.exists()
-
-
 def test_import_pulls_no_streamlit_app_or_driver():
     src = Path(pathway.__file__).resolve().parents[2]
     code = (

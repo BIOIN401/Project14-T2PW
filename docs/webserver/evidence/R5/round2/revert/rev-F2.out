@@ -1,0 +1,49 @@
+T2PW: C:\t\rev-R5\fix\tree\src\t2pw\__init__.py
+F                                                                        [100%]
+================================== FAILURES ===================================
+_________ test_the_rag_rounds_never_get_more_than_their_usual_budget __________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000024564540180>
+
+    def test_the_rag_rounds_never_get_more_than_their_usual_budget(monkeypatch):
+        import t2pw.service.rag_orchestration as rag_orchestration
+    
+        monkeypatch.setattr(rag_orchestration, "rag_loop_deadline_seconds", lambda: 100.0)
+>       assert ex._rag_deadline_kwargs({ex.DEADLINE_STATE_KEY: time.time() + 5000}) == {"deadline_seconds": 100.0}
+E       AssertionError: assert {'deadline_se....999997615814} == {'deadline_seconds': 100.0}
+E         
+E         Differing items:
+E         {'deadline_seconds': 4999.999997615814} != {'deadline_seconds': 100.0}
+E         Use -v to get more diff
+
+tests\test_service_run_pathway.py:411: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_run_pathway.py::test_the_rag_rounds_never_get_more_than_their_usual_budget
+1 failed, 102 deselected in 1.35s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev-R5\fix\tree\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : R5-fix2-rev-F2
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/rev-R5/fix/tree/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/rev-R5/fix/tree -q --basetemp=C:/t/bt/R5fix2/rev-F2 -k usual_budget tests/test_service_run_pathway.py
+cwd                     : C:\t\rev-R5\fix\tree
+root PID / process group: 221520 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 2.29 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  219764:python.exe
+descendants terminated  : 1  219764
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ws-R5/docs/webserver/evidence/R5/round2/revert/rev-F2.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R5fix2  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

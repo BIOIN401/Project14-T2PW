@@ -1,0 +1,55 @@
+T2PW: C:\t\ws-R5-mut\src\t2pw\__init__.py
+..............F
+================================== FAILURES ===================================
+________ test_the_ambiguous_gate_is_a_final_refusal_with_its_own_kind _________
+
+world = <test_service_run_pathway.World object at 0x000001F93AD05980>
+tmp_path = WindowsPath('C:/t/ws-R5-tmp/bt/mut-ambiguous-no-code-1/test_the_ambiguous_gate_is_a_f0')
+
+    def test_the_ambiguous_gate_is_a_final_refusal_with_its_own_kind(world, tmp_path):
+        def extract(request, reporter, state):
+            state["pipeline_error"] = {"status": "ambiguous_review_scope", "message": "pick an example"}
+            return ExtractionResult(failure=InputFailure(ex.KIND_AMBIGUOUS_REVIEW_SCOPE, "x"))
+        world.extract = extract
+        res = _run(tmp_path)
+        assert (res.status, res.failure_kind, res.stage) == ("fail", "ambiguous_review_scope", "stage1")
+>       assert res.message == "pick an example" and res.issue_codes == ["ambiguous_review_scope"]
+E       AssertionError: assert ('pick an example' == 'pick an example'
+E         
+E           pick an example and [] == ['ambiguous_review_scope']
+E         
+E         Right contains one more item: 'ambiguous_review_scope'
+E         Use -v to get more diff)
+
+tests\test_service_run_pathway.py:183: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_run_pathway.py::test_the_ambiguous_gate_is_a_final_refusal_with_its_own_kind
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 14 passed in 1.23s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R5-mut\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : R5-mut-ambiguous-no-code
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R5-mut -q --basetemp=C:/t/ws-R5-tmp/bt/mut-ambiguous-no-code-1 tests/test_service_run_pathway.py --no-header -p no:cacheprovider -x
+cwd                     : C:/t/ws-R5-mut
+root PID / process group: 144188 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 120 s
+duration                : 1.90 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  142268:python.exe
+descendants terminated  : 1  142268
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ws-R5-tmp/ev/mut/mut-ambiguous-no-code.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R5  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================
