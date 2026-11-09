@@ -1,0 +1,16 @@
+TASK: R5 round 2  BRANCH: ws/R5-run-pathway  REVIEWED: 572c3c1d..eacf769a
+VERDICT: APPROVE WITH NOTES
+Code read; regex probed at C:/t/rev-R5/round2/p.py. No pytest run. Evidence shows 168 + 8 passed, and reverts of F1/F2/F3 fail their tests.
+
+F1 fixed. "ACE2/TMPRSS2 UMP/TMP" is unchanged under both case modes. Roots at the string start, in quotes, after = or :, with either slash, and JSON-doubled backslashes are removed. Metacharacters are re.escaped. A bare root is removed. Case-blind matching is Windows-only.
+F2 fixed. extraction.py:860 is max(1.0, min(rag_loop_deadline_seconds(), left)). The key is absent on the app path, so the app is unchanged. The 1.0 floor stays.
+F3 fixed. pathway.py:346 times out right after _add_common_artifacts, before gate_verdict. The new strict and research test asserts timeout/post_pipeline and no export. The edited pre-export test still reaches the real :414 check, because gate_verdict now runs after :346 and before :414, so it covers the pre-export timeout. Nothing needed by a normal run is skipped.
+N3: the re-scrub cannot turn a finished job into a failed one. OSError is caught. A malformed record gives release None plus a warning (driver_bridge.py:236-237). It touches no field the pages read.
+Boundary: src has only service/pathway.py and service/extraction.py. Tests are test_service_run_pathway.py plus two renames. Nothing under pipeline/, pwml/, mapping/, rag/, curation/ or llm/prompts/. No secret, no *quarantine_report.json.
+
+FINDINGS (all notes)
+N-a [note] pathway.py:162 - the new lookahead (?=[\/"'\s]|$) misses a bare root followed by ) , . : ; ] }. Probed: "(C:/.../out)", "root: boom", "root." and "[root]" are all left whole. Likely rare, since the code mostly emits file paths or quoted paths. Fix: add )\],.:;} to the lookahead set.
+N-b [note] pathway.py:162 - the lookbehind (?<![\w/\]) also blocks a root that follows a JSON "\n" escape. In run_outcome.json or a JSON artifact, "...\n/tmp/x" leaves the root, because the preceding "n" is a word char. It is also blocked after "file:///". I found no code path that produces either.
+N-c [note] pathway.py:506 - the re-scrub treats JSON as text. A root that ends before a JSON-escaped quote (\"/tmp/x\") loses the backslash, and the record becomes invalid JSON. The bridge then reads it back as an unreadable release record plus a warning. It is not a failed job, and this needs odd text. write_text is not atomic, so a disk fault mid-write can leave a truncated record; a UnicodeDecodeError would also escape the except OSError. A small test is advisable, not required before merge: a record with bridge_files[].error carrying a root, still json.loads-able after the scrub. If it is cheap, scrub the dict before the bridge writes it.
+N-d [note] the F1 regression test monkeypatches only tempfile.gettempdir. No test covers a root before ) or , (see N-a).
+N-e [note] docs/webserver/results/R5.md - the status line and section 7 may still be stale (round-0 N2). Not re-checked.

@@ -1,0 +1,188 @@
+{
+  "label": "R5-ind2-golden-c011",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/ws-R5/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-R5",
+    "-q",
+    "--basetemp=C:/t/bt/R5ind2/golden-c011",
+    "tests/test_c011_freeze_seam_golden_equivalence.py"
+  ],
+  "cwd": "C:\\t\\ws-R5",
+  "started_at": "2026-11-09T21:01:31+00:00",
+  "finished_at": "2026-11-09T21:02:07+00:00",
+  "duration_seconds": 35.422010399999635,
+  "timeout_seconds": 540.0,
+  "root_pid": 224028,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 226472,
+      "name": "python.exe",
+      "ppid": 224028
+    },
+    {
+      "pid": 214744,
+      "name": "git.exe",
+      "ppid": 226472
+    },
+    {
+      "pid": 227792,
+      "name": "python.exe",
+      "ppid": 226472
+    },
+    {
+      "pid": 227812,
+      "name": "python.exe",
+      "ppid": 227792
+    },
+    {
+      "pid": 227840,
+      "name": "python.exe",
+      "ppid": 226472
+    },
+    {
+      "pid": 227860,
+      "name": "python.exe",
+      "ppid": 227840
+    },
+    {
+      "pid": 228020,
+      "name": "git.exe",
+      "ppid": 227860
+    },
+    {
+      "pid": 225516,
+      "name": "python.exe",
+      "ppid": 226472
+    },
+    {
+      "pid": 227412,
+      "name": "python.exe",
+      "ppid": 225516
+    },
+    {
+      "pid": 219972,
+      "name": "python.exe",
+      "ppid": 226472
+    },
+    {
+      "pid": 225020,
+      "name": "python.exe",
+      "ppid": 219972
+    },
+    {
+      "pid": 226644,
+      "name": "python.exe",
+      "ppid": 227452
+    },
+    {
+      "pid": 227452,
+      "name": "python.exe",
+      "ppid": 226472
+    },
+    {
+      "pid": 224152,
+      "name": "python.exe",
+      "ppid": 227116
+    },
+    {
+      "pid": 227116,
+      "name": "python.exe",
+      "ppid": 226472
+    },
+    {
+      "pid": 227548,
+      "name": "python.exe",
+      "ppid": 226472
+    },
+    {
+      "pid": 227576,
+      "name": "python.exe",
+      "ppid": 227548
+    }
+  ],
+  "descendants_terminated": [
+    214744,
+    219972,
+    224152,
+    225020,
+    225516,
+    226472,
+    226644,
+    227116,
+    227412,
+    227452,
+    227548,
+    227576,
+    227792,
+    227812,
+    227840,
+    227860,
+    228020
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 58320,
+      "name": "python.exe"
+    },
+    {
+      "pid": 197604,
+      "name": "python.exe"
+    },
+    {
+      "pid": 207788,
+      "name": "python.exe"
+    },
+    {
+      "pid": 217384,
+      "name": "python.exe"
+    },
+    {
+      "pid": 227076,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/ev-R5/round2-ind/golden-c011.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-R5\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-R5",
+    "repo_head": "eacf769a9a384f3afa61a1d1dad85caf3c5d5a23",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "R5-ind2",
+    "token": "R5-ind2:227076:0aff62f190666f70",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
