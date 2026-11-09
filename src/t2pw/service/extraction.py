@@ -913,10 +913,10 @@ def run_stage_two(
     # final_payload.
     #
     # THE MERGE STATEMENT STAYS HERE, and the loop calls it. C-060a's wiring test
-    # lifts the app's two ``merge_additions`` statements out of this file BY AST and
+    # lifts the two ``merge_additions`` statements out of this file BY AST and
     # executes the real source bytes, to prove each passes a real PathwayContext
     # (tests/test_c060a_requested_pathway_wiring.py:68-104; both must sit at or
-    # above OWNED_FLOOR = 4640, Stage 2's first). Writing the RAG merge inside a
+    # above OWNED_FLOOR = 790, Stage 2's first). Writing the RAG merge inside a
     # helper defined above would put it out of that instrument's reach and disarm
     # C-060a's protection without changing a line of C-060a's test.
     # R3d: both statements moved here with the rest of the block, verbatim, so C-060a

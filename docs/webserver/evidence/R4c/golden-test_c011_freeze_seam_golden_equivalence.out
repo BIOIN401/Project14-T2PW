@@ -1,0 +1,30 @@
+T2PW: C:\t\ws-R4c\src\t2pw\__init__.py
+........                                                                 [100%]
+8 passed in 37.64s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R4c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 4c90ef283f292a05ea9ace7557d771df2ea9aa75  [git, worktree dirty=True]
+label                   : R4c-golden-test_c011_freeze_seam_golden_equivalence
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R4c -q --basetemp=C:/t/ws-R4c-tmp/golden-test_c011_freeze_seam_golden_equivalence/bt tests/test_c011_freeze_seam_golden_equivalence.py
+cwd                     : C:\t\ws-R4c
+root PID / process group: 556344 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 38.64 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 17  582200:python.exe, 583448:git.exe, 580632:git.exe, 583248:python.exe, 583236:python.exe, 583260:python.exe, 583340:python.exe, 578616:python.exe, 582984:python.exe, 579756:python.exe, 583220:python.exe, 531076:python.exe, 579096:python.exe, 579084:python.exe, 582292:python.exe, 569048:python.exe, 575820:python.exe
+descendants terminated  : 17  531076, 569048, 575820, 578616, 579084, 579096, 579756, 580632, 582200, 582292, 582984, 583220, 583236, 583248, 583260, 583340, 583448
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : docs/webserver/evidence/R4c/golden-test_c011_freeze_seam_golden_equivalence.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R4c  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

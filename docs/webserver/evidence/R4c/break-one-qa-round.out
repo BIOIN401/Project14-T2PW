@@ -1,0 +1,76 @@
+T2PW: C:\t\ws-R4c-scratch\src\t2pw\__init__.py
+......F.............F.                                                   [100%]
+================================== FAILURES ===================================
+_________________ test_c_service_post_pipeline_equals_the_app _________________
+
+arms = {'after': {'data/enrichment_cache.json': (35407855, 1794199696247512900), 'data/id_mapping_cache.json': (4230034, 1794...t/enrichment_dump.json': (33986, 1794199703966619000), 'outputs/pathway.pwml': (23487, 1794199703973128000), ...}, ...}
+
+    def test_c_service_post_pipeline_equals_the_app(arms):
+        app1, service = arms["app1"], arms["service"]
+        # The payload the app handed the post-pipeline is the app's Stage-2 payload after propagate_context_organism.
+        from t2pw.pipeline.pipeline import propagate_context_organism
+    
+        assert app1["post_call"] and app1["export_call"], "the app arm never reached the post-pipeline and export"
+        assert app1["canonical_payload_sha256"], "the app arm produced no canonical payload"
+        (post_args, _kwargs) = app1["post_call"]
+        assert post_args[0] == propagate_context_organism(app1["stage2_payload"], app1["pathway_context"])
+        # Review F2: the non-default audit timeout is what the app handed the post-pipeline, so the service ran
+        # under it too. (The default 240 s branch is NOT covered here; see R2.5.md, Notes.)
+        assert _kwargs["audit_timeout_seconds"] == harness.AUDIT_TIMEOUT_SECONDS
+        assert service["misses"] == [] and service["refused"] == []
+        # Q-R3d-3: from R3d the service arm runs from the text, so it must consume every recorded LLM reply.
+>       assert [row for row in service["unused"] if row[0] == "llm"] == [], service["unused"]
+E       AssertionError: [('llm', 5)]
+E       assert [('llm', 5)] == []
+E         
+E         Left contains one more item: ('llm', 5)
+E         Use -v to get more diff
+
+tests\test_equivalence_app_vs_service.py:206: AssertionError
+______________________ test_c_the_service_equals_the_app ______________________
+
+arms = {'after': {'data/enrichment_cache.json': (35407855, 1794199696247512900), 'data/id_mapping_cache.json': (4230034, 1794...t/enrichment_dump.json': (33986, 1794199703966619000), 'outputs/pathway.pwml': (23487, 1794199703973128000), ...}, ...}
+
+    def test_c_the_service_equals_the_app(arms):
+        app1, service = arms["app1"], arms["service"]
+        assert app1["post_export_mode"] == "research"
+        assert not app1["export_called"] and app1["xml_bytes"] == 0, "research mode writes no PWML"
+>       assert service["misses"] == [] and service["refused"] == [], (service["misses"][:3], service["refused"][:5])
+E       AssertionError: ([{'asked': 1, 'key': '909108d81dd64491a66e805f34b1b5d0f66644721f93792c2a21dd6d3c6047b0', 'kind': 'llm', 'recorded': 0... 1, 'key': '6e375fdbfc45cf4724641d6a0510ced6af773c99b9401853930a792f7ece565b', 'kind': 'llm', 'recorded': 0, ...}], [])
+E       assert ([{'asked': 1,... 0, ...}, ...] == []
+E         
+E         Left contains 18 more items, first extra item: {'asked': 1, 'key': '909108d81dd64491a66e805f34b1b5d0f66644721f93792c2a21dd6d3c6047b0', 'kind': 'llm', 'recorded': 0, ...}
+E         Use -v to get more diff)
+
+tests\test_equivalence_second_fixture.py:119: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_equivalence_app_vs_service.py::test_c_service_post_pipeline_equals_the_app
+FAILED tests/test_equivalence_second_fixture.py::test_c_the_service_equals_the_app
+2 failed, 20 passed in 105.73s (0:01:45)
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R4c-scratch\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 4c90ef283f292a05ea9ace7557d771df2ea9aa75  [git, worktree dirty=True]
+label                   : R4c-break-one-qa-round
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R4c-scratch -q --basetemp=C:/t/ws-R4c-tmp/scratch/break-one-qa-round/bt tests/test_equivalence_app_vs_service.py tests/test_equivalence_second_fixture.py
+cwd                     : C:\t\ws-R4c-scratch
+root PID / process group: 586864 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 420 s
+duration                : 108.49 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 3  589868:python.exe, 591664:python.exe, 592848:python.exe
+descendants terminated  : 3  589868, 591664, 592848
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : docs/webserver/evidence/R4c/break-one-qa-round.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R4c  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

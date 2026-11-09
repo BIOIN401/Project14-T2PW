@@ -1,0 +1,91 @@
+{
+  "label": "R4c-dep-decl",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-R4c",
+    "-q",
+    "--basetemp=C:/t/ws-R4c-tmp/dep-decl/bt",
+    "tests/test_dependency_declarations.py"
+  ],
+  "cwd": "C:\\t\\ws-R4c",
+  "started_at": "2026-11-09T04:44:48+00:00",
+  "finished_at": "2026-11-09T04:44:53+00:00",
+  "duration_seconds": 4.458836199999496,
+  "timeout_seconds": 540.0,
+  "root_pid": 501816,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 545520,
+      "name": "python.exe",
+      "ppid": 501816
+    }
+  ],
+  "descendants_terminated": [
+    545520
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 24756,
+      "name": "python.exe"
+    },
+    {
+      "pid": 24880,
+      "name": "python.exe"
+    },
+    {
+      "pid": 547320,
+      "name": "python.exe"
+    },
+    {
+      "pid": 580160,
+      "name": "python.exe"
+    },
+    {
+      "pid": 580764,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/webserver/evidence/R4c/dep-decl.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-R4c\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-R4c",
+    "repo_head": "4c90ef283f292a05ea9ace7557d771df2ea9aa75",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "R4c",
+    "token": "R4c:580160:a7e21141afcfe5d2",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

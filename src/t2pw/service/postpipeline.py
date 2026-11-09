@@ -107,7 +107,7 @@ def run_quarantine_boundary(
     It sits immediately before the post-mapping Stage 3 revalidation because that
     is the FIRST blocking pre-export decision, not the last: a payload that fails
     there never initializes refinement review, so
-    ``_generate_pwml_from_refinement_working_json`` returns on
+    ``t2pw.service.export.run_export`` returns on
     ``refinement_gate_errors`` and ``run_pwml_export`` -- where quarantine first
     lived -- is never reached at all. Quarantine placed inside the exporter was
     unreachable in exactly the case it exists for.
