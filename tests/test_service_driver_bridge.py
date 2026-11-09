@@ -112,8 +112,8 @@ def test_import_loads_no_streamlit_app_or_driver():
 
 
 def test_worker_default_is_the_bridge_and_the_stub_stays_selectable(tmp_path):
-    assert worker.DEFAULT_RUN_FN == "t2pw.service.driver_bridge:run_pathway"
-    for spec, fn in ((worker.DEFAULT_RUN_FN, br.run_pathway),
+    assert worker.DEFAULT_RUN_FN == "t2pw.service.pathway:run_pathway"
+    for spec, fn in (("t2pw.service.driver_bridge:run_pathway", br.run_pathway),
                      ("t2pw.service.pathway:run_pathway", importlib.import_module(
                          "t2pw.service.pathway").run_pathway)):
         module, _, attr = spec.partition(":")
@@ -127,7 +127,7 @@ def test_worker_child_runs_the_bridge_end_to_end(tmp_path, fake):
     req = _req(tmp_path, texts=("some text",), deadline=time.time() + 3600)
     rq, rs = tmp_path / "request.json", tmp_path / "result.json"
     rq.write_text(json.dumps(request_to_dict(req)), encoding="utf-8")
-    assert worker._child_main(worker.DEFAULT_RUN_FN, str(rq), str(rs)) == 0
+    assert worker._child_main("t2pw.service.driver_bridge:run_pathway", str(rq), str(rs)) == 0
     got = json.loads(rs.read_text(encoding="utf-8"))
     assert got["status"] == STATUS_PASS and got["pwml_path"] == str(tmp_path / "out" / "pathway.pwml")
     assert len(fake.calls) == 1

@@ -450,9 +450,9 @@ def test_run_extraction_refuses_an_ambiguous_review_in_stage_one_before_any_llm_
         diag.deactivate()
 
     assert res.failure == ex.InputFailure(
-        ex.KIND_STAGE_ONE_FAILED, "Extraction failed: multi_example_review detected with no selected_example. "
+        ex.KIND_AMBIGUOUS_REVIEW_SCOPE, "multi_example_review detected with no selected_example. "
         "Extraction skipped to prevent mixed-pathway output.")
-    assert "pipeline_ready" not in state and "stage_one_boundary" not in state
+    assert state["pipeline_ready"] is False and "stage_one_boundary" not in state
 
 
 def test_run_extraction_end_to_end_offline(monkeypatch, tmp_path):
