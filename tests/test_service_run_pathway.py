@@ -785,3 +785,15 @@ def test_a_record_that_cannot_be_rescrubbed_is_left_alone(tmp_path):
     record.write_text('{"a": ', encoding="utf-8")  # truncated
     pw._rescrub_json_file(record, tmp_path)
     assert record.read_text(encoding="utf-8") == '{"a": ' and not list(tmp_path.glob("*.tmp"))
+
+
+def test_a_replace_that_fails_leaves_the_record_as_it_was(tmp_path, monkeypatch):
+    record = tmp_path / "run_outcome.json"
+    original = json.dumps({"a": str(tmp_path)})
+    record.write_text(original, encoding="utf-8")
+
+    def refuse(src, dst):
+        raise OSError("locked")
+    monkeypatch.setattr(pw.os, "replace", refuse)
+    pw._rescrub_json_file(record, tmp_path)
+    assert record.read_text(encoding="utf-8") == original and not list(tmp_path.glob("*.tmp"))
