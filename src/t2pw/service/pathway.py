@@ -14,7 +14,9 @@ The vocabulary strings MIRROR ``t2pw.batch.driver`` (``MODE_*``, ``STAGE_*``,
 
 from __future__ import annotations
 
+import contextlib
 import dataclasses
+import json
 import os
 import re
 import tempfile
@@ -158,10 +160,41 @@ def _server_paths(out_dir: Path, ignore_case: bool = os.name == "nt") -> "re.Pat
     spellings = {form for root in roots for resolved in (Path(root), Path(root).resolve())
                  for form in (str(resolved), resolved.as_posix(), str(resolved).replace("\\", "\\\\"))}
     # A root counts only as a whole path: not glued to a word or path character before it
-    # (``ACE2/TMPRSS2``, ``UMP/TMP``), and followed by a separator, quote, space or the end.
-    alternatives = "|".join(r"(?<![\w/\\])" + re.escape(s) + r"(?=[\\/\"'\s]|$)[\\/]*"
+    # (``ACE2/TMPRSS2``, ``UMP/TMP``), and followed by a separator, quote, space, closing or
+    # sentence punctuation, or the end.
+    alternatives = "|".join(r"(?<![\w/\\])" + re.escape(s) + r"(?=[\\/\"'\s)\],.:;}]|$)[\\/]*"
                             for s in sorted((s for s in spellings if len(s) > 3), key=len, reverse=True))
     return re.compile(alternatives, re.IGNORECASE if ignore_case else 0)  # Windows paths only are case-blind
+
+
+def _scrub_json_strings(value: Any, pattern: "re.Pattern[str]") -> Any:
+    """``value`` (parsed JSON) with the roots cut from every string value."""
+
+    if isinstance(value, str):
+        return pattern.sub("", value)
+    if isinstance(value, list):
+        return [_scrub_json_strings(v, pattern) for v in value]
+    if isinstance(value, dict):
+        return {k: _scrub_json_strings(v, pattern) for k, v in value.items()}
+    return value
+
+
+def _rescrub_json_file(record: Path, out_dir: Path) -> None:
+    """Cut the roots from the string values of a JSON file, through a temp file and ``os.replace``.
+
+    Parsed, not a text substitution: a root just before a JSON-escaped quote would lose the
+    backslash and break the file. Never raises: the bridge has already warned if the record
+    could not be written, and a failure here must not fail a finished job.
+    """
+
+    tmp = record.with_name(record.name + ".tmp")
+    try:
+        data = _scrub_json_strings(json.loads(record.read_text(encoding="utf-8")), _server_paths(out_dir))
+        tmp.write_text(json.dumps(data, indent=2, ensure_ascii=False, default=str), encoding="utf-8")
+        os.replace(tmp, record)
+    except (OSError, ValueError):  # ValueError: bad JSON and UnicodeDecodeError
+        with contextlib.suppress(OSError):
+            tmp.unlink()
 
 
 def _scrub_server_paths(artifacts: Dict[str, Any], out_dir: Path) -> Dict[str, Any]:
@@ -502,10 +535,7 @@ def run_pathway(request: PathwayRequest) -> PathwayResult:
     outcome.warnings = [_scrub_server_paths({'m': t}, out_dir)['m'] for t in outcome.warnings]
     result = bridge._to_result(outcome, out_dir)
     record = out_dir / bridge.OUTCOME_NAME  # the bridge adds bridge_files[].error (an OSError text with its path) as it writes
-    try:
-        record.write_text(_scrub_server_paths({'m': record.read_text(encoding="utf-8")}, out_dir)['m'], encoding="utf-8")
-    except OSError:
-        pass  # the bridge already warned that the record could not be written
+    _rescrub_json_file(record, out_dir)
     result.attempt_log = [{**row, "runner": "t2pw.service.pathway.run_pathway"} for row in result.attempt_log]
     png = state.get("refinement_graph_bytes")
     if isinstance(png, (bytes, bytearray)) and png:
