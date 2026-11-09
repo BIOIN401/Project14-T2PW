@@ -284,6 +284,9 @@ def run_app_arm(root: Path, cassette: llm_replay.Cassette, timeout: float, case:
     return {
         "outcome": {"status": outcome.status, "failure_kind": outcome.failure_kind, "stage": outcome.stage,
                     "message": outcome.message, "detail": (outcome.detail or "")[:4000]},
+        "outcome_row": {"counts": outcome.counts, "issue_codes": outcome.issue_codes, "warnings": outcome.warnings,
+                        "release_status": driver._release_status_row(outcome.release_status),
+                        "pwml_artifact": outcome.pwml_artifact, "artifacts": sorted(outcome.artifacts)},
         "seconds": round(seconds, 1),
         "canonical_payload_sha256": artifacts.get("canonical_payload_sha256"),
         "canonical_payload": deepcopy(artifacts.get(CANONICAL_PAYLOAD_KEY)),
@@ -447,6 +450,61 @@ def run_service_arm(app: Dict[str, Any], root: Path, cassette: llm_replay.Casset
     }
 
 
+def run_pathway_arm(app: Dict[str, Any], root: Path, cassette: llm_replay.Cassette,
+                    case: Dict[str, Any]) -> Dict[str, Any]:
+    """The whole case through ``run_pathway(PathwayRequest(...))`` (R5). Its settings are the shared defaults, so
+    the only override is the audit timeout the app arm also runs under (:data:`AUDIT_TIMEOUT_SECONDS`). The canonical
+    payload is read from the ``final_mapped.json`` the run delivered, and the spies check what the pipeline got."""
+
+    from t2pw.rag.eligibility import RequestedScope
+    from t2pw.service import defaults
+    from t2pw.service.pathway import PathwayRequest, run_pathway
+
+    new_root(root)
+    mine: Dict[str, Any] = {"root": root}
+    with pytest.MonkeyPatch.context() as mp:
+        cassette.install(mp)
+        isolate(mp, root)
+        frozen_bindings = freeze_clock(mp)
+        mp.setattr(defaults, "AUDIT_TIMEOUT_SECONDS", AUDIT_TIMEOUT_SECONDS)
+        install_spies(mp, mine)
+        started = time.monotonic()
+        result = run_pathway(PathwayRequest(
+            texts=(case["full_text"],),
+            scope=RequestedScope(requested_pathway=case["requested_pathway"],
+                                 requested_organism=case["requested_organism"]),
+            export_mode=case["mode"], out_dir=root / "job-out"))
+        seconds = time.monotonic() - started
+    delivered = {name: Path(path) for name, path in result.report_paths.items()}
+    mapped = delivered.get("final_mapped.json")
+    run_bound = {"qa_report", "reaction_summary", "rag_evidence_context", "pathway_context", "outputs_dir",
+                 "state", "project_root", "ref_path", "quarantine_report", "quarantine_artifacts"}
+
+    def settings(call: Any) -> Any:
+        return None if call is None else (call[0], {k: v for k, v in call[1].items() if k not in run_bound})
+
+    return {
+        "seconds": round(seconds, 1),
+        "result": {"status": result.status, "stage": result.stage, "failure_kind": result.failure_kind,
+                   "message": result.message, "warnings": result.warnings, "issue_codes": result.issue_codes,
+                   "counts": result.counts,
+                   "release_status": result.release_status.to_dict() if result.release_status else None,
+                   "pwml_name": result.pwml_path.name if result.pwml_path else "",
+                   "has_image": bool(result.image_path and result.image_path.is_file()),
+                   "reports": sorted(delivered)},
+        "canonical_payload": json.loads(mapped.read_text(encoding="utf-8")) if mapped else None,
+        "xml": result.pwml_path.read_bytes() if result.pwml_path else b"",
+        "pwml_files": _pwml_files(root),
+        "same_post_settings": settings(mine.get("post_call")) == settings(app.get("post_call")),
+        "same_export_settings": settings(mine.get("export_call")) == settings(app.get("export_call")),
+        "calls": mine.get("counts", {}),
+        "misses": list(cassette.misses),
+        "refused": list(cassette.refused),
+        "unused": cassette.unused(),
+        "frozen_bindings": frozen_bindings,
+    }
+
+
 def load_fixture(path: Path = FIXTURE) -> Dict[str, Any]:
     return json.loads(gzip.decompress(path.read_bytes()).decode("utf-8"))
 
@@ -544,6 +602,27 @@ def write_fixture(entries: Dict[str, Any], pinned: Dict[str, str], secrets: Dict
     print(f"wrote {path} ({path.stat().st_size} bytes gz, {len(text)} bytes json)")
 
 
+def replay_pathway(spec: Dict[str, Any], base: Path, out: Path) -> int:
+    """App once and ``run_pathway`` once, for a case that needs a fixed hash seed (R5); see :func:`replay_arms`."""
+
+    if os.environ.get("PYTHONHASHSEED") != spec["hash_seed"]:
+        print(f"refusing to replay: this case needs PYTHONHASHSEED={spec['hash_seed']}")
+        return 4
+    fixture = load_fixture(spec["fixture"])
+    mp = pytest.MonkeyPatch()
+    try:
+        replay_env(mp, fixture)
+        app = run_app_arm(base / "app", llm_replay.Cassette("replay", fixture["entries"]), 240.0, fixture["case"])
+        pathway = run_pathway_arm(app, base / "pathway", llm_replay.Cassette("replay", fixture["entries"]), fixture["case"])
+    finally:
+        mp.undo()
+    keep = ("outcome", "outcome_row", "canonical_payload", "misses", "refused", "unused")
+    row = {"app": {k: app.get(k) for k in keep}, "pathway": {k: v for k, v in pathway.items() if k != "xml"}}
+    row["app"]["xml_bytes"], row["pathway"]["xml_bytes"] = len(app["xml"]), len(pathway["xml"])
+    out.write_text(json.dumps(row, ensure_ascii=False, default=str), encoding="utf-8")
+    return 0
+
+
 def replay_arms(spec: Dict[str, Any], base: Path, out: Path) -> int:
     """Replay app, app and service for a case that needs a fixed hash seed; write the comparable parts as JSON.
 
@@ -614,7 +693,13 @@ def main(argv: Optional[list] = None) -> int:
     rep.add_argument("--case", choices=sorted(CASES), required=True)
     rep.add_argument("--base", type=Path, required=True)
     rep.add_argument("--out", type=Path, required=True)
+    pw = sub.add_parser("replay-pathway")
+    pw.add_argument("--case", choices=sorted(CASES), required=True)
+    pw.add_argument("--base", type=Path, required=True)
+    pw.add_argument("--out", type=Path, required=True)
     args = parser.parse_args(argv)
+    if args.cmd == "replay-pathway":
+        return replay_pathway(CASES[args.case], args.base, args.out)
     if args.cmd == "replay":
         return replay_arms(CASES[args.case], args.base, args.out)
     if args.cmd == "assemble":

@@ -16,6 +16,7 @@ from __future__ import annotations
 import logging
 import os
 import tempfile
+import time
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable, Dict, Iterable, List, MutableMapping, Optional, Sequence, Tuple
@@ -554,6 +555,67 @@ def _last_cleaning_report() -> Dict[str, Any]:
     return _safe_dict(passes[-1]) if passes else {}
 
 
+#: Refusal of the ambiguous-review gate (Q-R3d-2, moved from the app in R5). The batch
+#: driver's and the web layer's kind of the same name.
+KIND_AMBIGUOUS_REVIEW_SCOPE = "ambiguous_review_scope"
+#: ``run_extraction`` found the run's deadline already gone before the next stage.
+KIND_DEADLINE_EXCEEDED = "deadline_exceeded"
+#: Where ``run_pathway`` publishes the run's absolute deadline (``time.time()`` seconds).
+#: ``state``, not a parameter: ``run_extraction`` and ``run_stage_two`` take none, and the
+#: app has no deadline, so its call sites and their behaviour stay exactly as they were.
+DEADLINE_STATE_KEY = "pathway_run_deadline"
+
+
+def ambiguous_review_gate(
+    pathway_context: Any,
+    *,
+    state: MutableMapping[str, Any],
+    reporter: Reporter,
+) -> Optional[InputFailure]:
+    """Stage 0's multi-example-review refusal, or ``None`` when the run may go on.
+
+    The app's gate, moved here unchanged (Q-R3d-2). Stage 1 would refuse the same context
+    before its first LLM call, but only with a generic failure and without these writes.
+    """
+
+    if not is_ambiguous_multi_example_review_context(pathway_context):
+        return None
+    candidate_examples = pathway_context.get("candidate_examples", [])
+    state["pipeline_ready"] = False
+    state["pathway_context"] = pathway_context
+    message = (
+        "multi_example_review detected with no selected_example. "
+        "Extraction skipped to prevent mixed-pathway output."
+    )
+    state["pipeline_error"] = {
+        "status": KIND_AMBIGUOUS_REVIEW_SCOPE,
+        "message": message,
+        "candidate_examples": candidate_examples,
+    }
+    reporter.error(
+        "Ambiguous review scope: this looks like a multi-example review, but no target example was selected. "
+        "Name the example you want in the \"Optional extraction focus / task context\" box above "
+        "(one of the candidate example names below works), then re-run. "
+        "Re-running without naming a target will produce this same result."
+    )
+    if candidate_examples:
+        reporter.subheader("Candidate examples")
+        reporter.json(candidate_examples)
+    warning = pathway_context.get("warning")
+    if isinstance(warning, str) and warning.strip():
+        reporter.warning(warning.strip())
+    return InputFailure(KIND_AMBIGUOUS_REVIEW_SCOPE, message)
+
+
+def _deadline_failure(state: MutableMapping[str, Any]) -> Optional[InputFailure]:
+    """The stop for a run with no time left. Never set on the app's path."""
+
+    deadline = state.get(DEADLINE_STATE_KEY)
+    if deadline is not None and time.time() >= float(deadline):
+        return InputFailure(KIND_DEADLINE_EXCEEDED, "the run's deadline passed before the next stage started")
+    return None
+
+
 @dataclass(frozen=True)
 class StageOneResult:
     """What the rest of the submit block reads after Stage 1 and the RAG seed, or the
@@ -787,6 +849,13 @@ class ExtractionResult:
     failure: Optional[InputFailure] = None
 
 
+def _rag_deadline_kwargs(state: MutableMapping[str, Any]) -> Dict[str, float]:
+    """``deadline_seconds`` for the RAG rounds, only when a deadline was set (the app has none)."""
+
+    deadline = state.get(DEADLINE_STATE_KEY)
+    return {} if deadline is None else {"deadline_seconds": max(1.0, float(deadline) - time.time())}
+
+
 def run_stage_two(
     text: str,
     stage_one_result: StageOneResult,
@@ -949,6 +1018,7 @@ def run_stage_two(
             strict_db=bool(state.get("pwml_strict_db", True)),
             reporter=reporter,
             state=state,
+            **_rag_deadline_kwargs(state),
         )
         final_payload = rag_loop_record["payload"]
         emit_rag_loop_messages(rag_loop_record["messages"], reporter=reporter)
@@ -1029,12 +1099,10 @@ def run_extraction(
     Stage 1 and the RAG seed, Stage 2 and the publish into ``state``, composed in the
     app's order. Each step's failure is returned as it is; nothing else is added.
 
-    The app does not call this: it keeps calling the steps itself, because its
-    ambiguous-review gate (between Stage 0 and Stage 1) and ``reset_refinement_state()``
-    stay in the app, as do the quarantine reset and the token stats after Stage 2. Here
-    there is no gate: an ambiguous Stage-0 context is refused by Stage 1 itself
-    (``run_stage_one_with_chunking`` raises before any LLM call), as a ``stage_one_failed``
-    failure (R3d.md, open question 3).
+    The app does not call this: it keeps calling the steps itself, because
+    ``reset_refinement_state()`` stays in the app, as do the quarantine reset and the token
+    stats after Stage 2. Every step's failure is returned; ``state[DEADLINE_STATE_KEY]`` (absent
+    on the app's path) adds a stop before Stage 1 and Stage 2 once it has passed.
     """
 
     # As the app: the export-mode radio writes the session copy that Stage 1 reads.
@@ -1062,6 +1130,12 @@ def run_extraction(
         state=state,
         reporter=reporter,
     )
+    gated = ambiguous_review_gate(stage_zero.pathway_context, state=state, reporter=reporter)
+    if gated is not None:
+        return ExtractionResult(failure=gated)
+    expired = _deadline_failure(state)
+    if expired is not None:
+        return ExtractionResult(failure=expired)
     stage_one = run_stage_one(
         text,
         pathway_context=stage_zero.pathway_context,
@@ -1079,6 +1153,9 @@ def run_extraction(
     )
     if stage_one.failure is not None:
         return ExtractionResult(failure=stage_one.failure)
+    expired = _deadline_failure(state)
+    if expired is not None:
+        return ExtractionResult(failure=expired)
     return run_stage_two(
         text,
         stage_one,

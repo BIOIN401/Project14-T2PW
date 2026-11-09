@@ -187,7 +187,13 @@ from t2pw.service.rag_orchestration import (
     _rag_reentry_map,
     run_rag_rounds,
 )
-from t2pw.service.post_run import PostRunRequest, run_post_pipeline
+from t2pw.service import defaults as _defaults  # the form's values, shared with run_pathway (R5)
+from t2pw.service.post_run import (
+    PostRunRequest,
+    open_refinement_review,
+    reset_quarantine_state as _service_reset_quarantine_state,
+    run_post_pipeline,
+)
 from t2pw.service.reporter import StreamlitReporter, install_app_defaults
 from t2pw.service.export import _pwml_reference_path, run_export  # noqa: F401  (R4a: evidence scripts read app._pwml_reference_path)
 from t2pw.service.extraction import (
@@ -204,6 +210,7 @@ from t2pw.service.extraction import (
     assemble_inputs,
     render_attempts as _service_render_attempts,
     rag_loop_session_record,
+    ambiguous_review_gate,
     run_stage_one,
     run_stage_two,
     run_stage_zero,
@@ -471,60 +478,17 @@ def reset_refinement_state() -> None:
         st.session_state[key] = deepcopy(default)
 
 
-#: Session keys holding the single quarantine decision for this payload.
-QUARANTINE_STATE_KEYS = (
-    "quarantine_report",
-    "quarantine_artifacts",
-    "quarantine_coverage",
-    "quarantine_ok",
-    "quarantine_decision_controls",
-)
-
-
 def reset_quarantine_state(outputs_dir: Optional[Path] = None) -> None:
-    """Drop every stored quarantine decision. Called when a new run begins.
-
-    Session keys AND the artifacts they point at. A decision outlives the payload
-    it was made about in two directions: ``st.session_state`` survives a rerun,
-    and ``outputs/quarantine_report.json`` survives the whole session. Without
-    this, a second pipeline run that dies before reaching the boundary would show
-    the first run's coverage summary, and a caller reading the session would find
-    a report authorizing a pathway that is no longer loaded.
-
-    History under ``quarantine_history/`` is deliberately left in place.
-    """
-
-    for key in QUARANTINE_STATE_KEYS:
-        st.session_state.pop(key, None)
-    if outputs_dir is not None:
-        try:
-            clear_quarantine_artifacts(outputs_dir)
-        except OSError as exc:  # pragma: no cover - a locked file must not kill the run
-            logger.warning("reset_quarantine_state: could not clear artifacts: %s", exc)
+    """R5: moved to ``t2pw.service.post_run``; the app's call sites keep this name."""
+    _service_reset_quarantine_state(outputs_dir, state=st.session_state)
 
 
 def initialize_refinement_review_state(
     final_mapped_payload: Dict[str, Any],
     mapping_report: Dict[str, Any],
 ) -> None:
-    graph = build_draft_graph(final_mapped_payload)
-    graph_dict = graph.to_dict()
-    graph_bytes = render_draft_graph_to_png_bytes(graph_dict, dpi=100)
-    qa_report = generate_qa_report(graph, final_mapped_payload)
-
-    st.session_state.refinement_working_json = deepcopy(final_mapped_payload)
-    st.session_state.refinement_graph_dict = graph_dict
-    st.session_state.refinement_graph_bytes = graph_bytes
-    st.session_state.refinement_qa_report = qa_report
-    st.session_state.refinement_mapping_report = deepcopy(mapping_report)
-    st.session_state.refinement_mapping_misses = compact_mapping_misses(mapping_report)
-    st.session_state.refinement_history = []
-    st.session_state.refinement_round = 0
-    st.session_state.refinement_pwml_ready = False
-    st.session_state.refinement_last_error = None
-    st.session_state.refinement_last_warnings = []
-    st.session_state.refinement_gate_errors = []
-    st.session_state.refinement_checkpoints = []
+    """R5: moved to ``t2pw.service.post_run``; the app's call sites keep this name."""
+    open_refinement_review(final_mapped_payload, mapping_report, state=st.session_state)
 
 
 for _refinement_key, _refinement_default in REFINEMENT_STATE_DEFAULTS.items():
@@ -559,29 +523,6 @@ def resolve_path(path_text: str) -> Path:
 
 
 logger = logging.getLogger(__name__)
-
-
-def _bounded_env_int(name: str, default: int, *, minimum: int, maximum: int) -> int:
-    """Read an integer UI default from the environment and keep it in range."""
-    raw = os.getenv(name)
-    if raw is None or not raw.strip():
-        return default
-    try:
-        value = int(raw)
-    except ValueError:
-        logger.warning("Ignoring invalid %s=%r; using %d.", name, raw, default)
-        return default
-    if value < minimum or value > maximum:
-        clamped = min(max(value, minimum), maximum)
-        logger.warning(
-            "Clamping %s=%d to the supported UI range %d..%d.",
-            name,
-            value,
-            minimum,
-            maximum,
-        )
-        return clamped
-    return value
 
 
 def _sync_extraction_diagnostics() -> Dict[str, Any]:
@@ -1613,13 +1554,13 @@ with st.form("pwml_pipeline"):
         
     run_inference = st.checkbox(
         "Run inference/enrichment stage",
-        value=True,
+        value=_defaults.RUN_INFERENCE,
         help="Stage 1 always runs. Disable when you only want strict extraction.",
     )
 
     enable_chunking = st.checkbox(
         "Enable automatic chunking for long inputs",
-        value=True,
+        value=_defaults.ENABLE_CHUNKING,
         help="When enabled, Stage 1 splits long inputs into overlapping chunks before extraction.",
     )
 
@@ -1628,7 +1569,7 @@ with st.form("pwml_pipeline"):
     if rag_config()["enabled"]:
         rag_incomplete_flag = st.toggle(
             "Multi-paper RAG (novel pathway from multiple papers)",
-            value=True,
+            value=_defaults.RAG_INCOMPLETE_FLAG,
             help=(
                 "ON (default): always run multi-paper RAG — fetches and selects "
                 "related papers, retrieves gap-targeted evidence, and synthesizes "
@@ -1649,21 +1590,21 @@ with st.form("pwml_pipeline"):
         "Stage 1 auto-repair attempts",
         min_value=1,
         max_value=5,
-        value=2,
+        value=_defaults.EXTRACT_ATTEMPTS,
         step=1,
     )
     infer_attempts = col_b.number_input(
         "Stage 2 auto-repair attempts",
         min_value=1,
         max_value=5,
-        value=2,
+        value=_defaults.INFER_ATTEMPTS,
         step=1,
     )
     temperature = col_c.slider(
         "LLM temperature",
         min_value=0.0,
         max_value=1.0,
-        value=0.0,
+        value=_defaults.TEMPERATURE,
         step=0.1,
         help="Applied to both stages.",
     )
@@ -1671,7 +1612,7 @@ with st.form("pwml_pipeline"):
         "Stage 2 QA rounds",
         min_value=1,
         max_value=4,
-        value=2,
+        value=_defaults.INFER_ROUNDS,
         step=1,
         help="Round 1 is normal inference. Additional rounds include graph QA feedback hints (disconnected entities, missing links).",
     )
@@ -1681,24 +1622,14 @@ with st.form("pwml_pipeline"):
         "Stage 1 max tokens",
         min_value=500,
         max_value=128000,
-        value=_bounded_env_int(
-            "OPENROUTER_EXTRACTION_MAX_TOKENS",
-            64000,
-            minimum=500,
-            maximum=128000,
-        ),
+        value=_defaults.extract_tokens(),
         step=100,
     )
     infer_tokens = col_tokens_2.number_input(
         "Stage 2 max tokens",
         min_value=500,
         max_value=128000,
-        value=_bounded_env_int(
-            "OPENROUTER_INFERENCE_MAX_TOKENS",
-            64000,
-            minimum=500,
-            maximum=128000,
-        ),
+        value=_defaults.infer_tokens(),
         step=100,
     )
 
@@ -1707,14 +1638,14 @@ with st.form("pwml_pipeline"):
         "Chunk size (approx. words)",
         min_value=200,
         max_value=60000,
-        value=10000,
+        value=_defaults.CHUNK_SIZE,
         step=100,
     )
     chunk_overlap = chunk_cols[1].number_input(
         "Chunk overlap (words)",
         min_value=0,
         max_value=20000,
-        value=1600,
+        value=_defaults.CHUNK_OVERLAP,
         step=100,
     )
     st.caption("Runtime scales with: chunks x Stage 2 QA rounds x retry attempts.")
@@ -1756,30 +1687,10 @@ if submit:
     pathway_context = _stage_zero.pathway_context
     _diagnostics_dir = _stage_zero.diagnostics_dir
 
-    if is_ambiguous_multi_example_review_context(pathway_context):
-        candidate_examples = pathway_context.get("candidate_examples", [])
-        st.session_state["pipeline_ready"] = False
-        st.session_state["pathway_context"] = pathway_context
-        st.session_state["pipeline_error"] = {
-            "status": "ambiguous_review_scope",
-            "message": (
-                "multi_example_review detected with no selected_example. "
-                "Extraction skipped to prevent mixed-pathway output."
-            ),
-            "candidate_examples": candidate_examples,
-        }
-        st.error(
-            "Ambiguous review scope: this looks like a multi-example review, but no target example was selected. "
-            "Name the example you want in the \"Optional extraction focus / task context\" box above "
-            "(one of the candidate example names below works), then re-run. "
-            "Re-running without naming a target will produce this same result."
-        )
-        if candidate_examples:
-            st.subheader("Candidate examples")
-            st.json(candidate_examples)
-        warning = pathway_context.get("warning")
-        if isinstance(warning, str) and warning.strip():
-            st.warning(warning.strip())
+    # R5: the refusal, with its message and state writes, lives in
+    # t2pw.service.extraction.ambiguous_review_gate; a refusal stops the run here.
+    if ambiguous_review_gate(pathway_context, state=st.session_state,
+                             reporter=StreamlitReporter(st)) is not None:
         st.stop()
 
     # R3c: Stage 1 lives in t2pw.service.extraction.run_stage_one: the extraction and
@@ -2044,30 +1955,30 @@ if st.session_state.get("pipeline_ready"):
     post_col_a, post_col_b = st.columns(2)
     use_llm_audit = post_col_a.checkbox(
         "Use LLM in audit stage",
-        value=True,
+        value=_defaults.USE_LLM_AUDIT,
         help="Disabling runs deterministic audit rules only.",
         key="post_use_llm_audit",
     )
     use_sbml_overwatch = post_col_a.checkbox(
         "Use SBML semantic overwatch for legacy export",
-        value=False,
+        value=_defaults.USE_SBML_OVERWATCH,
         help="Only used by the legacy SBML export path.",
         key="post_use_sbml_overwatch",
     )
     use_stoich_agent = post_col_a.checkbox(
         "Stoichiometry agent (fill missing ATP/ADP/NAD etc.)",
-        value=False,
+        value=_defaults.USE_STOICH_AGENT,
         key="post_use_stoich_agent",
     )
     default_compartment = post_col_b.text_input(
         "Default compartment",
-        value="cell",
+        value=_defaults.DEFAULT_COMPARTMENT,
         key="post_default_compartment",
         help="Used when location/state is missing.",
     )
     mapping_cache_text = st.text_input(
         "ID mapping cache path",
-        value="data/id_mapping_cache.json",
+        value=_defaults.MAPPING_CACHE_PATH,
         key="post_mapping_cache",
         help="Cache file for UniProt/compound mapping lookups.",
     )
@@ -2076,7 +1987,7 @@ if st.session_state.get("pipeline_ready"):
         "Audit repair max rounds",
         min_value=1,
         max_value=10,
-        value=4,
+        value=_defaults.AUDIT_MAX_ROUNDS,
         step=1,
         key="post_audit_max_rounds",
         help="Retry audit/patch cycles until stable or this round limit.",
@@ -2085,7 +1996,7 @@ if st.session_state.get("pipeline_ready"):
         "Audit repair timeout (seconds)",
         min_value=30,
         max_value=1800,
-        value=240,
+        value=_defaults.AUDIT_TIMEOUT_SECONDS,
         step=10,
         key="post_audit_timeout_seconds",
         help="Hard timeout for all audit-repair rounds.",
@@ -2094,7 +2005,7 @@ if st.session_state.get("pipeline_ready"):
         "Audit candidates / round",
         min_value=1,
         max_value=5,
-        value=3,
+        value=_defaults.AUDIT_CANDIDATE_COUNT,
         step=1,
         key="post_audit_candidate_count",
         help="Generates multiple LLM repair candidates and picks the best by deterministic score.",
@@ -2102,13 +2013,13 @@ if st.session_state.get("pipeline_ready"):
     retrieval_cols = st.columns(3)
     use_example_retrieval = retrieval_cols[0].checkbox(
         "Use SBML motif retrieval during audit",
-        value=False,
+        value=_defaults.USE_EXAMPLE_RETRIEVAL,
         key="post_use_example_retrieval",
         help="Injects nearest SBML motif examples into each audit LLM call.",
     )
     example_index_path = retrieval_cols[1].text_input(
         "SBML motif index path",
-        value="src/tmp/sbml_motif_index.json",
+        value=_defaults.EXAMPLE_INDEX_PATH,
         key="post_example_index_path",
         help="JSON index built from trusted SBML files.",
     )
@@ -2116,7 +2027,7 @@ if st.session_state.get("pipeline_ready"):
         "SBML motifs top-k",
         min_value=1,
         max_value=8,
-        value=3,
+        value=_defaults.EXAMPLE_TOP_K,
         step=1,
         key="post_example_top_k",
         help="How many nearest examples to inject per round.",
@@ -2124,13 +2035,13 @@ if st.session_state.get("pipeline_ready"):
     gap_cols = st.columns(2)
     use_gap_resolver = gap_cols[0].checkbox(
         "Use Stage 3 Targeted Resolution (LLM-planned, code-executed)",
-        value=True,
+        value=_defaults.USE_GAP_RESOLVER,
         key="post_use_gap_resolver",
         help="Plans DB/API calls with LLM, executes deterministically, then applies selected patches.",
     )
     use_llm_gap_resolver = gap_cols[0].checkbox(
         "Use LLM in Stage 3 planner/selection",
-        value=True,
+        value=_defaults.USE_LLM_GAP_RESOLVER,
         key="post_use_llm_gap_resolver",
         help="LLM plans query strategy and selects among deterministic DB/API results.",
     )
@@ -2138,36 +2049,34 @@ if st.session_state.get("pipeline_ready"):
         "Gap resolver max entities",
         min_value=10,
         max_value=400,
-        value=80,
+        value=_defaults.GAP_RESOLVER_MAX_ITEMS,
         step=10,
         key="post_gap_resolver_max_items",
         help="Upper bound for per-round entity resolution workload.",
     )
     id_source_mode = post_col_b.selectbox(
         "ID mapping source",
-        options=["hybrid", "db", "api"],
-        index=["hybrid", "db", "api"].index((os.getenv("PATHBANK_ID_SOURCE", "hybrid") or "hybrid").strip().lower())
-        if (os.getenv("PATHBANK_ID_SOURCE", "hybrid") or "hybrid").strip().lower() in {"hybrid", "db", "api"}
-        else 0,
+        options=list(_defaults.ID_SOURCES),
+        index=list(_defaults.ID_SOURCES).index(_defaults.id_source()),
         key="post_mapping_source",
         help="hybrid = PathBank DB first, then API fallback.",
     )
     with st.expander("PathBank DB connection (optional)", expanded=False):
         db_cols = st.columns(2)
-        db_host = db_cols[0].text_input("DB host", value=os.getenv("PATHBANK_DB_HOST", ""), key="post_db_host")
+        db_host = db_cols[0].text_input("DB host", value=_defaults.db_host(), key="post_db_host")
         db_port = db_cols[1].number_input(
             "DB port",
             min_value=1,
             max_value=65535,
-            value=int(os.getenv("PATHBANK_DB_PORT", "3306") or "3306"),
+            value=_defaults.db_port(),
             step=1,
             key="post_db_port",
         )
-        db_user = db_cols[0].text_input("DB user", value=os.getenv("PATHBANK_DB_USER", ""), key="post_db_user")
-        db_schema = db_cols[1].text_input("DB schema", value=os.getenv("PATHBANK_DB_SCHEMA", "pathbank"), key="post_db_schema")
+        db_user = db_cols[0].text_input("DB user", value=_defaults.db_user(), key="post_db_user")
+        db_schema = db_cols[1].text_input("DB schema", value=_defaults.db_schema(), key="post_db_schema")
         db_password = st.text_input(
             "DB password",
-            value=os.getenv("PATHBANK_DB_PASSWORD", ""),
+            value=_defaults.db_password(),
             type="password",
             key="post_db_password",
         )

@@ -14,7 +14,10 @@ runs before the ``finally`` that publishes the diagnostics).
 
 from __future__ import annotations
 
+import logging
+from copy import deepcopy
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Any, Callable, Dict, MutableMapping, Optional
 
 import t2pw.config as _config
@@ -28,10 +31,81 @@ from t2pw.pipeline import extraction_diagnostics as _diag
 from t2pw.pipeline import pipeline as _pipeline
 from t2pw.pipeline.gate_reports import CANONICAL_PAYLOAD_KEY, FINAL_GATE_REPORT_KEY
 from t2pw.pipeline.stage_contracts import StageContractError
+from t2pw.pipeline.strict_quarantine import clear_quarantine_artifacts
 from t2pw.service import extraction as _extraction
 from t2pw.service import postpipeline as _postpipeline
 from t2pw.service.postpipeline import _safe_dict, _safe_list
 from t2pw.service.reporter import Reporter
+
+logger = logging.getLogger(__name__)
+
+#: Session keys holding the single quarantine decision for this payload.
+QUARANTINE_STATE_KEYS = (
+    "quarantine_report",
+    "quarantine_artifacts",
+    "quarantine_coverage",
+    "quarantine_ok",
+    "quarantine_decision_controls",
+)
+
+
+def reset_quarantine_state(outputs_dir: Optional[Path], *, state: MutableMapping[str, Any]) -> None:
+    """Drop every stored quarantine decision. Called when a new run begins.
+
+    State keys AND the artifacts they point at. A decision outlives the payload
+    it was made about in two directions: session state survives a rerun,
+    and ``outputs/quarantine_report.json`` survives the whole session. Without
+    this, a second pipeline run that dies before reaching the boundary would show
+    the first run's coverage summary, and a caller reading the session would find
+    a report authorizing a pathway that is no longer loaded.
+
+    History under ``quarantine_history/`` is deliberately left in place.
+    """
+
+    for key in QUARANTINE_STATE_KEYS:
+        state.pop(key, None)
+    if outputs_dir is not None:
+        try:
+            clear_quarantine_artifacts(outputs_dir)
+        except OSError as exc:  # pragma: no cover - a locked file must not kill the run
+            logger.warning("reset_quarantine_state: could not clear artifacts: %s", exc)
+
+
+def open_refinement_review(
+    final_mapped_payload: Dict[str, Any],
+    mapping_report: Dict[str, Any],
+    *,
+    state: MutableMapping[str, Any],
+) -> None:
+    """The refinement review state the "Generate PWML" step reads (R5, moved from the app).
+
+    The callees are looked up at call time, as the app script's per-run imports were,
+    so a patch on their source module reaches them.
+    """
+
+    from t2pw.curation import interactive_curator as _curator
+    from t2pw.pipeline import draft_graph as _draft_graph
+    from t2pw.pipeline import draft_graph_render as _render
+    from t2pw.pipeline import qa_graph as _qa_graph
+
+    graph = _draft_graph.build_draft_graph(final_mapped_payload)
+    graph_dict = graph.to_dict()
+    graph_bytes = _render.render_draft_graph_to_png_bytes(graph_dict, dpi=100)
+    qa_report = _qa_graph.generate_qa_report(graph, final_mapped_payload)
+
+    state["refinement_working_json"] = deepcopy(final_mapped_payload)
+    state["refinement_graph_dict"] = graph_dict
+    state["refinement_graph_bytes"] = graph_bytes
+    state["refinement_qa_report"] = qa_report
+    state["refinement_mapping_report"] = deepcopy(mapping_report)
+    state["refinement_mapping_misses"] = _curator.compact_mapping_misses(mapping_report)
+    state["refinement_history"] = []
+    state["refinement_round"] = 0
+    state["refinement_pwml_ready"] = False
+    state["refinement_last_error"] = None
+    state["refinement_last_warnings"] = []
+    state["refinement_gate_errors"] = []
+    state["refinement_checkpoints"] = []
 
 
 @dataclass(frozen=True)
