@@ -1,0 +1,98 @@
+{
+  "label": "2e-759afold",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/ws-R4-base/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-R4-base",
+    "--pin-verdict",
+    "C:/t/wsR4btmp/ev2/pin/b-2e-759afold.pin.json",
+    "-q",
+    "--basetemp=C:/t/wsR4btmp/bt/b-2e-759afold",
+    "tests/test_orch759a_fold_app_path.py"
+  ],
+  "cwd": "C:\\t\\ws-R4-base",
+  "started_at": "2026-11-08T21:01:44+00:00",
+  "finished_at": "2026-11-08T21:01:50+00:00",
+  "duration_seconds": 5.509567600000082,
+  "timeout_seconds": 280.0,
+  "root_pid": 246876,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 248976,
+      "name": "python.exe",
+      "ppid": 246876
+    }
+  ],
+  "descendants_terminated": [
+    248976
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 24756,
+      "name": "python.exe"
+    },
+    {
+      "pid": 24880,
+      "name": "python.exe"
+    },
+    {
+      "pid": 239640,
+      "name": "python.exe"
+    },
+    {
+      "pid": 246012,
+      "name": "python.exe"
+    },
+    {
+      "pid": 249220,
+      "name": "python.exe"
+    },
+    {
+      "pid": 250484,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/wsR4btmp/ev2/b-2e-759afold.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-R4-base\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-R4-base",
+    "repo_head": "72d309e97ca875785cad11bb7c62478d1fda2fb8",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "R4b",
+    "token": "R4b:246012:0e1f8837409e2211",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

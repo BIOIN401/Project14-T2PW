@@ -1,0 +1,44 @@
+T2PW: C:\t\wsR4btmp\scratch-tip\src\t2pw\__init__.py
+.F........................................                               [100%]
+================================== FAILURES ===================================
+____ test_a_non_dict_pathway_context_reaches_the_pipeline_as_an_empty_dict ____
+
+world = namespace(events=[('set', 'pathway_context'), ('reenter', <object object at 0x000002427052CCF0>), ('spinner', ('Runnin...w=<function world.<locals>.review at 0x000002427114C360>, run=<function world.<locals>.<lambda> at 0x000002427114CAE0>)
+
+    def test_a_non_dict_pathway_context_reaches_the_pipeline_as_an_empty_dict(world):
+        world.state["pathway_context"] = "not a dict"
+        world.run()
+>       assert world.call[1]["pathway_context"] == {}
+E       AssertionError: assert 'not a dict' == {}
+
+tests\test_service_post_run.py:236: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_post_run.py::test_a_non_dict_pathway_context_reaches_the_pipeline_as_an_empty_dict
+1 failed, 41 passed in 4.34s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\wsR4btmp\scratch-tip\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : mut-ctx-not-safe-dict
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/wsR4btmp/scratch-tip/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/wsR4btmp/scratch-tip -q -p no:cacheprovider --basetemp=C:/t/wsR4btmp/mut-tmp/ctx-not-safe-dict tests/test_service_post_run.py
+cwd                     : C:\t\wsR4btmp\scratch-tip
+root PID / process group: 524012 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 5.82 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  528324:python.exe
+descendants terminated  : 1  528324
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR4btmp\proof\mutation\ctx-not-safe-dict.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R4b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

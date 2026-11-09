@@ -1,0 +1,85 @@
+{
+  "label": "ivm",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/wsR4btmp/scripts/inline_vs_moved.py",
+    "C:/t/ws-R4-base",
+    "C:/t/ws-R4b"
+  ],
+  "cwd": "C:\\t\\ws-R4b",
+  "started_at": "2026-11-08T21:07:35+00:00",
+  "finished_at": "2026-11-08T21:07:37+00:00",
+  "duration_seconds": 1.605473499999789,
+  "timeout_seconds": 300.0,
+  "root_pid": 254352,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 269620,
+      "name": "python.exe",
+      "ppid": 254352
+    }
+  ],
+  "descendants_terminated": [
+    269620
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 24756,
+      "name": "python.exe"
+    },
+    {
+      "pid": 24880,
+      "name": "python.exe"
+    },
+    {
+      "pid": 250444,
+      "name": "python.exe"
+    },
+    {
+      "pid": 270132,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/wsR4btmp/proof/ivm/ivm.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-R4b\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-R4b",
+    "repo_head": "7170a9a7ae86a03385b7ddc01d9cd45c11e890f8",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "R4b",
+    "token": "R4b:250444:9ddafd7cc4946e5e",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

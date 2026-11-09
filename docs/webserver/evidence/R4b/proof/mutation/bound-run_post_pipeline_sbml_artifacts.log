@@ -1,0 +1,675 @@
+T2PW: C:\t\wsR4btmp\scratch-tip\src\t2pw\__init__.py
+FFFFFFFFFFFFFFFFFFFFFFFFFFF.F...F..F.F.                                  [100%]
+================================== FAILURES ===================================
+_____ test_the_handler_spends_the_run_in_order_and_coerces_every_argument _____
+
+world = namespace(events=[('reenter', <object object at 0x0000014184BD0CF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x00000141858902C0>, run=<function world.<locals>.<lambda> at 0x0000014185890220>)
+
+    def test_the_handler_spends_the_run_in_order_and_coerces_every_argument(world):
+        world.state.update(qa_report={"qa": 1}, reaction_summary="sum", export_mode="research", pwml_strict_db=0)
+        result = world.run()
+    
+>       assert world.events[:5] == [
+            ("reenter", RECORDER),
+            ("spinner", ("Running audit and DB mapping...",)),
+            ("spinner:enter",),
+            ("propagate", PAYLOAD, CTX),
+            ("artifacts", REBOUND),
+        ]
+E       AssertionError: assert [('reenter', ...inner:exit',)] == [('reenter', ...me': 'a'}]}})]
+E         
+E         At index 4 diff: ('spinner:exit',) != ('artifacts', {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}, 'organism': 'E. coli'})
+E         Use -v to get more diff
+
+tests\test_service_post_run.py:182: AssertionError
+_ test_blank_widget_values_get_the_apps_defaults[default_compartment-None-default_compartment-cell] _
+
+world = namespace(events=[('reenter', <object object at 0x0000014184BD0CF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x000001418642A700>, run=<function world.<locals>.<lambda> at 0x000001418642A840>)
+field = 'default_compartment', value = None, kw = 'default_compartment'
+expected = 'cell'
+
+    @pytest.mark.parametrize("field, value, kw, expected", [
+        ("default_compartment", None, "default_compartment", "cell"),
+        ("default_compartment", "   ", "default_compartment", "cell"),
+        ("mapping_cache_text", "   ", "mapping_cache_path", "id_mapping_cache.json"),
+        ("id_source_mode", None, "id_source", "hybrid"),
+        ("db_host", None, "db_host", ""),
+        ("db_user", None, "db_user", ""),
+        ("db_password", None, "db_password", ""),
+        ("db_schema", None, "db_schema", "pathbank"),
+        ("db_schema", "  ", "db_schema", "pathbank"),
+        ("example_index_path", None, "example_index_path", ""),
+    ])
+    def test_blank_widget_values_get_the_apps_defaults(world, field, value, kw, expected):
+        world.run(request=_request(**{field: value}))
+>       assert world.call[1][kw] == expected
+               ^^^^^^^^^^^^^
+E       TypeError: 'NoneType' object is not subscriptable
+
+tests\test_service_post_run.py:240: TypeError
+_ test_blank_widget_values_get_the_apps_defaults[default_compartment-   -default_compartment-cell] _
+
+world = namespace(events=[('reenter', <object object at 0x0000014184BD0CF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x000001418642AD40>, run=<function world.<locals>.<lambda> at 0x000001418642AF20>)
+field = 'default_compartment', value = '   ', kw = 'default_compartment'
+expected = 'cell'
+
+    @pytest.mark.parametrize("field, value, kw, expected", [
+        ("default_compartment", None, "default_compartment", "cell"),
+        ("default_compartment", "   ", "default_compartment", "cell"),
+        ("mapping_cache_text", "   ", "mapping_cache_path", "id_mapping_cache.json"),
+        ("id_source_mode", None, "id_source", "hybrid"),
+        ("db_host", None, "db_host", ""),
+        ("db_user", None, "db_user", ""),
+        ("db_password", None, "db_password", ""),
+        ("db_schema", None, "db_schema", "pathbank"),
+        ("db_schema", "  ", "db_schema", "pathbank"),
+        ("example_index_path", None, "example_index_path", ""),
+    ])
+    def test_blank_widget_values_get_the_apps_defaults(world, field, value, kw, expected):
+        world.run(request=_request(**{field: value}))
+>       assert world.call[1][kw] == expected
+               ^^^^^^^^^^^^^
+E       TypeError: 'NoneType' object is not subscriptable
+
+tests\test_service_post_run.py:240: TypeError
+_ test_blank_widget_values_get_the_apps_defaults[mapping_cache_text-   -mapping_cache_path-id_mapping_cache.json] _
+
+world = namespace(events=[('reenter', <object object at 0x0000014184BD0CF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x000001418642B420>, run=<function world.<locals>.<lambda> at 0x000001418642B600>)
+field = 'mapping_cache_text', value = '   ', kw = 'mapping_cache_path'
+expected = 'id_mapping_cache.json'
+
+    @pytest.mark.parametrize("field, value, kw, expected", [
+        ("default_compartment", None, "default_compartment", "cell"),
+        ("default_compartment", "   ", "default_compartment", "cell"),
+        ("mapping_cache_text", "   ", "mapping_cache_path", "id_mapping_cache.json"),
+        ("id_source_mode", None, "id_source", "hybrid"),
+        ("db_host", None, "db_host", ""),
+        ("db_user", None, "db_user", ""),
+        ("db_password", None, "db_password", ""),
+        ("db_schema", None, "db_schema", "pathbank"),
+        ("db_schema", "  ", "db_schema", "pathbank"),
+        ("example_index_path", None, "example_index_path", ""),
+    ])
+    def test_blank_widget_values_get_the_apps_defaults(world, field, value, kw, expected):
+        world.run(request=_request(**{field: value}))
+>       assert world.call[1][kw] == expected
+               ^^^^^^^^^^^^^
+E       TypeError: 'NoneType' object is not subscriptable
+
+tests\test_service_post_run.py:240: TypeError
+_ test_blank_widget_values_get_the_apps_defaults[id_source_mode-None-id_source-hybrid] _
+
+world = namespace(events=[('reenter', <object object at 0x0000014184BD0CF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x000001418642BB00>, run=<function world.<locals>.<lambda> at 0x000001418642BC40>)
+field = 'id_source_mode', value = None, kw = 'id_source', expected = 'hybrid'
+
+    @pytest.mark.parametrize("field, value, kw, expected", [
+        ("default_compartment", None, "default_compartment", "cell"),
+        ("default_compartment", "   ", "default_compartment", "cell"),
+        ("mapping_cache_text", "   ", "mapping_cache_path", "id_mapping_cache.json"),
+        ("id_source_mode", None, "id_source", "hybrid"),
+        ("db_host", None, "db_host", ""),
+        ("db_user", None, "db_user", ""),
+        ("db_password", None, "db_password", ""),
+        ("db_schema", None, "db_schema", "pathbank"),
+        ("db_schema", "  ", "db_schema", "pathbank"),
+        ("example_index_path", None, "example_index_path", ""),
+    ])
+    def test_blank_widget_values_get_the_apps_defaults(world, field, value, kw, expected):
+        world.run(request=_request(**{field: value}))
+>       assert world.call[1][kw] == expected
+               ^^^^^^^^^^^^^
+E       TypeError: 'NoneType' object is not subscriptable
+
+tests\test_service_post_run.py:240: TypeError
+____ test_blank_widget_values_get_the_apps_defaults[db_host-None-db_host-] ____
+
+world = namespace(events=[('reenter', <object object at 0x0000014184BD0CF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x000001418642A2A0>, run=<function world.<locals>.<lambda> at 0x000001418642A020>)
+field = 'db_host', value = None, kw = 'db_host', expected = ''
+
+    @pytest.mark.parametrize("field, value, kw, expected", [
+        ("default_compartment", None, "default_compartment", "cell"),
+        ("default_compartment", "   ", "default_compartment", "cell"),
+        ("mapping_cache_text", "   ", "mapping_cache_path", "id_mapping_cache.json"),
+        ("id_source_mode", None, "id_source", "hybrid"),
+        ("db_host", None, "db_host", ""),
+        ("db_user", None, "db_user", ""),
+        ("db_password", None, "db_password", ""),
+        ("db_schema", None, "db_schema", "pathbank"),
+        ("db_schema", "  ", "db_schema", "pathbank"),
+        ("example_index_path", None, "example_index_path", ""),
+    ])
+    def test_blank_widget_values_get_the_apps_defaults(world, field, value, kw, expected):
+        world.run(request=_request(**{field: value}))
+>       assert world.call[1][kw] == expected
+               ^^^^^^^^^^^^^
+E       TypeError: 'NoneType' object is not subscriptable
+
+tests\test_service_post_run.py:240: TypeError
+____ test_blank_widget_values_get_the_apps_defaults[db_user-None-db_user-] ____
+
+world = namespace(events=[('reenter', <object object at 0x0000014184BD0CF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x000001418642AD40>, run=<function world.<locals>.<lambda> at 0x000001418642B880>)
+field = 'db_user', value = None, kw = 'db_user', expected = ''
+
+    @pytest.mark.parametrize("field, value, kw, expected", [
+        ("default_compartment", None, "default_compartment", "cell"),
+        ("default_compartment", "   ", "default_compartment", "cell"),
+        ("mapping_cache_text", "   ", "mapping_cache_path", "id_mapping_cache.json"),
+        ("id_source_mode", None, "id_source", "hybrid"),
+        ("db_host", None, "db_host", ""),
+        ("db_user", None, "db_user", ""),
+        ("db_password", None, "db_password", ""),
+        ("db_schema", None, "db_schema", "pathbank"),
+        ("db_schema", "  ", "db_schema", "pathbank"),
+        ("example_index_path", None, "example_index_path", ""),
+    ])
+    def test_blank_widget_values_get_the_apps_defaults(world, field, value, kw, expected):
+        world.run(request=_request(**{field: value}))
+>       assert world.call[1][kw] == expected
+               ^^^^^^^^^^^^^
+E       TypeError: 'NoneType' object is not subscriptable
+
+tests\test_service_post_run.py:240: TypeError
+_ test_blank_widget_values_get_the_apps_defaults[db_password-None-db_password-] _
+
+world = namespace(events=[('reenter', <object object at 0x0000014184BD0CF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x000001418642A840>, run=<function world.<locals>.<lambda> at 0x000001418642A8E0>)
+field = 'db_password', value = None, kw = 'db_password', expected = ''
+
+    @pytest.mark.parametrize("field, value, kw, expected", [
+        ("default_compartment", None, "default_compartment", "cell"),
+        ("default_compartment", "   ", "default_compartment", "cell"),
+        ("mapping_cache_text", "   ", "mapping_cache_path", "id_mapping_cache.json"),
+        ("id_source_mode", None, "id_source", "hybrid"),
+        ("db_host", None, "db_host", ""),
+        ("db_user", None, "db_user", ""),
+        ("db_password", None, "db_password", ""),
+        ("db_schema", None, "db_schema", "pathbank"),
+        ("db_schema", "  ", "db_schema", "pathbank"),
+        ("example_index_path", None, "example_index_path", ""),
+    ])
+    def test_blank_widget_values_get_the_apps_defaults(world, field, value, kw, expected):
+        world.run(request=_request(**{field: value}))
+>       assert world.call[1][kw] == expected
+               ^^^^^^^^^^^^^
+E       TypeError: 'NoneType' object is not subscriptable
+
+tests\test_service_post_run.py:240: TypeError
+_ test_blank_widget_values_get_the_apps_defaults[db_schema-None-db_schema-pathbank] _
+
+world = namespace(events=[('reenter', <object object at 0x0000014184BD0CF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x000001418642B060>, run=<function world.<locals>.<lambda> at 0x000001418649CAE0>)
+field = 'db_schema', value = None, kw = 'db_schema', expected = 'pathbank'
+
+    @pytest.mark.parametrize("field, value, kw, expected", [
+        ("default_compartment", None, "default_compartment", "cell"),
+        ("default_compartment", "   ", "default_compartment", "cell"),
+        ("mapping_cache_text", "   ", "mapping_cache_path", "id_mapping_cache.json"),
+        ("id_source_mode", None, "id_source", "hybrid"),
+        ("db_host", None, "db_host", ""),
+        ("db_user", None, "db_user", ""),
+        ("db_password", None, "db_password", ""),
+        ("db_schema", None, "db_schema", "pathbank"),
+        ("db_schema", "  ", "db_schema", "pathbank"),
+        ("example_index_path", None, "example_index_path", ""),
+    ])
+    def test_blank_widget_values_get_the_apps_defaults(world, field, value, kw, expected):
+        world.run(request=_request(**{field: value}))
+>       assert world.call[1][kw] == expected
+               ^^^^^^^^^^^^^
+E       TypeError: 'NoneType' object is not subscriptable
+
+tests\test_service_post_run.py:240: TypeError
+_ test_blank_widget_values_get_the_apps_defaults[db_schema-  -db_schema-pathbank] _
+
+world = namespace(events=[('reenter', <object object at 0x0000014184BD0CF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x000001418649D120>, run=<function world.<locals>.<lambda> at 0x000001418649D080>)
+field = 'db_schema', value = '  ', kw = 'db_schema', expected = 'pathbank'
+
+    @pytest.mark.parametrize("field, value, kw, expected", [
+        ("default_compartment", None, "default_compartment", "cell"),
+        ("default_compartment", "   ", "default_compartment", "cell"),
+        ("mapping_cache_text", "   ", "mapping_cache_path", "id_mapping_cache.json"),
+        ("id_source_mode", None, "id_source", "hybrid"),
+        ("db_host", None, "db_host", ""),
+        ("db_user", None, "db_user", ""),
+        ("db_password", None, "db_password", ""),
+        ("db_schema", None, "db_schema", "pathbank"),
+        ("db_schema", "  ", "db_schema", "pathbank"),
+        ("example_index_path", None, "example_index_path", ""),
+    ])
+    def test_blank_widget_values_get_the_apps_defaults(world, field, value, kw, expected):
+        world.run(request=_request(**{field: value}))
+>       assert world.call[1][kw] == expected
+               ^^^^^^^^^^^^^
+E       TypeError: 'NoneType' object is not subscriptable
+
+tests\test_service_post_run.py:240: TypeError
+_ test_blank_widget_values_get_the_apps_defaults[example_index_path-None-example_index_path-] _
+
+world = namespace(events=[('reenter', <object object at 0x0000014184BD0CF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x000001418649C5E0>, run=<function world.<locals>.<lambda> at 0x000001418649D620>)
+field = 'example_index_path', value = None, kw = 'example_index_path'
+expected = ''
+
+    @pytest.mark.parametrize("field, value, kw, expected", [
+        ("default_compartment", None, "default_compartment", "cell"),
+        ("default_compartment", "   ", "default_compartment", "cell"),
+        ("mapping_cache_text", "   ", "mapping_cache_path", "id_mapping_cache.json"),
+        ("id_source_mode", None, "id_source", "hybrid"),
+        ("db_host", None, "db_host", ""),
+        ("db_user", None, "db_user", ""),
+        ("db_password", None, "db_password", ""),
+        ("db_schema", None, "db_schema", "pathbank"),
+        ("db_schema", "  ", "db_schema", "pathbank"),
+        ("example_index_path", None, "example_index_path", ""),
+    ])
+    def test_blank_widget_values_get_the_apps_defaults(world, field, value, kw, expected):
+        world.run(request=_request(**{field: value}))
+>       assert world.call[1][kw] == expected
+               ^^^^^^^^^^^^^
+E       TypeError: 'NoneType' object is not subscriptable
+
+tests\test_service_post_run.py:240: TypeError
+_______ test_the_rag_context_is_read_at_call_time_and_only_with_rag_on ________
+
+world = namespace(events=[('set', 'rag_evidence_context'), ('reenter', <object object at 0x0000014184BD0CF0>), ('spinner', ('R...w=<function world.<locals>.review at 0x000001418649DBC0>, run=<function world.<locals>.<lambda> at 0x000001418649DD00>)
+
+    def test_the_rag_context_is_read_at_call_time_and_only_with_rag_on(world):
+        world.state["rag_evidence_context"] = "EVIDENCE"
+        world.run()
+>       assert world.call[1]["rag_evidence_context"] == ""
+               ^^^^^^^^^^^^^
+E       TypeError: 'NoneType' object is not subscriptable
+
+tests\test_service_post_run.py:246: TypeError
+______ test_strict_db_defaults_to_true_when_the_checkbox_never_rendered _______
+
+world = namespace(events=[('reenter', <object object at 0x0000014184BD0CF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x000001418649CF40>, run=<function world.<locals>.<lambda> at 0x000001418649C0E0>)
+
+    def test_strict_db_defaults_to_true_when_the_checkbox_never_rendered(world):
+        world.run()
+>       assert world.call[1]["strict_db"] is True
+               ^^^^^^^^^^^^^
+E       TypeError: 'NoneType' object is not subscriptable
+
+tests\test_service_post_run.py:257: TypeError
+________ test_the_stored_artifacts_are_the_object_later_writes_mutate _________
+
+world = namespace(events=[('set', 'final_payload_snapshot'), ('reenter', <object object at 0x0000014184BD0CF0>), ('spinner', (...w=<function world.<locals>.review at 0x000001418649E700>, run=<function world.<locals>.<lambda> at 0x000001418649D4E0>)
+
+    def test_the_stored_artifacts_are_the_object_later_writes_mutate(world):
+        world.state["final_payload_snapshot"] = {"snap": 1}
+        world.artifacts.update(gate_failed=True)
+        world.run()
+>       assert world.state["post_pipeline_artifacts"] is world.artifacts
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'post_pipeline_artifacts'
+
+tests\test_service_post_run.py:264: KeyError
+______________ test_the_snapshot_defaults_to_the_rebound_payload ______________
+
+world = namespace(events=[('reenter', <object object at 0x0000014184BD0CF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x000001418649ECA0>, run=<function world.<locals>.<lambda> at 0x000001418649DA80>)
+
+    def test_the_snapshot_defaults_to_the_rebound_payload(world):
+        world.artifacts.update(gate_failed=True)
+        world.run()
+>       assert world.artifacts["final_payload_snapshot"] is REBOUND
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'final_payload_snapshot'
+
+tests\test_service_post_run.py:271: KeyError
+____ test_post_audit_reports_replace_the_session_copies_only_when_present _____
+
+world = namespace(events=[('reenter', <object object at 0x0000014184BD0CF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x000001418649E2A0>, run=<function world.<locals>.<lambda> at 0x000001418649E340>)
+
+    def test_post_audit_reports_replace_the_session_copies_only_when_present(world):
+        world.state.update(qa_report={"old": 1}, reaction_summary="old")
+        world.artifacts.update(gate_failed=True, post_audit_qa_report={"new": 1})
+        world.run()
+>       assert world.state["qa_report"] == {"new": 1} and world.state["reaction_summary"] == "old"
+E       AssertionError: assert ({'old': 1} == {'new': 1}
+E         
+E         Left contains 1 more item:
+E         {'old': 1}
+E         Right contains 1 more item:
+E         {'new': 1}
+E         Use -v to get more diff)
+
+tests\test_service_post_run.py:278: AssertionError
+_______________________ test_a_gate_failure_only_warns ________________________
+
+world = namespace(events=[('reenter', <object object at 0x0000014184BD0CF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x000001418642B4C0>, run=<function world.<locals>.<lambda> at 0x000001418642AD40>)
+
+    def test_a_gate_failure_only_warns(world):
+        world.artifacts.update(gate_failed=True)
+        world.run()
+>       assert [e for e in world.events if e[0] in ("warning", "info", "error", "open_review")] == [
+            ("warning", ("Post-pipeline stopped at hard-gate validation. Review gate_fail_report.json.",))]
+E       AssertionError: assert [] == [('warning', ...ort.json.',))]
+E         
+E         Right contains one more item: ('warning', ('Post-pipeline stopped at hard-gate validation. Review gate_fail_report.json.',))
+E         Use -v to get more diff
+
+tests\test_service_post_run.py:287: AssertionError
+________________ test_no_mapped_payload_says_nothing_and_syncs ________________
+
+world = namespace(events=[('reenter', <object object at 0x0000014184BD0CF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x000001418642BB00>, run=<function world.<locals>.<lambda> at 0x000001418642AFC0>)
+
+    def test_no_mapped_payload_says_nothing_and_syncs(world):
+        world.run()
+>       assert _names(world.events) == ["set", "sync"]
+E       AssertionError: assert ['render_cont...lure', 'sync'] == ['set', 'sync']
+E         
+E         At index 0 diff: 'render_contract_failure' != 'set'
+E         Use -v to get more diff
+
+tests\test_service_post_run.py:294: AssertionError
+____________ test_quarantine_flags_are_reported_before_the_verdict ____________
+
+world = namespace(events=[('reenter', <object object at 0x0000014184BD0CF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x000001418649EA20>, run=<function world.<locals>.<lambda> at 0x000001418649F2E0>)
+
+    def test_quarantine_flags_are_reported_before_the_verdict(world):
+        world.artifacts.update({CANONICAL_PAYLOAD_KEY: {"p": 1}, "quarantine_ok": True,
+                                "quarantine_review_flags": ["f1", "f2"]})
+        world.run()
+>       assert world.events[6:9] == [
+            ("set", "post_pipeline_artifacts"),
+            ("warning", ("Quarantine review flags (2): research mode kept every process. "
+                         "A strict export would have removed the ones listed below.",)),
+            ("json", (["f1", "f2"],)),
+        ]
+E       AssertionError: assert [('sync', True)] == [('set', 'pos...f1', 'f2'],))]
+E         
+E         At index 0 diff: ('sync', True) != ('set', 'post_pipeline_artifacts')
+E         Right contains 2 more items, first extra item: ('warning', ('Quarantine review flags (2): research mode kept every process. A strict export would have removed the ones listed below.',))
+E         Use -v to get more diff
+
+tests\test_service_post_run.py:302: AssertionError
+________________ test_a_quarantine_refusal_stops_before_review ________________
+
+world = namespace(events=[('reenter', <object object at 0x0000014184BD0CF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x000001418649F4C0>, run=<function world.<locals>.<lambda> at 0x000001418649E200>)
+
+    def test_a_quarantine_refusal_stops_before_review(world):
+        world.artifacts.update({
+            CANONICAL_PAYLOAD_KEY: {"p": 1}, "quarantine_ok": False, "quarantine_refusal_reasons": ["no core", 7],
+            "quarantine_coverage": {"cov": 1}, "quarantine_report": {"strict_invariants": {"inv": 1}},
+        })
+        world.run()
+>       assert world.state["refinement_gate_errors"] == [
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            {"path": "/processes", "reason": "quarantine refusal: no core"},
+            {"path": "/processes", "reason": "quarantine refusal: 7"},
+        ]
+E       KeyError: 'refinement_gate_errors'
+
+tests\test_service_post_run.py:316: KeyError
+________ test_research_mode_fails_open_on_stage_three_and_opens_review ________
+
+world = namespace(events=[('set', 'export_mode'), ('reenter', <object object at 0x0000014184BD0CF0>), ('spinner', ('Running au...w=<function world.<locals>.review at 0x000001418649CCC0>, run=<function world.<locals>.<lambda> at 0x000001418649D4E0>)
+
+    def test_research_mode_fails_open_on_stage_three_and_opens_review(world):
+        world.state["export_mode"] = "research"
+        world.artifacts.update({CANONICAL_PAYLOAD_KEY: {"p": 1}, "quarantine_ok": True, FINAL_GATE_REPORT_KEY: GATE,
+                                "mapping_report": {"m": 1}})
+        world.run()
+>       assert world.artifacts["research_stage3_review_flags"] == GATE["errors"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'research_stage3_review_flags'
+
+tests\test_service_post_run.py:338: KeyError
+_______ test_strict_stage_three_failure_shows_the_errors_and_no_review ________
+
+world = namespace(events=[('reenter', <object object at 0x0000014184BD0CF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x000001418649FE20>, run=<function world.<locals>.<lambda> at 0x000001418649FD80>)
+
+    def test_strict_stage_three_failure_shows_the_errors_and_no_review(world):
+        world.artifacts.update({CANONICAL_PAYLOAD_KEY: {"p": 1}, "quarantine_ok": True, FINAL_GATE_REPORT_KEY: GATE})
+        world.run()
+>       assert world.state["refinement_gate_errors"] == GATE["errors"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'refinement_gate_errors'
+
+tests\test_service_post_run.py:358: KeyError
+___________ test_strict_stage_three_failure_with_no_itemised_errors ___________
+
+world = namespace(events=[('reenter', <object object at 0x0000014184BD0CF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x000001418649FB00>, run=<function world.<locals>.<lambda> at 0x000001418649DEE0>)
+
+    def test_strict_stage_three_failure_with_no_itemised_errors(world):
+        world.artifacts.update({CANONICAL_PAYLOAD_KEY: {"p": 1}, "quarantine_ok": True,
+                                FINAL_GATE_REPORT_KEY: {"ok": False, "errors": []}})
+        world.run()
+>       assert ("write", ("No itemized errors were returned; showing full gate report below.",)) in world.events
+E       AssertionError: assert ('write', ('No itemized errors were returned; showing full gate report below.',)) in [('reenter', <object object at 0x0000014184BD0CF0>), ('spinner', ('Running audit and DB mapping...',)), ('spinner:ente..._contract_failure', StageContractError('Reaction must include at least one usable input or output participant.')), ...]
+E        +  where [('reenter', <object object at 0x0000014184BD0CF0>), ('spinner', ('Running audit and DB mapping...',)), ('spinner:ente..._contract_failure', StageContractError('Reaction must include at least one usable input or output participant.')), ...] = namespace(events=[('reenter', <object object at 0x0000014184BD0CF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x000001418649FB00>, run=<function world.<locals>.<lambda> at 0x000001418649DEE0>).events
+
+tests\test_service_post_run.py:378: AssertionError
+_____ test_a_passing_run_clears_the_errors_then_opens_review_then_says_so _____
+
+world = namespace(events=[('set', 'refinement_gate_errors'), ('reenter', <object object at 0x0000014184BD0CF0>), ('spinner', (...w=<function world.<locals>.review at 0x000001418650CB80>, run=<function world.<locals>.<lambda> at 0x000001418650C040>)
+
+    def test_a_passing_run_clears_the_errors_then_opens_review_then_says_so(world):
+        world.artifacts.update({CANONICAL_PAYLOAD_KEY: {"p": 1}, "quarantine_ok": True,
+                                FINAL_GATE_REPORT_KEY: {"ok": True}, "mapping_report": {"m": 2}})
+        world.state["refinement_gate_errors"] = ["stale"]
+        world.run()
+>       assert world.state["refinement_gate_errors"] == []
+E       AssertionError: assert ['stale'] == []
+E         
+E         Left contains one more item: 'stale'
+E         Use -v to get more diff
+
+tests\test_service_post_run.py:386: AssertionError
+______________ test_final_mapped_is_the_fallback_review_payload _______________
+
+world = namespace(events=[('reenter', <object object at 0x0000014184BD0CF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x000001418650D1C0>, run=<function world.<locals>.<lambda> at 0x000001418650D3A0>)
+
+    def test_final_mapped_is_the_fallback_review_payload(world):
+        world.artifacts.update({"final_mapped": {"fallback": 1}, "quarantine_ok": True, FINAL_GATE_REPORT_KEY: {"ok": True}})
+        world.run()
+>       assert ("open_review", {"fallback": 1}, {}) in world.events
+E       AssertionError: assert ('open_review', {'fallback': 1}, {}) in [('reenter', <object object at 0x0000014184BD0CF0>), ('spinner', ('Running audit and DB mapping...',)), ('spinner:ente..._contract_failure', StageContractError('Reaction must include at least one usable input or output participant.')), ...]
+E        +  where [('reenter', <object object at 0x0000014184BD0CF0>), ('spinner', ('Running audit and DB mapping...',)), ('spinner:ente..._contract_failure', StageContractError('Reaction must include at least one usable input or output participant.')), ...] = namespace(events=[('reenter', <object object at 0x0000014184BD0CF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x000001418650D1C0>, run=<function world.<locals>.<lambda> at 0x000001418650D3A0>).events
+
+tests\test_service_post_run.py:398: AssertionError
+___ test_a_stage_contract_failure_is_rendered_before_the_sync_and_returned ____
+
+world = namespace(events=[('reenter', <object object at 0x0000014184BD0CF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x000001418650D8A0>, run=<function world.<locals>.<lambda> at 0x000001418650C860>)
+
+    def test_a_stage_contract_failure_is_rendered_before_the_sync_and_returned(world):
+        world.raises = _contract_error()
+        result = world.run()
+>       assert result.failure is world.raises and result.final_payload is REBOUND
+E       AssertionError: assert (StageContractError('Reaction must include at least one usable input or output participant.') is StageContractError('contract broke'))
+E        +  where StageContractError('Reaction must include at least one usable input or output participant.') = PostRunResult(final_payload={'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}, 'organism': 'E. coli'}, failure=StageContractError('Reaction must include at least one usable input or output participant.')).failure
+E        +  and   StageContractError('contract broke') = namespace(events=[('reenter', <object object at 0x0000014184BD0CF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x000001418650D8A0>, run=<function world.<locals>.<lambda> at 0x000001418650C860>).raises
+
+tests\test_service_post_run.py:404: AssertionError
+_____ test_an_exception_is_recorded_against_the_rebound_payload_and_shown _____
+
+world = namespace(events=[('reenter', <object object at 0x0000014184BD0CF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x000001418650DF80>, run=<function world.<locals>.<lambda> at 0x000001418650DEE0>)
+
+    def test_an_exception_is_recorded_against_the_rebound_payload_and_shown(world):
+        world.raises = RuntimeError("boom")
+        result = world.run()
+>       assert result.failure is world.raises and result.final_payload is REBOUND
+E       AssertionError: assert (StageContractError('Reaction must include at least one usable input or output participant.') is RuntimeError('boom'))
+E        +  where StageContractError('Reaction must include at least one usable input or output participant.') = PostRunResult(final_payload={'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}, 'organism': 'E. coli'}, failure=StageContractError('Reaction must include at least one usable input or output participant.')).failure
+E        +  and   RuntimeError('boom') = namespace(events=[('reenter', <object object at 0x0000014184BD0CF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x000001418650DF80>, run=<function world.<locals>.<lambda> at 0x000001418650DEE0>).raises
+
+tests\test_service_post_run.py:413: AssertionError
+_____________ test_a_failing_review_lands_in_the_generic_handler ______________
+
+world = namespace(events=[('reenter', <object object at 0x0000014184BD0CF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x000001418650DB20>, run=<function world.<locals>.<lambda> at 0x000001418650DBC0>)
+
+    def test_a_failing_review_lands_in_the_generic_handler(world):
+        world.artifacts.update({CANONICAL_PAYLOAD_KEY: {"p": 1}, "quarantine_ok": True, FINAL_GATE_REPORT_KEY: {"ok": True}})
+        world.review_raises = RuntimeError("render failed")
+        result = world.run()
+>       assert result.failure is world.review_raises
+E       AssertionError: assert StageContractError('Reaction must include at least one usable input or output participant.') is RuntimeError('render failed')
+E        +  where StageContractError('Reaction must include at least one usable input or output participant.') = PostRunResult(final_payload={'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}, 'organism': 'E. coli'}, failure=StageContractError('Reaction must include at least one usable input or output participant.')).failure
+E        +  and   RuntimeError('render failed') = namespace(events=[('reenter', <object object at 0x0000014184BD0CF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x000001418650DB20>, run=<function world.<locals>.<lambda> at 0x000001418650DBC0>).review_raises
+
+tests\test_service_post_run.py:434: AssertionError
+________ test_mode_lookups_are_made_on_the_source_module_at_call_time _________
+
+world = namespace(events=[('reenter', <object object at 0x0000014184BD0CF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x000001418649F4C0>, run=<function world.<locals>.<lambda> at 0x000001418649E840>)
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000014186491BE0>
+
+    def test_mode_lookups_are_made_on_the_source_module_at_call_time(world, monkeypatch):
+        """The R3b review F1 rule for the two names the world fixture does not already patch."""
+    
+        monkeypatch.setattr(export_mode, "coerce_mode", lambda value: "sentinel-mode")
+        research = []
+        monkeypatch.setattr(export_mode, "is_research", lambda mode: research.append(mode) or True)
+        world.artifacts.update({CANONICAL_PAYLOAD_KEY: {"p": 1}, "quarantine_ok": True,
+                                FINAL_GATE_REPORT_KEY: {"ok": False, "errors": []}})
+        world.run()
+>       assert world.call[1]["export_mode"] == "sentinel-mode"
+               ^^^^^^^^^^^^^
+E       TypeError: 'NoneType' object is not subscriptable
+
+tests\test_service_post_run.py:479: TypeError
+_______ test_real_app_passes_every_widget_value_through_to_the_pipeline _______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000014186492B30>
+tmp_path = WindowsPath('C:/t/wsR4btmp/mut-tmp/bound-run_post_pipeline_sbml_artifacts/test_real_app_passes_every_wid0')
+
+    def test_real_app_passes_every_widget_value_through_to_the_pipeline(monkeypatch, tmp_path):
+        """The audit's F5 gap, for this call site: each widget, set to a non-default, reaches the
+        pipeline through the app's PostRunRequest, by name, with no widget wired to another's value."""
+    
+        payload = _graph_payload()
+        at, calls = _real_app(monkeypatch, tmp_path, payload=payload, widgets=WIDGETS)
+        assert not at.exception
+>       assert len(calls) == 1
+E       assert 0 == 1
+E        +  where 0 = len([])
+
+tests\test_service_post_run.py:574: AssertionError
+---------------------------- Captured stderr call -----------------------------
+2026-11-08 15:27:55.514 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:27:55.986 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:27:55.986 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:27:55.986 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:27:55.986 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:27:55.986 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:27:55.986 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:27:55.986 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:27:55.986 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:27:55.986 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:27:55.986 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:27:55.986 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:27:55.986 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:27:55.986 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:27:55.986 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:27:55.986 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:27:55.986 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:27:55.986 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:27:55.986 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:27:55.986 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:27:55.986 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:27:55.986 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:27:55.987 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:27:55.987 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:27:55.987 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:27:55.987 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:27:55.987 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:27:55.987 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:27:55.987 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:27:55.987 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:27:55.987 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:27:55.987 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+___ test_real_app_renders_a_contract_failure_and_keeps_the_rebound_payload ____
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000141A097B150>
+tmp_path = WindowsPath('C:/t/wsR4btmp/mut-tmp/bound-run_post_pipeline_sbml_artifacts/test_real_app_renders_a_contra0')
+
+    def test_real_app_renders_a_contract_failure_and_keeps_the_rebound_payload(monkeypatch, tmp_path):
+        payload = _graph_payload()
+    
+        def raise_it():
+            raise StageContractError("post_mapping", "contract broke", {"errors": [], "summary": {}, "stage": "post_mapping"})
+    
+        at, _calls = _real_app(monkeypatch, tmp_path, payload=payload, patched=raise_it)
+        assert not at.exception
+>       assert any("Audit and DB mapping stopped at the" in str(e.value) for e in at.error)
+E       assert False
+E        +  where False = any(<generator object test_real_app_renders_a_contract_failure_and_keeps_the_rebound_payload.<locals>.<genexpr> at 0x00000141A0F51380>)
+
+tests\test_service_post_run.py:594: AssertionError
+---------------------------- Captured stderr call -----------------------------
+2026-11-08 15:28:14.514 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:28:14.769 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:28:14.769 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:28:14.769 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:28:14.769 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:28:14.769 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:28:14.769 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:28:14.769 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:28:14.769 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:28:14.769 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:28:14.769 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:28:14.769 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.curation.audit_json_llm:audit_json_llm.py:1465 LLM audit failed: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': "No models loaded. Please load a model in the developer page or use the 'lms load' command.", 'type': 'invalid_request_error', 'param': 'model', 'code': None}}
+WARNING  t2pw.curation.audit_json_llm:audit_json_llm.py:1465 LLM audit failed: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': "No models loaded. Please load a model in the developer page or use the 'lms load' command.", 'type': 'invalid_request_error', 'param': 'model', 'code': None}}
+WARNING  t2pw.curation.audit_json_llm:audit_json_llm.py:1465 LLM audit failed: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': "No models loaded. Please load a model in the developer page or use the 'lms load' command.", 'type': 'invalid_request_error', 'param': 'model', 'code': None}}
+WARNING  t2pw.curation.audit_json_llm:audit_json_llm.py:1465 LLM audit failed: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': "No models loaded. Please load a model in the developer page or use the 'lms load' command.", 'type': 'invalid_request_error', 'param': 'model', 'code': None}}
+WARNING  t2pw.curation.audit_json_llm:audit_json_llm.py:1465 LLM audit failed: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': "No models loaded. Please load a model in the developer page or use the 'lms load' command.", 'type': 'invalid_request_error', 'param': 'model', 'code': None}}
+WARNING  t2pw.curation.audit_json_llm:audit_json_llm.py:1465 LLM audit failed: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': "No models loaded. Please load a model in the developer page or use the 'lms load' command.", 'type': 'invalid_request_error', 'param': 'model', 'code': None}}
+=========================== short test summary info ===========================
+FAILED tests/test_service_post_run.py::test_the_handler_spends_the_run_in_order_and_coerces_every_argument
+FAILED tests/test_service_post_run.py::test_blank_widget_values_get_the_apps_defaults[default_compartment-None-default_compartment-cell]
+FAILED tests/test_service_post_run.py::test_blank_widget_values_get_the_apps_defaults[default_compartment-   -default_compartment-cell]
+FAILED tests/test_service_post_run.py::test_blank_widget_values_get_the_apps_defaults[mapping_cache_text-   -mapping_cache_path-id_mapping_cache.json]
+FAILED tests/test_service_post_run.py::test_blank_widget_values_get_the_apps_defaults[id_source_mode-None-id_source-hybrid]
+FAILED tests/test_service_post_run.py::test_blank_widget_values_get_the_apps_defaults[db_host-None-db_host-]
+FAILED tests/test_service_post_run.py::test_blank_widget_values_get_the_apps_defaults[db_user-None-db_user-]
+FAILED tests/test_service_post_run.py::test_blank_widget_values_get_the_apps_defaults[db_password-None-db_password-]
+FAILED tests/test_service_post_run.py::test_blank_widget_values_get_the_apps_defaults[db_schema-None-db_schema-pathbank]
+FAILED tests/test_service_post_run.py::test_blank_widget_values_get_the_apps_defaults[db_schema-  -db_schema-pathbank]
+FAILED tests/test_service_post_run.py::test_blank_widget_values_get_the_apps_defaults[example_index_path-None-example_index_path-]
+FAILED tests/test_service_post_run.py::test_the_rag_context_is_read_at_call_time_and_only_with_rag_on
+FAILED tests/test_service_post_run.py::test_strict_db_defaults_to_true_when_the_checkbox_never_rendered
+FAILED tests/test_service_post_run.py::test_the_stored_artifacts_are_the_object_later_writes_mutate
+FAILED tests/test_service_post_run.py::test_the_snapshot_defaults_to_the_rebound_payload
+FAILED tests/test_service_post_run.py::test_post_audit_reports_replace_the_session_copies_only_when_present
+FAILED tests/test_service_post_run.py::test_a_gate_failure_only_warns - Asser...
+FAILED tests/test_service_post_run.py::test_no_mapped_payload_says_nothing_and_syncs
+FAILED tests/test_service_post_run.py::test_quarantine_flags_are_reported_before_the_verdict
+FAILED tests/test_service_post_run.py::test_a_quarantine_refusal_stops_before_review
+FAILED tests/test_service_post_run.py::test_research_mode_fails_open_on_stage_three_and_opens_review
+FAILED tests/test_service_post_run.py::test_strict_stage_three_failure_shows_the_errors_and_no_review
+FAILED tests/test_service_post_run.py::test_strict_stage_three_failure_with_no_itemised_errors
+FAILED tests/test_service_post_run.py::test_a_passing_run_clears_the_errors_then_opens_review_then_says_so
+FAILED tests/test_service_post_run.py::test_final_mapped_is_the_fallback_review_payload
+FAILED tests/test_service_post_run.py::test_a_stage_contract_failure_is_rendered_before_the_sync_and_returned
+FAILED tests/test_service_post_run.py::test_an_exception_is_recorded_against_the_rebound_payload_and_shown
+FAILED tests/test_service_post_run.py::test_a_failing_review_lands_in_the_generic_handler
+FAILED tests/test_service_post_run.py::test_mode_lookups_are_made_on_the_source_module_at_call_time
+FAILED tests/test_service_post_run.py::test_real_app_passes_every_widget_value_through_to_the_pipeline
+FAILED tests/test_service_post_run.py::test_real_app_renders_a_contract_failure_and_keeps_the_rebound_payload
+31 failed, 8 passed in 51.61s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\wsR4btmp\scratch-tip\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : mut-bound-run_post_pipeline_sbml_artifacts
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/wsR4btmp/scratch-tip/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/wsR4btmp/scratch-tip -q -p no:cacheprovider --basetemp=C:/t/wsR4btmp/mut-tmp/bound-run_post_pipeline_sbml_artifacts tests/test_service_post_run.py
+cwd                     : C:\t\wsR4btmp\scratch-tip
+root PID / process group: 295508 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 52.76 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  277828:python.exe
+descendants terminated  : 1  277828
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR4btmp\proof\mutation\bound-run_post_pipeline_sbml_artifacts.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R4b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

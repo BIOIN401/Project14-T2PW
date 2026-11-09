@@ -1,0 +1,12 @@
+untouched-tip                            expected=pass got=1 passed  OK  
+handler-call-missing                     expected=fail got=1 failed  OK  assert 0 == 1
+wrong-build-legacy-sbml                  expected=fail got=1 failed  OK  assert {True} == {False, True}
+StageContractError-handling-removed      expected=fail got=1 failed  OK  AssertionError: assert 'Exception' == 'StageContractError'
+generic-handler-removed                  expected=fail got=1 failed  OK  IndexError: list index out of range
+pop-removed                              expected=fail got=1 failed  OK  assert False
+failure-message-removed                  expected=fail got=1 failed  OK  assert 'Mapped pathway still fails the pre-export Stage 3 revalidation.' in '"""The "Run audit and DB mapping" handler, moved out of ``streamlit_app.py`` (R4b).\n\nThe app keeps the button, the ...._sync_extraction_diagnostics(state=state)\n\n    return PostRunResult(final_payload=final_payload, failure=failure)\n'
+app-render-callback-not-wired            expected=fail got=1 failed  OK  assert False
+app-button-does-not-call-the-handler     expected=fail got=1 failed  OK  StopIteration
+service-render-call-replaced             expected=fail got=1 failed  OK  assert False
+legacy-handler-pop-removed               expected=fail got=1 failed  OK  assert False
+11/11 as expected

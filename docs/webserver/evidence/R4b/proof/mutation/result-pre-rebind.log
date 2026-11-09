@@ -1,0 +1,162 @@
+T2PW: C:\t\wsR4btmp\scratch-tip\src\t2pw\__init__.py
+F........................FF...........F                                  [100%]
+================================== FAILURES ===================================
+_____ test_the_handler_spends_the_run_in_order_and_coerces_every_argument _____
+
+world = namespace(events=[('reenter', <object object at 0x0000027B9B5DCCF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x0000027B9C1F8360>, run=<function world.<locals>.<lambda> at 0x0000027B9C1F8400>)
+
+    def test_the_handler_spends_the_run_in_order_and_coerces_every_argument(world):
+        world.state.update(qa_report={"qa": 1}, reaction_summary="sum", export_mode="research", pwml_strict_db=0)
+        result = world.run()
+    
+        assert world.events[:5] == [
+            ("reenter", RECORDER),
+            ("spinner", ("Running audit and DB mapping...",)),
+            ("spinner:enter",),
+            ("propagate", PAYLOAD, CTX),
+            ("artifacts", REBOUND),
+        ]
+        assert world.events[5] == ("spinner:exit",)
+        payload, kwargs = world.call
+        assert payload is REBOUND
+        assert kwargs == {
+            "build_legacy_sbml": False,
+            "use_llm_audit": False,
+            "use_sbml_overwatch": True,
+            "default_compartment": "nucleus",
+            "mapping_cache_path": "cache.json",
+            "id_source": "db",
+            "db_host": "host",
+            "db_port": 3307,
+            "db_user": "user",
+            "db_password": "pw",
+            "db_schema": "schema",
+            "audit_max_rounds": 7,
+            "audit_timeout_seconds": 300,
+            "audit_candidate_count": 5,
+            "use_example_retrieval": True,
+            "example_index_path": "idx.json",
+            "example_top_k": 6,
+            "use_gap_resolver": False,
+            "use_llm_gap_resolver": True,
+            "gap_resolver_max_items": 120,
+            "qa_report": {"qa": 1},
+            "reaction_summary": "sum",
+            "use_stoich_agent": True,
+            "rag_evidence_context": "",
+            "export_mode": export_mode.coerce_mode("research"),
+            "strict_db": False,
+            "pathway_context": CTX,
+            "outputs_dir": world.tmp / "outputs",
+            "state": world.state,
+        }
+>       assert result.final_payload is REBOUND and result.failure is None
+E       AssertionError: assert ({'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}} is {'entities': {}, 'organism': 'E. coli', 'processes': {'reactions': [{'name': 'a'}]}})
+E        +  where {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}} = PostRunResult(final_payload={'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}}, failure=None).final_payload
+
+tests\test_service_post_run.py:223: AssertionError
+___ test_a_stage_contract_failure_is_rendered_before_the_sync_and_returned ____
+
+world = namespace(events=[('reenter', <object object at 0x0000027B9B5DCCF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x0000027B9C2F5300>, run=<function world.<locals>.<lambda> at 0x0000027B9C2F53A0>)
+
+    def test_a_stage_contract_failure_is_rendered_before_the_sync_and_returned(world):
+        world.raises = _contract_error()
+        result = world.run()
+>       assert result.failure is world.raises and result.final_payload is REBOUND
+E       AssertionError: assert (StageContractError('contract broke') is StageContractError('contract broke') and {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}} is {'entities': {}, 'organism': 'E. coli', 'processes': {'reactions': [{'name': 'a'}]}})
+E        +  where StageContractError('contract broke') = PostRunResult(final_payload={'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}}, failure=StageContractError('contract broke')).failure
+E        +  and   StageContractError('contract broke') = namespace(events=[('reenter', <object object at 0x0000027B9B5DCCF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x0000027B9C2F5300>, run=<function world.<locals>.<lambda> at 0x0000027B9C2F53A0>).raises
+E        +  and   {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}} = PostRunResult(final_payload={'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}}, failure=StageContractError('contract broke')).final_payload
+
+tests\test_service_post_run.py:404: AssertionError
+_____ test_an_exception_is_recorded_against_the_rebound_payload_and_shown _____
+
+world = namespace(events=[('reenter', <object object at 0x0000027B9B5DCCF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x0000027B9C274FE0>, run=<function world.<locals>.<lambda> at 0x0000027B9C2765C0>)
+
+    def test_an_exception_is_recorded_against_the_rebound_payload_and_shown(world):
+        world.raises = RuntimeError("boom")
+        result = world.run()
+>       assert result.failure is world.raises and result.final_payload is REBOUND
+E       AssertionError: assert (RuntimeError('boom') is RuntimeError('boom') and {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}} is {'entities': {}, 'organism': 'E. coli', 'processes': {'reactions': [{'name': 'a'}]}})
+E        +  where RuntimeError('boom') = PostRunResult(final_payload={'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}}, failure=RuntimeError('boom')).failure
+E        +  and   RuntimeError('boom') = namespace(events=[('reenter', <object object at 0x0000027B9B5DCCF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x0000027B9C274FE0>, run=<function world.<locals>.<lambda> at 0x0000027B9C2765C0>).raises
+E        +  and   {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}} = PostRunResult(final_payload={'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}}, failure=RuntimeError('boom')).final_payload
+
+tests\test_service_post_run.py:413: AssertionError
+__________ test_real_app_reads_the_rebound_payload_after_the_handler __________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000027B9C1AA5F0>
+tmp_path = WindowsPath('C:/t/wsR4btmp/mut-tmp/result-pre-rebind/test_real_app_reads_the_reboun0')
+
+    def test_real_app_reads_the_rebound_payload_after_the_handler(monkeypatch, tmp_path):
+        """Hazard: the failure path's rebound ``final_payload`` is what the rest of the page shows."""
+    
+        payload = _graph_payload()
+        seen = []
+        real = postpipeline.graph_summary
+    
+        def spy(p):
+            seen.append(p)
+            return real(p)
+    
+        monkeypatch.setattr(postpipeline, "graph_summary", spy)
+        monkeypatch.setattr(pipeline, "propagate_context_organism",
+                            lambda p, ctx: {**p, "rebound_marker": True})
+    
+        def raise_it():
+            raise StageContractError("post_mapping", "contract broke", {"errors": [], "summary": {}, "stage": "post_mapping"})
+    
+        at, _calls = _real_app(monkeypatch, tmp_path, payload=payload, patched=raise_it)
+        assert not at.exception
+>       assert seen[-1].get("rebound_marker") is True
+E       AssertionError: assert None is True
+E        +  where None = <built-in method get of dict object at 0x0000027BB6E76CC0>('rebound_marker')
+E        +    where <built-in method get of dict object at 0x0000027BB6E76CC0> = {'entities': {'compounds': [{'name': 'A'}]}, 'processes': {'reactions': [{'inputs': ['A'], 'name': 'r', 'outputs': ['A']}]}}.get
+
+tests\test_service_post_run.py:618: AssertionError
+---------------------------- Captured stderr call -----------------------------
+2026-11-08 22:07:04.290 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:07:04.646 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:07:04.646 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:07:04.646 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:07:04.646 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:07:04.646 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:07:04.646 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:07:04.646 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:07:04.646 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:07:04.646 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:07:04.646 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:07:04.646 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+=========================== short test summary info ===========================
+FAILED tests/test_service_post_run.py::test_the_handler_spends_the_run_in_order_and_coerces_every_argument
+FAILED tests/test_service_post_run.py::test_a_stage_contract_failure_is_rendered_before_the_sync_and_returned
+FAILED tests/test_service_post_run.py::test_an_exception_is_recorded_against_the_rebound_payload_and_shown
+FAILED tests/test_service_post_run.py::test_real_app_reads_the_rebound_payload_after_the_handler
+4 failed, 35 passed in 4.44s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\wsR4btmp\scratch-tip\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : mut-result-pre-rebind
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/wsR4btmp/scratch-tip/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/wsR4btmp/scratch-tip -q -p no:cacheprovider --basetemp=C:/t/wsR4btmp/mut-tmp/result-pre-rebind tests/test_service_post_run.py
+cwd                     : C:\t\wsR4btmp\scratch-tip
+root PID / process group: 506080 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 5.99 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  508872:python.exe
+descendants terminated  : 1  508872
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR4btmp\proof\mutation\result-pre-rebind.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R4b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

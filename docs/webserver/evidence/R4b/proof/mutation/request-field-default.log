@@ -1,0 +1,48 @@
+T2PW: C:\t\wsR4btmp\scratch-tip\src\t2pw\__init__.py
+
+=================================== ERRORS ====================================
+_______________ ERROR collecting tests/test_service_post_run.py _______________
+tests\test_service_post_run.py:42: in <module>
+    from t2pw.service import post_run  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\t2pw\service\post_run.py:37: in <module>
+    @dataclass(frozen=True)
+     ^^^^^^^^^^^^^^^^^^^^^^
+C:\Python313\Lib\dataclasses.py:1295: in wrap
+    return _process_class(cls, init, repr, eq, order, unsafe_hash,
+C:\Python313\Lib\dataclasses.py:1078: in _process_class
+    _init_fn(all_init_fields,
+C:\Python313\Lib\dataclasses.py:627: in _init_fn
+    raise TypeError(f'non-default argument {f.name!r} '
+E   TypeError: non-default argument 'use_sbml_overwatch' follows default argument 'use_llm_audit'
+=========================== short test summary info ===========================
+ERROR tests/test_service_post_run.py - TypeError: non-default argument 'use_s...
+!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 1.29s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\wsR4btmp\scratch-tip\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : mut-request-field-default
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/wsR4btmp/scratch-tip/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/wsR4btmp/scratch-tip -q -p no:cacheprovider --basetemp=C:/t/wsR4btmp/mut-tmp/request-field-default tests/test_service_post_run.py
+cwd                     : C:\t\wsR4btmp\scratch-tip
+root PID / process group: 509712 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 2.33 s
+exit reason             : nonzero
+exit code (real)        : 2
+returned code           : 2
+descendants observed    : 1  509804:python.exe
+descendants terminated  : 1  509804
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR4btmp\proof\mutation\request-field-default.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R4b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

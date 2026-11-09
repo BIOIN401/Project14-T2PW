@@ -63,6 +63,11 @@ class Reporter(Protocol):
 
     def code(self, body: Any, **kwargs: Any) -> Any: ...
 
+    # R4b: the post-pipeline handler (st.exception / st.write).
+    def exception(self, body: Any) -> Any: ...
+
+    def write(self, body: Any) -> Any: ...
+
 
 class StreamlitReporter:
     """Forwards each call to the given ``streamlit`` module, arguments untouched."""
@@ -106,6 +111,12 @@ class StreamlitReporter:
 
     def code(self, body: Any, **kwargs: Any) -> Any:
         return self._st.code(body, **kwargs)
+
+    def exception(self, body: Any) -> Any:
+        return self._st.exception(body)
+
+    def write(self, body: Any) -> Any:
+        return self._st.write(body)
 
 
 class _LoggedProgress:
@@ -170,6 +181,12 @@ class LoggingReporter:
         self._logger.info("%s", body)
 
     def code(self, body: Any, **_kwargs: Any) -> None:
+        self._logger.info("%s", body)
+
+    def exception(self, body: Any) -> None:
+        self._logger.error("%s", body, exc_info=body)
+
+    def write(self, body: Any) -> None:
         self._logger.info("%s", body)
 
 

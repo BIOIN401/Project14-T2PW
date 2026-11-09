@@ -1,0 +1,77 @@
+T2PW: C:\t\wsR4btmp\scratch-tip\src\t2pw\__init__.py
+.......................................F..                               [100%]
+================================== FAILURES ===================================
+__________ test_real_app_reads_the_rebound_payload_after_the_handler __________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000222F70839A0>
+tmp_path = WindowsPath('C:/t/wsR4btmp/mut-tmp/app-no-rebind/test_real_app_reads_the_reboun0')
+
+    def test_real_app_reads_the_rebound_payload_after_the_handler(monkeypatch, tmp_path):
+        """Hazard: the failure path's rebound ``final_payload`` is what the rest of the page shows."""
+    
+        payload = _graph_payload()
+        seen = []
+        real = postpipeline.graph_summary
+    
+        def spy(p):
+            seen.append(p)
+            return real(p)
+    
+        monkeypatch.setattr(postpipeline, "graph_summary", spy)
+        monkeypatch.setattr(pipeline, "propagate_context_organism",
+                            lambda p, ctx: {**p, "rebound_marker": True})
+    
+        def raise_it():
+            raise StageContractError("post_mapping", "contract broke", {"errors": [], "summary": {}, "stage": "post_mapping"})
+    
+        at, _calls = _real_app(monkeypatch, tmp_path, payload=payload, patched=raise_it)
+        assert not at.exception
+>       assert seen[-1].get("rebound_marker") is True
+E       AssertionError: assert None is True
+E        +  where None = <built-in method get of dict object at 0x00000222F8CF1180>('rebound_marker')
+E        +    where <built-in method get of dict object at 0x00000222F8CF1180> = {'entities': {'compounds': [{'name': 'A'}]}, 'processes': {'reactions': [{'inputs': ['A'], 'name': 'r', 'outputs': ['A']}]}}.get
+
+tests\test_service_post_run.py:632: AssertionError
+---------------------------- Captured stderr call -----------------------------
+2026-11-08 22:11:13.183 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:13.471 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:13.471 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:13.471 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:13.471 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:13.471 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:13.471 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:13.471 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:13.471 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:13.471 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:13.471 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:13.471 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+=========================== short test summary info ===========================
+FAILED tests/test_service_post_run.py::test_real_app_reads_the_rebound_payload_after_the_handler
+1 failed, 41 passed in 4.23s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\wsR4btmp\scratch-tip\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : mut-app-no-rebind
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/wsR4btmp/scratch-tip/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/wsR4btmp/scratch-tip -q -p no:cacheprovider --basetemp=C:/t/wsR4btmp/mut-tmp/app-no-rebind tests/test_service_post_run.py
+cwd                     : C:\t\wsR4btmp\scratch-tip
+root PID / process group: 528944 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 5.45 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  529048:python.exe
+descendants terminated  : 1  529048
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR4btmp\proof\mutation\app-no-rebind.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R4b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

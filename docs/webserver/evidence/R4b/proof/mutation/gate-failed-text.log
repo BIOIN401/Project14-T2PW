@@ -1,0 +1,48 @@
+T2PW: C:\t\wsR4btmp\scratch-tip\src\t2pw\__init__.py
+................F......................                                  [100%]
+================================== FAILURES ===================================
+_______________________ test_a_gate_failure_only_warns ________________________
+
+world = namespace(events=[('reenter', <object object at 0x000002613308CCF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x0000026133D6B380>, run=<function world.<locals>.<lambda> at 0x0000026133D6B420>)
+
+    def test_a_gate_failure_only_warns(world):
+        world.artifacts.update(gate_failed=True)
+        world.run()
+>       assert [e for e in world.events if e[0] in ("warning", "info", "error", "open_review")] == [
+            ("warning", ("Post-pipeline stopped at hard-gate validation. Review gate_fail_report.json.",))]
+E       AssertionError: assert [('warning', ...ort.json.',))] == [('warning', ...ort.json.',))]
+E         
+E         At index 0 diff: ('warning', ('Stopped at hard-gate validation. Review gate_fail_report.json.',)) != ('warning', ('Post-pipeline stopped at hard-gate validation. Review gate_fail_report.json.',))
+E         Use -v to get more diff
+
+tests\test_service_post_run.py:287: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_post_run.py::test_a_gate_failure_only_warns - Asser...
+1 failed, 38 passed in 3.77s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\wsR4btmp\scratch-tip\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : mut-gate-failed-text
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/wsR4btmp/scratch-tip/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/wsR4btmp/scratch-tip -q -p no:cacheprovider --basetemp=C:/t/wsR4btmp/mut-tmp/gate-failed-text tests/test_service_post_run.py
+cwd                     : C:\t\wsR4btmp\scratch-tip
+root PID / process group: 273240 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 4.79 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  293480:python.exe
+descendants terminated  : 1  293480
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR4btmp\proof\mutation\gate-failed-text.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R4b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

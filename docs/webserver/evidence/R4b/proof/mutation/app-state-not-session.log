@@ -1,0 +1,185 @@
+T2PW: C:\t\wsR4btmp\scratch-tip\src\t2pw\__init__.py
+....................................F.....                               [100%]
+================================== FAILURES ===================================
+_______ test_real_app_passes_every_widget_value_through_to_the_pipeline _______
+
+self = SessionState(_old_state={'$$STREAMLIT_INTERNAL_KEY_TESTING': {'$$ID-f13a96e12a7ec9902ea7d1a9f5b9f380-export_mode_radio...ams={}), _persist_tracker=PersistedWidgetTracker(_scopes={}, _widget_pages={}, _value_pages={}, _pending_resets=set()))
+key = 'post_pipeline_artifacts'
+
+    def __getitem__(self, key: str) -> Any:
+        wid_key_map = self._key_id_mapper.id_key_mapping
+        widget_id = self._get_widget_id(key)
+    
+        if widget_id in wid_key_map and widget_id == key:
+            # the "key" is a raw widget id, so get its associated user key for lookup
+            key = wid_key_map[widget_id]
+        try:
+>           base_value = self._getitem(widget_id, key)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\state\session_state.py:731: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = SessionState(_old_state={'$$STREAMLIT_INTERNAL_KEY_TESTING': {'$$ID-f13a96e12a7ec9902ea7d1a9f5b9f380-export_mode_radio...ams={}), _persist_tracker=PersistedWidgetTracker(_scopes={}, _widget_pages={}, _value_pages={}, _pending_resets=set()))
+widget_id = 'post_pipeline_artifacts', user_key = 'post_pipeline_artifacts'
+
+    def _getitem(self, widget_id: str | None, user_key: str | None) -> Any:
+        """Get the value of an entry in Session State, using either the
+        user-provided key or a widget id as appropriate for the internal dict
+        being accessed.
+    
+        At least one of the arguments must have a value.
+        """
+        if user_key is None and widget_id is None:  # pragma: no cover - defensive
+            raise ValueError(
+                "user_key and widget_id cannot both be None. This should never happen."
+            )
+    
+        if user_key is not None:
+            try:
+                return self._new_session_state[user_key]
+            except KeyError:
+                pass
+    
+        if widget_id is not None:
+            try:
+                return self._new_widget_state[widget_id]
+            except KeyError:
+                pass
+    
+        # Typically, there won't be both a widget id and an associated state key in
+        # old state at the same time, so the order we check is arbitrary.
+        # The exception is if session state is set and then a later run has
+        # a widget created, so the widget id entry should be newer.
+        # The opposite case shouldn't happen, because setting the value of a widget
+        # through session state will result in the next widget state reflecting that
+        # value.
+        if widget_id is not None:
+            try:
+                return self._old_state[widget_id]
+            except KeyError:
+                pass
+    
+        if user_key is not None:
+            try:
+                return self._old_state[user_key]
+            except KeyError:
+                pass
+    
+        # We'll never get here
+>       raise KeyError
+E       KeyError
+
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\state\session_state.py:784: KeyError
+
+During handling of the above exception, another exception occurred:
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000296B51C12B0>
+tmp_path = WindowsPath('C:/t/wsR4btmp/mut-tmp/app-state-not-session/test_real_app_passes_every_wid0')
+
+    def test_real_app_passes_every_widget_value_through_to_the_pipeline(monkeypatch, tmp_path):
+        """The audit's F5 gap, for this call site: each widget, set to a non-default, reaches the
+        pipeline through the app's PostRunRequest, by name, with no widget wired to another's value."""
+    
+        payload = _graph_payload()
+        at, calls = _real_app(monkeypatch, tmp_path, payload=payload, widgets=WIDGETS)
+        assert not at.exception
+        assert len(calls) == 1
+        passed = calls[0][1]
+        assert {key: passed[key] for key in EXPECTED} == EXPECTED
+        assert any("hard-gate" in str(w.value) for w in at.warning)
+>       assert at.session_state["post_pipeline_artifacts"]["gate_failed"] is True  # the app passed its own session
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_service_post_run.py:591: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\state\safe_session_state.py:104: in __getitem__
+    return self._state[key]
+           ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = SessionState(_old_state={'$$STREAMLIT_INTERNAL_KEY_TESTING': {'$$ID-f13a96e12a7ec9902ea7d1a9f5b9f380-export_mode_radio...ams={}), _persist_tracker=PersistedWidgetTracker(_scopes={}, _widget_pages={}, _value_pages={}, _pending_resets=set()))
+key = 'post_pipeline_artifacts'
+
+    def __getitem__(self, key: str) -> Any:
+        wid_key_map = self._key_id_mapper.id_key_mapping
+        widget_id = self._get_widget_id(key)
+    
+        if widget_id in wid_key_map and widget_id == key:
+            # the "key" is a raw widget id, so get its associated user key for lookup
+            key = wid_key_map[widget_id]
+        try:
+            base_value = self._getitem(widget_id, key)
+            return (
+                apply_presenter(self, widget_id, base_value)
+                if widget_id is not None
+                else base_value
+            )
+        except KeyError:
+>           raise KeyError(_missing_key_error_message(key))
+E           KeyError: 'st.session_state has no key "post_pipeline_artifacts". Did you forget to initialize it? More info: https://docs.streamlit.io/develop/concepts/architecture/session-state#initialization'
+
+C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Lib\site-packages\streamlit\runtime\state\session_state.py:738: KeyError
+---------------------------- Captured stderr call -----------------------------
+2026-11-08 22:11:16.558 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:17.136 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:17.137 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:17.137 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:17.137 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:17.138 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:17.138 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:17.138 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:17.138 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:17.138 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:17.138 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:17.138 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:17.138 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:17.138 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:17.138 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:17.138 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:17.138 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:17.138 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:17.138 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:17.138 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:17.138 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:17.138 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:17.138 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:17.138 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:17.138 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:17.138 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:17.138 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:17.138 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:17.138 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:17.138 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:17.138 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:17.138 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+=========================== short test summary info ===========================
+FAILED tests/test_service_post_run.py::test_real_app_passes_every_widget_value_through_to_the_pipeline
+1 failed, 41 passed in 4.15s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\wsR4btmp\scratch-tip\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : mut-app-state-not-session
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/wsR4btmp/scratch-tip/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/wsR4btmp/scratch-tip -q -p no:cacheprovider --basetemp=C:/t/wsR4btmp/mut-tmp/app-state-not-session tests/test_service_post_run.py
+cwd                     : C:\t\wsR4btmp\scratch-tip
+root PID / process group: 528740 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 5.37 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  528636:python.exe
+descendants terminated  : 1  528636
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR4btmp\proof\mutation\app-state-not-session.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R4b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

@@ -1,0 +1,102 @@
+T2PW: C:\t\wsR4btmp\scratch-tip\src\t2pw\__init__.py
+.............F...FF....F...............                                  [100%]
+================================== FAILURES ===================================
+________ test_the_stored_artifacts_are_the_object_later_writes_mutate _________
+
+world = namespace(events=[('set', 'final_payload_snapshot'), ('reenter', <object object at 0x00000258E89CCCF0>), ('spinner', (...w=<function world.<locals>.review at 0x00000258E95EA980>, run=<function world.<locals>.<lambda> at 0x00000258E95EAA20>)
+
+    def test_the_stored_artifacts_are_the_object_later_writes_mutate(world):
+        world.state["final_payload_snapshot"] = {"snap": 1}
+        world.artifacts.update(gate_failed=True)
+        world.run()
+>       assert world.state["post_pipeline_artifacts"] is world.artifacts
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'post_pipeline_artifacts'
+
+tests\test_service_post_run.py:264: KeyError
+________________ test_no_mapped_payload_says_nothing_and_syncs ________________
+
+world = namespace(events=[('reenter', <object object at 0x00000258E89CCCF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x00000258E95E8540>, run=<function world.<locals>.<lambda> at 0x00000258E95E8400>)
+
+    def test_no_mapped_payload_says_nothing_and_syncs(world):
+        world.run()
+>       assert _names(world.events) == ["set", "sync"]
+E       AssertionError: assert ['sync'] == ['set', 'sync']
+E         
+E         At index 0 diff: 'sync' != 'set'
+E         Right contains one more item: 'sync'
+E         Use -v to get more diff
+
+tests\test_service_post_run.py:294: AssertionError
+____________ test_quarantine_flags_are_reported_before_the_verdict ____________
+
+world = namespace(events=[('reenter', <object object at 0x00000258E89CCCF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x00000258E95E9260>, run=<function world.<locals>.<lambda> at 0x00000258E95E9080>)
+
+    def test_quarantine_flags_are_reported_before_the_verdict(world):
+        world.artifacts.update({CANONICAL_PAYLOAD_KEY: {"p": 1}, "quarantine_ok": True,
+                                "quarantine_review_flags": ["f1", "f2"]})
+        world.run()
+>       assert world.events[6:9] == [
+            ("set", "post_pipeline_artifacts"),
+            ("warning", ("Quarantine review flags (2): research mode kept every process. "
+                         "A strict export would have removed the ones listed below.",)),
+            ("json", (["f1", "f2"],)),
+        ]
+E       AssertionError: assert [('warning', ...gate_errors')] == [('set', 'pos...f1', 'f2'],))]
+E         
+E         At index 0 diff: ('warning', ('Quarantine review flags (2): research mode kept every process. A strict export would have removed the ones listed below.',)) != ('set', 'post_pipeline_artifacts')
+E         Use -v to get more diff
+
+tests\test_service_post_run.py:302: AssertionError
+_____ test_a_passing_run_clears_the_errors_then_opens_review_then_says_so _____
+
+world = namespace(events=[('set', 'refinement_gate_errors'), ('reenter', <object object at 0x00000258E89CCCF0>), ('spinner', (...w=<function world.<locals>.review at 0x00000258E964B9C0>, run=<function world.<locals>.<lambda> at 0x00000258E964BA60>)
+
+    def test_a_passing_run_clears_the_errors_then_opens_review_then_says_so(world):
+        world.artifacts.update({CANONICAL_PAYLOAD_KEY: {"p": 1}, "quarantine_ok": True,
+                                FINAL_GATE_REPORT_KEY: {"ok": True}, "mapping_report": {"m": 2}})
+        world.state["refinement_gate_errors"] = ["stale"]
+        world.run()
+        assert world.state["refinement_gate_errors"] == []
+        # the seed above, post_pipeline_artifacts, refinement_gate_errors
+>       assert _names(world.events) == ["set", "set", "set", "open_review", "info", "sync"]
+E       AssertionError: assert ['set', 'set'...info', 'sync'] == ['set', 'set'...info', 'sync']
+E         
+E         At index 2 diff: 'open_review' != 'set'
+E         Right contains one more item: 'sync'
+E         Use -v to get more diff
+
+tests\test_service_post_run.py:388: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_post_run.py::test_the_stored_artifacts_are_the_object_later_writes_mutate
+FAILED tests/test_service_post_run.py::test_no_mapped_payload_says_nothing_and_syncs
+FAILED tests/test_service_post_run.py::test_quarantine_flags_are_reported_before_the_verdict
+FAILED tests/test_service_post_run.py::test_a_passing_run_clears_the_errors_then_opens_review_then_says_so
+4 failed, 35 passed in 3.72s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\wsR4btmp\scratch-tip\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : mut-artifacts-not-stored
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/wsR4btmp/scratch-tip/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/wsR4btmp/scratch-tip -q -p no:cacheprovider --basetemp=C:/t/wsR4btmp/mut-tmp/artifacts-not-stored tests/test_service_post_run.py
+cwd                     : C:\t\wsR4btmp\scratch-tip
+root PID / process group: 310848 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 4.71 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  305876:python.exe
+descendants terminated  : 1  305876
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR4btmp\proof\mutation\artifacts-not-stored.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R4b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

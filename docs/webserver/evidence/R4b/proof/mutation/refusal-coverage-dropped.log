@@ -1,0 +1,62 @@
+T2PW: C:\t\wsR4btmp\scratch-tip\src\t2pw\__init__.py
+...................F...................                                  [100%]
+================================== FAILURES ===================================
+________________ test_a_quarantine_refusal_stops_before_review ________________
+
+world = namespace(events=[('reenter', <object object at 0x00000178A73FCCF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x00000178A7FFFC40>, run=<function world.<locals>.<lambda> at 0x00000178A7FFFCE0>)
+
+    def test_a_quarantine_refusal_stops_before_review(world):
+        world.artifacts.update({
+            CANONICAL_PAYLOAD_KEY: {"p": 1}, "quarantine_ok": False, "quarantine_refusal_reasons": ["no core", 7],
+            "quarantine_coverage": {"cov": 1}, "quarantine_report": {"strict_invariants": {"inv": 1}},
+        })
+        world.run()
+        assert world.state["refinement_gate_errors"] == [
+            {"path": "/processes", "reason": "quarantine refusal: no core"},
+            {"path": "/processes", "reason": "quarantine refusal: 7"},
+        ]
+>       assert [e for e in world.events if e[0] in ("error", "caption", "json", "open_review", "sync")] == [
+            ("error", ("Quarantine could not produce a viable requested-pathway core: no core; 7",)),
+            ("caption", ("Requested-core coverage",)),
+            ("json", ({"cov": 1},)),
+            ("caption", ("Strict invariants",)),
+            ("json", ({"inv": 1},)),
+            ("sync", True),
+        ]
+E       AssertionError: assert [('error', ('...'sync', True)] == [('error', ('...'sync', True)]
+E         
+E         At index 2 diff: ('caption', ('Strict invariants',)) != ('json', ({'cov': 1},))
+E         Right contains one more item: ('sync', True)
+E         Use -v to get more diff
+
+tests\test_service_post_run.py:320: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_post_run.py::test_a_quarantine_refusal_stops_before_review
+1 failed, 38 passed in 3.77s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\wsR4btmp\scratch-tip\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : mut-refusal-coverage-dropped
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/wsR4btmp/scratch-tip/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/wsR4btmp/scratch-tip -q -p no:cacheprovider --basetemp=C:/t/wsR4btmp/mut-tmp/refusal-coverage-dropped tests/test_service_post_run.py
+cwd                     : C:\t\wsR4btmp\scratch-tip
+root PID / process group: 291272 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 4.81 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  307912:python.exe
+descendants terminated  : 1  307912
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR4btmp\proof\mutation\refusal-coverage-dropped.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R4b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

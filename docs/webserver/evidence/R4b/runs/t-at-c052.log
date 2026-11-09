@@ -1,0 +1,64 @@
+T2PW: C:\t\ws-R4b\src\t2pw\__init__.py
+.....F.......                                                            [100%]
+================================== FAILURES ===================================
+___ test_new_acceptance_the_post_pipeline_seam_returns_its_prefreeze_report ___
+
+tmp_path = WindowsPath('C:/t/wsR4btmp/bt/t-at-c052/test_new_acceptance_the_post_p0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000027F9C8D8D50>
+
+    def test_new_acceptance_the_post_pipeline_seam_returns_its_prefreeze_report(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """Fails at base: the report is captured, never returned, and the temp
+        directory it could have been written into is swept in ``finally``."""
+    
+        seen = _offline_prefreeze_spy(monkeypatch, name_index=_collapsing_index())
+        payload = _collapsing_payload()
+    
+        result = _ep1(tmp_path, payload)(payload, **_ep1_kwargs(tmp_path))
+    
+        assert seen, "the pre-freeze seam never ran; this test would assert nothing"
+        assert result["prefreeze_resolution_report"] is seen[-1]
+        assert result["prefreeze_review_required"] == seen[-1]["review_required"]
+>       assert result["prefreeze_resolution_report"]["compounds"][
+            "rename_sources_collapsed"] == [{
+                "target": "glycerol 3 phosphate",
+                "sources": ["sn -glycerol 3-phosphate", "sn-glycerol 3-phosphate"],
+                "source_key": "sn glycerol 3 phosphate",
+            }]
+E       AssertionError: assert [{'source_key...l3phosphate'}] == [{'source_key...3 phosphate'}]
+E         
+E         At index 0 diff: {'target': 'glycerol3phosphate', 'sources': ['sn -glycerol 3-phosphate', 'sn-glycerol 3-phosphate'], 'source_key': 'snglycerol3phosphate'} != {'target': 'glycerol 3 phosphate', 'sources': ['sn -glycerol 3-phosphate', 'sn-glycerol 3-phosphate'], 'source_key': 'sn glycerol 3 phosphate'}
+E         Use -v to get more diff
+
+tests\test_c052_prefreeze_report_at_the_streamlit_seams.py:467: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_c052_prefreeze_report_at_the_streamlit_seams.py::test_new_acceptance_the_post_pipeline_seam_returns_its_prefreeze_report
+1 failed, 12 passed in 2.88s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R4b\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 7170a9a7ae86a03385b7ddc01d9cd45c11e890f8  [git, worktree dirty=False]
+label                   : at-c052
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R4b/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R4b --pin-verdict C:/t/wsR4btmp/ev2/pin/t-at-c052.pin.json -q --basetemp=C:/t/wsR4btmp/bt/t-at-c052 tests/test_c052_prefreeze_report_at_the_streamlit_seams.py
+cwd                     : C:\t\ws-R4b
+root PID / process group: 232248 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 280 s
+duration                : 3.79 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  230492:python.exe
+descendants terminated  : 1  230492
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/wsR4btmp/ev2/t-at-c052.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R4b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 8
+================================================

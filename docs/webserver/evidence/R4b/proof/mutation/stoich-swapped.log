@@ -1,0 +1,147 @@
+T2PW: C:\t\wsR4btmp\scratch-tip\src\t2pw\__init__.py
+F..................................F...                                  [100%]
+================================== FAILURES ===================================
+_____ test_the_handler_spends_the_run_in_order_and_coerces_every_argument _____
+
+world = namespace(events=[('reenter', <object object at 0x0000024811E90CF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x0000024812AA4360>, run=<function world.<locals>.<lambda> at 0x0000024812AA4400>)
+
+    def test_the_handler_spends_the_run_in_order_and_coerces_every_argument(world):
+        world.state.update(qa_report={"qa": 1}, reaction_summary="sum", export_mode="research", pwml_strict_db=0)
+        result = world.run()
+    
+        assert world.events[:5] == [
+            ("reenter", RECORDER),
+            ("spinner", ("Running audit and DB mapping...",)),
+            ("spinner:enter",),
+            ("propagate", PAYLOAD, CTX),
+            ("artifacts", REBOUND),
+        ]
+        assert world.events[5] == ("spinner:exit",)
+        payload, kwargs = world.call
+        assert payload is REBOUND
+>       assert kwargs == {
+            "build_legacy_sbml": False,
+            "use_llm_audit": False,
+            "use_sbml_overwatch": True,
+            "default_compartment": "nucleus",
+            "mapping_cache_path": "cache.json",
+            "id_source": "db",
+            "db_host": "host",
+            "db_port": 3307,
+            "db_user": "user",
+            "db_password": "pw",
+            "db_schema": "schema",
+            "audit_max_rounds": 7,
+            "audit_timeout_seconds": 300,
+            "audit_candidate_count": 5,
+            "use_example_retrieval": True,
+            "example_index_path": "idx.json",
+            "example_top_k": 6,
+            "use_gap_resolver": False,
+            "use_llm_gap_resolver": True,
+            "gap_resolver_max_items": 120,
+            "qa_report": {"qa": 1},
+            "reaction_summary": "sum",
+            "use_stoich_agent": True,
+            "rag_evidence_context": "",
+            "export_mode": export_mode.coerce_mode("research"),
+            "strict_db": False,
+            "pathway_context": CTX,
+            "outputs_dir": world.tmp / "outputs",
+            "state": world.state,
+        }
+E       AssertionError: assert {'audit_candi...': False, ...} == {'audit_candi...': False, ...}
+E         
+E         Omitting 28 identical items, use -vv to show
+E         Differing items:
+E         {'use_stoich_agent': False} != {'use_stoich_agent': True}
+E         Use -v to get more diff
+
+tests\test_service_post_run.py:192: AssertionError
+_______ test_real_app_passes_every_widget_value_through_to_the_pipeline _______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000024812A56E40>
+tmp_path = WindowsPath('C:/t/wsR4btmp/mut-tmp/stoich-swapped/test_real_app_passes_every_wid0')
+
+    def test_real_app_passes_every_widget_value_through_to_the_pipeline(monkeypatch, tmp_path):
+        """The audit's F5 gap, for this call site: each widget, set to a non-default, reaches the
+        pipeline through the app's PostRunRequest, by name, with no widget wired to another's value."""
+    
+        payload = _graph_payload()
+        at, calls = _real_app(monkeypatch, tmp_path, payload=payload, widgets=WIDGETS)
+        assert not at.exception
+        assert len(calls) == 1
+        passed = calls[0][1]
+>       assert {key: passed[key] for key in EXPECTED} == EXPECTED
+E       AssertionError: assert {'audit_candi...: 'host', ...} == {'audit_candi...: 'host', ...}
+E         
+E         Omitting 19 identical items, use -vv to show
+E         Differing items:
+E         {'use_stoich_agent': False} != {'use_stoich_agent': True}
+E         Use -v to get more diff
+
+tests\test_service_post_run.py:576: AssertionError
+---------------------------- Captured stderr call -----------------------------
+2026-11-08 15:30:57.961 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:30:58.323 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:30:58.323 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:30:58.323 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:30:58.323 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:30:58.324 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:30:58.324 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:30:58.324 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:30:58.324 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:30:58.324 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:30:58.324 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:30:58.324 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:30:58.324 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:30:58.324 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:30:58.324 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:30:58.324 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:30:58.324 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:30:58.324 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:30:58.324 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:30:58.324 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:30:58.324 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:30:58.324 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:30:58.324 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:30:58.324 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:30:58.324 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:30:58.324 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:30:58.324 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:30:58.324 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:30:58.324 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:30:58.324 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:30:58.324 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:30:58.324 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+=========================== short test summary info ===========================
+FAILED tests/test_service_post_run.py::test_the_handler_spends_the_run_in_order_and_coerces_every_argument
+FAILED tests/test_service_post_run.py::test_real_app_passes_every_widget_value_through_to_the_pipeline
+2 failed, 37 passed in 3.76s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\wsR4btmp\scratch-tip\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : mut-stoich-swapped
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/wsR4btmp/scratch-tip/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/wsR4btmp/scratch-tip -q -p no:cacheprovider --basetemp=C:/t/wsR4btmp/mut-tmp/stoich-swapped tests/test_service_post_run.py
+cwd                     : C:\t\wsR4btmp\scratch-tip
+root PID / process group: 305920 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 4.79 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  279548:python.exe
+descendants terminated  : 1  279548
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR4btmp\proof\mutation\stoich-swapped.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R4b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

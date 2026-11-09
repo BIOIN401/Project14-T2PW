@@ -1,0 +1,53 @@
+T2PW: C:\t\wsR4btmp\scratch-tip\src\t2pw\__init__.py
+..................F....................                                  [100%]
+================================== FAILURES ===================================
+____________ test_quarantine_flags_are_reported_before_the_verdict ____________
+
+world = namespace(events=[('reenter', <object object at 0x0000020ED2C00CF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x0000020ED3816AC0>, run=<function world.<locals>.<lambda> at 0x0000020ED3817920>)
+
+    def test_quarantine_flags_are_reported_before_the_verdict(world):
+        world.artifacts.update({CANONICAL_PAYLOAD_KEY: {"p": 1}, "quarantine_ok": True,
+                                "quarantine_review_flags": ["f1", "f2"]})
+        world.run()
+>       assert world.events[6:9] == [
+            ("set", "post_pipeline_artifacts"),
+            ("warning", ("Quarantine review flags (2): research mode kept every process. "
+                         "A strict export would have removed the ones listed below.",)),
+            ("json", (["f1", "f2"],)),
+        ]
+E       AssertionError: assert [('set', 'pos...f1', 'f2'],))] == [('set', 'pos...f1', 'f2'],))]
+E         
+E         At index 1 diff: ('warning', ('Quarantine review flags (2): research mode kept all processes. A strict export would have removed the ones listed below.',)) != ('warning', ('Quarantine review flags (2): research mode kept every process. A strict export would have removed the ones listed below.',))
+E         Use -v to get more diff
+
+tests\test_service_post_run.py:302: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_post_run.py::test_quarantine_flags_are_reported_before_the_verdict
+1 failed, 38 passed in 3.84s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\wsR4btmp\scratch-tip\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : mut-flags-text
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/wsR4btmp/scratch-tip/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/wsR4btmp/scratch-tip -q -p no:cacheprovider --basetemp=C:/t/wsR4btmp/mut-tmp/flags-text tests/test_service_post_run.py
+cwd                     : C:\t\wsR4btmp\scratch-tip
+root PID / process group: 309884 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 4.95 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  309264:python.exe
+descendants terminated  : 1  309264
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR4btmp\proof\mutation\flags-text.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R4b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================
