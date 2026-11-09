@@ -1,0 +1,71 @@
+T2PW: C:\t\rev-R5\fix\tree\src\t2pw\__init__.py
+FF.                                                                      [100%]
+================================== FAILURES ===================================
+________________ test_a_short_root_is_cut_only_as_a_whole_path ________________
+
+tmp_path = WindowsPath('C:/t/bt/R5fix2/rev-F1/test_a_short_root_is_cut_only_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000215F7704B00>
+
+    def test_a_short_root_is_cut_only_as_a_whole_path(tmp_path, monkeypatch):
+        import tempfile
+    
+        monkeypatch.setattr(tempfile, "gettempdir", lambda: "/tmp")  # the Linux host's temp dir
+        scrub = lambda text: pw._scrub_server_paths({"r.txt": text}, tmp_path)["r.txt"]  # noqa: E731
+        science = "ACE2/TMPRSS2 and UMP/TMP"
+>       assert scrub(science) == science
+E       AssertionError: assert 'ACE2RSS2 and UMP' == 'ACE2/TMPRSS2 and UMP/TMP'
+E         
+E         - ACE2/TMPRSS2 and UMP/TMP
+E         ?     ----            ----
+E         + ACE2RSS2 and UMP
+
+tests\test_service_run_pathway.py:726: AssertionError
+___ test_a_root_ignores_case_only_where_the_filesystem_does[False-x /TMP/a] ___
+
+tmp_path = WindowsPath('C:/t/bt/R5fix2/rev-F1/test_a_root_ignores_case_only_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000215F7704FC0>
+ignore_case = False, want = 'x /TMP/a'
+
+    @pytest.mark.parametrize("ignore_case,want", [(False, "x /TMP/a"), (True, "x a")])
+    def test_a_root_ignores_case_only_where_the_filesystem_does(tmp_path, monkeypatch, ignore_case, want):
+        import tempfile
+    
+        monkeypatch.setattr(tempfile, "gettempdir", lambda: "/tmp")
+>       assert pw._server_paths(tmp_path, ignore_case).sub("", "x /TMP/a") == want
+E       AssertionError: assert 'x a' == 'x /TMP/a'
+E         
+E         - x /TMP/a
+E         + x a
+
+tests\test_service_run_pathway.py:736: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_run_pathway.py::test_a_short_root_is_cut_only_as_a_whole_path
+FAILED tests/test_service_run_pathway.py::test_a_root_ignores_case_only_where_the_filesystem_does[False-x /TMP/a]
+2 failed, 1 passed, 100 deselected in 1.94s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rev-R5\fix\tree\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : R5-fix2-rev-F1
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/rev-R5/fix/tree/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/rev-R5/fix/tree -q --basetemp=C:/t/bt/R5fix2/rev-F1 -k short_root or ignores_case tests/test_service_run_pathway.py
+cwd                     : C:\t\rev-R5\fix\tree
+root PID / process group: 221296 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 2.89 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  221308:python.exe
+descendants terminated  : 1  221308
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ws-R5/docs/webserver/evidence/R5/round2/revert/rev-F1.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R5fix2  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================
