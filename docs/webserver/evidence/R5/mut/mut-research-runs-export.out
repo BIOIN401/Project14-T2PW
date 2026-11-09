@@ -1,0 +1,48 @@
+T2PW: C:\t\ws-R5-mut\src\t2pw\__init__.py
+.F
+================================== FAILURES ===================================
+_________________ test_research_mode_stops_before_the_export __________________
+
+world = <test_service_run_pathway.World object at 0x00000124FD720410>
+tmp_path = WindowsPath('C:/t/ws-R5-tmp/bt/mut-research-runs-export-1/test_research_mode_stops_befor0')
+
+    def test_research_mode_stops_before_the_export(world, tmp_path):
+        res = _run(tmp_path, export_mode="research")
+>       assert (res.status, res.stage) == ("pass", "research_report")
+E       AssertionError: assert ('pass', 'pwml_export') == ('pass', 'research_report')
+E         
+E         At index 1 diff: 'pwml_export' != 'research_report'
+E         Use -v to get more diff
+
+tests\test_service_run_pathway.py:121: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_run_pathway.py::test_research_mode_stops_before_the_export
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 1 passed in 1.16s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R5-mut\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : R5-mut-research-runs-export
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R5-mut -q --basetemp=C:/t/ws-R5-tmp/bt/mut-research-runs-export-1 tests/test_service_run_pathway.py --no-header -p no:cacheprovider -x
+cwd                     : C:/t/ws-R5-mut
+root PID / process group: 143764 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 120 s
+duration                : 1.80 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  145416:python.exe
+descendants terminated  : 1  145416
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ws-R5-tmp/ev/mut/mut-research-runs-export.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R5  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

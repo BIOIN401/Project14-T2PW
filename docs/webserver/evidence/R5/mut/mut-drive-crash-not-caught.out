@@ -1,0 +1,62 @@
+T2PW: C:\t\ws-R5-mut\src\t2pw\__init__.py
+................F
+================================== FAILURES ===================================
+_________ test_a_bug_in_the_drive_is_a_crash_result_not_an_exception __________
+
+world = <test_service_run_pathway.World object at 0x000001443529DE50>
+tmp_path = WindowsPath('C:/t/ws-R5-tmp/bt/mut-drive-crash-not-caught-1/test_a_bug_in_the_drive_is_a_c0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000144352CF930>
+
+    def test_a_bug_in_the_drive_is_a_crash_result_not_an_exception(world, tmp_path, monkeypatch):
+        monkeypatch.setattr(pw, "_drive", lambda *a, **k: 1 / 0)
+>       res = _run(tmp_path)
+              ^^^^^^^^^^^^^^
+
+tests\test_service_run_pathway.py:196: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_service_run_pathway.py:92: in _run
+    return pw.run_pathway(PathwayRequest(**fields))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\t2pw\service\pathway.py:489: in run_pathway
+    _drive(request, paper, outcome, state, CollectingReporter(), deadline)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+a = (PathwayRequest(texts=('The paper.',), pdf_paths=(), pmids=(), scope=RequestedScope(requested_pathway='', requested_or..., termination_is_operational=False), {}, <t2pw.service.reporter.CollectingReporter object at 0x00000144352FD700>, None)
+k = {}
+
+>   monkeypatch.setattr(pw, "_drive", lambda *a, **k: 1 / 0)
+                                                      ^^^^^
+E   ZeroDivisionError: division by zero
+
+tests\test_service_run_pathway.py:195: ZeroDivisionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_run_pathway.py::test_a_bug_in_the_drive_is_a_crash_result_not_an_exception
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 16 passed in 1.24s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R5-mut\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : R5-mut-drive-crash-not-caught
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R5-mut -q --basetemp=C:/t/ws-R5-tmp/bt/mut-drive-crash-not-caught-1 tests/test_service_run_pathway.py --no-header -p no:cacheprovider -x
+cwd                     : C:/t/ws-R5-mut
+root PID / process group: 139280 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 120 s
+duration                : 1.91 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  145040:python.exe
+descendants terminated  : 1  145040
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ws-R5-tmp/ev/mut/mut-drive-crash-not-caught.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R5  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

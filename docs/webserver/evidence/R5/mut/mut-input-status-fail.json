@@ -1,0 +1,103 @@
+{
+  "label": "R5-mut-input-status-fail",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-R5-mut",
+    "-q",
+    "--basetemp=C:/t/ws-R5-tmp/bt/mut-input-status-fail-1",
+    "tests/test_service_run_pathway.py",
+    "--no-header",
+    "-p",
+    "no:cacheprovider",
+    "-x"
+  ],
+  "cwd": "C:/t/ws-R5-mut",
+  "started_at": "2026-11-09T19:30:58+00:00",
+  "finished_at": "2026-11-09T19:31:00+00:00",
+  "duration_seconds": 2.135973300000842,
+  "timeout_seconds": 120.0,
+  "root_pid": 141788,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 140380,
+      "name": "python.exe",
+      "ppid": 141788
+    }
+  ],
+  "descendants_terminated": [
+    140380
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 58320,
+      "name": "python.exe"
+    },
+    {
+      "pid": 77756,
+      "name": "python.exe"
+    },
+    {
+      "pid": 99236,
+      "name": "python.exe"
+    },
+    {
+      "pid": 137320,
+      "name": "python.exe"
+    },
+    {
+      "pid": 142020,
+      "name": "python.exe"
+    },
+    {
+      "pid": 142176,
+      "name": "python.exe"
+    },
+    {
+      "pid": 142544,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/ws-R5-tmp/ev/mut/mut-input-status-fail.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-R5-mut\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "",
+    "repo_head": "",
+    "repo_source": "not_a_repository",
+    "wrapper_vs_head": "unknown",
+    "repo_tracked_files_dirty": null,
+    "repo_error": "fatal: not a git repository (or any of the parent directories): .git"
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "R5",
+    "token": "R5:142020:88f1910e3101b955",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

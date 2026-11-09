@@ -1,0 +1,56 @@
+T2PW: C:\t\ws-R5-mut\src\t2pw\__init__.py
+..........F
+================================== FAILURES ===================================
+_ test_wrapped_stage_failures_are_classified_and_retried[Extraction failed: invalid json from the model-llm-stage_one_failed] _
+
+world = <test_service_run_pathway.World object at 0x000002C3D5181130>
+tmp_path = WindowsPath('C:/t/ws-R5-tmp/bt/mut-classify-unknown-1/test_wrapped_stage_failures_ar0')
+kind = 'stage_one_failed'
+text = 'Extraction failed: invalid json from the model', want = 'llm'
+
+    @pytest.mark.parametrize("kind", [ex.KIND_STAGE_ONE_FAILED, ex.KIND_STAGE_TWO_FAILED])
+    @pytest.mark.parametrize("text,want", [("Extraction failed: invalid json from the model", "llm"),
+                                           ("Inference stage failed: connection refused", "network")])
+    def test_wrapped_stage_failures_are_classified_and_retried(world, tmp_path, kind, text, want):
+        world.extract = _fail(kind, text)
+        res = _run(tmp_path)
+>       assert (res.status, res.failure_kind, res.stage) == ("fail", want, "stage1")
+E       AssertionError: assert ('fail', 'unknown', 'stage1') == ('fail', 'llm', 'stage1')
+E         
+E         At index 1 diff: 'unknown' != 'llm'
+E         Use -v to get more diff
+
+tests\test_service_run_pathway.py:171: AssertionError
+------------------------------ Captured log call ------------------------------
+ERROR    t2pw.service.reporter:reporter.py:159 Extraction failed: invalid json from the model
+=========================== short test summary info ===========================
+FAILED tests/test_service_run_pathway.py::test_wrapped_stage_failures_are_classified_and_retried[Extraction failed: invalid json from the model-llm-stage_one_failed]
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 10 passed in 1.21s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R5-mut\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : R5-mut-classify-unknown
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R5-mut -q --basetemp=C:/t/ws-R5-tmp/bt/mut-classify-unknown-1 tests/test_service_run_pathway.py --no-header -p no:cacheprovider -x
+cwd                     : C:/t/ws-R5-mut
+root PID / process group: 144980 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 120 s
+duration                : 1.90 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  144992:python.exe
+descendants terminated  : 1  144992
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ws-R5-tmp/ev/mut/mut-classify-unknown.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R5  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

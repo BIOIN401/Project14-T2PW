@@ -1,0 +1,57 @@
+T2PW: C:\t\ws-R5-mut\src\t2pw\__init__.py
+........................................................................ [ 75%]
+...................F
+================================== FAILURES ===================================
+_____ test_absolute_server_paths_are_cut_from_a_delivered_report[native] ______
+
+world = <test_service_run_pathway.World object at 0x0000024233627330>
+tmp_path = WindowsPath('C:/t/ws-R5-tmp/bt/mut-scrub-by-shape-1/test_absolute_server_paths_are0')
+sep = 'native'
+
+    @pytest.mark.parametrize("sep", ["native", "posix"])
+    def test_absolute_server_paths_are_cut_from_a_delivered_report(world, tmp_path, sep):
+        from t2pw.pipeline import extraction_diagnostics as diag
+    
+        target = tmp_path / "tmp" / "diag" / "report.json"
+        res = _boundary_report(world, tmp_path, str(target) if sep == "native" else target.as_posix())
+        text = res.report_paths[diag.BOUNDARY_REPORT_NAME].read_text(encoding="utf-8")
+        report = json.loads(text)
+>       assert Path(report["report_path"].replace("\\", "/")) == Path("tmp/diag/report.json")
+E       AssertionError: assert WindowsPath('C:/t/ws-R5-tmp/bt/mut-scrub-by-shape-1/test_absolute_server_paths_are0/tmp/diag/report.json') == WindowsPath('tmp/diag/report.json')
+E        +  where WindowsPath('C:/t/ws-R5-tmp/bt/mut-scrub-by-shape-1/test_absolute_server_paths_are0/tmp/diag/report.json') = Path('C:/t/ws-R5-tmp/bt/mut-scrub-by-shape-1/test_absolute_server_paths_are0/tmp/diag/report.json')
+E        +    where 'C:/t/ws-R5-tmp/bt/mut-scrub-by-shape-1/test_absolute_server_paths_are0/tmp/diag/report.json' = <built-in method replace of str object at 0x00000242369EE510>('\\', '/')
+E        +      where <built-in method replace of str object at 0x00000242369EE510> = 'C:\\t\\ws-R5-tmp\\bt\\mut-scrub-by-shape-1\\test_absolute_server_paths_are0\\tmp\\diag\\report.json'.replace
+E        +  and   WindowsPath('tmp/diag/report.json') = Path('tmp/diag/report.json')
+
+tests\test_service_run_pathway.py:662: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_run_pathway.py::test_absolute_server_paths_are_cut_from_a_delivered_report[native]
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 91 passed in 5.21s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R5-mut\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : R5-mut-scrub-by-shape
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R5-mut -q --basetemp=C:/t/ws-R5-tmp/bt/mut-scrub-by-shape-1 tests/test_service_run_pathway.py --no-header -p no:cacheprovider -x
+cwd                     : C:/t/ws-R5-mut
+root PID / process group: 139496 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 120 s
+duration                : 6.10 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  144496:python.exe
+descendants terminated  : 1  144496
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ws-R5-tmp/ev/mut/mut-scrub-by-shape.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R5  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

@@ -1,0 +1,52 @@
+T2PW: C:\t\ws-R5-mut\src\t2pw\__init__.py
+......................F
+================================== FAILURES ===================================
+______________ test_the_review_step_not_opening_stops_the_export ______________
+
+world = <test_service_run_pathway.World object at 0x0000028454C3E2B0>
+tmp_path = WindowsPath('C:/t/ws-R5-tmp/bt/mut-review-guard-gone-1/test_the_review_step_not_openi0')
+
+    def test_the_review_step_not_opening_stops_the_export(world, tmp_path):
+        def post(request, state, reporter):
+            state["post_pipeline_artifacts"] = {CANONICAL_PAYLOAD_KEY: PAYLOAD, FINAL_GATE_REPORT_KEY: {"ok": True}}
+            return pr.PostRunResult(final_payload=request.final_payload)
+        world.post = post
+        res = _run(tmp_path)
+>       assert res.status == "fail" and "review step" in res.message and "export" not in world.calls
+E       AssertionError: assert ('pass' == 'fail'
+E         
+E         - fail
+E         + pass)
+
+tests\test_service_run_pathway.py:259: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_run_pathway.py::test_the_review_step_not_opening_stops_the_export
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 22 passed in 1.24s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R5-mut\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : R5-mut-review-guard-gone
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R5-mut -q --basetemp=C:/t/ws-R5-tmp/bt/mut-review-guard-gone-1 tests/test_service_run_pathway.py --no-header -p no:cacheprovider -x
+cwd                     : C:/t/ws-R5-mut
+root PID / process group: 145492 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 120 s
+duration                : 2.03 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  144872:python.exe
+descendants terminated  : 1  144872
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ws-R5-tmp/ev/mut/mut-review-guard-gone.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R5  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

@@ -1,0 +1,44 @@
+T2PW: C:\t\ws-R5-mut\src\t2pw\__init__.py
+..................................F
+================================== FAILURES ===================================
+_________ test_the_rag_rounds_get_the_time_left_only_with_a_deadline __________
+
+    def test_the_rag_rounds_get_the_time_left_only_with_a_deadline():
+        assert ex._rag_deadline_kwargs({}) == {}
+        assert ex._rag_deadline_kwargs({ex.DEADLINE_STATE_KEY: None}) == {}
+>       left = ex._rag_deadline_kwargs({ex.DEADLINE_STATE_KEY: time.time() + 500})["deadline_seconds"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'deadline_seconds'
+
+tests\test_service_run_pathway.py:370: KeyError
+=========================== short test summary info ===========================
+FAILED tests/test_service_run_pathway.py::test_the_rag_rounds_get_the_time_left_only_with_a_deadline
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 34 passed in 1.35s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R5-mut\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : R5-mut-rag-deadline-never-passed
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R5-mut -q --basetemp=C:/t/ws-R5-tmp/bt/mut-rag-deadline-never-passed-1 tests/test_service_run_pathway.py --no-header -p no:cacheprovider -x
+cwd                     : C:/t/ws-R5-mut
+root PID / process group: 148356 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 120 s
+duration                : 2.15 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  139304:python.exe
+descendants terminated  : 1  139304
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ws-R5-tmp/ev/mut/mut-rag-deadline-never-passed.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R5  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

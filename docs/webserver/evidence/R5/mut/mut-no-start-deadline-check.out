@@ -1,0 +1,50 @@
+T2PW: C:\t\ws-R5-mut\src\t2pw\__init__.py
+........................F
+================================== FAILURES ===================================
+___________________ test_no_time_at_the_start_runs_nothing ____________________
+
+world = <test_service_run_pathway.World object at 0x00000164EA8F26D0>
+tmp_path = WindowsPath('C:/t/ws-R5-tmp/bt/mut-no-start-deadline-check-1/test_no_time_at_the_start_runs0')
+
+    def test_no_time_at_the_start_runs_nothing(world, tmp_path):
+        res = _run(tmp_path, deadline=time.time() - 1)
+>       assert (res.status, res.failure_kind) == ("timeout", "timeout") and world.calls == []
+E       AssertionError: assert (('timeout', 'timeout') == ('timeout', 'timeout')
+E         
+E         Use -v to get more diff and ['extract'] == []
+E         
+E         Left contains one more item: 'extract'
+E         Use -v to get more diff)
+
+tests\test_service_run_pathway.py:277: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_run_pathway.py::test_no_time_at_the_start_runs_nothing
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 24 passed in 1.37s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R5-mut\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : R5-mut-no-start-deadline-check
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R5-mut -q --basetemp=C:/t/ws-R5-tmp/bt/mut-no-start-deadline-check-1 tests/test_service_run_pathway.py --no-header -p no:cacheprovider -x
+cwd                     : C:/t/ws-R5-mut
+root PID / process group: 145244 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 120 s
+duration                : 2.18 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  142712:python.exe
+descendants terminated  : 1  142712
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ws-R5-tmp/ev/mut/mut-no-start-deadline-check.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R5  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

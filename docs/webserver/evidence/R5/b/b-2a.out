@@ -1,0 +1,65 @@
+T2PW: C:\t\ws-R5-base\src\t2pw\__init__.py
+.......................................................................F [ 91%]
+.......                                                                  [100%]
+================================== FAILURES ===================================
+___ test_new_acceptance_the_post_pipeline_seam_returns_its_prefreeze_report ___
+
+tmp_path = WindowsPath('C:/t/ws-R5-tmp/bt/b-2a-1/test_new_acceptance_the_post_p0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000160898C35B0>
+
+    def test_new_acceptance_the_post_pipeline_seam_returns_its_prefreeze_report(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """Fails at base: the report is captured, never returned, and the temp
+        directory it could have been written into is swept in ``finally``."""
+    
+        seen = _offline_prefreeze_spy(monkeypatch, name_index=_collapsing_index())
+        payload = _collapsing_payload()
+    
+        result = _ep1(tmp_path, payload)(payload, **_ep1_kwargs(tmp_path))
+    
+        assert seen, "the pre-freeze seam never ran; this test would assert nothing"
+        assert result["prefreeze_resolution_report"] is seen[-1]
+        assert result["prefreeze_review_required"] == seen[-1]["review_required"]
+>       assert result["prefreeze_resolution_report"]["compounds"][
+            "rename_sources_collapsed"] == [{
+                "target": "glycerol 3 phosphate",
+                "sources": ["sn -glycerol 3-phosphate", "sn-glycerol 3-phosphate"],
+                "source_key": "sn glycerol 3 phosphate",
+            }]
+E       AssertionError: assert [{'source_key...l3phosphate'}] == [{'source_key...3 phosphate'}]
+E         
+E         At index 0 diff: {'target': 'glycerol3phosphate', 'sources': ['sn -glycerol 3-phosphate', 'sn-glycerol 3-phosphate'], 'source_key': 'snglycerol3phosphate'} != {'target': 'glycerol 3 phosphate', 'sources': ['sn -glycerol 3-phosphate', 'sn-glycerol 3-phosphate'], 'source_key': 'sn glycerol 3 phosphate'}
+E         Use -v to get more diff
+
+tests\test_c052_prefreeze_report_at_the_streamlit_seams.py:467: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_c052_prefreeze_report_at_the_streamlit_seams.py::test_new_acceptance_the_post_pipeline_seam_returns_its_prefreeze_report
+1 failed, 78 passed in 6.86s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R5-base\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 0725b80208325f3ab9dc334657e3a6d5558f6dde  [git, worktree dirty=False]
+label                   : R5-b-2a
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R5-base -q --basetemp=C:/t/ws-R5-tmp/bt/b-2a-1 tests/test_c030a_object_sharing_at_the_freeze_seam.py tests/test_c030_canonical_identity_fallback.py tests/test_c052_prefreeze_report_at_the_streamlit_seams.py --no-header -p no:cacheprovider
+cwd                     : C:/t/ws-R5-base
+root PID / process group: 131436 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 280 s
+duration                : 7.64 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 4  118344:python.exe, 132224:git.exe, 126116:git.exe, 129812:git.exe
+descendants terminated  : 4  118344, 126116, 129812, 132224
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ws-R5-tmp/ev/b/b-2a.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R5  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

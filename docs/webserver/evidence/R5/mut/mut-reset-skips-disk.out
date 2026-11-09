@@ -1,0 +1,69 @@
+T2PW: C:\t\ws-R5-mut\src\t2pw\__init__.py
+....................................F
+================================== FAILURES ===================================
+______________ test_two_runs_in_sequence_do_not_share_a_decision ______________
+
+world = <test_service_run_pathway.World object at 0x00000152B363C940>
+tmp_path = WindowsPath('C:/t/ws-R5-tmp/bt/mut-reset-skips-disk-1/test_two_runs_in_sequence_do_n0')
+
+    def test_two_runs_in_sequence_do_not_share_a_decision(world, tmp_path):
+        """The second run dies before the boundary: it must carry nothing of the first."""
+    
+        decisions = []
+    
+        def first_post(request, state, reporter):
+            world.stale.parent.mkdir(parents=True, exist_ok=True)
+            world.stale.write_text(json.dumps({"decision": "job-one"}), encoding="utf-8")
+            state["quarantine_report"] = {"decision": "job-one"}
+            state["quarantine_artifacts"] = {"quarantine_report.json": str(world.stale)}
+            decisions.append(dict(state))
+            return world.default_post(request, state, reporter)
+        world.post = first_post
+        first = _run(tmp_path, out_dir=tmp_path / "one")
+        assert "quarantine_report.json" in first.report_paths
+    
+        def second_post(request, state, reporter):
+            decisions.append(dict(state))
+            assert "quarantine_report" not in state and not world.stale.exists()
+            return pr.PostRunResult(final_payload=request.final_payload, failure=RuntimeError("mapping died"))
+        world.post = second_post
+        second = _run(tmp_path, out_dir=tmp_path / "two")
+        assert "quarantine_report.json" not in second.report_paths
+>       assert decisions[0] is not decisions[1] and not world.stale.exists()
+E       AssertionError: assert ({'pathway_run_deadline': None, 'quarantine_artifacts': {'quarantine_report.json': 'C:\\t\\ws-R5-tmp\\bt\\mut-reset-ski...sk-1\\test_two_runs_in_sequence_do_n0\\outputs\\quarantine_report.json'}, 'quarantine_report': {'decision': 'job-one'}} is not {'pathway_run_deadline': None} and not True)
+E        +  where True = exists()
+E        +    where exists = WindowsPath('C:/t/ws-R5-tmp/bt/mut-reset-skips-disk-1/test_two_runs_in_sequence_do_n0/outputs/quarantine_report.json').exists
+E        +      where WindowsPath('C:/t/ws-R5-tmp/bt/mut-reset-skips-disk-1/test_two_runs_in_sequence_do_n0/outputs/quarantine_report.json') = <test_service_run_pathway.World object at 0x00000152B363C940>.stale
+
+tests\test_service_run_pathway.py:411: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_run_pathway.py::test_two_runs_in_sequence_do_not_share_a_decision
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 36 passed in 1.30s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R5-mut\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : R5-mut-reset-skips-disk
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R5-mut -q --basetemp=C:/t/ws-R5-tmp/bt/mut-reset-skips-disk-1 tests/test_service_run_pathway.py --no-header -p no:cacheprovider -x
+cwd                     : C:/t/ws-R5-mut
+root PID / process group: 130412 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 120 s
+duration                : 2.02 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  145412:python.exe
+descendants terminated  : 1  145412
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ws-R5-tmp/ev/mut/mut-reset-skips-disk.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R5  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

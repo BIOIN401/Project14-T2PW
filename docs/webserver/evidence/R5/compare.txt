@@ -1,0 +1,48 @@
+2a	1 failed, 78 passed	1 failed, 78 passed	same
+2b-c055	14 passed	14 passed	same
+2b	134 passed	134 passed	same
+2c-c126	2 passed	2 passed	same
+2c	1 failed, 101 passed, 3 skipped	1 failed, 101 passed, 3 skipped	same
+2d-c119g9	3 passed	3 passed	same
+2d-stage3	28 passed	28 passed	same
+2d	1 failed, 413 passed	1 failed, 413 passed	same
+2e-759afold	2 passed	2 passed	same
+2e-759b	7 passed	7 passed	same
+2e-hook	1 passed	1 passed	same
+2e	44 passed	44 passed	same
+2f-driver	61 passed	61 passed	same
+2f-gate	14 passed	14 passed	same
+2f	1 failed, 32 passed, 4 skipped	1 failed, 32 passed, 4 skipped	same
+2g-759d	4 passed	4 passed	same
+2g-c056d	14 passed	14 passed	same
+2g-c082pp	1 passed	1 passed	same
+2g-c119sup	37 passed	37 passed	same
+2g-revview	11 passed	11 passed	same
+2g	162 passed, 8 skipped	162 passed, 8 skipped	same
+at-c052	1 failed, 12 passed	1 failed, 12 passed	same
+at-c082sr	8 passed	8 passed	same
+at-c083	12 passed	12 passed	same
+at-pf3	1 failed, 11 passed	1 failed, 11 passed	same
+browser	15 passed	15 passed	same
+clobber	8 passed	8 passed	same
+eq	14 passed	14 passed	same
+export	30 passed	30 passed	same
+g1	2 passed	2 passed	same
+g2	8 passed	8 passed	same
+g3	4 passed	4 passed	same
+g4	24 passed	24 passed	same
+post_run	42 passed	42 passed	same
+reasons	10 passed	10 passed	same
+second-fixture	8 passed	8 passed	same
+smoke	511 passed	511 passed	same
+solo-c060a	11 passed	11 passed	same
+solo-s2orch	12 passed	12 passed	same
+stage1	22 passed	22 passed	same
+stage2	1 failed, 27 passed	28 passed	DIFFERENT
+   tip-only: tests/test_service_extraction_stage2.py::test_run_extraction_refuses_an_ambiguous_review_in_stage_one_before_any_llm_call
+svc	57 passed	57 passed	same
+web	(no summary)	(no summary)	DIFFERENT
+   tip-only: tests/test_service_driver_bridge.py::test_worker_child_runs_the_bridge_end_to_end
+   tip-only: tests/test_service_driver_bridge.py::test_worker_default_is_the_bridge_and_the_stub_stays_selectable
+   tip-only: tests/test_service_pathway_interface.py::test_stub_returns_fixed_error_and_writes_nothing
+same=41 different=2
