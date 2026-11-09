@@ -221,6 +221,19 @@ def test_the_handler_spends_the_run_in_order_and_coerces_every_argument(world):
         "state": world.state,
     }
     assert result.final_payload is REBOUND and result.failure is None
+    # ``==`` cannot see these: 3307.0 == 3307 and 0 == False.
+    for key in ("db_port", "audit_max_rounds", "audit_timeout_seconds", "audit_candidate_count", "example_top_k",
+                "gap_resolver_max_items"):
+        assert type(kwargs[key]) is int, key
+    for key in ("use_llm_audit", "use_sbml_overwatch", "use_example_retrieval", "use_gap_resolver",
+                "use_llm_gap_resolver", "use_stoich_agent", "strict_db"):
+        assert type(kwargs[key]) is bool, key
+
+
+def test_a_non_dict_pathway_context_reaches_the_pipeline_as_an_empty_dict(world):
+    world.state["pathway_context"] = "not a dict"
+    world.run()
+    assert world.call[1]["pathway_context"] == {}
 
 
 @pytest.mark.parametrize("field, value, kw, expected", [
@@ -575,6 +588,7 @@ def test_real_app_passes_every_widget_value_through_to_the_pipeline(monkeypatch,
     passed = calls[0][1]
     assert {key: passed[key] for key in EXPECTED} == EXPECTED
     assert any("hard-gate" in str(w.value) for w in at.warning)
+    assert at.session_state["post_pipeline_artifacts"]["gate_failed"] is True  # the app passed its own session
 
 
 def test_real_app_warns_when_there_is_no_payload(monkeypatch, tmp_path):
@@ -616,3 +630,38 @@ def test_real_app_reads_the_rebound_payload_after_the_handler(monkeypatch, tmp_p
     at, _calls = _real_app(monkeypatch, tmp_path, payload=payload, patched=raise_it)
     assert not at.exception
     assert seen[-1].get("rebound_marker") is True
+
+
+def test_the_app_hands_the_service_its_own_callbacks():
+    """The app's three callbacks, by name: a stand-in here would still run every path above."""
+
+    import ast
+
+    tree = ast.parse(APP_PATH.read_text(encoding="utf-8"))
+    call = next(n for n in ast.walk(tree) if isinstance(n, ast.Call) and isinstance(n.func, ast.Name)
+                and n.func.id == "run_post_pipeline")
+    keywords = {k.arg: k.value for k in call.keywords}
+    assert keywords["open_review"].id == "initialize_refinement_review_state"
+    assert keywords["render_issue_detail"].id == "_render_issue_detail"
+    render = keywords["render_contract_failure"].body
+    assert render.func.id == "_render_stage_contract_failure"
+    assert {k.arg: k.value.value for k in render.keywords} == {
+        "operation_label": "Audit and DB mapping",
+        "download_key": "dl_audit_mapping_stage_contract_error",
+    }
+
+
+def test_the_app_clears_the_previous_run_before_calling_the_service_in_order():
+    """Pop, quarantine reset, ``post_artifacts = {}``, then the call, as the handler always did."""
+
+    import ast
+
+    tree = ast.parse(APP_PATH.read_text(encoding="utf-8"))
+    button = next(n for n in ast.walk(tree) if isinstance(n, ast.If) and isinstance(n.test, ast.Call)
+                  and isinstance(n.test.func, ast.Attribute) and n.test.func.attr == "button"
+                  and n.test.args and getattr(n.test.args[0], "value", "") == "Run audit and DB mapping")
+    source = [ast.unparse(statement) for statement in button.body[0].orelse[:4]]
+    assert source[0] == "st.session_state.pop('post_pipeline_artifacts', None)"
+    assert source[1] == "reset_quarantine_state(PROJECT_ROOT / 'outputs')"
+    assert source[2] == "post_artifacts = {}"
+    assert source[3].startswith("_post_run = run_post_pipeline(")
