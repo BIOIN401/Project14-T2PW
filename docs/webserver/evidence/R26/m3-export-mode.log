@@ -1,0 +1,59 @@
+T2PW: C:\t\wsR26tmp\mut\src\t2pw\__init__.py
+......F.                                                                 [100%]
+================================== FAILURES ===================================
+______________________ test_c_the_service_equals_the_app ______________________
+
+arms = {'after': {'data/enrichment_cache.json': (35407855, 1794171823000000000), 'data/id_mapping_cache.json': (4230034, 1794...t/enrichment_dump.json': (33986, 1794171823000000000), 'outputs/pathway.pwml': (23487, 1794171823000000000), ...}, ...}
+
+    def test_c_the_service_equals_the_app(arms):
+        app1, service = arms["app1"], arms["service"]
+        assert app1["post_export_mode"] == "research"
+        assert not app1["export_called"] and app1["xml_bytes"] == 0, "research mode writes no PWML"
+        assert service["misses"] == [] and service["refused"] == [], (service["misses"][:3], service["refused"][:5])
+        assert [row for row in service["unused"] if row[0] == "llm"] == [], service["unused"]
+        assert service["canonical_payload_sha256"] and service["canonical_payload_sha256"] == app1["canonical_payload_sha256"]
+        assert service["canonical_payload"] == app1["canonical_payload"]
+>       assert service["published"] == app1["published"]
+E       AssertionError: assert {'export_mode... ...}]}}, ...} == {'export_mode... ...}]}}, ...}
+E         
+E         Omitting 4 identical items, use -vv to show
+E         Differing items:
+E         {'export_mode': None} != {'export_mode': 'research'}
+E         Use -v to get more diff
+
+tests\test_equivalence_second_fixture.py:123: AssertionError
+============================= slowest 5 durations =============================
+44.92s setup    tests/test_equivalence_second_fixture.py::test_a_app_runs_offline_from_the_fixture_alone
+0.25s call     tests/test_equivalence_second_fixture.py::test_fixture_holds_no_secrets
+0.02s call     tests/test_equivalence_second_fixture.py::test_fixture_is_the_recorded_research_run
+0.01s call     tests/test_equivalence_second_fixture.py::test_b_replay_reproduces_the_recorded_live_run
+
+(1 durations < 0.005s hidden.  Use -vv to show these durations.)
+1 failed, 7 passed in 45.34s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\wsR26tmp\mut\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : m3-export-mode
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/wsR26tmp/mut/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/wsR26tmp/mut -q -rs --durations=5 --basetemp=C:/t/wsR26tmp/bt/m3-export-mode tests/test_equivalence_second_fixture.py
+cwd                     : C:\t\wsR26tmp\mut
+root PID / process group: 271540 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 340 s
+duration                : 45.86 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 3  276048:python.exe, 273580:python.exe, 275604:python.exe
+descendants terminated  : 3  273580, 275604, 276048
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/wsR26tmp/ev/m3-export-mode.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R26  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

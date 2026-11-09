@@ -1,0 +1,43 @@
+T2PW: C:\t\ws-R26\src\t2pw\__init__.py
+........................................................................ [ 14%]
+........................................................................ [ 28%]
+........................................................................ [ 42%]
+........................................................................ [ 56%]
+........................................................................ [ 70%]
+........................................................................ [ 84%]
+........................................................................ [ 98%]
+.......                                                                  [100%]
+============================= slowest 5 durations =============================
+4.19s call     tests/test_batch_driver.py::test_a_hanging_extraction_becomes_a_timeout_not_a_crash
+1.26s call     tests/test_bench_controls.py::test_a_complete_run_is_judged_on_its_priorities_not_on_completeness
+1.23s call     tests/test_bench_controls.py::test_an_incomplete_run_exits_nonzero[19]
+1.15s call     tests/test_bench_controls.py::test_an_incomplete_run_exits_nonzero[1]
+1.07s call     tests/test_c102_coverage_denominator.py::test_14_the_reconciliation_is_rendered_under_priorities_4_and_5_only
+511 passed in 44.35s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R26\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 3fcce6cf4ec2077309122031bf618e818d62fb27  [git, worktree dirty=False]
+label                   : smoke1
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R26/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R26 -q -rs --durations=5 --basetemp=C:/t/wsR26tmp/bt/smoke1 tests/test_reference_repair.py tests/test_strict_quarantine.py tests/test_strict_quarantine_contract_alignment.py tests/test_strict_quarantine_locks_and_scope.py tests/test_strict_quarantine_versioning.py tests/test_empty_extraction_payload.py tests/test_bench_goldset_and_semantic.py tests/test_bench_acquisition_and_artifacts.py tests/test_bench_controls.py tests/test_completeness_audit.py tests/test_batch_driver.py tests/test_stage3_gate_report_lifecycle.py tests/test_rag_admission_production_path.py tests/test_rag_gap_admission.py tests/test_rag_triage_orchestration.py tests/test_rag_provenance_gates.py tests/test_pipeline_reaction_rag_provenance.py tests/test_research_mode_orchestration.py tests/test_map_ids_name_gate.py tests/test_db_candidate_species_evidence.py tests/test_c102_coverage_denominator.py tests/test_c106_mutation_harness_executable.py
+cwd                     : C:\t\ws-R26
+root PID / process group: 273344 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 340 s
+duration                : 45.70 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 11  270788:python.exe, 250712:python.exe, 272404:python.exe, 256868:python.exe, 258640:python.exe, 272256:python.exe, 273072:python.exe, 272968:python.exe, 273388:python.exe, 273804:git.exe, 273424:git.exe
+descendants terminated  : 11  250712, 256868, 258640, 270788, 272256, 272404, 272968, 273072, 273388, 273424, 273804
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/wsR26tmp/ev/smoke1.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R26  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

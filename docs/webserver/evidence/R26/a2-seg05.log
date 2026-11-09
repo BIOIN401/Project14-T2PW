@@ -1,0 +1,94 @@
+segment 5: prior answers {'llm': 26, 'http': 29, 'db': 80}
+case PMC12505894: 64319 chars, sha256 c50a63fce65a1dfa
+2026-11-08 14:50:50.589 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 14:50:50.589 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 14:50:55.703 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-08 14:50:55.705 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-08 14:50:55.706 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-08 14:50:55.832 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-08 14:50:55.832 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-08 14:50:55.833 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+[cassette +134s] llm live 114s key=f0e5f7b4f4 max_tokens=128000 completion_tokens=21588
+[cassette +269s] llm live 135s key=e46509aac0 max_tokens=128000 completion_tokens=25864
+[cassette +271s] llm live 1s key=6f69c233c0 max_tokens=128000 completion_tokens=144
+{
+ "outcome": {
+  "status": "pass",
+  "failure_kind": "",
+  "stage": "research_report",
+  "message": "research run completed; no RAG synthesis in this run, so no citation report was produced",
+  "detail": "**2 biology/provenance issue(s) need review.** In strict mode each of these would have stopped the run. The pathway below was still produced \u2014 treat it as a candidate, not a result.\n**Research mode \u2014 relaxed.** PathWhiz formatting rules are skipped and biology/provenance problems are reported as review flags instead of stopping the run. The output is a *candidate* pathway for human review, not an importable PWML file. Read the Review flags panel before trusting it.\nQuarantine review flags (2): research mode kept every process. A strict export would have removed the ones listed below.\nResearch mode: the pre-export Stage 3 revalidation FAILED (1 error(s)) and was not enforced. The strict gates did NOT pass \u2014 this candidate is not PathWhiz-exportable as it stands. Refinement review is open so the findings below can be reviewed against the pathway itself.\n5 QA issues need review."
+ },
+ "seconds": 303.9,
+ "canonical_payload_sha256": "c4eb0d9f280ef335bb6ef87546132ed3f6bcaafd739ec418b53712b7053dc5ff",
+ "pwml_files": {},
+ "export_verdict": {
+  "ok": null,
+  "error": null,
+  "issues": null,
+  "required_gate_errors": null,
+  "required_gate_warnings": null
+ },
+ "pwml_sha256": null,
+ "pwml_bytes": 0,
+ "counts": {
+  "llm": 29,
+  "http": 70,
+  "db": 147
+ },
+ "live_llm_errors": [],
+ "segment": 5,
+ "served_from_prior": 135
+}
+wrote C:\t\ws-R26\tests\fixtures\equivalence\farnesol_research.json.gz (722094 bytes gz, 3624417 bytes json)
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R26\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 144d292de78e16446ea11ecfba79749ee3b5e743  [git, worktree dirty=False]
+label                   : a2-seg05
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R26/tests/equivalence/harness.py record --case farnesol_research --env-file C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.env --work C:/t/wsR26tmp/rec1
+cwd                     : C:\t\ws-R26
+root PID / process group: 237152 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 340 s
+duration                : 306.26 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 2  237164:python.exe, 240508:git.exe
+descendants terminated  : 2  237164, 240508
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/wsR26tmp/ev1/a2-seg05.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R26  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

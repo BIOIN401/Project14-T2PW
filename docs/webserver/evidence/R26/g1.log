@@ -1,0 +1,36 @@
+T2PW: C:\t\ws-R26\src\t2pw\__init__.py
+..                                                                       [100%]
+============================= slowest 5 durations =============================
+5.37s call     tests/test_batch_driver_seam_golden.py::test_driver_observable_behaviour_is_byte_identical_to_the_base_sha
+0.26s setup    tests/test_batch_driver_seam_golden.py::test_driver_observable_behaviour_is_byte_identical_to_the_base_sha
+0.15s setup    tests/test_batch_driver_seam_golden.py::test_the_three_terminal_paths_are_addressable_module_level_seams
+
+(2 durations < 0.005s hidden.  Use -vv to show these durations.)
+2 passed in 6.06s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R26\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 3fcce6cf4ec2077309122031bf618e818d62fb27  [git, worktree dirty=False]
+label                   : g1
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R26/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R26 -q -rs --durations=5 --basetemp=C:/t/wsR26tmp/bt/g1 tests/test_batch_driver_seam_golden.py
+cwd                     : C:\t\ws-R26
+root PID / process group: 271744 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 340 s
+duration                : 6.71 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  270716:python.exe
+descendants terminated  : 1  270716
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/wsR26tmp/ev/g1.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R26  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

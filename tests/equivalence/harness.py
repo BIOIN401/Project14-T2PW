@@ -25,6 +25,7 @@ import argparse
 import gzip
 import hashlib
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -65,6 +66,35 @@ AUDIT_TIMEOUT_KEY = "post_audit_timeout_seconds"
 #: (lines 502-1173), and the canonical payload hash covers them, so without this no two runs -- the live one
 #: included -- share a canonical hash. It is the only clock that reaches the canonical payload (R2.5 sec. 12.4).
 FROZEN_UTC = "1970-01-01T00:00:00Z"
+#: The second recorded case (R26, additive; the first case above is untouched): an open-access paper in
+#: RESEARCH mode, so the equivalence check sees Stage 2 additions, the out-of-scope filter and a non-default
+#: export mode (R3d review F1). The requested pathway carries the scope sentence that asks the model to label
+#: the paper's dolichol-cycle reaction ``out_of_scope`` (a natural hit was 1 in 182 labelled past runs,
+#: docs/webserver/results/R26.md sec. 2). It goes through the app's real extraction-focus box.
+SECOND_CASE = {
+    "fixture": ROOT / "tests" / "fixtures" / "equivalence" / "farnesol_research.json.gz",
+    "topic_line": ("PMC12505894 | farnesol biosynthesis (the dolichol cycle is a different pathway: "
+                   "extract its dolichyl pyrophosphate dephosphorylation but label it out_of_scope) "
+                   "| Candida albicans"),
+    "mode": "research",
+    "source": "docs/webserver/results/R26.md",
+    # NON-DEFAULT, for this case only: the batch driver compares Stage 0's pathway name with the requested text
+    # and would stop on the long scope sentence (R26.md sec. 4). The switch is the driver's documented one
+    # (annotate and continue); the check lives in the driver, so neither the app nor the service reads it.
+    "env": {"RAG_ELIGIBILITY_STAGE0_CONFLICT_ABORTS": "false"},
+    # The graph QA report lists equal-size components in set order, which depends on the process hash seed, and
+    # that report is part of the Stage-2 prompt (R26.md sec. 5). So this case records and replays under one
+    # fixed seed. It is set when the interpreter starts: see :func:`replay_arms`.
+    "hash_seed": "0",
+}
+CASES = {
+    "sour_taste_v2": {"fixture": FIXTURE, "topic_line": TOPIC_LINE, "mode": MODE,
+                      "source": "docs/evaluation_v2/paper_runs_orch755/topics/sour_taste_v2.txt"},
+    "farnesol_research": SECOND_CASE,
+}
+#: Keys the extraction publishes that the app and the service must agree on (R26): what the mutations of R3d
+#: review F1 change, compared directly, not only through the canonical payload they feed.
+PUBLISHED_KEYS = ("export_mode", "stage_one", "stage_two", "final_payload", "out_of_scope_removed_reactions")
 
 
 def freeze_clock(mp: pytest.MonkeyPatch) -> int:
@@ -158,14 +188,15 @@ def leaves(value: Any, path: str = "") -> Dict[str, Any]:
 CASE_FIELDS = ("paper_id", "title", "full_text", "requested_pathway", "requested_organism", "topic")
 
 
-def fetch_case(cache_dir: Path) -> Dict[str, Any]:
+def fetch_case(cache_dir: Path, spec: Dict[str, Any] = CASES["sour_taste_v2"]) -> Dict[str, Any]:
     from t2pw.batch.fetch import fetch_papers
 
-    papers, skipped = fetch_papers(TOPIC_LINE, limit=1, cache_dir=cache_dir, use_cache=True, screen=False)
-    assert papers and papers[0].paper_id == TOPIC_LINE.split("|")[0].strip(), skipped
+    topic_line, mode = spec["topic_line"], spec["mode"]
+    papers, skipped = fetch_papers(topic_line, limit=1, cache_dir=cache_dir, use_cache=True, screen=False)
+    assert papers and papers[0].paper_id == topic_line.split("|")[0].strip(), skipped
     case = {name: str(getattr(papers[0], name, "") or "") for name in CASE_FIELDS}
-    case.update(mode=MODE, topic_line=TOPIC_LINE, full_text_sha256=sha256(case["full_text"].encode("utf-8")),
-                source="docs/evaluation_v2/paper_runs_orch755/topics/sour_taste_v2.txt")
+    case.update(mode=mode, topic_line=topic_line, full_text_sha256=sha256(case["full_text"].encode("utf-8")),
+                source=spec["source"])
     return case
 
 
@@ -258,6 +289,7 @@ def run_app_arm(root: Path, cassette: llm_replay.Cassette, timeout: float, case:
         "pwml_files": _pwml_files(root),
         "export_verdict": export_verdict(pwml_result),
         "stage2_payload": deepcopy(driver._ss(at, "final_payload")) if at is not None else None,
+        "published": {key: deepcopy(driver._ss(at, key)) for key in PUBLISHED_KEYS} if at is not None else {},
         "pathway_context": deepcopy(driver._ss(at, "pathway_context")) if at is not None else None,
         "post_call": captured.get("post_call"),
         "export_call": captured.get("export_call"),
@@ -270,7 +302,8 @@ def run_app_arm(root: Path, cassette: llm_replay.Cassette, timeout: float, case:
     }
 
 
-def run_service_arm(app: Dict[str, Any], root: Path, cassette: llm_replay.Cassette) -> Dict[str, Any]:
+def run_service_arm(app: Dict[str, Any], root: Path, cassette: llm_replay.Cassette,
+                    case: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
     """The whole case on the service, from the case's text (R3d): ``run_extraction``, then the post-pipeline
     and the export, called directly on the service modules, as the app does.
 
@@ -298,12 +331,12 @@ def run_service_arm(app: Dict[str, Any], root: Path, cassette: llm_replay.Casset
         return {"seconds": round(time.monotonic() - started, 1) if started else 0.0, "ok": False, "error": error,
                 "canonical_payload_sha256": None, "canonical_payload": None, "xml": b"", "pwml_files": {},
                 "export_verdict": None, "misses": list(cassette.misses), "refused": list(cassette.refused),
-                "unused": cassette.unused()}
+                "unused": cassette.unused(), "published": {}}
 
     if app["post_call"] is None:  # no settings to run with; the test reports the app arm's own failure
         return failed("the app arm never reached the post-pipeline")
     new_root(root)
-    case = load_fixture()["case"]
+    case = load_fixture()["case"] if case is None else case
     paper = {name: case[name] for name in CASE_FIELDS}
     (post_args, post_kwargs) = deepcopy(app["post_call"])
     (export_args, export_kwargs) = deepcopy(app["export_call"]) if app["export_call"] else ((), {})
@@ -381,6 +414,7 @@ def run_service_arm(app: Dict[str, Any], root: Path, cassette: llm_replay.Casset
         "refused": list(cassette.refused),
         "unused": cassette.unused(),
         "frozen_bindings": frozen_bindings,
+        "published": {key: deepcopy(state.get(key)) for key in PUBLISHED_KEYS},
     }
 
 
@@ -407,11 +441,15 @@ def _git(*args: str) -> str:
 MAX_SEGMENTS = 20
 
 
-def record(env_file: Path, work: Path, timeout: float) -> int:
-    """One segment of the live recording; writes :data:`FIXTURE` if this segment's run reaches a PWML."""
+def record(env_file: Path, work: Path, timeout: float, spec: Dict[str, Any] = CASES["sour_taste_v2"]) -> int:
+    """One segment of the live recording; writes the case's fixture if this segment's run reaches its end
+    (a strict case: a PWML; a research case: a passing report, because research mode writes no PWML)."""
 
     from dotenv import dotenv_values
 
+    if spec.get("hash_seed") and os.environ.get("PYTHONHASHSEED") != spec["hash_seed"]:
+        print(f"refusing to record: this case needs PYTHONHASHSEED={spec['hash_seed']}")
+        return 4
     segments = work / "segments"
     segments.mkdir(parents=True, exist_ok=True)
     done = sorted(segments.glob("seg-*.jsonl"))
@@ -422,7 +460,7 @@ def record(env_file: Path, work: Path, timeout: float) -> int:
     prior = llm_replay.Cassette("replay", llm_replay.load_transcript(done[-1])) if done else None
     values = dotenv_values(env_file)
     secrets = {k: str(v) for k, v in values.items() if k in llm_replay.SECRET_ENV and v}
-    pinned = llm_replay.pinned_env_from(values)
+    pinned = {**llm_replay.pinned_env_from(values), **spec.get("env", {})}
     mp = pytest.MonkeyPatch()
     try:
         llm_replay.apply_env(mp, pinned, secrets)
@@ -432,7 +470,7 @@ def record(env_file: Path, work: Path, timeout: float) -> int:
         print(f"segment {n}: prior answers {prior.counts() if prior else {}}", flush=True)
         case_file = work / "case.json"
         if not case_file.exists():  # fetched once, then reused verbatim by every later segment
-            case_file.write_text(json.dumps(fetch_case(work / "fetch_cache"), ensure_ascii=False), encoding="utf-8")
+            case_file.write_text(json.dumps(fetch_case(work / "fetch_cache", spec), ensure_ascii=False), encoding="utf-8")
         case = json.loads(case_file.read_text(encoding="utf-8"))
         print(f"case {case['paper_id']}: {len(case['full_text'])} chars, sha256 {case['full_text_sha256'][:16]}", flush=True)
         app = run_app_arm(work / f"record-{n:02d}", cassette, timeout, case)
@@ -444,17 +482,22 @@ def record(env_file: Path, work: Path, timeout: float) -> int:
                    counts=cassette.counts(), live_llm_errors=cassette.live_llm_errors, segment=n,
                    served_from_prior=len(prior._served) if prior else 0)
     print(json.dumps(summary, indent=1))
-    if not app["xml"] or app["outcome"]["status"] != "pass":
-        print("NOT WRITING THE FIXTURE: the run did not reach a strict PWML export")
+    if app["outcome"]["status"] != "pass" or (case["mode"] == MODE and not app["xml"]):
+        print("NOT WRITING THE FIXTURE: the run did not reach its export step")
         return 2
+    if case["mode"] != MODE:  # R26: the live payload the replay is compared against
+        summary["canonical_payload"] = app["canonical_payload"]
     write_fixture(cassette.entries, pinned, secrets, summary, case,
                   {"tree_head": _git("rev-parse", "HEAD"),
-                   "tree_dirty": bool(_git("status", "--porcelain", "--", "src", "tests/equivalence"))})
+                   "tree_dirty": bool(_git("status", "--porcelain", "--", "src", "tests/equivalence")),
+                   "hash_seed": os.environ.get("PYTHONHASHSEED")},
+                  path=spec["fixture"])
     return 0
 
 
 def write_fixture(entries: Dict[str, Any], pinned: Dict[str, str], secrets: Dict[str, str],
-                  summary: Dict[str, Any], case: Dict[str, Any], provenance: Dict[str, Any]) -> None:
+                  summary: Dict[str, Any], case: Dict[str, Any], provenance: Dict[str, Any],
+                  path: Path = FIXTURE) -> None:
     models = sorted({row["response"].get("model") for row in entries["llm"]})
     fixture = {
         "schema": 1,
@@ -467,9 +510,39 @@ def write_fixture(entries: Dict[str, Any], pinned: Dict[str, str], secrets: Dict
     }
     text = json.dumps(fixture, indent=1, sort_keys=True, ensure_ascii=False)
     llm_replay.assert_no_secret_values(text, secrets)
-    FIXTURE.parent.mkdir(parents=True, exist_ok=True)
-    FIXTURE.write_bytes(gzip.compress(text.encode("utf-8"), mtime=0))
-    print(f"wrote {FIXTURE} ({FIXTURE.stat().st_size} bytes gz, {len(text)} bytes json)")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(gzip.compress(text.encode("utf-8"), mtime=0))
+    print(f"wrote {path} ({path.stat().st_size} bytes gz, {len(text)} bytes json)")
+
+
+def replay_arms(spec: Dict[str, Any], base: Path, out: Path) -> int:
+    """Replay app, app and service for a case that needs a fixed hash seed; write the comparable parts as JSON.
+
+    The seed is read when the interpreter starts, so a test cannot set it for itself: it runs this in a child
+    process (``harness.py replay``). Being a fresh process also satisfies :func:`replay_env`, so the test that
+    calls this has no need to run alone."""
+
+    if os.environ.get("PYTHONHASHSEED") != spec["hash_seed"]:
+        print(f"refusing to replay: this case needs PYTHONHASHSEED={spec['hash_seed']}")
+        return 4
+    fixture = load_fixture(spec["fixture"])
+    case = fixture["case"]
+    mp = pytest.MonkeyPatch()
+    try:
+        replay_env(mp, fixture)
+        arms = {"app1": run_app_arm(base / "app1", llm_replay.Cassette("replay", fixture["entries"]), 240.0, case),
+                "app2": run_app_arm(base / "app2", llm_replay.Cassette("replay", fixture["entries"]), 240.0, case)}
+        arms["service"] = run_service_arm(arms["app1"], base / "service",
+                                          llm_replay.Cassette("replay", fixture["entries"]), case=case)
+    finally:
+        mp.undo()
+    keep = ("outcome", "canonical_payload_sha256", "canonical_payload", "published", "misses", "refused", "unused",
+            "pwml_files", "error")
+    result = {name: {**{k: arm.get(k) for k in keep}, "xml_bytes": len(arm["xml"])} for name, arm in arms.items()}
+    result["app1"].update(post_export_mode=(arms["app1"]["post_call"] or (None, {}))[1].get("export_mode"),
+                          export_called=bool(arms["app1"]["export_call"]))
+    out.write_text(json.dumps(result, ensure_ascii=False), encoding="utf-8")
+    return 0
 
 
 def assemble(env_file: Path, transcript: Path, live_log: Path, recorded_head: str) -> int:
@@ -502,15 +575,22 @@ def main(argv: Optional[list] = None) -> int:
     rec.add_argument("--env-file", type=Path, required=True)
     rec.add_argument("--work", type=Path, required=True)
     rec.add_argument("--timeout", type=float, default=3600.0, help="driver budget; the wrapper bounds wall time")
+    rec.add_argument("--case", choices=sorted(CASES), default="sour_taste_v2")
     asm = sub.add_parser("assemble")
     asm.add_argument("--env-file", type=Path, required=True)
     asm.add_argument("--transcript", type=Path, required=True)
     asm.add_argument("--live-log", type=Path, required=True)
     asm.add_argument("--recorded-head", required=True)
+    rep = sub.add_parser("replay")
+    rep.add_argument("--case", choices=sorted(CASES), required=True)
+    rep.add_argument("--base", type=Path, required=True)
+    rep.add_argument("--out", type=Path, required=True)
     args = parser.parse_args(argv)
+    if args.cmd == "replay":
+        return replay_arms(CASES[args.case], args.base, args.out)
     if args.cmd == "assemble":
         return assemble(args.env_file, args.transcript, args.live_log, args.recorded_head)
-    return record(args.env_file, args.work, args.timeout)
+    return record(args.env_file, args.work, args.timeout, CASES[args.case])
 
 
 if __name__ == "__main__":

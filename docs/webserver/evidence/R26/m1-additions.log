@@ -1,0 +1,104 @@
+T2PW: C:\t\wsR26tmp\mut\src\t2pw\__init__.py
+..F.FFF.                                                                 [100%]
+================================== FAILURES ===================================
+_______________ test_a_app_runs_offline_from_the_fixture_alone ________________
+
+arms = {'after': {'data/enrichment_cache.json': (35407855, 1794171823000000000), 'data/id_mapping_cache.json': (4230034, 1794...t/enrichment_dump.json': (33986, 1794171823000000000), 'outputs/pathway.pwml': (23487, 1794171823000000000), ...}, ...}
+
+    def test_a_app_runs_offline_from_the_fixture_alone(arms):
+        recorded = arms["fixture"]["recorded"]
+        for name in ("app1", "app2"):
+            arm = arms[name]
+>           assert arm["misses"] == [], (name, arm["misses"][:3])
+E           AssertionError: ('app1', [{'asked': 1, 'key': 'c79770a448ac7ce6167dd4fb18bf012830eeecd7ebdfafcfeff8992fb2a5b65f', 'kind': 'llm', 'reco...ed': 1, 'key': '6ff032fc25aa9ecff993e560f56d7b077cfd9e883f7f3ddaa7927464cf8998f2', 'kind': 'llm', 'recorded': 0, ...}])
+E           assert [{'asked': 1,... 0, ...}, ...] == []
+E             
+E             Left contains 18 more items, first extra item: {'asked': 1, 'key': 'c79770a448ac7ce6167dd4fb18bf012830eeecd7ebdfafcfeff8992fb2a5b65f', 'kind': 'llm', 'recorded': 0, ...}
+E             Use -v to get more diff
+
+tests\test_equivalence_second_fixture.py:71: AssertionError
+______________________ test_b_two_app_runs_are_identical ______________________
+
+arms = {'after': {'data/enrichment_cache.json': (35407855, 1794171823000000000), 'data/id_mapping_cache.json': (4230034, 1794...t/enrichment_dump.json': (33986, 1794171823000000000), 'outputs/pathway.pwml': (23487, 1794171823000000000), ...}, ...}
+
+    def test_b_two_app_runs_are_identical(arms):
+        app1, app2 = arms["app1"], arms["app2"]
+>       assert app1["canonical_payload_sha256"] and app1["canonical_payload_sha256"] == app2["canonical_payload_sha256"]
+E       assert (None)
+
+tests\test_equivalence_second_fixture.py:98: AssertionError
+_______________ test_b_replay_reproduces_the_recorded_live_run ________________
+
+arms = {'after': {'data/enrichment_cache.json': (35407855, 1794171823000000000), 'data/id_mapping_cache.json': (4230034, 1794...t/enrichment_dump.json': (33986, 1794171823000000000), 'outputs/pathway.pwml': (23487, 1794171823000000000), ...}, ...}
+
+    def test_b_replay_reproduces_the_recorded_live_run(arms):
+        from t2pw.pipeline.gate_reports import payload_sha256
+    
+        recorded = arms["fixture"]["recorded"]
+        live_payload = recorded["canonical_payload"]
+        assert payload_sha256(live_payload) == recorded["canonical_payload_sha256"]
+        live, replay = harness.leaves(live_payload), harness.leaves(arms["app1"]["canonical_payload"])
+>       assert set(live) == set(replay)
+E       AssertionError: assert {'/biological.../1/name', ...} == {''}
+E         
+E         Extra items in the left set:
+E         '/entities/proteins/0/enrichment/protein/uniprot/go_mf_ids/1'
+E         '/entities/proteins/0/mapping_meta/identity_verdict/name_gate/reason'
+E         '/entities/compounds/5/provenance_lineage/1/sources/1/source_type'
+E         '/entities/proteins/1/gene_name'
+E         '/entities/compounds/1/mapping_meta/candidates/0/mapped_ids/biocyc'...
+E         
+E         ...Full output truncated (2415 lines hidden), use '-vv' to show
+
+tests\test_equivalence_second_fixture.py:110: AssertionError
+______________________ test_c_the_service_equals_the_app ______________________
+
+arms = {'after': {'data/enrichment_cache.json': (35407855, 1794171823000000000), 'data/id_mapping_cache.json': (4230034, 1794...t/enrichment_dump.json': (33986, 1794171823000000000), 'outputs/pathway.pwml': (23487, 1794171823000000000), ...}, ...}
+
+    def test_c_the_service_equals_the_app(arms):
+        app1, service = arms["app1"], arms["service"]
+        assert app1["post_export_mode"] == "research"
+        assert not app1["export_called"] and app1["xml_bytes"] == 0, "research mode writes no PWML"
+>       assert service["misses"] == [] and service["refused"] == [], (service["misses"][:3], service["refused"][:5])
+E       AssertionError: ([{'asked': 1, 'key': 'c79770a448ac7ce6167dd4fb18bf012830eeecd7ebdfafcfeff8992fb2a5b65f', 'kind': 'llm', 'recorded': 0... 1, 'key': '6ff032fc25aa9ecff993e560f56d7b077cfd9e883f7f3ddaa7927464cf8998f2', 'kind': 'llm', 'recorded': 0, ...}], [])
+E       assert ([{'asked': 1,... 0, ...}, ...] == []
+E         
+E         Left contains 18 more items, first extra item: {'asked': 1, 'key': 'c79770a448ac7ce6167dd4fb18bf012830eeecd7ebdfafcfeff8992fb2a5b65f', 'kind': 'llm', 'recorded': 0, ...}
+E         Use -v to get more diff)
+
+tests\test_equivalence_second_fixture.py:119: AssertionError
+============================= slowest 5 durations =============================
+26.82s setup    tests/test_equivalence_second_fixture.py::test_a_app_runs_offline_from_the_fixture_alone
+0.25s call     tests/test_equivalence_second_fixture.py::test_fixture_holds_no_secrets
+0.02s call     tests/test_equivalence_second_fixture.py::test_fixture_is_the_recorded_research_run
+0.01s call     tests/test_equivalence_second_fixture.py::test_b_replay_reproduces_the_recorded_live_run
+
+(1 durations < 0.005s hidden.  Use -vv to show these durations.)
+4 failed, 4 passed in 27.24s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\wsR26tmp\mut\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : m1-additions
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/wsR26tmp/mut/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/wsR26tmp/mut -q -rs --durations=5 --basetemp=C:/t/wsR26tmp/bt/m1-additions tests/test_equivalence_second_fixture.py
+cwd                     : C:\t\wsR26tmp\mut
+root PID / process group: 273488 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 340 s
+duration                : 27.89 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 3  272848:python.exe, 272268:python.exe, 275100:python.exe
+descendants terminated  : 3  272268, 272848, 275100
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/wsR26tmp/ev/m1-additions.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R26  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

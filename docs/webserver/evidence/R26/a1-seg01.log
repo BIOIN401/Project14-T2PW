@@ -1,0 +1,87 @@
+segment 1: prior answers {}
+case PMC12505894: 64319 chars, sha256 c50a63fce65a1dfa
+2026-11-08 13:48:25.488 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 13:48:25.488 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+[cassette +8s] llm live 5s key=3f5d2c7a68 max_tokens=128000 completion_tokens=396
+[cassette +22s] llm live 14s key=5d15caacfb max_tokens=64000 completion_tokens=2096
+[cassette +60s] llm live 37s key=5d15caacfb max_tokens=64000 completion_tokens=2226
+[cassette +94s] llm live 34s key=5d15caacfb max_tokens=64000 completion_tokens=2068
+[cassette +122s] llm live 28s key=32eb3b097f max_tokens=64000 completion_tokens=1328
+[cassette +161s] llm live 39s key=32eb3b097f max_tokens=64000 completion_tokens=1373
+[cassette +169s] llm live 7s key=32eb3b097f max_tokens=64000 completion_tokens=1347
+[cassette +184s] llm live 14s key=1db00804d7 max_tokens=128000 completion_tokens=1129
+[cassette +187s] llm live 3s key=86e4e14ebe max_tokens=128000 completion_tokens=240
+[cassette +205s] llm live 17s key=f8ade42849 max_tokens=128000 completion_tokens=1615
+[cassette +231s] llm live 25s key=aa27d4a608 max_tokens=128000 completion_tokens=3052
+2026-11-08 13:52:15.106 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-08 13:52:15.107 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-08 13:52:15.107 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+{
+ "outcome": {
+  "status": "scope_conflict",
+  "failure_kind": "",
+  "stage": "stage1",
+  "message": "Stage 0 read a scope that contradicts the batch request, so this paper is not the paper the topic line asked for: Stage 0 read pathway 'farnesol biosynthesis in Candida albicans' which does not match the requested 'farnesol biosynthesis (the dolichol cycle is a different pathway: extract its dolichyl pyrophosphate dephosphorylation but label it out_of_scope)'",
+  "detail": "Stage 0 read pathway 'farnesol biosynthesis in Candida albicans' which does not match the requested 'farnesol biosynthesis (the dolichol cycle is a different pathway: extract its dolichyl pyrophosphate dephosphorylation but label it out_of_scope)'"
+ },
+ "seconds": 229.6,
+ "canonical_payload_sha256": null,
+ "pwml_files": {},
+ "export_verdict": {
+  "ok": null,
+  "error": null,
+  "issues": null,
+  "required_gate_errors": null,
+  "required_gate_warnings": null
+ },
+ "pwml_sha256": null,
+ "pwml_bytes": 0,
+ "counts": {
+  "llm": 11,
+  "http": 0,
+  "db": 0
+ },
+ "live_llm_errors": [],
+ "segment": 1,
+ "served_from_prior": 0
+}
+NOT WRITING THE FIXTURE: the run did not reach its export step
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R26\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ d17e1711f89705397630eafe8c6c2b7862e5df28  [git, worktree dirty=False]
+label                   : a1-seg01
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R26/tests/equivalence/harness.py record --case farnesol_research --env-file C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.env --work C:/t/wsR26tmp/rec1
+cwd                     : C:\t\ws-R26
+root PID / process group: 111492 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 575 s
+duration                : 231.99 s
+exit reason             : nonzero
+exit code (real)        : 2
+returned code           : 2
+descendants observed    : 1  111080:python.exe
+descendants terminated  : 1  111080
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/wsR26tmp/ev1/a1-seg01.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R26  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

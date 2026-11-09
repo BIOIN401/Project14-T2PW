@@ -1,0 +1,36 @@
+T2PW: C:\t\ws-R26\src\t2pw\__init__.py
+........................                                                 [100%]
+============================= slowest 5 durations =============================
+2.65s call     tests/test_streamlit_quarantine_boundary.py::test_one_unmapped_enzyme_reaches_review_in_research_and_is_quarantined_in_strict
+2.43s call     tests/test_streamlit_quarantine_boundary.py::test_a_second_run_in_one_session_clears_the_previous_decision_before_deciding
+1.89s call     tests/test_streamlit_quarantine_boundary.py::test_a_second_run_that_reaches_the_boundary_decides_for_itself
+1.84s call     tests/test_streamlit_quarantine_boundary.py::test_a_refinement_that_adds_an_unexportable_process_still_exports_the_core
+1.83s call     tests/test_streamlit_quarantine_boundary.py::test_a_refinement_that_deletes_the_core_is_not_authorized_by_the_stale_decision
+24 passed in 35.55s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R26\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 3fcce6cf4ec2077309122031bf618e818d62fb27  [git, worktree dirty=False]
+label                   : g4
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R26/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R26 -q -rs --durations=5 --basetemp=C:/t/wsR26tmp/bt/g4 tests/test_streamlit_quarantine_boundary.py
+cwd                     : C:\t\ws-R26
+root PID / process group: 273144 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 340 s
+duration                : 37.07 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  273052:python.exe
+descendants terminated  : 1  273052
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/wsR26tmp/ev/g4.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R26  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================
