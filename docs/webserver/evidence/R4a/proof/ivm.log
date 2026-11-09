@@ -1,0 +1,28 @@
+scenarios SAME 30/30; sabotage detected 27/27; undetected=[]
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R4a\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 18a9a15d73d7908811bdf53e7475add1f6b0dc25  [git, worktree dirty=True]
+label                   : ivm
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R4a/docs/webserver/evidence/R4a/scripts/inline_vs_moved.py C:/t/ws-R4-base C:/t/ws-R4a C:/t/wsR4atmp/ev/proof/inline_vs_moved.json
+cwd                     : C:\t\ws-R4a
+root PID / process group: 288400 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 4.93 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  288052:python.exe
+descendants terminated  : 1  288052
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/wsR4atmp/ev/proof/ivm.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R4a  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

@@ -1,0 +1,80 @@
+control 0
+bound-run_pwml_export: killed
+bound-coerce_mode: killed
+bound-safe_dict: killed
+bound-safe_list: killed
+spinner-text: killed
+no-payload-message: killed
+payload-guard-dropped: killed
+gate-message: killed
+gate-issues: killed
+gate-quarantine-dropped: killed
+export-quarantine-dropped: killed
+ready-flag-removed: killed
+ready-false: killed
+ready-before-snapshot: killed
+snapshot-removed: killed
+snapshot-ascii: killed
+snapshot-indent: killed
+snapshot-name: killed
+artifacts-guard: killed
+artifacts-db-not-a-copy: killed
+artifacts-input-not-a-copy: killed
+artifacts-path: killed
+grounding-default: killed
+grounding-ignored: killed
+name-default: killed
+description-key: killed
+subject-default: killed
+width-default: killed
+width-not-int: killed
+height-default: killed
+bg-default: killed
+strict-default: killed
+context-not-safe: killed
+mode-not-coerced: killed
+reference-order: killed
+reference-root-ignored: killed
+project-root-ignored: killed
+quarantine-keys-swapped: killed
+signature-default-reporter: killed
+signature-positional: killed
+app-state-copied: killed
+app-reporter-none: killed
+app-work-dir: killed
+app-project-root: killed
+app-result-key: killed
+app-success-text: killed
+app-error-text: killed
+app-error-default: killed
+app-except-narrowed: killed
+app-reference-reexport-dropped: killed
+app-helper-restored: killed
+51/51 killed; not killed: []
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R4a\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 18a9a15d73d7908811bdf53e7475add1f6b0dc25  [git, worktree dirty=False]
+label                   : mutations2
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R4a/docs/webserver/evidence/R4a/scripts/mutate.py C:/t/wsR4atmp/mut-tree2 C:/t/wsR4atmp/ev/mut2
+cwd                     : C:\t\ws-R4a
+root PID / process group: 213980 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 500 s
+duration                : 106.66 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 105  197620:python.exe, 211436:python.exe, 217768:python.exe, 210492:python.exe, 211112:python.exe, 197992:python.exe, 206520:python.exe, 217664:python.exe, 217900:python.exe, 210760:python.exe, 217208:python.exe, 208980:python.exe, 216328:python.exe, 217180:python.exe, 217652:python.exe, 217892:python.exe, 217916:python.exe, 196588:python.exe, 210508:python.exe, 216076:python.exe, 217020:python.exe, 211336:python.exe, 215924:python.exe, 198884:python.exe, 213452:python.exe, 209940:python.exe, 217536:python.exe, 215424:python.exe, 217784:python.exe, 214240:python.exe, 217172:python.exe, 175288:python.exe, 211316:python.exe, 198680:python.exe, 211060:python.exe, 202060:python.exe, 217584:python.exe, 214308:python.exe, 216132:python.exe, 210832:python.exe, 206364:python.exe, 204728:python.exe, 216496:python.exe, 181260:python.exe, 217812:python.exe, 205560:python.exe, 218224:python.exe, 218628:python.exe, 218744:python.exe, 218272:python.exe, 218288:python.exe, 218772:python.exe, 218780:python.exe, 203724:python.exe, 213780:python.exe, 218448:python.exe, 218824:python.exe, 218384:python.exe, 218784:python.exe, 213392:python.exe, 216640:python.exe, 205828:python.exe, 216724:python.exe, 205412:python.exe, 215396:python.exe, 218680:python.exe, 211364:python.exe, 219540:python.exe, 219568:python.exe, 211972:python.exe, 219156:python.exe, 172176:python.exe, 219924:python.exe, 219280:python.exe, 219416:python.exe, 219204:python.exe, 220016:python.exe, 215148:python.exe, 219536:python.exe, 215888:python.exe, 219336:python.exe, 219844:python.exe, 219852:python.exe, 217376:python.exe, 219612:python.exe, 172612:python.exe, 217340:python.exe, 184608:python.exe, 216096:python.exe, 220452:python.exe, 220464:python.exe, 220808:python.exe, 220848:python.exe, 220284:python.exe, 220388:python.exe, 220856:python.exe, 220916:python.exe, 220964:python.exe, 221008:python.exe, 219104:python.exe, 202852:python.exe, 214304:python.exe, 220244:python.exe, 215048:python.exe, 220780:python.exe
+descendants terminated  : 105  172176, 172612, 175288, 181260, 184608, 196588, 197620, 197992, 198680, 198884, 202060, 202852, 203724, 204728, 205412, 205560, 205828, 206364, 206520, 208980, 209940, 210492, 210508, 210760, 210832, 211060, 211112, 211316, 211336, 211364, 211436, 211972, 213392, 213452, 213780, 214240, 214304, 214308, 215048, 215148, 215396, 215424, 215888, 215924, 216076, 216096, 216132, 216328, 216496, 216640, 216724, 217020, 217172, 217180, 217208, 217340, 217376, 217536, 217584, 217652, 217664, 217768, 217784, 217812, 217892, 217900, 217916, 218224, 218272, 218288, 218384, 218448, 218628, 218680, 218744, 218772, 218780, 218784, 218824, 219104, 219156, 219204, 219280, 219336, 219416, 219536, 219540, 219568, 219612, 219844, 219852, 219924, 220016, 220244, 220284, 220388, 220452, 220464, 220780, 220808, 220848, 220856, 220916, 220964, 221008
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/wsR4atmp/ev/mut2/mutations2.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R4a  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

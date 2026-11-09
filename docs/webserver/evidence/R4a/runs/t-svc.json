@@ -1,0 +1,124 @@
+{
+  "label": "t-svc",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/ws-R4a/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-R4a",
+    "--pin-verdict",
+    "C:/t/wsR4atmp/ev/pin/t-svc.pin.json",
+    "-q",
+    "--basetemp=C:/t/wsR4atmp/bt/t-svc",
+    "tests/test_service_extraction.py",
+    "tests/test_service_extraction_stage0.py",
+    "tests/test_service_reporter.py"
+  ],
+  "cwd": "C:\\t\\ws-R4a",
+  "started_at": "2026-11-09T04:03:41+00:00",
+  "finished_at": "2026-11-09T04:03:48+00:00",
+  "duration_seconds": 7.424486000003526,
+  "timeout_seconds": 400.0,
+  "root_pid": 498852,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 498864,
+      "name": "python.exe",
+      "ppid": 498852
+    },
+    {
+      "pid": 499436,
+      "name": "python.exe",
+      "ppid": 498864
+    },
+    {
+      "pid": 499456,
+      "name": "python.exe",
+      "ppid": 499436
+    },
+    {
+      "pid": 499216,
+      "name": "python.exe",
+      "ppid": 498864
+    },
+    {
+      "pid": 499272,
+      "name": "python.exe",
+      "ppid": 499216
+    }
+  ],
+  "descendants_terminated": [
+    498864,
+    499216,
+    499272,
+    499436,
+    499456
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 24756,
+      "name": "python.exe"
+    },
+    {
+      "pid": 24880,
+      "name": "python.exe"
+    },
+    {
+      "pid": 486632,
+      "name": "python.exe"
+    },
+    {
+      "pid": 492088,
+      "name": "python.exe"
+    },
+    {
+      "pid": 492124,
+      "name": "python.exe"
+    },
+    {
+      "pid": 496504,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/wsR4atmp/ev/t-svc.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-R4a\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-R4a",
+    "repo_head": "18a9a15d73d7908811bdf53e7475add1f6b0dc25",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "R4a",
+    "token": "R4a:486632:2dfa0ad6db6a6d42",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

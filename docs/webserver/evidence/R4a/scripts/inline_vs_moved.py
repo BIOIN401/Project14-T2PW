@@ -206,6 +206,7 @@ SCENARIOS = {
     "grounding-on": {"state": {**W, "pwml_grounding": True, "pwml_grounding_dict": {"g": 1}}},
     "grounding-on-no-dict": {"state": {**W, "pwml_grounding": True}},
     "grounding-off-with-dict": {"state": {**W, "pwml_grounding": False, "pwml_grounding_dict": {"g": 1}}},
+    "grounding-absent-with-dict": {"state": {**W, "pwml_grounding_dict": {"g": 1}}},
     "artifacts-dict": {"state": {**W, "post_pipeline_artifacts": {"keep": 1, "final_mapped_db": "old"}}},
     "artifacts-list": {"state": {**W, "post_pipeline_artifacts": ["a"]}},
     "artifacts-none": {"state": {**W, "post_pipeline_artifacts": None}},
