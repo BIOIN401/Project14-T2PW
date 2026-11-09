@@ -1,0 +1,244 @@
+{
+  "label": "E2E3b-webkit",
+  "command": [
+    "C:\\t\\e2e3-venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/ev-E2E3b/scripts/drive.py",
+    "webkit"
+  ],
+  "cwd": "C:/t/ws-E2E3b",
+  "started_at": "2026-11-09T04:38:00+00:00",
+  "finished_at": "2026-11-09T04:38:39+00:00",
+  "duration_seconds": 38.050792099995306,
+  "timeout_seconds": 500.0,
+  "root_pid": 3112,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 565068,
+      "name": "python.exe",
+      "ppid": 3112
+    },
+    {
+      "pid": 559232,
+      "name": "python.exe",
+      "ppid": 565068
+    },
+    {
+      "pid": 562828,
+      "name": "python.exe",
+      "ppid": 565068
+    },
+    {
+      "pid": 571544,
+      "name": "python.exe",
+      "ppid": 562828
+    },
+    {
+      "pid": 571680,
+      "name": "python.exe",
+      "ppid": 559232
+    },
+    {
+      "pid": 574200,
+      "name": "node.exe",
+      "ppid": 565068
+    },
+    {
+      "pid": 572792,
+      "name": "Playwright.exe",
+      "ppid": 574200
+    },
+    {
+      "pid": 565512,
+      "name": "conhost.exe",
+      "ppid": 574368
+    },
+    {
+      "pid": 574368,
+      "name": "WebKitWebProcess.exe",
+      "ppid": 572792
+    },
+    {
+      "pid": 574416,
+      "name": "WebKitGPUProcess.exe",
+      "ppid": 572792
+    },
+    {
+      "pid": 574420,
+      "name": "WebKitNetworkProcess.exe",
+      "ppid": 572792
+    },
+    {
+      "pid": 574436,
+      "name": "conhost.exe",
+      "ppid": 574416
+    },
+    {
+      "pid": 574444,
+      "name": "conhost.exe",
+      "ppid": 574420
+    },
+    {
+      "pid": 573588,
+      "name": "python.exe",
+      "ppid": 574276
+    },
+    {
+      "pid": 574276,
+      "name": "python.exe",
+      "ppid": 571680
+    },
+    {
+      "pid": 533660,
+      "name": "python.exe",
+      "ppid": 573688
+    },
+    {
+      "pid": 573688,
+      "name": "python.exe",
+      "ppid": 571544
+    },
+    {
+      "pid": 572628,
+      "name": "python.exe",
+      "ppid": 572756
+    },
+    {
+      "pid": 572756,
+      "name": "python.exe",
+      "ppid": 571680
+    },
+    {
+      "pid": 566584,
+      "name": "taskkill.exe",
+      "ppid": 565068
+    },
+    {
+      "pid": 563508,
+      "name": "python.exe",
+      "ppid": 571680
+    },
+    {
+      "pid": 570908,
+      "name": "python.exe",
+      "ppid": 563508
+    },
+    {
+      "pid": 568592,
+      "name": "tasklist.exe",
+      "ppid": 565068
+    },
+    {
+      "pid": 572524,
+      "name": "tasklist.exe",
+      "ppid": 565068
+    },
+    {
+      "pid": 573952,
+      "name": "taskkill.exe",
+      "ppid": 565068
+    },
+    {
+      "pid": 572224,
+      "name": "tasklist.exe",
+      "ppid": 565068
+    },
+    {
+      "pid": 573600,
+      "name": "tasklist.exe",
+      "ppid": 565068
+    }
+  ],
+  "descendants_terminated": [
+    533660,
+    559232,
+    562828,
+    563508,
+    565068,
+    565512,
+    566584,
+    568592,
+    570908,
+    571544,
+    571680,
+    572224,
+    572524,
+    572628,
+    572756,
+    572792,
+    573588,
+    573600,
+    573688,
+    573952,
+    574200,
+    574276,
+    574368,
+    574416,
+    574420,
+    574436,
+    574444
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 24756,
+      "name": "python.exe"
+    },
+    {
+      "pid": 24880,
+      "name": "python.exe"
+    },
+    {
+      "pid": 487856,
+      "name": "python.exe"
+    },
+    {
+      "pid": 547320,
+      "name": "python.exe"
+    },
+    {
+      "pid": 567492,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/ev-E2E3b/webkit-wrapper.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-E2E3b\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-E2E3b",
+    "repo_head": "f74ca9366f8ba89f7edd0aab41a840d4a40a3b00",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "E2E3b",
+    "token": "E2E3b:487856:3080784f278985ef",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

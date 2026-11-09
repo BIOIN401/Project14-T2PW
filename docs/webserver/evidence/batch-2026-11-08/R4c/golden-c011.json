@@ -1,0 +1,200 @@
+{
+  "label": "R4c-ind-golden-c011",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/ws-R4c/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-R4c",
+    "-q",
+    "--basetemp=C:/t/bt/R4cind/golden-c011",
+    "tests/test_c011_freeze_seam_golden_equivalence.py"
+  ],
+  "cwd": "C:\\t\\ws-R4c",
+  "started_at": "2026-11-09T04:57:50+00:00",
+  "finished_at": "2026-11-09T04:58:28+00:00",
+  "duration_seconds": 38.19820009999967,
+  "timeout_seconds": 540.0,
+  "root_pid": 593732,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 578532,
+      "name": "python.exe",
+      "ppid": 593732
+    },
+    {
+      "pid": 606632,
+      "name": "git.exe",
+      "ppid": 578532
+    },
+    {
+      "pid": 573728,
+      "name": "git.exe",
+      "ppid": 578532
+    },
+    {
+      "pid": 605128,
+      "name": "git.exe",
+      "ppid": 578532
+    },
+    {
+      "pid": 606224,
+      "name": "python.exe",
+      "ppid": 578532
+    },
+    {
+      "pid": 606568,
+      "name": "python.exe",
+      "ppid": 606224
+    },
+    {
+      "pid": 595628,
+      "name": "python.exe",
+      "ppid": 578532
+    },
+    {
+      "pid": 606164,
+      "name": "python.exe",
+      "ppid": 595628
+    },
+    {
+      "pid": 607260,
+      "name": "git.exe",
+      "ppid": 606164
+    },
+    {
+      "pid": 607364,
+      "name": "python.exe",
+      "ppid": 578532
+    },
+    {
+      "pid": 607384,
+      "name": "python.exe",
+      "ppid": 607364
+    },
+    {
+      "pid": 607368,
+      "name": "python.exe",
+      "ppid": 607392
+    },
+    {
+      "pid": 607392,
+      "name": "python.exe",
+      "ppid": 578532
+    },
+    {
+      "pid": 605956,
+      "name": "python.exe",
+      "ppid": 578532
+    },
+    {
+      "pid": 607468,
+      "name": "python.exe",
+      "ppid": 605956
+    },
+    {
+      "pid": 607492,
+      "name": "python.exe",
+      "ppid": 578532
+    },
+    {
+      "pid": 607524,
+      "name": "python.exe",
+      "ppid": 607492
+    },
+    {
+      "pid": 607632,
+      "name": "python.exe",
+      "ppid": 578532
+    },
+    {
+      "pid": 607772,
+      "name": "python.exe",
+      "ppid": 607632
+    }
+  ],
+  "descendants_terminated": [
+    573728,
+    578532,
+    595628,
+    605128,
+    605956,
+    606164,
+    606224,
+    606568,
+    606632,
+    607260,
+    607364,
+    607368,
+    607384,
+    607392,
+    607468,
+    607492,
+    607524,
+    607632,
+    607772
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 24756,
+      "name": "python.exe"
+    },
+    {
+      "pid": 24880,
+      "name": "python.exe"
+    },
+    {
+      "pid": 547320,
+      "name": "python.exe"
+    },
+    {
+      "pid": 606324,
+      "name": "python.exe"
+    },
+    {
+      "pid": 606340,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/ev-R4c/independent/golden-c011.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-R4c\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-R4c",
+    "repo_head": "b45da8787ffbf4f197ed2796650a00804753b6ed",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "R4c-ind",
+    "token": "R4c-ind:606324:5662c59d8a00a645",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

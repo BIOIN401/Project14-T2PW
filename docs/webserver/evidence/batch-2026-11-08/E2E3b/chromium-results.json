@@ -1,0 +1,237 @@
+{
+ "browser": "chromium",
+ "checks": [
+  {
+   "id": "4 organism 'mouse' offers Mus musculus",
+   "ok": true,
+   "detail": "3 opts, first: ['Mus musculus', 'Mus musculus castaneus', 'Candidatus Arthromitus sp. SFB-mouse-Japan']"
+  },
+  {
+   "id": "4 organism 'yeast' offers Saccharomyces cerevisiae",
+   "ok": true,
+   "detail": "12 opts, first: ['Candida glabrata', 'Rhodotorula glutinis', 'Saccharomyces cerevisae', 'Saccharomyces cerevisiae']"
+  },
+  {
+   "id": "4 organism 'E. coli' offers Escherichia coli",
+   "ok": true,
+   "detail": "30 opts, first: ['Escherichia coli', 'Escherichia coli W', 'Escherichia coli HS', 'Escherichia coli 042']"
+  },
+  {
+   "id": "4 organism 'rat' offers Rattus norvegicus",
+   "ok": true,
+   "detail": "30 opts, first: ['Rattus norvegicus', 'Veillonella ratti', 'Candida glabrata', 'Serratia sp. FS14']"
+  },
+  {
+   "id": "4 organism 'human' offers Homo sapiens",
+   "ok": true,
+   "detail": "27 opts, first: ['Homo', 'human', 'Homosapiens', 'homi sapiens']"
+  },
+  {
+   "id": "1 valid submit via real form: POST /submit 303 -> job page (no shim)",
+   "ok": true,
+   "detail": "(303, 'http://127.0.0.1:54927/submit', '/job/de534015eba5498d88f2fd338a1a8814') landed http://127.0.0.1:54927/job/de534015eba5498d88f2fd338a1a8814"
+  },
+  {
+   "id": "2 status panel updates itself to finished without reload",
+   "ok": true,
+   "detail": "seen=['Done', 'Failed', 'Queued', 'Review required', 'Running'] marker=alive 20s"
+  },
+  {
+   "id": "2 success result page renders",
+   "ok": true,
+   "detail": "\u2190 All pathways in this job  Fake Success Glycolysis  Done Mus musculus \u00b7 pathway name  Done. The pathway was built and passed the strict checks.  Down"
+  },
+  {
+   "id": "2 review_required result page renders",
+   "ok": true,
+   "detail": "\u2190 All pathways in this job  Fake Review Zero Pathway  Review required Homo sapiens \u00b7 pathway name  Needs review. A PWML "
+  },
+  {
+   "id": "5 'Why this needs review' card + 'The PWML contains no reactions.'",
+   "ok": true,
+   "detail": "\u2190 All pathways in this job  Fake Review Zero Pathway  Review required Homo sapiens \u00b7 pathway name  Needs review. A PWML was produced, but it is incomplete or uncertain in places and must be checked by a person before use. See why this needs review below.  Warning: Review required before use  Open the PWML in PathWhiz and check it against the sources. Do not treat it as final.  Why this needs revie"
+  },
+  {
+   "id": "2 failure result page renders (No PWML)",
+   "ok": true,
+   "detail": "\u2190 All pathways in this job  Fake Failure Pathway  Failed Escherichia coli \u00b7 pathway name  Could not build this pathway. The extracted pathway did not pass the quality checks, so no PWML was produced. "
+  },
+  {
+   "id": "5 quality-gate failure not 'unexpected problem'",
+   "ok": true,
+   "detail": "\u2190 All pathways in this job  Fake Failure Pathway  Failed Escherichia coli \u00b7 pathway name  Could not build this pathway. The extracted pathway did not pass the quality checks, so no PWML was produced. A different or richer source may help.  Error: No PWML was produced  The extracted pathway did not p"
+  },
+  {
+   "id": "3 PDF upload accepted (303, job page shows PDF)",
+   "ok": true,
+   "detail": "(303, 'http://127.0.0.1:54927/submit', '/job/9fd50ca57b3b4f3b8a4836247e07be8d') 'Job status\\n\\nNote:\\nKeep this link\\n\\nThis page is your job. Bookmark it: http://127.0.0.1:54927/job/9fd50ca57b3b4f3b8a4836247e07be8d\\n\\nAnyone who has the '"
+  },
+  {
+   "id": "3 non-PDF refused with message (5x)",
+   "ok": true,
+   "detail": "[(400, True), (400, True), (400, True), (400, True), (400, True)]"
+  },
+  {
+   "id": "3 non-PDF refusals spent no daily slot (valid submit after 2 used + 5 refused = 303, not 429)",
+   "ok": true,
+   "detail": "(303, 'http://127.0.0.1:54927/submit', '/job/a16cc489c541456983570d5bba580a60')"
+  },
+  {
+   "id": "5 cross-site browser form POST refused (403)",
+   "ok": true,
+   "detail": "(403, 'http://127.0.0.1:54927/submit', None) 'Skip to main content\\nT2PW\\nText to PathWhiz\\nSubmit\\nExamples\\nHelp\\nAbout / Cite\\nReq'"
+  },
+  {
+   "id": "5 cross-site POST via API with foreign Origin refused (403)",
+   "ok": true,
+   "detail": "403"
+  },
+  {
+   "id": "5 no console errors besides 4xx resource lines",
+   "ok": true,
+   "detail": "[]"
+  }
+ ],
+ "notes": {
+  "version": "156.0.8078.4",
+  "organism_search": {
+   "mouse": [
+    "Mus musculus",
+    "Mus musculus castaneus",
+    "Candidatus Arthromitus sp. SFB-mouse-Japan"
+   ],
+   "yeast": [
+    "Candida glabrata",
+    "Rhodotorula glutinis",
+    "Saccharomyces cerevisae",
+    "Saccharomyces cerevisiae",
+    "Candida albicans (strain SC5314 / ATCC MYA-2876)",
+    "Candida glabrata (strain ATCC 2001 / CBS 138 / JCM 3761 / NBRC 0622 / NRRL Y-65)"
+   ],
+   "E. coli": [
+    "Escherichia coli",
+    "Escherichia coli W",
+    "Escherichia coli HS",
+    "Escherichia coli 042",
+    "Escherichia coli 536",
+    "Escherichia coli DH1"
+   ],
+   "rat": [
+    "Rattus norvegicus",
+    "Veillonella ratti",
+    "Candida glabrata",
+    "Serratia sp. FS14",
+    "Nitratiruptor sp. SB155-2",
+    "Serratia liquefaciens ATCC 27592"
+   ],
+   "human": [
+    "Homo",
+    "human",
+    "Homosapiens",
+    "homi sapiens",
+    "Homo sapiens",
+    "Homo sapiens 1"
+   ]
+  },
+  "result0": "\u2190 All pathways in this job\n\nFake Success Glycolysis\n\nDone\nMus musculus \u00b7 pathway name\n\nDone. The pathway was built and passed the strict checks.\n\nDownload\n\nDownload PWML\nPathWhiz pathway file\n\nPathway diagram\nRendered from the PWML above.\nReports and diagnostic files (5)\nTechnical message\nAttempts\nAttempts for pathway 1\nAttempt\tStarted\tEnded\tOutcome\n1\t2026-11-09 04:36 UTC\t2026-11-09 04:36 UTC\tPassed",
+  "result1": "\u2190 All pathways in this job\n\nFake Review Zero Pathway\n\nReview required\nHomo sapiens \u00b7 pathway name\n\nNeeds review. A PWML was produced, but it is incomplete or uncertain in places and must be checked by a person before use. See why this needs review below.\n\nWarning:\nReview required before use\n\nOpen the PWML in PathWhiz and check it against the sources. Do not treat it as final.\n\nWhy this needs review\n\nWhat the PWML contains:\n\nReactions: 0\n\nThe PWML contains no reactions.\n\nWarning:\nWarnings\n\nFake warning: two reactions have no EC number.\nFake warning: one compound unmapped.\nDownload\n\nDownload PWM",
+  "result2": "\u2190 All pathways in this job\n\nFake Failure Pathway\n\nFailed\nEscherichia coli \u00b7 pathway name\n\nCould not build this pathway. The extracted pathway did not pass the quality checks, so no PWML was produced. A different or richer source may help.\n\nError:\nNo PWML was produced\n\nThe extracted pathway did not pass the quality checks, so no PWML was produced. A different or richer source may help.\n\nReports and diagnostic files (1)\nTechnical message\nAttempts\nAttempts for pathway 3\nAttempt\tStarted\tEnded\tOutcome\n1\t2026-11-09 04:36 UTC\t2026-11-09 04:37 UTC\tFailed (the extracted pathway failed the quality check",
+  "bad_responses": [
+   [
+    400,
+    "POST",
+    "http://127.0.0.1:54927/submit"
+   ],
+   [
+    400,
+    "POST",
+    "http://127.0.0.1:54927/submit"
+   ],
+   [
+    400,
+    "POST",
+    "http://127.0.0.1:54927/submit"
+   ],
+   [
+    400,
+    "POST",
+    "http://127.0.0.1:54927/submit"
+   ],
+   [
+    400,
+    "POST",
+    "http://127.0.0.1:54927/submit"
+   ],
+   [
+    403,
+    "POST",
+    "http://127.0.0.1:54927/submit"
+   ]
+  ],
+  "survivors": []
+ },
+ "console": [
+  [
+   "error",
+   "Failed to load resource: the server responded with a status of 400 (Bad Request)",
+   "http://127.0.0.1:54927/submit"
+  ],
+  [
+   "error",
+   "Failed to load resource: the server responded with a status of 400 (Bad Request)",
+   "http://127.0.0.1:54927/submit"
+  ],
+  [
+   "error",
+   "Failed to load resource: the server responded with a status of 400 (Bad Request)",
+   "http://127.0.0.1:54927/submit"
+  ],
+  [
+   "error",
+   "Failed to load resource: the server responded with a status of 400 (Bad Request)",
+   "http://127.0.0.1:54927/submit"
+  ],
+  [
+   "error",
+   "Failed to load resource: the server responded with a status of 400 (Bad Request)",
+   "http://127.0.0.1:54927/submit"
+  ],
+  [
+   "error",
+   "Failed to load resource: the server responded with a status of 403 (Forbidden)",
+   "http://127.0.0.1:54927/submit"
+  ]
+ ],
+ "bad": [
+  [
+   400,
+   "POST",
+   "http://127.0.0.1:54927/submit"
+  ],
+  [
+   400,
+   "POST",
+   "http://127.0.0.1:54927/submit"
+  ],
+  [
+   400,
+   "POST",
+   "http://127.0.0.1:54927/submit"
+  ],
+  [
+   400,
+   "POST",
+   "http://127.0.0.1:54927/submit"
+  ],
+  [
+   400,
+   "POST",
+   "http://127.0.0.1:54927/submit"
+  ],
+  [
+   403,
+   "POST",
+   "http://127.0.0.1:54927/submit"
+  ]
+ ]
+}

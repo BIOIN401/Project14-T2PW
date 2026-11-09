@@ -1,0 +1,256 @@
+{
+  "label": "E2E3b-chromium",
+  "command": [
+    "C:\\t\\e2e3-venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/ev-E2E3b/scripts/drive.py",
+    "chromium"
+  ],
+  "cwd": "C:/t/ws-E2E3b",
+  "started_at": "2026-11-09T04:36:26+00:00",
+  "finished_at": "2026-11-09T04:37:15+00:00",
+  "duration_seconds": 48.0792913999976,
+  "timeout_seconds": 500.0,
+  "root_pid": 568356,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 568976,
+      "name": "python.exe",
+      "ppid": 568356
+    },
+    {
+      "pid": 568756,
+      "name": "python.exe",
+      "ppid": 568976
+    },
+    {
+      "pid": 568864,
+      "name": "python.exe",
+      "ppid": 569008
+    },
+    {
+      "pid": 569008,
+      "name": "python.exe",
+      "ppid": 568976
+    },
+    {
+      "pid": 569012,
+      "name": "python.exe",
+      "ppid": 568756
+    },
+    {
+      "pid": 564596,
+      "name": "node.exe",
+      "ppid": 568976
+    },
+    {
+      "pid": 559420,
+      "name": "chrome-headless-shell.exe",
+      "ppid": 564596
+    },
+    {
+      "pid": 550816,
+      "name": "chrome-headless-shell.exe",
+      "ppid": 559420
+    },
+    {
+      "pid": 568416,
+      "name": "chrome-headless-shell.exe",
+      "ppid": 559420
+    },
+    {
+      "pid": 568768,
+      "name": "chrome-headless-shell.exe",
+      "ppid": 559420
+    },
+    {
+      "pid": 570024,
+      "name": "python.exe",
+      "ppid": 568864
+    },
+    {
+      "pid": 570056,
+      "name": "python.exe",
+      "ppid": 570024
+    },
+    {
+      "pid": 569664,
+      "name": "python.exe",
+      "ppid": 568864
+    },
+    {
+      "pid": 569828,
+      "name": "python.exe",
+      "ppid": 569664
+    },
+    {
+      "pid": 567360,
+      "name": "python.exe",
+      "ppid": 570088
+    },
+    {
+      "pid": 570088,
+      "name": "python.exe",
+      "ppid": 568864
+    },
+    {
+      "pid": 559008,
+      "name": "python.exe",
+      "ppid": 569248
+    },
+    {
+      "pid": 569248,
+      "name": "python.exe",
+      "ppid": 569012
+    },
+    {
+      "pid": 562272,
+      "name": "python.exe",
+      "ppid": 568360
+    },
+    {
+      "pid": 568360,
+      "name": "python.exe",
+      "ppid": 568864
+    },
+    {
+      "pid": 571800,
+      "name": "python.exe",
+      "ppid": 568864
+    },
+    {
+      "pid": 571912,
+      "name": "python.exe",
+      "ppid": 571800
+    },
+    {
+      "pid": 572064,
+      "name": "chrome-headless-shell.exe",
+      "ppid": 559420
+    },
+    {
+      "pid": 572208,
+      "name": "taskkill.exe",
+      "ppid": 568976
+    },
+    {
+      "pid": 571604,
+      "name": "tasklist.exe",
+      "ppid": 568976
+    },
+    {
+      "pid": 537268,
+      "name": "tasklist.exe",
+      "ppid": 568976
+    },
+    {
+      "pid": 571700,
+      "name": "taskkill.exe",
+      "ppid": 568976
+    },
+    {
+      "pid": 568984,
+      "name": "tasklist.exe",
+      "ppid": 568976
+    },
+    {
+      "pid": 571504,
+      "name": "tasklist.exe",
+      "ppid": 568976
+    }
+  ],
+  "descendants_terminated": [
+    537268,
+    550816,
+    559008,
+    559420,
+    562272,
+    564596,
+    567360,
+    568360,
+    568416,
+    568756,
+    568768,
+    568864,
+    568976,
+    568984,
+    569008,
+    569012,
+    569248,
+    569664,
+    569828,
+    570024,
+    570056,
+    570088,
+    571504,
+    571604,
+    571700,
+    571800,
+    571912,
+    572064,
+    572208
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 24756,
+      "name": "python.exe"
+    },
+    {
+      "pid": 24880,
+      "name": "python.exe"
+    },
+    {
+      "pid": 547320,
+      "name": "python.exe"
+    },
+    {
+      "pid": 567600,
+      "name": "python.exe"
+    },
+    {
+      "pid": 568240,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/ev-E2E3b/chromium-wrapper.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-E2E3b\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-E2E3b",
+    "repo_head": "f74ca9366f8ba89f7edd0aab41a840d4a40a3b00",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "E2E3b",
+    "token": "E2E3b:567600:e8b7a7724d4f9627",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

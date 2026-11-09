@@ -1,0 +1,167 @@
+{
+  "label": "R4c-ind-smoke",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/ws-R4c/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-R4c",
+    "-q",
+    "--basetemp=C:/t/bt/R4cind/smoke",
+    "tests/test_reference_repair.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_empty_extraction_payload.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py",
+    "tests/test_c102_coverage_denominator.py",
+    "tests/test_c106_mutation_harness_executable.py"
+  ],
+  "cwd": "C:\\t\\ws-R4c",
+  "started_at": "2026-11-09T05:00:22+00:00",
+  "finished_at": "2026-11-09T05:01:12+00:00",
+  "duration_seconds": 50.02526109999599,
+  "timeout_seconds": 540.0,
+  "root_pid": 606832,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 604744,
+      "name": "python.exe",
+      "ppid": 606832
+    },
+    {
+      "pid": 597924,
+      "name": "python.exe",
+      "ppid": 604744
+    },
+    {
+      "pid": 605200,
+      "name": "python.exe",
+      "ppid": 597924
+    },
+    {
+      "pid": 601724,
+      "name": "python.exe",
+      "ppid": 610236
+    },
+    {
+      "pid": 610236,
+      "name": "python.exe",
+      "ppid": 604744
+    },
+    {
+      "pid": 608692,
+      "name": "python.exe",
+      "ppid": 610148
+    },
+    {
+      "pid": 610148,
+      "name": "python.exe",
+      "ppid": 604744
+    },
+    {
+      "pid": 577488,
+      "name": "python.exe",
+      "ppid": 610684
+    },
+    {
+      "pid": 610684,
+      "name": "python.exe",
+      "ppid": 604744
+    },
+    {
+      "pid": 611992,
+      "name": "git.exe",
+      "ppid": 604744
+    }
+  ],
+  "descendants_terminated": [
+    577488,
+    597924,
+    601724,
+    604744,
+    605200,
+    608692,
+    610148,
+    610236,
+    610684,
+    611992
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 24756,
+      "name": "python.exe"
+    },
+    {
+      "pid": 24880,
+      "name": "python.exe"
+    },
+    {
+      "pid": 547320,
+      "name": "python.exe"
+    },
+    {
+      "pid": 609764,
+      "name": "python.exe"
+    },
+    {
+      "pid": 610212,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/ev-R4c/independent/smoke.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-R4c\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-R4c",
+    "repo_head": "b45da8787ffbf4f197ed2796650a00804753b6ed",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "R4c-ind",
+    "token": "R4c-ind:610212:0c8aa6d9bc421d32",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

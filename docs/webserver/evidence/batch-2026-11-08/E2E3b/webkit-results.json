@@ -1,0 +1,197 @@
+{
+ "browser": "webkit",
+ "checks": [
+  {
+   "id": "4 organism 'mouse' offers Mus musculus",
+   "ok": true,
+   "detail": "3 opts, first: ['Mus musculus', 'Mus musculus castaneus', 'Candidatus Arthromitus sp. SFB-mouse-Japan']"
+  },
+  {
+   "id": "4 organism 'yeast' offers Saccharomyces cerevisiae",
+   "ok": true,
+   "detail": "12 opts, first: ['Candida glabrata', 'Rhodotorula glutinis', 'Saccharomyces cerevisae', 'Saccharomyces cerevisiae']"
+  },
+  {
+   "id": "4 organism 'E. coli' offers Escherichia coli",
+   "ok": true,
+   "detail": "30 opts, first: ['Escherichia coli', 'Escherichia coli W', 'Escherichia coli HS', 'Escherichia coli 042']"
+  },
+  {
+   "id": "4 organism 'rat' offers Rattus norvegicus",
+   "ok": true,
+   "detail": "30 opts, first: ['Rattus norvegicus', 'Veillonella ratti', 'Candida glabrata', 'Serratia sp. FS14']"
+  },
+  {
+   "id": "4 organism 'human' offers Homo sapiens",
+   "ok": true,
+   "detail": "27 opts, first: ['Homo', 'human', 'Homosapiens', 'homi sapiens']"
+  },
+  {
+   "id": "1 valid submit via real form: POST /submit 303 -> job page (no shim)",
+   "ok": true,
+   "detail": "(303, 'http://127.0.0.1:63414/submit', '/job/16a84ec4711c48ad9388d65ffb4aa909') landed http://127.0.0.1:63414/job/16a84ec4711c48ad9388d65ffb4aa909"
+  },
+  {
+   "id": "2 status panel updates itself to finished without reload",
+   "ok": true,
+   "detail": "seen=['Done', 'Queued'] marker=alive 10s"
+  },
+  {
+   "id": "3 PDF upload accepted (303, job page shows PDF)",
+   "ok": true,
+   "detail": "(303, 'http://127.0.0.1:63414/submit', '/job/773f9970673d4c1e80e7a9d2f018d534') 'Job status\\n\\nNote:Keep this link\\n\\nThis page is your job. Bookmark it: http://127.0.0.1:63414/job/773f9970673d4c1e80e7a9d2f018d534\\n\\nAnyone who has the l'"
+  },
+  {
+   "id": "3 non-PDF refused with message (5x)",
+   "ok": true,
+   "detail": "[(400, True), (400, True), (400, True), (400, True), (400, True)]"
+  },
+  {
+   "id": "3 non-PDF refusals spent no daily slot (valid submit after 2 used + 5 refused = 303, not 429)",
+   "ok": true,
+   "detail": "(303, 'http://127.0.0.1:63414/submit', '/job/46f96aa68f124226861210189daec72f')"
+  }
+ ],
+ "notes": {
+  "version": "27.2",
+  "organism_search": {
+   "mouse": [
+    "Mus musculus",
+    "Mus musculus castaneus",
+    "Candidatus Arthromitus sp. SFB-mouse-Japan"
+   ],
+   "yeast": [
+    "Candida glabrata",
+    "Rhodotorula glutinis",
+    "Saccharomyces cerevisae",
+    "Saccharomyces cerevisiae",
+    "Candida albicans (strain SC5314 / ATCC MYA-2876)",
+    "Candida glabrata (strain ATCC 2001 / CBS 138 / JCM 3761 / NBRC 0622 / NRRL Y-65)"
+   ],
+   "E. coli": [
+    "Escherichia coli",
+    "Escherichia coli W",
+    "Escherichia coli HS",
+    "Escherichia coli 042",
+    "Escherichia coli 536",
+    "Escherichia coli DH1"
+   ],
+   "rat": [
+    "Rattus norvegicus",
+    "Veillonella ratti",
+    "Candida glabrata",
+    "Serratia sp. FS14",
+    "Nitratiruptor sp. SB155-2",
+    "Serratia liquefaciens ATCC 27592"
+   ],
+   "human": [
+    "Homo",
+    "human",
+    "Homosapiens",
+    "homi sapiens",
+    "Homo sapiens",
+    "Homo sapiens 1"
+   ]
+  },
+  "survivors": []
+ },
+ "console": [
+  [
+   "error",
+   "Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+   "http://127.0.0.1:63414/"
+  ],
+  [
+   "error",
+   "Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+   "http://127.0.0.1:63414/"
+  ],
+  [
+   "error",
+   "Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+   "http://127.0.0.1:63414/job/16a84ec4711c48ad9388d65ffb4aa909"
+  ],
+  [
+   "error",
+   "Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+   "http://127.0.0.1:63414/job/16a84ec4711c48ad9388d65ffb4aa909"
+  ],
+  [
+   "pageerror",
+   "/127.0.0.1:63414/organisms?organism_1=Mus%20musculus due to access control checks.",
+   ""
+  ],
+  [
+   "error",
+   "htmx:afterRequest",
+   "http://127.0.0.1:63414/static/js/htmx.min.js"
+  ],
+  [
+   "error",
+   "htmx:sendError",
+   "http://127.0.0.1:63414/static/js/htmx.min.js"
+  ],
+  [
+   "error",
+   "Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+   "http://127.0.0.1:63414/job/773f9970673d4c1e80e7a9d2f018d534"
+  ],
+  [
+   "error",
+   "Failed to load resource: the server responded with a status of 400 (Bad Request)",
+   "http://127.0.0.1:63414/submit"
+  ],
+  [
+   "error",
+   "Failed to load resource: the server responded with a status of 400 (Bad Request)",
+   "http://127.0.0.1:63414/submit"
+  ],
+  [
+   "error",
+   "Failed to load resource: the server responded with a status of 400 (Bad Request)",
+   "http://127.0.0.1:63414/submit"
+  ],
+  [
+   "error",
+   "Failed to load resource: the server responded with a status of 400 (Bad Request)",
+   "http://127.0.0.1:63414/submit"
+  ],
+  [
+   "error",
+   "Failed to load resource: the server responded with a status of 400 (Bad Request)",
+   "http://127.0.0.1:63414/submit"
+  ],
+  [
+   "error",
+   "Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+   "http://127.0.0.1:63414/submit"
+  ]
+ ],
+ "bad": [
+  [
+   400,
+   "POST",
+   "http://127.0.0.1:63414/submit"
+  ],
+  [
+   400,
+   "POST",
+   "http://127.0.0.1:63414/submit"
+  ],
+  [
+   400,
+   "POST",
+   "http://127.0.0.1:63414/submit"
+  ],
+  [
+   400,
+   "POST",
+   "http://127.0.0.1:63414/submit"
+  ],
+  [
+   400,
+   "POST",
+   "http://127.0.0.1:63414/submit"
+  ]
+ ]
+}

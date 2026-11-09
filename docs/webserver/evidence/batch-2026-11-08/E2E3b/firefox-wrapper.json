@@ -1,0 +1,256 @@
+{
+  "label": "E2E3b-firefox",
+  "command": [
+    "C:\\t\\e2e3-venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/ev-E2E3b/scripts/drive.py",
+    "firefox"
+  ],
+  "cwd": "C:/t/ws-E2E3b",
+  "started_at": "2026-11-09T04:37:21+00:00",
+  "finished_at": "2026-11-09T04:38:00+00:00",
+  "duration_seconds": 38.334616000000096,
+  "timeout_seconds": 500.0,
+  "root_pid": 571948,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 567136,
+      "name": "python.exe",
+      "ppid": 571948
+    },
+    {
+      "pid": 480404,
+      "name": "python.exe",
+      "ppid": 567136
+    },
+    {
+      "pid": 570116,
+      "name": "python.exe",
+      "ppid": 570888
+    },
+    {
+      "pid": 570888,
+      "name": "python.exe",
+      "ppid": 567136
+    },
+    {
+      "pid": 571332,
+      "name": "python.exe",
+      "ppid": 480404
+    },
+    {
+      "pid": 571452,
+      "name": "node.exe",
+      "ppid": 567136
+    },
+    {
+      "pid": 567392,
+      "name": "firefox.exe",
+      "ppid": 571452
+    },
+    {
+      "pid": 572116,
+      "name": "firefox.exe",
+      "ppid": 567392
+    },
+    {
+      "pid": 569368,
+      "name": "firefox.exe",
+      "ppid": 572116
+    },
+    {
+      "pid": 565332,
+      "name": "firefox.exe",
+      "ppid": 572116
+    },
+    {
+      "pid": 568992,
+      "name": "firefox.exe",
+      "ppid": 572116
+    },
+    {
+      "pid": 572372,
+      "name": "firefox.exe",
+      "ppid": 572116
+    },
+    {
+      "pid": 571900,
+      "name": "firefox.exe",
+      "ppid": 572116
+    },
+    {
+      "pid": 570364,
+      "name": "firefox.exe",
+      "ppid": 572116
+    },
+    {
+      "pid": 572604,
+      "name": "firefox.exe",
+      "ppid": 572116
+    },
+    {
+      "pid": 573352,
+      "name": "python.exe",
+      "ppid": 573408
+    },
+    {
+      "pid": 573408,
+      "name": "python.exe",
+      "ppid": 571332
+    },
+    {
+      "pid": 562908,
+      "name": "python.exe",
+      "ppid": 570116
+    },
+    {
+      "pid": 571008,
+      "name": "python.exe",
+      "ppid": 562908
+    },
+    {
+      "pid": 569316,
+      "name": "python.exe",
+      "ppid": 572832
+    },
+    {
+      "pid": 572832,
+      "name": "python.exe",
+      "ppid": 571332
+    },
+    {
+      "pid": 574092,
+      "name": "taskkill.exe",
+      "ppid": 567136
+    },
+    {
+      "pid": 574140,
+      "name": "python.exe",
+      "ppid": 571332
+    },
+    {
+      "pid": 574152,
+      "name": "python.exe",
+      "ppid": 574140
+    },
+    {
+      "pid": 574300,
+      "name": "tasklist.exe",
+      "ppid": 567136
+    },
+    {
+      "pid": 573476,
+      "name": "tasklist.exe",
+      "ppid": 567136
+    },
+    {
+      "pid": 573724,
+      "name": "taskkill.exe",
+      "ppid": 567136
+    },
+    {
+      "pid": 556824,
+      "name": "tasklist.exe",
+      "ppid": 567136
+    },
+    {
+      "pid": 571844,
+      "name": "tasklist.exe",
+      "ppid": 567136
+    }
+  ],
+  "descendants_terminated": [
+    480404,
+    556824,
+    562908,
+    565332,
+    567136,
+    567392,
+    568992,
+    569316,
+    569368,
+    570116,
+    570364,
+    570888,
+    571008,
+    571332,
+    571452,
+    571844,
+    571900,
+    572116,
+    572372,
+    572604,
+    572832,
+    573352,
+    573408,
+    573476,
+    573724,
+    574092,
+    574140,
+    574152,
+    574300
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 24756,
+      "name": "python.exe"
+    },
+    {
+      "pid": 24880,
+      "name": "python.exe"
+    },
+    {
+      "pid": 547320,
+      "name": "python.exe"
+    },
+    {
+      "pid": 562424,
+      "name": "python.exe"
+    },
+    {
+      "pid": 571888,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/ev-E2E3b/firefox-wrapper.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-E2E3b\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-E2E3b",
+    "repo_head": "f74ca9366f8ba89f7edd0aab41a840d4a40a3b00",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "E2E3b",
+    "token": "E2E3b:562424:dc79e30730d387ab",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

@@ -1,0 +1,40 @@
+T2PW: C:\t\ws-R4c\src\t2pw\__init__.py
+........................................................................ [ 23%]
+........................................................................ [ 46%]
+........................................................................ [ 70%]
+........................................................................ [ 93%]
+...................                                                      [100%]
+============================== warnings summary ===============================
+tests\test_service_inputs.py:254
+  C:\t\ws-R4c\tests\test_service_inputs.py:254: SyntaxWarning: invalid escape sequence '\d'
+    """W1F: mixed ASCII/non-ASCII digit strings (the old str.isdigit/\d regex accepted these)."""
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+307 passed, 1 warning in 46.86s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R4c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ b45da8787ffbf4f197ed2796650a00804753b6ed  [git, worktree dirty=False]
+label                   : R4c-ind-web
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R4c/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R4c -q --basetemp=C:/t/bt/R4cind/web tests/test_service_driver_bridge.py tests/test_service_pathway_interface.py tests/test_service_inputs.py tests/test_service_organisms.py tests/test_web_jobs.py tests/test_web_worker.py tests/test_web_retry.py tests/test_web_limits.py tests/test_web_notify.py tests/test_web_design_system.py tests/test_web_curator_queue.py tests/test_web_postrun.py tests/test_web_app.py
+cwd                     : C:\t\ws-R4c
+root PID / process group: 609808 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 48.09 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 116  609820:python.exe, 610140:python.exe, 610160:python.exe, 610268:python.exe, 610288:python.exe, 609292:python.exe, 609304:python.exe, 609412:python.exe, 609436:python.exe, 609396:python.exe, 609460:python.exe, 609576:python.exe, 609652:python.exe, 609708:python.exe, 609716:python.exe, 605352:python.exe, 608324:python.exe, 584744:python.exe, 609972:python.exe, 608920:python.exe, 610120:python.exe, 603592:python.exe, 609072:python.exe, 608736:python.exe, 610144:python.exe, 608248:python.exe, 609388:python.exe, 609580:python.exe, 609628:python.exe, 606564:python.exe, 608396:python.exe, 601868:python.exe, 603320:python.exe, 607460:python.exe, 604964:python.exe, 605592:python.exe, 608536:python.exe, 607908:python.exe, 606772:python.exe, 588620:python.exe, 609596:python.exe, 602948:python.exe, 608912:python.exe, 609060:python.exe, 609776:python.exe, 598856:python.exe, 607820:python.exe, 577408:python.exe, 603788:python.exe, 605652:python.exe, 609092:python.exe, 607668:python.exe, 609644:python.exe, 608352:python.exe, 608672:python.exe, 604592:python.exe, 606980:python.exe, 607764:python.exe, 609840:python.exe, 602792:python.exe, 609724:python.exe, 607888:python.exe, 608972:python.exe, 385720:python.exe, 610012:python.exe, 609068:python.exe, 609632:python.exe, 609624:python.exe, 610240:python.exe, 608560:python.exe, 608676:python.exe, 599700:python.exe, 609348:python.exe, 604008:python.exe, 607692:python.exe, 604608:python.exe, 608600:python.exe, 603424:python.exe, 610044:python.exe, 606596:python.exe, 607444:python.exe, 608160:python.exe, 609616:python.exe, 599592:python.exe, 604896:python.exe, 605212:python.exe, 609432:python.exe, 610348:python.exe, 610368:python.exe, 610388:python.exe, 610408:python.exe, 610428:python.exe, 610448:python.exe, 610468:python.exe, 610488:python.exe, 610508:python.exe, 610536:python.exe, 610628:python.exe, 610648:python.exe, 610768:python.exe, 610788:python.exe, 610972:tasklist.exe, 611132:python.exe, 611152:python.exe, 611172:python.exe, 611192:python.exe, 611236:python.exe, 611256:python.exe, 610980:python.exe, 611120:python.exe, 608372:python.exe, 610208:python.exe, 610164:python.exe, 610232:python.exe, 610444:python.exe, 610476:python.exe
+descendants terminated  : 116  385720, 577408, 584744, 588620, 598856, 599592, 599700, 601868, 602792, 602948, 603320, 603424, 603592, 603788, 604008, 604592, 604608, 604896, 604964, 605212, 605352, 605592, 605652, 606564, 606596, 606772, 606980, 607444, 607460, 607668, 607692, 607764, 607820, 607888, 607908, 608160, 608248, 608324, 608352, 608372, 608396, 608536, 608560, 608600, 608672, 608676, 608736, 608912, 608920, 608972, 609060, 609068, 609072, 609092, 609292, 609304, 609348, 609388, 609396, 609412, 609432, 609436, 609460, 609576, 609580, 609596, 609616, 609624, 609628, 609632, 609644, 609652, 609708, 609716, 609724, 609776, 609820, 609840, 609972, 610012, 610044, 610120, 610140, 610144, 610160, 610164, 610208, 610232, 610240, 610268, 610288, 610348, 610368, 610388, 610408, 610428, 610444, 610448, 610468, 610476, 610488, 610508, 610536, 610628, 610648, 610768, 610788, 610972, 610980, 611120, 611132, 611152, 611172, 611192, 611236, 611256
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ev-R4c/independent/web.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R4c-ind  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================
