@@ -199,6 +199,15 @@ def test_a_bug_in_the_drive_is_a_crash_result_not_an_exception(world, tmp_path, 
     assert "ZeroDivisionError" in outcome["detail"]
 
 
+def test_the_run_record_and_message_carry_no_server_root(world, tmp_path, monkeypatch):
+    def boom(*a, **k):
+        raise RuntimeError(f"under {Path.home()}")
+    monkeypatch.setattr(pw, "_drive", boom)
+    res = _run(tmp_path)
+    text = (tmp_path / "out" / "run_outcome.json").read_text(encoding="utf-8")
+    assert "RuntimeError" in text and str(Path.home()).replace("\\", "\\\\") not in text and str(Path.home()) not in res.message
+
+
 def test_no_reactions_and_absent_payload_are_final(world, tmp_path):
     world.extract = lambda r, rep, s: ExtractionResult(final_payload={"processes": {"reactions": []}})
     res = _run(tmp_path)

@@ -493,6 +493,7 @@ def run_pathway(request: PathwayRequest) -> PathwayResult:
         outcome.detail = ((outcome.detail + "\n\n") if outcome.detail else "") + traceback.format_exc()
     outcome.seconds = round(time.monotonic() - started, 2)
     outcome.artifacts = _scrub_server_paths(outcome.artifacts, out_dir)
+    outcome.message, outcome.detail = (_scrub_server_paths({'m': t}, out_dir)['m'] for t in (outcome.message or '', outcome.detail or ''))
     result = bridge._to_result(outcome, out_dir)
     result.attempt_log = [{**row, "runner": "t2pw.service.pathway.run_pathway"} for row in result.attempt_log]
     png = state.get("refinement_graph_bytes")
