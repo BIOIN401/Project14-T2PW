@@ -1,0 +1,54 @@
+T2PW: C:\t\wsR4btmp\scratch-tip\src\t2pw\__init__.py
+.............F.........................                                  [100%]
+================================== FAILURES ===================================
+________ test_the_stored_artifacts_are_the_object_later_writes_mutate _________
+
+world = namespace(events=[('set', 'final_payload_snapshot'), ('reenter', <object object at 0x000002197998CCF0>), ('spinner', (...w=<function world.<locals>.review at 0x000002197A5DA980>, run=<function world.<locals>.<lambda> at 0x000002197A5DAA20>)
+
+    def test_the_stored_artifacts_are_the_object_later_writes_mutate(world):
+        world.state["final_payload_snapshot"] = {"snap": 1}
+        world.artifacts.update(gate_failed=True)
+        world.run()
+        assert world.state["post_pipeline_artifacts"] is world.artifacts
+>       assert world.artifacts["final_payload_snapshot"] == {"snap": 1}
+E       AssertionError: assert {'entities': ...name': 'a'}]}} == {'snap': 1}
+E         
+E         Left contains 3 more items:
+E         {'entities': {},
+E          'organism': 'E. coli',
+E          'processes': {'reactions': [{'name': 'a'}]}}
+E         Right contains 1 more item:
+E         {'snap': 1}
+E         Use -v to get more diff
+
+tests\test_service_post_run.py:265: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_post_run.py::test_the_stored_artifacts_are_the_object_later_writes_mutate
+1 failed, 38 passed in 4.04s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\wsR4btmp\scratch-tip\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : mut-snapshot-key
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/wsR4btmp/scratch-tip/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/wsR4btmp/scratch-tip -q -p no:cacheprovider --basetemp=C:/t/wsR4btmp/mut-tmp/snapshot-key tests/test_service_post_run.py
+cwd                     : C:\t\wsR4btmp\scratch-tip
+root PID / process group: 309308 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 5.08 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  306260:python.exe
+descendants terminated  : 1  306260
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR4btmp\proof\mutation\snapshot-key.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R4b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

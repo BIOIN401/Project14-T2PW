@@ -1,0 +1,60 @@
+T2PW: C:\t\wsR4btmp\scratch-tip\src\t2pw\__init__.py
+...F...................................                                  [100%]
+================================== FAILURES ===================================
+_ test_blank_widget_values_get_the_apps_defaults[mapping_cache_text-   -mapping_cache_path-id_mapping_cache.json] _
+
+world = namespace(events=[('reenter', <object object at 0x00000233A7CBCCF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x00000233A88E8AE0>, run=<function world.<locals>.<lambda> at 0x00000233A88E8B80>)
+field = 'mapping_cache_text', value = '   ', kw = 'mapping_cache_path'
+expected = 'id_mapping_cache.json'
+
+    @pytest.mark.parametrize("field, value, kw, expected", [
+        ("default_compartment", None, "default_compartment", "cell"),
+        ("default_compartment", "   ", "default_compartment", "cell"),
+        ("mapping_cache_text", "   ", "mapping_cache_path", "id_mapping_cache.json"),
+        ("id_source_mode", None, "id_source", "hybrid"),
+        ("db_host", None, "db_host", ""),
+        ("db_user", None, "db_user", ""),
+        ("db_password", None, "db_password", ""),
+        ("db_schema", None, "db_schema", "pathbank"),
+        ("db_schema", "  ", "db_schema", "pathbank"),
+        ("example_index_path", None, "example_index_path", ""),
+    ])
+    def test_blank_widget_values_get_the_apps_defaults(world, field, value, kw, expected):
+        world.run(request=_request(**{field: value}))
+>       assert world.call[1][kw] == expected
+E       AssertionError: assert 'other.json' == 'id_mapping_cache.json'
+E         
+E         - id_mapping_cache.json
+E         + other.json
+
+tests\test_service_post_run.py:240: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_post_run.py::test_blank_widget_values_get_the_apps_defaults[mapping_cache_text-   -mapping_cache_path-id_mapping_cache.json]
+1 failed, 38 passed in 3.72s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\wsR4btmp\scratch-tip\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : mut-cache-default
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/wsR4btmp/scratch-tip/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/wsR4btmp/scratch-tip -q -p no:cacheprovider --basetemp=C:/t/wsR4btmp/mut-tmp/cache-default tests/test_service_post_run.py
+cwd                     : C:\t\wsR4btmp\scratch-tip
+root PID / process group: 302600 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 4.79 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  302852:python.exe
+descendants terminated  : 1  302852
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR4btmp\proof\mutation\cache-default.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R4b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

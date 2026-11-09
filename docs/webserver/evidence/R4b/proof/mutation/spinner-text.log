@@ -1,0 +1,54 @@
+T2PW: C:\t\wsR4btmp\scratch-tip\src\t2pw\__init__.py
+F......................................                                  [100%]
+================================== FAILURES ===================================
+_____ test_the_handler_spends_the_run_in_order_and_coerces_every_argument _____
+
+world = namespace(events=[('reenter', <object object at 0x0000027EAAE4CCF0>), ('spinner', ('Running audit',)), ('spinner:enter...w=<function world.<locals>.review at 0x0000027EABA48360>, run=<function world.<locals>.<lambda> at 0x0000027EABA48400>)
+
+    def test_the_handler_spends_the_run_in_order_and_coerces_every_argument(world):
+        world.state.update(qa_report={"qa": 1}, reaction_summary="sum", export_mode="research", pwml_strict_db=0)
+        result = world.run()
+    
+>       assert world.events[:5] == [
+            ("reenter", RECORDER),
+            ("spinner", ("Running audit and DB mapping...",)),
+            ("spinner:enter",),
+            ("propagate", PAYLOAD, CTX),
+            ("artifacts", REBOUND),
+        ]
+E       AssertionError: assert [('reenter', ...me': 'a'}]}})] == [('reenter', ...me': 'a'}]}})]
+E         
+E         At index 1 diff: ('spinner', ('Running audit',)) != ('spinner', ('Running audit and DB mapping...',))
+E         Use -v to get more diff
+
+tests\test_service_post_run.py:182: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_post_run.py::test_the_handler_spends_the_run_in_order_and_coerces_every_argument
+1 failed, 38 passed in 3.76s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\wsR4btmp\scratch-tip\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : mut-spinner-text
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/wsR4btmp/scratch-tip/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/wsR4btmp/scratch-tip -q -p no:cacheprovider --basetemp=C:/t/wsR4btmp/mut-tmp/spinner-text tests/test_service_post_run.py
+cwd                     : C:\t\wsR4btmp\scratch-tip
+root PID / process group: 302068 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 4.76 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  302056:python.exe
+descendants terminated  : 1  302056
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR4btmp\proof\mutation\spinner-text.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R4b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

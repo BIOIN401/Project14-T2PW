@@ -1,0 +1,230 @@
+T2PW: C:\t\wsR4btmp\scratch-tip\src\t2pw\__init__.py
+..F.F.FF......                                                           [100%]
+================================== FAILURES ===================================
+___ test_a_app_runs_offline_from_the_fixture_alone_to_the_recorded_verdict ____
+
+arms = {'after': {'data/enrichment_cache.json': (35408592, 1794173324244845100), 'data/id_mapping_cache.json': (4230244, 1794...ut/enrichment_dump.json': (1785, 1794173324283259800), 'outputs/pathway.pwml': (23487, 1794169516000000000), ...}, ...}
+
+    def test_a_app_runs_offline_from_the_fixture_alone_to_the_recorded_verdict(arms):
+        recorded = arms["fixture"]["recorded"]
+        for name in ("app1", "app2"):
+            arm = arms[name]
+            assert arm["misses"] == [], (name, arm["misses"][:3])
+            assert arm["refused"] == [], (name, arm["refused"][:5])
+>           assert arm["unused"] == [], (name, arm["unused"][:10])
+E           AssertionError: ('app1', [('llm', 6), ('llm', 7), ('llm', 8), ('llm', 11), ('llm', 12), ('llm', 13), ...])
+E           assert [('llm', 6), ...lm', 13), ...] == []
+E             
+E             Left contains 15 more items, first extra item: ('llm', 6)
+E             Use -v to get more diff
+
+tests\test_equivalence_app_vs_service.py:143: AssertionError
+---------------------------- Captured stderr setup ----------------------------
+2026-11-08 22:12:11.655 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:12:11.655 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:12:13.042 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-08 22:12:13.043 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-08 22:12:13.044 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-08 22:12:13.184 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-08 22:12:13.185 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-08 22:12:13.186 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-08 22:12:24.367 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-08 22:12:24.514 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:12:24.514 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:12:25.148 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-08 22:12:25.149 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-08 22:12:25.150 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-08 22:12:25.294 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-08 22:12:25.295 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-08 22:12:25.296 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-08 22:12:35.981 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-08 22:12:36.149 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:12:36.149 Session state does not function when running a script without `streamlit run`
+2026-11-08 22:12:36.153 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:12:46.940 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:12:46.940 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:12:47.492 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-08 22:12:47.493 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-08 22:12:47.494 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-08 22:12:47.616 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-08 22:12:47.616 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-08 22:12:47.617 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-11-08 22:12:58.392 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+_______________ test_b_replay_reproduces_the_recorded_live_run ________________
+
+arms = {'after': {'data/enrichment_cache.json': (35408592, 1794173324244845100), 'data/id_mapping_cache.json': (4230244, 1794...ut/enrichment_dump.json': (1785, 1794173324283259800), 'outputs/pathway.pwml': (23487, 1794169516000000000), ...}, ...}
+
+    def test_b_replay_reproduces_the_recorded_live_run(arms):
+        """Against the LIVE run: PWML bytes exactly, and the canonical payload field by field EXCEPT the
+        ``retrieved_at`` stamps, which in the live run are real wall-clock times (PO ruling 2026-11-05). The live
+        canonical hash is therefore not compared; the frozen arms compare full hashes in test_b/test_c."""
+    
+        from t2pw.pipeline.gate_reports import payload_sha256
+    
+        recorded = arms["fixture"]["recorded"]
+>       assert harness.sha256(arms["app1"]["xml"]) == recorded["pwml_sha256"]
+E       AssertionError: assert '3487fb9d0185...b824cdaa97dfa' == '76617a0d5063...6882502ed1f37'
+E         
+E         - 76617a0d5063a582b5f769c26be253ea1e669049e44dcee9fd26882502ed1f37
+E         + 3487fb9d0185d8d47d6ec808063a66ecbfcc871ea8988c8d381b824cdaa97dfa
+
+tests\test_equivalence_app_vs_service.py:168: AssertionError
+_________________ test_c_service_post_pipeline_equals_the_app _________________
+
+arms = {'after': {'data/enrichment_cache.json': (35408592, 1794173324244845100), 'data/id_mapping_cache.json': (4230244, 1794...ut/enrichment_dump.json': (1785, 1794173324283259800), 'outputs/pathway.pwml': (23487, 1794169516000000000), ...}, ...}
+
+    def test_c_service_post_pipeline_equals_the_app(arms):
+        app1, service = arms["app1"], arms["service"]
+        # The Stage-2 payload the service started from is the one the app's session held.
+        from t2pw.pipeline.pipeline import propagate_context_organism
+    
+        assert app1["post_call"] and app1["export_call"], "the app arm never reached the post-pipeline and export"
+        assert app1["canonical_payload_sha256"], "the app arm produced no canonical payload"
+        (post_args, _kwargs) = app1["post_call"]
+        assert post_args[0] == propagate_context_organism(app1["stage2_payload"], app1["pathway_context"])
+        # Review F2: the non-default audit timeout is what the app handed the post-pipeline, so the service ran
+        # under it too. (The default 240 s branch is NOT covered here; see R2.5.md, Notes.)
+        assert _kwargs["audit_timeout_seconds"] == harness.AUDIT_TIMEOUT_SECONDS
+        assert service["misses"] == [] and service["refused"] == []
+        # Q-R3d-3: from R3d the service arm runs from the text, so it must consume every recorded LLM reply.
+>       assert [row for row in service.get("unused", []) if row[0] == "llm"] == [], service.get("unused")
+E       AssertionError: [('llm', 6), ('llm', 7), ('llm', 8), ('llm', 11), ('llm', 12), ('llm', 13), ...]
+E       assert [('llm', 6), ...lm', 13), ...] == []
+E         
+E         Left contains 10 more items, first extra item: ('llm', 6)
+E         Use -v to get more diff
+
+tests\test_equivalence_app_vs_service.py:207: AssertionError
+__________ test_pwml_bytes_are_produced_and_equal_in_all_three_arms ___________
+
+arms = {'after': {'data/enrichment_cache.json': (35408592, 1794173324244845100), 'data/id_mapping_cache.json': (4230244, 1794...ut/enrichment_dump.json': (1785, 1794173324283259800), 'outputs/pathway.pwml': (23487, 1794169516000000000), ...}, ...}
+
+    def test_pwml_bytes_are_produced_and_equal_in_all_three_arms(arms):
+        # Not skippable: a fixture whose case writes no PWML cannot prove byte equality, so it fails here.
+        assert arms["fixture"]["recorded"]["pwml_bytes"] > 0, "the fixture's case wrote no PWML"
+        xml = arms["app1"]["xml"]
+        assert xml and arms["app2"]["xml"] == xml and arms["service"]["xml"] == xml
+>       assert harness.sha256(xml) == arms["fixture"]["recorded"]["pwml_sha256"]
+E       AssertionError: assert '3487fb9d0185...b824cdaa97dfa' == '76617a0d5063...6882502ed1f37'
+E         
+E         - 76617a0d5063a582b5f769c26be253ea1e669049e44dcee9fd26882502ed1f37
+E         + 3487fb9d0185d8d47d6ec808063a66ecbfcc871ea8988c8d381b824cdaa97dfa
+
+tests\test_equivalence_app_vs_service.py:220: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_equivalence_app_vs_service.py::test_a_app_runs_offline_from_the_fixture_alone_to_the_recorded_verdict
+FAILED tests/test_equivalence_app_vs_service.py::test_b_replay_reproduces_the_recorded_live_run
+FAILED tests/test_equivalence_app_vs_service.py::test_c_service_post_pipeline_equals_the_app
+FAILED tests/test_equivalence_app_vs_service.py::test_pwml_bytes_are_produced_and_equal_in_all_three_arms
+4 failed, 10 passed in 49.32s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\wsR4btmp\scratch-tip\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : mut-eq-no-audit-config
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/wsR4btmp/scratch-tip/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/wsR4btmp/scratch-tip -q -p no:cacheprovider --basetemp=C:/t/wsR4btmp/mut-tmp/eq-no-audit-config tests/test_equivalence_app_vs_service.py
+cwd                     : C:\t\wsR4btmp\scratch-tip
+root PID / process group: 526548 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 51.09 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  523540:python.exe
+descendants terminated  : 1  523540
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR4btmp\proof\mutation\eq-no-audit-config.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R4b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

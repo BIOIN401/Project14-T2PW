@@ -1,0 +1,75 @@
+T2PW: C:\t\wsR4btmp\scratch-tip\src\t2pw\__init__.py
+.........................FF.F..........                                  [100%]
+================================== FAILURES ===================================
+___ test_a_stage_contract_failure_is_rendered_before_the_sync_and_returned ____
+
+world = namespace(events=[('reenter', <object object at 0x0000017BA83BCCF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x0000017BA90A0FE0>, run=<function world.<locals>.<lambda> at 0x0000017BA90A1080>)
+
+    def test_a_stage_contract_failure_is_rendered_before_the_sync_and_returned(world):
+        world.raises = _contract_error()
+        result = world.run()
+>       assert result.failure is world.raises and result.final_payload is REBOUND
+E       AssertionError: assert (None is StageContractError('contract broke'))
+E        +  where None = PostRunResult(final_payload={'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}, 'organism': 'E. coli'}, failure=None).failure
+E        +  and   StageContractError('contract broke') = namespace(events=[('reenter', <object object at 0x0000017BA83BCCF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x0000017BA90A0FE0>, run=<function world.<locals>.<lambda> at 0x0000017BA90A1080>).raises
+
+tests\test_service_post_run.py:404: AssertionError
+_____ test_an_exception_is_recorded_against_the_rebound_payload_and_shown _____
+
+world = namespace(events=[('reenter', <object object at 0x0000017BA83BCCF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x0000017BA90A0040>, run=<function world.<locals>.<lambda> at 0x0000017BA908BF60>)
+
+    def test_an_exception_is_recorded_against_the_rebound_payload_and_shown(world):
+        world.raises = RuntimeError("boom")
+        result = world.run()
+>       assert result.failure is world.raises and result.final_payload is REBOUND
+E       AssertionError: assert (None is RuntimeError('boom'))
+E        +  where None = PostRunResult(final_payload={'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}, 'organism': 'E. coli'}, failure=None).failure
+E        +  and   RuntimeError('boom') = namespace(events=[('reenter', <object object at 0x0000017BA83BCCF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x0000017BA90A0040>, run=<function world.<locals>.<lambda> at 0x0000017BA908BF60>).raises
+
+tests\test_service_post_run.py:413: AssertionError
+_____________ test_a_failing_review_lands_in_the_generic_handler ______________
+
+world = namespace(events=[('reenter', <object object at 0x0000017BA83BCCF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x0000017BA908AD40>, run=<function world.<locals>.<lambda> at 0x0000017BA908ACA0>)
+
+    def test_a_failing_review_lands_in_the_generic_handler(world):
+        world.artifacts.update({CANONICAL_PAYLOAD_KEY: {"p": 1}, "quarantine_ok": True, FINAL_GATE_REPORT_KEY: {"ok": True}})
+        world.review_raises = RuntimeError("render failed")
+        result = world.run()
+>       assert result.failure is world.review_raises
+E       AssertionError: assert None is RuntimeError('render failed')
+E        +  where None = PostRunResult(final_payload={'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}, 'organism': 'E. coli'}, failure=None).failure
+E        +  and   RuntimeError('render failed') = namespace(events=[('reenter', <object object at 0x0000017BA83BCCF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x0000017BA908AD40>, run=<function world.<locals>.<lambda> at 0x0000017BA908ACA0>).review_raises
+
+tests\test_service_post_run.py:434: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_post_run.py::test_a_stage_contract_failure_is_rendered_before_the_sync_and_returned
+FAILED tests/test_service_post_run.py::test_an_exception_is_recorded_against_the_rebound_payload_and_shown
+FAILED tests/test_service_post_run.py::test_a_failing_review_lands_in_the_generic_handler
+3 failed, 36 passed in 4.31s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\wsR4btmp\scratch-tip\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : mut-result-no-failure
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/wsR4btmp/scratch-tip/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/wsR4btmp/scratch-tip -q -p no:cacheprovider --basetemp=C:/t/wsR4btmp/mut-tmp/result-no-failure tests/test_service_post_run.py
+cwd                     : C:\t\wsR4btmp\scratch-tip
+root PID / process group: 509832 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 5.76 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  509844:python.exe
+descendants terminated  : 1  509844
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR4btmp\proof\mutation\result-no-failure.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R4b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

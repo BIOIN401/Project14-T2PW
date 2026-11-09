@@ -1,0 +1,55 @@
+T2PW: C:\t\wsR4btmp\scratch-tip\src\t2pw\__init__.py
+.............................F.........                                  [100%]
+================================== FAILURES ===================================
+__________ test_a_failing_contract_render_still_syncs_and_propagates __________
+
+world = namespace(events=[('reenter', <object object at 0x000001ABC11DCCF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x000001ABC1DA2520>, run=<function world.<locals>.<lambda> at 0x000001ABC1DA25C0>)
+
+    def test_a_failing_contract_render_still_syncs_and_propagates(world):
+        world.raises = _contract_error()
+        boom = ValueError("render")
+    
+        def bad(failure):
+            raise boom
+    
+        with pytest.raises(ValueError):
+            post_run.run_post_pipeline(_request(), state=world.state, reporter=_Reporter(world.events), open_review=world.review,
+                                       render_issue_detail=lambda d: None, render_contract_failure=bad)
+>       assert world.events[-1] == ("sync", True)
+E       AssertionError: assert ('spinner:exit',) == ('sync', True)
+E         
+E         At index 0 diff: 'spinner:exit' != 'sync'
+E         Right contains one more item: True
+E         Use -v to get more diff
+
+tests\test_service_post_run.py:450: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_post_run.py::test_a_failing_contract_render_still_syncs_and_propagates
+1 failed, 38 passed in 4.47s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\wsR4btmp\scratch-tip\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : mut-sync-before-handlers
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/wsR4btmp/scratch-tip/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/wsR4btmp/scratch-tip -q -p no:cacheprovider --basetemp=C:/t/wsR4btmp/mut-tmp/sync-before-handlers tests/test_service_post_run.py
+cwd                     : C:\t\wsR4btmp\scratch-tip
+root PID / process group: 508072 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 5.99 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  508120:python.exe
+descendants terminated  : 1  508120
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR4btmp\proof\mutation\sync-before-handlers.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R4b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 8
+================================================

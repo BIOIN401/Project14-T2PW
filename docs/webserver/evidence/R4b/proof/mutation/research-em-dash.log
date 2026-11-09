@@ -1,0 +1,63 @@
+T2PW: C:\t\wsR4btmp\scratch-tip\src\t2pw\__init__.py
+....................F..................                                  [100%]
+================================== FAILURES ===================================
+________ test_research_mode_fails_open_on_stage_three_and_opens_review ________
+
+world = namespace(events=[('set', 'export_mode'), ('reenter', <object object at 0x000001EB5EBACCF0>), ('spinner', ('Running au...w=<function world.<locals>.review at 0x000001EB5F81BF60>, run=<function world.<locals>.<lambda> at 0x000001EB5F830040>)
+
+    def test_research_mode_fails_open_on_stage_three_and_opens_review(world):
+        world.state["export_mode"] = "research"
+        world.artifacts.update({CANONICAL_PAYLOAD_KEY: {"p": 1}, "quarantine_ok": True, FINAL_GATE_REPORT_KEY: GATE,
+                                "mapping_report": {"m": 1}})
+        world.run()
+        assert world.artifacts["research_stage3_review_flags"] == GATE["errors"]
+        assert world.artifacts["research_stage3_failed_open"] is True
+        assert world.state["refinement_gate_errors"] == []
+        tail = [e for e in world.events if e[0] in ("warning", "caption", "markdown", "json", "open_review", "sync")]
+>       assert tail == [
+            ("warning", ("Research mode: the pre-export Stage 3 revalidation FAILED (2 error(s)) and was not enforced. "
+                         "The strict gates did NOT pass \ufffd this candidate is not PathWhiz-exportable as it stands. "
+                         "Refinement review is open so the findings below can be reviewed against the pathway itself.",)),
+            ("caption", ("Stage 3 findings retained as review flags",)),
+            ("markdown", ("- `/a` \ufffd bad",)),
+            ("markdown", ("- plain",)),
+            ("json", (GATE,)),
+            ("open_review", {"p": 1}, {"m": 1}),
+            ("sync", True),
+        ]
+E       AssertionError: assert [('warning', ...'m': 1}), ...] == [('warning', ...'m': 1}), ...]
+E         
+E         At index 0 diff: ('warning', ('Research mode: the pre-export Stage 3 revalidation FAILED (2 error(s)) and was not enforced. The strict gates did NOT pass - this candidate is not PathWhiz-exportable as it stands. Refinement review is open so the findings below can be reviewed against the pathway itself.',)) != ('warning', ('Research mode: the pre-export Stage 3 revalidation FAILED (2 error(s)) and was not enforced. The strict gates did NOT pass \ufffd this candidate is not PathWhiz-exportable as it stands. Refinement review is open so the findings below can be reviewed against the pathway itself.',))
+E         Use -v to get more diff
+
+tests\test_service_post_run.py:342: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_post_run.py::test_research_mode_fails_open_on_stage_three_and_opens_review
+1 failed, 38 passed in 3.90s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\wsR4btmp\scratch-tip\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : mut-research-em-dash
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/wsR4btmp/scratch-tip/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/wsR4btmp/scratch-tip -q -p no:cacheprovider --basetemp=C:/t/wsR4btmp/mut-tmp/research-em-dash tests/test_service_post_run.py
+cwd                     : C:\t\wsR4btmp\scratch-tip
+root PID / process group: 312792 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 4.96 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  299152:python.exe
+descendants terminated  : 1  299152
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR4btmp\proof\mutation\research-em-dash.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R4b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

@@ -1,0 +1,49 @@
+T2PW: C:\t\wsR4btmp\scratch-tip\src\t2pw\__init__.py
+........................................F.                               [100%]
+================================== FAILURES ===================================
+______________ test_the_app_hands_the_service_its_own_callbacks _______________
+
+    def test_the_app_hands_the_service_its_own_callbacks():
+        """The app's three callbacks, by name: a stand-in here would still run every path above."""
+    
+        import ast
+    
+        tree = ast.parse(APP_PATH.read_text(encoding="utf-8"))
+        call = next(n for n in ast.walk(tree) if isinstance(n, ast.Call) and isinstance(n.func, ast.Name)
+                    and n.func.id == "run_post_pipeline")
+        keywords = {k.arg: k.value for k in call.keywords}
+>       assert keywords["open_review"].id == "initialize_refinement_review_state"
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Lambda' object has no attribute 'id'
+
+tests\test_service_post_run.py:644: AttributeError
+=========================== short test summary info ===========================
+FAILED tests/test_service_post_run.py::test_the_app_hands_the_service_its_own_callbacks
+1 failed, 41 passed in 4.21s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\wsR4btmp\scratch-tip\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : mut-app-review-noop
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/wsR4btmp/scratch-tip/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/wsR4btmp/scratch-tip -q -p no:cacheprovider --basetemp=C:/t/wsR4btmp/mut-tmp/app-review-noop tests/test_service_post_run.py
+cwd                     : C:\t\wsR4btmp\scratch-tip
+root PID / process group: 527544 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 5.44 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  528496:python.exe
+descendants terminated  : 1  528496
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR4btmp\proof\mutation\app-review-noop.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R4b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

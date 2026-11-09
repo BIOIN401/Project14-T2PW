@@ -1,0 +1,79 @@
+T2PW: C:\t\wsR4btmp\scratch-tip\src\t2pw\__init__.py
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_stage2_artifacts_are_visible_and_both_ui_paths_share_the_orchestrator __
+
+    def test_stage2_artifacts_are_visible_and_both_ui_paths_share_the_orchestrator() -> None:
+        namespace: dict[str, Any] = {"Any": Any, "Dict": Dict, "List": List, "Optional": Optional, "Tuple": Tuple}
+        entries_function = _load_function("_json_artifact_entries", namespace)
+        entries = entries_function(
+            {
+                "stage2_payload": {"stage": 2},
+                "stage2_mapping_report": {"summary": {"mapped": 1}},
+                "stage2_runtime_schema_report": {"boundary": "post_mapping"},
+                "mapping_report": {"summary": {"stage": 6}},
+            },
+            None,
+        )
+        filenames = {filename for _label, filename, _value in entries}
+        assert {
+            "stage2.mapped.json",
+            "stage2_mapping_report.json",
+            "stage2_runtime_schema_report.json",
+            "mapping_report.json",
+        } <= filenames
+    
+        tree = _source_tree()
+        # R4b (Q-R4-1): the audit handler's call moved to t2pw.service.post_run; the legacy
+        # button's stays here. Both still reach the one orchestrator.
+        post_run_path = ROOT / "src" / "t2pw" / "service" / "post_run.py"
+        post_run_tree = ast.parse(post_run_path.read_text(encoding="utf-8"))
+    
+        def orchestrator_calls(module: ast.AST) -> list:
+            return [
+                node
+                for node in ast.walk(module)
+                if isinstance(node, ast.Call)
+                and (
+                    (isinstance(node.func, ast.Name) and node.func.id == "run_post_pipeline_sbml_artifacts")
+                    or (isinstance(node.func, ast.Attribute) and node.func.attr == "run_post_pipeline_sbml_artifacts")
+                )
+            ]
+    
+        assert len(orchestrator_calls(tree)) == 1
+>       assert len(orchestrator_calls(post_run_tree)) == 1
+E       assert 0 == 1
+E        +  where 0 = len([])
+E        +    where [] = <function test_stage2_artifacts_are_visible_and_both_ui_paths_share_the_orchestrator.<locals>.orchestrator_calls at 0x000001C1A71542C0>(<ast.Module object at 0x000001C1A9E77FD0>)
+
+tests\test_streamlit_stage2_orchestration.py:1065: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_streamlit_stage2_orchestration.py::test_stage2_artifacts_are_visible_and_both_ui_paths_share_the_orchestrator
+1 failed in 1.11s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\wsR4btmp\scratch-tip\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : vac-handler-call-missing
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/wsR4btmp/scratch-tip/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/wsR4btmp/scratch-tip -q -p no:cacheprovider --basetemp=C:/t/wsR4btmp/vac-tmp/handler-call-missing tests/test_streamlit_stage2_orchestration.py::test_stage2_artifacts_are_visible_and_both_ui_paths_share_the_orchestrator
+cwd                     : C:\t\wsR4btmp\scratch-tip
+root PID / process group: 284756 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 120 s
+duration                : 2.02 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  285136:python.exe
+descendants terminated  : 1  285136
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR4btmp\proof\vacuity\handler-call-missing.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R4b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 8
+================================================

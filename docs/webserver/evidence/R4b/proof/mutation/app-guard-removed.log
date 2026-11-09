@@ -1,0 +1,78 @@
+T2PW: C:\t\wsR4btmp\scratch-tip\src\t2pw\__init__.py
+.....................................F...F                               [100%]
+================================== FAILURES ===================================
+________________ test_real_app_warns_when_there_is_no_payload _________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000280A67C39A0>
+tmp_path = WindowsPath('C:/t/wsR4btmp/mut-tmp/app-guard-removed/test_real_app_warns_when_there0')
+
+    def test_real_app_warns_when_there_is_no_payload(monkeypatch, tmp_path):
+        at, calls = _real_app(monkeypatch, tmp_path, payload={})
+>       assert calls == []
+E       AssertionError: assert [({}, {'audit... False, ...})] == []
+E         
+E         Left contains one more item: ({}, {'audit_candidate_count': 3, 'audit_max_rounds': 4, 'audit_timeout_seconds': 240, 'build_legacy_sbml': False, ...})
+E         Use -v to get more diff
+
+tests\test_service_post_run.py:596: AssertionError
+---------------------------- Captured stderr call -----------------------------
+2026-11-08 22:11:06.449 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:06.717 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:06.717 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:06.717 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:06.717 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:06.717 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:06.717 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:06.717 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:06.717 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:06.717 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:06.717 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 22:11:06.717 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+__ test_the_app_clears_the_previous_run_before_calling_the_service_in_order ___
+
+    def test_the_app_clears_the_previous_run_before_calling_the_service_in_order():
+        """Pop, quarantine reset, ``post_artifacts = {}``, then the call, as the handler always did."""
+    
+        import ast
+    
+        tree = ast.parse(APP_PATH.read_text(encoding="utf-8"))
+        button = next(n for n in ast.walk(tree) if isinstance(n, ast.If) and isinstance(n.test, ast.Call)
+                      and isinstance(n.test.func, ast.Attribute) and n.test.func.attr == "button"
+                      and n.test.args and getattr(n.test.args[0], "value", "") == "Run audit and DB mapping")
+        source = [ast.unparse(statement) for statement in button.body[0].orelse[:4]]
+>       assert source[0] == "st.session_state.pop('post_pipeline_artifacts', None)"
+               ^^^^^^^^^
+E       IndexError: list index out of range
+
+tests\test_service_post_run.py:664: IndexError
+=========================== short test summary info ===========================
+FAILED tests/test_service_post_run.py::test_real_app_warns_when_there_is_no_payload
+FAILED tests/test_service_post_run.py::test_the_app_clears_the_previous_run_before_calling_the_service_in_order
+2 failed, 40 passed in 4.10s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\wsR4btmp\scratch-tip\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : mut-app-guard-removed
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/wsR4btmp/scratch-tip/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/wsR4btmp/scratch-tip -q -p no:cacheprovider --basetemp=C:/t/wsR4btmp/mut-tmp/app-guard-removed tests/test_service_post_run.py
+cwd                     : C:\t\wsR4btmp\scratch-tip
+root PID / process group: 529328 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 5.36 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  529340:python.exe
+descendants terminated  : 1  529340
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR4btmp\proof\mutation\app-guard-removed.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R4b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

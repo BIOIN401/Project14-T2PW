@@ -1,0 +1,69 @@
+T2PW: C:\t\wsR4btmp\scratch-tip\src\t2pw\__init__.py
+..........................FF...........                                  [100%]
+================================== FAILURES ===================================
+_____ test_an_exception_is_recorded_against_the_rebound_payload_and_shown _____
+
+world = namespace(events=[('reenter', <object object at 0x0000028439F00CF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x000002843AB31580>, run=<function world.<locals>.<lambda> at 0x000002843AB31620>)
+
+    def test_an_exception_is_recorded_against_the_rebound_payload_and_shown(world):
+        world.raises = RuntimeError("boom")
+        result = world.run()
+        assert result.failure is world.raises and result.final_payload is REBOUND
+>       assert world.events[-4:] == [
+            ("snapshot", REBOUND, "post_pipeline", "RuntimeError: boom"),
+            ("error", ("Post-pipeline conversion failed: boom",)),
+            ("exception", (world.raises,)),
+            ("sync", True),
+        ]
+E       AssertionError: assert [('snapshot',...'sync', True)] == [('snapshot',...'sync', True)]
+E         
+E         At index 0 diff: ('snapshot', {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}, 'organism': 'E. coli'}, 'post_pipeline', 'boom') != ('snapshot', {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}, 'organism': 'E. coli'}, 'post_pipeline', 'RuntimeError: boom')
+E         Use -v to get more diff
+
+tests\test_service_post_run.py:414: AssertionError
+____________ test_a_propagation_failure_keeps_the_original_payload ____________
+
+world = namespace(events=[('reenter', <object object at 0x0000028439F00CF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x000002843AB30A40>, run=<function world.<locals>.<lambda> at 0x000002843AB309A0>)
+
+    def test_a_propagation_failure_keeps_the_original_payload(world):
+        world.propagate_raises = RuntimeError("no organism")
+        result = world.run()
+        assert result.final_payload is PAYLOAD
+>       assert world.events[-4:][0] == ("snapshot", PAYLOAD, "post_pipeline", "RuntimeError: no organism")
+E       AssertionError: assert ('snapshot', ...'no organism') == ('snapshot', ... no organism')
+E         
+E         At index 3 diff: 'no organism' != 'RuntimeError: no organism'
+E         Use -v to get more diff
+
+tests\test_service_post_run.py:426: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_post_run.py::test_an_exception_is_recorded_against_the_rebound_payload_and_shown
+FAILED tests/test_service_post_run.py::test_a_propagation_failure_keeps_the_original_payload
+2 failed, 37 passed in 4.57s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\wsR4btmp\scratch-tip\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : mut-snapshot-reason
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/wsR4btmp/scratch-tip/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/wsR4btmp/scratch-tip -q -p no:cacheprovider --basetemp=C:/t/wsR4btmp/mut-tmp/snapshot-reason tests/test_service_post_run.py
+cwd                     : C:\t\wsR4btmp\scratch-tip
+root PID / process group: 506296 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 6.10 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  506668:python.exe
+descendants terminated  : 1  506668
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR4btmp\proof\mutation\snapshot-reason.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R4b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

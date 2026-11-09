@@ -1,0 +1,45 @@
+T2PW: C:\t\wsR4btmp\scratch-tip\src\t2pw\__init__.py
+.....................F.................                                  [100%]
+================================== FAILURES ===================================
+_______ test_strict_stage_three_failure_shows_the_errors_and_no_review ________
+
+world = namespace(events=[('reenter', <object object at 0x0000023A157DCCF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x0000023A164B02C0>, run=<function world.<locals>.<lambda> at 0x0000023A164B0360>)
+
+    def test_strict_stage_three_failure_shows_the_errors_and_no_review(world):
+        world.artifacts.update({CANONICAL_PAYLOAD_KEY: {"p": 1}, "quarantine_ok": True, FINAL_GATE_REPORT_KEY: GATE})
+        world.run()
+>       assert world.state["refinement_gate_errors"] == GATE["errors"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'refinement_gate_errors'
+
+tests\test_service_post_run.py:358: KeyError
+=========================== short test summary info ===========================
+FAILED tests/test_service_post_run.py::test_strict_stage_three_failure_shows_the_errors_and_no_review
+1 failed, 38 passed in 3.81s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\wsR4btmp\scratch-tip\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : mut-strict-errors-not-set
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/wsR4btmp/scratch-tip/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/wsR4btmp/scratch-tip -q -p no:cacheprovider --basetemp=C:/t/wsR4btmp/mut-tmp/strict-errors-not-set tests/test_service_post_run.py
+cwd                     : C:\t\wsR4btmp\scratch-tip
+root PID / process group: 310196 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 4.82 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  303148:python.exe
+descendants terminated  : 1  303148
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR4btmp\proof\mutation\strict-errors-not-set.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R4b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

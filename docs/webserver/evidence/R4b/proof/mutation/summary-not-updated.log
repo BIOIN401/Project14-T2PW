@@ -1,0 +1,54 @@
+T2PW: C:\t\wsR4btmp\scratch-tip\src\t2pw\__init__.py
+...............F.......................                                  [100%]
+================================== FAILURES ===================================
+____ test_post_audit_reports_replace_the_session_copies_only_when_present _____
+
+world = namespace(events=[('reenter', <object object at 0x0000017F41D9CCF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x0000017F42A4F060>, run=<function world.<locals>.<lambda> at 0x0000017F42A4F100>)
+
+    def test_post_audit_reports_replace_the_session_copies_only_when_present(world):
+        world.state.update(qa_report={"old": 1}, reaction_summary="old")
+        world.artifacts.update(gate_failed=True, post_audit_qa_report={"new": 1})
+        world.run()
+        assert world.state["qa_report"] == {"new": 1} and world.state["reaction_summary"] == "old"
+        world.artifacts.update(post_audit_qa_report=None, post_audit_reaction_summary="new")
+        world.run()
+>       assert world.state["qa_report"] == {"new": 1} and world.state["reaction_summary"] == "new"
+E       AssertionError: assert ({'new': 1} == {'new': 1}
+E         
+E         Omitting 1 identical items, use -vv to show
+E         Use -v to get more diff and 'old' == 'new'
+E         
+E         - new
+E         + old)
+
+tests\test_service_post_run.py:281: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_post_run.py::test_post_audit_reports_replace_the_session_copies_only_when_present
+1 failed, 38 passed in 3.73s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\wsR4btmp\scratch-tip\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : mut-summary-not-updated
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/wsR4btmp/scratch-tip/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/wsR4btmp/scratch-tip -q -p no:cacheprovider --basetemp=C:/t/wsR4btmp/mut-tmp/summary-not-updated tests/test_service_post_run.py
+cwd                     : C:\t\wsR4btmp\scratch-tip
+root PID / process group: 307692 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 4.82 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  311636:python.exe
+descendants terminated  : 1  311636
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR4btmp\proof\mutation\summary-not-updated.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R4b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

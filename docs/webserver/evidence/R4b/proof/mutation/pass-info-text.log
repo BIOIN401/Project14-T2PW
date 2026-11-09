@@ -1,0 +1,55 @@
+T2PW: C:\t\wsR4btmp\scratch-tip\src\t2pw\__init__.py
+.......................F...............                                  [100%]
+================================== FAILURES ===================================
+_____ test_a_passing_run_clears_the_errors_then_opens_review_then_says_so _____
+
+world = namespace(events=[('set', 'refinement_gate_errors'), ('reenter', <object object at 0x000001C3DE0CCCF0>), ('spinner', (...w=<function world.<locals>.review at 0x000001C3DECF09A0>, run=<function world.<locals>.<lambda> at 0x000001C3DECF0A40>)
+
+    def test_a_passing_run_clears_the_errors_then_opens_review_then_says_so(world):
+        world.artifacts.update({CANONICAL_PAYLOAD_KEY: {"p": 1}, "quarantine_ok": True,
+                                FINAL_GATE_REPORT_KEY: {"ok": True}, "mapping_report": {"m": 2}})
+        world.state["refinement_gate_errors"] = ["stale"]
+        world.run()
+        assert world.state["refinement_gate_errors"] == []
+        # the seed above, post_pipeline_artifacts, refinement_gate_errors
+        assert _names(world.events) == ["set", "set", "set", "open_review", "info", "sync"]
+>       assert world.events[-2:] == [
+            ("info", ("Mapped pathway is ready for review. PWML generation is paused until approval.",)),
+            ("sync", True),
+        ]
+E       AssertionError: assert [('info', ('M...'sync', True)] == [('info', ('M...'sync', True)]
+E         
+E         At index 0 diff: ('info', ('Mapped pathway is ready for review.',)) != ('info', ('Mapped pathway is ready for review. PWML generation is paused until approval.',))
+E         Use -v to get more diff
+
+tests\test_service_post_run.py:389: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_post_run.py::test_a_passing_run_clears_the_errors_then_opens_review_then_says_so
+1 failed, 38 passed in 3.81s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\wsR4btmp\scratch-tip\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : mut-pass-info-text
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/wsR4btmp/scratch-tip/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/wsR4btmp/scratch-tip -q -p no:cacheprovider --basetemp=C:/t/wsR4btmp/mut-tmp/pass-info-text tests/test_service_post_run.py
+cwd                     : C:\t\wsR4btmp\scratch-tip
+root PID / process group: 313472 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 4.84 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  313600:python.exe
+descendants terminated  : 1  313600
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR4btmp\proof\mutation\pass-info-text.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R4b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

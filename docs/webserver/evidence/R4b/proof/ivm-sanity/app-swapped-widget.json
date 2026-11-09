@@ -1,0 +1,101 @@
+{
+  "label": "ivm-app-swapped-widget",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/wsR4btmp/scripts/inline_vs_moved.py",
+    "C:/t/ws-R4-base",
+    "C:/t/wsR4btmp/scratch-tip"
+  ],
+  "cwd": "C:\\t\\wsR4btmp\\scratch-tip",
+  "started_at": "2026-11-08T21:21:38+00:00",
+  "finished_at": "2026-11-08T21:21:40+00:00",
+  "duration_seconds": 1.7840902999996615,
+  "timeout_seconds": 300.0,
+  "root_pid": 286548,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 287964,
+      "name": "python.exe",
+      "ppid": 286548
+    }
+  ],
+  "descendants_terminated": [
+    287964
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 24756,
+      "name": "python.exe"
+    },
+    {
+      "pid": 24880,
+      "name": "python.exe"
+    },
+    {
+      "pid": 278184,
+      "name": "python.exe"
+    },
+    {
+      "pid": 279356,
+      "name": "python.exe"
+    },
+    {
+      "pid": 285832,
+      "name": "python.exe"
+    },
+    {
+      "pid": 287988,
+      "name": "python.exe"
+    },
+    {
+      "pid": 288112,
+      "name": "python.exe"
+    },
+    {
+      "pid": 288452,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:\\t\\wsR4btmp\\proof\\ivm-sanity\\app-swapped-widget.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\wsR4btmp\\scratch-tip\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "",
+    "repo_head": "",
+    "repo_source": "not_a_repository",
+    "wrapper_vs_head": "unknown",
+    "repo_tracked_files_dirty": null,
+    "repo_error": "fatal: not a git repository (or any of the parent directories): .git"
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "R4b",
+    "token": "R4b:288452:2813c3f98a3bf147",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

@@ -1,0 +1,50 @@
+T2PW: C:\t\wsR4btmp\scratch-tip\src\t2pw\__init__.py
+..............................F........                                  [100%]
+================================== FAILURES ===================================
+______________________ test_reenter_sits_outside_the_try ______________________
+
+world = namespace(events=[('snapshot', {'entities': {}, 'processes': {'reactions': [{'name': 'a'}]}}, 'post_pipeline', 'Runtim...w=<function world.<locals>.review at 0x00000169EB222AC0>, run=<function world.<locals>.<lambda> at 0x00000169EB222B60>)
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000169EB215390>
+
+    def test_reenter_sits_outside_the_try(world, monkeypatch):
+        boom = RuntimeError("recorder")
+    
+        def reenter(recorder):
+            raise boom
+    
+        monkeypatch.setattr(diag, "reenter", reenter)
+>       with pytest.raises(RuntimeError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'RuntimeError'>
+
+tests\test_service_post_run.py:460: Failed
+=========================== short test summary info ===========================
+FAILED tests/test_service_post_run.py::test_reenter_sits_outside_the_try - Fa...
+1 failed, 38 passed in 3.79s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\wsR4btmp\scratch-tip\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : mut-reenter-into-try
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/wsR4btmp/scratch-tip/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/wsR4btmp/scratch-tip -q -p no:cacheprovider --basetemp=C:/t/wsR4btmp/mut-tmp/reenter-into-try tests/test_service_post_run.py
+cwd                     : C:\t\wsR4btmp\scratch-tip
+root PID / process group: 301632 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 4.85 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  301680:python.exe
+descendants terminated  : 1  301680
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR4btmp\proof\mutation\reenter-into-try.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R4b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

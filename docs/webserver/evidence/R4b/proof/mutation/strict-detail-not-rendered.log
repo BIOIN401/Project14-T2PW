@@ -1,0 +1,61 @@
+T2PW: C:\t\wsR4btmp\scratch-tip\src\t2pw\__init__.py
+.....................F.................                                  [100%]
+================================== FAILURES ===================================
+_______ test_strict_stage_three_failure_shows_the_errors_and_no_review ________
+
+world = namespace(events=[('reenter', <object object at 0x00000252D842CCF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x00000252D91002C0>, run=<function world.<locals>.<lambda> at 0x00000252D9100360>)
+
+    def test_strict_stage_three_failure_shows_the_errors_and_no_review(world):
+        world.artifacts.update({CANONICAL_PAYLOAD_KEY: {"p": 1}, "quarantine_ok": True, FINAL_GATE_REPORT_KEY: GATE})
+        world.run()
+        assert world.state["refinement_gate_errors"] == GATE["errors"]
+        names = [e for e in world.events if e[0] not in ("reenter", "propagate", "artifacts", "spinner", "spinner:enter",
+                                                         "spinner:exit", "set")]
+>       assert names == [
+            ("error", ("Mapped pathway still fails the pre-export Stage 3 revalidation. Refinement review was not opened.",)),
+            ("expander", ("Why Stage 3 failed (2 error(s))",), {"expanded": True}),
+            ("expander:enter",),
+            ("markdown", ("- `/a` \ufffd bad",)),
+            ("render_issue_detail", {"d": 1}),
+            ("markdown", ("- plain",)),
+            ("json", (GATE,)),
+            ("expander:exit",),
+            ("sync", True),
+        ]
+E       AssertionError: assert [('error', ('...alse},)), ...] == [('error', ('...lain',)), ...]
+E         
+E         At index 4 diff: ('markdown', ('- plain',)) != ('render_issue_detail', {'d': 1})
+E         Right contains one more item: ('sync', True)
+E         Use -v to get more diff
+
+tests\test_service_post_run.py:361: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_post_run.py::test_strict_stage_three_failure_shows_the_errors_and_no_review
+1 failed, 38 passed in 3.79s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\wsR4btmp\scratch-tip\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : mut-strict-detail-not-rendered
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/wsR4btmp/scratch-tip/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/wsR4btmp/scratch-tip -q -p no:cacheprovider --basetemp=C:/t/wsR4btmp/mut-tmp/strict-detail-not-rendered tests/test_service_post_run.py
+cwd                     : C:\t\wsR4btmp\scratch-tip
+root PID / process group: 302192 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 4.94 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  313788:python.exe
+descendants terminated  : 1  313788
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR4btmp\proof\mutation\strict-detail-not-rendered.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R4b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

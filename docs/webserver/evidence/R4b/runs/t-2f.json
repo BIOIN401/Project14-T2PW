@@ -1,0 +1,194 @@
+{
+  "label": "2f",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/ws-R4b/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-R4b",
+    "--pin-verdict",
+    "C:/t/wsR4btmp/ev2/pin/t-2f.pin.json",
+    "-q",
+    "--basetemp=C:/t/wsR4btmp/bt/t-2f",
+    "tests/test_batch_preflight.py"
+  ],
+  "cwd": "C:\\t\\ws-R4b",
+  "started_at": "2026-11-08T20:46:26+00:00",
+  "finished_at": "2026-11-08T20:46:35+00:00",
+  "duration_seconds": 8.106176700000105,
+  "timeout_seconds": 280.0,
+  "root_pid": 219600,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 229560,
+      "name": "python.exe",
+      "ppid": 219600
+    },
+    {
+      "pid": 229916,
+      "name": "python.exe",
+      "ppid": 229920
+    },
+    {
+      "pid": 229920,
+      "name": "python.exe",
+      "ppid": 229560
+    },
+    {
+      "pid": 228276,
+      "name": "python.exe",
+      "ppid": 229260
+    },
+    {
+      "pid": 229260,
+      "name": "python.exe",
+      "ppid": 229560
+    },
+    {
+      "pid": 229556,
+      "name": "python.exe",
+      "ppid": 230012
+    },
+    {
+      "pid": 230012,
+      "name": "python.exe",
+      "ppid": 229560
+    },
+    {
+      "pid": 222604,
+      "name": "python.exe",
+      "ppid": 230312
+    },
+    {
+      "pid": 230312,
+      "name": "python.exe",
+      "ppid": 229560
+    },
+    {
+      "pid": 231392,
+      "name": "python.exe",
+      "ppid": 229560
+    },
+    {
+      "pid": 231412,
+      "name": "python.exe",
+      "ppid": 231392
+    },
+    {
+      "pid": 227896,
+      "name": "python.exe",
+      "ppid": 231412
+    },
+    {
+      "pid": 226532,
+      "name": "python.exe",
+      "ppid": 227896
+    },
+    {
+      "pid": 185068,
+      "name": "python.exe",
+      "ppid": 229560
+    },
+    {
+      "pid": 230404,
+      "name": "python.exe",
+      "ppid": 185068
+    },
+    {
+      "pid": 230408,
+      "name": "python.exe",
+      "ppid": 230404
+    },
+    {
+      "pid": 230440,
+      "name": "python.exe",
+      "ppid": 230408
+    }
+  ],
+  "descendants_terminated": [
+    185068,
+    222604,
+    226532,
+    227896,
+    228276,
+    229260,
+    229556,
+    229560,
+    229916,
+    229920,
+    230012,
+    230312,
+    230404,
+    230408,
+    230440,
+    231392,
+    231412
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 24756,
+      "name": "python.exe"
+    },
+    {
+      "pid": 24880,
+      "name": "python.exe"
+    },
+    {
+      "pid": 217008,
+      "name": "python.exe"
+    },
+    {
+      "pid": 224376,
+      "name": "python.exe"
+    },
+    {
+      "pid": 229536,
+      "name": "python.exe"
+    },
+    {
+      "pid": 230076,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/wsR4btmp/ev2/t-2f.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-R4b\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-R4b",
+    "repo_head": "7170a9a7ae86a03385b7ddc01d9cd45c11e890f8",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "R4b",
+    "token": "R4b:229536:9f67c8f5580b06d4",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

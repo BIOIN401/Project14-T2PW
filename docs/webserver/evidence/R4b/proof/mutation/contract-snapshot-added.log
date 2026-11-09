@@ -1,0 +1,46 @@
+T2PW: C:\t\wsR4btmp\scratch-tip\src\t2pw\__init__.py
+.........................F.............                                  [100%]
+================================== FAILURES ===================================
+___ test_a_stage_contract_failure_is_rendered_before_the_sync_and_returned ____
+
+world = namespace(events=[('reenter', <object object at 0x000002762794CCF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x0000027628580FE0>, run=<function world.<locals>.<lambda> at 0x0000027628581080>)
+
+    def test_a_stage_contract_failure_is_rendered_before_the_sync_and_returned(world):
+        world.raises = _contract_error()
+        result = world.run()
+        assert result.failure is world.raises and result.final_payload is REBOUND
+>       assert not any(e[0] == "snapshot" for e in world.events)
+E       assert not True
+E        +  where True = any(<generator object test_a_stage_contract_failure_is_rendered_before_the_sync_and_returned.<locals>.<genexpr> at 0x000002762852F5E0>)
+
+tests\test_service_post_run.py:405: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_post_run.py::test_a_stage_contract_failure_is_rendered_before_the_sync_and_returned
+1 failed, 38 passed in 3.77s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\wsR4btmp\scratch-tip\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : mut-contract-snapshot-added
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/wsR4btmp/scratch-tip/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/wsR4btmp/scratch-tip -q -p no:cacheprovider --basetemp=C:/t/wsR4btmp/mut-tmp/contract-snapshot-added tests/test_service_post_run.py
+cwd                     : C:\t\wsR4btmp\scratch-tip
+root PID / process group: 315012 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 5.00 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  312680:python.exe
+descendants terminated  : 1  312680
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR4btmp\proof\mutation\contract-snapshot-added.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R4b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

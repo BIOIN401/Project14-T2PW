@@ -1,0 +1,49 @@
+T2PW: C:\t\wsR4btmp\scratch-tip\src\t2pw\__init__.py
+.................................F.....                                  [100%]
+================================== FAILURES ===================================
+_____________ test_the_signature_is_keyword_only_with_no_defaults _____________
+
+    def test_the_signature_is_keyword_only_with_no_defaults():
+        params = inspect.signature(post_run.run_post_pipeline).parameters
+        for name in ("state", "reporter", "open_review", "render_issue_detail", "render_contract_failure"):
+>           assert params[name].kind is inspect.Parameter.KEYWORD_ONLY and params[name].default is inspect.Parameter.empty, name
+E           AssertionError: state
+E           assert (<_ParameterKind.KEYWORD_ONLY: 3> is <_ParameterKind.KEYWORD_ONLY: 3> and None is <class 'inspect._empty'>)
+E            +  where <_ParameterKind.KEYWORD_ONLY: 3> = <Parameter "state: 'MutableMapping[str, Any]' = None">.kind
+E            +  and   <_ParameterKind.KEYWORD_ONLY: 3> = <class 'inspect.Parameter'>.KEYWORD_ONLY
+E            +    where <class 'inspect.Parameter'> = inspect.Parameter
+E            +  and   None = <Parameter "state: 'MutableMapping[str, Any]' = None">.default
+E            +  and   <class 'inspect._empty'> = <class 'inspect.Parameter'>.empty
+E            +    where <class 'inspect.Parameter'> = inspect.Parameter
+
+tests\test_service_post_run.py:486: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_post_run.py::test_the_signature_is_keyword_only_with_no_defaults
+1 failed, 38 passed in 4.42s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\wsR4btmp\scratch-tip\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : mut-state-default
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/wsR4btmp/scratch-tip/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/wsR4btmp/scratch-tip -q -p no:cacheprovider --basetemp=C:/t/wsR4btmp/mut-tmp/state-default tests/test_service_post_run.py
+cwd                     : C:\t\wsR4btmp\scratch-tip
+root PID / process group: 509080 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 5.76 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  508364:python.exe
+descendants terminated  : 1  508364
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR4btmp\proof\mutation\state-default.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R4b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

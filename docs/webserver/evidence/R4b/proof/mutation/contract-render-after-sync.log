@@ -1,0 +1,98 @@
+T2PW: C:\t\wsR4btmp\scratch-tip\src\t2pw\__init__.py
+.........................F...F.......F.                                  [100%]
+================================== FAILURES ===================================
+___ test_a_stage_contract_failure_is_rendered_before_the_sync_and_returned ____
+
+world = namespace(events=[('reenter', <object object at 0x000001ACFB2ACCF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x000001ACFBF30FE0>, run=<function world.<locals>.<lambda> at 0x000001ACFBF31080>)
+
+    def test_a_stage_contract_failure_is_rendered_before_the_sync_and_returned(world):
+        world.raises = _contract_error()
+        result = world.run()
+        assert result.failure is world.raises and result.final_payload is REBOUND
+        assert not any(e[0] == "snapshot" for e in world.events)
+>       assert world.events[-2:] == [("render_contract_failure", world.raises), ("sync", True)]
+E       AssertionError: assert [('spinner:ex...'sync', True)] == [('render_con...'sync', True)]
+E         
+E         At index 0 diff: ('spinner:exit',) != ('render_contract_failure', StageContractError('contract broke'))
+E         Use -v to get more diff
+
+tests\test_service_post_run.py:406: AssertionError
+__________ test_a_failing_contract_render_still_syncs_and_propagates __________
+
+world = namespace(events=[('reenter', <object object at 0x000001ACFB2ACCF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x000001ACFBF1CA40>, run=<function world.<locals>.<lambda> at 0x000001ACFBF1D8A0>)
+
+    def test_a_failing_contract_render_still_syncs_and_propagates(world):
+        world.raises = _contract_error()
+        boom = ValueError("render")
+    
+        def bad(failure):
+            raise boom
+    
+>       with pytest.raises(ValueError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests\test_service_post_run.py:447: Failed
+___ test_real_app_renders_a_contract_failure_and_keeps_the_rebound_payload ____
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001ACFBEC7A80>
+tmp_path = WindowsPath('C:/t/wsR4btmp/mut-tmp/contract-render-after-sync/test_real_app_renders_a_contra0')
+
+    def test_real_app_renders_a_contract_failure_and_keeps_the_rebound_payload(monkeypatch, tmp_path):
+        payload = _graph_payload()
+    
+        def raise_it():
+            raise StageContractError("post_mapping", "contract broke", {"errors": [], "summary": {}, "stage": "post_mapping"})
+    
+        at, _calls = _real_app(monkeypatch, tmp_path, payload=payload, patched=raise_it)
+        assert not at.exception
+>       assert any("Audit and DB mapping stopped at the" in str(e.value) for e in at.error)
+E       assert False
+E        +  where False = any(<generator object test_real_app_renders_a_contract_failure_and_keeps_the_rebound_payload.<locals>.<genexpr> at 0x000001ACFF640C80>)
+
+tests\test_service_post_run.py:594: AssertionError
+---------------------------- Captured stderr call -----------------------------
+2026-11-08 15:35:42.583 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:35:42.829 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:35:42.829 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:35:42.829 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:35:42.829 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:35:42.829 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:35:42.830 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:35:42.830 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:35:42.830 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:35:42.830 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:35:42.830 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-08 15:35:42.830 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+=========================== short test summary info ===========================
+FAILED tests/test_service_post_run.py::test_a_stage_contract_failure_is_rendered_before_the_sync_and_returned
+FAILED tests/test_service_post_run.py::test_a_failing_contract_render_still_syncs_and_propagates
+FAILED tests/test_service_post_run.py::test_real_app_renders_a_contract_failure_and_keeps_the_rebound_payload
+3 failed, 36 passed in 3.80s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\wsR4btmp\scratch-tip\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : mut-contract-render-after-sync
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/wsR4btmp/scratch-tip/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/wsR4btmp/scratch-tip -q -p no:cacheprovider --basetemp=C:/t/wsR4btmp/mut-tmp/contract-render-after-sync tests/test_service_post_run.py
+cwd                     : C:\t\wsR4btmp\scratch-tip
+root PID / process group: 253316 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 4.80 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  312028:python.exe
+descendants terminated  : 1  312028
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR4btmp\proof\mutation\contract-render-after-sync.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R4b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

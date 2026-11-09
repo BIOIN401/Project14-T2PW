@@ -1,0 +1,130 @@
+static dead-globals check (tip app, after the handler): OK
+not-a-dict-none                DIFFERENT                 outcome=completed                                st-events=2 state-ops=0 callee-calls=0
+  differing fields: ['st', 'calls', 'after', 'post_artifacts', 'state_final']
+   base st [["button", "Run audit and DB mapping", "pwml_generate_btn"], ["error", ["\"No pipeline output in session state. Run the pipeline first.\""], {}]]
+   tip  st [["button", "Run audit and DB mapping", "pwml_generate_btn"], ["session_state.pop", "post_pipeline_artifacts"], ["session_state.pop", "quarantine_report"], ["session_state.pop", "quarantine_artifacts"], ["session_state.pop", "quarantine_coverage"], ["session_state.pop", "quarantine_ok"], ["session_state.pop", "quarantine_decision_controls"], ["spinner", ["\"Running audit and DB mapping...\""], {}], ["spinner:enter"], ["spinner:exit"], ["error", ["\"Post-pipeline conversion failed: 'NoneType' object is not a mapping\""], {}], ["exception", ["\"<TypeError>\""], {}], ["session_state", "extraction_diagnostics", "{\"diag\": 1}"]]
+   base calls []
+   tip  calls [["clear_quarantine_artifacts", ["\"<path <ROOT>/outputs>\""], {}], ["reenter", ["\"RECORDER\""], {}], ["propagate", ["null", "{\"pathway_name\": \"x\"}"], {}], ["snapshot", ["null"], {"reason": "\"TypeError: 'NoneType' object is not a mapping\"", "stage": "\"post_pipeline\""}]]
+   base after {"_gate_err": "\"<unbound>\"", "_gate_errors_for_display": "\"<unbound>\"", "_pa": "\"<unbound>\"", "_post_run": "\"<unbound>\"", "_quarantine_flags": "\"<unbound>\"", "_refusal_reasons": "\"<unbound>\"", "_stage3_failed": "\"<unbound>\"", "artifacts": "\"<unbound>\"", "exc": "\"<unbound>\"", "failure": "\"<unbound>\"", "final_gate": "\"<unbound>\"", "final_mapped_payload": "\"<unbound>\"", "mapping_report": "\"<unbound>\"", "reason": "\"<unbound>\""}
+   tip  after {"_gate_err": "\"<unbound>\"", "_gate_errors_for_display": "\"<unbound>\"", "_pa": "\"<unbound>\"", "_post_run": "\"<PostRunResult>\"", "_quarantine_flags": "\"<unbound>\"", "_refusal_reasons": "\"<unbound>\"", "_stage3_failed": "\"<unbound>\"", "artifacts": "\"<unbound>\"", "exc": "\"<unbound>\"", "failure": "\"<unbound>\"", "final_gate": "\"<unbound>\"", "final_mapped_payload": "\"<unbound>\"", "mapping_report": "\"<unbound>\"", "reason": "\"<unbound>\""}
+   base post_artifacts "\"<before>\""
+   tip  post_artifacts "{}"
+   base state_final "{\"extraction_diagnostics_recorder\": \"RECORDER\", \"pathway_context\": {\"pathway_name\": \"x\"}}"
+   tip  state_final "{\"extraction_diagnostics\": {\"diag\": 1}, \"extraction_diagnostics_recorder\": \"RECORDER\", \"pathway_context\": {\"pathway_name\": \"x\"}}"
+not-a-dict-list                DIFFERENT                 outcome=completed                                st-events=2 state-ops=0 callee-calls=0
+  differing fields: ['st', 'calls', 'after', 'post_artifacts', 'state_final']
+   base st [["button", "Run audit and DB mapping", "pwml_generate_btn"], ["error", ["\"No pipeline output in session state. Run the pipeline first.\""], {}]]
+   tip  st [["button", "Run audit and DB mapping", "pwml_generate_btn"], ["session_state.pop", "post_pipeline_artifacts"], ["session_state.pop", "quarantine_report"], ["session_state.pop", "quarantine_artifacts"], ["session_state.pop", "quarantine_coverage"], ["session_state.pop", "quarantine_ok"], ["session_state.pop", "quarantine_decision_controls"], ["spinner", ["\"Running audit and DB mapping...\""], {}], ["spinner:enter"], ["spinner:exit"], ["error", ["\"Post-pipeline conversion failed: 'list' object is not a mapping\""], {}], ["exception", ["\"<TypeError>\""], {}], ["session_state", "extraction_diagnostics", "{\"diag\": 1}"]]
+   base calls []
+   tip  calls [["clear_quarantine_artifacts", ["\"<path <ROOT>/outputs>\""], {}], ["reenter", ["\"RECORDER\""], {}], ["propagate", ["[\"x\"]", "{\"pathway_name\": \"x\"}"], {}], ["snapshot", ["[\"x\"]"], {"reason": "\"TypeError: 'list' object is not a mapping\"", "stage": "\"post_pipeline\""}]]
+   base after {"_gate_err": "\"<unbound>\"", "_gate_errors_for_display": "\"<unbound>\"", "_pa": "\"<unbound>\"", "_post_run": "\"<unbound>\"", "_quarantine_flags": "\"<unbound>\"", "_refusal_reasons": "\"<unbound>\"", "_stage3_failed": "\"<unbound>\"", "artifacts": "\"<unbound>\"", "exc": "\"<unbound>\"", "failure": "\"<unbound>\"", "final_gate": "\"<unbound>\"", "final_mapped_payload": "\"<unbound>\"", "mapping_report": "\"<unbound>\"", "reason": "\"<unbound>\""}
+   tip  after {"_gate_err": "\"<unbound>\"", "_gate_errors_for_display": "\"<unbound>\"", "_pa": "\"<unbound>\"", "_post_run": "\"<PostRunResult>\"", "_quarantine_flags": "\"<unbound>\"", "_refusal_reasons": "\"<unbound>\"", "_stage3_failed": "\"<unbound>\"", "artifacts": "\"<unbound>\"", "exc": "\"<unbound>\"", "failure": "\"<unbound>\"", "final_gate": "\"<unbound>\"", "final_mapped_payload": "\"<unbound>\"", "mapping_report": "\"<unbound>\"", "reason": "\"<unbound>\""}
+   base post_artifacts "\"<before>\""
+   tip  post_artifacts "{}"
+   base state_final "{\"extraction_diagnostics_recorder\": \"RECORDER\", \"pathway_context\": {\"pathway_name\": \"x\"}}"
+   tip  state_final "{\"extraction_diagnostics\": {\"diag\": 1}, \"extraction_diagnostics_recorder\": \"RECORDER\", \"pathway_context\": {\"pathway_name\": \"x\"}}"
+not-a-dict-empty               DIFFERENT                 outcome=completed                                st-events=2 state-ops=0 callee-calls=0
+  differing fields: ['st', 'calls', 'after', 'final_payload', 'post_artifacts', 'state_final']
+   base st [["button", "Run audit and DB mapping", "pwml_generate_btn"], ["error", ["\"No pipeline output in session state. Run the pipeline first.\""], {}]]
+   tip  st [["button", "Run audit and DB mapping", "pwml_generate_btn"], ["session_state.pop", "post_pipeline_artifacts"], ["session_state.pop", "quarantine_report"], ["session_state.pop", "quarantine_artifacts"], ["session_state.pop", "quarantine_coverage"], ["session_state.pop", "quarantine_ok"], ["session_state.pop", "quarantine_decision_controls"], ["spinner", ["\"Running audit and DB mapping...\""], {}], ["spinner:enter"], ["spinner:exit"], ["session_state", "post_pipeline_artifacts", "{}"], ["session_state", "extraction_diagnostics", "{\"diag\": 1}"]]
+   base calls []
+   tip  calls [["clear_quarantine_artifacts", ["\"<path <ROOT>/outputs>\""], {}], ["reenter", ["\"RECORDER\""], {}], ["propagate", ["{}", "{\"pathway_name\": \"x\"}"], {}], ["artifacts", ["{\"organism\": \"rebound\"}"], {"audit_candidate_count": "3", "audit_max_rounds": "4", "audit_timeout_seconds": "240", "build_legacy_sbml": "false", "db_host": "\"h\"", "db_password": "\"pw\"", "db_port": "3306", "db_schema": "\"sch\"", "db_user": "\"u\"", "default_compartment": "\"nucleus\"", "example_index_path": "\"i.json\"", "example_top_k": "3", "export_mode": "\"pathwhiz\"", "gap_resolver_max_items": "80", "id_source": "\"db\"", "mapping_cache_path": "\"cache.json\"", "outputs_dir": "\"<path <ROOT>/outputs>\"", "pathway_context": "{\"pathway_name\": \"x\"}", "qa_report": "null", "rag_evidence_context": "\"\"", "reaction_summary": "null", "state": "<state is session_state=True>", "strict_db": "true", "use_example_retrieval": "false", "use_gap_resolver": "true", "use_llm_audit": "true", "use_llm_gap_resolver": "false", "use_sbml_overwatch": "false", "use_stoich_agent": "false"}]]
+   base after {"_gate_err": "\"<unbound>\"", "_gate_errors_for_display": "\"<unbound>\"", "_pa": "\"<unbound>\"", "_post_run": "\"<unbound>\"", "_quarantine_flags": "\"<unbound>\"", "_refusal_reasons": "\"<unbound>\"", "_stage3_failed": "\"<unbound>\"", "artifacts": "\"<unbound>\"", "exc": "\"<unbound>\"", "failure": "\"<unbound>\"", "final_gate": "\"<unbound>\"", "final_mapped_payload": "\"<unbound>\"", "mapping_report": "\"<unbound>\"", "reason": "\"<unbound>\""}
+   tip  after {"_gate_err": "\"<unbound>\"", "_gate_errors_for_display": "\"<unbound>\"", "_pa": "\"<unbound>\"", "_post_run": "\"<PostRunResult>\"", "_quarantine_flags": "\"<unbound>\"", "_refusal_reasons": "\"<unbound>\"", "_stage3_failed": "\"<unbound>\"", "artifacts": "\"<unbound>\"", "exc": "\"<unbound>\"", "failure": "\"<unbound>\"", "final_gate": "\"<unbound>\"", "final_mapped_payload": "\"<unbound>\"", "mapping_report": "\"<unbound>\"", "reason": "\"<unbound>\""}
+   base final_payload "{}"
+   tip  final_payload "{\"organism\": \"rebound\"}"
+   base post_artifacts "\"<before>\""
+   tip  post_artifacts "{}"
+   base state_final "{\"extraction_diagnostics_recorder\": \"RECORDER\", \"pathway_context\": {\"pathway_name\": \"x\"}}"
+   tip  state_final "{\"extraction_diagnostics\": {\"diag\": 1}, \"extraction_diagnostics_recorder\": \"RECORDER\", \"pathway_context\": {\"pathway_name\": \"x\"}, \"post_pipeline_artifacts\": {\"final_payload_snapshot\": {\"organism\": \"rebound\"}}}"
+gate-failed                    SAME-EXCEPT-DEAD-GLOBALS  outcome=completed                                st-events=13 state-ops=8 callee-calls=4
+                                 differing globals (dead after the handler): ['_pa', '_post_run', 'artifacts']
+gate-failed-post-audit-reports SAME-EXCEPT-DEAD-GLOBALS  outcome=completed                                st-events=15 state-ops=10 callee-calls=4
+                                 differing globals (dead after the handler): ['_pa', '_post_run', 'artifacts']
+gate-failed-seed-snapshot      SAME-EXCEPT-DEAD-GLOBALS  outcome=completed                                st-events=13 state-ops=8 callee-calls=4
+                                 differing globals (dead after the handler): ['_pa', '_post_run', 'artifacts']
+artifacts-not-a-dict           SAME-EXCEPT-DEAD-GLOBALS  outcome=completed                                st-events=12 state-ops=8 callee-calls=4
+                                 differing globals (dead after the handler): ['_pa', '_post_run', 'artifacts', 'final_mapped_payload', 'mapping_report']
+no-mapped-payload              SAME-EXCEPT-DEAD-GLOBALS  outcome=completed                                st-events=12 state-ops=8 callee-calls=4
+                                 differing globals (dead after the handler): ['_pa', '_post_run', 'artifacts', 'final_mapped_payload', 'mapping_report']
+mapped-payload-empty           SAME-EXCEPT-DEAD-GLOBALS  outcome=completed                                st-events=12 state-ops=8 callee-calls=4
+                                 differing globals (dead after the handler): ['_pa', '_post_run', 'artifacts', 'final_mapped_payload', 'mapping_report']
+final-mapped-fallback          SAME-EXCEPT-DEAD-GLOBALS  outcome=completed                                st-events=27 state-ops=22 callee-calls=7
+                                 differing globals (dead after the handler): ['_pa', '_post_run', '_quarantine_flags', '_stage3_failed', 'artifacts', 'final_gate', 'final_mapped_payload', 'mapping_report']
+pass                           SAME-EXCEPT-DEAD-GLOBALS  outcome=completed                                st-events=27 state-ops=22 callee-calls=7
+                                 differing globals (dead after the handler): ['_pa', '_post_run', '_quarantine_flags', '_stage3_failed', 'artifacts', 'final_gate', 'final_mapped_payload', 'mapping_report']
+pass-stale-errors-replaced     SAME-EXCEPT-DEAD-GLOBALS  outcome=completed                                st-events=27 state-ops=22 callee-calls=7
+                                 differing globals (dead after the handler): ['_pa', '_post_run', '_quarantine_flags', '_stage3_failed', 'artifacts', 'final_gate', 'final_mapped_payload', 'mapping_report']
+pass-with-quarantine-flags     SAME-EXCEPT-DEAD-GLOBALS  outcome=completed                                st-events=29 state-ops=22 callee-calls=7
+                                 differing globals (dead after the handler): ['_pa', '_post_run', '_quarantine_flags', '_stage3_failed', 'artifacts', 'final_gate', 'final_mapped_payload', 'mapping_report']
+pass-no-final-gate             SAME-EXCEPT-DEAD-GLOBALS  outcome=completed                                st-events=27 state-ops=22 callee-calls=7
+                                 differing globals (dead after the handler): ['_pa', '_post_run', '_quarantine_flags', '_stage3_failed', 'artifacts', 'final_gate', 'final_mapped_payload', 'mapping_report']
+quarantine-refused             SAME-EXCEPT-DEAD-GLOBALS  outcome=completed                                st-events=18 state-ops=9 callee-calls=4
+                                 differing globals (dead after the handler): ['_pa', '_post_run', '_quarantine_flags', '_refusal_reasons', 'artifacts', 'final_mapped_payload', 'mapping_report']
+quarantine-refused-with-flags  SAME-EXCEPT-DEAD-GLOBALS  outcome=completed                                st-events=20 state-ops=9 callee-calls=4
+                                 differing globals (dead after the handler): ['_pa', '_post_run', '_quarantine_flags', '_refusal_reasons', 'artifacts', 'final_mapped_payload', 'mapping_report']
+research-stage3-fail           SAME-EXCEPT-DEAD-GLOBALS  outcome=completed                                st-events=32 state-ops=22 callee-calls=7
+                                 differing globals (dead after the handler): ['_gate_err', '_pa', '_post_run', '_quarantine_flags', '_stage3_failed', 'artifacts', 'final_gate', 'final_mapped_payload', 'mapping_report']
+research-stage3-no-errors      SAME-EXCEPT-DEAD-GLOBALS  outcome=completed                                st-events=29 state-ops=22 callee-calls=7
+                                 differing globals (dead after the handler): ['_pa', '_post_run', '_quarantine_flags', '_stage3_failed', 'artifacts', 'final_gate', 'final_mapped_payload', 'mapping_report']
+strict-stage3-fail             SAME-EXCEPT-DEAD-GLOBALS  outcome=completed                                st-events=23 state-ops=9 callee-calls=4
+                                 differing globals (dead after the handler): ['_gate_err', '_gate_errors_for_display', '_pa', '_post_run', '_quarantine_flags', '_stage3_failed', 'artifacts', 'final_gate', 'final_mapped_payload', 'mapping_report']
+strict-stage3-no-errors        SAME-EXCEPT-DEAD-GLOBALS  outcome=completed                                st-events=19 state-ops=9 callee-calls=4
+                                 differing globals (dead after the handler): ['_gate_errors_for_display', '_pa', '_post_run', '_quarantine_flags', '_stage3_failed', 'artifacts', 'final_gate', 'final_mapped_payload', 'mapping_report']
+contract-post-mapping          SAME-EXCEPT-DEAD-GLOBALS  outcome=completed                                st-events=22 state-ops=7 callee-calls=4
+                                 differing globals (dead after the handler): ['_post_run']
+contract-post-extraction       SAME-EXCEPT-DEAD-GLOBALS  outcome=completed                                st-events=22 state-ops=7 callee-calls=4
+                                 differing globals (dead after the handler): ['_post_run']
+contract-other-stage           SAME-EXCEPT-DEAD-GLOBALS  outcome=completed                                st-events=22 state-ops=7 callee-calls=4
+                                 differing globals (dead after the handler): ['_post_run']
+contract-render-raises         IDENTICAL                 outcome=raised TypeError: not serialisable       st-events=22 state-ops=7 callee-calls=4
+exception                      SAME-EXCEPT-DEAD-GLOBALS  outcome=completed                                st-events=13 state-ops=7 callee-calls=5
+                                 differing globals (dead after the handler): ['_post_run']
+exception-from-propagate       SAME-EXCEPT-DEAD-GLOBALS  outcome=completed                                st-events=13 state-ops=7 callee-calls=4
+                                 differing globals (dead after the handler): ['_post_run']
+reenter-raises                 IDENTICAL                 outcome=raised RuntimeError: recorder gone       st-events=7 state-ops=6 callee-calls=2
+review-raises                  SAME-EXCEPT-DEAD-GLOBALS  outcome=completed                                st-events=15 state-ops=9 callee-calls=7
+                                 differing globals (dead after the handler): ['_pa', '_post_run', '_quarantine_flags', '_stage3_failed', 'artifacts', 'final_gate', 'final_mapped_payload', 'mapping_report']
+diag-sync-raises               SAME-EXCEPT-DEAD-GLOBALS  outcome=completed                                st-events=26 state-ops=21 callee-calls=7
+                                 differing globals (dead after the handler): ['_pa', '_post_run', '_quarantine_flags', '_stage3_failed', 'artifacts', 'final_gate', 'final_mapped_payload', 'mapping_report']
+rag-on-with-evidence           SAME-EXCEPT-DEAD-GLOBALS  outcome=completed                                st-events=27 state-ops=22 callee-calls=7
+                                 differing globals (dead after the handler): ['_pa', '_post_run', '_quarantine_flags', '_stage3_failed', 'artifacts', 'final_gate', 'final_mapped_payload', 'mapping_report']
+rag-on-no-evidence             SAME-EXCEPT-DEAD-GLOBALS  outcome=completed                                st-events=27 state-ops=22 callee-calls=7
+                                 differing globals (dead after the handler): ['_pa', '_post_run', '_quarantine_flags', '_stage3_failed', 'artifacts', 'final_gate', 'final_mapped_payload', 'mapping_report']
+rag-off-with-evidence          SAME-EXCEPT-DEAD-GLOBALS  outcome=completed                                st-events=27 state-ops=22 callee-calls=7
+                                 differing globals (dead after the handler): ['_pa', '_post_run', '_quarantine_flags', '_stage3_failed', 'artifacts', 'final_gate', 'final_mapped_payload', 'mapping_report']
+strict-db-false-qa-seeded      SAME-EXCEPT-DEAD-GLOBALS  outcome=completed                                st-events=27 state-ops=22 callee-calls=7
+                                 differing globals (dead after the handler): ['_pa', '_post_run', '_quarantine_flags', '_stage3_failed', 'artifacts', 'final_gate', 'final_mapped_payload', 'mapping_report']
+widgets-blank                  SAME-EXCEPT-DEAD-GLOBALS  outcome=completed                                st-events=27 state-ops=22 callee-calls=7
+                                 differing globals (dead after the handler): ['_pa', '_post_run', '_quarantine_flags', '_stage3_failed', 'artifacts', 'final_gate', 'final_mapped_payload', 'mapping_report']
+stale-keys-popped              SAME-EXCEPT-DEAD-GLOBALS  outcome=completed                                st-events=27 state-ops=22 callee-calls=7
+                                 differing globals (dead after the handler): ['_pa', '_post_run', '_quarantine_flags', '_stage3_failed', 'artifacts', 'final_gate', 'final_mapped_payload', 'mapping_report']
+not-clicked                    IDENTICAL                 outcome=completed                                st-events=1 state-ops=0 callee-calls=0
+33/36 identical or known-difference only; static check OK; 3 unexplained
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\wsR4btmp\scratch-tip\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : ivm-app-guard-removed
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/wsR4btmp/scripts/inline_vs_moved.py C:/t/ws-R4-base C:/t/wsR4btmp/scratch-tip
+cwd                     : C:\t\wsR4btmp\scratch-tip
+root PID / process group: 288444 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 1.66 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  288616:python.exe
+descendants terminated  : 1  288616
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR4btmp\proof\ivm-sanity\app-guard-removed.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R4b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

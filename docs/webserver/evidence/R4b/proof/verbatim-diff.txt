@@ -1,0 +1,185 @@
+--- base-handler
++++ post_run
+@@ -1 +1 @@
+-reenter_extraction_diagnostics(st.session_state.get("extraction_diagnostics_recorder"))
++_diag.reenter(state.get("extraction_diagnostics_recorder"))
+@@ -3,2 +3,2 @@
+-    with st.spinner("Running audit and DB mapping..."):
+-        final_payload = propagate_context_organism(
++    with reporter.spinner("Running audit and DB mapping..."):
++        final_payload = _pipeline.propagate_context_organism(
+@@ -6 +6 @@
+-            st.session_state.get("pathway_context"),
++            state.get("pathway_context"),
+@@ -8 +8 @@
+-        artifacts = run_post_pipeline_sbml_artifacts(
++        artifacts = _postpipeline.run_post_pipeline_sbml_artifacts(
+@@ -11,22 +11,22 @@
+-            use_llm_audit=bool(use_llm_audit),
+-            use_sbml_overwatch=bool(use_sbml_overwatch),
+-            default_compartment=(default_compartment or "cell").strip() or "cell",
+-            mapping_cache_path=mapping_cache_text.strip() or "id_mapping_cache.json",
+-            id_source=(id_source_mode or "hybrid").strip().lower(),
+-            db_host=(db_host or "").strip(),
+-            db_port=int(db_port),
+-            db_user=(db_user or "").strip(),
+-            db_password=db_password or "",
+-            db_schema=(db_schema or "pathbank").strip() or "pathbank",
+-            audit_max_rounds=int(audit_max_rounds),
+-            audit_timeout_seconds=int(audit_timeout_seconds),
+-            audit_candidate_count=int(audit_candidate_count),
+-            use_example_retrieval=bool(use_example_retrieval),
+-            example_index_path=(example_index_path or "").strip(),
+-            example_top_k=int(example_top_k),
+-            use_gap_resolver=bool(use_gap_resolver),
+-            use_llm_gap_resolver=bool(use_llm_gap_resolver),
+-            gap_resolver_max_items=int(gap_resolver_max_items),
+-            qa_report=st.session_state.get("qa_report"),
+-            reaction_summary=st.session_state.get("reaction_summary"),
+-            use_stoich_agent=bool(use_stoich_agent),
++            use_llm_audit=bool(request.use_llm_audit),
++            use_sbml_overwatch=bool(request.use_sbml_overwatch),
++            default_compartment=(request.default_compartment or "cell").strip() or "cell",
++            mapping_cache_path=request.mapping_cache_text.strip() or "id_mapping_cache.json",
++            id_source=(request.id_source_mode or "hybrid").strip().lower(),
++            db_host=(request.db_host or "").strip(),
++            db_port=int(request.db_port),
++            db_user=(request.db_user or "").strip(),
++            db_password=request.db_password or "",
++            db_schema=(request.db_schema or "pathbank").strip() or "pathbank",
++            audit_max_rounds=int(request.audit_max_rounds),
++            audit_timeout_seconds=int(request.audit_timeout_seconds),
++            audit_candidate_count=int(request.audit_candidate_count),
++            use_example_retrieval=bool(request.use_example_retrieval),
++            example_index_path=(request.example_index_path or "").strip(),
++            example_top_k=int(request.example_top_k),
++            use_gap_resolver=bool(request.use_gap_resolver),
++            use_llm_gap_resolver=bool(request.use_llm_gap_resolver),
++            gap_resolver_max_items=int(request.gap_resolver_max_items),
++            qa_report=state.get("qa_report"),
++            reaction_summary=state.get("reaction_summary"),
++            use_stoich_agent=bool(request.use_stoich_agent),
+@@ -34,2 +34,2 @@
+-                st.session_state.get("rag_evidence_context") or ""
+-                if rag_config()["enabled"]
++                state.get("rag_evidence_context") or ""
++                if _config.rag_config()["enabled"]
+@@ -38 +38 @@
+-            export_mode=coerce_mode(st.session_state.get("export_mode")),
++            export_mode=_export_mode.coerce_mode(state.get("export_mode")),
+@@ -42,4 +42,4 @@
+-            strict_db=bool(st.session_state.get("pwml_strict_db", True)),
+-            pathway_context=_safe_dict(st.session_state.get("pathway_context")),
+-            outputs_dir=PROJECT_ROOT / "outputs",
+-            state=st.session_state,
++            strict_db=bool(state.get("pwml_strict_db", True)),
++            pathway_context=_safe_dict(state.get("pathway_context")),
++            outputs_dir=paths.PROJECT_ROOT / "outputs",
++            state=state,
+@@ -47 +47 @@
+-    st.session_state["post_pipeline_artifacts"] = artifacts
++    state["post_pipeline_artifacts"] = artifacts
+@@ -50 +50 @@
+-        st.session_state["qa_report"] = _pa["post_audit_qa_report"]
++        state["qa_report"] = _pa["post_audit_qa_report"]
+@@ -52,2 +52,2 @@
+-        st.session_state["reaction_summary"] = _pa["post_audit_reaction_summary"]
+-    _pa["final_payload_snapshot"] = st.session_state.get("final_payload_snapshot", final_payload)
++        state["reaction_summary"] = _pa["post_audit_reaction_summary"]
++    _pa["final_payload_snapshot"] = state.get("final_payload_snapshot", final_payload)
+@@ -55 +55 @@
+-        st.warning("Post-pipeline stopped at hard-gate validation. Review gate_fail_report.json.")
++        reporter.warning("Post-pipeline stopped at hard-gate validation. Review gate_fail_report.json.")
+@@ -75 +75 @@
+-                st.warning(
++                reporter.warning(
+@@ -80 +80 @@
+-                st.json(_quarantine_flags)
++                reporter.json(_quarantine_flags)
+@@ -85 +85 @@
+-                st.session_state.refinement_gate_errors = [
++                state["refinement_gate_errors"] = [
+@@ -89 +89 @@
+-                st.error(
++                reporter.error(
+@@ -98,4 +98,4 @@
+-                st.caption("Requested-core coverage")
+-                st.json(_safe_dict(_pa.get("quarantine_coverage")))
+-                st.caption("Strict invariants")
+-                st.json(_safe_dict(_pa.get("quarantine_report")).get("strict_invariants"))
++                reporter.caption("Requested-core coverage")
++                reporter.json(_safe_dict(_pa.get("quarantine_coverage")))
++                reporter.caption("Strict invariants")
++                reporter.json(_safe_dict(_pa.get("quarantine_report")).get("strict_invariants"))
+@@ -105 +105 @@
+-                if _stage3_failed and is_research(coerce_mode(st.session_state.get("export_mode"))):
++                if _stage3_failed and _export_mode.is_research(_export_mode.coerce_mode(state.get("export_mode"))):
+@@ -122,2 +122,2 @@
+-                    st.session_state.refinement_gate_errors = []
+-                    st.warning(
++                    state["refinement_gate_errors"] = []
++                    reporter.warning(
+@@ -133 +133 @@
+-                    st.caption("Stage 3 findings retained as review flags")
++                    reporter.caption("Stage 3 findings retained as review flags")
+@@ -136 +136 @@
+-                            st.markdown(
++                            reporter.markdown(
+@@ -140,2 +140,2 @@
+-                            st.markdown(f"- {_gate_err}")
+-                    st.json(final_gate)
++                            reporter.markdown(f"- {_gate_err}")
++                    reporter.json(final_gate)
+@@ -145 +145 @@
+-                    initialize_refinement_review_state(final_mapped_payload, mapping_report)
++                    open_review(final_mapped_payload, mapping_report)
+@@ -147,2 +147,2 @@
+-                    st.session_state.refinement_gate_errors = _safe_list(final_gate.get("errors"))
+-                    st.error(
++                    state["refinement_gate_errors"] = _safe_list(final_gate.get("errors"))
++                    reporter.error(
+@@ -153 +153 @@
+-                    with st.expander(
++                    with reporter.expander(
+@@ -160 +160 @@
+-                                    st.markdown(
++                                    reporter.markdown(
+@@ -163 +163 @@
+-                                    _render_issue_detail(_gate_err.get("detail"))
++                                    render_issue_detail(_gate_err.get("detail"))
+@@ -165 +165 @@
+-                                    st.markdown(f"- {_gate_err}")
++                                    reporter.markdown(f"- {_gate_err}")
+@@ -167,2 +167,2 @@
+-                            st.write("No itemized errors were returned; showing full gate report below.")
+-                        st.json(final_gate)
++                            reporter.write("No itemized errors were returned; showing full gate report below.")
++                        reporter.json(final_gate)
+@@ -170,9 +170,6 @@
+-                    st.session_state.refinement_gate_errors = []
+-                    initialize_refinement_review_state(final_mapped_payload, mapping_report)
+-                    st.info("Mapped pathway is ready for review. PWML generation is paused until approval.")
+-except StageContractError as failure:
+-    _render_stage_contract_failure(
+-        failure,
+-        operation_label="Audit and DB mapping",
+-        download_key="dl_audit_mapping_stage_contract_error",
+-    )
++                    state["refinement_gate_errors"] = []
++                    open_review(final_mapped_payload, mapping_report)
++                    reporter.info("Mapped pathway is ready for review. PWML generation is paused until approval.")
++except StageContractError as exc:
++    failure = exc
++    render_contract_failure(exc)
+@@ -180 +177,2 @@
+-    _record_mapped_failure_snapshot(
++    failure = exc
++    _postpipeline._record_mapped_failure_snapshot(
+@@ -185,2 +183,2 @@
+-    st.error(f"Post-pipeline conversion failed: {exc}")
+-    st.exception(exc)  # full traceback (file:line) so the cause isn't a mystery
++    reporter.error(f"Post-pipeline conversion failed: {exc}")
++    reporter.exception(exc)  # full traceback (file:line) so the cause isn't a mystery
+@@ -191 +189 @@
+-    _sync_extraction_diagnostics()
++    _extraction._sync_extraction_diagnostics(state=state)

@@ -1,0 +1,104 @@
+T2PW: C:\t\wsR4btmp\scratch-tip\src\t2pw\__init__.py
+...............F.FF....F...............                                  [100%]
+================================== FAILURES ===================================
+____ test_post_audit_reports_replace_the_session_copies_only_when_present _____
+
+world = namespace(events=[('reenter', <object object at 0x0000023A1BDBCCF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x0000023A1C9BF060>, run=<function world.<locals>.<lambda> at 0x0000023A1C9BF100>)
+
+    def test_post_audit_reports_replace_the_session_copies_only_when_present(world):
+        world.state.update(qa_report={"old": 1}, reaction_summary="old")
+        world.artifacts.update(gate_failed=True, post_audit_qa_report={"new": 1})
+        world.run()
+        assert world.state["qa_report"] == {"new": 1} and world.state["reaction_summary"] == "old"
+        world.artifacts.update(post_audit_qa_report=None, post_audit_reaction_summary="new")
+        world.run()
+>       assert world.state["qa_report"] == {"new": 1} and world.state["reaction_summary"] == "new"
+E       AssertionError: assert (None == {'new': 1})
+
+tests\test_service_post_run.py:281: AssertionError
+________________ test_no_mapped_payload_says_nothing_and_syncs ________________
+
+world = namespace(events=[('reenter', <object object at 0x0000023A1BDBCCF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x0000023A1C9BE5C0>, run=<function world.<locals>.<lambda> at 0x0000023A1C9BEE80>)
+
+    def test_no_mapped_payload_says_nothing_and_syncs(world):
+        world.run()
+>       assert _names(world.events) == ["set", "sync"]
+E       AssertionError: assert ['set', 'set', 'sync'] == ['set', 'sync']
+E         
+E         At index 1 diff: 'set' != 'sync'
+E         Left contains one more item: 'sync'
+E         Use -v to get more diff
+
+tests\test_service_post_run.py:294: AssertionError
+____________ test_quarantine_flags_are_reported_before_the_verdict ____________
+
+world = namespace(events=[('reenter', <object object at 0x0000023A1BDBCCF0>), ('spinner', ('Running audit and DB mapping...',)...w=<function world.<locals>.review at 0x0000023A1C9BDEE0>, run=<function world.<locals>.<lambda> at 0x0000023A1C9BDBC0>)
+
+    def test_quarantine_flags_are_reported_before_the_verdict(world):
+        world.artifacts.update({CANONICAL_PAYLOAD_KEY: {"p": 1}, "quarantine_ok": True,
+                                "quarantine_review_flags": ["f1", "f2"]})
+        world.run()
+>       assert world.events[6:9] == [
+            ("set", "post_pipeline_artifacts"),
+            ("warning", ("Quarantine review flags (2): research mode kept every process. "
+                         "A strict export would have removed the ones listed below.",)),
+            ("json", (["f1", "f2"],)),
+        ]
+E       AssertionError: assert [('set', 'pos...ed below.',))] == [('set', 'pos...f1', 'f2'],))]
+E         
+E         At index 1 diff: ('set', 'qa_report') != ('warning', ('Quarantine review flags (2): research mode kept every process. A strict export would have removed the ones listed below.',))
+E         Use -v to get more diff
+
+tests\test_service_post_run.py:302: AssertionError
+_____ test_a_passing_run_clears_the_errors_then_opens_review_then_says_so _____
+
+world = namespace(events=[('set', 'refinement_gate_errors'), ('reenter', <object object at 0x0000023A1BDBCCF0>), ('spinner', (...w=<function world.<locals>.review at 0x0000023A1C9BCAE0>, run=<function world.<locals>.<lambda> at 0x0000023A1C9BC680>)
+
+    def test_a_passing_run_clears_the_errors_then_opens_review_then_says_so(world):
+        world.artifacts.update({CANONICAL_PAYLOAD_KEY: {"p": 1}, "quarantine_ok": True,
+                                FINAL_GATE_REPORT_KEY: {"ok": True}, "mapping_report": {"m": 2}})
+        world.state["refinement_gate_errors"] = ["stale"]
+        world.run()
+        assert world.state["refinement_gate_errors"] == []
+        # the seed above, post_pipeline_artifacts, refinement_gate_errors
+>       assert _names(world.events) == ["set", "set", "set", "open_review", "info", "sync"]
+E       AssertionError: assert ['set', 'set'..., 'info', ...] == ['set', 'set'...info', 'sync']
+E         
+E         At index 3 diff: 'set' != 'open_review'
+E         Left contains one more item: 'sync'
+E         Use -v to get more diff
+
+tests\test_service_post_run.py:388: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_post_run.py::test_post_audit_reports_replace_the_session_copies_only_when_present
+FAILED tests/test_service_post_run.py::test_no_mapped_payload_says_nothing_and_syncs
+FAILED tests/test_service_post_run.py::test_quarantine_flags_are_reported_before_the_verdict
+FAILED tests/test_service_post_run.py::test_a_passing_run_clears_the_errors_then_opens_review_then_says_so
+4 failed, 35 passed in 3.77s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\wsR4btmp\scratch-tip\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : mut-qa-overwritten-always
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/wsR4btmp/scratch-tip/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/wsR4btmp/scratch-tip -q -p no:cacheprovider --basetemp=C:/t/wsR4btmp/mut-tmp/qa-overwritten-always tests/test_service_post_run.py
+cwd                     : C:\t\wsR4btmp\scratch-tip
+root PID / process group: 270504 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 4.81 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  239324:python.exe
+descendants terminated  : 1  239324
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:\t\wsR4btmp\proof\mutation\qa-overwritten-always.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R4b  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================
