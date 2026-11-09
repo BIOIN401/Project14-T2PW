@@ -1,0 +1,134 @@
+{
+  "label": "W6b-mut",
+  "command": [
+    "C:\\Program Files\\Git\\usr\\bin\\bash.exe",
+    "C:/t/w6b_ev/both.sh"
+  ],
+  "cwd": "C:/t/w6b_mut",
+  "started_at": "2026-11-08T21:23:40+00:00",
+  "finished_at": "2026-11-08T21:23:42+00:00",
+  "duration_seconds": 2.7255642999989504,
+  "timeout_seconds": 300.0,
+  "root_pid": 272516,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 291888,
+      "name": "bash.exe",
+      "ppid": 272516
+    },
+    {
+      "pid": 291896,
+      "name": "python.exe",
+      "ppid": 291888
+    },
+    {
+      "pid": 291908,
+      "name": "bash.exe",
+      "ppid": 272516
+    },
+    {
+      "pid": 291996,
+      "name": "python.exe",
+      "ppid": 291896
+    },
+    {
+      "pid": 247304,
+      "name": "python.exe",
+      "ppid": 286712
+    },
+    {
+      "pid": 286712,
+      "name": "bash.exe",
+      "ppid": 272516
+    },
+    {
+      "pid": 291784,
+      "name": "python.exe",
+      "ppid": 247304
+    }
+  ],
+  "descendants_terminated": [
+    247304,
+    286712,
+    291784,
+    291888,
+    291896,
+    291908,
+    291996
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 24756,
+      "name": "python.exe"
+    },
+    {
+      "pid": 24880,
+      "name": "python.exe"
+    },
+    {
+      "pid": 279756,
+      "name": "python.exe"
+    },
+    {
+      "pid": 284692,
+      "name": "python.exe"
+    },
+    {
+      "pid": 289364,
+      "name": "python.exe"
+    },
+    {
+      "pid": 289396,
+      "name": "python.exe"
+    },
+    {
+      "pid": 292488,
+      "name": "python.exe"
+    },
+    {
+      "pid": 292500,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/w6b_ev/mut.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-W6b\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-W6b",
+    "repo_head": "276752f6ee9e5304f5b50658ea8c00a351e1c56a",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "W6b",
+    "token": "W6b:292500:e47b44ff20f8d99e",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
