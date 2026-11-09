@@ -1,0 +1,50 @@
+T2PW: C:\t\ws-R4a\src\t2pw\__init__.py
+.................Fs....sss...........                                    [100%]
+================================== FAILURES ===================================
+_______ test_the_message_names_the_problem_the_interpreter_and_the_cure _______
+
+    def test_the_message_names_the_problem_the_interpreter_and_the_cure() -> None:
+        """The wrong-interpreter case: the one that actually happened.
+    
+        The cure has to be a command, not advice. "Use the venv" is not actionable at
+        2am; ``C:\\...\\.venv\\Scripts\\python.exe scripts\\batch_run.py`` is, and the
+        root cause -- ``py.exe`` ignoring the active virtualenv -- has to be named or
+        the operator fixes it once and hits it again next week.
+        """
+    
+        venv = runner.venv_python()
+>       assert venv is not None, "this project ships a .venv; the test assumes it"
+E       AssertionError: this project ships a .venv; the test assumes it
+E       assert None is not None
+
+tests\test_batch_preflight.py:616: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_batch_preflight.py::test_the_message_names_the_problem_the_interpreter_and_the_cure
+1 failed, 32 passed, 4 skipped in 7.36s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R4a\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 18a9a15d73d7908811bdf53e7475add1f6b0dc25  [git, worktree dirty=True]
+label                   : t-2f
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R4a/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R4a --pin-verdict C:/t/wsR4atmp/ev/pin/t-2f.pin.json -q --basetemp=C:/t/wsR4atmp/bt/t-2f tests/test_batch_preflight.py
+cwd                     : C:\t\ws-R4a
+root PID / process group: 298180 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 400 s
+duration                : 8.02 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 18  298192:python.exe, 298316:python.exe, 298336:python.exe, 298460:python.exe, 298480:python.exe, 298524:python.exe, 298544:python.exe, 298680:python.exe, 298720:python.exe, 298740:python.exe, 298900:python.exe, 298920:python.exe, 298940:python.exe, 298960:python.exe, 298028:python.exe, 298048:python.exe, 298068:python.exe, 297252:python.exe
+descendants terminated  : 18  297252, 298028, 298048, 298068, 298192, 298316, 298336, 298460, 298480, 298524, 298544, 298680, 298720, 298740, 298900, 298920, 298940, 298960
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/wsR4atmp/ev/t-2f.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R4a  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

@@ -1,0 +1,148 @@
+{
+  "label": "b-scans",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/ws-R4-base/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-R4-base",
+    "--pin-verdict",
+    "C:/t/wsR4atmp/ev/pin/b-scans.pin.json",
+    "-q",
+    "--basetemp=C:/t/wsR4atmp/bt/b-scans",
+    "tests/test_curator_offline_mode.py",
+    "tests/test_dependency_declarations.py",
+    "tests/test_identity_evidence_hydration.py",
+    "tests/test_c056c_semantic_evaluability.py",
+    "tests/test_eval_v2_metrics.py"
+  ],
+  "cwd": "C:\\t\\ws-R4-base",
+  "started_at": "2026-11-09T04:07:34+00:00",
+  "finished_at": "2026-11-09T04:07:45+00:00",
+  "duration_seconds": 10.22713549999753,
+  "timeout_seconds": 400.0,
+  "root_pid": 508712,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 509252,
+      "name": "python.exe",
+      "ppid": 508712
+    },
+    {
+      "pid": 500716,
+      "name": "git.exe",
+      "ppid": 509252
+    },
+    {
+      "pid": 494464,
+      "name": "git.exe",
+      "ppid": 509252
+    },
+    {
+      "pid": 506448,
+      "name": "git.exe",
+      "ppid": 509252
+    },
+    {
+      "pid": 495948,
+      "name": "git.exe",
+      "ppid": 509252
+    },
+    {
+      "pid": 491976,
+      "name": "git.exe",
+      "ppid": 509252
+    },
+    {
+      "pid": 503236,
+      "name": "git.exe",
+      "ppid": 509252
+    },
+    {
+      "pid": 503132,
+      "name": "git.exe",
+      "ppid": 509252
+    },
+    {
+      "pid": 504288,
+      "name": "git.exe",
+      "ppid": 509252
+    },
+    {
+      "pid": 509576,
+      "name": "git.exe",
+      "ppid": 509252
+    }
+  ],
+  "descendants_terminated": [
+    491976,
+    494464,
+    495948,
+    500716,
+    503132,
+    503236,
+    504288,
+    506448,
+    509252,
+    509576
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 24756,
+      "name": "python.exe"
+    },
+    {
+      "pid": 24880,
+      "name": "python.exe"
+    },
+    {
+      "pid": 498172,
+      "name": "python.exe"
+    },
+    {
+      "pid": 505436,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/wsR4atmp/ev/b-scans.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-R4-base\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-R4-base",
+    "repo_head": "72d309e97ca875785cad11bb7c62478d1fda2fb8",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "R4a",
+    "token": "R4a:498172:04763ddee4851faa",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

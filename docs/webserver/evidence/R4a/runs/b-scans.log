@@ -1,0 +1,54 @@
+T2PW: C:\t\ws-R4-base\src\t2pw\__init__.py
+.................................F...................................... [ 80%]
+.................                                                        [100%]
+================================== FAILURES ===================================
+___________ test_every_module_scope_third_party_import_is_declared ____________
+
+    def test_every_module_scope_third_party_import_is_declared() -> None:
+        sites, files_walked = third_party_imports()
+        _assert_walk_is_live(sites, files_walked)
+        pending = {_normalize(name) for name in PENDING_DECLARATION_DECISIONS}
+        undeclared = sorted(set(sites) - declared_distributions() - pending)
+        detail = "\n".join(f"  {dist}  <- {', '.join(sorted(set(sites[dist])))}" for dist in undeclared)
+>       assert not undeclared, (
+            "third-party distributions imported at module scope by src/t2pw but declared in "
+            f"neither requirements.txt nor pyproject.toml:\n{detail}\n"
+            "A fresh `pip install -r requirements.txt` gives a venv where importing these "
+            "raises ModuleNotFoundError (F-067)."
+        )
+E       AssertionError: third-party distributions imported at module scope by src/t2pw but declared in neither requirements.txt nor pyproject.toml:
+E           starlette  <- src/t2pw/web/app.py:35, src/t2pw/web/app.py:36, src/t2pw/web/app.py:37
+E         A fresh `pip install -r requirements.txt` gives a venv where importing these raises ModuleNotFoundError (F-067).
+E       assert not ['starlette']
+
+tests\test_dependency_declarations.py:154: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_dependency_declarations.py::test_every_module_scope_third_party_import_is_declared
+1 failed, 88 passed in 9.17s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R4-base\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 72d309e97ca875785cad11bb7c62478d1fda2fb8  [git, worktree dirty=False]
+label                   : b-scans
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R4-base/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R4-base --pin-verdict C:/t/wsR4atmp/ev/pin/b-scans.pin.json -q --basetemp=C:/t/wsR4atmp/bt/b-scans tests/test_curator_offline_mode.py tests/test_dependency_declarations.py tests/test_identity_evidence_hydration.py tests/test_c056c_semantic_evaluability.py tests/test_eval_v2_metrics.py
+cwd                     : C:\t\ws-R4-base
+root PID / process group: 508712 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 400 s
+duration                : 10.23 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 10  509252:python.exe, 500716:git.exe, 494464:git.exe, 506448:git.exe, 495948:git.exe, 491976:git.exe, 503236:git.exe, 503132:git.exe, 504288:git.exe, 509576:git.exe
+descendants terminated  : 10  491976, 494464, 495948, 500716, 503132, 503236, 504288, 506448, 509252, 509576
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/wsR4atmp/ev/b-scans.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R4a  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================
