@@ -852,8 +852,12 @@ class ExtractionResult:
 def _rag_deadline_kwargs(state: MutableMapping[str, Any]) -> Dict[str, float]:
     """``deadline_seconds`` for the RAG rounds, only when a deadline was set (the app has none)."""
 
+    from t2pw.service.rag_orchestration import rag_loop_deadline_seconds  # the usual budget, as the driver path gives it
+
     deadline = state.get(DEADLINE_STATE_KEY)
-    return {} if deadline is None else {"deadline_seconds": max(1.0, float(deadline) - time.time())}
+    if deadline is None:
+        return {}
+    return {"deadline_seconds": max(1.0, min(rag_loop_deadline_seconds(), float(deadline) - time.time()))}
 
 
 def run_stage_two(

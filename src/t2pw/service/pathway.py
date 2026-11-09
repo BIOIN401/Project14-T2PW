@@ -15,6 +15,7 @@ The vocabulary strings MIRROR ``t2pw.batch.driver`` (``MODE_*``, ``STAGE_*``,
 from __future__ import annotations
 
 import dataclasses
+import os
 import re
 import tempfile
 import time
@@ -148,7 +149,7 @@ class PathwayResult:
     attempt_log: List[Dict[str, Any]] = field(default_factory=list)
 
 
-def _server_paths(out_dir: Path) -> "re.Pattern[str]":
+def _server_paths(out_dir: Path, ignore_case: bool = os.name == "nt") -> "re.Pattern[str]":
     """Every spelling of a server folder a report can carry: native, ``/``, JSON-escaped."""
 
     import t2pw.paths as paths
@@ -156,9 +157,11 @@ def _server_paths(out_dir: Path) -> "re.Pattern[str]":
     roots = {paths.PROJECT_ROOT, out_dir, Path(tempfile.gettempdir()), Path.home()}
     spellings = {form for root in roots for resolved in (Path(root), Path(root).resolve())
                  for form in (str(resolved), resolved.as_posix(), str(resolved).replace("\\", "\\\\"))}
-    alternatives = "|".join(re.escape(s) + r"[\\/]*"
+    # A root counts only as a whole path: not glued to a word or path character before it
+    # (``ACE2/TMPRSS2``, ``UMP/TMP``), and followed by a separator, quote, space or the end.
+    alternatives = "|".join(r"(?<![\w/\\])" + re.escape(s) + r"(?=[\\/\"'\s]|$)[\\/]*"
                             for s in sorted((s for s in spellings if len(s) > 3), key=len, reverse=True))
-    return re.compile(alternatives, re.IGNORECASE)
+    return re.compile(alternatives, re.IGNORECASE if ignore_case else 0)  # Windows paths only are case-blind
 
 
 def _scrub_server_paths(artifacts: Dict[str, Any], out_dir: Path) -> Dict[str, Any]:
@@ -340,6 +343,8 @@ def _drive(
     if schema_findings:
         outcome.counts["runtime_schema_findings"] = schema_findings
     driver._add_common_artifacts(at, artifacts, outcome.artifacts)
+    if out_of_time("audit and DB mapping ran past the time budget"):  # before any verdict is drawn from it
+        return
 
     if not artifacts:
         codes.extend(c for c in driver._structural_guard_codes(joined) if c not in codes)
@@ -494,7 +499,13 @@ def run_pathway(request: PathwayRequest) -> PathwayResult:
     outcome.seconds = round(time.monotonic() - started, 2)
     outcome.artifacts = _scrub_server_paths(outcome.artifacts, out_dir)
     outcome.message, outcome.detail = (_scrub_server_paths({'m': t}, out_dir)['m'] for t in (outcome.message or '', outcome.detail or ''))
+    outcome.warnings = [_scrub_server_paths({'m': t}, out_dir)['m'] for t in outcome.warnings]
     result = bridge._to_result(outcome, out_dir)
+    record = out_dir / bridge.OUTCOME_NAME  # the bridge adds bridge_files[].error (an OSError text with its path) as it writes
+    try:
+        record.write_text(_scrub_server_paths({'m': record.read_text(encoding="utf-8")}, out_dir)['m'], encoding="utf-8")
+    except OSError:
+        pass  # the bridge already warned that the record could not be written
     result.attempt_log = [{**row, "runner": "t2pw.service.pathway.run_pathway"} for row in result.attempt_log]
     png = state.get("refinement_graph_bytes")
     if isinstance(png, (bytes, bytearray)) and png:

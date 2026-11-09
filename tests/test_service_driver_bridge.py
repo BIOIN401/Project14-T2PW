@@ -111,7 +111,7 @@ def test_import_loads_no_streamlit_app_or_driver():
     assert done.returncode == 0, done.stdout + done.stderr
 
 
-def test_worker_default_is_the_bridge_and_the_stub_stays_selectable(tmp_path):
+def test_worker_default_is_run_pathway_and_the_bridge_stays_selectable(tmp_path):
     assert worker.DEFAULT_RUN_FN == "t2pw.service.pathway:run_pathway"
     for spec, fn in (("t2pw.service.driver_bridge:run_pathway", br.run_pathway),
                      ("t2pw.service.pathway:run_pathway", importlib.import_module(

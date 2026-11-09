@@ -434,9 +434,9 @@ def test_run_extraction_returns_each_steps_failure_and_runs_nothing_after_it(ste
     assert [c[0] for c in steps.calls] == ["assemble", "zero", "one"]
 
 
-def test_run_extraction_refuses_an_ambiguous_review_in_stage_one_before_any_llm_call(monkeypatch, tmp_path):
-    """No ambiguous-review gate in ``run_extraction`` (R3d.md, open question 3): the REAL
-    ``run_stage_one_with_chunking`` refuses a Case-C context before its first LLM call."""
+def test_run_extraction_gates_an_ambiguous_review_before_any_llm_call(monkeypatch, tmp_path):
+    """``run_extraction`` runs the ambiguous-review gate after Stage 0 (R3d.md, open question 3,
+    reversed by Q-R3d-2): a Case-C context is refused before the first Stage-1 LLM call."""
 
     case_c = {"document_type": "multi_example_review", "selected_example": "", "candidate_examples": ["A", "B"]}
     monkeypatch.setattr(paths, "PROJECT_ROOT", tmp_path)

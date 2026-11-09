@@ -336,15 +336,38 @@ def test_time_running_out_before_the_audit_stops_cleanly(world, tmp_path, monkey
 def test_time_running_out_before_the_export_stops_cleanly(world, tmp_path, monkeypatch):
     from t2pw.service import driver_bridge as bridge
 
-    end = time.time() + 5000
+    from t2pw.batch import driver
 
-    def post(request, state, reporter):
+    end = time.time() + 5000
+    real = driver.gate_verdict
+
+    def verdict(artifacts):  # the clock runs out after the audit check, before the export check
         monkeypatch.setattr(pw.time, "time", lambda: end + 1)
-        return world.default_post(request, state, reporter)
-    world.post = post
+        return real(artifacts)
+    monkeypatch.setattr(driver, "gate_verdict", verdict)
     res = _run(tmp_path, deadline=end + bridge.GRACE_S)
     assert (res.status, res.failure_kind, res.stage) == ("timeout", "timeout", "pwml_export")
     assert "export" not in world.calls
+
+
+@pytest.mark.parametrize("mode", ["strict", "research"])
+def test_time_running_out_during_the_audit_is_a_timeout_not_a_verdict(world, tmp_path, monkeypatch, mode):
+    from t2pw.service import driver_bridge as bridge
+
+    end = time.time() + 5000
+
+    def post(request, state, reporter):  # the audit overruns; what it stored is a failing gate when strict
+        monkeypatch.setattr(pw.time, "time", lambda: end + 1)
+        world.default_post(request, state, reporter)
+        if mode == "strict":
+            state["post_pipeline_artifacts"][FINAL_GATE_REPORT_KEY] = {
+                "ok": False, "errors": [{"path": "/p", "reason": "bad", "code": "E1"}]}
+        return pr.PostRunResult(final_payload=request.final_payload)
+    world.post = post
+    res = _run(tmp_path, deadline=end + bridge.GRACE_S, export_mode="strict" if mode == "strict" else "research")
+    assert (res.status, res.failure_kind, res.stage) == ("timeout", "timeout", "post_pipeline")
+    assert "export" not in world.calls and res.pwml_path is None
+    assert retry.decide({"status": res.status, "failure_kind": res.failure_kind}, 1, 0.0).retry is False
 
 
 @pytest.mark.parametrize("step", ["before stage one", "before stage two"])
@@ -379,6 +402,14 @@ def test_the_rag_rounds_get_the_time_left_only_with_a_deadline():
     left = ex._rag_deadline_kwargs({ex.DEADLINE_STATE_KEY: time.time() + 500})["deadline_seconds"]
     assert 495 <= left <= 500
     assert ex._rag_deadline_kwargs({ex.DEADLINE_STATE_KEY: time.time() - 50}) == {"deadline_seconds": 1.0}
+
+
+def test_the_rag_rounds_never_get_more_than_their_usual_budget(monkeypatch):
+    import t2pw.service.rag_orchestration as rag_orchestration
+
+    monkeypatch.setattr(rag_orchestration, "rag_loop_deadline_seconds", lambda: 100.0)
+    assert ex._rag_deadline_kwargs({ex.DEADLINE_STATE_KEY: time.time() + 5000}) == {"deadline_seconds": 100.0}
+    assert 45 <= ex._rag_deadline_kwargs({ex.DEADLINE_STATE_KEY: time.time() + 50})["deadline_seconds"] <= 50
 
 
 # -- per-run isolation ------------------------------------------------------------------
@@ -684,6 +715,25 @@ def test_scrubbing_covers_the_temp_dir_and_home(tmp_path):
     text = f"{tempfile.gettempdir()}/a {Path.home() / 'b'}"
     out = pw._scrub_server_paths({"r.txt": text}, tmp_path)["r.txt"]
     assert tempfile.gettempdir() not in out and str(Path.home()) not in out and out.split() == ["a", "b"]
+
+
+def test_a_short_root_is_cut_only_as_a_whole_path(tmp_path, monkeypatch):
+    import tempfile
+
+    monkeypatch.setattr(tempfile, "gettempdir", lambda: "/tmp")  # the Linux host's temp dir
+    scrub = lambda text: pw._scrub_server_paths({"r.txt": text}, tmp_path)["r.txt"]  # noqa: E731
+    science = "ACE2/TMPRSS2 and UMP/TMP"
+    assert scrub(science) == science
+    assert scrub("see /tmp/abc/report.json ok") == "see abc/report.json ok"
+    assert scrub('{"report_path": "/tmp/abc/report.json"}') == '{"report_path": "abc/report.json"}'
+
+
+@pytest.mark.parametrize("ignore_case,want", [(False, "x /TMP/a"), (True, "x a")])
+def test_a_root_ignores_case_only_where_the_filesystem_does(tmp_path, monkeypatch, ignore_case, want):
+    import tempfile
+
+    monkeypatch.setattr(tempfile, "gettempdir", lambda: "/tmp")
+    assert pw._server_paths(tmp_path, ignore_case).sub("", "x /TMP/a") == want
 
 
 def test_a_write_failure_on_a_required_artifact_is_a_crash(world, tmp_path, monkeypatch):
