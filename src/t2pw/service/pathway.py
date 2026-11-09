@@ -222,7 +222,8 @@ def _drive(
     the same order, with the three clicks replaced by the service calls the app makes.
 
     ``at`` is only ``session_state``, the one thing the driver's helpers read off AppTest.
-    Keep this and ``_drive`` in step until R6 makes the driver call this module.
+    Since R6 the batch driver's default engine runs this (``driver.run_one_pathway``); the
+    AppTest ``driver._drive`` stays one release as the cross-check (``--engine apptest``).
     """
 
     import functools
@@ -488,6 +489,32 @@ def _drive(
                                  codes=pwml_codes, superseded=superseded)
 
 
+def run_paper(paper: Any, request: PathwayRequest, deadline: Optional[float]) -> Tuple[Any, Dict[str, Any]]:
+    """The run itself: ``paper`` in, the driver's ``RunOutcome`` and the run's state dict out.
+
+    ``run_pathway`` is this plus the input rules, the scrub and the result writer. The batch
+    driver (``driver.run_one_pathway``) calls this directly, so a batch leg gets the very
+    outcome the AppTest path would give: the paper as the plan holds it, unscrubbed artifacts
+    in memory, the driver's own ``detail``, ``seconds`` and release record. ``deadline`` is an
+    absolute ``time.time()`` second the run must finish by, ``None`` = no cap. Never raises.
+    """
+
+    from t2pw.batch import driver
+    from t2pw.service.reporter import CollectingReporter
+
+    outcome = driver.RunOutcome(paper_id=driver._paper_id(paper), mode=driver._resolve_mode(request.export_mode)[0])
+    state: Dict[str, Any] = {}
+    started = time.monotonic()
+    try:
+        _drive(request, paper, outcome, state, CollectingReporter(), deadline)
+    except Exception:  # noqa: BLE001 - a crash here is a result, never an unhandled error in the worker
+        outcome.status, outcome.failure_kind = STATUS_ERROR, KIND_CRASH
+        outcome.message = outcome.message or "the pipeline crashed before it could be judged"
+        outcome.detail = ((outcome.detail + "\n\n") if outcome.detail else "") + traceback.format_exc()
+    outcome.seconds = round(time.monotonic() - started, 2)
+    return outcome, state
+
+
 def run_pathway(request: PathwayRequest) -> PathwayResult:
     """Run one pathway headless: Stage 0-2, audit and mapping, export, in one process.
 
@@ -499,9 +526,8 @@ def run_pathway(request: PathwayRequest) -> PathwayResult:
     the request: a crash in the pipeline is an ``error``/``crash`` result.
     """
 
-    from t2pw.batch import driver, runner
+    from t2pw.batch import runner
     from t2pw.service import driver_bridge as bridge
-    from t2pw.service.reporter import CollectingReporter
 
     out_dir = Path(request.out_dir) if request.out_dir else Path(tempfile.mkdtemp(prefix="t2pw-job-"))
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -520,16 +546,7 @@ def run_pathway(request: PathwayRequest) -> PathwayResult:
         deadline = float(request.deadline) - bridge.GRACE_S
 
     runner.force_utf8_stdio()  # the worker child's stdout is a file (cp1252 on Windows)
-    outcome = driver.RunOutcome(paper_id=driver._paper_id(paper), mode=driver._resolve_mode(request.export_mode)[0])
-    state: Dict[str, Any] = {}
-    started = time.monotonic()
-    try:
-        _drive(request, paper, outcome, state, CollectingReporter(), deadline)
-    except Exception:  # noqa: BLE001 - a crash here is a result, never an unhandled error in the worker
-        outcome.status, outcome.failure_kind = STATUS_ERROR, KIND_CRASH
-        outcome.message = outcome.message or "the pipeline crashed before it could be judged"
-        outcome.detail = ((outcome.detail + "\n\n") if outcome.detail else "") + traceback.format_exc()
-    outcome.seconds = round(time.monotonic() - started, 2)
+    outcome, state = run_paper(paper, request, deadline)
     outcome.artifacts = _scrub_server_paths(outcome.artifacts, out_dir)
     outcome.message, outcome.detail = (_scrub_server_paths({'m': t}, out_dir)['m'] for t in (outcome.message or '', outcome.detail or ''))
     outcome.warnings = [_scrub_server_paths({'m': t}, out_dir)['m'] for t in outcome.warnings]
