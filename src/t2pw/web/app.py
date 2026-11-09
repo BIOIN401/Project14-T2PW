@@ -291,6 +291,9 @@ def _process_submission(app: FastAPI, form, remote: str, forwarded_for: Optional
                     if f.size is not None and (m := limits.check_pdf_bytes(f.size, views.scrub(f.filename, 80))):
                         err["pdfs"] = m
                         break
+                    if m := _cheap_pdf_problem(f):  # before the rate slot: a typo costs nothing
+                        err["pdfs"] = m
+                        break
         parsed[i] = dict(name=name, org=org, ids=ids)
         pdf_rows[i] = files if mode == "pdfs" else []
 
@@ -355,6 +358,19 @@ def _process_submission(app: FastAPI, form, remote: str, forwarded_for: Optional
     return ("ok", sid)
 
 
+def _cheap_pdf_problem(f: UploadFile) -> Optional[str]:
+    """Empty or not starting ``%PDF-``: the same two refusals ``save_uploads`` would make,
+    found from the first five bytes so the visitor keeps their daily slot. The page count
+    (the costly check) still runs after the rate limit."""
+    name = limits.sanitize_display_name(f.filename)
+    try:
+        head = f.file.read(5)
+        f.file.seek(0)
+    except (OSError, ValueError):
+        return None  # let save_uploads decide
+    return f"{name} is empty." if not head else limits.check_pdf_magic(head, name)
+
+
 def _discard(upload_dir: Path, saved) -> None:
     for s in saved:
         s.path.unlink(missing_ok=True)
@@ -371,12 +387,19 @@ def _cross_site(request: Request) -> bool:
     """CSRF guard for the one state-changing route. There is no cookie or login, so this is
     abuse control (a third-party page making visitors' browsers spend their rate slots or
     fill the queue). Rejects ``Sec-Fetch-Site: cross-site`` and any ``Origin`` whose host is
-    neither the request's ``Host`` nor the configured ``base_url`` host (``Origin: null``
-    included). A request with neither header (curl, old browsers) is allowed."""
-    if request.headers.get("sec-fetch-site", "").lower() == "cross-site":
+    neither the request's ``Host`` nor the configured ``base_url`` host. One exception:
+    under ``Referrer-Policy: no-referrer`` (which the site sets, because the job URL is the
+    credential) Chromium sends ``Origin: null`` on its own same-origin form POST, so
+    ``Origin`` exactly ``null`` is accepted when ``Sec-Fetch-Site`` is exactly
+    ``same-origin``. A bare ``Origin: null`` (sandboxed frame, data: URL) stays refused. A
+    request with neither header (curl, old browsers) is allowed."""
+    fetch_site = request.headers.get("sec-fetch-site", "").lower()
+    if fetch_site == "cross-site":
         return True
     origin = request.headers.get("origin")
     if origin is None:
+        return False
+    if origin == "null" and fetch_site == "same-origin":
         return False
     allowed = {request.headers.get("host", "").lower(), urlsplit(request.app.state.base_url).netloc.lower()}
     allowed.discard("")

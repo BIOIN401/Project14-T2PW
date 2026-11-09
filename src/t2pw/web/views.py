@@ -90,23 +90,38 @@ def parse_pmids(text: str) -> Tuple[List[str], List[str]]:
     return ids, bad
 
 
+def _match_tier(text: str, q: str) -> Optional[int]:
+    """0 exact, 1 starts with, 2 a word/bracket starts with, 3 contains; None for no match."""
+    if text == q:
+        return 0
+    if text.startswith(q):
+        return 1
+    if (" " + q) in text or ("(" + q) in text:
+        return 2
+    return 3 if q in text else None
+
+
 def search_organisms(organisms: Sequence[Any], q: str, limit: int = 30) -> List[Any]:
-    """Prefix matches first, then word-start matches, then substring matches."""
+    """Match the scientific label and the common name ("mouse", "yeast"); a genus
+    abbreviation also works ("E. coli" finds "Escherichia coli"). Exact, then starts-with,
+    then word-start, then substring; within a tier species with pathways, then the shorter label."""
     q = q.strip().casefold()
     if not q:
         return []
-    prefix, word, sub = [], [], []
+    q_abbr = q.replace(".", "")
+    hits = []
     for o in organisms:
-        low = o.label.casefold()
-        if low.startswith(q):
-            prefix.append(o)
-        elif (" " + q) in low or ("(" + q) in low:
-            word.append(o)
-        elif q in low:
-            sub.append(o)
-        if len(prefix) >= limit:
-            break
-    return (prefix + word + sub)[:limit]
+        label = o.label.casefold()
+        tiers = [_match_tier(label, q), _match_tier((o.common_name or "").casefold(), q)]
+        head, _, rest = label.partition(" ")
+        if rest:  # "escherichia coli" -> "e coli": prefix/exact only, substrings would be noise
+            t = _match_tier(head[0] + " " + rest, q_abbr)
+            tiers.append(t if t is not None and t <= 1 else None)
+        best = min((t for t in tiers if t is not None), default=None)
+        if best is not None:
+            hits.append((best, not o.has_pathways, len(o.label), o))
+    hits.sort(key=lambda h: h[:3])
+    return [h[3] for h in hits[:limit]]
 
 
 # -- item view-model -----------------------------------------------------------------
@@ -116,6 +131,9 @@ _KIND_TEXT = {
     KIND_LLM: "the language-model service did not return a usable answer",
     KIND_NETWORK: "a network service could not be reached",
     KIND_CRASH: "the run stopped unexpectedly",
+    KIND_CONTRACT: "the extracted pathway failed the quality checks",
+    KIND_AMBIGUOUS: "the extracted pathway failed the quality checks",
+    KIND_NO_REACTIONS: "no reactions could be extracted from the sources",
 }
 
 
