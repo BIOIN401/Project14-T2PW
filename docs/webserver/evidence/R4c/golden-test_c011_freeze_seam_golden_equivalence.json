@@ -1,0 +1,187 @@
+{
+  "label": "R4c-golden-test_c011_freeze_seam_golden_equivalence",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-R4c",
+    "-q",
+    "--basetemp=C:/t/ws-R4c-tmp/golden-test_c011_freeze_seam_golden_equivalence/bt",
+    "tests/test_c011_freeze_seam_golden_equivalence.py"
+  ],
+  "cwd": "C:\\t\\ws-R4c",
+  "started_at": "2026-11-09T04:45:08+00:00",
+  "finished_at": "2026-11-09T04:45:47+00:00",
+  "duration_seconds": 38.639375399994606,
+  "timeout_seconds": 540.0,
+  "root_pid": 556344,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 582200,
+      "name": "python.exe",
+      "ppid": 556344
+    },
+    {
+      "pid": 583448,
+      "name": "git.exe",
+      "ppid": 582200
+    },
+    {
+      "pid": 580632,
+      "name": "git.exe",
+      "ppid": 582200
+    },
+    {
+      "pid": 583248,
+      "name": "python.exe",
+      "ppid": 582200
+    },
+    {
+      "pid": 583236,
+      "name": "python.exe",
+      "ppid": 583248
+    },
+    {
+      "pid": 583260,
+      "name": "python.exe",
+      "ppid": 582200
+    },
+    {
+      "pid": 583340,
+      "name": "python.exe",
+      "ppid": 583260
+    },
+    {
+      "pid": 578616,
+      "name": "python.exe",
+      "ppid": 582200
+    },
+    {
+      "pid": 582984,
+      "name": "python.exe",
+      "ppid": 578616
+    },
+    {
+      "pid": 579756,
+      "name": "python.exe",
+      "ppid": 583220
+    },
+    {
+      "pid": 583220,
+      "name": "python.exe",
+      "ppid": 582200
+    },
+    {
+      "pid": 531076,
+      "name": "python.exe",
+      "ppid": 579096
+    },
+    {
+      "pid": 579096,
+      "name": "python.exe",
+      "ppid": 582200
+    },
+    {
+      "pid": 579084,
+      "name": "python.exe",
+      "ppid": 582200
+    },
+    {
+      "pid": 582292,
+      "name": "python.exe",
+      "ppid": 579084
+    },
+    {
+      "pid": 569048,
+      "name": "python.exe",
+      "ppid": 582200
+    },
+    {
+      "pid": 575820,
+      "name": "python.exe",
+      "ppid": 569048
+    }
+  ],
+  "descendants_terminated": [
+    531076,
+    569048,
+    575820,
+    578616,
+    579084,
+    579096,
+    579756,
+    580632,
+    582200,
+    582292,
+    582984,
+    583220,
+    583236,
+    583248,
+    583260,
+    583340,
+    583448
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 24756,
+      "name": "python.exe"
+    },
+    {
+      "pid": 24880,
+      "name": "python.exe"
+    },
+    {
+      "pid": 523304,
+      "name": "python.exe"
+    },
+    {
+      "pid": 547320,
+      "name": "python.exe"
+    },
+    {
+      "pid": 581504,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/webserver/evidence/R4c/golden-test_c011_freeze_seam_golden_equivalence.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-R4c\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-R4c",
+    "repo_head": "4c90ef283f292a05ea9ace7557d771df2ea9aa75",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "R4c",
+    "token": "R4c:523304:2f5aa66efdde8bc4",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

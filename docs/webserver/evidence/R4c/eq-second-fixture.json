@@ -1,0 +1,103 @@
+{
+  "label": "R4c-eq-second-fixture",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-R4c",
+    "-q",
+    "--basetemp=C:/t/ws-R4c-tmp/eq-second-fixture/bt",
+    "tests/test_equivalence_second_fixture.py"
+  ],
+  "cwd": "C:\\t\\ws-R4c",
+  "started_at": "2026-11-09T04:43:59+00:00",
+  "finished_at": "2026-11-09T04:44:48+00:00",
+  "duration_seconds": 48.75912580000295,
+  "timeout_seconds": 540.0,
+  "root_pid": 581276,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 578288,
+      "name": "python.exe",
+      "ppid": 581276
+    },
+    {
+      "pid": 581884,
+      "name": "python.exe",
+      "ppid": 581912
+    },
+    {
+      "pid": 581912,
+      "name": "python.exe",
+      "ppid": 578288
+    }
+  ],
+  "descendants_terminated": [
+    578288,
+    581884,
+    581912
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 24756,
+      "name": "python.exe"
+    },
+    {
+      "pid": 24880,
+      "name": "python.exe"
+    },
+    {
+      "pid": 547320,
+      "name": "python.exe"
+    },
+    {
+      "pid": 578556,
+      "name": "python.exe"
+    },
+    {
+      "pid": 581508,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "docs/webserver/evidence/R4c/eq-second-fixture.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-R4c\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-R4c",
+    "repo_head": "4c90ef283f292a05ea9ace7557d771df2ea9aa75",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "R4c",
+    "token": "R4c:581508:921928e9b5c1e381",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
