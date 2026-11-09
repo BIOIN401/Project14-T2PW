@@ -7,11 +7,11 @@
 {% macro row_fields(r) %}
   {{ c.text_field("name_" ~ r.n, "Pathway name", value=r.name, required=(r.n == 1),
         hint="Required for every option. With PubMed IDs or PDFs it names the pathway the papers describe.",
-        error=r.errors.get("name"), placeholder="e.g. glycolysis") }}
+        error=r.errors.get("name"), placeholder="e.g. glycolysis", attrs={"maxlength": 200}) }}
   {{ c.text_field("organism_" ~ r.n, "Organism", value=r.organism, required=(r.n == 1),
         hint="Start typing a species name and pick one from the suggestions.",
         error=r.errors.get("organism"), autocomplete="off",
-        attrs={"list": "organism-options", "hx-get": "/organisms", "hx-trigger": "input changed delay:250ms",
+        attrs={"maxlength": 200, "list": "organism-options", "hx-get": "/organisms", "hx-trigger": "input changed delay:250ms",
                "hx-target": "#organism-options", "hx-swap": "innerHTML"}) }}
   <div class="only-pmids">
     {{ c.textarea_field("pmids_" ~ r.n, "PubMed IDs", value=r.pmids, rows=3,
