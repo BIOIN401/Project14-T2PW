@@ -28,3 +28,7 @@ Wrapper `--heavy-lock W6c` -> `pinned_pytest.py --expect-tree C:/t/ws-W6c -q`, `
 
 * One `python -I -` with an empty stdin was started by my own slip (a command-line mistake); it hung, was stopped, and its two PIDs (launcher and child, created seconds earlier) were killed by PID. No other process was touched.
 * The heavy lock was held by another job for long stretches; two wrapper loops ran out their retries (exit 95, child never started) before the final runs.
+
+## Batched test, review and merge (added by the orchestrator, 2026-11-08)
+
+To conserve usage, W6b, W6c and R26 were tested as one trial merge (`98d7d641`), and R4a and R4b on top of it (`5a17423f`). Reviews and reports: `docs/webserver/evidence/batch-2026-11-08/`. Merged: W6b, W6c, R26 ending `f74ca936`; R4a, R4b ending `786f8a43`. Results on `5a17423f`: golden 38, equivalence 14, second fixture 8, service 57, stage1 22, stage2 28, export 30, post_run 42, c060a 11, s2orch 12, web 307, reasons 10, browser fixes 15, SMOKE 511, census 83, 0 survivors. No separate post-merge run: `786f8a43` has the same git tree hash (`e4422562`) as the tested trial, so it is byte-identical to what passed.

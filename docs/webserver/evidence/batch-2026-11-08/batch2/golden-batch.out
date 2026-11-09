@@ -1,0 +1,61 @@
+T2PW: C:\t\ws-batch2\src\t2pw\__init__.py
+
+=================================== ERRORS ====================================
+__________ ERROR collecting tests/test_reaction_evidence_app_hook.py __________
+ImportError while importing test module 'C:\t\ws-batch2\tests\test_reaction_evidence_app_hook.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Python313\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_reaction_evidence_app_hook.py:14: in <module>
+    from streamlit.testing.v1 import AppTest
+E   ModuleNotFoundError: No module named 'streamlit.testing'; 'streamlit' is not a package
+____________ ERROR collecting tests/test_reaction_evidence_view.py ____________
+ImportError while importing test module 'C:\t\ws-batch2\tests\test_reaction_evidence_view.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Python313\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_reaction_evidence_view.py:19: in <module>
+    from streamlit.testing.v1 import AppTest
+E   ModuleNotFoundError: No module named 'streamlit.testing'; 'streamlit' is not a package
+============================== warnings summary ===============================
+tests\test_service_inputs.py:254
+  C:\t\ws-batch2\tests\test_service_inputs.py:254: SyntaxWarning: invalid escape sequence '\d'
+    """W1F: mixed ASCII/non-ASCII digit strings (the old str.isdigit/\d regex accepted these)."""
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+ERROR tests/test_reaction_evidence_app_hook.py
+ERROR tests/test_reaction_evidence_view.py
+!!!!!!!!!!!!!!!!!!! Interrupted: 2 errors during collection !!!!!!!!!!!!!!!!!!!
+1 warning, 2 errors in 14.17s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-batch2\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 5a17423f3ef5f95404406f289cc6ed61ed5b755e  [git, worktree dirty=False]
+label                   : batch2-golden-batch
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-batch2/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-batch2 -q --basetemp=C:/t/bt/batch2/golden-batch
+cwd                     : C:\t\ws-batch2
+root PID / process group: 539112 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 15.99 s
+exit reason             : nonzero
+exit code (real)        : 2
+returned code           : 2
+descendants observed    : 1  538456:python.exe
+descendants terminated  : 1  538456
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ev-batch2/independent/golden-batch.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=batch2  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

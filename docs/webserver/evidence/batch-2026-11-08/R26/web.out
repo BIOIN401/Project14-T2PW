@@ -1,0 +1,40 @@
+T2PW: C:\t\ws-R26-trial\src\t2pw\__init__.py
+........................................................................ [ 23%]
+........................................................................ [ 46%]
+........................................................................ [ 70%]
+........................................................................ [ 93%]
+...................                                                      [100%]
+============================== warnings summary ===============================
+tests\test_service_inputs.py:254
+  C:\t\ws-R26-trial\tests\test_service_inputs.py:254: SyntaxWarning: invalid escape sequence '\d'
+    """W1F: mixed ASCII/non-ASCII digit strings (the old str.isdigit/\d regex accepted these)."""
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+307 passed, 1 warning in 44.65s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R26-trial\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 691a8aa81b0bb91aff9102d0df7db8e9af99ab72  [git, worktree dirty=False]
+label                   : R26-ind-web
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R26-trial/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R26-trial -q --basetemp=C:/t/bt/R26ind/web tests/test_service_driver_bridge.py tests/test_service_pathway_interface.py tests/test_service_inputs.py tests/test_service_organisms.py tests/test_web_jobs.py tests/test_web_worker.py tests/test_web_retry.py tests/test_web_limits.py tests/test_web_notify.py tests/test_web_design_system.py tests/test_web_curator_queue.py tests/test_web_postrun.py tests/test_web_app.py
+cwd                     : C:\t\ws-R26-trial
+root PID / process group: 497452 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 45.76 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 117  497480:python.exe, 494076:python.exe, 497644:python.exe, 495988:python.exe, 497052:python.exe, 493656:python.exe, 496812:python.exe, 496868:python.exe, 496828:python.exe, 497620:python.exe, 497636:python.exe, 495912:python.exe, 497556:python.exe, 495560:python.exe, 497076:python.exe, 493652:python.exe, 496664:python.exe, 491680:python.exe, 494124:python.exe, 492864:python.exe, 494784:python.exe, 492860:python.exe, 496148:python.exe, 475792:python.exe, 481496:python.exe, 484436:python.exe, 495468:python.exe, 482148:python.exe, 496800:python.exe, 480180:python.exe, 481972:python.exe, 494788:python.exe, 496264:python.exe, 494048:python.exe, 497168:python.exe, 479544:python.exe, 492132:python.exe, 492916:python.exe, 496120:python.exe, 496320:python.exe, 489204:python.exe, 497676:python.exe, 497688:python.exe, 497780:python.exe, 497792:python.exe, 497812:python.exe, 497824:python.exe, 497948:python.exe, 497968:python.exe, 498036:python.exe, 498056:python.exe, 498080:python.exe, 498100:python.exe, 498124:python.exe, 498144:python.exe, 498164:python.exe, 498184:python.exe, 498280:python.exe, 498300:python.exe, 498392:python.exe, 498412:python.exe, 498432:python.exe, 498452:python.exe, 498472:python.exe, 498492:python.exe, 498516:python.exe, 498536:python.exe, 498556:python.exe, 498576:python.exe, 498596:python.exe, 498616:python.exe, 498636:python.exe, 498656:python.exe, 498676:python.exe, 496060:python.exe, 497692:python.exe, 497796:python.exe, 498128:python.exe, 488396:python.exe, 498356:python.exe, 498424:python.exe, 494660:python.exe, 497668:python.exe, 497800:python.exe, 498044:python.exe, 498140:python.exe, 498336:python.exe, 498448:python.exe, 498468:python.exe, 498504:python.exe, 498520:python.exe, 498580:python.exe, 498632:python.exe, 497704:python.exe, 497836:python.exe, 497972:python.exe, 498116:python.exe, 496172:python.exe, 498112:python.exe, 493640:python.exe, 496684:python.exe, 498396:tasklist.exe, 494620:python.exe, 494828:python.exe, 498348:python.exe, 496352:python.exe, 498212:python.exe, 498528:python.exe, 498592:python.exe, 497956:python.exe, 497980:python.exe, 498364:python.exe, 498600:python.exe, 497744:python.exe, 498664:python.exe, 493936:python.exe, 498092:python.exe
+descendants terminated  : 117  475792, 479544, 480180, 481496, 481972, 482148, 484436, 488396, 489204, 491680, 492132, 492860, 492864, 492916, 493640, 493652, 493656, 493936, 494048, 494076, 494124, 494620, 494660, 494784, 494788, 494828, 495468, 495560, 495912, 495988, 496060, 496120, 496148, 496172, 496264, 496320, 496352, 496664, 496684, 496800, 496812, 496828, 496868, 497052, 497076, 497168, 497480, 497556, 497620, 497636, 497644, 497668, 497676, 497688, 497692, 497704, 497744, 497780, 497792, 497796, 497800, 497812, 497824, 497836, 497948, 497956, 497968, 497972, 497980, 498036, 498044, 498056, 498080, 498092, 498100, 498112, 498116, 498124, 498128, 498140, 498144, 498164, 498184, 498212, 498280, 498300, 498336, 498348, 498356, 498364, 498392, 498396, 498412, 498424, 498432, 498448, 498452, 498468, 498472, 498492, 498504, 498516, 498520, 498528, 498536, 498556, 498576, 498580, 498592, 498596, 498600, 498616, 498632, 498636, 498656, 498664, 498676
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ev-R26/independent/web.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R26-ind  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================

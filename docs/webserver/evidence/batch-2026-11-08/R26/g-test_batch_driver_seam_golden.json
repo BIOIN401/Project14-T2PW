@@ -1,0 +1,96 @@
+{
+  "label": "R26-ind-g-test_batch_driver_seam_golden",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/ws-R26-trial/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-R26-trial",
+    "-q",
+    "--basetemp=C:/t/bt/R26ind/g-test_batch_driver_seam_golden",
+    "tests/test_batch_driver_seam_golden.py"
+  ],
+  "cwd": "C:\\t\\ws-R26-trial",
+  "started_at": "2026-11-08T21:32:20+00:00",
+  "finished_at": "2026-11-08T21:32:27+00:00",
+  "duration_seconds": 6.800619800000277,
+  "timeout_seconds": 540.0,
+  "root_pid": 308868,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 309040,
+      "name": "python.exe",
+      "ppid": 308868
+    }
+  ],
+  "descendants_terminated": [
+    309040
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 24756,
+      "name": "python.exe"
+    },
+    {
+      "pid": 24880,
+      "name": "python.exe"
+    },
+    {
+      "pid": 304604,
+      "name": "python.exe"
+    },
+    {
+      "pid": 307036,
+      "name": "python.exe"
+    },
+    {
+      "pid": 307076,
+      "name": "python.exe"
+    },
+    {
+      "pid": 307236,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/ev-R26/independent/g-test_batch_driver_seam_golden.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-R26-trial\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-R26-trial",
+    "repo_head": "691a8aa81b0bb91aff9102d0df7db8e9af99ab72",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "R26-ind",
+    "token": "R26-ind:307236:5fb3582be5c18705",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

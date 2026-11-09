@@ -97,3 +97,7 @@ Round 2 results (all through the wrapper, `--heavy-lock W6b`, evidence in `evide
 | `tests/test_web_review_reasons.py` | 10 passed | 0 | 0 |
 | 13-file web+bridge list | 301 passed | 0 | 0 |
 | Scratch mutants (`C:/t/w6b_mut`, `w6b_mut2`, not in the repo) | rendering all of `reasons` fails 3 tests, including `test_e2e2_case_states_why` on the `semantic_evaluation_failed` assertion; rendering `retrieval_attempts` fails 6, including `test_e2e2_case_states_why` | 1 each, as intended | 0 |
+
+## Batched test, review and merge (added by the orchestrator, 2026-11-08)
+
+To conserve usage, W6b, W6c and R26 were tested as one trial merge (`98d7d641`), and R4a and R4b on top of it (`5a17423f`). Reviews and reports: `docs/webserver/evidence/batch-2026-11-08/`. Merged: W6b, W6c, R26 ending `f74ca936`; R4a, R4b ending `786f8a43`. Results on `5a17423f`: golden 38, equivalence 14, second fixture 8, service 57, stage1 22, stage2 28, export 30, post_run 42, c060a 11, s2orch 12, web 307, reasons 10, browser fixes 15, SMOKE 511, census 83, 0 survivors. No separate post-merge run: `786f8a43` has the same git tree hash (`e4422562`) as the tested trial, so it is byte-identical to what passed.

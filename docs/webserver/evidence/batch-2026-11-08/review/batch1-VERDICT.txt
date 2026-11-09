@@ -1,0 +1,20 @@
+A. W6c ws/W6c-browser-fixes @ 1e703038: APPROVE WITH NOTES
+B. W6b round 2 @ 21612b89: APPROVE
+
+A findings
+A1 [note, low] app.py _cross_site: Origin null accepted only with Sec-Fetch-Site == same-origin (exact, lowercased header). Sec-Fetch-* is a forbidden header, so page JS cannot set it. A sandboxed iframe, data: URL or cross-site redirect chain gets cross-site/none, so it is still refused. Non-browser clients can forge anything, as before. tests/test_web_app.py:515-523 is unedited and still meaningful: bare null and foreign-origin+same-origin still 403.
+A2 [note, low] app.py:~294 + _cheap_pdf_problem: reads 5 bytes of an already-spooled UploadFile and rewinds; opens nothing, so no handle or temp file leaks. Multipart parsing happens before and is unchanged. Size check already ran before the slot. The new free refusal is a 5-byte read, so no meaningful abuse. The limits.py docstring about "deliberate slot" is stale (Q-W6c-3, implementer already flagged).
+A3 [note, low] views.py search_organisms: q is capped at 100 chars in the route, list is lru_cached, work is O(n) per debounced keystroke, output cap 30, sort key (tier, no-pathways, len) is stable. Cost: now scans the whole list (old code broke early); fine at this list size. Escaping unchanged (Jinja template, no change). head[0] is safe: no label is empty or starts with a space in data/webserver/organisms.json. Data-quality ranking ("human" returns junk rows) is Q-W6c-1, a product question, not a defect.
+A4 [note, low] views.py _KIND_TEXT: accurate for no_reactions and for contract/ambiguous. Bridge-refusal attempts row now says "failed the quality checks", which is slightly wrong (implementer's Q-W6c-2). _failure_text handles the bridge refusal first, so the main detail text is right. Fix with W6b's item_view later.
+A5 Boundary OK: app.py, views.py, submit.html (maxlength only), new tests/test_web_browser_fixes.py, docs/evidence. No existing test edited. No quarantine_report.json. No key shapes found in evidence.
+A6 [note, info] SMOKE and golden seams not run in the task; merge gate must run them.
+
+B findings
+F1 resolved: result.html:23 and test assert "The PWML contains no reactions." and "found in this text" absent.
+F2 resolved: views.py _OMITTED uses \d{1,9}; test feeds a 5000-digit run, expects None.
+F3 resolved: test_e2e2 asserts retrieval_attempts, Retrieval, Completeness, semantic_evaluation_failed, requested_pathway_anchors_present absent; new test for unknown reactions count not shown as 0.
+F4 resolved: detail line switches to "See why this needs review below." when a card is shown, else the old text.
+F6 resolved: W6b.md edited (+26/-? lines); diff contains the disclosure. I did not re-read it line by line.
+Withheld fields: diff touches only result.html wording, the regex, the detail string and tests, so expansion_blocked_reason, retrieval_attempts and completeness still cannot reach the page. Test asserts each absent.
+Boundary and secrets OK: 10 files, src limited to result.html and views.py; no quarantine_report.json; no key shapes in evidence/W6b.
+B-note [info] I did not run the tests; the mutation scratch evidence is committed (0 survivors claimed, not re-verified).

@@ -1,0 +1,100 @@
+{
+  "label": "batch2-eq-second-fixture",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/ws-batch2/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-batch2",
+    "-q",
+    "--basetemp=C:/t/bt/batch2/eq-second-fixture",
+    "tests/test_equivalence_second_fixture.py"
+  ],
+  "cwd": "C:\\t\\ws-batch2",
+  "started_at": "2026-11-09T04:22:21+00:00",
+  "finished_at": "2026-11-09T04:23:08+00:00",
+  "duration_seconds": 46.863530000002356,
+  "timeout_seconds": 540.0,
+  "root_pid": 526720,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 542768,
+      "name": "python.exe",
+      "ppid": 526720
+    },
+    {
+      "pid": 528216,
+      "name": "python.exe",
+      "ppid": 541988
+    },
+    {
+      "pid": 541988,
+      "name": "python.exe",
+      "ppid": 542768
+    }
+  ],
+  "descendants_terminated": [
+    528216,
+    541988,
+    542768
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 24756,
+      "name": "python.exe"
+    },
+    {
+      "pid": 24880,
+      "name": "python.exe"
+    },
+    {
+      "pid": 526920,
+      "name": "python.exe"
+    },
+    {
+      "pid": 539364,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/ev-batch2/independent/eq-second-fixture.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-batch2\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-batch2",
+    "repo_head": "5a17423f3ef5f95404406f289cc6ed61ed5b755e",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "batch2",
+    "token": "batch2:526920:d905b2ac90457668",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

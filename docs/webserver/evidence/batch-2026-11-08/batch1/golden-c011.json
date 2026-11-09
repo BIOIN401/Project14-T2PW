@@ -1,0 +1,210 @@
+{
+  "label": "batch1-golden-c011",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/ws-batch1/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-batch1",
+    "-q",
+    "--basetemp=C:/t/bt/batch1/golden-c011",
+    "tests/test_c011_freeze_seam_golden_equivalence.py"
+  ],
+  "cwd": "C:\\t\\ws-batch1",
+  "started_at": "2026-11-09T04:20:26+00:00",
+  "finished_at": "2026-11-09T04:21:05+00:00",
+  "duration_seconds": 38.93391810000321,
+  "timeout_seconds": 540.0,
+  "root_pid": 539452,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 542428,
+      "name": "python.exe",
+      "ppid": 539452
+    },
+    {
+      "pid": 535256,
+      "name": "git.exe",
+      "ppid": 542428
+    },
+    {
+      "pid": 541532,
+      "name": "git.exe",
+      "ppid": 542428
+    },
+    {
+      "pid": 541380,
+      "name": "git.exe",
+      "ppid": 542428
+    },
+    {
+      "pid": 527228,
+      "name": "python.exe",
+      "ppid": 542428
+    },
+    {
+      "pid": 527904,
+      "name": "python.exe",
+      "ppid": 527228
+    },
+    {
+      "pid": 525992,
+      "name": "python.exe",
+      "ppid": 526744
+    },
+    {
+      "pid": 526744,
+      "name": "python.exe",
+      "ppid": 542428
+    },
+    {
+      "pid": 541664,
+      "name": "git.exe",
+      "ppid": 525992
+    },
+    {
+      "pid": 536788,
+      "name": "git.exe",
+      "ppid": 525992
+    },
+    {
+      "pid": 541636,
+      "name": "python.exe",
+      "ppid": 542428
+    },
+    {
+      "pid": 542320,
+      "name": "python.exe",
+      "ppid": 541636
+    },
+    {
+      "pid": 537560,
+      "name": "python.exe",
+      "ppid": 541360
+    },
+    {
+      "pid": 541360,
+      "name": "python.exe",
+      "ppid": 542428
+    },
+    {
+      "pid": 530028,
+      "name": "python.exe",
+      "ppid": 542428
+    },
+    {
+      "pid": 535028,
+      "name": "python.exe",
+      "ppid": 530028
+    },
+    {
+      "pid": 538564,
+      "name": "python.exe",
+      "ppid": 540288
+    },
+    {
+      "pid": 540288,
+      "name": "python.exe",
+      "ppid": 542428
+    },
+    {
+      "pid": 525508,
+      "name": "python.exe",
+      "ppid": 525612
+    },
+    {
+      "pid": 525612,
+      "name": "python.exe",
+      "ppid": 542428
+    }
+  ],
+  "descendants_terminated": [
+    525508,
+    525612,
+    525992,
+    526744,
+    527228,
+    527904,
+    530028,
+    535028,
+    535256,
+    536788,
+    537560,
+    538564,
+    540288,
+    541360,
+    541380,
+    541532,
+    541636,
+    541664,
+    542320,
+    542428
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 24756,
+      "name": "python.exe"
+    },
+    {
+      "pid": 24880,
+      "name": "python.exe"
+    },
+    {
+      "pid": 541216,
+      "name": "python.exe"
+    },
+    {
+      "pid": 541764,
+      "name": "python.exe"
+    },
+    {
+      "pid": 542108,
+      "name": "python.exe"
+    },
+    {
+      "pid": 542120,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/ev-batch1/independent/golden-c011.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-batch1\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-batch1",
+    "repo_head": "98d7d641453b46a20c004a80e85c52a1ac95c08e",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "batch1",
+    "token": "batch1:541764:5528aa28783f9e22",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

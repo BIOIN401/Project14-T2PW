@@ -96,3 +96,7 @@ Bounded wrapper, heavy lock R4b, fresh basetemp, survivors 0, `worktree dirty=Fa
 ## Evidence
 
 `docs/webserver/evidence/R4b/`: `runs/` (`t-` tip, `b-` base, `f-` final tip; logs and JSON), `proof/`, `scripts/`.
+
+## Batched test, review and merge (added by the orchestrator, 2026-11-08)
+
+To conserve usage, W6b, W6c and R26 were tested as one trial merge (`98d7d641`), and R4a and R4b on top of it (`5a17423f`). Reviews and reports: `docs/webserver/evidence/batch-2026-11-08/`. Merged: W6b, W6c, R26 ending `f74ca936`; R4a, R4b ending `786f8a43`. Results on `5a17423f`: golden 38, equivalence 14, second fixture 8, service 57, stage1 22, stage2 28, export 30, post_run 42, c060a 11, s2orch 12, web 307, reasons 10, browser fixes 15, SMOKE 511, census 83, 0 survivors. No separate post-merge run: `786f8a43` has the same git tree hash (`e4422562`) as the tested trial, so it is byte-identical to what passed.

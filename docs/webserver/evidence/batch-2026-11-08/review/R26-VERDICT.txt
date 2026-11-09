@@ -1,0 +1,7 @@
+R26 ws/R26-second-fixture @ 941ad8dd: APPROVE WITH NOTES
+1 harness: sour-taste unchanged. Defaults (CASES["sour_taste_v2"], path=FIXTURE, case=None->load_fixture) reproduce old values; removed lines are fetch_case TOPIC_LINE/MODE/source (same values via spec), record's guard (equivalent for strict: status!=pass or (mode==MODE and not xml)), write_fixture FIXTURE writes. Only extra: "published" key in arm dicts.
+2 isolation/non-vacuity: own roots app1/app2/service, fresh Cassette each, child process. m0 8 passed; m1 additions{} 4 failed; m2 raw merge 5 failed; m3 export_mode=None 1 failed; all 0 survivors. Not re-run.
+3 CC BY: Europe PMC JSON license "cc by", isOpenAccess Y. All 52 PMC ids in the fixture occur in the paper's own reference list; RAG off.
+4 hash seed: both arms share one seed; real content differences still show, only set-order ties hidden (hash-seed-diff.txt shows ordering-only).
+5 clean.
+6 filter runs in run_stage_one (extraction.py:683) before Stage 2 only.

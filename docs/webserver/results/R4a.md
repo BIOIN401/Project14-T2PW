@@ -96,3 +96,7 @@ Tip is the code at `bc712202` (run at `18a9a15d`, which adds only proof scripts)
 
 1. **`test_dependency_declarations` fails on base and tip** with `assert not ['starlette']`. It is not on the known-failures list. It predates this task and is not caused by it. Options: declare `starlette` in the dependencies (a one-line change, outside this boundary); or list it as a known failure (no code cost, but the test stays red).
 2. **Stale wording** in `postpipeline.py:110` and the harness comments still names the old function. Options: fix it in R4c, which already edits the harness (near zero cost); or leave it (a misleading name in a docstring).
+
+## Batched test, review and merge (added by the orchestrator, 2026-11-08)
+
+To conserve usage, W6b, W6c and R26 were tested as one trial merge (`98d7d641`), and R4a and R4b on top of it (`5a17423f`). Reviews and reports: `docs/webserver/evidence/batch-2026-11-08/`. Merged: W6b, W6c, R26 ending `f74ca936`; R4a, R4b ending `786f8a43`. Results on `5a17423f`: golden 38, equivalence 14, second fixture 8, service 57, stage1 22, stage2 28, export 30, post_run 42, c060a 11, s2orch 12, web 307, reasons 10, browser fixes 15, SMOKE 511, census 83, 0 survivors. No separate post-merge run: `786f8a43` has the same git tree hash (`e4422562`) as the tested trial, so it is byte-identical to what passed.

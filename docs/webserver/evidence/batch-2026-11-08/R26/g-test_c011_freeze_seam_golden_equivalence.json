@@ -1,0 +1,190 @@
+{
+  "label": "R26-ind-g-test_c011_freeze_seam_golden_equivalence",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/ws-R26-trial/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-R26-trial",
+    "-q",
+    "--basetemp=C:/t/bt/R26ind/g-test_c011_freeze_seam_golden_equivalence",
+    "tests/test_c011_freeze_seam_golden_equivalence.py"
+  ],
+  "cwd": "C:\\t\\ws-R26-trial",
+  "started_at": "2026-11-08T21:35:53+00:00",
+  "finished_at": "2026-11-08T21:36:28+00:00",
+  "duration_seconds": 34.499232300000585,
+  "timeout_seconds": 540.0,
+  "root_pid": 239820,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 307688,
+      "name": "python.exe",
+      "ppid": 239820
+    },
+    {
+      "pid": 315280,
+      "name": "git.exe",
+      "ppid": 307688
+    },
+    {
+      "pid": 314056,
+      "name": "git.exe",
+      "ppid": 307688
+    },
+    {
+      "pid": 302772,
+      "name": "git.exe",
+      "ppid": 307688
+    },
+    {
+      "pid": 313584,
+      "name": "python.exe",
+      "ppid": 307688
+    },
+    {
+      "pid": 314420,
+      "name": "python.exe",
+      "ppid": 313584
+    },
+    {
+      "pid": 313124,
+      "name": "python.exe",
+      "ppid": 314956
+    },
+    {
+      "pid": 314956,
+      "name": "python.exe",
+      "ppid": 307688
+    },
+    {
+      "pid": 304176,
+      "name": "python.exe",
+      "ppid": 307688
+    },
+    {
+      "pid": 298824,
+      "name": "python.exe",
+      "ppid": 304176
+    },
+    {
+      "pid": 303760,
+      "name": "python.exe",
+      "ppid": 307688
+    },
+    {
+      "pid": 313464,
+      "name": "python.exe",
+      "ppid": 303760
+    },
+    {
+      "pid": 310204,
+      "name": "python.exe",
+      "ppid": 307688
+    },
+    {
+      "pid": 313632,
+      "name": "python.exe",
+      "ppid": 310204
+    },
+    {
+      "pid": 314388,
+      "name": "python.exe",
+      "ppid": 307688
+    },
+    {
+      "pid": 315208,
+      "name": "python.exe",
+      "ppid": 314388
+    },
+    {
+      "pid": 298200,
+      "name": "python.exe",
+      "ppid": 307688
+    },
+    {
+      "pid": 313572,
+      "name": "python.exe",
+      "ppid": 298200
+    }
+  ],
+  "descendants_terminated": [
+    298200,
+    298824,
+    302772,
+    303760,
+    304176,
+    307688,
+    310204,
+    313124,
+    313464,
+    313572,
+    313584,
+    313632,
+    314056,
+    314388,
+    314420,
+    314956,
+    315208,
+    315280
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 24756,
+      "name": "python.exe"
+    },
+    {
+      "pid": 24880,
+      "name": "python.exe"
+    },
+    {
+      "pid": 306976,
+      "name": "python.exe"
+    },
+    {
+      "pid": 312264,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/ev-R26/independent/g-test_c011_freeze_seam_golden_equivalence.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-R26-trial\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-R26-trial",
+    "repo_head": "691a8aa81b0bb91aff9102d0df7db8e9af99ab72",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "R26-ind",
+    "token": "R26-ind:312264:cdd28656b4452b22",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

@@ -1,0 +1,12 @@
+TASK: R4a  BRANCH: ws/R4a-export-step  REVIEWED HEAD: 95a64c73
+VERDICT: APPROVE WITH NOTES
+GATES: boundary OK / no-biology OK / behaviour-preserved OK / tests OK / evidence OK (note F1) / secrets OK / result-doc OK
+TASK: R4b  BRANCH: ws/R4b-post-pipeline  REVIEWED HEAD: a5318398
+VERDICT: APPROVE WITH NOTES
+GATES: boundary OK / no-biology OK / behaviour-preserved OK / tests OK / evidence OK / secrets OK / result-doc OK
+FINDINGS (no blocking findings):
+F1 [note, R4a] docs/webserver/evidence/R4a/runs/t-smoke.log: SMOKE 511 at 18a9a15d reports worktree dirty=True; t-g1 is dirty=False. Cause not recorded. Re-run on the merge result (gate 4) closes it.
+F2 [note, R4b] tests/test_streamlit_stage2_orchestration.py:1092: the name set applies to both try nodes, so the legacy app handler could pass calling a local render_contract_failure. Slight loosening; per-module names would remove it.
+F3 [note, R4b, for R5] src/t2pw/service/post_run.py:76: the not-a-dict guard, artifact pop and quarantine reset are caller duties (app 2879+). A headless caller that skips the reset can leave a void quarantine decision standing.
+F4 [note, R4a] stale names of the moved function: src/t2pw/service/postpipeline.py:110, tests/equivalence/harness.py:357, tests/test_streamlit_quarantine_boundary.py:7. Fix in R4c.
+CHECKS: full report returned to the orchestrator via handback.

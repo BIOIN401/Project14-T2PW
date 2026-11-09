@@ -1,0 +1,88 @@
+{
+  "label": "batch2-eq-app-service",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/ws-batch2/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-batch2",
+    "-q",
+    "--basetemp=C:/t/bt/batch2/eq-app-service",
+    "tests/test_equivalence_app_vs_service.py"
+  ],
+  "cwd": "C:\\t\\ws-batch2",
+  "started_at": "2026-11-09T04:21:19+00:00",
+  "finished_at": "2026-11-09T04:22:17+00:00",
+  "duration_seconds": 58.233316099998774,
+  "timeout_seconds": 540.0,
+  "root_pid": 17300,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 526428,
+      "name": "python.exe",
+      "ppid": 17300
+    }
+  ],
+  "descendants_terminated": [
+    526428
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 24756,
+      "name": "python.exe"
+    },
+    {
+      "pid": 24880,
+      "name": "python.exe"
+    },
+    {
+      "pid": 485556,
+      "name": "python.exe"
+    },
+    {
+      "pid": 536192,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/ev-batch2/independent/eq-app-service.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-batch2\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-batch2",
+    "repo_head": "5a17423f3ef5f95404406f289cc6ed61ed5b755e",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "batch2",
+    "token": "batch2:536192:0a9e7cdfa9415e3e",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
