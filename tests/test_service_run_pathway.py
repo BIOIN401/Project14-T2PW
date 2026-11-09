@@ -156,7 +156,7 @@ def test_input_failures_are_final_contract_errors(world, tmp_path, kind):
 
 @pytest.mark.parametrize("kind", [ex.KIND_STAGE_ONE_BOUNDARY_ERROR, ex.KIND_STAGE_ONE_INCOMPLETE])
 def test_stage_one_verdicts_are_final_contract_failures(world, tmp_path, kind):
-    world.extract = _fail(kind, "Extraction boundary failed: nope")
+    world.extract = _fail(kind, "no usable result")  # no classifier marker: the kind alone decides
     res = _run(tmp_path)
     assert (res.status, res.failure_kind, res.stage) == ("fail", "contract", "stage1")
     assert retry.decide({"status": res.status, "failure_kind": res.failure_kind}, 1, 0.0).retry is False
@@ -376,13 +376,14 @@ def test_the_rag_rounds_get_the_time_left_only_with_a_deadline():
 def test_a_stale_decision_on_disk_is_gone_before_the_run_starts(world, tmp_path):
     world.stale.parent.mkdir(parents=True)
     world.stale.write_text("{}", encoding="utf-8")
+    seen = []
 
-    def extract(request, reporter, state):
-        assert not world.stale.exists(), "the extraction started under the previous job's decision"
+    def extract(request, reporter, state):  # recorded, not asserted: run_pathway catches exceptions
+        seen.append(world.stale.exists())
         return ExtractionResult(failure=InputFailure(ex.KIND_NO_TEXT, "nothing"))
     world.extract = extract
     _run(tmp_path)
-    assert world.calls == ["extract"]
+    assert seen == [False], "the extraction started under the previous job's decision"
 
 
 def test_two_runs_in_sequence_do_not_share_a_decision(world, tmp_path):
@@ -401,14 +402,14 @@ def test_two_runs_in_sequence_do_not_share_a_decision(world, tmp_path):
     first = _run(tmp_path, out_dir=tmp_path / "one")
     assert "quarantine_report.json" in first.report_paths
 
-    def second_post(request, state, reporter):
+    def second_post(request, state, reporter):  # recorded, not asserted: run_pathway catches exceptions
         decisions.append(dict(state))
-        assert "quarantine_report" not in state and not world.stale.exists()
+        decisions.append(world.stale.exists())
         return pr.PostRunResult(final_payload=request.final_payload, failure=RuntimeError("mapping died"))
     world.post = second_post
     second = _run(tmp_path, out_dir=tmp_path / "two")
     assert "quarantine_report.json" not in second.report_paths
-    assert decisions[0] is not decisions[1] and not world.stale.exists()
+    assert "quarantine_report" not in decisions[1] and decisions[2] is False
 
 
 def test_the_pop_and_reset_happen_again_before_the_audit(world, tmp_path):
@@ -419,11 +420,14 @@ def test_the_pop_and_reset_happen_again_before_the_audit(world, tmp_path):
         state["quarantine_report"] = {"stale": True}
         return ExtractionResult(final_payload=PAYLOAD)
 
-    def post(request, state, reporter):
-        assert "post_pipeline_artifacts" not in state and "quarantine_report" not in state
+    seen = []
+
+    def post(request, state, reporter):  # recorded, not asserted: run_pathway catches exceptions
+        seen.append(("post_pipeline_artifacts" in state, "quarantine_report" in state))
         return world.default_post(request, state, reporter)
     world.extract, world.post = extract, post
     _run(tmp_path)
+    assert seen == [(False, False)]
     assert world.seen_stale == [False]
 
 
