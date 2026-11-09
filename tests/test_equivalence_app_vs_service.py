@@ -9,10 +9,9 @@ and the offline flags (``T2PW_OFFLINE_CURATOR=1``, ``T2PW_SPECIES_LLM=0``, ``T2P
     text through Stage 0-2, audit and DB mapping, to the strict PWML export step, offline;
 (b) a second app run gives the identical canonical payload sha256, canonical payload, export verdict and
     PWML bytes, and both reproduce the recorded live run;
-(c) the SERVICE post-pipeline (``t2pw.service.postpipeline.run_post_pipeline_sbml_artifacts``, which
-    freezes via ``freeze_canonical_payload``, then ``run_pwml_export``), called directly on the Stage-2
-    payload the app reached, gives the same canonical hash and payload, the same export verdict and the
-    same PWML bytes as the app. Nothing is normalised.
+(c) the SERVICE steps, called directly from the case's text (``run_extraction``, ``run_post_pipeline``,
+    which freezes via ``freeze_canonical_payload``, then ``run_export``), give the same canonical hash and
+    payload, the same export verdict and the same PWML bytes as the app. Nothing is normalised.
 
 The case is a full open-access paper, pinned with scope (``harness.TOPIC_LINE``, from
 docs/evaluation_v2/paper_runs_orch755/topics/sour_taste_v2.txt), with committed evidence that strict mode
@@ -192,7 +191,7 @@ def test_the_clock_freeze_is_effective_and_touches_only_retrieved_at(arms):
 
 def test_c_service_post_pipeline_equals_the_app(arms):
     app1, service = arms["app1"], arms["service"]
-    # The Stage-2 payload the service started from is the one the app's session held.
+    # The payload the app handed the post-pipeline is the app's Stage-2 payload after propagate_context_organism.
     from t2pw.pipeline.pipeline import propagate_context_organism
 
     assert app1["post_call"] and app1["export_call"], "the app arm never reached the post-pipeline and export"
@@ -204,7 +203,7 @@ def test_c_service_post_pipeline_equals_the_app(arms):
     assert _kwargs["audit_timeout_seconds"] == harness.AUDIT_TIMEOUT_SECONDS
     assert service["misses"] == [] and service["refused"] == []
     # Q-R3d-3: from R3d the service arm runs from the text, so it must consume every recorded LLM reply.
-    assert [row for row in service.get("unused", []) if row[0] == "llm"] == [], service.get("unused")
+    assert [row for row in service["unused"] if row[0] == "llm"] == [], service["unused"]
     assert service["canonical_payload_sha256"] == app1["canonical_payload_sha256"]
     assert service["canonical_payload"] == app1["canonical_payload"]
     assert service["export_verdict"] == app1["export_verdict"]

@@ -129,13 +129,15 @@ def _on_call(name: str, args: Any, kwargs: Any) -> None:
     arm = _ARM["current"]
     if arm is None:
         return
+    counts = arm.setdefault("counts", {})
+    counts[name] = counts.get(name, 0) + 1
     if name == "run_post_pipeline_sbml_artifacts" and "post_call" not in arm:
-        arm["post_call"] = deepcopy((args, kwargs))
+        arm["post_call"] = deepcopy((args, {k: v for k, v in kwargs.items() if k != "state"}))  # state: not copyable (locks) and bound to its arm
         snapshot = arm["root"].with_name(arm["root"].name + ".at_post_pipeline")
         shutil.copytree(arm["root"], snapshot)  # the on-disk state the app's post-pipeline starts from
         arm["snapshot"] = snapshot
     elif name == "run_pwml_export" and "export_call" not in arm:
-        arm["export_call"] = deepcopy((args, kwargs))
+        arm["export_call"] = deepcopy((args, {k: v for k, v in kwargs.items() if k != "state"}))  # state: not copyable (locks) and bound to its arm
 
 
 def _spy(name: str, real: Any) -> Any:
@@ -320,11 +322,10 @@ def run_service_arm(app: Dict[str, Any], root: Path, cassette: llm_replay.Casset
     from streamlit.testing.v1 import AppTest
 
     from t2pw.batch import driver
-    from t2pw.config import rag_config
     from t2pw.pipeline.gate_reports import CANONICAL_PAYLOAD_KEY
-    from t2pw.pipeline.pipeline import propagate_context_organism
-    from t2pw.service import postpipeline
+    from t2pw.service.export import run_export
     from t2pw.service.extraction import ExtractionRequest, run_extraction
+    from t2pw.service.post_run import PostRunRequest, run_post_pipeline
     from t2pw.service.reporter import LoggingReporter
 
     def failed(error: str, started: Optional[float] = None) -> Dict[str, Any]:
@@ -368,38 +369,66 @@ def run_service_arm(app: Dict[str, Any], root: Path, cassette: llm_replay.Casset
         extraction = run_extraction(request, reporter=LoggingReporter(), state=state)
         if extraction.failure is not None:
             return failed(f"run_extraction failed: {extraction.failure}", started)
-        # As the "Run audit and DB mapping" handler: the Stage-2 payload after propagate_context_organism, the
-        # sidebar's settings, the run's own reports and context, and this root's outputs directory.
-        post_kwargs.update(
-            qa_report=state.get("qa_report"),
-            reaction_summary=state.get("reaction_summary"),
-            rag_evidence_context=(state.get("rag_evidence_context") or "") if rag_config()["enabled"] else "",
-            pathway_context=postpipeline._safe_dict(state.get("pathway_context")),
-            outputs_dir=root / "outputs",
-            state=state,
+        # R4c: the post-pipeline and the export are the SERVICE functions the app calls (``run_post_pipeline``,
+        # ``run_export``), not a copy of their steps. The sidebar settings come from what the app handed
+        # ``run_post_pipeline_sbml_artifacts`` / ``run_pwml_export``; the run's own reports, context and
+        # payload come from ``state``, where the service put them. Spies on ``postpipeline`` record what
+        # those two calls receive and how often.
+        mine: Dict[str, Any] = {"root": root}
+        install_spies(mp, mine)
+        state["pwml_strict_db"] = post_kwargs["strict_db"]  # the strict-DB widget, read by both steps
+        request_fields = dict(post_kwargs)
+        post_request = PostRunRequest(
+            final_payload=extraction.final_payload,
+            mapping_cache_text=request_fields.pop("mapping_cache_path"),
+            id_source_mode=request_fields.pop("id_source"),
+            **{name: request_fields.pop(name) for name in (
+                "use_llm_audit", "use_sbml_overwatch", "default_compartment", "db_host", "db_port", "db_user",
+                "db_password", "db_schema", "audit_max_rounds", "audit_timeout_seconds", "audit_candidate_count",
+                "use_example_retrieval", "example_index_path", "example_top_k", "use_gap_resolver",
+                "use_llm_gap_resolver", "gap_resolver_max_items", "use_stoich_agent")},
         )
-        post_payload = propagate_context_organism(extraction.final_payload, state.get("pathway_context"))
-        try:
-            artifacts = real_function(postpipeline.run_post_pipeline_sbml_artifacts)(
-                post_payload, *post_args[1:], **post_kwargs)
-        except Exception as exc:  # noqa: BLE001 -- reported by test (c); the app's handler catches it too
-            return failed(f"run_post_pipeline_sbml_artifacts raised {type(exc).__name__}: {str(exc)[:300]}",
-                          started)
-        # As "Generate PWML": refinement review starts from deepcopy(canonical payload)
-        # (initialize_refinement_review_state); the boundary's decision rides along
-        # (quarantine_session_state); the reference model comes from this root.
+        post_run = run_post_pipeline(
+            post_request, state=state, reporter=LoggingReporter(),
+            # initialize_refinement_review_state's one write the export reads (the rest is display state)
+            open_review=lambda payload, _report: state.__setitem__("refinement_working_json", deepcopy(payload)),
+            render_issue_detail=lambda _detail: None,
+            render_contract_failure=lambda _failure: None,
+        )
+        if post_run.failure is not None:  # the service's handler catches it too; reported by test (c)
+            return failed(f"run_post_pipeline raised {type(post_run.failure).__name__}: "
+                          f"{str(post_run.failure)[:300]}", started)
+        artifacts = state.get("post_pipeline_artifacts") or {}
+        canonical = deepcopy(artifacts.get(CANONICAL_PAYLOAD_KEY))  # before the export writes into the artifacts
+        # As "Generate PWML": the export reads the page's PWML settings and the reviewed payload from ``state``
+        # (the app's widgets, here the values the app handed ``run_pwml_export``); the reference model comes
+        # from this root.
         result: Dict[str, Any] = {"error": "the app arm never reached the PWML export"}
         if app["export_call"]:
-            export_kwargs.update(
-                project_root=root,
-                ref_path=root / "reference" / REFERENCE_FILES[0],
-                pathway_context=postpipeline._safe_dict(state.get("pathway_context")),
-                quarantine_report=artifacts.get("quarantine_report") or {},
-                quarantine_artifacts=artifacts.get("quarantine_artifacts") or {},
-            )
-            result = real_function(postpipeline.run_pwml_export)(deepcopy(artifacts.get(CANONICAL_PAYLOAD_KEY)),
-                                                  *export_args[1:], **export_kwargs)
+            state.update(
+                pwml_name=export_kwargs["pathway_name"], pwml_description=export_kwargs["pathway_description"],
+                pwml_subject=export_kwargs["pathway_subject"], pwml_width=export_kwargs["vis_width"],
+                pwml_height=export_kwargs["vis_height"], pwml_bg=export_kwargs["background_color"],
+                pwml_grounding=export_kwargs["grounding_dict"] is not None,
+                pwml_grounding_dict=export_kwargs["grounding_dict"])
+            result = run_export(state=state, reporter=LoggingReporter(), work_dir=root / "tmp", project_root=root)
         seconds = time.monotonic() - started
+        # Stricter than before: each spied function ran exactly once, and the service handed it the settings the
+        # app did (everything but what the run produced and what is bound to this arm's root).
+        run_bound = {"qa_report", "reaction_summary", "rag_evidence_context", "pathway_context", "outputs_dir",
+                     "state", "project_root", "ref_path", "quarantine_report", "quarantine_artifacts"}
+        for name, key, (theirs_args, theirs_kwargs) in (
+                ("run_post_pipeline_sbml_artifacts", "post_call", (post_args, post_kwargs)),
+                ("run_pwml_export", "export_call", (export_args, export_kwargs))):
+            if name == "run_pwml_export" and not app["export_call"]:
+                continue
+            if mine["counts"].get(name) != 1 or key not in mine:
+                return failed(f"{name} ran {mine['counts'].get(name, 0)} times in the service arm, not once",
+                              started)
+            (args, kwargs) = mine[key]
+            if args != theirs_args or {k: v for k, v in kwargs.items() if k not in run_bound} != {
+                    k: v for k, v in theirs_kwargs.items() if k not in run_bound}:
+                return failed(f"the service handed {name} different settings than the app", started)
 
     return {
         "seconds": round(seconds, 1),
