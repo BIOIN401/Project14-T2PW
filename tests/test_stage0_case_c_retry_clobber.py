@@ -91,6 +91,8 @@ import t2pw.app.streamlit_app as app  # noqa: E402
 from t2pw.pipeline.preprocessor import (  # noqa: E402
     is_ambiguous_multi_example_review_context,
 )
+from t2pw.service.extraction import ambiguous_review_gate  # noqa: E402
+from t2pw.service.reporter import StreamlitReporter  # noqa: E402
 
 APP_PATH = SRC / "t2pw" / "app" / "streamlit_app.py"
 
@@ -190,13 +192,11 @@ class _FakeStreamlit:
         raise _Stopped()
 
 
-def _ambiguous_review_gate() -> ast.If:
-    """Extract the ``ambiguous_review_scope`` refusal block from the app source.
+def _ambiguous_review_gate_is_wired_into_the_app() -> None:
+    """The app's submit block calls the service gate and stops on a refusal.
 
-    The block lives inside ``if submit:`` at module level, so it cannot be
-    imported and invoked; compiling just this node keeps the test honest (it
-    executes the shipped statements, not a copy of them) and makes the test fail
-    loudly if the gate is ever deleted or renamed.
+    The gate's statements moved to ``t2pw.service.extraction.ambiguous_review_gate`` (R5,
+    Q-R3d-2). Fails loudly if the app stops calling it, or walks on after a refusal.
     """
     source = APP_PATH.read_text(encoding="utf-8")
     tree = ast.parse(source)
@@ -204,35 +204,25 @@ def _ambiguous_review_gate() -> ast.If:
         node
         for node in ast.walk(tree)
         if isinstance(node, ast.If)
-        and (ast.get_source_segment(source, node.test) or "").strip()
-        == "is_ambiguous_multi_example_review_context(pathway_context)"
-        and "ambiguous_review_scope" in (ast.get_source_segment(source, node) or "")
+        and "ambiguous_review_gate(pathway_context" in (ast.get_source_segment(source, node.test) or "")
     ]
     assert len(blocks) == 1, f"expected exactly one ambiguous_review_scope gate, found {len(blocks)}"
-    return blocks[0]
+    assert (ast.get_source_segment(source, blocks[0].body[0]) or "").strip() == "st.stop()"
 
 
 def _run_gate(pathway_context: dict[str, Any]) -> _FakeStreamlit:
-    """Execute the shipped refusal block against ``pathway_context``.
+    """Execute the shipped refusal against ``pathway_context``.
 
-    ``stopped`` on the returned recorder is the pass condition: the block ends in
-    ``st.stop()``, so a run that reaches the end without stopping is exactly the
-    run that walked on into an unguided extraction.
+    ``stopped`` on the returned recorder is the pass condition: the app stops the run
+    on a refusal, so a run the gate lets through is exactly the run that walked on
+    into an unguided extraction.
     """
+    _ambiguous_review_gate_is_wired_into_the_app()
     fake_st = _FakeStreamlit()
-    namespace: dict[str, Any] = {
-        "st": fake_st,
-        "pathway_context": pathway_context,
-        "is_ambiguous_multi_example_review_context": (
-            is_ambiguous_multi_example_review_context
-        ),
-    }
-    module = ast.Module(body=[_ambiguous_review_gate()], type_ignores=[])
-    ast.fix_missing_locations(module)
-    try:
-        exec(compile(module, str(APP_PATH), "exec"), namespace)  # noqa: S102
-    except _Stopped:
-        fake_st.stopped = True
+    refusal = ambiguous_review_gate(
+        pathway_context, state=fake_st.session_state, reporter=StreamlitReporter(fake_st)
+    )
+    fake_st.stopped = refusal is not None
     return fake_st
 
 
