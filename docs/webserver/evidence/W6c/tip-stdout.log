@@ -1,0 +1,70 @@
+
+BOUNDED_RUN_HEAVY_LOCK_HELD path=C:\t\heavylock holder_attempted=W6c reason=held
+---- current holder file (C:\t\heavylock\holder.json) ----
+{
+  "token": "R26-ind:495724:bc8553fe4f13e633",
+  "holder": "R26-ind",
+  "label": "R26-ind-web",
+  "pid": 495724,
+  "command": [
+    "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.venv/Scripts/python.exe",
+    "-u",
+    "C:/t/ws-R26-trial/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-R26-trial",
+    "-q",
+    "--basetemp=C:/t/bt/R26ind/web",
+    "tests/test_service_driver_bridge.py",
+    "tests/test_service_pathway_interface.py",
+    "tests/test_service_inputs.py",
+    "tests/test_service_organisms.py",
+    "tests/test_web_jobs.py",
+    "tests/test_web_worker.py",
+    "tests/test_web_retry.py",
+    "tests/test_web_limits.py",
+    "tests/test_web_notify.py",
+    "tests/test_web_design_system.py",
+    "tests/test_web_curator_queue.py",
+    "tests/test_web_postrun.py",
+    "tests/test_web_app.py"
+  ],
+  "cwd": "C:\\t\\ws-R26-trial",
+  "acquired_at": "2026-11-09T04:02:53+00:00"
+}
+---- the child was NOT started; nothing was removed ----
+WRAPPER_EXIT 95 22:03:28
+T2PW: C:\t\ws-W6c\src\t2pw\__init__.py
+........................................................................ [ 22%]
+........................................................................ [ 44%]
+........................................................................ [ 67%]
+........................................................................ [ 89%]
+..................................                                       [100%]
+322 passed in 45.02s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-W6c\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ cc059750051f725bc2f90fc85f1e7c524c72339b  [git, worktree dirty=True]
+label                   : W6c-tip
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-W6c -q --basetemp=C:/t/w6c_tmp/tip2 tests/test_web_browser_fixes.py tests/test_service_driver_bridge.py tests/test_service_pathway_interface.py tests/test_service_inputs.py tests/test_service_organisms.py tests/test_web_jobs.py tests/test_web_worker.py tests/test_web_retry.py tests/test_web_limits.py tests/test_web_notify.py tests/test_web_design_system.py tests/test_web_curator_queue.py tests/test_web_postrun.py tests/test_web_app.py
+cwd                     : C:/t/ws-W6c
+root PID / process group: 487592 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 500 s
+duration                : 46.15 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 118  498876:python.exe, 498804:python.exe, 498940:python.exe, 490820:python.exe, 491556:python.exe, 499192:python.exe, 499288:python.exe, 499064:python.exe, 499412:python.exe, 499396:python.exe, 499508:python.exe, 499348:python.exe, 497648:python.exe, 498708:python.exe, 499464:python.exe, 500444:python.exe, 500480:python.exe, 500432:python.exe, 500508:python.exe, 500544:python.exe, 500552:python.exe, 493172:python.exe, 494012:python.exe, 500708:python.exe, 500372:python.exe, 499812:python.exe, 500380:python.exe, 499688:python.exe, 499836:python.exe, 499276:python.exe, 495084:python.exe, 492940:python.exe, 497064:python.exe, 500044:python.exe, 500108:python.exe, 493664:python.exe, 500304:python.exe, 493872:python.exe, 498816:python.exe, 499696:python.exe, 482584:python.exe, 92804:python.exe, 495288:python.exe, 20640:python.exe, 492936:python.exe, 495032:python.exe, 499352:python.exe, 496908:python.exe, 498308:python.exe, 487784:python.exe, 500608:python.exe, 478360:python.exe, 484576:python.exe, 487636:python.exe, 495860:python.exe, 500296:python.exe, 483720:python.exe, 485132:python.exe, 494540:python.exe, 493304:python.exe, 499852:python.exe, 494476:python.exe, 495240:python.exe, 24516:python.exe, 489036:python.exe, 499904:python.exe, 499928:python.exe, 3168:python.exe, 493096:python.exe, 500476:python.exe, 488208:python.exe, 495044:python.exe, 500600:python.exe, 493956:python.exe, 500276:python.exe, 489488:python.exe, 500624:python.exe, 497320:python.exe, 467128:python.exe, 489672:python.exe, 498240:python.exe, 492888:python.exe, 499328:python.exe, 498824:python.exe, 20372:python.exe, 497136:python.exe, 499808:python.exe, 20128:python.exe, 496724:python.exe, 493948:python.exe, 500592:python.exe, 484568:python.exe, 489692:python.exe, 488648:python.exe, 498312:python.exe, 494424:python.exe, 496608:python.exe, 494356:python.exe, 496272:python.exe, 496016:python.exe, 500152:python.exe, 497312:python.exe, 496788:python.exe, 499448:tasklist.exe, 492648:python.exe, 498196:python.exe, 20632:python.exe, 496204:python.exe, 475932:python.exe, 495896:python.exe, 496384:python.exe, 499056:python.exe, 488532:python.exe, 500724:python.exe, 20656:python.exe, 495432:python.exe, 495760:python.exe, 499848:python.exe
+descendants terminated  : 118  3168, 20128, 20372, 20632, 20640, 20656, 24516, 92804, 467128, 475932, 478360, 482584, 483720, 484568, 484576, 485132, 487636, 487784, 488208, 488532, 488648, 489036, 489488, 489672, 489692, 490820, 491556, 492648, 492888, 492936, 492940, 493096, 493172, 493304, 493664, 493872, 493948, 493956, 494012, 494356, 494424, 494476, 494540, 495032, 495044, 495084, 495240, 495288, 495432, 495760, 495860, 495896, 496016, 496204, 496272, 496384, 496608, 496724, 496788, 496908, 497064, 497136, 497312, 497320, 497648, 498196, 498240, 498308, 498312, 498708, 498804, 498816, 498824, 498876, 498940, 499056, 499064, 499192, 499276, 499288, 499328, 499348, 499352, 499396, 499412, 499448, 499464, 499508, 499688, 499696, 499808, 499812, 499836, 499848, 499852, 499904, 499928, 500044, 500108, 500152, 500276, 500296, 500304, 500372, 500380, 500432, 500444, 500476, 500480, 500508, 500544, 500552, 500592, 500600, 500608, 500624, 500708, 500724
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : docs/webserver/evidence/W6c/W6c-tip.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=W6c  acquired=True  released=True
+pre-existing (reported, NEVER killed): 6
+================================================
+WRAPPER_EXIT 0 22:04:35
