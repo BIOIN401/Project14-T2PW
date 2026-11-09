@@ -1,0 +1,173 @@
+{
+  "label": "E2E3c",
+  "command": [
+    "C:\\t\\e2e3-venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/ev-E2E3c/scripts/drive.py"
+  ],
+  "cwd": "C:/t/ws-E2E3c",
+  "started_at": "2026-11-09T17:53:54+00:00",
+  "finished_at": "2026-11-09T18:47:43+00:00",
+  "duration_seconds": 3228.4630657,
+  "timeout_seconds": 6600.0,
+  "root_pid": 14800,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 25612,
+      "name": "python.exe",
+      "ppid": 14800
+    },
+    {
+      "pid": 24036,
+      "name": "python.exe",
+      "ppid": 25612
+    },
+    {
+      "pid": 27956,
+      "name": "python.exe",
+      "ppid": 24036
+    },
+    {
+      "pid": 30560,
+      "name": "python.exe",
+      "ppid": 39208
+    },
+    {
+      "pid": 39208,
+      "name": "python.exe",
+      "ppid": 25612
+    },
+    {
+      "pid": 35940,
+      "name": "node.exe",
+      "ppid": 25612
+    },
+    {
+      "pid": 24476,
+      "name": "chrome-headless-shell.exe",
+      "ppid": 35940
+    },
+    {
+      "pid": 39672,
+      "name": "chrome-headless-shell.exe",
+      "ppid": 24476
+    },
+    {
+      "pid": 39940,
+      "name": "chrome-headless-shell.exe",
+      "ppid": 24476
+    },
+    {
+      "pid": 40012,
+      "name": "chrome-headless-shell.exe",
+      "ppid": 24476
+    },
+    {
+      "pid": 40436,
+      "name": "python.exe",
+      "ppid": 30560
+    },
+    {
+      "pid": 40448,
+      "name": "python.exe",
+      "ppid": 40436
+    },
+    {
+      "pid": 98464,
+      "name": "taskkill.exe",
+      "ppid": 25612
+    },
+    {
+      "pid": 40076,
+      "name": "tasklist.exe",
+      "ppid": 25612
+    },
+    {
+      "pid": 39348,
+      "name": "taskkill.exe",
+      "ppid": 25612
+    },
+    {
+      "pid": 40228,
+      "name": "tasklist.exe",
+      "ppid": 25612
+    }
+  ],
+  "descendants_terminated": [
+    24036,
+    24476,
+    25612,
+    27956,
+    30560,
+    35940,
+    39208,
+    39348,
+    39672,
+    39940,
+    40012,
+    40076,
+    40228,
+    40436,
+    40448,
+    98464
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 16560,
+      "name": "python.exe"
+    },
+    {
+      "pid": 18168,
+      "name": "python.exe"
+    },
+    {
+      "pid": 39156,
+      "name": "python.exe"
+    },
+    {
+      "pid": 39484,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/ev-E2E3c/wrapper.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "be92eb6e5d105800c85738dd64c551b934f51506",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "E2E3c",
+    "token": "E2E3c:39156:15c8621998a37fb9",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
