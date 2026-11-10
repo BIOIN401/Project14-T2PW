@@ -1,0 +1,30 @@
+T2PW: C:\t\ws-R6\src\t2pw\__init__.py
+.........................................................                [100%]
+57 passed in 7.12s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R6\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 5f4785bcb54cb36b5672740f97dae0ef188435d3  [git, worktree dirty=False]
+label                   : R6-ind-svc-set1
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R6/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R6 -q --basetemp=C:/t/bt/R6ind/svc-set1 tests/test_service_extraction.py tests/test_service_extraction_stage0.py tests/test_service_reporter.py
+cwd                     : C:\t\ws-R6
+root PID / process group: 550476 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 8.55 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 5  550488:python.exe, 550716:python.exe, 550736:python.exe, 549900:python.exe, 550308:python.exe
+descendants terminated  : 5  549900, 550308, 550488, 550716, 550736
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ev-R6ind/svc-set1.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R6-ind  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

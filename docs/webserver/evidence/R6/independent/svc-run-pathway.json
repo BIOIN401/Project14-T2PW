@@ -1,0 +1,92 @@
+{
+  "label": "R6-ind-svc-run-pathway",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/ws-R6/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-R6",
+    "-q",
+    "--basetemp=C:/t/bt/R6ind/svc-run-pathway",
+    "tests/test_service_run_pathway.py"
+  ],
+  "cwd": "C:\\t\\ws-R6",
+  "started_at": "2026-11-10T04:15:07+00:00",
+  "finished_at": "2026-11-10T04:15:14+00:00",
+  "duration_seconds": 6.619926400002441,
+  "timeout_seconds": 540.0,
+  "root_pid": 548416,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 548516,
+      "name": "python.exe",
+      "ppid": 548416
+    }
+  ],
+  "descendants_terminated": [
+    548516
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 58320,
+      "name": "python.exe"
+    },
+    {
+      "pid": 528900,
+      "name": "python.exe"
+    },
+    {
+      "pid": 530720,
+      "name": "python.exe"
+    },
+    {
+      "pid": 545968,
+      "name": "python.exe"
+    },
+    {
+      "pid": 546184,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/ev-R6ind/svc-run-pathway.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-R6\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-R6",
+    "repo_head": "5f4785bcb54cb36b5672740f97dae0ef188435d3",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "R6-ind",
+    "token": "R6-ind:546184:716b7a85b6314c87",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

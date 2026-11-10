@@ -1,0 +1,34 @@
+TASK: R6  BRANCH: ws/R6-batch-run-pathway  REVIEWED HEAD: 5f4785bc
+VERDICT: APPROVE WITH NOTES
+GATES: boundary OK / no-biology OK / behaviour-preserved OK (notes) / tests OK / evidence OK / secrets OK / result-doc OK
+
+Checked, no defect:
+- Real batch uses the service. scripts/batch_run.py -> run_batch (engine None) -> fresh plan stores run_pathway (runner.py:2393) -> child `--single` -> run_single reads plan.json (runner.py:1197) -> run_one_pathway. Resume without an engine keeps the plan's; a pre-R6 plan stays AppTest.
+- run_paper extraction: web path unchanged. Same order: input rules, deadline minus grace, force_utf8, core, scrub, _to_result, record, attempt_log, PNG. PathwayResult fields unchanged.
+- Row, verdict, files: both engines share the driver helpers and to_dict/write_artifacts. No-text verdict matches. .env is loaded before any env read (probe: _drive's extraction import pulls llm.client; defaults reads env only in functions).
+- Isolation: one child process per leg on both engines, so no in-memory leak. outputs/ and tmp/ on disk are shared as before; quarantine state is reset per run.
+- A/B is real: each arm goes through run_single(engine=) into its own function. Replay clean (0 misses, 0 refused, 0 unused LLM). PWML sha equal on sour; row differs only in `detail`; 22 and 18 files equal; the 3 that differ are as claimed.
+- Scrub probes: "(/tmp)", "/tmp,", "/tmp.", ":", ";", "]", "}" cut; ACE2/TMPRSS2, UMP/TMP, UMP/TMP. and (UMP/TMP) unchanged. Escaped-quote record stays valid JSON. Non-UTF-8 bytes, truncated JSON, a BOM and a lone surrogate leave the record untouched with no temp file and no raise; a missing record is a no-op (all probed).
+- Gates: only allowed files changed; 0 lines deleted from tests; new tests labelled. Evidence numbers match the RESULT doc (golden 38; 14/8/8; 25; 107; 377; 306; SMOKE 511; 332+1 failed+4 skipped). The 1 failure is the same test on base and tip. 26/26 run reports have 0 survivors; revert tally 20 KILLED. No secret patterns, .env, cache or *quarantine_report.json. 744K.
+
+Not verified by me: no live leg; pytest not run (per brief); failing and timed-out legs are covered only by the implementer's fakes.
+
+FINDINGS (no blocking):
+  N1 [note] src/t2pw/batch/runner.py:2362-2365 - T2PW_BATCH_ENGINE set on a resume switches the remaining legs and rewrites plan.json, and no manifest row names its engine, so a mixed run reads as one engine. It is logged once in batch.log, so RESULT.md:21 ("records which engine produced a run") holds only for an unswitched run.
+  N2 [note] src/t2pw/service/pathway.py:277 - R5 section 3 item 1 now reaches batch: failure_kind on a failing leg can differ where only the page rendered the signal (e.g. a PWML-export failure with no codes). Not observed in either A/B case; compare it on the first paired night.
+  N3 [note] src/t2pw/service/pathway.py:290 - an in-process extraction timeout has stage=stage1 on the service and stage=input on AppTest. Status, kind and termination class are equal.
+  N4 [note] src/t2pw/service/pathway.py:512 - crash message text differs from run_one's ("batch driver crashed..."); status and kind are equal.
+  N5 [note] docs/webserver/evidence/R6/scripts/ab_batch.py:81-82 - both arms share one process with AppTest first, and the clock is frozen, so timeouts are not exercised. Separate roots and a clean replay limit the risk.
+  N6 [note] src/t2pw/service/pathway.py:226 - the docstring names a `--engine apptest` flag that does not exist (same slip as commit bdac28c7); the real switch is T2PW_BATCH_ENGINE.
+  N7 [note] scripts/batch_run.py:52 - help text still says "real Streamlit app" (outside this boundary); update it if Q-R6-A option B is taken.
+  N8 [note] src/t2pw/service/pathway.py:165 - the `.` in the lookahead cuts a root glued to a suffix: "/tmp.txt" -> ".txt" (probed). Cosmetic, no science affected.
+  N9 [note] src/t2pw/service/pathway.py:178 - dict keys are not scrubbed (probed), which the old text scrub did do. The brief asks for values only, and I found no key holding a path in the bridge's row.
+  N10 [note] docs/webserver/evidence/R6/runs/*.json - reports hold local paths (C:\Users\Angad\...\.venv). No credentials.
+
+Open questions:
+  Q-R6-A: accept the env var; the 8-line flag can wait for a task that owns batch_run.py.
+  Q-R6-B: accept. Row `detail` is read only by result_text (runner.py:766) in the failure section and when appending failed writes (runner.py:1231); report.py, leg_trace.py and scripts/ do not read it.
+  Q-R6-C: accept. AppTest kept no artifacts on an extraction overrun, so the only loss is its copied Stage-1 artifacts on an audit overrun, and audit_timeout is capped to the remaining budget. Status, kind and operational_failure stay timeout, and a timeout row is still a completed pair on resume. Row stage becomes "unknown" and the kill comes 120 s later.
+  Q-R6-D: keep run_paper; the wrapper would rewrite paper ids and scrub leg files, and run_paper is the same code path.
+
+Files: C:/t/ws-R6/src/t2pw/batch/driver.py, C:/t/ws-R6/src/t2pw/batch/runner.py, C:/t/ws-R6/src/t2pw/service/pathway.py, C:/t/ws-R6/docs/webserver/results/R6.md
