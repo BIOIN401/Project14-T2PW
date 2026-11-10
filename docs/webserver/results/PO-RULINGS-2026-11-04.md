@@ -76,3 +76,7 @@ Orchestrator note (not a PO ruling): the question put to the PO described the re
 | Q-W0-1 | Where a web job writes its files. | **Fixed folder, then copy (option B).** The job runs in `PROJECT_ROOT/outputs`, as the live bridge does, and artifacts are copied to the job's `out_dir` on finish. No `out_dir` parameter is threaded through R1, R2 or R4 code. Safe only with W3's one-worker rule; a second worker would need option A. | R4, R5 |
 | Q-R5-1 | `PathwayResult.image_path` is never filled, though the job page offers the download. | **R5 saves the diagram the pipeline already renders** and fills `image_path`. | R5 |
 | Q-R5-2 | PDF options (page range, skip references, OCR) on the public request. | **No.** The web server uses the app's default PDF settings. `PathwayRequest` does not change. | R5 |
+
+## Addendum 8 (2026-11-09): LLM call timing
+
+**Q-RT-1, per-call logging and a per-call time cap.** The orchestrator proposed, from `results/RUNTIME-VARIANCE.md`, adding per-call logging on the website path and a 12-minute wall-clock cap per LLM call followed by the existing retry, with audit and curator calls left out because some good audit calls run longer than 12 minutes. The PO answered: "yeah sure do that". Recorded here as given. The PO has not ruled on the other options in that report (parallel Stage-1 draws, concurrent audit candidates, curator limits, provider route).
