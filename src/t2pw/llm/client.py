@@ -333,6 +333,65 @@ def web_run_scope():
         _WEB_RUN = previous
 
 
+#: Wall-clock cap on ONE provider request inside a website job (PO ruling Q-RT-1), in seconds.
+#: ``DEFAULT_REQUEST_TIMEOUT_SECONDS`` does not bound wall time: the provider keeps the
+#: connection alive, so failed calls ran 8 to 28 minutes with no timeout. The longest GOOD call
+#: measured on the capped stages was 11.97 minutes (Stage 1), so this must stay above 718.
+LLM_CALL_CAP_SECONDS = 720.0
+
+#: The stages whose good-call lengths were measured (Stage 0, Stage 1, Stage 2, RAG), as the
+#: ``stage_name`` each passes to ``chat_detailed``. Nothing else is capped: audit has good calls
+#: of 12.7 to 32.6 minutes, and the curator, gap resolver, repairs, alias lookups and any unnamed
+#: ``chat`` were not measured.
+LLM_CALL_CAP_STAGES = frozenset({
+    "preprocessor",          # pipeline/preprocessor.py (Stage 0)
+    "Stage 1 extraction",    # pipeline._run_json_stage label for stage_name="extraction"
+    "Stage 2 inference",     # pipeline._run_json_stage label for stage_name="inference"
+    "rag_prose_extraction",  # rag/extract.py
+})
+
+#: Attempt status for a request abandoned at the cap. Distinct from ``timeout`` (the SDK's own).
+STATUS_CALL_CAP = "call_cap"
+
+
+class _CallCapExceeded(Exception):
+    """One request ran past :data:`LLM_CALL_CAP_SECONDS` and was abandoned."""
+
+
+def _create(kwargs: Dict[str, Any], stage: str) -> Any:
+    """``_client.chat.completions.create(**kwargs)``, capped for a website job's measured stages.
+
+    Outside a website job, or for a stage not in :data:`LLM_CALL_CAP_STAGES`, this IS the plain
+    call, on the caller's thread. Otherwise the request runs on a daemon worker thread and is
+    waited for up to the cap. Past it the worker is abandoned and :class:`_CallCapExceeded` is
+    raised into the caller's existing retry loop. The worker does nothing but the request and
+    keeps its answer in a box nobody reads after that, so a late reply cannot reach
+    ``_record_usage``, a diagnostics object or any other state, and a daemon thread cannot hold
+    the process open. (The abandoned HTTP request ends on the SDK's own timeouts.)
+    """
+    if not (_WEB_RUN and stage in LLM_CALL_CAP_STAGES):
+        return _client.chat.completions.create(**kwargs)
+    box: Dict[str, Any] = {}
+    done = threading.Event()
+    request = dict(kwargs)  # the caller edits kwargs between attempts
+
+    def work() -> None:
+        try:
+            box["resp"] = _client.chat.completions.create(**request)
+        except BaseException as exc:  # noqa: BLE001 - re-raised on the caller's thread
+            box["exc"] = exc
+        finally:
+            done.set()
+
+    cap = float(LLM_CALL_CAP_SECONDS)
+    threading.Thread(target=work, name="t2pw-llm-call", daemon=True).start()
+    if not done.wait(cap):
+        raise _CallCapExceeded(f"{stage} request still running after the {cap:g}s wall-clock cap; abandoned")
+    if "exc" in box:
+        raise box["exc"]
+    return box["resp"]
+
+
 def _int_or_none(value: Any) -> Optional[int]:
     return value if isinstance(value, int) and not isinstance(value, bool) else None
 
@@ -857,7 +916,7 @@ def chat_detailed(
     for attempt in range(max_retries):
         try:
             diagnostics.begin_attempt()
-            resp = _client.chat.completions.create(**kwargs)
+            resp = _create(kwargs, diagnostics.stage)
             diagnostics.observe(resp)
             _record_usage(resp)
             time.sleep(spacing)
@@ -986,6 +1045,13 @@ def chat_detailed(
             diagnostics.note(attempt=attempt + 1, status=STATUS_TIMEOUT, error=str(e))
             time.sleep(min(base_sleep * (2 ** attempt), max_sleep))
 
+        except _CallCapExceeded as e:
+            # RT1: a failed attempt like any other -- same budget, same backoff, same loop.
+            last_err = e
+            diagnostics.note(attempt=attempt + 1, status=STATUS_CALL_CAP, error=str(e))
+            logger.warning("%s; retrying (attempt %d/%d).", e, attempt + 1, max_retries)
+            time.sleep(min(base_sleep * (2 ** attempt), max_sleep))
+
         except APIError as e:
             last_err = e
             diagnostics.note(attempt=attempt + 1, status=STATUS_ERROR, error=str(e))
@@ -998,8 +1064,10 @@ def chat_detailed(
             diagnostics.note(attempt=attempt + 1, status=STATUS_ERROR, error=str(e))
             time.sleep(min(base_sleep * (2 ** attempt), max_sleep))
 
-    if isinstance(last_err, APITimeoutError):
+    if isinstance(last_err, (APITimeoutError, _CallCapExceeded)):
         diagnostics.terminal_reason = TERMINAL_OPERATION_TIMEOUT
+        if isinstance(last_err, _CallCapExceeded):
+            request_timeout = LLM_CALL_CAP_SECONDS
         raise LLMOperationTimeout(
             f"LLM request for {stage_name or 'chat'} exceeded its {request_timeout}s timeout "
             f"on all {max_retries} attempts. Last error: {last_err}",
