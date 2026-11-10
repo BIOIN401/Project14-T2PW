@@ -1,11 +1,14 @@
+import contextlib
 import hashlib
 import json
 import logging
 import math
 import os
+import threading
 import time
+from datetime import datetime, timezone
 from dataclasses import dataclass, field
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Dict, List, Optional, Tuple
 
 import httpx
 from dotenv import load_dotenv
@@ -301,6 +304,71 @@ def _hash(value: Any) -> str:
     return "sha256:" + hashlib.sha256(raw).hexdigest()[:16]
 
 
+# -----------------------------------------------------------------------------
+# Web-run scope (RT1)
+#
+# ``t2pw.service.pathway.run_pathway`` -- the website's entry -- turns this on for
+# the length of one job. It does two things and is False everywhere else, so the
+# Streamlit app and a batch leg behave exactly as before:
+#   * per-call timing, token and provider facts, and curator calls, are written to
+#     the leg trace (and ONLY the trace: not CompletionDiagnostics.to_dict(), so no
+#     boundary report, gate input or verdict can see them);
+#   * a wall-clock cap on the calls of an allowlisted stage (see ``_create``).
+# A process-wide flag, not a ContextVar: the web worker runs one job per process,
+# and a flag is also seen by a call issued from a helper thread.
+# -----------------------------------------------------------------------------
+_WEB_RUN = False
+# Bound at import: tests replace this module's ``time`` with a sleep recorder.
+_wall_clock, _mono_clock = time.time, time.monotonic
+
+
+@contextlib.contextmanager
+def web_run_scope():
+    """Mark the calls made inside as a website job's (RT1). Restores the old value."""
+    global _WEB_RUN
+    previous, _WEB_RUN = _WEB_RUN, True
+    try:
+        yield
+    finally:
+        _WEB_RUN = previous
+
+
+def _int_or_none(value: Any) -> Optional[int]:
+    return value if isinstance(value, int) and not isinstance(value, bool) else None
+
+
+def _response_facts(resp: Any) -> Dict[str, Any]:
+    """Token counts, provider and generation id off a response, for the trace only.
+
+    OpenRouter puts ``provider`` beside ``model`` and nests reasoning tokens in
+    ``usage.completion_tokens_details``. Only plain ints and strs are kept, so an
+    odd response object adds nothing rather than something wrong. Never raises.
+    """
+    facts: Dict[str, Any] = {}
+    try:
+        usage = getattr(resp, "usage", None)
+        details = getattr(usage, "completion_tokens_details", None)
+        for key, value in (
+            ("prompt_tokens", getattr(usage, "prompt_tokens", None)),
+            ("completion_tokens", getattr(usage, "completion_tokens", None)),
+            ("reasoning_tokens", getattr(details, "reasoning_tokens", None)),
+        ):
+            if _int_or_none(value) is not None:
+                facts[key] = value
+        extra = getattr(resp, "model_extra", None)
+        extra = extra if isinstance(extra, dict) else {}
+        for key, value in (
+            ("provider", getattr(resp, "provider", None) or extra.get("provider")),
+            ("generation_id", getattr(resp, "id", None)),
+            ("response_model", getattr(resp, "model", None)),
+        ):
+            if isinstance(value, str) and value:
+                facts[key] = value
+    except Exception:  # noqa: BLE001 - a logging helper must not kill a call
+        return {}
+    return facts
+
+
 def _publish_attempt(diagnostics: "CompletionDiagnostics", row: Dict[str, Any]) -> None:
     """Flush one attempt row to the batch leg trace, if a leg is recording. C-111.
 
@@ -325,8 +393,27 @@ def _publish_attempt(diagnostics: "CompletionDiagnostics", row: Dict[str, Any]) 
     """
 
     try:
-        from t2pw.batch.leg_trace import record_model_attempt
+        from t2pw.batch.leg_trace import record_event, record_model_attempt
     except Exception:  # noqa: BLE001 - batch is optional for a standalone caller
+        return
+    if _WEB_RUN:
+        # Same row as ``model_attempt`` writes, plus RT1's timing and token facts.
+        try:
+            record_event(
+                "model_attempt",
+                stage=str(diagnostics.stage or "unattributed"),
+                attempt=int(row.get("attempt", 0) or 0),
+                status=str(row.get("status", "") or ""),
+                model=str(diagnostics.model or ""),
+                reason=str(row.get("error", "") or ""),
+                finish_reason=str(row.get("finish_reason", "") or ""),
+                content_chars=int(row.get("content_chars", 0) or 0),
+                request_hash=str(diagnostics.request_hash or ""),
+                response_hash=str(diagnostics.response_hash or ""),
+                **diagnostics.take_trace_facts(),
+            )
+        except Exception:  # noqa: BLE001
+            pass
         return
     try:
         record_model_attempt(
@@ -368,6 +455,31 @@ class CompletionDiagnostics:
     response_hash: str = ""
     raw_chars: int = 0
     attempt_log: List[Dict[str, Any]] = field(default_factory=list)
+    # RT1: trace-only scratch for the attempt in flight. Deliberately NOT in
+    # to_dict(), attempt_log or any report.
+    _attempt_clock: Optional[Tuple[float, float]] = field(default=None, init=False, repr=False, compare=False)
+    _attempt_facts: Dict[str, Any] = field(default_factory=dict, init=False, repr=False, compare=False)
+
+    def begin_attempt(self) -> None:
+        """Stamp the start of one provider request (trace-only timing)."""
+        if _WEB_RUN:
+            self._attempt_clock = (_wall_clock(), _mono_clock())
+            self._attempt_facts = {}
+
+    def observe(self, resp: Any) -> None:
+        """Keep the response's token / provider facts for the next ``note`` (trace-only)."""
+        if _WEB_RUN:
+            self._attempt_facts = _response_facts(resp)
+
+    def take_trace_facts(self) -> Dict[str, Any]:
+        """``started_at``, ``duration_s`` and the response facts of the attempt just noted."""
+        facts = dict(self._attempt_facts)
+        if self._attempt_clock is not None:
+            wall, mono = self._attempt_clock
+            facts["started_at"] = datetime.fromtimestamp(wall, timezone.utc).isoformat(timespec="milliseconds")
+            facts["duration_s"] = round(_mono_clock() - mono, 3)
+        self._attempt_clock, self._attempt_facts = None, {}
+        return facts
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -744,7 +856,9 @@ def chat_detailed(
 
     for attempt in range(max_retries):
         try:
+            diagnostics.begin_attempt()
             resp = _client.chat.completions.create(**kwargs)
+            diagnostics.observe(resp)
             _record_usage(resp)
             time.sleep(spacing)
 
@@ -957,9 +1071,28 @@ def chat_with_tools(
             kwargs["tool_choice"] = "auto"
         last_err: Optional[Exception] = None
         empty_attempts = 0
+        # RT1: on a website job only, every round is written to the leg trace (it was
+        # invisible). A private diagnostics object that nothing reads back: no
+        # return value, report or decision depends on it.
+        trace_diag = (
+            CompletionDiagnostics(
+                model=resolved_model, stage=str(stage_name or "chat_with_tools"), request_hash=_hash(msgs)
+            )
+            if _WEB_RUN
+            else None
+        )
+
+        def _trace(attempt_no: int, status: str, **row: Any) -> None:
+            if trace_diag is not None:
+                trace_diag.note(attempt=attempt_no, status=status, **row)
+
         for attempt in range(max_retries):
             try:
+                if trace_diag is not None:
+                    trace_diag.begin_attempt()
                 resp = _client.chat.completions.create(**kwargs)
+                if trace_diag is not None:
+                    trace_diag.observe(resp)
                 _record_usage(resp)
                 time.sleep(spacing)
 
@@ -981,6 +1114,7 @@ def chat_with_tools(
                         # re-send that prompt LLM_MAX_RETRIES times for nothing.
                         # The response is handed back unchanged so the caller
                         # still reduces it to "" exactly as it always has.
+                        _trace(attempt + 1, STATUS_CONTENT_FILTER, finish_reason=reason, error=str(last_err))
                         logger.error(
                             "LLM stopped %s on finish_reason=%s (model %s, tools_sent=%s) "
                             "with no content on attempt %d/%d. Moderation stop: the "
@@ -994,6 +1128,7 @@ def chat_with_tools(
                             max_retries,
                         )
                         return resp
+                    _trace(attempt + 1, STATUS_EMPTY, finish_reason=reason, error=str(last_err))
                     if attempt < max_retries - 1:
                         logger.warning(
                             "LLM returned an empty completion for %s (model %s, "
@@ -1024,23 +1159,30 @@ def chat_with_tools(
                     )
                     return resp
 
+                _trace(attempt + 1, STATUS_OK, finish_reason=_finish_reason(resp))
                 return resp
             except AuthenticationError as e:
+                _trace(attempt + 1, STATUS_ERROR, error=str(e))
                 raise RuntimeError(f"Authentication failed (401): {e}") from e
             except BadRequestError as e:
+                _trace(attempt + 1, STATUS_ERROR, error=str(e))
                 raise RuntimeError(f"Bad request (400): {e}") from e
             except RateLimitError as e:
                 last_err = e
+                _trace(attempt + 1, STATUS_ERROR, error=str(e))
                 time.sleep(min(base_sleep * (2 ** attempt), max_sleep))
             except APITimeoutError as e:
                 # Same budget and backoff; the attempt is bounded, the exit named.
                 last_err = e
+                _trace(attempt + 1, STATUS_TIMEOUT, error=str(e))
                 time.sleep(min(base_sleep * (2 ** attempt), max_sleep))
             except APIError as e:
                 last_err = e
+                _trace(attempt + 1, STATUS_ERROR, error=str(e))
                 time.sleep(min(base_sleep * (2 ** attempt), max_sleep))
             except json.JSONDecodeError as e:
                 last_err = e
+                _trace(attempt + 1, STATUS_ERROR, error=str(e))
                 time.sleep(min(base_sleep * (2 ** attempt), max_sleep))
         if isinstance(last_err, APITimeoutError):
             raise LLMOperationTimeout(
