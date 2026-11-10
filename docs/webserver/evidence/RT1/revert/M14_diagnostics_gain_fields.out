@@ -1,0 +1,59 @@
+T2PW: C:\t\ev-RT1\rev\base\src\t2pw\__init__.py
+.................................F.......                                [100%]
+================================== FAILURES ===================================
+____ test_result_and_diagnostics_are_identical_with_and_without_the_scope _____
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001A0361546E0>
+tmp_path = WindowsPath('C:/t/bt/RT1/rev-M14_diagnostics_gain_fields/test_result_and_diagnostics_ar0')
+
+    def test_result_and_diagnostics_are_identical_with_and_without_the_scope(monkeypatch, tmp_path):
+        replies = lambda: [_api_error(), _resp(""), _resp("final")]  # noqa: E731
+        monkeypatch.setattr(client_mod, "_client", _fake_client(replies()))
+        plain = _chat()
+        monkeypatch.setattr(client_mod, "_client", _fake_client(replies()))
+        _trace(tmp_path)
+        with client_mod.web_run_scope():
+            scoped = _chat()
+        assert (scoped.text, scoped.diagnostics.to_dict()) == (plain.text, plain.diagnostics.to_dict())
+        flat = str(scoped.diagnostics.to_dict())
+>       assert "duration_s" not in flat and "started_at" not in flat and "prompt_tokens" not in flat
+E       assert ('duration_s' not in "{'model': '...ion_s': 0.0}"
+E         
+E         'duration_s' is contained here:
+E           stop'}], 'duration_s': 0.0}
+E         ?           ++++++++++)
+
+tests\test_llm_call_logging.py:157: AssertionError
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.llm.client:client.py:967 LLM returned an empty completion for Stage 1 extraction (model m, finish_reason=stop) on attempt 2/8; retrying as a transient.
+WARNING  t2pw.llm.client:client.py:967 LLM returned an empty completion for Stage 1 extraction (model m, finish_reason=stop) on attempt 2/8; retrying as a transient.
+=========================== short test summary info ===========================
+FAILED tests/test_llm_call_logging.py::test_result_and_diagnostics_are_identical_with_and_without_the_scope
+1 failed, 40 passed in 8.57s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ev-RT1\rev\base\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : RT1rev-M14_diagnostics_gain_fields
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ev-RT1/rev/base/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ev-RT1/rev/base -q --basetemp=C:/t/bt/RT1/rev-M14_diagnostics_gain_fields tests/test_llm_call_cap.py tests/test_llm_call_logging.py
+cwd                     : C:\t\ev-RT1\rev\base
+root PID / process group: 691056 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 9.65 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  690988:python.exe
+descendants terminated  : 1  690988
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ev-RT1/rev/M14_diagnostics_gain_fields.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=RT1  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

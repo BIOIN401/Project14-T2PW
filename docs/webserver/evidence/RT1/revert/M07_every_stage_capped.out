@@ -1,0 +1,410 @@
+T2PW: C:\t\ev-RT1\rev\base\src\t2pw\__init__.py
+..........FFFFFFFFF......................                                [100%]
+================================== FAILURES ===================================
+__ test_every_other_stage_runs_on_the_callers_thread_with_no_cap[audit loop] __
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000246AFDBD630>
+stage = 'audit loop'
+
+    @pytest.mark.parametrize("stage", UNCAPPED_STAGES)
+    def test_every_other_stage_runs_on_the_callers_thread_with_no_cap(monkeypatch, stage):
+        slow_then_ok = lambda: (time.sleep(CAP * 3), _resp("slow but fine"))[1]  # noqa: E731 - well past the cap
+        provider = _use(monkeypatch, FakeProvider(slow_then_ok))
+        with client_mod.web_run_scope():
+>           result = _chat(stage)
+                     ^^^^^^^^^^^^
+
+tests\test_llm_call_cap.py:209: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_llm_call_cap.py:105: in _chat
+    return client_mod.chat_detailed([{"role": "user", "content": "hi"}], model_override="m", stage_name=stage)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\t2pw\llm\client.py:919: in chat_detailed
+    resp = _create(kwargs, diagnostics.stage)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\t2pw\llm\client.py:391: in _create
+    raise box["exc"]
+src\t2pw\llm\client.py:380: in work
+    box["resp"] = _client.chat.completions.create(**request)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <test_llm_call_cap.FakeProvider object at 0x00000246AFE0D450>
+kwargs = {'max_tokens': 65536, 'messages': [{'content': 'hi', 'role': 'user'}], 'model': 'm', 'temperature': 0.0, ...}
+
+    def create(self, **kwargs: Any) -> Any:
+        with self.lock:
+            self.threads.append(threading.current_thread())
+>           step = self.steps.pop(0)
+                   ^^^^^^^^^^^^^^^^^
+E           IndexError: pop from empty list
+
+tests\test_llm_call_cap.py:64: IndexError
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.llm.client:client.py:1052 audit loop request still running after the 0.15s wall-clock cap; abandoned; retrying (attempt 1/3).
+_ test_every_other_stage_runs_on_the_callers_thread_with_no_cap[final_completeness_audit] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000246AFD4F520>
+stage = 'final_completeness_audit'
+
+    @pytest.mark.parametrize("stage", UNCAPPED_STAGES)
+    def test_every_other_stage_runs_on_the_callers_thread_with_no_cap(monkeypatch, stage):
+        slow_then_ok = lambda: (time.sleep(CAP * 3), _resp("slow but fine"))[1]  # noqa: E731 - well past the cap
+        provider = _use(monkeypatch, FakeProvider(slow_then_ok))
+        with client_mod.web_run_scope():
+>           result = _chat(stage)
+                     ^^^^^^^^^^^^
+
+tests\test_llm_call_cap.py:209: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_llm_call_cap.py:105: in _chat
+    return client_mod.chat_detailed([{"role": "user", "content": "hi"}], model_override="m", stage_name=stage)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\t2pw\llm\client.py:919: in chat_detailed
+    resp = _create(kwargs, diagnostics.stage)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\t2pw\llm\client.py:391: in _create
+    raise box["exc"]
+src\t2pw\llm\client.py:380: in work
+    box["resp"] = _client.chat.completions.create(**request)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <test_llm_call_cap.FakeProvider object at 0x00000246AFCFF2F0>
+kwargs = {'max_tokens': 65536, 'messages': [{'content': 'hi', 'role': 'user'}], 'model': 'm', 'temperature': 0.0, ...}
+
+    def create(self, **kwargs: Any) -> Any:
+        with self.lock:
+            self.threads.append(threading.current_thread())
+>           step = self.steps.pop(0)
+                   ^^^^^^^^^^^^^^^^^
+E           IndexError: pop from empty list
+
+tests\test_llm_call_cap.py:64: IndexError
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.llm.client:client.py:1052 final_completeness_audit request still running after the 0.15s wall-clock cap; abandoned; retrying (attempt 1/3).
+_ test_every_other_stage_runs_on_the_callers_thread_with_no_cap[gap resolver] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000246AFD99D90>
+stage = 'gap resolver'
+
+    @pytest.mark.parametrize("stage", UNCAPPED_STAGES)
+    def test_every_other_stage_runs_on_the_callers_thread_with_no_cap(monkeypatch, stage):
+        slow_then_ok = lambda: (time.sleep(CAP * 3), _resp("slow but fine"))[1]  # noqa: E731 - well past the cap
+        provider = _use(monkeypatch, FakeProvider(slow_then_ok))
+        with client_mod.web_run_scope():
+>           result = _chat(stage)
+                     ^^^^^^^^^^^^
+
+tests\test_llm_call_cap.py:209: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_llm_call_cap.py:105: in _chat
+    return client_mod.chat_detailed([{"role": "user", "content": "hi"}], model_override="m", stage_name=stage)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\t2pw\llm\client.py:919: in chat_detailed
+    resp = _create(kwargs, diagnostics.stage)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\t2pw\llm\client.py:391: in _create
+    raise box["exc"]
+src\t2pw\llm\client.py:380: in work
+    box["resp"] = _client.chat.completions.create(**request)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <test_llm_call_cap.FakeProvider object at 0x00000246AFE168A0>
+kwargs = {'max_tokens': 65536, 'messages': [{'content': 'hi', 'role': 'user'}], 'model': 'm', 'temperature': 0.0, ...}
+
+    def create(self, **kwargs: Any) -> Any:
+        with self.lock:
+            self.threads.append(threading.current_thread())
+>           step = self.steps.pop(0)
+                   ^^^^^^^^^^^^^^^^^
+E           IndexError: pop from empty list
+
+tests\test_llm_call_cap.py:64: IndexError
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.llm.client:client.py:1052 gap resolver request still running after the 0.15s wall-clock cap; abandoned; retrying (attempt 1/3).
+___ test_every_other_stage_runs_on_the_callers_thread_with_no_cap[curator] ____
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000246AFE8EC90>
+stage = 'curator'
+
+    @pytest.mark.parametrize("stage", UNCAPPED_STAGES)
+    def test_every_other_stage_runs_on_the_callers_thread_with_no_cap(monkeypatch, stage):
+        slow_then_ok = lambda: (time.sleep(CAP * 3), _resp("slow but fine"))[1]  # noqa: E731 - well past the cap
+        provider = _use(monkeypatch, FakeProvider(slow_then_ok))
+        with client_mod.web_run_scope():
+>           result = _chat(stage)
+                     ^^^^^^^^^^^^
+
+tests\test_llm_call_cap.py:209: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_llm_call_cap.py:105: in _chat
+    return client_mod.chat_detailed([{"role": "user", "content": "hi"}], model_override="m", stage_name=stage)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\t2pw\llm\client.py:919: in chat_detailed
+    resp = _create(kwargs, diagnostics.stage)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\t2pw\llm\client.py:391: in _create
+    raise box["exc"]
+src\t2pw\llm\client.py:380: in work
+    box["resp"] = _client.chat.completions.create(**request)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <test_llm_call_cap.FakeProvider object at 0x00000246AFDEF3F0>
+kwargs = {'max_tokens': 65536, 'messages': [{'content': 'hi', 'role': 'user'}], 'model': 'm', 'temperature': 0.0, ...}
+
+    def create(self, **kwargs: Any) -> Any:
+        with self.lock:
+            self.threads.append(threading.current_thread())
+>           step = self.steps.pop(0)
+                   ^^^^^^^^^^^^^^^^^
+E           IndexError: pop from empty list
+
+tests\test_llm_call_cap.py:64: IndexError
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.llm.client:client.py:1052 curator request still running after the 0.15s wall-clock cap; abandoned; retrying (attempt 1/3).
+_____ test_every_other_stage_runs_on_the_callers_thread_with_no_cap[chat] _____
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000246AFE8B8B0>
+stage = 'chat'
+
+    @pytest.mark.parametrize("stage", UNCAPPED_STAGES)
+    def test_every_other_stage_runs_on_the_callers_thread_with_no_cap(monkeypatch, stage):
+        slow_then_ok = lambda: (time.sleep(CAP * 3), _resp("slow but fine"))[1]  # noqa: E731 - well past the cap
+        provider = _use(monkeypatch, FakeProvider(slow_then_ok))
+        with client_mod.web_run_scope():
+>           result = _chat(stage)
+                     ^^^^^^^^^^^^
+
+tests\test_llm_call_cap.py:209: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_llm_call_cap.py:105: in _chat
+    return client_mod.chat_detailed([{"role": "user", "content": "hi"}], model_override="m", stage_name=stage)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\t2pw\llm\client.py:919: in chat_detailed
+    resp = _create(kwargs, diagnostics.stage)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\t2pw\llm\client.py:391: in _create
+    raise box["exc"]
+src\t2pw\llm\client.py:380: in work
+    box["resp"] = _client.chat.completions.create(**request)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <test_llm_call_cap.FakeProvider object at 0x00000246AFE1C050>
+kwargs = {'max_tokens': 65536, 'messages': [{'content': 'hi', 'role': 'user'}], 'model': 'm', 'temperature': 0.0, ...}
+
+    def create(self, **kwargs: Any) -> Any:
+        with self.lock:
+            self.threads.append(threading.current_thread())
+>           step = self.steps.pop(0)
+                   ^^^^^^^^^^^^^^^^^
+E           IndexError: pop from empty list
+
+tests\test_llm_call_cap.py:64: IndexError
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.llm.client:client.py:1052 chat request still running after the 0.15s wall-clock cap; abandoned; retrying (attempt 1/3).
+__ test_every_other_stage_runs_on_the_callers_thread_with_no_cap[overwatch] ___
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000246AFE8BD80>
+stage = 'overwatch'
+
+    @pytest.mark.parametrize("stage", UNCAPPED_STAGES)
+    def test_every_other_stage_runs_on_the_callers_thread_with_no_cap(monkeypatch, stage):
+        slow_then_ok = lambda: (time.sleep(CAP * 3), _resp("slow but fine"))[1]  # noqa: E731 - well past the cap
+        provider = _use(monkeypatch, FakeProvider(slow_then_ok))
+        with client_mod.web_run_scope():
+>           result = _chat(stage)
+                     ^^^^^^^^^^^^
+
+tests\test_llm_call_cap.py:209: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_llm_call_cap.py:105: in _chat
+    return client_mod.chat_detailed([{"role": "user", "content": "hi"}], model_override="m", stage_name=stage)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\t2pw\llm\client.py:919: in chat_detailed
+    resp = _create(kwargs, diagnostics.stage)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\t2pw\llm\client.py:391: in _create
+    raise box["exc"]
+src\t2pw\llm\client.py:380: in work
+    box["resp"] = _client.chat.completions.create(**request)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <test_llm_call_cap.FakeProvider object at 0x00000246AFE235F0>
+kwargs = {'max_tokens': 65536, 'messages': [{'content': 'hi', 'role': 'user'}], 'model': 'm', 'temperature': 0.0, ...}
+
+    def create(self, **kwargs: Any) -> Any:
+        with self.lock:
+            self.threads.append(threading.current_thread())
+>           step = self.steps.pop(0)
+                   ^^^^^^^^^^^^^^^^^
+E           IndexError: pop from empty list
+
+tests\test_llm_call_cap.py:64: IndexError
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.llm.client:client.py:1052 overwatch request still running after the 0.15s wall-clock cap; abandoned; retrying (attempt 1/3).
+_ test_every_other_stage_runs_on_the_callers_thread_with_no_cap[focused_repair] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000246AFE87E30>
+stage = 'focused_repair'
+
+    @pytest.mark.parametrize("stage", UNCAPPED_STAGES)
+    def test_every_other_stage_runs_on_the_callers_thread_with_no_cap(monkeypatch, stage):
+        slow_then_ok = lambda: (time.sleep(CAP * 3), _resp("slow but fine"))[1]  # noqa: E731 - well past the cap
+        provider = _use(monkeypatch, FakeProvider(slow_then_ok))
+        with client_mod.web_run_scope():
+>           result = _chat(stage)
+                     ^^^^^^^^^^^^
+
+tests\test_llm_call_cap.py:209: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_llm_call_cap.py:105: in _chat
+    return client_mod.chat_detailed([{"role": "user", "content": "hi"}], model_override="m", stage_name=stage)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\t2pw\llm\client.py:919: in chat_detailed
+    resp = _create(kwargs, diagnostics.stage)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\t2pw\llm\client.py:391: in _create
+    raise box["exc"]
+src\t2pw\llm\client.py:380: in work
+    box["resp"] = _client.chat.completions.create(**request)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <test_llm_call_cap.FakeProvider object at 0x00000246AFAC7350>
+kwargs = {'max_tokens': 65536, 'messages': [{'content': 'hi', 'role': 'user'}], 'model': 'm', 'temperature': 0.0, ...}
+
+    def create(self, **kwargs: Any) -> Any:
+        with self.lock:
+            self.threads.append(threading.current_thread())
+>           step = self.steps.pop(0)
+                   ^^^^^^^^^^^^^^^^^
+E           IndexError: pop from empty list
+
+tests\test_llm_call_cap.py:64: IndexError
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.llm.client:client.py:1052 focused_repair request still running after the 0.15s wall-clock cap; abandoned; retrying (attempt 1/3).
+_ test_every_other_stage_runs_on_the_callers_thread_with_no_cap[Stage 1 extraction json repair] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000246AFE87CF0>
+stage = 'Stage 1 extraction json repair'
+
+    @pytest.mark.parametrize("stage", UNCAPPED_STAGES)
+    def test_every_other_stage_runs_on_the_callers_thread_with_no_cap(monkeypatch, stage):
+        slow_then_ok = lambda: (time.sleep(CAP * 3), _resp("slow but fine"))[1]  # noqa: E731 - well past the cap
+        provider = _use(monkeypatch, FakeProvider(slow_then_ok))
+        with client_mod.web_run_scope():
+>           result = _chat(stage)
+                     ^^^^^^^^^^^^
+
+tests\test_llm_call_cap.py:209: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_llm_call_cap.py:105: in _chat
+    return client_mod.chat_detailed([{"role": "user", "content": "hi"}], model_override="m", stage_name=stage)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\t2pw\llm\client.py:919: in chat_detailed
+    resp = _create(kwargs, diagnostics.stage)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\t2pw\llm\client.py:391: in _create
+    raise box["exc"]
+src\t2pw\llm\client.py:380: in work
+    box["resp"] = _client.chat.completions.create(**request)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <test_llm_call_cap.FakeProvider object at 0x00000246AD1359D0>
+kwargs = {'max_tokens': 65536, 'messages': [{'content': 'hi', 'role': 'user'}], 'model': 'm', 'temperature': 0.0, ...}
+
+    def create(self, **kwargs: Any) -> Any:
+        with self.lock:
+            self.threads.append(threading.current_thread())
+>           step = self.steps.pop(0)
+                   ^^^^^^^^^^^^^^^^^
+E           IndexError: pop from empty list
+
+tests\test_llm_call_cap.py:64: IndexError
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.llm.client:client.py:1052 Stage 1 extraction json repair request still running after the 0.15s wall-clock cap; abandoned; retrying (attempt 1/3).
+_ test_every_other_stage_runs_on_the_callers_thread_with_no_cap[Stage 2 inference row repair] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000246AFE9BF50>
+stage = 'Stage 2 inference row repair'
+
+    @pytest.mark.parametrize("stage", UNCAPPED_STAGES)
+    def test_every_other_stage_runs_on_the_callers_thread_with_no_cap(monkeypatch, stage):
+        slow_then_ok = lambda: (time.sleep(CAP * 3), _resp("slow but fine"))[1]  # noqa: E731 - well past the cap
+        provider = _use(monkeypatch, FakeProvider(slow_then_ok))
+        with client_mod.web_run_scope():
+>           result = _chat(stage)
+                     ^^^^^^^^^^^^
+
+tests\test_llm_call_cap.py:209: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_llm_call_cap.py:105: in _chat
+    return client_mod.chat_detailed([{"role": "user", "content": "hi"}], model_override="m", stage_name=stage)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\t2pw\llm\client.py:919: in chat_detailed
+    resp = _create(kwargs, diagnostics.stage)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\t2pw\llm\client.py:391: in _create
+    raise box["exc"]
+src\t2pw\llm\client.py:380: in work
+    box["resp"] = _client.chat.completions.create(**request)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <test_llm_call_cap.FakeProvider object at 0x00000246AFE28050>
+kwargs = {'max_tokens': 65536, 'messages': [{'content': 'hi', 'role': 'user'}], 'model': 'm', 'temperature': 0.0, ...}
+
+    def create(self, **kwargs: Any) -> Any:
+        with self.lock:
+            self.threads.append(threading.current_thread())
+>           step = self.steps.pop(0)
+                   ^^^^^^^^^^^^^^^^^
+E           IndexError: pop from empty list
+
+tests\test_llm_call_cap.py:64: IndexError
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.llm.client:client.py:1052 Stage 2 inference row repair request still running after the 0.15s wall-clock cap; abandoned; retrying (attempt 1/3).
+=========================== short test summary info ===========================
+FAILED tests/test_llm_call_cap.py::test_every_other_stage_runs_on_the_callers_thread_with_no_cap[audit loop]
+FAILED tests/test_llm_call_cap.py::test_every_other_stage_runs_on_the_callers_thread_with_no_cap[final_completeness_audit]
+FAILED tests/test_llm_call_cap.py::test_every_other_stage_runs_on_the_callers_thread_with_no_cap[gap resolver]
+FAILED tests/test_llm_call_cap.py::test_every_other_stage_runs_on_the_callers_thread_with_no_cap[curator]
+FAILED tests/test_llm_call_cap.py::test_every_other_stage_runs_on_the_callers_thread_with_no_cap[chat]
+FAILED tests/test_llm_call_cap.py::test_every_other_stage_runs_on_the_callers_thread_with_no_cap[overwatch]
+FAILED tests/test_llm_call_cap.py::test_every_other_stage_runs_on_the_callers_thread_with_no_cap[focused_repair]
+FAILED tests/test_llm_call_cap.py::test_every_other_stage_runs_on_the_callers_thread_with_no_cap[Stage 1 extraction json repair]
+FAILED tests/test_llm_call_cap.py::test_every_other_stage_runs_on_the_callers_thread_with_no_cap[Stage 2 inference row repair]
+9 failed, 32 passed in 6.17s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ev-RT1\rev\base\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : RT1rev-M07_every_stage_capped
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ev-RT1/rev/base/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ev-RT1/rev/base -q --basetemp=C:/t/bt/RT1/rev-M07_every_stage_capped tests/test_llm_call_cap.py tests/test_llm_call_logging.py
+cwd                     : C:\t\ev-RT1\rev\base
+root PID / process group: 692724 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 7.05 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  692932:python.exe
+descendants terminated  : 1  692932
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ev-RT1/rev/M07_every_stage_capped.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=RT1  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

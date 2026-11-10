@@ -1,0 +1,93 @@
+{
+  "label": "RT1rev-M12_web_scope_on_by_default",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/ev-RT1/rev/base/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ev-RT1/rev/base",
+    "-q",
+    "--basetemp=C:/t/bt/RT1/rev-M12_web_scope_on_by_default",
+    "tests/test_llm_call_cap.py",
+    "tests/test_llm_call_logging.py"
+  ],
+  "cwd": "C:\\t\\ev-RT1\\rev\\base",
+  "started_at": "2026-11-10T06:24:51+00:00",
+  "finished_at": "2026-11-10T06:25:02+00:00",
+  "duration_seconds": 10.300302399999055,
+  "timeout_seconds": 300.0,
+  "root_pid": 696348,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 696360,
+      "name": "python.exe",
+      "ppid": 696348
+    }
+  ],
+  "descendants_terminated": [
+    696360
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 58320,
+      "name": "python.exe"
+    },
+    {
+      "pid": 526120,
+      "name": "python.exe"
+    },
+    {
+      "pid": 692440,
+      "name": "python.exe"
+    },
+    {
+      "pid": 693444,
+      "name": "python.exe"
+    },
+    {
+      "pid": 696136,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/ev-RT1/rev/M12_web_scope_on_by_default.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ev-RT1\\rev\\base\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "",
+    "repo_head": "",
+    "repo_source": "not_a_repository",
+    "wrapper_vs_head": "unknown",
+    "repo_tracked_files_dirty": null,
+    "repo_error": "fatal: not a git repository (or any of the parent directories): .git"
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "RT1",
+    "token": "RT1:526120:df6438194771edcc",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

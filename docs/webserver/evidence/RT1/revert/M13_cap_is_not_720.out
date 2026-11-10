@@ -1,0 +1,44 @@
+T2PW: C:\t\ev-RT1\rev\base\src\t2pw\__init__.py
+...........................F.............                                [100%]
+================================== FAILURES ===================================
+___ test_the_cap_is_one_named_constant_above_the_longest_good_call_measured ___
+
+    def test_the_cap_is_one_named_constant_above_the_longest_good_call_measured():
+        lines = Path(client_mod.__file__).read_text(encoding="utf-8").splitlines()
+>       assert lines.count("LLM_CALL_CAP_SECONDS = 720.0") == 1  # the PO's 12 minutes, written once
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert 0 == 1
+E        +  where 0 = <built-in method count of list object at 0x0000017F4189F6C0>('LLM_CALL_CAP_SECONDS = 720.0')
+E        +    where <built-in method count of list object at 0x0000017F4189F6C0> = ['import contextlib', 'import hashlib', 'import json', 'import logging', 'import math', 'import os', ...].count
+
+tests\test_llm_call_cap.py:282: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_llm_call_cap.py::test_the_cap_is_one_named_constant_above_the_longest_good_call_measured
+1 failed, 40 passed in 8.95s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ev-RT1\rev\base\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : RT1rev-M13_cap_is_not_720
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ev-RT1/rev/base/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ev-RT1/rev/base -q --basetemp=C:/t/bt/RT1/rev-M13_cap_is_not_720 tests/test_llm_call_cap.py tests/test_llm_call_logging.py
+cwd                     : C:\t\ev-RT1\rev\base
+root PID / process group: 690728 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 10.24 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  685492:python.exe
+descendants terminated  : 1  685492
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ev-RT1/rev/M13_cap_is_not_720.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=RT1  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

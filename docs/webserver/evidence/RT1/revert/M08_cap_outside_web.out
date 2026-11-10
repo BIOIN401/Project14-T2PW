@@ -1,0 +1,101 @@
+T2PW: C:\t\ev-RT1\rev\base\src\t2pw\__init__.py
+....................FF...................                                [100%]
+================================== FAILURES ===================================
+_____ test_without_the_web_scope_a_slow_allowlisted_call_is_never_capped ______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000015D40913AD0>
+
+    def test_without_the_web_scope_a_slow_allowlisted_call_is_never_capped(monkeypatch):
+        slow = lambda: (time.sleep(CAP * 3), _resp("app or batch"))[1]  # noqa: E731
+        provider = _use(monkeypatch, FakeProvider(slow))
+>       result = _chat("Stage 1 extraction")  # the Streamlit app and batch legs call it exactly like this
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_llm_call_cap.py:228: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_llm_call_cap.py:105: in _chat
+    return client_mod.chat_detailed([{"role": "user", "content": "hi"}], model_override="m", stage_name=stage)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\t2pw\llm\client.py:919: in chat_detailed
+    resp = _create(kwargs, diagnostics.stage)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\t2pw\llm\client.py:391: in _create
+    raise box["exc"]
+src\t2pw\llm\client.py:380: in work
+    box["resp"] = _client.chat.completions.create(**request)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <test_llm_call_cap.FakeProvider object at 0x0000015D40931310>
+kwargs = {'max_tokens': 65536, 'messages': [{'content': 'hi', 'role': 'user'}], 'model': 'm', 'temperature': 0.0, ...}
+
+    def create(self, **kwargs: Any) -> Any:
+        with self.lock:
+            self.threads.append(threading.current_thread())
+>           step = self.steps.pop(0)
+                   ^^^^^^^^^^^^^^^^^
+E           IndexError: pop from empty list
+
+tests\test_llm_call_cap.py:64: IndexError
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.llm.client:client.py:1052 Stage 1 extraction request still running after the 0.15s wall-clock cap; abandoned; retrying (attempt 1/3).
+________________ test_run_pathway_caps_but_run_paper_does_not _________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000015D409F7380>
+tmp_path = WindowsPath('C:/t/bt/RT1/rev-M08_cap_outside_web/test_run_pathway_caps_but_run_0')
+
+    def test_run_pathway_caps_but_run_paper_does_not(monkeypatch, tmp_path):
+        # run_pathway: the web entry
+        gate = threading.Event()
+        web = _use(monkeypatch, FakeProvider(_held(gate), _ok("web")))
+        seen: dict = {}
+        monkeypatch.setattr(pw, "_drive", _slow_stage1_drive(web, seen))
+        pw.run_pathway(PathwayRequest(texts=("The paper.",), out_dir=tmp_path / "out"))
+        gate.set(); _join_workers()
+        assert seen["web"] is True and web.calls == 2
+        assert [r["status"] for r in seen["result"].diagnostics.attempt_log] == ["call_cap", "ok"]
+        # run_paper: what batch calls
+        slow = lambda: (time.sleep(CAP * 3), _resp("batch"))[1]  # noqa: E731
+        batch = _use(monkeypatch, FakeProvider(slow))
+        seen = {}
+        monkeypatch.setattr(pw, "_drive", _slow_stage1_drive(batch, seen))
+        pw.run_paper({"paper_id": "p"}, PathwayRequest(texts=("x",)), None)
+>       assert seen["web"] is False and batch.calls == 1 and seen["result"].text == "batch"
+E       assert (False is False and 2 == 1)
+E        +  where 2 = <test_llm_call_cap.FakeProvider object at 0x0000015D40CF11C0>.calls
+
+tests\test_llm_call_cap.py:257: AssertionError
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.llm.client:client.py:1052 Stage 1 extraction request still running after the 0.15s wall-clock cap; abandoned; retrying (attempt 1/3).
+WARNING  t2pw.llm.client:client.py:1052 Stage 1 extraction request still running after the 0.15s wall-clock cap; abandoned; retrying (attempt 1/3).
+=========================== short test summary info ===========================
+FAILED tests/test_llm_call_cap.py::test_without_the_web_scope_a_slow_allowlisted_call_is_never_capped
+FAILED tests/test_llm_call_cap.py::test_run_pathway_caps_but_run_paper_does_not
+2 failed, 39 passed in 8.26s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ev-RT1\rev\base\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : RT1rev-M08_cap_outside_web
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ev-RT1/rev/base/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ev-RT1/rev/base -q --basetemp=C:/t/bt/RT1/rev-M08_cap_outside_web tests/test_llm_call_cap.py tests/test_llm_call_logging.py
+cwd                     : C:\t\ev-RT1\rev\base
+root PID / process group: 692472 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 9.20 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  692336:python.exe
+descendants terminated  : 1  692336
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ev-RT1/rev/M08_cap_outside_web.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=RT1  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

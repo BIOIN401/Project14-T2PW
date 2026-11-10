@@ -1,0 +1,71 @@
+T2PW: C:\t\ev-RT1\rev\base\src\t2pw\__init__.py
+...................................FF....                                [100%]
+================================== FAILURES ===================================
+_______________ test_curator_rounds_are_visible_in_a_web_trace ________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001D2DCFAD630>
+tmp_path = WindowsPath('C:/t/bt/RT1/rev-M02_curator_silent/test_curator_rounds_are_visibl0')
+
+    def test_curator_rounds_are_visible_in_a_web_trace(monkeypatch, tmp_path):
+        monkeypatch.setattr(client_mod, "_client", _fake_client([_tool_turn(), _resp("curated")]))
+        _trace(tmp_path)
+        with client_mod.web_run_scope():
+            assert _with_tools() == "curated"
+        rows = _attempts(tmp_path)
+>       assert [r["stage"] for r in rows] == ["curator", "curator"]
+E       AssertionError: assert [] == ['curator', 'curator']
+E         
+E         Right contains 2 more items, first extra item: 'curator'
+E         Use -v to get more diff
+
+tests\test_llm_call_logging.py:191: AssertionError
+_____________ test_curator_retries_and_empty_replies_are_visible ______________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001D2DD362660>
+tmp_path = WindowsPath('C:/t/bt/RT1/rev-M02_curator_silent/test_curator_retries_and_empty0')
+
+    def test_curator_retries_and_empty_replies_are_visible(monkeypatch, tmp_path):
+        monkeypatch.setattr(client_mod, "_client", _fake_client([_api_error(), _resp(""), _resp("done")]))
+        _trace(tmp_path)
+        with client_mod.web_run_scope():
+            assert _with_tools() == "done"
+>       assert [r["status"] for r in _attempts(tmp_path)] == ["error", "empty", "ok"]
+E       AssertionError: assert [] == ['error', 'empty', 'ok']
+E         
+E         Right contains 3 more items, first extra item: 'error'
+E         Use -v to get more diff
+
+tests\test_llm_call_logging.py:202: AssertionError
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.llm.client:client.py:1201 LLM returned an empty completion for curator (model m, finish_reason=stop, tools_sent=True) on attempt 2/8; retrying as a transient.
+=========================== short test summary info ===========================
+FAILED tests/test_llm_call_logging.py::test_curator_rounds_are_visible_in_a_web_trace
+FAILED tests/test_llm_call_logging.py::test_curator_retries_and_empty_replies_are_visible
+2 failed, 39 passed in 8.65s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ev-RT1\rev\base\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : RT1rev-M02_curator_silent
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ev-RT1/rev/base/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ev-RT1/rev/base -q --basetemp=C:/t/bt/RT1/rev-M02_curator_silent tests/test_llm_call_cap.py tests/test_llm_call_logging.py
+cwd                     : C:\t\ev-RT1\rev\base
+root PID / process group: 687272 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 9.55 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  687548:python.exe
+descendants terminated  : 1  687548
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ev-RT1/rev/M02_curator_silent.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=RT1  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

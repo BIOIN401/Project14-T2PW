@@ -1,0 +1,225 @@
+T2PW: C:\t\ev-RT1\rev\base\src\t2pw\__init__.py
+FFFFF.FFFF...........F...................                                [100%]
+================================== FAILURES ===================================
+_ test_a_request_past_the_cap_is_a_failed_attempt_and_the_existing_retry_follows _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000193A5D70640>
+tmp_path = WindowsPath('C:/t/bt/RT1/rev-M05_no_cap/test_a_request_past_the_cap_is0')
+
+    def test_a_request_past_the_cap_is_a_failed_attempt_and_the_existing_retry_follows(monkeypatch, tmp_path):
+        gate = threading.Event()
+        provider = _use(monkeypatch, FakeProvider(_held(gate), _ok("second try")))
+        leg_trace.activate(tmp_path / leg_trace.LEG_TRACE_NAME)
+        started = time.monotonic()
+        with client_mod.web_run_scope():
+            result = _chat()
+>       assert time.monotonic() - started < 5  # waited the cap, not the hold
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       assert (45495.1659128 - 45475.1550555) < 5
+E        +  where 45495.1659128 = <built-in function monotonic>()
+E        +    where <built-in function monotonic> = time.monotonic
+
+tests\test_llm_call_cap.py:130: AssertionError
+______ test_every_attempt_capped_ends_as_the_distinct_operation_timeout _______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000193A8978D60>
+
+    def test_every_attempt_capped_ends_as_the_distinct_operation_timeout(monkeypatch):
+        gate = threading.Event()
+        provider = _use(monkeypatch, FakeProvider(*(_held(gate) for _ in range(3))))
+>       with client_mod.web_run_scope(), pytest.raises(client_mod.LLMOperationTimeout) as raised:
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 't2pw.llm.client.LLMOperationTimeout'>
+
+tests\test_llm_call_cap.py:143: Failed
+________ test_an_error_inside_the_worker_reaches_the_normal_retry_path ________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000193A8934170>
+
+    def test_an_error_inside_the_worker_reaches_the_normal_retry_path(monkeypatch):
+        provider = _use(monkeypatch, FakeProvider(lambda: (_ for _ in ()).throw(client_mod.APIError("boom")), _ok()))
+        with client_mod.web_run_scope():
+            result = _chat()
+        assert [r["status"] for r in result.diagnostics.attempt_log] == ["error", "ok"] and provider.calls == 2
+>       assert provider.threads[0] is not threading.current_thread()
+E       assert <_MainThread(MainThread, started 686408)> is not <_MainThread(MainThread, started 686408)>
+E        +  where <_MainThread(MainThread, started 686408)> = <function current_thread at 0x00000193A33B5DA0>()
+E        +    where <function current_thread at 0x00000193A33B5DA0> = threading.current_thread
+
+tests\test_llm_call_cap.py:157: AssertionError
+______ test_a_late_result_is_discarded_and_touches_no_totals_or_records _______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000193A89478A0>
+tmp_path = WindowsPath('C:/t/bt/RT1/rev-M05_no_cap/test_a_late_result_is_discarde0')
+
+    def test_a_late_result_is_discarded_and_touches_no_totals_or_records(monkeypatch, tmp_path):
+        gate = threading.Event()
+        provider = _use(monkeypatch, FakeProvider(_held(gate), _ok("kept", prompt=11, completion=22)))
+        leg_trace.activate(tmp_path / leg_trace.LEG_TRACE_NAME)
+        with client_mod.web_run_scope():
+            result = _chat()
+        before = (client_mod.get_token_stats(), result.diagnostics.to_dict(), len(leg_trace.read_events(tmp_path)),
+                  dict(client_mod._token_stats))
+        gate.set(); _join_workers()  # the abandoned request now answers, with 1000 / 2000 tokens
+        after = (client_mod.get_token_stats(), result.diagnostics.to_dict(), len(leg_trace.read_events(tmp_path)),
+                 dict(client_mod._token_stats))
+        assert before == after
+        stats = client_mod.get_token_stats()
+>       assert (stats["prompt_tokens"], stats["completion_tokens"], stats["api_calls"]) == (11, 22, 1)
+E       assert (1000, 2000, 1) == (11, 22, 1)
+E         
+E         At index 0 diff: 1000 != 11
+E         Use -v to get more diff
+
+tests\test_llm_call_cap.py:174: AssertionError
+___ test_the_worker_is_a_daemon_so_a_stuck_request_cannot_hold_the_process ____
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000193A8947DF0>
+
+    def test_the_worker_is_a_daemon_so_a_stuck_request_cannot_hold_the_process(monkeypatch):
+        gate = threading.Event()
+        _use(monkeypatch, FakeProvider(_held(gate), _ok()))
+        with client_mod.web_run_scope():
+            _chat()
+>       (worker,) = _workers()
+        ^^^^^^^^^
+E       ValueError: not enough values to unpack (expected 1, got 0)
+
+tests\test_llm_call_cap.py:184: ValueError
+______________ test_an_allowlisted_stage_is_capped[preprocessor] ______________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000193A8A84A50>
+stage = 'preprocessor'
+
+    @pytest.mark.parametrize("stage", CAPPED_STAGES)
+    def test_an_allowlisted_stage_is_capped(monkeypatch, stage):
+        gate = threading.Event()
+        provider = _use(monkeypatch, FakeProvider(_held(gate), _ok()))
+        with client_mod.web_run_scope():
+            result = _chat(stage)
+        gate.set(); _join_workers()
+>       assert [r["status"] for r in result.diagnostics.attempt_log] == ["call_cap", "ok"] and provider.calls == 2
+E       AssertionError: assert (['ok'] == ['call_cap', 'ok']
+E         
+E         At index 0 diff: 'ok' != 'call_cap'
+E         Right contains one more item: 'ok'
+E         Use -v to get more diff)
+
+tests\test_llm_call_cap.py:201: AssertionError
+___________ test_an_allowlisted_stage_is_capped[Stage 1 extraction] ___________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000193A8A6D310>
+stage = 'Stage 1 extraction'
+
+    @pytest.mark.parametrize("stage", CAPPED_STAGES)
+    def test_an_allowlisted_stage_is_capped(monkeypatch, stage):
+        gate = threading.Event()
+        provider = _use(monkeypatch, FakeProvider(_held(gate), _ok()))
+        with client_mod.web_run_scope():
+            result = _chat(stage)
+        gate.set(); _join_workers()
+>       assert [r["status"] for r in result.diagnostics.attempt_log] == ["call_cap", "ok"] and provider.calls == 2
+E       AssertionError: assert (['ok'] == ['call_cap', 'ok']
+E         
+E         At index 0 diff: 'ok' != 'call_cap'
+E         Right contains one more item: 'ok'
+E         Use -v to get more diff)
+
+tests\test_llm_call_cap.py:201: AssertionError
+___________ test_an_allowlisted_stage_is_capped[Stage 2 inference] ____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000193A8A6D8B0>
+stage = 'Stage 2 inference'
+
+    @pytest.mark.parametrize("stage", CAPPED_STAGES)
+    def test_an_allowlisted_stage_is_capped(monkeypatch, stage):
+        gate = threading.Event()
+        provider = _use(monkeypatch, FakeProvider(_held(gate), _ok()))
+        with client_mod.web_run_scope():
+            result = _chat(stage)
+        gate.set(); _join_workers()
+>       assert [r["status"] for r in result.diagnostics.attempt_log] == ["call_cap", "ok"] and provider.calls == 2
+E       AssertionError: assert (['ok'] == ['call_cap', 'ok']
+E         
+E         At index 0 diff: 'ok' != 'call_cap'
+E         Right contains one more item: 'ok'
+E         Use -v to get more diff)
+
+tests\test_llm_call_cap.py:201: AssertionError
+__________ test_an_allowlisted_stage_is_capped[rag_prose_extraction] __________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000193A8A9E510>
+stage = 'rag_prose_extraction'
+
+    @pytest.mark.parametrize("stage", CAPPED_STAGES)
+    def test_an_allowlisted_stage_is_capped(monkeypatch, stage):
+        gate = threading.Event()
+        provider = _use(monkeypatch, FakeProvider(_held(gate), _ok()))
+        with client_mod.web_run_scope():
+            result = _chat(stage)
+        gate.set(); _join_workers()
+>       assert [r["status"] for r in result.diagnostics.attempt_log] == ["call_cap", "ok"] and provider.calls == 2
+E       AssertionError: assert (['ok'] == ['call_cap', 'ok']
+E         
+E         At index 0 diff: 'ok' != 'call_cap'
+E         Right contains one more item: 'ok'
+E         Use -v to get more diff)
+
+tests\test_llm_call_cap.py:201: AssertionError
+________________ test_run_pathway_caps_but_run_paper_does_not _________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000193A89A44B0>
+tmp_path = WindowsPath('C:/t/bt/RT1/rev-M05_no_cap/test_run_pathway_caps_but_run_0')
+
+    def test_run_pathway_caps_but_run_paper_does_not(monkeypatch, tmp_path):
+        # run_pathway: the web entry
+        gate = threading.Event()
+        web = _use(monkeypatch, FakeProvider(_held(gate), _ok("web")))
+        seen: dict = {}
+        monkeypatch.setattr(pw, "_drive", _slow_stage1_drive(web, seen))
+        pw.run_pathway(PathwayRequest(texts=("The paper.",), out_dir=tmp_path / "out"))
+        gate.set(); _join_workers()
+>       assert seen["web"] is True and web.calls == 2
+E       assert (True is True and 1 == 2)
+E        +  where 1 = <test_llm_call_cap.FakeProvider object at 0x00000193A8A3A710>.calls
+
+tests\test_llm_call_cap.py:249: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_llm_call_cap.py::test_a_request_past_the_cap_is_a_failed_attempt_and_the_existing_retry_follows
+FAILED tests/test_llm_call_cap.py::test_every_attempt_capped_ends_as_the_distinct_operation_timeout
+FAILED tests/test_llm_call_cap.py::test_an_error_inside_the_worker_reaches_the_normal_retry_path
+FAILED tests/test_llm_call_cap.py::test_a_late_result_is_discarded_and_touches_no_totals_or_records
+FAILED tests/test_llm_call_cap.py::test_the_worker_is_a_daemon_so_a_stuck_request_cannot_hold_the_process
+FAILED tests/test_llm_call_cap.py::test_an_allowlisted_stage_is_capped[preprocessor]
+FAILED tests/test_llm_call_cap.py::test_an_allowlisted_stage_is_capped[Stage 1 extraction]
+FAILED tests/test_llm_call_cap.py::test_an_allowlisted_stage_is_capped[Stage 2 inference]
+FAILED tests/test_llm_call_cap.py::test_an_allowlisted_stage_is_capped[rag_prose_extraction]
+FAILED tests/test_llm_call_cap.py::test_run_pathway_caps_but_run_paper_does_not
+10 failed, 31 passed in 186.55s (0:03:06)
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ev-RT1\rev\base\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : RT1rev-M05_no_cap
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ev-RT1/rev/base/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ev-RT1/rev/base -q --basetemp=C:/t/bt/RT1/rev-M05_no_cap tests/test_llm_call_cap.py tests/test_llm_call_logging.py
+cwd                     : C:\t\ev-RT1\rev\base
+root PID / process group: 681268 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 187.70 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  680404:python.exe
+descendants terminated  : 1  680404
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ev-RT1/rev/M05_no_cap.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=RT1  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

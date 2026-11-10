@@ -1,0 +1,48 @@
+T2PW: C:\t\ev-RT1\rev\base\src\t2pw\__init__.py
+......................................F..                                [100%]
+================================== FAILURES ===================================
+___________ test_run_pathway_writes_a_trace_that_is_not_a_download ____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001C27847D9B0>
+tmp_path = WindowsPath('C:/t/bt/RT1/rev-M03_no_trace_activation/test_run_pathway_writes_a_trac0')
+
+    def test_run_pathway_writes_a_trace_that_is_not_a_download(monkeypatch, tmp_path):
+        result = _job(tmp_path, monkeypatch, [_resp()])
+        out = tmp_path / "out"
+>       assert (out / leg_trace.LEG_TRACE_NAME).is_file()
+E       AssertionError: assert False
+E        +  where False = is_file()
+E        +    where is_file = (WindowsPath('C:/t/bt/RT1/rev-M03_no_trace_activation/test_run_pathway_writes_a_trac0/out') / 'LEG_TRACE.jsonl').is_file
+E        +      where 'LEG_TRACE.jsonl' = leg_trace.LEG_TRACE_NAME
+
+tests\test_llm_call_logging.py:227: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_llm_call_logging.py::test_run_pathway_writes_a_trace_that_is_not_a_download
+1 failed, 40 passed in 8.55s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ev-RT1\rev\base\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : RT1rev-M03_no_trace_activation
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ev-RT1/rev/base/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ev-RT1/rev/base -q --basetemp=C:/t/bt/RT1/rev-M03_no_trace_activation tests/test_llm_call_cap.py tests/test_llm_call_logging.py
+cwd                     : C:\t\ev-RT1\rev\base
+root PID / process group: 687992 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 9.47 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  680476:python.exe
+descendants terminated  : 1  680476
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ev-RT1/rev/M03_no_trace_activation.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=RT1  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

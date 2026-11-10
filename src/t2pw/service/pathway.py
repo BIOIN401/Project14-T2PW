@@ -526,7 +526,8 @@ def run_pathway(request: PathwayRequest) -> PathwayResult:
     the request: a crash in the pipeline is an ``error``/``crash`` result.
     """
 
-    from t2pw.batch import runner
+    from t2pw.batch import leg_trace, runner
+    from t2pw.llm import client as llm_client
     from t2pw.service import driver_bridge as bridge
 
     out_dir = Path(request.out_dir) if request.out_dir else Path(tempfile.mkdtemp(prefix="t2pw-job-"))
@@ -546,7 +547,20 @@ def run_pathway(request: PathwayRequest) -> PathwayResult:
         deadline = float(request.deadline) - bridge.GRACE_S
 
     runner.force_utf8_stdio()  # the worker child's stdout is a file (cp1252 on Windows)
-    outcome, state = run_paper(paper, request, deadline)
+    # RT1: a per-call trace beside the job's files (stage, status, finish_reason, timings, token
+    # counts, hashes; no text). It is not in ``report_paths``, so it is not a download. Batch
+    # activates its own trace and calls ``run_paper``, never this function; an active one is left alone.
+    own_trace = leg_trace.active() is None
+    if own_trace:
+        leg_trace.activate(out_dir / leg_trace.LEG_TRACE_NAME)
+    leg_trace.record_event("job_begin", mode=request.export_mode, has_deadline=deadline is not None)
+    try:
+        with llm_client.web_run_scope():
+            outcome, state = run_paper(paper, request, deadline)
+        leg_trace.record_event("job_end", status=outcome.status, stage=outcome.stage, seconds=outcome.seconds)
+    finally:
+        if own_trace:
+            leg_trace.deactivate()
     outcome.artifacts = _scrub_server_paths(outcome.artifacts, out_dir)
     outcome.message, outcome.detail = (_scrub_server_paths({'m': t}, out_dir)['m'] for t in (outcome.message or '', outcome.detail or ''))
     outcome.warnings = [_scrub_server_paths({'m': t}, out_dir)['m'] for t in outcome.warnings]

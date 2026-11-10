@@ -1,0 +1,50 @@
+T2PW: C:\t\ws-RT1\src\t2pw\__init__.py
+.................Fs....sss........................................       [100%]
+================================== FAILURES ===================================
+_______ test_the_message_names_the_problem_the_interpreter_and_the_cure _______
+
+    def test_the_message_names_the_problem_the_interpreter_and_the_cure() -> None:
+        """The wrong-interpreter case: the one that actually happened.
+    
+        The cure has to be a command, not advice. "Use the venv" is not actionable at
+        2am; ``C:\\...\\.venv\\Scripts\\python.exe scripts\\batch_run.py`` is, and the
+        root cause -- ``py.exe`` ignoring the active virtualenv -- has to be named or
+        the operator fixes it once and hits it again next week.
+        """
+    
+        venv = runner.venv_python()
+>       assert venv is not None, "this project ships a .venv; the test assumes it"
+E       AssertionError: this project ships a .venv; the test assumes it
+E       assert None is not None
+
+tests\test_batch_preflight.py:616: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_batch_preflight.py::test_the_message_names_the_problem_the_interpreter_and_the_cure
+1 failed, 61 passed, 4 skipped in 19.08s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-RT1\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 07ee84216bdafe32d5717c71e0c04391c5527270  [git, worktree dirty=False]
+label                   : RT1-n4
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-RT1/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-RT1 -q --basetemp=C:/t/bt/RT1/n4 tests/test_batch_preflight.py tests/test_c111_timeout_observability.py tests/test_llm_client_request_timeout.py
+cwd                     : C:\t\ws-RT1
+root PID / process group: 702560 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 20.92 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 25  699836:python.exe, 702508:python.exe, 702528:python.exe, 703224:python.exe, 703404:python.exe, 703480:python.exe, 700476:python.exe, 702676:python.exe, 701560:python.exe, 703456:python.exe, 700312:python.exe, 701428:python.exe, 696276:python.exe, 701580:python.exe, 703144:python.exe, 702416:python.exe, 697192:python.exe, 701008:python.exe, 700432:python.exe, 703424:python.exe, 697276:python.exe, 700968:python.exe, 702168:taskkill.exe, 698520:python.exe, 700664:python.exe
+descendants terminated  : 25  696276, 697192, 697276, 698520, 699836, 700312, 700432, 700476, 700664, 700968, 701008, 701428, 701560, 701580, 702168, 702416, 702508, 702528, 702676, 703144, 703224, 703404, 703424, 703456, 703480
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ev-RT1/n4.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=RT1  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================
