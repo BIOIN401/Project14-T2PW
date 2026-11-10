@@ -289,11 +289,14 @@ def _interrupted(cmd, timeout):
 
 def test_a_resumed_batch_keeps_the_plans_engine_unless_one_is_given(tmp_path, monkeypatch):
     code, plan = _batch(tmp_path, monkeypatch, child=_interrupted, env="apptest")
+    first = runner.latest_run_dir(tmp_path)
     assert code == 1 and plan["engine"] == "apptest"
-    code, plan = _batch(tmp_path, monkeypatch, fresh=False)  # no env, no argument: the plan decides
-    assert plan["engine"] == "apptest"
+    code, plan = _batch(tmp_path, monkeypatch, fresh=False, child=_interrupted)  # no env, no argument: the plan decides
+    assert runner.latest_run_dir(tmp_path) == first and plan["engine"] == "apptest"
     code, plan = _batch(tmp_path, monkeypatch, fresh=False, child=_interrupted, engine="run_pathway")
-    assert plan["engine"] == "run_pathway"
+    assert runner.latest_run_dir(tmp_path) == first and plan["engine"] == "run_pathway"
+    log = (first / runner.LOG_NAME).read_text(encoding="utf-8")
+    assert "the engine is overridden; the legs now run on: run_pathway" in log
 
 
 def test_a_plan_from_before_r6_resumes_on_the_apptest_path(tmp_path, monkeypatch):
