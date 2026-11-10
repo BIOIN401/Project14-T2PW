@@ -72,10 +72,10 @@ def _routes(rhea=RHEA_ONE):
     ]
 
 
-def _run(rhea=RHEA_ONE, payload=None):
+def _run(rhea=RHEA_ONE, payload=None, **kw):
     p = payload or _payload()
     m = build_from_payload(p, {"pmcid": "PMC11983282", "title": "A different title", "source": "t"})
-    rep = fill_model(m, FakeFetcher(_routes(rhea)), Cache(None), TODAY)
+    rep = fill_model(m, FakeFetcher(_routes(rhea)), Cache(None), TODAY, **kw)
     return p, m, rep
 
 
@@ -185,13 +185,18 @@ def test_locations_go_ids_parent_and_membrane():
     assert loc["cytosol"].kind.absent
 
 
-def test_reaction_ec_and_rhea_only_when_unique():
+def test_reaction_ec_and_rhea_not_inferred_by_default():
     _, m, _ = _run()
+    assert all(r.ec_number.absent and r.rhea_id.absent for r in m.reactions)
+
+
+def test_reaction_ec_and_rhea_only_when_unique():
+    _, m, _ = _run(infer_reaction_ec=True)
     rx = next(r for r in m.reactions if r.name.value == "EntC rxn")
     assert rx.ec_number.value == "5.4.4.2" and rx.ec_number.prov.label == "inferred" and rx.ec_number.prov.match_type == "catalyst_ec"
     assert rx.rhea_id.value == "RHEA:18985" and rx.rhea_id.prov.label == "inferred"
     assert next(r for r in m.reactions if r.name.value == "No catalyst").ec_number.absent
-    _, m2, _ = _run(RHEA_MANY)
+    _, m2, _ = _run(RHEA_MANY, infer_reaction_ec=True)
     rx2 = next(r for r in m2.reactions if r.name.value == "EntC rxn")
     assert rx2.ec_number.value == "5.4.4.2" and rx2.rhea_id.absent
 
@@ -208,12 +213,12 @@ def test_pathway_citation_filled_conflict_noted_and_taxon():
 
 
 def test_licences_for_sources_used():
-    _, m, _ = _run()
+    _, m, _ = _run(infer_reaction_ec=True)
     text = " ".join(f.value for f in m.pathway.licences)
     for name in ("UniProt", "ChEBI", "Rhea", "Gene Ontology", "NCBI"):
         assert name in text
     n = len(m.pathway.licences)
-    fill_model(m, FakeFetcher(_routes()), Cache(None), TODAY)
+    fill_model(m, FakeFetcher(_routes()), Cache(None), TODAY, infer_reaction_ec=True)
     assert len(m.pathway.licences) == n  # not duplicated
 
 

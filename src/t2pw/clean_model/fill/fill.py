@@ -364,7 +364,9 @@ def _fill_pathway(c: _Ctx) -> None:
 
 
 def fill_model(model: CleanModel, fetcher: Any = None, cache: Optional[Cache] = None, today: Optional[str] = None,
-               sources: Tuple[str, ...] = ALL_SOURCES) -> FillReport:
+               sources: Tuple[str, ...] = ALL_SOURCES, infer_reaction_ec: bool = False) -> FillReport:
+    """``infer_reaction_ec`` (off by default): copy a lone catalyst's UniProt EC (and its unique Rhea id) to the reaction.
+    Opt-in because the catalyst EC is never checked against the substrates (measured: wrong fills)."""
     today = today or datetime.date.today().isoformat()
     cf = CachedFetcher(fetcher or UrllibFetcher(), cache if cache is not None else Cache(), today)
     c = _Ctx(model, cf, today, tuple(sources))
@@ -375,7 +377,7 @@ def fill_model(model: CleanModel, fetcher: Any = None, cache: Optional[Cache] = 
         entries = _fill_proteins(c)
     if "go" in sources:
         _fill_locations(c)
-    if "uniprot" in sources:
+    if "uniprot" in sources and infer_reaction_ec:
         _fill_reactions(c, entries)
     _fill_pathway(c)
     have = {x.value for x in model.pathway.licences if isinstance(x.value, str)}
