@@ -1,0 +1,401 @@
+{
+ "all": {
+  "label": "all scanned",
+  "runs": 192,
+  "runs_with_processes": 192,
+  "processes": 997,
+  "entities": 3172,
+  "kinds": {
+   "a1_exact_process_dup(inputs/outputs/enzymes/state, identity-keyed)": {
+    "runs_affected": 3,
+    "share_runs": 0.016,
+    "extra_rows": 4,
+    "share_of_denominator": 0.004,
+    "denominator": 997
+   },
+   "a2_near_copy_same_participants_and_enzyme_other_state": {
+    "runs_affected": 17,
+    "share_runs": 0.089,
+    "extra_rows": 45,
+    "share_of_denominator": 0.0451,
+    "denominator": 997
+   },
+   "a3_same_participants_other_enzymes_or_transporter": {
+    "runs_affected": 16,
+    "share_runs": 0.083,
+    "extra_rows": 33,
+    "share_of_denominator": 0.0331,
+    "denominator": 997
+   },
+   "b1_same_name_two_records": {
+    "runs_affected": 0,
+    "share_runs": 0.0,
+    "extra_rows": 0,
+    "share_of_denominator": 0.0,
+    "denominator": 3172
+   },
+   "b2_same_accession_two_records(alias)": {
+    "runs_affected": 29,
+    "share_runs": 0.151,
+    "extra_rows": 45,
+    "share_of_denominator": 0.0142,
+    "denominator": 3172
+   },
+   "b3_name_is_another_records_synonym(unproven)": {
+    "runs_affected": 24,
+    "share_runs": 0.125,
+    "extra_rows": 32,
+    "share_of_denominator": 0.0101,
+    "denominator": 3172
+   },
+   "c1_tile_redraw(entity drawn once per process tile)": {
+    "runs_affected": 184,
+    "share_runs": 0.958,
+    "extra_rows": 2031,
+    "share_of_denominator": 0.431,
+    "denominator": 4712
+   },
+   "c2_same_entity_same_state_location_rows(payload)": {
+    "runs_affected": 11,
+    "share_runs": 0.057,
+    "extra_rows": 29,
+    "share_of_denominator": 0.0062,
+    "denominator": 4712
+   },
+   "d_entity_located_in_multiple_states(payload)": {
+    "runs_affected": 80,
+    "share_runs": 0.417,
+    "extra_rows": 234,
+    "share_of_denominator": 0.0873,
+    "denominator": 2681
+   }
+  },
+  "pwml_files": 67,
+  "pwml_c_same_state_redraws": {
+   "runs_affected": 38,
+   "total": 222
+  },
+  "pwml_d_entities_in_multi_states": {
+   "runs_affected": 38,
+   "total": 153
+  },
+  "pwml_b_name_extra_records": {
+   "runs_affected": 1,
+   "total": 2
+  },
+  "pwml_b_id_extra_records": {
+   "runs_affected": 8,
+   "total": 21
+  },
+  "pwml_a_reaction_exact_dups": {
+   "runs_affected": 4,
+   "total": 4
+  },
+  "pwml_a_transport_exact_dups": {
+   "runs_affected": 0,
+   "total": 0
+  },
+  "pwml_locations": 1212,
+  "pwml_entities": 1088
+ },
+ "quarantine_ok_true": {
+  "label": "quarantine_ok=true (canonical)",
+  "runs": 152,
+  "runs_with_processes": 152,
+  "processes": 727,
+  "entities": 2297,
+  "kinds": {
+   "a1_exact_process_dup(inputs/outputs/enzymes/state, identity-keyed)": {
+    "runs_affected": 2,
+    "share_runs": 0.013,
+    "extra_rows": 3,
+    "share_of_denominator": 0.0041,
+    "denominator": 727
+   },
+   "a2_near_copy_same_participants_and_enzyme_other_state": {
+    "runs_affected": 14,
+    "share_runs": 0.092,
+    "extra_rows": 40,
+    "share_of_denominator": 0.055,
+    "denominator": 727
+   },
+   "a3_same_participants_other_enzymes_or_transporter": {
+    "runs_affected": 13,
+    "share_runs": 0.086,
+    "extra_rows": 24,
+    "share_of_denominator": 0.033,
+    "denominator": 727
+   },
+   "b1_same_name_two_records": {
+    "runs_affected": 0,
+    "share_runs": 0.0,
+    "extra_rows": 0,
+    "share_of_denominator": 0.0,
+    "denominator": 2297
+   },
+   "b2_same_accession_two_records(alias)": {
+    "runs_affected": 19,
+    "share_runs": 0.125,
+    "extra_rows": 25,
+    "share_of_denominator": 0.0109,
+    "denominator": 2297
+   },
+   "b3_name_is_another_records_synonym(unproven)": {
+    "runs_affected": 18,
+    "share_runs": 0.118,
+    "extra_rows": 25,
+    "share_of_denominator": 0.0109,
+    "denominator": 2297
+   },
+   "c1_tile_redraw(entity drawn once per process tile)": {
+    "runs_affected": 144,
+    "share_runs": 0.947,
+    "extra_rows": 1221,
+    "share_of_denominator": 0.3879,
+    "denominator": 3148
+   },
+   "c2_same_entity_same_state_location_rows(payload)": {
+    "runs_affected": 9,
+    "share_runs": 0.059,
+    "extra_rows": 24,
+    "share_of_denominator": 0.0076,
+    "denominator": 3148
+   },
+   "d_entity_located_in_multiple_states(payload)": {
+    "runs_affected": 54,
+    "share_runs": 0.355,
+    "extra_rows": 157,
+    "share_of_denominator": 0.0815,
+    "denominator": 1927
+   }
+  },
+  "pwml_files": 61,
+  "pwml_c_same_state_redraws": {
+   "runs_affected": 33,
+   "total": 171
+  },
+  "pwml_d_entities_in_multi_states": {
+   "runs_affected": 33,
+   "total": 127
+  },
+  "pwml_b_name_extra_records": {
+   "runs_affected": 0,
+   "total": 0
+  },
+  "pwml_b_id_extra_records": {
+   "runs_affected": 5,
+   "total": 14
+  },
+  "pwml_a_reaction_exact_dups": {
+   "runs_affected": 3,
+   "total": 3
+  },
+  "pwml_a_transport_exact_dups": {
+   "runs_affected": 0,
+   "total": 0
+  },
+  "pwml_locations": 1002,
+  "pwml_entities": 916
+ },
+ "quarantine_ok_false": {
+  "label": "quarantine_ok=false (final_mapped is pre-quarantine fallback)",
+  "runs": 8,
+  "runs_with_processes": 8,
+  "processes": 76,
+  "entities": 250,
+  "kinds": {
+   "a1_exact_process_dup(inputs/outputs/enzymes/state, identity-keyed)": {
+    "runs_affected": 1,
+    "share_runs": 0.125,
+    "extra_rows": 1,
+    "share_of_denominator": 0.0132,
+    "denominator": 76
+   },
+   "a2_near_copy_same_participants_and_enzyme_other_state": {
+    "runs_affected": 2,
+    "share_runs": 0.25,
+    "extra_rows": 4,
+    "share_of_denominator": 0.0526,
+    "denominator": 76
+   },
+   "a3_same_participants_other_enzymes_or_transporter": {
+    "runs_affected": 2,
+    "share_runs": 0.25,
+    "extra_rows": 8,
+    "share_of_denominator": 0.1053,
+    "denominator": 76
+   },
+   "b1_same_name_two_records": {
+    "runs_affected": 0,
+    "share_runs": 0.0,
+    "extra_rows": 0,
+    "share_of_denominator": 0.0,
+    "denominator": 250
+   },
+   "b2_same_accession_two_records(alias)": {
+    "runs_affected": 3,
+    "share_runs": 0.375,
+    "extra_rows": 3,
+    "share_of_denominator": 0.012,
+    "denominator": 250
+   },
+   "b3_name_is_another_records_synonym(unproven)": {
+    "runs_affected": 1,
+    "share_runs": 0.125,
+    "extra_rows": 1,
+    "share_of_denominator": 0.004,
+    "denominator": 250
+   },
+   "c1_tile_redraw(entity drawn once per process tile)": {
+    "runs_affected": 8,
+    "share_runs": 1.0,
+    "extra_rows": 216,
+    "share_of_denominator": 0.4943,
+    "denominator": 437
+   },
+   "c2_same_entity_same_state_location_rows(payload)": {
+    "runs_affected": 0,
+    "share_runs": 0.0,
+    "extra_rows": 0,
+    "share_of_denominator": 0.0,
+    "denominator": 437
+   },
+   "d_entity_located_in_multiple_states(payload)": {
+    "runs_affected": 6,
+    "share_runs": 0.75,
+    "extra_rows": 38,
+    "share_of_denominator": 0.1719,
+    "denominator": 221
+   }
+  }
+ },
+ "quarantine_unknown": {
+  "label": "no quarantine_report.json (older runs)",
+  "runs": 32,
+  "runs_with_processes": 32,
+  "processes": 194,
+  "entities": 625,
+  "kinds": {
+   "a1_exact_process_dup(inputs/outputs/enzymes/state, identity-keyed)": {
+    "runs_affected": 0,
+    "share_runs": 0.0,
+    "extra_rows": 0,
+    "share_of_denominator": 0.0,
+    "denominator": 194
+   },
+   "a2_near_copy_same_participants_and_enzyme_other_state": {
+    "runs_affected": 1,
+    "share_runs": 0.031,
+    "extra_rows": 1,
+    "share_of_denominator": 0.0052,
+    "denominator": 194
+   },
+   "a3_same_participants_other_enzymes_or_transporter": {
+    "runs_affected": 1,
+    "share_runs": 0.031,
+    "extra_rows": 1,
+    "share_of_denominator": 0.0052,
+    "denominator": 194
+   },
+   "b1_same_name_two_records": {
+    "runs_affected": 0,
+    "share_runs": 0.0,
+    "extra_rows": 0,
+    "share_of_denominator": 0.0,
+    "denominator": 625
+   },
+   "b2_same_accession_two_records(alias)": {
+    "runs_affected": 7,
+    "share_runs": 0.219,
+    "extra_rows": 17,
+    "share_of_denominator": 0.0272,
+    "denominator": 625
+   },
+   "b3_name_is_another_records_synonym(unproven)": {
+    "runs_affected": 5,
+    "share_runs": 0.156,
+    "extra_rows": 6,
+    "share_of_denominator": 0.0096,
+    "denominator": 625
+   },
+   "c1_tile_redraw(entity drawn once per process tile)": {
+    "runs_affected": 32,
+    "share_runs": 1.0,
+    "extra_rows": 594,
+    "share_of_denominator": 0.5271,
+    "denominator": 1127
+   },
+   "c2_same_entity_same_state_location_rows(payload)": {
+    "runs_affected": 2,
+    "share_runs": 0.062,
+    "extra_rows": 5,
+    "share_of_denominator": 0.0044,
+    "denominator": 1127
+   },
+   "d_entity_located_in_multiple_states(payload)": {
+    "runs_affected": 20,
+    "share_runs": 0.625,
+    "extra_rows": 39,
+    "share_of_denominator": 0.0732,
+    "denominator": 533
+   }
+  },
+  "pwml_files": 6,
+  "pwml_c_same_state_redraws": {
+   "runs_affected": 5,
+   "total": 51
+  },
+  "pwml_d_entities_in_multi_states": {
+   "runs_affected": 5,
+   "total": 26
+  },
+  "pwml_b_name_extra_records": {
+   "runs_affected": 1,
+   "total": 2
+  },
+  "pwml_b_id_extra_records": {
+   "runs_affected": 3,
+   "total": 7
+  },
+  "pwml_a_reaction_exact_dups": {
+   "runs_affected": 1,
+   "total": 1
+  },
+  "pwml_a_transport_exact_dups": {
+   "runs_affected": 0,
+   "total": 0
+  },
+  "pwml_locations": 210,
+  "pwml_entities": 172
+ },
+ "by_root": {
+  "C:/t/e2e4-run": {
+   "runs": 1,
+   "q_ok_true": 1
+  },
+  "C:/t/e2e5-run": {
+   "runs": 1,
+   "q_ok_true": 1
+  },
+  "runs": {
+   "runs": 14,
+   "q_ok_true": 0
+  },
+  "runs_papers": {
+   "runs": 13,
+   "q_ok_true": 11
+  },
+  "runs_smoke": {
+   "runs": 23,
+   "q_ok_true": 23
+  },
+  "runs_validation": {
+   "runs": 11,
+   "q_ok_true": 10
+  },
+  "runs_verify": {
+   "runs": 129,
+   "q_ok_true": 106
+  }
+ }
+}
