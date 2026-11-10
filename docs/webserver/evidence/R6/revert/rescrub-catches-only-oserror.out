@@ -1,0 +1,64 @@
+T2PW: C:\t\ev-R6\rev\tree\src\t2pw\__init__.py
+........................................................................ [ 67%]
+.................................F.                                      [100%]
+================================== FAILURES ===================================
+____________ test_a_record_that_cannot_be_rescrubbed_is_left_alone ____________
+
+tmp_path = WindowsPath('C:/t/bt/R6/rev-rescrub-catches-only-oserror-1794283247/test_a_record_that_cannot_be_r0')
+
+    def test_a_record_that_cannot_be_rescrubbed_is_left_alone(tmp_path):
+        record = tmp_path / "run_outcome.json"
+        pw._rescrub_json_file(record, tmp_path)  # absent: nothing to do, nothing raised
+        record.write_bytes(b'{"a": "\xff\xfe"}')  # not UTF-8
+>       pw._rescrub_json_file(record, tmp_path)
+
+tests\test_service_run_pathway.py:784: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\t2pw\service\pathway.py:192: in _rescrub_json_file
+    data = _scrub_json_strings(json.loads(record.read_text(encoding="utf-8")), _server_paths(out_dir))
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Python313\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Python313\Lib\pathlib\_abc.py:633: in read_text
+    return f.read()
+           ^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <encodings.utf_8.IncrementalDecoder object at 0x00000201D6DEE330>
+input = b'{"a": "\xff\xfe"}', final = True
+
+>   ???
+E   UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 7: invalid start byte
+
+<frozen codecs>:325: UnicodeDecodeError
+=========================== short test summary info ===========================
+FAILED tests/test_service_run_pathway.py::test_a_record_that_cannot_be_rescrubbed_is_left_alone
+1 failed, 106 passed in 5.16s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ev-R6\rev\tree\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : R6-rev-rescrub-catches-only-oserror
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:\t\ev-R6\rev\tree\docs\pwml_recovery_sprint\evidence\pinned_pytest.py --expect-tree C:\t\ev-R6\rev\tree -q --basetemp=C:/t/bt/R6/rev-rescrub-catches-only-oserror-1794283247 tests/test_service_run_pathway.py
+cwd                     : C:\t\ev-R6\rev\tree
+root PID / process group: 526800 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 6.16 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  526820:python.exe
+descendants terminated  : 1  526820
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ev-R6/rev/rescrub-catches-only-oserror.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R6  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

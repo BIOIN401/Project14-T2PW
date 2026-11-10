@@ -1,0 +1,95 @@
+T2PW: C:\t\ws-R6\src\t2pw\__init__.py
+.................................................................F...... [ 21%]
+..........Fs....sss..................................................... [ 42%]
+........................................................................ [ 64%]
+........................................................................ [ 85%]
+.................................................                        [100%]
+================================== FAILURES ===================================
+_________ test_every_import_driver_defers_is_covered_by_the_preflight _________
+
+    def test_every_import_driver_defers_is_covered_by_the_preflight() -> None:
+        """The regression guard for the whole feature.
+    
+        A preflight that checks a hand-written list is one refactor away from being
+        useless again: move one more import into a function to shave startup time and
+        the parent silently stops covering it. So the list is checked against
+        driver.py itself. Stdlib modules are exempt (an interpreter that cannot
+        import ``json`` has already failed in louder ways).
+        """
+    
+        third_party = [
+            name
+            for name in _deferred_imports(DRIVER_PATH)
+            if name.split(".")[0] not in sys.stdlib_module_names
+        ]
+        # NON-VACUITY FLOOR (RULING 13). This guard derives its list from driver.py, so
+        # a parse that finds NOTHING passes it -- and looks exactly like a list that is
+        # genuinely complete. Measured for C-069: neutralize ``_deferred_imports`` to
+        # return ``[]`` and the assertion below goes green against a CHILD_IMPORTS that
+        # is missing six real deferral sites. This is the line that tells the two apart.
+        assert third_party, (
+            "_deferred_imports found no non-stdlib deferred import in driver.py at all. "
+            "That is a broken parse, not a clean bill of health -- the check below would "
+            "pass vacuously."
+        )
+        missed = [name for name in third_party if not _covered(name)]
+>       assert missed == [], (
+            "driver.py defers these imports and the preflight would not catch them "
+            f"missing: {missed}. Add them to runner.CHILD_IMPORTS with the reason a "
+            "child needs them."
+        )
+E       AssertionError: driver.py defers these imports and the preflight would not catch them missing: ['t2pw.service', 't2pw.service.pathway']. Add them to runner.CHILD_IMPORTS with the reason a child needs them.
+E       assert ['t2pw.servic...vice.pathway'] == []
+E         
+E         Left contains 2 more items, first extra item: 't2pw.service'
+E         Use -v to get more diff
+
+tests\test_batch_preflight.py:232: AssertionError
+_______ test_the_message_names_the_problem_the_interpreter_and_the_cure _______
+
+    def test_the_message_names_the_problem_the_interpreter_and_the_cure() -> None:
+        """The wrong-interpreter case: the one that actually happened.
+    
+        The cure has to be a command, not advice. "Use the venv" is not actionable at
+        2am; ``C:\\...\\.venv\\Scripts\\python.exe scripts\\batch_run.py`` is, and the
+        root cause -- ``py.exe`` ignoring the active virtualenv -- has to be named or
+        the operator fixes it once and hits it again next week.
+        """
+    
+        venv = runner.venv_python()
+>       assert venv is not None, "this project ships a .venv; the test assumes it"
+E       AssertionError: this project ships a .venv; the test assumes it
+E       assert None is not None
+
+tests\test_batch_preflight.py:616: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_batch_preflight.py::test_every_import_driver_defers_is_covered_by_the_preflight
+FAILED tests/test_batch_preflight.py::test_the_message_names_the_problem_the_interpreter_and_the_cure
+2 failed, 331 passed, 4 skipped in 52.60s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R6\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 1fdf91ca54c56f6c33f27b0af692b3a5273aed87  [git, worktree dirty=True]
+label                   : R6-batchA
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R6/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R6 -q --basetemp=C:/t/bt/R6/batchA-1794264550 tests/test_batch_run.py tests/test_batch_preflight.py tests/test_deadline_budget.py tests/test_deadline_leg_timeout.py tests/test_c111_timeout_observability.py tests/test_batch_driver_run_pathway.py tests/test_service_run_pathway.py tests/test_service_driver_bridge.py tests/test_service_pathway_interface.py tests/test_web_worker.py
+cwd                     : C:\t\ws-R6
+root PID / process group: 320992 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 53.70 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 85  314972:python.exe, 319708:python.exe, 320480:python.exe, 320496:taskkill.exe, 320724:python.exe, 320156:python.exe, 320996:python.exe, 320276:python.exe, 320540:python.exe, 320128:python.exe, 320792:python.exe, 310212:python.exe, 318332:python.exe, 317460:python.exe, 321320:python.exe, 319812:python.exe, 320940:python.exe, 320668:python.exe, 320888:python.exe, 319452:python.exe, 321168:python.exe, 302036:python.exe, 317036:python.exe, 318808:python.exe, 321364:python.exe, 321412:python.exe, 320640:python.exe, 320700:python.exe, 321032:python.exe, 320880:python.exe, 318764:python.exe, 321004:python.exe, 319968:python.exe, 321016:python.exe, 320560:python.exe, 321316:python.exe, 320376:taskkill.exe, 310816:python.exe, 320552:python.exe, 319200:python.exe, 320568:python.exe, 321584:python.exe, 321604:python.exe, 321624:python.exe, 321644:python.exe, 321664:python.exe, 321676:python.exe, 321716:python.exe, 321768:python.exe, 321812:python.exe, 321824:python.exe, 321148:python.exe, 322068:python.exe, 322116:python.exe, 322120:python.exe, 322172:python.exe, 322200:python.exe, 316848:python.exe, 321668:python.exe, 305364:python.exe, 322460:python.exe, 322352:python.exe, 313312:python.exe, 320676:python.exe, 322516:python.exe, 322220:python.exe, 322552:python.exe, 321460:python.exe, 321760:python.exe, 321704:python.exe, 321740:python.exe, 317644:python.exe, 321268:python.exe, 321492:python.exe, 321780:python.exe, 322152:python.exe, 322160:python.exe, 322196:python.exe, 322296:python.exe, 322088:python.exe, 322124:python.exe, 322388:python.exe, 322396:python.exe, 319948:python.exe, 320804:python.exe
+descendants terminated  : 85  302036, 305364, 310212, 310816, 313312, 314972, 316848, 317036, 317460, 317644, 318332, 318764, 318808, 319200, 319452, 319708, 319812, 319948, 319968, 320128, 320156, 320276, 320376, 320480, 320496, 320540, 320552, 320560, 320568, 320640, 320668, 320676, 320700, 320724, 320792, 320804, 320880, 320888, 320940, 320996, 321004, 321016, 321032, 321148, 321168, 321268, 321316, 321320, 321364, 321412, 321460, 321492, 321584, 321604, 321624, 321644, 321664, 321668, 321676, 321704, 321716, 321740, 321760, 321768, 321780, 321812, 321824, 322068, 322088, 322116, 322120, 322124, 322152, 322160, 322172, 322196, 322200, 322220, 322296, 322352, 322388, 322396, 322460, 322516, 322552
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ev-R6/out/batchA.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R6  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

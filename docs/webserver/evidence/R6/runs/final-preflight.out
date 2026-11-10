@@ -1,0 +1,50 @@
+T2PW: C:\t\ws-R6\src\t2pw\__init__.py
+.................Fs....sss...........                                    [100%]
+================================== FAILURES ===================================
+_______ test_the_message_names_the_problem_the_interpreter_and_the_cure _______
+
+    def test_the_message_names_the_problem_the_interpreter_and_the_cure() -> None:
+        """The wrong-interpreter case: the one that actually happened.
+    
+        The cure has to be a command, not advice. "Use the venv" is not actionable at
+        2am; ``C:\\...\\.venv\\Scripts\\python.exe scripts\\batch_run.py`` is, and the
+        root cause -- ``py.exe`` ignoring the active virtualenv -- has to be named or
+        the operator fixes it once and hits it again next week.
+        """
+    
+        venv = runner.venv_python()
+>       assert venv is not None, "this project ships a .venv; the test assumes it"
+E       AssertionError: this project ships a .venv; the test assumes it
+E       assert None is not None
+
+tests\test_batch_preflight.py:616: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_batch_preflight.py::test_the_message_names_the_problem_the_interpreter_and_the_cure
+1 failed, 32 passed, 4 skipped in 9.64s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R6\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 9da877bd3bf5415bf6b22d8b1d1c00b8edb6263f  [git, worktree dirty=False]
+label                   : R6-final-preflight
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R6/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R6 -q --basetemp=C:/t/bt/R6/final-preflight-1794283334 tests/test_batch_preflight.py
+cwd                     : C:\t\ws-R6
+root PID / process group: 532872 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 10.47 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 21  530756:python.exe, 534076:python.exe, 533984:python.exe, 531140:python.exe, 534472:python.exe, 530548:python.exe, 533868:python.exe, 533908:python.exe, 534304:python.exe, 521460:python.exe, 533756:python.exe, 528348:python.exe, 530164:python.exe, 527392:python.exe, 530176:python.exe, 533644:python.exe, 534432:python.exe, 524456:python.exe, 533840:python.exe, 533296:python.exe, 533764:python.exe
+descendants terminated  : 21  521460, 524456, 527392, 528348, 530164, 530176, 530548, 530756, 531140, 533296, 533644, 533756, 533764, 533840, 533868, 533908, 533984, 534076, 534304, 534432, 534472
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ev-R6/out/final-preflight.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R6  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

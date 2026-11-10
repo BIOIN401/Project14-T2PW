@@ -1,0 +1,49 @@
+T2PW: C:\t\ev-R6\rev\tree\src\t2pw\__init__.py
+......................F..                                                [100%]
+================================== FAILURES ===================================
+_________ test_an_unknown_engine_is_a_usage_error_and_creates_nothing _________
+
+tmp_path = WindowsPath('C:/t/bt/R6/rev-unknown-engine-not-a-usage-error-1794283208/test_an_unknown_engine_is_a_us0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001E426D21010>
+capsys = <_pytest.capture.CaptureFixture object at 0x000001E426AC4980>
+
+    def test_an_unknown_engine_is_a_usage_error_and_creates_nothing(tmp_path, monkeypatch, capsys):
+        monkeypatch.setenv(driver.ENGINE_ENV, "apptset")
+        code = runner.run_batch(out=tmp_path, modes="strict", fresh=True, child_fn=lambda *a: pytest.fail("ran"),
+                                fetch_fn=lambda text, limit=None: pytest.fail("fetched"), echo=True)
+>       assert code == 2 and "apptset" in capsys.readouterr().err
+E       assert (1 == 2)
+
+tests\test_batch_driver_run_pathway.py:282: AssertionError
+---------------------------- Captured stderr call -----------------------------
+batch_run: unknown batch engine 'apptset'; use one of: run_pathway, apptest
+=========================== short test summary info ===========================
+FAILED tests/test_batch_driver_run_pathway.py::test_an_unknown_engine_is_a_usage_error_and_creates_nothing
+1 failed, 24 passed in 2.42s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ev-R6\rev\tree\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : R6-rev-unknown-engine-not-a-usage-error
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:\t\ev-R6\rev\tree\docs\pwml_recovery_sprint\evidence\pinned_pytest.py --expect-tree C:\t\ev-R6\rev\tree -q --basetemp=C:/t/bt/R6/rev-unknown-engine-not-a-usage-error-1794283208 tests/test_batch_driver_run_pathway.py
+cwd                     : C:\t\ev-R6\rev\tree
+root PID / process group: 528192 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 3.33 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 3  517416:python.exe, 522884:python.exe, 526928:python.exe
+descendants terminated  : 3  517416, 522884, 526928
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ev-R6/rev/unknown-engine-not-a-usage-error.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R6  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

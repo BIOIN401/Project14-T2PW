@@ -1,0 +1,188 @@
+{
+  "label": "R6-golden-c011",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/ws-R6/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-R6",
+    "-q",
+    "--basetemp=C:/t/bt/R6/golden-c011-1794264238",
+    "tests/test_c011_freeze_seam_golden_equivalence.py"
+  ],
+  "cwd": "C:\\t\\ws-R6",
+  "started_at": "2026-11-09T22:43:58+00:00",
+  "finished_at": "2026-11-09T22:44:37+00:00",
+  "duration_seconds": 38.82892020000145,
+  "timeout_seconds": 540.0,
+  "root_pid": 311520,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 316012,
+      "name": "python.exe",
+      "ppid": 311520
+    },
+    {
+      "pid": 318088,
+      "name": "git.exe",
+      "ppid": 316012
+    },
+    {
+      "pid": 317624,
+      "name": "python.exe",
+      "ppid": 316012
+    },
+    {
+      "pid": 317868,
+      "name": "python.exe",
+      "ppid": 317624
+    },
+    {
+      "pid": 311640,
+      "name": "python.exe",
+      "ppid": 318428
+    },
+    {
+      "pid": 318428,
+      "name": "python.exe",
+      "ppid": 316012
+    },
+    {
+      "pid": 310316,
+      "name": "git.exe",
+      "ppid": 311640
+    },
+    {
+      "pid": 252628,
+      "name": "python.exe",
+      "ppid": 314912
+    },
+    {
+      "pid": 314912,
+      "name": "python.exe",
+      "ppid": 316012
+    },
+    {
+      "pid": 312268,
+      "name": "python.exe",
+      "ppid": 314856
+    },
+    {
+      "pid": 314856,
+      "name": "python.exe",
+      "ppid": 316012
+    },
+    {
+      "pid": 308228,
+      "name": "python.exe",
+      "ppid": 316012
+    },
+    {
+      "pid": 315748,
+      "name": "python.exe",
+      "ppid": 308228
+    },
+    {
+      "pid": 316448,
+      "name": "python.exe",
+      "ppid": 316012
+    },
+    {
+      "pid": 316608,
+      "name": "python.exe",
+      "ppid": 316448
+    },
+    {
+      "pid": 301388,
+      "name": "python.exe",
+      "ppid": 316012
+    },
+    {
+      "pid": 311996,
+      "name": "python.exe",
+      "ppid": 301388
+    }
+  ],
+  "descendants_terminated": [
+    252628,
+    301388,
+    308228,
+    310316,
+    311640,
+    311996,
+    312268,
+    314856,
+    314912,
+    315748,
+    316012,
+    316448,
+    316608,
+    317624,
+    317868,
+    318088,
+    318428
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 58320,
+      "name": "python.exe"
+    },
+    {
+      "pid": 274088,
+      "name": "python.exe"
+    },
+    {
+      "pid": 306016,
+      "name": "python.exe"
+    },
+    {
+      "pid": 311692,
+      "name": "python.exe"
+    },
+    {
+      "pid": 316860,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/ev-R6/out/golden-c011.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-R6\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-R6",
+    "repo_head": "1fdf91ca54c56f6c33f27b0af692b3a5273aed87",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "R6",
+    "token": "R6:316860:f1bed31be490b1ae",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

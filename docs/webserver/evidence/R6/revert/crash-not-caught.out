@@ -1,0 +1,61 @@
+T2PW: C:\t\ev-R6\rev\tree\src\t2pw\__init__.py
+..........F..............                                                [100%]
+================================== FAILURES ===================================
+__________ test_a_bug_in_the_run_is_a_crash_outcome_not_an_exception __________
+
+world = <test_batch_driver_run_pathway.World object at 0x000002D4513D0C00>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002D4514084B0>
+
+    def test_a_bug_in_the_run_is_a_crash_outcome_not_an_exception(world, monkeypatch):
+        monkeypatch.setattr(pw, "_drive", lambda *a, **k: 1 / 0)
+        outcome = driver.run_one_pathway(PAPER, "strict")
+        assert (outcome.status, outcome.failure_kind) == ("error", "crash") and "ZeroDivisionError" in outcome.detail
+        monkeypatch.setattr(pw, "run_paper", lambda *a, **k: 1 / 0)
+>       outcome = driver.run_one_pathway(PAPER, "strict")
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_batch_driver_run_pathway.py:185: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\t2pw\batch\driver.py:2423: in run_one_pathway
+    return pathway.run_paper(paper, request, time.time() + float(timeout))[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+a = ({'full_text': 'The paper text.\nSecond line.', 'organism': 'Escherichia coli', 'paper_id': 'PMC1', 'slug': 'PMC1__alp...rganism='', pinned=False), extraction_focus='', export_mode='strict', out_dir=None, deadline=None), 1794290400.8568573)
+k = {}
+
+>   monkeypatch.setattr(pw, "run_paper", lambda *a, **k: 1 / 0)
+                                                         ^^^^^
+E   ZeroDivisionError: division by zero
+
+tests\test_batch_driver_run_pathway.py:184: ZeroDivisionError
+=========================== short test summary info ===========================
+FAILED tests/test_batch_driver_run_pathway.py::test_a_bug_in_the_run_is_a_crash_outcome_not_an_exception
+1 failed, 24 passed in 1.93s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ev-R6\rev\tree\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : R6-rev-crash-not-caught
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:\t\ev-R6\rev\tree\docs\pwml_recovery_sprint\evidence\pinned_pytest.py --expect-tree C:\t\ev-R6\rev\tree -q --basetemp=C:/t/bt/R6/rev-crash-not-caught-1794283198 tests/test_batch_driver_run_pathway.py
+cwd                     : C:\t\ev-R6\rev\tree
+root PID / process group: 527440 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 2.91 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 3  525732:python.exe, 525536:python.exe, 527468:python.exe
+descendants terminated  : 3  525536, 525732, 527468
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ev-R6/rev/crash-not-caught.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R6  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

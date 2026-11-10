@@ -1,0 +1,40 @@
+T2PW: C:\t\ws-R6\src\t2pw\__init__.py
+........................................................................ [ 23%]
+........................................................................ [ 47%]
+........................................................................ [ 70%]
+........................................................................ [ 94%]
+..................                                                       [100%]
+============================== warnings summary ===============================
+tests\test_service_inputs.py:254
+  C:\t\ws-R6\tests\test_service_inputs.py:254: SyntaxWarning: invalid escape sequence '\d'
+    """W1F: mixed ASCII/non-ASCII digit strings (the old str.isdigit/\d regex accepted these)."""
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+306 passed, 1 warning in 42.36s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R6\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 1fdf91ca54c56f6c33f27b0af692b3a5273aed87  [git, worktree dirty=True]
+label                   : R6-web
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R6/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R6 -q --basetemp=C:/t/bt/R6/web-1794264765 tests/test_service_driver_bridge.py tests/test_service_pathway_interface.py tests/test_service_inputs.py tests/test_service_organisms.py tests/test_web_jobs.py tests/test_web_worker.py tests/test_web_retry.py tests/test_web_limits.py tests/test_web_notify.py tests/test_web_design_system.py tests/test_web_curator_queue.py tests/test_web_postrun.py tests/test_web_app.py
+cwd                     : C:\t\ws-R6
+root PID / process group: 325864 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 43.36 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 112  325876:python.exe, 326100:python.exe, 326120:python.exe, 326448:python.exe, 326460:python.exe, 326480:python.exe, 326492:python.exe, 326608:python.exe, 326620:python.exe, 324384:python.exe, 326132:python.exe, 326144:python.exe, 326168:python.exe, 326588:python.exe, 326592:python.exe, 320904:python.exe, 323764:python.exe, 323916:python.exe, 325680:python.exe, 325704:python.exe, 326072:python.exe, 324000:python.exe, 326024:python.exe, 325456:python.exe, 325840:python.exe, 324244:python.exe, 325964:python.exe, 326052:python.exe, 326624:python.exe, 323176:python.exe, 324248:python.exe, 320604:python.exe, 326060:python.exe, 323988:python.exe, 326112:python.exe, 309624:python.exe, 317800:python.exe, 326248:python.exe, 326408:python.exe, 324100:python.exe, 324564:python.exe, 322580:python.exe, 326496:python.exe, 326504:python.exe, 326580:python.exe, 326220:python.exe, 326600:python.exe, 324208:python.exe, 325340:python.exe, 325972:python.exe, 325304:python.exe, 324144:python.exe, 325960:python.exe, 323624:python.exe, 326328:python.exe, 324088:python.exe, 324084:python.exe, 326224:python.exe, 326400:python.exe, 324752:python.exe, 325396:python.exe, 317416:python.exe, 323576:python.exe, 312848:python.exe, 314400:python.exe, 325848:python.exe, 326508:python.exe, 324936:python.exe, 325124:python.exe, 323508:python.exe, 325712:python.exe, 325420:python.exe, 326156:python.exe, 324272:python.exe, 326392:python.exe, 325980:python.exe, 326636:python.exe, 324212:python.exe, 324688:python.exe, 318796:python.exe, 326020:python.exe, 322232:python.exe, 324928:python.exe, 320536:python.exe, 326356:python.exe, 325140:python.exe, 326348:python.exe, 325484:python.exe, 326524:python.exe, 322800:python.exe, 326644:python.exe, 324060:python.exe, 326568:python.exe, 325672:python.exe, 314648:python.exe, 323580:python.exe, 325804:python.exe, 325236:tasklist.exe, 325372:python.exe, 325508:python.exe, 306376:python.exe, 325540:python.exe, 323596:python.exe, 326360:python.exe, 321104:python.exe, 323588:python.exe, 309704:python.exe, 325472:python.exe, 325988:python.exe, 325644:python.exe, 310944:python.exe, 325948:python.exe
+descendants terminated  : 112  306376, 309624, 309704, 310944, 312848, 314400, 314648, 317416, 317800, 318796, 320536, 320604, 320904, 321104, 322232, 322580, 322800, 323176, 323508, 323576, 323580, 323588, 323596, 323624, 323764, 323916, 323988, 324000, 324060, 324084, 324088, 324100, 324144, 324208, 324212, 324244, 324248, 324272, 324384, 324564, 324688, 324752, 324928, 324936, 325124, 325140, 325236, 325304, 325340, 325372, 325396, 325420, 325456, 325472, 325484, 325508, 325540, 325644, 325672, 325680, 325704, 325712, 325804, 325840, 325848, 325876, 325948, 325960, 325964, 325972, 325980, 325988, 326020, 326024, 326052, 326060, 326072, 326100, 326112, 326120, 326132, 326144, 326156, 326168, 326220, 326224, 326248, 326328, 326348, 326356, 326360, 326392, 326400, 326408, 326448, 326460, 326480, 326492, 326496, 326504, 326508, 326524, 326568, 326580, 326588, 326592, 326600, 326608, 326620, 326624, 326636, 326644
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ev-R6/out/web.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R6  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

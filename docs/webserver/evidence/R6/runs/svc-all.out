@@ -1,0 +1,35 @@
+T2PW: C:\t\ws-R6\src\t2pw\__init__.py
+........................................................................ [ 19%]
+........................................................................ [ 38%]
+........................................................................ [ 57%]
+........................................................................ [ 76%]
+........................................................................ [ 95%]
+.................                                                        [100%]
+377 passed in 16.44s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R6\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 1fdf91ca54c56f6c33f27b0af692b3a5273aed87  [git, worktree dirty=True]
+label                   : R6-svc-all
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R6/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R6 -q --basetemp=C:/t/bt/R6/svc-all-1794264809 tests/test_service_driver_bridge.py tests/test_service_export.py tests/test_service_extraction.py tests/test_service_extraction_stage0.py tests/test_service_extraction_stage1.py tests/test_service_extraction_stage2.py tests/test_service_inputs.py tests/test_service_organisms.py tests/test_service_pathway_interface.py tests/test_service_post_run.py tests/test_service_reporter.py tests/test_service_run_pathway.py
+cwd                     : C:\t\ws-R6
+root PID / process group: 322712 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 17.68 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 13  326288:python.exe, 322332:python.exe, 326372:python.exe, 324704:python.exe, 324300:python.exe, 325740:python.exe, 326484:python.exe, 326984:python.exe, 326996:python.exe, 327016:python.exe, 327036:python.exe, 327392:python.exe, 327480:python.exe
+descendants terminated  : 13  322332, 324300, 324704, 325740, 326288, 326372, 326484, 326984, 326996, 327016, 327036, 327392, 327480
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ev-R6/out/svc-all.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R6  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

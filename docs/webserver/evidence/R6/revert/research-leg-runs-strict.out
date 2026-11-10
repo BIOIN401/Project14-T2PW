@@ -1,0 +1,46 @@
+T2PW: C:\t\ev-R6\rev\tree\src\t2pw\__init__.py
+....F....................                                                [100%]
+================================== FAILURES ===================================
+_________________ test_a_research_leg_stops_before_the_export _________________
+
+world = <test_batch_driver_run_pathway.World object at 0x000002A3ACC839D0>
+
+    def test_a_research_leg_stops_before_the_export(world):
+        outcome = driver.run_one_pathway(PAPER, "Research (relaxed)", timeout=600)
+>       assert (outcome.mode, outcome.status, outcome.stage) == ("research", "pass", "research_report")
+E       AssertionError: assert ('strict', 'p...'pwml_export') == ('research', ...earch_report')
+E         
+E         At index 0 diff: 'strict' != 'research'
+E         Use -v to get more diff
+
+tests\test_batch_driver_run_pathway.py:140: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_batch_driver_run_pathway.py::test_a_research_leg_stops_before_the_export
+1 failed, 24 passed in 1.85s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ev-R6\rev\tree\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : R6-rev-research-leg-runs-strict
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:\t\ev-R6\rev\tree\docs\pwml_recovery_sprint\evidence\pinned_pytest.py --expect-tree C:\t\ev-R6\rev\tree -q --basetemp=C:/t/bt/R6/rev-research-leg-runs-strict-1794283195 tests/test_batch_driver_run_pathway.py
+cwd                     : C:\t\ev-R6\rev\tree
+root PID / process group: 527952 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 2.73 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 3  527784:python.exe, 527824:python.exe, 528140:python.exe
+descendants terminated  : 3  527784, 527824, 528140
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ev-R6/rev/research-leg-runs-strict.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R6  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

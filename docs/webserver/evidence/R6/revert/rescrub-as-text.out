@@ -1,0 +1,85 @@
+T2PW: C:\t\ev-R6\rev\tree\src\t2pw\__init__.py
+........................................................................ [ 67%]
+................................F..                                      [100%]
+================================== FAILURES ===================================
+____ test_the_run_record_stays_json_when_a_root_precedes_an_escaped_quote _____
+
+world = <test_service_run_pathway.World object at 0x0000025EB98F2E60>
+tmp_path = WindowsPath('C:/t/bt/R6/rev-rescrub-as-text-1794283233/test_the_run_record_stays_json0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000025EB98F5010>
+
+    def test_the_run_record_stays_json_when_a_root_precedes_an_escaped_quote(world, tmp_path, monkeypatch):
+        from t2pw.batch import runner
+    
+        out = tmp_path / "out"
+        real = runner.write_artifacts
+    
+        def lose(out_dir, artifacts):
+            return [{**row, "error": f'[Errno 28] No space left on device: "{out}"'} if row["name"] == "final_mapped.json" else row
+                    for row in real(out_dir, artifacts)]
+        monkeypatch.setattr(runner, "write_artifacts", lose)
+        res = _run(tmp_path)
+        assert res.status == "pass"
+        text = (out / "run_outcome.json").read_text(encoding="utf-8")
+>       record = json.loads(text)  # a text substitution ate the backslash of the escaped quote
+                 ^^^^^^^^^^^^^^^^
+
+tests\test_service_run_pathway.py:774: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Python313\Lib\json\__init__.py:346: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Python313\Lib\json\decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <json.decoder.JSONDecoder object at 0x0000025EB6771010>
+s = '{\n  "paper_id": "web:text1",\n  "mode": "strict",\n  "status": "pass",\n  "stage": "pwml_export",\n  "seconds": 0.0,...3_gate_report.json",\n      "bytes": 16\n    },\n    {\n      "name": "pathway.pwml",\n      "bytes": 7\n    }\n  ]\n}'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+>           obj, end = self.scan_once(s, idx)
+                       ^^^^^^^^^^^^^^^^^^^^^^
+E           json.decoder.JSONDecodeError: Expecting ',' delimiter: line 59 column 56 (char 1526)
+
+C:\Python313\Lib\json\decoder.py:361: JSONDecodeError
+=========================== short test summary info ===========================
+FAILED tests/test_service_run_pathway.py::test_the_run_record_stays_json_when_a_root_precedes_an_escaped_quote
+1 failed, 106 passed in 5.28s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ev-R6\rev\tree\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : R6-rev-rescrub-as-text
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:\t\ev-R6\rev\tree\docs\pwml_recovery_sprint\evidence\pinned_pytest.py --expect-tree C:\t\ev-R6\rev\tree -q --basetemp=C:/t/bt/R6/rev-rescrub-as-text-1794283233 tests/test_service_run_pathway.py
+cwd                     : C:\t\ev-R6\rev\tree
+root PID / process group: 529028 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 6.38 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  528996:python.exe
+descendants terminated  : 1  528996
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ev-R6/rev/rescrub-as-text.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R6  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

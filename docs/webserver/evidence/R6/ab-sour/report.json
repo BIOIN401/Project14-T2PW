@@ -1,0 +1,286 @@
+{
+  "row_keys_only_apptest": [],
+  "row_keys_only_run_pathway": [],
+  "row_fields_that_differ": {
+    "detail": [
+      "8 QA issues need review.\nQA warnings:\nChEBI ID '15378' is missing the 'CHEBI:' prefix.\nChEBI ID '28790' is missing the 'CHEBI:' prefix.",
+      ""
+    ]
+  },
+  "files_only_apptest": [],
+  "files_only_run_pathway": [],
+  "files_identical": [
+    "audit_iteration_summary.json",
+    "cleaning_report.json",
+    "contract_reports.json",
+    "coverage_diagnostics.json",
+    "coverage_summary.json",
+    "final_mapped.json",
+    "final_stage3_gate_report.json",
+    "gap_iteration_summary.json",
+    "graph_closure_iterations.json",
+    "merged_payload.json",
+    "pathway.review_required.pwml",
+    "pwml_ir.json",
+    "pwml_ir_report.json",
+    "pwml_ir_validation.json",
+    "pwml_qa.json",
+    "pwml_required_field_gate_report.json",
+    "pwml_validation_report.json",
+    "quarantine_report.json",
+    "removed_entity_report.json",
+    "scope_specialization.json",
+    "stage0_attempts.json",
+    "stage1_payload.json"
+  ],
+  "files_that_differ": [
+    "LEG_TRACE.jsonl",
+    "RESULT.txt",
+    "extraction_boundary_report.json"
+  ],
+  "pwml_identical": true,
+  "pwml_sha": [
+    {
+      "pathway.review_required.pwml": "76617a0d5063a582b5f769c26be253ea1e669049e44dcee9fd26882502ed1f37"
+    },
+    {
+      "pathway.review_required.pwml": "76617a0d5063a582b5f769c26be253ea1e669049e44dcee9fd26882502ed1f37"
+    }
+  ],
+  "result_txt_identical": false,
+  "manifest_file_names_identical": true,
+  "replay_clean": {
+    "apptest": {
+      "misses": 0,
+      "refused": 0,
+      "unused_llm": 0
+    },
+    "run_pathway": {
+      "misses": 0,
+      "refused": 0,
+      "unused_llm": 0
+    }
+  },
+  "seconds": [
+    15.7,
+    12.8
+  ],
+  "status": [
+    "pass",
+    "pass"
+  ],
+  "row_apptest": {
+    "paper_id": "PMC7059786",
+    "mode": "strict",
+    "status": "pass",
+    "stage": "pwml_export",
+    "failure_kind": "",
+    "message": "strict run completed; pathway.review_required.pwml is 53474 bytes",
+    "detail": "8 QA issues need review.\nQA warnings:\nChEBI ID '15378' is missing the 'CHEBI:' prefix.\nChEBI ID '28790' is missing the 'CHEBI:' prefix.",
+    "issue_codes": [],
+    "counts": {
+      "stage0_observed_pathways": 1,
+      "stage0_observed_organisms": 1,
+      "stage0_scope_specializations": 1,
+      "reactions": 0,
+      "transports": 6,
+      "entities": 16,
+      "proteins": 3,
+      "compounds": 2,
+      "runtime_schema_findings": 2,
+      "gate_errors": 0,
+      "blocking_issues": 0,
+      "pwml_bytes": 53474,
+      "pwml": {
+        "compounds": 2,
+        "proteins": 3,
+        "reactions": 0,
+        "edges": 16
+      }
+    },
+    "warnings": [
+      "runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/5/mapping_meta: Mapped entity with a name is missing mapping_meta.",
+      "runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/5/mapping_meta: Mapped entity with a name is missing mapping_meta."
+    ],
+    "observed_context": {
+      "observed_pathways": [
+        "sour taste transduction in Mus musculus"
+      ],
+      "observed_organisms": [
+        "Mus musculus"
+      ],
+      "aliases": [],
+      "ambiguities": [
+        "sweet taste transduction",
+        "umami taste transduction",
+        "bitter taste transduction",
+        "salty taste transduction",
+        "fatty acid taste (possible)"
+      ]
+    },
+    "release_status": {
+      "status": "review_required",
+      "pipeline_executed": true,
+      "strict_gates_passed": true,
+      "semantic_evaluation": "failed",
+      "semantic_not_evaluated_reason": "",
+      "semantic_failed_checks": [
+        "actor_named_in_its_own_cited_span"
+      ],
+      "semantic_check_evaluability": [
+        {
+          "check": "requested_pathway_anchors_present",
+          "applicable": true,
+          "inapplicable_reason": ""
+        },
+        {
+          "check": "organism_compatible",
+          "applicable": true,
+          "inapplicable_reason": ""
+        },
+        {
+          "check": "no_real_id_or_name_conflict",
+          "applicable": true,
+          "inapplicable_reason": ""
+        },
+        {
+          "check": "no_rejected_rag_reaction_reintroduced",
+          "applicable": false,
+          "inapplicable_reason": "no RAG admission report was supplied to this evaluation call, so a reintroduced claim is undetectable here. This describes THIS call only: the batch driver does persist rag_admission_report.json, and the offline scorer loads it and reaches a verdict"
+        },
+        {
+          "check": "actor_named_in_its_own_cited_span",
+          "applicable": true,
+          "inapplicable_reason": ""
+        }
+      ],
+      "strict_acceptance_eligible": false,
+      "completeness": 0.5,
+      "missing_anchors": [
+        "H⁺ (proton)",
+        "ATP",
+        "PKD2L1",
+        "SCN2A"
+      ],
+      "retrieval_attempts": 0,
+      "expansion_blocked_reason": "4 requested-core anchor(s) matched no admitted process: H⁺ (proton), ATP, PKD2L1, SCN2A",
+      "coverage_evaluated": true,
+      "reasons": [
+        "semantic_evaluation_failed:actor_named_in_its_own_cited_span"
+      ],
+      "applied": true,
+      "review_reasons": [],
+      "retrieval_attempts_source": "surviving_rows_carrying_rag_provenance"
+    },
+    "pwml_artifact": "pathway.review_required.pwml",
+    "slug": "PMC7059786__sour",
+    "topic": "Taste transduction: sour"
+  },
+  "row_run_pathway": {
+    "paper_id": "PMC7059786",
+    "mode": "strict",
+    "status": "pass",
+    "stage": "pwml_export",
+    "failure_kind": "",
+    "message": "strict run completed; pathway.review_required.pwml is 53474 bytes",
+    "detail": "",
+    "issue_codes": [],
+    "counts": {
+      "stage0_observed_pathways": 1,
+      "stage0_observed_organisms": 1,
+      "stage0_scope_specializations": 1,
+      "reactions": 0,
+      "transports": 6,
+      "entities": 16,
+      "proteins": 3,
+      "compounds": 2,
+      "runtime_schema_findings": 2,
+      "gate_errors": 0,
+      "blocking_issues": 0,
+      "pwml_bytes": 53474,
+      "pwml": {
+        "compounds": 2,
+        "proteins": 3,
+        "reactions": 0,
+        "edges": 16
+      }
+    },
+    "warnings": [
+      "runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/5/mapping_meta: Mapped entity with a name is missing mapping_meta.",
+      "runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/5/mapping_meta: Mapped entity with a name is missing mapping_meta."
+    ],
+    "observed_context": {
+      "observed_pathways": [
+        "sour taste transduction in Mus musculus"
+      ],
+      "observed_organisms": [
+        "Mus musculus"
+      ],
+      "aliases": [],
+      "ambiguities": [
+        "sweet taste transduction",
+        "umami taste transduction",
+        "bitter taste transduction",
+        "salty taste transduction",
+        "fatty acid taste (possible)"
+      ]
+    },
+    "release_status": {
+      "status": "review_required",
+      "pipeline_executed": true,
+      "strict_gates_passed": true,
+      "semantic_evaluation": "failed",
+      "semantic_not_evaluated_reason": "",
+      "semantic_failed_checks": [
+        "actor_named_in_its_own_cited_span"
+      ],
+      "semantic_check_evaluability": [
+        {
+          "check": "requested_pathway_anchors_present",
+          "applicable": true,
+          "inapplicable_reason": ""
+        },
+        {
+          "check": "organism_compatible",
+          "applicable": true,
+          "inapplicable_reason": ""
+        },
+        {
+          "check": "no_real_id_or_name_conflict",
+          "applicable": true,
+          "inapplicable_reason": ""
+        },
+        {
+          "check": "no_rejected_rag_reaction_reintroduced",
+          "applicable": false,
+          "inapplicable_reason": "no RAG admission report was supplied to this evaluation call, so a reintroduced claim is undetectable here. This describes THIS call only: the batch driver does persist rag_admission_report.json, and the offline scorer loads it and reaches a verdict"
+        },
+        {
+          "check": "actor_named_in_its_own_cited_span",
+          "applicable": true,
+          "inapplicable_reason": ""
+        }
+      ],
+      "strict_acceptance_eligible": false,
+      "completeness": 0.5,
+      "missing_anchors": [
+        "H⁺ (proton)",
+        "ATP",
+        "PKD2L1",
+        "SCN2A"
+      ],
+      "retrieval_attempts": 0,
+      "expansion_blocked_reason": "4 requested-core anchor(s) matched no admitted process: H⁺ (proton), ATP, PKD2L1, SCN2A",
+      "coverage_evaluated": true,
+      "reasons": [
+        "semantic_evaluation_failed:actor_named_in_its_own_cited_span"
+      ],
+      "applied": true,
+      "review_reasons": [],
+      "retrieval_attempts_source": "surviving_rows_carrying_rag_provenance"
+    },
+    "pwml_artifact": "pathway.review_required.pwml",
+    "slug": "PMC7059786__sour",
+    "topic": "Taste transduction: sour"
+  }
+}

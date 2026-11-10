@@ -1,0 +1,207 @@
+T2PW: C:\t\ev-R6\rev\tree\src\t2pw\__init__.py
+F...F............Fs..F.sss..........F                                    [100%]
+================================== FAILURES ===================================
+_________ test_every_import_driver_defers_is_covered_by_the_preflight _________
+
+    def test_every_import_driver_defers_is_covered_by_the_preflight() -> None:
+        """The regression guard for the whole feature.
+    
+        A preflight that checks a hand-written list is one refactor away from being
+        useless again: move one more import into a function to shave startup time and
+        the parent silently stops covering it. So the list is checked against
+        driver.py itself. Stdlib modules are exempt (an interpreter that cannot
+        import ``json`` has already failed in louder ways).
+        """
+    
+        third_party = [
+            name
+            for name in _deferred_imports(DRIVER_PATH)
+            if name.split(".")[0] not in sys.stdlib_module_names
+        ]
+        # NON-VACUITY FLOOR (RULING 13). This guard derives its list from driver.py, so
+        # a parse that finds NOTHING passes it -- and looks exactly like a list that is
+        # genuinely complete. Measured for C-069: neutralize ``_deferred_imports`` to
+        # return ``[]`` and the assertion below goes green against a CHILD_IMPORTS that
+        # is missing six real deferral sites. This is the line that tells the two apart.
+        assert third_party, (
+            "_deferred_imports found no non-stdlib deferred import in driver.py at all. "
+            "That is a broken parse, not a clean bill of health -- the check below would "
+            "pass vacuously."
+        )
+        missed = [name for name in third_party if not _covered(name)]
+>       assert missed == [], (
+            "driver.py defers these imports and the preflight would not catch them "
+            f"missing: {missed}. Add them to runner.CHILD_IMPORTS with the reason a "
+            "child needs them."
+        )
+E       AssertionError: driver.py defers these imports and the preflight would not catch them missing: ['t2pw.service.pathway']. Add them to runner.CHILD_IMPORTS with the reason a child needs them.
+E       assert ['t2pw.service.pathway'] == []
+E         
+E         Left contains one more item: 't2pw.service.pathway'
+E         Use -v to get more diff
+
+tests\test_batch_preflight.py:232: AssertionError
+_____________ test_the_real_environment_passes_its_own_preflight ______________
+
+    def test_the_real_environment_passes_its_own_preflight() -> None:
+        """The check must be true of the interpreter that is meant to run the batch.
+    
+        Without this the suite could go green on a preflight that rejects every
+        environment, including the correct one. No ``importorskip`` guard: the probe
+        is a fresh process, so this holds even though four other test modules have
+        already put a ``MagicMock`` in *this* process's ``sys.modules["streamlit"]``
+        -- which is the property that made the probe a subprocess in the first place.
+        """
+    
+        report = runner.check_preflight()
+>       assert [(p.subject, p.error) for p in report.problems] == []
+E       assert [('t2pw.servi...e.pathwayX'")] == []
+E         
+E         Left contains one more item: ('t2pw.service.pathwayX', "ModuleNotFoundError: No module named 't2pw.service.pathwayX'")
+E         Use -v to get more diff
+
+tests\test_batch_preflight.py:336: AssertionError
+_______ test_the_message_names_the_problem_the_interpreter_and_the_cure _______
+
+    def test_the_message_names_the_problem_the_interpreter_and_the_cure() -> None:
+        """The wrong-interpreter case: the one that actually happened.
+    
+        The cure has to be a command, not advice. "Use the venv" is not actionable at
+        2am; ``C:\\...\\.venv\\Scripts\\python.exe scripts\\batch_run.py`` is, and the
+        root cause -- ``py.exe`` ignoring the active virtualenv -- has to be named or
+        the operator fixes it once and hits it again next week.
+        """
+    
+        venv = runner.venv_python()
+>       assert venv is not None, "this project ships a .venv; the test assumes it"
+E       AssertionError: this project ships a .venv; the test assumes it
+E       assert None is not None
+
+tests\test_batch_preflight.py:616: AssertionError
+_____ test_run_preflight_is_silent_and_zero_when_the_environment_is_fine ______
+
+    def test_run_preflight_is_silent_and_zero_when_the_environment_is_fine() -> None:
+        lines: List[str] = []
+>       assert runner.run_preflight(echo=lines.append) == 0
+E       AssertionError: assert 3 == 0
+E        +  where 3 = <function run_preflight at 0x00000258B4A21120>(echo=<built-in method append of list object at 0x00000258B3618AC0>)
+E        +    where <function run_preflight at 0x00000258B4A21120> = runner.run_preflight
+E        +    and   <built-in method append of list object at 0x00000258B3618AC0> = ['==============================================================================\nPREFLIGHT FAILED -- nothing was fetc...rpreter out instead of trusting PATH.\n=============================================================================='].append
+
+tests\test_batch_preflight.py:694: AssertionError
+________ test_a_real_run_with_a_healthy_environment_reaches_the_batch _________
+
+tmp_path = WindowsPath('C:/t/bt/R6/rev-preflight-entry-missing-1794283214/test_a_real_run_with_a_healthy0')
+
+    def test_a_real_run_with_a_healthy_environment_reaches_the_batch(tmp_path: Path) -> None:
+        """The other half: the preflight must not become a new way to fail.
+    
+        The batch itself is stubbed out through ``--topics`` pointing at an empty
+        file, so this fetches nothing and exits 1 ("NOTHING RAN") -- what is proved is
+        that the preflight let it through and a run directory was created.
+        """
+    
+        topics = tmp_path / "empty_topics.txt"
+        topics.write_text("# no topics at all\n", encoding="utf-8")
+        out_dir = tmp_path / "runs"
+    
+        env = dict(os.environ)
+        env["PYTHONIOENCODING"] = "utf-8"
+        proc = subprocess.run(
+            [
+                sys.executable,
+                str(CLI_PATH),
+                "--out", str(out_dir),
+                "--fresh",
+                "--topics", str(topics),
+            ],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            timeout=300,
+            env=env,
+        )
+        combined = (proc.stdout or "") + (proc.stderr or "")
+    
+>       assert "PREFLIGHT FAILED" not in combined, combined
+E       AssertionError: ==============================================================================
+E         PREFLIGHT FAILED -- nothing was fetched, nothing was run, nothing was written.
+E         ==============================================================================
+E         This interpreter cannot do what a paper+mode child process has to do, so the
+E         batch stopped before creating a run directory. Every child would otherwise have
+E         died with the same error, one after another, AFTER the papers had been fetched:
+E         that is run 2026-07-27_2135, where 28 papers were fetched in 43s and all 56 legs
+E         then failed in 24s with one identical ModuleNotFoundError, leaving a 56-row
+E         manifest and a SUMMARY.txt reporting 28 research-mode defects that did not exist.
+E         
+E         WHAT IS BROKEN
+E           - t2pw.service.pathwayX
+E               needed for : the default leg engine (R6): driver.run_one_pathway defers
+E                            it, so the parent's import of driver proves nothing about
+E                            it, and a child that cannot import it fails every leg after
+E                            the fetch. It is probed on an apptest night too: a broken
+E                            checkout should stop either engine here
+E               failed with: ModuleNotFoundError: No module named 't2pw.service.pathwayX'
+E         
+E         WHICH PYTHON IS RUNNING
+E           running now  : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe
+E           project venv : (none found in this project)
+E         
+E         HOW TO FIX
+E           - There is no virtualenv in this project yet. Create one, install the
+E             dependencies into it, and rerun with it by name:
+E               py -m venv C:\t\ev-R6\rev\tree\.venv
+E               C:\t\ev-R6\rev\tree\.venv\Scripts\python.exe -m pip install -r C:\t\ev-R6\rev\tree\requirements.txt
+E         
+E         On Windows a bare 'scripts\batch_run.py' is opened by C:\WINDOWS\py.exe, which
+E         ignores an active virtualenv -- that is how the wrong interpreter gets in, and
+E         it is why the command above spells the interpreter out instead of trusting PATH.
+E         ==============================================================================
+E         
+E       assert 'PREFLIGHT FAILED' not in '===========...==========\n'
+E         
+E         'PREFLIGHT FAILED' is contained here:
+E           =========
+E           PREFLIGHT FAILED -- nothing was fetched, nothing was run, nothing was written.
+E         ? ++++++++++++++++
+E           ==============================================================================
+E           This interpreter cannot do what a paper+mode child process has to do, so the...
+E         
+E         ...Full output truncated (29 lines hidden), use '-vv' to show
+
+tests\test_batch_preflight.py:993: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_batch_preflight.py::test_every_import_driver_defers_is_covered_by_the_preflight
+FAILED tests/test_batch_preflight.py::test_the_real_environment_passes_its_own_preflight
+FAILED tests/test_batch_preflight.py::test_the_message_names_the_problem_the_interpreter_and_the_cure
+FAILED tests/test_batch_preflight.py::test_run_preflight_is_silent_and_zero_when_the_environment_is_fine
+FAILED tests/test_batch_preflight.py::test_a_real_run_with_a_healthy_environment_reaches_the_batch
+5 failed, 28 passed, 4 skipped in 8.48s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ev-R6\rev\tree\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : R6-rev-preflight-entry-missing
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:\t\ev-R6\rev\tree\docs\pwml_recovery_sprint\evidence\pinned_pytest.py --expect-tree C:\t\ev-R6\rev\tree -q --basetemp=C:/t/bt/R6/rev-preflight-entry-missing-1794283214 tests/test_batch_preflight.py
+cwd                     : C:\t\ev-R6\rev\tree
+root PID / process group: 528084 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 9.26 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 18  508332:python.exe, 510444:python.exe, 526328:python.exe, 524692:python.exe, 527300:python.exe, 528076:python.exe, 528080:python.exe, 527208:python.exe, 527584:python.exe, 524508:python.exe, 524248:python.exe, 526740:python.exe, 519384:python.exe, 526344:python.exe, 508436:python.exe, 528104:python.exe, 524240:python.exe, 528100:python.exe
+descendants terminated  : 18  508332, 508436, 510444, 519384, 524240, 524248, 524508, 524692, 526328, 526344, 526740, 527208, 527300, 527584, 528076, 528080, 528100, 528104
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ev-R6/rev/preflight-entry-missing.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R6  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

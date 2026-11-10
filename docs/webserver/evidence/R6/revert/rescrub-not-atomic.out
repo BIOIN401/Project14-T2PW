@@ -1,0 +1,57 @@
+T2PW: C:\t\ev-R6\rev\tree\src\t2pw\__init__.py
+........................................................................ [ 67%]
+..................................F                                      [100%]
+================================== FAILURES ===================================
+____________ test_a_replace_that_fails_leaves_the_record_as_it_was ____________
+
+tmp_path = WindowsPath('C:/t/bt/R6/rev-rescrub-not-atomic-1794283240/test_a_replace_that_fails_leav0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000019FE7CB5940>
+
+    def test_a_replace_that_fails_leaves_the_record_as_it_was(tmp_path, monkeypatch):
+        record = tmp_path / "run_outcome.json"
+        original = json.dumps({"a": str(tmp_path)})
+        record.write_text(original, encoding="utf-8")
+    
+        def refuse(src, dst):
+            raise OSError("locked")
+        monkeypatch.setattr(pw.os, "replace", refuse)
+        pw._rescrub_json_file(record, tmp_path)
+>       assert record.read_text(encoding="utf-8") == original and not list(tmp_path.glob("*.tmp"))
+E       assert ('{\n  "a": ""\n}' == '{"a": "C:\\\...fails_leav0"}'
+E         
+E         - {"a": "C:\\t\\bt\\R6\\rev-rescrub-not-atomic-1794283240\\test_a_replace_that_fails_leav0"}
+E         + {
+E         +   "a": ""
+E         + })
+
+tests\test_service_run_pathway.py:799: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_run_pathway.py::test_a_replace_that_fails_leaves_the_record_as_it_was
+1 failed, 106 passed in 5.27s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ev-R6\rev\tree\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : R6-rev-rescrub-not-atomic
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:\t\ev-R6\rev\tree\docs\pwml_recovery_sprint\evidence\pinned_pytest.py --expect-tree C:\t\ev-R6\rev\tree -q --basetemp=C:/t/bt/R6/rev-rescrub-not-atomic-1794283240 tests/test_service_run_pathway.py
+cwd                     : C:\t\ev-R6\rev\tree
+root PID / process group: 526752 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 6.37 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  520352:python.exe
+descendants terminated  : 1  520352
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ev-R6/rev/rescrub-not-atomic.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R6  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

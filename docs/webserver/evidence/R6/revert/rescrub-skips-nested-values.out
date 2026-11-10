@@ -1,0 +1,66 @@
+T2PW: C:\t\ev-R6\rev\tree\src\t2pw\__init__.py
+........................................................................ [ 67%]
+................................F..                                      [100%]
+================================== FAILURES ===================================
+____ test_the_run_record_stays_json_when_a_root_precedes_an_escaped_quote _____
+
+world = <test_service_run_pathway.World object at 0x0000028942562D00>
+tmp_path = WindowsPath('C:/t/bt/R6/rev-rescrub-skips-nested-values-1794283260/test_the_run_record_stays_json0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000289425667B0>
+
+    def test_the_run_record_stays_json_when_a_root_precedes_an_escaped_quote(world, tmp_path, monkeypatch):
+        from t2pw.batch import runner
+    
+        out = tmp_path / "out"
+        real = runner.write_artifacts
+    
+        def lose(out_dir, artifacts):
+            return [{**row, "error": f'[Errno 28] No space left on device: "{out}"'} if row["name"] == "final_mapped.json" else row
+                    for row in real(out_dir, artifacts)]
+        monkeypatch.setattr(runner, "write_artifacts", lose)
+        res = _run(tmp_path)
+        assert res.status == "pass"
+        text = (out / "run_outcome.json").read_text(encoding="utf-8")
+        record = json.loads(text)  # a text substitution ate the backslash of the escaped quote
+        error = next(f["error"] for f in record["bridge_files"] if f.get("error"))
+>       assert error.startswith("[Errno 28] No space left on device:") and error.endswith('"') and str(out) not in error
+E       assert (True and True and 'C:\\t\\bt\\...s_json0\\out' not in '[Errno 28] ..._json0\\out"'
+E        +  where True = <built-in method startswith of str object at 0x0000028942562EF0>('[Errno 28] No space left on device:')
+E        +    where <built-in method startswith of str object at 0x0000028942562EF0> = '[Errno 28] No space left on device: "C:\\t\\bt\\R6\\rev-rescrub-skips-nested-values-1794283260\\test_the_run_record_stays_json0\\out"'.startswith
+E        +  and   True = <built-in method endswith of str object at 0x0000028942562EF0>('"')
+E        +    where <built-in method endswith of str object at 0x0000028942562EF0> = '[Errno 28] No space left on device: "C:\\t\\bt\\R6\\rev-rescrub-skips-nested-values-1794283260\\test_the_run_record_stays_json0\\out"'.endswith
+E         
+E         'C:\\t\\bt\\R6\\rev...rd_stays_json0\\out' is contained here:
+E           [Errno 28] No space left on device: "C:\t\bt\R6\rev-rescrub-skips-nested-values-1794283260\test_the_run_record_stays_json0\out")
+
+tests\test_service_run_pathway.py:776: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_run_pathway.py::test_the_run_record_stays_json_when_a_root_precedes_an_escaped_quote
+1 failed, 106 passed in 5.98s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ev-R6\rev\tree\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : R6-rev-rescrub-skips-nested-values
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:\t\ev-R6\rev\tree\docs\pwml_recovery_sprint\evidence\pinned_pytest.py --expect-tree C:\t\ev-R6\rev\tree -q --basetemp=C:/t/bt/R6/rev-rescrub-skips-nested-values-1794283260 tests/test_service_run_pathway.py
+cwd                     : C:\t\ev-R6\rev\tree
+root PID / process group: 529764 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 7.44 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  529584:python.exe
+descendants terminated  : 1  529584
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ev-R6/rev/rescrub-skips-nested-values.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R6  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

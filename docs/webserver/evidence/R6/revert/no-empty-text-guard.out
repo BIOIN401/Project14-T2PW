@@ -1,0 +1,46 @@
+T2PW: C:\t\ev-R6\rev\tree\src\t2pw\__init__.py
+......F..................                                                [100%]
+================================== FAILURES ===================================
+_ test_a_leg_with_no_text_is_judged_before_any_work_as_the_apptest_path_judges_it _
+
+world = <test_batch_driver_run_pathway.World object at 0x0000029333771F30>
+
+    def test_a_leg_with_no_text_is_judged_before_any_work_as_the_apptest_path_judges_it(world):
+        outcome = driver.run_one_pathway({**PAPER, "full_text": ""}, "strict")
+>       assert (outcome.status, outcome.failure_kind) == ("fail", "no_reactions")
+E       AssertionError: assert ('pass', '') == ('fail', 'no_reactions')
+E         
+E         At index 0 diff: 'pass' != 'fail'
+E         Use -v to get more diff
+
+tests\test_batch_driver_run_pathway.py:154: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_batch_driver_run_pathway.py::test_a_leg_with_no_text_is_judged_before_any_work_as_the_apptest_path_judges_it
+1 failed, 24 passed in 1.84s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ev-R6\rev\tree\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : R6-rev-no-empty-text-guard
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:\t\ev-R6\rev\tree\docs\pwml_recovery_sprint\evidence\pinned_pytest.py --expect-tree C:\t\ev-R6\rev\tree -q --basetemp=C:/t/bt/R6/rev-no-empty-text-guard-1794283189 tests/test_batch_driver_run_pathway.py
+cwd                     : C:\t\ev-R6\rev\tree
+root PID / process group: 528188 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 2.89 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 3  528152:python.exe, 525240:python.exe, 526716:python.exe
+descendants terminated  : 3  525240, 526716, 528152
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ev-R6/rev/no-empty-text-guard.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R6  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

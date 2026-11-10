@@ -1,0 +1,178 @@
+{
+  "row_keys_only_apptest": [],
+  "row_keys_only_run_pathway": [],
+  "row_fields_that_differ": {
+    "detail": [
+      "**2 biology/provenance issue(s) need review.** In strict mode each of these would have stopped the run. The pathway below was still produced — treat it as a candidate, not a result.\n**Research mode — relaxed.** PathWhiz formatting rules are skipped and biology/provenance problems are reported as review flags instead of stopping the run. The output is a *candidate* pathway for human review, not an importable PWML file. Read the Review flags panel before trusting it.\nQuarantine review flags (2): research mode kept every process. A strict export would have removed the ones listed below.\nResearch mode: the pre-export Stage 3 revalidation FAILED (1 error(s)) and was not enforced. The strict gates did NOT pass — this candidate is not PathWhiz-exportable as it stands. Refinement review is open so the findings below can be reviewed against the pathway itself.\n5 QA issues need review.",
+      "Quarantine review flags (2): research mode kept every process. A strict export would have removed the ones listed below.\nResearch mode: the pre-export Stage 3 revalidation FAILED (1 error(s)) and was not enforced. The strict gates did NOT pass — this candidate is not PathWhiz-exportable as it stands. Refinement review is open so the findings below can be reviewed against the pathway itself."
+    ]
+  },
+  "files_only_apptest": [],
+  "files_only_run_pathway": [],
+  "files_identical": [
+    "audit_iteration_summary.json",
+    "cleaning_report.json",
+    "contract_reports.json",
+    "coverage_diagnostics.json",
+    "coverage_summary.json",
+    "final_mapped.json",
+    "final_stage3_gate_report.json",
+    "gap_iteration_summary.json",
+    "gate_fail_report.json",
+    "graph_closure_iterations.json",
+    "initial_stage3_gate_report.json",
+    "merged_payload.json",
+    "quarantine_report.json",
+    "removed_entity_report.json",
+    "review_flags.json",
+    "scope_conflict.json",
+    "stage0_attempts.json",
+    "stage1_payload.json"
+  ],
+  "files_that_differ": [
+    "LEG_TRACE.jsonl",
+    "RESULT.txt",
+    "extraction_boundary_report.json"
+  ],
+  "pwml_identical": false,
+  "pwml_sha": [
+    {},
+    {}
+  ],
+  "result_txt_identical": false,
+  "manifest_file_names_identical": true,
+  "replay_clean": {
+    "apptest": {
+      "misses": 0,
+      "refused": 0,
+      "unused_llm": 0
+    },
+    "run_pathway": {
+      "misses": 0,
+      "refused": 0,
+      "unused_llm": 0
+    }
+  },
+  "seconds": [
+    15.7,
+    13.6
+  ],
+  "status": [
+    "pass",
+    "pass"
+  ],
+  "row_apptest": {
+    "paper_id": "PMC12505894",
+    "mode": "research",
+    "status": "pass",
+    "stage": "research_report",
+    "failure_kind": "",
+    "message": "research run completed; no RAG synthesis in this run, so no citation report was produced",
+    "detail": "**2 biology/provenance issue(s) need review.** In strict mode each of these would have stopped the run. The pathway below was still produced — treat it as a candidate, not a result.\n**Research mode — relaxed.** PathWhiz formatting rules are skipped and biology/provenance problems are reported as review flags instead of stopping the run. The output is a *candidate* pathway for human review, not an importable PWML file. Read the Review flags panel before trusting it.\nQuarantine review flags (2): research mode kept every process. A strict export would have removed the ones listed below.\nResearch mode: the pre-export Stage 3 revalidation FAILED (1 error(s)) and was not enforced. The strict gates did NOT pass — this candidate is not PathWhiz-exportable as it stands. Refinement review is open so the findings below can be reviewed against the pathway itself.\n5 QA issues need review.",
+    "issue_codes": [
+      "gate.protein_cdr1_is_missing_a_uniprot_or_drugbank_identifier"
+    ],
+    "counts": {
+      "stage0_observed_pathways": 1,
+      "stage0_observed_organisms": 1,
+      "scope_conflicts": 1,
+      "reactions": 3,
+      "transports": 1,
+      "entities": 17,
+      "proteins": 5,
+      "compounds": 7,
+      "runtime_schema_findings": 7,
+      "gate_errors": 1,
+      "gate_errors_not_blocking": 1,
+      "blocking_issues": 0,
+      "review_flags": 2,
+      "skipped_format_rules": 0,
+      "normalization_actions": 2,
+      "gate_review_flags": 1
+    },
+    "warnings": [
+      "stage-0 scope conflict (recorded, run continued): Stage 0 read pathway 'farnesol biosynthesis in Candida albicans' which does not match the requested 'farnesol biosynthesis (the dolichol cycle is a different pathway: extract its dolichyl pyrophosphate dephosphorylation but label it out_of_scope)'",
+      "runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] runtime_schema_missing_field @ /processes/interactions/0/name: Required field is missing.",
+      "runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta.",
+      "runtime-schema finding (informational, not blocking): [post_enrichment_runtime_schema_report] runtime_schema_missing_field @ /processes/interactions/0/name: Required field is missing.",
+      "runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] runtime_schema_missing_field @ /processes/interactions/0/name: Required field is missing.",
+      "runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta.",
+      "runtime-schema finding (informational, not blocking): [post_remap_contract_report.runtime_schema_report] runtime_schema_missing_field @ /processes/interactions/0/name: Required field is missing.",
+      "runtime-schema finding (informational, not blocking): [pre_export_runtime_schema_report] runtime_schema_missing_field @ /processes/interactions/0/name: Required field is missing.",
+      "strict gate error (research mode: review flag, not blocking): gate.protein_cdr1_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/4: Protein 'Cdr1' is missing a UniProt or DrugBank identifier.",
+      "no research report: RAG did not trigger for this paper"
+    ],
+    "scope_conflicts": [
+      "Stage 0 read pathway 'farnesol biosynthesis in Candida albicans' which does not match the requested 'farnesol biosynthesis (the dolichol cycle is a different pathway: extract its dolichyl pyrophosphate dephosphorylation but label it out_of_scope)'"
+    ],
+    "observed_context": {
+      "observed_pathways": [
+        "farnesol biosynthesis in Candida albicans"
+      ],
+      "observed_organisms": [
+        "Candida albicans"
+      ],
+      "aliases": [],
+      "ambiguities": []
+    },
+    "slug": "PMC12505894__sour",
+    "topic": "farnesol biosynthesis (the dolichol cycle is a different pathway: extract its dolichyl pyrophosphate dephosphorylation but label it out_of_scope)"
+  },
+  "row_run_pathway": {
+    "paper_id": "PMC12505894",
+    "mode": "research",
+    "status": "pass",
+    "stage": "research_report",
+    "failure_kind": "",
+    "message": "research run completed; no RAG synthesis in this run, so no citation report was produced",
+    "detail": "Quarantine review flags (2): research mode kept every process. A strict export would have removed the ones listed below.\nResearch mode: the pre-export Stage 3 revalidation FAILED (1 error(s)) and was not enforced. The strict gates did NOT pass — this candidate is not PathWhiz-exportable as it stands. Refinement review is open so the findings below can be reviewed against the pathway itself.",
+    "issue_codes": [
+      "gate.protein_cdr1_is_missing_a_uniprot_or_drugbank_identifier"
+    ],
+    "counts": {
+      "stage0_observed_pathways": 1,
+      "stage0_observed_organisms": 1,
+      "scope_conflicts": 1,
+      "reactions": 3,
+      "transports": 1,
+      "entities": 17,
+      "proteins": 5,
+      "compounds": 7,
+      "runtime_schema_findings": 7,
+      "gate_errors": 1,
+      "gate_errors_not_blocking": 1,
+      "blocking_issues": 0,
+      "review_flags": 2,
+      "skipped_format_rules": 0,
+      "normalization_actions": 2,
+      "gate_review_flags": 1
+    },
+    "warnings": [
+      "stage-0 scope conflict (recorded, run continued): Stage 0 read pathway 'farnesol biosynthesis in Candida albicans' which does not match the requested 'farnesol biosynthesis (the dolichol cycle is a different pathway: extract its dolichyl pyrophosphate dephosphorylation but label it out_of_scope)'",
+      "runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] runtime_schema_missing_field @ /processes/interactions/0/name: Required field is missing.",
+      "runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta.",
+      "runtime-schema finding (informational, not blocking): [post_enrichment_runtime_schema_report] runtime_schema_missing_field @ /processes/interactions/0/name: Required field is missing.",
+      "runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] runtime_schema_missing_field @ /processes/interactions/0/name: Required field is missing.",
+      "runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta.",
+      "runtime-schema finding (informational, not blocking): [post_remap_contract_report.runtime_schema_report] runtime_schema_missing_field @ /processes/interactions/0/name: Required field is missing.",
+      "runtime-schema finding (informational, not blocking): [pre_export_runtime_schema_report] runtime_schema_missing_field @ /processes/interactions/0/name: Required field is missing.",
+      "strict gate error (research mode: review flag, not blocking): gate.protein_cdr1_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/4: Protein 'Cdr1' is missing a UniProt or DrugBank identifier.",
+      "no research report: RAG did not trigger for this paper"
+    ],
+    "scope_conflicts": [
+      "Stage 0 read pathway 'farnesol biosynthesis in Candida albicans' which does not match the requested 'farnesol biosynthesis (the dolichol cycle is a different pathway: extract its dolichyl pyrophosphate dephosphorylation but label it out_of_scope)'"
+    ],
+    "observed_context": {
+      "observed_pathways": [
+        "farnesol biosynthesis in Candida albicans"
+      ],
+      "observed_organisms": [
+        "Candida albicans"
+      ],
+      "aliases": [],
+      "ambiguities": []
+    },
+    "slug": "PMC12505894__sour",
+    "topic": "farnesol biosynthesis (the dolichol cycle is a different pathway: extract its dolichyl pyrophosphate dephosphorylation but label it out_of_scope)"
+  }
+}

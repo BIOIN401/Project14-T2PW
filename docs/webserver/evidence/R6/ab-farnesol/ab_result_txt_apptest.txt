@@ -1,0 +1,65 @@
+RESULT: PASS (with warnings)
+========================================
+paper      : PMC12505894
+title      : (unknown)
+slug       : PMC12505894__sour
+mode       : research
+status     : pass
+stage      : research_report
+wall time  : 15.6s
+
+WARNINGS
+----------------------------------------
+  ! stage-0 scope conflict (recorded, run continued): Stage 0 read pathway 'farnesol biosynthesis in Candida albicans' which does not match the requested 'farnesol biosynthesis (the dolichol cycle is a different pathway: extract its dolichyl pyrophosphate dephosphorylation but label it out_of_scope)'
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] runtime_schema_missing_field @ /processes/interactions/0/name: Required field is missing.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_enrichment_runtime_schema_report] runtime_schema_missing_field @ /processes/interactions/0/name: Required field is missing.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] runtime_schema_missing_field @ /processes/interactions/0/name: Required field is missing.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_remap_contract_report.runtime_schema_report] runtime_schema_missing_field @ /processes/interactions/0/name: Required field is missing.
+  ! runtime-schema finding (informational, not blocking): [pre_export_runtime_schema_report] runtime_schema_missing_field @ /processes/interactions/0/name: Required field is missing.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_cdr1_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/4: Protein 'Cdr1' is missing a UniProt or DrugBank identifier.
+  ! no research report: RAG did not trigger for this paper
+
+message    : research run completed; no RAG synthesis in this run, so no citation report was produced
+
+COUNTS
+----------------------------------------
+  blocking_issues = 0
+  compounds = 7
+  entities = 17
+  gate_errors = 1
+  gate_errors_not_blocking = 1
+  gate_review_flags = 1
+  normalization_actions = 2
+  proteins = 5
+  reactions = 3
+  review_flags = 2
+  runtime_schema_findings = 7
+  scope_conflicts = 1
+  skipped_format_rules = 0
+  stage0_observed_organisms = 1
+  stage0_observed_pathways = 1
+  transports = 1
+
+FILES WRITTEN
+----------------------------------------
+  - audit_iteration_summary.json  (2560 B)
+  - cleaning_report.json  (5576 B)
+  - contract_reports.json  (10147 B)
+  - coverage_diagnostics.json  (2510 B)
+  - coverage_summary.json  (2951 B)
+  - extraction_boundary_report.json  (13927 B)
+  - final_mapped.json  (196658 B)
+  - final_stage3_gate_report.json  (9393 B)
+  - gap_iteration_summary.json  (20908 B)
+  - gate_fail_report.json  (7899 B)
+  - graph_closure_iterations.json  (3314 B)
+  - initial_stage3_gate_report.json  (7899 B)
+  - merged_payload.json  (83192 B)
+  - quarantine_report.json  (24836 B)
+  - removed_entity_report.json  (241 B)
+  - review_flags.json  (6665 B)
+  - scope_conflict.json  (921 B)
+  - stage0_attempts.json  (826 B)
+  - stage1_payload.json  (20452 B)
