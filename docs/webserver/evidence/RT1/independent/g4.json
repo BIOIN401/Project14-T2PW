@@ -1,0 +1,92 @@
+{
+  "label": "RT1-ind-g4",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/ws-RT1/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-RT1",
+    "-q",
+    "--basetemp=C:/t/bt/RT1ind/g4",
+    "tests/test_streamlit_quarantine_boundary.py"
+  ],
+  "cwd": "C:\\t\\ws-RT1",
+  "started_at": "2026-11-10T06:36:21+00:00",
+  "finished_at": "2026-11-10T06:37:12+00:00",
+  "duration_seconds": 50.16189999999915,
+  "timeout_seconds": 540.0,
+  "root_pid": 711968,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 712004,
+      "name": "python.exe",
+      "ppid": 711968
+    }
+  ],
+  "descendants_terminated": [
+    712004
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 58320,
+      "name": "python.exe"
+    },
+    {
+      "pid": 693444,
+      "name": "python.exe"
+    },
+    {
+      "pid": 696136,
+      "name": "python.exe"
+    },
+    {
+      "pid": 712488,
+      "name": "python.exe"
+    },
+    {
+      "pid": 712564,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/ev-RT1-ind/independent/g4.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-RT1\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-RT1",
+    "repo_head": "9afa3c1486bb6cdedd204caf20855181335c2b33",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "RT1-ind",
+    "token": "RT1-ind:712488:b324e845574faf9d",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

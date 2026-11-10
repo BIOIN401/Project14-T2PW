@@ -1,0 +1,104 @@
+{
+  "label": "RT1-ind-e3",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/ws-RT1/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-RT1",
+    "-q",
+    "--basetemp=C:/t/bt/RT1ind/e3",
+    "tests/test_equivalence_run_pathway.py"
+  ],
+  "cwd": "C:\\t\\ws-RT1",
+  "started_at": "2026-11-10T06:39:31+00:00",
+  "finished_at": "2026-11-10T06:40:45+00:00",
+  "duration_seconds": 73.71877780000068,
+  "timeout_seconds": 540.0,
+  "root_pid": 711212,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 714704,
+      "name": "python.exe",
+      "ppid": 711212
+    },
+    {
+      "pid": 720012,
+      "name": "python.exe",
+      "ppid": 714704
+    },
+    {
+      "pid": 720048,
+      "name": "python.exe",
+      "ppid": 720012
+    }
+  ],
+  "descendants_terminated": [
+    714704,
+    720012,
+    720048
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 58320,
+      "name": "python.exe"
+    },
+    {
+      "pid": 693444,
+      "name": "python.exe"
+    },
+    {
+      "pid": 696136,
+      "name": "python.exe"
+    },
+    {
+      "pid": 713580,
+      "name": "python.exe"
+    },
+    {
+      "pid": 715096,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/ev-RT1-ind/independent/e3.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-RT1\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-RT1",
+    "repo_head": "9afa3c1486bb6cdedd204caf20855181335c2b33",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "RT1-ind",
+    "token": "RT1-ind:713580:606f9423957f7990",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

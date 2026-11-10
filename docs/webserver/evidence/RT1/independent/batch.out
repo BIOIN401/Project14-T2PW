@@ -1,0 +1,52 @@
+T2PW: C:\t\ws-RT1\src\t2pw\__init__.py
+........................................................................ [ 34%]
+........................................................................ [ 69%]
+..........................................Fs....sss...........           [100%]
+================================== FAILURES ===================================
+_______ test_the_message_names_the_problem_the_interpreter_and_the_cure _______
+
+    def test_the_message_names_the_problem_the_interpreter_and_the_cure() -> None:
+        """The wrong-interpreter case: the one that actually happened.
+    
+        The cure has to be a command, not advice. "Use the venv" is not actionable at
+        2am; ``C:\\...\\.venv\\Scripts\\python.exe scripts\\batch_run.py`` is, and the
+        root cause -- ``py.exe`` ignoring the active virtualenv -- has to be named or
+        the operator fixes it once and hits it again next week.
+        """
+    
+        venv = runner.venv_python()
+>       assert venv is not None, "this project ships a .venv; the test assumes it"
+E       AssertionError: this project ships a .venv; the test assumes it
+E       assert None is not None
+
+tests\test_batch_preflight.py:616: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_batch_preflight.py::test_the_message_names_the_problem_the_interpreter_and_the_cure
+1 failed, 201 passed, 4 skipped in 71.22s (0:01:11)
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-RT1\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 9afa3c1486bb6cdedd204caf20855181335c2b33  [git, worktree dirty=False]
+label                   : RT1-ind-batch
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-RT1/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-RT1 -q --basetemp=C:/t/bt/RT1ind/batch tests/test_batch_run.py tests/test_deadline_budget.py tests/test_deadline_leg_timeout.py tests/test_c111_timeout_observability.py tests/test_service_driver_bridge.py tests/test_service_pathway_interface.py tests/test_web_worker.py tests/test_batch_preflight.py
+cwd                     : C:\t\ws-RT1
+root PID / process group: 721816 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 73.26 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 85  720784:python.exe, 699012:python.exe, 715844:python.exe, 714708:taskkill.exe, 708404:python.exe, 715100:python.exe, 718964:python.exe, 713824:python.exe, 714788:python.exe, 717236:python.exe, 718128:python.exe, 714180:python.exe, 720412:python.exe, 714620:python.exe, 720408:python.exe, 710288:python.exe, 719632:python.exe, 720472:python.exe, 699972:python.exe, 721036:python.exe, 717764:taskkill.exe, 712168:python.exe, 719540:python.exe, 719664:python.exe, 720312:python.exe, 712764:python.exe, 719924:python.exe, 721724:python.exe, 714356:python.exe, 714344:python.exe, 718772:python.exe, 711848:python.exe, 720144:python.exe, 718424:python.exe, 718464:python.exe, 707160:python.exe, 721356:python.exe, 715360:python.exe, 720924:python.exe, 713440:python.exe, 717056:python.exe, 718468:python.exe, 719128:python.exe, 709336:python.exe, 718664:python.exe, 720528:python.exe, 721732:python.exe, 718808:python.exe, 720024:python.exe, 713864:python.exe, 712620:python.exe, 712144:python.exe, 714328:python.exe, 713336:python.exe, 720460:python.exe, 721432:python.exe, 721304:python.exe, 719720:python.exe, 721752:python.exe, 718832:python.exe, 721112:python.exe, 720744:python.exe, 711216:python.exe, 710336:python.exe, 716028:python.exe, 714980:python.exe, 721756:python.exe, 703696:python.exe, 713080:python.exe, 713672:python.exe, 718540:python.exe, 710016:python.exe, 712856:python.exe, 719692:python.exe, 720584:python.exe, 721452:python.exe, 638580:python.exe, 695752:python.exe, 707984:python.exe, 720324:python.exe, 714860:python.exe, 722216:python.exe, 722236:python.exe, 722336:python.exe, 722360:python.exe
+descendants terminated  : 85  638580, 695752, 699012, 699972, 703696, 707160, 707984, 708404, 709336, 710016, 710288, 710336, 711216, 711848, 712144, 712168, 712620, 712764, 712856, 713080, 713336, 713440, 713672, 713824, 713864, 714180, 714328, 714344, 714356, 714620, 714708, 714788, 714860, 714980, 715100, 715360, 715844, 716028, 717056, 717236, 717764, 718128, 718424, 718464, 718468, 718540, 718664, 718772, 718808, 718832, 718964, 719128, 719540, 719632, 719664, 719692, 719720, 719924, 720024, 720144, 720312, 720324, 720408, 720412, 720460, 720472, 720528, 720584, 720744, 720784, 720924, 721036, 721112, 721304, 721356, 721432, 721452, 721724, 721732, 721752, 721756, 722216, 722236, 722336, 722360
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ev-RT1-ind/independent/batch.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=RT1-ind  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

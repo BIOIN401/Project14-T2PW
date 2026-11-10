@@ -1,0 +1,194 @@
+{
+  "label": "RT1-ind-g2",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/ws-RT1/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-RT1",
+    "-q",
+    "--basetemp=C:/t/bt/RT1ind/g2",
+    "tests/test_c011_freeze_seam_golden_equivalence.py"
+  ],
+  "cwd": "C:\\t\\ws-RT1",
+  "started_at": "2026-11-10T06:35:22+00:00",
+  "finished_at": "2026-11-10T06:36:05+00:00",
+  "duration_seconds": 42.329848300003505,
+  "timeout_seconds": 540.0,
+  "root_pid": 709840,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 709904,
+      "name": "python.exe",
+      "ppid": 709840
+    },
+    {
+      "pid": 710308,
+      "name": "git.exe",
+      "ppid": 709904
+    },
+    {
+      "pid": 710564,
+      "name": "git.exe",
+      "ppid": 709904
+    },
+    {
+      "pid": 710176,
+      "name": "git.exe",
+      "ppid": 709904
+    },
+    {
+      "pid": 705620,
+      "name": "python.exe",
+      "ppid": 707112
+    },
+    {
+      "pid": 707112,
+      "name": "python.exe",
+      "ppid": 709904
+    },
+    {
+      "pid": 655076,
+      "name": "python.exe",
+      "ppid": 709904
+    },
+    {
+      "pid": 706736,
+      "name": "python.exe",
+      "ppid": 655076
+    },
+    {
+      "pid": 703528,
+      "name": "python.exe",
+      "ppid": 709260
+    },
+    {
+      "pid": 709260,
+      "name": "python.exe",
+      "ppid": 709904
+    },
+    {
+      "pid": 706976,
+      "name": "python.exe",
+      "ppid": 709904
+    },
+    {
+      "pid": 709744,
+      "name": "python.exe",
+      "ppid": 706976
+    },
+    {
+      "pid": 694676,
+      "name": "python.exe",
+      "ppid": 710576
+    },
+    {
+      "pid": 710576,
+      "name": "python.exe",
+      "ppid": 709904
+    },
+    {
+      "pid": 706088,
+      "name": "python.exe",
+      "ppid": 709712
+    },
+    {
+      "pid": 709712,
+      "name": "python.exe",
+      "ppid": 709904
+    },
+    {
+      "pid": 709700,
+      "name": "python.exe",
+      "ppid": 710196
+    },
+    {
+      "pid": 710196,
+      "name": "python.exe",
+      "ppid": 709904
+    }
+  ],
+  "descendants_terminated": [
+    655076,
+    694676,
+    703528,
+    705620,
+    706088,
+    706736,
+    706976,
+    707112,
+    709260,
+    709700,
+    709712,
+    709744,
+    709904,
+    710176,
+    710196,
+    710308,
+    710564,
+    710576
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 58320,
+      "name": "python.exe"
+    },
+    {
+      "pid": 693444,
+      "name": "python.exe"
+    },
+    {
+      "pid": 696136,
+      "name": "python.exe"
+    },
+    {
+      "pid": 705948,
+      "name": "python.exe"
+    },
+    {
+      "pid": 709280,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/ev-RT1-ind/independent/g2.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-RT1\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-RT1",
+    "repo_head": "9afa3c1486bb6cdedd204caf20855181335c2b33",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "RT1-ind",
+    "token": "RT1-ind:709280:6bf18159e68ad413",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
