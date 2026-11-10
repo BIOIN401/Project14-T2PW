@@ -21,3 +21,15 @@ Wave 1 finished (3 dispatches). Dead ends: funnel agent ran two stray empty `pyt
 | 8 | reconcile | sonnet / medium | protein count reconciliation | done: 168/435 adopted, 02 appended |
 
 Total 8 dispatches: 3 sonnet/high, 5 sonnet/medium. Max concurrency 3. Dead ends: stray empty python heredocs in dispatches 1 and 4 (stopped within seconds). PathBank MySQL not read (gap). Orchestrator wrote PLAN.md, CLEAN-MODEL-REQUIREMENTS.md, DECISIONS-PROPOSED.md and committed.
+
+
+---
+# Clean-model build (branch `pwml/clean-model`, worktree `C:/t/cm`, from `075d127d`)
+Scratch: `C:/t/ev-cm/`. Budget: at most 10 dispatches, one implementer edits the worktree at a time. Additive only (P-14).
+
+## Resume instructions
+Read this log, then `CLEAN-MODEL.md` (once it exists) and `git log`. Next undone row in the dispatch log is the next step.
+
+## Dispatch log (clean model)
+| # | name | model / effort | scope | status |
+|---|---|---|---|---|
