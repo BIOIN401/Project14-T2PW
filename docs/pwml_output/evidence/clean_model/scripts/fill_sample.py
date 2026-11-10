@@ -16,6 +16,8 @@ import random
 import sys
 from collections import Counter
 
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), *[".."] * 5, "src"))
+
 from t2pw.clean_model import build_from_run, to_payload
 from t2pw.clean_model.fill import fill_model
 
