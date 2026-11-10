@@ -1,0 +1,805 @@
+{
+ "ALL152": {
+  "n_runs": 152,
+  "n_papers": 51,
+  "s1": {
+   "compounds": 1228,
+   "proteins": 1136,
+   "protein_complexes": 51,
+   "nucleic_acids": 62,
+   "reactions": 561,
+   "transports": 107,
+   "interactions": 346
+  },
+  "m": {
+   "compounds": 1249,
+   "proteins": 1143,
+   "protein_complexes": 52,
+   "nucleic_acids": 64,
+   "reactions": 705,
+   "transports": 111,
+   "interactions": 837
+  },
+  "f": {
+   "compounds": 1095,
+   "proteins": 787,
+   "protein_complexes": 415,
+   "nucleic_acids": 39,
+   "reactions": 621,
+   "transports": 106,
+   "interactions": 352
+  },
+  "pwml": {
+   "compounds": 431,
+   "proteins": 241,
+   "protein_complexes": 234,
+   "nucleic_acids": 12,
+   "reactions": 245,
+   "transports": 42,
+   "interactions": 87
+  },
+  "f_on_pwml_runs": {
+   "compounds": 431,
+   "proteins": 241,
+   "protein_complexes": 234,
+   "nucleic_acids": 12,
+   "reactions": 245,
+   "transports": 42,
+   "interactions": 127
+  },
+  "f_map": {
+   "compounds:matched": 685,
+   "compounds:novel": 292,
+   "proteins:ambiguous": 4,
+   "proteins:novel": 76,
+   "protein_complexes:unresolved": 78,
+   "compounds:ambiguous": 118,
+   "proteins:matched": 663,
+   "proteins:unresolved": 5,
+   "protein_complexes:ambiguous": 27,
+   "protein_complexes:matched": 141,
+   "protein_complexes:novel": 36,
+   "proteins:fallback": 39,
+   "protein_complexes:fallback": 133
+  },
+  "f_ext": {
+   "compounds:id": 833,
+   "compounds:noid": 262,
+   "proteins:noid": 75,
+   "proteins:id": 712
+  },
+  "generated": {
+   "f:protein_complexes:complex_named_source_entity_wrapper": 14,
+   "f:protein_complexes:single_protein_pathwhiz_wrapper": 239,
+   "f:protein_complexes:complex_inferred_from_evidence": 1
+  },
+  "q_quar": {
+   "reaction": 71,
+   "interaction": 216,
+   "transport": 7
+  },
+  "q_acc": {
+   "reaction": 586,
+   "transport": 102,
+   "interaction": 278
+  },
+  "q_reasons": {
+   "interaction|quarantined_unmapped_entity|protein_missing_external_identity": 136,
+   "reaction|quarantined_unmapped_entity|protein_missing_external_identity": 54,
+   "interaction|quarantined_broken_reference|ambiguous_entity_type:nucleic_acids+proteins": 37,
+   "interaction|quarantined_unmapped_entity|undeclared_entity_in_entity_1": 27,
+   "interaction|quarantined_unmapped_entity|undeclared_entity_in_entity_2": 13,
+   "reaction|quarantined_broken_reference|ambiguous_entity_type:protein_complexes+proteins": 11,
+   "transport|quarantined_unmapped_entity|protein_missing_external_identity": 6,
+   "reaction|quarantined_broken_reference|ambiguous_entity_type:compounds+nucleic_acids": 3,
+   "interaction|quarantined_broken_reference|ambiguous_entity_type:protein_complexes+proteins": 3,
+   "reaction|quarantined_unmapped_entity|protein_complex_component_unrepresentable:enterobactin synthase:protein_missing_external_identity": 2,
+   "transport|quarantined_broken_reference|unresolved_actor_in_transporters": 1,
+   "reaction|quarantined_unmapped_entity|undeclared_entity_in_inputs": 1
+  },
+  "removed_entities": {
+   "compounds|unreferenced_after_quarantine": 154,
+   "proteins|degree_zero_after_quarantine": 101,
+   "element_collections|unreferenced_after_quarantine": 1,
+   "protein_complexes|degree_zero_after_quarantine": 24,
+   "nucleic_acids|unreferenced_after_quarantine": 24
+  },
+  "norm_stats": {
+   "entities_added_as_compounds": 60,
+   "n_autostate_created": 115,
+   "modifier_refs_canonicalized": 1477,
+   "n_same_as_groups": 132,
+   "n_aliases_rewritten": 398,
+   "n_entities_deduped": 54,
+   "nucleic_acid_named_entities_relocated": 1,
+   "unused_proteins_flagged_for_review": 85,
+   "research_mode_relaxations": 81,
+   "gate_error_count": 518,
+   "entities_added_as_proteins": 34,
+   "interaction_enzymes_promoted": 51,
+   "complex_named_proteins_relocated": 23,
+   "unused_proteins_quarantined": 62,
+   "orphan_proteins_dropped": 62,
+   "dedupe_removed_transports": 2,
+   "dedupe_removed": 39,
+   "dedupe_removed_total": 39,
+   "catalysts_promoted_to_enzymes": 2,
+   "n_entities_assigned_to_autostate": 24,
+   "enzymes_attached_from_reaction_evidence": 2,
+   "dedupe_removed_reactions": 37,
+   "duplicate_locked_reactions_quarantined_count": 7,
+   "entities_moved_out_of_compounds": 1,
+   "no_op_removed_count": 30,
+   "no_op_quarantined_count": 30,
+   "evidenced_no_op_quarantined_count": 13,
+   "locked_no_op_quarantined_count": 17,
+   "n_plus_tokens_remaining": 1,
+   "unresolved_complex_components_dropped": 2,
+   "component_only_proteins_removed": 2
+  },
+  "entity_admission": {
+   "ea_removed": 10,
+   "ea_demoted": 95,
+   "('hallucination_gate', 'reagent_form_of_a_species_already_present', 'compound')": 6,
+   "('hallucination_gate', 'references_a_removed_row', 'interaction')": 3,
+   "('hallucination_gate', 'references_a_removed_row', 'reaction')": 1
+  },
+  "re_by_kind": {
+   "reaction": {
+    "drawn": 245,
+    "total": 688,
+    "omitted_before_freeze": 67
+   },
+   "transport": {
+    "drawn": 42,
+    "total": 109,
+    "omitted_before_freeze": 3
+   },
+   "interaction": {
+    "drawn": 17,
+    "total": 494,
+    "omitted_before_freeze": 142
+   }
+  },
+  "re_withheld": {
+   "by_design_withheld": 295,
+   "merged_dup": 15,
+   "untyped_interaction": 38,
+   "bare_protein_endpoint": 2
+  },
+  "re_omitted": {
+   "reaction|(no reason: no_pwml)|unclassified": 376,
+   "interaction|(no reason: no_pwml)|unclassified": 225,
+   "interaction|protein_missing_external_identity|KI-001": 75,
+   "interaction|(no reason: not_recorded)|unclassified": 70,
+   "transport|(no reason: no_pwml)|unclassified": 64,
+   "interaction|untyped_interaction|KI-008": 38,
+   "interaction|ambiguous_entity_type:nucleic_acids+proteins|KI-011": 37,
+   "reaction|coarse_grained_same_entity_transformation|KI-015": 28,
+   "reaction|protein_missing_external_identity|KI-001": 23,
+   "interaction|undeclared_entity_in_entity_1|KI-015": 21,
+   "reaction|duplicate_locked_reaction|KI-014": 15,
+   "reaction|ambiguous_entity_type:protein_complexes+proteins|KI-011": 11,
+   "interaction|undeclared_entity_in_entity_2|KI-015": 9,
+   "transport|protein_missing_external_identity|KI-001": 3,
+   "reaction|output_subset_of_input_without_distinct_product|unclassified": 3,
+   "interaction|bare_protein_endpoint|KI-009": 2,
+   "reaction|ambiguous_entity_type:compounds+nucleic_acids|KI-011": 1,
+   "reaction|undeclared_entity_in_inputs|KI-015": 1
+  }
+ },
+ "P1_pathwhiz_pwml": {
+  "n_runs": 61,
+  "n_papers": 35,
+  "s1": {
+   "compounds": 514,
+   "proteins": 471,
+   "protein_complexes": 12,
+   "nucleic_acids": 34,
+   "reactions": 237,
+   "transports": 41,
+   "interactions": 182
+  },
+  "m": {
+   "compounds": 525,
+   "proteins": 474,
+   "protein_complexes": 18,
+   "nucleic_acids": 34,
+   "reactions": 290,
+   "transports": 44,
+   "interactions": 403
+  },
+  "f": {
+   "compounds": 431,
+   "proteins": 241,
+   "protein_complexes": 234,
+   "nucleic_acids": 12,
+   "reactions": 245,
+   "transports": 42,
+   "interactions": 127
+  },
+  "pwml": {
+   "compounds": 431,
+   "proteins": 241,
+   "protein_complexes": 234,
+   "nucleic_acids": 12,
+   "reactions": 245,
+   "transports": 42,
+   "interactions": 87
+  },
+  "f_on_pwml_runs": {
+   "compounds": 431,
+   "proteins": 241,
+   "protein_complexes": 234,
+   "nucleic_acids": 12,
+   "reactions": 245,
+   "transports": 42,
+   "interactions": 127
+  },
+  "f_map": {
+   "compounds:matched": 279,
+   "proteins:matched": 213,
+   "protein_complexes:unresolved": 40,
+   "protein_complexes:ambiguous": 9,
+   "protein_complexes:novel": 22,
+   "protein_complexes:matched": 95,
+   "compounds:novel": 120,
+   "proteins:fallback": 18,
+   "protein_complexes:fallback": 68,
+   "compounds:ambiguous": 32,
+   "proteins:unresolved": 4,
+   "proteins:novel": 6
+  },
+  "f_ext": {
+   "compounds:id": 327,
+   "proteins:id": 241,
+   "compounds:noid": 104
+  },
+  "generated": {
+   "f:protein_complexes:single_protein_pathwhiz_wrapper": 131,
+   "f:protein_complexes:complex_named_source_entity_wrapper": 3
+  },
+  "q_quar": {
+   "reaction": 18,
+   "transport": 2,
+   "interaction": 99
+  },
+  "q_acc": {
+   "reaction": 245,
+   "transport": 42,
+   "interaction": 127
+  },
+  "q_reasons": {
+   "interaction|quarantined_unmapped_entity|protein_missing_external_identity": 40,
+   "interaction|quarantined_broken_reference|ambiguous_entity_type:nucleic_acids+proteins": 37,
+   "interaction|quarantined_unmapped_entity|undeclared_entity_in_entity_1": 18,
+   "reaction|quarantined_unmapped_entity|protein_missing_external_identity": 14,
+   "interaction|quarantined_unmapped_entity|undeclared_entity_in_entity_2": 4,
+   "reaction|quarantined_broken_reference|ambiguous_entity_type:protein_complexes+proteins": 3,
+   "transport|quarantined_unmapped_entity|protein_missing_external_identity": 2,
+   "reaction|quarantined_broken_reference|ambiguous_entity_type:compounds+nucleic_acids": 1
+  },
+  "removed_entities": {
+   "proteins|degree_zero_after_quarantine": 52,
+   "protein_complexes|degree_zero_after_quarantine": 11,
+   "compounds|unreferenced_after_quarantine": 91,
+   "nucleic_acids|unreferenced_after_quarantine": 22
+  },
+  "norm_stats": {
+   "catalysts_promoted_to_enzymes": 2,
+   "interaction_enzymes_promoted": 23,
+   "n_autostate_created": 40,
+   "n_entities_assigned_to_autostate": 17,
+   "enzymes_attached_from_reaction_evidence": 1,
+   "modifier_refs_canonicalized": 550,
+   "n_same_as_groups": 70,
+   "n_aliases_rewritten": 214,
+   "n_entities_deduped": 30,
+   "unused_proteins_quarantined": 40,
+   "orphan_proteins_dropped": 40,
+   "gate_error_count": 181,
+   "entities_added_as_compounds": 32,
+   "entities_added_as_proteins": 6,
+   "dedupe_removed_reactions": 17,
+   "dedupe_removed": 17,
+   "dedupe_removed_total": 17,
+   "duplicate_locked_reactions_quarantined_count": 2,
+   "complex_named_proteins_relocated": 5,
+   "no_op_removed_count": 15,
+   "no_op_quarantined_count": 15,
+   "evidenced_no_op_quarantined_count": 7,
+   "locked_no_op_quarantined_count": 8
+  },
+  "entity_admission": {
+   "ea_removed": 1,
+   "ea_demoted": 53,
+   "('hallucination_gate', 'reagent_form_of_a_species_already_present', 'compound')": 1
+  },
+  "re_by_kind": {
+   "reaction": {
+    "drawn": 245,
+    "total": 279,
+    "omitted_before_freeze": 34
+   },
+   "transport": {
+    "drawn": 42,
+    "total": 44,
+    "omitted_before_freeze": 2
+   },
+   "interaction": {
+    "drawn": 17,
+    "total": 226,
+    "omitted_before_freeze": 99
+   }
+  },
+  "re_withheld": {
+   "by_design_withheld": 124,
+   "merged_dup": 10,
+   "untyped_interaction": 38,
+   "bare_protein_endpoint": 2
+  },
+  "re_omitted": {
+   "interaction|(no reason: not_recorded)|unclassified": 70,
+   "interaction|protein_missing_external_identity|KI-001": 40,
+   "interaction|untyped_interaction|KI-008": 38,
+   "interaction|ambiguous_entity_type:nucleic_acids+proteins|KI-011": 37,
+   "interaction|undeclared_entity_in_entity_1|KI-015": 18,
+   "reaction|coarse_grained_same_entity_transformation|KI-015": 15,
+   "reaction|protein_missing_external_identity|KI-001": 14,
+   "reaction|duplicate_locked_reaction|KI-014": 10,
+   "interaction|undeclared_entity_in_entity_2|KI-015": 4,
+   "reaction|ambiguous_entity_type:protein_complexes+proteins|KI-011": 3,
+   "transport|protein_missing_external_identity|KI-001": 2,
+   "interaction|bare_protein_endpoint|KI-009": 2,
+   "reaction|ambiguous_entity_type:compounds+nucleic_acids|KI-011": 1,
+   "reaction|output_subset_of_input_without_distinct_product|unclassified": 1
+  }
+ },
+ "P0_pathwhiz_nopwml": {
+  "n_runs": 40,
+  "n_papers": 26,
+  "s1": {
+   "compounds": 346,
+   "proteins": 266,
+   "protein_complexes": 20,
+   "nucleic_acids": 5,
+   "reactions": 165,
+   "transports": 34,
+   "interactions": 52
+  },
+  "m": {
+   "compounds": 350,
+   "proteins": 267,
+   "protein_complexes": 19,
+   "nucleic_acids": 5,
+   "reactions": 210,
+   "transports": 35,
+   "interactions": 155
+  },
+  "f": {
+   "compounds": 288,
+   "proteins": 145,
+   "protein_complexes": 156,
+   "nucleic_acids": 3,
+   "reactions": 183,
+   "transports": 32,
+   "interactions": 61
+  },
+  "pwml": null,
+  "f_on_pwml_runs": null,
+  "f_map": {
+   "compounds:ambiguous": 46,
+   "compounds:matched": 153,
+   "proteins:matched": 123,
+   "compounds:novel": 89,
+   "protein_complexes:ambiguous": 11,
+   "protein_complexes:matched": 39,
+   "protein_complexes:novel": 11,
+   "proteins:fallback": 21,
+   "protein_complexes:unresolved": 30,
+   "protein_complexes:fallback": 65,
+   "proteins:novel": 1
+  },
+  "f_ext": {
+   "compounds:id": 208,
+   "proteins:id": 145,
+   "compounds:noid": 80
+  },
+  "generated": {
+   "f:protein_complexes:complex_named_source_entity_wrapper": 1,
+   "f:protein_complexes:single_protein_pathwhiz_wrapper": 108,
+   "f:protein_complexes:complex_inferred_from_evidence": 1
+  },
+  "q_quar": {
+   "transport": 1,
+   "interaction": 43,
+   "reaction": 18
+  },
+  "q_acc": {
+   "transport": 32,
+   "interaction": 61,
+   "reaction": 183
+  },
+  "q_reasons": {
+   "interaction|quarantined_unmapped_entity|protein_missing_external_identity": 35,
+   "reaction|quarantined_unmapped_entity|protein_missing_external_identity": 9,
+   "reaction|quarantined_broken_reference|ambiguous_entity_type:protein_complexes+proteins": 8,
+   "interaction|quarantined_unmapped_entity|undeclared_entity_in_entity_2": 5,
+   "interaction|quarantined_unmapped_entity|undeclared_entity_in_entity_1": 3,
+   "transport|quarantined_unmapped_entity|protein_missing_external_identity": 1,
+   "reaction|quarantined_unmapped_entity|undeclared_entity_in_inputs": 1
+  },
+  "removed_entities": {
+   "compounds|unreferenced_after_quarantine": 63,
+   "proteins|degree_zero_after_quarantine": 49,
+   "element_collections|unreferenced_after_quarantine": 1,
+   "nucleic_acids|unreferenced_after_quarantine": 2,
+   "protein_complexes|degree_zero_after_quarantine": 13
+  },
+  "norm_stats": {
+   "entities_added_as_proteins": 14,
+   "interaction_enzymes_promoted": 7,
+   "n_autostate_created": 35,
+   "modifier_refs_canonicalized": 486,
+   "complex_named_proteins_relocated": 7,
+   "unused_proteins_quarantined": 22,
+   "orphan_proteins_dropped": 22,
+   "gate_error_count": 165,
+   "dedupe_removed_transports": 2,
+   "dedupe_removed": 10,
+   "dedupe_removed_total": 10,
+   "n_same_as_groups": 26,
+   "n_aliases_rewritten": 89,
+   "n_entities_deduped": 13,
+   "dedupe_removed_reactions": 8,
+   "duplicate_locked_reactions_quarantined_count": 5,
+   "no_op_removed_count": 3,
+   "no_op_quarantined_count": 3,
+   "evidenced_no_op_quarantined_count": 2,
+   "entities_added_as_compounds": 14,
+   "n_entities_assigned_to_autostate": 3,
+   "locked_no_op_quarantined_count": 1
+  },
+  "entity_admission": {
+   "ea_removed": 4,
+   "ea_demoted": 22,
+   "('hallucination_gate', 'reagent_form_of_a_species_already_present', 'compound')": 2,
+   "('hallucination_gate', 'references_a_removed_row', 'reaction')": 1,
+   "('hallucination_gate', 'references_a_removed_row', 'interaction')": 1
+  },
+  "re_by_kind": {
+   "reaction": {
+    "drawn": 0,
+    "total": 204,
+    "omitted_before_freeze": 21
+   },
+   "transport": {
+    "drawn": 0,
+    "total": 33,
+    "omitted_before_freeze": 1
+   },
+   "interaction": {
+    "drawn": 0,
+    "total": 104,
+    "omitted_before_freeze": 43
+   }
+  },
+  "re_withheld": {
+   "by_design_withheld": 59,
+   "merged_dup": 5
+  },
+  "re_omitted": {
+   "reaction|(no reason: no_pwml)|unclassified": 183,
+   "interaction|(no reason: no_pwml)|unclassified": 61,
+   "interaction|protein_missing_external_identity|KI-001": 35,
+   "transport|(no reason: no_pwml)|unclassified": 32,
+   "reaction|protein_missing_external_identity|KI-001": 9,
+   "reaction|ambiguous_entity_type:protein_complexes+proteins|KI-011": 8,
+   "reaction|duplicate_locked_reaction|KI-014": 5,
+   "interaction|undeclared_entity_in_entity_2|KI-015": 5,
+   "interaction|undeclared_entity_in_entity_1|KI-015": 3,
+   "reaction|coarse_grained_same_entity_transformation|KI-015": 3,
+   "transport|protein_missing_external_identity|KI-001": 1,
+   "reaction|undeclared_entity_in_inputs|KI-015": 1
+  }
+ },
+ "RS_research": {
+  "n_runs": 51,
+  "n_papers": 14,
+  "s1": {
+   "compounds": 368,
+   "proteins": 399,
+   "protein_complexes": 19,
+   "nucleic_acids": 23,
+   "reactions": 159,
+   "transports": 32,
+   "interactions": 112
+  },
+  "m": {
+   "compounds": 374,
+   "proteins": 402,
+   "protein_complexes": 15,
+   "nucleic_acids": 25,
+   "reactions": 205,
+   "transports": 32,
+   "interactions": 279
+  },
+  "f": {
+   "compounds": 376,
+   "proteins": 401,
+   "protein_complexes": 25,
+   "nucleic_acids": 24,
+   "reactions": 193,
+   "transports": 32,
+   "interactions": 164
+  },
+  "pwml": null,
+  "f_on_pwml_runs": null,
+  "f_map": {
+   "compounds:matched": 253,
+   "compounds:novel": 83,
+   "proteins:ambiguous": 4,
+   "proteins:novel": 69,
+   "protein_complexes:unresolved": 8,
+   "compounds:ambiguous": 40,
+   "proteins:matched": 327,
+   "proteins:unresolved": 1,
+   "protein_complexes:ambiguous": 7,
+   "protein_complexes:matched": 7,
+   "protein_complexes:novel": 3
+  },
+  "f_ext": {
+   "compounds:id": 298,
+   "compounds:noid": 78,
+   "proteins:noid": 75,
+   "proteins:id": 326
+  },
+  "generated": {
+   "f:protein_complexes:complex_named_source_entity_wrapper": 10
+  },
+  "q_quar": {
+   "reaction": 35,
+   "interaction": 74,
+   "transport": 4
+  },
+  "q_acc": {
+   "reaction": 158,
+   "transport": 28,
+   "interaction": 90
+  },
+  "q_reasons": {
+   "interaction|quarantined_unmapped_entity|protein_missing_external_identity": 61,
+   "reaction|quarantined_unmapped_entity|protein_missing_external_identity": 31,
+   "interaction|quarantined_unmapped_entity|undeclared_entity_in_entity_1": 6,
+   "interaction|quarantined_unmapped_entity|undeclared_entity_in_entity_2": 4,
+   "transport|quarantined_unmapped_entity|protein_missing_external_identity": 3,
+   "interaction|quarantined_broken_reference|ambiguous_entity_type:protein_complexes+proteins": 3,
+   "reaction|quarantined_broken_reference|ambiguous_entity_type:compounds+nucleic_acids": 2,
+   "reaction|quarantined_unmapped_entity|protein_complex_component_unrepresentable:enterobactin synthase:protein_missing_external_identity": 2,
+   "transport|quarantined_broken_reference|unresolved_actor_in_transporters": 1
+  },
+  "removed_entities": {},
+  "norm_stats": {
+   "entities_added_as_compounds": 14,
+   "n_autostate_created": 40,
+   "modifier_refs_canonicalized": 441,
+   "n_same_as_groups": 36,
+   "n_aliases_rewritten": 95,
+   "n_entities_deduped": 11,
+   "nucleic_acid_named_entities_relocated": 1,
+   "unused_proteins_flagged_for_review": 85,
+   "research_mode_relaxations": 81,
+   "gate_error_count": 172,
+   "n_entities_assigned_to_autostate": 4,
+   "entities_moved_out_of_compounds": 1,
+   "entities_added_as_proteins": 14,
+   "interaction_enzymes_promoted": 21,
+   "complex_named_proteins_relocated": 11,
+   "enzymes_attached_from_reaction_evidence": 1,
+   "dedupe_removed_reactions": 12,
+   "dedupe_removed": 12,
+   "dedupe_removed_total": 12,
+   "no_op_removed_count": 12,
+   "no_op_quarantined_count": 12,
+   "evidenced_no_op_quarantined_count": 4,
+   "n_plus_tokens_remaining": 1,
+   "locked_no_op_quarantined_count": 8,
+   "unresolved_complex_components_dropped": 2,
+   "component_only_proteins_removed": 2
+  },
+  "entity_admission": {
+   "ea_removed": 5,
+   "ea_demoted": 20,
+   "('hallucination_gate', 'reagent_form_of_a_species_already_present', 'compound')": 3,
+   "('hallucination_gate', 'references_a_removed_row', 'interaction')": 2
+  },
+  "re_by_kind": {
+   "reaction": {
+    "drawn": 0,
+    "total": 205,
+    "omitted_before_freeze": 12
+   },
+   "transport": {
+    "drawn": 0,
+    "total": 32,
+    "omitted_before_freeze": 0
+   },
+   "interaction": {
+    "drawn": 0,
+    "total": 164,
+    "omitted_before_freeze": 0
+   }
+  },
+  "re_withheld": {
+   "by_design_withheld": 112,
+   "merged_dup": 0
+  },
+  "re_omitted": {
+   "reaction|(no reason: no_pwml)|unclassified": 193,
+   "interaction|(no reason: no_pwml)|unclassified": 164,
+   "transport|(no reason: no_pwml)|unclassified": 32,
+   "reaction|coarse_grained_same_entity_transformation|KI-015": 10,
+   "reaction|output_subset_of_input_without_distinct_product|unclassified": 2
+  }
+ },
+ "OTHER40": {
+  "n_runs": 40,
+  "n_papers": 12,
+  "s1": {
+   "compounds": 367,
+   "proteins": 333,
+   "protein_complexes": 15,
+   "nucleic_acids": 44,
+   "reactions": 162,
+   "transports": 38,
+   "interactions": 125
+  },
+  "m": {
+   "compounds": 464,
+   "proteins": 379,
+   "protein_complexes": 17,
+   "nucleic_acids": 44,
+   "reactions": 233,
+   "transports": 42,
+   "interactions": 271
+  },
+  "f": {
+   "compounds": 442,
+   "proteins": 291,
+   "protein_complexes": 142,
+   "nucleic_acids": 44,
+   "reactions": 228,
+   "transports": 42,
+   "interactions": 208
+  },
+  "pwml": {
+   "compounds": 91,
+   "proteins": 44,
+   "protein_complexes": 41,
+   "nucleic_acids": 0,
+   "reactions": 54,
+   "transports": 3,
+   "interactions": 18
+  },
+  "f_on_pwml_runs": {
+   "compounds": 92,
+   "proteins": 44,
+   "protein_complexes": 41,
+   "nucleic_acids": 0,
+   "reactions": 54,
+   "transports": 3,
+   "interactions": 18
+  },
+  "f_map": {
+   "compounds:matched": 266,
+   "compounds:ambiguous": 47,
+   "compounds:novel": 128,
+   "compounds:unresolved": 1,
+   "proteins:matched": 164,
+   "proteins:ambiguous": 5,
+   "protein_complexes:matched": 46,
+   "protein_complexes:ambiguous": 11,
+   "protein_complexes:novel": 11,
+   "proteins:novel": 112,
+   "proteins:fallback": 10,
+   "protein_complexes:unresolved": 38,
+   "protein_complexes:fallback": 36
+  },
+  "f_ext": {
+   "compounds:id": 278,
+   "compounds:noid": 164,
+   "proteins:id": 176,
+   "proteins:noid": 115
+  },
+  "generated": {
+   "f:protein_complexes:single_protein_pathwhiz_wrapper": 78,
+   "f:protein_complexes:complex_named_source_entity_wrapper": 7
+  },
+  "q_quar": {
+   "interaction": 50,
+   "reaction": 10,
+   "transport": 2
+  },
+  "q_acc": {
+   "reaction": 55,
+   "transport": 9,
+   "interaction": 33
+  },
+  "q_reasons": {
+   "interaction|quarantined_broken_reference|ambiguous_entity_type:nucleic_acids+proteins": 26,
+   "interaction|quarantined_unmapped_entity|protein_missing_external_identity": 12,
+   "interaction|quarantined_unmapped_entity|undeclared_entity_in_entity_1": 12,
+   "reaction|quarantined_unmapped_entity|protein_missing_external_identity": 4,
+   "reaction|quarantined_unmapped_entity|undeclared_entity_in_outputs": 2,
+   "transport|quarantined_unmapped_entity|protein_missing_external_identity": 2,
+   "reaction|quarantined_broken_reference|ambiguous_entity_type:protein_complexes+proteins": 2,
+   "reaction|quarantined_broken_reference|ambiguous_entity_type:nucleic_acids+proteins": 1,
+   "reaction|quarantined_broken_reference|ambiguous_entity_type:compounds+nucleic_acids": 1
+  },
+  "removed_entities": {
+   "compounds|unreferenced_after_quarantine": 37,
+   "proteins|degree_zero_after_quarantine": 24,
+   "nucleic_acids|unreferenced_after_quarantine": 15,
+   "protein_complexes|degree_zero_after_quarantine": 3
+  },
+  "norm_stats": {
+   "entities_added_as_compounds": 8,
+   "n_autostate_created": 17,
+   "modifier_refs_canonicalized": 274,
+   "unused_proteins_quarantined": 24,
+   "orphan_proteins_dropped": 24,
+   "gate_error_count": 87,
+   "entities_added_as_proteins": 8,
+   "interaction_enzymes_promoted": 2,
+   "dedupe_removed_reactions": 1,
+   "dedupe_removed": 1,
+   "dedupe_removed_total": 1,
+   "duplicate_locked_reactions_quarantined_count": 1,
+   "n_same_as_groups": 14,
+   "n_aliases_rewritten": 43,
+   "n_entities_deduped": 11,
+   "complex_named_proteins_relocated": 6,
+   "catalysts_promoted_to_enzymes": 3,
+   "unused_proteins_flagged_for_review": 36,
+   "research_mode_relaxations": 10,
+   "n_entities_assigned_to_autostate": 2
+  },
+  "entity_admission": {
+   "ea_removed": 4,
+   "ea_demoted": 15,
+   "('hallucination_gate', 'reagent_form_of_a_species_already_present', 'compound')": 2,
+   "('hallucination_gate', 'references_a_removed_row', 'reaction')": 1,
+   "('hallucination_gate', 'references_a_removed_row', 'interaction')": 1
+  },
+  "re_by_kind": {
+   "reaction": {
+    "drawn": 54,
+    "total": 232,
+    "omitted_before_freeze": 4
+   },
+   "transport": {
+    "drawn": 3,
+    "total": 42,
+    "omitted_before_freeze": 0
+   },
+   "interaction": {
+    "drawn": 0,
+    "total": 208,
+    "omitted_before_freeze": 0
+   }
+  },
+  "re_withheld": {
+   "by_design_withheld": 119,
+   "merged_dup": 1
+  },
+  "re_omitted": {
+   "interaction|(no reason: no_pwml)|unclassified": 190,
+   "reaction|(no reason: no_pwml)|unclassified": 174,
+   "transport|(no reason: no_pwml)|unclassified": 39,
+   "interaction|(no reason: not_recorded)|unclassified": 18,
+   "reaction|coarse_grained_same_entity_transformation|KI-015": 3,
+   "reaction|duplicate_locked_reaction|KI-014": 1,
+   "reaction|output_subset_of_input_without_distinct_product|unclassified": 1
+  }
+ }
+}
