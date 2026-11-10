@@ -1,0 +1,136 @@
+{
+  "label": "E2E5b",
+  "command": [
+    "C:\\t\\e2e3-venv\\Scripts\\python.exe",
+    "C:/t/ev-E2E5b/check.py"
+  ],
+  "cwd": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+  "started_at": "2026-11-10T14:53:28+00:00",
+  "finished_at": "2026-11-10T14:53:32+00:00",
+  "duration_seconds": 4.066560799999934,
+  "timeout_seconds": 420.0,
+  "root_pid": 26796,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 30956,
+      "name": "python.exe",
+      "ppid": 26796
+    },
+    {
+      "pid": 31368,
+      "name": "python.exe",
+      "ppid": 30956
+    },
+    {
+      "pid": 34012,
+      "name": "python.exe",
+      "ppid": 31368
+    },
+    {
+      "pid": 33028,
+      "name": "node.exe",
+      "ppid": 30956
+    },
+    {
+      "pid": 34172,
+      "name": "chrome-headless-shell.exe",
+      "ppid": 33028
+    },
+    {
+      "pid": 34448,
+      "name": "chrome-headless-shell.exe",
+      "ppid": 34172
+    },
+    {
+      "pid": 34512,
+      "name": "chrome-headless-shell.exe",
+      "ppid": 34172
+    },
+    {
+      "pid": 34532,
+      "name": "chrome-headless-shell.exe",
+      "ppid": 34172
+    },
+    {
+      "pid": 34676,
+      "name": "chrome-headless-shell.exe",
+      "ppid": 34172
+    },
+    {
+      "pid": 33184,
+      "name": "taskkill.exe",
+      "ppid": 30956
+    }
+  ],
+  "descendants_terminated": [
+    30956,
+    31368,
+    33028,
+    33184,
+    34012,
+    34172,
+    34448,
+    34512,
+    34532,
+    34676
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 2556,
+      "name": "python.exe"
+    },
+    {
+      "pid": 31388,
+      "name": "python.exe"
+    },
+    {
+      "pid": 33872,
+      "name": "python.exe"
+    },
+    {
+      "pid": 33912,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/ev-E2E5b/wrapper.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "4b8ef1698e262cfbdbef62d1c8e2ff57a561f760",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "E2E5b",
+    "token": "E2E5b:33912:3339e8c6200d5c17",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
