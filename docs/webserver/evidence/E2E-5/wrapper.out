@@ -1,0 +1,47 @@
+C:\t\ev-E2E5\scripts\drive.py:60: DeprecationWarning: 'maxsplit' is passed as positional argument
+  k, v = line.split("=", 1); k = k.strip(); v = re.split(r"\s+#", v.strip(), 1)[0].strip().strip('"').strip("'")
+[     0s] started uvicorn 730992
+[     0s] started worker 730244
+[     4s] submitted -> job page
+[     4s] status ('Queued',) | Job status |  | Note: | Keep this link |  | This page is your job. Bookmark it: http://127.0.0.1:52094/job/ea79681c16aa429799bee5c47b24d663 |  | Anyone who has the link can see the results, so share it with care. |  | Submitted 2026-11-10 06:49 UTC. This page updates itself every 10 seconds. |  | Taste transduction: sour
+[    24s] status ('Running',) | Job status |  | Note: | Keep this link |  | This page is your job. Bookmark it: http://127.0.0.1:52094/job/ea79681c16aa429799bee5c47b24d663 |  | Anyone who has the link can see the results, so share it with care. |  | Submitted 2026-11-10 06:49 UTC. This page updates itself every 10 seconds. |  | Taste transduction: sour
+[  1285s] status ('Review required',) | Job status |  | Note: | Keep this link |  | This page is your job. Bookmark it: http://127.0.0.1:52094/job/ea79681c16aa429799bee5c47b24d663 |  | Anyone who has the link can see the results, so share it with care. |  | Submitted 2026-11-10 06:49 UTC. This page updates itself every 10 seconds. |  | Taste transduction: sour
+[  1315s] shot fail 05-job-done Page.screenshot: Timeout 30000ms exceeded.
+Call log:
+  - taking page screenshot
+  - waiting for fonts to load...
+  - fonts loaded
+
+[  1345s] shot fail 06-result Page.screenshot: Timeout 30000ms exceeded.
+Call log:
+  - taking page screenshot
+  - waiting for fonts to load...
+  - fonts loaded
+
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-E2E5\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 6a3d180a93e01fc76bc839a23270c0a68545e3c9  [git, worktree dirty=False]
+label                   : E2E5
+command                 : C:\t\e2e3-venv\Scripts\python.exe -u C:/t/ev-E2E5/scripts/drive.py
+cwd                     : C:/t/ws-E2E5
+root PID / process group: 726740 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 6600 s
+duration                : 6625.42 s
+exit reason             : timeout
+exit code (real)        : None
+returned code           : 124
+descendants observed    : 12  725596:python.exe, 730992:python.exe, 723148:python.exe, 728492:python.exe, 730244:python.exe, 731024:node.exe, 730216:chrome-headless-shell.exe, 708736:chrome-headless-shell.exe, 730300:chrome-headless-shell.exe, 730748:chrome-headless-shell.exe, 731740:python.exe, 731756:python.exe
+descendants terminated  : 12  708736, 723148, 725596, 728492, 730216, 730244, 730300, 730748, 730992, 731024, 731740, 731756
+graceful attempted      : True
+forced                  : True
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ev-E2E5/wrapper.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=E2E5  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

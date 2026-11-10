@@ -1,0 +1,53 @@
+rows 27 model_attempt 25 Counter({'model_attempt': 25, 'job_begin': 1, 'job_end': 1})
+started_at: present 25/25 (100%), non-empty/non-zero 25/25 (100%)
+duration_s: present 25/25 (100%), non-empty/non-zero 25/25 (100%)
+prompt_tokens: present 25/25 (100%), non-empty/non-zero 25/25 (100%)
+completion_tokens: present 25/25 (100%), non-empty/non-zero 25/25 (100%)
+reasoning_tokens: present 25/25 (100%), non-empty/non-zero 15/25 (60%)
+provider: present 25/25 (100%), non-empty/non-zero 25/25 (100%)
+generation_id: present 25/25 (100%), non-empty/non-zero 25/25 (100%)
+response_model: present 25/25 (100%), non-empty/non-zero 25/25 (100%)
+
+per stage
+preprocessor: n=1 sum=12.5s max=12.5s status={'ok': 1}
+Stage 1 extraction: n=3 sum=234.0s max=164.2s status={'ok': 3}
+rag_prose_extraction: n=8 sum=14.8s max=5.7s status={'ok': 8}
+Stage 2 inference: n=2 sum=59.8s max=52.5s status={'ok': 2}
+audit loop: n=3 sum=260.5s max=226.3s status={'ok': 3}
+curator: n=8 sum=168.5s max=63.8s status={'ok': 8}
+
+ten slowest
+audit loop ok 226.296 Relace stop
+Stage 1 extraction ok 164.159 Relace stop
+curator ok 63.8 Venice tool_calls
+Stage 2 inference ok 52.526 Venice stop
+Stage 1 extraction ok 37.682 DeepInfra stop
+curator ok 36.252 Venice tool_calls
+Stage 1 extraction ok 32.157 Wafer stop
+audit loop ok 25.321 Parasail stop
+curator ok 21.81 Venice tool_calls
+curator ok 16.874 Venice tool_calls
+
+LLM time sum 750.0s (12.5 min); job_end elapsed 1259.479s; unaccounted 509.5s (40%)
+
+call_cap rows 0 []
+statuses overall Counter({'ok': 25})
+
+longest successful call per capped stage (margin to 720s)
+preprocessor n_ok 1 max_ok 12.473 margin 707.527
+Stage 1 extraction n_ok 3 max_ok 164.159 margin 555.841
+Stage 2 inference n_ok 2 max_ok 52.526 margin 667.474
+rag_prose_extraction n_ok 8 max_ok 5.655 margin 714.345
+stages seen: ['Stage 1 extraction', 'Stage 2 inference', 'audit loop', 'curator', 'preprocessor', 'rag_prose_extraction']
+
+PRIVACY
+sk-or 0
+sk-[A-Za-z0-9_-]{20,} 0
+C:[\\/] 0
+C:\\\\ 0
+Users[\\/]+Angad 0
+Angad 0
+Bearer  0
+paper-evidence snippets tested 18 with hits 0
+keys in model_attempt rows: ['attempt', 'completion_tokens', 'content_chars', 'duration_s', 'elapsed_seconds', 'finish_reason', 'generation_id', 'kind', 'model', 'prompt_tokens', 'provider', 'reason', 'reasoning_tokens', 'request_hash', 'response_hash', 'response_model', 'seq', 'stage', 'started_at', 'status']
+string fields >80 chars: Counter()

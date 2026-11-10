@@ -1,0 +1,153 @@
+{
+  "label": "E2E5",
+  "command": [
+    "C:\\t\\e2e3-venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/ev-E2E5/scripts/drive.py"
+  ],
+  "cwd": "C:/t/ws-E2E5",
+  "started_at": "2026-11-10T06:48:58+00:00",
+  "finished_at": "2026-11-10T08:39:23+00:00",
+  "duration_seconds": 6625.418913400004,
+  "timeout_seconds": 6600.0,
+  "root_pid": 726740,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "timeout",
+  "exit_code": null,
+  "returned_code": 124,
+  "descendants_observed": [
+    {
+      "pid": 725596,
+      "name": "python.exe",
+      "ppid": 726740
+    },
+    {
+      "pid": 730992,
+      "name": "python.exe",
+      "ppid": 725596
+    },
+    {
+      "pid": 723148,
+      "name": "python.exe",
+      "ppid": 730992
+    },
+    {
+      "pid": 728492,
+      "name": "python.exe",
+      "ppid": 730244
+    },
+    {
+      "pid": 730244,
+      "name": "python.exe",
+      "ppid": 725596
+    },
+    {
+      "pid": 731024,
+      "name": "node.exe",
+      "ppid": 725596
+    },
+    {
+      "pid": 730216,
+      "name": "chrome-headless-shell.exe",
+      "ppid": 731024
+    },
+    {
+      "pid": 708736,
+      "name": "chrome-headless-shell.exe",
+      "ppid": 730216
+    },
+    {
+      "pid": 730300,
+      "name": "chrome-headless-shell.exe",
+      "ppid": 730216
+    },
+    {
+      "pid": 730748,
+      "name": "chrome-headless-shell.exe",
+      "ppid": 730216
+    },
+    {
+      "pid": 731740,
+      "name": "python.exe",
+      "ppid": 728492
+    },
+    {
+      "pid": 731756,
+      "name": "python.exe",
+      "ppid": 731740
+    }
+  ],
+  "descendants_terminated": [
+    708736,
+    723148,
+    725596,
+    728492,
+    730216,
+    730244,
+    730300,
+    730748,
+    730992,
+    731024,
+    731740,
+    731756
+  ],
+  "graceful_attempted": true,
+  "forced": true,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 58320,
+      "name": "python.exe"
+    },
+    {
+      "pid": 693444,
+      "name": "python.exe"
+    },
+    {
+      "pid": 696136,
+      "name": "python.exe"
+    },
+    {
+      "pid": 715716,
+      "name": "python.exe"
+    },
+    {
+      "pid": 729028,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/ev-E2E5/wrapper.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-E2E5\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-E2E5",
+    "repo_head": "6a3d180a93e01fc76bc839a23270c0a68545e3c9",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "E2E5",
+    "token": "E2E5:729028:3bf1312aaedfc336",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
