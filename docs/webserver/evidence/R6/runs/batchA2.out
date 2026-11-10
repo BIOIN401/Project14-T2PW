@@ -1,0 +1,54 @@
+T2PW: C:\t\ws-R6\src\t2pw\__init__.py
+........................................................................ [ 21%]
+..........Fs....sss..................................................... [ 42%]
+........................................................................ [ 64%]
+........................................................................ [ 85%]
+.................................................                        [100%]
+================================== FAILURES ===================================
+_______ test_the_message_names_the_problem_the_interpreter_and_the_cure _______
+
+    def test_the_message_names_the_problem_the_interpreter_and_the_cure() -> None:
+        """The wrong-interpreter case: the one that actually happened.
+    
+        The cure has to be a command, not advice. "Use the venv" is not actionable at
+        2am; ``C:\\...\\.venv\\Scripts\\python.exe scripts\\batch_run.py`` is, and the
+        root cause -- ``py.exe`` ignoring the active virtualenv -- has to be named or
+        the operator fixes it once and hits it again next week.
+        """
+    
+        venv = runner.venv_python()
+>       assert venv is not None, "this project ships a .venv; the test assumes it"
+E       AssertionError: this project ships a .venv; the test assumes it
+E       assert None is not None
+
+tests\test_batch_preflight.py:616: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_batch_preflight.py::test_the_message_names_the_problem_the_interpreter_and_the_cure
+1 failed, 332 passed, 4 skipped in 54.54s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ws-R6\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 1fdf91ca54c56f6c33f27b0af692b3a5273aed87  [git, worktree dirty=True]
+label                   : R6-batchA2
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ws-R6/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ws-R6 -q --basetemp=C:/t/bt/R6/batchA2-1794264645 tests/test_batch_run.py tests/test_batch_preflight.py tests/test_deadline_budget.py tests/test_deadline_leg_timeout.py tests/test_c111_timeout_observability.py tests/test_batch_driver_run_pathway.py tests/test_service_run_pathway.py tests/test_service_driver_bridge.py tests/test_service_pathway_interface.py tests/test_web_worker.py
+cwd                     : C:\t\ws-R6
+root PID / process group: 322964 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 55.48 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 85  321548:python.exe, 322732:python.exe, 323100:python.exe, 323748:taskkill.exe, 323836:python.exe, 323856:python.exe, 323984:python.exe, 324004:python.exe, 324164:python.exe, 324184:python.exe, 324480:python.exe, 324500:python.exe, 324520:python.exe, 324540:python.exe, 324560:python.exe, 324580:python.exe, 318812:python.exe, 323740:python.exe, 323864:python.exe, 323952:python.exe, 321500:python.exe, 321736:python.exe, 304864:python.exe, 324428:python.exe, 324568:python.exe, 323612:python.exe, 323812:python.exe, 323920:python.exe, 323808:python.exe, 323956:python.exe, 324120:python.exe, 324116:python.exe, 319564:python.exe, 313996:python.exe, 317448:python.exe, 322308:python.exe, 324460:taskkill.exe, 324168:python.exe, 324464:python.exe, 324188:python.exe, 324488:python.exe, 322480:python.exe, 323760:python.exe, 322148:python.exe, 324572:python.exe, 318328:python.exe, 323820:python.exe, 323460:python.exe, 322348:python.exe, 323640:python.exe, 324440:python.exe, 323672:python.exe, 323660:python.exe, 324172:python.exe, 324304:python.exe, 167144:python.exe, 171564:python.exe, 323512:python.exe, 324420:python.exe, 321428:python.exe, 323708:python.exe, 319728:python.exe, 324484:python.exe, 315888:python.exe, 320040:python.exe, 171524:python.exe, 319376:python.exe, 29216:python.exe, 320256:python.exe, 322952:python.exe, 323044:python.exe, 300408:python.exe, 323280:python.exe, 159768:python.exe, 320284:python.exe, 321220:python.exe, 321228:python.exe, 321828:python.exe, 322856:python.exe, 168616:python.exe, 324016:python.exe, 323016:python.exe, 168716:python.exe, 321380:python.exe, 324196:python.exe
+descendants terminated  : 85  29216, 159768, 167144, 168616, 168716, 171524, 171564, 300408, 304864, 313996, 315888, 317448, 318328, 318812, 319376, 319564, 319728, 320040, 320256, 320284, 321220, 321228, 321380, 321428, 321500, 321548, 321736, 321828, 322148, 322308, 322348, 322480, 322732, 322856, 322952, 323016, 323044, 323100, 323280, 323460, 323512, 323612, 323640, 323660, 323672, 323708, 323740, 323748, 323760, 323808, 323812, 323820, 323836, 323856, 323864, 323920, 323952, 323956, 323984, 324004, 324016, 324116, 324120, 324164, 324168, 324172, 324184, 324188, 324196, 324304, 324420, 324428, 324440, 324460, 324464, 324480, 324484, 324488, 324500, 324520, 324540, 324560, 324568, 324572, 324580
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ev-R6/out/batchA2.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R6  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

@@ -1,0 +1,58 @@
+RESULT: PASS (with warnings)
+========================================
+paper      : PMC7059786
+title      : (unknown)
+slug       : PMC7059786__sour
+mode       : strict
+status     : pass
+stage      : pwml_export
+wall time  : 12.8s
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/5/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/5/mapping_meta: Mapped entity with a name is missing mapping_meta.
+
+message    : strict run completed; pathway.review_required.pwml is 53474 bytes
+
+COUNTS
+----------------------------------------
+  blocking_issues = 0
+  compounds = 2
+  entities = 16
+  gate_errors = 0
+  proteins = 3
+  pwml = {'compounds': 2, 'proteins': 3, 'reactions': 0, 'edges': 16}
+  pwml_bytes = 53474
+  reactions = 0
+  runtime_schema_findings = 2
+  stage0_observed_organisms = 1
+  stage0_observed_pathways = 1
+  stage0_scope_specializations = 1
+  transports = 6
+
+FILES WRITTEN
+----------------------------------------
+  - audit_iteration_summary.json  (3972 B)
+  - cleaning_report.json  (1191 B)
+  - contract_reports.json  (6415 B)
+  - coverage_diagnostics.json  (2019 B)
+  - coverage_summary.json  (4994 B)
+  - extraction_boundary_report.json  (7371 B)
+  - final_mapped.json  (154727 B)
+  - final_stage3_gate_report.json  (2773 B)
+  - gap_iteration_summary.json  (19717 B)
+  - graph_closure_iterations.json  (1174 B)
+  - merged_payload.json  (59803 B)
+  - pathway.review_required.pwml  (53474 B)
+  - pwml_ir.json  (50748 B)
+  - pwml_ir_report.json  (851 B)
+  - pwml_ir_validation.json  (234 B)
+  - pwml_qa.json  (373 B)
+  - pwml_required_field_gate_report.json  (645 B)
+  - pwml_validation_report.json  (19586 B)
+  - quarantine_report.json  (15608 B)
+  - removed_entity_report.json  (836 B)
+  - scope_specialization.json  (928 B)
+  - stage0_attempts.json  (826 B)
+  - stage1_payload.json  (24219 B)

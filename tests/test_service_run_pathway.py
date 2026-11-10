@@ -746,3 +746,54 @@ def test_a_write_failure_on_a_required_artifact_is_a_crash(world, tmp_path, monk
     monkeypatch.setattr(runner, "write_artifacts", lose)
     res = _run(tmp_path)
     assert (res.status, res.failure_kind) == ("fail", "crash")
+
+
+# -- R6 part 2: the two notes carried out of the R5 review (N-a, N-c, N-d) --------------------
+def test_a_root_that_ends_a_clause_is_cut_but_science_is_not(tmp_path, monkeypatch):
+    import tempfile
+
+    monkeypatch.setattr(tempfile, "gettempdir", lambda: "/tmp")
+    scrub = lambda text: pw._scrub_server_paths({"r.txt": text}, tmp_path)["r.txt"]  # noqa: E731
+    assert scrub("(see /tmp) and /tmp, then /tmp. Also [/tmp] {/tmp} /tmp; /tmp: x") == "(see ) and , then . Also [] {} ; : x"
+    assert scrub("ACE2/TMPRSS2 and UMP/TMP, UMP/TMP) ok") == "ACE2/TMPRSS2 and UMP/TMP, UMP/TMP) ok"
+
+
+def test_the_run_record_stays_json_when_a_root_precedes_an_escaped_quote(world, tmp_path, monkeypatch):
+    from t2pw.batch import runner
+
+    out = tmp_path / "out"
+    real = runner.write_artifacts
+
+    def lose(out_dir, artifacts):
+        return [{**row, "error": f'[Errno 28] No space left on device: "{out}"'} if row["name"] == "final_mapped.json" else row
+                for row in real(out_dir, artifacts)]
+    monkeypatch.setattr(runner, "write_artifacts", lose)
+    res = _run(tmp_path)
+    assert res.status == "pass"
+    text = (out / "run_outcome.json").read_text(encoding="utf-8")
+    record = json.loads(text)  # a text substitution ate the backslash of the escaped quote
+    error = next(f["error"] for f in record["bridge_files"] if f.get("error"))
+    assert error.startswith("[Errno 28] No space left on device:") and error.endswith('"') and str(out) not in error
+    assert not list(out.glob("*.tmp")), "the temp file is gone after the replace"
+
+
+def test_a_record_that_cannot_be_rescrubbed_is_left_alone(tmp_path):
+    record = tmp_path / "run_outcome.json"
+    pw._rescrub_json_file(record, tmp_path)  # absent: nothing to do, nothing raised
+    record.write_bytes(b'{"a": "\xff\xfe"}')  # not UTF-8
+    pw._rescrub_json_file(record, tmp_path)
+    record.write_text('{"a": ', encoding="utf-8")  # truncated
+    pw._rescrub_json_file(record, tmp_path)
+    assert record.read_text(encoding="utf-8") == '{"a": ' and not list(tmp_path.glob("*.tmp"))
+
+
+def test_a_replace_that_fails_leaves_the_record_as_it_was(tmp_path, monkeypatch):
+    record = tmp_path / "run_outcome.json"
+    original = json.dumps({"a": str(tmp_path)})
+    record.write_text(original, encoding="utf-8")
+
+    def refuse(src, dst):
+        raise OSError("locked")
+    monkeypatch.setattr(pw.os, "replace", refuse)
+    pw._rescrub_json_file(record, tmp_path)
+    assert record.read_text(encoding="utf-8") == original and not list(tmp_path.glob("*.tmp"))

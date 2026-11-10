@@ -1,0 +1,57 @@
+T2PW: C:\t\ev-R6\rev\tree\src\t2pw\__init__.py
+....................F...F                                                [100%]
+================================== FAILURES ===================================
+__________ test_a_fresh_batch_defaults_to_run_pathway_and_stores_it ___________
+
+tmp_path = WindowsPath('C:/t/bt/R6/rev-default-engine-not-run-pathway-1794283163/test_a_fresh_batch_defaults_to0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000010BB4D4BCD0>
+
+    def test_a_fresh_batch_defaults_to_run_pathway_and_stores_it(tmp_path, monkeypatch):
+        code, plan = _batch(tmp_path, monkeypatch)
+>       assert code == 0 and plan["engine"] == "run_pathway"
+                             ^^^^^^^^^^^^^^
+E       KeyError: 'engine'
+
+tests\test_batch_driver_run_pathway.py:267: KeyError
+___________ test_a_plan_from_before_r6_resumes_on_the_apptest_path ____________
+
+tmp_path = WindowsPath('C:/t/bt/R6/rev-default-engine-not-run-pathway-1794283163/test_a_plan_from_before_r6_res0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000010BB4C13770>
+
+    def test_a_plan_from_before_r6_resumes_on_the_apptest_path(tmp_path, monkeypatch):
+        code, plan = _batch(tmp_path, monkeypatch, child=_interrupted)
+>       plan.pop("engine")
+E       KeyError: 'engine'
+
+tests\test_batch_driver_run_pathway.py:301: KeyError
+=========================== short test summary info ===========================
+FAILED tests/test_batch_driver_run_pathway.py::test_a_fresh_batch_defaults_to_run_pathway_and_stores_it
+FAILED tests/test_batch_driver_run_pathway.py::test_a_plan_from_before_r6_resumes_on_the_apptest_path
+2 failed, 23 passed in 3.94s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ev-R6\rev\tree\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : R6-rev-default-engine-not-run-pathway
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:\t\ev-R6\rev\tree\docs\pwml_recovery_sprint\evidence\pinned_pytest.py --expect-tree C:\t\ev-R6\rev\tree -q --basetemp=C:/t/bt/R6/rev-default-engine-not-run-pathway-1794283163 tests/test_batch_driver_run_pathway.py
+cwd                     : C:\t\ev-R6\rev\tree
+root PID / process group: 522116 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 5.78 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 3  525608:python.exe, 515500:python.exe, 522100:python.exe
+descendants terminated  : 3  515500, 522100, 525608
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ev-R6/rev/default-engine-not-run-pathway.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R6  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

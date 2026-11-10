@@ -1,0 +1,51 @@
+T2PW: C:\t\ev-R6\rev\tree\src\t2pw\__init__.py
+........................................................................ [ 67%]
+...............................F...                                      [100%]
+================================== FAILURES ===================================
+__________ test_a_root_that_ends_a_clause_is_cut_but_science_is_not ___________
+
+tmp_path = WindowsPath('C:/t/bt/R6/rev-lookahead-without-punctuation-1794283227/test_a_root_that_ends_a_clause0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000298BED5CBB0>
+
+    def test_a_root_that_ends_a_clause_is_cut_but_science_is_not(tmp_path, monkeypatch):
+        import tempfile
+    
+        monkeypatch.setattr(tempfile, "gettempdir", lambda: "/tmp")
+        scrub = lambda text: pw._scrub_server_paths({"r.txt": text}, tmp_path)["r.txt"]  # noqa: E731
+>       assert scrub("(see /tmp) and /tmp, then /tmp. Also [/tmp] {/tmp} /tmp; /tmp: x") == "(see ) and , then . Also [] {} ; : x"
+E       AssertionError: assert '(see /tmp) a.../tmp; /tmp: x' == '(see ) and ,...o [] {} ; : x'
+E         
+E         - (see ) and , then . Also [] {} ; : x
+E         + (see /tmp) and /tmp, then /tmp. Also [/tmp] {/tmp} /tmp; /tmp: x
+
+tests\test_service_run_pathway.py:757: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_service_run_pathway.py::test_a_root_that_ends_a_clause_is_cut_but_science_is_not
+1 failed, 106 passed in 5.03s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ev-R6\rev\tree\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : R6-rev-lookahead-without-punctuation
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:\t\ev-R6\rev\tree\docs\pwml_recovery_sprint\evidence\pinned_pytest.py --expect-tree C:\t\ev-R6\rev\tree -q --basetemp=C:/t/bt/R6/rev-lookahead-without-punctuation-1794283227 tests/test_service_run_pathway.py
+cwd                     : C:\t\ev-R6\rev\tree
+root PID / process group: 529164 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 6.03 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  529176:python.exe
+descendants terminated  : 1  529176
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ev-R6/rev/lookahead-without-punctuation.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R6  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

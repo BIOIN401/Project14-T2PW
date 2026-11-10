@@ -1,0 +1,202 @@
+{
+  "label": "R6-rev-preflight-entry-missing",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:\\t\\ev-R6\\rev\\tree\\docs\\pwml_recovery_sprint\\evidence\\pinned_pytest.py",
+    "--expect-tree",
+    "C:\\t\\ev-R6\\rev\\tree",
+    "-q",
+    "--basetemp=C:/t/bt/R6/rev-preflight-entry-missing-1794283214",
+    "tests/test_batch_preflight.py"
+  ],
+  "cwd": "C:\\t\\ev-R6\\rev\\tree",
+  "started_at": "2026-11-10T04:00:15+00:00",
+  "finished_at": "2026-11-10T04:00:24+00:00",
+  "duration_seconds": 9.257025700004306,
+  "timeout_seconds": 540.0,
+  "root_pid": 528084,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 508332,
+      "name": "python.exe",
+      "ppid": 528084
+    },
+    {
+      "pid": 510444,
+      "name": "python.exe",
+      "ppid": 508332
+    },
+    {
+      "pid": 526328,
+      "name": "python.exe",
+      "ppid": 510444
+    },
+    {
+      "pid": 524692,
+      "name": "python.exe",
+      "ppid": 527300
+    },
+    {
+      "pid": 527300,
+      "name": "python.exe",
+      "ppid": 508332
+    },
+    {
+      "pid": 528076,
+      "name": "python.exe",
+      "ppid": 528080
+    },
+    {
+      "pid": 528080,
+      "name": "python.exe",
+      "ppid": 508332
+    },
+    {
+      "pid": 527208,
+      "name": "python.exe",
+      "ppid": 508332
+    },
+    {
+      "pid": 527584,
+      "name": "python.exe",
+      "ppid": 508332
+    },
+    {
+      "pid": 524508,
+      "name": "python.exe",
+      "ppid": 527584
+    },
+    {
+      "pid": 524248,
+      "name": "python.exe",
+      "ppid": 508332
+    },
+    {
+      "pid": 526740,
+      "name": "python.exe",
+      "ppid": 524248
+    },
+    {
+      "pid": 519384,
+      "name": "python.exe",
+      "ppid": 526344
+    },
+    {
+      "pid": 526344,
+      "name": "python.exe",
+      "ppid": 526740
+    },
+    {
+      "pid": 508436,
+      "name": "python.exe",
+      "ppid": 508332
+    },
+    {
+      "pid": 528104,
+      "name": "python.exe",
+      "ppid": 508436
+    },
+    {
+      "pid": 524240,
+      "name": "python.exe",
+      "ppid": 528104
+    },
+    {
+      "pid": 528100,
+      "name": "python.exe",
+      "ppid": 524240
+    }
+  ],
+  "descendants_terminated": [
+    508332,
+    508436,
+    510444,
+    519384,
+    524240,
+    524248,
+    524508,
+    524692,
+    526328,
+    526344,
+    526740,
+    527208,
+    527300,
+    527584,
+    528076,
+    528080,
+    528100,
+    528104
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 58320,
+      "name": "python.exe"
+    },
+    {
+      "pid": 274088,
+      "name": "python.exe"
+    },
+    {
+      "pid": 306016,
+      "name": "python.exe"
+    },
+    {
+      "pid": 501936,
+      "name": "python.exe"
+    },
+    {
+      "pid": 522960,
+      "name": "python.exe"
+    },
+    {
+      "pid": 526580,
+      "name": "python.exe"
+    },
+    {
+      "pid": 527092,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/ev-R6/rev/preflight-entry-missing.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ev-R6\\rev\\tree\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "",
+    "repo_head": "",
+    "repo_source": "not_a_repository",
+    "wrapper_vs_head": "unknown",
+    "repo_tracked_files_dirty": null,
+    "repo_error": "fatal: not a git repository (or any of the parent directories): .git"
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "R6",
+    "token": "R6:501936:22c611845d229c37",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

@@ -1,0 +1,200 @@
+{
+  "label": "R6-preflight-base",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/ev-R6/base/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ev-R6/base",
+    "-q",
+    "--basetemp=C:/t/bt/R6/preflight-base-1794264746",
+    "tests/test_batch_preflight.py"
+  ],
+  "cwd": "C:\\t\\ev-R6\\base",
+  "started_at": "2026-11-09T22:52:26+00:00",
+  "finished_at": "2026-11-09T22:52:35+00:00",
+  "duration_seconds": 8.964167199999793,
+  "timeout_seconds": 540.0,
+  "root_pid": 324772,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 325276,
+      "name": "python.exe",
+      "ppid": 324772
+    },
+    {
+      "pid": 299552,
+      "name": "python.exe",
+      "ppid": 325276
+    },
+    {
+      "pid": 325064,
+      "name": "python.exe",
+      "ppid": 299552
+    },
+    {
+      "pid": 322804,
+      "name": "python.exe",
+      "ppid": 325376
+    },
+    {
+      "pid": 325376,
+      "name": "python.exe",
+      "ppid": 325276
+    },
+    {
+      "pid": 319840,
+      "name": "python.exe",
+      "ppid": 324632
+    },
+    {
+      "pid": 324632,
+      "name": "python.exe",
+      "ppid": 325276
+    },
+    {
+      "pid": 322696,
+      "name": "python.exe",
+      "ppid": 325276
+    },
+    {
+      "pid": 323736,
+      "name": "python.exe",
+      "ppid": 322696
+    },
+    {
+      "pid": 322852,
+      "name": "python.exe",
+      "ppid": 325276
+    },
+    {
+      "pid": 322992,
+      "name": "python.exe",
+      "ppid": 322852
+    },
+    {
+      "pid": 321756,
+      "name": "python.exe",
+      "ppid": 324788
+    },
+    {
+      "pid": 324788,
+      "name": "python.exe",
+      "ppid": 325276
+    },
+    {
+      "pid": 317696,
+      "name": "python.exe",
+      "ppid": 324768
+    },
+    {
+      "pid": 324768,
+      "name": "python.exe",
+      "ppid": 321756
+    },
+    {
+      "pid": 323604,
+      "name": "python.exe",
+      "ppid": 325276
+    },
+    {
+      "pid": 324764,
+      "name": "python.exe",
+      "ppid": 323604
+    },
+    {
+      "pid": 321540,
+      "name": "python.exe",
+      "ppid": 322136
+    },
+    {
+      "pid": 322136,
+      "name": "python.exe",
+      "ppid": 324764
+    }
+  ],
+  "descendants_terminated": [
+    299552,
+    317696,
+    319840,
+    321540,
+    321756,
+    322136,
+    322696,
+    322804,
+    322852,
+    322992,
+    323604,
+    323736,
+    324632,
+    324764,
+    324768,
+    324788,
+    325064,
+    325276,
+    325376
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 58320,
+      "name": "python.exe"
+    },
+    {
+      "pid": 274088,
+      "name": "python.exe"
+    },
+    {
+      "pid": 306016,
+      "name": "python.exe"
+    },
+    {
+      "pid": 323148,
+      "name": "python.exe"
+    },
+    {
+      "pid": 323456,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/ev-R6/out-base/preflight-base.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ev-R6\\base\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ev-R6\\base",
+    "repo_head": "87c6b9466007cf6ebaa812d0f5c95002246b5503",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "R6",
+    "token": "R6:323456:bcc571b6e3560e22",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

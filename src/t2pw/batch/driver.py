@@ -2371,6 +2371,67 @@ def run_one(
     return outcome
 
 
+# ---------------------------------------------------------------------------
+# The engine of a batch leg (R6). ``run_one`` (AppTest, the path every benchmark number
+# came from) stays whole; ``run_one_pathway`` is its twin on the service engine the web
+# server runs. ``runner.run_single`` picks one through ``engine_fn``.
+# ---------------------------------------------------------------------------
+ENGINE_PATHWAY = "run_pathway"
+ENGINE_APPTEST = "apptest"
+ENGINES = (ENGINE_PATHWAY, ENGINE_APPTEST)
+#: The operator's switch for ``scripts/batch_run.py`` (which takes no engine flag):
+#: ``T2PW_BATCH_ENGINE=apptest``. The chosen engine is then stored in the run's plan.json.
+ENGINE_ENV = "T2PW_BATCH_ENGINE"
+
+
+def resolve_engine(value: Any) -> str:
+    """An engine name as given (case and spaces ignored); empty means the default, ``run_pathway``."""
+
+    name = _text(value).strip().lower()
+    if not name:
+        return ENGINE_PATHWAY
+    if name not in ENGINES:
+        raise ValueError(f"unknown batch engine {value!r}; use one of: {', '.join(ENGINES)}")
+    return name
+
+
+def engine_fn(engine: Any) -> Any:
+    """The leg function for a stored engine name. Only ``run_pathway`` selects the service
+    engine: a plan that names none (written before R6) or anything else is the AppTest path,
+    so a resumed overnight run keeps the engine it started with."""
+
+    return run_one_pathway if _text(engine) == ENGINE_PATHWAY else run_one
+
+
+def run_one_pathway(paper: Any, mode: Any, *, timeout: float = DEFAULT_TIMEOUT) -> RunOutcome:
+    """``run_one`` through the service engine: one paper, one export mode, never raises.
+
+    Same arguments and the same ``RunOutcome`` as :func:`run_one` (``app_path`` and
+    ``app_timeout`` mean nothing here: there is no app). ``timeout`` is the leg's budget; it
+    becomes the absolute deadline the service checks between its stages. A paper with no
+    text is judged here, as the AppTest path judges it before it starts the app.
+    """
+
+    mode_token, _label = _resolve_mode(mode)
+    began = time.monotonic()
+    outcome = RunOutcome(paper_id=_paper_id(paper), mode=mode_token)
+    try:
+        if _paper_text(paper):
+            from t2pw.service import pathway
+
+            request = pathway.PathwayRequest(export_mode=mode_token)
+            return pathway.run_paper(paper, request, time.time() + float(timeout))[0]
+        _fail(outcome, status=_STATUS_FAIL, kind=KIND_NO_REACTIONS,
+              message="paper has no full text, so there was nothing to extract")
+    except Exception:  # noqa: BLE001 -- the same promise run_one makes
+        outcome.status = _STATUS_ERROR
+        outcome.failure_kind = KIND_CRASH
+        outcome.message = outcome.message or "batch driver crashed before it could judge the run"
+        outcome.detail = ((outcome.detail + "\n\n") if outcome.detail else "") + traceback.format_exc()
+    outcome.seconds = round(time.monotonic() - began, 2)
+    return outcome
+
+
 def _fail(
     outcome: RunOutcome,
     *,
@@ -3245,6 +3306,10 @@ def _drive(
 
 __all__ = [
     "DEFAULT_APP_PATH",
+    "ENGINES",
+    "ENGINE_APPTEST",
+    "ENGINE_ENV",
+    "ENGINE_PATHWAY",
     "DEFAULT_TIMEOUT",
     "DETAIL_LIMIT",
     "KIND_CONTRACT",
@@ -3269,5 +3334,8 @@ __all__ = [
     "WARN_RUNTIME_SCHEMA_PREFIX",
     "WARN_SUPERSEDED_INTERMEDIATE_PREFIX",
     "RunOutcome",
+    "engine_fn",
+    "resolve_engine",
     "run_one",
+    "run_one_pathway",
 ]

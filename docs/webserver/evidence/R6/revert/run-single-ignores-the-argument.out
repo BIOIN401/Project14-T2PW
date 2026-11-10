@@ -1,0 +1,78 @@
+T2PW: C:\t\ev-R6\rev\tree\src\t2pw\__init__.py
+..............FF.........                                                [100%]
+================================== FAILURES ===================================
+_ test_run_single_takes_the_engine_from_the_plan_or_the_argument[None-run_pathway-run_pathway] _
+
+tmp_path = WindowsPath('C:/t/bt/R6/rev-run-single-ignores-the-argument-1794283186/test_run_single_takes_the_engi3')
+engines = [('apptest', 900.0)], stored = None, asked = 'run_pathway'
+want = 'run_pathway'
+
+    @pytest.mark.parametrize("stored,asked,want", [
+        ("run_pathway", None, "run_pathway"),
+        ("apptest", None, "apptest"),
+        (None, None, "apptest"),            # called bare on a plan that names none: as it always did
+        (None, "run_pathway", "run_pathway"),
+        ("run_pathway", "apptest", "apptest"),
+    ])
+    def test_run_single_takes_the_engine_from_the_plan_or_the_argument(tmp_path, engines, stored, asked, want):
+        runner.run_single(_run_dir(tmp_path, stored), "PMC1__alpha", "strict", timeout=900, engine=asked)
+>       assert engines == [(want, 900.0)]
+E       AssertionError: assert [('apptest', 900.0)] == [('run_pathway', 900.0)]
+E         
+E         At index 0 diff: ('apptest', 900.0) != ('run_pathway', 900.0)
+E         Use -v to get more diff
+
+tests\test_batch_driver_run_pathway.py:214: AssertionError
+_ test_run_single_takes_the_engine_from_the_plan_or_the_argument[run_pathway-apptest-apptest] _
+
+tmp_path = WindowsPath('C:/t/bt/R6/rev-run-single-ignores-the-argument-1794283186/test_run_single_takes_the_engi4')
+engines = [('run_pathway', 900.0)], stored = 'run_pathway', asked = 'apptest'
+want = 'apptest'
+
+    @pytest.mark.parametrize("stored,asked,want", [
+        ("run_pathway", None, "run_pathway"),
+        ("apptest", None, "apptest"),
+        (None, None, "apptest"),            # called bare on a plan that names none: as it always did
+        (None, "run_pathway", "run_pathway"),
+        ("run_pathway", "apptest", "apptest"),
+    ])
+    def test_run_single_takes_the_engine_from_the_plan_or_the_argument(tmp_path, engines, stored, asked, want):
+        runner.run_single(_run_dir(tmp_path, stored), "PMC1__alpha", "strict", timeout=900, engine=asked)
+>       assert engines == [(want, 900.0)]
+E       AssertionError: assert [('run_pathway', 900.0)] == [('apptest', 900.0)]
+E         
+E         At index 0 diff: ('run_pathway', 900.0) != ('apptest', 900.0)
+E         Use -v to get more diff
+
+tests\test_batch_driver_run_pathway.py:214: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_batch_driver_run_pathway.py::test_run_single_takes_the_engine_from_the_plan_or_the_argument[None-run_pathway-run_pathway]
+FAILED tests/test_batch_driver_run_pathway.py::test_run_single_takes_the_engine_from_the_plan_or_the_argument[run_pathway-apptest-apptest]
+2 failed, 23 passed in 1.90s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ev-R6\rev\tree\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : R6-rev-run-single-ignores-the-argument
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:\t\ev-R6\rev\tree\docs\pwml_recovery_sprint\evidence\pinned_pytest.py --expect-tree C:\t\ev-R6\rev\tree -q --basetemp=C:/t/bt/R6/rev-run-single-ignores-the-argument-1794283186 tests/test_batch_driver_run_pathway.py
+cwd                     : C:\t\ev-R6\rev\tree
+root PID / process group: 526924 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 2.88 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 3  527616:python.exe, 527984:python.exe, 528056:python.exe
+descendants terminated  : 3  527616, 527984, 528056
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ev-R6/rev/run-single-ignores-the-argument.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R6  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

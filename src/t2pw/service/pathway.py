@@ -14,7 +14,9 @@ The vocabulary strings MIRROR ``t2pw.batch.driver`` (``MODE_*``, ``STAGE_*``,
 
 from __future__ import annotations
 
+import contextlib
 import dataclasses
+import json
 import os
 import re
 import tempfile
@@ -158,10 +160,41 @@ def _server_paths(out_dir: Path, ignore_case: bool = os.name == "nt") -> "re.Pat
     spellings = {form for root in roots for resolved in (Path(root), Path(root).resolve())
                  for form in (str(resolved), resolved.as_posix(), str(resolved).replace("\\", "\\\\"))}
     # A root counts only as a whole path: not glued to a word or path character before it
-    # (``ACE2/TMPRSS2``, ``UMP/TMP``), and followed by a separator, quote, space or the end.
-    alternatives = "|".join(r"(?<![\w/\\])" + re.escape(s) + r"(?=[\\/\"'\s]|$)[\\/]*"
+    # (``ACE2/TMPRSS2``, ``UMP/TMP``), and followed by a separator, quote, space, closing or
+    # sentence punctuation, or the end.
+    alternatives = "|".join(r"(?<![\w/\\])" + re.escape(s) + r"(?=[\\/\"'\s)\],.:;}]|$)[\\/]*"
                             for s in sorted((s for s in spellings if len(s) > 3), key=len, reverse=True))
     return re.compile(alternatives, re.IGNORECASE if ignore_case else 0)  # Windows paths only are case-blind
+
+
+def _scrub_json_strings(value: Any, pattern: "re.Pattern[str]") -> Any:
+    """``value`` (parsed JSON) with the roots cut from every string value."""
+
+    if isinstance(value, str):
+        return pattern.sub("", value)
+    if isinstance(value, list):
+        return [_scrub_json_strings(v, pattern) for v in value]
+    if isinstance(value, dict):
+        return {k: _scrub_json_strings(v, pattern) for k, v in value.items()}
+    return value
+
+
+def _rescrub_json_file(record: Path, out_dir: Path) -> None:
+    """Cut the roots from the string values of a JSON file, through a temp file and ``os.replace``.
+
+    Parsed, not a text substitution: a root just before a JSON-escaped quote would lose the
+    backslash and break the file. Never raises: the bridge has already warned if the record
+    could not be written, and a failure here must not fail a finished job.
+    """
+
+    tmp = record.with_name(record.name + ".tmp")
+    try:
+        data = _scrub_json_strings(json.loads(record.read_text(encoding="utf-8")), _server_paths(out_dir))
+        tmp.write_text(json.dumps(data, indent=2, ensure_ascii=False, default=str), encoding="utf-8")
+        os.replace(tmp, record)
+    except (OSError, ValueError):  # ValueError: bad JSON and UnicodeDecodeError
+        with contextlib.suppress(OSError):
+            tmp.unlink()
 
 
 def _scrub_server_paths(artifacts: Dict[str, Any], out_dir: Path) -> Dict[str, Any]:
@@ -189,7 +222,8 @@ def _drive(
     the same order, with the three clicks replaced by the service calls the app makes.
 
     ``at`` is only ``session_state``, the one thing the driver's helpers read off AppTest.
-    Keep this and ``_drive`` in step until R6 makes the driver call this module.
+    Since R6 the batch driver's default engine runs this (``driver.run_one_pathway``); the
+    AppTest ``driver._drive`` stays one release as the cross-check (``--engine apptest``).
     """
 
     import functools
@@ -455,6 +489,32 @@ def _drive(
                                  codes=pwml_codes, superseded=superseded)
 
 
+def run_paper(paper: Any, request: PathwayRequest, deadline: Optional[float]) -> Tuple[Any, Dict[str, Any]]:
+    """The run itself: ``paper`` in, the driver's ``RunOutcome`` and the run's state dict out.
+
+    ``run_pathway`` is this plus the input rules, the scrub and the result writer. The batch
+    driver (``driver.run_one_pathway``) calls this directly, so a batch leg gets the very
+    outcome the AppTest path would give: the paper as the plan holds it, unscrubbed artifacts
+    in memory, the driver's own ``detail``, ``seconds`` and release record. ``deadline`` is an
+    absolute ``time.time()`` second the run must finish by, ``None`` = no cap. Never raises.
+    """
+
+    from t2pw.batch import driver
+    from t2pw.service.reporter import CollectingReporter
+
+    outcome = driver.RunOutcome(paper_id=driver._paper_id(paper), mode=driver._resolve_mode(request.export_mode)[0])
+    state: Dict[str, Any] = {}
+    started = time.monotonic()
+    try:
+        _drive(request, paper, outcome, state, CollectingReporter(), deadline)
+    except Exception:  # noqa: BLE001 - a crash here is a result, never an unhandled error in the worker
+        outcome.status, outcome.failure_kind = STATUS_ERROR, KIND_CRASH
+        outcome.message = outcome.message or "the pipeline crashed before it could be judged"
+        outcome.detail = ((outcome.detail + "\n\n") if outcome.detail else "") + traceback.format_exc()
+    outcome.seconds = round(time.monotonic() - started, 2)
+    return outcome, state
+
+
 def run_pathway(request: PathwayRequest) -> PathwayResult:
     """Run one pathway headless: Stage 0-2, audit and mapping, export, in one process.
 
@@ -466,9 +526,8 @@ def run_pathway(request: PathwayRequest) -> PathwayResult:
     the request: a crash in the pipeline is an ``error``/``crash`` result.
     """
 
-    from t2pw.batch import driver, runner
+    from t2pw.batch import runner
     from t2pw.service import driver_bridge as bridge
-    from t2pw.service.reporter import CollectingReporter
 
     out_dir = Path(request.out_dir) if request.out_dir else Path(tempfile.mkdtemp(prefix="t2pw-job-"))
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -487,25 +546,13 @@ def run_pathway(request: PathwayRequest) -> PathwayResult:
         deadline = float(request.deadline) - bridge.GRACE_S
 
     runner.force_utf8_stdio()  # the worker child's stdout is a file (cp1252 on Windows)
-    outcome = driver.RunOutcome(paper_id=driver._paper_id(paper), mode=driver._resolve_mode(request.export_mode)[0])
-    state: Dict[str, Any] = {}
-    started = time.monotonic()
-    try:
-        _drive(request, paper, outcome, state, CollectingReporter(), deadline)
-    except Exception:  # noqa: BLE001 - a crash here is a result, never an unhandled error in the worker
-        outcome.status, outcome.failure_kind = STATUS_ERROR, KIND_CRASH
-        outcome.message = outcome.message or "the pipeline crashed before it could be judged"
-        outcome.detail = ((outcome.detail + "\n\n") if outcome.detail else "") + traceback.format_exc()
-    outcome.seconds = round(time.monotonic() - started, 2)
+    outcome, state = run_paper(paper, request, deadline)
     outcome.artifacts = _scrub_server_paths(outcome.artifacts, out_dir)
     outcome.message, outcome.detail = (_scrub_server_paths({'m': t}, out_dir)['m'] for t in (outcome.message or '', outcome.detail or ''))
     outcome.warnings = [_scrub_server_paths({'m': t}, out_dir)['m'] for t in outcome.warnings]
     result = bridge._to_result(outcome, out_dir)
     record = out_dir / bridge.OUTCOME_NAME  # the bridge adds bridge_files[].error (an OSError text with its path) as it writes
-    try:
-        record.write_text(_scrub_server_paths({'m': record.read_text(encoding="utf-8")}, out_dir)['m'], encoding="utf-8")
-    except OSError:
-        pass  # the bridge already warned that the record could not be written
+    _rescrub_json_file(record, out_dir)
     result.attempt_log = [{**row, "runner": "t2pw.service.pathway.run_pathway"} for row in result.attempt_log]
     png = state.get("refinement_graph_bytes")
     if isinstance(png, (bytes, bytearray)) and png:

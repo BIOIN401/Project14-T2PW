@@ -1,0 +1,175 @@
+{
+  "label": "R6-svc-all",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-u",
+    "C:/t/ws-R6/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/ws-R6",
+    "-q",
+    "--basetemp=C:/t/bt/R6/svc-all-1794264809",
+    "tests/test_service_driver_bridge.py",
+    "tests/test_service_export.py",
+    "tests/test_service_extraction.py",
+    "tests/test_service_extraction_stage0.py",
+    "tests/test_service_extraction_stage1.py",
+    "tests/test_service_extraction_stage2.py",
+    "tests/test_service_inputs.py",
+    "tests/test_service_organisms.py",
+    "tests/test_service_pathway_interface.py",
+    "tests/test_service_post_run.py",
+    "tests/test_service_reporter.py",
+    "tests/test_service_run_pathway.py"
+  ],
+  "cwd": "C:\\t\\ws-R6",
+  "started_at": "2026-11-09T22:53:29+00:00",
+  "finished_at": "2026-11-09T22:53:47+00:00",
+  "duration_seconds": 17.681477399997675,
+  "timeout_seconds": 540.0,
+  "root_pid": 322712,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 326288,
+      "name": "python.exe",
+      "ppid": 322712
+    },
+    {
+      "pid": 322332,
+      "name": "python.exe",
+      "ppid": 326288
+    },
+    {
+      "pid": 326372,
+      "name": "python.exe",
+      "ppid": 322332
+    },
+    {
+      "pid": 324704,
+      "name": "python.exe",
+      "ppid": 326288
+    },
+    {
+      "pid": 324300,
+      "name": "python.exe",
+      "ppid": 324704
+    },
+    {
+      "pid": 325740,
+      "name": "python.exe",
+      "ppid": 326484
+    },
+    {
+      "pid": 326484,
+      "name": "python.exe",
+      "ppid": 326288
+    },
+    {
+      "pid": 326984,
+      "name": "python.exe",
+      "ppid": 326288
+    },
+    {
+      "pid": 326996,
+      "name": "python.exe",
+      "ppid": 326984
+    },
+    {
+      "pid": 327016,
+      "name": "python.exe",
+      "ppid": 326288
+    },
+    {
+      "pid": 327036,
+      "name": "python.exe",
+      "ppid": 327016
+    },
+    {
+      "pid": 327392,
+      "name": "python.exe",
+      "ppid": 326288
+    },
+    {
+      "pid": 327480,
+      "name": "python.exe",
+      "ppid": 327392
+    }
+  ],
+  "descendants_terminated": [
+    322332,
+    324300,
+    324704,
+    325740,
+    326288,
+    326372,
+    326484,
+    326984,
+    326996,
+    327016,
+    327036,
+    327392,
+    327480
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 58320,
+      "name": "python.exe"
+    },
+    {
+      "pid": 274088,
+      "name": "python.exe"
+    },
+    {
+      "pid": 306016,
+      "name": "python.exe"
+    },
+    {
+      "pid": 323636,
+      "name": "python.exe"
+    },
+    {
+      "pid": 325856,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/ev-R6/out/svc-all.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\ws-R6\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\ws-R6",
+    "repo_head": "1fdf91ca54c56f6c33f27b0af692b3a5273aed87",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "R6",
+    "token": "R6:323636:67c55d88fb55eb87",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

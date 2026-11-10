@@ -1125,11 +1125,16 @@ def run_single(
     *,
     timeout: float = DEFAULT_PAPER_TIMEOUT,
     run_fn: Optional[Callable[..., RunOutcome]] = None,
+    engine: Optional[str] = None,
 ) -> Dict[str, Any]:
     """Run one paper+mode, write its folder, and return its manifest row.
 
     Executed in the child process. Everything is written here (not in the parent)
     so a crash after the pipeline succeeded still leaves the artifacts on disk.
+
+    ``engine`` (R6) picks the leg function when ``run_fn`` is not given: ``None`` reads
+    the run's ``plan.json`` (where ``run_batch`` stored it), and a plan that names none
+    is the AppTest path -- so this function called bare behaves as it always did.
     """
 
     run_dir = Path(run_dir)
@@ -1189,7 +1194,7 @@ def run_single(
         leg_trace.deactivate()
         return _relocate_files(row, slug, mode)
 
-    runner = run_fn or driver.run_one
+    runner = run_fn or driver.engine_fn(engine or load_plan(run_dir).get("engine"))
     if trace is not None:
         trace.stage_begin("driver")
     outcome = runner(paper, mode, timeout=max(60.0, float(timeout)))
@@ -1582,6 +1587,13 @@ CHILD_IMPORTS: Tuple[Tuple[str, str], ...] = (
         "t2pw.pipeline.pipeline' exits 1 while 'import t2pw.batch.driver' still "
         "exits 0. _finalize_timeout's deferred use additionally loses "
         "termination_reason on the terminal row",
+    ),
+    (
+        "t2pw.service.pathway",
+        "the default leg engine (R6): driver.run_one_pathway defers it, so the "
+        "parent's import of driver proves nothing about it, and a child that "
+        "cannot import it fails every leg after the fetch. It is probed on an "
+        "apptest night too: a broken checkout should stop either engine here",
     ),
 )
 
@@ -2115,6 +2127,7 @@ def _plan_for_fresh_run(
     limit: Optional[int],
     fetch_fn: Callable[..., Tuple[List[BatchPaper], List[Dict[str, Any]]]],
     log: Callable[[str], None],
+    engine: Optional[str] = None,
 ) -> Dict[str, Any]:
     """Fetch the papers, lay out their folders, and write ``plan.json``."""
 
@@ -2167,6 +2180,7 @@ def _plan_for_fresh_run(
         "limit": limit,
         "papers": [_plan_record(paper) for paper in papers],
         "skipped": len(skipped),
+        **({"engine": engine} if engine else {}),  # R6: which leg engine this run uses
         # The eligibility gate's own account: the thresholds this run was screened
         # with, the per-outcome tally, and the ids flagged for manual inspection.
         # Persisted here so a plan is self-describing -- a paper that never entered
@@ -2248,14 +2262,26 @@ def run_batch(
     data_dir: Any = None,
     echo: bool = True,
     clock: Callable[[], float] = time.monotonic,
+    engine: Optional[str] = None,
 ) -> int:
     """Run the whole batch. Returns the process exit code (0 = everything passed).
 
     A thin guard around :func:`_run_batch`: whatever goes wrong, the run
     directory is left with a ``plan.json`` and a readable log rather than as an
     orphan the runner would replace with a fresh empty one every night.
+
+    ``engine`` (R6) is ``run_pathway`` (the default) or ``apptest``; ``None`` reads
+    ``T2PW_BATCH_ENGINE``. A fresh run stores it in plan.json, a resumed run keeps the
+    plan's engine unless one was given explicitly. An unknown name exits 2, like a usage error.
     """
 
+    requested = engine or os.environ.get(driver.ENGINE_ENV)
+    try:
+        engine = driver.resolve_engine(requested) if requested else None
+    except ValueError as exc:
+        if echo:
+            print(f"batch_run: {exc}", file=sys.stderr)
+        return 2
     state: Dict[str, Any] = {"run_dir": None}
     try:
         return _run_batch(
@@ -2274,6 +2300,7 @@ def run_batch(
             data_dir=data_dir,
             echo=echo,
             clock=clock,
+            engine=engine,
         )
     except KeyboardInterrupt:
         raise
@@ -2299,6 +2326,7 @@ def _run_batch(
     data_dir: Any = None,
     echo: bool = True,
     clock: Callable[[], float] = time.monotonic,
+    engine: Optional[str] = None,
 ) -> int:
     """The batch loop itself.
 
@@ -2331,6 +2359,10 @@ def _run_batch(
             plan["modes"] = cli_modes
             save_plan(run_dir, plan)
             log(f"--modes overrides the plan; now running: {', '.join(cli_modes)}")
+        if engine and engine != plan.get("engine"):
+            plan["engine"] = engine
+            save_plan(run_dir, plan)
+            log(f"the engine is overridden; the legs now run on: {engine}")
         log(f"CONTINUING the incomplete run {run_dir.name} (no --fresh given)")
         log(f"  already recorded : {len(completed_pairs(run_dir))} paper+mode run(s) -- these are skipped")
         log(f"  still to do      : {len(pending_pairs(run_dir, plan))} paper+mode run(s)")
@@ -2358,8 +2390,11 @@ def _run_batch(
             limit=limit,
             fetch_fn=fetch_fn or fetch_papers,
             log=log,
+            engine=engine or driver.ENGINE_PATHWAY,
         )
 
+    log(f"leg engine       : {_text(plan.get('engine')) or driver.ENGINE_APPTEST}"
+        + ("" if plan.get("engine") else " (this plan names none, so the AppTest path)"))
     started_at = _text(plan.get("created_at")) or datetime.now().isoformat(timespec="seconds")
     refresh_reports(run_dir, started_at=started_at)
 

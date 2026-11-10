@@ -1,0 +1,78 @@
+T2PW: C:\t\ev-R6\rev\tree\src\t2pw\__init__.py
+F.....................F..                                                [100%]
+================================== FAILURES ===================================
+_________ test_engine_names_default_to_run_pathway_and_reject_a_typo __________
+
+    def test_engine_names_default_to_run_pathway_and_reject_a_typo():
+        assert driver.resolve_engine(None) == driver.resolve_engine("") == driver.ENGINE_PATHWAY == "run_pathway"
+        assert driver.resolve_engine(" AppTest ") == driver.ENGINE_APPTEST == "apptest"
+>       with pytest.raises(ValueError, match="run_pathway, apptest"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests\test_batch_driver_run_pathway.py:101: Failed
+_________ test_an_unknown_engine_is_a_usage_error_and_creates_nothing _________
+
+tmp_path = WindowsPath('C:/t/bt/R6/rev-unknown-engine-accepted-1794283211/test_an_unknown_engine_is_a_us0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000012DB6463A80>
+capsys = <_pytest.capture.CaptureFixture object at 0x0000012DB312A660>
+
+    def test_an_unknown_engine_is_a_usage_error_and_creates_nothing(tmp_path, monkeypatch, capsys):
+        monkeypatch.setenv(driver.ENGINE_ENV, "apptset")
+>       code = runner.run_batch(out=tmp_path, modes="strict", fresh=True, child_fn=lambda *a: pytest.fail("ran"),
+                                fetch_fn=lambda text, limit=None: pytest.fail("fetched"), echo=True)
+
+tests\test_batch_driver_run_pathway.py:280: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\t2pw\batch\runner.py:2287: in run_batch
+    return _run_batch(
+src\t2pw\batch\runner.py:2386: in _run_batch
+    plan = _plan_for_fresh_run(
+src\t2pw\batch\runner.py:2161: in _plan_for_fresh_run
+    papers, skipped = fetch_fn(topics_text, limit=limit)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+text = '# topics.txt -- the work list for scripts/batch_run.py\n#\n# One line per topic. Blank lines and everything after a "...----------------------------------------\n\n# Uncomment to pin a specific paper you want in every run:\n# PMC4412817\n'
+limit = None
+
+>   fetch_fn=lambda text, limit=None: pytest.fail("fetched"), echo=True)
+                                      ^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: fetched
+
+tests\test_batch_driver_run_pathway.py:281: Failed
+---------------------------- Captured stdout call -----------------------------
+[22:00:14] STARTING a fresh run 2026-11-09_2200 (--fresh was given)
+[22:00:14]   cache snapshot   : id_mapping_cache.json, enrichment_cache.json
+[22:00:14] fetching papers (topics=C:\t\ev-R6\rev\tree\topics.txt, limit=none) ...
+=========================== short test summary info ===========================
+FAILED tests/test_batch_driver_run_pathway.py::test_engine_names_default_to_run_pathway_and_reject_a_typo
+FAILED tests/test_batch_driver_run_pathway.py::test_an_unknown_engine_is_a_usage_error_and_creates_nothing
+2 failed, 23 passed in 1.96s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ev-R6\rev\tree\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : R6-rev-unknown-engine-accepted
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:\t\ev-R6\rev\tree\docs\pwml_recovery_sprint\evidence\pinned_pytest.py --expect-tree C:\t\ev-R6\rev\tree -q --basetemp=C:/t/bt/R6/rev-unknown-engine-accepted-1794283211 tests/test_batch_driver_run_pathway.py
+cwd                     : C:\t\ev-R6\rev\tree
+root PID / process group: 507348 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 2.93 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 3  509628:python.exe, 525848:python.exe, 526584:python.exe
+descendants terminated  : 3  509628, 525848, 526584
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ev-R6/rev/unknown-engine-accepted.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R6  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

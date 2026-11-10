@@ -1,0 +1,54 @@
+T2PW: C:\t\ev-R6\rev\tree\src\t2pw\__init__.py
+.......................F.                                                [100%]
+================================== FAILURES ===================================
+_______ test_a_resumed_batch_keeps_the_plans_engine_unless_one_is_given _______
+
+tmp_path = WindowsPath('C:/t/bt/R6/rev-resume-cannot-override-1794283297/test_a_resumed_batch_keeps_the0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002AF4DAF9390>
+
+    def test_a_resumed_batch_keeps_the_plans_engine_unless_one_is_given(tmp_path, monkeypatch):
+        code, plan = _batch(tmp_path, monkeypatch, child=_interrupted, env="apptest")
+        first = runner.latest_run_dir(tmp_path)
+        assert code == 1 and plan["engine"] == "apptest"
+        code, plan = _batch(tmp_path, monkeypatch, fresh=False, child=_interrupted)  # no env, no argument: the plan decides
+        assert runner.latest_run_dir(tmp_path) == first and plan["engine"] == "apptest"
+        code, plan = _batch(tmp_path, monkeypatch, fresh=False, child=_interrupted, engine="run_pathway")
+>       assert runner.latest_run_dir(tmp_path) == first and plan["engine"] == "run_pathway"
+E       AssertionError: assert (WindowsPath('C:/t/bt/R6/rev-resume-cannot-override-1794283297/test_a_resumed_batch_keeps_the0/2026-11-09_2201') == WindowsPath('C:/t/bt/R6/rev-resume-cannot-override-1794283297/test_a_resumed_batch_keeps_the0/2026-11-09_2201') and 'apptest' == 'run_pathway'
+E        +  where WindowsPath('C:/t/bt/R6/rev-resume-cannot-override-1794283297/test_a_resumed_batch_keeps_the0/2026-11-09_2201') = <function latest_run_dir at 0x000002AF4AD5DDA0>(WindowsPath('C:/t/bt/R6/rev-resume-cannot-override-1794283297/test_a_resumed_batch_keeps_the0'))
+E        +    where <function latest_run_dir at 0x000002AF4AD5DDA0> = runner.latest_run_dir
+E         
+E         - run_pathway
+E         + apptest)
+
+tests\test_batch_driver_run_pathway.py:297: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_batch_driver_run_pathway.py::test_a_resumed_batch_keeps_the_plans_engine_unless_one_is_given
+1 failed, 24 passed in 2.30s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ev-R6\rev\tree\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : R6-rev-resume-cannot-override
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:\t\ev-R6\rev\tree\docs\pwml_recovery_sprint\evidence\pinned_pytest.py --expect-tree C:\t\ev-R6\rev\tree -q --basetemp=C:/t/bt/R6/rev-resume-cannot-override-1794283297 tests/test_batch_driver_run_pathway.py
+cwd                     : C:\t\ev-R6\rev\tree
+root PID / process group: 531560 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 3.56 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 3  532448:python.exe, 532512:python.exe, 533480:python.exe
+descendants terminated  : 3  532448, 532512, 533480
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ev-R6/rev/resume-cannot-override.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R6  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

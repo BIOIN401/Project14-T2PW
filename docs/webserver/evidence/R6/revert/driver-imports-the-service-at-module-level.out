@@ -1,0 +1,55 @@
+T2PW: C:\t\ev-R6\rev\tree\src\t2pw\__init__.py
+..F......................                                                [100%]
+================================== FAILURES ===================================
+__ test_the_driver_and_the_service_do_not_import_each_other_at_module_level ___
+
+    def test_the_driver_and_the_service_do_not_import_each_other_at_module_level():
+        code = ("import sys\n"
+                "import t2pw.batch.driver\n"
+                "assert 't2pw.service.pathway' not in sys.modules, 'driver imports the service'\n"
+                "for name in [m for m in sys.modules if m.startswith('t2pw')]: del sys.modules[name]\n"
+                "import t2pw.service.pathway\n"
+                "assert 't2pw.batch.driver' not in sys.modules, 'the service imports the driver'\n")
+        done = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, cwd=ROOT,
+                              env={**os.environ, "PYTHONPATH": str(ROOT / "src")})
+>       assert done.returncode == 0, done.stderr
+E       AssertionError: Traceback (most recent call last):
+E           File "<string>", line 3, in <module>
+E             assert 't2pw.service.pathway' not in sys.modules, 'driver imports the service'
+E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         AssertionError: driver imports the service
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe', '-c', "im...rts the service\'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: driver imports the service\n').returncode
+
+tests\test_batch_driver_run_pathway.py:120: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_batch_driver_run_pathway.py::test_the_driver_and_the_service_do_not_import_each_other_at_module_level
+1 failed, 24 passed in 1.86s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ev-R6\rev\tree\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : R6-rev-driver-imports-the-service-at-module-level
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:\t\ev-R6\rev\tree\docs\pwml_recovery_sprint\evidence\pinned_pytest.py --expect-tree C:\t\ev-R6\rev\tree -q --basetemp=C:/t/bt/R6/rev-driver-imports-the-service-at-module-level-1794283224 tests/test_batch_driver_run_pathway.py
+cwd                     : C:\t\ev-R6\rev\tree
+root PID / process group: 528608 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 2.90 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 2  528620:python.exe, 528896:python.exe
+descendants terminated  : 2  528620, 528896
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ev-R6/rev/driver-imports-the-service-at-module-level.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=R6  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================
