@@ -35,3 +35,4 @@ Read this log, then `CLEAN-MODEL.md` (once it exists) and `git log`. Next undone
 |---|---|---|---|---|
 | 1 | A model+builder | sonnet / high | model.py, builder, vocab, roundtrip, build_all | done: 152/152 built, 152/152 exact round trip, 36 tests pass; title 0/152 locally (online layer must fill); PMID 152 |
 | 2 | B online fill | sonnet / medium | fill/ (http, cache, sources, fill), fill_sample.py | done: 65 tests pass (A+B); ChEBI name search via OLS4 (ChEBI API has no exact search); not yet run live at scale |
+| 3 | C SBML exporter | sonnet / medium | export/sbml.py, sbo.py, validate_sbml.py | done: 74 clean-model tests pass; libsbml 6 runs: 0 errors, only 80601 (no initial value, deliberate) |
