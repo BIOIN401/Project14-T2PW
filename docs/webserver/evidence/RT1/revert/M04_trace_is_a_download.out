@@ -1,0 +1,53 @@
+T2PW: C:\t\ev-RT1\rev\base\src\t2pw\__init__.py
+......................................F..                                [100%]
+================================== FAILURES ===================================
+___________ test_run_pathway_writes_a_trace_that_is_not_a_download ____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000020F69D69940>
+tmp_path = WindowsPath('C:/t/bt/RT1/rev-M04_trace_is_a_download/test_run_pathway_writes_a_trac0')
+
+    def test_run_pathway_writes_a_trace_that_is_not_a_download(monkeypatch, tmp_path):
+        result = _job(tmp_path, monkeypatch, [_resp()])
+        out = tmp_path / "out"
+        assert (out / leg_trace.LEG_TRACE_NAME).is_file()
+        kinds = [e["kind"] for e in leg_trace.read_events(out)]
+        assert kinds[0] == "job_begin" and kinds[-1] == "job_end" and "model_attempt" in kinds
+        (row,) = _attempts(out)
+        assert row["stage"] == "Stage 1 extraction" and "duration_s" in row and row["prompt_tokens"] == 11
+        # not offered: downloads are looked up by key in report_paths / pwml_path / image_path
+        delivered = {str(p) for p in [result.pwml_path, result.image_path, *result.report_paths.values()] if p}
+>       assert not any(leg_trace.LEG_TRACE_NAME in p for p in delivered)
+E       assert not True
+E        +  where True = any(<generator object test_run_pathway_writes_a_trace_that_is_not_a_download.<locals>.<genexpr> at 0x0000020F6A0F5150>)
+
+tests\test_llm_call_logging.py:234: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_llm_call_logging.py::test_run_pathway_writes_a_trace_that_is_not_a_download
+1 failed, 40 passed in 8.61s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ev-RT1\rev\base\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : RT1rev-M04_trace_is_a_download
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ev-RT1/rev/base/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ev-RT1/rev/base -q --basetemp=C:/t/bt/RT1/rev-M04_trace_is_a_download tests/test_llm_call_cap.py tests/test_llm_call_logging.py
+cwd                     : C:\t\ev-RT1\rev\base
+root PID / process group: 687380 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 9.63 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  683948:python.exe
+descendants terminated  : 1  683948
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ev-RT1/rev/M04_trace_is_a_download.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=RT1  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

@@ -1,0 +1,142 @@
+T2PW: C:\t\ev-RT1\rev\base\src\t2pw\__init__.py
+...F...................FFFF..............                                [100%]
+================================== FAILURES ===================================
+______ test_a_late_result_is_discarded_and_touches_no_totals_or_records _______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000194525BFCE0>
+tmp_path = WindowsPath('C:/t/bt/RT1/rev-M06_late_result_recorded/test_a_late_result_is_discarde0')
+
+    def test_a_late_result_is_discarded_and_touches_no_totals_or_records(monkeypatch, tmp_path):
+        gate = threading.Event()
+        provider = _use(monkeypatch, FakeProvider(_held(gate), _ok("kept", prompt=11, completion=22)))
+        leg_trace.activate(tmp_path / leg_trace.LEG_TRACE_NAME)
+        with client_mod.web_run_scope():
+            result = _chat()
+        before = (client_mod.get_token_stats(), result.diagnostics.to_dict(), len(leg_trace.read_events(tmp_path)),
+                  dict(client_mod._token_stats))
+        gate.set(); _join_workers()  # the abandoned request now answers, with 1000 / 2000 tokens
+        after = (client_mod.get_token_stats(), result.diagnostics.to_dict(), len(leg_trace.read_events(tmp_path)),
+                 dict(client_mod._token_stats))
+>       assert before == after
+E       AssertionError: assert ({'api_calls'..._tokens': 22}) == ({'api_calls'...okens': 1022})
+E         
+E         At index 0 diff: {'prompt_tokens': 22, 'completion_tokens': 44, 'total_tokens': 66, 'api_calls': 2, 'estimated_cost_usd': 1.6e-05} != {'prompt_tokens': 1022, 'completion_tokens': 2044, 'total_tokens': 3066, 'api_calls': 3, 'estimated_cost_usd': 0.000736}
+E         Use -v to get more diff
+
+tests\test_llm_call_cap.py:172: AssertionError
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.llm.client:client.py:1053 Stage 1 extraction request still running after the 0.15s wall-clock cap; abandoned; retrying (attempt 1/3).
+_ test_a_call_that_finishes_normally_is_identical_with_the_cap_on_or_off[preprocessor] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000194529B3C40>
+stage = 'preprocessor'
+
+    @pytest.mark.parametrize("stage", CAPPED_STAGES)
+    def test_a_call_that_finishes_normally_is_identical_with_the_cap_on_or_off(monkeypatch, stage):
+        _use(monkeypatch, FakeProvider(_ok("same"), _ok("same")))
+        plain = _chat(stage)
+        with client_mod.web_run_scope():
+            capped = _chat(stage)
+        assert (capped.text, capped.diagnostics.to_dict()) == (plain.text, plain.diagnostics.to_dict())
+        stats = client_mod.get_token_stats()
+>       assert (stats["prompt_tokens"], stats["completion_tokens"], stats["api_calls"]) == (22, 44, 2)
+E       assert (33, 66, 3) == (22, 44, 2)
+E         
+E         At index 0 diff: 33 != 22
+E         Use -v to get more diff
+
+tests\test_llm_call_cap.py:276: AssertionError
+_ test_a_call_that_finishes_normally_is_identical_with_the_cap_on_or_off[Stage 1 extraction] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000019452618F30>
+stage = 'Stage 1 extraction'
+
+    @pytest.mark.parametrize("stage", CAPPED_STAGES)
+    def test_a_call_that_finishes_normally_is_identical_with_the_cap_on_or_off(monkeypatch, stage):
+        _use(monkeypatch, FakeProvider(_ok("same"), _ok("same")))
+        plain = _chat(stage)
+        with client_mod.web_run_scope():
+            capped = _chat(stage)
+        assert (capped.text, capped.diagnostics.to_dict()) == (plain.text, plain.diagnostics.to_dict())
+        stats = client_mod.get_token_stats()
+>       assert (stats["prompt_tokens"], stats["completion_tokens"], stats["api_calls"]) == (22, 44, 2)
+E       assert (33, 66, 3) == (22, 44, 2)
+E         
+E         At index 0 diff: 33 != 22
+E         Use -v to get more diff
+
+tests\test_llm_call_cap.py:276: AssertionError
+_ test_a_call_that_finishes_normally_is_identical_with_the_cap_on_or_off[Stage 2 inference] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000194529B3B60>
+stage = 'Stage 2 inference'
+
+    @pytest.mark.parametrize("stage", CAPPED_STAGES)
+    def test_a_call_that_finishes_normally_is_identical_with_the_cap_on_or_off(monkeypatch, stage):
+        _use(monkeypatch, FakeProvider(_ok("same"), _ok("same")))
+        plain = _chat(stage)
+        with client_mod.web_run_scope():
+            capped = _chat(stage)
+        assert (capped.text, capped.diagnostics.to_dict()) == (plain.text, plain.diagnostics.to_dict())
+        stats = client_mod.get_token_stats()
+>       assert (stats["prompt_tokens"], stats["completion_tokens"], stats["api_calls"]) == (22, 44, 2)
+E       assert (33, 66, 3) == (22, 44, 2)
+E         
+E         At index 0 diff: 33 != 22
+E         Use -v to get more diff
+
+tests\test_llm_call_cap.py:276: AssertionError
+_ test_a_call_that_finishes_normally_is_identical_with_the_cap_on_or_off[rag_prose_extraction] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000194529B35B0>
+stage = 'rag_prose_extraction'
+
+    @pytest.mark.parametrize("stage", CAPPED_STAGES)
+    def test_a_call_that_finishes_normally_is_identical_with_the_cap_on_or_off(monkeypatch, stage):
+        _use(monkeypatch, FakeProvider(_ok("same"), _ok("same")))
+        plain = _chat(stage)
+        with client_mod.web_run_scope():
+            capped = _chat(stage)
+        assert (capped.text, capped.diagnostics.to_dict()) == (plain.text, plain.diagnostics.to_dict())
+        stats = client_mod.get_token_stats()
+>       assert (stats["prompt_tokens"], stats["completion_tokens"], stats["api_calls"]) == (22, 44, 2)
+E       assert (33, 66, 3) == (22, 44, 2)
+E         
+E         At index 0 diff: 33 != 22
+E         Use -v to get more diff
+
+tests\test_llm_call_cap.py:276: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_llm_call_cap.py::test_a_late_result_is_discarded_and_touches_no_totals_or_records
+FAILED tests/test_llm_call_cap.py::test_a_call_that_finishes_normally_is_identical_with_the_cap_on_or_off[preprocessor]
+FAILED tests/test_llm_call_cap.py::test_a_call_that_finishes_normally_is_identical_with_the_cap_on_or_off[Stage 1 extraction]
+FAILED tests/test_llm_call_cap.py::test_a_call_that_finishes_normally_is_identical_with_the_cap_on_or_off[Stage 2 inference]
+FAILED tests/test_llm_call_cap.py::test_a_call_that_finishes_normally_is_identical_with_the_cap_on_or_off[rag_prose_extraction]
+5 failed, 36 passed in 8.70s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ev-RT1\rev\base\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : RT1rev-M06_late_result_recorded
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ev-RT1/rev/base/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ev-RT1/rev/base -q --basetemp=C:/t/bt/RT1/rev-M06_late_result_recorded tests/test_llm_call_cap.py tests/test_llm_call_logging.py
+cwd                     : C:\t\ev-RT1\rev\base
+root PID / process group: 689288 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 9.70 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  689256:python.exe
+descendants terminated  : 1  689256
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ev-RT1/rev/M06_late_result_recorded.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=RT1  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

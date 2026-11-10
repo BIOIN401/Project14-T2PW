@@ -1,0 +1,10 @@
+M12_web_scope_on_by_default exit=1
+8 failed, 33 passed in 9.21s
+FAILED tests/test_llm_call_cap.py::test_without_the_web_scope_a_slow_allowlisted_call_is_never_capped
+FAILED tests/test_llm_call_cap.py::test_run_pathway_caps_but_run_paper_does_not
+FAILED tests/test_llm_call_cap.py::test_the_scope_is_off_after_run_pathway_even_when_the_run_crashes
+FAILED tests/test_llm_call_logging.py::test_a_batch_leg_trace_gets_exactly_the_old_row
+FAILED tests/test_llm_call_logging.py::test_the_scope_is_off_by_default_and_restored
+FAILED tests/test_llm_call_logging.py::test_the_curator_is_silent_outside_a_web_job
+FAILED tests/test_llm_call_logging.py::test_run_pathway_writes_a_trace_that_is_not_a_download
+FAILED tests/test_llm_call_logging.py::test_run_paper_alone_is_not_a_web_run

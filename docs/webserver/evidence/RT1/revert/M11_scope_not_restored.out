@@ -1,0 +1,216 @@
+T2PW: C:\t\ev-RT1\rev\base\src\t2pw\__init__.py
+....................FFF.........F.F..FF.F                                [100%]
+================================== FAILURES ===================================
+_____ test_without_the_web_scope_a_slow_allowlisted_call_is_never_capped ______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001C06F9F3BD0>
+
+    def test_without_the_web_scope_a_slow_allowlisted_call_is_never_capped(monkeypatch):
+        slow = lambda: (time.sleep(CAP * 3), _resp("app or batch"))[1]  # noqa: E731
+        provider = _use(monkeypatch, FakeProvider(slow))
+>       result = _chat("Stage 1 extraction")  # the Streamlit app and batch legs call it exactly like this
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_llm_call_cap.py:228: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_llm_call_cap.py:105: in _chat
+    return client_mod.chat_detailed([{"role": "user", "content": "hi"}], model_override="m", stage_name=stage)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\t2pw\llm\client.py:919: in chat_detailed
+    resp = _create(kwargs, diagnostics.stage)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\t2pw\llm\client.py:391: in _create
+    raise box["exc"]
+src\t2pw\llm\client.py:380: in work
+    box["resp"] = _client.chat.completions.create(**request)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <test_llm_call_cap.FakeProvider object at 0x000001C06FA12D50>
+kwargs = {'max_tokens': 65536, 'messages': [{'content': 'hi', 'role': 'user'}], 'model': 'm', 'temperature': 0.0, ...}
+
+    def create(self, **kwargs: Any) -> Any:
+        with self.lock:
+            self.threads.append(threading.current_thread())
+>           step = self.steps.pop(0)
+                   ^^^^^^^^^^^^^^^^^
+E           IndexError: pop from empty list
+
+tests\test_llm_call_cap.py:64: IndexError
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.llm.client:client.py:1052 Stage 1 extraction request still running after the 0.15s wall-clock cap; abandoned; retrying (attempt 1/3).
+________________ test_run_pathway_caps_but_run_paper_does_not _________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001C06FACF3F0>
+tmp_path = WindowsPath('C:/t/bt/RT1/rev-M11_scope_not_restored/test_run_pathway_caps_but_run_0')
+
+    def test_run_pathway_caps_but_run_paper_does_not(monkeypatch, tmp_path):
+        # run_pathway: the web entry
+        gate = threading.Event()
+        web = _use(monkeypatch, FakeProvider(_held(gate), _ok("web")))
+        seen: dict = {}
+        monkeypatch.setattr(pw, "_drive", _slow_stage1_drive(web, seen))
+        pw.run_pathway(PathwayRequest(texts=("The paper.",), out_dir=tmp_path / "out"))
+        gate.set(); _join_workers()
+        assert seen["web"] is True and web.calls == 2
+        assert [r["status"] for r in seen["result"].diagnostics.attempt_log] == ["call_cap", "ok"]
+        # run_paper: what batch calls
+        slow = lambda: (time.sleep(CAP * 3), _resp("batch"))[1]  # noqa: E731
+        batch = _use(monkeypatch, FakeProvider(slow))
+        seen = {}
+        monkeypatch.setattr(pw, "_drive", _slow_stage1_drive(batch, seen))
+        pw.run_paper({"paper_id": "p"}, PathwayRequest(texts=("x",)), None)
+>       assert seen["web"] is False and batch.calls == 1 and seen["result"].text == "batch"
+E       assert (True is False)
+
+tests\test_llm_call_cap.py:257: AssertionError
+------------------------------ Captured log call ------------------------------
+WARNING  t2pw.llm.client:client.py:1052 Stage 1 extraction request still running after the 0.15s wall-clock cap; abandoned; retrying (attempt 1/3).
+WARNING  t2pw.llm.client:client.py:1052 Stage 1 extraction request still running after the 0.15s wall-clock cap; abandoned; retrying (attempt 1/3).
+______ test_the_scope_is_off_after_run_pathway_even_when_the_run_crashes ______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001C06FDBF700>
+tmp_path = WindowsPath('C:/t/bt/RT1/rev-M11_scope_not_restored/test_the_scope_is_off_after_ru0')
+
+    def test_the_scope_is_off_after_run_pathway_even_when_the_run_crashes(monkeypatch, tmp_path):
+        monkeypatch.setattr(pw, "_drive", lambda *a, **k: 1 / 0)
+        result = pw.run_pathway(PathwayRequest(texts=("The paper.",), out_dir=tmp_path / "out"))
+>       assert result.status == "error" and client_mod._WEB_RUN is False and leg_trace.active() is None
+E       AssertionError: assert ('error' == 'error'
+E         
+E           error and True is False)
+E        +  where True = client_mod._WEB_RUN
+
+tests\test_llm_call_cap.py:264: AssertionError
+_______________ test_a_batch_leg_trace_gets_exactly_the_old_row _______________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001C06F9FD470>
+tmp_path = WindowsPath('C:/t/bt/RT1/rev-M11_scope_not_restored/test_a_batch_leg_trace_gets_ex0')
+
+    def test_a_batch_leg_trace_gets_exactly_the_old_row(monkeypatch, tmp_path):
+        monkeypatch.setattr(client_mod, "_client", _fake_client([_resp()]))
+        _trace(tmp_path)
+        _chat()  # no web_run_scope: the batch / app path
+        (row,) = _attempts(tmp_path)
+>       assert set(row) == {"seq", "kind", "elapsed_seconds", "stage", "attempt", "status", "model", "reason",
+                            "finish_reason", "content_chars", "request_hash", "response_hash"}
+E       AssertionError: assert {'attempt', '..._reason', ...} == {'attempt', '... 'model', ...}
+E         
+E         Extra items in the left set:
+E         'started_at'
+E         'prompt_tokens'
+E         'completion_tokens'
+E         'generation_id'
+E         'reasoning_tokens'...
+E         
+E         ...Full output truncated (4 lines hidden), use '-vv' to show
+
+tests\test_llm_call_logging.py:143: AssertionError
+________________ test_the_scope_is_off_by_default_and_restored ________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001C06FACD320>
+
+    def test_the_scope_is_off_by_default_and_restored(monkeypatch):
+>       assert client_mod._WEB_RUN is False
+E       assert True is False
+E        +  where True = client_mod._WEB_RUN
+
+tests\test_llm_call_logging.py:161: AssertionError
+________________ test_the_curator_is_silent_outside_a_web_job _________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001C06F9FFC40>
+tmp_path = WindowsPath('C:/t/bt/RT1/rev-M11_scope_not_restored/test_the_curator_is_silent_out0')
+
+    def test_the_curator_is_silent_outside_a_web_job(monkeypatch, tmp_path):
+        monkeypatch.setattr(client_mod, "_client", _fake_client([_tool_turn(), _resp("curated")]))
+        _trace(tmp_path)
+        assert _with_tools() == "curated"
+>       assert _attempts(tmp_path) == []  # batch traces keep today's counts
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert [{'attempt': ...s': 0.0, ...}] == []
+E         
+E         Left contains 2 more items, first extra item: {'attempt': 1, 'completion_tokens': 22, 'content_chars': 0, 'duration_s': 0.0, ...}
+E         Use -v to get more diff
+
+tests\test_llm_call_logging.py:209: AssertionError
+___________ test_run_pathway_writes_a_trace_that_is_not_a_download ____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001C06FDBF2A0>
+tmp_path = WindowsPath('C:/t/bt/RT1/rev-M11_scope_not_restored/test_run_pathway_writes_a_trac0')
+
+    def test_run_pathway_writes_a_trace_that_is_not_a_download(monkeypatch, tmp_path):
+        result = _job(tmp_path, monkeypatch, [_resp()])
+        out = tmp_path / "out"
+        assert (out / leg_trace.LEG_TRACE_NAME).is_file()
+        kinds = [e["kind"] for e in leg_trace.read_events(out)]
+        assert kinds[0] == "job_begin" and kinds[-1] == "job_end" and "model_attempt" in kinds
+        (row,) = _attempts(out)
+        assert row["stage"] == "Stage 1 extraction" and "duration_s" in row and row["prompt_tokens"] == 11
+        # not offered: downloads are looked up by key in report_paths / pwml_path / image_path
+        delivered = {str(p) for p in [result.pwml_path, result.image_path, *result.report_paths.values()] if p}
+        assert not any(leg_trace.LEG_TRACE_NAME in p for p in delivered)
+        assert leg_trace.LEG_TRACE_NAME not in result.report_paths
+>       assert leg_trace.active() is None and client_mod._WEB_RUN is False  # nothing left switched on
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       assert (None is None and True is False)
+E        +  where None = <function active at 0x000001C06F4ECE00>()
+E        +    where <function active at 0x000001C06F4ECE00> = leg_trace.active
+E        +  and   True = client_mod._WEB_RUN
+
+tests\test_llm_call_logging.py:236: AssertionError
+____________________ test_run_paper_alone_is_not_a_web_run ____________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001C06FDBF5B0>
+tmp_path = WindowsPath('C:/t/bt/RT1/rev-M11_scope_not_restored/test_run_paper_alone_is_not_a_0')
+
+    def test_run_paper_alone_is_not_a_web_run(monkeypatch, tmp_path):
+        """Batch calls ``run_paper`` directly: no trace of its own, no web scope."""
+        seen = {}
+        monkeypatch.setattr(pw, "_drive", lambda *a, **k: seen.update(web=client_mod._WEB_RUN, trace=leg_trace.active()))
+        pw.run_paper({"paper_id": "p"}, PathwayRequest(texts=("x",)), None)
+>       assert seen == {"web": False, "trace": None}
+E       AssertionError: assert {'trace': None, 'web': True} == {'trace': None, 'web': False}
+E         
+E         Omitting 1 identical items, use -vv to show
+E         Differing items:
+E         {'web': True} != {'web': False}
+E         Use -v to get more diff
+
+tests\test_llm_call_logging.py:254: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_llm_call_cap.py::test_without_the_web_scope_a_slow_allowlisted_call_is_never_capped
+FAILED tests/test_llm_call_cap.py::test_run_pathway_caps_but_run_paper_does_not
+FAILED tests/test_llm_call_cap.py::test_the_scope_is_off_after_run_pathway_even_when_the_run_crashes
+FAILED tests/test_llm_call_logging.py::test_a_batch_leg_trace_gets_exactly_the_old_row
+FAILED tests/test_llm_call_logging.py::test_the_scope_is_off_by_default_and_restored
+FAILED tests/test_llm_call_logging.py::test_the_curator_is_silent_outside_a_web_job
+FAILED tests/test_llm_call_logging.py::test_run_pathway_writes_a_trace_that_is_not_a_download
+FAILED tests/test_llm_call_logging.py::test_run_paper_alone_is_not_a_web_run
+8 failed, 33 passed in 8.48s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\ev-RT1\rev\base\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : unknown  @ (no repository)  [not_a_repository, worktree dirty=None]
+label                   : RT1rev-M11_scope_not_restored
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -u C:/t/ev-RT1/rev/base/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/ev-RT1/rev/base -q --basetemp=C:/t/bt/RT1/rev-M11_scope_not_restored tests/test_llm_call_cap.py tests/test_llm_call_logging.py
+cwd                     : C:\t\ev-RT1\rev\base
+root PID / process group: 691792 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 300 s
+duration                : 9.66 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  687288:python.exe
+descendants terminated  : 1  687288
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/ev-RT1/rev/M11_scope_not_restored.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=RT1  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================
