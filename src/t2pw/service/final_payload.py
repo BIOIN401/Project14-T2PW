@@ -172,6 +172,119 @@ def maybe_apply_final_id_fill(payload: Dict[str, Any], pathway_context: Any = No
     try:
         report = apply_final_id_fill(payload, fill_meta(pathway_context, state), **kw)
         report["meta_keys"] = sorted(fill_meta(pathway_context, state))
+        report["pathway_meta"] = maybe_apply_final_pathway_meta(payload, pathway_context, state, **kw)
         return report
     except Exception as exc:
         return {"enabled": True, "written": 0, "error": f"{type(exc).__name__}: {exc}"}
+
+
+# ---- pathway title and reference (D-W12: the PWML carries the paper title and one reference) -------------------------
+
+FINAL_PAYLOAD_PATHWAY_FIELD = "final_payload_pathway"
+_PW_FIELDS = ("title", "pmid", "pmcid", "doi", "year", "authors")
+
+
+def _fld(f: Any) -> Optional[Dict[str, Any]]:
+    """{value, source, match_type, retrieved} of a clean-model Field, or None when absent/empty."""
+    if getattr(f, "absent", True) or f.value in (None, "", []):
+        return None
+    p = f.prov
+    return {"value": f.value, "source": p.source or p.label, "match_type": p.match_type or p.label, "retrieved": p.retrieved}
+
+
+def _citation(b: Dict[str, Any]) -> str:
+    au = (b.get("authors") or {}).get("value")
+    au = ", ".join(str(a) for a in au) if isinstance(au, list) else (str(au) if au else "")
+    parts = [(au + ": " if au else "") + str(b["title"]["value"]).rstrip(".") + "."]
+    if b.get("year"):
+        parts.append(f"{b['year']['value']}.")
+    if b.get("doi"):
+        parts.append(f"doi: {b['doi']['value']}.")
+    if b.get("pmid"):
+        parts.append(f"PMID: {b['pmid']['value']}.")
+    return " ".join(parts)
+
+
+def apply_final_pathway_meta(payload: Dict[str, Any], meta: Optional[Dict[str, Any]] = None, *, fetcher: Any = None,
+                             cache: Any = None, today: Optional[str] = None,
+                             pathway_name: Optional[str] = None) -> Dict[str, Any]:
+    """Set ``payload["final_payload_pathway"]`` (title, pmid, pmcid, doi, year, authors, each with provenance, plus the one
+    ``reference``). Paper mode (a pmid/pmcid/doi is known): the title comes from NCBI esummary through the fill layer, else
+    ``meta["title"]``, else the pathway name. Name mode: the pathway name. Nothing is invented; with no text the key is not
+    written. Fails open: on any error the payload is exactly what it was."""
+    report: Dict[str, Any] = {"enabled": True, "written": False, "title_source": None, "error": None}
+    snapshot = copy.deepcopy(payload)
+    try:
+        from t2pw.clean_model import build_from_payload
+        from t2pw.clean_model.fill import fill_model
+
+        today = today or datetime.date.today().isoformat()
+        meta = dict(meta or {})
+        if meta.pop("pmid_source", None):  # a guessed pmid (token position in the PMC header) is not an identifier
+            meta.pop("pmid", None)
+        meta.setdefault("source", "run input")
+        meta_title = meta.pop("title", None)  # a fallback only: the NCBI title wins when the lookup answers
+        model = build_from_payload(payload, meta)
+        if any(not getattr(model.pathway, k).absent for k in ("pmid", "pmcid")):
+            fill_model(model, fetcher=fetcher or _live_fetcher(), cache=cache, today=today, sources=("ncbi",))
+        b: Dict[str, Any] = {"schema": 1, "date": today}
+        for k in _PW_FIELDS:
+            v = _fld(getattr(model.pathway, k))
+            if v:
+                b[k] = v
+        if "title" not in b:
+            for txt, src in ((meta_title, "paper metadata"), (pathway_name, "pathway name")):
+                if isinstance(txt, str) and txt.strip():
+                    b["title"] = {"value": " ".join(txt.split()), "source": src, "match_type": "given", "retrieved": None}
+                    break
+        if "title" in b:
+            if any(k in b for k in ("pmid", "pmcid", "doi")):
+                b["reference"] = {"pubmed_id": b["pmid"]["value"] if "pmid" in b else None, "text": _citation(b)}
+            payload[FINAL_PAYLOAD_PATHWAY_FIELD] = b
+            report.update(written=True, title_source=b["title"]["source"], has_reference="reference" in b)
+    except Exception as exc:  # fail open
+        payload.clear()
+        payload.update(snapshot)
+        report.update(written=False, error=f"{type(exc).__name__}: {exc}")
+    return report
+
+
+def paper_meta(pathway_context: Any = None, state: Any = None) -> Dict[str, Any]:
+    """pmid/pmcid/doi/title/year of the paper when the caller put them in ``state["final_payload_paper"]`` (or pathway_context)."""
+    ctx = pathway_context if isinstance(pathway_context, dict) else {}
+    st = state if hasattr(state, "get") else {}
+    src = st.get("final_payload_paper") if isinstance(st.get("final_payload_paper"), dict) else {}
+    return {k: str(v) for k in ("pmid", "pmcid", "doi", "title", "year") if (v := src.get(k) or ctx.get(k))}
+
+
+def maybe_apply_final_pathway_meta(payload: Dict[str, Any], pathway_context: Any = None, state: Any = None,
+                                   **kw: Any) -> Dict[str, Any]:
+    """The postpipeline seam for the title/reference: {} when the flag is off; otherwise the report. Never raises."""
+    if not final_payload_enabled():
+        return {}
+    try:
+        ctx = pathway_context if isinstance(pathway_context, dict) else {}
+        meta = {**fill_meta(pathway_context, state), **paper_meta(pathway_context, state)}
+        return apply_final_pathway_meta(payload, meta, pathway_name=ctx.get("pathway_name"), **kw)
+    except Exception as exc:
+        return {"enabled": True, "written": False, "error": f"{type(exc).__name__}: {exc}"}
+
+
+def effective_pathway_name(payload: Any, name: str) -> str:
+    """The title from ``final_payload_pathway`` in place of the default name; ``name`` unchanged when the key is absent."""
+    b = payload.get(FINAL_PAYLOAD_PATHWAY_FIELD) if isinstance(payload, dict) else None
+    t = (b.get("title") or {}).get("value") if isinstance(b, dict) and isinstance(b.get("title"), dict) else None
+    return " ".join(t.split()) if name == "Generated Pathway" and isinstance(t, str) and t.strip() else name
+
+
+def paper_meta_from_paper(paper: Any) -> Dict[str, str]:
+    """pmid/pmcid/doi/title/year from a batch/service paper object or dict; ``paper_id`` is read as an id only when it looks like one."""
+    def get(n: str) -> str:
+        v = paper.get(n) if isinstance(paper, dict) else getattr(paper, n, None)
+        return str(v).strip() if v not in (None, "") else ""
+    out = {k: get(k) for k in ("pmid", "pmcid", "doi", "title", "year")}
+    pid = get("paper_id")
+    for k, rx in (("pmcid", r"PMC\d+"), ("pmid", r"\d+"), ("doi", r"10\.\S+")):
+        if pid and not out[k] and re.fullmatch(rx, pid, re.I):
+            out[k] = pid
+    return {k: v for k, v in out.items() if v}

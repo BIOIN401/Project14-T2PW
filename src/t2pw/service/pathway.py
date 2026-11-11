@@ -256,6 +256,9 @@ def _drive(
     pr.reset_quarantine_state(outputs_dir, state=state)
     outcome.stage = STAGE_INPUT
     research = outcome.mode == MODE_RESEARCH
+    from t2pw.service import final_payload as fpl  # D-W12 title/reference: hand the paper ids to the post-pipeline (flag only)
+    if fpl.final_payload_enabled():
+        state["final_payload_paper"] = fpl.paper_meta_from_paper(paper)
     try:
         extraction = ex.run_extraction(
             ex.ExtractionRequest(

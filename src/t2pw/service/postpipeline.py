@@ -1793,6 +1793,11 @@ def run_pwml_export(
     quarantine_artifacts = dict(quarantine_artifacts or {})
     quarantine_reused = False
     try:
+        # Final payload (D-W12): the paper title replaces the default name, only when the payload carries the key
+        # ``final_payload_pathway`` (written under T2PW_FINAL_PAYLOAD). Otherwise the name is returned unchanged.
+        from t2pw.service.final_payload import effective_pathway_name
+
+        pathway_name = effective_pathway_name(final_payload, pathway_name)
         before_export_report = _write_reaction_preservation_report("before_final_export", final_payload)
         payload = deepcopy(final_payload)
         grounding_report: Dict[str, Any] = {}

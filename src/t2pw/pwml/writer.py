@@ -2707,7 +2707,13 @@ class DeterministicPwmlBuilder:
             "subject": self.args.subject,
             "species-id": first_species_id,
             "sub-pathways": [],
-            "references": [],
+            # Final payload (D-W12): the IR carries references only when the payload had ``final_payload_pathway``;
+            # otherwise this is the same empty list as before. Shape as the template: id, pubmed-id, text, element-id, element-type.
+            "references": [
+                {"id": i, "pubmed-id": r.get("pubmed-id"), "text": r.get("text"),
+                 "element-id": self.pathway_id_int, "element-type": "Pathway"}
+                for i, r in enumerate((self.extraction.get("pathway") or {}).get("references") or [], 1)
+            ],
         }
 
         ordered_fields = self.signature.pathway_children or list(pathway_values.keys())
