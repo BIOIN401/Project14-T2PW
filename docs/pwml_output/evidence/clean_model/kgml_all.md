@@ -4,12 +4,14 @@ XML written to `C:/t/ev-cm/kgml_out` (outside the repo). Structural check = requ
 
 - runs: 152, files written: 152, structural check passed: 152, failures: 0
 - entries: 2293; KEGG id 556 (24.2%), non-KEGG prefix 747 (32.6%), undefined 990 (43.2%)
+- entries added as reaction placeholders (no free catalyst entry): 193 (not counted in the three id classes above)
 - reactions (incl. transports): 724; rn: 0, rhea: 0, undefined 724
 - relations: 325; signed 106, unsigned 219
 
 ## Omission totals
 
 - direction_placeholder: 724
+- extra_catalysts: 230
 - lost_catalysts_and_modifiers: 1503
 - lost_compartments: 414
 - lost_quotes: 1051

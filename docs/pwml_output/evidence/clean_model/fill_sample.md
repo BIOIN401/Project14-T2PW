@@ -2,25 +2,23 @@
 
 payload unchanged after fill: 10/10
 
-fields filled 426, ids filled 185, ambiguous 10, conflicts 8, requests 118, cache hits 26
+fields filled 493, ids filled 252, ambiguous 8, conflicts 8, requests 4, cache hits 133
 
 ## By source
 
 | key | n |
 |---|---|
-| ChEBI | 155 |
+| ChEBI | 135 |
 | GO | 10 |
 | NCBI | 30 |
-| Rhea | 5 |
-| UniProt | 226 |
+| UniProt | 318 |
 
 ## By match type
 
 | key | n |
 |---|---|
 | accession | 255 |
-| catalyst_ec | 12 |
-| cross_reference | 146 |
+| cross_reference | 225 |
 | exact_label | 10 |
 | exact_synonym | 3 |
 
@@ -30,7 +28,7 @@ fields filled 426, ids filled 185, ambiguous 10, conflicts 8, requests 118, cach
 |---|---|
 | compound.cas | 4 |
 | compound.chebi_id | 4 |
-| compound.drugbank_id | 24 |
+| compound.drugbank_id | 4 |
 | compound.formula | 39 |
 | compound.hmdb_id | 1 |
 | compound.inchikey | 39 |
@@ -43,12 +41,11 @@ fields filled 426, ids filled 185, ambiguous 10, conflicts 8, requests 118, cach
 | pathway.year | 10 |
 | protein.ec_number | 1 |
 | protein.ensembl | 79 |
+| protein.ensembl_gene | 99 |
 | protein.kegg_gene | 32 |
 | protein.protein_name | 21 |
 | protein.synonym | 72 |
 | protein.taxon_id | 14 |
-| reaction.ec_number | 7 |
-| reaction.rhea_id | 5 |
 
 ## Refused
 

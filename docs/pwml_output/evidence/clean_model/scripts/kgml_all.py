@@ -27,8 +27,10 @@ def structural_ok(path):
     if any(not req.get(e.tag, set()) <= set(e.attrib) for e in root.iter()):
         return False
     ids = [e.get("id") for e in root.findall("entry")]
-    allids = ids + [r.get("id") for r in root.findall("reaction")]
-    return (len(ids) == len(set(ids)) and len(allids) == len(set(allids))
+    by_id = {e.get("id"): e for e in root.findall("entry")}
+    rids = [r.get("id") for r in root.findall("reaction")]
+    return (len(ids) == len(set(ids)) and len(rids) == len(set(rids))  # a reaction id is an entry id, and that entry names the reaction
+            and all(r.get("id") in by_id and r.get("name") in by_id[r.get("id")].get("reaction", "").split() for r in root.findall("reaction"))
             and all(c.get("id") in ids for c in root.iter("component"))
             and all(r.get("entry1") in ids and r.get("entry2") in ids for r in root.findall("relation"))
             and all(s.get("id") in ids for s in root.iter() if s.tag in ("substrate", "product")))
@@ -56,7 +58,7 @@ def main():
             res["failures"].append({"dir": d, "error": traceback.format_exc()[-500:]})
             continue
         tot.update(om["stats"])
-        for k in ("unmapped_entities", "skipped_reactions", "skipped_interactions", "skipped_group_members"):
+        for k in ("unmapped_entities", "skipped_reactions", "skipped_interactions", "skipped_group_members", "extra_catalysts"):
             om_tot[k] += len(om[k])
         om_tot["direction_placeholder"] += om["direction_placeholder"]["count"]
         nf = om["no_slot_in_format"]
@@ -76,6 +78,7 @@ def main():
           "- entries: %d; KEGG id %d (%.1f%%), non-KEGG prefix %d (%.1f%%), undefined %d (%.1f%%)" % (
               tot["entries"], tot["entries_kegg"], 100 * tot["entries_kegg"] / e, tot["entries_non_kegg"], 100 * tot["entries_non_kegg"] / e,
               tot["entries_undefined"], 100 * tot["entries_undefined"] / e),
+          "- entries added as reaction placeholders (no free catalyst entry): %d (not counted in the three id classes above)" % tot["entries_reaction_placeholder"],
           "- reactions (incl. transports): %d; rn: %d, rhea: %d, undefined %d" % (tot["reactions"], tot["reactions_rn"], tot["reactions_rhea"], tot["reactions_undefined"]),
           "- relations: %d; signed %d, unsigned %d" % (tot["relations"], tot["relations_signed"], tot["relations_unsigned"]),
           "", "## Omission totals", ""] + ["- %s: %d" % (k, v) for k, v in sorted(om_tot.items())]

@@ -1,46 +1,43 @@
 {
  "runs": 10,
  "payload_unchanged": 10,
- "fields_filled": 426,
- "ids_filled": 185,
+ "fields_filled": 493,
+ "ids_filled": 252,
  "by_source": {
-  "ChEBI": 155,
-  "UniProt": 226,
+  "ChEBI": 135,
+  "UniProt": 318,
   "GO": 10,
-  "NCBI": 30,
-  "Rhea": 5
+  "NCBI": 30
  },
  "by_match_type": {
   "accession": 255,
-  "cross_reference": 146,
+  "cross_reference": 225,
   "exact_label": 10,
-  "exact_synonym": 3,
-  "catalyst_ec": 12
+  "exact_synonym": 3
  },
  "by_field": {
   "compound.formula": 39,
   "compound.inchikey": 39,
   "compound.smiles": 39,
-  "compound.drugbank_id": 24,
   "protein.protein_name": 21,
   "protein.synonym": 72,
   "protein.taxon_id": 14,
   "protein.kegg_gene": 32,
   "protein.ensembl": 79,
+  "protein.ensembl_gene": 99,
   "location.go_id": 9,
   "location.parent": 1,
   "pathway.title": 10,
   "pathway.authors": 10,
   "pathway.year": 10,
+  "compound.drugbank_id": 4,
   "compound.chebi_id": 4,
   "compound.kegg_id": 5,
   "compound.hmdb_id": 1,
   "compound.cas": 4,
-  "protein.ec_number": 1,
-  "reaction.ec_number": 7,
-  "reaction.rhea_id": 5
+  "protein.ec_number": 1
  },
- "ambiguous": 10,
+ "ambiguous": 8,
  "conflicts": 8,
  "refused": {},
  "lookups_failed": {},
@@ -48,69 +45,69 @@
   "go": 11,
   "chebi": 11
  },
- "requests": 118,
- "cache_hits": 26,
+ "requests": 4,
+ "cache_hits": 133,
  "per_run": [
   {
    "run": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-08-22_2147/papers/PMC12180156/strict",
-   "fields": 37,
-   "ids": 13,
+   "fields": 41,
+   "ids": 17,
    "ambiguous": 0,
    "conflicts": 0
   },
   {
    "run": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-01_1612/papers/PMC12856317/strict",
-   "fields": 20,
-   "ids": 5,
+   "fields": 18,
+   "ids": 3,
    "ambiguous": 1,
    "conflicts": 0
   },
   {
    "run": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_smoke/2026-09-10_1135/papers/PMC13474689/strict",
-   "fields": 16,
-   "ids": 1,
+   "fields": 15,
+   "ids": 0,
    "ambiguous": 0,
    "conflicts": 0
   },
   {
    "run": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_validation/c121/2026-09-09_0028/papers/PMC4471609/strict",
-   "fields": 21,
-   "ids": 3,
+   "fields": 19,
+   "ids": 1,
    "ambiguous": 4,
    "conflicts": 0
   },
   {
    "run": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-08-28_1816/papers/PMC12096016/research",
-   "fields": 91,
-   "ids": 46,
+   "fields": 95,
+   "ids": 50,
    "ambiguous": 0,
    "conflicts": 6
   },
   {
    "run": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-01_1612/papers/PMC12782028/research",
-   "fields": 160,
-   "ids": 95,
-   "ambiguous": 2,
+   "fields": 234,
+   "ids": 169,
+   "ambiguous": 0,
    "conflicts": 0
   },
   {
    "run": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-08-28_1816/papers/PMC13231680/research",
-   "fields": 31,
-   "ids": 11,
+   "fields": 29,
+   "ids": 9,
    "ambiguous": 0,
    "conflicts": 1
   },
   {
    "run": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_verify/2026-09-06_1425/papers/PMC11172790/research",
-   "fields": 32,
-   "ids": 8,
+   "fields": 26,
+   "ids": 2,
    "ambiguous": 2,
    "conflicts": 0
   },
   {
    "run": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/runs_smoke/2026-09-10_1135/papers/PMC13438895/strict",
-   "fields": 11,
-   "ids": 2,
+   "fields": 9,
+   "ids": 0,
    "ambiguous": 0,
    "conflicts": 1
   },

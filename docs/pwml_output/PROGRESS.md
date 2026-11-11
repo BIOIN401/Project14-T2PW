@@ -38,3 +38,5 @@ Read this log, then `CLEAN-MODEL.md` (once it exists) and `git log`. Next undone
 | 3 | C SBML exporter | sonnet / medium | export/sbml.py, sbo.py, validate_sbml.py | done: 74 clean-model tests pass; libsbml 6 runs: 0 errors, only 80601 (no initial value, deliberate) |
 | 4 | M measurement | sonnet / medium | MEASUREMENT.md; build 152, SBML 152 (0 errors), live fill 10 runs | done: found 2 wrong + 2 questionable reaction EC/Rhea fills (catalyst-EC inference) |
 | 5 | K KGML + fix | sonnet / medium | export/kgml.py, kgml_all; reaction EC/Rhea fill made opt-in (default off) | done: 84 clean-model tests pass; 152/152 KGML files pass structural check |
+| 6 | review | opus / high (ws-reviewer) | independent review of diff 075d127d..37416257 | APPROVE WITH FIXES: 3 major + 1 major (KGML reaction ids, from recall) + 11 minor |
+| 7 | F fixes | sonnet / medium | 13 items; Biopython check of KGML (0 -> 152 of 152 parse) | done: 102 clean-model tests pass |

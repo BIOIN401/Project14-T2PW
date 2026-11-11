@@ -36,10 +36,10 @@ Script: `scripts/build_all.py` (local files only, no network, no run file copied
 | modification/unsigned | 40 |
 | activation/positive | 26 |
 | modulation/unsigned | 15 |
-| catalysis/unsigned | 14 |
 | cofactor/unsigned | 11 |
+| catalysis/unsigned | 11 |
 | complex_formation/unsigned | 9 |
 | degradation/unsigned | 9 |
+| other_unsigned/unsigned | 6 |
 | transport/unsigned | 5 |
-| other_unsigned/unsigned | 3 |
 | competition/unsigned | 1 |
