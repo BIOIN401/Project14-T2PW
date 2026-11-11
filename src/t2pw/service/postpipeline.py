@@ -1463,6 +1463,13 @@ def run_post_pipeline_sbml_artifacts(
             strict_db=bool(strict_db),
         )
         assert isinstance(prefreeze_resolution_report, dict)
+        # Final payload phase 1 (D-W12): flag-guarded database id fill, in place, fails open.
+        # Off by default: the helper returns {} and touches nothing. The report stays local.
+        from t2pw.service.final_payload import maybe_apply_final_id_fill
+
+        final_payload_fill_report = maybe_apply_final_id_fill(
+            final_export_payload, pathway_context, state,
+        )
         post_enrichment_runtime_schema_report = validate_runtime_payload_contract(
             final_export_payload,
             boundary="post_enrichment",
