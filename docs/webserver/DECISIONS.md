@@ -67,3 +67,13 @@ allow it to carry them".
 (`SummerBIOIN/smpdb`). Edits to that code are allowed when needed for the test, and each one is
 reported to the PO. PO, verbatim: "you can make an edit to the spmbdb code if u need to in order
 to do that but let me know" and "automating the testing proces is vital".
+
+**D-W16 · 2026-11-10 — Gap filling also uses RAG and related papers.** The completeness step
+of D-W12 fills gaps from three sources: public databases, RAG over the submitted paper, and
+relevant papers found and retrieved when the paper itself leaves large gaps. The same route serves
+a prompt that names a pathway with no paper (for example "give me pathway of tca cycle"). Content
+from another paper is labelled with that paper's id and is never presented as stated by the
+submitted paper. This extends D-W03 (name mode uses the existing RAG as it is) beyond the LOI; it
+does not add work for the LOI. PO, verbatim: "but the gpas should also fill in using rag, and
+fidning releveant papers if there are large gaps in the paper itself or perhaps the user prompted
+with something like give me pathway of tca cycle".
