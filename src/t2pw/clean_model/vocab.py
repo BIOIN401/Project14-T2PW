@@ -45,14 +45,13 @@ _add("expression_regulation", "unsigned", "regulates expression", "regulates tra
      "transcriptional regulation", "promoter of")
 _add("modification", "unsigned", "modifies", "modification", "phosphopantetheinylates",
      "phosphopantetheinylation", "methylates", "acetylates", "glycosylates", "hydroxylates")
-_add("catalysis", "unsigned", "catalyzes", "catalyses", "catalyzes hydrolysis of", "substrate of",
-     "provides substrate for")
+_add("catalysis", "unsigned", "catalyzes", "catalyses", "catalyzes hydrolysis of")
 _add("cofactor", "unsigned", "cofactor of", "cofactor")
 _add("transport", "unsigned", "transports", "aids transport of")
 _add("competition", "unsigned", "competes with")
 _add("modulation", "unsigned", "regulates", "regulation", "modulates", "modulation", "synergizes with",
      "affects", "influences")
-_add("other_unsigned", "unsigned", "same as", "requires")
+_add("other_unsigned", "unsigned", "same as", "requires", "substrate of", "provides substrate for")  # not catalysis: the substrate does not catalyse
 
 
 def normalise(raw: Any) -> str:

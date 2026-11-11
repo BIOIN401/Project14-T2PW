@@ -263,6 +263,7 @@ class Compound(Node):
     pubchem_cid: Field = F()
     cas: Field = F()
     drugbank_id: Field = F()
+    drugbank_mapped: Field = F()  # DrugBank id found only under mapped_ids (not a payload key: never written back)
     inchikey: Field = F()  # slots for the online layer
     formula: Field = F()
     smiles: Field = F()
@@ -272,13 +273,30 @@ class Compound(Node):
     chosen_rule: Field = F()
     lineage: Field = F()
     mapping: Field = F()
+    compound_class: Field = F()  # compound / cofactor / ion; "class" repeats it in the payload
+    class_: Field = F()
+    compound_type: Field = F()
+    type_: Field = F()
     KEYS = {"name": "name", "synonyms": "synonyms", "short_name": "short_name", "chebi_id": "chebi_id",
             "kegg_id": "kegg_id", "hmdb_id": "hmdb_id", "pubchem_cid": "pubchem_cid", "cas": "cas",
             "drugbank_id": "drugbank_id", "confidence": "confidence", "provenance": "provenance",
             "db_status": "db_status", "chosen_rule": "chosen_rule", "provenance_lineage": "lineage",
-            "mapping_meta": "mapping"}
+            "mapping_meta": "mapping", "compound_class": "compound_class", "class": "class_",
+            "compound_type": "compound_type", "type": "type_"}
     IDS = frozenset({"chebi_id", "kegg_id", "hmdb_id", "pubchem_cid", "cas", "drugbank_id"})
-    META = frozenset({"confidence", "provenance", "db_status", "chosen_rule", "provenance_lineage", "mapping_meta"})
+    META = frozenset({"confidence", "provenance", "db_status", "chosen_rule", "provenance_lineage", "mapping_meta",
+                      "compound_class", "class", "compound_type", "type"})
+
+    @classmethod
+    def from_raw(cls, raw: Dict[str, Any]):
+        n = super().from_raw(raw)
+        mi = n.extras.get("mapped_ids")
+        v = mi.get("drugbank") if isinstance(mi, dict) else None
+        if isinstance(v, str) and v and n.drugbank_id.absent:
+            meta = raw.get("mapping_meta") if isinstance(raw.get("mapping_meta"), dict) else {}
+            n.drugbank_mapped = frozen(v, "db", source=meta.get("provider") or meta.get("source"), accession=v,
+                                       match_type=raw.get("chosen_rule") or meta.get("chosen_rule"))
+        return n
 
 
 @dataclass

@@ -89,8 +89,9 @@ def read_run_meta(run_dir: str) -> Dict[str, Any]:
             meta.setdefault("doi", d.group(1).rstrip(".,;"))
             prev = head[:d.start()].split()
             pmc_num = (meta.get("pmcid") or "")[3:]
-            if prev and prev[-1].isdigit() and prev[-1] != pmc_num:
-                meta.setdefault("pmid", prev[-1])
+            if prev and prev[-1].isdigit() and prev[-1] != pmc_num and "pmid" not in meta:
+                meta["pmid"] = prev[-1]  # a token position guess, not a structured field
+                meta["pmid_source"] = "PMC text header"
             # the title follows the DOI but cannot be cut from the author block reliably: kept raw, not as the title
             meta.setdefault("header_after_doi", head[d.end():d.end() + 300].strip())
     except OSError:
@@ -103,7 +104,9 @@ def _fill_pathway(model: CleanModel, meta: Dict[str, Any], src: str) -> None:
     for key, attr in (("title", "title"), ("pmid", "pmid"), ("pmcid", "pmcid"), ("doi", "doi"),
                       ("authors", "authors"), ("year", "year")):
         if meta.get(key) not in (None, ""):
-            setattr(pw, attr, frozen(meta[key], "paper", source=src, accession=str(meta[key]) if key != "title" else None))
+            guess = key == "pmid" and meta.get("pmid_source")
+            setattr(pw, attr, frozen(meta[key], "inferred" if guess else "paper", source=meta["pmid_source"] if guess else src,
+                                     accession=str(meta[key]) if key != "title" else None))
     if meta.get("mode"):
         pw.mode = frozen(meta["mode"], "default", source=src)
     if meta.get("run_date"):

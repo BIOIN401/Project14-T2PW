@@ -171,3 +171,80 @@ def test_sids_unique_and_sbo_from_verified_table():
             assert el.get("sboTerm") in SBO
     assert len(ids) == len(set(ids))
     assert root.find("s:model", NS).get("name") == "A test pathway"
+
+
+RDF = "{http://www.w3.org/1999/02/22-rdf-syntax-ns#}"
+BQ = "{http://biomodels.net/biology-qualifiers/}"
+
+
+def _qualified(sp):
+    """{qualifier local name: [resource, ...]} of one element's rdf annotation."""
+    out = {}
+    for q in sp.iter():
+        if q.tag.startswith(BQ):
+            out[q.tag[len(BQ):]] = [li.get(RDF + "resource") for li in q.iter(RDF + "li")]
+    return out
+
+
+def _doc(p, meta=None):
+    return ET.fromstring(X.sbml_text(build_from_payload(p, meta or {})).encode("utf-8"))
+
+
+def test_unknown_placeholder_never_a_species_in_any_reference_type():
+    p = payload()
+    p["entities"]["proteins"].append({"name": "Ghost", "pathbank_protein_id": 9659})  # flagged under another name
+    p["processes"]["reactions"] = [{"name": "u", "inputs": ["Unknown", "A"], "outputs": ["B", "Ghost"],
+                                    "enzymes": [{"entity": "Unknown"}, {"entity": "Ghost"}], "modifiers": [{"entity": "Unknown"}]}]
+    p["processes"]["transports"] = [{"name": "t1", "cargo": "Unknown"},
+                                    {"name": "t2", "cargo": "A", "transporters": [{"entity": "Unknown"}, {"entity": "EntY"}]}]
+    root = _doc(p)
+    names = {s.get("name").casefold() for s in root.iter(SB + "species")}
+    assert "unknown" not in names and "ghost" not in names
+    rxs = reactions(root)
+    assert len(rxs["u"].findall("s:listOfReactants/s:speciesReference", NS)) == 1
+    assert rxs["u"].find("s:listOfModifiers", NS) is None and "t1" not in rxs
+    assert len(rxs["t2"].findall("s:listOfModifiers/s:modifierSpeciesReference", NS)) == 1
+    om = {o.get("name"): o for o in root.iter(TW + "omission")}
+    assert "Unknown" in om and "Ghost" in om and om["Unknown"].get("kind") in ("reference", "protein", "transport")
+    assert any(o.get("kind") == "reference" and o.get("name") == "Unknown" for o in root.iter(TW + "omission"))
+
+
+def test_plain_modifier_is_sbo_modifier_catalyst_stays_catalyst():
+    p = payload()
+    p["processes"]["reactions"] = [{"name": "m", "inputs": ["A"], "outputs": ["B"], "enzymes": [{"entity": "EntX"}],
+                                    "modifiers": [{"entity": "EntY"}]}]
+    mods = {m.get("species"): m.get("sboTerm") for m in reactions(_doc(p))["m"].iter(SB + "modifierSpeciesReference")}
+    assert sorted(mods.values()) == ["SBO:0000013", "SBO:0000019"] and SBO["SBO:0000019"] == "modifier"
+
+
+def test_ensembl_protein_is_gene_and_transcript_ids_are_encoded_by():
+    m = model()
+    prov = {"label": "db", "source": "UniProt", "accession": "P0A6A3", "match_type": "cross_reference", "retrieved": "2026-11-10"}
+    m.db_layer["items"] += [{"kind": "protein", "entity": "EntX", "field": f, "value": v, "prov": prov} for f, v in (
+        ("ensembl", "ENSP00000269305"), ("ensembl_gene", "ENST00000269305"), ("ensembl_gene", "ENSG00000141510"),
+        ("kegg_gene", "hsa:7157"))]
+    root = ET.fromstring(X.sbml_text(m).encode("utf-8"))
+    q = _qualified(species(root, "EntX"))
+    assert "https://identifiers.org/ensembl/ENSP00000269305" in q["is"]
+    assert set(q["isEncodedBy"]) == {"https://identifiers.org/ensembl/ENST00000269305", "https://identifiers.org/ensembl/ENSG00000141510",
+                                     "https://identifiers.org/kegg.genes/hsa:7157"}
+    assert not any("ENST" in u or "kegg.genes" in u for u in q["is"])
+
+
+def test_drugbank_from_mapped_ids_written_as_db_labelled_annotation():
+    p = payload()
+    p["entities"]["compounds"].append({"name": "DrugX", "mapped_ids": {"drugbank": "DB03246"}, "class": "cofactor"})
+    root = _doc(p)
+    sp = species(root, "DrugX")
+    assert "https://identifiers.org/drugbank/DB03246" in _qualified(sp)["is"]
+    i = [x for x in sp.iter(TW + "id") if x.get("db") == "drugbank"][0]
+    assert i.get("id") == "DB03246" and i.get("label") == "db"
+
+
+def test_guessed_pmid_not_written_as_identifier_but_paper_pmid_is():
+    for label, expected in (("inferred", False), ("paper", True)):
+        m = model()
+        m.pathway.pmid = frozen("123", label)
+        text = X.sbml_text(m)
+        assert ("identifiers.org/pubmed/123" in text) is expected
+        assert 'key="pmid"' in text

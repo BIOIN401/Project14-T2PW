@@ -27,8 +27,11 @@ def check(text):
     ids = [e.get("id") for e in entries]
     assert len(ids) == len(set(ids)) and all(i.isdigit() for i in ids)
     assert all(e.get("type") in ETYPES for e in entries)
-    allids = ids + [r.get("id") for r in root.findall("reaction")]
-    assert len(allids) == len(set(allids))
+    by_id = {e.get("id"): e for e in entries}
+    rids = [r.get("id") for r in root.findall("reaction")]
+    assert len(rids) == len(set(rids))
+    for r in root.findall("reaction"):  # KGML: a reaction's id is an entry's id, and that entry carries reaction="<name>"
+        assert r.get("id") in by_id and r.get("name") in by_id[r.get("id")].get("reaction", "").split()
     for c in root.iter("component"):
         assert c.get("id") in ids
     for r in root.findall("relation"):
@@ -92,7 +95,7 @@ def entry(root, label):
 def test_placeholders_and_structure():
     text, om = K.kgml_text(model())
     root = check(text)
-    assert (root.get("name"), root.get("org"), root.get("number")) == ("undefined", "undefined", "00000")
+    assert (root.get("name"), root.get("org"), root.get("number")) == ("path:undefined", "undefined", "00000")
     assert root.get("title") == "A test pathway" and "not a KEGG map" in text and om["sources_used"] == ["ChEBI: CC BY 4.0"]
 
 
@@ -177,8 +180,8 @@ def test_no_kegg_request_anywhere():
 
 
 def _runs():
-    rl = "C:/t/ev-cm/runlist.json"
-    if not os.path.exists(rl):
+    rl = os.environ.get("T2PW_RUNLIST")  # path to a runlist.json; unset -> the real-run test is skipped
+    if not rl or not os.path.exists(rl):
         return []
     return [r["dir"] for r in json.load(open(rl, encoding="utf-8")) if r.get("q") is True and os.path.exists(os.path.join(r["dir"], "final_mapped.json"))][:3]
 
@@ -189,3 +192,49 @@ def test_real_runs_pass_structural_check():
         text, om = K.kgml_for_run(d)
         check(text)
         assert text == K.kgml_for_run(d)[0] and om["stats"]["entries"] > 0
+
+
+def test_reaction_ids_are_entry_ids_catalyst_or_placeholder():
+    text, om = K.kgml_text(model())
+    root = check(text)
+    ents = {e.get("id"): e for e in root.findall("entry")}
+    rxs = {r.get("name"): r for r in root.findall("reaction")}
+    enz = entry(root, "EntX")
+    assert rxs["rhea:18985"].get("id") == enz.get("id") and enz.get("reaction") == "rhea:18985"   # first catalyst's entry
+    ph = [e for e in ents.values() if e.get("type") == "reaction"]
+    assert len(ph) == 2 and all(e.get("reaction") == e.get("name") for e in ph)                   # no catalyst -> placeholder entry
+    assert {e.get("name") for e in ph} == {"rn:R00001", "undefined"}
+    assert om["stats"]["entries_reaction_placeholder"] == 2
+
+
+def test_extra_catalysts_go_to_omissions_and_an_entry_serves_one_reaction():
+    p = payload()
+    p["processes"]["reactions"] = [
+        {"name": "r1", "inputs": ["A"], "outputs": ["B"], "enzymes": [{"entity": "EntX"}, {"entity": "EntY"}]},
+        {"name": "r2", "inputs": ["B"], "outputs": ["C"], "enzymes": [{"entity": "EntX"}]}]
+    m = build_from_payload(p, {})
+    text, om = K.kgml_text(m)
+    root = check(text)
+    r1, r2 = root.findall("reaction")[:2]  # the fixture also has one transport
+    assert r1.get("id") == entry(root, "EntX").get("id")
+    r2_entry = [e for e in root.findall("entry") if e.get("id") == r2.get("id")][0]
+    assert r2.get("id") != r1.get("id") and r2_entry.get("type") == "reaction"   # EntX already identifies r1: placeholder
+    assert {(x["reaction"], x["catalyst"]) for x in om["extra_catalysts"]} == {("r1", "EntY"), ("r2", "EntX")}
+
+
+def test_ubiquitination_subtype_spelling():
+    p = payload()
+    p["processes"]["interactions"] = [{"entity_1": "EntX", "entity_2": "EntY", "relationship": "ubiquitinates"}]
+    text, _ = K.kgml_text(build_from_payload(p, {}))
+    assert 'name="ubiquitination" value="+u"' in text and "ubiquination" not in text
+
+
+def test_unknown_placeholder_never_an_entry_or_reaction_part():
+    p = payload()
+    p["processes"]["reactions"] = [{"name": "u", "inputs": ["Unknown", "A"], "outputs": ["B"], "enzymes": [{"entity": "Unknown"}]}]
+    p["processes"]["interactions"] = [{"entity_1": "Unknown", "entity_2": "EntX", "relationship": "binds"}]
+    text, om = K.kgml_text(build_from_payload(p, {}))
+    root = check(text)
+    assert "Unknown" not in {e.find("graphics").get("name") for e in root.findall("entry")}
+    assert om["unknown_references"].get("Unknown", 0) >= 2
+    assert len(root.findall("relation")) == 0 and len(root.findall("reaction")) == 2   # "u" and the fixture transport

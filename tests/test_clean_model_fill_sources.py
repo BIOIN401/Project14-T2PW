@@ -11,7 +11,8 @@ def test_uniprot_entry_and_gene_search():
     f = FakeFetcher([("/P0AEJ2.json", None, uniprot())])
     e = S.uniprot_entry(f, "P0AEJ2")
     assert e["accession"] == "P0AEJ2" and e["gene_names"] == ["entC"] and e["ec_numbers"] == ["5.4.4.2"]
-    assert e["taxon_id"] == "83333" and e["xrefs"]["kegg_gene"] == ["eco:b0593"] and e["xrefs"]["ensembl"] == ["AAC73696"]
+    assert e["taxon_id"] == "83333" and e["xrefs"]["kegg_gene"] == ["eco:b0593"] and e["xrefs"]["ensembl"] == ["ENSP00000269305.4", "AAC73696"]
+    assert e["xrefs"]["ensembl_gene"] == ["ENST00000269305.9", "ENSG00000141510.18", "AAC73696"]  # transcript/gene ids apart from protein ids
     assert "Isochorismate mutase" in e["synonyms"] and "entC2" in e["synonyms"] and e["reviewed"]
     assert S.uniprot_entry(f, "P99999") is None
     f = FakeFetcher([("/search", None, uniprot_search(uniprot(), uniprot("A0A1", reviewed=False)))])
@@ -45,8 +46,9 @@ def test_go_cc_by_name_and_ancestors():
                      ("/terms/GO:0042597", None, qg_terms(("GO:0042597", "periplasmic space", ["periplasm"])))])
     assert S.go_cc_by_name(f, "periplasm") == [{"id": "GO:0042597", "name": "periplasmic space", "match_type": "exact_synonym"}]
     assert S.go_cc_by_name(f, "periplasmic spac") == []
-    f = FakeFetcher([("/ancestors", {"relations": "is_a,part_of"}, qg_anc(GO_0005829=["GO:0005737", "GO:0005622"]))])
+    f = FakeFetcher([("/ancestors", {"relations": "part_of"}, qg_anc(GO_0005829=["GO:0005737", "GO:0005622"]))])  # part_of only, not is_a
     assert S.go_ancestors(f, ["GO:0005829"]) == {"GO:0005829": ["GO:0005737", "GO:0005622"]}
+    assert f.calls[0][1] == {"relations": "part_of"}
 
 
 def test_ncbi_clients_and_rhea():

@@ -43,15 +43,21 @@ def uniprot_entry(f: Any, accession: str) -> Optional[Dict[str, Any]]:
         if isinstance(g.get("geneName"), dict):
             genes.append(g["geneName"]["value"])
         gsyn += [s["value"] for s in g.get("synonyms") or []]
-    xr: Dict[str, List[str]] = {"kegg_gene": [], "ensembl": [], "go": []}
+    # The Ensembl xref id is a transcript; the protein id is its ProteinId property. `ensembl` holds protein ids only,
+    # `ensembl_gene` the transcript and gene ids (written as isEncodedBy). KEGG ids are gene ids too.
+    xr: Dict[str, List[str]] = {"kegg_gene": [], "ensembl": [], "ensembl_gene": [], "go": []}
     for x in d.get("uniProtKBCrossReferences") or []:
         db = x.get("database", "")
         if db == "KEGG":
             xr["kegg_gene"].append(x["id"])
         elif db.startswith("Ensembl"):
-            xr["ensembl"].append(x["id"])
+            props = {p.get("key"): p.get("value") for p in x.get("properties") or []}
+            if props.get("ProteinId"):
+                xr["ensembl"].append(props["ProteinId"])
+            xr["ensembl_gene"] += [x["id"]] + ([props["GeneId"]] if props.get("GeneId") else [])
         elif db == "GO":
             xr["go"].append(x["id"])
+    xr = {k: list(dict.fromkeys(v)) for k, v in xr.items()}
     return {"accession": d["primaryAccession"], "protein_name": (_names(rec) or [None])[0], "gene_names": genes,
             "synonyms": list(dict.fromkeys(syn + gsyn)), "ec_numbers": list(dict.fromkeys(ecs)),
             "taxon_id": str((d.get("organism") or {}).get("taxonId", "")) or None, "xrefs": xr,
@@ -154,10 +160,11 @@ def go_cc_by_name(f: Any, name: str) -> List[Dict[str, Any]]:
 
 
 def go_ancestors(f: Any, ids: List[str]) -> Dict[str, List[str]]:
-    """GO id -> ancestor ids over is_a and part_of (self excluded)."""
+    """GO id -> ancestor ids over part_of only (self excluded): the SBML writes the parent as bqbiol:isPartOf, so is_a
+    ancestors (a membrane is_a membrane-bounded thing) must not mix in. Verified live 2026-11-10: cytosol -> cytoplasm."""
     if not ids:
         return {}
-    d = f.get_json(QUICKGO + "terms/" + ",".join(ids) + "/ancestors", {"relations": "is_a,part_of"})
+    d = f.get_json(QUICKGO + "terms/" + ",".join(ids) + "/ancestors", {"relations": "part_of"})
     return {r["id"]: [a for a in r.get("ancestors") or [] if a != r["id"]] for r in (d or {}).get("results") or []}
 
 

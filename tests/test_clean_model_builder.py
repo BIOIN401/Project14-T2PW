@@ -175,10 +175,22 @@ def test_pathway_meta_from_run_folder(tmp_path):
     m = build_from_run(str(run))
     pw = m.pathway
     assert pw.pmcid.value == "PMC12096016" and pw.pmid.value == "40400396" and pw.doi.value == "10.1002/pro.70160"
-    assert pw.pmid.prov.label == "paper" and pw.pmid.prov.frozen
+    assert pw.pmid.prov.label == "inferred" and pw.pmid.prov.frozen and pw.pmid.prov.source == "PMC text header"  # token guess
+    assert pw.pmcid.prov.label == "paper" and pw.doi.prov.label == "paper"
     assert pw.title.absent and pw.title.prov.label == "unknown"  # not guessed from the text
     assert pw.organism.value == "Escherichia coli" and pw.taxon_id.value == "562"
     assert pw.mode.value == "strict" and pw.run_date.value == "2026-10-21_0709"
+    assert to_payload(m) == _payload()
+
+
+def test_pmid_from_structured_request_stays_paper(tmp_path):
+    run = tmp_path / "PMC12096016" / "strict"
+    run.mkdir(parents=True)
+    (run / "final_mapped.json").write_text(json.dumps(_payload()), encoding="utf-8")
+    (run.parent / "request.json").write_text(json.dumps({"pmids": [40400396]}), encoding="utf-8")
+    (run.parent / "01_source_text.txt").write_text("PMC12096016 12096016 11111111 10.1002/pro.70160 x", encoding="utf-8")
+    m = build_from_run(str(run))
+    assert m.pathway.pmid.value == "40400396" and m.pathway.pmid.prov.label == "paper"  # header token never overrides it
     assert to_payload(m) == _payload()
 
 

@@ -76,6 +76,9 @@ def test_ref_bare_dict_and_entity_key_roundtrip():
     ("phosphorylates", "phosphorylation", "unsigned"),
     ("allosteric_inhibitor_of", "inhibition", "negative"),
     ("SAME_AS", "other_unsigned", "unsigned"),
+    ("substrate of", "other_unsigned", "unsigned"),       # a substrate does not catalyse
+    ("provides substrate for", "other_unsigned", "unsigned"),
+    ("catalyzes", "catalysis", "unsigned"),
     ("some brand new verb", "other_unsigned", "unsigned"),
     (None, "other_unsigned", "unsigned"),
 ])
@@ -89,3 +92,18 @@ def test_interaction_keeps_raw_text_and_has_sbo_slot():
     i = Interaction.from_raw(raw)
     assert i.relationship.value == "BINDS" and i.sbo.absent and i.kind.absent
     assert i.to_raw() == raw
+
+
+def test_compound_drugbank_and_class_flags_are_typed_and_roundtrip_exact():
+    raw = {"name": "L-serine", "class": "cofactor", "compound_class": "cofactor", "compound_type": "Compound", "type": "Compound",
+           "mapped_ids": {"drugbank": "DB00133", "kegg": "C00065"}, "mapping_meta": {"provider": "PathBankDB"}, "chosen_rule": "r1"}
+    c = Compound.from_raw(raw)
+    assert c.drugbank_mapped.value == "DB00133" and c.drugbank_mapped.prov.label == "db" and c.drugbank_mapped.prov.frozen
+    assert c.drugbank_mapped.prov.source == "PathBankDB" and c.drugbank_mapped.prov.match_type == "r1"
+    assert c.drugbank_id.absent  # the payload key itself stays unset
+    assert (c.class_.value, c.compound_class.value, c.compound_type.value, c.type_.value) == ("cofactor", "cofactor", "Compound", "Compound")
+    assert "class" not in c.extras and "compound_type" not in c.extras and "mapped_ids" in c.extras
+    assert c.to_raw() == raw  # nothing added, nothing lost
+    top = Compound.from_raw({"name": "cAMP", "drugbank_id": "DB02527", "mapped_ids": {"drugbank": "DB09999"}, "class": None})
+    assert top.drugbank_mapped.absent and top.drugbank_id.value == "DB02527" and top.class_.value is None
+    assert top.to_raw()["class"] is None

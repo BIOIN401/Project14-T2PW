@@ -1,7 +1,7 @@
 """Clean model -> KGML text (KGML v0.7.2 structure). Stdlib only, deterministic (same model, same bytes), no network.
 
-This is NOT a KEGG map: ``name/org/number`` are the documented placeholders ``undefined/undefined/00000`` and the
-layout is a plain grid (layout only, not biology). Nothing is invented:
+This is NOT a KEGG map: ``name/org/number`` are the documented placeholders ``path:undefined/undefined/00000`` (the
+``path:`` prefix is required by Biopython's KGML parser) and the layout is a plain grid (layout only, not biology). Nothing is invented:
 * KEGG ids (``cpd:C#####``, KEGG gene ids, ``rn:R#####``) only when the model already holds them (paper/db labelled);
 * else the non-KEGG prefixed id the model holds (``chebi:``, ``uniprot:``, ``rhea:``), stated in an XML comment;
 * else the KGML placeholder ``undefined`` with the paper label in ``<graphics name>``, listed in the omissions dict.
@@ -28,7 +28,7 @@ _ETYPE = {"compound": "compound", "protein": "gene", "nucleic_acid": "gene", "co
 _SUBTYPE = {
     "phosphorylation": ("phosphorylation", "+p"), "dephosphorylation": ("dephosphorylation", "-p"),
     "binding": ("binding/association", "---"), "association": ("binding/association", "---"),
-    "complex_formation": ("binding/association", "---"), "ubiquitination": ("ubiquination", "+u"),
+    "complex_formation": ("binding/association", "---"), "ubiquitination": ("ubiquitination", "+u"),  # spelling as in KEGG's KGML docs and real files (hsa04120)
 }
 _SIGNED = {("activation", "positive"): ("activation", "-->"), ("inhibition", "negative"): ("inhibition", "--|"),
            ("expression_regulation", "positive"): ("expression", "-->"), ("expression_regulation", "negative"): ("repression", "--|")}
@@ -48,11 +48,13 @@ class _Kgml:
         self.x = _Exporter(model)
         self.om: Dict[str, Any] = {
             "unmapped_entities": [], "no_slot_in_format": {}, "direction_placeholder": {"directionStated": False, "count": 0, "names": []},
-            "skipped_reactions": [], "skipped_interactions": [], "skipped_group_members": [], "sources_used": [],
+            "skipped_reactions": [], "skipped_interactions": [], "skipped_group_members": [], "extra_catalysts": [],
+            "unknown_references": {}, "sources_used": [],
             "non_kegg_prefixes_used": [], "stats": {}}
         self.prefixes: set = set()
         self.eid: Dict[int, int] = {}  # _Ent.n -> entry id
-        self.stats = {k: 0 for k in ("entries", "entries_kegg", "entries_non_kegg", "entries_undefined", "reactions", "reactions_rn",
+        self.stats = {k: 0 for k in ("entries", "entries_kegg", "entries_non_kegg", "entries_undefined", "entries_reaction_placeholder",
+                                     "reactions", "reactions_rn",
                                      "reactions_rhea", "reactions_undefined", "relations", "relations_signed", "relations_unsigned")}
 
     # names ------------------------------------------------------------------------------------------------------
@@ -94,7 +96,7 @@ class _Kgml:
             self.eid[e.n] = i
         nid = len(ents)
         cols = max(1, math.ceil(math.sqrt(len(ents))))
-        out: List[str] = []
+        rows: List[Dict[str, Any]] = []  # entry rows; rendered after the reactions have claimed their entry ids
         for i, e in enumerate(ents):
             name, cls = self.entry_name(e)
             self.stats["entries"] += 1
@@ -115,8 +117,7 @@ class _Kgml:
             g = _a(name=e.name, fgcolor="#000000", bgcolor={"compound": "#FFFFFF", "group": "#BFBFFF"}.get(_ETYPE[e.kind], "#BFFFBF"),
                    type="rectangle" if box else "circle", x=70 + (i % cols) * 140, y=35 + (i // cols) * 70,
                    width=100 if box else 20, height=40 if box else 20)
-            out.append('  <entry id="%d"%s>\n    <graphics%s/>\n%s  </entry>\n' % (i + 1, _a(name=name, type=_ETYPE[e.kind]), g, comp))
-        out = ["".join(out)]
+            rows.append({"id": i + 1, "name": name, "type": _ETYPE[e.kind], "g": g, "comp": comp, "reaction": None})
 
         rels, nrel = [], 0
         lost = {"quotes": 0, "stoichiometry_participants": 0, "catalysts_and_modifiers": 0, "compartments": len(m.locations or []),
@@ -143,9 +144,29 @@ class _Kgml:
 
         rxs: List[str] = []
 
-        def add_reaction(label: str, name: str, subs: List[Any], prods: List[Any], stated: bool, rev: bool, cls: str) -> None:
+        taken: set = set()  # entry ids already used as a reaction id (one entry identifies one reaction)
+
+        def add_reaction(label: str, name: str, subs: List[Any], prods: List[Any], stated: bool, rev: bool, cls: str,
+                         catalysts: List[Any]) -> None:
+            """KGML: a reaction's id is the id of its enzyme entry, which carries reaction="<reaction name>"."""
             nonlocal nid
-            nid += 1
+            cats = list(dict.fromkeys(e for e in catalysts if e.n in self.eid))
+            pick = next((e for e in cats if self.eid[e.n] not in taken), None)
+            if pick is not None:
+                rid = self.eid[pick.n]
+                rows[rid - 1]["reaction"] = name
+            else:  # no catalyst entry free: a placeholder entry of type reaction named like the reaction
+                nid += 1
+                rid, k = nid, len(rows)
+                rows.append({"id": rid, "name": name, "type": "reaction", "comp": "", "reaction": name,
+                             "g": _a(name=label, fgcolor="#000000", bgcolor="#BFBFFF", type="rectangle", x=70 + (k % cols) * 140,
+                                     y=35 + (k // cols) * 70, width=100, height=40)})
+                self.stats["entries_reaction_placeholder"] += 1
+            taken.add(rid)
+            for e in cats:
+                if e is not pick:
+                    self.om["extra_catalysts"].append({"reaction": label, "catalyst": e.name,
+                                                       "reason": "a KGML reaction takes the id of one enzyme entry and an entry identifies one reaction; this catalyst is not linked"})
             self.stats["reactions"] += 1
             self.stats["reactions_" + cls] += 1
             note = "" if stated else "    <!-- directionStated=false: type irreversible is the required placeholder, the paper did not state a direction -->\n"
@@ -154,7 +175,7 @@ class _Kgml:
                 self.om["direction_placeholder"]["names"].append(label)
             sp = "".join('    <substrate id="%d" name="%s"/>\n' % (self.eid[e.n], _esc(self.names[e.n], True)) for e in subs)
             pp = "".join('    <product id="%d" name="%s"/>\n' % (self.eid[e.n], _esc(self.names[e.n], True)) for e in prods)
-            rxs.append('  <reaction%s>\n%s%s%s  </reaction>\n' % (_a(id=nid, name=name, type="reversible" if rev else "irreversible"), note, sp, pp))
+            rxs.append('  <reaction%s>\n%s%s%s  </reaction>\n' % (_a(id=rid, name=name, type="reversible" if rev else "irreversible"), note, sp, pp))
 
         self.names = {e.n: self.entry_name(e)[0] for e in ents}
         for rx in m.reactions or []:
@@ -180,7 +201,9 @@ class _Kgml:
                 self.om["skipped_reactions"].append({"name": label, "reason": "written without undeclared participants: %s" % dropped, "written": True})
             rev, stated = x._direction(rx)
             name, cls = self.reaction_name(rx)
-            add_reaction(label, name, sides[0], sides[1], stated, rev, cls)
+            cats = [x.entity(r.entity.value, create=False) for r in (rx.catalysts or [])
+                    if isinstance(r.entity.value, str) and not r.unknown]
+            add_reaction(label, name, sides[0], sides[1], stated, rev, cls, [c for c in cats if c is not None])
         for t in m.transports or []:
             label = _str(t.name) or "(unnamed transport)"
             cargo = x.entity(t.cargo.value, create=False) if isinstance(t.cargo.value, str) else None
@@ -190,16 +213,19 @@ class _Kgml:
                 self.om["skipped_reactions"].append({"name": label, "reason": "transport cargo is not a declared compound"})
                 continue
             lost["transport_locations"].append({"name": label, "from": _str(t.from_location), "to": _str(t.to_location)})
-            add_reaction(label, UNDEF, [cargo], [cargo], False, False, "undefined")
+            trs = [x.entity(r.entity.value, create=False) for r in (t.transporters or [])
+                   if isinstance(r.entity.value, str) and not r.unknown]
+            add_reaction(label, UNDEF, [cargo], [cargo], False, False, "undefined", [c for c in trs if c is not None])
 
         om = self.om
         om["no_slot_in_format"] = lost
         om["sources_used"] = [f.value for f in pw.licences if isinstance(f.value, str)]
+        om["unknown_references"] = dict(sorted(x.sentinel_refs.items()))  # PathBank Unknown placeholder: never an entry
         om["non_kegg_prefixes_used"] = sorted(self.prefixes)
         om["stats"] = self.stats
         title = _str(pw.title) or _str(pw.pmcid)
         head = ["This file is not a KEGG map. It is a KGML-structured export of a clean model extracted from one paper: name, org and number are",
-                "the documented placeholders (undefined, undefined, 00000), no KEGG layout, names or map content is used, and the x/y positions",
+                "the documented placeholders (path:undefined, undefined, 00000), no KEGG layout, names or map content is used, and the x/y positions",
                 "are a plain grid (layout only, not biology). KEGG ids appear only where the model already held them.",
                 "KGML has no slot for compartments, stoichiometry, catalysts or evidence quotes; those are reported in the sidecar omissions file."]
         if self.strict:
@@ -209,8 +235,10 @@ class _Kgml:
         if om["sources_used"]:
             head.append("Database attribution: " + " | ".join(om["sources_used"]))
         return ('<?xml version="1.0" encoding="UTF-8"?>\n<!--\n%s\n-->\n<pathway%s>\n%s%s%s</pathway>\n' % (
-            "\n".join(_c(h) for h in head), _a(name=UNDEF, org=UNDEF, number="00000", title=title),
-            out[0], "".join(rels), "".join(rxs)))
+            "\n".join(_c(h) for h in head), _a(name="path:" + UNDEF, org=UNDEF, number="00000", title=title),
+            "".join('  <entry id="%d"%s>\n    <graphics%s/>\n%s  </entry>\n' % (
+                r["id"], _a(name=r["name"], type=r["type"], reaction=r["reaction"]), r["g"], r["comp"]) for r in rows),
+            "".join(rels), "".join(rxs)))
 
 
 def kgml_text(model: CleanModel, strict_kegg: bool = False) -> Tuple[str, Dict[str, Any]]:
@@ -228,10 +256,7 @@ def write_kgml(model: CleanModel, path: str, strict_kegg: bool = False) -> Dict[
     return om
 
 
-def kgml_for_run(run_dir: str, fill: bool = False, strict_kegg: bool = False) -> Tuple[str, Dict[str, Any]]:
+def kgml_for_run(run_dir: str, strict_kegg: bool = False) -> Tuple[str, Dict[str, Any]]:
+    """Exporters never look anything up (D-003): call ``fill_model`` on the model first if wanted."""
     from ..builder import build_from_run
-    model = build_from_run(run_dir)
-    if fill:
-        from ..fill import fill_model
-        fill_model(model)
-    return kgml_text(model, strict_kegg)
+    return kgml_text(build_from_run(run_dir), strict_kegg)

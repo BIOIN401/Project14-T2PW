@@ -108,3 +108,12 @@ def test_default_cache_folder_is_not_the_data_caches():
     from t2pw.clean_model.fill.cache import DEFAULT_DIR
     d = DEFAULT_DIR.replace("\\", "/")
     assert d.endswith("clean_model_cache") and "/data" not in d
+
+
+def test_200_with_non_json_or_non_utf8_body_raises_fetcherror():
+    f, _ = _fetcher([(200, {}, b"<html>oops</html>")], [])
+    with pytest.raises(FetchError):
+        f.get_json("https://x.org/p")
+    f, _ = _fetcher([(200, {}, b"\xff\xfe\x00")], [])
+    with pytest.raises(FetchError):
+        f.get_text("https://x.org/p")

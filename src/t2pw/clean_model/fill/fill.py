@@ -26,7 +26,7 @@ LICENCES = {
     "go": "Gene Ontology / QuickGO: CC BY 4.0, https://geneontology.org/docs/go-citation-policy/",
     "ncbi": "NCBI (E-utilities, Taxonomy, PubMed/PMC metadata): public domain, https://www.ncbi.nlm.nih.gov/home/about/policies/",
 }
-ID_FIELDS = {"chebi_id", "kegg_id", "kegg_gene", "hmdb_id", "pubchem_cid", "cas", "drugbank_id", "ensembl", "uniprot",
+ID_FIELDS = {"chebi_id", "kegg_id", "kegg_gene", "hmdb_id", "pubchem_cid", "cas", "drugbank_id", "ensembl", "ensembl_gene", "uniprot",
              "go_id", "taxonomy_id", "taxon_id", "ec_number", "rhea_id", "doi", "pmid", "pmcid"}
 _ACC = re.compile(r"^([OPQ][0-9][A-Z0-9]{3}[0-9]|[A-NR-Z][0-9]([A-Z][A-Z0-9]{2}[0-9]){1,2})$")
 _CLASSY = re.compile(r"\b(family|superfamily|class|classes|group|receptors|channels|subunits)\b", re.I)
@@ -75,6 +75,7 @@ def _num(v: Any) -> Optional[str]:
 class _Ctx:
     def __init__(self, model: CleanModel, f: Any, today: str, enabled: Tuple[str, ...]) -> None:
         self.model, self.f, self.today, self.enabled = model, f, today, enabled
+        self.date = today  # retrieval date of the latest lookup: the oldest response it used (a cache hit keeps its own date)
         self.rep = FillReport()
         self.used: set = set()
         self.model.db_layer = {"items": [], "suggestions": [], "conflicts": [], "refused": []}
@@ -82,7 +83,7 @@ class _Ctx:
 
     def prov(self, source: str, accession: Any, match_type: str, label: str = "db") -> Prov:
         return Prov(label=label, source=source, accession=None if accession is None else str(accession),
-                    retrieved=self.today, match_type=match_type)
+                    retrieved=self.date, match_type=match_type)
 
     def put(self, kind: str, entity: Optional[str], fld: str, value: Any, prov: Prov) -> bool:
         key = (kind, entity, fld, repr(value))
@@ -123,11 +124,15 @@ class _Ctx:
 
     def call(self, source: str, fn: Any, *a: Any) -> Any:
         """Run one source lookup; a FetchError is counted and returns None (a missing value is never invented)."""
+        dates = getattr(self.f, "dates", None)
+        if dates is not None:
+            del dates[:]
         try:
             r = fn(self.f, *a)
         except FetchError:
             _bump(self.rep.lookups_failed, source)
             return None
+        self.date = min(dates) if dates else self.today
         if r is None or r == [] or r == {}:
             _bump(self.rep.lookups_no_match, source)
         return r
@@ -151,7 +156,10 @@ def _chebi_details(c: _Ctx, comp: Any, name: str, info: Dict[str, Any], mt: str)
     xp = c.prov("ChEBI", "CHEBI:" + info["id"], "cross_reference")
     for fld, key in _XREF.items():
         vals = info["xrefs"].get(key) or []
-        if c.compare("compound", name, fld, getattr(comp, fld), vals, xp):
+        held = getattr(comp, fld)
+        if fld == "drugbank_id" and held.absent:
+            held = comp.drugbank_mapped  # the id the payload carries under mapped_ids
+        if c.compare("compound", name, fld, held, vals, xp):
             continue
         for v in vals:
             c.put("compound", name, fld, v, xp)
@@ -243,7 +251,7 @@ def _fill_proteins(c: _Ctx) -> Dict[str, Dict[str, Any]]:
                     c.conflict("protein", name, "taxon_id", mt, e["taxon_id"], pv)  # strain-level ids differ from species-level
                 else:
                     c.put("protein", name, "taxon_id", e["taxon_id"], pv)
-            for fld in ("kegg_gene", "ensembl"):
+            for fld in ("kegg_gene", "ensembl", "ensembl_gene"):
                 for v in e["xrefs"][fld]:
                     c.put("protein", name, fld, v, xp)
         elif not acc and not p.gene_name.absent and isinstance(p.gene_name.value, str) \
@@ -382,7 +390,7 @@ def fill_model(model: CleanModel, fetcher: Any = None, cache: Optional[Cache] = 
     _fill_pathway(c)
     have = {x.value for x in model.pathway.licences if isinstance(x.value, str)}
     names = {"UniProt": "uniprot", "ChEBI": "chebi", "Rhea": "rhea", "GO": "go", "NCBI": "ncbi", "NCBI Taxonomy": "ncbi"}
-    for key in dict.fromkeys(names[s] for s in c.used if s in names):
+    for key in sorted({names[s] for s in c.used if s in names}):  # sorted: bytes must not depend on PYTHONHASHSEED
         if LICENCES[key] not in have:
             model.pathway.licences.append(Field(LICENCES[key], Prov(label="db", source=key, retrieved=today,
                                                                    match_type="accession")))

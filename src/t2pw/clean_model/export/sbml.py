@@ -13,6 +13,7 @@ import re
 import unicodedata
 from typing import Any, Dict, List, Optional, Tuple
 
+from ..builder import _is_sentinel
 from ..model import CleanModel, Field
 from . import sbo as S
 
@@ -112,21 +113,25 @@ IDTYPES = {
     "drugbank": ("drugbank", _rx(r"DB\d{5}"), "bqbiol:is"),
     "kegg.compound": ("kegg.compound", _rx(r"C\d{5}"), "bqbiol:is"),
     "kegg.reaction": ("kegg.reaction", _rx(r"R\d{5}"), "bqbiol:is"),
-    "kegg.genes": ("kegg.genes", _rx(r"[a-z]{2,5}:\S+"), "bqbiol:is"),
-    "ensembl": ("ensembl", lambda v: v.strip().split(".")[0] if re.fullmatch(r"ENS\w+(\.\d+)?", v.strip()) else None, "bqbiol:is"),
+    # KEGG gene ids and Ensembl transcript/gene ids name the gene a polypeptide is encoded by, not the polypeptide itself
+    "kegg.genes": ("kegg.genes", _rx(r"[a-z]{2,5}:\S+"), "bqbiol:isEncodedBy"),
+    "ensembl": ("ensembl", lambda v: v.strip().split(".")[0] if re.fullmatch(r"ENS[A-Z]*P\d+(\.\d+)?", v.strip()) else None, "bqbiol:is"),
+    "ensembl.encoded": ("ensembl", lambda v: v.strip().split(".")[0] if re.fullmatch(r"ENS[A-Z]*[GT]\d+(\.\d+)?", v.strip()) else None,
+                        "bqbiol:isEncodedBy"),
 }
 # (entity kind, field name) -> id type. Fields are payload slots on the model object and/or db_layer item fields.
 FIELD_IDTYPE = {
     ("compound", "chebi_id"): "chebi", ("compound", "kegg_id"): "kegg.compound", ("compound", "hmdb_id"): "hmdb",
     ("compound", "pubchem_cid"): "pubchem.compound", ("compound", "cas"): "cas", ("compound", "drugbank_id"): "drugbank",
+    ("compound", "drugbank_mapped"): "drugbank",
     ("protein", "uniprot"): "uniprot", ("protein", "ec_number"): "ec-code", ("protein", "ec_numbers"): "ec-code",
     ("protein", "taxonomy_id"): "taxonomy", ("protein", "taxon_id"): "taxonomy", ("protein", "kegg_gene"): "kegg.genes",
-    ("protein", "ensembl"): "ensembl",
+    ("protein", "ensembl"): "ensembl", ("protein", "ensembl_gene"): "ensembl.encoded",
     ("location", "go_id"): "go",
     ("reaction", "rhea_id"): "rhea", ("reaction", "ec_number"): "ec-code", ("reaction", "kegg_reaction_id"): "kegg.reaction",
     ("reaction", "go_mf"): "go",
 }
-OBJ_FIELDS = {"compound": ("chebi_id", "kegg_id", "hmdb_id", "pubchem_cid", "cas", "drugbank_id"),
+OBJ_FIELDS = {"compound": ("chebi_id", "kegg_id", "hmdb_id", "pubchem_cid", "cas", "drugbank_id", "drugbank_mapped"),
               "protein": ("uniprot", "ec_number", "ec_numbers", "taxonomy_id"),
               "location": ("go_id",), "reaction": ("rhea_id", "ec_number", "kegg_reaction_id", "go_mf")}
 
@@ -174,6 +179,8 @@ class _Exporter:
     def __init__(self, model: CleanModel) -> None:
         self.m = model
         self.omissions: List[Dict[str, Any]] = []
+        self.sentinel_names: set = set()  # names of flagged Unknown objects: never an entity, however referenced
+        self.sentinel_refs: Dict[str, int] = {}
         self.sloc = {_str(s.name): _str(s.location) for s in (model.states or []) if _str(s.name) and _str(s.location)}
         self.state_ctx = {_str(s.name): s for s in (model.states or []) if _str(s.name)}
         self.layer = {k: list((model.db_layer or {}).get(k) or []) for k in ("items", "suggestions", "conflicts", "refused")}
@@ -191,6 +198,7 @@ class _Exporter:
                 if name is None:
                     self.omissions.append({"kind": kind, "name": None, "reason": "entity without a name", "source": "sbml_export"})
                 elif "unknown_sentinel" in o.flags or (kind == "protein" and name.strip().casefold() == "unknown"):
+                    self.sentinel_names.add(_lkey(name))
                     self.omissions.append({"kind": kind, "name": name, "reason": "PathBank Unknown placeholder, not an entity",
                                            "source": "sbml_export"})
                 else:
@@ -221,6 +229,9 @@ class _Exporter:
 
     def entity(self, name: Any, create: bool = True) -> Optional[_Ent]:
         if not isinstance(name, str) or not name.strip():
+            return None
+        if _is_sentinel(name) or _lkey(name) in self.sentinel_names:  # every reference type: never a species/entry/modifier
+            self.sentinel_refs[name] = self.sentinel_refs.get(name, 0) + 1
             return None
         e = self.by_name.get(name) or self.by_fold.get(_lkey(name))
         if e is None and create:
@@ -424,11 +435,11 @@ class _Exporter:
             kids.append(El("annotation", kids=[El("t2pw:stoichiometry", {"state": "unstated"})]))
         return El(tag, {"species": sp["id"], "stoichiometry": st, "constant": True}, kids)
 
-    def _modifier(self, sp: Dict[str, Any], ref: Any, seen: set) -> Optional[El]:
+    def _modifier(self, sp: Dict[str, Any], ref: Any, seen: set, default: str = "modifier") -> Optional[El]:
         if sp["id"] in seen:
             return None
         seen.add(sp["id"])
-        role = (_str(ref.role) or "catalyst").casefold()
+        role = (_str(ref.role) or default).casefold()
         return El("modifierSpeciesReference", {"species": sp["id"], "sboTerm": S.ROLE_SBO.get(role, "SBO:0000019")})
 
     def _direction(self, rx: Any) -> Tuple[bool, bool]:
@@ -466,14 +477,14 @@ class _Exporter:
                 els.append(self._spref("speciesReference", self.sp(e, lk if lk else self.pick(e, None)), ref))
             parts[tag] = els
         mods, seen = [], set()
-        for ref in (rx.catalysts or []) + (rx.modifiers or []):
+        for ref, dflt in [(r, "catalyst") for r in rx.catalysts or []] + [(r, "modifier") for r in rx.modifiers or []]:
             e = self.entity(ref.entity.value) if isinstance(ref.entity.value, str) and not ref.unknown else None
             if e is None or (e.obj is not None and "unknown_sentinel" in e.obj.flags):
                 paras.append("A catalyst or modifier was named only as Unknown; it is not written.")
                 continue
             if _str(ref.evidence) and ref.evidence.value != _str(rx.evidence):
                 paras.append('Evidence for %s: "%s"' % (e.name, _str(ref.evidence)))
-            m = self._modifier(self.sp(e, self.pick(e, hint)), ref, seen)
+            m = self._modifier(self.sp(e, self.pick(e, hint)), ref, seen, dflt)
             if m is not None:
                 mods.append(m)
         rev, rev_stated = self._direction(rx)
@@ -574,7 +585,7 @@ class _Exporter:
         pm, pmc, doi = _str(pw.pmid), _str(pw.pmcid), _str(pw.doi)
         title = _str(pw.title)
         rdf: List[Tuple[str, str]] = []
-        if pm and re.fullmatch(r"\d+", pm.strip()):
+        if pm and pw.pmid.prov.label in ("paper", "db") and re.fullmatch(r"\d+", pm.strip()):  # a guessed pmid stays in t2pw:meta
             rdf.append(("bqmodel:isDescribedBy", "https://identifiers.org/pubmed/" + pm.strip()))
         if pmc and re.fullmatch(r"PMC\d+", pmc.strip()):
             rdf.append(("bqmodel:isDescribedBy", "https://identifiers.org/pmc/" + pmc.strip()))
@@ -594,6 +605,9 @@ class _Exporter:
         lic = [x.value for x in pw.licences if isinstance(x.value, str)]
         omis = [El("t2pw:omission", {"kind": r.kind, "name": r.name, "reason": r.reason, "source": r.source}) for r in m.removed]
         omis += [El("t2pw:omission", {k: o.get(k) for k in ("kind", "name", "reason", "source")}) for o in self.omissions]
+        omis += [El("t2pw:omission", {"kind": "reference", "name": n, "source": "sbml_export",
+                                      "reason": "PathBank Unknown placeholder referenced %d time(s) as participant, catalyst, transporter or endpoint; not written" % c})
+                 for n, c in sorted(self.sentinel_refs.items())]
         omis += [El("t2pw:omission", {"kind": r.get("kind"), "name": r.get("entity"), "reason": "database value refused: %s (%s)" % (r.get("reason"), r.get("field")),
                                       "source": "db_layer"}) for r in self.layer["refused"]]
         ixs = [self.interaction_el(ix) for ix in m.interactions or []]
@@ -627,10 +641,7 @@ def write_sbml(model: CleanModel, path: str) -> str:
     return path
 
 
-def sbml_for_run(run_dir: str, fill: bool = False) -> str:
+def sbml_for_run(run_dir: str) -> str:
+    """Exporters never look anything up (D-003): call ``fill_model`` on the model first if wanted."""
     from ..builder import build_from_run
-    model = build_from_run(run_dir)
-    if fill:
-        from ..fill import fill_model
-        fill_model(model)
-    return sbml_text(model)
+    return sbml_text(build_from_run(run_dir))

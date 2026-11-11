@@ -31,7 +31,11 @@ def uniprot(acc="P0AEJ2", gene="entC", taxon=83333, ec="5.4.4.2", name="Isochori
                                    "alternativeNames": [{"fullName": {"value": "Isochorismate mutase"}}]},
             "genes": [{"geneName": {"value": gene}, "synonyms": [{"value": "entC2"}], "orderedLocusNames": [{"value": "b0593"}]}],
             "uniProtKBCrossReferences": [{"database": "KEGG", "id": "eco:b0593"},
-                                         {"database": "EnsemblBacteria", "id": "AAC73696"},
+                                         {"database": "Ensembl", "id": "ENST00000269305.9",  # a transcript; the protein id is a property
+                                          "properties": [{"key": "ProteinId", "value": "ENSP00000269305.4"},
+                                                         {"key": "GeneId", "value": "ENSG00000141510.18"}]},
+                                         {"database": "EnsemblBacteria", "id": "AAC73696",
+                                          "properties": [{"key": "ProteinId", "value": "AAC73696"}]},
                                          {"database": "GO", "id": "GO:0008909"}]}
 
 

@@ -55,16 +55,19 @@ class CachedFetcher:
         self.inner, self.cache, self.today = inner, cache, today
         self.requests = 0
         self.hits = 0
+        self.dates: list = []  # retrieval date of every response served since the caller last cleared it
 
     def _go(self, kind: str, url: str, params: Optional[Dict[str, Any]]) -> Any:
         key = request_key(kind, url, params)
         hit = self.cache.get(key)
         if hit is not None:
             self.hits += 1
+            self.dates.append(hit.get("retrieved") or self.today)  # the entry's own date, not today's
             return hit["value"]
         self.requests += 1
         value = getattr(self.inner, "get_" + kind)(url, params)
         self.cache.put(key, url, params, value, self.today)
+        self.dates.append(self.today)
         return value
 
     def get_json(self, url: str, params: Optional[Dict[str, Any]] = None) -> Any:

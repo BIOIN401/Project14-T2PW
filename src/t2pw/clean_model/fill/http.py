@@ -87,8 +87,14 @@ class UrllibFetcher:
 
     def get_json(self, url: str, params: Optional[Dict[str, Any]] = None) -> Any:
         body = self._get(url, params, "application/json")
-        return None if body is None else json.loads(body.decode("utf-8"))
+        try:  # a 200 with an HTML error page or a truncated body must not abort the whole fill
+            return None if body is None else json.loads(body.decode("utf-8"))
+        except ValueError as e:  # JSONDecodeError and UnicodeDecodeError
+            raise FetchError(f"HTTP 200 but the body is not JSON for {url}: {e}") from e
 
     def get_text(self, url: str, params: Optional[Dict[str, Any]] = None) -> Optional[str]:
         body = self._get(url, params, "text/plain, text/tab-separated-values")
-        return None if body is None else body.decode("utf-8")
+        try:
+            return None if body is None else body.decode("utf-8")
+        except ValueError as e:
+            raise FetchError(f"HTTP 200 but the body is not UTF-8 text for {url}: {e}") from e

@@ -62,7 +62,7 @@ def _routes(rhea=RHEA_ONE):
         ("QuickGO/services/ontology/go/search", {"query": "cytosol"}, qg_search(("GO:0005829", "cytosol", "cellular_component"))),
         ("QuickGO/services/ontology/go/search", {"query": "cytoplasm"}, qg_search(("GO:0005737", "cytoplasm", "cellular_component"))),
         ("QuickGO/services/ontology/go/search", {"query": "plasma membrane"}, qg_search(("GO:0005886", "plasma membrane", "cellular_component"))),
-        ("/ancestors", None, qg_anc(GO_0005829=["GO:0005737", "GO:0005622"], GO_0005737=["GO:0005622"], GO_0005886=["GO:0016020"])),
+        ("/ancestors", {"relations": "part_of"}, qg_anc(GO_0005829=["GO:0005737", "GO:0005622"], GO_0005737=["GO:0005622"], GO_0005886=["GO:0016020"])),
         ("/terms/GO:0005829", None, qg_terms(("GO:0005829", "cytosol", []))),
         ("/terms/GO:0005737", None, qg_terms(("GO:0005737", "cytoplasm", []))),
         ("/terms/GO:0005886", None, qg_terms(("GO:0005886", "plasma membrane", []))),
@@ -157,7 +157,8 @@ def test_no_match_and_compounds_with_other_ids_are_not_looked_up():
 def test_protein_with_accession_adds_names_ec_taxon_and_carried_xrefs():
     _, m, _ = _run()
     fld = {i["field"] for i in _items(m, entity="EntC")}
-    assert {"protein_name", "synonym", "ec_number", "taxon_id", "kegg_gene", "ensembl"} <= fld
+    assert {"protein_name", "synonym", "ec_number", "taxon_id", "kegg_gene", "ensembl", "ensembl_gene"} <= fld
+    assert _items(m, entity="EntC", field="ensembl")[0]["value"] == "ENSP00000269305.4"
     kg = _items(m, entity="EntC", field="kegg_gene")[0]
     assert kg["value"] == "eco:b0593" and kg["prov"]["source"] == "UniProt" and kg["prov"]["match_type"] == "cross_reference"
     assert not _items(m, entity="EntC", field="gene_name")  # frozen gene equals UniProt: nothing to add
@@ -241,3 +242,34 @@ def test_cache_hits_on_second_fill_and_fetch_failure_counted():
     bad = FakeFetcher([("uniprotkb", None, FetchError("HTTP 500")), ("chebi", None, FetchError("x"))])
     r3 = fill_model(build_from_payload(_payload(), {}), bad, Cache(None), TODAY, sources=("uniprot", "chebi"))
     assert r3.lookups_failed.get("uniprot", 0) > 0 and r3.fields_filled == 0
+
+
+def test_cached_entry_keeps_its_own_retrieval_date_in_provenance():
+    cache = Cache(None)
+    fill_model(build_from_payload(_payload(), {"pmcid": "PMC11983282"}), FakeFetcher(_routes()), cache, "2026-01-02")
+    assert all(e["retrieved"] == "2026-01-02" for e in cache._mem.values())
+    m = build_from_payload(_payload(), {"pmcid": "PMC11983282"})
+    rep = fill_model(m, FakeFetcher([]), cache, TODAY)  # everything served from the old cache
+    assert rep.requests == 0 and rep.cache_hits > 0 and m.db_layer["items"]
+    for i in m.db_layer["items"]:
+        assert i["prov"]["retrieved"] == "2026-01-02", i
+    cm = {c.name.value: c for c in m.compounds}
+    assert cm["ATP"].inchikey.prov.retrieved == "2026-01-02"
+    # a live fetch is stamped with today's date; a mixed lookup takes the oldest date it used
+    m2 = build_from_payload(_payload(), {})
+    fill_model(m2, FakeFetcher(_routes()), Cache(None), TODAY)
+    assert {i["prov"]["retrieved"] for i in m2.db_layer["items"]} == {TODAY}
+
+
+def test_licence_order_is_sorted_not_set_order():
+    _, m, _ = _run(infer_reaction_ec=True)
+    keys = [f.prov.source for f in m.pathway.licences]
+    assert len(keys) >= 4 and keys == sorted(keys)
+
+
+def test_non_json_200_is_a_counted_failure_not_an_abort():
+    from t2pw.clean_model.fill.http import Throttle, UrllibFetcher
+    uf = UrllibFetcher(Throttle(0, sleep=lambda s: None), retries=0, opener=lambda u, h, t: (200, {}, b"<html>busy</html>"))
+    m = build_from_payload(_payload(), {})
+    rep = fill_model(m, uf, Cache(None), TODAY, sources=("uniprot", "chebi", "go"))
+    assert rep.lookups_failed.get("uniprot", 0) > 0 and rep.lookups_failed.get("chebi", 0) > 0 and rep.fields_filled == 0
