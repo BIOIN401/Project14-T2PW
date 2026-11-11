@@ -40,3 +40,7 @@ Read this log, then `CLEAN-MODEL.md` (once it exists) and `git log`. Next undone
 | 5 | K KGML + fix | sonnet / medium | export/kgml.py, kgml_all; reaction EC/Rhea fill made opt-in (default off) | done: 84 clean-model tests pass; 152/152 KGML files pass structural check |
 | 6 | review | opus / high (ws-reviewer) | independent review of diff 075d127d..37416257 | APPROVE WITH FIXES: 3 major + 1 major (KGML reaction ids, from recall) + 11 minor |
 | 7 | F fixes | sonnet / medium | 13 items; Biopython check of KGML (0 -> 152 of 152 parse) | done: 102 clean-model tests pass |
+| 8 | re-review | sonnet / high (ws-reviewer) | delta 37416257..83f5bd74 | APPROVE WITH FIXES: 13 of 13 fixed (spelling of ubiquitination unverified); placeholder in CLEAN-MODEL section 7 fixed by orchestrator |
+| 9 | test runner | haiku / medium | focused, SMOKE, golden at 83f5bd74 | done: focused 101 passed + 1 skipped (102 with T2PW_RUNLIST), SMOKE 511 passed, golden 38 passed, 0 survivors |
+
+Total 9 dispatches of 10: sonnet/high x2 (A, re-review), sonnet/medium x5 (B, C, M, K, F), opus/high x1 (review), haiku/medium x1 (runner). No scouts. All work finished; nothing to resume. Record: CLEAN-MODEL.md.

@@ -88,7 +88,10 @@ All from `evidence/clean_model/`. Canonical set: 152 runs (P-01).
 
 ## 7. Review and gates
 
-@@REVIEW@@
+- **Independent review 1** (opus/high, `ws-reviewer`, diff `075d127d..37416257`): APPROVE WITH FIXES. Boundary clean, round trip real, signs never invented. Four major findings (Unknown sentinel could become a species; Ensembl transcript ids written as `bqbiol:is`; cache hits stamped today's date; KGML reaction ids matched no entry) and 11 minor ones; all 13 code findings fixed in one round (P-29, P-30).
+- **Re-review** (sonnet/high, `ws-reviewer`, delta `37416257..83f5bd74`): APPROVE WITH FIXES, findings 1-13 fixed (finding 5 partly, below). Residual notes: (a) KGML subtype spelling `ubiquitination` follows the fixer's reading of KEGG's docs and a real KGML file; the re-reviewer recalled `ubiquination` from the spec table and could not check without calling KEGG, so treat the spelling as **unverified against a consumer** (one token in `export/kgml.py`); (b) licence provenance in the fill layer still stamps today's date, and an item's date is that of the latest call of its lookup, not necessarily the call that produced the value (low); (c) evidence scripts keep scratch paths such as `C:/t/ev-cm/runlist.json` (the test path is now the `T2PW_RUNLIST` env var).
+- **Tests** (dispatched `haiku/medium` runner, bounded wrapper, branch tip `83f5bd74`, 0 surviving processes): clean-model focused 101 passed + 1 skipped (102 passed with `T2PW_RUNLIST` set); SMOKE 511 passed; golden-seam files 38 passed (`test_batch_driver_seam_golden`, `test_c011_freeze_seam_golden_equivalence`, `test_streamlit_stage8_export_contract`, `test_streamlit_quarantine_boundary`), no test edited.
+- **Boundary**: `git diff --name-only 075d127d..HEAD` lists only `src/t2pw/clean_model/`, `tests/test_clean_model_*.py`, `tests/clean_model_fill_fakes.py`, `docs/pwml_output/` and `.gitignore` (one line). No cache, secret, XML or `*quarantine_report.json` committed. `evidence/clean_model/validate_sbml.json` is about 1 MB (raw libsbml messages); strip it if size matters.
 
 ## 8. Open questions for the PO
 
