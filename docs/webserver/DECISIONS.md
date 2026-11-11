@@ -77,3 +77,15 @@ submitted paper. This extends D-W03 (name mode uses the existing RAG as it is) b
 does not add work for the LOI. PO, verbatim: "but the gpas should also fill in using rag, and
 fidning releveant papers if there are large gaps in the paper itself or perhaps the user prompted
 with something like give me pathway of tca cycle".
+
+**D-W17 · 2026-11-10 — Explore filling from databases of known pathways; name mode shares the
+gap-filling machinery.** (a) Explore filling missing steps from curated pathway databases, as an
+independent source that can raise accuracy. Candidates to assess: PathBank, Reactome, Rhea,
+WikiPathways, MetaCyc; KEGG stays excluded under D-W14. Each candidate is assessed for coverage,
+licence and how a step is matched to the paper's organism and entities before any build. Steps
+taken from such a database are labelled with the database and its pathway id, never as stated by
+the paper. (b) Name-only mode ("give me pathway of tca cycle") uses the same completeness-and-fill
+machinery as a submitted paper (D-W12, D-W16), not a separate route. PO, verbatim: "i also think we
+should explore fillig in from db of known pathways that would improve accuracy by using another
+source, and the name only mode should use the same machinery that we use for gap filling for the
+regular pdfs, addd that inot the docs too".
