@@ -1,0 +1,43 @@
+# T2PW PathWhiz import harness stack. Project name: t2pw-pwi
+# Reuses the already-built image smpdb-app:latest (Ruby 2.2.0 + JDK7) - no Dockerfile build.
+# SMPDB_SRC is the host path of the harness working copy of smpdb (never the owner checkout).
+services:
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: password   # local throwaway
+      MYSQL_DATABASE: smpdb_development
+    command: --character-set-server=utf8 --collation-server=utf8_general_ci --sql-mode=NO_ENGINE_SUBSTITUTION
+    ports:
+      - "3317:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-ppassword"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+  app:
+    image: smpdb-app:latest
+    working_dir: /app
+    command: sleep infinity
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ${SMPDB_SRC:?set SMPDB_SRC (run_import.py does)}:/app
+      - bundle:/opt/ruby-2.2.0/lib/ruby/gems/2.2.0
+      - ${PWML_DIR:-./pwml_in}:/pwml_in:ro
+      - ${OUT_DIR:-./out}:/out
+      - ./stubs:/stubs:ro
+    ports:
+      - "3010:3000"
+    environment:
+      RAILS_ENV: development
+      RUBYLIB: /stubs
+      JAVA_HOME: /usr/lib/jvm/java-7-openjdk-amd64
+volumes:
+  mysql_data:
+  bundle:
+    external: true
+    name: t2pw-pwi_bundle
