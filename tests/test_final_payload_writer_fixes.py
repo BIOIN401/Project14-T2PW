@@ -139,3 +139,68 @@ def test_transport_only_compound_unchanged_both_modes(monkeypatch) -> None:
     _, on = _build(_payload())
     for root in (off, on):
         assert set(_transport_loc_refs(root)) <= set(_loc_ids(root))
+
+
+def _subtree_xml(root, tag):
+    from lxml import etree
+    return [etree.tostring(n) for n in root.iter(tag)]
+
+
+def test_transport_only_compound_subtrees_identical_both_modes(monkeypatch) -> None:
+    monkeypatch.delenv("T2PW_FINAL_PAYLOAD", raising=False)
+    _, off = _build(_payload())
+    monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "1")
+    _, on = _build(_payload())
+    for tag in ("compound-locations", "transport-visualizations"):
+        assert _subtree_xml(off, tag) == _subtree_xml(on, tag) != []
+
+
+def test_transported_compound_used_by_reaction_in_third_state(monkeypatch) -> None:
+    payload = _payload(reaction_uses_glucose=True)
+    payload["entities"]["subcellular_locations"].append({"name": "mitochondrion", "pathwhiz_id": 4})
+    payload["biological_states"].append({"name": "mitochondrion", "species": "Homo sapiens",
+                                         "subcellular_location": "mitochondrion", "compartment_canonical": "mitochondrion"})
+    payload["processes"]["reactions"][0]["biological_state"] = "mitochondrion"
+    monkeypatch.delenv("T2PW_FINAL_PAYLOAD", raising=False)
+    _, off = _build(payload)
+    monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "1")
+    _, on = _build(payload)
+    refs, ids = set(_transport_loc_refs(on)), _loc_ids(on)
+    assert refs and refs <= set(ids) and len(ids) == len(set(ids))
+    # only the locations a transport references are added back; state C's base row stays skipped
+    assert len(ids) - len(_loc_ids(off)) == len(refs)
+
+
+def test_interaction_compound_member_has_no_dangling_location_flag_on(flag_on) -> None:
+    from test_pwml_interaction_export import _payload as ipayload
+    payload = ipayload()
+    payload["entities"]["compounds"] = [
+        {"name": "L-arabinose", "pathbank_compound_id": 101, "mapped_ids": {"chebi": "CHEBI:17535"}},
+        {"name": "Y", "pathbank_compound_id": 105},
+    ]
+    payload["processes"]["reactions"] = [{"name": "ara to Y", "inputs": ["L-arabinose"], "outputs": ["Y"],
+                                          "biological_state": "cytosol"}]
+    payload["processes"]["interactions"] = [{"name": "arabinose activates AraC", "entity_1": "L-arabinose",
+                                             "relationship": "activation", "entity_2": "AraC complex",
+                                             "biological_state": "cytosol", "evidence": "q"}]
+    _, root = _build(payload)
+    refs = [int(n.text) for n in root.findall(".//interaction_compound_visualizations//compound-location-id")]
+    assert refs and set(refs) <= set(_loc_ids(root))
+
+
+def test_no_processes_flag_on_equals_flag_off_minus_bound(monkeypatch) -> None:
+    from lxml import etree
+    payload = _payload()
+    payload["processes"] = {"reactions": [], "transports": [], "interactions": []}
+
+    def dump(flag):
+        if flag:
+            monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "1")
+        else:
+            monkeypatch.delenv("T2PW_FINAL_PAYLOAD", raising=False)
+        _, root = _build(payload, with_bound=True)
+        for n in root.findall(".//bound-visualizations"):
+            n.clear()
+        return etree.tostring(root)
+
+    assert dump(False) == dump(True)

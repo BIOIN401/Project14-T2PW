@@ -1370,10 +1370,14 @@ class DeterministicPwmlBuilder:
                     item["inhibitor"] = True
                 item["enzyme-class"] = member.get("enzyme_class") or member.get("enzyme-class")
                 enzymes.append(item)
+            if final_payload_enabled():
+                spontaneous = True if reaction.get("spontaneous") is True else None
+            else:
+                spontaneous = bool(reaction.get("spontaneous", False))
             reactions.append(
                 {
                     "id": rid,
-                    "spontaneous": (True if reaction.get("spontaneous") else None) if final_payload_enabled() else bool(reaction.get("spontaneous", False)),
+                    "spontaneous": spontaneous,
                     "pwr-id": f"PW_R{rid:06d}",
                     "direction": direction_for(reaction.get("direction")),
                     "reaction-left-elements": left,
@@ -1552,12 +1556,14 @@ class DeterministicPwmlBuilder:
                     info = entity_info(entity_key)
                     if info and info.get("entity_type") == "compound":
                         reaction_compound_entity_keys.add(entity_key)
+        viz_referenced_location_keys: set[str] = set()
         if final_payload_enabled():
-            # Transport visualizations point at the base compound location, so keep it for transport members too.
-            for transport in process_items.get("transports", []) if isinstance(process_items.get("transports"), list) else []:
-                for member in (transport.get("transport_elements") or []) if isinstance(transport, dict) else []:
-                    if isinstance(member, dict):
-                        reaction_compound_entity_keys.discard(str(member.get("entity_key") or ""))
+            # Transport/interaction visualizations point at specific base compound locations; keep only those.
+            for viz in ir.get("process_visualizations", []) if isinstance(ir.get("process_visualizations"), list) else []:
+                if isinstance(viz, dict) and viz.get("type") in {"transport_visualization", "interaction_visualization"}:
+                    for member in viz.get("members") or []:
+                        if isinstance(member, dict) and member.get("location_key"):
+                            viz_referenced_location_keys.add(str(member["location_key"]))
         total_compound_count = len(self.section_items.get("compounds", []))
         grid_placed_compound_count = 0
         skipped_base_location_by_id: Dict[int, Dict[str, Any]] = {}
@@ -1603,6 +1609,7 @@ class DeterministicPwmlBuilder:
                 section == "compound-locations"
                 and info.get("entity_type") == "compound"
                 and str(loc.get("entity_key") or "") in reaction_compound_entity_keys
+                and str(loc.get("key") or "") not in viz_referenced_location_keys
             )
             if skip_base_compound_location:
                 skipped_base_location_by_id[lid] = item
