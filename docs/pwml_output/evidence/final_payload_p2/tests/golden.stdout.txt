@@ -1,0 +1,30 @@
+T2PW: C:\t\fp\src\t2pw\__init__.py
+......................................                                   [100%]
+38 passed in 75.77s (0:01:15)
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\fp\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 03e4c241a5f221c6308e86b4e76b198a5d7fc1a9  [git, worktree dirty=False]
+label                   : job
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe C:/t/fp/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/fp -q --basetemp=C:/t/fp_tmp/p2tests/golden tests/test_batch_driver_seam_golden.py tests/test_c011_freeze_seam_golden_equivalence.py tests/test_streamlit_stage8_export_contract.py tests/test_streamlit_quarantine_boundary.py
+cwd                     : C:\t\fp
+root PID / process group: 533080 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 77.68 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 19  531588:python.exe, 533816:git.exe, 534128:git.exe, 533624:python.exe, 533516:python.exe, 510852:python.exe, 533764:python.exe, 534252:git.exe, 534268:git.exe, 534120:python.exe, 534296:python.exe, 528924:python.exe, 532460:python.exe, 533800:python.exe, 534480:python.exe, 531612:python.exe, 534412:python.exe, 529564:python.exe, 531220:python.exe
+descendants terminated  : 19  510852, 528924, 529564, 531220, 531588, 531612, 532460, 533516, 533624, 533764, 533800, 533816, 534120, 534128, 534252, 534268, 534296, 534412, 534480
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/fp/docs/pwml_output/evidence/final_payload_p2/tests/golden.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=p2-golden  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

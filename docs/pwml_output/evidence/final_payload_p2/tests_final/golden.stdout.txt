@@ -1,0 +1,30 @@
+T2PW: C:\t\fp\src\t2pw\__init__.py
+......................................                                   [100%]
+38 passed in 84.17s (0:01:24)
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\fp\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ e9c3e1971dad8d7112bb6caef2649287c7ba0581  [git, worktree dirty=False]
+label                   : fp-golden
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/fp -q --basetemp=C:/t/tmpbase/golden-1865 tests/test_batch_driver_seam_golden.py tests/test_c011_freeze_seam_golden_equivalence.py tests/test_streamlit_stage8_export_contract.py tests/test_streamlit_quarantine_boundary.py
+cwd                     : C:\t\fp
+root PID / process group: 23540 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 85.93 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 19  23528:python.exe, 14568:git.exe, 34936:git.exe, 3688:git.exe, 2220:python.exe, 32620:python.exe, 4124:python.exe, 21060:python.exe, 11704:git.exe, 16156:python.exe, 17612:python.exe, 15724:python.exe, 28664:python.exe, 13652:python.exe, 17460:python.exe, 9528:python.exe, 35532:python.exe, 11824:python.exe, 34460:python.exe
+descendants terminated  : 19  2220, 3688, 4124, 9528, 11704, 11824, 13652, 14568, 15724, 16156, 17460, 17612, 21060, 23528, 28664, 32620, 34460, 34936, 35532
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/fp/docs/pwml_output/evidence/final_payload_p2/tests_final/golden.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=fp  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

@@ -70,3 +70,12 @@ Scratch: `C:/t/ev-fp/`. Budget was at most 12 dispatches; about 15 were used (fi
 | 15 | PathWhiz import pairs | sonnet / medium | harness, 24 pairs off vs on | identical error sets, 24 references created |
 
 Dead ends: write denial under `C:/t` until the restart; a correct refusal to write on another agent's word; heavy lock held by the import-harness builder; RAM below the floor (Docker), floor lowered to 4 GB for focused runs; an empty `python -` heredoc once (exited at once); a stale agent deleted replay work dirs (one run re-run).
+
+
+---
+# Final payload, phase 2 (branch `pwml/final-payload`, from `e26c8566`, code HEAD `e9c3e197`)
+Record: `FINAL-PAYLOAD-P2.md`; evidence `evidence/final_payload_p2/`. Writer fixes (bound visualizations, spontaneous nil, base compound location, plain-protein transporters as one-member complex) behind `T2PW_FINAL_PAYLOAD`; PathWhiz importer fixes (vev_node, left/right state remap); harness vocabulary seed on `pwml/import-harness`.
+- Tests: focused 187 passed + 1 skipped, golden 38, SMOKE 511, 0 survivors. Flag-off identity 97 of 97 sha256.
+- Harness (59 replay files, vocabulary seed): flag on + patched importer 29 clean, 211 messages, transports 31 of 37; flag off 0 clean, 496 messages. Baseline was 0 of 60.
+- Open: transport-transporter-id importer remap (19 messages, also on real PW176888), ontology name map, nucleic acid type, left=right transports.
+- 11 dispatches (sonnet medium x6, sonnet high x2, opus high x2, haiku x1) plus message resumes.

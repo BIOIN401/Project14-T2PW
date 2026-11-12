@@ -1,0 +1,38 @@
+[pwi] OK       54.1s  122.pwml  errors=3
+[pwi] OK        2.9s  123.pwml  errors=1
+[pwi] OK       14.6s  124.pwml  errors=5
+[pwi] OK        3.4s  125.pwml  errors=5
+[pwi] OK       11.7s  126.pwml  errors=12
+[pwi] OK       19.0s  129.pwml  errors=2
+[pwi] OK       18.1s  130.pwml  errors=9
+[pwi] OK       10.5s  131.pwml  errors=5
+[pwi] OK       20.0s  132.pwml  errors=4
+[pwi] OK       19.3s  133.pwml  errors=1
+[pwi] summary: {"files": 10, "success_true": 10, "success_true_no_errors": 0, "success_false": 0, "total_seconds": 173.6}
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\fp\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ e9c3e1971dad8d7112bb6caef2649287c7ba0581  [git, worktree dirty=False]
+label                   : pwi-off6-b_04
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -X utf8 C:/t/pwi/t2pw/tools/pathwhiz_import/run_import.py --list C:/t/fp/docs/pwml_output/evidence/final_payload_p2/import6/off6/lists/b_04 --out C:/t/fp/docs/pwml_output/evidence/final_payload_p2/import6/off6/b_04 --chunk 10
+cwd                     : C:\t\fp\docs\pwml_output\evidence\final_payload_p2
+root PID / process group: 96576 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 234.88 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 15  89352:python.exe, 96960:docker.exe, 96260:docker.exe, 95400:docker-compose.exe, 95524:docker-compose.exe, 96640:docker.exe, 96856:docker-compose.exe, 91292:docker-compose.exe, 91352:docker.exe, 95528:docker.exe, 96000:docker-compose.exe, 91236:docker-compose.exe, 90532:docker-compose.exe, 93660:docker.exe, 92144:docker-compose.exe
+descendants terminated  : 15  89352, 90532, 91236, 91292, 91352, 92144, 93660, 95400, 95524, 95528, 96000, 96260, 96640, 96856, 96960
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/fp/docs/pwml_output/evidence/final_payload_p2/import6/off6/b_04.bounded.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=pwi  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

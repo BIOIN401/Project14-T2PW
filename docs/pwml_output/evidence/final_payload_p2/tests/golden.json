@@ -1,0 +1,198 @@
+{
+  "label": "job",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "C:/t/fp/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/fp",
+    "-q",
+    "--basetemp=C:/t/fp_tmp/p2tests/golden",
+    "tests/test_batch_driver_seam_golden.py",
+    "tests/test_c011_freeze_seam_golden_equivalence.py",
+    "tests/test_streamlit_stage8_export_contract.py",
+    "tests/test_streamlit_quarantine_boundary.py"
+  ],
+  "cwd": "C:\\t\\fp",
+  "started_at": "2026-11-12T02:04:29+00:00",
+  "finished_at": "2026-11-12T02:05:47+00:00",
+  "duration_seconds": 77.68287409999903,
+  "timeout_seconds": 540.0,
+  "root_pid": 533080,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 531588,
+      "name": "python.exe",
+      "ppid": 533080
+    },
+    {
+      "pid": 533816,
+      "name": "git.exe",
+      "ppid": 531588
+    },
+    {
+      "pid": 534128,
+      "name": "git.exe",
+      "ppid": 531588
+    },
+    {
+      "pid": 533624,
+      "name": "python.exe",
+      "ppid": 531588
+    },
+    {
+      "pid": 533516,
+      "name": "python.exe",
+      "ppid": 533624
+    },
+    {
+      "pid": 510852,
+      "name": "python.exe",
+      "ppid": 531588
+    },
+    {
+      "pid": 533764,
+      "name": "python.exe",
+      "ppid": 510852
+    },
+    {
+      "pid": 534252,
+      "name": "git.exe",
+      "ppid": 533764
+    },
+    {
+      "pid": 534268,
+      "name": "git.exe",
+      "ppid": 533764
+    },
+    {
+      "pid": 534120,
+      "name": "python.exe",
+      "ppid": 531588
+    },
+    {
+      "pid": 534296,
+      "name": "python.exe",
+      "ppid": 534120
+    },
+    {
+      "pid": 528924,
+      "name": "python.exe",
+      "ppid": 531588
+    },
+    {
+      "pid": 532460,
+      "name": "python.exe",
+      "ppid": 528924
+    },
+    {
+      "pid": 533800,
+      "name": "python.exe",
+      "ppid": 534480
+    },
+    {
+      "pid": 534480,
+      "name": "python.exe",
+      "ppid": 531588
+    },
+    {
+      "pid": 531612,
+      "name": "python.exe",
+      "ppid": 531588
+    },
+    {
+      "pid": 534412,
+      "name": "python.exe",
+      "ppid": 531612
+    },
+    {
+      "pid": 529564,
+      "name": "python.exe",
+      "ppid": 531220
+    },
+    {
+      "pid": 531220,
+      "name": "python.exe",
+      "ppid": 531588
+    }
+  ],
+  "descendants_terminated": [
+    510852,
+    528924,
+    529564,
+    531220,
+    531588,
+    531612,
+    532460,
+    533516,
+    533624,
+    533764,
+    533800,
+    533816,
+    534120,
+    534128,
+    534252,
+    534268,
+    534296,
+    534412,
+    534480
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 508088,
+      "name": "python.exe"
+    },
+    {
+      "pid": 508144,
+      "name": "python.exe"
+    },
+    {
+      "pid": 531100,
+      "name": "python.exe"
+    },
+    {
+      "pid": 533352,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/fp/docs/pwml_output/evidence/final_payload_p2/tests/golden.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\fp\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\fp",
+    "repo_head": "03e4c241a5f221c6308e86b4e76b198a5d7fc1a9",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "p2-golden",
+    "token": "p2-golden:531100:02c4784af9fe2926",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
