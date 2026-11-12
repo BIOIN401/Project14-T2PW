@@ -118,3 +118,26 @@ want the entire cholestrol pathay we gotta fetch the entire thing, i thuink it w
 like fetch as muhc data as we can and then allow an agent to select the stuff that is important
 based on the users input or inferred context right / 7. ignore it". Evaluation method (question 6)
 still open.
+
+**D-W19 · 2026-11-11 — Final payload is the main path; PathWhiz importer fixes; fill rules for
+enzymes, transporters and protein ids.** (a) The final payload (D-W12) is the main thing every
+format is built from, PWML included: `T2PW_FINAL_PAYLOAD` is to become the default path. (b)
+Renaming compounds to their database names (e.g. "H+" to "Hydrogen Ion") is accepted. (c) Protein
+ids: match the paper's species; if that fails, an id from another species may be used, and this is
+disclosed in the text version. (d) Reactions with no enzyme: first look for the enzyme in other
+papers (RAG or whatever method works best); only if none is found mark spontaneous as unknown,
+because it may truly be unknown. (e) Transporters are written in the form PathWhiz expects. (f)
+PathWhiz importer bugs found by the import test (the `vcv_node` typo in `lib/pwml_parser.rb` and the
+transport `left-/right-biological-state-id` never being remapped) are to be fixed, and recorded in
+our docs; no smpdb commits (standing rule). (g) The PathWhiz import harness, its seed data and its
+results may be committed, provided the repository is not bloated. (h) Evaluation of database fill
+(D-W18 open question): hold-out ablation plus a hand-checked sample now; testing on new papers with
+non-PathBank answers later. PO, verbatim: "For 6 yes i like ur plan on the checeking the datbase
+filling, we can do ther eal testign later / 1. Ues commit the pathwhiz import / 2. yeah sure / 3.
+dont explode my repo, but if github will accept all of that stuff then yeah commit it / 4. yeah i
+mean the final payload is what we are gonna use as the main thig for buildin pwmland all other text
+types / 5. yes / 6. we should try but if we cant we can take another species name if needed, and
+then just disclose this in the text version / [transport bug] 1. Fix this but also make a note of
+it in our docs / 2. we should try to find these enzymes and then yeah mark them as unknown because
+they may truly be unknown but we need to check other papers for it firdst using rag or whayveer
+metho works the btest / 3. match the pathwhiz format".
