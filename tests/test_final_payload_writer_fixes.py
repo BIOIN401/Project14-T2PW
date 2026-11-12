@@ -207,7 +207,8 @@ def test_no_processes_flag_on_equals_flag_off_minus_bound(monkeypatch) -> None:
         for n in root.findall(".//bound-visualizations"):
             n.clear()
         # B2 (vocabulary map) renames the location "extracellular" to the PathWhiz row name when the flag is on; undo that here
-        return etree.tostring(root).replace(b"Extracellular Space", b"extracellular")
+        out = etree.tostring(root)
+        return out.replace(b"Extracellular Space", b"extracellular") if flag else out
 
     assert dump(False) == dump(True)
 
@@ -276,7 +277,7 @@ def test_plain_protein_transporter_unchanged_flag_off(flag_off) -> None:
 
 # --- B1 minors, B3 nucleic-acid type ---------------------------------------------------------------------------------
 
-def _build_mutated(payload: dict, mutate):
+def _build_mutated(mutate):
     import t2pw.pwml.writer as w
     orig = w.DeterministicPwmlBuilder.__init__
 
@@ -290,7 +291,7 @@ def test_nameless_transporter_complex_falls_back_to_entity_key_flag_on(flag_on, 
     def blank(ir):
         for p in ir["entities"]["proteins"]:
             p["name"] = ""
-    monkeypatch.setattr(DeterministicPwmlBuilder, "__init__", _build_mutated(None, blank))
+    monkeypatch.setattr(DeterministicPwmlBuilder, "__init__", _build_mutated(blank))
     _, root = _build(_payload())
     name = root.find(".//protein-complexes/protein-complex/name").text
     assert name.strip() != "complex" and name.endswith(" complex") and name != " complex"
@@ -305,10 +306,11 @@ def test_synth_complex_id_avoids_explicit_complex_id_flag_on(flag_on) -> None:
     assert len(ids) == 2 and len(set(ids)) == 2 and 40000 in ids
 
 
-def _na_payload() -> dict:
+def _na_payload(with_ids: bool = False) -> dict:
     p = _payload()
     names = ["ent mRNA", "RyhB", "ALAD1/HEMB1", "DNA polymerase", "tRNA-Leu", "rpoS gene"]
-    p["entities"]["nucleic_acids"] = [{"name": n, "pathbank_nucleic_acid_id": 500 + i} for i, n in enumerate(names)]
+    p["entities"]["nucleic_acids"] = [{"name": n, **({"pathbank_nucleic_acid_id": 500 + i} if with_ids else {})}
+                                      for i, n in enumerate(names)]
     return p
 
 
@@ -328,3 +330,15 @@ def test_nucleotide_type_untouched_flag_off(flag_off) -> None:
     builder, root = _build(_na_payload())
     assert set(_na_types(root).values()) == {""}
     assert "nucleic_acids_type_unset" not in builder.layout_debug_counts
+
+
+def test_nucleotide_type_skipped_for_existing_pathwhiz_rows_flag_on(flag_on) -> None:
+    _, root = _build(_na_payload(with_ids=True))
+    assert set(_na_types(root).values()) == {""}
+
+
+def test_nucleotide_type_protein_names_stay_untyped() -> None:
+    from t2pw.pwml.writer import nucleotide_type_for
+    for name in ("RNA Pol II", "RNA chaperone Hfq", "DNA mismatch repair MutS", "DNA-PK", "RNA polymerase", "DNA kinase"):
+        assert nucleotide_type_for({"name": name}) is None, name
+    assert nucleotide_type_for({"name": "ent mRNA"}) == "RNA"

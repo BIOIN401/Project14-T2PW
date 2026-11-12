@@ -719,7 +719,9 @@ def _serpentine_reaction_position(
 
 _RNA_TOKENS = {"rna", "mrna", "mirna", "rrna", "trna", "srna", "sirna", "ncrna", "lncrna", "snrna", "snorna"}
 _DNA_TOKENS = {"dna", "gene", "genes", "cdna", "gdna"}
-_PROTEIN_TOKENS = {"protein", "proteins", "factor", "complex", "enzyme", "receptor", "binding", "product", "subunit"}
+_PROTEIN_TOKENS = {"protein", "proteins", "factor", "complex", "enzyme", "receptor", "binding", "product", "subunit",
+                   "pol", "polymerase", "polymerases", "chaperone", "chaperones", "repair", "pk", "kinase", "kinases",
+                   "helicase", "primase", "ligase", "nuclease", "polypeptide"}
 
 
 def nucleotide_type_for(record: Dict[str, Any]) -> Optional[str]:
@@ -1215,7 +1217,8 @@ class DeterministicPwmlBuilder:
                 "entity_type": "nucleic_acid",
             }
             na_item: Dict[str, Any] = {"id": rid, "name": record.get("name", ""), "element-states": []}
-            if final_payload_enabled():
+            # An existing PathWhiz row is looked up by name+type, so never infer a type for one.
+            if final_payload_enabled() and not (record.get("pathwhiz_id") or record.get("pathbank_nucleic_acid_id")):
                 na_type = nucleotide_type_for(record)
                 if na_type:
                     na_item["nucleotide-type"] = na_type
@@ -1490,6 +1493,8 @@ class DeterministicPwmlBuilder:
                             cid = self.complex_ids.next()
                         synth_complex_by_protein[str(member.get("entity_key"))] = cid
                         pname = str(raw_entity_by_key.get(str(member.get("entity_key")), {}).get("name") or "").strip()
+                        raw_p = raw_entity_by_key.get(str(member.get("entity_key")), {})
+                        pname = pname or next((str(raw_p[k]).strip() for k in ("label", "display_name") if raw_p.get(k)), "")
                         pname = pname or str(member.get("entity_key") or "")
                         self.section_items["protein-complexes"].append(
                             {
