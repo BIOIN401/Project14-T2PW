@@ -1,0 +1,405 @@
+{
+ "PMC12096016": {
+  "src": "eval_v2",
+  "complete": true,
+  "meta": {
+   "title": "The enterobactin biosynthetic intermediate 2,3-dihydroxybenzoic acid is a competitive inhibitor of EntB"
+  },
+  "rx": [
+   {
+    "i": 0,
+    "label": "EntC: chorismate <-> isochorismate",
+    "in": [
+     "chorismate"
+    ],
+    "out": [
+     "isochorismate"
+    ],
+    "final_hit_runs": 29,
+    "runs": 29
+   },
+   {
+    "i": 1,
+    "label": "EntB isochorismatase: isochorismate -> 2,3-diDHB + pyruvate",
+    "in": [
+     "isochorismate"
+    ],
+    "out": [
+     "2,3-dihydro-2,3-dihydroxybenzoate",
+     "pyruvate"
+    ],
+    "final_hit_runs": 29,
+    "runs": 29
+   },
+   {
+    "i": 2,
+    "label": "EntA: 2,3-diDHB -> 2,3-DHB",
+    "in": [
+     "2,3-dihydro-2,3-dihydroxybenzoate"
+    ],
+    "out": [
+     "2,3-dihydroxybenzoic acid"
+    ],
+    "final_hit_runs": 29,
+    "runs": 29
+   },
+   {
+    "i": 3,
+    "label": "EntE: 2,3-DHB + ATP -> 2,3-dihydroxybenzoyl-AMP",
+    "in": [
+     "2,3-dihydroxybenzoic acid",
+     "ATP"
+    ],
+    "out": [
+     "2,3-dihydroxybenzoyl-AMP"
+    ],
+    "final_hit_runs": 25,
+    "runs": 29
+   },
+   {
+    "i": 4,
+    "label": "EntF: activated 2,3-DHB + L-serine -> enterobactin",
+    "in": [
+     "2,3-dihydroxybenzoic acid",
+     "L-serine"
+    ],
+    "out": [
+     "enterobactin"
+    ],
+    "final_hit_runs": 25,
+    "runs": 29
+   }
+  ]
+ },
+ "PMC12657337": {
+  "src": "eval_v2",
+  "complete": false,
+  "meta": {
+   "title": "High-level production of vitamin K2 in Escherichia coli via modular metabolic engineering"
+  },
+  "rx": [
+   {
+    "i": 0,
+    "label": "HepPPS: FPP -> HepPP",
+    "in": [
+     "farnesyl pyrophosphate"
+    ],
+    "out": [
+     "heptaprenyl pyrophosphate"
+    ],
+    "final_hit_runs": null,
+    "runs": 0
+   },
+   {
+    "i": 1,
+    "label": "MenA: HepPP + DHNA -> DMK-7",
+    "in": [
+     "heptaprenyl pyrophosphate",
+     "DHNA"
+    ],
+    "out": [
+     "demethylmenaquinone-7"
+    ],
+    "final_hit_runs": null,
+    "runs": 0
+   },
+   {
+    "i": 2,
+    "label": "UbiE: DMK-7 -> MK-7",
+    "in": [
+     "demethylmenaquinone-7"
+    ],
+    "out": [
+     "menaquinone-7"
+    ],
+    "final_hit_runs": null,
+    "runs": 0
+   }
+  ]
+ },
+ "PMC12312563": {
+  "src": "eval_v2",
+  "complete": true,
+  "meta": {
+   "title": "Structures of Listeria monocytogenes MenD in ThDP-bound and in-crystallo captured intermediate states"
+  },
+  "rx": [
+   {
+    "i": 0,
+    "label": "MenD: 2-oxoglutarate + isochorismate -> SEPHCHC",
+    "in": [
+     "2-oxoglutarate",
+     "isochorismate"
+    ],
+    "out": [
+     "SEPHCHC"
+    ],
+    "final_hit_runs": 3,
+    "runs": 3
+   }
+  ]
+ },
+ "PMC12421875": {
+  "src": "eval_v2",
+  "complete": true,
+  "meta": {
+   "title": "The growth benefits and toxicity of quinone biosynthesis are balanced by a dual regulatory mechanism"
+  },
+  "rx": [
+   {
+    "i": 0,
+    "label": "MenF: chorismate <-> isochorismate",
+    "in": [
+     "chorismate"
+    ],
+    "out": [
+     "isochorismate"
+    ],
+    "final_hit_runs": 2,
+    "runs": 2
+   },
+   {
+    "i": 1,
+    "label": "MenD: isochorismate -> SEPHCHC",
+    "in": [
+     "isochorismate"
+    ],
+    "out": [
+     "SEPHCHC"
+    ],
+    "final_hit_runs": 1,
+    "runs": 2
+   },
+   {
+    "i": 2,
+    "label": "MenH: SEPHCHC -> SHCHC",
+    "in": [
+     "SEPHCHC"
+    ],
+    "out": [
+     "SHCHC"
+    ],
+    "final_hit_runs": 2,
+    "runs": 2
+   },
+   {
+    "i": 3,
+    "label": "MenC: SHCHC -> OSB",
+    "in": [
+     "SHCHC"
+    ],
+    "out": [
+     "OSB"
+    ],
+    "final_hit_runs": 2,
+    "runs": 2
+   },
+   {
+    "i": 4,
+    "label": "MenE: OSB -> OSB-CoA",
+    "in": [
+     "OSB"
+    ],
+    "out": [
+     "OSB-CoA"
+    ],
+    "final_hit_runs": 2,
+    "runs": 2
+   },
+   {
+    "i": 5,
+    "label": "MenB: OSB-CoA -> DHNA-CoA",
+    "in": [
+     "OSB-CoA"
+    ],
+    "out": [
+     "DHNA-CoA"
+    ],
+    "final_hit_runs": 2,
+    "runs": 2
+   },
+   {
+    "i": 6,
+    "label": "MenI: DHNA-CoA -> DHNA",
+    "in": [
+     "DHNA-CoA"
+    ],
+    "out": [
+     "DHNA"
+    ],
+    "final_hit_runs": 2,
+    "runs": 2
+   },
+   {
+    "i": 7,
+    "label": "MenA: DHNA + prenyl diphosphate -> DMK",
+    "in": [
+     "DHNA",
+     "prenyl diphosphate"
+    ],
+    "out": [
+     "demethylmenaquinone"
+    ],
+    "final_hit_runs": 1,
+    "runs": 2
+   },
+   {
+    "i": 8,
+    "label": "MenG: DMK -> MK",
+    "in": [
+     "demethylmenaquinone"
+    ],
+    "out": [
+     "menaquinone"
+    ],
+    "final_hit_runs": 2,
+    "runs": 2
+   }
+  ]
+ },
+ "PMC12444477": {
+  "src": "pinned_v1",
+  "complete": false,
+  "meta": {
+   "title": "The regulation of lipid A biosynthesis"
+  },
+  "rx": [
+   {
+    "i": 0,
+    "label": "WaaA adds Kdo to lipid IVA",
+    "in": [
+     "lipid IVA"
+    ],
+    "out": [
+     "Kdo-lipid IVA"
+    ],
+    "final_hit_runs": 8,
+    "runs": 8
+   },
+   {
+    "i": 1,
+    "label": "LpxL/LpxM acylate Kdo-lipid IVA to Kdo-lipid A",
+    "in": [
+     "Kdo-lipid IVA"
+    ],
+    "out": [
+     "Kdo-lipid A"
+    ],
+    "final_hit_runs": 6,
+    "runs": 8
+   }
+  ]
+ },
+ "PMC12856317": {
+  "src": "pinned_v1",
+  "complete": false,
+  "meta": {
+   "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis"
+  },
+  "rx": [
+   {
+    "i": 0,
+    "label": "ALAS2: glycine + succinyl-CoA to ALA",
+    "in": [
+     "glycine",
+     "succinyl-CoA"
+    ],
+    "out": [
+     "aminolevulinic acid"
+    ],
+    "final_hit_runs": 24,
+    "runs": 24
+   }
+  ]
+ },
+ "PMC12452463": {
+  "src": "pinned_v1",
+  "complete": false,
+  "meta": {
+   "title": "Enterobactin: A key player in bacterial iron acquisition and virulence"
+  },
+  "rx": [
+   {
+    "i": 0,
+    "label": "EntC: chorismate to isochorismate",
+    "in": [
+     "chorismate"
+    ],
+    "out": [
+     "isochorismate"
+    ],
+    "final_hit_runs": 25,
+    "runs": 25
+   },
+   {
+    "i": 1,
+    "label": "EntB: isochorismate to 2,3-dihydro-2,3-dihydroxybenzoate",
+    "in": [
+     "isochorismate"
+    ],
+    "out": [
+     "2,3-dihydro-2,3-dihydroxybenzoate"
+    ],
+    "final_hit_runs": 22,
+    "runs": 25
+   },
+   {
+    "i": 2,
+    "label": "EntE: DHB to DHB-AMP",
+    "in": [
+     "DHB"
+    ],
+    "out": [
+     "DHB-AMP"
+    ],
+    "final_hit_runs": 6,
+    "runs": 25
+   }
+  ]
+ },
+ "PMC12782028": {
+  "src": "pinned_v1",
+  "complete": false,
+  "meta": {
+   "title": "Cholesterol and steroid synthesis pathways may be involved in the inhibition of osteosarcoma"
+  },
+  "rx": [
+   {
+    "i": 0,
+    "label": "LSS: 2,3-oxidosqualene to lanosterol",
+    "in": [
+     "2,3-oxidosqualene"
+    ],
+    "out": [
+     "lanosterol"
+    ],
+    "final_hit_runs": 18,
+    "runs": 18
+   },
+   {
+    "i": 1,
+    "label": "CYP51A1: lanosterol to 4,4-dimethylcholesta-trienol",
+    "in": [
+     "lanosterol"
+    ],
+    "out": [
+     "4,4-dimethylcholesta-8(9),14,24-trien-3b-ol"
+    ],
+    "final_hit_runs": 18,
+    "runs": 18
+   },
+   {
+    "i": 2,
+    "label": "DHCR24: desmosterol to cholesterol",
+    "in": [
+     "desmosterol"
+    ],
+    "out": [
+     "cholesterol"
+    ],
+    "final_hit_runs": 17,
+    "runs": 18
+   }
+  ]
+ }
+}
