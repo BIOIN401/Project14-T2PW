@@ -1388,6 +1388,7 @@ class DeterministicPwmlBuilder:
         self.section_items["reactions"] = reactions
 
         transports: List[Dict[str, Any]] = []
+        synth_complex_by_protein: Dict[str, int] = {}
         for transport in process_items.get("transports", []) if isinstance(process_items.get("transports"), list) else []:
             if not isinstance(transport, dict):
                 continue
@@ -1434,6 +1435,33 @@ class DeterministicPwmlBuilder:
                 item: Dict[str, Any] = {"id": mid, "biological-state-id": lookup("biological_states", member.get("biological_state_key"))}
                 if info["entity_type"] == "protein_complex":
                     item["protein-complex-id"] = int(info["id"])
+                elif final_payload_enabled():
+                    # PathWhiz's TransportTransporter has no protein_id column; PathBank writes every
+                    # transporter as a protein-complex. Repackage the same protein as a one-member
+                    # complex (nothing else is added); its visualization is made with the transport viz.
+                    cid = synth_complex_by_protein.get(str(member.get("entity_key")))
+                    if cid is None:
+                        cid = self.complex_ids.next()
+                        synth_complex_by_protein[str(member.get("entity_key"))] = cid
+                        pname = str(raw_entity_by_key.get(str(member.get("entity_key")), {}).get("name") or "").strip()
+                        self.section_items["protein-complexes"].append(
+                            {
+                                "id": cid,
+                                "name": pname if pname.casefold().endswith(" complex") else f"{pname} complex",
+                                "species-id": default_species_id,
+                                "pwp-id": f"PW_P{cid:06d}",
+                                "protein_complex-proteins": [
+                                    {"id": self.ids.next(), "protein-id": int(info["id"]), "stoichiometry": None}
+                                ],
+                                "element-states": [],
+                            }
+                        )
+                    item["protein-complex-id"] = cid
+                    member_ids[str(member.get("key"))].update(
+                        synth_complex_id=cid,
+                        protein_key=member.get("entity_key"),
+                        biological_state_key=member.get("biological_state_key"),
+                    )
                 else:
                     item["protein-id"] = int(info["id"])
                 transporters_out.append(item)
@@ -1627,6 +1655,7 @@ class DeterministicPwmlBuilder:
 
         self.section_items["protein-complex-visualizations"] = []
         protein_complex_viz_by_entity: Dict[str, int] = {}
+        synth_pcv_by_complex_state: Dict[Tuple[int, str], int] = {}
         protein_complex_viz_by_entity_state: Dict[Tuple[str, str], int] = {}
         for item in ir.get("protein_complex_visualizations", []) if isinstance(ir.get("protein_complex_visualizations"), list) else []:
             if not isinstance(item, dict):
@@ -2519,7 +2548,32 @@ class DeterministicPwmlBuilder:
                             )
                             if pcv_id is None:
                                 pcv_id = protein_complex_viz_by_entity.get(str(entity_key))
-                        if mtype == "protein_complex" and pcv_id:
+                        if minfo.get("synth_complex_id") is not None:
+                            # the one-member wrapper made for this plain-protein transporter (flag on)
+                            bs_key = str(minfo.get("biological_state_key") or "")
+                            pcv_id = synth_pcv_by_complex_state.get((minfo["synth_complex_id"], bs_key))
+                            if pcv_id is None:
+                                ploc = loc_id if loc_id is not None else ensure_protein_location(
+                                    str(minfo.get("protein_key")), bs_key)
+                                bs_id = lookup("biological_states", bs_key)
+                                if ploc is None or bs_id is None:
+                                    continue
+                                pcv_id = self.ids.next()
+                                synth_pcv_by_complex_state[(minfo["synth_complex_id"], bs_key)] = pcv_id
+                                self.section_items["protein-complex-visualizations"].append(
+                                    {
+                                        "id": pcv_id,
+                                        "protein-complex-id": minfo["synth_complex_id"],
+                                        "pathway-visualization-id": self.pathway_visualization_id_int,
+                                        "biological-state-id": bs_id,
+                                        "protein_complex_protein_visualizations": [
+                                            {"id": self.ids.next(), "protein-location-id": ploc}
+                                        ],
+                                        "protein_complex_compound_visualizations": [],
+                                    }
+                                )
+                            tv["protein-complex-visualization-id"] = pcv_id
+                        elif mtype == "protein_complex" and pcv_id:
                             tv["protein-complex-visualization-id"] = pcv_id
                         elif loc_id is not None:
                             tv["protein-location-id"] = loc_id

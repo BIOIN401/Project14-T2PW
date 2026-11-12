@@ -204,3 +204,65 @@ def test_no_processes_flag_on_equals_flag_off_minus_bound(monkeypatch) -> None:
         return etree.tostring(root)
 
     assert dump(False) == dump(True)
+
+
+# --- B2: plain-protein transporters are written as a one-member protein-complex (PathBank shape) -----------------------
+
+def _ids(root, path):
+    return [int(n.text) for n in root.findall(path)]
+
+
+def _check_transporter_complex(root, n_transporters=1):
+    tts = root.findall(".//transport-transporters/transport-transporter")
+    assert len(tts) == n_transporters
+    complexes = {int(c.findtext("id")): c for c in root.findall(".//protein-complexes/protein-complex")}
+    protein_ids = set(_ids(root, ".//proteins/protein/id"))
+    pcvs = {int(v.findtext("id")): v for v in root.findall(".//protein-complex-visualizations/protein-complex-visualization")}
+    ploc = {int(l.findtext("id")): l for l in root.findall(".//protein-locations/protein-location")}
+    for tt in tts:
+        assert tt.find("protein-id") is None
+        cid = int(tt.findtext("protein-complex-id"))
+        assert cid in complexes
+        members = complexes[cid].findall("protein_complex-proteins/protein-complex-protein")
+        assert len(members) == 1 and int(members[0].findtext("protein-id")) in protein_ids
+        assert members[0].find("stoichiometry").get("nil") == "true"
+    for tv in root.findall(".//transport_transporter_visualizations/transport-transporter-visualization"):
+        assert tv.find("protein-location-id") is None
+        assert int(tv.findtext("transport-transporter-id")) in _ids(root, ".//transport-transporters/transport-transporter/id")
+        pcv = pcvs[int(tv.findtext("protein-complex-visualization-id"))]
+        assert int(pcv.findtext("protein-complex-id")) in complexes
+        locs = [ploc[int(n.text)] for n in pcv.findall(".//protein-complex-protein-visualization/protein-location-id")]
+        assert len(locs) == 1
+        assert int(locs[0].findtext("protein-id")) == int(
+            complexes[int(pcv.findtext("protein-complex-id"))].find("protein_complex-proteins/protein-complex-protein/protein-id").text)
+    for tag in ("protein-complexes/protein-complex", "protein-complex-visualizations/protein-complex-visualization"):
+        ids = _ids(root, f".//{tag}/id")
+        assert len(ids) == len(set(ids))
+    return complexes
+
+
+def test_plain_protein_transporter_becomes_complex_flag_on(flag_on) -> None:
+    _, root = _build(_payload())
+    complexes = _check_transporter_complex(root)
+    assert len(complexes) == 1 and next(iter(complexes.values())).findtext("name") == "GLUT1 complex"
+    assert len(root.findall(".//protein-complex-visualizations/protein-complex-visualization")) == 1
+
+
+def test_two_transports_same_protein_share_one_wrapper_flag_on(flag_on) -> None:
+    payload = _payload()
+    second = dict(payload["processes"]["transports"][0], name="Glucose export",
+                  from_biological_state="cytosol", to_biological_state="extracellular")
+    payload["processes"]["transports"].append(second)
+    _, root = _build(payload)
+    complexes = _check_transporter_complex(root, n_transporters=2)
+    assert len(complexes) == 1
+    assert len(root.findall(".//transport-visualizations/transport-visualization")) == 2
+
+
+def test_plain_protein_transporter_unchanged_flag_off(flag_off) -> None:
+    _, root = _build(_payload())
+    tt = root.find(".//transport-transporters/transport-transporter")
+    assert tt.find("protein-id") is not None and tt.find("protein-complex-id") is None
+    assert root.findall(".//protein-complexes/protein-complex") == []
+    tv = root.find(".//transport_transporter_visualizations/transport-transporter-visualization")
+    assert tv.find("protein-location-id") is not None and tv.find("protein-complex-visualization-id") is None
