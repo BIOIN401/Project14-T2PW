@@ -89,3 +89,32 @@ machinery as a submitted paper (D-W12, D-W16), not a separate route. PO, verbati
 should explore fillig in from db of known pathways that would improve accuracy by using another
 source, and the name only mode should use the same machinery that we use for gap filling for the
 regular pdfs, addd that inot the docs too".
+
+
+**D-W18 · 2026-11-11 — Known-pathway database fill: sources and limits** (answers the open
+questions in `docs/pwml_output/assessment/08-known-pathway-db-fill.md` on `pwml/clean-model`).
+(a) Sources: Rhea, Reactome, WikiPathways and PathBank. PathBank is the lab's own database, so its
+licence is not a blocker; use the PathBank database we already have (read-only), accepting that it
+is less reliable to reach. MetaCyc/EcoCyc are ignored. KEGG stays excluded (D-W14). No message to
+the PathBank team is needed for now. (b) Filled steps go into the one final payload and from there
+into every format, PWML included (D-W12), labelled `db` with database and accession. (c) Rhea, which
+has no organism field, may fill a step only where a gap has been identified, and only when the
+other parts of the reaction (substrates, products, enzyme) already match the paper's organism.
+(d) Steps known only by cross-species inference (for example a Reactome human-to-rat ortholog step)
+are not used unless the step is confirmed for that species; revisit later. (e) Size: by default a
+fill only adds steps between entities the paper already names. When the user asks for a named
+pathway, or says they want the entire pathway (for example "cholesterol pathway"), fetch the whole
+pathway. Fetch as much as is available, then an agent selects what matters from the user's request
+or the inferred context. PO, verbatim: "Yes to rhea and reactome and wikipathways and pathbank bro
+we own pathbank the lab im in, but yeah it acts up use the database we have althouhg i dont think it
+will work as well / the filling should go into the main payload used for all formats / 2. lets
+leave pathbanks writes fr now / 3. Yes if its just filling in a gap and the other parts of the
+reaction are clearly from that orgnaism by that i mean if everythging else matches chances are that
+step is there, but we should prolly only use it if we have identified a gap right / 4. im not sure
+like we should be able to see a connection but is that smart is it true that the rat has that step
+in it, if its not confirmed lets leave it atleast for now lets log this decisions / 5. yeah
+anywhere between the paper, but if the person asks for cholestrol pathway or has speciied thjey
+want the entire cholestrol pathay we gotta fetch the entire thing, i thuink it would be smart to
+like fetch as muhc data as we can and then allow an agent to select the stuff that is important
+based on the users input or inferred context right / 7. ignore it". Evaluation method (question 6)
+still open.
