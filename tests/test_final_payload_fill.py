@@ -318,3 +318,55 @@ def test_freeze_quarantine_and_hash_tolerate_the_provenance_key(tmp_path):
     assert r1["quarantine_ok"] == r0["quarantine_ok"]
     if r1["quarantine_ok"]:
         assert FINAL_PAYLOAD_FILL_FIELD in r1["payload"]
+
+
+def _abbrev_fill(names_routes, names):
+    p = {"entities": {"species": [], "subcellular_locations": [], "compounds": [{"name": n} for n in names], "proteins": [],
+                      "protein_complexes": []}, "biological_states": [], "processes": {"reactions": []}}
+    f = FakeFetcher(names_routes)
+    return p, apply_final_id_fill(p, {"organism": "Escherichia coli"}, fetcher=f, cache=Cache(None), today=TODAY)
+
+
+def test_short_abbreviation_synonym_is_refused_with_its_cross_references():
+    p, rep = _abbrev_fill([("ols4", {"q": "MK"}, ols((74706, "Met-Lys", ["MK"]))),
+                           ("/compound/74706/", None, chebi(74706, "Met-Lys", "C11H23N3O3S", "X-Y-Z", "C99999", "HMDB0011745", "1-2-3"))], ["MK"])
+    mk = _rows(p)["MK"]
+    assert rep["error"] is None and rep["written"] == 0
+    assert all(k not in mk for k in ID_KEYS) and "final_payload_fill" not in p
+    assert rep["refused"].get("short_abbreviation_synonym", 0) >= 2  # chebi_id and the fields derived from that entry
+    assert {d["field"] for d in rep["refused_detail"] if d["reason"] == "short_abbreviation_synonym"} >= {"chebi_id", "kegg_id", "hmdb_id"}
+
+
+def test_exact_label_short_name_still_accepted():
+    p, rep = _abbrev_fill([("ols4", {"q": "ATP"}, ols((15422, "ATP", []))), ("/compound/15422/", None, chebi())], ["ATP"])
+    assert _rows(p)["ATP"]["chebi_id"] == "CHEBI:15422" and _rows(p)["ATP"]["kegg_id"] == "C00002"
+    assert "short_abbreviation_synonym" not in rep["refused"]
+
+
+def test_synonym_with_lowercase_or_long_name_still_accepted():
+    p, rep = _abbrev_fill([("ols4", {"q": "MgCl2"}, ols((6636, "magnesium dichloride", ["MgCl2"]))),
+                           ("/compound/6636/", None, chebi(6636, "magnesium dichloride", "Cl2Mg", "TWRXJAOTZQYOKJ-UHFFFAOYSA-L", "C00305", "HMDB0000547")),
+                           ("ols4", {"q": "Cys-Asp-Gly"}, ols((140231, "Cys-Asp-Gly peptide", ["Cys-Asp-Gly"]))),
+                           ("/compound/140231/", None, chebi(140231, "Cys-Asp-Gly peptide", "C9H15N3O6S", "A-B-C", "C88888", "HMDB0000001")),
+                           ("ols4", {"q": "SHCHCX"}, ols((39564, "SHCHC-like", ["SHCHCX"]))),
+                           ("/compound/39564/", None, chebi(39564, "SHCHC-like", "C11H11O5", "D-E-F", "C16", "HMDB0002"))],
+                          ["MgCl2", "Cys-Asp-Gly", "SHCHCX"])
+    for n in ("MgCl2", "Cys-Asp-Gly", "SHCHCX"):
+        assert _rows(p)[n]["chebi_id"].startswith("CHEBI:"), n
+    assert "short_abbreviation_synonym" not in rep["refused"]
+
+
+def test_short_abbreviation_rule_shape():
+    from t2pw.service.final_payload import _short_abbreviation as sa
+    assert [sa(n) for n in ("MK", "PMEA", "CDG", "DMAPP", "SHCHC", "M K")] == [True] * 6
+    assert [sa(n) for n in ("H2O", "H+", "O2", "NAD+", "Ca2+", "MgCl2", "SHCHCX", "A", "Cys-Asp-Gly", "")] == [False] * 10
+
+
+def test_h2o_hplus_o2_synonym_fills_are_kept():
+    routes, names = [], ["H2O", "H+", "O2"]
+    for q, cid, lab, kegg in (("H2O", 15377, "water", "C00001"), ("H+", 15378, "proton", "C00080"), ("O2", 15379, "dioxygen", "C00007")):
+        routes += [("ols4", {"q": q}, ols((cid, lab, [q]))), (f"/compound/{cid}/", None, chebi(cid, lab, kegg=kegg, hmdb="HMDB0001", cas="1-1-1"))]
+    p, rep = _abbrev_fill(routes, names)
+    for n, cid in zip(names, (15377, 15378, 15379)):
+        assert _rows(p)[n]["chebi_id"] == f"CHEBI:{cid}", n
+    assert "short_abbreviation_synonym" not in rep["refused"]

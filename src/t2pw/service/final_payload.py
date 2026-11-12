@@ -39,6 +39,11 @@ def _empty(v: Any) -> bool:
     return v is None or (isinstance(v, str) and v.strip().casefold() in _PLACEHOLDERS)
 
 
+def _short_abbreviation(name: Any) -> bool:
+    """Two to five capital letters once spaces are removed: no digits, no charge signs, no lowercase (MK, PMEA, CDG; not H2O, H+, O2, NAD+)."""
+    return re.fullmatch(r"[A-Z]{2,5}", re.sub(r"\s+", "", str(name))) is not None
+
+
 def _norm(v: Any) -> str:
     return re.sub(r"[^a-z0-9]", "", str(v).casefold()).removeprefix("chebi").removeprefix("hmdb").lstrip("0")
 
@@ -87,8 +92,16 @@ def _plan(payload: Dict[str, Any], items: List[Dict[str, Any]], report: Dict[str
         refused[reason] = refused.get(reason, 0) + 1
         report["refused_detail"].append({"kind": key[0], "entity": key[1], "field": key[2], "reason": reason})
 
+    # A short all-capitals abbreviation matched only as a ChEBI synonym is often a different compound's synonym (MK -> Met-Lys,
+    # PMEA -> adefovir, CDG -> Cys-Asp-Gly; hand check 2026-11-11): refuse the entity, with every cross-reference derived from it.
+    # Exactly "exact_synonym": exact_label and the charged_form fills (NAD+) were all correct.
+    abbreviation = {(i["kind"], i["entity"]) for i in items if i.get("kind") == "compound" and i.get("field") == "chebi_id"
+                    and (i.get("prov") or {}).get("match_type") == "exact_synonym" and _short_abbreviation(i.get("entity"))}
     for key, its in groups.items():
         kind, name, fld = key
+        if (kind, name) in abbreviation:
+            refuse("short_abbreviation_synonym", key)
+            continue
         if len({_norm(i["value"]) for i in its}) != 1:
             refuse("ambiguous", key)
             continue
