@@ -1,0 +1,33 @@
+[pwi] OK       40.8s  PW012926.pwml  errors=1
+[pwi] OK       38.0s  PW741182.pwml  errors=0
+[pwi] OK       52.8s  PW687775.pwml  errors=3
+[pwi] OK       69.8s  PW176888.pwml  errors=2
+[pwi] OK        1.1s  PW1.pwml  errors=133
+[pwi] summary: {"files": 5, "success_true": 5, "success_true_no_errors": 1, "success_false": 0, "total_seconds": 202.5}
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\fp\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 3e782d76d2c6f7ba821e064fde857ad4d8eac8bc  [git, worktree dirty=False]
+label                   : pwi-controls-b_00
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -X utf8 C:/t/pwi/t2pw/tools/pathwhiz_import/run_import.py --list C:/t/fp/docs/pwml_output/evidence/final_payload_p3/import/controls/lists/b_00 --out C:/t/fp/docs/pwml_output/evidence/final_payload_p3/import/controls/b_00 --chunk 10
+cwd                     : C:\t\fp\docs\pwml_output\evidence\final_payload_p3
+root PID / process group: 149200 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 226.91 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 15  149212:python.exe, 149232:docker.exe, 149340:docker.exe, 149396:docker-compose.exe, 149436:docker-compose.exe, 148932:docker-compose.exe, 149068:docker.exe, 149084:docker-compose.exe, 149280:docker-compose.exe, 149308:docker.exe, 139292:docker-compose.exe, 148600:docker.exe, 148396:docker-compose.exe, 149088:docker.exe, 151652:docker-compose.exe
+descendants terminated  : 15  139292, 148396, 148600, 148932, 149068, 149084, 149088, 149212, 149232, 149280, 149308, 149340, 149396, 149436, 151652
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/fp/docs/pwml_output/evidence/final_payload_p3/import/controls/b_00.bounded.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=pwi  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

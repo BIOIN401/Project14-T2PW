@@ -1,0 +1,38 @@
+[pwi] OK       29.2s  122.pwml  errors=0
+[pwi] OK        1.2s  123.pwml  errors=0
+[pwi] OK       11.2s  124.pwml  errors=0
+[pwi] OK        1.9s  125.pwml  errors=1
+[pwi] OK        4.2s  126.pwml  errors=2
+[pwi] OK       19.6s  129.pwml  errors=0
+[pwi] OK       14.9s  130.pwml  errors=3
+[pwi] OK       10.2s  131.pwml  errors=0
+[pwi] OK       18.7s  132.pwml  errors=0
+[pwi] OK       17.7s  133.pwml  errors=0
+[pwi] summary: {"files": 10, "success_true": 10, "success_true_no_errors": 7, "success_false": 0, "total_seconds": 128.8}
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\fp\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 3e782d76d2c6f7ba821e064fde857ad4d8eac8bc  [git, worktree dirty=False]
+label                   : pwi-on-b_04
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -X utf8 C:/t/pwi/t2pw/tools/pathwhiz_import/run_import.py --list C:/t/fp/docs/pwml_output/evidence/final_payload_p3/import/on/lists/b_04 --out C:/t/fp/docs/pwml_output/evidence/final_payload_p3/import/on/b_04 --chunk 10
+cwd                     : C:\t\fp\docs\pwml_output\evidence\final_payload_p3
+root PID / process group: 163624 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 149.58 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 16  162660:python.exe, 163536:docker.exe, 156832:docker.exe, 162624:docker-compose.exe, 163136:docker-compose.exe, 163716:docker.exe, 114140:docker-compose.exe, 163256:docker-compose.exe, 163712:docker.exe, 155716:docker-compose.exe, 163432:docker-compose.exe, 163640:docker.exe, 161956:docker-compose.exe, 157612:docker.exe, 165312:docker-compose.exe, 165364:docker-compose.exe
+descendants terminated  : 16  114140, 155716, 156832, 157612, 161956, 162624, 162660, 163136, 163256, 163432, 163536, 163640, 163712, 163716, 165312, 165364
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/fp/docs/pwml_output/evidence/final_payload_p3/import/on/b_04.bounded.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=pwi  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

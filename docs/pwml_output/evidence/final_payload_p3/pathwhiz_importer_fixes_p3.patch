@@ -1,0 +1,62 @@
+--- a/lib/pwml_parser.rb
++++ b/lib/pwml_parser.rb
+@@ -28,6 +28,7 @@
+     
+     @reaction_list = {}
+     @reaction_enzyme_list = {}
++    @transport_transporter_list = {}
+     @reaction_coupled_transport_list = {}
+     @transport_list = {}
+     @interaction_list = {}
+@@ -119,6 +120,7 @@
+           
+           @reaction_list = {}
+           @reaction_enzyme_list = {}
++          @transport_transporter_list = {}
+           @reaction_coupled_transport_list = {}
+           @transport_list = {}
+           @interaction_list = {}
+@@ -561,6 +563,10 @@
+         remap_hash_name = '@reaction_enzyme_list'
+         remap_value = @reaction_enzyme_list[node.content]
+         hash[node.name.underscore.to_sym] = remap_value
++      elsif node.name == 'transport-transporter-id'
++        remap_hash_name = '@transport_transporter_list'
++        remap_value = @transport_transporter_list[node.content]
++        hash[node.name.underscore.to_sym] = remap_value
+       elsif node.name == 'reaction-coupled-transport-id'
+         remap_hash_name = '@reaction_coupled_transport_list'
+         remap_value = @reaction_coupled_transport_list[node.content]
+@@ -773,6 +779,7 @@
+             store_reaction_enzyme_ids(node, existing)
+             debug_reaction_enzymes_for_reaction(node, existing, "existing")
+           end
++          store_transport_transporter_ids(node, existing) if klass == Transport
+         elsif object.save
+           # Save and store the new object id if it doesn't already exist
+           hash[id] = object.id
+@@ -780,6 +787,7 @@
+             store_reaction_enzyme_ids(node, object)
+             debug_reaction_enzymes_for_reaction(node, object, "saved")
+           end
++          store_transport_transporter_ids(node, object) if klass == Transport
+         else
+           @result[:errors]["#{node.name.underscore}_#{id.to_s}".to_sym] = object.errors.full_messages
+         end
+@@ -820,6 +828,16 @@
+     end
+   end
+ 
++  # Maps each PWML transport-transporter id to the created record, as store_reaction_enzyme_ids does for reaction enzymes.
++  def store_transport_transporter_ids(node, transport)
++    node.xpath('transport-transporters/transport-transporter').each do |tt_node|
++      pwml_id = tt_node.xpath('id').first.try(:content)
++      protein_complex_id = @protein_complex_list[tt_node.xpath('protein-complex-id').first.try(:content)]
++      transporter = transport.get_enzyme(protein_complex_id) if protein_complex_id.present?
++      @transport_transporter_list[pwml_id] = transporter.id if pwml_id.present? && transporter.present?
++    end
++  end
++
+   # Scans all location nodes in pv_node to find the minimum x/y values.
+   # Sets @coordinate_offset_x / _y so every location shifts into positive canvas space.
+   def compute_coordinate_offset(pv_node)

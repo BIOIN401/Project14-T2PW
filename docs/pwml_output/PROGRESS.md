@@ -79,3 +79,11 @@ Record: `FINAL-PAYLOAD-P2.md`; evidence `evidence/final_payload_p2/`. Writer fix
 - Harness (59 replay files, vocabulary seed): flag on + patched importer 29 clean, 211 messages, transports 31 of 37; flag off 0 clean, 496 messages. Baseline was 0 of 60.
 - Open: transport-transporter-id importer remap (19 messages, also on real PW176888), ontology name map, nucleic acid type, left=right transports.
 - 11 dispatches (sonnet medium x6, sonnet high x2, opus high x2, haiku x1) plus message resumes.
+
+---
+# Final payload, phase 3 (branch `pwml/final-payload`, code HEAD `d6914468`)
+Record: `FINAL-PAYLOAD-P3.md`; evidence `evidence/final_payload_p3/`. Importer patch 3 (transport-transporter-id), nameless complex name and id collision, nucleic-acid typing, vocabulary synonym map, left=right traced (not a writer defect). All behind `T2PW_FINAL_PAYLOAD`.
+- Tests: SMOKE 511, golden 38, focused 96, 0 survivors. Flag-off identity 97 of 97.
+- Harness: 43 of 59 clean (P2 29), 147 messages (211).
+- Live runs NOT done (`.env` copy denied); default NOT flipped.
+- 9 dispatches.
