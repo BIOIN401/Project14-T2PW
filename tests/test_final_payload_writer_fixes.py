@@ -206,7 +206,8 @@ def test_no_processes_flag_on_equals_flag_off_minus_bound(monkeypatch) -> None:
         _, root = _build(payload, with_bound=True)
         for n in root.findall(".//bound-visualizations"):
             n.clear()
-        return etree.tostring(root)
+        # B2 (vocabulary map) renames the location "extracellular" to the PathWhiz row name when the flag is on; undo that here
+        return etree.tostring(root).replace(b"Extracellular Space", b"extracellular")
 
     assert dump(False) == dump(True)
 

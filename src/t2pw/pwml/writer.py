@@ -16,6 +16,7 @@ from t2pw.paths import PROJECT_ROOT
 from t2pw.pipeline.entity_identity import component_stoichiometry, is_pathbank_unknown_protein
 from t2pw.pipeline.process_normalizer import normalize_process_payload
 from t2pw.pwml.compound_templates import TEMPLATE_DIMS, select_compound_template_id
+from t2pw.pwml.vocabulary_map import map_vocabulary_name
 from t2pw.pwml.ir import build_pwml_ir, is_pwml_ir, validate_pwml_ir
 from t2pw.pwml.qa import run_pwml_qa
 from t2pw.service.final_payload import final_payload_enabled
@@ -779,6 +780,7 @@ class DeterministicPwmlBuilder:
             "shared_intermediates_skipped_cofactor": 0,
             "shared_intermediate_locations_reused": 0,
         }
+        self.vocabulary_outcomes: List[Dict[str, Any]] = []  # final payload only: non-exact vocabulary names
         self.layout_debug_stacks: List[Dict[str, Any]] = []
         self.layout_debug_shared_intermediates: List[Dict[str, Any]] = []
         self.withheld_interactions: List[Dict[str, Any]] = []
@@ -791,6 +793,19 @@ class DeterministicPwmlBuilder:
         self._ir_key_ids: Dict[str, Dict[str, int]] = {}
         self._ir_entity_info: Dict[str, Dict[str, Any]] = {}
         self._ir_pathway_species_id: Optional[int] = None
+
+    def _vocabulary_fields(self, kind: str, record: Dict[str, Any]) -> Dict[str, Any]:
+        """name and ontology-id of a location / cell-type / tissue item. Flag off: the record as is. Flag on (final payload P3,
+        B2): a reviewed synonym is replaced by the PathWhiz row name; the outcome is counted in ``layout_debug_counts``."""
+        name, onto = record.get("name", ""), record.get("ontology_id")
+        if final_payload_enabled():
+            new_name, onto, outcome = map_vocabulary_name(kind, name, onto)
+            key = f"vocabulary_{outcome}"
+            self.layout_debug_counts[key] = self.layout_debug_counts.get(key, 0) + 1
+            if outcome != "exact":
+                self.vocabulary_outcomes.append({"kind": kind, "name": name, "outcome": outcome, "written": new_name})
+            name = new_name
+        return {"name": name, "ontology-id": onto}
 
     def _make_compound_identity_fields_optional(self) -> None:
         compound_sig = self.signature.sections.get("compounds")
@@ -1003,7 +1018,7 @@ class DeterministicPwmlBuilder:
             rid = id_for(record, ["pathwhiz_id", "pathbank_cell_type_id", "pw_cell_type_id"], self.ids)
             remember("cell_types", record.get("key"), rid)
             self.section_items["cell-types"].append(
-                {"id": rid, "name": record.get("name", ""), "ontology-id": record.get("ontology_id")}
+                {"id": rid, **self._vocabulary_fields("cell-type", record)}
             )
 
         self.section_items["species"] = []
@@ -1043,7 +1058,7 @@ class DeterministicPwmlBuilder:
             )
             remember("subcellular_locations", record.get("key"), rid)
             self.section_items["subcellular-locations"].append(
-                {"id": rid, "name": record.get("name", ""), "ontology-id": record.get("ontology_id")}
+                {"id": rid, **self._vocabulary_fields("subcellular-location", record)}
             )
 
         self.section_items["tissues"] = []
@@ -1055,8 +1070,7 @@ class DeterministicPwmlBuilder:
             self.section_items["tissues"].append(
                 {
                     "id": rid,
-                    "name": record.get("name", ""),
-                    "ontology-id": record.get("ontology_id"),
+                    **self._vocabulary_fields("tissue", record),
                     "visualization-template-id": None,
                     "drawable-image-id": None,
                 }
