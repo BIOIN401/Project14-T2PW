@@ -131,3 +131,7 @@ Wrap long batches in `docs/pwml_recovery_sprint/evidence/bounded_run.py --heavy-
 3. **Should `<bound-visualization>` be written at all?** 60 of 60 files carry one with no `<bound-id>`; PathBank exports in `reference/` carry none (checked on 2: PW012926, PW741182).
 4. OK to commit `tools/pathwhiz_import/seed/seed_inserts.sql` (rows from your dump: template names, sizes, user ids, no personal data)? It makes the harness runnable without the 14 GB file.
 5. The harness hard-codes this machine's defaults (owner checkout path, Playwright venv). Fine for the owner's one-command use; say so if it should be made portable.
+
+## 9. Vocabulary seed (added 2026-11-11)
+
+`tools/pathwhiz_import/seed/vocab_inserts.sql` (511 KB) holds vocabulary rows (cell types and related lookup tables) taken from the owner dump with a read-only `grep` of the `INSERT INTO` lines, the same way as `seed_inserts.sql`. The dump was not loaded. It is loaded by the harness before an import so that species, cell type, location and tissue lookups resolve as in production. Not verified: that the rows cover every table the biological-state layer needs, and the effect on the 60-file error counts (to be measured by a replay, not done here).
