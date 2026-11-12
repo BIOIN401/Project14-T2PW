@@ -147,10 +147,15 @@ def _subtree_xml(root, tag):
 
 
 def test_transport_only_compound_subtrees_identical_both_modes(monkeypatch) -> None:
+    def payload():  # no transporter: a plain-protein transporter is wrapped in a complex when the flag is on (B2)
+        p = _payload()
+        p["processes"]["transports"][0]["transporters"] = []
+        return p
+
     monkeypatch.delenv("T2PW_FINAL_PAYLOAD", raising=False)
-    _, off = _build(_payload())
+    _, off = _build(payload())
     monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "1")
-    _, on = _build(_payload())
+    _, on = _build(payload())
     for tag in ("compound-locations", "transport-visualizations"):
         assert _subtree_xml(off, tag) == _subtree_xml(on, tag) != []
 
