@@ -1458,18 +1458,17 @@ def run_post_pipeline_sbml_artifacts(
         # (``raw_name``, ``synonyms``, ``db_status``) into ``final_mapped.json``.
         # An ambiguous rename or a reference the rename would break raises
         # ``PrefreezeResolutionError`` out of here, leaving the payload untouched.
-        prefreeze_resolution_report = run_prefreeze_resolution(
+        # Final payload phase 1 (D-W12): with T2PW_FINAL_PAYLOAD the database id fill runs first, so the resolver and the freeze
+        # see the filled ids; a resolver refusal caused by a fill restores the payload and re-runs it. Off: just the resolver.
+        from t2pw.service.final_payload import prefreeze_with_final_fill
+
+        prefreeze_resolution_report, final_payload_fill_report = prefreeze_with_final_fill(
             final_export_payload,
-            strict_db=bool(strict_db),
+            lambda p: run_prefreeze_resolution(p, strict_db=bool(strict_db)),
+            pathway_context,
+            state,
         )
         assert isinstance(prefreeze_resolution_report, dict)
-        # Final payload phase 1 (D-W12): flag-guarded database id fill, in place, fails open.
-        # Off by default: the helper returns {} and touches nothing. The report stays local.
-        from t2pw.service.final_payload import maybe_apply_final_id_fill
-
-        final_payload_fill_report = maybe_apply_final_id_fill(
-            final_export_payload, pathway_context, state,
-        )
         post_enrichment_runtime_schema_report = validate_runtime_payload_contract(
             final_export_payload,
             boundary="post_enrichment",

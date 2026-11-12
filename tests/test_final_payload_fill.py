@@ -25,6 +25,7 @@ from t2pw.pwml.validate import discover_structure_signature, repair_tree  # noqa
 from t2pw.pwml.writer import DeterministicPwmlBuilder  # noqa: E402
 from t2pw.service.final_payload import (  # noqa: E402
     FINAL_PAYLOAD_FILL_FIELD, apply_final_id_fill, fill_meta, final_payload_enabled, maybe_apply_final_id_fill,
+    prefreeze_with_final_fill,
 )
 
 TODAY = "2026-11-10"
@@ -112,11 +113,92 @@ def test_flag_on_wiring_helper_runs_and_never_raises(monkeypatch):
     assert rep["written"] == 0 and "ZeroDivisionError" in rep["error"]
 
 
-def test_postpipeline_seam_is_after_prefreeze_and_before_validation():
+def test_postpipeline_seam_wraps_the_resolver_and_precedes_validation():
     src = (ROOT / "src/t2pw/service/postpipeline.py").read_text(encoding="utf-8")
-    a = src.index("final_payload_fill_report = maybe_apply_final_id_fill(")
-    assert src.rindex("run_prefreeze_resolution(", 0, a) < a
+    a = src.index("prefreeze_resolution_report, final_payload_fill_report = prefreeze_with_final_fill(")
+    assert "maybe_apply_final_id_fill(" not in src  # the fill is no longer a separate step after the resolver
+    assert "run_prefreeze_resolution(p, strict_db=bool(strict_db))" in src[a:a + 400]
     assert a < src.index('boundary="post_enrichment"', a)
+
+
+def _seam_payload():
+    return {"entities": {"species": [], "subcellular_locations": [], "compounds": [{"name": "chorismate"}], "proteins": [],
+                         "protein_complexes": []}, "biological_states": [], "processes": {"reactions": []}}
+
+
+def _seam_fetcher():
+    return FakeFetcher([("ols4", {"q": "chorismate"}, ols((29748, "chorismate(2-)", ["chorismate"]))),
+                        ("/compound/29748/", None, chebi(29748, "chorismate(2-)", "C10H8O6", "WTFXTQVDAKGDEY-HTQZYQBOSA-L", "C00251", "HMDB0000975"))])
+
+
+def _seam(p, resolve, monkeypatch):
+    monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "1")
+    return prefreeze_with_final_fill(p, resolve, {"likely_organism": "Escherichia coli"}, {},
+                                     fetcher=_seam_fetcher(), cache=Cache(None), today=TODAY)
+
+
+def test_seam_fill_runs_before_the_resolver(monkeypatch):
+    seen = []
+    p = _seam_payload()
+    res, rep = _seam(p, lambda pl: seen.append(copy.deepcopy(pl["entities"]["compounds"][0])) or {"ok": 1}, monkeypatch)
+    assert res == {"ok": 1} and rep["written"] >= 1 and len(seen) == 1
+    assert seen[0]["chebi_id"] == "CHEBI:29748" and seen[0]["kegg_id"] == "C00251"  # the resolver already sees the ids
+
+
+def test_seam_resolver_error_after_a_fill_restores_the_payload_and_reruns(monkeypatch):
+    from t2pw.pwml.prefreeze_resolution import PrefreezeResolutionError
+    calls = []
+
+    def resolve(pl):
+        calls.append(copy.deepcopy(pl))
+        if "chebi_id" in pl["entities"]["compounds"][0]:
+            raise PrefreezeResolutionError("ambiguous", "two rows would get one name")
+        return {"flag_off_result": True}
+
+    p = _seam_payload()
+    before = copy.deepcopy(p)
+    res, rep = _seam(p, resolve, monkeypatch)
+    assert res == {"flag_off_result": True} and p == before and len(calls) == 2 and calls[1] == before
+    assert rep["written"] == 0 and "ambiguous" in rep["restored_after_resolver_error"]
+    assert FINAL_PAYLOAD_FILL_FIELD not in p
+
+
+def test_seam_resolver_error_without_a_fill_is_raised_as_before(monkeypatch):
+    from t2pw.pwml.prefreeze_resolution import PrefreezeResolutionError
+    calls = []
+
+    def resolve(pl):
+        calls.append(1)
+        raise PrefreezeResolutionError("ambiguous", "x")
+
+    monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "1")
+    p = {"entities": {"species": [], "compounds": [], "proteins": []}}
+    with pytest.raises(PrefreezeResolutionError):
+        prefreeze_with_final_fill(p, resolve, {}, {}, fetcher=FakeFetcher([]), cache=Cache(None), today=TODAY)
+    assert calls == [1]
+
+
+def test_seam_flag_off_is_the_resolver_alone(monkeypatch):
+    monkeypatch.delenv("T2PW_FINAL_PAYLOAD", raising=False)
+    monkeypatch.setattr("t2pw.service.final_payload.maybe_apply_final_id_fill",
+                        lambda *a, **k: (_ for _ in ()).throw(AssertionError("fill must not run")))
+    p = _seam_payload()
+    before = copy.deepcopy(p)
+    calls = []
+    res, rep = prefreeze_with_final_fill(p, lambda pl: calls.append(1) or {"r": 1}, {}, {})
+    assert (res, rep) == ({"r": 1}, {}) and calls == [1] and p == before
+
+
+def test_role_or_class_term_without_a_structure_gets_no_id():
+    role = chebi(50860, "electron acceptor", None, None, "C00001", "HMDB0000001")
+    role["default_structure"] = {}
+    p, rep = _abbrev_fill([("ols4", {"q": "electron acceptor"}, ols((50860, "electron acceptor", []))), ("/compound/50860/", None, role),
+                           ("ols4", {"q": "ATP"}, ols((15422, "ATP", []))), ("/compound/15422/", None, chebi())],
+                          ["electron acceptor", "ATP"])
+    ea = _rows(p)["electron acceptor"]
+    assert all(k not in ea for k in ID_KEYS) and _rows(p)["ATP"]["chebi_id"] == "CHEBI:15422"
+    assert rep["refused"].get("no_structure_in_chebi", 0) >= 2
+    assert {d["field"] for d in rep["refused_detail"] if d["reason"] == "no_structure_in_chebi"} >= {"chebi_id", "kegg_id"}
 
 
 def test_fill_meta_sources():

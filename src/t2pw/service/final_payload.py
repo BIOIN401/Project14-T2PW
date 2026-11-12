@@ -9,6 +9,21 @@ D-117), so those stay report suggestions. No LLM, no gene names, no reaction EC/
 Rules: an existing id is never touched; one exact label/synonym match only; an id already used by another row of the same
 list is refused; complexes, families/classes and the Unknown sentinel are skipped. Any failure leaves ``payload`` exactly as it
 was. Provenance goes under one new top-level key, ``final_payload_fill``.
+
+Order: the fill runs BEFORE the pre-freeze resolver (``prefreeze_with_final_fill``), so a filled id reaches the D-015 resolver
+(which matches by chebi/kegg id and renames, e.g. H+ -> Hydrogen Ion) and the freeze/hash sees the canonical name. If a filled id
+makes the resolver raise ``PrefreezeResolutionError``, the payload is restored in place and the resolver re-run, so a fill can
+never cause a refusal the flag-off run would not have (the title/reference key is dropped with it).
+
+Known limits: (1) the title and reference follow the payload key, not the flag, at export time (``effective_pathway_name`` and
+the IR read ``final_payload_pathway`` whenever it is present). (2) Two separate 300 s budgets, the fill and then the title
+lookup, and the throttle is per fetcher (one fetcher per call), so the worst case is about 600 s of live requests. (3) The
+``final_payload_fill`` key carries dates, so the canonical hash changes from day to day for the same run. (4) Role/class terms:
+a name that is a ChEBI role or class (``electron acceptor``, ``antioxidant``) carries no structure in ChEBI, so a chebi_id fill
+is accepted only when the same lookup also returned an InChIKey (``no_structure_in_chebi`` otherwise). That is the only signal
+available without extra requests; it also refuses the rare real molecule ChEBI holds without a structure (and any entity whose
+details lookup failed), which stays a suggestion-free miss, never a wrong id. (5) A bare PMID/PMCID/DOI in the paper id is read
+as an id, but a reference is written only when the NCBI lookup confirmed that paper.
 """
 
 from __future__ import annotations
@@ -97,6 +112,11 @@ def _plan(payload: Dict[str, Any], items: List[Dict[str, Any]], report: Dict[str
     # Exactly "exact_synonym": exact_label and the charged_form fills (NAD+) were all correct.
     abbreviation = {(i["kind"], i["entity"]) for i in items if i.get("kind") == "compound" and i.get("field") == "chebi_id"
                     and (i.get("prov") or {}).get("match_type") == "exact_synonym" and _short_abbreviation(i.get("entity"))}
+    # F4: a chebi_id found by name whose details lookup returned no InChIKey is a ChEBI role or class (no structure): refuse it
+    # and every cross-reference derived from it.
+    structured = {(i["kind"], i["entity"]) for i in items if i.get("field") == "inchikey" and i.get("value")}
+    by_name = {(i["kind"], i["entity"]) for i in items if i.get("kind") == "compound" and i.get("field") == "chebi_id"
+               and str((i.get("prov") or {}).get("match_type") or "").startswith("exact_")}
     for key, its in groups.items():
         kind, name, fld = key
         if (kind, name) in abbreviation:
@@ -115,6 +135,8 @@ def _plan(payload: Dict[str, Any], items: List[Dict[str, Any]], report: Dict[str
         mapped = row.get("mapped_ids") if isinstance(row.get("mapped_ids"), dict) else {}
         if kind == "compound" and _NOT_A_MOLECULE.search(name):
             refuse("not_a_single_molecule", key)
+        elif (kind, name) in by_name and (kind, name) not in structured:
+            refuse("no_structure_in_chebi", key)
         elif not _empty(row.get(fld)) or (isinstance(row.get("db_row"), dict) and not _empty(row["db_row"].get(fld))):
             refuse("slot_filled", key)
         elif any(not _empty(mapped.get(a)) for a in _TARGETS[kind][1][fld]):
@@ -191,6 +213,27 @@ def maybe_apply_final_id_fill(payload: Dict[str, Any], pathway_context: Any = No
         return {"enabled": True, "written": 0, "error": f"{type(exc).__name__}: {exc}"}
 
 
+def prefreeze_with_final_fill(payload: Dict[str, Any], resolve: Any, pathway_context: Any = None, state: Any = None,
+                              **kw: Any) -> tuple:
+    """The postpipeline seam: (``resolve(payload)``, fill report). Flag off: exactly ``resolve(payload)`` and {}.
+    Flag on: fill first, then the resolver; a ``PrefreezeResolutionError`` after a fill restores ``payload`` in place and
+    re-runs the resolver on it, as the flag-off run would."""
+    if not final_payload_enabled():
+        return resolve(payload), {}
+    snapshot = copy.deepcopy(payload)
+    report = maybe_apply_final_id_fill(payload, pathway_context, state, **kw)
+    if payload == snapshot:
+        return resolve(payload), report
+    from t2pw.pwml.prefreeze_resolution import PrefreezeResolutionError
+    try:
+        return resolve(payload), report
+    except PrefreezeResolutionError as exc:
+        payload.clear()
+        payload.update(snapshot)
+        report.update(written=0, restored_after_resolver_error=f"{type(exc).__name__}: {exc}")
+        return resolve(payload), report
+
+
 # ---- pathway title and reference (D-W12: the PWML carries the paper title and one reference) -------------------------
 
 FINAL_PAYLOAD_PATHWAY_FIELD = "final_payload_pathway"
@@ -223,7 +266,7 @@ def apply_final_pathway_meta(payload: Dict[str, Any], meta: Optional[Dict[str, A
                              pathway_name: Optional[str] = None) -> Dict[str, Any]:
     """Set ``payload["final_payload_pathway"]`` (title, pmid, pmcid, doi, year, authors, each with provenance, plus the one
     ``reference``). Paper mode (a pmid/pmcid/doi is known): the title comes from NCBI esummary through the fill layer, else
-    ``meta["title"]``, else the pathway name. Name mode: the pathway name. Nothing is invented; with no text the key is not
+    ``meta["title"]``, else the pathway name; the reference only when NCBI confirmed the paper. Name mode: the pathway name. Nothing is invented; with no text the key is not
     written. Fails open: on any error the payload is exactly what it was."""
     report: Dict[str, Any] = {"enabled": True, "written": False, "title_source": None, "error": None}
     snapshot = copy.deepcopy(payload)
@@ -251,7 +294,7 @@ def apply_final_pathway_meta(payload: Dict[str, Any], meta: Optional[Dict[str, A
                     b["title"] = {"value": " ".join(txt.split()), "source": src, "match_type": "given", "retrieved": None}
                     break
         if "title" in b:
-            if any(k in b for k in ("pmid", "pmcid", "doi")):
+            if b["title"]["source"] == "NCBI" and any(k in b for k in ("pmid", "pmcid", "doi")):  # only a confirmed paper
                 b["reference"] = {"pubmed_id": b["pmid"]["value"] if "pmid" in b else None, "text": _citation(b)}
             payload[FINAL_PAYLOAD_PATHWAY_FIELD] = b
             report.update(written=True, title_source=b["title"]["source"], has_reference="reference" in b)
@@ -291,13 +334,17 @@ def effective_pathway_name(payload: Any, name: str) -> str:
 
 
 def paper_meta_from_paper(paper: Any) -> Dict[str, str]:
-    """pmid/pmcid/doi/title/year from a batch/service paper object or dict; ``paper_id`` is read as an id only when it looks like one."""
+    """pmid/pmcid/doi/title/year from a batch/service paper object or dict. ``paper_id`` is read as an id only when it looks
+    like one; a web id ``web:PMID123+text1+x.pdf`` is split on ``+`` and each kind is taken only when exactly one was submitted."""
     def get(n: str) -> str:
         v = paper.get(n) if isinstance(paper, dict) else getattr(paper, n, None)
         return str(v).strip() if v not in (None, "") else ""
     out = {k: get(k) for k in ("pmid", "pmcid", "doi", "title", "year")}
     pid = get("paper_id")
-    for k, rx in (("pmcid", r"PMC\d+"), ("pmid", r"\d+"), ("doi", r"10\.\S+")):
-        if pid and not out[k] and re.fullmatch(rx, pid, re.I):
-            out[k] = pid
+    web = pid.startswith("web:")
+    toks = [t for t in pid[4:].split("+") if t] if web else [pid]
+    for k, rx in (("pmcid", r"PMC\d+"), ("pmid", r"PMID\d+" if web else r"(?:PMID)?\d+"), ("doi", r"10\.\S+")):
+        hits = {re.sub(r"(?i)^pmid", "", t) if k == "pmid" else t for t in toks if re.fullmatch(rx, t, re.I)}
+        if len(hits) == 1 and not out[k]:
+            out[k] = hits.pop()
     return {k: v for k, v in out.items() if v}

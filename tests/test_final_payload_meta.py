@@ -80,9 +80,10 @@ def test_lookup_failure_falls_back_to_meta_title_then_pathway_name_then_nothing(
     p = _p()
     _apply(p, {"pmid": "555", "title": "Given title"}, routes=[])  # esummary answers nothing
     assert p[KEY]["title"]["value"] == "Given title" and p[KEY]["title"]["source"] == "paper metadata"
-    assert p[KEY]["reference"]["pubmed_id"] == "555"
+    assert "reference" not in p[KEY]  # F3: the id was not confirmed by NCBI, so no reference
     p = _p()
     _apply(p, {"pmid": "555"}, routes=[("esummary", None, FetchError("down"))], pathway_name="The pathway")
+    assert "reference" not in p[KEY]
     assert p[KEY]["title"]["source"] == "pathway name"
     p, before = _p(), copy.deepcopy(_p())
     rep = _apply(p, {"pmid": "555"}, routes=[("esummary", None, FetchError("down"))])
@@ -184,6 +185,27 @@ def test_paper_meta_from_paper():
     assert paper_meta_from_paper(SimpleNamespace(paper_id="31415", pmcid="")) == {"pmid": "31415"}
     assert paper_meta_from_paper(SimpleNamespace(paper_id="some-slug", title="")) == {}
     assert paper_meta_from_paper(None) == {}
+
+
+def test_paper_meta_from_web_paper_id():
+    f = paper_meta_from_paper
+    assert f({"paper_id": "web:PMID12345678"}) == {"pmid": "12345678"}
+    assert f({"paper_id": "web:text1+PMID42+scan.pdf"}) == {"pmid": "42"}
+    assert f({"paper_id": "web:PMID1+PMID2"}) == {}  # two PMIDs: no single paper
+    assert f({"paper_id": "web:PMC777"}) == {"pmcid": "PMC777"}
+    assert f({"paper_id": "web:10.1000/xyz"}) == {"doi": "10.1000/xyz"}
+    assert f({"paper_id": "web:text1+notes.pdf"}) == {}
+    assert f({"paper_id": "web:12345"}) == {}  # a bare number in a web id is not a PMID
+    assert f({"paper_id": "PMID99"}) == {"pmid": "99"}
+
+
+def test_unconfirmed_pmid_gives_no_reference_and_a_confirmed_one_does():
+    p = _p()
+    _apply(p, {"pmid": "12345"}, routes=[("esummary", None, FetchError("down"))], pathway_name="N")
+    assert "reference" not in p[KEY] and p[KEY]["title"]["source"] == "pathway name"
+    p = _p()
+    _apply(p, {"pmid": "555"})
+    assert p[KEY]["reference"]["pubmed_id"] == "555"
 
 
 def test_key_survives_freeze_and_quarantine(tmp_path):
