@@ -31,6 +31,19 @@ namespace :pwml do
     c.execute('SET FOREIGN_KEY_CHECKS=1')
     left = pwml_counts.select { |_, n| n > 0 }.keys
     raise "DB not clean after reset: #{left.inspect}" unless left.empty?
+    pwml_seed_vocab!
+  end
+
+  # Vocabulary rows the production DB already has (cell_types, species, subcellular_locations, tissues,
+  # protein 9659 'Unknown'), copied from the dump by grep. Re-inserted after every truncation so each
+  # file sees them and `before` counts include them (created counts = rows the importer added).
+  def pwml_seed_vocab!
+    f = File.join(File.dirname(__FILE__), 'pwml_vocab_seed.sql')
+    return unless File.exist?(f)
+    c = ActiveRecord::Base.connection
+    c.execute('SET FOREIGN_KEY_CHECKS=0')
+    File.foreach(f) { |l| c.execute(l.strip) unless l.strip.empty? }
+    c.execute('SET FOREIGN_KEY_CHECKS=1')
   end
 
   def pwml_plain(v)

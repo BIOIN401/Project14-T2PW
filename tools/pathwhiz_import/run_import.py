@@ -65,6 +65,7 @@ def ensure_config(work):
     if not os.path.exists(m):
         shutil.copy(os.path.join(work, "config", "moldb.yml.sample"), m)
     shutil.copy(os.path.join(HERE, "pwml_import.rake"), os.path.join(work, "lib", "tasks", "pwml_import.rake"))
+    shutil.copy(os.path.join(HERE, "seed", "vocab_inserts.sql"), os.path.join(work, "lib", "tasks", "pwml_vocab_seed.sql"))  # re-seeded by the rake after every reset
 
 
 def ensure_images_and_volume():
