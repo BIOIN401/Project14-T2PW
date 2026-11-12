@@ -271,3 +271,59 @@ def test_plain_protein_transporter_unchanged_flag_off(flag_off) -> None:
     assert root.findall(".//protein-complexes/protein-complex") == []
     tv = root.find(".//transport_transporter_visualizations/transport-transporter-visualization")
     assert tv.find("protein-location-id") is not None and tv.find("protein-complex-visualization-id") is None
+
+
+# --- B1 minors, B3 nucleic-acid type ---------------------------------------------------------------------------------
+
+def _build_mutated(payload: dict, mutate):
+    import t2pw.pwml.writer as w
+    orig = w.DeterministicPwmlBuilder.__init__
+
+    def init(self, extraction, *a, **k):
+        mutate(extraction)
+        orig(self, extraction, *a, **k)
+    return init
+
+
+def test_nameless_transporter_complex_falls_back_to_entity_key_flag_on(flag_on, monkeypatch) -> None:
+    def blank(ir):
+        for p in ir["entities"]["proteins"]:
+            p["name"] = ""
+    monkeypatch.setattr(DeterministicPwmlBuilder, "__init__", _build_mutated(None, blank))
+    _, root = _build(_payload())
+    name = root.find(".//protein-complexes/protein-complex/name").text
+    assert name.strip() != "complex" and name.endswith(" complex") and name != " complex"
+
+
+def test_synth_complex_id_avoids_explicit_complex_id_flag_on(flag_on) -> None:
+    payload = _payload()
+    payload["entities"]["protein_complexes"] = [
+        {"name": "Cx", "pathbank_protein_complex_id": 40000, "components": [{"name": "GLUT1"}]}]
+    _, root = _build(payload)
+    ids = _ids(root, ".//protein-complexes/protein-complex/id")
+    assert len(ids) == 2 and len(set(ids)) == 2 and 40000 in ids
+
+
+def _na_payload() -> dict:
+    p = _payload()
+    names = ["ent mRNA", "RyhB", "ALAD1/HEMB1", "DNA polymerase", "tRNA-Leu", "rpoS gene"]
+    p["entities"]["nucleic_acids"] = [{"name": n, "pathbank_nucleic_acid_id": 500 + i} for i, n in enumerate(names)]
+    return p
+
+
+def _na_types(root) -> dict:
+    return {n.findtext("name"): (n.findtext("nucleotide-type") or "") for n in root.findall(".//nucleic-acids/nucleic-acid")}
+
+
+def test_nucleotide_type_set_only_when_unambiguous_flag_on(flag_on) -> None:
+    builder, root = _build(_na_payload())
+    types = _na_types(root)
+    assert types["ent mRNA"] == "RNA" and types["tRNA-Leu"] == "RNA" and types["rpoS gene"] == "DNA"
+    assert types["RyhB"] == "" and types["ALAD1/HEMB1"] == "" and types["DNA polymerase"] == ""
+    assert builder.layout_debug_counts["nucleic_acids_type_unset"] == 3
+
+
+def test_nucleotide_type_untouched_flag_off(flag_off) -> None:
+    builder, root = _build(_na_payload())
+    assert set(_na_types(root).values()) == {""}
+    assert "nucleic_acids_type_unset" not in builder.layout_debug_counts

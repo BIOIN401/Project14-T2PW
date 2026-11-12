@@ -716,6 +716,26 @@ def _serpentine_reaction_position(
     }
 
 
+_RNA_TOKENS = {"rna", "mrna", "mirna", "rrna", "trna", "srna", "sirna", "ncrna", "lncrna", "snrna", "snorna"}
+_DNA_TOKENS = {"dna", "gene", "genes", "cdna", "gdna"}
+_PROTEIN_TOKENS = {"protein", "proteins", "factor", "complex", "enzyme", "receptor", "binding", "product", "subunit"}
+
+
+def nucleotide_type_for(record: Dict[str, Any]) -> Optional[str]:
+    """DNA or RNA only when kind/name make it unambiguous, else None (final payload, B3)."""
+    texts = [str(record.get(k) or "") for k in ("class", "kind", "type", "nucleotide_type", "name")]
+    found: set[str] = set()
+    for text in texts:
+        for tok in re.split(r"[^a-z0-9]+", text.casefold()):
+            if tok in _PROTEIN_TOKENS or (tok.endswith("ase") and len(tok) > 4):
+                return None  # e.g. 'DNA polymerase' is a protein
+            if tok in _RNA_TOKENS:
+                found.add("RNA")
+            elif tok in _DNA_TOKENS:
+                found.add("DNA")
+    return found.pop() if len(found) == 1 else None
+
+
 @dataclass
 class IdFactory:
     value: int = 1
@@ -1180,9 +1200,16 @@ class DeterministicPwmlBuilder:
                 "type": "NucleicAcid",
                 "entity_type": "nucleic_acid",
             }
-            self.section_items["nucleic-acids"].append(
-                {"id": rid, "name": record.get("name", ""), "element-states": []}
-            )
+            na_item: Dict[str, Any] = {"id": rid, "name": record.get("name", ""), "element-states": []}
+            if final_payload_enabled():
+                na_type = nucleotide_type_for(record)
+                if na_type:
+                    na_item["nucleotide-type"] = na_type
+                else:
+                    self.layout_debug_counts["nucleic_acids_type_unset"] = (
+                        self.layout_debug_counts.get("nucleic_acids_type_unset", 0) + 1
+                    )
+            self.section_items["nucleic-acids"].append(na_item)
 
         default_species_id = self._ir_pathway_species_id
 
@@ -1441,13 +1468,19 @@ class DeterministicPwmlBuilder:
                     # complex (nothing else is added); its visualization is made with the transport viz.
                     cid = synth_complex_by_protein.get(str(member.get("entity_key")))
                     if cid is None:
+                        # Skip ids already taken by explicit complexes (pathwhiz_id may be >= 40000).
+                        from t2pw.mapping.map_ids import _wrapper_complex_name  # lazy: heavy module, flag-on only
+                        taken = {c.get("id") for c in self.section_items["protein-complexes"]}
                         cid = self.complex_ids.next()
+                        while cid in taken:
+                            cid = self.complex_ids.next()
                         synth_complex_by_protein[str(member.get("entity_key"))] = cid
                         pname = str(raw_entity_by_key.get(str(member.get("entity_key")), {}).get("name") or "").strip()
+                        pname = pname or str(member.get("entity_key") or "")
                         self.section_items["protein-complexes"].append(
                             {
                                 "id": cid,
-                                "name": pname if pname.casefold().endswith(" complex") else f"{pname} complex",
+                                "name": _wrapper_complex_name(pname),
                                 "species-id": default_species_id,
                                 "pwp-id": f"PW_P{cid:06d}",
                                 "protein_complex-proteins": [
