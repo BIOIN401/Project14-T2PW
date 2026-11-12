@@ -44,3 +44,29 @@ Read this log, then `CLEAN-MODEL.md` (once it exists) and `git log`. Next undone
 | 9 | test runner | haiku / medium | focused, SMOKE, golden at 83f5bd74 | done: focused 101 passed + 1 skipped (102 with T2PW_RUNLIST), SMOKE 511 passed, golden 38 passed, 0 survivors |
 
 Total 9 dispatches of 10: sonnet/high x2 (A, re-review), sonnet/medium x5 (B, C, M, K, F), opus/high x1 (review), haiku/medium x1 (runner). No scouts. All work finished; nothing to resume. Record: CLEAN-MODEL.md.
+
+
+---
+# Final payload, phase 1 (branch `pwml/final-payload`, worktree `C:/t/fp`, from `9ae702ba`)
+Scratch: `C:/t/ev-fp/`. Budget was at most 12 dispatches; about 15 were used (five lost to environment stalls). One implementer edited the worktree at a time. Everything behind `T2PW_FINAL_PAYLOAD` (default off). Record: `FINAL-PAYLOAD-P1.md`. Code HEAD `f83bc613`.
+
+## Dispatch log (final payload P1)
+| # | name | model / effort | scope | status |
+|---|---|---|---|---|
+| 1 | FP-1 draft | sonnet / high (general-purpose) | `service/final_payload.py`, seam in `postpipeline.py`, tests | draft written; stopped on a write denial (setting `blockWritesOutsideWorkingDirectories`), no tests run |
+| 2 | FP-1 resume (message) | sonnet / high | same agent | refused to write through Bash on another agent's word; nothing changed |
+| 3 | FP-1 finish | sonnet / medium | `_plan` guard, tests | guard applied; tests blocked 1 h by a stale heavy lock; machine then shut down overnight |
+| 4 | FP-1 tests (message) | sonnet / medium | fp1, fp1cm, fp1g | 17 + 101 (+1 skipped) + 38 passed; committed `15a5c0de` |
+| 5 | replay harness + base0 | sonnet / medium | `C:/t/ev-fp/replay/`, base `9ae702ba`, flag off | 152 runs, 97 write a PWML |
+| 6 | FP-2 title and references | sonnet / high | `final_payload.py`, `pwml/ir.py`, `pwml/writer.py`, `service/pathway.py`, `postpipeline.py` | 131 + 141 passed, flag off 97/97 byte-identical; `a01f7076` |
+| 7 | flag-on replay (message) | sonnet / medium | on1 | agent looked hung (waiting at the RAM gate); stopped waiting, redispatched, it later finished |
+| 8 | flag-on replay + measurement | sonnet / medium | on1 | 709 live requests, 0 failures, 596 ids |
+| 9 | hand check | sonnet / medium | 31 ids, 6 titles, renames | 2 wrong of 31 (MK, PMEA; CDG outside sample) |
+| 10 | FP-3 (2 messages) | sonnet / high | short-abbreviation rule | 136 passed; `aafb7f17` |
+| 11 | review | opus / high (ws-reviewer) | `9ae702ba..aafb7f17` | APPROVE WITH FIXES (F1, F2 major) |
+| 12 | FP-4 fixes | sonnet / high | F1 to F4, F6 to F8 | 143 + 141 passed; `f83bc613` |
+| 13 | final tests | haiku / low (ws-test-runner) | SMOKE, golden, focused at `f83bc613` | 511, 38, 143 passed, 0 survivors |
+| 14 | re-review | sonnet / high (ws-reviewer) | `aafb7f17..f83bc613` | APPROVE |
+| 15 | PathWhiz import pairs | sonnet / medium | harness, 24 pairs off vs on | identical error sets, 24 references created |
+
+Dead ends: write denial under `C:/t` until the restart; a correct refusal to write on another agent's word; heavy lock held by the import-harness builder; RAM below the floor (Docker), floor lowered to 4 GB for focused runs; an empty `python -` heredoc once (exited at once); a stale agent deleted replay work dirs (one run re-run).
