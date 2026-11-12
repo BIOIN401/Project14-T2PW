@@ -18,6 +18,7 @@ from t2pw.pipeline.process_normalizer import normalize_process_payload
 from t2pw.pwml.compound_templates import TEMPLATE_DIMS, select_compound_template_id
 from t2pw.pwml.ir import build_pwml_ir, is_pwml_ir, validate_pwml_ir
 from t2pw.pwml.qa import run_pwml_qa
+from t2pw.service.final_payload import final_payload_enabled
 from t2pw.pwml.validate import (
     SectionSignature,
     StructureSignature,
@@ -1372,7 +1373,7 @@ class DeterministicPwmlBuilder:
             reactions.append(
                 {
                     "id": rid,
-                    "spontaneous": bool(reaction.get("spontaneous", False)),
+                    "spontaneous": (True if reaction.get("spontaneous") else None) if final_payload_enabled() else bool(reaction.get("spontaneous", False)),
                     "pwr-id": f"PW_R{rid:06d}",
                     "direction": direction_for(reaction.get("direction")),
                     "reaction-left-elements": left,
@@ -1551,6 +1552,12 @@ class DeterministicPwmlBuilder:
                     info = entity_info(entity_key)
                     if info and info.get("entity_type") == "compound":
                         reaction_compound_entity_keys.add(entity_key)
+        if final_payload_enabled():
+            # Transport visualizations point at the base compound location, so keep it for transport members too.
+            for transport in process_items.get("transports", []) if isinstance(process_items.get("transports"), list) else []:
+                for member in (transport.get("transport_elements") or []) if isinstance(transport, dict) else []:
+                    if isinstance(member, dict):
+                        reaction_compound_entity_keys.discard(str(member.get("entity_key") or ""))
         total_compound_count = len(self.section_items.get("compounds", []))
         grid_placed_compound_count = 0
         skipped_base_location_by_id: Dict[int, Dict[str, Any]] = {}
@@ -1805,6 +1812,9 @@ class DeterministicPwmlBuilder:
                     bound["width"] = str(region["w"])
                     bound["height"] = str(region["h"])
                 break
+        if final_payload_enabled():
+            # PathWhiz cannot import the empty-section bound visualizations; the regions above are already computed.
+            self.section_items["bound-visualizations"] = []
 
         def ir_region_for_state(state_key: str) -> Dict[str, int]:
             return state_region_by_key.get(
