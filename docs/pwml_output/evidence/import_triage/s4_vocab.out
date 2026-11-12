@@ -1,0 +1,55 @@
+{'cell_types': 43, 'species': 4016, 'subcellular_locations': 77, 'tissues': 53}
+('cell-type', 'nil_onto', 'hit') 1
+('cell-type', 'nil_onto', 'miss') 16
+('species', 'tax_in_db', 'class_blank') 20
+('species', 'tax_in_db', 'class_set') 57
+('species', 'tax_not_in_db', 'class_set') 8
+('subcellular-location', 'has_onto', 'miss') 59
+('subcellular-location', 'nil_onto', 'hit') 89
+('subcellular-location', 'nil_onto', 'miss') 32
+('tissue', 'nil_onto', 'hit') 4
+('tissue', 'nil_onto', 'miss') 9
+files with >=1 vocabulary miss in production: 59 of 60
+--- top misses (tag,name,onto) count
+59 ('subcellular-location', 'cell', 'GO:0005623')
+9 ('subcellular-location', 'extracellular', '')
+3 ('subcellular-location', 'mitochondria', '')
+3 ('cell-type', 'MG-63', '')
+3 ('cell-type', 'Saos-2', '')
+2 ('subcellular-location', 'apical membrane', '')
+2 ('subcellular-location', 'synaptic vesicle', '')
+2 ('subcellular-location', 'saliva', '')
+1 ('subcellular-location', 'synaptic cleft', '')
+1 ('subcellular-location', 'postsynaptic membrane', '')
+1 ('cell-type', 'Type III cell', '')
+1 ('cell-type', 'Type II cell', '')
+1 ('cell-type', 'Type III taste cell', '')
+1 ('cell-type', 'geniculate ganglion neuron', '')
+1 ('subcellular-location', 'plasma membrane', '')
+1 ('subcellular-location', 'ER', '')
+1 ('subcellular-location', 'thylakoid membrane', '')
+1 ('subcellular-location', 'stroma', '')
+1 ('subcellular-location', 'etioplast', '')
+1 ('tissue', 'root', '')
+1 ('tissue', 'cotyledon', '')
+1 ('tissue', 'hypocotyl', '')
+1 ('subcellular-location', 'apical', '')
+1 ('subcellular-location', 'synaptic vesicles', '')
+1 ('cell-type', 'Type III cells', '')
+1 ('tissue', 'taste buds', '')
+1 ('species', 'Paris polyphylla', '49666')
+1 ('species', 'Paris polyphylla var. yunnanensis', '221260')
+1 ('cell-type', 'astrocytes', '')
+1 ('cell-type', 'neurons', '')
+1 ('tissue', 'central nervous system', '')
+1 ('cell-type', 'erythroid cells', '')
+1 ('tissue', 'bone marrow', '')
+1 ('cell-type', 'erythroid', '')
+1 ('subcellular-location', 'cytoplasmic leaflet of the IM', '')
+1 ('subcellular-location', 'periplasmic leaflet of the IM', '')
+1 ('cell-type', 'Leydig cells', '')
+1 ('subcellular-location', 'microsomal fraction', '')
+1 ('subcellular-location', 'endoplasmic_reticulum', '')
+1 ('species', 'Apium graveolens', '4045')
+files with >=1 nil-ontology name absent from production vocabulary: 28 of 60
+distinct absent names: 40
