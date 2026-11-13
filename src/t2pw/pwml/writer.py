@@ -782,6 +782,7 @@ class DeterministicPwmlBuilder:
             "shared_intermediates_skipped_cofactor": 0,
             "shared_intermediate_locations_reused": 0,
         }
+        self._last_vocabulary_outcome = ""
         self.vocabulary_outcomes: List[Dict[str, Any]] = []  # final payload only: non-exact vocabulary names
         self.layout_debug_stacks: List[Dict[str, Any]] = []
         self.layout_debug_shared_intermediates: List[Dict[str, Any]] = []
@@ -802,6 +803,7 @@ class DeterministicPwmlBuilder:
         name, onto = record.get("name", ""), record.get("ontology_id")
         if final_payload_enabled():
             new_name, onto, outcome = map_vocabulary_name(kind, name, onto)
+            self._last_vocabulary_outcome = outcome
             key = f"vocabulary_{outcome}"
             self.layout_debug_counts[key] = self.layout_debug_counts.get(key, 0) + 1
             if outcome != "exact":
@@ -1058,10 +1060,15 @@ class DeterministicPwmlBuilder:
                 ["pathwhiz_id", "pathbank_subcellular_location_id", "pw_subcellular_location_id"],
                 self.ids,
             )
+            fields = self._vocabulary_fields("subcellular-location", record)
+            if final_payload_enabled() and self._last_vocabulary_outcome == "unmapped":
+                # D-W20a: PathWhiz needs name + ontology id to create a location row. With no id the item is dropped; it is not
+                # remembered, so a biological state that named it is written without subcellular-location-id (a state needs
+                # only one component, and the importer skips an empty id). Other formats keep the name.
+                self.layout_debug_counts["locations_dropped_no_id"] = self.layout_debug_counts.get("locations_dropped_no_id", 0) + 1
+                continue
             remember("subcellular_locations", record.get("key"), rid)
-            self.section_items["subcellular-locations"].append(
-                {"id": rid, **self._vocabulary_fields("subcellular-location", record)}
-            )
+            self.section_items["subcellular-locations"].append({"id": rid, **fields})
 
         self.section_items["tissues"] = []
         for record in ir.get("tissues", []) if isinstance(ir.get("tissues"), list) else []:

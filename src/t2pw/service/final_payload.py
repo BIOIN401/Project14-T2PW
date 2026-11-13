@@ -165,18 +165,26 @@ def apply_final_id_fill(payload: Dict[str, Any], meta: Optional[Dict[str, Any]] 
         from t2pw.clean_model.fill import fill_model
 
         today = today or datetime.date.today().isoformat()
+        fetcher = fetcher or _live_fetcher()
+        # D-W20a: ontology ids for location / cell-type / tissue names, first (few requests) so a spent budget costs compound fills
+        from t2pw.service.final_payload_ontology import fill_ontology_ids
+        onto = fill_ontology_ids(payload, fetcher, cache, today)
+        report["ontology"] = {k: onto[k] for k in ("counts", "refused", "requests", "cache_hits")}
+        for e in onto["entries"]:
+            report["by_field"]["%s.%s" % (e["kind"], e["field"])] = report["by_field"].get("%s.%s" % (e["kind"], e["field"]), 0) + 1
         model = build_from_payload(payload, dict(meta or {}))
-        rep = fill_model(model, fetcher=fetcher or _live_fetcher(), cache=cache, today=today, sources=("chebi", "uniprot", "ncbi"))
+        rep = fill_model(model, fetcher=fetcher, cache=cache, today=today, sources=("chebi", "uniprot", "ncbi"))
         report["fill"] = rep.to_dict()
         report["suggestions"] = copy.deepcopy(model.db_layer.get("suggestions") or [])
         writes = _plan(payload, model.db_layer.get("items") or [], report)
         for w in writes:
             w["row"][w["field"]] = w["value"]
             report["by_field"][w["entry"]["kind"] + "." + w["field"]] = report["by_field"].get(w["entry"]["kind"] + "." + w["field"], 0) + 1
-        if writes:
-            payload[FINAL_PAYLOAD_FILL_FIELD] = {"schema": 1, "date": today, "written": len(writes),
-                                                 "by_field": dict(report["by_field"]), "entries": [w["entry"] for w in writes]}
-        report["written"] = len(writes)
+        entries = onto["entries"] + [w["entry"] for w in writes]
+        if entries:
+            payload[FINAL_PAYLOAD_FILL_FIELD] = {"schema": 1, "date": today, "written": len(entries),
+                                                 "by_field": dict(report["by_field"]), "entries": entries}
+        report["written"] = len(entries)
     except Exception as exc:  # fail open: the payload is exactly what it was
         payload.clear()
         payload.update(snapshot)

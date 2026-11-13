@@ -89,8 +89,9 @@ def test_flag_on_maps_counts_and_keeps_ontology_id(monkeypatch) -> None:
     monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "1")
     builder, root = _build()
     got = _names(root)
-    assert got["subcellular-location"] == {"Endoplasmic Reticulum": None, "cytosol": None, "thylakoid membrane": None,
-                                           "cell": "GO:0005623"}
+    # D-W20a: "thylakoid membrane" has no row and no ontology id, so the PWML drops it (counted in locations_dropped_no_id)
+    assert got["subcellular-location"] == {"Endoplasmic Reticulum": None, "cytosol": None, "cell": "GO:0005623"}
+    assert builder.layout_debug_counts["locations_dropped_no_id"] == 1
     assert set(got["cell-type"]) == {"Neuron", "MG-63"} and set(got["tissue"]) == {"Taste Bud"}
     counts = {k: v for k, v in builder.layout_debug_counts.items() if k.startswith("vocabulary_")}
     assert counts == {"vocabulary_mapped": 3, "vocabulary_exact": 1, "vocabulary_unmapped": 2, "vocabulary_new_row": 1}

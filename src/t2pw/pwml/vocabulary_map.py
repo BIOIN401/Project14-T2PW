@@ -6,6 +6,8 @@ one is written); a miss creates a row and a row needs an ontology id, so a name 
 * ``exact``   the name is already a PathWhiz row (case-insensitive, as MySQL compares): written unchanged.
 * ``mapped``  a reviewed synonym below names the same entity as an existing row: the row's name is written and the ontology id
               is left out, so the importer finds the row by name alone (the same way the 89 existing hits are found).
+* ``mapped_by_id`` the data carries an ontology id (looked up online, D-W20a) that PathWhiz already holds under another name: the
+              row's name is written without the id (a second row with that id would fail the unique-id validation).
 * ``new_row`` / ``unmapped``  no row fits: the name is left unchanged; ``new_row`` when the data already carries an ontology id
               (PathWhiz can create the row), ``unmapped`` when it does not. No id is ever invented.
 
@@ -230,6 +232,7 @@ SYNONYMS: Dict[str, Dict[str, str]] = {
 # synaptic vesicle / cleft (Synapse is wider), IM leaflets (Inner Membrane is the whole membrane), cell lines MG-63 and Saos-2.
 
 _ROW_KEYS: Dict[str, Dict[str, str]] = {k: {n.casefold(): n for n in rows} for k, rows in PATHWHIZ_ROWS.items()}
+_ROW_BY_ID: Dict[str, Dict[str, str]] = {k: {v: n for n, v in rows.items()} for k, rows in PATHWHIZ_ROWS.items()}
 
 
 def map_vocabulary_name(kind: str, name: Any, ontology_id: Any) -> Tuple[str, Optional[str], str]:
@@ -244,4 +247,6 @@ def map_vocabulary_name(kind: str, name: Any, ontology_id: Any) -> Tuple[str, Op
     target = SYNONYMS[kind].get(key)
     if target is not None and onto in (None, PATHWHIZ_ROWS[kind][target]):
         return target, None, "mapped"  # an id that disagrees with the row means the entity is not the same: leave it
+    if onto in _ROW_BY_ID[kind]:  # an id found online that PathWhiz already holds under another name: same term, use its row
+        return _ROW_BY_ID[kind][onto], None, "mapped_by_id"
     return name, ontology_id, "new_row" if onto else "unmapped"
