@@ -141,3 +141,17 @@ then just disclose this in the text version / [transport bug] 1. Fix this but al
 it in our docs / 2. we should try to find these enzymes and then yeah mark them as unknown because
 they may truly be unknown but we need to check other papers for it firdst using rag or whayveer
 metho works the btest / 3. match the pathwhiz format".
+
+**D-W20 · 2026-11-12 — Unmatched locations, same-state transports, nucleic-acid type, keys for
+live runs** (answers `FINAL-PAYLOAD-P3.md` open questions on `pwml/final-payload`). (a) Location,
+cell-type and tissue names PathWhiz lacks: look up their ontology ids online and keep them in the
+final payload; a location still unresolved is dropped only when converting the final payload to a
+format that needs the id (e.g. PWML), not from the payload itself. (b) Transports whose start and
+end state are the same: fix at the cause (the state filler in the pipeline) and test it; this is an
+authorised pipeline change. (c) DNA/RNA type of a nucleic acid that the name does not settle: try to
+fill it from the paper first; the fallback is decided after seeing how far that gets. (d) The `.env`
+keys may be copied into a work tree for live runs, and the copy must be deleted and cleaned up
+afterwards. PO, verbatim: "1. yes look up and then drop location after converting from final
+payload to the specific file type / 2. yeah lets fix and test / 3. im not sure is there anyway to
+fill this in from the paper? lets start with this / and yeah bro u can move the .env keys but you
+have to delete this and clean it up".
