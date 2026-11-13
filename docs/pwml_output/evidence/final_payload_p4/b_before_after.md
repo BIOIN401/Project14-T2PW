@@ -34,3 +34,8 @@ Both new values are states the row declared itself in `elements_with_states` (si
 - All 39 other test files that mention process_normalizer / ensure_autostates: 1081 passed, 8 skipped, 1 failed: `test_rag_seed_entity_reimport.py::test_the_orchestrator_passes_the_merge_base_to_conform`. It is an AST check of `streamlit_app.py` source (untouched by this commit); not caused by this change, but not re-run on f66b3ef2 to prove it was already failing.
 - SMOKE not run (separate dispatch).
 Reports: `tests_final/b_new.*`, `tests_final/b_rest.*`.
+
+## Fix round (after the opus review of HEAD cdcac27a)
+`_declared_side_state` now compares the declared state names with `_normalize` (was case-sensitive `_canonical`, so `Cytosol` and `cytosol` on one side disagreed and fell back to the placeholder), and `ensure_autostates` keeps `__auto_state__` for a side whose declared state equals the state the other side ends up with (it would create a new left == right transport). New tests in `tests/test_process_normalizer_transport_states.py`: equal-sides case, and case-insensitive agreement.
+
+Re-run of `b_before_after.py` on the working tree (243 stored merged payloads, old = f66b3ef2): **unchanged**. 243 compared / 0 errors, 2 runs changed, the same 2 transports (OTOP1-mediated H+ permeation: `__auto_state__` / `Type III taste cell state`; enterobactin secretion: `Escherichia coli cytosol` / `Escherichia coli extracellular`), 0 differences outside transport states, the same 8 gate connectivity counter differences, left = right transports 5 old -> 4 new (the same 4 as above). The new equal-sides rule does not fire on any stored payload. Raw: `b_before_after.json`, `b_before_after.stdout.txt`.

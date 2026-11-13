@@ -1,0 +1,79 @@
+T2PW: C:\t\fp\src\t2pw\__init__.py
+.....F...F.............................................................. [ 97%]
+..                                                                       [100%]
+================================== FAILURES ===================================
+_______ test_writer_drops_idless_location_and_keeps_state_flag_on_only ________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001F71EF37150>
+
+    def test_writer_drops_idless_location_and_keeps_state_flag_on_only(monkeypatch) -> None:
+        rows = [{"name": "thylakoid membrane", "pathwhiz_id": 4}, {"name": "cytosol", "pathwhiz_id": 3}]
+        monkeypatch.delenv("T2PW_FINAL_PAYLOAD", raising=False)
+        b, root = _build(copy.deepcopy(rows))
+        assert _loc_names(root) == ["thylakoid membrane", "cytosol"] and "locations_dropped_no_id" not in b.layout_debug_counts
+        monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "1")
+        b, root = _build(copy.deepcopy(rows))
+        assert _loc_names(root) == ["cytosol"] and b.layout_debug_counts["locations_dropped_no_id"] == 1
+        states = root.findall(".//biological-states/biological-state")
+        assert len(states) == 2 and sum(1 for s in states if (s.findtext("subcellular-location-id") or "").strip()) == 1
+        # the same location with an id found online is kept, with its id
+        b, root = _build([{"name": "thylakoid membrane", "pathwhiz_id": 4, "ontology_id": "GO:0042651"}, rows[1]])
+        got = {n.findtext("name"): n.findtext("ontology-id") for n in root.findall(".//subcellular-locations/subcellular-location")}
+>       assert got == {"thylakoid membrane": "GO:0042651", "cytosol": None} and "locations_dropped_no_id" not in b.layout_debug_counts
+E       AssertionError: assert ({'cytosol': '... 'GO:0042651'} == {'cytosol': N... 'GO:0042651'}
+E         
+E         Omitting 1 identical items, use -vv to show
+E         Differing items:
+E         {'cytosol': ''} != {'cytosol': None}
+E         Use -v to get more diff)
+
+tests\test_final_payload_ontology.py:144: AssertionError
+_______________ test_flag_on_maps_counts_and_keeps_ontology_id ________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001F71F43C050>
+
+    def test_flag_on_maps_counts_and_keeps_ontology_id(monkeypatch) -> None:
+        monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "1")
+        builder, root = _build()
+        got = _names(root)
+>       assert got["subcellular-location"] == {"Endoplasmic Reticulum": None, "cytosol": None, "thylakoid membrane": None,
+                                               "cell": "GO:0005623"}
+E       AssertionError: assert {'Endoplasmic...ytosol': None} == {'Endoplasmic...mbrane': None}
+E         
+E         Omitting 3 identical items, use -vv to show
+E         Right contains 1 more item:
+E         {'thylakoid membrane': None}
+E         Use -v to get more diff
+
+tests\test_final_payload_vocabulary.py:92: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_final_payload_ontology.py::test_writer_drops_idless_location_and_keeps_state_flag_on_only
+FAILED tests/test_final_payload_vocabulary.py::test_flag_on_maps_counts_and_keeps_ontology_id
+2 failed, 72 passed in 2.74s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\fp\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f66b3ef23cee672486ae5bd5d56ecccfe8321e37  [git, worktree dirty=True]
+label                   : fp-p4a
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/fp -q --basetemp=C:/t/tmpbase/p4a-16393 tests/test_final_payload_ontology.py tests/test_final_payload_vocabulary.py tests/test_final_payload_fill.py tests/test_final_payload_meta.py tests/test_final_payload_writer_fixes.py
+cwd                     : C:\t\fp
+root PID / process group: 464796 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 3.97 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  463612:python.exe
+descendants terminated  : 1  463612
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/fp/docs/pwml_output/evidence/final_payload_p4/tests_final/p4a.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=fp  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

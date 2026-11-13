@@ -35,6 +35,7 @@ for idx, run in enumerate(runs):
             c = fn.classify(text, r)
             st = c["status"]
             w = fn.classify(text, r, None)
+            tot["window_only_" + fn._classify(text, r, fn.WINDOW)["status"]] += 1  # the old default rule, for comparison
         tot[st] += 1
         in_name = bool(c.get("cue")) and c["cue"] in [t for t in fn.re.split(r"[^a-z0-9]+", str(r.get("name")).casefold())]
         both = st == "resolved" and w["status"] == "resolved" and w["type"] == c["type"]
