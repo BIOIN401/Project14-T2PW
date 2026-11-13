@@ -60,3 +60,18 @@ def test_idempotent():
     p = _payload({"name": "t", "cargo": "H+", "elements_with_states": [_ews("right", "Cytosol state")]})
     once = ensure_autostates(p)
     assert ensure_autostates(copy.deepcopy(once)) == once
+
+
+def test_declared_state_equal_to_the_other_sides_state_keeps_placeholder():
+    # right is explicit "Cytosol state"; left declares the same state: using it would create a new left == right
+    t = _run({"name": "t", "cargo": "H+", "to_biological_state": "cytosol STATE",
+              "elements_with_states": [_ews("left", "Cytosol state")]})
+    assert (t["from_biological_state"], t["to_biological_state"]) == (AUTO, "cytosol STATE")
+    # both sides declare the same state and neither is explicit: the second cannot also take it
+    t = _run({"name": "t", "cargo": "H+", "elements_with_states": [_ews("left", "Cytosol state"), _ews("right", "Cytosol state")]})
+    assert (t["from_biological_state"], t["to_biological_state"]) == (AUTO, "Cytosol state")
+
+
+def test_declarations_that_differ_only_in_case_agree():
+    t = _run({"name": "t", "cargo": "H+", "elements_with_states": [_ews("right", "Cytosol state"), _ews("right", "cytosol  STATE")]})
+    assert (t["from_biological_state"], t["to_biological_state"]) == (AUTO, "Cytosol state")

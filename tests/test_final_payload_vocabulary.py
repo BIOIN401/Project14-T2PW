@@ -49,7 +49,7 @@ def _build():
         "entities": {
             "species": [{"name": "Homo sapiens", "pathwhiz_id": 1}],
             "subcellular_locations": [{"name": "ER", "pathwhiz_id": 2}, {"name": "cytosol", "pathwhiz_id": 3},
-                                      {"name": "thylakoid membrane", "pathwhiz_id": 4},
+                                      {"name": "thylakoid membrane"},  # no database id: droppable
                                       {"name": "cell", "ontology_id": "GO:0005623", "pathwhiz_id": 5}],
             "cell_types": [{"name": "neurons", "pathwhiz_id": 6}, {"name": "MG-63", "pathwhiz_id": 7}],
             "tissues": [{"name": "taste buds", "pathwhiz_id": 8}],
@@ -89,7 +89,8 @@ def test_flag_on_maps_counts_and_keeps_ontology_id(monkeypatch) -> None:
     monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "1")
     builder, root = _build()
     got = _names(root)
-    # D-W20a: "thylakoid membrane" has no row and no ontology id, so the PWML drops it (counted in locations_dropped_no_id)
+    # D-W20a: "thylakoid membrane" has no row, no ontology id and no database id, and no state needs it to stay distinct,
+    # so the PWML drops it (counted in locations_dropped_no_id). (It had pathwhiz_id 4 before the M1 fix; such a row is kept now.)
     assert got["subcellular-location"] == {"Endoplasmic Reticulum": None, "cytosol": None, "cell": "GO:0005623"}
     assert builder.layout_debug_counts["locations_dropped_no_id"] == 1
     assert set(got["cell-type"]) == {"Neuron", "MG-63"} and set(got["tissue"]) == {"Taste Bud"}

@@ -6,8 +6,9 @@ database id and whose type the name does not settle (``writer.nucleotide_type_fo
 paper text and read a type cue next to each.
 
 Rules (each justified in ``docs/pwml_output/evidence/final_payload_p4/c_nucleic_paper.md``):
-* Mention: the row name or one of its ``synonyms``, case-insensitive, whole token (no letter/digit on either side); spaces and
-  hyphens in the name match any run of spaces/hyphens.
+* Mention: the row name or one of its ``synonyms``, case-insensitive, whole token (no letter/digit on either side, and no ``.``
+  ``-`` ``/`` joining it to a further letter/digit: ``LHCB1`` is not a mention inside ``LHCB1.1``, nor ``RBCS`` inside ``RBCS-1A``);
+  spaces and hyphens in the name match any run of spaces/hyphens.
 * Cue window: the 2 word tokens before and after the mention, inside the same sentence. A whole-sentence window would hand a
   neighbouring entity's cue to this one ("the CHLH promoter and miR171c transcript"); an adjacent head noun ("X mRNA", "X
   promoter region", "plasmid X") is the claim being read.
@@ -17,6 +18,8 @@ Rules (each justified in ``docs/pwml_output/evidence/final_payload_p4/c_nucleic_
 * A mention with both kinds in its window is conflicting; a mention with none is neutral. All cue-bearing mentions must agree,
   else the row is unresolved (``conflicting``). No cue anywhere is unresolved (``no_cue``), no mention is ``not_mentioned``.
   No majority vote: a symbol used as gene in one place and as transcript in another is exactly the ambiguity to leave alone.
+* Intersection: a type is taken only if the window rule AND the whole-sentence rule (the same agreement logic with every cue of
+  each mention's sentence) give the same type. A window hit the whole sentence contradicts is ``conflicting``.
 * Protein-like names (writer ``_PROTEIN_TOKENS``) are never typed here.
 The result goes on the row as ``nucleotide_type_paper`` plus an ``entries`` item in ``final_payload_fill`` with the quoted
 sentence, the cue and the character offset. Fails open: any error leaves the payload exactly as it was.
@@ -54,7 +57,7 @@ def _names(row: Dict[str, Any]) -> List[str]:
 
 def _pattern(name: str) -> "re.Pattern[str]":
     parts = [re.escape(p) for p in re.split(r"[\s\-]+", name) if p]
-    return re.compile(r"(?<![A-Za-z0-9])" + r"[\s\-]+".join(parts) + r"(?![A-Za-z0-9])", re.I)
+    return re.compile(r"(?<![A-Za-z0-9])(?<![A-Za-z0-9][.\-/])" + r"[\s\-]+".join(parts) + r"(?![A-Za-z0-9])(?![.\-/][A-Za-z0-9])", re.I)
 
 
 def _sentences(text: str):
@@ -98,7 +101,19 @@ def mentions(text: str, row: Dict[str, Any], window: Optional[int] = WINDOW) -> 
 
 
 def classify(text: str, row: Dict[str, Any], window: Optional[int] = WINDOW) -> Dict[str, Any]:
-    """{status: resolved|not_mentioned|no_cue|conflicting, type, cue, offset, quote, mentions, cued}."""
+    """{status: resolved|not_mentioned|no_cue|conflicting, type, cue, offset, quote, mentions, cued}. With a window, resolved only
+    if the whole-sentence rule gives the same type (see module docstring)."""
+    out = _classify(text, row, window)
+    if window is not None and out["status"] == "resolved":
+        whole = _classify(text, row, None)
+        if whole["status"] != "resolved" or whole["type"] != out["type"]:
+            out.update(status="conflicting", type=None)
+            for k in ("cue", "offset", "quote"):
+                out.pop(k, None)
+    return out
+
+
+def _classify(text: str, row: Dict[str, Any], window: Optional[int]) -> Dict[str, Any]:
     ms = mentions(text, row, window)
     cued = [m for m in ms if m["kinds"]]
     out: Dict[str, Any] = {"mentions": len(ms), "cued": len(cued), "type": None}

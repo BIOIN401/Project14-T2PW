@@ -726,7 +726,7 @@ _PROTEIN_TOKENS = {"protein", "proteins", "factor", "complex", "enzyme", "recept
 
 def nucleotide_type_for(record: Dict[str, Any]) -> Optional[str]:
     """DNA or RNA only when kind/name make it unambiguous, else None (final payload, B3)."""
-    if record.get("nucleotide_type_paper") in ("DNA", "RNA"):  # D-W20c: set by final_payload_nucleic from the paper, with provenance
+    if final_payload_enabled() and record.get("nucleotide_type_paper") in ("DNA", "RNA"):  # D-W20c: set by final_payload_nucleic from the paper, with provenance
         return record["nucleotide_type_paper"]
     texts = [str(record.get(k) or "") for k in ("class", "kind", "type", "nucleotide_type", "name")]
     found: set[str] = set()
@@ -1054,6 +1054,8 @@ class DeterministicPwmlBuilder:
             )
 
         self.section_items["subcellular-locations"] = []
+        loc_item_by_key: Dict[str, Dict[str, Any]] = {}
+        droppable_locations: Dict[str, Dict[str, Any]] = {}  # final payload: id-less locations PathWhiz could not create
         for record in ir.get("subcellular_locations", []) if isinstance(ir.get("subcellular_locations"), list) else []:
             if not isinstance(record, dict):
                 continue
@@ -1063,14 +1065,18 @@ class DeterministicPwmlBuilder:
                 self.ids,
             )
             fields = self._vocabulary_fields("subcellular-location", record)
-            if final_payload_enabled() and self._last_vocabulary_outcome == "unmapped":
-                # D-W20a: PathWhiz needs name + ontology id to create a location row. With no id the item is dropped; it is not
-                # remembered, so a biological state that named it is written without subcellular-location-id (a state needs
-                # only one component, and the importer skips an empty id). Other formats keep the name.
-                self.layout_debug_counts["locations_dropped_no_id"] = self.layout_debug_counts.get("locations_dropped_no_id", 0) + 1
-                continue
             remember("subcellular_locations", record.get("key"), rid)
-            self.section_items["subcellular-locations"].append({"id": rid, **fields})
+            loc_item = {"id": rid, **fields}
+            self.section_items["subcellular-locations"].append(loc_item)
+            loc_item_by_key[str(record.get("key"))] = loc_item
+            if (
+                final_payload_enabled()
+                and self._last_vocabulary_outcome == "unmapped"
+                and first_int(record, ["pathwhiz_id", "pathbank_subcellular_location_id", "pw_subcellular_location_id"]) is None
+                and not record.get("ontology_id")
+                and not record.get("ontology-id")
+            ):
+                droppable_locations[str(record.get("key"))] = loc_item
 
         self.section_items["tissues"] = []
         for record in ir.get("tissues", []) if isinstance(ir.get("tissues"), list) else []:
@@ -1086,6 +1092,43 @@ class DeterministicPwmlBuilder:
                     "drawable-image-id": None,
                 }
             )
+
+        if droppable_locations:
+            # D-W20a: PathWhiz needs name + ontology id to create a location row, so an id-less location is dropped (a state needs
+            # only one component and the importer skips an empty id) -- unless dropping makes a state identical to another state
+            # of the run (PathWhiz uniqueness: species, tissue, location, cell type) or leaves it with no component: then it is
+            # kept by name as before. Keeping a location only adds distinctions, so one pass settles it.
+            state_parts = []
+            for record in ir.get("biological_states", []) if isinstance(ir.get("biological_states"), list) else []:
+                if not isinstance(record, dict):
+                    continue
+                loc_key = str(record.get("subcellular_location_key")) if record.get("subcellular_location_key") is not None else None
+                state_parts.append((
+                    (lookup("species", record.get("species_key")), lookup("tissues", record.get("tissue_key")),
+                     lookup("cell_types", record.get("cell_type_key"))),
+                    loc_key if loc_key in loc_item_by_key else None,
+                ))
+
+            def loc_token(key: Optional[str], dropped: bool) -> Any:
+                if key is None or (dropped and key in droppable_locations):
+                    return None
+                item = loc_item_by_key[key]
+                return (str(item.get("name") or "").casefold(), item.get("ontology-id"))
+
+            keep: set = set()
+            for i, (rest, loc) in enumerate(state_parts):
+                if loc in droppable_locations and all(x is None for x in rest):
+                    keep.add(loc)  # the state would have no component at all
+                for rest2, loc2 in state_parts[i + 1:]:
+                    if (rest == rest2 and loc_token(loc, False) != loc_token(loc2, False)
+                            and loc_token(loc, True) == loc_token(loc2, True)):
+                        keep.update(k for k in (loc, loc2) if k in droppable_locations)
+            for key, item in droppable_locations.items():
+                counter = "locations_kept_state_collision" if key in keep else "locations_dropped_no_id"
+                self.layout_debug_counts[counter] = self.layout_debug_counts.get(counter, 0) + 1
+                if key not in keep:
+                    self.section_items["subcellular-locations"].remove(item)
+                    self._ir_key_ids["subcellular_locations"].pop(key, None)
 
         biological_states = []
         for record in ir.get("biological_states", []) if isinstance(ir.get("biological_states"), list) else []:

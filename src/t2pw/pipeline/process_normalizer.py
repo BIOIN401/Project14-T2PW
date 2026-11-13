@@ -3154,7 +3154,7 @@ def _declared_side_state(row: Dict[str, Any], side: str, states: Sequence[Any]) 
     names = set()
     for ews in _safe_list(row.get("elements_with_states")):
         if isinstance(ews, dict) and str(ews.get("side", "")).strip().lower() == side:
-            name = _canonical(str(ews.get("biological_state", "")))
+            name = _normalize(str(ews.get("biological_state", "")))  # same key as the lookup below: "Cytosol" and "cytosol" agree
             if name:
                 names.add(name)
     if len(names) != 1:
@@ -3225,15 +3225,17 @@ def ensure_autostates(payload: Dict[str, Any], *, report: Optional[Dict[str, Any
             continue
         from_state = _canonical(str(row.get("from_biological_state", "")))
         to_state = _canonical(str(row.get("to_biological_state", "")))
+        # A declared state is used only if it differs from what the other side ends up with; equal sides would be a new
+        # left == right transport, so that side keeps the placeholder (as before this change).
+        left_decl = "" if from_state else _declared_side_state(row, "left", biological_states)
+        right_decl = "" if to_state else _declared_side_state(row, "right", biological_states)
         if not from_state:
-            row["from_biological_state"] = (
-                _declared_side_state(row, "left", biological_states) or auto_state_name
-            )
+            other = to_state or right_decl or auto_state_name
+            row["from_biological_state"] = left_decl if left_decl and _normalize(left_decl) != _normalize(other) else auto_state_name
             rep["summary"]["n_entities_assigned_to_autostate"] += 1
         if not to_state:
-            row["to_biological_state"] = (
-                _declared_side_state(row, "right", biological_states) or auto_state_name
-            )
+            other = row["from_biological_state"]
+            row["to_biological_state"] = right_decl if right_decl and _normalize(right_decl) != _normalize(other) else auto_state_name
             rep["summary"]["n_entities_assigned_to_autostate"] += 1
     return payload
 

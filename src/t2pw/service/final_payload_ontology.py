@@ -6,13 +6,18 @@ GO cellular component for locations, CL for cell types, BTO for tissues (PathWhi
 UBERON ids would be rejected on import and are not used).
 
 Rules: an EXACT label or EXACT synonym match only (verified here, not trusted from the index), match type recorded; the rank of
-a fuzzy hit is never used; more than one distinct term matching exactly -> refused as ``ambiguous``; an existing id is never
+a fuzzy hit is never used. The OLS4 search ``synonym`` field mixes exact, related, broad and narrow synonyms (``nerve fiber`` is a
+RELATED synonym of GO:0043005 "neuron projection"), so a synonym hit counts only after the term itself is fetched (OLS4 v2
+``classes`` endpoint) and the name is in its ``oboInOwl#hasExactSynonym`` list; a failed fetch refuses the name. After the first
+fetch error of a run the remaining lookups are skipped and counted (``skipped_after_fetch_error``).
+More than one distinct term matching exactly -> refused as ``ambiguous``; an existing id is never
 overwritten. A name never seen in ``entities`` but present in ``biological_states`` (the IR invents a bare row for it later) gets
 a row ``{"name", "ontology_id"}`` appended, so the id reaches the IR. Failures are counted, never raised.
 """
 
 from __future__ import annotations
 
+import urllib.parse
 from typing import Any, Dict, List, Optional
 
 from t2pw.clean_model.fill.cache import Cache, CachedFetcher
@@ -28,7 +33,17 @@ _SPECS = (
     ("cell_types", "cell-type", ("cell_type", "cell-type"), "cl", "CL:", None),
     ("tissues", "tissue", ("tissue",), "bto", "BTO:", None),
 )
+OLS4_TERM = "https://www.ebi.ac.uk/ols4/api/v2/ontologies/{onto}/classes/{iri}"  # iri: double URL-encoded
+EXACT_SYNONYM_KEY = "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym"
 _KIND_LABEL = {"subcellular-location": "location", "cell-type": "cell_type", "tissue": "tissue"}
+
+
+def exact_synonyms(f: Any, onto: str, obo_id: str) -> List[str]:
+    """The exact synonyms of one term, from the OLS4 v2 entity. A FetchError propagates; an unknown term gives []."""
+    iri = urllib.parse.quote(urllib.parse.quote("http://purl.obolibrary.org/obo/" + obo_id.replace(":", "_"), safe=""), safe="")
+    d = f.get_json(OLS4_TERM.format(onto=onto, iri=iri))
+    vals = (d or {}).get(EXACT_SYNONYM_KEY) or []
+    return [str(v.get("value") if isinstance(v, dict) else v) for v in (vals if isinstance(vals, list) else [vals])]
 
 
 def ols_exact(f: Any, name: str, ontology: str, prefix: str, branch: Optional[str]) -> List[Dict[str, str]]:
@@ -46,7 +61,7 @@ def ols_exact(f: Any, name: str, ontology: str, prefix: str, branch: Optional[st
             continue
         if _cf(label) == q:
             mt = "exact_label"
-        elif q in [_cf(s) for s in r.get("synonym") or []]:
+        elif q in [_cf(s) for s in r.get("synonym") or []] and q in [_cf(s) for s in exact_synonyms(f, ontology, oid)]:
             mt = "exact_synonym"
         else:
             continue
@@ -60,7 +75,8 @@ def fill_ontology_ids(payload: Dict[str, Any], fetcher: Any, cache: Optional[Cac
     cf = CachedFetcher(fetcher, cache if cache is not None else Cache(), today)
     ents = payload.get("entities") if isinstance(payload.get("entities"), dict) else None
     rep: Dict[str, Any] = {"entries": [], "refused": [], "counts": {"looked_up": 0, "resolved": 0, "ambiguous": 0,
-                                                                      "no_exact_match": 0, "fetch_error": 0}}
+                                                                      "no_exact_match": 0, "fetch_error": 0,
+                                                                      "skipped_after_fetch_error": 0}}
     if ents is None:
         return rep
     states = [s for s in payload.get("biological_states") or [] if isinstance(s, dict)]
@@ -79,6 +95,10 @@ def fill_ontology_ids(payload: Dict[str, Any], fetcher: Any, cache: Optional[Cac
                 continue
             name, cur = str(row["name"]).strip(), row.get("ontology_id") or row.get("ontology-id")
             if cur not in (None, "") or map_vocabulary_name(kind, name, None)[2] in ("exact", "mapped"):
+                continue
+            if rep["counts"]["fetch_error"]:  # the service is failing: stop asking, count what was not asked
+                rep["counts"]["skipped_after_fetch_error"] += 1
+                rep["refused"].append({"kind": _KIND_LABEL[kind], "name": name, "reason": "skipped_after_fetch_error"})
                 continue
             rep["counts"]["looked_up"] += 1
             try:

@@ -64,10 +64,27 @@ def test_conflict_inside_one_window_and_far_cue_ignored() -> None:
     assert rep["no_cue"] == 1  # 'gene' is far outside the two-token window
 
 
-def test_whole_sentence_window_is_available_and_stricter_on_neighbours() -> None:
+def test_window_hit_the_whole_sentence_contradicts_stays_unresolved() -> None:
+    # was: resolved (RNA by the adjacent 'transcript'); the intersection rule leaves it, the sentence also holds 'promoter'
     text = "The CHLH promoter and the miR171c transcript were measured."
-    assert _run(text, {"name": "miR171c"})[1]["resolved"] == 1  # 'transcript' adjacent
-    assert _run(text, {"name": "miR171c"}, window=None)[1]["conflicting"] == 1
+    row = {"name": "miR171c"}
+    assert fn._classify(text, row, fn.WINDOW)["type"] == "RNA"  # the window rule alone
+    assert fn.classify(text, row)["status"] == "conflicting" and _run(text, row)[1]["conflicting"] == 1
+    assert _run(text, row, window=None)[1]["conflicting"] == 1
+    # window and whole sentence agree: resolved
+    assert _run("The Xa mRNA, a transcript, rose.", {"name": "Xa"})[1]["resolved"] == 1
+    # 'X mRNA and Y promoters' (the LHCB1.1 coordinated case): the head noun after Y is not in X's window, the sentence says both
+    assert _run("The Xa mRNA and Yb promoters were measured.", {"name": "Xa"})[1]["conflicting"] == 1
+    assert _run("The Xa mRNA and Yb promoters were measured.", {"name": "Yb"})[1]["conflicting"] == 1
+
+
+def test_name_inside_a_longer_name_is_not_a_mention() -> None:
+    for name, longer in (("LHCB1", "LHCB1.1"), ("RBCS", "RBCS-1A"), ("LHCB1", "LHCB1/LHCB3"), ("RBCS", "AtRBCS.1a")):
+        assert _run(f"The {longer} promoter was active.", {"name": name})[1]["not_mentioned"] == 1, longer
+    assert _run("The LHCB1.1 promoter was active.", {"name": "LHCB1.1"})[1]["resolved"] == 1  # the full name still matches
+    assert _run("The RBCS-1A gene.", {"name": "RBCS-1A"})[1]["resolved"] == 1
+    assert _run("The LHCB1. The promoter.", {"name": "LHCB1"})[1]["no_cue"] == 1  # sentence-final '.' is not a joiner
+    assert _run("Genes: LHCB1, RBCS and PORA.", {"name": "LHCB1"})[1]["resolved"] == 1  # a comma is not a joiner
 
 
 def test_no_mention_no_cue_no_text() -> None:
@@ -124,8 +141,12 @@ def test_seam_flag_off_does_nothing_and_flag_on_reads_state(monkeypatch) -> None
 
 def test_writer_accepts_paper_type_only_with_flag_and_no_id(monkeypatch) -> None:
     assert nucleotide_type_for({"name": "CHLH promoter"}) is None
+    monkeypatch.delenv("T2PW_FINAL_PAYLOAD", raising=False)
+    assert nucleotide_type_for({"name": "CHLH promoter", "nucleotide_type_paper": "DNA"}) is None  # M-fix: flag off ignores it
+    monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "1")
     assert nucleotide_type_for({"name": "CHLH promoter", "nucleotide_type_paper": "DNA"}) == "DNA"
     assert nucleotide_type_for({"name": "RNA chaperone", "nucleotide_type_paper": "bogus"}) is None
+    monkeypatch.delenv("T2PW_FINAL_PAYLOAD")
 
     def payload(**extra):
         pl = _payload()
