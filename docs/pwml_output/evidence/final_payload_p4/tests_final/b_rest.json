@@ -1,0 +1,137 @@
+{
+  "label": "fp-b_rest",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/fp",
+    "-q",
+    "--basetemp=C:/t/tmpbase/b_rest-17245",
+    "tests/test_apply_audit_patch_referential_integrity.py",
+    "tests/test_baseline_regression_2026_07_28.py",
+    "tests/test_batch_research_gate_fail_open.py",
+    "tests/test_c055_rag_loop_wiring.py",
+    "tests/test_c095_wrapper_superset_identity.py",
+    "tests/test_c099_wrapper_species_preservation.py",
+    "tests/test_curation_patch_transaction.py",
+    "tests/test_entity_identity_contracts.py",
+    "tests/test_entity_type_gate.py",
+    "tests/test_failure_detail.py",
+    "tests/test_interactive_curator.py",
+    "tests/test_locked_noop_quarantine_policy.py",
+    "tests/test_orch758a_charge_notation_not_composite.py",
+    "tests/test_orch759a_duplicate_protein_fold.py",
+    "tests/test_orch759c_quarantine_bucket_closure.py",
+    "tests/test_orch762_protein_identity.py",
+    "tests/test_orch766_unreferenced_species.py",
+    "tests/test_orch769b_actor_protein_registry.py",
+    "tests/test_orch773_omit_per_row.py",
+    "tests/test_orch792_no_silent_drops.py",
+    "tests/test_orch797a_reference_key.py",
+    "tests/test_orch799a_row_is_referenced.py",
+    "tests/test_orch802_enzyme_cue_boundary.py",
+    "tests/test_pathbank_unknown_fallback.py",
+    "tests/test_protein_export_policy.py",
+    "tests/test_pwml_ir_duplicate_row_refusal.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_graph_delta.py",
+    "tests/test_rag_payload_gate_guardrails.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_rag_seed_entity_reimport.py",
+    "tests/test_reference_repair.py",
+    "tests/test_research_mode_normalizer.py",
+    "tests/test_stage_one_paper_dictionary.py",
+    "tests/test_strict_failure_replay.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_real_artifact_replay.py"
+  ],
+  "cwd": "C:\\t\\fp",
+  "started_at": "2026-11-13T02:14:23+00:00",
+  "finished_at": "2026-11-13T02:16:21+00:00",
+  "duration_seconds": 117.95311779999975,
+  "timeout_seconds": 540.0,
+  "root_pid": 493272,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 482960,
+      "name": "python.exe",
+      "ppid": 493272
+    }
+  ],
+  "descendants_terminated": [
+    482960
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 253476,
+      "name": "python.exe"
+    },
+    {
+      "pid": 443128,
+      "name": "python.exe"
+    },
+    {
+      "pid": 452560,
+      "name": "python.exe"
+    },
+    {
+      "pid": 456764,
+      "name": "python.exe"
+    },
+    {
+      "pid": 462040,
+      "name": "python.exe"
+    },
+    {
+      "pid": 469532,
+      "name": "python.exe"
+    },
+    {
+      "pid": 492324,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/fp/docs/pwml_output/evidence/final_payload_p4/tests_final/b_rest.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\fp\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\fp",
+    "repo_head": "f66b3ef23cee672486ae5bd5d56ecccfe8321e37",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "fp",
+    "token": "fp:469532:e47a840da979d4bb",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

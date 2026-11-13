@@ -1,0 +1,31 @@
+T2PW: C:\t\fp\src\t2pw\__init__.py
+........................................................................ [ 67%]
+..................................                                       [100%]
+106 passed in 82.71s (0:01:22)
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\fp\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f66b3ef23cee672486ae5bd5d56ecccfe8321e37  [git, worktree dirty=True]
+label                   : fp-b_new
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/fp -q --basetemp=C:/t/tmpbase/b_new-17210 tests/test_process_normalizer_transport_states.py tests/test_process_normalizer.py tests/test_c121_autostate_lifecycle.py tests/test_batch_driver_seam_golden.py tests/test_c011_freeze_seam_golden_equivalence.py tests/test_streamlit_stage8_export_contract.py tests/test_streamlit_quarantine_boundary.py
+cwd                     : C:\t\fp
+root PID / process group: 493196 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 84.66 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 21  493212:python.exe, 493360:git.exe, 493436:git.exe, 469084:git.exe, 492812:git.exe, 469752:python.exe, 493184:python.exe, 476704:python.exe, 487300:python.exe, 492972:git.exe, 491928:git.exe, 490788:python.exe, 490920:python.exe, 489588:python.exe, 492020:python.exe, 489584:python.exe, 493256:python.exe, 479712:python.exe, 490536:python.exe, 472928:python.exe, 493176:python.exe
+descendants terminated  : 21  469084, 469752, 472928, 476704, 479712, 487300, 489584, 489588, 490536, 490788, 490920, 491928, 492020, 492812, 492972, 493176, 493184, 493212, 493256, 493360, 493436
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/fp/docs/pwml_output/evidence/final_payload_p4/tests_final/b_new.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=fp  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================
