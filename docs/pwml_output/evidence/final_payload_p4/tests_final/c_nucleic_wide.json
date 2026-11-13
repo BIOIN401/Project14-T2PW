@@ -1,0 +1,215 @@
+{
+  "label": "fp-c_nucleic_wide",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/fp",
+    "-q",
+    "--basetemp=C:/t/tmpbase/c_nucleic_wide-17535",
+    "tests/test_final_payload_fill.py",
+    "tests/test_final_payload_meta.py",
+    "tests/test_final_payload_nucleic_type.py",
+    "tests/test_final_payload_ontology.py",
+    "tests/test_final_payload_vocabulary.py",
+    "tests/test_final_payload_writer_fixes.py",
+    "tests/test_batch_driver_seam_golden.py",
+    "tests/test_c011_freeze_seam_golden_equivalence.py",
+    "tests/test_pwml_ir.py"
+  ],
+  "cwd": "C:\\t\\fp",
+  "started_at": "2026-11-13T02:22:30+00:00",
+  "finished_at": "2026-11-13T02:23:16+00:00",
+  "duration_seconds": 46.175938100001076,
+  "timeout_seconds": 540.0,
+  "root_pid": 503484,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 503532,
+      "name": "python.exe",
+      "ppid": 503484
+    },
+    {
+      "pid": 502144,
+      "name": "git.exe",
+      "ppid": 503532
+    },
+    {
+      "pid": 498680,
+      "name": "git.exe",
+      "ppid": 503532
+    },
+    {
+      "pid": 501428,
+      "name": "git.exe",
+      "ppid": 503532
+    },
+    {
+      "pid": 503548,
+      "name": "git.exe",
+      "ppid": 503532
+    },
+    {
+      "pid": 503560,
+      "name": "python.exe",
+      "ppid": 503572
+    },
+    {
+      "pid": 503572,
+      "name": "python.exe",
+      "ppid": 503532
+    },
+    {
+      "pid": 502904,
+      "name": "python.exe",
+      "ppid": 503532
+    },
+    {
+      "pid": 503644,
+      "name": "python.exe",
+      "ppid": 502904
+    },
+    {
+      "pid": 503628,
+      "name": "python.exe",
+      "ppid": 503704
+    },
+    {
+      "pid": 503704,
+      "name": "python.exe",
+      "ppid": 503532
+    },
+    {
+      "pid": 494732,
+      "name": "python.exe",
+      "ppid": 503532
+    },
+    {
+      "pid": 500712,
+      "name": "python.exe",
+      "ppid": 494732
+    },
+    {
+      "pid": 500520,
+      "name": "python.exe",
+      "ppid": 503532
+    },
+    {
+      "pid": 502804,
+      "name": "python.exe",
+      "ppid": 500520
+    },
+    {
+      "pid": 498840,
+      "name": "python.exe",
+      "ppid": 502624
+    },
+    {
+      "pid": 502624,
+      "name": "python.exe",
+      "ppid": 503532
+    },
+    {
+      "pid": 496468,
+      "name": "python.exe",
+      "ppid": 503532
+    },
+    {
+      "pid": 502164,
+      "name": "python.exe",
+      "ppid": 496468
+    }
+  ],
+  "descendants_terminated": [
+    494732,
+    496468,
+    498680,
+    498840,
+    500520,
+    500712,
+    501428,
+    502144,
+    502164,
+    502624,
+    502804,
+    502904,
+    503532,
+    503548,
+    503560,
+    503572,
+    503628,
+    503644,
+    503704
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 452560,
+      "name": "python.exe"
+    },
+    {
+      "pid": 456764,
+      "name": "python.exe"
+    },
+    {
+      "pid": 502916,
+      "name": "python.exe"
+    },
+    {
+      "pid": 503020,
+      "name": "python.exe"
+    },
+    {
+      "pid": 503044,
+      "name": "python.exe"
+    },
+    {
+      "pid": 503404,
+      "name": "python.exe"
+    },
+    {
+      "pid": 503412,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/fp/docs/pwml_output/evidence/final_payload_p4/tests_final/c_nucleic_wide.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\fp\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\fp",
+    "repo_head": "02856d68666e3473813ea5d85bfdae30d4a3b47d",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "fp",
+    "token": "fp:503044:427897b1ca6f4624",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
