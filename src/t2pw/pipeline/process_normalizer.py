@@ -3140,6 +3140,29 @@ def normalize_process_actor_schema(payload: Dict[str, Any], *, report: Optional[
     return payload
 
 
+def _declared_side_state(row: Dict[str, Any], side: str, states: Sequence[Any]) -> str:
+    """State the row itself declares for one side of a transport, else ``""``.
+
+    A transport row lists its per-side states in ``elements_with_states``
+    (``side`` = ``left``/``right``). When the row-level ``from``/``to`` field is
+    empty, that declared state is the stated one; the single ``__auto_state__``
+    placeholder would put BOTH sides in the same state. Used only if every
+    declaration for the side names the same state and that state exists in
+    ``biological_states``; nothing is inferred from prose.
+    """
+
+    names = set()
+    for ews in _safe_list(row.get("elements_with_states")):
+        if isinstance(ews, dict) and str(ews.get("side", "")).strip().lower() == side:
+            name = _canonical(str(ews.get("biological_state", "")))
+            if name:
+                names.add(name)
+    if len(names) != 1:
+        return ""
+    found = _find_entity_row(states, next(iter(names)))
+    return found["name"] if found else ""
+
+
 def ensure_autostates(payload: Dict[str, Any], *, report: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
     rep = report if isinstance(report, dict) else _new_report()
     auto_state_name = "__auto_state__"
@@ -3203,10 +3226,14 @@ def ensure_autostates(payload: Dict[str, Any], *, report: Optional[Dict[str, Any
         from_state = _canonical(str(row.get("from_biological_state", "")))
         to_state = _canonical(str(row.get("to_biological_state", "")))
         if not from_state:
-            row["from_biological_state"] = auto_state_name
+            row["from_biological_state"] = (
+                _declared_side_state(row, "left", biological_states) or auto_state_name
+            )
             rep["summary"]["n_entities_assigned_to_autostate"] += 1
         if not to_state:
-            row["to_biological_state"] = auto_state_name
+            row["to_biological_state"] = (
+                _declared_side_state(row, "right", biological_states) or auto_state_name
+            )
             rep["summary"]["n_entities_assigned_to_autostate"] += 1
     return payload
 
