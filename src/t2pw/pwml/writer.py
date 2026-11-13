@@ -1117,8 +1117,8 @@ class DeterministicPwmlBuilder:
 
             keep: set = set()
             for i, (rest, loc) in enumerate(state_parts):
-                if loc in droppable_locations and all(x is None for x in rest):
-                    keep.add(loc)  # the state would have no component at all
+                if loc in droppable_locations and all(x is None for x in rest[1:]):
+                    keep.add(loc)  # no tissue, cell type or location left: species alone is a wildcard in the importer
                 for rest2, loc2 in state_parts[i + 1:]:
                     if (rest == rest2 and loc_token(loc, False) != loc_token(loc2, False)
                             and loc_token(loc, True) == loc_token(loc2, True)):

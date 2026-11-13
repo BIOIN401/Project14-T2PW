@@ -122,12 +122,14 @@ def test_id_that_pathwhiz_already_holds_maps_to_its_row_without_the_id() -> None
     assert map_vocabulary_name("tissue", "root", "BTO:0001188")[2] == "new_row"
 
 
-_STATES = [{"name": "s", "species": "Homo sapiens", "subcellular_location": "thylakoid membrane"},
-           {"name": "t", "species": "Homo sapiens", "subcellular_location": "cytosol"}]
+_TISSUE = [{"name": "root", "pathwhiz_id": 5}]
+_STATES = [{"name": "s", "species": "Homo sapiens", "tissue": "root", "subcellular_location": "thylakoid membrane"},
+           {"name": "t", "species": "Homo sapiens", "tissue": "root", "subcellular_location": "cytosol"}]
 
 
-def _build(loc_rows, states=None):
+def _build(loc_rows, states=None, tissues=None):
     payload = {"entities": {"species": [{"name": "Homo sapiens", "pathwhiz_id": 1}], "subcellular_locations": loc_rows,
+                            "tissues": tissues or [],
                             "compounds": [{"name": "A", "pathbank_compound_id": 103}]},
                "biological_states": states or _STATES,
                "processes": {"reactions": [], "transports": [], "interactions": []}}
@@ -147,15 +149,15 @@ def test_writer_drops_idless_location_and_keeps_state_flag_on_only(monkeypatch) 
     # M1 fix: the thylakoid row now carries no database id (a row with pathwhiz_id is never dropped, see the next test)
     rows = [{"name": "thylakoid membrane"}, {"name": "cytosol", "pathwhiz_id": 3}]
     monkeypatch.delenv("T2PW_FINAL_PAYLOAD", raising=False)
-    b, root = _build(copy.deepcopy(rows))
+    b, root = _build(copy.deepcopy(rows), tissues=_TISSUE)
     assert _loc_names(root) == ["thylakoid membrane", "cytosol"] and "locations_dropped_no_id" not in b.layout_debug_counts
     monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "1")
-    b, root = _build(copy.deepcopy(rows))
+    b, root = _build(copy.deepcopy(rows), tissues=_TISSUE)
     assert _loc_names(root) == ["cytosol"] and b.layout_debug_counts["locations_dropped_no_id"] == 1
     states = root.findall(".//biological-states/biological-state")
     assert len(states) == 2 and sum(1 for s in states if (s.findtext("subcellular-location-id") or "").strip()) == 1
     # the same location with an id found online is kept, with its id
-    b, root = _build([{"name": "thylakoid membrane", "ontology_id": "GO:0042651"}, rows[1]])
+    b, root = _build([{"name": "thylakoid membrane", "ontology_id": "GO:0042651"}, rows[1]], tissues=_TISSUE)
     got = {n.findtext("name"): n.findtext("ontology-id") or None for n in root.findall(".//subcellular-locations/subcellular-location")}
     assert got == {"thylakoid membrane": "GO:0042651", "cytosol": None} and "locations_dropped_no_id" not in b.layout_debug_counts
 
@@ -173,20 +175,35 @@ def test_row_with_database_id_is_never_dropped(monkeypatch) -> None:
 
 def test_idless_location_kept_when_dropping_would_make_two_states_identical(monkeypatch) -> None:
     monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "1")
-    states = [{"name": "s", "species": "Homo sapiens", "subcellular_location": "thylakoid membrane"},
-              {"name": "t", "species": "Homo sapiens", "subcellular_location": "stroma x"},
-              {"name": "u", "species": "Homo sapiens", "subcellular_location": "cytosol"}]
+    states = [{"name": "s", "species": "Homo sapiens", "tissue": "root", "subcellular_location": "thylakoid membrane"},
+              {"name": "t", "species": "Homo sapiens", "tissue": "root", "subcellular_location": "stroma x"},
+              {"name": "u", "species": "Homo sapiens", "tissue": "root", "subcellular_location": "cytosol"}]
     rows = [{"name": "thylakoid membrane"}, {"name": "stroma x"}, {"name": "cytosol", "pathwhiz_id": 3}]
-    b, root = _build(copy.deepcopy(rows), states)
+    b, root = _build(copy.deepcopy(rows), states, tissues=_TISSUE)
     # s and t differ only by an id-less location: dropping both would make them identical (PathWhiz uniqueness), so both stay
     assert _loc_names(root) == ["thylakoid membrane", "stroma x", "cytosol"]
     assert b.layout_debug_counts["locations_kept_state_collision"] == 2 and "locations_dropped_no_id" not in b.layout_debug_counts
     ids = _state_locs(root)
     assert len(set(ids.values())) == 3 and all(ids.values())
     # no collision: s differs from u by a kept location; the unrelated id-less location is dropped
-    b, root = _build(copy.deepcopy(rows), [states[0], states[2]])
+    b, root = _build(copy.deepcopy(rows), [states[0], states[2]], tissues=_TISSUE)
     assert _loc_names(root) == ["cytosol"] and b.layout_debug_counts["locations_dropped_no_id"] == 2
     assert "locations_kept_state_collision" not in b.layout_debug_counts
+
+def test_idless_location_kept_for_species_only_state_dropped_with_tissue(monkeypatch) -> None:
+    # d2 idx 10: species alone is a wildcard in the PathWhiz importer, so a state whose only other component is an id-less
+    # location keeps that location by name; with a tissue the state is still distinguishable and the location is dropped
+    monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "1")
+    rows = [{"name": "saliva"}, {"name": "cytosol", "pathwhiz_id": 3}]
+    only = [{"name": "s", "species": "Homo sapiens", "subcellular_location": "saliva"},
+            {"name": "t", "species": "Homo sapiens", "subcellular_location": "cytosol"}]
+    b, root = _build(copy.deepcopy(rows), only)
+    assert _loc_names(root) == ["saliva", "cytosol"] and all(_state_locs(root).values())
+    assert b.layout_debug_counts["locations_kept_state_collision"] == 1 and "locations_dropped_no_id" not in b.layout_debug_counts
+    withtissue = [dict(only[0], tissue="root"), only[1]]
+    b, root = _build(copy.deepcopy(rows), withtissue, tissues=_TISSUE)
+    assert _loc_names(root) == ["cytosol"] and b.layout_debug_counts["locations_dropped_no_id"] == 1
+
 
 def test_synonym_hit_needs_the_name_in_the_terms_exact_synonyms(monkeypatch) -> None:
     # nerve fiber is only a RELATED synonym of GO:0043005 (live OLS4, 2026-11-12): the search index lists it, the term says related
