@@ -726,6 +726,8 @@ _PROTEIN_TOKENS = {"protein", "proteins", "factor", "complex", "enzyme", "recept
 
 def nucleotide_type_for(record: Dict[str, Any]) -> Optional[str]:
     """DNA or RNA only when kind/name make it unambiguous, else None (final payload, B3)."""
+    if record.get("nucleotide_type_paper") in ("DNA", "RNA"):  # D-W20c: set by final_payload_nucleic from the paper, with provenance
+        return record["nucleotide_type_paper"]
     texts = [str(record.get(k) or "") for k in ("class", "kind", "type", "nucleotide_type", "name")]
     found: set[str] = set()
     for text in texts:

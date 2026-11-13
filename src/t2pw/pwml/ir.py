@@ -879,6 +879,7 @@ def _copy_common_entity_fields(record: Dict[str, Any], raw: Dict[str, Any]) -> N
         "ec_numbers",
         "element_states",
         "components",
+        "nucleotide_type_paper",  # D-W20c: only ever present on a flag-on payload
     ]:
         if key in raw:
             record[key] = raw[key]

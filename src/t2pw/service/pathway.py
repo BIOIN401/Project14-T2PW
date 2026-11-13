@@ -259,6 +259,8 @@ def _drive(
     from t2pw.service import final_payload as fpl  # D-W12 title/reference: hand the paper ids to the post-pipeline (flag only)
     if fpl.final_payload_enabled():
         state["final_payload_paper"] = fpl.paper_meta_from_paper(paper)
+        state["final_payload_paper_text"] = driver._paper_text(paper)  # D-W20c: nucleic-acid type read from the paper
+        state["final_payload_paper_text_source"] = "run input text"
     try:
         extraction = ex.run_extraction(
             ex.ExtractionRequest(
