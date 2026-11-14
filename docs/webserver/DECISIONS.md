@@ -175,3 +175,12 @@ outer membarnaes / and i want you to show me what these ppaer pathways would loo
 intenral rendering / aSLO WE have receieved permission to edit the spmbd folder and fix pathwhiz so
 maybe if changes eed to be made there w cna do that as well, and then we just ned to log all
 changes so each change can act as its own pull requiest".
+
+**D-W22 · 2026-11-13: PathWhiz changes as stacked branches** (amends D-W21 f). Changes to the
+PathWhiz app (`smpdb`) are made on the owner's branch line as one new branch per change. Each
+branch builds on the previous one, so each branch acts as one pull request. This lifts the earlier
+no-commit rule for these branches only. Their working copy is a separate git worktree, so the
+owner's checkout and its uncommitted work are not touched. The owner's own uncommitted change is
+never committed. The branches are not pushed until the PO says so. PO, verbatim: "u can make the
+edits in my branch maye make a new branch for each edit that builds on the next that acts asthe
+pull reqest".
