@@ -201,14 +201,14 @@ EBI_SEARCH = "https://www.ebi.ac.uk/ebisearch/ws/rest/rnacentral"  # the search 
 MAX_IDS = 20
 _SYMBOL = re.compile(r"[A-Za-z][A-Za-z0-9_.\-]{2,39}")  # a gene symbol or alias: one token, no space, slash or leading digit
 # NCBI Gene type -> nucleic acid type of the record's name. protein-coding -> DNA is a PROPOSED rule (D-W21d only says "try an online
-# lookup"; the product owner has not ruled): accepted only when no paper sentence naming the row has a protein word (see
-# ``_protein_context``), else the row stays unknown with lookup code ``protein_context``. NCBI aliases are matched exactly, case-fold
+# lookup"; the product owner has not ruled): accepted only when a paper sentence names the row and none of those has a protein word (see
+# ``_dna_context_code``), else the row stays unknown with lookup code ``protein_context`` or ``no_protein_context_evidence``. NCBI aliases are matched exactly, case-fold
 # only. RNA-gene types: the gene's only product is an RNA, and a symbol such as RyhB, MIR171c or tRNA-Leu names that RNA.
 # pseudo / other / unknown / biological-region are not decisive and stay unresolved.
 GENE_TYPE = {"protein-coding": "DNA", "ncRNA": "RNA", "tRNA": "RNA", "rRNA": "RNA", "snRNA": "RNA", "snoRNA": "RNA",
              "scRNA": "RNA", "miscRNA": "RNA"}
 LOOKUP_CODES = ("not_attempted", "no_fetcher", "species_unknown", "species_ambiguous", "no_symbol_name", "not_found",
-                "ambiguous", "gene_type_not_decisive", "sources_disagree", "too_many_records", "protein_context",
+                "ambiguous", "gene_type_not_decisive", "sources_disagree", "too_many_records", "protein_context", "no_protein_context_evidence",
                 "refused_by_a_source",
                 "lookup_error", "lookup_skipped_after_error", "slot_filled", "writer_ignores")
 
@@ -221,15 +221,20 @@ def _cf(s: Any) -> str:
     return str(s or "").strip().casefold()
 
 
-def _protein_context(text: Any, row: Dict[str, Any]) -> bool:
-    """True when a paper sentence that names the row (name or a synonym) holds a protein word (writer ``_PROTEIN_TOKENS``): the symbol
-    is then used for the protein there (CHL27 as a subunit), so a protein-coding gene type does not make the row DNA."""
+def _dna_context_code(text: Any, row: Dict[str, Any]) -> Optional[str]:
+    """None when a protein-coding gene type may make the row DNA, else the lookup code that keeps it unknown. Needs positive evidence:
+    at least one paper sentence names the row (name or a synonym) and none of those sentences holds a protein word (writer
+    ``_PROTEIN_TOKENS``). A protein word means the symbol is used for the protein there (CHL27 as a subunit): ``protein_context``.
+    No paper text, or a row the text never names, gives ``no_protein_context_evidence`` (review 2, R2-2)."""
     from t2pw.pwml.writer import _PROTEIN_TOKENS
     pats = [_pattern(n) for n in _names(row)]
+    named = False
     for _, sent in _sentences(text if isinstance(text, str) else ""):
-        if any(p.search(sent) for p in pats) and any(t in _PROTEIN_TOKENS for t in re.findall(r"[a-z0-9]+", sent.casefold())):
-            return True
-    return False
+        if any(p.search(sent) for p in pats):
+            named = True
+            if any(t in _PROTEIN_TOKENS for t in re.findall(r"[a-z0-9]+", sent.casefold())):
+                return "protein_context"
+    return None if named else "no_protein_context_evidence"
 
 
 def _short(s: str) -> str:
@@ -384,8 +389,10 @@ def apply_nucleic_types(payload: Dict[str, Any], text: Any, *, fetcher: Any = No
             # protein-like names are never typed here; a row the paper itself calls both DNA and RNA stays unknown (a lookup would
             # silently pick one against the paper's own text)
             out = {"status": "not_attempted"} if reason in ("protein_like", "conflicting") else lk.resolve(r)
-            if out["status"] == "resolved" and out.get("gene_type") == "protein-coding" and _protein_context(text, r):
-                out = {"status": "protein_context"}
+            if out["status"] == "resolved" and out.get("gene_type") == "protein-coding":
+                code = _dna_context_code(text, r)
+                if code:
+                    out = {"status": code}
             if out["status"] == "resolved" and _cf(r.get("nucleotide_type")):
                 out = {"status": "slot_filled"}
             if out["status"] == "resolved":

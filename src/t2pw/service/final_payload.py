@@ -16,8 +16,8 @@ makes the resolver raise ``PrefreezeResolutionError``, the payload is restored i
 never cause a refusal the flag-off run would not have (the title/reference key is dropped with it).
 
 Known limits: (1) the title and reference follow the payload key, not the flag, at export time (``effective_pathway_name`` and
-the IR read ``final_payload_pathway`` whenever it is present). (2) Two separate 300 s budgets, the fill and then the title
-lookup, and the throttle is per fetcher (one fetcher per call), so the worst case is about 600 s of live requests. (3) The
+the IR read ``final_payload_pathway`` whenever it is present). (2) The id fill and the nucleic lookup share one 300 s budget, the
+title lookup has its own 60 s, and the throttle is per fetcher, so the worst case is about 360 s of live requests. (3) The
 ``final_payload_fill`` key carries dates, so the canonical hash changes from day to day for the same run. (4) Role/class terms:
 a name that is a ChEBI role or class (``electron acceptor``, ``antioxidant``) carries no structure in ChEBI, so a chebi_id fill
 is accepted only when the same lookup also returned an InChIKey (``no_structure_in_chebi`` otherwise). That is the only signal
@@ -37,6 +37,7 @@ from typing import Any, Dict, List, Optional
 
 FINAL_PAYLOAD_FILL_FIELD = "final_payload_fill"
 BUDGET_SECONDS = 300.0  # wall clock for live requests; cached answers are free, so a re-run finishes the rest
+TITLE_BUDGET_SECONDS = 60.0  # the title / reference lookup (one or two requests) has its own, so a spent id fill cannot starve it (review 2, R2-3)
 HOST_INTERVAL = 1.0  # at most 1 request per second per host (the fill layer's own default is 3/s)
 
 _COMPOUND_ALIASES = {"chebi_id": ("chebi",), "kegg_id": ("kegg",), "hmdb_id": ("hmdb",),
@@ -67,10 +68,11 @@ class _Budget:
     """Wraps the live fetcher: once the wall-clock budget is spent every further request is a FetchError (counted, not fatal)."""
 
     def __init__(self, inner: Any, seconds: float) -> None:
-        self.inner, self.deadline = inner, time.monotonic() + seconds
+        self.inner, self.deadline, self.exhausted = inner, time.monotonic() + seconds, False  # exhausted: a request was refused
 
     def _check(self) -> None:
         if time.monotonic() > self.deadline:
+            self.exhausted = True
             from t2pw.clean_model.fill.http import FetchError
             raise FetchError("final payload fill time budget exhausted")
 
@@ -83,13 +85,19 @@ class _Budget:
         return self.inner.get_text(url, params)
 
 
-def _live_fetcher() -> Any:
+def _live_fetcher(seconds: Optional[float] = None) -> Any:
     from t2pw.clean_model.fill.http import Throttle, UrllibFetcher
-    try:
-        seconds = float(os.environ.get("T2PW_FINAL_PAYLOAD_BUDGET_S", BUDGET_SECONDS))
-    except ValueError:
-        seconds = BUDGET_SECONDS
+    if seconds is None:
+        try:
+            seconds = float(os.environ.get("T2PW_FINAL_PAYLOAD_BUDGET_S", BUDGET_SECONDS))
+        except ValueError:
+            seconds = BUDGET_SECONDS
     return _Budget(UrllibFetcher(throttle=Throttle(interval=HOST_INTERVAL)), seconds)
+
+
+def _spent(fetcher: Any) -> bool:
+    """True when the budgeted fetcher refused a request because its time was up (a fake has no budget: False)."""
+    return bool(getattr(fetcher, "exhausted", False))
 
 
 def _plan(payload: Dict[str, Any], items: List[Dict[str, Any]], report: Dict[str, Any]) -> List[Dict[str, Any]]:
@@ -159,14 +167,14 @@ def apply_final_id_fill(payload: Dict[str, Any], meta: Optional[Dict[str, Any]] 
                         paper_source: str = "paper text") -> Dict[str, Any]:
     """Fill empty id slots of ``payload`` in place. Fails open: on any error ``payload`` is restored and the report says why."""
     report: Dict[str, Any] = {"enabled": True, "written": 0, "by_field": {}, "refused": {}, "refused_detail": [],
-                              "suggestions": [], "error": None}
+                              "suggestions": [], "error": None, "budget_exhausted": False}
     snapshot = copy.deepcopy(payload)
+    fetcher = fetcher or _live_fetcher()
     try:
         from t2pw.clean_model import build_from_payload
         from t2pw.clean_model.fill import fill_model
 
         today = today or datetime.date.today().isoformat()
-        fetcher = fetcher or _live_fetcher()
         # D-W20a: ontology ids for location / cell-type / tissue names, first (few requests) so a spent budget costs compound fills
         from t2pw.service.final_payload_ontology import fill_ontology_ids
         onto = fill_ontology_ids(payload, fetcher, cache, today, paper_text=paper_text, paper_source=paper_source)  # P5: text for numbered cell types
@@ -190,6 +198,7 @@ def apply_final_id_fill(payload: Dict[str, Any], meta: Optional[Dict[str, Any]] 
         payload.clear()
         payload.update(snapshot)
         report.update(written=0, by_field={}, error=f"{type(exc).__name__}: {exc}")
+    report["budget_exhausted"] = _spent(fetcher)
     return report
 
 
@@ -221,13 +230,15 @@ def maybe_apply_final_id_fill(payload: Dict[str, Any], pathway_context: Any = No
     if not final_payload_enabled():
         return {}
     try:
-        # ONE fetcher (one time budget, T2PW_FINAL_PAYLOAD_BUDGET_S from its construction) for the id fill, the nucleic lookup and the
-        # pathway title: the three steps share the budget, so a fill that spends it leaves the later steps to fail open (the nucleic
-        # rows stay unknown with lookup_error, the title falls back to the name). A caller-given ``fetcher`` is used as it is.
-        kw = {**kw, "fetcher": kw.get("fetcher") or _live_fetcher()}
-        report = apply_final_id_fill(payload, fill_meta(pathway_context, state), **{**_paper_kw(state), **kw})
+        # ONE fetcher (one time budget, T2PW_FINAL_PAYLOAD_BUDGET_S from its construction) for the id fill and the nucleic lookup: a
+        # fill that spends it leaves the nucleic rows unknown with lookup_error (each report says ``budget_exhausted``). The title /
+        # reference lookup is NOT in it: it builds its own small budget (TITLE_BUDGET_SECONDS) in ``apply_final_pathway_meta``, so a
+        # slow fill cannot starve it (review 2, R2-3; the title reads only the paper metadata, nothing the fill writes). A caller-given
+        # ``fetcher`` is used as it is by all three steps.
+        shared = {**kw, "fetcher": kw.get("fetcher") or _live_fetcher()}
+        report = apply_final_id_fill(payload, fill_meta(pathway_context, state), **{**_paper_kw(state), **shared})
         report["meta_keys"] = sorted(fill_meta(pathway_context, state))
-        report["nucleic_types"] = maybe_apply_paper_nucleic_types(payload, state, **{k: kw[k] for k in ("fetcher", "cache", "today") if k in kw})
+        report["nucleic_types"] = maybe_apply_paper_nucleic_types(payload, state, **{k: shared[k] for k in ("fetcher", "cache", "today") if k in shared})
         report["pathway_meta"] = maybe_apply_final_pathway_meta(payload, pathway_context, state, **kw)
         return report
     except Exception as exc:
@@ -242,8 +253,11 @@ def maybe_apply_paper_nucleic_types(payload: Dict[str, Any], state: Any = None, 
     called on its own; ``maybe_apply_final_id_fill`` passes the one fetcher it shares with the id fill)."""
     from t2pw.service.final_payload_nucleic import apply_nucleic_types
     st = state if hasattr(state, "get") else {}
-    return apply_nucleic_types(payload, st.get("final_payload_paper_text"), fetcher=fetcher or _live_fetcher(), cache=cache, today=today,
-                               source=str(st.get("final_payload_paper_text_source") or "paper text"))
+    fetcher = fetcher or _live_fetcher()
+    rep = apply_nucleic_types(payload, st.get("final_payload_paper_text"), fetcher=fetcher, cache=cache, today=today,
+                              source=str(st.get("final_payload_paper_text_source") or "paper text"))
+    rep["budget_exhausted"] = _spent(fetcher)
+    return rep
 
 
 def prefreeze_with_final_fill(payload: Dict[str, Any], resolve: Any, pathway_context: Any = None, state: Any = None,
@@ -301,8 +315,9 @@ def apply_final_pathway_meta(payload: Dict[str, Any], meta: Optional[Dict[str, A
     ``reference``). Paper mode (a pmid/pmcid/doi is known): the title comes from NCBI esummary through the fill layer, else
     ``meta["title"]``, else the pathway name; the reference only when NCBI confirmed the paper. Name mode: the pathway name. Nothing is invented; with no text the key is not
     written. Fails open: on any error the payload is exactly what it was."""
-    report: Dict[str, Any] = {"enabled": True, "written": False, "title_source": None, "error": None}
+    report: Dict[str, Any] = {"enabled": True, "written": False, "title_source": None, "error": None, "budget_exhausted": False}
     snapshot = copy.deepcopy(payload)
+    fetcher = fetcher or _live_fetcher(TITLE_BUDGET_SECONDS)  # its own small budget, never the id fill's
     try:
         from t2pw.clean_model import build_from_payload
         from t2pw.clean_model.fill import fill_model
@@ -315,7 +330,7 @@ def apply_final_pathway_meta(payload: Dict[str, Any], meta: Optional[Dict[str, A
         meta_title = meta.pop("title", None)  # a fallback only: the NCBI title wins when the lookup answers
         model = build_from_payload(payload, meta)
         if any(not getattr(model.pathway, k).absent for k in ("pmid", "pmcid")):
-            fill_model(model, fetcher=fetcher or _live_fetcher(), cache=cache, today=today, sources=("ncbi",))
+            fill_model(model, fetcher=fetcher, cache=cache, today=today, sources=("ncbi",))
         b: Dict[str, Any] = {"schema": 1, "date": today}
         for k in _PW_FIELDS:
             v = _fld(getattr(model.pathway, k))
@@ -335,6 +350,7 @@ def apply_final_pathway_meta(payload: Dict[str, Any], meta: Optional[Dict[str, A
         payload.clear()
         payload.update(snapshot)
         report.update(written=False, error=f"{type(exc).__name__}: {exc}")
+    report["budget_exhausted"] = _spent(fetcher)
     return report
 
 

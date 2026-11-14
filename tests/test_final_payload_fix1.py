@@ -35,7 +35,7 @@ def test_f1_human_outer_membrane_with_a_go_id_is_dropped_not_written_by_name(mon
     monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "1")
     b, root = _build(_human_membrane_payload("t1"))  # the two states differ by tissue: dropping the location binds nothing
     assert _loc_names(root) == ["cytosol"] and b.layout_debug_counts["locations_dropped_no_id"] == 1
-    assert "nonbacterial_membranes_kept_by_name" not in b.layout_debug_counts
+    assert "membranes_kept_unresolved" not in b.layout_debug_counts
     assert map_vocabulary_name("subcellular-location", "outer membrane", "GO:0019867", frozenset({"eukaryote"})) == ("outer membrane", None, "unmapped")
 
 
@@ -44,14 +44,14 @@ def test_f1_kept_nonbacterial_membrane_is_renamed_so_it_cannot_bind_to_the_bacte
     b, root = _build(_human_membrane_payload("t0"))  # same tissue: without the location the first state is a subset of the second, so it is kept
     names = _loc_names(root)
     assert "outer membrane" not in [n.casefold() for n in names] and "Outer Membrane" not in names
-    assert names == ["outer membrane (non-bacterial, no ontology id)", "cytosol"]
-    assert b.layout_debug_counts["nonbacterial_membranes_kept_by_name"] == 1 and b.layout_debug_counts["components_kept_wildcard_guard"] == 1
+    assert names == ["outer membrane (unresolved, no ontology id)", "cytosol"]  # review 2 R2-1: the suffix claims nothing about the organism
+    assert b.layout_debug_counts["membranes_kept_unresolved"] == 1 and b.layout_debug_counts["components_kept_wildcard_guard"] == 1
 
 
 def test_f1_flag_off_is_untouched(monkeypatch) -> None:
     monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "0")
     b, root = _build(_human_membrane_payload("t0"))
-    assert _loc_names(root) == ["outer membrane", "cytosol"] and not b.layout_debug_counts.get("nonbacterial_membranes_kept_by_name")
+    assert _loc_names(root) == ["outer membrane", "cytosol"] and not b.layout_debug_counts.get("membranes_kept_unresolved")
 
 
 # ---- F2: a conflicting row is not sent to the lookup -------------------------------------------------------------------------
@@ -158,7 +158,7 @@ def test_f8_unlisted_prokaryote_genus_is_undetermined_and_listed_ones_still_map(
 
 
 # ---- F9: one fetcher (one budget) for the three network steps ----------------------------------------------------------------
-def test_f9_the_three_steps_share_one_fetcher(monkeypatch) -> None:
+def test_f9_fill_and_nucleic_share_one_fetcher_the_title_has_its_own(monkeypatch) -> None:
     monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "1")
     built, seen = [], {}
     sentinel = object()
@@ -167,7 +167,8 @@ def test_f9_the_three_steps_share_one_fetcher(monkeypatch) -> None:
     monkeypatch.setattr(fp, "maybe_apply_paper_nucleic_types", lambda payload, state=None, **kw: seen.__setitem__("nucleic", kw.get("fetcher")) or {})
     monkeypatch.setattr(fp, "maybe_apply_final_pathway_meta", lambda payload, ctx=None, state=None, **kw: seen.__setitem__("meta", kw.get("fetcher")) or {})
     fp.maybe_apply_final_id_fill({}, {}, {})
-    assert built == [1] and seen == {"fill": sentinel, "nucleic": sentinel, "meta": sentinel}
+    # review 2 R2-3: the title builds its own small budget, so it is handed no shared fetcher
+    assert built == [1] and seen == {"fill": sentinel, "nucleic": sentinel, "meta": None}
     mine = object()  # a caller-given fetcher is used as it is, and no live one is built
     fp.maybe_apply_final_id_fill({}, {}, {}, fetcher=mine)
     assert built == [1] and seen == {"fill": mine, "nucleic": mine, "meta": mine}

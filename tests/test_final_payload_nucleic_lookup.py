@@ -100,7 +100,7 @@ def test_ncbi_gene_rna_gene_resolves_with_provenance() -> None:
 def test_protein_coding_alias_is_dna_and_symbol_beats_alias() -> None:
     genes = [G(7, "CRD1", "protein-coding", "AT3G56940, CHL27", 3702, "Arabidopsis thaliana")]
     p = P({"name": "CHL27"}, taxid="3702")
-    run(p, Fake(genes))
+    run(p, Fake(genes), text="CHL27 was measured in leaves.")  # R2-2: a protein-coding gene needs a paper sentence naming the row
     assert row(p)["nucleotide_type"] == "DNA" and row(p)["nucleotide_type_source"]["match_type"] == "exact_alias"
 
 
@@ -130,7 +130,7 @@ def test_undecisive_gene_type_is_unresolved(typ) -> None:
                                       ("snoRNA", "RNA"), ("scRNA", "RNA"), ("miscRNA", "RNA")])
 def test_gene_type_map(typ, want) -> None:
     p = P({"name": "Foo1"}, taxid="3702")
-    run(p, Fake([G(10, "Foo1", typ, taxid=3702)]))
+    run(p, Fake([G(10, "Foo1", typ, taxid=3702)]), text="Foo1 was measured in leaves.")  # R2-2: text fixture for protein-coding
     assert row(p)["nucleotide_type"] == want
 
 

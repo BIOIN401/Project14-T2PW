@@ -903,10 +903,13 @@ class DeterministicPwmlBuilder:
                 if (ns, key) in kept:
                     names = ["components_kept_wildcard_guard"] + (["locations_kept_state_collision"] if ns == "subcellular_locations" else [])
                     if ns == "subcellular_locations" and membrane_row(item.get("name")):
-                        # a non-bacterial inner / outer membrane with no id (a bacterial one was mapped, so is not droppable): written
-                        # under its own name it would bind to the bacterial PathWhiz row, so the name is made one that cannot match
-                        item["name"] = f"{item['name']} (non-bacterial, no ontology id)"
-                        names.append("nonbacterial_membranes_kept_by_name")
+                        # an inner / outer membrane with no id that the guard keeps (a bacterial one was mapped, so is not droppable). Written
+                        # under its own name it would bind to the bacterial PathWhiz row, so the name is made one that cannot match. The
+                        # suffix claims nothing about the organism (it may be merely undetermined); the paper name stays in vocabulary_outcomes.
+                        self.vocabulary_outcomes.append({"kind": "subcellular-location", "name": item["name"], "outcome": "membrane_kept_unresolved",
+                                                         "written": f"{item['name']} (unresolved, no ontology id)"})
+                        item["name"] = f"{item['name']} (unresolved, no ontology id)"
+                        names.append("membranes_kept_unresolved")
                 else:
                     names = [counters[ns][0]]
                     self.section_items[counters[ns][1]].remove(item)
