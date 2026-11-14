@@ -1,0 +1,22 @@
+F.                                                                       [100%]
+================================== FAILURES ===================================
+____________ test_reaction_member_side_is_the_role_in_both_layouts ____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000018BDCD6CE90>
+
+    def test_reaction_member_side_is_the_role_in_both_layouts(monkeypatch):
+        for layout in (None, "v2"):
+            rows = _members(_build(monkeypatch, layout))
+            single = [(s, r) for s, r in rows if len(r) == 1]
+            assert len(single) >= 16  # the fixture has real reactions, so the check is not vacuous
+>           assert [s for s, r in single if s not in r] == [], layout
+E           AssertionError: None
+E           assert ['Right', 'Ri..., 'Left', ...] == []
+E             
+E             Left contains 9 more items, first extra item: 'Right'
+E             Use -v to get more diff
+
+tests\test_pwml_member_side.py:70: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_pwml_member_side.py::test_reaction_member_side_is_the_role_in_both_layouts
+1 failed, 1 passed in 0.15s
