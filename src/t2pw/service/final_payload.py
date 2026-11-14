@@ -221,6 +221,10 @@ def maybe_apply_final_id_fill(payload: Dict[str, Any], pathway_context: Any = No
     if not final_payload_enabled():
         return {}
     try:
+        # ONE fetcher (one time budget, T2PW_FINAL_PAYLOAD_BUDGET_S from its construction) for the id fill, the nucleic lookup and the
+        # pathway title: the three steps share the budget, so a fill that spends it leaves the later steps to fail open (the nucleic
+        # rows stay unknown with lookup_error, the title falls back to the name). A caller-given ``fetcher`` is used as it is.
+        kw = {**kw, "fetcher": kw.get("fetcher") or _live_fetcher()}
         report = apply_final_id_fill(payload, fill_meta(pathway_context, state), **{**_paper_kw(state), **kw})
         report["meta_keys"] = sorted(fill_meta(pathway_context, state))
         report["nucleic_types"] = maybe_apply_paper_nucleic_types(payload, state, **{k: kw[k] for k in ("fetcher", "cache", "today") if k in kw})
@@ -234,7 +238,8 @@ def maybe_apply_paper_nucleic_types(payload: Dict[str, Any], state: Any = None, 
                                     today: Optional[str] = None) -> Dict[str, Any]:
     """D-W20c / D-W21d: DNA/RNA type of unsettled nucleic acids read from the paper text in ``state["final_payload_paper_text"]``
     (set by ``run_pathway`` with the flag on; absent in the Streamlit path), then NCBI Gene / RNAcentral by exact name in the
-    pathway species, then ``nucleotide_type_status: "unknown"``. ``fetcher`` defaults to the live, budgeted one."""
+    pathway species, then ``nucleotide_type_status: "unknown"``. ``fetcher`` defaults to the live, budgeted one (a NEW budget when
+    called on its own; ``maybe_apply_final_id_fill`` passes the one fetcher it shares with the id fill)."""
     from t2pw.service.final_payload_nucleic import apply_nucleic_types
     st = state if hasattr(state, "get") else {}
     return apply_nucleic_types(payload, st.get("final_payload_paper_text"), fetcher=fetcher or _live_fetcher(), cache=cache, today=today,

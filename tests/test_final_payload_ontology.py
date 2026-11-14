@@ -186,7 +186,7 @@ def test_idless_location_kept_when_dropping_would_make_two_states_identical(monk
     assert b.layout_debug_counts["locations_kept_state_collision"] == 2 and "locations_dropped_no_id" not in b.layout_debug_counts
     ids = _state_locs(root)
     assert len(set(ids.values())) == 3 and all(ids.values())
-    # no collision: s differs from u by a kept location; the unrelated id-less location is dropped
+    # no collision: s and u now also differ by tissue (root / leaf), so dropping both id-less locations binds no state to another: both dropped
     b, root = _build(copy.deepcopy(rows), [states[0], dict(states[2], tissue="leaf")], tissues=_TISSUES)
     assert _loc_names(root) == ["cytosol"] and b.layout_debug_counts["locations_dropped_no_id"] == 2
     assert "locations_kept_state_collision" not in b.layout_debug_counts

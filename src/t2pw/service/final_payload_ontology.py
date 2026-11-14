@@ -153,7 +153,13 @@ _NUMERAL = r"(?:i{1,3}|iv|v|vi{1,3}|ix|x|\d{1,2})"
 _NUMBERED = re.compile(rf"^type ({_NUMERAL}) cell$", re.I)
 _FILLER = {"and", "or", "the", "of", "in", "are", "is", "to", "with", "from", "by", "that", "which", "as", "for", "an", "these", "those",
            "both", "all", "other", "between", "but", "not", "only", "type", "cell", "cells", "also", "than", "were", "was", "have", "has"}
-MAX_PHRASES = 6  # most frequent distinct phrases looked up per name
+MAX_PHRASES = 6  # more distinct phrases than this: refused (too_many_phrases), never cut to the most frequent ones
+
+
+def _numbered_name(name: Any) -> bool:
+    """True for a ``Type <numeral> cell`` name (singular or plural)."""
+    text = str(name or "")
+    return _NUMBERED.match(re.sub(r"\s+", " ", singular_form(text) or text).strip()) is not None
 
 
 def numbered_phrases(name: str, texts: Iterable[Tuple[str, str]]) -> List[Dict[str, Any]]:
@@ -173,7 +179,7 @@ def numbered_phrases(name: str, texts: Iterable[Tuple[str, str]]) -> List[Dict[s
             e = found.setdefault(phrase, {"phrase": phrase, "source": source, "count": 0,
                                           "quote": " ".join((text[max(0, mm.start() - 60):mm.end() + 60]).split())})
             e["count"] += 1
-    return sorted(found.values(), key=lambda e: (-e["count"], e["phrase"]))[:MAX_PHRASES]
+    return sorted(found.values(), key=lambda e: (-e["count"], e["phrase"]))
 
 
 def numbered_context(f: Any, name: str, texts: Iterable[Tuple[str, str]]) -> Tuple[Optional[Dict[str, Any]], str]:
@@ -182,6 +188,8 @@ def numbered_context(f: Any, name: str, texts: Iterable[Tuple[str, str]]) -> Tup
     phrases = numbered_phrases(name, texts)
     if not phrases:
         return None, "no_context_phrase"
+    if len(phrases) > MAX_PHRASES:  # a cut list could hide a second CL term, so "exactly one" would pass falsely
+        return None, "too_many_phrases"
     ids: Dict[str, Dict[str, Any]] = {}
     for ph in phrases:
         hits = ols_exact(f, ph["phrase"], "cl", "CL:", None)
@@ -228,6 +236,7 @@ def fill_ontology_ids(payload: Dict[str, Any], fetcher: Any, cache: Optional[Cac
         return rep
     states = [s for s in payload.get("biological_states") or [] if isinstance(s, dict)]
     species = _payload_species(payload)
+    ols_failed = False
     for key, kind, state_keys, onto, prefix, branch in _SPECS:
         rows = ents.get(key)
         if not isinstance(rows, list):
@@ -248,8 +257,12 @@ def fill_ontology_ids(payload: Dict[str, Any], fetcher: Any, cache: Optional[Cac
                 held = r.get("ontology_id") or r.get("ontology-id") or (row_id(kind, m0[0]) if m0[2] in ("exact", "mapped") else None)
                 if held:
                     claimed.setdefault(str(held), n0)
-        # plural-looking names last, so the exact (singular) name of the same entity claims the id first
-        for row in sorted((r for r in rows if isinstance(r, dict)), key=lambda r: singular_form(r.get("name")) is not None):
+        # plural-looking names later, so the exact (singular) name of the same entity claims the id first; numbered cell type names
+        # ("Type II cell", resolved from the paper's context) last of all, so a row with its own exact CL label ("Type II taste cell")
+        # claims that id before a context guess does
+        for row in sorted((r for r in rows if isinstance(r, dict)),
+                          key=lambda r: (kind == "cell-type" and _numbered_name(r.get("name")),
+                                         singular_form(r.get("name")) is not None)):
             if not str(row.get("name") or "").strip():
                 continue
             name, cur = str(row["name"]).strip(), row.get("ontology_id") or row.get("ontology-id")
@@ -259,7 +272,7 @@ def fill_ontology_ids(payload: Dict[str, Any], fetcher: Any, cache: Optional[Cac
                 extra["membrane_rows_by_organism"].append({"name": name, "organisms": sorted(orgs), "outcome": mapped[2], "row": mapped[0]})
             if cur not in (None, "") or mapped[2] in ("exact", "mapped"):
                 continue
-            if rep["counts"]["fetch_error"]:  # the service is failing: stop asking, count what was not asked
+            if ols_failed:  # OLS is failing: stop asking, count what was not asked (a Cellosaurus failure does not stop OLS lookups)
                 rep["counts"]["skipped_after_fetch_error"] += 1
                 rep["refused"].append({"kind": _KIND_LABEL[kind], "name": name, "reason": "skipped_after_fetch_error"})
                 continue
@@ -279,7 +292,11 @@ def fill_ontology_ids(payload: Dict[str, Any], fetcher: Any, cache: Optional[Cac
                     elif why != "no_context_phrase":
                         extra["numbered_context_refused"][why] = extra["numbered_context_refused"].get(why, 0) + 1
                 if kind == "cell-type" and not hits and not row.get("cellosaurus_id"):  # B: a cell line is not a CL term
-                    line, cello_note = cellosaurus_for(cf, name, species)
+                    try:
+                        line, cello_note = cellosaurus_for(cf, name, species)
+                    except FetchError:  # Cellosaurus failing (or refusing an odd name) must not stop the OLS lookups
+                        line, cello_note = None, "fetch_error"
+                        rep["counts"]["fetch_error"] += 1  # still a fetch error in the totals; ``cellosaurus_refused`` counts it apart
                     if line is None:
                         extra["cellosaurus_refused"][cello_note] = extra["cellosaurus_refused"].get(cello_note, 0) + 1
                     else:
@@ -291,6 +308,7 @@ def fill_ontology_ids(payload: Dict[str, Any], fetcher: Any, cache: Optional[Cac
                                                "species": line["species"], "pathwhiz_can_use": False,
                                                "retrieved": cf.dates[-1] if cf.dates else today})
             except FetchError as exc:
+                ols_failed = True
                 rep["counts"]["fetch_error"] += 1
                 rep["refused"].append({"kind": _KIND_LABEL[kind], "name": name, "reason": f"fetch_error: {exc}"})
                 continue

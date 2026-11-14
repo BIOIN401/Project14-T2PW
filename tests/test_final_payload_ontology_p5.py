@@ -225,7 +225,8 @@ def test_organism_kind_tables_are_exact_and_contradictions_are_unknown() -> None
     assert organism_kind("Homo sapiens", "Eukaryote") == "eukaryote" and organism_kind("Homo sapiens") is None
     assert organism_kind("Methanosarcina mazei", "Prokaryote") == "archaeon"
     assert organism_kind("Clostridium difficile", "Eukaryote") is None and organism_kind("Escherichia coli", "Eukaryote") is None
-    assert organism_kind("Pseudomonas aeruginosa") == "bacterium" and organism_kind("Unknownus bacter", "Prokaryote") == "bacterium"
+    # F8 (review 1): "Prokaryote" with an unlisted genus is undetermined, no longer "bacterium" (the old assertion here said "bacterium")
+    assert organism_kind("Pseudomonas aeruginosa") == "bacterium" and organism_kind("Unknownus bacter", "Prokaryote") is None
     assert organism_kinds([("Escherichia coli", "Prokaryote"), ("Homo sapiens", None)]) == {"bacterium", "unknown"}
 
 

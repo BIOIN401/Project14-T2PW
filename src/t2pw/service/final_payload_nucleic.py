@@ -200,13 +200,16 @@ EUTILS = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/"
 EBI_SEARCH = "https://www.ebi.ac.uk/ebisearch/ws/rest/rnacentral"  # the search behind rnacentral.org; its own /api/v1/rna has no name filter
 MAX_IDS = 20
 _SYMBOL = re.compile(r"[A-Za-z][A-Za-z0-9_.\-]{2,39}")  # a gene symbol or alias: one token, no space, slash or leading digit
-# NCBI Gene type -> nucleic acid type of the record's name. protein-coding: the gene as a genetic element is DNA (PO ruling D-W21d).
-# RNA-gene types: the gene's only product is an RNA, and a symbol such as RyhB, MIR171c or tRNA-Leu names that RNA.
+# NCBI Gene type -> nucleic acid type of the record's name. protein-coding -> DNA is a PROPOSED rule (D-W21d only says "try an online
+# lookup"; the product owner has not ruled): accepted only when no paper sentence naming the row has a protein word (see
+# ``_protein_context``), else the row stays unknown with lookup code ``protein_context``. NCBI aliases are matched exactly, case-fold
+# only. RNA-gene types: the gene's only product is an RNA, and a symbol such as RyhB, MIR171c or tRNA-Leu names that RNA.
 # pseudo / other / unknown / biological-region are not decisive and stay unresolved.
 GENE_TYPE = {"protein-coding": "DNA", "ncRNA": "RNA", "tRNA": "RNA", "rRNA": "RNA", "snRNA": "RNA", "snoRNA": "RNA",
              "scRNA": "RNA", "miscRNA": "RNA"}
 LOOKUP_CODES = ("not_attempted", "no_fetcher", "species_unknown", "species_ambiguous", "no_symbol_name", "not_found",
-                "ambiguous", "gene_type_not_decisive", "sources_disagree", "too_many_records",
+                "ambiguous", "gene_type_not_decisive", "sources_disagree", "too_many_records", "protein_context",
+                "refused_by_a_source",
                 "lookup_error", "lookup_skipped_after_error", "slot_filled", "writer_ignores")
 
 
@@ -216,6 +219,17 @@ class _Fail(Exception):
 
 def _cf(s: Any) -> str:
     return str(s or "").strip().casefold()
+
+
+def _protein_context(text: Any, row: Dict[str, Any]) -> bool:
+    """True when a paper sentence that names the row (name or a synonym) holds a protein word (writer ``_PROTEIN_TOKENS``): the symbol
+    is then used for the protein there (CHL27 as a subunit), so a protein-coding gene type does not make the row DNA."""
+    from t2pw.pwml.writer import _PROTEIN_TOKENS
+    pats = [_pattern(n) for n in _names(row)]
+    for _, sent in _sentences(text if isinstance(text, str) else ""):
+        if any(p.search(sent) for p in pats) and any(t in _PROTEIN_TOKENS for t in re.findall(r"[a-z0-9]+", sent.casefold())):
+            return True
+    return False
 
 
 def _short(s: str) -> str:
@@ -263,7 +277,7 @@ def _ncbi_gene(f: Any, names: List[str], taxid: str) -> Dict[str, Any]:
     c = next(iter(cands.values()))
     if GENE_TYPE.get(c["gene_type"]) is None:
         raise _Fail("gene_type_not_decisive")
-    return {"type": GENE_TYPE[c["gene_type"]], "source": "NCBI Gene", "accession": "GeneID:" + c["id"], "match_type": c["match_type"],
+    return {"type": GENE_TYPE[c["gene_type"]], "gene_type": c["gene_type"], "source": "NCBI Gene", "accession": "GeneID:" + c["id"], "match_type": c["match_type"],
             "candidates": ["GeneID:" + i for i in sorted(cands, key=int)],
             "quote": _short('GeneID %s (%s): symbol "%s", aliases "%s", gene type %s; matched "%s" as %s'
                             % (c["id"], c["organism"], c["symbol"], ", ".join(c["aliases"]), c["gene_type"], c["name"], c["match_type"]))}
@@ -320,11 +334,13 @@ class _Lookup:
             self.failed = True
             return {"status": "lookup_error"}
         ok = [g for g in got if isinstance(g, dict)]
+        why = [g for g in got if g != "not_found" and not isinstance(g, dict)]  # a source that REFUSED (not merely found nothing)
         if len({g["type"] for g in ok}) > 1:
             return {"status": "sources_disagree"}
+        if ok and why:  # one source answered, another saw two genes / a pseudogene / too many records: not one unambiguous answer
+            return {"status": "refused_by_a_source", "refusals": why, "found_by": [g["source"] for g in ok]}
         if ok:
             return dict(ok[0], status="resolved", confirmed_by=[g["source"] + " " + g["accession"] for g in ok[1:]])
-        why = [g for g in got if g != "not_found"]
         return {"status": why[0] if why else "not_found"}
 
 
@@ -365,7 +381,11 @@ def apply_nucleic_types(payload: Dict[str, Any], text: Any, *, fetcher: Any = No
         lk = _Lookup(cf, taxid, why)
         for r in todo:
             reason = reasons[id(r)]
-            out = {"status": "not_attempted"} if reason == "protein_like" else lk.resolve(r)
+            # protein-like names are never typed here; a row the paper itself calls both DNA and RNA stays unknown (a lookup would
+            # silently pick one against the paper's own text)
+            out = {"status": "not_attempted"} if reason in ("protein_like", "conflicting") else lk.resolve(r)
+            if out["status"] == "resolved" and out.get("gene_type") == "protein-coding" and _protein_context(text, r):
+                out = {"status": "protein_context"}
             if out["status"] == "resolved" and _cf(r.get("nucleotide_type")):
                 out = {"status": "slot_filled"}
             if out["status"] == "resolved":

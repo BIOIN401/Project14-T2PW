@@ -254,7 +254,7 @@ _ABBR_OF = {"inner": "im", "outer": "om"}
 # ids that may accompany the name of the same bacterial compartment: the row's own stored id, GO cell outer membrane, GO outer membrane
 _MEMBRANE_OWN_IDS = {"Inner Membrane": {"GO:0070258"}, "Outer Membrane": {"GO:0043165", "GO:0009279", "GO:0019867"}}
 
-# Exact genus tables (no guessing). A genus in neither table, with the species classification "Prokaryote", counts as bacterial.
+# Exact genus tables (no guessing). A genus in neither table is undetermined (None), whatever the classification says (except Eukaryote).
 _BACTERIAL_GENERA = frozenset("""escherichia pseudomonas bacillus lactococcus listeria staphylococcus streptococcus streptomyces borrelia
 borreliella aquifex campylobacter helicobacter mycobacterium salmonella klebsiella acinetobacter haemophilus vibrio yersinia shigella
 clostridium clostridioides enterococcus lactobacillus corynebacterium neisseria legionella synechocystis synechococcus thermus agrobacterium
@@ -276,9 +276,7 @@ def organism_kind(name: Any, classification: Any = None) -> Optional[str]:
     cls = str(classification or "").strip().casefold()
     if cls == "eukaryote":
         return None if table else "eukaryote"
-    if cls == "prokaryote":
-        return table or ("bacterium" if text else None)  # PathWhiz "Prokaryote": bacterial unless the genus is a listed archaeon
-    return table
+    return table  # "Prokaryote" with an unlisted genus stays undetermined (None): the bacterial rows are not given on a guess
 
 
 def organism_kinds(species: Iterable[Tuple[Any, Any]]) -> frozenset:
@@ -320,7 +318,11 @@ def map_vocabulary_name(kind: str, name: Any, ontology_id: Any, organisms: Optio
             return mem, None, "mapped"
         if onto in _ROW_BY_ID[kind]:  # the data carries the id of another row (a mitochondrial membrane, say): that row
             return _ROW_BY_ID[kind][onto], None, "mapped_by_id"
-        return name, None, "unmapped"  # not bacterial or undetermined: the name equals a bacterial row's name, so no id is written either
+        # not bacterial or undetermined: the name equals a bacterial row's name, so no id is written either. Writing the record's own
+        # id instead would not be safe: PathWhiz SubcellularLocation validates a unique name, and MySQL compares names case-
+        # insensitively, so the create would collide with the bacterial row. The writer therefore treats this as an id-less row
+        # (decided from the WRITTEN id): dropped, or, when the wildcard guard keeps it, renamed so it cannot bind (writer guard).
+        return name, None, "unmapped"
     if key in _ROW_KEYS[kind]:
         return name, ontology_id, "exact"
     target = SYNONYMS[kind].get(key)

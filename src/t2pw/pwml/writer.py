@@ -16,7 +16,7 @@ from t2pw.paths import PROJECT_ROOT
 from t2pw.pipeline.entity_identity import component_stoichiometry, is_pathbank_unknown_protein
 from t2pw.pipeline.process_normalizer import normalize_process_payload
 from t2pw.pwml.compound_templates import TEMPLATE_DIMS, select_compound_template_id
-from t2pw.pwml.vocabulary_map import map_vocabulary_name, organism_kinds
+from t2pw.pwml.vocabulary_map import map_vocabulary_name, membrane_row, organism_kinds
 from t2pw.pwml.ir import build_pwml_ir, is_pwml_ir, validate_pwml_ir
 from t2pw.pwml.qa import run_pwml_qa
 from t2pw.service.final_payload import final_payload_enabled
@@ -837,9 +837,12 @@ class DeterministicPwmlBuilder:
         The importer treats an omitted component as a WILDCARD (find_by without nil ids), so a row is kept, by name, whenever
         omitting it would let a state bind to another state: its remaining components match (are a subset of) another state's, or
         it would be identical to another, or it would keep no tissue / cell type / location. The whole set of states is evaluated
-        at once; rows are restored (location, tissue, cell type order) until no state is newly wildcard-bindable. Restoring a
-        row never makes another state bindable (every state that references the row gains the component together), so this ends,
-        with every row kept at worst. A state already bindable before any drop (full components) is not counted against us."""
+        at once; rows are restored (location, tissue, cell type order) until no state is newly wildcard-bindable. ``kept`` only
+        grows and there are finitely many rows, so the loop ends, with every row kept at worst. Restoring a row can in principle
+        make ANOTHER state bindable (two rows with equal name and id tokens), which is why the outer loop re-checks every state
+        until nothing changes. A state already bindable before any drop (full components) is not counted against us. Scope: this
+        reasons over this file only; against a populated PathWhiz database and the unpatched importer an omitted component can
+        still bind to a matching row of another pathway."""
         order = ("subcellular_locations", "tissues", "cell_types")
         refs = {"subcellular_locations": "subcellular_location_key", "tissues": "tissue_key", "cell_types": "cell_type_key"}
         states = []
@@ -899,6 +902,11 @@ class DeterministicPwmlBuilder:
             for key, item in droppable[ns].items():
                 if (ns, key) in kept:
                     names = ["components_kept_wildcard_guard"] + (["locations_kept_state_collision"] if ns == "subcellular_locations" else [])
+                    if ns == "subcellular_locations" and membrane_row(item.get("name")):
+                        # a non-bacterial inner / outer membrane with no id (a bacterial one was mapped, so is not droppable): written
+                        # under its own name it would bind to the bacterial PathWhiz row, so the name is made one that cannot match
+                        item["name"] = f"{item['name']} (non-bacterial, no ontology id)"
+                        names.append("nonbacterial_membranes_kept_by_name")
                 else:
                     names = [counters[ns][0]]
                     self.section_items[counters[ns][1]].remove(item)
@@ -1115,13 +1123,13 @@ class DeterministicPwmlBuilder:
         item_by_key: Dict[str, Dict[str, Dict[str, Any]]] = {"subcellular_locations": {}, "tissues": {}, "cell_types": {}}
         droppable: Dict[str, Dict[str, Dict[str, Any]]] = {"subcellular_locations": {}, "tissues": {}, "cell_types": {}}
 
-        def idless_unmapped(record: Dict[str, Any], id_keys: Sequence[str]) -> bool:
+        def idless_unmapped(record: Dict[str, Any], id_keys: Sequence[str], written: Dict[str, Any]) -> bool:
+            # decided from the id that will be WRITTEN (the vocabulary map may drop or replace the record's own id)
             return (
                 final_payload_enabled()
                 and self._last_vocabulary_outcome == "unmapped"
                 and first_int(record, id_keys) is None
-                and not record.get("ontology_id")
-                and not record.get("ontology-id")
+                and not written.get("ontology-id")
             )
 
         self.section_items["cell-types"] = []
@@ -1133,7 +1141,7 @@ class DeterministicPwmlBuilder:
             ct_item = {"id": rid, **self._vocabulary_fields("cell-type", record)}
             self.section_items["cell-types"].append(ct_item)
             item_by_key["cell_types"][str(record.get("key"))] = ct_item
-            if idless_unmapped(record, ["pathwhiz_id", "pathbank_cell_type_id", "pw_cell_type_id"]):
+            if idless_unmapped(record, ["pathwhiz_id", "pathbank_cell_type_id", "pw_cell_type_id"], ct_item):
                 droppable["cell_types"][str(record.get("key"))] = ct_item
 
         self.section_items["species"] = []
@@ -1177,7 +1185,7 @@ class DeterministicPwmlBuilder:
             loc_item = {"id": rid, **fields}
             self.section_items["subcellular-locations"].append(loc_item)
             item_by_key["subcellular_locations"][str(record.get("key"))] = loc_item
-            if idless_unmapped(record, ["pathwhiz_id", "pathbank_subcellular_location_id", "pw_subcellular_location_id"]):
+            if idless_unmapped(record, ["pathwhiz_id", "pathbank_subcellular_location_id", "pw_subcellular_location_id"], loc_item):
                 droppable["subcellular_locations"][str(record.get("key"))] = loc_item
 
         self.section_items["tissues"] = []
@@ -1194,7 +1202,7 @@ class DeterministicPwmlBuilder:
             }
             self.section_items["tissues"].append(tissue_item)
             item_by_key["tissues"][str(record.get("key"))] = tissue_item
-            if idless_unmapped(record, ["pathwhiz_id", "pathbank_tissue_id", "pw_tissue_id"]):
+            if idless_unmapped(record, ["pathwhiz_id", "pathbank_tissue_id", "pw_tissue_id"], tissue_item):
                 droppable["tissues"][str(record.get("key"))] = tissue_item
 
         if any(droppable.values()):

@@ -215,7 +215,8 @@ def test_unknown_flag_reasons_and_never_a_type() -> None:
     rows = p["entities"]["nucleic_acids"]
     assert [r["nucleotide_type_unknown_reason"] for r in rows[:4]] == ["conflicting", "no_cue", "not_mentioned", "protein_like"]
     assert all(r["nucleotide_type_status"] == "unknown" and "nucleotide_type" not in r and "nucleotide_type_paper" not in r for r in rows[:4])
-    assert rows[3]["nucleotide_type_unknown_lookup"] == "not_attempted" and rows[0]["nucleotide_type_unknown_lookup"] == "not_found"
+    # F2 (review 1): a row the paper calls both DNA and RNA is not sent to the lookup either (the old assertion here said "not_found")
+    assert rows[3]["nucleotide_type_unknown_lookup"] == "not_attempted" and rows[0]["nucleotide_type_unknown_lookup"] == "not_attempted"
     assert rows[4]["nucleotide_type_paper"] == "RNA" and rows[4]["nucleotide_type_status"] == "resolved"
     assert rep["unknown"] == 4 and rep["unknown_by_reason"] == {"conflicting": 1, "no_cue": 1, "not_mentioned": 1, "protein_like": 1}
     assert rep["resolved"] == 1 and rep["lookup_resolved"] == 0
