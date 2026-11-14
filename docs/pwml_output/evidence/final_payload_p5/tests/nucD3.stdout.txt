@@ -1,0 +1,55 @@
+T2PW: C:\t\fp\src\t2pw\__init__.py
+........................................................................ [ 31%]
+.............................................F.......................... [ 62%]
+........................................................................ [ 93%]
+................                                                         [100%]
+================================== FAILURES ===================================
+_ test_writer_keeps_inner_and_outer_separate_for_bacteria_and_drops_them_for_a_human _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002108E56FD20>
+
+    def test_writer_keeps_inner_and_outer_separate_for_bacteria_and_drops_them_for_a_human(monkeypatch) -> None:
+        ecoli = {"name": "Escherichia coli", "pathwhiz_id": 1, "classification": "Prokaryote"}
+        names = ["inner membrane (IM)", "outer membrane (OM)", "cytosol"]
+        monkeypatch.delenv("T2PW_FINAL_PAYLOAD", raising=False)
+        b, root = _build(_writer_payload(ecoli, names))
+        assert _loc_names(root) == names and not b.vocabulary_outcomes  # flag off: untouched
+        monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "1")
+        b, root = _build(_writer_payload(ecoli, names))
+        assert _loc_names(root) == ["Inner Membrane", "Outer Membrane", "cytosol"]
+>       assert {(o["name"], o["written"], tuple(o["organisms"])) for o in b.vocabulary_outcomes} == {
+                                                ^^^^^^^^^^^^^^
+            ("inner membrane (IM)", "Inner Membrane", ("bacterium",)), ("outer membrane (OM)", "Outer Membrane", ("bacterium",))}
+E       KeyError: 'organisms'
+
+tests\test_final_payload_ontology_p5.py:284: KeyError
+=========================== short test summary info ===========================
+FAILED tests/test_final_payload_ontology_p5.py::test_writer_keeps_inner_and_outer_separate_for_bacteria_and_drops_them_for_a_human
+1 failed, 231 passed in 27.65s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\fp\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 52111d086e7f41c8923d3b57d3ffa144d7e729b6  [git, worktree dirty=True]
+label                   : fp-nucD3
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/fp -q --basetemp=C:/t/tmpbase/nucD3-20996 tests/test_final_payload_nucleic_lookup.py tests/test_final_payload_nucleic_type.py tests/test_final_payload_fill.py tests/test_final_payload_meta.py tests/test_final_payload_ontology.py tests/test_final_payload_ontology_p5.py tests/test_final_payload_vocabulary.py tests/test_final_payload_wildcard_guard.py tests/test_final_payload_writer_fixes.py tests/test_pwml_ir.py tests/test_pwml_ir_duplicate_row_refusal.py
+cwd                     : C:\t\fp
+root PID / process group: 346104 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 28.60 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  350936:python.exe
+descendants terminated  : 1  350936
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/fp/docs/pwml_output/evidence/final_payload_p5/tests/nucD3.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=fp5-nucD3  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================
