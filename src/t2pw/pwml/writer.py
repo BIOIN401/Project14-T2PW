@@ -2578,14 +2578,9 @@ class DeterministicPwmlBuilder:
                     if not minfo:
                         continue
                     role = str(member.get("role") or "")
-                    layout = reaction_layout_by_key.get(str(viz.get("process_key") or ""), {"row-dir": 1})
-                    side = (
-                        _reaction_visual_side(layout, True)
-                        if role == "left"
-                        else _reaction_visual_side(layout, False)
-                        if role == "right"
-                        else ""
-                    )
+                    # PathWhiz reads the member's `side` as its role (SBML/SBGN export,
+                    # orientation, find_element), so it follows the role, not the serpentine row.
+                    side = "Left" if role == "left" else "Right" if role == "right" else ""
                     mtype = str(member.get("member_type") or minfo.get("entity_type") or "")
                     if role == "enzyme":
                         ev = {"id": self.ids.next(), "reaction-enzyme-id": int(minfo["id"])}
