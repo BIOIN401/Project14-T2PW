@@ -276,3 +276,6 @@ def test_reaction_point_joins_the_box_of_a_drawn_neighbour():
     relayout(items, _ids())
     assert [lb["label-text"] for lb in items["label-locations"]] == ["cytosol"]
     assert len(items["membrane-visualizations"]) == 1
+    box = [int(t) for t in re.findall(r"-?[0-9]+", items["membrane-visualizations"][0]["path"])]
+    end = [int(t) for t in re.findall(r"-?[0-9]+", items["edges"][0]["path"])][-2:]  # the reaction point
+    assert min(box[0::2]) <= end[0] <= max(box[0::2]) and min(box[1::2]) <= end[1] <= max(box[1::2])
