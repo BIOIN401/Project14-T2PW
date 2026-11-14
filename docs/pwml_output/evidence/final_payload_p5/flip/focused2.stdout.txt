@@ -1,0 +1,163 @@
+T2PW: C:\t\fp\src\t2pw\__init__.py
+..............................................F......................FF. [ 19%]
+...............F.......F................................................ [ 38%]
+........................................................................ [ 57%]
+........................................................................ [ 76%]
+........................................................................ [ 95%]
+.F..............                                                         [100%]
+================================== FAILURES ===================================
+_ test_f1_kept_nonbacterial_membrane_is_renamed_so_it_cannot_bind_to_the_bacterial_row _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000014824B96190>
+
+    def test_f1_kept_nonbacterial_membrane_is_renamed_so_it_cannot_bind_to_the_bacterial_row(monkeypatch) -> None:
+        monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "1")
+        b, root = _build(_human_membrane_payload("t0"))  # same tissue: without the location the first state is a subset of the second, so it is kept
+        names = _loc_names(root)
+        assert "outer membrane" not in [n.casefold() for n in names] and "Outer Membrane" not in names
+>       assert names == ["outer membrane (non-bacterial, no ontology id)", "cytosol"]
+E       AssertionError: assert ['outer membr...)', 'cytosol'] == ['outer membr...)', 'cytosol']
+E         
+E         At index 0 diff: 'outer membrane (unresolved, no ontology id)' != 'outer membrane (non-bacterial, no ontology id)'
+E         Use -v to get more diff
+
+tests\test_final_payload_fix1.py:47: AssertionError
+___________ test_r23_a_spent_id_fill_budget_does_not_stop_the_title ___________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001481EED15C0>
+
+    def test_r23_a_spent_id_fill_budget_does_not_stop_the_title(monkeypatch) -> None:
+        monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "1")
+        clock = SimpleNamespace(now=1000.0)
+        monkeypatch.setattr(fp, "time", SimpleNamespace(monotonic=lambda: clock.now))  # only this module sees the fake clock
+        inner = _SlowFake([("esummary", {"db": "pubmed"}, PUBMED)], clock)
+        monkeypatch.setattr("t2pw.clean_model.fill.http.UrllibFetcher", lambda throttle=None: inner)
+        p = _p()
+        rep = fp.maybe_apply_final_id_fill(p, {"likely_organism": "Pseudomonas putida"}, {"final_payload_paper": {"pmid": "555"}},
+                                           cache=Cache(None), today=TODAY)
+>       assert "error" not in rep
+E       AssertionError: assert 'error' not in {'by_field': {}, 'enabled': True, 'error': None, 'fill': {'by_field': {}, 'by_match_type': {}, 'by_source': {}, 'cache_hits': 0, ...}, ...}
+
+tests\test_final_payload_fix2.py:146: AssertionError
+_____ test_r23_a_spent_budget_is_reported_and_the_title_still_falls_back ______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001481EEECEC0>
+
+    def test_r23_a_spent_budget_is_reported_and_the_title_still_falls_back(monkeypatch) -> None:
+        clock = SimpleNamespace(now=0.0)
+        monkeypatch.setattr(fp, "time", SimpleNamespace(monotonic=lambda: clock.now))
+>       assert fp.TITLE_BUDGET_SECONDS < fp.BUDGET_SECONDS
+               ^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 't2pw.service.final_payload' has no attribute 'TITLE_BUDGET_SECONDS'. Did you mean: 'BUDGET_SECONDS'?
+
+tests\test_final_payload_fix2.py:157: AttributeError
+___________ test_protein_coding_alias_is_dna_and_symbol_beats_alias ___________
+
+    def test_protein_coding_alias_is_dna_and_symbol_beats_alias() -> None:
+        genes = [G(7, "CRD1", "protein-coding", "AT3G56940, CHL27", 3702, "Arabidopsis thaliana")]
+        p = P({"name": "CHL27"}, taxid="3702")
+        run(p, Fake(genes))
+>       assert row(p)["nucleotide_type"] == "DNA" and row(p)["nucleotide_type_source"]["match_type"] == "exact_alias"
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'nucleotide_type'
+
+tests\test_final_payload_nucleic_lookup.py:104: KeyError
+___________________ test_gene_type_map[protein-coding-DNA] ____________________
+
+typ = 'protein-coding', want = 'DNA'
+
+    @pytest.mark.parametrize("typ,want", [("protein-coding", "DNA"), ("ncRNA", "RNA"), ("tRNA", "RNA"), ("rRNA", "RNA"), ("snRNA", "RNA"),
+                                          ("snoRNA", "RNA"), ("scRNA", "RNA"), ("miscRNA", "RNA")])
+    def test_gene_type_map(typ, want) -> None:
+        p = P({"name": "Foo1"}, taxid="3702")
+        run(p, Fake([G(10, "Foo1", typ, taxid=3702)]))
+>       assert row(p)["nucleotide_type"] == want
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'nucleotide_type'
+
+tests\test_final_payload_nucleic_lookup.py:134: KeyError
+____ test_cli_export_emits_the_canonical_organism_and_keeps_its_provenance ____
+
+tmp_path = WindowsPath('C:/t/tmpbase/flip-focused2-13965-801/test_cli_export_emits_the_cano0')
+
+    def test_cli_export_emits_the_canonical_organism_and_keeps_its_provenance(
+        tmp_path: Path,
+    ) -> None:
+        """D-016 (LOCKED) on the CLI entry point, end to end.
+    
+        Fails at ``d146be48``: the species ladder had moved into the pre-freeze
+        sequence and only Streamlit called it, so this entry point emitted
+        ``<name>Lactococcus lactis subsp. lactis KF147</name>`` with an empty
+        ``name_canonicalization["species"]`` and no preflight -- the exported organism
+        wearing the un-normalized name with no record that a normalization was owed.
+        """
+    
+        result, out_dir = _run_cli_export(tmp_path, _kf147_payload())
+        assert "error" not in result
+    
+        pwml = (out_dir / "pathway.pwml").read_text(encoding="utf-8")
+        assert "<name>Lactococcus lactis</name>" in pwml
+        assert "KF147" not in pwml
+    
+        ir = json.loads((out_dir / "final.pwml_ir.json").read_text(encoding="utf-8"))
+        species = ir["species"]
+        assert [row["name"] for row in species] == ["Lactococcus lactis"]
+        # The alias is the provenance the IR carries: the row still answers to the
+        # name the paper used, so an importer matching on either finds one organism.
+        # DEFERRED, not this card's boundary: ``ir._component_record`` (ir.py:415-435)
+        # projects ``aliases`` but not ``raw_name``, so the ``raw_name`` the pre-freeze
+        # stage writes onto the payload row -- asserted directly in
+        # tests/test_prefreeze_species_resolution.py -- stops at the IR projection.
+        # Measured identical on the Streamlit path; not introduced by this seam.
+        assert species[0]["aliases"] == ["Lactococcus lactis subsp. lactis KF147"]
+    
+        report = json.loads((out_dir / "pwml_ir_report.json").read_text(encoding="utf-8"))
+        assert report["name_canonicalization"]["species"] == [{
+            "from": "Lactococcus lactis subsp. lactis KF147",
+            "to": "Lactococcus lactis",
+            "taxonomy_id": "1091041",
+            "source": "deterministic_strain_normalization",
+        }]
+        # P4-01: no worktree carries a .env, so ``PathBankDbResolver.from_env()``
+        # answers ``None`` and this leg is offline. Asserted rather than assumed --
+        # a reachable DB would make the preflight below silently absent instead of
+        # wrong, and a vacuous assertion is not evidence.
+>       assert report["db_resolution"]["available"] is False
+E       assert True is False
+
+tests\test_pwml_writer.py:1833: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_final_payload_fix1.py::test_f1_kept_nonbacterial_membrane_is_renamed_so_it_cannot_bind_to_the_bacterial_row
+FAILED tests/test_final_payload_fix2.py::test_r23_a_spent_id_fill_budget_does_not_stop_the_title
+FAILED tests/test_final_payload_fix2.py::test_r23_a_spent_budget_is_reported_and_the_title_still_falls_back
+FAILED tests/test_final_payload_nucleic_lookup.py::test_protein_coding_alias_is_dna_and_symbol_beats_alias
+FAILED tests/test_final_payload_nucleic_lookup.py::test_gene_type_map[protein-coding-DNA]
+FAILED tests/test_pwml_writer.py::test_cli_export_emits_the_canonical_organism_and_keeps_its_provenance
+6 failed, 370 passed in 49.23s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\fp\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f00a4964d5e09aa2cdbc3add49fe4a443fe4fc53  [git, worktree dirty=True]
+label                   : fp-flip-focused2
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/fp -q --basetemp=C:/t/tmpbase/flip-focused2-13965-801 tests/test_final_payload_default_flip.py tests/test_final_payload_fill.py tests/test_final_payload_fix1.py tests/test_final_payload_fix2.py tests/test_final_payload_meta.py tests/test_final_payload_nucleic_lookup.py tests/test_final_payload_nucleic_type.py tests/test_final_payload_ontology.py tests/test_final_payload_ontology_p5.py tests/test_final_payload_vocabulary.py tests/test_final_payload_wildcard_guard.py tests/test_final_payload_writer_fixes.py tests/test_process_normalizer.py tests/test_process_normalizer_transport_states.py tests/test_pwml_ir.py tests/test_pwml_ir_duplicate_row_refusal.py tests/test_pwml_writer.py tests/test_transport_sides.py
+cwd                     : C:\t\fp
+root PID / process group: 277556 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 51.46 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  277932:python.exe
+descendants terminated  : 1  277932
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/fp/docs/pwml_output/evidence/final_payload_p5/flip/focused2.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=fp5-flip-focused2  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

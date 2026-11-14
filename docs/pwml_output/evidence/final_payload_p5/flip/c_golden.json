@@ -1,0 +1,184 @@
+{
+  "label": "fpc-flip-c_golden",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/fpclean",
+    "-q",
+    "--basetemp=C:/t/tmpbase/flip-c_golden-21802-1",
+    "tests/test_batch_driver_seam_golden.py",
+    "tests/test_c011_freeze_seam_golden_equivalence.py",
+    "tests/test_streamlit_stage8_export_contract.py",
+    "tests/test_streamlit_quarantine_boundary.py"
+  ],
+  "cwd": "C:\\t\\fpclean",
+  "started_at": "2026-11-14T22:31:40+00:00",
+  "finished_at": "2026-11-14T22:33:11+00:00",
+  "duration_seconds": 90.61624060000031,
+  "timeout_seconds": 900.0,
+  "root_pid": 286620,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 283736,
+      "name": "python.exe",
+      "ppid": 286620
+    },
+    {
+      "pid": 281940,
+      "name": "python.exe",
+      "ppid": 283736
+    },
+    {
+      "pid": 287096,
+      "name": "python.exe",
+      "ppid": 281940
+    },
+    {
+      "pid": 270408,
+      "name": "python.exe",
+      "ppid": 283736
+    },
+    {
+      "pid": 286240,
+      "name": "python.exe",
+      "ppid": 270408
+    },
+    {
+      "pid": 287256,
+      "name": "git.exe",
+      "ppid": 286240
+    },
+    {
+      "pid": 284236,
+      "name": "python.exe",
+      "ppid": 283736
+    },
+    {
+      "pid": 285600,
+      "name": "python.exe",
+      "ppid": 284236
+    },
+    {
+      "pid": 260540,
+      "name": "python.exe",
+      "ppid": 283252
+    },
+    {
+      "pid": 283252,
+      "name": "python.exe",
+      "ppid": 283736
+    },
+    {
+      "pid": 271344,
+      "name": "python.exe",
+      "ppid": 283736
+    },
+    {
+      "pid": 287180,
+      "name": "python.exe",
+      "ppid": 271344
+    },
+    {
+      "pid": 287352,
+      "name": "python.exe",
+      "ppid": 287568
+    },
+    {
+      "pid": 287568,
+      "name": "python.exe",
+      "ppid": 283736
+    },
+    {
+      "pid": 283184,
+      "name": "python.exe",
+      "ppid": 283736
+    },
+    {
+      "pid": 285488,
+      "name": "python.exe",
+      "ppid": 283184
+    }
+  ],
+  "descendants_terminated": [
+    260540,
+    270408,
+    271344,
+    281940,
+    283184,
+    283252,
+    283736,
+    284236,
+    285488,
+    285600,
+    286240,
+    287096,
+    287180,
+    287256,
+    287352,
+    287568
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 77224,
+      "name": "python.exe"
+    },
+    {
+      "pid": 101992,
+      "name": "python.exe"
+    },
+    {
+      "pid": 102708,
+      "name": "python.exe"
+    },
+    {
+      "pid": 106124,
+      "name": "python.exe"
+    },
+    {
+      "pid": 281332,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/fp/docs/pwml_output/evidence/final_payload_p5/flip/c_golden.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\fpclean\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\fpclean",
+    "repo_head": "5d1ac2ce56c75d7b6bb9bf5c27329e5a26f6f34d",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "fp5c-flip-c_golden",
+    "token": "fp5c-flip-c_golden:281332:1b45ed3f4f5252f5",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

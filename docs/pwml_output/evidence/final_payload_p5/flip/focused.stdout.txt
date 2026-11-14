@@ -1,0 +1,677 @@
+T2PW: C:\t\fp\src\t2pw\__init__.py
+FF.....F.....................F...................F...................... [ 20%]
+................FF.............FF.....F....................F....F....... [ 41%]
+...F.F.FF...F..F.F..F...F............................................... [ 62%]
+........................................F............................... [ 83%]
+.......................F.........F........F..............                [100%]
+================================== FAILURES ===================================
+______________________________ test_flag_parsing ______________________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002B8509F48A0>
+
+    def test_flag_parsing(monkeypatch):
+        for v, want in (("1", True), ("TRUE", True), ("Yes", True), ("0", False), ("", False), ("off", False)):
+            monkeypatch.setenv("T2PW_FINAL_PAYLOAD", v)
+>           assert final_payload_enabled() is want
+E           assert True is False
+E            +  where True = final_payload_enabled()
+
+tests\test_final_payload_fill.py:93: AssertionError
+____________ test_flag_off_wiring_helper_leaves_payload_untouched _____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002B8568215B0>
+
+    def test_flag_off_wiring_helper_leaves_payload_untouched(monkeypatch):
+        monkeypatch.delenv("T2PW_FINAL_PAYLOAD", raising=False)
+        p = _payload()
+        before = copy.deepcopy(p)
+        called = []
+        monkeypatch.setattr("t2pw.service.final_payload.apply_final_id_fill", lambda *a, **k: called.append(1))
+>       assert maybe_apply_final_id_fill(p, {"likely_organism": "Escherichia coli"}, {}) == {}
+E       assert {'enabled': T... 'written': 0} == {}
+E         
+E         Left contains 3 more items:
+E         {'enabled': True,
+E          'error': "TypeError: 'NoneType' object does not support item assignment",
+E          'written': 0}
+E         Use -v to get more diff
+
+tests\test_final_payload_fill.py:104: AssertionError
+__________________ test_seam_flag_off_is_the_resolver_alone ___________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002B856701B80>
+
+    def test_seam_flag_off_is_the_resolver_alone(monkeypatch):
+        monkeypatch.delenv("T2PW_FINAL_PAYLOAD", raising=False)
+        monkeypatch.setattr("t2pw.service.final_payload.maybe_apply_final_id_fill",
+                            lambda *a, **k: (_ for _ in ()).throw(AssertionError("fill must not run")))
+        p = _seam_payload()
+        before = copy.deepcopy(p)
+        calls = []
+>       res, rep = prefreeze_with_final_fill(p, lambda pl: calls.append(1) or {"r": 1}, {}, {})
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_final_payload_fill.py:188: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\t2pw\service\final_payload.py:257: in prefreeze_with_final_fill
+    report = maybe_apply_final_id_fill(payload, pathway_context, state, **kw)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_final_payload_fill.py:184: in <lambda>
+    lambda *a, **k: (_ for _ in ()).throw(AssertionError("fill must not run")))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+.0 = <tuple_iterator object at 0x000002B8566E0A90>
+
+>   lambda *a, **k: (_ for _ in ()).throw(AssertionError("fill must not run")))
+E   AssertionError: fill must not run
+
+tests\test_final_payload_fill.py:184: AssertionError
+________________________ test_f1_flag_off_is_untouched ________________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002B850DA3850>
+
+    def test_f1_flag_off_is_untouched(monkeypatch) -> None:
+        monkeypatch.delenv("T2PW_FINAL_PAYLOAD", raising=False)
+        b, root = _build(_human_membrane_payload("t0"))
+>       assert _loc_names(root) == ["outer membrane", "cytosol"] and not b.layout_debug_counts.get("nonbacterial_membranes_kept_by_name")
+E       AssertionError: assert (['outer membr...)', 'cytosol'] == ['outer membrane', 'cytosol']
+E         
+E         At index 0 diff: 'outer membrane (non-bacterial, no ontology id)' != 'outer membrane'
+E         Use -v to get more diff)
+
+tests\test_final_payload_fix1.py:54: AssertionError
+_____________________________ test_wiring_helpers _____________________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002B850EF1470>
+
+    def test_wiring_helpers(monkeypatch):
+        p, before = _p(), copy.deepcopy(_p())
+        monkeypatch.delenv("T2PW_FINAL_PAYLOAD", raising=False)
+>       assert maybe_apply_final_pathway_meta(p, {"pathway_name": "n"}, {}) == {} and p == before
+E       AssertionError: assert ({'enabled': T...ay name', ...} == {}
+E         
+E         Left contains 5 more items:
+E         {'enabled': True,
+E          'error': None,
+E          'has_reference': False,
+E          'title_source': 'pathway name',
+E          'written': True}
+E         Use -v to get more diff)
+
+tests\test_final_payload_meta.py:166: AssertionError
+__________ test_hook_flag_off_untouched_and_flag_on_runs_the_lookup ___________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002B850F0DDA0>
+
+    def test_hook_flag_off_untouched_and_flag_on_runs_the_lookup(monkeypatch) -> None:
+        p = P({"name": "RyhB"})
+        monkeypatch.delenv("T2PW_FINAL_PAYLOAD", raising=False)
+>       assert fp.maybe_apply_final_id_fill(p, {}, {}) == {} and p == P({"name": "RyhB"})
+E       AssertionError: assert ({'by_field': ... 0, ...}, ...} == {}
+E         
+E         Left contains 12 more items:
+E         {'by_field': {},
+E          'enabled': True,
+E          'error': None,
+E          'fill': {'by_field': {},
+E                   'by_match_type': {},...
+E         
+E         ...Full output truncated (52 lines hidden), use '-vv' to show)
+
+tests\test_final_payload_nucleic_lookup.py:282: AssertionError
+_ test_writer_writes_a_looked_up_type_flag_on_only_and_unknown_rows_stay_untyped _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002B85117DD30>
+
+    def test_writer_writes_a_looked_up_type_flag_on_only_and_unknown_rows_stay_untyped(monkeypatch) -> None:
+        def build(flag):
+            pl = _payload()
+            pl["entities"]["species"][0]["taxonomy_id"] = "9606"  # Homo sapiens: the fake ignores the taxid
+            pl["entities"]["nucleic_acids"] = [{"name": "RyhB"}, {"name": "Zzz9"}, {"name": "CHL27", "pathbank_nucleic_acid_id": 7}]
+            run(pl, Fake(RYHB), text="")
+            if flag:
+                monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "1")
+            else:
+                monkeypatch.delenv("T2PW_FINAL_PAYLOAD", raising=False)
+            return pl, _build(pl)
+    
+        pl, (builder, root) = build(True)
+        assert pl["entities"]["nucleic_acids"][0]["nucleotide_type"] == "RNA"
+        assert _na_types(root) == {"RyhB": "RNA", "Zzz9": "", "CHL27": ""}
+        assert builder.layout_debug_counts["nucleic_acids_type_unset"] == 1  # only the unknown row; as before for an unsettled row
+        _, (_, root) = build(False)  # flag off: the writer ignores the key
+>       assert _na_types(root) == {"RyhB": "", "Zzz9": "", "CHL27": ""}
+E       AssertionError: assert {'CHL27': '',...', 'Zzz9': ''} == {'CHL27': '',...', 'Zzz9': ''}
+E         
+E         Omitting 2 identical items, use -vv to show
+E         Differing items:
+E         {'RyhB': 'RNA'} != {'RyhB': ''}
+E         Use -v to get more diff
+
+tests\test_final_payload_nucleic_lookup.py:305: AssertionError
+___________ test_seam_flag_off_does_nothing_and_flag_on_reads_state ___________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002B850E19160>
+
+    def test_seam_flag_off_does_nothing_and_flag_on_reads_state(monkeypatch) -> None:
+        p = _p({"name": "Xa"})
+        monkeypatch.delenv("T2PW_FINAL_PAYLOAD", raising=False)
+>       assert fp.maybe_apply_final_id_fill(p, {}, {"final_payload_paper_text": "The Xa gene."}) == {} and p == _p({"name": "Xa"})
+E       AssertionError: assert ({'by_field': ... 0, ...}, ...} == {}
+E         
+E         Left contains 12 more items:
+E         {'by_field': {},
+E          'enabled': True,
+E          'error': None,
+E          'fill': {'by_field': {},
+E                   'by_match_type': {},...
+E         
+E         ...Full output truncated (52 lines hidden), use '-vv' to show)
+
+tests\test_final_payload_nucleic_type.py:134: AssertionError
+___________ test_writer_accepts_paper_type_only_with_flag_and_no_id ___________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002B85117E660>
+
+    def test_writer_accepts_paper_type_only_with_flag_and_no_id(monkeypatch) -> None:
+        assert nucleotide_type_for({"name": "CHLH promoter"}) is None
+        monkeypatch.delenv("T2PW_FINAL_PAYLOAD", raising=False)
+>       assert nucleotide_type_for({"name": "CHLH promoter", "nucleotide_type_paper": "DNA"}) is None  # M-fix: flag off ignores it
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert 'DNA' is None
+E        +  where 'DNA' = nucleotide_type_for({'name': 'CHLH promoter', 'nucleotide_type_paper': 'DNA'})
+
+tests\test_final_payload_nucleic_type.py:145: AssertionError
+_______ test_writer_drops_idless_location_and_keeps_state_flag_on_only ________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002B850ECB5B0>
+
+    def test_writer_drops_idless_location_and_keeps_state_flag_on_only(monkeypatch) -> None:
+        # M1 fix: the thylakoid row now carries no database id (a row with pathwhiz_id is never dropped, see the next test)
+        rows = [{"name": "thylakoid membrane"}, {"name": "cytosol", "pathwhiz_id": 3}]
+        monkeypatch.delenv("T2PW_FINAL_PAYLOAD", raising=False)
+        b, root = _build(copy.deepcopy(rows), tissues=_TISSUES)
+>       assert _loc_names(root) == ["thylakoid membrane", "cytosol"] and "locations_dropped_no_id" not in b.layout_debug_counts
+E       AssertionError: assert (['cytosol'] == ['thylakoid m...e', 'cytosol']
+E         
+E         At index 0 diff: 'cytosol' != 'thylakoid membrane'
+E         Right contains one more item: 'cytosol'
+E         Use -v to get more diff)
+
+tests\test_final_payload_ontology.py:154: AssertionError
+_ test_writer_keeps_inner_and_outer_separate_for_bacteria_and_drops_them_for_a_human _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002B850EF08A0>
+
+    def test_writer_keeps_inner_and_outer_separate_for_bacteria_and_drops_them_for_a_human(monkeypatch) -> None:
+        ecoli = {"name": "Escherichia coli", "pathwhiz_id": 1, "classification": "Prokaryote"}
+        names = ["inner membrane (IM)", "outer membrane (OM)", "cytosol"]
+        monkeypatch.delenv("T2PW_FINAL_PAYLOAD", raising=False)
+        b, root = _build(_writer_payload(ecoli, names))
+>       assert _loc_names(root) == names and not b.vocabulary_outcomes  # flag off: untouched
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert (['Inner Membr...e', 'cytosol'] == ['inner membr...)', 'cytosol']
+E         
+E         At index 0 diff: 'Inner Membrane' != 'inner membrane (IM)'
+E         Use -v to get more diff)
+
+tests\test_final_payload_ontology_p5.py:304: AssertionError
+____________________ test_flag_off_writes_names_unchanged _____________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002B85117F850>
+
+    def test_flag_off_writes_names_unchanged(monkeypatch) -> None:
+        monkeypatch.delenv("T2PW_FINAL_PAYLOAD", raising=False)
+        builder, root = _build()
+        got = _names(root)
+>       assert set(got["subcellular-location"]) == {"ER", "cytosol", "thylakoid membrane", "cell"}
+E       AssertionError: assert {'Endoplasmic...l', 'cytosol'} == {'ER', 'cell'...oid membrane'}
+E         
+E         Extra items in the left set:
+E         'Endoplasmic Reticulum'
+E         Extra items in the right set:
+E         'thylakoid membrane'
+E         'ER'
+E         Use -v to get more diff
+
+tests\test_final_payload_vocabulary.py:83: AssertionError
+______________ test_flag_off_writes_every_row_and_counts_nothing ______________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002B850E30670>
+
+    def test_flag_off_writes_every_row_and_counts_nothing(monkeypatch) -> None:
+        monkeypatch.delenv("T2PW_FINAL_PAYLOAD", raising=False)
+        states = [_s("A", tissue="zz idless tissue", cell_type="zz idless cell", subcellular_location="zz idless place"), _s("B", subcellular_location="cytosol")]
+        b, root = _build(states, locs=[{"name": "zz idless place"}, LOC], tissues=[{"name": "zz idless tissue"}], cts=[{"name": "zz idless cell"}])
+>       assert _states(root)["A"] == ("zz idless tissue", "zz idless cell", "zz idless place")
+E       AssertionError: assert ('', '', 'zz idless place') == ('zz idless t...idless place')
+E         
+E         At index 0 diff: '' != 'zz idless tissue'
+E         Use -v to get more diff
+
+tests\test_final_payload_wildcard_guard.py:139: AssertionError
+_______________ test_bound_visualizations_written_when_flag_off _______________
+
+flag_off = None
+
+    def test_bound_visualizations_written_when_flag_off(flag_off) -> None:
+        builder, root = _build(_payload(), with_bound=True)
+>       assert len(builder.section_items["bound-visualizations"]) == 1
+E       assert 0 == 1
+E        +  where 0 = len([])
+
+tests\test_final_payload_writer_fixes.py:81: AssertionError
+________________ test_spontaneous_flag_off_is_plain_bool[None] ________________
+
+flag_off = None, value = None
+
+    @pytest.mark.parametrize("value", [None, False, True])
+    def test_spontaneous_flag_off_is_plain_bool(flag_off, value) -> None:
+        _, root = _build(_payload(reaction_spontaneous=False), spontaneous=value)
+        nodes = _spont(root)
+>       assert len(nodes) == 1 and nodes[0].get("nil") is None
+E       AssertionError: assert (1 == 1 and 'true' is None)
+E        +  where 1 = len([<Element spontaneous at 0x2b856f554c0>])
+E        +  and   'true' = get('nil')
+E        +    where get = <Element spontaneous at 0x2b856f554c0>.get
+
+tests\test_final_payload_writer_fixes.py:99: AssertionError
+_______________ test_spontaneous_flag_off_is_plain_bool[False] ________________
+
+flag_off = None, value = False
+
+    @pytest.mark.parametrize("value", [None, False, True])
+    def test_spontaneous_flag_off_is_plain_bool(flag_off, value) -> None:
+        _, root = _build(_payload(reaction_spontaneous=False), spontaneous=value)
+        nodes = _spont(root)
+>       assert len(nodes) == 1 and nodes[0].get("nil") is None
+E       AssertionError: assert (1 == 1 and 'true' is None)
+E        +  where 1 = len([<Element spontaneous at 0x2b8573de240>])
+E        +  and   'true' = get('nil')
+E        +    where get = <Element spontaneous at 0x2b8573de240>.get
+
+tests\test_final_payload_writer_fixes.py:99: AssertionError
+________________ test_transport_location_dangles_when_flag_off ________________
+
+flag_off = None
+
+    def test_transport_location_dangles_when_flag_off(flag_off) -> None:
+        _, root = _build(_payload(reaction_uses_glucose=True))
+        refs, ids = _transport_loc_refs(root), _loc_ids(root)
+>       assert refs and not set(refs) <= set(ids)  # the documented defect, unchanged with the flag off
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       assert ([13, 11] and not {11, 13} <= {11, 13, 15, 16})
+E        +  where {11, 13} = set([13, 11])
+E        +  and   {11, 13, 15, 16} = set([11, 13, 15, 16])
+
+tests\test_final_payload_writer_fixes.py:132: AssertionError
+__________ test_transported_compound_used_by_reaction_in_third_state __________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002B850E316A0>
+
+    def test_transported_compound_used_by_reaction_in_third_state(monkeypatch) -> None:
+        payload = _payload(reaction_uses_glucose=True)
+        payload["entities"]["subcellular_locations"].append({"name": "mitochondrion", "pathwhiz_id": 4})
+        payload["biological_states"].append({"name": "mitochondrion", "species": "Homo sapiens",
+                                             "subcellular_location": "mitochondrion", "compartment_canonical": "mitochondrion"})
+        payload["processes"]["reactions"][0]["biological_state"] = "mitochondrion"
+        monkeypatch.delenv("T2PW_FINAL_PAYLOAD", raising=False)
+        _, off = _build(payload)
+        monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "1")
+        _, on = _build(payload)
+        refs, ids = set(_transport_loc_refs(on)), _loc_ids(on)
+        assert refs and refs <= set(ids) and len(ids) == len(set(ids))
+        # only the locations a transport references are added back; state C's base row stays skipped
+>       assert len(ids) - len(_loc_ids(off)) == len(refs)
+E       assert (4 - 4) == 2
+E        +  where 4 = len([15, 16, 18, 19])
+E        +  and   4 = len([15, 16, 18, 19])
+E        +    where [15, 16, 18, 19] = _loc_ids(<Element super-pathway-visualization at 0x2b85731ff40>)
+E        +  and   2 = len({15, 16})
+
+tests\test_final_payload_writer_fixes.py:176: AssertionError
+____________ test_no_processes_flag_on_equals_flag_off_minus_bound ____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002B850E330E0>
+
+    def test_no_processes_flag_on_equals_flag_off_minus_bound(monkeypatch) -> None:
+        from lxml import etree
+        payload = _payload()
+        payload["processes"] = {"reactions": [], "transports": [], "interactions": []}
+    
+        def dump(flag):
+            if flag:
+                monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "1")
+            else:
+                monkeypatch.delenv("T2PW_FINAL_PAYLOAD", raising=False)
+            _, root = _build(payload, with_bound=True)
+            for n in root.findall(".//bound-visualizations"):
+                n.clear()
+            # B2 (vocabulary map) renames the location "extracellular" to the PathWhiz row name when the flag is on; undo that here
+            out = etree.tostring(root)
+            return out.replace(b"Extracellular Space", b"extracellular") if flag else out
+    
+>       assert dump(False) == dump(True)
+E       AssertionError: assert b'<super-path...isualization>' == b'<super-path...isualization>'
+E         
+E         At index 1046 diff: b'E' != b'e'
+E         Use -v to get more diff
+
+tests\test_final_payload_writer_fixes.py:213: AssertionError
+______________ test_plain_protein_transporter_unchanged_flag_off ______________
+
+flag_off = None
+
+    def test_plain_protein_transporter_unchanged_flag_off(flag_off) -> None:
+        _, root = _build(_payload())
+        tt = root.find(".//transport-transporters/transport-transporter")
+>       assert tt.find("protein-id") is not None and tt.find("protein-complex-id") is None
+E       AssertionError: assert (None is not None)
+E        +  where None = find('protein-id')
+E        +    where find = <Element transport-transporter at 0x2b857442140>.find
+
+tests\test_final_payload_writer_fixes.py:272: AssertionError
+___________________ test_nucleotide_type_untouched_flag_off ___________________
+
+flag_off = None
+
+    def test_nucleotide_type_untouched_flag_off(flag_off) -> None:
+        builder, root = _build(_na_payload())
+>       assert set(_na_types(root).values()) == {""}
+E       AssertionError: assert {'', 'DNA', 'RNA'} == {''}
+E         
+E         Extra items in the left set:
+E         'DNA'
+E         'RNA'
+E         Use -v to get more diff
+
+tests\test_final_payload_writer_fixes.py:331: AssertionError
+___________ test_spontaneous_field_is_always_forced_false_on_export ___________
+
+    def test_spontaneous_field_is_always_forced_false_on_export() -> None:
+        payload = _base_payload()
+        payload["processes"]["reactions"][0].update({"enzymes": [], "spontaneous": True})
+        ir, report = build_pwml_ir(prefrozen_when_compounded(payload), strict_db=True)
+        assert not report["errors"]
+        assert ir["processes"]["reactions"][0]["spontaneous"] is False
+    
+        signature = discover_structure_signature(ROOT / "reference" / "PW000001.pwml")
+        args = SimpleNamespace(name="Generated Pathway", description="", subject="Metabolic", pw_id="PW000000", height=1400, width=3200, background_color="#FFFFFF", ref=str(ROOT / "reference" / "PW000001.pwml"))
+        root = DeterministicPwmlBuilder(extraction=ir, signature=signature, args=args).build().root
+>       assert root.findtext(".//reactions/reaction/spontaneous") == "false"
+E       AssertionError: assert '' == 'false'
+E         
+E         - false
+
+tests\test_pwml_ir.py:776: AssertionError
+_______ test_ir_transport_visualization_populates_edges_and_transporter _______
+
+    def test_ir_transport_visualization_populates_edges_and_transporter() -> None:
+        payload = {
+            "entities": {
+                "species": [{"name": "Homo sapiens", "pathwhiz_id": 1}],
+                "subcellular_locations": [
+                    {"name": "extracellular", "pathwhiz_id": 2},
+                    {"name": "cytosol", "pathwhiz_id": 3},
+                ],
+                "compounds": [{"name": "Glucose", "pathbank_compound_id": 101}],
+                "proteins": [
+                    {
+                        "name": "GLUT1",
+                        "species": "Homo sapiens",
+                        "uniprot": "P11166",
+                        "pathbank_protein_id": 301,
+                    }
+                ],
+            },
+            "biological_states": [
+                {
+                    "name": "extracellular",
+                    "species": "Homo sapiens",
+                    "subcellular_location": "extracellular",
+                    "compartment_canonical": "extracellular",
+                },
+                {
+                    "name": "cytosol",
+                    "species": "Homo sapiens",
+                    "subcellular_location": "cytosol",
+                    "compartment_canonical": "cytosol",
+                },
+            ],
+            "processes": {
+                "reactions": [],
+                "transports": [
+                    {
+                        "name": "Glucose import",
+                        "cargo": "Glucose",
+                        "from_biological_state": "extracellular",
+                        "to_biological_state": "cytosol",
+                        "transporters": [{"protein": "GLUT1"}],
+                    }
+                ],
+                "interactions": [],
+            },
+        }
+        ir, report = build_pwml_ir(payload, strict_db=True)
+        assert report["errors"] == []
+        signature = discover_structure_signature(ROOT / "reference" / "PW000001.pwml")
+        builder = DeterministicPwmlBuilder(extraction=ir, signature=signature, args=_writer_args())
+        builder.build()
+    
+        transport_viz = builder.section_items["transport-visualizations"][0]
+        compound_viz = transport_viz["transport_compound_visualizations"]
+        transporter_viz = transport_viz["transport_transporter_visualizations"]
+        assert {item["side"] for item in compound_viz} == {"Left", "Right"}
+        assert len(compound_viz) == 2
+        assert len(transporter_viz) == 1
+        assert "edge-id" not in transporter_viz[0]
+    
+        edge_by_id = {edge["id"]: edge for edge in builder.section_items["edges"]}
+        protein_loc = builder.section_items["protein-locations"][0]
+>       assert transporter_viz[0]["protein-location-id"] == protein_loc["id"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'protein-location-id'
+
+tests\test_pwml_writer.py:604: KeyError
+________ test_writer_uses_per_reaction_locations_for_shared_compounds _________
+
+    def test_writer_uses_per_reaction_locations_for_shared_compounds() -> None:
+        payload = {
+            "entities": {
+                "species": [{"name": "Homo sapiens", "pathwhiz_id": 1}],
+                "subcellular_locations": [{"name": "cytosol", "pathwhiz_id": 2}],
+                "compounds": [
+                    {"name": "Oxygen", "short_name": "O2", "pathbank_compound_id": 301},
+                    {"name": "Water", "short_name": "H2O", "pathbank_compound_id": 302},
+                    {"name": "Unused cofactor", "short_name": "UC", "pathbank_compound_id": 303},
+                ],
+                "proteins": [
+                    {"name": "Enzyme A", "pathbank_protein_id": 401},
+                    {"name": "Enzyme B", "pathbank_protein_id": 402},
+                ],
+            },
+            "biological_states": [{"name": "cytosol", "species": "Homo sapiens", "subcellular_location": "cytosol"}],
+            "processes": {
+                "reactions": [
+                    {
+                        "name": "First oxygen reaction",
+                        "inputs": ["Oxygen"],
+                        "outputs": ["Water"],
+                        "biological_state": "cytosol",
+                        "enzymes": [{"protein": "Enzyme A"}],
+                    },
+                    {
+                        "name": "Second oxygen reaction",
+                        "inputs": ["Oxygen"],
+                        "outputs": ["Water"],
+                        "biological_state": "cytosol",
+                        "enzymes": [{"protein": "Enzyme B"}],
+                    },
+                ],
+                "transports": [],
+                "interactions": [],
+            },
+        }
+        ir, report = build_pwml_ir(payload, strict_db=True)
+        assert not report["errors"]
+    
+        builder, _root = _build_pwml_for_ir(ir)
+    
+        compound_id_by_name = {compound["name"]: compound["id"] for compound in builder.section_items["compounds"]}
+        loc_by_id = {loc["id"]: loc for loc in builder.section_items["compound-locations"]}
+        edge_by_id = {edge["id"]: edge for edge in builder.section_items["edges"]}
+    
+        left_locations = []
+        right_locations = []
+        for reaction_viz in builder.section_items["reaction-visualizations"]:
+            by_side = {
+                rcv["side"]: rcv
+                for rcv in reaction_viz["reaction_compound_visualizations"]
+            }
+            left_loc = loc_by_id[by_side["Left"]["compound-location-id"]]
+            right_loc = loc_by_id[by_side["Right"]["compound-location-id"]]
+            left_locations.append(left_loc)
+            right_locations.append(right_loc)
+    
+            left_anchor = (
+                int(left_loc["x"]) + int(left_loc["width"]),
+                int(left_loc["y"]) + int(left_loc["height"]) // 2,
+            )
+            right_anchor = (
+                int(right_loc["x"]),
+                int(right_loc["y"]) + int(right_loc["height"]) // 2,
+            )
+            assert edge_by_id[by_side["Left"]["edge-id"]]["path"].startswith(f"M{left_anchor[0]} {left_anchor[1]} ")
+            assert edge_by_id[by_side["Right"]["edge-id"]]["path"].startswith(f"M{right_anchor[0]} {right_anchor[1]} ")
+    
+        assert [loc["compound-id"] for loc in left_locations] == [compound_id_by_name["Oxygen"]] * 2
+        assert [loc["compound-id"] for loc in right_locations] == [compound_id_by_name["Water"]] * 2
+        assert len({loc["id"] for loc in left_locations}) == 2
+        assert len({loc["id"] for loc in right_locations}) == 2
+        assert len({int(loc["x"]) for loc in left_locations}) == 2
+        assert len({int(loc["x"]) for loc in right_locations}) == 2
+        assert len(builder.section_items["compound-locations"]) == 4
+        assert [loc["compound-id"] for loc in builder.section_items["compound-locations"]].count(
+            compound_id_by_name["Unused cofactor"]
+        ) == 0
+>       assert builder.layout_debug_counts == {
+            "compound_total": 3,
+            "compound_grid_skipped_reaction_used": 2,
+            "compound_grid_placed_non_reaction": 0,
+            "shared_intermediates_detected": 0,
+            "shared_intermediates_skipped_cofactor": 0,
+            "shared_intermediate_locations_reused": 0,
+        }
+E       AssertionError: assert {'compound_gr...used': 0, ...} == {'compound_gr...used': 0, ...}
+E         
+E         Omitting 6 identical items, use -vv to show
+E         Left contains 1 more item:
+E         {'vocabulary_exact': 1}
+E         Use -v to get more diff
+
+tests\test_pwml_writer.py:1129: AssertionError
+____ test_cli_export_emits_the_canonical_organism_and_keeps_its_provenance ____
+
+tmp_path = WindowsPath('C:/t/tmpbase/flip-focused-2026-8/test_cli_export_emits_the_cano0')
+
+    def test_cli_export_emits_the_canonical_organism_and_keeps_its_provenance(
+        tmp_path: Path,
+    ) -> None:
+        """D-016 (LOCKED) on the CLI entry point, end to end.
+    
+        Fails at ``d146be48``: the species ladder had moved into the pre-freeze
+        sequence and only Streamlit called it, so this entry point emitted
+        ``<name>Lactococcus lactis subsp. lactis KF147</name>`` with an empty
+        ``name_canonicalization["species"]`` and no preflight -- the exported organism
+        wearing the un-normalized name with no record that a normalization was owed.
+        """
+    
+        result, out_dir = _run_cli_export(tmp_path, _kf147_payload())
+        assert "error" not in result
+    
+        pwml = (out_dir / "pathway.pwml").read_text(encoding="utf-8")
+        assert "<name>Lactococcus lactis</name>" in pwml
+        assert "KF147" not in pwml
+    
+        ir = json.loads((out_dir / "final.pwml_ir.json").read_text(encoding="utf-8"))
+        species = ir["species"]
+        assert [row["name"] for row in species] == ["Lactococcus lactis"]
+        # The alias is the provenance the IR carries: the row still answers to the
+        # name the paper used, so an importer matching on either finds one organism.
+        # DEFERRED, not this card's boundary: ``ir._component_record`` (ir.py:415-435)
+        # projects ``aliases`` but not ``raw_name``, so the ``raw_name`` the pre-freeze
+        # stage writes onto the payload row -- asserted directly in
+        # tests/test_prefreeze_species_resolution.py -- stops at the IR projection.
+        # Measured identical on the Streamlit path; not introduced by this seam.
+        assert species[0]["aliases"] == ["Lactococcus lactis subsp. lactis KF147"]
+    
+        report = json.loads((out_dir / "pwml_ir_report.json").read_text(encoding="utf-8"))
+        assert report["name_canonicalization"]["species"] == [{
+            "from": "Lactococcus lactis subsp. lactis KF147",
+            "to": "Lactococcus lactis",
+            "taxonomy_id": "1091041",
+            "source": "deterministic_strain_normalization",
+        }]
+        # P4-01: no worktree carries a .env, so ``PathBankDbResolver.from_env()``
+        # answers ``None`` and this leg is offline. Asserted rather than assumed --
+        # a reachable DB would make the preflight below silently absent instead of
+        # wrong, and a vacuous assertion is not evidence.
+>       assert report["db_resolution"]["available"] is False
+E       assert True is False
+
+tests\test_pwml_writer.py:1833: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_final_payload_fill.py::test_flag_parsing - assert True is F...
+FAILED tests/test_final_payload_fill.py::test_flag_off_wiring_helper_leaves_payload_untouched
+FAILED tests/test_final_payload_fill.py::test_seam_flag_off_is_the_resolver_alone
+FAILED tests/test_final_payload_fix1.py::test_f1_flag_off_is_untouched - Asse...
+FAILED tests/test_final_payload_meta.py::test_wiring_helpers - AssertionError...
+FAILED tests/test_final_payload_nucleic_lookup.py::test_hook_flag_off_untouched_and_flag_on_runs_the_lookup
+FAILED tests/test_final_payload_nucleic_lookup.py::test_writer_writes_a_looked_up_type_flag_on_only_and_unknown_rows_stay_untyped
+FAILED tests/test_final_payload_nucleic_type.py::test_seam_flag_off_does_nothing_and_flag_on_reads_state
+FAILED tests/test_final_payload_nucleic_type.py::test_writer_accepts_paper_type_only_with_flag_and_no_id
+FAILED tests/test_final_payload_ontology.py::test_writer_drops_idless_location_and_keeps_state_flag_on_only
+FAILED tests/test_final_payload_ontology_p5.py::test_writer_keeps_inner_and_outer_separate_for_bacteria_and_drops_them_for_a_human
+FAILED tests/test_final_payload_vocabulary.py::test_flag_off_writes_names_unchanged
+FAILED tests/test_final_payload_wildcard_guard.py::test_flag_off_writes_every_row_and_counts_nothing
+FAILED tests/test_final_payload_writer_fixes.py::test_bound_visualizations_written_when_flag_off
+FAILED tests/test_final_payload_writer_fixes.py::test_spontaneous_flag_off_is_plain_bool[None]
+FAILED tests/test_final_payload_writer_fixes.py::test_spontaneous_flag_off_is_plain_bool[False]
+FAILED tests/test_final_payload_writer_fixes.py::test_transport_location_dangles_when_flag_off
+FAILED tests/test_final_payload_writer_fixes.py::test_transported_compound_used_by_reaction_in_third_state
+FAILED tests/test_final_payload_writer_fixes.py::test_no_processes_flag_on_equals_flag_off_minus_bound
+FAILED tests/test_final_payload_writer_fixes.py::test_plain_protein_transporter_unchanged_flag_off
+FAILED tests/test_final_payload_writer_fixes.py::test_nucleotide_type_untouched_flag_off
+FAILED tests/test_pwml_ir.py::test_spontaneous_field_is_always_forced_false_on_export
+FAILED tests/test_pwml_writer.py::test_ir_transport_visualization_populates_edges_and_transporter
+FAILED tests/test_pwml_writer.py::test_writer_uses_per_reaction_locations_for_shared_compounds
+FAILED tests/test_pwml_writer.py::test_cli_export_emits_the_canonical_organism_and_keeps_its_provenance
+25 failed, 320 passed in 60.52s (0:01:00)
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\fp\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f00a4964d5e09aa2cdbc3add49fe4a443fe4fc53  [git, worktree dirty=True]
+label                   : fp-flip-focused
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/fp -q --basetemp=C:/t/tmpbase/flip-focused-2026-8 tests/test_final_payload_fill.py tests/test_final_payload_fix1.py tests/test_final_payload_meta.py tests/test_final_payload_nucleic_lookup.py tests/test_final_payload_nucleic_type.py tests/test_final_payload_ontology.py tests/test_final_payload_ontology_p5.py tests/test_final_payload_vocabulary.py tests/test_final_payload_wildcard_guard.py tests/test_final_payload_writer_fixes.py tests/test_process_normalizer.py tests/test_process_normalizer_transport_states.py tests/test_pwml_ir.py tests/test_pwml_ir_duplicate_row_refusal.py tests/test_pwml_writer.py tests/test_transport_sides.py
+cwd                     : C:\t\fp
+root PID / process group: 43676 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 61.80 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  47216:python.exe
+descendants terminated  : 1  47216
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/fp/docs/pwml_output/evidence/final_payload_p5/flip/focused.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=fp5-flip-focused  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================
