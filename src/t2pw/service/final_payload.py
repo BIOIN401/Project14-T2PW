@@ -155,7 +155,8 @@ def _plan(payload: Dict[str, Any], items: List[Dict[str, Any]], report: Dict[str
 
 
 def apply_final_id_fill(payload: Dict[str, Any], meta: Optional[Dict[str, Any]] = None, *, fetcher: Any = None,
-                        cache: Any = None, today: Optional[str] = None) -> Dict[str, Any]:
+                        cache: Any = None, today: Optional[str] = None, paper_text: Optional[str] = None,
+                        paper_source: str = "paper text") -> Dict[str, Any]:
     """Fill empty id slots of ``payload`` in place. Fails open: on any error ``payload`` is restored and the report says why."""
     report: Dict[str, Any] = {"enabled": True, "written": 0, "by_field": {}, "refused": {}, "refused_detail": [],
                               "suggestions": [], "error": None}
@@ -168,8 +169,8 @@ def apply_final_id_fill(payload: Dict[str, Any], meta: Optional[Dict[str, Any]] 
         fetcher = fetcher or _live_fetcher()
         # D-W20a: ontology ids for location / cell-type / tissue names, first (few requests) so a spent budget costs compound fills
         from t2pw.service.final_payload_ontology import fill_ontology_ids
-        onto = fill_ontology_ids(payload, fetcher, cache, today)
-        report["ontology"] = {k: onto[k] for k in ("counts", "refused", "requests", "cache_hits")}
+        onto = fill_ontology_ids(payload, fetcher, cache, today, paper_text=paper_text, paper_source=paper_source)  # P5: text for numbered cell types
+        report["ontology"] = {k: onto[k] for k in ("counts", "refused", "requests", "cache_hits", "extra")}
         for e in onto["entries"]:
             report["by_field"]["%s.%s" % (e["kind"], e["field"])] = report["by_field"].get("%s.%s" % (e["kind"], e["field"]), 0) + 1
         model = build_from_payload(payload, dict(meta or {}))
@@ -207,13 +208,20 @@ def fill_meta(pathway_context: Any = None, state: Any = None) -> Dict[str, Any]:
     return meta
 
 
+def _paper_kw(state: Any) -> Dict[str, Any]:
+    """P5: the paper text of the run (``state["final_payload_paper_text"]``, set by ``run_pathway`` with the flag on), for the ontology fill."""
+    st = state if hasattr(state, "get") else {}
+    txt = st.get("final_payload_paper_text")
+    return {"paper_text": txt, "paper_source": str(st.get("final_payload_paper_text_source") or "paper text")} if isinstance(txt, str) and txt else {}
+
+
 def maybe_apply_final_id_fill(payload: Dict[str, Any], pathway_context: Any = None, state: Any = None,
                               **kw: Any) -> Dict[str, Any]:
     """The postpipeline seam: {} (payload untouched) when the flag is off; otherwise the fill report. Never raises."""
     if not final_payload_enabled():
         return {}
     try:
-        report = apply_final_id_fill(payload, fill_meta(pathway_context, state), **kw)
+        report = apply_final_id_fill(payload, fill_meta(pathway_context, state), **{**_paper_kw(state), **kw})
         report["meta_keys"] = sorted(fill_meta(pathway_context, state))
         report["nucleic_types"] = maybe_apply_paper_nucleic_types(payload, state, **{k: kw[k] for k in ("fetcher", "cache", "today") if k in kw})
         report["pathway_meta"] = maybe_apply_final_pathway_meta(payload, pathway_context, state, **kw)

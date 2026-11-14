@@ -16,7 +16,7 @@ from t2pw.paths import PROJECT_ROOT
 from t2pw.pipeline.entity_identity import component_stoichiometry, is_pathbank_unknown_protein
 from t2pw.pipeline.process_normalizer import normalize_process_payload
 from t2pw.pwml.compound_templates import TEMPLATE_DIMS, select_compound_template_id
-from t2pw.pwml.vocabulary_map import map_vocabulary_name
+from t2pw.pwml.vocabulary_map import map_vocabulary_name, organism_kinds
 from t2pw.pwml.ir import build_pwml_ir, is_pwml_ir, validate_pwml_ir
 from t2pw.pwml.qa import run_pwml_qa
 from t2pw.service.final_payload import final_payload_enabled
@@ -799,17 +799,29 @@ class DeterministicPwmlBuilder:
         self._ir_entity_info: Dict[str, Dict[str, Any]] = {}
         self._ir_pathway_species_id: Optional[int] = None
 
-    def _vocabulary_fields(self, kind: str, record: Dict[str, Any]) -> Dict[str, Any]:
+    @staticmethod
+    def _location_organisms(ir: Dict[str, Any], location_key: Any) -> frozenset:
+        """P5 (E): organism kinds of the states that use a location (a state without a species counts the pathway's species)."""
+        species = {str(r.get("key")): (r.get("name"), r.get("classification")) for r in ir.get("species") or [] if isinstance(r, dict)}
+        pairs: List[Any] = []
+        for st in ir.get("biological_states") or []:
+            if isinstance(st, dict) and st.get("subcellular_location_key") == location_key:
+                pairs += [species[str(st.get("species_key"))]] if str(st.get("species_key")) in species else list(species.values())
+        return organism_kinds(pairs or species.values())
+
+    def _vocabulary_fields(self, kind: str, record: Dict[str, Any], organisms: Optional[frozenset] = None) -> Dict[str, Any]:
         """name and ontology-id of a location / cell-type / tissue item. Flag off: the record as is. Flag on (final payload P3,
-        B2): a reviewed synonym is replaced by the PathWhiz row name; the outcome is counted in ``layout_debug_counts``."""
+        B2): a reviewed synonym is replaced by the PathWhiz row name; the outcome is counted in ``layout_debug_counts``.
+        ``organisms`` (locations only, P5 E) makes inner / outer membrane organism-aware."""
         name, onto = record.get("name", ""), record.get("ontology_id")
         if final_payload_enabled():
-            new_name, onto, outcome = map_vocabulary_name(kind, name, onto)
+            new_name, onto, outcome = map_vocabulary_name(kind, name, onto, organisms)
             self._last_vocabulary_outcome = outcome
             key = f"vocabulary_{outcome}"
             self.layout_debug_counts[key] = self.layout_debug_counts.get(key, 0) + 1
             if outcome != "exact":
-                self.vocabulary_outcomes.append({"kind": kind, "name": name, "outcome": outcome, "written": new_name})
+                self.vocabulary_outcomes.append({"kind": kind, "name": name, "outcome": outcome, "written": new_name,
+                                                 **({"organisms": sorted(organisms)} if organisms is not None else {})})
             name = new_name
         return {"name": name, "ontology-id": onto}
 
@@ -1159,7 +1171,8 @@ class DeterministicPwmlBuilder:
                 ["pathwhiz_id", "pathbank_subcellular_location_id", "pw_subcellular_location_id"],
                 self.ids,
             )
-            fields = self._vocabulary_fields("subcellular-location", record)
+            fields = self._vocabulary_fields("subcellular-location", record,
+                                             self._location_organisms(ir, record.get("key")) if final_payload_enabled() else None)
             remember("subcellular_locations", record.get("key"), rid)
             loc_item = {"id": rid, **fields}
             self.section_items["subcellular-locations"].append(loc_item)

@@ -16,11 +16,21 @@ and ``tissues`` (53), taken from the harness seed ``vocab_inserts.sql`` (grep of
 production gains rows. Every SYNONYMS target must be a key of PATHWHIZ_ROWS (tests/test_final_payload_vocabulary.py).
 Only the same biological entity is mapped; no "closest match" (a tissue is never mapped to a different organ, nor a cell line or a
 subtype to its parent type).
+
+Phase 5 additions: (B) a plural name whose singular is a PathWhiz row is mapped to it (same entity); (E) inner and outer membrane are
+organism-aware. PathWhiz rows ``Inner Membrane`` / ``Outer Membrane`` are the bacterial cell membranes (98 % / 99 % of the 1285 / 1243
+production states using them belong to prokaryotes; mitochondria have their own rows; evidence/final_payload_p5/ontoBE/). Their stored
+GO ids (GO:0070258 "inner membrane pellicle complex", GO:0043165 "outer membrane assembly") are other terms, so the rows are identified
+by name only. Called with ``organisms`` (a set of organism kinds of the states that use the location), the names ``inner membrane``,
+``outer membrane`` and their ``(IM)`` / ``(OM)`` spellings map to those rows only when the organisms are exactly {"bacterium"}; for any other
+or undetermined organism they are NOT written under a row name (the name would bind to the bacterial row at import). ``organisms=None``
+(no context given) keeps the phase 3 behaviour.
 """
 
 from __future__ import annotations
 
-from typing import Any, Dict, Optional, Tuple
+import re
+from typing import Any, Dict, Iterable, Optional, Tuple
 
 PATHWHIZ_ROWS: Dict[str, Dict[str, str]] = {
     "subcellular-location": {
@@ -215,6 +225,7 @@ SYNONYMS: Dict[str, Dict[str, str]] = {
         "extracellular": "Extracellular Space",  # PathBank's name for the extracellular compartment (GO:0005615)
         "apical membrane": "Apical cell membrane",  # apical plasma membrane of a polarised cell (GO:0016324); reviewer to confirm
         "postsynaptic membrane": "post-synaptic membrane",  # hyphen spelling only (GO:0045211)
+        "plasma_membrane": "Cell Membrane",  # underscore spelling of "plasma membrane" (see above)
     },
     "cell-type": {
         "neurons": "Neuron",  # plural of the same cell type (CL:0000540)
@@ -230,21 +241,85 @@ SYNONYMS: Dict[str, Dict[str, str]] = {
 # "Type III cell(s)" (no context), erythroid (progenitors are not erythrocytes), central nervous system (Nervous System is wider),
 # bone marrow (Bone is not marrow), young leaf (Leaf is wider), apical (no membrane stated), etioplast (Plastid is wider),
 # synaptic vesicle / cleft (Synapse is wider), IM leaflets (Inner Membrane is the whole membrane), cell lines MG-63 and Saos-2.
+# Phase 5: plurals of a row (granulosa cells) are mapped by ``singular_form``; the inner / outer membrane names by organism (above).
 
 _ROW_KEYS: Dict[str, Dict[str, str]] = {k: {n.casefold(): n for n in rows} for k, rows in PATHWHIZ_ROWS.items()}
 _ROW_BY_ID: Dict[str, Dict[str, str]] = {k: {v: n for n, v in rows.items()} for k, rows in PATHWHIZ_ROWS.items()}
 
 
-def map_vocabulary_name(kind: str, name: Any, ontology_id: Any) -> Tuple[str, Optional[str], str]:
-    """Return (name to write, ontology id to write, outcome). ``kind`` is a PWML tag: subcellular-location, cell-type, tissue."""
+# ---- phase 5 (E): organism-aware inner / outer membrane ----------------------------------------------------------------------
+_MEMBRANE_ROW = {"inner membrane": "Inner Membrane", "outer membrane": "Outer Membrane"}
+_MEMBRANE_NAME = re.compile(r"^(inner|outer) membrane(?: \((im|om)\))?$")
+_ABBR_OF = {"inner": "im", "outer": "om"}
+# ids that may accompany the name of the same bacterial compartment: the row's own stored id, GO cell outer membrane, GO outer membrane
+_MEMBRANE_OWN_IDS = {"Inner Membrane": {"GO:0070258"}, "Outer Membrane": {"GO:0043165", "GO:0009279", "GO:0019867"}}
+
+# Exact genus tables (no guessing). A genus in neither table, with the species classification "Prokaryote", counts as bacterial.
+_BACTERIAL_GENERA = frozenset("""escherichia pseudomonas bacillus lactococcus listeria staphylococcus streptococcus streptomyces borrelia
+borreliella aquifex campylobacter helicobacter mycobacterium salmonella klebsiella acinetobacter haemophilus vibrio yersinia shigella
+clostridium clostridioides enterococcus lactobacillus corynebacterium neisseria legionella synechocystis synechococcus thermus agrobacterium
+rhizobium sinorhizobium bacteroides chlamydia rickettsia treponema burkholderia bordetella brucella francisella xanthomonas zymomonas
+geobacter shewanella caulobacter deinococcus thermotoga bifidobacterium enterobacter citrobacter serratia proteus erwinia pectobacterium
+photorhabdus aeromonas azotobacter rhodobacter prochlorococcus nostoc anabaena cupriavidus ralstonia paracoccus akkermansia""".split())
+_ARCHAEAL_GENERA = frozenset("""methanocaldococcus methanococcus methanosarcina methanobacterium methanothermobacter methanopyrus
+halobacterium haloferax haloarcula sulfolobus saccharolobus thermococcus pyrococcus archaeoglobus thermoplasma picrophilus nitrosopumilus
+aeropyrum pyrobaculum ignicoccus nanoarchaeum thermoproteus haloquadratum natronomonas methanobrevibacter""".split())
+_ABBREVIATED = {"e. coli": "escherichia", "b. subtilis": "bacillus", "l. lactis": "lactococcus", "s. aureus": "staphylococcus"}
+
+
+def organism_kind(name: Any, classification: Any = None) -> Optional[str]:
+    """"bacterium" / "archaeon" / "eukaryote" for a species row, or None when it cannot be told. ``classification`` is the PathWhiz species
+    column (Prokaryote / Eukaryote). The genus tables and the classification must agree; a contradiction gives None."""
+    text = re.sub(r"\s+", " ", str(name or "")).strip().casefold()
+    genus = _ABBREVIATED.get(" ".join(text.split()[:2])) or (text.split()[0] if text else "")
+    table = "bacterium" if genus in _BACTERIAL_GENERA else "archaeon" if genus in _ARCHAEAL_GENERA else None
+    cls = str(classification or "").strip().casefold()
+    if cls == "eukaryote":
+        return None if table else "eukaryote"
+    if cls == "prokaryote":
+        return table or ("bacterium" if text else None)  # PathWhiz "Prokaryote": bacterial unless the genus is a listed archaeon
+    return table
+
+
+def organism_kinds(species: Iterable[Tuple[Any, Any]]) -> frozenset:
+    """The set of organism kinds of (name, classification) pairs; a species whose kind cannot be told contributes "unknown"."""
+    return frozenset(organism_kind(n, c) or "unknown" for n, c in species)
+
+
+def membrane_row(name: Any) -> Optional[str]:
+    """The PathWhiz bacterial membrane row a name stands for (inner membrane, outer membrane, with an optional (IM) / (OM)), else None."""
+    m = _MEMBRANE_NAME.match(re.sub(r"\s+", " ", str(name or "")).strip().casefold())
+    return _MEMBRANE_ROW[f"{m.group(1)} membrane"] if m and m.group(2) in (None, _ABBR_OF[m.group(1)]) else None
+
+
+def singular_form(name: Any) -> Optional[str]:
+    """The name with a plural -s cut from its last word (cells -> cell, vesicles -> vesicle), or None. No irregular plurals; words
+    ending in ss / us / is are left alone."""
+    text = re.sub(r"\s+", " ", str(name or "")).strip()
+    last = text.rsplit(" ", 1)[-1].casefold()
+    return None if len(last) < 4 or not last.endswith("s") or last.endswith(("ss", "us", "is")) else text[:-1]
+
+
+def map_vocabulary_name(kind: str, name: Any, ontology_id: Any, organisms: Optional[Iterable[str]] = None) -> Tuple[str, Optional[str], str]:
+    """Return (name to write, ontology id to write, outcome). ``kind`` is a PWML tag: subcellular-location, cell-type, tissue.
+    ``organisms``: organism kinds (``organism_kinds``) of the states that use a location; None = no context (phase 3 behaviour)."""
     text = str(name or "").strip()
     onto = str(ontology_id).strip() if ontology_id not in (None, "") else None
     key = text.casefold()
     if not text or kind not in PATHWHIZ_ROWS:
         return name, ontology_id, "unmapped"
+    mem = membrane_row(text) if kind == "subcellular-location" and organisms is not None else None
+    if mem is not None:
+        if frozenset(organisms) == {"bacterium"} and (onto is None or onto in _MEMBRANE_OWN_IDS[mem]):
+            return mem, None, "mapped"
+        if onto in _ROW_BY_ID[kind]:  # the data carries the id of another row (a mitochondrial membrane, say): that row
+            return _ROW_BY_ID[kind][onto], None, "mapped_by_id"
+        return name, None, "unmapped"  # not bacterial or undetermined: the name equals a bacterial row's name, so no id is written either
     if key in _ROW_KEYS[kind]:
         return name, ontology_id, "exact"
     target = SYNONYMS[kind].get(key)
+    if target is None and (sing := singular_form(text)) is not None:  # B: the plural of a row name or of a reviewed synonym
+        target = _ROW_KEYS[kind].get(sing.casefold()) or SYNONYMS[kind].get(sing.casefold())
     if target is not None and onto in (None, PATHWHIZ_ROWS[kind][target]):
         return target, None, "mapped"  # an id that disagrees with the row means the entity is not the same: leave it
     if onto in _ROW_BY_ID[kind]:  # an id found online that PathWhiz already holds under another name: same term, use its row

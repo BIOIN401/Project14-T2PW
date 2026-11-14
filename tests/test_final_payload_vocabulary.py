@@ -102,3 +102,13 @@ def test_flag_on_maps_counts_and_keeps_ontology_id(monkeypatch) -> None:
     # the biological state still points at the (renamed) location by id
     loc_ids = {n.findtext("id") for n in root.findall(".//subcellular-locations/subcellular-location")}
     assert {n.text for n in root.findall(".//biological-states/biological-state/subcellular-location-id")} <= loc_ids
+
+
+def test_p5_membrane_rows_exist_and_own_ids_are_their_stored_ones() -> None:
+    from t2pw.pwml.vocabulary_map import _MEMBRANE_OWN_IDS, _MEMBRANE_ROW
+    rows = PATHWHIZ_ROWS["subcellular-location"]
+    assert set(_MEMBRANE_ROW.values()) == set(_MEMBRANE_OWN_IDS) and all(r in rows for r in _MEMBRANE_ROW.values())
+    assert all(rows[r] in ids for r, ids in _MEMBRANE_OWN_IDS.items())  # the row's stored id is always accepted next to the name
+    # the two bacterial rows and the mitochondrial ones are four different rows with four different ids
+    mito = {rows["Mitochondrial Inner Membrane"], rows["Mitochondrial Outer Membrane"]}
+    assert len({rows["Inner Membrane"], rows["Outer Membrane"]} | mito) == 4
