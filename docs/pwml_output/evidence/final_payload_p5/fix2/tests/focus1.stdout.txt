@@ -1,0 +1,105 @@
+T2PW: C:\t\fp\src\t2pw\__init__.py
+.....................................................................F.. [ 23%]
+........................................................................ [ 47%]
+........................................................................ [ 70%]
+........................................................................ [ 94%]
+...............F.                                                        [100%]
+================================== FAILURES ===================================
+___________ test_r23_a_spent_id_fill_budget_does_not_stop_the_title ___________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000142EF2A2DD0>
+
+    def test_r23_a_spent_id_fill_budget_does_not_stop_the_title(monkeypatch) -> None:
+        monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "1")
+        clock = SimpleNamespace(now=1000.0)
+        monkeypatch.setattr(fp, "time", SimpleNamespace(monotonic=lambda: clock.now))  # only this module sees the fake clock
+        inner = _SlowFake([("esummary", {"db": "pubmed"}, PUBMED)], clock)
+        monkeypatch.setattr("t2pw.clean_model.fill.http.UrllibFetcher", lambda throttle=None: inner)
+        p = _p()
+        rep = fp.maybe_apply_final_id_fill(p, {"likely_organism": "Pseudomonas putida"}, {"final_payload_paper": {"pmid": "555"}},
+                                           cache=Cache(None), today=TODAY)
+>       assert "error" not in rep
+E       AssertionError: assert 'error' not in {'budget_exhausted': True, 'by_field': {}, 'enabled': True, 'error': None, ...}
+
+tests\test_final_payload_fix2.py:146: AssertionError
+____ test_cli_export_emits_the_canonical_organism_and_keeps_its_provenance ____
+
+tmp_path = WindowsPath('C:/t/tmpbase/focus1-21838/test_cli_export_emits_the_cano0')
+
+    def test_cli_export_emits_the_canonical_organism_and_keeps_its_provenance(
+        tmp_path: Path,
+    ) -> None:
+        """D-016 (LOCKED) on the CLI entry point, end to end.
+    
+        Fails at ``d146be48``: the species ladder had moved into the pre-freeze
+        sequence and only Streamlit called it, so this entry point emitted
+        ``<name>Lactococcus lactis subsp. lactis KF147</name>`` with an empty
+        ``name_canonicalization["species"]`` and no preflight -- the exported organism
+        wearing the un-normalized name with no record that a normalization was owed.
+        """
+    
+        result, out_dir = _run_cli_export(tmp_path, _kf147_payload())
+        assert "error" not in result
+    
+        pwml = (out_dir / "pathway.pwml").read_text(encoding="utf-8")
+        assert "<name>Lactococcus lactis</name>" in pwml
+        assert "KF147" not in pwml
+    
+        ir = json.loads((out_dir / "final.pwml_ir.json").read_text(encoding="utf-8"))
+        species = ir["species"]
+        assert [row["name"] for row in species] == ["Lactococcus lactis"]
+        # The alias is the provenance the IR carries: the row still answers to the
+        # name the paper used, so an importer matching on either finds one organism.
+        # DEFERRED, not this card's boundary: ``ir._component_record`` (ir.py:415-435)
+        # projects ``aliases`` but not ``raw_name``, so the ``raw_name`` the pre-freeze
+        # stage writes onto the payload row -- asserted directly in
+        # tests/test_prefreeze_species_resolution.py -- stops at the IR projection.
+        # Measured identical on the Streamlit path; not introduced by this seam.
+        assert species[0]["aliases"] == ["Lactococcus lactis subsp. lactis KF147"]
+    
+        report = json.loads((out_dir / "pwml_ir_report.json").read_text(encoding="utf-8"))
+        assert report["name_canonicalization"]["species"] == [{
+            "from": "Lactococcus lactis subsp. lactis KF147",
+            "to": "Lactococcus lactis",
+            "taxonomy_id": "1091041",
+            "source": "deterministic_strain_normalization",
+        }]
+        # P4-01: no worktree carries a .env, so ``PathBankDbResolver.from_env()``
+        # answers ``None`` and this leg is offline. Asserted rather than assumed --
+        # a reachable DB would make the preflight below silently absent instead of
+        # wrong, and a vacuous assertion is not evidence.
+>       assert report["db_resolution"]["available"] is False
+E       assert True is False
+
+tests\test_pwml_writer.py:1833: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_final_payload_fix2.py::test_r23_a_spent_id_fill_budget_does_not_stop_the_title
+FAILED tests/test_pwml_writer.py::test_cli_export_emits_the_canonical_organism_and_keeps_its_provenance
+2 failed, 303 passed in 10.46s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\fp\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 5d1ac2ce56c75d7b6bb9bf5c27329e5a26f6f34d  [git, worktree dirty=True]
+label                   : fp-focus1
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/fp -q --basetemp=C:/t/tmpbase/focus1-21838 tests/test_final_payload_default_flip.py tests/test_final_payload_fill.py tests/test_final_payload_fix1.py tests/test_final_payload_fix2.py tests/test_final_payload_meta.py tests/test_final_payload_nucleic_lookup.py tests/test_final_payload_nucleic_type.py tests/test_final_payload_ontology.py tests/test_final_payload_ontology_p5.py tests/test_final_payload_vocabulary.py tests/test_final_payload_wildcard_guard.py tests/test_final_payload_writer_fixes.py tests/test_pwml_ir.py tests/test_pwml_ir_duplicate_row_refusal.py tests/test_pwml_writer.py
+cwd                     : C:\t\fp
+root PID / process group: 289212 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 11.42 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  290328:python.exe
+descendants terminated  : 1  290328
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/fp/docs/pwml_output/evidence/final_payload_p5/fix2/tests/focus1.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=fp5-focus1  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

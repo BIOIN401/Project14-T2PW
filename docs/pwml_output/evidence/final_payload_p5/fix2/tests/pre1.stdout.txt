@@ -1,0 +1,77 @@
+T2PW: C:\t\fp\src\t2pw\__init__.py
+.F.......F.........................................F.................... [ 75%]
+.......................                                                  [100%]
+================================== FAILURES ===================================
+___________ test_protein_coding_alias_is_dna_and_symbol_beats_alias ___________
+
+    def test_protein_coding_alias_is_dna_and_symbol_beats_alias() -> None:
+        genes = [G(7, "CRD1", "protein-coding", "AT3G56940, CHL27", 3702, "Arabidopsis thaliana")]
+        p = P({"name": "CHL27"}, taxid="3702")
+        run(p, Fake(genes))
+>       assert row(p)["nucleotide_type"] == "DNA" and row(p)["nucleotide_type_source"]["match_type"] == "exact_alias"
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'nucleotide_type'
+
+tests\test_final_payload_nucleic_lookup.py:104: KeyError
+___________________ test_gene_type_map[protein-coding-DNA] ____________________
+
+typ = 'protein-coding', want = 'DNA'
+
+    @pytest.mark.parametrize("typ,want", [("protein-coding", "DNA"), ("ncRNA", "RNA"), ("tRNA", "RNA"), ("rRNA", "RNA"), ("snRNA", "RNA"),
+                                          ("snoRNA", "RNA"), ("scRNA", "RNA"), ("miscRNA", "RNA")])
+    def test_gene_type_map(typ, want) -> None:
+        p = P({"name": "Foo1"}, taxid="3702")
+        run(p, Fake([G(10, "Foo1", typ, taxid=3702)]))
+>       assert row(p)["nucleotide_type"] == want
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'nucleotide_type'
+
+tests\test_final_payload_nucleic_lookup.py:134: KeyError
+_ test_f1_kept_nonbacterial_membrane_is_renamed_so_it_cannot_bind_to_the_bacterial_row _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001DC7B51B7E0>
+
+    def test_f1_kept_nonbacterial_membrane_is_renamed_so_it_cannot_bind_to_the_bacterial_row(monkeypatch) -> None:
+        monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "1")
+        b, root = _build(_human_membrane_payload("t0"))  # same tissue: without the location the first state is a subset of the second, so it is kept
+        names = _loc_names(root)
+        assert "outer membrane" not in [n.casefold() for n in names] and "Outer Membrane" not in names
+>       assert names == ["outer membrane (non-bacterial, no ontology id)", "cytosol"]
+E       AssertionError: assert ['outer membr...)', 'cytosol'] == ['outer membr...)', 'cytosol']
+E         
+E         At index 0 diff: 'outer membrane (unresolved, no ontology id)' != 'outer membrane (non-bacterial, no ontology id)'
+E         Use -v to get more diff
+
+tests\test_final_payload_fix1.py:47: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_final_payload_nucleic_lookup.py::test_protein_coding_alias_is_dna_and_symbol_beats_alias
+FAILED tests/test_final_payload_nucleic_lookup.py::test_gene_type_map[protein-coding-DNA]
+FAILED tests/test_final_payload_fix1.py::test_f1_kept_nonbacterial_membrane_is_renamed_so_it_cannot_bind_to_the_bacterial_row
+3 failed, 92 passed in 1.29s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\fp\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 5d1ac2ce56c75d7b6bb9bf5c27329e5a26f6f34d  [git, worktree dirty=True]
+label                   : fp-pre1
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/fp -q --basetemp=C:/t/tmpbase/pre1-4458 tests/test_final_payload_nucleic_lookup.py tests/test_final_payload_nucleic_type.py tests/test_final_payload_fix1.py tests/test_final_payload_writer_fixes.py tests/test_final_payload_wildcard_guard.py
+cwd                     : C:\t\fp
+root PID / process group: 277404 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 2.17 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  286264:python.exe
+descendants terminated  : 1  286264
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/fp/docs/pwml_output/evidence/final_payload_p5/fix2/tests/pre1.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=fp5-pre1  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================
