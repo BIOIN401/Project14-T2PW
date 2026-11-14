@@ -55,7 +55,7 @@ For every file in every mode, the pair (07d23e9c output, fixed output) is compar
 | off v2 | 97 | 1036 | 285 | 44 | 0 |
 | on v2 | 97 | 1036 | 285 | 44 | 0 |
 
-285 changed against 281 mismatches: 4 of the 6 members per mode that sit on both lists changed too. The replay results (`replay_results_*.jsonl`) match the layout package's on ok / written / counts. The check script refuses an empty input directory. This is stricter than the layout package's `content_check.py` (which strips geometry but also compares `side`).
+285 changed against 281 mismatches: 4 of the 6 members per mode that sit on both lists changed too. `side_only_check.py` got its empty-input refusal after the metrics were produced (comparison logic unchanged). `fetch_sbml.py` was changed to read the local harness login from `screenshot.py` after the exports were taken (it first held the literal login); the edited version was not re-run. The replay results (`replay_results_*.jsonl`) match the layout package's on ok / written / counts. The check script refuses an empty input directory. This is stricter than the layout package's `content_check.py` (which strips geometry but also compares `side`).
 
 ### 3.3 PathWhiz import harness (`harness/`, `side_db/`)
 
@@ -83,8 +83,8 @@ Importer `pwml_parser.rb` sha256 `eb00ccaa...` (same as the layout package), sam
 
 File 37 (cholesterol branch, 4 reactions) was imported alone and exported with `/live/view/PW000001.sbml`, before and after.
 
-* Before: the reaction "4,4-dimethylcholesta-8(9),14,24-trien-3b-ol -> cholesterol" is exported with **cholesterol as the reactant and the diene as the product**. 3 of 4 reactions match the PWML roles.
-* After: all 4 reactions export reactants and products as the PWML has them (4 of 4). The other 3 reactions are unchanged.
+* Before (SBGN, orientation and find_element were not exercised): the reaction "4,4-dimethylcholesta-8(9),14,24-trien-3b-ol -> cholesterol" is exported with **cholesterol as the reactant and the diene as the product**. 3 of 4 reactions match the PWML roles.
+* After: all 4 reactions export reactants and products as the PWML has them (4 of 4, compounds only). The other 3 reactions are unchanged.
 * Tables: `sbml/37_before_reactions.md`, `sbml/37_after_reactions.md`; raw exports and PWMLs beside them. (The export mangles the beta character in the name; the check compares ASCII only.)
 
 ## 4. Tests (bounded wrapper, heavy lock, `evidence/side_fix/tests/`, `logs/`)
@@ -105,7 +105,7 @@ The replay and harness jobs each ran bounded with 0 survivors (`logs/after_repla
 | # | scope | model / effort | verdict |
 |---|---|---|---|
 | 1 | `07d23e9c..3bd33491` (`ws-reviewer`) | opus / high | REJECT: F1 the new test's guard `> 20` could not pass (fixture has 16 single-role members); F2 two assertions in `test_pwml_writer.py` still pinned the old side. Notes: stale docstring, the check script passing on empty input, base-tree layout. All fixed in `74dcb2df`, `0bb147e4`. Confirmed: all other `_reaction_visual_side` uses are geometry, role mapping right for every PathWhiz reader, no behaviour change besides `side` |
-| 2 | re-review of `07d23e9c..HEAD` | opus / high | see 8 |
+| 2 | re-review of `07d23e9c..9803bd66` (same agent, resumed) | opus / high | **APPROVE WITH NOTES**: F5 hard-coded local login in `fetch_sbml.py` (fixed), F6 SBML/SBGN wording overclaimed (reworded), F7 "4 of 4" is compounds only (said so), F8 check script edited after the metrics (noted); numbers in 3-4 match the committed files; no forbidden files |
 
 ## 6. Boundary exception (needs PO confirmation)
 
@@ -115,12 +115,9 @@ The brief fixed the boundary at `writer.py`, the new test and docs. The fix cann
 
 **Apply to default output?** The change touches output with the flag off (today's default) as well as on.
 
-* Yes: SBML and SBGN exports from PathWhiz, its orientation calculation and its stoichiometry lookup become correct for the 44 of 97 files with swapped members; no coordinate, id or other attribute changes (3.2). Cost: the code is 1 statement in `writer.py`; the three test assertions; a decision that PWML bytes change for a fraction of previously generated files.
+* Yes: PathWhiz stops swapping reactants and products for the members of the 44 of 97 files that had swapped members (SBML export shown on one file, section 3.4; SBGN export, orientation and stoichiometry lookup follow from reading the PathWhiz code, not run); no coordinate, id or other attribute changes (3.2). Cost: the code is 1 statement in `writer.py`; the three test assertions; a decision that PWML bytes change for a fraction of previously generated files.
 * No (keep as is): exports from T2PW drawings keep swapping reactants and products for the members on every second row; document it.
 * With v1 geometry the reaction's drawn direction on a right-to-left row no longer matches `side`; with v2 geometry (always left to right) drawing and `side` agree. Orientation computed by PathWhiz follows the role either way.
 
 Not tied to the layout flag, so it can be applied independently of `T2PW_PWML_LAYOUT`.
 
-## 8. Re-review
-
-(filled in below after the second review)
