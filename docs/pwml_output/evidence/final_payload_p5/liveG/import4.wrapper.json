@@ -1,0 +1,180 @@
+{
+  "label": "pwi-liveG4",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "tools/pathwhiz_import/run_import.py",
+    "C:/t/fp/docs/pwml_output/evidence/final_payload_p5/liveG/pwml/pathwhiz.pwml",
+    "C:/t/fp/docs/pwml_output/evidence/final_payload_p5/liveG/pwml/nameonly_r2.pwml",
+    "--smpdb-src",
+    "C:/t/pwpr/h04",
+    "--work",
+    "C:/t/pwi/p5w/liveG3",
+    "--out",
+    "C:/t/pwi/p5w/liveG3out"
+  ],
+  "cwd": "C:\\t\\pwi\\t2pw",
+  "started_at": "2026-11-14T21:14:59+00:00",
+  "finished_at": "2026-11-14T21:16:03+00:00",
+  "duration_seconds": 64.15612069999997,
+  "timeout_seconds": 1500.0,
+  "root_pid": 39328,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 39204,
+      "name": "python.exe",
+      "ppid": 39328
+    },
+    {
+      "pid": 37116,
+      "name": "git.exe",
+      "ppid": 39204
+    },
+    {
+      "pid": 11676,
+      "name": "sh.exe",
+      "ppid": 37116
+    },
+    {
+      "pid": 37600,
+      "name": "git-upload-pack.exe",
+      "ppid": 11676
+    },
+    {
+      "pid": 42732,
+      "name": "docker.exe",
+      "ppid": 39204
+    },
+    {
+      "pid": 42036,
+      "name": "docker.exe",
+      "ppid": 39204
+    },
+    {
+      "pid": 42344,
+      "name": "docker-compose.exe",
+      "ppid": 42036
+    },
+    {
+      "pid": 37352,
+      "name": "docker.exe",
+      "ppid": 39204
+    },
+    {
+      "pid": 37296,
+      "name": "docker-compose.exe",
+      "ppid": 37352
+    },
+    {
+      "pid": 24964,
+      "name": "docker-compose.exe",
+      "ppid": 37260
+    },
+    {
+      "pid": 37260,
+      "name": "docker.exe",
+      "ppid": 39204
+    },
+    {
+      "pid": 37392,
+      "name": "docker-compose.exe",
+      "ppid": 37260
+    },
+    {
+      "pid": 37348,
+      "name": "docker.exe",
+      "ppid": 39204
+    },
+    {
+      "pid": 38976,
+      "name": "docker-compose.exe",
+      "ppid": 37348
+    },
+    {
+      "pid": 44804,
+      "name": "docker.exe",
+      "ppid": 39204
+    },
+    {
+      "pid": 44904,
+      "name": "docker-compose.exe",
+      "ppid": 44804
+    }
+  ],
+  "descendants_terminated": [
+    11676,
+    24964,
+    37116,
+    37260,
+    37296,
+    37348,
+    37352,
+    37392,
+    37600,
+    38976,
+    39204,
+    42036,
+    42344,
+    42732,
+    44804,
+    44904
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 15768,
+      "name": "python.exe"
+    },
+    {
+      "pid": 24240,
+      "name": "python.exe"
+    },
+    {
+      "pid": 41496,
+      "name": "python.exe"
+    },
+    {
+      "pid": 42204,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/fp/docs/pwml_output/evidence/final_payload_p5/liveG/import4.wrapper.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\fp\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\fp",
+    "repo_head": "34cb102aa5c8f7ee2ab7f54e973240eec9a2f4a8",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "pwi-liveG4",
+    "token": "pwi-liveG4:42204:d9fa25c9723bb2e0",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

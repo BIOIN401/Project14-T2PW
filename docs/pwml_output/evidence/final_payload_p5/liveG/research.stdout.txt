@@ -1,0 +1,32 @@
+run_fn t2pw.service.pathway:run_pathway scope RequestedScope(requested_pathway='cholesterol biosynthesis', requested_organism='Homo sapiens', pinned=False)
+recovered []
+ran item 1 attempt 1 state finished status pass kind  t=2678s
+FINAL item 1 finished pass  attempts 1
+wall_s 2677.5
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\fp\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 34cb102aa5c8f7ee2ab7f54e973240eec9a2f4a8  [git, worktree dirty=True]
+label                   : fp5-liveG-research
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe C:/t/fp/docs/pwml_output/evidence/final_payload_p5/liveG/drive.py research research 41522513 cholesterol biosynthesis Homo sapiens
+cwd                     : C:\t\fp
+root PID / process group: 1277156 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 4500 s
+duration                : 2678.34 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 3  1278332:python.exe, 1278416:python.exe, 1278432:python.exe
+descendants terminated  : 3  1278332, 1278416, 1278432
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/fp/docs/pwml_output/evidence/final_payload_p5/liveG/research.wrapper.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=fp5-liveG-research  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

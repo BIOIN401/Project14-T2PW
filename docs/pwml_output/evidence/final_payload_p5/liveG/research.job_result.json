@@ -1,0 +1,192 @@
+{
+ "status": "pass",
+ "stage": "research_report",
+ "failure_kind": "",
+ "message": "research run completed with a citation report",
+ "warnings": [
+  "runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.",
+  "runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta."
+ ],
+ "issue_codes": [],
+ "counts": {
+  "stage0_observed_pathways": 1,
+  "stage0_observed_organisms": 1,
+  "reactions": 3,
+  "transports": 0,
+  "entities": 38,
+  "proteins": 20,
+  "compounds": 12,
+  "runtime_schema_findings": 2,
+  "gate_errors": 0,
+  "blocking_issues": 0,
+  "review_flags": 14,
+  "skipped_format_rules": 0,
+  "normalization_actions": 30,
+  "tier": {
+   "a": 10,
+   "b": 0,
+   "c": 4,
+   "d": 0
+  },
+  "citations": 1,
+  "unsourced": 0
+ },
+ "release_status": null,
+ "pwml_path": null,
+ "image_path": "C:\\t\\fpl\\research\\work\\item-1\\attempt-1\\out\\pathway.png",
+ "report_paths": {
+  "audit_iteration_summary.json": "C:\\t\\fpl\\research\\work\\item-1\\attempt-1\\out\\audit_iteration_summary.json",
+  "cleaning_report.json": "C:\\t\\fpl\\research\\work\\item-1\\attempt-1\\out\\cleaning_report.json",
+  "contract_reports.json": "C:\\t\\fpl\\research\\work\\item-1\\attempt-1\\out\\contract_reports.json",
+  "coverage_diagnostics.json": "C:\\t\\fpl\\research\\work\\item-1\\attempt-1\\out\\coverage_diagnostics.json",
+  "coverage_summary.json": "C:\\t\\fpl\\research\\work\\item-1\\attempt-1\\out\\coverage_summary.json",
+  "extraction_boundary_report.json": "C:\\t\\fpl\\research\\work\\item-1\\attempt-1\\out\\extraction_boundary_report.json",
+  "final_mapped.json": "C:\\t\\fpl\\research\\work\\item-1\\attempt-1\\out\\final_mapped.json",
+  "final_stage3_gate_report.json": "C:\\t\\fpl\\research\\work\\item-1\\attempt-1\\out\\final_stage3_gate_report.json",
+  "gap_iteration_summary.json": "C:\\t\\fpl\\research\\work\\item-1\\attempt-1\\out\\gap_iteration_summary.json",
+  "graph_closure_iterations.json": "C:\\t\\fpl\\research\\work\\item-1\\attempt-1\\out\\graph_closure_iterations.json",
+  "merged_payload.json": "C:\\t\\fpl\\research\\work\\item-1\\attempt-1\\out\\merged_payload.json",
+  "quarantine_report.json": "C:\\t\\fpl\\research\\work\\item-1\\attempt-1\\out\\quarantine_report.json",
+  "rag_admission_report.json": "C:\\t\\fpl\\research\\work\\item-1\\attempt-1\\out\\rag_admission_report.json",
+  "removed_entity_report.json": "C:\\t\\fpl\\research\\work\\item-1\\attempt-1\\out\\removed_entity_report.json",
+  "research_pathway_citations.json": "C:\\t\\fpl\\research\\work\\item-1\\attempt-1\\out\\research_pathway_citations.json",
+  "research_pathway_elements.csv": "C:\\t\\fpl\\research\\work\\item-1\\attempt-1\\out\\research_pathway_elements.csv",
+  "research_pathway_report.txt": "C:\\t\\fpl\\research\\work\\item-1\\attempt-1\\out\\research_pathway_report.txt",
+  "review_flags.json": "C:\\t\\fpl\\research\\work\\item-1\\attempt-1\\out\\review_flags.json",
+  "stage0_attempts.json": "C:\\t\\fpl\\research\\work\\item-1\\attempt-1\\out\\stage0_attempts.json",
+  "stage1_payload.json": "C:\\t\\fpl\\research\\work\\item-1\\attempt-1\\out\\stage1_payload.json"
+ },
+ "attempt_log": [
+  {
+   "attempt": 1,
+   "runner": "t2pw.service.pathway.run_pathway",
+   "paper_id": "web:PMID41522513",
+   "mode": "research",
+   "status": "pass",
+   "stage": "research_report",
+   "seconds": 2656.22,
+   "failure_kind": "",
+   "message": "research run completed with a citation report",
+   "issue_codes": [],
+   "counts": {
+    "stage0_observed_pathways": 1,
+    "stage0_observed_organisms": 1,
+    "reactions": 3,
+    "transports": 0,
+    "entities": 38,
+    "proteins": 20,
+    "compounds": 12,
+    "runtime_schema_findings": 2,
+    "gate_errors": 0,
+    "blocking_issues": 0,
+    "review_flags": 14,
+    "skipped_format_rules": 0,
+    "normalization_actions": 30,
+    "tier": {
+     "a": 10,
+     "b": 0,
+     "c": 4,
+     "d": 0
+    },
+    "citations": 1,
+    "unsourced": 0
+   },
+   "files": [
+    {
+     "name": "stage0_attempts.json",
+     "bytes": 3056
+    },
+    {
+     "name": "extraction_boundary_report.json",
+     "bytes": 7767
+    },
+    {
+     "name": "cleaning_report.json",
+     "bytes": 1200
+    },
+    {
+     "name": "audit_iteration_summary.json",
+     "bytes": 1414
+    },
+    {
+     "name": "gap_iteration_summary.json",
+     "bytes": 233
+    },
+    {
+     "name": "stage1_payload.json",
+     "bytes": 33512
+    },
+    {
+     "name": "merged_payload.json",
+     "bytes": 76712
+    },
+    {
+     "name": "final_stage3_gate_report.json",
+     "bytes": 2721
+    },
+    {
+     "name": "contract_reports.json",
+     "bytes": 21960
+    },
+    {
+     "name": "final_mapped.json",
+     "bytes": 423698
+    },
+    {
+     "name": "rag_admission_report.json",
+     "bytes": 152046
+    },
+    {
+     "name": "quarantine_report.json",
+     "bytes": 15154
+    },
+    {
+     "name": "removed_entity_report.json",
+     "bytes": 241
+    },
+    {
+     "name": "graph_closure_iterations.json",
+     "bytes": 4208
+    },
+    {
+     "name": "coverage_summary.json",
+     "bytes": 2888
+    },
+    {
+     "name": "coverage_diagnostics.json",
+     "bytes": 2690
+    },
+    {
+     "name": "review_flags.json",
+     "bytes": 12410
+    },
+    {
+     "name": "research_pathway_report.txt",
+     "bytes": 10016
+    },
+    {
+     "name": "research_pathway_citations.json",
+     "bytes": 37806
+    },
+    {
+     "name": "research_pathway_elements.csv",
+     "bytes": 3810
+    }
+   ],
+   "warnings": [
+    "runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.",
+    "runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta."
+   ],
+   "observed_context": {
+    "observed_pathways": [
+     "cholesterol biosynthesis"
+    ],
+    "observed_organisms": [
+     "Homo sapiens"
+    ],
+    "aliases": [],
+    "ambiguities": []
+   }
+  }
+ ]
+}
