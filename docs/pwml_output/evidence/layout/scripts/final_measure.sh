@@ -3,7 +3,7 @@
 # v2 content identity against v1, layout metrics (stored and PathWhiz template sizes), v1/v2 renders of 8 files.
 T=C:/t/lay; E=$T/docs/pwml_output/evidence/layout; D3=$T/docs/pwml_output/evidence/final_payload_p4/d3/replay
 PY=C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.venv/Scripts/python.exe
-R=C:/t/layx/replay; M=$E/metrics; mkdir -p $M
+R=C:/t/layx/replay; M=${M_DIR:-$E/metrics}; mkdir -p $M  # M_DIR / RENDER_DIR: where this pass writes
 for spec in "off_v1 0 " "on_v1 1 " "off_v2 0 v2" "on_v2 1 v2"; do
   set -- $spec; L=$1; F=$2; LAY=${3:-}
   rm -rf $R/$L
@@ -19,4 +19,4 @@ for m in off on; do
     $PY -X utf8 $E/scripts/layout_metrics.py --pathwhiz-sizes $M/metrics_${m}_${v}_pwsizes.json $R/${m}_$v/pwml > /dev/null
   done
 done
-$PY -X utf8 $E/scripts/render_pairs.py $T/src $R/on_v1/pwml $R/on_v2/pwml $E/render 7,128,9,116,134,126,58,10
+$PY -X utf8 $E/scripts/render_pairs.py $T/src $R/on_v1/pwml $R/on_v2/pwml ${RENDER_DIR:-$E/render} 7,128,9,116,134,126,58,10

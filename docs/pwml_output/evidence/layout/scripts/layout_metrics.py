@@ -2,13 +2,21 @@
 
 usage: layout_metrics.py [--pathwhiz-sizes] OUT.json FILE_OR_DIR [FILE_OR_DIR ...]
 
---pathwhiz-sizes: size compound locations by their template (t2pw TEMPLATE_DIMS), as PathWhiz draws them;
+--pathwhiz-sizes: size compound locations by their template (t2pw TEMPLATE_DIMS) and template-2 protein /
+nucleic-acid locations at 150x70, as PathWhiz draws them;
 PathWhiz keeps no width/height of its own for a location. Default: the stored width/height.
 
 Per file: node-node overlaps, nodes outside the canvas, edges passing through a node box that is
 not one of their two ends, edge points outside the canvas, edge crossings, compartment containment,
 canvas size and fill. Nodes = visible compound/protein/nucleic-acid/element-collection locations.
 Compartment boxes = bound-visualizations (have a biological-state-id) and closed membrane-visualizations.
+"Attached" nodes are the ones PathWhiz's viewer keeps: a location a process visualization (reaction, transport,
+interaction) refers to, directly or through a protein-complex visualization such a process refers to; the viewer drops
+every other location (`isOrphan`, pathway_visualization.js.coffee). Compartment containment is measured on attached
+nodes; empty boxes = closed membranes (what PathWhiz and render.py draw as compartment outlines) holding no attached
+node; bound-visualizations count as boxes for containment only (neither viewer draws them); internal labels = label
+text starting with "__" or "AutoState_" (generated state names); edges under label = visible edges crossing a drawn label box;
+label overlaps = drawn label box (template 15 / 235 geometry, scale) intersecting a node box.
 """
 import json
 import re
@@ -93,6 +101,38 @@ def segs_cross(a, b, c, d):
 
 
 PW_DIMS = {}
+OTHER_DIMS = {}
+LABEL_GEOM = {"15": (160, 10), "235": (200, 16)}  # template: box width, px per line (label_locations/*.jst.eco)
+
+
+def label_lines(text, length=28):
+    words = []
+    for w in (text or "").split():
+        words += [w[i:i + length] for i in range(0, len(w), length)] if len(w) > length else [w]
+    lines, cur = 0, ""
+    for w in words:
+        if cur and len(cur) + len(w) + 1 > length:
+            lines, cur = lines + 1, w
+        else:
+            cur = f"{cur} {w}" if cur else w
+    return lines + (1 if cur else 0)
+
+
+def attached_ids(pv):
+    used_pcv, ids = set(), set()
+    procs = [v for t in ("reaction-visualization", "transport-visualization", "interaction-visualization") for v in pv.iter(t)]
+    for v in procs:
+        for el in v.iter():
+            if not isinstance(el.tag, str):
+                continue
+            if el.tag.endswith("location-id"):
+                ids.add(el.text)
+            elif el.tag == "protein-complex-visualization-id":
+                used_pcv.add(el.text)
+    for pcv in pv.iter("protein-complex-visualization"):
+        if pcv.findtext("id") in used_pcv:
+            ids.update(e.text for e in pcv.iter("protein-location-id"))
+    return ids
 
 
 def measure(path):
@@ -100,6 +140,7 @@ def measure(path):
     pv = root.find(".//pathway-visualization")
     W, H = num(pv, "width"), num(pv, "height")
     nodes = []
+    att = attached_ids(pv)
     for tag in LOCS:
         for el in pv.iter(tag):
             if (txt(el, "hidden") or "false") == "true":
@@ -108,7 +149,10 @@ def measure(path):
             t = txt(el, "visualization-template-id")
             if tag == "compound-location" and t and t.isdigit() and int(t) in PW_DIMS:
                 w, h = PW_DIMS[int(t)]
-            nodes.append({"id": txt(el, "id"), "state": txt(el, "biological-state-id"), "r": (x, y, x + w, y + h)})
+            elif tag != "compound-location" and t and t.isdigit() and int(t) in OTHER_DIMS:
+                w, h = OTHER_DIMS[int(t)]
+            nodes.append({"id": txt(el, "id"), "state": txt(el, "biological-state-id"), "r": (x, y, x + w, y + h),
+                          "attached": txt(el, "id") in att})
     edges = []
     for el in pv.iter("edge"):
         if (txt(el, "hidden") or "false") == "true":
@@ -116,7 +160,7 @@ def measure(path):
         pts = path_points(txt(el, "path"))
         if len(pts) >= 2:
             edges.append({"id": txt(el, "id"), "pts": pts})
-    boxes = []
+    boxes, membranes = [], []
     for el in pv.iter("bound-visualization"):
         if (txt(el, "hidden") or "false") != "true":
             x, y = num(el, "x"), num(el, "y")
@@ -127,6 +171,7 @@ def measure(path):
         if pts and (d.strip().upper().endswith("Z") or (len(pts) > 2 and pts[0] == pts[-1])):
             xs, ys = [p[0] for p in pts], [p[1] for p in pts]
             r = (min(xs), min(ys), max(xs), max(ys))
+            membranes.append(r)
             if not any(b["r"] == r for b in boxes):  # a membrane drawn over a bound box is one compartment
                 boxes.append({"state": None, "r": r})
 
@@ -154,11 +199,26 @@ def measure(path):
     for i, j in combinations(range(len(segs)), 2):
         if any(segs_cross(a, b, c, d) for a, b in segs[i] for c, d in segs[j]):
             crossings += 1
-    # compartments: every node in a box; a box holds one biological state only; bound boxes hold their own state
+    # compartments: every attached node in a box; a box holds one biological state only; bound boxes hold their own state
     not_in_box, mixed, own_out = 0, 0, 0
+    empty_boxes = sum(1 for m in membranes if not any(n["attached"] and inside((n["r"][0], n["r"][1]), m)
+                                                   and inside((n["r"][2], n["r"][3]), m) for n in nodes))
+    labels = []
+    for el in pv.iter("label-location"):
+        t, sc = txt(el, "visualization-template-id"), num(el, "scale-x", 1.0)
+        bw, lh = LABEL_GEOM.get(t, (160, 10))
+        x, y = num(el, "x"), num(el, "y")
+        labels.append({"text": txt(el, "label-text") or "", "r": (x + 5 * sc, y + 25 * sc, x + (5 + bw) * sc,
+                                                                 y + (40 + lh * label_lines(txt(el, "label-text"))) * sc)})
+    internal_labels = sum(1 for lb in labels if lb["text"].strip().startswith(("__", "AutoState_")))
+    edges_under_label = sum(1 for e in edges if any(seg_hits_rect(a, b, lb["r"]) for lb in labels for a, b in zip(e["pts"], e["pts"][1:])))
+    label_overlaps = sum(1 for lb in labels for n in nodes
+                         if min(lb["r"][2], n["r"][2]) > max(lb["r"][0], n["r"][0]) and min(lb["r"][3], n["r"][3]) > max(lb["r"][1], n["r"][1]))
     if boxes:
         members = [[] for _ in boxes]
         for n in nodes:
+            if not n["attached"]:
+                continue
             hold = [k for k, b in enumerate(boxes) if inside((n["r"][0], n["r"][1]), b["r"]) and inside((n["r"][2], n["r"][3]), b["r"])]
             if not hold:
                 not_in_box += 1
@@ -182,7 +242,10 @@ def measure(path):
         "edges_through_node": through, "edge_node_hits": through_pairs,
         "edges_out_of_canvas": out_edges, "long_edges": long_edges, "edge_crossings": crossings,
         "compartment_boxes": len(boxes), "nodes_not_in_box": not_in_box, "mixed_state_boxes": mixed,
-        "nodes_outside_own_bound": own_out, "box_overlaps": box_overlaps,
+        "nodes_outside_own_bound": own_out, "box_overlaps": box_overlaps, "empty_boxes": empty_boxes,
+        "labels": len(labels), "internal_labels": internal_labels, "label_node_overlaps": label_overlaps,
+        "edges_under_label": edges_under_label, "membranes": len(membranes),
+        "unattached_nodes": sum(1 for n in nodes if not n["attached"]),
         "content_w": bx[2] - bx[0], "content_h": bx[3] - bx[1],
         "fill_pct": round(100.0 * area / (W * H), 2) if W and H else 0.0,
     }
@@ -194,6 +257,7 @@ def main():
         sys.path.insert(0, str(Path(__file__).resolve().parents[5] / "src"))
         from t2pw.pwml.compound_templates import TEMPLATE_DIMS
         PW_DIMS.update(TEMPLATE_DIMS)
+        OTHER_DIMS.update({2: (150, 70)})
         argv = argv[1:]
     out, args = argv[0], argv[1:]
     files = []

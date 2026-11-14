@@ -107,6 +107,8 @@ What the PathWhiz screenshots show:
 All with `PYTHONPATH=<tree>/src`, `T2PW_OFFLINE_CURATOR=1`, the flag unset, a fresh `--basetemp`, heavy lock `lay`, `FINAL SURVIVING COUNT 0`. No existing test was edited.
 
 ## 7. Open questions for the product owner
+*Update 2026-11-14:* the v2.1 pass (section 9) settles items 3 (orphan edges moved into the canvas), 4 (nucleic-acid size) and 6 (labels), and answers item 2 with harness-DB evidence (9.4).
+
 1. **Flip the default to v2?** Options: flip now (all quality counts at 0, content identical, harness not worse); or first look at more PathWhiz screenshots / let a curator judge. Cost of waiting: users keep getting v1 pictures.
 2. **v1 writes `side` against the member's role for 285 of 1036 reaction members (F2 of the review).** `writer.py` `_reaction_visual_side` flips Left/Right on every second serpentine row; PathWhiz reads `side` as the reaction side (substrate/product in SBML/SBGN export, `Reaction#find_element`). v2 keeps v1's values, so for those reactions the labels PathWhiz reads disagree with the drawing (substrates are drawn left in v2). Options: (a) set `side` from the role (substrate Left, product Right) in the writer: an output change, not layout, needs a ruling and its own before/after harness run; (b) keep as is. Cost of (a): small code change plus a harness pass; it changes import semantics for those reactions (believed to fix them).
 3. **Edges tied to nothing drawn** (N1/F3 of the review): 4 visible lines in idx 6 and 2 in idx 146 (flag on) reach outside the v2 canvas; flag off has one in idx 130 whose interaction members point at compound locations 32/33 that the writer never emitted (a dangling reference in v1). Options: hide them (changes `hidden`, not geometry), widen the canvas to contain them (geometry only, leaves stray lines), or fix the writer so they are not dangling (output change).
@@ -124,3 +126,107 @@ All with `PYTHONPATH=<tree>/src`, `T2PW_OFFLINE_CURATOR=1`, the flag unset, a fr
 Everything else (fact finding, code, replays, harness, tests) was done by the package owner directly.
 
 Dead ends and slips: (1) The first layout put compartments as full-width stripes with global columns: idx 7 came out 3850 x 9136; replaced by per-compartment layered groups packed in boxes. (2) The first v2 run collapsed edges tied to nothing to a point and recomputed `side`; both reverted after review. (3) The first byte-identity check compared against the committed d3 copies and reported 97/97 different: autocrlf. (4) Python's `bash` resolved to WSL's bash, so a first bounded job ran nothing (exit 1). (5) One `python -` was typed by mistake (stopped at once with TaskStop, it ran nothing; no process survived) and one `git commit -F -` with an empty heredoc was typed (aborted on the empty message, no commit). (6) The first v2 harness pass imported pre-review v2 files and was abandoned midway (moved to `C:/t/layx/pwi/v2pre_59_partial`, not used). (7) The Docker stack `t2pw-pwi` was left running: phase 5 uses the same stack.
+
+## 9. v2.1 polish pass (2026-11-14, code `260c9a84`, `d6f8ddf4`, `1c8aa0c9`; all v2-only)
+Asked by the orchestrator after looking at the v2 PathWhiz screenshots 7 and 128. Flag unset is unchanged.
+
+### 9.1 What changed
+1. **No box for a compartment PathWhiz draws nothing in.** Finding first: the PathWhiz viewer drops every location that no reaction, transport or interaction visualization refers to, directly or through a protein-complex visualization such a process uses (`isOrphan` in `visual_element.js.coffee`, removal in `pathway_visualization.js.coffee` ~495-513). Checked on the 8 v2 screenshots: of 47 protein locations not drawn, 31 were in no complex visualization, 9 in a complex no process used, 7 in a used complex (not traced further; those files carry importer messages for proteins or complexes on the empty DB). The empty boxes in screenshots 7 and 128 (`plastid`, `Bacillus subtilis plasma membrane`, `__auto_state__`) held only such unattached nodes. v2.1 draws a box (membrane plus label) only for a state holding an attached node; unattached nodes stay in their state's box when it has one, otherwise go to an unoutlined area after the boxes (PathWhiz shows nothing there; the canvas still holds them because other renderers draw them). A reaction or transport point whose own state has no box joins the box of a drawn neighbour.
+2. **Labels.** Text = the state's name without " state"; generated names (`__auto_state__`, `AutoState_*` from `curation/gap_resolver.py`) get no label. Style as PathBank's own files: template 235 "Simple Label - Large" (PW000001 uses it at scale 1.9; v2.1 uses 2.0, so the label text is drawn at 32 px, against the 10 px small template of v2). The box's top padding follows the label's drawn height (PathWhiz wraps label text at 28 characters, `divide_label_text`), so the label ends 24 px above the first node. Label boxes are obstacles for edges, because PathWhiz draws them as opaque white boxes above edges.
+3. **Edges tied to nothing drawn** keep their v1 shape and move together into a strip under the content; the canvas grows to hold them. Zero-length ones become a point in the bottom margin. PathWhiz's viewer drops all of them (orphans); `render.py` draws them.
+4. **Nucleic-acid locations** take their template size (template 2: 150x70, as drawn).
+5. `side`: not changed (9.4).
+
+### 9.2 Gates (97 + 97 replayed files at the v2.1 head, `evidence/layout/metrics/v2_1/`)
+* Flag unset byte-identical: 97/97 flag off and 97/97 flag on match the sha256 recorded for P4 d3 (`metrics/v2_1/sha_*.json`).
+* v2 content check: 0 differences in 97/97 flag off and 97/97 flag on (`metrics/v2_1/content_*.json`; `content_check.py` unchanged: `side` and arrow on/off still compared).
+* Metrics ("PW sizes" = compounds and template-2 proteins / nucleic acids at their PathWhiz template size):
+
+| metric (97 files) | off v1 | off v2 | on v1 | on v2 | off v1 PW sizes | off v2 PW sizes | on v1 PW sizes | on v2 PW sizes |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| node_overlaps | 228 | 0 | 255 | 0 | 241 | 0 | 273 | 0 |
+| files_with_node_overlaps | 41 | 0 | 47 | 0 | 42 | 0 | 48 | 0 |
+| nodes_out_of_canvas | 1 | 0 | 1 | 0 | 1 | 0 | 1 | 0 |
+| edges_through_node | 302 | 0 | 311 | 0 | 305 | 0 | 314 | 0 |
+| edge_node_hits | 540 | 0 | 561 | 0 | 550 | 0 | 582 | 0 |
+| files_with_edges_through_node | 57 | 0 | 58 | 0 | 57 | 0 | 58 | 0 |
+| edges_out_of_canvas | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| long_edges | 44 | 18 | 44 | 31 | 44 | 18 | 44 | 31 |
+| edge_crossings | 430 | 95 | 430 | 98 | 430 | 95 | 430 | 98 |
+| compartment_boxes | 289 | 289 | 0 | 181 | 289 | 289 | 0 | 181 |
+| nodes_not_in_box | 21 | 0 | 0 | 0 | 48 | 0 | 0 | 0 |
+| mixed_state_boxes | 18 | 0 | 0 | 0 | 13 | 0 | 0 | 0 |
+| nodes_outside_own_bound | 54 | 0 | 0 | 0 | 31 | 0 | 0 | 0 |
+| box_overlaps | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| membranes | 0 | 162 | 0 | 181 | 0 | 162 | 0 | 181 |
+| empty_boxes | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| labels | 0 | 152 | 0 | 168 | 0 | 152 | 0 | 168 |
+| internal_labels | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| label_node_overlaps | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| edges_under_label | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| unattached_nodes | 210 | 210 | 210 | 210 | 210 | 210 | 210 | 210 |
+| median_canvas_w | 3200.0 | 1500.0 | 3200.0 | 1500.0 | 3200.0 | 1500.0 | 3200.0 | 1500.0 |
+| median_canvas_h | 1692.0 | 1370.0 | 1692.0 | 1430.0 | 1692.0 | 1370.0 | 1692.0 | 1430.0 |
+| max_canvas_w | 3200.0 | 4240.0 | 3200.0 | 4240.0 | 3200.0 | 4240.0 | 3200.0 | 4240.0 |
+| max_canvas_h | 7380.0 | 3839.0 | 7380.0 | 3884.0 | 7380.0 | 3839.0 | 7380.0 | 3884.0 |
+| median_fill_pct | 5.19 | 16.3 | 5.46 | 17.77 | 5.77 | 16.3 | 6.37 | 17.77 |
+| median_content_over_canvas_area_pct | 37.0 | 67.7 | 37.0 | 73.1 | 37.0 | 67.7 | 37.0 | 73.1 |
+
+Against v2: overlaps, edges through nodes, nodes outside their box and edges out of the canvas stay at 0. Empty boxes, internal labels, label-node overlaps and edges under labels are 0. Flag on: 181 drawn boxes (v2: 255). The canvas is a little taller: median 1430 px against 1278 px, and max 3884 px against 3419 px. The extra height comes from the larger labels and from the unoutlined area for unattached nodes. Crossings went from 91 to 98 and long edges from 29 to 31, because edges now route around label boxes.
+
+New measures: `membranes` (closed membrane boxes drawn), `empty_boxes` (membranes holding no attached node), `internal_labels` (label text starting `__` or `AutoState_`), `label_node_overlaps` (drawn label box over a node box), `edges_under_label` (visible edge crossing a drawn label box), `unattached_nodes` (locations the PathWhiz viewer drops). Containment (`nodes_not_in_box`, `mixed_state_boxes`, `nodes_outside_own_bound`) is now measured on attached nodes only, also for v1. That is why the v1 columns differ from section 5.2. In flag-off output, bound-visualizations count as boxes for containment only (neither PathWhiz nor `render.py` draws them).
+
+### 9.3 PathWhiz harness (59 flag-on files, same importer copy, `pwml_parser.rb` sha256 `eb00ccaa...`)
+| (59 files) | v1 | v2 (section 5.3) | v2.1 |
+|---|---:|---:|---:|
+| clean files (no messages) | 45 | 45 | 45 |
+| importer messages | 94 | 94 | 94 |
+| transports created / expected | 32/37 | 32/37 | 32/37 |
+| interactions created / expected | 13/17 | 13/17 | 13/17 |
+| reactions created / expected | 236/239 | 236/239 | 236/239 |
+| files whose message text differs from v1 | | 0 | 0 |
+| membranes / labels created / written | | | 98/98, 92/92 |
+
+Every other created-row count is identical per file (`harness/v2_1/v1_vs_v21.md`). A first v2.1 pass at `260c9a84` gave the same numbers and is superseded.
+
+Screenshots `evidence/layout/pathwhiz/v2_1/{7,128,9,116,134,126,58,10}.png`; renders `evidence/layout/render/v2_1/<idx>-{v1,v2}.png` (`render.py` draws no labels, and sizes its canvas from edges and membranes, so the unoutlined area of unattached nodes can fall outside its picture).
+
+What the v2.1 screenshots show:
+* **Fixed.** No empty boxes, and no `__auto_state__` box. Labels are readable at the viewer's fitted view and sit clear of the compound headers. No edge passes under a label.
+* **Still visible.**
+  * PathWhiz's large label template is 200 px wide at scale 1 and wraps at 28 characters, so a 22-28 character name runs past the white box (idx 128 "Bacillus subtilis cytoplasm").
+  * Two states with the same location but different cell type or tissue get the same label (idx 7: two "plastid" boxes). The state names are the same once " state" is stripped.
+  * The unoutlined area of unattached nodes shows as empty canvas in PathWhiz (idx 128, below the boxes).
+
+### 9.4 What PathWhiz does with `side` (evidence; nothing changed)
+* **In the PWML:** a reaction member's role is in the reaction's own `<reaction-left-elements>` / `<reaction-right-elements>`; the member visualization's `side` is separate. Measured with `scripts/side_pwml.py`: of 1036 reaction members (97 files, either mode), **281 have a `side` naming the other list** (6 more sit on both lists), in 44 of 97 files, identical in flag off and flag on and in v1 and v2 (`metrics/v2_1/side_pwml.json`). Cause: `writer.py` `_reaction_visual_side` gives the visual side of a serpentine row, which flips on every second row.
+* **After import (harness DB, `scripts/side_db.py`):** each of the 27 harness files with a mismatch was imported alone, then `reaction_*_visualizations.side` was read against the stored role (`reaction_elements.type`, `ReactionLeftElement`/`ReactionRightElement`, which the importer takes from the reaction element lists). **156 of 426 imported member rows have a side that contradicts the stored role:** 87 reactants with `side = Right`, 69 products with `side = Left` (`evidence/layout/side/side_db.json`). Per file this equals the PWML count in 26 of 27 files; in idx 130 the importer dropped one member row and merged two compounds onto one row (so 2 of the PWML's 4 show).
+* **What it means:** the reaction itself is not swapped. Its stored roles are right, so the reaction's left/right element lists and anything read from them are correct. Everything PathWhiz reads from the visualization's `side` is swapped for those members:
+  * the SBML export from the pathway drawing (`reaction_visualization.rb` ~311-363: `addLeftReactionElement` / `addRightReactionElement` by `side`) writes those reactants as products and the reverse;
+  * the SBGN export draws their arcs on the wrong side (~432-480);
+  * `orientation()` is computed from the wrong members (~182-250);
+  * `Reaction#find_element` looks the member up in the wrong list, finds nothing and falls back to stoichiometry 1 (`reaction.rb:322-330`).
+
+  The exports were read from the code, not run.
+* **Flag-off output today:** yes. The writer computes `side` the same way with the final-payload flag off or on, and the counts are the same in both modes.
+* **Proposed fix (product decision, an output change, not layout):** in `writer.py`, write `side` from the member's role (substrate `Left`, product `Right`) instead of the serpentine row direction. Cost: about 5 lines; changes the `side` of 281 members in 44 files in both modes; needs a before/after harness pass and a rerun of the writer tests. Effect: SBML/SBGN exports and stoichiometry lookups become correct for those reactions. With v1 geometry, those reactions' orientation follows the role, so it no longer matches the drawing on right-to-left rows; with v2 geometry (always left to right) the drawing and `side` then agree. Alternative: keep as is and document that exports from T2PW drawings swap these members.
+
+### 9.5 Tests (bounded wrapper, 0 surviving processes)
+| suite (head `1c8aa0c9`) | result | report |
+|---|---|---|
+| focused (`test_pwml_layout.py`, now 10 tests, + writer / IR / writer-fixes files) | **137 passed** | `tests/v2_1/focused.stdout.txt` (bounded job report `tests/v21_final.json`; `tests/v21_measure.json` is the superseded run at `260c9a84`) |
+| SMOKE (22 files) | **511 passed** | `tests/v2_1/smoke.stdout.txt`, `tests/v2_1/suites.json` |
+| golden seam (4 files, unedited) | **38 passed** | `tests/v2_1/golden.stdout.txt`, `tests/v2_1/suites.json` |
+
+Every job: `FINAL SURVIVING COUNT 0`. Phase 5 held the heavy lock with live legs throughout. `scripts/lockrun.sh` waits until `holder.json` is absent and retries a lost acquire; a lost acquire exits 95 and runs nothing.
+
+### 9.6 Review, dispatches, slips
+| # | task | model / effort | verdict |
+|---|---|---|---|
+| 3 | review of `3df33507..260c9a84` plus evidence scripts | opus / high (`ws-reviewer`) | APPROVE WITH FIXES: F1 `AutoState_*` names could become labels; F2 empty-box metric blind in flag-off mode; F3 edges under opaque label boxes; F4 orphan move assumed M/L/C; F5 missing tests; F6 dead constant; F7 SMOKE/golden still to run |
+| 4 | re-review of `260c9a84..d6f8ddf4` | opus / high (same agent, resumed) | APPROVE WITH NOTES (code); evidence to be checked at the final head |
+| 5 | final check of `3df33507..1c8aa0c9`, code and regenerated evidence | opus / high (same agent, resumed) | **APPROVE**. Notes: (N1) column header of `harness/v2_1/v1_vs_v21.md` (fixed); (N2) idx 7 has two distinct states both named "plastid state", an upstream state-generation matter for the biology track; (N3) the `side` finding (9.4) |
+
+`1c8aa0c9` only adds the endpoint assertion the re-review asked for. All evidence was regenerated at that head.
+
+Slips: (1) one `cat > file <<'EOF'` heredoc was used to write a small script (it completed; written with the Write tool from then on); (2) `harness_v21.sh` was edited while a running job was executing it, and was restored byte for byte from a copy within a minute, before bash read past the line it was on; the tagged variant is a separate file, `harness_tag.sh`; (3) the first v2.1 harness pass (`C:/t/layx/pwi/v21_59`, `v21shots`) imported files from `260c9a84` and is superseded by the pass at the final head (`v21b`). (4) A machine restart came after every v2.1 job had finished (all bounded reports completed, 0 survivors); nothing needed re-running, only this record and the commits were left.
