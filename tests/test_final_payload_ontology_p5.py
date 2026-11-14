@@ -299,7 +299,7 @@ def _writer_payload(species_row, names):
 def test_writer_keeps_inner_and_outer_separate_for_bacteria_and_drops_them_for_a_human(monkeypatch) -> None:
     ecoli = {"name": "Escherichia coli", "pathwhiz_id": 1, "classification": "Prokaryote"}
     names = ["inner membrane (IM)", "outer membrane (OM)", "cytosol"]
-    monkeypatch.delenv("T2PW_FINAL_PAYLOAD", raising=False)
+    monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "0")
     b, root = _build(_writer_payload(ecoli, names))
     assert _loc_names(root) == names and not b.vocabulary_outcomes  # flag off: untouched
     monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "1")

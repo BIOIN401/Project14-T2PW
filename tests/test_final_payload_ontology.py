@@ -149,7 +149,7 @@ def _loc_names(root):
 def test_writer_drops_idless_location_and_keeps_state_flag_on_only(monkeypatch) -> None:
     # M1 fix: the thylakoid row now carries no database id (a row with pathwhiz_id is never dropped, see the next test)
     rows = [{"name": "thylakoid membrane"}, {"name": "cytosol", "pathwhiz_id": 3}]
-    monkeypatch.delenv("T2PW_FINAL_PAYLOAD", raising=False)
+    monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "0")
     b, root = _build(copy.deepcopy(rows), tissues=_TISSUES)
     assert _loc_names(root) == ["thylakoid membrane", "cytosol"] and "locations_dropped_no_id" not in b.layout_debug_counts
     monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "1")

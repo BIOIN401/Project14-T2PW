@@ -88,15 +88,15 @@ def _rows(p, kind="compounds"):
 
 
 def test_flag_parsing(monkeypatch):
-    for v, want in (("1", True), ("TRUE", True), ("Yes", True), ("0", False), ("", False), ("off", False)):
+    for v, want in (("1", True), ("TRUE", True), ("Yes", True), ("0", False), ("", True), ("off", False)):
         monkeypatch.setenv("T2PW_FINAL_PAYLOAD", v)
         assert final_payload_enabled() is want
     monkeypatch.delenv("T2PW_FINAL_PAYLOAD")
-    assert final_payload_enabled() is False
+    assert final_payload_enabled() is True  # D-W19a: unset means on
 
 
 def test_flag_off_wiring_helper_leaves_payload_untouched(monkeypatch):
-    monkeypatch.delenv("T2PW_FINAL_PAYLOAD", raising=False)
+    monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "0")
     p = _payload()
     before = copy.deepcopy(p)
     called = []
@@ -179,7 +179,7 @@ def test_seam_resolver_error_without_a_fill_is_raised_as_before(monkeypatch):
 
 
 def test_seam_flag_off_is_the_resolver_alone(monkeypatch):
-    monkeypatch.delenv("T2PW_FINAL_PAYLOAD", raising=False)
+    monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "0")
     monkeypatch.setattr("t2pw.service.final_payload.maybe_apply_final_id_fill",
                         lambda *a, **k: (_ for _ in ()).throw(AssertionError("fill must not run")))
     p = _seam_payload()

@@ -133,7 +133,7 @@ def test_dropping_one_component_alone_is_safe_in_the_joint_setup(monkeypatch) ->
 
 
 def test_flag_off_writes_every_row_and_counts_nothing(monkeypatch) -> None:
-    monkeypatch.delenv("T2PW_FINAL_PAYLOAD", raising=False)
+    monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "0")
     states = [_s("A", tissue="zz idless tissue", cell_type="zz idless cell", subcellular_location="zz idless place"), _s("B", subcellular_location="cytosol")]
     b, root = _build(states, locs=[{"name": "zz idless place"}, LOC], tissues=[{"name": "zz idless tissue"}], cts=[{"name": "zz idless cell"}])
     assert _states(root)["A"] == ("zz idless tissue", "zz idless cell", "zz idless place")

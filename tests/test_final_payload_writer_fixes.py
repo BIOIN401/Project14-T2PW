@@ -73,7 +73,7 @@ def flag_on(monkeypatch):
 
 @pytest.fixture
 def flag_off(monkeypatch):
-    monkeypatch.delenv("T2PW_FINAL_PAYLOAD", raising=False)
+    monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "0")
 
 
 def test_bound_visualizations_written_when_flag_off(flag_off) -> None:
@@ -133,7 +133,7 @@ def test_transport_location_dangles_when_flag_off(flag_off) -> None:
 
 
 def test_transport_only_compound_unchanged_both_modes(monkeypatch) -> None:
-    monkeypatch.delenv("T2PW_FINAL_PAYLOAD", raising=False)
+    monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "0")
     _, off = _build(_payload())
     monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "1")
     _, on = _build(_payload())
@@ -152,7 +152,7 @@ def test_transport_only_compound_subtrees_identical_both_modes(monkeypatch) -> N
         p["processes"]["transports"][0]["transporters"] = []
         return p
 
-    monkeypatch.delenv("T2PW_FINAL_PAYLOAD", raising=False)
+    monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "0")
     _, off = _build(payload())
     monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "1")
     _, on = _build(payload())
@@ -166,7 +166,7 @@ def test_transported_compound_used_by_reaction_in_third_state(monkeypatch) -> No
     payload["biological_states"].append({"name": "mitochondrion", "species": "Homo sapiens",
                                          "subcellular_location": "mitochondrion", "compartment_canonical": "mitochondrion"})
     payload["processes"]["reactions"][0]["biological_state"] = "mitochondrion"
-    monkeypatch.delenv("T2PW_FINAL_PAYLOAD", raising=False)
+    monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "0")
     _, off = _build(payload)
     monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "1")
     _, on = _build(payload)
@@ -202,7 +202,7 @@ def test_no_processes_flag_on_equals_flag_off_minus_bound(monkeypatch) -> None:
         if flag:
             monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "1")
         else:
-            monkeypatch.delenv("T2PW_FINAL_PAYLOAD", raising=False)
+            monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "0")
         _, root = _build(payload, with_bound=True)
         for n in root.findall(".//bound-visualizations"):
             n.clear()

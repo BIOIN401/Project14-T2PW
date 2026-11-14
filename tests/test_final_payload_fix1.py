@@ -49,7 +49,7 @@ def test_f1_kept_nonbacterial_membrane_is_renamed_so_it_cannot_bind_to_the_bacte
 
 
 def test_f1_flag_off_is_untouched(monkeypatch) -> None:
-    monkeypatch.delenv("T2PW_FINAL_PAYLOAD", raising=False)
+    monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "0")
     b, root = _build(_human_membrane_payload("t0"))
     assert _loc_names(root) == ["outer membrane", "cytosol"] and not b.layout_debug_counts.get("nonbacterial_membranes_kept_by_name")
 

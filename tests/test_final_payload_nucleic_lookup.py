@@ -278,7 +278,7 @@ def test_lookup_failure_rolls_back_only_the_lookup_step(monkeypatch) -> None:
 
 def test_hook_flag_off_untouched_and_flag_on_runs_the_lookup(monkeypatch) -> None:
     p = P({"name": "RyhB"})
-    monkeypatch.delenv("T2PW_FINAL_PAYLOAD", raising=False)
+    monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "0")
     assert fp.maybe_apply_final_id_fill(p, {}, {}) == {} and p == P({"name": "RyhB"})
     monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "1")
     rep = fp.maybe_apply_paper_nucleic_types(p, {"final_payload_paper_text": "x"}, fetcher=Fake(RYHB), cache=Cache(None), today=TODAY)
@@ -294,7 +294,7 @@ def test_writer_writes_a_looked_up_type_flag_on_only_and_unknown_rows_stay_untyp
         if flag:
             monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "1")
         else:
-            monkeypatch.delenv("T2PW_FINAL_PAYLOAD", raising=False)
+            monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "0")
         return pl, _build(pl)
 
     pl, (builder, root) = build(True)

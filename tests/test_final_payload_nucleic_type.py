@@ -130,7 +130,7 @@ def test_failure_leaves_payload_untouched(monkeypatch) -> None:
 
 def test_seam_flag_off_does_nothing_and_flag_on_reads_state(monkeypatch) -> None:
     p = _p({"name": "Xa"})
-    monkeypatch.delenv("T2PW_FINAL_PAYLOAD", raising=False)
+    monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "0")
     assert fp.maybe_apply_final_id_fill(p, {}, {"final_payload_paper_text": "The Xa gene."}) == {} and p == _p({"name": "Xa"})
     monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "1")
     rep = fp.maybe_apply_paper_nucleic_types(p, {"final_payload_paper_text": "The Xa gene.",
@@ -141,12 +141,12 @@ def test_seam_flag_off_does_nothing_and_flag_on_reads_state(monkeypatch) -> None
 
 def test_writer_accepts_paper_type_only_with_flag_and_no_id(monkeypatch) -> None:
     assert nucleotide_type_for({"name": "CHLH promoter"}) is None
-    monkeypatch.delenv("T2PW_FINAL_PAYLOAD", raising=False)
+    monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "0")
     assert nucleotide_type_for({"name": "CHLH promoter", "nucleotide_type_paper": "DNA"}) is None  # M-fix: flag off ignores it
     monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "1")
     assert nucleotide_type_for({"name": "CHLH promoter", "nucleotide_type_paper": "DNA"}) == "DNA"
     assert nucleotide_type_for({"name": "RNA chaperone", "nucleotide_type_paper": "bogus"}) is None
-    monkeypatch.delenv("T2PW_FINAL_PAYLOAD")
+    monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "0")
 
     def payload(**extra):
         pl = _payload()
@@ -159,6 +159,6 @@ def test_writer_accepts_paper_type_only_with_flag_and_no_id(monkeypatch) -> None
     assert "nucleic_acids_type_unset" not in builder.layout_debug_counts
     _, root = _build(payload(pathbank_nucleic_acid_id=7))  # existing PathWhiz row: never typed
     assert _na_types(root) == {"CHLH promoter": ""}
-    monkeypatch.delenv("T2PW_FINAL_PAYLOAD")
+    monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "0")
     _, root = _build(payload())  # flag off: byte-identical behaviour, no type
     assert _na_types(root) == {"CHLH promoter": ""}

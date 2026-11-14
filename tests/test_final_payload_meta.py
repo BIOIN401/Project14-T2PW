@@ -162,7 +162,7 @@ def test_reference_without_a_paper_id_and_a_user_chosen_name_are_respected():
 
 def test_wiring_helpers(monkeypatch):
     p, before = _p(), copy.deepcopy(_p())
-    monkeypatch.delenv("T2PW_FINAL_PAYLOAD", raising=False)
+    monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "0")
     assert maybe_apply_final_pathway_meta(p, {"pathway_name": "n"}, {}) == {} and p == before
     monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "1")
     state = {"final_payload_paper": {"pmid": "555", "title": "T"}}

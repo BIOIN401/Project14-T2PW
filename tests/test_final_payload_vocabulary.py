@@ -77,7 +77,7 @@ def _names(root):
 
 
 def test_flag_off_writes_names_unchanged(monkeypatch) -> None:
-    monkeypatch.delenv("T2PW_FINAL_PAYLOAD", raising=False)
+    monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "0")
     builder, root = _build()
     got = _names(root)
     assert set(got["subcellular-location"]) == {"ER", "cytosol", "thylakoid membrane", "cell"}

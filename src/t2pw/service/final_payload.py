@@ -1,6 +1,6 @@
 """Final payload, phase 1 (PO ruling D-W12): a deterministic database id fill before the freeze.
 
-Flag ``T2PW_FINAL_PAYLOAD`` (1/true/yes, default off). Reuses the clean model's online fill layer
+Flag ``T2PW_FINAL_PAYLOAD`` (default ON since D-W19a; unset or empty is on, only 0/false/no/off turns it off). Reuses the clean model's online fill layer
 (``clean_model.builder`` + ``clean_model.fill``) to find ids, then writes only the accepted ones into the payload rows, under
 the keys the PWML writer already reads: compounds ``chebi_id kegg_id hmdb_id pubchem_cid cas drugbank_id`` and species
 ``taxonomy_id``. Proteins get nothing written: the fill layer only proposes UniProt candidates for them (P-20, D-106/D-108/
@@ -47,7 +47,7 @@ _NOT_A_MOLECULE = re.compile(r"\bcomplex of\b|\b(family|superfamily|class|classe
 
 
 def final_payload_enabled() -> bool:
-    return os.environ.get("T2PW_FINAL_PAYLOAD", "").strip().casefold() in ("1", "true", "yes")
+    return os.environ.get("T2PW_FINAL_PAYLOAD", "").strip().casefold() not in ("0", "false", "no", "off")
 
 
 def _empty(v: Any) -> bool:
