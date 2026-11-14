@@ -155,3 +155,23 @@ afterwards. PO, verbatim: "1. yes look up and then drop location after convertin
 payload to the specific file type / 2. yeah lets fix and test / 3. im not sure is there anyway to
 fill this in from the paper? lets start with this / and yeah bro u can move the .env keys but you
 have to delete this and clean it up".
+
+**D-W21 · 2026-11-13 — Phase 4 open questions, PathWhiz changes as reviewable patches, internal
+renderings** (answers `FINAL-PAYLOAD-P4.md` § 9 on `pwml/final-payload`). (a) Add the guard so an
+id-less location is not dropped when that would leave a state PathWhiz can bind to another state.
+(b) Cell types and tissues without an id stay in the final payload; they may be removed from the
+PWML only. Find out and record why each has no id. (c) The 4 transports whose start and end are
+the same: test a fix at the extraction step. It must fix them and keep everything we currently
+have; a fix that loses anything is not adopted. (d) DNA/RNA type the paper does not settle is
+flagged unknown; also try an online lookup to settle it. (e) Inner and outer membrane are
+different things and are never merged. (f) The PO has given permission to edit the `smpdb` folder
+and fix PathWhiz where needed. Every change there is logged on its own so that each one can
+become its own pull request. (g) Show the paper pathways in our internal rendering. PO, verbatim:
+"1. yeah sure / 2. Well why dont they have an ID, and they should still be in the final payload but
+yeah night have to remove form the pwml / 3. Well lets test this change see if its fixes those
+errors but also maintians everuthing we currently have / 4. Yeah flag it as unkown, is there anway
+to search online and try to figure out what it would be? / 5. arent they differnt things inner and
+outer membarnaes / and i want you to show me what these ppaer pathways would look like in our
+intenral rendering / aSLO WE have receieved permission to edit the spmbd folder and fix pathwhiz so
+maybe if changes eed to be made there w cna do that as well, and then we just ned to log all
+changes so each change can act as its own pull requiest".
