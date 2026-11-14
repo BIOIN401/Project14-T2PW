@@ -1,0 +1,118 @@
+T2PW: C:\t\fp\src\t2pw\__init__.py
+....FFF........................................                          [100%]
+================================== FAILURES ===================================
+_____________ test_species_only_state_keeps_its_idless_component ______________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002BF2D25B790>
+
+    def test_species_only_state_keeps_its_idless_component(monkeypatch) -> None:
+        monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "1")
+        states = [_s("A", cell_type="zz idless cell"), _s("B", subcellular_location="cytosol")]
+>       b, root = _build(states, locs=[LOC], cts=[{"name": "zz idless cell"}])
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_final_payload_wildcard_guard.py:102: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+states = [{'cell_type': 'zz idless cell', 'name': 'A', 'species': 'Homo sapiens'}, {'name': 'B', 'species': 'Homo sapiens', 'subcellular_location': 'cytosol'}]
+
+    def _build(states, *, locs=(), tissues=(), cts=()):
+        payload = {"entities": {"species": [SP], "subcellular_locations": list(locs), "tissues": list(tissues),
+                                "cell_types": list(cts), "compounds": [{"name": "A", "pathbank_compound_id": 103}]},
+                   "biological_states": states, "processes": {"reactions": [], "transports": [], "interactions": []}}
+        ir, report = build_pwml_ir(payload, strict_db=False)
+>       assert report["errors"] == []
+E       assert [{'biological...al_states/0'}] == []
+E         
+E         Left contains 2 more items, first extra item: {'biological_state_key': 'bs_1', 'code': 'biological_state_missing_subcellular_location', 'message': "Biological state 'A' has no resolved subcellular location reference.", 'pointer': '/biological_states/0'}
+E         Use -v to get more diff
+
+tests\test_final_payload_wildcard_guard.py:31: AssertionError
+______ test_joint_drop_is_evaluated_together_and_restores_one_component _______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002BF2D2D2250>
+
+    def test_joint_drop_is_evaluated_together_and_restores_one_component(monkeypatch) -> None:
+        # A drops either id-less component safely on its own ((sp, ct, loc) and (sp, ct, tissue) both differ from B), but dropping both
+        # leaves (sp, ct) which is a subset of B (sp, ct): exactly one is restored, the location first
+        monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "1")
+        states = [_s("A", tissue="zz idless tissue", cell_type="neuron", subcellular_location="zz idless place"), _s("B", cell_type="neuron")]
+>       b, root = _build(states, locs=[{"name": "zz idless place"}], tissues=[{"name": "zz idless tissue"}], cts=[CT])
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_final_payload_wildcard_guard.py:112: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+states = [{'cell_type': 'neuron', 'name': 'A', 'species': 'Homo sapiens', 'subcellular_location': 'zz idless place', ...}, {'cell_type': 'neuron', 'name': 'B', 'species': 'Homo sapiens'}]
+
+    def _build(states, *, locs=(), tissues=(), cts=()):
+        payload = {"entities": {"species": [SP], "subcellular_locations": list(locs), "tissues": list(tissues),
+                                "cell_types": list(cts), "compounds": [{"name": "A", "pathbank_compound_id": 103}]},
+                   "biological_states": states, "processes": {"reactions": [], "transports": [], "interactions": []}}
+        ir, report = build_pwml_ir(payload, strict_db=False)
+>       assert report["errors"] == []
+E       assert [{'biological...al_states/1'}] == []
+E         
+E         Left contains 2 more items, first extra item: {'biological_state_key': 'bs_2', 'code': 'biological_state_missing_subcellular_location', 'message': "Biological state 'B' has no resolved subcellular location reference.", 'pointer': '/biological_states/1'}
+E         Use -v to get more diff
+
+tests\test_final_payload_wildcard_guard.py:31: AssertionError
+________ test_dropping_one_component_alone_is_safe_in_the_joint_setup _________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002BF2D2D2450>
+
+    def test_dropping_one_component_alone_is_safe_in_the_joint_setup(monkeypatch) -> None:
+        monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "1")
+        states = [_s("A", tissue="zz idless tissue", cell_type="neuron", subcellular_location="cytosol"), _s("B", cell_type="neuron")]
+>       b, root = _build(states, locs=[LOC], tissues=[{"name": "zz idless tissue"}], cts=[CT])
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_final_payload_wildcard_guard.py:120: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+states = [{'cell_type': 'neuron', 'name': 'A', 'species': 'Homo sapiens', 'subcellular_location': 'cytosol', ...}, {'cell_type': 'neuron', 'name': 'B', 'species': 'Homo sapiens'}]
+
+    def _build(states, *, locs=(), tissues=(), cts=()):
+        payload = {"entities": {"species": [SP], "subcellular_locations": list(locs), "tissues": list(tissues),
+                                "cell_types": list(cts), "compounds": [{"name": "A", "pathbank_compound_id": 103}]},
+                   "biological_states": states, "processes": {"reactions": [], "transports": [], "interactions": []}}
+        ir, report = build_pwml_ir(payload, strict_db=False)
+>       assert report["errors"] == []
+E       assert [{'biological...al_states/1'}] == []
+E         
+E         Left contains 2 more items, first extra item: {'biological_state_key': 'bs_2', 'code': 'biological_state_missing_subcellular_location', 'message': "Biological state 'B' has no resolved subcellular location reference.", 'pointer': '/biological_states/1'}
+E         Use -v to get more diff
+
+tests\test_final_payload_wildcard_guard.py:31: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_final_payload_wildcard_guard.py::test_species_only_state_keeps_its_idless_component
+FAILED tests/test_final_payload_wildcard_guard.py::test_joint_drop_is_evaluated_together_and_restores_one_component
+FAILED tests/test_final_payload_wildcard_guard.py::test_dropping_one_component_alone_is_safe_in_the_joint_setup
+3 failed, 44 passed in 2.59s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\fp\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 3e8a66f384d1838a2fb752b78d1526205d3631c9  [git, worktree dirty=True]
+label                   : fp-wA2
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/fp -q --basetemp=C:/t/tmpbase/wA2-5746 tests/test_final_payload_wildcard_guard.py tests/test_final_payload_ontology.py tests/test_final_payload_writer_fixes.py tests/test_final_payload_vocabulary.py
+cwd                     : C:\t\fp
+root PID / process group: 151204 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 3.92 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  148728:python.exe
+descendants terminated  : 1  148728
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/fp/docs/pwml_output/evidence/final_payload_p5/tests/wA2.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=fp5-wA2  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================
