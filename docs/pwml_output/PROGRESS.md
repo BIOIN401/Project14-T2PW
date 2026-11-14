@@ -95,3 +95,11 @@ Record: `FINAL-PAYLOAD-P4.md`; evidence `evidence/final_payload_p4/`. OLS4 ontol
 - Harness: 45 of 59 clean (P3 43), 94 messages (147), transports 32 of 37 (31).
 - Live runs NOT done (no `.env`); default NOT flipped. Residual importer-wildcard risk open.
 - 11 dispatches.
+
+---
+# Final payload, phase 5 (branch `pwml/final-payload`, code head `41385706`)
+Record: `FINAL-PAYLOAD-P5.md`; evidence `evidence/final_payload_p5/`; PathWhiz patches `pathwhiz_changes/` (stacked local branches `t2pw/01..04`, not pushed). Wildcard guard, cell types and tissues dropped from the PWML only, Cellosaurus / singular forms / numbered cell types, organism-aware inner and outer membrane, nucleic type unknown flag plus NCBI Gene / RNAcentral lookup, importer exact state matching (branch 04), transport-sides re-ask (flag, default off, not recommended), bounded network layer, default flip. Proposed decisions P-44 to P-54.
+- Tests (clean worktree, 0 survivors): SMOKE 511, golden 38, focused 407. Flag-off identity 97 of 97.
+- Harness (59 files): 48 clean (P4 45), 63 messages with branch 04 / 67 without (P4 94), transports 33 / 32 of 37; controls unchanged.
+- Live runs: pathwhiz pass, research pass, name-only pass on retry (first run no_reactions); default flipped (`T2PW_FINAL_PAYLOAD=0` switches off).
+- 19 dispatches plus resumes.

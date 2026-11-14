@@ -1,0 +1,23 @@
+# Review 3 (flip and fix round 2) and re-review 4 (fix round 3)
+
+Reviewers: ws-reviewer, opus / high (review 3, range `f00a4964..28278264`) and sonnet / high (re-review 4, range `5d1fc6ef..8abdbae0`). Recorded by the orchestrator; condensed, all findings kept. Read-only, no tests run, `.env` not read.
+
+## Review 3: APPROVE WITH FIXES (R3-1, R3-2 before the default-on build reaches the web server or main)
+Gates: boundary ok; no biology change under pipeline/mapping/rag/curation/llm; `pwml/writer.py` edits are flag-on naming only (authorised D-W19 to D-W21); secrets ok.
+Answers: the parser is correct (only 0/false/no/off disable). Every other reader is local except `postpipeline.py:1463` (`prefreeze_with_final_fill`), the only network path: with the flag on by default every Streamlit run and every `run_pathway`/batch/web job now makes live ChEBI, UniProt, NCBI, OLS and RNAcentral calls in `run_post_pipeline`. Fail-open confirmed for id fill, ontology, nucleic and title (payload restored in a try; every `maybe_*` wrapper catches all). The `test_flag_parsing` assertion change tests the flag semantics themselves: legitimate. The 20 `setenv("0")` edits are env pins only. The autouse pin can hide a flag-on regression (R3-2). R2-1 rename acceptable for the flip. R2-2 logic correct; R2-3 correct.
+- R3-1 [major] `final_payload.py:67-85,227-245`, `pathway.py:346,385`: the fill budget ignores the job deadline (`state["pathway_run_deadline"]`) and `_Budget` has no circuit breaker: with the APIs unreachable each request burns about 8 s (1+2+4 s backoff) until 300 s are spent, a blackholed host up to about 127 s per request, title step 60 s more; a job that completed with the flag off could hit `out_of_time` and lose its PWML. Fix: cap both budgets to the time left before the deadline minus a margin; open a circuit after N consecutive FetchErrors.
+- R3-2 [major] `tests/conftest.py:50-53`: SMOKE, golden, AppTest and batch tests now exercise only the non-default path. Fix: flag-on seam tests with a fetcher that raises FetchError.
+- R3-3 [minor] the docstring "worst case about 360 s" ignores a request already running; the nucleic step `budget_exhausted` reports shared state.
+- R3-4 [minor for the flip, major for the paper] `writer.py:755-762,3057-3063`: `BuildResult` carries neither `vocabulary_outcomes` nor `layout_debug_counts`, so drops and renames reach no file (D-W19c disclose, D-W21b record why); a kept membrane has a stale `unmapped` entry plus the new `membrane_kept_unresolved` one. Fix: carry both into the export report.
+- R3-5 [minor, PO question] `final_payload_nucleic.py:203-237`: the "positive evidence" is really the absence of a protein word ("CHL27 levels decreased" would still type DNA); changes 0 of 152 runs.
+- R3-6 [minor] SMOKE and golden evidence predates `d44c835f` and ran pinned off: re-run at the final head.
+- R3-7 [minor] `.env` still present; other dirty tracked caches must not be merged.
+- R3-8 [minor] `final_payload.py:39-40,89-93`: no switch keeps the payload on but stops network; the 60 s title budget cannot be set from the environment; `nan`/`inf` remove the bound.
+
+## Re-review 4 of fix round 3: APPROVE WITH FIXES (R3-1, R3-2, R3-3, R3-8 met as asked)
+Verified: deadline is `request.deadline - GRACE_S` as epoch `time.time()` seconds, same value `out_of_time` compares; an absent or past deadline handled; breaker correct (404/None resets, timeout counts; `CachedFetcher` sits outside so errors are never cached); flag-off path returns before any of this; 10 s / 2 retry fetcher only with a deadline; tests offline and not vacuous (5-call assertion fails without the breaker).
+- R4-1 [minor, fix or document] `final_payload.py:23,90-94`: the "worst request about 33 s" claim ignores `Retry-After` (`http.py:80-85` sleeps up to 60 s between retries): a 429/503 with `Retry-After: 60` makes one in-flight request about 150 s, 90 s past the margin; narrow (one request starting just before the cap). Fix: clamp the sleep in the tightened fetcher, or soften the docstring. Status: documented, not fixed.
+- R4-2 [note] the circuit is global per fetcher, not per host: five failures from one host skip the other hosts' lookups (fails open; loses ids on a partial outage). Open question.
+- R4-3 [note] a test without the `net` fixture reads the real `clean_model_cache/` (possible flake with a warm cache).
+- R4-4 [note] `test_a_deadline_already_gone...` should also assert `budget_exhausted is True`.
+NOT VERIFIED: no test run; that `postpipeline.py:1465` passes the same state dict `pathway.py:246` writes; real-network timing; how much of the 60 s margin the freeze, audit tail and export need.
