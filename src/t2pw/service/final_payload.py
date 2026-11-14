@@ -17,7 +17,14 @@ never cause a refusal the flag-off run would not have (the title/reference key i
 
 Known limits: (1) the title and reference follow the payload key, not the flag, at export time (``effective_pathway_name`` and
 the IR read ``final_payload_pathway`` whenever it is present). (2) The id fill and the nucleic lookup share one 300 s budget, the
-title lookup has its own 60 s, and the throttle is per fetcher, so the worst case is about 360 s of live requests. (3) The
+title lookup has its own 60 s, and the throttle is per fetcher: no NEW request starts after about 360 s, but a request already in
+flight (4 tries, up to ~127 s on a blackholed host) can run past that. Fix round 3 bounds this further: (a) both budgets are capped
+to the time left before the job deadline (``state["pathway_run_deadline"]``, epoch seconds) minus ``DEADLINE_MARGIN_S``, and under a
+deadline the live fetcher uses 10 s timeouts and 2 retries (worst request ~33 s), so a web job that finished with the flag off
+cannot run out of time here; (b) ``_Budget`` opens a circuit after ``CIRCUIT_BREAKER_N`` consecutive ``FetchError`` s (a success
+resets the count), so a dead network costs seconds; each step report carries ``circuit_open``; (c) ``T2PW_FINAL_PAYLOAD_BUDGET_S``
+caps every budget including the title's (non-finite or negative values are ignored). ``T2PW_FINAL_PAYLOAD_BUDGET_S=0`` is the
+OFFLINE SWITCH: the layer makes no network call at all and fills nothing that needs one (cached answers are still used). (3) The
 ``final_payload_fill`` key carries dates, so the canonical hash changes from day to day for the same run. (4) Role/class terms:
 a name that is a ChEBI role or class (``electron acceptor``, ``antioxidant``) carries no structure in ChEBI, so a chebi_id fill
 is accepted only when the same lookup also returned an InChIKey (``no_structure_in_chebi`` otherwise). That is the only signal
@@ -30,6 +37,7 @@ from __future__ import annotations
 
 import copy
 import datetime
+import math
 import os
 import re
 import time
@@ -39,6 +47,9 @@ FINAL_PAYLOAD_FILL_FIELD = "final_payload_fill"
 BUDGET_SECONDS = 300.0  # wall clock for live requests; cached answers are free, so a re-run finishes the rest
 TITLE_BUDGET_SECONDS = 60.0  # the title / reference lookup (one or two requests) has its own, so a spent id fill cannot starve it (review 2, R2-3)
 HOST_INTERVAL = 1.0  # at most 1 request per second per host (the fill layer's own default is 3/s)
+CIRCUIT_BREAKER_N = 5  # consecutive FetchErrors after which every further request is refused (dead network: seconds, not minutes)
+DEADLINE_MARGIN_S = 60.0  # kept free for the freeze, audit and export between the end of this layer and the job deadline
+DEADLINE_STATE_KEY = "pathway_run_deadline"  # = t2pw.service.extraction.DEADLINE_STATE_KEY (absolute time.time() seconds; a test pins them equal)
 
 _COMPOUND_ALIASES = {"chebi_id": ("chebi",), "kegg_id": ("kegg",), "hmdb_id": ("hmdb",),
                      "pubchem_cid": ("pubchem", "pubchem_id"), "cas": ("cas",), "drugbank_id": ("drugbank",)}
@@ -65,39 +76,83 @@ def _norm(v: Any) -> str:
 
 
 class _Budget:
-    """Wraps the live fetcher: once the wall-clock budget is spent every further request is a FetchError (counted, not fatal)."""
+    """Wraps the live fetcher: once the wall-clock budget is spent, or ``breaker`` FetchErrors came in a row, every further request
+    is a FetchError (counted in ``refused``, not fatal). A success resets the consecutive count."""
 
-    def __init__(self, inner: Any, seconds: float) -> None:
-        self.inner, self.deadline, self.exhausted = inner, time.monotonic() + seconds, False  # exhausted: a request was refused
+    def __init__(self, inner: Any, seconds: float, breaker: int = CIRCUIT_BREAKER_N) -> None:
+        self.inner, self.deadline, self.breaker = inner, time.monotonic() + seconds, breaker
+        self.refused, self.errors_in_a_row, self.circuit_open = 0, 0, False
 
-    def _check(self) -> None:
-        if time.monotonic() > self.deadline:
-            self.exhausted = True
-            from t2pw.clean_model.fill.http import FetchError
-            raise FetchError("final payload fill time budget exhausted")
+    @property
+    def exhausted(self) -> bool:  # a request was refused (budget spent or circuit open)
+        return self.refused > 0
+
+    def limit(self, seconds: float, *, tighten: bool = False) -> None:
+        """Never run past ``seconds`` from now (only ever shortens). ``tighten``: a hard job deadline, so also bound one request."""
+        self.deadline = min(self.deadline, time.monotonic() + max(0.0, seconds))
+        if tighten and hasattr(self.inner, "timeout") and hasattr(self.inner, "retries"):
+            self.inner.timeout, self.inner.retries = min(self.inner.timeout, 10.0), min(self.inner.retries, 2)
+
+    def _call(self, fn: Any, url: str, params: Optional[Dict[str, Any]]) -> Any:
+        from t2pw.clean_model.fill.http import FetchError
+        if self.circuit_open or time.monotonic() >= self.deadline:
+            self.refused += 1
+            raise FetchError("final payload fill circuit open" if self.circuit_open else "final payload fill time budget exhausted")
+        try:
+            out = fn(url, params)
+        except FetchError:
+            self.errors_in_a_row += 1
+            self.circuit_open = self.circuit_open or self.errors_in_a_row >= self.breaker
+            raise
+        self.errors_in_a_row = 0
+        return out
 
     def get_json(self, url: str, params: Optional[Dict[str, Any]] = None) -> Any:
-        self._check()
-        return self.inner.get_json(url, params)
+        return self._call(self.inner.get_json, url, params)
 
     def get_text(self, url: str, params: Optional[Dict[str, Any]] = None) -> Optional[str]:
-        self._check()
-        return self.inner.get_text(url, params)
+        return self._call(self.inner.get_text, url, params)
+
+
+def _env_budget() -> Optional[float]:
+    """T2PW_FINAL_PAYLOAD_BUDGET_S as a finite number >= 0, else None (unset, empty, nan, inf, negative or not a number: use the default)."""
+    try:
+        v = float(os.environ.get("T2PW_FINAL_PAYLOAD_BUDGET_S", ""))
+    except ValueError:
+        return None
+    return v if math.isfinite(v) and v >= 0 else None
 
 
 def _live_fetcher(seconds: Optional[float] = None) -> Any:
     from t2pw.clean_model.fill.http import Throttle, UrllibFetcher
     if seconds is None:
-        try:
-            seconds = float(os.environ.get("T2PW_FINAL_PAYLOAD_BUDGET_S", BUDGET_SECONDS))
-        except ValueError:
-            seconds = BUDGET_SECONDS
+        env = _env_budget()
+        seconds = BUDGET_SECONDS if env is None else env
     return _Budget(UrllibFetcher(throttle=Throttle(interval=HOST_INTERVAL)), seconds)
 
 
-def _spent(fetcher: Any) -> bool:
-    """True when the budgeted fetcher refused a request because its time was up (a fake has no budget: False)."""
-    return bool(getattr(fetcher, "exhausted", False))
+def _title_budget() -> float:
+    env = _env_budget()
+    return TITLE_BUDGET_SECONDS if env is None else min(TITLE_BUDGET_SECONDS, env)
+
+
+def _cap_to_job_deadline(fetcher: Any, state: Any) -> Any:
+    """Shorten a live budgeted fetcher to the time left before ``state["pathway_run_deadline"]`` minus the margin. No deadline in
+    state (Streamlit, tests), or a fetcher that is not ours (a caller-given fake): untouched."""
+    st = state if hasattr(state, "get") else {}
+    dl = st.get(DEADLINE_STATE_KEY)
+    if isinstance(dl, (int, float)) and not isinstance(dl, bool) and math.isfinite(dl) and hasattr(fetcher, "limit"):
+        fetcher.limit(dl - time.time() - DEADLINE_MARGIN_S, tighten=True)
+    return fetcher
+
+
+def _refused(fetcher: Any) -> int:
+    """Requests the budgeted fetcher has refused so far (a fake has no budget: 0)."""
+    return int(getattr(fetcher, "refused", 0) or 0)
+
+
+def _circuit_open(fetcher: Any) -> bool:
+    return bool(getattr(fetcher, "circuit_open", False))
 
 
 def _plan(payload: Dict[str, Any], items: List[Dict[str, Any]], report: Dict[str, Any]) -> List[Dict[str, Any]]:
@@ -167,9 +222,10 @@ def apply_final_id_fill(payload: Dict[str, Any], meta: Optional[Dict[str, Any]] 
                         paper_source: str = "paper text") -> Dict[str, Any]:
     """Fill empty id slots of ``payload`` in place. Fails open: on any error ``payload`` is restored and the report says why."""
     report: Dict[str, Any] = {"enabled": True, "written": 0, "by_field": {}, "refused": {}, "refused_detail": [],
-                              "suggestions": [], "error": None, "budget_exhausted": False}
+                              "suggestions": [], "error": None, "budget_exhausted": False, "circuit_open": False}
     snapshot = copy.deepcopy(payload)
     fetcher = fetcher or _live_fetcher()
+    refused0 = _refused(fetcher)
     try:
         from t2pw.clean_model import build_from_payload
         from t2pw.clean_model.fill import fill_model
@@ -198,7 +254,7 @@ def apply_final_id_fill(payload: Dict[str, Any], meta: Optional[Dict[str, Any]] 
         payload.clear()
         payload.update(snapshot)
         report.update(written=0, by_field={}, error=f"{type(exc).__name__}: {exc}")
-    report["budget_exhausted"] = _spent(fetcher)
+    report["budget_exhausted"], report["circuit_open"] = _refused(fetcher) > refused0, _circuit_open(fetcher)  # refused DURING this step
     return report
 
 
@@ -231,11 +287,11 @@ def maybe_apply_final_id_fill(payload: Dict[str, Any], pathway_context: Any = No
         return {}
     try:
         # ONE fetcher (one time budget, T2PW_FINAL_PAYLOAD_BUDGET_S from its construction) for the id fill and the nucleic lookup: a
-        # fill that spends it leaves the nucleic rows unknown with lookup_error (each report says ``budget_exhausted``). The title /
+        # fill that spends it leaves the nucleic rows unknown with lookup_error (each report says ``budget_exhausted`` and ``circuit_open``). Both budgets are capped to the job deadline. The title /
         # reference lookup is NOT in it: it builds its own small budget (TITLE_BUDGET_SECONDS) in ``apply_final_pathway_meta``, so a
         # slow fill cannot starve it (review 2, R2-3; the title reads only the paper metadata, nothing the fill writes). A caller-given
         # ``fetcher`` is used as it is by all three steps.
-        shared = {**kw, "fetcher": kw.get("fetcher") or _live_fetcher()}
+        shared = {**kw, "fetcher": kw.get("fetcher") or _cap_to_job_deadline(_live_fetcher(), state)}
         report = apply_final_id_fill(payload, fill_meta(pathway_context, state), **{**_paper_kw(state), **shared})
         report["meta_keys"] = sorted(fill_meta(pathway_context, state))
         report["nucleic_types"] = maybe_apply_paper_nucleic_types(payload, state, **{k: shared[k] for k in ("fetcher", "cache", "today") if k in shared})
@@ -253,10 +309,11 @@ def maybe_apply_paper_nucleic_types(payload: Dict[str, Any], state: Any = None, 
     called on its own; ``maybe_apply_final_id_fill`` passes the one fetcher it shares with the id fill)."""
     from t2pw.service.final_payload_nucleic import apply_nucleic_types
     st = state if hasattr(state, "get") else {}
-    fetcher = fetcher or _live_fetcher()
+    fetcher = fetcher or _cap_to_job_deadline(_live_fetcher(), st)
+    refused0 = _refused(fetcher)
     rep = apply_nucleic_types(payload, st.get("final_payload_paper_text"), fetcher=fetcher, cache=cache, today=today,
                               source=str(st.get("final_payload_paper_text_source") or "paper text"))
-    rep["budget_exhausted"] = _spent(fetcher)
+    rep["budget_exhausted"], rep["circuit_open"] = _refused(fetcher) > refused0, _circuit_open(fetcher)
     return rep
 
 
@@ -315,9 +372,11 @@ def apply_final_pathway_meta(payload: Dict[str, Any], meta: Optional[Dict[str, A
     ``reference``). Paper mode (a pmid/pmcid/doi is known): the title comes from NCBI esummary through the fill layer, else
     ``meta["title"]``, else the pathway name; the reference only when NCBI confirmed the paper. Name mode: the pathway name. Nothing is invented; with no text the key is not
     written. Fails open: on any error the payload is exactly what it was."""
-    report: Dict[str, Any] = {"enabled": True, "written": False, "title_source": None, "error": None, "budget_exhausted": False}
+    report: Dict[str, Any] = {"enabled": True, "written": False, "title_source": None, "error": None, "budget_exhausted": False,
+                              "circuit_open": False}
     snapshot = copy.deepcopy(payload)
-    fetcher = fetcher or _live_fetcher(TITLE_BUDGET_SECONDS)  # its own small budget, never the id fill's
+    fetcher = fetcher or _live_fetcher(_title_budget())  # its own small budget, never the id fill's
+    refused0 = _refused(fetcher)
     try:
         from t2pw.clean_model import build_from_payload
         from t2pw.clean_model.fill import fill_model
@@ -350,7 +409,7 @@ def apply_final_pathway_meta(payload: Dict[str, Any], meta: Optional[Dict[str, A
         payload.clear()
         payload.update(snapshot)
         report.update(written=False, error=f"{type(exc).__name__}: {exc}")
-    report["budget_exhausted"] = _spent(fetcher)
+    report["budget_exhausted"], report["circuit_open"] = _refused(fetcher) > refused0, _circuit_open(fetcher)
     return report
 
 
@@ -370,6 +429,8 @@ def maybe_apply_final_pathway_meta(payload: Dict[str, Any], pathway_context: Any
     try:
         ctx = pathway_context if isinstance(pathway_context, dict) else {}
         meta = {**fill_meta(pathway_context, state), **paper_meta(pathway_context, state)}
+        if not kw.get("fetcher"):
+            kw = {**kw, "fetcher": _cap_to_job_deadline(_live_fetcher(_title_budget()), state)}
         return apply_final_pathway_meta(payload, meta, pathway_name=ctx.get("pathway_name"), **kw)
     except Exception as exc:
         return {"enabled": True, "written": False, "error": f"{type(exc).__name__}: {exc}"}
