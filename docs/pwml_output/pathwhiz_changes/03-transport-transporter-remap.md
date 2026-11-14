@@ -22,3 +22,6 @@ Apply 01 to 03 and run the harness (`README.md`). Expected: the 19 "Transport tr
 
 ## Risk
 Medium-low. Additions only; a missing mapping now gives "can't be blank" rather than a wrong attachment. Known gaps, not fixed here: `reaction-coupled-transport` enzymes probably have the same gap (not checked); `get_enzyme` ignores the biological state, so two transporters with the same complex in different states of one transport could collide; the 3 residual messages are untraced.
+
+## Branch
+`t2pw/03-transport-transporter-remap`, commit `c5c12d69`, on top of `t2pw/02-transport-state-remap`. Local only, not pushed. Worktree C:/t/pwpr/03.

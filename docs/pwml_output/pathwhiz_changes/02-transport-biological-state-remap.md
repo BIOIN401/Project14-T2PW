@@ -19,3 +19,6 @@ Apply 01 and 02, then run the harness (`README.md`) on the 59-file set. Expected
 
 ## Risk
 Low. Same pattern as the neighbouring branch. The behaviour change is that a missing mapping becomes a loud validation error instead of a silent wrong attachment, which is the intent. It assumes biological states are imported before transports, as for the existing `biological-state-id` users.
+
+## Branch
+`t2pw/02-transport-state-remap`, commit `48ab7499`, on top of `t2pw/01-vcv-node-typo`. Local only, not pushed. Worktree C:/t/pwpr/02.

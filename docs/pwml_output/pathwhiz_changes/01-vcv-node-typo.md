@@ -17,3 +17,6 @@ Syntax: `ruby -c lib/pwml_parser.rb` gives `Syntax OK`. Behaviour: import a PWML
 
 ## Risk
 Very low. One identifier; the old value was always the wrong node. Does not touch id remapping.
+
+## Branch
+`t2pw/01-vcv-node-typo`, commit `17af3272`, from `test-prod-with-parser-fix` HEAD `6e11df0e`. Local only, not pushed. Worktree C:/t/pwpr/01.
