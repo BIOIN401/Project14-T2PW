@@ -1,0 +1,933 @@
+{
+ "biological_states": [
+  {
+   "evidence": "enterobactin is synthesized in the cytoplasm",
+   "name": "cytoplasmic state",
+   "species": "Escherichia coli",
+   "subcellular_location": "cytoplasm"
+  },
+  {
+   "evidence": "secreted to the extracellular environment",
+   "name": "extracellular state",
+   "species": "Escherichia coli",
+   "subcellular_location": "extracellular space"
+  },
+  {
+   "evidence": "TolC-dependent process",
+   "name": "outer membrane state",
+   "species": "Escherichia coli",
+   "subcellular_location": "outer membrane"
+  }
+ ],
+ "element_locations": {
+  "compound_locations": [
+   {
+    "biological_state": "cytoplasmic state",
+    "compound": "enterobactin",
+    "evidence": "enterobactin is produced in the cytoplasm"
+   },
+   {
+    "biological_state": "extracellular state",
+    "compound": "enterobactin",
+    "evidence": "secreted to the extracellular environment"
+   },
+   {
+    "biological_state": "extracellular state",
+    "compound": "ferric enterobactin",
+    "evidence": "ferric-enterobactin complex is then imported via TonB-dependent uptake"
+   }
+  ],
+  "protein_locations": [
+   {
+    "biological_state": "cytoplasmic state",
+    "evidence": "enterobactin is synthesized in the cytoplasm",
+    "protein": "EntB"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "evidence": "enterobactin is synthesized in the cytoplasm",
+    "protein": "EntC"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "evidence": "enterobactin is synthesized in the cytoplasm",
+    "protein": "EntA"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "evidence": "enterobactin is synthesized in the cytoplasm",
+    "protein": "EntE"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "evidence": "enterobactin is synthesized in the cytoplasm",
+    "protein": "EntF"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "evidence": "enterobactin is synthesized in the cytoplasm",
+    "protein": "EntD"
+   }
+  ]
+ },
+ "entities": {
+  "compounds": [
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "2,3-dihydroxybenzoic acid",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "chorismate",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "isochorismate",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "2,3-dihydro-2,3-dihydroxybenzoate",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "enterobactin",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "ferric enterobactin",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "cofactor",
+    "confidence": 1.0,
+    "name": "NADH",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "cofactor",
+    "confidence": 1.0,
+    "name": "ATP",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "L-serine",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "pyruvate",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "lactate",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "cofactor",
+    "confidence": 1.0,
+    "name": "NAD+",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "2,3-dihydroxybenzoyl-AMP",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "ion",
+    "confidence": 1.0,
+    "name": "ferric iron",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   }
+  ],
+  "proteins": [
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "EntB",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "EntC",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "EntA",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "EntE",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "EntF",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "EntD",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "Fur",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "MenD",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "name": "porcine lactate dehydrogenase",
+    "provenance": "reconstructed_from_process_participant",
+    "provenance_lineage": [
+     {
+      "origin": "inferred",
+      "paper_explicit": "not_evaluated",
+      "reason": "registry shell reconstructed for a participant a process row named but the entity registry did not carry",
+      "review_required": true,
+      "sources": [],
+      "stage": "normalization",
+      "support": "derived",
+      "uncertainty": "the shell carries no identifier; the entity stays unresolved until something grounds it"
+     }
+    ],
+    "reconstructed_from": {
+     "pointer": "/processes/reactions/5/enzymes",
+     "role": "enzymes"
+    },
+    "resolution_status": "unresolved"
+   },
+   {
+    "name": "TolC",
+    "provenance": "reconstructed_from_process_participant",
+    "provenance_lineage": [
+     {
+      "origin": "inferred",
+      "paper_explicit": "not_evaluated",
+      "reason": "registry shell reconstructed for a participant a process row named but the entity registry did not carry",
+      "review_required": true,
+      "sources": [],
+      "stage": "normalization",
+      "support": "derived",
+      "uncertainty": "the shell carries no identifier; the entity stays unresolved until something grounds it"
+     }
+    ],
+    "reconstructed_from": {
+     "pointer": "/processes/transports/0/transporters",
+     "role": "transporters"
+    },
+    "resolution_status": "unresolved"
+   },
+   {
+    "name": "TonB",
+    "provenance": "reconstructed_from_process_participant",
+    "provenance_lineage": [
+     {
+      "origin": "inferred",
+      "paper_explicit": "not_evaluated",
+      "reason": "registry shell reconstructed for a participant a process row named but the entity registry did not carry",
+      "review_required": true,
+      "sources": [],
+      "stage": "normalization",
+      "support": "derived",
+      "uncertainty": "the shell carries no identifier; the entity stays unresolved until something grounds it"
+     }
+    ],
+    "reconstructed_from": {
+     "pointer": "/processes/transports/1/transporters",
+     "role": "transporters"
+    },
+    "resolution_status": "unresolved"
+   }
+  ],
+  "species": [
+   {
+    "name": "Escherichia coli",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   }
+  ],
+  "subcellular_locations": [
+   {
+    "evidence": "enterobactin is synthesized in the cytoplasm",
+    "name": "cytoplasm",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "evidence": "secreted to the extracellular environment",
+    "name": "extracellular space",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "evidence": "TolC-dependent process",
+    "name": "outer membrane",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   }
+  ]
+ },
+ "processes": {
+  "interactions": [
+   {
+    "biological_state": "cytoplasmic state",
+    "entity_1": "2,3-dihydroxybenzoic acid",
+    "entity_2": "EntB",
+    "evidence": "2,3-DHB is a competitive inhibitor of apo-EntB isochorismatase activity (Ki ~ 200 μM)",
+    "name": "2,3-DHB competitive inhibition of EntB",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "relationship": "inhibition"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "entity_1": "Fur",
+    "entity_2": "ent gene clusters",
+    "evidence": "holo-Fur binds to the promoters of three ent gene clusters, silencing gene expression",
+    "name": "Fur repression of ent genes",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "relationship": "inhibition"
+   }
+  ],
+  "reactions": [
+   {
+    "biological_state": "cytoplasmic state",
+    "enzymes": [
+     {
+      "confidence": 1.0,
+      "evidence": "EntC (isochorismate synthase; EC 5.4.4.2)",
+      "protein": "EntC",
+      "provenance": "extracted"
+     }
+    ],
+    "evidence": "EntC (isochorismate synthase; EC 5.4.4.2)",
+    "inputs": [
+     "chorismate"
+    ],
+    "locked_reaction_id": "rxn_lock_003",
+    "name": "EntC reaction",
+    "outputs": [
+     "isochorismate"
+    ],
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "scope_membership": "core"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "enzymes": [
+     {
+      "confidence": 1.0,
+      "evidence": "EntB (isochorismatase/aryl carrier protein)",
+      "protein": "EntB",
+      "provenance": "extracted"
+     }
+    ],
+    "evidence": "isochorismate is converted to 2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB) and pyruvate by EntB isochorismatase activity",
+    "inputs": [
+     "isochorismate"
+    ],
+    "locked_reaction_id": "rxn_lock_002",
+    "name": "EntB isochorismatase reaction",
+    "outputs": [
+     "2,3-dihydro-2,3-dihydroxybenzoate",
+     "pyruvate"
+    ],
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "scope_membership": "core"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "enzymes": [
+     {
+      "confidence": 1.0,
+      "evidence": "EntA (2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase; EC 1.3.1.28)",
+      "protein": "EntA",
+      "provenance": "extracted"
+     }
+    ],
+    "evidence": "EntA (2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase; EC 1.3.1.28)",
+    "inputs": [
+     "2,3-dihydro-2,3-dihydroxybenzoate"
+    ],
+    "locked_reaction_id": "rxn_lock_001",
+    "name": "EntA reaction",
+    "outputs": [
+     "2,3-dihydroxybenzoic acid"
+    ],
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "scope_membership": "core"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "enzymes": [
+     {
+      "confidence": 1.0,
+      "evidence": "EntE (2,3-dihydroxybenzoyl-AMP ligase; EC 6.2.1.71)",
+      "protein": "EntE",
+      "provenance": "extracted"
+     }
+    ],
+    "evidence": "2,3-DHB is adenylated by EntE (2,3-dihydroxybenzoyl-AMP ligase; EC 6.2.1.71) in an ATP-dependent reaction",
+    "inputs": [
+     "2,3-dihydroxybenzoic acid",
+     "ATP"
+    ],
+    "locked_reaction_id": "rxn_lock_004",
+    "name": "EntE reaction",
+    "outputs": [
+     "2,3-dihydroxybenzoyl-AMP"
+    ],
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "scope_membership": "core"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "enzymes": [
+     {
+      "confidence": 1.0,
+      "evidence": "EntF (enterobactin synthase)",
+      "protein": "EntF",
+      "provenance": "extracted"
+     }
+    ],
+    "evidence": "Enterobactin production from activated 2,3-DHB then involves three EntF-catalyzed cycles of condensation with L-serine",
+    "inputs": [
+     "2,3-dihydroxybenzoyl-AMP",
+     "L-serine"
+    ],
+    "locked_reaction_id": "rxn_lock_005",
+    "name": "EntF enterobactin synthase reaction",
+    "outputs": [
+     "enterobactin"
+    ],
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "scope_membership": "core"
+   },
+   {
+    "enzymes": [
+     {
+      "confidence": 1.0,
+      "evidence": "LDH-catalyzed conversion of pyruvate to lactate",
+      "protein": "porcine lactate dehydrogenase",
+      "provenance": "extracted"
+     }
+    ],
+    "evidence": "LDH-catalyzed conversion of pyruvate to lactate is then monitored by loss of OD 340 following oxidation of NADH to NAD+",
+    "inputs": [
+     "pyruvate",
+     "NADH"
+    ],
+    "locked_reaction_id": "rxn_lock_006",
+    "name": "LDH reaction",
+    "outputs": [
+     "lactate",
+     "NAD"
+    ],
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "scope_membership": "auxiliary"
+   }
+  ],
+  "transports": [
+   {
+    "cargo": "enterobactin",
+    "elements_with_states": [
+     {
+      "biological_state": "cytoplasmic state",
+      "element": "enterobactin",
+      "evidence": "enterobactin is produced in the cytoplasm",
+      "side": "left"
+     },
+     {
+      "biological_state": "extracellular state",
+      "element": "enterobactin",
+      "evidence": "secreted to the extracellular environment",
+      "side": "right"
+     }
+    ],
+    "evidence": "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment by a TolC-dependent process",
+    "from_biological_state": "cytoplasmic state",
+    "name": "enterobactin secretion",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "to_biological_state": "extracellular state",
+    "transporters": [
+     {
+      "evidence": "TolC-dependent process",
+      "protein": "TolC"
+     }
+    ]
+   },
+   {
+    "cargo": "ferric enterobactin",
+    "elements_with_states": [
+     {
+      "biological_state": "extracellular state",
+      "element": "ferric enterobactin",
+      "evidence": "ferric-enterobactin complex is then imported via TonB-dependent uptake",
+      "side": "left"
+     },
+     {
+      "biological_state": "cytoplasmic state",
+      "element": "ferric enterobactin",
+      "evidence": "ferric-enterobactin complex is then imported via TonB-dependent uptake",
+      "side": "right"
+     }
+    ],
+    "evidence": "ferric-enterobactin complex is then imported via TonB-dependent uptake",
+    "from_biological_state": "extracellular state",
+    "name": "ferric enterobactin import",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "to_biological_state": "cytoplasmic state",
+    "transporters": [
+     {
+      "evidence": "TonB-dependent uptake",
+      "protein": "TonB"
+     }
+    ]
+   }
+  ]
+ }
+}

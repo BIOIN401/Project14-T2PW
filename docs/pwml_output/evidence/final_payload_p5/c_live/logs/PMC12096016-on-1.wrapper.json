@@ -1,0 +1,94 @@
+{
+  "label": "fp-cimpl-PMC12096016-on-1",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "C:/t/fp/docs/pwml_output/evidence/final_payload_p5/c_live/run_case.py",
+    "--paper",
+    "PMC12096016",
+    "--arm",
+    "on",
+    "--rep",
+    "1",
+    "--out",
+    "C:/t/fp/docs/pwml_output/evidence/final_payload_p5/c_live/runs"
+  ],
+  "cwd": "C:\\t\\fp",
+  "started_at": "2026-11-14T04:05:44+00:00",
+  "finished_at": "2026-11-14T04:06:37+00:00",
+  "duration_seconds": 53.448939599998994,
+  "timeout_seconds": 2700.0,
+  "root_pid": 537084,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 536044,
+      "name": "python.exe",
+      "ppid": 537084
+    }
+  ],
+  "descendants_terminated": [
+    536044
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 251140,
+      "name": "python.exe"
+    },
+    {
+      "pid": 404548,
+      "name": "python.exe"
+    },
+    {
+      "pid": 407620,
+      "name": "python.exe"
+    },
+    {
+      "pid": 532744,
+      "name": "python.exe"
+    },
+    {
+      "pid": 537604,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/fp/docs/pwml_output/evidence/final_payload_p5/c_live/logs/PMC12096016-on-1.wrapper.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\fp\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\fp",
+    "repo_head": "f4b0be9a99a6874452932a019ed06f4c2f89e894",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "fp5-cimpl",
+    "token": "fp5-cimpl:537604:2039b3f4006ca484",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

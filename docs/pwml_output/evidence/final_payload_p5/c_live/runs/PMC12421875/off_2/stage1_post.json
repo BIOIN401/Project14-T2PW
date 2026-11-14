@@ -1,0 +1,974 @@
+{
+ "biological_states": [
+  {
+   "evidence": "cytoplasm",
+   "name": "cytoplasmic state",
+   "species": "Lactococcus lactis subsp. lactis KF147",
+   "subcellular_location": "cytoplasm"
+  },
+  {
+   "evidence": "extracellular",
+   "name": "extracellular state",
+   "species": "Lactococcus lactis subsp. lactis KF147",
+   "subcellular_location": "extracellular"
+  },
+  {
+   "evidence": "[DHNA] in",
+   "name": "intracellular state",
+   "species": "Lactococcus lactis subsp. lactis KF147",
+   "subcellular_location": "intracellular"
+  },
+  {
+   "evidence": "extracellular DHNA accumulation rate",
+   "name": "extracellular state",
+   "species": "Lactococcus lactis subsp. lactis KF147",
+   "subcellular_location": "extracellular"
+  }
+ ],
+ "element_locations": {
+  "compound_locations": [
+   {
+    "biological_state": "cytoplasmic state",
+    "compound": "chorismate",
+    "evidence": "cytoplasm"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "compound": "isochorismate",
+    "evidence": "cytoplasm"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "compound": "SEPHCHC",
+    "evidence": "cytoplasm"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "compound": "SHCHC",
+    "evidence": "cytoplasm"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "compound": "OSB",
+    "evidence": "cytoplasm"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "compound": "OSB-CoA",
+    "evidence": "cytoplasm"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "compound": "DHNA-CoA",
+    "evidence": "cytoplasm"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "compound": "DHNA",
+    "evidence": "cytoplasm"
+   },
+   {
+    "biological_state": "extracellular state",
+    "compound": "DHNA",
+    "evidence": "DHNA secreted by L. lactis"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "compound": "prenyl diphosphate",
+    "evidence": "cytoplasm"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "compound": "DMK",
+    "evidence": "cytoplasm"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "compound": "MK",
+    "evidence": "cytoplasm"
+   },
+   {
+    "biological_state": "intracellular state",
+    "compound": "DHNA",
+    "evidence": "[DHNA] in"
+   },
+   {
+    "biological_state": "extracellular state",
+    "compound": "DHNA",
+    "evidence": "extracellular DHNA accumulation rate"
+   }
+  ],
+  "protein_locations": [
+   {
+    "biological_state": "cytoplasmic state",
+    "evidence": "cytoplasm",
+    "protein": "MenF"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "evidence": "cytoplasm",
+    "protein": "MenD"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "evidence": "cytoplasm",
+    "protein": "MenH"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "evidence": "cytoplasm",
+    "protein": "MenC"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "evidence": "cytoplasm",
+    "protein": "MenE"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "evidence": "cytoplasm",
+    "protein": "MenB"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "evidence": "cytoplasm",
+    "protein": "MenI"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "evidence": "cytoplasm",
+    "protein": "MenA"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "evidence": "cytoplasm",
+    "protein": "MenG"
+   }
+  ]
+ },
+ "entities": {
+  "compounds": [
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "chorismate",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "isochorismate",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "SEPHCHC",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "SHCHC",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "OSB",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "OSB-CoA",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "DHNA-CoA",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "DHNA",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "prenyl diphosphate",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "DMK",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "MK",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   }
+  ],
+  "proteins": [
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "MenF",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "MenD",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "MenH",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "MenC",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "MenE",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "MenB",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "MenI",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "MenA",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "MenG",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   }
+  ],
+  "species": [
+   {
+    "name": "Lactococcus lactis subsp. lactis KF147",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   }
+  ],
+  "subcellular_locations": [
+   {
+    "evidence": "cytoplasm",
+    "name": "cytoplasm",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "evidence": "extracellular",
+    "name": "extracellular",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "evidence": "[DHNA] in",
+    "name": "intracellular",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   }
+  ]
+ },
+ "processes": {
+  "interactions": [
+   {
+    "biological_state": "cytoplasmic state",
+    "entity_1": "DHNA",
+    "entity_2": "MenD",
+    "evidence": "allosteric inhibition of MenD by DHNA",
+    "name": "DHNA inhibits MenD",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "relationship": "inhibits"
+   }
+  ],
+  "reactions": [
+   {
+    "biological_state": "cytoplasmic state",
+    "enzymes": [
+     {
+      "confidence": 1.0,
+      "evidence": "MenF catalyzes a reversible reaction converting chorismate to isochorismate",
+      "protein": "MenF",
+      "provenance": "extracted"
+     }
+    ],
+    "evidence": "MenF catalyzes a reversible reaction converting chorismate (A) to isochorismate (B)",
+    "inputs": [
+     "chorismate"
+    ],
+    "locked_reaction_id": "rxn_lock_006",
+    "name": "MenF reaction",
+    "outputs": [
+     "isochorismate"
+    ],
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "scope_membership": "core"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "enzymes": [
+     {
+      "confidence": 1.0,
+      "evidence": "MenD facilitates the conversion of isochorismate to SEPHCHC",
+      "protein": "MenD",
+      "provenance": "extracted"
+     }
+    ],
+    "evidence": "MenD facilitates the conversion of isochorismate (B) to SEPHCHC (C)",
+    "inputs": [
+     "isochorismate"
+    ],
+    "locked_reaction_id": "rxn_lock_004",
+    "name": "MenD reaction",
+    "outputs": [
+     "SEPHCHC"
+    ],
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "scope_membership": "core"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "enzymes": [
+     {
+      "confidence": 1.0,
+      "evidence": "d[D]/dt = k_cat^H [MenH][C]/(K_M^H+[C])",
+      "protein": "MenH",
+      "provenance": "extracted"
+     }
+    ],
+    "evidence": "d[D]/dt = k_cat^H [MenH][C]/(K_M^H+[C])",
+    "inputs": [
+     "SEPHCHC"
+    ],
+    "locked_reaction_id": "rxn_lock_008",
+    "name": "MenH reaction",
+    "outputs": [
+     "SHCHC"
+    ],
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "scope_membership": "core"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "enzymes": [
+     {
+      "confidence": 1.0,
+      "evidence": "d[E]/dt = k_cat^C [MenC][D]/(K_M^C+[D])",
+      "protein": "MenC",
+      "provenance": "extracted"
+     }
+    ],
+    "evidence": "d[E]/dt = k_cat^C [MenC][D]/(K_M^C+[D])",
+    "inputs": [
+     "SHCHC"
+    ],
+    "locked_reaction_id": "rxn_lock_003",
+    "name": "MenC reaction",
+    "outputs": [
+     "OSB"
+    ],
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "scope_membership": "core"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "enzymes": [
+     {
+      "confidence": 1.0,
+      "evidence": "d[F]/dt = k_cat^E [MenE][E]/(K_M^E+[E])",
+      "protein": "MenE",
+      "provenance": "extracted"
+     }
+    ],
+    "evidence": "d[F]/dt = k_cat^E [MenE][E]/(K_M^E+[E])",
+    "inputs": [
+     "OSB"
+    ],
+    "locked_reaction_id": "rxn_lock_005",
+    "name": "MenE reaction",
+    "outputs": [
+     "OSB-CoA"
+    ],
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "scope_membership": "core"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "enzymes": [
+     {
+      "confidence": 1.0,
+      "evidence": "d[G]/dt = k_cat^B [MenB][F]/(K_M^B+[F])",
+      "protein": "MenB",
+      "provenance": "extracted"
+     }
+    ],
+    "evidence": "d[G]/dt = k_cat^B [MenB][F]/(K_M^B+[F])",
+    "inputs": [
+     "OSB-CoA"
+    ],
+    "locked_reaction_id": "rxn_lock_002",
+    "name": "MenB reaction",
+    "outputs": [
+     "DHNA-CoA"
+    ],
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "scope_membership": "core"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "enzymes": [
+     {
+      "confidence": 1.0,
+      "evidence": "d[DHNA]_in/dt = k_cat^I [MenI][G]/(K_M^I+[G])",
+      "protein": "MenI",
+      "provenance": "extracted"
+     }
+    ],
+    "evidence": "d[DHNA]_in/dt = k_cat^I [MenI][G]/(K_M^I+[G])",
+    "inputs": [
+     "DHNA-CoA"
+    ],
+    "locked_reaction_id": "rxn_lock_009",
+    "name": "MenI reaction",
+    "outputs": [
+     "DHNA"
+    ],
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "scope_membership": "core"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "enzymes": [
+     {
+      "confidence": 1.0,
+      "evidence": "MenA joins DHNA and prenyl diphosphate to produce DMK",
+      "protein": "MenA",
+      "provenance": "extracted"
+     }
+    ],
+    "evidence": "MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK)",
+    "inputs": [
+     "DHNA",
+     "prenyl diphosphate"
+    ],
+    "locked_reaction_id": "rxn_lock_001",
+    "name": "MenA reaction",
+    "outputs": [
+     "DMK"
+    ],
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "scope_membership": "core"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "enzymes": [
+     {
+      "confidence": 1.0,
+      "evidence": "MenG demethylates DMK to generate MK",
+      "protein": "MenG",
+      "provenance": "extracted"
+     }
+    ],
+    "evidence": "MenG demethylates DMK to generate MK",
+    "inputs": [
+     "DMK"
+    ],
+    "locked_reaction_id": "rxn_lock_007",
+    "name": "MenG reaction",
+    "outputs": [
+     "MK"
+    ],
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "scope_membership": "core"
+   }
+  ],
+  "transports": [
+   {
+    "cargo": "DHNA",
+    "elements_with_states": [
+     {
+      "biological_state": "cytoplasmic state",
+      "element": "DHNA",
+      "evidence": "DHNA diffusion through the membrane",
+      "side": "left"
+     },
+     {
+      "biological_state": "extracellular state",
+      "element": "DHNA",
+      "evidence": "DHNA diffusion through the membrane",
+      "side": "right"
+     }
+    ],
+    "evidence": "DHNA diffusion through the membrane",
+    "from_biological_state": "cytoplasmic state",
+    "name": "DHNA diffusion out of cell",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "to_biological_state": "extracellular state"
+   },
+   {
+    "cargo": "DHNA",
+    "elements_with_states": [
+     {
+      "biological_state": "intracellular state",
+      "element": "DHNA",
+      "evidence": "[DHNA] in",
+      "side": "left"
+     },
+     {
+      "biological_state": "extracellular state",
+      "element": "DHNA",
+      "evidence": "extracellular DHNA accumulation rate",
+      "side": "right"
+     }
+    ],
+    "evidence": "extracellular DHNA accumulation rate",
+    "from_biological_state": "intracellular state",
+    "name": "DHNA diffusion from intracellular to extracellular",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "to_biological_state": "extracellular state"
+   }
+  ]
+ }
+}

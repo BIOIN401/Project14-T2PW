@@ -1,0 +1,56 @@
+T2PW: C:\t\fp\src\t2pw\__init__.py
+F....................................................................... [ 59%]
+..................................................                       [100%]
+================================== FAILURES ===================================
+________ test_repairs_both_missing_sides_from_quotes_with_dash_folding ________
+
+    def test_repairs_both_missing_sides_from_quotes_with_dash_folding():
+        chat = Chat({"rows": [{"id": 0, "from": FROM_CYT, "to": TO_EXT}]})
+        payload = _payload()
+        fixed, report = ts.repair_transport_sides(payload, TEXT, chat_fn=chat)
+        assert chat.calls == 1
+        assert _row(fixed)["from_biological_state"] == "Cytoplasm"  # existing state reused, case-insensitively
+        assert _row(fixed)["to_biological_state"] == "extracellular"
+        assert [s["name"] for s in fixed["biological_states"]] == ["Cytoplasm", "extracellular"]
+        assert fixed["biological_states"][1]["species"] == "Escherichia coli"
+        assert "from_biological_state" not in _row(payload)  # the input is not mutated
+        (rep,) = report["repairs"]
+>       assert rep["old"] == ["", ""] and rep["new"] == ["Cytoplasm", "extracellular"] and rep["quotes"]["to_biological_state"]
+E       AssertionError: assert (['', ''] == ['', '']
+E         
+E         Use -v to get more diff and ['cytoplasm', 'extracellular'] == ['Cytoplasm', 'extracellular']
+E         
+E         At index 0 diff: 'cytoplasm' != 'Cytoplasm'
+E         Use -v to get more diff)
+
+tests\test_transport_sides.py:58: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_transport_sides.py::test_repairs_both_missing_sides_from_quotes_with_dash_folding
+1 failed, 121 passed in 17.91s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\fp\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 5d5358e6d602dc8f504e16fe699691a7555c9466  [git, worktree dirty=True]
+label                   : fp-cimplA
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/fp -q --basetemp=C:/t/tmpbase/cimplA-26669 tests/test_transport_sides.py tests/test_service_extraction_stage1.py tests/test_service_extraction.py tests/test_process_normalizer.py tests/test_process_normalizer_transport_states.py
+cwd                     : C:\t\fp
+root PID / process group: 516304 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 1500 s
+duration                : 19.36 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 5  522228:python.exe, 521168:python.exe, 525296:python.exe, 520556:python.exe, 527080:python.exe
+descendants terminated  : 5  520556, 521168, 522228, 525296, 527080
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/fp/docs/pwml_output/evidence/final_payload_p5/tests/cimplA.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=fp5-cimpl  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

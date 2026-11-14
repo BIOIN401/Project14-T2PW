@@ -1,0 +1,1944 @@
+{
+ "biological_states": [
+  {
+   "evidence": "Kdo-lipid A is synthesized in the bacterial cytoplasm",
+   "name": "E. coli cytoplasm",
+   "species": "Escherichia coli",
+   "subcellular_location": "cytoplasm"
+  },
+  {
+   "evidence": "catalyzed in the cytoplasm or the cytoplasmic leaflet of the IM",
+   "name": "E. coli inner membrane",
+   "species": "Escherichia coli",
+   "subcellular_location": "inner membrane"
+  },
+  {
+   "evidence": "flipped from the cytoplasmic leaflet to the periplasmic leaflet",
+   "name": "E. coli periplasm",
+   "species": "Escherichia coli",
+   "subcellular_location": "periplasm"
+  },
+  {
+   "evidence": "transported to the OM",
+   "name": "E. coli outer membrane",
+   "species": "Escherichia coli",
+   "subcellular_location": "outer membrane"
+  }
+ ],
+ "element_locations": {
+  "compound_locations": [
+   {
+    "biological_state": "E. coli cytoplasm",
+    "compound": "UDP-GlcNAc",
+    "evidence": "LpxA, the first enzyme in the lipid A biosynthesis pathway, catalyzes the reversible acylation of UDP-GlcNAc"
+   },
+   {
+    "biological_state": "E. coli cytoplasm",
+    "compound": "β-hydroxyacyl-ACP",
+    "evidence": "using FAS II-derived β-hydroxyacyl-ACP molecules"
+   },
+   {
+    "biological_state": "E. coli cytoplasm",
+    "compound": "Kdo-lipid A",
+    "evidence": "Kdo-lipid A is synthesized in the bacterial cytoplasm"
+   },
+   {
+    "biological_state": "E. coli cytoplasm",
+    "compound": "lipid IV_A",
+    "evidence": "phosphorylated by LpxK to produce lipid IV_A"
+   },
+   {
+    "biological_state": "E. coli outer membrane",
+    "compound": "LPS",
+    "evidence": "LPS in its outer leaflet"
+   },
+   {
+    "biological_state": "E. coli inner membrane",
+    "compound": "core-lipid A",
+    "evidence": "core-lipid A is flipped from the cytoplasmic leaflet to the periplasmic leaflet"
+   },
+   {
+    "biological_state": "E. coli periplasm",
+    "compound": "core-lipid A",
+    "evidence": "flipped from the cytoplasmic leaflet to the periplasmic leaflet"
+   }
+  ],
+  "protein_locations": [
+   {
+    "biological_state": "E. coli cytoplasm",
+    "evidence": "LpxC is a deacetylase that removes the acetyl group",
+    "protein": "LpxC"
+   },
+   {
+    "biological_state": "E. coli inner membrane",
+    "evidence": "FtsH is a hexameric, ATP-dependent, and membrane-embedded protease",
+    "protein": "FtsH"
+   },
+   {
+    "biological_state": "E. coli inner membrane",
+    "evidence": "LapB (lipopolysaccharide assembly protein B)",
+    "protein": "LapB"
+   },
+   {
+    "biological_state": "E. coli inner membrane",
+    "evidence": "the membrane protein YejM",
+    "protein": "YejM"
+   },
+   {
+    "biological_state": "E. coli cytoplasm",
+    "evidence": "LpxA, the first enzyme in the lipid A biosynthesis pathway",
+    "protein": "LpxA"
+   },
+   {
+    "biological_state": "E. coli inner membrane",
+    "evidence": "flippase MsbA",
+    "protein": "MsbA"
+   }
+  ]
+ },
+ "entities": {
+  "compounds": [
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "UDP-GlcNAc",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "β-hydroxyacyl-ACP",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "Kdo-lipid A",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "lipid IV_A",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "LPS",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "UDP-3-O-(R-3-hydroxymyristoyl)-N-acetylglucosamine",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "R-3-hydroxymyristoyl-ACP",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "UMP",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "Kdo-lipid IV_A",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "core-lipid A",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "O-antigen",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "acyl-CoA",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "palmitate",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "palmitoyl-CoA",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "oleate",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "cofactor",
+    "confidence": 1.0,
+    "name": "CoA",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "cofactor",
+    "confidence": 1.0,
+    "name": "ATP",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "UDP-3-O-(R-3-hydroxydecanoyl)-glucosamine",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "fructose-6-P",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "cardiolipin",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "lysophospholipids",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "fatty acids",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "GPL",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "PG",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "lipid A",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "name": "UDP-2,3-diacylglucosamine",
+    "provenance": "reconstructed_from_process_participant",
+    "provenance_lineage": [
+     {
+      "origin": "inferred",
+      "paper_explicit": "not_evaluated",
+      "reason": "registry shell reconstructed for a participant a process row named but the entity registry did not carry",
+      "review_required": true,
+      "sources": [],
+      "stage": "normalization",
+      "support": "derived",
+      "uncertainty": "the shell carries no identifier; the entity stays unresolved until something grounds it"
+     }
+    ],
+    "reconstructed_from": {
+     "pointer": "/processes/reactions/3/inputs",
+     "role": "inputs"
+    },
+    "resolution_status": "unresolved"
+   },
+   {
+    "name": "lipid X",
+    "provenance": "reconstructed_from_process_participant",
+    "provenance_lineage": [
+     {
+      "origin": "inferred",
+      "paper_explicit": "not_evaluated",
+      "reason": "registry shell reconstructed for a participant a process row named but the entity registry did not carry",
+      "review_required": true,
+      "sources": [],
+      "stage": "normalization",
+      "support": "derived",
+      "uncertainty": "the shell carries no identifier; the entity stays unresolved until something grounds it"
+     }
+    ],
+    "reconstructed_from": {
+     "pointer": "/processes/reactions/4/inputs",
+     "role": "inputs"
+    },
+    "resolution_status": "unresolved"
+   },
+   {
+    "name": "tetra-acylated disaccharide intermediate",
+    "provenance": "reconstructed_from_process_participant",
+    "provenance_lineage": [
+     {
+      "origin": "inferred",
+      "paper_explicit": "not_evaluated",
+      "reason": "registry shell reconstructed for a participant a process row named but the entity registry did not carry",
+      "review_required": true,
+      "sources": [],
+      "stage": "normalization",
+      "support": "derived",
+      "uncertainty": "the shell carries no identifier; the entity stays unresolved until something grounds it"
+     }
+    ],
+    "reconstructed_from": {
+     "pointer": "/processes/reactions/5/inputs",
+     "role": "inputs"
+    },
+    "resolution_status": "unresolved"
+   },
+   {
+    "name": "Kdo-lipid A (laurate)",
+    "provenance": "reconstructed_from_process_participant",
+    "provenance_lineage": [
+     {
+      "origin": "inferred",
+      "paper_explicit": "not_evaluated",
+      "reason": "registry shell reconstructed for a participant a process row named but the entity registry did not carry",
+      "review_required": true,
+      "sources": [],
+      "stage": "normalization",
+      "support": "derived",
+      "uncertainty": "the shell carries no identifier; the entity stays unresolved until something grounds it"
+     }
+    ],
+    "reconstructed_from": {
+     "pointer": "/processes/reactions/8/inputs",
+     "role": "inputs"
+    },
+    "resolution_status": "unresolved"
+   }
+  ],
+  "protein_complexes": [
+   {
+    "class": "protein_complex",
+    "components": [
+     "FtsH",
+     "YciM"
+    ],
+    "confidence": 1.0,
+    "evidence": "YejM controls LpxC levels by regulating protease activity of the FtsH/YciM complex of Escherichia coli",
+    "name": "FtsH/YciM complex",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   }
+  ],
+  "proteins": [
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "LpxC",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "FtsH",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "LapB",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "YejM",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "LpxA",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "LpxD",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "LpxH",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "LpxI",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "LpxG",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "LpxB",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "LpxK",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "WaaA",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "LpxL",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "LpxM",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "MsbA",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "FabZ",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "PldA",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "FadD",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "YhcB",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "FabI",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "ObgE",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "RnhA",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "RnhB",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "LapA",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "PlsY",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "WaaC",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "MurA",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "GcvB",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "YciM",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   }
+  ],
+  "species": [
+   {
+    "name": "Escherichia coli",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   }
+  ],
+  "subcellular_locations": [
+   {
+    "evidence": "Kdo-lipid A is synthesized in the bacterial cytoplasm",
+    "name": "cytoplasm",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "evidence": "catalyzed in the cytoplasm or the cytoplasmic leaflet of the IM",
+    "name": "inner membrane",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "evidence": "flipped from the cytoplasmic leaflet to the periplasmic leaflet",
+    "name": "periplasm",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "evidence": "transported to the OM",
+    "name": "outer membrane",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   }
+  ]
+ },
+ "processes": {
+  "interactions": [
+   {
+    "biological_state": "E. coli inner membrane",
+    "entity_1": "FtsH",
+    "entity_2": "LpxC",
+    "evidence": "FtsH was able to directly degrade LpxC",
+    "name": "FtsH degrades LpxC",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "relationship": "inhibition"
+   },
+   {
+    "biological_state": "E. coli inner membrane",
+    "entity_1": "LapB",
+    "entity_2": "FtsH",
+    "evidence": "LapB addition dramatically elevated the rate in which FtsH degraded Ec LpxC",
+    "name": "LapB activates FtsH-mediated LpxC degradation",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "relationship": "activation"
+   },
+   {
+    "biological_state": "E. coli cytoplasm",
+    "entity_1": "LapB",
+    "entity_2": "LpxC",
+    "evidence": "LapB binding is sufficient to reduce Ec LpxC activity by approximately 80%",
+    "name": "LapB inhibits LpxC",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "relationship": "inhibition"
+   },
+   {
+    "biological_state": "E. coli inner membrane",
+    "entity_1": "YejM",
+    "entity_2": "LapB",
+    "evidence": "YejM sequesters LapB, preventing FtsH-mediated proteolysis of Ec LpxC",
+    "name": "YejM inhibits LapB",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "relationship": "inhibition"
+   },
+   {
+    "biological_state": "E. coli inner membrane",
+    "entity_1": "LPS",
+    "entity_2": "YejM",
+    "evidence": "addition of LPS to YejM reduced its capacity to interact with LapB",
+    "name": "LPS inhibits YejM-LapB interaction",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "relationship": "inhibition"
+   },
+   {
+    "biological_state": "E. coli inner membrane",
+    "entity_1": "PldA",
+    "entity_2": "LpxC",
+    "evidence": "PldA activity has been shown to stabilize LpxC and increase LPS biosynthesis",
+    "name": "PldA stabilizes LpxC",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "relationship": "activation"
+   },
+   {
+    "biological_state": "E. coli cytoplasm",
+    "entity_1": "FadD",
+    "entity_2": "PldA",
+    "evidence": "function of PldA was dependent on the presence of FadD",
+    "name": "FadD activates PldA-mediated LpxC stabilization",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "relationship": "activation"
+   },
+   {
+    "biological_state": "E. coli cytoplasm",
+    "entity_1": "ObgE",
+    "entity_2": "LpxA",
+    "evidence": "ObgE inhibits LpxA activity in vivo",
+    "name": "ObgE inhibits LpxA",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "relationship": "inhibition"
+   },
+   {
+    "biological_state": "E. coli cytoplasm",
+    "entity_1": "RnhA",
+    "entity_2": "LpxA",
+    "evidence": "RnhA and RnhB have been shown to stimulate LpxA activity in vitro",
+    "name": "RnhA activates LpxA",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "relationship": "activation"
+   },
+   {
+    "biological_state": "E. coli cytoplasm",
+    "entity_1": "RnhB",
+    "entity_2": "LpxA",
+    "evidence": "RnhA and RnhB have been shown to stimulate LpxA activity in vitro",
+    "name": "RnhB activates LpxA",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "relationship": "activation"
+   },
+   {
+    "biological_state": "E. coli inner membrane",
+    "entity_1": "FtsH",
+    "entity_2": "WaaA",
+    "evidence": "FtsH was capable of directly degrading WaaA",
+    "name": "FtsH degrades WaaA",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "relationship": "inhibition"
+   },
+   {
+    "biological_state": "E. coli inner membrane",
+    "entity_1": "FtsH",
+    "entity_2": "LpxD",
+    "evidence": "LpxD is similarly proteolyzed by FtsH",
+    "name": "FtsH degrades LpxD",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "relationship": "inhibition"
+   },
+   {
+    "entity_1": "FtsH",
+    "entity_2": "LpxC",
+    "evidence": "FtsH-mediated proteolysis of LpxC is conserved in enterobacteria",
+    "name": "FtsH-mediated proteolysis of LpxC",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "relationship": "inhibition"
+   },
+   {
+    "entity_1": "YejM",
+    "entity_2": "FtsH/YciM complex",
+    "evidence": "YejM modulates activity of the YciM/FtsH protease complex",
+    "name": "YejM modulates FtsH/YciM complex",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "relationship": "interaction"
+   }
+  ],
+  "reactions": [
+   {
+    "biological_state": "E. coli cytoplasm",
+    "enzymes": [
+     {
+      "confidence": 1.0,
+      "evidence": "LpxA, the first enzyme in the lipid A biosynthesis pathway, catalyzes the reversible acylation of UDP-GlcNAc",
+      "protein": "LpxA",
+      "provenance": "extracted"
+     }
+    ],
+    "evidence": "LpxA, the first enzyme in the lipid A biosynthesis pathway, catalyzes the reversible acylation of UDP-GlcNAc using FAS II-derived β-hydroxyacyl-ACP molecules",
+    "inputs": [
+     "UDP-GlcNAc",
+     "β-hydroxyacyl-ACP"
+    ],
+    "locked_reaction_id": "rxn_lock_001",
+    "name": "LpxA reaction",
+    "outputs": [
+     "UDP-3-O-(R-3-hydroxymyristoyl)-N-acetylglucosamine"
+    ],
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "scope_membership": "core"
+   },
+   {
+    "biological_state": "E. coli cytoplasm",
+    "enzymes": [
+     {
+      "confidence": 1.0,
+      "evidence": "LpxC is a deacetylase that removes the acetyl group from the GlcNAc moiety",
+      "protein": "LpxC",
+      "provenance": "extracted"
+     }
+    ],
+    "evidence": "LpxC is a deacetylase that removes the acetyl group from the GlcNAc moiety to allow for the addition of the next acyl group",
+    "inputs": [
+     "UDP-3-O-(R-3-hydroxymyristoyl)-N-acetylglucosamine"
+    ],
+    "locked_reaction_id": "rxn_lock_003",
+    "name": "LpxC reaction",
+    "outputs": [
+     "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine"
+    ],
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "scope_membership": "core"
+   },
+   {
+    "biological_state": "E. coli cytoplasm",
+    "enzymes": [
+     {
+      "confidence": 1.0,
+      "evidence": "addition of the next acyl group by LpxD",
+      "protein": "LpxD",
+      "provenance": "extracted"
+     }
+    ],
+    "evidence": "addition of the next acyl group by LpxD",
+    "inputs": [
+     "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine"
+    ],
+    "locked_reaction_id": "rxn_lock_004",
+    "name": "LpxD reaction",
+    "outputs": [
+     "UDP-2,3-diacylglucosamine"
+    ],
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "scope_membership": "core"
+   },
+   {
+    "biological_state": "E. coli cytoplasm",
+    "enzymes": [
+     {
+      "confidence": 1.0,
+      "evidence": "removal of UMP by LpxH",
+      "protein": "LpxH",
+      "provenance": "extracted"
+     }
+    ],
+    "evidence": "removal of UMP by LpxH",
+    "inputs": [
+     "UDP-2,3-diacylglucosamine"
+    ],
+    "locked_reaction_id": "rxn_lock_005",
+    "name": "LpxH reaction",
+    "outputs": [
+     "lipid X"
+    ],
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "scope_membership": "core"
+   },
+   {
+    "biological_state": "E. coli cytoplasm",
+    "enzymes": [
+     {
+      "confidence": 1.0,
+      "evidence": "LpxB then catalyzes the formation of a tetra-acylated disaccharide intermediate",
+      "protein": "LpxB",
+      "provenance": "extracted"
+     }
+    ],
+    "evidence": "LpxB then catalyzes the formation of a tetra-acylated disaccharide intermediate",
+    "inputs": [
+     "lipid X",
+     "UDP-2,3-diacylglucosamine"
+    ],
+    "locked_reaction_id": "rxn_lock_002",
+    "name": "LpxB reaction",
+    "outputs": [
+     "tetra-acylated disaccharide intermediate"
+    ],
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "scope_membership": "core"
+   },
+   {
+    "biological_state": "E. coli cytoplasm",
+    "enzymes": [
+     {
+      "confidence": 1.0,
+      "evidence": "phosphorylated by LpxK to produce lipid IV_A",
+      "protein": "LpxK",
+      "provenance": "extracted"
+     }
+    ],
+    "evidence": "phosphorylated by LpxK to produce lipid IV_A",
+    "inputs": [
+     "tetra-acylated disaccharide intermediate"
+    ],
+    "locked_reaction_id": "rxn_lock_006",
+    "name": "LpxK reaction",
+    "outputs": [
+     "lipid IV_A"
+    ],
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "scope_membership": "core"
+   },
+   {
+    "biological_state": "E. coli cytoplasm",
+    "enzymes": [
+     {
+      "confidence": 1.0,
+      "evidence": "WaaA adds a number of Kdo residues",
+      "protein": "WaaA",
+      "provenance": "extracted"
+     }
+    ],
+    "evidence": "WaaA adds a number of Kdo residues to form the first sugar(s) of the core, resulting in Kdo-lipid IV_A",
+    "inputs": [
+     "lipid IV_A"
+    ],
+    "locked_reaction_id": "rxn_lock_009",
+    "name": "WaaA reaction",
+    "outputs": [
+     "Kdo-lipid IV_A"
+    ],
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "scope_membership": "core"
+   },
+   {
+    "biological_state": "E. coli cytoplasm",
+    "enzymes": [
+     {
+      "confidence": 1.0,
+      "evidence": "sequentially acylated by LpxL and LpxM to finally form Kdo-lipid A",
+      "protein": "LpxL",
+      "provenance": "extracted"
+     }
+    ],
+    "evidence": "sequentially acylated by LpxL and LpxM to finally form Kdo-lipid A",
+    "inputs": [
+     "Kdo-lipid IV_A"
+    ],
+    "locked_reaction_id": "rxn_lock_007",
+    "name": "LpxL reaction",
+    "outputs": [
+     "Kdo-lipid A (laurate)"
+    ],
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "scope_membership": "core"
+   },
+   {
+    "biological_state": "E. coli cytoplasm",
+    "enzymes": [
+     {
+      "confidence": 1.0,
+      "evidence": "sequentially acylated by LpxL and LpxM to finally form Kdo-lipid A",
+      "protein": "LpxM",
+      "provenance": "extracted"
+     }
+    ],
+    "evidence": "sequentially acylated by LpxL and LpxM to finally form Kdo-lipid A",
+    "inputs": [
+     "Kdo-lipid A (laurate)"
+    ],
+    "locked_reaction_id": "rxn_lock_008",
+    "name": "LpxM reaction",
+    "outputs": [
+     "Kdo-lipid A"
+    ],
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "scope_membership": "core"
+   }
+  ],
+  "transports": [
+   {
+    "cargo": "core-lipid A",
+    "elements_with_states": [
+     {
+      "biological_state": "E. coli inner membrane",
+      "element": "core-lipid A",
+      "evidence": "core-lipid A is flipped from the cytoplasmic leaflet",
+      "side": "left"
+     },
+     {
+      "biological_state": "E. coli periplasm",
+      "element": "core-lipid A",
+      "evidence": "to the periplasmic leaflet of the IM by the flippase MsbA",
+      "side": "right"
+     }
+    ],
+    "evidence": "core-lipid A is flipped from the cytoplasmic leaflet to the periplasmic leaflet of the IM by the flippase MsbA",
+    "from_biological_state": "E. coli inner membrane",
+    "name": "MsbA-mediated core-lipid A flip",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "to_biological_state": "E. coli periplasm",
+    "transporters": [
+     {
+      "evidence": "core-lipid A is flipped from the cytoplasmic leaflet to the periplasmic leaflet of the IM by the flippase MsbA",
+      "protein": "MsbA"
+     }
+    ]
+   },
+   {
+    "cargo": "core-lipid A",
+    "elements_with_states": [
+     {
+      "biological_state": "E. coli periplasm",
+      "element": "core-lipid A",
+      "evidence": "transport to the OM by the lipopolysaccharide transport (Lpt) system",
+      "side": "left"
+     },
+     {
+      "biological_state": "E. coli outer membrane",
+      "element": "core-lipid A",
+      "evidence": "transport to the OM by the lipopolysaccharide transport (Lpt) system",
+      "side": "right"
+     }
+    ],
+    "evidence": "transport to the OM by the lipopolysaccharide transport (Lpt) system",
+    "from_biological_state": "E. coli periplasm",
+    "name": "Lpt-mediated core-lipid A transport to OM",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "to_biological_state": "E. coli outer membrane"
+   }
+  ]
+ }
+}

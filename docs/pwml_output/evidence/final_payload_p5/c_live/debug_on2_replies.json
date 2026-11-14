@@ -1,0 +1,57 @@
+[
+ {
+  "try": 1,
+  "raw_reply": [
+   "{}"
+  ],
+  "repairs": [],
+  "rejected": [
+   {
+    "pointer": "/processes/transports/0",
+    "name": "TubI-mediated tubercidin export",
+    "reason": "no side with a quote found in the paper text"
+   }
+  ],
+  "error": null
+ },
+ {
+  "try": 2,
+  "raw_reply": [
+   "{\"rows\": [{\"id\": 0, \"from\": null, \"to\": {\"state\": \"extracellular\", \"compartment\": \"extracellular\", \"quote\": \"out of the cell\"}}]}"
+  ],
+  "repairs": [
+   {
+    "pointer": "/processes/transports/0",
+    "name": "TubI-mediated tubercidin export",
+    "old": [
+     "",
+     ""
+    ],
+    "new": [
+     "",
+     "extracellular"
+    ],
+    "quotes": {
+     "to_biological_state": "out of the cell"
+    }
+   }
+  ],
+  "rejected": [],
+  "error": null
+ },
+ {
+  "try": 3,
+  "raw_reply": [
+   "{}"
+  ],
+  "repairs": [],
+  "rejected": [
+   {
+    "pointer": "/processes/transports/0",
+    "name": "TubI-mediated tubercidin export",
+    "reason": "no side with a quote found in the paper text"
+   }
+  ],
+  "error": null
+ }
+]
