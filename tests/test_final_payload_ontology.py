@@ -123,8 +123,9 @@ def test_id_that_pathwhiz_already_holds_maps_to_its_row_without_the_id() -> None
 
 
 _TISSUE = [{"name": "root", "pathwhiz_id": 5}]
+_TISSUES = _TISSUE + [{"name": "leaf", "pathwhiz_id": 6}]  # P5: a sibling state whose tissue differs, so dropping an id-less location is not wildcard-bindable
 _STATES = [{"name": "s", "species": "Homo sapiens", "tissue": "root", "subcellular_location": "thylakoid membrane"},
-           {"name": "t", "species": "Homo sapiens", "tissue": "root", "subcellular_location": "cytosol"}]
+           {"name": "t", "species": "Homo sapiens", "tissue": "leaf", "subcellular_location": "cytosol"}]
 
 
 def _build(loc_rows, states=None, tissues=None):
@@ -149,15 +150,15 @@ def test_writer_drops_idless_location_and_keeps_state_flag_on_only(monkeypatch) 
     # M1 fix: the thylakoid row now carries no database id (a row with pathwhiz_id is never dropped, see the next test)
     rows = [{"name": "thylakoid membrane"}, {"name": "cytosol", "pathwhiz_id": 3}]
     monkeypatch.delenv("T2PW_FINAL_PAYLOAD", raising=False)
-    b, root = _build(copy.deepcopy(rows), tissues=_TISSUE)
+    b, root = _build(copy.deepcopy(rows), tissues=_TISSUES)
     assert _loc_names(root) == ["thylakoid membrane", "cytosol"] and "locations_dropped_no_id" not in b.layout_debug_counts
     monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "1")
-    b, root = _build(copy.deepcopy(rows), tissues=_TISSUE)
+    b, root = _build(copy.deepcopy(rows), tissues=_TISSUES)
     assert _loc_names(root) == ["cytosol"] and b.layout_debug_counts["locations_dropped_no_id"] == 1
     states = root.findall(".//biological-states/biological-state")
     assert len(states) == 2 and sum(1 for s in states if (s.findtext("subcellular-location-id") or "").strip()) == 1
     # the same location with an id found online is kept, with its id
-    b, root = _build([{"name": "thylakoid membrane", "ontology_id": "GO:0042651"}, rows[1]], tissues=_TISSUE)
+    b, root = _build([{"name": "thylakoid membrane", "ontology_id": "GO:0042651"}, rows[1]], tissues=_TISSUES)
     got = {n.findtext("name"): n.findtext("ontology-id") or None for n in root.findall(".//subcellular-locations/subcellular-location")}
     assert got == {"thylakoid membrane": "GO:0042651", "cytosol": None} and "locations_dropped_no_id" not in b.layout_debug_counts
 
@@ -186,7 +187,7 @@ def test_idless_location_kept_when_dropping_would_make_two_states_identical(monk
     ids = _state_locs(root)
     assert len(set(ids.values())) == 3 and all(ids.values())
     # no collision: s differs from u by a kept location; the unrelated id-less location is dropped
-    b, root = _build(copy.deepcopy(rows), [states[0], states[2]], tissues=_TISSUE)
+    b, root = _build(copy.deepcopy(rows), [states[0], dict(states[2], tissue="leaf")], tissues=_TISSUES)
     assert _loc_names(root) == ["cytosol"] and b.layout_debug_counts["locations_dropped_no_id"] == 2
     assert "locations_kept_state_collision" not in b.layout_debug_counts
 

@@ -813,6 +813,87 @@ class DeterministicPwmlBuilder:
             name = new_name
         return {"name": name, "ontology-id": onto}
 
+    def _apply_wildcard_guard(
+        self,
+        ir: Dict[str, Any],
+        item_by_key: Dict[str, Dict[str, Dict[str, Any]]],
+        droppable: Dict[str, Dict[str, Dict[str, Any]]],
+        lookup: Any,
+    ) -> None:
+        """Final payload (D-W20a, D-W21 a/b): omit location / tissue / cell-type rows that PathWhiz cannot create (no database id,
+        no ontology id) from the PWML, and write the states that referenced them without that component (a state needs only one).
+        The importer treats an omitted component as a WILDCARD (find_by without nil ids), so a row is kept, by name, whenever
+        omitting it would let a state bind to another state: its remaining components match (are a subset of) another state's, or
+        it would be identical to another, or it would keep no tissue / cell type / location. The whole set of states is evaluated
+        at once; rows are restored (location, tissue, cell type order) until no state is newly wildcard-bindable. Restoring a
+        row never makes another state bindable (every state that references the row gains the component together), so this ends,
+        with every row kept at worst. A state already bindable before any drop (full components) is not counted against us."""
+        order = ("subcellular_locations", "tissues", "cell_types")
+        refs = {"subcellular_locations": "subcellular_location_key", "tissues": "tissue_key", "cell_types": "cell_type_key"}
+        states = []
+        for record in ir.get("biological_states", []) if isinstance(ir.get("biological_states"), list) else []:
+            if not isinstance(record, dict):
+                continue
+            comps = {}
+            for ns in order:
+                key = record.get(refs[ns])
+                comps[ns] = str(key) if key is not None and str(key) in item_by_key[ns] else None
+            states.append((lookup("species", record.get("species_key")), comps))
+
+        def token(ns: str, key: Optional[str]) -> Any:
+            if key is None:
+                return None
+            item = item_by_key[ns][key]
+            return (str(item.get("name") or "").casefold(), item.get("ontology-id"))
+
+        kept: set = set()
+
+        def view(st: Any, dropping: bool) -> tuple:
+            sp, comps = st
+            return (sp,) + tuple(
+                None if comps[ns] is None or (dropping and comps[ns] in droppable[ns] and (ns, comps[ns]) not in kept)
+                else token(ns, comps[ns])
+                for ns in order
+            )
+
+        def within(a: tuple, b: tuple) -> bool:  # every set component of a equals b's: a's lookup can bind to b
+            return all(x is None or x == y for x, y in zip(a, b))
+
+        full = [view(st, False) for st in states]
+
+        def dropped_of(st: Any) -> List[Any]:
+            return [(ns, st[1][ns]) for ns in order
+                    if st[1][ns] is not None and st[1][ns] in droppable[ns] and (ns, st[1][ns]) not in kept]
+
+        def violates(i: int) -> bool:
+            if not dropped_of(states[i]):
+                return False
+            v = view(states[i], True)
+            if all(x is None for x in v[1:]):
+                return True  # species alone (or nothing) is a wildcard
+            return any(j != i and within(v, view(states[j], True)) and not within(full[i], full[j]) for j in range(len(states)))
+
+        changed = True
+        while changed:
+            changed = False
+            for i, st in enumerate(states):
+                while violates(i):
+                    kept.add(dropped_of(st)[0])
+                    changed = True
+        counters = {"subcellular_locations": ("locations_dropped_no_id", "subcellular-locations"),
+                    "tissues": ("tissues_dropped_no_id", "tissues"),
+                    "cell_types": ("cell_types_dropped_no_id", "cell-types")}
+        for ns in order:
+            for key, item in droppable[ns].items():
+                if (ns, key) in kept:
+                    names = ["components_kept_wildcard_guard"] + (["locations_kept_state_collision"] if ns == "subcellular_locations" else [])
+                else:
+                    names = [counters[ns][0]]
+                    self.section_items[counters[ns][1]].remove(item)
+                    self._ir_key_ids.get(ns, {}).pop(key, None)
+                for name in names:
+                    self.layout_debug_counts[name] = self.layout_debug_counts.get(name, 0) + 1
+
     def _make_compound_identity_fields_optional(self) -> None:
         compound_sig = self.signature.sections.get("compounds")
         if compound_sig is None:
@@ -1017,15 +1098,31 @@ class DeterministicPwmlBuilder:
 
         self.section_items = {}
 
+        # final payload: rows PathWhiz could not create (no database id, no ontology id, name not in the vocabulary) are candidates
+        # to be omitted from the PWML; the wildcard guard below decides which actually are
+        item_by_key: Dict[str, Dict[str, Dict[str, Any]]] = {"subcellular_locations": {}, "tissues": {}, "cell_types": {}}
+        droppable: Dict[str, Dict[str, Dict[str, Any]]] = {"subcellular_locations": {}, "tissues": {}, "cell_types": {}}
+
+        def idless_unmapped(record: Dict[str, Any], id_keys: Sequence[str]) -> bool:
+            return (
+                final_payload_enabled()
+                and self._last_vocabulary_outcome == "unmapped"
+                and first_int(record, id_keys) is None
+                and not record.get("ontology_id")
+                and not record.get("ontology-id")
+            )
+
         self.section_items["cell-types"] = []
         for record in ir.get("cell_types", []) if isinstance(ir.get("cell_types"), list) else []:
             if not isinstance(record, dict):
                 continue
             rid = id_for(record, ["pathwhiz_id", "pathbank_cell_type_id", "pw_cell_type_id"], self.ids)
             remember("cell_types", record.get("key"), rid)
-            self.section_items["cell-types"].append(
-                {"id": rid, **self._vocabulary_fields("cell-type", record)}
-            )
+            ct_item = {"id": rid, **self._vocabulary_fields("cell-type", record)}
+            self.section_items["cell-types"].append(ct_item)
+            item_by_key["cell_types"][str(record.get("key"))] = ct_item
+            if idless_unmapped(record, ["pathwhiz_id", "pathbank_cell_type_id", "pw_cell_type_id"]):
+                droppable["cell_types"][str(record.get("key"))] = ct_item
 
         self.section_items["species"] = []
         species_id_by_name: Dict[str, int] = {}
@@ -1054,8 +1151,6 @@ class DeterministicPwmlBuilder:
             )
 
         self.section_items["subcellular-locations"] = []
-        loc_item_by_key: Dict[str, Dict[str, Any]] = {}
-        droppable_locations: Dict[str, Dict[str, Any]] = {}  # final payload: id-less locations PathWhiz could not create
         for record in ir.get("subcellular_locations", []) if isinstance(ir.get("subcellular_locations"), list) else []:
             if not isinstance(record, dict):
                 continue
@@ -1068,15 +1163,9 @@ class DeterministicPwmlBuilder:
             remember("subcellular_locations", record.get("key"), rid)
             loc_item = {"id": rid, **fields}
             self.section_items["subcellular-locations"].append(loc_item)
-            loc_item_by_key[str(record.get("key"))] = loc_item
-            if (
-                final_payload_enabled()
-                and self._last_vocabulary_outcome == "unmapped"
-                and first_int(record, ["pathwhiz_id", "pathbank_subcellular_location_id", "pw_subcellular_location_id"]) is None
-                and not record.get("ontology_id")
-                and not record.get("ontology-id")
-            ):
-                droppable_locations[str(record.get("key"))] = loc_item
+            item_by_key["subcellular_locations"][str(record.get("key"))] = loc_item
+            if idless_unmapped(record, ["pathwhiz_id", "pathbank_subcellular_location_id", "pw_subcellular_location_id"]):
+                droppable["subcellular_locations"][str(record.get("key"))] = loc_item
 
         self.section_items["tissues"] = []
         for record in ir.get("tissues", []) if isinstance(ir.get("tissues"), list) else []:
@@ -1084,51 +1173,19 @@ class DeterministicPwmlBuilder:
                 continue
             rid = id_for(record, ["pathwhiz_id", "pathbank_tissue_id", "pw_tissue_id"], self.ids)
             remember("tissues", record.get("key"), rid)
-            self.section_items["tissues"].append(
-                {
-                    "id": rid,
-                    **self._vocabulary_fields("tissue", record),
-                    "visualization-template-id": None,
-                    "drawable-image-id": None,
-                }
-            )
+            tissue_item = {
+                "id": rid,
+                **self._vocabulary_fields("tissue", record),
+                "visualization-template-id": None,
+                "drawable-image-id": None,
+            }
+            self.section_items["tissues"].append(tissue_item)
+            item_by_key["tissues"][str(record.get("key"))] = tissue_item
+            if idless_unmapped(record, ["pathwhiz_id", "pathbank_tissue_id", "pw_tissue_id"]):
+                droppable["tissues"][str(record.get("key"))] = tissue_item
 
-        if droppable_locations:
-            # D-W20a: PathWhiz needs name + ontology id to create a location row, so an id-less location is dropped (a state needs
-            # only one component and the importer skips an empty id) -- unless dropping makes a state identical to another state
-            # of the run (PathWhiz uniqueness: species, tissue, location, cell type) or leaves it with no component: then it is
-            # kept by name as before. Keeping a location only adds distinctions, so one pass settles it.
-            state_parts = []
-            for record in ir.get("biological_states", []) if isinstance(ir.get("biological_states"), list) else []:
-                if not isinstance(record, dict):
-                    continue
-                loc_key = str(record.get("subcellular_location_key")) if record.get("subcellular_location_key") is not None else None
-                state_parts.append((
-                    (lookup("species", record.get("species_key")), lookup("tissues", record.get("tissue_key")),
-                     lookup("cell_types", record.get("cell_type_key"))),
-                    loc_key if loc_key in loc_item_by_key else None,
-                ))
-
-            def loc_token(key: Optional[str], dropped: bool) -> Any:
-                if key is None or (dropped and key in droppable_locations):
-                    return None
-                item = loc_item_by_key[key]
-                return (str(item.get("name") or "").casefold(), item.get("ontology-id"))
-
-            keep: set = set()
-            for i, (rest, loc) in enumerate(state_parts):
-                if loc in droppable_locations and all(x is None for x in rest[1:]):
-                    keep.add(loc)  # no tissue, cell type or location left: species alone is a wildcard in the importer
-                for rest2, loc2 in state_parts[i + 1:]:
-                    if (rest == rest2 and loc_token(loc, False) != loc_token(loc2, False)
-                            and loc_token(loc, True) == loc_token(loc2, True)):
-                        keep.update(k for k in (loc, loc2) if k in droppable_locations)
-            for key, item in droppable_locations.items():
-                counter = "locations_kept_state_collision" if key in keep else "locations_dropped_no_id"
-                self.layout_debug_counts[counter] = self.layout_debug_counts.get(counter, 0) + 1
-                if key not in keep:
-                    self.section_items["subcellular-locations"].remove(item)
-                    self._ir_key_ids["subcellular_locations"].pop(key, None)
+        if any(droppable.values()):
+            self._apply_wildcard_guard(ir, item_by_key, droppable, lookup)
 
         biological_states = []
         for record in ir.get("biological_states", []) if isinstance(ir.get("biological_states"), list) else []:
