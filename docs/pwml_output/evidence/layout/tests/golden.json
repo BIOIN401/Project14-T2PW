@@ -1,0 +1,214 @@
+{
+  "label": "lay-golden",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "C:/t/lay/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/lay",
+    "-q",
+    "--basetemp=C:/t/layx/tmpbase/golden-41101-158",
+    "tests/test_batch_driver_seam_golden.py",
+    "tests/test_c011_freeze_seam_golden_equivalence.py",
+    "tests/test_streamlit_stage8_export_contract.py",
+    "tests/test_streamlit_quarantine_boundary.py"
+  ],
+  "cwd": "C:\\t\\lay",
+  "started_at": "2026-11-14T06:11:04+00:00",
+  "finished_at": "2026-11-14T06:15:36+00:00",
+  "duration_seconds": 272.0678731999942,
+  "timeout_seconds": 1500.0,
+  "root_pid": 653632,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 654692,
+      "name": "python.exe",
+      "ppid": 653632
+    },
+    {
+      "pid": 654648,
+      "name": "git.exe",
+      "ppid": 654692
+    },
+    {
+      "pid": 656856,
+      "name": "git.exe",
+      "ppid": 654692
+    },
+    {
+      "pid": 653280,
+      "name": "git.exe",
+      "ppid": 654692
+    },
+    {
+      "pid": 645372,
+      "name": "python.exe",
+      "ppid": 657504
+    },
+    {
+      "pid": 657504,
+      "name": "python.exe",
+      "ppid": 654692
+    },
+    {
+      "pid": 651236,
+      "name": "python.exe",
+      "ppid": 654692
+    },
+    {
+      "pid": 637344,
+      "name": "python.exe",
+      "ppid": 651236
+    },
+    {
+      "pid": 657256,
+      "name": "git.exe",
+      "ppid": 637344
+    },
+    {
+      "pid": 657924,
+      "name": "git.exe",
+      "ppid": 637344
+    },
+    {
+      "pid": 654928,
+      "name": "git.exe",
+      "ppid": 637344
+    },
+    {
+      "pid": 659008,
+      "name": "python.exe",
+      "ppid": 659128
+    },
+    {
+      "pid": 659128,
+      "name": "python.exe",
+      "ppid": 654692
+    },
+    {
+      "pid": 655796,
+      "name": "python.exe",
+      "ppid": 654692
+    },
+    {
+      "pid": 658772,
+      "name": "python.exe",
+      "ppid": 655796
+    },
+    {
+      "pid": 657132,
+      "name": "python.exe",
+      "ppid": 654692
+    },
+    {
+      "pid": 659148,
+      "name": "python.exe",
+      "ppid": 657132
+    },
+    {
+      "pid": 654444,
+      "name": "python.exe",
+      "ppid": 654692
+    },
+    {
+      "pid": 658828,
+      "name": "python.exe",
+      "ppid": 654444
+    },
+    {
+      "pid": 658472,
+      "name": "python.exe",
+      "ppid": 654692
+    },
+    {
+      "pid": 655368,
+      "name": "python.exe",
+      "ppid": 658472
+    }
+  ],
+  "descendants_terminated": [
+    637344,
+    645372,
+    651236,
+    653280,
+    654444,
+    654648,
+    654692,
+    654928,
+    655368,
+    655796,
+    656856,
+    657132,
+    657256,
+    657504,
+    657924,
+    658472,
+    658772,
+    658828,
+    659008,
+    659128,
+    659148
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 251140,
+      "name": "python.exe"
+    },
+    {
+      "pid": 404548,
+      "name": "python.exe"
+    },
+    {
+      "pid": 407620,
+      "name": "python.exe"
+    },
+    {
+      "pid": 654452,
+      "name": "python.exe"
+    },
+    {
+      "pid": 656000,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/lay/docs/pwml_output/evidence/layout/tests/golden.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "b84f2490cb90a88ed2c129ec8be174912247a11d",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "lay",
+    "token": "lay:654452:f2fd45cd8d730016",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

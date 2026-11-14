@@ -98,7 +98,13 @@ What the PathWhiz screenshots show:
 * The control PathBank file PW012926 (`pathwhiz/control_PW012926.png`) is drawn as before.
 
 ## 6. Tests (bounded wrapper, 0 surviving processes, reports in `evidence/layout/tests/`)
-TESTS_TABLE
+| suite | result | report |
+|---|---|---|
+| focused: `test_pwml_layout.py` (8 tests, new) + `test_pwml_writer.py`, `test_pwml_ir.py`, `test_pwml_ir_duplicate_row_refusal.py`, `test_final_payload_writer_fixes.py` | **133 passed** | `tests/focused.*` |
+| SMOKE (22 files, TEST_MATRIX command) | **511 passed** | `tests/smoke.*` |
+| golden seam (4 files, unedited) | **38 passed** | `tests/golden.*` (`scripts/golden_try.sh`: retries the lock acquire, phase 5 was running live legs back to back) |
+
+All with `PYTHONPATH=<tree>/src`, `T2PW_OFFLINE_CURATOR=1`, the flag unset, a fresh `--basetemp`, heavy lock `lay`, `FINAL SURVIVING COUNT 0`. No existing test was edited.
 
 ## 7. Open questions for the product owner
 1. **Flip the default to v2?** Options: flip now (all quality counts at 0, content identical, harness not worse); or first look at more PathWhiz screenshots / let a curator judge. Cost of waiting: users keep getting v1 pictures.
