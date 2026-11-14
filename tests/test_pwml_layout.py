@@ -54,7 +54,7 @@ def _strip(root):
             el.text = "#"
         elif tag == "options" and ptag == "edge" and el.text:
             o = json.loads(el.text)
-            el.text = json.dumps({k: ("#" if k.endswith("_path") and v is not None else v) for k, v in o.items()}, sort_keys=True)
+            el.text = json.dumps({k: ("#" if k.endswith("_path") else v) for k, v in o.items()}, sort_keys=True)
     return etree.tostring(root, method="c14n")
 
 
