@@ -36,7 +36,7 @@ from typing import Any, Dict, Iterable, List, Optional, Tuple
 from t2pw.clean_model.fill.cache import Cache, CachedFetcher
 from t2pw.clean_model.fill.http import FetchError
 from t2pw.clean_model.fill.sources import OLS4, _cf
-from t2pw.pwml.vocabulary_map import PATHWHIZ_ROWS, SYNONYMS, map_vocabulary_name, membrane_row, organism_kinds, singular_form
+from t2pw.pwml.vocabulary_map import PATHWHIZ_ROWS, SYNONYMS, map_vocabulary_name, membrane_row, organism_kinds, row_id, singular_form
 
 # payload key, PWML kind (vocabulary_map), biological_states key(s), OLS ontology, id prefix, restrict-to-branch IRI
 _SPECS = (
@@ -221,7 +221,7 @@ def fill_ontology_ids(payload: Dict[str, Any], fetcher: Any, cache: Optional[Cac
     rep: Dict[str, Any] = {"entries": [], "refused": [], "counts": {"looked_up": 0, "resolved": 0, "ambiguous": 0,
                                                                       "no_exact_match": 0, "fetch_error": 0,
                                                                       "skipped_after_fetch_error": 0},
-                           "extra": {"singular_form_resolved": 0, "numbered_context_resolved": 0, "numbered_context_refused": {},
+                           "extra": {"singular_form_resolved": 0, "numbered_context_resolved": 0, "numbered_context_refused": {}, "id_used_by_other_row": 0,
                                      "cellosaurus_found": 0, "cellosaurus_refused": {}, "membrane_rows_by_organism": []}}
     extra = rep["extra"]
     if ents is None:
@@ -238,8 +238,19 @@ def fill_ontology_ids(payload: Dict[str, Any], fetcher: Any, cache: Optional[Cac
             if n and _cf(n) not in have:
                 have.add(_cf(n))
                 rows.append({"name": n, "_from_state": True})
-        for row in rows:
-            if not isinstance(row, dict) or not str(row.get("name") or "").strip():
+        # ids already held by a row of this list, or reached by a row's reviewed name mapping: a second row must not resolve to the same
+        # ontology id / PathWhiz row (PathWhiz ontology ids are unique, and two rows for one id are two names for one entity)
+        claimed: Dict[str, str] = {}
+        for r in rows:
+            if isinstance(r, dict) and str(r.get("name") or "").strip():
+                n0 = str(r["name"]).strip()
+                m0 = map_vocabulary_name(kind, n0, None, location_organisms(payload, n0, state_keys) if kind == "subcellular-location" else None)
+                held = r.get("ontology_id") or r.get("ontology-id") or (row_id(kind, m0[0]) if m0[2] in ("exact", "mapped") else None)
+                if held:
+                    claimed.setdefault(str(held), n0)
+        # plural-looking names last, so the exact (singular) name of the same entity claims the id first
+        for row in sorted((r for r in rows if isinstance(r, dict)), key=lambda r: singular_form(r.get("name")) is not None):
+            if not str(row.get("name") or "").strip():
                 continue
             name, cur = str(row["name"]).strip(), row.get("ontology_id") or row.get("ontology-id")
             orgs = location_organisms(payload, name, state_keys) if kind == "subcellular-location" else None
@@ -287,6 +298,10 @@ def fill_ontology_ids(payload: Dict[str, Any], fetcher: Any, cache: Optional[Cac
                 rep["counts"]["ambiguous"] += 1
                 rep["refused"].append({"kind": _KIND_LABEL[kind], "name": name, "reason": "ambiguous",
                                        "candidates": [h["id"] for h in hits]})
+            elif hits and hits[0]["id"] in claimed and _cf(claimed[hits[0]["id"]]) != _cf(name):
+                extra["id_used_by_other_row"] += 1
+                rep["refused"].append({"kind": _KIND_LABEL[kind], "name": name, "reason": "id_used_by_other_row",
+                                       "candidates": [hits[0]["id"]], "other_row": claimed[hits[0]["id"]]})
             elif not hits:
                 rep["counts"]["no_exact_match"] += 1
                 rep["refused"].append({"kind": _KIND_LABEL[kind], "name": name, "reason": "no_exact_match",
@@ -296,6 +311,7 @@ def fill_ontology_ids(payload: Dict[str, Any], fetcher: Any, cache: Optional[Cac
                 h = hits[0]
                 row["ontology_id"] = h["id"]
                 row.pop("_from_state", None)
+                claimed[h["id"]] = name
                 rep["counts"]["resolved"] += 1
                 e = {"kind": _KIND_LABEL[kind], "entity": name, "field": "ontology_id", "accession": h["id"],
                      "source": "OLS4", "label": h["label"], "match_type": h["match_type"],

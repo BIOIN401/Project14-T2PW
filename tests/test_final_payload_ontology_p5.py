@@ -70,7 +70,7 @@ def test_ols_singular_is_a_second_exact_lookup_and_the_matched_form_is_recorded(
     e = next(x for x in rep["entries"] if x["entity"] == "synaptic vesicles")
     assert e["matched_form"] == "synaptic vesicle" and e["match_type"] == "exact_label" and rep["extra"]["singular_form_resolved"] == 1
     assert "matched_form" not in next(x for x in rep["entries"] if x["entity"] == "synaptic cleft")
-    assert [c[1]["q"] for c in f.calls] == ["synaptic vesicles", "synaptic vesicle", "synaptic cleft"]  # the exact name first, no singular
+    assert [c[1]["q"] for c in f.calls] == ["synaptic cleft", "synaptic vesicles", "synaptic vesicle"]  # plural-looking names last; exact name first
 
 
 # ---- B: Cellosaurus ----------------------------------------------------------------------------------------------------------
@@ -184,16 +184,39 @@ def test_numbered_name_resolves_only_when_the_paper_names_exactly_one_cl_term() 
     assert {c[1]["q"] for c in f.calls if "ols4" in c[0]} == {"Type II cell"}
 
 
-def test_numbered_name_uses_the_payloads_own_full_name_and_the_reviewed_synonym() -> None:
-    # the payload also carries "Type III taste cell" (not a CL label; the reviewed vocabulary synonym names CL:0002285)
-    p = _num_payload("Type III cells", "Type III taste cell")
-    rep = fill_ontology_ids(p, FakeFetcher([]), Cache(None), TODAY)
-    rows = {r["name"]: r.get("ontology_id") for r in p["entities"]["cell_types"]}
-    assert rows["Type III cells"] == "CL:0002285"
-    e = next(x for x in rep["entries"] if x["entity"] == "Type III cells")
-    assert e["match_type"] == "reviewed_synonym" and e["context_source"] == "payload cell types"
+def test_numbered_name_uses_the_reviewed_synonym_and_never_doubles_a_row_the_payload_already_has() -> None:
+    # "type III taste cell" is not a CL label; the reviewed vocabulary synonym names CL:0002285 (PathWhiz row 'type III taste bud cell')
+    p = _num_payload("Type III cells")
+    rep = fill_ontology_ids(p, FakeFetcher([]), Cache(None), TODAY, paper_text="Type III taste cells carry synapses. Type III taste cells sense sour.")
+    e = rep["entries"][0]
+    assert p["entities"]["cell_types"][0]["ontology_id"] == "CL:0002285" and e["match_type"] == "reviewed_synonym"
+    assert (e["context_phrase"], e["context_source"], e["context_count"]) == ("type iii taste cell", "paper text", 2)
     # the id maps to the PathWhiz row by id in the writer, with no id written
     assert map_vocabulary_name("cell-type", "Type III cells", "CL:0002285") == ("type III taste bud cell", None, "mapped_by_id")
+    # the payload also carries "Type III taste cell", which the writer already maps to that row: a second row must not reach it
+    p = _num_payload("Type III cells", "Type III taste cell", "Type III cell")
+    rep = fill_ontology_ids(p, FakeFetcher([]), Cache(None), TODAY)
+    assert not any(r.get("ontology_id") for r in p["entities"]["cell_types"])
+    assert [(r["name"], r["reason"], r["other_row"]) for r in rep["refused"]] == [
+        ("Type III cell", "id_used_by_other_row", "Type III taste cell"), ("Type III cells", "id_used_by_other_row", "Type III taste cell")]
+    assert rep["extra"]["id_used_by_other_row"] == 2 and rep["extra"]["numbered_context_resolved"] == 0
+
+
+def test_two_names_for_one_ontology_term_resolve_only_one_row_the_exact_name() -> None:
+    # synaptic vesicles (plural, listed first) and synaptic vesicle: the exact name keeps GO:0008021, the plural is refused (one id, one row)
+    p = {"entities": {"subcellular_locations": [{"name": "synaptic vesicles"}, {"name": "synaptic vesicle"}]}, "biological_states": []}
+    f = FakeFetcher([("ols4", {"q": "synaptic vesicle"}, ols(("GO:0008021", "synaptic vesicle", [])))])
+    rep = fill_ontology_ids(p, f, Cache(None), TODAY)
+    rows = {r["name"]: r.get("ontology_id") for r in p["entities"]["subcellular_locations"]}
+    assert rows == {"synaptic vesicles": None, "synaptic vesicle": "GO:0008021"}
+    assert rep["refused"] == [{"kind": "location", "name": "synaptic vesicles", "reason": "id_used_by_other_row",
+                               "candidates": ["GO:0008021"], "other_row": "synaptic vesicle"}]
+    assert rep["counts"]["resolved"] == 1 and rep["extra"]["singular_form_resolved"] == 0
+    # an id the payload already carries on another row blocks too (existing ids are never touched, never doubled)
+    p = {"entities": {"subcellular_locations": [{"name": "synaptic vesicle", "ontology_id": "GO:0008021"}, {"name": "synaptic vesicles"}]},
+         "biological_states": []}
+    rep = fill_ontology_ids(p, f, Cache(None), TODAY)
+    assert p["entities"]["subcellular_locations"][1].get("ontology_id") is None and rep["refused"][0]["reason"] == "id_used_by_other_row"
 
 
 # ---- E: organism-aware inner / outer membrane ---------------------------------------------------------------------------------

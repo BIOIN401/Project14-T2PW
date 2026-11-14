@@ -286,6 +286,12 @@ def organism_kinds(species: Iterable[Tuple[Any, Any]]) -> frozenset:
     return frozenset(organism_kind(n, c) or "unknown" for n, c in species)
 
 
+def row_id(kind: str, row_name: Any) -> Optional[str]:
+    """The ontology id of the PathWhiz row called ``row_name`` (case-insensitive), or None."""
+    name = _ROW_KEYS.get(kind, {}).get(str(row_name or "").strip().casefold())
+    return PATHWHIZ_ROWS[kind][name] if name else None
+
+
 def membrane_row(name: Any) -> Optional[str]:
     """The PathWhiz bacterial membrane row a name stands for (inner membrane, outer membrane, with an optional (IM) / (OM)), else None."""
     m = _MEMBRANE_NAME.match(re.sub(r"\s+", " ", str(name or "")).strip().casefold())
