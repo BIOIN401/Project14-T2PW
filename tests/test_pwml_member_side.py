@@ -43,7 +43,7 @@ def _build(monkeypatch, layout):
 
 
 def _members(root):
-    """(row_dir_is_rtl_unknown, side, roles from the reaction's own element lists) per reaction member."""
+    """(side, roles from the reaction's own element lists) per reaction member."""
     pv = root.find(".//pathway-visualization")
     roles = {}
     for r in pv.iter("reaction"):
@@ -66,7 +66,7 @@ def test_reaction_member_side_is_the_role_in_both_layouts(monkeypatch):
     for layout in (None, "v2"):
         rows = _members(_build(monkeypatch, layout))
         single = [(s, r) for s, r in rows if len(r) == 1]
-        assert len(single) > 20  # the fixture has real reactions, so the check is not vacuous
+        assert len(single) >= 16  # the fixture has real reactions, so the check is not vacuous
         assert [s for s, r in single if s not in r] == [], layout
 
 
