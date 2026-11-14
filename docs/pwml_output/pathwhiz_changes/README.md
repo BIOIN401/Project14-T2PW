@@ -39,6 +39,7 @@ Details are in `tools/pathwhiz_import/README.md`. Harness, 59 files, writer flag
 | 01 | `01-vcv-node-typo.patch` | vacuous edge loop used the wrong variable | read from code, not reproduced |
 | 02 | `02-transport-biological-state-remap.patch` | remap left/right biological state ids | 37 of 37 transports lost, empty DB |
 | 03 | `03-transport-transporter-remap.patch` | remap transport-transporter ids, add `@transport_transporter_list` | 19 messages in 12 files down to 3 in 3 |
+| 04 | `04-biological-state-exact-match.patch` (optional copy) | an omitted biological-state component matches nil, not any value | harness, 39 files: states created equal states in the file for the 3 large PathBank controls (262 to 273, 176 to 183, 342 to 351); 3 writer files gain a transport; 15 files without bindable states identical |
 
 ## Stacked branches (PO amendment 2026-11-13; the branches are now the source of truth, the .patch files are optional copies)
 Repo: the PathWhiz app checkout (owner's folder, never touched). Worktrees under `C:/t/pwpr/NN`. Not pushed.
@@ -48,5 +49,6 @@ Repo: the PathWhiz app checkout (owner's folder, never touched). Worktrees under
 | 01 | `t2pw/01-vcv-node-typo` | `17af3272` | `test-prod-with-parser-fix` `6e11df0e` |
 | 02 | `t2pw/02-transport-state-remap` | `48ab7499` | 01 |
 | 03 | `t2pw/03-transport-transporter-remap` | `c5c12d69` | 02 |
+| 04 | `t2pw/04-biological-state-exact-match` | `80bdaca7` | 03 |
 
 The owner's uncommitted change in `lib/pwml_parser.rb` (the `element-id` branch, 10 lines) is in no branch. Check: tip of 03 (`c5c12d69`) plus that change (diff between the committed HEAD and the 2026-11-11 backup) gives a `lib/pwml_parser.rb` with sha256 `eb00ccaaf04fcdf6d7454070bb7300787442ce16a200d16d58e7b2208ecfffae`, equal to the file the harness imports (the owner's working copy, which the harness clones and patches with `git diff HEAD`). The harness keeps importing from the owner's working copy, unchanged.
