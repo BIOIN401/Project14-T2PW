@@ -15,7 +15,7 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from t2pw.pwml.layout import _path, _pava, layout_version  # noqa: E402
+from t2pw.pwml.layout import _path, _pava, layout_version, relayout  # noqa: E402
 from t2pw.pwml.validate import discover_structure_signature  # noqa: E402
 from t2pw.pwml.writer import DeterministicPwmlBuilder  # noqa: E402
 
@@ -50,11 +50,11 @@ def _strip(root):
             el.text = None
         elif tag in ("x", "y", "width", "height") and len(el) == 0:
             el.text = "#"
-        elif (tag == "path" and ptag == "edge") or (tag == "side" and ptag.startswith("reaction-")):
+        elif tag == "path" and ptag == "edge":
             el.text = "#"
         elif tag == "options" and ptag == "edge" and el.text:
             o = json.loads(el.text)
-            el.text = json.dumps({k: ("#" if k.endswith("_path") else v) for k, v in o.items()}, sort_keys=True)
+            el.text = json.dumps({k: ("#" if k.endswith("_path") and v is not None else v) for k, v in o.items()}, sort_keys=True)
     return etree.tostring(root, method="c14n")
 
 
@@ -125,3 +125,70 @@ def test_path_is_straight_cubic_segments():
 def test_pava_keeps_separation_and_fits_targets():
     assert _pava([0, 0, 0], [0, 10, 10]) == [-10.0, 0.0, 10.0]
     assert _pava([0, 100], [0, 10]) == [0.0, 100.0]
+
+
+def _ids():
+    n = [1000]
+
+    def nxt():
+        n[0] += 1
+        return n[0]
+    return nxt
+
+
+def _loc(i, state, w="160", h="60", hidden=False, tid=81):
+    return {"id": i, "compound-id": i, "biological-state-id": state, "visualization-template-id": tid,
+            "hidden": hidden, "x": 0, "y": 0, "zindex": 10, "font-size": "regular", "width": w, "height": h}
+
+
+def test_relayout_empty_items_gives_a_small_valid_canvas():
+    w, h = relayout({}, _ids())
+    assert w > 0 and h > 0
+
+
+def test_relayout_edge_cases_and_determinism():
+    arrow = json.dumps({"start_arrow": True, "start_flat_arrow": False, "end_arrow": False, "end_flat_arrow": False,
+                        "start_arrow_path": "M 0 0 L 0 0 L 0 0"})
+    items = {
+        "biological-states": [{"id": 1, "name": "cytosol state"}, {"id": 2, "name": "nucleus state"}],
+        "compound-locations": [_loc(1, 1), _loc(2, 1, w="160.0"), _loc(3, 1, hidden=True), _loc(4, 2)],
+        "protein-locations": [dict(_loc(5, 1, "150", "70", tid=2), **{"protein-id": 5})],
+        "protein-complex-visualizations": [
+            {"id": 50, "protein_complex_protein_visualizations": [{"id": 51, "protein-location-id": 5}]},
+            {"id": 60, "protein_complex_protein_visualizations": []},  # a complex with nothing drawable
+        ],
+        "edges": [{"id": 70, "path": "M0 0", "hidden": False, "options": None},
+                  {"id": 71, "path": "M0 0", "hidden": False, "options": arrow},
+                  {"id": 72, "path": "M0 0", "hidden": True, "options": "{}"},
+                  {"id": 73, "path": "M0 0", "hidden": False, "options": arrow},
+                  {"id": 74, "path": "M9 9 L8 8", "hidden": False, "options": None}],  # tied to nothing
+        "reaction-visualizations": [{"id": 80, "reaction-id": 1, "biological-state-id": 1,
+                                     "reaction_compound_visualizations": [
+                                         {"compound-location-id": 1, "edge-id": 70, "side": "Right"},
+                                         {"compound-location-id": 2, "edge-id": 71, "side": "Left"}],
+                                     "reaction_enzyme_visualizations": [{"protein-complex-visualization-id": 50}]}],
+        "interaction-visualizations": [{"id": 90, "interaction_compound_visualizations": [
+            {"compound-location-id": 4, "edge-id": 72, "side": "Left"}],
+            "interaction_protein_complex_visualizations": [
+            {"protein-complex-visualization-id": 60, "edge-id": 73, "side": "Right"}]}],
+        "bound-visualizations": [{"id": 95, "biological-state-id": 1}, {"id": 96, "biological-state-id": 3}],
+    }
+    a, b = copy.deepcopy(items), copy.deepcopy(items)
+    wa, ha = relayout(a, _ids())
+    assert (wa, ha) == relayout(b, _ids()) and a == b  # deterministic
+    # side is the reaction side PathWhiz reads, never geometry
+    assert [m["side"] for m in a["reaction-visualizations"][0]["reaction_compound_visualizations"]] == ["Right", "Left"]
+    # substrate (no arrow) left of the enzyme, product (arrow) right of it
+    loc = {it["id"]: it for sec in ("compound-locations", "protein-locations") for it in a[sec]}
+    assert loc[1]["x"] < loc[5]["x"] < loc[2]["x"]
+    tip = json.loads(a["edges"][1]["options"])["start_arrow_path"].split()[4:6]
+    assert tip == [a["edges"][1]["path"].split()[0][1:], a["edges"][1]["path"].split()[1]]  # arrow at the product end
+    # interaction with an undrawable side: a stub point, an arrow that is still a real arrow
+    assert json.loads(a["edges"][3]["options"])["start_arrow_path"] is not None
+    assert a["edges"][4]["path"] == "M9 9 L8 8"  # nothing to attach it to: left as written
+    assert loc[3]["x"] >= 0 and loc[3]["y"] >= 0 and loc[3]["x"] + 200 <= wa
+    assert loc[2]["width"] == "200"  # compound template 81 is drawn at its template size
+    bv = {b["id"]: b for b in a["bound-visualizations"]}
+    assert bv[95]["x"] <= loc[1]["x"] and bv[96]["width"] == "200"  # empty state: a small box of its own
+    assert [l["label-text"] for l in a["label-locations"]] == ["cytosol", "nucleus"]
+    assert len(a["membrane-visualizations"]) == 2

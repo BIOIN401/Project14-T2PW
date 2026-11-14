@@ -1,15 +1,16 @@
 """PWML layout v2: recompute the geometry of a built PWML (``T2PW_PWML_LAYOUT=v2``; default ``v1`` = unchanged).
 
-Runs on the writer's ``section_items`` after every element and id exists, and changes geometry only:
-location x/y, the stored width/height of compound locations whose template size is known (PathWhiz draws a
-location at its template's size and keeps no size of its own), edge paths and the arrow paths in their options,
-the ``side`` of reaction members (which side of the reaction a member is drawn on, already layout-derived in
-v1), compartment boxes (bound-visualizations when present, plus one membrane-visualization and one
-label-location per compartment) and the canvas size. Ids, references and every non-visual field are left alone.
+Runs on the writer's ``section_items`` after every element and id exists, and changes geometry only: location
+x/y, the stored width/height of compound locations whose template size is known (PathWhiz draws a location at
+its template's size and keeps no size of its own), edge paths and the arrow paths in their options, compartment
+boxes (bound-visualizations when present, plus one membrane-visualization and one label-location per
+compartment) and the canvas size. Ids, references, reaction-member ``side`` (PathWhiz reads it as the reaction
+side) and every other field are left as v1 writes them.
 
-Layout: layered (Sugiyama-style). Compartments (biological states) are horizontal bands; processes flow left
-to right through global columns (substrate -> enzyme/transporter or reaction point -> product). Edges are
-straight when the straight line is clear, otherwise routed around node boxes on a grid.
+Layout: each compartment (biological state) is a box; inside it, each connected group of nodes gets a layered
+(Sugiyama-style) left-to-right layout (substrate -> enzyme, transporter or reaction point -> product), groups are
+shelf-packed in the box, and boxes are packed in rows. Edges are straight when the straight line is clear of
+node boxes, otherwise routed around them on a grid.
 """
 from __future__ import annotations
 
@@ -40,7 +41,6 @@ class _Block:
     def __init__(self, key: Any, state: Any, members: List[Dict[str, Any]], w: int, h: int, offsets: List[Tuple[int, int]]):
         self.key, self.state, self.members, self.w, self.h, self.offsets = key, state, members, w, h, offsets
         self.x = self.y = 0
-        self.layer = 0
 
     @property
     def virtual(self) -> bool:
@@ -53,6 +53,10 @@ class _Block:
         return self.x + self.w / 2, self.y + self.h / 2
 
 
+def _dim(value: Any) -> int:
+    return int(float(value))
+
+
 def _pack_members(locs: List[Dict[str, Any]]) -> Tuple[int, int, List[Tuple[int, int]]]:
     rows = [locs[i:i + MEMBERS_PER_ROW] for i in range(0, len(locs), MEMBERS_PER_ROW)]
     offsets, y, w = [], 0, 0
@@ -60,9 +64,9 @@ def _pack_members(locs: List[Dict[str, Any]]) -> Tuple[int, int, List[Tuple[int,
         x = 0
         for loc in row:
             offsets.append((x, y))
-            x += int(loc["width"]) + MEMBER_GAP
+            x += _dim(loc["width"]) + MEMBER_GAP
         w = max(w, x - MEMBER_GAP)
-        y += max(int(loc["height"]) for loc in row) + MEMBER_GAP
+        y += max(_dim(loc["height"]) for loc in row) + MEMBER_GAP
     return w, y - MEMBER_GAP, offsets
 
 
@@ -119,6 +123,7 @@ class _Router:
     """Orthogonal A* on a CELL grid with node boxes (padded) as obstacles."""
 
     def __init__(self, width: int, height: int, rects: List[Tuple[int, int, int, int]]):
+        self.width, self.height = width, height
         self.gw, self.gh = width // CELL + 1, height // CELL + 1
         self.block = bytearray(self.gw * self.gh)
         for r in rects:
@@ -167,7 +172,7 @@ class _Router:
         while cells[-1] in prev:
             cells.append(prev[cells[-1]])
         cells.reverse()
-        pts = [(c[0] * CELL + CELL // 2, c[1] * CELL + CELL // 2) for c in cells]
+        pts = [(min(c[0] * CELL + CELL // 2, self.width), min(c[1] * CELL + CELL // 2, self.height)) for c in cells]
         corners = [pts[0]] + [q for p, q, r in zip(pts, pts[1:], pts[2:]) if (p[0] == q[0]) != (q[0] == r[0])] + [pts[-1]]
         # replace the grid ends by the exact anchors, keeping the first and last legs straight
         if len(corners) >= 3:
@@ -192,6 +197,14 @@ def _path(points: List[Tuple[int, int]]) -> Tuple[str, Tuple[int, int], Tuple[in
             cp1 = c1
         cp2 = c2
     return " ".join(parts), cp1, cp2
+
+
+def _options(raw: Any) -> Dict[str, Any]:
+    try:
+        o = json.loads(raw) if isinstance(raw, str) and raw else {}
+    except ValueError:
+        return {}
+    return o if isinstance(o, dict) else {}
 
 
 def _set_arrow_paths(edge: Dict[str, Any], start, cp1, end, cp2) -> None:
@@ -340,7 +353,7 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
     """Re-place every visual element of ``items`` in place; returns the new canvas (width, height).
 
     ``ir`` and ``key_ids`` (the writer's IR and its IR-key -> PWML-id map) only serve to place edges that no
-    visualization member references; without them such edges become a point in the canvas corner."""
+    visualization member references; an edge still tied to nothing drawn keeps its v1 path."""
     locs: Dict[int, Dict[str, Any]] = {}
     hidden_locs: List[Dict[str, Any]] = []
     for sec in LOC_SECTIONS:
@@ -396,7 +409,6 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
     # ---- process units: layering edges and, per edge, (start block, end block)
     flow: List[Tuple[Any, Any]] = []
     edge_ends: Dict[int, Tuple[Any, Any]] = {}
-    side_fix: List[Tuple[Dict[str, Any], Any, Any]] = []
     hub_of: Dict[Tuple[str, Any], Any] = {}
     for rv in items.get("reaction-visualizations", []):
         hubs = []
@@ -419,9 +431,8 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
                 edge_ends[int(e["id"])] = (k if k is not None else hub, hub)
             if k is None:
                 continue
-            side_fix.append((m, k, hub))
             opts = e.get("options") if e is not None else None
-            product = isinstance(opts, str) and '"start_arrow": true' in opts
+            product = _options(opts).get("start_arrow") is True
             for h in hubs or [hub]:
                 flow.append((h, k) if product else (k, h))
     for tv in items.get("transport-visualizations", []):
@@ -587,13 +598,11 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
                 "x": x0 + 16, "y": y0 + 14, "zindex": 20, "scale-x": "1.0", "scale-y": "1.0",
                 "width": "160", "height": "15"})
     for loc in hidden_locs:  # not drawn; kept inside the canvas
-        loc["x"] = max(0, min(int(loc.get("x") or 0), width - int(loc["width"])))
-        loc["y"] = max(0, min(int(loc.get("y") or 0), height - int(loc["height"])))
+        loc["x"] = max(0, min(int(loc.get("x") or 0), width - _dim(loc["width"])))
+        loc["y"] = max(0, min(int(loc.get("y") or 0), height - _dim(loc["height"])))
 
-    # ---- reaction member side, then edges
-    for m, k, hub in side_fix:
-        m["side"] = "Left" if blocks[k].center()[0] <= blocks[hub].center()[0] else "Right"
-    member_rects = {k: [(int(l["x"]), int(l["y"]), int(l["x"]) + int(l["width"]), int(l["y"]) + int(l["height"]))
+    # ---- edges
+    member_rects = {k: [(int(l["x"]), int(l["y"]), int(l["x"]) + _dim(l["width"]), int(l["y"]) + _dim(l["height"]))
                         for l in bl.members] for k, bl in blocks.items()}
     all_rects = [r for rs in member_rects.values() for r in rs]
     router = _Router(width, height, all_rects)
@@ -615,8 +624,5 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
         path, cp1, cp2 = _path(pts)
         e["path"] = path
         _set_arrow_paths(e, pts[0], cp1, pts[-1], cp2)
-    for eid, e in edges.items():  # nothing to attach it to: a point inside the canvas, not a stray line
-        if eid not in edge_ends:
-            e["path"] = _path([(MARGIN, MARGIN)])[0]
-            _set_arrow_paths(e, (MARGIN, MARGIN), (MARGIN, MARGIN), (MARGIN, MARGIN), (MARGIN, MARGIN))
+    # an edge that neither a visualization member nor the IR ties to anything drawn keeps its v1 geometry
     return int(width), int(height)
