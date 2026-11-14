@@ -26,7 +26,7 @@ from typing import Any, Callable, Dict, List, Optional, Tuple
 from t2pw.pwml.compound_templates import TEMPLATE_DIMS
 
 LOC_SECTIONS = ("compound-locations", "protein-locations", "nucleic-acid-locations", "element-collection-locations")
-MARGIN, BAND_GAP, BAND_PAD_X, BAND_PAD_TOP, BAND_PAD_BOT = 40, 40, 40, 60, 40
+MARGIN, BAND_GAP, BAND_PAD_X, BAND_PAD_BOT = 40, 40, 40, 40
 HGAP, VGAP, MEMBER_GAP, MEMBERS_PER_ROW = 110, 40, 10, 3
 JUNCTION_W, JUNCTION_H = 40, 20
 OBSTACLE_PAD, CELL = 8, 10
@@ -36,6 +36,7 @@ MEMBRANE_TEMPLATE = 220  # PathWhiz "Simple Membrane"
 # rounded box at (x + 5s, y + 25s) of 200s x (15 + 16 lines)s, text wrapped at 28 characters (the template's text_length).
 LABEL_TEMPLATE, LABEL_SCALE, LABEL_TEXT_LENGTH = 235, 2.0, 28
 BOX_PAD_TOP_NO_LABEL, LABEL_GAP = 40, 24
+INTERNAL_NAME_PREFIXES = ("__", "AutoState_")
 # PathWhiz template sizes of non-compound location templates met in T2PW output (template 2 "Enzyme Monomer I")
 OTHER_TEMPLATE_DIMS = {2: (150, 70)}
 
@@ -54,12 +55,18 @@ def _label_lines(text: str, length: int = LABEL_TEXT_LENGTH) -> int:
     return lines + (1 if cur else 0)
 
 
+def _label_rect(lb: Dict[str, Any]) -> Tuple[int, int, int, int]:
+    """The white box PathWhiz draws for a template-235 label (simple_label.jst.eco), in canvas coordinates."""
+    x, y, sc = int(lb["x"]), int(lb["y"]), float(lb["scale-x"])
+    return (int(x + 5 * sc), int(y + 25 * sc), int(x + 205 * sc), int(y + (40 + 16 * _label_lines(str(lb["label-text"]))) * sc))
+
+
 def label_text(state: Dict[str, Any]) -> str:
-    """The state's name without the trailing " state"; nothing for an internal name such as ``__auto_state__``."""
+    """The state's name without the trailing " state"; nothing for a generated name (``__auto_state__``, ``AutoState_*``)."""
     name = str(state.get("name") or "").strip()
     if name.endswith(" state"):
         name = name[: -len(" state")].strip()
-    return "" if not name or name.startswith("__") else name
+    return "" if not name or name.startswith(INTERNAL_NAME_PREFIXES) else name
 
 
 def layout_version() -> str:
@@ -667,7 +674,8 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
     # ---- edges
     member_rects = {k: [(int(l["x"]), int(l["y"]), int(l["x"]) + _dim(l["width"]), int(l["y"]) + _dim(l["height"]))
                         for l in bl.members] for k, bl in blocks.items()}
-    all_rects = [r for rs in member_rects.values() for r in rs]
+    label_rects = [_label_rect(lb) for lb in items.get("label-locations", [])]
+    all_rects = [r for rs in member_rects.values() for r in rs] + label_rects
     router = _Router(width, height, all_rects)
     routed = 0
     for eid, (a, b) in edge_ends.items():
@@ -691,7 +699,8 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
     # viewer drops it as an orphan; other renderers draw it). Lines move together, unchanged, into a strip under the
     # content and the canvas grows to hold them; a zero-length one becomes a point in the bottom margin.
     orphans = [(e, _path_points(str(e.get("path") or ""))) for eid, e in edges.items() if eid not in edge_ends]
-    lines = [(e, pts) for e, pts in orphans if len(set(pts)) > 1]
+    lines = [(e, pts) for e, pts in orphans if len(set(pts)) > 1 and re.fullmatch(r"[MLC0-9.\s,-]*", str(e.get("path") or ""))
+             and len(re.findall(r"-?\d+(?:\.\d+)?", str(e.get("path") or ""))) % 2 == 0]
     for e, pts in orphans:
         if len(set(pts)) <= 1:
             e["path"] = _path([(MARGIN, height - MARGIN // 2)])[0]

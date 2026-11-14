@@ -213,6 +213,7 @@ def test_relayout_edge_cases_and_determinism():
 def test_labels_never_show_internal_names_and_wrap_like_pathwhiz():
     assert label_text({"name": "cytosol state"}) == "cytosol"
     assert label_text({"name": "__auto_state__"}) == "" and label_text({"name": "  "}) == ""
+    assert label_text({"name": "AutoState_homo_sapiensendoplasmic_reticulum_membrane"}) == ""
     assert _label_lines("Bacillus subtilis plasma membrane") == 2  # 28-character lines, as divide_label_text
     assert _label_lines("x" * 60) == 3
 
@@ -249,3 +250,29 @@ def test_no_box_for_a_state_whose_nodes_pathwhiz_drops_and_orphan_edges_move_int
     assert nums[1] >= max(it["y"] + int(it["height"]) for it in items["compound-locations"])
     every = items["compound-locations"] + items["protein-locations"] + items["nucleic-acid-locations"]
     assert all(0 <= it["x"] and it["x"] + int(it["width"]) <= w and it["y"] + int(it["height"]) <= h for it in every)
+
+
+def test_no_attached_node_means_no_box_and_everything_stays_in_the_canvas():
+    items = {"biological-states": [{"id": 1, "name": "cytosol state"}],
+             "compound-locations": [_loc(1, 1), _loc(2, 1)],
+             "edges": [{"id": 70, "path": "M575 660 C575 660 575 660 575 660", "hidden": False, "options": None}]}
+    w, h = relayout(items, _ids())
+    assert not items.get("membrane-visualizations") and not items.get("label-locations")
+    assert all(0 <= it["x"] and it["x"] + 200 <= w and it["y"] + 190 <= h for it in items["compound-locations"])
+    assert items["edges"][0]["path"] == "M40 %d C40 %d 40 %d 40 %d" % ((h - 20,) * 4)  # zero-length orphan: a point in the margin
+
+
+def test_reaction_point_joins_the_box_of_a_drawn_neighbour():
+    items = {"biological-states": [{"id": 1, "name": "cytosol state"}, {"id": 2, "name": "nucleus state"}],
+             "compound-locations": [_loc(1, 1), _loc(2, 1)],
+             "edges": [{"id": 70, "path": "M0 0", "hidden": False, "options": None},
+                       {"id": 71, "path": "M0 0", "hidden": False, "options": None}],
+             # the reaction's own state (2) holds no node: its point must not make a box of its own
+             "reaction-visualizations": [{"id": 80, "reaction-id": 1, "biological-state-id": 2,
+                                          "reaction_compound_visualizations": [
+                                              {"compound-location-id": 1, "edge-id": 70, "side": "Left"},
+                                              {"compound-location-id": 2, "edge-id": 71, "side": "Right"}],
+                                          "reaction_enzyme_visualizations": []}]}
+    relayout(items, _ids())
+    assert [lb["label-text"] for lb in items["label-locations"]] == ["cytosol"]
+    assert len(items["membrane-visualizations"]) == 1
