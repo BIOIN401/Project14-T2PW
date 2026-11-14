@@ -880,6 +880,7 @@ def _copy_common_entity_fields(record: Dict[str, Any], raw: Dict[str, Any]) -> N
         "element_states",
         "components",
         "nucleotide_type_paper",  # D-W20c: only ever present on a flag-on payload
+        "nucleotide_type",  # D-W21d: set from an NCBI Gene / RNAcentral record on a flag-on payload; the writer reads it only under the flag
     ]:
         if key in raw:
             record[key] = raw[key]

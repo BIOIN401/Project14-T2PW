@@ -215,20 +215,22 @@ def maybe_apply_final_id_fill(payload: Dict[str, Any], pathway_context: Any = No
     try:
         report = apply_final_id_fill(payload, fill_meta(pathway_context, state), **kw)
         report["meta_keys"] = sorted(fill_meta(pathway_context, state))
-        report["nucleic_types"] = maybe_apply_paper_nucleic_types(payload, state)
+        report["nucleic_types"] = maybe_apply_paper_nucleic_types(payload, state, **{k: kw[k] for k in ("fetcher", "cache", "today") if k in kw})
         report["pathway_meta"] = maybe_apply_final_pathway_meta(payload, pathway_context, state, **kw)
         return report
     except Exception as exc:
         return {"enabled": True, "written": 0, "error": f"{type(exc).__name__}: {exc}"}
 
 
-def maybe_apply_paper_nucleic_types(payload: Dict[str, Any], state: Any = None) -> Dict[str, Any]:
-    """D-W20c: DNA/RNA type of unsettled nucleic acids read from the paper text in ``state["final_payload_paper_text"]``
-    (set by ``run_pathway`` with the flag on; absent in the Streamlit path, then the rows stay unset and are counted)."""
-    from t2pw.service.final_payload_nucleic import apply_paper_nucleic_types
+def maybe_apply_paper_nucleic_types(payload: Dict[str, Any], state: Any = None, *, fetcher: Any = None, cache: Any = None,
+                                    today: Optional[str] = None) -> Dict[str, Any]:
+    """D-W20c / D-W21d: DNA/RNA type of unsettled nucleic acids read from the paper text in ``state["final_payload_paper_text"]``
+    (set by ``run_pathway`` with the flag on; absent in the Streamlit path), then NCBI Gene / RNAcentral by exact name in the
+    pathway species, then ``nucleotide_type_status: "unknown"``. ``fetcher`` defaults to the live, budgeted one."""
+    from t2pw.service.final_payload_nucleic import apply_nucleic_types
     st = state if hasattr(state, "get") else {}
-    return apply_paper_nucleic_types(payload, st.get("final_payload_paper_text"),
-                                     source=str(st.get("final_payload_paper_text_source") or "paper text"))
+    return apply_nucleic_types(payload, st.get("final_payload_paper_text"), fetcher=fetcher or _live_fetcher(), cache=cache, today=today,
+                               source=str(st.get("final_payload_paper_text_source") or "paper text"))
 
 
 def prefreeze_with_final_fill(payload: Dict[str, Any], resolve: Any, pathway_context: Any = None, state: Any = None,
