@@ -87,3 +87,11 @@ Record: `FINAL-PAYLOAD-P3.md`; evidence `evidence/final_payload_p3/`. Importer p
 - Harness: 43 of 59 clean (P2 29), 147 messages (211).
 - Live runs NOT done (`.env` copy denied); default NOT flipped.
 - 9 dispatches.
+
+---
+# Final payload, phase 4 (branch `pwml/final-payload`, code HEAD `0727df29`)
+Record: `FINAL-PAYLOAD-P4.md`; evidence `evidence/final_payload_p4/`. OLS4 ontology ids for unmatched locations, cell types and tissues (id-less locations dropped in the PWML only, with a collision guard), same-state transport fix in `process_normalizer.py` (2 stored transports changed), DNA/RNA type from the paper text (10 of 35 resolved). Proposed decisions P-41 to P-43.
+- Tests: SMOKE 511, golden 38, focused 231, 0 survivors. Flag-off identity 97 of 97.
+- Harness: 45 of 59 clean (P3 43), 94 messages (147), transports 32 of 37 (31).
+- Live runs NOT done (no `.env`); default NOT flipped. Residual importer-wildcard risk open.
+- 11 dispatches.
