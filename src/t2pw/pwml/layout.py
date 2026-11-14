@@ -1,13 +1,15 @@
 """PWML layout v2: recompute the geometry of a built PWML (``T2PW_PWML_LAYOUT=v2``; default ``v1`` = unchanged).
 
 Runs on the writer's ``section_items`` after every element and id exists, and changes geometry only: location
-x/y, the stored width/height of compound locations whose template size is known (PathWhiz draws a location at
-its template's size and keeps no size of its own), edge paths and the arrow paths in their options, compartment
+x/y, the stored width/height of locations whose template size is known (PathWhiz draws a location at its
+template's size and keeps no size of its own), edge paths and the arrow paths in their options, compartment
 boxes (bound-visualizations when present, plus one membrane-visualization and one label-location per
 compartment) and the canvas size. Ids, references, reaction-member ``side`` (PathWhiz reads it as the reaction
 side) and every other field are left as v1 writes them.
 
-Layout: each compartment (biological state) is a box; inside it, each connected group of nodes gets a layered
+Layout: each compartment (biological state) that holds a node PathWhiz draws is a box with a label (the state's
+name, never an internal one; PathBank's label template and scale); PathWhiz's viewer drops every location no process
+refers to, so such nodes do not make a box of their own; inside it, each connected group of nodes gets a layered
 (Sugiyama-style) left-to-right layout (substrate -> enzyme, transporter or reaction point -> product), groups are
 shelf-packed in the box, and boxes are packed in rows. Edges are straight when the straight line is clear of
 node boxes, otherwise routed around them on a grid.
@@ -17,6 +19,7 @@ from __future__ import annotations
 import heapq
 import json
 import os
+import re
 from collections import defaultdict
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
@@ -28,7 +31,35 @@ HGAP, VGAP, MEMBER_GAP, MEMBERS_PER_ROW = 110, 40, 10, 3
 JUNCTION_W, JUNCTION_H = 40, 20
 OBSTACLE_PAD, CELL = 8, 10
 ASPECT = 2.0  # target width:height of the packed picture
-MEMBRANE_TEMPLATE, LABEL_TEMPLATE = 220, 15  # PathWhiz "Simple Membrane", "Simple Label - Small"
+MEMBRANE_TEMPLATE = 220  # PathWhiz "Simple Membrane"
+# Labels as in PathBank's own files (PW000001: template 235 "Simple Label - Large", scale 1.9). PathWhiz draws it as a
+# rounded box at (x + 5s, y + 25s) of 200s x (15 + 16 lines)s, text wrapped at 28 characters (the template's text_length).
+LABEL_TEMPLATE, LABEL_SCALE, LABEL_TEXT_LENGTH = 235, 2.0, 28
+BOX_PAD_TOP_NO_LABEL, LABEL_GAP = 40, 24
+# PathWhiz template sizes of non-compound location templates met in T2PW output (template 2 "Enzyme Monomer I")
+OTHER_TEMPLATE_DIMS = {2: (150, 70)}
+
+
+def _label_lines(text: str, length: int = LABEL_TEXT_LENGTH) -> int:
+    """Line count of PathWhiz's divide_label_text (visualization_template.js.coffee): words, long ones split, greedy join."""
+    words = []
+    for w in text.split():
+        words += [w[i:i + length] for i in range(0, len(w), length)] if len(w) > length else [w]
+    lines, cur = 0, ""
+    for w in words:
+        if cur and len(cur) + len(w) + 1 > length:
+            lines, cur = lines + 1, w
+        else:
+            cur = f"{cur} {w}" if cur else w
+    return lines + (1 if cur else 0)
+
+
+def label_text(state: Dict[str, Any]) -> str:
+    """The state's name without the trailing " state"; nothing for an internal name such as ``__auto_state__``."""
+    name = str(state.get("name") or "").strip()
+    if name.endswith(" state"):
+        name = name[: -len(" state")].strip()
+    return "" if not name or name.startswith("__") else name
 
 
 def layout_version() -> str:
@@ -233,6 +264,11 @@ def _set_arrow_paths(edge: Dict[str, Any], start, cp1, end, cp2) -> None:
         edge["options"] = json.dumps(opts)
 
 
+def _path_points(d: str) -> List[Tuple[float, float]]:
+    nums = [float(t) for t in re.findall(r"-?\d+(?:\.\d+)?", d)]
+    return list(zip(nums[0::2], nums[1::2]))
+
+
 def _rounded_rect(x0: int, y0: int, x1: int, y1: int, r: int = 30) -> str:
     """Closed membrane path in PathBank's form: M then C segments only, ending where it started."""
     def seg(a, b):
@@ -353,12 +389,12 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
     """Re-place every visual element of ``items`` in place; returns the new canvas (width, height).
 
     ``ir`` and ``key_ids`` (the writer's IR and its IR-key -> PWML-id map) only serve to place edges that no
-    visualization member references; an edge still tied to nothing drawn keeps its v1 path."""
+    visualization member references; an edge still tied to nothing drawn keeps its v1 shape, moved into the canvas."""
     locs: Dict[int, Dict[str, Any]] = {}
     hidden_locs: List[Dict[str, Any]] = []
     for sec in LOC_SECTIONS:
         for it in items.get(sec, []):
-            dims = TEMPLATE_DIMS.get(it.get("visualization-template-id")) if sec == "compound-locations" else None
+            dims = (TEMPLATE_DIMS if sec == "compound-locations" else OTHER_TEMPLATE_DIMS).get(it.get("visualization-template-id"))
             if dims:  # PathWhiz draws a location at its template's size and ignores the stored one
                 it["width"], it["height"] = str(dims[0]), str(dims[1])
             (hidden_locs.append(it) if it.get("hidden") else locs.__setitem__(int(it["id"]), it))
@@ -409,6 +445,7 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
     # ---- process units: layering edges and, per edge, (start block, end block)
     flow: List[Tuple[Any, Any]] = []
     edge_ends: Dict[int, Tuple[Any, Any]] = {}
+    attached: set = set()  # blocks a process visualization refers to; PathWhiz's viewer drops the rest (isOrphan)
     hub_of: Dict[Tuple[str, Any], Any] = {}
     for rv in items.get("reaction-visualizations", []):
         hubs = []
@@ -416,6 +453,7 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
             k = pcv_block(ev.get("protein-complex-visualization-id")) or loc_block(ev.get("protein-location-id"))
             if k is not None and k not in hubs:
                 hubs.append(k)
+        attached.update(hubs)
         members = []
         for sec, fld in (("reaction_compound_visualizations", "compound-location-id"),
                          ("reaction_element_collection_visualizations", "element-collection-location-id"),
@@ -441,6 +479,7 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
             k = pcv_block(tt.get("protein-complex-visualization-id")) or loc_block(tt.get("protein-location-id"))
             if k is not None and k not in hubs:
                 hubs.append(k)
+        attached.update(hubs)
         members = [(m, loc_block(m.get("compound-location-id"))) for m in tv.get("transport_compound_visualizations", [])]
         if not members:
             continue
@@ -463,6 +502,7 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
                 ends.setdefault(m.get("side"), []).append((m, loc_block(m.get(fld))))
         for m in iv.get("interaction_protein_complex_visualizations", []):
             ends.setdefault(m.get("side"), []).append((m, pcv_block(m.get("protein-complex-visualization-id"))))
+        attached.update(k for side in ends.values() for _, k in side if k is not None)
         lk = next((k for _, k in ends["Left"] if k is not None), None)
         rk = next((k for _, k in ends["Right"] if k is not None), None)
         if (lk is None) != (rk is None) and ends["Left"] and ends["Right"]:
@@ -490,18 +530,31 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
             own = loc_block(ids.get("locations", {}).get(lk)) or pcv_block(ids.get("protein_complex_visualizations", {}).get(lk))
             edge_ends[eid] = (own if own is not None else hub, hub)
 
-    # ---- compartments become bands; inside a band, each connected group of blocks is laid out in layers
+    # ---- compartments: a box per state holding a node PathWhiz draws; each connected group laid out in layers
+    attached.update(k for pair in flow for k in pair)
     keys = list(blocks)
+    boxed = {blocks[k].state for k in keys if k in attached and not blocks[k].virtual}
+    nbrs: Dict[Any, List[Any]] = defaultdict(list)
+    for u, v in flow:
+        nbrs[u].append(v)
+        nbrs[v].append(u)
+    for k in keys:  # a reaction/transport point joins the box of a drawn neighbour when its own state has none
+        if blocks[k].virtual and blocks[k].state not in boxed:
+            st = next((blocks[n].state for n in nbrs[k] if blocks[n].state in boxed), None)
+            if st is not None or boxed:
+                blocks[k].state = st if st is not None else sorted(boxed, key=str)[0]
+    loose_key = ("loose",)  # unattached nodes of a state without a box: packed after the boxes, no outline
     by_state: Dict[Any, List[Any]] = defaultdict(list)
     for k in keys:
-        by_state[blocks[k].state].append(k)
+        st = blocks[k].state
+        by_state[st if st in boxed else loose_key].append(k)
     link: Dict[Tuple[Any, Any], int] = defaultdict(int)
     for u, v in flow:
         su, sv = blocks[u].state, blocks[v].state
         if su != sv:
             link[(su, sv)] += 1
             link[(sv, su)] += 1
-    remaining = sorted(by_state, key=lambda s: (-len(by_state[s]), str(s)))
+    remaining = sorted((s for s in by_state if s != loose_key), key=lambda s: (-len(by_state[s]), str(s)))
     bands = [remaining.pop(0)] if remaining else []
     while remaining:  # heavily linked compartments next to each other
         nxt = max(remaining, key=lambda s: (link[(bands[-1], s)], len(by_state[s]), -remaining.index(s)))
@@ -532,21 +585,34 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
             comp = [c for c in by_state[s] if c in set(comp)]
             w, h = _layered(blocks, comp, flow)
             comps.append((comp, w, h))
-        comps.sort(key=lambda c: -(c[1] * c[2]))
+        comps.sort(key=lambda c: (not any(k in attached for k in c[0]), -(c[1] * c[2])))  # drawn groups first
         comps_by_state[s] = comps
+    if loose_key in by_state:
+        comps_by_state[loose_key] = sorted(((([k], *_layered(blocks, [k], flow))) for k in by_state[loose_key]),
+                                           key=lambda c: -(c[1] * c[2]))
 
     area = sum((w + HGAP) * (h + VGAP) for cs in comps_by_state.values() for _, w, h in cs)
     target = max([int((area * ASPECT) ** 0.5)] + [w for cs in comps_by_state.values() for _, w, _ in cs])
     # inside each compartment its groups are shelf-packed; the compartment boxes are then packed in rows
+    states = {s.get("id"): s for s in items.get("biological-states", [])}
+    labels = {st: label_text(states.get(st, {})) for st in bands}
+    label_w = int((5 + 200) * LABEL_SCALE)
+
+    def pad_top(st):
+        text = labels.get(st, "")
+        return int(4 + (40 + 16 * _label_lines(text)) * LABEL_SCALE) + LABEL_GAP if text else BOX_PAD_TOP_NO_LABEL
+
     boxes = []
-    for st in bands:
+    for st in bands + ([loose_key] if loose_key in comps_by_state else []):
         placed, cx, cy, shelf_h, used_w = [], 0, 0, 0, 0
         for comp, w, h in comps_by_state[st]:
             if cx > 0 and cx + w > target:
                 cx, cy, shelf_h = 0, cy + shelf_h + 2 * VGAP, 0
             placed.append((comp, cx, cy))
             used_w, shelf_h, cx = max(used_w, cx + w), max(shelf_h, h), cx + w + HGAP
-        boxes.append((st, used_w + 2 * BAND_PAD_X, cy + shelf_h + BAND_PAD_TOP + BAND_PAD_BOT, placed))
+        if labels.get(st):
+            used_w = max(used_w, label_w)
+        boxes.append((st, used_w + 2 * BAND_PAD_X, cy + shelf_h + pad_top(st) + BAND_PAD_BOT, placed))
     row_limit = max([target + 2 * BAND_PAD_X] + [bw for _, bw, _, _ in boxes])
     rows: List[List[Any]] = []
     x = row_w = 0
@@ -564,8 +630,9 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
             for comp, dx, dy in placed:
                 for k in comp:
                     blocks[k].x += MARGIN + bx + BAND_PAD_X + dx
-                    blocks[k].y += top + BAND_PAD_TOP + dy
-            band_rects.append((st, (MARGIN + bx, top, MARGIN + bx + bw, top + row_h)))
+                    blocks[k].y += top + pad_top(st) + dy
+            if st != loose_key:
+                band_rects.append((st, (MARGIN + bx, top, MARGIN + bx + bw, top + row_h)))
             row_w = max(row_w, bx + bw)
         top += row_h + BAND_GAP
     width = MARGIN + row_w + MARGIN
@@ -584,19 +651,15 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
         bv["x"], bv["y"], bv["width"], bv["height"] = r[0], r[1], str(r[2] - r[0]), str(r[3] - r[1])
     height = (extra_y + 80 + MARGIN) if extra_x > MARGIN else (top - BAND_GAP + MARGIN)
     width = max(width, extra_x + MARGIN)
-    names = {s.get("id"): str(s.get("name") or "") for s in items.get("biological-states", [])}
     for s, (x0, y0, x1, y1) in band_rects:
         items.setdefault("membrane-visualizations", []).append({
             "id": new_id(), "path": _rounded_rect(x0, y0, x1, y1), "visualization-template-id": MEMBRANE_TEMPLATE,
             "complete-membrane": True, "zindex": 6, "width": f"{x1 - x0}.0", "height": f"{y1 - y0}.0"})
-        name = names.get(s, "")
-        if name.endswith(" state"):
-            name = name[: -len(" state")]
-        if name:
+        if labels.get(s):
             items.setdefault("label-locations", []).append({
-                "id": new_id(), "visualization-template-id": LABEL_TEMPLATE, "label-text": name,
-                "x": x0 + 16, "y": y0 + 14, "zindex": 20, "scale-x": "1.0", "scale-y": "1.0",
-                "width": "160", "height": "15"})
+                "id": new_id(), "visualization-template-id": LABEL_TEMPLATE, "label-text": labels[s],
+                "x": x0 + 12, "y": y0 + 4, "zindex": 20, "scale-x": f"{LABEL_SCALE}", "scale-y": f"{LABEL_SCALE}",
+                "width": "200", "height": "15"})
     for loc in hidden_locs:  # not drawn; kept inside the canvas
         loc["x"] = max(0, min(int(loc.get("x") or 0), width - _dim(loc["width"])))
         loc["y"] = max(0, min(int(loc.get("y") or 0), height - _dim(loc["height"])))
@@ -624,5 +687,23 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
         path, cp1, cp2 = _path(pts)
         e["path"] = path
         _set_arrow_paths(e, pts[0], cp1, pts[-1], cp2)
-    # an edge that neither a visualization member nor the IR ties to anything drawn keeps its v1 geometry
+    # An edge that neither a visualization member nor the IR ties to anything drawn keeps its v1 shape (PathWhiz's
+    # viewer drops it as an orphan; other renderers draw it). Lines move together, unchanged, into a strip under the
+    # content and the canvas grows to hold them; a zero-length one becomes a point in the bottom margin.
+    orphans = [(e, _path_points(str(e.get("path") or ""))) for eid, e in edges.items() if eid not in edge_ends]
+    lines = [(e, pts) for e, pts in orphans if len(set(pts)) > 1]
+    for e, pts in orphans:
+        if len(set(pts)) <= 1:
+            e["path"] = _path([(MARGIN, height - MARGIN // 2)])[0]
+    if lines:
+        x0 = min(px for _, pts in lines for px, _ in pts)
+        y0 = min(py for _, pts in lines for _, py in pts)
+        dx, dy = int(MARGIN + BAND_PAD_X - x0), int(height - y0)
+        for e, pts in lines:
+            moved = iter([int(v) + (dx if i % 2 == 0 else dy) for i, v in enumerate(c for p in pts for c in p)])
+            e["path"] = re.sub(r"-?\d+(?:\.\d+)?", lambda _m: str(next(moved)), str(e["path"]))
+            new = _path_points(e["path"])
+            _set_arrow_paths(e, new[0], new[1], new[-1], new[-2])
+            for px, py in new:
+                width, height = max(width, int(px) + MARGIN), max(height, int(py) + MARGIN)
     return int(width), int(height)

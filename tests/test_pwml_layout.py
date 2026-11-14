@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import copy
 import json
+import re
 import sys
 from itertools import combinations
 from pathlib import Path
@@ -15,7 +16,7 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from t2pw.pwml.layout import _path, _pava, layout_version, relayout  # noqa: E402
+from t2pw.pwml.layout import _label_lines, _path, _pava, label_text, layout_version, relayout  # noqa: E402
 from t2pw.pwml.validate import discover_structure_signature  # noqa: E402
 from t2pw.pwml.writer import DeterministicPwmlBuilder  # noqa: E402
 
@@ -96,22 +97,36 @@ def test_v2_quality(monkeypatch):
     for (_, a), (_, b) in combinations(boxes, 2):
         assert min(a[2], b[2]) <= max(a[0], b[0]) or min(a[3], b[3]) <= max(a[1], b[1]), (a, b)
     assert all(r[0] >= 0 and r[1] >= 0 and r[2] <= W and r[3] <= H for _, r in boxes)
-    # one closed membrane per compartment; each node sits in a membrane holding only its own state
+    # one closed membrane per compartment that holds a node PathWhiz draws (one a process refers to, directly or
+    # through a used complex visualization); each such node sits in a membrane holding only its own state
+    pv = root.find(".//pathway-visualization")
+    procs = [v for t in ("reaction-visualization", "transport-visualization", "interaction-visualization") for v in pv.iter(t)]
+    ref = {e.text for v in procs for e in v.iter() if isinstance(e.tag, str) and e.tag.endswith("location-id")}
+    pcvs = {e.text for v in procs for e in v.iter("protein-complex-visualization-id")}
+    for c in pv.iter("protein-complex-visualization"):
+        if c.findtext("id") in pcvs:
+            ref |= {e.text for e in c.iter("protein-location-id")}
+    drawn = []
+    for tag in LOCS:
+        for el in root.iter(tag):
+            if el.findtext("hidden") != "true" and el.findtext("id") in ref:
+                x, y = int(el.findtext("x")), int(el.findtext("y"))
+                drawn.append((el.findtext("biological-state-id"), (x, y, x + int(el.findtext("width")), y + int(el.findtext("height")))))
     rects = []
     for m in root.iter("membrane-visualization"):
-        nums = [int(t) for t in m.findtext("path").replace("M", " ").replace("C", " ").split()]
+        nums = [int(t) for t in re.findall(r"-?\d+", m.findtext("path"))]
         xs, ys = nums[0::2], nums[1::2]
         assert (xs[0], ys[0]) == (xs[-1], ys[-1])
         rects.append((min(xs), min(ys), max(xs), max(ys)))
-    states = {s for s, _ in boxes}
-    assert len(rects) == len(states)
+    assert len(rects) == len({st for st, _ in drawn})
     for r in rects:
-        inside = {s for s, b in boxes if r[0] <= b[0] and r[1] <= b[1] and b[2] <= r[2] and b[3] <= r[3]}
-        assert len(inside) == 1
-    assert len(list(root.iter("label-location"))) == len(rects)
-    # every visible edge stays inside the canvas
+        inside = {st for st, bx in drawn if r[0] <= bx[0] and r[1] <= bx[1] and bx[2] <= r[2] and bx[3] <= r[3]}
+        assert len(inside) == 1  # no empty box, no mixed box
+    texts = [lb.findtext("label-text") for lb in root.iter("label-location")]
+    assert texts and not any(t.startswith("__") for t in texts)
+    # every edge stays inside the canvas
     for e in root.iter("edge"):
-        nums = [int(t) for t in e.findtext("path").replace("M", " ").replace("C", " ").split()]
+        nums = [int(float(t)) for t in re.findall(r"-?\d+(?:\.\d+)?", e.findtext("path"))]
         assert all(0 <= v <= W for v in nums[0::2]) and all(0 <= v <= H for v in nums[1::2])
 
 
@@ -185,10 +200,52 @@ def test_relayout_edge_cases_and_determinism():
     assert tip == [a["edges"][1]["path"].split()[0][1:], a["edges"][1]["path"].split()[1]]  # arrow at the product end
     # interaction with an undrawable side: a stub point, an arrow that is still a real arrow
     assert json.loads(a["edges"][3]["options"])["start_arrow_path"] is not None
-    assert a["edges"][4]["path"] == "M9 9 L8 8"  # nothing to attach it to: left as written
+    moved = [int(t) for t in re.findall(r"-?[0-9]+", a["edges"][4]["path"])]  # tied to nothing: same shape, in the canvas
+    assert (moved[0] - moved[2], moved[1] - moved[3]) == (1, 1) and max(moved[0::2]) <= wa and max(moved[1::2]) <= ha
     assert loc[3]["x"] >= 0 and loc[3]["y"] >= 0 and loc[3]["x"] + 200 <= wa
     assert loc[2]["width"] == "200"  # compound template 81 is drawn at its template size
     bv = {b["id"]: b for b in a["bound-visualizations"]}
     assert bv[95]["x"] <= loc[1]["x"] and bv[96]["width"] == "200"  # empty state: a small box of its own
     assert [l["label-text"] for l in a["label-locations"]] == ["cytosol", "nucleus"]
     assert len(a["membrane-visualizations"]) == 2
+
+
+def test_labels_never_show_internal_names_and_wrap_like_pathwhiz():
+    assert label_text({"name": "cytosol state"}) == "cytosol"
+    assert label_text({"name": "__auto_state__"}) == "" and label_text({"name": "  "}) == ""
+    assert _label_lines("Bacillus subtilis plasma membrane") == 2  # 28-character lines, as divide_label_text
+    assert _label_lines("x" * 60) == 3
+
+
+def test_no_box_for_a_state_whose_nodes_pathwhiz_drops_and_orphan_edges_move_into_the_canvas():
+    items = {
+        "biological-states": [{"id": 1, "name": "cytosol state"}, {"id": 2, "name": "__auto_state__"},
+                              {"id": 3, "name": "plasma membrane state"}],
+        "compound-locations": [_loc(1, 1), _loc(2, 1)],
+        "nucleic-acid-locations": [dict(_loc(9, 1, tid=2), **{"nucleic-acid-id": 9})],
+        "protein-locations": [dict(_loc(5, 2, "150", "70", tid=2), **{"protein-id": 5}),   # in an unused complex
+                              dict(_loc(6, 3, "150", "70", tid=2), **{"protein-id": 6})],  # in no complex
+        "protein-complex-visualizations": [{"id": 50, "protein_complex_protein_visualizations": [{"id": 51, "protein-location-id": 5}]}],
+        "edges": [{"id": 70, "path": "M0 0", "hidden": False, "options": None},
+                  {"id": 71, "path": "M0 0", "hidden": False, "options": None},
+                  {"id": 74, "path": "M5000 300 L5100 320", "hidden": False, "options": None}],  # tied to nothing
+        "reaction-visualizations": [{"id": 80, "reaction-id": 1, "biological-state-id": 1,
+                                     "reaction_compound_visualizations": [
+                                         {"compound-location-id": 1, "edge-id": 70, "side": "Left"},
+                                         {"compound-location-id": 2, "edge-id": 71, "side": "Right"}],
+                                     "reaction_enzyme_visualizations": []}],
+    }
+    w, h = relayout(items, _ids())
+    assert len(items["membrane-visualizations"]) == 1  # only cytosol holds a node PathWhiz draws
+    assert [lb["label-text"] for lb in items["label-locations"]] == ["cytosol"]
+    lb = items["label-locations"][0]
+    assert (lb["visualization-template-id"], lb["scale-x"]) == (235, "2.0")
+    top = min(it["y"] for it in items["compound-locations"])
+    assert lb["y"] + (40 + 16) * 2 < top  # drawn label box ends above the first node
+    assert items["nucleic-acid-locations"][0]["width"] == "150" and items["nucleic-acid-locations"][0]["height"] == "70"
+    nums = [int(t) for t in re.findall(r"-?\d+", items["edges"][2]["path"])]  # same shape, moved under the content
+    assert items["edges"][2]["path"].startswith("M") and " L" in items["edges"][2]["path"]
+    assert (nums[2] - nums[0], nums[3] - nums[1]) == (100, 20) and nums[2] + 40 <= w and nums[3] + 40 <= h
+    assert nums[1] >= max(it["y"] + int(it["height"]) for it in items["compound-locations"])
+    every = items["compound-locations"] + items["protein-locations"] + items["nucleic-acid-locations"]
+    assert all(0 <= it["x"] and it["x"] + int(it["width"]) <= w and it["y"] + int(it["height"]) <= h for it in every)
