@@ -84,7 +84,12 @@ REPLAY_PLACEHOLDERS = {
 #: urllib against PubMed and an embedding endpoint, neither of which this cassette covers).
 FORCED_ENV = {"T2PW_OFFLINE_CURATOR": "1", "T2PW_SPECIES_LLM": "0", "T2PW_SPECIES_NCBI": "0", "RAG_ENABLED": "0"}
 #: Replay only: ``client.py`` sleeps this long after every completion. Timing only, never a decision.
-REPLAY_ONLY_ENV = {"LLM_CALL_SPACING": "0"}
+#: ``T2PW_FINAL_PAYLOAD=0`` (D-W23 a): ``apply_env`` clears every ``T2PW_*`` variable, so since the final payload became
+#: default-ON an unset variable would run live id lookups inside this offline replay. The recorded runs were made without
+#: it. ``T2PW_PWML_LAYOUT=v1`` (D-W23 b, "pinned to v1"): the recorded ``pwml_sha256`` was made under layout v1, and
+#: with v2 as the default the app arm's PWML bytes differ (65394 vs 53474 bytes) only by geometry. The default path (both
+#: variables unset) is covered separately by ``tests/test_equivalence_default_path.py``.
+REPLAY_ONLY_ENV = {"LLM_CALL_SPACING": "0", "T2PW_FINAL_PAYLOAD": "0", "T2PW_PWML_LAYOUT": "v1"}
 
 
 class ReplayMiss(RuntimeError):
