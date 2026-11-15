@@ -34,8 +34,8 @@ def _species_ids(monkeypatch, species):
 
 def test_species_without_a_database_id_never_takes_another_species_id(monkeypatch):
     # idx 134: Homo sapiens has PathBank id 1, the unresolved Mus musculus (listed first) drew the counter's 1 as well
-    taken = [{"key": f"sp_x{i}", "name": f"Species {i}", "pathwhiz_id": i, "taxonomy_id": str(1000 + i)} for i in range(1, 9)]
+    taken = [{"key": f"sp_x{i}", "name": f"Species {i}", "pathwhiz_id": i, "taxonomy_id": str(1000 + i)} for i in (1, 2, 4, 5, 6, 7, 8, 9)]  # 3 is the fixture E. coli
     unresolved = [{"key": "sp_mus", "name": "Mus musculus", "taxonomy_id": "10090"}]
     ids = _species_ids(monkeypatch, unresolved + taken)
     assert len(ids) == len(set(ids.values())) == 10, ids
-    assert [ids[f"Species {i}"] for i in range(1, 9)] == [str(i) for i in range(1, 9)]  # database ids untouched
+    assert [ids[f"Species {i}"] for i in (1, 2, 4, 5, 6, 7, 8, 9)] == ["1", "2", "4", "5", "6", "7", "8", "9"]  # database ids untouched
