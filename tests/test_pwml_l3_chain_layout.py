@@ -101,7 +101,10 @@ def test_v2_chain_reads_left_to_right(monkeypatch):
     pv = _build(monkeypatch, "v2")
     names = {c.findtext("id"): c.findtext("name") for c in pv.iter("compound")}
     x = {}
+    used = {loc for rows in _compound_uses(pv).values() for loc, *_ in rows}
     for loc in pv.iter("compound-location"):
+        if loc.findtext("id") not in used:  # base locations no process draws (PathWhiz's viewer drops them)
+            continue
         x.setdefault(names[loc.findtext("compound-id")], []).append(int(loc.findtext("x")))
     chain = ["chorismate", "isochorismate", "2,3-dihydro-2,3-dihydroxybenzoate", "2,3-dihydroxybenzoic acid",
              "2,3-dihydroxybenzoyl-AMP", "enterobactin"]
