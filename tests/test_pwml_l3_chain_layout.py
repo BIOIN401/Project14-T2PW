@@ -9,7 +9,7 @@ from __future__ import annotations
 import copy
 import json
 import sys
-from collections import Counter, defaultdict
+from collections import defaultdict
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -22,26 +22,20 @@ if str(SRC) not in sys.path:
 
 from t2pw.pwml.layout import _Block, _layered  # noqa: E402
 from t2pw.pwml.validate import discover_structure_signature  # noqa: E402
-from t2pw.pwml.writer import DeterministicPwmlBuilder, _is_currency_compound_record  # noqa: E402
+from t2pw.pwml.writer import DeterministicPwmlBuilder, _is_chain_hub_compound_record, _is_currency_compound_record  # noqa: E402
+from test_pwml_layout import _content  # noqa: E402  (tests/ is on sys.path, as for the other cross-test imports)
 
 IR = json.loads((ROOT / "tests" / "fixtures" / "pwml_layout" / "ir_run4.json").read_text(encoding="utf-8"))
-VIZ = ("bound-visualizations", "compound-locations", "element-collection-locations", "nucleic-acid-locations",
-       "protein-locations", "protein-complex-visualizations", "edges", "reaction-visualizations",
-       "reaction-coupled-transport_visualizations", "transport-visualizations", "interaction-visualizations",
-       "sub-pathway-visualizations", "vacuous-compound-visualizations", "vacuous-edge-visualizations",
-       "vacuous-nucleic-acid-visualizations", "vacuous-element-collection-visualizations",
-       "vacuous-protein-visualizations", "drawable-element-locations", "membrane-visualizations", "label-locations",
-       "zoom-visualizations")
 
 
-def _build(monkeypatch, layout):
+def _build(monkeypatch, layout, ir=IR):
     monkeypatch.delenv("T2PW_FINAL_PAYLOAD", raising=False)
     monkeypatch.setenv("T2PW_PWML_LAYOUT", layout)
     args = SimpleNamespace(name="Generated Pathway", description="", subject="Metabolic", pw_id="PW000000",
                            height=1400, width=3200, background_color="#FFFFFF",
                            ref=str(ROOT / "reference" / "PW000001.pwml"))
     sig = discover_structure_signature(ROOT / "reference" / "PW000001.pwml")
-    root = DeterministicPwmlBuilder(extraction=copy.deepcopy(IR), signature=sig, args=args).build().root
+    root = DeterministicPwmlBuilder(extraction=copy.deepcopy(ir), signature=sig, args=args).build().root
     return etree.fromstring(etree.tostring(root)).find(".//pathway-visualization")
 
 
@@ -62,7 +56,7 @@ def _currency(pv):
     out = set()
     for c in pv.iter("compound"):
         rec = {k: c.findtext(k) for k in ("name", "kegg-id", "chebi-id")}
-        if _is_currency_compound_record(rec):
+        if _is_chain_hub_compound_record(rec):
             out.add(c.findtext("id"))
     return out
 
@@ -115,33 +109,33 @@ def test_v2_chain_reads_left_to_right(monkeypatch):
     assert xs[0] < xs[1] <= xs[2] < xs[3] < xs[4] < xs[5], dict(zip(chain, xs))
 
 
-def _content(pv, keep_viz):
-    """Everything but the drawing, plus each reaction's members dereferenced to (compound, state, side, edge kind)."""
-    pv = copy.deepcopy(pv)
-    for tag in ("width", "height"):
-        pv.find(tag).text = "#"
-    locs = {el.findtext("id"): (el.findtext("compound-id"), el.findtext("biological-state-id"), el.findtext("hidden"),
-                                el.findtext("visualization-template-id")) for el in pv.iter("compound-location")}
-    edges = {el.findtext("id"): (el.findtext("hidden"), el.findtext("visualization-template-id"),
-                                 {k: v for k, v in json.loads(el.findtext("options") or "{}").items() if not k.endswith("_path")}.__repr__())
-             for el in pv.iter("edge")}
-    members = Counter()
-    for rv in pv.iter("reaction-visualization"):
-        for m in rv.iter("reaction-compound-visualization"):
-            members[(rv.findtext("reaction-id"), locs[m.findtext("compound-location-id")], m.findtext("side"),
-                     edges[m.findtext("edge-id")])] += 1
-    for tag in VIZ:
-        el = pv.find(tag)
-        if el is not None and tag not in keep_viz:
-            pv.remove(el)
-    return etree.tostring(pv, method="c14n"), members
-
-
 def test_v2_changes_only_the_drawing(monkeypatch):
-    a, ma = _content(_build(monkeypatch, "v1"), ())
-    b, mb = _content(_build(monkeypatch, "v2"), ())
+    """Same check as test_pwml_layout.test_v2_changes_geometry_only: every process visualization, enzyme, edge and
+    non-compound location identical with ids resolved; only compound-location ids and counts may differ."""
+    a = _content(_build(monkeypatch, "v1").getroottree().getroot())
+    b = _content(_build(monkeypatch, "v2").getroottree().getroot())
     assert a == b
-    assert ma == mb and sum(ma.values()) >= 16
+    assert len(a[1]["reaction-visualizations"]) == 6 and len(a[1]["edges"]) >= 16
+
+
+def _uses_of(pv, name):
+    cid = next(c.findtext("id") for c in pv.iter("compound") if c.findtext("name") == name)
+    return [loc for rows in _compound_uses(pv).values() for loc, c, *_ in rows if c == cid]
+
+
+def test_v2_shares_an_acyl_coa_intermediate(monkeypatch):
+    """An acyl-CoA is a chain intermediate: the v1 currency rule (any name ending in " CoA") must not split it in v2."""
+    name = "1,4-dihydroxy-2-naphthoyl-CoA"
+    assert _is_currency_compound_record({"name": name}) and not _is_chain_hub_compound_record({"name": name})
+    assert _is_chain_hub_compound_record({"name": "Coenzyme A"}) and _is_chain_hub_compound_record({"name": "ATP"})
+    ir = copy.deepcopy(IR)
+    for c in ir["entities"]["compounds"]:
+        if c["key"] == "cmp_3":  # 2,3-dihydroxybenzoic acid: product of rxn_3, substrate of rxn_4 and rxn_6
+            c["name"] = name
+    v2 = _uses_of(_build(monkeypatch, "v2", ir), name)
+    assert len(v2) == 3 and len(set(v2)) == 1
+    v1 = _uses_of(_build(monkeypatch, "v1", ir), name)
+    assert len(v1) == 3 and len(set(v1)) == 3  # v1 keeps one location per reaction
 
 
 def test_layered_breaks_a_cycle_at_the_edge_back_to_the_earlier_process():

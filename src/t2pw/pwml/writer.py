@@ -374,6 +374,15 @@ def _is_currency_compound_record(record: Dict[str, Any]) -> bool:
     return chebi_id in _CURRENCY_COMPOUND_CHEBI_IDS
 
 
+def _is_chain_hub_compound_record(record: Dict[str, Any]) -> bool:
+    """Layout v2 chain reuse only: currency by exact name, KEGG or ChEBI id, without the suffix rules of
+    ``_is_currency_compound_record`` (an acyl-CoA such as OSB-CoA or DHNA-CoA is a chain intermediate, not a hub)."""
+    names = {_currency_name_token(record.get(k)) for k in ("name", "short-name", "short_name")}
+    kegg_id = str(record.get("kegg-id") or record.get("kegg_id") or "").strip().upper()
+    chebi_id = str(record.get("chebi-id") or record.get("chebi_id") or "").replace("CHEBI:", "").strip()
+    return bool(names & _CURRENCY_COMPOUND_NAMES) or kegg_id in _CURRENCY_COMPOUND_KEGG_IDS or chebi_id in _CURRENCY_COMPOUND_CHEBI_IDS
+
+
 def _singularize(tag: str) -> str:
     overrides = {
         "species": "species",
@@ -2332,8 +2341,9 @@ class DeterministicPwmlBuilder:
         compound_loc_by_rxn_side: Dict[Tuple[int, str, int, str], int] = {}
         row_transition_source_by_member_key: Dict[str, str] = {}
         # Layout v2 (F3): one drawn location per (compound, biological state) for the whole chain, so a product
-        # feeds visibly into every reaction that uses it. Currency compounds (ATP, NAD(P)H, H2O, CoA, ...) stay one
-        # location per reaction: a single hub node would pull long edges across the picture. A reaction never
+        # feeds visibly into every reaction that uses it. Currency compounds (ATP, NAD(P)H, H2O, CoA, ...; exact name
+        # or id, _is_chain_hub_compound_record) stay one location per reaction: a single hub node would pull long
+        # edges across the picture; an acyl-CoA is an intermediate and is shared. A reaction never
         # gets the same location twice (a compound on both of its sides keeps two). v1 keeps adjacent-only reuse.
         chain_reuse = layout_version() == "v2"
         chain_loc_by_base: Dict[Tuple[int, str], int] = {}
@@ -2401,7 +2411,7 @@ class DeterministicPwmlBuilder:
                         chain_loc_id is not None
                         and member_key
                         and chain_loc_id not in locs_of_reaction
-                        and not _is_currency_compound_record(compound_record_by_id.get(identity[0], {}))
+                        and not _is_chain_hub_compound_record(compound_record_by_id.get(identity[0], {}))
                     ):
                         reaction_member_location_by_key[member_key] = chain_loc_id
                         compound_loc_by_rxn_side[(identity[0], identity[1], reaction_idx, side)] = chain_loc_id

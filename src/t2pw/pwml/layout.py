@@ -344,8 +344,8 @@ def _layered(blocks: Dict[Any, "_Block"], keys: List[Any], flow: List[Tuple[Any,
              rank: Optional[Dict[Any, int]] = None) -> Tuple[int, int]:
     """Sugiyama-style layout of one connected group: columns by longest path (back edges dropped), order by
     barycenter sweeps, y by least-squares alignment with neighbours (no overlap). Sets block x/y relative to
-    the group's top-left corner; returns the group's (width, height). ``rank`` (a block's first process in the
-    pathway's order) orders the depth-first search, so a cycle is broken at the edge that returns to the earlier
+    the group's top-left corner; returns the group's (width, height). ``rank`` (the index of the first flow pair
+    a block is in; flow follows the pathway's order of processes) orders the depth-first search, so a cycle is broken at the edge that returns to the earlier
     process and the chain reads left to right in pathway order."""
     if rank:
         keys = sorted(keys, key=lambda k: rank.get(k, 1 << 30))  # stable: unranked keep their order, last
@@ -626,7 +626,8 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
         remaining.remove(nxt)
         bands.append(nxt)
 
-    rank: Dict[Any, int] = {}  # a block's first process, in the order processes are listed (pathway order)
+    # rank: index of the first flow pair a block is in (flow lists reactions, transports, interactions in pathway order)
+    rank: Dict[Any, int] = {}
     for i, (u, v) in enumerate(flow):
         rank.setdefault(u, i)
         rank.setdefault(v, i)
