@@ -184,3 +184,39 @@ owner's checkout and its uncommitted work are not touched. The owner's own uncom
 never committed. The branches are not pushed until the PO says so. PO, verbatim: "u can make the
 edits in my branch maye make a new branch for each edit that builds on the next that acts asthe
 pull reqest".
+
+
+**D-W23 · 2026-11-14: release of the PWML output work, and a correctness programme** (recorded by
+the orchestrator at the PO's direction).
+(a) **Offline equivalence**: the replay harness pins `T2PW_FINAL_PAYLOAD=0` in `REPLAY_ONLY_ENV`
+(`tests/equivalence/llm_replay.py`). This restores exactly what was tested before the default flip,
+and a separate offline test covers the final-payload default path. The PO accepted this harness edit
+as an exception to merge gate 5.
+(b) **Layout**: `T2PW_PWML_LAYOUT` defaults to v2. v1 stays available. Tests that pin v1
+coordinates are updated to v2 or pinned to v1.
+(c) **Reaction-member `side` fix** (`pwml/side-fix`) is applied to the default output.
+(d) **Main**: once the full gates pass on the merge result, merge `webserver/refactor` plus the
+PWML output work (final payload, layout v2, side fix, equivalence fix) into `main`. This brings the
+whole web-server refactor into `main`. The PO approved this; it supersedes "only the PO merges into
+main" for this one merge.
+(e) **Open phase-5 questions** (`FINAL-PAYLOAD-P5.md` §7): the orchestrator decides them on the
+recommended option, and logs each one.
+(f) **PathWhiz branches** `t2pw/01..04` are pushed to the smpdb remote, but are NOT merged into
+whichever branch is the production or main line there. Branches only, no merge.
+(g) **Correctness programme**: one orchestrator runs it. Assessment sub-agents go first and only
+assess what needs fixing; fix sub-agents follow. It focuses on the layouts:
+- the PWML layout as seen in PathWhiz;
+- the web diagrams, made clearer where possible (the PO accepts that complex pathways stay complex);
+- renderings of the other formats (SBML, SBGN);
+- every rendering compared with the others and with the actual pathways, to confirm correctness
+  of everything built so far.
+PO, verbatim: "For the decisions for me, number one, yeah, just do your recommendation. Number two,
+yeah, turn on the new layout. Number three, fix it and then push to main. Number four, I'm not sure
+what smaller questions you're talking about. But just like update everything to the most recent
+version. And then I want you to try to fix. And then I want you to assess what we have to fix now.
+Have one orchestrator do that. [...] especially, I want to focus on the layouts as well. I want to
+work on all the layouts. So maybe create renderings of the other layouts that we have, like SPML,
+and then SBML. And then use that layout to see if our renderings are correct, and then also compare
+the renderings to the actual pathways and confirm that correctness as well." On main: "Merge all to
+main". On PathWhiz: "pusht the branches but dont merge to the version that is used as the main, im
+not sure which one it is but DO NOT MERGE".
