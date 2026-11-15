@@ -194,6 +194,7 @@ def test_interaction_compound_member_has_no_dangling_location_flag_on(flag_on) -
 
 
 def test_no_processes_flag_on_equals_flag_off_minus_bound(monkeypatch) -> None:
+    monkeypatch.setenv("T2PW_PWML_LAYOUT", "v1")  # tests the v1 geometry engine (D-W23 b)
     from lxml import etree
     payload = _payload()
     payload["processes"] = {"reactions": [], "transports": [], "interactions": []}

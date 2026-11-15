@@ -71,18 +71,18 @@ def _boxes(root):
 
 def test_flag_values(monkeypatch):
     monkeypatch.delenv("T2PW_PWML_LAYOUT", raising=False)
-    assert layout_version() == "v1"
-    for value, expected in (("v2", "v2"), (" V2 ", "v2"), ("v1", "v1"), ("yes", "v1"), ("", "v1")):
+    assert layout_version() == "v2"  # D-W23 b: v2 is the default
+    for value, expected in (("v2", "v2"), (" V2 ", "v2"), ("v1", "v1"), (" V1 ", "v1"), ("yes", "v2"), ("v3", "v2"), ("", "v2")):  # unknown: the default
         monkeypatch.setenv("T2PW_PWML_LAYOUT", value)
         assert layout_version() == expected
 
 
-def test_unset_and_v1_are_the_same_bytes(monkeypatch):
-    assert etree.tostring(_build(monkeypatch, None)) == etree.tostring(_build(monkeypatch, "v1"))
+def test_unset_and_v2_are_the_same_bytes(monkeypatch):
+    assert etree.tostring(_build(monkeypatch, None)) == etree.tostring(_build(monkeypatch, "v2"))
 
 
 def test_v2_changes_geometry_only(monkeypatch):
-    v1, v2 = _build(monkeypatch, None), _build(monkeypatch, "v2")
+    v1, v2 = _build(monkeypatch, "v1"), _build(monkeypatch, "v2")
     assert etree.tostring(v1) != etree.tostring(v2)
     assert _strip(v1) == _strip(v2)
 

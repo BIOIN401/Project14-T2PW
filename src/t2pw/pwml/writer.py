@@ -2997,7 +2997,7 @@ class DeterministicPwmlBuilder:
         self._make_compound_identity_fields_optional()
         self._make_biological_state_identity_fields_optional()
         counts = self._populate_sections_from_ir()
-        if layout_version() == "v2":  # T2PW_PWML_LAYOUT=v2: geometry only (pwml/layout.py)
+        if layout_version() == "v2":  # layout v2 is the default; T2PW_PWML_LAYOUT=v1 skips it: geometry only (pwml/layout.py)
             self.args.width, self.args.height = relayout(self.section_items, self.ids.next, self.extraction, self._ir_key_ids)
 
         root = etree.Element(self.signature.root_tag, nsmap={"option": OPTION_TAG_NS})

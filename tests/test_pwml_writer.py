@@ -791,7 +791,8 @@ def test_writer_emits_visible_complex_and_reaction_enzyme_visualization() -> Non
     assert "protein-location-id" not in enzyme_viz
 
 
-def test_writer_places_reaction_elements_around_enzyme_center() -> None:
+def test_writer_places_reaction_elements_around_enzyme_center(monkeypatch) -> None:
+    monkeypatch.setenv("T2PW_PWML_LAYOUT", "v1")  # tests the v1 geometry engine (D-W23 b)
     ir, report = build_pwml_ir(_payload_with_complex_enzyme(), strict_db=True)
     assert not report["errors"]
 
@@ -840,7 +841,8 @@ def test_writer_places_reaction_elements_around_enzyme_center() -> None:
     assert right_options["end_arrow"] is False
 
 
-def test_writer_places_odd_row_reaction_members_upstream_for_rtl_flow() -> None:
+def test_writer_places_odd_row_reaction_members_upstream_for_rtl_flow(monkeypatch) -> None:
+    monkeypatch.setenv("T2PW_PWML_LAYOUT", "v1")  # tests the v1 geometry engine (D-W23 b)
     reactions = []
     compounds = []
     proteins = []
@@ -918,7 +920,8 @@ def test_writer_places_odd_row_reaction_members_upstream_for_rtl_flow() -> None:
     assert _edge_options(edge_by_id[product_viz["edge-id"]])["start_arrow"] is True
 
 
-def test_writer_places_stacked_reaction_members_from_side_anchors() -> None:
+def test_writer_places_stacked_reaction_members_from_side_anchors(monkeypatch) -> None:
+    monkeypatch.setenv("T2PW_PWML_LAYOUT", "v1")  # tests the v1 geometry engine (D-W23 b)
     ir, report = build_pwml_ir(_payload_with_stacked_reaction_members(), strict_db=True)
     assert not report["errors"]
 
@@ -970,7 +973,8 @@ def test_writer_places_stacked_reaction_members_from_side_anchors() -> None:
             )
 
 
-def test_writer_size_packs_mixed_compound_stack() -> None:
+def test_writer_size_packs_mixed_compound_stack(monkeypatch) -> None:
+    monkeypatch.setenv("T2PW_PWML_LAYOUT", "v1")  # tests the v1 geometry engine (D-W23 b)
     payload = {
         "entities": {
             "species": [{"name": "Homo sapiens", "pathwhiz_id": 1}],
@@ -1047,7 +1051,8 @@ def test_writer_size_packs_mixed_compound_stack() -> None:
     assert left_debug["y_positions"] == expected_tops
 
 
-def test_writer_uses_per_reaction_locations_for_shared_compounds() -> None:
+def test_writer_uses_per_reaction_locations_for_shared_compounds(monkeypatch) -> None:
+    monkeypatch.setenv("T2PW_PWML_LAYOUT", "v1")  # tests the v1 geometry engine (D-W23 b)
     payload = {
         "entities": {
             "species": [{"name": "Homo sapiens", "pathwhiz_id": 1}],
@@ -1136,7 +1141,8 @@ def test_writer_uses_per_reaction_locations_for_shared_compounds() -> None:
     }
 
 
-def test_writer_reuses_safe_linear_intermediates_but_not_cofactors() -> None:
+def test_writer_reuses_safe_linear_intermediates_but_not_cofactors(monkeypatch) -> None:
+    monkeypatch.setenv("T2PW_PWML_LAYOUT", "v1")  # tests the v1 geometry engine (D-W23 b)
     payload = {
         "entities": {
             "species": [{"name": "Homo sapiens", "pathwhiz_id": 1}],
@@ -1257,7 +1263,8 @@ def test_writer_reuses_safe_linear_intermediates_but_not_cofactors() -> None:
     )
 
 
-def test_writer_routes_shared_intermediate_across_serpentine_rows_with_elbow_path() -> None:
+def test_writer_routes_shared_intermediate_across_serpentine_rows_with_elbow_path(monkeypatch) -> None:
+    monkeypatch.setenv("T2PW_PWML_LAYOUT", "v1")  # tests the v1 geometry engine (D-W23 b)
     compounds = [
         {"name": "Start metabolite", "pathbank_compound_id": 1101},
         {"name": "Intermediate B", "pathbank_compound_id": 1102},
@@ -1362,7 +1369,8 @@ def test_writer_routes_shared_intermediate_across_serpentine_rows_with_elbow_pat
 
 
 
-def test_writer_uses_virtual_edges_for_reactions_without_enzymes() -> None:
+def test_writer_uses_virtual_edges_for_reactions_without_enzymes(monkeypatch) -> None:
+    monkeypatch.setenv("T2PW_PWML_LAYOUT", "v1")  # tests the v1 geometry engine (D-W23 b)
     payload = _payload_with_complex_enzyme()
     payload["entities"].pop("proteins")
     payload["processes"]["reactions"][0]["enzymes"] = []

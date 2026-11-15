@@ -1,4 +1,4 @@
-"""PWML layout v2: recompute the geometry of a built PWML (``T2PW_PWML_LAYOUT=v2``; default ``v1`` = unchanged).
+"""PWML layout v2: recompute the geometry of a built PWML (the DEFAULT since D-W23; ``T2PW_PWML_LAYOUT=v1`` keeps the old geometry unchanged).
 
 Runs on the writer's ``section_items`` after every element and id exists, and changes geometry only: location
 x/y, the stored width/height of locations whose template size is known (PathWhiz draws a location at its
@@ -70,7 +70,8 @@ def label_text(state: Dict[str, Any]) -> str:
 
 
 def layout_version() -> str:
-    return "v2" if os.environ.get("T2PW_PWML_LAYOUT", "").strip().casefold() == "v2" else "v1"
+    """``v1`` only when ``T2PW_PWML_LAYOUT`` is ``v1`` (stripped, any case); unset, empty, ``v2`` or any other value is ``v2`` (D-W23 b)."""
+    return "v1" if os.environ.get("T2PW_PWML_LAYOUT", "").strip().casefold() == "v1" else "v2"
 
 
 class _Block:
