@@ -1,0 +1,192 @@
+{
+  "label": "REL-golden",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "C:/t/rel/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/rel",
+    "-q",
+    "--basetemp=C:/t/rel-reports/final/tmp/golden/bt",
+    "tests/test_batch_driver_seam_golden.py",
+    "tests/test_c011_freeze_seam_golden_equivalence.py",
+    "tests/test_streamlit_stage8_export_contract.py",
+    "tests/test_streamlit_quarantine_boundary.py"
+  ],
+  "cwd": "C:\\t\\rel",
+  "started_at": "2026-11-15T18:07:55+00:00",
+  "finished_at": "2026-11-15T18:09:18+00:00",
+  "duration_seconds": 83.3874177000007,
+  "timeout_seconds": 900.0,
+  "root_pid": 178024,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 177892,
+      "name": "python.exe",
+      "ppid": 178024
+    },
+    {
+      "pid": 177708,
+      "name": "git.exe",
+      "ppid": 177892
+    },
+    {
+      "pid": 158760,
+      "name": "git.exe",
+      "ppid": 177892
+    },
+    {
+      "pid": 170000,
+      "name": "python.exe",
+      "ppid": 177892
+    },
+    {
+      "pid": 173816,
+      "name": "python.exe",
+      "ppid": 170000
+    },
+    {
+      "pid": 137532,
+      "name": "python.exe",
+      "ppid": 177892
+    },
+    {
+      "pid": 172640,
+      "name": "python.exe",
+      "ppid": 137532
+    },
+    {
+      "pid": 177600,
+      "name": "git.exe",
+      "ppid": 172640
+    },
+    {
+      "pid": 176748,
+      "name": "python.exe",
+      "ppid": 177892
+    },
+    {
+      "pid": 177184,
+      "name": "python.exe",
+      "ppid": 176748
+    },
+    {
+      "pid": 154772,
+      "name": "python.exe",
+      "ppid": 177884
+    },
+    {
+      "pid": 177884,
+      "name": "python.exe",
+      "ppid": 177892
+    },
+    {
+      "pid": 160788,
+      "name": "python.exe",
+      "ppid": 177892
+    },
+    {
+      "pid": 161352,
+      "name": "python.exe",
+      "ppid": 160788
+    },
+    {
+      "pid": 177208,
+      "name": "python.exe",
+      "ppid": 177892
+    },
+    {
+      "pid": 177516,
+      "name": "python.exe",
+      "ppid": 177208
+    },
+    {
+      "pid": 176428,
+      "name": "python.exe",
+      "ppid": 177464
+    },
+    {
+      "pid": 177464,
+      "name": "python.exe",
+      "ppid": 177892
+    }
+  ],
+  "descendants_terminated": [
+    137532,
+    154772,
+    158760,
+    160788,
+    161352,
+    170000,
+    172640,
+    173816,
+    176428,
+    176748,
+    177184,
+    177208,
+    177464,
+    177516,
+    177600,
+    177708,
+    177884,
+    177892
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 155336,
+      "name": "python.exe"
+    },
+    {
+      "pid": 157632,
+      "name": "python.exe"
+    },
+    {
+      "pid": 177636,
+      "name": "python.exe"
+    },
+    {
+      "pid": 177644,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/rel-reports/final/golden.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\rel\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\rel",
+    "repo_head": "bc63f5041234cbe17e6cbde667c090f1a6baee97",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "rel-runner",
+    "token": "rel-runner:177644:d9ae9e158a0888ff",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

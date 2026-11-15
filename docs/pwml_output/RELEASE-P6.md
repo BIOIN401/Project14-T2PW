@@ -65,10 +65,14 @@ Pushed 2026-11-15 from the worktree `C:/t/pwpr/04` to the PathWhiz remote `origi
 ## 6. Merge and final gates
 Procedure: this docs commit on `pwml/final-payload`, merged into `release/pwml` (from `origin/webserver/refactor`, fetched again first); SMOKE, golden, the three equivalence files (each alone) and the focused set (default and v1) re-run by an independent `ws-test-runner` on that exact merge SHA; then fast-forward pushes of `webserver/refactor` and `main` (`origin/main` `06a0b8c0` is an ancestor). The SHAs and the counts of that run are recorded in a docs-only follow-up commit on `webserver/refactor` (evidence `evidence/release_p6/gates_final/`), because a doc cannot hold the counts of a run on its own commit.
 
+**Result (2026-11-15).** Merge `bc63f504` = `origin/webserver/refactor` `c757814b` + `pwml/final-payload` `2d99a683` (code identical to `24fdbe73`). Independent `ws-test-runner` (sonnet / medium) on exactly `bc63f504`, bounded wrapper, 0 surviving processes, exit 0 each (`evidence/release_p6/gates_final/`): SMOKE 511 passed; golden seam 38 passed (the four files and both equivalence files unedited vs `c757814b`); `test_equivalence_run_pathway.py` 8, `test_equivalence_app_vs_service.py` 14, `test_equivalence_default_path.py` 6 (each alone); focused 532 (default) and 532 (`T2PW_PWML_LAYOUT=v1`).
+`webserver/refactor` pushed `c757814b..bc63f504` (fast-forward). **`main` NOT pushed: the push command was denied by the permission system**; `origin/main` stays at `06a0b8c0`, which is an ancestor of `bc63f504`, so `git push origin bc63f504:main` is a fast-forward of a fully tested SHA whenever it is allowed. This record lives on `pwml/final-payload` only, so that `bc63f504` stays the tested tip for that push.
+
 ## 7. Open questions for the product owner
 1. Synonym `type iii taste cell` to CL:0002285: confirm or reject (§2 #4).
 2. MG-63 / Saos-2: payload only (now), BTO tissue rows, or a PathWhiz `cell_type.rb` change accepting `CVCL_` (§2 #3).
 3. Streamlit Width/Height inputs no longer set the canvas under v2: relabel, hide, or keep (§0.4).
+4. Push `bc63f504` to `main` (D-W23 d): the push was denied by the permission system and needs to be allowed or done by the PO.
 
 ## 8. Dispatches
 | # | task | agent | model / effort |

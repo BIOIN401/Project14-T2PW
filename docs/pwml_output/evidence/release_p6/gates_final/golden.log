@@ -1,0 +1,31 @@
+T2PW: C:\t\rel\src\t2pw\__init__.py
+......................................                                   [100%]
+38 passed in 81.88s (0:01:21)
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rel\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ bc63f5041234cbe17e6cbde667c090f1a6baee97  [git, worktree dirty=False]
+label                   : REL-golden
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe C:/t/rel/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/rel -q --basetemp=C:/t/rel-reports/final/tmp/golden/bt tests/test_batch_driver_seam_golden.py tests/test_c011_freeze_seam_golden_equivalence.py tests/test_streamlit_stage8_export_contract.py tests/test_streamlit_quarantine_boundary.py
+cwd                     : C:\t\rel
+root PID / process group: 178024 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 83.39 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 18  177892:python.exe, 177708:git.exe, 158760:git.exe, 170000:python.exe, 173816:python.exe, 137532:python.exe, 172640:python.exe, 177600:git.exe, 176748:python.exe, 177184:python.exe, 154772:python.exe, 177884:python.exe, 160788:python.exe, 161352:python.exe, 177208:python.exe, 177516:python.exe, 176428:python.exe, 177464:python.exe
+descendants terminated  : 18  137532, 154772, 158760, 160788, 161352, 170000, 172640, 173816, 176428, 176748, 177184, 177208, 177464, 177516, 177600, 177708, 177884, 177892
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/rel-reports/final/golden.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=rel-runner  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================
+exit=0

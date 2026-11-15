@@ -1,0 +1,38 @@
+T2PW: C:\t\rel\src\t2pw\__init__.py
+........................................................................ [ 14%]
+........................................................................ [ 28%]
+........................................................................ [ 42%]
+........................................................................ [ 56%]
+........................................................................ [ 70%]
+........................................................................ [ 84%]
+........................................................................ [ 98%]
+.......                                                                  [100%]
+511 passed in 47.41s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rel\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ bc63f5041234cbe17e6cbde667c090f1a6baee97  [git, worktree dirty=False]
+label                   : REL-smoke
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe C:/t/rel/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/rel -q --basetemp=C:/t/rel-reports/final/tmp/smoke/bt tests/test_reference_repair.py tests/test_strict_quarantine.py tests/test_strict_quarantine_contract_alignment.py tests/test_strict_quarantine_locks_and_scope.py tests/test_strict_quarantine_versioning.py tests/test_empty_extraction_payload.py tests/test_bench_goldset_and_semantic.py tests/test_bench_acquisition_and_artifacts.py tests/test_bench_controls.py tests/test_completeness_audit.py tests/test_batch_driver.py tests/test_stage3_gate_report_lifecycle.py tests/test_rag_admission_production_path.py tests/test_rag_gap_admission.py tests/test_rag_triage_orchestration.py tests/test_rag_provenance_gates.py tests/test_pipeline_reaction_rag_provenance.py tests/test_research_mode_orchestration.py tests/test_map_ids_name_gate.py tests/test_db_candidate_species_evidence.py tests/test_c102_coverage_denominator.py tests/test_c106_mutation_harness_executable.py
+cwd                     : C:\t\rel
+root PID / process group: 176944 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 1500 s
+duration                : 48.69 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 9  176992:python.exe, 171548:python.exe, 175896:python.exe, 176948:python.exe, 176548:python.exe, 177148:python.exe, 172344:python.exe, 173864:python.exe, 178020:git.exe
+descendants terminated  : 9  171548, 172344, 173864, 175896, 176548, 176948, 176992, 177148, 178020
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/rel-reports/final/smoke.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=rel-runner  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================
+exit=0

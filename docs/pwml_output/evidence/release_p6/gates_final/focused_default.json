@@ -1,0 +1,112 @@
+{
+  "label": "REL-focused_default",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "C:/t/rel/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/rel",
+    "-q",
+    "--basetemp=C:/t/rel-reports/final/tmp/focused_default/bt",
+    "tests/test_c121_autostate_lifecycle.py",
+    "tests/test_final_payload_default_flip.py",
+    "tests/test_final_payload_default_seam.py",
+    "tests/test_final_payload_fill.py",
+    "tests/test_final_payload_fix1.py",
+    "tests/test_final_payload_fix2.py",
+    "tests/test_final_payload_meta.py",
+    "tests/test_final_payload_nucleic_lookup.py",
+    "tests/test_final_payload_nucleic_type.py",
+    "tests/test_final_payload_ontology.py",
+    "tests/test_final_payload_ontology_p5.py",
+    "tests/test_final_payload_vocabulary.py",
+    "tests/test_final_payload_wildcard_guard.py",
+    "tests/test_final_payload_writer_fixes.py",
+    "tests/test_process_normalizer.py",
+    "tests/test_process_normalizer_transport_states.py",
+    "tests/test_pwml_db_resolver.py",
+    "tests/test_pwml_interaction_export.py",
+    "tests/test_pwml_interaction_protein_wrappers.py",
+    "tests/test_pwml_interaction_type_spellings.py",
+    "tests/test_pwml_ir.py",
+    "tests/test_pwml_ir_duplicate_row_refusal.py",
+    "tests/test_pwml_layout.py",
+    "tests/test_pwml_member_side.py",
+    "tests/test_pwml_writer.py",
+    "tests/test_transport_sides.py"
+  ],
+  "cwd": "C:\\t\\rel",
+  "started_at": "2026-11-15T18:11:49+00:00",
+  "finished_at": "2026-11-15T18:11:56+00:00",
+  "duration_seconds": 6.760003700000198,
+  "timeout_seconds": 1800.0,
+  "root_pid": 176500,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 179564,
+      "name": "python.exe",
+      "ppid": 176500
+    }
+  ],
+  "descendants_terminated": [
+    179564
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 155336,
+      "name": "python.exe"
+    },
+    {
+      "pid": 157632,
+      "name": "python.exe"
+    },
+    {
+      "pid": 169196,
+      "name": "python.exe"
+    },
+    {
+      "pid": 177608,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/rel-reports/final/focused_default.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\rel\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\rel",
+    "repo_head": "bc63f5041234cbe17e6cbde667c090f1a6baee97",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "rel-runner",
+    "token": "rel-runner:169196:9a641b65cf167447",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
