@@ -22,7 +22,7 @@ flight (4 tries, up to ~127 s on a blackholed host) can run past that. Fix round
 to the time left before the job deadline (``state["pathway_run_deadline"]``, epoch seconds) minus ``DEADLINE_MARGIN_S``, and under a
 deadline the live fetcher uses 10 s timeouts and 2 retries (worst request ~33 s), so a web job that finished with the flag off
 cannot run out of time here; (b) ``_Budget`` opens a circuit per HOST after ``CIRCUIT_BREAKER_N`` consecutive ``FetchError`` s from it (a success
-resets that host's count; D-W23 c), so a dead network costs seconds; each step report carries ``circuit_open``; (c) ``T2PW_FINAL_PAYLOAD_BUDGET_S``
+resets that host's count; D-W23 c), so a dead network costs ``CIRCUIT_BREAKER_N`` failed requests per host (worst case: the global time budget plus one request in flight); each step report carries ``circuit_open``; (c) ``T2PW_FINAL_PAYLOAD_BUDGET_S``
 caps every budget including the title's (non-finite or negative values are ignored). ``T2PW_FINAL_PAYLOAD_BUDGET_S=0`` is the
 OFFLINE SWITCH: the layer makes no network call at all and fills nothing that needs one (cached answers are still used). (3) The
 ``final_payload_fill`` key carries dates, so the canonical hash changes from day to day for the same run. (4) Role/class terms:

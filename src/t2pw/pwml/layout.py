@@ -70,7 +70,7 @@ def label_text(state: Dict[str, Any]) -> str:
 
 
 def layout_version() -> str:
-    """``v1`` only when ``T2PW_PWML_LAYOUT`` is ``v1`` (stripped, any case); unset, empty, ``v2`` or any other value is ``v2`` (D-W23 b)."""
+    """``v1`` only when ``T2PW_PWML_LAYOUT`` is ``v1`` (stripped, any case); unset, empty, ``v2`` and every other value, including ``0``, ``off`` and ``false``, give the default ``v2`` (D-W23 b)."""
     return "v1" if os.environ.get("T2PW_PWML_LAYOUT", "").strip().casefold() == "v1" else "v2"
 
 

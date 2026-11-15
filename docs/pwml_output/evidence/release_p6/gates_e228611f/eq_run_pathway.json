@@ -1,0 +1,103 @@
+{
+  "label": "REL-eq_run_pathway",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "C:/t/rel/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/rel",
+    "-q",
+    "--basetemp=C:/t/rel-reports/tmp/eq_run_pathway/bt",
+    "tests/test_equivalence_run_pathway.py"
+  ],
+  "cwd": "C:\\t\\rel",
+  "started_at": "2026-11-15T16:38:49+00:00",
+  "finished_at": "2026-11-15T16:39:56+00:00",
+  "duration_seconds": 67.05474849999996,
+  "timeout_seconds": 900.0,
+  "root_pid": 60392,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 59396,
+      "name": "python.exe",
+      "ppid": 60392
+    },
+    {
+      "pid": 53240,
+      "name": "python.exe",
+      "ppid": 59396
+    },
+    {
+      "pid": 61376,
+      "name": "python.exe",
+      "ppid": 53240
+    }
+  ],
+  "descendants_terminated": [
+    53240,
+    59396,
+    61376
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 1988,
+      "name": "python.exe"
+    },
+    {
+      "pid": 16660,
+      "name": "python.exe"
+    },
+    {
+      "pid": 26132,
+      "name": "python.exe"
+    },
+    {
+      "pid": 60012,
+      "name": "python.exe"
+    },
+    {
+      "pid": 60036,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/rel-reports/eq_run_pathway.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\rel\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\rel",
+    "repo_head": "e228611f8f1833eea307f37ad2e8b678f01989bf",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "rel-runner",
+    "token": "rel-runner:60012:d63347d1eeaabc32",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

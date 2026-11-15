@@ -1,0 +1,127 @@
+{
+  "label": "REL-eq_run_nov1",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "C:/t/fp/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/fp",
+    "-q",
+    "--basetemp=C:/t/rel-impl/tmp/eq_run_nov1/bt",
+    "tests/test_equivalence_run_pathway.py"
+  ],
+  "cwd": "C:\\t\\fp",
+  "started_at": "2026-11-15T03:23:24+00:00",
+  "finished_at": "2026-11-15T03:24:30+00:00",
+  "duration_seconds": 65.50625760000185,
+  "timeout_seconds": 900.0,
+  "root_pid": 514052,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 532852,
+      "name": "python.exe",
+      "ppid": 514052
+    },
+    {
+      "pid": 543652,
+      "name": "python.exe",
+      "ppid": 532852
+    },
+    {
+      "pid": 543672,
+      "name": "python.exe",
+      "ppid": 543652
+    }
+  ],
+  "descendants_terminated": [
+    532852,
+    543652,
+    543672
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 102708,
+      "name": "python.exe"
+    },
+    {
+      "pid": 393984,
+      "name": "python.exe"
+    },
+    {
+      "pid": 394100,
+      "name": "python.exe"
+    },
+    {
+      "pid": 505520,
+      "name": "python.exe"
+    },
+    {
+      "pid": 506164,
+      "name": "python.exe"
+    },
+    {
+      "pid": 513440,
+      "name": "python.exe"
+    },
+    {
+      "pid": 537052,
+      "name": "python.exe"
+    },
+    {
+      "pid": 539084,
+      "name": "python.exe"
+    },
+    {
+      "pid": 539112,
+      "name": "python.exe"
+    },
+    {
+      "pid": 539292,
+      "name": "python.exe"
+    },
+    {
+      "pid": 540028,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/rel-impl/eq_run_nov1.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\fp\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\fp",
+    "repo_head": "854872d99f374d139f97e7f48b1e560342b88a05",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "rel-impl",
+    "token": "rel-impl:393984:2a48a48dd7913c85",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}
