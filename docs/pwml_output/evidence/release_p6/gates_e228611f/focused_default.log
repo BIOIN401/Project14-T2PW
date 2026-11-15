@@ -1,0 +1,38 @@
+T2PW: C:\t\rel\src\t2pw\__init__.py
+........................................................................ [ 13%]
+........................................................................ [ 27%]
+........................................................................ [ 40%]
+........................................................................ [ 54%]
+........................................................................ [ 67%]
+........................................................................ [ 81%]
+........................................................................ [ 94%]
+............................                                             [100%]
+532 passed in 6.11s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\rel\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ e228611f8f1833eea307f37ad2e8b678f01989bf  [git, worktree dirty=False]
+label                   : REL-focused_default
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe C:/t/rel/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/rel -q --basetemp=C:/t/rel-reports/tmp/focused_default/bt tests/test_c121_autostate_lifecycle.py tests/test_final_payload_default_flip.py tests/test_final_payload_default_seam.py tests/test_final_payload_fill.py tests/test_final_payload_fix1.py tests/test_final_payload_fix2.py tests/test_final_payload_meta.py tests/test_final_payload_nucleic_lookup.py tests/test_final_payload_nucleic_type.py tests/test_final_payload_ontology.py tests/test_final_payload_ontology_p5.py tests/test_final_payload_vocabulary.py tests/test_final_payload_wildcard_guard.py tests/test_final_payload_writer_fixes.py tests/test_process_normalizer.py tests/test_process_normalizer_transport_states.py tests/test_pwml_db_resolver.py tests/test_pwml_interaction_export.py tests/test_pwml_interaction_protein_wrappers.py tests/test_pwml_interaction_type_spellings.py tests/test_pwml_ir.py tests/test_pwml_ir_duplicate_row_refusal.py tests/test_pwml_layout.py tests/test_pwml_member_side.py tests/test_pwml_writer.py tests/test_transport_sides.py
+cwd                     : C:\t\rel
+root PID / process group: 65500 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 1800 s
+duration                : 7.05 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  63068:python.exe
+descendants terminated  : 1  63068
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/rel-reports/focused_default.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=rel-runner  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================
+exit=0

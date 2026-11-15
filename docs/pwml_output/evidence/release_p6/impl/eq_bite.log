@@ -1,0 +1,51 @@
+T2PW: C:\t\fp\src\t2pw\__init__.py
+....F.                                                                   [100%]
+================================== FAILURES ===================================
+_________________________ test_the_pwml_is_layout_v2 __________________________
+
+default_path = {'all_requests': 14, 'app': {'canonical_payload': {'biological_states': [{'cell_type': 'Type III taste cell', 'evidenc...te_errors': [], ...}, ...}, 'app_requests': 7, 'defaults': {'final_payload': True, 'layout': 'v2', 'unset': True}, ...}
+
+    def test_the_pwml_is_layout_v2(default_path):
+        # The writer always emits the (possibly empty) <membrane-visualizations/> section, so a substring test would also pass for v1.
+        # v2 adds one membrane-visualization and one label-location per compartment; v1 leaves both sections empty.
+        from lxml import etree
+    
+        root = etree.fromstring(default_path["app"]["xml"])
+>       assert len(root.findall(".//membrane-visualizations/membrane-visualization")) > 0
+E       AssertionError: assert 0 > 0
+E        +  where 0 = len([])
+E        +    where [] = findall('.//membrane-visualizations/membrane-visualization')
+E        +      where findall = <Element super-pathway-visualization at 0x2bb7200ba00>.findall
+
+tests\test_equivalence_default_path.py:106: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_equivalence_default_path.py::test_the_pwml_is_layout_v2 - A...
+1 failed, 5 passed in 30.10s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\fp\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 7e258805463b72bed3d045748ed56e6947e84f55  [git, worktree dirty=True]
+label                   : REL-eq_bite
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe C:/t/fp/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/fp -q --basetemp=C:/t/rel-impl/tmp/eq_bite/bt tests/test_equivalence_default_path.py
+cwd                     : C:\t\fp
+root PID / process group: 165140 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 31.78 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  165820:python.exe
+descendants terminated  : 1  165820
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/rel-impl/eq_bite.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=rel-impl  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================
+exit=1
