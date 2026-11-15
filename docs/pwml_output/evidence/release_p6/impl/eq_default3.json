@@ -1,0 +1,87 @@
+{
+  "label": "REL-eq_default3",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "C:/t/fp/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/fp",
+    "-q",
+    "--basetemp=C:/t/rel-impl/tmp/eq_default3/bt",
+    "tests/test_equivalence_default_path.py"
+  ],
+  "cwd": "C:\\t\\fp",
+  "started_at": "2026-11-15T18:00:40+00:00",
+  "finished_at": "2026-11-15T18:01:13+00:00",
+  "duration_seconds": 32.38354559999971,
+  "timeout_seconds": 900.0,
+  "root_pid": 164940,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 167340,
+      "name": "python.exe",
+      "ppid": 164940
+    }
+  ],
+  "descendants_terminated": [
+    167340
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 155336,
+      "name": "python.exe"
+    },
+    {
+      "pid": 157632,
+      "name": "python.exe"
+    },
+    {
+      "pid": 166516,
+      "name": "python.exe"
+    },
+    {
+      "pid": 167272,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/rel-impl/eq_default3.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\fp\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\fp",
+    "repo_head": "7e258805463b72bed3d045748ed56e6947e84f55",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "rel-impl",
+    "token": "rel-impl:166516:290b68cc1da94ed4",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

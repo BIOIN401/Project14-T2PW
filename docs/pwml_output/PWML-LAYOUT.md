@@ -2,7 +2,7 @@
 
 Code: `src/t2pw/pwml/layout.py` (new), `src/t2pw/pwml/writer.py` (one import plus a 2-line hook in `DeterministicPwmlBuilder.build()`), `tests/test_pwml_layout.py`, fixture `tests/fixtures/pwml_layout/ir_run4.json`. Evidence: `evidence/layout/` (scripts, metrics, renders, PathWhiz screenshots, test reports).
 
-Flag `T2PW_PWML_LAYOUT`: unset or `v1` = today's layout, byte-identical; `v2` = new layout. Default stays `v1`; the product owner flips it.
+Flag `T2PW_PWML_LAYOUT`: `v1` = the old layout; `v2` = new layout. **Since RELEASE-P6 (D-W23 b) the default is `v2`**: unset, empty and every value other than `v1` give v2. The sections below were written when the default was still v1 ("unset" there means v1).
 
 ## 0. NOT ESTABLISHED (read first)
 1. Harness = empty PathWhiz DB plus vocabulary seed (as in P4). Nothing was imported into production PathWhiz.
