@@ -1,6 +1,6 @@
 # Reaction-member `side` follows the role (experiment branch `pwml/side-fix`)
 
-Status: **not merged, not for merge.** Prepared for a product-owner decision on `pwml/layout` head `07d23e9c`. Open question at the end.
+Status: **applied** (PO ruling D-W23 c), released with RELEASE-P6 together with layout v2 as the default (D-W23 b). Originally prepared for a product-owner decision on `pwml/layout` head `07d23e9c`; section 7 is answered. Where this doc says "today's default" it means the state before the release (final payload off, layout v1).
 
 ## 1. What and why
 

@@ -98,5 +98,21 @@ def test_the_app_and_run_pathway_agree(default_path):
 
 
 def test_the_pwml_is_layout_v2(default_path):
-    # v2 adds one membrane-visualization per compartment; the v1 writer leaves the section empty
-    assert b"<membrane-visualization" in default_path["app"]["xml"]
+    # The writer always emits the (possibly empty) <membrane-visualizations/> section, so a substring test would also pass for v1.
+    # v2 adds one membrane-visualization and one label-location per compartment; v1 leaves both sections empty.
+    from lxml import etree
+
+    root = etree.fromstring(default_path["app"]["xml"])
+    assert len(root.findall(".//membrane-visualizations/membrane-visualization")) > 0
+    assert len(root.findall(".//label-locations/label-location")) > 0
+
+
+def test_the_app_payload_is_the_recorded_live_payload_plus_the_final_payload_title(default_path):
+    """Against the recorded live run (made with the final payload off): the same leaves, except the ``retrieved_at`` stamps (live
+    wall-clock times; the replay freezes the clock) and the ``final_payload_pathway`` record the default-ON title step adds
+    (a dead network falls back to the paper's own title). Nothing else may differ."""
+
+    live = harness.load_fixture()["recorded"]["canonical_payload"]
+    a, b = harness.leaves(live), harness.leaves(default_path["app"]["canonical_payload"])
+    assert set(a) <= set(b) and all(k.startswith("/final_payload_pathway/") for k in set(b) - set(a)), sorted(set(b) ^ set(a))[:10]
+    assert sorted(k for k in a if a[k] != b[k] and not k.endswith("/retrieved_at")) == []
