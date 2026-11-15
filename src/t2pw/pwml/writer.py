@@ -1151,10 +1151,18 @@ class DeterministicPwmlBuilder:
         self.section_items["species"] = []
         species_id_by_name: Dict[str, int] = {}
         species_id_by_external_id: Dict[str, int] = {}
-        for record in ir.get("species", []) if isinstance(ir.get("species"), list) else []:
-            if not isinstance(record, dict):
-                continue
-            rid = id_for(record, ["pathwhiz_id", "pathbank_species_id", "pw_species_id"], self.ids)
+        species_id_keys = ["pathwhiz_id", "pathbank_species_id", "pw_species_id"]
+        species_records = [r for r in ir.get("species", []) if isinstance(r, dict)] if isinstance(ir.get("species"), list) else []
+        # a species without a database id takes the next counter value, which can equal another species' real id (idx 134:
+        # Homo sapiens has PathBank id 1, the unresolved Mus musculus drew 1 as well and PathWhiz keys species by this id)
+        species_ids_taken = {first_int(r, species_id_keys) for r in species_records} - {None, 0}
+        for record in species_records:
+            rid = first_int(record, species_id_keys)
+            if not rid:
+                rid = self.ids.next()
+                while rid in species_ids_taken:
+                    rid = self.ids.next()
+                species_ids_taken.add(rid)
             remember("species", record.get("key"), rid)
             if record.get("name"):
                 species_id_by_name[_normalize_key(str(record.get("name")))] = rid
