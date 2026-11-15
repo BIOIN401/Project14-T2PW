@@ -1,0 +1,39 @@
+0bb147e4 test_pwml_writer: three side assertions follow the role (outside the declared boundary, PO to confirm)
+focused exit=0
+249 passed in 5.00s
+smoke exit=0
+511 passed in 65.45s (0:01:05)
+golden exit=0
+38 passed in 96.65s (0:01:36)
+old-writer exit=1 (expect 1)
+=========================== short test summary info ===========================
+FAILED tests/test_pwml_member_side.py::test_reaction_member_side_is_the_role_in_both_layouts
+1 failed, 1 passed in 0.15s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 25fd334a00bdc951631f7189461f6b4e52eeefe7  [git, worktree dirty=True]
+label                   : side-tests
+command                 : C:\Program Files\Git\usr\bin\bash.exe scripts/suites.sh
+cwd                     : C:\t\side\docs\pwml_output\evidence\side_fix
+root PID / process group: 266408 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 3000 s
+duration                : 174.76 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 44  178244:mkdir.exe, 269220:bash.exe, 280124:python.exe, 280248:bash.exe, 279508:python.exe, 281504:bash.exe, 268988:bash.exe, 280736:python.exe, 280828:python.exe, 268724:python.exe, 280804:python.exe, 280908:python.exe, 281180:python.exe, 270392:python.exe, 280052:python.exe, 282224:python.exe, 282244:python.exe, 283368:git.exe, 283240:git.exe, 283500:tail.exe, 283556:bash.exe, 280676:python.exe, 282720:python.exe, 283100:bash.exe, 284508:git.exe, 284612:git.exe, 278724:git.exe, 282832:python.exe, 284340:python.exe, 283004:python.exe, 283896:python.exe, 283716:python.exe, 284268:python.exe, 283992:python.exe, 284456:python.exe, 283084:python.exe, 284388:python.exe, 284164:python.exe, 284200:python.exe, 283596:python.exe, 284096:python.exe, 276724:python.exe, 286676:bash.exe, 286680:python.exe
+descendants terminated  : 44  178244, 268724, 268988, 269220, 270392, 276724, 278724, 279508, 280052, 280124, 280248, 280676, 280736, 280804, 280828, 280908, 281180, 281504, 282224, 282244, 282720, 282832, 283004, 283084, 283100, 283240, 283368, 283500, 283556, 283596, 283716, 283896, 283992, 284096, 284164, 284200, 284268, 284340, 284388, 284456, 284508, 284612, 286676, 286680
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/sidex/suites.bounded.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=side  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================
+LOCKRUN_EXIT=0 attempt=179

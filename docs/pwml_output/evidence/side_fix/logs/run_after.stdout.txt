@@ -1,0 +1,44 @@
+replay off_v1 exit=0 written=97
+{"files": 97, "members": 1036, "side_changed": 285, "files_changed": 44, "failing_files": 0, "only_in_after": []}
+side_only off_v1 exit=0
+replay on_v1 exit=0 written=97
+{"files": 97, "members": 1036, "side_changed": 285, "files_changed": 44, "failing_files": 0, "only_in_after": []}
+side_only on_v1 exit=0
+replay off_v2 exit=0 written=97
+{"files": 97, "members": 1036, "side_changed": 285, "files_changed": 44, "failing_files": 0, "only_in_after": []}
+side_only off_v2 exit=0
+replay on_v2 exit=0 written=97
+{"files": 97, "members": 1036, "side_changed": 285, "files_changed": 44, "failing_files": 0, "only_in_after": []}
+side_only on_v2 exit=0
+{"members": 4144, "mismatch_vs_element_lists": 1124, "both_sides": 24, "not_in_lists": 0, "mismatch_vs_arrow": 1140}
+files with a mismatch: 176
+{"members": 4144, "mismatch_vs_element_lists": 0, "both_sides": 24, "not_in_lists": 0, "mismatch_vs_arrow": 0}
+files with a mismatch: 0
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 25fd334a00bdc951631f7189461f6b4e52eeefe7  [git, worktree dirty=True]
+label                   : side-replay
+command                 : C:\Program Files\Git\usr\bin\bash.exe scripts/run_after.sh
+cwd                     : C:\t\side\docs\pwml_output\evidence\side_fix
+root PID / process group: 38012 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 1800 s
+duration                : 70.26 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 32  37544:bash.exe, 44760:python.exe, 44780:python.exe, 2060:bash.exe, 10840:python.exe, 39224:python.exe, 5756:bash.exe, 39980:python.exe, 40200:python.exe, 45200:python.exe, 45372:bash.exe, 45520:python.exe, 45620:bash.exe, 45716:python.exe, 45744:python.exe, 45112:cp.exe, 46904:bash.exe, 46832:python.exe, 46888:python.exe, 47004:bash.exe, 44772:python.exe, 46016:bash.exe, 45284:python.exe, 2516:python.exe, 12616:bash.exe, 41540:python.exe, 32408:python.exe, 34712:python.exe, 47988:bash.exe, 46732:python.exe, 47084:bash.exe, 43048:python.exe
+descendants terminated  : 32  2060, 2516, 5756, 10840, 12616, 32408, 34712, 37544, 39224, 39980, 40200, 41540, 43048, 44760, 44772, 44780, 45112, 45200, 45284, 45372, 45520, 45620, 45716, 45744, 46016, 46732, 46832, 46888, 46904, 47004, 47084, 47988
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/sidex/after_replay.bounded.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=side  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================
+LOCKRUN_EXIT=0 attempt=1

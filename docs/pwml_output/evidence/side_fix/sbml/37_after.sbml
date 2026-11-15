@@ -1,0 +1,378 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" level="3" xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" version="1">
+  <model id="Pathway1" metaid="eb14e0a3-5026-4fa5-bad8-42d4e9599575">
+    <annotation>
+  <pathwhiz:dimensions xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:width="3200" pathwhiz:height="2160"/><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#eb14e0a3-5026-4fa5-bad8-42d4e9599575">
+          <bqbiol:is>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:smpdb:SMP0000001"/>
+	</rdf:Bag>
+	</bqbiol:is>
+	
+	<bqbiol:is>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:pathwhiz:PW000001"/>
+	</rdf:Bag>
+	</bqbiol:is>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+      <listOfUnitDefinitions>
+      <unitDefinition id="Unit1" name="Mole">
+        <listOfUnits>
+          <unit scale="0" exponent="1" multiplier="1" kind="mole"/>
+        </listOfUnits>
+      </unitDefinition>
+    </listOfUnitDefinitions>
+    <listOfCompartments>
+      <compartment id="BiologicalState1" constant="false" name="Homo sapiens, Endoplasmic Reticulum" sboTerm="SBO:0000240">
+        <annotation>
+  <pathwhiz:compartment xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:compartment_id="1" pathwhiz:compartment_type="biological_state"/>
+        </annotation>
+            </compartment>
+    </listOfCompartments>
+    <listOfSpecies>
+      <species id="Compound2" constant="false" initialAmount="1" hasOnlySubstanceUnits="true" name="2,3-oxidosqualene" metaid="_20b215ab-88b7-4cec-bab5-88966fb29ac2" boundaryCondition="false" sboTerm="SBO:0000247" substanceUnits="Unit1" compartment="BiologicalState1">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="2" pathwhiz:species_type="compound"/><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#_20b215ab-88b7-4cec-bab5-88966fb29ac2">
+	<bqbiol:is>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:pathwhiz.compound:PW_C000002"/>
+	<rdf:li rdf:resource="urn:miriam:pubchem.compound:5366020"/>
+	</rdf:Bag>
+	</bqbiol:is>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species id="Compound3" constant="false" initialAmount="1" hasOnlySubstanceUnits="true" name="lanosterol" metaid="_8c702c16-34b3-4367-ad5e-527930576ec3" boundaryCondition="false" sboTerm="SBO:0000247" substanceUnits="Unit1" compartment="BiologicalState1">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="3" pathwhiz:species_type="compound"/><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#_8c702c16-34b3-4367-ad5e-527930576ec3">
+              <bqbiol:is>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:pathwhiz.compound:PW_C000003"/>
+	<rdf:li rdf:resource="urn:miriam:hmdb:HMDB0001251"/>
+	<rdf:li rdf:resource="urn:miriam:kegg.compound:C01724"/>
+	<rdf:li rdf:resource="urn:miriam:biocyc:LANOSTEROL"/>
+	<rdf:li rdf:resource="urn:miriam:pubchem.compound:246983"/>
+	<rdf:li rdf:resource="urn:miriam:chebi:CHEBI:16521"/>
+	<rdf:li rdf:resource="urn:miriam:chemspider:216175"/>
+	</rdf:Bag>
+	</bqbiol:is>
+	
+	<bqbiol:isDescribedBy>
+	<rdf:Bag>
+	<rdf:li rdf:resource="cas:79-63-0"/>
+	</rdf:Bag>
+	</bqbiol:isDescribedBy>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species id="ProteinComplex1" constant="false" initialAmount="1" hasOnlySubstanceUnits="true" name="Lanosterol synthase" metaid="_3597aabf-0285-45ec-8894-5f2dd3b7d2c9" boundaryCondition="false" sboTerm="SBO:0000245" substanceUnits="Unit1" compartment="BiologicalState1">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="1" pathwhiz:species_type="protein_complex">
+            <pathwhiz:protein_associations>
+              <pathwhiz:protein_complex_proteins>
+                <pathwhiz:protein>Protein9660</pathwhiz:protein></pathwhiz:protein_complex_proteins></pathwhiz:protein_associations></pathwhiz:species><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#_3597aabf-0285-45ec-8894-5f2dd3b7d2c9">
+	<bqbiol:hasPart>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:uniprot:P48449"/>
+	</rdf:Bag>
+	</bqbiol:hasPart>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species id="Protein9660" constant="false" initialAmount="1" hasOnlySubstanceUnits="true" name="Lanosterol synthase" metaid="b54cf165-ac95-45bf-af9b-536ae7eef260" boundaryCondition="false" sboTerm="SBO:0000245" substanceUnits="Unit1" compartment="BiologicalState1">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="9660" pathwhiz:species_type="protein"/><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#b54cf165-ac95-45bf-af9b-536ae7eef260">
+	<bqbiol:is>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:uniprot:P48449"/>
+	</rdf:Bag>
+	</bqbiol:is>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species id="Compound4" constant="false" initialAmount="1" hasOnlySubstanceUnits="true" name="4,4-dimethylcholesta-8(9),14,24-trien-3��-ol" metaid="ff76347e-2643-4d53-80e2-6c73c6967120" boundaryCondition="false" sboTerm="SBO:0000247" substanceUnits="Unit1" compartment="BiologicalState1">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="4" pathwhiz:species_type="compound"/><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#ff76347e-2643-4d53-80e2-6c73c6967120">
+	<bqbiol:is>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:pathwhiz.compound:PW_C000004"/>
+	</rdf:Bag>
+	</bqbiol:is>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species id="ProteinComplex2" constant="false" initialAmount="1" hasOnlySubstanceUnits="true" name="Lanosterol 14-alpha demethylase" metaid="_319758df-b1ce-466a-a502-d4f7260b0bbc" boundaryCondition="false" sboTerm="SBO:0000245" substanceUnits="Unit1" compartment="BiologicalState1">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="2" pathwhiz:species_type="protein_complex">
+            <pathwhiz:protein_associations>
+              <pathwhiz:protein_complex_proteins>
+                <pathwhiz:protein>Protein9661</pathwhiz:protein></pathwhiz:protein_complex_proteins></pathwhiz:protein_associations></pathwhiz:species><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#_319758df-b1ce-466a-a502-d4f7260b0bbc">
+	<bqbiol:hasPart>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:uniprot:Q16850"/>
+	</rdf:Bag>
+	</bqbiol:hasPart>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species id="Protein9661" constant="false" initialAmount="1" hasOnlySubstanceUnits="true" name="Lanosterol 14-alpha demethylase" metaid="_6d5ce00c-4b7c-4372-8d87-69ec8871aeb2" boundaryCondition="false" sboTerm="SBO:0000245" substanceUnits="Unit1" compartment="BiologicalState1">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="9661" pathwhiz:species_type="protein"/><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#_6d5ce00c-4b7c-4372-8d87-69ec8871aeb2">
+	<bqbiol:is>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:uniprot:Q16850"/>
+	</rdf:Bag>
+	</bqbiol:is>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species id="Compound5" constant="false" initialAmount="1" hasOnlySubstanceUnits="true" name="desmosterol" metaid="_426e5ae5-af67-40bc-9b80-9544c1e1cf49" boundaryCondition="false" sboTerm="SBO:0000247" substanceUnits="Unit1" compartment="BiologicalState1">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="5" pathwhiz:species_type="compound"/><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#_426e5ae5-af67-40bc-9b80-9544c1e1cf49">
+              <bqbiol:is>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:pathwhiz.compound:PW_C000005"/>
+	<rdf:li rdf:resource="urn:miriam:hmdb:HMDB0002719"/>
+	<rdf:li rdf:resource="urn:miriam:kegg.compound:C01802"/>
+	<rdf:li rdf:resource="urn:miriam:biocyc:CPD-4141"/>
+	<rdf:li rdf:resource="urn:miriam:pubchem.compound:439577"/>
+	<rdf:li rdf:resource="urn:miriam:chebi:CHEBI:17737"/>
+	<rdf:li rdf:resource="urn:miriam:chemspider:388662"/>
+	</rdf:Bag>
+	</bqbiol:is>
+	
+	<bqbiol:isDescribedBy>
+	<rdf:Bag>
+	<rdf:li rdf:resource="cas:313-04-2"/>
+	</rdf:Bag>
+	</bqbiol:isDescribedBy>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species id="Compound1" constant="false" initialAmount="1" hasOnlySubstanceUnits="true" name="cholesterol" metaid="_3f5ead05-343c-4a54-842e-db2728112254" boundaryCondition="false" sboTerm="SBO:0000247" substanceUnits="Unit1" compartment="BiologicalState1">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="1" pathwhiz:species_type="compound"/><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#_3f5ead05-343c-4a54-842e-db2728112254">
+              <bqbiol:is>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:pathwhiz.compound:PW_C000001"/>
+	<rdf:li rdf:resource="urn:miriam:hmdb:HMDB0000067"/>
+	<rdf:li rdf:resource="urn:miriam:kegg.compound:C00187"/>
+	<rdf:li rdf:resource="urn:miriam:biocyc:CHOLESTEROL"/>
+	<rdf:li rdf:resource="urn:miriam:pubchem.compound:5997"/>
+	<rdf:li rdf:resource="urn:miriam:chebi:CHEBI:16113"/>
+	<rdf:li rdf:resource="urn:miriam:chemspider:5775"/>
+	</rdf:Bag>
+	</bqbiol:is>
+	
+	<bqbiol:isDescribedBy>
+	<rdf:Bag>
+	<rdf:li rdf:resource="cas:57-88-5"/>
+	</rdf:Bag>
+	</bqbiol:isDescribedBy>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species id="ProteinComplex3" constant="false" initialAmount="1" hasOnlySubstanceUnits="true" name="Delta(24)-sterol reductase" metaid="c4c50c71-797a-4c2b-ae98-1be3562fe3b0" boundaryCondition="false" sboTerm="SBO:0000245" substanceUnits="Unit1" compartment="BiologicalState1">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="3" pathwhiz:species_type="protein_complex">
+            <pathwhiz:protein_associations>
+              <pathwhiz:protein_complex_proteins>
+                <pathwhiz:protein>Protein9663</pathwhiz:protein></pathwhiz:protein_complex_proteins></pathwhiz:protein_associations></pathwhiz:species><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#c4c50c71-797a-4c2b-ae98-1be3562fe3b0">
+	<bqbiol:hasPart>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:uniprot:Q15392"/>
+	</rdf:Bag>
+	</bqbiol:hasPart>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species id="Protein9663" constant="false" initialAmount="1" hasOnlySubstanceUnits="true" name="Delta(24)-sterol reductase" metaid="_1f1ef6a9-b039-4e31-88cd-8f8c6c2e8de5" boundaryCondition="false" sboTerm="SBO:0000245" substanceUnits="Unit1" compartment="BiologicalState1">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="9663" pathwhiz:species_type="protein"/><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#_1f1ef6a9-b039-4e31-88cd-8f8c6c2e8de5">
+	<bqbiol:is>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:uniprot:Q15392"/>
+	</rdf:Bag>
+	</bqbiol:is>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species id="ProteinComplex4" constant="false" initialAmount="1" hasOnlySubstanceUnits="true" name="Methylsterol monooxygenase 1" metaid="d264e0f3-73a6-4e58-a4f2-66ac5f0780d0" boundaryCondition="false" sboTerm="SBO:0000245" substanceUnits="Unit1" compartment="BiologicalState1">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="4" pathwhiz:species_type="protein_complex">
+            <pathwhiz:protein_associations>
+              <pathwhiz:protein_complex_proteins>
+                <pathwhiz:protein>Protein9662</pathwhiz:protein></pathwhiz:protein_complex_proteins></pathwhiz:protein_associations></pathwhiz:species><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#d264e0f3-73a6-4e58-a4f2-66ac5f0780d0">
+	<bqbiol:hasPart>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:uniprot:Q15800"/>
+	</rdf:Bag>
+	</bqbiol:hasPart>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species id="Protein9662" constant="false" initialAmount="1" hasOnlySubstanceUnits="true" name="Methylsterol monooxygenase 1" metaid="_2abd62c0-30a0-4110-b974-dfa7e4ad6729" boundaryCondition="false" sboTerm="SBO:0000245" substanceUnits="Unit1" compartment="BiologicalState1">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="9662" pathwhiz:species_type="protein"/><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#_2abd62c0-30a0-4110-b974-dfa7e4ad6729">
+	<bqbiol:is>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:uniprot:Q15800"/>
+	</rdf:Bag>
+	</bqbiol:is>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+    </listOfSpecies>
+    <listOfReactions>
+      <reaction id="Reaction1" name="2,3-oxidosqualene &amp;rarr; lanosterol" reversible="false" sboTerm="SBO:0000176" fast="false" compartment="BiologicalState1">
+        <annotation>
+  <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_id="1" pathwhiz:reaction_type="reaction"/>
+        </annotation>
+              <listOfReactants>
+          <speciesReference constant="false" species="Compound2" sboTerm="SBO:0000015" stoichiometry="1">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound2" pathwhiz:location_id="1" pathwhiz:x="109.0" pathwhiz:y="285.0" pathwhiz:visualization_template_id="81" pathwhiz:width="200.0" pathwhiz:height="190.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M309 380 C324 380 339 380 355 380" pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;end_arrow&quot;: false, &quot;end_flat_arrow&quot;: false, &quot;start_arrow&quot;: false, &quot;start_flat_arrow&quot;: false}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="false" species="Compound3" sboTerm="SBO:0000011" stoichiometry="1">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound3" pathwhiz:location_id="2" pathwhiz:x="556.0" pathwhiz:y="285.0" pathwhiz:visualization_template_id="157" pathwhiz:width="200.0" pathwhiz:height="190.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M556 380 C539 380 522 380 505 380" pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;: true, &quot;start_flat_arrow&quot;: false, &quot;end_arrow&quot;: false, &quot;end_flat_arrow&quot;: false, &quot;start_arrow_path&quot;: &quot;M 530.019237886 395 L 556 380 L 530.019237886 365&quot;}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="ProteinComplex1" sboTerm="SBO:0000460">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein_complex">
+                <pathwhiz:location_element pathwhiz:element_type="protein_complex_visualization" pathwhiz:element_id="ProteinComplex1">
+                  <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="Protein9660" pathwhiz:location_id="1" pathwhiz:x="355.0" pathwhiz:y="345.0" pathwhiz:visualization_template_id="2" pathwhiz:width="150.0" pathwhiz:height="70.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/></pathwhiz:location_element></pathwhiz:location>
+            </annotation>
+                    </modifierSpeciesReference>
+        </listOfModifiers>
+      </reaction>
+      <reaction id="Reaction2" name="lanosterol &amp;rarr; 4,4-dimethylcholesta-8(9),14,24-trien-3��-ol" reversible="false" sboTerm="SBO:0000176" fast="false" compartment="BiologicalState1">
+        <annotation>
+  <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_id="2" pathwhiz:reaction_type="reaction"/>
+        </annotation>
+              <listOfReactants>
+          <speciesReference constant="false" species="Compound3" sboTerm="SBO:0000015" stoichiometry="1">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound3" pathwhiz:location_id="2" pathwhiz:x="556.0" pathwhiz:y="285.0" pathwhiz:visualization_template_id="157" pathwhiz:width="200.0" pathwhiz:height="190.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M756 380 C889 380 1022 380 1155 380" pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;end_arrow&quot;: false, &quot;end_flat_arrow&quot;: false, &quot;start_arrow&quot;: false, &quot;start_flat_arrow&quot;: false}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="false" species="Compound4" sboTerm="SBO:0000011" stoichiometry="1">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound4" pathwhiz:location_id="3" pathwhiz:x="1356.0" pathwhiz:y="285.0" pathwhiz:visualization_template_id="81" pathwhiz:width="200.0" pathwhiz:height="200.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1356 380 C1339 380 1322 380 1305 380" pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;: true, &quot;start_flat_arrow&quot;: false, &quot;end_arrow&quot;: false, &quot;end_flat_arrow&quot;: false, &quot;start_arrow_path&quot;: &quot;M 1330.01923789 395 L 1356 380 L 1330.01923789 365&quot;}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="ProteinComplex2" sboTerm="SBO:0000460">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein_complex">
+                <pathwhiz:location_element pathwhiz:element_type="protein_complex_visualization" pathwhiz:element_id="ProteinComplex2">
+                  <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="Protein9661" pathwhiz:location_id="2" pathwhiz:x="1155.0" pathwhiz:y="345.0" pathwhiz:visualization_template_id="2" pathwhiz:width="150.0" pathwhiz:height="70.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/></pathwhiz:location_element></pathwhiz:location>
+            </annotation>
+                    </modifierSpeciesReference>
+        </listOfModifiers>
+      </reaction>
+      <reaction id="Reaction3" name="desmosterol &amp;rarr; cholesterol" reversible="false" sboTerm="SBO:0000176" fast="false" compartment="BiologicalState1">
+        <annotation>
+  <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_id="3" pathwhiz:reaction_type="reaction"/>
+        </annotation>
+              <listOfReactants>
+          <speciesReference constant="false" species="Compound5" sboTerm="SBO:0000015" stoichiometry="1">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound5" pathwhiz:location_id="4" pathwhiz:x="1709.0" pathwhiz:y="285.0" pathwhiz:visualization_template_id="81" pathwhiz:width="200.0" pathwhiz:height="190.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1909 380 C1924 380 1939 380 1955 380" pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;end_arrow&quot;: false, &quot;end_flat_arrow&quot;: false, &quot;start_arrow&quot;: false, &quot;start_flat_arrow&quot;: false}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="false" species="Compound1" sboTerm="SBO:0000011" stoichiometry="1">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound1" pathwhiz:location_id="5" pathwhiz:x="2156.0" pathwhiz:y="285.0" pathwhiz:visualization_template_id="157" pathwhiz:width="200.0" pathwhiz:height="190.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M2156 380 C2139 380 2122 380 2105 380" pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;: true, &quot;start_flat_arrow&quot;: false, &quot;end_arrow&quot;: false, &quot;end_flat_arrow&quot;: false, &quot;start_arrow_path&quot;: &quot;M 2130.01923789 395 L 2156 380 L 2130.01923789 365&quot;}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="ProteinComplex3" sboTerm="SBO:0000460">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein_complex">
+                <pathwhiz:location_element pathwhiz:element_type="protein_complex_visualization" pathwhiz:element_id="ProteinComplex3">
+                  <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="Protein9663" pathwhiz:location_id="3" pathwhiz:x="1955.0" pathwhiz:y="345.0" pathwhiz:visualization_template_id="2" pathwhiz:width="150.0" pathwhiz:height="70.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/></pathwhiz:location_element></pathwhiz:location>
+            </annotation>
+                    </modifierSpeciesReference>
+        </listOfModifiers>
+      </reaction>
+      <reaction id="Reaction4" name="4,4-dimethylcholesta-8(9),14,24-trien-3��-ol &amp;rarr; cholesterol" reversible="false" sboTerm="SBO:0000176" fast="false" compartment="BiologicalState1">
+        <annotation>
+  <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_id="4" pathwhiz:reaction_type="reaction"/>
+        </annotation>
+              <listOfReactants>
+          <speciesReference constant="false" species="Compound4" sboTerm="SBO:0000015" stoichiometry="1">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound4" pathwhiz:location_id="6" pathwhiz:x="2891.0" pathwhiz:y="985.0" pathwhiz:visualization_template_id="81" pathwhiz:width="200.0" pathwhiz:height="200.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M2891 1080 C2875 1080 2860 1080 2845 1080" pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;end_arrow&quot;: false, &quot;end_flat_arrow&quot;: false, &quot;start_arrow&quot;: false, &quot;start_flat_arrow&quot;: false}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="false" species="Compound1" sboTerm="SBO:0000011" stoichiometry="1">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound1" pathwhiz:location_id="7" pathwhiz:x="2444.0" pathwhiz:y="985.0" pathwhiz:visualization_template_id="157" pathwhiz:width="200.0" pathwhiz:height="190.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M2644 1080 C2661 1080 2678 1080 2695 1080" pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;: true, &quot;start_flat_arrow&quot;: false, &quot;end_arrow&quot;: false, &quot;end_flat_arrow&quot;: false, &quot;start_arrow_path&quot;: &quot;M 2669.98076211 1065 L 2644 1080 L 2669.98076211 1095&quot;}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="ProteinComplex4" sboTerm="SBO:0000460">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein_complex">
+                <pathwhiz:location_element pathwhiz:element_type="protein_complex_visualization" pathwhiz:element_id="ProteinComplex4">
+                  <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="Protein9662" pathwhiz:location_id="4" pathwhiz:x="2695.0" pathwhiz:y="1045.0" pathwhiz:visualization_template_id="2" pathwhiz:width="150.0" pathwhiz:height="70.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/></pathwhiz:location_element></pathwhiz:location>
+            </annotation>
+                    </modifierSpeciesReference>
+        </listOfModifiers>
+      </reaction>
+    </listOfReactions>
+  </model>
+</sbml>

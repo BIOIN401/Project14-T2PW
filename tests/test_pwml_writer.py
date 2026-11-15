@@ -897,8 +897,8 @@ def test_writer_places_odd_row_reaction_members_upstream_for_rtl_flow() -> None:
     substrate_loc = loc_by_id[substrate_viz["compound-location-id"]]
     product_loc = loc_by_id[product_viz["compound-location-id"]]
 
-    assert substrate_viz["side"] == "Right"
-    assert product_viz["side"] == "Left"
+    assert substrate_viz["side"] == "Left"
+    assert product_viz["side"] == "Right"
     assert int(substrate_loc["x"]) - (enzyme_x + enzyme_w) == 46
     assert enzyme_x - (int(product_loc["x"]) + int(product_loc["width"])) == 51
 
@@ -1336,7 +1336,7 @@ def test_writer_routes_shared_intermediate_across_serpentine_rows_with_elbow_pat
     )
     assert producer_member["compound-location-id"] == consumer_member["compound-location-id"]
     assert producer_member["side"] == "Right"
-    assert consumer_member["side"] == "Right"
+    assert consumer_member["side"] == "Left"
 
     shared_loc = loc_by_id[consumer_member["compound-location-id"]]
     consumer_enzyme = builder.section_items["protein-locations"][3]

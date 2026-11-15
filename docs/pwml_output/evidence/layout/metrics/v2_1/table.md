@@ -1,0 +1,29 @@
+| metric (97 files) | off v1 | off v2 | on v1 | on v2 | off v1 PW sizes | off v2 PW sizes | on v1 PW sizes | on v2 PW sizes |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| node_overlaps | 228 | 0 | 255 | 0 | 241 | 0 | 273 | 0 |
+| files_with_node_overlaps | 41 | 0 | 47 | 0 | 42 | 0 | 48 | 0 |
+| nodes_out_of_canvas | 1 | 0 | 1 | 0 | 1 | 0 | 1 | 0 |
+| edges_through_node | 302 | 0 | 311 | 0 | 305 | 0 | 314 | 0 |
+| edge_node_hits | 540 | 0 | 561 | 0 | 550 | 0 | 582 | 0 |
+| files_with_edges_through_node | 57 | 0 | 58 | 0 | 57 | 0 | 58 | 0 |
+| edges_out_of_canvas | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| long_edges | 44 | 18 | 44 | 31 | 44 | 18 | 44 | 31 |
+| edge_crossings | 430 | 95 | 430 | 98 | 430 | 95 | 430 | 98 |
+| compartment_boxes | 289 | 289 | 0 | 181 | 289 | 289 | 0 | 181 |
+| nodes_not_in_box | 21 | 0 | 0 | 0 | 48 | 0 | 0 | 0 |
+| mixed_state_boxes | 18 | 0 | 0 | 0 | 13 | 0 | 0 | 0 |
+| nodes_outside_own_bound | 54 | 0 | 0 | 0 | 31 | 0 | 0 | 0 |
+| box_overlaps | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| membranes | 0 | 162 | 0 | 181 | 0 | 162 | 0 | 181 |
+| empty_boxes | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| labels | 0 | 152 | 0 | 168 | 0 | 152 | 0 | 168 |
+| internal_labels | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| label_node_overlaps | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| edges_under_label | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| unattached_nodes | 210 | 210 | 210 | 210 | 210 | 210 | 210 | 210 |
+| median_canvas_w | 3200.0 | 1500.0 | 3200.0 | 1500.0 | 3200.0 | 1500.0 | 3200.0 | 1500.0 |
+| median_canvas_h | 1692.0 | 1370.0 | 1692.0 | 1430.0 | 1692.0 | 1370.0 | 1692.0 | 1430.0 |
+| max_canvas_w | 3200.0 | 4240.0 | 3200.0 | 4240.0 | 3200.0 | 4240.0 | 3200.0 | 4240.0 |
+| max_canvas_h | 7380.0 | 3839.0 | 7380.0 | 3884.0 | 7380.0 | 3839.0 | 7380.0 | 3884.0 |
+| median_fill_pct | 5.19 | 16.3 | 5.46 | 17.77 | 5.77 | 16.3 | 6.37 | 17.77 |
+| median_content_over_canvas_area_pct | 37.0 | 67.7 | 37.0 | 73.1 | 37.0 | 67.7 | 37.0 | 73.1 |

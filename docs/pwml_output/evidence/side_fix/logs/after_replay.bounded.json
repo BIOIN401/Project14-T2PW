@@ -1,0 +1,268 @@
+{
+  "label": "side-replay",
+  "command": [
+    "C:\\Program Files\\Git\\usr\\bin\\bash.exe",
+    "scripts/run_after.sh"
+  ],
+  "cwd": "C:\\t\\side\\docs\\pwml_output\\evidence\\side_fix",
+  "started_at": "2026-11-14T21:16:21+00:00",
+  "finished_at": "2026-11-14T21:17:31+00:00",
+  "duration_seconds": 70.25570979999998,
+  "timeout_seconds": 1800.0,
+  "root_pid": 38012,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 37544,
+      "name": "bash.exe",
+      "ppid": 38012
+    },
+    {
+      "pid": 44760,
+      "name": "python.exe",
+      "ppid": 37544
+    },
+    {
+      "pid": 44780,
+      "name": "python.exe",
+      "ppid": 44760
+    },
+    {
+      "pid": 2060,
+      "name": "bash.exe",
+      "ppid": 38012
+    },
+    {
+      "pid": 10840,
+      "name": "python.exe",
+      "ppid": 39224
+    },
+    {
+      "pid": 39224,
+      "name": "python.exe",
+      "ppid": 2060
+    },
+    {
+      "pid": 5756,
+      "name": "bash.exe",
+      "ppid": 38012
+    },
+    {
+      "pid": 39980,
+      "name": "python.exe",
+      "ppid": 40200
+    },
+    {
+      "pid": 40200,
+      "name": "python.exe",
+      "ppid": 5756
+    },
+    {
+      "pid": 45200,
+      "name": "python.exe",
+      "ppid": 45520
+    },
+    {
+      "pid": 45372,
+      "name": "bash.exe",
+      "ppid": 38012
+    },
+    {
+      "pid": 45520,
+      "name": "python.exe",
+      "ppid": 45372
+    },
+    {
+      "pid": 45620,
+      "name": "bash.exe",
+      "ppid": 38012
+    },
+    {
+      "pid": 45716,
+      "name": "python.exe",
+      "ppid": 45744
+    },
+    {
+      "pid": 45744,
+      "name": "python.exe",
+      "ppid": 45620
+    },
+    {
+      "pid": 45112,
+      "name": "cp.exe",
+      "ppid": 46904
+    },
+    {
+      "pid": 46904,
+      "name": "bash.exe",
+      "ppid": 38012
+    },
+    {
+      "pid": 46832,
+      "name": "python.exe",
+      "ppid": 46888
+    },
+    {
+      "pid": 46888,
+      "name": "python.exe",
+      "ppid": 47004
+    },
+    {
+      "pid": 47004,
+      "name": "bash.exe",
+      "ppid": 38012
+    },
+    {
+      "pid": 44772,
+      "name": "python.exe",
+      "ppid": 46016
+    },
+    {
+      "pid": 46016,
+      "name": "bash.exe",
+      "ppid": 38012
+    },
+    {
+      "pid": 45284,
+      "name": "python.exe",
+      "ppid": 44772
+    },
+    {
+      "pid": 2516,
+      "name": "python.exe",
+      "ppid": 41540
+    },
+    {
+      "pid": 12616,
+      "name": "bash.exe",
+      "ppid": 38012
+    },
+    {
+      "pid": 41540,
+      "name": "python.exe",
+      "ppid": 12616
+    },
+    {
+      "pid": 32408,
+      "name": "python.exe",
+      "ppid": 47988
+    },
+    {
+      "pid": 34712,
+      "name": "python.exe",
+      "ppid": 32408
+    },
+    {
+      "pid": 47988,
+      "name": "bash.exe",
+      "ppid": 38012
+    },
+    {
+      "pid": 46732,
+      "name": "python.exe",
+      "ppid": 47084
+    },
+    {
+      "pid": 47084,
+      "name": "bash.exe",
+      "ppid": 38012
+    },
+    {
+      "pid": 43048,
+      "name": "python.exe",
+      "ppid": 46732
+    }
+  ],
+  "descendants_terminated": [
+    2060,
+    2516,
+    5756,
+    10840,
+    12616,
+    32408,
+    34712,
+    37544,
+    39224,
+    39980,
+    40200,
+    41540,
+    43048,
+    44760,
+    44772,
+    44780,
+    45112,
+    45200,
+    45284,
+    45372,
+    45520,
+    45620,
+    45716,
+    45744,
+    46016,
+    46732,
+    46832,
+    46888,
+    46904,
+    47004,
+    47084,
+    47988
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 6796,
+      "name": "python.exe"
+    },
+    {
+      "pid": 15768,
+      "name": "python.exe"
+    },
+    {
+      "pid": 24240,
+      "name": "python.exe"
+    },
+    {
+      "pid": 44488,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/sidex/after_replay.bounded.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "25fd334a00bdc951631f7189461f6b4e52eeefe7",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "side",
+    "token": "side:6796:ceb92af0a6e96535",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

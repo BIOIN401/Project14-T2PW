@@ -18,6 +18,7 @@ from t2pw.pipeline.process_normalizer import normalize_process_payload
 from t2pw.pwml.compound_templates import TEMPLATE_DIMS, select_compound_template_id
 from t2pw.pwml.vocabulary_map import map_vocabulary_name, membrane_row, organism_kinds
 from t2pw.pwml.ir import build_pwml_ir, is_pwml_ir, validate_pwml_ir
+from t2pw.pwml.layout import layout_version, relayout
 from t2pw.pwml.qa import run_pwml_qa
 from t2pw.service.final_payload import final_payload_enabled
 from t2pw.pwml.validate import (
@@ -2658,14 +2659,9 @@ class DeterministicPwmlBuilder:
                     if not minfo:
                         continue
                     role = str(member.get("role") or "")
-                    layout = reaction_layout_by_key.get(str(viz.get("process_key") or ""), {"row-dir": 1})
-                    side = (
-                        _reaction_visual_side(layout, True)
-                        if role == "left"
-                        else _reaction_visual_side(layout, False)
-                        if role == "right"
-                        else ""
-                    )
+                    # PathWhiz reads the member's `side` as its role (SBML/SBGN export,
+                    # orientation, find_element), so it follows the role, not the serpentine row.
+                    side = "Left" if role == "left" else "Right" if role == "right" else ""
                     mtype = str(member.get("member_type") or minfo.get("entity_type") or "")
                     if role == "enzyme":
                         ev = {"id": self.ids.next(), "reaction-enzyme-id": int(minfo["id"])}
@@ -3001,6 +2997,8 @@ class DeterministicPwmlBuilder:
         self._make_compound_identity_fields_optional()
         self._make_biological_state_identity_fields_optional()
         counts = self._populate_sections_from_ir()
+        if layout_version() == "v2":  # T2PW_PWML_LAYOUT=v2: geometry only (pwml/layout.py)
+            self.args.width, self.args.height = relayout(self.section_items, self.ids.next, self.extraction, self._ir_key_ids)
 
         root = etree.Element(self.signature.root_tag, nsmap={"option": OPTION_TAG_NS})
         for tag in self.signature.root_children:
