@@ -220,3 +220,52 @@ and then SBML. And then use that layout to see if our renderings are correct, an
 the renderings to the actual pathways and confirm that correctness as well." On main: "Merge all to
 main". On PathWhiz: "pusht the branches but dont merge to the version that is used as the main, im
 not sure which one it is but DO NOT MERGE".
+
+
+**D-W24 · 2026-11-14: rulings on the correctness assessment; biology changes authorized** (recorded by
+the orchestrator at the PO's direction). Answers the open questions in
+`docs/pwml_output/CORRECTNESS-ASSESSMENT.md` section 3. The PO decided items 1-3, 5 and 6 and left
+the rest to the orchestrator ("If there's any more questions, I'm going to leave it to you").
+(1) **Activators and inhibitors.** A protein is written as the enzyme of a step only when it catalyses
+that step. A protein that only activates or inhibits a step becomes an Activation or Inhibition
+interaction on that step, not its enzyme. PO: "are activators and inhibitors enzymes? If it's an enzyme,
+then yeah."
+(2) **Reactions with no stated compartment.** The LLM estimates the compartment from context, for
+example the compartment of the neighbouring reactions that share its compounds. It does not fall back to
+the first compartment listed. An estimated compartment is marked as estimated and carries its evidence.
+(3) **Export quarantine.** It must never delete a correct reaction (the idx 116 case). PO: "it shouldn't
+be deleting any correct reactions."
+(4) **Regulation links (orchestrator's decision).** Every Activation and Inhibition interaction with a
+valid endpoint reaches the PWML. Any that vanish today, as in idx 58, 78 and 128, are a bug to fix.
+Relationship types that PathWhiz cannot store (it accepts Activation and Inhibition only, per D-104 § 4)
+stay out of the PWML. They are kept in the text record, our SBML and the web diagram.
+(5) **Duplicates.** Near-synonym compartments ("cell", "intracellular", the organism name) are merged into
+one, and the duplicated chains in them are merged. Exact duplicate reactions are written once. PO: "yes, we
+should be merging these things."
+(6) **Evidence.** Every reaction, enzyme assignment, compartment and interaction carries evidence from the
+paper. Checks are added for: enzyme belongs to its step; invented or merged steps; estimated compartments.
+An element whose evidence fails is flagged for review, and is removed only when the paper contradicts it.
+Correct elements are never silently dropped. PO: "we should be adding evidence checks for everything.
+Everything should have evidence back."
+(7) **Smaller questions (orchestrator's decision).**
+- Transports with no from/to: estimated the same way as (2), and flagged.
+- Reactions whose enzyme has no database identity: kept and flagged, not deleted.
+- "Unknown" placeholder complexes: no longer carry a species they were not given.
+- Reversibility and stoichiometry: deferred. They are assessed and proposed, not built in this round.
+(8) **Concurrency of the three draws.** `T2PW_EXTRACTION_DRAWS=3` (D-104 § 2) runs its draws one after
+another today. They will run concurrently, with the merge unchanged, so wall time falls without changing
+the result.
+(9) **Gates.** The standing no-regression rule binds: results that cannot be shown not to be worse are
+deferred. Biology changes are A/B-tested on identical inputs: the gold sets, the 26-pathway assessment
+sample and the 97 replays, with every PWML imported into PathWhiz. The work lives on `pwml/correctness`,
+pushed but **not** merged into `webserver/refactor` or `main`; the PO decides that merge after reading the
+results. This relaxes web-track merge gate 6 (no biology) for this branch only.
+PO, verbatim: "Should active number three. So the questions you're asking, number 1, I'm not sure, are
+activators and inhibitors enzymes? If it's an enzyme, then yeah. Where should the reaction with no stated
+location go? The LLM should be able to estimate a stated location. You know, if the reaction is occurring
+in one part of the mitochondria, and then next up we're talking about another thing, perhaps it's in that
+same part of the mitochondria. Yes, it shouldn't be deleting any correct reactions for number 3. For
+number 4, I'm not sure what you mean by regulation links, to be honest. 5, yes, we should be merging these
+things. For 6, yes, we should be adding evidence checks for everything. Everything should have evidence
+back. [...] If there's any more questions, I'm going to leave it to you. [...] I want you to add these
+changes, then test import everthng it pathwhiz as needed and test all things".
