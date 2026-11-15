@@ -8,7 +8,9 @@ from __future__ import annotations
 import copy
 import sys
 import time
+from collections import Counter
 from pathlib import Path
+from urllib.parse import urlsplit
 
 import pytest
 
@@ -29,10 +31,11 @@ class _Inner:
     timeout, retries = 30.0, 3
 
     def __init__(self, mode: str) -> None:
-        self.mode, self.calls = mode, 0
+        self.mode, self.calls, self.urls = mode, 0, []
 
     def _go(self, url, params=None):
         self.calls += 1
+        self.urls.append(url)
         if self.mode == "dead":
             raise FetchError("network unreachable (test)")
         return None
@@ -98,7 +101,8 @@ def test_dead_network_fails_open_and_the_circuit_opens(net, monkeypatch, tmp_pat
     assert rep["enabled"] and rep["written"] == 0 and rep["error"] is None  # the fill failed open: every request was a FetchError
     assert rep["circuit_open"] is True and rep["budget_exhausted"] is True
     assert rep["nucleic_types"]["circuit_open"] is True and rep["pathway_meta"]["circuit_open"] is False  # the title has its own
-    assert inner.calls == fp.CIRCUIT_BREAKER_N  # the dead network cost 5 requests, not one per entity
+    per_host = Counter(urlsplit(u).netloc for u in inner.urls)  # D-W23 c: the circuit is per host, so a dead network costs 5 per host
+    assert max(per_host.values()) == fp.CIRCUIT_BREAKER_N and inner.calls == sum(per_host.values())  # not one request per entity
 
     def freeze(payload):
         return freeze_canonical_payload(payload, strict_db=False, outputs_dir=tmp_path, pathway_context={}, export_mode="pathwhiz",
@@ -203,6 +207,41 @@ def test_circuit_opens_after_n_in_a_row_and_a_success_resets_the_count():
     with pytest.raises(FetchError, match="circuit open"):
         b2.get_json("u")
     assert inner2.calls == 5 and b2.refused == 1 and b2.exhausted is True  # refused without touching the network
+
+
+def test_the_circuit_is_per_host_five_failures_from_one_host_do_not_stop_another():
+    class Hosts:
+        def __init__(self):
+            self.calls = []
+
+        def get_json(self, url, params=None):
+            self.calls.append(url)
+            if "dead.example" in url:
+                raise FetchError("x")
+            return {"ok": 1}
+
+        get_text = get_json
+
+    inner = Hosts()
+    b = fp._Budget(inner, 1000.0, breaker=5)
+    for _ in range(5):
+        with pytest.raises(FetchError):
+            b.get_json("https://dead.example/a")
+    assert b.circuit_open is True and b.refused == 0
+    assert b.get_json("https://live.example/a") == {"ok": 1}  # another host is still served
+    with pytest.raises(FetchError, match="circuit open"):
+        b.get_json("https://dead.example/b?q=1")  # the dead host is refused without touching the network
+    assert len(inner.calls) == 6 and b.refused == 1
+    # a success resets only its own host's count
+    inner2 = Hosts()
+    b2 = fp._Budget(inner2, 1000.0, breaker=5)
+    for _ in range(4):
+        with pytest.raises(FetchError):
+            b2.get_json("https://dead.example/a")
+    assert b2.get_json("https://live.example/a") == {"ok": 1}  # a success on another host does not reset dead.example's count
+    with pytest.raises(FetchError):
+        b2.get_json("https://dead.example/a")
+    assert b2.circuit_open is True
 
 
 # ---- R3-3: budget_exhausted is per step -------------------------------------------------------------------------------------

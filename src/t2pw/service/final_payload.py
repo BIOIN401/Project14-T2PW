@@ -21,8 +21,8 @@ title lookup has its own 60 s, and the throttle is per fetcher: no NEW request s
 flight (4 tries, up to ~127 s on a blackholed host) can run past that. Fix round 3 bounds this further: (a) both budgets are capped
 to the time left before the job deadline (``state["pathway_run_deadline"]``, epoch seconds) minus ``DEADLINE_MARGIN_S``, and under a
 deadline the live fetcher uses 10 s timeouts and 2 retries (worst request ~33 s), so a web job that finished with the flag off
-cannot run out of time here; (b) ``_Budget`` opens a circuit after ``CIRCUIT_BREAKER_N`` consecutive ``FetchError`` s (a success
-resets the count), so a dead network costs seconds; each step report carries ``circuit_open``; (c) ``T2PW_FINAL_PAYLOAD_BUDGET_S``
+cannot run out of time here; (b) ``_Budget`` opens a circuit per HOST after ``CIRCUIT_BREAKER_N`` consecutive ``FetchError`` s from it (a success
+resets that host's count; D-W23 c), so a dead network costs seconds; each step report carries ``circuit_open``; (c) ``T2PW_FINAL_PAYLOAD_BUDGET_S``
 caps every budget including the title's (non-finite or negative values are ignored). ``T2PW_FINAL_PAYLOAD_BUDGET_S=0`` is the
 OFFLINE SWITCH: the layer makes no network call at all and fills nothing that needs one (cached answers are still used). (3) The
 ``final_payload_fill`` key carries dates, so the canonical hash changes from day to day for the same run. (4) Role/class terms:
@@ -42,6 +42,7 @@ import os
 import re
 import time
 from typing import Any, Dict, List, Optional
+from urllib.parse import urlsplit
 
 FINAL_PAYLOAD_FILL_FIELD = "final_payload_fill"
 BUDGET_SECONDS = 300.0  # wall clock for live requests; cached answers are free, so a re-run finishes the rest
@@ -76,12 +77,17 @@ def _norm(v: Any) -> str:
 
 
 class _Budget:
-    """Wraps the live fetcher: once the wall-clock budget is spent, or ``breaker`` FetchErrors came in a row, every further request
-    is a FetchError (counted in ``refused``, not fatal). A success resets the consecutive count."""
+    """Wraps the live fetcher: once the wall-clock budget is spent, every further request is a FetchError; so is every request to a host
+    that gave ``breaker`` FetchErrors in a row (counted in ``refused``, not fatal). The circuit is per host (D-W23 c): a success resets
+    only its own host's count, and a dead host never stops requests to another. The time budget stays global."""
 
     def __init__(self, inner: Any, seconds: float, breaker: int = CIRCUIT_BREAKER_N) -> None:
         self.inner, self.deadline, self.breaker = inner, time.monotonic() + seconds, breaker
-        self.refused, self.errors_in_a_row, self.circuit_open = 0, 0, False
+        self.refused, self.errors_in_a_row, self.open_hosts = 0, {}, set()
+
+    @property
+    def circuit_open(self) -> bool:  # any host's circuit is open (what the step reports carry)
+        return bool(self.open_hosts)
 
     @property
     def exhausted(self) -> bool:  # a request was refused (budget spent or circuit open)
@@ -95,16 +101,18 @@ class _Budget:
 
     def _call(self, fn: Any, url: str, params: Optional[Dict[str, Any]]) -> Any:
         from t2pw.clean_model.fill.http import FetchError
-        if self.circuit_open or time.monotonic() >= self.deadline:
+        host = urlsplit(str(url)).netloc.casefold()
+        if host in self.open_hosts or time.monotonic() >= self.deadline:
             self.refused += 1
-            raise FetchError("final payload fill circuit open" if self.circuit_open else "final payload fill time budget exhausted")
+            raise FetchError("final payload fill circuit open" if host in self.open_hosts else "final payload fill time budget exhausted")
         try:
             out = fn(url, params)
         except FetchError:
-            self.errors_in_a_row += 1
-            self.circuit_open = self.circuit_open or self.errors_in_a_row >= self.breaker
+            n = self.errors_in_a_row[host] = self.errors_in_a_row.get(host, 0) + 1
+            if n >= self.breaker:
+                self.open_hosts.add(host)
             raise
-        self.errors_in_a_row = 0
+        self.errors_in_a_row[host] = 0
         return out
 
     def get_json(self, url: str, params: Optional[Dict[str, Any]] = None) -> Any:
