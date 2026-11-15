@@ -84,7 +84,22 @@ def test_unset_and_v2_are_the_same_bytes(monkeypatch):
 def test_v2_changes_geometry_only(monkeypatch):
     v1, v2 = _build(monkeypatch, "v1"), _build(monkeypatch, "v2")
     assert etree.tostring(v1) != etree.tostring(v2)
-    assert _strip(v1) == _strip(v2)
+    # D-W24 / correctness F3: v2 draws a shared compound once, so location and visualization ids and counts differ
+    # from v1. The content may not: everything outside the drawing sections is identical, and every reaction member
+    # is drawn with the same compound, state and side.
+    drawing = re.compile(r"(locations|visualizations|edges)$")
+
+    def content(root):
+        root = copy.deepcopy(root)
+        pv = root.find(".//pathway-visualization")
+        locs = {el.findtext("id"): (el.findtext("compound-id"), el.findtext("biological-state-id")) for el in pv.iter("compound-location")}
+        members = sorted((rv.findtext("reaction-id"), locs[m.findtext("compound-location-id")], m.findtext("side"))
+                         for rv in pv.iter("reaction-visualization") for m in rv.iter("reaction-compound-visualization"))
+        for el in [c for c in pv if isinstance(c.tag, str) and drawing.search(c.tag)]:
+            pv.remove(el)
+        return _strip(root), members
+
+    assert content(v1) == content(v2)
 
 
 def test_v2_quality(monkeypatch):

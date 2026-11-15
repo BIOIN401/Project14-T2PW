@@ -291,15 +291,23 @@ def _rounded_rect(x0: int, y0: int, x1: int, y1: int, r: int = 30) -> str:
     return " ".join(out) + " "
 
 
-def _layered(blocks: Dict[Any, "_Block"], keys: List[Any], flow: List[Tuple[Any, Any]]) -> Tuple[int, int]:
+def _layered(blocks: Dict[Any, "_Block"], keys: List[Any], flow: List[Tuple[Any, Any]],
+             rank: Optional[Dict[Any, int]] = None) -> Tuple[int, int]:
     """Sugiyama-style layout of one connected group: columns by longest path (back edges dropped), order by
     barycenter sweeps, y by least-squares alignment with neighbours (no overlap). Sets block x/y relative to
-    the group's top-left corner; returns the group's (width, height)."""
+    the group's top-left corner; returns the group's (width, height). ``rank`` (a block's first process in the
+    pathway's order) orders the depth-first search, so a cycle is broken at the edge that returns to the earlier
+    process and the chain reads left to right in pathway order."""
+    if rank:
+        keys = sorted(keys, key=lambda k: rank.get(k, 1 << 30))  # stable: unranked keep their order, last
     inside = set(keys)
     succ: Dict[Any, List[Any]] = defaultdict(list)
     for u, v in flow:
         if u in inside and v in inside and u != v and v not in succ[u]:
             succ[u].append(v)
+    if rank:
+        for u in succ:
+            succ[u].sort(key=lambda k: rank.get(k, 1 << 30))
     mark: Dict[Any, int] = {}
     dag: Dict[Any, List[Any]] = defaultdict(list)
     for start in keys:
@@ -569,6 +577,10 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
         remaining.remove(nxt)
         bands.append(nxt)
 
+    rank: Dict[Any, int] = {}  # a block's first process, in the order processes are listed (pathway order)
+    for i, (u, v) in enumerate(flow):
+        rank.setdefault(u, i)
+        rank.setdefault(v, i)
     comps_by_state: Dict[Any, List[Tuple[List[Any], int, int]]] = {}
     for s in bands:
         ks = set(by_state[s])
@@ -591,7 +603,7 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
                         seen.add(v)
                         todo.append(v)
             comp = [c for c in by_state[s] if c in set(comp)]
-            w, h = _layered(blocks, comp, flow)
+            w, h = _layered(blocks, comp, flow, rank)
             comps.append((comp, w, h))
         comps.sort(key=lambda c: (not any(k in attached for k in c[0]), -(c[1] * c[2])))  # drawn groups first
         comps_by_state[s] = comps
