@@ -1,0 +1,676 @@
+{
+ "7": {
+  "n_reactions": 23,
+  "same_compartment": [
+   {
+    "sig": "glu-trnaglu -> glu 1-semialdehyde",
+    "reactions": [
+     [
+      "rxn_1",
+      "plastid",
+      [
+       "hema1 complex"
+      ]
+     ],
+     [
+      "rxn_17",
+      "plastid",
+      [
+       "flu complex",
+       "glutamyl-trna reductase",
+       "hema1 complex"
+      ]
+     ]
+    ]
+   },
+   {
+    "sig": "coproporphyrinogen iii -> protoporphyrinogen ix",
+    "reactions": [
+     [
+      "rxn_7",
+      "plastid",
+      [
+       "cpo1"
+      ]
+     ],
+     [
+      "rxn_18",
+      "plastid",
+      [
+       "coproporphyrinogen-iii oxidase 1, chloroplastic",
+       "cpo1"
+      ]
+     ]
+    ]
+   },
+   {
+    "sig": "protoporphyrinogen ix -> protoporphyrin ix",
+    "reactions": [
+     [
+      "rxn_8",
+      "plastid",
+      [
+       "ppo1",
+       "protogen ix oxidase"
+      ]
+     ],
+     [
+      "rxn_19",
+      "plastid",
+      [
+       "ppo"
+      ]
+     ]
+    ]
+   }
+  ],
+  "across_compartments": [
+   {
+    "sig": "mg2 + protoporphyrin ix -> mg-proto ix",
+    "reactions": [
+     [
+      "rxn_9",
+      "thylakoid membrane",
+      [
+       "gun4 complex",
+       "mg-chelatase"
+      ]
+     ],
+     [
+      "rxn_21",
+      "plastid",
+      [
+       "gun4 complex",
+       "mg-chelatase complex"
+      ]
+     ]
+    ]
+   }
+  ]
+ },
+ "9": {
+  "n_reactions": 19,
+  "same_compartment": [],
+  "across_compartments": [
+   {
+    "sig": "chorismate -> isochorismate",
+    "reactions": [
+     [
+      "rxn_1",
+      "cell",
+      [
+       "menf complex"
+      ]
+     ],
+     [
+      "rxn_11",
+      "intracellular",
+      [
+       "menf complex"
+      ]
+     ]
+    ]
+   },
+   {
+    "sig": "isochorismate -> 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate",
+    "reactions": [
+     [
+      "rxn_2",
+      "cell",
+      [
+       "mend complex"
+      ]
+     ],
+     [
+      "rxn_12",
+      "intracellular",
+      [
+       "mend complex"
+      ]
+     ]
+    ]
+   },
+   {
+    "sig": "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate -> shchc",
+    "reactions": [
+     [
+      "rxn_3",
+      "cell",
+      [
+       "menh complex"
+      ]
+     ],
+     [
+      "rxn_13",
+      "intracellular",
+      [
+       "menh complex"
+      ]
+     ]
+    ]
+   },
+   {
+    "sig": "shchc -> osb",
+    "reactions": [
+     [
+      "rxn_4",
+      "cell",
+      [
+       "menc complex"
+      ]
+     ],
+     [
+      "rxn_14",
+      "intracellular",
+      [
+       "menc complex"
+      ]
+     ]
+    ]
+   },
+   {
+    "sig": "osb -> osb-coa",
+    "reactions": [
+     [
+      "rxn_5",
+      "cell",
+      [
+       "mene complex"
+      ]
+     ],
+     [
+      "rxn_15",
+      "intracellular",
+      [
+       "mene complex"
+      ]
+     ]
+    ]
+   },
+   {
+    "sig": "osb-coa -> dhna-coa",
+    "reactions": [
+     [
+      "rxn_6",
+      "cell",
+      [
+       "menb complex",
+       "mend complex"
+      ]
+     ],
+     [
+      "rxn_16",
+      "intracellular",
+      [
+       "menb complex"
+      ]
+     ]
+    ]
+   },
+   {
+    "sig": "dhna-coa -> 1,4-dihydroxy-2-naphthoic acid",
+    "reactions": [
+     [
+      "rxn_7",
+      "cell",
+      [
+       "meni"
+      ]
+     ],
+     [
+      "rxn_17",
+      "intracellular",
+      [
+       "meni"
+      ]
+     ]
+    ]
+   },
+   {
+    "sig": "1,4-dihydroxy-2-naphthoic acid + prenyl diphosphate -> dmk",
+    "reactions": [
+     [
+      "rxn_8",
+      "cell",
+      [
+       "mena"
+      ]
+     ],
+     [
+      "rxn_18",
+      "intracellular",
+      [
+       "mena"
+      ]
+     ]
+    ]
+   },
+   {
+    "sig": "dmk -> mk",
+    "reactions": [
+     [
+      "rxn_9",
+      "cell",
+      [
+       "meng complex"
+      ]
+     ],
+     [
+      "rxn_19",
+      "intracellular",
+      [
+       "meng complex"
+      ]
+     ]
+    ]
+   }
+  ]
+ },
+ "116": {
+  "n_reactions": 14,
+  "same_compartment": [
+   {
+    "sig": "l-serine + palmitoyl-coa -> 3-dehydrosphinganine",
+    "reactions": [
+     [
+      "rxn_1",
+      "endoplasmic reticulum",
+      [
+       "serine palmitoyltransferase complex"
+      ]
+     ],
+     [
+      "rxn_4",
+      "endoplasmic reticulum",
+      [
+       "serine palmitoyltransferase complex"
+      ]
+     ]
+    ]
+   }
+  ],
+  "across_compartments": []
+ },
+ "5": {
+  "n_reactions": 16,
+  "same_compartment": [
+   {
+    "sig": "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate -> shchc",
+    "reactions": [
+     [
+      "rxn_4",
+      "intracellular",
+      [
+       "menh"
+      ]
+     ],
+     [
+      "rxn_9",
+      "intracellular",
+      [
+       "menh"
+      ]
+     ]
+    ]
+   },
+   {
+    "sig": "shchc -> osb",
+    "reactions": [
+     [
+      "rxn_5",
+      "intracellular",
+      [
+       "menc"
+      ]
+     ],
+     [
+      "rxn_10",
+      "intracellular",
+      [
+       "menc"
+      ]
+     ]
+    ]
+   },
+   {
+    "sig": "osb -> osb-coa",
+    "reactions": [
+     [
+      "rxn_6",
+      "intracellular",
+      [
+       "mene"
+      ]
+     ],
+     [
+      "rxn_11",
+      "intracellular",
+      [
+       "mene"
+      ]
+     ]
+    ]
+   },
+   {
+    "sig": "osb-coa -> dhna-coa",
+    "reactions": [
+     [
+      "rxn_7",
+      "intracellular",
+      [
+       "menb"
+      ]
+     ],
+     [
+      "rxn_12",
+      "intracellular",
+      [
+       "menb"
+      ]
+     ]
+    ]
+   },
+   {
+    "sig": "dhna-coa -> 1,4-dihydroxy-2-naphthoic acid",
+    "reactions": [
+     [
+      "rxn_8",
+      "intracellular",
+      [
+       "meni"
+      ]
+     ],
+     [
+      "rxn_13",
+      "intracellular",
+      [
+       "meni"
+      ]
+     ]
+    ]
+   }
+  ],
+  "across_compartments": [
+   {
+    "sig": "1,4-dihydroxy-2-naphthoic acid + dimethylallylpyrophosphate -> demethylmenaquinone (dmk)",
+    "reactions": [
+     [
+      "rxn_2",
+      "cell",
+      [
+       "mena complex"
+      ]
+     ],
+     [
+      "rxn_14",
+      "intracellular",
+      [
+       "mena complex"
+      ]
+     ],
+     [
+      "rxn_16",
+      "cell",
+      [
+       "mena complex"
+      ]
+     ]
+    ]
+   },
+   {
+    "sig": "demethylmenaquinone (dmk) -> menaquinone (mk)",
+    "reactions": [
+     [
+      "rxn_3",
+      "cell",
+      [
+       "meng"
+      ]
+     ],
+     [
+      "rxn_15",
+      "intracellular",
+      [
+       "meng"
+      ]
+     ]
+    ]
+   }
+  ]
+ },
+ "134": {
+  "n_reactions": 10,
+  "same_compartment": [],
+  "across_compartments": [
+   {
+    "sig": "n6-trimethyllysine -> 3-hydroxy-n6-trimethyllysine",
+    "reactions": [
+     [
+      "rxn_1",
+      "mitochondria",
+      [
+       "bbd",
+       "tmld"
+      ]
+     ],
+     [
+      "rxn_7",
+      "cell",
+      [
+       "tmld"
+      ]
+     ]
+    ]
+   },
+   {
+    "sig": "3-hydroxy-n6-trimethyllysine -> 4-trimethylaminobutyraldehyde + glycine",
+    "reactions": [
+     [
+      "rxn_2",
+      "mitochondria",
+      [
+       "shmt1"
+      ]
+     ],
+     [
+      "rxn_3",
+      "mitochondria",
+      [
+       "shmt2"
+      ]
+     ],
+     [
+      "rxn_6",
+      "mitochondria",
+      [
+       "shmt1",
+       "shmt2",
+       "tha1"
+      ]
+     ],
+     [
+      "rxn_9",
+      "cell",
+      [
+       "shmt1",
+       "shmt2",
+       "tha1"
+      ]
+     ]
+    ]
+   }
+  ]
+ },
+ "125": {
+  "n_reactions": 8,
+  "same_compartment": [
+   {
+    "sig": "bergaptol + sam -> bergapten",
+    "reactions": [
+     [
+      "rxn_5",
+      "endoplasmic_reticulum",
+      [
+       "agomt1"
+      ]
+     ],
+     [
+      "rxn_8",
+      "endoplasmic_reticulum",
+      [
+       "agomt2"
+      ]
+     ]
+    ]
+   }
+  ],
+  "across_compartments": []
+ },
+ "120": {
+  "n_reactions": 7,
+  "same_compartment": [
+   {
+    "sig": "androstenedione -> testosterone",
+    "reactions": [
+     [
+      "rxn_1",
+      "cell",
+      [
+       "hsd17b3 complex"
+      ]
+     ],
+     [
+      "rxn_2",
+      "cell",
+      [
+       "hsd17b1 complex",
+       "hsd17b12 complex"
+      ]
+     ],
+     [
+      "rxn_3",
+      "cell",
+      [
+       "hsd17b7 complex"
+      ]
+     ],
+     [
+      "rxn_4",
+      "cell",
+      [
+       "hsd17b12 complex"
+      ]
+     ],
+     [
+      "rxn_5",
+      "cell",
+      [
+       "hsd17b12 complex",
+       "hsd17b3 complex",
+       "hsd17b7 complex"
+      ]
+     ]
+    ]
+   }
+  ],
+  "across_compartments": []
+ },
+ "126": {
+  "n_reactions": 5,
+  "same_compartment": [
+   {
+    "sig": "benzaldehyde + nadph -> benzyl alcohol + nadp+",
+    "reactions": [
+     [
+      "rxn_1",
+      "cytosol",
+      [
+       "phbr1",
+       "phbr2"
+      ]
+     ],
+     [
+      "rxn_2",
+      "cytosol",
+      [
+       "phbbo",
+       "phbr1",
+       "phbr2",
+       "phbse",
+       "phbs\u03b1",
+       "phcad1"
+      ]
+     ]
+    ]
+   }
+  ],
+  "across_compartments": []
+ },
+ "122": {
+  "n_reactions": 4,
+  "same_compartment": [
+   {
+    "sig": "farnesyl pyrophosphate -> farnesyl phosphate",
+    "reactions": [
+     [
+      "rxn_1",
+      "endoplasmic reticulum",
+      [
+       "cwh8 complex"
+      ]
+     ],
+     [
+      "rxn_4",
+      "endoplasmic reticulum",
+      [
+       "cwh8 complex"
+      ]
+     ]
+    ]
+   }
+  ],
+  "across_compartments": []
+ },
+ "12": {
+  "n_reactions": 5,
+  "same_compartment": [
+   {
+    "sig": "diosgenin + udp-glucose -> diosgenin 3-o-glucoside (trillin)",
+    "reactions": [
+     [
+      "rxn_1",
+      "cytoplasm",
+      [
+       "ugt91bp2"
+      ]
+     ],
+     [
+      "rxn_2",
+      "cytoplasm",
+      [
+       "ugt703r1"
+      ]
+     ],
+     [
+      "rxn_3",
+      "cytoplasm",
+      [
+       "ugt703r2"
+      ]
+     ],
+     [
+      "rxn_4",
+      "cytoplasm",
+      [
+       "ugt703r1",
+       "ugt703r2",
+       "ugt703r3",
+       "ugt91bp2"
+      ]
+     ]
+    ]
+   }
+  ],
+  "across_compartments": []
+ }
+}

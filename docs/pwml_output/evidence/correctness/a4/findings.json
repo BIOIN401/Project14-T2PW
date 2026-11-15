@@ -1,0 +1,182 @@
+[
+ {
+  "rank": 1, "severity": "S1", "bucket": "A",
+  "title": "Paper-explicit core reactions are deleted pre-freeze when their enzyme has no external identity, while the same situation elsewhere ships an Unknown placeholder",
+  "pathways": [5, 121, 68],
+  "evidence": "final_payload.quarantined_locked_reactions reason protein_missing_external_identity: idx 5 MenD isochorismate -> SEPHCHC (gold_v2 PMC12421875 R2; chain breaks after isochorismate); idx 121 HS41.20 dehydratase and both HS41.17 mutase steps (the two furanose products named in the pathway title are absent); idx 68 LpxL/LpxM. Same run family exports 88 Unknown-only complexes (a4/unknown_complexes.json), e.g. idx 9 MenI/MenA.",
+  "proposed_fix": "Apply one rule: a paper-explicit reaction whose enzyme fails identity keeps the reaction with a placeholder enzyme (as section 13 already licenses) and is marked review_required, instead of being removed.",
+  "needs_PO_ruling": true,
+  "options": [
+   "(a) Keep the reaction, enzyme as Unknown placeholder (consistent with the section 13 standing position). Cost: more placeholder rows; small change at the quarantine admission rule; no loss of gold recall (idx 5 -> 9/9).",
+   "(b) Keep the reaction with no enzyme, flagged review_required. Cost: enzyme-less reactions in PWML; PathWhiz accepts them (idx 116 R2, 148 R5 already do).",
+   "(c) Status quo. Cost: gold-scored recall loss (idx 5 8/9) and pathways whose named end products vanish (idx 121)."
+  ]
+ },
+ {
+  "rank": 2, "severity": "S1", "bucket": "A",
+  "title": "Wrong enzyme assignments in the payload",
+  "pathways": [134, 7, 126, 120, 129, 128, 78, 58, 116],
+  "evidence": "134: TMLD and BBD on both reaction 1 and 4 ('Reactions 1 and 4 are catalyzed by ... TMLD and ... BBD', i.e. respectively) and mouse-only Tha1 in the human pathway ('a mouse protein absent in humans'); 7: Chl synthase step drawn with CHLI (WP3018: CHLG AT3G51820), FLU ('a negative regulator of ALA synthesis') as GluTR enzyme; 126: BBO/BSE/BSα/CAD1 scattered onto BR, BPBT and BS steps; 120: HSD17B1 ('undetectable in the testis ... cannot compensate'); 129: RibBA on RibD step; 128: CoaX as pantethine transporter, CoaA missing; 78/58: EntE step and EntF/EntD complexes = [EntB,EntD,EntF,EntE]; 116: 'ceramide synthase' grounded to TLCD3B (UniProt Q71RH2), not CERS1-6.",
+  "proposed_fix": "Add a deterministic enzyme-step consistency check before freeze: the enzyme's own evidence sentence must name the reaction's substrate or product (or the 'respectively' order), and organism-restricted genes are checked against the run organism. Flag, do not auto-assign.",
+  "needs_PO_ruling": true,
+  "options": [
+   "(a) Pre-freeze check that drops an enzyme whose evidence does not bind it to the step (keeps the reaction). Cost: some true multi-enzyme statements lose an enzyme; changes extraction-side code (rule 6, PO).",
+   "(b) Same check, but flag review_required only. Cost: wrong enzymes still exported, but labelled.",
+   "(c) Prompt-level fix for 'respectively' and regulator-vs-catalyst wording. Cost: Stage-1 nondeterminism; needs re-run evidence."
+  ]
+ },
+ {
+  "rank": 3, "severity": "S1", "bucket": "B",
+  "title": "Reactions with no stated compartment are drawn in the first biological state, inventing locations",
+  "pathways": [138, 134, 116, 144, 128],
+  "evidence": "ir.py resolve_state (~line 1836-1841) returns default_bs_key for any null state. 138: all 8 tubercidin steps in 'extracellular' although 'TubI is responsible for transporting TBN out of the cell once synthesized'; 134: SHMT1, TMABADH and BBD steps in the mitochondrion although 'carnitine biosynthesis occurs initially in the mitochondria and subsequently in the cytosol' (Reactome R-HSA-71262 confirms cytosolic ALDH9A1/BBOX1/SHMT1); 116: SphK, SMase, ceramidase in ER (paper gives none, GSL hydrolysis 'principally in the lysosome'); 144: AmOMT2 in ER; 128: spontaneous extracellular cysteinopantetheine formation in cytoplasm. Counts: a1/null_state_default.json.",
+  "proposed_fix": "Exporter: map a null state to an organism-level 'cell' state with no subcellular location (create one if absent), never to an arbitrary named compartment. Contract section 1 forbids inventing locations; section 5 forbids exporter reinterpretation.",
+  "needs_PO_ruling": false,
+  "options": [
+   "(a) Neutral organism-level state. Cost: small IR change; PWML compartments get a generic 'cell' box.",
+   "(b) Move the default upstream of freeze so final_payload is honest. Cost: touches pipeline output schema."
+  ]
+ },
+ {
+  "rank": 4, "severity": "S1", "bucket": "B",
+  "title": "Exporter quarantines a correct reaction and keeps a wrong shortcut (idx 116 sphinganine -> dihydroceramide)",
+  "pathways": [116],
+  "evidence": "base/116/outputs__quarantine_report.json stage pre_export_strict_quarantine, pointer /processes/reactions/4, reason reaction_enzyme_must_be_protein_complex: the enzyme is a bare protein with no Stage-6 wrapper. The PWML keeps R2 sphinganine -> ceramide (enzyme-less, skips dihydroceramide) and R5 dihydroceramide -> ceramide whose substrate now has no producer. Paper: 'The desaturation of these dihydroceramides ... by dihydroceramide Δ4-desaturase 1 produces ceramide'. a1/per_pathway.json: missing_in_pwml for 116.",
+  "proposed_fix": "Ensure Stage 6 creates the protein-complex wrapper for every surviving protein catalyst before freeze (so the exporter has nothing to drop), and make the pre-export quarantine fail loudly rather than silently remove a frozen reaction. Separately (A): R2 is a conflated step; the identity Q71RH2 (TLCD3B) is wrong.",
+  "needs_PO_ruling": true,
+  "options": [
+   "(a) Wrapper fix upstream of freeze only. Cost: small; reaction returns with TLCD3B identity, which is itself wrong (S1) unless identity is also withheld to placeholder.",
+   "(b) Wrapper fix + withhold the name-matched identity (placeholder). Cost: one more Unknown complex.",
+   "(c) Leave as is. Cost: exported de novo chain is biochemically wrong."
+  ]
+ },
+ {
+  "rank": 5, "severity": "S1", "bucket": "A",
+  "title": "Collapsed or conflated steps with wrong products",
+  "pathways": [68, 116, 138, 19, 148, 114],
+  "evidence": "68: LpxA product written as the post-LpxC glucosamine; LpxD/LpxH/LpxB/LpxK collapsed into one 'LpxB' step; LpxC/LpxD/LpxH/LpxK extracted as X -> X and quarantined (coarse_grained_same_entity_transformation) -> 3/8 pinned_v1 expected enzymes present as catalysts. 116: sphinganine -> ceramide. 138: compound 3 -> 5 skips PurA/PurB ('the missing two enzymes, adenylosuccinate synthetase (PurA), and adenylosuccinate lyase (PurB)'). 19: DmaW+EasF as one step. 148: CYP83B1 + GSH conjugation collapsed. 114: DltA adenylation without D-alanyl-AMP; DltC loading extracted as D-Ala -> D-Ala and quarantined.",
+  "proposed_fix": "When the coarse-grained X -> X detector fires, route the enzyme sentence to a targeted re-extraction for the intermediate (the paper usually names it) instead of only quarantining.",
+  "needs_PO_ruling": true,
+  "options": [
+   "(a) Targeted re-extraction of the step on coarse-grained hits. Cost: one bounded LLM call per hit; extraction change.",
+   "(b) Keep the collapsed reaction but flag review_required with the skipped enzymes listed. Cost: still a wrong product in PWML.",
+   "(c) Status quo (quarantine). Cost: idx 68 loses 6 of 9 steps."
+  ]
+ },
+ {
+  "rank": 6, "severity": "S1", "bucket": "A",
+  "title": "Invented or non-evidence reactions survive to export",
+  "pathways": [126, 144, 7, 78, 128, 135],
+  "evidence": "126 R2 benzaldehyde -> salicylic acid by BBO (paper: BBO hydroxylates benzyl benzoate to benzyl salicylate); R2-R4 evidence is the literal pathway name. 144 R5 'liquiritigenin + naringenin -> isoflavone backbone' (rag_literature; evidence is the article metadata header). 7 R21 Pchlide -> singlet oxygen with GluTR/FC1 as activators. 78 R6 porcine LDH coupled assay (gold_v2 off_pathway O2; contract: no assay reporters). 128 R9 a methods-section chemical preparation. 135 R9 MgCl2 as substrate.",
+  "proposed_fix": "Pre-freeze evidence gate: reject a reaction whose evidence string does not contain at least one of its participants (catches 126, 144) and tag methods/assay sentences (catches 78, 128, 135).",
+  "needs_PO_ruling": true,
+  "options": [
+   "(a) Hard gate (drop). Cost: may drop a few true reactions with paraphrased evidence; 'smaller supported pathway preferable' supports it.",
+   "(b) Soft gate (review_required). Cost: invented content still drawn."
+  ]
+ },
+ {
+  "rank": 7, "severity": "S1", "bucket": "A+B",
+  "title": "Inhibitor/activator modifiers drawn as enzymes; idx 9 inhibitor is itself invented",
+  "pathways": [9, 7],
+  "evidence": "B: ir.py line 2178 (and validator ~3102) add modifiers with role activator/inhibitor to enzyme_sources, so they become reaction-enzymes. A: idx 9 R5 OSB-CoA -> DHNA-CoA carries 'MenD complex' role inhibitor; the paper only says 'the allosteric inhibition of MenD by DHNA' (gold_v2 excluded_statements: 'DHNA allosterically inhibits MenD', regulation), already present as interaction I0. So the PWML shows MenD catalysing the MenB step. 7: GUN4 (activator) drawn as Mg-chelatase enzyme; GluTR/FC1 drawn as enzymes of the invented singlet-oxygen reaction. a2/modifiers_as_enzymes.json.",
+  "proposed_fix": "B: stop mapping activator/inhibitor to reaction-enzymes; emit them as PWML interactions (or drop with a report issue). A: idx 9 modifier is an extraction error.",
+  "needs_PO_ruling": false,
+  "options": [
+   "(a) Emit as interaction elements. Cost: needs a PWML interaction mapping for reaction-level modifiers.",
+   "(b) Drop with warning. Cost: real activators (GUN4) disappear from the drawing."
+  ]
+ },
+ {
+  "rank": 8, "severity": "S2", "bucket": "A",
+  "title": "Duplicate reactions and duplicated chains in synonymous states",
+  "pathways": [9, 5, 134, 120, 12, 7, 116, 10, 150, 129, 122, 58, 135, 126],
+  "evidence": "Payload already contains them; exporter renders faithfully. 9: R10-R18 repeat R0-R8 ('L. lactis KF147 state' = cell vs 'Lactococcus lactis intracellular state'); 5: chain in 3 states + RAG copy (9 dups); 134: 10 reactions for 4 steps; 120: androstenedione -> testosterone 5 times; 12: one glucosylation 4 times; 7: 5 dups; 10/150: H+ entry 3x. Counts: a2/duplicate_reactions.json; this assessor's per_pathway.json duplicates.",
+  "proposed_fix": "Pre-freeze dedup on (canonical inputs, outputs, resolved subcellular location) merging enzyme lists and evidence; treat 'cell'/'intracellular'/'cytoplasm' of a bacterium as one location.",
+  "needs_PO_ruling": true,
+  "options": [
+   "(a) Merge on resolved location with a synonym table for prokaryotic 'cell/intracellular/cytoplasm'. Cost: a location-equivalence decision the PO owns.",
+   "(b) Merge only exact same-state duplicates. Cost: leaves the 9/5/134 chain duplication."
+  ]
+ },
+ {
+  "rank": 9, "severity": "S2", "bucket": "A",
+  "title": "Unknown placeholder enzymes (88 of 162 complexes), labelled Arabidopsis thaliana in every organism, including canonical human enzymes",
+  "pathways": [134, 135, 138, 148, 19, 126, 125, 121, 142, 12, 5, 116, 7, 14],
+  "evidence": "a4/unknown_complexes.json: 88/162 payload complexes are Unknown-only; the Unknown protein row carries species 'Arabidopsis thaliana' in 20/26 payloads (human, mouse, bacterial). idx 134: all six human enzymes (TMLHE, SHMT1, SHMT2, ALDH9A1, BBOX1 are reviewed UniProt entries) failed as species_mismatch. idx 5 vs idx 9 (same paper): Men proteins Unknown vs grounded (Q9CHJ9..).",
+  "proposed_fix": "Section 13 makes placeholder export a standing disagreement: do not 'fix' the policy. Escalate two narrower points: the species label on the sentinel, and species_mismatch failures for human enzymes in a human pathway.",
+  "needs_PO_ruling": true,
+  "options": [
+   "(a) Keep sentinel but write the run organism (or no species) on the placeholder row in PWML. Cost: deviates from the PathBank Unknown record (id 9659).",
+   "(b) Investigate the species_mismatch path for human/mouse runs only. Cost: identity-ladder work (mapping/, biology track).",
+   "(c) No change (section 13). Cost: a human pathway shows plant-species proteins."
+  ]
+ },
+ {
+  "rank": 10, "severity": "S2", "bucket": "A",
+  "title": "Reversibility and stoichiometry cannot be represented: the payload schema has neither field",
+  "pathways": [9, 5, 129, 142, 68, 14],
+  "evidence": "No key matching revers*/direction* in any of 196 payload reactions (scripts/a4_rev.py); inputs/outputs are bare names. 8 reactions in 5 pathways cite reversibility (9 R0/R9/R10, 5 R0, 129 R6, 142 R1 '⇌', 68 R0 'reversible acylation'); all 196 written direction Right (a1/per_pathway.json). Stoichiometry always 1: 142 '2.0 Pyruvate' -> 1; 14 'NADPH or NADH' encoded as both co-substrates. The exporter is faithful to the payload, so this is A (schema), not B. gold_v2 marks MenF and EntC reversible=true.",
+  "proposed_fix": "Add optional reversible and per-participant stoichiometry fields to the Stage-1 schema and carry them through freeze; exporter writes direction from them.",
+  "needs_PO_ruling": true,
+  "options": [
+   "(a) Add both fields (default unknown, never inferred). Cost: schema + prompt + canonical-hash allowlist change.",
+   "(b) Reversibility only. Cost: stoichiometry stays 1.",
+   "(c) Status quo. Cost: section 2 'correct directionality and reversibility, correct stoichiometry' unmet."
+  ]
+ },
+ {
+  "rank": 11, "severity": "S2", "bucket": "A",
+  "title": "Wrong direction / wrong co-substrate identities",
+  "pathways": [142, 5, 14],
+  "evidence": "142 IlvE written 2-OG + Val -> KIV + Glu (catabolic) in a biosynthesis pathway (paper row is ⇌). 5 MenA co-substrate grounded to DMAPP (C5) where the paper says 'prenyl diphosphate' (idx 9 kept it). 14 HMGR with NADPH + NADH both consumed.",
+  "proposed_fix": "Orientation check against the requested pathway's net direction when the source marks a reaction reversible; never ground a generic class name ('prenyl diphosphate') to a specific compound.",
+  "needs_PO_ruling": true,
+  "options": ["(a) Deterministic orientation rule for ⇌ rows. Cost: needs reversibility field (F10).", "(b) Flag only. Cost: backwards step stays drawn."]
+ },
+ {
+  "rank": 12, "severity": "S2", "bucket": "A",
+  "title": "Transports with lost compartments, wrong cargo or wrong/missing transporter",
+  "pathways": [78, 138, 134, 128],
+  "evidence": "78 enterobactin secretion and 138 TBN export written cell -> cell with no transporter (paper: TolC-dependent; TubI MFS). 134 cargo TMABA where paper says 'postulated mitochondrial TML/HTML antiporter' (Reactome: HTMLYS translocates). 128 CoaX (a kinase) as pantethine transporter; PanU/EcfA1/EcfA2 quarantined so the ECF complex is EcfT only.",
+  "proposed_fix": "Transport admission: from_state != to_state required; transporter entity must be named in the transport's own evidence sentence.",
+  "needs_PO_ruling": false,
+  "options": ["(a) Gate pre-freeze. Cost: transports with no named transporter become transporter-less (honest)."]
+ },
+ {
+  "rank": 13, "severity": "S2", "bucket": "A",
+  "title": "Paper-central content missing (depth)",
+  "pathways": [116, 125, 144, 120, 10, 126],
+  "evidence": "116: ORMDL inhibition of SPT, the paper's subject ('pointed to how ORMDLs inhibit SPT'), absent; 125: CYP71AJ steps the paper cites (marmesin -> psoralen, psoralen -> xanthotoxol) not filled, leaving the furanocoumarin branch disconnected; 144: 2-HID dehydration to formononetin missing, so the calycosin precursor has no producer; 120: upstream androgen chain absent; 10: Kir2.1 block; 126: BBO/BSE salicylic-acid arm.",
+  "proposed_fix": "These are typed gaps (disconnected substrate with a paper sentence naming the producer) that the section 10 RAG loop is meant to fill; check why gap detection did not fire.",
+  "needs_PO_ruling": false,
+  "options": ["(a) Investigate gap detection on these 6 runs. Cost: diagnosis only."]
+ },
+ {
+  "rank": 14, "severity": "S2", "bucket": "A",
+  "title": "Run-to-run variance on the same paper",
+  "pathways": [9, 5, 78, 58],
+  "evidence": "PMC12421875: idx 9 gold 9/9 with grounded Men proteins; idx 5 gold 8/9, MenD deleted, 7/8 complexes Unknown, DMAPP co-substrate. PMC12096016: idx 78 has assay LDH reaction and broken complexes; idx 58 has wrong EntE enzyme and off-pathway chelation.",
+  "proposed_fix": "Report only; CLAUDE.md already notes Stage-1 nondeterminism at temperature 0. Any fix must be judged over repeated runs.",
+  "needs_PO_ruling": false,
+  "options": []
+ },
+ {
+  "rank": 15, "severity": "S3", "bucket": "B",
+  "title": "Two species written with the same species id",
+  "pathways": [134],
+  "evidence": "replay/on_v2/pwml/134.pwml lines 36-50: Homo sapiens id 1 and Mus musculus id 1 (Arabidopsis id 4). Payload species list has 3 distinct names; no payload entity uses Mus musculus.",
+  "proposed_fix": "Exporter species-id map must be injective; drop unused species or give each its own id.",
+  "needs_PO_ruling": false,
+  "options": []
+ },
+ {
+  "rank": 16, "severity": "S3", "bucket": "A",
+  "title": "Assay preparation used as a compartment",
+  "pathways": [125],
+  "evidence": "All idx 125 reactions in 'microsomal fraction' (resolved to ER for one state), incl. soluble OMT steps; the paper uses microsomes only as an assay prep ('Microsomal fractions were flash-frozen').",
+  "proposed_fix": "Treat 'microsomal fraction' as non-biological in state extraction.",
+  "needs_PO_ruling": false,
+  "options": []
+ }
+]

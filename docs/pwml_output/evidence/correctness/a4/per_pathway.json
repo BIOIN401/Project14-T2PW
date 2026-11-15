@@ -1,0 +1,424 @@
+{
+ "_meta": {
+  "assessor": "A4 (content vs ground truth)",
+  "method": "Manual reading of base/<idx>/final_payload.json (payload summary: a4/summ.txt, from scripts/a4_summ.py) against the source paper text (scripts/a4_grep.py quotes), the eval_v2 gold supplement and pinned_v1 gold, and public references (Reactome, WikiPathways, PathBank, UniProt). No pipeline, test or scorer was run; gold scores are a manual reaction-by-reaction match, not the eval_v2 scorer.",
+  "bucket_legend": "A = the final payload itself is wrong vs the paper (extraction / mapping / pre-freeze stages). B = payload right, PWML/IR misrepresents it (exporter/IR).",
+  "count_legend": "correct = distinct paper-supported steps with right substrate/product (enzyme problems listed under wrong); duplicates are not counted as correct.",
+  "gold_files": {
+   "gold_v2": "C:/t/integ/src/t2pw/bench/eval_v2/gold_v2_supported_reactions.json (cases PMC12096016, PMC12421875 cover sample idx 78, 58, 9, 5; supported_reactions_complete=true)",
+   "pinned_v1": "C:/t/integ/src/t2pw/bench/gold/pinned_v1.json (PMC12444477 covers idx 68: anchors + expected enzymes, no reaction inventory; also PMC12421875, PMC12096016)",
+   "not_covered": "the other 21 sample pathways have no gold set (searched src/t2pw/bench, docs/evaluation_v2 incl. pathbank_gold and gold_cohort)"
+  }
+ },
+ "7": {
+  "organism": "Arabidopsis thaliana", "pathway": "Chlorophyll biosynthesis", "paper": "PMC5130987 (review)",
+  "verdict": "PARTLY CORRECT: Mg-branch backbone (Glu-tRNA -> Chl a/b) correct, but wrong enzymes, an invented reaction and 5 duplicates",
+  "counts": {"correct": 15, "missing": 3, "wrong": 3, "extra": 1, "duplicates": 5},
+  "correct": ["R0 GluTR", "R1 GSAT", "R2 ALAD", "R3 PBGD", "R4 UROS", "R5 UROD", "R6 CPO", "R7 PPO", "R8 Mg-chelatase", "R9 CHLM", "R10 cyclase", "R11 POR", "R12 DVR", "R13 CHLP GGPP->phytyl-PP", "R15 CAO Chlide a->Chlide b"],
+  "missing": [
+   {"step": "Glu + tRNAGlu -> Glu-tRNAGlu (GluRS)", "why": "quarantined pre-freeze, ambiguous_entity_type:compounds+nucleic_acids", "quote": "Glu-tRNA Glu formed from Glu and tRNA Glu within plastids is reduced to Glu 1-semialdehyde", "bucket": "A"},
+   {"step": "Proto IX + Fe2+ -> protoheme (FC1/FC2)", "quote": "In the Fe-branch, an Fe 2+ ion is inserted into the Proto IX macrocycle by ferrochelatase to form protoheme", "bucket": "A", "note": "branch arguably outside 'chlorophyll' scope; FC2/HO1 sit in quarantined_proteins"},
+   {"step": "heme -> biliverdin IX (HO1)", "quote": "four heme oxygenase (HO) genes have been identified, with HO1 playing a major role", "bucket": "A", "note": "same scope caveat"}
+  ],
+  "wrong": [
+   {"item": "R14 MV-Chlide + geranylgeraniol -> Chl a drawn with enzyme 'CHLI complex' (Mg-chelatase subunit CHLI1)", "should_be": "Chl synthase (CHLG, AT3G51820)", "quote": "Chl a is formed by esterification of MV-Chlide with geranylgeraniol or phytol, which is catalyzed by Chl synthase", "reference": "WikiPathways WP3018 (AT3G51820)", "bucket": "A"},
+   {"item": "R16 Glu-tRNA -> GSA lists FLU complex as an enzyme", "should_be": "FLU is a negative regulator, not a catalyst", "quote": "FLUORESCENT IN BLUE LIGHT (FLU), which is a negative regulator of ALA synthesis, interacts with HEMA1-encoded GluTR1", "bucket": "A"},
+   {"item": "R19 Chl a -> Chl b by CAO", "should_be": "CAO acts on Chlide a; paper wording is ambiguous ('Chlide a or Chl a'), minor", "quote": "Some of Chlide a or Chl a is converted into Chlide b or Chl b by Chlide a oxygenase (CAO)", "bucket": "A"}
+  ],
+  "extra": [
+   {"item": "R21 Pchlide -> singlet oxygen with GluTR and FC1 as 'activators'", "why": "photosensitisation in the flu mutant, not a pathway reaction; GluTR/FC1 are not activators of it; exporter then draws both as enzymes (B, see findings F6)", "quote": "With light exposure, Pchlide accumulated in the mutant generates singlet oxygen", "bucket": "A"}
+  ],
+  "duplicates": ["R16 = R0 (GluTR)", "R17 = R6 (CPO)", "R18 = R7 (PPO)", "R20 = R8 (Mg-chelatase; thylakoid vs plastid; R20 uses an Unknown-only 'Mg-chelatase complex' although a real CHLI1/CHLD/CHLH complex exists)", "R22 Pchlide -> Chlide a = R11 DV-Pchlide -> DV-Chlide (synonym names, etioplast state)"],
+  "gold": {"covered": false},
+  "reference": {"id": "WikiPathways WP3018 'Chlorophyll A biosynthesis I (Arabidopsis thaliana)'; PathBank PW012911", "differences": "Chl synthase is CHLG with phytyl-PP; payload names CHLI and geranylgeraniol"},
+  "quotes": ["Chl a is formed by esterification of MV-Chlide with geranylgeraniol or phytol, which is catalyzed by Chl synthase", "FLU, which is a negative regulator of ALA synthesis"]
+ },
+ "128": {
+  "organism": "Bacillus subtilis 168", "pathway": "coenzyme A biosynthesis", "paper": "PMC11487621",
+  "verdict": "MOSTLY CORRECT: all 8 core steps right; enzyme gaps (CoaA, PanG), a wrong transporter, transporter subunits lost",
+  "counts": {"correct": 9, "missing": 5, "wrong": 2, "extra": 1, "duplicates": 0},
+  "correct": ["R0 PanB", "R1 PanE/IlvC (PanG missing)", "R2 PanC", "R3 pantothenate kinase step (CoaA missing)", "R4 CoaBC", "R5 CoaD", "R6 CoaE", "R7 PanD", "R8 pantetheine -> 4'-PPant (enzyme missing)", "R10 pantethine -> pantetheine", "T0 pantothenate uptake via ECF", "T1 cysteinopantetheine uptake via TcyJKLMN"],
+  "missing": [
+   {"item": "PanG (YkpB) as third ketopantoate reductase on R1", "quote": "YkpB PanG Ketopantoate reductase", "bucket": "A"},
+   {"item": "CoaA on R3 (pantothenate kinase) and R8 (pantetheine kinase)", "quote": "CoaA Bifunctional pantothenate/pantetheine kinase", "bucket": "A"},
+   {"item": "PanU (S component), EcfA1, EcfA2 of the ECF transporter: quarantined proteins; complex exported as EcfT only", "quote": "High-affinity vitamin B5 uptake ... requires an ATP-driven energy coupling factor transporter with PanU (previously YhfU) as the substrate-specific subunit", "bucket": "A"},
+   {"item": "cysteinopantetheine -> cysteine + pantetheine (reduction in cytoplasm)", "quote": "Upon reduction in the cytoplasm, the pantetheine then seems to feed into the CoaA-dependent coenzyme A salvage", "bucket": "A"}
+  ],
+  "wrong": [
+   {"item": "T2 pantethine uptake with transporter CoaX (a kinase)", "quote": "Pantethine rescued growth of the coaX mutant", "bucket": "A"},
+   {"item": "R9 cysteine + pantetheine -> cysteinopantetheine: spontaneous and extracellular per paper, payload spontaneous=false and state null (exporter then places it in cytoplasm, B)", "quote": "these molecules can spontaneously form cysteinopantetheine, which is then taken up by TcyJKLMN", "bucket": "A+B"}
+  ],
+  "extra": [{"item": "CysK/CymR interactions (sulfur regulation, off-pathway context)", "bucket": "A", "severity": "S3"}],
+  "duplicates": [],
+  "gold": {"covered": false},
+  "reference": {"id": "Reactome R-HSA-196783 'Coenzyme A biosynthesis' (human)", "differences": "same PANK -> PPCS -> PPCDC -> PPAT -> DPCK chain; B. subtilis fuses PPCS/PPCDC as CoaBC (payload correct to collapse R4)"},
+  "quotes": ["CoaA Bifunctional pantothenate/pantetheine kinase CoaX Pantothenate kinase"]
+ },
+ "9": {
+  "organism": "Lactococcus lactis subsp. lactis KF147", "pathway": "menaquinone (DHNA) biosynthesis", "paper": "PMC12421875",
+  "verdict": "CORRECT CORE (9/9 gold) but every step duplicated in a second state and one invented modifier",
+  "counts": {"correct": 9, "missing": 0, "wrong": 1, "extra": 0, "duplicates": 10},
+  "correct": ["R0 MenF", "R1 MenD", "R2 MenH", "R3 MenC", "R4 MenE", "R5 MenB (step)", "R6 MenI", "R7 MenA", "R8 MenG", "R9 isochorismate -> chorismate (reverse MenF, paper-supported reversibility)", "T0 DHNA efflux (diffusion; gold off_pathway O3)", "I0 DHNA inhibits MenD"],
+  "missing": [],
+  "wrong": [
+   {"item": "R5 OSB-CoA -> DHNA-CoA carries modifier 'MenD complex' role=inhibitor", "should_be": "no such modifier; the paper's inhibition is DHNA -> MenD (already I0). The exporter additionally draws this inhibitor as the step's enzyme (ir.py 2178, B)", "quote": "the allosteric inhibition of MenD by DHNA reduces MenD's regulatory efficiency", "gold": "gold_v2 excluded_statements: 'DHNA allosterically inhibits MenD' (regulation)", "bucket": "A (payload) + B (drawn as enzyme)"}
+  ],
+  "extra": [],
+  "duplicates": ["R10..R18 repeat R0..R8 in 'Lactococcus lactis intracellular state' while R0..R8 sit in 'L. lactis KF147 state' (location 'cell')", "T1 = T0"],
+  "gold": {"covered": true, "set": "gold_v2 PMC12421875 (complete)", "score": "9/9 gold reactions matched (R1-R9); 0 unsupported extra reactions; 10 duplicate processes; 1 wrong modifier", "note": "MenI and MenA exported as Unknown-only complexes (identity placeholder)"},
+  "reference": {"id": "PathBank SMP0001911 (E. coli menaquinol biosynthesis)", "differences": "E. coli MenA uses octaprenyl-PP and MenG = UbiE; L. lactis paper only says 'prenyl diphosphate'"},
+  "quotes": ["The enzyme MenF catalyzes a reversible reaction converting chorismate (A) to isochorismate (B)", "MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK)"]
+ },
+ "116": {
+  "organism": "Homo sapiens", "pathway": "sphingolipid biosynthesis", "paper": "PMC12376012 (review on ORMDL regulation of SPT)",
+  "verdict": "WRONG IN A KEY PLACE: the exported de novo chain skips dihydroceramide (correct step dropped by exporter, wrong shortcut kept); the paper's subject (ORMDL-SPT inhibition) is absent",
+  "counts": {"correct": 11, "missing": 5, "wrong": 2, "extra": 0, "duplicates": 3},
+  "correct": ["R0 SPT", "R1 KDSR", "R4 sphinganine -> dihydroceramide (in payload; DROPPED from PWML, B)", "R5 DEGS1", "R7 ceramide -> GlcCer (Golgi)", "R8 SphK", "R10 GlcCer -> ceramide (lysosome)", "R11 SMS1 (medial Golgi)", "R12 ceramidase", "R13 SMase", "R14 S1P phosphatase", "T0 CERT ER -> Golgi"],
+  "missing": [
+   {"item": "ORMDL1-3 inhibition of SPT (paper title topic) and ceramide feedback", "quote": "pointed to how ORMDLs inhibit SPT", "bucket": "A"},
+   {"item": "SPTLC3 and SPTssb subunits (quarantined proteins)", "bucket": "A"},
+   {"item": "S1P lyase degradation of S1P", "quote": "the substrate for S1P lyase, the only enzyme in this pathway capable of degrading the sphingosine backbone", "bucket": "A"},
+   {"item": "sphingosine -> ceramide salvage by ceramide synthases", "quote": "The sphingosine produced by these enzymes can be converted back into ceramide by the c[eramide synthases]", "bucket": "A"},
+   {"item": "enzymes on R2/R6/R7/R9/R10 (CerS, SMS, GlcCer synthase, SMase, glucosidase) left empty", "bucket": "A"}
+  ],
+  "wrong": [
+   {"item": "R2 sphinganine -> ceramide (no enzyme) survives in PWML", "should_be": "N-acylation of sphinganine gives dihydroceramide; ceramide only after DEGS1 desaturation", "quote": "The desaturation of these dihydroceramides at carbons 4/5 by dihydroceramide Δ4-desaturase 1 produces ceramide", "bucket": "A"},
+   {"item": "protein 'ceramide synthase' grounded to Q71RH2 = TLCD3B/FAM57B (name match), not one of the six CERS1-6 the paper means", "quote": "The fatty acid is appended by one of the six ceramide synthases", "bucket": "A"}
+  ],
+  "extra": [],
+  "duplicates": ["R3 = R0 (serine vs L-serine)", "R6 ceramide -> SM (no enzyme) = R11", "R9 SM -> ceramide = R13"],
+  "export_issues_B": ["R4 sphinganine -> dihydroceramide quarantined at export: reaction_enzyme_must_be_protein_complex (base/116/outputs__quarantine_report.json, stage pre_export_strict_quarantine)", "R8, R9, R12, R13, R14 have no state and are drawn in ER (first state): SMase/SphK/ceramidase locations invented; paper places GSL hydrolysis 'principally in the lysosome'"],
+  "gold": {"covered": false},
+  "reference": {"id": "Reactome R-HSA-1660661 'Sphingolipid de novo biosynthesis'", "differences": "Reactome: 'Ceramide synthases transfer acyl-CoA onto sphingoid' then 'DEGS1 dehydrogenates dihydroceramide'; SGMS1/2 transfer phosphocholine (from phosphatidylcholine) onto ceramide; payload uses free phosphorylcholine (paper-literal, S3)"},
+  "quotes": ["Fatty acids ... can be N-acylated to the sphingoid backbone", "At the medial Golgi, sphingomyelin is produced from ceramide by sphingomyelin synthase 1"]
+ },
+ "5": {
+  "organism": "Lactococcus lactis", "pathway": "menaquinone biosynthesis", "paper": "PMC12421875 (same paper as idx 9, earlier run)",
+  "verdict": "INCOMPLETE: MenD step deleted (chain broken after isochorismate), wrong MenA co-substrate, chain triplicated",
+  "counts": {"correct": 7, "missing": 1, "wrong": 1, "extra": 0, "duplicates": 9},
+  "correct": ["R0 MenF", "R3 MenH", "R4 MenC", "R5 MenE", "R6 MenB", "R7 MenI", "R2 MenG", "T0 DHNA efflux"],
+  "missing": [{"item": "isochorismate -> SEPHCHC (MenD), gold R2", "why": "quarantined pre-freeze: protein_missing_external_identity (MenD)", "quote": "MenD facilitates the conversion of isochorismate (B) to ... (SEPHCHC, C)", "bucket": "A"}],
+  "wrong": [{"item": "MenA step uses 'Dimethylallylpyrophosphate' (DMAPP, C5)", "should_be": "'prenyl diphosphate' (long-chain polyprenyl-PP); idx 9 kept 'prenyl diphosphate'", "quote": "MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone (DMK)", "bucket": "A"}],
+  "extra": [],
+  "duplicates": ["R8..R12 repeat R3..R7 ('Lactococcus lactis intracellular' vs 'intracellular state')", "R13/R14 repeat R1/R2 ('cells' vs 'intracellular')", "R15 MenA step again from RAG (state null)", "T1 = T0"],
+  "gold": {"covered": true, "set": "gold_v2 PMC12421875 (complete)", "score": "8/9 matched (R2 MenD missing; R8 MenA matched with wrong co-substrate identity); 0 unsupported extras; 9 duplicate processes", "note": "7 of 8 complexes Unknown-only (ambiguous_insufficient_margin) where idx 9 grounded the same Men proteins to Q9CHJ9..Q9CHK4: run-to-run grounding variance"},
+  "reference": {"id": "PathBank SMP0001911", "differences": "as idx 9"},
+  "quotes": ["MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI"]
+ },
+ "134": {
+  "organism": "Homo sapiens", "pathway": "carnitine biosynthesis", "paper": "PMC11016064",
+  "verdict": "WRONG: 4 real steps but both dioxygenases on both dioxygenase steps, a mouse-only enzyme in the human pathway, wrong transport cargo, 10 reactions for 4 steps, cytosolic steps drawn in mitochondrion",
+  "counts": {"correct": 3, "missing": 1, "wrong": 4, "extra": 0, "duplicates": 5},
+  "correct": ["R1 SHMT1 HTML aldol cleavage", "R2 SHMT2 HTML aldol cleavage", "R3 TMABADH TMABA -> GBB", "(step of R0 TML -> HTML and R4 GBB -> carnitine right, enzymes wrong)"],
+  "missing": [{"item": "HTML (or TML/HTML) mitochondrial export; cosubstrates 2-OG/O2/succinate on dioxygenase steps (minor)", "quote": "the postulated mitochondrial TML/HTML antiporter remains unknown", "bucket": "A"}],
+  "wrong": [
+   {"item": "R0 TML -> HTML lists TMLD and BBD; R4 GBB -> carnitine lists BBD and TMLD", "should_be": "reaction 1 = TMLD only, reaction 4 = BBD only", "quote": "Reactions 1 and 4 are catalyzed by two Fe2+-dependent dioxygenases: TML dioxygenase (TMLD) and γ-butyrobetaine dioxygenase (BBD)", "bucket": "A"},
+   {"item": "R5/R8 add Tha1 as HTML aldolase in a Homo sapiens pathway", "should_be": "Tha1 is mouse-only", "quote": "a mouse protein absent in humans (threonine aldolase; Tha1)", "bucket": "A"},
+   {"item": "T0 transports TMABA mitochondrion -> cytosol", "should_be": "HTML (paper: postulated TML/HTML antiporter; Reactome: 'HTMLYS translocates from the mitochondrial matrix to the cytosol')", "bucket": "A"},
+   {"item": "R0-R5 have no state; exporter draws them in the mitochondrion: SHMT1, TMABADH and BBD steps are cytosolic", "quote": "carnitine biosynthesis occurs initially in the mitochondria and subsequently in the cytosol", "bucket": "B"}
+  ],
+  "extra": [],
+  "duplicates": ["R5, R8 = R1/R2 (all HTML -> Gly + TMABA)", "R7 HTML -> TMABA (glycine dropped)", "R6 = R0 in 'human carnitine biosynthesis' (cell)", "R9 = R3 (+NADH)"],
+  "export_issues_B": ["species Homo sapiens and Mus musculus both written with species id 1 (replay/on_v2/pwml/134.pwml lines 36-50)"],
+  "gold": {"covered": false},
+  "reference": {"id": "Reactome R-HSA-71262 'Carnitine synthesis'", "differences": "Reactome: TMLHE (TMLD) -> SHMT1 -> HTML translocation mito->cytosol -> ALDH9A1 -> BBOX1; all six human enzymes exported as Unknown-only placeholders although TMLHE/SHMT1/SHMT2/ALDH9A1/BBOX1 are reviewed human UniProt entries (failure reason species_mismatch)"},
+  "quotes": ["SHMT1, SHMT2 and Tha1 catalyze the aldol cleavage of HTML"]
+ },
+ "135": {
+  "organism": "Saposhnikovia divaricata", "pathway": "furochromone biosynthesis", "paper": "PMC11961743",
+  "verdict": "CORRECT: all 7 characterised enzymes on the right steps; one duplicate with an assay salt as substrate",
+  "counts": {"correct": 9, "missing": 0, "wrong": 0, "extra": 0, "duplicates": 1},
+  "correct": ["R0 SdPCS", "R1 SdPT", "R2 SdPC", "R3/R4 SdCH", "R5/R6 SdOMT", "R7/R8 SdUGT1/SdUGT2"],
+  "missing": [],
+  "wrong": [],
+  "extra": [],
+  "duplicates": ["R9 = R1 with MgCl2 added as a substrate (assay buffer component; audit_modified)"],
+  "gold": {"covered": false},
+  "reference": {"id": "none found (plant specialised metabolism; no PathBank/Reactome entry)", "differences": "n/a"},
+  "quotes": ["SdCH could convert 4 and 5 (5-O-methylvisamminol) into 7 (norcimifugin) and 8 (cimifugin)", "SdUGT2 ... showed the same catalytic activities"],
+  "note": "all 7 enzymes exported as Unknown-only placeholders (species_mismatch)"
+ },
+ "78": {
+  "organism": "Escherichia coli", "pathway": "enterobactin biosynthesis", "paper": "PMC12096016",
+  "verdict": "CORRECT CORE (5/5 gold) with an assay reaction, a protein-modification step and mis-built complexes",
+  "counts": {"correct": 5, "missing": 1, "wrong": 2, "extra": 2, "duplicates": 0},
+  "correct": ["R0 EntC", "R1 EntB isochorismatase", "R2 EntA", "R3 EntE", "R4 EntF condensation (written from DHB-S-EntB)", "I0 DHB inhibits EntB (paper's finding)"],
+  "missing": [{"item": "DHB-AMP -> DHB-S-EntB loading, so R3 product does not feed R4 substrate (gold excludes carrier loading; chain is disconnected as drawn)", "bucket": "A"}],
+  "wrong": [
+   {"item": "'EntF complex' and 'EntD complex' both = [EntB, EntD, EntF, EntE]; R5 lists 'isochorismatase' as an enzyme of EntD phosphopantetheinylation", "bucket": "A"},
+   {"item": "T0 enterobactin secretion written cell -> cell with no transporter", "should_be": "cytoplasm -> extracellular, TolC-dependent", "quote": "Enterobactin is produced in the cytoplasm and secreted to the extracellular environment by a TolC-dependent process", "bucket": "A"}
+  ],
+  "extra": [
+   {"item": "R6 pyruvate + NADH -> lactate + NAD+ by porcine LDH (coupled assay)", "gold": "gold_v2 off_pathway O2", "quote": "LDH-catalyzed conversion of pyruvate to lactate is then monitored by loss of OD340", "bucket": "A"},
+   {"item": "R5 apo-EntB -> holo-EntB (EntD)", "gold": "gold_v2 excluded_statements (protein modification)", "bucket": "A", "severity": "S3"}
+  ],
+  "duplicates": [],
+  "gold": {"covered": true, "set": "gold_v2 PMC12096016 (complete)", "score": "5/5 gold reactions matched; 1 off_pathway (assay) reaction exported; 1 excluded statement exported"},
+  "reference": {"id": "PathBank SMP0002062 'Enterobactin Biosynthesis' (E. coli)", "differences": "PathBank: DHB + L-serine + ATP by the enterobactin synthase complex; export via EntS + TolC"},
+  "quotes": ["isochorismate is converted to 2,3-dihydro-2,3-dihydroxybenzoate (2,3-diDHB) and pyruvate by EntB isochorismatase activity"]
+ },
+ "58": {
+  "organism": "Escherichia coli", "pathway": "enterobactin biosynthesis", "paper": "PMC12096016 (same paper as idx 78, other run)",
+  "verdict": "CORRECT CORE (5/5 gold), wrong enzyme on EntE step, one duplicate, off-pathway chelation",
+  "counts": {"correct": 5, "missing": 0, "wrong": 1, "extra": 1, "duplicates": 1},
+  "correct": ["R0 EntC", "R1 EntB", "R2 EntA", "R3 DHB adenylation (step)", "R4 DHB-AMP + Ser -> enterobactin", "T0 TolC secretion", "T1 TonB uptake"],
+  "missing": [],
+  "wrong": [{"item": "R3 adenylation enzyme 'enterobactin synthase' = [EntB, EntD, EntF, EntE]", "should_be": "EntE", "quote": "2,3-DHB is adenylated by EntE in an ATP-dependent reaction", "bucket": "A"}],
+  "extra": [{"item": "R6 enterobactin + Fe3+ -> ferric-enterobactin (gold off_pathway O4)", "bucket": "A", "severity": "S3"}],
+  "duplicates": ["R5 = R2 (+NAD+/NADH)"],
+  "gold": {"covered": true, "set": "gold_v2 PMC12096016 (complete)", "score": "5/5 matched; 1 off_pathway reaction + 2 off_pathway transports (O3/O4 class) exported"},
+  "reference": {"id": "PathBank SMP0002062", "differences": "as idx 78"},
+  "quotes": ["three EntF-catalyzed cycles of condensation with L-serine"]
+ },
+ "125": {
+  "organism": "Apium graveolens", "pathway": "furanocoumarin biosynthesis", "paper": "PMC13364408",
+  "verdict": "CORRECT BUT FRAGMENTED: characterised steps right; literature P450 steps not filled, so marmesin/psoralen branch is disconnected; compartment is an assay fraction",
+  "counts": {"correct": 8, "missing": 3, "wrong": 1, "extra": 0, "duplicates": 0},
+  "correct": ["R0 AgPT1 (DMS + osthenol)", "R1 AgCOC1 DMS -> marmesin", "R2 AgCOC1 osthenol -> columbianetin + jatamansinol", "R3-R6 AgOMT1", "R7 AgOMT2 (isozyme of R4, not a duplicate)"],
+  "missing": [
+   {"item": "marmesin -> psoralen and columbianetin -> angelicin (CYP71AJ)", "quote": "The conversions of Marmesin (4) → psoralen (10) and columbianetin (5) → angelicin (11) are mediated by CYP71AJ subfamily P450 enzymes", "bucket": "A (depth; RAG-fillable)"},
+   {"item": "psoralen -> xanthotoxol (CYP71AJ4) / -> bergaptol", "quote": "CYP71AJ4 catalyzes the hydroxylation of psoralen (10) → xanthotoxol (14)", "bucket": "A (depth)"},
+   {"item": "5-OH/8-OH hydroxylations feeding isopimpinellin", "quote": "the preceding hydroxylations are mediated by enzymes not characterized in this study", "bucket": "A (depth)"}
+  ],
+  "wrong": [{"item": "all reactions in 'microsomal fraction' (an assay preparation), incl. soluble OMT steps", "bucket": "A", "severity": "S3"}],
+  "extra": [],
+  "duplicates": [],
+  "gold": {"covered": false},
+  "reference": {"id": "none verified", "differences": "n/a"},
+  "quotes": ["AgCOC1 catalyzes the conversion of DMS (2) to marmesin (4)"]
+ },
+ "129": {
+  "organism": "Aquifex aeolicus", "pathway": "riboflavin biosynthesis", "paper": "PMC12051542",
+  "verdict": "CORRECT: 6-step riboflavin core right incl. the paper's new phosphatases; one duplicate with a wrong extra enzyme, one off-pathway side activity",
+  "counts": {"correct": 6, "missing": 0, "wrong": 1, "extra": 1, "duplicates": 1},
+  "correct": ["R0 RibA (RibBA)", "R1 RibD", "R2 RibB (RibBA)", "R3 ARAPDP dephosphorylation (HFP, IMP)", "R4 lumazine synthase", "R5 riboflavin synthase"],
+  "missing": [],
+  "wrong": [{"item": "R7 duplicate of R1 adds RibBA as an enzyme of the RibD deaminase/reductase step", "bucket": "A"}],
+  "extra": [{"item": "R6 Ru5P -> R5P isomerase side activity of HFP (paper-stated, not pathway)", "quote": "To determine the reversibility of the isomerase reaction catalyzed by HFP", "bucket": "A", "severity": "S3"}],
+  "duplicates": ["R7 = R1"],
+  "gold": {"covered": false},
+  "reference": {"id": "none verified for Aquifex", "differences": "n/a"},
+  "quotes": ["These two enzymes were PP11, which is annotated as an myo-inositol-1(or 4)-monophosphatase (IMP), and PP17, a histidine family phosphatase (HFP)"]
+ },
+ "138": {
+  "organism": "Streptomyces tubercidicus", "pathway": "tubercidin biosynthesis", "paper": "PMC6112128",
+  "verdict": "CONTENT MOSTLY RIGHT, LOCATION WRONG: 7 Tub steps right; PurA/PurB steps collapsed into one enzyme-less step; whole intracellular pathway drawn in the extracellular box",
+  "counts": {"correct": 7, "missing": 2, "wrong": 3, "extra": 0, "duplicates": 0},
+  "correct": ["R0 TubC", "R1 TubA", "R2 TubB", "R3 TubE", "R4 TubF", "R5 TubD", "R6 TubG"],
+  "missing": [{"item": "compound 3 -> 4 (PurA) and 4 -> 5 (PurB), proposed housekeeping enzymes", "quote": "the missing two enzymes, adenylosuccinate synthetase (PurA), and adenylosuccinate lyase (PurB)", "bucket": "A"}],
+  "wrong": [
+   {"item": "R7 compound 3 -> compound 5 collapses two steps, no enzyme", "bucket": "A"},
+   {"item": "T0 tubercidin export written cell -> cell, TubI not attached", "quote": "TubI is responsible for transporting TBN out of the cell once synthesized", "bucket": "A"},
+   {"item": "all 8 reactions have no state; exporter puts them in the first state 'Streptomyces tubercidicus extracellular'", "bucket": "B", "severity": "S1"}
+  ],
+  "extra": [],
+  "duplicates": [],
+  "gold": {"covered": false},
+  "reference": {"id": "none verified", "differences": "n/a"},
+  "quotes": ["TubE specifically utilizes PRPP and CDG for construction of the deazapurine nucleoside scaffold"]
+ },
+ "120": {
+  "organism": "Mus musculus", "pathway": "testosterone biosynthesis", "paper": "PMC12059215",
+  "verdict": "THIN AND REPETITIVE: one real step drawn 5 times; one enzyme contradicted by the paper; upstream steroidogenesis absent",
+  "counts": {"correct": 1, "missing": 1, "wrong": 1, "extra": 2, "duplicates": 4},
+  "correct": ["R0 androstenedione -> testosterone (HSD17B3; HSD17B12 and HSD17B7 as alternative isozymes are paper-supported)"],
+  "missing": [{"item": "upstream androgen pathway (pregnenolone -> progesterone -> 17-OH-progesterone -> androstenedione), metabolites measured in the paper", "quote": "Within the canonical pathway of androgen biosynthesis, pregnenolone, progesterone, 17-OH progesterone, dehydroepiandrosterone (DHEA), androstenedione", "bucket": "A (depth)"}],
+  "wrong": [{"item": "R1 lists HSD17B1 for (adult Leydig) testosterone production", "quote": "in adulthood, Hsd17b1 is undetectable in the testis in wild-type and Hsd17b3 KO mice and cannot compensate for Hsd17b3 deficiency", "bucket": "A"}],
+  "extra": [{"item": "R5 estrone -> estradiol, R6 DHT -> 3α-diol (paper-stated side activities, outside testosterone synthesis)", "bucket": "A", "severity": "S3"}],
+  "duplicates": ["R1, R2, R3, R4 = R0 across 'Leydig cells of testis' / 'adult Leydig cells' / 'testis' (all location 'cell')"],
+  "gold": {"covered": false},
+  "reference": {"id": "Reactome R-HSA-193048 'Androgen biosynthesis' (human)", "differences": "Reactome covers CYP11A1 -> HSD3B -> CYP17A1 -> HSD17B3; payload has only the last step"},
+  "quotes": ["HSD17B3 ... is the primary enzyme responsible for the conversion of androstenedione to testosterone"]
+ },
+ "148": {
+  "organism": "Moringa oleifera", "pathway": "glucomoringin biosynthesis", "paper": "PMC13474689",
+  "verdict": "CORRECT AS A PROPOSED (homology-predicted) PATHWAY; one collapsed step",
+  "counts": {"correct": 5, "missing": 1, "wrong": 1, "extra": 1, "duplicates": 0},
+  "correct": ["R0 CYP79A1", "R2 SUR1", "R3 UGT74B1", "R4 SOT16", "R5 rhamnosylation (enzyme unknown, correctly empty)"],
+  "missing": [{"item": "glutathione conjugation and processing between CYP83B1 and SUR1", "quote": "undergoes glutathione conjugation and is further processed to form S-(hydroxyphenylacetothiohydroximoyl)-L-cysteine", "bucket": "A"}],
+  "wrong": [{"item": "R1 aldoxime -> S-(...)-L-cysteine credited to CYP83B1 alone (3 steps collapsed)", "bucket": "A", "severity": "S2"}],
+  "extra": [{"item": "R6 glucomoringin -> moringin (myrosinase hydrolysis, downstream of the requested pathway)", "bucket": "A", "severity": "S3"}],
+  "duplicates": [],
+  "gold": {"covered": false},
+  "reference": {"id": "none verified", "differences": "n/a"},
+  "quotes": ["CYP79A1 is proposed to initiate the pathway by converting tyrosine to (E)-4-hydroxyphenylacetaldoxime"]
+ },
+ "19": {
+  "organism": "Aspergillus japonicus", "pathway": "cycloclavine biosynthesis", "paper": "PMC4471609",
+  "verdict": "MOSTLY CORRECT; first two steps collapsed; agroclavine branch not shown for this organism",
+  "counts": {"correct": 4, "missing": 1, "wrong": 1, "extra": 1, "duplicates": 0},
+  "correct": ["R0 EasA/EasG -> festuclavine (in vitro without EasH)", "R1 EasA/EasG/EasH -> cycloclavine", "R3 EasE/EasC -> chanoclavine-I", "R4 EasD -> chanoclavine-I aldehyde"],
+  "missing": [{"item": "DMAT intermediate: L-Trp + DMAPP -> DMAT (DmaW), DMAT -> N-Me-DMAT (EasF, SAM)", "bucket": "A"}],
+  "wrong": [{"item": "R2 L-Trp + DMAPP -> N-Me-DMAT credited to DmaW+EasF as one step", "bucket": "A", "severity": "S2"}],
+  "extra": [{"item": "R5 chanoclavine-I aldehyde -> agroclavine (isomerase-type EasA of other fungi)", "quote": "festuclavine (4; reductive EasA) or agroclavine (5; isomerase EasA)", "bucket": "A"}],
+  "duplicates": [],
+  "gold": {"covered": false},
+  "reference": {"id": "none verified", "differences": "n/a"},
+  "quotes": ["Upon the incubation of chanoclavine-I aldehyde (3) with ... EasA, EasG, and EasH ... we observed the formation of cycloclavine (6)"]
+ },
+ "144": {
+  "organism": "Astragalus membranaceus", "pathway": "calycosin biosynthesis", "paper": "PMC13084691",
+  "verdict": "PARTLY CORRECT: steps right but formononetin is never produced (gap), plus one nonsense RAG reaction",
+  "counts": {"correct": 5, "missing": 1, "wrong": 1, "extra": 0, "duplicates": 0},
+  "correct": ["R0 AmIFS liquiritigenin -> daidzein", "R1 AmOMT2", "R2 AmIFS on 4'-methoxyliquiritigenin", "R3 AmI3'H formononetin -> calycosin", "R4 AmIFS naringenin -> genistein"],
+  "missing": [{"item": "2,7-dihydroxy-4'-methoxyisoflavanone -> formononetin (2-HID dehydration)", "quote": "followed by dehydration catalyzed by 2-hydroxyisoflavanone dehydratase (2-HID) to generate isoflavone products", "bucket": "A"}],
+  "wrong": [{"item": "R5 'liquiritigenin + naringenin -> isoflavone backbone' (rag_literature; evidence is the article metadata header)", "bucket": "A", "severity": "S1"}],
+  "extra": [],
+  "duplicates": [],
+  "export_issues_B": ["R1 (AmOMT2) and R5 have no state; drawn in ER (first state)"],
+  "gold": {"covered": false},
+  "reference": {"id": "none verified", "differences": "n/a"},
+  "quotes": ["AmI3′H catalyzed 3′-hydroxylation of formononetin, directly producing calycosin"]
+ },
+ "126": {
+  "organism": "Petunia hybrida", "pathway": "benzyl alcohol biosynthesis", "paper": "PMC13486683",
+  "verdict": "WRONG IN PART: BR step and compartment story right; an invented benzaldehyde -> salicylic acid reaction and scrambled enzymes on 3 of 5 reactions, evidence = pathway name",
+  "counts": {"correct": 3, "missing": 3, "wrong": 4, "extra": 0, "duplicates": 1},
+  "correct": ["R0 PhBR1/PhBR2 benzaldehyde -> benzyl alcohol (cytosol)", "R3 BPBT benzoyl-CoA + benzyl alcohol -> benzyl benzoate (step)", "R4 benzoyl-CoA -> benzaldehyde in peroxisome (step)", "T0 benzaldehyde peroxisome -> cytosol"],
+  "missing": [
+   {"item": "benzyl benzoate -> benzyl salicylate (BBO, ER P450)", "quote": "benzyl benzoate is first hydroxylated by benzyl benzoate oxidase (BBO), an endoplasmic reticulum-localized cytochrome P450 enzyme, to form benzyl salicylate", "bucket": "A"},
+   {"item": "benzyl salicylate -> salicylic acid (BSE)", "bucket": "A"},
+   {"item": "BSβ subunit of the heterodimeric benzaldehyde synthase", "quote": "Heterodimeric benzaldehyde synthases (BSs) consisting of α and β subunits", "bucket": "A"}
+  ],
+  "wrong": [
+   {"item": "R2 benzaldehyde + NADPH + O2 -> salicylic acid by PhBBO (evidence string: 'benzyl alcohol biosynthesis in Petunia hybrida')", "bucket": "A", "severity": "S1"},
+   {"item": "R1 adds PhCAD1, PhBSα, PhBBO, PhBSE as benzaldehyde reductases", "bucket": "A"},
+   {"item": "R3 adds PhBSα to BPBT", "bucket": "A"},
+   {"item": "R4 enzymes PhBBO, PhBSE, PhBSα; should be BSα/BSβ", "bucket": "A"}
+  ],
+  "extra": [],
+  "duplicates": ["R1 = R0"],
+  "gold": {"covered": false},
+  "reference": {"id": "none verified", "differences": "n/a"},
+  "quotes": ["PhBR1 and PhBR2 catalyze the NADPH-dependent reduction of benzaldehyde"]
+ },
+ "122": {
+  "organism": "Candida albicans", "pathway": "farnesol biosynthesis", "paper": "PMC12505894",
+  "verdict": "CORRECT (one duplicate)",
+  "counts": {"correct": 3, "missing": 0, "wrong": 0, "extra": 0, "duplicates": 1},
+  "correct": ["R0 Cwh8 FPP -> FP", "R1 Dpp1/2/3 FP -> farnesol (paper hedges 'and/or')", "R2 Cwh8 Dol-PP -> Dol-P (paper-stated side activity)"],
+  "missing": [], "wrong": [], "extra": [],
+  "duplicates": ["R3 = R0 (synonym state name)"],
+  "gold": {"covered": false},
+  "reference": {"id": "none verified", "differences": "n/a"},
+  "quotes": ["Cwh8 converts FPP to FP in the first step of farnesol biosynthesis"]
+ },
+ "121": {
+  "organism": "Campylobacter jejuni", "pathway": "CDP-α-d-fucofuranose and CDP-β-l-6-deoxy-altrofuranose biosynthesis", "paper": "PMC12369002",
+  "verdict": "INCOMPLETE: both named end products missing and step 2 missing; 3 paper-explicit reactions deleted because their enzymes lacked an external identity",
+  "counts": {"correct": 4, "missing": 3, "wrong": 0, "extra": 0, "duplicates": 0},
+  "correct": ["R0 HS41.21 CDP-Glc synthesis", "R1 HS41.19 3,5-epimerase", "R2 HS41.18 -> CDP-d-fucopyranose", "R3 HS41.18 -> CDP-6-deoxy-l-altropyranose"],
+  "missing": [
+   {"item": "CDP-Glc -> CDP-4-keto-6-deoxy-Glc (HS41.20)", "quote": "HS41.20 catalyzes the NAD+-dependent 4,6-dehydration of CDP-Glc to CDP-4-keto-glucose", "why": "quarantined protein_missing_external_identity", "bucket": "A"},
+   {"item": "CDP-d-fucopyranose -> CDP-d-fucofuranose (HS41.17)", "why": "quarantined protein_missing_external_identity", "bucket": "A"},
+   {"item": "CDP-6-deoxy-l-altropyranose -> CDP-6-deoxy-l-altrofuranose (HS41.17)", "why": "quarantined protein_missing_external_identity", "bucket": "A"}
+  ],
+  "wrong": [], "extra": [], "duplicates": [],
+  "gold": {"covered": false},
+  "reference": {"id": "none verified", "differences": "n/a"},
+  "quotes": ["In the presence of the 3,5-epimerase, the C4-reductase predominantly catalyzes the formation of CDP-6-deoxy-l-altrose (8)"]
+ },
+ "142": {
+  "organism": "Streptococcus suis", "pathway": "branched-chain amino acid biosynthesis", "paper": "PMC12707518 (GEM flux table)",
+  "verdict": "THIN, ONE STEP BACKWARDS: built from model-table rows; transaminase written in the catabolic direction; 2 pyruvate exported as 1",
+  "counts": {"correct": 2, "missing": 0, "wrong": 2, "extra": 0, "duplicates": 0},
+  "correct": ["R2 IlvC acetolactate -> DHIV", "R3 IlvC acetohydroxybutanoate -> DHMP"],
+  "missing": [],
+  "wrong": [
+   {"item": "R1 2-OG + L-Val -> KIV + L-Glu (IlvE) in a biosynthesis pathway", "should_be": "KIV + L-Glu -> L-Val + 2-OG (paper row is ⇌)", "quote": "2-Oxoglutarate_c + L-Valine_c ⇌ 3-Methyl-2-oxobutanoate_c + L-Glutamate_c", "bucket": "A"},
+   {"item": "R0 acetolactate synthase: stoichiometry '2.0 Pyruvate' exported as 1 (payload has no stoichiometry field)", "quote": "H+_c + 2.0 Pyruvate_c –> (S)-2-Acetolactate_c + CO2_c", "bucket": "A"}
+  ],
+  "extra": [], "duplicates": [],
+  "gold": {"covered": false},
+  "reference": {"id": "none verified", "differences": "n/a"},
+  "quotes": ["IlvC is responsible for converting (S)-2-acetolactate into (R)-2,3-dihydroxy-3-methylbutanoate"]
+ },
+ "114": {
+  "organism": "Staphylococcus aureus MRSA N315", "pathway": "wall teichoic acid D-alanylation (dlt)", "paper": "PMC12071552",
+  "verdict": "INCOMPLETE: adenylation steps lose their main product; DltC loading quarantined; transfer to WTA simplified to a DltD transport",
+  "counts": {"correct": 0, "missing": 2, "wrong": 2, "extra": 0, "duplicates": 0},
+  "correct": ["(T0/T1 D-Ala/D-Ser to cell wall: direction and DltD participation paper-stated, cargo simplified)"],
+  "missing": [
+   {"item": "D-Ala(-AMP) -> D-Ala-DltC (DltA, DltC carrier)", "why": "extracted as D-Ala -> D-Ala and quarantined coarse_grained_same_entity_transformation", "quote": "DltA transfers D-Ala to DltC in an ATP-dependent manner, and DltC presents D-Ala to DltB", "bucket": "A"},
+   {"item": "DltB step", "bucket": "A"}
+  ],
+  "wrong": [
+   {"item": "R0 D-Ala + ATP -> PPi (D-alanyl-AMP product missing)", "quote": "the adenylation reaction catalyzed by SaN315 DltA", "bucket": "A"},
+   {"item": "R1 D-Ser + ATP -> PPi (same)", "bucket": "A"}
+  ],
+  "extra": [], "duplicates": [],
+  "gold": {"covered": false},
+  "reference": {"id": "none verified", "differences": "n/a"},
+  "quotes": ["with the participation of DltD, D-Ala migrates across the membrane and onto teichoic acid"]
+ },
+ "14": {
+  "organism": "Borrelia burgdorferi", "pathway": "mevalonate pathway (HMGR paper)", "paper": "PMC13488460",
+  "verdict": "CORRECT STEP, WRONG CO-SUBSTRATES: 'NADPH or NADH' encoded as both",
+  "counts": {"correct": 1, "missing": 0, "wrong": 1, "extra": 0, "duplicates": 0},
+  "correct": ["R0 HMG-CoA -> mevalonate (HMGR)"],
+  "missing": [],
+  "wrong": [{"item": "R0 inputs HMG-CoA + NADPH + NADH", "should_be": "2 NAD(P)H, either cofactor (CoA, NAD(P)+ products missing)", "quote": "class II HMGRs ... can use either NADPH or NADH as cofactors", "bucket": "A", "severity": "S2"}],
+  "extra": [], "duplicates": [],
+  "gold": {"covered": false},
+  "reference": {"id": "Rhea not checked", "differences": "n/a"},
+  "quotes": ["A cofactor-promiscuous HMGR from the Lyme disease"]
+ },
+ "10": {
+  "organism": "Mus musculus", "pathway": "sour taste transduction", "paper": "PMC7059786 (review)",
+  "verdict": "PARTLY CORRECT: OTOP1 H+ entry and 5-HT release right; heavy transport duplication; Kir2.1 block missing",
+  "counts": {"correct": 3, "missing": 2, "wrong": 0, "extra": 0, "duplicates": 4},
+  "correct": ["T0 H+ entry via OTOP1", "T1 5-HT release from Type III cells", "T6 Ca2+ entry (voltage-gated channels; transporter quarantined)"],
+  "missing": [
+   {"item": "H+ block of Kir2.1 K+ channels", "quote": "The entering H+ ions not only directly depolarize the taste cells but also block Kir2.1 K+ channels", "bucket": "A"},
+   {"item": "SCN2A Na+ channel (quarantined protein) / action potential step", "quote": "voltage-gated Na+ channels (SCN2A) to generate action potentials", "bucket": "A"}
+  ],
+  "wrong": [], "extra": [],
+  "duplicates": ["T2, T4 = T0 (H+ via OTOP1, auto/cytosol states)", "T3, T5 = T1 (5-HT release)"],
+  "gold": {"covered": false},
+  "reference": {"id": "none (signalling; Reactome has no sour-taste pathway verified)", "differences": "n/a"},
+  "quotes": ["transduction of sour involves permeation of H+ through an apical ion channel subsequently identified as OTOP1"],
+  "note": "PKD2L1 correctly excluded: 'PKD2L1 itself was not necessary for transduction of protons'"
+ },
+ "150": {
+  "organism": "Mus musculus", "pathway": "sour taste transduction", "paper": "not recorded in sample.json (run dir C:/t/e2e4-run/... has no 01_source_text.txt); evidence quotes match the PMC7059786 review",
+  "verdict": "PARTLY CORRECT: OTOP1 H+ entry, Kir2.1 block and 5-HT3 activation right; H+ entry drawn 3 times, 5-HT release twice",
+  "counts": {"correct": 4, "missing": 1, "wrong": 0, "extra": 0, "duplicates": 3},
+  "correct": ["T0 H+ via OTOP1", "T1 5-HT release", "I0 H+ inhibits Kir2.1", "I1 5-HT activates 5-HT3 receptor"],
+  "missing": [{"item": "SCN2A / voltage-gated Ca2+ steps (quarantined as coarse-grained X -> X 'reactions')", "bucket": "A"}],
+  "wrong": [], "extra": [],
+  "duplicates": ["T2, T3 = T0", "T4 = T1"],
+  "gold": {"covered": false},
+  "reference": {"id": "none", "differences": "n/a"},
+  "quotes": ["block Kir2.1 K+ channels", "5-HT acting on neural 5-HT 3 receptors"],
+  "note": "assessed against PMC7059786 text by topic; paper identity not confirmed"
+ },
+ "12": {
+  "organism": "Paris polyphylla var. yunnanensis", "pathway": "steroidal saponin (polyphyllin) glucosylation", "paper": "PMC13123502",
+  "verdict": "CORRECT CONTENT, 4x DUPLICATED: 2 real reactions written as 5",
+  "counts": {"correct": 2, "missing": 0, "wrong": 0, "extra": 0, "duplicates": 3},
+  "correct": ["diosgenin -> trillin (UGT91BP2, UGT703R1-3)", "R4 pennogenin -> pennogenin 3-O-glucoside (UGT703R1-3)"],
+  "missing": [], "wrong": [], "extra": [],
+  "duplicates": ["R0, R1, R2 (one UGT each, no state) are subsumed by R3 (all four UGTs, cytoplasm)"],
+  "gold": {"covered": false},
+  "reference": {"id": "none", "differences": "n/a"},
+  "quotes": ["UGT703R1, UGT703R2 and UGT703R3 glucosylate pennogenin to pennogenin 3-O-glucoside in vitro"]
+ },
+ "68": {
+  "organism": "Escherichia coli", "pathway": "lipid A biosynthesis", "paper": "PMC12444477 (JBC review)",
+  "verdict": "WRONG / LARGELY LOST: 9-step Raetz pathway exported as 3 reactions, two of them collapsed with wrong products; 6 enzymes' steps missing",
+  "counts": {"correct": 1, "missing": 6, "wrong": 2, "extra": 0, "duplicates": 0},
+  "correct": ["R2 WaaA lipid IVA + Kdo -> Kdo-lipid IVA", "T0 MsbA flip, T1 Lpt to OM (paper-stated)"],
+  "missing": [
+   {"item": "LpxC deacetylation, LpxD acylation, LpxH UMP removal, LpxK phosphorylation", "why": "extracted as X -> X and quarantined coarse_grained_same_entity_transformation; the enzymes survive only as 'LpxC -catalyzes-> compound' interactions (withheld from PWML)", "quote": "LpxC is a deacetylase that removes the acetyl group from the GlcNAc moiety", "bucket": "A"},
+   {"item": "LpxL and LpxM acylations to Kdo-lipid A", "why": "quarantined protein_missing_external_identity", "quote": "sequentially acylated by LpxL and LpxM to finally form Kdo-lipid A", "bucket": "A"}
+  ],
+  "wrong": [
+   {"item": "R0 LpxA product written as UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine (the post-LpxC product)", "should_be": "UDP-3-O-acyl-GlcNAc", "quote": "The first enzyme in the Raetz pathway, LpxA, acylates uridine diphosphate-N-acetyl-glucosamine (UDP-GlcNAc)", "bucket": "A"},
+   {"item": "R1 UDP-3-O-acyl-GlcN -> lipid IVA credited to LpxB alone (LpxD, LpxH, LpxB, LpxK collapsed)", "quote": "which is phosphorylated by LpxK to produce lipid IV A", "bucket": "A"}
+  ],
+  "extra": [], "duplicates": [],
+  "gold": {"covered": true, "set": "pinned_v1 PMC12444477 (expected_enzymes, no reaction inventory)", "score": "3/8 expected enzymes appear as reaction catalysts (LpxA, LpxB, WaaA); LpxC/LpxD/LpxK/LpxL/LpxM absent as catalysts; acceptable LpxH absent"},
+  "reference": {"id": "PathBank SMP0000851 'Lipopolysaccharide Biosynthesis' (E. coli)", "differences": "PathBank carries the full LpxA..LpxM chain on the inner-membrane cytoplasmic face"},
+  "quotes": ["LpxB then catalyzes the formation of a tetra-acylated disaccharide intermediate"]
+ }
+}
