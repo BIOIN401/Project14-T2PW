@@ -269,3 +269,25 @@ number 4, I'm not sure what you mean by regulation links, to be honest. 5, yes, 
 things. For 6, yes, we should be adding evidence checks for everything. Everything should have evidence
 back. [...] If there's any more questions, I'm going to leave it to you. [...] I want you to add these
 changes, then test import everthng it pathwhiz as needed and test all things".
+
+
+**D-W25 · 2026-11-14: fix PathWhiz where it limits the pipeline** (recorded by the orchestrator at the
+PO's direction; amends D-W24 (4)). Where PathWhiz itself is what limits our output (for example, it
+stores only Activation and Inhibition interactions), we may change PathWhiz instead of dropping our
+content. The changes must be structured:
+- one stacked branch per change, `t2pw/05-*` onwards on top of `t2pw/04`;
+- pushed, never merged into the production line (the PO raises the pull requests later);
+- every existing PathWhiz function keeps working;
+- each change has its own tests.
+A sub-agent first analyses the `smpdb` code for PathWhiz-side issues that reach our pipeline, then the
+fixes follow. On the T2PW side, output that only a patched PathWhiz can import goes behind a flag that
+defaults off. The default PWML must stay importable by production PathWhiz until the PO merges those
+pull requests.
+PO, verbatim: "we need to regulation links. We obviously have to leave those out if pathways can't
+support them, or we could just edit pathways and add in those capabilities. [...] we are able to edit
+pathways now, as long as we're making structured changes. So we're pushing with each branch builds on
+the next. I'll put up a bunch of pull requests later that will merge everything to actual production
+pathways. [...] have a subagent go analyze the SPMDB folder and have them look in and see what are the
+issues in the pathways that are propagating to our code, and then how can we fix those to make our
+pipeline better and work better. You know, we can totally do that as long as all the functionality is
+maintained and even improved."
