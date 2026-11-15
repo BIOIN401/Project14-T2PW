@@ -291,3 +291,15 @@ pathways. [...] have a subagent go analyze the SPMDB folder and have them look i
 issues in the pathways that are propagating to our code, and then how can we fix those to make our
 pipeline better and work better. You know, we can totally do that as long as all the functionality is
 maintained and even improved."
+
+
+**D-W26 · 2026-11-14: target the patched PathWhiz** (recorded by the orchestrator at the PO's
+direction; amends D-W25). T2PW output targets PathWhiz with our `t2pw/*` branches applied. New
+PathWhiz capabilities are used by default; no default-off flag and no compatibility path for
+unpatched production PathWhiz. The PO will open the pull requests and drive the merges; the
+PathWhiz maintainers have agreed to the code updates. Branches are still pushed, never merged by us.
+PO, verbatim: "We don't have to do that. We're going to update the code anyway. It's busted. They've
+agreed to just let me update the code. [...] So I want you to use the new features, and I want you to
+build off of that and then I will just push for getting everything merged [...] So use the new stuff.
+You don't have to build it for the old stuff. It already doesn't work with the production pathways,
+by the way. There were some big bugs that had to be fixed."
