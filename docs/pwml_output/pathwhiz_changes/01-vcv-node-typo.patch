@@ -1,0 +1,11 @@
+--- a/lib/pwml_parser.rb
++++ b/lib/pwml_parser.rb
+@@ -288,7 +288,7 @@
+                 end
+               end
+               pv_node.xpath('vacuous-edge-visualizations/vacuous-edge-visualization').each do |vev_node|
+-                v = self.build_nested_visualization(vcv_node, pathway_visualization)
++                v = self.build_nested_visualization(vev_node, pathway_visualization)
+                 if v.present?
+                   pathway_visualization.vacuous_edge_visualizations << v
+                 end

@@ -1,0 +1,11 @@
+BINDING RULES (every subagent)
+- Tests/pipeline commands only through docs/pwml_recovery_sprint/evidence/bounded_run.py --heavy-lock <holder> --timeout <s> --json <path> -- <python> <tree>/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree <tree> -q --basetemp=<fresh dir> (no `--` before pinned_pytest args). Helper: C:/t/runtests.sh NAME tests... (edit its evidence dir to final_payload_p3 if reused). PYTHONPATH=C:/t/fp/src, T2PW_OFFLINE_CURATOR=1 for deterministic tests (NOT live runs). Python C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.venv/Scripts/python.exe. Create basetemp parent first. One heavy job at a time; wait until C:/t/heavylock/holder.json absent. Never pytest -n auto. Counts from piped wrapper output.
+- Bash tool timeout must exceed wrapper timeout (max 600000ms foreground; longer jobs: run_in_background WITHOUT '&', wait for notification). Never combine & with run_in_background.
+- Free RAM >= 4 GB before heavy job; if machine busy wait, never kill others' processes.
+- NEVER `python -` or any heredoc fed to an interpreter stdin. Write scripts to files.
+- No taskkill /IM python.exe, no pkill python; clean only own PIDs. Stop Docker project t2pw-pwi when done; never docker prune.
+- Never commit caches (data/enrichment_cache.json etc.), .env, or any *quarantine_report.json (rename copies). Never read/print .env.
+- Commit messages: write to a file with Write tool, then `git -C <tree> commit -F <file>`; keep the word "smpdb" out of any command line containing `git commit`. End message with: Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>. Docs-only commits separate from code commits.
+- Out of scope: src/t2pw/pipeline/, mapping/, rag/, curation/, llm/prompts/. All writer changes behind T2PW_FINAL_PAYLOAD; flag-off output must stay byte identical to bf20c050.
+- A permission denial stops that step; report it, do not work around it.
+- Background: C:/t/fp/docs/pwml_output/FINAL-PAYLOAD-P2.md (sections 4, 6, 7), IMPORT-ERROR-TRIAGE.md, C:/t/pwi/t2pw/docs/pwml_output/IMPORT-HARNESS.md.

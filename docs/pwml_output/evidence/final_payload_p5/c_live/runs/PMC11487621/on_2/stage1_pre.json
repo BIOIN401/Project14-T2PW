@@ -1,0 +1,1540 @@
+{
+ "biological_states": [
+  {
+   "evidence": "cytoplasmic coupling helices of EcfT",
+   "name": "cytoplasmic state",
+   "species": "Bacillus subtilis",
+   "subcellular_location": "cytoplasm"
+  },
+  {
+   "evidence": "from the medium",
+   "name": "extracellular state",
+   "species": "Bacillus subtilis",
+   "subcellular_location": "extracellular"
+  },
+  {
+   "evidence": "transmembrane complex",
+   "name": "membrane state",
+   "species": "Bacillus subtilis",
+   "subcellular_location": "cell membrane"
+  }
+ ],
+ "element_locations": {
+  "compound_locations": [
+   {
+    "biological_state": "extracellular state",
+    "compound": "pantothenate",
+    "evidence": "pantothenate can be imported"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "compound": "pantothenate",
+    "evidence": "pantothenate can be made de novo"
+   },
+   {
+    "biological_state": "extracellular state",
+    "compound": "cysteinopantetheine",
+    "evidence": "cysteinopantetheine is a novel metabolite"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "compound": "coenzyme A",
+    "evidence": "coenzyme A is an essential cofactor"
+   }
+  ],
+  "nucleic_acid_locations": [
+   {
+    "biological_state": "cytoplasmic state",
+    "evidence": "CymR-repressed snaA-tcyJKLMN-cmoOIJ-ribR-sndA-ytnM operon",
+    "nucleic_acid": "tcyJKLMN operon"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "evidence": "dsDNA of the cysK upstream region",
+    "nucleic_acid": "cysK upstream region"
+   }
+  ],
+  "protein_locations": [
+   {
+    "biological_state": "membrane state",
+    "evidence": "EcfT and PanU form a transmembrane complex",
+    "protein": "EcfT"
+   },
+   {
+    "biological_state": "membrane state",
+    "evidence": "EcfT and PanU form a transmembrane complex",
+    "protein": "PanU"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "evidence": "cytoplasmic coupling helices of EcfT",
+    "protein": "EcfA1"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "evidence": "cytoplasmic coupling helices of EcfT",
+    "protein": "EcfA2"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "evidence": "CymR is a transcriptional repressor",
+    "protein": "CymR"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "evidence": "CysK is the cysteine synthase",
+    "protein": "CysK"
+   }
+  ]
+ },
+ "entities": {
+  "compounds": [
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "α-ketoisovalerate",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "α-ketopantoate",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "pantoate",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "β-alanine",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "pantothenate",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "phosphopantothenate",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "cysteine",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "phosphopantetheine",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "dephospho-CoA",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "cofactor",
+    "confidence": 1.0,
+    "name": "coenzyme A",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "pantetheine",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "cysteinopantetheine",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "aspartate",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "pantethine",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "cystine",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   }
+  ],
+  "nucleic_acids": [
+   {
+    "class": "nucleic_acid",
+    "confidence": 1.0,
+    "name": "tcyJKLMN operon",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "nucleic_acid",
+    "confidence": 1.0,
+    "name": "cysK upstream region",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "nucleic_acid",
+    "confidence": 1.0,
+    "name": "CymR binding site of the cysK gene",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   }
+  ],
+  "protein_complexes": [
+   {
+    "class": "protein_complex",
+    "components": [
+     "EcfA1",
+     "EcfA2",
+     "EcfT",
+     "PanU"
+    ],
+    "confidence": 1.0,
+    "evidence": "ColabFold/AlphaFold predicted model of the complex of EcfT – EcfA1 – EcfA2 – PanU",
+    "name": "EcfA1/EcfA2/EcfT/PanU complex",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein_complex",
+    "components": [
+     "TcyJ",
+     "TcyK",
+     "TcyL",
+     "TcyM",
+     "TcyN"
+    ],
+    "confidence": 1.0,
+    "evidence": "tcyJKLMN genes encode subunits of an ABC transporter for the uptake of cystine",
+    "name": "TcyJKLMN complex",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein_complex",
+    "components": [
+     "CymR",
+     "CysK"
+    ],
+    "confidence": 1.0,
+    "evidence": "the two proteins form a CymR2-CysK2 complex",
+    "name": "CymR2-CysK2 complex",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein_complex",
+    "components": [
+     "CymR",
+     "CysK"
+    ],
+    "confidence": 1.0,
+    "evidence": "atomic models of the CymR2-CysK2 heterotetramer",
+    "name": "CymR2-CysK2 heterotetramer",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein_complex",
+    "components": [
+     "CymR"
+    ],
+    "confidence": 1.0,
+    "evidence": "crystal structure of the hexameric CymR (PDB: 2Y75)",
+    "name": "hexameric CymR",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   }
+  ],
+  "proteins": [
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "PanB",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "PanC",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "PanE",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "PanG",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "IlvC",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "CoaA",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "CoaX",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "transporter",
+    "confidence": 1.0,
+    "name": "PanU",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "transporter",
+    "confidence": 1.0,
+    "name": "EcfT",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "transporter",
+    "confidence": 1.0,
+    "name": "EcfA1",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "transporter",
+    "confidence": 1.0,
+    "name": "EcfA2",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "transporter",
+    "confidence": 1.0,
+    "name": "TcyJ",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "transporter",
+    "confidence": 1.0,
+    "name": "TcyK",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "transporter",
+    "confidence": 1.0,
+    "name": "TcyL",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "transporter",
+    "confidence": 1.0,
+    "name": "TcyM",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "transporter",
+    "confidence": 1.0,
+    "name": "TcyN",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "CymR",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "CysK",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "CoaBC",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "CoaD",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "CoaE",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "PanD",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   }
+  ],
+  "species": [
+   {
+    "name": "Bacillus subtilis",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   }
+  ],
+  "subcellular_locations": [
+   {
+    "evidence": "cytoplasmic coupling helices of EcfT",
+    "name": "cytoplasm",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "evidence": "from the medium",
+    "name": "extracellular",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "evidence": "transmembrane complex",
+    "name": "cell membrane",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   }
+  ]
+ },
+ "processes": {
+  "interactions": [
+   {
+    "biological_state": "cytoplasmic state",
+    "entity_1": "CymR",
+    "entity_2": "tcyJKLMN operon",
+    "evidence": "cymR gene, encoding the transcriptional repressor of a regulon involved in cysteine metabolism",
+    "name": "CymR represses tcyJKLMN operon",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "relationship": "inhibition"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "entity_1": "CysK",
+    "entity_2": "CymR",
+    "evidence": "CysK does not only act as the cysteine synthase but also as a corepressor of CymR",
+    "name": "CysK binds CymR",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "relationship": "binding"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "entity_1": "CymR2-CysK2 complex",
+    "entity_2": "cysK upstream region",
+    "evidence": "CymR2-CysK2 repressor complex would bind to DNA",
+    "name": "CymR2-CysK2 complex binds cysK upstream region",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "relationship": "binding"
+   },
+   {
+    "entity_1": "CysK",
+    "entity_2": "CymR",
+    "evidence": "The interaction between CysK and CymR triggers DNA binding by CymR.",
+    "name": "CysK-CymR interaction",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "relationship": "interaction"
+   },
+   {
+    "entity_1": "CymR",
+    "entity_2": "CymR binding site of the cysK gene",
+    "evidence": "molecular docking with HDOCK using dsDNA of the CymR binding site",
+    "name": "CymR binding to CymR binding site",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "relationship": "binding"
+   }
+  ],
+  "reactions": [
+   {
+    "biological_state": "cytoplasmic state",
+    "enzymes": [
+     {
+      "confidence": 1.0,
+      "evidence": "α-ketoisovalerate is hydroxymethylated to α-ketopantoate",
+      "protein": "PanB",
+      "provenance": "extracted"
+     }
+    ],
+    "evidence": "α-ketoisovalerate is hydroxymethylated to α-ketopantoate",
+    "inputs": [
+     "α-ketoisovalerate"
+    ],
+    "locked_reaction_id": "rxn_lock_006",
+    "name": "PanB reaction",
+    "outputs": [
+     "α-ketopantoate"
+    ],
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "scope_membership": "core"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "enzymes": [
+     {
+      "confidence": 1.0,
+      "evidence": "three enzymes can reduce ketopantoate to pantoate",
+      "protein": "PanE",
+      "provenance": "extracted"
+     },
+     {
+      "confidence": 1.0,
+      "evidence": "three enzymes can reduce ketopantoate to pantoate",
+      "protein": "PanG",
+      "provenance": "extracted"
+     },
+     {
+      "confidence": 1.0,
+      "evidence": "three enzymes can reduce ketopantoate to pantoate",
+      "protein": "IlvC",
+      "provenance": "extracted"
+     }
+    ],
+    "evidence": "three enzymes can reduce ketopantoate to pantoate",
+    "inputs": [
+     "α-ketopantoate"
+    ],
+    "locked_reaction_id": "rxn_lock_005",
+    "name": "Ketopantoate reduction",
+    "outputs": [
+     "pantoate"
+    ],
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "scope_membership": "core"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "enzymes": [
+     {
+      "confidence": 1.0,
+      "evidence": "panC mutant lacking pantothenate synthase",
+      "protein": "PanC",
+      "provenance": "extracted"
+     }
+    ],
+    "evidence": "pantothenate can be made de novo",
+    "inputs": [
+     "pantoate",
+     "β-alanine"
+    ],
+    "locked_reaction_id": "rxn_lock_009",
+    "name": "Pantothenate synthase reaction",
+    "outputs": [
+     "pantothenate"
+    ],
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "scope_membership": "core"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "enzymes": [
+     {
+      "confidence": 1.0,
+      "evidence": "Two enzymes, CoaA and CoaX, can phosphorylate pantothenate",
+      "protein": "CoaA",
+      "provenance": "extracted"
+     },
+     {
+      "confidence": 1.0,
+      "evidence": "Two enzymes, CoaA and CoaX, can phosphorylate pantothenate",
+      "protein": "CoaX",
+      "provenance": "extracted"
+     }
+    ],
+    "evidence": "Two enzymes, CoaA and CoaX, can phosphorylate pantothenate",
+    "inputs": [
+     "pantothenate"
+    ],
+    "locked_reaction_id": "rxn_lock_008",
+    "name": "Pantothenate kinase reaction",
+    "outputs": [
+     "phosphopantothenate"
+    ],
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "scope_membership": "core"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "enzymes": [
+     {
+      "confidence": 1.0,
+      "evidence": "bifunctional phosphopantothenoylcysteine synthetase/decarboxylase",
+      "protein": "CoaBC",
+      "provenance": "extracted"
+     }
+    ],
+    "evidence": "bifunctional phosphopantothenoylcysteine synthetase/decarboxylase",
+    "inputs": [
+     "phosphopantothenate",
+     "cysteine"
+    ],
+    "locked_reaction_id": "rxn_lock_002",
+    "name": "CoaBC reaction",
+    "outputs": [
+     "phosphopantetheine"
+    ],
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "scope_membership": "core"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "enzymes": [
+     {
+      "confidence": 1.0,
+      "evidence": "Phosphopantetheine adenylyltransferase",
+      "protein": "CoaD",
+      "provenance": "extracted"
+     }
+    ],
+    "evidence": "Phosphopantetheine adenylyltransferase",
+    "inputs": [
+     "phosphopantetheine"
+    ],
+    "locked_reaction_id": "rxn_lock_003",
+    "name": "CoaD reaction",
+    "outputs": [
+     "dephospho-CoA"
+    ],
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "scope_membership": "core"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "enzymes": [
+     {
+      "confidence": 1.0,
+      "evidence": "Dephospho-CoA kinase",
+      "protein": "CoaE",
+      "provenance": "extracted"
+     }
+    ],
+    "evidence": "Dephospho-CoA kinase",
+    "inputs": [
+     "dephospho-CoA"
+    ],
+    "locked_reaction_id": "rxn_lock_004",
+    "name": "CoaE reaction",
+    "outputs": [
+     "coenzyme A"
+    ],
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "scope_membership": "core"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "enzymes": [
+     {
+      "confidence": 1.0,
+      "evidence": "CoaA has pantetheine kinase activity",
+      "protein": "CoaA",
+      "provenance": "extracted"
+     }
+    ],
+    "evidence": "CoaA has pantetheine kinase activity",
+    "inputs": [
+     "pantetheine"
+    ],
+    "locked_reaction_id": "rxn_lock_007",
+    "name": "Pantetheine kinase reaction",
+    "outputs": [
+     "phosphopantetheine"
+    ],
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "scope_membership": "core"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "enzymes": [
+     {
+      "confidence": 1.0,
+      "evidence": "β-alanine is synthesized by the aspartate decarboxylase PanD",
+      "protein": "PanD",
+      "provenance": "extracted"
+     }
+    ],
+    "evidence": "β-alanine is synthesized by the aspartate decarboxylase PanD",
+    "inputs": [
+     "aspartate"
+    ],
+    "locked_reaction_id": "rxn_lock_001",
+    "name": "Aspartate decarboxylase reaction",
+    "outputs": [
+     "β-alanine"
+    ],
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "scope_membership": "anaplerotic"
+   }
+  ],
+  "transports": [
+   {
+    "cargo": "pantothenate",
+    "elements_with_states": [
+     {
+      "biological_state": "extracellular state",
+      "element": "pantothenate",
+      "evidence": "pantothenate can be imported",
+      "side": "left"
+     },
+     {
+      "biological_state": "cytoplasmic state",
+      "element": "pantothenate",
+      "evidence": "pantothenate can be imported",
+      "side": "right"
+     }
+    ],
+    "evidence": "pantothenate can be imported by B. subtilis with high affinity using an ECF transporter with PanU as the substrate-specific S protein",
+    "from_biological_state": "extracellular state",
+    "name": "Pantothenate high-affinity uptake via ECF transporter",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "to_biological_state": "cytoplasmic state",
+    "transporters": [
+     {
+      "evidence": "pantothenate can be imported by B. subtilis with high affinity using an ECF transporter with PanU as the substrate-specific S protein",
+      "protein_complex": "EcfA1/EcfA2/EcfT/PanU complex"
+     }
+    ]
+   },
+   {
+    "cargo": "pantothenate",
+    "elements_with_states": [
+     {
+      "biological_state": "extracellular state",
+      "element": "pantothenate",
+      "evidence": "an additional uptake system can transport the intermediate with low affinity",
+      "side": "left"
+     },
+     {
+      "biological_state": "cytoplasmic state",
+      "element": "pantothenate",
+      "evidence": "an additional uptake system can transport the intermediate with low affinity",
+      "side": "right"
+     }
+    ],
+    "evidence": "an additional uptake system can transport the intermediate with low affinity",
+    "from_biological_state": "extracellular state",
+    "name": "Pantothenate low-affinity uptake",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "to_biological_state": "cytoplasmic state"
+   },
+   {
+    "cargo": "cysteinopantetheine",
+    "elements_with_states": [
+     {
+      "biological_state": "extracellular state",
+      "element": "cysteinopantetheine",
+      "evidence": "the ABC Transporter TcyJKLMN is active in the transport of cysteine-pantetheine",
+      "side": "left"
+     },
+     {
+      "biological_state": "cytoplasmic state",
+      "element": "cysteinopantetheine",
+      "evidence": "the ABC Transporter TcyJKLMN is active in the transport of cysteine-pantetheine",
+      "side": "right"
+     }
+    ],
+    "evidence": "the ABC Transporter TcyJKLMN is active in the transport of cysteine-pantetheine",
+    "from_biological_state": "extracellular state",
+    "name": "Cysteinopantetheine uptake via TcyJKLMN",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "to_biological_state": "cytoplasmic state",
+    "transporters": [
+     {
+      "evidence": "the ABC Transporter TcyJKLMN is active in the transport of cysteine-pantetheine",
+      "protein_complex": "TcyJKLMN complex"
+     }
+    ]
+   }
+  ]
+ }
+}

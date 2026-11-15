@@ -1,0 +1,146 @@
+{
+ "n_files": 243,
+ "compared": 243,
+ "errors": [],
+ "runs_changed": 2,
+ "transports_changed": [
+  {
+   "run": "runs_papers\\ORCH-759p\\legs\\sour_taste_v2-strict\\2026-10-22_2233\\papers\\PMC7059786\\strict\\merged_payload.json",
+   "idx": 4,
+   "transport": "OTOP1-mediated H+ permeation",
+   "cargo": "H+",
+   "field": "to_biological_state",
+   "before": "__auto_state__",
+   "after": "Type III taste cell state",
+   "other_side_after": "__auto_state__"
+  },
+  {
+   "run": "runs_verify\\2026-08-18_1328\\papers\\PMC12452463\\strict\\merged_payload.json",
+   "idx": 1,
+   "transport": "enterobactin secretion",
+   "cargo": "enterobactin",
+   "field": "from_biological_state",
+   "before": "__auto_state__",
+   "after": "Escherichia coli cytosol",
+   "other_side_after": "Escherichia coli extracellular"
+  }
+ ],
+ "outside_transport_diffs": [],
+ "report_diffs": [
+  {
+   "run": "runs_papers\\ORCH-759p\\legs\\sour_taste_v2-strict\\2026-10-22_2233\\papers\\PMC7059786\\strict\\merged_payload.json",
+   "path": "/gate/connectivity/largest_component_pct",
+   "before": "91.84",
+   "after": "92.0"
+  },
+  {
+   "run": "runs_papers\\ORCH-759p\\legs\\sour_taste_v2-strict\\2026-10-22_2233\\papers\\PMC7059786\\strict\\merged_payload.json",
+   "path": "/gate/connectivity/main_component_size",
+   "before": "45",
+   "after": "46"
+  },
+  {
+   "run": "runs_papers\\ORCH-759p\\legs\\sour_taste_v2-strict\\2026-10-22_2233\\papers\\PMC7059786\\strict\\merged_payload.json",
+   "path": "/gate/connectivity/n_edges",
+   "before": "70",
+   "after": "73"
+  },
+  {
+   "run": "runs_papers\\ORCH-759p\\legs\\sour_taste_v2-strict\\2026-10-22_2233\\papers\\PMC7059786\\strict\\merged_payload.json",
+   "path": "/gate/connectivity/n_nodes",
+   "before": "49",
+   "after": "50"
+  },
+  {
+   "run": "runs_papers\\ORCH-759p\\legs\\sour_taste_v2-strict\\2026-10-22_2233\\papers\\PMC7059786\\strict\\merged_payload.json",
+   "path": "/gate_details/connectivity/largest_component_pct",
+   "before": "91.84",
+   "after": "92.0"
+  },
+  {
+   "run": "runs_papers\\ORCH-759p\\legs\\sour_taste_v2-strict\\2026-10-22_2233\\papers\\PMC7059786\\strict\\merged_payload.json",
+   "path": "/gate_details/connectivity/main_component_size",
+   "before": "45",
+   "after": "46"
+  },
+  {
+   "run": "runs_papers\\ORCH-759p\\legs\\sour_taste_v2-strict\\2026-10-22_2233\\papers\\PMC7059786\\strict\\merged_payload.json",
+   "path": "/gate_details/connectivity/n_edges",
+   "before": "70",
+   "after": "73"
+  },
+  {
+   "run": "runs_papers\\ORCH-759p\\legs\\sour_taste_v2-strict\\2026-10-22_2233\\papers\\PMC7059786\\strict\\merged_payload.json",
+   "path": "/gate_details/connectivity/n_nodes",
+   "before": "49",
+   "after": "50"
+  }
+ ],
+ "auto_both_old": [
+  {
+   "run": "runs_papers\\ORCH-759p\\legs\\sour_taste_v2-strict\\2026-10-22_2233\\papers\\PMC7059786\\strict\\merged_payload.json",
+   "i": 4,
+   "transport": "OTOP1-mediated H+ permeation",
+   "cargo": "H+",
+   "state": "__auto_state__"
+  },
+  {
+   "run": "runs_smoke\\2026-09-08_1528\\papers\\PMC6112128\\strict\\merged_payload.json",
+   "i": 0,
+   "transport": "TubI-mediated TBN export",
+   "cargo": "tubercidin",
+   "state": "__auto_state__"
+  },
+  {
+   "run": "runs_verify\\2026-08-21_2057\\papers\\PMC12096016\\research\\merged_payload.json",
+   "i": 1,
+   "transport": "ferric-enterobactin import",
+   "cargo": "ferric enterobactin",
+   "state": "__auto_state__"
+  },
+  {
+   "run": "runs_verify\\2026-08-27_1341\\papers\\PMC12096016\\strict\\merged_payload.json",
+   "i": 0,
+   "transport": "enterobactin secretion",
+   "cargo": "enterobactin",
+   "state": "__auto_state__"
+  },
+  {
+   "run": "runs_verify\\2026-09-02_2052\\papers\\PMC12096016\\strict\\merged_payload.json",
+   "i": 0,
+   "transport": "enterobactin secretion",
+   "cargo": "enterobactin",
+   "state": "E. coli cytoplasmic state"
+  }
+ ],
+ "auto_both_new": [
+  {
+   "run": "runs_smoke\\2026-09-08_1528\\papers\\PMC6112128\\strict\\merged_payload.json",
+   "i": 0,
+   "transport": "TubI-mediated TBN export",
+   "cargo": "tubercidin",
+   "state": "__auto_state__"
+  },
+  {
+   "run": "runs_verify\\2026-08-21_2057\\papers\\PMC12096016\\research\\merged_payload.json",
+   "i": 1,
+   "transport": "ferric-enterobactin import",
+   "cargo": "ferric enterobactin",
+   "state": "__auto_state__"
+  },
+  {
+   "run": "runs_verify\\2026-08-27_1341\\papers\\PMC12096016\\strict\\merged_payload.json",
+   "i": 0,
+   "transport": "enterobactin secretion",
+   "cargo": "enterobactin",
+   "state": "__auto_state__"
+  },
+  {
+   "run": "runs_verify\\2026-09-02_2052\\papers\\PMC12096016\\strict\\merged_payload.json",
+   "i": 0,
+   "transport": "enterobactin secretion",
+   "cargo": "enterobactin",
+   "state": "E. coli cytoplasmic state"
+  }
+ ]
+}

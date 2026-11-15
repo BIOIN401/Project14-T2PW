@@ -1,0 +1,177 @@
+<?xml version='1.0' encoding='utf-8'?>
+<super-pathway-visualization xmlns:option="urn:pathwhiz-option">
+  <named-for-id type="integer">1</named-for-id>
+  <named-for-type>Pathway</named-for-type>
+  <cached-name>Update of the sideroflexin (SLC56) gene family.</cached-name>
+  <cached-description></cached-description>
+  <cached-subject>Metabolic</cached-subject>
+  <pw-id>PW000000</pw-id>
+  <pathway-visualization-contexts>
+    <pathway-visualization-context>
+      <position>Center</position>
+      <id>PathwayVisualizationContext1</id>
+      <pathway-visualization>
+        <height type="integer">1400</height>
+        <width type="integer">3200</width>
+        <background-color>#FFFFFF</background-color>
+        <id>PathwayVisualization1</id>
+        <pathway>
+          <id type="integer">1</id>
+          <name>Update of the sideroflexin (SLC56) gene family.</name>
+          <description></description>
+          <subject>Metabolic</subject>
+          <species-id type="integer">1</species-id>
+          <sub-pathways/>
+          <references>
+            <reference>
+              <id type="integer">1</id>
+              <pubmed-id>40542427</pubmed-id>
+              <text>Katsafadou AI, Nebert DW, Krupenko SA, Thompson DC, Vasiliou V: Update of the sideroflexin (SLC56) gene family. 2025. doi: 10.1186/s40246-025-00779-w. PMID: 40542427.</text>
+              <element-id type="integer">1</element-id>
+              <element-type>Pathway</element-type>
+            </reference>
+          </references>
+        </pathway>
+        <cell-types/>
+        <species>
+          <species>
+            <id type="integer">1</id>
+            <name>Homo sapiens</name>
+            <taxonomy-id>9606</taxonomy-id>
+            <classification>Eukaryote</classification>
+            <common-name>Human</common-name>
+          </species>
+        </species>
+        <subcellular-locations>
+          <subcellular-location>
+            <id type="integer">1</id>
+            <name>cell</name>
+            <ontology-id>GO:0005623</ontology-id>
+          </subcellular-location>
+          <subcellular-location>
+            <id type="integer">2</id>
+            <name>mitochondrial matrix</name>
+            <ontology-id nil="true"/>
+          </subcellular-location>
+          <subcellular-location>
+            <id type="integer">3</id>
+            <name>mitochondrial inner membrane</name>
+            <ontology-id nil="true"/>
+          </subcellular-location>
+        </subcellular-locations>
+        <tissues/>
+        <biological-states>
+          <biological-state>
+            <id type="integer">4</id>
+            <tissue-id nil="true" type="integer"/>
+            <subcellular-location-id type="integer">2</subcellular-location-id>
+            <species-id type="integer">1</species-id>
+            <cell-type-id nil="true" type="integer"/>
+            <name>mitochondrial matrix</name>
+          </biological-state>
+          <biological-state>
+            <id type="integer">5</id>
+            <tissue-id nil="true" type="integer"/>
+            <subcellular-location-id type="integer">3</subcellular-location-id>
+            <species-id type="integer">1</species-id>
+            <cell-type-id nil="true" type="integer"/>
+            <name>mitochondrial inner membrane</name>
+          </biological-state>
+        </biological-states>
+        <bounds/>
+        <compounds/>
+        <element-collections/>
+        <nucleic-acids/>
+        <proteins>
+          <protein>
+            <id type="integer">30000</id>
+            <name>ALAS2</name>
+            <uniprot-id>P22557</uniprot-id>
+            <description/>
+            <hmdbp-id/>
+            <gene-name/>
+            <locus/>
+            <drugbank-id nil="true"/>
+            <genbank-id/>
+            <species-id type="integer">1</species-id>
+            <ec-numbers>
+              <ec-number>2.3.1.37</ec-number>
+            </ec-numbers>
+            <synonyms nil="true"/>
+            <element-states/>
+          </protein>
+          <protein>
+            <id type="integer">30001</id>
+            <name>SFXN4</name>
+            <uniprot-id>Q6P4A7</uniprot-id>
+            <description/>
+            <hmdbp-id/>
+            <gene-name/>
+            <locus/>
+            <drugbank-id nil="true"/>
+            <genbank-id/>
+            <species-id type="integer">1</species-id>
+            <ec-numbers/>
+            <synonyms nil="true"/>
+            <element-states/>
+          </protein>
+        </proteins>
+        <protein-complexes/>
+        <reactions/>
+        <reaction-coupled-transports/>
+        <transports/>
+        <interactions/>
+        <bound-visualizations/>
+        <compound-locations/>
+        <element-collection-locations/>
+        <nucleic-acid-locations/>
+        <protein-locations>
+          <protein-location>
+            <id type="integer">8</id>
+            <protein-id type="integer">30000</protein-id>
+            <biological-state-id type="integer">4</biological-state-id>
+            <visualization-template-id type="integer">2</visualization-template-id>
+            <hidden type="boolean">false</hidden>
+            <x type="integer">240</x>
+            <y type="integer">1050</y>
+            <zindex type="integer">8</zindex>
+            <label-type>subunit</label-type>
+            <font-size>regular</font-size>
+            <width>150</width>
+            <height>70</height>
+          </protein-location>
+          <protein-location>
+            <id type="integer">9</id>
+            <protein-id type="integer">30001</protein-id>
+            <biological-state-id type="integer">5</biological-state-id>
+            <visualization-template-id type="integer">2</visualization-template-id>
+            <hidden type="boolean">false</hidden>
+            <x type="integer">440</x>
+            <y type="integer">1050</y>
+            <zindex type="integer">8</zindex>
+            <label-type>subunit</label-type>
+            <font-size>regular</font-size>
+            <width>150</width>
+            <height>70</height>
+          </protein-location>
+        </protein-locations>
+        <protein-complex-visualizations/>
+        <edges/>
+        <reaction-visualizations/>
+        <reaction-coupled-transport_visualizations/>
+        <transport-visualizations/>
+        <interaction-visualizations/>
+        <sub-pathway-visualizations/>
+        <vacuous-compound-visualizations/>
+        <vacuous-edge-visualizations/>
+        <vacuous-nucleic-acid-visualizations/>
+        <vacuous-element-collection-visualizations/>
+        <vacuous-protein-visualizations/>
+        <drawable-element-locations/>
+        <membrane-visualizations/>
+        <label-locations/>
+        <zoom-visualizations/>
+      </pathway-visualization>
+    </pathway-visualization-context>
+  </pathway-visualization-contexts>
+</super-pathway-visualization>

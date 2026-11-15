@@ -1,0 +1,100 @@
+{
+  "label": "pwi-liveG2",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "tools/pathwhiz_import/run_import.py",
+    "C:/t/fp/docs/pwml_output/evidence/final_payload_p5/liveG/pwml/pathwhiz.pwml",
+    "C:/t/fp/docs/pwml_output/evidence/final_payload_p5/liveG/pwml/nameonly_r2.pwml",
+    "--smpdb-src",
+    "C:/t/pwpr/h04",
+    "--work",
+    "C:/t/pwi/p5w/liveG",
+    "--out",
+    "C:/t/pwi/p5w/liveG/out"
+  ],
+  "cwd": "C:\\t\\pwi\\t2pw",
+  "started_at": "2026-11-14T11:58:31+00:00",
+  "finished_at": "2026-11-14T11:58:35+00:00",
+  "duration_seconds": 2.6372299999929965,
+  "timeout_seconds": 900.0,
+  "root_pid": 1431084,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "nonzero",
+  "exit_code": 1,
+  "returned_code": 1,
+  "descendants_observed": [
+    {
+      "pid": 1431140,
+      "name": "python.exe",
+      "ppid": 1431084
+    },
+    {
+      "pid": 1430648,
+      "name": "git.exe",
+      "ppid": 1431140
+    }
+  ],
+  "descendants_terminated": [
+    1430648,
+    1431140
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 251140,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1277304,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1277468,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1373736,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1426264,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/fp/docs/pwml_output/evidence/final_payload_p5/liveG/import.wrapper.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\fp\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\fp",
+    "repo_head": "34cb102aa5c8f7ee2ab7f54e973240eec9a2f4a8",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "pwi",
+    "token": "pwi:1373736:33daa8d003655698",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

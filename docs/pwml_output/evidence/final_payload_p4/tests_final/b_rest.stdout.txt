@@ -1,0 +1,90 @@
+T2PW: C:\t\fp\src\t2pw\__init__.py
+........................................................................ [  6%]
+........................................................................ [ 13%]
+........................................................................ [ 19%]
+........................................................................ [ 26%]
+........................................................................ [ 33%]
+........................................................................ [ 39%]
+........................................................................ [ 46%]
+........................................................................ [ 52%]
+........................................................................ [ 59%]
+...............F........................................................ [ 66%]
+........................................................................ [ 72%]
+.....................ss...s..sss.ss..................................... [ 79%]
+........................................................................ [ 85%]
+........................................................................ [ 92%]
+........................................................................ [ 99%]
+..........                                                               [100%]
+================================== FAILURES ===================================
+___________ test_the_orchestrator_passes_the_merge_base_to_conform ____________
+
+    def test_the_orchestrator_passes_the_merge_base_to_conform():
+        """The S3 seam must hand conform the SAME object it hands ``merge_additions``.
+    
+        ``seed_payload`` defaults to ``None``, which is the pre-fix behaviour, so a
+        caller that forgets it gets a green conform module and a merged payload with
+        every duplicate still in it. That is not hypothetical: the guard landed on
+        2026-07-28 with ``streamlit_app.py`` still calling
+        ``conform_rag_additions_for_merge(rag_result.payload)``, and every number the
+        fix claims -- 88 entity rows -> 66 on PMC12444477/strict, 279 -> 220 across the
+        eight delivered ``merged_payload.json`` with a RAG side -- was unreachable in
+        production until the second argument was added. Every unit test in this file
+        passes the base explicitly, so none of them can catch that.
+    
+        Checked against the SOURCE rather than by running the orchestrator, because
+        importing ``streamlit_app`` executes a Streamlit script. The assertion is
+        stronger than "two arguments were passed": the name given to conform must be
+        the same name given to ``merge_additions`` as its base. Passing the Stage-1
+        seed there instead would type-check, run, and quietly let back every entity
+        that Stage 2 registered and Stage 1 did not ('lipid IV_A precursor',
+        'Kdo-lipid A precursor', 'tetra-acylated disaccharide intermediate' in that
+        same run).
+        """
+        tree = ast.parse(APP_PATH.read_text(encoding="utf-8"))
+    
+        def _calls(name: str) -> List[ast.Call]:
+            return [
+                node
+                for node in ast.walk(tree)
+                if isinstance(node, ast.Call)
+                and isinstance(node.func, ast.Name)
+                and node.func.id == name
+            ]
+    
+        conform_calls = _calls("conform_rag_additions_for_merge")
+>       assert len(conform_calls) == 1, "the S3 seam is the only caller; found %d" % len(conform_calls)
+E       AssertionError: the S3 seam is the only caller; found 0
+E       assert 0 == 1
+E        +  where 0 = len([])
+
+tests\test_rag_seed_entity_reimport.py:570: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_rag_seed_entity_reimport.py::test_the_orchestrator_passes_the_merge_base_to_conform
+1 failed, 1081 passed, 8 skipped in 115.70s (0:01:55)
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\fp\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ f66b3ef23cee672486ae5bd5d56ecccfe8321e37  [git, worktree dirty=True]
+label                   : fp-b_rest
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/fp -q --basetemp=C:/t/tmpbase/b_rest-17245 tests/test_apply_audit_patch_referential_integrity.py tests/test_baseline_regression_2026_07_28.py tests/test_batch_research_gate_fail_open.py tests/test_c055_rag_loop_wiring.py tests/test_c095_wrapper_superset_identity.py tests/test_c099_wrapper_species_preservation.py tests/test_curation_patch_transaction.py tests/test_entity_identity_contracts.py tests/test_entity_type_gate.py tests/test_failure_detail.py tests/test_interactive_curator.py tests/test_locked_noop_quarantine_policy.py tests/test_orch758a_charge_notation_not_composite.py tests/test_orch759a_duplicate_protein_fold.py tests/test_orch759c_quarantine_bucket_closure.py tests/test_orch762_protein_identity.py tests/test_orch766_unreferenced_species.py tests/test_orch769b_actor_protein_registry.py tests/test_orch773_omit_per_row.py tests/test_orch792_no_silent_drops.py tests/test_orch797a_reference_key.py tests/test_orch799a_row_is_referenced.py tests/test_orch802_enzyme_cue_boundary.py tests/test_pathbank_unknown_fallback.py tests/test_protein_export_policy.py tests/test_pwml_ir_duplicate_row_refusal.py tests/test_rag_gap_admission.py tests/test_rag_graph_delta.py tests/test_rag_payload_gate_guardrails.py tests/test_rag_provenance_gates.py tests/test_rag_seed_entity_reimport.py tests/test_reference_repair.py tests/test_research_mode_normalizer.py tests/test_stage_one_paper_dictionary.py tests/test_strict_failure_replay.py tests/test_strict_quarantine.py tests/test_strict_quarantine_contract_alignment.py tests/test_strict_quarantine_locks_and_scope.py tests/test_strict_quarantine_real_artifact_replay.py
+cwd                     : C:\t\fp
+root PID / process group: 493272 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 117.95 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  482960:python.exe
+descendants terminated  : 1  482960
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/fp/docs/pwml_output/evidence/final_payload_p4/tests_final/b_rest.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=fp  acquired=True  released=True
+pre-existing (reported, NEVER killed): 7
+================================================

@@ -1,0 +1,38 @@
+[pwi] OK       18.0s  151.pwml  errors=30
+[pwi] OK       72.8s  6.pwml  errors=17
+[pwi] OK      202.2s  7.pwml  errors=65
+[pwi] OK       35.2s  8.pwml  errors=12
+[pwi] OK        5.4s  10.pwml  errors=44
+[pwi] OK        5.4s  11.pwml  errors=9
+[pwi] OK        0.4s  14.pwml  errors=1
+[pwi] OK        0.7s  15.pwml  errors=1
+[pwi] OK        9.3s  16.pwml  errors=5
+[pwi] OK        9.4s  17.pwml  errors=5
+[pwi] summary: {"files": 10, "success_true": 10, "success_true_no_errors": 0, "success_false": 0, "total_seconds": 358.8}
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\fp\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 76b0d6ebd31ab10bc8b349c09c95860bede9d0ef  [git, worktree dirty=False]
+label                   : pwi-off5-b_00
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -X utf8 C:/t/pwi/t2pw/tools/pathwhiz_import/run_import.py --list C:/t/fp/docs/pwml_output/evidence/final_payload_p2/import/off5/lists/b_00 --out C:/t/fp/docs/pwml_output/evidence/final_payload_p2/import/off5/b_00 --chunk 10
+cwd                     : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 618744 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 382.62 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 18  618756:python.exe, 618776:docker.exe, 618832:docker.exe, 618884:docker.exe, 618936:docker-compose.exe, 618976:docker-compose.exe, 618736:docker.exe, 618824:docker-compose.exe, 619056:docker-compose.exe, 609608:docker.exe, 619184:docker-compose.exe, 615588:docker-compose.exe, 619316:docker.exe, 619388:docker-compose.exe, 619404:docker-compose.exe, 623936:docker.exe, 628692:docker-compose.exe, 622652:docker-compose.exe
+descendants terminated  : 18  609608, 615588, 618736, 618756, 618776, 618824, 618832, 618884, 618936, 618976, 619056, 619184, 619316, 619388, 619404, 622652, 623936, 628692
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/fp/docs/pwml_output/evidence/final_payload_p2/import/off5/b_00.bounded.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=pwi  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

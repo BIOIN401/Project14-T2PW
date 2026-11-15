@@ -1,0 +1,105 @@
+T2PW: C:\t\fp\src\t2pw\__init__.py
+........F............................................................... [ 26%]
+........................................................................ [ 52%]
+.....................................................F.................. [ 78%]
+..........................................................               [100%]
+================================== FAILURES ===================================
+_ test_f6_exact_row_wins_over_the_context_resolved_numbered_name_whatever_the_list_order _
+
+    def test_f6_exact_row_wins_over_the_context_resolved_numbered_name_whatever_the_list_order() -> None:
+        for names in (["Type II cell", "Type II taste cell"], ["Type II taste cell", "Type II cell"]):
+            p = {"entities": {"cell_types": [{"name": n} for n in names], "species": []}, "biological_states": []}
+            f = FakeFetcher([("ols4", {"q": "type ii taste cell"}, ols(("CL:0002286", "type II taste cell", [])))])
+            rep = fill_ontology_ids(p, f, Cache(None), TODAY, paper_text=_TASTE)
+            got = {r["name"]: r.get("ontology_id") for r in p["entities"]["cell_types"]}
+>           assert got == {"Type II taste cell": "CL:0002286", "Type II cell": None}, names
+E           AssertionError: ['Type II cell', 'Type II taste cell']
+E           assert {'Type II cel...e cell': None} == {'Type II cel... 'CL:0002286'}
+E             
+E             Omitting 1 identical items, use -vv to show
+E             Differing items:
+E             {'Type II taste cell': None} != {'Type II taste cell': 'CL:0002286'}
+E             Use -v to get more diff
+
+tests\test_final_payload_fix1.py:128: AssertionError
+____ test_cli_export_emits_the_canonical_organism_and_keeps_its_provenance ____
+
+tmp_path = WindowsPath('C:/t/tmpbase/fix1a-28124/test_cli_export_emits_the_cano0')
+
+    def test_cli_export_emits_the_canonical_organism_and_keeps_its_provenance(
+        tmp_path: Path,
+    ) -> None:
+        """D-016 (LOCKED) on the CLI entry point, end to end.
+    
+        Fails at ``d146be48``: the species ladder had moved into the pre-freeze
+        sequence and only Streamlit called it, so this entry point emitted
+        ``<name>Lactococcus lactis subsp. lactis KF147</name>`` with an empty
+        ``name_canonicalization["species"]`` and no preflight -- the exported organism
+        wearing the un-normalized name with no record that a normalization was owed.
+        """
+    
+        result, out_dir = _run_cli_export(tmp_path, _kf147_payload())
+        assert "error" not in result
+    
+        pwml = (out_dir / "pathway.pwml").read_text(encoding="utf-8")
+        assert "<name>Lactococcus lactis</name>" in pwml
+        assert "KF147" not in pwml
+    
+        ir = json.loads((out_dir / "final.pwml_ir.json").read_text(encoding="utf-8"))
+        species = ir["species"]
+        assert [row["name"] for row in species] == ["Lactococcus lactis"]
+        # The alias is the provenance the IR carries: the row still answers to the
+        # name the paper used, so an importer matching on either finds one organism.
+        # DEFERRED, not this card's boundary: ``ir._component_record`` (ir.py:415-435)
+        # projects ``aliases`` but not ``raw_name``, so the ``raw_name`` the pre-freeze
+        # stage writes onto the payload row -- asserted directly in
+        # tests/test_prefreeze_species_resolution.py -- stops at the IR projection.
+        # Measured identical on the Streamlit path; not introduced by this seam.
+        assert species[0]["aliases"] == ["Lactococcus lactis subsp. lactis KF147"]
+    
+        report = json.loads((out_dir / "pwml_ir_report.json").read_text(encoding="utf-8"))
+        assert report["name_canonicalization"]["species"] == [{
+            "from": "Lactococcus lactis subsp. lactis KF147",
+            "to": "Lactococcus lactis",
+            "taxonomy_id": "1091041",
+            "source": "deterministic_strain_normalization",
+        }]
+        # P4-01: no worktree carries a .env, so ``PathBankDbResolver.from_env()``
+        # answers ``None`` and this leg is offline. Asserted rather than assumed --
+        # a reachable DB would make the preflight below silently absent instead of
+        # wrong, and a vacuous assertion is not evidence.
+>       assert report["db_resolution"]["available"] is False
+E       assert True is False
+
+tests\test_pwml_writer.py:1833: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_final_payload_fix1.py::test_f6_exact_row_wins_over_the_context_resolved_numbered_name_whatever_the_list_order
+FAILED tests/test_pwml_writer.py::test_cli_export_emits_the_canonical_organism_and_keeps_its_provenance
+2 failed, 272 passed in 36.19s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\fp\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 5d5358e6d602dc8f504e16fe699691a7555c9466  [git, worktree dirty=True]
+label                   : fp-fix1a
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/fp -q --basetemp=C:/t/tmpbase/fix1a-28124 tests/test_final_payload_fix1.py tests/test_final_payload_ontology.py tests/test_final_payload_ontology_p5.py tests/test_final_payload_nucleic_lookup.py tests/test_final_payload_nucleic_type.py tests/test_final_payload_fill.py tests/test_final_payload_meta.py tests/test_final_payload_vocabulary.py tests/test_final_payload_wildcard_guard.py tests/test_final_payload_writer_fixes.py tests/test_pwml_writer.py tests/test_pwml_ir.py tests/test_pwml_ir_duplicate_row_refusal.py
+cwd                     : C:\t\fp
+root PID / process group: 466164 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 37.27 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  529020:python.exe
+descendants terminated  : 1  529020
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/fp/docs/pwml_output/evidence/final_payload_p5/tests/fix1a.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=fp5-fix1a  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

@@ -1,0 +1,103 @@
+{
+  "label": "fp5-liveG-nameonly",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "C:/t/fp/docs/pwml_output/evidence/final_payload_p5/liveG/drive.py",
+    "nameonly",
+    "strict",
+    "-",
+    "cholesterol biosynthesis",
+    "Homo sapiens"
+  ],
+  "cwd": "C:\\t\\fp",
+  "started_at": "2026-11-14T10:58:35+00:00",
+  "finished_at": "2026-11-14T11:04:14+00:00",
+  "duration_seconds": 338.29265190000297,
+  "timeout_seconds": 4500.0,
+  "root_pid": 1331860,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 1327356,
+      "name": "python.exe",
+      "ppid": 1331860
+    },
+    {
+      "pid": 1329500,
+      "name": "python.exe",
+      "ppid": 1335532
+    },
+    {
+      "pid": 1335532,
+      "name": "python.exe",
+      "ppid": 1327356
+    }
+  ],
+  "descendants_terminated": [
+    1327356,
+    1329500,
+    1335532
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 251140,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1277304,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1277468,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1334356,
+      "name": "python.exe"
+    },
+    {
+      "pid": 1337176,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/fp/docs/pwml_output/evidence/final_payload_p5/liveG/nameonly.wrapper.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\fp\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\fp",
+    "repo_head": "34cb102aa5c8f7ee2ab7f54e973240eec9a2f4a8",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "fp5-liveG-nameonly",
+    "token": "fp5-liveG-nameonly:1337176:f4f3900e1818a616",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

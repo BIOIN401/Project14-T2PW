@@ -729,6 +729,9 @@ def run_stage_one(
         if _boundary.failure is not None:
             reporter.json(_boundary.failure.report)
         return StageOneResult(failure=InputFailure(KIND_STAGE_ONE_INCOMPLETE, message))
+    from t2pw.service import transport_sides as _transport_sides  # T2PW_TRANSPORT_SIDES, test only, default off
+    if _transport_sides.enabled():
+        stage_one = _transport_sides.apply_to_stage_one(stage_one, text, state, diagnostics_dir)
     if _boundary.reconstruction:
         reporter.info(
             f"Reconstructed {_boundary.reconstruction.get('shell_count', 0)} unresolved "

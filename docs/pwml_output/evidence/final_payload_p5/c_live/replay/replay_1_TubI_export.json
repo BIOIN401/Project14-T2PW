@@ -1,0 +1,78 @@
+{
+ "case": "1_TubI_export",
+ "seconds": 3.3,
+ "unchanged_input": true,
+ "report": {
+  "flag": "T2PW_TRANSPORT_SIDES",
+  "deficient": [
+   {
+    "pointer": "/processes/transports/0",
+    "name": "TubI-mediated TBN export",
+    "sides": [
+     "",
+     ""
+    ]
+   }
+  ],
+  "calls": 1,
+  "repairs": [
+   {
+    "pointer": "/processes/transports/0",
+    "name": "TubI-mediated TBN export",
+    "old": [
+     "",
+     ""
+    ],
+    "new": [
+     "intracellular",
+     "extracellular"
+    ],
+    "quotes": {
+     "from_biological_state": "out of the cell",
+     "to_biological_state": "out of the cell"
+    }
+   }
+  ],
+  "rejected": [],
+  "new_states": [
+   {
+    "pointer": "/processes/transports/0",
+    "state": {
+     "name": "intracellular",
+     "subcellular_location": "cytoplasm",
+     "evidence": "out of the cell"
+    }
+   },
+   {
+    "pointer": "/processes/transports/0",
+    "state": {
+     "name": "extracellular",
+     "subcellular_location": "extracellular",
+     "evidence": "out of the cell"
+    }
+   }
+  ],
+  "error": null
+ },
+ "transports_before": [
+  {
+   "name": "TubI-mediated TBN export",
+   "cargo": "tubercidin",
+   "from_biological_state": null,
+   "to_biological_state": null
+  }
+ ],
+ "transports_after": [
+  {
+   "name": "TubI-mediated TBN export",
+   "cargo": "tubercidin",
+   "from_biological_state": "intracellular",
+   "to_biological_state": "extracellular"
+  }
+ ],
+ "states_before": [],
+ "states_after": [
+  "intracellular",
+  "extracellular"
+ ]
+}

@@ -1,0 +1,46 @@
+T2PW: C:\t\fp\src\t2pw\__init__.py
+.F...........................................                            [100%]
+================================== FAILURES ===================================
+_____________________ test_title_step_has_its_own_circuit _____________________
+
+net = <function net.<locals>.install at 0x000001FFA4790A40>
+
+    def test_title_step_has_its_own_circuit(net):
+        inner = net("dead")
+        p = _payload()
+        rep = fp.maybe_apply_final_pathway_meta(p, {"likely_organism": "Escherichia coli"}, {"final_payload_paper": {"pmid": "555", "title": "T"}})
+        assert rep["written"] is True and rep["title_source"] == "paper metadata"  # falls back to the given title, nothing invented
+>       assert rep["circuit_open"] is True and rep["budget_exhausted"] is True and inner.calls == fp.CIRCUIT_BREAKER_N
+E       assert (False is True)
+
+tests\test_final_payload_default_seam.py:114: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_final_payload_default_seam.py::test_title_step_has_its_own_circuit
+1 failed, 44 passed in 2.30s
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\fp\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 5d1fc6ef1152e71a1d1ddbe8f4cf15e6992c57b2  [git, worktree dirty=True]
+label                   : fp-fix3a
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/fp -q --basetemp=C:/t/tmpbase/fix3a-23312 tests/test_final_payload_default_seam.py tests/test_final_payload_fix1.py tests/test_final_payload_fix2.py
+cwd                     : C:\t\fp
+root PID / process group: 329964 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 3.30 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  330044:python.exe
+descendants terminated  : 1  330044
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/fp/docs/pwml_output/evidence/final_payload_p5/tests/fix3a.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=fp5-fix3a  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

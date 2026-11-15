@@ -1,0 +1,14 @@
+written d3-on / writerA-on 97 97 same set True only d3 [] only writerA []
+files changed vs d3 on: 28 of 97 idx [3, 4, 8, 10, 16, 18, 20, 23, 27, 31, 37, 46, 58, 66, 77, 78, 88, 91, 98, 102, 109, 119, 126, 141, 142, 146, 150, 151]
+writerA non-stage3 errors [(13, 'PWML required-field gate failed.', 'required_field_gate'), (22, 'PWML required-field gate failed.', 'required_field_gate'), (32, 'PWML required-field gate failed.', 'required_field_gate'), (33, 'PWML required-field gate failed.', 'required_field_gate'), (36, 'PWML required-field gate failed.', 'required_field_gate')]
+counter locations_dropped_no_id sum {'d3': 4, 'writerA': 3} files {'d3': 3, 'writerA': 2}
+counter tissues_dropped_no_id sum {'d3': 0, 'writerA': 1} files {'d3': 0, 'writerA': 1}
+counter cell_types_dropped_no_id sum {'d3': 0, 'writerA': 15} files {'d3': 0, 'writerA': 8}
+counter components_kept_wildcard_guard sum {'d3': 0, 'writerA': 25} files {'d3': 0, 'writerA': 13}
+counter locations_kept_state_collision sum {'d3': 18, 'writerA': 19} files {'d3': 11, 'writerA': 11}
+wildcard check d3 on      {'species_only_states': 0, 'files_with_species_only': 0, 'wildcard_bindable_states': 65, 'files_with_bindable': 20}
+wildcard check writerA on {'species_only_states': 0, 'files_with_species_only': 0, 'wildcard_bindable_states': 63, 'files_with_bindable': 20}
+wildcard check P4 off     {'species_only_states': 0, 'files_with_species_only': 0, 'wildcard_bindable_states': 59, 'files_with_bindable': 19}
+changed files by moved counter {'locations_kept_state_collision': 1, 'components_kept_wildcard_guard': 6, 'locations_dropped_no_id': 1, 'tissues_dropped_no_id': 1, 'cell_types_dropped_no_id': 8}
+files whose cell-type/tissue/location/state sections changed vs d3 on: 9 of 97 idx [3, 10, 23, 37, 98, 119, 146, 150, 151]
+files changed only outside those sections (compound names etc., not the writer guard): 19

@@ -1,0 +1,178 @@
+{
+  "label": "pwi-on6-b_04",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-X",
+    "utf8",
+    "C:/t/pwi/t2pw/tools/pathwhiz_import/run_import.py",
+    "--list",
+    "C:/t/fp/docs/pwml_output/evidence/final_payload_p2/import6/on6/lists/b_04",
+    "--out",
+    "C:/t/fp/docs/pwml_output/evidence/final_payload_p2/import6/on6/b_04",
+    "--chunk",
+    "10"
+  ],
+  "cwd": "C:\\t\\fp\\docs\\pwml_output\\evidence\\final_payload_p2",
+  "started_at": "2026-11-12T18:40:35+00:00",
+  "finished_at": "2026-11-12T18:43:04+00:00",
+  "duration_seconds": 148.60211389999995,
+  "timeout_seconds": 540.0,
+  "root_pid": 119016,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 121904,
+      "name": "python.exe",
+      "ppid": 119016
+    },
+    {
+      "pid": 121996,
+      "name": "docker.exe",
+      "ppid": 121904
+    },
+    {
+      "pid": 118544,
+      "name": "docker.exe",
+      "ppid": 121904
+    },
+    {
+      "pid": 122040,
+      "name": "docker-compose.exe",
+      "ppid": 118544
+    },
+    {
+      "pid": 120416,
+      "name": "docker-compose.exe",
+      "ppid": 118544
+    },
+    {
+      "pid": 119036,
+      "name": "docker.exe",
+      "ppid": 121904
+    },
+    {
+      "pid": 117332,
+      "name": "docker-compose.exe",
+      "ppid": 119036
+    },
+    {
+      "pid": 116176,
+      "name": "docker-compose.exe",
+      "ppid": 118040
+    },
+    {
+      "pid": 118040,
+      "name": "docker.exe",
+      "ppid": 121904
+    },
+    {
+      "pid": 116364,
+      "name": "docker-compose.exe",
+      "ppid": 118040
+    },
+    {
+      "pid": 106044,
+      "name": "docker.exe",
+      "ppid": 121904
+    },
+    {
+      "pid": 118452,
+      "name": "docker-compose.exe",
+      "ppid": 106044
+    },
+    {
+      "pid": 119352,
+      "name": "docker-compose.exe",
+      "ppid": 106044
+    },
+    {
+      "pid": 122976,
+      "name": "docker.exe",
+      "ppid": 121904
+    },
+    {
+      "pid": 123084,
+      "name": "docker-compose.exe",
+      "ppid": 122976
+    }
+  ],
+  "descendants_terminated": [
+    106044,
+    116176,
+    116364,
+    117332,
+    118040,
+    118452,
+    118544,
+    119036,
+    119352,
+    120416,
+    121904,
+    121996,
+    122040,
+    122976,
+    123084
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 28048,
+      "name": "python.exe"
+    },
+    {
+      "pid": 28540,
+      "name": "python.exe"
+    },
+    {
+      "pid": 53536,
+      "name": "python.exe"
+    },
+    {
+      "pid": 117896,
+      "name": "python.exe"
+    },
+    {
+      "pid": 117936,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/fp/docs/pwml_output/evidence/final_payload_p2/import6/on6/b_04.bounded.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\fp\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\fp",
+    "repo_head": "e9c3e1971dad8d7112bb6caef2649287c7ba0581",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "pwi",
+    "token": "pwi:117896:48d4389229449c1c",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

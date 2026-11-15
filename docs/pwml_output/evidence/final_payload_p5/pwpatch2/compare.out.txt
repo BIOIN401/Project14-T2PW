@@ -1,0 +1,83 @@
+3.pwml         bind     same=False success True->True msgs 7->4 bs 5->6 transports 4->5
+      table biological_states 5 -> 6
+      table pathway_elements 4 -> 5
+      table transport_compound_visualizations 10 -> 12
+      table transport_elements 4 -> 5
+      table transport_visualizations 5 -> 6
+      table transports 4 -> 5
+      msg only before: transport_28=["Transport elements is too short (minimum is 1 character)"]
+      msg only before: transport_element_29=["Biological state must have unique biological states"]
+      msg only before: transport_visualization_77=["Transport can't be blank"]
+5.pwml         bind     same=True success True->True msgs 0->0 bs 3->3 transports 1->1
+6.pwml         bind     same=True success True->True msgs 0->0 bs 5->5 transports 2->2
+7.pwml         bind     same=True success True->True msgs 25->25 bs 4->4 transports 0->0
+9.pwml         bind     same=True success True->True msgs 0->0 bs 5->5 transports 2->2
+10.pwml        bind     same=False success True->True msgs 7->7 bs 5->7 transports 6->6
+      table biological_states 5 -> 7
+48.pwml        bind     same=True success True->True msgs 1->1 bs 3->3 transports 0->0
+76.pwml        bind     same=True success True->True msgs 12->12 bs 2->2 transports 0->0
+116.pwml       bind     same=True success True->True msgs 1->1 bs 5->5 transports 1->1
+119.pwml       bind     same=False success True->True msgs 1->1 bs 5->6 transports 2->2
+      table biological_states 5 -> 6
+120.pwml       bind     same=False success True->True msgs 0->0 bs 1->2 transports 0->0
+      table biological_states 1 -> 2
+      table element_states 4 -> 7
+122.pwml       bind     same=True success True->True msgs 0->0 bs 2->2 transports 0->0
+126.pwml       bind     same=True success True->True msgs 0->0 bs 5->5 transports 1->1
+127.pwml       bind     same=True success True->True msgs 0->0 bs 2->2 transports 0->0
+129.pwml       bind     same=True success True->True msgs 0->0 bs 1->1 transports 0->0
+139.pwml       bind     same=True success True->True msgs 1->1 bs 1->1 transports 0->0
+144.pwml       bind     same=True success True->True msgs 0->0 bs 2->2 transports 0->0
+146.pwml       bind     same=False success True->True msgs 0->0 bs 5->7 transports 1->1
+      table biological_states 5 -> 7
+150.pwml       bind     same=False success True->True msgs 8->4 bs 7->8 transports 4->5
+      table biological_states 7 -> 8
+      table element_states 8 -> 9
+      table pathway_elements 6 -> 7
+      table transport_compound_visualizations 8 -> 10
+      table transport_elements 4 -> 5
+      table transport_transporter_visualizations 2 -> 3
+      table transport_transporters 2 -> 3
+      table transport_visualizations 4 -> 5
+      table transports 4 -> 5
+      msg only before: transport_28=["Transport elements is too short (minimum is 1 character)"]
+      msg only before: transport_element_29=["Biological state must have unique biological states"]
+      msg only before: transport_transporter_visualization_107=["Transport transporter can't be blank"]
+      msg only before: transport_visualization_104=["Transport can't be blank"]
+151.pwml       bind     same=False success True->True msgs 5->1 bs 7->8 transports 2->3
+      table biological_states 7 -> 8
+      table element_states 4 -> 5
+      table pathway_elements 5 -> 6
+      table transport_compound_visualizations 4 -> 6
+      table transport_elements 2 -> 3
+      table transport_transporter_visualizations 1 -> 2
+      table transport_transporters 1 -> 2
+      table transport_visualizations 2 -> 3
+      table transports 2 -> 3
+      msg only before: transport_23=["Transport elements is too short (minimum is 1 character)"]
+      msg only before: transport_element_24=["Biological state must have unique biological states"]
+      msg only before: transport_transporter_visualization_89=["Transport transporter can't be blank"]
+      msg only before: transport_visualization_86=["Transport can't be blank"]
+23.pwml        nobind   same=True success True->True msgs 0->0 bs 3->3 transports 0->0
+37.pwml        nobind   same=True success True->True msgs 0->0 bs 2->2 transports 0->0
+98.pwml        nobind   same=True success True->True msgs 0->0 bs 2->2 transports 0->0
+4.pwml         nobind   same=True success True->True msgs 0->0 bs 2->2 transports 1->1
+8.pwml         nobind   same=True success True->True msgs 0->0 bs 3->3 transports 1->1
+12.pwml        nobind   same=True success True->True msgs 0->0 bs 1->1 transports 0->0
+16.pwml        nobind   same=True success True->True msgs 0->0 bs 1->1 transports 0->0
+20.pwml        nobind   same=True success True->True msgs 0->0 bs 1->1 transports 0->0
+29.pwml        nobind   same=True success True->True msgs 0->0 bs 3->3 transports 2->2
+40.pwml        nobind   same=True success True->True msgs 0->0 bs 1->1 transports 0->0
+56.pwml        nobind   same=True success True->True msgs 0->0 bs 2->2 transports 0->0
+74.pwml        nobind   same=True success True->True msgs 2->2 bs 2->2 transports 0->0
+91.pwml        nobind   same=True success True->True msgs 0->0 bs 3->3 transports 1->1
+107.pwml       nobind   same=True success True->True msgs 0->0 bs 3->3 transports 0->0
+130.pwml       nobind   same=True success True->True msgs 3->3 bs 1->1 transports 0->0
+PW012926.pwml  control  same=False success True->True msgs 1->1 bs 262->273 transports 1->1
+      table biological_states 262 -> 273
+PW741182.pwml  control  same=False success True->True msgs 0->0 bs 176->183 transports 4->4
+      table biological_states 176 -> 183
+PW687775.pwml  control  same=True success True->True msgs 3->3 bs 18->18 transports 0->0
+PW176888.pwml  control  same=False success True->True msgs 2->2 bs 342->351 transports 4->4
+      table biological_states 342 -> 351
+files 39 changed among non-bind/control: 3

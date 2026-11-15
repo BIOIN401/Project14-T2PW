@@ -1,0 +1,108 @@
+{
+ "case": "2_ferric_enterobactin_import",
+ "seconds": 19.8,
+ "unchanged_input": true,
+ "report": {
+  "flag": "T2PW_TRANSPORT_SIDES",
+  "deficient": [
+   {
+    "pointer": "/processes/transports/0",
+    "name": "enterobactin secretion",
+    "sides": [
+     "cytoplasmic state",
+     ""
+    ]
+   },
+   {
+    "pointer": "/processes/transports/1",
+    "name": "ferric-enterobactin import",
+    "sides": [
+     "",
+     ""
+    ]
+   }
+  ],
+  "calls": 1,
+  "repairs": [
+   {
+    "pointer": "/processes/transports/0",
+    "name": "enterobactin secretion",
+    "old": [
+     "cytoplasmic state",
+     ""
+    ],
+    "new": [
+     "cytoplasmic state",
+     "extracellular"
+    ],
+    "quotes": {
+     "to_biological_state": "secreted to the extracellular environment"
+    }
+   },
+   {
+    "pointer": "/processes/transports/1",
+    "name": "ferric-enterobactin import",
+    "old": [
+     "",
+     ""
+    ],
+    "new": [
+     "extracellular",
+     "cytoplasmic state"
+    ],
+    "quotes": {
+     "from_biological_state": "extracellular ferric iron",
+     "to_biological_state": "imported via TonB-dependent uptake"
+    }
+   }
+  ],
+  "rejected": [],
+  "new_states": [
+   {
+    "pointer": "/processes/transports/0",
+    "state": {
+     "name": "extracellular",
+     "species": "Escherichia coli",
+     "subcellular_location": "extracellular",
+     "evidence": "secreted to the extracellular environment"
+    }
+   }
+  ],
+  "error": null
+ },
+ "transports_before": [
+  {
+   "name": "enterobactin secretion",
+   "cargo": "enterobactin",
+   "from_biological_state": "cytoplasmic state",
+   "to_biological_state": null
+  },
+  {
+   "name": "ferric-enterobactin import",
+   "cargo": "ferric enterobactin",
+   "from_biological_state": null,
+   "to_biological_state": null
+  }
+ ],
+ "transports_after": [
+  {
+   "name": "enterobactin secretion",
+   "cargo": "enterobactin",
+   "from_biological_state": "cytoplasmic state",
+   "to_biological_state": "extracellular"
+  },
+  {
+   "name": "ferric-enterobactin import",
+   "cargo": "ferric enterobactin",
+   "from_biological_state": "extracellular",
+   "to_biological_state": "cytoplasmic state"
+  }
+ ],
+ "states_before": [
+  "cytoplasmic state"
+ ],
+ "states_after": [
+  "cytoplasmic state",
+  "extracellular"
+ ]
+}

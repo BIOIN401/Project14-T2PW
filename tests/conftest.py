@@ -45,3 +45,9 @@ def _one_extraction_draw_unless_a_test_asks(monkeypatch: pytest.MonkeyPatch) -> 
                 os.environ[DRAWS_ENV_VAR] = before
 
     monkeypatch.setattr(dotenv, "load_dotenv", load_dotenv_keeping_the_draw_count)
+
+
+@pytest.fixture(autouse=True)
+def _final_payload_off_unless_a_test_asks(monkeypatch: pytest.MonkeyPatch) -> None:
+    """D-W19a made T2PW_FINAL_PAYLOAD default ON; the existing suite was written for off, so pin it. A test opts in with setenv("1")."""
+    monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "0")

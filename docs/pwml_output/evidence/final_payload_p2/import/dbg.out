@@ -1,0 +1,29 @@
+[pwi] OK       17.7s  151.pwml  errors=30
+[pwi] summary: {"files": 1, "success_true": 1, "success_true_no_errors": 0, "success_false": 0, "total_seconds": 17.7}
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\fp\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 76b0d6ebd31ab10bc8b349c09c95860bede9d0ef  [git, worktree dirty=False]
+label                   : pwi-dbg
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -X utf8 C:/t/pwi/t2pw/tools/pathwhiz_import/run_import.py --list list_dbg.txt --out dbg --chunk 10
+cwd                     : C:\t\fp\docs\pwml_output\evidence\final_payload_p2\import
+root PID / process group: 544600 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 46.07 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 17  545116:python.exe, 545156:docker.exe, 535644:docker.exe, 545380:docker.exe, 545788:docker-compose.exe, 545728:docker-compose.exe, 540900:docker-compose.exe, 543344:docker.exe, 540948:docker-compose.exe, 524476:docker.exe, 544712:docker-compose.exe, 544052:docker-compose.exe, 545224:docker.exe, 545732:docker-compose.exe, 545940:docker.exe, 546028:docker-compose.exe, 545980:docker-compose.exe
+descendants terminated  : 17  524476, 535644, 540900, 540948, 543344, 544052, 544712, 545116, 545156, 545224, 545380, 545728, 545732, 545788, 545940, 545980, 546028
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : dbg.bounded.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=pwi  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

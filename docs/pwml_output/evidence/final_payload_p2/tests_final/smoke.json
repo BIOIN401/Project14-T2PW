@@ -1,0 +1,156 @@
+{
+  "label": "fp-smoke",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/fp",
+    "-q",
+    "--basetemp=C:/t/tmpbase/smoke-1922",
+    "tests/test_reference_repair.py",
+    "tests/test_strict_quarantine.py",
+    "tests/test_strict_quarantine_contract_alignment.py",
+    "tests/test_strict_quarantine_locks_and_scope.py",
+    "tests/test_strict_quarantine_versioning.py",
+    "tests/test_empty_extraction_payload.py",
+    "tests/test_bench_goldset_and_semantic.py",
+    "tests/test_bench_acquisition_and_artifacts.py",
+    "tests/test_bench_controls.py",
+    "tests/test_completeness_audit.py",
+    "tests/test_batch_driver.py",
+    "tests/test_stage3_gate_report_lifecycle.py",
+    "tests/test_rag_admission_production_path.py",
+    "tests/test_rag_gap_admission.py",
+    "tests/test_rag_triage_orchestration.py",
+    "tests/test_rag_provenance_gates.py",
+    "tests/test_pipeline_reaction_rag_provenance.py",
+    "tests/test_research_mode_orchestration.py",
+    "tests/test_map_ids_name_gate.py",
+    "tests/test_db_candidate_species_evidence.py",
+    "tests/test_c102_coverage_denominator.py",
+    "tests/test_c106_mutation_harness_executable.py"
+  ],
+  "cwd": "C:\\t\\fp",
+  "started_at": "2026-11-12T17:43:18+00:00",
+  "finished_at": "2026-11-12T17:44:10+00:00",
+  "duration_seconds": 52.003543899999954,
+  "timeout_seconds": 540.0,
+  "root_pid": 41828,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 15412,
+      "name": "python.exe",
+      "ppid": 41828
+    },
+    {
+      "pid": 40308,
+      "name": "python.exe",
+      "ppid": 40448
+    },
+    {
+      "pid": 40448,
+      "name": "python.exe",
+      "ppid": 15412
+    },
+    {
+      "pid": 33020,
+      "name": "python.exe",
+      "ppid": 38072
+    },
+    {
+      "pid": 38072,
+      "name": "python.exe",
+      "ppid": 15412
+    },
+    {
+      "pid": 33544,
+      "name": "python.exe",
+      "ppid": 15412
+    },
+    {
+      "pid": 40016,
+      "name": "python.exe",
+      "ppid": 33544
+    },
+    {
+      "pid": 12280,
+      "name": "python.exe",
+      "ppid": 15412
+    },
+    {
+      "pid": 30928,
+      "name": "python.exe",
+      "ppid": 12280
+    }
+  ],
+  "descendants_terminated": [
+    12280,
+    15412,
+    30928,
+    33020,
+    33544,
+    38072,
+    40016,
+    40308,
+    40448
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 28048,
+      "name": "python.exe"
+    },
+    {
+      "pid": 28540,
+      "name": "python.exe"
+    },
+    {
+      "pid": 41592,
+      "name": "python.exe"
+    },
+    {
+      "pid": 41604,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/fp/docs/pwml_output/evidence/final_payload_p2/tests_final/smoke.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\fp\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\fp",
+    "repo_head": "e9c3e1971dad8d7112bb6caef2649287c7ba0581",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "fp",
+    "token": "fp:41592:c5ffed0ee7e9066a",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

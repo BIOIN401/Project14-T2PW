@@ -1,0 +1,30 @@
+T2PW: C:\t\fpclean\src\t2pw\__init__.py
+......................................                                   [100%]
+38 passed in 88.05s (0:01:28)
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\fpclean\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 5d1ac2ce56c75d7b6bb9bf5c27329e5a26f6f34d  [git, worktree dirty=False]
+label                   : fpc-flip-c_golden
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/fpclean -q --basetemp=C:/t/tmpbase/flip-c_golden-21802-1 tests/test_batch_driver_seam_golden.py tests/test_c011_freeze_seam_golden_equivalence.py tests/test_streamlit_stage8_export_contract.py tests/test_streamlit_quarantine_boundary.py
+cwd                     : C:\t\fpclean
+root PID / process group: 286620 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 900 s
+duration                : 90.62 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 16  283736:python.exe, 281940:python.exe, 287096:python.exe, 270408:python.exe, 286240:python.exe, 287256:git.exe, 284236:python.exe, 285600:python.exe, 260540:python.exe, 283252:python.exe, 271344:python.exe, 287180:python.exe, 287352:python.exe, 287568:python.exe, 283184:python.exe, 285488:python.exe
+descendants terminated  : 16  260540, 270408, 271344, 281940, 283184, 283252, 283736, 284236, 285488, 285600, 286240, 287096, 287180, 287256, 287352, 287568
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/fp/docs/pwml_output/evidence/final_payload_p5/flip/c_golden.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=fp5c-flip-c_golden  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

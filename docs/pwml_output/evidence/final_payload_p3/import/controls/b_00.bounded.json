@@ -1,0 +1,178 @@
+{
+  "label": "pwi-controls-b_00",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-X",
+    "utf8",
+    "C:/t/pwi/t2pw/tools/pathwhiz_import/run_import.py",
+    "--list",
+    "C:/t/fp/docs/pwml_output/evidence/final_payload_p3/import/controls/lists/b_00",
+    "--out",
+    "C:/t/fp/docs/pwml_output/evidence/final_payload_p3/import/controls/b_00",
+    "--chunk",
+    "10"
+  ],
+  "cwd": "C:\\t\\fp\\docs\\pwml_output\\evidence\\final_payload_p3",
+  "started_at": "2026-11-12T18:59:46+00:00",
+  "finished_at": "2026-11-12T19:03:33+00:00",
+  "duration_seconds": 226.90712620000068,
+  "timeout_seconds": 540.0,
+  "root_pid": 149200,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 149212,
+      "name": "python.exe",
+      "ppid": 149200
+    },
+    {
+      "pid": 149232,
+      "name": "docker.exe",
+      "ppid": 149212
+    },
+    {
+      "pid": 149340,
+      "name": "docker.exe",
+      "ppid": 149212
+    },
+    {
+      "pid": 149396,
+      "name": "docker-compose.exe",
+      "ppid": 149340
+    },
+    {
+      "pid": 149436,
+      "name": "docker-compose.exe",
+      "ppid": 149340
+    },
+    {
+      "pid": 148932,
+      "name": "docker-compose.exe",
+      "ppid": 149068
+    },
+    {
+      "pid": 149068,
+      "name": "docker.exe",
+      "ppid": 149212
+    },
+    {
+      "pid": 149084,
+      "name": "docker-compose.exe",
+      "ppid": 149068
+    },
+    {
+      "pid": 149280,
+      "name": "docker-compose.exe",
+      "ppid": 149308
+    },
+    {
+      "pid": 149308,
+      "name": "docker.exe",
+      "ppid": 149212
+    },
+    {
+      "pid": 139292,
+      "name": "docker-compose.exe",
+      "ppid": 148600
+    },
+    {
+      "pid": 148600,
+      "name": "docker.exe",
+      "ppid": 149212
+    },
+    {
+      "pid": 148396,
+      "name": "docker-compose.exe",
+      "ppid": 149088
+    },
+    {
+      "pid": 149088,
+      "name": "docker.exe",
+      "ppid": 149212
+    },
+    {
+      "pid": 151652,
+      "name": "docker-compose.exe",
+      "ppid": 149088
+    }
+  ],
+  "descendants_terminated": [
+    139292,
+    148396,
+    148600,
+    148932,
+    149068,
+    149084,
+    149088,
+    149212,
+    149232,
+    149280,
+    149308,
+    149340,
+    149396,
+    149436,
+    151652
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 53536,
+      "name": "python.exe"
+    },
+    {
+      "pid": 117356,
+      "name": "python.exe"
+    },
+    {
+      "pid": 118780,
+      "name": "python.exe"
+    },
+    {
+      "pid": 148856,
+      "name": "python.exe"
+    },
+    {
+      "pid": 148868,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/fp/docs/pwml_output/evidence/final_payload_p3/import/controls/b_00.bounded.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\fp\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\fp",
+    "repo_head": "3e782d76d2c6f7ba821e064fde857ad4d8eac8bc",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "pwi",
+    "token": "pwi:148868:4554472069e3df36",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

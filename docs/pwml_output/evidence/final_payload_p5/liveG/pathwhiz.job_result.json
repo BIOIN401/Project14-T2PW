@@ -1,0 +1,315 @@
+{
+ "status": "pass",
+ "stage": "pwml_export",
+ "failure_kind": "",
+ "message": "strict run completed; pathway.review_required.pwml is 32791 bytes",
+ "warnings": [
+  "runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.",
+  "runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta."
+ ],
+ "issue_codes": [],
+ "counts": {
+  "stage0_observed_pathways": 1,
+  "stage0_observed_organisms": 1,
+  "reactions": 3,
+  "transports": 0,
+  "entities": 17,
+  "proteins": 3,
+  "compounds": 5,
+  "runtime_schema_findings": 2,
+  "gate_errors": 0,
+  "blocking_issues": 0,
+  "pwml_bytes": 32791,
+  "pwml": {
+   "compounds": 5,
+   "proteins": 3,
+   "reactions": 3,
+   "edges": 9
+  }
+ },
+ "release_status": {
+  "status": "review_required",
+  "pipeline_executed": true,
+  "strict_gates_passed": true,
+  "semantic_evaluation": "failed",
+  "semantic_not_evaluated_reason": "",
+  "semantic_failed_checks": [
+   "actor_named_in_its_own_cited_span"
+  ],
+  "semantic_check_evaluability": [
+   {
+    "check": "requested_pathway_anchors_present",
+    "applicable": true,
+    "inapplicable_reason": ""
+   },
+   {
+    "check": "organism_compatible",
+    "applicable": true,
+    "inapplicable_reason": ""
+   },
+   {
+    "check": "no_real_id_or_name_conflict",
+    "applicable": true,
+    "inapplicable_reason": ""
+   },
+   {
+    "check": "no_rejected_rag_reaction_reintroduced",
+    "applicable": false,
+    "inapplicable_reason": "no RAG admission report was supplied to this evaluation call, so a reintroduced claim is undetectable here. This describes THIS call only: the batch driver does persist rag_admission_report.json, and the offline scorer loads it and reaches a verdict"
+   },
+   {
+    "check": "actor_named_in_its_own_cited_span",
+    "applicable": true,
+    "inapplicable_reason": ""
+   }
+  ],
+  "strict_acceptance_eligible": false,
+  "completeness": 0.470588,
+  "missing_anchors": [
+   "HMG-CoA",
+   "mevalonate",
+   "MSMO1",
+   "HMGCR",
+   "SQLE",
+   "FDFT1",
+   "EBP",
+   "SREBF1",
+   "SREBF2"
+  ],
+  "retrieval_attempts": 0,
+  "expansion_blocked_reason": "9 requested-core anchor(s) matched no admitted process: HMG-CoA, mevalonate, MSMO1, HMGCR, SQLE, FDFT1, EBP, SREBF1, SREBF2",
+  "coverage_evaluated": true,
+  "reasons": [
+   "requested_core_coverage_below_minimum:0.471<0.500"
+  ]
+ },
+ "pwml_path": "C:\\t\\fpl\\pathwhiz\\work\\item-1\\attempt-1\\out\\pathway.review_required.pwml",
+ "image_path": "C:\\t\\fpl\\pathwhiz\\work\\item-1\\attempt-1\\out\\pathway.png",
+ "report_paths": {
+  "audit_iteration_summary.json": "C:\\t\\fpl\\pathwhiz\\work\\item-1\\attempt-1\\out\\audit_iteration_summary.json",
+  "cleaning_report.json": "C:\\t\\fpl\\pathwhiz\\work\\item-1\\attempt-1\\out\\cleaning_report.json",
+  "contract_reports.json": "C:\\t\\fpl\\pathwhiz\\work\\item-1\\attempt-1\\out\\contract_reports.json",
+  "coverage_diagnostics.json": "C:\\t\\fpl\\pathwhiz\\work\\item-1\\attempt-1\\out\\coverage_diagnostics.json",
+  "coverage_summary.json": "C:\\t\\fpl\\pathwhiz\\work\\item-1\\attempt-1\\out\\coverage_summary.json",
+  "extraction_boundary_report.json": "C:\\t\\fpl\\pathwhiz\\work\\item-1\\attempt-1\\out\\extraction_boundary_report.json",
+  "final_mapped.json": "C:\\t\\fpl\\pathwhiz\\work\\item-1\\attempt-1\\out\\final_mapped.json",
+  "final_stage3_gate_report.json": "C:\\t\\fpl\\pathwhiz\\work\\item-1\\attempt-1\\out\\final_stage3_gate_report.json",
+  "gap_iteration_summary.json": "C:\\t\\fpl\\pathwhiz\\work\\item-1\\attempt-1\\out\\gap_iteration_summary.json",
+  "graph_closure_iterations.json": "C:\\t\\fpl\\pathwhiz\\work\\item-1\\attempt-1\\out\\graph_closure_iterations.json",
+  "merged_payload.json": "C:\\t\\fpl\\pathwhiz\\work\\item-1\\attempt-1\\out\\merged_payload.json",
+  "pwml_ir.json": "C:\\t\\fpl\\pathwhiz\\work\\item-1\\attempt-1\\out\\pwml_ir.json",
+  "pwml_ir_report.json": "C:\\t\\fpl\\pathwhiz\\work\\item-1\\attempt-1\\out\\pwml_ir_report.json",
+  "pwml_ir_validation.json": "C:\\t\\fpl\\pathwhiz\\work\\item-1\\attempt-1\\out\\pwml_ir_validation.json",
+  "pwml_qa.json": "C:\\t\\fpl\\pathwhiz\\work\\item-1\\attempt-1\\out\\pwml_qa.json",
+  "pwml_required_field_gate_report.json": "C:\\t\\fpl\\pathwhiz\\work\\item-1\\attempt-1\\out\\pwml_required_field_gate_report.json",
+  "pwml_validation_report.json": "C:\\t\\fpl\\pathwhiz\\work\\item-1\\attempt-1\\out\\pwml_validation_report.json",
+  "quarantine_report.json": "C:\\t\\fpl\\pathwhiz\\work\\item-1\\attempt-1\\out\\quarantine_report.json",
+  "rag_admission_report.json": "C:\\t\\fpl\\pathwhiz\\work\\item-1\\attempt-1\\out\\rag_admission_report.json",
+  "removed_entity_report.json": "C:\\t\\fpl\\pathwhiz\\work\\item-1\\attempt-1\\out\\removed_entity_report.json",
+  "stage0_attempts.json": "C:\\t\\fpl\\pathwhiz\\work\\item-1\\attempt-1\\out\\stage0_attempts.json",
+  "stage1_payload.json": "C:\\t\\fpl\\pathwhiz\\work\\item-1\\attempt-1\\out\\stage1_payload.json"
+ },
+ "attempt_log": [
+  {
+   "attempt": 1,
+   "runner": "t2pw.service.pathway.run_pathway",
+   "paper_id": "web:PMID41522513",
+   "mode": "strict",
+   "status": "pass",
+   "stage": "pwml_export",
+   "seconds": 1419.23,
+   "failure_kind": "",
+   "message": "strict run completed; pathway.review_required.pwml is 32791 bytes",
+   "issue_codes": [],
+   "counts": {
+    "stage0_observed_pathways": 1,
+    "stage0_observed_organisms": 1,
+    "reactions": 3,
+    "transports": 0,
+    "entities": 17,
+    "proteins": 3,
+    "compounds": 5,
+    "runtime_schema_findings": 2,
+    "gate_errors": 0,
+    "blocking_issues": 0,
+    "pwml_bytes": 32791,
+    "pwml": {
+     "compounds": 5,
+     "proteins": 3,
+     "reactions": 3,
+     "edges": 9
+    }
+   },
+   "files": [
+    {
+     "name": "stage0_attempts.json",
+     "bytes": 4540
+    },
+    {
+     "name": "extraction_boundary_report.json",
+     "bytes": 7519
+    },
+    {
+     "name": "cleaning_report.json",
+     "bytes": 1143
+    },
+    {
+     "name": "audit_iteration_summary.json",
+     "bytes": 2414
+    },
+    {
+     "name": "gap_iteration_summary.json",
+     "bytes": 17695
+    },
+    {
+     "name": "stage1_payload.json",
+     "bytes": 22408
+    },
+    {
+     "name": "merged_payload.json",
+     "bytes": 71028
+    },
+    {
+     "name": "final_stage3_gate_report.json",
+     "bytes": 2831
+    },
+    {
+     "name": "contract_reports.json",
+     "bytes": 6415
+    },
+    {
+     "name": "final_mapped.json",
+     "bytes": 276438
+    },
+    {
+     "name": "rag_admission_report.json",
+     "bytes": 130100
+    },
+    {
+     "name": "quarantine_report.json",
+     "bytes": 9776
+    },
+    {
+     "name": "removed_entity_report.json",
+     "bytes": 1541
+    },
+    {
+     "name": "graph_closure_iterations.json",
+     "bytes": 1887
+    },
+    {
+     "name": "coverage_summary.json",
+     "bytes": 2887
+    },
+    {
+     "name": "coverage_diagnostics.json",
+     "bytes": 3050
+    },
+    {
+     "name": "pathway.review_required.pwml",
+     "bytes": 32791
+    },
+    {
+     "name": "pwml_ir.json",
+     "bytes": 40081
+    },
+    {
+     "name": "pwml_ir_report.json",
+     "bytes": 5579
+    },
+    {
+     "name": "pwml_ir_validation.json",
+     "bytes": 232
+    },
+    {
+     "name": "pwml_validation_report.json",
+     "bytes": 19586
+    },
+    {
+     "name": "pwml_qa.json",
+     "bytes": 429
+    },
+    {
+     "name": "pwml_required_field_gate_report.json",
+     "bytes": 2423
+    }
+   ],
+   "warnings": [
+    "runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.",
+    "runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta."
+   ],
+   "observed_context": {
+    "observed_pathways": [
+     "cholesterol biosynthesis"
+    ],
+    "observed_organisms": [
+     "Homo sapiens"
+    ],
+    "aliases": [],
+    "ambiguities": []
+   },
+   "release_status": {
+    "status": "review_required",
+    "pipeline_executed": true,
+    "strict_gates_passed": true,
+    "semantic_evaluation": "failed",
+    "semantic_not_evaluated_reason": "",
+    "semantic_failed_checks": [
+     "actor_named_in_its_own_cited_span"
+    ],
+    "semantic_check_evaluability": [
+     {
+      "check": "requested_pathway_anchors_present",
+      "applicable": true,
+      "inapplicable_reason": ""
+     },
+     {
+      "check": "organism_compatible",
+      "applicable": true,
+      "inapplicable_reason": ""
+     },
+     {
+      "check": "no_real_id_or_name_conflict",
+      "applicable": true,
+      "inapplicable_reason": ""
+     },
+     {
+      "check": "no_rejected_rag_reaction_reintroduced",
+      "applicable": false,
+      "inapplicable_reason": "no RAG admission report was supplied to this evaluation call, so a reintroduced claim is undetectable here. This describes THIS call only: the batch driver does persist rag_admission_report.json, and the offline scorer loads it and reaches a verdict"
+     },
+     {
+      "check": "actor_named_in_its_own_cited_span",
+      "applicable": true,
+      "inapplicable_reason": ""
+     }
+    ],
+    "strict_acceptance_eligible": false,
+    "completeness": 0.470588,
+    "missing_anchors": [
+     "HMG-CoA",
+     "mevalonate",
+     "MSMO1",
+     "HMGCR",
+     "SQLE",
+     "FDFT1",
+     "EBP",
+     "SREBF1",
+     "SREBF2"
+    ],
+    "retrieval_attempts": 0,
+    "expansion_blocked_reason": "9 requested-core anchor(s) matched no admitted process: HMG-CoA, mevalonate, MSMO1, HMGCR, SQLE, FDFT1, EBP, SREBF1, SREBF2",
+    "coverage_evaluated": true,
+    "reasons": [
+     "requested_core_coverage_below_minimum:0.471<0.500"
+    ],
+    "applied": true,
+    "review_reasons": [
+     "minimum_core:requested_core_coverage_below_minimum:0.471<0.500"
+    ],
+    "retrieval_attempts_source": "surviving_rows_carrying_rag_provenance"
+   },
+   "pwml_artifact": "pathway.review_required.pwml"
+  }
+ ]
+}

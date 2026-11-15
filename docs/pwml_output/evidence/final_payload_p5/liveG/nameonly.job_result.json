@@ -1,0 +1,88 @@
+{
+ "status": "fail",
+ "stage": "stage1",
+ "failure_kind": "no_reactions",
+ "message": "the pipeline produced a pathway with no reactions and no transports",
+ "warnings": [],
+ "issue_codes": [],
+ "counts": {
+  "stage0_observed_pathways": 1,
+  "stage0_observed_organisms": 1,
+  "reactions": 0,
+  "transports": 0,
+  "entities": 16,
+  "proteins": 8,
+  "compounds": 3
+ },
+ "release_status": null,
+ "pwml_path": null,
+ "image_path": null,
+ "report_paths": {
+  "cleaning_report.json": "C:\\t\\fpl\\nameonly\\work\\item-1\\attempt-1\\out\\cleaning_report.json",
+  "extraction_boundary_report.json": "C:\\t\\fpl\\nameonly\\work\\item-1\\attempt-1\\out\\extraction_boundary_report.json",
+  "merged_payload.json": "C:\\t\\fpl\\nameonly\\work\\item-1\\attempt-1\\out\\merged_payload.json",
+  "rag_admission_report.json": "C:\\t\\fpl\\nameonly\\work\\item-1\\attempt-1\\out\\rag_admission_report.json",
+  "stage0_attempts.json": "C:\\t\\fpl\\nameonly\\work\\item-1\\attempt-1\\out\\stage0_attempts.json",
+  "stage1_payload.json": "C:\\t\\fpl\\nameonly\\work\\item-1\\attempt-1\\out\\stage1_payload.json"
+ },
+ "attempt_log": [
+  {
+   "attempt": 1,
+   "runner": "t2pw.service.pathway.run_pathway",
+   "paper_id": "PMC13743265",
+   "mode": "strict",
+   "status": "fail",
+   "stage": "stage1",
+   "seconds": 311.89,
+   "failure_kind": "no_reactions",
+   "message": "the pipeline produced a pathway with no reactions and no transports",
+   "issue_codes": [],
+   "counts": {
+    "stage0_observed_pathways": 1,
+    "stage0_observed_organisms": 1,
+    "reactions": 0,
+    "transports": 0,
+    "entities": 16,
+    "proteins": 8,
+    "compounds": 3
+   },
+   "files": [
+    {
+     "name": "stage0_attempts.json",
+     "bytes": 826
+    },
+    {
+     "name": "extraction_boundary_report.json",
+     "bytes": 7305
+    },
+    {
+     "name": "cleaning_report.json",
+     "bytes": 1080
+    },
+    {
+     "name": "stage1_payload.json",
+     "bytes": 9622
+    },
+    {
+     "name": "merged_payload.json",
+     "bytes": 50505
+    },
+    {
+     "name": "rag_admission_report.json",
+     "bytes": 175079
+    }
+   ],
+   "warnings": [],
+   "observed_context": {
+    "observed_pathways": [
+     "cholesterol biosynthesis"
+    ],
+    "observed_organisms": [
+     "Homo sapiens"
+    ],
+    "aliases": [],
+    "ambiguities": []
+   }
+  }
+ ]
+}

@@ -1,0 +1,44 @@
+{
+ "calls": 1,
+ "deficient": [
+  {
+   "name": "TubI-mediated TBN export",
+   "pointer": "/processes/transports/0",
+   "sides": [
+    "cytoplasmic state",
+    ""
+   ]
+  }
+ ],
+ "error": null,
+ "flag": "T2PW_TRANSPORT_SIDES",
+ "new_states": [
+  {
+   "pointer": "/processes/transports/0",
+   "state": {
+    "evidence": "out of the cell",
+    "name": "extracellular",
+    "species": "Streptomyces tubercidicus NBRC 13090",
+    "subcellular_location": "extracellular"
+   }
+  }
+ ],
+ "rejected": [],
+ "repairs": [
+  {
+   "name": "TubI-mediated TBN export",
+   "new": [
+    "cytoplasmic state",
+    "extracellular"
+   ],
+   "old": [
+    "cytoplasmic state",
+    ""
+   ],
+   "pointer": "/processes/transports/0",
+   "quotes": {
+    "to_biological_state": "out of the cell"
+   }
+  }
+ ]
+}

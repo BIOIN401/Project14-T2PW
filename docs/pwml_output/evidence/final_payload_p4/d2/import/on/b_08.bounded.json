@@ -1,0 +1,196 @@
+{
+  "label": "pwi-on-b_08",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-X",
+    "utf8",
+    "C:/t/pwi/t2pw/tools/pathwhiz_import/run_import.py",
+    "--list",
+    "C:/t/fp/docs/pwml_output/evidence/final_payload_p4/d2/import/on/lists/b_08",
+    "--out",
+    "C:/t/fp/docs/pwml_output/evidence/final_payload_p4/d2/import/on/b_08",
+    "--chunk",
+    "10"
+  ],
+  "cwd": "C:\\t\\fp\\docs\\pwml_output\\evidence\\final_payload_p4\\d2",
+  "started_at": "2026-11-13T05:09:00+00:00",
+  "finished_at": "2026-11-13T05:11:12+00:00",
+  "duration_seconds": 131.31687500000407,
+  "timeout_seconds": 540.0,
+  "root_pid": 705632,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 699808,
+      "name": "python.exe",
+      "ppid": 705632
+    },
+    {
+      "pid": 700616,
+      "name": "docker.exe",
+      "ppid": 699808
+    },
+    {
+      "pid": 693280,
+      "name": "docker.exe",
+      "ppid": 699808
+    },
+    {
+      "pid": 704956,
+      "name": "docker.exe",
+      "ppid": 699808
+    },
+    {
+      "pid": 705204,
+      "name": "docker-compose.exe",
+      "ppid": 704956
+    },
+    {
+      "pid": 703912,
+      "name": "docker-compose.exe",
+      "ppid": 704956
+    },
+    {
+      "pid": 707472,
+      "name": "docker.exe",
+      "ppid": 699808
+    },
+    {
+      "pid": 707532,
+      "name": "docker-compose.exe",
+      "ppid": 707472
+    },
+    {
+      "pid": 704488,
+      "name": "docker-compose.exe",
+      "ppid": 707472
+    },
+    {
+      "pid": 704788,
+      "name": "docker.exe",
+      "ppid": 699808
+    },
+    {
+      "pid": 706672,
+      "name": "docker-compose.exe",
+      "ppid": 704788
+    },
+    {
+      "pid": 706936,
+      "name": "docker-compose.exe",
+      "ppid": 704788
+    },
+    {
+      "pid": 707156,
+      "name": "docker.exe",
+      "ppid": 699808
+    },
+    {
+      "pid": 707208,
+      "name": "docker-compose.exe",
+      "ppid": 707156
+    },
+    {
+      "pid": 707224,
+      "name": "docker-compose.exe",
+      "ppid": 707156
+    },
+    {
+      "pid": 708960,
+      "name": "docker.exe",
+      "ppid": 699808
+    },
+    {
+      "pid": 709016,
+      "name": "docker-compose.exe",
+      "ppid": 708960
+    },
+    {
+      "pid": 709108,
+      "name": "docker-compose.exe",
+      "ppid": 708960
+    }
+  ],
+  "descendants_terminated": [
+    693280,
+    699808,
+    700616,
+    703912,
+    704488,
+    704788,
+    704956,
+    705204,
+    706672,
+    706936,
+    707156,
+    707208,
+    707224,
+    707472,
+    707532,
+    708960,
+    709016,
+    709108
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 452560,
+      "name": "python.exe"
+    },
+    {
+      "pid": 456764,
+      "name": "python.exe"
+    },
+    {
+      "pid": 656980,
+      "name": "python.exe"
+    },
+    {
+      "pid": 702408,
+      "name": "python.exe"
+    },
+    {
+      "pid": 704752,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/fp/docs/pwml_output/evidence/final_payload_p4/d2/import/on/b_08.bounded.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\fp\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\fp",
+    "repo_head": "73ce1e85faa15393d872ccd8565b806e80c4ad11",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "pwi",
+    "token": "pwi:702408:cd13a277003062be",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

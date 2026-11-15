@@ -1,0 +1,25 @@
+== (1) FLAG OFF (T2PW_FINAL_PAYLOAD=0), new vs stored
+written new off / P4d3 off / P3 off: 97 97 97 same set d3: True same set p3: True
+identical to P4 d3 off: 97 of 97 different: []
+identical to P3 off: 97 of 97 different: []
+off unwritten by stage: {'stage3_revalidation': 35, 'required_field_gate': 20}
+off unwritten by (stage,error) differing from d3 off: []
+== (2) FLAG ON
+written new on / P4d3 on: 97 97 same set: True only new [] only d3 []
+on files byte-different from P4 d3 on: 22 of 97 [3, 7, 8, 10, 23, 29, 31, 35, 37, 46, 50, 68, 70, 76, 84, 98, 105, 111, 119, 146, 150, 151]
+on files byte-different from P3 on: 25
+non-stage3 errors on: [(13, 'PWML required-field gate failed.', 'required_field_gate'), (22, 'PWML required-field gate failed.', 'required_field_gate'), (32, 'PWML required-field gate failed.', 'required_field_gate'), (33, 'PWML required-field gate failed.', 'required_field_gate'), (36, 'PWML required-field gate failed.', 'required_field_gate'), (38, 'PWML required-field gate failed.', 'required_field_gate'), (47, 'PWML required-field gate failed.', 'required_field_gate'), (53, 'PWML required-field gate failed.', 'required_field_gate')]
+fill_error runs: []
+live requests 31 fetch errors 0 paper text found 150 of 152
+counter locations_dropped_no_id written-runs sum {'new': 4, 'd3': 4} files(new) 3
+counter cell_types_dropped_no_id written-runs sum {'new': 13, 'd3': 0} files(new) 6
+counter tissues_dropped_no_id written-runs sum {'new': 1, 'd3': 0} files(new) 1
+counter components_kept_wildcard_guard written-runs sum {'new': 21, 'd3': 0} files(new) 13
+counter locations_kept_state_collision written-runs sum {'new': 16, 'd3': 18} files(new) 11
+counter membranes_kept_unresolved written-runs sum {'new': 0, 'd3': 0} files(new) 0
+counter nucleic_acids_type_unset written-runs sum {'new': 9, 'd3': 10} files(new) 3
+ontology counts {'looked_up': 226, 'resolved': 19, 'ambiguous': 0, 'no_exact_match': 202, 'fetch_error': 0, 'skipped_after_fetch_error': 0} ontology_id entries by kind {'location': 9, 'cell_type': 3, 'tissue': 7}
+nucleic_types_report sums {'enabled': 152, 'candidates': 35, 'resolved': 10, 'no_paper_text': 0, 'not_mentioned': 7, 'no_cue': 11, 'conflicting': 6, 'protein_like': 1, 'lookup_resolved': 1, 'lookup_codes.not_attempted': 7, 'lookup_codes.not_found': 3, 'lookup_codes.no_symbol_name': 13, 'unknown': 24, 'unknown_by_reason.conflicting': 6, 'unknown_by_reason.no_cue': 10, 'unknown_by_reason.protein_like': 1, 'unknown_by_reason.not_mentioned': 7, 'lookup_requests': 14, 'lookup_cache_hits': 0, 'budget_exhausted': 0, 'lookup_by_source.NCBI Gene': 1, 'lookup_codes.protein_context': 1}
+wildcard check NEW on  {'species_only_states': 0, 'files_species_only': 0, 'wildcard_bindable_states': 63, 'files_bindable': 20}
+wildcard check P4d3 on {'species_only_states': 0, 'files_species_only': 0, 'wildcard_bindable_states': 65, 'files_bindable': 20}
+wildcard check NEW off {'species_only_states': 0, 'files_species_only': 0, 'wildcard_bindable_states': 59, 'files_bindable': 19}

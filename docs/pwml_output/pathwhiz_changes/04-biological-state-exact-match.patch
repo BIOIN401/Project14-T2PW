@@ -1,0 +1,87 @@
+From 80bdaca73bf070373ac410a66d4f503767b222ab Mon Sep 17 00:00:00 2001
+From: AngadSC <104170661+AngadSC@users.noreply.github.com>
+Date: Fri, 13 Nov 2026 20:01:06 -0600
+Subject: [PATCH] PWML importer: match biological states exactly (an omitted
+ component means nil, not any value)
+
+Problem
+PwmlParser#store_object looks an incoming entity up with klass.find_by(attribute_hash).
+attribute_hash comes from to_hash_shallow, which drops every blank element, so a
+biological state whose tissue, cell type or subcellular location is omitted or
+nil="true" has no key for that column. find_by then treats the column as a wildcard
+and the state is bound to the first existing biological state that agrees on the
+components that were given, e.g. a (species, location) state binds to a
+(species, tissue, location) sibling. The state loses its identity: it is not created,
+every element that referenced it is attached to the wrong state, and two states that
+are different in the file collapse into one row. This contradicts the model, which
+defines a state by its exact tuple: BiologicalState validates uniqueness of each
+component in the scope of the other three (nil is matched as IS NULL) and
+BiologicalState.find_existing does an exact where.
+
+Evidence (local import harness, empty database, Rails 4.2 / Ruby 2.2, importer before
+and after this change plus the 10-line element-id change that is uncommitted in the
+owner checkout; same 39 PWML files imported twice)
+- Real PathBank exports (PW012926, PW741182, PW176888): states are written with
+  nil="true" components and a pwbs-id that is shared by many states (PW_BS000024 is on
+  32 states of PW741182), so pwbs_id does not make the lookup exact. Biological states
+  created, before -> after: 262 -> 273, 176 -> 183, 342 -> 351, which is exactly the
+  number of states in each file (273, 183, 351). The 7, 11 and 9 missing rows were
+  states collapsed into siblings. PW687775: 18 -> 18. No other created count and no
+  message changed in any of the four.
+- Files written by the T2PW writer (no pwbs-id, omitted components): 7 of 20 files
+  with wildcard-bindable states change (3, 10, 119, 120, 146, 150, 151), 13 do not.
+  In 3, 150 and 151 the transport that failed with "Biological state must have unique
+  biological states" (both transport elements bound to one collapsed state) is now
+  created: transports 4 -> 5, 4 -> 5, 2 -> 3, messages 7 -> 4, 8 -> 4, 5 -> 1.
+- 15 files with no wildcard-bindable state: identical success, messages and created
+  counts in every table.
+- Not changed: lookup for every other class, find_by_unique_external_id, new_object
+  attributes, the owner's element-id branch.
+
+Fix
+In store_object, for BiologicalState only, start the lookup hash from
+{species_id: nil, tissue_id: nil, cell_type_id: nil, subcellular_location_id: nil} and
+merge attribute_hash over it. Components the file gives are matched as before, omitted
+ones must be NULL. One statement, no other behaviour change.
+
+Risk
+A PWML state that omits a component no longer binds to an existing state that has
+it; it binds to the state with that component NULL, or a new row is created. Files
+that never relied on that are unaffected (see evidence). pwbs_id is still part of the
+lookup, unchanged.
+
+Verify
+ruby -c lib/pwml_parser.rb; import a PWML whose states include both (species, location)
+and (species, tissue, location) and check that two biological_states rows are created.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+---
+ lib/pwml_parser.rb | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/lib/pwml_parser.rb b/lib/pwml_parser.rb
+index 88d23c08..845df86d 100644
+--- a/lib/pwml_parser.rb
++++ b/lib/pwml_parser.rb
+@@ -670,7 +670,17 @@ class PwmlParser
+           # duplicate INSERT that collides on that same unique key. Returns nil
+           # for anything without such an id, so every other type falls through
+           # to the original full-attribute lookup with identical behaviour.
+-          existing = find_by_unique_external_id(klass, attribute_hash) || klass.find_by(attribute_hash)
++          # A biological state is identified by its exact (species, tissue, cell type,
++          # subcellular location) tuple, the same rule as its uniqueness validations and
++          # BiologicalState.find_existing. A component the PWML omits (to_hash_shallow
++          # drops blank values) means nil, not any value: without this the omitted key
++          # is missing from find_by and the state binds to an arbitrary sibling that has
++          # that component set.
++          lookup = attribute_hash
++          if klass == BiologicalState
++            lookup = { species_id: nil, tissue_id: nil, cell_type_id: nil, subcellular_location_id: nil }.merge(attribute_hash)
++          end
++          existing = find_by_unique_external_id(klass, attribute_hash) || klass.find_by(lookup)
+         end
+         debug_pwml("store_object exact lookup result", {
+           klass: klass.name,
+-- 
+2.46.0.windows.1
+

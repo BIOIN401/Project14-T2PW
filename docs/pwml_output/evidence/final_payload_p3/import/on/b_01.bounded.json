@@ -1,0 +1,178 @@
+{
+  "label": "pwi-on-b_01",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-X",
+    "utf8",
+    "C:/t/pwi/t2pw/tools/pathwhiz_import/run_import.py",
+    "--list",
+    "C:/t/fp/docs/pwml_output/evidence/final_payload_p3/import/on/lists/b_01",
+    "--out",
+    "C:/t/fp/docs/pwml_output/evidence/final_payload_p3/import/on/b_01",
+    "--chunk",
+    "10"
+  ],
+  "cwd": "C:\\t\\fp\\docs\\pwml_output\\evidence\\final_payload_p3",
+  "started_at": "2026-11-12T19:09:08+00:00",
+  "finished_at": "2026-11-12T19:12:59+00:00",
+  "duration_seconds": 230.4597063000001,
+  "timeout_seconds": 540.0,
+  "root_pid": 152552,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 148444,
+      "name": "python.exe",
+      "ppid": 152552
+    },
+    {
+      "pid": 149692,
+      "name": "docker.exe",
+      "ppid": 148444
+    },
+    {
+      "pid": 151904,
+      "name": "docker.exe",
+      "ppid": 148444
+    },
+    {
+      "pid": 156904,
+      "name": "docker-compose.exe",
+      "ppid": 151904
+    },
+    {
+      "pid": 148648,
+      "name": "docker-compose.exe",
+      "ppid": 151904
+    },
+    {
+      "pid": 150008,
+      "name": "docker.exe",
+      "ppid": 148444
+    },
+    {
+      "pid": 156696,
+      "name": "docker-compose.exe",
+      "ppid": 150008
+    },
+    {
+      "pid": 155244,
+      "name": "docker-compose.exe",
+      "ppid": 150008
+    },
+    {
+      "pid": 156924,
+      "name": "docker.exe",
+      "ppid": 148444
+    },
+    {
+      "pid": 157496,
+      "name": "docker-compose.exe",
+      "ppid": 156924
+    },
+    {
+      "pid": 156224,
+      "name": "docker-compose.exe",
+      "ppid": 157588
+    },
+    {
+      "pid": 157588,
+      "name": "docker.exe",
+      "ppid": 148444
+    },
+    {
+      "pid": 123808,
+      "name": "docker.exe",
+      "ppid": 148444
+    },
+    {
+      "pid": 158064,
+      "name": "docker-compose.exe",
+      "ppid": 123808
+    },
+    {
+      "pid": 155920,
+      "name": "docker-compose.exe",
+      "ppid": 123808
+    }
+  ],
+  "descendants_terminated": [
+    123808,
+    148444,
+    148648,
+    149692,
+    150008,
+    151904,
+    155244,
+    155920,
+    156224,
+    156696,
+    156904,
+    156924,
+    157496,
+    157588,
+    158064
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 53536,
+      "name": "python.exe"
+    },
+    {
+      "pid": 117356,
+      "name": "python.exe"
+    },
+    {
+      "pid": 118780,
+      "name": "python.exe"
+    },
+    {
+      "pid": 157088,
+      "name": "python.exe"
+    },
+    {
+      "pid": 157128,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/fp/docs/pwml_output/evidence/final_payload_p3/import/on/b_01.bounded.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\fp\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\fp",
+    "repo_head": "3e782d76d2c6f7ba821e064fde857ad4d8eac8bc",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "pwi",
+    "token": "pwi:157088:43fe576ee149b8cb",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

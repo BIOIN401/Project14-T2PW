@@ -1,0 +1,110 @@
+{
+  "label": "REL-replay-on_v2",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-X",
+    "utf8",
+    "C:/t/rel/docs/pwml_output/evidence/layout/scripts/replay.py",
+    "--src",
+    "C:/t/rel/src",
+    "--flag",
+    "1",
+    "--label",
+    "on_v2",
+    "--start",
+    "0",
+    "--count",
+    "152",
+    "--out",
+    "C:/t/rel-reports/replay",
+    "--layout",
+    "v2"
+  ],
+  "cwd": "C:\\t\\rel",
+  "started_at": "2026-11-15T16:42:41+00:00",
+  "finished_at": "2026-11-15T16:43:02+00:00",
+  "duration_seconds": 20.45827089999989,
+  "timeout_seconds": 3000.0,
+  "root_pid": 67316,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 67328,
+      "name": "python.exe",
+      "ppid": 67316
+    }
+  ],
+  "descendants_terminated": [
+    67328
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 1988,
+      "name": "python.exe"
+    },
+    {
+      "pid": 16660,
+      "name": "python.exe"
+    },
+    {
+      "pid": 26132,
+      "name": "python.exe"
+    },
+    {
+      "pid": 66836,
+      "name": "python.exe"
+    },
+    {
+      "pid": 66856,
+      "name": "python.exe"
+    },
+    {
+      "pid": 67152,
+      "name": "python.exe"
+    },
+    {
+      "pid": 67176,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/rel-reports/replay_on_v2.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\rel\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\rel",
+    "repo_head": "e228611f8f1833eea307f37ad2e8b678f01989bf",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "rel-runner",
+    "token": "rel-runner:66856:9af20f866edfc744",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

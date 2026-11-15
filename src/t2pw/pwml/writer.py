@@ -16,8 +16,11 @@ from t2pw.paths import PROJECT_ROOT
 from t2pw.pipeline.entity_identity import component_stoichiometry, is_pathbank_unknown_protein
 from t2pw.pipeline.process_normalizer import normalize_process_payload
 from t2pw.pwml.compound_templates import TEMPLATE_DIMS, select_compound_template_id
+from t2pw.pwml.vocabulary_map import map_vocabulary_name, membrane_row, organism_kinds
 from t2pw.pwml.ir import build_pwml_ir, is_pwml_ir, validate_pwml_ir
+from t2pw.pwml.layout import layout_version, relayout
 from t2pw.pwml.qa import run_pwml_qa
+from t2pw.service.final_payload import final_payload_enabled
 from t2pw.pwml.validate import (
     SectionSignature,
     StructureSignature,
@@ -715,6 +718,30 @@ def _serpentine_reaction_position(
     }
 
 
+_RNA_TOKENS = {"rna", "mrna", "mirna", "rrna", "trna", "srna", "sirna", "ncrna", "lncrna", "snrna", "snorna"}
+_DNA_TOKENS = {"dna", "gene", "genes", "cdna", "gdna"}
+_PROTEIN_TOKENS = {"protein", "proteins", "factor", "complex", "enzyme", "receptor", "binding", "product", "subunit",
+                   "pol", "polymerase", "polymerases", "chaperone", "chaperones", "repair", "pk", "kinase", "kinases",
+                   "helicase", "primase", "ligase", "nuclease", "polypeptide"}
+
+
+def nucleotide_type_for(record: Dict[str, Any]) -> Optional[str]:
+    """DNA or RNA only when kind/name make it unambiguous, else None (final payload, B3)."""
+    if final_payload_enabled() and record.get("nucleotide_type_paper") in ("DNA", "RNA"):  # D-W20c: set by final_payload_nucleic from the paper, with provenance
+        return record["nucleotide_type_paper"]
+    texts = [str(record.get(k) or "") for k in ("class", "kind", "type", "nucleotide_type", "name")]
+    found: set[str] = set()
+    for text in texts:
+        for tok in re.split(r"[^a-z0-9]+", text.casefold()):
+            if tok in _PROTEIN_TOKENS or (tok.endswith("ase") and len(tok) > 4):
+                return None  # e.g. 'DNA polymerase' is a protein
+            if tok in _RNA_TOKENS:
+                found.add("RNA")
+            elif tok in _DNA_TOKENS:
+                found.add("DNA")
+    return found.pop() if len(found) == 1 else None
+
+
 @dataclass
 class IdFactory:
     value: int = 1
@@ -758,6 +785,8 @@ class DeterministicPwmlBuilder:
             "shared_intermediates_skipped_cofactor": 0,
             "shared_intermediate_locations_reused": 0,
         }
+        self._last_vocabulary_outcome = ""
+        self.vocabulary_outcomes: List[Dict[str, Any]] = []  # final payload only: non-exact vocabulary names
         self.layout_debug_stacks: List[Dict[str, Any]] = []
         self.layout_debug_shared_intermediates: List[Dict[str, Any]] = []
         self.withheld_interactions: List[Dict[str, Any]] = []
@@ -770,6 +799,124 @@ class DeterministicPwmlBuilder:
         self._ir_key_ids: Dict[str, Dict[str, int]] = {}
         self._ir_entity_info: Dict[str, Dict[str, Any]] = {}
         self._ir_pathway_species_id: Optional[int] = None
+
+    @staticmethod
+    def _location_organisms(ir: Dict[str, Any], location_key: Any) -> frozenset:
+        """P5 (E): organism kinds of the states that use a location (a state without a species counts the pathway's species)."""
+        species = {str(r.get("key")): (r.get("name"), r.get("classification")) for r in ir.get("species") or [] if isinstance(r, dict)}
+        pairs: List[Any] = []
+        for st in ir.get("biological_states") or []:
+            if isinstance(st, dict) and st.get("subcellular_location_key") == location_key:
+                pairs += [species[str(st.get("species_key"))]] if str(st.get("species_key")) in species else list(species.values())
+        return organism_kinds(pairs or species.values())
+
+    def _vocabulary_fields(self, kind: str, record: Dict[str, Any], organisms: Optional[frozenset] = None) -> Dict[str, Any]:
+        """name and ontology-id of a location / cell-type / tissue item. Flag off: the record as is. Flag on (final payload P3,
+        B2): a reviewed synonym is replaced by the PathWhiz row name; the outcome is counted in ``layout_debug_counts``.
+        ``organisms`` (locations only, P5 E) makes inner / outer membrane organism-aware."""
+        name, onto = record.get("name", ""), record.get("ontology_id")
+        if final_payload_enabled():
+            new_name, onto, outcome = map_vocabulary_name(kind, name, onto, organisms)
+            self._last_vocabulary_outcome = outcome
+            key = f"vocabulary_{outcome}"
+            self.layout_debug_counts[key] = self.layout_debug_counts.get(key, 0) + 1
+            if outcome != "exact":
+                self.vocabulary_outcomes.append({"kind": kind, "name": name, "outcome": outcome, "written": new_name,
+                                                 **({"organisms": sorted(organisms)} if organisms is not None else {})})
+            name = new_name
+        return {"name": name, "ontology-id": onto}
+
+    def _apply_wildcard_guard(
+        self,
+        ir: Dict[str, Any],
+        item_by_key: Dict[str, Dict[str, Dict[str, Any]]],
+        droppable: Dict[str, Dict[str, Dict[str, Any]]],
+        lookup: Any,
+    ) -> None:
+        """Final payload (D-W20a, D-W21 a/b): omit location / tissue / cell-type rows that PathWhiz cannot create (no database id,
+        no ontology id) from the PWML, and write the states that referenced them without that component (a state needs only one).
+        The importer treats an omitted component as a WILDCARD (find_by without nil ids), so a row is kept, by name, whenever
+        omitting it would let a state bind to another state: its remaining components match (are a subset of) another state's, or
+        it would be identical to another, or it would keep no tissue / cell type / location. The whole set of states is evaluated
+        at once; rows are restored (location, tissue, cell type order) until no state is newly wildcard-bindable. ``kept`` only
+        grows and there are finitely many rows, so the loop ends, with every row kept at worst. Restoring a row can in principle
+        make ANOTHER state bindable (two rows with equal name and id tokens), which is why the outer loop re-checks every state
+        until nothing changes. A state already bindable before any drop (full components) is not counted against us. Scope: this
+        reasons over this file only; against a populated PathWhiz database and the unpatched importer an omitted component can
+        still bind to a matching row of another pathway."""
+        order = ("subcellular_locations", "tissues", "cell_types")
+        refs = {"subcellular_locations": "subcellular_location_key", "tissues": "tissue_key", "cell_types": "cell_type_key"}
+        states = []
+        for record in ir.get("biological_states", []) if isinstance(ir.get("biological_states"), list) else []:
+            if not isinstance(record, dict):
+                continue
+            comps = {}
+            for ns in order:
+                key = record.get(refs[ns])
+                comps[ns] = str(key) if key is not None and str(key) in item_by_key[ns] else None
+            states.append((lookup("species", record.get("species_key")), comps))
+
+        def token(ns: str, key: Optional[str]) -> Any:
+            if key is None:
+                return None
+            item = item_by_key[ns][key]
+            return (str(item.get("name") or "").casefold(), item.get("ontology-id"))
+
+        kept: set = set()
+
+        def view(st: Any, dropping: bool) -> tuple:
+            sp, comps = st
+            return (sp,) + tuple(
+                None if comps[ns] is None or (dropping and comps[ns] in droppable[ns] and (ns, comps[ns]) not in kept)
+                else token(ns, comps[ns])
+                for ns in order
+            )
+
+        def within(a: tuple, b: tuple) -> bool:  # every set component of a equals b's: a's lookup can bind to b
+            return all(x is None or x == y for x, y in zip(a, b))
+
+        full = [view(st, False) for st in states]
+
+        def dropped_of(st: Any) -> List[Any]:
+            return [(ns, st[1][ns]) for ns in order
+                    if st[1][ns] is not None and st[1][ns] in droppable[ns] and (ns, st[1][ns]) not in kept]
+
+        def violates(i: int) -> bool:
+            if not dropped_of(states[i]):
+                return False
+            v = view(states[i], True)
+            if all(x is None for x in v[1:]):
+                return True  # species alone (or nothing) is a wildcard
+            return any(j != i and within(v, view(states[j], True)) and not within(full[i], full[j]) for j in range(len(states)))
+
+        changed = True
+        while changed:
+            changed = False
+            for i, st in enumerate(states):
+                while violates(i):
+                    kept.add(dropped_of(st)[0])
+                    changed = True
+        counters = {"subcellular_locations": ("locations_dropped_no_id", "subcellular-locations"),
+                    "tissues": ("tissues_dropped_no_id", "tissues"),
+                    "cell_types": ("cell_types_dropped_no_id", "cell-types")}
+        for ns in order:
+            for key, item in droppable[ns].items():
+                if (ns, key) in kept:
+                    names = ["components_kept_wildcard_guard"] + (["locations_kept_state_collision"] if ns == "subcellular_locations" else [])
+                    if ns == "subcellular_locations" and membrane_row(item.get("name")):
+                        # an inner / outer membrane with no id that the guard keeps (a bacterial one was mapped, so is not droppable). Written
+                        # under its own name it would bind to the bacterial PathWhiz row, so the name is made one that cannot match. The
+                        # suffix claims nothing about the organism (it may be merely undetermined); the paper name stays in vocabulary_outcomes.
+                        self.vocabulary_outcomes.append({"kind": "subcellular-location", "name": item["name"], "outcome": "membrane_kept_unresolved",
+                                                         "written": f"{item['name']} (unresolved, no ontology id)"})
+                        item["name"] = f"{item['name']} (unresolved, no ontology id)"
+                        names.append("membranes_kept_unresolved")
+                else:
+                    names = [counters[ns][0]]
+                    self.section_items[counters[ns][1]].remove(item)
+                    self._ir_key_ids.get(ns, {}).pop(key, None)
+                for name in names:
+                    self.layout_debug_counts[name] = self.layout_debug_counts.get(name, 0) + 1
 
     def _make_compound_identity_fields_optional(self) -> None:
         compound_sig = self.signature.sections.get("compounds")
@@ -975,15 +1122,31 @@ class DeterministicPwmlBuilder:
 
         self.section_items = {}
 
+        # final payload: rows PathWhiz could not create (no database id, no ontology id, name not in the vocabulary) are candidates
+        # to be omitted from the PWML; the wildcard guard below decides which actually are
+        item_by_key: Dict[str, Dict[str, Dict[str, Any]]] = {"subcellular_locations": {}, "tissues": {}, "cell_types": {}}
+        droppable: Dict[str, Dict[str, Dict[str, Any]]] = {"subcellular_locations": {}, "tissues": {}, "cell_types": {}}
+
+        def idless_unmapped(record: Dict[str, Any], id_keys: Sequence[str], written: Dict[str, Any]) -> bool:
+            # decided from the id that will be WRITTEN (the vocabulary map may drop or replace the record's own id)
+            return (
+                final_payload_enabled()
+                and self._last_vocabulary_outcome == "unmapped"
+                and first_int(record, id_keys) is None
+                and not written.get("ontology-id")
+            )
+
         self.section_items["cell-types"] = []
         for record in ir.get("cell_types", []) if isinstance(ir.get("cell_types"), list) else []:
             if not isinstance(record, dict):
                 continue
             rid = id_for(record, ["pathwhiz_id", "pathbank_cell_type_id", "pw_cell_type_id"], self.ids)
             remember("cell_types", record.get("key"), rid)
-            self.section_items["cell-types"].append(
-                {"id": rid, "name": record.get("name", ""), "ontology-id": record.get("ontology_id")}
-            )
+            ct_item = {"id": rid, **self._vocabulary_fields("cell-type", record)}
+            self.section_items["cell-types"].append(ct_item)
+            item_by_key["cell_types"][str(record.get("key"))] = ct_item
+            if idless_unmapped(record, ["pathwhiz_id", "pathbank_cell_type_id", "pw_cell_type_id"], ct_item):
+                droppable["cell_types"][str(record.get("key"))] = ct_item
 
         self.section_items["species"] = []
         species_id_by_name: Dict[str, int] = {}
@@ -1020,10 +1183,14 @@ class DeterministicPwmlBuilder:
                 ["pathwhiz_id", "pathbank_subcellular_location_id", "pw_subcellular_location_id"],
                 self.ids,
             )
+            fields = self._vocabulary_fields("subcellular-location", record,
+                                             self._location_organisms(ir, record.get("key")) if final_payload_enabled() else None)
             remember("subcellular_locations", record.get("key"), rid)
-            self.section_items["subcellular-locations"].append(
-                {"id": rid, "name": record.get("name", ""), "ontology-id": record.get("ontology_id")}
-            )
+            loc_item = {"id": rid, **fields}
+            self.section_items["subcellular-locations"].append(loc_item)
+            item_by_key["subcellular_locations"][str(record.get("key"))] = loc_item
+            if idless_unmapped(record, ["pathwhiz_id", "pathbank_subcellular_location_id", "pw_subcellular_location_id"], loc_item):
+                droppable["subcellular_locations"][str(record.get("key"))] = loc_item
 
         self.section_items["tissues"] = []
         for record in ir.get("tissues", []) if isinstance(ir.get("tissues"), list) else []:
@@ -1031,15 +1198,19 @@ class DeterministicPwmlBuilder:
                 continue
             rid = id_for(record, ["pathwhiz_id", "pathbank_tissue_id", "pw_tissue_id"], self.ids)
             remember("tissues", record.get("key"), rid)
-            self.section_items["tissues"].append(
-                {
-                    "id": rid,
-                    "name": record.get("name", ""),
-                    "ontology-id": record.get("ontology_id"),
-                    "visualization-template-id": None,
-                    "drawable-image-id": None,
-                }
-            )
+            tissue_item = {
+                "id": rid,
+                **self._vocabulary_fields("tissue", record),
+                "visualization-template-id": None,
+                "drawable-image-id": None,
+            }
+            self.section_items["tissues"].append(tissue_item)
+            item_by_key["tissues"][str(record.get("key"))] = tissue_item
+            if idless_unmapped(record, ["pathwhiz_id", "pathbank_tissue_id", "pw_tissue_id"], tissue_item):
+                droppable["tissues"][str(record.get("key"))] = tissue_item
+
+        if any(droppable.values()):
+            self._apply_wildcard_guard(ir, item_by_key, droppable, lookup)
 
         biological_states = []
         for record in ir.get("biological_states", []) if isinstance(ir.get("biological_states"), list) else []:
@@ -1179,9 +1350,17 @@ class DeterministicPwmlBuilder:
                 "type": "NucleicAcid",
                 "entity_type": "nucleic_acid",
             }
-            self.section_items["nucleic-acids"].append(
-                {"id": rid, "name": record.get("name", ""), "element-states": []}
-            )
+            na_item: Dict[str, Any] = {"id": rid, "name": record.get("name", ""), "element-states": []}
+            # An existing PathWhiz row is looked up by name+type, so never infer a type for one.
+            if final_payload_enabled() and not (record.get("pathwhiz_id") or record.get("pathbank_nucleic_acid_id")):
+                na_type = nucleotide_type_for(record)
+                if na_type:
+                    na_item["nucleotide-type"] = na_type
+                else:
+                    self.layout_debug_counts["nucleic_acids_type_unset"] = (
+                        self.layout_debug_counts.get("nucleic_acids_type_unset", 0) + 1
+                    )
+            self.section_items["nucleic-acids"].append(na_item)
 
         default_species_id = self._ir_pathway_species_id
 
@@ -1369,10 +1548,14 @@ class DeterministicPwmlBuilder:
                     item["inhibitor"] = True
                 item["enzyme-class"] = member.get("enzyme_class") or member.get("enzyme-class")
                 enzymes.append(item)
+            if final_payload_enabled():
+                spontaneous = True if reaction.get("spontaneous") is True else None
+            else:
+                spontaneous = bool(reaction.get("spontaneous", False))
             reactions.append(
                 {
                     "id": rid,
-                    "spontaneous": bool(reaction.get("spontaneous", False)),
+                    "spontaneous": spontaneous,
                     "pwr-id": f"PW_R{rid:06d}",
                     "direction": direction_for(reaction.get("direction")),
                     "reaction-left-elements": left,
@@ -1383,6 +1566,7 @@ class DeterministicPwmlBuilder:
         self.section_items["reactions"] = reactions
 
         transports: List[Dict[str, Any]] = []
+        synth_complex_by_protein: Dict[str, int] = {}
         for transport in process_items.get("transports", []) if isinstance(process_items.get("transports"), list) else []:
             if not isinstance(transport, dict):
                 continue
@@ -1429,6 +1613,41 @@ class DeterministicPwmlBuilder:
                 item: Dict[str, Any] = {"id": mid, "biological-state-id": lookup("biological_states", member.get("biological_state_key"))}
                 if info["entity_type"] == "protein_complex":
                     item["protein-complex-id"] = int(info["id"])
+                elif final_payload_enabled():
+                    # PathWhiz's TransportTransporter has no protein_id column; PathBank writes every
+                    # transporter as a protein-complex. Repackage the same protein as a one-member
+                    # complex (nothing else is added); its visualization is made with the transport viz.
+                    cid = synth_complex_by_protein.get(str(member.get("entity_key")))
+                    if cid is None:
+                        # Skip ids already taken by explicit complexes (pathwhiz_id may be >= 40000).
+                        from t2pw.mapping.map_ids import _wrapper_complex_name  # lazy: heavy module, flag-on only
+                        taken = {c.get("id") for c in self.section_items["protein-complexes"]}
+                        cid = self.complex_ids.next()
+                        while cid in taken:
+                            cid = self.complex_ids.next()
+                        synth_complex_by_protein[str(member.get("entity_key"))] = cid
+                        pname = str(raw_entity_by_key.get(str(member.get("entity_key")), {}).get("name") or "").strip()
+                        raw_p = raw_entity_by_key.get(str(member.get("entity_key")), {})
+                        pname = pname or next((str(raw_p[k]).strip() for k in ("label", "display_name") if raw_p.get(k)), "")
+                        pname = pname or str(member.get("entity_key") or "")
+                        self.section_items["protein-complexes"].append(
+                            {
+                                "id": cid,
+                                "name": _wrapper_complex_name(pname),
+                                "species-id": default_species_id,
+                                "pwp-id": f"PW_P{cid:06d}",
+                                "protein_complex-proteins": [
+                                    {"id": self.ids.next(), "protein-id": int(info["id"]), "stoichiometry": None}
+                                ],
+                                "element-states": [],
+                            }
+                        )
+                    item["protein-complex-id"] = cid
+                    member_ids[str(member.get("key"))].update(
+                        synth_complex_id=cid,
+                        protein_key=member.get("entity_key"),
+                        biological_state_key=member.get("biological_state_key"),
+                    )
                 else:
                     item["protein-id"] = int(info["id"])
                 transporters_out.append(item)
@@ -1551,6 +1770,14 @@ class DeterministicPwmlBuilder:
                     info = entity_info(entity_key)
                     if info and info.get("entity_type") == "compound":
                         reaction_compound_entity_keys.add(entity_key)
+        viz_referenced_location_keys: set[str] = set()
+        if final_payload_enabled():
+            # Transport/interaction visualizations point at specific base compound locations; keep only those.
+            for viz in ir.get("process_visualizations", []) if isinstance(ir.get("process_visualizations"), list) else []:
+                if isinstance(viz, dict) and viz.get("type") in {"transport_visualization", "interaction_visualization"}:
+                    for member in viz.get("members") or []:
+                        if isinstance(member, dict) and member.get("location_key"):
+                            viz_referenced_location_keys.add(str(member["location_key"]))
         total_compound_count = len(self.section_items.get("compounds", []))
         grid_placed_compound_count = 0
         skipped_base_location_by_id: Dict[int, Dict[str, Any]] = {}
@@ -1596,6 +1823,7 @@ class DeterministicPwmlBuilder:
                 section == "compound-locations"
                 and info.get("entity_type") == "compound"
                 and str(loc.get("entity_key") or "") in reaction_compound_entity_keys
+                and str(loc.get("key") or "") not in viz_referenced_location_keys
             )
             if skip_base_compound_location:
                 skipped_base_location_by_id[lid] = item
@@ -1613,6 +1841,7 @@ class DeterministicPwmlBuilder:
 
         self.section_items["protein-complex-visualizations"] = []
         protein_complex_viz_by_entity: Dict[str, int] = {}
+        synth_pcv_by_complex_state: Dict[Tuple[int, str], int] = {}
         protein_complex_viz_by_entity_state: Dict[Tuple[str, str], int] = {}
         for item in ir.get("protein_complex_visualizations", []) if isinstance(ir.get("protein_complex_visualizations"), list) else []:
             if not isinstance(item, dict):
@@ -1805,6 +2034,9 @@ class DeterministicPwmlBuilder:
                     bound["width"] = str(region["w"])
                     bound["height"] = str(region["h"])
                 break
+        if final_payload_enabled():
+            # PathWhiz cannot import the empty-section bound visualizations; the regions above are already computed.
+            self.section_items["bound-visualizations"] = []
 
         def ir_region_for_state(state_key: str) -> Dict[str, int]:
             return state_region_by_key.get(
@@ -2427,14 +2659,9 @@ class DeterministicPwmlBuilder:
                     if not minfo:
                         continue
                     role = str(member.get("role") or "")
-                    layout = reaction_layout_by_key.get(str(viz.get("process_key") or ""), {"row-dir": 1})
-                    side = (
-                        _reaction_visual_side(layout, True)
-                        if role == "left"
-                        else _reaction_visual_side(layout, False)
-                        if role == "right"
-                        else ""
-                    )
+                    # PathWhiz reads the member's `side` as its role (SBML/SBGN export,
+                    # orientation, find_element), so it follows the role, not the serpentine row.
+                    side = "Left" if role == "left" else "Right" if role == "right" else ""
                     mtype = str(member.get("member_type") or minfo.get("entity_type") or "")
                     if role == "enzyme":
                         ev = {"id": self.ids.next(), "reaction-enzyme-id": int(minfo["id"])}
@@ -2502,7 +2729,32 @@ class DeterministicPwmlBuilder:
                             )
                             if pcv_id is None:
                                 pcv_id = protein_complex_viz_by_entity.get(str(entity_key))
-                        if mtype == "protein_complex" and pcv_id:
+                        if minfo.get("synth_complex_id") is not None:
+                            # the one-member wrapper made for this plain-protein transporter (flag on)
+                            bs_key = str(minfo.get("biological_state_key") or "")
+                            pcv_id = synth_pcv_by_complex_state.get((minfo["synth_complex_id"], bs_key))
+                            if pcv_id is None:
+                                ploc = loc_id if loc_id is not None else ensure_protein_location(
+                                    str(minfo.get("protein_key")), bs_key)
+                                bs_id = lookup("biological_states", bs_key)
+                                if ploc is None or bs_id is None:
+                                    continue
+                                pcv_id = self.ids.next()
+                                synth_pcv_by_complex_state[(minfo["synth_complex_id"], bs_key)] = pcv_id
+                                self.section_items["protein-complex-visualizations"].append(
+                                    {
+                                        "id": pcv_id,
+                                        "protein-complex-id": minfo["synth_complex_id"],
+                                        "pathway-visualization-id": self.pathway_visualization_id_int,
+                                        "biological-state-id": bs_id,
+                                        "protein_complex_protein_visualizations": [
+                                            {"id": self.ids.next(), "protein-location-id": ploc}
+                                        ],
+                                        "protein_complex_compound_visualizations": [],
+                                    }
+                                )
+                            tv["protein-complex-visualization-id"] = pcv_id
+                        elif mtype == "protein_complex" and pcv_id:
                             tv["protein-complex-visualization-id"] = pcv_id
                         elif loc_id is not None:
                             tv["protein-location-id"] = loc_id
@@ -2707,7 +2959,13 @@ class DeterministicPwmlBuilder:
             "subject": self.args.subject,
             "species-id": first_species_id,
             "sub-pathways": [],
-            "references": [],
+            # Final payload (D-W12): the IR carries references only when the payload had ``final_payload_pathway``;
+            # otherwise this is the same empty list as before. Shape as the template: id, pubmed-id, text, element-id, element-type.
+            "references": [
+                {"id": i, "pubmed-id": r.get("pubmed-id"), "text": r.get("text"),
+                 "element-id": self.pathway_id_int, "element-type": "Pathway"}
+                for i, r in enumerate((self.extraction.get("pathway") or {}).get("references") or [], 1)
+            ],
         }
 
         ordered_fields = self.signature.pathway_children or list(pathway_values.keys())
@@ -2739,6 +2997,8 @@ class DeterministicPwmlBuilder:
         self._make_compound_identity_fields_optional()
         self._make_biological_state_identity_fields_optional()
         counts = self._populate_sections_from_ir()
+        if layout_version() == "v2":  # layout v2 is the default; T2PW_PWML_LAYOUT=v1 skips it: geometry only (pwml/layout.py)
+            self.args.width, self.args.height = relayout(self.section_items, self.ids.next, self.extraction, self._ir_key_ids)
 
         root = etree.Element(self.signature.root_tag, nsmap={"option": OPTION_TAG_NS})
         for tag in self.signature.root_children:

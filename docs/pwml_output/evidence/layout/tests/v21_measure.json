@@ -1,0 +1,140 @@
+{
+  "label": "lay-v21-measure",
+  "command": [
+    "C:\\Program Files\\Git\\usr\\bin\\bash.exe",
+    "C:/t/lay/docs/pwml_output/evidence/layout/scripts/v21_measure.sh"
+  ],
+  "cwd": "c:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+  "started_at": "2026-11-14T07:27:16+00:00",
+  "finished_at": "2026-11-14T07:28:42+00:00",
+  "duration_seconds": 85.54816410000058,
+  "timeout_seconds": 2400.0,
+  "root_pid": 877760,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 873044,
+      "name": "bash.exe",
+      "ppid": 876184
+    },
+    {
+      "pid": 876184,
+      "name": "bash.exe",
+      "ppid": 877760
+    },
+    {
+      "pid": 875912,
+      "name": "python.exe",
+      "ppid": 879480
+    },
+    {
+      "pid": 879480,
+      "name": "python.exe",
+      "ppid": 881932
+    },
+    {
+      "pid": 881932,
+      "name": "bash.exe",
+      "ppid": 877760
+    },
+    {
+      "pid": 873808,
+      "name": "bash.exe",
+      "ppid": 877760
+    },
+    {
+      "pid": 878364,
+      "name": "python.exe",
+      "ppid": 873808
+    },
+    {
+      "pid": 882008,
+      "name": "python.exe",
+      "ppid": 878364
+    },
+    {
+      "pid": 877024,
+      "name": "bash.exe",
+      "ppid": 877760
+    },
+    {
+      "pid": 879644,
+      "name": "tail.exe",
+      "ppid": 877024
+    }
+  ],
+  "descendants_terminated": [
+    873044,
+    873808,
+    875912,
+    876184,
+    877024,
+    878364,
+    879480,
+    879644,
+    881932,
+    882008
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 251140,
+      "name": "python.exe"
+    },
+    {
+      "pid": 665148,
+      "name": "python.exe"
+    },
+    {
+      "pid": 672292,
+      "name": "python.exe"
+    },
+    {
+      "pid": 878080,
+      "name": "python.exe"
+    },
+    {
+      "pid": 878152,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/lay/docs/pwml_output/evidence/layout/tests/v21_measure.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW",
+    "repo_head": "143216879c9de43981ea93eade54d243f7306d3e",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "lay",
+    "token": "lay:878080:d296d10d9a3fa61d",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

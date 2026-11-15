@@ -1,0 +1,28 @@
+{"arm": "off", "draws": "1", "exception": null, "failure": null, "llm_by_stage": {"Stage 1 extraction": {"errors": 0, "requests": 2, "seconds": 42.0}, "Stage 2 inference": {"errors": 0, "requests": 4, "seconds": 95.5}, "preprocessor": {"errors": 0, "requests": 1, "seconds": 12.7}}, "llm_requests_total": 7, "paper": "PMC12421875", "rep": "1", "stage1_identical_pre_post": true, "stage1_only": false, "started": "2026-11-13 22:43:50", "wall_seconds": 153.0}
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\fp\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ c96cf47966cea71a9d3d7aeb10713a6359807bc1  [git, worktree dirty=False]
+label                   : fp-cimpl-PMC12421875-off-1
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe C:/t/fp/docs/pwml_output/evidence/final_payload_p5/c_live/run_case.py --paper PMC12421875 --arm off --rep 1 --out C:/t/fp/docs/pwml_output/evidence/final_payload_p5/c_live/runs
+cwd                     : C:\t\fp
+root PID / process group: 566552 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 2700 s
+duration                : 154.73 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  566564:python.exe
+descendants terminated  : 1  566564
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/fp/docs/pwml_output/evidence/final_payload_p5/c_live/logs/PMC12421875-off-1.wrapper.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=fp5-cimpl  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

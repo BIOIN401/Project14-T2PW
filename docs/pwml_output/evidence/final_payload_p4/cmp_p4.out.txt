@@ -1,0 +1,12 @@
+OFF written p3/p4 97 97 same set True
+OFF identical 97 different []
+ON written p3/p4 97 97 same set True only p3 [] only p4 []
+ON files changed vs P3 17 of 97 idx [3, 4, 7, 10, 17, 27, 68, 70, 76, 84, 105, 116, 119, 125, 126, 150, 151]
+ON non-s3 errors [(13, 'PWML required-field gate failed.'), (22, 'PWML required-field gate failed.'), (32, 'PWML required-field gate failed.'), (33, 'PWML required-field gate failed.'), (36, 'PWML required-field gate failed.')] fill_error []
+layout_debug_counts (written runs) {'locations_dropped_no_id': 21, 'nucleic_acids_type_unset': 6}
+ontology report counts {'looked_up': 227, 'resolved': 17, 'ambiguous': 0, 'no_exact_match': 210, 'fetch_error': 0}
+ontology_id entries by kind {'location': 9, 'tissue': 7, 'cell_type': 1} distinct names 14
+nucleic_types_report sums {'enabled': 152, 'candidates': 35, 'resolved': 16, 'no_paper_text': 0, 'not_mentioned': 6, 'no_cue': 12, 'conflicting': 0, 'protein_like': 1}
+by_field sum {'compound.drugbank_id': 138, 'compound.kegg_id': 149, 'compound.hmdb_id': 27, 'compound.cas': 127, 'compound.chebi_id': 106, 'location.ontology_id': 9, 'tissue.ontology_id': 7, 'cell_type.ontology_id': 1}
+live requests 48 fetch errors 0
+paper_text_found 150 of 152

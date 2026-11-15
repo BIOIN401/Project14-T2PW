@@ -1458,9 +1458,15 @@ def run_post_pipeline_sbml_artifacts(
         # (``raw_name``, ``synonyms``, ``db_status``) into ``final_mapped.json``.
         # An ambiguous rename or a reference the rename would break raises
         # ``PrefreezeResolutionError`` out of here, leaving the payload untouched.
-        prefreeze_resolution_report = run_prefreeze_resolution(
+        # Final payload phase 1 (D-W12): with T2PW_FINAL_PAYLOAD the database id fill runs first, so the resolver and the freeze
+        # see the filled ids; a resolver refusal caused by a fill restores the payload and re-runs it. Off: just the resolver.
+        from t2pw.service.final_payload import prefreeze_with_final_fill
+
+        prefreeze_resolution_report, final_payload_fill_report = prefreeze_with_final_fill(
             final_export_payload,
-            strict_db=bool(strict_db),
+            lambda p: run_prefreeze_resolution(p, strict_db=bool(strict_db)),
+            pathway_context,
+            state,
         )
         assert isinstance(prefreeze_resolution_report, dict)
         post_enrichment_runtime_schema_report = validate_runtime_payload_contract(
@@ -1786,6 +1792,11 @@ def run_pwml_export(
     quarantine_artifacts = dict(quarantine_artifacts or {})
     quarantine_reused = False
     try:
+        # Final payload (D-W12): the paper title replaces the default name, only when the payload carries the key
+        # ``final_payload_pathway`` (written under T2PW_FINAL_PAYLOAD). Otherwise the name is returned unchanged.
+        from t2pw.service.final_payload import effective_pathway_name
+
+        pathway_name = effective_pathway_name(final_payload, pathway_name)
         before_export_report = _write_reaction_preservation_report("before_final_export", final_payload)
         payload = deepcopy(final_payload)
         grounding_report: Dict[str, Any] = {}

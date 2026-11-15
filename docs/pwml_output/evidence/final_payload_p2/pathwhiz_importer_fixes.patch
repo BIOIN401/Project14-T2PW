@@ -1,0 +1,26 @@
+--- a/lib/pwml_parser.rb
++++ b/lib/pwml_parser.rb
+@@ -288,7 +288,7 @@
+                 end
+               end
+               pv_node.xpath('vacuous-edge-visualizations/vacuous-edge-visualization').each do |vev_node|
+-                v = self.build_nested_visualization(vcv_node, pathway_visualization)
++                v = self.build_nested_visualization(vev_node, pathway_visualization)
+                 if v.present?
+                   pathway_visualization.vacuous_edge_visualizations << v
+                 end
+@@ -493,6 +493,14 @@
+         remap_value = @biological_state_list[node.content]
+         Rails.logger.warn("[PWML BIOSTATE DEBUG] add_content biological-state-id content=#{node.content.inspect} parent_node=#{node.parent.try(:name).inspect} biological_state_list=#{@biological_state_list.inspect} list_object_id=#{@biological_state_list.object_id} remap_value=#{remap_value.inspect}")
+         hash[node.name.underscore.to_sym] = remap_value
++      elsif node.name == 'left-biological-state-id'
++        remap_hash_name = '@biological_state_list'
++        remap_value = @biological_state_list[node.content]
++        hash[node.name.underscore.to_sym] = remap_value
++      elsif node.name == 'right-biological-state-id'
++        remap_hash_name = '@biological_state_list'
++        remap_value = @biological_state_list[node.content]
++        hash[node.name.underscore.to_sym] = remap_value
+       elsif node.name == 'edge-id'
+         remap_hash_name = '@edge_list'
+         remap_value = @edge_list[node.content]

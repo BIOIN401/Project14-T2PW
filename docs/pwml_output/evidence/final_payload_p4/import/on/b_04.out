@@ -1,0 +1,38 @@
+[pwi] OK       30.9s  122.pwml  errors=0
+[pwi] OK        1.2s  123.pwml  errors=0
+[pwi] OK        9.7s  124.pwml  errors=0
+[pwi] OK        3.6s  125.pwml  errors=0
+[pwi] OK        5.8s  126.pwml  errors=0
+[pwi] OK       17.9s  129.pwml  errors=0
+[pwi] OK       15.2s  130.pwml  errors=3
+[pwi] OK        8.7s  131.pwml  errors=0
+[pwi] OK       17.0s  132.pwml  errors=0
+[pwi] OK       17.8s  133.pwml  errors=0
+[pwi] summary: {"files": 10, "success_true": 10, "success_true_no_errors": 9, "success_false": 0, "total_seconds": 127.7}
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\fp\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 3c7d02f8b81fa5c9f4306396cfe55ef02ea390d9  [git, worktree dirty=False]
+label                   : pwi-on-b_04
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -X utf8 C:/t/pwi/t2pw/tools/pathwhiz_import/run_import.py --list C:/t/fp/docs/pwml_output/evidence/final_payload_p4/import/on/lists/b_04 --out C:/t/fp/docs/pwml_output/evidence/final_payload_p4/import/on/b_04 --chunk 10
+cwd                     : C:\t\fp\docs\pwml_output\evidence\final_payload_p4
+root PID / process group: 608440 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 160.40 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 17  608592:python.exe, 608508:docker.exe, 497448:docker.exe, 608972:docker.exe, 605972:docker-compose.exe, 608096:docker-compose.exe, 608512:docker.exe, 607984:docker-compose.exe, 609300:docker-compose.exe, 609424:docker.exe, 609476:docker-compose.exe, 609568:docker-compose.exe, 609656:docker.exe, 609704:docker-compose.exe, 609748:docker-compose.exe, 608364:docker.exe, 613092:docker-compose.exe
+descendants terminated  : 17  497448, 605972, 607984, 608096, 608364, 608508, 608512, 608592, 608972, 609300, 609424, 609476, 609568, 609656, 609704, 609748, 613092
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/fp/docs/pwml_output/evidence/final_payload_p4/import/on/b_04.bounded.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=pwi  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

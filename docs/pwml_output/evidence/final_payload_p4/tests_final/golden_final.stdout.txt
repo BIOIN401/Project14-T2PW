@@ -1,0 +1,30 @@
+T2PW: C:\t\fp\src\t2pw\__init__.py
+......................................                                   [100%]
+38 passed in 73.62s (0:01:13)
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\fp\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 797db6a8731e6f872972d6eda84b48a84794670e  [git, worktree dirty=True]
+label                   : fp-golden_final
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/fp -q --basetemp=C:/t/tmpbase/golden_final-3535 tests/test_batch_driver_seam_golden.py tests/test_c011_freeze_seam_golden_equivalence.py tests/test_streamlit_stage8_export_contract.py tests/test_streamlit_quarantine_boundary.py
+cwd                     : C:\t\fp
+root PID / process group: 112036 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 75.27 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 19  112048:python.exe, 112392:git.exe, 112236:git.exe, 111812:git.exe, 112560:python.exe, 112576:python.exe, 111284:python.exe, 112380:python.exe, 112516:git.exe, 103004:python.exe, 112636:python.exe, 103724:python.exe, 111676:python.exe, 101572:python.exe, 108468:python.exe, 112740:python.exe, 112776:python.exe, 112872:python.exe, 112892:python.exe
+descendants terminated  : 19  101572, 103004, 103724, 108468, 111284, 111676, 111812, 112048, 112236, 112380, 112392, 112516, 112560, 112576, 112636, 112740, 112776, 112872, 112892
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/fp/docs/pwml_output/evidence/final_payload_p4/tests_final/golden_final.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=fp  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

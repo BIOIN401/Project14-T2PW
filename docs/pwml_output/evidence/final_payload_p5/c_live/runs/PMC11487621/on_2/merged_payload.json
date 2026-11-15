@@ -1,0 +1,1699 @@
+{
+ "biological_states": [
+  {
+   "evidence": "cytoplasmic coupling helices of EcfT",
+   "name": "cytoplasmic state",
+   "species": "Bacillus subtilis",
+   "subcellular_location": "cytoplasm"
+  },
+  {
+   "evidence": "from the medium",
+   "name": "extracellular state",
+   "species": "Bacillus subtilis",
+   "subcellular_location": "extracellular"
+  },
+  {
+   "evidence": "transmembrane complex",
+   "name": "membrane state",
+   "species": "Bacillus subtilis",
+   "subcellular_location": "cell membrane"
+  }
+ ],
+ "element_locations": {
+  "compound_locations": [
+   {
+    "biological_state": "extracellular state",
+    "compound": "pantothenate",
+    "evidence": "pantothenate can be imported"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "compound": "pantothenate",
+    "evidence": "pantothenate can be made de novo"
+   },
+   {
+    "biological_state": "extracellular state",
+    "compound": "cysteinopantetheine",
+    "evidence": "cysteinopantetheine is a novel metabolite"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "compound": "coenzyme A",
+    "evidence": "coenzyme A is an essential cofactor"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "compound": "phosphopantothenate",
+    "evidence": "Pantothenate and phosphopantothenate were detected in the WT extracts"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "compound": "phosphopantetheine",
+    "evidence": "phosphopantetheine is an intermediate in CoA biosynthesis"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "compound": "dephospho-CoA",
+    "evidence": "dephospho-CoA is an intermediate in CoA biosynthesis"
+   },
+   {
+    "biological_state": "extracellular state",
+    "compound": "pantetheine",
+    "evidence": "pantetheine can be taken up from the medium"
+   },
+   {
+    "biological_state": "extracellular state",
+    "compound": "pantethine",
+    "evidence": "pantethine can be taken up and reduced to pantetheine"
+   },
+   {
+    "biological_state": "extracellular state",
+    "compound": "cystine",
+    "evidence": "cystine is formed by oxidation of two cysteines"
+   }
+  ],
+  "nucleic_acid_locations": [
+   {
+    "biological_state": "cytoplasmic state",
+    "evidence": "CymR-repressed snaA-tcyJKLMN-cmoOIJ-ribR-sndA-ytnM operon",
+    "nucleic_acid": "tcyJKLMN operon"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "evidence": "dsDNA of the cysK upstream region",
+    "nucleic_acid": "cysK upstream region"
+   }
+  ],
+  "protein_locations": [
+   {
+    "biological_state": "membrane state",
+    "evidence": "EcfT and PanU form a transmembrane complex",
+    "protein": "EcfT"
+   },
+   {
+    "biological_state": "membrane state",
+    "evidence": "EcfT and PanU form a transmembrane complex",
+    "protein": "PanU"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "evidence": "cytoplasmic coupling helices of EcfT",
+    "protein": "EcfA1"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "evidence": "cytoplasmic coupling helices of EcfT",
+    "protein": "EcfA2"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "evidence": "CymR is a transcriptional repressor",
+    "protein": "CymR"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "evidence": "CysK is the cysteine synthase",
+    "protein": "CysK"
+   }
+  ]
+ },
+ "entities": {
+  "compounds": [
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "α-ketoisovalerate",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "α-ketopantoate",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "pantoate",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "β-alanine",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "pantothenate",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "phosphopantothenate",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "cysteine",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "phosphopantetheine",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "dephospho-CoA",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "cofactor",
+    "confidence": 1.0,
+    "name": "coenzyme A",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "pantetheine",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "cysteinopantetheine",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "aspartate",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "pantethine",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "compound",
+    "confidence": 1.0,
+    "name": "cystine",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   }
+  ],
+  "nucleic_acids": [
+   {
+    "class": "nucleic_acid",
+    "confidence": 1.0,
+    "name": "tcyJKLMN operon",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "nucleic_acid",
+    "confidence": 1.0,
+    "name": "cysK upstream region",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "nucleic_acid",
+    "confidence": 1.0,
+    "name": "CymR binding site of the cysK gene",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   }
+  ],
+  "protein_complexes": [
+   {
+    "class": "protein_complex",
+    "components": [
+     "EcfA1",
+     "EcfA2",
+     "EcfT",
+     "PanU"
+    ],
+    "confidence": 1.0,
+    "evidence": "ColabFold/AlphaFold predicted model of the complex of EcfT – EcfA1 – EcfA2 – PanU",
+    "name": "EcfA1/EcfA2/EcfT/PanU complex",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein_complex",
+    "components": [
+     "TcyJ",
+     "TcyK",
+     "TcyL",
+     "TcyM",
+     "TcyN"
+    ],
+    "confidence": 1.0,
+    "evidence": "tcyJKLMN genes encode subunits of an ABC transporter for the uptake of cystine",
+    "name": "TcyJKLMN complex",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein_complex",
+    "components": [
+     "CymR",
+     "CysK"
+    ],
+    "confidence": 1.0,
+    "evidence": "the two proteins form a CymR2-CysK2 complex",
+    "name": "CymR2-CysK2 complex",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein_complex",
+    "components": [
+     "CymR",
+     "CysK"
+    ],
+    "confidence": 1.0,
+    "evidence": "atomic models of the CymR2-CysK2 heterotetramer",
+    "name": "CymR2-CysK2 heterotetramer",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein_complex",
+    "components": [
+     "CymR"
+    ],
+    "confidence": 1.0,
+    "evidence": "crystal structure of the hexameric CymR (PDB: 2Y75)",
+    "name": "hexameric CymR",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   }
+  ],
+  "proteins": [
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "PanB",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "PanC",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "PanE",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "PanG",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "IlvC",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "CoaA",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "CoaX",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "transporter",
+    "confidence": 1.0,
+    "name": "PanU",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "transporter",
+    "confidence": 1.0,
+    "name": "EcfT",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "transporter",
+    "confidence": 1.0,
+    "name": "EcfA1",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "transporter",
+    "confidence": 1.0,
+    "name": "EcfA2",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "transporter",
+    "confidence": 1.0,
+    "name": "TcyJ",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "transporter",
+    "confidence": 1.0,
+    "name": "TcyK",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "transporter",
+    "confidence": 1.0,
+    "name": "TcyL",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "transporter",
+    "confidence": 1.0,
+    "name": "TcyM",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "transporter",
+    "confidence": 1.0,
+    "name": "TcyN",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "CymR",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "CysK",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "CoaBC",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "CoaD",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "CoaE",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "class": "protein",
+    "confidence": 1.0,
+    "name": "PanD",
+    "provenance": "extracted",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   }
+  ],
+  "species": [
+   {
+    "name": "Bacillus subtilis",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   }
+  ],
+  "subcellular_locations": [
+   {
+    "evidence": "cytoplasmic coupling helices of EcfT",
+    "name": "cytoplasm",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "evidence": "from the medium",
+    "name": "extracellular",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   },
+   {
+    "evidence": "transmembrane complex",
+    "name": "cell membrane",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ]
+   }
+  ]
+ },
+ "entity_admission_report": {
+  "counts": {
+   "admitted": 0,
+   "demoted": 0,
+   "removed": 0
+  },
+  "demoted": [],
+  "removed": [],
+  "review_reasons": [],
+  "review_required": false,
+  "schema_version": 1,
+  "source_index": {
+   "length": 76081,
+   "schema_version": 1,
+   "status": "written"
+  }
+ },
+ "locked_reaction_filter_report": {
+  "exported_locked_reactions": 9,
+  "locked_reactions_found": 9,
+  "quarantined_locked_reactions": 0
+ },
+ "processes": {
+  "interactions": [
+   {
+    "biological_state": "cytoplasmic state",
+    "entity_1": "CymR",
+    "entity_2": "tcyJKLMN operon",
+    "evidence": "cymR gene, encoding the transcriptional repressor of a regulon involved in cysteine metabolism",
+    "name": "CymR represses tcyJKLMN operon",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "relationship": "inhibition"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "entity_1": "CysK",
+    "entity_2": "CymR",
+    "evidence": "CysK does not only act as the cysteine synthase but also as a corepressor of CymR",
+    "name": "CysK binds CymR",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "relationship": "binding"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "entity_1": "CymR2-CysK2 complex",
+    "entity_2": "cysK upstream region",
+    "evidence": "CymR2-CysK2 repressor complex would bind to DNA",
+    "name": "CymR2-CysK2 complex binds cysK upstream region",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "relationship": "binding"
+   },
+   {
+    "entity_1": "CysK",
+    "entity_2": "CymR",
+    "evidence": "The interaction between CysK and CymR triggers DNA binding by CymR.",
+    "name": "CysK-CymR interaction",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "relationship": "interaction"
+   },
+   {
+    "entity_1": "CymR",
+    "entity_2": "CymR binding site of the cysK gene",
+    "evidence": "molecular docking with HDOCK using dsDNA of the CymR binding site",
+    "name": "CymR binding to CymR binding site",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "relationship": "binding"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "entity_1": "CymR",
+    "entity_2": "tcyJKLMN operon",
+    "evidence": "CymR is the transcriptional repressor of a regulon involved in cysteine metabolism",
+    "name": "CymR represses tcyJKLMN operon",
+    "relationship": "inhibition"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "entity_1": "CysK",
+    "entity_2": "CymR",
+    "evidence": "CysK acts as a corepressor of CymR",
+    "name": "CysK binds CymR",
+    "relationship": "binding"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "entity_1": "CymR2-CysK2 complex",
+    "entity_2": "cysK upstream region",
+    "evidence": "CymR2-CysK2 repressor complex binds to its DNA target sites",
+    "name": "CymR2-CysK2 complex binds cysK upstream region",
+    "relationship": "binding"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "entity_1": "CysK",
+    "entity_2": "CymR",
+    "evidence": "CysK and CymR form a CymR2-CysK2 complex",
+    "name": "CysK-CymR interaction",
+    "relationship": "interaction"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "entity_1": "CymR",
+    "entity_2": "CymR binding site of the cysK gene",
+    "evidence": "CymR binding site of the cysK gene",
+    "name": "CymR binding to CymR binding site of the cysK gene",
+    "relationship": "binding"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "entity_1": "CymR",
+    "entity_2": "tcyJKLMN operon",
+    "evidence": "CymR represses tcyJKLMN operon",
+    "name": "CymR represses tcyJKLMN operon",
+    "relationship": "inhibition"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "entity_1": "CysK",
+    "entity_2": "CymR",
+    "evidence": "CysK binds CymR",
+    "name": "CysK binds CymR",
+    "relationship": "binding"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "entity_1": "CymR2-CysK2 complex",
+    "entity_2": "cysK upstream region",
+    "evidence": "CymR2-CysK2 complex binds cysK upstream region",
+    "name": "CymR2-CysK2 complex binds cysK upstream region",
+    "relationship": "binding"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "entity_1": "CysK",
+    "entity_2": "CymR",
+    "evidence": "CysK-CymR interaction",
+    "name": "CysK-CymR interaction",
+    "relationship": "interaction"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "entity_1": "CymR",
+    "entity_2": "CymR binding site of the cysK gene",
+    "evidence": "CymR binding to CymR binding site of the cysK gene",
+    "name": "CymR binding to CymR binding site of the cysK gene",
+    "relationship": "binding"
+   }
+  ],
+  "reactions": [
+   {
+    "biological_state": "cytoplasmic state",
+    "enzymes": [
+     {
+      "confidence": 1.0,
+      "evidence": "α-ketoisovalerate is hydroxymethylated to α-ketopantoate",
+      "protein": "PanB",
+      "provenance": "extracted"
+     }
+    ],
+    "evidence": "α-ketoisovalerate is hydroxymethylated to α-ketopantoate",
+    "inputs": [
+     "α-ketoisovalerate"
+    ],
+    "locked_reaction_id": "rxn_lock_006",
+    "name": "PanB reaction",
+    "outputs": [
+     "α-ketopantoate"
+    ],
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "scope_membership": "core"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "enzymes": [
+     {
+      "confidence": 1.0,
+      "evidence": "three enzymes can reduce ketopantoate to pantoate",
+      "protein": "PanE",
+      "provenance": "extracted"
+     },
+     {
+      "confidence": 1.0,
+      "evidence": "three enzymes can reduce ketopantoate to pantoate",
+      "protein": "PanG",
+      "provenance": "extracted"
+     },
+     {
+      "confidence": 1.0,
+      "evidence": "three enzymes can reduce ketopantoate to pantoate",
+      "protein": "IlvC",
+      "provenance": "extracted"
+     }
+    ],
+    "evidence": "three enzymes can reduce ketopantoate to pantoate",
+    "inputs": [
+     "α-ketopantoate"
+    ],
+    "locked_reaction_id": "rxn_lock_005",
+    "name": "Ketopantoate reduction",
+    "outputs": [
+     "pantoate"
+    ],
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "scope_membership": "core"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "enzymes": [
+     {
+      "confidence": 1.0,
+      "evidence": "panC mutant lacking pantothenate synthase",
+      "protein": "PanC",
+      "provenance": "extracted"
+     }
+    ],
+    "evidence": "pantothenate can be made de novo",
+    "inputs": [
+     "pantoate",
+     "β-alanine"
+    ],
+    "locked_reaction_id": "rxn_lock_009",
+    "name": "Pantothenate synthase reaction",
+    "outputs": [
+     "pantothenate"
+    ],
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "scope_membership": "core"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "enzymes": [
+     {
+      "confidence": 1.0,
+      "evidence": "Two enzymes, CoaA and CoaX, can phosphorylate pantothenate",
+      "protein": "CoaA",
+      "provenance": "extracted"
+     },
+     {
+      "confidence": 1.0,
+      "evidence": "Two enzymes, CoaA and CoaX, can phosphorylate pantothenate",
+      "protein": "CoaX",
+      "provenance": "extracted"
+     }
+    ],
+    "evidence": "Two enzymes, CoaA and CoaX, can phosphorylate pantothenate",
+    "inputs": [
+     "pantothenate"
+    ],
+    "locked_reaction_id": "rxn_lock_008",
+    "name": "Pantothenate kinase reaction",
+    "outputs": [
+     "phosphopantothenate"
+    ],
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "scope_membership": "core"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "enzymes": [
+     {
+      "confidence": 1.0,
+      "evidence": "bifunctional phosphopantothenoylcysteine synthetase/decarboxylase",
+      "protein": "CoaBC",
+      "provenance": "extracted"
+     }
+    ],
+    "evidence": "bifunctional phosphopantothenoylcysteine synthetase/decarboxylase",
+    "inputs": [
+     "phosphopantothenate",
+     "cysteine"
+    ],
+    "locked_reaction_id": "rxn_lock_002",
+    "name": "CoaBC reaction",
+    "outputs": [
+     "phosphopantetheine"
+    ],
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "scope_membership": "core"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "enzymes": [
+     {
+      "confidence": 1.0,
+      "evidence": "Phosphopantetheine adenylyltransferase",
+      "protein": "CoaD",
+      "provenance": "extracted"
+     }
+    ],
+    "evidence": "Phosphopantetheine adenylyltransferase",
+    "inputs": [
+     "phosphopantetheine"
+    ],
+    "locked_reaction_id": "rxn_lock_003",
+    "name": "CoaD reaction",
+    "outputs": [
+     "dephospho-CoA"
+    ],
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "scope_membership": "core"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "enzymes": [
+     {
+      "confidence": 1.0,
+      "evidence": "Dephospho-CoA kinase",
+      "protein": "CoaE",
+      "provenance": "extracted"
+     }
+    ],
+    "evidence": "Dephospho-CoA kinase",
+    "inputs": [
+     "dephospho-CoA"
+    ],
+    "locked_reaction_id": "rxn_lock_004",
+    "name": "CoaE reaction",
+    "outputs": [
+     "coenzyme A"
+    ],
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "scope_membership": "core"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "enzymes": [
+     {
+      "confidence": 1.0,
+      "evidence": "CoaA has pantetheine kinase activity",
+      "protein": "CoaA",
+      "provenance": "extracted"
+     }
+    ],
+    "evidence": "CoaA has pantetheine kinase activity",
+    "inputs": [
+     "pantetheine"
+    ],
+    "locked_reaction_id": "rxn_lock_007",
+    "name": "Pantetheine kinase reaction",
+    "outputs": [
+     "phosphopantetheine"
+    ],
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "scope_membership": "core"
+   },
+   {
+    "biological_state": "cytoplasmic state",
+    "enzymes": [
+     {
+      "confidence": 1.0,
+      "evidence": "β-alanine is synthesized by the aspartate decarboxylase PanD",
+      "protein": "PanD",
+      "provenance": "extracted"
+     }
+    ],
+    "evidence": "β-alanine is synthesized by the aspartate decarboxylase PanD",
+    "inputs": [
+     "aspartate"
+    ],
+    "locked_reaction_id": "rxn_lock_001",
+    "name": "Aspartate decarboxylase reaction",
+    "outputs": [
+     "β-alanine"
+    ],
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "scope_membership": "anaplerotic"
+   },
+   {
+    "biological_state": "extracellular state",
+    "evidence": "Cysteinopantetheine was obtained by overnight incubation of cysteine (5 mM) and pantetheine (500 µM) in water at room temperature.",
+    "inputs": [
+     "cysteine",
+     "pantetheine"
+    ],
+    "name": "cysteinopantetheine formation",
+    "outputs": [
+     "cysteinopantetheine"
+    ]
+   }
+  ],
+  "transports": [
+   {
+    "cargo": "pantothenate",
+    "elements_with_states": [
+     {
+      "biological_state": "extracellular state",
+      "element": "pantothenate",
+      "evidence": "pantothenate can be imported",
+      "side": "left"
+     },
+     {
+      "biological_state": "cytoplasmic state",
+      "element": "pantothenate",
+      "evidence": "pantothenate can be imported",
+      "side": "right"
+     }
+    ],
+    "evidence": "pantothenate can be imported by B. subtilis with high affinity using an ECF transporter with PanU as the substrate-specific S protein",
+    "from_biological_state": "extracellular state",
+    "name": "Pantothenate high-affinity uptake via ECF transporter",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "to_biological_state": "cytoplasmic state",
+    "transporters": [
+     {
+      "evidence": "pantothenate can be imported by B. subtilis with high affinity using an ECF transporter with PanU as the substrate-specific S protein",
+      "protein_complex": "EcfA1/EcfA2/EcfT/PanU complex"
+     },
+     {
+      "confidence": 0.9,
+      "evidence": "can be imported by B. subtilis with high affinity using an ECF transporter with PanU as the substrate-specific S protein",
+      "protein": "PanU",
+      "provenance": "inferred",
+      "source_refs": [
+       "can be imported by B. subtilis with high affinity using an ECF transporter with PanU as the substrate-specific S protein"
+      ]
+     }
+    ]
+   },
+   {
+    "cargo": "pantothenate",
+    "elements_with_states": [
+     {
+      "biological_state": "extracellular state",
+      "element": "pantothenate",
+      "evidence": "an additional uptake system can transport the intermediate with low affinity",
+      "side": "left"
+     },
+     {
+      "biological_state": "cytoplasmic state",
+      "element": "pantothenate",
+      "evidence": "an additional uptake system can transport the intermediate with low affinity",
+      "side": "right"
+     }
+    ],
+    "evidence": "an additional uptake system can transport the intermediate with low affinity",
+    "from_biological_state": "extracellular state",
+    "name": "Pantothenate low-affinity uptake",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "to_biological_state": "cytoplasmic state"
+   },
+   {
+    "cargo": "cysteinopantetheine",
+    "elements_with_states": [
+     {
+      "biological_state": "extracellular state",
+      "element": "cysteinopantetheine",
+      "evidence": "the ABC Transporter TcyJKLMN is active in the transport of cysteine-pantetheine",
+      "side": "left"
+     },
+     {
+      "biological_state": "cytoplasmic state",
+      "element": "cysteinopantetheine",
+      "evidence": "the ABC Transporter TcyJKLMN is active in the transport of cysteine-pantetheine",
+      "side": "right"
+     }
+    ],
+    "evidence": "the ABC Transporter TcyJKLMN is active in the transport of cysteine-pantetheine",
+    "from_biological_state": "extracellular state",
+    "name": "Cysteinopantetheine uptake via TcyJKLMN",
+    "provenance_lineage": [
+     {
+      "origin": "paper_stated",
+      "paper_explicit": "explicit",
+      "reason": "present in the Stage-1 extraction payload when it reached the Stage-1 to Stage-2 boundary",
+      "review_required": false,
+      "sources": [],
+      "stage": "paper_extraction",
+      "support": "unsupported",
+      "uncertainty": ""
+     }
+    ],
+    "to_biological_state": "cytoplasmic state",
+    "transporters": [
+     {
+      "evidence": "the ABC Transporter TcyJKLMN is active in the transport of cysteine-pantetheine",
+      "protein_complex": "TcyJKLMN complex"
+     }
+    ]
+   }
+  ]
+ },
+ "quarantined_locked_reactions": [],
+ "source_text_index": {
+  "length": 76081,
+  "normalized": "1266 mbio mbio mbio american society for microbiology asm pmc11487621 11487621 11487621 39194188 10 1128 mbio 01772 24 coenzyme a biosynthesis in bacillus subtilis discovery of a novel precursor metabolite for salvage and its uptake system warneke robert investigation methodology visualization writing original draft writing review and editing 1 herzberg christina investigation methodology 1 klein moritz investigation methodology 2 elfmann christoph resources software visualization 1 dittmann josi investigation 1 feussner kirstin data curation methodology supervision 2 3 feussner ivo funding acquisition methodology supervision 2 stülke jörg conceptualization formal analysis funding acquisition project administration resources supervision writing original draft writing review and editing 1 freitag nancy e editor 4 1 department of general microbiology institute for microbiology genetics and göttingen center for molecular biosciences university of göttingen göttingen germany 2 department of plant biochemistry albrecht von haller institute and göttingen center for molecular biosciences university of göttingen göttingen germany 3 service unit for metabolomics and lipidomics göttingen center for molecular biosciences university of göttingen göttingen germany 4 university of illinois chicago chicago illinois usa address correspondence to jörg stülke jstuelk gwdg de the authors declare no conflict of interest 28 8 2024 15 10 e01772 24 e01772 24 18 10 2024 copyright 2024 warneke et al this is an open access article distributed under the terms of the creative commons attribution 4 0 international license abstract the gram positive model bacterium bacillus subtilis is used for many biotechnological applications including the large scale production of vitamins for vitamin b5 a precursor for coenzyme a synthesis there is so far no established fermentation process available and the metabolic pathways that involve this vitamin are only partially understood in this study we have elucidated the complete pathways for the biosynthesis of pantothenate and coenzyme a in b subtilis pantothenate can not only be synthesized but also be taken up from the medium we have identified the enzymes and the transporter involved in the pantothenate biosynthesis and uptake high affinity vitamin b5 uptake in b subtilis requires an atp driven energy coupling factor transporter with panu previously yhfu as the substrate specific subunit moreover we have identified a salvage pathway for coenzyme a acquisition that acts on complex medium even in the absence of pantothenate synthesis this pathway requires rewiring of sulfur metabolism resulting in the increased expression of a cysteine transporter in the salvage pathway the bacteria import cysteinopantetheine a novel naturally occurring metabolite using the cystine transport system tcyjklmn this work lays the foundation for the development of effective processes for vitamin b5 and coenzyme a production using b subtilis importance vitamins are essential components of the diet of animals and humans vitamins are thus important targets for biotechnological production while efficient fermentation processes have been developed for several vitamins this is not the case for vitamin b5 pantothenate the precursor of coenzyme a we have elucidated the complete pathway for coenzyme a biosynthesis in the biotechnological workhorse bacillus subtilis moreover a salvage pathway for coenzyme a synthesis was found in this study normally this pathway depends on pantetheine however we observed activity of the salvage pathway on complex medium in mutants lacking the pantothenate biosynthesis pathway even in the absence of supplemented pantetheine this required rewiring of metabolism by expressing a cystine transporter due to acquisition of mutations affecting the regulation of cysteine metabolism this shows how the hidden underground metabolism can give rise to the rapid formation of novel metabolic pathways keywords bacillus subtilis coenzyme a vitamin b5 metabolism salvage transport proteins ecf transporter abc transporter status released display pdf yes is olf no is manuscript no is preprint no is journal matter no is scanned no is retracted no received 2024 jun 11 accepted 2024 jul 26 collection date 2024 oct introduction the metabolism of humans and animals involves many compounds that are essential because they cannot be produced by their own metabolic processes these compounds therefore have to be acquired from food in addition to many essential amino acids and fatty acids this is also true for vitamins many vitamins are used as precursors for important cofactors such as nicotinamide adenine dinucleotide flavin adenine dinucleotide fad thiamine pyrophosphate tetrahydrofolic acid pyridoxal phosphate and coenzyme a they are required in many metabolic pathways such as energy metabolism central carbon metabolism amino acid metabolism or fatty acid biosynthesis vitamins are used for many applications including feed food cosmetics chemicals and pharmaceutics and thus need to be produced on a large scale 1 vitamins can be produced by chemical synthesis or by biotechnological processes biotechnology is regarded as more sustainable and a variety of microorganisms such as escherichia coli bacillus subtilis corynebacterium glutamicum ashbya gossypii or baker s yeast saccharomyces cerevisiae are in use for such processes or targets for process development 2 an example for the replacement of a chemical by a biotechnological process is the production of vitamin b2 riboflavin a precursor for the flavin coenzymes fad and fmn in this case the biotechnological process has replaced the chemical synthesis in as little as 15 years due to economic and sustainability benefits 3 we are interested in the physiology of the gram positive model bacterium b subtilis in addition to being one of the best studied bacteria b subtilis is also a major workhorse in biotechnology for the production of proteins and vitamins and many other applications 3 5 moreover b subtilis is the target of attempts to minimize its genome in order to get a comprehensive understanding for the component requirements of a living cell 6 7 and to use genome minimized strains as platforms in biotechnological applications 8 10 coenzyme a is an essential cofactor that is involved in many metabolic pathways such as central carbon metabolism amino acid metabolism and fatty acid biosynthesis 11 this cofactor is synthesized from pantothenic acid which is also known as vitamin b5 b subtilis is able to synthesize coenzyme a from two molecules of pyruvate aspartate and cysteine see fig 1 with pantothenate being a key intermediate of the pathway the initial reactions from pyruvate to α ketoisovalerate are shared with branched chain amino acid biosynthesis and are catalyzed by enzymes of this pathway 2 11 for the specific steps of pantothenate and coenzyme a biosynthesis several enzymes have been identified biochemically or based on the similarity to enzymes from other organisms for each reaction of the pathway see fig 1 even though both vitamin b5 and coenzyme a are very important metabolites their metabolism is not fully understood in the vitamin production platform b subtillis for the conversion of α ketopantoate to pantoate and the phosphorylation of pantothenate two enzymes each ylbq ykpb and coaa coax respectively have been suggested but their specific roles have not been clarified see uniprot org and 12 for ylbq ykpb and coaa coax respectively moreover for the panc mutant lacking pantothenate synthase it has been shown that such a mutant is viable on complex but not on minimal medium suggesting that intermediate s of coenzyme a biosynthesis can be taken up from complex medium 13 in addition the panb and panc mutants are impaired in growth even on complex medium and the panc mutant was reported to readily acquire suppressor mutations 13 this suggests the existence of other enzymes and or means of synthesizing coenzyme a in b subtilis fig 1 schematic overview of the pathways for coenzyme a acquisition in b subtilis the biosynthetic and salvage pathways as well as the uptake systems for important precursors are shown enzymes and reactions identified in this study are highlighted in light brown for information on the enzymes see table 1 biochemical pathway map for coenzyme a biosynthesis depicts essential non essential enzymes and intermediates including pantothenate and cysteine metabolism with transporter proteins involved in metabolite import color coded for clarity to shift from chemical to biotechnological synthesis of vitamin b5 b subtilis is one of the key target organisms for the development of fermentative processes using strains overexpressing enzymes of the pathway up to 80 g l of vitamin b5 could be produced 2 however to optimize the biotechnological production of a metabolite it is essential to comprehensively understand the complete biosynthetic pathway as well as alternative routes that feed into it as discussed above our knowledge of the b5 pathway in b subtilis is still limited we have recently studied two pathways that feed into b5 synthesis for the ilvbhc leuabcd operon that encodes enzymes for α ketoisovalerate biosynthesis we demonstrated that its expression is activated in the presence of preferred carbon sources by the pleiotropic transcription factor ccpa 14 moreover this operon is repressed in the presence of amino acids and activated under conditions of nitrogen limitation by the transcription factors cody and tnra respectively 15 16 in addition we have recently studied the homeostasis of the precursor molecule β alanine 17 this molecule can be taken up from the medium by the amino acid importers aima and alap interestingly intracellular accumulation of β alanine is toxic for b subtilis and the molecule can be exported by the amino acid exporter aexa the corresponding aexa gene is silent under most conditions and can only be expressed upon the acquisition of mutations that trigger the dna binding activity of the transcription activator aera 17 in this work we have studied the pathway leading to the formation of vitamin b5 and coenzyme a in b subtilis in detail we have identified three enzymes that contribute to the reduction of α ketopantoate as well as an uptake system for vitamin b5 pantothenic acid in addition to pantothenate b subtilis can also use pantetheine as a precursor for coenzyme a biosynthesis our work demonstrates that the two pantothenate kinases have shared and individual activities the analysis of suppressor mutants that allow the growth of panb or panc mutants identified cysteinopantetheine a novel metabolite as an additional precursor that can be taken up by b subtilis and feed into coenzyme a biosynthesis bypassing the synthesis of vitamin b5 the use of cysteinopantetheine requires the expression of the cymr repressed snaa tcyjklmn cmooij ribr snda ytnm operon to allow its uptake by the tcyjklmn abc transporter results essential and conditionally essential enzymes in the biosynthesis of coa the pathway for coa biosynthesis has not been completely elucidated in b subtilis see fig 1 based on a large scale attempt to construct mutants for all genes the genes for the last three steps of coa biosynthesis that is coabc coad and coae are essential in b subtilis indicating that they are required for growth even on complex medium 13 however the genes for the initial steps of the pathway to pantothenate could be deleted but their fitness was impaired on complex medium and in some cases the mutants were unable to grow on minimal medium see fig 2a to test the role of these genes we assayed growth of all mutants starting with the first dedicated enzyme of the pathway α ketoisovalerate hydroxymethyltransferase panb see fig 1 table 1 to the last non essential enzyme pantothenate kinase coaa and coax as shown in fig 2b the panb and panc mutants gp4401 and gp4402 respectively were not viable on the complex medium used here whereas the growth of all other mutants was indistinguishable from that of the wild type strain 168 this indicates that the panb and panc genes are also essential for the growth of b subtilis for the panb mutant the appearance of individual colonies is visible at the highest cell concentration see fig 2b this suggests the formation of suppressor mutants see below indeed it has been reported that several mutants of the pathway tend to acquire suppressor mutations 13 in contrast all mutants were viable on the medium supplemented with pantothenate thus the panb and panc genes can be regarded as conditionally essential as they are dispensable if the cells are provided with the product of the pathway β alanine a precursor for pantothenate synthesis can be taken up from the environment or is synthesized by the aspartate decarboxylase pand 17 18 the pand mutant was viable both on complex and minimal medium fig 2b indicating that additional enzymes contribute to β alanine synthesis the coaa and coax mutants grew indistinguishably from the wild type strain as reported previously 12 however we were unable to construct a coaa coax double mutant indicating that there is no additional pantothenate kinase in b subtilis taken together our findings indicate that pantothenate is an essential precursor for coa biosynthesis and that b subtilis can take up this important intermediate from the environment fig 2 essential and conditionally essential enzymes in the biosynthesis of coenzyme a a the relative fitness of mutant strains on complex lb and minimal medium the fitness data were derived from reference 13 and the visualization was adapted from the subti wiki database 19 b the growth of the b subtilis wild type was compared with the mutants δ panb gp4401 δ pane gp3384 δ panc gp4402 δ pand gp3382 δ coaa gp3380 and δ coax gp3381 the cells were grown in sporulation medium sp supplemented with 1 mm pantothenate to an od 600 of 1 0 and serial dilutions 10 fold were prepared these samples were plated on sp or c glc minimal plates with or without added 1 mm pantothenate and incubated at 37 c for 48 h bar graph depicts the relative fitness of various gene deletions in lb and minimal media with a spot assay below displaying growth differences for gene deletions on different media types with or without pantothenate supplementation table 1 enzymes and proteins involved in the coenzyme a biosynthesis and in the uptake of pantothenate a old name new name product function panb α ketoisovalerate hydroxymethyltransferase ylbq pane ketopantoate reductase ykpb pang ketopantoate reductase ilvc bifunctional ketol acid reductoisomerase reduction of acetolactate and α ketopantoate panc pantothenate synthase pand aspartate decarboxylase coaa bifunctional pantothenate pantetheine kinase coax pantothenate kinase yloi coabc bifunctional phosphopantothenoylcysteine synthetase decarboxylase ylbi coad phosphopantetheine adenylyltransferase ytag coae dephospho coa kinase ybaf ecft transporter subunit of ecf transporter ybxa ecfa1 atpase component of ecf transporter ybae ecfa2 atpase component of ecf transporter yhfu panu pantothenate binding protein s component of ec transporter a enzymes proteins identified in this study were renamed as indicated identification of enzymes that contribute to pantoate biosynthesis in b subtilis the vitamin b5 precursor pantoate is synthesized from α ketoisovalerate an intermediate in valine biosynthesis in the first step α ketoisovalerate is hydroxymethylated to α ketopantoate in the next step α ketopantoate is reduced to pantoic acid by ketopantoate reductase pane 2 b subtilis encodes two members of the ketopantoate reductase family ylbq and ykpb these proteins have so far not been characterized in the uniprot database the ylbq protein is annotated as pane accordingly the corresponding mutant gp3384 was included in our initial growth assay see fig 2b however the growth of the pane mutant was not impaired indicating that the second putative ketopantoate reductase ykpb re designated pang see table 1 also contributes to ketopantoate reduction to get insights into the roles of pane and pang in pantoate biosynthesis we tested the growth of single and double mutants on minimal medium see fig s1 all strains even the pane pang double mutant grew well indicating the presence of yet other enzymes that may contribute to pantoate formation in e coli the ketol acid reductoisomerase ilvc which is primarily involved in branched chain amino acid biosynthesis is rather promiscuous and can act on a variety α ketoacids including α ketopantoate 20 we thus considered the possibility that ilvc might be a third pantoate forming enzyme in b subtilis indeed growth of the pane pang ilvc triple mutant gp4403 was severely impaired on complex medium in the absence of pantothenate indicating that ketopantoate reduction is an essential function and that ilvc is the third ketopantoate reductase in b subtilis identification of an uptake system for pantothenate the results presented above demonstrate that the panb and panc mutants are auxotrophic for pantothenate see fig 2b vitamins and cofactors are often transported by multimeric energy coupling factor ecf type transporters that consist of a transmembrane transport protein ybaf in b subtilis two atp binding subunits ybxa and ybae and substrate specific binding proteins 21 22 to test whether pantothenate is also taken up by an ecf transporter in b subtilis we compared the growth of the wild type strain 168 panc mutant gp4361 and the isogenic panc ybaf ecft double mutant gp4700 see fig 3a while the wild type strain was able to grow in the absence of pantothenate both strains lacking panc required the addition of pantothenate to the medium if pantothenate uptake would require an ecf transporter the double mutant gp4700 would be unable to grow as was indeed observed at a low pantothenate concentration 50 μm in contrast the panc ybaf ecft double mutant was viable at a high pantothenate concentration 1 mm as a control we also tested the growth of the ybaf ecft single mutant gp4703 which was viable in the absence of pantothenate this indicates that the phenotype at the low pantothenate concentration resulted from the combined absence of pantothenate biosynthesis and transport taken together these data indicate that the ecf transport system is responsible for high affinity pantothenate transport and that an additional uptake system can transport the intermediate with low affinity fig 3 pantothenate is imported via the ecf transporter ecfa1 a2 t with the s component panu a the growth of the b subtilis wild type was compared with the mutants δ panc gp4361 δ ecft gp4703 and the double mutant δ panc δ ecft gp4700 using a drop dilution assay the cells were grown in c glucose minimal medium supplemented with 1 mm pantothenate to an od 600 of 1 0 and serial dilutions 10 fold were prepared these samples were spotted on c glc minimal medium supplemented with 50 μm or 1 mm pantothenate and incubated at 37 c for 48 h b the growth of the δ panc mutant gp4361 was compared with the isogenic δ ribu gp4694 δ thit gp4695 δ trpp gp4696 δ panu gp4697 δ ypdp gp4698 and δ yuig gp4699 mutants as well as the δ panu gp4704 strain the cells were grown in c glucose minimal medium supplemented with 1 mm pantothenate to an od 600 of 1 0 and serial dilutions 10 fold were prepared these samples were plated on c glc minimal medium supplemented with 50 μm or 1 mm pantothenate and incubated at 37 c for 48 h c colabfold alphafold predicted model of the complex of ecft beige ecfa1 light blue ecfa2 dark blue panu magenta the model was placed on a schematic membrane gray based on position of the transmembrane helices of ecft and panu as indicated below the structure the model confidence iptm score of the calculated model is 0 877 spot assays depict the growth of wild type and mutant strains on c glc with different pantothenate concentrations alphafold colabfold model illustrates the structure of the panu ecft ecfa1 ecfa2 complex as mentioned above the ecf transporters consist of three general components and a substrate specific binding protein the s protein to identify the s protein required for high affinity pantothenate transport we deleted all genes encoding the s proteins of b subtilis in the background of the panc mutant and tested their growth in the absence and presence of pantothenate fig 3b with the exception of the panc yhfu panu double mutant gp4697 all strains were viable if pantothenate was present in the medium the deletion of the yhfu panu gene by itself had no impact on the viability of b subtilis since the single yhfu panu mutant gp4704 grew well in the absence of pantothenate reflecting its ability to synthesize the intermediate taken together our results demonstrate that pantothenate can be imported by b subtilis with high affinity using an ecf transporter with yhfu as the substrate specific s protein therefore we rename the general ecf transporter proteins ecfa1 and ecfa2 the atpase components previously ybxa and ybae respectively see table 1 and ecft the membrane spanning transporter component previously ybat and the pantothenate binding s protein panu for pan tothenate u ptake previously yhfu we used colabfold to predict a structural atomic model of the ecfa1 ecfa2 ecft panu complex the highest ranked model had a high local accuracy as indicated by the predicted local distance difference test plddt value of 85 8 it also featured high ptm 0 867 and iptm 0 877 scores which indicate high confidence in the folding of the protein subunits and the complex interfaces respectively the model see fig 3c predicts that ecft and panu form a transmembrane complex for pantothenate binding and transport whereas the atp binding ecfa1 and ecfa2 subunits are bound to this complex via cytoplasmic coupling helices of ecft the ecfa1 and ecfa2 subunits additionally interact with each other via their c terminal domains see http www subtiwiki uni goettingen de v4 predictedcomplex id 173 for an interactive presentation of the complex the model is in agreement with the cryo electron microscopic structure of the folate ect transporter of lactobacillus delbrückii 23 a coaa and pantetheine dependent salvage pathway in e coli a pantothenate independent pathway for coenzyme a biosynthesis was discovered 24 in this bypass pantethine and or pantetheine are taken up and pantetheine is directly phosphorylated to phosphopantetheine this reaction is catalyzed by the single pantothenate kinase of e coli coaa 24 interestingly many bacteria possess either coaa or coax and only few bacteria including b subtilis have both enzymes in e coli the only pantothenate kinase coaa has a second activity as a pantetheine kinase to test whether this bypass is also active in b subtilis we assayed the growth of the panc mutant gp4379 and the isogenic double mutants panc coaa gp4652 and panc coax gp4653 in the presence of pantethine see fig s2a in e coli pantethine is taken up and reduced to pantetheine 24 the panc mutant was viable indicating that b subtilis is also able to use pantetheine as a precursor for coenzyme a biosynthesis of the two kinases only coaa was required for the utilization of pantetheine whereas the loss of coax had no effect this indicates that coaa has pantetheine kinase activity in addition to its activity as a pantothenate kinase whereas coax only has the latter activity see fig s2a this is in agreement with the activity of e coli coaa which also has both activities the coaa enzymes from e coli and b subtilis share 50 identical residues which may explain why the proteins have the same biochemical activities the existence of this salvage pathway is further supported by the investigation of a coabc mutant the coabc previously yloi gene of b subtilis is essential for growth 13 25 based on the results described above pantethine should rescue the coabc mutant indeed we were able to delete the coabc gene provided that pantethine was present in the growth medium see fig s2b the resulting coabc mutant gp4670 was only viable in the presence of pantethine this observation supports the proposed pantetheine and coaa dependent salvage route to coenzyme a in b subtilis see fig 1 isolation of suppressor mutants that can grow in the absence of internally synthesized pantothenate as mentioned above we observed the appearance of suppressor mutants when we cultivated the panb mutant in the absence of pantothenate similarly suppressor formation was also observed for the panc mutant two suppressor mutants were obtained from the panb mutant and one from the panc mutant the genomes of all three suppressor mutants were analyzed by genome sequencing see fig 4a the two strains derived from the panb mutant both had an identical point mutation in the cysk gene encoding the cysteine synthase the last enzyme of cysteine biosynthesis 26 the mutation resulted in the formation of a truncated cysk protein g223 stop interestingly strain gp4450 derived from the panc mutant also carried a mutation that may affect cysteine metabolism in this case the cymr gene encoding the transcriptional repressor of a regulon involved in cysteine metabolism 27 was affected resulting in a cymr protein with an amino acid substitution of leu 49 to thr this substitution affects the dna binding helix turn helix motif of cymr 28 thus suggesting loss of cymr mediated repression two of the analyzed suppressor mutants had additional mutations see fig 4a fig 4 suppressors of mutants deficient in pantothenate biosynthesis inactivate the cymr cysk repressor complex a suppressor mutations acquired by the δ panb and δ panc mutants on sporulation medium sp without supplemented pantothenate b the growth of the b subtilis wild type was compared with the mutants δ panb gp3383 δ cysk gp4404 δ panb δ cysk gp3343 and the suppressor mutant δ panb cysk g223 gp3397 the cells were grown in sporulation medium sp supplemented with 1 mm pantothenate to an od 600 of 1 0 and serial dilutions 10 fold were prepared these samples were plated on sp plates and incubated at 37 c for 48 h c colabfold alphafold predicted model of the complex of the cymr dimer red purple with the cysk dimer lightblue darkblue bound to the 5 utr of the cysk gene modeled with hdock illustrations depict suppressor mutations in the δpanb and δpanc strains growth of wild type and mutant strains on sp medium and structural model of the cymr cysk dna complex to test whether the cysk or cymr mutations are sufficient to allow growth of the panb panc mutants in the absence of added pantothenate we deleted the cysk and cymr genes in the panb and panc mutants respectively and tested the growth of the double mutants as shown in fig 4b the panb cysk double mutant gp4124 was able to grow without added pantothenate similarly the deletion of cymr allowed growth of the panc mutant see fig 5a these results demonstrate that the inactivation of either cysk or cymr is necessary and sufficient to suppress the pantothenate deficiency of the panb and panc mutants fig 5 expression of the tcyjklmn abc transporter is responsible and sufficient for the suppression of pantothenate biosynthesis deficiency a the growth of the b subtilis wild type was compared with the mutants δ panc gp4361 δ panc δ cymr gp4362 δ panc δ cymr δ tcyn gp4375 δ panc δ tcyn gp4378 δ panc p xyl empty gp4379 and δ panc p xyl tcyjklmn gp4380 the cells were grown in sporulation medium sp supplemented with 1 mm pantothenate to an od 600 of 1 0 and serial dilutions 10 fold were prepared these samples were plated on sp plates with or without the inducer 1 xylose and incubated at 37 c for 48 h b the growth of the δ panc δ snaa neo gp4364 and the isogenic cre loxed δ panc δ snaa lox72 gp4383 was compared the cells were grown in sporulation medium sp supplemented with 1 mm pantothenate to an od 600 of 1 0 and serial dilutions 10 fold were prepared these samples were plated on sp plates with or without 1 mm of pantothenate and incubated at 37 c for 48 h growth experiments of wild type and mutant bacterial strains on sp medium and sp medium supplemented with 1 xylose or pantothenate depict the effects of various genetic deletions and mutations on bacterial growth modeling of the cysk cymr repressor complex interestingly cysk does not only act as the cysteine synthase but also as a corepressor of cymr 29 at high intracellular cysteine concentrations the two proteins form a cymr 2 cysk 2 complex 29 and this complex can bind to its dna target sites and repress transcription while the crystal structure of the inactive cymr hexamer which is present in the absence of cysteine has been solved pdb 2y75 27 no structure is available for the cymr 2 cysk 2 repressor complex we therefore made use of alphafold multimer 30 to obtain a structural model for the complex see fig 4c the predicted model exhibited high confidence scores plddt 86 2 ptm 0 771 iptm 0 669 see http www subtiwiki uni goettingen de v4 predictedcomplex id 170 for an interactive presentation of the complex the resulting structure suggests that the c terminus of cymr protrudes like an anchor into cysk subsequently we assessed whether the predicted cymr 2 cysk 2 repressor complex would bind to dna by employing a molecular docking approach with hdock 31 using the dsdna of the cysk upstream region as a template which contains the cymr binding site 27 we found a strikingly high predicted confidence score for the protein dna complex 0 933 suggesting that the cymr 2 cysk 2 repressor complex very likely binds to the dna in this way see fig 4c such an interaction would not be possible for the cymr hexamer as the dna binding domains are facing inwards 28 we hypothesize that in the presence of cysteine dimeric cysk interacts with the hexamer causing its disassembly as a result the cymr 2 cysk 2 repressor complex is formed with its dna binding site in a position to interact with its target dna 28 see movie s1 in the model of the cymr 2 cysk 2 repressor complex the penultimate residue of cymr tyr 137 interacts with gly 223 of cysk it is tempting to speculate that the truncation of cysk just at this position interferes with the interaction and thus prevents the formation of the cysk 2 cymr 2 repressor complex this idea is indeed supported by the predicted structure of the complex between cymr and the truncated cysk cymr seems to be completely reorientated with the dna binding domain facing toward the truncated cysk which would completely prevent dna binding see fig s3 the absence of cymr mediated transcription repression resulting from a mutation in the dna binding domain or from abortive interaction with the truncated corepressor cysk results in the expression of the genes of the cymr regulon 27 the cystine transporter tcyjklmn is required to bypass panc essentiality the results described above suggest that the constitutive expression of the genes and operons of the cymr regulon is responsible for the ability of the panb or panc suppressor mutants to grow in the absence of added pantothenate the cymr regulon consists of 42 genes that are organized in 10 transcription units 27 see http www subtiwiki uni goettingen de v4 regulon id protein 50930c56c27d22715620a350220e3c56adb41020 19 to get an idea which of these genes might be responsible for the suppression we performed an initial screening by transferring deletion mutant alleles from 25 representative mutants of the koo mutant collection 13 see table s1 to the panc cymr double mutant gp4362 then we checked the transformants for their ability to grow on plates in the absence of added pantothenate we expected that the inactivation of genes that are required for the suppression phenotype would result in loss of growth under this condition while no effect was observed in most cases the inactivation of the tcyl tcym and tcyn genes reversed the suppression and prevented the growth of the panc cymr double mutant in the absence of added pantothenate see fig 5a for the panc cymr tcyn mutant gp4375 the tcyj tcyk tcyl tcym and tcyn genes encode subunits of an abc transporter for the uptake of cystine 32 to demonstrate that this abc transporter is indeed responsible for the suppression of the panc mutant we constructed strain gp4380 in which the tcyjklmn genes are expressed under the control of the xylose inducible promoter of the b subtilis xylab operon in this strain which also lacks the panc gene the addition of the inducer xylose allowed growth in the absence of pantothenate in contrast no growth was observed in the isogenic control strain gp4379 that carries the empty plasmid integrated into the genome moreover we tested growth of a panc δ snaa mutant from the koo collection 13 in this library each reading frame is replaced by an antibiotic cassette with a relatively strong outwardly facing promoter so overexpression of genes can be the result of the replacement of upstream genes 13 33 as a result deletion of the immediately upstream snaa gene puts the tcyjklmn operon under the control of such a strong promoter indeed the panc δ snaa mutant gp4364 was able to grow on complex medium in the absence of added pantothenate see fig 5b in contrast the deletion of the resistance cassette including the promoter gp4383 resulted in loss of growth as the tcyjklmn genes were no longer constitutively expressed fig 5b thus the cymr independent overexpression of the tcyjklmn genes is sufficient to rescue the panc mutant these results also demonstrate that the mutations affecting cymr and its co repressor cysk work by allowing constitutive expression of the tcyjklmn genes identification of the tcyjklmn substrate that feeds into the coenzyme a salvage pathway as described above the tcyjklmn complex seems to allow the growth of b subtilis in the absence of pantothenate biosynthesis this suggests that this abc transporter may transport not only cystine but also a precursor molecule that allows pantothenate independent synthesis of coenzyme a this idea is supported by the established promiscuity of many amino acid transporters 17 34 35 candidates for such substrates are pantothenate or pantetheine which could be introduced into either of the two pathways to coaa see above fig 1 phosphorylated or very large molecules are rather unlikely to be imported by permeases 24 so we focused on pantothenate and pantetheine to distinguish between the two molecules we used strains that allowed inducible expression of the tcyjklmn genes in the backgrounds of panc panc coaa or panc coax mutants see fig 6a as described above see fig 5a induction of the tcy genes by xylose allowed growth of the panc mutant gp4380 on complex medium suggesting that the transported substrate is present in the medium in contrast the isogenic coaa mutant gp4444 was unable to grow whereas the coax mutant strain gp4489 grew like the wild type upon induction of the tcyjklmn genes this observation indicates that the bifunctional pantothenate pantetheine kinase coaa is essential for the growth of the suppressor mutants whereas the monofunctional coax is not sufficient the addition of pantothenate allowed he growth of both the coaa and the coax mutant in good agreement with the retained pantothenate kinase activity in both strains pantethine the oxidized dimeric form of pantetheine in contrast rescued growth of the coax but not of the coaa mutant this result supports the notion that coaa is required for the suppression of the panc mutant by overexpression of the tcyjklmn abc transporter taken together we conclude that the suppression occurs via the pantetheine and coaa dependent coenzyme a salvage route see fig 1 this idea is further supported by the observation that both pantothenate and phosphopantothenate can be found in the b subtilis wild type strain whereas both metabolites are absent from the panc mutant see fig 6b as the panc mutant is unable to produce pantothenate irrespective of the expression of the tcyjklmn abc transporter we can exclude pantothenate as a possible substrate for the transporter fig 6 suppression by expression of the tcyjklmn abc transporter depends on coaa a the growth of the δ panc p xyl tcyjklmn gp4380 mutant was compared with the isogenic δ coaa gp4444 and δ coax gp4489 mutants the cells were grown in sporulation medium sp supplemented with 1 mm pantothenate to an od 600 of 1 0 and serial dilutions 10 fold were prepared these samples were plated on sp plates with or without the inducer 1 xylose or supplemented with 250 μm pantothenate or pantethine and incubated at 37 c for 48 h b b subtilis extracts of wt panc p xyl empty gp4379 and panc p xyl tcyjklmn gp4380 were analyzed by ultrahigh performance liquid chromatography coupled to high resolution mass spectrometry relative intensities of four independent experiments are shown as boxplots pantothenate and phosphopantothenate were detected in the wt extracts but not in the panc mutant strains n d the identity of either pantothenate or phosphopantothenate in the extracts was confirmed by ms ms analyses and authentic standards for pantothenate respective fragmentation spectra at 15 or 20 ev are shown for negative ionization mode the precursor ion is marked by a rhomb characteristic fragments are displayed in the respective structures growth of bacterial mutants on different media along with mass spectrometry data for pantothenate and phosphopantothenate highlighting the metabolic deficiencies and chemical profiles of these compounds in the mutants compared to wild type the exclusion of pantothenate suggests that instead pantetheine or its oxidation product pantethine may be transported by the abc transporter to get support for this idea we analyzed the panc mutant gp4361 the isogenic strain gp4364 overexpressing the tcyjklmn genes due to the replacement of the snaa gene and the panc mutant also lacking the tcyjklmn genes gp4660 due to the essentiality of panc and the lack of any possible substrate for uptake by the tcyjklmn abc transporter these strains are unable to grow on minimal medium in the absence of any precursor molecules for coenzyme a we then tested the growth of the strains at different concentrations of pantetheine and pantethine see fig s4 all strains were able to grow at high concentrations of pantetheine and pantethine 50 μm however the ability to grow diminished with decreasing pantetheine and pantethine concentrations and no growth was possible at concentrations below 2 5 and 5 μm for pantetheine and pantethine respectively independent of the presence or absence of the tcyjklmn abc transporter see fig s4 thus we had to exclude the possibility that pantetheine pantethine might be transported by tcyjklmn as the two obvious hypotheses had been discarded by the experimental data we had to consider alternative possibilities the tcyjklmn transporter is a high affinity cystine transporter 35 cystine is formed by oxidation of two cysteines yielding the homodimeric disulfide similarly pantethine is the product of pantetheine oxidation which consists of two pantetheine molecules linked by a disulfide bond taking into account that the tcyjklmn transporter probably recognizes a cysteine moiety with a disulfide bond and that pantetheine is required for coaa mediated coenzyme a salvage we hypothesized the presence of a heterodimeric disulfide formed by cysteine and pantetheine under oxidizing conditions see fig s5 such a molecule might then be taken up by tcyjklmn and subsequently be reduced in the cell to cysteine and pantetheine to test the spontaneous formation of a disulfide hybrid molecule of cysteine and pantetheine we mixed both molecules with a 50 fold excess of cysteine and incubated the mixture overnight similarly we incubated both cysteine and pantetheine alone the analysis of the resulting products by uhplc hrms ms see fig 7a fig s6 showed the expected oxidation products cystine and pantethine upon the incubation of cysteine or pantetheine respectively these products were also detected after the incubation of the mixture of cysteine and pantetheine in addition and as suspected we identified the heterodimeric cysteinopantetheine fig 7 the abc transporter tcyjklmn is active in the transport of cysteine pantetheine a the identity of cysteinopantetheine was confirmed by comparative ms ms analyses with cystine and pantethine authentic standards for top panel cystine and middle panel pantethine as well as bottom panel a solution containing cysteinopantetheine generated by incubation of cysteine with pantetheine see materials and methods were analyzed by ultrahigh performance liquid chromatography coupled to high resolution mass spectrometry and fragmented by collision induced dissociation at 20 ev top panel middle panel or 23 ev bottom panel in negative ionization mode the respective ms ms spectra were interpreted as shown in the tables and as characteristic fragments in the structure a cysteine moiety is considered as c 3 h 6 no 2 s and a pantetheine moiety is considered as c 11 h 21 n 2 o 8 s the respective precursor ions are marked by a rhomb characteristic fragments used for structure confirmation of cysteinopantetheine are marked in orange and green respectively b the growth of the δ panc gp4361 mutant was compared with the isogenic δ panc δ snaa gp4364 and δ panc δ tcyjklmn gp4660 the cells were grown in c glc minimal medium supplemented with 1 mm pantothenate to an od 600 of 1 0 and serial dilutions 10 fold were prepared these samples were plated on c glc minimal medium plates with 50 μm oxidized cysteine top 1 μm oxidized pantetheine mix middle or 1 μm of oxidized cysteine pantetheine mix containing cysteine pantetheine bottom and incubated at 37 c for 48 h mass spectrometry data for cystine pantethine and cysteinopantethine along with bacterial growth assays depicting the effect of these compounds on the growth of different bacterial mutants on selective media next we tested the growth of the three panc mutants with standard or high level expression of tcyjklmn or in the absence of the abc transporter on minimal medium supplemented with the final oxidation products of cysteine corresponding to 50 μm cysteine pantetheine corresponding to 1 μm pantetheine and the mixture of both molecules the same concentrations for both metabolites as shown in fig 7b no growth was possible with the oxidation products of cysteine cystine or pantetheine pantethine alone this is not unexpected as we already have hypothesized that a hybrid molecule that sufficiently resembles cysteine for transport but that also brings pantetheine is required for the tcyjklmn dependent bypass of the growth defect of the panc mutant indeed the addition of the oxidation product of the cysteine pantetheine mixture that contained the novel molecule cysteinopantetheine allowed growth of the panc mutant overexpressing the tcyjklmn abc transporter we can therefore assume that the complex medium contains small amounts of pantetheine as well as cysteine and that these molecules can spontaneously form cysteinopantetheine which is then taken up by tcyjklmn upon reduction in the cytoplasm the pantetheine then seems to feed into the coaa dependent coenzyme a salvage see fig 1 discussion with their involvement in more than 30 reactions among them in the intersection between glycolysis and the citric acid cycle and the initial reaction of fatty acid biosynthesis coenzyme a and its derivative acetyl coa are central to the physiology of b subtilis see https corewiki uni goettingen de metabolite 4569 and https corewiki uni goettingen de metabolite 4732 it is therefore not surprising that b subtilis has developed two independent routes for the acquisition of coenzyme a and that the bacterium encodes transporters for multiple precursor molecules to import rather than to synthesize them see fig 1 in principle b subtilis can synthesize coenzyme a from pantothenate or from pantetheine while pantothenate can be made de novo from intermediates of central carbon metabolism such as pyruvate and oxaloacetate via aspartate there is no pathway for the biosynthesis of pantetheine instead pantetheine is a degradation product of the phosphopantetheine moiety of the acyl carrier protein acpa which plays a major role in fatty acid biosynthesis 36 thus the pantetheine dependent salvage pathway to coenzyme a is only possible if pantetheine or a source of it can be taken up in this work we have identified all the players in the biosynthesis of coenzyme a in b subtilis interestingly two steps in the pantothenate dependent pathway can be catalyzed by more than one enzyme three enzymes can reduce ketopantoate to pantoate the ketopantoate reductases pane and pang as well the ketol acid reductase ilvc which is also part of branched chain amino acid biosynthesis many organisms have multiple ketopantoate reductases however it is so far unknown whether these enzymes have distinct activities in many bacteria that contain only one of these enzymes such as e coli listeria monocytogenes bacillus licheniformis or streptococcus pyogenes only pane is present suggesting that this is the major player in pantoate production this idea is supported by the observation that the pane gene of b subtilis is more strongly expressed than pang under most conditions 37 two enzymes coaa and coax can phosphorylate pantothenate unlike the ketopantoate reductases which are members of the same cluster of orthologous genes 38 coaa and coax are members of different protein families most bacteria contain only one of these enzymes which is typically coax as in cyanobacteria clostridia bacteroidetes or spirochaetes in gamma proteobacteria most species have either coaa or coax only in the bacilli and actinobacteria many species have both enzymes interestingly the lactic acid bacteria encode coaa rather than coax whereas bacteria of the genus staphylococcus have neither coaa nor coax but a third type coaw 39 the two enzymes of b subtilis are distinct from each other as coaa and other enzymes of this family can phosphorylate multiple pantothenate analogs including pantetheine whereas members of the coax like family are highly selective for pantothenate 24 40 41 for metabolites with complex biosynthetic pathways bacteria often use salvage pathways to recycle broken or semi complete precursor molecules in addition to the more costly complete de novo synthesis in b subtilis this is the case for purine nucleotides for the sulfur containing amino acids methionine and cysteine 42 44 and also for coenzyme a as shown in this work this requires the efficient uptake of these precursors which are often available in media as a result of the death of other cells and the concomitant release of metabolites however metabolites that have a low abundance in cells will then also be present at very low concentrations in media suggesting the requirement for high affinity uptake systems in this study we have identified uptake systems for pantothenate and cysteinopantetheine pantothenate is transported by an ecf transporter that obtains energy derived from atp hydrolysis by the two cytoplasmic subunits ecfa1 and ecfa2 the membrane spanning transporter ecft interacts both with the atpase subunits of the complex and with the substrate specific panu protein see fig 3c the ecf transporters are required for the high affinity uptake of vitamins and cofactors as well as of other rare nutrients such as tryptophan or cobalt they are typically composed of the general ecfa1 ecfa2 and ecft proteins and substrate specific binding s proteins 22 b subtilis contains six s proteins as judged from sequence similarity and functional analyses while the substrates for four of these proteins have been identified prior to this work no functional analyses have been performed for panu yhfu and yuig interestingly these two proteins share 26 8 amino acid identity and both are subject to repression of their genes by the bifunctional biotin protein ligase and transcription factor bira 45 indeed the proteins are similar to biotin specific s proteins suggesting a role in biotin uptake most bacteria that contain proteins of this family encode only one of them interestingly several bacteria of the bacilli group contain two and in some cases even three members of this family it is tempting to speculate that these proteins have diverged in evolution to serve the transport of different substrates biotin and pantothenate it will thus be interesting to test the substrate specificity of yuig the panu paralog in b subtilis our suppressor screen of mutants defective in pantothenate synthesis yielded mutations affecting the expression of an abc transporter previously implicated in the uptake of cystine 35 since coenzyme a is essential for bacterial growth these mutations already suggested the possibility of transport of a precursor of coenzyme a by the tcyjklmn abc transporter high expression of this transporter allowed the uptake of this unknown intermediate from complex medium however the transporter was not implicated in the uptake of the potential precursor molecules pantothenate pantetheine and pantethine moreover more than 5 μm pantetheine or even more than 50 μm of pantethine are required for growth in the absence of pantothenate biosynthesis see fig s4 the presence of a precursor molecule in complex medium which can be taken up by tcyjklmn suggested that the abc transporter accumulated a different molecule from the medium it is reasonable to assume that the concentration of pantetheine in complex medium is very low whereas amino acids are likely to be much more abundant thus we considered the possibility that under oxidizing conditions a hybrid molecule between cysteine and pantetheine could be formed and then be taken up by the tcyjklmn transporter as many amino acid transporters are not very substrate specific and cystine and cysteinopantetheine even share the cysteine moiety of the molecule this idea seemed highly attractive and could be proven by experimental analysis cysteinopantetheine is a novel metabolite that has not been described so far as cysteinopantetheine was present in complex medium that contains beef extract it seems safe to assume that this is also the case for natural environments that contain organic material derived from the decay of cells and tissues such as the soil and plant surfaces the typical habitats of b subtilis it is tempting to speculate that more molecules might form hybrids under specific conditions and that the growth requirement for one moiety of such hybrids and the possibility to transport it for the second one may facilitate a rich underground metabolism which still awaits its exploration materials and methods bacterial strains growth conditions and phenotypic characterization e coli dh5α 46 was used for cloning all b subtilis strains used in this study are listed in table s1 all strains are derived from the laboratory strain 168 trpc2 strains from the bkk koo mutant collection 13 had the target genes deleted and replaced by a kanamycin resistance cassette b subtilis and e coli were grown in lysogeny broth lb medium in sporulation medium sp 8 g l nutrient broth 250 mg lmgso 4 7h 2 o 1 g l kcl 4 4 ng l ferric ammonium citrate 0 5 mm cacl 2 10 μm mncl 2 46 47 for testing the requirement for pathway intermediates c minimal medium see https subtiwiki uni goettingen de wiki index php title c minimal medium supplemented with 0 5 glucose c glc 48 was used lb sp or c glc plates were prepared by the addition of 17 g bacto agar l difco to lb and sp respectively dna manipulation and genome sequencing b subtilis was transformed with plasmids genomic dna or pcr products according to the two step protocol 46 47 transformants were selected on sp plates containing erythromycin 2 μg ml plus lincomycin 25 μg ml tetracycline 12 5 μg ml chloramphenicol 5 μg ml kanamycin 10 μg ml or spectinomycin 150 μg ml phusion dna polymerase thermo fisher scientific dreieich germany was used as recommended by the manufacturer dna fragments were purified using the peqgold cycle pure kit peqlab erlangen germany dna sequences were determined by the dideoxy chain termination method 46 chromosomal dna from b subtilis was isolated using the peqgold bacterial dna kit peqlab erlangen germany to identify the mutations in the suppressor mutants their genomic dna was subjected to whole genome sequencing briefly the reads were mapped on the reference genome of b subtilis 168 genbank accession number nc 000964 49 mapping of the reads was performed using the geneious software package biomatters ltd new zealand 50 frequently occurring hitchhiker mutations 51 and silent mutations were omitted from the screen the resulting genome sequences were compared to that of our in house wild type strain single nucleotide polymorphisms were considered as significant when the total coverage depth exceeded 25 reads with a variant frequency of 90 all identified mutations were verified by pcr amplification and sanger sequencing the genome sequences of the three suppressor mutants are accessible at https www ebi ac uk ena browser view prjeb77606 plasmids pdr244 was used to delete the resistance cassettes in the strains of the koo collection as described the deletion results in a cre lox scar 13 the integrative plasmid pgp886 52 was used for the xylose inducible expression of genes in b subtilis upon transformation the plasmid integrates into the xkde gene of prophage pbsx to express the tcyjklmn genes under the control of the xylose inducible promoter we constructed plasmid pgp4018 as follows the tcyjklmn genes were amplified using the primer pair rw812 5 aaatctagagatgaataagcgtaaaggattggttttgc and rw813 ttt gaattc tcatatcaccggctcctttatgtg the dna fragment was digested with xbai and ecori introduced with the pcr primers and ligated to pgp886 linearized with the same enzymes construction of mutant strains by allelic replacement deletion of the coabc panc and tcyjklmn genes was achieved by transformation of b subtilis 168 with pcr products constructed using oligonucleotides to amplify dna fragments flanking the target genes and an appropriate intervening resistance cassette as described previously 53 the integrity of the regions flanking the integrated resistance cassette was verified by sequencing pcr products of about 1 100 bp amplified from the chromosomal dna of the resulting mutant strains see table s1 uhplc hrms analysis of b subtilis extracts and cysteinopantetheine b subtilis was grown to midlogarithmic phase and 15 od 600 units were harvested by centrifugation cells were washed once with tris hcl 10 mm ph7 0 and then quenched in methanol acetonitrile water 40 40 20 vol vol vol cells were further disrupted by ultrasonic bath for 30 min cell debris was removed by centrifugation at 18 000 g at room temperature the supernatant was transferred into micro vials and analyzed by ultrahigh performance liquid chromatography uhplc 1290 infinity agilent technologies coupled to a high resolution mass spectrometer hrms 6540 or 6546 uhd accurate mass q tof lc ms instrument with dual jet stream technology agilent technologies as described 54 the identity of pantothenate was confirmed by an authentic standard cayman chemical company ann arbor mi usa as well as the comparison of the ms ms spectra to those of the nist mass spectral library https chemdata nist gov nist 1351032 positive ionization nist 1351077 negative ionization phosphopantothenate was identified by accurate mass analysis and interpretation of hrms ms spectra in negative ionization with m z 78 959 and m z 96 970 as analytical fragments of the phosphate moiety the detection limit of pantothenate was determined to be 10 fmol per injection with an authentic standard cysteinopantetheine was obtained by overnight incubation of cysteine 5 mm and pantetheine 500 μm in water at room temperature the structure of cysteinopantetheine was confirmed by comparative ms ms analyses under consideration of the characteristic fragments obtained from ms ms spectra of cystine and pantethine both from merck darmstadt germany these reference spectra were obtained from ms ms fragmentation of authentic standards of cystine and pantethine and were further compared to high resolution ms ms spectra from the nist mass spectral library for cystine nist 1190075 negative ionization and nist 1190045 positive ionization for pantethine nist 1271189 positive ionization based on the characteristic fragments of both homodimeric disulfides the identity of cysteinopantetheine was confirmed visualization of global mutant fitness data for all non essential genes of b subtilis the fitness of the corresponding mutants as compared to a wild type strain has been determined under several growth conditions in complex and minimal media 13 to make this information accessible in an intuitive way we added a relative mutant fitness widget to the gene pages of the database subti wiki 19 the fitness scores for each gene and condition were extracted and stored in the subti wiki database for the visualization a bar plot provided by the apache echarts library v4 1 0 was used atomic model generation with colabfold the local installation of colabfold 55 version 1 5 5 released on january 30 2024 which is compatible with alphafold 2 3 2 was used to predict atomic models of the cymr 2 cysk 2 heterotetramer and the ecfa1 ecfa2 ecft panu complex for the jobs the default options were kept a total of five unrelaxed atomic models of cymr 2 cysk 2 and ecfa1 a2 t panu were calculated and subsequently analyzed the models were evaluated using the pae viewer web server 56 the models were ranked from 1 to 5 according to alphafold multimer s model confidence metric a weighted combination of iptm and ptm the predicted template modeling score ptm measures the structural congruence between two folded protein structures while the iptm interface ptm scores interactions between residues of different chains to estimate the accuracy of interfaces the plddt predicted local distance difference test is a confidence measure for the per residue accuracy of the structure the predicted model of the cymr 2 cysk 2 repressor complex was used as a template for a molecular docking with hdock 31 using dsdna of the cymr binding site of the cysk gene 5 cataataccaatacaaatagtcggaaattgaggt for the movie pymol 2 5 http www pymol org was used with the models of the cymr 2 cysk 2 repressor complex with and without dna and a crystal structure of the hexameric cymr pdb 2y75 a morphing animation was created between the c and d chains of the cymr hexamer and the cymr dimer of the cymr 2 cysk 2 repressor complex model acknowledgments the authors are grateful to constantin büttner for helping with some experiments this work was supported by the deutsche forschungsgemeinschaft via the priority program spp1879 project stu 214 16 2 and collaborative research center crc1565 project 469281184 to j s i f and m k were supported by the deutsche forschungsgemeinschaft grk 2172 protect inst 186 822 1 and inst 186 1434 1 r w m k and j s conceived and designed the experiments r w m k c h j d and k f performed the experiments r w m k c h c e j d k f i f and j s analyzed and discussed the data r w m k c e k f i f and j s wrote the manuscript all authors edited and approved the manuscript contributor information jörg stülke email jstuelk gwdg de nancy e freitag university of illinois chicago chicago illinois usa supplemental material the following material is available online at https doi org 10 1128 mbio 01772 24 supplemental figures mbio 01772 24 s0001 pdf figures s1 to s6 10 1128 mbio 01772 24 suf1 legend mbio 01772 24 s0002 pdf legend for movie s1 10 1128 mbio 01772 24 suf2 table s1 mbio 01772 24 s0003 pdf bacterial strains used in this study 10 1128 mbio 01772 24 suf3 movie s1 mbio 01772 24 s0004 mp4 the interaction between cysk and cymr triggers dna binding by cymr 10 1128 mbio 01772 24 suf4 asm does not own the copyrights to supplemental material that may be linked to or accessed through an article the authors have granted asm a non exclusive world wide license to publish the supplemental material files please contact the corresponding author directly for reuse references 1 eggersdorfer m laudert d létinois u mcclymont t medlock j netscher t bonrath w 2012 one hundred years of vitamins a success story of the natural sciences angew chem int ed engl 51 12960 12990 doi 10 1002 anie 201205886 2 acevedo rocha cg gronenberg ls mack m commichau fm genee hj 2019 microbial cell factories for the sustainable manufacturing of b vitamins curr opin biotechnol 56 18 29 doi 10 1016 j copbio 2018 07 006 3 stülke j grüppen a bramkamp m pelzer s 2023 bacillus subtilis a swiss army knife in science and biotechnology j bacteriol 205 e0010223 doi 10 1128 jb 00102 23 4 van dijl jm hecker m 2013 bacillus subtilis from soil bacterium to super secreting cell factory microb cell fact 12 3 doi 10 1186 1475 2859 12 3 5 qian j wang y hu z shi t wang y ye c huang h 2023 bacillus sp as a microbial cell factory advancements and future prospects biotechnol adv 69 108278 doi 10 1016 j biotechadv 2023 108278 6 reuss dr commichau fm gundlach j zhu b stülke j 2016 the blueprint of a minimal cell minibacillus microbiol mol biol rev 80 955 987 doi 10 1128 mmbr 00029 16 7 reuss dr altenbuchner j mäder u rath h ischebeck t sappa pk thürmer a guérin c nicolas p steil l zhu b feussner i klumpp s daniel r commichau fm völker u stülke j 2017 large scale reduction of the bacillus subtilis genome consequences for the transcriptional network resource allocation and metabolism genome res 27 289 299 doi 10 1101 gr 215293 116 8 aguilar suárez r stülke j van dijl jm 2019 less is more toward a genome reduced bacillus cell factory for difficult proteins acs synth biol 8 99 108 doi 10 1021 acssynbio 8b00342 9 van tilburg ay van heel aj stülke j de kok naw rueff a s kuipers op 2020 minibacillus pg10 as a convenient and effective production host for lantibiotics acs synth biol 9 1833 1842 doi 10 1021 acssynbio 0c00194 10 michalik s et al 2021 the bacillus subtilis minimal genome compendium acs synth biol 10 2767 2771 doi 10 1021 acssynbio 1c00339 11 barritt sa dubois coyne se dibble cc 2024 coenzyme a biosynthesis mechanisms of regulation function and disease nat metab 6 1008 1023 doi 10 1038 s42255 024 01059 y 12 ogata y katoh h asayama m chohnan s 2014 role of prokaryotic type i and iii pantothenate kinases in the coenzyme a biosynthetic pathway of bacillus subtilis can j microbiol 60 297 305 doi 10 1139 cjm 2013 0793 13 koo b m kritikos g farelli jd todor h tong k kimsey h wapinski i galardini m cabal a peters jm hachmann a b rudner dz allen kn typas a gross ca 2017 construction and analysis of two genome scale deletion libraries for bacillus subtilis cell syst 4 291 305 doi 10 1016 j cels 2016 12 013 14 ludwig h meinken c matin a stülke j 2002 insufficient expression of the ilv leu operon encoding enzymes of branched chain amino acid biosynthesis limits growth of a bacillus subtilis ccpa mutant j bacteriol 184 5174 5178 doi 10 1128 jb 184 18 5174 5178 2002 15 molle v nakaura y shivers rp yamaguchi h losick r fujita y sonenshein al 2003 additional targets of the bacillus subtilis global regulator cody identified by chromatin immunoprecipitation and genome wide transcript analysis j bacteriol 185 1911 1922 doi 10 1128 jb 185 6 1911 1922 2003 16 tojo s satomura t morisaki k yoshida k i hirooka k fujita y 2004 negative transcriptional regulation of the ilv leu operon for biosynthesis of branched chain amino acids through the bacillus subtilis global regulator tnra j bacteriol 186 7971 7979 doi 10 1128 jb 186 23 7971 7979 2004 17 warneke r herzberg c daniel r hormes b stülke j 2024 control of three carbon amino acid homeostasis by promiscuous importers and exporters in bacillus subtilis role of the sleeping beauty amino acid exporters mbio 15 e0345623 doi 10 1128 mbio 03456 23 18 deng s zhang j cai z li y 2015 characterization of l aspartate α decarboxylase from bacillus subtilis sheng wu gong cheng xue bao 31 1184 1193 19 pedreira t elfmann c stülke j 2022 the current state of subtiwiki the database for the model organism bacillus subtilis nucleic acids res 50 d875 d882 doi 10 1093 nar gkab943 20 tyagi r lee y t guddat lw duggleby rg 2005 probing the mechanism of the bifunctional enzyme ketol acid reductoisomerase by site directed mutagenesis of the active site febs j 272 593 602 doi 10 1111 j 1742 4658 2004 04506 x 21 eitinger t rodionov da grote m schneider e 2011 canonical and ecf type atp binding cassette importers in prokaryotes diversity in modular organization and cellular functions fems microbiol rev 35 3 67 doi 10 1111 j 1574 6976 2010 00230 x 22 rempel s stanek wk slotboom dj 2019 ecf type atp binding cassette transporters annu rev biochem 88 551 576 doi 10 1146 annurev biochem 013118 111705 23 thangaratnarajah c nijland m borges araújo l jeucken a rheinberger j marrink sj souza pct paulino c slotboom dj 2023 expulsion mechanism of the substrate translocating subunit in ecf transporters nat commun 14 4484 doi 10 1038 s41467 023 40266 1 24 balibar cj hollis symynkywicz mf tao j 2011 pantethine rescues phosphopantothenoylcysteine synthetase and phosphopantothenoylcysteine decarboxylase deficiency in escherichia coli but not in pseudomonas aeruginosa j bacteriol 193 3304 3312 doi 10 1128 jb 00334 11 25 peters jm colavin a shi h czarny tl larson mh wong s hawkins js lu chs koo b m marta e shiver al whitehead eh weissman js brown ed qi ls huang kc gross ca 2016 a comprehensive crispr based functional analysis of essential genes in bacteria cell 165 1493 1506 doi 10 1016 j cell 2016 05 003 26 van der ploeg jr barone m leisinger t 2001 functional analysis of the bacillus subtilis cysk and cysji genes fems microbiol lett 201 29 35 doi 10 1111 j 1574 6968 2001 tb10728 x 27 even s burguière p auger s soutourina o danchin a martin verstraete i 2006 global control of cysteine metabolism by cymr in bacillus subtilis j bacteriol 188 2184 2197 doi 10 1128 jb 188 6 2184 2197 2006 28 shepard w soutourina o courtois e england p haouz a martin verstraete i 2011 insights into the rrf2 repressor family the structure of cymr the global cysteine regulator of bacillus subtilis febs j 278 2689 2701 doi 10 1111 j 1742 4658 2011 08195 x 29 tanous c soutourina o raynal b hullo m f mervelet p gilles a m noirot p danchin a england p martin verstraete i 2008 the cymr regulator in complex with the enzyme cysk controls cysteine metabolism in bacillus subtilis j biol chem 283 35551 35560 doi 10 1074 jbc m805951200 30 evans r o neill m pritzel a antropova n senior a green t žídek a bates r blackwell s yim j ronneberger o bodenstein s zielinski m bridgland a potapenko a cowie a tunyasuvunakool k jain r clancy e kohli p jumper j hassabis d 2022 protein complex prediction with alphafold multimer biorxiv doi 10 1101 2021 10 04 463034 31 yan y tao h he j huang s y 2020 the hdock server for integrated protein protein docking nat protoc 15 1829 1852 doi 10 1038 s41596 020 0312 x 32 burguière p auger s hullo m f danchin a martin verstraete i 2004 three different systems participate in l cystine uptake in bacillus subtilis j bacteriol 186 4875 4884 doi 10 1128 jb 186 15 4875 4884 2004 33 klewing a koo b m krüger l poehlein a reuss d daniel r gross ca stülke j 2020 resistance to serine in bacillus subtilis identification of the serine transporter ybec and of a metabolic network that links serine and threonine metabolism environ microbiol 22 3937 3949 doi 10 1111 1462 2920 15179 34 wicke d meissner j warneke r elfmann c stülke j 2023 understudied proteins and understudied functions in the model bacterium bacillus subtilis a major challenge in current research mol microbiol 120 8 19 doi 10 1111 mmi 15053 35 meissner j königshof m wrede k warneke r mardoukhi msy commichau fm stülke j 2024 control of asparagine homeostasis in bacillus subtilis identification of promiscuous amino acid importers and exporters j bacteriol 206 e0042023 doi 10 1128 jb 00420 23 36 jackowski s rock co 1984 metabolism of 4 phosphopantetheine in escherichia coli j bacteriol 158 115 120 doi 10 1128 jb 158 1 115 120 1984 37 nicolas p mäder u dervyn e rochat t leduc a pigeonneau n bidnenko e marchadier e hoebeke m aymerich s et al 2012 condition dependent transcriptome reveals high level regulatory architecture in bacillus subtilis science 335 1103 1106 doi 10 1126 science 1206848 38 galperin my wolf yi makarova ks vera alvarez r landsman d koonin ev 2021 cog database update focus on microbial diversity model organisms and widespread pathogens nucleic acids res 49 d274 d281 doi 10 1093 nar gkaa1018 39 leonardi r chohnan s zhang y m virga kg lee re rock co jackowski s 2005 a pantothenate kinase from staphylococcus aureus refractory to feedback regulation by coenzyme a j biol chem 280 3314 3322 doi 10 1074 jbc m411608200 40 ivey ra zhang y m virga kg hevener k lee re rock co jackowski s park h w 2004 the structure of the pantothenate kinase adp pantothenate ternary complex reveals the relationship between the binding sites for substrate allosteric regulator and antimetabolites j biol chem 279 35622 35629 doi 10 1074 jbc m403152200 41 hong bs yun mk zhang y m chohnan s rock co white sw jackowski s park h w leonardi r 2006 prokaryotic type ii and type iii pantothenate kinases the same monomer fold creates dimers with distinct catalytic properties structure 14 1251 1261 doi 10 1016 j str 2006 06 008 42 christiansen lc schou s nygaard p saxild hh 1997 xanthine metabolism in bacillus subtilis characterization of the xpt pbux operon and evidence for purine and nitrogen controlled expression of genes involved in xanthine salvage and catabolism j bacteriol 179 2540 2550 doi 10 1128 jb 179 8 2540 2550 1997 43 hullo m f auger s soutourina o barzu o yvon m danchin a martin verstraete i 2007 conversion of methionine to cysteine in bacillus subtilis and its regulation j bacteriol 189 187 197 doi 10 1128 jb 01273 06 44 sekowska a danchin a 2002 the methionine salvage pathway in bacillus subtilis bmc microbiol 2 8 doi 10 1186 1471 2180 2 8 45 lee jm zhang s saha s santa anna s jiang c perkins j 2001 rna expression analysis using an antisense bacillus subtilis genome array j bacteriol 183 7371 7380 doi 10 1128 jb 183 24 7371 7380 2001 46 sambrook j fritsch ef maniatis t 1989 molecular cloning a laboratory manual 2nd ed cold spring harbor laboratory cold spring harbor n y 47 kunst f rapoport g 1995 salt stress is an environmental signal affecting degradative enzyme synthesis in bacillus subtilis j bacteriol 177 2403 2407 doi 10 1128 jb 177 9 2403 2407 1995 48 meinken c blencke hm ludwig h stülke j 2003 expression of the glycolytic gapa operon in bacillus subtilis differential syntheses of proteins encoded by the operon microbiol reading 149 751 761 doi 10 1099 mic 0 26078 0 49 barbe v cruveiller s kunst f lenoble p meurice g sekowska a vallenet d wang t moszer i médigue c danchin a 2009 from a consortium sequence to a unified sequence the bacillus subtilis 168 reference genome a decade later microbiol reading 155 1758 1775 doi 10 1099 mic 0 027839 0 50 kearse m moir r wilson a stones havas s cheung m sturrock s buxton s cooper a markowitz s duran c thierer t ashton b meintjes p drummond a 2012 geneious basic an integrated and extendable desktop software platform for the organization and analysis of sequence data bioinformatics 28 1647 1649 doi 10 1093 bioinformatics bts199 51 reuss dr fasshauer p mroch pj ul haq i koo b m pöhlein a gross ca daniel r brantl s stülke j 2019 topoisomerase iv can functionally replace all type 1a topoisomerases in bacillus subtilis nucleic acids res 47 5231 5242 doi 10 1093 nar gkz260 52 gerwig j kiley tb gunka k stanley wall n stülke j 2014 the protein tyrosine kinases epsb and ptka differentially affect biofilm formation in bacillus subtilis microbiol reading 160 682 691 doi 10 1099 mic 0 074971 0 53 diethmaier c newman ja kovács at kaever v herzberg c rodrigues c boonstra m kuipers op lewis rj stülke j 2014 the ymdb phosphodiesterase is a global regulator of late adaptive responses in bacillus subtilis j bacteriol 196 265 275 doi 10 1128 jb 00826 13 54 feussner k abreu in klein m feussner i 2023 metabolite fingerprinting a powerful metabolomics approach for marker identification and functional gene annotation methods enzymol 680 325 350 doi 10 1016 bs mie 2022 08 015 55 mirdita m schütze k moriwaki y heo l ovchinnikov s steinegger m 2022 colabfold making protein folding accessible to all nat methods 19 679 682 doi 10 1038 s41592 022 01488 1 56 elfmann c stülke j 2023 pae viewer a webserver for the interactive visualization of the predicted aligned error for multimer structure predictions and crosslinks nucleic acids res 51 w404 w410 doi 10 1093 nar gkad350 associated data supplementary materials supplemental figures mbio 01772 24 s0001 pdf figures s1 to s6 10 1128 mbio 01772 24 suf1 legend mbio 01772 24 s0002 pdf legend for movie s1 10 1128 mbio 01772 24 suf2 table s1 mbio 01772 24 s0003 pdf bacterial strains used in this study 10 1128 mbio 01772 24 suf3 movie s1 mbio 01772 24 s0004 mp4 the interaction between cysk and cymr triggers dna binding by cymr 10 1128 mbio 01772 24 suf4",
+  "schema_version": 1
+ }
+}

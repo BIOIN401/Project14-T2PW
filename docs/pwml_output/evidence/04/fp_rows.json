@@ -1,0 +1,317 @@
+[
+ {
+  "paper": "PMC12421875",
+  "mode": "pathwhiz",
+  "date": "2026-10-22",
+  "cls": "partial_match",
+  "inputs": [
+   "1,4-dihydroxy-2-naphthoic acid",
+   "Dimethylallylpyrophosphate"
+  ],
+  "outputs": [
+   "demethylmenaquinone (DMK)"
+  ],
+  "enzymes": [
+   "MenA complex"
+  ],
+  "gold": [
+   "R8"
+  ],
+  "evid": "paper_text_missing",
+  "missing": [
+   "prenyl diphosphate"
+  ]
+ },
+ {
+  "paper": "PMC12096016",
+  "mode": "research",
+  "date": "2026-08-18",
+  "cls": "partial_match",
+  "inputs": [
+   "2,3-dihydroxybenzoic acid (2,3-DHB)",
+   "Adenosine triphosphate"
+  ],
+  "outputs": [
+   "enterobactin"
+  ],
+  "enzymes": [
+   "EntE",
+   "EntF"
+  ],
+  "gold": [
+   "R5"
+  ],
+  "evid": "paper_text_missing",
+  "missing": [
+   "L-serine"
+  ]
+ },
+ {
+  "paper": "PMC12312563",
+  "mode": "research",
+  "date": "2026-08-21",
+  "cls": "unsupported",
+  "inputs": [
+   "Oxoglutaric acid"
+  ],
+  "outputs": [
+   "intermediate I"
+  ],
+  "enzymes": [
+   "MenD"
+  ],
+  "gold": [],
+  "evid": "paper_text_missing",
+  "missing": null
+ },
+ {
+  "paper": "PMC12312563",
+  "mode": "research",
+  "date": "2026-08-21",
+  "cls": "unsupported",
+  "inputs": [
+   "intermediate I",
+   "isochorismate"
+  ],
+  "outputs": [
+   "intermediate II"
+  ],
+  "enzymes": [
+   "MenD"
+  ],
+  "gold": [],
+  "evid": "paper_text_missing",
+  "missing": null
+ },
+ {
+  "paper": "PMC12312563",
+  "mode": "research",
+  "date": "2026-08-21",
+  "cls": "unsupported",
+  "inputs": [
+   "intermediate II"
+  ],
+  "outputs": [
+   "SEPHCHC"
+  ],
+  "enzymes": [
+   "MenD"
+  ],
+  "gold": [],
+  "evid": "paper_text_missing",
+  "missing": null
+ },
+ {
+  "paper": "PMC12096016",
+  "mode": "research",
+  "date": "2026-08-21",
+  "cls": "paper_stated_summary",
+  "inputs": [
+   "chorismate"
+  ],
+  "outputs": [
+   "2,3-dihydro-2,3-dihydroxybenzoate",
+   "pyruvate"
+  ],
+  "enzymes": [
+   "2,3-dihydroxybenzoic acid",
+   "EntB"
+  ],
+  "gold": [
+   "S2"
+  ],
+  "evid": "paper_text_missing",
+  "missing": null
+ },
+ {
+  "paper": "PMC12096016",
+  "mode": "pathwhiz",
+  "date": "2026-08-21",
+  "cls": "paper_stated_off_pathway",
+  "inputs": [
+   "pyruvate",
+   "NADH"
+  ],
+  "outputs": [
+   "lactate",
+   "NAD+"
+  ],
+  "enzymes": [
+   "lactate dehydrogenase"
+  ],
+  "gold": [
+   "O2"
+  ],
+  "evid": "paper_text_missing",
+  "missing": null
+ },
+ {
+  "paper": "PMC12096016",
+  "mode": "research",
+  "date": "2026-08-22",
+  "cls": "unsupported",
+  "inputs": [
+   "apo-EntB"
+  ],
+  "outputs": [
+   "holo-EntB"
+  ],
+  "enzymes": [
+   "EntD",
+   "apo-EntB",
+   "EntB"
+  ],
+  "gold": [],
+  "evid": "paper_text_missing",
+  "missing": null
+ },
+ {
+  "paper": "PMC12096016",
+  "mode": "research",
+  "date": "2026-08-24",
+  "cls": "paper_stated_off_pathway",
+  "inputs": [
+   "pyruvate",
+   "NADH"
+  ],
+  "outputs": [
+   "lactate",
+   "NAD+"
+  ],
+  "enzymes": [
+   "EntB"
+  ],
+  "gold": [
+   "O2"
+  ],
+  "evid": "paper_text_missing",
+  "missing": null
+ },
+ {
+  "paper": "PMC12096016",
+  "mode": "pathwhiz",
+  "date": "2026-08-24",
+  "cls": "paper_stated_off_pathway",
+  "inputs": [
+   "enterobactin",
+   "Fe3"
+  ],
+  "outputs": [
+   "ferric-enterobactin complex"
+  ],
+  "enzymes": [],
+  "gold": [
+   "O4"
+  ],
+  "evid": "paper_text_missing",
+  "missing": null
+ },
+ {
+  "paper": "PMC12096016",
+  "mode": "pathwhiz",
+  "date": "2026-08-27",
+  "cls": "partial_match",
+  "inputs": [
+   "2,3-dihydroxybenzoyl-phosphopantetheinyl-EntB",
+   "L-serine"
+  ],
+  "outputs": [
+   "enterobactin"
+  ],
+  "enzymes": [
+   "EntF complex",
+   "enterobactin synthase complex"
+  ],
+  "gold": [
+   "R5"
+  ],
+  "evid": "paper_text_missing",
+  "missing": [
+   "2,3-dihydroxybenzoic acid"
+  ]
+ },
+ {
+  "paper": "PMC12096016",
+  "mode": "pathwhiz",
+  "date": "2026-08-27",
+  "cls": "unsupported",
+  "inputs": [
+   "apo-EntB",
+   "Pantetheine 4'-phosphate"
+  ],
+  "outputs": [
+   "holo-EntB"
+  ],
+  "enzymes": [
+   "EntD complex",
+   "isochorismatase"
+  ],
+  "gold": [],
+  "evid": "paper_text_missing",
+  "missing": null
+ },
+ {
+  "paper": "PMC12096016",
+  "mode": "pathwhiz",
+  "date": "2026-08-27",
+  "cls": "paper_stated_off_pathway",
+  "inputs": [
+   "pyruvate",
+   "NADH"
+  ],
+  "outputs": [
+   "lactate",
+   "NAD+"
+  ],
+  "enzymes": [
+   "porcine lactate dehydrogenase"
+  ],
+  "gold": [
+   "O2"
+  ],
+  "evid": "paper_text_missing",
+  "missing": null
+ },
+ {
+  "paper": "PMC12096016",
+  "mode": "pathwhiz",
+  "date": "2026-09-02",
+  "cls": "unsupported",
+  "inputs": [
+   "2,3-dihydroxybenzoic acid",
+   "Adenosine triphosphate"
+  ],
+  "outputs": [
+   "Adenosine monophosphate"
+  ],
+  "enzymes": [
+   "EntE complex"
+  ],
+  "gold": [],
+  "evid": "paper_text_missing",
+  "missing": null
+ },
+ {
+  "paper": "PMC12096016",
+  "mode": "pathwhiz",
+  "date": "2026-09-02",
+  "cls": "partial_match",
+  "inputs": [
+   "L-serine"
+  ],
+  "outputs": [
+   "enterobactin"
+  ],
+  "enzymes": [
+   "EntF complex",
+   "EntD complex"
+  ],
+  "gold": [
+   "R5"
+  ],
+  "evid": "paper_text_missing",
+  "missing": [
+   "2,3-dihydroxybenzoic acid"
+  ]
+ }
+]

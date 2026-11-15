@@ -1,0 +1,206 @@
+{
+  "label": "fp-cimplB",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/fp",
+    "-q",
+    "--basetemp=C:/t/tmpbase/cimplB-34001",
+    "tests/test_batch_driver_seam_golden.py",
+    "tests/test_c011_freeze_seam_golden_equivalence.py"
+  ],
+  "cwd": "C:\\t\\fp",
+  "started_at": "2026-11-14T03:57:40+00:00",
+  "finished_at": "2026-11-14T03:58:25+00:00",
+  "duration_seconds": 44.57798919999914,
+  "timeout_seconds": 1500.0,
+  "root_pid": 526436,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 523116,
+      "name": "python.exe",
+      "ppid": 526436
+    },
+    {
+      "pid": 528204,
+      "name": "git.exe",
+      "ppid": 523116
+    },
+    {
+      "pid": 523628,
+      "name": "git.exe",
+      "ppid": 523116
+    },
+    {
+      "pid": 527612,
+      "name": "git.exe",
+      "ppid": 523116
+    },
+    {
+      "pid": 528180,
+      "name": "python.exe",
+      "ppid": 523116
+    },
+    {
+      "pid": 519372,
+      "name": "python.exe",
+      "ppid": 528180
+    },
+    {
+      "pid": 526308,
+      "name": "python.exe",
+      "ppid": 527328
+    },
+    {
+      "pid": 527328,
+      "name": "python.exe",
+      "ppid": 523116
+    },
+    {
+      "pid": 527980,
+      "name": "git.exe",
+      "ppid": 526308
+    },
+    {
+      "pid": 528480,
+      "name": "git.exe",
+      "ppid": 526308
+    },
+    {
+      "pid": 528788,
+      "name": "python.exe",
+      "ppid": 523116
+    },
+    {
+      "pid": 528784,
+      "name": "python.exe",
+      "ppid": 528788
+    },
+    {
+      "pid": 528712,
+      "name": "python.exe",
+      "ppid": 528796
+    },
+    {
+      "pid": 528796,
+      "name": "python.exe",
+      "ppid": 523116
+    },
+    {
+      "pid": 527552,
+      "name": "python.exe",
+      "ppid": 523116
+    },
+    {
+      "pid": 528960,
+      "name": "python.exe",
+      "ppid": 527552
+    },
+    {
+      "pid": 527592,
+      "name": "python.exe",
+      "ppid": 523116
+    },
+    {
+      "pid": 529132,
+      "name": "python.exe",
+      "ppid": 527592
+    },
+    {
+      "pid": 528608,
+      "name": "python.exe",
+      "ppid": 523116
+    },
+    {
+      "pid": 529256,
+      "name": "python.exe",
+      "ppid": 528608
+    }
+  ],
+  "descendants_terminated": [
+    519372,
+    523116,
+    523628,
+    526308,
+    527328,
+    527552,
+    527592,
+    527612,
+    527980,
+    528180,
+    528204,
+    528480,
+    528608,
+    528712,
+    528784,
+    528788,
+    528796,
+    528960,
+    529132,
+    529256
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 251140,
+      "name": "python.exe"
+    },
+    {
+      "pid": 404548,
+      "name": "python.exe"
+    },
+    {
+      "pid": 407620,
+      "name": "python.exe"
+    },
+    {
+      "pid": 520636,
+      "name": "python.exe"
+    },
+    {
+      "pid": 526620,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/fp/docs/pwml_output/evidence/final_payload_p5/tests/cimplB.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\fp\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\fp",
+    "repo_head": "5d5358e6d602dc8f504e16fe699691a7555c9466",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "fp5-cimpl",
+    "token": "fp5-cimpl:520636:45a54acf6578da2c",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

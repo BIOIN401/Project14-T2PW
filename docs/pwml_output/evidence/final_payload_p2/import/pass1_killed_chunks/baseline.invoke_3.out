@@ -1,0 +1,53 @@
+[pwi] OK       45.7s  pathway.review_required.pwml  errors=15
+[pwi] OK       15.5s  pathway.review_required.pwml  errors=3
+[pwi] OK       15.2s  pathway.review_required.pwml  errors=3
+[pwi] OK       10.6s  pathway.review_required.pwml  errors=17
+[pwi] OK       21.9s  pathway.review_required.pwml  errors=5
+[pwi] OK        0.8s  pathway.review_required.pwml  errors=1
+[pwi] OK       19.6s  pathway.review_required.pwml  errors=3
+[pwi] OK        0.6s  pathway.review_required.pwml  errors=1
+[pwi] OK       12.0s  pathway.review_required.pwml  errors=5
+[pwi] OK        1.4s  pathway.review_required.pwml  errors=5
+[pwi] OK       21.6s  pathway.review_required.pwml  errors=15
+[pwi] OK       30.8s  pathway.review_required.pwml  errors=2
+[pwi] OK       16.0s  pathway.review_required.pwml  errors=9
+[pwi] OK       13.5s  pathway.review_required.pwml  errors=7
+[pwi] OK       17.4s  pathway.review_required.pwml  errors=7
+[pwi] OK       17.6s  pathway.review_required.pwml  errors=2
+[pwi] OK        1.6s  pathway.review_required.pwml  errors=9
+[pwi] OK        1.1s  pathway.review_required.pwml  errors=10
+[pwi] OK       24.8s  pathway.review_required.pwml  errors=3
+[pwi] OK        6.1s  pathway.review_required.pwml  errors=2
+[pwi] OK       23.2s  pathway.review_required.pwml  errors=8
+[pwi] OK        0.9s  pathway.review_required.pwml  errors=2
+[pwi] OK        0.6s  pathway.pwml  errors=1
+[pwi] OK        1.6s  pathway.review_required.pwml  errors=3
+[pwi] OK        0.9s  pathway.review_required.pwml  errors=3
+[pwi] summary: {"files": 60, "success_true": 59, "success_true_no_errors": 0, "success_false": 1, "total_seconds": 1284.0}
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\fp\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 76b0d6ebd31ab10bc8b349c09c95860bede9d0ef  [git, worktree dirty=False]
+label                   : pwi-baseline-3
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -X utf8 C:/t/pwi/t2pw/tools/pathwhiz_import/run_import.py --list C:/t/fp/docs/pwml_output/evidence/final_payload_p2/import/list_baseline.txt --out C:/t/fp/docs/pwml_output/evidence/final_payload_p2/import/baseline --resume --chunk 10
+cwd                     : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 606200 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 400.67 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 30  606780:python.exe, 607108:docker.exe, 602628:docker.exe, 601496:docker-compose.exe, 606048:docker.exe, 605788:docker-compose.exe, 593828:docker.exe, 606152:docker-compose.exe, 603928:docker-compose.exe, 604508:docker.exe, 606028:docker-compose.exe, 607048:docker-compose.exe, 606728:docker.exe, 607140:docker-compose.exe, 606088:docker-compose.exe, 604460:docker.exe, 609148:docker-compose.exe, 609400:docker-compose.exe, 609700:docker.exe, 609736:docker-compose.exe, 609868:docker-compose.exe, 610780:docker.exe, 611840:docker-compose.exe, 606084:docker-compose.exe, 607236:docker-compose.exe, 612144:docker.exe, 556920:docker-compose.exe, 611708:docker-compose.exe, 612232:docker.exe, 612312:docker-compose.exe
+descendants terminated  : 30  556920, 593828, 601496, 602628, 603928, 604460, 604508, 605788, 606028, 606048, 606084, 606088, 606152, 606728, 606780, 607048, 607108, 607140, 607236, 609148, 609400, 609700, 609736, 609868, 610780, 611708, 611840, 612144, 612232, 612312
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/fp/docs/pwml_output/evidence/final_payload_p2/import/baseline.bounded_3.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=pwi  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

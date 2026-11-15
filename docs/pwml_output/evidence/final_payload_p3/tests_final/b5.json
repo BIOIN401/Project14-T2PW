@@ -1,0 +1,95 @@
+{
+  "label": "fp-b5",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/fp",
+    "-q",
+    "--basetemp=C:/t/tmpbase/b5-8225",
+    "tests/test_final_payload_fill.py",
+    "tests/test_final_payload_meta.py",
+    "tests/test_final_payload_vocabulary.py",
+    "tests/test_final_payload_writer_fixes.py",
+    "tests/test_pwml_writer.py"
+  ],
+  "cwd": "C:\\t\\fp",
+  "started_at": "2026-11-12T21:16:36+00:00",
+  "finished_at": "2026-11-12T21:16:39+00:00",
+  "duration_seconds": 2.8810684000000037,
+  "timeout_seconds": 540.0,
+  "root_pid": 224812,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 224616,
+      "name": "python.exe",
+      "ppid": 224812
+    }
+  ],
+  "descendants_terminated": [
+    224616
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 53536,
+      "name": "python.exe"
+    },
+    {
+      "pid": 218224,
+      "name": "python.exe"
+    },
+    {
+      "pid": 220040,
+      "name": "python.exe"
+    },
+    {
+      "pid": 220728,
+      "name": "python.exe"
+    },
+    {
+      "pid": 224952,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/fp/docs/pwml_output/evidence/final_payload_p3/tests_final/b5.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\fp\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\fp",
+    "repo_head": "3e782d76d2c6f7ba821e064fde857ad4d8eac8bc",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": true,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "fp",
+    "token": "fp:224952:d6de7d30d1fbc68c",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

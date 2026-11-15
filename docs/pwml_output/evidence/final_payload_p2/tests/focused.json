@@ -1,0 +1,97 @@
+{
+  "label": "job",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "C:/t/fp/docs/pwml_recovery_sprint/evidence/pinned_pytest.py",
+    "--expect-tree",
+    "C:/t/fp",
+    "-q",
+    "--basetemp=C:/t/fp_tmp/p2tests/focused",
+    "tests/test_final_payload_writer_fixes.py",
+    "tests/test_final_payload_fill.py",
+    "tests/test_final_payload_meta.py",
+    "tests/test_pwml_writer.py",
+    "tests/test_clean_model_builder.py",
+    "tests/test_clean_model_fill_fill.py",
+    "tests/test_clean_model_fill_http_cache.py",
+    "tests/test_clean_model_fill_sources.py",
+    "tests/test_clean_model_kgml.py",
+    "tests/test_clean_model_model.py",
+    "tests/test_clean_model_sbml.py"
+  ],
+  "cwd": "C:\\t\\fp",
+  "started_at": "2026-11-12T02:04:22+00:00",
+  "finished_at": "2026-11-12T02:04:26+00:00",
+  "duration_seconds": 3.8059639999992214,
+  "timeout_seconds": 540.0,
+  "root_pid": 525888,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 531444,
+      "name": "python.exe",
+      "ppid": 525888
+    }
+  ],
+  "descendants_terminated": [
+    531444
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 508088,
+      "name": "python.exe"
+    },
+    {
+      "pid": 508144,
+      "name": "python.exe"
+    },
+    {
+      "pid": 528692,
+      "name": "python.exe"
+    },
+    {
+      "pid": 532960,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/fp/docs/pwml_output/evidence/final_payload_p2/tests/focused.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\fp\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\fp",
+    "repo_head": "03e4c241a5f221c6308e86b4e76b198a5d7fc1a9",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "p2-focused",
+    "token": "p2-focused:532960:4da001e200988483",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

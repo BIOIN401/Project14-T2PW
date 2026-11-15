@@ -1,0 +1,31 @@
+[pwi] cloning C:/t/pwpr/h04 -> C:\t\pwi\p5w\liveG3
+command failed (128): git clone --local --quiet C:/t/pwpr/h04 C:\t\pwi\p5w\liveG3
+fatal: destination path 'C:\t\pwi\p5w\liveG3' already exists and is not an empty directory.
+
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\fp\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 34cb102aa5c8f7ee2ab7f54e973240eec9a2f4a8  [git, worktree dirty=True]
+label                   : pwi-liveG3
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe tools/pathwhiz_import/run_import.py C:/t/fp/docs/pwml_output/evidence/final_payload_p5/liveG/pwml/pathwhiz.pwml C:/t/fp/docs/pwml_output/evidence/final_payload_p5/liveG/pwml/nameonly_r2.pwml --smpdb-src C:/t/pwpr/h04 --work C:/t/pwi/p5w/liveG3 --out C:/t/pwi/p5w/liveG3/out
+cwd                     : C:\t\pwi\t2pw
+root PID / process group: 35184 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 1500 s
+duration                : 0.36 s
+exit reason             : nonzero
+exit code (real)        : 1
+returned code           : 1
+descendants observed    : 1  35448:python.exe
+descendants terminated  : 1  35448
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/fp/docs/pwml_output/evidence/final_payload_p5/liveG/import3.wrapper.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=pwi-liveG3  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

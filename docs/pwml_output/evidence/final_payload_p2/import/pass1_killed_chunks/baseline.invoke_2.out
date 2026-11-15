@@ -1,0 +1,45 @@
+[pwi] FAIL     35.0s  pathway.review_required.pwml  errors=5
+[pwi] OK       46.3s  pathway.review_required.pwml  errors=12
+[pwi] OK       22.1s  pathway.review_required.pwml  errors=10
+[pwi] OK       41.1s  pathway.review_required.pwml  errors=22
+[pwi] OK       17.8s  pathway.review_required.pwml  errors=1
+[pwi] OK        6.6s  pathway.pwml  errors=4
+[pwi] OK       10.2s  pathway.pwml  errors=8
+[pwi] OK       42.4s  pathway.review_required.pwml  errors=23
+[pwi] OK       42.4s  pathway.review_required.pwml  errors=18
+[pwi] OK       13.4s  pathway.review_required.pwml  errors=5
+[pwi] OK       76.2s  pathway.review_required.pwml  errors=28
+[pwi] OK       10.3s  pathway.review_required.pwml  errors=3
+[pwi] OK       12.7s  pathway.review_required.pwml  errors=8
+[pwi] OK       17.6s  pathway.review_required.pwml  errors=5
+[pwi] OK       22.4s  pathway.review_required.pwml  errors=3
+[pwi] OK       10.2s  pathway.review_required.pwml  errors=4
+[pwi] OK       36.1s  pathway.review_required.pwml  errors=14
+[pwi] OK       18.3s  pathway.review_required.pwml  errors=4
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\fp\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ 76b0d6ebd31ab10bc8b349c09c95860bede9d0ef  [git, worktree dirty=False]
+label                   : pwi-baseline-2
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -X utf8 C:/t/pwi/t2pw/tools/pathwhiz_import/run_import.py --list C:/t/fp/docs/pwml_output/evidence/final_payload_p2/import/list_baseline.txt --out C:/t/fp/docs/pwml_output/evidence/final_payload_p2/import/baseline --resume --chunk 10
+cwd                     : c:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW
+root PID / process group: 598464 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 566.41 s
+exit reason             : timeout
+exit code (real)        : None
+returned code           : 124
+descendants observed    : 21  580808:python.exe, 598060:docker.exe, 584444:docker.exe, 597820:docker-compose.exe, 598168:docker.exe, 598832:docker-compose.exe, 598268:docker-compose.exe, 598592:docker.exe, 598908:docker-compose.exe, 598844:docker.exe, 597880:docker-compose.exe, 598584:docker-compose.exe, 597984:docker.exe, 598416:docker-compose.exe, 595096:docker-compose.exe, 588212:docker-compose.exe, 601760:docker.exe, 603032:docker-compose.exe, 598236:docker-compose.exe, 602904:docker.exe, 537152:docker-compose.exe
+descendants terminated  : 21  537152, 580808, 584444, 588212, 595096, 597820, 597880, 597984, 598060, 598168, 598236, 598268, 598416, 598584, 598592, 598832, 598844, 598908, 601760, 602904, 603032
+graceful attempted      : True
+forced                  : True
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/fp/docs/pwml_output/evidence/final_payload_p2/import/baseline.bounded_2.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=pwi  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================

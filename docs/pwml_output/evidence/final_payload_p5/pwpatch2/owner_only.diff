@@ -1,0 +1,21 @@
+diff --git a/lib/pwml_parser.rb b/lib/pwml_parser.rb
+index 48055c6..cabad07 100644
+--- a/lib/pwml_parser.rb
++++ b/lib/pwml_parser.rb
+@@ -569,6 +569,16 @@ class PwmlParser
+         remap_hash_name = '@sub_pathway_list'
+         remap_value = @sub_pathway_list[node.content]
+         hash[node.name.underscore.to_sym] = remap_value
++      elsif node.name == 'element-id'
++        # element-id is polymorphic, so the id map is chosen by the sibling element-type.
++        # element-type comes after element-id in exported pwml, so read it from the xml, not the hash
++        element_type = node.parent.at_xpath('element-type').try(:content)
++        if element_type.present? && instance_variable_defined?("@#{element_type.underscore}_list")
++          remap_hash_name = "@#{element_type.underscore}_list"
++          remap_value = instance_variable_get(remap_hash_name)[node.content]
++        end
++        # Fall back to the raw value when there is no map, as before
++        hash[node.name.underscore.to_sym] = remap_value || node.content
+       elsif node.name == 'direction'
+         hash[node.name.underscore.to_sym] = convert_direction(node.content)
+       else

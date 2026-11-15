@@ -1,0 +1,29 @@
+LLM returned an empty completion for Stage 2 inference (model deepseek/deepseek-v4-flash, finish_reason=length) on attempt 1/3; retrying as a transient.
+{"arm": "on", "deficient": 0, "draws": "1", "exception": null, "failure": null, "llm_by_stage": {"Stage 1 extraction": {"errors": 0, "requests": 2, "seconds": 141.1}, "Stage 2 inference": {"errors": 0, "requests": 5, "seconds": 636.6}, "preprocessor": {"errors": 0, "requests": 1, "seconds": 37.5}}, "llm_requests_total": 8, "paper": "PMC12444477", "rep": "2", "repair_calls": 0, "repair_error": null, "repairs": 0, "stage1_identical_pre_post": true, "stage1_only": false, "started": "2026-11-13 23:51:20", "wall_seconds": 820.3}
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\fp\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ c96cf47966cea71a9d3d7aeb10713a6359807bc1  [git, worktree dirty=False]
+label                   : fp-cimpl-PMC12444477-on-2
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe C:/t/fp/docs/pwml_output/evidence/final_payload_p5/c_live/run_case.py --paper PMC12444477 --arm on --rep 2 --out C:/t/fp/docs/pwml_output/evidence/final_payload_p5/c_live/runs
+cwd                     : C:\t\fp
+root PID / process group: 621532 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 2700 s
+duration                : 831.99 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 1  629592:python.exe
+descendants terminated  : 1  629592
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/fp/docs/pwml_output/evidence/final_payload_p5/c_live/logs/PMC12444477-on-2.wrapper.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=fp5-cimpl  acquired=True  released=True
+pre-existing (reported, NEVER killed): 5
+================================================

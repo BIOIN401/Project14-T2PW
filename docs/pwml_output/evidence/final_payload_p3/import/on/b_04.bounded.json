@@ -1,0 +1,184 @@
+{
+  "label": "pwi-on-b_04",
+  "command": [
+    "C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.venv\\Scripts\\python.exe",
+    "-X",
+    "utf8",
+    "C:/t/pwi/t2pw/tools/pathwhiz_import/run_import.py",
+    "--list",
+    "C:/t/fp/docs/pwml_output/evidence/final_payload_p3/import/on/lists/b_04",
+    "--out",
+    "C:/t/fp/docs/pwml_output/evidence/final_payload_p3/import/on/b_04",
+    "--chunk",
+    "10"
+  ],
+  "cwd": "C:\\t\\fp\\docs\\pwml_output\\evidence\\final_payload_p3",
+  "started_at": "2026-11-12T19:19:54+00:00",
+  "finished_at": "2026-11-12T19:22:23+00:00",
+  "duration_seconds": 149.57887759999994,
+  "timeout_seconds": 540.0,
+  "root_pid": 163624,
+  "isolation": "windows_job_object(KILL_ON_JOB_CLOSE)",
+  "process_group": null,
+  "exit_reason": "completed",
+  "exit_code": 0,
+  "returned_code": 0,
+  "descendants_observed": [
+    {
+      "pid": 162660,
+      "name": "python.exe",
+      "ppid": 163624
+    },
+    {
+      "pid": 163536,
+      "name": "docker.exe",
+      "ppid": 162660
+    },
+    {
+      "pid": 156832,
+      "name": "docker.exe",
+      "ppid": 162660
+    },
+    {
+      "pid": 162624,
+      "name": "docker-compose.exe",
+      "ppid": 156832
+    },
+    {
+      "pid": 163136,
+      "name": "docker-compose.exe",
+      "ppid": 156832
+    },
+    {
+      "pid": 163716,
+      "name": "docker.exe",
+      "ppid": 162660
+    },
+    {
+      "pid": 114140,
+      "name": "docker-compose.exe",
+      "ppid": 163716
+    },
+    {
+      "pid": 163256,
+      "name": "docker-compose.exe",
+      "ppid": 163712
+    },
+    {
+      "pid": 163712,
+      "name": "docker.exe",
+      "ppid": 162660
+    },
+    {
+      "pid": 155716,
+      "name": "docker-compose.exe",
+      "ppid": 163712
+    },
+    {
+      "pid": 163432,
+      "name": "docker-compose.exe",
+      "ppid": 163640
+    },
+    {
+      "pid": 163640,
+      "name": "docker.exe",
+      "ppid": 162660
+    },
+    {
+      "pid": 161956,
+      "name": "docker-compose.exe",
+      "ppid": 163640
+    },
+    {
+      "pid": 157612,
+      "name": "docker.exe",
+      "ppid": 162660
+    },
+    {
+      "pid": 165312,
+      "name": "docker-compose.exe",
+      "ppid": 157612
+    },
+    {
+      "pid": 165364,
+      "name": "docker-compose.exe",
+      "ppid": 157612
+    }
+  ],
+  "descendants_terminated": [
+    114140,
+    155716,
+    156832,
+    157612,
+    161956,
+    162624,
+    162660,
+    163136,
+    163256,
+    163432,
+    163536,
+    163640,
+    163712,
+    163716,
+    165312,
+    165364
+  ],
+  "graceful_attempted": false,
+  "forced": false,
+  "final_surviving_count": 0,
+  "survivors": [],
+  "preexisting_reported": [
+    {
+      "pid": 53536,
+      "name": "python.exe"
+    },
+    {
+      "pid": 117356,
+      "name": "python.exe"
+    },
+    {
+      "pid": 118780,
+      "name": "python.exe"
+    },
+    {
+      "pid": 160852,
+      "name": "python.exe"
+    },
+    {
+      "pid": 161704,
+      "name": "python.exe"
+    }
+  ],
+  "cleanup_success": true,
+  "notes": [],
+  "json_report_path": "C:/t/fp/docs/pwml_output/evidence/final_payload_p3/import/on/b_04.bounded.json",
+  "json_report_written": true,
+  "json_report_error": "",
+  "schema_version": 1,
+  "wrapper_build": {
+    "digest": "sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0",
+    "digest_algorithm": "sha256",
+    "digest_scope": "raw_bytes_of_the_executing_module_file",
+    "path": "C:\\t\\fp\\docs\\pwml_recovery_sprint\\evidence\\bounded_run.py",
+    "size_bytes": 67831,
+    "digest_error": "",
+    "repo_root": "C:\\t\\fp",
+    "repo_head": "3e782d76d2c6f7ba821e064fde857ad4d8eac8bc",
+    "repo_source": "git",
+    "wrapper_vs_head": "clean",
+    "repo_tracked_files_dirty": false,
+    "repo_error": ""
+  },
+  "heavy_lock": {
+    "requested": true,
+    "path": "C:\\t\\heavylock",
+    "holder": "pwi",
+    "token": "pwi:160852:fc7e5f6e3338c57e",
+    "holder_file": "C:\\t\\heavylock\\holder.json",
+    "acquired": true,
+    "released": true,
+    "acquire_error": "",
+    "release_refusal": "",
+    "holder_seen": ""
+  }
+}

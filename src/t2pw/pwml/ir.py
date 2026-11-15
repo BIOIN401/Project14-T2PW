@@ -879,6 +879,8 @@ def _copy_common_entity_fields(record: Dict[str, Any], raw: Dict[str, Any]) -> N
         "ec_numbers",
         "element_states",
         "components",
+        "nucleotide_type_paper",  # D-W20c: only ever present on a flag-on payload
+        "nucleotide_type",  # D-W21d: set from an NCBI Gene / RNAcentral record on a flag-on payload; the writer reads it only under the flag
     ]:
         if key in raw:
             record[key] = raw[key]
@@ -1356,6 +1358,15 @@ def build_pwml_ir(
         ir["pathway"]["name"] = _canonical(pathway_meta.get("pathway_name"))
     if pathway_meta.get("pathway_subject") and pathway_subject == "Metabolic":
         ir["pathway"]["subject"] = _canonical(pathway_meta.get("pathway_subject"))
+    # Final payload (D-W12): only a payload carrying ``final_payload_pathway`` (written under T2PW_FINAL_PAYLOAD) is touched.
+    final_pathway = payload.get("final_payload_pathway")
+    if isinstance(final_pathway, dict):
+        title = _safe_dict(final_pathway.get("title")).get("value")
+        if title and pathway_name == "Generated Pathway":
+            ir["pathway"]["name"] = _canonical(title)
+        ref = _safe_dict(final_pathway.get("reference"))
+        if ref.get("text"):
+            ir["pathway"]["references"] = [{"pubmed-id": ref.get("pubmed_id"), "text": _canonical(ref["text"])}]
 
     component_specs = [
         ("species", "species", "sp", ["pathbank_species_id", "pw_species_id", "pathwhiz_id"]),

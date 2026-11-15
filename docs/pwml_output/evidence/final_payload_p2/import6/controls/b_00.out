@@ -1,0 +1,30 @@
+[pwi] OK       75.2s  PW687775.pwml  errors=3
+[pwi] OK      101.8s  PW176888.pwml  errors=5
+[pwi] summary: {"files": 2, "success_true": 2, "success_true_no_errors": 0, "success_false": 0, "total_seconds": 177.0}
+
+================ CLEANUP REPORT ================
+report schema version   : 1
+wrapper build           : sha256:83d139543d4c01b33984b6ca9fb0943db461d0ee5f85091623089a548b8abed0
+wrapper path (executed) : C:\t\fp\docs\pwml_recovery_sprint\evidence\bounded_run.py
+wrapper vs HEAD         : clean  @ e9c3e1971dad8d7112bb6caef2649287c7ba0581  [git, worktree dirty=False]
+label                   : pwi-controls-b_00
+command                 : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.venv\Scripts\python.exe -X utf8 C:/t/pwi/t2pw/tools/pathwhiz_import/run_import.py --list C:/t/fp/docs/pwml_output/evidence/final_payload_p2/import6/controls/lists/b_00 --out C:/t/fp/docs/pwml_output/evidence/final_payload_p2/import6/controls/b_00 --chunk 10
+cwd                     : C:\t\fp\docs\pwml_output\evidence\final_payload_p2
+root PID / process group: 52564 / None
+isolation               : windows_job_object(KILL_ON_JOB_CLOSE)
+timeout                 : 540 s
+duration                : 217.66 s
+exit reason             : completed
+exit code (real)        : 0
+returned code           : 0
+descendants observed    : 15  52432:python.exe, 41436:docker.exe, 52548:docker.exe, 36396:docker.exe, 52264:docker-compose.exe, 53080:docker.exe, 53280:docker-compose.exe, 53348:docker-compose.exe, 52576:docker.exe, 53420:docker-compose.exe, 53560:docker.exe, 53628:docker-compose.exe, 11556:docker-compose.exe, 57376:docker.exe, 14048:docker-compose.exe
+descendants terminated  : 15  11556, 14048, 36396, 41436, 52264, 52432, 52548, 52576, 53080, 53280, 53348, 53420, 53560, 53628, 57376
+graceful attempted      : False
+forced                  : False
+FINAL SURVIVING COUNT   : 0
+cleanup                 : success
+json report             : C:/t/fp/docs/pwml_output/evidence/final_payload_p2/import6/controls/b_00.bounded.json
+json report written     : True
+heavy lock              : C:\t\heavylock  holder=pwi  acquired=True  released=True
+pre-existing (reported, NEVER killed): 4
+================================================
