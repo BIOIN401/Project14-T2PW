@@ -380,6 +380,15 @@ def _is_currency_compound_record(record: Dict[str, Any]) -> bool:
     return chebi_id in _CURRENCY_COMPOUND_CHEBI_IDS
 
 
+def _is_chain_hub_compound_record(record: Dict[str, Any]) -> bool:
+    """Layout v2 chain reuse only: currency by exact name, KEGG or ChEBI id, without the suffix rules of
+    ``_is_currency_compound_record`` (an acyl-CoA such as OSB-CoA or DHNA-CoA is a chain intermediate, not a hub)."""
+    names = {_currency_name_token(record.get(k)) for k in ("name", "short-name", "short_name")}
+    kegg_id = str(record.get("kegg-id") or record.get("kegg_id") or "").strip().upper()
+    chebi_id = str(record.get("chebi-id") or record.get("chebi_id") or "").replace("CHEBI:", "").strip()
+    return bool(names & _CURRENCY_COMPOUND_NAMES) or kegg_id in _CURRENCY_COMPOUND_KEGG_IDS or chebi_id in _CURRENCY_COMPOUND_CHEBI_IDS
+
+
 def _singularize(tag: str) -> str:
     overrides = {
         "species": "species",
@@ -2343,11 +2352,19 @@ class DeterministicPwmlBuilder:
         )
         compound_loc_by_rxn_side: Dict[Tuple[int, str, int, str], int] = {}
         row_transition_source_by_member_key: Dict[str, str] = {}
+        # Layout v2 (F3): one drawn location per (compound, biological state) for the whole chain, so a product
+        # feeds visibly into every reaction that uses it. Currency compounds (ATP, NAD(P)H, H2O, CoA, ...; exact name
+        # or id, _is_chain_hub_compound_record) stay one location per reaction: a single hub node would pull long
+        # edges across the picture; an acyl-CoA is an intermediate and is shared. A reaction never
+        # gets the same location twice (a compound on both of its sides keeps two). v1 keeps adjacent-only reuse.
+        chain_reuse = layout_version() == "v2"
+        chain_loc_by_base: Dict[Tuple[int, str], int] = {}
 
         for reaction_key, reaction in raw_reactions_by_key.items():
             layout = reaction_layout_by_key.get(reaction_key)
             if not layout:
                 continue
+            locs_of_reaction: set = set()
             reaction_idx = reaction_idx_by_key.get(reaction_key, 0)
             biological_state_key = str(reaction.get("biological_state_key") or "")
             enzyme_left_x = layout["enzyme-x"]
@@ -2380,6 +2397,7 @@ class DeterministicPwmlBuilder:
                                     reaction_member_location_by_key[member_key] = shared_loc_id
                                     row_transition_source_by_member_key[member_key] = reaction_sequence[producer_idx][0]
                                 compound_loc_by_rxn_side[(compound_id, state_key, reaction_idx, side)] = shared_loc_id
+                                locs_of_reaction.add(shared_loc_id)
                                 compound_record = compound_record_by_id.get(compound_id, {})
                                 self.layout_debug_shared_intermediates.append(
                                     {
@@ -2398,6 +2416,19 @@ class DeterministicPwmlBuilder:
                         base_loc_id = lookup("locations", member.get("location_key"))
                     if base_loc_id is None:
                         continue
+                    member_key = str(member.get("key") or "")
+                    chain_key = (base_loc_id, member_state_key)  # same base copy and state: the same location record
+                    chain_loc_id = chain_loc_by_base.get(chain_key) if chain_reuse and identity is not None else None
+                    if (
+                        chain_loc_id is not None
+                        and member_key
+                        and chain_loc_id not in locs_of_reaction
+                        and not _is_chain_hub_compound_record(compound_record_by_id.get(identity[0], {}))
+                    ):
+                        reaction_member_location_by_key[member_key] = chain_loc_id
+                        compound_loc_by_rxn_side[(identity[0], identity[1], reaction_idx, side)] = chain_loc_id
+                        locs_of_reaction.add(chain_loc_id)
+                        continue
                     loc = loc_by_id.get(base_loc_id)
                     if not loc:
                         continue
@@ -2408,6 +2439,7 @@ class DeterministicPwmlBuilder:
                             "entity_key": entity_key,
                             "width": width,
                             "height": height,
+                            "chain_key": chain_key,
                         }
                     )
                 heights = [int(member["height"]) for member in stack_members]
@@ -2461,6 +2493,8 @@ class DeterministicPwmlBuilder:
                         if identity is not None:
                             compound_id, state_key = identity
                             compound_loc_by_rxn_side[(compound_id, state_key, reaction_idx, side)] = loc_id
+                        chain_loc_by_base.setdefault(stack_member["chain_key"], loc_id)
+                        locs_of_reaction.add(loc_id)
 
         self.layout_debug_counts["shared_intermediate_locations_reused"] = sum(
             1
