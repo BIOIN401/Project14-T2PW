@@ -126,7 +126,13 @@ def _add_interaction_arrow(edge: Dict[str, Any], interaction_type: str, x1: int,
     Sampled 40 of each in the live ``edges`` table: Activation carries
     ``start_arrow`` with its path, Inhibition the exact inverse with a
     ``start_flat_arrow`` path. The sign lives only here, never in a column.
+    L4 (PathWhiz t2pw/05, ``interaction_visualization.js.coffee``): Regulation, Catalysis
+    and Modification take the start arrow like Activation; Binding and Unspecified are
+    undirected and take no arrow.
     """
+    if interaction_type in ("Binding", "Unspecified"):
+        _add_no_arrow(edge)
+        return
     inhibition = interaction_type == "Inhibition"
     path = (
         _compute_flat_arrow_path(x1, y1, cp1x, cp1y)
@@ -1684,7 +1690,13 @@ class DeterministicPwmlBuilder:
 
         self.section_items["interactions"] = []
         self.withheld_interactions = []
-        for interaction in process_items.get("interactions", []) if isinstance(process_items.get("interactions"), list) else []:
+        # L4: the IR keeps modifier-derived interactions (D-W24 (1)) in their own bucket.
+        all_interactions = [
+            row
+            for bucket in ("interactions", "modifier_interactions")
+            for row in (process_items.get(bucket) if isinstance(process_items.get(bucket), list) else [])
+        ]
+        for interaction in all_interactions:
             if not isinstance(interaction, dict):
                 continue
             if interaction.get("export_status") == "withheld":
@@ -2634,7 +2646,10 @@ class DeterministicPwmlBuilder:
         self.section_items["interaction-visualizations"] = []
         self.section_items["sub-pathway-visualizations"] = []
         interactions_by_key = {
-            str(row.get("key")): row for row in process_items.get("interactions", []) if isinstance(row, dict)
+            str(row.get("key")): row
+            for bucket in ("interactions", "modifier_interactions")
+            for row in process_items.get(bucket, []) or []
+            if isinstance(row, dict)
         }
         ir_loc_by_key = {str(loc.get("key")): loc for loc in ir.get("locations", []) if isinstance(loc, dict)}
 
@@ -3237,9 +3252,11 @@ def run_pwml_pipeline_export(args: argparse.Namespace) -> Dict[str, Any]:
             {
                 "pwml_file": pwml_path.name,
                 "why": (
-                    "PathWhiz stores only Activation and Inhibition interactions between "
-                    "drawable elements (compound, protein complex, nucleic acid, element "
-                    "collection). Each row below was held back rather than guessed into an "
+                    "PathWhiz stores only Activation, Inhibition, Binding, Regulation, Catalysis, "
+                    "Modification and Unspecified interactions between two different drawable "
+                    "elements (compound, protein complex, nucleic acid, element collection), and "
+                    "merges a repeat of the same type and elements into one. Each row below was "
+                    "held back rather than guessed into an "
                     "exportable shape; it is still in final.pwml_ir.json and its warning is "
                     "in pwml_ir_report.json."
                 ),

@@ -15,9 +15,11 @@ from t2pw.pipeline.entity_identity import (
 from t2pw.pwml.compound_resolution import _compound_external_ids, _resolve_compound_rows
 from t2pw.pwml.compound_templates import select_compound_template_id
 from t2pw.pwml.interaction_types import (  # noqa: F401 -- re-exported: the names ir.py always had
+    PWML_INTERACTION_EDGE_TEMPLATES,
     PWML_INTERACTION_TYPES,
     _interaction_type_key,
     interaction_relationship_word,
+    pwml_export_interaction_type,
     pwml_interaction_type,
 )
 from t2pw.pwml.db_resolver import PathWhizCompoundResolver, apply_compound_db_resolution, normalize_chebi_id
@@ -35,6 +37,25 @@ _NAME_INDEX_UNSET = object()
 AMBIGUOUS_ENDPOINT_KINDS = ("compound", "nucleic_acid", "element_collection")
 
 
+#: D-W24 (1): the modifier roles that are not catalysis, and the interaction each becomes.
+MODIFIER_ROLE_INTERACTION_TYPES = {"activator": "Activation", "inhibitor": "Inhibition"}
+MODIFIER_ROLE_VERBS = {"activator": "activates", "inhibitor": "inhibits"}
+
+
+def _evidence_names(evidence: str, entity: Optional[Dict[str, Any]], *more: Any) -> bool:
+    """Does the quote name ``entity`` (any of its names) or one of ``more``?"""
+    entity = entity or {}
+    text = evidence.casefold()
+    aliases = [*_safe_list(entity.get("synonyms")), *more,
+               *(entity.get(f) for f in ("name", "raw_name", "short_name", "common_name"))]
+    for alias in aliases:
+        a = _canonical(alias).casefold()
+        for variant in (a, a[: -len(" complex")] if a.endswith(" complex") else ""):
+            if len(variant) >= 2 and variant in text:
+                return True
+    return False
+
+
 def interaction_pwml_verdict(
     raw_type: Any,
     endpoints: Sequence[Tuple[str, Optional[Dict[str, Any]]]],
@@ -46,7 +67,7 @@ def interaction_pwml_verdict(
     (``app.reaction_evidence``) reads the verdict back out of the built IR.
 
     ``endpoints`` is ``(entity_type, payload row)`` for each side that resolved.
-    Returns ``pwml_type`` (``""`` for an unsigned word), ``reason`` (``""`` when the row
+    Returns ``pwml_type`` (``""`` for a word with no PathWhiz type), ``reason`` (``""`` when the row
     is drawn) and ``unwrappable_proteins``. A bare protein cannot be drawn (PathWhiz has
     no protein interaction member). Stage 6 wraps a protein endpoint only when it has a
     species and a UniProt/DrugBank identity, and also refuses some that do (the Unknown
@@ -56,7 +77,7 @@ def interaction_pwml_verdict(
     ``ambiguous_endpoints`` lists protein endpoints whose written name also names one of
     :data:`AMBIGUOUS_ENDPOINT_KINDS`; such a row is ``ambiguous_protein_endpoint`` first.
     """
-    pwml_type = pwml_interaction_type(raw_type)
+    pwml_type = pwml_export_interaction_type(raw_type)
     verdict: Dict[str, Any] = {"pwml_type": pwml_type, "reason": "", "unwrappable_proteins": []}
     if not pwml_type:
         verdict["reason"] = "untyped_interaction"
@@ -2078,6 +2099,7 @@ def build_pwml_ir(
         return margin_left + col * col_w, max(260, int(height * 0.35)) + row * 240
 
     allowed_enzyme_entity_types = {"protein", "protein_complex"}
+    modifier_steps: List[Dict[str, Any]] = []
     reaction_index = 0
     for ridx, raw in enumerate(_safe_list(processes.get("reactions"))):
         if not isinstance(raw, dict):
@@ -2168,15 +2190,20 @@ def build_pwml_ir(
                         }
                     )
 
-        enzyme_sources: List[Tuple[Any, bool]] = [
-            (actor, False) for actor in _safe_list(raw.get("enzymes"))
-        ]
-        for mod in _safe_list(raw.get("modifiers")):
-            if not isinstance(mod, dict):
-                continue
-            role = _canonical(mod.get("role")).lower()
-            if role in {"catalyst", "activator", "inhibitor", "enzyme"}:
-                enzyme_sources.append((mod, True))
+        enzyme_sources: List[Tuple[Any, bool]] = []
+        # D-W24 (1): a protein is the step's enzyme only when it catalyses it. An activator /
+        # inhibitor -- in ``modifiers`` or, should one carry that role, in ``enzymes`` -- becomes
+        # an interaction on the step, built after the payload's own interactions (below); the
+        # payload row keeps the role.
+        for field, is_modifier in (("enzymes", False), ("modifiers", True)):
+            for midx, actor in enumerate(_safe_list(raw.get(field))):
+                role = _canonical(actor.get("role")).lower() if isinstance(actor, dict) else ""
+                if role in MODIFIER_ROLE_INTERACTION_TYPES:
+                    modifier_steps.append({"ridx": ridx, "field": field, "midx": midx, "mod": actor, "role": role, "reaction": reaction})
+                elif not is_modifier:
+                    enzyme_sources.append((actor, False))
+                elif isinstance(actor, dict) and role in {"catalyst", "enzyme"}:
+                    enzyme_sources.append((actor, True))
         explicit_enzyme_actors: set[Tuple[str, str]] = set()
         for eidx, (actor, is_modifier) in enumerate(enzyme_sources):
             name, hint, role = _actor_name_and_hint(actor)
@@ -2378,26 +2405,39 @@ def build_pwml_ir(
         )
 
     interaction_index = 0
-    for iidx, raw in enumerate(_safe_list(processes.get("interactions"))):
-        if not isinstance(raw, dict):
-            continue
-        left_name = _canonical(raw.get("left") or raw.get("entity_1") or raw.get("source"))
-        right_name = _canonical(raw.get("right") or raw.get("entity_2") or raw.get("target"))
-        left_entity = resolve_entity(left_name, "interaction", f"/processes/interactions/{iidx}/entity_1")
-        right_entity = resolve_entity(right_name, "interaction", f"/processes/interactions/{iidx}/entity_2")
+    #: (type, left entity key, right entity key, biological state) -> key of the interaction drawn
+    #: for it (L4). PathWhiz merges an interaction with the same type and the same two elements
+    #: into one (``Interaction#generate_signature``; the importer maps the repeat onto the existing
+    #: row and still attaches its visualization). A repeat in the SAME state would draw the same
+    #: line on the same two nodes again, so it is written once and the others say so; a repeat in
+    #: another state is written, because its drawing is the only one in that compartment.
+    drawn_interaction_by_signature: Dict[Tuple[str, str, str, str], str] = {}
+
+    def emit_interaction(
+        *,
+        name: str,
+        raw_type: str,
+        left_name: str,
+        right_name: str,
+        left_entity: Optional[Dict[str, Any]],
+        right_entity: Optional[Dict[str, Any]],
+        bs_key: Optional[str],
+        pointer: str,
+        evidence: str,
+        bucket: str,
+        extra: Optional[Dict[str, Any]] = None,
+        review_reasons: Sequence[str] = (),
+    ) -> Dict[str, Any]:
+        nonlocal interaction_index
         interaction_index += 1
         int_key = f"int_{interaction_index}"
-        bs_key = resolve_state(raw.get("biological_state"), f"/processes/interactions/{iidx}/biological_state", required=True)
-        raw_type = interaction_relationship_word(raw)
-        # Spelling only: "activation" / "activates" -> "Activation", "inhibits" ->
-        # "Inhibition". A word not in the table stays as written and is withheld
-        # below -- mapping "binds" or "modifies" onto a sign would be the exporter
-        # inventing biology after the freeze (merge rule 8).
-        interaction_type = pwml_interaction_type(raw_type) or raw_type
+        # Spelling only: "activation" / "activates" -> "Activation", "binds" -> "Binding"
+        # (L4, D-W26). A word in no table stays as written and is withheld below.
+        interaction_type = pwml_export_interaction_type(raw_type) or raw_type
         interaction = {
             "key": int_key,
             "type": "interaction",
-            "name": _canonical(raw.get("name")) or f"Interaction {interaction_index}",
+            "name": name or f"Interaction {interaction_index}",
             "interaction_type": interaction_type,
             "biological_state_key": bs_key,
             "left": (
@@ -2410,12 +2450,32 @@ def build_pwml_ir(
                 if right_entity
                 else None
             ),
+            # D-W24 (6): the paper evidence travels with every interaction, drawn or not.
+            "evidence": evidence,
         }
-        # ORCH-747. PathWhiz imports exactly two interaction types and has no
-        # interaction member table for a bare protein (only compound, protein
-        # complex, nucleic acid, element collection and bound). Anything else is
-        # kept in the IR and reported, but withheld from the PWML: the writer
-        # lists every withheld row in a side file next to the export.
+        if extra:
+            interaction.update(extra)
+        reasons = list(review_reasons)
+        if not evidence:
+            reasons.insert(0, "no_evidence")
+        if reasons:
+            # Flagged, never dropped (D-W24 (6)): the row is drawn or withheld exactly as it
+            # would be with evidence.
+            interaction["review_required"] = True
+            interaction["review_reasons"] = reasons
+            _add_issue(
+                report,
+                "warning",
+                "interaction_review_required",
+                f"Interaction {interaction['name']!r} ({left_name} -{raw_type}-> {right_name}) needs review: {', '.join(reasons)}.",
+                pointer=pointer,
+                reasons=reasons,
+            )
+        # ORCH-747. PathWhiz has no interaction member table for a bare protein (only
+        # compound, protein complex, nucleic acid, element collection and bound), and stores
+        # only the types in ``pwml_export_interaction_type``. Anything else is kept in the
+        # IR and reported, but withheld from the PWML: the writer lists every withheld row
+        # in a side file next to the export.
         # ORCH-754b / D-104: the rule is :func:`interaction_pwml_verdict`; the exporter
         # never builds a wrapper itself (merge rule 8).
         # The written name, not the row the resolver chose: a protein endpoint whose
@@ -2423,10 +2483,11 @@ def build_pwml_ir(
         # known to be the protein, so it is never drawn as one.
         ambiguous = []
         for side, written in ((left_entity, left_name), (right_entity, right_name)):
-            if side and side["entity_type"] == "protein":
-                kinds = sorted(
-                    {c["entity_type"] for c in entity_by_name.get(_norm(written), [])} & set(AMBIGUOUS_ENDPOINT_KINDS)
-                )
+            candidate_types = {c["entity_type"] for c in entity_by_name.get(_norm(written), [])}
+            # A complex side whose written name also names a protein is judged as the protein
+            # side it replaced (L4 exact-complex rule below), so the check stays fail-closed.
+            if side and (side["entity_type"] == "protein" or (side["entity_type"] == "protein_complex" and "protein" in candidate_types)):
+                kinds = sorted(candidate_types & set(AMBIGUOUS_ENDPOINT_KINDS))
                 if kinds:
                     ambiguous.append({"name": written, "also_names": kinds})
         verdict = interaction_pwml_verdict(
@@ -2436,18 +2497,31 @@ def build_pwml_ir(
         )
         withheld_reason = verdict["reason"]
         unwrappable = verdict["unwrappable_proteins"]
+        signature: Optional[Tuple[str, str, str, str]] = None
+        if not withheld_reason and bucket == "modifier_interactions" and not (left_entity and right_entity):
+            withheld_reason = "step_has_no_element_to_anchor"
+        if not withheld_reason and left_entity and right_entity:
+            # PathWhiz refuses an interaction whose two sides are one element.
+            if (left_entity["entity_type"], left_entity["key"]) == (right_entity["entity_type"], right_entity["key"]):
+                withheld_reason = "same_element_both_sides"
+            else:
+                signature = (interaction_type, str(left_entity["key"]), str(right_entity["key"]), str(bs_key))
+                if signature in drawn_interaction_by_signature:
+                    withheld_reason = "duplicate_interaction"
         if withheld_reason:
             interaction["export_status"] = "withheld"
             interaction["withheld"] = {
                 "reason": withheld_reason,
-                "pointer": f"/processes/interactions/{iidx}",
+                "pointer": pointer,
                 "raw_interaction_type": raw_type,
                 "left": left_name,
                 "right": right_name,
                 # ORCH-754b: the evidence travels with the verdict, so the record the app
                 # persists (``pwml_ir.json``) and the CLI side file are complete on their own.
-                "evidence": _canonical(raw.get("evidence")),
+                "evidence": evidence,
             }
+            if withheld_reason == "duplicate_interaction" and signature:
+                interaction["withheld"]["duplicate_of"] = drawn_interaction_by_signature[signature]
             if unwrappable:
                 interaction["withheld"]["unwrappable_proteins"] = unwrappable
             if verdict.get("ambiguous_endpoints"):
@@ -2457,12 +2531,14 @@ def build_pwml_ir(
                 "warning",
                 "interaction_withheld_from_pwml",
                 f"Interaction {interaction['name']!r} ({left_name} -{raw_type}-> {right_name}) is withheld from the PWML: {withheld_reason}.",
-                pointer=f"/processes/interactions/{iidx}",
+                pointer=pointer,
                 reason=withheld_reason,
                 raw_interaction_type=raw_type,
             )
         else:
             interaction["export_status"] = "exportable"
+            if signature:
+                drawn_interaction_by_signature[signature] = int_key
             ix, iy = process_xy(reaction_index + transport_index + interaction_index - 1)
             members_for_viz = []
             if left_entity and right_entity:
@@ -2474,8 +2550,9 @@ def build_pwml_ir(
                     # PathBank draws the pair as two edges spanning the same two
                     # elements in opposite directions: the Right edge carries the
                     # arrow (or T-bar) at the right element, the Left edge is its
-                    # reverse and is hidden so the line is not drawn twice.
-                    template_id = 148 if interaction_type == "Inhibition" else 149
+                    # reverse and is hidden so the line is not drawn twice. Both take
+                    # the type's edge template (PathWhiz t2pw/05 ``edgeTemplates``).
+                    template_id = PWML_INTERACTION_EDGE_TEMPLATES.get(interaction_type, 149)
                     left_edge = add_edge(lx, ly, rx, ry)
                     left_edge["hidden"] = True
                     left_edge["visualization_template_id"] = template_id
@@ -2505,9 +2582,113 @@ def build_pwml_ir(
                     "members": members_for_viz,
                 }
             )
-        ir["processes"]["interactions"].append(interaction)
+        ir["processes"].setdefault(bucket, []).append(interaction)
         process_by_key[int_key] = interaction
         process_by_name[_norm(interaction["name"])] = interaction
+        return interaction
+
+    def _exact_complex(entity: Optional[Dict[str, Any]], written: str) -> Optional[Dict[str, Any]]:
+        """L4 (D-W24 (4)). The interaction resolver prefers a protein, which can never be drawn.
+        When the written name is ALSO the exact name of a protein complex (idx 6: "Cadherin EGF LAG
+        seven-pass G-type receptor 1" is a complex's name and a synonym of the protein Celsr1), the
+        endpoint is that complex. Only the complex's own name counts, never an alias, so no other
+        assembly is borrowed; nothing is built."""
+        if not entity or entity.get("entity_type") != "protein":
+            return entity
+        for candidate in entity_by_name.get(_norm(written), []):
+            if candidate.get("entity_type") == "protein_complex" and _norm(candidate.get("name")) == _norm(written):
+                return candidate
+        return entity
+
+    for iidx, raw in enumerate(_safe_list(processes.get("interactions"))):
+        if not isinstance(raw, dict):
+            continue
+        left_name = _canonical(raw.get("left") or raw.get("entity_1") or raw.get("source"))
+        right_name = _canonical(raw.get("right") or raw.get("entity_2") or raw.get("target"))
+        left_entity = _exact_complex(resolve_entity(left_name, "interaction", f"/processes/interactions/{iidx}/entity_1"), left_name)
+        right_entity = _exact_complex(resolve_entity(right_name, "interaction", f"/processes/interactions/{iidx}/entity_2"), right_name)
+        emit_interaction(
+            name=_canonical(raw.get("name")),
+            raw_type=interaction_relationship_word(raw),
+            left_name=left_name,
+            right_name=right_name,
+            left_entity=left_entity,
+            right_entity=right_entity,
+            bs_key=resolve_state(raw.get("biological_state"), f"/processes/interactions/{iidx}/biological_state", required=True),
+            pointer=f"/processes/interactions/{iidx}",
+            evidence=_canonical(raw.get("evidence")),
+            bucket="interactions",
+        )
+
+    # D-W24 (1), L4. An activator / inhibitor modifier of a reaction is drawn as an Activation /
+    # Inhibition interaction ON THAT STEP, never as its enzyme. A PathWhiz interaction holds
+    # exactly one element per side and cannot name a reaction, so the step is represented by its
+    # anchor element: the step's first enzyme (other than the modifier itself) -- the modifier acts
+    # on the step through the enzyme that runs it -- else the step's first substrate, else its first
+    # product. The full modifier -> reaction link is kept on the row (``on_reaction``), in the
+    # payload's ``modifiers`` (text record) and in our SBML (modifier roles). These rows live in
+    # their own IR bucket so ``ir.processes.interactions`` stays one row per payload interaction
+    # (``app.reaction_evidence`` lines the two up).
+    for step in modifier_steps:
+        ridx, midx, mod, reaction = step["ridx"], step["midx"], step["mod"], step["reaction"]
+        pointer = f"/processes/reactions/{ridx}/{step['field']}/{midx}"
+        name, hint, _role = _actor_name_and_hint(mod)
+        if not name:
+            _add_issue(
+                report,
+                "warning",
+                "enzyme_without_resolvable_actor",
+                "Reaction enzyme/modifier evidence did not include an explicit entity reference.",
+                pointer=pointer,
+            )
+            continue
+        # Resolved exactly as it was when it was drawn as an enzyme (wrapper complex first).
+        left_entity = resolve_entity(name, "enzyme", pointer, hint=hint)
+        if not left_entity:
+            continue
+        anchors = [
+            m for m in (*reaction["enzymes"], *reaction["left"], *reaction["right"])
+            if m.get("entity_key") != left_entity["key"]
+        ]
+        anchor = anchors[0] if anchors else None
+        right_entity = entity_by_key.get(anchor["entity_key"]) if anchor else None
+        right_name = _canonical((right_entity or {}).get("name"))
+        evidence = _canonical(mod.get("evidence"))
+        review = []
+        if evidence:
+            # D-W24 (6): the quote must name the modifier and something of the step (its name,
+            # an enzyme or a participant). A quote that fails is flagged, never dropped.
+            # ponytail: substring match on names / aliases (and the name without " complex");
+            # a flag only, so a loose hit costs a missed flag, never a drop.
+            if not _evidence_names(evidence, left_entity, name):
+                review.append("evidence_does_not_name_modifier")
+            if not any(
+                _evidence_names(evidence, entity_by_key.get(m.get("entity_key")))
+                for m in (*reaction["enzymes"], *reaction["left"], *reaction["right"])
+                if m.get("entity_key") != left_entity["key"]
+            ) and not _evidence_names(evidence, None, reaction["name"]):
+                review.append("evidence_does_not_name_step")
+        emit_interaction(
+            name=f"{name} {MODIFIER_ROLE_VERBS[step['role']]} {reaction['name']}",
+            raw_type=MODIFIER_ROLE_INTERACTION_TYPES[step["role"]],
+            left_name=name,
+            right_name=right_name,
+            left_entity=left_entity,
+            right_entity=right_entity,
+            bs_key=reaction["biological_state_key"],
+            pointer=pointer,
+            evidence=evidence,
+            bucket="modifier_interactions",
+            extra={
+                "origin": "reaction_modifier",
+                "modifier_role": step["role"],
+                "on_reaction": {"key": reaction["key"], "name": reaction["name"], "pointer": f"/processes/reactions/{ridx}"},
+                "step_anchor": (
+                    "enzyme" if anchor in reaction["enzymes"] else "substrate" if anchor in reaction["left"] else "product"
+                ) if anchor else "",
+            },
+            review_reasons=review,
+        )
 
     # Fallback grid for entities referenced via explicit element_locations but not
     # placed by any reaction/transport. They use a flat grid below the reaction band.
@@ -3617,7 +3798,10 @@ def validate_pwml_ir(ir: Dict[str, Any]) -> Dict[str, Any]:
         if not _safe_list(rct.get("enzymes")):
             error("rct_missing_enzyme", "Reaction-coupled transport must have at least one enzyme.", f"/processes/reaction_coupled_transports/{idx}/enzymes")
 
-    for idx, interaction in enumerate(_safe_list(processes.get("interactions"))):
+    # L4: modifier-derived interactions (D-W24 (1)) are interactions too, in their own bucket.
+    for idx, interaction in enumerate(
+        _safe_list(processes.get("interactions")) + _safe_list(processes.get("modifier_interactions"))
+    ):
         if not isinstance(interaction, dict):
             continue
         key = interaction.get("key")
@@ -3629,7 +3813,10 @@ def validate_pwml_ir(ir: Dict[str, Any]) -> Dict[str, Any]:
         left = interaction.get("left")
         right = interaction.get("right")
         if not isinstance(left, dict) or not isinstance(right, dict):
-            error("interaction_missing_side", "Interaction must have exactly one left and one right member.", f"/processes/interactions/{idx}")
+            # A modifier row whose step has no element to anchor on is withheld with that
+            # reason; it is not a broken interaction (it is never written).
+            if not (interaction.get("origin") == "reaction_modifier" and interaction.get("export_status") == "withheld"):
+                error("interaction_missing_side", "Interaction must have exactly one left and one right member.", f"/processes/interactions/{idx}")
         else:
             for side_name, side in [("left", left), ("right", right)]:
                 entity_type = side.get("entity_type")
