@@ -621,7 +621,8 @@ def _llm_bound_digests(post_stage6: dict | None = None) -> dict:
             "qa_report": _sha(qa),
         }
     unwrappable = _payload()
-    unwrappable["processes"]["interactions"] = unwrappable["processes"]["interactions"][2:]
+    # L4 review F3: from row 3 on (FtsH, Orphan); the "binds" row is wrappable since D-W26, so it is not in this case.
+    unwrappable["processes"]["interactions"] = unwrappable["processes"]["interactions"][3:]
     report = _stage6(unwrappable)
     out["stage6_all_unwrappable"] = _sha({"report": report, "payload": unwrappable})
     wrapped_report = _stage6(_payload())  # the same input on both trees; only the tip wraps
@@ -657,15 +658,16 @@ LLM_BOUND_BASE_DIGESTS: dict = {
         "draft_graph": "978f3a09c9768f1ba4b166bfd6782a5f5a021c389ebb8758494c4cdd06504119",
         "qa_report": "1829e4ef6c7869aba66cabca5c818174dfe5eaac4ff35c4b2a1d87c23c18f689"
     },
-    # D-W26 / L4: the next two move only because Stage 6 now also wraps the fixture's "binds" row (post-Stage-6
-    # payload). Base c2b9c727 generators on the same payload give the same digests; the curator-prompt
-    # digests below (stage6_wrapped_report, stage6_wrapped_mapping_misses) are unchanged.
+    # D-W26 / L4: wrapped_post_stage6 moves only because Stage 6 now also wraps the fixture's "binds" row (post-Stage-6
+    # payload); base c2b9c727 generators on that payload give the same digests. stage6_all_unwrappable now hashes
+    # rows 3: (review F3, the binds row left out): 417d9037.. is what base c2b9c727 AND this tree produce for it.
+    # The curator-prompt digests (stage6_wrapped_report, stage6_wrapped_mapping_misses) are unchanged.
     "wrapped_post_stage6": {
         "reaction_summary": "895749fbf4d7bcc06b33d49de02501d8a165ddce53f1f617e88eb8a44e411e61",
         "draft_graph": "e59f9469b03b5bee58c6491212b3b6b2ecb697bc849e976526fabec94197df2d",
         "qa_report": "71d4191e22dce970cb9b85b924d527f9cd5813785e1c057e5bd31e2ba0e3f373"
     },
-    "stage6_all_unwrappable": "e22c33b24cfd5d5929e42aa1e189371fc33a6c8cde48d28c15f0e36b5982c216",
+    "stage6_all_unwrappable": "417d9037aec279a581e594b3eded5dfc2e75288e9a6e3a646c41d217e26e7899",
     "stage6_wrapped_report": "33514f4c236a2fad43ad733d953761c1e3c22f6c9fe3685b9cec11eb5c30769d",
     "stage6_wrapped_mapping_misses": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
 }

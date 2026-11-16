@@ -44,6 +44,24 @@ MODIFIER_ROLE_INTERACTION_TYPES = {"activator": "Activation", "inhibitor": "Inhi
 MODIFIER_ROLE_VERBS = {"activator": "activates", "inhibitor": "inhibits"}
 
 
+#: GTP / GDP: currency for anchoring, absent from the writer's currency tables (which also drive layout).
+_ANCHOR_EXTRA_CURRENCY = {"names": {"gtp", "gdp", "guanosine triphosphate", "guanosine diphosphate"},
+                          "kegg": {"C00044", "C00035"}}
+
+
+def _is_currency_anchor(entity: Optional[Dict[str, Any]]) -> bool:
+    """A currency compound, by the writer's exact-name / KEGG / ChEBI classifier (no acyl-CoA suffix rule,
+    so OSB-CoA stays a defining participant) plus GTP / GDP."""
+    if not entity or entity.get("entity_type") != "compound":
+        return False
+    from t2pw.pwml.writer import _currency_name_token, _is_chain_hub_compound_record  # function-local: writer imports ir
+
+    if _is_chain_hub_compound_record(entity):
+        return True
+    return (_currency_name_token(entity.get("name")) in _ANCHOR_EXTRA_CURRENCY["names"]
+            or str(entity.get("kegg_id") or "").strip().upper() in _ANCHOR_EXTRA_CURRENCY["kegg"])
+
+
 def _evidence_names(evidence: str, entity: Optional[Dict[str, Any]], *more: Any) -> bool:
     """Does the quote name ``entity`` (any of its names) or one of ``more``?"""
     entity = entity or {}
@@ -2655,9 +2673,13 @@ def build_pwml_ir(
         left_entity = resolve_entity(name, "enzyme", pointer, hint=hint)
         if not left_entity:
             continue
+        # L4 review F4: with no other enzyme, a non-currency substrate (then product) stands for the step;
+        # a currency compound (ATP, GTP, NAD(P)H, ...) only when the step has nothing else.
+        participants = [m for m in (*reaction["left"], *reaction["right"]) if m.get("entity_key") != left_entity["key"]]
         anchors = [
-            m for m in (*reaction["enzymes"], *reaction["left"], *reaction["right"])
-            if m.get("entity_key") != left_entity["key"]
+            *(m for m in reaction["enzymes"] if m.get("entity_key") != left_entity["key"]),
+            *(m for m in participants if not _is_currency_anchor(entity_by_key.get(m.get("entity_key")))),
+            *(m for m in participants if _is_currency_anchor(entity_by_key.get(m.get("entity_key")))),
         ]
         anchor = anchors[0] if anchors else None
         right_entity = entity_by_key.get(anchor["entity_key"]) if anchor else None
@@ -3456,7 +3478,8 @@ def validate_required_pwml_contract(payload_or_ir: Any, *, strict_db: bool = Tru
             if isinstance(s, dict)
         }
         process_keys: set = set()
-        for bucket in PROCESS_BUCKETS.values():
+        # L4: modifier-derived interactions (D-W24 (1)) are drawn processes too.
+        for bucket in (*PROCESS_BUCKETS.values(), "modifier_interactions"):
             for p in _safe_list(_safe_dict(payload_or_ir.get("processes")).get(bucket)):
                 if isinstance(p, dict) and p.get("key"):
                     process_keys.add(p["key"])

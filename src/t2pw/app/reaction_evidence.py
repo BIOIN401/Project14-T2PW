@@ -539,8 +539,21 @@ def _same_process(lock_id: str, name: Any, row: Mapping[str, Any]) -> bool:
 #: to it -- in particular ``bare_protein_endpoint`` says only that no wrapper exists,
 #: never why Stage 6 did not build one.
 _WITHHELD_GLOSS = {
+    # D-W26 (L4): PathWhiz with the t2pw/05 branch stores seven interaction types.
     "untyped_interaction": (
-        "the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores"
+        "the relationship word maps to none of the interaction types PathWhiz stores (Activation, Inhibition, "
+        "Binding, Regulation, Catalysis, Modification, Unspecified)"
+    ),
+    "duplicate_interaction": (
+        "the same type between the same two elements in the same state is already drawn, and PathWhiz "
+        "merges such repeats into one"
+    ),
+    "relationship_type_not_stated": (
+        "the row states no relationship word and has no paper evidence, so it is not drawn"
+    ),
+    "same_element_both_sides": "both endpoints are the same element, which a PathWhiz interaction cannot hold",
+    "step_has_no_element_to_anchor": (
+        "the reaction this modifier acts on has no other enzyme, substrate or product to attach the interaction to"
     ),
     "bare_protein_endpoint": (
         "a protein endpoint is not wrapped in a single-protein complex in this payload, "

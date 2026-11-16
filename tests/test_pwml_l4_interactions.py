@@ -360,3 +360,50 @@ def test_a_row_with_no_relationship_word_is_drawn_unspecified_only_with_evidence
     assert bare["review_reasons"] == ["no_evidence"]
     assert [w["name"] for w in build.withheld_interactions] == ["AraC and Pc"]
     assert [i.findtext("interaction-type") for i in root.iter("interaction")] == ["Unspecified"] and qa["ok"]
+
+
+# ── review fixes F1, F2, F4 ───────────────────────────────────────────────────
+
+
+def test_the_required_contract_accepts_a_drawn_modifier_interaction() -> None:
+    """F1: validate_required_pwml_contract collected process keys from PROCESS_BUCKETS only, so a
+    drawn modifier interaction's visualization was a false visualization_missing_process."""
+    from t2pw.pwml.ir import validate_required_pwml_contract
+
+    ir, _report = build_pwml_ir(prefrozen(_modifier_payload()), strict_db=True)
+    assert ir["processes"]["modifier_interactions"]
+    codes = {e["code"] for e in validate_required_pwml_contract(ir)["errors"]}
+    assert "visualization_missing_process" not in codes
+
+
+def test_the_text_record_glosses_the_new_withheld_reasons_truthfully() -> None:
+    """F2: no gloss may still say Activation/Inhibition are the only stored types."""
+    from t2pw.app.reaction_evidence import _pwml_verdict
+
+    for reason in ("untyped_interaction", "duplicate_interaction", "relationship_type_not_stated",
+                   "same_element_both_sides", "step_has_no_element_to_anchor"):
+        text = _pwml_verdict({"export_status": "withheld", "withheld": {"reason": reason}})
+        assert text.startswith(f"withheld -- {reason}: ") and len(text) > len(reason) + 20
+        assert "the only interaction types" not in text
+    assert "Binding" in _pwml_verdict({"export_status": "withheld", "withheld": {"reason": "untyped_interaction"}})
+
+
+def _atp_payload(inputs: list, outputs: list) -> dict:
+    payload = _modifier_payload()
+    payload["entities"]["compounds"].append(
+        {"name": "ATP", "pathbank_compound_id": 1006, "kegg_id": "C00002", "mapped_ids": {"chebi": "CHEBI:30616", "kegg": "C00002"}})
+    payload["entities"]["compounds"].append(
+        {"name": "ADP", "pathbank_compound_id": 1007, "kegg_id": "C00008", "mapped_ids": {"chebi": "CHEBI:16761", "kegg": "C00008"}})
+    rx = payload["processes"]["reactions"][1]
+    rx["inputs"], rx["outputs"] = [{"name": n} for n in inputs], [{"name": n} for n in outputs]
+    return payload
+
+
+def test_with_no_enzyme_the_step_is_anchored_on_a_non_currency_participant_before_a_currency_one() -> None:
+    """F4: GTP/ATP stood for the step in 7 of 17 modifier rows; currency is the fallback only."""
+    for inputs, outputs, expected, side in ((["ATP", "OSB-CoA"], ["DHNA-CoA"], "OSB-CoA", "substrate"),
+                                            (["ATP"], ["DHNA-CoA"], "DHNA-CoA", "product"),
+                                            (["ATP"], ["ADP"], "Adenosine triphosphate", "substrate")):  # only currency: used (pre-freeze names ATP)
+        ir, _report, _build, _root, qa = _export(_atp_payload(inputs, outputs))
+        mend = next(i for i in ir["processes"]["modifier_interactions"] if i["modifier_role"] == "inhibitor")
+        assert (_names(ir)[mend["right"]["entity_key"]], mend["step_anchor"]) == (expected, side) and qa["ok"]
