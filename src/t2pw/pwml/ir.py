@@ -2651,9 +2651,10 @@ def build_pwml_ir(
     # Inhibition interaction ON THAT STEP, never as its enzyme. A PathWhiz interaction holds
     # exactly one element per side and cannot name a reaction, so the step is represented by its
     # anchor element: the step's first enzyme (other than the modifier itself) -- the modifier acts
-    # on the step through the enzyme that runs it -- else the step's first substrate, else its first
-    # product. The full modifier -> reaction link is kept on the row (``on_reaction``), in the
-    # payload's ``modifiers`` (text record) and in our SBML (modifier roles). These rows live in
+    # on the step through the enzyme that runs it -- else its first non-currency substrate, then
+    # product, and a currency compound only when nothing else exists. The full modifier -> reaction
+    # link is kept on the row (``on_reaction``, in pwml_ir.json), in the IR report's issue pointers,
+    # and in our SBML (modifier roles); the text record does not show it. These rows live in
     # their own IR bucket so ``ir.processes.interactions`` stays one row per payload interaction
     # (``app.reaction_evidence`` lines the two up).
     for step in modifier_steps:
