@@ -290,7 +290,8 @@ def _paper_kw(state: Any) -> Dict[str, Any]:
 
 def maybe_apply_final_id_fill(payload: Dict[str, Any], pathway_context: Any = None, state: Any = None,
                               **kw: Any) -> Dict[str, Any]:
-    """The postpipeline seam: {} (payload untouched) when the flag is off; otherwise the fill report. Never raises."""
+    """The postpipeline seam: {} (payload untouched) when the flag is off; otherwise the fill report, whose ``merge`` key is the
+    D-W24 (5) state / duplicate-reaction merge (``final_payload_merge``, run last). Never raises."""
     if not final_payload_enabled():
         return {}
     try:
@@ -304,9 +305,12 @@ def maybe_apply_final_id_fill(payload: Dict[str, Any], pathway_context: Any = No
         report["meta_keys"] = sorted(fill_meta(pathway_context, state))
         report["nucleic_types"] = maybe_apply_paper_nucleic_types(payload, state, **{k: shared[k] for k in ("fetcher", "cache", "today") if k in shared})
         report["pathway_meta"] = maybe_apply_final_pathway_meta(payload, pathway_context, state, **kw)
-        return report
     except Exception as exc:
-        return {"enabled": True, "written": 0, "error": f"{type(exc).__name__}: {exc}"}
+        report = {"enabled": True, "written": 0, "error": f"{type(exc).__name__}: {exc}"}
+    # D-W24 (5), L6: last, offline, whatever the fill did; never raises (fails open, payload restored).
+    from t2pw.service.final_payload_merge import merge_states_and_duplicates
+    report["merge"] = merge_states_and_duplicates(payload)
+    return report
 
 
 def maybe_apply_paper_nucleic_types(payload: Dict[str, Any], state: Any = None, *, fetcher: Any = None, cache: Any = None,
