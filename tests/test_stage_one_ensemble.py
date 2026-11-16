@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import json
 import sys
+import threading
 from copy import deepcopy
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set
@@ -34,6 +35,7 @@ from t2pw.pipeline.stage_one_ensemble import (  # noqa: E402
     BOUNDARY_STAGE1_ENSEMBLE,
     ENV_VAR,
     REPORT_NAME,
+    current_draw,
     extraction_draws,
     merge_draws,
     row_key,
@@ -111,10 +113,14 @@ class Recorder:
         self.script = list(script)
         self.calls: List[Dict[str, Any]] = []
         self.returned: List[Any] = []
+        self.lock = threading.Lock()
 
     def __call__(self, **kwargs: Any) -> Any:
-        self.calls.append(kwargs)
-        item = self.script[len(self.calls) - 1]
+        # L9: N > 1 draws run concurrently, so the script is indexed by the draw's own number
+        # (current_draw), not by call order, which would be a race. N = 1 has no draw number.
+        with self.lock:
+            self.calls.append(kwargs)
+            item = self.script[(current_draw() or len(self.calls)) - 1]
         if isinstance(item, BaseException):
             raise item
         result = (deepcopy(item), [{"attempt": 1, "raw": json.dumps(item)}])
@@ -344,7 +350,7 @@ def test_an_unrelated_exception_propagates_immediately(no_env: None, monkeypatch
     monkeypatch.setattr(pipeline_mod, "_run_json_stage", rec)
     with pytest.raises(RuntimeError, match="leg deadline"):
         run_extraction_pipeline(TEXT)
-    assert len(rec.calls) == 1
+    assert len(rec.calls) == 3  # L9: the other two draws were already in flight; the error still propagates untouched
 
 
 def test_ambiguous_review_still_rejected_before_any_draw(no_env: None, monkeypatch: pytest.MonkeyPatch) -> None:
