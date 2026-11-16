@@ -201,12 +201,27 @@ def test_l6_states_whose_names_disagree_never_merge(states, species) -> None:
     assert any(d["reason"] == "names_disagree" for d in rep["deferred"]) or states[0][1] != states[1][1]
 
 
-def test_l6_a_generic_state_does_not_join_two_specific_ones_that_disagree() -> None:
-    """Agreement is checked against every member: 'cytosol' may take 'hepatocyte cytosol' but then not 'neuron cytosol'."""
-    p = _payload([_st("cytosol", "cytosol", "Homo sapiens"), _st("hepatocyte cytosol", "cytosol", "Homo sapiens"),
-                  _st("neuron cytosol", "cytosol", "Homo sapiens")], [], [], _HS)
-    merge_states_and_duplicates(p)
-    assert [s["name"] for s in p["biological_states"]] == ["cytosol", "neuron cytosol"]
+@pytest.mark.parametrize("order", [
+    ["cytosol", "hepatocyte cytosol", "neuron cytosol"],
+    ["neuron cytosol", "hepatocyte cytosol", "cytosol"],  # review round 2, R1: the reversed order
+    ["hepatocyte cytosol", "cytosol", "neuron cytosol"],
+])
+def test_l6_a_generic_state_does_not_join_two_specific_ones_that_disagree(order) -> None:
+    """R1: 'cytosol' agrees with both 'hepatocyte cytosol' and 'neuron cytosol', which disagree with each other: it is the
+    same place as neither for certain, so all three stay apart in any row order."""
+    p = _payload([_st(n, "cytosol", "Homo sapiens") for n in order], [], [], _HS)
+    rep = merge_states_and_duplicates(p)
+    assert [s["name"] for s in p["biological_states"]] == order
+    assert MERGE_FIELD not in p
+    assert [d["state"] for d in rep["deferred"] if d["reason"] == "agrees_with_states_that_disagree"] == ["cytosol"]
+
+
+def test_l6_a_placeholder_at_row_0_is_not_merged_with_a_stated_state() -> None:
+    """R2: the stated state must survive, but row 0 (the default state) never moves: defer."""
+    p = _payload([_st("__auto_state__", "cell"), _st("cytoplasmic state", "cytoplasm"), _st("outside", "extracellular")], [], [])
+    rep = merge_states_and_duplicates(p)
+    assert [s["name"] for s in p["biological_states"]] == ["__auto_state__", "cytoplasmic state", "outside"]
+    assert {d["reason"] for d in rep["deferred"]} == {"default_state_is_a_placeholder"}
 
 
 def test_l6_states_without_a_species_never_merge() -> None:

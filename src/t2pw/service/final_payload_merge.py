@@ -11,11 +11,13 @@ same location after :func:`location_key` (the table below; parenthetical text is
 both absent), the same :data:`POSITION_WORDS`, AND names that agree: the name's words minus every spelling of its location,
 the organism, the cell type, the tissue and :data:`NAME_STOPWORDS` must carry the same place words (:data:`PLACE_WORDS`:
 "thylakoid membrane" is not "chloroplast", "blood" is not "urine") and the other words of one must be a subset of the other's
-("hepatocyte cytosol" is not "neuron cytosol"). Agreement is checked against every member of a group, not only the first. A
+("hepatocyte cytosol" is not "neuron cytosol"). Agreement is checked against every member of a group, and a state that agrees
+with two states that disagree with each other ("cytosol" beside both) never merges, so the result never depends on row order. A
 placeholder (``__auto_state__``, ``AutoState_*``) has no name words. A state with no location field is keyed by its name; a
 state with neither never merges. A eukaryote "cell" / "intracellular" state is the cytosol only when nothing else
 distinguishes them, and never merges without a cell type or tissue. The kept state is the first of its group (row 0, the
-default state, never moves), or its first stated member when the first is a placeholder. Merged-away names go on the kept
+default state, never moves), or its first stated member when the first is a placeholder; a placeholder at row 0 with a
+stated member is not merged (the stated state would have to move row 0). Merged-away names go on the kept
 row's ``aliases``; the rows, whole, into the ``final_payload_merge`` record. Every reference by name (processes,
 element_locations, entity ``element_states``) is re-pointed; one re-pointed off a placeholder is marked
 ``compartment_source: "estimated"`` with a ``compartment_estimate`` reason (lane L7's field). Guards, each deferring and saying
@@ -340,8 +342,23 @@ def _state_groups(payload: Dict[str, Any], states: List[Dict[str, Any]], report:
         if i in cell_as_cytosol:
             words |= spelled.get("ecell", set())
         residue.append(_name_residue(s, words, species_rows))
-    row, _ = _resolver(states)
+
+    def same_place(i: int, j: int) -> bool:
+        return (pro[i] == pro[j] and loc[i] == loc[j] and ctx[i] == ctx[j]
+                and org.same(states[i].get("species"), states[j].get("species")) and _names_agree(residue[i], residue[j]))
+
+    # R1 (fail closed): a state that agrees with two states which disagree with each other ("cytosol" with "hepatocyte
+    # cytosol" and "neuron cytosol") has no one place it is the same as; it never merges, whatever the row order. With these
+    # removed, what is left is order-independent: every state that agrees with two others has them agree with each other.
     blocked: set = set()
+    for i in range(len(states)):
+        partners = [j for j in range(len(states)) if j != i and same_place(i, j)]
+        clashing = sorted({str(states[b].get("name")) for a in partners for b in partners if a < b and not same_place(a, b)})
+        if clashing:
+            blocked.add(i)
+            report["deferred"].append({"kind": "state", "state": str(states[i].get("name")), "row": i,
+                                       "reason": "agrees_with_states_that_disagree", "with": clashing})
+    row, _ = _resolver(states)
     while True:
         group = list(range(len(states)))
         members: Dict[int, List[int]] = {}
@@ -380,11 +397,18 @@ def _state_groups(payload: Dict[str, Any], states: List[Dict[str, Any]], report:
         for i in sorted(clash):
             report["deferred"].append({"kind": "state", "state": str(states[i].get("name")), "row": i, "reason": "transport_ends_would_merge"})
         blocked |= clash
-    # The kept state is a stated one rather than a placeholder, except row 0 (the default state) which never moves.
+    # The kept state is a stated one rather than a placeholder. R2: row 0 (the default state) never moves, so a placeholder at
+    # row 0 with a stated member is not merged at all (the box would otherwise keep the placeholder's name).
     for k, ms in members.items():
-        if len(ms) > 1 and k != 0 and is_placeholder(states[k]):
+        if len(ms) > 1 and is_placeholder(states[k]):
             stated = [m for m in ms if not is_placeholder(states[m])]
-            if stated:
+            if stated and k == 0:
+                for m in ms:
+                    group[m] = m
+                report["deferred"].append({"kind": "state", "state": str(states[0].get("name")), "row": 0,
+                                           "reason": "default_state_is_a_placeholder",
+                                           "with": [str(states[m].get("name")) for m in stated]})
+            elif stated:
                 for m in ms:
                     group[m] = stated[0]
     # Guard: the kept state's name must still resolve to it (no later surviving row may carry it).
