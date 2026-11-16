@@ -176,6 +176,63 @@ def test_l6_positional_qualifiers_in_the_name_keep_states_apart() -> None:
                                                          "extracellular space (taste bud lumen)", "Type III cell apical membrane"]
 
 
+_HS = (("Homo sapiens", "Eukaryote", "9606"),)
+_AT = (("Arabidopsis thaliana", "Eukaryote", "3702"),)
+
+
+@pytest.mark.parametrize("states,species", [
+    # review F1: each pair is two different places that the location field alone would have merged
+    ([("hepatocyte cytosol", "cytosol"), ("neuron cytosol", "cytosol")], _HS),
+    ([("liver mitochondrion", "mitochondrion"), ("kidney mitochondrion", "mitochondrion")], _HS),
+    ([("chloroplast", "chloroplast"), ("thylakoid membrane", "chloroplast")], _AT),
+    ([("chloroplast (thylakoid membrane)", "chloroplast"), ("chloroplast (envelope)", "chloroplast")], _AT),
+    ([("chloroplast (thylakoid membrane) state", "chloroplast (thylakoid membrane)"),
+      ("chloroplast (envelope) state", "chloroplast (envelope)")], _AT),
+    ([("nucleus", "nucleus"), ("nucleolus", "nucleus")], _HS),
+    ([("lysosome", "lysosome"), ("lysosome membrane", "lysosome")], _HS),
+    ([("blood", "extracellular"), ("urine", "extracellular")], _HS),
+    ([("extracellular space", "extracellular"), ("blood", "extracellular")], _HS),
+])
+def test_l6_states_whose_names_disagree_never_merge(states, species) -> None:
+    p = _payload([_st(n, loc, species[0][0]) for n, loc in states], [], [], species)
+    rep = merge_states_and_duplicates(p)
+    assert [s["name"] for s in p["biological_states"]] == [n for n, _ in states]
+    assert MERGE_FIELD not in p
+    assert any(d["reason"] == "names_disagree" for d in rep["deferred"]) or states[0][1] != states[1][1]
+
+
+def test_l6_a_generic_state_does_not_join_two_specific_ones_that_disagree() -> None:
+    """Agreement is checked against every member: 'cytosol' may take 'hepatocyte cytosol' but then not 'neuron cytosol'."""
+    p = _payload([_st("cytosol", "cytosol", "Homo sapiens"), _st("hepatocyte cytosol", "cytosol", "Homo sapiens"),
+                  _st("neuron cytosol", "cytosol", "Homo sapiens")], [], [], _HS)
+    merge_states_and_duplicates(p)
+    assert [s["name"] for s in p["biological_states"]] == ["cytosol", "neuron cytosol"]
+
+
+def test_l6_states_without_a_species_never_merge() -> None:
+    p = _payload([{"name": "cytoplasm", "subcellular_location": "cytoplasm"},
+                  {"name": "cytoplasm state", "subcellular_location": "cytoplasm"}], [], [])
+    merge_states_and_duplicates(p)
+    assert len(p["biological_states"]) == 2
+
+
+@pytest.mark.parametrize("states,species", [
+    # the true synonyms the merge exists for keep working
+    ([("Lactococcus lactis cells", "cell"), ("intracellular state", "intracellular"), ("Lactococcus lactis cytoplasm", "cytoplasm"),
+      ("L. lactis KF147 state", "cell"), ("bacterial cell state", "cell"), ("cytosolic state", "cytosol")],
+     (("Lactococcus lactis", "Prokaryote", "1358"),)),
+    ([("plastid", "plastid"), ("plastid state", "plastid")], _AT),
+    ([("extracellular", "extracellular"), ("extracellular space state", "extracellular space")], _HS),
+    ([("ER state", "endoplasmic reticulum"), ("Homo sapiens endoplasmic reticulum", "ER")], _HS),
+    ([("lysosome state", "lysosome"), ("Lysosome state", "lysosomal")], _HS),
+])
+def test_l6_true_synonyms_still_merge(states, species) -> None:
+    sp = species[0][0]
+    p = _payload([_st(n, loc, sp) for n, loc in states], [], [], species)
+    merge_states_and_duplicates(p)
+    assert [s["name"] for s in p["biological_states"]] == [states[0][0]]
+
+
 def test_l6_states_without_a_location_are_keyed_by_name() -> None:
     sp = (("Homo sapiens", "Eukaryote", "9606"),)
     p = _payload([{"name": "cytoplasm", "species": "Homo sapiens"}, {"name": "nucleus", "species": "Homo sapiens"},
@@ -228,14 +285,82 @@ def test_l6_rows_that_are_not_exact_duplicates_stay() -> None:
     assert [r["name"] for r in p["processes"]["reactions"]] == ["a", "stoich", "reverse", "other product"]
 
 
-def test_l6_the_kept_copy_is_the_catalysed_one() -> None:
-    """idx 20: 'Spontaneous elimination of SEPHCHC' and 'MenH-catalyzed conversion of SEPHCHC' are the same step."""
+def test_l6_an_uncatalysed_copy_is_not_folded_into_a_catalysed_one_both_are_flagged() -> None:
+    """idx 20 (review F3): 'Spontaneous elimination of SEPHCHC' and 'MenH-catalyzed conversion of SEPHCHC' are conflicting
+    claims about the same step; both stay, both are flagged."""
     rx = [_rx("Spontaneous elimination", ["SEPHCHC"], ["SHCHC", "pyruvate"], "cell", [], lock="rxn_lock_005"),
-          _rx("MenH-catalyzed conversion", ["SEPHCHC"], ["pyruvate", "SHCHC"], "cell", ["MenH complex"], lock="rxn_lock_004")]
+          _rx("MenH-catalyzed conversion", ["SEPHCHC"], ["pyruvate", "SHCHC"], "cell", ["MenH complex"], lock="rxn_lock_004"),
+          _rx("MenH again", ["SEPHCHC"], ["pyruvate", "SHCHC"], "cell", ["MenH complex"])]
     p = _payload([_st("cell", "cell")], rx, ["MenH complex"])
+    rep = merge_states_and_duplicates(p)
+    names = [r["name"] for r in p["processes"]["reactions"]]
+    assert names == ["Spontaneous elimination", "MenH-catalyzed conversion"]  # the two catalysed copies still merge
+    assert all(r["review_reasons"][0].startswith("same_step_with_and_without_enzyme") for r in p["processes"]["reactions"])
+    assert {f["reason"] for f in rep["flagged"]} == {"same_step_with_and_without_enzyme"}
+
+
+def test_l6_reactions_with_an_empty_side_never_merge() -> None:
+    rx = [_rx("a", [], ["y"], "cell", ["E"]), _rx("b", [], ["y"], "cell", ["E"])]
+    p = _payload([_st("cell", "cell")], rx, ["E"])
+    rep = merge_states_and_duplicates(p)
+    assert len(p["processes"]["reactions"]) == 2 and {d["reason"] for d in rep["deferred"]} == {"empty_side"}
+
+
+def test_l6_a_merged_pair_leaves_the_text_record_coverage_unchanged() -> None:
+    """Review F2: a merged-away copy is a KI-014 'merged duplicate, not counted', not an unclassified omission."""
+    from t2pw.app.reaction_evidence import _omissions
+
+    unmerged = _dup_payload()
+    ir2 = {"processes": {"reactions": [{"name": "a"}, {"name": "b"}], "transports": [], "interactions": []}}
+    base = _omissions(unmerged, None, None, ir2, "pwml_ir.json", [], "")["coverage"]
+    p = _dup_payload()
     merge_states_and_duplicates(p)
-    assert [r["name"] for r in p["processes"]["reactions"]] == ["MenH-catalyzed conversion"]
-    assert p["quarantined_locked_reactions"][0]["locked_reaction_id"] == "rxn_lock_005"
+    ir1 = {"processes": {"reactions": [{"name": "a"}], "transports": [], "interactions": []}}
+    om = _omissions(p, None, None, ir1, "pwml_ir.json", [], "")
+    cov = om["coverage"]
+    assert (base["drawn"], base["total"]) == (2, 2)
+    assert (cov["drawn"], cov["total"]) == (1, 1)  # 100% before, 100% after: nothing counted as lost
+    assert cov["merged_duplicates"] == 1 and cov["not_counted"] == 1
+    assert om["omitted"][0]["ki"] == "KI-014"
+    assert p["quarantined_locked_reactions"][0]["merged_into"]["note"] == "written once as 'a' (D-W24 5)"
+
+
+def test_l6_merged_away_names_leave_reaction_order() -> None:
+    p = _dup_payload()
+    p["reaction_order"] = ["a", "b", "other"]
+    rep = merge_states_and_duplicates(p)
+    assert p["reaction_order"] == ["a", "other"] and rep["reaction_order_removed"] == 1
+
+
+def test_l6_a_placeholder_merged_into_the_cytoplasm_marks_its_references_estimated() -> None:
+    """Review F7: '__auto_state__' (no stated compartment) merged into the prokaryote cytoplasm."""
+    p = _payload([_st("cytoplasmic state", "cytoplasm"), _st("__auto_state__", "cell")], [], [])
+    p["element_locations"]["compound_locations"] = [{"compound": "x", "biological_state": "__auto_state__"},
+                                                   {"compound": "y", "biological_state": "cytoplasmic state"}]
+    merge_states_and_duplicates(p)
+    a, b = p["element_locations"]["compound_locations"]
+    assert a["biological_state"] == "cytoplasmic state" and a["compartment_source"] == "estimated"
+    assert "no stated compartment" in a["compartment_estimate"][0]["reason"]
+    assert "compartment_source" not in b
+    assert [s["name"] for s in p["biological_states"]] == ["cytoplasmic state"]
+
+
+def test_l6_the_kept_state_is_the_stated_one_not_the_placeholder() -> None:
+    p = _payload([_st("extracellular", "extracellular"), _st("AutoState_lactococcus_lactiscytoplasm", "cytoplasm"),
+                  _st("Lactococcus lactis cytoplasm", "cytoplasm")], [], [])
+    merge_states_and_duplicates(p)
+    assert [s["name"] for s in p["biological_states"]] == ["extracellular", "Lactococcus lactis cytoplasm"]
+
+
+def test_l6_a_merge_module_that_fails_to_import_does_not_break_the_seam(monkeypatch) -> None:
+    import t2pw.service.final_payload as fp
+
+    monkeypatch.setenv("T2PW_FINAL_PAYLOAD", "1")
+    monkeypatch.setattr("t2pw.clean_model.fill.cache.Cache._path", lambda self, key: None)
+    monkeypatch.setitem(sys.modules, "t2pw.service.final_payload_merge", None)
+    p = _dup_payload()
+    rep = fp.maybe_apply_final_id_fill(p, None, {}, fetcher=_NoNet())
+    assert "error" in rep["merge"] and len(p["processes"]["reactions"]) == 2
 
 
 def test_l6_a_copy_that_would_add_a_non_complex_enzyme_is_not_merged() -> None:

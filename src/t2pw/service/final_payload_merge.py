@@ -3,30 +3,36 @@
 Runs last in ``final_payload.maybe_apply_final_id_fill`` (flag ``T2PW_FINAL_PAYLOAD``; off = the payload is untouched), so in a
 run it comes before the pre-freeze resolver, the freeze and the strict quarantine, and the IR, the PWML, the SBML and the text
 record all read the same merged payload. No network, no LLM. Fails open: on any error the payload is exactly what it was. Runs
-once: a payload that already carries ``final_payload_merge`` is left alone.
+once: a payload that already carries ``final_payload_merge`` is left alone. When nothing merges or is flagged, the payload is
+not touched at all (deferrals are only in the returned report).
 
-States. Two states merge only when they mean the same place: the same organism, the same location after :func:`location_key`
-(the table below), the same cell type and the same tissue (or both absent), and the same :data:`POSITION_WORDS` in name and
-location ("apical extracellular" and "synaptic extracellular" stay apart). A state with no location field is keyed by its
-name (the IR reads such a state's location from its name); a state with neither never merges. The kept state is the first of
-its group (so row 0, the default state, never moves). A eukaryote state at "cell" / "intracellular" with no cell type and no
-tissue never merges (only its name says which cell); the merged-away names go on the kept row's ``aliases`` and the rows
-themselves, whole, into the ``final_payload_merge`` record. Every reference by name (processes, element_locations, entity
-``element_states``) is re-pointed to the kept state. Guards, each deferring the merge and saying why in the record: a
-transport whose two ends would become one state; a kept state whose name a later surviving state also carries.
+States. Two states merge only when they mean the same place: the same organism (a state with no species never merges), the
+same location after :func:`location_key` (the table below; parenthetical text is kept), the same cell type and tissue (or
+both absent), the same :data:`POSITION_WORDS`, AND names that agree: the name's words minus every spelling of its location,
+the organism, the cell type, the tissue and :data:`NAME_STOPWORDS` must carry the same place words (:data:`PLACE_WORDS`:
+"thylakoid membrane" is not "chloroplast", "blood" is not "urine") and the other words of one must be a subset of the other's
+("hepatocyte cytosol" is not "neuron cytosol"). Agreement is checked against every member of a group, not only the first. A
+placeholder (``__auto_state__``, ``AutoState_*``) has no name words. A state with no location field is keyed by its name; a
+state with neither never merges. A eukaryote "cell" / "intracellular" state is the cytosol only when nothing else
+distinguishes them, and never merges without a cell type or tissue. The kept state is the first of its group (row 0, the
+default state, never moves), or its first stated member when the first is a placeholder. Merged-away names go on the kept
+row's ``aliases``; the rows, whole, into the ``final_payload_merge`` record. Every reference by name (processes,
+element_locations, entity ``element_states``) is re-pointed; one re-pointed off a placeholder is marked
+``compartment_source: "estimated"`` with a ``compartment_estimate`` reason (lane L7's field). Guards, each deferring and saying
+why: names that disagree; a transport whose two ends would become one state; a kept name a later surviving state also carries.
 
-Reactions. After the state merge, reactions with the same state, the same left and right members with stoichiometry (read as
-the IR reads them), the same direction, reversibility, spontaneous flag and out-of-scope verdict are written once. Enzymes
-and modifiers of every copy are unioned on the kept row (isozymes written as separate rows with identical sides and state
-merge too, as PathWhiz does on import; ``isozyme_groups`` counts them). The kept row is the copy with the most enzymes and
-modifiers (so the step keeps the name of its catalysed copy), then one carrying a ``locked_reaction_id``, then the first. Each merged-away row is recorded whole, as it was before this step, in the
-``final_payload_merge`` record AND in ``quarantined_locked_reactions`` (the record ``dedupe_processes`` already uses for a
-duplicate locked reaction), so its lock stays accounted for, its evidence stays in the text record and it is listed there as
-"merged into" the kept row. Zero loss guards: a copy (the kept one included) takes part only when every enzyme and modifier
-of it passes the strict quarantine's own actor check under strict_db (the stricter mode) AND is a declared protein complex
-(the only enzyme the IR writes; idx 113: a copy with a bare-protein enzyme is quarantined at export, and keeping it would have
-cost the step), so neither the kept row nor a union can lose its place in the PWML. A copy that fails a guard stays as it
-was and is listed under ``deferred``.
+Reactions. After the state merge, reactions with the same state, the same non-empty left and right members with stoichiometry
+(read as the IR reads them), the same direction, reversibility, spontaneous flag and out-of-scope verdict are written once.
+Enzymes and modifiers of every copy are unioned on the kept row (isozymes merge too, as PathWhiz does on import;
+``isozyme_groups`` counts them). A copy with no enzyme and a catalysed copy are conflicting claims: neither is folded into the
+other, both carry a ``review_reasons`` entry. The kept row is the copy with the most enzymes and modifiers, then a locked one,
+then the first. Each merged-away row is recorded whole, as it was before this step, in the ``final_payload_merge`` record AND
+in ``quarantined_locked_reactions`` with the reason ``duplicate_locked_reaction`` (the one ``dedupe_processes`` uses; KI-014,
+"merged duplicate, not counted"), so its lock stays accounted for, its evidence stays in the text record and the coverage does
+not fall; ``merged_into`` names the kept row. A merged-away name no surviving reaction carries leaves ``reaction_order``. Zero
+loss guards: a copy (the kept one included) takes part only when every enzyme and modifier of it passes the strict
+quarantine's own actor check under strict_db AND is a declared protein complex (idx 113: a copy with a bare-protein enzyme is
+quarantined at export, and keeping it would have cost the step). A copy that fails a guard stays as it was, under ``deferred``.
 """
 
 from __future__ import annotations
@@ -36,7 +42,7 @@ import re
 from typing import Any, Dict, List, Optional, Tuple
 
 MERGE_FIELD = "final_payload_merge"
-MERGED_REASON = "merged_duplicate_reaction"
+MERGED_REASON = "duplicate_locked_reaction"  # the reason dedupe_processes uses; KI-014 "merged duplicate, not counted"
 
 # ---- normalisation table ---------------------------------------------------------------------------------------------
 #: Spelling variants of one location -> one spelling (whole string, after lower-casing, "_" -> " ", a parenthetical, a
@@ -76,11 +82,40 @@ POSITION_WORDS = frozenset({
     "pericellular", "early", "late", "rough", "smooth", "dendritic", "axonal", "somatic",
 })
 _STRAIN_WORDS = frozenset({"strain", "str", "str."})
+#: Name words that carry no place: dropped before two names are compared.
+NAME_STOPWORDS = frozenset({"of", "in", "the", "a", "an", "and", "state", "from", "at", "on", "within", "inside", "to", "for",
+                            "with", "by", "strain", "str", "subsp", "sp", "spp", "var", "serovar", "pv"})
+#: Words that name a place (besides the table's own words). A name word from this set that is not the state's own location
+#: must be carried by both names: "thylakoid membrane" (location chloroplast) is not "chloroplast", "blood" is not "urine".
+EXTRA_PLACE_WORDS = frozenset({
+    "thylakoid", "envelope", "nucleolus", "nucleoplasm", "membrane", "lumen", "stroma", "matrix", "vesicle", "granule",
+    "endosome", "cytoskeleton", "chromatin", "cleft", "pore", "space", "compartment", "wall", "apoplast", "etioplast",
+    "amyloplast", "glyoxysome", "microsome", "mitochondrial", "organelle", "inclusion", "body", "droplet", "lipid",
+    "blood", "urine", "plasma", "serum", "saliva", "bile", "milk", "cerebrospinal", "fluid", "sweat", "feces", "lymph",
+    "synapse", "axon", "dendrite", "cilium", "flagellum", "spine",
+})
 
 
 def position_words(state: Dict[str, Any]) -> frozenset:
     text = _text(f"{state.get('name') or ''} {_state_loc(state) or ''}")
     return frozenset(re.findall(r"[a-z0-9]+", text)) & POSITION_WORDS
+
+
+def _word(t: str) -> str:
+    return t[:-1] if len(t) > 3 and t.endswith("s") and not t.endswith(("ss", "is", "us")) else t
+
+
+def _tokens(value: Any) -> set:
+    """Lower-case words, last-letter plural dropped; parenthetical text is kept ("chloroplast (envelope)")."""
+    return {_word(t) for t in re.findall(r"[a-z0-9]+", _text(value))}
+
+
+_PLACEHOLDER = re.compile(r"^_*auto_?state", re.I)
+
+
+def is_placeholder(state: Dict[str, Any]) -> bool:
+    """A generated state with no stated place (``__auto_state__``, ``AutoState_<species><location>``)."""
+    return bool(_PLACEHOLDER.match(str(state.get("name") or "").strip()))
 
 
 def _norm(value: Any) -> str:
@@ -100,12 +135,15 @@ def _singular(text: str) -> str:
     return (head + " " + last).strip()
 
 
+PLACE_WORDS = frozenset(set().union(*(_tokens(k) | _tokens(v) for k, v in LOCATION_SYNONYMS.items()))
+                        | {_word(w) for w in EXTRA_PLACE_WORDS} | POSITION_WORDS)
+
+
 def location_key(value: Any, prokaryote: bool) -> str:
     """One spelling per place. ``"X state"`` = ``"X"``; plural = singular; the table above; in a prokaryote "cell",
     "intracellular", "cytoplasm" and "cytosol" are the cytoplasm; in a eukaryote "cell" and "intracellular" are one
     unstated place, kept apart from the cytosol."""
-    s = re.sub(r"\([^)]*\)", " ", _text(value))
-    s = re.sub(r"\s+", " ", s).strip()
+    s = _text(value)  # a parenthetical is kept: "chloroplast (thylakoid membrane)" is not "chloroplast"
     s = re.sub(r"^the ", "", s)
     s = re.sub(r" state$", "", s)
     s = LOCATION_SYNONYMS.get(s, LOCATION_SYNONYMS.get(_singular(s), _singular(s)))
@@ -233,6 +271,31 @@ def _resolver(states: List[Dict[str, Any]]):
     return row, last
 
 
+def _name_residue(state: Dict[str, Any], loc_words: set, payload_species: List[Dict[str, Any]]) -> set:
+    """The words of a state's name that say something its location, organism, cell type and tissue do not."""
+    if is_placeholder(state):
+        return set()
+    strip = set(loc_words) | NAME_STOPWORDS
+    sp = state.get("species")
+    row = _species_row(sp, payload_species)
+    for n in [sp, *([row.get("name"), *(row.get("synonyms") or [])] if row else [])]:
+        if isinstance(n, str) and n.strip():
+            toks = re.findall(r"[a-z0-9]+", _text(n))
+            strip |= {_word(t) for t in toks}
+            if toks:
+                strip.add(toks[0][:1])  # "L. lactis", "E. coli"
+    for f in ("cell_type", "cell-type", "tissue"):
+        strip |= _tokens(state.get(f))
+    return _tokens(state.get("name")) - strip
+
+
+def _names_agree(a: set, b: set) -> bool:
+    """Place words beyond the location must be the same in both; any other word may only be added, never swapped."""
+    pa, pb = a & PLACE_WORDS, b & PLACE_WORDS
+    oa, ob = a - PLACE_WORDS, b - PLACE_WORDS
+    return pa == pb and (oa <= ob or ob <= oa)
+
+
 def _state_groups(payload: Dict[str, Any], states: List[Dict[str, Any]], report: Dict[str, Any]) -> List[int]:
     """group[i] = index of the kept state for row i."""
     org = _Organisms(payload, [str(s.get("species") or "") for s in states])
@@ -240,7 +303,9 @@ def _state_groups(payload: Dict[str, Any], states: List[Dict[str, Any]], report:
     loc = []
     for i, s in enumerate(states):
         k = location_key(_state_loc(s) or s.get("name"), pro[i])
-        loc.append(k or "\0unkeyed:%d" % i)  # neither a location nor a name: never merges
+        if not k or not str(s.get("species") or "").strip():
+            k = "\0unkeyed:%d" % i  # no location and no name, or no species: never merges
+        loc.append(k)
     ctx = [(context_key(s.get("cell_type") or s.get("cell-type")), context_key(s.get("tissue")), position_words(s)) for s in states]
     # Eukaryote: "cell" is the cytosol only when nothing else distinguishes them -- that organism's states name no place
     # other than the cell, the cytosol and the outside, and a cytosol state with the same cell type and tissue exists.
@@ -262,18 +327,39 @@ def _state_groups(payload: Dict[str, Any], states: List[Dict[str, Any]], report:
                    for j in range(len(states))):
                 report["deferred"].append({"kind": "state", "state": str(s.get("name")), "row": i, "reason": "eukaryote_cell_without_cell_type_or_tissue"})
             loc[i] = "\0unkeyed:%d" % i
+    # The name must agree too (F1): the words of the location (every spelling of it in the table), the organism, the cell
+    # type, the tissue and stopwords are dropped; what is left must agree (``_names_agree``).
+    spelled: Dict[str, set] = {}
+    for phrase in set(LOCATION_SYNONYMS) | set(LOCATION_SYNONYMS.values()):
+        for p in (True, False):
+            spelled.setdefault(("p" if p else "e") + location_key(phrase, p), set()).update(_tokens(phrase))
+    species_rows = _species_rows(payload)
+    residue = []
+    for i, s in enumerate(states):
+        words = _tokens(_state_loc(s)) | spelled.get(("p" if pro[i] else "e") + loc[i], set())
+        if i in cell_as_cytosol:
+            words |= spelled.get("ecell", set())
+        residue.append(_name_residue(s, words, species_rows))
     row, _ = _resolver(states)
     blocked: set = set()
     while True:
         group = list(range(len(states)))
+        members: Dict[int, List[int]] = {}
         for i in range(len(states)):
             if i in blocked or group[i] != i:
                 continue
+            members[i] = [i]
             for j in range(i + 1, len(states)):
                 if j in blocked or group[j] != j:
                     continue
                 if pro[i] == pro[j] and loc[i] == loc[j] and ctx[i] == ctx[j] and org.same(states[i].get("species"), states[j].get("species")):
-                    group[j] = i
+                    if all(_names_agree(residue[m], residue[j]) for m in members[i]):
+                        group[j] = i
+                        members[i].append(j)
+                    else:
+                        report["deferred"].append({"kind": "state", "state": str(states[j].get("name")), "row": j,
+                                                   "with": str(states[i].get("name")), "reason": "names_disagree",
+                                                   "words": sorted(residue[j] ^ residue[i])})
         # Guard: a transport whose two ends are different states must not become a same-state transport.
         clash = set()
         for t in ((payload.get("processes") or {}).get("transports") or []):
@@ -290,18 +376,26 @@ def _state_groups(payload: Dict[str, Any], states: List[Dict[str, Any]], report:
                     clash |= {ra, rb}
         if not clash:
             break
+        report["deferred"] = [d for d in report["deferred"] if d.get("reason") != "names_disagree"]  # recomputed next pass
         for i in sorted(clash):
             report["deferred"].append({"kind": "state", "state": str(states[i].get("name")), "row": i, "reason": "transport_ends_would_merge"})
         blocked |= clash
+    # The kept state is a stated one rather than a placeholder, except row 0 (the default state) which never moves.
+    for k, ms in members.items():
+        if len(ms) > 1 and k != 0 and is_placeholder(states[k]):
+            stated = [m for m in ms if not is_placeholder(states[m])]
+            if stated:
+                for m in ms:
+                    group[m] = stated[0]
     # Guard: the kept state's name must still resolve to it (no later surviving row may carry it).
     kept = {i for i in range(len(states)) if group[i] == i}
     for k in sorted(kept):
-        members = [i for i in range(len(states)) if group[i] == k]
-        if len(members) < 2:
+        ms = [i for i in range(len(states)) if group[i] == k]
+        if len(ms) < 2:
             continue
         n = _norm(states[k].get("name"))
         if n and any(j > k and j in kept and _norm(states[j].get("name")) == n for j in range(len(states))):
-            for i in members:
+            for i in ms:
                 group[i] = i
             report["deferred"].append({"kind": "state", "state": str(states[k].get("name")), "row": k, "reason": "kept_name_not_unique"})
     return group
@@ -323,11 +417,21 @@ def _merge_states(payload: Dict[str, Any], report: Dict[str, Any]):
     if all(group[i] == i for i in range(len(states))):
         return resolve
     rename = {n: str(states[group[i]].get("name")) for n, i in last.items() if group[i] != i}
+    placeholder = {n for n, i in last.items() if group[i] != i and is_placeholder(states[i])}
     for holder, key in list(_iter_state_refs(payload)):
         n = _norm(holder.get(key))
         if n in rename and _norm(rename[n]) != n:
+            old = holder[key]
             holder[key] = rename[n]
             report["state_references_repointed"] += 1
+            if n in placeholder:  # F7: a placeholder had no stated compartment; where it now sits is an estimate (L7's field)
+                kept = states[group[last[n]]]
+                holder["compartment_source"] = "estimated"
+                holder.setdefault("compartment_estimate", []).append({
+                    "field": key, "from_state": old, "to_state": rename[n],
+                    "reason": f"placeholder state '{old}' had no stated compartment; merged into '{rename[n]}' "
+                              f"({_state_loc(kept)}, {kept.get('species')}) as the same place (D-W24 5, L6)"})
+                report["placeholder_references_estimated"] += 1
     originals = copy.deepcopy(states)
     for i, s in enumerate(states):
         k = group[i]
@@ -339,6 +443,7 @@ def _merge_states(payload: Dict[str, Any], report: Dict[str, Any]):
             if isinstance(a, str) and a and _norm(a) != _norm(kept.get("name")) and a not in aliases:
                 aliases.append(a)
         report["states"].append({"state": s.get("name"), "row": i, "into": kept.get("name"), "into_row": k,
+                                 "placeholder": is_placeholder(s),
                                  "location": _state_loc(s), "into_location": _state_loc(kept),
                                  "species": s.get("species"), "into_species": kept.get("species"), "original": originals[i]})
     payload["biological_states"] = [s for i, s in enumerate(states) if group[i] == i]
@@ -388,8 +493,12 @@ def _merge_reactions(payload: Dict[str, Any], resolve: Any, originals: List[Any]
                _side(r.get("inputs")), _side(r.get("outputs")), _scope_is_out_of_scope(r))
         groups.setdefault(sig, []).append(i)
     drop: set = set()
-    for members in groups.values():
+    for sig, members in groups.items():
         if len(members) < 2:
+            continue
+        if not sig[4] or not sig[5]:  # a side is empty: not a reaction anything can be proven equal to
+            for i in members:
+                report["deferred"].append({"kind": "reaction", "reaction": reactions[i].get("name"), "row": i, "reason": "empty_side"})
             continue
         ok = []
         for i in members:
@@ -404,53 +513,80 @@ def _merge_reactions(payload: Dict[str, Any], resolve: Any, originals: List[Any]
                                            else "actor_not_a_protein_complex:" + "|".join(bare)})
         if len(ok) < 2:
             continue
-        # kept: the copy with the most enzymes and modifiers (named after its catalyst), then a locked one, then the first
-        k = min(ok, key=lambda i: (-len(reactions[i].get("enzymes") or []) - len(reactions[i].get("modifiers") or []), not _lock(reactions[i]), i))
-        kept = reactions[k]
-        isozymes = False
-        for i in ok:
-            if i == k:
-                continue
-            dup = reactions[i]
-            to_add = []
-            differs = False
-            for fld in ("enzymes", "modifiers"):
-                have = {_actor_key(a) for a in (kept.get(fld) or [])}
-                differs = differs or {_actor_key(a) for a in (dup.get(fld) or [])} != have
-                for a in dup.get(fld) or []:
-                    if _actor_key(a) not in have:
-                        to_add.append((fld, a))
-                        have.add(_actor_key(a))
-            for fld, a in to_add:
-                kept.setdefault(fld, []).append(copy.deepcopy(a))
-            original = originals[i]
-            record = {"reaction_name": str(original.get("name") or "<unnamed>"),
-                      "reason": f"{MERGED_REASON}: written once as '{kept.get('name')}' (D-W24 5)",
-                      "action": "merged_into_reaction", "json_pointer": f"/processes/reactions/{i}",
-                      "merged_into": {"reaction_name": kept.get("name"), "locked_reaction_id": _lock(kept) or None},
-                      "original_reaction": original}
-            if _lock(original):
-                record["locked_reaction_id"] = _lock(original)
-            if not isinstance(payload.get("quarantined_locked_reactions"), list):
-                payload["quarantined_locked_reactions"] = []
-            payload["quarantined_locked_reactions"].append(record)
-            drop.add(i)
-            isozymes = isozymes or differs
-            report["reactions"].append({"reaction": original.get("name"), "row": i, "lock": _lock(original) or None,
-                                        "into": kept.get("name"), "into_row": k, "into_lock": _lock(kept) or None,
-                                        "biological_state": original.get("biological_state"),
-                                        "actors_added": [[f, _actor_name(a)] for f, a in to_add]})
-        if isozymes:
-            report["isozyme_groups"] += 1
+        # F3: a copy with no enzyme and a catalysed copy are conflicting claims (idx 20: "Spontaneous elimination" vs the
+        # MenH step). Neither is folded into the other; both are flagged. Copies on the same side still merge.
+        n_actors = {i: len(reactions[i].get("enzymes") or []) + len(reactions[i].get("modifiers") or []) for i in ok}
+        catalysed, uncatalysed = [i for i in ok if n_actors[i]], [i for i in ok if not n_actors[i]]
+        if catalysed and uncatalysed:
+            names = [str(reactions[i].get("name")) for i in ok]
+            for i in ok:
+                reactions[i].setdefault("review_reasons", []).append(
+                    "same_step_with_and_without_enzyme: written as " + " / ".join(repr(n) for n in names) + "; kept apart (D-W24 5, L6)")
+                report["flagged"].append({"reaction": reactions[i].get("name"), "row": i, "reason": "same_step_with_and_without_enzyme"})
+        for sub in ((catalysed, uncatalysed) if catalysed and uncatalysed else (ok,)):
+            if len(sub) >= 2:
+                _merge_copies(payload, reactions, sub, n_actors, originals, drop, report)
     if drop:
         procs["reactions"] = [r for i, r in enumerate(reactions) if i not in drop]
+        # F6: a merged-away name no surviving reaction carries leaves reaction_order
+        alive = {_norm(r.get("name")) for r in procs["reactions"] if isinstance(r, dict)}
+        gone = {_norm(originals[i].get("name")) for i in drop} - alive
+        order = payload.get("reaction_order")
+        if gone and isinstance(order, list):
+            payload["reaction_order"] = [x for x in order if not (isinstance(x, str) and _norm(x) in gone)]
+            report["reaction_order_removed"] = len(order) - len(payload["reaction_order"])
+
+
+def _merge_copies(payload: Dict[str, Any], reactions: List[Any], ok: List[int], n_actors: Dict[int, int], originals: List[Any],
+                  drop: set, report: Dict[str, Any]) -> None:
+    """Write the copies ``ok`` once. Kept: the copy with the most enzymes and modifiers (named after its catalyst), then a
+    locked one, then the first."""
+    k = min(ok, key=lambda i: (-n_actors[i], not _lock(reactions[i]), i))
+    kept = reactions[k]
+    isozymes = False
+    for i in ok:
+        if i == k:
+            continue
+        dup = reactions[i]
+        to_add = []
+        differs = False
+        for fld in ("enzymes", "modifiers"):
+            have = {_actor_key(a) for a in (kept.get(fld) or [])}
+            differs = differs or {_actor_key(a) for a in (dup.get(fld) or [])} != have
+            for a in dup.get(fld) or []:
+                if _actor_key(a) not in have:
+                    to_add.append((fld, a))
+                    have.add(_actor_key(a))
+        for fld, a in to_add:
+            kept.setdefault(fld, []).append(copy.deepcopy(a))
+        original = originals[i]
+        # F2: the existing reason for a duplicate folded into a kept row (KI-014: listed, not counted in the coverage)
+        record = {"reaction_name": str(original.get("name") or "<unnamed>"), "reason": MERGED_REASON,
+                  "action": "merged_into_reaction", "json_pointer": f"/processes/reactions/{i}",
+                  "merged_into": {"reaction_name": kept.get("name"), "locked_reaction_id": _lock(kept) or None,
+                                  "note": f"written once as '{kept.get('name')}' (D-W24 5)"},
+                  "original_reaction": original}
+        if _lock(original):
+            record["locked_reaction_id"] = _lock(original)
+        if not isinstance(payload.get("quarantined_locked_reactions"), list):
+            payload["quarantined_locked_reactions"] = []
+        payload["quarantined_locked_reactions"].append(record)
+        drop.add(i)
+        isozymes = isozymes or differs
+        report["reactions"].append({"reaction": original.get("name"), "row": i, "lock": _lock(original) or None,
+                                    "into": kept.get("name"), "into_row": k, "into_lock": _lock(kept) or None,
+                                    "biological_state": original.get("biological_state"),
+                                    "actors_added": [[f, _actor_name(a)] for f, a in to_add]})
+    if isozymes:
+        report["isozyme_groups"] += 1
 
 
 def merge_states_and_duplicates(payload: Dict[str, Any]) -> Dict[str, Any]:
     """Apply the merge to ``payload`` in place; the report is also written under ``payload[MERGE_FIELD]`` when anything
     merged (deferrals alone stay in the returned report only). Never raises: any error restores the payload and is reported."""
     report: Dict[str, Any] = {"schema": 1, "states": [], "reactions": [], "deferred": [], "isozyme_groups": 0,
-                              "eukaryote_cell_as_cytosol": [], "state_references_repointed": 0, "error": None}
+                              "eukaryote_cell_as_cytosol": [], "state_references_repointed": 0,
+                              "placeholder_references_estimated": 0, "flagged": [], "error": None}
     if not isinstance(payload, dict) or MERGE_FIELD in payload:
         report["skipped"] = "already_merged" if isinstance(payload, dict) else "not_a_payload"
         return report
@@ -465,10 +601,10 @@ def merge_states_and_duplicates(payload: Dict[str, Any]) -> Dict[str, Any]:
         report["counts"] = {"states_before": states_before, "states_after": len(payload.get("biological_states") or []),
                             "reactions_before": reactions_before,
                             "reactions_after": len(((payload.get("processes") or {}).get("reactions") or []))}
-        if report["states"] or report["reactions"]:  # nothing merged: the payload stays byte-identical
+        if report["states"] or report["reactions"] or report["flagged"]:  # else the payload stays byte-identical
             payload[MERGE_FIELD] = copy.deepcopy(report)
     except Exception as exc:  # fail open
         payload.clear()
         payload.update(snapshot)
-        report.update(states=[], reactions=[], error=f"{type(exc).__name__}: {exc}")
+        report.update(states=[], reactions=[], flagged=[], error=f"{type(exc).__name__}: {exc}")
     return report

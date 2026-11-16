@@ -308,8 +308,11 @@ def maybe_apply_final_id_fill(payload: Dict[str, Any], pathway_context: Any = No
     except Exception as exc:
         report = {"enabled": True, "written": 0, "error": f"{type(exc).__name__}: {exc}"}
     # D-W24 (5), L6: last, offline, whatever the fill did; never raises (fails open, payload restored).
-    from t2pw.service.final_payload_merge import merge_states_and_duplicates
-    report["merge"] = merge_states_and_duplicates(payload)
+    try:
+        from t2pw.service.final_payload_merge import merge_states_and_duplicates
+        report["merge"] = merge_states_and_duplicates(payload)
+    except Exception as exc:
+        report["merge"] = {"error": f"{type(exc).__name__}: {exc}"}
     return report
 
 
