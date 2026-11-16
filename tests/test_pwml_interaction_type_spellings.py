@@ -92,6 +92,14 @@ UNSIGNED = [
     "reduces",
 ]
 
+#: D-W26 / L4: the unsigned words PathWhiz t2pw/05 now stores, with their type. Still no sign read in.
+STORED_UNSIGNED = {
+    "competes_with": "Unspecified", "binds": "Binding", "binding": "Binding", "binds_to": "Binding",
+    "binds to": "Binding", "interacts": "Unspecified", "interacts_with": "Unspecified",
+    "interacts with": "Unspecified", "interaction": "Unspecified", "associates with": "Unspecified",
+    "modifies": "Modification", "regulates": "Regulation", "modulates": "Regulation", "catalyzes": "Catalysis",
+}
+
 
 def _payload(*relationships: str) -> dict:
     """One interaction per spelling, complex -> promoter, so no row is withheld for a
@@ -178,7 +186,7 @@ def test_each_inhibition_spelling_exports_as_inhibition(word: str) -> None:
 # ── every unsigned word stays withheld, with a reason and its spelling ──────
 
 
-@pytest.mark.parametrize("word", UNSIGNED)
+@pytest.mark.parametrize("word", [w for w in UNSIGNED if w not in STORED_UNSIGNED])  # D-W26: stored types moved out
 def test_a_word_whose_sign_is_not_in_it_is_withheld_not_guessed(word: str) -> None:
     (row,), report = _rows(word)
     assert row["export_status"] == "withheld"
@@ -190,6 +198,15 @@ def test_a_word_whose_sign_is_not_in_it_is_withheld_not_guessed(word: str) -> No
     assert len(warnings) == 1
     assert warnings[0]["reason"] == "untyped_interaction"
     assert warnings[0]["raw_interaction_type"] == word
+
+
+@pytest.mark.parametrize("word", sorted(STORED_UNSIGNED))
+def test_an_unsigned_word_pathwhiz_now_stores_is_drawn_as_its_type_with_no_sign(word: str) -> None:
+    """D-W26 / L4: replaces the withheld expectation for these words; still never a sign."""
+    (row,), _ = _rows(word)
+    assert row["export_status"] == "exportable"
+    assert row["interaction_type"] == STORED_UNSIGNED[word]
+    assert row["interaction_type"] not in ("Activation", "Inhibition")
 
 
 # ── case, whitespace and punctuation variants map; nothing else is tolerated ─
@@ -225,9 +242,10 @@ def test_an_unknown_word_or_a_missing_relationship_is_withheld_rather_than_defau
     assert unknown["interaction_type"] == "frobnicates"
     assert unknown["withheld"]["reason"] == "untyped_interaction"
     # No relationship at all: the exporter's placeholder word is itself unsigned.
-    assert missing["export_status"] == "withheld"
-    assert missing["interaction_type"] == "interaction"
-    assert missing["withheld"]["raw_interaction_type"] == "interaction"
+    # L4 ruling: with paper evidence ("q") the row is drawn as Unspecified and flagged, never signed.
+    assert missing["export_status"] == "exportable"
+    assert missing["interaction_type"] == "Unspecified"
+    assert missing["review_reasons"] == ["relationship_type_not_stated"]
 
 
 @pytest.mark.parametrize(
@@ -247,6 +265,8 @@ def test_no_stemming_a_near_miss_of_a_table_word_is_withheld(near_miss: str) -> 
 
 def test_the_pwml_carries_the_signed_rows_and_withholds_the_unsigned_ones() -> None:
     words = ["inhibits", "binds", "activates", "SAME_AS", "REPRESSES", "promoter_of", "prevents"]
+    # D-W26 / L4: "binds" is now drawn as Binding; REPRESSES and prevents repeat inhibits on the same two
+    # elements in the same state, which PathWhiz merges, so they are written once (duplicate_interaction).
     ir, report = build_pwml_ir(_payload(*words), strict_db=True, name_index=None)
     assert report["errors"] == []
     signature = discover_structure_signature(REFERENCE)
@@ -257,11 +277,12 @@ def test_the_pwml_carries_the_signed_rows_and_withholds_the_unsigned_ones() -> N
     build = DeterministicPwmlBuilder(extraction=ir, signature=signature, args=args).build()
 
     exported = [node.findtext("interaction-type") for node in build.root.iter("interaction")]
-    assert exported == ["Inhibition", "Activation", "Inhibition", "Inhibition"]
-    assert len(list(build.root.iter("interaction-visualization"))) == 4
+    assert exported == ["Inhibition", "Binding", "Activation"]
+    assert len(list(build.root.iter("interaction-visualization"))) == 3
     withheld = {row["raw_interaction_type"]: row["reason"] for row in build.withheld_interactions}
     assert withheld == {
-        "binds": "untyped_interaction",
         "SAME_AS": "untyped_interaction",
+        "REPRESSES": "duplicate_interaction",
         "promoter_of": "untyped_interaction",
+        "prevents": "duplicate_interaction",
     }

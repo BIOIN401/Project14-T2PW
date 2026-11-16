@@ -143,7 +143,8 @@ def test_session_run_directory_reads_the_verdicts_from_the_sessions_own_export_i
     _silent_to_the_batch_driver(at)
     labels = [e.label for e in at.expander]
     assert "INTERACTIONS (3) -- PWML verdicts read from: session pwml_export_result[pwml_ir]" in labels
-    assert "PWML: withheld -- untyped_interaction: the relationship word is neither" in "\n".join(_texts(at.code))
+    # D-W26 / L4: the gloss no longer says Activation/Inhibition are the only stored types.
+    assert "PWML: withheld -- untyped_interaction: the relationship word maps to none" in "\n".join(_texts(at.code))
 
 
 def _withheld_binds() -> dict:

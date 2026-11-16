@@ -43,7 +43,7 @@ from typing import Any, Dict, List, Mapping, Optional
 
 # Standard library only (the sign table, no exporter): used to check that an IR row
 # belongs to the payload row beside it, never to decide a verdict.
-from t2pw.pwml.interaction_types import interaction_relationship_word, pwml_interaction_type
+from t2pw.pwml.interaction_types import interaction_relationship_word, pwml_export_interaction_type
 from t2pw.pipeline.name_keys import reference_key
 
 from t2pw.pipeline.strict_quarantine import (
@@ -539,8 +539,21 @@ def _same_process(lock_id: str, name: Any, row: Mapping[str, Any]) -> bool:
 #: to it -- in particular ``bare_protein_endpoint`` says only that no wrapper exists,
 #: never why Stage 6 did not build one.
 _WITHHELD_GLOSS = {
+    # D-W26 (L4): PathWhiz with the t2pw/05 branch stores seven interaction types.
     "untyped_interaction": (
-        "the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores"
+        "the relationship word maps to none of the interaction types PathWhiz stores (Activation, Inhibition, "
+        "Binding, Regulation, Catalysis, Modification, Unspecified)"
+    ),
+    "duplicate_interaction": (
+        "the same type between the same two elements in the same state is already drawn, and PathWhiz "
+        "merges such repeats into one"
+    ),
+    "relationship_type_not_stated": (
+        "the row states no relationship word and has no paper evidence, so it is not drawn"
+    ),
+    "same_element_both_sides": "both endpoints are the same element, which a PathWhiz interaction cannot hold",
+    "step_has_no_element_to_anchor": (
+        "the reaction this modifier acts on has no other enzyme, substrate or product to attach the interaction to"
     ),
     "bare_protein_endpoint": (
         "a protein endpoint is not wrapped in a single-protein complex in this payload, "
@@ -603,7 +616,7 @@ def _same_row(row: Mapping[str, Any], ir_row: Mapping[str, Any], ir_entities: Ma
         return (_text(withheld.get("raw_interaction_type")), _text(withheld.get("left")), _text(withheld.get("right"))) == (
             word, left, right)
     # A drawn row keeps the sign, not the word, and the entity each side was bound to.
-    if pwml_interaction_type(word) != _text(ir_row.get("interaction_type")):
+    if pwml_export_interaction_type(word) != _text(ir_row.get("interaction_type")):
         return False
     for side, written in (("left", left), ("right", right)):
         entity = _dict(ir_entities.get(_text(_dict(ir_row.get(side)).get("entity_key"))))
@@ -714,7 +727,7 @@ def _entry(kind: str, name: Any, where: str, text: str, source: str, reason: str
     ki = known_issue_id(reason if ki_of is None else ki_of)
     return {
         # ORCH-795 (D-114 AMENDMENT 2 § 1): an interaction whose word PathWhiz has no type for, however it was omitted.
-        "uncarried": kind == "interaction" and bool(row) and not pwml_interaction_type(interaction_relationship_word(row)),
+        "uncarried": kind == "interaction" and bool(row) and not pwml_export_interaction_type(interaction_relationship_word(row)),
         "kind": kind, "name": _text(name), "where": where, "text": text, "source": source,
         "reason": reason, "message": message, "omission": omission, "ki": ki,
         # pre_freeze | ir (a written PWML does not draw it) | no_pwml | not_recorded
