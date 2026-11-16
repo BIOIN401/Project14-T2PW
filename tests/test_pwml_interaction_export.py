@@ -320,28 +320,29 @@ def test_untyped_and_bare_protein_interactions_are_withheld_with_a_reason() -> N
     ir, build, root = _export(_payload())
 
     exported = {node.findtext("interaction-type") for node in root.iter("interaction")}
-    assert exported == {"Activation", "Inhibition"}
-    assert len(list(root.iter("interaction"))) == 2
-    assert len(list(root.iter("interaction-visualization"))) == 2
+    assert exported == {"Activation", "Inhibition", "Binding"}  # D-W26 / L4: "binding" is now drawn as Binding
+    assert len(list(root.iter("interaction"))) == 3  # D-W26 / L4
+    assert len(list(root.iter("interaction-visualization"))) == 3  # D-W26 / L4
 
     # Still in the IR, with the verdict on the row, never silently removed.
     by_name = {row["name"]: row for row in ir["processes"]["interactions"]}
-    assert by_name["AraC binds A site"]["export_status"] == "withheld"
-    assert by_name["AraC binds A site"]["interaction_type"] == "binding"
+    assert by_name["AraC binds A site"]["export_status"] == "exportable"  # D-W26 / L4
+    assert by_name["AraC binds A site"]["interaction_type"] == "Binding"  # D-W26 / L4
     assert by_name["AraR represses the A site"]["export_status"] == "withheld"
     assert by_name["AraC activates araBAD"]["export_status"] == "exportable"
 
     withheld = {row["name"]: row for row in build.withheld_interactions}
-    assert withheld["AraC binds A site"]["reason"] == "untyped_interaction"
-    assert withheld["AraC binds A site"]["raw_interaction_type"] == "binding"
-    assert withheld["AraC binds A site"]["left"] == "AraC complex"
-    assert withheld["AraC binds A site"]["right"] == "A site"
-    assert withheld["AraC binds A site"]["pointer"] == "/processes/interactions/2"
+    assert "AraC binds A site" not in withheld  # D-W26 / L4: drawn now; untyped words are pinned in the spellings tests
     assert withheld["AraR represses the A site"]["reason"] == "bare_protein_endpoint"
-    assert len(withheld) == 2
+    # The withheld-record fields once pinned on the binding row, now on the remaining withheld row.
+    assert withheld["AraR represses the A site"]["raw_interaction_type"] == "inhibition"
+    assert withheld["AraR represses the A site"]["left"] == "AraR"
+    assert withheld["AraR represses the A site"]["right"] == "A site"
+    assert withheld["AraR represses the A site"]["pointer"] == "/processes/interactions/3"
+    assert len(withheld) == 1  # D-W26 / L4
 
-    # No orphan geometry for a withheld row: only the two drawn pairs have edges.
-    assert len(ir["edges"]) == 4
+    # No orphan geometry for a withheld row: only the three drawn pairs have edges.
+    assert len(ir["edges"]) == 6  # D-W26 / L4
 
 
 def test_cli_export_writes_the_withheld_side_file_next_to_the_pwml(tmp_path: Path) -> None:
@@ -355,20 +356,20 @@ def test_cli_export_writes_the_withheld_side_file_next_to_the_pwml(tmp_path: Pat
 
     assert summary.get("pwml_file"), summary
     assert summary["pwml_qa_ok"] is True
-    assert summary["withheld_interaction_count"] == 2
+    assert summary["withheld_interaction_count"] == 1  # D-W26 / L4: "binding" is drawn now
     side_file = Path(summary["withheld_interactions"])
     assert side_file == out_dir / "pathway.withheld_interactions.json"
     assert side_file.exists()
     record = json.loads(side_file.read_text(encoding="utf-8"))
     assert record["pwml_file"] == "pathway.pwml"
-    assert record["count"] == 2
-    assert {row["reason"] for row in record["interactions"]} == {"untyped_interaction", "bare_protein_endpoint"}
-    assert "binding" in {row["raw_interaction_type"] for row in record["interactions"]}
+    assert record["count"] == 1  # D-W26 / L4
+    assert {row["reason"] for row in record["interactions"]} == {"bare_protein_endpoint"}  # D-W26 / L4
+    assert "binding" not in {row["raw_interaction_type"] for row in record["interactions"]}  # D-W26 / L4
 
     pwml = etree.parse(str(out_dir / "pathway.pwml")).getroot()
-    assert {node.findtext("interaction-type") for node in pwml.iter("interaction")} == {"Activation", "Inhibition"}
+    assert {node.findtext("interaction-type") for node in pwml.iter("interaction")} == {"Activation", "Inhibition", "Binding"}  # D-W26 / L4
     ir_report = json.loads((out_dir / "pwml_ir_report.json").read_text(encoding="utf-8"))
-    assert sum(1 for w in ir_report["warnings"] if w["code"] == "interaction_withheld_from_pwml") == 2
+    assert sum(1 for w in ir_report["warnings"] if w["code"] == "interaction_withheld_from_pwml") == 1  # D-W26 / L4
 
 
 def test_cli_export_writes_no_side_file_when_nothing_is_withheld(tmp_path: Path) -> None:
@@ -440,7 +441,7 @@ def test_qa_accepts_the_writer_output_and_counts_it() -> None:
     _ir, _build, root = _export(_payload())
     report = run_pwml_qa(etree.tostring(root, encoding="utf-8"))
     assert report["ok"] is True, report["errors"]
-    assert report["stats"]["interactions"] == 2
+    assert report["stats"]["interactions"] == 3  # D-W26 / L4: the Binding row is written too
 
 
 # ── 6. the IR keeps the rows it withholds and validates the ones it draws ──
@@ -451,7 +452,7 @@ def test_ir_interaction_members_are_registered_for_visualization_validation() ->
     validation = validate_pwml_ir(ir)
     assert validation["ok"], validation["errors"]
     drawn = [v for v in ir["process_visualizations"] if v["type"] == "interaction_visualization"]
-    assert [v["process_key"] for v in drawn] == ["int_1", "int_2"]
+    assert [v["process_key"] for v in drawn] == ["int_1", "int_2", "int_3"]  # D-W26 / L4: int_3 (binding) drawn
     for viz in drawn:
         assert [m["role"] for m in viz["members"]] == ["left", "right"]
         assert viz["members"][0]["process_member_key"] == f"{viz['process_key']}_left"

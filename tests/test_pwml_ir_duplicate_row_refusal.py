@@ -278,7 +278,11 @@ def test_new_acceptance_a_reference_cannot_be_silently_repointed() -> None:
 R3_CONTROL_LEG = ("runs/2026-07-27_1623/papers/"
                   "PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict/"
                   "final_mapped.json")
-R3_BASE_IR_DIGEST = "14af62c13c45fe53c9ff4685d76d2591e024751abdd056eb37bd78f718adf471"
+R3_BASE_IR_DIGEST = "12bb20e1279df88aa98b64eede95a584167ac546d64f8734ea38bf3b5b0a2885"
+#: MOVED by **L4** (D-W24 (6), evidence on every interaction) on 2026-11-15: ``14af62c13c45…`` -> ``12bb20e1279d…``.
+#: The whole move is ONE added line, the leg's one interaction gains its top-level ``evidence`` ("weak
+#: inhibition of enzyme activity in the presence of 1,4-dihydroxy-2-naphthoic acid"); IR dumps base c2b9c727
+#: vs L4 diff to that line only, and the report warnings are unchanged.
 #: MOVED, DELIBERATELY, by **ORCH-754b** on 2026-10-19 under permanent **merge rule 4**
 #: (the re-pin ORCH-747/749 owed, authorised for ORCH-754b): ``32bf7893e62f…`` ->
 #: ``14af62c13c45…``, cumulative ``c9265fb8`` -> ORCH-754b's tip. This leg carries ONE

@@ -43,7 +43,7 @@ from typing import Any, Dict, List, Mapping, Optional
 
 # Standard library only (the sign table, no exporter): used to check that an IR row
 # belongs to the payload row beside it, never to decide a verdict.
-from t2pw.pwml.interaction_types import interaction_relationship_word, pwml_interaction_type
+from t2pw.pwml.interaction_types import interaction_relationship_word, pwml_export_interaction_type
 from t2pw.pipeline.name_keys import reference_key
 
 from t2pw.pipeline.strict_quarantine import (
@@ -603,7 +603,7 @@ def _same_row(row: Mapping[str, Any], ir_row: Mapping[str, Any], ir_entities: Ma
         return (_text(withheld.get("raw_interaction_type")), _text(withheld.get("left")), _text(withheld.get("right"))) == (
             word, left, right)
     # A drawn row keeps the sign, not the word, and the entity each side was bound to.
-    if pwml_interaction_type(word) != _text(ir_row.get("interaction_type")):
+    if pwml_export_interaction_type(word) != _text(ir_row.get("interaction_type")):
         return False
     for side, written in (("left", left), ("right", right)):
         entity = _dict(ir_entities.get(_text(_dict(ir_row.get(side)).get("entity_key"))))
@@ -714,7 +714,7 @@ def _entry(kind: str, name: Any, where: str, text: str, source: str, reason: str
     ki = known_issue_id(reason if ki_of is None else ki_of)
     return {
         # ORCH-795 (D-114 AMENDMENT 2 § 1): an interaction whose word PathWhiz has no type for, however it was omitted.
-        "uncarried": kind == "interaction" and bool(row) and not pwml_interaction_type(interaction_relationship_word(row)),
+        "uncarried": kind == "interaction" and bool(row) and not pwml_export_interaction_type(interaction_relationship_word(row)),
         "kind": kind, "name": _text(name), "where": where, "text": text, "source": source,
         "reason": reason, "message": message, "omission": omission, "ki": ki,
         # pre_freeze | ir (a written PWML does not draw it) | no_pwml | not_recorded

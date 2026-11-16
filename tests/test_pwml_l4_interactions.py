@@ -341,3 +341,22 @@ def test_the_same_interaction_in_another_state_is_still_drawn_there() -> None:
     by_name = {r["name"]: r for r in ir["processes"]["interactions"]}
     assert by_name["AraC activation of araBAD"]["export_status"] == "exportable"
     assert [i.findtext("interaction-type") for i in root.iter("interaction")].count("Activation") == 2 and qa["ok"]
+
+
+def test_a_row_with_no_relationship_word_is_drawn_unspecified_only_with_evidence() -> None:
+    """L4 ruling (orchestrator, 2026-11-15): no stated word -> Unspecified, drawn only with paper
+    evidence and flagged relationship_type_not_stated; with no evidence it stays withheld, listed."""
+    payload = _base()
+    payload["processes"]["interactions"] = [
+        {"name": "AraC and araBAD", "entity_1": "AraC complex", "entity_2": "araBAD promoter",
+         "biological_state": STATE, "evidence": "AraC acts at araBAD"},
+        {"name": "AraC and Pc", "entity_1": "AraC complex", "entity_2": "Pc promoter", "biological_state": STATE},
+    ]
+    ir, _report, build, root, qa = _export(payload)
+    stated_by_evidence, bare = ir["processes"]["interactions"]
+    assert stated_by_evidence["export_status"] == "exportable" and stated_by_evidence["interaction_type"] == "Unspecified"
+    assert stated_by_evidence["review_reasons"] == ["relationship_type_not_stated"]
+    assert bare["export_status"] == "withheld" and bare["withheld"]["reason"] == "relationship_type_not_stated"
+    assert bare["review_reasons"] == ["no_evidence"]
+    assert [w["name"] for w in build.withheld_interactions] == ["AraC and Pc"]
+    assert [i.findtext("interaction-type") for i in root.iter("interaction")] == ["Unspecified"] and qa["ok"]

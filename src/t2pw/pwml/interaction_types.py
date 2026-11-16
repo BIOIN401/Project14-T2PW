@@ -130,3 +130,13 @@ def pwml_export_interaction_type(raw_type: Any) -> str:
     """
     key = _interaction_type_key(raw_type)
     return PWML_INTERACTION_TYPES.get(key) or PWML_UNSIGNED_INTERACTION_TYPES.get(key, "")
+
+
+#: Withheld reason / review reason for a row that states no relationship word at all (L4 ruling).
+RELATIONSHIP_TYPE_NOT_STATED = "relationship_type_not_stated"
+
+
+def relationship_stated(raw: Dict[str, Any]) -> bool:
+    """Does the row state a relationship word? :func:`interaction_relationship_word` falls back to
+    ``interaction`` (Unspecified) when it does not; such a row is drawn only with paper evidence."""
+    return any(_canonical(raw.get(f)) for f in ("interaction_type", "relationship", "class"))

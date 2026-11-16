@@ -45,7 +45,7 @@ from t2pw.pipeline.lineage import (
     record as record_lineage,
 )
 from t2pw.pwml.compound_resolution import CLASS_TERM_NEVER_NARROWED, is_class_participant_term
-from t2pw.pwml.interaction_types import interaction_relationship_word, pwml_export_interaction_type
+from t2pw.pwml.interaction_types import interaction_relationship_word, pwml_export_interaction_type, relationship_stated
 from t2pw.pipeline.name_keys import reference_key
 from t2pw.pipeline.reference_repair import (
     ReplacementRecord,
@@ -9126,6 +9126,9 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
         if not isinstance(interaction, dict) or iidx in split_undecided or not pwml_export_interaction_type(
             interaction_relationship_word(interaction)
         ):
+            continue
+        # L4 ruling: a row with no relationship word and no evidence stays withheld; no wrapper.
+        if not relationship_stated(interaction) and not str(interaction.get("evidence") or "").strip():
             continue
         endpoints: List[Tuple[str, str, Dict[str, Any]]] = []
         shared_name = False

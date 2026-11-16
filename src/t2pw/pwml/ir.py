@@ -17,10 +17,12 @@ from t2pw.pwml.compound_templates import select_compound_template_id
 from t2pw.pwml.interaction_types import (  # noqa: F401 -- re-exported: the names ir.py always had
     PWML_INTERACTION_EDGE_TEMPLATES,
     PWML_INTERACTION_TYPES,
+    RELATIONSHIP_TYPE_NOT_STATED,
     _interaction_type_key,
     interaction_relationship_word,
     pwml_export_interaction_type,
     pwml_interaction_type,
+    relationship_stated,
 )
 from t2pw.pwml.db_resolver import PathWhizCompoundResolver, apply_compound_db_resolution, normalize_chebi_id
 from t2pw.pwml.name_index import PathwhizNameIndex, default_name_index
@@ -2427,6 +2429,7 @@ def build_pwml_ir(
         bucket: str,
         extra: Optional[Dict[str, Any]] = None,
         review_reasons: Sequence[str] = (),
+        withhold: str = "",
     ) -> Dict[str, Any]:
         nonlocal interaction_index
         interaction_index += 1
@@ -2495,7 +2498,7 @@ def build_pwml_ir(
             [(side["entity_type"], source_row_by_key.get(side["key"], side)) for side in (left_entity, right_entity) if side],
             ambiguous,
         )
-        withheld_reason = verdict["reason"]
+        withheld_reason = withhold or verdict["reason"]
         unwrappable = verdict["unwrappable_proteins"]
         signature: Optional[Tuple[str, str, str, str]] = None
         if not withheld_reason and bucket == "modifier_interactions" and not (left_entity and right_entity):
@@ -2607,16 +2610,22 @@ def build_pwml_ir(
         right_name = _canonical(raw.get("right") or raw.get("entity_2") or raw.get("target"))
         left_entity = _exact_complex(resolve_entity(left_name, "interaction", f"/processes/interactions/{iidx}/entity_1"), left_name)
         right_entity = _exact_complex(resolve_entity(right_name, "interaction", f"/processes/interactions/{iidx}/entity_2"), right_name)
+        evidence = _canonical(raw.get("evidence"))
+        # L4 ruling: a row stating no relationship word reads as "interaction" (Unspecified). It is
+        # drawn only with paper evidence, and flagged; without evidence it stays withheld, listed.
+        stated = relationship_stated(raw)
         emit_interaction(
             name=_canonical(raw.get("name")),
             raw_type=interaction_relationship_word(raw),
+            review_reasons=() if stated or not evidence else (RELATIONSHIP_TYPE_NOT_STATED,),
+            withhold="" if stated or evidence else RELATIONSHIP_TYPE_NOT_STATED,
             left_name=left_name,
             right_name=right_name,
             left_entity=left_entity,
             right_entity=right_entity,
             bs_key=resolve_state(raw.get("biological_state"), f"/processes/interactions/{iidx}/biological_state", required=True),
             pointer=f"/processes/interactions/{iidx}",
-            evidence=_canonical(raw.get("evidence")),
+            evidence=evidence,
             bucket="interactions",
         )
 

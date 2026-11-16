@@ -171,7 +171,10 @@ def test_unsigned_and_unwrappable_rows_are_left_exactly_as_written() -> None:
     original = deepcopy(payload["processes"]["interactions"])
     report = _stage6(payload)
     rows = payload["processes"]["interactions"]
-    assert rows[2] == original[2]  # binds: no sign, no wrapper
+    # D-W26 / L4: "binds" now has a PathWhiz type (Binding), so its protein endpoints take the wrapper.
+    assert (rows[2]["entity_1"], rows[2]["entity_2"]) == ("SFXN4 complex", "ALAS2 complex")
+    assert {k: v for k, v in rows[2].items() if k not in ("entity_1", "entity_2")} == {
+        k: v for k, v in original[2].items() if k not in ("entity_1", "entity_2")}
     # FtsH has no identity, so NEITHER endpoint of its row is wrapped: a wrapper for
     # ALAS2 alone would not make the row drawable.
     assert rows[3] == original[3]
@@ -287,14 +290,14 @@ def test_wrapped_rows_export_and_the_rest_are_withheld_with_their_reason() -> No
     ir, build, root = _export(payload)
 
     statuses = [row["export_status"] for row in ir["processes"]["interactions"]]
-    assert statuses == ["exportable", "exportable", "withheld", "withheld", "withheld"]
+    assert statuses == ["exportable", "exportable", "exportable", "withheld", "withheld"]  # D-W26 / L4: binds drawn
     withheld = {row["name"]: row for row in build.withheld_interactions}
-    assert withheld["SFXN4 binds ALAS2"]["reason"] == "untyped_interaction"
+    assert "SFXN4 binds ALAS2" not in withheld  # D-W26 / L4: drawn as Binding
     assert withheld["FtsH inhibits ALAS2"]["reason"] == "protein_endpoint_missing_external_identity"
     assert withheld["FtsH inhibits ALAS2"]["unwrappable_proteins"] == [{"name": "FtsH", "missing": ["external_identity"]}]
     assert withheld["Orphan inhibits ALAS2 mRNA"]["reason"] == "protein_endpoint_missing_species"
-    assert {n.findtext("interaction-type") for n in root.iter("interaction")} == {"Inhibition", "Activation"}
-    assert len(list(root.iter("interaction"))) == 2
+    assert {n.findtext("interaction-type") for n in root.iter("interaction")} == {"Inhibition", "Activation", "Binding"}  # D-W26 / L4
+    assert len(list(root.iter("interaction"))) == 3  # D-W26 / L4
 
 
 def test_both_missing_names_both_and_a_wrappable_bare_protein_keeps_the_fallback_reason() -> None:
@@ -475,7 +478,7 @@ def test_the_human_facing_record_carries_word_evidence_and_the_ir_verdict_for_ev
     assert ("PWML: withheld -- protein_endpoint_missing_external_identity: FtsH has no UniProt/DrugBank "
             "identity, which a single-protein complex wrapper requires") in blocks["INTERACTION 4"]
     assert "Orphan has no species" in blocks["INTERACTION 5"]
-    assert "PWML: withheld -- untyped_interaction" in blocks["INTERACTION 3"]
+    assert "PWML: drawn as Binding" in blocks["INTERACTION 3"]  # D-W26 / L4: binds is drawn now
 
 
 def test_every_reason_is_glossed_truthfully_including_a_refused_wrapper() -> None:
@@ -527,7 +530,7 @@ def test_no_verdict_is_shown_when_no_pwml_was_written_batch_path(tmp_path: Path)
     assert text.count(NO_PWML) == 5
     (tmp_path / "pathway.review_required.pwml").write_text("<pwml/>", encoding="utf-8")
     text = render_text(build_report(load_run_artifacts(tmp_path)))
-    assert text.count("PWML: drawn as") == 2 and NO_PWML not in text
+    assert text.count("PWML: drawn as") == 3 and NO_PWML not in text  # D-W26 / L4: + the Binding row
 
 
 def test_a_stale_ir_row_is_never_paired_with_a_different_word_or_endpoint() -> None:
@@ -543,7 +546,7 @@ def test_a_stale_ir_row_is_never_paired_with_a_different_word_or_endpoint() -> N
     blocks = _evidence_blocks(stale, ir)
     for number in (1, 2, 4):
         assert "was built from a different relationship or endpoints" in blocks[f"INTERACTION {number}"]
-    assert "PWML: withheld -- untyped_interaction" in blocks["INTERACTION 3"]  # an unchanged row keeps it
+    assert "PWML: drawn as Binding" in blocks["INTERACTION 3"]  # an unchanged row keeps it (D-W26 / L4: drawn)
     assert "PWML: withheld -- protein_endpoint_missing_species" in blocks["INTERACTION 5"]
 
 
@@ -654,12 +657,15 @@ LLM_BOUND_BASE_DIGESTS: dict = {
         "draft_graph": "978f3a09c9768f1ba4b166bfd6782a5f5a021c389ebb8758494c4cdd06504119",
         "qa_report": "1829e4ef6c7869aba66cabca5c818174dfe5eaac4ff35c4b2a1d87c23c18f689"
     },
+    # D-W26 / L4: the next two move only because Stage 6 now also wraps the fixture's "binds" row (post-Stage-6
+    # payload). Base c2b9c727 generators on the same payload give the same digests; the curator-prompt
+    # digests below (stage6_wrapped_report, stage6_wrapped_mapping_misses) are unchanged.
     "wrapped_post_stage6": {
-        "reaction_summary": "10cd71373108b1b872eb583fc81fedb991f3e6da4bd8e4d69d5f8b88c96bd07d",
-        "draft_graph": "1923f35f1f3323a315833e3885bf688dce0b69031548936d7b7592d36aed2316",
-        "qa_report": "f03ee0791c61a9867d8cc8cbb85920bbef2ca2a520cae6a1eaa6290a5ed95a54"
+        "reaction_summary": "895749fbf4d7bcc06b33d49de02501d8a165ddce53f1f617e88eb8a44e411e61",
+        "draft_graph": "e59f9469b03b5bee58c6491212b3b6b2ecb697bc849e976526fabec94197df2d",
+        "qa_report": "71d4191e22dce970cb9b85b924d527f9cd5813785e1c057e5bd31e2ba0e3f373"
     },
-    "stage6_all_unwrappable": "75d9b8b2f729368908d6d847b3f3d539815e6d959d0b01770f3f31db88c968e6",
+    "stage6_all_unwrappable": "e22c33b24cfd5d5929e42aa1e189371fc33a6c8cde48d28c15f0e36b5982c216",
     "stage6_wrapped_report": "33514f4c236a2fad43ad733d953761c1e3c22f6c9fe3685b9cec11eb5c30769d",
     "stage6_wrapped_mapping_misses": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
 }
@@ -677,8 +683,9 @@ def test_the_withheld_record_carries_the_evidence() -> None:
     _stage6(payload)
     _ir, build, _root = _export(payload)
     by_name = {row["name"]: row for row in build.withheld_interactions}
-    assert by_name["SFXN4 binds ALAS2"]["evidence"] == "quote for SFXN4 binds ALAS2"
-    assert by_name["SFXN4 binds ALAS2"]["raw_interaction_type"] == "binds"
+    # D-W26 / L4: "SFXN4 binds ALAS2" is drawn now; the same check on a row that is still withheld.
+    assert by_name["FtsH inhibits ALAS2"]["evidence"] == "quote for FtsH inhibits ALAS2"
+    assert by_name["FtsH inhibits ALAS2"]["raw_interaction_type"] == "inhibits"
 
 
 # ── CORRECTION (G9: fails on base f9892cdf, passes at the tip) ───────────────
@@ -697,6 +704,10 @@ def test_competes_with_is_withheld_as_untyped_not_drawn_as_a_directed_inhibition
     ]
     ir, _report = build_pwml_ir(payload, strict_db=True)
     rows = ir["processes"]["interactions"]
-    assert [r["export_status"] for r in rows] == ["withheld", "withheld"]
-    assert [r["withheld"]["reason"] for r in rows] == ["untyped_interaction"] * 2
-    assert [r["withheld"]["raw_interaction_type"] for r in rows] == ["competes_with", "Competes With"]
+    # D-W26 / L4: competes_with is drawn as Unspecified (undirected, no arrow) -- still never a directed
+    # Inhibition; "Competes  With" is in no table and stays withheld.
+    assert [r["export_status"] for r in rows] == ["exportable", "withheld"]
+    assert rows[0]["interaction_type"] == "Unspecified"
+    assert not [r for r in rows if r["interaction_type"] in ("Inhibition", "Activation")]
+    assert rows[1]["withheld"]["reason"] == "untyped_interaction"
+    assert rows[1]["withheld"]["raw_interaction_type"] == "Competes With"

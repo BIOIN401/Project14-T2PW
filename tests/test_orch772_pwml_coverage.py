@@ -364,10 +364,12 @@ def test_each_replayed_leg_carries_the_measured_trees_coverage(replayed):
     # draws 10 of 21; 7 of its interactions are untyped (KI-008).
     # ORCH-795 (D-114 AMENDMENT 2 § 1, merge rule 4): the third figure now also counts the unsigned interactions
     # quarantined BEFORE the IR (for an entity): enterobactin 7 -> 9, WNT PCP 17 -> 51. drawn and total unchanged.
+    # D-W26 / L4: words PathWhiz t2pw/05 now stores (binds, catalyzes, ...) are no longer uncarried, so the third
+    # figure falls: enterobactin 9 -> 2, WNT PCP 51 -> 13. drawn and total unchanged.
     assert got == {
-        "ORCH-767/enterobactin-strict/2026-10-23_2224": (10, 21, 9),
+        "ORCH-767/enterobactin-strict/2026-10-23_2224": (10, 21, 2),
         "ORCH-767/sour_taste_v2-strict/2026-10-24_0042": (7, 12, 0),
-        "ORCH-767/wnt_pcp-strict/2026-10-24_0131": (1, 66, 51),
+        "ORCH-767/wnt_pcp-strict/2026-10-24_0131": (1, 66, 13),
     }
 
 
