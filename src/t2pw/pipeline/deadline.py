@@ -42,6 +42,7 @@ what spends it. There are no retries here, unconditional or otherwise.
 
 from __future__ import annotations
 
+import threading
 import time
 from dataclasses import dataclass, field
 from typing import Any, Callable, Dict, Optional, Tuple
@@ -405,6 +406,7 @@ class LegDeadline:
         self.total = max(0.0, float(self.leg_timeout.seconds))
         self.reserve = max(0.0, float(reserve_seconds))
         self._checkpoints = 0
+        self._checkpoint_lock = threading.Lock()
 
     @property
     def elapsed(self) -> float:
@@ -474,10 +476,12 @@ class LegDeadline:
         either way, so a caller that wants to know can check.
         """
 
-        self._checkpoints += 1
+        with self._checkpoint_lock:  # L9: concurrent Stage-1 draws share one deadline
+            self._checkpoints += 1
+            sequence = self._checkpoints
         record = Checkpoint(
             label=str(label),
-            sequence=self._checkpoints,
+            sequence=sequence,
             stage=str(stage),
             elapsed_seconds=self.elapsed,
             remaining_seconds=self.remaining,

@@ -1176,8 +1176,8 @@ def run_ensemble(draw: DrawFn, n: int, *, failure: type,
 
     ``failure`` is the exception class that means "this draw produced nothing usable"
     (``PipelineFailure`` in production); it is a parameter so this module never imports
-    ``pipeline``. Anything else propagates untouched and immediately: a leg deadline or a
-    cancelled run is not a bad sample. When every draw fails the last failure is
+    ``pipeline``. Anything else propagates untouched, once the other draws (already in flight)
+    have finished: a leg deadline or a cancelled run is not a bad sample. When every draw fails the last failure is
     re-raised, so callers keep seeing the type they always caught.
     """
 

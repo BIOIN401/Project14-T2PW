@@ -344,7 +344,7 @@ def test_every_draw_failing_raises_the_last_failure(no_env: None, monkeypatch: p
     assert len(rec.calls) == 3
 
 
-def test_an_unrelated_exception_propagates_immediately(no_env: None, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_an_unrelated_exception_propagates_untouched(no_env: None, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv(ENV_VAR, "3")
     rec = Recorder([RuntimeError("leg deadline"), DRAW_2, DRAW_3])
     monkeypatch.setattr(pipeline_mod, "_run_json_stage", rec)
@@ -368,7 +368,7 @@ def test_side_file_accumulates_one_entry_per_ensemble(no_env: None, monkeypatch:
     """The chunked path calls run_extraction_pipeline once per chunk; each gets its own entry."""
 
     monkeypatch.setenv(ENV_VAR, "2")
-    rec = Recorder([DRAW_1, DRAW_2, DRAW_2, DRAW_3])
+    rec = Recorder([DRAW_1, DRAW_2])
     monkeypatch.setattr(pipeline_mod, "_run_json_stage", rec)
     diag.activate(run_id="orch750", artifact_dir=tmp_path)
     run_extraction_pipeline(TEXT)
