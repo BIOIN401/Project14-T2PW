@@ -303,3 +303,18 @@ agreed to just let me update the code. [...] So I want you to use the new featur
 build off of that and then I will just push for getting everything merged [...] So use the new stuff.
 You don't have to build it for the old stuff. It already doesn't work with the production pathways,
 by the way. There were some big bugs that had to be fixed."
+
+
+**D-W27 · 2026-11-16: the orchestrator acts on the open items** (recorded by the orchestrator at the
+PO's direction). The PO said "keep tings going, just handle evreuthing ursewlf" after a restart. On
+that basis the orchestrator:
+(a) fast-forwarded `main` to the tested release `bc63f504`, as approved in D-W23 (d). An earlier push by
+a sub-agent had been refused by the permission system.
+(b) authorizes committing the PO's element-id remap hunk in PathWhiz `lib/pwml_parser.rb` (issue I2) as
+its own branch `t2pw/09-interaction-element-id-remap`, on top of `t2pw/08`. The hunk is applied
+unchanged, credited to the owner, and gets its own spec. This is an exception to D-W22 for this one hunk.
+The owner's checkout and the rest of their uncommitted work are not touched. Without this hunk our
+pathways import into PathWhiz with 0 reactions, transports and interactions.
+(c) decides the remaining release questions on the recommended option, logged in `RELEASE-P6.md` §
+open questions. The biology-only items (the `type iii taste cell` synonym; MG-63 and Saos-2) stay as
+they are (no synonym added; payload only) until the PO rules.
