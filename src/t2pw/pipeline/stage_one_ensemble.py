@@ -107,6 +107,8 @@ import logging
 import os
 import re
 import weakref
+from concurrent.futures import ThreadPoolExecutor
+from contextvars import ContextVar, copy_context
 from copy import deepcopy
 from functools import lru_cache
 from pathlib import Path
@@ -1127,29 +1129,67 @@ def paper_defined_pair(a: str, b: str) -> Optional[Tuple[str, str, str]]:
     return None
 
 
+#: The draw number (1..N) the code below it is running for; 0 outside a concurrent draw.
+_DRAW_NUMBER: ContextVar[int] = ContextVar("t2pw_stage1_draw_number", default=0)
+
+
+def current_draw() -> int:
+    """The number of the Stage-1 draw running on this thread, 0 when none (N = 1, or elsewhere)."""
+
+    return _DRAW_NUMBER.get()
+
+
+def _run_draws(draw: DrawFn, n: int, failure: type) -> List[Tuple[Optional[Dict[str, Any]], List[Any], Optional[BaseException]]]:
+    """``(payload, attempt logs, failure)`` per draw, in draw order 1..n.
+
+    n == 1 calls ``draw`` inline, no pool. Otherwise ``n`` draws run on ``n`` threads (the
+    pool is bounded by N: the LLM client's own 429 backoff is per call and there is no shared
+    limiter or provider cap to honour, so N in flight is the whole load). Each thread runs in
+    a copy of the caller's context: the leg deadline and the run's diagnostics recorder are
+    ContextVars and a bare thread would not see them. A draw that raises anything but
+    ``failure`` propagates -- the lowest-numbered one, after the other draws have finished, as
+    a sequential run would have raised the first.
+    """
+
+    def one() -> Tuple[Optional[Dict[str, Any]], List[Any], Optional[BaseException]]:
+        try:
+            payload, logs = draw()
+        except failure as exc:  # type: ignore[misc]
+            return None, getattr(exc, "attempts", None) or [], exc
+        return payload, logs, None
+
+    if n == 1:
+        return [one()]
+    current_diagnostics()  # created in the caller's context, so every copy shares it
+    with ThreadPoolExecutor(max_workers=n, thread_name_prefix="t2pw-draw") as pool:
+        futures = []
+        for number in range(1, n + 1):
+            context = copy_context()
+            context.run(_DRAW_NUMBER.set, number)
+            futures.append(pool.submit(context.run, one))
+        return [future.result() for future in futures]
+
+
 def run_ensemble(draw: DrawFn, n: int, *, failure: type,
                  paper_text: Optional[str] = None) -> Tuple[Dict[str, Any], List[Dict[str, Any]]]:
     """Issue ``draw`` ``n`` times, union the successes, raise only when every draw failed.
 
     ``failure`` is the exception class that means "this draw produced nothing usable"
     (``PipelineFailure`` in production); it is a parameter so this module never imports
-    ``pipeline``. Anything else propagates untouched and immediately: a leg deadline or a
-    cancelled run is not a bad sample. When every draw fails the last failure is
+    ``pipeline``. Anything else propagates untouched, once the other draws (already in flight)
+    have finished: a leg deadline or a cancelled run is not a bad sample. When every draw fails the last failure is
     re-raised, so callers keep seeing the type they always caught.
     """
 
     payloads: List[Optional[Dict[str, Any]]] = []
     attempts: List[Dict[str, Any]] = []
     failures: List[Tuple[int, BaseException]] = []
-    for index in range(1, n + 1):
-        try:
-            payload, logs = draw()
-        except failure as exc:  # type: ignore[misc]
+    # D-W24 (8): the draws run concurrently but everything below walks them in draw order,
+    # so the merge, the report and the attempt log never depend on which draw finished first.
+    for index, (payload, logs, exc) in enumerate(_run_draws(draw, n, failure), start=1):
+        if exc is not None:
             failures.append((index, exc))
-            payloads.append(None)
-            logs = getattr(exc, "attempts", None) or []
-        else:
-            payloads.append(payload)
+        payloads.append(payload)
         attempts.extend({**entry, "draw": index} for entry in logs if isinstance(entry, dict))
     if not any(isinstance(p, dict) for p in payloads):
         last = failures[-1][1]

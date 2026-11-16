@@ -822,7 +822,10 @@ class ExtractionDiagnostics:
     def _flush(self) -> None:
         if self.artifact_dir is None:
             return
-        self.write(self.artifact_dir)
+        # L9: concurrent Stage-1 draws record into one recorder; one writer at a time per file
+        # (the lock is re-entrant, write() takes it again to read the artifacts).
+        with self._lock:
+            self.write(self.artifact_dir)
 
 
 def _bounded_attempt(attempt: Mapping[str, Any]) -> Dict[str, Any]:
