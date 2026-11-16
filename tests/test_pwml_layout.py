@@ -84,7 +84,52 @@ def test_unset_and_v2_are_the_same_bytes(monkeypatch):
 def test_v2_changes_geometry_only(monkeypatch):
     v1, v2 = _build(monkeypatch, "v1"), _build(monkeypatch, "v2")
     assert etree.tostring(v1) != etree.tostring(v2)
-    assert _strip(v1) == _strip(v2)
+    # D-W24 / correctness F3: v2 draws a shared compound once, so compound-location ids and counts differ from v1.
+    # Nothing else may: see _content.
+    assert _content(v1) == _content(v2)
+
+
+DRAWING = re.compile(r"(locations|visualizations|edges)$")
+REF = re.compile(r"(location-id|^edge-id|protein-complex-visualization-id)$")
+
+
+def _content(root):
+    """Content plus drawing, with ids resolved and geometry masked, tolerant only to compound-location ids and counts.
+
+    Returns (everything outside the drawing sections as in _strip, each drawing section as a sorted list of element
+    signatures). A signature drops id and geometry (x, y, width, height, edge path, *_path arrow options) and replaces
+    every location / edge / complex-visualization reference by the signature of what it points at, so each reaction,
+    transport and interaction visualization keeps its members (compound, state, side), enzymes and edges (hidden,
+    template, arrows). Compound locations compare as a set: F3 merges identical copies. Membranes and labels are v2's own.
+    """
+    pv = root.find(".//pathway-visualization")
+    sections = [s for s in pv if isinstance(s.tag, str) and DRAWING.search(s.tag)]
+    by_id = {(el.tag, el.findtext("id")): el for s in sections for el in s if isinstance(el.tag, str)}
+
+    def sig(el):
+        out = []
+        for c in el:
+            if not isinstance(c.tag, str) or c.tag in ("id", "x", "y", "width", "height", "path"):
+                continue
+            if len(c):
+                out.append((c.tag, tuple(sorted((sig(x) for x in c if isinstance(x.tag, str)), key=repr))))
+            elif c.tag == "options" and c.text:
+                out.append((c.tag, sorted((k, v) for k, v in json.loads(c.text).items() if not k.endswith("_path"))))
+            elif REF.search(c.tag) and c.text:
+                target = by_id.get((c.tag[:-3], c.text))
+                out.append((c.tag, sig(target) if target is not None else ("MISSING", c.text)))
+            else:
+                out.append((c.tag, c.text))
+        return tuple(out)
+
+    drawn = {s.tag: sorted(repr(sig(el)) for el in s if isinstance(el.tag, str))
+             for s in sections if s.tag not in ("membrane-visualizations", "label-locations")}
+    drawn["compound-locations"] = sorted(set(drawn.get("compound-locations", [])))
+    core = copy.deepcopy(root)
+    cpv = core.find(".//pathway-visualization")
+    for s in [s for s in cpv if isinstance(s.tag, str) and DRAWING.search(s.tag)]:
+        cpv.remove(s)
+    return _strip(core), drawn
 
 
 def test_v2_quality(monkeypatch):
