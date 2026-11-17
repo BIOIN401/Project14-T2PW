@@ -28,7 +28,9 @@ Order, per reaction:
 
 Transports: the same for each missing side. Neighbours only fill a side when the other side is stated (the cargo's other
 reactions, minus the stated side's state, sit in one state); with both sides missing only the LLM can give a direction.
-Sides that would end up equal are not written: the row keeps them and is flagged. Element-level sides are not touched.
+Step 3 does not write a side (the general cell state as one end turned a right-by-accident "apical side" into "cell", idx
+3): an unestimated side keeps what it had and the row is flagged. Sides that would end up equal are not written either.
+Element-level sides are not touched.
 
 Every changed row gets ``compartment_source`` (neighbour_estimate | llm_estimate | unresolved; L6's ``estimated`` = a
 placeholder merged into a stated state; absent = stated) and a ``compartment_estimate`` entry with a human ``reason``; the
@@ -580,24 +582,12 @@ def _run(payload: Dict[str, Any], state: Any, report: Dict[str, Any], cache: Any
         missing = [f for f in SIDES if _unstated(t_orig[i][f]) and (i, f) not in t_est]
         if not missing:
             continue
-        if len(missing) == 1:
-            g = ctx.general(report)
-            other = t.get(SIDES[1] if missing[0] == SIDES[0] else SIDES[0])
-            if g is not None and ctx.key(g) != ctx.key(other):
-                f = missing[0]
-                old = t_orig[i][f]
-                reason = (f"{f.split('_')[0]} side not stated and not estimated ({t_why.get(i)}{llm_note}); placed in '{g}', "
-                          f"the general cell state of {ctx.organism} ({RULING})")
-                t[f] = g
-                _flag(t, f"{f.split('_')[0]} side placed in '{g}', the general cell state of {ctx.organism} ({RULING})")
-                _mark(t, "unresolved", {"step": "L7", "field": f, "from_state": old or None, "to_state": g, "source": "unresolved",
-                                        "reason": reason})
-                report["transports"].append({"row": i, "transport": t.get("name"), "field": f, "from_state": old or None,
-                                             "to_state": g, "source": "unresolved", "reason": reason})
-                continue
+        # A transport side is written only from neighbours or the model. The general cell state is NOT used for a side: on
+        # the replays it turned "apical side -> Type III cell" (idx 3, right by accident) into "cell -> Type III cell", a
+        # movement from the cell into itself. The side keeps what it had (the IR's default) and the row is flagged.
         reason = (f"side(s) {', '.join(f.split('_')[0] for f in missing)} not stated and not estimated "
-                  f"({t_why.get(i) or 'no answer'}{llm_note}); a side is not written when both sides would be the same state, "
-                  f"and no direction is invented; left as they were ({RULING})")
+                  f"({t_why.get(i) or 'no answer'}{llm_note}); a side is not placed in the general cell state, never "
+                  f"written when both sides would be the same state, and no direction is invented; left as they were ({RULING})")
         _flag(t, reason)
         _mark(t, "unresolved", {"step": "L7", "field": ",".join(missing), "from_state": None, "to_state": None,
                                 "source": "unresolved", "reason": reason})

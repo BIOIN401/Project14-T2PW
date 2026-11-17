@@ -243,6 +243,17 @@ def test_l7_both_sides_missing_are_never_given_a_direction_offline() -> None:
     assert "no direction is invented" in t["review_reasons"][-1]
 
 
+def test_l7_a_side_nobody_estimated_is_not_put_in_the_general_cell_state() -> None:
+    """idx 3: 'OTOP1 H+ permeation' had no from side; the general cell state would make it cell -> Type III cell."""
+    p = _payload([_st("apical side state", "cell"), _st("Type III cell state", "cell", cell_type="Type III cell")],
+                 [_rx("R", ["a"], ["b"])], [_tr("OTOP1-mediated H+ permeation", "H+", None, "Type III cell state")])
+    estimate_compartments(p, {})
+    t = p["processes"]["transports"][0]
+    assert t["from_biological_state"] is None and t["review_required"] is True
+    assert "not placed in the general cell state" in t["review_reasons"][-1]
+    assert _by_name(p)["R"]["biological_state"] == "Homo sapiens cell"  # a reaction still is
+
+
 def test_l7_a_side_that_would_equal_the_other_side_is_not_written() -> None:
     p = _payload([_st("E. coli cytoplasm", "cytoplasm", "Escherichia coli")], [],
                  [_tr("enterobactin secretion", "enterobactin", "E. coli cytoplasm", None)], species=(("Escherichia coli", "Prokaryote", "562"),))
@@ -285,7 +296,7 @@ def test_l7_the_text_record_prints_how_the_compartment_was_placed() -> None:
 
     txt = render_text(build_report({FINAL_MAPPED_FILENAME: _placed()}))
     assert "Compartment (not stated in the paper record): ER state [neighbour_estimate: no compartment stated;" in txt
-    assert "TRANSPORT SIDES NOT STATED IN THE PAPER RECORD (1)" in txt and "to=Homo sapiens cell [unresolved:" in txt
+    assert "TRANSPORT SIDES NOT STATED IN THE PAPER RECORD (1)" in txt and "from=ER state; to=" in txt and "[unresolved:" in txt
     assert txt.count("Compartment (not stated") == 1  # the stated reaction prints no such line
 
 
