@@ -466,9 +466,9 @@ def test_new_acceptance_the_post_pipeline_seam_returns_its_prefreeze_report(
     assert result["prefreeze_review_required"] == seen[-1]["review_required"]
     assert result["prefreeze_resolution_report"]["compounds"][
         "rename_sources_collapsed"] == [{
-            "target": "glycerol 3 phosphate",
+            "target": "glycerol3phosphate",
             "sources": ["sn -glycerol 3-phosphate", "sn-glycerol 3-phosphate"],
-            "source_key": "sn glycerol 3 phosphate",
+            "source_key": "snglycerol3phosphate",
         }]
     # The two seams' records are DIFFERENT documents about different objects, so
     # this one must not wear the other's label.
