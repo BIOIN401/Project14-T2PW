@@ -5,6 +5,33 @@ fix stay consistent with the intended pipeline design.
 
 ---
 
+## The export quarantine never omits a reaction for its enzyme (2026-11-16, branch `corr/L5-quarantine-keep`)
+
+**Files changed:** `src/t2pw/pipeline/strict_quarantine.py`, `src/t2pw/pwml/ir.py`,
+`src/t2pw/pwml/writer.py`, tests (expectations moved by D-W24 item 3 only).
+
+D-W24 item 3 (PO): the quarantine must never delete a correct reaction. A bare-protein enzyme
+now takes the Stage-6 single-protein wrapper before admission; an enzyme or modifier that still
+cannot be written leaves the reaction, which stays and is flagged (`omitted_from_pwml:...+N_actors`,
+`review_required`). **Re-measured full-stack across the 39 cached legs** of the frozen cohort in
+`tests/data/baseline_cohort_manifest.json`:
+
+| stage | result |
+|---|---|
+| quarantine | 37 admitted, 2 refused |
+| Stage 3 after quarantine | **37 / 37 pass** |
+| required-field contract | 10 / 37 pass |
+| IR build + validation | 10 / 10 of those reaching it |
+| **fully exportable** | **10 / 37** |
+
+Nine legs move from refused to admitted; eight still fail the required contract on species metadata
+alone and one, `runs/2026-08-02_2130/papers/PMC12096016/research`, now exports (39 legs; 37 admitted / 2
+refused; 37/37 Stage 3; 10/37 required contract; 10/10 IR; 10/37 exportable; by leg 27/27, by row 27/27).
+Residual codes: `species_missing_classification` (27 legs, 27 rows), `species_missing_taxonomy`
+(27 legs, 27 rows).
+
+---
+
 ## Degree zero is answered against the pre-prune process snapshot (2026-08-10, branch `agent/p01-stale-index`)
 
 **Files changed:** `src/t2pw/pipeline/strict_quarantine.py`,
