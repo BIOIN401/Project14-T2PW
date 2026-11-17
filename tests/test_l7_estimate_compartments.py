@@ -21,7 +21,8 @@ from t2pw.clean_model.fill.cache import Cache  # noqa: E402
 from t2pw.service.final_payload_compartments import FIELD, estimate_compartments  # noqa: E402
 
 PAPER = ("Carnitine biosynthesis starts in the mitochondria. TML is hydroxylated by TMLD in the mitochondrial matrix. "
-         "The aldehyde is then oxidised in the cytosol by TMABADH. Some steps take place in peroxisomes of liver cells.")
+         "The aldehyde is then oxidised in the cytosol by TMABADH. Some steps take place in peroxisomes of liver cells. "
+         "In liver cells TML is also oxidised in peroxisomes.")
 
 
 def _rx(name, ins, outs, state=None, **kw):
@@ -53,6 +54,12 @@ def _offline_cache(monkeypatch):
     monkeypatch.setattr("t2pw.clean_model.fill.cache.Cache._path", lambda self, key: None)  # memory only
     monkeypatch.delenv("T2PW_FINAL_PAYLOAD_BUDGET_S", raising=False)
     monkeypatch.setenv("T2PW_OFFLINE_CURATOR", "1")  # the real client is never reached; a test passes its own chat_fn
+
+
+@pytest.fixture
+def llm_on(monkeypatch):
+    """Step 2 (the LLM estimate) is off by default (deferred, never measured); the fake-model tests switch it on."""
+    monkeypatch.setattr("t2pw.service.final_payload_compartments.LLM_ESTIMATE", True)
 
 
 @pytest.fixture
@@ -126,8 +133,8 @@ def _ambiguous():
                     [_rx("TMLD reaction", ["TML"], ["HTML"])])
 
 
-def test_l7_the_model_places_a_reaction_in_a_candidate_state_with_a_verbatim_quote_and_the_reply_is_cached() -> None:
-    chat = _Chat({"items": [{"id": 0, "state": "mitochondrial state", "quote": "hydroxylated by TMLD in the mitochondrial matrix"}]})
+def test_l7_the_model_places_a_reaction_in_a_candidate_state_with_a_verbatim_quote_and_the_reply_is_cached(llm_on) -> None:
+    chat = _Chat({"items": [{"id": 0, "state": "mitochondrial state", "quote": "TML is hydroxylated by TMLD in the mitochondrial matrix"}]})
     cache = Cache(None)
     p = _ambiguous()
     rep = estimate_compartments(p, {"final_payload_paper_text": PAPER}, cache=cache, chat_fn=chat)
@@ -143,11 +150,11 @@ def test_l7_the_model_places_a_reaction_in_a_candidate_state_with_a_verbatim_quo
 
 
 @pytest.mark.parametrize("answer,why", [
-    ({"id": 0, "state": "mitochondrial state", "quote": "TMLD works in the mitochondria"}, "quote not found"),
-    ({"id": 0, "state": "nucleus state", "quote": "hydroxylated by TMLD in the mitochondrial matrix"}, "not a candidate"),
-    ({"id": 0, "state": None, "new_location": "lysosome", "quote": "hydroxylated by TMLD in the mitochondrial matrix"}, "not in the quote"),
+    ({"id": 0, "state": "mitochondrial state", "quote": "TML works in the mitochondria"}, "quote not found"),
+    ({"id": 0, "state": "nucleus state", "quote": "TML is hydroxylated by TMLD in the mitochondrial matrix"}, "not a candidate"),
+    ({"id": 0, "state": None, "new_location": "lysosome", "quote": "TML is hydroxylated by TMLD in the mitochondrial matrix"}, "not in the quote"),
 ])
-def test_l7_an_unsupported_model_answer_is_rejected_and_the_row_flagged(answer, why) -> None:
+def test_l7_an_unsupported_model_answer_is_rejected_and_the_row_flagged(answer, why, llm_on) -> None:
     p = _ambiguous()
     rep = estimate_compartments(p, {"final_payload_paper_text": PAPER}, chat_fn=_Chat({"items": [answer]}))
     r = _by_name(p)["TMLD reaction"]
@@ -155,11 +162,11 @@ def test_l7_an_unsupported_model_answer_is_rejected_and_the_row_flagged(answer, 
     assert why in rep["llm"]["rejected"][0]["reason"]
 
 
-def test_l7_the_model_may_name_a_new_pathwhiz_location_found_in_its_quote() -> None:
+def test_l7_the_model_may_name_a_new_pathwhiz_location_found_in_its_quote(llm_on) -> None:
     p = _ambiguous()
     estimate_compartments(p, {"final_payload_paper_text": PAPER},
                           chat_fn=_Chat({"items": [{"id": 0, "state": None, "new_location": "peroxisome",
-                                                    "quote": "Some steps take place in peroxisomes of liver cells"}]}))
+                                                    "quote": "In liver cells TML is also oxidised in peroxisomes"}]}))
     r = _by_name(p)["TMLD reaction"]
     assert r["biological_state"] == "Homo sapiens peroxisome" and r["compartment_source"] == "llm_estimate"
     new = p["biological_states"][-1]
@@ -167,7 +174,7 @@ def test_l7_the_model_may_name_a_new_pathwhiz_location_found_in_its_quote() -> N
     assert {"name": "peroxisome"} in p["entities"]["subcellular_locations"]
 
 
-def test_l7_the_offline_switch_skips_the_model_and_keeps_the_row_flagged(monkeypatch) -> None:
+def test_l7_the_offline_switch_skips_the_model_and_keeps_the_row_flagged(monkeypatch, llm_on) -> None:
     monkeypatch.setenv("T2PW_FINAL_PAYLOAD_BUDGET_S", "0")
     chat = _Chat({"items": []})
     p = _ambiguous()
@@ -177,13 +184,24 @@ def test_l7_the_offline_switch_skips_the_model_and_keeps_the_row_flagged(monkeyp
     assert r["compartment_source"] == "unresolved" and "offline_switch" in r["compartment_estimate"][-1]["reason"]
 
 
-def test_l7_a_failing_model_call_leaves_the_rows_flagged() -> None:
+def test_l7_a_failing_model_call_leaves_the_rows_flagged_with_a_fixed_reason_and_no_provider_text(llm_on) -> None:
+    """F3: a provider error can name server paths (an .env); rows, text record and SBML carry only a fixed reason."""
     def boom(*a, **k):
-        raise RuntimeError("provider down")
+        raise RuntimeError("provider down; config C:\\Users\\someone\\proj\\.env and /srv/app/.env unreadable")
 
     p = _ambiguous()
     rep = estimate_compartments(p, {"final_payload_paper_text": PAPER}, chat_fn=boom)
-    assert "provider down" in rep["llm"]["error"] and _by_name(p)["TMLD reaction"]["compartment_source"] == "unresolved"
+    r = _by_name(p)["TMLD reaction"]
+    assert r["compartment_source"] == "unresolved" and "compartment_estimate_unavailable" in r["review_reasons"][-1] + r["compartment_estimate"][-1]["reason"]
+    assert "provider down" in rep["llm"]["error"] and "<path>" in rep["llm"]["error"]
+    assert ".env" not in json.dumps(p) and "someone" not in json.dumps(p) and "provider down" not in json.dumps(r)
+    from t2pw.app.reaction_evidence import FINAL_MAPPED_FILENAME, build_report, render_text
+    from t2pw.clean_model import build_from_payload
+    from t2pw.clean_model.export.sbml import sbml_text
+
+    assert "compartment_estimate_unavailable" in render_text(build_report({FINAL_MAPPED_FILENAME: p}))
+    assert "provider down" not in render_text(build_report({FINAL_MAPPED_FILENAME: p}))
+    assert "provider down" not in sbml_text(build_from_payload(p)) and "someone" not in sbml_text(build_from_payload(p))
 
 
 # ---- step 3: the general cell state ----------------------------------------------------------------------------------
@@ -268,12 +286,12 @@ def test_l7_a_side_that_would_equal_the_other_side_is_not_written() -> None:
     assert t["to_biological_state"] is None and t["review_required"] is True
 
 
-def test_l7_the_model_gives_both_sides_of_a_transport_only_when_they_differ() -> None:
-    text = "TubI exports TBN out of the cell into the medium. TBN is made in the cytoplasm of the producer."
+def test_l7_the_model_gives_both_sides_of_a_transport_only_when_they_differ(llm_on) -> None:
+    text = "TubI exports TBN out of the cell into the extracellular medium. TBN is made in the cytoplasm of the producer."
     sp = (("Streptomyces tubercidicus", "Prokaryote", "47759"),)
     states = [_st("S. t. cytoplasm", "cytoplasm", "Streptomyces tubercidicus"), _st("S. t. extracellular", "extracellular", "Streptomyces tubercidicus")]
     good = {"items": [{"id": 0, "from": {"state": "S. t. cytoplasm", "quote": "TBN is made in the cytoplasm"},
-                       "to": {"state": "S. t. extracellular", "quote": "TubI exports TBN out of the cell"}}]}
+                       "to": {"state": "S. t. extracellular", "quote": "TubI exports TBN out of the cell into the extracellular medium"}}]}
     p = _payload(copy.deepcopy(states), [], [_tr("TubI export", "TBN")], species=sp)
     estimate_compartments(p, {"final_payload_paper_text": text}, chat_fn=_Chat(good))
     t = p["processes"]["transports"][0]
@@ -411,7 +429,7 @@ def test_l7_deferred_a_placeholder_is_neither_renamed_nor_left_silent() -> None:
     assert all(r["compartment_source"] == "unresolved" for r in rx.values())
 
 
-def test_l7_deferred_neighbour_and_model_estimates_still_apply() -> None:
+def test_l7_deferred_neighbour_and_model_estimates_still_apply(llm_on) -> None:
     p = _payload([_st("cytosolic state", "cytosol"), _st("ER state", "endoplasmic reticulum")],
                  [_rx("A", ["lanosterol"], ["FF-MAS"], "ER state"), _rx("B", ["FF-MAS"], ["T-MAS"])])
     estimate_compartments(p, {})
@@ -419,5 +437,31 @@ def test_l7_deferred_neighbour_and_model_estimates_still_apply() -> None:
     q = _ambiguous()
     estimate_compartments(q, {"final_payload_paper_text": PAPER},
                           chat_fn=_Chat({"items": [{"id": 0, "state": "mitochondrial state",
-                                                    "quote": "hydroxylated by TMLD in the mitochondrial matrix"}]}))
+                                                    "quote": "TML is hydroxylated by TMLD in the mitochondrial matrix"}]}))
     assert _by_name(q)["TMLD reaction"]["biological_state"] == "mitochondrial state"
+
+
+# ---- review F1: the LLM step is deferred; its answer check is tight --------------------------------------------------
+def test_l7_the_llm_step_is_off_by_default_and_asks_nothing() -> None:
+    import t2pw.service.final_payload_compartments as fpc
+
+    assert fpc.LLM_ESTIMATE is False
+    chat = _Chat({"items": [{"id": 0, "state": "mitochondrial state", "quote": "TML is hydroxylated by TMLD in the mitochondrial matrix"}]})
+    p = _ambiguous()
+    rep = estimate_compartments(p, {"final_payload_paper_text": PAPER}, chat_fn=chat)
+    r = _by_name(p)["TMLD reaction"]
+    assert chat.calls == 0 and rep["llm"]["skipped"] == "deferred" and rep["llm"]["calls"] == 0
+    assert r["compartment_source"] == "unresolved" and "biological_state" not in r
+
+
+@pytest.mark.parametrize("answer,why", [
+    ({"id": 0, "state": "mitochondrial state", "quote": "Carnitine biosynthesis starts in the mitochondria"},
+     "names none of the item's participants or enzymes"),
+    ({"id": 0, "state": "cytosolic state", "quote": "TML is hydroxylated by TMLD in the mitochondrial matrix"},
+     "does not name the place"),
+])
+def test_l7_a_quote_must_name_the_place_and_a_participant_or_enzyme(answer, why, llm_on) -> None:
+    p = _ambiguous()
+    rep = estimate_compartments(p, {"final_payload_paper_text": PAPER}, chat_fn=_Chat({"items": [answer]}))
+    assert _by_name(p)["TMLD reaction"]["compartment_source"] == "unresolved"
+    assert why in rep["llm"]["rejected"][0]["reason"]

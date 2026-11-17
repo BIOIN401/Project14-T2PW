@@ -15,10 +15,11 @@ Order, per reaction:
    (``cofactor_policy.VOCABULARY`` is excluded: ATP, H2O, CoA ... link every compartment), through other unstated reactions,
    stopping at stated ones. If every stated reaction reached sits in ONE state, use it (``neighbour_estimate``); the
    evidence is the shared participants and the neighbour reaction names. Estimates never feed other estimates.
-2. LLM (``llm/prompts/compartment_estimate_system.txt``): one call per payload for everything step 1 left, temperature 0,
+2. DEFERRED (``LLM_ESTIMATE = False``; never measured). When on: LLM (``llm/prompts/compartment_estimate_system.txt``): one call per payload for everything step 1 left, temperature 0,
    JSON, with the paper text (or the evidence sentences), the organism and the candidate states. An answer is accepted only
-   when its quote (3+ words) is verbatim in the text, and it names a candidate state, or a new location that is in the quote
-   and is a PathWhiz location. Replies are cached in the fill cache (key: prompt + request sha256), so a replay is
+   when its quote (3+ words) is verbatim in the text, names one of the item's participants or enzymes and the chosen
+   place, and the place is a candidate state or a new location that is a PathWhiz location. A provider failure puts only
+   ``compartment_estimate_unavailable`` on the rows; the error, paths redacted, stays in the report. Replies are cached in the fill cache (key: prompt + request sha256), so a replay is
    deterministic; ``T2PW_FINAL_PAYLOAD_BUDGET_S=0`` (and ``T2PW_OFFLINE_CURATOR`` without an injected ``chat_fn``) skips the
    call (a cached reply is still used, as the other fills do) and the row stays flagged (``llm_estimate``).
 3. DEFERRED (``GENERAL_STATE_FALLBACK = False``): the reaction keeps its state (the IR puts it in the referenced
@@ -46,6 +47,7 @@ import copy
 import hashlib
 import json
 import os
+import re
 import time
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
@@ -65,6 +67,12 @@ NOT_STATED = "compartment_not_stated"
 #: be shown (orchestrator ruling under the PO's no-regression rule). Off: an unresolved reaction keeps its state and is
 #: flagged. Turn on only after the live check passes.
 GENERAL_STATE_FALLBACK = False
+#: Step 2 (the LLM estimate) is OFF: it has never been measured (the live check got 0 answers) and under D-W24 (9) an
+#: unmeasured biology change is deferred. Off: no model call, no cached reply read; the rows stay flagged. The live-check
+#: script switches it on for its own process only; the product never does.
+LLM_ESTIMATE = False
+#: The fixed row reason when the model step was not usable (provider error): the detail stays in the report only.
+UNAVAILABLE = "compartment_estimate_unavailable"
 RULING = "D-W24 2, L7"
 SOURCES = ("unresolved", "llm_estimate", "neighbour_estimate")  # weakest first
 SIDES = ("from_biological_state", "to_biological_state")
@@ -319,8 +327,26 @@ def build_request(items: List[Dict[str, Any]], ctx: _Ctx, text: str) -> Tuple[st
     return _system(), user
 
 
-def _accept(ans: Any, ctx: _Ctx, text_words: str) -> Tuple[Optional[Tuple[str, str]], str]:
-    """((kind, value), quote) with kind "state" (a candidate name) or "new" (a location), or (None, why)."""
+def _place_words(loc: Any, pro: bool) -> set:
+    """Every spelling of a location's words ("mitochondria" also "mitochondrial", "mitochondrion")."""
+    key = M.location_key(loc, pro)
+    words = M._tokens(loc)
+    for k, v in M.LOCATION_SYNONYMS.items():
+        if M.location_key(k, pro) == key:
+            words |= M._tokens(k) | M._tokens(v)
+    return words - M.NAME_STOPWORDS
+
+
+def _names_one(quote: str, names: List[str]) -> bool:
+    from t2pw.service.transport_sides import _words
+
+    q = f" {_words(quote)} "
+    return any(_words(n) and f" {_words(n)} " in q for n in names if isinstance(n, str))
+
+
+def _accept(ans: Any, ctx: _Ctx, text_words: str, names: List[str]) -> Tuple[Optional[Tuple[str, str]], str]:
+    """((kind, value), quote) with kind "state" (a candidate name) or "new" (a location), or (None, why). The quote must be
+    verbatim in the text, name the chosen place, and name one of the item's participants or enzymes (``names``)."""
     from t2pw.service.transport_sides import _quote_in_text, _words
 
     if not isinstance(ans, dict):
@@ -328,10 +354,16 @@ def _accept(ans: Any, ctx: _Ctx, text_words: str) -> Tuple[Optional[Tuple[str, s
     quote = str(ans.get("quote") or "").strip()
     if len(_words(quote).split()) < MIN_QUOTE_WORDS or not _quote_in_text(quote, text_words):
         return None, "quote not found verbatim in the paper text"
+    if not _names_one(quote, names):
+        return None, "quote names none of the item's participants or enzymes"
     st = str(ans.get("state") or "").strip()
     if st:
         row = ctx.cands.get(_norm(st))
-        return ((("state", str(row["name"])), quote) if row is not None else (None, f"state '{st}' is not a candidate"))
+        if row is None:
+            return None, f"state '{st}' is not a candidate"
+        if not _place_words(M._state_loc(row) or row.get("name"), ctx.pro) & M._tokens(quote):
+            return None, f"quote does not name the place of '{row['name']}'"
+        return ("state", str(row["name"])), quote
     loc = str(ans.get("new_location") or "").strip()
     if not loc or len(loc) > 40:
         return None, "no state and no location given"
@@ -344,6 +376,14 @@ def _accept(ans: Any, ctx: _Ctx, text_words: str) -> Tuple[Optional[Tuple[str, s
         return None, f"location '{loc}' is not a PathWhiz location"
     hit = ctx.at(loc)
     return ((("state", str(hit["name"])) if hit is not None else ("new", loc)), quote)
+
+
+_PATH = re.compile(r"(?:[A-Za-z]:[\\/]|\\\\|~[\\/]|(?<![\w.])/(?=[\w.-]+/))[^\s'\"<>|,;)]*")
+
+
+def _redact(text: str) -> str:
+    """A provider error with filesystem paths (a server may name its .env) cut out."""
+    return _PATH.sub("<path>", text)
 
 
 def _same(a: Tuple[str, str], b: Tuple[str, str], ctx: _Ctx) -> bool:
@@ -383,7 +423,7 @@ def _llm(items: List[Dict[str, Any]], ctx: _Ctx, text: str, state: Any, cache: A
         try:
             reply = _ask(system, user, chat_fn)
         except Exception as exc:  # noqa: BLE001 - the step goes on without the model
-            rep["error"] = f"{type(exc).__name__}: {exc}"[:300]
+            rep["error"] = _redact(f"{type(exc).__name__}: {exc}")[:300]
             return {}
         cache.put(key, PROMPT_ID, {"sha256": sha}, reply, today)
     return {a.get("id"): a for a in reply.get("items") or [] if isinstance(a, dict)}
@@ -469,6 +509,7 @@ def _run(payload: Dict[str, Any], state: Any, report: Dict[str, Any], cache: Any
     items: List[Dict[str, Any]] = []
     ask: Dict[int, Tuple[str, int, List[str]]] = {}
     from t2pw.pwml.ir import _actor_name_and_hint
+    names: Dict[int, List[str]] = {}
     for i in [i for i in todo if i not in est]:
         r = rx[i]
         ins = [p for p in _participants({"inputs": r.get("inputs")})]
@@ -479,6 +520,7 @@ def _run(payload: Dict[str, Any], state: Any, report: Dict[str, Any], cache: Any
         if hints.get(i):
             item["states_of_linked_reactions"] = hints[i]
         ask[item["id"]] = ("reaction", i, [])
+        names[item["id"]] = ins + outs + item["enzymes"]
         items.append(item)
     for i in ttodo:
         t = tr[i]
@@ -490,6 +532,7 @@ def _run(payload: Dict[str, Any], state: Any, report: Dict[str, Any], cache: Any
                 "current_to": None if _unstated(t.get(SIDES[1])) else ctx.name(t.get(SIDES[1])),
                 "ask": [f.split("_")[0] for f in sides]}
         ask[item["id"]] = ("transport", i, sides)
+        names[item["id"]] = _cargo(t) + [_actor_name_and_hint(a)[0] for a in (t.get("transporters") or [])]
         items.append(item)
     items, dropped = items[:MAX_ITEMS], items[MAX_ITEMS:]
     for it in dropped:
@@ -499,7 +542,9 @@ def _run(payload: Dict[str, Any], state: Any, report: Dict[str, Any], cache: Any
     if items:
         report["llm"]["text_source"] = "paper_text" if text is paper else "evidence_sentences"
     answers: Dict[Any, Any] = {}
-    if items and text.strip():
+    if items and not LLM_ESTIMATE:
+        report["llm"]["skipped"] = "deferred"
+    elif items and text.strip():
         from t2pw.service.transport_sides import _window
 
         for it in items:
@@ -514,7 +559,7 @@ def _run(payload: Dict[str, Any], state: Any, report: Dict[str, Any], cache: Any
     for n, (kind, i, sides) in ask.items():
         ans = answers.get(n)
         if kind == "reaction":
-            target, quote = _accept(ans, ctx, text_words) if ans is not None else (None, "")
+            target, quote = _accept(ans, ctx, text_words, names[n]) if ans is not None else (None, "")
             if target is None:
                 if ans is not None:
                     report["llm"]["rejected"].append({"reaction": rx[i].get("name"), "reason": quote})
@@ -527,7 +572,7 @@ def _run(payload: Dict[str, Any], state: Any, report: Dict[str, Any], cache: Any
         got = {}
         for f in sides:
             side = (ans or {}).get(f.split("_")[0]) if isinstance(ans, dict) else None
-            target, quote = _accept(side, ctx, text_words) if side is not None else (None, "")
+            target, quote = _accept(side, ctx, text_words, names[n]) if side is not None else (None, "")
             if target is not None:
                 got[f] = (target, quote)
             elif side is not None:
@@ -560,8 +605,9 @@ def _run(payload: Dict[str, Any], state: Any, report: Dict[str, Any], cache: Any
                                      "source": src, "reason": ev["reason"]})
 
     # step 3
-    llm_note = report["llm"].get("skipped") or report["llm"].get("error")
-    llm_note = f"; model not asked ({llm_note})" if llm_note else ""
+    # Rows carry only fixed words; a provider's error text (it can name server paths) stays in the report, redacted (F3).
+    llm_note = ("; " + UNAVAILABLE) if report["llm"].get("error") else (
+        f"; model step {report['llm']['skipped']}" if report["llm"].get("skipped") else "")
     for i in todo:
         if i in est:
             continue
