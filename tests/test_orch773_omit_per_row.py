@@ -178,16 +178,19 @@ def test_g9_unexportable_component_takes_its_complex_and_processes_not_the_pathw
     assert _refusals(result) == []
     # Round 1 (N1): the declared complex left because its component was omitted, which the reason now says.
     reason = "protein_complex_component_omitted:EntB:protein_missing_external_identity"
+    # D-W24 3 / L5: the reaction stays and loses only the complex; the interaction still leaves.
     assert _omitted(result) == [
-        ("EntB isochorismatase reaction", QUARANTINED_UNMAPPED_ENTITY, reason, "actor", "enzymes", "isochorismatase"),
         ("2,3-DHB competitive inhibition of EntB", QUARANTINED_UNMAPPED_ENTITY, reason, "process", "entity_2", "isochorismatase"),
     ]
     assert _removed(result) == [
         ("protein_complexes", "isochorismatase", reason),
         ("proteins", "EntB", "protein_missing_external_identity"),
     ]
-    # A reaction whose enzyme fails is still omitted whole (D-114 AMENDMENT 1 s1).
-    _review_required(result)
+    (complex_row,) = [row for row in result.removed_entity_report["removed_entities"] if row["name"] == "isochorismatase"]
+    assert [(r["process_name"], r["slots"], r["decision"]) for r in complex_row["detail"]["actor_removed_from"]] == [
+        ("EntB isochorismatase reaction", ["enzymes", "modifiers"], "D-W24 3")]
+    assert "EntB isochorismatase reaction" in [row["name"] for row in _surviving(result, "reactions")]
+    _review_required(result, actors=1)
 
 
 def test_g9_unexportable_row_kept_only_by_a_synonym_is_removed_alone() -> None:
@@ -200,7 +203,11 @@ def test_g9_unexportable_row_kept_only_by_a_synonym_is_removed_alone() -> None:
     result = _quarantine(payload, context)
     assert _refusals(result) == []
     insp3r = "inositol-1,4,5-trisphosphate receptor (InsP3R)"
+    # D-W24 3 / L5: 'PLC cleavage of PIP2' is kept and loses its identity-less enzyme and modifiers (3 rows).
     assert _removed(result) == [
+        ("enzymes", "phospholipase C (PLC)", "protein_missing_external_identity"),
+        ("modifiers", "G protein", "protein_missing_external_identity"),
+        ("modifiers", "phospholipase C (PLC)", "protein_missing_external_identity"),
         ("proteins", "phosphorylated CAMKII", "protein_missing_external_identity"),
         ("transporters", insp3r, "actor_schema_not_canonical"),
         ("transporters", insp3r, "actor_schema_not_canonical"),
@@ -214,7 +221,7 @@ def test_g9_unexportable_row_kept_only_by_a_synonym_is_removed_alone() -> None:
     for name in ("IP3-induced Ca2+ release", "SERCA pumps Ca2+ into ER"):
         assert transports[name]["transporters"] == []
     assert "calcineurin B component of calcineurin complex" in {row["name"] for row in _surviving(result, "interactions")}
-    _review_required(result, actors=2)
+    _review_required(result, actors=5)  # D-W24 3 / L5: 2 transporters + 3 reaction actors
 
 
 # ── G9: the final pre-export gate (freeze) ─────────────────────────────────
@@ -270,12 +277,12 @@ def test_g9_final_gate_wrapper_with_no_other_catalyst_omits_its_reaction() -> No
     assert _refusals(result) == []
     message = ("Generated protein complex 'enterobactin synthase complex' component 'EntD' "
                "is missing positive stoichiometry.")
-    assert _omitted(result) == [
-        ("enterobactin synthase complex reaction", QUARANTINED_UNMAPPED_ENTITY, message, "actor", "enzymes",
-         "enterobactin synthase complex"),
-    ]
+    # D-W24 3 / L5: the reaction stays, without the unwritable complex (its only catalyst).
+    assert _omitted(result) == []
     assert _removed(result) == [("protein_complexes", "enterobactin synthase complex", message)]
-    _review_required(result)
+    reaction = next(row for row in _surviving(result, "reactions") if row["name"] == "enterobactin synthase complex reaction")
+    assert "enterobactin synthase complex" not in [actor.get("entity") for actor in reaction["enzymes"]]
+    _review_required(result, actors=1)
 
 
 # ── G9: the export's gates ─────────────────────────────────────────────────
@@ -307,10 +314,10 @@ def test_g9_required_gate_bare_protein_enzyme_omits_its_reaction() -> None:
     payload, context = _leg("runs_verify_2026-08-21_2057_PMC12096016")
     result = _quarantine(payload, context)
     assert _refusals(result) == []
-    assert _omitted(result) == [
-        ("LDH coupled reaction", QUARANTINED_BROKEN_REFERENCE, "reaction_enzyme_must_be_protein_complex", "actor",
-         "enzymes", "lactate dehydrogenase"),
-    ]
+    # D-W24 3 / L5: the bare enzyme takes its single-protein wrapper; nothing is omitted.
+    assert _omitted(result) == []
+    reaction = next(row for row in _surviving(result, "reactions") if row["name"] == "LDH coupled reaction")
+    assert [(a["entity"], a["entity_type"]) for a in reaction["enzymes"]] == [("lactate dehydrogenase complex", "protein_complex")]
     _review_required(result)
 
 
@@ -386,19 +393,40 @@ def test_preservation_a_whole_pathway_refusal_still_refuses_and_nothing_is_omitt
     assert _refusals(result) == ["required:no_defensible_reaction_support"]
 
 
-def test_preservation_omissions_that_buy_no_pwml_are_rolled_back() -> None:
-    """The bare-enzyme leg with its pathway species stripped of every identity: the required-field gate
-    names the LDH reaction AND the species, a whole-pathway requirement. Omitting LDH would still leave no
-    PWML, so nothing is omitted and both refusals stand, exactly as at base."""
+def _per_row_rounds(monkeypatch) -> List[List[str]]:
+    """The process names each per-row omission round omitted, before any rollback (L5 review F9: proves an
+    omission was really attempted, so "nothing is omitted" is a rollback and not a round that never ran)."""
 
-    payload, context = _leg("runs_verify_2026-08-21_2057_PMC12096016")
+    from t2pw.pipeline import strict_quarantine as sq
+
+    real, rounds = sq._apply_per_row_failures, []
+
+    def spy(failures, working, admissions, *, iteration):
+        omitted, removed, drops = real(failures, working, admissions, iteration=iteration)
+        rounds.append([str(row.get("name")) for row in omitted])
+        return omitted, removed, drops
+
+    monkeypatch.setattr(sq, "_apply_per_row_failures", spy)
+    return rounds
+
+
+def test_preservation_omissions_that_buy_no_pwml_are_rolled_back(monkeypatch) -> None:
+    """The EntB leg (``test_g9_unexportable_component_*``) with its pathway species stripped of every
+    identity. The per-row round omits the interaction whose endpoint is the unexportable complex (a process
+    slot, not an actor); the next round then meets the species, a whole-pathway requirement that names no
+    row. The omission bought no PWML, so it is rolled back: nothing is omitted and the refusal stands.
+
+    L5 review F9: this leg replaces the bare-LDH leg, whose only per-row failure was its enzyme -- which
+    D-W24 3 now wraps -- so on that leg no omission was ever attempted and the test could not fail."""
+
+    payload, context = _leg("ORCH-755_enterobactin-strict_2026-10-20_2201")
     for key in ("pathbank_species_id", "pw_species_id", "pathwhiz_id", "species_id", "taxonomy_id", "taxonomy-id"):
         payload["entities"]["species"][0].pop(key, None)
+    rounds = _per_row_rounds(monkeypatch)
     result = _quarantine(payload, context)
-    assert _omitted(result) == [] and _removed(result) == []
-    refusals = _refusals(result)
-    assert "required:reaction_enzyme_must_be_protein_complex" in refusals
-    assert "required:species_missing_taxonomy" in refusals
+    assert rounds == [["2,3-DHB competitive inhibition of EntB"]]  # attempted ...
+    assert _omitted(result) == [] and _removed(result) == []  # ... and rolled back
+    assert _refusals(result) == ["quarantine:unexportable_entity:1"]
 
 
 def test_preservation_a_passing_leg_is_untouched() -> None:
@@ -419,18 +447,29 @@ def test_preservation_research_mode_omits_nothing() -> None:
     assert _omitted(result) == [] and _removed(result) == []
 
 
-def test_preservation_an_omission_that_would_leave_nothing_is_rolled_back() -> None:
-    """Every reaction of this toy fails Stage 8 (no ``entity_type``) and the required-field gate (bare protein
-    enzymes). Omitting them all would leave an empty graph, so nothing is omitted: the export's own gate
-    refuses, exactly as at base."""
+def test_preservation_an_omission_that_would_leave_nothing_is_rolled_back(monkeypatch) -> None:
+    """Every reaction of this toy fails the required-field gate on a row of its own: the toy carries lineage
+    (one compound) and no reaction has defensible support, so ``no_defensible_reaction_support`` names every
+    reaction (D-116 s1). Omitting them all would leave an empty graph, so nothing is omitted: the export's own
+    gate refuses.
 
+    L5 review F9: the toy's old failure was its bare-protein enzymes (Stage 8, an actor), which D-W24 3 now
+    wraps, so no omission was ever attempted; the support gate is a failure of the reaction itself."""
+
+    from t2pw.pipeline import lineage
     from test_strict_quarantine import _glutathione_payload
 
-    result = _quarantine(_glutathione_payload(), None)
-    assert _omitted(result) == [] and _removed(result) == []
+    payload = _glutathione_payload()
+    lineage.record(payload["entities"]["compounds"][0], lineage.LineageEntry(
+        stage="normalization", origin="inferred", support="derived", paper_explicit="not_evaluated",
+        reason="lineage carrier present (L5 F9 fixture)", review_required=False))
+    rounds = _per_row_rounds(monkeypatch)
+    result = _quarantine(payload, None)
+    assert rounds == [["gamma-glutamylcysteine synthesis", "glutathione synthesis"]]  # attempted ...
+    assert _omitted(result) == [] and _removed(result) == []  # ... and rolled back
     assert [row["state"] for row in result.admissions] == ["core_accepted", "core_accepted"]
     assert result.ok
-    assert _refusals(result)[0].startswith("stage8:")
+    assert "required:no_defensible_reaction_support" in _refusals(result)
 
 
 # ── NEW acceptance test (no base failure claimed) ──────────────────────────
@@ -460,6 +499,7 @@ _INSP3R = "inositol-1,4,5-trisphosphate receptor (InsP3R)"
 _WRAPPER = ("Generated protein complex 'enterobactin synthase complex' component 'enterobactin synthase' "
             "is missing positive stoichiometry.")
 _TRANSPORTER = ("transporters", "actor_schema_not_canonical", "KI-023", "D-114 AMENDMENT 1 s2")
+_REACTION_ACTOR = ("protein_missing_external_identity", "KI-001", "D-W24 3")  # D-W24 3 / L5
 
 
 def _text_record(result, pwml: bool = True):
@@ -482,8 +522,12 @@ def _text_record(result, pwml: bool = True):
     [
         ("ORCH-755_sour_taste-strict_2026-10-21_0139", "3 actors",
          [(name, "OTOP1", *_TRANSPORTER) for name in _OTOP1]),
-        ("ORCH-767_wnt_ca-strict_2026-10-24_0314", "2 actors",
-         [(name, _INSP3R, *_TRANSPORTER) for name in ("IP3-induced Ca2+ release", "SERCA pumps Ca2+ into ER")]),
+        # D-W24 3 / L5: + the three actors 'PLC cleavage of PIP2' (kept) loses.
+        ("ORCH-767_wnt_ca-strict_2026-10-24_0314", "5 actors",
+         [("PLC cleavage of PIP2", "phospholipase C (PLC)", "enzymes", *_REACTION_ACTOR),
+          ("PLC cleavage of PIP2", "G protein", "modifiers", *_REACTION_ACTOR),
+          ("PLC cleavage of PIP2", "phospholipase C (PLC)", "modifiers", *_REACTION_ACTOR)]
+         + [(name, _INSP3R, *_TRANSPORTER) for name in ("IP3-induced Ca2+ release", "SERCA pumps Ca2+ into ER")]),
         ("ORCH-767_enterobactin-strict_2026-10-23_2224", "1 actors",
          [("EntF enterobactin synthase reaction", "enterobactin synthase complex", "enzymes, modifiers", _WRAPPER,
            "KI-012", "D-113 s1")]),
@@ -503,10 +547,14 @@ def test_new_text_record_lists_every_actor_left_out_of_a_drawn_process(slug, tit
         assert ("Catalysts kept" in block) is (block["Decision"] == "D-113 s1")
         if block["Decision"] == "D-113 s1":
             assert "EntF complex" in block["Catalysts kept"]
+        elif block["Decision"] == "D-W24 3":  # L5: a kept reaction's actor; the KI's own hand fix
+            assert block["Gate"] == "strict_quarantine_admission"
         else:
             assert f"\"{actor}\" as a transporter of \"{process}\"" in block["Add by hand"]
     # The process is drawn and counted as drawn; only the actor is left out.
-    omitted = {e["name"] for e in report["omitted"]}
+    # D-W24 3 / L5: 'PLC cleavage of PIP2' (now kept) shares its name with two pre-freeze merged duplicates
+    # (duplicate_locked_reaction, KI-014) the record lists as omitted; those rows are not this process.
+    omitted = {e["name"] for e in report["omitted"] if not e.get("merged_duplicate")}
     assert not omitted & {process for process, *_ in expected}
     assert report["pwml_coverage"]["drawn"] is not None
     assert "catalysts kept" not in "".join(line for line in section.splitlines() if "transporters" in line)

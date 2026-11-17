@@ -382,23 +382,42 @@ def test_l6_a_copy_that_would_add_a_non_complex_enzyme_is_not_merged() -> None:
     rx = [_rx("a", ["x"], ["y"], "cell", ["E complex", "F complex"]), _rx("b", ["x"], ["y"], "cell", ["E complex"])]
     rx[1]["enzymes"].append({"entity": "bare E2", "entity_type": "protein", "role": "catalyst"})
     p = _payload([_st("cell", "cell")], rx, ["E complex", "F complex"])
-    p["entities"]["proteins"] = [{"name": "bare E2", "species": "Lactococcus lactis", "uniprot_id": "P00001"}]
+    # D-W24 3 / L5: a bare protein WITH a database identity is now wrapped by the quarantine and merges
+    # (test_l6_a_copy_with_a_bare_protein_enzyme_is_never_the_kept_row). One the quarantine will NOT wrap
+    # still defers its copy: an identity-less one fails the strict actor check first ...
+    q = copy.deepcopy(p)
+    q["entities"]["proteins"] = [{"name": "bare E2", "species": "Lactococcus lactis"}]
+    rep = merge_states_and_duplicates(q)
+    assert len(q["processes"]["reactions"]) == 2
+    assert rep["deferred"][0]["reason"] == "actor_not_admissible_under_strict:protein_missing_external_identity"
+    # ... and the PathBank Unknown sentinel, which has an identity but is never wrapped, is not a complex.
+    rx[1]["enzymes"][-1]["entity"] = "Unknown"
+    p["entities"]["proteins"] = [{"name": "Unknown", "species": "Lactococcus lactis", "pathbank_protein_id": 9659,
+                                  "uniprot_id": "Unknown",
+                                  "mapping_meta": {"chosen_rule": "pathbank_unknown_protein_fallback", "fallback_used": True}}]
     rep = merge_states_and_duplicates(p)
     assert len(p["processes"]["reactions"]) == 2
-    assert rep["deferred"][0]["reason"] == "actor_not_a_protein_complex:bare E2"
+    assert rep["deferred"][0]["reason"] == "actor_not_a_protein_complex:Unknown"
 
 
 def test_l6_a_copy_with_a_bare_protein_enzyme_is_never_the_kept_row() -> None:
-    """idx 113: 'C4H hydroxylation' (bare protein AtCYP73A5, quarantined at export) and 'C4H reaction' (the complex) are the
-    same step. Keeping the first would have folded the drawn copy into the quarantined one and lost the step."""
+    """idx 113: 'C4H hydroxylation' (bare protein AtCYP73A5) and 'C4H reaction' (the complex) are the same step. Base:
+    AtCYP73A5's reaction was quarantined at export, so folding the drawn copy into it lost the step. D-W24 3 / L5: the
+    quarantine wraps AtCYP73A5 (it has a UniProt id), so the copies merge into one row carrying both enzymes; a bare
+    enzyme WITHOUT an identity (asserted below) still keeps its copy apart."""
     rx = [_rx("C4H hydroxylation", ["cinnamic acid"], ["p-coumaric acid"], "cell", [], lock="rxn_lock_002"),
           _rx("C4H reaction", ["cinnamic acid"], ["p-coumaric acid"], "cell", ["Cinnamate 4-hydroxylase"], lock="rxn_lock_004")]
     rx[0]["enzymes"] = [{"entity": "AtCYP73A5", "entity_type": "protein", "role": "catalyst"}]
     p = _payload([_st("cell", "cell")], rx, ["Cinnamate 4-hydroxylase"])
     p["entities"]["proteins"] = [{"name": "AtCYP73A5", "species": "Lactococcus lactis", "uniprot_id": "P92994"}]
-    before = copy.deepcopy(p["processes"])
+    unidentified = copy.deepcopy(p)
     merge_states_and_duplicates(p)
-    assert p["processes"] == before
+    (kept,) = p["processes"]["reactions"]
+    assert {a["entity"] for a in kept["enzymes"]} == {"AtCYP73A5", "Cinnamate 4-hydroxylase"}  # D-W24 3 / L5
+    unidentified["entities"]["proteins"][0].pop("uniprot_id")
+    before = copy.deepcopy(unidentified["processes"])
+    merge_states_and_duplicates(unidentified)
+    assert unidentified["processes"] == before
 
 
 # ---- the seam --------------------------------------------------------------------------------------------------------

@@ -2722,6 +2722,29 @@ def build_pwml_ir(
             review_reasons=review,
         )
 
+    # L5 (D-W24 3, ruling 2): an interaction the export quarantine left out because an endpoint
+    # cannot be written (a complex with no components) is kept as a withheld row with that reason,
+    # in its own bucket so ``processes.interactions`` stays one row per payload interaction. Last,
+    # so no other row's key moves. Never drawn; listed in the side file.
+    for widx, held in enumerate(_safe_list(payload.get("withheld_interactions"))):
+        if not isinstance(held, dict):
+            continue
+        raw = _safe_dict(held.get("row"))
+        emit_interaction(
+            name=_canonical(held.get("name") or raw.get("name")),
+            raw_type=interaction_relationship_word(raw),
+            left_name=_canonical(raw.get("left") or raw.get("entity_1") or raw.get("source")),
+            right_name=_canonical(raw.get("right") or raw.get("entity_2") or raw.get("target")),
+            left_entity=None,
+            right_entity=None,
+            bs_key=None,
+            pointer=_canonical(held.get("pointer")) or f"/withheld_interactions/{widx}",
+            evidence=_canonical(raw.get("evidence")),
+            bucket="quarantine_withheld_interactions",
+            extra={"origin": "export_quarantine", "withheld_endpoint": _canonical(held.get("endpoint"))},
+            withhold=_canonical(held.get("reason")) or "endpoint_not_exportable",
+        )
+
     # Fallback grid for entities referenced via explicit element_locations but not
     # placed by any reaction/transport. They use a flat grid below the reaction band.
     orphan_idx = 0

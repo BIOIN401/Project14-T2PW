@@ -33,8 +33,9 @@ in ``quarantined_locked_reactions`` with the reason ``duplicate_locked_reaction`
 "merged duplicate, not counted"), so its lock stays accounted for, its evidence stays in the text record and the coverage does
 not fall; ``merged_into`` names the kept row. A merged-away name no surviving reaction carries leaves ``reaction_order``. Zero
 loss guards: a copy (the kept one included) takes part only when every enzyme and modifier of it passes the strict
-quarantine's own actor check under strict_db AND is a declared protein complex (idx 113: a copy with a bare-protein enzyme is
-quarantined at export, and keeping it would have cost the step). A copy that fails a guard stays as it was, under ``deferred``.
+quarantine's own actor check under strict_db AND is a declared protein complex or a bare protein the quarantine will wrap
+(``strict_quarantine.wrappable_bare_enzymes``, lane L5, D-W24 3; idx 113's AtCYP73A5). A copy that fails a guard stays as it
+was, under ``deferred``.
 """
 
 from __future__ import annotations
@@ -500,7 +501,9 @@ def _lock(row: Dict[str, Any]) -> str:
 
 
 def _merge_reactions(payload: Dict[str, Any], resolve: Any, originals: List[Any], report: Dict[str, Any]) -> None:
-    from t2pw.pipeline.strict_quarantine import _actor_verdict, _build_registry, _scope_is_out_of_scope
+    from t2pw.mapping.map_ids import _normalize_name
+    from t2pw.pipeline.strict_quarantine import (
+        _actor_verdict, _build_registry, _scope_is_out_of_scope, wrappable_bare_enzymes)
     from t2pw.pwml.ir import _direction
 
     procs = payload.get("processes") or {}
@@ -508,6 +511,9 @@ def _merge_reactions(payload: Dict[str, Any], resolve: Any, originals: List[Any]
     if not isinstance(reactions, list):
         return
     registry = _build_registry(payload)
+    # L5 (D-W24 3): the quarantine wraps a bare protein with a database identity in its single-protein complex, so
+    # such an actor WILL be written as a complex; it no longer defers its copy. Same predicate as the quarantine's.
+    will_wrap = set(wrappable_bare_enzymes(payload))
     groups: Dict[Tuple[Any, ...], List[int]] = {}
     for i, r in enumerate(reactions):
         if not isinstance(r, dict):
@@ -528,7 +534,8 @@ def _merge_reactions(payload: Dict[str, Any], resolve: Any, originals: List[Any]
         for i in members:
             verdict = _actor_verdict("reactions", reactions[i], registry, strict_db=True)
             bare = [_actor_name(a) for f in ("enzymes", "modifiers") for a in reactions[i].get(f) or []
-                    if (registry.resolve(_actor_name(a)) or ("",))[0] != "protein_complexes"]
+                    if (registry.resolve(_actor_name(a)) or ("",))[0] != "protein_complexes"
+                    and _normalize_name(_actor_name(a)) not in will_wrap]
             if verdict is None and not bare:
                 ok.append(i)
             else:

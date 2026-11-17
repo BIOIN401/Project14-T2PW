@@ -36,6 +36,8 @@ if str(SRC) not in sys.path:
 
 from t2pw.pipeline.export_mode import PATHWHIZ, RESEARCH  # noqa: E402
 from t2pw.pipeline.strict_quarantine import (  # noqa: E402
+    AUXILIARY_ACCEPTED,
+    CORE_ACCEPTED,
     COVERAGE_REPORT_FILENAME,
     QUARANTINE_HISTORY_DIRNAME,
     QUARANTINE_REPORT_FILENAME,
@@ -53,7 +55,7 @@ from t2pw.pipeline.strict_quarantine import (  # noqa: E402
     write_quarantine_artifacts,
 )
 
-from test_strict_quarantine_contract_alignment import _base, _strict_failures  # noqa: E402
+from test_strict_quarantine_contract_alignment import _base, _dropped_actor, _strict_failures  # noqa: E402
 
 
 STAGE_ZERO_CONTEXT = {
@@ -184,7 +186,10 @@ def test_a_research_report_cannot_authorize_a_strict_export() -> None:
     )
     # And the strict verdict on the same payload really is different.
     strict = _decided(payload, mode=PATHWHIZ)
-    assert strict.quarantine_report["counts"][QUARANTINED_UNMAPPED_ENTITY] == 1
+    # D-W24 3 / L5: strict keeps the reaction and drops the unidentified modifier, so the graph differs.
+    assert _dropped_actor(strict, "gamma-glutamylcysteine synthesis", "unidentified enzyme")["reason"] == (
+        "protein_missing_external_identity")
+    assert strict.quarantine_report["resulting_payload_hash"] != research.quarantine_report["resulting_payload_hash"]
 
 
 def test_a_strict_report_cannot_authorize_a_research_export() -> None:
@@ -423,10 +428,13 @@ def test_a_refinement_that_adds_an_unexportable_process_loses_only_that_process(
     )
 
     assert rejudged.ok is True
-    assert rejudged.states()["peripheral OPDA reduction"] == QUARANTINED_UNMAPPED_ENTITY
+    # D-W24 3 / L5: the added reaction stays and loses only its unidentified modifier.
+    assert rejudged.states()["peripheral OPDA reduction"] in {CORE_ACCEPTED, AUXILIARY_ACCEPTED}
+    assert _dropped_actor(rejudged, "peripheral OPDA reduction", "OPR3")["reason"] == "protein_missing_external_identity"
     assert [row["name"] for row in rejudged.payload["processes"]["reactions"]] == [
         "gamma-glutamylcysteine synthesis",
         "glutathione synthesis",
+        "peripheral OPDA reduction",
     ]
     assert _strict_failures(rejudged.payload) == []
 
@@ -555,7 +563,8 @@ def test_strict_and_research_decisions_for_one_payload_do_not_collide(tmp_path: 
     assert archived.exists(), "the strict decision was overwritten by the research one"
     kept = json.loads(archived.read_text(encoding="utf-8"))
     assert kept["export_mode"] == PATHWHIZ
-    assert kept["counts"][QUARANTINED_UNMAPPED_ENTITY] == 1
+    # D-W24 3 / L5: the strict decision kept the reaction and dropped one actor, which it records.
+    assert "omitted_from_pwml:0_processes+1_actors" in kept["review_reasons"]
     current = json.loads((tmp_path / QUARANTINE_REPORT_FILENAME).read_text(encoding="utf-8"))
     assert current["export_mode"] == RESEARCH
 
@@ -657,10 +666,12 @@ def test_strict_mode_on_the_same_candidate_does_remove_it() -> None:
 
     strict = quarantine_and_close(_research_candidate(), strict_db=True, mode=PATHWHIZ)
 
-    assert strict.states()["novel oxidation"] == QUARANTINED_UNMAPPED_ENTITY
-    assert "novel oxidation" not in [
-        row["name"] for row in strict.payload["processes"]["reactions"]
-    ]
+    # D-W24 3 / L5: strict keeps the reaction and removes only the accession-less enzyme from it.
+    assert strict.states()["novel oxidation"] in {CORE_ACCEPTED, AUXILIARY_ACCEPTED}
+    (novel,) = [row for row in strict.payload["processes"]["reactions"] if row["name"] == "novel oxidation"]
+    assert novel["modifiers"] == []
+    assert _dropped_actor(strict, "novel oxidation", "novel 2026 oxidoreductase")["reason"] == (
+        "protein_missing_external_identity")
     assert quarantine_review_flags(strict.quarantine_report) == []
 
 
