@@ -318,3 +318,42 @@ pathways import into PathWhiz with 0 reactions, transports and interactions.
 (c) decides the remaining release questions on the recommended option, logged in `RELEASE-P6.md` §
 open questions. The biology-only items (the `type iii taste cell` synonym; MG-63 and Saos-2) stay as
 they are (no synonym added; payload only) until the PO rules.
+
+
+**D-W28 · 2026-11-17: next-phase vision, lab vLLM, Thursday demo, and full autonomy** (recorded by the
+orchestrator at the PO's direction). The full vision is in `docs/VISION.md`.
+(a) **Pipeline shape.**
+- Extract everything the paper holds, with correct IDs.
+- Extend from other peer-reviewed sources (abstract or full text) and from curated databases, with
+  provenance on every element.
+- Keep a single big payload.
+- An LLM sets the scope from the user's request. The **default scope is the paper plus its immediate
+  context**, and the user can re-scope after the output exists ("make this more detailed").
+- Files are generated when the user asks to download them.
+(b) **Look.** Outside-sourced elements look the same as paper elements in PathWhiz.
+(c) **Validators** (libSBML, SBGN and so on) are for development and testing only, not for every
+production job. The orchestrator checks real outputs itself in a local PathWhiz.
+(d) **Benchmark.** The main benchmark is paper-only. A smaller set uses the full view ("how much of
+everything known did it recover").
+(e) **Lab vLLM.**
+- The A6000 machine is reached over SSH as `lab-gpu`, with key auth set up by the PO.
+- We may run our own vLLM server there with a long context (Gemma 4 31B w4a16, already cached) when the
+  GPU is free, and stop it afterwards. Other users' jobs are never stopped.
+- A watcher queues our run until the GPU is free.
+- While we wait, the same Gemma model is A/B-tested through OpenRouter.
+- The lab machine does NOT host the web server. That moves to OVH Cloud later.
+(f) **PathBank DB.** Keep the existing read-only user.
+(g) **Demo (Thursday 2026-11-19).** Show everything except the public site:
+- the vLLM working;
+- pathways in PathWhiz and in our rendering;
+- every generated file type.
+(h) **Autonomy.** The orchestrator runs the whole programme without asking. PathWhiz changes keep the
+D-W22 shape: one stacked branch per set of edits, each built on the previous one, every edit logged,
+pushed but never merged. Agents are right-sized to their task (`docs/webserver/ORCHESTRATOR.md` § 3).
+PO, verbatim (2026-11-17): "set up that watcher [...] we need to have a lot more tokens on our model when we
+put the Gemma on there. Also, why don't we just test Gemma like the exact model we're going to run on the VLM?
+[...] test that with open router. Just as we're waiting. [...] now that you have everything written to the
+docs, the exact specifications that we want, have everything taken care of. You have access to everything.
+[...] Make sure to check everything against pathways, check against SSPMDB, the folder, run it locally. If you
+need to, you can make edits to pathways as well, but make sure, again, you're logging all the edits. You're
+making them, you're making each set of edits in a new branch built off the last one".
