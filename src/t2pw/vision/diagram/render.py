@@ -5,7 +5,6 @@ Everything is derived from the data. No per-paper coordinates, no per-paper case
 Run:  python t2pw_diagrams.py   (see build_page.py for the page builder)
 """
 import heapq
-import json
 import math
 import re
 from collections import defaultdict, Counter
@@ -21,7 +20,10 @@ def _font(size):
     for p in (os.environ.get("T2PW_DIAGRAM_FONT"), "C:/Windows/Fonts/segoeui.ttf",
               "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"):
         if p and os.path.exists(p):
-            return ImageFont.truetype(p, size)
+            try:
+                return ImageFont.truetype(p, size)
+            except OSError:  # exists but is not a font: try the next one
+                continue
     return ImageFont.load_default(size)
 
 
@@ -1659,7 +1661,3 @@ def render(ir, style, ident, hide_reg=True):
            f'role="img" aria-labelledby="{ident}-t" {attrs} onmouseover="{HOVER_JS}" onmouseleave="this.classList.remove(\'hl\')">\n'
            f'<title id="{ident}-t">{escape(ident)}</title>\n{DEFS}\n' + "\n".join(views) + "\n</svg>")
     return svg, mc, layc
-
-
-def load(path):
-    return json.load(open(path, encoding="utf-8"))
