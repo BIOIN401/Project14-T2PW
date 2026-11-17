@@ -405,7 +405,13 @@ def test_g9_r1_n4_unreferenced_element_collection_named_like_a_wrapped_protein_i
 
 
 def _assert_glutathione_synthesis_stranded(result, reason: str) -> None:
-    assert _record(result, "glutathione synthesis") == ("quarantined_disconnected", f"stranded_by_closure:{reason}")
+    # D-W24 3 / L5 review F6: closure no longer strands the reaction for its enzyme (it was
+    # ``("quarantined_disconnected", f"stranded_by_closure:{reason}")``); the reaction stays and the
+    # wrapper that stopped resolving leaves it, recorded with the same reason at the closure gate.
+    assert _record(result, "glutathione synthesis")[0] in ("core_accepted", "auxiliary_accepted")
+    assert [(row["bucket"], row["name"], row["reason"], row["detail"]["gate"])
+            for row in result.removed_entity_report["removed_entities"] if row["bucket"] in ("enzymes", "modifiers")] == [
+        ("enzymes", f"{GS} complex", reason, "strict_quarantine_closure")]
     assert _record(result, "gamma-glutamylcysteine synthesis")[0] == "core_accepted"
     assert result.refusal_reasons == []
     assert result.ok

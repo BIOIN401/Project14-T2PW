@@ -249,9 +249,13 @@ def test_g9_closure_revalidation_applies_the_same_predicate(monkeypatch: pytest.
     result = sq.quarantine_and_close(payload, strict_db=True)
 
     record = _record(result, "glutathione synthesis")
-    assert record["state"] == QUARANTINED_DISCONNECTED
-    assert record["reason"] == "stranded_by_closure:non_protein_actor_in_modifiers"
-    assert record["essential_participant"] == "GSS"
+    # D-W24 3 / L5 review F6: the same predicate still refuses GSS at closure, but the reaction is no longer
+    # stranded for it (was QUARANTINED_DISCONNECTED, "stranded_by_closure:non_protein_actor_in_modifiers");
+    # it stays and loses only the modifier, recorded at the closure gate.
+    assert record["state"] != QUARANTINED_DISCONNECTED
+    assert [(row["bucket"], row["name"], row["reason"], row["detail"]["gate"])
+            for row in result.removed_entity_report["removed_entities"] if row["bucket"] == "modifiers"] == [
+        ("modifiers", "GSS", "non_protein_actor_in_modifiers", "strict_quarantine_closure")]
     assert _unknown_actor_errors(result.payload) == []
 
 
