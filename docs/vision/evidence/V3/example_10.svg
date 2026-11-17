@@ -1,0 +1,200 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="dg" viewBox="0 0 434 1284" width="434" height="1284" role="img" aria-labelledby="b-t" data-style="cell" data-core="434 1284" onmouseover="var s=this,j=event.target.closest('.nodes .jn');s.querySelectorAll('.on').forEach(function(e){e.classList.remove('on')});s.classList.toggle('hl',!!j);if(j){s.querySelectorAll('[data-p~='+j.dataset.p+']').forEach(function(e){e.classList.add('on')})}" onmouseleave="this.classList.remove('hl')"><style>:root{
+  --bg:#F3F5F8; --panel:#FFFFFF; --ink:#1B2631; --muted:#5B6877; --rule:#D5DBE3; --accent:#1F5F8B;
+  --canvas:#FBFCFD;
+  --c-fill:#FCE9C4; --c-line:#9A6A12;
+  --p-fill:#D7E6F6; --p-line:#2F5F96;
+  --x-fill:#D3EEE3; --x-line:#25765D;
+  --n-fill:#E7DDF3; --n-line:#6D4F9C;
+  --r-extra:#E5EFF8; --r-membrane:#F1E6D2; --r-cytosol:#EBF4EA; --r-organelle:#EFE9F5; --r-auto:#ECEDEF; --r-cell:#EEF3E8; --r-periplasm:#E9F0F4; --r-iface:#F7F2E8;
+  --lipid-h:#C9A26A; --lipid-t:#D9BE90;
+  --edge:#35424F; --act:#177A62; --inh:#BE3B28; --assoc:#76818D;
+  --node-bg:#FFFFFF; --cellline:#6A7F57; --sepline:#C9D0D9;
+  --jn-fill:#FFFFFF; --jn-line:#35424F;
+  --badge-fill:#FFF3C4; --badge-line:#B08900;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#12171D; --panel:#1A2129; --ink:#E6EBF0; --muted:#9AA7B5; --rule:#2E3944; --accent:#7DB7E0;
+  --canvas:#161C23;
+  --c-fill:#5B4417; --c-line:#E0B25A;
+  --p-fill:#1F3A5C; --p-line:#7FB0E6;
+  --x-fill:#1B4A3D; --x-line:#6FCFAE;
+  --n-fill:#3A2E57; --n-line:#B79CE6;
+  --r-extra:#18283A; --r-membrane:#352B1D; --r-cytosol:#1B2B22; --r-organelle:#2A2336; --r-auto:#1F252C; --r-cell:#1C2A1F; --r-periplasm:#1B2B33; --r-iface:#2D281D;
+  --lipid-h:#9C7A45; --lipid-t:#6E5632;
+  --edge:#AEBBC8; --act:#52D1AB; --inh:#FF8A74; --assoc:#8E9AA7;
+  --node-bg:#1A2129; --cellline:#8FB07A; --sepline:#33404C;
+  --jn-fill:#1A2129; --jn-line:#AEBBC8;
+  --badge-fill:#4A3F10; --badge-line:#E0C14F;
+  color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --bg:#12171D; --panel:#1A2129; --ink:#E6EBF0; --muted:#9AA7B5; --rule:#2E3944; --accent:#7DB7E0;
+  --canvas:#161C23;
+  --c-fill:#5B4417; --c-line:#E0B25A;
+  --p-fill:#1F3A5C; --p-line:#7FB0E6;
+  --x-fill:#1B4A3D; --x-line:#6FCFAE;
+  --n-fill:#3A2E57; --n-line:#B79CE6;
+  --r-extra:#18283A; --r-membrane:#352B1D; --r-cytosol:#1B2B22; --r-organelle:#2A2336; --r-auto:#1F252C; --r-cell:#1C2A1F; --r-periplasm:#1B2B33; --r-iface:#2D281D;
+  --lipid-h:#9C7A45; --lipid-t:#6E5632;
+  --edge:#AEBBC8; --act:#52D1AB; --inh:#FF8A74; --assoc:#8E9AA7;
+  --node-bg:#1A2129; --cellline:#8FB07A; --sepline:#33404C;
+  --jn-fill:#1A2129; --jn-line:#AEBBC8;
+  --badge-fill:#4A3F10; --badge-line:#E0C14F;
+  color-scheme:dark;}
+
+.dg{display:block;font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif}
+.dg .canvas{fill:var(--canvas)}
+.dg text{fill:var(--ink);font-size:12px}
+/* bands and regions */
+.dg .band .bg{fill:var(--r-cytosol)}
+.dg .band.extra .bg{fill:var(--r-extra)}
+.dg .band.membrane .bg{fill:var(--r-membrane)}
+.dg .band.organelle .bg{fill:var(--r-organelle)}
+.dg .band.auto .bg{fill:var(--r-auto)}
+.dg .band.cell .bg{fill:var(--r-cell)}
+.dg .band.periplasm .bg{fill:var(--r-periplasm)}
+.dg .band.iface .bg{fill:var(--r-iface)}
+.dg .sep{stroke:var(--sepline);stroke-width:1}
+.dg .gutline{stroke:var(--sepline);stroke-width:1}
+.dg .blabel{font-size:13px;font-weight:600}
+.dg .bsub{font-size:10.5px;fill:var(--muted)}
+.dg .lipid-h{fill:var(--lipid-h)}
+.dg .lipid-t{stroke:var(--lipid-t);stroke-width:1.4;fill:none;stroke-linecap:round}
+.dg .cellfill{fill:var(--r-cell)}
+.dg .cellline{fill:none;stroke:var(--cellline);stroke-width:2.5}
+.dg .celltitle{font-size:12px;font-weight:600;fill:var(--muted);letter-spacing:.02em}
+.dg .orgblob{fill:var(--r-organelle);stroke:var(--p-line);stroke-width:1.2;stroke-dasharray:none;opacity:.98}
+.dg .rlabel{font-size:11.5px;font-weight:600;fill:var(--muted)}
+.dg .ifaceline{stroke:var(--cellline);stroke-width:2;stroke-dasharray:2 5;stroke-linecap:round}
+.dg text.ifacelbl{font-size:10.5px;font-weight:500;fill:var(--muted)}
+/* nodes */
+.dg .n text{pointer-events:none}
+.dg .n.compound rect{fill:var(--c-fill);stroke:var(--c-line);stroke-width:1.4}
+.dg .n.compound.small rect{stroke-dasharray:none;fill:var(--node-bg);stroke-width:1.6}
+.dg .n.protein rect{fill:var(--p-fill);stroke:var(--p-line);stroke-width:1.6}
+.dg .n.complex polygon{fill:var(--x-fill);stroke:var(--x-line);stroke-width:1.8}
+.dg .n.nucleic polygon{fill:var(--n-fill);stroke:var(--n-line);stroke-width:1.6}
+.dg .n .chip{font-size:9.5px;fill:var(--muted)}
+.dg .jn rect{fill:var(--jn-fill);stroke:var(--jn-line);stroke-width:1.5}
+.dg .jn.transport rect.inner{fill:none;stroke-width:1}
+.dg .jn text{font-size:10.5px;font-weight:700;fill:var(--ink)}
+/* edges */
+.dg .e{fill:none;stroke:var(--edge);stroke-width:1.5;stroke-linejoin:round}
+.dg .e.cat,.dg .e.enz{stroke-width:1.2}
+.dg .e.act{stroke:var(--act);stroke-width:1.9}
+.dg .e.inh{stroke:var(--inh);stroke-width:1.9}
+.dg .e.assoc{stroke:var(--assoc);stroke-width:1.3;stroke-dasharray:5 4}
+.dg .e.wh{opacity:.6}
+.dg .mk-fill{fill:var(--edge)}
+.dg .mk-act{fill:var(--canvas);stroke:var(--act);stroke-width:1.6}
+.dg .mk-inh{stroke:var(--inh);stroke-width:2.6;fill:none}
+.dg .mk-cat{fill:var(--canvas);stroke:var(--edge);stroke-width:1.2}
+.dg .mk-dot{fill:var(--assoc)}
+.dg .badge rect{fill:var(--badge-fill);stroke:var(--badge-line);stroke-width:1}
+.dg .badge text{font-size:10px;font-weight:600;fill:var(--ink)}
+
+.dg .spine{fill:var(--r-extra);opacity:.7}
+.dg .spinelbl{font-size:10.5px;font-weight:700;fill:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+
+/* v2: directed links, merged-step badges, legend, regulation toggle, hover highlight */
+.dg .mk-dir{fill:var(--assoc)}
+.dg .e.assoc.dir{stroke-dasharray:none;stroke-width:1.4}
+.dg .e.wh{opacity:.6}
+.dg .badge.merged rect{fill:var(--p-fill);stroke:var(--p-line)}
+.dg .xcap{font-size:9.5px;fill:var(--accent);font-weight:600}
+.dg .legendbg{fill:var(--canvas)}
+.dg .legend text{font-size:12px}
+.dg .legend .jn text{font-size:10px}
+.dg .legend .xcap{font-size:10px}
+.dg .reghead{font-size:12.5px;font-weight:700;fill:var(--accent)}
+.dg .regdet{font-size:11.5px;fill:var(--muted)}
+.dg .regtoggle{cursor:pointer}
+.dg .regtoggle rect{fill:var(--panel);stroke:var(--accent);stroke-width:1.3}
+.dg .regtoggle text{font-size:11px;font-weight:600;fill:var(--accent)}
+.dg .regtoggle:hover rect,.dg .regtoggle:focus rect{fill:var(--p-fill)}
+.dg .regtoggle:focus{outline:none}
+.dg .regtoggle:focus-visible rect{stroke-width:2.5}
+.dg .view-full{display:none}
+.dg.show-reg .view-full{display:inline}
+.dg.show-reg .view-core{display:none}
+.dg .n,.dg .e,.dg .jn{transition:opacity .12s}
+.dg.hl .nodes .n,.dg.hl .nodes .jn,.dg.hl .edges .e,.dg.hl .edges .badge{opacity:.14}
+.dg.hl .nodes .on,.dg.hl .edges .on{opacity:1}
+.dg.hl .edges .e.wh.on{opacity:.85}
+.dg .jn text.xcap{font-size:9.5px;font-weight:600;fill:var(--accent)}
+</style>
+<title id="b-t">b</title>
+<defs>
+<marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path class="mk-fill" d="M0,0 L10,5 L0,10 z"/></marker>
+<marker id="arrs" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path class="mk-fill" d="M10,0 L0,5 L10,10 z"/></marker>
+<marker id="act" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="10" markerHeight="10" orient="auto"><path class="mk-act" d="M1,1.5 L11,6 L1,10.5 z"/></marker>
+<marker id="inh" viewBox="0 0 12 12" refX="8" refY="6" markerWidth="10" markerHeight="10" orient="auto"><path class="mk-inh" d="M8,0.5 L8,11.5"/></marker>
+<marker id="cat" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto"><circle class="mk-cat" cx="5" cy="5" r="3.2"/></marker>
+<marker id="arrd" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path class="mk-dir" d="M0,0 L10,5 L0,10 z"/></marker>
+<marker id="dot" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="5" markerHeight="5"><circle class="mk-dot" cx="4" cy="4" r="3"/></marker>
+<pattern id="lipidTop" width="12" height="14" patternUnits="userSpaceOnUse"><circle class="lipid-h" cx="6" cy="4" r="3"/><path class="lipid-t" d="M4.6,7 L4.6,13 M7.4,7 L7.4,13"/></pattern>
+<pattern id="lipidBot" width="12" height="14" patternUnits="userSpaceOnUse"><circle class="lipid-h" cx="6" cy="10" r="3"/><path class="lipid-t" d="M4.6,1 L4.6,7 M7.4,1 L7.4,7"/></pattern>
+</defs>
+<g class="view-core">
+<rect class="canvas" x="0" y="0" width="434" height="1284"/>
+<g class="band auto"><rect class="bg" x="0" y="24.0" width="433.7" height="84.0" rx="0"/></g>
+<g class="band extra"><rect class="bg" x="0" y="114.0" width="433.7" height="128.0" rx="0"/></g>
+<g class="cellbox"><rect class="cellfill" x="30.0" y="274.0" width="357.7" height="896.0" rx="34"/></g>
+<g class="band membrane"><rect class="bg" x="30.0" y="320.0" width="357.7" height="496.0"/><rect x="30.0" y="320.0" width="357.7" height="14" fill="url(#lipidTop)"/><rect x="30.0" y="802.0" width="357.7" height="14" fill="url(#lipidBot)"/></g>
+<g class="band cell"><rect class="bg" x="40.0" y="816.0" width="337.7" height="76.0" rx="10"/></g>
+<g class="band cytosol"><rect class="bg" x="40.0" y="892.0" width="337.7" height="120.0" rx="10"/></g>
+<rect class="orgblob" x="85.2" y="1034.0" width="111.6" height="106.0" rx="26"/>
+<rect class="orgblob" x="220.8" y="1034.0" width="111.6" height="106.0" rx="26"/>
+<rect class="cellline" x="30.0" y="274.0" width="357.7" height="896.0" rx="34"/>
+<text class="celltitle" x="64.0" y="304.0">cell · Type III cells</text>
+<text class="rlabel auto" x="16.0" y="41.0">unplaced (auto state)</text>
+<text class="rlabel extra" x="16.0" y="131.0">saliva</text>
+<text class="rlabel membrane" x="46.0" y="351.0">apical membrane</text>
+<text class="rlabel cell" x="46.0" y="833.0">cell</text>
+<text class="rlabel cytosol" x="46.0" y="909.0">cytosol</text>
+<text class="rlabel organelle" x="101.2" y="1055.0">synapse</text>
+<text class="rlabel organelle" x="236.8" y="1055.0">synaptic vesicles</text>
+<g class="edges">
+<path class="e xin" data-p="T1" data-ek="xin" data-e="compound:cmp_1" d="M43.3,155.0 L39.1,155.0 Q35.0,155.0 35.0,159.1 L35.0,616.0 Q35.0,625.0 44.0,625.0 L169.0,625.0"></path>
+<path class="e xout" data-p="T1" data-ek="xout" data-e="compound:cmp_1" d="M201.0,635.0 L296.0,635.0 Q305.0,635.0 305.0,644.0 L305.0,838.0" marker-end="url(#arr)"></path>
+<path class="e xin" data-p="T2" data-ek="xin" data-e="compound:cmp_2" d="M85.0,840.0 L85.0,684.0 Q85.0,675.0 94.0,675.0 L169.0,675.0"></path>
+<path class="e xout" data-p="T2" data-ek="xout" data-e="compound:cmp_2" d="M201.0,675.0 L246.0,675.0 Q255.0,675.0 255.0,666.0 L255.0,164.0 Q255.0,155.0 246.0,155.0 L233.8,155.0" marker-end="url(#arr)"></path>
+<path class="e xin" data-p="T3" data-ek="xin" data-e="compound:cmp_1" d="M146.7,65.0 L156.0,65.0 Q165.0,65.0 165.0,74.0 L165.0,336.0 Q165.0,345.0 174.0,345.0 L256.0,345.0 Q265.0,345.0 265.0,354.0 L265.0,576.0 Q265.0,585.0 256.0,585.0 L201.0,585.0"></path>
+<path class="e xout" data-p="T3" data-ek="xout" data-e="compound:cmp_1" d="M185.0,606.0 L185.0,610.5 Q185.0,615.0 189.5,615.0 L236.0,615.0 Q245.0,615.0 245.0,624.0 L245.0,931.9 Q245.0,935.0 248.1,935.0 L251.3,935.0" marker-end="url(#arr)"></path>
+<path class="e xin" data-p="T4" data-ek="xin" data-e="compound:cmp_2" d="M301.8,1085.0 L356.0,1085.0 Q365.0,1085.0 365.0,1076.0 L365.0,744.0 Q365.0,735.0 356.0,735.0 L201.0,735.0"></path>
+<path class="e xout" data-p="T4" data-ek="xout" data-e="compound:cmp_2" d="M201.0,725.0 L208.0,725.0 Q215.0,725.0 215.0,732.0 L215.0,1076.0 Q215.0,1085.0 206.0,1085.0 L173.8,1085.0" marker-end="url(#arr)"></path>
+<path class="e xin" data-p="T5" data-ek="xin" data-e="compound:cmp_1" d="M95.0,80.0 L95.0,116.0 Q95.0,125.0 104.0,125.0 L236.0,125.0 Q245.0,125.0 245.0,134.0 L245.0,536.0 Q245.0,545.0 236.0,545.0 L201.0,545.0"></path>
+<path class="e xout" data-p="T5" data-ek="xout" data-e="compound:cmp_1" d="M185.0,534.0 L185.0,529.5 Q185.0,525.0 180.5,525.0 L14.0,525.0 Q5.0,525.0 5.0,516.0 L5.0,74.0 Q5.0,65.0 14.0,65.0 L41.3,65.0" marker-end="url(#arr)"></path>
+<path class="e xin" data-p="T6" data-ek="xin" data-e="compound:cmp_2" d="M248.2,1085.0 L234.0,1085.0 Q225.0,1085.0 225.0,1076.0 L225.0,774.0 Q225.0,765.0 216.0,765.0 L201.0,765.0"></path>
+<path class="e xout" data-p="T6" data-ek="xout" data-e="compound:cmp_2" d="M185.0,754.0 L185.0,749.5 Q185.0,745.0 189.5,745.0 L266.0,745.0 Q275.0,745.0 275.0,736.0 L275.0,74.0 Q275.0,65.0 266.0,65.0 L233.8,65.0" marker-end="url(#arr)"></path>
+<path class="e xin" data-p="T7" data-ek="xin" data-e="compound:cmp_3" d="M123.9,205.0 L226.0,205.0 Q235.0,205.0 235.0,214.0 L235.0,496.0 Q235.0,505.0 226.0,505.0 L201.0,505.0"></path>
+<path class="e xout" data-p="T7" data-ek="xout" data-e="compound:cmp_3" d="M201.0,515.0 L226.0,515.0 Q235.0,515.0 235.0,524.0 L235.0,966.0 Q235.0,975.0 244.0,975.0 L274.1,975.0" marker-end="url(#arr)"></path>
+<path class="e cat" data-p="T1" data-ek="cat" data-e="protein:prot_1" d="M155.7,455.0 L155.3,455.0 Q155.0,455.0 155.0,455.3 L155.0,628.0 Q155.0,635.0 162.0,635.0 L169.0,635.0" marker-end="url(#cat)"></path>
+<path class="e cat" data-p="T3" data-ek="cat" data-e="protein:prot_1" d="M214.3,415.0 L219.7,415.0 Q225.0,415.0 225.0,420.3 L225.0,586.0 Q225.0,595.0 216.0,595.0 L201.0,595.0" marker-end="url(#cat)"></path>
+<path class="e cat" data-p="T5" data-ek="cat" data-e="protein:prot_1" d="M155.7,375.0 L150.3,375.0 Q145.0,375.0 145.0,380.3 L145.0,536.0 Q145.0,545.0 154.0,545.0 L169.0,545.0" marker-end="url(#cat)"></path>
+</g>
+<g class="nodes">
+<g class="jn transport" data-p="T1" data-k="tr_1"><title>H+ influx through OTOP1</title><rect x="170.0" y="625.0" width="30.0" height="20.0" rx="10"/><rect class="inner" x="173.0" y="628.0" width="24.0" height="14.0" rx="7"/><text x="185.0" y="638.6" text-anchor="middle">T1</text><g class="badge"><rect x="170.0" y="646.0" width="78.0" height="14" rx="7"/><text x="175.0" y="656.5">same as T3, T5</text></g></g>
+<g class="n compound small" data-ent="compound:cmp_1" data-comp="saliva" data-p="T1"><title>Hydrogen Ion [ion]</title><rect x="44.3" y="141.0" width="101.4" height="28.0" rx="14.0"/><text x="95.0" y="159.0" text-anchor="middle">Hydrogen Ion</text></g>
+<g class="n compound small" data-ent="compound:cmp_1" data-comp="cell" data-p="T1"><title>Hydrogen Ion [ion]</title><rect x="254.3" y="841.0" width="101.4" height="28.0" rx="14.0"/><text x="305.0" y="859.0" text-anchor="middle">Hydrogen Ion</text></g>
+<g class="jn transport" data-p="T2" data-k="tr_2"><title>5-HT release from Type III cells</title><rect x="170.0" y="665.0" width="30.0" height="20.0" rx="10"/><rect class="inner" x="173.0" y="668.0" width="24.0" height="14.0" rx="7"/><text x="185.0" y="678.6" text-anchor="middle">T2</text><g class="badge"><rect x="170.0" y="686.0" width="78.0" height="14" rx="7"/><text x="175.0" y="696.5">same as T4, T6</text></g></g>
+<g class="n compound" data-ent="compound:cmp_2" data-comp="cell" data-p="T2"><title>5-HT [compound]</title><rect x="59.2" y="841.0" width="51.6" height="28.0" rx="14.0"/><text x="85.0" y="859.0" text-anchor="middle">5-HT</text></g>
+<g class="n compound" data-ent="compound:cmp_2" data-comp="saliva" data-p="T2"><title>5-HT [compound]</title><rect x="179.2" y="141.0" width="51.6" height="28.0" rx="14.0"/><text x="205.0" y="159.0" text-anchor="middle">5-HT</text></g>
+<g class="jn transport" data-p="T3" data-k="tr_3"><title>OTOP1-mediated H+ permeation</title><rect x="170.0" y="585.0" width="30.0" height="20.0" rx="10"/><rect class="inner" x="173.0" y="588.0" width="24.0" height="14.0" rx="7"/><text x="185.0" y="598.6" text-anchor="middle">T3</text><g class="badge"><rect x="170.0" y="606.0" width="78.0" height="14" rx="7"/><text x="175.0" y="616.5">same as T1, T5</text></g></g>
+<g class="n compound small" data-ent="compound:cmp_1" data-comp="unplaced (auto state)" data-p="T3 T5"><title>Hydrogen Ion [ion]</title><rect x="44.3" y="51.0" width="101.4" height="28.0" rx="14.0"/><text x="95.0" y="69.0" text-anchor="middle">Hydrogen Ion</text></g>
+<g class="n compound small" data-ent="compound:cmp_1" data-comp="cytosol" data-p="T3"><title>Hydrogen Ion [ion]</title><rect x="254.3" y="921.0" width="101.4" height="28.0" rx="14.0"/><text x="305.0" y="939.0" text-anchor="middle">Hydrogen Ion</text></g>
+<g class="jn transport" data-p="T4" data-k="tr_4"><title>5-HT release from Type III cells</title><rect x="170.0" y="715.0" width="30.0" height="20.0" rx="10"/><rect class="inner" x="173.0" y="718.0" width="24.0" height="14.0" rx="7"/><text x="185.0" y="728.6" text-anchor="middle">T4</text><g class="badge"><rect x="170.0" y="736.0" width="78.0" height="14" rx="7"/><text x="175.0" y="746.5">same as T2, T6</text></g></g>
+<g class="n compound" data-ent="compound:cmp_2" data-comp="synaptic vesicles" data-p="T4 T6"><title>5-HT [compound]</title><rect x="249.2" y="1071.0" width="51.6" height="28.0" rx="14.0"/><text x="275.0" y="1089.0" text-anchor="middle">5-HT</text></g>
+<g class="n compound" data-ent="compound:cmp_2" data-comp="synapse" data-p="T4"><title>5-HT [compound]</title><rect x="119.2" y="1071.0" width="51.6" height="28.0" rx="14.0"/><text x="145.0" y="1089.0" text-anchor="middle">5-HT</text></g>
+<g class="jn transport" data-p="T5" data-k="tr_5"><title>OTOP1-mediated H+ permeation</title><rect x="170.0" y="535.0" width="30.0" height="20.0" rx="10"/><rect class="inner" x="173.0" y="538.0" width="24.0" height="14.0" rx="7"/><text x="185.0" y="548.6" text-anchor="middle">T5</text><g class="badge"><rect x="170.0" y="556.0" width="78.0" height="14" rx="7"/><text x="175.0" y="566.5">same as T1, T3</text></g></g>
+<g class="jn transport" data-p="T6" data-k="tr_6"><title>5-HT release from Type III cells</title><rect x="170.0" y="755.0" width="30.0" height="20.0" rx="10"/><rect class="inner" x="173.0" y="758.0" width="24.0" height="14.0" rx="7"/><text x="185.0" y="768.6" text-anchor="middle">T6</text><g class="badge"><rect x="170.0" y="776.0" width="78.0" height="14" rx="7"/><text x="175.0" y="786.5">same as T2, T4</text></g></g>
+<g class="n compound" data-ent="compound:cmp_2" data-comp="unplaced (auto state)" data-p="T6"><title>5-HT [compound]</title><rect x="179.2" y="51.0" width="51.6" height="28.0" rx="14.0"/><text x="205.0" y="69.0" text-anchor="middle">5-HT</text></g>
+<g class="jn transport" data-p="T7" data-k="tr_7"><title>Ca++ influx through voltage-gated Ca++ channels</title><rect x="170.0" y="495.0" width="30.0" height="20.0" rx="10"/><rect class="inner" x="173.0" y="498.0" width="24.0" height="14.0" rx="7"/><text x="185.0" y="508.6" text-anchor="middle">T7</text></g>
+<g class="n compound small" data-ent="compound:cmp_3" data-comp="saliva" data-p="T7"><title>Ca++ [ion]</title><rect x="67.1" y="191.0" width="55.8" height="28.0" rx="14.0"/><text x="95.0" y="209.0" text-anchor="middle">Ca++</text></g>
+<g class="n compound small" data-ent="compound:cmp_3" data-comp="cytosol" data-p="T7"><title>Ca++ [ion]</title><rect x="277.1" y="961.0" width="55.8" height="28.0" rx="14.0"/><text x="305.0" y="979.0" text-anchor="middle">Ca++</text></g>
+<g class="n protein" data-ent="protein:prot_1" data-comp="cell" data-p="T1"><title>OTOP1</title><rect x="156.7" y="441.0" width="56.7" height="28.0" rx="3"/><text x="185.0" y="459.0" text-anchor="middle">OTOP1</text></g>
+<g class="n protein" data-ent="protein:prot_1" data-comp="cell" data-p="T3"><title>OTOP1</title><rect x="156.7" y="401.0" width="56.7" height="28.0" rx="3"/><text x="185.0" y="419.0" text-anchor="middle">OTOP1</text></g>
+<g class="n protein" data-ent="protein:prot_1" data-comp="cell" data-p="T5"><title>OTOP1</title><rect x="156.7" y="361.0" width="56.7" height="28.0" rx="3"/><text x="185.0" y="379.0" text-anchor="middle">OTOP1</text></g>
+</g>
+<g class="legend"><rect class="legendbg" x="0" y="1200.0" width="433.7" height="84.0"/><line class="sep" x1="0" x2="433.7" y1="1200.0" y2="1200.0"/><g class="n compound"><rect x="16" y="1211" width="26" height="14" rx="7"/></g><text x="54" y="1222">molecule</text><g class="n protein"><rect x="126.979375" y="1211" width="26" height="14" rx="3"/></g><text x="164.979375" y="1222">protein / enzyme</text><g class="jn transport"><rect x="282.8928125" y="1210" width="28" height="16" rx="8"/><rect class="inner" x="285.8928125" y="1213" width="22" height="10" rx="5"/><text x="296.8928125" y="1221.6" text-anchor="middle">T#</text></g><text x="320.8928125" y="1222">transport</text><path class="e prod" d="M16,1242 h28" marker-end="url(#arr)"/><text x="54" y="1246">substrate → product</text><path class="e cat" d="M189.83406250000002,1242 h28" marker-end="url(#cat)"/><text x="227.83406250000002" y="1246">catalyses</text><g class="badge"><rect x="16" y="1259" width="30" height="14" rx="7"/><text x="31" y="1269.5" text-anchor="middle">same</text></g><text x="54" y="1270">same as R# = same molecules, listed as a separate step</text></g>
+</g>
+</svg>

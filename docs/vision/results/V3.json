@@ -1,0 +1,32 @@
+{
+  "lane": "V3",
+  "built": "Pathway diagram renderer moved from the v2 prototype (C:/t/ev-diagram-v2) into src/t2pw/vision/diagram. API: render_svg(ir, *, style=None, ident='b'), render_html(ir, *, title=None, style=None), diagram_metrics(ir), selfcheck(ir, svg) -> {ok, failures}. Style is the prototype auto-pick unless given. The regulation toggle and legend are inside the SVG itself (inline JS and CSS), so render_html is only a thin shell.",
+  "files": [
+    "src/t2pw/vision/__init__.py (empty)",
+    "src/t2pw/vision/diagram/__init__.py (new, thin API)",
+    "src/t2pw/vision/diagram/render.py (= t2pw_diagrams.py; only change: font lookup, was hard-coded C:/Windows/Fonts/segoeui.ttf)",
+    "src/t2pw/vision/diagram/diagram.css (unchanged, read via importlib.resources)",
+    "src/t2pw/vision/diagram/metrics.py (model_metrics, crossings; batch CLI removed)",
+    "src/t2pw/vision/diagram/selfcheck.py (check_svg and helpers; batch CLI and render_and_check removed)",
+    "tests/test_vision_diagram.py", "tests/data/vision/diagram/ir_small.json (render-corr 103)", "tests/data/vision/diagram/ir_transport.json (render-corr 67)",
+    "docs/vision/evidence/V3/equivalence_97.json, example_10.svg, example_82.html"
+  ],
+  "tests": [["tests/test_vision_diagram.py", "5 passed", "C:/t/vis-runs/logs/diagram-tests.log"]],
+  "proofs": {
+    "equivalence_97": "97/97 SVG byte-identical to the prototype (render_all.py recipe: auto-picked style, ident 'b', diagram.css embedded after the svg open tag); metrics dict identical 97/97; selfcheck 0 failures 97/97 (same as prototype); 0 render errors. Nothing normalised: the SVG has no paths or timestamps. Script C:/t/vis-runs/scratch/diagram/equiv.py, log C:/t/vis-runs/logs/diagram-equiv.log. The proof ran on the Segoe UI font, so it holds only where that font is present."
+  },
+  "left_out_of_package": [
+    "render_all.py (batch driver; writes manifest/metrics/selfcheck JSON, also the bands/cell/spine variants for the first 8 pathways) - reproduced as the scratch proof script only",
+    "shots.py, shot.py, shots.py, shotpage.py (Playwright screenshots; belong to the later checks lane)",
+    "build_page.py and template.html (the style-comparison showcase page with hand-written per-paper notes and a page-level legend; the per-pathway page is render_html)",
+    "metrics.py / selfcheck.py __main__ CLIs; selfcheck --drop-reaction negative test (not ported to a test; not needed for the move)",
+    "itypes.py, etypes.py, rx.py, summ.py, batch.py, scan*.py, try*.py, patch*.py, explore.py, fix.py, dump.py (scaffolding)"
+  ],
+  "dead_ends": [],
+  "open_questions": [
+    "FONT: render.py measures text widths with PIL ImageFont. It needs Segoe UI (Windows). On Linux it falls back to DejaVu Sans (or PIL's default), which changes label widths and therefore layout, so the server output will not match this proof. Decide: ship a bundled open font (and regenerate expected output), or accept the fallback. T2PW_DIAGRAM_FONT overrides the path.",
+    "PACKAGING: diagram.css must be listed in pyproject.toml [tool.setuptools.package-data] to ship in a wheel. pyproject.toml is outside this lane's boundary; it works from a source tree and editable installs.",
+    "Pillow is imported at module import time (render.py); it is in requirements.txt (Pillow>=10.0.0) but not checked against pyproject dependencies.",
+    "render_html uses system-ui fonts; the prototype page used Google Fonts links (network), left out on purpose."
+  ]
+}
