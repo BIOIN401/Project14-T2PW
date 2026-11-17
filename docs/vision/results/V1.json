@@ -2,6 +2,38 @@
  "lane": "V1",
  "branch": "vision/model",
  "code_commit": "626fe8e9",
+ "review_round_1": {
+  "verdict_in": "CHANGES_REQUESTED (opus/high), findings F1-F9",
+  "code_commit": "95c4602e",
+  "fixes": {
+   "F1": "reaction identity: candidates keyed by (inputs, outputs); a candidate matches only if both rows have the same normalized biological_state or at least one has none",
+   "F2": "hop edges only through entities that resolve to a row with a grounded id and are not currency (spellings from pipeline/cofactor_policy.py _CURRENCY folded with its _normalize; both private, imported read-only, family keys left out so bare 'pi' stays a participant). Extension entities still take the min hop of any reached process naming them, so a process's non-edge entities are shown with it. PLAN 2.1 rule kept, no deviation: on the 152 payloads 549/621 base reactions (88%) have a grounded non-currency participant to carry an edge, vs 619/621 with any named non-currency entity; the 70 without one cannot attract extension rows",
+   "F3": "reaction identity sets drop currency metabolites on both sides (the full sets are used only when that empties both sides); orientation and state rules unchanged",
+   "F4": "a name/synonym match is refused when both rows carry ids in one namespace and none agree; the incoming row is added as a new extension row",
+   "F5": "the rename pass runs on every incoming row: complex components and protein/complex 'species' are now references (refs()), so they are rewritten to the matched row's name",
+   "F6": "paper-only prunes reaction_order names of dropped reactions unless a kept reaction carries the name (rule of service/final_payload_merge.py 562-567, keyed by the shared reference_key rather than the IR key, to avoid importing pwml.ir)",
+   "F7": "paper-only keeps a state with its own paper record even when only dropped rows used it",
+   "F8": "sources['seed_paper'].kind = 'other_paper' (note kept); SEED_TAG is rag/provenance.py SEED_SOURCE_ID",
+   "F9": "evidence route fixed, not the docstring: a row with no lineage whose rag_provenance is seed-tagged gets one other_paper record (source seed_paper, note 'no lineage; seed-tagged rag_provenance'), never paper. No row of the 152 payloads hits this (the 3 seed-tagged rows all carry lineage)"
+  },
+  "tests": [
+   {"label": "model-unit-3-prefix", "what": "new tests against the unfixed code 626fe8e9", "counts": "9 failed (one per finding F1-F9), 17 passed, survivors 0", "log": "C:/t/vis-runs/logs/model-unit-3.log"},
+   {"label": "model-unit-4", "what": "after the fix", "counts": "26 passed, 0 failed, 0 errors, survivors 0", "log": "C:/t/vis-runs/logs/model-unit-4.log"}
+  ],
+  "proof": {
+   "label": "model-proof-2",
+   "result": "identity 152/152 (DEFAULT and FULL == base, json.dumps identical); paper-only new dangling references 0; survivors 0",
+   "paper_only": "reactions 612/621 kept (9 dropped, unchanged: 7 audit_modified-only, 2 rag_literature); processes 1069/1079; rows 6285/6326 (was 6281: +4 states with their own paper record, F7)",
+   "base_unresolved_refs": "167 (was 139): protein/complex 'species' strings are now references (F5) and 28 of them name no species row in the base; the view adds none",
+   "hop_edge_coverage": "rx_with_grounded_edge 549/621, rx_with_any_named_entity_edge 619/621",
+   "summary": "docs/vision/evidence/V1/identity_152.json",
+   "log": "C:/t/vis-runs/logs/model-proof-2.log"
+  },
+  "open_questions": [
+   "F4 leaves a name collision: two rows with the same normalized name but different ids in one namespace. Processes reference entities by name, so an incoming reaction naming that name resolves to the first (base) row. V4 should keep such rows apart by renaming the incoming one (e.g. suffix with its id); not done here because the right display name is a curation choice",
+   "F1 matches states by normalized name only: 'E. coli cytoplasm' and 'cytoplasm' do not match, so the same step reported against differently named states is kept twice (under-merge, the safe direction)"
+  ]
+ },
  "built": [
   "src/t2pw/vision/payload.py: build_big_payload (base deep-copied, input untouched), element keys '<section path>:<signature>' with '#n' ordinals (base first, extension appended, so existing keys never change), row_provenance (lineage origin -> kind; no lineage + evidence -> paper 'no lineage; evidence quote'; neither -> unclassified), sources table, merge_extension, compute_hops, save/load_big_payload, big_from_run",
   "src/t2pw/vision/view.py: ScopeSpec + PAPER_ONLY / DEFAULT(max_hops=1) / FULL, more_detailed / less_detailed, view (reference-closed), view_stats, unresolved_refs",
@@ -10,13 +42,13 @@
  ],
  "design_choices": {
   "unresolved_excluded": "origin unresolved / excluded / unknown (e.g. implied_by_usage) -> kind 'unclassified' with note '<origin>: <reason>' (brief: keep as-is in note)",
-  "seed_paper_caveat": "rag_literature lineage always maps to other_paper, even when its only source is tagged 'seed_paper'; the tag is never used to upgrade a row to 'paper' (rag/conform.py ~283: the tag is not a reliable seed test). rag_provenance with source_id seed_paper adds no record; any other rag_provenance source adds an other_paper / database record unless lineage already gave that (kind, source). sources['seed_paper'] carries a note saying so. Effect: paper-only can only show less, never more",
+  "seed_paper_caveat": "rag_literature lineage always maps to other_paper, even when its only source is tagged 'seed_paper'; the tag is never used to upgrade a row to 'paper' (rag/conform.py ~283: the tag is not a reliable seed test). rag_provenance with source_id seed_paper adds no record when the row has lineage, and one other_paper record when it has none (F9); any other rag_provenance source adds an other_paper / database record unless lineage already gave that (kind, source). sources['seed_paper'] carries a note saying so. Effect: paper-only can only show less, never more",
   "database_records": "one record per lineage entry; source = first source's table id; other source ids listed in note; all registered in the sources table (id = source_id for papers, '<source_type>:<id>' for databases unless already prefixed)",
   "quote": "paper and other_paper records carry the row's evidence string as quote",
   "paper_meta": "stored as sources['paper']; paper records then point source 'paper' (else null)",
-  "paper_only": "keeps base processes with a paper record; prunes compounds, proteins, complexes, nucleic acids, element collections to those referenced by kept processes (and kept complexes' components) or with their own paper record; species, subcellular locations, cell types, tissues, compartments pass through; element_locations dropped only when their element was in the base and is no longer in the view; a state is dropped only when base rows used it and no kept row does; all other top-level keys (reaction_order, source_text_index, quarantine reports ...) pass through unchanged",
-  "hops": "base rows 0; an extension process = 1 + min hop of the entities it shares (base entities and any name a base process uses count as 0); extension entities take the min hop of processes using them; extension location rows take their entity's hop, states their users' min hop; extension rows are never below 1; unreachable -> null (FULL only)",
-  "merge_identity": "entities: shared grounded id (chebi/kegg/hmdb/pubchem/pathbank/uniprot/drugbank fields and mapped_ids, same section) then normalized name or synonym; reactions: identity sets of inputs/outputs in either orientation; other rows: their signature. Entity names in new extension process/location rows are rewritten to the matched row's name so the view stays reference-closed"
+  "paper_only": "keeps base processes with a paper record; prunes compounds, proteins, complexes, nucleic acids, element collections to those referenced by kept processes (and kept complexes' components) or with their own paper record; species, subcellular locations, cell types, tissues, compartments pass through; element_locations dropped only when their element was in the base and is no longer in the view; a state is dropped only when base rows used it, no kept row does and it has no paper record of its own (F7); reaction_order loses the names of dropped reactions (F6); all other top-level keys (source_text_index, quarantine reports ...) pass through unchanged",
+  "hops": "base rows 0; an extension process = 1 + min hop of the grounded, non-currency entities it shares (review_round_1 F2); extension entities take the min hop of processes using them; extension location rows take their entity's hop, states their users' min hop; extension rows are never below 1; unreachable -> null (FULL only)",
+  "merge_identity": "entities: shared grounded id (chebi/kegg/hmdb/pubchem/pathbank/uniprot/drugbank fields and mapped_ids, same section) then normalized name or synonym unless ids conflict (F4); reactions: identity sets of inputs/outputs without currency metabolites (F3), either orientation, same state when both have one (F1); other rows: their signature. Entity names an incoming row references are rewritten to the matched row's name (F5) so the view stays reference-closed"
  },
  "files": [
   "src/t2pw/vision/__init__.py",
@@ -50,6 +82,6 @@
  "open_questions": [
   "unresolved/excluded lineage is mapped to kind 'unclassified' with the origin in note (per brief). If downstream wants them as their own kinds, it is a one-line change in ORIGIN_KIND",
   "7 audit-only reactions are dropped by paper-only although they carry an evidence quote. Conservative by the mapping; V7 faithfulness could check whether their quotes are in the paper",
-  "paper-only passes reaction_order through unchanged, so it can name reactions the view dropped (brief: other top-level keys unchanged). Consumers look reactions up by name and tolerate misses; prune it if V6 needs that"
+  "(resolved in review_round_1 F6) paper-only used to pass reaction_order through unchanged"
  ]
 }

@@ -8,7 +8,7 @@ import time
 from collections import Counter
 from pathlib import Path
 
-from t2pw.vision.payload import big_from_run, keyed_rows, norm
+from t2pw.vision.payload import _Index, big_from_run, is_currency, keyed_rows, norm
 from t2pw.vision.view import DEFAULT, FULL, PAPER_ONLY, unresolved_refs, view, view_stats
 
 
@@ -38,7 +38,13 @@ def main(runlist, out_path):
         new_dangling = [x for x in unresolved_refs(po) if (x[1], norm(x[2])) not in before]
         st = view_stats(big, PAPER_ONLY)
         unclassified = 0
+        index = _Index(big)  # F2: how many base reactions could carry a hop edge (grounded, non-currency)
         for section, key, x, _ in keyed_rows(big):
+            if section == "processes.reactions" and isinstance(x, dict):
+                names = list(x.get("inputs") or []) + list(x.get("outputs") or [])
+                tot["rx_with_grounded_edge"] += int(any(index.edge(n) for n in names))
+                tot["rx_with_any_named_entity_edge"] += int(any(
+                    not is_currency(n) and not index.ident(n).startswith("name:") for n in names))
             recs = big["provenance"][key]
             ks = sorted({rr["kind"] for rr in recs})
             if ks == ["unclassified"]:
