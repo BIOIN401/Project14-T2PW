@@ -56,6 +56,19 @@ LEG_QUARANTINED = [
     (23, "Protogen IX to Proto IX", "non_protein_actor_in_enzymes", "PPO1"),
 ]
 
+#: D-W24 3 / L5: the LEG_QUARANTINED reactions are kept; these are the actors they lose.
+LEG_ACTOR_DROPS = [
+    ("GluTR (HEMA1) reaction", "non_protein_actor_in_modifiers", "PIF1"),
+    ("GluTR (HEMA1) reaction", "non_protein_actor_in_modifiers", "GBP"),
+    ("ALAD (HEMB1) reaction", "non_protein_actor_in_modifiers", "FAR1"),
+    ("Glu-tRNAGlu reduction to GSA", "non_protein_actor_in_enzymes", "GBP"),
+    ("Glu-tRNAGlu reduction to GSA", "non_protein_actor_in_modifiers", "GBP"),
+    ("Coprogen III to Protogen IX", "non_protein_actor_in_enzymes", "CPO1"),
+    ("Coprogen III to Protogen IX", "non_protein_actor_in_modifiers", "CPO1"),
+    ("Protogen IX to Proto IX", "non_protein_actor_in_enzymes", "PPO1"),
+    ("Protogen IX to Proto IX", "non_protein_actor_in_modifiers", "PPO1"),
+]
+
 _UNKNOWN_ACTOR = ("Unknown protein/modifier reference", "Unknown transporter reference")
 
 
@@ -99,34 +112,33 @@ def test_g9_leg_quarantines_exactly_the_five_reactions_whose_actor_is_no_protein
     # The live run's decision input was sha256:6c5f9c8b2410d8af; ORCH-773 bumped QUARANTINE_POLICY_VERSION
     # (2026-07-31.1 -> 2026-10-25.1), which moves it and nothing else (merge rule 4); ORCH-780's bump
     # (-> 2026-10-26.1) moves it again, sha256:0bb36bd9e1f252d9 -> below.
-    assert report["decision_input_hash"] == "sha256:5ee0f01968ff79f3"  # ORCH-797a: context core terms in the D-120 key (was a5cf19b0eebf9c75)
+    assert report["decision_input_hash"] == "sha256:354d1ce73c3847e8"  # D-W24 3 / L5: policy version only (was 5ee0f01968ff79f3)
     quarantined = [
         (row["index"], row["name"], row["reason"], row["essential_participant"])
         for row in result.admissions
         if row["state"] not in ACCEPTED_STATES
     ]
-    # Base: [] -- every one of the 32 processes admitted.
-    assert quarantined == LEG_QUARANTINED
-    assert all(
-        row["state"] == QUARANTINED_BROKEN_REFERENCE
-        for row in result.admissions
-        if row["state"] not in ACCEPTED_STATES
-    )
+    # D-W24 3 / L5: the five reactions stay; each loses only its non-protein actors (9 rows), recorded.
+    assert quarantined == []
+    assert [
+        (row["detail"]["actor_removed_from"][0]["process_name"], row["reason"], row["name"])
+        for row in result.removed_entity_report["removed_entities"] if row["bucket"] in ("enzymes", "modifiers")
+    ] == LEG_ACTOR_DROPS
     assert report["counts"] == {
-        "core_accepted": 17,
-        "auxiliary_accepted": 10,
+        "core_accepted": 20,
+        "auxiliary_accepted": 12,
         "quarantined_unmapped_entity": 0,
         "quarantined_out_of_scope": 0,
         "quarantined_weak_evidence": 0,
-        "quarantined_broken_reference": 5,
+        "quarantined_broken_reference": 0,
         "quarantined_disconnected": 0,
     }
     assert result.ok and result.refusal_reasons == []
     assert report["release"]["status"] == "review_required"
-    # The cost, pinned so it cannot move silently: GLK1 was reached only through r17.
-    assert report["release"]["missing_anchors"] == ["POR (PORB)", "GLK1"]
+    # D-W24 3 / L5: r17 is kept, so GLK1 is reached again; only POR (PORB) is missing.
+    assert report["release"]["missing_anchors"] == ["POR (PORB)"]
     processes = result.payload["processes"]
-    assert (len(processes["reactions"]), len(processes["interactions"])) == (22, 5)
+    assert (len(processes["reactions"]), len(processes["interactions"])) == (27, 5)
 
 
 def test_g9_leg_final_gate_passes_on_the_quarantined_payload() -> None:
@@ -152,11 +164,10 @@ def test_g9_a_modifier_declared_only_as_a_gene_is_quarantined() -> None:
     result = quarantine_and_close(payload, strict_db=True)
 
     record = _record(result, "glutathione synthesis")
-    assert (record["state"], record["reason"], record["essential_participant"]) == (
-        QUARANTINED_BROKEN_REFERENCE,
-        "non_protein_actor_in_modifiers",
-        "PIF1",
-    )
+    # D-W24 3 / L5: the reaction stays; only the gene-declared modifier leaves it.
+    assert record["state"] in ACCEPTED_STATES
+    assert [(row["bucket"], row["name"], row["reason"]) for row in result.removed_entity_report["removed_entities"]
+            if row["bucket"] == "modifiers"] == [("modifiers", "PIF1", "non_protein_actor_in_modifiers")]
     assert _record(result, "gamma-glutamylcysteine synthesis")["state"] in ACCEPTED_STATES
     assert _unknown_actor_errors(result.payload) == []
 
@@ -171,11 +182,10 @@ def test_g9_a_compound_named_as_a_modifier_is_quarantined() -> None:
     result = quarantine_and_close(payload, strict_db=True)
 
     record = _record(result, "glutathione synthesis")
-    assert (record["state"], record["reason"], record["essential_participant"]) == (
-        QUARANTINED_BROKEN_REFERENCE,
-        "non_protein_actor_in_modifiers",
-        "L-cysteine",
-    )
+    # D-W24 3 / L5: the reaction stays; only the compound modifier leaves it.
+    assert record["state"] in ACCEPTED_STATES
+    assert [(row["bucket"], row["name"], row["reason"]) for row in result.removed_entity_report["removed_entities"]
+            if row["bucket"] == "modifiers"] == [("modifiers", "L-cysteine", "non_protein_actor_in_modifiers")]
     assert _unknown_actor_errors(result.payload) == []
 
 

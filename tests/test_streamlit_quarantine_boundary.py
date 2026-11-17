@@ -481,8 +481,10 @@ def test_the_app_reaches_quarantine_and_the_valid_core_reaches_review() -> None:
     report = at.session_state["quarantine_report"]
     assert report["ok"] is True
     states = {row["name"]: row["state"] for row in report["admissions"]}
-    assert states["peripheral OPDA reduction"] == QUARANTINED_UNMAPPED_ENTITY
+    # D-W24 3 / L5: the peripheral reaction stays; only its unidentified modifier OPR3 leaves, flagged.
+    assert states["peripheral OPDA reduction"].endswith("_accepted")
     assert states["gamma-glutamylcysteine synthesis"].endswith("_accepted")
+    assert report["review_reasons"] == ["omitted_from_pwml:0_processes+1_actors"]
 
     # Stage 3 -- the check that used to stop this run -- now passes, and refinement
     # review opened. That is the whole recovery, measured at the production seam.
@@ -491,7 +493,9 @@ def test_the_app_reaches_quarantine_and_the_valid_core_reaches_review() -> None:
     assert [row["name"] for row in working["processes"]["reactions"]] == [
         "gamma-glutamylcysteine synthesis",
         "glutathione synthesis",
+        "peripheral OPDA reduction",
     ]
+    assert [row.get("entity") for row in working["processes"]["reactions"][2].get("modifiers") or []] == []
 
 
 @pytest.mark.usefixtures("offline_mapping")
@@ -608,10 +612,12 @@ def test_all_four_artifacts_are_written_and_retained() -> None:
         assert Path(path).exists(), name
         assert _artifact(name)["schema_version"] >= 1
 
-    quarantined = _artifact(QUARANTINE_REPORT_FILENAME)["quarantined"]
-    assert [row["name"] for row in quarantined] == ["peripheral OPDA reduction"]
-    # The original row, kept whole, is what makes the decision reviewable.
-    assert quarantined[0]["original_process"]["inputs"] == ["OPDA"]
+    # D-W24 3 / L5: nothing is quarantined; the dropped modifier is recorded instead.
+    assert _artifact(QUARANTINE_REPORT_FILENAME)["quarantined"] == []
+    dropped = [row for row in _artifact(REMOVED_ENTITY_REPORT_FILENAME)["removed_entities"] if row["bucket"] == "modifiers"]
+    assert [(row["name"], row["reason"]) for row in dropped] == [("OPR3", "protein_missing_external_identity")]
+    # The original actor, kept whole, is what makes the decision reviewable.
+    assert dropped[0]["detail"]["actor"] == {"entity": "OPR3", "entity_type": "protein", "role": "inhibitor"}
 
 
 @pytest.mark.usefixtures("offline_mapping")
@@ -666,14 +672,13 @@ def test_a_run_with_no_viable_core_is_refused_at_the_boundary() -> None:
     # The shortfall is still raised and still named -- it moved out of the
     # blocking list, it did not disappear.
     assert report["refusal_reasons"] == []
-    assert any(
-        reason.startswith("minimum_core:core_process_count_below_minimum")
-        for reason in report["review_reasons"]
-    )
-    # And the surviving fragment really is the unrelated one: nothing was
-    # admitted to make coverage pass.
-    assert report["coverage"]["core_accepted_processes"] == 0
-    assert report["coverage"]["surviving_processes"] == 1
+    # D-W24 3 / L5: the two core reactions are no longer unexportable -- each loses only its unmappable
+    # regulator -- so the core is satisfied and the release is review_required for the dropped actors, never
+    # success. The unrelated-survivor protection itself is pinned by test_strict_failure_replay
+    # (only_unrelated_reactions_survive), which this change does not move.
+    assert report["review_reasons"] == ["omitted_from_pwml:0_processes+2_actors"]
+    assert report["coverage"]["core_accepted_processes"] == 2
+    assert report["coverage"]["surviving_processes"] == 3
 
     # Refinement review now OPENS on the fragment, because there is a fragment to
     # review. That is the behaviour change: the reviewer gets the graph plus the
@@ -698,16 +703,19 @@ def test_the_refusal_still_writes_every_artifact() -> None:
     _run_post_pipeline(_payload_with_no_viable_core())
 
     coverage = _artifact(COVERAGE_REPORT_FILENAME)
-    assert coverage["minimum_core_satisfied"] is False
-    assert coverage["core_accepted_processes"] == 0
+    # D-W24 3 / L5: the core reactions are kept without their unmappable regulators, which are recorded.
+    assert coverage["minimum_core_satisfied"] is True
+    assert coverage["core_accepted_processes"] == 2
     report = _artifact(QUARANTINE_REPORT_FILENAME)
     assert report["ok"] is True
     assert report["release"]["status"] == "review_required"
     assert report["release"]["strict_acceptance_eligible"] is False
-    assert any(r.startswith("minimum_core:") for r in report["review_reasons"])
-    assert {row["name"] for row in report["quarantined"]} == {
-        "gamma-glutamylcysteine synthesis",
-        "glutathione synthesis",
+    assert report["review_reasons"] == ["omitted_from_pwml:0_processes+2_actors"]
+    assert report["quarantined"] == []
+    assert {(row["name"], row["reason"]) for row in _artifact(REMOVED_ENTITY_REPORT_FILENAME)["removed_entities"]
+            if row["bucket"] == "modifiers"} == {
+        ("unmappable regulator 0", "protein_missing_external_identity"),
+        ("unmappable regulator 1", "protein_missing_external_identity"),
     }
 
 
@@ -1012,12 +1020,14 @@ def test_a_refinement_that_adds_an_unexportable_process_still_exports_the_core()
     at = _run_post_pipeline(_payload_with_one_bad_peripheral())
 
     working = deepcopy(at.session_state["refinement_working_json"])
-    working["entities"]["compounds"].extend([{"name": "OPDA"}, {"name": "OPC-8:0"}])
+    # D-W24 3 / L5 fixture fix: 'peripheral OPDA reduction' now survives the first quarantine, so OPDA and
+    # OPC-8:0 are still declared and located; re-adding them made a duplicate compound row
+    # (PWML_IR_DUPLICATE_NAMED_ROW). Add only what is missing -- the review-added reaction is unchanged.
+    declared = {row["name"] for row in working["entities"]["compounds"]}
+    located = {row["compound"] for row in working["element_locations"]["compound_locations"]}
+    working["entities"]["compounds"].extend([{"name": n} for n in ("OPDA", "OPC-8:0") if n not in declared])
     working["element_locations"]["compound_locations"].extend(
-        [
-            {"compound": "OPDA", "biological_state": "cytosol"},
-            {"compound": "OPC-8:0", "biological_state": "cytosol"},
-        ]
+        [{"compound": n, "biological_state": "cytosol"} for n in ("OPDA", "OPC-8:0") if n not in located]
     )
     _add_unmapped_modifier(
         working,
@@ -1043,8 +1053,11 @@ def test_a_refinement_that_adds_an_unexportable_process_still_exports_the_core()
     states = {
         row["name"]: row["state"] for row in result["quarantine_report"]["admissions"]
     }
-    assert states["review-added peripheral"] == QUARANTINED_UNMAPPED_ENTITY
-    assert b"review-added peripheral" not in result["xml_bytes"]
+    # D-W24 3 / L5: the review-added reaction is kept and drawn; only its unmapped regulator leaves it.
+    assert states["review-added peripheral"].endswith("_accepted")
+    # (Reaction names are not written to the PWML, so the old "not in xml_bytes" check could never fail;
+    # the drawn reaction count says it: the two core reactions, the peripheral one and this one.)
+    assert result["xml_bytes"].count(b"<reaction>") == 4
     assert Path(result["output_path"]).stat().st_size > 0
 
 
@@ -1315,9 +1328,11 @@ def test_one_unmapped_enzyme_reaches_review_in_research_and_is_quarantined_in_st
         return [row["name"] for row in working["processes"]["reactions"]]
 
     assert "peripheral OPDA reduction" in _reactions(research)
-    assert "peripheral OPDA reduction" not in _reactions(strict)
+    # D-W24 3 / L5: strict keeps the reaction too and removes only the unmapped modifier from it.
+    assert "peripheral OPDA reduction" in _reactions(strict)
 
-    assert strict.session_state["quarantine_report"]["counts"][QUARANTINED_UNMAPPED_ENTITY] == 1
+    assert strict.session_state["quarantine_report"]["counts"][QUARANTINED_UNMAPPED_ENTITY] == 0
+    assert strict.session_state["quarantine_report"]["review_reasons"] == ["omitted_from_pwml:0_processes+1_actors"]
     research_report = research.session_state["quarantine_report"]
     assert research_report["counts"][QUARANTINED_UNMAPPED_ENTITY] == 1, (
         "research must still MAKE the decision; it just does not apply it"

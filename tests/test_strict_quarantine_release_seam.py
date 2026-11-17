@@ -543,14 +543,17 @@ def test_pmc12452463_is_review_required_and_never_strict_success() -> None:
     result = quarantine_and_close(payload, strict_db=True, pathway_context=_TRAP1_CONTEXT)
     release = _release(result)
 
-    assert round(float(result.coverage["coverage_ratio"]), 3) == 0.167
-    assert result.coverage["minimum_core_satisfied"] is False
+    # D-W24 3 / L5: EntC/EntB/EntE and assembly reactions are kept (their identity-less enzymes leave), so
+    # coverage rises 0.167 -> 0.833; the leg is still never strict success: the dropped actors cap it.
+    assert round(float(result.coverage["coverage_ratio"]), 3) == 0.833
+    assert result.coverage["minimum_core_satisfied"] is True
     assert result.ok is True, "the fragment is still exported, not dropped"
     assert release["status"] == REVIEW_REQUIRED
     assert release["strict_acceptance_eligible"] is False
+    assert "omitted_from_pwml:7_processes+8_actors" in release["reasons"]
     # And the missing anchors are recorded, so the reviewer is told WHICH part of
     # the route is unsupported rather than only that something is.
-    assert "2,3-dihydro-2,3-dihydroxybenzoate" in release["missing_anchors"]
+    assert release["missing_anchors"] == ["L-serine"]
 
 
 @pytest.mark.parametrize(

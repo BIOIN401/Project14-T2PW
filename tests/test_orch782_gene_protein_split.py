@@ -95,7 +95,7 @@ def test_g9_gene_role_target_resolves_to_gene():
 def test_g9_enzyme_role_resolves_to_protein():
     result = quarantine_and_close(_synthetic(), strict_db=True)
     assert _reasons(result)[("reactions", 0)] == "admitted"
-    assert result.payload["processes"]["reactions"][0]["enzymes"][0]["entity"] == "GCLC"
+    assert result.payload["processes"]["reactions"][0]["enzymes"][0]["entity"] == "GCLC complex"  # D-W24 3 / L5: wrapped
     assert "GCLC" in [row["name"] for row in result.payload["entities"]["proteins"]]
 
 
@@ -136,7 +136,12 @@ def test_g9_chlorophyll_leg_recovers_gene_regulation_by_row():
     # regulator / enzyme role -> the protein (GLK1 is a gene too; ALAD1/HEMB1 is the enzyme,
     # now judged as the protein by the identity gate instead of by ambiguity)
     assert by_name["GLK1 activates HEMA1 promoter"] == "admitted"
-    assert _reasons(result)[("reactions", 17)] == "protein_missing_external_identity"  # 2nd "ALA condensation to PBG"
+    # D-W24 3 / L5: the 2nd "ALA condensation to PBG" is kept and loses only its identity-less enzyme.
+    assert _reasons(result)[("reactions", 17)] == "admitted"
+    assert [(row["bucket"], row["name"], row["reason"]) for row in result.removed_entity_report["removed_entities"]
+            if row["bucket"] in ("enzymes", "modifiers")] == [
+        ("enzymes", "ALAD1/HEMB1", "protein_missing_external_identity"),
+        ("modifiers", "ALAD1/HEMB1", "protein_missing_external_identity")]
     # undecidable (protein-level wording) -> only that row, under KI-011
     assert by_name["FLU inhibits HEMA1"] == KI011
     assert result.ok and result.refusal_reasons == []

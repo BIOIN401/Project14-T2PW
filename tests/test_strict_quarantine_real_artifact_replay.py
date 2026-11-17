@@ -855,15 +855,23 @@ def test_stage_three_recovery_is_not_strict_exportability() -> None:
 #: Stage 3 27 -> 28, contract 8 -> 9, IR 8 -> 9, exportable 8 -> 9. The residual
 #: counts do not move: that leg contributes none. ``PMC12856317/research``, the
 #: other cohort leg in ``EXPECTED_P01_DELTAS``, stays refused.
+#:
+#: **MOVED by D-W24 3 / L5, 2026-11-16.** The quarantine no longer omits a reaction for its
+#: enzyme or modifier (the reaction stays, the actor leaves, flagged). Nine cohort legs that it
+#: refused now pass it and Stage 3 (admitted 28 -> 37, refused 11 -> 2); eight of them still
+#: fail the required contract on ``species_missing_*`` only, and one,
+#: ``runs/2026-08-02_2130/papers/PMC12096016/research``, now clears every stage
+#: (contract / IR / exportable 9 -> 10). Per leg, base 111dea4e vs tip:
+#: ``corr-assess/lanes/L5logs/probe_art_{base,tip}_out.json``.
 FULL_STACK_BASELINE: Dict[str, int] = {
     "legs_examined": 39,
-    "quarantine_admitted": 28,
-    "quarantine_refused": 11,
-    "stage3_after_pass": 28,
-    "required_contract_pass": 9,
-    "reached_ir": 9,
-    "ir_pass": 9,
-    "exportable": 9,
+    "quarantine_admitted": 37,
+    "quarantine_refused": 2,
+    "stage3_after_pass": 37,
+    "required_contract_pass": 10,
+    "reached_ir": 10,
+    "ir_pass": 10,
+    "exportable": 10,
 }
 
 #: How many LEGS exhibit each residual code, and how many error ROWS carry it.
@@ -913,13 +921,14 @@ FULL_STACK_BASELINE: Dict[str, int] = {
 #: code list. The edit is scripted at
 #: ``docs/pwml_recovery_sprint/evidence/c121_changelog_edit.py`` so a reviewer reads
 #: the three exact substitutions rather than an in-place rewrite.
+#: D-W24 3 / L5: 19 -> 27 legs and rows, the eight newly admitted legs that still fail on species only.
 RESIDUAL_CODES_BY_LEG: Dict[str, int] = {
-    "species_missing_classification": 19,
-    "species_missing_taxonomy": 19,
+    "species_missing_classification": 27,
+    "species_missing_taxonomy": 27,
 }
 RESIDUAL_CODES_BY_ROW: Dict[str, int] = {
-    "species_missing_classification": 19,
-    "species_missing_taxonomy": 19,
+    "species_missing_classification": 27,
+    "species_missing_taxonomy": 27,
 }
 
 _REMEASURE = (
@@ -1231,19 +1240,23 @@ def test_the_change_log_baseline_table_agrees_with_the_pinned_values() -> None:
 #: unmoved" while the cohort had already grown to 35 (29 unmoved at C-067's base).
 #: That drift predates C-067 and is fixed in passing because this block is being
 #: rewritten anyway.
+#:
+#: **D-W24 3 / L5 moved it again, 2026-11-16, the C-067 way.** Four present legs leave: under the new
+#: policy their reactions are no longer omitted for their enzymes, so the pre-C-010 device finds no
+#: false degree-zero entity either (before == after; they no longer move). Old tuples:
+#: ``runs/2026-08-02_2130/papers/PMC12096016/strict`` (["EntA", "Unknown", "enterobactin synthase
+#: complex"] -> []), ``runs/2026-08-02_2130/papers/PMC12856317/research`` (["ALAS2", "ALAS2
+#: homodimer"] -> [], unexportable_entity:1 kept), ``runs_verify/2026-08-04_1207/papers/PMC12452463/strict``
+#: (["EntE"] -> []), ``runs_verify/2026-08-04_1234/papers/PMC12096016/strict`` (["EntA"] -> []).
+#: One leg that still moves, in C-010's shape, joins so claim 1 stays live:
+#: ``runs_verify/2026-08-21_2057/papers/PMC12452463/research`` (was ["EntB", "EntD", "EntF"] before).
+#: ``runs_verify/2026-08-04_1754/.../strict`` is absent from this checkout and was not re-measured.
+#: Base vs tip over all 115 legs: ``corr-assess/lanes/L5logs/probe_art_{base,tip}_out.json`` (p01_moved).
 EXPECTED_P01_DELTAS: Dict[str, Tuple[Any, ...]] = {
-    "runs/2026-08-02_2130/papers/PMC12096016/strict":
-        (["EntA", "Unknown", "enterobactin synthase complex"], [], False, True,
-         ["degree_zero_export:3"], []),
-    "runs/2026-08-02_2130/papers/PMC12856317/research":
-        (["ALAS2", "ALAS2 homodimer"], [], False, False,
-         ["degree_zero_export:2", "unexportable_entity:1"], ["unexportable_entity:1"]),
-    "runs_verify/2026-08-04_1207/papers/PMC12452463/strict":
-        (["EntE"], [], False, True, ["degree_zero_export:1"], []),
-    "runs_verify/2026-08-04_1234/papers/PMC12096016/strict":
-        (["EntA"], [], False, True, ["degree_zero_export:1"], []),
     "runs_verify/2026-08-04_1754/papers/PMC12452463/strict":
         (["EntD", "EntF"], [], False, True, ["degree_zero_export:2"], []),
+    "runs_verify/2026-08-21_2057/papers/PMC12452463/research":
+        (["EntD", "EntD complex", "EntF"], [], False, True, ["degree_zero_export:3"], []),
 }
 
 

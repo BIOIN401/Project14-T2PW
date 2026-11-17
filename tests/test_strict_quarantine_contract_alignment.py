@@ -170,6 +170,15 @@ def _strict_failures(payload: Dict[str, Any]) -> List[str]:
     return reasons
 
 
+def _dropped_actor(result, process: str, actor: str) -> Dict[str, Any]:
+    """D-W24 3 / L5: the removed-entity record of an actor a kept reaction lost."""
+    return next(
+        row for row in result.removed_entity_report["removed_entities"]
+        if row["bucket"] in ("enzymes", "modifiers") and row["name"] == actor
+        and row["detail"]["actor_removed_from"][0]["process_name"] == process
+    )
+
+
 def _states(result) -> Dict[str, str]:
     return result.states()
 
@@ -381,9 +390,9 @@ def test_a_protein_without_species_quarantines_the_reaction_and_clears_the_gates
 
     result = quarantine_and_close(payload, strict_db=True)
 
-    record = next(
-        row for row in result.quarantine_report["quarantined"] if row["name"] == "glutathione oxidation"
-    )
+    # D-W24 3 / L5: the reaction stays; the species-less modifier leaves it.
+    assert "glutathione oxidation" not in [row["name"] for row in result.quarantine_report["quarantined"]]
+    record = _dropped_actor(result, "glutathione oxidation", "GPX1")
     assert record["reason"] == "protein_missing_species"
     assert result.ok is True
     assert _strict_failures(result.payload) == []
@@ -446,9 +455,9 @@ def test_a_complex_missing_species_quarantines_the_reaction_that_uses_it() -> No
 
     result = quarantine_and_close(payload, strict_db=True)
 
-    record = next(
-        row for row in result.quarantine_report["quarantined"] if row["name"] == "glutathione oxidation"
-    )
+    # D-W24 3 / L5: the reaction stays; the complex without species leaves it.
+    assert "glutathione oxidation" not in [row["name"] for row in result.quarantine_report["quarantined"]]
+    record = _dropped_actor(result, "glutathione oxidation", "glutathione peroxidase complex")
     assert record["reason"] == "protein_complex_missing_species"
     assert _strict_failures(result.payload) == []
 
@@ -485,9 +494,9 @@ def test_a_generated_wrapper_component_without_species_is_caught() -> None:
 
     result = quarantine_and_close(payload, strict_db=True)
 
-    record = next(
-        row for row in result.quarantine_report["quarantined"] if row["name"] == "glutathione oxidation"
-    )
+    # D-W24 3 / L5: the reaction stays; the wrapper whose component lacks species leaves it.
+    assert "glutathione oxidation" not in [row["name"] for row in result.quarantine_report["quarantined"]]
+    record = _dropped_actor(result, "glutathione oxidation", "glutathione peroxidase complex")
     assert "protein_missing_species" in record["reason"]
     assert _strict_failures(result.payload) == []
 
