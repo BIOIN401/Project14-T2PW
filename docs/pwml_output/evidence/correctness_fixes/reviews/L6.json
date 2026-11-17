@@ -1,0 +1,49 @@
+{
+ "lane": "L6",
+ "reviewer": "ws-reviewer opus/high",
+ "agent": "a227a89b917f84f11",
+ "reviewed_head": "c9decdf1",
+ "verdict": "REJECT (2 blocking, in boundary)",
+ "findings": [
+  "F1 S1 state rule ignores name/parentheticals: hepatocyte vs neuron cytosol, liver vs kidney mitochondrion, thylakoid membrane into chloroplast, nucleolus into nucleus, lysosome membrane+lysosome, blood+urine, species-less states merge (none in 97 replays; all 58 actual merges true synonyms)",
+  "F2 merged copies counted as unclassified omissions (coverage idx 9 19/19->10/19); use duplicate_locked_reaction KI-014",
+  "F3 enzyme-less copy merged into catalysed copy (idx 20 spontaneous vs MenH); empty-sides guard",
+  "F4 import outside try",
+  "F5 stale numeric biological_state_index (unread)",
+  "F6 reaction_order lists merged-away names",
+  "F7 __auto_state__ merge not marked estimated",
+  "F8 tests ran on dirty tree"
+ ],
+ "verified": [
+  "independent 97-pair A/B 0 problems",
+  "totals match",
+  "lock accounting ok",
+  "fail-open deep copy",
+  "flag-off 97/97 identical"
+ ],
+ "round1": {
+  "head": "9c45208d",
+  "verdict": "REJECT (R1 blocking)",
+  "findings": [
+   "R1 S1 generic state merges into one of two disagreeing specific states by row order (cytosol + hepatocyte/neuron cytosol)",
+   "R2 placeholder row 0 absorbs stated state",
+   "R3 idx 3 cytosol/cytoplasm kept apart (safe)",
+   "R4 F5 stale index unchanged"
+  ],
+  "verified": [
+   "21 adversarial cases do not merge",
+   "coverage unchanged",
+   "0 loss on 97",
+   "flag-off 97/97"
+  ]
+ },
+ "orchestrator_standard": "Round 2 judged only on R1/R2 plus regressions; severity = wrong merge reachable on plausible inputs; fail closed (defer).",
+ "round2": {
+  "head": "6149dd05",
+  "verdict": "APPROVE WITH NITS",
+  "notes": [
+   "N1 over-deferral on safe side",
+   "N2 duplicate deferral reasons in record"
+  ]
+ }
+}

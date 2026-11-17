@@ -43,7 +43,7 @@ from typing import Any, Dict, List, Mapping, Optional
 
 # Standard library only (the sign table, no exporter): used to check that an IR row
 # belongs to the payload row beside it, never to decide a verdict.
-from t2pw.pwml.interaction_types import interaction_relationship_word, pwml_interaction_type
+from t2pw.pwml.interaction_types import interaction_relationship_word, pwml_export_interaction_type
 from t2pw.pipeline.name_keys import reference_key
 
 from t2pw.pipeline.strict_quarantine import (
@@ -539,8 +539,21 @@ def _same_process(lock_id: str, name: Any, row: Mapping[str, Any]) -> bool:
 #: to it -- in particular ``bare_protein_endpoint`` says only that no wrapper exists,
 #: never why Stage 6 did not build one.
 _WITHHELD_GLOSS = {
+    # D-W26 (L4): PathWhiz with the t2pw/05 branch stores seven interaction types.
     "untyped_interaction": (
-        "the relationship word is neither Activation nor Inhibition, the only interaction types PathWhiz stores"
+        "the relationship word maps to none of the interaction types PathWhiz stores (Activation, Inhibition, "
+        "Binding, Regulation, Catalysis, Modification, Unspecified)"
+    ),
+    "duplicate_interaction": (
+        "the same type between the same two elements in the same state is already drawn, and PathWhiz "
+        "merges such repeats into one"
+    ),
+    "relationship_type_not_stated": (
+        "the row states no relationship word and has no paper evidence, so it is not drawn"
+    ),
+    "same_element_both_sides": "both endpoints are the same element, which a PathWhiz interaction cannot hold",
+    "step_has_no_element_to_anchor": (
+        "the reaction this modifier acts on has no other enzyme, substrate or product to attach the interaction to"
     ),
     "bare_protein_endpoint": (
         "a protein endpoint is not wrapped in a single-protein complex in this payload, "
@@ -603,7 +616,7 @@ def _same_row(row: Mapping[str, Any], ir_row: Mapping[str, Any], ir_entities: Ma
         return (_text(withheld.get("raw_interaction_type")), _text(withheld.get("left")), _text(withheld.get("right"))) == (
             word, left, right)
     # A drawn row keeps the sign, not the word, and the entity each side was bound to.
-    if pwml_interaction_type(word) != _text(ir_row.get("interaction_type")):
+    if pwml_export_interaction_type(word) != _text(ir_row.get("interaction_type")):
         return False
     for side, written in (("left", left), ("right", right)):
         entity = _dict(ir_entities.get(_text(_dict(ir_row.get(side)).get("entity_key"))))
@@ -714,7 +727,7 @@ def _entry(kind: str, name: Any, where: str, text: str, source: str, reason: str
     ki = known_issue_id(reason if ki_of is None else ki_of)
     return {
         # ORCH-795 (D-114 AMENDMENT 2 § 1): an interaction whose word PathWhiz has no type for, however it was omitted.
-        "uncarried": kind == "interaction" and bool(row) and not pwml_interaction_type(interaction_relationship_word(row)),
+        "uncarried": kind == "interaction" and bool(row) and not pwml_export_interaction_type(interaction_relationship_word(row)),
         "kind": kind, "name": _text(name), "where": where, "text": text, "source": source,
         "reason": reason, "message": message, "omission": omission, "ki": ki,
         # pre_freeze | ir (a written PWML does not draw it) | no_pwml | not_recorded
@@ -1057,6 +1070,7 @@ def build_report(
                 ],
                 "evidence": _quotes(row),
                 "sources": _sources(row, paper_id),
+                **({"compartment": _compartment(row, "biological_state")} if _compartment(row, "biological_state") else {}),
                 "duplicate_of": [],
                 "_key": (tuple(sorted(map(_norm, inputs))), tuple(sorted(map(_norm, outputs)))),
             }
@@ -1130,6 +1144,11 @@ def build_report(
             for row in map(_dict, _list(payload.get(BORROWED_PROTEIN_IDENTITIES_KEY)))
         ],
         "interactions": interactions,
+        "transport_compartments": [
+            f"{_text(row.get('name')) or NOT_RECORDED}: {_compartment(row, 'from_biological_state', 'to_biological_state')}"
+            for row in map(_dict, _list(processes.get("transports")))
+            if _compartment(row, "from_biological_state", "to_biological_state")
+        ],
         "ir_source": ir_source if PWML_IR_FILENAME in artifacts else NOT_RECORDED,
         "quarantined": quarantined,
         "removed_entities": removed_entities,
@@ -1309,6 +1328,19 @@ def omitted_lines(report: Mapping[str, Any]) -> List[str]:
     return lines + [""]
 
 
+def _compartment(row: Mapping[str, Any], *fields: str) -> str:
+    """D-W24 (2, 7a): a compartment the paper record did not state, with how it was placed (``compartment_source`` and the
+    last ``compartment_estimate`` reason); empty for a stated one, so other reports keep their bytes."""
+    source = _text(row.get("compartment_source"))
+    if not source:
+        return ""
+    entries = [e for e in map(_dict, _list(row.get("compartment_estimate"))) if _text(e.get("reason"))]
+    where = "; ".join(f"{f.split('_')[0]}={_text(row.get(f)) or NOT_RECORDED}" for f in fields) if len(fields) > 1 else (
+        _text(row.get(fields[0])) or NOT_RECORDED)
+    reason = _text(entries[-1].get("reason")) if entries else NOT_RECORDED
+    return f"{where} [{source}: {reason}]"
+
+
 def _evidence(quotes: List[str]) -> List[str]:
     return ["Evidence:", *([f'  {i}. "{q}"' for i, q in enumerate(quotes, 1)] or [f"  {NOT_RECORDED}"])]
 
@@ -1330,6 +1362,7 @@ def reaction_lines(reaction: Mapping[str, Any]) -> List[str]:
         f"Products: {', '.join(reaction['products']) or NOT_RECORDED}",
         f"Enzyme(s): {'; '.join(reaction['enzymes']) or NOT_RECORDED}",
         f"Species: {', '.join(reaction['species']) or NOT_RECORDED}",
+        *([f"Compartment (not stated in the paper record): {reaction['compartment']}"] if reaction.get("compartment") else []),
         f"Status: {'; '.join(status)}",
         f"Lineage: {' | '.join(reaction['lineage']) or NOT_RECORDED}",
         "Mapping:",
@@ -1412,6 +1445,9 @@ def render_text(report: Mapping[str, Any]) -> str:
         lines += [*interaction_lines(item), ""]
     if not report["interactions"]:
         lines += _absent(None if report["payload_source"] == NOT_RECORDED else [])
+    if report.get("transport_compartments"):  # absent section when every transport side is stated
+        lines += [*_section(f"TRANSPORT SIDES NOT STATED IN THE PAPER RECORD ({len(report['transport_compartments'])})"),
+                  *(f"- {line}" for line in report["transport_compartments"]), ""]
     if report["borrowed_identities"]:  # absent section when nothing is borrowed: other reports keep their bytes
         lines += [*_section(borrowed_identities_title(report)), *(f"- {line}" for line in report["borrowed_identities"]), ""]
     quarantined = report["quarantined"]

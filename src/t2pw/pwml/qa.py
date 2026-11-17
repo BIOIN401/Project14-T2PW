@@ -5,6 +5,8 @@ from typing import Any, Dict, List
 
 from lxml import etree
 
+from t2pw.pwml.interaction_types import PWML_INTERACTION_EDGE_TEMPLATES
+
 
 def run_pwml_qa(pwml_bytes: bytes) -> Dict[str, Any]:
     errors: List[str] = []
@@ -88,7 +90,8 @@ def run_pwml_qa(pwml_bytes: bytes) -> Dict[str, Any]:
     # exactly one left and one right element, a type it stores, and a
     # visualization carrying a member on each side. Anything else is an error:
     # an interaction that cannot import is not a warning.
-    _PWML_INTERACTION_TYPES = {"Activation", "Inhibition"}
+    # L4 (D-W26): the patched PathWhiz (t2pw/05) stores seven types.
+    _PWML_INTERACTION_TYPES = set(PWML_INTERACTION_EDGE_TEMPLATES)
     viz_sides_by_interaction: Dict[str, set] = {}
     for viz in root.iter("interaction-visualization"):
         ref_el = viz.find("interaction-id")
@@ -102,7 +105,7 @@ def run_pwml_qa(pwml_bytes: bytes) -> Dict[str, Any]:
         type_el = interaction.find("interaction-type")
         itype = (type_el.text or "").strip() if type_el is not None else ""
         if itype not in _PWML_INTERACTION_TYPES:
-            errors.append(f"{label} has interaction-type '{itype}'; PathWhiz stores only Activation or Inhibition.")
+            errors.append(f"{label} has interaction-type '{itype}'; PathWhiz stores only {', '.join(sorted(_PWML_INTERACTION_TYPES))}.")
         if interaction.find("name") is not None:
             errors.append(f"{label} carries a <name> child, which PathBank never writes on an interaction.")
         for side_tag in ("interaction-left-elements", "interaction-right-elements"):

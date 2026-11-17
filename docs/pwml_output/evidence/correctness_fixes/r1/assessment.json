@@ -1,0 +1,188 @@
+{
+  "_meta": {
+    "assessor": "R1 (reversibility and stoichiometry, D-W24 item 7: assess and propose, build nothing)",
+    "tree": "C:/t/corr (pwml/correctness, read only); PathWhiz source C:/t/corr-pw/tree (read only)",
+    "method": "Source reading plus two short read-only scripts over the 152 stored payloads (r1/measure.py, r1/measure2.py, output r1/measure_out.json). No tests, replays or LLM runs. Regex counts are upper bounds (noisy), the reaction-evidence counts are hand-checked.",
+    "headline": "Reversibility and stoichiometry are structurally absent at the front of the pipeline (extraction prompt and payload carry neither), but every downstream stage already has a socket for them (IR, PWML writer, canonical comparison, clean-model SBML Field, PathWhiz DB and SBML). Wiring one explicit, evidence-gated reversible field is small. Stoichiometry is a different animal: the paper rarely states it in a form the extractor sees, and an LLM asked for it will invent it."
+  },
+
+  "a_current_state": {
+    "extraction": {
+      "prompt": "src/t2pw/llm/prompts/pwml_system.txt (reaction schema, ~line 313): a reaction is {name, inputs:[str], outputs:[str], modifiers[], biological_state, evidence, class, scope_membership, confidence, provenance, source_refs}. No direction, no reversible, no per-participant stoichiometry. inputs/outputs are bare strings. Prompts mention 'stoichiometrically consumed' only as a cofactor-placement rule. pwml_infer_system.txt:168 says 'keep the process stoichiometry explicit' but the schema has no slot, so it has no effect. The only prompt text that names direction is the narrowed-excerpt retry (pipeline.py ~4500: 'do not invent ... directionality or stoichiometry') and the compartment-estimate prompt (transport sides).",
+      "measured": "Across 621 reactions in 152 payloads: 1544 inputs/outputs items, all 1544 are str; 0 reactions carry a direction, reversible or stoichiometry key."
+    },
+    "payload": {
+      "schema": "src/t2pw/schema.py and pipeline/payload_models.py. ReactionModel has no direction/reversible/stoichiometry field, but _RuntimeModel is extra='allow', so an extra key survives validation. ProcessParticipant (schema.py:371, payload_models.py:337) DOES define stoichiometry/coefficient for dict participants, and ProteinComplexComponent defines stoichiometry; nothing ever asks the LLM to fill the reaction ones. Only complex-component stoichiometry is populated today (see b).",
+      "canonical_comparison": "pipeline/canonical.py already reads payload 'direction' (right/left/both) and 'reversible' (bool) AS STATED, without defaulting, and reads participant stoichiometry via _number; so the cross-format equivalence layer is already stoichiometry/direction aware."
+    },
+    "ir": {
+      "file": "src/t2pw/pwml/ir.py",
+      "direction": "_direction() (line ~969) maps '<', 'left', 'reverse' -> '<'; '<>', '<=>', 'both', 'reversible' -> '<>'; EVERYTHING ELSE including absent -> '>'. So with no payload field, direction is always '>' (196/196 reactions in A1). An absent value is indistinguishable from an asserted forward reaction.",
+      "stoichiometry": "_coerce_participants (line ~985): bare string -> stoichiometry 1; dict -> int(stoich) or 1, floored at 1 (so '2.0' becomes 2 but 0.5 becomes 1). Validation emits warning reaction_participant_missing_stoichiometry for every bare string ('defaults to 1'), so the system already knows these 1s are defaults but does not carry that knowledge forward. Complex components differ: component_stoichiometry() returns None when unstated and the writer emits <stoichiometry nil=\"true\"/> (PathWhiz column is nullable). Reactions have no such 'unstated' path: the value is forced to 1.",
+      "transports": "Transport elements: stoichiometry int(...) or 1; direction hard-coded 'Right' (writer.py ~1647). Out of scope here but same pattern."
+    },
+    "pwml": {
+      "file": "src/t2pw/pwml/writer.py",
+      "reaction_direction": "direction_for() (line ~1122) -> Right / Left / Both. Already supports Both. Written per reaction as <direction>.",
+      "reaction_elements": "reaction-left/right-elements each get int(member.stoichiometry or 1). Fine if the IR carries a real number.",
+      "measured": "196/196 payload reactions written direction Right in the A1 sample."
+    },
+    "pathwhiz_db_and_import": {
+      "storage": "reactions.direction string(255) with values '>' '<' '<>' (db/schema.rb; helpers/reactions_helper.rb options 'Left to Right', 'Right to Left', 'Reversible'). reaction_elements.stoichiometry integer, validated presence and > 0 (reaction_element.rb:12; migration create_reactions: t.integer). There is no 'unknown' direction value; the Reaction#direction_label helper returns 'Unknown' only for anything else (e.g. blank), and lib/pwml_parser.rb convert_direction returns '' for anything not Right/Left/Both.",
+      "import": "lib/pwml_parser.rb:596 reads <direction> and convert_direction maps Right->'>', Left->'<', Both->'<>'. Stoichiometry node read as a plain integer attribute. So PWML 'Both' round-trips into the DB as a real reversible reaction; no PathWhiz change is needed."
+    },
+    "pathwhiz_sbml_sbgn": {
+      "sbml": "Reaction#sbml_instance (reaction.rb:316) calls addReaction(id, name, self.reversible?, ...), where reversible? is true only when direction == '<>'. So PathWhiz SBML emits reversible=true exactly for 'Both' reactions. A3 measured reversible=false on 230/230 because every T2PW reaction is Right, not because PathWhiz cannot say true. Species references carry stoichiometry from the reaction_elements row (find_element defaults to 1 holder only for a missing row).",
+      "sbgn": "reaction_visualization.rb passes self.reaction.direction to addLeftArc/addRightArc for every participant arc (lines 433-483); the SBGN builder (java in lib/java) draws arrowheads from it. Reversible reactions therefore render with arrowheads on both sides. Not checked in a rendered image; that needs a PathWhiz run and is outside this read-only job.",
+      "display": "reaction.rb:206/214 builds the text equation and prints the coefficient only when stoichiometry > 1, so a stored 2 shows as '2 Pyruvate' in the PathWhiz UI; a stored 1 is invisible. Bound/interaction elements in the JS also render the coefficient when > 1."
+    },
+    "our_sbml_clean_model": {
+      "file": "src/t2pw/clean_model/export/sbml.py, model.py",
+      "direction": "Reaction has Field slots 'reversible' and 'direction' (model.py:378-379), _direction() (sbml.py:454) returns (value, stated) and only trusts a Field whose provenance label is 'paper'. Everything else -> reversible=false plus t2pw:directionStated=false and a t2pw:reversibleNote. The builder never fills those Fields from the payload (no 'reversible' or 'direction' in builder.py), so directionStated is false for 100% of reactions. This is honest, and it is ready to light up once a payload field exists.",
+      "stoichiometry": "SpeciesReference.stoichiometry written only if the Field is paper-stated; otherwise stoichiometry attribute is None and an annotation t2pw:stoichiometry state=unstated is added. model.py:163 labels any payload number 'default' (if 1 or None) or 'inferred' otherwise, so a payload number is never counted as 'paper' and today no species reference gets a numeric stoichiometry. That is the correct conservative behaviour and is already tested design, not a bug."
+    },
+    "stoich_module": {
+      "files": "src/t2pw/stoich/{agent,classifier,templates}.py (853 lines); root shims src/stoich_*.py re-export them.",
+      "what_it_does": "A reaction-class classifier (keyword/template, then LLM) plus an agent that looks up KEGG reaction entries and ChEBI to 'repair' reaction inputs/outputs against a template (e.g. adds missing ATP/ADP, CO2). It is about missing participants, with a coefficient side effect, not about reading stoichiometry from the paper.",
+      "does_it_run": "Only if the post-pipeline option use_stoich_agent is set. service/postpipeline.py:1416 imports run_stoich_agent behind 'if use_stoich_agent'. Default in service/pathway.py:360 is d.USE_STOICH_AGENT (a config default); in the Streamlit app it is a checkbox (streamlit_app.py:1968). The stored 152 baseline runs show 0 non-1 reaction stoichiometries, so it did not run or did not change anything in them. It calls KEGG (the programme rule is no KEGG for data, and the agent injects non-paper participants), so it is not a candidate to turn on for the web server. Recommend it stay off and be documented as such.",
+      "verdict": "Not a stoichiometry reader. Treat as legacy, off by default, and out of scope for this proposal."
+    },
+    "web": {
+      "state": "No web surface exposes or edits direction or stoichiometry; the web server renders the same PWML/SBML. A reversible field would appear automatically in the PWML 'direction' element and SBML reversible attribute; no web code change, except possibly a line in the report page legend."
+    }
+  },
+
+  "b_measured_frequency": {
+    "population": "152 stored runs, 111 distinct papers (several papers are processed in more than one leg), 621 payload reactions, 415 complexes. 2 of the 152 paper_text files are missing.",
+    "reversibility": {
+      "paper_text_regex": "Papers whose text contains any reversibility wording (reversib*, equilibri*, interconver*, arrows, 'back reaction', 'bidirectional', 'both directions'): 61 of 111 distinct papers (92 of 152 runs). This is an UPPER BOUND and mostly noise: 'equilibrium dissociation constant', 'reversible inhibitor', 'validate mutations in both directions', 'irreversible', author-title uses ('A reversible feedback mechanism ...').",
+      "reaction_evidence_hits": "13 of 621 payload reactions (2.1 percent), in 11 of the 152 runs (idx 5, 9, 17, 24, 25, 68, 75, 100, 127, 129, 142), carry reversibility or irreversibility wording in their own name or evidence quote. Hand classification of those 13: 7 truly state the reaction as reversible or give a reverse step (idx 5 and 9 MenF: 'catalyzes a reversible reaction converting chorismate to isochorismate'; idx 68 LpxA: 'catalyzes the reversible acylation of UDP-GlcNAc'; idx 129 HFP isomerase: 'to determine the reversibility of the isomerase reaction'; idx 17 PSAT: 'The equilibrium constant for the conversion of L-Glu/3PHP to alpha-KG and L-OPS was estimated'; idx 127 PSAT 'reverse reaction' assay; idx 142 VALTA row with an equilibrium arrow); 3 state IRREVERSIBLE (idx 24 and 25 MenD 'first irreversible step', idx 75 LpxC 'first irreversible and committed step'); 1 is a false positive (idx 100 'reversible mixed inhibitor', which is inhibition, not reaction direction); 2 residual are duplicates of MenF across legs. So roughly 7 reversible and 3 irreversible statements, about 1.6 percent of reactions, concentrated in enzymology-style papers about one enzyme.",
+      "cross_check": "A4 independently listed 8 reactions in 5 pathways citing reversibility (9, 5, 129, 142, 68) and gold_v2 marks MenF and EntC reversible=true. The eval gold schema already has a 'reversible' flag (bench/eval_v2/gold.py:48, goldset.py:341) used so that a reversible gold reaction may match backwards (eval_v2/reactions.py:112).",
+      "payload_reaction_with_direction_key": 0,
+      "examples": [
+        {"idx": 9, "quote": "The enzyme MenF catalyzes a reversible reaction converting chorismate (A) to isochorismate (B)", "payload_today": "direction not carried; PWML Right"},
+        {"idx": 68, "quote": "LpxA, the first enzyme in the lipid A biosynthesis pathway, catalyzes the reversible acylation of UDP-GlcNAc using FAS II-derived beta-hydroxyacyl-ACP molecules", "payload_today": "PWML Right"},
+        {"idx": 129, "quote": "To determine the reversibility of the isomerase reaction catalyzed by HFP isomerase ...", "payload_today": "PWML Right; the paper reports a measurement, the sentence alone does not say the answer, so even a human needs the result sentence"},
+        {"idx": 142, "quote": "VALTA ... 2-Oxoglutarate_c + L-Valine_c <=> 3-Methyl-2-oxobutanoate_c + L-Glutamate_c (IlvE in BCAA biosynthetic pathway)", "payload_today": "IlvE step written backwards (catabolic orientation) in a biosynthesis pathway; with a reversible flag the orientation is no longer a hard error"},
+        {"idx": 75, "quote": "LpxC catalyzes the first irreversible and committed step in lipid A biosynthesis", "payload_today": "PWML Right, which happens to be right; but also no way to tell it was stated"}
+      ],
+      "pathwhiz_sbml": "reversible=false on 230/230 reactions (a3). 7 payload reactions in the A3 sample carried reversibility wording."
+    },
+    "stoichiometry": {
+      "reaction_participants": "0 of 1544 reaction participants carry any stoichiometry value (all bare strings), so 100 percent are the default 1 written by IR. Where do non-1 values exist? Nowhere in the 621 reactions or in transports (0 non-1 elements).",
+      "paper_text_regex": "Stoichiometry-shaped phrasing ('stoichiometr*', 'two molecules of', '2 pyruvate' etc.): 57 raw run hits; most are binding stoichiometry (idx 1 and 101 'DHB:EntB binding stoichiometry of 1', idx 100 and 108 'binding stoichiometry best fit to 4:1 (monomer equivalents)', 110 NRPS interaction stoichiometries) or the phrase 'stoichiometric conversion' (idx 11, 118), NOT reaction coefficients. Genuine reaction-coefficient statements are rare: idx 117 'requiring one molecule of GTP and two molecules of ribulose-5-phosphate' (riboflavin biosynthesis); idx 142 the reaction table '2.0 Pyruvate' (A4 finding) which was written as 1. Estimate: fewer than 10 of 621 reactions (under 2 percent) have a coefficient stated in the paper text the extractor sees, and most of the rest are balanced reactions whose coefficients a chemist could reconstruct but the paper does not print.",
+      "complex_components": "The only place non-1 stoichiometry exists today: 454 of the component entries in 415 complexes carry a stoichiometry value; only 5 are not 1: ALAS2 homodimer (x2; idx 38, 99, 109), MPT synthase complex NIT-8 (x2; idx 11, 118). Origin is the extraction or enrichment of the complex component, not a stoichiometric reaction, and in the PWML it is the protein_complex_proteins column (nullable, written blank if unstated). I did not trace each of the 449 'ones' to paper vs default; a quick read of component_stoichiometry() says a '1' present in the payload is written as 1, so some of those 449 may be defaults inserted upstream. That is a separate, smaller question for a follow-up.",
+      "balanced_reaction_note": "Many reactions are not stoichiometrically balanced as written (A4: idx 14 HMGR consumes NADPH and NADH both because 'NADPH or NADH' was encoded as two co-substrates). Writing all-1 coefficients on those is wrong in the PathWhiz UI only when a coefficient above 1 was correct; for 1:1 chemistry (most pathway steps) 1 is right by default."
+    }
+  },
+
+  "c_what_pathwhiz_can_store_and_render": {
+    "direction": "Three values: Right ('>'), Left ('<'), Both ('<>'); PWML words Right/Left/Both. Both is the only reversible form. SBML reversible attribute = (direction == '<>'). SBGN arcs get the direction string and are drawn accordingly. There is NO 'unknown/unstated' value: a blank direction is rejected or empty (convert_direction returns '' on anything else) and displayed 'Unknown' in the label helper. Consequence for T2PW: for an unstated reaction we must still choose Right (current behaviour) or omit the node; omitting is untested on import and risky. So 'null' in our payload can only mean 'write Right and mark as unstated in our own metadata'.",
+    "stoichiometry": "reaction_elements.stoichiometry: positive integer, required. Rationals and fractional coefficients are not representable (integer column, validates > 0). Complex components use a nullable column (our writer already blanks it). Display shows the number only when > 1.",
+    "per_side_arrows": "Direction is per reaction, not per participant. Transport elements have their own direction field per element.",
+    "implication": "PathWhiz needs no change. Everything proposed below is on our side of the PWML boundary."
+  },
+
+  "d_options": [
+    {
+      "id": 1,
+      "title": "Payload field reversible: true|false|null, filled only from an explicit paper statement",
+      "design": [
+        "Prompt: add one optional key to the reaction schema in pwml_system.txt: \"reversible\": true | false | null with the instruction 'set only when the text states the reaction is reversible / irreversible / at equilibrium, quote the sentence in evidence; otherwise null. Never infer from chemistry or from general knowledge.' Add the matching line to the JSON schema example and one worked positive and one worked null example.",
+        "Schema: ReactionModel gets reversible: bool | None (payload_models.py) and PayloadReaction in schema.py gets the key; additive, extra=allow already admits it.",
+        "Freeze/lock: ensure reversible is preserved through merge/audit/dedup stages (needs a check that the stages copy unknown keys; the canonical layer already reads it).",
+        "IR: _direction() takes the payload 'reversible' bool: True -> '<>'; False -> '>' (explicit irreversible, forward as extracted); None -> '>' as today but IR records direction_stated=false so it can be reported. 'direction' text still wins if present.",
+        "PWML: no writer change (direction_for already emits Both). Optionally write nothing new for null.",
+        "Clean-model SBML: builder.py sets rx.reversible Field to value with provenance 'paper' only when the payload value is a bool backed by a non-empty evidence quote; sbml.py already does the rest (reversible=true, directionStated=true). null keeps today's placeholder.",
+        "Orientation rule (optional, A4 finding 'IlvE written backwards'): when reversible is true and the requested pathway has a net direction, a deterministic check flags (never swaps) a step whose orientation is against it. This is a flag, not an edit."
+      ],
+      "cost": {
+        "files": "pwml_system.txt (+ pwml_infer_system.txt line for consistency), schema.py, payload_models.py, pwml/ir.py (_direction, ~10 lines), clean_model/builder.py (~15 lines), possibly pipeline freeze/merge copy points; web: none",
+        "prompt_change": "yes, one field and 2 examples; touches llm/prompts which CLAUDE.md lists as 'biology' scope, so this needs a PO ruling in the same way as D-W24 items 1-6",
+        "schema_change": "additive and optional; no existing payload becomes invalid",
+        "tests": "unit: IR _direction with True/False/None; builder sets Field only with evidence; PWML emits Both; SBML reversible=true and directionStated=true; golden payload round-trip keeps the key; a negative test that null produces byte-identical PWML to today (regression guard). Estimated 6 to 10 tests plus update of SMOKE counts. Replay: a live run on the 11 papers listed in (b) is the only cost that needs an LLM key, about 11 papers x 1 run."
+      },
+      "risk_to_no_regression": {
+        "pwml_output_change": "None unless a paper states reversibility: every null/absent value yields the same direction '>' as today. The change is strictly additive, so PWML for the other ~95 percent of reactions is byte-identical (this can be proved by diffing PWML of the 152 stored payloads before and after, with no LLM).",
+        "llm_risk": "The model may set reversible=true from chemistry knowledge (most enzymes are reversible in textbooks). That would add Both arrows the paper never stated, a contract s.1 violation (invent directionality). Mitigation: require an evidence quote that matches the source text (existing evidence-quote validators) and keep false/true only when the quote contains one of a closed vocabulary (reversib*, irreversib*, equilibri*, interconver*, arrows); otherwise coerce to null. A deterministic post-check is cheap and fully fails closed.",
+        "irreversible side": "reversible=false is only 'stated irreversible'; it does not change PWML (still Right). Only value is the SBML directionStated flag, so it can be cut if unwanted.",
+        "temperature_zero_nondeterminism": "per CLAUDE.md the same input gives different Stage-1 output at temperature 0; re-run 2 to 3 times per paper before calling a flag instability a regression."
+      },
+      "verification": [
+        "Offline, no LLM: unit tests above; before/after PWML diff of all 152 stored payloads must be empty (null everywhere); then inject the value by hand for idx 9 (MenF), 68 (LpxA) and 142 (IlvE) and assert PWML Both and SBML reversible=true directionStated=true.",
+        "Gold: eval_v2 gold already has reversible flag; MenF and EntC are reversible=true. Count of reversible-gold reactions across all gold sets needs a scan (not done here; a 20-line script). Use them as the positive set: precision (no false true), recall (stated ones captured). Because the eval only matches backwards for reversible gold, no scorer change is required, but a new metric 'reversible_stated_precision' should be added.",
+        "Live: re-run the 11 papers in (b) (5, 9, 17, 24, 25, 68, 75, 100, 127, 129, 142) 3 times each; expect true on 5, 9, 68, 129?, 142; false on 24, 25, 75; null elsewhere; false positives on idx 100 (inhibitor) must be null. Plus the other 100 or so papers: expect zero new non-null values except those a human confirms. This negative set matters more than the positives."
+      ],
+      "recommendation": "RECOMMENDED, in a limited form: implement the field, but make the deterministic evidence-quote check mandatory so the LLM can never set it without a quoted sentence, and ship it only after a PO ruling (touches prompts). Value is small (about 1.6 percent of reactions, 7 reversible statements in 152 runs) but it is the only way to make PathWhiz SBML stop saying false on reactions the paper calls reversible, and it fixes the 'cannot represent' structural gap A4 ranked highest. Do the null-everywhere identity proof first; it is free."
+    },
+    {
+      "id": 2,
+      "title": "Stoichiometry only where the paper states it, default 1, with a stated/default marker",
+      "design": [
+        "Prompt: allow inputs/outputs items to be either a string or {\"name\":..., \"stoichiometry\": n, \"stoichiometry_evidence\": quote}. Instruct to use the object form only when the text gives a coefficient for that participant ('two molecules of X', '2 pyruvate', an equation with coefficients), with a quote.",
+        "Schema/payload: ParticipantLike already admits dicts with stoichiometry; add stoichiometry_evidence (or reuse 'evidence').",
+        "IR: _coerce_participants keeps the stated value and adds a stated flag; default 1 flagged stated=false. Writer unchanged (integer).",
+        "Clean-model: builder labels the Field 'paper' only if the quote check passes; sbml.py then writes stoichiometry=n instead of the unstated annotation.",
+        "Deterministic filter: the number must appear in the quote adjacent to the participant name; otherwise discard to default."
+      ],
+      "cost": {
+        "files": "pwml_system.txt (a bigger prompt change than option 1: inputs/outputs types change), payload_models.py, ir.py (_coerce_participants, ~15 lines), builder.py (~20 lines), a new small quote-adjacency check; downstream code that assumes inputs/outputs are strings (many places: mapping, curation, canonicalization, entity admission) needs an audit even though dict members are already tolerated",
+        "prompt_change": "yes and larger; changes the shape the LLM must produce for every reaction, which also changes how it decomposes reactions and so can shift Stage-1 recall",
+        "schema_change": "optional dict form already exists; the evidence field is new",
+        "tests": "about 10 to 15 tests, including string/dict mixing through the whole pipeline and a regression on the 152 payloads (identical when no coefficient stated); SMOKE counts change"
+      },
+      "risk_to_no_regression": {
+        "llm_invented_stoichiometry": "HIGH if unguarded. LLMs will fill textbook coefficients (2 ATP, 2 NADH per glucose) that the paper does not state, and PathWhiz draws '2 ATP' when stoichiometry > 1, which is user-visible and wrong in 1:1 papers. The adjacency check cuts it, but the check can only reject numerals absent from the quote; an LLM that quotes a different line is still possible.",
+        "shape_change": "Changing inputs/outputs from string to optional dict is a broad change that can lower recall at Stage 1 (D-W24 contract: never worsen text to PWML). The risk is not the coefficient but the side effect on extraction.",
+        "benefit_size": "Fewer than 10 of 621 reactions have a printed coefficient in the stored papers; options 1 and 2 are not comparable in value"
+      },
+      "verification": [
+        "Positive set: idx 117 (riboflavin, 'one molecule of GTP and two molecules of Ru5P'), idx 142 ('2.0 Pyruvate' in a reaction table). Both need a human to confirm which reaction the coefficient attaches to.",
+        "Negative set: everything else; require zero non-1 values without a quote containing the numeral. Gold sets do not carry reaction coefficients (the eval gold schema lists reactants/products only; PathBank stoichiometry in pathbank_gold.py:143 is complex-component stoichiometry), so no gold set measures this; verification would be a hand-built set of about 10 to 15 reactions, which is itself a work item.",
+        "PathBank gold: could be used to check coefficients on matched reactions via the PathWhiz DB reaction_elements, but only for reactions that exist in PathBank and for which the paper states the same numbers; low overlap expected."
+      ],
+      "recommendation": "DEFER, do not build this round. The benefit is under 2 percent of reactions and the largest part of the risk (invention, extraction shape drift) is in the part that benefits only a handful of reactions. If ever built, build as a deterministic post-filter over a separate small LLM pass (not in the Stage-1 prompt), so that the main extraction shape does not change. For now, keep all-1 and make the default visible (see Option 4)."
+    },
+    {
+      "id": 3,
+      "title": "Status quo",
+      "design": ["No change."],
+      "cost": {"files": "none", "prompt_change": "none", "schema_change": "none", "tests": "none"},
+      "risk_to_no_regression": "None. Residual harm: PWML claims Right for every reaction, including 7 reactions in the stored sample whose papers say reversible; PathWhiz SBML says reversible=false on 230/230; the clean-model SBML is honest (directionStated=false). In contract terms (s.1 'never invent directionality'), writing Right for an unstated direction is itself an assertion of direction that no paper made; the clean-model SBML is the only output that does not make it.",
+      "verification": "n/a",
+      "recommendation": "Acceptable for stoichiometry (default 1 is right for most 1:1 steps and the clean model already labels it default). Not acceptable long term for direction, because the PWML 'Right' is an invented claim in every unstated case; see Option 4 for the cheap honesty fix."
+    },
+    {
+      "id": 4,
+      "title": "No-extraction honesty step (additive to 3, no prompt change, no LLM, no PWML change)",
+      "design": [
+        "Record in IR/report that direction and stoichiometry are defaults: IR already warns reaction_participant_missing_stoichiometry per bare string; add one per-reaction 'direction_unstated' info message (same mechanism).",
+        "Surface the aggregate on the web report page and in the PWML export notes: 'Reaction direction and stoichiometry were not extracted from the paper; PathWhiz direction is set to Right and all coefficients to 1 as defaults.' This is a documentation line, not a data change.",
+        "Keep clean-model SBML as is (directionStated=false, stoichiometry unstated)."
+      ],
+      "cost": {"files": "ir.py (one info line), web report template or caption, README/web-server about text", "prompt_change": "none", "schema_change": "none", "tests": "2 to 3 tests; zero PWML bytes change"},
+      "risk_to_no_regression": "None by construction (metadata only).",
+      "verification": "PWML byte-identity on the 152 stored payloads; report line present.",
+      "recommendation": "RECOMMENDED now, independent of option 1; costs almost nothing and makes the default visible to NAR reviewers."
+    }
+  ],
+
+  "recommendation": {
+    "now_this_round": "Option 4 (visibility of defaults) is the only thing worth building without a prompt change.",
+    "next": "Option 1 as a separate, PO-ruled item, behind an evidence-quote closed-vocabulary check, proven by a null-everywhere PWML identity diff on the 152 stored payloads and by a 3x live re-run of the 11 papers in (b). Expected yield: about 7 reversible and 3 irreversible statements in 152 runs.",
+    "defer": "Option 2 (stoichiometry); under 2 percent of reactions have a printed coefficient, no gold set measures it, and the invention risk is the highest of any option. Revisit only as a post-filter, not a Stage-1 prompt change.",
+    "dont_enable": "use_stoich_agent: it fetches KEGG data and injects non-paper participants, against the no-KEGG and never-invent rules.",
+    "open_questions_for_PO": [
+      "Is writing direction Right for an unstated reaction acceptable in the PWML long term, given PathWhiz has no unknown value? Alternative is to omit the direction node, untested on PathWhiz import (it would store '' and display 'Unknown').",
+      "May the Stage-1 prompt (llm/prompts, biology scope) gain one optional reversible key? Cost: a prompt change plus a live re-run budget.",
+      "Should stated 'irreversible' (3 of 11 hits) be recorded at all? Only affects SBML directionStated, not PWML.",
+      "Complex component stoichiometry (454 values, 5 not 1): trace paper vs default as a follow-up; out of this assessment."
+    ],
+    "caveats": [
+      "Counts of reaction-level mentions come from the stored payload evidence field, which is the extractor's chosen quote; a statement present in the paper but not quoted is not counted (paper-text regex: 61/111 papers mention reversibility words, mostly irrelevant).",
+      "PathWhiz SBGN arrowhead rendering is inferred from source, not checked on a rendered image.",
+      "I did not check that freeze/merge/audit stages preserve an unknown reaction key; this is the one structural unknown for Option 1 and the first thing to test.",
+      "No gold-set scan for the number of reversible-gold reactions was done."
+    ]
+  }
+}

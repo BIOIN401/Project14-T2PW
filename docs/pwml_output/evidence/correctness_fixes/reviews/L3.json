@@ -1,0 +1,31 @@
+{
+ "lane": "L3",
+ "reviewer": "ws-reviewer opus/high",
+ "agent": "a0a8815edf14a4140",
+ "reviewed_head": "b9721428",
+ "verdict": "APPROVE WITH NITS (F1 fix before merge)",
+ "findings": [
+  "F1 test_pwml_layout.py:90-102 edit drops checks F3 does not touch; compare process visualizations deref'd (fix before merge)",
+  "F2 writer.py:366 currency classifier ' coa' suffix too broad for v2 chain reuse (OSB-CoA, DHNA-CoA split in idx 9); add narrower v2-only test",
+  "F3 layout.py:580-583 comment wrong",
+  "F4 shared MenF enzyme node for forward/reverse pair; long edges 31->42 accepted trade-off, check in PathWhiz import",
+  "F5 re-run layout_metrics --pathwhiz-sizes on merge with L2",
+  "F6 reviewer has no write access; verdict recorded by orchestrator"
+ ],
+ "verified": [
+  "trial merge with L2 clean, 48 tests pass",
+  "4 new tests fail on base",
+  "member locations valid, 506/506 viz identical deref",
+  "currency list pre-existing",
+  "v1 guarded, 97/97 identical"
+ ],
+ "fix_round": {
+  "head": "33dcd129",
+  "verdict": "APPROVE",
+  "notes": [
+   "F5 replay metrics accepted from implementer",
+   "F6 nit DRAWING regex matches subcellular-locations (ids resolved, no loss)"
+  ],
+  "equiv_default": "6 passed"
+ }
+}

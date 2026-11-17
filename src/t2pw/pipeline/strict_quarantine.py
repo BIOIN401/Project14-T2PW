@@ -223,7 +223,12 @@ DEFAULT_MIN_CORE_COVERAGE = 0.5
 #: the old rules authorize an export judged by the new ones.
 #: 2026-10-25.1 (ORCH-773): per-row export failures are omitted, not refused.
 #: 2026-10-26.1 (ORCH-780): the no-support refusal omits its unsupported reactions instead (D-116).
-QUARANTINE_POLICY_VERSION = "2026-10-26.1"
+#: 2026-11-15.1 (L5, D-W24 item 3): a reaction is never omitted for its enzyme/modifier. A bare protein
+#: enzyme takes the Stage-6 single-protein wrapper; an actor that still cannot be written leaves the
+#: reaction, which stays and is flagged.
+#: 2026-11-16.1 (L8, D-W24 item 7b): a reaction enzyme with no database identity is written as an Unknown-backed
+#: placeholder complex of the same name instead of leaving the reaction; the run is review_required.
+QUARANTINE_POLICY_VERSION = "2026-11-16.1"
 
 
 def _canonical_requested_core(
@@ -1409,30 +1414,48 @@ def _actor_verdict(
     only).
     """
 
+    for _slot, _position, verdict in _failing_actors(bucket, process, registry, strict_db=strict_db):
+        return verdict
+    return None
+
+
+def _failing_actors(
+    bucket: str,
+    process: Mapping[str, Any],
+    registry: _Registry,
+    *,
+    strict_db: bool,
+) -> List[Tuple[str, int, Tuple[str, str, str]]]:
+    """Every unusable actor as ``(slot, position, verdict)``, in slot order; ``_actor_verdict`` is the first."""
+
+    failing: List[Tuple[str, int, Tuple[str, str, str]]] = []
     for slot in _ACTOR_SLOTS.get(bucket, ()):
-        for actor in _safe_list(process.get(slot)):
+        for position, actor in enumerate(_safe_list(process.get(slot))):
+            verdict: Optional[Tuple[str, str, str]] = None
             name = _actor_name(actor) if not isinstance(actor, str) else _canonical(actor)
+            ambiguous = registry.ambiguous(name) if name else ()
+            resolved = registry.resolve(name) if name else None
             if not name:
-                return (QUARANTINED_BROKEN_REFERENCE, f"unnamed_actor_in_{slot}", "")
-            ambiguous = registry.ambiguous(name)
-            if ambiguous:
-                return (
+                verdict = (QUARANTINED_BROKEN_REFERENCE, f"unnamed_actor_in_{slot}", "")
+            elif ambiguous:
+                verdict = (
                     QUARANTINED_BROKEN_REFERENCE,
                     f"ambiguous_entity_type:{'+'.join(ambiguous)}",
                     name,
                 )
-            resolved = registry.resolve(name)
-            if resolved is None:
-                return (QUARANTINED_BROKEN_REFERENCE, f"unresolved_actor_in_{slot}", name)
-            if isinstance(actor, dict) and _normalize(name) not in registry.protein_norms:
-                return (QUARANTINED_BROKEN_REFERENCE, f"non_protein_actor_in_{slot}", name)
-            entity_bucket, row = resolved
-            ok, reason = _entity_representability(
-                entity_bucket, row, registry, strict_db=strict_db
-            )
-            if not ok:
-                return (QUARANTINED_UNMAPPED_ENTITY, reason, name)
-    return None
+            elif resolved is None:
+                verdict = (QUARANTINED_BROKEN_REFERENCE, f"unresolved_actor_in_{slot}", name)
+            elif isinstance(actor, dict) and _normalize(name) not in registry.protein_norms:
+                verdict = (QUARANTINED_BROKEN_REFERENCE, f"non_protein_actor_in_{slot}", name)
+            else:
+                ok, reason = _entity_representability(
+                    resolved[0], resolved[1], registry, strict_db=strict_db
+                )
+                if not ok:
+                    verdict = (QUARANTINED_UNMAPPED_ENTITY, reason, name)
+            if verdict is not None:
+                failing.append((slot, position, verdict))
+    return failing
 
 
 def _scope_is_out_of_scope(process: Mapping[str, Any]) -> bool:
@@ -1670,17 +1693,22 @@ def _admit_processes(
     core_terms: Sequence[str],
     confidence_floor: Optional[float],
     forced: Optional[Mapping[Tuple[str, int], Tuple[str, str, str]]] = None,
+    actor_drops: Optional[List[Dict[str, Any]]] = None,
 ) -> List[Dict[str, Any]]:
     """One admission record per process, in payload order.
 
     ``forced`` maps ``(bucket, index)`` to a verdict decided before admission
     (ORCH-782: :func:`_split_gene_protein_names`); it only ever quarantines.
 
-    Writes no payload row's biology: it neither adds, removes nor reorders a
-    row, and edits no field any gate, hash or exporter reads. Its one write is
-    the PRODUCT_CONTRACT section 3 attribution the block above describes --
-    ``provenance_lineage`` on the rows it quarantines, appended by a final pass
-    once every record here is final.
+    ``actor_drops`` (a list, strict mode; ``None`` in research, which applies
+    nothing): D-W24 item 3. A reaction that passes every other check but names
+    an enzyme or modifier :func:`_actor_verdict` refuses is kept, and loses only
+    those actors; each is appended there as a removed-entity record carrying the
+    actor verbatim. Otherwise it writes no payload row's biology: it neither
+    adds, removes nor reorders a row, and edits no field any gate, hash or
+    exporter reads. Its one other write is the PRODUCT_CONTRACT section 3
+    attribution the block above describes -- ``provenance_lineage`` on the rows
+    it quarantines, appended by a final pass once every record here is final.
     """
 
     processes = _safe_dict(payload.get("processes"))
@@ -1749,6 +1777,17 @@ def _admit_processes(
                 verdict = _essential_participant_verdict(
                     bucket, process, registry, strict_db=strict_db
                 )
+
+            if verdict is None and bucket == "reactions" and actor_drops is not None:
+                failing = _failing_actors(bucket, process, registry, strict_db=strict_db)
+                for slot, position, (_state, reason, _name) in failing:
+                    actor_drops.append(
+                        _actor_drop_record(pointer, name, slot, _safe_list(process.get(slot))[position], reason,
+                                           "strict_quarantine_admission")
+                    )
+                for slot in dict.fromkeys(slot for slot, _position, _verdict in failing):
+                    gone = {position for s, position, _verdict in failing if s == slot}
+                    process[slot] = [a for i, a in enumerate(_safe_list(process.get(slot))) if i not in gone]
 
             if verdict is None:
                 verdict = _actor_verdict(bucket, process, registry, strict_db=strict_db)
@@ -2592,8 +2631,14 @@ def _revalidate_surviving_processes(
     *,
     strict_db: bool,
     iteration: int,
+    actor_drops: Optional[List[Dict[str, Any]]] = None,
 ) -> List[Dict[str, Any]]:
     """Re-check every surviving process against the shrunken graph.
+
+    ``actor_drops`` (strict mode; ``None`` in research): D-W24 3, as at admission. A
+    surviving reaction whose only failure is an enzyme or modifier keeps itself and
+    loses those actors, each appended there as a removed-entity record; it is never
+    ``stranded_by_closure`` for an actor (L5 review F6).
 
     This is requirement 3's "validate every process reference; repeat until no
     new orphan is produced", and it is a BACKSTOP rather than a routine step.
@@ -2627,9 +2672,18 @@ def _revalidate_surviving_processes(
             newly_quarantined.append(record)
             continue
         process = rows[index]
-        verdict = _essential_participant_verdict(
-            bucket, process, registry, strict_db=strict_db
-        ) or _actor_verdict(bucket, process, registry, strict_db=strict_db)
+        verdict = _essential_participant_verdict(bucket, process, registry, strict_db=strict_db)
+        if verdict is None and bucket == "reactions" and actor_drops is not None:
+            failing = _failing_actors(bucket, process, registry, strict_db=strict_db)
+            for slot, position, (_state, reason, _name) in failing:
+                actor_drops.append(_actor_drop_record(
+                    str(record.get("pointer") or ""), str(record.get("name") or ""), slot,
+                    _safe_list(process.get(slot))[position], reason, "strict_quarantine_closure",
+                ))
+            for slot in dict.fromkeys(slot for slot, _position, _verdict in failing):
+                gone = {position for s, position, _verdict in failing if s == slot}
+                process[slot] = [a for i, a in enumerate(_safe_list(process.get(slot))) if i not in gone]
+        verdict = verdict or _actor_verdict(bucket, process, registry, strict_db=strict_db)
         if verdict is None:
             continue
         _state, reason, participant = verdict
@@ -2929,8 +2983,10 @@ def _degree_zero_exports(
 # attaches to it, by that gate's own test); D-113 section 1's inferred wrapper
 # leaves its reaction's actor list while the paper's catalyst and the reaction
 # stay; and a transport whose transporter fails keeps the transport and loses
-# only that transporter (D-114 AMENDMENT 1 section 2). A reaction whose enzyme
-# fails and an interaction with a failing endpoint still leave whole.
+# only that transporter (D-114 AMENDMENT 1 section 2). A reaction whose enzyme or
+# modifier fails keeps itself and loses only that actor, flagged (D-W24 item 3: the
+# quarantine never deletes a correct reaction). An interaction with a failing
+# endpoint still leaves whole.
 #
 # An omission is kept only when it buys a PWML. Strict mode only (research
 # applies nothing); and if the rounds end on a refusal that names no row, on a
@@ -2978,7 +3034,395 @@ def _cap_release_for_omissions(release: Dict[str, Any], reason: str) -> Dict[str
     return record
 
 
-_ROW_POINTER = re.compile(r"^/(processes|entities)/([a-z_]+)/(\d+)(?:/([a-z_]+)/(\d+))?")
+#: D-W24 item 3: the slots whose failure costs a reaction the actor, never the reaction.
+_REACTION_ACTOR_SLOTS: Tuple[str, ...] = _ACTOR_SLOTS["reactions"]
+REACTION_ACTOR_DECISION = "D-W24 3"
+#: L5 (D-W24 3, orchestrator ruling 2): a payload-level list of the interactions the per-row
+#: pass left out because an endpoint entity cannot be written (idx 76/77: a complex with no
+#: components). The IR emits each as a withheld row with its reason, as L4 withholds rows, so
+#: pwml_ir.json and the withheld side file keep it; it is never drawn.
+WITHHELD_INTERACTIONS_FIELD = "withheld_interactions"
+#: L5 review F4: every enzyme/modifier a kept reaction lost (D-W24 3), as a payload-level record so it stays in
+#: final_mapped.json (and the clean model / our SBML) and not only in removed_entity_report.json. Written only
+#: when non-empty, so a payload that lost no actor is unchanged.
+WITHHELD_REACTION_ACTORS_FIELD = "withheld_reaction_actors"
+
+
+def _actor_drop_record(
+    pointer: str, process_name: str, slot: str, actor: Any, reason: str, gate: str
+) -> Dict[str, Any]:
+    """A removed-entity record for one actor a kept reaction lost (D-W24 3), the actor verbatim."""
+
+    name = (_actor_name(actor) if not isinstance(actor, str) else _canonical(actor)) or "<unnamed>"
+    removed_from = {"process": pointer, "process_name": process_name, "slots": [slot],
+                    "decision": REACTION_ACTOR_DECISION}
+    return {
+        "bucket": slot,
+        "name": name,
+        "reason": reason,
+        "had_external_identity": None,
+        "detail": {
+            **scrub_detail({"gate": gate, "omission": "reaction_actor_dropped_reaction_kept",
+                            "actor_removed_from": [removed_from]}),
+            "actor": deepcopy(actor),
+        },
+    }
+
+
+def _wrap_bare_reaction_enzymes(working: Dict[str, Any]) -> List[Dict[str, Any]]:
+    """D-W24 3: give a bare-protein reaction enzyme its PathWhiz complex instead of losing the reaction.
+
+    PathWhiz takes a ProteinComplex as a reaction enzyme, never a bare protein
+    (``reaction_enzyme_must_be_protein_complex``). Stage 6 normally wraps every
+    one; a payload that reaches this boundary with one still bare (an older
+    payload, or a protein identified after Stage 6's wrapper ran) is wrapped here
+    by that same Stage-6 function, offline (no DB, no cache: a single-protein
+    wrapper, ``generated``/``single_protein_pathwhiz_wrapper``), and only for a
+    protein with a database identity, the one kind that wrapper accepts. Anything
+    it leaves bare is dropped from the reaction by the per-actor rule, never the
+    reaction. Upstream of the freeze, so PRODUCT_CONTRACT section 5 holds.
+
+    Returns one record per protein asked to wrap (protein, the complex its actors now
+    name, the reactions that named it, its section 3 facts), for
+    ``quarantine_report["enzyme_wrappers"]`` (L5 review F7). No lineage entry is written on the
+    wrapper row: on a payload with no lineage anywhere that one entry would switch on the
+    reaction-support gate's archival guard (``reaction_support.lineage_carrier_active``) and could
+    turn an ``indeterminate`` support verdict into a refusal.
+    """
+
+    from t2pw.mapping import map_ids
+
+    bare = wrappable_bare_enzymes(working)
+    if not bare:
+        return []
+    named_by: Dict[str, List[str]] = {norm: [] for norm in bare}
+    for reaction in _safe_list(_safe_dict(working.get("processes")).get("reactions")):
+        if isinstance(reaction, dict):
+            for slot in _REACTION_ACTOR_SLOTS:
+                for actor in _safe_list(reaction.get(slot)):
+                    norm = map_ids._normalize_name(map_ids._reaction_actor_name_and_type(
+                        actor if isinstance(actor, dict) else {"entity": actor})[0])
+                    if norm in named_by and _row_name(reaction) not in named_by[norm]:
+                        named_by[norm].append(_row_name(reaction))
+    complexes_before = {
+        id(row) for row in _safe_list(_safe_dict(working.get("entities")).get("protein_complexes"))
+    }
+    map_ids._rewrite_reaction_protein_enzymes_to_complexes(
+        working,
+        db=None,
+        cache=map_ids.MappingCache(Path("."), enabled=False),  # disabled: never read or written
+        global_organism="",
+        only_proteins=set(bare),
+    )
+    complexes = {
+        map_ids._normalize_name(_row_name(row)): row
+        for row in _safe_list(_safe_dict(working.get("entities")).get("protein_complexes"))
+        if isinstance(row, dict)
+    }
+    records: List[Dict[str, Any]] = []
+    for norm, name in sorted(bare.items(), key=lambda item: item[1]):
+        wrapper = complexes.get(map_ids._normalize_name(map_ids._wrapper_complex_name(name)))
+        records.append({
+            "protein": name,
+            "protein_complex": _row_name(wrapper) if wrapper is not None else "",
+            "built_here": wrapper is not None and id(wrapper) not in complexes_before,
+            "reactions": named_by[norm],
+            # PRODUCT_CONTRACT section 3, in the audit record (as Stage 6's own wrapper carries none on the
+            # row): the stage, why, the record it rests on, and that the paper did not state the complex.
+            "stage": "quarantine",
+            "origin": "inferred",
+            "source": "the protein's own database identity (single_protein_pathwhiz_wrapper, offline)",
+            "paper_explicit": "not_evaluated",
+            "decision": REACTION_ACTOR_DECISION,
+        })
+    return records
+
+
+def wrappable_bare_enzymes(working: Mapping[str, Any]) -> Dict[str, str]:
+    """``{normalized name: name}`` of every reaction enzyme/modifier the quarantine will wrap (D-W24 3).
+
+    The one predicate: a bare protein (not also a complex name) with a database identity that is not
+    the PathBank Unknown sentinel. :func:`_wrap_bare_reaction_enzymes` wraps exactly these; lane L6's
+    final-payload merge (``final_payload_merge``), which runs before the quarantine, accepts exactly
+    these as actors that will be written.
+    """
+
+    from t2pw.mapping import map_ids
+
+    entities = _safe_dict(working.get("entities"))
+    protein_rows = {
+        map_ids._normalize_name(_row_name(row)): row
+        for row in _safe_list(entities.get("proteins"))
+        if isinstance(row, dict) and _row_name(row)
+    }
+    complex_norms = {
+        map_ids._normalize_name(_row_name(row))
+        for row in _safe_list(entities.get("protein_complexes"))
+        if isinstance(row, dict)
+    }
+    bare: Dict[str, str] = {}
+    for reaction in _safe_list(_safe_dict(working.get("processes")).get("reactions")):
+        if not isinstance(reaction, dict):
+            continue
+        for slot in _REACTION_ACTOR_SLOTS:
+            for actor in _safe_list(reaction.get(slot)):
+                name, actor_type, _role = map_ids._reaction_actor_name_and_type(
+                    actor if isinstance(actor, dict) else {"entity": actor}
+                )
+                norm = map_ids._normalize_name(name)
+                row = protein_rows.get(norm)
+                if (
+                    row is not None
+                    and actor_type in {"protein", ""}
+                    and norm not in complex_norms
+                    and has_protein_external_identity(row)
+                    and not is_pathbank_unknown_protein(row)
+                ):
+                    bare.setdefault(norm, name)
+    return bare
+
+
+#: D-W24 7b (L8): a reaction enzyme with no database identity keeps its reaction AND its name, as the Unknown-backed
+#: placeholder complex the Stage-6 fallback ships elsewhere; the run is ``review_required`` with this reason.
+PLACEHOLDER_ENZYME_DECISION = "D-W24 7b"
+PLACEHOLDER_ENZYME_REASON = "placeholder_enzyme_without_identity"
+_UNUSABLE_ENZYME_NAMES = frozenset({"", "unknown", "uncharacterized", "uncharacterised", "hypothetical", "unnamed",
+                                    "enzyme", "protein", "catalyst", "complex"})
+
+
+def placeholder_enzymes(working: Mapping[str, Any]) -> Dict[str, str]:
+    """``{normalized name: name}`` of reaction enzymes the quarantine gives an Unknown-backed placeholder (D-W24 7b).
+
+    A bare protein (not also a complex or compound name) named as a reaction enzyme, or as a catalyst-role modifier, that
+    has no database identity and is not the sentinel itself. Left out: a protein that is also a reaction substrate or
+    product, transport cargo or a complex component (slots a complex cannot fill), and a name that says nothing.
+    """
+
+    from t2pw.mapping import map_ids
+
+    entities = _safe_dict(working.get("entities"))
+    proteins = {
+        map_ids._normalize_name(_row_name(row)): row
+        for row in _safe_list(entities.get("proteins"))
+        if isinstance(row, dict) and _row_name(row)
+    }
+    taken = {
+        map_ids._normalize_name(_row_name(row))
+        for bucket in ("protein_complexes", "compounds", "nucleic_acids", "element_collections")
+        for row in _safe_list(entities.get(bucket))
+        if isinstance(row, dict)
+    }
+    processes = _safe_dict(working.get("processes"))
+    structural: Set[str] = set()
+    for reaction in _safe_list(processes.get("reactions")):
+        if isinstance(reaction, dict):
+            structural.update(map_ids._normalize_name(n) for n in _participant_names(reaction.get("inputs")))
+            structural.update(map_ids._normalize_name(n) for n in _participant_names(reaction.get("outputs")))
+    for transport in _safe_list(processes.get("transports")):
+        if isinstance(transport, dict):
+            structural.update(map_ids._normalize_name(n) for n in _transport_cargo_names(transport)[0])
+    for row in _safe_list(entities.get("protein_complexes")):
+        if isinstance(row, dict):
+            structural.update(map_ids._normalize_name(_component_name(c)) for c in _safe_list(row.get("components")))
+    out: Dict[str, str] = {}
+    for reaction in _safe_list(processes.get("reactions")):
+        if not isinstance(reaction, dict):
+            continue
+        for slot in _REACTION_ACTOR_SLOTS:
+            for actor in _safe_list(reaction.get(slot)):
+                name, actor_type, role = map_ids._reaction_actor_name_and_type(
+                    actor if isinstance(actor, dict) else {"entity": actor})
+                if slot == "modifiers" and _canonical(role).casefold() not in {"", "catalyst", "enzyme"}:
+                    continue
+                norm = map_ids._normalize_name(name)
+                row = proteins.get(norm)
+                if (
+                    row is not None
+                    and actor_type in {"protein", ""}
+                    and norm not in taken
+                    and norm not in structural
+                    and norm not in _UNUSABLE_ENZYME_NAMES
+                    and not has_protein_external_identity(row)
+                    and not is_pathbank_unknown_protein(row)
+                    and not placeholder_claims_real_identity(row)
+                    and protein_species_context(row)  # the complex takes its species; none = still unwritable
+                ):
+                    out.setdefault(norm, name)
+    return out
+
+
+def _catalyst_role(slot: str, role: Any) -> bool:
+    return slot == "enzymes" or _canonical(str(role or "")).casefold() in {"", "catalyst", "enzyme"}
+
+
+def _named_outside_catalysis(working: Mapping[str, Any], norm: str) -> bool:
+    """Whether an interaction, a transporter or a non-catalyst reaction modifier names this protein."""
+
+    from t2pw.mapping import map_ids
+
+    def hit(names: Sequence[str]) -> bool:
+        return any(map_ids._normalize_name(n) == norm for n in names)
+
+    processes = _safe_dict(working.get("processes"))
+    for row in _safe_list(processes.get("interactions")):
+        if isinstance(row, dict) and (hit([n for side in _interaction_endpoints(row) for n in side])
+                                      or hit(_participant_names(row.get("participants")))):
+            return True
+    for row in _safe_list(processes.get("transports")):
+        if isinstance(row, dict) and hit(_participant_names(row.get("transporters"))):
+            return True
+    for row in _safe_list(processes.get("reactions")):
+        if not isinstance(row, dict):
+            continue
+        for slot in _REACTION_ACTOR_SLOTS:
+            for actor in _safe_list(row.get(slot)):
+                name, _type, role = map_ids._reaction_actor_name_and_type(actor)
+                if map_ids._normalize_name(name) == norm and not _catalyst_role(slot, role):
+                    return True
+    return False
+
+
+def _placeholder_unidentified_enzymes(working: Dict[str, Any]) -> List[Dict[str, Any]]:
+    """D-W24 7b: each :func:`placeholder_enzymes` protein becomes a one-component complex holding PathBank's Unknown protein
+    (9659), as ``map_ids._apply_pathbank_unknown_enzyme_fallback`` builds it, and the reaction's catalyst slots name it.
+    Named nowhere else, the complex takes the protein's name and the protein row (and its location rows) goes. Also named
+    by an interaction, a transporter or a regulator modifier, the complex is "<name> complex" and the protein row stays
+    for those references, which are judged exactly as before (a newly admitted interaction could reach an endpoint the
+    quarantine cannot write: a real-artifact lipid A leg, FtsH). The sentinel is the payload's own when it
+    has one, else added with no species (D-W24 7c). The complex keeps the protein's species and evidence, and it and each
+    reaction naming it carry ``review_required``. Returns one record per placeholder for ``enzyme_wrappers``.
+    """
+
+    from t2pw.mapping import map_ids
+    from t2pw.pipeline.entity_identity import (
+        IDENTITY_PLACEHOLDER,
+        PATHBANK_UNKNOWN_FALLBACK_RULE,
+        PATHBANK_UNKNOWN_LOOKUP_SPECIES,
+        SENTINEL_LOOKUP_SPECIES_FIELD,
+        PATHBANK_UNKNOWN_PROTEIN_ID,
+        PATHBANK_UNKNOWN_PROTEIN_NAME,
+        PATHBANK_UNKNOWN_PROTEIN_UNIPROT,
+    )
+
+    targets = placeholder_enzymes(working)
+    if not targets:
+        return []
+    entities = working.setdefault("entities", {})
+    proteins = entities.setdefault("proteins", [])
+    complexes = entities.setdefault("protein_complexes", [])
+    if not any(is_pathbank_unknown_protein(row) for row in proteins):
+        # Review F1: the PWML's lookup key for record 9659 needs its species row, as Stage 6 adds it
+        # (map_ids._ensure_unknown_species); the sentinel itself asserts no species.
+        species_rows = entities.setdefault("species", [])
+        key = PATHBANK_UNKNOWN_LOOKUP_SPECIES
+        if not any(isinstance(r, dict) and (_text(r.get("name")) == key["name"]
+                                            or str(r.get("taxonomy_id") or "") == key["taxonomy_id"]) for r in species_rows):
+            species_rows.append({"name": key["name"], "taxonomy_id": key["taxonomy_id"],
+                                 "pathbank_species_id": key["pathbank_species_id"], "species_id": key["pathbank_species_id"],
+                                 "mapping_meta": {"species_resolution": dict(key)}})
+        proteins.append({
+            SENTINEL_LOOKUP_SPECIES_FIELD: {
+                **key, "role": "PathWhiz lookup key binding PathBank record 9659; not the enzyme's species (D-W24 7c, L8)"},
+            "name": PATHBANK_UNKNOWN_PROTEIN_NAME,
+            "pathbank_protein_id": PATHBANK_UNKNOWN_PROTEIN_ID,
+            "pw_protein_id": PATHBANK_UNKNOWN_PROTEIN_ID,
+            "uniprot_id": PATHBANK_UNKNOWN_PROTEIN_UNIPROT,
+            "mapped_ids": {"uniprot": PATHBANK_UNKNOWN_PROTEIN_UNIPROT, "pathbank_protein_id": PATHBANK_UNKNOWN_PROTEIN_ID},
+            "identity_status": IDENTITY_PLACEHOLDER,
+            "species_not_asserted": "D-W24 7c, L8: PathBank's Unknown record stands for an unidentified enzyme; no species "
+                                    "is asserted for it",
+            "mapping_meta": {"provider": "PathBankDB", "source": "db", "chosen_rule": PATHBANK_UNKNOWN_FALLBACK_RULE,
+                             "identity_status": IDENTITY_PLACEHOLDER, "pathbank_protein_id": PATHBANK_UNKNOWN_PROTEIN_ID,
+                             "cross_species_placeholder": True, "confidence": 0.0, "fallback_used": True,
+                             "fallback_reason": "protein_missing_external_identity"},
+        })
+    reason = "the paper's enzyme has no database identity; written as an Unknown-backed placeholder (D-W24 7b, L8)"
+    records: List[Dict[str, Any]] = []
+    by_norm = {map_ids._normalize_name(_row_name(r)): r for r in proteins if isinstance(r, dict) and _row_name(r)}
+    complex_names = {map_ids._normalize_name(_row_name(r)) for r in complexes if isinstance(r, dict)}
+    for norm, name in sorted(targets.items(), key=lambda item: item[1]):
+        protein = by_norm[norm]
+        # Named elsewhere (an interaction, a transporter, a regulator modifier): those references keep the protein and
+        # are judged exactly as before; the catalyst slots take "<name> complex" (L5's wrapper naming). Otherwise the
+        # complex takes the enzyme's own name and the protein row goes, as the Stage-6 fallback ships it (idx 9 MenI).
+        shared = _named_outside_catalysis(working, norm)
+        complex_name = map_ids._wrapper_complex_name(_row_name(protein)) if shared else _row_name(protein)
+        if shared and map_ids._normalize_name(complex_name) in complex_names:
+            continue
+        complex_names.add(map_ids._normalize_name(complex_name))
+        complex_row: Dict[str, Any] = {
+            "name": complex_name,
+            **{k: deepcopy(protein[k]) for k in ("species", "organism", "species_id", "pathbank_species_id", "taxonomy_id",
+                                                 "species_ref", "evidence", "provenance", "source_refs",
+                                                 "provenance_lineage", "synonyms") if k in protein},
+            "generated": True,
+            "generation_reason": "single_protein_pathwhiz_wrapper",
+            "components": [{"name": PATHBANK_UNKNOWN_PROTEIN_NAME, "stoichiometry": 1,
+                            "pathbank_protein_id": PATHBANK_UNKNOWN_PROTEIN_ID,
+                            "mapped_ids": {"uniprot": PATHBANK_UNKNOWN_PROTEIN_UNIPROT,
+                                           "pathbank_protein_id": PATHBANK_UNKNOWN_PROTEIN_ID}}],
+            "identity_status": IDENTITY_PLACEHOLDER,
+            "review_required": True,
+            "review_reasons": [f"{PLACEHOLDER_ENZYME_REASON}: {reason}"],
+            "mapping_meta": {"provider": "PathBankDB", "source": "db", "chosen_rule": PATHBANK_UNKNOWN_FALLBACK_RULE,
+                             "confidence": 0.0, "identity_status": IDENTITY_PLACEHOLDER, "fallback_used": True,
+                             "fallback_reason": "protein_missing_external_identity", "functional_enzyme_name": name,
+                             "sentinel_pathbank_protein_id": PATHBANK_UNKNOWN_PROTEIN_ID,
+                             "decision": PLACEHOLDER_ENZYME_DECISION},
+        }
+        complexes.append(complex_row)
+        if not shared:
+            proteins.remove(protein)
+        named_by: List[str] = []
+        for reaction in _safe_list(_safe_dict(working.get("processes")).get("reactions")):
+            if not isinstance(reaction, dict):
+                continue
+            hit = False
+            for slot in _REACTION_ACTOR_SLOTS:
+                actors = _safe_list(reaction.get(slot))
+                for position, actor in enumerate(actors):
+                    actor_name, _type, role = map_ids._reaction_actor_name_and_type(actor)
+                    if map_ids._normalize_name(actor_name) != norm or not _catalyst_role(slot, role):
+                        continue
+                    if isinstance(actor, dict):
+                        actor.pop("protein", None)
+                        actor.pop("protein-complex", None)
+                        actor.pop("protein_complex", None)
+                        actor.pop("name", None)
+                        actor.update({"entity": complex_row["name"], "entity_type": "protein_complex"})
+                    else:
+                        actors[position] = {"entity": complex_row["name"], "entity_type": "protein_complex",
+                                            "role": "catalyst"}
+                    hit = True
+            if hit:
+                reaction["review_required"] = True
+                reasons = reaction.setdefault("review_reasons", [])
+                line = f"{PLACEHOLDER_ENZYME_REASON}: {name}: {reason}"
+                if line not in reasons:
+                    reasons.append(line)
+                named_by.append(_row_name(reaction))
+        locations = _safe_dict(working.get("element_locations"))
+        if not shared and isinstance(locations.get("protein_locations"), list):
+            locations["protein_locations"] = [
+                row for row in locations["protein_locations"]
+                if map_ids._normalize_name(_row_name(row) or _text(_safe_dict(row).get("protein"))) != norm
+            ]
+        records.append({
+            "protein": name,
+            "protein_complex": complex_row["name"],
+            "built_here": True,
+            "reactions": named_by,
+            "kind": "pathbank_unknown_placeholder",
+            "stage": "quarantine",
+            "origin": "inferred",
+            "source": "the paper's enzyme name; PathBank's Unknown protein 9659 as its component (no database identity)",
+            "paper_explicit": "not_evaluated",
+            "decision": PLACEHOLDER_ENZYME_DECISION,
+        })
+    return records
+
+
+_ROW_POINTER =re.compile(r"^/(processes|entities)/([a-z_]+)/(\d+)(?:/([a-z_]+)/(\d+))?")
 _STATE_POINTER = re.compile(r"^/biological_states/(\d+)$")
 #: ORCH-788: the IR code (``ir.build_pwml_ir`` / ``ir.validate_pwml_ir``) for a state with no location.
 STATE_MISSING_LOCATION_REASON = "biological_state_missing_subcellular_location"
@@ -3379,7 +3823,20 @@ def _apply_per_row_failures(
                     actor_removals.append(removal(record, [_TRANSPORTER_SLOT], "D-114 AMENDMENT 1 s2"))
                     actor_drops += 1
                     continue
+                if process_bucket == "reactions" and all(slot in _REACTION_ACTOR_SLOTS for slot, _ in hits):
+                    slots = list(dict.fromkeys(slot for slot, _ in hits))
+                    for slot in slots:
+                        process[slot] = [a for a in _safe_list(process.get(slot)) if not resolves_to(a, row)]
+                    actor_removals.append(removal(record, slots, REACTION_ACTOR_DECISION))
+                    actor_drops += 1
+                    continue
                 slot, ref = next((hit for hit in hits if hit[0] not in _ACTOR_SLOT_NAMES), hits[0])
+                if process_bucket == "interactions":
+                    working.setdefault(WITHHELD_INTERACTIONS_FIELD, []).append(
+                        {"name": str(record.get("name") or ""), "pointer": str(record.get("pointer") or ""),
+                         "reason": reason, "endpoint": name, "slot": slot, "gate": gate,
+                         "row": deepcopy(process)}
+                    )
                 omit(record, QUARANTINED_UNMAPPED_ENTITY, reason, slot, ref, gate, failing)
         # Re-read: the recursion above may already have rewritten this bucket.
         entities[bucket] = [r for r in _safe_list(entities.get(bucket)) if r is not row]
@@ -3476,6 +3933,26 @@ def _apply_per_row_failures(
                 )
             process[_TRANSPORTER_SLOT] = [a for i, a in enumerate(actors) if i not in first_by_position]
             actor_drops += len(first_by_position)
+            continue
+        if record.get("bucket") == "reactions" and all(
+            f["slot"] in _REACTION_ACTOR_SLOTS and f.get("position") is not None for f in group
+        ):
+            # D-W24 3: the reaction stays; the enzymes/modifiers that cannot be written go, flagged.
+            process = process_row(record)
+            first_by_actor: Dict[Tuple[str, int], Mapping[str, Any]] = {}
+            for f in group:
+                if f["position"] < len(_safe_list(process.get(f["slot"]))):
+                    first_by_actor.setdefault((f["slot"], f["position"]), f)
+            for (slot, position), f in sorted(first_by_actor.items()):
+                removed.append(_actor_drop_record(
+                    str(record.get("pointer") or ""), str(record.get("name") or ""), slot,
+                    _safe_list(process.get(slot))[position], f["reason"], f["gate"],
+                ))
+            for slot in dict.fromkeys(slot for slot, _position in sorted(first_by_actor)):
+                process[slot] = [
+                    a for i, a in enumerate(_safe_list(process.get(slot))) if (slot, i) not in first_by_actor
+                ]
+            actor_drops += len(first_by_actor)
             continue
         first = group[0]
         omit(record, QUARANTINED_BROKEN_REFERENCE, first["reason"], first["slot"], first["name"], first["gate"])
@@ -3593,11 +4070,30 @@ def quarantine_and_close(
     split_omissions = _split_gene_protein_names(working)
     kind_removed, kind_removed_locations = _keep_one_kind_per_name(working)
     kind_removed.extend(_spell_references_canonically(working))
+    # D-W24 3, strict only (research applies nothing and its flags stay as they were).
+    admission_actor_drops: Optional[List[Dict[str, Any]]] = None
+    enzyme_wrappers: List[Dict[str, Any]] = []
+    if not is_research(mode):
+        admission_actor_drops = []
+        # D-W24 7b (L8): first, so a protein with no identity is a placeholder complex before anything else reads it.
+        # strict_db only (review F4): without the DB the identity rule does not apply and the bare protein is admitted as is.
+        enzyme_wrappers = (_placeholder_unidentified_enzymes(working) if strict_db else []) \
+            + _wrap_bare_reaction_enzymes(working)
+        if enzyme_wrappers:
+            logger.info("quarantine_and_close: wrapped bare reaction enzymes (D-W24 3): %s",
+                        ", ".join(row["protein"] for row in enzyme_wrappers))
     registry = _build_registry(working)
     core_terms = collect_requested_core_terms(
         working, requested_core=requested_core, pathway_context=pathway_context
     )
 
+    # L5 review F5: admission now edits accepted reaction rows (D-W24 3 actor drops), so their originals are
+    # snapshotted BEFORE it. A row admission quarantines is never edited there except for its section 3 lineage
+    # entry, which its original keeps (taken after admission, as before).
+    before_admission = {
+        bucket: deepcopy(_safe_list(_safe_dict(working.get("processes")).get(bucket)))
+        for bucket in _PROCESS_KIND_BY_BUCKET
+    }
     admissions = _admit_processes(
         working,
         registry,
@@ -3605,7 +4101,9 @@ def quarantine_and_close(
         core_terms=core_terms,
         confidence_floor=confidence_floor,
         forced=split_omissions,
+        actor_drops=admission_actor_drops,
     )
+    kind_removed.extend(admission_actor_drops or [])
     # The audit artifact keeps the row itself, not a digest: requirement 2 says
     # the original process is retained, and a reviewer restoring one needs the
     # participants back, not a summary of them.
@@ -3614,7 +4112,11 @@ def quarantine_and_close(
     for record in admissions:
         bucket = str(record.get("bucket") or "")
         index = int(record.get("index") or 0)
-        rows = _safe_list(processes_in.get(bucket))
+        rows = (
+            _safe_list(processes_in.get(bucket))
+            if record.get("state") in QUARANTINE_STATES
+            else before_admission.get(bucket) or []
+        )
         if 0 <= index < len(rows):
             originals[(bucket, index)] = deepcopy(rows[index])
 
@@ -3629,7 +4131,10 @@ def quarantine_and_close(
     converged = False
     # ORCH-773: once closure settles, a per-row omission round (see the section
     # above _freeze_candidate). ``rollback`` is the state before the first one.
-    actor_drop_count = 0
+    # Admission's and closure's own actor drops (D-W24 3) are not part of any per-row round, so a rollback keeps
+    # every drop made before it was taken.
+    actor_drop_count = len(admission_actor_drops or [])
+    rollback_drop_count = actor_drop_count
     rollback: Optional[Tuple[Any, ...]] = None
 
     for iteration in range(1, int(max_iterations) + 1):
@@ -3669,9 +4174,12 @@ def quarantine_and_close(
         removed_entities = _prune_entities(working, keep_norms)
         registry = _build_registry(working)
         removed_locations = _prune_locations(working, set(registry.norms), locations_own_kind_at_input)
+        closure_drops: Optional[List[Dict[str, Any]]] = None if is_research(mode) else []
         newly_quarantined = _revalidate_surviving_processes(
-            working, admissions, registry, strict_db=strict_db, iteration=iteration
+            working, admissions, registry, strict_db=strict_db, iteration=iteration, actor_drops=closure_drops
         )
+        removed_entities.extend(closure_drops or [])
+        actor_drop_count += len(closure_drops or [])
         removed_states = _prune_biological_states(working, admissions)
         # ORCH-766 / D-111 section 1. Last: it reads what every prune above left.
         # Recorded with the entity removals, the degree-zero rows' own record.
@@ -3711,6 +4219,7 @@ def quarantine_and_close(
                         (working, admissions, iterations, all_removed_entities,
                          all_removed_locations, all_removed_states)
                     )
+                    rollback_drop_count = actor_drop_count
                 omitted, removed, drops = _apply_per_row_failures(failures, working, admissions, iteration=iteration)
                 actor_drop_count += drops
                 changed = bool(omitted or removed)
@@ -3724,7 +4233,7 @@ def quarantine_and_close(
                 # The omissions did not buy a PWML: undo every round.
                 (working, admissions, iterations, all_removed_entities,
                  all_removed_locations, all_removed_states) = rollback
-                actor_drop_count = 0
+                actor_drop_count = rollback_drop_count
                 changed = False
         if not changed:
             converged = True
@@ -3734,7 +4243,7 @@ def quarantine_and_close(
         # The iteration cap ran out after an omission round: undo every round.
         (working, admissions, iterations, all_removed_entities,
          all_removed_locations, all_removed_states) = rollback
-        actor_drop_count = 0
+        actor_drop_count = rollback_drop_count
         converged = True
 
     if not converged:
@@ -3748,6 +4257,28 @@ def quarantine_and_close(
     # reach it, never written to after: it is the only surviving record of which
     # row each accepted record was written for.
     process_snapshot: Dict[str, Any] = deepcopy(_safe_dict(working.get("processes")))
+    # F4: only for a reaction that is still drawn; one that left later keeps its actors in its original_process.
+    kept_pointers = {str(r.get("pointer") or "") for r in admissions if r.get("state") in ACCEPTED_STATES}
+    withheld_actors = [
+        {
+            "reaction": removed_from.get("process_name"),
+            "pointer": removed_from.get("process"),
+            "slots": removed_from.get("slots"),
+            "actor": _safe_dict(row.get("detail")).get("actor", row.get("name")),
+            "name": row.get("name"),
+            "reason": row.get("reason"),
+            "gate": _safe_dict(row.get("detail")).get("gate"),
+            "decision": REACTION_ACTOR_DECISION,
+        }
+        for row in all_removed_entities
+        for removed_from in _safe_list(_safe_dict(row.get("detail")).get("actor_removed_from"))
+        if isinstance(removed_from, dict) and removed_from.get("decision") == REACTION_ACTOR_DECISION
+        and removed_from.get("process") in kept_pointers
+    ]
+    if withheld_actors and not is_research(mode):
+        # A payload quarantined again (an edit after review) keeps the records of its first pass.
+        held = _safe_list(working.get(WITHHELD_REACTION_ACTORS_FIELD))
+        working[WITHHELD_REACTION_ACTORS_FIELD] = held + [row for row in withheld_actors if row not in held]
     _drop_quarantined_processes(working, admissions)
     lock_accounting = _reconcile_locked_reactions(working, admissions, originals)
 
@@ -3900,6 +4431,13 @@ def quarantine_and_close(
     )
     if omission_reason:
         review_reasons = [*review_reasons, omission_reason]
+    # D-W24 7b (L8): a PWML that writes an enzyme as an Unknown-backed placeholder is review_required.
+    placeholders = sum(1 for row in enzyme_wrappers if row.get("decision") == PLACEHOLDER_ENZYME_DECISION)
+    placeholder_reason = (
+        f"{PLACEHOLDER_ENZYME_REASON}:{placeholders}" if placeholders and not refusal_reasons else ""
+    )
+    if placeholder_reason:
+        review_reasons = [*review_reasons, placeholder_reason]
 
     # D-002's required record, built through C-041's factory rather than beside
     # it: the invariant ``strict_acceptance_eligible == (status ==
@@ -4116,7 +4654,11 @@ def quarantine_and_close(
         # anything. What it buys: ``semantic_evaluation: "passed"`` on this
         # report could not previously be told apart from a four-of-four pass,
         # and here it is never four of four.
-        "schema_version": 6,
+        #
+        # 7 (L5, D-W24 3, review F7): ONE key, ``enzyme_wrappers`` -- a list, empty unless the
+        # quarantine wrapped a bare-protein reaction enzyme. Additive as 4-6 were.
+        "schema_version": 7,
+        "enzyme_wrappers": enzyme_wrappers,
         "stage": "pre_export_strict_quarantine",
         "strict_db": bool(strict_db),
         "export_mode": coerce_mode(mode),
@@ -4153,7 +4695,8 @@ def quarantine_and_close(
         # review_required run, so a below-threshold export can never be counted
         # as strict success (TRAP-1 / PRODUCT_CONTRACT 13).
         "release": {
-            **_cap_release_for_omissions(release.to_dict(), omission_reason),
+            **_cap_release_for_omissions(_cap_release_for_omissions(release.to_dict(), omission_reason),
+                                         placeholder_reason),
             # Research decides and applies nothing, so there this is a FINDING,
             # exactly like ``research_mode.would_have_refused`` -- not a verdict
             # anything acted on.

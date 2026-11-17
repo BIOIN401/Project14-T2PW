@@ -41,18 +41,67 @@ INTERNAL_NAME_PREFIXES = ("__", "AutoState_")
 OTHER_TEMPLATE_DIMS = {2: (150, 70)}
 
 
-def _label_lines(text: str, length: int = LABEL_TEXT_LENGTH) -> int:
-    """Line count of PathWhiz's divide_label_text (visualization_template.js.coffee): words, long ones split, greedy join."""
+def _label_chunks(text: str, length: int = LABEL_TEXT_LENGTH) -> List[str]:
+    """Lines of PathWhiz's divide_label_text (visualization_template.js.coffee): words, long ones split, greedy join."""
     words = []
     for w in text.split():
         words += [w[i:i + length] for i in range(0, len(w), length)] if len(w) > length else [w]
-    lines, cur = 0, ""
+    lines, cur = [], ""
     for w in words:
         if cur and len(cur) + len(w) + 1 > length:
-            lines, cur = lines + 1, w
+            lines, cur = lines + [cur], w
         else:
             cur = f"{cur} {w}" if cur else w
-    return lines + (1 if cur else 0)
+    return lines + ([cur] if cur else [])
+
+
+def _label_lines(text: str, length: int = LABEL_TEXT_LENGTH) -> int:
+    return len(_label_chunks(text, length))
+
+
+# Verdana advance widths per 1000 em (the label font); other characters count 650. The template wraps at 28 characters
+# but the 200-unit label rectangle holds about 20 wide ones, so PathWhiz draws a line like "Bacillus subtilis cytoplasm"
+# running out of its box.
+_VERDANA = {c: w for w, cs in (
+    (269, "'"), (274, "il"), (344, "j"), (352, " f"), (364, ",."), (394, "!t"), (421, "I"), (427, "r"), (454, "()-/:;[\\]|"),
+    (455, "J"), (459, '"'), (521, "cs"), (525, "z"), (545, "?"), (557, "L"), (575, "F"), (592, "kvxy"), (596, "e"), (601, "a"),
+    (603, "P"), (607, "o"), (615, "Y"), (616, "T"), (623, "bdgpq"), (632, "E"), (633, "hnu"), (635, "{}"),
+    (636, "$*0123456789_`"), (684, "ASV"), (685, "XZ"), (686, "B"), (693, "K"), (695, "R"), (698, "C"), (727, "&"),
+    (732, "U"), (748, "N"), (751, "H"), (771, "D"), (775, "G"), (787, "OQ"), (818, "#+<=>^w~"), (843, "M"), (973, "m"),
+    (989, "W"), (1000, "@"), (1076, "%")) for c in cs}
+LABEL_FONT, LABEL_FIT = 16, 180  # font size of the template; widest line that sits inside its 200-unit rectangle with a margin
+LABEL_STEP = (15 + LABEL_FONT) * 2 + 6  # stacked one-line labels: rectangle height in canvas units (scale 2) plus a gap
+
+
+def _text_w(text: str) -> float:
+    return sum(_VERDANA.get(c, 650) for c in text) * LABEL_FONT / 1000
+
+
+def label_parts(text: str) -> List[str]:
+    """The label texts to draw for ``text``: the text itself when PathWhiz's wrapping keeps every line inside the label
+    rectangle, else one-line pieces (each its own label, stacked) cut by drawn width. The wrap length is a template
+    field, so a line cannot be shortened from here."""
+    if all(_text_w(c) <= LABEL_FIT for c in _label_chunks(text)):
+        return [text]
+    parts, cur = [], ""
+    for w in text.split():
+        while _text_w(w) > LABEL_FIT or len(w) > LABEL_TEXT_LENGTH:  # a word wider than a line: cut it
+            k = max(1, max(i for i in range(1, len(w) + 1) if _text_w(w[:i]) <= LABEL_FIT and i <= LABEL_TEXT_LENGTH))
+            if cur:
+                parts, cur = parts + [cur], ""
+            parts, w = parts + [w[:k]], w[k:]
+        if cur and _text_w(f"{cur} {w}") > LABEL_FIT:
+            parts, cur = parts + [cur], w
+        else:
+            cur = f"{cur} {w}" if cur else w
+    return parts + ([cur] if cur else [])
+
+
+def _label_pad(parts: List[str]) -> int:
+    """Height from the top of a compartment box to the bottom of its label."""
+    if len(parts) == 1:
+        return int(4 + (40 + 16 * _label_lines(parts[0])) * LABEL_SCALE)
+    return int(4 + (len(parts) - 1) * LABEL_STEP + (40 + 16) * LABEL_SCALE)
 
 
 def _label_rect(lb: Dict[str, Any]) -> Tuple[int, int, int, int]:
@@ -291,15 +340,23 @@ def _rounded_rect(x0: int, y0: int, x1: int, y1: int, r: int = 30) -> str:
     return " ".join(out) + " "
 
 
-def _layered(blocks: Dict[Any, "_Block"], keys: List[Any], flow: List[Tuple[Any, Any]]) -> Tuple[int, int]:
+def _layered(blocks: Dict[Any, "_Block"], keys: List[Any], flow: List[Tuple[Any, Any]],
+             rank: Optional[Dict[Any, int]] = None) -> Tuple[int, int]:
     """Sugiyama-style layout of one connected group: columns by longest path (back edges dropped), order by
     barycenter sweeps, y by least-squares alignment with neighbours (no overlap). Sets block x/y relative to
-    the group's top-left corner; returns the group's (width, height)."""
+    the group's top-left corner; returns the group's (width, height). ``rank`` (the index of the first flow pair
+    a block is in; flow follows the pathway's order of processes) orders the depth-first search, so a cycle is broken at the edge that returns to the earlier
+    process and the chain reads left to right in pathway order."""
+    if rank:
+        keys = sorted(keys, key=lambda k: rank.get(k, 1 << 30))  # stable: unranked keep their order, last
     inside = set(keys)
     succ: Dict[Any, List[Any]] = defaultdict(list)
     for u, v in flow:
         if u in inside and v in inside and u != v and v not in succ[u]:
             succ[u].append(v)
+    if rank:
+        for u in succ:
+            succ[u].sort(key=lambda k: rank.get(k, 1 << 30))
     mark: Dict[Any, int] = {}
     dag: Dict[Any, List[Any]] = defaultdict(list)
     for start in keys:
@@ -569,6 +626,11 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
         remaining.remove(nxt)
         bands.append(nxt)
 
+    # rank: index of the first flow pair a block is in (flow lists reactions, transports, interactions in pathway order)
+    rank: Dict[Any, int] = {}
+    for i, (u, v) in enumerate(flow):
+        rank.setdefault(u, i)
+        rank.setdefault(v, i)
     comps_by_state: Dict[Any, List[Tuple[List[Any], int, int]]] = {}
     for s in bands:
         ks = set(by_state[s])
@@ -591,7 +653,7 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
                         seen.add(v)
                         todo.append(v)
             comp = [c for c in by_state[s] if c in set(comp)]
-            w, h = _layered(blocks, comp, flow)
+            w, h = _layered(blocks, comp, flow, rank)
             comps.append((comp, w, h))
         comps.sort(key=lambda c: (not any(k in attached for k in c[0]), -(c[1] * c[2])))  # drawn groups first
         comps_by_state[s] = comps
@@ -608,7 +670,7 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
 
     def pad_top(st):
         text = labels.get(st, "")
-        return int(4 + (40 + 16 * _label_lines(text)) * LABEL_SCALE) + LABEL_GAP if text else BOX_PAD_TOP_NO_LABEL
+        return _label_pad(label_parts(text)) + LABEL_GAP if text else BOX_PAD_TOP_NO_LABEL
 
     boxes = []
     for st in bands + ([loose_key] if loose_key in comps_by_state else []):
@@ -663,10 +725,10 @@ def relayout(items: Dict[str, List[Dict[str, Any]]], new_id: Callable[[], int], 
         items.setdefault("membrane-visualizations", []).append({
             "id": new_id(), "path": _rounded_rect(x0, y0, x1, y1), "visualization-template-id": MEMBRANE_TEMPLATE,
             "complete-membrane": True, "zindex": 6, "width": f"{x1 - x0}.0", "height": f"{y1 - y0}.0"})
-        if labels.get(s):
+        for j, part in enumerate(label_parts(labels[s]) if labels.get(s) else []):
             items.setdefault("label-locations", []).append({
-                "id": new_id(), "visualization-template-id": LABEL_TEMPLATE, "label-text": labels[s],
-                "x": x0 + 12, "y": y0 + 4, "zindex": 20, "scale-x": f"{LABEL_SCALE}", "scale-y": f"{LABEL_SCALE}",
+                "id": new_id(), "visualization-template-id": LABEL_TEMPLATE, "label-text": part,
+                "x": x0 + 12, "y": y0 + 4 + j * LABEL_STEP, "zindex": 20, "scale-x": f"{LABEL_SCALE}", "scale-y": f"{LABEL_SCALE}",
                 "width": "200", "height": "15"})
     for loc in hidden_locs:  # not drawn; kept inside the canvas
         loc["x"] = max(0, min(int(loc.get("x") or 0), width - _dim(loc["width"])))

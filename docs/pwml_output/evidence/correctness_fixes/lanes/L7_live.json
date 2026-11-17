@@ -1,0 +1,883 @@
+{
+ "lane": "L7",
+ "step": "live LLM check (authorized by the orchestrator, message from ab76046542b4609e1)",
+ "status": "STOPPED: PROVIDER UNAVAILABLE. No model answered; nothing estimated by the LLM; nothing cached; nothing to compare with the paper.",
+ "command": "bash C:/t/corr-assess/lanes/L7scripts/run_live.sh C:/t/corr-L7 live1 live C:/t/corr-assess/lanes/L7scripts/idx_affected.txt",
+ "code": "d01052cd (clean tree, no code changed in this step; run_live.sh only got an optional idx-file argument and --guard 900)",
+ "wrapper": "bounded_run.py via gate.sh, holder corr-l7, GATE_OPEN after 0 polls, FINAL SURVIVING COUNT 0, BW_EXIT 0; log C:/t/corr-assess/lanes/L7logs/live_live1.log",
+ "files": 30,
+ "files_that_asked_the_model": 25,
+ "files_that_asked": [
+  3,
+  6,
+  10,
+  15,
+  18,
+  19,
+  56,
+  62,
+  79,
+  84,
+  86,
+  98,
+  113,
+  116,
+  119,
+  123,
+  124,
+  134,
+  135,
+  136,
+  137,
+  138,
+  148,
+  150,
+  151
+ ],
+ "what_the_pipeline_said_verbatim_first_300_chars": "RuntimeError: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': \"No models loaded. Please load a model in the developer page or use the 'lms load' command.\", ",
+ "reading": "The client's own wrapper suggests a JSON-format problem, but the original provider error is \"No models loaded. Please load a model in the developer page or use the 'lms load' command.\" That is the reply of a local LM Studio server with no model loaded: the environment the pipeline reads points the LLM client at a local server that has nothing loaded. .env was not read or printed; no key was searched for. Each failing call returned in under a second (no retries burned).",
+ "calls_tokens_cost_actually_used": {
+  "successful_calls": 0,
+  "prompt_tokens": 0,
+  "completion_tokens": 0,
+  "usd": 0.0,
+  "attempted_requests": 25,
+  "note": "25 requests were sent and refused with HTTP 400 before any generation"
+ },
+ "the_22_reactions": "all 22 stay where the offline run put them (general cell state, compartment_source unresolved, review_required); no model placement exists to compare with the paper",
+ "the_22_detail": [
+  {
+   "idx": 6,
+   "reaction": "Cdc42 GTP hydrolysis",
+   "old_first_state": "plasma membrane state",
+   "source": "unresolved",
+   "state": "Homo sapiens cell",
+   "quote": null,
+   "reason": "no compartment stated and none could be estimated (no linked reaction has a stated compartment; model not asked (RuntimeError: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': \"No models loaded. Please load a model in the developer page or use the 'lms load' command.\", )); placed in 'Homo sapiens cell', the general cell state of Homo sapiens (D-W24 2, L7)",
+   "reaction_evidence": "Cdc42 is a hydrolase that can hydrolyze the GTP to GDP in the presence of GAP"
+  },
+  {
+   "idx": 6,
+   "reaction": "Profilin-facilitated actin nucleotide exchange",
+   "old_first_state": "plasma membrane state",
+   "source": "unresolved",
+   "state": "Homo sapiens cell",
+   "quote": null,
+   "reason": "no compartment stated and none could be estimated (no linked reaction has a stated compartment; model not asked (RuntimeError: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': \"No models loaded. Please load a model in the developer page or use the 'lms load' command.\", )); placed in 'Homo sapiens cell', the general cell state of Homo sapiens (D-W24 2, L7)",
+   "reaction_evidence": "Profilin also facilitates the exchange of ADP for ATP on actin monomers"
+  },
+  {
+   "idx": 6,
+   "reaction": "Rac1/RhoA GDP/GTP exchange",
+   "old_first_state": "plasma membrane state",
+   "source": "unresolved",
+   "state": "Homo sapiens cell",
+   "quote": null,
+   "reason": "no compartment stated and none could be estimated (no linked reaction has a stated compartment; model not asked (RuntimeError: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': \"No models loaded. Please load a model in the developer page or use the 'lms load' command.\", )); placed in 'Homo sapiens cell', the general cell state of Homo sapiens (D-W24 2, L7)",
+   "reaction_evidence": "The exchange of GDP for GTP is mediated by Guanine Nucleotide Exchange Factors"
+  },
+  {
+   "idx": 86,
+   "reaction": "DHCR24 reaction",
+   "old_first_state": "endoplasmic reticulum state",
+   "source": "unresolved",
+   "state": "Homo sapiens cell",
+   "quote": null,
+   "reason": "no compartment stated and none could be estimated (no linked reaction has a stated compartment; model not asked (RuntimeError: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': \"No models loaded. Please load a model in the developer page or use the 'lms load' command.\", )); placed in 'Homo sapiens cell', the general cell state of Homo sapiens (D-W24 2, L7)",
+   "reaction_evidence": "DHCR24 (δ24-cholesterol reductase) catalyzes the final step converting desmosterol to cholesterol"
+  },
+  {
+   "idx": 98,
+   "reaction": "DHCR24 reaction",
+   "old_first_state": "endoplasmic reticulum in human osteosarcoma cells",
+   "source": "unresolved",
+   "state": "Homo sapiens cell",
+   "quote": null,
+   "reason": "no compartment stated and none could be estimated (no linked reaction has a stated compartment; model not asked (RuntimeError: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': \"No models loaded. Please load a model in the developer page or use the 'lms load' command.\", )); placed in 'Homo sapiens cell', the general cell state of Homo sapiens (D-W24 2, L7)",
+   "reaction_evidence": "DHCR24 catalyzes the final step in the cholesterol biosynthesis pathway, converting desmosterol to cholesterol"
+  },
+  {
+   "idx": 116,
+   "reaction": "S1P phosphatase reaction",
+   "old_first_state": "ER state",
+   "source": "unresolved",
+   "state": "Homo sapiens cell",
+   "quote": null,
+   "reason": "no compartment stated and none could be estimated (no linked reaction has a stated compartment; model not asked (RuntimeError: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': \"No models loaded. Please load a model in the developer page or use the 'lms load' command.\", )); placed in 'Homo sapiens cell', the general cell state of Homo sapiens (D-W24 2, L7)",
+   "reaction_evidence": "Sphingosine‐1‐phosphate can be reconverted back into sphingosine by the action of sphingosine‐1‐phosphate (S1P) phosphatases"
+  },
+  {
+   "idx": 116,
+   "reaction": "Sphingomyelin hydrolysis",
+   "old_first_state": "ER state",
+   "source": "unresolved",
+   "state": "Homo sapiens cell",
+   "quote": null,
+   "reason": "no compartment stated and none could be estimated (linked reactions sit in 2 different states; model not asked (RuntimeError: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': \"No models loaded. Please load a model in the developer page or use the 'lms load' command.\", )); placed in 'Homo sapiens cell', the general cell state of Homo sapiens (D-W24 2, L7)",
+   "reaction_evidence": "sphingomyelin can be hydrolyzed by one of several sphingomyelinases to generate ceramide"
+  },
+  {
+   "idx": 116,
+   "reaction": "Sphingosine kinase reaction",
+   "old_first_state": "ER state",
+   "source": "unresolved",
+   "state": "Homo sapiens cell",
+   "quote": null,
+   "reason": "no compartment stated and none could be estimated (no linked reaction has a stated compartment; model not asked (RuntimeError: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': \"No models loaded. Please load a model in the developer page or use the 'lms load' command.\", )); placed in 'Homo sapiens cell', the general cell state of Homo sapiens (D-W24 2, L7)",
+   "reaction_evidence": "sphingosine may be phosphorylated to produce S1P by one of two sphingosine kinases"
+  },
+  {
+   "idx": 116,
+   "reaction": "ceramidase reaction",
+   "old_first_state": "ER state",
+   "source": "unresolved",
+   "state": "Homo sapiens cell",
+   "quote": null,
+   "reason": "no compartment stated and none could be estimated (no linked reaction has a stated compartment; model not asked (RuntimeError: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': \"No models loaded. Please load a model in the developer page or use the 'lms load' command.\", )); placed in 'Homo sapiens cell', the general cell state of Homo sapiens (D-W24 2, L7)",
+   "reaction_evidence": "These include ceramidases, which generate sphingosine and a fatty acid"
+  },
+  {
+   "idx": 116,
+   "reaction": "sphingomyelinase reaction",
+   "old_first_state": "ER state",
+   "source": "unresolved",
+   "state": "Homo sapiens cell",
+   "quote": null,
+   "reason": "no compartment stated and none could be estimated (linked reactions sit in 2 different states; model not asked (RuntimeError: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': \"No models loaded. Please load a model in the developer page or use the 'lms load' command.\", )); placed in 'Homo sapiens cell', the general cell state of Homo sapiens (D-W24 2, L7)",
+   "reaction_evidence": "sphingomyelin can be hydrolyzed by one of several sphingomyelinases to generate ceramide"
+  },
+  {
+   "idx": 119,
+   "reaction": "Catharanthine-vindoline coupling",
+   "old_first_state": "epidermal cell cytosol",
+   "source": "unresolved",
+   "state": "Catharanthus roseus cell",
+   "quote": null,
+   "reason": "no compartment stated and none could be estimated (no linked reaction has a stated compartment; model not asked (RuntimeError: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': \"No models loaded. Please load a model in the developer page or use the 'lms load' command.\", )); placed in 'Catharanthus roseus cell', the general cell state of Catharanthus roseus (D-W24 2, L7)",
+   "reaction_evidence": "Vinblastine and vincristine are derived from the coupling of catharanthine and vindoline"
+  },
+  {
+   "idx": 119,
+   "reaction": "G10H reaction",
+   "old_first_state": "epidermal cell cytosol",
+   "source": "unresolved",
+   "state": "Catharanthus roseus cell",
+   "quote": null,
+   "reason": "no compartment stated and none could be estimated (no linked reaction has a stated compartment; model not asked (RuntimeError: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': \"No models loaded. Please load a model in the developer page or use the 'lms load' command.\", )); placed in 'Catharanthus roseus cell', the general cell state of Catharanthus roseus (D-W24 2, L7)",
+   "reaction_evidence": "G10H geraniol 10-hydroxylase"
+  },
+  {
+   "idx": 124,
+   "reaction": "hordatine B formation",
+   "old_first_state": "barley seedling",
+   "source": "unresolved",
+   "state": "Hordeum vulgare cell",
+   "quote": null,
+   "reason": "no compartment stated and none could be estimated (linked reactions sit only in a state that names no compartment; model not asked (RuntimeError: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': \"No models loaded. Please load a model in the developer page or use the 'lms load' command.\", )); placed in 'Hordeum vulgare cell', the general cell state of Hordeum vulgare (D-W24 2, L7)",
+   "reaction_evidence": "hordatine B (HB) is a heterodimer of pCA and FA"
+  },
+  {
+   "idx": 124,
+   "reaction": "hordatine C formation",
+   "old_first_state": "barley seedling",
+   "source": "unresolved",
+   "state": "Hordeum vulgare cell",
+   "quote": null,
+   "reason": "no compartment stated and none could be estimated (linked reactions sit only in a state that names no compartment; model not asked (RuntimeError: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': \"No models loaded. Please load a model in the developer page or use the 'lms load' command.\", )); placed in 'Hordeum vulgare cell', the general cell state of Hordeum vulgare (D-W24 2, L7)",
+   "reaction_evidence": "Hordatines A and C (HA and HC) are homodimers of p-coumaroylagmatine (pCA) and feruloylagmatine (FA), respectively"
+  },
+  {
+   "idx": 134,
+   "reaction": "BBD reaction",
+   "old_first_state": "mitochondrial state",
+   "source": "unresolved",
+   "state": "Homo sapiens cell",
+   "quote": null,
+   "reason": "no compartment stated and none could be estimated (linked reactions sit only in a state that names no compartment; model not asked (RuntimeError: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': \"No models loaded. Please load a model in the developer page or use the 'lms load' command.\", )); placed in 'Homo sapiens cell', the general cell state of Homo sapiens (D-W24 2, L7)",
+   "reaction_evidence": "Reactions 1 and 4 are catalyzed by two Fe2+-dependent dioxygenases: TML dioxygenase (TMLD) and BBD"
+  },
+  {
+   "idx": 134,
+   "reaction": "TMABADH reaction",
+   "old_first_state": "mitochondrial state",
+   "source": "unresolved",
+   "state": "Homo sapiens cell",
+   "quote": null,
+   "reason": "no compartment stated and none could be estimated (linked reactions sit only in a state that names no compartment; model not asked (RuntimeError: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': \"No models loaded. Please load a model in the developer page or use the 'lms load' command.\", )); placed in 'Homo sapiens cell', the general cell state of Homo sapiens (D-W24 2, L7)",
+   "reaction_evidence": "reaction 3 is catalyzed by trimethylamino butyraldehyde dehydrogenase (TMABADH)"
+  },
+  {
+   "idx": 134,
+   "reaction": "TML dioxygenase reaction",
+   "old_first_state": "mitochondrial state",
+   "source": "unresolved",
+   "state": "Homo sapiens cell",
+   "quote": null,
+   "reason": "no compartment stated and none could be estimated (linked reactions sit only in a state that names no compartment; model not asked (RuntimeError: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': \"No models loaded. Please load a model in the developer page or use the 'lms load' command.\", )); placed in 'Homo sapiens cell', the general cell state of Homo sapiens (D-W24 2, L7)",
+   "reaction_evidence": "Reactions 1 and 4 are catalyzed by two Fe2+-dependent dioxygenases: TML dioxygenase (TMLD) and BBD"
+  },
+  {
+   "idx": 134,
+   "reaction": "Tha1 HTMLA reaction",
+   "old_first_state": "mitochondrial state",
+   "source": "unresolved",
+   "state": "Homo sapiens cell",
+   "quote": null,
+   "reason": "no compartment stated and none could be estimated (linked reactions sit only in a state that names no compartment; model not asked (RuntimeError: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': \"No models loaded. Please load a model in the developer page or use the 'lms load' command.\", )); placed in 'Homo sapiens cell', the general cell state of Homo sapiens (D-W24 2, L7)",
+   "reaction_evidence": "SHMT1, SHMT2 and Tha1 catalyze the aldol cleavage of HTML"
+  },
+  {
+   "idx": 136,
+   "reaction": "NaGR (A622) reaction",
+   "old_first_state": "cytosolic state",
+   "source": "unresolved",
+   "state": "Nicotiana tabacum cell",
+   "quote": null,
+   "reason": "no compartment stated and none could be estimated (no linked reaction has a stated compartment; model not asked (RuntimeError: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': \"No models loaded. Please load a model in the developer page or use the 'lms load' command.\", )); placed in 'Nicotiana tabacum cell', the general cell state of Nicotiana tabacum (D-W24 2, L7)",
+   "reaction_evidence": "When only NaGT and NaGR were present (Reaction 3), we observed the formation of 5b."
+  },
+  {
+   "idx": 136,
+   "reaction": "NaGT (UGT1) reaction",
+   "old_first_state": "cytosolic state",
+   "source": "unresolved",
+   "state": "Nicotiana tabacum cell",
+   "quote": null,
+   "reason": "no compartment stated and none could be estimated (no linked reaction has a stated compartment; model not asked (RuntimeError: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': \"No models loaded. Please load a model in the developer page or use the 'lms load' command.\", )); placed in 'Nicotiana tabacum cell', the general cell state of Nicotiana tabacum (D-W24 2, L7)",
+   "reaction_evidence": "When only NaGT (UGT1) was present (Reaction 2), we observed the formation of 10"
+  },
+  {
+   "idx": 136,
+   "reaction": "NicGH (β-GD1) reaction",
+   "old_first_state": "cytosolic state",
+   "source": "unresolved",
+   "state": "Nicotiana tabacum cell",
+   "quote": null,
+   "reason": "no compartment stated and none could be estimated (no linked reaction has a stated compartment; model not asked (RuntimeError: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': \"No models loaded. Please load a model in the developer page or use the 'lms load' command.\", )); placed in 'Nicotiana tabacum cell', the general cell state of Nicotiana tabacum (D-W24 2, L7)",
+   "reaction_evidence": "Finally, when all four enzymes were present (Full), we observed the formation of 1."
+  },
+  {
+   "idx": 136,
+   "reaction": "NicGS (BBLa) reaction",
+   "old_first_state": "cytosolic state",
+   "source": "unresolved",
+   "state": "Nicotiana tabacum cell",
+   "quote": null,
+   "reason": "no compartment stated and none could be estimated (no linked reaction has a stated compartment; model not asked (RuntimeError: Bad request (400). This model/provider may not support response_format JSON. Try OPENROUTER_MODEL=openrouter/free or a different model. Original error: Error code: 400 - {'error': {'message': \"No models loaded. Please load a model in the developer page or use the 'lms load' command.\", )); placed in 'Nicotiana tabacum cell', the general cell state of Nicotiana tabacum (D-W24 2, L7)",
+   "reaction_evidence": "When only NaGT, NaGR and NicGS were present (Reaction 4), we observed the formation of 13."
+  }
+ ],
+ "of_76_unresolved": {
+  "resolved_by_llm": 0,
+  "left_flagged": 76
+ },
+ "transport_sides": {
+  "unresolved": 13
+ },
+ "validator_rejections": [],
+ "cache_second_run": "NOT PROVABLE: a failed call is not cached (by design: only a parsed reply is stored), and C:/t/corr-assess/lanes/L7live/llmcache has 0 files. The unit test test_l7_the_model_places_a_reaction_in_a_candidate_state_with_a_verbatim_quote_and_the_reply_is_cached shows 1 call for 2 identical runs with a fake model.",
+ "fail_open_seen_live": "the step behaved as designed on a dead provider: llm.error recorded per file, rows flagged, 30/30 exports ok in both arms, output identical to the offline run",
+ "code_problem": "none in L7 found by this run. Observation only: llm.client rewrites the 400 into 'may not support response_format JSON' advice, which misleads here; the original text is kept after 'Original error:'.",
+ "to_rerun": "load a model in the local LM Studio server (or point the pipeline's provider env at a working endpoint), then rerun the same command with a new label; then python C:/t/corr-assess/lanes/L7scripts/live_check.py <label> <out.json>. Cost estimate unchanged: about 6 calls for the 12 sample files; for all 30 files the dry run is still to be measured (25 files asked the model).",
+ "per_file": [
+  {
+   "idx": 3,
+   "calls": 0,
+   "items": 2,
+   "cache_hits": 0,
+   "reactions": {
+    "neighbour_estimate": 0,
+    "llm_estimate": 0,
+    "unresolved": 0
+   },
+   "transports": [
+    {
+     "name": "OTOP1-mediated H+ permeation",
+     "field": "from_biological_state",
+     "source": "unresolved",
+     "to": null
+    },
+    {
+     "name": "5-HT release from Type III cells",
+     "field": "to_biological_state",
+     "source": "unresolved",
+     "to": null
+    }
+   ],
+   "A_ok": true,
+   "B_ok": true,
+   "B_release": "review_required",
+   "A_release": "review_required",
+   "reply_head": []
+  },
+  {
+   "idx": 6,
+   "calls": 0,
+   "items": 5,
+   "cache_hits": 0,
+   "reactions": {
+    "neighbour_estimate": 0,
+    "llm_estimate": 0,
+    "unresolved": 3
+   },
+   "transports": [
+    {
+     "name": "Dvl translocation to plasma membrane",
+     "field": "from_biological_state",
+     "source": "unresolved",
+     "to": null
+    },
+    {
+     "name": "Dvl translocation to plasma membrane",
+     "field": "from_biological_state",
+     "source": "unresolved",
+     "to": null
+    }
+   ],
+   "A_ok": true,
+   "B_ok": true,
+   "B_release": "review_required",
+   "A_release": "review_required",
+   "reply_head": []
+  },
+  {
+   "idx": 9,
+   "calls": 0,
+   "items": null,
+   "cache_hits": 0,
+   "reactions": {
+    "neighbour_estimate": 1,
+    "llm_estimate": 0,
+    "unresolved": 0
+   },
+   "transports": [],
+   "A_ok": true,
+   "B_ok": true,
+   "B_release": "release_ready",
+   "A_release": "release_ready",
+   "reply_head": []
+  },
+  {
+   "idx": 10,
+   "calls": 0,
+   "items": 3,
+   "cache_hits": 0,
+   "reactions": {
+    "neighbour_estimate": 0,
+    "llm_estimate": 0,
+    "unresolved": 0
+   },
+   "transports": [
+    {
+     "name": "OTOP1-mediated H+ permeation",
+     "field": "from_biological_state",
+     "source": "unresolved",
+     "to": null
+    },
+    {
+     "name": "OTOP1-mediated H+ permeation",
+     "field": "from_biological_state,to_biological_state",
+     "source": "unresolved",
+     "to": null
+    },
+    {
+     "name": "5-HT release from Type III cells",
+     "field": "to_biological_state",
+     "source": "unresolved",
+     "to": null
+    }
+   ],
+   "A_ok": true,
+   "B_ok": true,
+   "B_release": "review_required",
+   "A_release": "review_required",
+   "reply_head": []
+  },
+  {
+   "idx": 15,
+   "calls": 0,
+   "items": 2,
+   "cache_hits": 0,
+   "reactions": {
+    "neighbour_estimate": 0,
+    "llm_estimate": 0,
+    "unresolved": 2
+   },
+   "transports": [],
+   "A_ok": true,
+   "B_ok": true,
+   "B_release": "review_required",
+   "A_release": "review_required",
+   "reply_head": []
+  },
+  {
+   "idx": 18,
+   "calls": 0,
+   "items": 5,
+   "cache_hits": 0,
+   "reactions": {
+    "neighbour_estimate": 0,
+    "llm_estimate": 0,
+    "unresolved": 5
+   },
+   "transports": [],
+   "A_ok": true,
+   "B_ok": true,
+   "B_release": "review_required",
+   "A_release": "review_required",
+   "reply_head": []
+  },
+  {
+   "idx": 19,
+   "calls": 0,
+   "items": 6,
+   "cache_hits": 0,
+   "reactions": {
+    "neighbour_estimate": 0,
+    "llm_estimate": 0,
+    "unresolved": 6
+   },
+   "transports": [],
+   "A_ok": true,
+   "B_ok": true,
+   "B_release": "review_required",
+   "A_release": "review_required",
+   "reply_head": []
+  },
+  {
+   "idx": 37,
+   "calls": 0,
+   "items": null,
+   "cache_hits": 0,
+   "reactions": {
+    "neighbour_estimate": 2,
+    "llm_estimate": 0,
+    "unresolved": 0
+   },
+   "transports": [],
+   "A_ok": true,
+   "B_ok": true,
+   "B_release": "review_required",
+   "A_release": "review_required",
+   "reply_head": []
+  },
+  {
+   "idx": 56,
+   "calls": 0,
+   "items": 1,
+   "cache_hits": 0,
+   "reactions": {
+    "neighbour_estimate": 0,
+    "llm_estimate": 0,
+    "unresolved": 1
+   },
+   "transports": [],
+   "A_ok": true,
+   "B_ok": true,
+   "B_release": "review_required",
+   "A_release": "review_required",
+   "reply_head": []
+  },
+  {
+   "idx": 62,
+   "calls": 0,
+   "items": 1,
+   "cache_hits": 0,
+   "reactions": {
+    "neighbour_estimate": 0,
+    "llm_estimate": 0,
+    "unresolved": 1
+   },
+   "transports": [],
+   "A_ok": true,
+   "B_ok": true,
+   "B_release": "review_required",
+   "A_release": "review_required",
+   "reply_head": []
+  },
+  {
+   "idx": 78,
+   "calls": 0,
+   "items": null,
+   "cache_hits": 0,
+   "reactions": {
+    "neighbour_estimate": 1,
+    "llm_estimate": 0,
+    "unresolved": 0
+   },
+   "transports": [],
+   "A_ok": true,
+   "B_ok": true,
+   "B_release": "review_required",
+   "A_release": "review_required",
+   "reply_head": []
+  },
+  {
+   "idx": 79,
+   "calls": 0,
+   "items": 2,
+   "cache_hits": 0,
+   "reactions": {
+    "neighbour_estimate": 1,
+    "llm_estimate": 0,
+    "unresolved": 2
+   },
+   "transports": [],
+   "A_ok": true,
+   "B_ok": true,
+   "B_release": "review_required",
+   "A_release": "review_required",
+   "reply_head": []
+  },
+  {
+   "idx": 84,
+   "calls": 0,
+   "items": 4,
+   "cache_hits": 0,
+   "reactions": {
+    "neighbour_estimate": 0,
+    "llm_estimate": 0,
+    "unresolved": 4
+   },
+   "transports": [],
+   "A_ok": true,
+   "B_ok": true,
+   "B_release": "review_required",
+   "A_release": "review_required",
+   "reply_head": []
+  },
+  {
+   "idx": 86,
+   "calls": 0,
+   "items": 1,
+   "cache_hits": 0,
+   "reactions": {
+    "neighbour_estimate": 1,
+    "llm_estimate": 0,
+    "unresolved": 1
+   },
+   "transports": [],
+   "A_ok": true,
+   "B_ok": true,
+   "B_release": "review_required",
+   "A_release": "review_required",
+   "reply_head": []
+  },
+  {
+   "idx": 98,
+   "calls": 0,
+   "items": 1,
+   "cache_hits": 0,
+   "reactions": {
+    "neighbour_estimate": 1,
+    "llm_estimate": 0,
+    "unresolved": 1
+   },
+   "transports": [],
+   "A_ok": true,
+   "B_ok": true,
+   "B_release": "review_required",
+   "A_release": "review_required",
+   "reply_head": []
+  },
+  {
+   "idx": 113,
+   "calls": 0,
+   "items": 2,
+   "cache_hits": 0,
+   "reactions": {
+    "neighbour_estimate": 0,
+    "llm_estimate": 0,
+    "unresolved": 2
+   },
+   "transports": [],
+   "A_ok": true,
+   "B_ok": true,
+   "B_release": "review_required",
+   "A_release": "review_required",
+   "reply_head": []
+  },
+  {
+   "idx": 116,
+   "calls": 0,
+   "items": 5,
+   "cache_hits": 0,
+   "reactions": {
+    "neighbour_estimate": 0,
+    "llm_estimate": 0,
+    "unresolved": 5
+   },
+   "transports": [],
+   "A_ok": true,
+   "B_ok": true,
+   "B_release": "review_required",
+   "A_release": "review_required",
+   "reply_head": []
+  },
+  {
+   "idx": 119,
+   "calls": 0,
+   "items": 3,
+   "cache_hits": 0,
+   "reactions": {
+    "neighbour_estimate": 0,
+    "llm_estimate": 0,
+    "unresolved": 2
+   },
+   "transports": [
+    {
+     "name": "Catharanthine secretion to leaf surface",
+     "field": "from_biological_state",
+     "source": "unresolved",
+     "to": null
+    }
+   ],
+   "A_ok": true,
+   "B_ok": true,
+   "B_release": "review_required",
+   "A_release": "review_required",
+   "reply_head": []
+  },
+  {
+   "idx": 123,
+   "calls": 0,
+   "items": 2,
+   "cache_hits": 0,
+   "reactions": {
+    "neighbour_estimate": 0,
+    "llm_estimate": 0,
+    "unresolved": 2
+   },
+   "transports": [],
+   "A_ok": true,
+   "B_ok": true,
+   "B_release": "review_required",
+   "A_release": "review_required",
+   "reply_head": []
+  },
+  {
+   "idx": 124,
+   "calls": 0,
+   "items": 2,
+   "cache_hits": 0,
+   "reactions": {
+    "neighbour_estimate": 0,
+    "llm_estimate": 0,
+    "unresolved": 2
+   },
+   "transports": [],
+   "A_ok": true,
+   "B_ok": true,
+   "B_release": "review_required",
+   "A_release": "review_required",
+   "reply_head": []
+  },
+  {
+   "idx": 128,
+   "calls": 0,
+   "items": null,
+   "cache_hits": 0,
+   "reactions": {
+    "neighbour_estimate": 1,
+    "llm_estimate": 0,
+    "unresolved": 0
+   },
+   "transports": [],
+   "A_ok": true,
+   "B_ok": true,
+   "B_release": "review_required",
+   "A_release": "review_required",
+   "reply_head": []
+  },
+  {
+   "idx": 134,
+   "calls": 0,
+   "items": 4,
+   "cache_hits": 0,
+   "reactions": {
+    "neighbour_estimate": 0,
+    "llm_estimate": 0,
+    "unresolved": 4
+   },
+   "transports": [],
+   "A_ok": true,
+   "B_ok": true,
+   "B_release": "review_required",
+   "A_release": "review_required",
+   "reply_head": []
+  },
+  {
+   "idx": 135,
+   "calls": 0,
+   "items": 10,
+   "cache_hits": 0,
+   "reactions": {
+    "neighbour_estimate": 0,
+    "llm_estimate": 0,
+    "unresolved": 10
+   },
+   "transports": [],
+   "A_ok": true,
+   "B_ok": true,
+   "B_release": "review_required",
+   "A_release": "review_required",
+   "reply_head": []
+  },
+  {
+   "idx": 136,
+   "calls": 0,
+   "items": 4,
+   "cache_hits": 0,
+   "reactions": {
+    "neighbour_estimate": 0,
+    "llm_estimate": 0,
+    "unresolved": 4
+   },
+   "transports": [],
+   "A_ok": true,
+   "B_ok": true,
+   "B_release": "review_required",
+   "A_release": "review_required",
+   "reply_head": []
+  },
+  {
+   "idx": 137,
+   "calls": 0,
+   "items": 4,
+   "cache_hits": 0,
+   "reactions": {
+    "neighbour_estimate": 0,
+    "llm_estimate": 0,
+    "unresolved": 4
+   },
+   "transports": [],
+   "A_ok": true,
+   "B_ok": true,
+   "B_release": "review_required",
+   "A_release": "review_required",
+   "reply_head": []
+  },
+  {
+   "idx": 138,
+   "calls": 0,
+   "items": 9,
+   "cache_hits": 0,
+   "reactions": {
+    "neighbour_estimate": 0,
+    "llm_estimate": 0,
+    "unresolved": 8
+   },
+   "transports": [
+    {
+     "name": "TubI-mediated TBN export",
+     "field": "from_biological_state,to_biological_state",
+     "source": "unresolved",
+     "to": null
+    }
+   ],
+   "A_ok": true,
+   "B_ok": true,
+   "B_release": "review_required",
+   "A_release": "review_required",
+   "reply_head": []
+  },
+  {
+   "idx": 144,
+   "calls": 0,
+   "items": null,
+   "cache_hits": 0,
+   "reactions": {
+    "neighbour_estimate": 2,
+    "llm_estimate": 0,
+    "unresolved": 0
+   },
+   "transports": [],
+   "A_ok": true,
+   "B_ok": true,
+   "B_release": "review_required",
+   "A_release": "review_required",
+   "reply_head": []
+  },
+  {
+   "idx": 148,
+   "calls": 0,
+   "items": 7,
+   "cache_hits": 0,
+   "reactions": {
+    "neighbour_estimate": 0,
+    "llm_estimate": 0,
+    "unresolved": 7
+   },
+   "transports": [],
+   "A_ok": true,
+   "B_ok": true,
+   "B_release": "review_required",
+   "A_release": "review_required",
+   "reply_head": []
+  },
+  {
+   "idx": 150,
+   "calls": 0,
+   "items": 3,
+   "cache_hits": 0,
+   "reactions": {
+    "neighbour_estimate": 0,
+    "llm_estimate": 0,
+    "unresolved": 0
+   },
+   "transports": [
+    {
+     "name": "H+ permeation through OTOP1",
+     "field": "from_biological_state",
+     "source": "unresolved",
+     "to": null
+    },
+    {
+     "name": "5-HT release from Type III cells",
+     "field": "to_biological_state",
+     "source": "unresolved",
+     "to": null
+    },
+    {
+     "name": "H+ influx into Type III cell",
+     "field": "from_biological_state",
+     "source": "unresolved",
+     "to": null
+    }
+   ],
+   "A_ok": true,
+   "B_ok": true,
+   "B_release": "review_required",
+   "A_release": "review_required",
+   "reply_head": []
+  },
+  {
+   "idx": 151,
+   "calls": 0,
+   "items": 1,
+   "cache_hits": 0,
+   "reactions": {
+    "neighbour_estimate": 0,
+    "llm_estimate": 0,
+    "unresolved": 0
+   },
+   "transports": [
+    {
+     "name": "H+ influx into Type III cell",
+     "field": "from_biological_state",
+     "source": "unresolved",
+     "to": null
+    }
+   ],
+   "A_ok": true,
+   "B_ok": true,
+   "B_release": "review_required",
+   "A_release": "review_required",
+   "reply_head": []
+  }
+ ],
+ "evidence": {
+  "summary": "C:/t/corr-assess/lanes/L7logs/live1_check.json",
+  "arms": "C:/t/bt-corr/L7/live/live1/arms/ (outside the repo, not committed)"
+ }
+}

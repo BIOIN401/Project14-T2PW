@@ -1,0 +1,399 @@
+{
+ "lane": "L4",
+ "branch": "corr/L4-interactions",
+ "worktree": "C:/t/corr-L4",
+ "base": "c2b9c727",
+ "commits": [
+  "27d4a283 (code + new tests)",
+  "cba99705 (orchestrator rulings 1-3: reaction_evidence patch, unstated-relationship rule, 32 existing test updates)",
+  "da994e47 (docs only: docs/reaction_evidence_sample.txt re-rendered, 2 lines)",
+  "c20b18b4 (merge pwml/correctness 0f36c82f, L3; clean, no conflicts)",
+  "081aea1b (review fixes F1-F4 + tests)",
+  "803107a7 (ir.py comment only, review F6: where the modifier link is kept; F4 anchor order)"
+ ],
+ "files_changed": [
+  "src/t2pw/pwml/interaction_types.py",
+  "src/t2pw/pwml/ir.py",
+  "src/t2pw/pwml/qa.py",
+  "src/t2pw/pwml/writer.py",
+  "src/t2pw/mapping/map_ids.py (Stage-6 wrapper _rewrite_reaction_protein_enzymes_to_complexes only: import, type gate, own-wrapper rule, comments)",
+  "tests/test_pwml_l4_interactions.py (new)",
+  "src/t2pw/app/reaction_evidence.py (boundary extended by orchestrator ruling 1)",
+  "tests/test_pwml_interaction_type_spellings.py, tests/test_pwml_interaction_export.py, tests/test_pwml_interaction_protein_wrappers.py, tests/test_pwml_ir_duplicate_row_refusal.py, tests/test_orch772_pwml_coverage.py, tests/test_orch772b_no_pwml_cause.py (ruling 2)",
+  "docs/reaction_evidence_sample.txt (fixture test_reaction_evidence pins; separate docs commit)"
+ ],
+ "boundary_notes": [
+  "ir.py outside the listed line ranges: validate_pwml_ir interaction loop also iterates processes.modifier_interactions (and skips the missing-side error for a withheld modifier row); module-level MODIFIER_ROLE_* tables and _evidence_names helper. All part of the interaction export.",
+  "reaction_evidence.py patch APPLIED in cba99705 per orchestrator ruling 1 (pwml_interaction_type -> pwml_export_interaction_type at the import, _same_row and 'uncarried'); text record now reads 'PWML: drawn as Binding' etc.",
+  "Kept signed-only on purpose: pwml_interaction_type / PWML_INTERACTION_TYPES (readers clean_model.vocab.classify and stage_one_ensemble._relationship_key would otherwise read 'binds' as inhibition / merge relationships at Stage 1). New function pwml_export_interaction_type carries all seven types."
+ ],
+ "rulings": {
+  "1_modifiers": "A reaction modifier (or enzymes-list entry) with role activator/inhibitor is never an enzyme. It becomes an Activation/Inhibition interaction in IR bucket processes.modifier_interactions (processes.interactions stays one row per payload interaction, which app.reaction_evidence lines up by count). Left = the modifier resolved as before (role 'enzyme', wrapper complex first). Right = the step's first other enzyme, else (review F4) its first non-currency substrate, then non-currency product, then a currency compound only when the step has nothing else (step_anchor recorded); none -> withheld step_has_no_element_to_anchor. Row carries origin=reaction_modifier, modifier_role, on_reaction {key,name,pointer}, step_anchor, evidence. CORRECTION (review F6): the modifier -> reaction link is kept in pwml_ir.json (processes.modifier_interactions, on_reaction) and in the IR report (interaction_review_required / interaction_withheld_from_pwml issues carry the /processes/reactions/<i>/modifiers/<j> pointer); the text record (app.reaction_evidence) does NOT show it -- it lists payload interactions only. Evidence check: quote must name the modifier and something of the step (enzyme, participant or step name), else review_required (flag only). idx 9 MenD: CORRECTION (review F5): drawn as MenD complex -| MenB complex (the step's enzyme), review_required evidence_does_not_name_step (paper supports DHNA inhibiting MenD; not contradicted -> flagged, not dropped). idx 7: GluTR (glutamyl-tRNA reductase), FC1 complex now Activation interactions on 'singlet oxygen generation from Pchlide' (no enzyme -> anchored on Pchlide), GUN4 complex Activation -> Mg-chelatase step; GUN4 stays an enzyme there only because the payload's own enzymes list names it a catalyst (the duplicate activator-role enzyme entry is gone).",
+  "2_vanishing_signed": "Cause 1 (dominant, not a code bug today): the 97 stored payloads predate the ORCH-754b Stage-6 interaction wrapper; replay starts from final_mapped.json so Stage 6 never ran for them. Probe (L4logs/probe_stage6_base.json): today's Stage 6 wraps all 38 bare signed rows (incl. 58/78 2,3-DHB -| EntB, 128 CysK -> CymR). Cause 2 (code, fixed in ir.py): an endpoint that is the exact name of a protein complex AND a synonym of a protein resolved to the bare protein (interaction resolver prefers protein) -> idx 6 'Celsr1 activates Dvl' x2 withheld; now the exact-name complex is used (never an alias, nothing built; ambiguity check stays fail-closed). Cause 3 (code, fixed in Stage 6): a one-protein generated wrapper whose single component carries another name of the same protein (same UniProt) was refused as 'another complex' -> idx 7 FLU/GluTR1 (GluTR1 complex holds HEMA1, P42804); now reused.",
+  "3_new_types": "pwml_export_interaction_type exact-match table per brief (binding/binds/binds to/binds_to/noncovalently_bound_to -> Binding; regulates/regulation/modulates -> Regulation; catalyzes -> Catalysis; modifies -> Modification; interaction/interacts with/interacts_with/interacts/associates with/competes_with -> Unspecified). Both edges' template: Activation 149, Inhibition 148, Binding 195, Unspecified 195, Regulation 219, Catalysis 5, Modification 218. Right-edge decoration per PathWhiz t2pw/05 editor: Inhibition flat; Activation/Regulation/Catalysis/Modification start arrow; Binding/Unspecified none. Stage-6 wrapper now wraps protein endpoints of every exportable type. Same element both sides -> withheld same_element_both_sides. Same type + same two elements + same biological state -> written once (withheld duplicate_interaction, duplicate_of key); a repeat in ANOTHER state is written because PathWhiz maps the repeat onto the existing interaction but keeps its visualization (pwml_parser store_nested_object find_existing), and dropping it would lose that compartment's drawing. qa.py accepts the seven types.",
+  "4_evidence": "Every IR interaction (payload and modifier rows, drawn or withheld) carries 'evidence'; empty -> review_required ['no_evidence'] + warning interaction_review_required; never dropped. PWML itself has no evidence field on interactions (PathWhiz interactions table has none); evidence lives in pwml_ir.json, the withheld side file, the text record and our SBML.",
+  "orchestrator_3_unstated_relationship": "A payload interaction with no interaction_type/relationship/class (interaction_types.relationship_stated) reads as 'interaction' -> Unspecified. With paper evidence: drawn, review_required ['relationship_type_not_stated']. Without evidence: withheld, reason relationship_type_not_stated (in the withheld side file), review_required ['no_evidence']; Stage 6 does not wrap its endpoints. Test: test_pwml_l4_interactions::test_a_row_with_no_relationship_word_is_drawn_unspecified_only_with_evidence. No such row occurs in the 97 replays."
+ },
+ "tests_added": [
+  "tests/test_pwml_l4_interactions.py::test_activator_and_inhibitor_modifiers_are_interactions_on_the_step_not_enzymes",
+  "tests/test_pwml_l4_interactions.py::test_a_modifier_without_evidence_is_flagged_not_dropped",
+  "tests/test_pwml_l4_interactions.py::test_new_pathwhiz_types_are_written_with_their_edge_templates",
+  "tests/test_pwml_l4_interactions.py::test_qa_accepts_every_stored_type_and_refuses_others",
+  "tests/test_pwml_l4_interactions.py::test_an_interaction_without_evidence_is_flagged_not_dropped",
+  "tests/test_pwml_l4_interactions.py::test_stage6_wraps_protein_endpoints_of_every_exportable_type",
+  "tests/test_pwml_l4_interactions.py::test_an_endpoint_named_exactly_like_a_complex_is_drawn_as_that_complex_not_a_bare_protein",
+  "tests/test_pwml_l4_interactions.py::test_stage6_reuses_a_one_protein_wrapper_whose_component_is_the_same_protein_by_identity",
+  "tests/test_pwml_l4_interactions.py::test_an_enzymes_list_entry_with_an_inhibitor_role_is_not_drawn_as_an_enzyme",
+  "tests/test_pwml_l4_interactions.py::test_the_same_interaction_in_another_state_is_still_drawn_there",
+  "tests/test_pwml_l4_interactions.py::test_a_row_with_no_relationship_word_is_drawn_unspecified_only_with_evidence",
+  "tests/test_pwml_l4_interactions.py::test_the_required_contract_accepts_a_drawn_modifier_interaction",
+  "tests/test_pwml_l4_interactions.py::test_the_text_record_glosses_the_new_withheld_reasons_truthfully",
+  "tests/test_pwml_l4_interactions.py::test_with_no_enzyme_the_step_is_anchored_on_a_non_currency_participant_before_a_currency_one"
+ ],
+ "test_runs": {
+  "before_base_src_stashed": {
+   "log": "C:/t/corr-assess/lanes/L4logs/before_final.log",
+   "result": "9 failed (all 9 tests then in the file; the 10th, other-state repeat, was added after and was not run on base: it is a no-loss guard on the new dedupe, which base does not have)"
+  },
+  "before_identity_rule_alone": {
+   "log": "C:/t/corr-assess/lanes/L4logs/before3.log",
+   "result": "1 failed (GluTR1 wrapper test with a signed word: base leaves FLU/GluTR1 bare)"
+  },
+  "after": {
+   "log": "C:/t/corr-assess/lanes/L4logs/after_final.log",
+   "result": "10 passed"
+  },
+  "affected_suites": {
+   "log": "C:/t/corr-assess/lanes/L4logs/aff_final.log",
+   "selection": "C:/t/corr-assess/lanes/L4scripts/aff.txt (29 files)",
+   "result": "28 failed, 1013 passed; the 28 are the old-policy expectations listed under existing_test_expectations_changed"
+  },
+  "golden_seam_each_alone": {
+   "test_batch_driver_seam_golden": "2 passed",
+   "test_c011_freeze_seam_golden_equivalence": "8 passed",
+   "test_streamlit_stage8_export_contract": "4 passed",
+   "test_streamlit_quarantine_boundary": "24 passed",
+   "logs": "C:/t/corr-assess/lanes/L4logs/g_<name>.log"
+  },
+  "equivalence_each_alone": {
+   "test_equivalence_run_pathway": "8 passed",
+   "test_equivalence_app_vs_service": "14 passed",
+   "test_equivalence_default_path": "6 passed"
+  },
+  "smoke": {
+   "log": "C:/t/corr-assess/lanes/L4logs/smoke.log",
+   "result": "511 passed in 61.23s"
+  },
+  "after_rulings_affected": {
+   "log": "C:/t/corr-assess/lanes/L4logs/aff3.log",
+   "result": "1042 passed, 1 failed: test_reaction_evidence_app_hook (AppTest 'Forms cannot be nested' when appended to the one-process batch); alone it passes (hooknew.log 1 passed)"
+  }
+ },
+ "replay_proof": {
+  "harness": "C:/t/corr-assess/lanes/L4scripts/dump_replay_l4.py (copy of scripts/dump_replay.py; writes only under C:/t/bt-corr/L4/replay; per-idx compact IR summary; --stage6 1 re-runs the src-under-test's own Stage-6 interaction wrapper offline (db=None, cache off, only_proteins = protein endpoints) on the stored payload, because the stored payloads predate it). Base tree: git archive c2b9c727 src reference data -> C:/t/bt-corr/L4/basetree.",
+  "arms": {
+   "base_v2/new_v2": "stored payloads, layout v2, final payload on (the default)",
+   "base_s6/new_s6": "same + fresh Stage-6 interaction wrapper (simulates a new run)",
+   "base_v1/new_v1": "layout v1"
+  },
+  "all_arms": "97/97 PWML written, 0 harness errors, 0 files with QA errors in every arm",
+  "totals_v2": {
+   "base": {
+    "enzymes": 473,
+    "pwml_interactions": {
+     "Activation": 9,
+     "Inhibition": 14
+    },
+    "withheld": {
+     "bare_protein_endpoint": 40,
+     "untyped_interaction": 123
+    }
+   },
+   "new": {
+    "enzymes": 456,
+    "pwml_interactions": {
+     "Activation": 22,
+     "Inhibition": 19,
+     "Binding": 4,
+     "Unspecified": 3
+    },
+    "of_which_modifier_rows": {
+     "Activation": 12,
+     "Inhibition": 5
+    },
+    "withheld": {
+     "bare_protein_endpoint": 122,
+     "untyped_interaction": 32,
+     "duplicate_interaction": 1
+    }
+   }
+  },
+  "totals_s6": {
+   "base": {
+    "enzymes": 474,
+    "pwml_interactions": {
+     "Activation": 15,
+     "Inhibition": 46
+    },
+    "withheld": {
+     "bare_protein_endpoint": 2,
+     "untyped_interaction": 123
+    }
+   },
+   "new": {
+    "enzymes": 457,
+    "pwml_interactions": {
+     "Activation": 28,
+     "Inhibition": 51,
+     "Binding": 45,
+     "Catalysis": 10,
+     "Modification": 21,
+     "Regulation": 8,
+     "Unspecified": 7
+    },
+    "of_which_modifier_rows": {
+     "Activation": 12,
+     "Inhibition": 5
+    },
+    "withheld": {
+     "untyped_interaction": 32,
+     "duplicate_interaction": 1,
+     "bare_protein_endpoint": 0
+    }
+   }
+  },
+  "edge_templates_and_arrows_verified": "new_s6 PWMLs: every edge of Binding/Unspecified 195, Regulation 219, Catalysis 5, Modification 218, Activation 149, Inhibition 148; Right edge arrow for Activation/Regulation/Catalysis/Modification, flat for Inhibition, none for Binding/Unspecified",
+  "sample_26_s6": {
+   "before": {
+    "untyped_interaction withheld": 38,
+    "Activation": 5,
+    "Inhibition": 11
+   },
+   "after": {
+    "Binding": 19,
+    "Catalysis": 9,
+    "Regulation": 3,
+    "Modification": 1,
+    "Unspecified": 1,
+    "Activation": 8,
+    "Inhibition": 12,
+    "untyped withheld": 5
+   },
+   "note": "exactly the brief's expectation: the 33 rows withheld only for their type are drawn; transports 2, component_of 2, substrate_of 1 stay withheld"
+  },
+  "nothing_lost": {
+   "enzymes_removed": "17 enzyme entries in 7 files (4, 6, 7, 9, 29, 100, 102); every one reappears as a modifier interaction, all 17 drawn (C:/t/corr-assess/lanes/L4_check_v2.json, L4_check_s6.json enzymes_removed[].now)",
+   "drawn_before_not_after": "none, in every arm",
+   "pwml_tag_drops": "only reaction-enzyme / reaction-enzyme-id / -visualization / enzyme-class / protein-complex-id / inhibitor (the moved enzymes) -- no compound, complex, reaction, location, membrane or label count drops (L4logs/tagcount.txt)",
+   "byte_identical": "v2: 85/97 (12 differ: 4, 6, 7, 9, 29, 56, 62, 100, 102, 105, 109, 111); v1: same 85/12; s6: 64/33"
+  },
+  "v1_layout_byte_identity": "CORRECTION (review F6): T2PW_PWML_LAYOUT=v1 and the final-payload path are NOT byte-identical in 12 of 97 files (4, 6, 7, 9, 29, 56, 62, 100, 102, 105, 109, 111), exactly the files where the authorized change applies; the other 85 are byte-identical. Accepted because D-W26 has no flag: there is no off path to keep.",
+  "review_required_rows": "12 modifier rows flagged by the quote check (idx 4, 6 x7, 7 GluTR, 9 MenD, 29, 102); all still drawn",
+  "tables": [
+   "C:/t/corr-assess/lanes/L4_replay_table.json",
+   "C:/t/corr-assess/lanes/L4_replay_table_s6.json",
+   "C:/t/corr-assess/lanes/L4_check_v2.json",
+   "C:/t/corr-assess/lanes/L4_check_s6.json"
+  ],
+  "pwml_for_pathwhiz_import": {
+   "stored_payloads": "C:/t/bt-corr/L4/replay/new_v2/pwml",
+   "with_fresh_stage6": "C:/t/bt-corr/L4/replay/new_s6/pwml",
+   "base_for_ab": [
+    "C:/t/bt-corr/L4/replay/base_v2/pwml",
+    "C:/t/bt-corr/L4/replay/base_s6/pwml"
+   ]
+  }
+ },
+ "open_issues": [
+  "In the stored-payload replays 122 rows stay withheld as bare_protein_endpoint only because those payloads predate the Stage-6 interaction wrapper; a fresh run (s6 arm) draws them. A real gold re-run is the proof for new runs.",
+  "Research mode runs Stage 6 without wrappers (allow_complex_wrapper_creation=False), so protein-endpoint interactions of research runs stay withheld; unchanged by this lane.",
+  "Modifier anchor choice is a representation decision (enzyme, else substrate): 'GluTR activates Pchlide' reads oddly for idx 7, whose payload step is itself doubtful; flagged review_required.",
+  "Self-inflicted process slip: one early Bash call accidentally ran 'python.exe -I -' (stdin), outside the wrapper; it hung on stdin, was stopped via TaskStop within the timeout, and its PID was confirmed gone. No heavy lock was held.",
+  "test_reaction_evidence_app_hook fails only when appended to a one-process batch (AppTest nested-form state); passes alone pre- and post-merge."
+ ],
+ "pids": "All runs through bounded_run.py --heavy-lock corr-l4 (Windows job object), 0 survivors each; no L4 python process left at the end; heavy lock absent at the end.",
+ "head": "803107a7",
+ "existing_tests_edited": {
+  "full_diff": "C:/t/corr-assess/lanes/L4logs/existing_test_edits.diff (git diff 27d4a283 cba99705 over the 6 files); every changed assertion carries a '# D-W26 / L4' or 'L4 ruling' comment",
+  "edits": [
+   {
+    "test": "test_pwml_interaction_type_spellings.py::test_a_word_whose_sign_is_not_in_it_is_withheld_not_guessed (14 params)",
+    "before": "parametrized over all of UNSIGNED, each asserted withheld untyped_interaction",
+    "after": "parametrized over UNSIGNED minus STORED_UNSIGNED (the 14 words t2pw/05 stores); the withheld assertions are unchanged for the rest. UNSIGNED itself unchanged, so the table test still asserts none of them is in the signed table"
+   },
+   {
+    "test": "test_pwml_interaction_type_spellings.py::test_an_unsigned_word_pathwhiz_now_stores_is_drawn_as_its_type_with_no_sign (new, replaces the 14 cases)",
+    "before": "-",
+    "after": "exportable, interaction_type == STORED_UNSIGNED[word], and never Activation/Inhibition"
+   },
+   {
+    "test": "test_pwml_interaction_type_spellings.py::test_an_unknown_word_or_a_missing_relationship_is_withheld_rather_than_defaulted",
+    "before": "missing: withheld, interaction_type 'interaction', raw 'interaction'",
+    "after": "missing (fixture has evidence 'q'): exportable, interaction_type 'Unspecified', review_reasons ['relationship_type_not_stated'] (ruling 3); unknown-word assertions unchanged"
+   },
+   {
+    "test": "test_pwml_interaction_type_spellings.py::test_the_pwml_carries_the_signed_rows_and_withholds_the_unsigned_ones",
+    "before": "exported ['Inhibition','Activation','Inhibition','Inhibition'], 4 viz, withheld {binds, SAME_AS, promoter_of: untyped}",
+    "after": "exported ['Inhibition','Binding','Activation'], 3 viz, withheld {SAME_AS, promoter_of: untyped; REPRESSES, prevents: duplicate_interaction} -- the two extra Inhibitions repeat inhibits on the same two elements in the same state (written once, D-W26 merge rule)"
+   },
+   {
+    "test": "test_pwml_interaction_export.py::test_untyped_and_bare_protein_interactions_are_withheld_with_a_reason",
+    "before": "exported {Activation, Inhibition}, 2 interactions/2 viz; 'AraC binds A site' withheld untyped with raw/left/right/pointer; 2 withheld; 4 edges",
+    "after": "exported {Activation, Inhibition, Binding}, 3/3; binds row exportable as Binding and not in the side list; the raw/left/right/pointer checks moved onto the remaining withheld row (AraR: inhibition, AraR, A site, /processes/interactions/3); 1 withheld; 6 edges"
+   },
+   {
+    "test": "test_pwml_interaction_export.py::test_cli_export_writes_the_withheld_side_file_next_to_the_pwml",
+    "before": "count 2, reasons {untyped, bare_protein_endpoint}, 'binding' in raw words, PWML {Activation, Inhibition}, 2 warnings",
+    "after": "count 1, reasons {bare_protein_endpoint}, 'binding' not in raw words, PWML {Activation, Inhibition, Binding}, 1 warning"
+   },
+   {
+    "test": "test_pwml_interaction_export.py::test_qa_accepts_the_writer_output_and_counts_it",
+    "before": "stats interactions 2",
+    "after": "3"
+   },
+   {
+    "test": "test_pwml_interaction_export.py::test_ir_interaction_members_are_registered_for_visualization_validation",
+    "before": "drawn ['int_1','int_2']",
+    "after": "['int_1','int_2','int_3']"
+   },
+   {
+    "test": "test_pwml_interaction_protein_wrappers.py::test_unsigned_and_unwrappable_rows_are_left_exactly_as_written",
+    "before": "rows[2] == original[2] (binds not wrapped)",
+    "after": "rows[2] endpoints == ('SFXN4 complex','ALAS2 complex') and every other field of rows[2] == original; FtsH/Orphan rows still exactly as written"
+   },
+   {
+    "test": "test_pwml_interaction_protein_wrappers.py::test_wrapped_rows_export_and_the_rest_are_withheld_with_their_reason",
+    "before": "statuses [exp, exp, withheld, withheld, withheld]; binds withheld untyped; PWML {Inhibition, Activation}, 2",
+    "after": "[exp, exp, exp, withheld, withheld]; binds not withheld; PWML {Inhibition, Activation, Binding}, 3; FtsH/Orphan assertions unchanged"
+   },
+   {
+    "test": "test_pwml_interaction_protein_wrappers.py::test_the_human_facing_record_carries_word_evidence_and_the_ir_verdict_for_every_row",
+    "before": "INTERACTION 3: 'PWML: withheld -- untyped_interaction'",
+    "after": "INTERACTION 3: 'PWML: drawn as Binding' (needs the reaction_evidence patch)"
+   },
+   {
+    "test": "test_pwml_interaction_protein_wrappers.py::test_no_verdict_is_shown_when_no_pwml_was_written_batch_path",
+    "before": "with a PWML: 'PWML: drawn as' x2",
+    "after": "x3 (the Binding row); the no-PWML half unchanged"
+   },
+   {
+    "test": "test_pwml_interaction_protein_wrappers.py::test_a_stale_ir_row_is_never_paired_with_a_different_word_or_endpoint",
+    "before": "unchanged row 3 keeps 'PWML: withheld -- untyped_interaction'",
+    "after": "unchanged row 3 keeps 'PWML: drawn as Binding'; the three stale-row assertions unchanged (row 1's new word 'binds' -> Binding still differs from Inhibition)"
+   },
+   {
+    "test": "test_pwml_interaction_protein_wrappers.py::test_every_llm_bound_input_is_byte_identical_to_the_base",
+    "before": "wrapped_post_stage6 {10cd7137.., 1923f35f.., f03ee079..}; stage6_all_unwrappable 75d9b8b2..",
+    "after": "wrapped_post_stage6 {895749fb.., e59f9469.., 71d4191e..} (moves only because the tip's own Stage 6 wraps 'binds'); stage6_all_unwrappable now hashes rows [3:] (review F3: the binds row left out) and is pinned 417d9037..; ONLY these two keys edited",
+    "proof": "orch754b_llm_input_identity.py with base tree c2b9c727 after F3 (L4logs/llm_identity2.json, llmid2.log): every module from its own tree; tip_equals_base TRUE -- every digest, including stage6_all_unwrappable 417d9037.., stage6_wrapped_report 33514f4c.. and stage6_wrapped_mapping_misses 4f53cda1.. (the curator-prompt inputs, equal to their original pins), is identical base vs tip. The script still prints VERDICT FAILED only because its third condition wants the 'prev' tree to differ and prev = base here. 75d9b8b2 itself cannot be restored: it hashes rows [2:], which contain the binds row that this tree now wraps."
+   },
+   {
+    "test": "test_pwml_interaction_protein_wrappers.py::test_the_withheld_record_carries_the_evidence",
+    "before": "'SFXN4 binds ALAS2' withheld record evidence + raw 'binds'",
+    "after": "same two checks on the still-withheld 'FtsH inhibits ALAS2' (evidence 'quote for FtsH inhibits ALAS2', raw 'inhibits')"
+   },
+   {
+    "test": "test_pwml_interaction_protein_wrappers.py::test_competes_with_is_withheld_as_untyped_not_drawn_as_a_directed_inhibition",
+    "before": "both rows withheld untyped; raw ['competes_with','Competes With']",
+    "after": "row 0 (competes_with) exportable as Unspecified; NO row is Inhibition/Activation (the D-104 Am.1 s3 property kept); row 1 ('Competes  With', in no table) withheld untyped with raw 'Competes With'"
+   },
+   {
+    "test": "test_pwml_ir_duplicate_row_refusal.py::test_new_acceptance_a_non_colliding_leg_is_byte_identical_to_the_base",
+    "before": "R3_BASE_IR_DIGEST 14af62c1..",
+    "after": "12bb20e1..; report/warning assertions untouched",
+    "proof": "IR of the R3 leg under base c2b9c727 vs L4 (C:/t/bt-corr/L4/r3_base.json, r3_new.json): diff is exactly one added line, the interaction's \"evidence\"; warnings identical; recomputed digest of the base dump = 14af62c1.. (the old pin), of the L4 dump = 12bb20e1.."
+   },
+   {
+    "test": "test_orch772_pwml_coverage.py::test_each_replayed_leg_carries_the_measured_trees_coverage",
+    "before": "enterobactin (10,21,9), WNT PCP (1,66,51)",
+    "after": "(10,21,2), (1,66,13); drawn and total unchanged, sour taste unchanged"
+   },
+   {
+    "test": "test_orch772b_no_pwml_cause.py::test_g9_the_morning_summary_names_the_known_issue_of_a_leg_with_no_pwml",
+    "before": "'0/12 (0%); full count 0/21 (0%); no PWML: KI-012'",
+    "after": "'0/19 (0%); full count 0/21 (0%); no PWML: KI-012' (7 of the 9 uncarried now have a type)"
+   },
+   {
+    "test": "test_reaction_evidence.py::test_committed_sample_is_this_module_run_over_the_committed_leg",
+    "before": "test unchanged; fixture docs/reaction_evidence_sample.txt said '8 processes ... the 2 interactions PathWhiz cannot carry' / 'the 2 KI-008 interactions included'",
+    "after": "fixture re-rendered by the module (regen_sample.py): '10 processes ... the 0 interactions' / 'the 0 KI-008 interactions included'; the 2-line diff is the whole change"
+   },
+   {
+    "test": "test_reaction_evidence_view.py::test_session_run_directory_reads_the_verdicts_from_the_sessions_own_export_ir",
+    "before": "'PWML: withheld -- untyped_interaction: the relationship word is neither'",
+    "after": "'PWML: withheld -- untyped_interaction: the relationship word maps to none' (review F2 rewording)"
+   }
+  ]
+ },
+ "post_merge": {
+  "head": "c20b18b4 = merge of pwml/correctness 0f36c82f into cba99705+da994e47; clean merge",
+  "L3_interplay": "L3 changes reaction-member compound location reuse (writer) and component ordering (layout). Interaction visualizations reference their own IR locations; checked on m_new_s6: every edge template/arrow per type as specified, 0 dangling interaction compound-location references, 0 QA errors in 97 files",
+  "focused": {
+   "log": "C:/t/corr-assess/lanes/L4logs/post_focus.log",
+   "selection": "aff.txt + tests/test_pwml_l3_chain_layout.py",
+   "result": "1048 passed"
+  },
+  "app_hook_alone": "1 passed (post_hook.log)",
+  "golden_seam_each_alone": {
+   "test_batch_driver_seam_golden": "2 passed",
+   "test_c011_freeze_seam_golden_equivalence": "8 passed",
+   "test_streamlit_stage8_export_contract": "4 passed",
+   "test_streamlit_quarantine_boundary": "24 passed"
+  },
+  "equivalence_each_alone": {
+   "test_equivalence_run_pathway": "8 passed",
+   "test_equivalence_app_vs_service": "14 passed",
+   "test_equivalence_default_path": "6 passed"
+  },
+  "smoke": "511 passed (post_smoke.log)",
+  "replay_base": "0f36c82f exported to C:/t/bt-corr/L4/basetree2 (src, reference, data)",
+  "replay": "arms m_base_v2/m_new_v2, m_base_s6/m_new_s6, m_base_v1/m_new_v1: 97/97 PWML, 0 harness errors, 0 QA-error files each. Numbers identical to the pre-merge proof: v2 85 byte-identical / 12 differ, s6 64/33, v1 85/12; enzymes 473->456 (s6 474->457), all 17 removed enzyme entries reappear as drawn interactions; no interaction drawn before is missing; no compound/complex/reaction/location/label count drops; 26-sample (s6): Binding 19, Catalysis 9, Regulation 3, Modification 1, Unspecified 1 drawn, 5 untyped withheld",
+  "pwml_for_pathwhiz_import": {
+   "with_fresh_stage6": "C:/t/bt-corr/L4/replay/m_new_s6/pwml",
+   "stored_payloads": "C:/t/bt-corr/L4/replay/m_new_v2/pwml",
+   "base": [
+    "C:/t/bt-corr/L4/replay/m_base_s6/pwml",
+    "C:/t/bt-corr/L4/replay/m_base_v2/pwml"
+   ]
+  }
+ },
+ "review_fixes": {
+  "F1": "validate_required_pwml_contract also collects process keys from processes.modifier_interactions (no false visualization_missing_process). Test fails at c20b18b4, passes at 081aea1b.",
+  "F2": "untyped_interaction gloss names the seven stored types; new glosses for duplicate_interaction, relationship_type_not_stated, same_element_both_sides, step_has_no_element_to_anchor. Test fails before, passes after.",
+  "F3": "see existing_tests_edited (stage6_all_unwrappable): rows [3:], base and tip identical (417d9037..).",
+  "F4": {
+   "rule": "no other enzyme -> first non-currency substrate, then non-currency product, then a currency compound only when the step has nothing else. Currency = writer._is_chain_hub_compound_record (exact name / KEGG / ChEBI; no acyl-CoA suffix rule, so OSB-CoA stays defining) plus GTP/GDP (names, KEGG C00044/C00035), which the writer tables lack; the writer tables were not touched because they also drive layout.",
+   "test": "fails before (ATP chosen), passes after (OSB-CoA; DHNA-CoA when the only substrate is ATP; ATP when ATP -> ADP is all there is)",
+   "replay_effect": "0 of 17 anchors change on the 97 replays (L4_anchors_f4.json). The 7 GTP/ATP rows are idx 6 'Rac1/RhoA GDP/GTP exchange' (GTP -> GDP) and 'Profilin-facilitated actin nucleotide exchange' (ATP -> ADP): both steps have no enzyme and only currency participants, so the fallback applies. Their real subjects (RhoA, actin) are not participants in the payload; that is an extraction issue, not the anchor's. PWMLs of all arms byte-identical to the pre-fix head."
+  },
+  "F5": "L4.json corrected: idx 9 draws MenD complex -| MenB complex (the step's enzyme), flagged evidence_does_not_name_step.",
+  "F6": "L4.json corrected: the modifier link is in pwml_ir.json and the IR report, not the text record; v1/final payload not byte-identical in 12/97 files, accepted because D-W26 has no flag. ir.py comment aligned (803107a7)."
+ },
+ "post_review_runs": {
+  "on": "081aea1b (behaviour); 803107a7 differs by one ir.py comment only, v1 replay ran on 803107a7",
+  "failing_first": "L4logs/f_before.log: the 3 new tests fail with src at c20b18b4",
+  "focused": "1051 passed (r_focus.log: aff.txt + L3 chain test)",
+  "app_hook_alone": "1 passed",
+  "golden_seam_each_alone": {
+   "test_batch_driver_seam_golden": "2 passed",
+   "test_c011_freeze_seam_golden_equivalence": "8 passed",
+   "test_streamlit_stage8_export_contract": "4 passed",
+   "test_streamlit_quarantine_boundary": "24 passed"
+  },
+  "equivalence_each_alone": {
+   "test_equivalence_run_pathway": "8 passed",
+   "test_equivalence_app_vs_service": "14 passed",
+   "test_equivalence_default_path": "6 passed"
+  },
+  "smoke": "511 passed (r_smoke.log)",
+  "replay": "arms r_new_v2 / r_new_s6 / r_new_v1 vs base m_base_* (0f36c82f): 97/97 PWML, 0 harness errors, 0 QA-error files; v2 85/12, s6 64/33, v1 85/12 byte-identical/differ; 17 moved enzymes all drawn as interactions; nothing drawn before is lost; no non-enzyme tag count drops; r_new_* byte-identical to the pre-fix m_new_* in all 97 files. First v1 attempt exited 95 (lock taken by corr-rev9 between gate check and acquire; nothing started) and was re-run.",
+  "pwml_for_pathwhiz_import": {
+   "with_fresh_stage6": "C:/t/bt-corr/L4/replay/r_new_s6/pwml",
+   "stored_payloads": "C:/t/bt-corr/L4/replay/r_new_v2/pwml",
+   "base": [
+    "C:/t/bt-corr/L4/replay/m_base_s6/pwml",
+    "C:/t/bt-corr/L4/replay/m_base_v2/pwml"
+   ]
+  }
+ }
+}

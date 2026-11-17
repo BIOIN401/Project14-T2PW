@@ -13,7 +13,13 @@ from typing import Any, Dict, List, Optional, Sequence, Tuple
 from lxml import etree
 
 from t2pw.paths import PROJECT_ROOT
-from t2pw.pipeline.entity_identity import component_stoichiometry, is_pathbank_unknown_protein
+from t2pw.pipeline.entity_identity import (
+    PATHBANK_UNKNOWN_SPECIES_CONTEXT,
+    SENTINEL_LOOKUP_SPECIES_FIELD,
+    component_stoichiometry,
+    is_pathbank_unknown_protein,
+    protein_species_context,
+)
 from t2pw.pipeline.process_normalizer import normalize_process_payload
 from t2pw.pwml.compound_templates import TEMPLATE_DIMS, select_compound_template_id
 from t2pw.pwml.vocabulary_map import map_vocabulary_name, membrane_row, organism_kinds
@@ -126,7 +132,13 @@ def _add_interaction_arrow(edge: Dict[str, Any], interaction_type: str, x1: int,
     Sampled 40 of each in the live ``edges`` table: Activation carries
     ``start_arrow`` with its path, Inhibition the exact inverse with a
     ``start_flat_arrow`` path. The sign lives only here, never in a column.
+    L4 (PathWhiz t2pw/05, ``interaction_visualization.js.coffee``): Regulation, Catalysis
+    and Modification take the start arrow like Activation; Binding and Unspecified are
+    undirected and take no arrow.
     """
+    if interaction_type in ("Binding", "Unspecified"):
+        _add_no_arrow(edge)
+        return
     inhibition = interaction_type == "Inhibition"
     path = (
         _compute_flat_arrow_path(x1, y1, cp1x, cp1y)
@@ -372,6 +384,15 @@ def _is_currency_compound_record(record: Dict[str, Any]) -> bool:
         return True
     chebi_id = str(record.get("chebi-id") or record.get("chebi_id") or "").replace("CHEBI:", "").strip()
     return chebi_id in _CURRENCY_COMPOUND_CHEBI_IDS
+
+
+def _is_chain_hub_compound_record(record: Dict[str, Any]) -> bool:
+    """Layout v2 chain reuse only: currency by exact name, KEGG or ChEBI id, without the suffix rules of
+    ``_is_currency_compound_record`` (an acyl-CoA such as OSB-CoA or DHNA-CoA is a chain intermediate, not a hub)."""
+    names = {_currency_name_token(record.get(k)) for k in ("name", "short-name", "short_name")}
+    kegg_id = str(record.get("kegg-id") or record.get("kegg_id") or "").strip().upper()
+    chebi_id = str(record.get("chebi-id") or record.get("chebi_id") or "").replace("CHEBI:", "").strip()
+    return bool(names & _CURRENCY_COMPOUND_NAMES) or kegg_id in _CURRENCY_COMPOUND_KEGG_IDS or chebi_id in _CURRENCY_COMPOUND_CHEBI_IDS
 
 
 def _singularize(tag: str) -> str:
@@ -1151,10 +1172,18 @@ class DeterministicPwmlBuilder:
         self.section_items["species"] = []
         species_id_by_name: Dict[str, int] = {}
         species_id_by_external_id: Dict[str, int] = {}
-        for record in ir.get("species", []) if isinstance(ir.get("species"), list) else []:
-            if not isinstance(record, dict):
-                continue
-            rid = id_for(record, ["pathwhiz_id", "pathbank_species_id", "pw_species_id"], self.ids)
+        species_id_keys = ["pathwhiz_id", "pathbank_species_id", "pw_species_id"]
+        species_records = [r for r in ir.get("species", []) if isinstance(r, dict)] if isinstance(ir.get("species"), list) else []
+        # a species without a database id takes the next counter value, which can equal another species' real id (idx 134:
+        # Homo sapiens has PathBank id 1, the unresolved Mus musculus drew 1 as well and PathWhiz keys species by this id)
+        species_ids_taken = {first_int(r, species_id_keys) for r in species_records} - {None, 0}
+        for record in species_records:
+            rid = first_int(record, species_id_keys)
+            if not rid:
+                rid = self.ids.next()
+                while rid in species_ids_taken:
+                    rid = self.ids.next()
+                species_ids_taken.add(rid)
             remember("species", record.get("key"), rid)
             if record.get("name"):
                 species_id_by_name[_normalize_key(str(record.get("name")))] = rid
@@ -1364,7 +1393,29 @@ class DeterministicPwmlBuilder:
 
         default_species_id = self._ir_pathway_species_id
 
+        def species_id_of(candidates: List[Any]) -> Optional[int]:
+            for candidate in candidates:
+                if isinstance(candidate, dict):
+                    candidate = candidate.get("name") or candidate.get("id")
+                if candidate in (None, ""):
+                    continue
+                text = str(candidate).strip()
+                resolved = species_id_by_name.get(_normalize_key(text))
+                if resolved is None:
+                    resolved = species_id_by_external_id.get(text.casefold())
+                if resolved is not None:
+                    return resolved
+            return None
+
         def protein_species_id(record: Dict[str, Any]) -> Optional[int]:
+            if protein_species_context(record) == PATHBANK_UNKNOWN_SPECIES_CONTEXT:
+                # D-W24 7c (L8) and its review finding F1: the Unknown placeholder protein asserts no species, but its
+                # <species-id> stays: it is ONLY the lookup key that binds PathBank record 9659 (protein 9659 is stored
+                # under species 4). Without it PathWhiz's find_by matches any of ~2,195 'Unknown'/'Unknown' proteins,
+                # and an empty database refuses the row. Never the pathway's species: that would make a new 'Unknown'.
+                key = record.get(SENTINEL_LOOKUP_SPECIES_FIELD)
+                key = key if isinstance(key, dict) else {}
+                return species_id_of([key.get("name"), key.get("pathbank_species_id"), key.get("taxonomy_id")])
             resolved = lookup("species", record.get("species_key"))
             if resolved is not None:
                 return resolved
@@ -1676,7 +1727,14 @@ class DeterministicPwmlBuilder:
 
         self.section_items["interactions"] = []
         self.withheld_interactions = []
-        for interaction in process_items.get("interactions", []) if isinstance(process_items.get("interactions"), list) else []:
+        # L4: the IR keeps modifier-derived interactions (D-W24 (1)) in their own bucket.
+        # L5: and the export quarantine's withheld interactions in theirs (always withheld).
+        all_interactions = [
+            row
+            for bucket in ("interactions", "modifier_interactions", "quarantine_withheld_interactions")
+            for row in (process_items.get(bucket) if isinstance(process_items.get(bucket), list) else [])
+        ]
+        for interaction in all_interactions:
             if not isinstance(interaction, dict):
                 continue
             if interaction.get("export_status") == "withheld":
@@ -2323,11 +2381,19 @@ class DeterministicPwmlBuilder:
         )
         compound_loc_by_rxn_side: Dict[Tuple[int, str, int, str], int] = {}
         row_transition_source_by_member_key: Dict[str, str] = {}
+        # Layout v2 (F3): one drawn location per (compound, biological state) for the whole chain, so a product
+        # feeds visibly into every reaction that uses it. Currency compounds (ATP, NAD(P)H, H2O, CoA, ...; exact name
+        # or id, _is_chain_hub_compound_record) stay one location per reaction: a single hub node would pull long
+        # edges across the picture; an acyl-CoA is an intermediate and is shared. A reaction never
+        # gets the same location twice (a compound on both of its sides keeps two). v1 keeps adjacent-only reuse.
+        chain_reuse = layout_version() == "v2"
+        chain_loc_by_base: Dict[Tuple[int, str], int] = {}
 
         for reaction_key, reaction in raw_reactions_by_key.items():
             layout = reaction_layout_by_key.get(reaction_key)
             if not layout:
                 continue
+            locs_of_reaction: set = set()
             reaction_idx = reaction_idx_by_key.get(reaction_key, 0)
             biological_state_key = str(reaction.get("biological_state_key") or "")
             enzyme_left_x = layout["enzyme-x"]
@@ -2360,6 +2426,7 @@ class DeterministicPwmlBuilder:
                                     reaction_member_location_by_key[member_key] = shared_loc_id
                                     row_transition_source_by_member_key[member_key] = reaction_sequence[producer_idx][0]
                                 compound_loc_by_rxn_side[(compound_id, state_key, reaction_idx, side)] = shared_loc_id
+                                locs_of_reaction.add(shared_loc_id)
                                 compound_record = compound_record_by_id.get(compound_id, {})
                                 self.layout_debug_shared_intermediates.append(
                                     {
@@ -2378,6 +2445,19 @@ class DeterministicPwmlBuilder:
                         base_loc_id = lookup("locations", member.get("location_key"))
                     if base_loc_id is None:
                         continue
+                    member_key = str(member.get("key") or "")
+                    chain_key = (base_loc_id, member_state_key)  # same base copy and state: the same location record
+                    chain_loc_id = chain_loc_by_base.get(chain_key) if chain_reuse and identity is not None else None
+                    if (
+                        chain_loc_id is not None
+                        and member_key
+                        and chain_loc_id not in locs_of_reaction
+                        and not _is_chain_hub_compound_record(compound_record_by_id.get(identity[0], {}))
+                    ):
+                        reaction_member_location_by_key[member_key] = chain_loc_id
+                        compound_loc_by_rxn_side[(identity[0], identity[1], reaction_idx, side)] = chain_loc_id
+                        locs_of_reaction.add(chain_loc_id)
+                        continue
                     loc = loc_by_id.get(base_loc_id)
                     if not loc:
                         continue
@@ -2388,6 +2468,7 @@ class DeterministicPwmlBuilder:
                             "entity_key": entity_key,
                             "width": width,
                             "height": height,
+                            "chain_key": chain_key,
                         }
                     )
                 heights = [int(member["height"]) for member in stack_members]
@@ -2441,6 +2522,8 @@ class DeterministicPwmlBuilder:
                         if identity is not None:
                             compound_id, state_key = identity
                             compound_loc_by_rxn_side[(compound_id, state_key, reaction_idx, side)] = loc_id
+                        chain_loc_by_base.setdefault(stack_member["chain_key"], loc_id)
+                        locs_of_reaction.add(loc_id)
 
         self.layout_debug_counts["shared_intermediate_locations_reused"] = sum(
             1
@@ -2626,7 +2709,10 @@ class DeterministicPwmlBuilder:
         self.section_items["interaction-visualizations"] = []
         self.section_items["sub-pathway-visualizations"] = []
         interactions_by_key = {
-            str(row.get("key")): row for row in process_items.get("interactions", []) if isinstance(row, dict)
+            str(row.get("key")): row
+            for bucket in ("interactions", "modifier_interactions")
+            for row in process_items.get(bucket, []) or []
+            if isinstance(row, dict)
         }
         ir_loc_by_key = {str(loc.get("key")): loc for loc in ir.get("locations", []) if isinstance(loc, dict)}
 
@@ -3229,9 +3315,11 @@ def run_pwml_pipeline_export(args: argparse.Namespace) -> Dict[str, Any]:
             {
                 "pwml_file": pwml_path.name,
                 "why": (
-                    "PathWhiz stores only Activation and Inhibition interactions between "
-                    "drawable elements (compound, protein complex, nucleic acid, element "
-                    "collection). Each row below was held back rather than guessed into an "
+                    "PathWhiz stores only Activation, Inhibition, Binding, Regulation, Catalysis, "
+                    "Modification and Unspecified interactions between two different drawable "
+                    "elements (compound, protein complex, nucleic acid, element collection), and "
+                    "merges a repeat of the same type and elements into one. Each row below was "
+                    "held back rather than guessed into an "
                     "exportable shape; it is still in final.pwml_ir.json and its warning is "
                     "in pwml_ir_report.json."
                 ),

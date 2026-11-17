@@ -1,0 +1,882 @@
+{
+ "lane": "L5",
+ "branch": "corr/L5-quarantine-keep",
+ "worktree": "C:/t/corr-L5",
+ "base": "111dea4e",
+ "head": "ebb08d87",
+ "commits": [
+  "bc0c0ff0 code + new tests: wrap bare enzymes, drop unwritable actors, keep reactions (D-W24 3)",
+  "aa8b3684 code: ruling 2, interactions with an unwritable endpoint kept as withheld rows (+1 test)",
+  "3f8ddba4 tests: 73 existing expectations moved by D-W24 3 (ruling 1)",
+  "ebb08d87 docs only: change_log entry with the re-measured cohort table"
+ ],
+ "files_changed": {
+  "code": [
+   "src/t2pw/pipeline/strict_quarantine.py",
+   "src/t2pw/pwml/ir.py",
+   "src/t2pw/pwml/writer.py"
+  ],
+  "new_tests": [
+   "tests/test_l5_quarantine_keeps_reactions.py"
+  ],
+  "existing_tests_ruling_1": [
+   "tests/fixtures/strict_failures/cases.json",
+   "tests/test_c011_freeze_seam_golden_equivalence.py",
+   "tests/test_orch759c_quarantine_bucket_closure.py",
+   "tests/test_orch766_unreferenced_species.py",
+   "tests/test_orch769b_actor_protein_registry.py",
+   "tests/test_orch773_omit_per_row.py",
+   "tests/test_orch782_gene_protein_split.py",
+   "tests/test_streamlit_quarantine_boundary.py",
+   "tests/test_strict_quarantine.py",
+   "tests/test_strict_quarantine_contract_alignment.py",
+   "tests/test_strict_quarantine_real_artifact_replay.py",
+   "tests/test_strict_quarantine_release_seam.py",
+   "tests/test_strict_quarantine_versioning.py"
+  ],
+  "docs": [
+   "docs/change_log.md (required by test_the_change_log_baseline_table_agrees_with_the_pinned_values)"
+  ]
+ },
+ "change": {
+  "1_wrap": "Strict mode, before admission: a reaction enzyme/modifier that is a bare protein with a DB identity takes the Stage-6 single-protein wrapper (map_ids._rewrite_reaction_protein_enzymes_to_complexes, offline, only_proteins). Pre-freeze.",
+  "2_keep": "Any reaction actor that still cannot be written (no identity, non-protein, unresolved, ambiguous, unrepresentable complex, named by a per-row gate, or a failing entity reached only through enzymes/modifiers) leaves the reaction; the reaction stays. Each dropped actor = removed-entity row (bucket enzymes|modifiers, reason, gate, actor verbatim, decision 'D-W24 3'); counts in omitted_from_pwml:N_processes+M_actors -> review_required; listed in the text record.",
+  "3_withheld_interactions (ruling 2)": "An interaction omitted because an endpoint entity cannot be written (76/77: complex with no components) is recorded in payload.withheld_interactions (row verbatim, reason, endpoint, slot, gate) and emitted by the IR as an L4-style withheld row (bucket quarantine_withheld_interactions, origin export_quarantine) and in the writer's withheld side file. Never drawn; PWML bytes unchanged.",
+  "4_research": "Research mode untouched.",
+  "5_version": "QUARANTINE_POLICY_VERSION 2026-10-26.1 -> 2026-11-15.1"
+ },
+ "inventory_removals": {
+  "source": "152 replays at base 111dea4e: C:/t/corr-assess/lanes/L5_inventory_before_v2.json; tip: L5_inventory_after_v2.json",
+  "failing_runs": "51 research (quarantine decides, removes nothing; identical before/after), 4 pathwhiz (13/33/147 one-reaction no_defensible_reaction_support rollback, 149 species): the quarantine removes nothing in any of the 55",
+  "exported_runs_before": {
+   "no_defensible_reaction_support": "10 reactions / 8 runs (48, 56, 62, 67, 82, 93, 103, 146) - NOT changed (ruling 3: other lane)",
+   "reaction_enzyme_must_be_protein_complex": "3 reactions (27, 113, 116) - FIXED, wrapped",
+   "generated complex missing stoichiometry": "1 reaction (29) - FIXED, kept without the complex",
+   "non_protein_actor_in_modifiers": "1 reaction (44) - FIXED, kept without the PLP cofactor",
+   "protein_complex_missing_components (interaction endpoint)": "2 interactions (76, 77) - ruling 2: kept as withheld rows"
+  },
+  "exported_runs_after": "reactions removed only for no_defensible_reaction_support (10); 0 for any enzyme/modifier reason"
+ },
+ "tests_added": [
+  "tests/test_l5_quarantine_keeps_reactions.py::test_l5_a_bare_protein_enzyme_is_wrapped_and_its_reaction_is_kept",
+  "tests/test_l5_quarantine_keeps_reactions.py::test_l5_an_enzyme_that_cannot_be_written_leaves_the_reaction_and_the_reaction_stays_flagged",
+  "tests/test_l5_quarantine_keeps_reactions.py::test_l5_a_non_protein_modifier_leaves_the_reaction_not_the_reaction_itself",
+  "tests/test_l5_quarantine_keeps_reactions.py::test_l5_the_ldh_leg_keeps_its_reaction_with_a_wrapped_enzyme",
+  "tests/test_l5_quarantine_keeps_reactions.py::test_l5_research_mode_is_untouched",
+  "tests/test_l5_quarantine_keeps_reactions.py::test_l5_an_interaction_whose_endpoint_complex_cannot_be_written_is_kept_as_a_withheld_row"
+ ],
+ "test_runs_base_111dea4e (also the L4 post-merge check)": {
+  "tree": "git worktree C:/t/bt-corr/L5/basewt @ 111dea4e (detached); logs C:/t/corr-assess/lanes/L5logs/base_*.log",
+  "smoke": "511 passed",
+  "golden_each_alone": {
+   "test_batch_driver_seam_golden": "2 passed",
+   "test_c011_freeze_seam_golden_equivalence": "8 passed",
+   "test_streamlit_stage8_export_contract": "4 passed",
+   "test_streamlit_quarantine_boundary": "24 passed"
+  },
+  "equivalence_each_alone": {
+   "test_equivalence_run_pathway": "3 failed, 5 passed (strict case: an LLM cassette key asked=1 recorded=0, status pass vs error; PRE-EXISTING at 111dea4e)",
+   "test_equivalence_app_vs_service": "14 passed",
+   "test_equivalence_default_path": "6 passed"
+  },
+  "c052_alone": "1 failed, 12 passed (test_new_acceptance_the_post_pipeline_seam_returns_its_prefreeze_report: 'glycerol3phosphate' vs 'glycerol 3 phosphate' key; PRE-EXISTING)",
+  "c055_alone": "14 passed",
+  "affected_51_files": "1 failed, 1184 passed, 8 skipped (test_orch768_replay_corpus[ORCH-767/sour_taste_v2]: pwml_matches_leg False; PRE-EXISTING, left alone)",
+  "new_l5_tests_on_base": "5 failed, 1 passed (research guard passes on base by design) - fail-first",
+  "note": "an earlier base attempt on a git-archive copy (not a checkout) produced false failures (c102/c106/c011 need git); discarded, archived as chain_base_archive_INVALID_not_a_checkout.out"
+ },
+ "test_runs_tip_ebb08d87": {
+  "focused": "6 passed (fin_focused.log)",
+  "smoke": "511 passed (fin_smoke.log)",
+  "affected": "1 failed, 1236 passed, 8 skipped (51 files + test_pwml_l4_interactions, test_pwml_interaction_export, test_pwml_writer); the 1 = test_orch768 sour_taste_v2, pre-existing",
+  "test_reaction_evidence_alone": "19 passed",
+  "golden_each_alone": {
+   "test_batch_driver_seam_golden": "2 passed",
+   "test_c011_freeze_seam_golden_equivalence": "8 passed",
+   "test_streamlit_stage8_export_contract": "4 passed",
+   "test_streamlit_quarantine_boundary": "24 passed"
+  },
+  "equivalence_each_alone": {
+   "test_equivalence_run_pathway": "3 failed, 5 passed (same 3 as base)",
+   "test_equivalence_app_vs_service": "14 passed",
+   "test_equivalence_default_path": "6 passed"
+  },
+  "c052_alone": "1 failed, 12 passed (same as base)",
+  "c055_alone": "14 passed"
+ },
+ "existing_test_expectations_moved": {
+  "count": "73 node ids (list: L5logs/existing_expectations_changed.txt) in 14 files incl. 1 fixture; exact text: L5logs/existing_test_edits.diff",
+  "not_moved_preexisting": [
+   "tests/test_orch768_replay_corpus.py::test_replay_reproduces_the_recorded_verdict[ORCH-767/sour_taste_v2-strict/2026-10-24_0042] (fails on base 111dea4e)"
+  ],
+  "fixture_fix": "test_streamlit_quarantine_boundary::test_a_refinement_that_adds_an_unexportable_process_still_exports_the_core: the test re-added OPDA and OPC-8:0 compound rows (and locations) to the reviewed payload. Before L5 the first quarantine had removed 'peripheral OPDA reduction' and with it those rows; now it keeps the reaction, so the rows still exist and re-adding them made a duplicate compound row that the IR refuses (PWML_IR_DUPLICATE_NAMED_ROW). The fix adds only names not already declared/located; the review-added reaction is unchanged. Separately its 'reaction name not in xml_bytes' check was vacuous (reaction names are not written to the PWML) and became <reaction> count == 4.",
+  "edits": [
+   {
+    "file": "tests/test_strict_quarantine.py",
+    "test": "test_a_protein_without_external_identity_quarantines_the_reaction_not_the_enzyme_slot",
+    "before": "glutathione oxidation quarantined (quarantined_unmapped_entity, protein_missing_external_identity); original_process.enzymes kept verbatim",
+    "after": "reaction accepted; removed-entity row enzymes|unmapped oxidase|protein_missing_external_identity with detail.actor == the enzyme row verbatim",
+    "why": "reaction kept, actor dropped"
+   },
+   {
+    "file": "tests/test_strict_quarantine.py",
+    "test": "test_a_placeholder_shipping_a_real_accession_is_still_quarantined",
+    "before": "glutathione hydrolysis quarantined, reason contains malformed_placeholder",
+    "after": "reaction accepted; dropped actor glutathione hydrolase, reason contains malformed_placeholder",
+    "why": "reaction kept, actor dropped"
+   },
+   {
+    "file": "tests/test_strict_quarantine.py",
+    "test": "test_a_complex_whose_component_is_undeclared_is_a_broken_reference",
+    "before": "glutathione hydrolysis quarantined, reason startswith protein_complex_component_unresolved",
+    "after": "reaction accepted; dropped actor glutathione hydrolase, same reason prefix",
+    "why": "reaction kept, actor dropped"
+   },
+   {
+    "file": "tests/test_strict_quarantine.py",
+    "test": "test_an_ambiguous_entity_name_quarantines_the_processes_that_reference_it",
+    "before": "glutathione synthesis quarantined_broken_reference, ambiguous_entity_type:protein_complexes+proteins",
+    "after": "reaction accepted; dropped actor glutathione synthetase with that reason; overlap/gate assertions unchanged",
+    "why": "reaction kept, actor dropped"
+   },
+   {
+    "file": "tests/test_strict_quarantine.py",
+    "test": "test_components_of_a_surviving_complex_are_preserved_even_at_degree_zero",
+    "before": "protein_complexes == ['glutamate-cysteine ligase complex']",
+    "after": "== ['glutamate-cysteine ligase complex', 'glutathione synthetase complex']",
+    "why": "bare enzyme wrapped"
+   },
+   {
+    "file": "tests/test_strict_quarantine.py",
+    "test": "test_components_go_when_the_complex_that_preserved_them_goes",
+    "before": "protein_complexes == []",
+    "after": "== the two base-payload enzyme wrappers (removed set unchanged)",
+    "why": "bare enzyme wrapped"
+   },
+   {
+    "file": "tests/test_strict_quarantine.py",
+    "test": "test_unknown_backed_functional_complex_survives_quarantine",
+    "before": "protein_complexes == ['glutathione hydrolase']",
+    "after": "== ['glutathione hydrolase', 'glutamate-cysteine ligase complex', 'glutathione synthetase complex']",
+    "why": "bare enzyme wrapped"
+   },
+   {
+    "file": "tests/test_strict_quarantine_contract_alignment.py",
+    "test": "test_a_complex_missing_species_quarantines_the_reaction_that_uses_it",
+    "before": "glutathione oxidation quarantined, reason protein_complex_missing_species",
+    "after": "not quarantined; dropped actor glutathione peroxidase complex with that reason; _strict_failures == [] unchanged",
+    "why": "reaction kept, actor dropped"
+   },
+   {
+    "file": "tests/test_strict_quarantine_contract_alignment.py",
+    "test": "test_a_generated_wrapper_component_without_species_is_caught",
+    "before": "quarantined, 'protein_missing_species' in reason",
+    "after": "not quarantined; dropped actor glutathione peroxidase complex, same reason check",
+    "why": "reaction kept, actor dropped"
+   },
+   {
+    "file": "tests/test_strict_quarantine_contract_alignment.py",
+    "test": "test_a_protein_without_species_quarantines_the_reaction_and_clears_the_gates",
+    "before": "quarantined, reason protein_missing_species",
+    "after": "not quarantined; dropped modifier GPX1, reason protein_missing_species; ok and gates unchanged",
+    "why": "reaction kept, actor dropped"
+   },
+   {
+    "file": "tests/test_strict_quarantine_versioning.py",
+    "test": "test_a_research_report_cannot_authorize_a_strict_export",
+    "before": "strict counts[quarantined_unmapped_entity] == 1",
+    "after": "strict dropped actor 'unidentified enzyme' (protein_missing_external_identity) and strict resulting_payload_hash != research's",
+    "why": "reaction kept, actor dropped"
+   },
+   {
+    "file": "tests/test_strict_quarantine_versioning.py",
+    "test": "test_a_refinement_that_adds_an_unexportable_process_loses_only_that_process",
+    "before": "peripheral OPDA reduction quarantined; reactions == 2 core",
+    "after": "accepted; dropped OPR3 modifier recorded; reactions == 2 core + peripheral",
+    "why": "reaction kept, actor dropped"
+   },
+   {
+    "file": "tests/test_strict_quarantine_versioning.py",
+    "test": "test_strict_and_research_decisions_for_one_payload_do_not_collide",
+    "before": "archived strict report counts[quarantined_unmapped_entity] == 1",
+    "after": "archived strict report review_reasons contains omitted_from_pwml:0_processes+1_actors",
+    "why": "reaction kept, actor dropped"
+   },
+   {
+    "file": "tests/test_strict_quarantine_versioning.py",
+    "test": "test_strict_mode_on_the_same_candidate_does_remove_it",
+    "before": "novel oxidation quarantined and absent from payload",
+    "after": "accepted, present with modifiers == []; dropped actor novel 2026 oxidoreductase recorded",
+    "why": "reaction kept, actor dropped"
+   },
+   {
+    "file": "tests/test_orch759c_quarantine_bucket_closure.py",
+    "test": "test_g9_chlorophyll_leg_releases_review_required_once_orphan_genes_close",
+    "before": "decision_input_hash 6efc8c92d0f65c07; counts core 27 / unmapped 14; admissions 53355ece...; removed (23, 54084dfd...); reactions 31",
+    "after": "bed226cb72cdc343; core 28 / unmapped 13; admissions 076970a7...; removed (25, f1a72aa0...); reactions 32",
+    "why": "policy version + reactions/17 'ALA condensation to PBG' kept; removed gains exactly enzymes|ALAD1/HEMB1 and modifiers|ALAD1/HEMB1 (probe_legs base vs tip)"
+   },
+   {
+    "file": "tests/test_orch759c_quarantine_bucket_closure.py",
+    "test": "test_delta_n2_compound_shadowing_a_wrapped_protein_without_accession",
+    "before": "glutathione synthesis quarantined_unmapped_entity, protein_complex_component_unrepresentable:GS:protein_missing_external_identity",
+    "after": "accepted; enzymes drop reasons == [that same reason]",
+    "why": "reaction kept, actor dropped"
+   },
+   {
+    "file": "tests/test_orch769b_actor_protein_registry.py",
+    "test": "test_g9_leg_quarantines_exactly_the_five_reactions_whose_actor_is_no_protein",
+    "before": "decision_input_hash 5ee0f019...; quarantined == LEG_QUARANTINED (5); counts core 17 aux 10 broken 5; missing_anchors ['POR (PORB)', 'GLK1']; (22, 5)",
+    "after": "354d1ce7...; quarantined == []; actor drops == LEG_ACTOR_DROPS (9 rows); core 20 aux 12 broken 0; ['POR (PORB)']; (27, 5)",
+    "why": "policy version + 5 reactions kept, 9 non-protein actors dropped"
+   },
+   {
+    "file": "tests/test_orch769b_actor_protein_registry.py",
+    "test": "test_g9_a_modifier_declared_only_as_a_gene_is_quarantined",
+    "before": "glutathione synthesis quarantined_broken_reference non_protein_actor_in_modifiers PIF1",
+    "after": "accepted; modifiers drop == [(PIF1, non_protein_actor_in_modifiers)]",
+    "why": "reaction kept, actor dropped"
+   },
+   {
+    "file": "tests/test_orch769b_actor_protein_registry.py",
+    "test": "test_g9_a_compound_named_as_a_modifier_is_quarantined",
+    "before": "quarantined_broken_reference non_protein_actor_in_modifiers L-cysteine",
+    "after": "accepted; modifiers drop == [(L-cysteine, non_protein_actor_in_modifiers)]",
+    "why": "reaction kept, actor dropped"
+   },
+   {
+    "file": "tests/test_orch773_omit_per_row.py",
+    "test": "test_g9_unexportable_component_takes_its_complex_and_processes_not_the_pathway",
+    "before": "_omitted == [EntB isochorismatase reaction, 2,3-DHB interaction]; _review_required(actors=0)",
+    "after": "_omitted == [2,3-DHB interaction]; complex row actor_removed_from == [(EntB isochorismatase reaction, [enzymes, modifiers], D-W24 3)]; reaction survives; actors=1",
+    "why": "reaction kept, actor dropped"
+   },
+   {
+    "file": "tests/test_orch773_omit_per_row.py",
+    "test": "test_g9_unexportable_row_kept_only_by_a_synonym_is_removed_alone",
+    "before": "_removed starts with proteins|phosphorylated CAMKII; actors=2",
+    "after": "_removed gains enzymes|PLC, modifiers|G protein, modifiers|PLC (PLC cleavage of PIP2 kept); actors=5",
+    "why": "reaction kept, actor dropped"
+   },
+   {
+    "file": "tests/test_orch773_omit_per_row.py",
+    "test": "test_g9_final_gate_wrapper_with_no_other_catalyst_omits_its_reaction",
+    "before": "_omitted == [enterobactin synthase complex reaction]; actors=0",
+    "after": "_omitted == []; reaction kept without the complex; _removed unchanged; actors=1",
+    "why": "reaction kept, actor dropped"
+   },
+   {
+    "file": "tests/test_orch773_omit_per_row.py",
+    "test": "test_g9_required_gate_bare_protein_enzyme_omits_its_reaction",
+    "before": "_omitted == [LDH coupled reaction, reaction_enzyme_must_be_protein_complex]",
+    "after": "_omitted == []; LDH enzyme == (lactate dehydrogenase complex, protein_complex)",
+    "why": "bare enzyme wrapped"
+   },
+   {
+    "file": "tests/test_orch773_omit_per_row.py",
+    "test": "test_preservation_omissions_that_buy_no_pwml_are_rolled_back",
+    "before": "'required:reaction_enzyme_must_be_protein_complex' in refusals",
+    "after": "not in refusals (wrapped); species_missing_taxonomy still in; nothing omitted/removed unchanged",
+    "why": "bare enzyme wrapped"
+   },
+   {
+    "file": "tests/test_orch773_omit_per_row.py",
+    "test": "test_preservation_an_omission_that_would_leave_nothing_is_rolled_back",
+    "before": "first refusal startswith 'stage8:'",
+    "after": "first refusal startswith 'required:species_missing_classification' (enzymes wrapped, Stage 8 passes; still names no row; nothing omitted)",
+    "why": "bare enzyme wrapped"
+   },
+   {
+    "file": "tests/test_orch773_omit_per_row.py",
+    "test": "test_new_text_record_lists_every_actor_left_out_of_a_drawn_process[wnt_ca]",
+    "before": "title '2 actors'; 2 transporter blocks; omitted-name check over every omitted row",
+    "after": "title '5 actors'; + 3 blocks (PLC cleavage of PIP2: PLC enzymes / G protein modifiers / PLC modifiers, protein_missing_external_identity, KI-001, D-W24 3, gate strict_quarantine_admission); omitted-name check skips merged_duplicate rows (two pre-freeze duplicate_locked_reaction rows share the kept reaction's name)",
+    "why": "reaction kept, actor dropped"
+   },
+   {
+    "file": "tests/test_orch782_gene_protein_split.py",
+    "test": "test_g9_enzyme_role_resolves_to_protein",
+    "before": "enzymes[0].entity == 'GCLC'",
+    "after": "== 'GCLC complex'",
+    "why": "bare enzyme wrapped"
+   },
+   {
+    "file": "tests/test_orch782_gene_protein_split.py",
+    "test": "test_g9_chlorophyll_leg_recovers_gene_regulation_by_row",
+    "before": "reasons[(reactions,17)] == protein_missing_external_identity",
+    "after": "== admitted; enzymes/modifiers drop ALAD1/HEMB1 protein_missing_external_identity",
+    "why": "reaction kept, actor dropped"
+   },
+   {
+    "file": "tests/fixtures/strict_failures/cases.json",
+    "test": "enzyme_without_external_identity (4 tests in test_strict_failure_replay)",
+    "before": "review_reasons [1_processes+0_actors]; quarantined {OPDA reduction}; surviving 2; removed [OPDA, OPC-8:0, OPR3, OPR3 complex]",
+    "after": "review_reasons [0_processes+1_actors]; quarantined {}; surviving 3; removed [OPR3 complex (actor row), OPR3, OPR3 complex]; l5_note added",
+    "why": "reaction kept, actor dropped"
+   },
+   {
+    "file": "tests/test_strict_quarantine_real_artifact_replay.py",
+    "test": "test_the_full_stack_baseline_is_exactly_what_was_reported",
+    "before": "admitted 28 refused 11 stage3 28 contract 9 IR 9 exportable 9; species_missing_* 19/19",
+    "after": "37 / 2 / 37 / 10 / 10 / 10; 27/27",
+    "why": "9 legs now pass the quarantine (8 still fail species only; 2026-08-02_2130 PMC12096016/research exports); per leg probe_art_{base,tip}_out.json"
+   },
+   {
+    "file": "tests/test_strict_quarantine_real_artifact_replay.py",
+    "test": "test_the_pre_prune_reference_set_moves_exactly_the_allowlisted_legs",
+    "before": "EXPECTED_P01_DELTAS: 5 legs",
+    "after": "4 present legs leave (before == after under the new policy), the absent 1754 leg kept unmeasured, runs_verify/2026-08-21_2057 PMC12452463/research joins with its measured C-010-shaped tuple",
+    "why": "C-067 precedent"
+   },
+   {
+    "file": "tests/test_strict_quarantine_release_seam.py",
+    "test": "test_pmc12452463_is_review_required_and_never_strict_success",
+    "before": "coverage 0.167; minimum_core_satisfied False; '2,3-dihydro-2,3-dihydroxybenzoate' in missing_anchors",
+    "after": "0.833; True; omitted_from_pwml:7_processes+8_actors in release reasons; missing_anchors == ['L-serine']; status review_required and eligible False unchanged",
+    "why": "4 reactions kept without their identity-less enzymes"
+   },
+   {
+    "file": "tests/test_c011_freeze_seam_golden_equivalence.py",
+    "test": "3 tests (byte-for-byte, regenerate-from-base, override) + registry tests",
+    "before": "chain c052(c030(c057(c797(fixture)))); _C030_LEGS/_C052_LEGS 35; standing one-way {C-057, C-797}",
+    "after": "C-905 (= L5) registered one-way delta _with_c905_reactions_kept between C-797 and C-057, stating 13 legs that keep processes (quarantined falls, surviving rises) and 3 now frozen; _C030_LEGS/_C052_LEGS 38; override names C-057,C-797,C-905",
+    "why": "measured base vs tip c011doc_{base,tip}.json: exactly those 13 legs move"
+   },
+   {
+    "file": "tests/test_streamlit_quarantine_boundary.py",
+    "test": "6 tests",
+    "before": "peripheral OPDA reduction / core reactions with an unmapped regulator quarantined",
+    "after": "kept, the regulator dropped and recorded (review_reasons omitted_from_pwml:0_processes+N_actors); no-viable-core payload now satisfies its core (2 core, 3 surviving); FIXTURE FIX in the refinement test (below); the vacuous 'name not in xml_bytes' check replaced by <reaction> count == 4",
+    "why": "reaction kept, actor dropped"
+   }
+  ],
+  "orch766_pins": {
+   "rule": "re-pinned only where base output reproduces the committed pin AND the digest with policy_version/decision_inputs/decision_input_hash/decision_id stripped is identical base vs tip",
+   "result": "28/28 identical -> all re-pinned",
+   "per_pin": [
+    {
+     "pin": "base",
+     "old": "7ee1e24baf7e35b7ee4461627aafa40525830e5d5defa3bb54dcfdac1efd9591",
+     "new": "d4bec7fea65656e422e2b758c8c3eddfde647b919a4b434d2af715ae5dfa2c27",
+     "normalized_base": "ac469dcbf3bdd21dba23437af2269051259eb9504002337f577ab50ee397d01c",
+     "normalized_tip": "ac469dcbf3bdd21dba23437af2269051259eb9504002337f577ab50ee397d01c",
+     "normalized_identical": true
+    },
+    {
+     "pin": "state_species",
+     "old": "42e7c8ca79c87aa740d3a91e54b6671039808ac8f0dd49cd41ea0bd387565648",
+     "new": "5e629cb248f25f44a27ab7c704862c913ecd526da820a05b9f0427a6d15fff50",
+     "normalized_base": "cd2b9fe73268e673bce8ab7346ef9de1df6e911b10442af4f0c8ee21fd817c4a",
+     "normalized_tip": "cd2b9fe73268e673bce8ab7346ef9de1df6e911b10442af4f0c8ee21fd817c4a",
+     "normalized_identical": true
+    },
+    {
+     "pin": "state_organism",
+     "old": "6c322b23d01268afc5d4776a6c2f4a91ae72b99c3743e38c2f0d71a54e31f6c6",
+     "new": "639b935dfa2bc3b96835a52b75ccbc85bfbb3edc093a9916edefe21e9a05134c",
+     "normalized_base": "5100d3c526fa2bfba6ed2de66a70e11fdbb31524e13d51f84ca8c678556daaa1",
+     "normalized_tip": "5100d3c526fa2bfba6ed2de66a70e11fdbb31524e13d51f84ca8c678556daaa1",
+     "normalized_identical": true
+    },
+    {
+     "pin": "state_name",
+     "old": "9b8c582965ceacac4a7e139f17559577af019efcb3a89255a8a077cf3626b5e6",
+     "new": "7e57f892e865dae8e5555793fc102941fae54cf4b51c6421f3f9d5be6784f6e6",
+     "normalized_base": "90af73b2e1058121cf921a847f3295e211b3740edb7462da7d4e2cc3ec20fe66",
+     "normalized_tip": "90af73b2e1058121cf921a847f3295e211b3740edb7462da7d4e2cc3ec20fe66",
+     "normalized_identical": true
+    },
+    {
+     "pin": "protein_species",
+     "old": "97d31e50d9bfd4cb12fedd0843efa2227c8b2a8bb7f642e8f09436e7c0ddb41e",
+     "new": "62accd35458126370f70de772ea754185d510239d54baee3effdb479afe298f6",
+     "normalized_base": "82826de83b6c5fbdaf6e1d34dcc0602a00355a778defed86682739e7d2894b3e",
+     "normalized_tip": "82826de83b6c5fbdaf6e1d34dcc0602a00355a778defed86682739e7d2894b3e",
+     "normalized_identical": true
+    },
+    {
+     "pin": "protein_organism",
+     "old": "48eb53ef98941c6cbd7adc30e881c01fb92b25d329678e7f4cad5c684c8ad764",
+     "new": "79f587ba2b70db9cfcabe696a246fadbc33c1ba3bc00fd37b89a45d6c1a0d0f1",
+     "normalized_base": "4b236fc657c2f934100f3f220214ddcb8a6040f4a9168ed5c903690c0377731a",
+     "normalized_tip": "4b236fc657c2f934100f3f220214ddcb8a6040f4a9168ed5c903690c0377731a",
+     "normalized_identical": true
+    },
+    {
+     "pin": "protein_species_ref_name",
+     "old": "60070b71652ad13b7bd9d9f6fcaabbcbc2d531453a9d170be1fc722df2018018",
+     "new": "696635ccd93f6210873aa82a4f98e482050b2e873c88b1f6a4a24177b48b654e",
+     "normalized_base": "aab79dd41df2f9479def50be29edde57750d31b57535fd970d1bf58b03d0cf0d",
+     "normalized_tip": "aab79dd41df2f9479def50be29edde57750d31b57535fd970d1bf58b03d0cf0d",
+     "normalized_identical": true
+    },
+    {
+     "pin": "protein_mapping_meta_species",
+     "old": "c248f8aa5e035caecc005977c3b7b8474cb3c64ed4cb5610e28ad978a8b08e1d",
+     "new": "c31087a3d6347acbd443d3aaabe61b3dc137fe3261539f6f542d5dd8147c07e5",
+     "normalized_base": "2c1bf58a43d22931836ddc8d33a09a7c820640cf2ace8e26828f354eccec61fc",
+     "normalized_tip": "2c1bf58a43d22931836ddc8d33a09a7c820640cf2ace8e26828f354eccec61fc",
+     "normalized_identical": true
+    },
+    {
+     "pin": "complex_species",
+     "old": "68af94d31ba9d31de1af886e92906aca12178235fd25de783c5650a319626c17",
+     "new": "b5d5f4af1117f2f5b5dfd91726874a36de4c3ad20a2f03defcfc46a33a060322",
+     "normalized_base": "ee2b0ee35f120adb90a852cf2da282d80f457fba174aa75a78a04b360e1185db",
+     "normalized_tip": "ee2b0ee35f120adb90a852cf2da282d80f457fba174aa75a78a04b360e1185db",
+     "normalized_identical": true
+    },
+    {
+     "pin": "complex_organism",
+     "old": "a07648c205cb8ecbde3f7c6b37311ac5361cc6551ef663f128990e2da65bb86f",
+     "new": "f6f3e1b11b25149d240ca38bd5c8d978e33cdc0115ac630a0a6375c9b73da99d",
+     "normalized_base": "84c288b62a4fd8481020503887773125a028a5db6c41c5ede3e96d5f756b0ff5",
+     "normalized_tip": "84c288b62a4fd8481020503887773125a028a5db6c41c5ede3e96d5f756b0ff5",
+     "normalized_identical": true
+    },
+    {
+     "pin": "other_entity_species",
+     "old": "59848cca3ccaecaa47a2c72f45d691006e6059a4ce019d60120ccb307ceb479e",
+     "new": "5ec19da64753c181d2ec9854f352956be2d653be2e1a4f67d937e9c09be78ee5",
+     "normalized_base": "e3433753e6f5e7a152a7657a2375f3954a26f59731252fa2bdc7d9ddac6737b4",
+     "normalized_tip": "e3433753e6f5e7a152a7657a2375f3954a26f59731252fa2bdc7d9ddac6737b4",
+     "normalized_identical": true
+    },
+    {
+     "pin": "location_row_species",
+     "old": "ab6b5819e73ea295d799d55ca685b800711d18912d8221a53759cab89e8abb61",
+     "new": "e4bcc5dcb8fd8b9098ec73027c20208cb46a73faa451a50e22eb80f973cbf7cf",
+     "normalized_base": "6ee3e8c1dc68a6597279a00c80702457ea62f860cba0defbe7839ffe1c0fa28c",
+     "normalized_tip": "6ee3e8c1dc68a6597279a00c80702457ea62f860cba0defbe7839ffe1c0fa28c",
+     "normalized_identical": true
+    },
+    {
+     "pin": "pathway_metadata_organism",
+     "old": "180ebca37067f3e6688874a5a2606e270d41ce859166753948f64d292b9dbfbc",
+     "new": "49f33a07711d380d66dd81346475973a58e5ba8113271fb315f89058337f0230",
+     "normalized_base": "db387babe54e46858bf467b2f130f28fa71504ed2a8cd413a71ea2cc30da5bb1",
+     "normalized_tip": "db387babe54e46858bf467b2f130f28fa71504ed2a8cd413a71ea2cc30da5bb1",
+     "normalized_identical": true
+    },
+    {
+     "pin": "surviving_process_field",
+     "old": "158d8a41f6d0086d3b85fe358fda58f4306ed96b5c469e0b318d44e62620d24a",
+     "new": "1cd719e143cd5b3b742f7d90415b73ecb5f367dfdeed309e6d2a9b9870207e2f",
+     "normalized_base": "088ee942fe84c3533c58a90b22366d1943a87975bfc78175975052510465dbbb",
+     "normalized_tip": "088ee942fe84c3533c58a90b22366d1943a87975bfc78175975052510465dbbb",
+     "normalized_identical": true
+    },
+    {
+     "pin": "alias",
+     "old": "afe2e047be567544fafc692bfa1e287bf45d018b105f836453fe97d012ffda73",
+     "new": "33a497f8a2279b1570397d5aa1f9a7bb045cd3baa6a7913519b793938c82173f",
+     "normalized_base": "bf09ab6d3ecef5872fbe66bfb831a93418e77d688b810a161845c933a84530ef",
+     "normalized_tip": "bf09ab6d3ecef5872fbe66bfb831a93418e77d688b810a161845c933a84530ef",
+     "normalized_identical": true
+    },
+    {
+     "pin": "synonym",
+     "old": "c61100abc184f807987cd622a667e918cef39926afaff7ac41094c53dd865a9e",
+     "new": "cd002ee4b610f531897a7c4c394739819edc2f440c23633ebfce003c7e08c800",
+     "normalized_base": "da73aeea919a4de7a04d70de473fe927857794e2265b8c5e8560fe7beb9e3f67",
+     "normalized_tip": "da73aeea919a4de7a04d70de473fe927857794e2265b8c5e8560fe7beb9e3f67",
+     "normalized_identical": true
+    },
+    {
+     "pin": "raw_name",
+     "old": "50362983d670a2d6d6d4f770a7dd6fe0e965435a7a7d7304600e20eea89676aa",
+     "new": "2f922eee645538ccb4ae5526104ad713ef6d623c38cd12f51f845ca9699f34e3",
+     "normalized_base": "a9ecdcdd30646ab7550f1ed9ef3c728b6fb33f1a4c370c9bbf458e81a00f6626",
+     "normalized_tip": "a9ecdcdd30646ab7550f1ed9ef3c728b6fb33f1a4c370c9bbf458e81a00f6626",
+     "normalized_identical": true
+    },
+    {
+     "pin": "case_and_punctuation_variant",
+     "old": "62c8ec9ca9cf2984c5dd55ed0ecf67b18d338f73a3bc29d882862fb6a3f4036c",
+     "new": "fd186b0b868638a0f58d5fff777bdf971e62adbc2078244da48d922bc3e1bd99",
+     "normalized_base": "94d329f154476eac98c9d8d9cbf9de3d6e57454dec526fffc25911adcd4927c5",
+     "normalized_tip": "94d329f154476eac98c9d8d9cbf9de3d6e57454dec526fffc25911adcd4927c5",
+     "normalized_identical": true
+    },
+    {
+     "pin": "protein_taxonomy_id",
+     "old": "b41f47767ab7dfe916bdf471e6738e73e7006a11305d0a0c389cf7e17dc7dcf9",
+     "new": "0e37b99c3dd41acca1a3b3b7ffbc080d9c16beb3a1205d50eb2a0b0de648491b",
+     "normalized_base": "c923c34b790fa90ef1c248760e4943f793494060e684dc352b35e7de8bfe58c1",
+     "normalized_tip": "c923c34b790fa90ef1c248760e4943f793494060e684dc352b35e7de8bfe58c1",
+     "normalized_identical": true
+    },
+    {
+     "pin": "protein_species_id",
+     "old": "88cd97ddc10ce5d634a0fb898b7c122ba345a81a6d4c0a2042ac7fd66c8887c2",
+     "new": "f7a957f85509db2806b1aabf7e93fbb661e8c5d7caeaa9b89db9fe3eb54f745f",
+     "normalized_base": "4312631d79abad8d318472830662fc0952728258cc16732f6afd92108abe99e9",
+     "normalized_tip": "4312631d79abad8d318472830662fc0952728258cc16732f6afd92108abe99e9",
+     "normalized_identical": true
+    },
+    {
+     "pin": "protein_species_ref_ids",
+     "old": "6a8b7b1aeccb1eb1867f5db27aa540b1f1e721f2bded06f95bbc38db6009a06a",
+     "new": "5cee2278fa24859fc8809eef717a45f845d9b61704436f4788ad4c87c6375c3d",
+     "normalized_base": "a4297704902af6779e4c05525490a5bbb04e60b81bcb1a5d3064259f26ddefa9",
+     "normalized_tip": "a4297704902af6779e4c05525490a5bbb04e60b81bcb1a5d3064259f26ddefa9",
+     "normalized_identical": true
+    },
+    {
+     "pin": "state_taxonomy_id",
+     "old": "8245a6733bfb71ed28511ae8c04bc7eaf360e331547914765052934b465aa516",
+     "new": "30dc3509f9fd75eefff422124355d6b71c9d7bf416f6d5eccb283ac07e7fd71b",
+     "normalized_base": "1cc324acff4f4155fb4620b36e40b3aff790076c2ed1e7b9f6f19b7ec08cf677",
+     "normalized_tip": "1cc324acff4f4155fb4620b36e40b3aff790076c2ed1e7b9f6f19b7ec08cf677",
+     "normalized_identical": true
+    },
+    {
+     "pin": "species_id_as_float_text",
+     "old": "cbaff37cecfa22be80df36ebd1794b115e2a61abd98fc4df373baa6a0ebd04c2",
+     "new": "a4fa655c509345c783be54b8215ed7076461737f3ede5bd998ea2ac57323b76e",
+     "normalized_base": "424dd3e82c282ea3bc8baa8970b00beb921176cb4c7e256a0c9f8ff1d7413d6f",
+     "normalized_tip": "424dd3e82c282ea3bc8baa8970b00beb921176cb4c7e256a0c9f8ff1d7413d6f",
+     "normalized_identical": true
+    },
+    {
+     "pin": "species_id_non_integral_float",
+     "old": "8e036922090ab99803872689512d5a668b4dc10c3f9c08b55b9f81ac6ea33af9",
+     "new": "d697e8789dc9341e687355e383eca4853f51ee2c0847a3d16e7695b9fe5599c0",
+     "normalized_base": "0270bf4cebf69595edb82c304cba69aa2e0e71c85404c99bb4e3b95df3c7b629",
+     "normalized_tip": "0270bf4cebf69595edb82c304cba69aa2e0e71c85404c99bb4e3b95df3c7b629",
+     "normalized_identical": true
+    },
+    {
+     "pin": "species_id_non_integral_text",
+     "old": "66653bde626002dd67dee7557a1e817abc542794826f0c9c4fe63b30655c651a",
+     "new": "0ffc15d53698afc35b7de47fcece9616a646b0e78bdd906106959dd86bda8ef6",
+     "normalized_base": "4802dae8a321b1f4ae0e0f5f257d72720eddbbfcb9b7430f23dafddffed0f250",
+     "normalized_tip": "4802dae8a321b1f4ae0e0f5f257d72720eddbbfcb9b7430f23dafddffed0f250",
+     "normalized_identical": true
+    },
+    {
+     "pin": "create_default_name",
+     "old": "0fccf968036b093b7bb925f983c721d412cc2e4cc977fafa82f8a8720ac30e27",
+     "new": "f13aa54dfa4ee9aa1f0c3e13118ffddfb61f1ede5b7f187385464958949ecf60",
+     "normalized_base": "af4bc8e4e1e721d8eb9ef8db7f183e88833ef13505243cffc6d0ee81f1bab87e",
+     "normalized_tip": "af4bc8e4e1e721d8eb9ef8db7f183e88833ef13505243cffc6d0ee81f1bab87e",
+     "normalized_identical": true
+    },
+    {
+     "pin": "first_row",
+     "old": "0b721eb01f56141a51e650337a4ac3045b790c5854385525bdc69eb45643b306",
+     "new": "7a29f1369b2edb0b785ea94f0a340314a621cee9084bad4815ec6a9a758ff42e",
+     "normalized_base": "e205712aad0339f62618a3bc304af7c3bf5d338dc51276fea93a5466b3f0f898",
+     "normalized_tip": "e205712aad0339f62618a3bc304af7c3bf5d338dc51276fea93a5466b3f0f898",
+     "normalized_identical": true
+    },
+    {
+     "pin": "requested_organism",
+     "old": "4f25a124db191559f97391801223a3437aeab2f1f5d90c9d66bbee2716519caf",
+     "new": "8ad52f5c9c10cc963bd00e3e0c5fd29c401a5f6fadae73c1debcfd55d97642f0",
+     "normalized_base": "976f5041057942c702e446c2a657f7cbfe7e74321d8ffd5521e36b102ca4af5e",
+     "normalized_tip": "976f5041057942c702e446c2a657f7cbfe7e74321d8ffd5521e36b102ca4af5e",
+     "normalized_identical": true
+    }
+   ],
+   "evidence": "L5scripts/pins_delta.py; L5logs/pins_base_out.json, pins_tip_out.json, pins_repinned.json"
+  }
+ },
+ "replay_proof": {
+  "harness": "C:/t/corr-assess/lanes/L5scripts/dump_replay_l5.py; base = 111dea4e source; tip = ebb08d87 source",
+  "v2_152": {
+   "runs": [
+    152,
+    152
+   ],
+   "exported": [
+    97,
+    97
+   ],
+   "harness_errors": [
+    0,
+    0
+   ],
+   "byte_identical": 92,
+   "byte_changed": 5,
+   "changed_files": [
+    27,
+    29,
+    44,
+    113,
+    116
+   ],
+   "new_exports": [],
+   "lost_exports": [],
+   "pwml_tag_drops": [],
+   "pwml_tag_totals": {
+    "before": {
+     "reaction": 409,
+     "reaction-enzyme": 456,
+     "protein-complex": 393,
+     "protein": 374,
+     "compound": 687,
+     "transport": 74,
+     "interaction": 48,
+     "reaction-left-element": 564,
+     "reaction-right-element": 473
+    },
+    "after": {
+     "reaction": 414,
+     "reaction-enzyme": 460,
+     "protein-complex": 397,
+     "protein": 376,
+     "compound": 691,
+     "transport": 74,
+     "interaction": 49,
+     "reaction-left-element": 571,
+     "reaction-right-element": 479
+    }
+   }
+  },
+  "v2_gains": [
+   {
+    "idx": 27,
+    "gained_reactions": [
+     "LDH coupled reaction"
+    ]
+   },
+   {
+    "idx": 29,
+    "gained_reactions": [
+     "enterobactin synthase complex reaction"
+    ]
+   },
+   {
+    "idx": 44,
+    "gained_reactions": [
+     "ALAS2-catalyzed ALA formation"
+    ]
+   },
+   {
+    "idx": 113,
+    "gained_reactions": [
+     "C4H hydroxylation"
+    ]
+   },
+   {
+    "idx": 116,
+    "gained_reactions": [
+     "ceramide synthase reaction"
+    ]
+   }
+  ],
+  "v2_losses": [],
+  "ruling_2_pwml_effect": "fin_v2 vs after_v2 (before ruling 2): 0 PWML files differ; 76/77 now carry the withheld row in pwml_ir.json and the side file (L5logs/probe_7677.log)",
+  "v1_97": {
+   "byte_identical": 92,
+   "byte_changed": 5,
+   "changed_files": [
+    27,
+    29,
+    44,
+    113,
+    116
+   ],
+   "new_exports": [],
+   "lost_exports": [],
+   "pwml_tag_drops": []
+  },
+  "flag0_97": {
+   "byte_identical": 92,
+   "byte_changed": 5,
+   "changed_files": [
+    27,
+    29,
+    44,
+    113,
+    116
+   ],
+   "new_exports": [],
+   "lost_exports": [],
+   "pwml_tag_drops": []
+  },
+  "v1_flag0_note": "Not byte-identical in exactly the 5 changed files (the quarantine runs under every layout and flag); the other 92 are byte-identical in both arms. Same accepted pattern as L4.",
+  "new_content_to_check_in_pathwhiz": "C:/t/bt-corr/L5/replay/fin_v2/pwml/{27,29,44,113,116}.pwml (27 LDH coupled reaction w/ lactate dehydrogenase complex; 29 enterobactin synthase complex reaction without enzyme; 44 ALAS2-catalyzed ALA formation without PLP; 113 C4H hydroxylation w/ AtCYP73A5 complex + 'piperonylic acid inhibits C4H' drawn; 116 ceramide synthase reaction w/ ceramide synthase complex)",
+  "previously_failing_now_exporting_replays": "none of the 55",
+  "cohort_tests_now_exporting": "real-artifact cohort: runs/2026-08-02_2130/papers/PMC12096016/research newly exportable (and 8 legs newly admitted that still fail species metadata); c011 cohort: 3 strict legs now freeze a payload (2026-07-28_2122 PMC12312563, 2026-07-28_2122 PMC13231680, 2026-08-02_2130 PMC12657337). These are content to check.",
+  "v2_gains_correction_round2": "Review F2: the idx 113 'gain' (C4H hydroxylation) in round 1 was a DUPLICATE of the already drawn 'C4H reaction' (cinnamic acid -> p-coumaric acid; AtCYP73A5 vs Cinnamate 4-hydroxylase), drawn twice. After round 2 F1 the two copies merge (flag on): one reaction 'C4H hydroxylation' with both complexes. Not new content."
+ },
+ "open_issues": [
+  "Ruling 3 items stay with other lanes: no_defensible_reaction_support removal (10 reactions); research mode (Stage 6 does not wrap; 16 research runs write no PWML); TLCD3B/Q71RH2 identity of 'ceramide synthase' in idx 116.",
+  "Text record: a D-W24 3 actor drop's 'Add by hand' line is the KI's whole-file workaround (reaction_evidence._actor_hand_fix has branches only for D-114/D-113); a one-line branch ('add X as the enzyme/modifier of Y') would be clearer - outside this lane's files.",
+  "Research mode still shows the old quarantine decision as a flag (it applies nothing) while strict keeps the reaction; by design, but the two now disagree on such rows.",
+  "Pre-existing on base 111dea4e (L4 post-merge check): test_equivalence_run_pathway 3 failed (strict case LLM cassette key not recorded), c052 1 failed (reference-key spelling), test_orch768 sour_taste_v2 pwml_matches_leg False.",
+  "Base worktree C:/t/bt-corr/L5/basewt (detached 111dea4e) left in place: 'git worktree remove' was denied by permissions; needs removal by someone allowed to.",
+  "One mistake during the run: a stray empty 'python -' heredoc started once (no input); it was stopped within the task and no process survived (checked)."
+ ],
+ "pids": "none of ours left (checked after the last run); heavy lock released by every L5 run (BW_EXIT recorded each time).",
+ "round2": {
+  "implementer": "L5c (took over from the stuck L5 agent; its uncommitted patch L5_partial_r2.patch reviewed and finished)",
+  "worktree": "C:/t/corr-L5c",
+  "branch": "corr/L5c-quarantine-keep",
+  "base": "46dc4a82 (L5 ebb08d87 + pwml/correctness 8898f58a)",
+  "head": "9f3be115",
+  "commits": [
+   "0059f8ba code + L5/L6 tests: F1, F4, F5, F6, F7 (msg C:/t/corr-assess/msgs/L5c_code.txt)",
+   "c4de06cd tests: F9 (5 tests use a non-actor failure again) + schema_version pins 6->7 (msg L5c_tests.txt)",
+   "9f3be115 tests: expectations moved by F6 (orch759c x2, orch769b x1) and F7 (28 orch766 digest pins) (msg L5c_tests2.txt)"
+  ],
+  "review_of_the_partial_patch": {
+   "kept": [
+    "F1 guard via strict_quarantine.wrappable_bare_enzymes (one predicate shared with the wrapper)",
+    "F5 before_admission snapshot",
+    "F6 closure actor drops + rollback_drop_count",
+    "F7 enzyme_wrappers + schema 7",
+    "F4 withheld_reaction_actors + clean_model/builder.py reader"
+   ],
+   "changed": [
+    "F7: REMOVED the provenance_lineage entry the patch wrote on each built wrapper row. On a payload with no lineage anywhere it would switch on reaction_support.lineage_carrier_active and could turn an 'indeterminate' support verdict into a no_defensible_reaction_support refusal. The section 3 facts (stage, origin, source, paper_explicit, decision) are in quarantine_report.enzyme_wrappers instead (Stage 6's own wrapper rows carry no lineage either). The patch also used origin 'inferred' correctly but the stage/origin in the report record now use the lineage vocabulary.",
+    "F4: withheld_reaction_actors lists only actors of a reaction still drawn (a reaction that left later keeps them in its original_process), and a re-quarantined payload keeps its earlier records (append, no duplicates).",
+    "F1 test: the patch's edit of test_l6_a_copy_that_would_add_a_non_complex_enzyme_is_not_merged failed (an identity-less protein now defers through the strict actor check, not the complex guard); it now asserts both remaining defer routes (identity-less -> actor_not_admissible_under_strict, PathBank Unknown sentinel -> actor_not_a_protein_complex).",
+    "Tests for F4, F5, F6, F7 were missing; added."
+   ]
+  },
+  "findings": {
+   "F1": "final_payload_merge guard accepts a bare protein the quarantine will wrap (wrappable_bare_enzymes: bare protein, not a complex name, DB identity, not the PathBank Unknown sentinel); every other non-complex actor still defers.",
+   "F2": "idx 113 correction recorded under replay_proof.v2_gains_correction_round2.",
+   "F4": "payload.withheld_reaction_actors (reaction, pointer, slots, actor verbatim, name, reason, gate, decision); clean_model builder reads it (and withheld_interactions) as Removed records -> SBML t2pw:omission. idx 44 PLP is such a record.",
+   "F5": "originals of accepted rows snapshotted before _admit_processes.",
+   "F6": "_revalidate_surviving_processes drops failing enzymes/modifiers of a surviving reaction (gate strict_quarantine_closure) instead of stranded_by_closure; essential-participant failures still strand. Rollback keeps drops made before it.",
+   "F7": "quarantine_report schema_version 7, key enzyme_wrappers.",
+   "F9": "test_streamlit_quarantine_boundary 644/692 (no viable core) and 1312 (strict quarantines) use an unidentified protein PRODUCT (an input is promoted to a modifier by normalize_process_payload, found by the first attempt failing); test_orch773 395 uses the EntB leg with species stripped (interaction omitted per row, then rolled back), 431 the toy with a lineage carrier (no_defensible_reaction_support names every reaction, then rolled back); both spy on the per-row round to prove the omission was attempted."
+  },
+  "tests_added": [
+   "test_l5_quarantine_keeps_reactions.py::test_l5_an_actor_lost_during_closure_leaves_the_reaction_not_the_reaction_itself (F6)",
+   "test_l5_quarantine_keeps_reactions.py::test_l5_a_dropped_actor_stays_in_the_frozen_payload_as_a_withheld_record (F4)",
+   "test_l5_quarantine_keeps_reactions.py::test_l5_a_reaction_that_leaves_after_losing_an_actor_keeps_that_actor_in_its_original (F5)",
+   "test_l5_quarantine_keeps_reactions.py::test_l5_the_quarantine_report_records_the_wrappers_it_built (F7)"
+  ],
+  "existing_tests_moved": {
+   "tests/test_l6_merge_compartments.py": "a_copy_with_a_bare_protein_enzyme_is_never_the_kept_row: idx 113 copies now merge (both enzymes); an identity-less AtCYP73A5 still defers. a_copy_that_would_add_a_non_complex_enzyme: see above.",
+   "tests/test_streamlit_quarantine_boundary.py": "F9: 3 tests restored to their pre-L5 assertions with a product defect; fixture helper _add_unmapped_participant",
+   "tests/test_orch773_omit_per_row.py": "F9: 2 rollback tests on non-actor failures + per-row spy",
+   "tests/test_strict_quarantine.py, test_strict_quarantine_release_seam.py, test_c056c_semantic_evaluability.py": "schema_version 6 -> 7",
+   "tests/test_orch759c_quarantine_bucket_closure.py": "F6: two delta_n2 shapes: reaction kept, wrapper dropped at closure with the same reason",
+   "tests/test_orch769b_actor_protein_registry.py": "F6: closure revalidation keeps the reaction, drops GSS (non_protein_actor_in_modifiers)",
+   "tests/test_orch766_unreferenced_species.py": "F7: 28 digest pins; normalised back to schema 6 (enzyme_wrappers removed) all 28 equal the old pins (C:/t/corr-assess/lanes/L5cprobe/probe_766.json)"
+  },
+  "fail_first": {
+   "log": "C:/t/corr-assess/lanes/L5clogs/before_focused.log",
+   "result": "src stashed (46dc4a82 code), round-2 tests: 8 failed (4 new L5 tests, the L6 idx-113 merge test, 3 schema pins), 165 passed"
+  },
+  "test_runs_on_committed_head_9f3be115": {
+   "chain": "C:/t/corr-assess/lanes/L5clogs/chain2.out (every step checked HEAD 9f3be115 and a clean tree)",
+   "focused (l5, l6, orch773)": "92 passed",
+   "smoke": "511 passed",
+   "affected (51 files + l4/interaction/writer/final_payload fix1 fix2 default_flip/orch772)": "1 failed, 1315 passed, 8 skipped; the 1 = test_orch768 sour_taste_v2 (pre-existing)",
+   "reaction_evidence": "19 passed",
+   "clean_model (7 files)": "101 passed, 1 skipped",
+   "golden_each_alone": {
+    "test_batch_driver_seam_golden": "2 passed",
+    "test_c011_freeze_seam_golden_equivalence": "8 passed",
+    "test_streamlit_stage8_export_contract": "4 passed",
+    "test_streamlit_quarantine_boundary": "24 passed"
+   },
+   "equivalence_each_alone": {
+    "test_equivalence_run_pathway": "3 failed, 5 passed (strict case, LLM replay key asked=1 recorded=0: the known L9 ReplayMiss); re-run once: 8 passed (C:/t/corr-assess/lanes/L5clogs/r2_g_test_equivalence_run_pathway_rerun.log)",
+    "test_equivalence_app_vs_service": "14 passed",
+    "test_equivalence_default_path": "6 passed"
+   },
+   "c052_alone": "1 failed, 12 passed (pre-existing)",
+   "c055_alone": "14 passed",
+   "earlier_head_c4de06cd": "chain.out: same, plus 31 failures in the affected suites (28 orch766 pins, 2 orch759c, 1 orch769b) that 9f3be115 moves"
+  },
+  "replay_152": {
+   "harness": "C:/t/corr-assess/lanes/L5scripts/dump_replay_l5.py via L5cscripts/replay.sh; base = git archive 8898f58a (src, reference, data) at C:/t/bt-corr/L5c/base8898; head = C:/t/corr-L5c @ 9f3be115",
+   "note": "a first base run without data/ (pathwhiz_id_db.json read from the repo root) differed in 21 extra files by compound names only (pyruvate vs Pyruvic acid); discarded (r2_base_*), re-run as r2_base2_*",
+   "v2_152_flag1": {
+    "runs": [
+     152,
+     152
+    ],
+    "exported": [
+     97,
+     97
+    ],
+    "harness_errors": [
+     0,
+     0
+    ],
+    "byte_identical": 92,
+    "byte_changed": 5,
+    "changed_files": [
+     27,
+     29,
+     44,
+     113,
+     116
+    ],
+    "new_exports": [],
+    "lost_exports": [],
+    "pwml_tag_drops": [],
+    "gains": "27 LDH coupled reaction; 29 enterobactin synthase complex reaction; 44 ALAS2-catalyzed ALA formation; 116 ceramide synthase reaction; 113: 'C4H reaction' merged into 'C4H hydroxylation' which carries both complexes (pc_4 AtCYP73A5 complex + pc_2 Cinnamate 4-hydroxylase); reaction count at 113 unchanged (4)",
+    "pwml_tags_before": {
+     "reaction": 377,
+     "reaction-enzyme": 427,
+     "protein-complex": 393,
+     "protein": 374,
+     "compound": 687,
+     "transport": 74,
+     "interaction": 48
+    },
+    "pwml_tags_after": {
+     "reaction": 381,
+     "reaction-enzyme": 431,
+     "protein-complex": 397,
+     "protein": 376,
+     "compound": 691,
+     "transport": 74,
+     "interaction": 49
+    },
+    "table": "C:/t/corr-assess/lanes/L5c_replay_table_v2.json"
+   },
+   "v1_97": "92 identical, 5 changed (same 5), no export lost/gained, no tag drop (L5c_replay_table_v1.json)",
+   "flag0_97": "92 identical, 5 changed (same 5), no tag drop; with T2PW_FINAL_PAYLOAD=0 the L6 merge does not run, so idx 113 draws both C4H copies there (as in round 1) (L5c_replay_table_f0.json)",
+   "previously_failing_now_exporting": "none of the 55"
+  },
+  "l6_ab_97": {
+   "harness": "L6scripts/dump_replay_l6.py + check_l6.py on the L5c worktree (arm A merge off, arm B merge on, identical inputs)",
+   "result": "C:/t/corr-assess/lanes/L5clogs/ab_r2_ab_v2_check.json",
+   "totals": {
+    "exported": [
+     97,
+     97
+    ],
+    "states": "290 -> 233 (57 merged)",
+    "payload_reactions": "424 -> 391 (33 merged; L6 alone: 32)",
+    "pwml_reactions": "414 -> 381",
+    "isozyme_groups": 10,
+    "deferred": 6,
+    "zero_loss_problems": 0
+   },
+   "newly_merged": "idx 113 'C4H reaction' -> 'C4H hydroxylation' (+ Cinnamate 4-hydroxylase as enzyme and modifier)",
+   "remaining_deferrals": {
+    "reactions (4, actor_not_a_protein_complex)": [
+     "idx 6 'Rac1/RhoA GDP/GTP exchange' (Ras-related C3 botulinum toxin substrate 1)",
+     "idx 7 'Coprogen III oxidation to Protogen IX' (Coproporphyrinogen-III oxidase 1, chloroplastic)",
+     "idx 17 'PHGDH reaction' x2 (D-3-phosphoglycerate dehydrogenase)"
+    ],
+    "why_not_F1": "not bare proteins: each actor IS a declared protein_complex (entity_type protein_complex) whose name is ALSO a synonym of a protein row (Rac1, CPO, PHGDH), so the registry resolves the name to the protein and L6's guard calls it non-complex. The quarantine does not wrap them (it writes the complex). A false deferral in L6's guard (registry resolution order), outside this lane; fail-closed (nothing lost, copies drawn as before).",
+    "states (2)": [
+     "idx 3 names_disagree (cytosolic vs cytoplasm)",
+     "idx 150 eukaryote_cell_without_cell_type_or_tissue"
+    ]
+   }
+  },
+  "open_issues": [
+   "L6 guard false deferral for complexes whose name is also a protein synonym (idx 6, 7, 17): owner L6 / orchestrator.",
+   "Flag-off path (T2PW_FINAL_PAYLOAD=0): idx 113 draws both C4H copies (no merge there).",
+   "withheld_reaction_actors 'pointer' is the admission pointer (pre-compaction index), as removed_entity_report's 'process'; use 'reaction' for lookup.",
+   "Pre-existing, left alone: test_c052 (1), test_orch768 sour_taste_v2 (1), equivalence_run_pathway ReplayMiss (L9; passed on re-run).",
+   "Base tree C:/t/bt-corr/L5c/base8898 is a git-archive copy (src, reference, data), not a worktree; only used for replays."
+  ],
+  "pids": "every run a bounded_run child (holder corr-l5c), FINAL SURVIVING COUNT 0 each; no L5c process left; heavy lock released each run.",
+  "commands_denied": "none"
+ }
+}

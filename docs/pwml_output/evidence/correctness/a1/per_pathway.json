@@ -1,0 +1,7366 @@
+{
+ "7": {
+  "idx": 7,
+  "canvas": [
+   3730,
+   3719
+  ],
+  "reactions": {
+   "payload": 23,
+   "pwml": 23,
+   "pwml_viz": 23,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "payload_without_enzyme": 0,
+   "pwml_without_enzyme": 0,
+   "direction_values": {
+    "Right": 23
+   }
+  },
+  "noncatalyst_modifiers": {
+   "payload_roles": {
+    "activator": 3
+   },
+   "total": 3,
+   "written_as_reaction_enzyme": 3,
+   "examples": [
+    [
+     "Mg-chelatase reaction",
+     "gun4 complex",
+     "activator"
+    ],
+    [
+     "singlet oxygen generation from Pchlide",
+     "glutamyl-trna reductase",
+     "activator"
+    ],
+    [
+     "singlet oxygen generation from Pchlide",
+     "fc1 complex",
+     "activator"
+    ]
+   ]
+  },
+  "payload_dups": {
+   "exact_dup": 0,
+   "reverse_dup_pairs_same_enzyme": 0,
+   "same_inout_diff_enzyme": 4,
+   "reverse_pairs_any_enzyme": 0
+  },
+  "pwml_dups": {
+   "exact_dup": 0,
+   "reverse_dup_pairs_same_enzyme": 0,
+   "same_inout_diff_enzyme": 4,
+   "reverse_pairs_any_enzyme": 0
+  },
+  "side_vs_role": {
+   "members": 50,
+   "side_contradicts_list": 0,
+   "on_both_lists": 0,
+   "elements_not_drawn": 0
+  },
+  "enzymes": {
+   "reaction_enzyme_rows": 34,
+   "payload_enzyme_refs": 34,
+   "viz_complex_mismatch": 0,
+   "enzyme_not_drawn": 0
+  },
+  "states": {
+   "payload": 10,
+   "pwml": 10,
+   "used_in_pwml": [
+    "etioplast state",
+    "nucleus",
+    "nucleus state",
+    "plastid",
+    "plastid state",
+    "thylakoid membrane",
+    "thylakoid membrane state"
+   ],
+   "defined_unused": [
+    "etioplast",
+    "nucleus state",
+    "plastid state"
+   ],
+   "payload_dup_names": [
+    "nucleus state",
+    "plastid state"
+   ],
+   "synonym_groups_used": {
+    "plastid": [
+     "etioplast|etioplast state",
+     "plastid|plastid",
+     "plastid|plastid state"
+    ],
+    "thylakoid membrane": [
+     "thylakoid membrane|thylakoid membrane",
+     "thylakoid membrane|thylakoid membrane state"
+    ],
+    "nucleus": [
+     "nucleus|nucleus",
+     "nucleus|nucleus state"
+    ]
+   },
+   "null_state_reactions_payload": 0,
+   "species_among_used": [
+    "Arabidopsis thaliana"
+   ],
+   "reaction_state_payload": {
+    "plastid": 17,
+    "plastid state": 3,
+    "thylakoid membrane state": 2,
+    "etioplast state": 1
+   },
+   "reaction_state_pwml": {
+    "plastid": 17,
+    "plastid state": 3,
+    "thylakoid membrane state": 2,
+    "etioplast state": 1
+   },
+   "reaction_state_mismatch": 0
+  },
+  "species": {
+   "organism": "Arabidopsis thaliana",
+   "payload_species": [
+    "Arabidopsis thaliana"
+   ],
+   "pwml_species": [
+    "Arabidopsis thaliana"
+   ],
+   "state_species_in_pwml": [
+    "Arabidopsis thaliana"
+   ]
+  },
+  "compartment_boxes": {
+   "boxes": 5,
+   "labels": [
+    "plastid",
+    "plastid",
+    "thylakoid membrane",
+    "nucleus",
+    "etioplast"
+   ],
+   "dup_labels": [
+    "plastid"
+   ],
+   "organism_or_strain_named": []
+  },
+  "transports": {
+   "payload": 0,
+   "pwml": 0,
+   "pwml_elements": 0,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "transporters_payload": 0,
+   "transporters_pwml": 0,
+   "drawn": 0,
+   "same_state_both_ends_pwml": 0
+  },
+  "interactions": {
+   "payload": 31,
+   "pwml": 10
+  },
+  "drawing": {
+   "compound_locations": 46,
+   "distinct_compound_state": 35,
+   "compounds_with_multiple_locs": 8,
+   "shared_compound_state": 12,
+   "shared_redrawn": 7,
+   "drawn_components": 15,
+   "logical_components": 3,
+   "hidden_locs": 0
+  },
+  "flow": {
+   "precedence_pairs": 14,
+   "right_to_left_pairs": 3,
+   "examples": [
+    [
+     "protoporphyrin IX",
+     2225,
+     465
+    ],
+    [
+     "Glu 1-semialdehyde",
+     775,
+     465
+    ],
+    [
+     "Glu 1-semialdehyde",
+     585,
+     465
+    ]
+   ]
+  },
+  "canvas_use": {
+   "w": 3730,
+   "h": 3719,
+   "x_span": 3420,
+   "y_span": 3389,
+   "fit_scale_1600x900": 0.242
+  },
+  "pwml_counts": {
+   "compounds": 25,
+   "proteins": 40,
+   "protein-complexes": 33,
+   "reactions": 23,
+   "transports": 0,
+   "interactions": 10,
+   "compound-locations": 46,
+   "protein-locations": 63,
+   "edges": 104,
+   "biological-states": 10,
+   "membrane-visualizations": 5,
+   "label-locations": 5
+  },
+  "db": {
+   "counts": {
+    "biological_states": 4,
+    "compound_locations": 46,
+    "compounds": 25,
+    "element_states": 45,
+    "interaction_elements": 16,
+    "interactions": 8,
+    "pathway_elements": 42,
+    "protein_complexes": 33,
+    "protein_locations": 63,
+    "proteins": 40,
+    "reaction_elements": 50,
+    "reaction_enzymes": 34,
+    "reactions": 23,
+    "subcellular_locations": 80
+   },
+   "reactions_db": 23,
+   "reactions_pwml_distinct": 23,
+   "reactions_merged_by_importer": 0,
+   "reactions_pwml_not_in_db": [],
+   "reactions_db_not_in_pwml": [],
+   "reaction_elements_expected": 50,
+   "reaction_enzymes_expected": 34,
+   "transports_db_vs_pwml_missing": [],
+   "transports_db_vs_pwml_extra": [],
+   "db_states": [
+    "etioplast",
+    "nucleus",
+    "plastid",
+    "thylakoid membrane"
+   ]
+  },
+  "import": {
+   "ok": true,
+   "errors": {
+    "nucleic_acid_24": [
+     "Nucleotide type can't be blank",
+     "Nucleotide type is not included in the list"
+    ],
+    "nucleic_acid_25": [
+     "Nucleotide type can't be blank",
+     "Nucleotide type is not included in the list"
+    ],
+    "nucleic_acid_27": [
+     "Nucleotide type can't be blank",
+     "Nucleotide type is not included in the list"
+    ],
+    "nucleic_acid_28": [
+     "Nucleotide type can't be blank",
+     "Nucleotide type is not included in the list"
+    ],
+    "nucleic_acid_30": [
+     "Nucleotide type can't be blank",
+     "Nucleotide type is not included in the list"
+    ],
+    "nucleic_acid_32": [
+     "Nucleotide type can't be blank",
+     "Nucleotide type is not included in the list"
+    ],
+    "nucleic_acid_33": [
+     "Nucleotide type can't be blank",
+     "Nucleotide type is not included in the list"
+    ],
+    "interaction_right_element_157": [
+     "Element can't be blank"
+    ],
+    "interaction_155": [
+     "Interaction right elements is the wrong length (should be 1 character)"
+    ],
+    "interaction_right_element_169": [
+     "Element can't be blank"
+    ],
+    "interaction_167": [
+     "Interaction right elements is the wrong length (should be 1 character)"
+    ],
+    "nucleic_acid_location_230": [
+     "Nucleic acid can't be blank"
+    ],
+    "nucleic_acid_location_232": [
+     "Nucleic acid can't be blank"
+    ],
+    "nucleic_acid_location_257": [
+     "Nucleic acid can't be blank"
+    ],
+    "nucleic_acid_location_280": [
+     "Nucleic acid can't be blank"
+    ],
+    "interaction_nucleic_acid_visualization_664": [
+     "Nucleic acid location can't be blank"
+    ],
+    "interaction_visualization_662": [
+     "Interaction can't be blank"
+    ],
+    "interaction_nucleic_acid_visualization_676": [
+     "Nucleic acid location can't be blank"
+    ],
+    "interaction_visualization_674": [
+     "Interaction can't be blank"
+    ]
+   },
+   "pw_id": "PW000001",
+   "created_main": {
+    "pathways": 1,
+    "compounds": 25,
+    "compound_locations": 46,
+    "proteins": 39,
+    "protein_complexes": 33,
+    "reactions": 23,
+    "transports": 0,
+    "element_states": 45,
+    "subcellular_locations": 3,
+    "species": 0,
+    "pathway_visualizations": 1
+   },
+   "expected": {
+    "compounds": 25,
+    "proteins": 40,
+    "protein_complexes": 33,
+    "reactions": 23,
+    "transports": 0,
+    "interactions": 10,
+    "compound_locations": 46,
+    "protein_locations": 63
+   },
+   "exports": {
+    "sbml": {
+     "status": 200,
+     "bytes": 195461,
+     "ok": true
+    },
+    "sbgn": {
+     "status": 200,
+     "bytes": 91118,
+     "ok": true
+    },
+    "pwml": {
+     "status": 200,
+     "bytes": 348586,
+     "ok": true
+    }
+   },
+   "screenshot_ok": true,
+   "parser_exception": null
+  },
+  "problems": [
+   {
+    "class": "data/extraction",
+    "sev": "S2",
+    "what": "duplicate reactions in payload: {'exact_dup': 0, 'reverse_dup_pairs_same_enzyme': 0, 'same_inout_diff_enzyme': 4, 'reverse_pairs_any_enzyme': 0}"
+   },
+   {
+    "class": "data/extraction",
+    "sev": "S2",
+    "what": "two boxes with the same label ['plastid']"
+   },
+   {
+    "class": "data/extraction",
+    "sev": "S2",
+    "what": "near-synonym compartments used: {'plastid': ['etioplast|etioplast state', 'plastid|plastid', 'plastid|plastid state'], 'thylakoid membrane': ['thylakoid membrane|thylakoid membrane', 'thylakoid membrane|thylakoid membrane state'], 'nucleus': ['nucleus|nucleus', 'nucleus|nucleus state']}"
+   },
+   {
+    "class": "writer (shared-intermediate reuse only for adjacent reactions)",
+    "sev": "S2",
+    "what": "7 shared compounds redrawn; 15 drawn components vs 3 logical"
+   },
+   {
+    "class": "layout",
+    "sev": "S2",
+    "what": "3 of 14 producer->consumer pairs drawn against reading order"
+   },
+   {
+    "class": "layout (+PathWhiz fixed font)",
+    "sev": "S3",
+    "what": "fit-to-window scale 0.242: text unreadable"
+   },
+   {
+    "class": "writer (ir.py enzyme_sources)",
+    "sev": "S2",
+    "what": "activator/inhibitor written as reaction enzyme: [['Mg-chelatase reaction', 'gun4 complex', 'activator'], ['singlet oxygen generation from Pchlide', 'glutamyl-trna reductase', 'activator'], ['singlet oxygen generation from Pchlide', 'fc1 complex', 'activator']]"
+   },
+   {
+    "class": "writer/data (nucleic acids without nucleotide type)",
+    "sev": "S1",
+    "what": "PathWhiz importer rejected 7 nucleic acids, 4 nucleic-acid locations and 2 interactions"
+   },
+   {
+    "class": "writer/IR (silent drop)",
+    "sev": "S1",
+    "what": "interactions payload 31 -> PWML 10"
+   }
+  ],
+  "screenshot_review": {
+   "file": "C:/t/corr-assess/a1/shots/7.png",
+   "flow_in_pathway_order": "no",
+   "labels_readable": "no (enzyme/compound text ~3.6 px at fit 0.24; overflows boxes)",
+   "shared_compounds_redrawn": "yes, 7 compounds drawn 2-4x (protoporphyrinogen IX, Mg-Proto IX, Pchlide, Glu-1-semialdehyde)",
+   "note": "two boxes both labelled \"plastid\"; chain split into 5 rows; nucleus box holds only regulator ellipses with red inhibition ends"
+  }
+ },
+ "128": {
+  "idx": 128,
+  "canvas": [
+   3210,
+   2662
+  ],
+  "reactions": {
+   "payload": 11,
+   "pwml": 11,
+   "pwml_viz": 11,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "payload_without_enzyme": 3,
+   "pwml_without_enzyme": 3,
+   "direction_values": {
+    "Right": 11
+   }
+  },
+  "noncatalyst_modifiers": {
+   "payload_roles": {},
+   "total": 0,
+   "written_as_reaction_enzyme": 0,
+   "examples": []
+  },
+  "payload_dups": {
+   "exact_dup": 0,
+   "reverse_dup_pairs_same_enzyme": 0,
+   "same_inout_diff_enzyme": 0,
+   "reverse_pairs_any_enzyme": 0
+  },
+  "pwml_dups": {
+   "exact_dup": 0,
+   "reverse_dup_pairs_same_enzyme": 0,
+   "same_inout_diff_enzyme": 0,
+   "reverse_pairs_any_enzyme": 0
+  },
+  "side_vs_role": {
+   "members": 25,
+   "side_contradicts_list": 0,
+   "on_both_lists": 0,
+   "elements_not_drawn": 0
+  },
+  "enzymes": {
+   "reaction_enzyme_rows": 9,
+   "payload_enzyme_refs": 9,
+   "viz_complex_mismatch": 0,
+   "enzyme_not_drawn": 0
+  },
+  "states": {
+   "payload": 4,
+   "pwml": 4,
+   "used_in_pwml": [
+    "Bacillus subtilis cytoplasm",
+    "Bacillus subtilis extracellular",
+    "Bacillus subtilis plasma membrane",
+    "__auto_state__"
+   ],
+   "defined_unused": [],
+   "payload_dup_names": [],
+   "synonym_groups_used": {
+    "cell-interior": [
+     "cell|__auto_state__",
+     "cytoplasm|Bacillus subtilis cytoplasm"
+    ]
+   },
+   "null_state_reactions_payload": 1,
+   "species_among_used": [
+    "Bacillus subtilis",
+    "Bacillus subtilis (strain"
+   ],
+   "reaction_state_payload": {
+    "Bacillus subtilis cytoplasm": 10,
+    "null": 1
+   },
+   "reaction_state_pwml": {
+    "Bacillus subtilis cytoplasm": 11
+   },
+   "reaction_state_mismatch": null
+  },
+  "species": {
+   "organism": "Bacillus subtilis (strain 168)",
+   "payload_species": [
+    "Bacillus subtilis",
+    "B. subtilis",
+    "Bacillus subtilis (strain"
+   ],
+   "pwml_species": [
+    "Bacillus subtilis",
+    "Bacillus subtilis (strain"
+   ],
+   "state_species_in_pwml": [
+    "Bacillus subtilis",
+    "Bacillus subtilis (strain"
+   ]
+  },
+  "compartment_boxes": {
+   "boxes": 2,
+   "labels": [
+    "Bacillus subtilis cytoplasm",
+    "Bacillus subtilis extracellular"
+   ],
+   "dup_labels": [],
+   "organism_or_strain_named": []
+  },
+  "transports": {
+   "payload": 3,
+   "pwml": 3,
+   "pwml_elements": 3,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "transporters_payload": 4,
+   "transporters_pwml": 4,
+   "drawn": 3,
+   "same_state_both_ends_pwml": 0
+  },
+  "interactions": {
+   "payload": 2,
+   "pwml": 0
+  },
+  "drawing": {
+   "compound_locations": 27,
+   "distinct_compound_state": 17,
+   "compounds_with_multiple_locs": 8,
+   "shared_compound_state": 9,
+   "shared_redrawn": 6,
+   "drawn_components": 7,
+   "logical_components": 1,
+   "hidden_locs": 0
+  },
+  "flow": {
+   "precedence_pairs": 10,
+   "right_to_left_pairs": 4,
+   "examples": [
+    [
+     "4'-phosphopantetheine",
+     1290,
+     465
+    ],
+    [
+     "pantetheine",
+     2060,
+     1290
+    ],
+    [
+     "pantetheine",
+     2060,
+     333
+    ],
+    [
+     "\u03b2-alanine",
+     2125,
+     1605
+    ]
+   ]
+  },
+  "canvas_use": {
+   "w": 3210,
+   "h": 2662,
+   "x_span": 2990,
+   "y_span": 2332,
+   "fit_scale_1600x900": 0.338
+  },
+  "pwml_counts": {
+   "compounds": 15,
+   "proteins": 17,
+   "protein-complexes": 12,
+   "reactions": 11,
+   "transports": 3,
+   "interactions": 0,
+   "compound-locations": 27,
+   "protein-locations": 29,
+   "edges": 40,
+   "biological-states": 4,
+   "membrane-visualizations": 2,
+   "label-locations": 2
+  },
+  "db": {
+   "counts": {
+    "biological_states": 4,
+    "compound_locations": 27,
+    "compounds": 14,
+    "element_states": 29,
+    "pathway_elements": 14,
+    "protein_complexes": 11,
+    "protein_locations": 29,
+    "proteins": 18,
+    "reaction_elements": 25,
+    "reaction_enzymes": 9,
+    "reactions": 11,
+    "subcellular_locations": 78,
+    "transport_elements": 2,
+    "transport_transporters": 2,
+    "transports": 2
+   },
+   "reactions_db": 11,
+   "reactions_pwml_distinct": 11,
+   "reactions_merged_by_importer": 0,
+   "reactions_pwml_not_in_db": [
+    [
+     [
+      "dephospho-coa"
+     ],
+     [
+      "coenzyme a"
+     ],
+     [
+      "coae complex"
+     ]
+    ]
+   ],
+   "reactions_db_not_in_pwml": [
+    [
+     [
+      "dephospho-coa"
+     ],
+     [
+      "coa-sh"
+     ],
+     [
+      "coae complex"
+     ]
+    ]
+   ],
+   "reaction_elements_expected": 25,
+   "reaction_enzymes_expected": 9,
+   "transports_db_vs_pwml_missing": [
+    [
+     "cysteinopantetheine",
+     "extracellular space",
+     "cytoplasm"
+    ]
+   ],
+   "transports_db_vs_pwml_extra": [],
+   "db_states": [
+    "cell",
+    "cell membrane",
+    "cytoplasm",
+    "extracellular space"
+   ]
+  },
+  "import": {
+   "ok": true,
+   "errors": {
+    "transport_62": [
+     "Transport can't contain duplicate elements"
+    ],
+    "transport_transporter_visualization_268": [
+     "Transport transporter can't be blank"
+    ],
+    "transport_transporter_visualization_269": [
+     "Transport transporter can't be blank"
+    ],
+    "transport_visualization_265": [
+     "Transport can't be blank"
+    ]
+   },
+   "pw_id": "PW000001",
+   "created_main": {
+    "pathways": 1,
+    "compounds": 14,
+    "compound_locations": 27,
+    "proteins": 17,
+    "protein_complexes": 11,
+    "reactions": 11,
+    "transports": 2,
+    "element_states": 29,
+    "subcellular_locations": 1,
+    "species": 0,
+    "pathway_visualizations": 1
+   },
+   "expected": {
+    "compounds": 15,
+    "proteins": 17,
+    "protein_complexes": 12,
+    "reactions": 11,
+    "transports": 3,
+    "interactions": 0,
+    "compound_locations": 27,
+    "protein_locations": 29
+   },
+   "exports": {
+    "sbml": {
+     "status": 200,
+     "bytes": 80769,
+     "ok": true
+    },
+    "sbgn": {
+     "status": 200,
+     "bytes": 30922,
+     "ok": true
+    },
+    "pwml": {
+     "status": 200,
+     "bytes": 158279,
+     "ok": true
+    }
+   },
+   "screenshot_ok": true,
+   "parser_exception": null
+  },
+  "problems": [
+   {
+    "class": "writer (ir.py default_bs_key)",
+    "sev": "S3",
+    "what": "1 reaction(s) with no stated compartment placed in biological_states[0]"
+   },
+   {
+    "class": "data/extraction",
+    "sev": "S2",
+    "what": "near-synonym compartments used: {'cell-interior': ['cell|__auto_state__', 'cytoplasm|Bacillus subtilis cytoplasm']}"
+   },
+   {
+    "class": "writer (shared-intermediate reuse only for adjacent reactions)",
+    "sev": "S2",
+    "what": "6 shared compounds redrawn; 7 drawn components vs 1 logical"
+   },
+   {
+    "class": "layout",
+    "sev": "S2",
+    "what": "4 of 10 producer->consumer pairs drawn against reading order"
+   },
+   {
+    "class": "data/extraction (writer passes it through)",
+    "sev": "S1",
+    "what": "transport not created in PathWhiz: duplicate transporter element (TcyJKLMN listed twice)"
+   },
+   {
+    "class": "writer/IR (silent drop)",
+    "sev": "S1",
+    "what": "interactions payload 2 -> PWML 0"
+   }
+  ],
+  "screenshot_review": {
+   "file": "C:/t/corr-assess/a1/shots/128.png",
+   "flow_in_pathway_order": "partly",
+   "labels_readable": "label \"Bacillus subtilis cytoplasm\" cut off",
+   "shared_compounds_redrawn": "yes, pantetheine drawn 4x, cysteine 2x",
+   "note": "chain breaks into 4 rows; long transport lines run across the whole cell box; reaction without enzyme drawn as bare arrow"
+  }
+ },
+ "9": {
+  "idx": 9,
+  "canvas": [
+   3210,
+   3064
+  ],
+  "reactions": {
+   "payload": 19,
+   "pwml": 19,
+   "pwml_viz": 19,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "payload_without_enzyme": 0,
+   "pwml_without_enzyme": 0,
+   "direction_values": {
+    "Right": 19
+   }
+  },
+  "noncatalyst_modifiers": {
+   "payload_roles": {
+    "inhibitor": 1
+   },
+   "total": 1,
+   "written_as_reaction_enzyme": 1,
+   "examples": [
+    [
+     "MenB-catalyzed conversion of OSB-CoA to DHNA-CoA",
+     "mend complex",
+     "inhibitor"
+    ]
+   ]
+  },
+  "payload_dups": {
+   "exact_dup": 8,
+   "reverse_dup_pairs_same_enzyme": 1,
+   "same_inout_diff_enzyme": 1,
+   "reverse_pairs_any_enzyme": 1
+  },
+  "pwml_dups": {
+   "exact_dup": 8,
+   "reverse_dup_pairs_same_enzyme": 1,
+   "same_inout_diff_enzyme": 1,
+   "reverse_pairs_any_enzyme": 1
+  },
+  "side_vs_role": {
+   "members": 40,
+   "side_contradicts_list": 0,
+   "on_both_lists": 0,
+   "elements_not_drawn": 0
+  },
+  "enzymes": {
+   "reaction_enzyme_rows": 20,
+   "payload_enzyme_refs": 20,
+   "viz_complex_mismatch": 0,
+   "enzyme_not_drawn": 0
+  },
+  "states": {
+   "payload": 7,
+   "pwml": 7,
+   "used_in_pwml": [
+    "L. lactis KF147 state",
+    "Lactococcus lactis extracellular state",
+    "Lactococcus lactis intracellular state",
+    "extracellular state",
+    "intracellular state"
+   ],
+   "defined_unused": [
+    "Lactococcus lactis cell",
+    "extracellular"
+   ],
+   "payload_dup_names": [],
+   "synonym_groups_used": {
+    "cell-interior": [
+     "cell|L. lactis KF147 state",
+     "intracellular|Lactococcus lactis intracellular state",
+     "intracellular|intracellular state"
+    ],
+    "extracellular": [
+     "Extracellular Space|Lactococcus lactis extracellular state",
+     "Extracellular Space|extracellular state"
+    ]
+   },
+   "null_state_reactions_payload": 1,
+   "species_among_used": [
+    "Lactococcus lactis",
+    "Lactococcus lactis subsp. lactis KF147"
+   ],
+   "reaction_state_payload": {
+    "L. lactis KF147 state": 9,
+    "null": 1,
+    "Lactococcus lactis intracellular state": 9
+   },
+   "reaction_state_pwml": {
+    "L. lactis KF147 state": 10,
+    "Lactococcus lactis intracellular state": 9
+   },
+   "reaction_state_mismatch": null
+  },
+  "species": {
+   "organism": "Lactococcus lactis subsp. lactis KF147",
+   "payload_species": [
+    "Lactococcus lactis",
+    "Lactococcus lactis subsp. lactis KF147",
+    "L. lactis subsp. lactis KF147",
+    "Arabidopsis thaliana"
+   ],
+   "pwml_species": [
+    "Lactococcus lactis",
+    "Lactococcus lactis subsp. lactis KF147",
+    "Arabidopsis thaliana"
+   ],
+   "state_species_in_pwml": [
+    "Lactococcus lactis",
+    "Lactococcus lactis subsp. lactis KF147"
+   ]
+  },
+  "compartment_boxes": {
+   "boxes": 5,
+   "labels": [
+    "L. lactis KF147",
+    "Lactococcus lactis intracellular",
+    "Lactococcus lactis extracellular",
+    "intracellular",
+    "extracellular"
+   ],
+   "dup_labels": [],
+   "organism_or_strain_named": [
+    "L. lactis KF147"
+   ]
+  },
+  "transports": {
+   "payload": 2,
+   "pwml": 2,
+   "pwml_elements": 2,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "transporters_payload": 0,
+   "transporters_pwml": 0,
+   "drawn": 2,
+   "same_state_both_ends_pwml": 0
+  },
+  "interactions": {
+   "payload": 1,
+   "pwml": 1
+  },
+  "drawing": {
+   "compound_locations": 34,
+   "distinct_compound_state": 25,
+   "compounds_with_multiple_locs": 8,
+   "shared_compound_state": 17,
+   "shared_redrawn": 8,
+   "drawn_components": 6,
+   "logical_components": 1,
+   "hidden_locs": 0
+  },
+  "flow": {
+   "precedence_pairs": 18,
+   "right_to_left_pairs": 5,
+   "examples": [
+    [
+     "chorismate",
+     2485,
+     2485
+    ],
+    [
+     "isochorismate",
+     2485,
+     465
+    ],
+    [
+     "isochorismate",
+     2485,
+     2485
+    ],
+    [
+     "DHNA-CoA",
+     465,
+     465
+    ]
+   ]
+  },
+  "canvas_use": {
+   "w": 3210,
+   "h": 3064,
+   "x_span": 2850,
+   "y_span": 2614,
+   "fit_scale_1600x900": 0.294
+  },
+  "pwml_counts": {
+   "compounds": 11,
+   "proteins": 8,
+   "protein-complexes": 9,
+   "reactions": 19,
+   "transports": 2,
+   "interactions": 1,
+   "compound-locations": 34,
+   "protein-locations": 18,
+   "edges": 66,
+   "biological-states": 7,
+   "membrane-visualizations": 5,
+   "label-locations": 5
+  },
+  "db": {
+   "counts": {
+    "biological_states": 5,
+    "compound_locations": 34,
+    "compounds": 11,
+    "element_states": 16,
+    "interaction_elements": 2,
+    "interactions": 1,
+    "pathway_elements": 23,
+    "protein_complexes": 9,
+    "protein_locations": 18,
+    "proteins": 8,
+    "reaction_elements": 23,
+    "reaction_enzymes": 12,
+    "reactions": 11,
+    "subcellular_locations": 78,
+    "transport_elements": 2,
+    "transports": 2
+   },
+   "reactions_db": 11,
+   "reactions_pwml_distinct": 11,
+   "reactions_merged_by_importer": 8,
+   "reactions_pwml_not_in_db": [],
+   "reactions_db_not_in_pwml": [],
+   "reaction_elements_expected": 40,
+   "reaction_enzymes_expected": 20,
+   "transports_db_vs_pwml_missing": [],
+   "transports_db_vs_pwml_extra": [],
+   "db_states": [
+    "cell",
+    "extracellular space",
+    "intracellular"
+   ]
+  },
+  "import": {
+   "ok": true,
+   "errors": {},
+   "pw_id": "PW000001",
+   "created_main": {
+    "pathways": 1,
+    "compounds": 11,
+    "compound_locations": 34,
+    "proteins": 7,
+    "protein_complexes": 9,
+    "reactions": 11,
+    "transports": 2,
+    "element_states": 16,
+    "subcellular_locations": 1,
+    "species": 0,
+    "pathway_visualizations": 1
+   },
+   "expected": {
+    "compounds": 11,
+    "proteins": 8,
+    "protein_complexes": 9,
+    "reactions": 19,
+    "transports": 2,
+    "interactions": 1,
+    "compound_locations": 34,
+    "protein_locations": 18
+   },
+   "exports": {
+    "sbml": {
+     "status": 200,
+     "bytes": 104696,
+     "ok": true
+    },
+    "sbgn": {
+     "status": 200,
+     "bytes": 50197,
+     "ok": true
+    },
+    "pwml": {
+     "status": 200,
+     "bytes": 168734,
+     "ok": true
+    }
+   },
+   "screenshot_ok": true,
+   "parser_exception": null
+  },
+  "problems": [
+   {
+    "class": "writer (ir.py default_bs_key)",
+    "sev": "S3",
+    "what": "1 reaction(s) with no stated compartment placed in biological_states[0]"
+   },
+   {
+    "class": "data/extraction",
+    "sev": "S2",
+    "what": "duplicate reactions in payload: {'exact_dup': 8, 'reverse_dup_pairs_same_enzyme': 1, 'same_inout_diff_enzyme': 1, 'reverse_pairs_any_enzyme': 1}"
+   },
+   {
+    "class": "data/extraction",
+    "sev": "S2",
+    "what": "near-synonym compartments used: {'cell-interior': ['cell|L. lactis KF147 state', 'intracellular|Lactococcus lactis intracellular state', 'intracellular|intracellular state'], 'extracellular': ['Extracellular Space|Lactococcus lactis extracellular state', 'Extracellular Space|extracellular state']}"
+   },
+   {
+    "class": "writer (shared-intermediate reuse only for adjacent reactions)",
+    "sev": "S2",
+    "what": "8 shared compounds redrawn; 6 drawn components vs 1 logical"
+   },
+   {
+    "class": "layout",
+    "sev": "S2",
+    "what": "5 of 18 producer->consumer pairs drawn against reading order"
+   },
+   {
+    "class": "layout (+PathWhiz fixed font)",
+    "sev": "S3",
+    "what": "fit-to-window scale 0.294: text unreadable"
+   },
+   {
+    "class": "writer (ir.py enzyme_sources)",
+    "sev": "S2",
+    "what": "activator/inhibitor written as reaction enzyme: [['MenB-catalyzed conversion of OSB-CoA to DHNA-CoA', 'mend complex', 'inhibitor']]"
+   }
+  ],
+  "screenshot_review": {
+   "file": "C:/t/corr-assess/a1/shots/9.png",
+   "flow_in_pathway_order": "no",
+   "labels_readable": "tiny at fit 0.29",
+   "shared_compounds_redrawn": "yes, isochorismate/DHNA-CoA/DHNA drawn 2-3x",
+   "note": "same 9-reaction chain drawn in two boxes; 5 boxes for a 2-compartment cell; chorismate<->isochorismate pair far right of lower row of the KF147 box"
+  }
+ },
+ "116": {
+  "idx": 116,
+  "canvas": [
+   2790,
+   3370
+  ],
+  "reactions": {
+   "payload": 15,
+   "pwml": 14,
+   "pwml_viz": 14,
+   "missing_in_pwml": [
+    [
+     [
+      "sphinganine"
+     ],
+     [
+      "dihydroceramide"
+     ],
+     [
+      "ceramide synthase"
+     ]
+    ]
+   ],
+   "extra_in_pwml": [],
+   "payload_without_enzyme": 5,
+   "pwml_without_enzyme": 5,
+   "direction_values": {
+    "Right": 14
+   }
+  },
+  "noncatalyst_modifiers": {
+   "payload_roles": {},
+   "total": 0,
+   "written_as_reaction_enzyme": 0,
+   "examples": []
+  },
+  "payload_dups": {
+   "exact_dup": 1,
+   "reverse_dup_pairs_same_enzyme": 2,
+   "same_inout_diff_enzyme": 0,
+   "reverse_pairs_any_enzyme": 4
+  },
+  "pwml_dups": {
+   "exact_dup": 1,
+   "reverse_dup_pairs_same_enzyme": 2,
+   "same_inout_diff_enzyme": 0,
+   "reverse_pairs_any_enzyme": 4
+  },
+  "side_vs_role": {
+   "members": 33,
+   "side_contradicts_list": 0,
+   "on_both_lists": 0,
+   "elements_not_drawn": 0
+  },
+  "enzymes": {
+   "reaction_enzyme_rows": 9,
+   "payload_enzyme_refs": 10,
+   "viz_complex_mismatch": 0,
+   "enzyme_not_drawn": 0
+  },
+  "states": {
+   "payload": 9,
+   "pwml": 9,
+   "used_in_pwml": [
+    "ER state",
+    "ER state",
+    "Golgi state",
+    "Lysosome state",
+    "medial Golgi state"
+   ],
+   "defined_unused": [
+    "Golgi state",
+    "Plasma membrane state",
+    "lysosome state",
+    "plasma membrane state"
+   ],
+   "payload_dup_names": [
+    "ER state",
+    "Golgi state"
+   ],
+   "synonym_groups_used": {},
+   "null_state_reactions_payload": 5,
+   "species_among_used": [
+    "Homo sapiens"
+   ],
+   "reaction_state_payload": {
+    "ER state": 6,
+    "Golgi state": 2,
+    "null": 5,
+    "Lysosome state": 1,
+    "medial Golgi state": 1
+   },
+   "reaction_state_pwml": {
+    "ER state": 10,
+    "Golgi state": 2,
+    "Lysosome state": 1,
+    "medial Golgi state": 1
+   },
+   "reaction_state_mismatch": null
+  },
+  "species": {
+   "organism": "Homo sapiens",
+   "payload_species": [
+    "Homo sapiens",
+    "Arabidopsis thaliana"
+   ],
+   "pwml_species": [
+    "Homo sapiens",
+    "Arabidopsis thaliana"
+   ],
+   "state_species_in_pwml": [
+    "Homo sapiens"
+   ]
+  },
+  "compartment_boxes": {
+   "boxes": 5,
+   "labels": [
+    "ER",
+    "ER",
+    "Golgi",
+    "medial Golgi",
+    "Lysosome"
+   ],
+   "dup_labels": [
+    "er"
+   ],
+   "organism_or_strain_named": []
+  },
+  "transports": {
+   "payload": 1,
+   "pwml": 1,
+   "pwml_elements": 1,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "transporters_payload": 1,
+   "transporters_pwml": 1,
+   "drawn": 1,
+   "same_state_both_ends_pwml": 0
+  },
+  "interactions": {
+   "payload": 0,
+   "pwml": 0
+  },
+  "drawing": {
+   "compound_locations": 34,
+   "distinct_compound_state": 20,
+   "compounds_with_multiple_locs": 9,
+   "shared_compound_state": 10,
+   "shared_redrawn": 9,
+   "drawn_components": 12,
+   "logical_components": 1,
+   "hidden_locs": 0
+  },
+  "flow": {
+   "precedence_pairs": 8,
+   "right_to_left_pairs": 2,
+   "examples": [
+    [
+     "ceramide",
+     1290,
+     465
+    ],
+    [
+     "ceramide",
+     1345,
+     465
+    ]
+   ]
+  },
+  "canvas_use": {
+   "w": 2790,
+   "h": 3370,
+   "x_span": 2430,
+   "y_span": 2920,
+   "fit_scale_1600x900": 0.267
+  },
+  "pwml_counts": {
+   "compounds": 13,
+   "proteins": 7,
+   "protein-complexes": 9,
+   "reactions": 14,
+   "transports": 1,
+   "interactions": 0,
+   "compound-locations": 34,
+   "protein-locations": 11,
+   "edges": 44,
+   "biological-states": 9,
+   "membrane-visualizations": 5,
+   "label-locations": 5
+  },
+  "db": {
+   "counts": {
+    "biological_states": 5,
+    "compound_locations": 34,
+    "compounds": 12,
+    "element_states": 8,
+    "pathway_elements": 14,
+    "protein_complexes": 9,
+    "protein_locations": 11,
+    "proteins": 7,
+    "reaction_elements": 30,
+    "reaction_enzymes": 8,
+    "reactions": 13,
+    "subcellular_locations": 78,
+    "transport_elements": 1,
+    "transport_transporters": 1,
+    "transports": 1
+   },
+   "reactions_db": 13,
+   "reactions_pwml_distinct": 13,
+   "reactions_merged_by_importer": 1,
+   "reactions_pwml_not_in_db": [
+    [
+     [
+      "palmitoyl-coa",
+      "serine"
+     ],
+     [
+      "3-dehydrosphinganine"
+     ],
+     [
+      "serine palmitoyltransferase complex"
+     ]
+    ]
+   ],
+   "reactions_db_not_in_pwml": [
+    [
+     [
+      "l-serine",
+      "palmitoyl-coa"
+     ],
+     [
+      "3-dehydrosphinganine"
+     ],
+     [
+      "serine palmitoyltransferase complex"
+     ]
+    ]
+   ],
+   "reaction_elements_expected": 33,
+   "reaction_enzymes_expected": 9,
+   "transports_db_vs_pwml_missing": [],
+   "transports_db_vs_pwml_extra": [],
+   "db_states": [
+    "cell membrane",
+    "endoplasmic reticulum",
+    "golgi apparatus",
+    "lysosome",
+    "null"
+   ]
+  },
+  "import": {
+   "ok": true,
+   "errors": {
+    "subcellular_location_6": [
+     "Ontology can't be blank",
+     "Ontology is invalid"
+    ]
+   },
+   "pw_id": "PW000001",
+   "created_main": {
+    "pathways": 1,
+    "compounds": 12,
+    "compound_locations": 34,
+    "proteins": 6,
+    "protein_complexes": 9,
+    "reactions": 13,
+    "transports": 1,
+    "element_states": 8,
+    "subcellular_locations": 1,
+    "species": 0,
+    "pathway_visualizations": 1
+   },
+   "expected": {
+    "compounds": 13,
+    "proteins": 7,
+    "protein_complexes": 9,
+    "reactions": 14,
+    "transports": 1,
+    "interactions": 0,
+    "compound_locations": 34,
+    "protein_locations": 11
+   },
+   "exports": {
+    "sbml": {
+     "status": 200,
+     "bytes": 84333,
+     "ok": true
+    },
+    "sbgn": {
+     "status": 200,
+     "bytes": 37971,
+     "ok": true
+    },
+    "pwml": {
+     "status": 200,
+     "bytes": 144786,
+     "ok": true
+    }
+   },
+   "screenshot_ok": true,
+   "parser_exception": null
+  },
+  "problems": [
+   {
+    "class": "data/extraction (strict quarantine at export)",
+    "sev": "S1",
+    "what": "payload reaction absent from PWML: [[['sphinganine'], ['dihydroceramide'], ['ceramide synthase']]]"
+   },
+   {
+    "class": "writer (ir.py default_bs_key)",
+    "sev": "S1",
+    "what": "5 reaction(s) with no stated compartment placed in biological_states[0]"
+   },
+   {
+    "class": "data/extraction",
+    "sev": "S2",
+    "what": "duplicate reactions in payload: {'exact_dup': 1, 'reverse_dup_pairs_same_enzyme': 2, 'same_inout_diff_enzyme': 0, 'reverse_pairs_any_enzyme': 4}"
+   },
+   {
+    "class": "data/extraction",
+    "sev": "S2",
+    "what": "two boxes with the same label ['er']"
+   },
+   {
+    "class": "writer (shared-intermediate reuse only for adjacent reactions)",
+    "sev": "S2",
+    "what": "9 shared compounds redrawn; 12 drawn components vs 1 logical"
+   },
+   {
+    "class": "layout",
+    "sev": "S2",
+    "what": "2 of 8 producer->consumer pairs drawn against reading order"
+   },
+   {
+    "class": "layout (+PathWhiz fixed font)",
+    "sev": "S3",
+    "what": "fit-to-window scale 0.267: text unreadable"
+   }
+  ],
+  "screenshot_review": {
+   "file": "C:/t/corr-assess/a1/shots/116.png",
+   "flow_in_pathway_order": "partly",
+   "labels_readable": "ok at 100%, tiny at fit 0.27",
+   "shared_compounds_redrawn": "yes, L-serine 2x, palmitoyl-CoA 2x, ceramide 6x",
+   "note": "two boxes both \"ER\"; long diagonal/vertical edge from Golgi ceramide to the ER chain; SPT duplicate drawn as parallel stack"
+  }
+ },
+ "5": {
+  "idx": 5,
+  "canvas": [
+   2950,
+   3884
+  ],
+  "reactions": {
+   "payload": 16,
+   "pwml": 16,
+   "pwml_viz": 16,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "payload_without_enzyme": 0,
+   "pwml_without_enzyme": 0,
+   "direction_values": {
+    "Right": 16
+   }
+  },
+  "noncatalyst_modifiers": {
+   "payload_roles": {},
+   "total": 0,
+   "written_as_reaction_enzyme": 0,
+   "examples": []
+  },
+  "payload_dups": {
+   "exact_dup": 8,
+   "reverse_dup_pairs_same_enzyme": 0,
+   "same_inout_diff_enzyme": 0,
+   "reverse_pairs_any_enzyme": 0
+  },
+  "pwml_dups": {
+   "exact_dup": 8,
+   "reverse_dup_pairs_same_enzyme": 0,
+   "same_inout_diff_enzyme": 0,
+   "reverse_pairs_any_enzyme": 0
+  },
+  "side_vs_role": {
+   "members": 35,
+   "side_contradicts_list": 0,
+   "on_both_lists": 0,
+   "elements_not_drawn": 0
+  },
+  "enzymes": {
+   "reaction_enzyme_rows": 16,
+   "payload_enzyme_refs": 16,
+   "viz_complex_mismatch": 0,
+   "enzyme_not_drawn": 0
+  },
+  "states": {
+   "payload": 5,
+   "pwml": 5,
+   "used_in_pwml": [
+    "Lactococcus lactis cells",
+    "Lactococcus lactis extracellular",
+    "Lactococcus lactis intracellular",
+    "extracellular state",
+    "intracellular state"
+   ],
+   "defined_unused": [],
+   "payload_dup_names": [],
+   "synonym_groups_used": {
+    "cell-interior": [
+     "cell|Lactococcus lactis cells",
+     "intracellular|Lactococcus lactis intracellular",
+     "intracellular|intracellular state"
+    ],
+    "extracellular": [
+     "Extracellular Space|Lactococcus lactis extracellular",
+     "Extracellular Space|extracellular state"
+    ]
+   },
+   "null_state_reactions_payload": 1,
+   "species_among_used": [
+    "Lactococcus lactis"
+   ],
+   "reaction_state_payload": {
+    "Lactococcus lactis cells": 3,
+    "intracellular state": 5,
+    "Lactococcus lactis intracellular": 7,
+    "null": 1
+   },
+   "reaction_state_pwml": {
+    "Lactococcus lactis cells": 4,
+    "intracellular state": 5,
+    "Lactococcus lactis intracellular": 7
+   },
+   "reaction_state_mismatch": null
+  },
+  "species": {
+   "organism": "Lactococcus lactis",
+   "payload_species": [
+    "Lactococcus lactis",
+    "L. lactis subsp. lactis KF147",
+    "Arabidopsis thaliana"
+   ],
+   "pwml_species": [
+    "Lactococcus lactis",
+    "Arabidopsis thaliana"
+   ],
+   "state_species_in_pwml": [
+    "Lactococcus lactis"
+   ]
+  },
+  "compartment_boxes": {
+   "boxes": 5,
+   "labels": [
+    "Lactococcus lactis intracellular",
+    "Lactococcus lactis extracellular",
+    "intracellular",
+    "extracellular",
+    "Lactococcus lactis cells"
+   ],
+   "dup_labels": [],
+   "organism_or_strain_named": []
+  },
+  "transports": {
+   "payload": 2,
+   "pwml": 2,
+   "pwml_elements": 2,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "transporters_payload": 0,
+   "transporters_pwml": 0,
+   "drawn": 2,
+   "same_state_both_ends_pwml": 0
+  },
+  "interactions": {
+   "payload": 0,
+   "pwml": 0
+  },
+  "drawing": {
+   "compound_locations": 33,
+   "distinct_compound_state": 23,
+   "compounds_with_multiple_locs": 9,
+   "shared_compound_state": 13,
+   "shared_redrawn": 8,
+   "drawn_components": 9,
+   "logical_components": 2,
+   "hidden_locs": 0
+  },
+  "flow": {
+   "precedence_pairs": 12,
+   "right_to_left_pairs": 1,
+   "examples": [
+    [
+     "DHNA-CoA",
+     2485,
+     465
+    ]
+   ]
+  },
+  "canvas_use": {
+   "w": 2950,
+   "h": 3884,
+   "x_span": 2590,
+   "y_span": 3402,
+   "fit_scale_1600x900": 0.232
+  },
+  "pwml_counts": {
+   "compounds": 11,
+   "proteins": 2,
+   "protein-complexes": 8,
+   "reactions": 16,
+   "transports": 2,
+   "interactions": 0,
+   "compound-locations": 33,
+   "protein-locations": 16,
+   "edges": 55,
+   "biological-states": 5,
+   "membrane-visualizations": 5,
+   "label-locations": 5
+  },
+  "db": {
+   "counts": {
+    "biological_states": 3,
+    "compound_locations": 33,
+    "compounds": 11,
+    "element_states": 4,
+    "pathway_elements": 11,
+    "protein_complexes": 8,
+    "protein_locations": 16,
+    "proteins": 2,
+    "reaction_elements": 17,
+    "reaction_enzymes": 8,
+    "reactions": 8,
+    "subcellular_locations": 78,
+    "transport_elements": 1,
+    "transports": 1
+   },
+   "reactions_db": 8,
+   "reactions_pwml_distinct": 8,
+   "reactions_merged_by_importer": 8,
+   "reactions_pwml_not_in_db": [],
+   "reactions_db_not_in_pwml": [],
+   "reaction_elements_expected": 35,
+   "reaction_enzymes_expected": 16,
+   "transports_db_vs_pwml_missing": [
+    [
+     "1,4-dihydroxy-2-naphthoic acid",
+     "intracellular",
+     "extracellular space"
+    ]
+   ],
+   "transports_db_vs_pwml_extra": [],
+   "db_states": [
+    "cell",
+    "extracellular space",
+    "intracellular"
+   ]
+  },
+  "import": {
+   "ok": true,
+   "errors": {},
+   "pw_id": "PW000001",
+   "created_main": {
+    "pathways": 1,
+    "compounds": 11,
+    "compound_locations": 33,
+    "proteins": 1,
+    "protein_complexes": 8,
+    "reactions": 8,
+    "transports": 1,
+    "element_states": 4,
+    "subcellular_locations": 1,
+    "species": 0,
+    "pathway_visualizations": 1
+   },
+   "expected": {
+    "compounds": 11,
+    "proteins": 2,
+    "protein_complexes": 8,
+    "reactions": 16,
+    "transports": 2,
+    "interactions": 0,
+    "compound_locations": 33,
+    "protein_locations": 16
+   },
+   "exports": {
+    "sbml": {
+     "status": 200,
+     "bytes": 85595,
+     "ok": true
+    },
+    "sbgn": {
+     "status": 200,
+     "bytes": 42234,
+     "ok": true
+    },
+    "pwml": {
+     "status": 200,
+     "bytes": 140889,
+     "ok": true
+    }
+   },
+   "screenshot_ok": true,
+   "parser_exception": null
+  },
+  "problems": [
+   {
+    "class": "writer (ir.py default_bs_key)",
+    "sev": "S3",
+    "what": "1 reaction(s) with no stated compartment placed in biological_states[0]"
+   },
+   {
+    "class": "data/extraction",
+    "sev": "S2",
+    "what": "duplicate reactions in payload: {'exact_dup': 8, 'reverse_dup_pairs_same_enzyme': 0, 'same_inout_diff_enzyme': 0, 'reverse_pairs_any_enzyme': 0}"
+   },
+   {
+    "class": "data/extraction",
+    "sev": "S2",
+    "what": "near-synonym compartments used: {'cell-interior': ['cell|Lactococcus lactis cells', 'intracellular|Lactococcus lactis intracellular', 'intracellular|intracellular state'], 'extracellular': ['Extracellular Space|Lactococcus lactis extracellular', 'Extracellular Space|extracellular state']}"
+   },
+   {
+    "class": "writer (shared-intermediate reuse only for adjacent reactions)",
+    "sev": "S2",
+    "what": "8 shared compounds redrawn; 9 drawn components vs 2 logical"
+   },
+   {
+    "class": "layout",
+    "sev": "S2",
+    "what": "1 of 12 producer->consumer pairs drawn against reading order"
+   },
+   {
+    "class": "layout (+PathWhiz fixed font)",
+    "sev": "S3",
+    "what": "fit-to-window scale 0.232: text unreadable"
+   }
+  ],
+  "screenshot_review": {
+   "file": "C:/t/corr-assess/a1/shots/5.png",
+   "flow_in_pathway_order": "no",
+   "labels_readable": "tiny at fit 0.23",
+   "shared_compounds_redrawn": "yes, DHNA 5x",
+   "note": "chain drawn twice (Lactococcus lactis intracellular / intracellular); 5 boxes (cells, intracellular x2, extracellular x2)"
+  }
+ },
+ "134": {
+  "idx": 134,
+  "canvas": [
+   2380,
+   3010
+  ],
+  "reactions": {
+   "payload": 10,
+   "pwml": 10,
+   "pwml_viz": 10,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "payload_without_enzyme": 0,
+   "pwml_without_enzyme": 0,
+   "direction_values": {
+    "Right": 10
+   }
+  },
+  "noncatalyst_modifiers": {
+   "payload_roles": {},
+   "total": 0,
+   "written_as_reaction_enzyme": 0,
+   "examples": []
+  },
+  "payload_dups": {
+   "exact_dup": 1,
+   "reverse_dup_pairs_same_enzyme": 0,
+   "same_inout_diff_enzyme": 3,
+   "reverse_pairs_any_enzyme": 0
+  },
+  "pwml_dups": {
+   "exact_dup": 1,
+   "reverse_dup_pairs_same_enzyme": 0,
+   "same_inout_diff_enzyme": 3,
+   "reverse_pairs_any_enzyme": 0
+  },
+  "side_vs_role": {
+   "members": 27,
+   "side_contradicts_list": 0,
+   "on_both_lists": 0,
+   "elements_not_drawn": 0
+  },
+  "enzymes": {
+   "reaction_enzyme_rows": 17,
+   "payload_enzyme_refs": 17,
+   "viz_complex_mismatch": 0,
+   "enzyme_not_drawn": 0
+  },
+  "states": {
+   "payload": 3,
+   "pwml": 3,
+   "used_in_pwml": [
+    "cytosolic state",
+    "human carnitine biosynthesis",
+    "mitochondrial state"
+   ],
+   "defined_unused": [],
+   "payload_dup_names": [],
+   "synonym_groups_used": {
+    "cell-interior": [
+     "cell|human carnitine biosynthesis",
+     "cytosol|cytosolic state"
+    ]
+   },
+   "null_state_reactions_payload": 6,
+   "species_among_used": [
+    "Mus musculus"
+   ],
+   "reaction_state_payload": {
+    "null": 6,
+    "human carnitine biosynthesis": 4
+   },
+   "reaction_state_pwml": {
+    "mitochondrial state": 6,
+    "human carnitine biosynthesis": 4
+   },
+   "reaction_state_mismatch": null
+  },
+  "species": {
+   "organism": "Homo sapiens",
+   "payload_species": [
+    "Homo sapiens",
+    "Mus musculus",
+    "Arabidopsis thaliana"
+   ],
+   "pwml_species": [
+    "Mus musculus",
+    "Arabidopsis thaliana"
+   ],
+   "state_species_in_pwml": [
+    "Mus musculus"
+   ]
+  },
+  "compartment_boxes": {
+   "boxes": 3,
+   "labels": [
+    "mitochondrial",
+    "cytosolic",
+    "human carnitine biosynthesis"
+   ],
+   "dup_labels": [],
+   "organism_or_strain_named": []
+  },
+  "transports": {
+   "payload": 1,
+   "pwml": 1,
+   "pwml_elements": 1,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "transporters_payload": 0,
+   "transporters_pwml": 0,
+   "drawn": 1,
+   "same_state_both_ends_pwml": 0
+  },
+  "interactions": {
+   "payload": 0,
+   "pwml": 0
+  },
+  "drawing": {
+   "compound_locations": 28,
+   "distinct_compound_state": 15,
+   "compounds_with_multiple_locs": 5,
+   "shared_compound_state": 6,
+   "shared_redrawn": 5,
+   "drawn_components": 5,
+   "logical_components": 1,
+   "hidden_locs": 0
+  },
+  "flow": {
+   "precedence_pairs": 11,
+   "right_to_left_pairs": 2,
+   "examples": [
+    [
+     "3-hydroxy-N6-trimethyllysine",
+     995,
+     995
+    ],
+    [
+     "3-hydroxy-N6-trimethyllysine",
+     995,
+     995
+    ]
+   ]
+  },
+  "canvas_use": {
+   "w": 2380,
+   "h": 3010,
+   "x_span": 2055,
+   "y_span": 2620,
+   "fit_scale_1600x900": 0.299
+  },
+  "pwml_counts": {
+   "compounds": 8,
+   "proteins": 1,
+   "protein-complexes": 6,
+   "reactions": 10,
+   "transports": 1,
+   "interactions": 0,
+   "compound-locations": 28,
+   "protein-locations": 11,
+   "edges": 46,
+   "biological-states": 3,
+   "membrane-visualizations": 3,
+   "label-locations": 3
+  },
+  "db": {
+   "counts": {
+    "biological_states": 3,
+    "compound_locations": 28,
+    "compounds": 8,
+    "element_states": 2,
+    "pathway_elements": 18,
+    "protein_complexes": 6,
+    "protein_locations": 11,
+    "proteins": 1,
+    "reaction_elements": 24,
+    "reaction_enzymes": 14,
+    "reactions": 9,
+    "subcellular_locations": 78,
+    "transport_elements": 1,
+    "transports": 1
+   },
+   "reactions_db": 9,
+   "reactions_pwml_distinct": 9,
+   "reactions_merged_by_importer": 1,
+   "reactions_pwml_not_in_db": [],
+   "reactions_db_not_in_pwml": [],
+   "reaction_elements_expected": 27,
+   "reaction_enzymes_expected": 17,
+   "transports_db_vs_pwml_missing": [],
+   "transports_db_vs_pwml_extra": [],
+   "db_states": [
+    "cell",
+    "cytosol",
+    "mitochondrion"
+   ]
+  },
+  "import": {
+   "ok": true,
+   "errors": {},
+   "pw_id": "PW000001",
+   "created_main": {
+    "pathways": 1,
+    "compounds": 8,
+    "compound_locations": 28,
+    "proteins": 0,
+    "protein_complexes": 6,
+    "reactions": 9,
+    "transports": 1,
+    "element_states": 2,
+    "subcellular_locations": 1,
+    "species": 0,
+    "pathway_visualizations": 1
+   },
+   "expected": {
+    "compounds": 8,
+    "proteins": 1,
+    "protein_complexes": 6,
+    "reactions": 10,
+    "transports": 1,
+    "interactions": 0,
+    "compound_locations": 28,
+    "protein_locations": 11
+   },
+   "exports": {
+    "sbml": {
+     "status": 200,
+     "bytes": 67369,
+     "ok": true
+    },
+    "sbgn": {
+     "status": 200,
+     "bytes": 35743,
+     "ok": true
+    },
+    "pwml": {
+     "status": 200,
+     "bytes": 115004,
+     "ok": true
+    }
+   },
+   "screenshot_ok": true,
+   "parser_exception": null
+  },
+  "problems": [
+   {
+    "class": "writer (ir.py default_bs_key)",
+    "sev": "S1",
+    "what": "6 reaction(s) with no stated compartment placed in biological_states[0]"
+   },
+   {
+    "class": "data/extraction",
+    "sev": "S2",
+    "what": "duplicate reactions in payload: {'exact_dup': 1, 'reverse_dup_pairs_same_enzyme': 0, 'same_inout_diff_enzyme': 3, 'reverse_pairs_any_enzyme': 0}"
+   },
+   {
+    "class": "data/extraction",
+    "sev": "S2",
+    "what": "near-synonym compartments used: {'cell-interior': ['cell|human carnitine biosynthesis', 'cytosol|cytosolic state']}"
+   },
+   {
+    "class": "writer (shared-intermediate reuse only for adjacent reactions)",
+    "sev": "S2",
+    "what": "5 shared compounds redrawn; 5 drawn components vs 1 logical"
+   },
+   {
+    "class": "layout",
+    "sev": "S2",
+    "what": "2 of 11 producer->consumer pairs drawn against reading order"
+   },
+   {
+    "class": "layout (+PathWhiz fixed font)",
+    "sev": "S3",
+    "what": "fit-to-window scale 0.299: text unreadable"
+   },
+   {
+    "class": "writer (species id collision)",
+    "sev": "S1",
+    "what": "Homo sapiens and Mus musculus both written with species id 1; PathWhiz stores the pathway as Mus musculus"
+   }
+  ],
+  "screenshot_review": {
+   "file": "C:/t/corr-assess/a1/shots/134.png",
+   "flow_in_pathway_order": "no",
+   "labels_readable": "label \"human carnitine biosynthesis\" cut off; compound names overflow",
+   "shared_compounds_redrawn": "yes, glycine 3x, 4-trimethylaminobutyraldehyde 7x",
+   "note": "compartment box named after the pathway; 6 reactions with no stated compartment drawn in \"mitochondrial\"; isozyme enzyme ellipses without edges"
+  }
+ },
+ "135": {
+  "idx": 135,
+  "canvas": [
+   2690,
+   1770
+  ],
+  "reactions": {
+   "payload": 10,
+   "pwml": 10,
+   "pwml_viz": 10,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "payload_without_enzyme": 0,
+   "pwml_without_enzyme": 0,
+   "direction_values": {
+    "Right": 10
+   }
+  },
+  "noncatalyst_modifiers": {
+   "payload_roles": {},
+   "total": 0,
+   "written_as_reaction_enzyme": 0,
+   "examples": []
+  },
+  "payload_dups": {
+   "exact_dup": 0,
+   "reverse_dup_pairs_same_enzyme": 0,
+   "same_inout_diff_enzyme": 0,
+   "reverse_pairs_any_enzyme": 0
+  },
+  "pwml_dups": {
+   "exact_dup": 0,
+   "reverse_dup_pairs_same_enzyme": 0,
+   "same_inout_diff_enzyme": 0,
+   "reverse_pairs_any_enzyme": 0
+  },
+  "side_vs_role": {
+   "members": 27,
+   "side_contradicts_list": 0,
+   "on_both_lists": 0,
+   "elements_not_drawn": 0
+  },
+  "enzymes": {
+   "reaction_enzyme_rows": 12,
+   "payload_enzyme_refs": 12,
+   "viz_complex_mismatch": 0,
+   "enzyme_not_drawn": 0
+  },
+  "states": {
+   "payload": 0,
+   "pwml": 1,
+   "used_in_pwml": [
+    "__auto_state__"
+   ],
+   "defined_unused": [],
+   "payload_dup_names": [],
+   "synonym_groups_used": {},
+   "null_state_reactions_payload": 10,
+   "species_among_used": [
+    "Arabidopsis thaliana"
+   ],
+   "reaction_state_payload": {
+    "null": 10
+   },
+   "reaction_state_pwml": {
+    "__auto_state__": 10
+   },
+   "reaction_state_mismatch": null
+  },
+  "species": {
+   "organism": "Saposhnikovia divaricata",
+   "payload_species": [
+    "Saposhnikovia divaricata",
+    "Arabidopsis thaliana"
+   ],
+   "pwml_species": [
+    "Saposhnikovia divaricata",
+    "Arabidopsis thaliana"
+   ],
+   "state_species_in_pwml": [
+    "Arabidopsis thaliana"
+   ]
+  },
+  "compartment_boxes": {
+   "boxes": 1,
+   "labels": [],
+   "dup_labels": [],
+   "organism_or_strain_named": []
+  },
+  "transports": {
+   "payload": 0,
+   "pwml": 0,
+   "pwml_elements": 0,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "transporters_payload": 0,
+   "transporters_pwml": 0,
+   "drawn": 0,
+   "same_state_both_ends_pwml": 0
+  },
+  "interactions": {
+   "payload": 0,
+   "pwml": 0
+  },
+  "drawing": {
+   "compound_locations": 27,
+   "distinct_compound_state": 13,
+   "compounds_with_multiple_locs": 9,
+   "shared_compound_state": 9,
+   "shared_redrawn": 9,
+   "drawn_components": 6,
+   "logical_components": 1,
+   "hidden_locs": 0
+  },
+  "flow": {
+   "precedence_pairs": 11,
+   "right_to_left_pairs": 3,
+   "examples": [
+    [
+     "noreugenin",
+     1345,
+     465
+    ],
+    [
+     "noreugenin",
+     1345,
+     465
+    ],
+    [
+     "visamminol",
+     2225,
+     1345
+    ]
+   ]
+  },
+  "canvas_use": {
+   "w": 2690,
+   "h": 1770,
+   "x_span": 2330,
+   "y_span": 1420,
+   "fit_scale_1600x900": 0.508
+  },
+  "pwml_counts": {
+   "compounds": 13,
+   "proteins": 1,
+   "protein-complexes": 7,
+   "reactions": 10,
+   "transports": 0,
+   "interactions": 0,
+   "compound-locations": 27,
+   "protein-locations": 7,
+   "edges": 39,
+   "biological-states": 1,
+   "membrane-visualizations": 1,
+   "label-locations": 0
+  },
+  "db": {
+   "counts": {
+    "biological_states": 1,
+    "compound_locations": 27,
+    "compounds": 13,
+    "element_states": 1,
+    "pathway_elements": 12,
+    "protein_complexes": 7,
+    "protein_locations": 7,
+    "proteins": 1,
+    "reaction_elements": 27,
+    "reaction_enzymes": 12,
+    "reactions": 10,
+    "subcellular_locations": 78
+   },
+   "reactions_db": 10,
+   "reactions_pwml_distinct": 10,
+   "reactions_merged_by_importer": 0,
+   "reactions_pwml_not_in_db": [],
+   "reactions_db_not_in_pwml": [],
+   "reaction_elements_expected": 27,
+   "reaction_enzymes_expected": 12,
+   "transports_db_vs_pwml_missing": [],
+   "transports_db_vs_pwml_extra": [],
+   "db_states": [
+    "cell"
+   ]
+  },
+  "import": {
+   "ok": true,
+   "errors": {},
+   "pw_id": "PW000001",
+   "created_main": {
+    "pathways": 1,
+    "compounds": 13,
+    "compound_locations": 27,
+    "proteins": 0,
+    "protein_complexes": 7,
+    "reactions": 10,
+    "transports": 0,
+    "element_states": 1,
+    "subcellular_locations": 1,
+    "species": 1,
+    "pathway_visualizations": 1
+   },
+   "expected": {
+    "compounds": 13,
+    "proteins": 1,
+    "protein_complexes": 7,
+    "reactions": 10,
+    "transports": 0,
+    "interactions": 0,
+    "compound_locations": 27,
+    "protein_locations": 7
+   },
+   "exports": {
+    "sbml": {
+     "status": 200,
+     "bytes": 65110,
+     "ok": true
+    },
+    "sbgn": {
+     "status": 200,
+     "bytes": 29526,
+     "ok": true
+    },
+    "pwml": {
+     "status": 200,
+     "bytes": 108946,
+     "ok": true
+    }
+   },
+   "screenshot_ok": true,
+   "parser_exception": null
+  },
+  "problems": [
+   {
+    "class": "writer (ir.py default_bs_key)",
+    "sev": "S3",
+    "what": "10 reaction(s) with no stated compartment placed in biological_states[0]"
+   },
+   {
+    "class": "writer (shared-intermediate reuse only for adjacent reactions)",
+    "sev": "S2",
+    "what": "9 shared compounds redrawn; 6 drawn components vs 1 logical"
+   },
+   {
+    "class": "layout",
+    "sev": "S2",
+    "what": "3 of 11 producer->consumer pairs drawn against reading order"
+   }
+  ],
+  "screenshot_review": {
+   "file": "C:/t/corr-assess/a1/shots/135.png",
+   "flow_in_pathway_order": "no (chain end on top, start at bottom)",
+   "labels_readable": "ok",
+   "shared_compounds_redrawn": "yes, noreugenin 3x, visamminol 3x, peucenin 2x",
+   "note": "single unlabelled box; MgCl2 drawn as a substrate; SdPT/SdUGT stacks converge on one enzyme"
+  }
+ },
+ "78": {
+  "idx": 78,
+  "canvas": [
+   2390,
+   2020
+  ],
+  "reactions": {
+   "payload": 7,
+   "pwml": 7,
+   "pwml_viz": 7,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "payload_without_enzyme": 0,
+   "pwml_without_enzyme": 0,
+   "direction_values": {
+    "Right": 7
+   }
+  },
+  "noncatalyst_modifiers": {
+   "payload_roles": {},
+   "total": 0,
+   "written_as_reaction_enzyme": 0,
+   "examples": []
+  },
+  "payload_dups": {
+   "exact_dup": 0,
+   "reverse_dup_pairs_same_enzyme": 0,
+   "same_inout_diff_enzyme": 0,
+   "reverse_pairs_any_enzyme": 0
+  },
+  "pwml_dups": {
+   "exact_dup": 0,
+   "reverse_dup_pairs_same_enzyme": 0,
+   "same_inout_diff_enzyme": 0,
+   "reverse_pairs_any_enzyme": 0
+  },
+  "side_vs_role": {
+   "members": 20,
+   "side_contradicts_list": 0,
+   "on_both_lists": 0,
+   "elements_not_drawn": 0
+  },
+  "enzymes": {
+   "reaction_enzyme_rows": 9,
+   "payload_enzyme_refs": 9,
+   "viz_complex_mismatch": 0,
+   "enzyme_not_drawn": 0
+  },
+  "states": {
+   "payload": 3,
+   "pwml": 3,
+   "used_in_pwml": [
+    "__auto_state__",
+    "cytoplasm"
+   ],
+   "defined_unused": [
+    "extracellular"
+   ],
+   "payload_dup_names": [],
+   "synonym_groups_used": {
+    "cell-interior": [
+     "cell|__auto_state__",
+     "cytoplasm|cytoplasm"
+    ]
+   },
+   "null_state_reactions_payload": 1,
+   "species_among_used": [
+    "Escherichia coli"
+   ],
+   "reaction_state_payload": {
+    "cytoplasm": 6,
+    "null": 1
+   },
+   "reaction_state_pwml": {
+    "cytoplasm": 7
+   },
+   "reaction_state_mismatch": null
+  },
+  "species": {
+   "organism": "Escherichia coli",
+   "payload_species": [
+    "Escherichia coli",
+    "Arabidopsis thaliana"
+   ],
+   "pwml_species": [
+    "Escherichia coli",
+    "Arabidopsis thaliana"
+   ],
+   "state_species_in_pwml": [
+    "Escherichia coli"
+   ]
+  },
+  "compartment_boxes": {
+   "boxes": 2,
+   "labels": [
+    "cytoplasm"
+   ],
+   "dup_labels": [],
+   "organism_or_strain_named": []
+  },
+  "transports": {
+   "payload": 1,
+   "pwml": 1,
+   "pwml_elements": 1,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "transporters_payload": 0,
+   "transporters_pwml": 0,
+   "drawn": 1,
+   "same_state_both_ends_pwml": 1
+  },
+  "interactions": {
+   "payload": 1,
+   "pwml": 0
+  },
+  "drawing": {
+   "compound_locations": 18,
+   "distinct_compound_state": 17,
+   "compounds_with_multiple_locs": 1,
+   "shared_compound_state": 4,
+   "shared_redrawn": 1,
+   "drawn_components": 3,
+   "logical_components": 3,
+   "hidden_locs": 0
+  },
+  "flow": {
+   "precedence_pairs": 4,
+   "right_to_left_pairs": 0,
+   "examples": []
+  },
+  "canvas_use": {
+   "w": 2390,
+   "h": 2020,
+   "x_span": 2030,
+   "y_span": 1570,
+   "fit_scale_1600x900": 0.446
+  },
+  "pwml_counts": {
+   "compounds": 16,
+   "proteins": 7,
+   "protein-complexes": 8,
+   "reactions": 7,
+   "transports": 1,
+   "interactions": 0,
+   "compound-locations": 18,
+   "protein-locations": 8,
+   "edges": 31,
+   "biological-states": 3,
+   "membrane-visualizations": 2,
+   "label-locations": 1
+  },
+  "db": {
+   "counts": {
+    "biological_states": 3,
+    "compound_locations": 18,
+    "compounds": 16,
+    "element_states": 7,
+    "pathway_elements": 9,
+    "protein_complexes": 8,
+    "protein_locations": 8,
+    "proteins": 7,
+    "reaction_elements": 20,
+    "reaction_enzymes": 9,
+    "reactions": 7,
+    "subcellular_locations": 78
+   },
+   "reactions_db": 7,
+   "reactions_pwml_distinct": 7,
+   "reactions_merged_by_importer": 0,
+   "reactions_pwml_not_in_db": [],
+   "reactions_db_not_in_pwml": [],
+   "reaction_elements_expected": 20,
+   "reaction_enzymes_expected": 9,
+   "transports_db_vs_pwml_missing": [
+    [
+     "enterobactin",
+     "cell",
+     "cell"
+    ]
+   ],
+   "transports_db_vs_pwml_extra": [],
+   "db_states": [
+    "cell",
+    "cytoplasm",
+    "extracellular space"
+   ]
+  },
+  "import": {
+   "ok": true,
+   "errors": {
+    "transport_element_51": [
+     "Biological state must have unique biological states"
+    ],
+    "transport_50": [
+     "Transport elements is too short (minimum is 1 character)"
+    ],
+    "transport_visualization_187": [
+     "Transport can't be blank"
+    ]
+   },
+   "pw_id": "PW000001",
+   "created_main": {
+    "pathways": 1,
+    "compounds": 16,
+    "compound_locations": 18,
+    "proteins": 6,
+    "protein_complexes": 8,
+    "reactions": 7,
+    "transports": 0,
+    "element_states": 7,
+    "subcellular_locations": 1,
+    "species": 0,
+    "pathway_visualizations": 1
+   },
+   "expected": {
+    "compounds": 16,
+    "proteins": 7,
+    "protein_complexes": 8,
+    "reactions": 7,
+    "transports": 1,
+    "interactions": 0,
+    "compound_locations": 18,
+    "protein_locations": 8
+   },
+   "exports": {
+    "sbml": {
+     "status": 200,
+     "bytes": 66347,
+     "ok": true
+    },
+    "sbgn": {
+     "status": 200,
+     "bytes": 25089,
+     "ok": true
+    },
+    "pwml": {
+     "status": 200,
+     "bytes": 109609,
+     "ok": true
+    }
+   },
+   "screenshot_ok": true,
+   "parser_exception": null
+  },
+  "problems": [
+   {
+    "class": "writer (ir.py default_bs_key)",
+    "sev": "S3",
+    "what": "1 reaction(s) with no stated compartment placed in biological_states[0]"
+   },
+   {
+    "class": "data/extraction",
+    "sev": "S2",
+    "what": "near-synonym compartments used: {'cell-interior': ['cell|__auto_state__', 'cytoplasm|cytoplasm']}"
+   },
+   {
+    "class": "writer (shared-intermediate reuse only for adjacent reactions)",
+    "sev": "S2",
+    "what": "1 shared compounds redrawn; 3 drawn components vs 3 logical"
+   },
+   {
+    "class": "data/extraction (writer passes it through)",
+    "sev": "S1",
+    "what": "transport not created in PathWhiz: both ends __auto_state__"
+   },
+   {
+    "class": "writer/IR (silent drop)",
+    "sev": "S1",
+    "what": "interactions payload 1 -> PWML 0"
+   }
+  ],
+  "screenshot_review": {
+   "file": "C:/t/corr-assess/a1/shots/78.png",
+   "flow_in_pathway_order": "partly",
+   "labels_readable": "ok",
+   "shared_compounds_redrawn": "yes, enterobactin 4x, 2,3-DHB 3x",
+   "note": "unlabelled empty second box; long diagonal transport edges; EntB/E/F/D drawn as 4 ellipses on one stack"
+  }
+ },
+ "125": {
+  "idx": 125,
+  "canvas": [
+   2380,
+   2560
+  ],
+  "reactions": {
+   "payload": 8,
+   "pwml": 8,
+   "pwml_viz": 8,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "payload_without_enzyme": 0,
+   "pwml_without_enzyme": 0,
+   "direction_values": {
+    "Right": 8
+   }
+  },
+  "noncatalyst_modifiers": {
+   "payload_roles": {},
+   "total": 0,
+   "written_as_reaction_enzyme": 0,
+   "examples": []
+  },
+  "payload_dups": {
+   "exact_dup": 0,
+   "reverse_dup_pairs_same_enzyme": 0,
+   "same_inout_diff_enzyme": 1,
+   "reverse_pairs_any_enzyme": 0
+  },
+  "pwml_dups": {
+   "exact_dup": 0,
+   "reverse_dup_pairs_same_enzyme": 0,
+   "same_inout_diff_enzyme": 1,
+   "reverse_pairs_any_enzyme": 0
+  },
+  "side_vs_role": {
+   "members": 26,
+   "side_contradicts_list": 0,
+   "on_both_lists": 0,
+   "elements_not_drawn": 0
+  },
+  "enzymes": {
+   "reaction_enzyme_rows": 8,
+   "payload_enzyme_refs": 8,
+   "viz_complex_mismatch": 0,
+   "enzyme_not_drawn": 0
+  },
+  "states": {
+   "payload": 3,
+   "pwml": 3,
+   "used_in_pwml": [
+    "microsomal fraction state"
+   ],
+   "defined_unused": [
+    "__auto_state__",
+    "microsomal fraction state"
+   ],
+   "payload_dup_names": [
+    "microsomal fraction state"
+   ],
+   "synonym_groups_used": {},
+   "null_state_reactions_payload": 0,
+   "species_among_used": [
+    "Apium graveolens"
+   ],
+   "reaction_state_payload": {
+    "microsomal fraction state": 8
+   },
+   "reaction_state_pwml": {
+    "microsomal fraction state": 8
+   },
+   "reaction_state_mismatch": 0
+  },
+  "species": {
+   "organism": "Apium graveolens L.",
+   "payload_species": [
+    "Apium graveolens",
+    "Arabidopsis thaliana"
+   ],
+   "pwml_species": [
+    "Apium graveolens",
+    "Arabidopsis thaliana"
+   ],
+   "state_species_in_pwml": [
+    "Apium graveolens"
+   ]
+  },
+  "compartment_boxes": {
+   "boxes": 1,
+   "labels": [
+    "microsomal fraction"
+   ],
+   "dup_labels": [],
+   "organism_or_strain_named": []
+  },
+  "transports": {
+   "payload": 0,
+   "pwml": 0,
+   "pwml_elements": 0,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "transporters_payload": 0,
+   "transporters_pwml": 0,
+   "drawn": 0,
+   "same_state_both_ends_pwml": 0
+  },
+  "interactions": {
+   "payload": 0,
+   "pwml": 0
+  },
+  "drawing": {
+   "compound_locations": 25,
+   "distinct_compound_state": 16,
+   "compounds_with_multiple_locs": 6,
+   "shared_compound_state": 7,
+   "shared_redrawn": 6,
+   "drawn_components": 3,
+   "logical_components": 2,
+   "hidden_locs": 0
+  },
+  "flow": {
+   "precedence_pairs": 2,
+   "right_to_left_pairs": 0,
+   "examples": []
+  },
+  "canvas_use": {
+   "w": 2380,
+   "h": 2560,
+   "x_span": 2020,
+   "y_span": 2110,
+   "fit_scale_1600x900": 0.352
+  },
+  "pwml_counts": {
+   "compounds": 16,
+   "proteins": 1,
+   "protein-complexes": 4,
+   "reactions": 8,
+   "transports": 0,
+   "interactions": 0,
+   "compound-locations": 25,
+   "protein-locations": 4,
+   "edges": 34,
+   "biological-states": 3,
+   "membrane-visualizations": 1,
+   "label-locations": 1
+  },
+  "db": {
+   "counts": {
+    "biological_states": 3,
+    "compound_locations": 25,
+    "compounds": 16,
+    "element_states": 1,
+    "pathway_elements": 8,
+    "protein_complexes": 4,
+    "protein_locations": 4,
+    "proteins": 1,
+    "reaction_elements": 26,
+    "reaction_enzymes": 8,
+    "reactions": 8,
+    "subcellular_locations": 78
+   },
+   "reactions_db": 8,
+   "reactions_pwml_distinct": 8,
+   "reactions_merged_by_importer": 0,
+   "reactions_pwml_not_in_db": [],
+   "reactions_db_not_in_pwml": [],
+   "reaction_elements_expected": 26,
+   "reaction_enzymes_expected": 8,
+   "transports_db_vs_pwml_missing": [],
+   "transports_db_vs_pwml_extra": [],
+   "db_states": [
+    "cell",
+    "endoplasmic reticulum",
+    "null"
+   ]
+  },
+  "import": {
+   "ok": true,
+   "errors": {
+    "subcellular_location_2": [
+     "Ontology can't be blank",
+     "Ontology is invalid"
+    ]
+   },
+   "pw_id": "PW000001",
+   "created_main": {
+    "pathways": 1,
+    "compounds": 16,
+    "compound_locations": 25,
+    "proteins": 0,
+    "protein_complexes": 4,
+    "reactions": 8,
+    "transports": 0,
+    "element_states": 1,
+    "subcellular_locations": 1,
+    "species": 1,
+    "pathway_visualizations": 1
+   },
+   "expected": {
+    "compounds": 16,
+    "proteins": 1,
+    "protein_complexes": 4,
+    "reactions": 8,
+    "transports": 0,
+    "interactions": 0,
+    "compound_locations": 25,
+    "protein_locations": 4
+   },
+   "exports": {
+    "sbml": {
+     "status": 200,
+     "bytes": 61470,
+     "ok": true
+    },
+    "sbgn": {
+     "status": 200,
+     "bytes": 24150,
+     "ok": true
+    },
+    "pwml": {
+     "status": 200,
+     "bytes": 98870,
+     "ok": true
+    }
+   },
+   "screenshot_ok": true,
+   "parser_exception": null
+  },
+  "problems": [
+   {
+    "class": "data/extraction",
+    "sev": "S2",
+    "what": "duplicate reactions in payload: {'exact_dup': 0, 'reverse_dup_pairs_same_enzyme': 0, 'same_inout_diff_enzyme': 1, 'reverse_pairs_any_enzyme': 0}"
+   },
+   {
+    "class": "writer (shared-intermediate reuse only for adjacent reactions)",
+    "sev": "S2",
+    "what": "6 shared compounds redrawn; 3 drawn components vs 2 logical"
+   }
+  ],
+  "screenshot_review": {
+   "file": "C:/t/corr-assess/a1/shots/125.png",
+   "flow_in_pathway_order": "no (8 reactions collapse onto 4 enzyme nodes)",
+   "labels_readable": "ok",
+   "shared_compounds_redrawn": "yes, SAM 5x, bergaptol 2x",
+   "note": "AgOMT1 node carries 4 reactions: substrate->product pairing unreadable"
+  }
+ },
+ "129": {
+  "idx": 129,
+  "canvas": [
+   1500,
+   2169
+  ],
+  "reactions": {
+   "payload": 8,
+   "pwml": 8,
+   "pwml_viz": 8,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "payload_without_enzyme": 0,
+   "pwml_without_enzyme": 0,
+   "direction_values": {
+    "Right": 8
+   }
+  },
+  "noncatalyst_modifiers": {
+   "payload_roles": {},
+   "total": 0,
+   "written_as_reaction_enzyme": 0,
+   "examples": []
+  },
+  "payload_dups": {
+   "exact_dup": 0,
+   "reverse_dup_pairs_same_enzyme": 0,
+   "same_inout_diff_enzyme": 0,
+   "reverse_pairs_any_enzyme": 0
+  },
+  "pwml_dups": {
+   "exact_dup": 0,
+   "reverse_dup_pairs_same_enzyme": 0,
+   "same_inout_diff_enzyme": 0,
+   "reverse_pairs_any_enzyme": 0
+  },
+  "side_vs_role": {
+   "members": 19,
+   "side_contradicts_list": 0,
+   "on_both_lists": 0,
+   "elements_not_drawn": 0
+  },
+  "enzymes": {
+   "reaction_enzyme_rows": 10,
+   "payload_enzyme_refs": 10,
+   "viz_complex_mismatch": 0,
+   "enzyme_not_drawn": 0
+  },
+  "states": {
+   "payload": 2,
+   "pwml": 2,
+   "used_in_pwml": [
+    "Aquifex aeolicus state"
+   ],
+   "defined_unused": [
+    "Aquifex aeolicus state"
+   ],
+   "payload_dup_names": [
+    "Aquifex aeolicus state"
+   ],
+   "synonym_groups_used": {},
+   "null_state_reactions_payload": 0,
+   "species_among_used": [
+    "Aquifex aeolicus"
+   ],
+   "reaction_state_payload": {
+    "Aquifex aeolicus state": 8
+   },
+   "reaction_state_pwml": {
+    "Aquifex aeolicus state": 8
+   },
+   "reaction_state_mismatch": 0
+  },
+  "species": {
+   "organism": "Aquifex aeolicus",
+   "payload_species": [
+    "Aquifex aeolicus",
+    "Arabidopsis thaliana"
+   ],
+   "pwml_species": [
+    "Aquifex aeolicus",
+    "Arabidopsis thaliana"
+   ],
+   "state_species_in_pwml": [
+    "Aquifex aeolicus"
+   ]
+  },
+  "compartment_boxes": {
+   "boxes": 1,
+   "labels": [
+    "Aquifex aeolicus"
+   ],
+   "dup_labels": [],
+   "organism_or_strain_named": []
+  },
+  "transports": {
+   "payload": 0,
+   "pwml": 0,
+   "pwml_elements": 0,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "transporters_payload": 0,
+   "transporters_pwml": 0,
+   "drawn": 0,
+   "same_state_both_ends_pwml": 0
+  },
+  "interactions": {
+   "payload": 0,
+   "pwml": 0
+  },
+  "drawing": {
+   "compound_locations": 18,
+   "distinct_compound_state": 10,
+   "compounds_with_multiple_locs": 5,
+   "shared_compound_state": 6,
+   "shared_redrawn": 5,
+   "drawn_components": 3,
+   "logical_components": 1,
+   "hidden_locs": 0
+  },
+  "flow": {
+   "precedence_pairs": 8,
+   "right_to_left_pairs": 4,
+   "examples": [
+    [
+     "2,5-diamino-6-ribosylamino-pyrimidinone 5\u2032-phosphate",
+     465,
+     465
+    ],
+    [
+     "2,5-diamino-6-ribosylamino-pyrimidinone 5\u2032-phosphate",
+     465,
+     465
+    ],
+    [
+     "5-amino-6-ribitylamino-pyrimidinedione",
+     465,
+     465
+    ],
+    [
+     "5-amino-6-ribitylamino-pyrimidinedione",
+     1035,
+     465
+    ]
+   ]
+  },
+  "canvas_use": {
+   "w": 1500,
+   "h": 2169,
+   "x_span": 1140,
+   "y_span": 1719,
+   "fit_scale_1600x900": 0.415
+  },
+  "pwml_counts": {
+   "compounds": 11,
+   "proteins": 5,
+   "protein-complexes": 6,
+   "reactions": 8,
+   "transports": 0,
+   "interactions": 0,
+   "compound-locations": 18,
+   "protein-locations": 6,
+   "edges": 29,
+   "biological-states": 2,
+   "membrane-visualizations": 1,
+   "label-locations": 1
+  },
+  "db": {
+   "counts": {
+    "biological_states": 1,
+    "compound_locations": 18,
+    "compounds": 10,
+    "element_states": 5,
+    "pathway_elements": 10,
+    "protein_complexes": 6,
+    "protein_locations": 6,
+    "proteins": 5,
+    "reaction_elements": 19,
+    "reaction_enzymes": 10,
+    "reactions": 8,
+    "subcellular_locations": 78
+   },
+   "reactions_db": 8,
+   "reactions_pwml_distinct": 8,
+   "reactions_merged_by_importer": 0,
+   "reactions_pwml_not_in_db": [
+    [
+     [
+      "ribulose 5-phosphate"
+     ],
+     [
+      "3,4-dihydroxy-2-butanone 4-phosphate"
+     ],
+     [
+      "ribba complex"
+     ]
+    ],
+    [
+     [
+      "ribulose 5-phosphate"
+     ],
+     [
+      "ribose 5-phosphate"
+     ],
+     [
+      "hfp"
+     ]
+    ]
+   ],
+   "reactions_db_not_in_pwml": [
+    [
+     [
+      "d-ribulose 5-phosphate"
+     ],
+     [
+      "3,4-dihydroxy-2-butanone 4-phosphate"
+     ],
+     [
+      "ribba complex"
+     ]
+    ],
+    [
+     [
+      "d-ribulose 5-phosphate"
+     ],
+     [
+      "ribose 5-phosphate"
+     ],
+     [
+      "hfp"
+     ]
+    ]
+   ],
+   "reaction_elements_expected": 19,
+   "reaction_enzymes_expected": 10,
+   "transports_db_vs_pwml_missing": [],
+   "transports_db_vs_pwml_extra": [],
+   "db_states": [
+    "cell"
+   ]
+  },
+  "import": {
+   "ok": true,
+   "errors": {},
+   "pw_id": "PW000001",
+   "created_main": {
+    "pathways": 1,
+    "compounds": 10,
+    "compound_locations": 18,
+    "proteins": 4,
+    "protein_complexes": 6,
+    "reactions": 8,
+    "transports": 0,
+    "element_states": 5,
+    "subcellular_locations": 1,
+    "species": 0,
+    "pathway_visualizations": 1
+   },
+   "expected": {
+    "compounds": 11,
+    "proteins": 5,
+    "protein_complexes": 6,
+    "reactions": 8,
+    "transports": 0,
+    "interactions": 0,
+    "compound_locations": 18,
+    "protein_locations": 6
+   },
+   "exports": {
+    "sbml": {
+     "status": 200,
+     "bytes": 55030,
+     "ok": true
+    },
+    "sbgn": {
+     "status": 200,
+     "bytes": 22104,
+     "ok": true
+    },
+    "pwml": {
+     "status": 200,
+     "bytes": 87120,
+     "ok": true
+    }
+   },
+   "screenshot_ok": true,
+   "parser_exception": null
+  },
+  "problems": [
+   {
+    "class": "writer (shared-intermediate reuse only for adjacent reactions)",
+    "sev": "S2",
+    "what": "5 shared compounds redrawn; 3 drawn components vs 1 logical"
+   },
+   {
+    "class": "layout",
+    "sev": "S2",
+    "what": "4 of 8 producer->consumer pairs drawn against reading order"
+   }
+  ],
+  "screenshot_review": {
+   "file": "C:/t/corr-assess/a1/shots/129.png",
+   "flow_in_pathway_order": "partly",
+   "labels_readable": "ok",
+   "shared_compounds_redrawn": "yes, 5-amino-6-ribitylamino-pyrimidinedione(+5-P) 4x, D-ribulose 5-phosphate 2x",
+   "note": "rows run top-down but earlier steps sit below later ones; orphan IMP/HFP ellipses"
+  }
+ },
+ "138": {
+  "idx": 138,
+  "canvas": [
+   3630,
+   1327
+  ],
+  "reactions": {
+   "payload": 8,
+   "pwml": 8,
+   "pwml_viz": 8,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "payload_without_enzyme": 1,
+   "pwml_without_enzyme": 1,
+   "direction_values": {
+    "Right": 8
+   }
+  },
+  "noncatalyst_modifiers": {
+   "payload_roles": {},
+   "total": 0,
+   "written_as_reaction_enzyme": 0,
+   "examples": []
+  },
+  "payload_dups": {
+   "exact_dup": 0,
+   "reverse_dup_pairs_same_enzyme": 0,
+   "same_inout_diff_enzyme": 0,
+   "reverse_pairs_any_enzyme": 0
+  },
+  "pwml_dups": {
+   "exact_dup": 0,
+   "reverse_dup_pairs_same_enzyme": 0,
+   "same_inout_diff_enzyme": 0,
+   "reverse_pairs_any_enzyme": 0
+  },
+  "side_vs_role": {
+   "members": 19,
+   "side_contradicts_list": 0,
+   "on_both_lists": 0,
+   "elements_not_drawn": 0
+  },
+  "enzymes": {
+   "reaction_enzyme_rows": 7,
+   "payload_enzyme_refs": 7,
+   "viz_complex_mismatch": 0,
+   "enzyme_not_drawn": 0
+  },
+  "states": {
+   "payload": 2,
+   "pwml": 2,
+   "used_in_pwml": [
+    "Streptomyces tubercidicus extracellular",
+    "__auto_state__"
+   ],
+   "defined_unused": [],
+   "payload_dup_names": [],
+   "synonym_groups_used": {},
+   "null_state_reactions_payload": 8,
+   "species_among_used": [
+    "Streptomyces tubercidicus"
+   ],
+   "reaction_state_payload": {
+    "null": 8
+   },
+   "reaction_state_pwml": {
+    "Streptomyces tubercidicus extracellular": 8
+   },
+   "reaction_state_mismatch": null
+  },
+  "species": {
+   "organism": "Streptomyces tubercidicus",
+   "payload_species": [
+    "Streptomyces tubercidicus",
+    "Arabidopsis thaliana"
+   ],
+   "pwml_species": [
+    "Streptomyces tubercidicus",
+    "Arabidopsis thaliana"
+   ],
+   "state_species_in_pwml": [
+    "Streptomyces tubercidicus"
+   ]
+  },
+  "compartment_boxes": {
+   "boxes": 2,
+   "labels": [
+    "Streptomyces tubercidicus extracellular"
+   ],
+   "dup_labels": [],
+   "organism_or_strain_named": []
+  },
+  "transports": {
+   "payload": 1,
+   "pwml": 1,
+   "pwml_elements": 1,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "transporters_payload": 0,
+   "transporters_pwml": 0,
+   "drawn": 1,
+   "same_state_both_ends_pwml": 1
+  },
+  "interactions": {
+   "payload": 0,
+   "pwml": 0
+  },
+  "drawing": {
+   "compound_locations": 15,
+   "distinct_compound_state": 13,
+   "compounds_with_multiple_locs": 2,
+   "shared_compound_state": 7,
+   "shared_redrawn": 2,
+   "drawn_components": 3,
+   "logical_components": 1,
+   "hidden_locs": 0
+  },
+  "flow": {
+   "precedence_pairs": 7,
+   "right_to_left_pairs": 1,
+   "examples": [
+    [
+     "compound 5",
+     1290,
+     465
+    ]
+   ]
+  },
+  "canvas_use": {
+   "w": 3630,
+   "h": 1327,
+   "x_span": 3343,
+   "y_span": 845,
+   "fit_scale_1600x900": 0.441
+  },
+  "pwml_counts": {
+   "compounds": 12,
+   "proteins": 1,
+   "protein-complexes": 7,
+   "reactions": 8,
+   "transports": 1,
+   "interactions": 0,
+   "compound-locations": 15,
+   "protein-locations": 7,
+   "edges": 28,
+   "biological-states": 2,
+   "membrane-visualizations": 2,
+   "label-locations": 1
+  },
+  "db": {
+   "counts": {
+    "biological_states": 2,
+    "compound_locations": 15,
+    "compounds": 12,
+    "element_states": 1,
+    "pathway_elements": 8,
+    "protein_complexes": 7,
+    "protein_locations": 7,
+    "proteins": 1,
+    "reaction_elements": 19,
+    "reaction_enzymes": 7,
+    "reactions": 8,
+    "subcellular_locations": 78
+   },
+   "reactions_db": 8,
+   "reactions_pwml_distinct": 8,
+   "reactions_merged_by_importer": 0,
+   "reactions_pwml_not_in_db": [],
+   "reactions_db_not_in_pwml": [],
+   "reaction_elements_expected": 19,
+   "reaction_enzymes_expected": 7,
+   "transports_db_vs_pwml_missing": [
+    [
+     "tubercidin",
+     "cell",
+     "cell"
+    ]
+   ],
+   "transports_db_vs_pwml_extra": [],
+   "db_states": [
+    "cell",
+    "extracellular space"
+   ]
+  },
+  "import": {
+   "ok": true,
+   "errors": {
+    "transport_element_40": [
+     "Biological state must have unique biological states"
+    ],
+    "transport_39": [
+     "Transport elements is too short (minimum is 1 character)"
+    ],
+    "transport_visualization_164": [
+     "Transport can't be blank"
+    ]
+   },
+   "pw_id": "PW000001",
+   "created_main": {
+    "pathways": 1,
+    "compounds": 12,
+    "compound_locations": 15,
+    "proteins": 0,
+    "protein_complexes": 7,
+    "reactions": 8,
+    "transports": 0,
+    "element_states": 1,
+    "subcellular_locations": 1,
+    "species": 1,
+    "pathway_visualizations": 1
+   },
+   "expected": {
+    "compounds": 12,
+    "proteins": 1,
+    "protein_complexes": 7,
+    "reactions": 8,
+    "transports": 1,
+    "interactions": 0,
+    "compound_locations": 15,
+    "protein_locations": 7
+   },
+   "exports": {
+    "sbml": {
+     "status": 200,
+     "bytes": 51077,
+     "ok": true
+    },
+    "sbgn": {
+     "status": 200,
+     "bytes": 18565,
+     "ok": true
+    },
+    "pwml": {
+     "status": 200,
+     "bytes": 84290,
+     "ok": true
+    }
+   },
+   "screenshot_ok": true,
+   "parser_exception": null
+  },
+  "problems": [
+   {
+    "class": "writer (ir.py default_bs_key)",
+    "sev": "S1",
+    "what": "8 reaction(s) with no stated compartment placed in biological_states[0]"
+   },
+   {
+    "class": "writer (shared-intermediate reuse only for adjacent reactions)",
+    "sev": "S2",
+    "what": "2 shared compounds redrawn; 3 drawn components vs 1 logical"
+   },
+   {
+    "class": "layout",
+    "sev": "S2",
+    "what": "1 of 7 producer->consumer pairs drawn against reading order"
+   },
+   {
+    "class": "data/extraction (writer passes it through)",
+    "sev": "S1",
+    "what": "transport not created in PathWhiz: both ends __auto_state__"
+   }
+  ],
+  "screenshot_review": {
+   "file": "C:/t/corr-assess/a1/shots/138.png",
+   "flow_in_pathway_order": "partly",
+   "labels_readable": "label cut off (\"Streptomyces tubercidicu\")",
+   "shared_compounds_redrawn": "yes, compound 3 / compound 5 2x",
+   "note": "whole biosynthesis drawn inside a box labelled \"extracellular\"; second row runs backwards; empty unlabelled box"
+  }
+ },
+ "120": {
+  "idx": 120,
+  "canvas": [
+   1820,
+   1679
+  ],
+  "reactions": {
+   "payload": 7,
+   "pwml": 7,
+   "pwml_viz": 7,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "payload_without_enzyme": 0,
+   "pwml_without_enzyme": 0,
+   "direction_values": {
+    "Right": 7
+   }
+  },
+  "noncatalyst_modifiers": {
+   "payload_roles": {},
+   "total": 0,
+   "written_as_reaction_enzyme": 0,
+   "examples": []
+  },
+  "payload_dups": {
+   "exact_dup": 0,
+   "reverse_dup_pairs_same_enzyme": 0,
+   "same_inout_diff_enzyme": 4,
+   "reverse_pairs_any_enzyme": 0
+  },
+  "pwml_dups": {
+   "exact_dup": 0,
+   "reverse_dup_pairs_same_enzyme": 0,
+   "same_inout_diff_enzyme": 4,
+   "reverse_pairs_any_enzyme": 0
+  },
+  "side_vs_role": {
+   "members": 14,
+   "side_contradicts_list": 0,
+   "on_both_lists": 0,
+   "elements_not_drawn": 0
+  },
+  "enzymes": {
+   "reaction_enzyme_rows": 12,
+   "payload_enzyme_refs": 12,
+   "viz_complex_mismatch": 0,
+   "enzyme_not_drawn": 0
+  },
+  "states": {
+   "payload": 4,
+   "pwml": 4,
+   "used_in_pwml": [
+    "Leydig cells of testis",
+    "adult Leydig cells",
+    "testis"
+   ],
+   "defined_unused": [
+    "Leydig cells of testis"
+   ],
+   "payload_dup_names": [
+    "Leydig cells of testis"
+   ],
+   "synonym_groups_used": {
+    "cell-interior": [
+     "cell|Leydig cells of testis",
+     "cell|adult Leydig cells",
+     "cell|testis"
+    ]
+   },
+   "null_state_reactions_payload": 0,
+   "species_among_used": [
+    "Mus musculus"
+   ],
+   "reaction_state_payload": {
+    "Leydig cells of testis": 5,
+    "adult Leydig cells": 1,
+    "testis": 1
+   },
+   "reaction_state_pwml": {
+    "Leydig cells of testis": 5,
+    "adult Leydig cells": 1,
+    "testis": 1
+   },
+   "reaction_state_mismatch": 0
+  },
+  "species": {
+   "organism": "Mus musculus",
+   "payload_species": [
+    "Mus musculus"
+   ],
+   "pwml_species": [
+    "Mus musculus"
+   ],
+   "state_species_in_pwml": [
+    "Mus musculus"
+   ]
+  },
+  "compartment_boxes": {
+   "boxes": 3,
+   "labels": [
+    "Leydig cells of testis",
+    "testis",
+    "adult Leydig cells"
+   ],
+   "dup_labels": [],
+   "organism_or_strain_named": []
+  },
+  "transports": {
+   "payload": 0,
+   "pwml": 0,
+   "pwml_elements": 0,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "transporters_payload": 0,
+   "transporters_pwml": 0,
+   "drawn": 0,
+   "same_state_both_ends_pwml": 0
+  },
+  "interactions": {
+   "payload": 0,
+   "pwml": 0
+  },
+  "drawing": {
+   "compound_locations": 14,
+   "distinct_compound_state": 10,
+   "compounds_with_multiple_locs": 2,
+   "shared_compound_state": 2,
+   "shared_redrawn": 2,
+   "drawn_components": 4,
+   "logical_components": 3,
+   "hidden_locs": 0
+  },
+  "flow": {
+   "precedence_pairs": 0,
+   "right_to_left_pairs": 0,
+   "examples": []
+  },
+  "canvas_use": {
+   "w": 1820,
+   "h": 1679,
+   "x_span": 1460,
+   "y_span": 1349,
+   "fit_scale_1600x900": 0.536
+  },
+  "pwml_counts": {
+   "compounds": 6,
+   "proteins": 4,
+   "protein-complexes": 4,
+   "reactions": 7,
+   "transports": 0,
+   "interactions": 0,
+   "compound-locations": 14,
+   "protein-locations": 8,
+   "edges": 26,
+   "biological-states": 4,
+   "membrane-visualizations": 3,
+   "label-locations": 3
+  },
+  "db": {
+   "counts": {
+    "biological_states": 1,
+    "compound_locations": 14,
+    "compounds": 6,
+    "element_states": 4,
+    "pathway_elements": 12,
+    "protein_complexes": 4,
+    "protein_locations": 8,
+    "proteins": 5,
+    "reaction_elements": 14,
+    "reaction_enzymes": 12,
+    "reactions": 7,
+    "subcellular_locations": 78
+   },
+   "reactions_db": 7,
+   "reactions_pwml_distinct": 7,
+   "reactions_merged_by_importer": 0,
+   "reactions_pwml_not_in_db": [],
+   "reactions_db_not_in_pwml": [],
+   "reaction_elements_expected": 14,
+   "reaction_enzymes_expected": 12,
+   "transports_db_vs_pwml_missing": [],
+   "transports_db_vs_pwml_extra": [],
+   "db_states": [
+    "cell"
+   ]
+  },
+  "import": {
+   "ok": true,
+   "errors": {},
+   "pw_id": "PW000001",
+   "created_main": {
+    "pathways": 1,
+    "compounds": 6,
+    "compound_locations": 14,
+    "proteins": 4,
+    "protein_complexes": 4,
+    "reactions": 7,
+    "transports": 0,
+    "element_states": 4,
+    "subcellular_locations": 1,
+    "species": 0,
+    "pathway_visualizations": 1
+   },
+   "expected": {
+    "compounds": 6,
+    "proteins": 4,
+    "protein_complexes": 4,
+    "reactions": 7,
+    "transports": 0,
+    "interactions": 0,
+    "compound_locations": 14,
+    "protein_locations": 8
+   },
+   "exports": {
+    "sbml": {
+     "status": 200,
+     "bytes": 44478,
+     "ok": true
+    },
+    "sbgn": {
+     "status": 200,
+     "bytes": 20685,
+     "ok": true
+    },
+    "pwml": {
+     "status": 200,
+     "bytes": 78774,
+     "ok": true
+    }
+   },
+   "screenshot_ok": true,
+   "parser_exception": null
+  },
+  "problems": [
+   {
+    "class": "data/extraction",
+    "sev": "S2",
+    "what": "duplicate reactions in payload: {'exact_dup': 0, 'reverse_dup_pairs_same_enzyme': 0, 'same_inout_diff_enzyme': 4, 'reverse_pairs_any_enzyme': 0}"
+   },
+   {
+    "class": "data/extraction",
+    "sev": "S2",
+    "what": "near-synonym compartments used: {'cell-interior': ['cell|Leydig cells of testis', 'cell|adult Leydig cells', 'cell|testis']}"
+   },
+   {
+    "class": "writer (shared-intermediate reuse only for adjacent reactions)",
+    "sev": "S2",
+    "what": "2 shared compounds redrawn; 4 drawn components vs 3 logical"
+   }
+  ],
+  "screenshot_review": {
+   "file": "C:/t/corr-assess/a1/shots/120.png",
+   "flow_in_pathway_order": "yes",
+   "labels_readable": "ok",
+   "shared_compounds_redrawn": "yes, androstenedione 3x, testosterone 4x",
+   "note": "same androstenedione->testosterone step drawn in 3 boxes (Leydig cells of testis / testis / adult Leydig cells)"
+  }
+ },
+ "148": {
+  "idx": 148,
+  "canvas": [
+   4240,
+   350
+  ],
+  "reactions": {
+   "payload": 7,
+   "pwml": 7,
+   "pwml_viz": 7,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "payload_without_enzyme": 1,
+   "pwml_without_enzyme": 1,
+   "direction_values": {
+    "Right": 7
+   }
+  },
+  "noncatalyst_modifiers": {
+   "payload_roles": {},
+   "total": 0,
+   "written_as_reaction_enzyme": 0,
+   "examples": []
+  },
+  "payload_dups": {
+   "exact_dup": 0,
+   "reverse_dup_pairs_same_enzyme": 0,
+   "same_inout_diff_enzyme": 0,
+   "reverse_pairs_any_enzyme": 0
+  },
+  "pwml_dups": {
+   "exact_dup": 0,
+   "reverse_dup_pairs_same_enzyme": 0,
+   "same_inout_diff_enzyme": 0,
+   "reverse_pairs_any_enzyme": 0
+  },
+  "side_vs_role": {
+   "members": 14,
+   "side_contradicts_list": 0,
+   "on_both_lists": 0,
+   "elements_not_drawn": 0
+  },
+  "enzymes": {
+   "reaction_enzyme_rows": 7,
+   "payload_enzyme_refs": 7,
+   "viz_complex_mismatch": 0,
+   "enzyme_not_drawn": 0
+  },
+  "states": {
+   "payload": 1,
+   "pwml": 1,
+   "used_in_pwml": [
+    "__auto_state__"
+   ],
+   "defined_unused": [],
+   "payload_dup_names": [],
+   "synonym_groups_used": {},
+   "null_state_reactions_payload": 7,
+   "species_among_used": [
+    "Moringa oleifera"
+   ],
+   "reaction_state_payload": {
+    "null": 7
+   },
+   "reaction_state_pwml": {
+    "__auto_state__": 7
+   },
+   "reaction_state_mismatch": null
+  },
+  "species": {
+   "organism": "Moringa oleifera",
+   "payload_species": [
+    "Moringa oleifera",
+    "Arabidopsis thaliana"
+   ],
+   "pwml_species": [
+    "Moringa oleifera",
+    "Arabidopsis thaliana"
+   ],
+   "state_species_in_pwml": [
+    "Moringa oleifera"
+   ]
+  },
+  "compartment_boxes": {
+   "boxes": 1,
+   "labels": [],
+   "dup_labels": [],
+   "organism_or_strain_named": []
+  },
+  "transports": {
+   "payload": 0,
+   "pwml": 0,
+   "pwml_elements": 0,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "transporters_payload": 0,
+   "transporters_pwml": 0,
+   "drawn": 0,
+   "same_state_both_ends_pwml": 0
+  },
+  "interactions": {
+   "payload": 0,
+   "pwml": 0
+  },
+  "drawing": {
+   "compound_locations": 8,
+   "distinct_compound_state": 8,
+   "compounds_with_multiple_locs": 0,
+   "shared_compound_state": 6,
+   "shared_redrawn": 0,
+   "drawn_components": 1,
+   "logical_components": 1,
+   "hidden_locs": 0
+  },
+  "flow": {
+   "precedence_pairs": 6,
+   "right_to_left_pairs": 0,
+   "examples": []
+  },
+  "canvas_use": {
+   "w": 4240,
+   "h": 350,
+   "x_span": 3880,
+   "y_span": 115,
+   "fit_scale_1600x900": 0.377
+  },
+  "pwml_counts": {
+   "compounds": 8,
+   "proteins": 1,
+   "protein-complexes": 7,
+   "reactions": 7,
+   "transports": 0,
+   "interactions": 0,
+   "compound-locations": 8,
+   "protein-locations": 7,
+   "edges": 21,
+   "biological-states": 1,
+   "membrane-visualizations": 1,
+   "label-locations": 0
+  },
+  "db": {
+   "counts": {
+    "biological_states": 1,
+    "compound_locations": 8,
+    "compounds": 8,
+    "element_states": 1,
+    "pathway_elements": 8,
+    "protein_complexes": 7,
+    "protein_locations": 7,
+    "proteins": 1,
+    "reaction_elements": 14,
+    "reaction_enzymes": 7,
+    "reactions": 7,
+    "subcellular_locations": 78
+   },
+   "reactions_db": 7,
+   "reactions_pwml_distinct": 7,
+   "reactions_merged_by_importer": 0,
+   "reactions_pwml_not_in_db": [],
+   "reactions_db_not_in_pwml": [],
+   "reaction_elements_expected": 14,
+   "reaction_enzymes_expected": 7,
+   "transports_db_vs_pwml_missing": [],
+   "transports_db_vs_pwml_extra": [],
+   "db_states": [
+    "cell"
+   ]
+  },
+  "import": {
+   "ok": true,
+   "errors": {},
+   "pw_id": "PW000001",
+   "created_main": {
+    "pathways": 1,
+    "compounds": 8,
+    "compound_locations": 8,
+    "proteins": 0,
+    "protein_complexes": 7,
+    "reactions": 7,
+    "transports": 0,
+    "element_states": 1,
+    "subcellular_locations": 1,
+    "species": 1,
+    "pathway_visualizations": 1
+   },
+   "expected": {
+    "compounds": 8,
+    "proteins": 1,
+    "protein_complexes": 7,
+    "reactions": 7,
+    "transports": 0,
+    "interactions": 0,
+    "compound_locations": 8,
+    "protein_locations": 7
+   },
+   "exports": {
+    "sbml": {
+     "status": 200,
+     "bytes": 40963,
+     "ok": true
+    },
+    "sbgn": {
+     "status": 200,
+     "bytes": 14734,
+     "ok": true
+    },
+    "pwml": {
+     "status": 200,
+     "bytes": 65407,
+     "ok": true
+    }
+   },
+   "screenshot_ok": true,
+   "parser_exception": null
+  },
+  "problems": [
+   {
+    "class": "writer (ir.py default_bs_key)",
+    "sev": "S3",
+    "what": "7 reaction(s) with no stated compartment placed in biological_states[0]"
+   }
+  ],
+  "screenshot_review": {
+   "file": "C:/t/corr-assess/a1/shots/148.png",
+   "flow_in_pathway_order": "yes (single row of 7)",
+   "labels_readable": "compound names overflow their boxes",
+   "shared_compounds_redrawn": "no",
+   "note": "canvas 4240x350 so fit-to-window scale is tiny; otherwise the cleanest result"
+  }
+ },
+ "19": {
+  "idx": 19,
+  "canvas": [
+   2070,
+   1750
+  ],
+  "reactions": {
+   "payload": 6,
+   "pwml": 6,
+   "pwml_viz": 6,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "payload_without_enzyme": 0,
+   "pwml_without_enzyme": 0,
+   "direction_values": {
+    "Right": 6
+   }
+  },
+  "noncatalyst_modifiers": {
+   "payload_roles": {},
+   "total": 0,
+   "written_as_reaction_enzyme": 0,
+   "examples": []
+  },
+  "payload_dups": {
+   "exact_dup": 0,
+   "reverse_dup_pairs_same_enzyme": 0,
+   "same_inout_diff_enzyme": 0,
+   "reverse_pairs_any_enzyme": 0
+  },
+  "pwml_dups": {
+   "exact_dup": 0,
+   "reverse_dup_pairs_same_enzyme": 0,
+   "same_inout_diff_enzyme": 0,
+   "reverse_pairs_any_enzyme": 0
+  },
+  "side_vs_role": {
+   "members": 17,
+   "side_contradicts_list": 0,
+   "on_both_lists": 0,
+   "elements_not_drawn": 0
+  },
+  "enzymes": {
+   "reaction_enzyme_rows": 12,
+   "payload_enzyme_refs": 12,
+   "viz_complex_mismatch": 0,
+   "enzyme_not_drawn": 0
+  },
+  "states": {
+   "payload": 1,
+   "pwml": 1,
+   "used_in_pwml": [
+    "__auto_state__"
+   ],
+   "defined_unused": [],
+   "payload_dup_names": [],
+   "synonym_groups_used": {},
+   "null_state_reactions_payload": 6,
+   "species_among_used": [
+    "Aspergillus japonicus"
+   ],
+   "reaction_state_payload": {
+    "null": 6
+   },
+   "reaction_state_pwml": {
+    "__auto_state__": 6
+   },
+   "reaction_state_mismatch": null
+  },
+  "species": {
+   "organism": "Aspergillus japonicus",
+   "payload_species": [
+    "Aspergillus japonicus",
+    "Arabidopsis thaliana"
+   ],
+   "pwml_species": [
+    "Aspergillus japonicus",
+    "Arabidopsis thaliana"
+   ],
+   "state_species_in_pwml": [
+    "Aspergillus japonicus"
+   ]
+  },
+  "compartment_boxes": {
+   "boxes": 1,
+   "labels": [],
+   "dup_labels": [],
+   "organism_or_strain_named": []
+  },
+  "transports": {
+   "payload": 0,
+   "pwml": 0,
+   "pwml_elements": 0,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "transporters_payload": 0,
+   "transporters_pwml": 0,
+   "drawn": 0,
+   "same_state_both_ends_pwml": 0
+  },
+  "interactions": {
+   "payload": 0,
+   "pwml": 0
+  },
+  "drawing": {
+   "compound_locations": 15,
+   "distinct_compound_state": 10,
+   "compounds_with_multiple_locs": 2,
+   "shared_compound_state": 4,
+   "shared_redrawn": 2,
+   "drawn_components": 2,
+   "logical_components": 1,
+   "hidden_locs": 0
+  },
+  "flow": {
+   "precedence_pairs": 5,
+   "right_to_left_pairs": 3,
+   "examples": [
+    [
+     "chanoclavine-I aldehyde",
+     1605,
+     465
+    ],
+    [
+     "chanoclavine-I aldehyde",
+     1605,
+     465
+    ],
+    [
+     "chanoclavine-I aldehyde",
+     1605,
+     465
+    ]
+   ]
+  },
+  "canvas_use": {
+   "w": 2070,
+   "h": 1750,
+   "x_span": 1710,
+   "y_span": 1400,
+   "fit_scale_1600x900": 0.514
+  },
+  "pwml_counts": {
+   "compounds": 10,
+   "proteins": 1,
+   "protein-complexes": 8,
+   "reactions": 6,
+   "transports": 0,
+   "interactions": 0,
+   "compound-locations": 15,
+   "protein-locations": 8,
+   "edges": 29,
+   "biological-states": 1,
+   "membrane-visualizations": 1,
+   "label-locations": 0
+  },
+  "db": {
+   "counts": {
+    "biological_states": 1,
+    "compound_locations": 15,
+    "compounds": 10,
+    "element_states": 1,
+    "pathway_elements": 12,
+    "protein_complexes": 8,
+    "protein_locations": 8,
+    "proteins": 1,
+    "reaction_elements": 17,
+    "reaction_enzymes": 12,
+    "reactions": 6,
+    "subcellular_locations": 78
+   },
+   "reactions_db": 6,
+   "reactions_pwml_distinct": 6,
+   "reactions_merged_by_importer": 0,
+   "reactions_pwml_not_in_db": [],
+   "reactions_db_not_in_pwml": [],
+   "reaction_elements_expected": 17,
+   "reaction_enzymes_expected": 12,
+   "transports_db_vs_pwml_missing": [],
+   "transports_db_vs_pwml_extra": [],
+   "db_states": [
+    "cell"
+   ]
+  },
+  "import": {
+   "ok": true,
+   "errors": {},
+   "pw_id": "PW000001",
+   "created_main": {
+    "pathways": 1,
+    "compounds": 10,
+    "compound_locations": 15,
+    "proteins": 0,
+    "protein_complexes": 8,
+    "reactions": 6,
+    "transports": 0,
+    "element_states": 1,
+    "subcellular_locations": 1,
+    "species": 0,
+    "pathway_visualizations": 1
+   },
+   "expected": {
+    "compounds": 10,
+    "proteins": 1,
+    "protein_complexes": 8,
+    "reactions": 6,
+    "transports": 0,
+    "interactions": 0,
+    "compound_locations": 15,
+    "protein_locations": 8
+   },
+   "exports": {
+    "sbml": {
+     "status": 200,
+     "bytes": 51163,
+     "ok": true
+    },
+    "sbgn": {
+     "status": 200,
+     "bytes": 22039,
+     "ok": true
+    },
+    "pwml": {
+     "status": 200,
+     "bytes": 83495,
+     "ok": true
+    }
+   },
+   "screenshot_ok": true,
+   "parser_exception": null
+  },
+  "problems": [
+   {
+    "class": "writer (ir.py default_bs_key)",
+    "sev": "S3",
+    "what": "6 reaction(s) with no stated compartment placed in biological_states[0]"
+   },
+   {
+    "class": "writer (shared-intermediate reuse only for adjacent reactions)",
+    "sev": "S2",
+    "what": "2 shared compounds redrawn; 2 drawn components vs 1 logical"
+   },
+   {
+    "class": "layout",
+    "sev": "S2",
+    "what": "3 of 5 producer->consumer pairs drawn against reading order"
+   }
+  ],
+  "screenshot_review": {
+   "file": "C:/t/corr-assess/a1/shots/19.png",
+   "flow_in_pathway_order": "no (bottom-up)",
+   "labels_readable": "ok",
+   "shared_compounds_redrawn": "yes, chanoclavine-I aldehyde 4x",
+   "note": "EasA node carries 3 reactions; EasH/EasG/EasF/EasC enzyme ellipses with no edges; NADPH wires loop"
+  }
+ },
+ "144": {
+  "idx": 144,
+  "canvas": [
+   1810,
+   1824
+  ],
+  "reactions": {
+   "payload": 6,
+   "pwml": 6,
+   "pwml_viz": 6,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "payload_without_enzyme": 0,
+   "pwml_without_enzyme": 0,
+   "direction_values": {
+    "Right": 6
+   }
+  },
+  "noncatalyst_modifiers": {
+   "payload_roles": {},
+   "total": 0,
+   "written_as_reaction_enzyme": 0,
+   "examples": []
+  },
+  "payload_dups": {
+   "exact_dup": 0,
+   "reverse_dup_pairs_same_enzyme": 0,
+   "same_inout_diff_enzyme": 0,
+   "reverse_pairs_any_enzyme": 0
+  },
+  "pwml_dups": {
+   "exact_dup": 0,
+   "reverse_dup_pairs_same_enzyme": 0,
+   "same_inout_diff_enzyme": 0,
+   "reverse_pairs_any_enzyme": 0
+  },
+  "side_vs_role": {
+   "members": 18,
+   "side_contradicts_list": 0,
+   "on_both_lists": 0,
+   "elements_not_drawn": 0
+  },
+  "enzymes": {
+   "reaction_enzyme_rows": 6,
+   "payload_enzyme_refs": 6,
+   "viz_complex_mismatch": 0,
+   "enzyme_not_drawn": 0
+  },
+  "states": {
+   "payload": 3,
+   "pwml": 3,
+   "used_in_pwml": [
+    "endoplasmic reticulum of A. membranaceus",
+    "endoplasmic reticulum of A. membranaceus"
+   ],
+   "defined_unused": [
+    "__auto_state__"
+   ],
+   "payload_dup_names": [
+    "endoplasmic reticulum of A. membranaceus"
+   ],
+   "synonym_groups_used": {},
+   "null_state_reactions_payload": 2,
+   "species_among_used": [
+    "Astragalus membranaceus"
+   ],
+   "reaction_state_payload": {
+    "endoplasmic reticulum of A. membranaceus": 4,
+    "null": 2
+   },
+   "reaction_state_pwml": {
+    "endoplasmic reticulum of A. membranaceus": 6
+   },
+   "reaction_state_mismatch": null
+  },
+  "species": {
+   "organism": "Astragalus membranaceus",
+   "payload_species": [
+    "Astragalus membranaceus",
+    "Arabidopsis thaliana"
+   ],
+   "pwml_species": [
+    "Astragalus membranaceus",
+    "Arabidopsis thaliana"
+   ],
+   "state_species_in_pwml": [
+    "Astragalus membranaceus"
+   ]
+  },
+  "compartment_boxes": {
+   "boxes": 2,
+   "labels": [
+    "endoplasmic reticulum of A. membranaceus",
+    "endoplasmic reticulum of A. membranaceus"
+   ],
+   "dup_labels": [
+    "endoplasmic reticulum of a. membranaceus"
+   ],
+   "organism_or_strain_named": [
+    "endoplasmic reticulum of A. membranaceus",
+    "endoplasmic reticulum of A. membranaceus"
+   ]
+  },
+  "transports": {
+   "payload": 0,
+   "pwml": 0,
+   "pwml_elements": 0,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "transporters_payload": 0,
+   "transporters_pwml": 0,
+   "drawn": 0,
+   "same_state_both_ends_pwml": 0
+  },
+  "interactions": {
+   "payload": 0,
+   "pwml": 0
+  },
+  "drawing": {
+   "compound_locations": 18,
+   "distinct_compound_state": 14,
+   "compounds_with_multiple_locs": 2,
+   "shared_compound_state": 2,
+   "shared_redrawn": 2,
+   "drawn_components": 4,
+   "logical_components": 1,
+   "hidden_locs": 0
+  },
+  "flow": {
+   "precedence_pairs": 0,
+   "right_to_left_pairs": 0,
+   "examples": []
+  },
+  "canvas_use": {
+   "w": 1810,
+   "h": 1824,
+   "x_span": 1450,
+   "y_span": 1342,
+   "fit_scale_1600x900": 0.493
+  },
+  "pwml_counts": {
+   "compounds": 11,
+   "proteins": 1,
+   "protein-complexes": 3,
+   "reactions": 6,
+   "transports": 0,
+   "interactions": 0,
+   "compound-locations": 18,
+   "protein-locations": 4,
+   "edges": 24,
+   "biological-states": 3,
+   "membrane-visualizations": 2,
+   "label-locations": 2
+  },
+  "db": {
+   "counts": {
+    "biological_states": 2,
+    "compound_locations": 18,
+    "compounds": 11,
+    "element_states": 1,
+    "pathway_elements": 6,
+    "protein_complexes": 3,
+    "protein_locations": 4,
+    "proteins": 1,
+    "reaction_elements": 18,
+    "reaction_enzymes": 6,
+    "reactions": 6,
+    "subcellular_locations": 78
+   },
+   "reactions_db": 6,
+   "reactions_pwml_distinct": 6,
+   "reactions_merged_by_importer": 0,
+   "reactions_pwml_not_in_db": [],
+   "reactions_db_not_in_pwml": [],
+   "reaction_elements_expected": 18,
+   "reaction_enzymes_expected": 6,
+   "transports_db_vs_pwml_missing": [],
+   "transports_db_vs_pwml_extra": [],
+   "db_states": [
+    "cell",
+    "endoplasmic reticulum"
+   ]
+  },
+  "import": {
+   "ok": true,
+   "errors": {},
+   "pw_id": "PW000001",
+   "created_main": {
+    "pathways": 1,
+    "compounds": 11,
+    "compound_locations": 18,
+    "proteins": 0,
+    "protein_complexes": 3,
+    "reactions": 6,
+    "transports": 0,
+    "element_states": 1,
+    "subcellular_locations": 1,
+    "species": 1,
+    "pathway_visualizations": 1
+   },
+   "expected": {
+    "compounds": 11,
+    "proteins": 1,
+    "protein_complexes": 3,
+    "reactions": 6,
+    "transports": 0,
+    "interactions": 0,
+    "compound_locations": 18,
+    "protein_locations": 4
+   },
+   "exports": {
+    "sbml": {
+     "status": 200,
+     "bytes": 44374,
+     "ok": true
+    },
+    "sbgn": {
+     "status": 200,
+     "bytes": 18098,
+     "ok": true
+    },
+    "pwml": {
+     "status": 200,
+     "bytes": 74828,
+     "ok": true
+    }
+   },
+   "screenshot_ok": true,
+   "parser_exception": null
+  },
+  "problems": [
+   {
+    "class": "writer (ir.py default_bs_key)",
+    "sev": "S1",
+    "what": "2 reaction(s) with no stated compartment placed in biological_states[0]"
+   },
+   {
+    "class": "data/extraction",
+    "sev": "S2",
+    "what": "two boxes with the same label ['endoplasmic reticulum of a. membranaceus']"
+   },
+   {
+    "class": "writer (shared-intermediate reuse only for adjacent reactions)",
+    "sev": "S2",
+    "what": "2 shared compounds redrawn; 4 drawn components vs 1 logical"
+   }
+  ],
+  "screenshot_review": {
+   "file": "C:/t/corr-assess/a1/shots/144.png",
+   "flow_in_pathway_order": "partly",
+   "labels_readable": "label cut off",
+   "shared_compounds_redrawn": "yes, liquiritigenin 2x, naringenin 2x",
+   "note": "two boxes with identical label \"endoplasmic reticulum of A. membranaceus\"; AmIFS node carries 3 reactions"
+  }
+ },
+ "126": {
+  "idx": 126,
+  "canvas": [
+   1810,
+   2150
+  ],
+  "reactions": {
+   "payload": 5,
+   "pwml": 5,
+   "pwml_viz": 5,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "payload_without_enzyme": 0,
+   "pwml_without_enzyme": 0,
+   "direction_values": {
+    "Right": 5
+   }
+  },
+  "noncatalyst_modifiers": {
+   "payload_roles": {},
+   "total": 0,
+   "written_as_reaction_enzyme": 0,
+   "examples": []
+  },
+  "payload_dups": {
+   "exact_dup": 0,
+   "reverse_dup_pairs_same_enzyme": 0,
+   "same_inout_diff_enzyme": 1,
+   "reverse_pairs_any_enzyme": 0
+  },
+  "pwml_dups": {
+   "exact_dup": 0,
+   "reverse_dup_pairs_same_enzyme": 0,
+   "same_inout_diff_enzyme": 1,
+   "reverse_pairs_any_enzyme": 0
+  },
+  "side_vs_role": {
+   "members": 20,
+   "side_contradicts_list": 0,
+   "on_both_lists": 0,
+   "elements_not_drawn": 0
+  },
+  "enzymes": {
+   "reaction_enzyme_rows": 14,
+   "payload_enzyme_refs": 14,
+   "viz_complex_mismatch": 0,
+   "enzyme_not_drawn": 0
+  },
+  "states": {
+   "payload": 8,
+   "pwml": 8,
+   "used_in_pwml": [
+    "Petunia hybrida cytosol",
+    "cytosolic state",
+    "peroxisomal state",
+    "peroxisome"
+   ],
+   "defined_unused": [
+    "Petunia hybrida peroxisome",
+    "Petunia hybrida state",
+    "cytosol",
+    "peroxisomal state"
+   ],
+   "payload_dup_names": [
+    "peroxisomal state"
+   ],
+   "synonym_groups_used": {
+    "cell-interior": [
+     "cytosol|Petunia hybrida cytosol",
+     "cytosol|cytosolic state"
+    ],
+    "peroxisome": [
+     "peroxisome|peroxisomal state",
+     "peroxisome|peroxisome"
+    ]
+   },
+   "null_state_reactions_payload": 0,
+   "species_among_used": [
+    "Petunia hybrida"
+   ],
+   "reaction_state_payload": {
+    "cytosolic state": 2,
+    "Petunia hybrida cytosol": 2,
+    "peroxisome": 1
+   },
+   "reaction_state_pwml": {
+    "cytosolic state": 2,
+    "Petunia hybrida cytosol": 2,
+    "peroxisome": 1
+   },
+   "reaction_state_mismatch": 0
+  },
+  "species": {
+   "organism": "Petunia hybrida",
+   "payload_species": [
+    "Petunia hybrida",
+    "Arabidopsis thaliana"
+   ],
+   "pwml_species": [
+    "Petunia hybrida",
+    "Arabidopsis thaliana"
+   ],
+   "state_species_in_pwml": [
+    "Petunia hybrida"
+   ]
+  },
+  "compartment_boxes": {
+   "boxes": 4,
+   "labels": [
+    "cytosolic",
+    "peroxisomal",
+    "Petunia hybrida cytosol",
+    "peroxisome"
+   ],
+   "dup_labels": [],
+   "organism_or_strain_named": []
+  },
+  "transports": {
+   "payload": 1,
+   "pwml": 1,
+   "pwml_elements": 1,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "transporters_payload": 0,
+   "transporters_pwml": 0,
+   "drawn": 1,
+   "same_state_both_ends_pwml": 0
+  },
+  "interactions": {
+   "payload": 0,
+   "pwml": 0
+  },
+  "drawing": {
+   "compound_locations": 22,
+   "distinct_compound_state": 17,
+   "compounds_with_multiple_locs": 4,
+   "shared_compound_state": 4,
+   "shared_redrawn": 4,
+   "drawn_components": 4,
+   "logical_components": 1,
+   "hidden_locs": 0
+  },
+  "flow": {
+   "precedence_pairs": 0,
+   "right_to_left_pairs": 0,
+   "examples": []
+  },
+  "canvas_use": {
+   "w": 1810,
+   "h": 2150,
+   "x_span": 1523,
+   "y_span": 1820,
+   "fit_scale_1600x900": 0.419
+  },
+  "pwml_counts": {
+   "compounds": 10,
+   "proteins": 1,
+   "protein-complexes": 7,
+   "reactions": 5,
+   "transports": 1,
+   "interactions": 0,
+   "compound-locations": 22,
+   "protein-locations": 12,
+   "edges": 36,
+   "biological-states": 8,
+   "membrane-visualizations": 4,
+   "label-locations": 4
+  },
+  "db": {
+   "counts": {
+    "biological_states": 5,
+    "compound_locations": 22,
+    "compounds": 10,
+    "element_states": 3,
+    "pathway_elements": 15,
+    "protein_complexes": 7,
+    "protein_locations": 12,
+    "proteins": 1,
+    "reaction_elements": 20,
+    "reaction_enzymes": 14,
+    "reactions": 5,
+    "subcellular_locations": 78,
+    "transport_elements": 1,
+    "transports": 1
+   },
+   "reactions_db": 5,
+   "reactions_pwml_distinct": 5,
+   "reactions_merged_by_importer": 0,
+   "reactions_pwml_not_in_db": [],
+   "reactions_db_not_in_pwml": [],
+   "reaction_elements_expected": 20,
+   "reaction_enzymes_expected": 14,
+   "transports_db_vs_pwml_missing": [],
+   "transports_db_vs_pwml_extra": [],
+   "db_states": [
+    "cell",
+    "cytosol",
+    "peroxisome"
+   ]
+  },
+  "import": {
+   "ok": true,
+   "errors": {},
+   "pw_id": "PW000001",
+   "created_main": {
+    "pathways": 1,
+    "compounds": 10,
+    "compound_locations": 22,
+    "proteins": 0,
+    "protein_complexes": 7,
+    "reactions": 5,
+    "transports": 1,
+    "element_states": 3,
+    "subcellular_locations": 1,
+    "species": 1,
+    "pathway_visualizations": 1
+   },
+   "expected": {
+    "compounds": 10,
+    "proteins": 1,
+    "protein_complexes": 7,
+    "reactions": 5,
+    "transports": 1,
+    "interactions": 0,
+    "compound_locations": 22,
+    "protein_locations": 12
+   },
+   "exports": {
+    "sbml": {
+     "status": 200,
+     "bytes": 60360,
+     "ok": true
+    },
+    "sbgn": {
+     "status": 200,
+     "bytes": 28339,
+     "ok": true
+    },
+    "pwml": {
+     "status": 200,
+     "bytes": 103651,
+     "ok": true
+    }
+   },
+   "screenshot_ok": true,
+   "parser_exception": null
+  },
+  "problems": [
+   {
+    "class": "data/extraction",
+    "sev": "S2",
+    "what": "duplicate reactions in payload: {'exact_dup': 0, 'reverse_dup_pairs_same_enzyme': 0, 'same_inout_diff_enzyme': 1, 'reverse_pairs_any_enzyme': 0}"
+   },
+   {
+    "class": "data/extraction",
+    "sev": "S2",
+    "what": "near-synonym compartments used: {'cell-interior': ['cytosol|Petunia hybrida cytosol', 'cytosol|cytosolic state'], 'peroxisome': ['peroxisome|peroxisomal state', 'peroxisome|peroxisome']}"
+   },
+   {
+    "class": "writer (shared-intermediate reuse only for adjacent reactions)",
+    "sev": "S2",
+    "what": "4 shared compounds redrawn; 4 drawn components vs 1 logical"
+   }
+  ],
+  "screenshot_review": {
+   "file": "C:/t/corr-assess/a1/shots/126.png",
+   "flow_in_pathway_order": "no",
+   "labels_readable": "ok",
+   "shared_compounds_redrawn": "yes, benzaldehyde 4x, benzyl alcohol 3x",
+   "note": "4 boxes (cytosolic, Petunia hybrida cytosol, peroxisomal, peroxisome); stacks of isozyme ellipses without edges"
+  }
+ },
+ "122": {
+  "idx": 122,
+  "canvas": [
+   1500,
+   1450
+  ],
+  "reactions": {
+   "payload": 4,
+   "pwml": 4,
+   "pwml_viz": 4,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "payload_without_enzyme": 0,
+   "pwml_without_enzyme": 0,
+   "direction_values": {
+    "Right": 4
+   }
+  },
+  "noncatalyst_modifiers": {
+   "payload_roles": {},
+   "total": 0,
+   "written_as_reaction_enzyme": 0,
+   "examples": []
+  },
+  "payload_dups": {
+   "exact_dup": 1,
+   "reverse_dup_pairs_same_enzyme": 0,
+   "same_inout_diff_enzyme": 0,
+   "reverse_pairs_any_enzyme": 0
+  },
+  "pwml_dups": {
+   "exact_dup": 1,
+   "reverse_dup_pairs_same_enzyme": 0,
+   "same_inout_diff_enzyme": 0,
+   "reverse_pairs_any_enzyme": 0
+  },
+  "side_vs_role": {
+   "members": 9,
+   "side_contradicts_list": 0,
+   "on_both_lists": 0,
+   "elements_not_drawn": 0
+  },
+  "enzymes": {
+   "reaction_enzyme_rows": 6,
+   "payload_enzyme_refs": 6,
+   "viz_complex_mismatch": 0,
+   "enzyme_not_drawn": 0
+  },
+  "states": {
+   "payload": 3,
+   "pwml": 3,
+   "used_in_pwml": [
+    "Candida albicans endoplasmic reticulum",
+    "__auto_state__",
+    "endoplasmic reticulum state"
+   ],
+   "defined_unused": [],
+   "payload_dup_names": [],
+   "synonym_groups_used": {
+    "er": [
+     "endoplasmic reticulum|Candida albicans endoplasmic reticulum",
+     "endoplasmic reticulum|endoplasmic reticulum state"
+    ]
+   },
+   "null_state_reactions_payload": 0,
+   "species_among_used": [
+    "Candida albicans"
+   ],
+   "reaction_state_payload": {
+    "endoplasmic reticulum state": 3,
+    "Candida albicans endoplasmic reticulum": 1
+   },
+   "reaction_state_pwml": {
+    "endoplasmic reticulum state": 3,
+    "Candida albicans endoplasmic reticulum": 1
+   },
+   "reaction_state_mismatch": 0
+  },
+  "species": {
+   "organism": "Candida albicans",
+   "payload_species": [
+    "Candida albicans"
+   ],
+   "pwml_species": [
+    "Candida albicans"
+   ],
+   "state_species_in_pwml": [
+    "Candida albicans"
+   ]
+  },
+  "compartment_boxes": {
+   "boxes": 2,
+   "labels": [
+    "endoplasmic reticulum",
+    "Candida albicans endoplasmic reticulum"
+   ],
+   "dup_labels": [],
+   "organism_or_strain_named": []
+  },
+  "transports": {
+   "payload": 0,
+   "pwml": 0,
+   "pwml_elements": 0,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "transporters_payload": 0,
+   "transporters_pwml": 0,
+   "drawn": 0,
+   "same_state_both_ends_pwml": 0
+  },
+  "interactions": {
+   "payload": 0,
+   "pwml": 0
+  },
+  "drawing": {
+   "compound_locations": 8,
+   "distinct_compound_state": 8,
+   "compounds_with_multiple_locs": 0,
+   "shared_compound_state": 1,
+   "shared_redrawn": 0,
+   "drawn_components": 2,
+   "logical_components": 2,
+   "hidden_locs": 0
+  },
+  "flow": {
+   "precedence_pairs": 1,
+   "right_to_left_pairs": 0,
+   "examples": []
+  },
+  "canvas_use": {
+   "w": 1500,
+   "h": 1450,
+   "x_span": 1140,
+   "y_span": 1120,
+   "fit_scale_1600x900": 0.621
+  },
+  "pwml_counts": {
+   "compounds": 6,
+   "proteins": 4,
+   "protein-complexes": 4,
+   "reactions": 4,
+   "transports": 0,
+   "interactions": 0,
+   "compound-locations": 8,
+   "protein-locations": 8,
+   "edges": 15,
+   "biological-states": 3,
+   "membrane-visualizations": 2,
+   "label-locations": 2
+  },
+  "db": {
+   "counts": {
+    "biological_states": 2,
+    "compound_locations": 8,
+    "compounds": 6,
+    "element_states": 7,
+    "pathway_elements": 5,
+    "protein_complexes": 4,
+    "protein_locations": 8,
+    "proteins": 5,
+    "reaction_elements": 7,
+    "reaction_enzymes": 5,
+    "reactions": 3,
+    "subcellular_locations": 78
+   },
+   "reactions_db": 3,
+   "reactions_pwml_distinct": 3,
+   "reactions_merged_by_importer": 1,
+   "reactions_pwml_not_in_db": [],
+   "reactions_db_not_in_pwml": [],
+   "reaction_elements_expected": 9,
+   "reaction_enzymes_expected": 6,
+   "transports_db_vs_pwml_missing": [],
+   "transports_db_vs_pwml_extra": [],
+   "db_states": [
+    "cell",
+    "endoplasmic reticulum"
+   ]
+  },
+  "import": {
+   "ok": true,
+   "errors": {},
+   "pw_id": "PW000001",
+   "created_main": {
+    "pathways": 1,
+    "compounds": 6,
+    "compound_locations": 8,
+    "proteins": 4,
+    "protein_complexes": 4,
+    "reactions": 3,
+    "transports": 0,
+    "element_states": 7,
+    "subcellular_locations": 1,
+    "species": 0,
+    "pathway_visualizations": 1
+   },
+   "expected": {
+    "compounds": 6,
+    "proteins": 4,
+    "protein_complexes": 4,
+    "reactions": 4,
+    "transports": 0,
+    "interactions": 0,
+    "compound_locations": 8,
+    "protein_locations": 8
+   },
+   "exports": {
+    "sbml": {
+     "status": 200,
+     "bytes": 32134,
+     "ok": true
+    },
+    "sbgn": {
+     "status": 200,
+     "bytes": 11656,
+     "ok": true
+    },
+    "pwml": {
+     "status": 200,
+     "bytes": 54257,
+     "ok": true
+    }
+   },
+   "screenshot_ok": true,
+   "parser_exception": null
+  },
+  "problems": [
+   {
+    "class": "data/extraction",
+    "sev": "S2",
+    "what": "duplicate reactions in payload: {'exact_dup': 1, 'reverse_dup_pairs_same_enzyme': 0, 'same_inout_diff_enzyme': 0, 'reverse_pairs_any_enzyme': 0}"
+   },
+   {
+    "class": "data/extraction",
+    "sev": "S2",
+    "what": "near-synonym compartments used: {'er': ['endoplasmic reticulum|Candida albicans endoplasmic reticulum', 'endoplasmic reticulum|endoplasmic reticulum state']}"
+   }
+  ],
+  "screenshot_review": {
+   "file": "C:/t/corr-assess/a1/shots/122.png",
+   "flow_in_pathway_order": "partly",
+   "labels_readable": "label cut off",
+   "shared_compounds_redrawn": "yes, farnesyl pyrophosphate 2x",
+   "note": "two ER boxes (\"endoplasmic reticulum\", \"Candida albicans endoplasmic reticulum\"); Dpp2/Dpp3 ellipses without edges"
+  }
+ },
+ "121": {
+  "idx": 121,
+  "canvas": [
+   930,
+   1622
+  ],
+  "reactions": {
+   "payload": 4,
+   "pwml": 4,
+   "pwml_viz": 4,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "payload_without_enzyme": 0,
+   "pwml_without_enzyme": 0,
+   "direction_values": {
+    "Right": 4
+   }
+  },
+  "noncatalyst_modifiers": {
+   "payload_roles": {},
+   "total": 0,
+   "written_as_reaction_enzyme": 0,
+   "examples": []
+  },
+  "payload_dups": {
+   "exact_dup": 0,
+   "reverse_dup_pairs_same_enzyme": 0,
+   "same_inout_diff_enzyme": 0,
+   "reverse_pairs_any_enzyme": 0
+  },
+  "pwml_dups": {
+   "exact_dup": 0,
+   "reverse_dup_pairs_same_enzyme": 0,
+   "same_inout_diff_enzyme": 0,
+   "reverse_pairs_any_enzyme": 0
+  },
+  "side_vs_role": {
+   "members": 14,
+   "side_contradicts_list": 0,
+   "on_both_lists": 0,
+   "elements_not_drawn": 0
+  },
+  "enzymes": {
+   "reaction_enzyme_rows": 4,
+   "payload_enzyme_refs": 4,
+   "viz_complex_mismatch": 0,
+   "enzyme_not_drawn": 0
+  },
+  "states": {
+   "payload": 1,
+   "pwml": 1,
+   "used_in_pwml": [
+    "Campylobacter jejuni cellular context"
+   ],
+   "defined_unused": [],
+   "payload_dup_names": [],
+   "synonym_groups_used": {},
+   "null_state_reactions_payload": 0,
+   "species_among_used": [
+    "Campylobacter jejuni"
+   ],
+   "reaction_state_payload": {
+    "Campylobacter jejuni cellular context": 4
+   },
+   "reaction_state_pwml": {
+    "Campylobacter jejuni cellular context": 4
+   },
+   "reaction_state_mismatch": 0
+  },
+  "species": {
+   "organism": "Campylobacter jejuni",
+   "payload_species": [
+    "Campylobacter jejuni",
+    "Arabidopsis thaliana"
+   ],
+   "pwml_species": [
+    "Campylobacter jejuni",
+    "Arabidopsis thaliana"
+   ],
+   "state_species_in_pwml": [
+    "Campylobacter jejuni"
+   ]
+  },
+  "compartment_boxes": {
+   "boxes": 1,
+   "labels": [
+    "Campylobacter jejuni cellular context"
+   ],
+   "dup_labels": [],
+   "organism_or_strain_named": []
+  },
+  "transports": {
+   "payload": 0,
+   "pwml": 0,
+   "pwml_elements": 0,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "transporters_payload": 0,
+   "transporters_pwml": 0,
+   "drawn": 0,
+   "same_state_both_ends_pwml": 0
+  },
+  "interactions": {
+   "payload": 0,
+   "pwml": 0
+  },
+  "drawing": {
+   "compound_locations": 14,
+   "distinct_compound_state": 10,
+   "compounds_with_multiple_locs": 4,
+   "shared_compound_state": 4,
+   "shared_redrawn": 4,
+   "drawn_components": 3,
+   "logical_components": 2,
+   "hidden_locs": 0
+  },
+  "flow": {
+   "precedence_pairs": 1,
+   "right_to_left_pairs": 1,
+   "examples": [
+    [
+     "CDP-4-keto-6-deoxy-l-altrose",
+     465,
+     465
+    ]
+   ]
+  },
+  "canvas_use": {
+   "w": 930,
+   "h": 1622,
+   "x_span": 643,
+   "y_span": 1200,
+   "fit_scale_1600x900": 0.555
+  },
+  "pwml_counts": {
+   "compounds": 10,
+   "proteins": 1,
+   "protein-complexes": 3,
+   "reactions": 4,
+   "transports": 0,
+   "interactions": 0,
+   "compound-locations": 14,
+   "protein-locations": 3,
+   "edges": 18,
+   "biological-states": 1,
+   "membrane-visualizations": 1,
+   "label-locations": 1
+  },
+  "db": {
+   "counts": {
+    "biological_states": 1,
+    "compound_locations": 14,
+    "compounds": 10,
+    "element_states": 1,
+    "pathway_elements": 4,
+    "protein_complexes": 3,
+    "protein_locations": 3,
+    "proteins": 1,
+    "reaction_elements": 14,
+    "reaction_enzymes": 4,
+    "reactions": 4,
+    "subcellular_locations": 78
+   },
+   "reactions_db": 4,
+   "reactions_pwml_distinct": 4,
+   "reactions_merged_by_importer": 0,
+   "reactions_pwml_not_in_db": [],
+   "reactions_db_not_in_pwml": [],
+   "reaction_elements_expected": 14,
+   "reaction_enzymes_expected": 4,
+   "transports_db_vs_pwml_missing": [],
+   "transports_db_vs_pwml_extra": [],
+   "db_states": [
+    "cell"
+   ]
+  },
+  "import": {
+   "ok": true,
+   "errors": {},
+   "pw_id": "PW000001",
+   "created_main": {
+    "pathways": 1,
+    "compounds": 10,
+    "compound_locations": 14,
+    "proteins": 0,
+    "protein_complexes": 3,
+    "reactions": 4,
+    "transports": 0,
+    "element_states": 1,
+    "subcellular_locations": 1,
+    "species": 0,
+    "pathway_visualizations": 1
+   },
+   "expected": {
+    "compounds": 10,
+    "proteins": 1,
+    "protein_complexes": 3,
+    "reactions": 4,
+    "transports": 0,
+    "interactions": 0,
+    "compound_locations": 14,
+    "protein_locations": 3
+   },
+   "exports": {
+    "sbml": {
+     "status": 200,
+     "bytes": 36218,
+     "ok": true
+    },
+    "sbgn": {
+     "status": 200,
+     "bytes": 13647,
+     "ok": true
+    },
+    "pwml": {
+     "status": 200,
+     "bytes": 60096,
+     "ok": true
+    }
+   },
+   "screenshot_ok": true,
+   "parser_exception": null
+  },
+  "problems": [
+   {
+    "class": "writer (shared-intermediate reuse only for adjacent reactions)",
+    "sev": "S2",
+    "what": "4 shared compounds redrawn; 3 drawn components vs 2 logical"
+   },
+   {
+    "class": "layout",
+    "sev": "S2",
+    "what": "1 of 1 producer->consumer pairs drawn against reading order"
+   }
+  ],
+  "screenshot_review": {
+   "file": "C:/t/corr-assess/a1/shots/121.png",
+   "flow_in_pathway_order": "yes",
+   "labels_readable": "ok",
+   "shared_compounds_redrawn": "yes, CDP-4-keto-6-deoxy-d-glucose 2x, CDP-4-keto-6-deoxy-l-altrose 2x",
+   "note": "one-reaction rows stacked vertically; reaction order top-down is not the biochemical order"
+  }
+ },
+ "142": {
+  "idx": 142,
+  "canvas": [
+   1810,
+   1444
+  ],
+  "reactions": {
+   "payload": 4,
+   "pwml": 4,
+   "pwml_viz": 4,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "payload_without_enzyme": 0,
+   "pwml_without_enzyme": 0,
+   "direction_values": {
+    "Right": 4
+   }
+  },
+  "noncatalyst_modifiers": {
+   "payload_roles": {},
+   "total": 0,
+   "written_as_reaction_enzyme": 0,
+   "examples": []
+  },
+  "payload_dups": {
+   "exact_dup": 0,
+   "reverse_dup_pairs_same_enzyme": 0,
+   "same_inout_diff_enzyme": 0,
+   "reverse_pairs_any_enzyme": 0
+  },
+  "pwml_dups": {
+   "exact_dup": 0,
+   "reverse_dup_pairs_same_enzyme": 0,
+   "same_inout_diff_enzyme": 0,
+   "reverse_pairs_any_enzyme": 0
+  },
+  "side_vs_role": {
+   "members": 18,
+   "side_contradicts_list": 0,
+   "on_both_lists": 0,
+   "elements_not_drawn": 0
+  },
+  "enzymes": {
+   "reaction_enzyme_rows": 4,
+   "payload_enzyme_refs": 4,
+   "viz_complex_mismatch": 0,
+   "enzyme_not_drawn": 0
+  },
+  "states": {
+   "payload": 2,
+   "pwml": 2,
+   "used_in_pwml": [
+    "Streptococcus suis cytoplasm"
+   ],
+   "defined_unused": [
+    "__auto_state__"
+   ],
+   "payload_dup_names": [],
+   "synonym_groups_used": {},
+   "null_state_reactions_payload": 0,
+   "species_among_used": [
+    "Streptococcus suis"
+   ],
+   "reaction_state_payload": {
+    "Streptococcus suis cytoplasm": 4
+   },
+   "reaction_state_pwml": {
+    "Streptococcus suis cytoplasm": 4
+   },
+   "reaction_state_mismatch": 0
+  },
+  "species": {
+   "organism": "Streptococcus suis",
+   "payload_species": [
+    "Streptococcus suis",
+    "Arabidopsis thaliana"
+   ],
+   "pwml_species": [
+    "Streptococcus suis",
+    "Arabidopsis thaliana"
+   ],
+   "state_species_in_pwml": [
+    "Streptococcus suis"
+   ]
+  },
+  "compartment_boxes": {
+   "boxes": 1,
+   "labels": [
+    "Streptococcus suis cytoplasm"
+   ],
+   "dup_labels": [],
+   "organism_or_strain_named": []
+  },
+  "transports": {
+   "payload": 0,
+   "pwml": 0,
+   "pwml_elements": 0,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "transporters_payload": 0,
+   "transporters_pwml": 0,
+   "drawn": 0,
+   "same_state_both_ends_pwml": 0
+  },
+  "interactions": {
+   "payload": 0,
+   "pwml": 0
+  },
+  "drawing": {
+   "compound_locations": 18,
+   "distinct_compound_state": 13,
+   "compounds_with_multiple_locs": 4,
+   "shared_compound_state": 4,
+   "shared_redrawn": 4,
+   "drawn_components": 3,
+   "logical_components": 2,
+   "hidden_locs": 0
+  },
+  "flow": {
+   "precedence_pairs": 1,
+   "right_to_left_pairs": 1,
+   "examples": [
+    [
+     "(S)-2-acetolactate",
+     465,
+     465
+    ]
+   ]
+  },
+  "canvas_use": {
+   "w": 1810,
+   "h": 1444,
+   "x_span": 1450,
+   "y_span": 1106,
+   "fit_scale_1600x900": 0.623
+  },
+  "pwml_counts": {
+   "compounds": 13,
+   "proteins": 1,
+   "protein-complexes": 3,
+   "reactions": 4,
+   "transports": 0,
+   "interactions": 0,
+   "compound-locations": 18,
+   "protein-locations": 3,
+   "edges": 22,
+   "biological-states": 2,
+   "membrane-visualizations": 1,
+   "label-locations": 1
+  },
+  "db": {
+   "counts": {
+    "biological_states": 2,
+    "compound_locations": 18,
+    "compounds": 13,
+    "element_states": 1,
+    "pathway_elements": 4,
+    "protein_complexes": 3,
+    "protein_locations": 3,
+    "proteins": 1,
+    "reaction_elements": 18,
+    "reaction_enzymes": 4,
+    "reactions": 4,
+    "subcellular_locations": 78
+   },
+   "reactions_db": 4,
+   "reactions_pwml_distinct": 4,
+   "reactions_merged_by_importer": 0,
+   "reactions_pwml_not_in_db": [],
+   "reactions_db_not_in_pwml": [],
+   "reaction_elements_expected": 18,
+   "reaction_enzymes_expected": 4,
+   "transports_db_vs_pwml_missing": [],
+   "transports_db_vs_pwml_extra": [],
+   "db_states": [
+    "cell",
+    "cytoplasm"
+   ]
+  },
+  "import": {
+   "ok": true,
+   "errors": {},
+   "pw_id": "PW000001",
+   "created_main": {
+    "pathways": 1,
+    "compounds": 13,
+    "compound_locations": 18,
+    "proteins": 0,
+    "protein_complexes": 3,
+    "reactions": 4,
+    "transports": 0,
+    "element_states": 1,
+    "subcellular_locations": 1,
+    "species": 0,
+    "pathway_visualizations": 1
+   },
+   "expected": {
+    "compounds": 13,
+    "proteins": 1,
+    "protein_complexes": 3,
+    "reactions": 4,
+    "transports": 0,
+    "interactions": 0,
+    "compound_locations": 18,
+    "protein_locations": 3
+   },
+   "exports": {
+    "sbml": {
+     "status": 200,
+     "bytes": 43650,
+     "ok": true
+    },
+    "sbgn": {
+     "status": 200,
+     "bytes": 16407,
+     "ok": true
+    },
+    "pwml": {
+     "status": 200,
+     "bytes": 71735,
+     "ok": true
+    }
+   },
+   "screenshot_ok": true,
+   "parser_exception": null
+  },
+  "problems": [
+   {
+    "class": "writer (shared-intermediate reuse only for adjacent reactions)",
+    "sev": "S2",
+    "what": "4 shared compounds redrawn; 3 drawn components vs 2 logical"
+   },
+   {
+    "class": "layout",
+    "sev": "S2",
+    "what": "1 of 1 producer->consumer pairs drawn against reading order"
+   }
+  ],
+  "screenshot_review": {
+   "file": "C:/t/corr-assess/a1/shots/142.png",
+   "flow_in_pathway_order": "no (bottom-up)",
+   "labels_readable": "label overflows box",
+   "shared_compounds_redrawn": "yes, (S)-2-acetolactate 2x",
+   "note": "IlvI at the bottom feeds IlvC above it; order inverted"
+  }
+ },
+ "114": {
+  "idx": 114,
+  "canvas": [
+   1363,
+   1230
+  ],
+  "reactions": {
+   "payload": 2,
+   "pwml": 2,
+   "pwml_viz": 2,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "payload_without_enzyme": 0,
+   "pwml_without_enzyme": 0,
+   "direction_values": {
+    "Right": 2
+   }
+  },
+  "noncatalyst_modifiers": {
+   "payload_roles": {},
+   "total": 0,
+   "written_as_reaction_enzyme": 0,
+   "examples": []
+  },
+  "payload_dups": {
+   "exact_dup": 0,
+   "reverse_dup_pairs_same_enzyme": 0,
+   "same_inout_diff_enzyme": 0,
+   "reverse_pairs_any_enzyme": 0
+  },
+  "pwml_dups": {
+   "exact_dup": 0,
+   "reverse_dup_pairs_same_enzyme": 0,
+   "same_inout_diff_enzyme": 0,
+   "reverse_pairs_any_enzyme": 0
+  },
+  "side_vs_role": {
+   "members": 6,
+   "side_contradicts_list": 0,
+   "on_both_lists": 0,
+   "elements_not_drawn": 0
+  },
+  "enzymes": {
+   "reaction_enzyme_rows": 2,
+   "payload_enzyme_refs": 2,
+   "viz_complex_mismatch": 0,
+   "enzyme_not_drawn": 0
+  },
+  "states": {
+   "payload": 3,
+   "pwml": 3,
+   "used_in_pwml": [
+    "cell wall state",
+    "cytoplasmic state",
+    "membrane state"
+   ],
+   "defined_unused": [],
+   "payload_dup_names": [],
+   "synonym_groups_used": {},
+   "null_state_reactions_payload": 0,
+   "species_among_used": [
+    "Staphylococcus aureus (MRSA N315)"
+   ],
+   "reaction_state_payload": {
+    "cytoplasmic state": 2
+   },
+   "reaction_state_pwml": {
+    "cytoplasmic state": 2
+   },
+   "reaction_state_mismatch": 0
+  },
+  "species": {
+   "organism": "Staphylococcus aureus (MRSA N315)",
+   "payload_species": [
+    "Staphylococcus aureus",
+    "Staphylococcus aureus (MRSA N315)"
+   ],
+   "pwml_species": [
+    "Staphylococcus aureus (MRSA N315)"
+   ],
+   "state_species_in_pwml": [
+    "Staphylococcus aureus (MRSA N315)"
+   ]
+  },
+  "compartment_boxes": {
+   "boxes": 2,
+   "labels": [
+    "cytoplasmic",
+    "cell wall"
+   ],
+   "dup_labels": [],
+   "organism_or_strain_named": []
+  },
+  "transports": {
+   "payload": 2,
+   "pwml": 2,
+   "pwml_elements": 2,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "transporters_payload": 2,
+   "transporters_pwml": 2,
+   "drawn": 2,
+   "same_state_both_ends_pwml": 0
+  },
+  "interactions": {
+   "payload": 0,
+   "pwml": 0
+  },
+  "drawing": {
+   "compound_locations": 10,
+   "distinct_compound_state": 6,
+   "compounds_with_multiple_locs": 4,
+   "shared_compound_state": 2,
+   "shared_redrawn": 2,
+   "drawn_components": 1,
+   "logical_components": 1,
+   "hidden_locs": 0
+  },
+  "flow": {
+   "precedence_pairs": 0,
+   "right_to_left_pairs": 0,
+   "examples": []
+  },
+  "canvas_use": {
+   "w": 1363,
+   "h": 1230,
+   "x_span": 1053,
+   "y_span": 780,
+   "fit_scale_1600x900": 0.732
+  },
+  "pwml_counts": {
+   "compounds": 4,
+   "proteins": 2,
+   "protein-complexes": 2,
+   "reactions": 2,
+   "transports": 2,
+   "interactions": 0,
+   "compound-locations": 10,
+   "protein-locations": 3,
+   "edges": 12,
+   "biological-states": 3,
+   "membrane-visualizations": 2,
+   "label-locations": 2
+  },
+  "db": {
+   "counts": {
+    "biological_states": 3,
+    "compound_locations": 10,
+    "compounds": 4,
+    "element_states": 3,
+    "pathway_elements": 4,
+    "protein_complexes": 2,
+    "protein_locations": 3,
+    "proteins": 3,
+    "reaction_elements": 6,
+    "reaction_enzymes": 2,
+    "reactions": 2,
+    "subcellular_locations": 78,
+    "transport_elements": 2,
+    "transport_transporters": 2,
+    "transports": 2
+   },
+   "reactions_db": 2,
+   "reactions_pwml_distinct": 2,
+   "reactions_merged_by_importer": 0,
+   "reactions_pwml_not_in_db": [],
+   "reactions_db_not_in_pwml": [],
+   "reaction_elements_expected": 6,
+   "reaction_enzymes_expected": 2,
+   "transports_db_vs_pwml_missing": [],
+   "transports_db_vs_pwml_extra": [],
+   "db_states": [
+    "cell membrane",
+    "cell wall",
+    "cytoplasm"
+   ]
+  },
+  "import": {
+   "ok": true,
+   "errors": {},
+   "pw_id": "PW000001",
+   "created_main": {
+    "pathways": 1,
+    "compounds": 4,
+    "compound_locations": 10,
+    "proteins": 2,
+    "protein_complexes": 2,
+    "reactions": 2,
+    "transports": 2,
+    "element_states": 3,
+    "subcellular_locations": 1,
+    "species": 0,
+    "pathway_visualizations": 1
+   },
+   "expected": {
+    "compounds": 4,
+    "proteins": 2,
+    "protein_complexes": 2,
+    "reactions": 2,
+    "transports": 2,
+    "interactions": 0,
+    "compound_locations": 10,
+    "protein_locations": 3
+   },
+   "exports": {
+    "sbml": {
+     "status": 200,
+     "bytes": 26180,
+     "ok": true
+    },
+    "sbgn": {
+     "status": 200,
+     "bytes": 10516,
+     "ok": true
+    },
+    "pwml": {
+     "status": 200,
+     "bytes": 44573,
+     "ok": true
+    }
+   },
+   "screenshot_ok": true,
+   "parser_exception": null
+  },
+  "problems": [
+   {
+    "class": "writer (shared-intermediate reuse only for adjacent reactions)",
+    "sev": "S2",
+    "what": "2 shared compounds redrawn; 1 drawn components vs 1 logical"
+   },
+   {
+    "class": "writer (species id collision)",
+    "sev": "S3",
+    "what": "two S. aureus species rows share id 257; strain name lost"
+   }
+  ],
+  "screenshot_review": {
+   "file": "C:/t/corr-assess/a1/shots/114.png",
+   "flow_in_pathway_order": "partly",
+   "labels_readable": "ok",
+   "shared_compounds_redrawn": "yes, D-alanine/D-serine 3x each",
+   "note": "two long orthogonal edges across the cell-wall box; second reaction has products only in the other box"
+  }
+ },
+ "14": {
+  "idx": 14,
+  "canvas": [
+   930,
+   590
+  ],
+  "reactions": {
+   "payload": 1,
+   "pwml": 1,
+   "pwml_viz": 1,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "payload_without_enzyme": 0,
+   "pwml_without_enzyme": 0,
+   "direction_values": {
+    "Right": 1
+   }
+  },
+  "noncatalyst_modifiers": {
+   "payload_roles": {},
+   "total": 0,
+   "written_as_reaction_enzyme": 0,
+   "examples": []
+  },
+  "payload_dups": {
+   "exact_dup": 0,
+   "reverse_dup_pairs_same_enzyme": 0,
+   "same_inout_diff_enzyme": 0,
+   "reverse_pairs_any_enzyme": 0
+  },
+  "pwml_dups": {
+   "exact_dup": 0,
+   "reverse_dup_pairs_same_enzyme": 0,
+   "same_inout_diff_enzyme": 0,
+   "reverse_pairs_any_enzyme": 0
+  },
+  "side_vs_role": {
+   "members": 4,
+   "side_contradicts_list": 0,
+   "on_both_lists": 0,
+   "elements_not_drawn": 0
+  },
+  "enzymes": {
+   "reaction_enzyme_rows": 1,
+   "payload_enzyme_refs": 1,
+   "viz_complex_mismatch": 0,
+   "enzyme_not_drawn": 0
+  },
+  "states": {
+   "payload": 1,
+   "pwml": 1,
+   "used_in_pwml": [
+    "B. burgdorferi cytoplasmic state"
+   ],
+   "defined_unused": [],
+   "payload_dup_names": [],
+   "synonym_groups_used": {},
+   "null_state_reactions_payload": 0,
+   "species_among_used": [
+    "Borrelia burgdorferi"
+   ],
+   "reaction_state_payload": {
+    "B. burgdorferi cytoplasmic state": 1
+   },
+   "reaction_state_pwml": {
+    "B. burgdorferi cytoplasmic state": 1
+   },
+   "reaction_state_mismatch": 0
+  },
+  "species": {
+   "organism": "Borrelia burgdorferi",
+   "payload_species": [
+    "Borrelia burgdorferi",
+    "Borreliella burgdorferi",
+    "Arabidopsis thaliana"
+   ],
+   "pwml_species": [
+    "Borrelia burgdorferi",
+    "Borreliella burgdorferi",
+    "Arabidopsis thaliana"
+   ],
+   "state_species_in_pwml": [
+    "Borrelia burgdorferi"
+   ]
+  },
+  "compartment_boxes": {
+   "boxes": 1,
+   "labels": [
+    "B. burgdorferi cytoplasmic"
+   ],
+   "dup_labels": [],
+   "organism_or_strain_named": [
+    "B. burgdorferi cytoplasmic"
+   ]
+  },
+  "transports": {
+   "payload": 0,
+   "pwml": 0,
+   "pwml_elements": 0,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "transporters_payload": 0,
+   "transporters_pwml": 0,
+   "drawn": 0,
+   "same_state_both_ends_pwml": 0
+  },
+  "interactions": {
+   "payload": 0,
+   "pwml": 0
+  },
+  "drawing": {
+   "compound_locations": 4,
+   "distinct_compound_state": 4,
+   "compounds_with_multiple_locs": 0,
+   "shared_compound_state": 0,
+   "shared_redrawn": 0,
+   "drawn_components": 1,
+   "logical_components": 1,
+   "hidden_locs": 0
+  },
+  "flow": {
+   "precedence_pairs": 0,
+   "right_to_left_pairs": 0,
+   "examples": []
+  },
+  "canvas_use": {
+   "w": 930,
+   "h": 590,
+   "x_span": 570,
+   "y_span": 300,
+   "fit_scale_1600x900": 1.525
+  },
+  "pwml_counts": {
+   "compounds": 4,
+   "proteins": 1,
+   "protein-complexes": 1,
+   "reactions": 1,
+   "transports": 0,
+   "interactions": 0,
+   "compound-locations": 4,
+   "protein-locations": 1,
+   "edges": 5,
+   "biological-states": 1,
+   "membrane-visualizations": 1,
+   "label-locations": 1
+  },
+  "db": {
+   "counts": {
+    "biological_states": 1,
+    "compound_locations": 4,
+    "compounds": 4,
+    "element_states": 1,
+    "pathway_elements": 1,
+    "protein_complexes": 1,
+    "protein_locations": 1,
+    "proteins": 1,
+    "reaction_elements": 4,
+    "reaction_enzymes": 1,
+    "reactions": 1,
+    "subcellular_locations": 78
+   },
+   "reactions_db": 1,
+   "reactions_pwml_distinct": 1,
+   "reactions_merged_by_importer": 0,
+   "reactions_pwml_not_in_db": [],
+   "reactions_db_not_in_pwml": [],
+   "reaction_elements_expected": 4,
+   "reaction_enzymes_expected": 1,
+   "transports_db_vs_pwml_missing": [],
+   "transports_db_vs_pwml_extra": [],
+   "db_states": [
+    "cytoplasm"
+   ]
+  },
+  "import": {
+   "ok": true,
+   "errors": {},
+   "pw_id": "PW000001",
+   "created_main": {
+    "pathways": 1,
+    "compounds": 4,
+    "compound_locations": 4,
+    "proteins": 0,
+    "protein_complexes": 1,
+    "reactions": 1,
+    "transports": 0,
+    "element_states": 1,
+    "subcellular_locations": 1,
+    "species": 0,
+    "pathway_visualizations": 1
+   },
+   "expected": {
+    "compounds": 4,
+    "proteins": 1,
+    "protein_complexes": 1,
+    "reactions": 1,
+    "transports": 0,
+    "interactions": 0,
+    "compound_locations": 4,
+    "protein_locations": 1
+   },
+   "exports": {
+    "sbml": {
+     "status": 200,
+     "bytes": 13126,
+     "ok": true
+    },
+    "sbgn": {
+     "status": 200,
+     "bytes": 4064,
+     "ok": true
+    },
+    "pwml": {
+     "status": 200,
+     "bytes": 23234,
+     "ok": true
+    }
+   },
+   "screenshot_ok": true,
+   "parser_exception": null
+  },
+  "problems": [],
+  "screenshot_review": {
+   "file": "C:/t/corr-assess/a1/shots/14.png",
+   "flow_in_pathway_order": "yes",
+   "labels_readable": "label overflows box",
+   "shared_compounds_redrawn": "no",
+   "note": "single reaction; fine"
+  }
+ },
+ "10": {
+  "idx": 10,
+  "canvas": [
+   1078,
+   2288
+  ],
+  "reactions": {
+   "payload": 0,
+   "pwml": 0,
+   "pwml_viz": 0,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "payload_without_enzyme": 0,
+   "pwml_without_enzyme": 0,
+   "direction_values": {}
+  },
+  "noncatalyst_modifiers": {
+   "payload_roles": {},
+   "total": 0,
+   "written_as_reaction_enzyme": 0,
+   "examples": []
+  },
+  "payload_dups": {
+   "exact_dup": 0,
+   "reverse_dup_pairs_same_enzyme": 0,
+   "same_inout_diff_enzyme": 0,
+   "reverse_pairs_any_enzyme": 0
+  },
+  "pwml_dups": {
+   "exact_dup": 0,
+   "reverse_dup_pairs_same_enzyme": 0,
+   "same_inout_diff_enzyme": 0,
+   "reverse_pairs_any_enzyme": 0
+  },
+  "side_vs_role": {
+   "members": 0,
+   "side_contradicts_list": 0,
+   "on_both_lists": 0,
+   "elements_not_drawn": 0
+  },
+  "enzymes": {
+   "reaction_enzyme_rows": 0,
+   "payload_enzyme_refs": 0,
+   "viz_complex_mismatch": 0,
+   "enzyme_not_drawn": 0
+  },
+  "states": {
+   "payload": 10,
+   "pwml": 10,
+   "used_in_pwml": [
+    "Type III cell apical membrane state",
+    "Type III cell state",
+    "__auto_state__",
+    "apical membrane state",
+    "apical state",
+    "cytosolic state",
+    "extracellular state",
+    "synapse state",
+    "synaptic vesicle state"
+   ],
+   "defined_unused": [
+    "Type III taste cell state"
+   ],
+   "payload_dup_names": [],
+   "synonym_groups_used": {
+    "cell-interior": [
+     "cell|Type III cell state",
+     "cell|__auto_state__",
+     "cytosol|cytosolic state"
+    ],
+    "apical cell membrane": [
+     "Apical cell membrane|Type III cell apical membrane state",
+     "Apical cell membrane|apical membrane state"
+    ]
+   },
+   "null_state_reactions_payload": 0,
+   "species_among_used": [
+    "Mus musculus"
+   ],
+   "reaction_state_payload": {},
+   "reaction_state_pwml": {},
+   "reaction_state_mismatch": 0
+  },
+  "species": {
+   "organism": "Mus musculus",
+   "payload_species": [
+    "Mus musculus"
+   ],
+   "pwml_species": [
+    "Mus musculus"
+   ],
+   "state_species_in_pwml": [
+    "Mus musculus"
+   ]
+  },
+  "compartment_boxes": {
+   "boxes": 6,
+   "labels": [
+    "Type III cell",
+    "synaptic vesicle",
+    "synapse",
+    "extracellular",
+    "cytosolic"
+   ],
+   "dup_labels": [],
+   "organism_or_strain_named": []
+  },
+  "transports": {
+   "payload": 7,
+   "pwml": 7,
+   "pwml_elements": 7,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "transporters_payload": 3,
+   "transporters_pwml": 3,
+   "drawn": 7,
+   "same_state_both_ends_pwml": 1
+  },
+  "interactions": {
+   "payload": 0,
+   "pwml": 0
+  },
+  "drawing": {
+   "compound_locations": 12,
+   "distinct_compound_state": 12,
+   "compounds_with_multiple_locs": 0,
+   "shared_compound_state": 0,
+   "shared_redrawn": 0,
+   "drawn_components": 0,
+   "logical_components": 0,
+   "hidden_locs": 0
+  },
+  "flow": {
+   "precedence_pairs": 0,
+   "right_to_left_pairs": 0,
+   "examples": []
+  },
+  "canvas_use": {
+   "w": 1078,
+   "h": 2288,
+   "x_span": 780,
+   "y_span": 1950,
+   "fit_scale_1600x900": 0.393
+  },
+  "pwml_counts": {
+   "compounds": 3,
+   "proteins": 1,
+   "protein-complexes": 1,
+   "reactions": 0,
+   "transports": 7,
+   "interactions": 0,
+   "compound-locations": 12,
+   "protein-locations": 4,
+   "edges": 14,
+   "biological-states": 10,
+   "membrane-visualizations": 6,
+   "label-locations": 5
+  },
+  "db": {
+   "counts": {
+    "biological_states": 5,
+    "compound_locations": 12,
+    "compounds": 3,
+    "element_states": 3,
+    "pathway_elements": 6,
+    "protein_complexes": 1,
+    "protein_locations": 4,
+    "proteins": 2,
+    "subcellular_locations": 79,
+    "transport_elements": 6,
+    "transport_transporters": 2,
+    "transports": 6
+   },
+   "reactions_db": 0,
+   "reactions_pwml_distinct": 0,
+   "reactions_merged_by_importer": 0,
+   "reactions_pwml_not_in_db": [],
+   "reactions_db_not_in_pwml": [],
+   "reaction_elements_expected": 0,
+   "reaction_enzymes_expected": 0,
+   "transports_db_vs_pwml_missing": [
+    [
+     "hydrogen ion",
+     "saliva",
+     "cell"
+    ],
+    [
+     "5-ht",
+     "cell",
+     "saliva"
+    ],
+    [
+     "5-ht",
+     "synaptic vesicles",
+     "synapse"
+    ],
+    [
+     "hydrogen ion",
+     "cell",
+     "cell"
+    ],
+    [
+     "5-ht",
+     "synaptic vesicles",
+     "cell"
+    ],
+    [
+     "ca++",
+     "saliva",
+     "cytosol"
+    ]
+   ],
+   "transports_db_vs_pwml_extra": [
+    [
+     "hydrogen ion",
+     "null",
+     "cell"
+    ],
+    [
+     "5-ht",
+     "cell",
+     "null"
+    ],
+    [
+     "5-ht",
+     "null",
+     "synapse"
+    ],
+    [
+     "5-ht",
+     "null",
+     "cell"
+    ],
+    [
+     "ca++",
+     "null",
+     "cytosol"
+    ]
+   ],
+   "db_states": [
+    "apical cell membrane",
+    "cell",
+    "cytosol",
+    "null",
+    "synapse"
+   ]
+  },
+  "import": {
+   "ok": true,
+   "errors": {
+    "subcellular_location_2": [
+     "Ontology can't be blank",
+     "Ontology is invalid"
+    ],
+    "subcellular_location_3": [
+     "Ontology can't be blank",
+     "Ontology is invalid"
+    ],
+    "subcellular_location_4": [
+     "Ontology can't be blank",
+     "Ontology is invalid"
+    ],
+    "transport_element_34": [
+     "Biological state must have unique biological states"
+    ],
+    "transport_33": [
+     "Transport elements is too short (minimum is 1 character)"
+    ],
+    "transport_transporter_visualization_99": [
+     "Transport transporter can't be blank"
+    ],
+    "transport_visualization_96": [
+     "Transport can't be blank"
+    ]
+   },
+   "pw_id": "PW000001",
+   "created_main": {
+    "pathways": 1,
+    "compounds": 3,
+    "compound_locations": 12,
+    "proteins": 1,
+    "protein_complexes": 1,
+    "reactions": 0,
+    "transports": 6,
+    "element_states": 3,
+    "subcellular_locations": 2,
+    "species": 0,
+    "pathway_visualizations": 1
+   },
+   "expected": {
+    "compounds": 3,
+    "proteins": 1,
+    "protein_complexes": 1,
+    "reactions": 0,
+    "transports": 7,
+    "interactions": 0,
+    "compound_locations": 12,
+    "protein_locations": 4
+   },
+   "exports": {
+    "sbml": {
+     "status": 200,
+     "bytes": 23506,
+     "ok": true
+    },
+    "sbgn": {
+     "status": 200,
+     "bytes": 11645,
+     "ok": true
+    },
+    "pwml": {
+     "status": 200,
+     "bytes": 48053,
+     "ok": true
+    }
+   },
+   "screenshot_ok": true,
+   "parser_exception": null
+  },
+  "problems": [
+   {
+    "class": "data/extraction",
+    "sev": "S2",
+    "what": "near-synonym compartments used: {'cell-interior': ['cell|Type III cell state', 'cell|__auto_state__', 'cytosol|cytosolic state'], 'apical cell membrane': ['Apical cell membrane|Type III cell apical membrane state', 'Apical cell membrane|apical membrane state']}"
+   },
+   {
+    "class": "data/extraction (writer passes it through)",
+    "sev": "S1",
+    "what": "transport not created in PathWhiz: same-state / __auto_state__ ends"
+   }
+  ],
+  "screenshot_review": {
+   "file": "C:/t/corr-assess/a1/shots/10.png",
+   "flow_in_pathway_order": "no",
+   "labels_readable": "ok",
+   "shared_compounds_redrawn": "yes, 5-HT 4x",
+   "note": "no reactions; 6 boxes; long edges cross the whole canvas and each other"
+  }
+ },
+ "58": {
+  "idx": 58,
+  "canvas": [
+   2070,
+   2270
+  ],
+  "reactions": {
+   "payload": 7,
+   "pwml": 7,
+   "pwml_viz": 7,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "payload_without_enzyme": 1,
+   "pwml_without_enzyme": 1,
+   "direction_values": {
+    "Right": 7
+   }
+  },
+  "noncatalyst_modifiers": {
+   "payload_roles": {},
+   "total": 0,
+   "written_as_reaction_enzyme": 0,
+   "examples": []
+  },
+  "payload_dups": {
+   "exact_dup": 0,
+   "reverse_dup_pairs_same_enzyme": 0,
+   "same_inout_diff_enzyme": 0,
+   "reverse_pairs_any_enzyme": 0
+  },
+  "pwml_dups": {
+   "exact_dup": 0,
+   "reverse_dup_pairs_same_enzyme": 0,
+   "same_inout_diff_enzyme": 0,
+   "reverse_pairs_any_enzyme": 0
+  },
+  "side_vs_role": {
+   "members": 20,
+   "side_contradicts_list": 0,
+   "on_both_lists": 0,
+   "elements_not_drawn": 0
+  },
+  "enzymes": {
+   "reaction_enzyme_rows": 6,
+   "payload_enzyme_refs": 6,
+   "viz_complex_mismatch": 0,
+   "enzyme_not_drawn": 0
+  },
+  "states": {
+   "payload": 2,
+   "pwml": 2,
+   "used_in_pwml": [
+    "cytoplasmic state",
+    "extracellular state"
+   ],
+   "defined_unused": [],
+   "payload_dup_names": [],
+   "synonym_groups_used": {},
+   "null_state_reactions_payload": 0,
+   "species_among_used": [
+    "Escherichia coli"
+   ],
+   "reaction_state_payload": {
+    "cytoplasmic state": 6,
+    "extracellular state": 1
+   },
+   "reaction_state_pwml": {
+    "cytoplasmic state": 6,
+    "extracellular state": 1
+   },
+   "reaction_state_mismatch": 0
+  },
+  "species": {
+   "organism": "Escherichia coli",
+   "payload_species": [
+    "Escherichia coli"
+   ],
+   "pwml_species": [
+    "Escherichia coli"
+   ],
+   "state_species_in_pwml": [
+    "Escherichia coli"
+   ]
+  },
+  "compartment_boxes": {
+   "boxes": 2,
+   "labels": [
+    "cytoplasmic",
+    "extracellular"
+   ],
+   "dup_labels": [],
+   "organism_or_strain_named": []
+  },
+  "transports": {
+   "payload": 2,
+   "pwml": 2,
+   "pwml_elements": 2,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "transporters_payload": 2,
+   "transporters_pwml": 2,
+   "drawn": 2,
+   "same_state_both_ends_pwml": 0
+  },
+  "interactions": {
+   "payload": 4,
+   "pwml": 0
+  },
+  "drawing": {
+   "compound_locations": 22,
+   "distinct_compound_state": 15,
+   "compounds_with_multiple_locs": 5,
+   "shared_compound_state": 4,
+   "shared_redrawn": 2,
+   "drawn_components": 4,
+   "logical_components": 1,
+   "hidden_locs": 0
+  },
+  "flow": {
+   "precedence_pairs": 6,
+   "right_to_left_pairs": 1,
+   "examples": [
+    [
+     "2,3-dihydroxybenzoyl-AMP",
+     1155,
+     1155
+    ]
+   ]
+  },
+  "canvas_use": {
+   "w": 2070,
+   "h": 2270,
+   "x_span": 1710,
+   "y_span": 1900,
+   "fit_scale_1600x900": 0.396
+  },
+  "pwml_counts": {
+   "compounds": 13,
+   "proteins": 8,
+   "protein-complexes": 6,
+   "reactions": 7,
+   "transports": 2,
+   "interactions": 0,
+   "compound-locations": 22,
+   "protein-locations": 8,
+   "edges": 30,
+   "biological-states": 2,
+   "membrane-visualizations": 2,
+   "label-locations": 2
+  },
+  "db": {
+   "counts": {
+    "biological_states": 2,
+    "compound_locations": 22,
+    "compounds": 13,
+    "element_states": 8,
+    "pathway_elements": 9,
+    "protein_complexes": 6,
+    "protein_locations": 8,
+    "proteins": 9,
+    "reaction_elements": 20,
+    "reaction_enzymes": 6,
+    "reactions": 7,
+    "subcellular_locations": 78,
+    "transport_elements": 2,
+    "transport_transporters": 2,
+    "transports": 2
+   },
+   "reactions_db": 7,
+   "reactions_pwml_distinct": 7,
+   "reactions_merged_by_importer": 0,
+   "reactions_pwml_not_in_db": [],
+   "reactions_db_not_in_pwml": [],
+   "reaction_elements_expected": 20,
+   "reaction_enzymes_expected": 6,
+   "transports_db_vs_pwml_missing": [],
+   "transports_db_vs_pwml_extra": [],
+   "db_states": [
+    "cytoplasm",
+    "extracellular space"
+   ]
+  },
+  "import": {
+   "ok": true,
+   "errors": {},
+   "pw_id": "PW000001",
+   "created_main": {
+    "pathways": 1,
+    "compounds": 13,
+    "compound_locations": 22,
+    "proteins": 8,
+    "protein_complexes": 6,
+    "reactions": 7,
+    "transports": 2,
+    "element_states": 8,
+    "subcellular_locations": 1,
+    "species": 0,
+    "pathway_visualizations": 1
+   },
+   "expected": {
+    "compounds": 13,
+    "proteins": 8,
+    "protein_complexes": 6,
+    "reactions": 7,
+    "transports": 2,
+    "interactions": 0,
+    "compound_locations": 22,
+    "protein_locations": 8
+   },
+   "exports": {
+    "sbml": {
+     "status": 200,
+     "bytes": 66779,
+     "ok": true
+    },
+    "sbgn": {
+     "status": 500,
+     "bytes": 178229,
+     "ok": false
+    },
+    "pwml": {
+     "status": 200,
+     "bytes": 109239,
+     "ok": true
+    }
+   },
+   "screenshot_ok": true,
+   "parser_exception": null
+  },
+  "problems": [
+   {
+    "class": "writer (shared-intermediate reuse only for adjacent reactions)",
+    "sev": "S2",
+    "what": "2 shared compounds redrawn; 4 drawn components vs 1 logical"
+   },
+   {
+    "class": "layout",
+    "sev": "S2",
+    "what": "1 of 6 producer->consumer pairs drawn against reading order"
+   },
+   {
+    "class": "writer/IR (silent drop)",
+    "sev": "S1",
+    "what": "interactions payload 4 -> PWML 0"
+   },
+   {
+    "class": "writer / PathWhiz exporter",
+    "sev": "S3",
+    "what": "Fe3+ uses visualization template 299; PathWhiz SBGN export fails (HTTP 500, \"Template not found!\")"
+   }
+  ],
+  "screenshot_review": {
+   "file": "C:/t/corr-assess/a1/shots/58.png",
+   "flow_in_pathway_order": "partly",
+   "labels_readable": "ok",
+   "shared_compounds_redrawn": "yes, enterobactin 4x, 2,3-DHB 3x",
+   "note": "EntA step drawn below the EntB/E/F/D step it feeds; long edges to the extracellular box"
+  }
+ },
+ "12": {
+  "idx": 12,
+  "canvas": [
+   930,
+   2520
+  ],
+  "reactions": {
+   "payload": 5,
+   "pwml": 5,
+   "pwml_viz": 5,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "payload_without_enzyme": 0,
+   "pwml_without_enzyme": 0,
+   "direction_values": {
+    "Right": 5
+   }
+  },
+  "noncatalyst_modifiers": {
+   "payload_roles": {},
+   "total": 0,
+   "written_as_reaction_enzyme": 0,
+   "examples": []
+  },
+  "payload_dups": {
+   "exact_dup": 0,
+   "reverse_dup_pairs_same_enzyme": 0,
+   "same_inout_diff_enzyme": 3,
+   "reverse_pairs_any_enzyme": 0
+  },
+  "pwml_dups": {
+   "exact_dup": 0,
+   "reverse_dup_pairs_same_enzyme": 0,
+   "same_inout_diff_enzyme": 3,
+   "reverse_pairs_any_enzyme": 0
+  },
+  "side_vs_role": {
+   "members": 15,
+   "side_contradicts_list": 0,
+   "on_both_lists": 0,
+   "elements_not_drawn": 0
+  },
+  "enzymes": {
+   "reaction_enzyme_rows": 10,
+   "payload_enzyme_refs": 10,
+   "viz_complex_mismatch": 0,
+   "enzyme_not_drawn": 0
+  },
+  "states": {
+   "payload": 1,
+   "pwml": 1,
+   "used_in_pwml": [
+    "cytoplasmic state"
+   ],
+   "defined_unused": [],
+   "payload_dup_names": [],
+   "synonym_groups_used": {},
+   "null_state_reactions_payload": 3,
+   "species_among_used": [
+    "Paris polyphylla"
+   ],
+   "reaction_state_payload": {
+    "null": 3,
+    "cytoplasmic state": 2
+   },
+   "reaction_state_pwml": {
+    "cytoplasmic state": 5
+   },
+   "reaction_state_mismatch": null
+  },
+  "species": {
+   "organism": "Paris polyphylla var. yunnanensis",
+   "payload_species": [
+    "Paris polyphylla",
+    "Arabidopsis thaliana"
+   ],
+   "pwml_species": [
+    "Paris polyphylla",
+    "Arabidopsis thaliana"
+   ],
+   "state_species_in_pwml": [
+    "Paris polyphylla"
+   ]
+  },
+  "compartment_boxes": {
+   "boxes": 1,
+   "labels": [
+    "cytoplasmic"
+   ],
+   "dup_labels": [],
+   "organism_or_strain_named": []
+  },
+  "transports": {
+   "payload": 0,
+   "pwml": 0,
+   "pwml_elements": 0,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "transporters_payload": 0,
+   "transporters_pwml": 0,
+   "drawn": 0,
+   "same_state_both_ends_pwml": 0
+  },
+  "interactions": {
+   "payload": 0,
+   "pwml": 0
+  },
+  "drawing": {
+   "compound_locations": 15,
+   "distinct_compound_state": 5,
+   "compounds_with_multiple_locs": 3,
+   "shared_compound_state": 3,
+   "shared_redrawn": 3,
+   "drawn_components": 1,
+   "logical_components": 1,
+   "hidden_locs": 0
+  },
+  "flow": {
+   "precedence_pairs": 0,
+   "right_to_left_pairs": 0,
+   "examples": []
+  },
+  "canvas_use": {
+   "w": 930,
+   "h": 2520,
+   "x_span": 570,
+   "y_span": 2070,
+   "fit_scale_1600x900": 0.357
+  },
+  "pwml_counts": {
+   "compounds": 5,
+   "proteins": 1,
+   "protein-complexes": 4,
+   "reactions": 5,
+   "transports": 0,
+   "interactions": 0,
+   "compound-locations": 15,
+   "protein-locations": 4,
+   "edges": 25,
+   "biological-states": 1,
+   "membrane-visualizations": 1,
+   "label-locations": 1
+  },
+  "db": {
+   "counts": {
+    "biological_states": 1,
+    "compound_locations": 15,
+    "compounds": 5,
+    "element_states": 1,
+    "pathway_elements": 10,
+    "protein_complexes": 4,
+    "protein_locations": 4,
+    "proteins": 1,
+    "reaction_elements": 15,
+    "reaction_enzymes": 10,
+    "reactions": 5,
+    "subcellular_locations": 78
+   },
+   "reactions_db": 5,
+   "reactions_pwml_distinct": 5,
+   "reactions_merged_by_importer": 0,
+   "reactions_pwml_not_in_db": [],
+   "reactions_db_not_in_pwml": [],
+   "reaction_elements_expected": 15,
+   "reaction_enzymes_expected": 10,
+   "transports_db_vs_pwml_missing": [],
+   "transports_db_vs_pwml_extra": [],
+   "db_states": [
+    "cytoplasm"
+   ]
+  },
+  "import": {
+   "ok": true,
+   "errors": {},
+   "pw_id": "PW000001",
+   "created_main": {
+    "pathways": 1,
+    "compounds": 5,
+    "compound_locations": 15,
+    "proteins": 0,
+    "protein_complexes": 4,
+    "reactions": 5,
+    "transports": 0,
+    "element_states": 1,
+    "subcellular_locations": 1,
+    "species": 1,
+    "pathway_visualizations": 1
+   },
+   "expected": {
+    "compounds": 5,
+    "proteins": 1,
+    "protein_complexes": 4,
+    "reactions": 5,
+    "transports": 0,
+    "interactions": 0,
+    "compound_locations": 15,
+    "protein_locations": 4
+   },
+   "exports": {
+    "sbml": {
+     "status": 200,
+     "bytes": 37793,
+     "ok": true
+    },
+    "sbgn": {
+     "status": 200,
+     "bytes": 17579,
+     "ok": true
+    },
+    "pwml": {
+     "status": 200,
+     "bytes": 62388,
+     "ok": true
+    }
+   },
+   "screenshot_ok": true,
+   "parser_exception": null
+  },
+  "problems": [
+   {
+    "class": "writer (ir.py default_bs_key)",
+    "sev": "S3",
+    "what": "3 reaction(s) with no stated compartment placed in biological_states[0]"
+   },
+   {
+    "class": "data/extraction",
+    "sev": "S2",
+    "what": "duplicate reactions in payload: {'exact_dup': 0, 'reverse_dup_pairs_same_enzyme': 0, 'same_inout_diff_enzyme': 3, 'reverse_pairs_any_enzyme': 0}"
+   },
+   {
+    "class": "writer (shared-intermediate reuse only for adjacent reactions)",
+    "sev": "S2",
+    "what": "3 shared compounds redrawn; 1 drawn components vs 1 logical"
+   }
+  ],
+  "screenshot_review": {
+   "file": "C:/t/corr-assess/a1/shots/12.png",
+   "flow_in_pathway_order": "no",
+   "labels_readable": "ok",
+   "shared_compounds_redrawn": "yes, diosgenin 4x, UDP-glucose 4x",
+   "note": "4 isozyme reactions with identical substrates/products; every substrate redrawn and converging"
+  }
+ },
+ "150": {
+  "idx": 150,
+  "canvas": [
+   1526,
+   2144
+  ],
+  "reactions": {
+   "payload": 0,
+   "pwml": 0,
+   "pwml_viz": 0,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "payload_without_enzyme": 0,
+   "pwml_without_enzyme": 0,
+   "direction_values": {}
+  },
+  "noncatalyst_modifiers": {
+   "payload_roles": {},
+   "total": 0,
+   "written_as_reaction_enzyme": 0,
+   "examples": []
+  },
+  "payload_dups": {
+   "exact_dup": 0,
+   "reverse_dup_pairs_same_enzyme": 0,
+   "same_inout_diff_enzyme": 0,
+   "reverse_pairs_any_enzyme": 0
+  },
+  "pwml_dups": {
+   "exact_dup": 0,
+   "reverse_dup_pairs_same_enzyme": 0,
+   "same_inout_diff_enzyme": 0,
+   "reverse_pairs_any_enzyme": 0
+  },
+  "side_vs_role": {
+   "members": 0,
+   "side_contradicts_list": 0,
+   "on_both_lists": 0,
+   "elements_not_drawn": 0
+  },
+  "enzymes": {
+   "reaction_enzyme_rows": 0,
+   "payload_enzyme_refs": 0,
+   "viz_complex_mismatch": 0,
+   "enzyme_not_drawn": 0
+  },
+  "states": {
+   "payload": 12,
+   "pwml": 12,
+   "used_in_pwml": [
+    "Type III cell apical membrane state",
+    "Type III cell state",
+    "Type III cell synaptic vesicle state",
+    "__auto_state__",
+    "afferent nerve fiber state",
+    "apical membrane of Type III cell",
+    "apical membrane of Type III cells state",
+    "cytosol of Type III cell",
+    "extracellular space in taste bud",
+    "postsynaptic membrane of gustatory nerve",
+    "synaptic vesicle in Type III cell",
+    "synaptic vesicle state"
+   ],
+   "defined_unused": [],
+   "payload_dup_names": [],
+   "synonym_groups_used": {
+    "cell-interior": [
+     "cell|Type III cell state",
+     "cell|__auto_state__",
+     "cell|afferent nerve fiber state",
+     "cytosol|cytosol of Type III cell"
+    ],
+    "synvesicle": [
+     "synaptic vesicles|Type III cell synaptic vesicle state",
+     "synaptic vesicles|synaptic vesicle state",
+     "synaptic vesicle|synaptic vesicle in Type III cell"
+    ],
+    "apical cell membrane": [
+     "Apical cell membrane|Type III cell apical membrane state",
+     "Apical cell membrane|apical membrane of Type III cell"
+    ]
+   },
+   "null_state_reactions_payload": 0,
+   "species_among_used": [
+    "Mus musculus"
+   ],
+   "reaction_state_payload": {},
+   "reaction_state_pwml": {},
+   "reaction_state_mismatch": 0
+  },
+  "species": {
+   "organism": "Mus musculus",
+   "payload_species": [
+    "Mus musculus",
+    "Arabidopsis thaliana"
+   ],
+   "pwml_species": [
+    "Mus musculus",
+    "Arabidopsis thaliana"
+   ],
+   "state_species_in_pwml": [
+    "Mus musculus"
+   ]
+  },
+  "compartment_boxes": {
+   "boxes": 8,
+   "labels": [
+    "Type III cell",
+    "Type III cell synaptic vesicle",
+    "apical membrane of Type III cells",
+    "afferent nerve fiber",
+    "synaptic vesicle in Type III cell",
+    "extracellular space in taste bud",
+    "cytosol of Type III cell"
+   ],
+   "dup_labels": [],
+   "organism_or_strain_named": []
+  },
+  "transports": {
+   "payload": 5,
+   "pwml": 5,
+   "pwml_elements": 5,
+   "missing_in_pwml": [
+    [
+     "h+",
+     "__auto_state__",
+     "type iii cell state",
+     1
+    ],
+    [
+     "h+",
+     "__auto_state__",
+     "apical membrane of type iii cells state",
+     1
+    ],
+    [
+     "h+",
+     "extracellular space in taste bud",
+     "cytosol of type iii cell",
+     1
+    ]
+   ],
+   "extra_in_pwml": [
+    [
+     "hydrogen ion",
+     "__auto_state__",
+     "type iii cell state",
+     1
+    ],
+    [
+     "hydrogen ion",
+     "__auto_state__",
+     "apical membrane of type iii cells state",
+     1
+    ],
+    [
+     "hydrogen ion",
+     "extracellular space in taste bud",
+     "cytosol of type iii cell",
+     1
+    ]
+   ],
+   "transporters_payload": 3,
+   "transporters_pwml": 3,
+   "drawn": 5,
+   "same_state_both_ends_pwml": 0
+  },
+  "interactions": {
+   "payload": 2,
+   "pwml": 2
+  },
+  "drawing": {
+   "compound_locations": 12,
+   "distinct_compound_state": 12,
+   "compounds_with_multiple_locs": 0,
+   "shared_compound_state": 0,
+   "shared_redrawn": 0,
+   "drawn_components": 0,
+   "logical_components": 0,
+   "hidden_locs": 0
+  },
+  "flow": {
+   "precedence_pairs": 0,
+   "right_to_left_pairs": 0,
+   "examples": []
+  },
+  "canvas_use": {
+   "w": 1526,
+   "h": 2144,
+   "x_span": 1288,
+   "y_span": 1906,
+   "fit_scale_1600x900": 0.42
+  },
+  "pwml_counts": {
+   "compounds": 2,
+   "proteins": 3,
+   "protein-complexes": 3,
+   "reactions": 0,
+   "transports": 5,
+   "interactions": 2,
+   "compound-locations": 12,
+   "protein-locations": 10,
+   "edges": 14,
+   "biological-states": 12,
+   "membrane-visualizations": 8,
+   "label-locations": 7
+  },
+  "db": {
+   "counts": {
+    "biological_states": 7,
+    "compound_locations": 12,
+    "compounds": 2,
+    "element_states": 8,
+    "interaction_elements": 4,
+    "interactions": 2,
+    "pathway_elements": 6,
+    "protein_complexes": 3,
+    "protein_locations": 10,
+    "proteins": 3,
+    "subcellular_locations": 79,
+    "transport_elements": 4,
+    "transport_transporters": 2,
+    "transports": 4
+   },
+   "reactions_db": 0,
+   "reactions_pwml_distinct": 0,
+   "reactions_merged_by_importer": 0,
+   "reactions_pwml_not_in_db": [],
+   "reactions_db_not_in_pwml": [],
+   "reaction_elements_expected": 0,
+   "reaction_enzymes_expected": 0,
+   "transports_db_vs_pwml_missing": [
+    [
+     "hydrogen ion",
+     "cell",
+     "cell"
+    ],
+    [
+     "5-ht",
+     "synaptic vesicles",
+     "cell"
+    ],
+    [
+     "hydrogen ion",
+     "cell",
+     "apical membrane of type iii cells"
+    ]
+   ],
+   "transports_db_vs_pwml_extra": [
+    [
+     "5-ht",
+     "null",
+     "cell"
+    ],
+    [
+     "hydrogen ion",
+     "cell",
+     "null"
+    ]
+   ],
+   "db_states": [
+    "apical cell membrane",
+    "cell",
+    "cytosol",
+    "extracellular space",
+    "null",
+    "post-synaptic membrane",
+    "synaptic vesicle"
+   ]
+  },
+  "import": {
+   "ok": true,
+   "errors": {
+    "cell_type_1": [
+     "Ontology can't be blank",
+     "Ontology is invalid"
+    ],
+    "cell_type_2": [
+     "Ontology can't be blank",
+     "Ontology is invalid"
+    ],
+    "subcellular_location_5": [
+     "Ontology can't be blank",
+     "Ontology is invalid"
+    ],
+    "subcellular_location_6": [
+     "Ontology can't be blank",
+     "Ontology is invalid"
+    ],
+    "transport_element_29": [
+     "Biological state must have unique biological states"
+    ],
+    "transport_28": [
+     "Transport elements is too short (minimum is 1 character)"
+    ],
+    "transport_transporter_visualization_107": [
+     "Transport transporter can't be blank"
+    ],
+    "transport_visualization_104": [
+     "Transport can't be blank"
+    ]
+   },
+   "pw_id": "PW000001",
+   "created_main": {
+    "pathways": 1,
+    "compounds": 2,
+    "compound_locations": 12,
+    "proteins": 2,
+    "protein_complexes": 3,
+    "reactions": 0,
+    "transports": 4,
+    "element_states": 8,
+    "subcellular_locations": 2,
+    "species": 0,
+    "pathway_visualizations": 1
+   },
+   "expected": {
+    "compounds": 2,
+    "proteins": 3,
+    "protein_complexes": 3,
+    "reactions": 0,
+    "transports": 5,
+    "interactions": 2,
+    "compound_locations": 12,
+    "protein_locations": 10
+   },
+   "exports": {
+    "sbml": {
+     "status": 200,
+     "bytes": 27015,
+     "ok": true
+    },
+    "sbgn": {
+     "status": 200,
+     "bytes": 14971,
+     "ok": true
+    },
+    "pwml": {
+     "status": 200,
+     "bytes": 62288,
+     "ok": true
+    }
+   },
+   "screenshot_ok": true,
+   "parser_exception": null
+  },
+  "problems": [
+   {
+    "class": "data/extraction",
+    "sev": "S2",
+    "what": "near-synonym compartments used: {'cell-interior': ['cell|Type III cell state', 'cell|__auto_state__', 'cell|afferent nerve fiber state', 'cytosol|cytosol of Type III cell'], 'synvesicle': ['synaptic vesicles|Type III cell synaptic vesicle state', 'synaptic vesicles|synaptic vesicle state', 'synaptic vesicle|synaptic vesicle in Type III cell'], 'apical cell membrane': ['Apical cell membrane|Type III cell apical membrane state', 'Apical cell membrane|apical membrane of Type III cell']}"
+   },
+   {
+    "class": "data/extraction (writer passes it through)",
+    "sev": "S1",
+    "what": "transport not created in PathWhiz: same-state / __auto_state__ ends"
+   }
+  ],
+  "screenshot_review": {
+   "file": "C:/t/corr-assess/a1/shots/150.png",
+   "flow_in_pathway_order": "no",
+   "labels_readable": "labels cut off",
+   "shared_compounds_redrawn": "yes, 5-HT 5x",
+   "note": "8 boxes for near-identical locations; long edges through boxes; mostly transports"
+  }
+ },
+ "68": {
+  "idx": 68,
+  "canvas": [
+   2070,
+   1785
+  ],
+  "reactions": {
+   "payload": 3,
+   "pwml": 3,
+   "pwml_viz": 3,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "payload_without_enzyme": 0,
+   "pwml_without_enzyme": 0,
+   "direction_values": {
+    "Right": 3
+   }
+  },
+  "noncatalyst_modifiers": {
+   "payload_roles": {},
+   "total": 0,
+   "written_as_reaction_enzyme": 0,
+   "examples": []
+  },
+  "payload_dups": {
+   "exact_dup": 0,
+   "reverse_dup_pairs_same_enzyme": 0,
+   "same_inout_diff_enzyme": 0,
+   "reverse_pairs_any_enzyme": 0
+  },
+  "pwml_dups": {
+   "exact_dup": 0,
+   "reverse_dup_pairs_same_enzyme": 0,
+   "same_inout_diff_enzyme": 0,
+   "reverse_pairs_any_enzyme": 0
+  },
+  "side_vs_role": {
+   "members": 8,
+   "side_contradicts_list": 0,
+   "on_both_lists": 0,
+   "elements_not_drawn": 0
+  },
+  "enzymes": {
+   "reaction_enzyme_rows": 3,
+   "payload_enzyme_refs": 3,
+   "viz_complex_mismatch": 0,
+   "enzyme_not_drawn": 0
+  },
+  "states": {
+   "payload": 5,
+   "pwml": 5,
+   "used_in_pwml": [
+    "__auto_state__",
+    "cytoplasmic leaflet of IM state",
+    "cytoplasmic state",
+    "outer membrane state",
+    "periplasmic leaflet of IM state"
+   ],
+   "defined_unused": [],
+   "payload_dup_names": [],
+   "synonym_groups_used": {
+    "cell-interior": [
+     "cell|__auto_state__",
+     "cytoplasm|cytoplasmic state"
+    ]
+   },
+   "null_state_reactions_payload": 0,
+   "species_among_used": [
+    "Escherichia coli"
+   ],
+   "reaction_state_payload": {
+    "cytoplasmic state": 3
+   },
+   "reaction_state_pwml": {
+    "cytoplasmic state": 3
+   },
+   "reaction_state_mismatch": 0
+  },
+  "species": {
+   "organism": "Escherichia coli",
+   "payload_species": [
+    "Escherichia coli",
+    "E. coli",
+    "Arabidopsis thaliana"
+   ],
+   "pwml_species": [
+    "Escherichia coli",
+    "E. coli",
+    "Arabidopsis thaliana"
+   ],
+   "state_species_in_pwml": [
+    "Escherichia coli"
+   ]
+  },
+  "compartment_boxes": {
+   "boxes": 4,
+   "labels": [
+    "cytoplasmic",
+    "cytoplasmic leaflet of IM",
+    "periplasmic leaflet of IM",
+    "outer membrane"
+   ],
+   "dup_labels": [],
+   "organism_or_strain_named": []
+  },
+  "transports": {
+   "payload": 2,
+   "pwml": 2,
+   "pwml_elements": 2,
+   "missing_in_pwml": [],
+   "extra_in_pwml": [],
+   "transporters_payload": 1,
+   "transporters_pwml": 1,
+   "drawn": 2,
+   "same_state_both_ends_pwml": 0
+  },
+  "interactions": {
+   "payload": 13,
+   "pwml": 0
+  },
+  "drawing": {
+   "compound_locations": 12,
+   "distinct_compound_state": 12,
+   "compounds_with_multiple_locs": 0,
+   "shared_compound_state": 2,
+   "shared_redrawn": 0,
+   "drawn_components": 1,
+   "logical_components": 1,
+   "hidden_locs": 0
+  },
+  "flow": {
+   "precedence_pairs": 2,
+   "right_to_left_pairs": 0,
+   "examples": []
+  },
+  "canvas_use": {
+   "w": 2070,
+   "h": 1785,
+   "x_span": 1710,
+   "y_span": 1335,
+   "fit_scale_1600x900": 0.504
+  },
+  "pwml_counts": {
+   "compounds": 8,
+   "proteins": 10,
+   "protein-complexes": 5,
+   "reactions": 3,
+   "transports": 2,
+   "interactions": 0,
+   "compound-locations": 12,
+   "protein-locations": 11,
+   "edges": 15,
+   "biological-states": 5,
+   "membrane-visualizations": 4,
+   "label-locations": 4
+  },
+  "db": {
+   "counts": {
+    "biological_states": 4,
+    "compound_locations": 12,
+    "compounds": 8,
+    "element_states": 11,
+    "pathway_elements": 4,
+    "protein_complexes": 5,
+    "protein_locations": 11,
+    "proteins": 10,
+    "reaction_elements": 8,
+    "reaction_enzymes": 3,
+    "reactions": 3,
+    "subcellular_locations": 78,
+    "transport_elements": 1,
+    "transports": 1
+   },
+   "reactions_db": 3,
+   "reactions_pwml_distinct": 3,
+   "reactions_merged_by_importer": 0,
+   "reactions_pwml_not_in_db": [],
+   "reactions_db_not_in_pwml": [],
+   "reaction_elements_expected": 8,
+   "reaction_enzymes_expected": 3,
+   "transports_db_vs_pwml_missing": [
+    [
+     "core-lipid a",
+     "cytoplasmic leaflet of the im",
+     "periplasmic leaflet of the im"
+    ],
+    [
+     "core-lipid a",
+     "periplasmic leaflet of the im",
+     "outer membrane"
+    ]
+   ],
+   "transports_db_vs_pwml_extra": [
+    [
+     "core-lipid a",
+     "null",
+     "outer membrane"
+    ]
+   ],
+   "db_states": [
+    "cell",
+    "cytoplasm",
+    "null",
+    "outer membrane"
+   ]
+  },
+  "import": {
+   "ok": true,
+   "errors": {
+    "subcellular_location_6": [
+     "Ontology can't be blank",
+     "Ontology is invalid"
+    ],
+    "subcellular_location_7": [
+     "Ontology can't be blank",
+     "Ontology is invalid"
+    ],
+    "transport_element_30": [
+     "Biological state must have unique biological states"
+    ],
+    "transport_29": [
+     "Transport elements is too short (minimum is 1 character)"
+    ],
+    "transport_transporter_visualization_109": [
+     "Transport transporter can't be blank"
+    ],
+    "transport_visualization_106": [
+     "Transport can't be blank"
+    ]
+   },
+   "pw_id": "PW000001",
+   "created_main": {
+    "pathways": 1,
+    "compounds": 8,
+    "compound_locations": 12,
+    "proteins": 9,
+    "protein_complexes": 5,
+    "reactions": 3,
+    "transports": 1,
+    "element_states": 11,
+    "subcellular_locations": 1,
+    "species": 0,
+    "pathway_visualizations": 1
+   },
+   "expected": {
+    "compounds": 8,
+    "proteins": 10,
+    "protein_complexes": 5,
+    "reactions": 3,
+    "transports": 2,
+    "interactions": 0,
+    "compound_locations": 12,
+    "protein_locations": 11
+   },
+   "exports": {
+    "sbml": {
+     "status": 200,
+     "bytes": 28804,
+     "ok": true
+    },
+    "sbgn": {
+     "status": 200,
+     "bytes": 10269,
+     "ok": true
+    },
+    "pwml": {
+     "status": 200,
+     "bytes": 71720,
+     "ok": true
+    }
+   },
+   "screenshot_ok": true,
+   "parser_exception": null
+  },
+  "problems": [
+   {
+    "class": "data/extraction",
+    "sev": "S2",
+    "what": "near-synonym compartments used: {'cell-interior': ['cell|__auto_state__', 'cytoplasm|cytoplasmic state']}"
+   },
+   {
+    "class": "PathWhiz importer",
+    "sev": "S1",
+    "what": "transport not created in PathWhiz: new subcellular locations rejected by empty harness DB (Ontology blank)"
+   },
+   {
+    "class": "writer/IR (silent drop)",
+    "sev": "S1",
+    "what": "interactions payload 13 -> PWML 0"
+   }
+  ],
+  "screenshot_review": {
+   "file": "C:/t/corr-assess/a1/shots/68.png",
+   "flow_in_pathway_order": "yes",
+   "labels_readable": "label cut off (\"cytoplasmic leaflet of IM\")",
+   "shared_compounds_redrawn": "no",
+   "note": "readable; two empty/nearly empty compartment boxes"
+  }
+ }
+}

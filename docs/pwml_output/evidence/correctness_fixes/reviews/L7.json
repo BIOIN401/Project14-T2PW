@@ -1,0 +1,26 @@
+{
+ "lane": "L7",
+ "reviewer": "ws-reviewer opus/high",
+ "agent": "af8e6f94b70117947",
+ "reviewed_head": "4d747658",
+ "verdict": "REJECT (F1 blocking)",
+ "findings": [
+  "F1 LLM step on by default in production, unmeasured, weak _accept",
+  "F2 L7 after L6: duplicates from moves not merged (re-run L6 merge before enabling step 2/3)",
+  "F3 provider error text (may contain .env path) copied into rows/text/SBML; wrong reason text",
+  "F4 AutoState_* treated as not stated",
+  "F5 transport side check compares rows not locations (nit, accepted)",
+  "F6 comment placement sbml.py:92 (nit, accepted)",
+  "F7 out-of-boundary text record/SBML changes required by brief"
+ ],
+ "reviewer_runs": "trial merge with 5c40e9f0: focused 212, SMOKE 511",
+ "round2": {
+  "head": "82f1347b",
+  "verdict": "APPROVE WITH NITS",
+  "notes": [
+   "N1 _place_words single generic word leaks (must fix before LLM_ESTIMATE on)",
+   "N2 currency names satisfy participant check (same)",
+   "N3 path redaction stops at space"
+  ]
+ }
+}

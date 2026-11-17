@@ -1,0 +1,416 @@
+{
+ "lane": "L7",
+ "branch": "corr/L7-estimate-compartments",
+ "worktree": "C:/t/corr-L7",
+ "base": "8898f58a",
+ "head": "82f1347b",
+ "status": "REVIEW FIXES F1, F3 COMMITTED (90f17a6d) AND pwml/correctness 5c40e9f0 (L5, L9b) MERGED (82f1347b); verified on the committed merge head; not pushed. Steps 2 (LLM) and 3 (general state) both deferred behind default-off constants.",
+ "commits": [
+  "5cd31f01 L7: estimate the compartment of reactions and transport sides with none stated (D-W24 2, 7a)",
+  "d01052cd L7: a transport side nobody estimated is not put in the general cell state",
+  "4d747658 L7: defer step 3 (general cell state) behind GENERAL_STATE_FALLBACK = False",
+  "90f17a6d L7 review fixes F1, F3: LLM step off by default with a tighter answer check; fixed row reason on provider failure",
+  "82f1347b Merge pwml/correctness (5c40e9f0: lanes L5, L9b) into corr/L7-estimate-compartments (clean, no conflicts)"
+ ],
+ "files_changed": {
+  "src/t2pw/service/final_payload_compartments.py": "NEW: the step (neighbours -> LLM -> general cell state)",
+  "src/t2pw/llm/prompts/compartment_estimate_system.txt": "NEW: prompt for this step only",
+  "src/t2pw/service/final_payload.py": "seam: runs estimate_compartments after the L6 merge; new kw-only chat_fn; organism hint from fill_meta",
+  "src/t2pw/app/reaction_evidence.py": "OUTSIDE the declared boundary (brief requires the text record): 'Compartment (not stated in the paper record)' line on a reaction and a 'TRANSPORT SIDES NOT STATED' section, both only when compartment_source is present (other reports keep their bytes)",
+  "src/t2pw/clean_model/export/sbml.py": "OUTSIDE the declared boundary (brief requires our SBML annotation): t2pw:compartmentSource on reaction/transport + note text, only when compartment_source is present",
+  "tests/test_l7_estimate_compartments.py": "NEW, 26 tests, fake LLM",
+  "src/t2pw/pwml/ir.py": "NOT changed: resolve_state/default_bs_key untouched; the final-payload step writes the state name, so the IR fallback is no longer reached for reactions with the flag on; flag off keeps it (byte-identical)"
+ },
+ "design": {
+  "order": "after L6's merge (last step of maybe_apply_final_id_fill). Why: neighbours and LLM candidates are the merged states (two 'ER state' rows are one place); a placeholder L6 already merged into a stated state is not estimated twice. Cost: two reactions that become exact duplicates only once L7 places them are not merged by L6 (2 pairs on the replays: idx 6, 113).",
+  "unstated": "empty biological_state, or a reference to a placeholder (__auto_state__, AutoState_*); an unresolvable name is left alone",
+  "step1_neighbours": "BFS over reactions sharing a participant, excluding cofactor_policy.VOCABULARY (currency + hubs) and every transport cargo (a transported compound sits on both sides of a membrane: idx 84 would otherwise put enterobactin biosynthesis extracellular); traverses unstated reactions, stops at stated ones; exactly one informative state -> neighbour_estimate. A eukaryote 'cell'/'intracellular' state names no compartment and never decides (idx 134 'human carnitine biosynthesis'). Estimates never feed other estimates.",
+  "step2_llm": "one call per payload, temperature 0, JSON, chat_detailed with OPENROUTER_EXTRACTION_MODEL, timeout 120 s, max_tokens 4000; input = organism, candidate states, items (reaction equation/enzymes/evidence/text around evidence, linked states; transport cargo/known side/asked sides), paper text head (60,000 chars) or the evidence sentences. Accepted only with a verbatim >=3-word quote and a candidate state, or a new location named in the quote that map_vocabulary_name resolves (exact/mapped). Transport sides must differ. Cached in the fill cache (key: prompt id + sha256 of system+user). Skipped: T2PW_FINAL_PAYLOAD_BUDGET_S=0 (cached reply still used), T2PW_OFFLINE_CURATOR with no injected chat_fn, open fetch circuit, job deadline within margin.",
+  "step3_general_state": "DEFERRED (GENERAL_STATE_FALLBACK = False). When on: reactions only: an existing state of the pathway organism with location cytoplasm (prokaryote)/cell (eukaryote), no cell type/tissue and a name saying nothing else; else the pipeline's __auto_state__ renamed '<its species> <its location>' with every reference re-pointed (L6's _iter_state_refs); else a new '<organism> cytoplasm|cell' state (+ location entity row). review_required + review_reasons 'compartment_not_stated: ...'. Organism = the run's likely_organism when the payload carries it (idx 135: Saposhnikovia, not the Arabidopsis expression host), else the states' majority species, else the normalizer's default species.",
+  "transports": "per missing side: neighbours only when the other side is stated (cargo's other reactions minus that state, one state); LLM for the rest (both sides must differ). Deviation from the brief, by evidence: step 3 is NOT applied to a transport side (round 1 turned idx 3 'apical side -> Type III cell', right by accident, into 'cell -> Type III cell'); an unestimated side keeps what it had and the row is flagged. No direction invented. Element-level sides untouched.",
+  "vocabulary": "compartment_source: neighbour_estimate | llm_estimate | unresolved (L7); 'estimated' kept as written by L6 (placeholder merged into a stated state); absent = stated. Each change appends a compartment_estimate entry {step, field, from_state, to_state, source, reason, evidence...}. Payload record: final_payload_compartments (only when something changed)."
+ },
+ "tests_added": [
+  "tests/test_l7_estimate_compartments.py (26): neighbour chain + currency excluded; disagreeing neighbours -> general state not row 0; transported compound links nothing (idx 84); general-state neighbour does not decide; fake LLM candidate + cache (1 call for 2 runs); 3 rejected answers (quote not verbatim, not a candidate, location not in quote); new PathWhiz location; offline switch; failing model call; whole pathway unstated -> renamed placeholder not extracellular (idx 138); plain existing state reused, named place not; pathway organism over expression host (idx 135); transport side from cargo neighbours; both sides missing never given a direction; unestimated side not put in general state (idx 3); equal side not written; fake LLM both sides only when different; text record line; SBML annotation; IR state not row 0; seam runs it after the merge; flag off untouched; runs once + fails open; nothing to do = untouched"
+ ],
+ "test_runs": {
+  "all_on_committed_head": "d01052cd, tree clean at every step (C:/t/corr-assess/lanes/L7logs/chain2.out); round 1 at 5cd31f01 in chain.out",
+  "before_base_8898f58a": {
+   "log": "C:/t/corr-assess/lanes/L7logs/r2_before.log",
+   "result": "1 error (collection: module absent)"
+  },
+  "before_module_without_hook_text_sbml": {
+   "log": "C:/t/corr-assess/lanes/L7logs/r2_before_nohook.log",
+   "result": "3 failed (seam, text record, SBML), 23 passed"
+  },
+  "after": {
+   "log": "C:/t/corr-assess/lanes/L7logs/r2_after.log",
+   "result": "26 passed"
+  },
+  "related_existing_files": {
+   "log": "C:/t/corr-assess/lanes/L7logs/r2_related.log",
+   "result": "421 passed, 1 skipped (l6, clean_model builder/sbml/model/kgml, all final_payload_*, reaction_evidence, reaction_evidence_view, transport_sides, l7)"
+  },
+  "smoke": {
+   "log": "C:/t/corr-assess/lanes/L7logs/r2_smoke.log",
+   "result": "511 passed"
+  },
+  "golden_seam_each_alone": {
+   "test_batch_driver_seam_golden": "2 passed",
+   "test_c011_freeze_seam_golden_equivalence": "8 passed",
+   "test_streamlit_stage8_export_contract": "4 passed",
+   "test_streamlit_quarantine_boundary": "24 passed"
+  },
+  "equivalence_each_alone": {
+   "test_equivalence_run_pathway": "8 passed (r2); round 1 3 failed, rerun 8 passed; BASE tree 8898f58a also 3 failed with the same signature (LLM replay key asked 1 recorded 0) = the pre-existing flake L6 recorded; the file pins T2PW_FINAL_PAYLOAD=0 so L7 never runs in it",
+   "test_equivalence_app_vs_service": "14 passed",
+   "test_equivalence_default_path": "6 passed"
+  },
+  "also": "test_orch772_pwml_coverage 35 passed",
+  "expectations_changed": "none; no existing test edited",
+  "wrapper": "bounded_run.py via C:/t/corr-assess/lanes/L7scripts/gate.sh, heavy lock holder corr-l7, FINAL SURVIVING COUNT 0 every run"
+ },
+ "replay_proof": {
+  "script": "C:/t/corr-assess/lanes/L7scripts/dump_replay_l7.py (from L6's; A/B in one process: arm A = fill + L6 merge with L7 patched out, arm B = deep copy + L7; T2PW_FINAL_PAYLOAD_BUDGET_S=0 so offline: cached ids, no LLM -> steps 1 and 3 only)",
+  "table": "C:/t/corr-assess/lanes/L7_replay_table.json (per changed file: reactions by compartment_source, moved reactions, PWML tag counts A/B)",
+  "full_check": "C:/t/corr-assess/lanes/L7logs/check_ab_v2.json",
+  "totals": {
+   "files": 97,
+   "A_pwml": 97,
+   "B_pwml": 97,
+   "changed_pwml": 17,
+   "files_with_estimates": 30,
+   "reactions_moved": 67,
+   "transports_moved": 4,
+   "transport_sides_unresolved": 13,
+   "new_duplicate_pairs": 2,
+   "B_release_changed": 0,
+   "B_qa_errors_more": 0,
+   "reactions_stated": 306,
+   "reactions_unresolved": 76,
+   "reactions_neighbour_estimate": 10
+  },
+  "nothing_dropped": "97/97 export in both arms, release status unchanged in all 97, QA errors never up. PWML tag sums over 97 files A->B: reaction 377->377, transport 74->74, interaction 48->48, compound 687->687, protein 374->374, protein-complex 393->393, biological-state 234->241 (+7 general states), compound-location 867->869. Only count drop: idx 79 compound-location 7->6: lanosterol was drawn twice (placeholder box and ER box); CYP51A1 now sits in ER, so one node is shared; no element name lost (locs.py).",
+  "flag_off_identity": {
+   "v2": "97 identical / 0 different (r2_offcmp_v2.json)",
+   "v1": "97 identical / 0 different (r2_offcmp_v1.json)"
+  },
+  "reactions_by_source_97_files": {
+   "stated": 306,
+   "neighbour_estimate": 10,
+   "unresolved": 76
+  },
+  "affected_files": [
+   3,
+   6,
+   9,
+   10,
+   15,
+   18,
+   19,
+   37,
+   56,
+   62,
+   78,
+   79,
+   84,
+   86,
+   98,
+   113,
+   116,
+   119,
+   123,
+   124,
+   128,
+   134,
+   135,
+   136,
+   137,
+   138,
+   144,
+   148,
+   150,
+   151
+  ]
+ },
+ "regression_risk_named": {
+  "summary": "Offline (no LLM) step 3 moves 22 reactions OFF a stated non-placeholder row-0 state into the organism's general cell state (flagged). Most of those defaults were wrong per the assessment (116 ER, 134 mitochondrion for cytosolic steps), but some were right by accident and become vaguer: idx 134 'TML dioxygenase' (mitochondrial, Reactome R-HSA-71262), idx 86/98 'DHCR24' (ER), idx 6 three small-GTPase steps (plasma membrane), idx 124 two hordatine steps lose 'barley seedling', idx 119 two steps lose 'epidermal cell cytosol', idx 136 four Nicotiana steps (were 'cytosolic state'). Nothing is lost (same reactions, same participants, flagged review_required with the reason) but these are less specific. The live LLM step is the designed fix; its effect is unmeasured until the orchestrator runs it.",
+  "list": "C:/t/corr-assess/lanes/L7_replay_table.json files_with_any_change[].moved",
+  "status_r3": "RESOLVED by the deferral: none of the 22 moves at 4d747658; each is flagged unresolved/review_required in place"
+ },
+ "live_check_prepared_not_run": {
+  "script": "bash C:/t/corr-assess/lanes/L7scripts/run_live.sh C:/t/corr-L7 <label> live   (dry = count the request, no call)",
+  "what": "the 12 affected sample pathways (C:/t/corr-assess/lanes/L7scripts/idx12.txt); id fill offline (cached), then L7 with the real client explicitly (chat_detailed, the pipeline's own provider env; nothing reads or prints .env); bounded wrapper, heavy lock corr-l7, timeout 3600 s; replies cached in C:/t/corr-assess/lanes/L7live/llmcache (a rerun is free and deterministic); per idx arms/<idx>.json carries llm_calls (tokens, model, reply), the estimate report and both exports",
+  "check_after": "python check_l7.py C:/t/bt-corr/L7/live <label> <out.json>  (same A/B check; llm_estimate rows show quote)",
+  "cost_estimate": {
+   "calls": 6,
+   "of_12": "128, 9, 5, 78, 144, 12 need none (neighbours or nothing unstated in the replayed payloads); 116, 134, 135, 138, 148, 19 one call each",
+   "items": 41,
+   "input_chars": 314436,
+   "input_tokens_approx": "80k-90k (chars/3.5-4)",
+   "output_tokens": "expected 3k-5k, hard cap 6 x 4000 = 24k",
+   "usd_at_client_default_prices": "about 0.01-0.02 (LLM_COST_INPUT_PER_M 0.12, OUTPUT 0.30 defaults in llm/client.py; the real model's price from OPENROUTER_EXTRACTION_MODEL was not read)",
+   "wall": "6 sequential calls, typically 10-60 s each; bounded 3600 s",
+   "dry_run_log": "C:/t/corr-assess/lanes/L7logs/live_r2_dry.log"
+  },
+  "all_30_affected_idx": "C:/t/corr-assess/lanes/L7scripts/idx_affected.txt (point run_live.sh at it to cover the 22 reactions named under regression_risk_named)",
+  "cost_estimate_all_30_files": {
+   "dry_run": "run_live.sh ... r4_dry dry idx_affected.txt at 82f1347b (live script switches LLM_ESTIMATE on in its own process)",
+   "calls": 25,
+   "items": 88,
+   "input_chars": 1186503,
+   "input_tokens_approx": "300k-340k",
+   "output_tokens": "expected 6k-10k; hard cap 25 x 4000 = 100k",
+   "usd_at_client_default_prices": "about 0.04-0.07 (0.12 / 0.30 per M; the real model's price was not read)"
+  }
+ },
+ "open_issues": [
+  "Live LLM step still unmeasured: the provider the environment points at (a local LM Studio server) had no model loaded; every call returned HTTP 400 'No models loaded'. Rerun after a model is loaded.",
+  "idx 15: the pipeline's placeholder carries Arabidopsis thaliana (expression host) for a Paris polyphylla pathway; step 3 reuses it and names it 'Arabidopsis thaliana cell' (pre-existing species defect, now visible in the box name).",
+  "Transport sides: 13 flagged unresolved, none estimated offline (no cargo neighbours qualify); the both-sides-missing cases (138 TubI, 10/26 OTOP1/enterobactin) need the LLM.",
+  "ir.py not changed (proposed boundary refinement: not needed); reaction_evidence.py and clean_model/export/sbml.py changed outside the declared boundary because the brief requires the text record and SBML annotation.",
+  "Process slips: two shell commands in this lane started python with '-' (stdin) by mistake; both were stopped at once (TaskStop) and the process list showed no surviving python of mine.",
+  "idx 144 AmOMT2 sits in the ER state (pre-existing) and is now labelled neighbour_estimate; the paper does not support it (its microsomal evidence is for AmIFS).",
+  "With step 3 on, 2 new exact-duplicate pairs appeared (idx 6, 113); with it off there are none.",
+  "Steps 2 and 3 are both deferred: the 75 unresolved reactions stay in the IR's placeholder or first state, flagged review_required with that placement named; only the 10 neighbour estimates (1 move) act. To enable: load a provider model, run the live check (cost above), review the placements against the papers, re-run L6's reaction merge on moved rows (F2), then switch LLM_ESTIMATE (and later GENERAL_STATE_FALLBACK) on.",
+  "Review F5, F6 not addressed: text not received."
+ ],
+ "pids": "every test/replay ran under bounded_run.py (FINAL SURVIVING COUNT 0); after the work the only python.exe processes are VS Code's isort server (PIDs 212692, 212764), not mine",
+ "scripts": "C:/t/corr-assess/lanes/L7scripts/",
+ "logs": "C:/t/corr-assess/lanes/L7logs/",
+ "live_check_run": {
+  "record": "C:/t/corr-assess/lanes/L7_live.json",
+  "result": "0 successful calls, 0 tokens, $0; 25 requests refused (HTTP 400, LM Studio 'No models loaded'); 0 of 76 unresolved resolved; 22 moved reactions unchanged from offline; 0 validator rejections; cache empty, so the free-identical-second-run proof is not possible yet"
+ },
+ "ruling_r3": {
+  "from": "orchestrator (ab76046542b4609e1) under the PO's no-regression rule",
+  "change": "step 3 off by module constant GENERAL_STATE_FALLBACK = False (no env flag). Off: an unresolved reaction keeps its biological_state (the IR puts it in the referenced placeholder or the first listed state), compartment_source 'unresolved', review_required, review_reasons 'compartment_not_stated: left in '<state>' because no estimate was available; that placement is not evidence', compartment_estimate entry with placed_in. Steps 1, 2 and the transport-side handling unchanged. The step-3 code stays (general state, placeholder rename) and runs when the constant is True.",
+  "tests": "30 in tests/test_l7_estimate_compartments.py: the 7 step-3 tests run with the constant on (fixture general_on); 4 new tests pin the default off (constant is False; reaction keeps state + flag names where it lands; placeholder neither renamed nor silent; steps 1 and 2 still apply)"
+ },
+ "test_runs_r3": {
+  "all_on_committed_head": "4d747658, tree clean at every step (C:/t/corr-assess/lanes/L7logs/chain3.out)",
+  "before_base_8898f58a": {
+   "log": "C:/t/corr-assess/lanes/L7logs/r3_before.log",
+   "result": "1 error (collection: module absent)"
+  },
+  "before_module_without_hook_text_sbml": {
+   "log": "C:/t/corr-assess/lanes/L7logs/r3_before_nohook.log",
+   "result": "3 failed (seam, text record, SBML), 27 passed"
+  },
+  "before_previous_head_d01052cd": {
+   "log": "C:/t/corr-assess/lanes/L7logs/r3_before_prevhead.log",
+   "result": "3 failed (the default-off tests: constant absent, reaction moved to the general state, placeholder renamed), 7 errors (the step-3 tests: fixture sets a constant d01052cd does not have), 20 passed"
+  },
+  "after": {
+   "log": "C:/t/corr-assess/lanes/L7logs/r3_after.log",
+   "result": "30 passed"
+  },
+  "related_existing_files": {
+   "log": "C:/t/corr-assess/lanes/L7logs/r3_related.log",
+   "result": "425 passed, 1 skipped"
+  },
+  "smoke": {
+   "log": "C:/t/corr-assess/lanes/L7logs/r3_smoke.log",
+   "result": "511 passed"
+  },
+  "golden_seam_each_alone": {
+   "test_batch_driver_seam_golden": "2 passed",
+   "test_c011_freeze_seam_golden_equivalence": "8 passed",
+   "test_streamlit_stage8_export_contract": "4 passed",
+   "test_streamlit_quarantine_boundary": "24 passed"
+  },
+  "equivalence_each_alone": {
+   "test_equivalence_run_pathway": "8 passed",
+   "test_equivalence_app_vs_service": "first run 2 failed (signature 'LLM replay key asked 1 recorded 0' and 'unfrozen', the same flake family as run_pathway; conftest pins T2PW_FINAL_PAYLOAD=0 so L7 never runs there); rerun alone on 4d747658: 14 passed (r3_g_test_equivalence_app_vs_service_r2.log); base tree 8898f58a: 14 passed this time (base_g_test_equivalence_app_vs_service.log)",
+   "test_equivalence_default_path": "6 passed"
+  },
+  "also": "test_orch772_pwml_coverage 35 passed",
+  "expectations_changed": "none; no existing test edited",
+  "wrapper": "bounded_run.py via gate.sh, holder corr-l7, FINAL SURVIVING COUNT 0 every run"
+ },
+ "replay_proof_r3": {
+  "run": "replay r3_ab_v2 at 4d747658 (flag on, layout v2, offline: steps 1 and 3-deferred)",
+  "full_check": "C:/t/corr-assess/lanes/L7logs/check_r3_ab_v2.json",
+  "totals": {
+   "files": 97,
+   "A_pwml": 97,
+   "B_pwml": 97,
+   "changed_pwml": 1,
+   "files_with_estimates": 30,
+   "reactions_moved": 1,
+   "transports_moved": 0,
+   "transport_sides_unresolved": 13,
+   "new_duplicate_pairs": 0,
+   "B_release_changed": 0,
+   "B_qa_errors_more": 0,
+   "reactions_stated": 306,
+   "reactions_unresolved": 76,
+   "reactions_neighbour_estimate": 10
+  },
+  "reactions_by_source_97_files": {
+   "stated": 306,
+   "neighbour_estimate": 10,
+   "unresolved (kept + flagged)": 76
+  },
+  "moved": "1 reaction in 1 file: idx 79 'CYP51A1 (lanosterol 14alpha-demethylase) reaction' __auto_state__ -> 'endoplasmic reticulum state' (neighbour_estimate). PWML bytes change in that file only; the 76 flags live in the payload, the text record and the SBML, not in the PWML.",
+  "the_22": "none moves: every one of the 22 reactions listed under regression_risk_named keeps its first state (moved list of check_r3_ab_v2.json holds only idx 79)",
+  "nothing_dropped": "97/97 export both arms, release unchanged in 97, QA errors never up, no new duplicate pairs; reaction/transport/interaction/compound/protein counts equal. Only count change: idx 79 compound-location 7->6 (lanosterol was drawn in the placeholder box and in ER; now one node in ER; no element lost).",
+  "flag_off_identity": {
+   "v2": "97 identical / 0 different (r3_offcmp_v2.json)",
+   "v1": "97 identical / 0 different (r3_offcmp_v1.json)"
+  }
+ },
+ "neighbour_estimates_vs_paper": {
+  "evidence": "C:/t/corr-assess/lanes/L7logs/nb_paper_r2.json (step 1 is unchanged in 4d747658: the same 10 estimates)",
+  "correct_to_wrong": 0,
+  "rows": [
+   {
+    "idx": 9,
+    "reaction": "isochorismate to chorismate (MenF)",
+    "state": "L. lactis KF147 state",
+    "moved": false,
+    "paper": "no compartment stated for MenF; the only cell state of the organism; prokaryote cytoplasm. Not wrong."
+   },
+   {
+    "idx": 37,
+    "reaction": "CYP51A1 reaction",
+    "state": "endoplasmic reticulum state",
+    "moved": false,
+    "paper": "paper names no CYP51A1 location; ER via LSS ('This enzyme is mainly located in the endoplasmic reticulum', said of LSS); ER is CYP51A1's UniProt location. Right."
+   },
+   {
+    "idx": 37,
+    "reaction": "DHCR24 reaction",
+    "state": "endoplasmic reticulum state",
+    "moved": false,
+    "paper": "same paper; DHCR24 is an ER enzyme (UniProt). Right."
+   },
+   {
+    "idx": 78,
+    "reaction": "LDH reaction",
+    "state": "cytoplasm",
+    "moved": false,
+    "paper": "'LDH-catalyzed conversion of pyruvate to lactate is then monitored by loss of OD340': an in-vitro coupled assay, not pathway biology; no compartment in the paper. Placement meaningless, unchanged."
+   },
+   {
+    "idx": 79,
+    "reaction": "CYP51A1 (lanosterol 14alpha-demethylase) reaction",
+    "state": "endoplasmic reticulum state",
+    "moved": true,
+    "from": "__auto_state__ (cell, no compartment)",
+    "paper": "shares lanosterol with the LSS reaction the paper places in the ER ('The catalytic activity of LSS is essential ... This enzyme is mainly located in the endoplasmic reticulum'); CYP51A1 is ER-resident (UniProt). Vague -> right."
+   },
+   {
+    "idx": 86,
+    "reaction": "CYP51A1 reaction",
+    "state": "endoplasmic reticulum state",
+    "moved": false,
+    "paper": "as idx 37. Right."
+   },
+   {
+    "idx": 98,
+    "reaction": "CYP51A1 reaction",
+    "state": "endoplasmic reticulum in human osteosarcoma cells",
+    "moved": false,
+    "paper": "as idx 37. Right."
+   },
+   {
+    "idx": 128,
+    "reaction": "Cysteinopantetheine formation",
+    "state": "Bacillus subtilis cytoplasm",
+    "moved": false,
+    "paper": "'Cysteinopantetheine was obtained by overnight incubation of cysteine (5 mM) and pantetheine (500 uM) in water': a lab preparation; the paper adds 'Upon reduction in the cytoplasm, the pantetheine then seems to feed into the CoaA-dependent coenzyme A salvage'. Unchanged."
+   },
+   {
+    "idx": 144,
+    "reaction": "AmOMT2-catalyzed 4'-O-methylation of liquiritigenin",
+    "state": "endoplasmic reticulum of A. membranaceus",
+    "moved": false,
+    "paper": "DOUBTFUL, not a move: the paper's microsomal sentences are about AmIFS ('In vitro microsomal assays revealed that AmIFS exhibited higher catalytic activity toward liquiritigenin'); nothing places the O-methyltransferase AmOMT2 (plant OMTs are usually soluble). The ER placement predates L7; L7 now labels it neighbour_estimate with its evidence (shared liquiritigenin), which a reviewer can see."
+   },
+   {
+    "idx": 144,
+    "reaction": "isoflavone backbone formation",
+    "state": "endoplasmic reticulum of A. membranaceus",
+    "moved": false,
+    "paper": "isoflavone synthase (AmIFS, a P450) is microsomal per the paper. Right."
+   }
+  ]
+ },
+ "review_round_1": {
+  "verdict": "REJECT on 4d747658 (one blocker), relayed by the orchestrator; the reviewer's file was not found under C:/t/corr-assess/reviews",
+  "F1_blocking": "FIXED (90f17a6d): step 2 behind LLM_ESTIMATE = False (no call, no cached reply read, llm.skipped 'deferred'); test pins it off; fake-model tests switch it on (fixture llm_on); the live-check script (live_l7.py, built by mk_live.py) sets fpc.LLM_ESTIMATE = True in its own process only, the product never reads an override. _accept now also requires the quote to name the chosen place (any spelling of the state's location, or the new location) and one of the item's participants or enzymes (transport: cargo or transporters); test with both failure cases.",
+  "F3": "FIXED (90f17a6d): a provider failure puts only 'compartment_estimate_unavailable' on the rows (review reasons, compartment_estimate reason, so the text record and the SBML); the error text stays in the final-payload report with filesystem paths replaced by '<path>' (_redact). Test: an error naming C:\\...\\.env and /srv/app/.env leaves no provider text or path in the payload rows, the text record or the SBML.",
+  "F2": "RECORDED (no code): before LLM_ESTIMATE or GENERAL_STATE_FALLBACK is ever switched on, L6's reaction merge (final_payload_merge._merge_reactions, with its zero-loss guards) must re-run on the rows L7 moved; with step 3 on, the r2 replay showed 2 new exact-duplicate pairs (idx 6, 113) that L6, running before L7, cannot merge. With both steps off (now) there are none.",
+  "F5_F6": "NOT ADDRESSED: their text was not in the relay and no L7 review file exists; asked the orchestrator for them."
+ },
+ "test_runs_r4": {
+  "all_on_committed_head": "82f1347b (merge), tree clean at every step (C:/t/corr-assess/lanes/L7logs/chain4.out)",
+  "before_base_5c40e9f0": {
+   "log": "C:/t/corr-assess/lanes/L7logs/r4_before_base.log",
+   "result": "1 error (collection: module absent)"
+  },
+  "before_previous_head_4d747658": {
+   "log": "C:/t/corr-assess/lanes/L7logs/r4_before_prevhead.log",
+   "result": "1 failed (LLM step not off), 11 errors (fixture llm_on: constant absent), 21 passed"
+  },
+  "before_previous_head_4d747658_fixture_tolerant": {
+   "log": "C:/t/corr-assess/lanes/L7logs/r4_before_prevhead_tolerant.log",
+   "result": "4 failed (LLM off by default; provider text on rows; quote without a participant accepted; quote without the place accepted), 29 passed"
+  },
+  "after": {
+   "log": "C:/t/corr-assess/lanes/L7logs/r4_after.log",
+   "result": "33 passed"
+  },
+  "related_existing_files": {
+   "log": "C:/t/corr-assess/lanes/L7logs/r4_related.log",
+   "result": "454 passed, 1 skipped (the earlier list + test_l5_quarantine_keeps_reactions + test_l9b_issue_order)"
+  },
+  "smoke": {
+   "log": "C:/t/corr-assess/lanes/L7logs/r4_smoke.log",
+   "result": "511 passed"
+  },
+  "golden_seam_each_alone": {
+   "test_batch_driver_seam_golden": "2 passed",
+   "test_c011_freeze_seam_golden_equivalence": "8 passed",
+   "test_streamlit_stage8_export_contract": "4 passed",
+   "test_streamlit_quarantine_boundary": "24 passed"
+  },
+  "equivalence_each_alone": {
+   "test_equivalence_run_pathway": "8 passed",
+   "test_equivalence_app_vs_service": "14 passed",
+   "test_equivalence_default_path": "6 passed"
+  },
+  "also": "test_orch772_pwml_coverage 35 passed",
+  "expectations_changed": "none; no existing test edited",
+  "wrapper": "bounded_run.py via gate.sh, holder corr-l7, FINAL SURVIVING COUNT 0 every run"
+ },
+ "replay_proof_r4": {
+  "run": "replay r4_ab_v2 at 82f1347b (flag on, v2, offline; steps 2 and 3 off)",
+  "full_check": "C:/t/corr-assess/lanes/L7logs/check_r4_ab_v2.json",
+  "compare_with_r3": "C:/t/corr-assess/lanes/L7logs/cmp_r3_r4.json",
+  "totals": {
+   "files": 97,
+   "A_pwml": 97,
+   "B_pwml": 97,
+   "changed_pwml": 1,
+   "files_with_estimates": 30,
+   "reactions_moved": 1,
+   "transports_moved": 0,
+   "transport_sides_unresolved": 13,
+   "new_duplicate_pairs": 0,
+   "B_release_changed": 0,
+   "B_qa_errors_more": 0,
+   "reactions_stated": 306,
+   "reactions_unresolved": 75,
+   "reactions_neighbour_estimate": 10
+  },
+  "equals_r3": "96 of 97 files have the same L7 effect as r3 (sources, moved reactions and transports, drops, PWML-changed flag). The one difference is idx 113: 2 unresolved in r3, 1 now, because L5's change lets L6 merge 'C4H reaction' into 'C4H hydroxylation' (arm A, before L7: merge record now 2 rows, quarantined_locked_reactions 1 -> 2), so one fewer unstated row reaches L7. Not an L7 change.",
+  "moved": "1 reaction (idx 79 CYP51A1, __auto_state__ -> ER state, neighbour_estimate); none of the 22",
+  "nothing_dropped": "97/97 export both arms, release unchanged, QA errors never up, no new duplicate pairs; only idx 79 compound-location 7->6 (one shared lanosterol node, no element lost)",
+  "flag_off_identity_vs_5c40e9f0": {
+   "v2": "97 identical / 0 different (r4_offcmp_v2.json)",
+   "v1": "97 identical / 0 different (r4_offcmp_v1.json)"
+  }
+ }
+}

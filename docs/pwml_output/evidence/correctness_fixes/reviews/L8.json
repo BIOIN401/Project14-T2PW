@@ -1,0 +1,30 @@
+{
+ "lane": "L8",
+ "reviewer": "ws-reviewer opus/high",
+ "agent": "a4b5a8600872b38f9",
+ "reviewed_head": "1e81f352",
+ "verdict": "REJECT (7c)",
+ "findings": [
+  "F1 nil species-id for 9659 binds arbitrary one of 2195 Unknown proteins in production; empty DB fails validates :species",
+  "F2 check precision ~49% wrong overall (flags only)",
+  "F3 judge accepts short quotes",
+  "F4 7b also runs strict_db=False",
+  "F5 7b shape lacks unread fields; enzyme without identity and species still dropped",
+  "F6 9 test files edited (not 13), none weakened; stale test name; fail-first log stale",
+  "F7 9 of 10 no_defensible on negative controls; deviation justified",
+  "F8 nits",
+  "F9 merge with L7: evidence after estimate_compartments",
+  "F10 7b untested on real inputs (needs live A/B)"
+ ],
+ "round2": {
+  "head": "330113d2",
+  "verdict": "APPROVE WITH NITS",
+  "notes": [
+   "F2 writer silently writes nil species if lookup key unresolved: add QA warning",
+   "F3 lookup key saved only with species/organism name",
+   "F6 checks still noisy; must stay out of release status",
+   "F9 7b untested live; PathWhiz bind 9659 without species open; Arabidopsis states in 135/15 predate"
+  ],
+  "orchestrator_ruling": "no_defensible removals stay (status quo, 9/10 negative controls)"
+ }
+}

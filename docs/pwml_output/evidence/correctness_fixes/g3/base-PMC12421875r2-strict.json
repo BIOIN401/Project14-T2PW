@@ -1,0 +1,197 @@
+{
+ "arm": "base",
+ "leg": "base-PMC12421875r2-strict",
+ "paper": "PMC12421875",
+ "mode": "strict",
+ "run_dir": "C:\\t\\bt-corr\\g3\\legs\\base-PMC12421875r2-strict\\2026-11-17_1017",
+ "manifest": [
+  {
+   "slug": "PMC12421875",
+   "mode": "strict",
+   "status": "pass",
+   "stage": "pwml_export",
+   "seconds": 1314.24,
+   "failure_kind": "",
+   "message": "strict run completed; pathway.review_required.pwml is 131944 bytes"
+  }
+ ],
+ "wall_seconds": 1314.24,
+ "pwml_files": [
+  "pathway.review_required.pwml"
+ ],
+ "release_status": "review_required",
+ "export_status": "review_required",
+ "review_reasons": [],
+ "result_head": "RESULT: PASS (with warnings)\n========================================\npaper      : PMC12421875\ntitle      : (unknown)\nslug       : PMC12421875\nmode       : strict\nstatus     : pass\nstage      : pwml_export\nwall time  : 1314.2s (21m54s)\n\nWARNINGS\n----------------------------------------\n  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.\n  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.\n\nmessage    : strict run completed; pathway.review_required.pwml is 131944 bytes\n\nCOUNTS\n----------------------------------------\n  blocking_issues = 0\n  compounds = 14\n  entities = 35\n  gate_errors = 0\n  proteins = 8\n  pwml = {'compounds': 14, 'proteins': 8, 'reactions': 13, 'edges': 46}\n  pwml_bytes = 131944\n  reactions = 13\n  runtime_schema_findings = 2\n  stage0_observed_organisms = 1\n  stage0_observed_pathways = 1\n  trans",
+ "payload_counts": {
+  "reactions": 13,
+  "transports": 1,
+  "interactions": 1
+ },
+ "entity_counts": {
+  "species": 2,
+  "subcellular_locations": 2,
+  "compounds": 14,
+  "proteins": 8,
+  "protein_complexes": 9
+ },
+ "quarantined_locked_reactions": 1,
+ "pwml_bytes": 131944,
+ "pwml_tags": {
+  "reaction": 13,
+  "reaction-enzyme": 13,
+  "protein-complex": 9,
+  "protein": 8,
+  "compound": 14,
+  "transport": 1,
+  "interaction": 1,
+  "compound-location": 27,
+  "protein-complex-location": 0,
+  "biological-state": 6,
+  "element-collection": 0
+ },
+ "model_attempts_by_stage": {
+  "preprocessor": 9,
+  "Stage 1 extraction": 6,
+  "rag_prose_extraction": 24,
+  "Stage 2 inference": 4,
+  "audit loop": 3,
+  "gap resolver": 6
+ },
+ "model_attempts_total": 52,
+ "token_totals": {},
+ "model_attempt_keys": [
+  "attempt",
+  "content_chars",
+  "elapsed_seconds",
+  "finish_reason",
+  "kind",
+  "model",
+  "reason",
+  "request_hash",
+  "response_hash",
+  "seq",
+  "stage",
+  "status"
+ ],
+ "acceptance_keys": [
+  "acceptance_priorities",
+  "blockers_by_scope",
+  "completion",
+  "coverage_reconciliation_corpus",
+  "denominators",
+  "gold_set",
+  "identity",
+  "legs_attempted",
+  "legs_scored",
+  "negative_control_outcomes",
+  "notes",
+  "papers",
+  "research_failures_by_cause",
+  "run_dir",
+  "scientific_errors",
+  "strict_failures_by_boundary"
+ ],
+ "eval_v2": {
+  "retained_reactions": 13,
+  "unique_reactions": 13,
+  "duplicate_rows_collapsed": 0,
+  "row_classes": {
+   "target_paper_supported": 12,
+   "paper_stated_off_pathway": 0,
+   "paper_stated_summary": 1,
+   "name_conflict": 0,
+   "partial_match": 0,
+   "external_rag_supported": 0,
+   "indeterminate_external": 0,
+   "unsupported": 0
+  },
+  "table1_paper_extraction": {
+   "rows_claimed_as_paper_extraction": 13,
+   "true_positive_rows": 12,
+   "gold_reactions": 9,
+   "gold_reactions_matched": [
+    "R1",
+    "R2",
+    "R3",
+    "R4",
+    "R5",
+    "R6",
+    "R7",
+    "R8",
+    "R9"
+   ],
+   "precision": 0.9231,
+   "recall": 1.0,
+   "f1": 0.96
+  },
+  "table2_final_support": {
+   "retained_unique": 13,
+   "unsupported": 0,
+   "unsupported_rate": 0.0,
+   "indeterminate_external": 0,
+   "unsupported_rate_upper_bound": 0.0,
+   "external_rag_supported": 0,
+   "paper_stated_off_pathway": 0,
+   "off_pathway_rate": 0.0,
+   "paper_stated_summary": 1,
+   "partial_match": 0,
+   "name_conflict": 0
+  },
+  "name_conflicts_for_hand_review": [],
+  "entity_accuracy": {
+   "substrate_accuracy": 1.0,
+   "substrate_hits": 10,
+   "substrate_total": 10,
+   "product_accuracy": 1.0,
+   "product_hits": 9,
+   "product_total": 9,
+   "enzyme_accuracy": 1.0,
+   "enzyme_verdicts": {
+    "correct": 9
+   },
+   "species_accuracy": 1.0,
+   "species_verdicts": {
+    "correct": 12,
+    "unknown": 1
+   }
+  },
+  "minor_cofactors_missing_on_matched_reactions": [],
+  "evidence": {
+   "evidence_support_rate": 0.5385,
+   "evidence_support_rate_on_true_positives": 0.5833,
+   "verdicts": {
+    "verbatim_in_paper": 7,
+    "dump_only": 6
+   },
+   "paper_text_available": true
+  },
+  "old_lenient_matcher_same_rows": {
+   "matched_rows": 12,
+   "gold_reactions_matched": [
+    "R1",
+    "R2",
+    "R3",
+    "R4",
+    "R5",
+    "R6",
+    "R7",
+    "R8",
+    "R9"
+   ],
+   "recall": 1.0,
+   "rows_where_old_and_v2_disagree": []
+  }
+ },
+ "eval_v2_gold_reactions": [
+  "R1",
+  "R2",
+  "R3",
+  "R4",
+  "R5",
+  "R6",
+  "R7",
+  "R8",
+  "R9"
+ ]
+}

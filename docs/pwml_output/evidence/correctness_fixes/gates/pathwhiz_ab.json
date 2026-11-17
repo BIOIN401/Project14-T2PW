@@ -1,0 +1,503 @@
+{
+ "totals_before": {
+  "files": 97,
+  "success": 97,
+  "no_errors": 74,
+  "error_messages": 84,
+  "sbml_ok": 97,
+  "sbgn_ok": 97,
+  "pwml_ok": 97,
+  "screenshots": 26,
+  "created_vs_expected": {
+   "reactions": {
+    "created": 388,
+    "expected": 409
+   },
+   "reaction_elements": {
+    "created": 988,
+    "expected": null
+   },
+   "enzymes": {
+    "created": 450,
+    "expected": null
+   },
+   "compounds": {
+    "created": 681,
+    "expected": 687
+   },
+   "proteins": {
+    "created": 333,
+    "expected": 374
+   },
+   "complexes": {
+    "created": 389,
+    "expected": 393
+   },
+   "locations": {
+    "created": 1704,
+    "expected": 1705
+   },
+   "transports": {
+    "created": 66,
+    "expected": 74
+   },
+   "interactions": {
+    "created": 18,
+    "expected": 23
+   }
+  },
+  "interaction_types": {
+   "Inhibition": 12,
+   "Activation": 6
+  }
+ },
+ "totals_after": {
+  "files": 97,
+  "success": 97,
+  "no_errors": 74,
+  "error_messages": 82,
+  "sbml_ok": 97,
+  "sbgn_ok": 97,
+  "pwml_ok": 97,
+  "screenshots": 26,
+  "created_vs_expected": {
+   "reactions": {
+    "created": 378,
+    "expected": 381
+   },
+   "reaction_elements": {
+    "created": 963,
+    "expected": null
+   },
+   "enzymes": {
+    "created": 426,
+    "expected": null
+   },
+   "compounds": {
+    "created": 685,
+    "expected": 691
+   },
+   "proteins": {
+    "created": 335,
+    "expected": 376
+   },
+   "complexes": {
+    "created": 393,
+    "expected": 397
+   },
+   "locations": {
+    "created": 1416,
+    "expected": 1417
+   },
+   "transports": {
+    "created": 65,
+    "expected": 74
+   },
+   "interactions": {
+    "created": 44,
+    "expected": 49
+   }
+  },
+  "interaction_types": {
+   "Activation": 19,
+   "Inhibition": 18,
+   "Unspecified": 3,
+   "Binding": 4
+  }
+ },
+ "files": [
+  97,
+  97
+ ],
+ "import_success": [
+  97,
+  97
+ ],
+ "no_errors": [
+  74,
+  74
+ ],
+ "error_messages": [
+  84,
+  82
+ ],
+ "errors_before": {
+  "by_message": {
+   "Ontology can't be blank": 21,
+   "Ontology is invalid": 21,
+   "Nucleotide type can't be blank": 9,
+   "Nucleotide type is not included in the list": 9,
+   "Transport can't be blank": 7,
+   "Biological state must have unique biological states": 6,
+   "Transport elements is too short (minimum is N character)": 6,
+   "Nucleic acid can't be blank": 5,
+   "Transport transporter can't be blank": 5,
+   "Element can't be blank": 4,
+   "Interaction can't be blank": 4,
+   "Interaction right elements is the wrong length (should be N character)": 3,
+   "Nucleic acid location can't be blank": 3,
+   "Protein complex can't be blank": 3,
+   "Protein complex proteins is too short (minimum is N character)": 2,
+   "Protein complex visualization can't be blank": 1,
+   "Interaction left elements is the wrong length (should be N character)": 1,
+   "Transport can't contain duplicate elements": 1,
+   "Pwc has already been taken": 1,
+   "Compound can't be blank": 1,
+   "Compound location can't be blank": 1
+  },
+  "by_element_type": {
+   "subcellular_location": 32,
+   "nucleic_acid": 18,
+   "cell_type": 8,
+   "transport": 7,
+   "transport_visualization": 7,
+   "transport_element": 6,
+   "nucleic_acid_location": 5,
+   "transport_transporter_visualization": 5,
+   "interaction": 4,
+   "interaction_visualization": 4,
+   "interaction_right_element": 3,
+   "interaction_nucleic_acid_visualization": 3,
+   "protein_complex_visualization": 3,
+   "protein_complex": 2,
+   "tissue": 2,
+   "interaction_protein_complex_visualization": 1,
+   "interaction_left_element": 1,
+   "compound": 1,
+   "compound_location": 1,
+   "reaction_compound_visualization": 1
+  }
+ },
+ "errors_after": {
+  "by_message": {
+   "Ontology can't be blank": 19,
+   "Ontology is invalid": 19,
+   "Nucleotide type can't be blank": 9,
+   "Nucleotide type is not included in the list": 9,
+   "Transport can't be blank": 7,
+   "Biological state must have unique biological states": 6,
+   "Transport elements is too short (minimum is N character)": 6,
+   "Nucleic acid can't be blank": 5,
+   "Transport transporter can't be blank": 5,
+   "Element can't be blank": 4,
+   "Interaction can't be blank": 4,
+   "Interaction right elements is the wrong length (should be N character)": 3,
+   "Nucleic acid location can't be blank": 3,
+   "Protein complex can't be blank": 3,
+   "Protein complex proteins is too short (minimum is N character)": 2,
+   "Protein complex visualization can't be blank": 1,
+   "Interaction left elements is the wrong length (should be N character)": 1,
+   "Transport can't contain duplicate elements": 1,
+   "Pwc has already been taken": 1,
+   "Compound can't be blank": 1,
+   "Compound location can't be blank": 1
+  },
+  "by_element_type": {
+   "subcellular_location": 32,
+   "nucleic_acid": 18,
+   "transport": 7,
+   "transport_visualization": 7,
+   "transport_element": 6,
+   "nucleic_acid_location": 5,
+   "transport_transporter_visualization": 5,
+   "cell_type": 4,
+   "interaction": 4,
+   "interaction_visualization": 4,
+   "interaction_right_element": 3,
+   "interaction_nucleic_acid_visualization": 3,
+   "protein_complex_visualization": 3,
+   "protein_complex": 2,
+   "tissue": 2,
+   "interaction_protein_complex_visualization": 1,
+   "interaction_left_element": 1,
+   "compound": 1,
+   "compound_location": 1,
+   "reaction_compound_visualization": 1
+  }
+ },
+ "fewer": [
+  {
+   "idx": 7,
+   "type": "reactions",
+   "created": [
+    23,
+    21
+   ],
+   "expected": [
+    23,
+    21
+   ],
+   "pwml_count": [
+    23,
+    21
+   ],
+   "errors": [
+    19,
+    19
+   ],
+   "why": "PWML itself has fewer reactions after (23 -> 21): L6 merge/dedup, not an import loss"
+  },
+  {
+   "idx": 9,
+   "type": "reactions",
+   "created": [
+    11,
+    10
+   ],
+   "expected": [
+    19,
+    10
+   ],
+   "pwml_count": [
+    19,
+    10
+   ],
+   "errors": [
+    0,
+    0
+   ],
+   "why": "PWML itself has fewer reactions after (19 -> 10): L6 merge/dedup, not an import loss"
+  },
+  {
+   "idx": 9,
+   "type": "transports",
+   "created": [
+    2,
+    1
+   ],
+   "expected": [
+    2,
+    2
+   ],
+   "pwml_count": [
+    2,
+    2
+   ],
+   "errors": [
+    0,
+    0
+   ],
+   "why": "PWML count unchanged but the importer created fewer than expected: PathWhiz rejection"
+  },
+  {
+   "idx": 12,
+   "type": "reactions",
+   "created": [
+    5,
+    2
+   ],
+   "expected": [
+    5,
+    2
+   ],
+   "pwml_count": [
+    5,
+    2
+   ],
+   "errors": [
+    0,
+    0
+   ],
+   "why": "PWML itself has fewer reactions after (5 -> 2): L6 merge/dedup, not an import loss"
+  },
+  {
+   "idx": 120,
+   "type": "reactions",
+   "created": [
+    7,
+    4
+   ],
+   "expected": [
+    7,
+    4
+   ],
+   "pwml_count": [
+    7,
+    4
+   ],
+   "errors": [
+    0,
+    0
+   ],
+   "why": "PWML itself has fewer reactions after (7 -> 4): L6 merge/dedup, not an import loss"
+  },
+  {
+   "idx": 125,
+   "type": "reactions",
+   "created": [
+    8,
+    7
+   ],
+   "expected": [
+    8,
+    7
+   ],
+   "pwml_count": [
+    8,
+    7
+   ],
+   "errors": [
+    1,
+    1
+   ],
+   "why": "PWML itself has fewer reactions after (8 -> 7): L6 merge/dedup, not an import loss"
+  },
+  {
+   "idx": 126,
+   "type": "reactions",
+   "created": [
+    5,
+    4
+   ],
+   "expected": [
+    5,
+    4
+   ],
+   "pwml_count": [
+    5,
+    4
+   ],
+   "errors": [
+    0,
+    0
+   ],
+   "why": "PWML itself has fewer reactions after (5 -> 4): L6 merge/dedup, not an import loss"
+  },
+  {
+   "idx": 133,
+   "type": "reactions",
+   "created": [
+    5,
+    4
+   ],
+   "expected": [
+    5,
+    4
+   ],
+   "pwml_count": [
+    5,
+    4
+   ],
+   "errors": [
+    0,
+    0
+   ],
+   "why": "PWML itself has fewer reactions after (5 -> 4): L6 merge/dedup, not an import loss"
+  },
+  {
+   "idx": 134,
+   "type": "reactions",
+   "created": [
+    9,
+    7
+   ],
+   "expected": [
+    10,
+    8
+   ],
+   "pwml_count": [
+    10,
+    8
+   ],
+   "errors": [
+    0,
+    0
+   ],
+   "why": "PWML itself has fewer reactions after (10 -> 8): L6 merge/dedup, not an import loss"
+  }
+ ],
+ "created_ratio": {
+  "reactions": {
+   "before": {
+    "created": 388,
+    "expected": 409
+   },
+   "after": {
+    "created": 378,
+    "expected": 381
+   }
+  },
+  "reaction_elements": {
+   "before": {
+    "created": 988,
+    "expected": null
+   },
+   "after": {
+    "created": 963,
+    "expected": null
+   }
+  },
+  "enzymes": {
+   "before": {
+    "created": 450,
+    "expected": null
+   },
+   "after": {
+    "created": 426,
+    "expected": null
+   }
+  },
+  "compounds": {
+   "before": {
+    "created": 681,
+    "expected": 687
+   },
+   "after": {
+    "created": 685,
+    "expected": 691
+   }
+  },
+  "proteins": {
+   "before": {
+    "created": 333,
+    "expected": 374
+   },
+   "after": {
+    "created": 335,
+    "expected": 376
+   }
+  },
+  "complexes": {
+   "before": {
+    "created": 389,
+    "expected": 393
+   },
+   "after": {
+    "created": 393,
+    "expected": 397
+   }
+  },
+  "locations": {
+   "before": {
+    "created": 1704,
+    "expected": 1705
+   },
+   "after": {
+    "created": 1416,
+    "expected": 1417
+   }
+  },
+  "transports": {
+   "before": {
+    "created": 66,
+    "expected": 74
+   },
+   "after": {
+    "created": 65,
+    "expected": 74
+   }
+  },
+  "interactions": {
+   "before": {
+    "created": 18,
+    "expected": 23
+   },
+   "after": {
+    "created": 44,
+    "expected": 49
+   }
+  }
+ },
+ "fewer_unexplained": [],
+ "more_errors_files": []
+}

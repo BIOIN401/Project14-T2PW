@@ -1,0 +1,22 @@
+{
+ "lane": "L2", "branch": "corr/L2-writer-small", "reviewed_head": "2d225cc3f2eae96456bacc489c4f03a67bcf8516", "base": "pwml/correctness 12c99a00",
+ "verdict": "APPROVE WITH NITS",
+ "gates": {"boundary": "pass (layout.py, writer.py, 2 new tests)", "v1_byte_identical": "pass (sha256: 96/97 identical, 134 differs only by id renumbering; ids masked = identical)", "tests": "pass (43 focused, SMOKE 511 by implementer; reviewer: golden 38 = 10+4+24 passed, test_equivalence_default_path 6 passed alone, 0 survivors, logs C:/t/corr-assess/reviews/L2logs/)", "no_content_loss": "pass (v2: 71 identical, 25 geometry/labels only, 134 ids; counts equal)", "secrets_cache": "pass", "worktree_clean": "pass"},
+ "verified": [
+  "F2 root cause confirmed: unresolved species falls to self.ids (aux counter from 1), Homo sapiens DB id 1 -> both id 1. PathWhiz keys @species_list by xml id (lib/pwml_parser.rb store_object hash[id]; add_content remaps species-id through it), so the later record won.",
+  "Skipping ids is safe for PathWhiz: xml ids are document-local (add_content skips the id node; DB rows found by taxonomy_id/attributes). All references go through remember()/lookup(), so shifts stay consistent. 134: species-id refs 10x1 + 1x4 unchanged; Mus musculus now 2; no reference pointed to it.",
+  "F10 runs only under v2: writer.py build() calls relayout only when layout_version()==v2. _label_lines refactor is count-equivalent. No new_id() call after the label loop, so extra labels shift no other ids.",
+  "Stacked labels are ordinary label-location elements (template 235, unique ids, same fields as before); step 68 = one-line rect (15+16)*2 + 6 gap, matching simple_label.jst.eco. Verdana widths spot-checked against verdana.ttf (a 600, m 974, space 352).",
+  "Spot checks: 17.pwml astrocyte cytosol (human CNS) -> two labels, box and contents +36, nothing else; 134.pwml v1 identical after masking ids.",
+  "New tests fail on base by reading: Mus musculus draws counter 1 = Species 1; base relayout emits one label Bacillus subtilis cytoplasm; label_parts absent."
+ ],
+ "findings": [
+  {"id": "N1", "severity": "note (recommended follow-up)", "where": "src/t2pw/pwml/writer.py:1075-1091 (id_for, document_id_for)", "what": "Fix is species-only. Same collision class is latent for every other caller: cell types (:1143), subcellular locations (:1189), tissues (:1207), element collections (:1325), nucleic acids (:1354) share the aux counter from 1 with DB ids; compounds/proteins/complexes fall back to counters from 20000/30000/40000 that can equal a real PathBank id. PathWhiz keys each type by xml id, so a collision would silently re-point references. 0 observed in 97 replays (location ids 1-11, cell types 1-3, tissues 3-13, nucleic acids 8-35, all counter-made).", "fix": "one per-namespace taken-set guard inside id_for/document_id_for instead of the species-local loop"},
+  {"id": "N2", "severity": "nit", "where": "src/t2pw/pwml/layout.py:91", "what": "Join test checks drawn width only. A part under 180 units but over 28 chars (only with very narrow glyphs) would be re-wrapped by PathWhiz to 2 lines and overlap the next stacked label (step is one line). Unreachable on the 97 replays.", "fix": "also break when len(cur + space + w) > LABEL_TEXT_LENGTH"},
+  {"id": "N3", "severity": "nit (evidence)", "where": "C:/t/corr-assess/lanes/L2logs/before.log", "what": "Failing-first run was on earlier versions of the species test (fixture ids) and label test 1 (failed on a test bug, KeyError). Final versions fail on base by reading only; no run shows it."},
+  {"id": "N4", "severity": "nit (report)", "where": "C:/t/corr-assess/lanes/L2scripts/labels_check.py:11", "what": "Before/after count (17 labels in 13 files) uses a 200-unit threshold; the fix splits at 180, which is why 25 files change. Not wrong, but the report should say so."},
+  {"id": "N5", "severity": "note", "where": "src/t2pw/pwml/layout.py:715", "what": "Stacked pieces are independent objects in the PathWhiz editor (moving one leaves the other). Cosmetic; acceptable."}
+ ],
+ "open_carried": ["idx 114 two species records with the same PathBank id 257 and taxonomy 1280 (write once?)", "5 compound id duplicates (F11)", "fit-to-window scale in 5 pathways (F3/F4)"],
+ "reviewer_runs": {"eqv": "6 passed, 0 survivors", "golden_batch_c011": "10 passed", "streamlit_stage8": "4 passed", "streamlit_quarantine": "24 passed", "lock": "corr-l2rev acquired and released; heavylock absent after", "pids": "none of mine survive"}
+}

@@ -154,6 +154,15 @@ def _states(result) -> dict:
     return result.states()
 
 
+def _dropped_actor(result, process: str, actor: str) -> dict:
+    """D-W24 3 / L5: the removed-entity record of an actor a kept reaction lost."""
+    return next(
+        row for row in result.removed_entity_report["removed_entities"]
+        if row["bucket"] in ("enzymes", "modifiers") and row["name"] == actor
+        and row["detail"]["actor_removed_from"][0]["process_name"] == process
+    )
+
+
 # ── 1. A bad peripheral reaction leaves; the core survives ──────────────────
 
 
@@ -265,14 +274,14 @@ def test_a_protein_without_external_identity_quarantines_the_reaction_not_the_en
     )
 
     result = quarantine_and_close(payload, strict_db=True)
-    record = next(
-        row for row in result.quarantine_report["quarantined"] if row["name"] == "glutathione oxidation"
-    )
-
-    assert record["state"] == QUARANTINED_UNMAPPED_ENTITY
-    assert record["reason"] == "protein_missing_external_identity"
-    # The enzyme row is still in the retained original, untouched.
-    assert record["original_process"]["enzymes"] == [{"entity": "unmapped oxidase"}]
+    # D-W24 3 / L5: the reaction stays. D-W24 7b / L8: so does its enzyme, as the Unknown-backed placeholder
+    # complex of the same name (was: the enzyme left, protein_missing_external_identity).
+    assert _states(result)["glutathione oxidation"] in {CORE_ACCEPTED, AUXILIARY_ACCEPTED}
+    (oxidation,) = [r for r in result.payload["processes"]["reactions"] if r["name"] == "glutathione oxidation"]
+    assert [(a["entity"], a["entity_type"]) for a in oxidation["enzymes"]] == [("unmapped oxidase", "protein_complex")]
+    (placeholder,) = [c for c in result.payload["entities"]["protein_complexes"] if c["name"] == "unmapped oxidase"]
+    assert [c["pathbank_protein_id"] for c in placeholder["components"]] == [9659]
+    assert "placeholder_enzyme_without_identity:1" in result.quarantine_report["review_reasons"]
 
     # strict_db=False is the DB-less run, where the identity rule does not apply
     # and the same reaction must be admitted.
@@ -474,8 +483,9 @@ def test_components_of_a_surviving_complex_are_preserved_even_at_degree_zero() -
 
     # Neither component appears in any reaction; the complex carries the edge.
     assert {"GCLC", "GCLM"} <= proteins
+    # D-W24 3 / L5: the base payload's bare enzyme 'glutathione synthetase' takes its single-protein wrapper.
     assert [row["name"] for row in result.payload["entities"]["protein_complexes"]] == [
-        "glutamate-cysteine ligase complex"
+        "glutamate-cysteine ligase complex", "glutathione synthetase complex"
     ]
     assert result.quarantine_report["strict_invariants"]["degree_zero_exports"] == []
 
@@ -498,7 +508,10 @@ def test_components_go_when_the_complex_that_preserved_them_goes() -> None:
     removed = {row["name"] for row in result.removed_entity_report["removed_entities"]}
 
     assert removed == {"orphan complex", "orphan subunit"}
-    assert result.payload["entities"]["protein_complexes"] == []
+    # D-W24 3 / L5: only the base payload's two bare enzymes' wrappers remain; the orphan complex is gone.
+    assert [row["name"] for row in result.payload["entities"]["protein_complexes"]] == [
+        "glutamate-cysteine ligase complex", "glutathione synthetase complex"
+    ]
 
 
 # ── 5. Unknown-backed functional complexes are valid ────────────────────────
@@ -560,8 +573,9 @@ def test_unknown_backed_functional_complex_survives_quarantine() -> None:
     result = quarantine_and_close(_unknown_backed_payload(), strict_db=True)
 
     assert _states(result)["glutathione hydrolysis"] in {CORE_ACCEPTED, AUXILIARY_ACCEPTED}
+    # D-W24 3 / L5: plus the wrappers of the base payload's two bare enzymes.
     assert [row["name"] for row in result.payload["entities"]["protein_complexes"]] == [
-        "glutathione hydrolase"
+        "glutathione hydrolase", "glutamate-cysteine ligase complex", "glutathione synthetase complex"
     ]
     assert "Unknown" in {row["name"] for row in result.payload["entities"]["proteins"]}
     assert result.quarantine_report["counts"][QUARANTINED_UNMAPPED_ENTITY] == 0
@@ -576,11 +590,9 @@ def test_a_placeholder_shipping_a_real_accession_is_still_quarantined() -> None:
     unknown["mapped_ids"]["uniprot"] = "P19440"
 
     result = quarantine_and_close(payload, strict_db=True)
-    record = next(
-        row for row in result.quarantine_report["quarantined"] if row["name"] == "glutathione hydrolysis"
-    )
-
-    assert record["state"] == QUARANTINED_UNMAPPED_ENTITY
+    # D-W24 3 / L5: the reaction stays; the forged placeholder complex leaves it.
+    assert _states(result)["glutathione hydrolysis"] in {CORE_ACCEPTED, AUXILIARY_ACCEPTED}
+    record = _dropped_actor(result, "glutathione hydrolysis", "glutathione hydrolase")
     assert "malformed_placeholder" in record["reason"]
 
 
@@ -591,11 +603,9 @@ def test_a_complex_whose_component_is_undeclared_is_a_broken_reference() -> None
     ]
 
     result = quarantine_and_close(payload, strict_db=True)
-    record = next(
-        row for row in result.quarantine_report["quarantined"] if row["name"] == "glutathione hydrolysis"
-    )
-
-    assert record["state"] == QUARANTINED_UNMAPPED_ENTITY
+    # D-W24 3 / L5: the reaction stays; the complex with the undeclared component leaves it.
+    assert _states(result)["glutathione hydrolysis"] in {CORE_ACCEPTED, AUXILIARY_ACCEPTED}
+    record = _dropped_actor(result, "glutathione hydrolysis", "glutathione hydrolase")
     assert record["reason"].startswith("protein_complex_component_unresolved")
 
 
@@ -811,11 +821,9 @@ def test_an_ambiguous_entity_name_quarantines_the_processes_that_reference_it() 
     )
 
     result = quarantine_and_close(payload, strict_db=True)
-    record = next(
-        row for row in result.quarantine_report["quarantined"] if row["name"] == "glutathione synthesis"
-    )
-
-    assert record["state"] == QUARANTINED_BROKEN_REFERENCE
+    # D-W24 3 / L5: the reaction stays; only the ambiguous enzyme reference leaves it.
+    assert _states(result)["glutathione synthesis"] in {CORE_ACCEPTED, AUXILIARY_ACCEPTED}
+    record = _dropped_actor(result, "glutathione synthesis", "glutathione synthetase")
     assert record["reason"] == "ambiguous_entity_type:protein_complexes+proteins"
     # Both declarations then fall out as unreferenced, so the closed graph is
     # unambiguous rather than merely un-exported.
@@ -917,7 +925,7 @@ def test_all_four_artifacts_are_written_even_when_nothing_was_quarantined(tmp_pa
     # ``test_strict_quarantine_release_seam.py:699``. There are TWO pins of this
     # one fact, and this is the second; C-056b moved this same line for its own
     # 4 -> 5 bump (``8eee549``). The record was incomplete, not wrong.
-    assert quarantine["schema_version"] == 6
+    assert quarantine["schema_version"] == 7  # L5 review F7: + enzyme_wrappers (additive)
     assert quarantine["counts"][CORE_ACCEPTED] == 2
     assert quarantine["quarantined"] == []
 

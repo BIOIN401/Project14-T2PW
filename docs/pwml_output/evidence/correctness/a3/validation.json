@@ -1,0 +1,202 @@
+{
+ "tools": {
+  "python": "3.13.6 (C:/t/fmt-venv)",
+  "python-libsbml": "5.21.2",
+  "libsbgnpy": "0.7.2 (XSD SBGN-ML 0.3 + schematron pd/er/af + spec rules)",
+  "lxml": "6.1.3",
+  "momapy": "0.16.1 (skia renderer; readers sbgnml-0.2/0.3, sbml, celldesigner)",
+  "sbmlnetwork": "0.5.12 (libsbmlnetwork 0.5.12, networkinfotranslator 0.5.12; autolayout + draw)",
+  "skia-python": "144.1",
+  "ipython": "needed by sbmlnetwork.draw"
+ },
+ "sbml": {
+  "ours": {
+   "files": 26,
+   "level_version": [
+    "3v2"
+   ],
+   "errors": 0,
+   "warnings": 2293,
+   "by_category": [
+    {
+     "severity": "warning",
+     "category": "units",
+     "id": 99508,
+     "message": "Unable to verify consistency of units: encountered a model entity with no declared units",
+     "count": 799,
+     "files": 26,
+     "example": "In situations where a mathematical expression refers to a compartment, species or parameter, it is necessary to know the units of the object to establish unit consistency. In models where the units of"
+    },
+    {
+     "severity": "warning",
+     "category": "units",
+     "id": 20616,
+     "message": "No substance units defined for the species",
+     "count": 695,
+     "files": 26,
+     "example": "If the attribute 'substanceUnits' in a Species object has not been set, then the unit of measurement associated with the species' quantity is determined by the value of the enclosing Model object's 's"
+    },
+    {
+     "severity": "warning",
+     "category": "modeling_practice",
+     "id": 80601,
+     "message": "It's best to define an initial amount or initial concentration for every species in a mode",
+     "count": 695,
+     "files": 26,
+     "example": "As a principle of best modeling practice, the <species> should set an initial value (amount or concentration) rather than be left undefined. Doing so improves the portability of models between differe"
+    },
+    {
+     "severity": "warning",
+     "category": "units",
+     "id": 20518,
+     "message": "No units defined for Compartment object",
+     "count": 104,
+     "files": 26,
+     "example": "If neither the attribute 'units' nor the attribute 'spatialDimensions' on a Compartment object is set, the unit associated with that compartment's size is undefined. Reference: L3V2 Section 4.5.4  The"
+    }
+   ],
+   "note": "warnings are deliberate: no initial amount (80601), no units (20616, 20518, 99508); 0 errors in 26/26"
+  },
+  "pathwhiz": {
+   "files": 26,
+   "level_version": [
+    "3v1"
+   ],
+   "errors": 0,
+   "warnings": 137,
+   "by_category": [
+    {
+     "severity": "warning",
+     "category": "units",
+     "id": 99508,
+     "message": "Unable to verify consistency of units: encountered a model entity with no declared units",
+     "count": 63,
+     "files": 26,
+     "example": "In situations where a mathematical expression refers to a compartment, species or parameter, it is necessary to know the units of the object to establish unit consistency. In models where the units of"
+    },
+    {
+     "severity": "warning",
+     "category": "units",
+     "id": 20518,
+     "message": "No units defined for Compartment object",
+     "count": 63,
+     "files": 26,
+     "example": "If neither the attribute 'units' nor the attribute 'spatialDimensions' on a Compartment object is set, the unit associated with that compartment's size is undefined. Reference: L3V1 Section 4.5  The <"
+    },
+    {
+     "severity": "warning",
+     "category": "sbo",
+     "id": 10708,
+     "message": "Invalid 'sboTerm' attribute value for a SpeciesReference object",
+     "count": 11,
+     "files": 3,
+     "example": "The value of the 'sboTerm' attribute on a <speciesReference> or <modifierSpeciesReference> is expected to be an SBO identifier (http://www.biomodels.net/SBO/) referring to a participant role. The appr"
+    }
+   ],
+   "note": "0 errors; 11 invalid sboTerm on speciesReference in 3 files (7,9,150); PathWhiz writes initialAmount=1 on all 529 species so 80601 does not fire"
+  }
+ },
+ "sbgn": {
+  "files_validated": 25,
+  "file_missing_or_failed": [
+   "58"
+  ],
+  "format_note": "PathWhiz writes SBGN-ML 0.2 (language process description); libsbgnpy upconverts to 0.3 before XSD validation",
+  "xsd_errors_total": 45,
+  "xsd_map_id_missing_files": 25,
+  "xsd_other_examples": [],
+  "momapy_load": "25/25 load with reader sbgnml-0.2 and render to PNG",
+  "schematron_rule_totals": [
+   {
+    "rule": "pd10102",
+    "message": "Arc with class consumption must have target reference to port on glyph with PN classes",
+    "count": 297,
+    "files": 25
+   },
+   {
+    "rule": "pd10105",
+    "message": "Arc with class production must have source reference to port on glyph with PN classes and target reference to ",
+    "count": 247,
+    "files": 25
+   },
+   {
+    "rule": "pd10141",
+    "message": "All process nodes should have at least one input and at least one ouput pointing to the arcs",
+    "count": 221,
+    "files": 25
+   },
+   {
+    "rule": "pd10125",
+    "message": "Arc with class logic arc must have target reference to a logical operator",
+    "count": 91,
+    "files": 13
+   },
+   {
+    "rule": "pd10142",
+    "message": "logic Arc must be connected to either 'OR', 'AND' or 'NOT'",
+    "count": 91,
+    "files": 13
+   },
+   {
+    "rule": "00001",
+    "message": "ID needs to be unique.",
+    "count": 40,
+    "files": 1
+   },
+   {
+    "rule": "pd10109",
+    "message": "Modulation arc must have source reference to glyph of EPN classes or a logical operator",
+    "count": 37,
+    "files": 13
+   },
+   {
+    "rule": "pd10111",
+    "message": "'and', 'or', and 'not' glyphs must be the source for exactly one arc.",
+    "count": 35,
+    "files": 12
+   },
+   {
+    "rule": "pd10112",
+    "message": "If there are compartments defined, top-level glyphs must have a compartmentRef.\"",
+    "count": 15,
+    "files": 3
+   },
+   {
+    "rule": "pd10130",
+    "message": "[NOT SURE]",
+    "count": 3,
+    "files": 1
+   }
+  ],
+  "schematron_issues_per_file": {
+   "7": 152,
+   "128": 48,
+   "9": 74,
+   "116": 51,
+   "5": 57,
+   "134": 74,
+   "135": 49,
+   "78": 84,
+   "125": 34,
+   "129": 39,
+   "138": 27,
+   "120": 43,
+   "148": 27,
+   "19": 55,
+   "144": 24,
+   "126": 75,
+   "122": 21,
+   "121": 18,
+   "142": 22,
+   "114": 14,
+   "14": 5,
+   "10": 18,
+   "58": null,
+   "12": 38,
+   "150": 18,
+   "68": 14
+  }
+ },
+ "momapy_sbml_load": "52/52 SBML files (26 ours, 26 PathWhiz) load with momapy reader 'sbml'; none carries a layout so momapy cannot render SBML (layout=None); rendered with SBMLNetwork autolayout instead",
+ "renders": "C:/t/corr-assess/a3/render/<idx>_{ours_sbml,pw_sbml,pw_sbgn}.png (77 of 78; 58 pw_sbgn does not exist), log a3/render_log.json"
+}

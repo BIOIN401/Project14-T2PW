@@ -1,0 +1,35 @@
+{
+ "lane": "L4",
+ "reviewer": "ws-reviewer opus/high",
+ "agent": "a20a4aef2c1fc8804",
+ "reviewed_head": "c20b18b4",
+ "verdict": "APPROVE WITH NITS (F1,F2 should-fix before merge)",
+ "findings": [
+  "F1 ir.py:3459 contract audit misses modifier_interactions -> false visualization_missing_process",
+  "F2 reaction_evidence.py:543 gloss outdated after D-W26; new reasons unglossed",
+  "F3 stage6_all_unwrappable subset now contains a wrappable binds row; restore base pin 75d9b8b2",
+  "F4 first-substrate anchor lands on GTP/ATP in 7/17 modifier rows",
+  "F5 L4.json idx 9 description wrong (real: MenD complex -| MenB complex)",
+  "F6 modifier link only in IR, not text record",
+  "F7 v1/final-payload not byte-identical 12/97 (authorized, no flag under D-W26)",
+  "F8 pre-existing zero-length interaction edges 41->56 (layout)",
+  "F9 Unspecified only exact words; associates_with/Competes With withheld"
+ ],
+ "verified": [
+  "17 enzyme entries moved all reappear",
+  "type/template table matches smpdb t2pw/05",
+  "170 interactions valid in m_new_s6",
+  "llm_identity curator digests unchanged",
+  "identity fixes fail-closed",
+  "golden 2/8/4/24, L4+edited files 173, wrappers 24"
+ ],
+ "round2": {
+  "head": "803107a7",
+  "verdict": "APPROVE",
+  "notes": [
+   "N1 GTP/GDP ChEBI ids not in currency anchor list",
+   "N2 F7/F8 recorded: v1 12/97 differ authorized; zero-length interaction edges pre-existing layout defect",
+   "N3 SMOKE on real merge result required"
+  ]
+ }
+}

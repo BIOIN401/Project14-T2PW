@@ -158,6 +158,35 @@ def _reaction_names(payload: Dict[str, Any]) -> List[str]:
 DRAWS = pytest.mark.parametrize("draws", [1, 3], ids=["1-draw", "3-draws"])
 
 
+@pytest.fixture
+def serial_draws(monkeypatch: pytest.MonkeyPatch) -> None:
+    """L9: N draws run concurrently now. A scenario that is about WHICH call the budget runs out on
+    (the last draw's first) is order-dependent, so it runs its draws one after another, as it was
+    written to."""
+
+    from concurrent.futures import Future
+
+    class Inline:
+        def __init__(self, **_: Any) -> None:
+            pass
+
+        def __enter__(self) -> "Inline":
+            return self
+
+        def __exit__(self, *_: Any) -> None:
+            return None
+
+        def submit(self, fn: Any, *args: Any) -> Future:
+            future: Future = Future()
+            try:
+                future.set_result(fn(*args))
+            except BaseException as exc:  # noqa: BLE001 - re-raised by .result(), like a pool
+                future.set_exception(exc)
+            return future
+
+    monkeypatch.setattr("t2pw.pipeline.stage_one_ensemble.ThreadPoolExecutor", Inline)
+
+
 # ----------------------------------------------------------------------------- G9
 
 
@@ -309,7 +338,8 @@ def _assert_chunk_2_fatal_as_at_base(failure: PipelineFailure, transport: Transp
 
 
 @DRAWS
-def test_still_fatal_when_the_budget_refused_the_retry(draws: int, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_still_fatal_when_the_budget_refused_the_retry(
+        draws: int, monkeypatch: pytest.MonkeyPatch, serial_draws: None) -> None:
     """Repair round 1 (B1a). A live leg deadline admits the last draw's first call on chunk 2,
     which says nothing, then refuses its retry as ``budget_exhausted``. That chunk never got
     its retry, so its silence is not an answer."""

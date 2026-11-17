@@ -204,7 +204,9 @@ def _removed(model: CleanModel, payload: Dict[str, Any], run_dir: Optional[str])
             model.removed.append(Removed(kind, name, reason, source, copy.deepcopy(entry)))
 
     for key, kind in (("quarantined_proteins", "protein"), ("quarantined_locked_reactions", "reaction"),
-                      ("quarantined_process_claims", "process_claim")):
+                      ("quarantined_process_claims", "process_claim"),
+                      # L5 (D-W24 3): actors a kept reaction lost, and interactions withheld for an unwritable endpoint
+                      ("withheld_reaction_actors", "reaction_actor"), ("withheld_interactions", "interaction")):
         for e in payload.get(key) or []:
             add(kind, e, "payload." + key)
     adm = payload.get("entity_admission_report")

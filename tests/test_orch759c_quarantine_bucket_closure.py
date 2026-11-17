@@ -69,16 +69,24 @@ ORPHAN_GENES = ["CAO", "GUN4", "HEMA1", "PORB"]
 #: ORCH-794 (D-119 § 3) moved them again: tRNAGlu, declared as compound and nucleic acid, keeps the nucleic
 #: acid its name says, so "Glu-tRNAGlu reduction to GSA" is admitted (core 26 -> 27, broken-reference 10 -> 9);
 #: the compound row and its location go as same_name_declared_as_another_kind:nucleic_acids (ORCH-794-RESULT.md).
+#: D-W24 3 / L5 moved them again: the 2nd "ALA condensation to PBG" (reactions/17) is kept and loses only its
+#: identity-less enzyme ALAD1/HEMB1 (core 27 -> 28, unmapped 14 -> 13, reactions 31 -> 32); the removed list
+#: gains exactly the two actor rows enzymes|ALAD1/HEMB1 and modifiers|ALAD1/HEMB1 (23 -> 25). Old pins:
+#: admissions 53355ece...387, removed (23, 54084dfd...45f); lanes/L5.json.
 ORCH782_COUNTS = {
     **BASE_COUNTS,
-    "core_accepted": 27,
+    "core_accepted": 28,
     "auxiliary_accepted": 47,
+    "quarantined_unmapped_entity": 13,
     "quarantined_broken_reference": 9,
 }
-ORCH782_ADMISSIONS_SHA256 = "53355ece7103ffd90afd3042a7b7589d4b719667bf2f28c30c476154c0e17387"
+ORCH782_ADMISSIONS_SHA256 = "076970a7f3c4fdb52cd7bb8f2a372140eca1693b9a31fbf655fef6a9bb9b3802"
 ORCH782_ORPHAN_GENES = ["CAO gene", "PORB gene"]
-ORCH782_REMOVED = (23, "54084dfdd62116c5042768b532f515ce452503502488c4cd38e95c6319e9e45f")
-ORCH782_REMOVED_LOCATIONS = (41, "eda2b5d1b050853b87968f60311cc838fa74d7b23d5d64e1ad571efd4cd9f907")
+# D-W24 7b / L8: ALAD1/HEMB1 (no identity) is the Unknown-backed placeholder of 'ALA condensation to PBG', so the removed
+# lines lose exactly enzymes|, modifiers|ALAD1/HEMB1 and proteins|ALAD1/HEMB1|degree_zero (25 -> 22) and its plastid
+# protein location (41 -> 40); was (25, f1a72aa0...) and (41, eda2b5d1...) (corr-assess/lanes/L8probe/new_pins_*.json).
+ORCH782_REMOVED = (22, "808e176c2965fd0e9e0b0dc19af856682b44a57dfeaf65ca446df67f932bbc6c")
+ORCH782_REMOVED_LOCATIONS = (40, "4f18440e45cc43d37603198db536d5b3b2fd79e83a88f718bb6b5f7ce3e44fb4")
 #: ``removed_locations`` at base, as ``bucket|name|reason|biological_state`` lines
 #: (``evidence/orch759c/26-r1-probe-base.log``; identical at the round-0 tip, ``24``).
 BASE_REMOVED_LOCATIONS_SHA256 = "66891e59028a1dc0fd2c0919d30e6f77571d612c7e2420de71329cb685bde7ff"
@@ -114,7 +122,7 @@ def test_g9_chlorophyll_leg_releases_review_required_once_orphan_genes_close() -
     # The live decision, replayed: same admissions, same counts. Its decision input was
     # sha256:d2ef87f2ae5da361; ORCH-773's QUARANTINE_POLICY_VERSION bump moves it and nothing else, and
     # ORCH-780's (-> 2026-10-26.1) again: sha256:8b2be66a5cacc344 -> below.
-    assert report["decision_input_hash"] == "sha256:6efc8c92d0f65c07"  # ORCH-797a: context core terms in the D-120 key (was 6db09994c3616bb6)
+    assert report["decision_input_hash"] == "sha256:20c4f250c589c6b2"  # D-W24 7b / L8: policy version only (was bed226cb72cdc343)
     assert report["counts"] == ORCH782_COUNTS
     assert _digest(f"{row['pointer']}|{row['state']}" for row in result.admissions) == ORCH782_ADMISSIONS_SHA256
 
@@ -139,7 +147,7 @@ def test_g9_chlorophyll_leg_releases_review_required_once_orphan_genes_close() -
     assert not set(ORPHAN_GENES) & {row["name"] for row in entities["nucleic_acids"]}
     assert len(entities["nucleic_acids"]) == 21  # ORCH-794: + tRNAGlu
     processes = result.payload["processes"]
-    assert (len(processes["reactions"]), len(processes["interactions"])) == (31, 43)  # ORCH-794: + Glu-tRNAGlu reduction
+    assert (len(processes["reactions"]), len(processes["interactions"])) == (32, 43)  # ORCH-794: + Glu-tRNAGlu reduction; D-W24 3 / L5: + ALA condensation (r17)
 
     # The strict final gate freeze_canonical_payload runs once quarantine is ok.
     details = run_strict_post_normalization_gates(
@@ -400,7 +408,13 @@ def test_g9_r1_n4_unreferenced_element_collection_named_like_a_wrapped_protein_i
 
 
 def _assert_glutathione_synthesis_stranded(result, reason: str) -> None:
-    assert _record(result, "glutathione synthesis") == ("quarantined_disconnected", f"stranded_by_closure:{reason}")
+    # D-W24 3 / L5 review F6: closure no longer strands the reaction for its enzyme (it was
+    # ``("quarantined_disconnected", f"stranded_by_closure:{reason}")``); the reaction stays and the
+    # wrapper that stopped resolving leaves it, recorded with the same reason at the closure gate.
+    assert _record(result, "glutathione synthesis")[0] in ("core_accepted", "auxiliary_accepted")
+    assert [(row["bucket"], row["name"], row["reason"], row["detail"]["gate"])
+            for row in result.removed_entity_report["removed_entities"] if row["bucket"] in ("enzymes", "modifiers")] == [
+        ("enzymes", f"{GS} complex", reason, "strict_quarantine_closure")]
     assert _record(result, "gamma-glutamylcysteine synthesis")[0] == "core_accepted"
     assert result.refusal_reasons == []
     assert result.ok
@@ -423,8 +437,11 @@ def test_delta_n2_compound_shadowing_a_wrapped_protein_without_accession() -> No
 
     # ORCH-794 (D-119 § 3): the compound goes before admission (GS is the wrapper's component, a protein-only
     # role), so admission refuses the reaction for the same component; closure stranded it before.
-    assert _record(result, "glutathione synthesis") == (
-        "quarantined_unmapped_entity", f"protein_complex_component_unrepresentable:{GS}:protein_missing_external_identity")
+    # D-W24 3 / L5: the reaction stays; the wrapper with the accession-less component leaves it.
+    assert _record(result, "glutathione synthesis")[0] in ("core_accepted", "auxiliary_accepted")
+    dropped = [row for row in result.removed_entity_report["removed_entities"] if row["bucket"] == "enzymes"]
+    assert [row["reason"] for row in dropped] == [
+        f"protein_complex_component_unrepresentable:{GS}:protein_missing_external_identity"]
     assert _record(result, "gamma-glutamylcysteine synthesis")[0] == "core_accepted"
     assert result.refusal_reasons == [] and result.ok
 

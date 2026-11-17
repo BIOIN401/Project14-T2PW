@@ -248,7 +248,7 @@ def test_the_seam_records_three_evaluable_gating_checks_beside_a_passed_verdict(
     )
 
     # The bump that carries this key, disclosed under merge rule 4 (D-054 section 8).
-    assert result.quarantine_report["schema_version"] == 6
+    assert result.quarantine_report["schema_version"] == 7  # L5 review F7: + enzyme_wrappers (additive)
 
 
 def test_the_rag_shortfall_is_recorded_and_deliberately_not_closed() -> None:

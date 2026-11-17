@@ -32,6 +32,7 @@ from t2pw.pipeline.entity_identity import (
     has_protein_external_identity,
     is_generated_complex_wrapper,
     is_pathbank_unknown_protein,
+    protein_external_identity,
     protein_species_context,
     route_entity_for_mapping,
 )
@@ -44,7 +45,7 @@ from t2pw.pipeline.lineage import (
     record as record_lineage,
 )
 from t2pw.pwml.compound_resolution import CLASS_TERM_NEVER_NARROWED, is_class_participant_term
-from t2pw.pwml.interaction_types import interaction_relationship_word, pwml_interaction_type
+from t2pw.pwml.interaction_types import interaction_relationship_word, pwml_export_interaction_type, relationship_stated
 from t2pw.pipeline.name_keys import reference_key
 from t2pw.pipeline.reference_repair import (
     ReplacementRecord,
@@ -8535,7 +8536,7 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
 ) -> Dict[str, Any]:
     """Rewrite protein enzyme/modifier references to protein_complex references.
 
-    Also the protein endpoints of signed interactions (ORCH-754b, D-104): PathWhiz
+    Also the protein endpoints of exportable interactions (ORCH-754b, D-104; L4 every PathWhiz type): PathWhiz
     has no bare-protein interaction member either, and they take the same wrapper.
 
     ``only_proteins`` (normalized names, ORCH-759e) limits the pass to the actor lists
@@ -9052,7 +9053,9 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
     # (reference/PW687775.pwml, interaction 15843). So a protein endpoint gets the
     # enzyme wrapper -- the same ``_resolve_complex_name``, cache and F-116 superset
     # refusal -- built here, before the freeze, never by the exporter (merge rule 8).
-    # Only a row the PWML can carry is wrapped: its word must carry a sign, and every
+    # Only a row the PWML can carry is wrapped: its word must have a PathWhiz type (L4: the
+    # signed types and, since D-W26, Binding / Regulation / Catalysis / Modification /
+    # Unspecified -- ``pwml_export_interaction_type``), and every
     # protein endpoint must have the species and UniProt/DrugBank identity the
     # generated-complex gates require (``ir.validate_required_pwml_contract``), so a
     # wrapper never turns a withheld row into a broken complex. Anything else is left
@@ -9120,9 +9123,12 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
     }
 
     for iidx, interaction in enumerate(interactions):
-        if not isinstance(interaction, dict) or iidx in split_undecided or not pwml_interaction_type(
+        if not isinstance(interaction, dict) or iidx in split_undecided or not pwml_export_interaction_type(
             interaction_relationship_word(interaction)
         ):
+            continue
+        # L4 ruling: a row with no relationship word and no evidence stays withheld; no wrapper.
+        if not relationship_stated(interaction) and not str(interaction.get("evidence") or "").strip():
             continue
         endpoints: List[Tuple[str, str, Dict[str, Any]]] = []
         shared_name = False
@@ -9153,11 +9159,20 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
             name: complexes_by_norm.get(_normalize_name(_wrapper_complex_name(name)))
             for _field, name, _row in endpoints
         }
+        # L4: the one component may carry another name of the same protein (idx 7: the
+        # "GluTR1 complex" wrapper holds "HEMA1", UniProt P42804 like the protein GluTR1);
+        # the same UniProt/DrugBank identity makes it this protein's own wrapper too.
+        protein_rows = {name: prow for _field, name, prow in endpoints}
         own_wrapper = {
             name: row is not None
             and is_generated_complex_wrapper(row)
-            and [_normalize_name(_component_name(c)) for c in _safe_list(row.get("components"))]
-            == [_normalize_name(name)]
+            and len(_safe_list(row.get("components"))) == 1
+            and (
+                _normalize_name(_component_name(_safe_list(row.get("components"))[0])) == _normalize_name(name)
+                or bool(protein_external_identity(protein_rows[name]))
+                and protein_external_identity(_safe_list(row.get("components"))[0])
+                == protein_external_identity(protein_rows[name])
+            )
             for name, row in named.items()
         }
         if not all(

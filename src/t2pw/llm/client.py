@@ -4,8 +4,10 @@ import json
 import logging
 import math
 import os
+import random
 import threading
 import time
+from contextvars import ContextVar
 from datetime import datetime, timezone
 from dataclasses import dataclass, field
 from typing import Any, Callable, Dict, List, Optional, Tuple
@@ -112,6 +114,7 @@ else:
 # Token usage tracking
 # -----------------------------------------------------------------------------
 _token_stats: Dict[str, int] = {"prompt_tokens": 0, "completion_tokens": 0, "calls": 0}
+_token_stats_lock = threading.Lock()  # concurrent Stage-1 draws (L9) update the counters
 
 # Per-million-token prices (configurable via .env)
 _COST_INPUT_PER_M = float(os.getenv("LLM_COST_INPUT_PER_M", "0.12"))
@@ -122,9 +125,10 @@ def _record_usage(resp: Any) -> None:
     usage = getattr(resp, "usage", None)
     if usage is None:
         return
-    _token_stats["prompt_tokens"] += getattr(usage, "prompt_tokens", 0) or 0
-    _token_stats["completion_tokens"] += getattr(usage, "completion_tokens", 0) or 0
-    _token_stats["calls"] += 1
+    with _token_stats_lock:
+        _token_stats["prompt_tokens"] += getattr(usage, "prompt_tokens", 0) or 0
+        _token_stats["completion_tokens"] += getattr(usage, "completion_tokens", 0) or 0
+        _token_stats["calls"] += 1
 
 
 def get_token_stats() -> Dict[str, Any]:
@@ -358,7 +362,25 @@ class _CallCapExceeded(Exception):
     """One request ran past :data:`LLM_CALL_CAP_SECONDS` and was abandoned."""
 
 
+#: Returns a context manager that wraps every provider request made in the context it is set in
+#: (it may block on entry). ``stage_one_ensemble`` sets it per Stage-1 draw so that request i of
+#: draw k is issued after request i of draw k-1 (the draws' requests are byte-identical, and
+#: replayed and recorded answers are served in the order requests arrive). ``None`` everywhere
+#: else: no wrapping at all.
+REQUEST_GATE: ContextVar[Optional[Callable[[], Any]]] = ContextVar("t2pw_llm_request_gate", default=None)
+
+
+def _gated() -> Any:
+    gate = REQUEST_GATE.get()
+    return gate() if gate is not None else contextlib.nullcontext()
+
+
 def _create(kwargs: Dict[str, Any], stage: str) -> Any:
+    with _gated():
+        return _create_request(kwargs, stage)
+
+
+def _create_request(kwargs: Dict[str, Any], stage: str) -> Any:
     """``_client.chat.completions.create(**kwargs)``, capped for a website job's measured stages.
 
     Outside a website job, or for a stage not in :data:`LLM_CALL_CAP_STAGES`, this IS the plain
@@ -1036,7 +1058,8 @@ def chat_detailed(
         except RateLimitError as e:
             last_err = e
             diagnostics.note(attempt=attempt + 1, status=STATUS_ERROR, error=str(e))
-            time.sleep(min(base_sleep * (2 ** attempt), max_sleep))
+            # jittered (never above the cap) so concurrent draws that hit a 429 together do not retry in lockstep
+            time.sleep(min(base_sleep * (2 ** attempt), max_sleep) * random.uniform(0.5, 1.0))
 
         except APITimeoutError as e:
             # Same budget, same backoff -- retry semantics are untouched. What is
@@ -1158,7 +1181,8 @@ def chat_with_tools(
             try:
                 if trace_diag is not None:
                     trace_diag.begin_attempt()
-                resp = _client.chat.completions.create(**kwargs)
+                with _gated():
+                    resp = _client.chat.completions.create(**kwargs)
                 if trace_diag is not None:
                     trace_diag.observe(resp)
                 _record_usage(resp)
@@ -1238,7 +1262,7 @@ def chat_with_tools(
             except RateLimitError as e:
                 last_err = e
                 _trace(attempt + 1, STATUS_ERROR, error=str(e))
-                time.sleep(min(base_sleep * (2 ** attempt), max_sleep))
+                time.sleep(min(base_sleep * (2 ** attempt), max_sleep) * random.uniform(0.5, 1.0))
             except APITimeoutError as e:
                 # Same budget and backoff; the attempt is bounded, the exit named.
                 last_err = e

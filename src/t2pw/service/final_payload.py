@@ -288,11 +288,14 @@ def _paper_kw(state: Any) -> Dict[str, Any]:
     return {"paper_text": txt, "paper_source": str(st.get("final_payload_paper_text_source") or "paper text")} if isinstance(txt, str) and txt else {}
 
 
-def maybe_apply_final_id_fill(payload: Dict[str, Any], pathway_context: Any = None, state: Any = None,
-                              **kw: Any) -> Dict[str, Any]:
-    """The postpipeline seam: {} (payload untouched) when the flag is off; otherwise the fill report. Never raises."""
+def maybe_apply_final_id_fill(payload: Dict[str, Any], pathway_context: Any = None, state: Any = None, *,
+                              chat_fn: Any = None, **kw: Any) -> Dict[str, Any]:
+    """The postpipeline seam: {} (payload untouched) when the flag is off; otherwise the fill report, whose ``merge`` key is the
+    D-W24 (5) state / duplicate-reaction merge (``final_payload_merge``) and whose ``compartments`` key is the D-W24 (2, 7a)
+    compartment estimate (``final_payload_compartments``, run last; ``chat_fn`` replaces its LLM call). Never raises."""
     if not final_payload_enabled():
         return {}
+    shared: Dict[str, Any] = {}
     try:
         # ONE fetcher (one time budget, T2PW_FINAL_PAYLOAD_BUDGET_S from its construction) for the id fill and the nucleic lookup: a
         # fill that spends it leaves the nucleic rows unknown with lookup_error (each report says ``budget_exhausted`` and ``circuit_open``). Both budgets are capped to the job deadline. The title /
@@ -304,9 +307,31 @@ def maybe_apply_final_id_fill(payload: Dict[str, Any], pathway_context: Any = No
         report["meta_keys"] = sorted(fill_meta(pathway_context, state))
         report["nucleic_types"] = maybe_apply_paper_nucleic_types(payload, state, **{k: shared[k] for k in ("fetcher", "cache", "today") if k in shared})
         report["pathway_meta"] = maybe_apply_final_pathway_meta(payload, pathway_context, state, **kw)
-        return report
     except Exception as exc:
-        return {"enabled": True, "written": 0, "error": f"{type(exc).__name__}: {exc}"}
+        report = {"enabled": True, "written": 0, "error": f"{type(exc).__name__}: {exc}"}
+    # D-W24 (5), L6: last, offline, whatever the fill did; never raises (fails open, payload restored).
+    try:
+        from t2pw.service.final_payload_merge import merge_states_and_duplicates
+        report["merge"] = merge_states_and_duplicates(payload)
+    except Exception as exc:
+        report["merge"] = {"error": f"{type(exc).__name__}: {exc}"}
+    # D-W24 (2, 7a), L7: after the merge, so its neighbours and candidates are the merged states; never raises (fails open).
+    try:
+        from t2pw.service.final_payload_compartments import estimate_compartments
+        report["compartments"] = estimate_compartments(payload, state, cache=kw.get("cache"), chat_fn=chat_fn,
+                                                       fetcher=shared.get("fetcher"), today=kw.get("today"),
+                                                       organism_hint=fill_meta(pathway_context, state).get("organism") or "")
+    except Exception as exc:
+        report["compartments"] = {"error": f"{type(exc).__name__}: {exc}"}
+    # D-W24 (6, 7c), L8: evidence checks, last: after L7's compartment estimate, whose rows it checks, offline; never raises.
+    try:
+        from t2pw.service.final_payload_evidence import check_evidence
+        ctx = pathway_context if isinstance(pathway_context, dict) else {}
+        report["evidence"] = check_evidence(payload, _paper_kw(state).get("paper_text"), {
+            "pathway_name": str(ctx.get("pathway_name") or ""), "organism": fill_meta(pathway_context, state).get("organism") or ""})
+    except Exception as exc:
+        report["evidence"] = {"error": f"{type(exc).__name__}: {exc}"}
+    return report
 
 
 def maybe_apply_paper_nucleic_types(payload: Dict[str, Any], state: Any = None, *, fetcher: Any = None, cache: Any = None,

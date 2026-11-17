@@ -73,7 +73,70 @@ def interaction_relationship_word(raw: Dict[str, Any]) -> str:
 def pwml_interaction_type(raw_type: Any) -> str:
     """``Activation`` / ``Inhibition`` when the sign is in the word, else ``""``.
 
-    The one statement of which interactions PathWhiz can store. Stage 6 reads it to
-    decide which protein endpoints need a wrapper (ORCH-754b).
+    Signed types only. Which interactions reach the PWML is
+    :func:`pwml_export_interaction_type` (L4, D-W26), which adds the unsigned types.
     """
     return PWML_INTERACTION_TYPES.get(_interaction_type_key(raw_type), "")
+
+
+#: L4 (D-W26; PathWhiz ``t2pw/05-interaction-types``). The patched PathWhiz also stores five types
+#: that carry NO sign: Binding (physical association, undirected), Regulation (directed influence,
+#: sign not stated), Catalysis (left catalyses something about right), Modification (left covalently
+#: modifies right) and Unspecified (the source says the two interact, not how). Exact match on
+#: :func:`_interaction_type_key`, like :data:`PWML_INTERACTION_TYPES`; a word in neither table
+#: (``component_of``, ``substrate_of``, ``transports``, ``degrades``, ``cofactor_of``, ...) stays
+#: withheld from the PWML and is kept in the text record, our SBML and the web diagram. Kept apart
+#: from the signed table on purpose: :func:`pwml_interaction_type` still answers "is the sign in the
+#: word" for its readers (``clean_model.vocab``, the Stage-1 pooling key), which must never read a
+#: sign into ``binds``.
+PWML_UNSIGNED_INTERACTION_TYPES = {
+    "binding": "Binding",
+    "binds": "Binding",
+    "binds to": "Binding",
+    "binds_to": "Binding",
+    "noncovalently_bound_to": "Binding",
+    "regulates": "Regulation",
+    "regulation": "Regulation",
+    "modulates": "Regulation",
+    "catalyzes": "Catalysis",
+    "modifies": "Modification",
+    "interaction": "Unspecified",
+    "interacts with": "Unspecified",
+    "interacts_with": "Unspecified",
+    "interacts": "Unspecified",
+    "associates with": "Unspecified",
+    "competes_with": "Unspecified",
+}
+
+#: Edge ``visualization-template-id`` for both edges of an interaction, by type: PathWhiz's own
+#: editor defaults (``interaction.js.coffee`` ``edgeTemplates`` on ``t2pw/05``).
+PWML_INTERACTION_EDGE_TEMPLATES = {
+    "Activation": 149,
+    "Inhibition": 148,
+    "Binding": 195,
+    "Unspecified": 195,
+    "Regulation": 219,
+    "Catalysis": 5,
+    "Modification": 218,
+}
+
+
+def pwml_export_interaction_type(raw_type: Any) -> str:
+    """The PathWhiz ``interaction-type`` a relationship word is written as, else ``""``.
+
+    Signed words first (:func:`pwml_interaction_type`), then the unsigned table. This is the
+    one statement of which interactions reach the PWML; Stage 6 reads it to decide which
+    protein endpoints get the single-protein wrapper.
+    """
+    key = _interaction_type_key(raw_type)
+    return PWML_INTERACTION_TYPES.get(key) or PWML_UNSIGNED_INTERACTION_TYPES.get(key, "")
+
+
+#: Withheld reason / review reason for a row that states no relationship word at all (L4 ruling).
+RELATIONSHIP_TYPE_NOT_STATED = "relationship_type_not_stated"
+
+
+def relationship_stated(raw: Dict[str, Any]) -> bool:
+    """Does the row state a relationship word? :func:`interaction_relationship_word` falls back to
+    ``interaction`` (Unspecified) when it does not; such a row is drawn only with paper evidence."""
+    return any(_canonical(raw.get(f)) for f in ("interaction_type", "relationship", "class"))

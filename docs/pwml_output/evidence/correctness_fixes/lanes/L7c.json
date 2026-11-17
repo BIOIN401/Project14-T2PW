@@ -1,0 +1,123 @@
+{
+ "lane": "L7c",
+ "branch": "corr/L7c-accept",
+ "worktree": "C:/t/corr-L7c",
+ "base": "c5734190",
+ "head": "896b1071",
+ "status": "N1, N2, N3, F5, F6 fixed and committed (896b1071); all gates green; live check run (25 real calls). LLM_ESTIMATE and GENERAL_STATE_FALLBACK stay False. Not pushed, not merged.",
+ "inherited_partial_patch": "C:/t/corr-assess/lanes/L7b_partial.patch, reviewed and kept with two fixes: (a) F5 _same compared only location key + cell type + tissue, so 'apical extracellular' -> 'basolateral extracellular' (same location field) would have been rejected as the same side, a regression against the old row compare; position words (M.position_words) added. (b) N3 regex stopped at ')', so 'C:\\Program Files (x86)\\App\\.env' leaked '\\App\\.env'; ')' removed from the stop set.",
+ "files_changed": {
+  "src/t2pw/service/final_payload_compartments.py": "N1 _names_place (1-4 word phrase whose location key equals the place's key) replaces _place_words in _accept for both the state and the new-location path; N2 participant names through _linking (cofactor_policy.VOCABULARY excluded) for reactions and transport cargo; N3 _PATH covers spaces and '(x86)' (runs to the next quote, <, >, |, comma, semicolon or line end; over-redacts the rest of that line in the report, by design); F5 _same compares rows, else (location key, position words, cell type, tissue); docstring updated",
+  "src/t2pw/clean_model/export/sbml.py": "F6 only: the IDTYPES comment moved back above _digits (its position before L7, b4c3cb60)",
+  "tests/test_l7_estimate_compartments.py": "6 new tests"
+ },
+ "tests_added": [
+  "test_l7_n1_one_shared_generic_word_does_not_name_the_place[plasma membrane vs 'in the cell' | golgi apparatus vs 'complex' | extracellular space vs 'space'] (each case also checks the named phrase IS accepted)",
+  "test_l7_n2_a_currency_compound_is_not_the_participant_a_quote_must_name",
+  "test_l7_n3_paths_with_spaces_are_redacted_whole (Windows with spaces, Program Files (x86), POSIX with spaces)",
+  "test_l7_f5_transport_sides_compare_places_not_rows (apical vs basolateral accepted; 'plasma membrane' vs 'cell membrane' rows rejected as the same place)"
+ ],
+ "test_runs": {
+  "before_base_src_c5734190": {"log": "C:/t/corr-assess/lanes/L7clogs/before1.log", "result": "6 failed (exactly the 6 new tests), 33 passed"},
+  "after_uncommitted": {"log": "C:/t/corr-assess/lanes/L7clogs/after1.log", "result": "39 passed"},
+  "on_committed_head_896b1071_tree_clean_every_step": "C:/t/corr-assess/lanes/L7clogs/chain.out",
+  "focused": {"log": "c_after.log", "result": "39 passed"},
+  "related": {"log": "c_related.log", "result": "460 passed, 1 skipped (L7's related list + l5 + l9b)"},
+  "smoke": {"log": "c_smoke.log", "result": "511 passed"},
+  "golden_seam_each_alone": {"test_batch_driver_seam_golden": "2 passed", "test_c011_freeze_seam_golden_equivalence": "8 passed",
+                             "test_streamlit_stage8_export_contract": "4 passed", "test_streamlit_quarantine_boundary": "24 passed"},
+  "equivalence_each_alone": {"test_equivalence_run_pathway": "8 passed", "test_equivalence_app_vs_service": "14 passed", "test_equivalence_default_path": "6 passed"},
+  "expectations_changed": "none; no existing test edited",
+  "wrapper": "bounded_run.py via C:/t/corr-assess/lanes/L7cscripts/gate.sh, heavy lock holder corr-l7c, 16 runs, FINAL SURVIVING COUNT 0 in every one"
+ },
+ "replay_97": {
+  "what": "dump_replay_l7.py, flag on, layout v2, offline (steps 2 and 3 off), head 896b1071 vs base tree c5734190 (git archive into C:/t/bt-corr/L7c/basetree)",
+  "result": "97/97 identical: arm A PWML sha256, arm B PWML sha256, arm B payload JSON and the L7 estimate report all equal",
+  "head_totals": "75 unresolved, 10 neighbour_estimate, LLM step 'deferred' in 25 files (same as L7 r4)",
+  "compare": "C:/t/corr-assess/lanes/L7clogs/cmp_head_base.json",
+  "note": "the first head replay lost a lock race to corr-pw (BW_EXIT 95, 'the child was NOT started; nothing was removed', c_replay_head.log); re-run as head2_ab_v2 (c_replay_head2.log), BW_EXIT 0"
+ },
+ "live_check": {
+  "command": "bash C:/t/corr-assess/lanes/L7cscripts/run_live.sh live1 live C:/t/corr-assess/lanes/L7scripts/idx_affected.txt  -> gate.sh -> bounded_run.py -> <venv python> C:/t/corr-assess/scripts/live_launch.py --script C:/t/corr-assess/lanes/L7cscripts/live_l7c.py ...",
+  "code": "896b1071, clean tree; LLM_ESTIMATE switched on inside the live-check process only (product constant unchanged)",
+  "log": "C:/t/corr-assess/lanes/L7clogs/live1.log",
+  "outputs": "C:/t/bt-corr/L7c/live/live1/arms; summary C:/t/corr-assess/lanes/L7clogs/live1_sum.json; every model answer C:/t/corr-assess/lanes/L7clogs/live1_answers.json; the 22 C:/t/corr-assess/lanes/L7clogs/live1_the22.json",
+  "permission_denials": 0,
+  "secret_scan": "grep 'sk-or-' over C:/t/corr-assess/lanes (all logs, records, reply cache, scripts) and C:/t/bt-corr/L7c/live: 0 hits. The only hits under C:/t/bt-corr/L7c are 18 regex/prefix patterns in tracked source and docs inside basetree (git archive of c5734190), no key material.",
+  "files": 30,
+  "calls": 25,
+  "model": "deepseek/deepseek-v4-flash",
+  "prompt_tokens": 303194,
+  "completion_tokens": 18260,
+  "cost_usd": "0.0419 by the client's own estimate (equals 0.12 / 0.30 USD per M tokens, the client's default rates; the real model price was not read)",
+  "wall": "30 files in about 6 minutes; slowest file 41 s",
+  "items_asked": 88,
+  "answer_slots_returned": 93,
+  "answers_with_empty_quote": 47,
+  "accepted": 1,
+  "rejections_total": 88,
+  "rejections_by_reason": {
+   "quote not found verbatim in the paper text": 62,
+   "quote names none of the item's participants or enzymes": 15,
+   "quote does not name the place of the chosen state": 9,
+   "location is not in the quote": 2
+  },
+  "rejections_read": {
+   "not_verbatim_62": "47 are the model declining (empty quote, so the reason text is misleading: it should say 'no quote given'); the other 15 are paraphrases or merged sentences (2 near misses, 0.94 and 0.95 of the quote verbatim: idx 123, 138).",
+   "no_participant_15": "7 are H+ transports (OTOP1, idx 3, 10, 150, 151): the cargo H+ is currency, so N2 removes it, and the quotes do not name OTOP1 ('permeation of H+ through an apical ion channel'). That is the cost of N2 on transports whose cargo is a currency compound. The rest are name mismatches: 'BBLs' vs enzyme 'BBLa' (136), A622 reaction (136), Rac1 (6), DHCR24 quote about LSS (86, a correct rejection), PSA (56), TubI/TBN (138).",
+   "no_place_9": "idx 84 x4 (E. coli cytosolic state; quotes name no place; biologically right but unsupported by the quote), 134 x2 (the 'human carnitine biosynthesis' state, location 'cell'; no place in the quote), 3/10 x2 and 150 x1 ('synapse' / 'extracellular space in taste bud' from '5-HT from Type III cells'). All correct rejections under N1.",
+   "location_not_in_quote_2": "123, 137: new location 'cytosol' from quotes that name no place. Correct rejections."
+  },
+  "newly_placed": [
+   {"idx": 136, "reaction": "NicGH (beta-GD1) reaction", "old": "cytosolic state (row 0 / referenced state)", "llm": "vacuolar state",
+    "quote": "predicted to encode a vacuolar localised β-glucosidase (β-GD1)", "paper": "verbatim in PMC13184244 (cluster description)", "judgement": "BETTER"}
+  ],
+  "transports_placed": 0,
+  "the_22": {
+   "product_effect": "1 better (136 NicGH), 21 same (still in their old state, flagged unresolved), 0 worse",
+   "rows": [
+    {"idx": 6, "reaction": "Rac1/RhoA GDP/GTP exchange", "old": "plasma membrane state", "llm_proposed": "cytoplasmic state", "quote": "sequestering Rac1 in the cytoplasm", "gate": "rejected (no participant named)", "proposal_vs_paper": "WORSE as a proposal (the quote is about GDI sequestering inactive Rac1; GEF exchange is at the membrane)", "product": "SAME"},
+    {"idx": 6, "reaction": "Profilin-facilitated actin nucleotide exchange", "old": "plasma membrane state", "llm_proposed": null, "gate": "no answer", "product": "SAME"},
+    {"idx": 6, "reaction": "Cdc42 GTP hydrolysis", "old": "plasma membrane state", "llm_proposed": null, "gate": "no answer", "product": "SAME"},
+    {"idx": 86, "reaction": "DHCR24 reaction", "old": "endoplasmic reticulum state", "llm_proposed": "endoplasmic reticulum state", "quote": "This enzyme is mainly located in the endoplasmic reticulum", "gate": "rejected (no participant; the sentence is about LSS)", "proposal_vs_paper": "SAME place, wrong evidence", "product": "SAME"},
+    {"idx": 98, "reaction": "DHCR24 reaction", "old": "endoplasmic reticulum in human osteosarcoma cells", "llm_proposed": null, "gate": "no answer", "product": "SAME"},
+    {"idx": 116, "reaction": "Sphingosine kinase reaction", "old": "ER state", "llm_proposed": null, "gate": "no answer", "product": "SAME (old ER is doubtful; the paper places de novo steps in the ER, glycosphingolipid hydrolysis in the lysosome, sphingomyelin at the Golgi/plasma membrane)"},
+    {"idx": 116, "reaction": "Sphingomyelin hydrolysis", "old": "ER state", "llm_proposed": null, "gate": "no answer", "product": "SAME"},
+    {"idx": 116, "reaction": "ceramidase reaction", "old": "ER state", "llm_proposed": null, "gate": "no answer", "product": "SAME"},
+    {"idx": 116, "reaction": "sphingomyelinase reaction", "old": "ER state", "llm_proposed": null, "gate": "no answer", "product": "SAME"},
+    {"idx": 116, "reaction": "S1P phosphatase reaction", "old": "ER state", "llm_proposed": null, "gate": "no answer", "product": "SAME"},
+    {"idx": 119, "reaction": "G10H reaction", "old": "epidermal cell cytosol", "llm_proposed": null, "gate": "no answer", "product": "SAME"},
+    {"idx": 119, "reaction": "Catharanthine-vindoline coupling", "old": "epidermal cell cytosol", "llm_proposed": null, "gate": "no answer", "product": "SAME"},
+    {"idx": 124, "reaction": "hordatine B formation", "old": "barley seedling", "llm_proposed": "barley seedling", "quote": "Hordatines A and C (HA and HC) are homodimers ... (merged, 0.52 verbatim)", "gate": "rejected (not verbatim)", "proposal_vs_paper": "SAME", "product": "SAME"},
+    {"idx": 124, "reaction": "hordatine C formation", "old": "barley seedling", "llm_proposed": "barley seedling", "quote": "Hordatines A and C (HA and HC) are homodimers ... (0.64 verbatim)", "gate": "rejected (not verbatim)", "proposal_vs_paper": "SAME", "product": "SAME"},
+    {"idx": 134, "reaction": "TML dioxygenase reaction", "old": "mitochondrial state", "llm_proposed": "human carnitine biosynthesis (location 'cell')", "quote": "Carnitine biosynthesis begins with release of N6-trimethyllysine (TML) ... (0.74 verbatim)", "gate": "rejected (not verbatim)", "proposal_vs_paper": "WORSE as a proposal (paper: 'carnitine biosynthesis occurs initially in the mitochondria'; TMLD is mitochondrial)", "product": "SAME"},
+    {"idx": 134, "reaction": "TMABADH reaction", "old": "mitochondrial state", "llm_proposed": "human carnitine biosynthesis", "quote": "reaction 3 is catalyzed by trimethylamino butyraldehyde dehydrogenase (TMABADH)", "gate": "rejected (no place)", "proposal_vs_paper": "vaguer, but the old mitochondrial default is wrong (paper: '... and subsequently in the cytosol'); neither is right", "product": "SAME"},
+    {"idx": 134, "reaction": "BBD reaction", "old": "mitochondrial state", "llm_proposed": "human carnitine biosynthesis", "quote": "Reactions 1 and 4 are catalyzed by two Fe2+-dependent dioxygenases: TML dioxygenase (TMLD) and BBD (0.54 verbatim)", "gate": "rejected (not verbatim)", "proposal_vs_paper": "vaguer; old mitochondrial is wrong for BBD (cytosolic step)", "product": "SAME"},
+    {"idx": 134, "reaction": "Tha1 HTMLA reaction", "old": "mitochondrial state", "llm_proposed": "human carnitine biosynthesis", "quote": "SHMT1, SHMT2 and Tha1 catalyze the aldol cleavage of HTML", "gate": "rejected (no place)", "proposal_vs_paper": "vaguer; the paper names cytosolic SHMT1 and mitochondrial SHMT2, so 'cell' is not wrong", "product": "SAME"},
+    {"idx": 136, "reaction": "NaGT (UGT1) reaction", "old": "cytosolic state", "llm_proposed": null, "gate": "no answer", "product": "SAME (paper states no UGT1 location)"},
+    {"idx": 136, "reaction": "NaGR (A622) reaction", "old": "cytosolic state", "llm_proposed": "cytosolic state", "quote": "A622, a cytosolically localised isoflavone reductase-like enzyme", "gate": "rejected (no participant named: the item's enzyme name did not match 'A622')", "proposal_vs_paper": "SAME, and the paper supports it", "product": "SAME"},
+    {"idx": 136, "reaction": "NicGS (BBLa) reaction", "old": "cytosolic state", "llm_proposed": "vacuolar state", "quote": "BBLs encode vacuolar-localised flavin-containing oxidases", "gate": "rejected ('BBLs' is not the enzyme name 'BBLa')", "proposal_vs_paper": "BETTER (paper: BBLs are vacuolar)", "product": "SAME (a missed improvement)"},
+    {"idx": 136, "reaction": "NicGH (beta-GD1) reaction", "old": "cytosolic state", "llm_proposed": "vacuolar state", "quote": "predicted to encode a vacuolar localised β-glucosidase (β-GD1)", "gate": "ACCEPTED", "proposal_vs_paper": "BETTER", "product": "BETTER"}
+   ]
+  },
+  "nothing_dropped": "30/30 export in both arms, release status unchanged in all 30, QA errors 0 in both arms; only tag drop: idx 79 compound-location 7 -> 6 (the known shared lanosterol node from the neighbour estimate, L7 r4)",
+  "cache_proof": {
+   "how": "files 116 and 134 re-run in DRY mode (no launcher, no provider config) with the same reply cache; a dry chat_fn that is reached records a call",
+   "log": "C:/t/corr-assess/lanes/L7clogs/cache2.log",
+   "result": "both files: 0 calls reached the model, 1 cache hit each, same request sha256, same PWML sha256, same rejections; B payload differs only in final_payload_compartments.llm.calls (1 -> 0) and .cache_hits (0 -> 1)",
+   "record": "C:/t/corr-assess/lanes/L7clogs/cache_proof.json"
+  }
+ },
+ "verdict_for_switching_step_2_on": "Do not switch on yet. Safe (0 worse in the product, 1 better) but nearly inert: 1 of 88 items placed. The model declines on about half the items, and the answer check rejects most of the rest. Some rejections are right (no place in the quote); some are recall misses (BBLs vs BBLa, H+ transports after N2).",
+ "open_issues": [
+  "The rejection reason 'quote not found verbatim' also covers an empty quote (the model declined); 47 of the 62. Suggest a separate 'no quote given' reason. Not changed here (outside the brief).",
+  "N2 costs H+ transports: 7 rejections where the only cargo is H+ and the quote does not name the transporter. Option: keep a currency cargo as a name when it is the transport's only cargo. Needs a PO/orchestrator call; not done.",
+  "Enzyme-name matching is exact-phrase: 'BBLs' does not match 'BBLa', and the A622 sentence did not match the NaGR item. A family or alias match would recover 136 NicGS (better). Not done.",
+  "Redaction cuts the rest of a line after a path (by design, ponytail note in code); the report loses that detail.",
+  "F2 (re-run L6's merge on rows L7 moves) still has to happen before LLM_ESTIMATE goes on."
+ ],
+ "scripts": "C:/t/corr-assess/lanes/L7cscripts/ (gate.sh, focused.sh, chain.sh, replay_head2.sh, cmp_replay.py, run_live.sh, live_l7c.py, live_sum.py, peek_rej.py, show_ans.py, show_sum.py, join22.py, cache_cmp.py, cache_diff.py)",
+ "logs": "C:/t/corr-assess/lanes/L7clogs/",
+ "commit_message": "C:/t/corr-assess/msgs/L7c_code.txt",
+ "pids": "every python run went through bounded_run.py (16 runs, FINAL SURVIVING COUNT 0 each); no python started outside the wrapper except four short read-only summary scripts that exited (live_sum, peek_rej/show_ans, join22, cache_cmp/diff)"
+}

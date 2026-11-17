@@ -1,0 +1,81 @@
+{
+ "arm": "base",
+ "leg": "base-PMC12444477-strict",
+ "paper": "PMC12444477",
+ "mode": "strict",
+ "run_dir": "C:\\t\\bt-corr\\g3\\legs\\base-PMC12444477-strict\\2026-11-17_1122",
+ "manifest": [
+  {
+   "slug": "PMC12444477",
+   "mode": "strict",
+   "status": "fail",
+   "stage": "post_pipeline",
+   "seconds": 4928.63,
+   "failure_kind": "contract",
+   "message": "post-pipeline validation failed: 1 blocking issue(s) at final_pre_export_gate_lifecycle [final_gate_report_missing]"
+  }
+ ],
+ "wall_seconds": 4928.63,
+ "pwml_files": [],
+ "release_status": "diagnostic_only",
+ "export_status": "refused",
+ "review_reasons": [],
+ "result_head": "RESULT: FAIL\n========================================\npaper      : PMC12444477\ntitle      : (unknown)\nslug       : PMC12444477\nmode       : strict\nstatus     : fail\nstage      : post_pipeline\nwall time  : 4928.6s (82m08s)\n\nWARNINGS\n----------------------------------------\n  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/11/mapping_meta: Mapped entity with a name is missing mapping_meta.\n  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/proteins/28/mapping_meta: Mapped entity with a name is missing mapping_meta.\n  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/11/mapping_meta: Mapped entity with a name is missing mapping_meta.\n  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/proteins/28/mapping_meta: Mapped entity with a name is mis",
+ "payload_counts": {
+  "reactions": 28,
+  "transports": 6,
+  "interactions": 31
+ },
+ "entity_counts": {
+  "species": 2,
+  "subcellular_locations": 12,
+  "compounds": 38,
+  "nucleic_acids": 1,
+  "proteins": 28,
+  "protein_complexes": 22
+ },
+ "quarantined_locked_reactions": 4,
+ "model_attempts_by_stage": {
+  "preprocessor": 12,
+  "Stage 1 extraction": 6,
+  "extraction json repair": 1,
+  "rag_prose_extraction": 24,
+  "Stage 2 inference": 4,
+  "audit loop": 3,
+  "gap resolver": 28
+ },
+ "model_attempts_total": 78,
+ "token_totals": {},
+ "model_attempt_keys": [
+  "attempt",
+  "content_chars",
+  "elapsed_seconds",
+  "finish_reason",
+  "kind",
+  "model",
+  "reason",
+  "request_hash",
+  "response_hash",
+  "seq",
+  "stage",
+  "status"
+ ],
+ "acceptance_keys": [
+  "acceptance_priorities",
+  "blockers_by_scope",
+  "completion",
+  "coverage_reconciliation_corpus",
+  "denominators",
+  "gold_set",
+  "identity",
+  "legs_attempted",
+  "legs_scored",
+  "negative_control_outcomes",
+  "notes",
+  "papers",
+  "research_failures_by_cause",
+  "run_dir",
+  "scientific_errors",
+  "strict_failures_by_boundary"
+ ]
+}

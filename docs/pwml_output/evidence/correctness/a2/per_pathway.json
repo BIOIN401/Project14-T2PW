@@ -1,0 +1,3338 @@
+{
+ "source": "IR regenerated from C:/t/integ (bcc67409) via a2_ir_replay.py; PWML byte-identical to base for 26/26",
+ "aggregate": {
+  "before": {
+   "crossings": 739,
+   "long_edges_gt600": 62,
+   "edge_len_max": 29017,
+   "bends": 689,
+   "enzyme_rxn_dist_median": 2910,
+   "enzyme_rxn_dist_max": 9534,
+   "enzyme_far_gt200": 59,
+   "reg_edges": 54,
+   "reg_only_molecules": 58,
+   "dup_tags": 52,
+   "n_entity_drawings": 578,
+   "W": 43143,
+   "H": 19092,
+   "edge_through_node": 3,
+   "node_overlaps": 1,
+   "route_fail": 2,
+   "area_Mpx": 37.552044,
+   "ISSUE:withheld_interaction_drawn_not_in_pwml": 41,
+   "ISSUE:directional_interaction_drawn_undirected": 10,
+   "ISSUE:duplicate_marker_tags": 52,
+   "ISSUE:transport_no_compartment_boundary_drawn": 13,
+   "ISSUE:upstream_duplicate_transporter": 1,
+   "ISSUE:label_truncated_tooltip_only": 5
+  },
+  "reg": {
+   "crossings": 645,
+   "long_edges_gt600": 54,
+   "edge_len_max": 28718,
+   "bends": 622,
+   "enzyme_rxn_dist_median": 2840,
+   "enzyme_rxn_dist_max": 9374,
+   "enzyme_far_gt200": 59,
+   "reg_edges": 0,
+   "reg_only_molecules": 0,
+   "dup_tags": 52,
+   "n_entity_drawings": 520,
+   "W": 42623,
+   "H": 17480,
+   "edge_through_node": 3,
+   "node_overlaps": 1,
+   "route_fail": 2,
+   "area_Mpx": 31.618738000000008,
+   "ISSUE:duplicate_marker_tags": 52,
+   "ISSUE:transport_no_compartment_boundary_drawn": 13,
+   "ISSUE:upstream_duplicate_transporter": 1,
+   "ISSUE:label_truncated_tooltip_only": 5
+  },
+  "enz": {
+   "crossings": 414,
+   "long_edges_gt600": 57,
+   "edge_len_max": 28799,
+   "bends": 638,
+   "enzyme_rxn_dist_median": 1800,
+   "enzyme_rxn_dist_max": 3210,
+   "enzyme_far_gt200": 9,
+   "reg_edges": 54,
+   "reg_only_molecules": 62,
+   "dup_tags": 52,
+   "n_entity_drawings": 644,
+   "W": 43612,
+   "H": 21734,
+   "edge_through_node": 3,
+   "node_overlaps": 1,
+   "route_fail": 2,
+   "area_Mpx": 42.206590000000006,
+   "ISSUE:withheld_interaction_drawn_not_in_pwml": 41,
+   "ISSUE:directional_interaction_drawn_undirected": 10,
+   "ISSUE:duplicate_marker_tags": 52,
+   "ISSUE:transport_no_compartment_boundary_drawn": 13,
+   "ISSUE:upstream_duplicate_transporter": 1,
+   "ISSUE:label_truncated_tooltip_only": 5
+  },
+  "merge": {
+   "crossings": 593,
+   "long_edges_gt600": 60,
+   "edge_len_max": 28714,
+   "bends": 600,
+   "enzyme_rxn_dist_median": 2710,
+   "enzyme_rxn_dist_max": 8749,
+   "enzyme_far_gt200": 49,
+   "reg_edges": 54,
+   "reg_only_molecules": 58,
+   "dup_tags": 31,
+   "n_entity_drawings": 578,
+   "W": 43143,
+   "H": 18210,
+   "edge_through_node": 3,
+   "node_overlaps": 1,
+   "route_fail": 2,
+   "area_Mpx": 36.051694,
+   "ISSUE:withheld_interaction_drawn_not_in_pwml": 41,
+   "ISSUE:directional_interaction_drawn_undirected": 10,
+   "ISSUE:duplicate_marker_tags": 31,
+   "ISSUE:transport_no_compartment_boundary_drawn": 13,
+   "ISSUE:upstream_duplicate_transporter": 1,
+   "ISSUE:label_truncated_tooltip_only": 5
+  },
+  "all": {
+   "crossings": 278,
+   "long_edges_gt600": 49,
+   "edge_len_max": 28285,
+   "bends": 461,
+   "enzyme_rxn_dist_median": 1710,
+   "enzyme_rxn_dist_max": 3250,
+   "enzyme_far_gt200": 4,
+   "reg_edges": 0,
+   "reg_only_molecules": 0,
+   "dup_tags": 31,
+   "n_entity_drawings": 564,
+   "W": 43091,
+   "H": 19772,
+   "edge_through_node": 3,
+   "node_overlaps": 1,
+   "route_fail": 2,
+   "area_Mpx": 35.370948000000006,
+   "ISSUE:duplicate_marker_tags": 31,
+   "ISSUE:transport_no_compartment_boundary_drawn": 13,
+   "ISSUE:upstream_duplicate_transporter": 1,
+   "ISSUE:label_truncated_tooltip_only": 5
+  }
+ },
+ "pathways": {
+  "7": {
+   "pathway": "Chlorophyll biosynthesis",
+   "style": "bands",
+   "diagram_vs_ir": {
+    "withheld_interaction_drawn_not_in_pwml": [
+     "int_1:binding",
+     "int_2:binding",
+     "int_3:binding",
+     "int_4:binding",
+     "int_5:binding",
+     "int_6:binding",
+     "int_7:binding",
+     "int_8:binding",
+     "int_9:binding",
+     "int_10:binding",
+     "int_11:binding",
+     "int_12:binding",
+     "int_17:binding",
+     "int_18:binding",
+     "int_19:binding",
+     "int_26:binding",
+     "int_27:regulation",
+     "int_28:component_of",
+     "int_29:component_of",
+     "int_30:regulates",
+     "int_31:regulates"
+    ],
+    "directional_interaction_drawn_undirected": [
+     "int_27:regulation",
+     "int_28:component_of",
+     "int_29:component_of",
+     "int_30:regulates",
+     "int_31:regulates"
+    ],
+    "duplicate_marker_tags": [
+     "R1",
+     "R7",
+     "R8",
+     "R17",
+     "R18",
+     "R19"
+    ]
+   },
+   "payload_vs_ir": {
+    "counts": {
+     "reactions": [
+      23,
+      23
+     ],
+     "transports": [
+      0,
+      0
+     ],
+     "interactions": [
+      31,
+      31
+     ]
+    },
+    "reactions_missing_in_ir": [],
+    "reaction_sides_differ": [],
+    "reaction_enzymes_differ": [
+     "Mg-chelatase reaction: payload ['mg-chelatase complex'] vs IR [['gun4 complex', 'mg-chelatase'], ['gun4 complex', 'mg-chelatase complex']]",
+     "singlet oxygen generation from Pchlide: payload [] vs IR [['fc1 complex', 'glutamyl-trna reductase']]"
+    ]
+   },
+   "metrics_before": {
+    "style": "bands",
+    "W": 4090,
+    "H": 3048,
+    "area_per_entity": 124657,
+    "n_entity_drawings": 100,
+    "n_unique_entities": 87,
+    "n_edges": 115,
+    "crossings": 129,
+    "bends": 88,
+    "edge_len_median": 149,
+    "edge_len_max": 3528,
+    "long_edges_gt600": 11,
+    "enzyme_rxn_dist_median": 80,
+    "enzyme_rxn_dist_max": 1347,
+    "enzyme_far_gt200": 11,
+    "enzymes_serving_gt1_reaction": 4,
+    "reg_edges": 31,
+    "reg_edge_share": 0.27,
+    "dashed_assoc_edges": 21,
+    "reg_only_molecules": 38,
+    "hub_compound": "protoporphyrinogen IX",
+    "hub_degree": 4,
+    "cross_region_edges": 0,
+    "lanes": 4,
+    "main_chain_len": 10,
+    "dup_tags": 6,
+    "truncated_labels": 0,
+    "interaction_classes": {
+     "assoc": 21,
+     "act": 3,
+     "inh": 7
+    },
+    "node_overlaps": 0,
+    "edge_through_node": 0,
+    "route_fail": 0,
+    "truncated": 0
+   },
+   "metrics_after_all": {
+    "crossings": 15,
+    "long_edges_gt600": 3,
+    "edge_len_max": 3467,
+    "bends": 29,
+    "enzyme_rxn_dist_median": 70,
+    "enzyme_rxn_dist_max": 210,
+    "enzyme_far_gt200": 1,
+    "reg_edges": 0,
+    "reg_only_molecules": 0,
+    "dup_tags": 3,
+    "n_entity_drawings": 64,
+    "W": 4060,
+    "H": 1924,
+    "edge_through_node": 0,
+    "node_overlaps": 0,
+    "route_fail": 0,
+    "hidden": {
+     "edges": 31,
+     "nodes": 41,
+     "act": 3,
+     "inh": 7
+    }
+   },
+   "after_all_issues": {
+    "duplicate_marker_tags": 3
+   },
+   "screenshot": "C:/t/corr-assess/a2/before/7.png",
+   "upstream_regulator_as_catalyst": [
+    {
+     "idx": 7,
+     "reaction": "Mg-chelatase reaction",
+     "modifier": "GUN4 complex",
+     "role": "activator"
+    },
+    {
+     "idx": 7,
+     "reaction": "singlet oxygen generation from Pchlide",
+     "modifier": "glutamyl-tRNA reductase",
+     "role": "activator"
+    },
+    {
+     "idx": 7,
+     "reaction": "singlet oxygen generation from Pchlide",
+     "modifier": "FC1 complex",
+     "role": "activator"
+    }
+   ],
+   "upstream_duplicate_reactions": {
+    "n_reactions": 23,
+    "same_compartment": [
+     {
+      "sig": "glu-trnaglu -> glu 1-semialdehyde",
+      "reactions": [
+       [
+        "rxn_1",
+        "plastid",
+        [
+         "hema1 complex"
+        ]
+       ],
+       [
+        "rxn_17",
+        "plastid",
+        [
+         "flu complex",
+         "glutamyl-trna reductase",
+         "hema1 complex"
+        ]
+       ]
+      ]
+     },
+     {
+      "sig": "coproporphyrinogen iii -> protoporphyrinogen ix",
+      "reactions": [
+       [
+        "rxn_7",
+        "plastid",
+        [
+         "cpo1"
+        ]
+       ],
+       [
+        "rxn_18",
+        "plastid",
+        [
+         "coproporphyrinogen-iii oxidase 1, chloroplastic",
+         "cpo1"
+        ]
+       ]
+      ]
+     },
+     {
+      "sig": "protoporphyrinogen ix -> protoporphyrin ix",
+      "reactions": [
+       [
+        "rxn_8",
+        "plastid",
+        [
+         "ppo1",
+         "protogen ix oxidase"
+        ]
+       ],
+       [
+        "rxn_19",
+        "plastid",
+        [
+         "ppo"
+        ]
+       ]
+      ]
+     }
+    ],
+    "across_compartments": [
+     {
+      "sig": "mg2 + protoporphyrin ix -> mg-proto ix",
+      "reactions": [
+       [
+        "rxn_9",
+        "thylakoid membrane",
+        [
+         "gun4 complex",
+         "mg-chelatase"
+        ]
+       ],
+       [
+        "rxn_21",
+        "plastid",
+        [
+         "gun4 complex",
+         "mg-chelatase complex"
+        ]
+       ]
+      ]
+     }
+    ]
+   }
+  },
+  "128": {
+   "pathway": "coenzyme A biosynthesis in Bacillus subtilis",
+   "style": "spine",
+   "diagram_vs_ir": {
+    "transport_no_compartment_boundary_drawn": [
+     "tr_1",
+     "tr_2",
+     "tr_3"
+    ],
+    "upstream_duplicate_transporter": [
+     "tr_2"
+    ],
+    "withheld_interaction_drawn_not_in_pwml": [
+     "int_1:Activation",
+     "int_2:binds"
+    ]
+   },
+   "payload_vs_ir": {
+    "counts": {
+     "reactions": [
+      11,
+      11
+     ],
+     "transports": [
+      3,
+      3
+     ],
+     "interactions": [
+      2,
+      2
+     ]
+    },
+    "reactions_missing_in_ir": [],
+    "reaction_sides_differ": [],
+    "reaction_enzymes_differ": []
+   },
+   "metrics_before": {
+    "style": "spine",
+    "W": 2544,
+    "H": 868,
+    "area_per_entity": 71235,
+    "n_entity_drawings": 31,
+    "n_unique_entities": 28,
+    "n_edges": 45,
+    "crossings": 15,
+    "bends": 22,
+    "edge_len_median": 96,
+    "edge_len_max": 1663,
+    "long_edges_gt600": 5,
+    "enzyme_rxn_dist_median": 70,
+    "enzyme_rxn_dist_max": 430,
+    "enzyme_far_gt200": 2,
+    "enzymes_serving_gt1_reaction": 0,
+    "reg_edges": 2,
+    "reg_edge_share": 0.044,
+    "dashed_assoc_edges": 1,
+    "reg_only_molecules": 2,
+    "hub_compound": "4'-phosphopantetheine",
+    "hub_degree": 3,
+    "cross_region_edges": 0,
+    "lanes": 0,
+    "main_chain_len": 7,
+    "dup_tags": 0,
+    "truncated_labels": 0,
+    "interaction_classes": {
+     "act": 1,
+     "assoc": 1
+    },
+    "node_overlaps": 0,
+    "edge_through_node": 0,
+    "route_fail": 0,
+    "truncated": 0
+   },
+   "metrics_after_all": {
+    "crossings": 10,
+    "long_edges_gt600": 5,
+    "edge_len_max": 1653,
+    "bends": 18,
+    "enzyme_rxn_dist_median": 70,
+    "enzyme_rxn_dist_max": 70,
+    "enzyme_far_gt200": 0,
+    "reg_edges": 0,
+    "reg_only_molecules": 0,
+    "dup_tags": 0,
+    "n_entity_drawings": 29,
+    "W": 2544,
+    "H": 852,
+    "edge_through_node": 0,
+    "node_overlaps": 0,
+    "route_fail": 0,
+    "hidden": {
+     "edges": 2,
+     "nodes": 2,
+     "act": 1,
+     "inh": 0
+    }
+   },
+   "after_all_issues": {
+    "transport_no_compartment_boundary_drawn": 3,
+    "upstream_duplicate_transporter": 1
+   },
+   "screenshot": "C:/t/corr-assess/a2/before/128.png",
+   "upstream_regulator_as_catalyst": [],
+   "upstream_duplicate_reactions": null
+  },
+  "9": {
+   "pathway": "menaquinone (DHNA) biosynthesis in Lactococcus lactis",
+   "style": "spine",
+   "diagram_vs_ir": {
+    "transport_no_compartment_boundary_drawn": [
+     "tr_1",
+     "tr_2"
+    ],
+    "duplicate_marker_tags": [
+     "T1",
+     "T2"
+    ],
+    "label_truncated_tooltip_only": [
+     "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate",
+     "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate"
+    ]
+   },
+   "payload_vs_ir": {
+    "counts": {
+     "reactions": [
+      19,
+      19
+     ],
+     "transports": [
+      2,
+      2
+     ],
+     "interactions": [
+      1,
+      1
+     ]
+    },
+    "reactions_missing_in_ir": [],
+    "reaction_sides_differ": [],
+    "reaction_enzymes_differ": [
+     "MenB-catalyzed conversion of OSB-CoA to DHNA-CoA: payload ['menb complex'] vs IR [['menb complex', 'mend complex']]"
+    ]
+   },
+   "metrics_before": {
+    "style": "spine",
+    "W": 3013,
+    "H": 592,
+    "area_per_entity": 43510,
+    "n_entity_drawings": 41,
+    "n_unique_entities": 20,
+    "n_edges": 65,
+    "crossings": 32,
+    "bends": 26,
+    "edge_len_median": 97,
+    "edge_len_max": 2412,
+    "long_edges_gt600": 4,
+    "enzyme_rxn_dist_median": 90,
+    "enzyme_rxn_dist_max": 1273,
+    "enzyme_far_gt200": 2,
+    "enzymes_serving_gt1_reaction": 2,
+    "reg_edges": 1,
+    "reg_edge_share": 0.015,
+    "dashed_assoc_edges": 0,
+    "reg_only_molecules": 0,
+    "hub_compound": "isochorismate",
+    "hub_degree": 3,
+    "cross_region_edges": 0,
+    "lanes": 0,
+    "main_chain_len": 9,
+    "dup_tags": 2,
+    "truncated_labels": 2,
+    "interaction_classes": {
+     "inh": 1
+    },
+    "node_overlaps": 1,
+    "edge_through_node": 3,
+    "route_fail": 2,
+    "truncated": 2
+   },
+   "metrics_after_all": {
+    "crossings": 17,
+    "long_edges_gt600": 2,
+    "edge_len_max": 2387,
+    "bends": 17,
+    "enzyme_rxn_dist_median": 90,
+    "enzyme_rxn_dist_max": 180,
+    "enzyme_far_gt200": 0,
+    "reg_edges": 0,
+    "reg_only_molecules": 0,
+    "dup_tags": 2,
+    "n_entity_drawings": 43,
+    "W": 3015,
+    "H": 734,
+    "edge_through_node": 3,
+    "node_overlaps": 1,
+    "route_fail": 2,
+    "hidden": {
+     "edges": 1,
+     "nodes": 1,
+     "act": 0,
+     "inh": 1
+    }
+   },
+   "after_all_issues": {
+    "transport_no_compartment_boundary_drawn": 2,
+    "duplicate_marker_tags": 2,
+    "label_truncated_tooltip_only": 2
+   },
+   "screenshot": "C:/t/corr-assess/a2/before/9.png",
+   "upstream_regulator_as_catalyst": [
+    {
+     "idx": 9,
+     "reaction": "MenB-catalyzed conversion of OSB-CoA to DHNA-CoA",
+     "modifier": "MenD complex",
+     "role": "inhibitor"
+    }
+   ],
+   "upstream_duplicate_reactions": {
+    "n_reactions": 19,
+    "same_compartment": [],
+    "across_compartments": [
+     {
+      "sig": "chorismate -> isochorismate",
+      "reactions": [
+       [
+        "rxn_1",
+        "cell",
+        [
+         "menf complex"
+        ]
+       ],
+       [
+        "rxn_11",
+        "intracellular",
+        [
+         "menf complex"
+        ]
+       ]
+      ]
+     },
+     {
+      "sig": "isochorismate -> 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate",
+      "reactions": [
+       [
+        "rxn_2",
+        "cell",
+        [
+         "mend complex"
+        ]
+       ],
+       [
+        "rxn_12",
+        "intracellular",
+        [
+         "mend complex"
+        ]
+       ]
+      ]
+     },
+     {
+      "sig": "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate -> shchc",
+      "reactions": [
+       [
+        "rxn_3",
+        "cell",
+        [
+         "menh complex"
+        ]
+       ],
+       [
+        "rxn_13",
+        "intracellular",
+        [
+         "menh complex"
+        ]
+       ]
+      ]
+     },
+     {
+      "sig": "shchc -> osb",
+      "reactions": [
+       [
+        "rxn_4",
+        "cell",
+        [
+         "menc complex"
+        ]
+       ],
+       [
+        "rxn_14",
+        "intracellular",
+        [
+         "menc complex"
+        ]
+       ]
+      ]
+     },
+     {
+      "sig": "osb -> osb-coa",
+      "reactions": [
+       [
+        "rxn_5",
+        "cell",
+        [
+         "mene complex"
+        ]
+       ],
+       [
+        "rxn_15",
+        "intracellular",
+        [
+         "mene complex"
+        ]
+       ]
+      ]
+     },
+     {
+      "sig": "osb-coa -> dhna-coa",
+      "reactions": [
+       [
+        "rxn_6",
+        "cell",
+        [
+         "menb complex",
+         "mend complex"
+        ]
+       ],
+       [
+        "rxn_16",
+        "intracellular",
+        [
+         "menb complex"
+        ]
+       ]
+      ]
+     },
+     {
+      "sig": "dhna-coa -> 1,4-dihydroxy-2-naphthoic acid",
+      "reactions": [
+       [
+        "rxn_7",
+        "cell",
+        [
+         "meni"
+        ]
+       ],
+       [
+        "rxn_17",
+        "intracellular",
+        [
+         "meni"
+        ]
+       ]
+      ]
+     },
+     {
+      "sig": "1,4-dihydroxy-2-naphthoic acid + prenyl diphosphate -> dmk",
+      "reactions": [
+       [
+        "rxn_8",
+        "cell",
+        [
+         "mena"
+        ]
+       ],
+       [
+        "rxn_18",
+        "intracellular",
+        [
+         "mena"
+        ]
+       ]
+      ]
+     },
+     {
+      "sig": "dmk -> mk",
+      "reactions": [
+       [
+        "rxn_9",
+        "cell",
+        [
+         "meng complex"
+        ]
+       ],
+       [
+        "rxn_19",
+        "intracellular",
+        [
+         "meng complex"
+        ]
+       ]
+      ]
+     }
+    ]
+   }
+  },
+  "116": {
+   "pathway": "sphingolipid biosynthesis",
+   "style": "cell",
+   "diagram_vs_ir": {
+    "duplicate_marker_tags": [
+     "R1",
+     "R4"
+    ]
+   },
+   "payload_vs_ir": {
+    "counts": {
+     "reactions": [
+      15,
+      14
+     ],
+     "transports": [
+      1,
+      1
+     ],
+     "interactions": [
+      0,
+      0
+     ]
+    },
+    "reactions_missing_in_ir": [],
+    "reaction_sides_differ": [
+     "serine palmitoyltransferase reaction: payload ['palmitoyl-coa', 'serine']->['3-dehydrosphinganine'] vs IR [(['l-serine', 'palmitoyl-coa'], ['3-dehydrosphinganine'])]",
+     "ceramide synthase reaction: payload ['sphinganine']->['dihydroceramide'] vs IR [(['sphinganine'], ['ceramide'])]"
+    ],
+    "reaction_enzymes_differ": []
+   },
+   "metrics_before": {
+    "style": "cell",
+    "W": 3388,
+    "H": 1016,
+    "area_per_entity": 122920,
+    "n_entity_drawings": 28,
+    "n_unique_entities": 21,
+    "n_edges": 45,
+    "crossings": 16,
+    "bends": 26,
+    "edge_len_median": 109,
+    "edge_len_max": 1912,
+    "long_edges_gt600": 5,
+    "enzyme_rxn_dist_median": 70,
+    "enzyme_rxn_dist_max": 220,
+    "enzyme_far_gt200": 2,
+    "enzymes_serving_gt1_reaction": 1,
+    "reg_edges": 0,
+    "reg_edge_share": 0.0,
+    "dashed_assoc_edges": 0,
+    "reg_only_molecules": 0,
+    "hub_compound": "ceramide",
+    "hub_degree": 5,
+    "cross_region_edges": 0,
+    "lanes": 5,
+    "main_chain_len": 7,
+    "dup_tags": 2,
+    "truncated_labels": 0,
+    "interaction_classes": {},
+    "node_overlaps": 0,
+    "edge_through_node": 0,
+    "route_fail": 0,
+    "truncated": 0
+   },
+   "metrics_after_all": {
+    "crossings": 6,
+    "long_edges_gt600": 4,
+    "edge_len_max": 1872,
+    "bends": 20,
+    "enzyme_rxn_dist_median": 70,
+    "enzyme_rxn_dist_max": 80,
+    "enzyme_far_gt200": 0,
+    "reg_edges": 0,
+    "reg_only_molecules": 0,
+    "dup_tags": 1,
+    "n_entity_drawings": 28,
+    "W": 3388,
+    "H": 1000,
+    "edge_through_node": 0,
+    "node_overlaps": 0,
+    "route_fail": 0,
+    "hidden": {
+     "edges": 0,
+     "nodes": 0,
+     "act": 0,
+     "inh": 0
+    }
+   },
+   "after_all_issues": {
+    "duplicate_marker_tags": 1
+   },
+   "screenshot": "C:/t/corr-assess/a2/before/116.png",
+   "upstream_regulator_as_catalyst": [],
+   "upstream_duplicate_reactions": {
+    "n_reactions": 14,
+    "same_compartment": [
+     {
+      "sig": "l-serine + palmitoyl-coa -> 3-dehydrosphinganine",
+      "reactions": [
+       [
+        "rxn_1",
+        "endoplasmic reticulum",
+        [
+         "serine palmitoyltransferase complex"
+        ]
+       ],
+       [
+        "rxn_4",
+        "endoplasmic reticulum",
+        [
+         "serine palmitoyltransferase complex"
+        ]
+       ]
+      ]
+     }
+    ],
+    "across_compartments": []
+   }
+  },
+  "5": {
+   "pathway": "menaquinone biosynthesis",
+   "style": "spine",
+   "diagram_vs_ir": {
+    "transport_no_compartment_boundary_drawn": [
+     "tr_1",
+     "tr_2"
+    ],
+    "duplicate_marker_tags": [
+     "R2",
+     "R4",
+     "R5",
+     "R6",
+     "R7",
+     "R8",
+     "R9",
+     "R10",
+     "R11",
+     "R12",
+     "R13",
+     "R16",
+     "T1",
+     "T2"
+    ],
+    "label_truncated_tooltip_only": [
+     "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate"
+    ]
+   },
+   "payload_vs_ir": {
+    "counts": {
+     "reactions": [
+      16,
+      16
+     ],
+     "transports": [
+      2,
+      2
+     ],
+     "interactions": [
+      0,
+      0
+     ]
+    },
+    "reactions_missing_in_ir": [],
+    "reaction_sides_differ": [],
+    "reaction_enzymes_differ": []
+   },
+   "metrics_before": {
+    "style": "spine",
+    "W": 2335,
+    "H": 764,
+    "area_per_entity": 68607,
+    "n_entity_drawings": 26,
+    "n_unique_entities": 19,
+    "n_edges": 55,
+    "crossings": 41,
+    "bends": 37,
+    "edge_len_median": 120,
+    "edge_len_max": 1607,
+    "long_edges_gt600": 1,
+    "enzyme_rxn_dist_median": 170,
+    "enzyme_rxn_dist_max": 520,
+    "enzyme_far_gt200": 2,
+    "enzymes_serving_gt1_reaction": 6,
+    "reg_edges": 0,
+    "reg_edge_share": 0.0,
+    "dashed_assoc_edges": 0,
+    "reg_only_molecules": 0,
+    "hub_compound": "SHCHC",
+    "hub_degree": 4,
+    "cross_region_edges": 0,
+    "lanes": 0,
+    "main_chain_len": 7,
+    "dup_tags": 14,
+    "truncated_labels": 1,
+    "interaction_classes": {},
+    "node_overlaps": 0,
+    "edge_through_node": 0,
+    "route_fail": 0,
+    "truncated": 1
+   },
+   "metrics_after_all": {
+    "crossings": 9,
+    "long_edges_gt600": 1,
+    "edge_len_max": 1607,
+    "bends": 11,
+    "enzyme_rxn_dist_median": 80,
+    "enzyme_rxn_dist_max": 170,
+    "enzyme_far_gt200": 0,
+    "reg_edges": 0,
+    "reg_only_molecules": 0,
+    "dup_tags": 8,
+    "n_entity_drawings": 26,
+    "W": 2335,
+    "H": 648,
+    "edge_through_node": 0,
+    "node_overlaps": 0,
+    "route_fail": 0,
+    "hidden": {
+     "edges": 0,
+     "nodes": 0,
+     "act": 0,
+     "inh": 0
+    }
+   },
+   "after_all_issues": {
+    "transport_no_compartment_boundary_drawn": 2,
+    "duplicate_marker_tags": 8,
+    "label_truncated_tooltip_only": 1
+   },
+   "screenshot": "C:/t/corr-assess/a2/before/5.png",
+   "upstream_regulator_as_catalyst": [],
+   "upstream_duplicate_reactions": {
+    "n_reactions": 16,
+    "same_compartment": [
+     {
+      "sig": "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate -> shchc",
+      "reactions": [
+       [
+        "rxn_4",
+        "intracellular",
+        [
+         "menh"
+        ]
+       ],
+       [
+        "rxn_9",
+        "intracellular",
+        [
+         "menh"
+        ]
+       ]
+      ]
+     },
+     {
+      "sig": "shchc -> osb",
+      "reactions": [
+       [
+        "rxn_5",
+        "intracellular",
+        [
+         "menc"
+        ]
+       ],
+       [
+        "rxn_10",
+        "intracellular",
+        [
+         "menc"
+        ]
+       ]
+      ]
+     },
+     {
+      "sig": "osb -> osb-coa",
+      "reactions": [
+       [
+        "rxn_6",
+        "intracellular",
+        [
+         "mene"
+        ]
+       ],
+       [
+        "rxn_11",
+        "intracellular",
+        [
+         "mene"
+        ]
+       ]
+      ]
+     },
+     {
+      "sig": "osb-coa -> dhna-coa",
+      "reactions": [
+       [
+        "rxn_7",
+        "intracellular",
+        [
+         "menb"
+        ]
+       ],
+       [
+        "rxn_12",
+        "intracellular",
+        [
+         "menb"
+        ]
+       ]
+      ]
+     },
+     {
+      "sig": "dhna-coa -> 1,4-dihydroxy-2-naphthoic acid",
+      "reactions": [
+       [
+        "rxn_8",
+        "intracellular",
+        [
+         "meni"
+        ]
+       ],
+       [
+        "rxn_13",
+        "intracellular",
+        [
+         "meni"
+        ]
+       ]
+      ]
+     }
+    ],
+    "across_compartments": [
+     {
+      "sig": "1,4-dihydroxy-2-naphthoic acid + dimethylallylpyrophosphate -> demethylmenaquinone (dmk)",
+      "reactions": [
+       [
+        "rxn_2",
+        "cell",
+        [
+         "mena complex"
+        ]
+       ],
+       [
+        "rxn_14",
+        "intracellular",
+        [
+         "mena complex"
+        ]
+       ],
+       [
+        "rxn_16",
+        "cell",
+        [
+         "mena complex"
+        ]
+       ]
+      ]
+     },
+     {
+      "sig": "demethylmenaquinone (dmk) -> menaquinone (mk)",
+      "reactions": [
+       [
+        "rxn_3",
+        "cell",
+        [
+         "meng"
+        ]
+       ],
+       [
+        "rxn_15",
+        "intracellular",
+        [
+         "meng"
+        ]
+       ]
+      ]
+     }
+    ]
+   }
+  },
+  "134": {
+   "pathway": "carnitine biosynthesis",
+   "style": "spine",
+   "diagram_vs_ir": {
+    "transport_no_compartment_boundary_drawn": [
+     "tr_1"
+    ],
+    "duplicate_marker_tags": [
+     "R2",
+     "R3",
+     "R6"
+    ]
+   },
+   "payload_vs_ir": {
+    "counts": {
+     "reactions": [
+      10,
+      10
+     ],
+     "transports": [
+      1,
+      1
+     ],
+     "interactions": [
+      0,
+      0
+     ]
+    },
+    "reactions_missing_in_ir": [],
+    "reaction_sides_differ": [],
+    "reaction_enzymes_differ": []
+   },
+   "metrics_before": {
+    "style": "spine",
+    "W": 1448,
+    "H": 868,
+    "area_per_entity": 48349,
+    "n_entity_drawings": 26,
+    "n_unique_entities": 14,
+    "n_edges": 46,
+    "crossings": 46,
+    "bends": 41,
+    "edge_len_median": 121,
+    "edge_len_max": 1207,
+    "long_edges_gt600": 4,
+    "enzyme_rxn_dist_median": 150,
+    "enzyme_rxn_dist_max": 973,
+    "enzyme_far_gt200": 7,
+    "enzymes_serving_gt1_reaction": 6,
+    "reg_edges": 0,
+    "reg_edge_share": 0.0,
+    "dashed_assoc_edges": 0,
+    "reg_only_molecules": 0,
+    "hub_compound": "3-hydroxy-N6-trimethyllysine",
+    "hub_degree": 4,
+    "cross_region_edges": 0,
+    "lanes": 0,
+    "main_chain_len": 4,
+    "dup_tags": 3,
+    "truncated_labels": 0,
+    "interaction_classes": {},
+    "node_overlaps": 0,
+    "edge_through_node": 0,
+    "route_fail": 0,
+    "truncated": 0
+   },
+   "metrics_after_all": {
+    "crossings": 6,
+    "long_edges_gt600": 2,
+    "edge_len_max": 832,
+    "bends": 25,
+    "enzyme_rxn_dist_median": 70,
+    "enzyme_rxn_dist_max": 220,
+    "enzyme_far_gt200": 1,
+    "reg_edges": 0,
+    "reg_only_molecules": 0,
+    "dup_tags": 1,
+    "n_entity_drawings": 30,
+    "W": 1491,
+    "H": 924,
+    "edge_through_node": 0,
+    "node_overlaps": 0,
+    "route_fail": 0,
+    "hidden": {
+     "edges": 0,
+     "nodes": 0,
+     "act": 0,
+     "inh": 0
+    }
+   },
+   "after_all_issues": {
+    "transport_no_compartment_boundary_drawn": 1,
+    "duplicate_marker_tags": 1
+   },
+   "screenshot": "C:/t/corr-assess/a2/before/134.png",
+   "upstream_regulator_as_catalyst": [],
+   "upstream_duplicate_reactions": {
+    "n_reactions": 10,
+    "same_compartment": [],
+    "across_compartments": [
+     {
+      "sig": "n6-trimethyllysine -> 3-hydroxy-n6-trimethyllysine",
+      "reactions": [
+       [
+        "rxn_1",
+        "mitochondria",
+        [
+         "bbd",
+         "tmld"
+        ]
+       ],
+       [
+        "rxn_7",
+        "cell",
+        [
+         "tmld"
+        ]
+       ]
+      ]
+     },
+     {
+      "sig": "3-hydroxy-n6-trimethyllysine -> 4-trimethylaminobutyraldehyde + glycine",
+      "reactions": [
+       [
+        "rxn_2",
+        "mitochondria",
+        [
+         "shmt1"
+        ]
+       ],
+       [
+        "rxn_3",
+        "mitochondria",
+        [
+         "shmt2"
+        ]
+       ],
+       [
+        "rxn_6",
+        "mitochondria",
+        [
+         "shmt1",
+         "shmt2",
+         "tha1"
+        ]
+       ],
+       [
+        "rxn_9",
+        "cell",
+        [
+         "shmt1",
+         "shmt2",
+         "tha1"
+        ]
+       ]
+      ]
+     }
+    ]
+   }
+  },
+  "135": {
+   "pathway": "furochromone biosynthesis in Saposhnikovia divaricata",
+   "style": "spine",
+   "diagram_vs_ir": {},
+   "payload_vs_ir": {
+    "counts": {
+     "reactions": [
+      10,
+      10
+     ],
+     "transports": [
+      0,
+      0
+     ],
+     "interactions": [
+      0,
+      0
+     ]
+    },
+    "reactions_missing_in_ir": [],
+    "reaction_sides_differ": [],
+    "reaction_enzymes_differ": []
+   },
+   "metrics_before": {
+    "style": "spine",
+    "W": 2126,
+    "H": 436,
+    "area_per_entity": 46354,
+    "n_entity_drawings": 20,
+    "n_unique_entities": 20,
+    "n_edges": 39,
+    "crossings": 31,
+    "bends": 29,
+    "edge_len_median": 97,
+    "edge_len_max": 1874,
+    "long_edges_gt600": 5,
+    "enzyme_rxn_dist_median": 140,
+    "enzyme_rxn_dist_max": 353,
+    "enzyme_far_gt200": 5,
+    "enzymes_serving_gt1_reaction": 5,
+    "reg_edges": 0,
+    "reg_edge_share": 0.0,
+    "dashed_assoc_edges": 0,
+    "reg_only_molecules": 0,
+    "hub_compound": "noreugenin",
+    "hub_degree": 3,
+    "cross_region_edges": 0,
+    "lanes": 0,
+    "main_chain_len": 6,
+    "dup_tags": 0,
+    "truncated_labels": 0,
+    "interaction_classes": {},
+    "node_overlaps": 0,
+    "edge_through_node": 0,
+    "route_fail": 0,
+    "truncated": 0
+   },
+   "metrics_after_all": {
+    "crossings": 29,
+    "long_edges_gt600": 5,
+    "edge_len_max": 1802,
+    "bends": 28,
+    "enzyme_rxn_dist_median": 80,
+    "enzyme_rxn_dist_max": 140,
+    "enzyme_far_gt200": 0,
+    "reg_edges": 0,
+    "reg_only_molecules": 0,
+    "dup_tags": 0,
+    "n_entity_drawings": 25,
+    "W": 2205,
+    "H": 636,
+    "edge_through_node": 0,
+    "node_overlaps": 0,
+    "route_fail": 0,
+    "hidden": {
+     "edges": 0,
+     "nodes": 0,
+     "act": 0,
+     "inh": 0
+    }
+   },
+   "after_all_issues": {},
+   "screenshot": "C:/t/corr-assess/a2/before/135.png",
+   "upstream_regulator_as_catalyst": [],
+   "upstream_duplicate_reactions": null
+  },
+  "78": {
+   "pathway": "enterobactin biosynthesis",
+   "style": "spine",
+   "diagram_vs_ir": {
+    "transport_no_compartment_boundary_drawn": [
+     "tr_1"
+    ],
+    "withheld_interaction_drawn_not_in_pwml": [
+     "int_1:Inhibition"
+    ]
+   },
+   "payload_vs_ir": {
+    "counts": {
+     "reactions": [
+      7,
+      7
+     ],
+     "transports": [
+      1,
+      1
+     ],
+     "interactions": [
+      1,
+      1
+     ]
+    },
+    "reactions_missing_in_ir": [],
+    "reaction_sides_differ": [
+     "EntB isochorismatase reaction: payload ['isochorismate']->['2,3-dihydro-2,3-dihydroxybenzoate', 'pyruvate'] vs IR [(['isochorismate'], ['2,3-dihydro-2,3-dihydroxybenzoate', 'pyruvic acid'])]",
+     "LDH reaction: payload ['nadh', 'pyruvate']->['lactate', 'nad+'] vs IR [(['nadh', 'pyruvic acid'], ['lactate', 'nad+'])]"
+    ],
+    "reaction_enzymes_differ": []
+   },
+   "metrics_before": {
+    "style": "spine",
+    "W": 1628,
+    "H": 850,
+    "area_per_entity": 53219,
+    "n_entity_drawings": 26,
+    "n_unique_entities": 25,
+    "n_edges": 32,
+    "crossings": 51,
+    "bends": 29,
+    "edge_len_median": 199,
+    "edge_len_max": 1330,
+    "long_edges_gt600": 2,
+    "enzyme_rxn_dist_median": 260,
+    "enzyme_rxn_dist_max": 350,
+    "enzyme_far_gt200": 5,
+    "enzymes_serving_gt1_reaction": 1,
+    "reg_edges": 1,
+    "reg_edge_share": 0.031,
+    "dashed_assoc_edges": 0,
+    "reg_only_molecules": 1,
+    "hub_compound": "isochorismate",
+    "hub_degree": 2,
+    "cross_region_edges": 0,
+    "lanes": 0,
+    "main_chain_len": 4,
+    "dup_tags": 0,
+    "truncated_labels": 0,
+    "interaction_classes": {
+     "inh": 1
+    },
+    "node_overlaps": 0,
+    "edge_through_node": 0,
+    "route_fail": 0,
+    "truncated": 0
+   },
+   "metrics_after_all": {
+    "crossings": 18,
+    "long_edges_gt600": 3,
+    "edge_len_max": 1415,
+    "bends": 23,
+    "enzyme_rxn_dist_median": 80,
+    "enzyme_rxn_dist_max": 170,
+    "enzyme_far_gt200": 0,
+    "reg_edges": 0,
+    "reg_only_molecules": 0,
+    "dup_tags": 0,
+    "n_entity_drawings": 26,
+    "W": 1722,
+    "H": 992,
+    "edge_through_node": 0,
+    "node_overlaps": 0,
+    "route_fail": 0,
+    "hidden": {
+     "edges": 1,
+     "nodes": 1,
+     "act": 0,
+     "inh": 1
+    }
+   },
+   "after_all_issues": {
+    "transport_no_compartment_boundary_drawn": 1
+   },
+   "screenshot": "C:/t/corr-assess/a2/before/78.png",
+   "upstream_regulator_as_catalyst": [],
+   "upstream_duplicate_reactions": null
+  },
+  "125": {
+   "pathway": "furanocoumarin biosynthesis",
+   "style": "bands",
+   "diagram_vs_ir": {
+    "duplicate_marker_tags": [
+     "R5",
+     "R8"
+    ]
+   },
+   "payload_vs_ir": {
+    "counts": {
+     "reactions": [
+      8,
+      8
+     ],
+     "transports": [
+      0,
+      0
+     ],
+     "interactions": [
+      0,
+      0
+     ]
+    },
+    "reactions_missing_in_ir": [],
+    "reaction_sides_differ": [],
+    "reaction_enzymes_differ": []
+   },
+   "metrics_before": {
+    "style": "bands",
+    "W": 999,
+    "H": 590,
+    "area_per_entity": 29460,
+    "n_entity_drawings": 20,
+    "n_unique_entities": 20,
+    "n_edges": 34,
+    "crossings": 59,
+    "bends": 51,
+    "edge_len_median": 174,
+    "edge_len_max": 699,
+    "long_edges_gt600": 1,
+    "enzyme_rxn_dist_median": 110,
+    "enzyme_rxn_dist_max": 230,
+    "enzyme_far_gt200": 1,
+    "enzymes_serving_gt1_reaction": 2,
+    "reg_edges": 0,
+    "reg_edge_share": 0.0,
+    "dashed_assoc_edges": 0,
+    "reg_only_molecules": 0,
+    "hub_compound": "SAM",
+    "hub_degree": 5,
+    "cross_region_edges": 0,
+    "lanes": 1,
+    "main_chain_len": 2,
+    "dup_tags": 2,
+    "truncated_labels": 0,
+    "interaction_classes": {},
+    "node_overlaps": 0,
+    "edge_through_node": 0,
+    "route_fail": 0,
+    "truncated": 0
+   },
+   "metrics_after_all": {
+    "crossings": 40,
+    "long_edges_gt600": 1,
+    "edge_len_max": 640,
+    "bends": 40,
+    "enzyme_rxn_dist_median": 60,
+    "enzyme_rxn_dist_max": 120,
+    "enzyme_far_gt200": 0,
+    "reg_edges": 0,
+    "reg_only_molecules": 0,
+    "dup_tags": 1,
+    "n_entity_drawings": 24,
+    "W": 999,
+    "H": 762,
+    "edge_through_node": 0,
+    "node_overlaps": 0,
+    "route_fail": 0,
+    "hidden": {
+     "edges": 0,
+     "nodes": 0,
+     "act": 0,
+     "inh": 0
+    }
+   },
+   "after_all_issues": {
+    "duplicate_marker_tags": 1
+   },
+   "screenshot": "C:/t/corr-assess/a2/before/125.png",
+   "upstream_regulator_as_catalyst": [],
+   "upstream_duplicate_reactions": {
+    "n_reactions": 8,
+    "same_compartment": [
+     {
+      "sig": "bergaptol + sam -> bergapten",
+      "reactions": [
+       [
+        "rxn_5",
+        "endoplasmic_reticulum",
+        [
+         "agomt1"
+        ]
+       ],
+       [
+        "rxn_8",
+        "endoplasmic_reticulum",
+        [
+         "agomt2"
+        ]
+       ]
+      ]
+     }
+    ],
+    "across_compartments": []
+   }
+  },
+  "129": {
+   "pathway": "riboflavin biosynthesis",
+   "style": "spine",
+   "diagram_vs_ir": {
+    "label_truncated_tooltip_only": [
+     "2,5-diamino-6-ribosylamino-pyrimidinone 5\u2032-phosphate",
+     "5-amino-6-ribitylamino-pyrimidinedione 5\u2032-phosphate"
+    ]
+   },
+   "payload_vs_ir": {
+    "counts": {
+     "reactions": [
+      8,
+      8
+     ],
+     "transports": [
+      0,
+      0
+     ],
+     "interactions": [
+      0,
+      0
+     ]
+    },
+    "reactions_missing_in_ir": [],
+    "reaction_sides_differ": [],
+    "reaction_enzymes_differ": []
+   },
+   "metrics_before": {
+    "style": "spine",
+    "W": 1802,
+    "H": 592,
+    "area_per_entity": 62749,
+    "n_entity_drawings": 17,
+    "n_unique_entities": 17,
+    "n_edges": 29,
+    "crossings": 14,
+    "bends": 16,
+    "edge_len_median": 82,
+    "edge_len_max": 859,
+    "long_edges_gt600": 2,
+    "enzyme_rxn_dist_median": 170,
+    "enzyme_rxn_dist_max": 682,
+    "enzyme_far_gt200": 3,
+    "enzymes_serving_gt1_reaction": 3,
+    "reg_edges": 0,
+    "reg_edge_share": 0.0,
+    "dashed_assoc_edges": 0,
+    "reg_only_molecules": 0,
+    "hub_compound": "2,5-diamino-6-ribosylamino-pyrimidinone 5\u2032-phosphate",
+    "hub_degree": 3,
+    "cross_region_edges": 0,
+    "lanes": 0,
+    "main_chain_len": 6,
+    "dup_tags": 0,
+    "truncated_labels": 2,
+    "interaction_classes": {},
+    "node_overlaps": 0,
+    "edge_through_node": 0,
+    "route_fail": 0,
+    "truncated": 2
+   },
+   "metrics_after_all": {
+    "crossings": 2,
+    "long_edges_gt600": 1,
+    "edge_len_max": 844,
+    "bends": 12,
+    "enzyme_rxn_dist_median": 80,
+    "enzyme_rxn_dist_max": 170,
+    "enzyme_far_gt200": 0,
+    "reg_edges": 0,
+    "reg_only_molecules": 0,
+    "dup_tags": 0,
+    "n_entity_drawings": 21,
+    "W": 1809,
+    "H": 734,
+    "edge_through_node": 0,
+    "node_overlaps": 0,
+    "route_fail": 0,
+    "hidden": {
+     "edges": 0,
+     "nodes": 0,
+     "act": 0,
+     "inh": 0
+    }
+   },
+   "after_all_issues": {
+    "label_truncated_tooltip_only": 2
+   },
+   "screenshot": "C:/t/corr-assess/a2/before/129.png",
+   "upstream_regulator_as_catalyst": [],
+   "upstream_duplicate_reactions": null
+  },
+  "138": {
+   "pathway": "tubercidin biosynthesis",
+   "style": "spine",
+   "diagram_vs_ir": {
+    "transport_no_compartment_boundary_drawn": [
+     "tr_1"
+    ]
+   },
+   "payload_vs_ir": {
+    "counts": {
+     "reactions": [
+      8,
+      8
+     ],
+     "transports": [
+      1,
+      1
+     ],
+     "interactions": [
+      0,
+      0
+     ]
+    },
+    "reactions_missing_in_ir": [
+     "None: ['compound 3'] -> ['compound 5']"
+    ],
+    "reaction_sides_differ": [],
+    "reaction_enzymes_differ": []
+   },
+   "metrics_before": {
+    "style": "spine",
+    "W": 2075,
+    "H": 308,
+    "area_per_entity": 31963,
+    "n_entity_drawings": 20,
+    "n_unique_entities": 19,
+    "n_edges": 28,
+    "crossings": 0,
+    "bends": 5,
+    "edge_len_median": 55,
+    "edge_len_max": 1342,
+    "long_edges_gt600": 2,
+    "enzyme_rxn_dist_median": 60,
+    "enzyme_rxn_dist_max": 60,
+    "enzyme_far_gt200": 0,
+    "enzymes_serving_gt1_reaction": 0,
+    "reg_edges": 0,
+    "reg_edge_share": 0.0,
+    "dashed_assoc_edges": 0,
+    "reg_only_molecules": 0,
+    "hub_compound": "H2NTP",
+    "hub_degree": 2,
+    "cross_region_edges": 0,
+    "lanes": 0,
+    "main_chain_len": 8,
+    "dup_tags": 0,
+    "truncated_labels": 0,
+    "interaction_classes": {},
+    "node_overlaps": 0,
+    "edge_through_node": 0,
+    "route_fail": 0,
+    "truncated": 0
+   },
+   "metrics_after_all": {
+    "crossings": 0,
+    "long_edges_gt600": 2,
+    "edge_len_max": 1342,
+    "bends": 5,
+    "enzyme_rxn_dist_median": 60,
+    "enzyme_rxn_dist_max": 60,
+    "enzyme_far_gt200": 0,
+    "reg_edges": 0,
+    "reg_only_molecules": 0,
+    "dup_tags": 0,
+    "n_entity_drawings": 20,
+    "W": 2075,
+    "H": 364,
+    "edge_through_node": 0,
+    "node_overlaps": 0,
+    "route_fail": 0,
+    "hidden": {
+     "edges": 0,
+     "nodes": 0,
+     "act": 0,
+     "inh": 0
+    }
+   },
+   "after_all_issues": {
+    "transport_no_compartment_boundary_drawn": 1
+   },
+   "screenshot": "C:/t/corr-assess/a2/before/138.png",
+   "upstream_regulator_as_catalyst": [],
+   "upstream_duplicate_reactions": null
+  },
+  "120": {
+   "pathway": "testosterone biosynthesis",
+   "style": "bands",
+   "diagram_vs_ir": {
+    "duplicate_marker_tags": [
+     "R1",
+     "R2",
+     "R3",
+     "R4"
+    ]
+   },
+   "payload_vs_ir": {
+    "counts": {
+     "reactions": [
+      7,
+      7
+     ],
+     "transports": [
+      0,
+      0
+     ],
+     "interactions": [
+      0,
+      0
+     ]
+    },
+    "reactions_missing_in_ir": [],
+    "reaction_sides_differ": [],
+    "reaction_enzymes_differ": []
+   },
+   "metrics_before": {
+    "style": "bands",
+    "W": 756,
+    "H": 712,
+    "area_per_entity": 35886,
+    "n_entity_drawings": 15,
+    "n_unique_entities": 10,
+    "n_edges": 26,
+    "crossings": 36,
+    "bends": 32,
+    "edge_len_median": 172,
+    "edge_len_max": 439,
+    "long_edges_gt600": 0,
+    "enzyme_rxn_dist_median": 130,
+    "enzyme_rxn_dist_max": 310,
+    "enzyme_far_gt200": 3,
+    "enzymes_serving_gt1_reaction": 3,
+    "reg_edges": 0,
+    "reg_edge_share": 0.0,
+    "dashed_assoc_edges": 0,
+    "reg_only_molecules": 0,
+    "hub_compound": "androstenedione",
+    "hub_degree": 4,
+    "cross_region_edges": 0,
+    "lanes": 2,
+    "main_chain_len": 1,
+    "dup_tags": 4,
+    "truncated_labels": 0,
+    "interaction_classes": {},
+    "node_overlaps": 0,
+    "edge_through_node": 0,
+    "route_fail": 0,
+    "truncated": 0
+   },
+   "metrics_after_all": {
+    "crossings": 2,
+    "long_edges_gt600": 0,
+    "edge_len_max": 249,
+    "bends": 12,
+    "enzyme_rxn_dist_median": 50,
+    "enzyme_rxn_dist_max": 130,
+    "enzyme_far_gt200": 0,
+    "reg_edges": 0,
+    "reg_only_molecules": 0,
+    "dup_tags": 1,
+    "n_entity_drawings": 19,
+    "W": 756,
+    "H": 812,
+    "edge_through_node": 0,
+    "node_overlaps": 0,
+    "route_fail": 0,
+    "hidden": {
+     "edges": 0,
+     "nodes": 0,
+     "act": 0,
+     "inh": 0
+    }
+   },
+   "after_all_issues": {
+    "duplicate_marker_tags": 1
+   },
+   "screenshot": "C:/t/corr-assess/a2/before/120.png",
+   "upstream_regulator_as_catalyst": [],
+   "upstream_duplicate_reactions": {
+    "n_reactions": 7,
+    "same_compartment": [
+     {
+      "sig": "androstenedione -> testosterone",
+      "reactions": [
+       [
+        "rxn_1",
+        "cell",
+        [
+         "hsd17b3 complex"
+        ]
+       ],
+       [
+        "rxn_2",
+        "cell",
+        [
+         "hsd17b1 complex",
+         "hsd17b12 complex"
+        ]
+       ],
+       [
+        "rxn_3",
+        "cell",
+        [
+         "hsd17b7 complex"
+        ]
+       ],
+       [
+        "rxn_4",
+        "cell",
+        [
+         "hsd17b12 complex"
+        ]
+       ],
+       [
+        "rxn_5",
+        "cell",
+        [
+         "hsd17b12 complex",
+         "hsd17b3 complex",
+         "hsd17b7 complex"
+        ]
+       ]
+      ]
+     }
+    ],
+    "across_compartments": []
+   }
+  },
+  "148": {
+   "pathway": "glucomoringin biosynthesis",
+   "style": "spine",
+   "diagram_vs_ir": {},
+   "payload_vs_ir": {
+    "counts": {
+     "reactions": [
+      7,
+      7
+     ],
+     "transports": [
+      0,
+      0
+     ],
+     "interactions": [
+      0,
+      0
+     ]
+    },
+    "reactions_missing_in_ir": [],
+    "reaction_sides_differ": [],
+    "reaction_enzymes_differ": []
+   },
+   "metrics_before": {
+    "style": "spine",
+    "W": 2652,
+    "H": 334,
+    "area_per_entity": 59061,
+    "n_entity_drawings": 15,
+    "n_unique_entities": 15,
+    "n_edges": 21,
+    "crossings": 0,
+    "bends": 0,
+    "edge_len_median": 70,
+    "edge_len_max": 82,
+    "long_edges_gt600": 0,
+    "enzyme_rxn_dist_median": 90,
+    "enzyme_rxn_dist_max": 90,
+    "enzyme_far_gt200": 0,
+    "enzymes_serving_gt1_reaction": 0,
+    "reg_edges": 0,
+    "reg_edge_share": 0.0,
+    "dashed_assoc_edges": 0,
+    "reg_only_molecules": 0,
+    "hub_compound": "(E)-4-hydroxyphenylacetaldehyde oxime",
+    "hub_degree": 2,
+    "cross_region_edges": 0,
+    "lanes": 0,
+    "main_chain_len": 7,
+    "dup_tags": 0,
+    "truncated_labels": 0,
+    "interaction_classes": {},
+    "node_overlaps": 0,
+    "edge_through_node": 0,
+    "route_fail": 0,
+    "truncated": 0
+   },
+   "metrics_after_all": {
+    "crossings": 0,
+    "long_edges_gt600": 0,
+    "edge_len_max": 82,
+    "bends": 0,
+    "enzyme_rxn_dist_median": 90,
+    "enzyme_rxn_dist_max": 90,
+    "enzyme_far_gt200": 0,
+    "reg_edges": 0,
+    "reg_only_molecules": 0,
+    "dup_tags": 0,
+    "n_entity_drawings": 15,
+    "W": 2652,
+    "H": 390,
+    "edge_through_node": 0,
+    "node_overlaps": 0,
+    "route_fail": 0,
+    "hidden": {
+     "edges": 0,
+     "nodes": 0,
+     "act": 0,
+     "inh": 0
+    }
+   },
+   "after_all_issues": {},
+   "screenshot": "C:/t/corr-assess/a2/before/148.png",
+   "upstream_regulator_as_catalyst": [],
+   "upstream_duplicate_reactions": null
+  },
+  "19": {
+   "pathway": "cycloclavine biosynthesis",
+   "style": "spine",
+   "diagram_vs_ir": {},
+   "payload_vs_ir": {
+    "counts": {
+     "reactions": [
+      6,
+      6
+     ],
+     "transports": [
+      0,
+      0
+     ],
+     "interactions": [
+      0,
+      0
+     ]
+    },
+    "reactions_missing_in_ir": [],
+    "reaction_sides_differ": [],
+    "reaction_enzymes_differ": []
+   },
+   "metrics_before": {
+    "style": "spine",
+    "W": 1545,
+    "H": 592,
+    "area_per_entity": 50808,
+    "n_entity_drawings": 18,
+    "n_unique_entities": 18,
+    "n_edges": 29,
+    "crossings": 25,
+    "bends": 17,
+    "edge_len_median": 79,
+    "edge_len_max": 1184,
+    "long_edges_gt600": 4,
+    "enzyme_rxn_dist_median": 90,
+    "enzyme_rxn_dist_max": 260,
+    "enzyme_far_gt200": 3,
+    "enzymes_serving_gt1_reaction": 2,
+    "reg_edges": 0,
+    "reg_edge_share": 0.0,
+    "dashed_assoc_edges": 0,
+    "reg_only_molecules": 0,
+    "hub_compound": "chanoclavine-I aldehyde",
+    "hub_degree": 4,
+    "cross_region_edges": 0,
+    "lanes": 0,
+    "main_chain_len": 4,
+    "dup_tags": 0,
+    "truncated_labels": 0,
+    "interaction_classes": {},
+    "node_overlaps": 0,
+    "edge_through_node": 0,
+    "route_fail": 0,
+    "truncated": 0
+   },
+   "metrics_after_all": {
+    "crossings": 11,
+    "long_edges_gt600": 4,
+    "edge_len_max": 1312,
+    "bends": 15,
+    "enzyme_rxn_dist_median": 90,
+    "enzyme_rxn_dist_max": 350,
+    "enzyme_far_gt200": 1,
+    "reg_edges": 0,
+    "reg_only_molecules": 0,
+    "dup_tags": 0,
+    "n_entity_drawings": 22,
+    "W": 1545,
+    "H": 992,
+    "edge_through_node": 0,
+    "node_overlaps": 0,
+    "route_fail": 0,
+    "hidden": {
+     "edges": 0,
+     "nodes": 0,
+     "act": 0,
+     "inh": 0
+    }
+   },
+   "after_all_issues": {},
+   "screenshot": "C:/t/corr-assess/a2/before/19.png",
+   "upstream_regulator_as_catalyst": [],
+   "upstream_duplicate_reactions": null
+  },
+  "144": {
+   "pathway": "calycosin biosynthesis",
+   "style": "bands",
+   "diagram_vs_ir": {},
+   "payload_vs_ir": {
+    "counts": {
+     "reactions": [
+      6,
+      6
+     ],
+     "transports": [
+      0,
+      0
+     ],
+     "interactions": [
+      0,
+      0
+     ]
+    },
+    "reactions_missing_in_ir": [],
+    "reaction_sides_differ": [],
+    "reaction_enzymes_differ": []
+   },
+   "metrics_before": {
+    "style": "bands",
+    "W": 965,
+    "H": 532,
+    "area_per_entity": 36681,
+    "n_entity_drawings": 14,
+    "n_unique_entities": 14,
+    "n_edges": 24,
+    "crossings": 25,
+    "bends": 25,
+    "edge_len_median": 131,
+    "edge_len_max": 444,
+    "long_edges_gt600": 0,
+    "enzyme_rxn_dist_median": 170,
+    "enzyme_rxn_dist_max": 328,
+    "enzyme_far_gt200": 2,
+    "enzymes_serving_gt1_reaction": 1,
+    "reg_edges": 0,
+    "reg_edge_share": 0.0,
+    "dashed_assoc_edges": 0,
+    "reg_only_molecules": 0,
+    "hub_compound": "NADPH",
+    "hub_degree": 4,
+    "cross_region_edges": 0,
+    "lanes": 1,
+    "main_chain_len": 2,
+    "dup_tags": 0,
+    "truncated_labels": 0,
+    "interaction_classes": {},
+    "node_overlaps": 0,
+    "edge_through_node": 0,
+    "route_fail": 0,
+    "truncated": 0
+   },
+   "metrics_after_all": {
+    "crossings": 13,
+    "long_edges_gt600": 0,
+    "edge_len_max": 455,
+    "bends": 24,
+    "enzyme_rxn_dist_median": 60,
+    "enzyme_rxn_dist_max": 60,
+    "enzyme_far_gt200": 0,
+    "reg_edges": 0,
+    "reg_only_molecules": 0,
+    "dup_tags": 0,
+    "n_entity_drawings": 17,
+    "W": 1005,
+    "H": 704,
+    "edge_through_node": 0,
+    "node_overlaps": 0,
+    "route_fail": 0,
+    "hidden": {
+     "edges": 0,
+     "nodes": 0,
+     "act": 0,
+     "inh": 0
+    }
+   },
+   "after_all_issues": {},
+   "screenshot": "C:/t/corr-assess/a2/before/144.png",
+   "upstream_regulator_as_catalyst": [],
+   "upstream_duplicate_reactions": null
+  },
+  "126": {
+   "pathway": "benzyl alcohol biosynthesis in Petunia hybrida",
+   "style": "spine",
+   "diagram_vs_ir": {
+    "transport_no_compartment_boundary_drawn": [
+     "tr_1"
+    ],
+    "duplicate_marker_tags": [
+     "R1",
+     "R2"
+    ]
+   },
+   "payload_vs_ir": {
+    "counts": {
+     "reactions": [
+      5,
+      5
+     ],
+     "transports": [
+      1,
+      1
+     ],
+     "interactions": [
+      0,
+      0
+     ]
+    },
+    "reactions_missing_in_ir": [],
+    "reaction_sides_differ": [
+     "PhBBO benzaldehyde hydroxylase reaction: payload ['benzaldehyde', 'nadph', 'o2']->['h2o', 'nadp+', 'salicylic acid'] vs IR [(['benzaldehyde', 'nadph', 'o2'], ['nadp+', 'salicylic acid', 'water'])]"
+    ],
+    "reaction_enzymes_differ": []
+   },
+   "metrics_before": {
+    "style": "spine",
+    "W": 1270,
+    "H": 598,
+    "area_per_entity": 34523,
+    "n_entity_drawings": 22,
+    "n_unique_entities": 17,
+    "n_edges": 36,
+    "crossings": 44,
+    "bends": 42,
+    "edge_len_median": 123,
+    "edge_len_max": 1177,
+    "long_edges_gt600": 4,
+    "enzyme_rxn_dist_median": 170,
+    "enzyme_rxn_dist_max": 354,
+    "enzyme_far_gt200": 4,
+    "enzymes_serving_gt1_reaction": 4,
+    "reg_edges": 0,
+    "reg_edge_share": 0.0,
+    "dashed_assoc_edges": 0,
+    "reg_only_molecules": 0,
+    "hub_compound": "benzaldehyde",
+    "hub_degree": 3,
+    "cross_region_edges": 0,
+    "lanes": 0,
+    "main_chain_len": 4,
+    "dup_tags": 2,
+    "truncated_labels": 0,
+    "interaction_classes": {},
+    "node_overlaps": 0,
+    "edge_through_node": 0,
+    "route_fail": 0,
+    "truncated": 0
+   },
+   "metrics_after_all": {
+    "crossings": 7,
+    "long_edges_gt600": 4,
+    "edge_len_max": 1162,
+    "bends": 32,
+    "enzyme_rxn_dist_median": 60,
+    "enzyme_rxn_dist_max": 180,
+    "enzyme_far_gt200": 0,
+    "reg_edges": 0,
+    "reg_only_molecules": 0,
+    "dup_tags": 1,
+    "n_entity_drawings": 24,
+    "W": 1270,
+    "H": 654,
+    "edge_through_node": 0,
+    "node_overlaps": 0,
+    "route_fail": 0,
+    "hidden": {
+     "edges": 0,
+     "nodes": 0,
+     "act": 0,
+     "inh": 0
+    }
+   },
+   "after_all_issues": {
+    "transport_no_compartment_boundary_drawn": 1,
+    "duplicate_marker_tags": 1
+   },
+   "screenshot": "C:/t/corr-assess/a2/before/126.png",
+   "upstream_regulator_as_catalyst": [],
+   "upstream_duplicate_reactions": {
+    "n_reactions": 5,
+    "same_compartment": [
+     {
+      "sig": "benzaldehyde + nadph -> benzyl alcohol + nadp+",
+      "reactions": [
+       [
+        "rxn_1",
+        "cytosol",
+        [
+         "phbr1",
+         "phbr2"
+        ]
+       ],
+       [
+        "rxn_2",
+        "cytosol",
+        [
+         "phbbo",
+         "phbr1",
+         "phbr2",
+         "phbse",
+         "phbs\u03b1",
+         "phcad1"
+        ]
+       ]
+      ]
+     }
+    ],
+    "across_compartments": []
+   }
+  },
+  "122": {
+   "pathway": "farnesol biosynthesis",
+   "style": "bands",
+   "diagram_vs_ir": {
+    "duplicate_marker_tags": [
+     "R1",
+     "R4"
+    ]
+   },
+   "payload_vs_ir": {
+    "counts": {
+     "reactions": [
+      4,
+      4
+     ],
+     "transports": [
+      0,
+      0
+     ],
+     "interactions": [
+      0,
+      0
+     ]
+    },
+    "reactions_missing_in_ir": [],
+    "reaction_sides_differ": [],
+    "reaction_enzymes_differ": []
+   },
+   "metrics_before": {
+    "style": "bands",
+    "W": 1000,
+    "H": 358,
+    "area_per_entity": 35801,
+    "n_entity_drawings": 10,
+    "n_unique_entities": 10,
+    "n_edges": 15,
+    "crossings": 4,
+    "bends": 7,
+    "edge_len_median": 86,
+    "edge_len_max": 187,
+    "long_edges_gt600": 0,
+    "enzyme_rxn_dist_median": 110,
+    "enzyme_rxn_dist_max": 170,
+    "enzyme_far_gt200": 0,
+    "enzymes_serving_gt1_reaction": 1,
+    "reg_edges": 0,
+    "reg_edge_share": 0.0,
+    "dashed_assoc_edges": 0,
+    "reg_only_molecules": 0,
+    "hub_compound": "farnesyl phosphate",
+    "hub_degree": 3,
+    "cross_region_edges": 0,
+    "lanes": 1,
+    "main_chain_len": 2,
+    "dup_tags": 2,
+    "truncated_labels": 0,
+    "interaction_classes": {},
+    "node_overlaps": 0,
+    "edge_through_node": 0,
+    "route_fail": 0,
+    "truncated": 0
+   },
+   "metrics_after_all": {
+    "crossings": 2,
+    "long_edges_gt600": 0,
+    "edge_len_max": 179,
+    "bends": 4,
+    "enzyme_rxn_dist_median": 60,
+    "enzyme_rxn_dist_max": 110,
+    "enzyme_far_gt200": 0,
+    "reg_edges": 0,
+    "reg_only_molecules": 0,
+    "dup_tags": 1,
+    "n_entity_drawings": 11,
+    "W": 1000,
+    "H": 414,
+    "edge_through_node": 0,
+    "node_overlaps": 0,
+    "route_fail": 0,
+    "hidden": {
+     "edges": 0,
+     "nodes": 0,
+     "act": 0,
+     "inh": 0
+    }
+   },
+   "after_all_issues": {
+    "duplicate_marker_tags": 1
+   },
+   "screenshot": "C:/t/corr-assess/a2/before/122.png",
+   "upstream_regulator_as_catalyst": [],
+   "upstream_duplicate_reactions": {
+    "n_reactions": 4,
+    "same_compartment": [
+     {
+      "sig": "farnesyl pyrophosphate -> farnesyl phosphate",
+      "reactions": [
+       [
+        "rxn_1",
+        "endoplasmic reticulum",
+        [
+         "cwh8 complex"
+        ]
+       ],
+       [
+        "rxn_4",
+        "endoplasmic reticulum",
+        [
+         "cwh8 complex"
+        ]
+       ]
+      ]
+     }
+    ],
+    "across_compartments": []
+   }
+  },
+  "121": {
+   "pathway": "CDP-\u03b1-d-fucofuranose and CDP-\u03b2-l-6-deoxy-altrofuranose biosynthesis",
+   "style": "bands",
+   "diagram_vs_ir": {},
+   "payload_vs_ir": {
+    "counts": {
+     "reactions": [
+      4,
+      4
+     ],
+     "transports": [
+      0,
+      0
+     ],
+     "interactions": [
+      0,
+      0
+     ]
+    },
+    "reactions_missing_in_ir": [],
+    "reaction_sides_differ": [],
+    "reaction_enzymes_differ": []
+   },
+   "metrics_before": {
+    "style": "bands",
+    "W": 973,
+    "H": 416,
+    "area_per_entity": 31124,
+    "n_entity_drawings": 13,
+    "n_unique_entities": 13,
+    "n_edges": 18,
+    "crossings": 13,
+    "bends": 23,
+    "edge_len_median": 120,
+    "edge_len_max": 594,
+    "long_edges_gt600": 0,
+    "enzyme_rxn_dist_median": 110,
+    "enzyme_rxn_dist_max": 305,
+    "enzyme_far_gt200": 1,
+    "enzymes_serving_gt1_reaction": 1,
+    "reg_edges": 0,
+    "reg_edge_share": 0.0,
+    "dashed_assoc_edges": 0,
+    "reg_only_molecules": 0,
+    "hub_compound": "CDP-4-keto-6-deoxy-d-glucose",
+    "hub_degree": 2,
+    "cross_region_edges": 0,
+    "lanes": 1,
+    "main_chain_len": 2,
+    "dup_tags": 0,
+    "truncated_labels": 0,
+    "interaction_classes": {},
+    "node_overlaps": 0,
+    "edge_through_node": 0,
+    "route_fail": 0,
+    "truncated": 0
+   },
+   "metrics_after_all": {
+    "crossings": 8,
+    "long_edges_gt600": 0,
+    "edge_len_max": 544,
+    "bends": 18,
+    "enzyme_rxn_dist_median": 60,
+    "enzyme_rxn_dist_max": 60,
+    "enzyme_far_gt200": 0,
+    "reg_edges": 0,
+    "reg_only_molecules": 0,
+    "dup_tags": 0,
+    "n_entity_drawings": 14,
+    "W": 1023,
+    "H": 472,
+    "edge_through_node": 0,
+    "node_overlaps": 0,
+    "route_fail": 0,
+    "hidden": {
+     "edges": 0,
+     "nodes": 0,
+     "act": 0,
+     "inh": 0
+    }
+   },
+   "after_all_issues": {},
+   "screenshot": "C:/t/corr-assess/a2/before/121.png",
+   "upstream_regulator_as_catalyst": [],
+   "upstream_duplicate_reactions": null
+  },
+  "142": {
+   "pathway": "branched-chain amino acid biosynthesis",
+   "style": "bands",
+   "diagram_vs_ir": {},
+   "payload_vs_ir": {
+    "counts": {
+     "reactions": [
+      4,
+      4
+     ],
+     "transports": [
+      0,
+      0
+     ],
+     "interactions": [
+      0,
+      0
+     ]
+    },
+    "reactions_missing_in_ir": [],
+    "reaction_sides_differ": [
+     "ACLS (acetolactate synthase) reaction: payload ['hydrogen ion', 'pyruvate']->['(s)-2-acetolactate', 'carbon dioxide'] vs IR [(['hydrogen ion', 'pyruvic acid'], ['(s)-2-acetolactate', 'carbon dioxide'])]"
+    ],
+    "reaction_enzymes_differ": []
+   },
+   "metrics_before": {
+    "style": "bands",
+    "W": 947,
+    "H": 474,
+    "area_per_entity": 28063,
+    "n_entity_drawings": 16,
+    "n_unique_entities": 16,
+    "n_edges": 22,
+    "crossings": 18,
+    "bends": 26,
+    "edge_len_median": 122,
+    "edge_len_max": 524,
+    "long_edges_gt600": 0,
+    "enzyme_rxn_dist_median": 110,
+    "enzyme_rxn_dist_max": 311,
+    "enzyme_far_gt200": 1,
+    "enzymes_serving_gt1_reaction": 1,
+    "reg_edges": 0,
+    "reg_edge_share": 0.0,
+    "dashed_assoc_edges": 0,
+    "reg_only_molecules": 0,
+    "hub_compound": "Hydrogen Ion",
+    "hub_degree": 3,
+    "cross_region_edges": 0,
+    "lanes": 1,
+    "main_chain_len": 2,
+    "dup_tags": 0,
+    "truncated_labels": 0,
+    "interaction_classes": {},
+    "node_overlaps": 0,
+    "edge_through_node": 0,
+    "route_fail": 0,
+    "truncated": 0
+   },
+   "metrics_after_all": {
+    "crossings": 8,
+    "long_edges_gt600": 0,
+    "edge_len_max": 504,
+    "bends": 21,
+    "enzyme_rxn_dist_median": 60,
+    "enzyme_rxn_dist_max": 60,
+    "enzyme_far_gt200": 0,
+    "reg_edges": 0,
+    "reg_only_molecules": 0,
+    "dup_tags": 0,
+    "n_entity_drawings": 17,
+    "W": 972,
+    "H": 530,
+    "edge_through_node": 0,
+    "node_overlaps": 0,
+    "route_fail": 0,
+    "hidden": {
+     "edges": 0,
+     "nodes": 0,
+     "act": 0,
+     "inh": 0
+    }
+   },
+   "after_all_issues": {},
+   "screenshot": "C:/t/corr-assess/a2/before/142.png",
+   "upstream_regulator_as_catalyst": [],
+   "upstream_duplicate_reactions": null
+  },
+  "114": {
+   "pathway": "wall teichoic acid D-alanylation (dlt pathway)",
+   "style": "bands",
+   "diagram_vs_ir": {},
+   "payload_vs_ir": {
+    "counts": {
+     "reactions": [
+      2,
+      2
+     ],
+     "transports": [
+      2,
+      2
+     ],
+     "interactions": [
+      0,
+      0
+     ]
+    },
+    "reactions_missing_in_ir": [],
+    "reaction_sides_differ": [],
+    "reaction_enzymes_differ": []
+   },
+   "metrics_before": {
+    "style": "bands",
+    "W": 694,
+    "H": 662,
+    "area_per_entity": 51024,
+    "n_entity_drawings": 9,
+    "n_unique_entities": 7,
+    "n_edges": 14,
+    "crossings": 18,
+    "bends": 18,
+    "edge_len_median": 167,
+    "edge_len_max": 541,
+    "long_edges_gt600": 0,
+    "enzyme_rxn_dist_median": 120,
+    "enzyme_rxn_dist_max": 120,
+    "enzyme_far_gt200": 0,
+    "enzymes_serving_gt1_reaction": 1,
+    "reg_edges": 0,
+    "reg_edge_share": 0.0,
+    "dashed_assoc_edges": 0,
+    "reg_only_molecules": 0,
+    "hub_compound": "Adenosine triphosphate",
+    "hub_degree": 2,
+    "cross_region_edges": 0,
+    "lanes": 3,
+    "main_chain_len": 1,
+    "dup_tags": 0,
+    "truncated_labels": 0,
+    "interaction_classes": {},
+    "node_overlaps": 0,
+    "edge_through_node": 0,
+    "route_fail": 0,
+    "truncated": 0
+   },
+   "metrics_after_all": {
+    "crossings": 12,
+    "long_edges_gt600": 1,
+    "edge_len_max": 695,
+    "bends": 15,
+    "enzyme_rxn_dist_median": 60,
+    "enzyme_rxn_dist_max": 60,
+    "enzyme_far_gt200": 0,
+    "reg_edges": 0,
+    "reg_only_molecules": 0,
+    "dup_tags": 0,
+    "n_entity_drawings": 10,
+    "W": 694,
+    "H": 776,
+    "edge_through_node": 0,
+    "node_overlaps": 0,
+    "route_fail": 0,
+    "hidden": {
+     "edges": 0,
+     "nodes": 0,
+     "act": 0,
+     "inh": 0
+    }
+   },
+   "after_all_issues": {},
+   "screenshot": "C:/t/corr-assess/a2/before/114.png",
+   "upstream_regulator_as_catalyst": [],
+   "upstream_duplicate_reactions": null
+  },
+  "14": {
+   "pathway": "mevalonate pathway",
+   "style": "bands",
+   "diagram_vs_ir": {},
+   "payload_vs_ir": {
+    "counts": {
+     "reactions": [
+      1,
+      1
+     ],
+     "transports": [
+      0,
+      0
+     ],
+     "interactions": [
+      0,
+      0
+     ]
+    },
+    "reactions_missing_in_ir": [],
+    "reaction_sides_differ": [],
+    "reaction_enzymes_differ": []
+   },
+   "metrics_before": {
+    "style": "bands",
+    "W": 695,
+    "H": 242,
+    "area_per_entity": 33617,
+    "n_entity_drawings": 5,
+    "n_unique_entities": 5,
+    "n_edges": 5,
+    "crossings": 0,
+    "bends": 3,
+    "edge_len_median": 56,
+    "edge_len_max": 174,
+    "long_edges_gt600": 0,
+    "enzyme_rxn_dist_median": 60,
+    "enzyme_rxn_dist_max": 60,
+    "enzyme_far_gt200": 0,
+    "enzymes_serving_gt1_reaction": 0,
+    "reg_edges": 0,
+    "reg_edge_share": 0.0,
+    "dashed_assoc_edges": 0,
+    "reg_only_molecules": 0,
+    "hub_compound": "hydroxymethylglutaryl-CoA",
+    "hub_degree": 1,
+    "cross_region_edges": 0,
+    "lanes": 1,
+    "main_chain_len": 1,
+    "dup_tags": 0,
+    "truncated_labels": 0,
+    "interaction_classes": {},
+    "node_overlaps": 0,
+    "edge_through_node": 0,
+    "route_fail": 0,
+    "truncated": 0
+   },
+   "metrics_after_all": {
+    "crossings": 0,
+    "long_edges_gt600": 0,
+    "edge_len_max": 174,
+    "bends": 3,
+    "enzyme_rxn_dist_median": 60,
+    "enzyme_rxn_dist_max": 60,
+    "enzyme_far_gt200": 0,
+    "reg_edges": 0,
+    "reg_only_molecules": 0,
+    "dup_tags": 0,
+    "n_entity_drawings": 5,
+    "W": 695,
+    "H": 298,
+    "edge_through_node": 0,
+    "node_overlaps": 0,
+    "route_fail": 0,
+    "hidden": {
+     "edges": 0,
+     "nodes": 0,
+     "act": 0,
+     "inh": 0
+    }
+   },
+   "after_all_issues": {},
+   "screenshot": "C:/t/corr-assess/a2/before/14.png",
+   "upstream_regulator_as_catalyst": [],
+   "upstream_duplicate_reactions": null
+  },
+  "10": {
+   "pathway": "sour taste transduction (Mus musculus)",
+   "style": "cell",
+   "diagram_vs_ir": {
+    "duplicate_marker_tags": [
+     "T1",
+     "T2",
+     "T3",
+     "T4",
+     "T5",
+     "T6"
+    ]
+   },
+   "payload_vs_ir": {
+    "counts": {
+     "reactions": [
+      0,
+      0
+     ],
+     "transports": [
+      7,
+      7
+     ],
+     "interactions": [
+      0,
+      0
+     ]
+    },
+    "reactions_missing_in_ir": [],
+    "reaction_sides_differ": [],
+    "reaction_enzymes_differ": []
+   },
+   "metrics_before": {
+    "style": "cell",
+    "W": 434,
+    "H": 1200,
+    "area_per_entity": 37174,
+    "n_entity_drawings": 14,
+    "n_unique_entities": 6,
+    "n_edges": 17,
+    "crossings": 34,
+    "bends": 38,
+    "edge_len_median": 445,
+    "edge_len_max": 820,
+    "long_edges_gt600": 5,
+    "enzyme_rxn_dist_median": null,
+    "enzyme_rxn_dist_max": null,
+    "enzyme_far_gt200": 0,
+    "enzymes_serving_gt1_reaction": 0,
+    "reg_edges": 0,
+    "reg_edge_share": 0.0,
+    "dashed_assoc_edges": 0,
+    "reg_only_molecules": 0,
+    "hub_compound": null,
+    "hub_degree": 0,
+    "cross_region_edges": 0,
+    "lanes": 7,
+    "main_chain_len": 2,
+    "dup_tags": 6,
+    "truncated_labels": 0,
+    "interaction_classes": {},
+    "node_overlaps": 0,
+    "edge_through_node": 0,
+    "route_fail": 0,
+    "truncated": 0
+   },
+   "metrics_after_all": {
+    "crossings": 34,
+    "long_edges_gt600": 5,
+    "edge_len_max": 820,
+    "bends": 38,
+    "enzyme_rxn_dist_median": null,
+    "enzyme_rxn_dist_max": null,
+    "enzyme_far_gt200": 0,
+    "reg_edges": 0,
+    "reg_only_molecules": 0,
+    "dup_tags": 6,
+    "n_entity_drawings": 14,
+    "W": 434,
+    "H": 1256,
+    "edge_through_node": 0,
+    "node_overlaps": 0,
+    "route_fail": 0,
+    "hidden": {
+     "edges": 0,
+     "nodes": 0,
+     "act": 0,
+     "inh": 0
+    }
+   },
+   "after_all_issues": {
+    "duplicate_marker_tags": 6
+   },
+   "screenshot": "C:/t/corr-assess/a2/before/10.png",
+   "upstream_regulator_as_catalyst": [],
+   "upstream_duplicate_reactions": null
+  },
+  "58": {
+   "pathway": "enterobactin biosynthesis",
+   "style": "spine",
+   "diagram_vs_ir": {
+    "transport_no_compartment_boundary_drawn": [
+     "tr_1",
+     "tr_2"
+    ],
+    "withheld_interaction_drawn_not_in_pwml": [
+     "int_1:Inhibition",
+     "int_2:binds to",
+     "int_3:binds to",
+     "int_4:modifies"
+    ],
+    "directional_interaction_drawn_undirected": [
+     "int_4:modifies"
+    ]
+   },
+   "payload_vs_ir": {
+    "counts": {
+     "reactions": [
+      7,
+      7
+     ],
+     "transports": [
+      2,
+      2
+     ],
+     "interactions": [
+      4,
+      4
+     ]
+    },
+    "reactions_missing_in_ir": [],
+    "reaction_sides_differ": [
+     "EntB isochorismatase conversion of isochorismate to 2,3-diDHB and pyruvate: payload ['isochorismate']->['2,3-dihydro-2,3-dihydroxybenzoate', 'pyruvate'] vs IR [(['isochorismate'], ['2,3-dihydro-2,3-dihydroxybenzoate', 'pyruvic acid'])]"
+    ],
+    "reaction_enzymes_differ": []
+   },
+   "metrics_before": {
+    "style": "spine",
+    "W": 2658,
+    "H": 436,
+    "area_per_entity": 48294,
+    "n_entity_drawings": 24,
+    "n_unique_entities": 22,
+    "n_edges": 36,
+    "crossings": 14,
+    "bends": 21,
+    "edge_len_median": 101,
+    "edge_len_max": 2215,
+    "long_edges_gt600": 4,
+    "enzyme_rxn_dist_median": 140,
+    "enzyme_rxn_dist_max": 358,
+    "enzyme_far_gt200": 1,
+    "enzymes_serving_gt1_reaction": 2,
+    "reg_edges": 4,
+    "reg_edge_share": 0.111,
+    "dashed_assoc_edges": 3,
+    "reg_only_molecules": 3,
+    "hub_compound": "2,3-dihydro-2,3-dihydroxybenzoate",
+    "hub_degree": 3,
+    "cross_region_edges": 0,
+    "lanes": 0,
+    "main_chain_len": 8,
+    "dup_tags": 0,
+    "truncated_labels": 0,
+    "interaction_classes": {
+     "inh": 1,
+     "assoc": 3
+    },
+    "node_overlaps": 0,
+    "edge_through_node": 0,
+    "route_fail": 0,
+    "truncated": 0
+   },
+   "metrics_after_all": {
+    "crossings": 4,
+    "long_edges_gt600": 4,
+    "edge_len_max": 2217,
+    "bends": 12,
+    "enzyme_rxn_dist_median": 70,
+    "enzyme_rxn_dist_max": 80,
+    "enzyme_far_gt200": 0,
+    "reg_edges": 0,
+    "reg_only_molecules": 0,
+    "dup_tags": 0,
+    "n_entity_drawings": 23,
+    "W": 2786,
+    "H": 492,
+    "edge_through_node": 0,
+    "node_overlaps": 0,
+    "route_fail": 0,
+    "hidden": {
+     "edges": 4,
+     "nodes": 3,
+     "act": 0,
+     "inh": 1
+    }
+   },
+   "after_all_issues": {
+    "transport_no_compartment_boundary_drawn": 2
+   },
+   "screenshot": "C:/t/corr-assess/a2/before/58.png",
+   "upstream_regulator_as_catalyst": [],
+   "upstream_duplicate_reactions": null
+  },
+  "12": {
+   "pathway": "steroidal saponin (polyphyllin) biosynthesis in Paris polyphylla",
+   "style": "bands",
+   "diagram_vs_ir": {
+    "duplicate_marker_tags": [
+     "R1",
+     "R2",
+     "R3",
+     "R4"
+    ]
+   },
+   "payload_vs_ir": {
+    "counts": {
+     "reactions": [
+      5,
+      5
+     ],
+     "transports": [
+      0,
+      0
+     ],
+     "interactions": [
+      0,
+      0
+     ]
+    },
+    "reactions_missing_in_ir": [],
+    "reaction_sides_differ": [],
+    "reaction_enzymes_differ": []
+   },
+   "metrics_before": {
+    "style": "bands",
+    "W": 692,
+    "H": 590,
+    "area_per_entity": 45341,
+    "n_entity_drawings": 9,
+    "n_unique_entities": 9,
+    "n_edges": 25,
+    "crossings": 55,
+    "bends": 33,
+    "edge_len_median": 174,
+    "edge_len_max": 449,
+    "long_edges_gt600": 0,
+    "enzyme_rxn_dist_median": 170,
+    "enzyme_rxn_dist_max": 350,
+    "enzyme_far_gt200": 4,
+    "enzymes_serving_gt1_reaction": 4,
+    "reg_edges": 0,
+    "reg_edge_share": 0.0,
+    "dashed_assoc_edges": 0,
+    "reg_only_molecules": 0,
+    "hub_compound": "UDP-glucose",
+    "hub_degree": 5,
+    "cross_region_edges": 0,
+    "lanes": 1,
+    "main_chain_len": 1,
+    "dup_tags": 4,
+    "truncated_labels": 0,
+    "interaction_classes": {},
+    "node_overlaps": 0,
+    "edge_through_node": 0,
+    "route_fail": 0,
+    "truncated": 0
+   },
+   "metrics_after_all": {
+    "crossings": 8,
+    "long_edges_gt600": 0,
+    "edge_len_max": 437,
+    "bends": 14,
+    "enzyme_rxn_dist_median": 110,
+    "enzyme_rxn_dist_max": 350,
+    "enzyme_far_gt200": 1,
+    "reg_edges": 0,
+    "reg_only_molecules": 0,
+    "dup_tags": 1,
+    "n_entity_drawings": 12,
+    "W": 692,
+    "H": 646,
+    "edge_through_node": 0,
+    "node_overlaps": 0,
+    "route_fail": 0,
+    "hidden": {
+     "edges": 0,
+     "nodes": 0,
+     "act": 0,
+     "inh": 0
+    }
+   },
+   "after_all_issues": {
+    "duplicate_marker_tags": 1
+   },
+   "screenshot": "C:/t/corr-assess/a2/before/12.png",
+   "upstream_regulator_as_catalyst": [],
+   "upstream_duplicate_reactions": {
+    "n_reactions": 5,
+    "same_compartment": [
+     {
+      "sig": "diosgenin + udp-glucose -> diosgenin 3-o-glucoside (trillin)",
+      "reactions": [
+       [
+        "rxn_1",
+        "cytoplasm",
+        [
+         "ugt91bp2"
+        ]
+       ],
+       [
+        "rxn_2",
+        "cytoplasm",
+        [
+         "ugt703r1"
+        ]
+       ],
+       [
+        "rxn_3",
+        "cytoplasm",
+        [
+         "ugt703r2"
+        ]
+       ],
+       [
+        "rxn_4",
+        "cytoplasm",
+        [
+         "ugt703r1",
+         "ugt703r2",
+         "ugt703r3",
+         "ugt91bp2"
+        ]
+       ]
+      ]
+     }
+    ],
+    "across_compartments": []
+   }
+  },
+  "150": {
+   "pathway": "sour taste transduction",
+   "style": "cell",
+   "diagram_vs_ir": {
+    "duplicate_marker_tags": [
+     "T1",
+     "T2",
+     "T3",
+     "T4",
+     "T5"
+    ]
+   },
+   "payload_vs_ir": {
+    "counts": {
+     "reactions": [
+      0,
+      0
+     ],
+     "transports": [
+      5,
+      5
+     ],
+     "interactions": [
+      2,
+      2
+     ]
+    },
+    "reactions_missing_in_ir": [],
+    "reaction_sides_differ": [],
+    "reaction_enzymes_differ": []
+   },
+   "metrics_before": {
+    "style": "cell",
+    "W": 1115,
+    "H": 816,
+    "area_per_entity": 60668,
+    "n_entity_drawings": 15,
+    "n_unique_entities": 7,
+    "n_edges": 15,
+    "crossings": 15,
+    "bends": 19,
+    "edge_len_median": 217,
+    "edge_len_max": 769,
+    "long_edges_gt600": 2,
+    "enzyme_rxn_dist_median": null,
+    "enzyme_rxn_dist_max": null,
+    "enzyme_far_gt200": 0,
+    "enzymes_serving_gt1_reaction": 0,
+    "reg_edges": 2,
+    "reg_edge_share": 0.133,
+    "dashed_assoc_edges": 0,
+    "reg_only_molecules": 3,
+    "hub_compound": null,
+    "hub_degree": 0,
+    "cross_region_edges": 0,
+    "lanes": 9,
+    "main_chain_len": 1,
+    "dup_tags": 5,
+    "truncated_labels": 0,
+    "interaction_classes": {
+     "inh": 1,
+     "act": 1
+    },
+    "node_overlaps": 0,
+    "edge_through_node": 0,
+    "route_fail": 0,
+    "truncated": 0
+   },
+   "metrics_after_all": {
+    "crossings": 15,
+    "long_edges_gt600": 1,
+    "edge_len_max": 609,
+    "bends": 19,
+    "enzyme_rxn_dist_median": null,
+    "enzyme_rxn_dist_max": null,
+    "enzyme_far_gt200": 0,
+    "reg_edges": 0,
+    "reg_only_molecules": 0,
+    "dup_tags": 5,
+    "n_entity_drawings": 12,
+    "W": 644,
+    "H": 872,
+    "edge_through_node": 0,
+    "node_overlaps": 0,
+    "route_fail": 0,
+    "hidden": {
+     "edges": 2,
+     "nodes": 3,
+     "act": 1,
+     "inh": 1
+    }
+   },
+   "after_all_issues": {
+    "duplicate_marker_tags": 5
+   },
+   "screenshot": "C:/t/corr-assess/a2/before/150.png",
+   "upstream_regulator_as_catalyst": [],
+   "upstream_duplicate_reactions": null
+  },
+  "68": {
+   "pathway": "lipid A biosynthesis (Escherichia coli)",
+   "style": "cell",
+   "diagram_vs_ir": {
+    "withheld_interaction_drawn_not_in_pwml": [
+     "int_1:catalyzes",
+     "int_2:competes_with",
+     "int_3:substrate_of",
+     "int_4:catalyzes",
+     "int_5:catalyzes",
+     "int_6:transports",
+     "int_7:transports",
+     "int_8:catalyzes",
+     "int_9:catalyzes",
+     "int_10:catalyzes",
+     "int_11:catalyzes",
+     "int_12:catalyzes",
+     "int_13:catalyzes"
+    ],
+    "directional_interaction_drawn_undirected": [
+     "int_2:competes_with",
+     "int_3:substrate_of",
+     "int_6:transports",
+     "int_7:transports"
+    ]
+   },
+   "payload_vs_ir": {
+    "counts": {
+     "reactions": [
+      3,
+      3
+     ],
+     "transports": [
+      2,
+      2
+     ],
+     "interactions": [
+      13,
+      13
+     ]
+    },
+    "reactions_missing_in_ir": [],
+    "reaction_sides_differ": [],
+    "reaction_enzymes_differ": []
+   },
+   "metrics_before": {
+    "style": "cell",
+    "W": 1299,
+    "H": 1198,
+    "area_per_entity": 64834,
+    "n_entity_drawings": 24,
+    "n_unique_entities": 22,
+    "n_edges": 29,
+    "crossings": 4,
+    "bends": 15,
+    "edge_len_median": 99,
+    "edge_len_max": 985,
+    "long_edges_gt600": 1,
+    "enzyme_rxn_dist_median": 70,
+    "enzyme_rxn_dist_max": 80,
+    "enzyme_far_gt200": 0,
+    "enzymes_serving_gt1_reaction": 0,
+    "reg_edges": 13,
+    "reg_edge_share": 0.448,
+    "dashed_assoc_edges": 4,
+    "reg_only_molecules": 11,
+    "hub_compound": "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine",
+    "hub_degree": 2,
+    "cross_region_edges": 0,
+    "lanes": 4,
+    "main_chain_len": 3,
+    "dup_tags": 0,
+    "truncated_labels": 0,
+    "interaction_classes": {
+     "enz": 9,
+     "assoc": 4
+    },
+    "node_overlaps": 0,
+    "edge_through_node": 0,
+    "route_fail": 0,
+    "truncated": 0
+   },
+   "metrics_after_all": {
+    "crossings": 2,
+    "long_edges_gt600": 1,
+    "edge_len_max": 985,
+    "bends": 6,
+    "enzyme_rxn_dist_median": 70,
+    "enzyme_rxn_dist_max": 70,
+    "enzyme_far_gt200": 0,
+    "reg_edges": 0,
+    "reg_only_molecules": 0,
+    "dup_tags": 0,
+    "n_entity_drawings": 13,
+    "W": 1280,
+    "H": 894,
+    "edge_through_node": 0,
+    "node_overlaps": 0,
+    "route_fail": 0,
+    "hidden": {
+     "edges": 13,
+     "nodes": 11,
+     "act": 0,
+     "inh": 0
+    }
+   },
+   "after_all_issues": {},
+   "screenshot": "C:/t/corr-assess/a2/before/68.png",
+   "upstream_regulator_as_catalyst": [],
+   "upstream_duplicate_reactions": null
+  }
+ }
+}
