@@ -104,6 +104,26 @@ def test_transport_across_two_compartments():
     assert g["compartment"] == 2 and g["simple chemical"] == 2 and g["process"] == 1 and g["macromolecule"] == 1
     assert arcs(text) == Counter({"consumption": 1, "production": 1, "catalysis": 1})
     assert rep["exported"]["transports"] == 1
+    # the consumed cargo sits in the from-compartment, the produced cargo in the to-compartment
+    doc = etree.fromstring(text.encode())
+    label = {c.get("id"): c.find("s:label", NS).get("text") for c in doc.xpath("//s:glyph[@class='compartment']", namespaces=NS)}
+    ent = {g.get("id"): label[g.get("compartmentRef")] for g in doc.xpath("//s:glyph[@compartmentRef]", namespaces=NS)}
+    (cons,) = doc.xpath("//s:arc[@class='consumption']", namespaces=NS)
+    (prod,) = doc.xpath("//s:arc[@class='production']", namespaces=NS)
+    assert ent[cons.get("source")] == "cytoplasm" and ent[prod.get("target")] == "extracellular"
+    assert rep["notes"] == {"compartment_assumed:transporter_in_from_compartment": 1}  # T1 has no state of its own
+
+
+def test_transport_same_compartment_and_collisions_counted():
+    p = payload(transports=[dict(TR, to_biological_state="cyt state")],
+                reactions=[dict(RX, name="r1", biological_state="cyt state"), dict(RX, name="r2", biological_state="cyt state 2")])
+    p["biological_states"] = [{"name": "cyt state", "subcellular_location": "cytoplasm", "cell_type": "X"},
+                              {"name": "cyt state 2", "subcellular_location": "cytoplasm", "cell_type": "Y"}]
+    text, rep = sbgn_export(p)
+    assert problems(text) == []
+    assert rep["notes"]["transport_same_compartment"] == 1
+    assert rep["compartment_collisions"] == {"cytoplasm": 2}
+    assert glyphs(text)["compartment"] == 1
 
 
 def test_interactions_resolved_and_counted():
@@ -114,22 +134,55 @@ def test_interactions_resolved_and_counted():
         {"entity_1": "A", "entity_2": "nothing", "relationship": "Inhibition"},  # unresolved target
         {"entity_1": "A to B", "entity_2": "E1", "relationship": "activates"},  # source is a process
         {"entity_1": "A", "entity_2": "E2", "relationship": "activates"},  # E2 catalyses nothing
+        {"entity_1": "A", "entity_2": "E1", "relationship": "deactivates"},  # sign must not flip to stimulation
+        {"entity_1": "C", "entity_2": "A to B", "relationship": "component_of"},
     ]
     text, rep = sbgn_export(payload(reactions=[RX], interactions=ix))
     assert problems(text) == []
     a = arcs(text)
-    assert a["stimulation"] == 1 and a["modulation"] == 1 and a["inhibition"] == 2  # +1 inhibition from the reaction modifier
-    assert rep["exported"]["interactions"] == 3
-    assert rep["omitted"]["interactions"] == {"unresolved_endpoint": 1, "source_is_process": 1, "target_entity_catalyses_no_process": 1}
+    assert a["stimulation"] == 1 and a["modulation"] == 0 and a["inhibition"] == 3  # inhibits, deactivates, reaction modifier
+    assert rep["exported"]["interactions"] == 3 and rep["exported"]["interactions_multi_arc"] == 0
+    assert rep["omitted"]["interactions"] == {"relationship_not_regulatory": 2, "unresolved_endpoint": 1, "source_is_process": 1,
+                                              "target_entity_catalyses_no_process": 1}
+    assert rep["notes"]["compartment_assumed:interaction_source_in_target_compartment"] == 2  # the two without a state
 
 
-def test_interaction_reaches_process_through_complex_membership():
+@pytest.mark.parametrize("rel,cls", [
+    ("Activation", "stimulation"), ("activates", "stimulation"), ("stimulates", "stimulation"), ("upregulates", "stimulation"),
+    ("inhibits", "inhibition"), ("INHIBITION", "inhibition"), ("allosteric_inhibitor_of", "inhibition"),
+    ("downregulates", "inhibition"), ("deactivates", "inhibition"), ("inactivates", "inhibition"),
+    ("modifies", "modulation"), ("MODIFIES", "modulation"), ("regulates", "modulation"), ("modulates", "modulation"),
+    ("cofactor_of", "modulation"),
+    ("binds", None), ("binding", None), ("component_of", None), ("SAME_AS", None), ("substrate_of", None),
+    ("competes_with", None), ("interacts with", None), ("catalyzes", None), ("induces", None), ("promotes", None), ("", None), (None, None),
+])
+def test_relationship_word_list(rel, cls):
+    from t2pw.vision.export_sbgn import _rel_class
+    assert _rel_class(rel) == cls
+
+
+def test_interaction_does_not_reach_process_through_complex_membership():
     rx = {"name": "r", "inputs": ["A"], "outputs": ["B"], "biological_state": "cyt state",
           "enzymes": [{"entity": "Cx", "entity_type": "protein_complex"}]}
     ix = [{"entity_1": "C", "entity_2": "E2", "relationship": "downregulates"}]  # E2 is a member of Cx, Cx catalyses r
     text, rep = sbgn_export(payload(reactions=[rx], interactions=ix))
+    assert arcs(text)["inhibition"] == 0 and rep["exported"]["interactions"] == 0
+    assert rep["omitted"] == {"interactions": {"target_entity_catalyses_no_process": 1}}
+
+
+def test_interaction_fanout_counted():
+    rx2 = dict(RX, name="A to C", outputs=["C"], modifiers=[])
+    ix = [{"entity_1": "B", "entity_2": "E1", "relationship": "inhibits", "biological_state": "cyt state"}]  # E1 catalyses both
+    text, rep = sbgn_export(payload(reactions=[dict(RX, modifiers=[]), rx2], interactions=ix))
     assert problems(text) == []
-    assert arcs(text)["inhibition"] == 1 and rep["exported"]["interactions"] == 1 and rep["omitted"] == {}
+    assert rep["exported"]["interactions"] == 1 and rep["exported"]["interactions_multi_arc"] == 1 and arcs(text)["inhibition"] == 2
+
+
+def test_unknown_modifier_role_gets_no_arc():
+    rx = dict(RX, modifiers=[{"entity": "mRNA1", "entity_type": "nucleic_acid", "role": "binder"}])
+    text, rep = sbgn_export(payload(reactions=[rx]))
+    assert arcs(text) == Counter({"consumption": 1, "production": 2, "catalysis": 1})
+    assert rep["omitted"] == {"reaction_arcs": {"role_not_regulatory": 1}}
 
 
 def test_complex_members_nested():

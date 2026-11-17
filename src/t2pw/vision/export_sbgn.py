@@ -3,16 +3,17 @@
 Pure: no network, no DB, no LLM. Coordinates come from the PWML IR when given, else a deterministic grid.
 
     sbgn_export(payload, ir=None) -> (text, report)
-    sbgn_text(payload, *, ir=None, title=None) -> str
+    sbgn_text(payload, *, ir=None) -> str
     write_sbgn(payload, path, *, ir=None)
 
 Mapping: one compartment glyph per subcellular location used ("unspecified" when a state has none);
 one entity glyph per (entity, compartment) used; each reaction / transport -> one process glyph with
-consumption, production, catalysis and modulation arcs. An interaction becomes stimulation / inhibition /
-catalysis / modulation arcs from entity_1 to the process(es) it can be resolved to (SBGN PD modulation
-arcs must end at a process): a process name, or the processes entity_2 catalyses or transports, directly or as
-a member of a complex that does.
-Anything else is omitted and counted in the report.
+consumption, production, catalysis and modulation arcs. An interaction becomes a stimulation / inhibition /
+modulation arc from entity_1 to the process(es) it resolves to (SBGN PD modulation arcs must end at a process):
+a process name, or the processes entity_2 itself catalyses or transports (no complex-membership inference).
+Only a closed list of regulatory relationships gets an arc; binding, component_of, SAME_AS etc. do not.
+Anything else is omitted and counted in the report; placements the payload did not state are counted in
+report["notes"], merged compartments in report["compartment_collisions"].
 """
 from __future__ import annotations
 
@@ -43,18 +44,24 @@ def _cf(s) -> str:
     return str(s).strip().casefold()
 
 
-def _rel_class(text) -> str:
-    t = _cf(text or "")
-    if "inhibit" in t or "inactiv" in t or "downregulat" in t or "repress" in t or "suppress" in t:
-        return "inhibition"
-    if "activat" in t or "stimulat" in t or "upregulat" in t or "induc" in t or "promot" in t:
-        return "stimulation"
-    if "catalyz" in t or "catalys" in t:
-        return "catalysis"
-    return "modulation"
+# Closed word lists, matched on word prefixes after lower-casing and treating "_" as a space. Anything not
+# listed is NOT regulation and gets no arc (binding, component_of, SAME_AS, substrate_of, ...).
+# ponytail: deactivat*/inactivat* are read as inhibition (the paper states the target loses activity).
+_INHIBIT = ("inhibit", "downregulat", "repress", "deactivat", "inactivat")
+_STIMULATE = ("activat", "stimulat", "upregulat")
+_MODULATE = ("modif", "regulat", "modulat", "cofactor")
 
 
-def _role_class(role) -> str:
+def _rel_class(text) -> str | None:
+    words = re.sub(r"[_\s]+", " ", str(text or "")).strip().casefold().split()
+    for cls, prefixes in (("inhibition", _INHIBIT), ("stimulation", _STIMULATE), ("modulation", _MODULATE)):
+        if any(w.startswith(p) for w in words for p in prefixes):
+            return cls
+    return None
+
+
+def _role_class(role) -> str | None:
+    """Modifier role -> arc class; catalyst / enzyme / empty -> catalysis; unknown role -> None (no arc)."""
     return "catalysis" if _cf(role or "") in ("", "catalyst", "enzyme") else _rel_class(role)
 
 
@@ -74,16 +81,14 @@ class _Model:
             for r in ent.get(bucket) or []:
                 if isinstance(r.get("name"), str) and r["name"].strip():
                     self.idx[k].setdefault(_cf(r["name"]), r)
-        self.in_complex = defaultdict(list)  # protein cf name -> [complex cf name]
-        for cx in ent.get("protein_complexes") or []:
-            for c in cx.get("components") or []:
-                n = c.get("name") if isinstance(c, dict) else c
-                if isinstance(n, str) and isinstance(cx.get("name"), str) and _cf(cx["name"]) not in self.in_complex[_cf(n)]:
-                    self.in_complex[_cf(n)].append(_cf(cx["name"]))
         self.bs_loc = {}
+        self.bs_ctx = {}  # cf state name -> (species, cell_type, tissue)
         for b in payload.get("biological_states") or []:
             if isinstance(b.get("name"), str) and isinstance(b.get("subcellular_location"), str) and b["subcellular_location"].strip():
                 self.bs_loc[_cf(b["name"])] = b["subcellular_location"].strip()
+                self.bs_ctx[_cf(b["name"])] = tuple(str(b.get(k) or "") for k in ("species", "cell_type", "tissue"))
+        self.comp_ctx = defaultdict(set)  # compartment -> {(species, cell_type, tissue)} of the states that map to it
+        self.notes = Counter()  # things the payload did not state, or that were merged: reported, not hidden
         self.comps = {}  # cf location -> {id,label}
         self.glyphs = {}  # (kind, cf name, comp) -> glyph dict
         self.procs = []
@@ -99,6 +104,8 @@ class _Model:
         if not loc and state:
             loc = self.bs_loc.get(_cf(state))
         key = _cf(loc) if loc else ""
+        if state and _cf(state) in self.bs_ctx and key:
+            self.comp_ctx[key].add(self.bs_ctx[_cf(state)])
         if key not in self.comps:
             self.comps[key] = {"id": "c%d" % (len(self.comps) + 1), "label": loc or "unspecified"}
         return key
@@ -162,7 +169,11 @@ class _Model:
             if not hit:
                 self.omit[label]["unresolved_entity"] += 1
                 continue
-            m = (_role_class(e.get("role")), self.glyph(hit[0], hit[1], comp))
+            cls = _role_class(e.get("role"))
+            if cls is None:
+                self.omit[label]["role_not_regulatory"] += 1
+                continue
+            m = (cls, self.glyph(hit[0], hit[1], comp))
             if not any(m[0] == c and m[1] is g for c, g in mods):
                 mods.append(m)
         return mods
@@ -176,6 +187,7 @@ class _Model:
                 c = self.comp(loc=rx["subcellular_location"].strip())
             elif self.ir and _cf(name) in self.ir["rxn_state"]:
                 c = self.comp(self.ir["rxn_state"][_cf(name)])
+                self.notes["compartment_assumed:reaction_state_from_ir"] += 1
             else:
                 c = self.comp()
             ins = self._members(rx.get("inputs"), c, "reaction_arcs")
@@ -192,23 +204,27 @@ class _Model:
                 self.omit["transports"]["unresolved_cargo"] += 1
                 continue
             c1, c2 = self.comp(fs), self.comp(ts)
-            self.add_proc("transport", tr.get("name"), c1, [self.glyph(hit[0], hit[1], c1)],
-                          [self.glyph(hit[0], hit[1], c2)], self._mods({"enzymes": tr.get("transporters")}, c1, "transport_arcs"))
+            mods = self._mods({"enzymes": tr.get("transporters")}, c1, "transport_arcs")
+            self.add_proc("transport", tr.get("name"), c1, [self.glyph(hit[0], hit[1], c1)], [self.glyph(hit[0], hit[1], c2)], mods)
             self.n["transports"] += 1
+            if c1 == c2:
+                self.notes["transport_same_compartment"] += 1
+            self.notes["compartment_assumed:transporter_in_from_compartment"] += len(mods)
         for ix in pr.get("interactions") or []:
             self._interaction(ix)
 
     def _interaction(self, ix):
         e1, e2 = ix.get("entity_1"), ix.get("entity_2")
+        cls = _rel_class(ix.get("relationship"))
+        if cls is None:  # binding, component_of, SAME_AS, ...: not regulation, so no arc
+            self.omit["interactions"]["relationship_not_regulatory"] += 1
+            return
         src, dst = self.find(e1), self.find(e2)
         if not src:
             self.omit["interactions"]["source_is_process" if _cf(e1 or "") in self.proc_by_name else "unresolved_endpoint"] += 1
             return
         if dst:
-            n2 = _cf(dst[1]["name"])  # processes the entity catalyses, directly or as a member of a catalysing complex
-            targets = list(self.catalysed.get((dst[0], n2)) or [])
-            for cx in self.in_complex.get(n2, ()) if dst[0] == "protein" else ():
-                targets += [p for p in self.catalysed.get(("protein_complex", cx), ()) if p not in targets]
+            targets = list(self.catalysed.get((dst[0], _cf(dst[1]["name"]))) or [])  # processes the entity itself catalyses
             reason = "target_entity_catalyses_no_process"
         else:
             targets = [self.proc_by_name[_cf(e2 or "")]] if _cf(e2 or "") in self.proc_by_name else []
@@ -216,12 +232,19 @@ class _Model:
         if not targets:
             self.omit["interactions"][reason] += 1
             return
-        c = self.comp(ix["biological_state"]) if ix.get("biological_state") and _cf(ix["biological_state"]) in self.bs_loc else targets[0]["comp"]
-        g, cls = self.glyph(src[0], src[1], c), _rel_class(ix.get("relationship"))
+        if ix.get("biological_state") and _cf(ix["biological_state"]) in self.bs_loc:
+            c = self.comp(ix["biological_state"])
+        else:
+            c = targets[0]["comp"]
+            self.notes["compartment_assumed:interaction_source_in_target_compartment"] += 1
+        g = self.glyph(src[0], src[1], c)
+        arcs = 0
         for p in targets:
             if not any(cls == c2 and g is g2 for c2, g2 in p["mods"]):
                 p["mods"].append((cls, g))
+                arcs += 1
         self.n["interactions"] += 1
+        self.n["interactions_multi_arc"] += arcs > 1
 
 
 def _ir_index(ir: dict, bs_loc: dict) -> dict:
@@ -313,13 +336,11 @@ def _ids_ext(parent, row, tag="ids"):
         ET.SubElement(_el(parent, "extension"), "{%s}%s" % (XNS, tag), {k: _x(v) for k, v in ids.items()})
 
 
-def sbgn_export(payload: dict, ir: dict | None = None, title: str | None = None) -> tuple[str, dict]:
+def sbgn_export(payload: dict, ir: dict | None = None) -> tuple[str, dict]:
     m = _Model(payload or {}, ir)
     boxes = _layout(m)
     root = ET.Element("{%s}sbgn" % NS)
     mp = _el(root, "map", language="process description", version=PD, id="map1")
-    if title:
-        ET.SubElement(_el(mp, "extension"), "{%s}title" % XNS).text = _x(title)
     for ck, c in m.comps.items():
         x0, y0, x1, y1 = boxes[ck]
         g = _el(mp, "glyph", **{"class": "compartment", "id": c["id"]})
@@ -370,12 +391,17 @@ def sbgn_export(payload: dict, ir: dict | None = None, title: str | None = None)
         "omitted": {k: dict(v) for k, v in sorted(m.omit.items())},
         "layout": {"ir_positioned": n["ir_positioned"], "grid_positioned": n["grid_positioned"]},
         "unspecified_compartment": "" in m.comps,
+        # not omissions: things merged or placed without the payload saying so
+        "notes": dict(sorted(m.notes.items())),
+        # compartment label -> number of distinct (species, cell type, tissue) states merged into it (only if > 1)
+        "compartment_collisions": {m.comps[k]["label"]: len(v) for k, v in sorted(m.comp_ctx.items()) if len(v) > 1},
     }
+    report["exported"]["interactions_multi_arc"] = n["interactions_multi_arc"]
     return text, report
 
 
-def sbgn_text(payload: dict, *, ir: dict | None = None, title: str | None = None) -> str:
-    return sbgn_export(payload, ir, title)[0]
+def sbgn_text(payload: dict, *, ir: dict | None = None) -> str:
+    return sbgn_export(payload, ir)[0]
 
 
 def write_sbgn(payload: dict, path, *, ir: dict | None = None) -> None:
