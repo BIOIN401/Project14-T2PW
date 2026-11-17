@@ -30,6 +30,41 @@ OPENROUTER_API_KEY=sk-or-...
 OPENROUTER_MODEL=...
 ```
 
+### vLLM (self-hosted, OpenAI-compatible)
+
+Select it for one run from the process environment; `T2PW_LLM_PROVIDER` wins over
+`LLM_PROVIDER` in `.env`, and unset leaves today's behaviour unchanged. The `T2PW_LLM_*` and
+`VLLM_*` variables in the process environment also win over `.env` (every other variable is
+still overridden by `.env`).
+
+```powershell
+$env:T2PW_LLM_PROVIDER = "vllm"
+$env:VLLM_MODEL = "<model name the server was started with>"   # required
+```
+
+| Variable | Default | Meaning |
+|---|---|---|
+| `T2PW_LLM_PROVIDER` | unset | `local`, `openrouter` or `vllm`; overrides `LLM_PROVIDER` |
+| `VLLM_BASE_URL` | `http://127.0.0.1:8000/v1` | the server's OpenAI-compatible endpoint |
+| `VLLM_MODEL` | none (required) | model id sent on every request; used for every stage |
+| `VLLM_API_KEY` | `EMPTY` | only if the server was started with `--api-key` |
+| `VLLM_MAX_TOKENS` | `16000` | completion budget for every call and the UI defaults |
+| `T2PW_LLM_MODEL` | unset | per-run model for ANY provider; beats `OPENROUTER_MODEL` / `VLLM_MODEL` / `LMSTUDIO_MODEL`, every per-stage `OPENROUTER_*_MODEL` and any caller-resolved model. With it set, `VLLM_MODEL` is optional |
+
+`T2PW_LLM_MODEL` forces one model for every stage, so leave `OPENROUTER_EXTRACTION_FALLBACK_MODEL`
+unset while using it (the ladder's alternate-model rung would re-ask the same model). It works on
+OpenRouter too, e.g. `$env:T2PW_LLM_MODEL = "<model id>"` with `LLM_PROVIDER=openrouter`.
+
+With `vllm`, the `OPENROUTER_*` model and budget variables (`OPENROUTER_EXTRACTION_MODEL`,
+`OPENROUTER_EXTRACTION_MAX_TOKENS`, `LLM_MAX_TOKENS`, ...) are ignored. Requests carry no
+OpenRouter headers. Timeouts and retries are the shared `LLM_REQUEST_TIMEOUT_SECONDS`,
+`LLM_MAX_RETRIES` and `LLM_RETRY_*`. Because one model serves every stage, leave
+`OPENROUTER_EXTRACTION_FALLBACK_MODEL` unset: the Stage-1 ladder's alternate-model rung would
+otherwise re-ask the same model.
+
+To reach a vLLM server on the lab GPU machine, run `scripts/vllm_tunnel.ps1` (or
+`ssh -N -L 8000:127.0.0.1:<port> lab-gpu`) and leave `VLLM_BASE_URL` at its default.
+
 Optional PathBank database-backed mapping uses:
 
 ```text

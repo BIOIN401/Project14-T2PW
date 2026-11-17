@@ -66,11 +66,21 @@ def bounded_env_int(name: str, default: int, *, minimum: int, maximum: int) -> i
     return value
 
 
+def _is_vllm() -> bool:
+    """Same precedence as ``t2pw.llm.client.PROVIDER``, without importing the client."""
+    provider = os.getenv("T2PW_LLM_PROVIDER") or os.getenv("LLM_PROVIDER") or ""
+    return provider.strip().lower() == "vllm"
+
+
 def extract_tokens() -> int:
+    if _is_vllm():
+        return bounded_env_int("VLLM_MAX_TOKENS", 16000, minimum=500, maximum=128000)
     return bounded_env_int("OPENROUTER_EXTRACTION_MAX_TOKENS", 64000, minimum=500, maximum=128000)
 
 
 def infer_tokens() -> int:
+    if _is_vllm():
+        return bounded_env_int("VLLM_MAX_TOKENS", 16000, minimum=500, maximum=128000)
     return bounded_env_int("OPENROUTER_INFERENCE_MAX_TOKENS", 64000, minimum=500, maximum=128000)
 
 

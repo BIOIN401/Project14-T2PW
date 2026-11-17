@@ -24,9 +24,18 @@ logger = logging.getLogger(__name__)
 # Load .env reliably (project root = folder containing "src")
 # -----------------------------------------------------------------------------
 ENV_PATH = PROJECT_ROOT / ".env"
+# ``override=True`` lets .env beat the process environment, which would make a per-run
+# override impossible. The per-run vLLM knobs are therefore read BEFORE dotenv and put back
+# AFTER it, so a process-set ``T2PW_LLM_PROVIDER`` / ``VLLM_*`` always wins; every other
+# variable behaves exactly as before.
+_PER_RUN_ENV = {k: v for k, v in os.environ.items() if k.startswith(("T2PW_LLM_", "VLLM_"))}
 load_dotenv(dotenv_path=ENV_PATH, override=True)
+os.environ.update(_PER_RUN_ENV)
 
-PROVIDER = (os.getenv("LLM_PROVIDER", "local") or "local").strip().lower()
+#: ``T2PW_LLM_PROVIDER`` (per run, process environment) wins over ``LLM_PROVIDER`` (.env).
+PROVIDER = (os.getenv("T2PW_LLM_PROVIDER") or os.getenv("LLM_PROVIDER", "local") or "local").strip().lower()
+#: Used by ``configured_max_tokens`` for ``vllm`` instead of the OpenRouter budget variables.
+VLLM_DEFAULT_MAX_TOKENS = 16_000
 
 #: One provider request's wall-clock ceiling, in seconds. Read ONCE, here, and
 #: applied to BOTH client constructions below and to every request either retry
@@ -106,8 +115,24 @@ elif PROVIDER == "local":
                      timeout=_timeout(REQUEST_TIMEOUT_SECONDS))
     _model = model
 
+elif PROVIDER == "vllm":
+    # OpenAI-compatible vLLM server. No OpenRouter headers (HTTP-Referer / X-Title), and no
+    # OpenRouter-only request fields are built anywhere in this module.
+    base_url = (os.getenv("VLLM_BASE_URL") or "http://127.0.0.1:8000/v1").strip()
+    model = (os.getenv("VLLM_MODEL") or "").strip()
+    if not model and not (os.getenv("T2PW_LLM_MODEL") or "").strip():
+        raise RuntimeError("VLLM_MODEL (or T2PW_LLM_MODEL) is required when the provider is 'vllm'.")
+
+    _client = OpenAI(
+        base_url=base_url,
+        api_key=(os.getenv("VLLM_API_KEY") or "EMPTY").strip() or "EMPTY",
+        timeout=_timeout(REQUEST_TIMEOUT_SECONDS),
+        max_retries=SDK_MAX_RETRIES,
+    )
+    _model = model
+
 else:
-    raise RuntimeError("LLM_PROVIDER must be 'local' or 'openrouter'")
+    raise RuntimeError("LLM provider must be 'local', 'openrouter' or 'vllm' (T2PW_LLM_PROVIDER / LLM_PROVIDER)")
 
 
 # -----------------------------------------------------------------------------
@@ -734,11 +759,17 @@ def _resolve_model(
     Resolve the model for a call.
 
     Priority:
+      0. T2PW_LLM_MODEL (per run, process environment); beats everything below
       1. explicit model_override
       2. stage-specific OpenRouter env var named by the caller
       3. OPENROUTER_MODEL
       4. provider default captured during client setup
     """
+    # Per-run model override (process environment): beats every per-stage variable, the
+    # provider's global model variable and any caller-resolved ``model_override``.
+    run_model = (os.getenv("T2PW_LLM_MODEL") or "").strip()
+    if run_model:
+        return run_model
     override = (model_override or "").strip()
     if override:
         return override
@@ -782,7 +813,21 @@ FAILOVER_MODEL_ENV_VARS: Dict[str, str] = {
 
 
 def configured_max_tokens(stage_env_var: Optional[str] = None) -> int:
-    """``stage_env_var``, else ``LLM_MAX_TOKENS``, else 128,000; a bad value -> 128,000."""
+    """``stage_env_var``, else ``LLM_MAX_TOKENS``, else 128,000; a bad value -> 128,000.
+
+    ``vllm``: ``VLLM_MAX_TOKENS``, else 16,000. The OpenRouter stage variables are ignored,
+    because they are sized for a 128k-context hosted model, not a self-hosted one.
+    """
+    if PROVIDER == "vllm":
+        raw_value = os.getenv("VLLM_MAX_TOKENS") or str(VLLM_DEFAULT_MAX_TOKENS)
+        try:
+            value = int(raw_value)
+        except (TypeError, ValueError):
+            value = 0
+        if value <= 0:
+            logger.warning("Invalid VLLM_MAX_TOKENS %r; using %d.", raw_value, VLLM_DEFAULT_MAX_TOKENS)
+            return VLLM_DEFAULT_MAX_TOKENS
+        return value
     raw_value = (
         (os.getenv(stage_env_var) if stage_env_var else None)
         or os.getenv("LLM_MAX_TOKENS")
@@ -808,6 +853,8 @@ def request_max_tokens(
     """What one request may ask for: ``max_tokens`` (``None`` = configured), clamped
     to the smallest max completion among ``model`` and every model it can fail over to."""
     requested = configured_max_tokens() if max_tokens is None else int(max_tokens)
+    if PROVIDER == "vllm":  # the table is OpenRouter's; a vLLM model's limit is the server's
+        return requested
     models = [model]
     fallback_env_var = FAILOVER_MODEL_ENV_VARS.get(model_env_var or "")
     if fallback_env_var and (os.getenv(fallback_env_var) or "").strip():
