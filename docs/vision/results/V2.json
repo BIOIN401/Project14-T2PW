@@ -1,30 +1,43 @@
 {
   "lane": "V2",
   "branch": "vision/sbgn",
-  "built": "SBGN-ML 0.3 Process Description exporter over a final_mapped-schema payload: sbgn_export(payload, ir=None, title=None) -> (text, report), sbgn_text, write_sbgn. Pure (stdlib ElementTree, no network/DB/LLM). Compartment glyph per subcellular location used ('unspecified' when a state has none), one entity glyph per (entity, compartment): simple chemical / macromolecule / complex (members nested) / nucleic acid feature. Reaction and transport -> process glyph with consumption, production, catalysis (enzymes, transporters, catalyst-role modifiers) and stimulation/inhibition/modulation arcs (modifier roles, interactions). Database ids from mapped_ids go in <extension><t2pw:ids .../>. Positions from the PWML IR (locations, bound_visualizations, process_visualizations) when given, else a deterministic grid; entities missing from the IR fall back to the grid.",
+  "built": "SBGN-ML 0.3 Process Description exporter over a final_mapped-schema payload: sbgn_export(payload, ir=None) -> (text, report), sbgn_text(payload, *, ir=None), write_sbgn. Pure (stdlib ElementTree, no network/DB/LLM). Compartment glyph per subcellular location used ('unspecified' when a state has none), one entity glyph per (entity, compartment): simple chemical / macromolecule / complex (members nested) / nucleic acid feature. Reaction and transport -> process glyph with consumption, production, catalysis (enzymes, transporters, catalyst-role modifiers) and stimulation/inhibition/modulation arcs (modifier roles, interactions). Interaction arcs only for a closed list of regulatory relationships and only to a process the target entity itself catalyses or transports, or a process named as the target. Database ids from mapped_ids go in <extension><t2pw:ids .../>. Positions from the PWML IR when given, else a deterministic grid; entities missing from the IR fall back to the grid.",
   "files": {
     "src/t2pw/vision/__init__.py": "empty",
-    "src/t2pw/vision/export_sbgn.py": "exporter (~380 lines incl. blanks)",
-    "tests/test_vision_sbgn.py": "9 tests, XSD + schematron validation",
+    "src/t2pw/vision/export_sbgn.py": "exporter",
+    "tests/test_vision_sbgn.py": "39 tests (incl. parametrised relationship word list), XSD + schematron validation",
     "tests/data/vision/sbgn/": "SBGN.xsd, render.xsd, sbgn_pd.sch (libsbgn 2aae05bb), SOURCE.txt",
-    "docs/vision/evidence/V2/": "export_97.json (per-file summary), example_3/9/10.sbgn"
+    "docs/vision/evidence/V2/": "export_97.json (per-file summary, round 1), example_3/9/10.sbgn"
   },
   "tests": [
-    ["focused tests/test_vision_sbgn.py", "9 passed", "C:/t/vis-runs/logs/v2-focused-3.log"]
+    ["focused tests/test_vision_sbgn.py (initial)", "9 passed", "C:/t/vis-runs/logs/v2-focused-3.log"],
+    ["focused tests/test_vision_sbgn.py (fix round 1)", "39 passed, survivors=0", "C:/t/vis-runs/logs/v2-focused-4.log"]
   ],
   "proofs": {
     "export_97": {
-      "script": "C:/t/vis-runs/scratch/sbgn/proof.py (log C:/t/vis-runs/logs/v2-proof-2.log)",
+      "script": "C:/t/vis-runs/scratch/sbgn/proof.py (log C:/t/vis-runs/logs/v2-proof-3.log)",
       "files": 97,
       "valid_xsd_and_schematron": 97,
       "deterministic_same_bytes": true,
       "process_glyphs_equal_reactions_plus_transports": "97 of 97 files (498 process glyphs = 424 reactions + 74 transports)",
-      "entity_glyphs": 1287,
-      "interactions": {"payload": 188, "exported": 91, "omitted": {"target_entity_catalyses_no_process": 96, "unresolved_endpoint": 1}},
+      "entity_glyphs": 1233,
+      "interactions": {"payload": 188, "exported": 5, "exported_with_more_than_one_arc": 2,
+                        "omitted": {"relationship_not_regulatory": 86, "target_entity_catalyses_no_process": 97}},
       "other_omissions": {"reaction_arcs:unresolved_entity": 1},
-      "layout": {"ir_positioned": 1520, "grid_positioned": 265, "files_with_unspecified_compartment": 11}
+      "layout": {"ir_positioned": 1485, "grid_positioned": 246, "files_with_unspecified_compartment": 11}
     },
     "validators": "lxml XMLSchema on SBGN.xsd; lxml isoschematron on sbgn_pd.sch phase 'basic' after in-memory edits (see SOURCE.txt); pd10133 and the sanity phase cannot run in XSLT 1.0 (pd10133 re-checked in Python). Negative control: dropping a compartmentRef fails pd10112."
+  },
+  "review_round_1": {
+    "verdict_received": "CHANGES_REQUESTED (opus/high); product call VD-8: no arc may assert regulation the paper did not state",
+    "F1": "_rel_class replaced by a closed word-prefix list on lower-cased text with '_' as a space: activat*/stimulat*/upregulat* -> stimulation; inhibit*/downregulat*/repress*/deactivat*/inactivat* -> inhibition (choice: deactivat*/inactivat* read as inhibition, since the sign is certain); modif*/regulat*/modulat*/cofactor* -> modulation; all else omitted and counted as relationship_not_regulatory. Catalysis branch dropped. The same list applies to reaction-modifier roles (catalyst/enzyme/empty -> catalysis; unknown role -> no arc, counted role_not_regulatory). Relationship is checked before endpoint resolution, so a non-regulatory relationship is always counted under that reason.",
+    "F2": "Complex-membership traversal deleted. Fan-out: interactions that produced more than one arc are counted (report.exported.interactions_multi_arc; 97 files: 2 of the 5 exported interactions).",
+    "F3": "report.notes.transport_same_compartment (97 files: 6; includes transports whose from and to states are both missing and so both fall in 'unspecified').",
+    "F4": "report.compartment_collisions {label: number of distinct (species, cell_type, tissue) states merged}; 9 of 97 files, 12 compartments.",
+    "F5": "report.notes counts compartment_assumed:transporter_in_from_compartment (37), compartment_assumed:interaction_source_in_target_compartment (2) and compartment_assumed:reaction_state_from_ir (79, reaction without a state placed by the IR reaction's state; formerly unreported).",
+    "F6": "test_transport_across_two_compartments asserts the consumption arc's source glyph is in the from-compartment and the production arc's target glyph in the to-compartment.",
+    "other": "Unused title parameter removed from sbgn_export / sbgn_text.",
+    "effect_on_97_proof": "Interactions exported fell from 91 to 5: the earlier count came from complex-membership inference and from non-regulatory relationships (binding, component_of, SAME_AS, catalyzes, ...) drawn as modulation. Entity glyphs 1287 -> 1233 (fewer interaction source glyphs). Validity 97/97 unchanged."
   },
   "dead_ends": [
     "Brief says runlist.json[idx]; the IR index is into the q=true subset of runlist.json (152 entries), not the raw 192-entry list. Using the raw list pairs an IR with the wrong payload.",
@@ -32,8 +45,7 @@
     "Reading JSON with the default encoding fails (cp1252) on some final_mapped.json; use utf-8."
   ],
   "open_questions": [
-    "96 of 188 interactions (51%) are entity-to-entity (mostly protein-protein 'binding'/'activation' with no process) and are omitted: SBGN PD modulation arcs must end at a process. Options: (a) keep omitting and count (current); (b) emit an association process glyph for binding-type relationships and a phenotype/unspecified process for the rest, which invents a process the paper did not state; (c) SBGN Entity Relationship or Activity Flow output for the interaction layer. Cost of (b)/(c): a second SBGN language or an invented process node. Product owner to decide.",
-    "Interactions with a relationship such as component_of, same_as, cofactor_of, binds are exported as generic modulation arcs (brief: otherwise modulation); some of these (component_of, SAME_AS) are not modulation semantically.",
-    "Reactions without biological_state take the compartment from the IR reaction when an IR is given, else a synthetic 'unspecified' compartment (11 of 97 files). Whether to drop those glyphs or infer a compartment from the enzyme is a product call."
+    "Only 5 of 188 interactions now become arcs. 86 are non-regulatory relationships (mostly binding); 97 regulate an entity that catalyses no process in the payload (often a protein that is only a member of a catalysing complex). SBGN PD modulation arcs must end at a process. Showing these needs another SBGN language (Entity Relationship) or an invented process node; product owner to decide.",
+    "Reactions without biological_state: 79 are placed by the IR reaction's state, and 11 of 97 files still have an 'unspecified' compartment. Whether to drop those glyphs is a product call."
   ]
 }

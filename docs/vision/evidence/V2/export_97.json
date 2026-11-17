@@ -9,15 +9,22 @@
   "payload_transports": 74,
   "payload_interactions": 188,
   "process_glyphs": 498,
-  "entity_glyphs": 1287,
-  "interactions_exported": 91,
-  "ir_positioned": 1520,
-  "grid_positioned": 265,
-  "unspecified_compartment_files": 11
+  "entity_glyphs": 1233,
+  "interactions_exported": 5,
+  "interactions_multi_arc": 2,
+  "files_with_compartment_collisions": 9,
+  "compartment_collisions": 12,
+  "note:compartment_assumed:transporter_in_from_compartment": 37,
+  "ir_positioned": 1485,
+  "grid_positioned": 246,
+  "unspecified_compartment_files": 11,
+  "note:compartment_assumed:interaction_source_in_target_compartment": 2,
+  "note:compartment_assumed:reaction_state_from_ir": 79,
+  "note:transport_same_compartment": 6
  },
  "omitted_by_reason": {
-  "interactions:target_entity_catalyses_no_process": 96,
-  "interactions:unresolved_endpoint": 1,
+  "interactions:relationship_not_regulatory": 86,
+  "interactions:target_entity_catalyses_no_process": 97,
   "reaction_arcs:unresolved_entity": 1
  },
  "validators": "SBGN.xsd (libsbgn 2aae05b) + sbgn_pd.sch phase basic, lxml, pd10133 checked in Python; see tests/data/vision/sbgn/SOURCE.txt",
@@ -39,18 +46,27 @@
    "interactions_exported": 0,
    "omitted": {
     "interactions": {
-     "target_entity_catalyses_no_process": 1
+     "relationship_not_regulatory": 1
     }
    },
    "layout": {
     "ir_positioned": 10,
     "grid_positioned": 7
    },
-   "unspecified_compartment": true
+   "unspecified_compartment": true,
+   "interactions_multi_arc": 0,
+   "notes": {
+    "compartment_assumed:transporter_in_from_compartment": 3
+   },
+   "compartment_collisions": {
+    "apical membrane": 2,
+    "cytoplasm": 2,
+    "synaptic vesicles": 2
+   }
   },
   {
    "idx": 4,
-   "bytes": 15045,
+   "bytes": 13821,
    "valid_xsd_schematron": true,
    "problems": [],
    "deterministic": true,
@@ -59,16 +75,26 @@
    "interactions": 4,
    "process_glyphs": 7,
    "process_glyphs_expected": 7,
-   "entity_glyphs": 20,
+   "entity_glyphs": 19,
    "compartments": 2,
-   "arcs": 42,
-   "interactions_exported": 4,
-   "omitted": {},
+   "arcs": 35,
+   "interactions_exported": 1,
+   "omitted": {
+    "interactions": {
+     "relationship_not_regulatory": 3
+    }
+   },
    "layout": {
-    "ir_positioned": 26,
+    "ir_positioned": 25,
     "grid_positioned": 1
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 1,
+   "notes": {
+    "compartment_assumed:interaction_source_in_target_compartment": 1,
+    "compartment_assumed:transporter_in_from_compartment": 1
+   },
+   "compartment_collisions": {}
   },
   {
    "idx": 5,
@@ -90,7 +116,12 @@
     "ir_positioned": 20,
     "grid_positioned": 28
    },
-   "unspecified_compartment": true
+   "unspecified_compartment": true,
+   "interactions_multi_arc": 0,
+   "notes": {
+    "compartment_assumed:transporter_in_from_compartment": 0
+   },
+   "compartment_collisions": {}
   },
   {
    "idx": 6,
@@ -109,19 +140,25 @@
    "interactions_exported": 0,
    "omitted": {
     "interactions": {
-     "target_entity_catalyses_no_process": 10,
-     "unresolved_endpoint": 1
+     "relationship_not_regulatory": 8,
+     "target_entity_catalyses_no_process": 3
     }
    },
    "layout": {
     "ir_positioned": 17,
     "grid_positioned": 0
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {
+    "compartment_assumed:reaction_state_from_ir": 3,
+    "compartment_assumed:transporter_in_from_compartment": 1
+   },
+   "compartment_collisions": {}
   },
   {
    "idx": 7,
-   "bytes": 41192,
+   "bytes": 40491,
    "valid_xsd_schematron": true,
    "problems": [],
    "deterministic": true,
@@ -130,24 +167,28 @@
    "interactions": 31,
    "process_glyphs": 23,
    "process_glyphs_expected": 23,
-   "entity_glyphs": 65,
+   "entity_glyphs": 63,
    "compartments": 3,
-   "arcs": 87,
-   "interactions_exported": 3,
+   "arcs": 85,
+   "interactions_exported": 1,
    "omitted": {
     "interactions": {
-     "target_entity_catalyses_no_process": 28
+     "relationship_not_regulatory": 18,
+     "target_entity_catalyses_no_process": 12
     }
    },
    "layout": {
     "ir_positioned": 83,
-    "grid_positioned": 5
+    "grid_positioned": 3
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {},
+   "compartment_collisions": {}
   },
   {
    "idx": 8,
-   "bytes": 12773,
+   "bytes": 10730,
    "valid_xsd_schematron": true,
    "problems": [],
    "deterministic": true,
@@ -156,16 +197,25 @@
    "interactions": 10,
    "process_glyphs": 6,
    "process_glyphs_expected": 6,
-   "entity_glyphs": 19,
+   "entity_glyphs": 16,
    "compartments": 2,
-   "arcs": 32,
-   "interactions_exported": 10,
-   "omitted": {},
+   "arcs": 23,
+   "interactions_exported": 1,
+   "omitted": {
+    "interactions": {
+     "relationship_not_regulatory": 9
+    }
+   },
    "layout": {
-    "ir_positioned": 24,
+    "ir_positioned": 21,
     "grid_positioned": 1
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {
+    "compartment_assumed:transporter_in_from_compartment": 1
+   },
+   "compartment_collisions": {}
   },
   {
    "idx": 9,
@@ -187,7 +237,16 @@
     "ir_positioned": 33,
     "grid_positioned": 29
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 1,
+   "notes": {
+    "compartment_assumed:reaction_state_from_ir": 1,
+    "compartment_assumed:transporter_in_from_compartment": 0
+   },
+   "compartment_collisions": {
+    "extracellular": 2,
+    "intracellular": 2
+   }
   },
   {
    "idx": 10,
@@ -209,7 +268,15 @@
     "ir_positioned": 17,
     "grid_positioned": 1
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {
+    "compartment_assumed:transporter_in_from_compartment": 3,
+    "transport_same_compartment": 1
+   },
+   "compartment_collisions": {
+    "cell": 2
+   }
   },
   {
    "idx": 11,
@@ -231,7 +298,12 @@
     "ir_positioned": 16,
     "grid_positioned": 0
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {
+    "compartment_assumed:transporter_in_from_compartment": 0
+   },
+   "compartment_collisions": {}
   },
   {
    "idx": 12,
@@ -253,7 +325,10 @@
     "ir_positioned": 11,
     "grid_positioned": 9
    },
-   "unspecified_compartment": true
+   "unspecified_compartment": true,
+   "interactions_multi_arc": 0,
+   "notes": {},
+   "compartment_collisions": {}
   },
   {
    "idx": 14,
@@ -275,7 +350,10 @@
     "ir_positioned": 6,
     "grid_positioned": 0
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {},
+   "compartment_collisions": {}
   },
   {
    "idx": 15,
@@ -297,11 +375,16 @@
     "ir_positioned": 11,
     "grid_positioned": 0
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {
+    "compartment_assumed:reaction_state_from_ir": 2
+   },
+   "compartment_collisions": {}
   },
   {
    "idx": 16,
-   "bytes": 6308,
+   "bytes": 5866,
    "valid_xsd_schematron": true,
    "problems": [],
    "deterministic": true,
@@ -310,20 +393,28 @@
    "interactions": 2,
    "process_glyphs": 4,
    "process_glyphs_expected": 4,
-   "entity_glyphs": 10,
+   "entity_glyphs": 9,
    "compartments": 1,
-   "arcs": 14,
-   "interactions_exported": 2,
-   "omitted": {},
+   "arcs": 12,
+   "interactions_exported": 0,
+   "omitted": {
+    "interactions": {
+     "relationship_not_regulatory": 1,
+     "target_entity_catalyses_no_process": 1
+    }
+   },
    "layout": {
-    "ir_positioned": 13,
+    "ir_positioned": 12,
     "grid_positioned": 1
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {},
+   "compartment_collisions": {}
   },
   {
    "idx": 17,
-   "bytes": 8196,
+   "bytes": 7768,
    "valid_xsd_schematron": true,
    "problems": [],
    "deterministic": true,
@@ -332,16 +423,23 @@
    "interactions": 1,
    "process_glyphs": 3,
    "process_glyphs_expected": 3,
-   "entity_glyphs": 15,
+   "entity_glyphs": 14,
    "compartments": 2,
-   "arcs": 16,
-   "interactions_exported": 1,
-   "omitted": {},
+   "arcs": 15,
+   "interactions_exported": 0,
+   "omitted": {
+    "interactions": {
+     "target_entity_catalyses_no_process": 1
+    }
+   },
    "layout": {
     "ir_positioned": 8,
-    "grid_positioned": 10
+    "grid_positioned": 9
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {},
+   "compartment_collisions": {}
   },
   {
    "idx": 18,
@@ -363,7 +461,12 @@
     "ir_positioned": 5,
     "grid_positioned": 9
    },
-   "unspecified_compartment": true
+   "unspecified_compartment": true,
+   "interactions_multi_arc": 0,
+   "notes": {
+    "compartment_assumed:reaction_state_from_ir": 5
+   },
+   "compartment_collisions": {}
   },
   {
    "idx": 19,
@@ -385,11 +488,16 @@
     "ir_positioned": 24,
     "grid_positioned": 0
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {
+    "compartment_assumed:reaction_state_from_ir": 6
+   },
+   "compartment_collisions": {}
   },
   {
    "idx": 20,
-   "bytes": 7496,
+   "bytes": 6746,
    "valid_xsd_schematron": true,
    "problems": [],
    "deterministic": true,
@@ -398,16 +506,23 @@
    "interactions": 2,
    "process_glyphs": 5,
    "process_glyphs_expected": 5,
-   "entity_glyphs": 11,
+   "entity_glyphs": 9,
    "compartments": 1,
-   "arcs": 17,
-   "interactions_exported": 2,
-   "omitted": {},
+   "arcs": 15,
+   "interactions_exported": 0,
+   "omitted": {
+    "interactions": {
+     "target_entity_catalyses_no_process": 2
+    }
+   },
    "layout": {
-    "ir_positioned": 15,
+    "ir_positioned": 13,
     "grid_positioned": 1
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {},
+   "compartment_collisions": {}
   },
   {
    "idx": 23,
@@ -429,11 +544,14 @@
     "ir_positioned": 11,
     "grid_positioned": 0
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {},
+   "compartment_collisions": {}
   },
   {
    "idx": 25,
-   "bytes": 3857,
+   "bytes": 2487,
    "valid_xsd_schematron": true,
    "problems": [],
    "deterministic": true,
@@ -442,20 +560,27 @@
    "interactions": 4,
    "process_glyphs": 1,
    "process_glyphs_expected": 1,
-   "entity_glyphs": 7,
+   "entity_glyphs": 4,
    "compartments": 1,
-   "arcs": 7,
-   "interactions_exported": 4,
-   "omitted": {},
+   "arcs": 4,
+   "interactions_exported": 0,
+   "omitted": {
+    "interactions": {
+     "target_entity_catalyses_no_process": 4
+    }
+   },
    "layout": {
-    "ir_positioned": 8,
+    "ir_positioned": 5,
     "grid_positioned": 0
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {},
+   "compartment_collisions": {}
   },
   {
    "idx": 27,
-   "bytes": 15083,
+   "bytes": 13989,
    "valid_xsd_schematron": true,
    "problems": [],
    "deterministic": true,
@@ -464,20 +589,30 @@
    "interactions": 3,
    "process_glyphs": 8,
    "process_glyphs_expected": 8,
-   "entity_glyphs": 21,
+   "entity_glyphs": 20,
    "compartments": 2,
-   "arcs": 35,
-   "interactions_exported": 3,
-   "omitted": {},
+   "arcs": 29,
+   "interactions_exported": 0,
+   "omitted": {
+    "interactions": {
+     "target_entity_catalyses_no_process": 1,
+     "relationship_not_regulatory": 2
+    }
+   },
    "layout": {
-    "ir_positioned": 28,
+    "ir_positioned": 27,
     "grid_positioned": 1
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {
+    "compartment_assumed:transporter_in_from_compartment": 0
+   },
+   "compartment_collisions": {}
   },
   {
    "idx": 29,
-   "bytes": 10723,
+   "bytes": 10175,
    "valid_xsd_schematron": true,
    "problems": [],
    "deterministic": true,
@@ -486,20 +621,29 @@
    "interactions": 1,
    "process_glyphs": 6,
    "process_glyphs_expected": 6,
-   "entity_glyphs": 14,
+   "entity_glyphs": 13,
    "compartments": 3,
-   "arcs": 20,
-   "interactions_exported": 1,
-   "omitted": {},
+   "arcs": 18,
+   "interactions_exported": 0,
+   "omitted": {
+    "interactions": {
+     "target_entity_catalyses_no_process": 1
+    }
+   },
    "layout": {
-    "ir_positioned": 18,
+    "ir_positioned": 17,
     "grid_positioned": 2
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {
+    "compartment_assumed:transporter_in_from_compartment": 1
+   },
+   "compartment_collisions": {}
   },
   {
    "idx": 31,
-   "bytes": 13859,
+   "bytes": 12764,
    "valid_xsd_schematron": true,
    "problems": [],
    "deterministic": true,
@@ -508,20 +652,29 @@
    "interactions": 3,
    "process_glyphs": 7,
    "process_glyphs_expected": 7,
-   "entity_glyphs": 20,
+   "entity_glyphs": 19,
    "compartments": 2,
-   "arcs": 31,
-   "interactions_exported": 3,
-   "omitted": {},
+   "arcs": 25,
+   "interactions_exported": 0,
+   "omitted": {
+    "interactions": {
+     "target_entity_catalyses_no_process": 3
+    }
+   },
    "layout": {
-    "ir_positioned": 25,
+    "ir_positioned": 24,
     "grid_positioned": 2
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {
+    "compartment_assumed:transporter_in_from_compartment": 2
+   },
+   "compartment_collisions": {}
   },
   {
    "idx": 35,
-   "bytes": 7780,
+   "bytes": 7380,
    "valid_xsd_schematron": true,
    "problems": [],
    "deterministic": true,
@@ -530,20 +683,25 @@
    "interactions": 2,
    "process_glyphs": 5,
    "process_glyphs_expected": 5,
-   "entity_glyphs": 12,
+   "entity_glyphs": 11,
    "compartments": 2,
-   "arcs": 15,
-   "interactions_exported": 1,
+   "arcs": 14,
+   "interactions_exported": 0,
    "omitted": {
     "interactions": {
-     "target_entity_catalyses_no_process": 1
+     "target_entity_catalyses_no_process": 2
     }
    },
    "layout": {
     "ir_positioned": 15,
-    "grid_positioned": 2
+    "grid_positioned": 1
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {
+    "compartment_assumed:transporter_in_from_compartment": 1
+   },
+   "compartment_collisions": {}
   },
   {
    "idx": 37,
@@ -565,11 +723,16 @@
     "ir_positioned": 13,
     "grid_positioned": 0
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {
+    "compartment_assumed:reaction_state_from_ir": 2
+   },
+   "compartment_collisions": {}
   },
   {
    "idx": 39,
-   "bytes": 5139,
+   "bytes": 4224,
    "valid_xsd_schematron": true,
    "problems": [],
    "deterministic": true,
@@ -578,20 +741,27 @@
    "interactions": 2,
    "process_glyphs": 2,
    "process_glyphs_expected": 2,
-   "entity_glyphs": 6,
+   "entity_glyphs": 5,
    "compartments": 1,
-   "arcs": 13,
-   "interactions_exported": 2,
-   "omitted": {},
+   "arcs": 9,
+   "interactions_exported": 0,
+   "omitted": {
+    "interactions": {
+     "target_entity_catalyses_no_process": 2
+    }
+   },
    "layout": {
-    "ir_positioned": 8,
+    "ir_positioned": 7,
     "grid_positioned": 0
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {},
+   "compartment_collisions": {}
   },
   {
    "idx": 40,
-   "bytes": 3759,
+   "bytes": 3362,
    "valid_xsd_schematron": true,
    "problems": [],
    "deterministic": true,
@@ -600,24 +770,28 @@
    "interactions": 6,
    "process_glyphs": 2,
    "process_glyphs_expected": 2,
-   "entity_glyphs": 6,
+   "entity_glyphs": 5,
    "compartments": 1,
-   "arcs": 7,
-   "interactions_exported": 1,
+   "arcs": 6,
+   "interactions_exported": 0,
    "omitted": {
     "interactions": {
-     "target_entity_catalyses_no_process": 5
+     "target_entity_catalyses_no_process": 2,
+     "relationship_not_regulatory": 4
     }
    },
    "layout": {
     "ir_positioned": 7,
-    "grid_positioned": 1
+    "grid_positioned": 0
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {},
+   "compartment_collisions": {}
   },
   {
    "idx": 42,
-   "bytes": 8135,
+   "bytes": 7465,
    "valid_xsd_schematron": true,
    "problems": [],
    "deterministic": true,
@@ -626,24 +800,28 @@
    "interactions": 3,
    "process_glyphs": 4,
    "process_glyphs_expected": 4,
-   "entity_glyphs": 10,
+   "entity_glyphs": 9,
    "compartments": 1,
-   "arcs": 15,
-   "interactions_exported": 2,
+   "arcs": 12,
+   "interactions_exported": 0,
    "omitted": {
     "interactions": {
-     "target_entity_catalyses_no_process": 1
+     "relationship_not_regulatory": 1,
+     "target_entity_catalyses_no_process": 2
     }
    },
    "layout": {
     "ir_positioned": 13,
-    "grid_positioned": 1
+    "grid_positioned": 0
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {},
+   "compartment_collisions": {}
   },
   {
    "idx": 44,
-   "bytes": 3850,
+   "bytes": 3342,
    "valid_xsd_schematron": true,
    "problems": [],
    "deterministic": true,
@@ -652,24 +830,27 @@
    "interactions": 2,
    "process_glyphs": 1,
    "process_glyphs_expected": 1,
-   "entity_glyphs": 6,
+   "entity_glyphs": 5,
    "compartments": 1,
-   "arcs": 6,
-   "interactions_exported": 1,
+   "arcs": 5,
+   "interactions_exported": 0,
    "omitted": {
     "interactions": {
-     "target_entity_catalyses_no_process": 1
+     "target_entity_catalyses_no_process": 2
     }
    },
    "layout": {
-    "ir_positioned": 7,
+    "ir_positioned": 6,
     "grid_positioned": 0
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {},
+   "compartment_collisions": {}
   },
   {
    "idx": 46,
-   "bytes": 12940,
+   "bytes": 12531,
    "valid_xsd_schematron": true,
    "problems": [],
    "deterministic": true,
@@ -680,18 +861,27 @@
    "process_glyphs_expected": 7,
    "entity_glyphs": 18,
    "compartments": 2,
-   "arcs": 27,
-   "interactions_exported": 1,
-   "omitted": {},
+   "arcs": 24,
+   "interactions_exported": 0,
+   "omitted": {
+    "interactions": {
+     "target_entity_catalyses_no_process": 1
+    }
+   },
    "layout": {
     "ir_positioned": 24,
     "grid_positioned": 1
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {
+    "compartment_assumed:transporter_in_from_compartment": 0
+   },
+   "compartment_collisions": {}
   },
   {
    "idx": 48,
-   "bytes": 4361,
+   "bytes": 3819,
    "valid_xsd_schematron": true,
    "problems": [],
    "deterministic": true,
@@ -700,24 +890,28 @@
    "interactions": 3,
    "process_glyphs": 2,
    "process_glyphs_expected": 2,
-   "entity_glyphs": 6,
-   "compartments": 2,
-   "arcs": 7,
-   "interactions_exported": 1,
+   "entity_glyphs": 5,
+   "compartments": 1,
+   "arcs": 6,
+   "interactions_exported": 0,
    "omitted": {
     "interactions": {
-     "target_entity_catalyses_no_process": 2
+     "target_entity_catalyses_no_process": 2,
+     "relationship_not_regulatory": 1
     }
    },
    "layout": {
-    "ir_positioned": 1,
+    "ir_positioned": 0,
     "grid_positioned": 7
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {},
+   "compartment_collisions": {}
   },
   {
    "idx": 50,
-   "bytes": 9817,
+   "bytes": 9273,
    "valid_xsd_schematron": true,
    "problems": [],
    "deterministic": true,
@@ -726,20 +920,26 @@
    "interactions": 3,
    "process_glyphs": 6,
    "process_glyphs_expected": 6,
-   "entity_glyphs": 14,
+   "entity_glyphs": 13,
    "compartments": 2,
-   "arcs": 19,
-   "interactions_exported": 2,
+   "arcs": 17,
+   "interactions_exported": 0,
    "omitted": {
     "interactions": {
-     "target_entity_catalyses_no_process": 1
+     "relationship_not_regulatory": 1,
+     "target_entity_catalyses_no_process": 2
     }
    },
    "layout": {
-    "ir_positioned": 20,
+    "ir_positioned": 19,
     "grid_positioned": 0
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {
+    "compartment_assumed:transporter_in_from_compartment": 1
+   },
+   "compartment_collisions": {}
   },
   {
    "idx": 52,
@@ -761,11 +961,14 @@
     "ir_positioned": 11,
     "grid_positioned": 0
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {},
+   "compartment_collisions": {}
   },
   {
    "idx": 54,
-   "bytes": 3849,
+   "bytes": 2808,
    "valid_xsd_schematron": true,
    "problems": [],
    "deterministic": true,
@@ -774,16 +977,23 @@
    "interactions": 2,
    "process_glyphs": 1,
    "process_glyphs_expected": 1,
-   "entity_glyphs": 6,
+   "entity_glyphs": 4,
    "compartments": 1,
-   "arcs": 6,
-   "interactions_exported": 2,
-   "omitted": {},
+   "arcs": 4,
+   "interactions_exported": 0,
+   "omitted": {
+    "interactions": {
+     "target_entity_catalyses_no_process": 2
+    }
+   },
    "layout": {
-    "ir_positioned": 7,
+    "ir_positioned": 5,
     "grid_positioned": 0
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {},
+   "compartment_collisions": {}
   },
   {
    "idx": 56,
@@ -802,18 +1012,22 @@
    "interactions_exported": 0,
    "omitted": {
     "interactions": {
-     "target_entity_catalyses_no_process": 4
+     "target_entity_catalyses_no_process": 1,
+     "relationship_not_regulatory": 3
     }
    },
    "layout": {
     "ir_positioned": 0,
     "grid_positioned": 3
    },
-   "unspecified_compartment": true
+   "unspecified_compartment": true,
+   "interactions_multi_arc": 0,
+   "notes": {},
+   "compartment_collisions": {}
   },
   {
    "idx": 58,
-   "bytes": 16439,
+   "bytes": 14936,
    "valid_xsd_schematron": true,
    "problems": [],
    "deterministic": true,
@@ -822,20 +1036,30 @@
    "interactions": 4,
    "process_glyphs": 9,
    "process_glyphs_expected": 9,
-   "entity_glyphs": 22,
+   "entity_glyphs": 21,
    "compartments": 2,
-   "arcs": 41,
-   "interactions_exported": 4,
-   "omitted": {},
+   "arcs": 32,
+   "interactions_exported": 0,
+   "omitted": {
+    "interactions": {
+     "target_entity_catalyses_no_process": 2,
+     "relationship_not_regulatory": 2
+    }
+   },
    "layout": {
-    "ir_positioned": 29,
+    "ir_positioned": 28,
     "grid_positioned": 2
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {
+    "compartment_assumed:transporter_in_from_compartment": 2
+   },
+   "compartment_collisions": {}
   },
   {
    "idx": 60,
-   "bytes": 3900,
+   "bytes": 3497,
    "valid_xsd_schematron": true,
    "problems": [],
    "deterministic": true,
@@ -844,24 +1068,88 @@
    "interactions": 2,
    "process_glyphs": 2,
    "process_glyphs_expected": 2,
-   "entity_glyphs": 6,
+   "entity_glyphs": 5,
    "compartments": 1,
-   "arcs": 7,
-   "interactions_exported": 1,
+   "arcs": 6,
+   "interactions_exported": 0,
    "omitted": {
     "interactions": {
-     "target_entity_catalyses_no_process": 1
+     "target_entity_catalyses_no_process": 2
     }
    },
    "layout": {
-    "ir_positioned": 8,
+    "ir_positioned": 7,
     "grid_positioned": 0
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {},
+   "compartment_collisions": {}
   },
   {
    "idx": 62,
-   "bytes": 2332,
+   "bytes": 2028,
+   "valid_xsd_schematron": true,
+   "problems": [],
+   "deterministic": true,
+   "reactions": 1,
+   "transports": 0,
+   "interactions": 2,
+   "process_glyphs": 1,
+   "process_glyphs_expected": 1,
+   "entity_glyphs": 3,
+   "compartments": 1,
+   "arcs": 3,
+   "interactions_exported": 0,
+   "omitted": {
+    "interactions": {
+     "target_entity_catalyses_no_process": 1,
+     "relationship_not_regulatory": 1
+    }
+   },
+   "layout": {
+    "ir_positioned": 0,
+    "grid_positioned": 4
+   },
+   "unspecified_compartment": true,
+   "interactions_multi_arc": 0,
+   "notes": {},
+   "compartment_collisions": {}
+  },
+  {
+   "idx": 66,
+   "bytes": 12192,
+   "valid_xsd_schematron": true,
+   "problems": [],
+   "deterministic": true,
+   "reactions": 5,
+   "transports": 2,
+   "interactions": 3,
+   "process_glyphs": 7,
+   "process_glyphs_expected": 7,
+   "entity_glyphs": 18,
+   "compartments": 2,
+   "arcs": 24,
+   "interactions_exported": 0,
+   "omitted": {
+    "interactions": {
+     "target_entity_catalyses_no_process": 3
+    }
+   },
+   "layout": {
+    "ir_positioned": 23,
+    "grid_positioned": 2
+   },
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {
+    "compartment_assumed:transporter_in_from_compartment": 2
+   },
+   "compartment_collisions": {}
+  },
+  {
+   "idx": 67,
+   "bytes": 2835,
    "valid_xsd_schematron": true,
    "problems": [],
    "deterministic": true,
@@ -873,65 +1161,24 @@
    "entity_glyphs": 4,
    "compartments": 1,
    "arcs": 4,
-   "interactions_exported": 1,
+   "interactions_exported": 0,
    "omitted": {
     "interactions": {
-     "target_entity_catalyses_no_process": 1
+     "target_entity_catalyses_no_process": 2
     }
    },
    "layout": {
     "ir_positioned": 0,
     "grid_positioned": 5
    },
-   "unspecified_compartment": true
-  },
-  {
-   "idx": 66,
-   "bytes": 13274,
-   "valid_xsd_schematron": true,
-   "problems": [],
-   "deterministic": true,
-   "reactions": 5,
-   "transports": 2,
-   "interactions": 3,
-   "process_glyphs": 7,
-   "process_glyphs_expected": 7,
-   "entity_glyphs": 19,
-   "compartments": 2,
-   "arcs": 30,
-   "interactions_exported": 3,
-   "omitted": {},
-   "layout": {
-    "ir_positioned": 23,
-    "grid_positioned": 3
-   },
-   "unspecified_compartment": false
-  },
-  {
-   "idx": 67,
-   "bytes": 3373,
-   "valid_xsd_schematron": true,
-   "problems": [],
-   "deterministic": true,
-   "reactions": 1,
-   "transports": 0,
-   "interactions": 2,
-   "process_glyphs": 1,
-   "process_glyphs_expected": 1,
-   "entity_glyphs": 5,
-   "compartments": 1,
-   "arcs": 6,
-   "interactions_exported": 2,
-   "omitted": {},
-   "layout": {
-    "ir_positioned": 1,
-    "grid_positioned": 5
-   },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {},
+   "compartment_collisions": {}
   },
   {
    "idx": 68,
-   "bytes": 8859,
+   "bytes": 8143,
    "valid_xsd_schematron": true,
    "problems": [],
    "deterministic": true,
@@ -940,20 +1187,25 @@
    "interactions": 13,
    "process_glyphs": 5,
    "process_glyphs_expected": 5,
-   "entity_glyphs": 15,
+   "entity_glyphs": 13,
    "compartments": 4,
-   "arcs": 18,
-   "interactions_exported": 2,
+   "arcs": 16,
+   "interactions_exported": 0,
    "omitted": {
     "interactions": {
-     "target_entity_catalyses_no_process": 11
+     "relationship_not_regulatory": 13
     }
    },
    "layout": {
-    "ir_positioned": 20,
+    "ir_positioned": 18,
     "grid_positioned": 0
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {
+    "compartment_assumed:transporter_in_from_compartment": 1
+   },
+   "compartment_collisions": {}
   },
   {
    "idx": 70,
@@ -975,7 +1227,10 @@
     "ir_positioned": 10,
     "grid_positioned": 0
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {},
+   "compartment_collisions": {}
   },
   {
    "idx": 72,
@@ -997,11 +1252,14 @@
     "ir_positioned": 9,
     "grid_positioned": 0
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {},
+   "compartment_collisions": {}
   },
   {
    "idx": 74,
-   "bytes": 4825,
+   "bytes": 2794,
    "valid_xsd_schematron": true,
    "problems": [],
    "deterministic": true,
@@ -1010,24 +1268,28 @@
    "interactions": 4,
    "process_glyphs": 1,
    "process_glyphs_expected": 1,
-   "entity_glyphs": 7,
+   "entity_glyphs": 4,
    "compartments": 1,
-   "arcs": 7,
-   "interactions_exported": 3,
+   "arcs": 4,
+   "interactions_exported": 0,
    "omitted": {
     "interactions": {
-     "target_entity_catalyses_no_process": 1
+     "target_entity_catalyses_no_process": 3,
+     "relationship_not_regulatory": 1
     }
    },
    "layout": {
-    "ir_positioned": 7,
-    "grid_positioned": 1
+    "ir_positioned": 5,
+    "grid_positioned": 0
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {},
+   "compartment_collisions": {}
   },
   {
    "idx": 76,
-   "bytes": 16483,
+   "bytes": 15064,
    "valid_xsd_schematron": true,
    "problems": [],
    "deterministic": true,
@@ -1036,24 +1298,30 @@
    "interactions": 5,
    "process_glyphs": 9,
    "process_glyphs_expected": 9,
-   "entity_glyphs": 29,
+   "entity_glyphs": 26,
    "compartments": 5,
-   "arcs": 34,
-   "interactions_exported": 3,
+   "arcs": 30,
+   "interactions_exported": 0,
    "omitted": {
     "interactions": {
+     "relationship_not_regulatory": 3,
      "target_entity_catalyses_no_process": 2
     }
    },
    "layout": {
-    "ir_positioned": 35,
-    "grid_positioned": 3
+    "ir_positioned": 34,
+    "grid_positioned": 1
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {
+    "compartment_assumed:transporter_in_from_compartment": 2
+   },
+   "compartment_collisions": {}
   },
   {
    "idx": 77,
-   "bytes": 3899,
+   "bytes": 3391,
    "valid_xsd_schematron": true,
    "problems": [],
    "deterministic": true,
@@ -1062,24 +1330,28 @@
    "interactions": 4,
    "process_glyphs": 1,
    "process_glyphs_expected": 1,
-   "entity_glyphs": 6,
+   "entity_glyphs": 5,
    "compartments": 1,
-   "arcs": 6,
-   "interactions_exported": 1,
+   "arcs": 5,
+   "interactions_exported": 0,
    "omitted": {
     "interactions": {
-     "target_entity_catalyses_no_process": 3
+     "target_entity_catalyses_no_process": 2,
+     "relationship_not_regulatory": 2
     }
    },
    "layout": {
-    "ir_positioned": 7,
+    "ir_positioned": 6,
     "grid_positioned": 0
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {},
+   "compartment_collisions": {}
   },
   {
    "idx": 78,
-   "bytes": 16835,
+   "bytes": 16427,
    "valid_xsd_schematron": true,
    "problems": [],
    "deterministic": true,
@@ -1090,14 +1362,25 @@
    "process_glyphs_expected": 8,
    "entity_glyphs": 25,
    "compartments": 2,
-   "arcs": 34,
-   "interactions_exported": 1,
-   "omitted": {},
+   "arcs": 31,
+   "interactions_exported": 0,
+   "omitted": {
+    "interactions": {
+     "target_entity_catalyses_no_process": 1
+    }
+   },
    "layout": {
     "ir_positioned": 31,
     "grid_positioned": 2
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {
+    "compartment_assumed:reaction_state_from_ir": 1,
+    "compartment_assumed:transporter_in_from_compartment": 0,
+    "transport_same_compartment": 1
+   },
+   "compartment_collisions": {}
   },
   {
    "idx": 79,
@@ -1119,7 +1402,10 @@
     "ir_positioned": 13,
     "grid_positioned": 1
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {},
+   "compartment_collisions": {}
   },
   {
    "idx": 82,
@@ -1145,11 +1431,14 @@
     "ir_positioned": 0,
     "grid_positioned": 5
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {},
+   "compartment_collisions": {}
   },
   {
    "idx": 84,
-   "bytes": 9699,
+   "bytes": 9009,
    "valid_xsd_schematron": true,
    "problems": [],
    "deterministic": true,
@@ -1158,13 +1447,13 @@
    "interactions": 4,
    "process_glyphs": 7,
    "process_glyphs_expected": 7,
-   "entity_glyphs": 15,
+   "entity_glyphs": 13,
    "compartments": 2,
-   "arcs": 21,
-   "interactions_exported": 2,
+   "arcs": 19,
+   "interactions_exported": 0,
    "omitted": {
     "interactions": {
-     "target_entity_catalyses_no_process": 2
+     "target_entity_catalyses_no_process": 4
     },
     "reaction_arcs": {
      "unresolved_entity": 1
@@ -1172,9 +1461,15 @@
    },
    "layout": {
     "ir_positioned": 19,
-    "grid_positioned": 3
+    "grid_positioned": 1
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {
+    "compartment_assumed:reaction_state_from_ir": 4,
+    "compartment_assumed:transporter_in_from_compartment": 1
+   },
+   "compartment_collisions": {}
   },
   {
    "idx": 86,
@@ -1196,11 +1491,16 @@
     "ir_positioned": 11,
     "grid_positioned": 0
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {
+    "compartment_assumed:reaction_state_from_ir": 2
+   },
+   "compartment_collisions": {}
   },
   {
    "idx": 88,
-   "bytes": 4855,
+   "bytes": 3915,
    "valid_xsd_schematron": true,
    "problems": [],
    "deterministic": true,
@@ -1209,20 +1509,28 @@
    "interactions": 3,
    "process_glyphs": 1,
    "process_glyphs_expected": 1,
-   "entity_glyphs": 8,
+   "entity_glyphs": 6,
    "compartments": 1,
-   "arcs": 9,
-   "interactions_exported": 3,
-   "omitted": {},
-   "layout": {
-    "ir_positioned": 8,
-    "grid_positioned": 1
+   "arcs": 6,
+   "interactions_exported": 0,
+   "omitted": {
+    "interactions": {
+     "target_entity_catalyses_no_process": 2,
+     "relationship_not_regulatory": 1
+    }
    },
-   "unspecified_compartment": false
+   "layout": {
+    "ir_positioned": 7,
+    "grid_positioned": 0
+   },
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {},
+   "compartment_collisions": {}
   },
   {
    "idx": 91,
-   "bytes": 13039,
+   "bytes": 11950,
    "valid_xsd_schematron": true,
    "problems": [],
    "deterministic": true,
@@ -1231,20 +1539,30 @@
    "interactions": 3,
    "process_glyphs": 6,
    "process_glyphs_expected": 6,
-   "entity_glyphs": 18,
+   "entity_glyphs": 17,
    "compartments": 2,
-   "arcs": 29,
-   "interactions_exported": 3,
-   "omitted": {},
+   "arcs": 23,
+   "interactions_exported": 0,
+   "omitted": {
+    "interactions": {
+     "target_entity_catalyses_no_process": 1,
+     "relationship_not_regulatory": 2
+    }
+   },
    "layout": {
-    "ir_positioned": 23,
+    "ir_positioned": 22,
     "grid_positioned": 1
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {
+    "compartment_assumed:transporter_in_from_compartment": 1
+   },
+   "compartment_collisions": {}
   },
   {
    "idx": 93,
-   "bytes": 5599,
+   "bytes": 5059,
    "valid_xsd_schematron": true,
    "problems": [],
    "deterministic": true,
@@ -1253,24 +1571,28 @@
    "interactions": 3,
    "process_glyphs": 2,
    "process_glyphs_expected": 2,
-   "entity_glyphs": 9,
+   "entity_glyphs": 8,
    "compartments": 1,
-   "arcs": 10,
-   "interactions_exported": 2,
+   "arcs": 8,
+   "interactions_exported": 0,
    "omitted": {
     "interactions": {
-     "target_entity_catalyses_no_process": 1
+     "target_entity_catalyses_no_process": 2,
+     "relationship_not_regulatory": 1
     }
    },
    "layout": {
-    "ir_positioned": 2,
+    "ir_positioned": 1,
     "grid_positioned": 9
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {},
+   "compartment_collisions": {}
   },
   {
    "idx": 96,
-   "bytes": 6453,
+   "bytes": 6053,
    "valid_xsd_schematron": true,
    "problems": [],
    "deterministic": true,
@@ -1279,20 +1601,23 @@
    "interactions": 2,
    "process_glyphs": 4,
    "process_glyphs_expected": 4,
-   "entity_glyphs": 10,
+   "entity_glyphs": 9,
    "compartments": 1,
-   "arcs": 13,
-   "interactions_exported": 1,
+   "arcs": 12,
+   "interactions_exported": 0,
    "omitted": {
     "interactions": {
-     "target_entity_catalyses_no_process": 1
+     "target_entity_catalyses_no_process": 2
     }
    },
    "layout": {
     "ir_positioned": 13,
-    "grid_positioned": 1
+    "grid_positioned": 0
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {},
+   "compartment_collisions": {}
   },
   {
    "idx": 98,
@@ -1314,7 +1639,12 @@
     "ir_positioned": 11,
     "grid_positioned": 0
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {
+    "compartment_assumed:reaction_state_from_ir": 2
+   },
+   "compartment_collisions": {}
   },
   {
    "idx": 100,
@@ -1333,18 +1663,21 @@
    "interactions_exported": 0,
    "omitted": {
     "interactions": {
-     "target_entity_catalyses_no_process": 1
+     "relationship_not_regulatory": 1
     }
    },
    "layout": {
     "ir_positioned": 7,
     "grid_positioned": 0
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {},
+   "compartment_collisions": {}
   },
   {
    "idx": 102,
-   "bytes": 11564,
+   "bytes": 11291,
    "valid_xsd_schematron": true,
    "problems": [],
    "deterministic": true,
@@ -1355,18 +1688,29 @@
    "process_glyphs_expected": 7,
    "entity_glyphs": 16,
    "compartments": 2,
-   "arcs": 25,
-   "interactions_exported": 2,
-   "omitted": {},
+   "arcs": 23,
+   "interactions_exported": 0,
+   "omitted": {
+    "interactions": {
+     "target_entity_catalyses_no_process": 1,
+     "relationship_not_regulatory": 1
+    }
+   },
    "layout": {
     "ir_positioned": 22,
     "grid_positioned": 1
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {
+    "compartment_assumed:transporter_in_from_compartment": 0,
+    "transport_same_compartment": 1
+   },
+   "compartment_collisions": {}
   },
   {
    "idx": 103,
-   "bytes": 3003,
+   "bytes": 2595,
    "valid_xsd_schematron": true,
    "problems": [],
    "deterministic": true,
@@ -1375,20 +1719,27 @@
    "interactions": 1,
    "process_glyphs": 1,
    "process_glyphs_expected": 1,
-   "entity_glyphs": 5,
+   "entity_glyphs": 4,
    "compartments": 1,
-   "arcs": 5,
-   "interactions_exported": 1,
-   "omitted": {},
+   "arcs": 4,
+   "interactions_exported": 0,
+   "omitted": {
+    "interactions": {
+     "target_entity_catalyses_no_process": 1
+    }
+   },
    "layout": {
     "ir_positioned": 0,
-    "grid_positioned": 6
+    "grid_positioned": 5
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {},
+   "compartment_collisions": {}
   },
   {
    "idx": 105,
-   "bytes": 7718,
+   "bytes": 7311,
    "valid_xsd_schematron": true,
    "problems": [],
    "deterministic": true,
@@ -1397,20 +1748,26 @@
    "interactions": 4,
    "process_glyphs": 5,
    "process_glyphs_expected": 5,
-   "entity_glyphs": 13,
+   "entity_glyphs": 12,
    "compartments": 2,
-   "arcs": 15,
-   "interactions_exported": 1,
+   "arcs": 14,
+   "interactions_exported": 0,
    "omitted": {
     "interactions": {
-     "target_entity_catalyses_no_process": 3
+     "target_entity_catalyses_no_process": 3,
+     "relationship_not_regulatory": 1
     }
    },
    "layout": {
-    "ir_positioned": 17,
+    "ir_positioned": 16,
     "grid_positioned": 1
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {
+    "compartment_assumed:transporter_in_from_compartment": 1
+   },
+   "compartment_collisions": {}
   },
   {
    "idx": 107,
@@ -1432,11 +1789,14 @@
     "ir_positioned": 11,
     "grid_positioned": 0
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {},
+   "compartment_collisions": {}
   },
   {
    "idx": 109,
-   "bytes": 3824,
+   "bytes": 3315,
    "valid_xsd_schematron": true,
    "problems": [],
    "deterministic": true,
@@ -1445,20 +1805,24 @@
    "interactions": 2,
    "process_glyphs": 1,
    "process_glyphs_expected": 1,
-   "entity_glyphs": 6,
+   "entity_glyphs": 5,
    "compartments": 1,
-   "arcs": 6,
-   "interactions_exported": 1,
+   "arcs": 5,
+   "interactions_exported": 0,
    "omitted": {
     "interactions": {
-     "target_entity_catalyses_no_process": 1
+     "target_entity_catalyses_no_process": 1,
+     "relationship_not_regulatory": 1
     }
    },
    "layout": {
-    "ir_positioned": 7,
+    "ir_positioned": 6,
     "grid_positioned": 0
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {},
+   "compartment_collisions": {}
   },
   {
    "idx": 111,
@@ -1477,18 +1841,23 @@
    "interactions_exported": 0,
    "omitted": {
     "interactions": {
-     "target_entity_catalyses_no_process": 2
+     "relationship_not_regulatory": 2
     }
    },
    "layout": {
     "ir_positioned": 3,
     "grid_positioned": 0
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {
+    "compartment_assumed:transporter_in_from_compartment": 0
+   },
+   "compartment_collisions": {}
   },
   {
    "idx": 113,
-   "bytes": 10095,
+   "bytes": 9957,
    "valid_xsd_schematron": true,
    "problems": [],
    "deterministic": true,
@@ -1499,14 +1868,20 @@
    "process_glyphs_expected": 6,
    "entity_glyphs": 14,
    "compartments": 2,
-   "arcs": 21,
+   "arcs": 20,
    "interactions_exported": 1,
    "omitted": {},
    "layout": {
     "ir_positioned": 12,
     "grid_positioned": 8
    },
-   "unspecified_compartment": true
+   "unspecified_compartment": true,
+   "interactions_multi_arc": 0,
+   "notes": {
+    "compartment_assumed:interaction_source_in_target_compartment": 1,
+    "compartment_assumed:reaction_state_from_ir": 1
+   },
+   "compartment_collisions": {}
   },
   {
    "idx": 114,
@@ -1528,7 +1903,12 @@
     "ir_positioned": 12,
     "grid_positioned": 0
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {
+    "compartment_assumed:transporter_in_from_compartment": 2
+   },
+   "compartment_collisions": {}
   },
   {
    "idx": 116,
@@ -1550,7 +1930,13 @@
     "ir_positioned": 44,
     "grid_positioned": 2
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {
+    "compartment_assumed:reaction_state_from_ir": 5,
+    "compartment_assumed:transporter_in_from_compartment": 1
+   },
+   "compartment_collisions": {}
   },
   {
    "idx": 118,
@@ -1572,7 +1958,12 @@
     "ir_positioned": 18,
     "grid_positioned": 0
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {
+    "compartment_assumed:transporter_in_from_compartment": 0
+   },
+   "compartment_collisions": {}
   },
   {
    "idx": 119,
@@ -1594,7 +1985,15 @@
     "ir_positioned": 27,
     "grid_positioned": 0
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {
+    "compartment_assumed:reaction_state_from_ir": 2,
+    "compartment_assumed:transporter_in_from_compartment": 0
+   },
+   "compartment_collisions": {
+    "cytosol": 2
+   }
   },
   {
    "idx": 120,
@@ -1616,7 +2015,12 @@
     "ir_positioned": 14,
     "grid_positioned": 3
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {},
+   "compartment_collisions": {
+    "cell": 2
+   }
   },
   {
    "idx": 121,
@@ -1638,7 +2042,10 @@
     "ir_positioned": 17,
     "grid_positioned": 0
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {},
+   "compartment_collisions": {}
   },
   {
    "idx": 122,
@@ -1660,7 +2067,10 @@
     "ir_positioned": 13,
     "grid_positioned": 1
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {},
+   "compartment_collisions": {}
   },
   {
    "idx": 123,
@@ -1682,7 +2092,12 @@
     "ir_positioned": 9,
     "grid_positioned": 0
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {
+    "compartment_assumed:reaction_state_from_ir": 2
+   },
+   "compartment_collisions": {}
   },
   {
    "idx": 124,
@@ -1704,7 +2119,12 @@
     "ir_positioned": 18,
     "grid_positioned": 0
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {
+    "compartment_assumed:reaction_state_from_ir": 2
+   },
+   "compartment_collisions": {}
   },
   {
    "idx": 125,
@@ -1726,7 +2146,10 @@
     "ir_positioned": 27,
     "grid_positioned": 1
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {},
+   "compartment_collisions": {}
   },
   {
    "idx": 126,
@@ -1748,7 +2171,14 @@
     "ir_positioned": 26,
     "grid_positioned": 2
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {
+    "compartment_assumed:transporter_in_from_compartment": 0
+   },
+   "compartment_collisions": {
+    "cytosol": 2
+   }
   },
   {
    "idx": 127,
@@ -1770,7 +2200,12 @@
     "ir_positioned": 13,
     "grid_positioned": 0
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {},
+   "compartment_collisions": {
+    "cytosol": 2
+   }
   },
   {
    "idx": 128,
@@ -1789,14 +2224,21 @@
    "interactions_exported": 0,
    "omitted": {
     "interactions": {
-     "target_entity_catalyses_no_process": 2
+     "target_entity_catalyses_no_process": 1,
+     "relationship_not_regulatory": 1
     }
    },
    "layout": {
     "ir_positioned": 40,
     "grid_positioned": 3
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {
+    "compartment_assumed:reaction_state_from_ir": 1,
+    "compartment_assumed:transporter_in_from_compartment": 3
+   },
+   "compartment_collisions": {}
   },
   {
    "idx": 129,
@@ -1818,11 +2260,14 @@
     "ir_positioned": 25,
     "grid_positioned": 0
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {},
+   "compartment_collisions": {}
   },
   {
    "idx": 130,
-   "bytes": 8392,
+   "bytes": 8103,
    "valid_xsd_schematron": true,
    "problems": [],
    "deterministic": true,
@@ -1831,24 +2276,27 @@
    "interactions": 3,
    "process_glyphs": 5,
    "process_glyphs_expected": 5,
-   "entity_glyphs": 12,
+   "entity_glyphs": 11,
    "compartments": 1,
-   "arcs": 17,
-   "interactions_exported": 1,
+   "arcs": 16,
+   "interactions_exported": 0,
    "omitted": {
     "interactions": {
-     "target_entity_catalyses_no_process": 2
+     "target_entity_catalyses_no_process": 3
     }
    },
    "layout": {
     "ir_positioned": 16,
-    "grid_positioned": 1
+    "grid_positioned": 0
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {},
+   "compartment_collisions": {}
   },
   {
    "idx": 131,
-   "bytes": 5774,
+   "bytes": 5461,
    "valid_xsd_schematron": true,
    "problems": [],
    "deterministic": true,
@@ -1857,20 +2305,24 @@
    "interactions": 2,
    "process_glyphs": 4,
    "process_glyphs_expected": 4,
-   "entity_glyphs": 9,
+   "entity_glyphs": 8,
    "compartments": 1,
-   "arcs": 12,
-   "interactions_exported": 1,
+   "arcs": 11,
+   "interactions_exported": 0,
    "omitted": {
     "interactions": {
-     "target_entity_catalyses_no_process": 1
+     "target_entity_catalyses_no_process": 1,
+     "relationship_not_regulatory": 1
     }
    },
    "layout": {
-    "ir_positioned": 13,
+    "ir_positioned": 12,
     "grid_positioned": 0
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {},
+   "compartment_collisions": {}
   },
   {
    "idx": 132,
@@ -1892,11 +2344,16 @@
     "ir_positioned": 19,
     "grid_positioned": 0
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {
+    "compartment_assumed:transporter_in_from_compartment": 0
+   },
+   "compartment_collisions": {}
   },
   {
    "idx": 133,
-   "bytes": 7402,
+   "bytes": 6842,
    "valid_xsd_schematron": true,
    "problems": [],
    "deterministic": true,
@@ -1905,16 +2362,23 @@
    "interactions": 1,
    "process_glyphs": 5,
    "process_glyphs_expected": 5,
-   "entity_glyphs": 10,
+   "entity_glyphs": 9,
    "compartments": 1,
-   "arcs": 19,
-   "interactions_exported": 1,
-   "omitted": {},
+   "arcs": 16,
+   "interactions_exported": 0,
+   "omitted": {
+    "interactions": {
+     "target_entity_catalyses_no_process": 1
+    }
+   },
    "layout": {
-    "ir_positioned": 14,
+    "ir_positioned": 13,
     "grid_positioned": 1
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {},
+   "compartment_collisions": {}
   },
   {
    "idx": 134,
@@ -1936,7 +2400,13 @@
     "ir_positioned": 35,
     "grid_positioned": 7
    },
-   "unspecified_compartment": true
+   "unspecified_compartment": true,
+   "interactions_multi_arc": 0,
+   "notes": {
+    "compartment_assumed:reaction_state_from_ir": 4,
+    "compartment_assumed:transporter_in_from_compartment": 0
+   },
+   "compartment_collisions": {}
   },
   {
    "idx": 135,
@@ -1958,7 +2428,12 @@
     "ir_positioned": 10,
     "grid_positioned": 20
    },
-   "unspecified_compartment": true
+   "unspecified_compartment": true,
+   "interactions_multi_arc": 0,
+   "notes": {
+    "compartment_assumed:reaction_state_from_ir": 10
+   },
+   "compartment_collisions": {}
   },
   {
    "idx": 136,
@@ -1980,7 +2455,13 @@
     "ir_positioned": 24,
     "grid_positioned": 0
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {
+    "compartment_assumed:reaction_state_from_ir": 4,
+    "compartment_assumed:transporter_in_from_compartment": 1
+   },
+   "compartment_collisions": {}
   },
   {
    "idx": 137,
@@ -2002,7 +2483,12 @@
     "ir_positioned": 4,
     "grid_positioned": 20
    },
-   "unspecified_compartment": true
+   "unspecified_compartment": true,
+   "interactions_multi_arc": 0,
+   "notes": {
+    "compartment_assumed:reaction_state_from_ir": 4
+   },
+   "compartment_collisions": {}
   },
   {
    "idx": 138,
@@ -2024,7 +2510,14 @@
     "ir_positioned": 28,
     "grid_positioned": 3
    },
-   "unspecified_compartment": true
+   "unspecified_compartment": true,
+   "interactions_multi_arc": 0,
+   "notes": {
+    "compartment_assumed:reaction_state_from_ir": 7,
+    "compartment_assumed:transporter_in_from_compartment": 0,
+    "transport_same_compartment": 1
+   },
+   "compartment_collisions": {}
   },
   {
    "idx": 139,
@@ -2046,7 +2539,10 @@
     "ir_positioned": 13,
     "grid_positioned": 0
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {},
+   "compartment_collisions": {}
   },
   {
    "idx": 140,
@@ -2068,11 +2564,14 @@
     "ir_positioned": 7,
     "grid_positioned": 0
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {},
+   "compartment_collisions": {}
   },
   {
    "idx": 141,
-   "bytes": 7465,
+   "bytes": 7154,
    "valid_xsd_schematron": true,
    "problems": [],
    "deterministic": true,
@@ -2081,16 +2580,23 @@
    "interactions": 1,
    "process_glyphs": 6,
    "process_glyphs_expected": 6,
-   "entity_glyphs": 10,
+   "entity_glyphs": 9,
    "compartments": 1,
-   "arcs": 18,
-   "interactions_exported": 1,
-   "omitted": {},
+   "arcs": 17,
+   "interactions_exported": 0,
+   "omitted": {
+    "interactions": {
+     "target_entity_catalyses_no_process": 1
+    }
+   },
    "layout": {
     "ir_positioned": 14,
-    "grid_positioned": 2
+    "grid_positioned": 1
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {},
+   "compartment_collisions": {}
   },
   {
    "idx": 142,
@@ -2112,7 +2618,10 @@
     "ir_positioned": 19,
     "grid_positioned": 1
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {},
+   "compartment_collisions": {}
   },
   {
    "idx": 143,
@@ -2134,7 +2643,10 @@
     "ir_positioned": 12,
     "grid_positioned": 0
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {},
+   "compartment_collisions": {}
   },
   {
    "idx": 144,
@@ -2156,7 +2668,12 @@
     "ir_positioned": 20,
     "grid_positioned": 0
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {
+    "compartment_assumed:reaction_state_from_ir": 2
+   },
+   "compartment_collisions": {}
   },
   {
    "idx": 145,
@@ -2178,11 +2695,14 @@
     "ir_positioned": 15,
     "grid_positioned": 0
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {},
+   "compartment_collisions": {}
   },
   {
    "idx": 146,
-   "bytes": 5533,
+   "bytes": 5050,
    "valid_xsd_schematron": true,
    "problems": [],
    "deterministic": true,
@@ -2191,20 +2711,25 @@
    "interactions": 3,
    "process_glyphs": 2,
    "process_glyphs_expected": 2,
-   "entity_glyphs": 9,
-   "compartments": 4,
-   "arcs": 9,
-   "interactions_exported": 2,
+   "entity_glyphs": 8,
+   "compartments": 3,
+   "arcs": 8,
+   "interactions_exported": 0,
    "omitted": {
     "interactions": {
-     "target_entity_catalyses_no_process": 1
+     "target_entity_catalyses_no_process": 3
     }
    },
    "layout": {
     "ir_positioned": 3,
-    "grid_positioned": 8
+    "grid_positioned": 7
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {
+    "compartment_assumed:transporter_in_from_compartment": 1
+   },
+   "compartment_collisions": {}
   },
   {
    "idx": 148,
@@ -2226,7 +2751,12 @@
     "ir_positioned": 22,
     "grid_positioned": 0
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {
+    "compartment_assumed:reaction_state_from_ir": 7
+   },
+   "compartment_collisions": {}
   },
   {
    "idx": 150,
@@ -2252,7 +2782,15 @@
     "ir_positioned": 9,
     "grid_positioned": 6
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {
+    "compartment_assumed:transporter_in_from_compartment": 3,
+    "transport_same_compartment": 1
+   },
+   "compartment_collisions": {
+    "cell": 2
+   }
   },
   {
    "idx": 151,
@@ -2278,7 +2816,15 @@
     "ir_positioned": 6,
     "grid_positioned": 4
    },
-   "unspecified_compartment": false
+   "unspecified_compartment": false,
+   "interactions_multi_arc": 0,
+   "notes": {
+    "compartment_assumed:transporter_in_from_compartment": 2,
+    "transport_same_compartment": 1
+   },
+   "compartment_collisions": {
+    "cell": 2
+   }
   }
  ]
 }

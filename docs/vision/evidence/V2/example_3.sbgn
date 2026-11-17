@@ -29,20 +29,20 @@
       <label text="cell" />
       <bbox x="0" y="669" w="3200" h="531" />
     </glyph>
-    <glyph class="simple chemical" id="g1" compartmentRef="c1">
-      <label text="H+" />
-      <bbox x="40" y="70" w="40" h="40" />
-    </glyph>
-    <glyph class="simple chemical" id="g2" compartmentRef="c2">
-      <label text="H+" />
-      <bbox x="40" y="270" w="40" h="40" />
-    </glyph>
-    <glyph class="macromolecule" id="g3" compartmentRef="c1">
+    <glyph class="macromolecule" id="g1" compartmentRef="c1">
       <extension>
         <t2pw:ids gene_name="OTOP1" pathbank_protein_id="3078" uniprot="Q7RTM1" />
       </extension>
       <label text="OTOP1" />
-      <bbox x="240" y="70" w="80" h="40" />
+      <bbox x="40" y="70" w="80" h="40" />
+    </glyph>
+    <glyph class="simple chemical" id="g2" compartmentRef="c1">
+      <label text="H+" />
+      <bbox x="240" y="70" w="40" h="40" />
+    </glyph>
+    <glyph class="simple chemical" id="g3" compartmentRef="c2">
+      <label text="H+" />
+      <bbox x="40" y="270" w="40" h="40" />
     </glyph>
     <glyph class="simple chemical" id="g4" compartmentRef="c3">
       <extension>
@@ -65,20 +65,20 @@
       <label text="5-HT" />
       <bbox x="2145" y="489" w="40" h="40" />
     </glyph>
-    <glyph class="simple chemical" id="g7" compartmentRef="c6">
-      <label text="H+" />
-      <bbox x="40" y="1470" w="40" h="40" />
-    </glyph>
-    <glyph class="simple chemical" id="g8" compartmentRef="c7">
-      <label text="H+" />
-      <bbox x="40" y="1070" w="40" h="40" />
-    </glyph>
-    <glyph class="macromolecule" id="g9" compartmentRef="c6">
+    <glyph class="macromolecule" id="g7" compartmentRef="c6">
       <extension>
         <t2pw:ids gene_name="OTOP1" pathbank_protein_id="3078" uniprot="Q7RTM1" />
       </extension>
       <label text="OTOP1" />
-      <bbox x="240" y="1470" w="80" h="40" />
+      <bbox x="40" y="1470" w="80" h="40" />
+    </glyph>
+    <glyph class="simple chemical" id="g8" compartmentRef="c6">
+      <label text="H+" />
+      <bbox x="240" y="1470" w="40" h="40" />
+    </glyph>
+    <glyph class="simple chemical" id="g9" compartmentRef="c7">
+      <label text="H+" />
+      <bbox x="40" y="1070" w="40" h="40" />
     </glyph>
     <glyph class="simple chemical" id="g10" compartmentRef="c7">
       <extension>
@@ -142,16 +142,16 @@
       <port id="p6_in" x="910" y="739" />
       <port id="p6_out" x="950" y="739" />
     </glyph>
-    <arc class="consumption" id="a1" source="g1" target="p1_in">
-      <start x="60" y="90" />
+    <arc class="consumption" id="a1" source="g2" target="p1_in">
+      <start x="260" y="90" />
       <end x="370" y="499" />
     </arc>
-    <arc class="production" id="a2" source="p1_out" target="g2">
+    <arc class="production" id="a2" source="p1_out" target="g3">
       <start x="410" y="499" />
       <end x="60" y="290" />
     </arc>
-    <arc class="catalysis" id="a3" source="g3" target="p1">
-      <start x="280" y="90" />
+    <arc class="catalysis" id="a3" source="g1" target="p1">
+      <start x="80" y="90" />
       <end x="390" y="489" />
     </arc>
     <arc class="consumption" id="a4" source="g4" target="p2_in">
@@ -162,16 +162,16 @@
       <start x="950" y="499" />
       <end x="1085" y="509" />
     </arc>
-    <arc class="consumption" id="a6" source="g1" target="p3_in">
-      <start x="60" y="90" />
+    <arc class="consumption" id="a6" source="g2" target="p3_in">
+      <start x="260" y="90" />
       <end x="1450" y="499" />
     </arc>
-    <arc class="production" id="a7" source="p3_out" target="g2">
+    <arc class="production" id="a7" source="p3_out" target="g3">
       <start x="1490" y="499" />
       <end x="60" y="290" />
     </arc>
-    <arc class="catalysis" id="a8" source="g3" target="p3">
-      <start x="280" y="90" />
+    <arc class="catalysis" id="a8" source="g1" target="p3">
+      <start x="80" y="90" />
       <end x="1470" y="489" />
     </arc>
     <arc class="consumption" id="a9" source="g4" target="p4_in">
@@ -182,16 +182,16 @@
       <start x="2030" y="499" />
       <end x="2165" y="509" />
     </arc>
-    <arc class="consumption" id="a11" source="g7" target="p5_in">
-      <start x="60" y="1490" />
+    <arc class="consumption" id="a11" source="g8" target="p5_in">
+      <start x="260" y="1490" />
       <end x="370" y="739" />
     </arc>
-    <arc class="production" id="a12" source="p5_out" target="g8">
+    <arc class="production" id="a12" source="p5_out" target="g9">
       <start x="410" y="739" />
       <end x="60" y="1090" />
     </arc>
-    <arc class="catalysis" id="a13" source="g9" target="p5">
-      <start x="280" y="1490" />
+    <arc class="catalysis" id="a13" source="g7" target="p5">
+      <start x="80" y="1490" />
       <end x="390" y="729" />
     </arc>
     <arc class="consumption" id="a14" source="g10" target="p6_in">
