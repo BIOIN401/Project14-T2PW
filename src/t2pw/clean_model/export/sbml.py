@@ -90,6 +90,15 @@ def _prov_attrs(p: Any) -> Dict[str, Any]:
 
 
 # id type -> (identifiers.org prefix, normaliser returning the id or None, rdf qualifier)
+def _estimate(node: Any) -> Optional[Tuple[str, str]]:
+    """D-W24 (2, 7a): (compartment_source, reasons) of a reaction / transport whose compartment was not stated; None if stated."""
+    src = node.extras.get("compartment_source")
+    if not isinstance(src, str) or not src:
+        return None
+    reasons = [str(e.get("reason")) for e in node.extras.get("compartment_estimate") or [] if isinstance(e, dict) and e.get("reason")]
+    return src, " | ".join(reasons) or "no reason recorded"
+
+
 def _digits(v: str) -> Optional[str]:
     m = re.fullmatch(r"(?:[A-Za-z]+[:_\s]?)?(\d+)", v.strip())
     return m.group(1) if m else None
@@ -460,7 +469,10 @@ class _Exporter:
         paras: List[str] = []
         if _str(rx.evidence):
             paras.append('Evidence: "%s"' % _str(rx.evidence))
-        if hint:
+        est = _estimate(rx)
+        if hint and est:
+            paras.append("Location (biological state %s, not stated in the paper record; %s): %s." % (st, est[0], hint))
+        elif hint:
             paras.append("Location (from the paper's biological state %s): %s." % (st, hint))
         else:
             paras.append("Location of this reaction not stated.")
@@ -495,6 +507,8 @@ class _Exporter:
                  El("t2pw:provenance", {"label": rx.name.prov.label if not rx.name.absent else "unknown"})]
         if not rev_stated:
             extra.append(El("t2pw:reversibleNote", text="reversible=false is the required SBML placeholder; the paper did not state a direction"))
+        if est:
+            extra.append(El("t2pw:compartmentSource", {"source": est[0]}, text=est[1]))
         if _val(rx.step_index) is not None:
             extra.append(El("t2pw:stepIndex", _prov_attrs(rx.step_index.prov), text=str(rx.step_index.value)))
         extra += self.layer_elems("reaction", _str(rx.name))
@@ -519,6 +533,9 @@ class _Exporter:
                 "from-location and no to-location" if not fr and not to else "from-location" if not fr else "to-location",
                 "the unspecified-location compartment" if not fr and not to else "the unspecified-location compartment on that side"))
         paras.append("Mechanism: %s." % _str(t.mechanism) if _str(t.mechanism) else "")
+        est = _estimate(t)
+        if est:
+            paras.append("Sides not stated in the paper record (%s): %s" % (est[0], est[1]))
         ref_src, ref_dst = self.sp(cargo, _lkey(fr) if fr else None), self.sp(cargo, _lkey(to) if to else None)
         mods, seen = [], set()
         for ref in t.transporters or []:
@@ -536,7 +553,8 @@ class _Exporter:
                   [notes(paras),
                    self.annotation(mid, None, [El("t2pw:directionStated", text="false"), El("t2pw:spontaneous", text="unstated"),
                                                El("t2pw:reversibleNote", text="reversible=false is the required SBML placeholder; the paper did not state a direction"),
-                                               El("t2pw:provenance", {"label": t.name.prov.label if not t.name.absent else "unknown"})]),
+                                               El("t2pw:provenance", {"label": t.name.prov.label if not t.name.absent else "unknown"}),
+                                               *([El("t2pw:compartmentSource", {"source": est[0]}, text=est[1])] if est else [])]),
                    El("listOfReactants", kids=[self._spref("speciesReference", ref_src, plain)]),
                    El("listOfProducts", kids=[self._spref("speciesReference", ref_dst, plain)]),
                    El("listOfModifiers", kids=mods) if mods else None])
