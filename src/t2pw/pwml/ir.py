@@ -896,6 +896,7 @@ def _copy_common_entity_fields(record: Dict[str, Any], raw: Dict[str, Any]) -> N
         "organism",
         "species_id",
         "pathbank_species_id",
+        "pathwhiz_lookup_species",  # D-W24 7c / L8 review F1: the Unknown sentinel's 9659 lookup key, for the writer only
         "pw_protein_id",
         "hmdb_id",
         "kegg_id",

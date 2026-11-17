@@ -203,11 +203,11 @@ def test_g9_unexportable_row_kept_only_by_a_synonym_is_removed_alone() -> None:
     result = _quarantine(payload, context)
     assert _refusals(result) == []
     insp3r = "inositol-1,4,5-trisphosphate receptor (InsP3R)"
-    # D-W24 3 / L5: 'PLC cleavage of PIP2' is kept and loses its identity-less enzyme and modifiers (3 rows).
+    # D-W24 3 / L5: 'PLC cleavage of PIP2' is kept. D-W24 7b / L8: its identity-less enzyme PLC is the Unknown-backed
+    # placeholder 'phospholipase C (PLC) complex' (was: + enzymes|PLC, modifiers|PLC dropped); the G protein regulator
+    # still leaves.
     assert _removed(result) == [
-        ("enzymes", "phospholipase C (PLC)", "protein_missing_external_identity"),
         ("modifiers", "G protein", "protein_missing_external_identity"),
-        ("modifiers", "phospholipase C (PLC)", "protein_missing_external_identity"),
         ("proteins", "phosphorylated CAMKII", "protein_missing_external_identity"),
         ("transporters", insp3r, "actor_schema_not_canonical"),
         ("transporters", insp3r, "actor_schema_not_canonical"),
@@ -221,7 +221,7 @@ def test_g9_unexportable_row_kept_only_by_a_synonym_is_removed_alone() -> None:
     for name in ("IP3-induced Ca2+ release", "SERCA pumps Ca2+ into ER"):
         assert transports[name]["transporters"] == []
     assert "calcineurin B component of calcineurin complex" in {row["name"] for row in _surviving(result, "interactions")}
-    _review_required(result, actors=5)  # D-W24 3 / L5: 2 transporters + 3 reaction actors
+    _review_required(result, actors=3)  # D-W24 3 / L5: 2 transporters + 1 reaction actor (L8: was 3, PLC kept)
 
 
 # ── G9: the final pre-export gate (freeze) ─────────────────────────────────
@@ -522,11 +522,10 @@ def _text_record(result, pwml: bool = True):
     [
         ("ORCH-755_sour_taste-strict_2026-10-21_0139", "3 actors",
          [(name, "OTOP1", *_TRANSPORTER) for name in _OTOP1]),
-        # D-W24 3 / L5: + the three actors 'PLC cleavage of PIP2' (kept) loses.
-        ("ORCH-767_wnt_ca-strict_2026-10-24_0314", "5 actors",
-         [("PLC cleavage of PIP2", "phospholipase C (PLC)", "enzymes", *_REACTION_ACTOR),
-          ("PLC cleavage of PIP2", "G protein", "modifiers", *_REACTION_ACTOR),
-          ("PLC cleavage of PIP2", "phospholipase C (PLC)", "modifiers", *_REACTION_ACTOR)]
+        # D-W24 3 / L5: + the actors 'PLC cleavage of PIP2' (kept) loses. D-W24 7b / L8: its identity-less enzyme PLC
+        # is the Unknown-backed placeholder 'phospholipase C (PLC) complex' now (was 5 actors: + PLC enzymes, modifiers).
+        ("ORCH-767_wnt_ca-strict_2026-10-24_0314", "3 actors",
+         [("PLC cleavage of PIP2", "G protein", "modifiers", *_REACTION_ACTOR)]
          + [(name, _INSP3R, *_TRANSPORTER) for name in ("IP3-induced Ca2+ release", "SERCA pumps Ca2+ into ER")]),
         ("ORCH-767_enterobactin-strict_2026-10-23_2224", "1 actors",
          [("EntF enterobactin synthase reaction", "enterobactin synthase complex", "enzymes, modifiers", _WRAPPER,

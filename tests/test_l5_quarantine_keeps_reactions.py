@@ -107,17 +107,22 @@ def test_l5_a_bare_protein_enzyme_is_wrapped_and_its_reaction_is_kept() -> None:
 
 def test_l5_an_enzyme_that_cannot_be_written_leaves_the_reaction_and_the_reaction_stays_flagged() -> None:
     """No database identity (strict): the wrapper refuses it and PathWhiz cannot take it. Base: the reaction
-    was omitted whole (protein_missing_external_identity). Now it stays without that enzyme, review_required."""
+    was omitted whole (protein_missing_external_identity). Now it stays without that enzyme, review_required.
+    L8 (D-W24 7b): an enzyme with no identity but a species is now an Unknown-backed placeholder
+    (test_l8_placeholder_enzymes); with no species either it still cannot be written, so this case drops its species."""
 
-    result = quarantine_and_close(_sphingolipid(uniprot=""), strict_db=True, mode="pathwhiz")
+    payload = _sphingolipid(uniprot="")
+    for key in ("species", "organism"):
+        payload["entities"]["proteins"][0].pop(key)
+    result = quarantine_and_close(payload, strict_db=True, mode="pathwhiz")
     assert result.ok
     assert _omitted_names(result) == []
     reaction = _reaction(result, "ceramide synthase reaction")
     assert reaction["enzymes"] == [] and reaction["modifiers"] == []
     assert reaction["inputs"] == ["Sphinganine"] and reaction["outputs"] == ["dihydroceramide"]
     assert _actor_drops(result) == [
-        ("enzymes", ENZYME, "protein_missing_external_identity", "ceramide synthase reaction"),
-        ("modifiers", ENZYME, "protein_missing_external_identity", "ceramide synthase reaction"),
+        ("enzymes", ENZYME, "protein_missing_species", "ceramide synthase reaction"),
+        ("modifiers", ENZYME, "protein_missing_species", "ceramide synthase reaction"),
     ]
     dropped = [r for r in result.removed_entity_report["removed_entities"] if r["bucket"] == "enzymes"]
     assert dropped[0]["detail"]["actor"]["entity"] == ENZYME  # verbatim, for a reviewer to restore

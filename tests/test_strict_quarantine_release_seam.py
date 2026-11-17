@@ -550,7 +550,9 @@ def test_pmc12452463_is_review_required_and_never_strict_success() -> None:
     assert result.ok is True, "the fragment is still exported, not dropped"
     assert release["status"] == REVIEW_REQUIRED
     assert release["strict_acceptance_eligible"] is False
-    assert "omitted_from_pwml:7_processes+8_actors" in release["reasons"]
+    # D-W24 7b / L8: EntB, EntC, EntE (no identity) are Unknown-backed placeholders now (was 7_processes+8_actors).
+    assert "omitted_from_pwml:7_processes+2_actors" in release["reasons"]
+    assert "placeholder_enzyme_without_identity:3" in release["reasons"]
     # And the missing anchors are recorded, so the reviewer is told WHICH part of
     # the route is unsupported rather than only that something is.
     assert release["missing_anchors"] == ["L-serine"]

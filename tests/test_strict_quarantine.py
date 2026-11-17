@@ -274,12 +274,14 @@ def test_a_protein_without_external_identity_quarantines_the_reaction_not_the_en
     )
 
     result = quarantine_and_close(payload, strict_db=True)
-    # D-W24 3 / L5: the reaction stays; only its enzyme leaves, with the reason.
+    # D-W24 3 / L5: the reaction stays. D-W24 7b / L8: so does its enzyme, as the Unknown-backed placeholder
+    # complex of the same name (was: the enzyme left, protein_missing_external_identity).
     assert _states(result)["glutathione oxidation"] in {CORE_ACCEPTED, AUXILIARY_ACCEPTED}
-    record = _dropped_actor(result, "glutathione oxidation", "unmapped oxidase")
-    assert record["reason"] == "protein_missing_external_identity"
-    # The enzyme row is still in the retained record, untouched.
-    assert record["detail"]["actor"] == {"entity": "unmapped oxidase"}
+    (oxidation,) = [r for r in result.payload["processes"]["reactions"] if r["name"] == "glutathione oxidation"]
+    assert [(a["entity"], a["entity_type"]) for a in oxidation["enzymes"]] == [("unmapped oxidase", "protein_complex")]
+    (placeholder,) = [c for c in result.payload["entities"]["protein_complexes"] if c["name"] == "unmapped oxidase"]
+    assert [c["pathbank_protein_id"] for c in placeholder["components"]] == [9659]
+    assert "placeholder_enzyme_without_identity:1" in result.quarantine_report["review_reasons"]
 
     # strict_db=False is the DB-less run, where the identity rule does not apply
     # and the same reaction must be admitted.

@@ -136,12 +136,12 @@ def test_g9_chlorophyll_leg_recovers_gene_regulation_by_row():
     # regulator / enzyme role -> the protein (GLK1 is a gene too; ALAD1/HEMB1 is the enzyme,
     # now judged as the protein by the identity gate instead of by ambiguity)
     assert by_name["GLK1 activates HEMA1 promoter"] == "admitted"
-    # D-W24 3 / L5: the 2nd "ALA condensation to PBG" is kept and loses only its identity-less enzyme.
+    # D-W24 3 / L5: the 2nd "ALA condensation to PBG" is kept. D-W24 7b / L8: so is its identity-less enzyme, as the
+    # Unknown-backed placeholder complex ALAD1/HEMB1 (was: the enzyme and modifier rows were dropped).
     assert _reasons(result)[("reactions", 17)] == "admitted"
     assert [(row["bucket"], row["name"], row["reason"]) for row in result.removed_entity_report["removed_entities"]
-            if row["bucket"] in ("enzymes", "modifiers")] == [
-        ("enzymes", "ALAD1/HEMB1", "protein_missing_external_identity"),
-        ("modifiers", "ALAD1/HEMB1", "protein_missing_external_identity")]
+            if row["bucket"] in ("enzymes", "modifiers")] == []
+    assert "ALAD1/HEMB1" in {row["name"] for row in result.payload["entities"]["protein_complexes"]}
     # undecidable (protein-level wording) -> only that row, under KI-011
     assert by_name["FLU inhibits HEMA1"] == KI011
     assert result.ok and result.refusal_reasons == []

@@ -82,8 +82,11 @@ ORCH782_COUNTS = {
 }
 ORCH782_ADMISSIONS_SHA256 = "076970a7f3c4fdb52cd7bb8f2a372140eca1693b9a31fbf655fef6a9bb9b3802"
 ORCH782_ORPHAN_GENES = ["CAO gene", "PORB gene"]
-ORCH782_REMOVED = (25, "f1a72aa0bc7e16276a767a92f91457dfd1b2fd57e147db4ff7ad6f016b8ea373")
-ORCH782_REMOVED_LOCATIONS = (41, "eda2b5d1b050853b87968f60311cc838fa74d7b23d5d64e1ad571efd4cd9f907")
+# D-W24 7b / L8: ALAD1/HEMB1 (no identity) is the Unknown-backed placeholder of 'ALA condensation to PBG', so the removed
+# lines lose exactly enzymes|, modifiers|ALAD1/HEMB1 and proteins|ALAD1/HEMB1|degree_zero (25 -> 22) and its plastid
+# protein location (41 -> 40); was (25, f1a72aa0...) and (41, eda2b5d1...) (corr-assess/lanes/L8probe/new_pins_*.json).
+ORCH782_REMOVED = (22, "808e176c2965fd0e9e0b0dc19af856682b44a57dfeaf65ca446df67f932bbc6c")
+ORCH782_REMOVED_LOCATIONS = (40, "4f18440e45cc43d37603198db536d5b3b2fd79e83a88f718bb6b5f7ce3e44fb4")
 #: ``removed_locations`` at base, as ``bucket|name|reason|biological_state`` lines
 #: (``evidence/orch759c/26-r1-probe-base.log``; identical at the round-0 tip, ``24``).
 BASE_REMOVED_LOCATIONS_SHA256 = "66891e59028a1dc0fd2c0919d30e6f77571d612c7e2420de71329cb685bde7ff"
@@ -119,7 +122,7 @@ def test_g9_chlorophyll_leg_releases_review_required_once_orphan_genes_close() -
     # The live decision, replayed: same admissions, same counts. Its decision input was
     # sha256:d2ef87f2ae5da361; ORCH-773's QUARANTINE_POLICY_VERSION bump moves it and nothing else, and
     # ORCH-780's (-> 2026-10-26.1) again: sha256:8b2be66a5cacc344 -> below.
-    assert report["decision_input_hash"] == "sha256:bed226cb72cdc343"  # D-W24 3 / L5: policy version only (was 6efc8c92d0f65c07)
+    assert report["decision_input_hash"] == "sha256:20c4f250c589c6b2"  # D-W24 7b / L8: policy version only (was bed226cb72cdc343)
     assert report["counts"] == ORCH782_COUNTS
     assert _digest(f"{row['pointer']}|{row['state']}" for row in result.admissions) == ORCH782_ADMISSIONS_SHA256
 

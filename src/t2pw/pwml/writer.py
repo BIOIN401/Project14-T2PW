@@ -13,7 +13,13 @@ from typing import Any, Dict, List, Optional, Sequence, Tuple
 from lxml import etree
 
 from t2pw.paths import PROJECT_ROOT
-from t2pw.pipeline.entity_identity import component_stoichiometry, is_pathbank_unknown_protein
+from t2pw.pipeline.entity_identity import (
+    PATHBANK_UNKNOWN_SPECIES_CONTEXT,
+    SENTINEL_LOOKUP_SPECIES_FIELD,
+    component_stoichiometry,
+    is_pathbank_unknown_protein,
+    protein_species_context,
+)
 from t2pw.pipeline.process_normalizer import normalize_process_payload
 from t2pw.pwml.compound_templates import TEMPLATE_DIMS, select_compound_template_id
 from t2pw.pwml.vocabulary_map import map_vocabulary_name, membrane_row, organism_kinds
@@ -1387,7 +1393,29 @@ class DeterministicPwmlBuilder:
 
         default_species_id = self._ir_pathway_species_id
 
+        def species_id_of(candidates: List[Any]) -> Optional[int]:
+            for candidate in candidates:
+                if isinstance(candidate, dict):
+                    candidate = candidate.get("name") or candidate.get("id")
+                if candidate in (None, ""):
+                    continue
+                text = str(candidate).strip()
+                resolved = species_id_by_name.get(_normalize_key(text))
+                if resolved is None:
+                    resolved = species_id_by_external_id.get(text.casefold())
+                if resolved is not None:
+                    return resolved
+            return None
+
         def protein_species_id(record: Dict[str, Any]) -> Optional[int]:
+            if protein_species_context(record) == PATHBANK_UNKNOWN_SPECIES_CONTEXT:
+                # D-W24 7c (L8) and its review finding F1: the Unknown placeholder protein asserts no species, but its
+                # <species-id> stays: it is ONLY the lookup key that binds PathBank record 9659 (protein 9659 is stored
+                # under species 4). Without it PathWhiz's find_by matches any of ~2,195 'Unknown'/'Unknown' proteins,
+                # and an empty database refuses the row. Never the pathway's species: that would make a new 'Unknown'.
+                key = record.get(SENTINEL_LOOKUP_SPECIES_FIELD)
+                key = key if isinstance(key, dict) else {}
+                return species_id_of([key.get("name"), key.get("pathbank_species_id"), key.get("taxonomy_id")])
             resolved = lookup("species", record.get("species_key"))
             if resolved is not None:
                 return resolved
