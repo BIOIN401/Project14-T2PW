@@ -34,6 +34,31 @@
    "F1 matches states by normalized name only: 'E. coli cytoplasm' and 'cytoplasm' do not match, so the same step reported against differently named states is kept twice (under-merge, the safe direction)"
   ]
  },
+ "review_round_2": {
+  "verdict_in": "re-review (opus/high): F1-F9 fixed; new blocking R1, plus R2-R4",
+  "code_commit": "214fd096",
+  "fixes": {
+   "R1": "a reversed-orientation reaction match also requires the currency metabolites to mirror (incoming currency in == existing currency out and vice versa) when both rows list some; a row listing no currency still matches either orientation. Hexokinase (glucose + ATP -> G6P + ADP) no longer absorbs G6Pase (G6P + H2O -> glucose + Phosphate); 'B + NADH -> A + NAD+' still merges with 'A -> B' (test_f3 unchanged and passing). Same for PFK/FBPase and any kinase/phosphatase pair that lists its cofactors",
+   "R2": "merge_extension docstring: a forward match ignores currency, so cofactor variants merge (A + NAD+ -> B + NADH and A + NADP+ -> B + NADPH are one element)",
+   "R3": "base_unresolved_refs 139 -> 167 (recorded here as asked): from round 1 (F5) on, refs() counts the 'species' string on protein and protein-complex rows as an entity reference so the rename pass can rewrite it. 28 of those strings name no species row in their base payload (e.g. a short species name on a protein vs the full name on the species row). They are base facts; the paper-only view adds 0 new dangling references (proof below)",
+   "R4": "test_r4_bare_pi_is_not_currency pins is_currency('pi') is False (phosphatidylinositol) and is_currency('Phosphate') True; the private imports of _CURRENCY and _normalize are kept"
+  },
+  "tests": [
+   {"label": "model-unit-5-prefix", "what": "new tests against the unfixed code 44904bfc", "counts": "1 failed (test_r1: assert [] == ['G6Pase'], i.e. G6Pase merged into hexokinase), 27 passed, survivors 0", "log": "C:/t/vis-runs/logs/model-unit-5.log"},
+   {"label": "model-unit-6", "what": "after the fix, original test order", "counts": "1 failed, 27 passed: G6Pase correctly entered the extension, then the test's 'G6P + ADP -> glucose + ATP' matched G6Pase FORWARD (currency ignored, the R2 behaviour) instead of hexokinase reversed. Test reordered so it checks the reversed rule in isolation; the observation is an open question below", "log": "C:/t/vis-runs/logs/model-unit-6.log"},
+   {"label": "model-unit-7", "what": "after the fix", "counts": "28 passed, 0 failed, 0 errors, survivors 0", "log": "C:/t/vis-runs/logs/model-unit-7.log"}
+  ],
+  "proof": {
+   "label": "model-proof-3",
+   "result": "identity 152/152 (DEFAULT and FULL == base, json.dumps identical); paper-only new dangling 0; reactions kept 612/621, rows 6285/6326, base_unresolved_refs 167, rx_with_grounded_edge 549/621: unchanged from round 1 (merge rules do not touch the base); survivors 0",
+   "log": "C:/t/vis-runs/logs/model-proof-3.log"
+  },
+  "open_questions": [
+   "_CURRENCY and _normalize are private names in pipeline/cofactor_policy.py; ask for public names in a later biology-track change (this programme may not edit that file)",
+   "the forward match ignores currency, so a step written with different cofactors merges into an existing one: after G6Pase is in the extension, 'G6P + ADP -> glucose + ATP' (hexokinase written backwards) merges into G6Pase rather than reversed into hexokinase. Requiring compatible currency on forward matches too would fix it but would stop NAD+/NADP+ variants merging (R2). Needs a ruling before V4 feeds real database steps",
+   "a reaction listing no currency matches a reversed row whatever its cofactors (needed for test_f3), so a paper's bare 'glucose -> G6P' still absorbs a database G6Pase as 'orientation reversed'. The stricter alternative (reverse only when currency mirrors exactly, both empty included) would stop test_f3's reverse merging"
+  ]
+ },
  "built": [
   "src/t2pw/vision/payload.py: build_big_payload (base deep-copied, input untouched), element keys '<section path>:<signature>' with '#n' ordinals (base first, extension appended, so existing keys never change), row_provenance (lineage origin -> kind; no lineage + evidence -> paper 'no lineage; evidence quote'; neither -> unclassified), sources table, merge_extension, compute_hops, save/load_big_payload, big_from_run",
   "src/t2pw/vision/view.py: ScopeSpec + PAPER_ONLY / DEFAULT(max_hops=1) / FULL, more_detailed / less_detailed, view (reference-closed), view_stats, unresolved_refs",
