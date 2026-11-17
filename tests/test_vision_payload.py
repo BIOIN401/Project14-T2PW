@@ -168,9 +168,10 @@ def test_merge_by_synonym_renames_reference():
 
 def test_hops_on_a_chain():
     big = build_big_payload(payload())
-    rows = {"entities.compounds": [{"name": "F"}, {"name": "G"}, {"name": "lonely"}],
+    rows = {"entities.compounds": [{"name": "F", "chebi_id": "10"}, {"name": "G", "chebi_id": "11"},
+                                   {"name": "lonely"}],
             "processes.reactions": [{"name": "far", "inputs": ["F"], "outputs": ["G"]},
-                                    {"name": "near", "inputs": ["D"], "outputs": ["F"]}],
+                                    {"name": "near", "inputs": ["A"], "outputs": ["F"]}],
             "biological_states": [{"name": "periplasm state"}],
             "element_locations.compound_locations": [{"compound": "G", "biological_state": "periplasm state"}]}
     merged = merge_extension(big, rows)
@@ -178,10 +179,87 @@ def test_hops_on_a_chain():
     ext_keys = [k for k in element_keys(merged) if k not in big["hops"]]
     # extension order: entities, processes, element_locations, then states
     named = dict(zip(["F", "G", "lonely", "far", "near", "G@periplasm", "periplasm state"], ext_keys))
-    assert named["near"].startswith("processes.reactions:d>f")
+    assert named["near"].startswith("processes.reactions:a>f")
     assert hops[named["near"]] == 1
     assert hops[named["far"]] == 2
     assert hops[named["F"]] == 1 and hops[named["G"]] == 2
     assert hops[named["lonely"]] is None
     assert hops[named["G@periplasm"]] == 2 and hops[named["periplasm state"]] == 2
     assert all(hops[k] == 0 for k in big["hops"])
+
+
+# ---- review round 1 (each fails on 626fe8e9) ----
+
+def ext_names(big, section="processes.reactions"):
+    container, name = section.split(".")
+    return [r.get("name") for r in big["extension"].get(container, {}).get(name, [])]
+
+
+def test_f1_reaction_identity_respects_state():
+    big = build_big_payload(payload())
+    merged = merge_extension(big, {"processes.reactions": [
+        {"name": "mito", "inputs": ["A"], "outputs": ["B"], "biological_state": "mitochondrion"},
+        {"name": "stateless", "inputs": ["A"], "outputs": ["B"]}]})
+    assert ext_names(merged) == ["mito"]  # stateless one still merges into r1
+
+
+def with_currency():
+    p = payload()
+    p["entities"]["compounds"] += [{"name": "ATP", "chebi_id": "15422"}, {"name": "ADP", "chebi_id": "16761"}]
+    p["processes"]["reactions"][0]["inputs"].append("ATP")
+    p["processes"]["reactions"][0]["outputs"].append("ADP")
+    return p
+
+
+def test_f2_hops_skip_currency_and_ungrounded_entities():
+    big = build_big_payload(with_currency())
+    merged = merge_extension(big, {
+        "entities.compounds": [{"name": "Y", "chebi_id": "20"}, {"name": "Z", "chebi_id": "21"},
+                               {"name": "W", "chebi_id": "22"}],
+        "processes.reactions": [{"name": "via ATP", "inputs": ["ATP"], "outputs": ["Y"]},
+                                {"name": "via E", "inputs": ["E"], "outputs": ["Z"]},
+                                {"name": "via A", "inputs": ["A", "H2O"], "outputs": ["W"]}]})
+    hop = {r: merged["hops"][k] for r, k in zip(["Y", "Z", "W", "via ATP", "via E", "via A"],
+                                                 [k for k in element_keys(merged) if k not in big["hops"]])}
+    assert hop["via ATP"] is None and hop["Y"] is None  # ATP is currency
+    assert hop["via E"] is None and hop["Z"] is None    # E has no grounded id
+    assert hop["via A"] == 1 and hop["W"] == 1
+
+
+def test_f3_currency_ignored_in_reaction_identity():
+    big = build_big_payload(payload())
+    merged = merge_extension(big, {"processes.reactions": [
+        {"name": "db", "inputs": ["A", "ATP"], "outputs": ["B", "ADP", "H+"]},
+        {"name": "db rev", "inputs": ["B", "NADH"], "outputs": ["A", "NAD+"]}]})
+    assert ext_names(merged) == []
+    assert merged["provenance"][by_name(merged, "processes.reactions", "r1")] == \
+        big["provenance"][by_name(big, "processes.reactions", "r1")]  # no records were given
+
+
+def test_f4_no_name_merge_when_same_namespace_ids_differ():
+    big = build_big_payload(payload())
+    merged = merge_extension(big, {"entities.compounds": [{"name": "A", "chebi_id": "999"},
+                                                          {"name": "alpha-A", "kegg_id": "C1"}]})
+    assert ext_names(merged, "entities.compounds") == ["A"]  # chebi 1 != 999; kegg is another namespace
+
+
+def test_f5_rename_rewrites_complex_components():
+    p = payload()
+    p["entities"]["proteins"][0]["synonyms"] = ["enzyme alpha"]
+    merged = merge_extension(build_big_payload(p), {"entities.protein_complexes": [
+        {"name": "Cx", "components": [{"name": "enzyme alpha"}, "Enzyme Alpha"]}]})
+    assert merged["extension"]["entities"]["protein_complexes"][0]["components"] == [{"name": "EnzA"}, "EnzA"]
+
+
+def test_f8_seed_source_kind_is_other_paper():
+    big = build_big_payload(payload())
+    assert big["sources"]["seed_paper"]["kind"] == "other_paper" and big["sources"]["seed_paper"]["note"]
+
+
+def test_f9_seed_tag_without_lineage_is_not_paper():
+    p = payload()
+    p["entities"]["compounds"].append({"name": "S", "evidence": "a passage",
+                                       "rag_provenance": {"source_id": "seed_paper", "source_type": "paper"}})
+    big = build_big_payload(p)
+    recs = big["provenance"][by_name(big, "entities.compounds", "S")]
+    assert [r["kind"] for r in recs] == ["other_paper"] and recs[0]["source"] == "seed_paper"

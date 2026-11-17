@@ -73,8 +73,9 @@ def test_paper_only_keeps_complex_components():
 
 def extended():
     big = build_big_payload(payload())
-    rows = {"entities.compounds": [{"name": "F"}, {"name": "G"}, {"name": "lonely"}],
-            "processes.reactions": [{"name": "near", "inputs": ["D"], "outputs": ["F"]},
+    rows = {"entities.compounds": [{"name": "F", "chebi_id": "10"}, {"name": "G", "chebi_id": "11"},
+                                   {"name": "lonely"}],
+            "processes.reactions": [{"name": "near", "inputs": ["A"], "outputs": ["F"]},
                                     {"name": "far", "inputs": ["F"], "outputs": ["G"],
                                      "biological_state": "periplasm state"}],
             "biological_states": [{"name": "periplasm state"}]}
@@ -110,3 +111,24 @@ def test_more_and_less_detailed():
     assert less_detailed(DEFAULT) == PAPER_ONLY
     assert less_detailed(PAPER_ONLY) == PAPER_ONLY
     assert less_detailed(FULL) == DEFAULT
+
+
+# ---- review round 1 (each fails on 626fe8e9) ----
+
+def test_f6_paper_only_prunes_reaction_order():
+    p = payload()
+    p["reaction_order"] = ["r1", "rag", "other", "not a reaction"]
+    v = view(build_big_payload(p), PAPER_ONLY)
+    assert v["reaction_order"] == ["r1", "not a reaction"]
+    assert view(build_big_payload(p), DEFAULT)["reaction_order"] == p["reaction_order"]
+
+
+def test_f7_paper_only_keeps_state_with_own_paper_record():
+    p = payload()
+    p["biological_states"].append({"name": "stated state", "evidence": "the paper says so"})
+    p["processes"]["reactions"][2]["biological_state"] = "stated state"  # used only by the dropped rag row
+    p["biological_states"].append({"name": "lost state"})
+    p["processes"]["reactions"][3]["biological_state"] = "lost state"
+    v = view(build_big_payload(p), PAPER_ONLY)
+    assert [r["name"] for r in v["biological_states"]] == ["E. coli cytoplasm", "stated state"]
+    assert new_dangling(p, v) == []

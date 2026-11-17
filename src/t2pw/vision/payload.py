@@ -22,7 +22,9 @@ from collections import Counter
 from pathlib import Path
 from typing import Any, Callable, Dict, Iterator, List, Optional, Tuple
 
+from t2pw.pipeline.cofactor_policy import _CURRENCY, _normalize as _currency_fold  # private, read-only
 from t2pw.pipeline.name_keys import reference_key
+from t2pw.rag.provenance import SEED_SOURCE_ID as SEED_TAG
 
 SCHEMA = "t2pw.big_payload/1"
 CONTAINERS = ("entities", "processes", "element_locations")
@@ -38,10 +40,18 @@ ORIGIN_KIND = {
 }
 # Lineage source_type values that name a paper (anything else is a database record).
 PAPER_SOURCE_TYPES = ("", "paper")
-# RAG tags chunks of the supplied paper "seed_paper". rag/conform.py (~line 283) warns the tag means
-# "a seed reaction registered this first", not "the base has it", so it is never used to upgrade a
-# row to kind "paper": a rag_literature entry stays other_paper whatever its sources say.
-SEED_TAG = "seed_paper"
+# RAG tags chunks of the supplied paper SEED_TAG ("seed_paper"). rag/conform.py (~line 283) warns the
+# tag means "a seed reaction registered this first", not "the base has it", so it never makes a row
+# kind "paper": a rag_literature entry, or a seed-tagged row without lineage, stays other_paper.
+
+# Ubiquitous currency metabolites (pipeline/cofactor_policy.py _CURRENCY, folded the same way). They
+# are left out of reaction identity and never carry a hop edge.
+# Spellings only, not family keys: the module drops bare "pi" (phosphatidylinositol) on purpose.
+CURRENCY = frozenset(_currency_fold(s) for spellings in _CURRENCY.values() for s in spellings)
+
+
+def is_currency(name: Any) -> bool:
+    return isinstance(name, str) and _currency_fold(name) in CURRENCY
 
 ID_FIELDS = {"chebi_id": "chebi", "kegg_id": "kegg", "hmdb_id": "hmdb", "pubchem_cid": "pubchem",
              "pathbank_compound_id": "pathbank_compound", "drugbank_id": "drugbank", "uniprot": "uniprot",
@@ -135,9 +145,11 @@ def refs(section: str, row: Any, rename: Optional[Callable[[str], str]] = None):
             if f in row:
                 out[f] = ent(row[f])
         st(row.get("biological_state"))
-    elif section == "entities.protein_complexes":
+    elif section in ("entities.proteins", "entities.protein_complexes"):
         if isinstance(row.get("components"), list):
             out["components"] = [actor(x) for x in row["components"]]
+        if isinstance(row.get("species"), str):
+            out["species"] = ent(row["species"])
     elif section == STATES:
         for f in ("species", "subcellular_location", "cell_type", "tissue"):
             if f in row:
@@ -214,7 +226,6 @@ def register_source(sources: Dict[str, Any], sid: str, stype: str, uri: str = ""
             if "doi.org/" in (uri or ""):
                 entry["doi"] = uri.split("doi.org/", 1)[1]
             if sid == SEED_TAG:
-                entry["kind"] = "paper"
                 entry["note"] = ("RAG tag for a chunk indexed from the supplied paper; not a reliable "
                                  "seed test (rag/conform.py), so rows citing it stay other_paper")
         else:
@@ -236,8 +247,10 @@ def row_provenance(row: Any, sources: Dict[str, Any], paper_source: Optional[str
     - each ``provenance_lineage`` entry -> one record (origin mapped by ORIGIN_KIND; unresolved,
       excluded and unknown origins -> kind ``unclassified`` with the origin kept in ``note``);
     - ``rag_provenance`` naming a source other than the seed tag -> other_paper / database record,
-      unless lineage already gave that (kind, source); the seed tag adds nothing (see SEED_TAG);
-    - no lineage but an ``evidence`` quote -> one ``paper`` record; neither -> ``unclassified``.
+      unless lineage already gave that (kind, source); with lineage, the seed tag adds nothing;
+    - no lineage and a seed-tagged ``rag_provenance`` -> one ``other_paper`` record (the row came in
+      through RAG, so its evidence is a retrieved passage, not proof the paper states it);
+    - otherwise no lineage but an ``evidence`` quote -> one ``paper`` record; neither -> ``unclassified``.
     """
     if not isinstance(row, dict):
         return [{"kind": "unclassified", "source": None, "quote": None, "stage": None, "note": "not a row"}]
@@ -266,7 +279,12 @@ def row_provenance(row: Any, sources: Dict[str, Any], paper_source: Optional[str
             recs.append({"kind": kind, "source": sid, "quote": quote, "stage": "rag_retrieval",
                          "note": "from rag_provenance"})
     if not lineage and not recs:
-        if quote:
+        if isinstance(rp, dict) and str(rp.get("source_id") or "").strip() == SEED_TAG:
+            sid = register_source(sources, SEED_TAG, rp.get("source_type"), rp.get("source_uri") or "",
+                                  rp.get("source_title"))
+            recs.append({"kind": "other_paper", "source": sid, "quote": quote, "stage": "rag_retrieval",
+                         "note": "no lineage; seed-tagged rag_provenance"})
+        elif quote:
             recs.append({"kind": "paper", "source": paper_source, "quote": quote, "stage": None,
                          "note": "no lineage; evidence quote"})
         else:
@@ -329,6 +347,12 @@ def grounded_ids(row: Dict[str, Any]) -> set:
     return out
 
 
+def _ids_conflict(a: set, b: set) -> bool:
+    """True when two rows have ids in a shared namespace and none of those ids agree."""
+    shared = {ns for ns, _ in a} & {ns for ns, _ in b}
+    return any(not ({v for n, v in a if n == ns} & {v for n, v in b if n == ns}) for ns in shared)
+
+
 def _names(row: Dict[str, Any]) -> List[str]:
     names = [row.get("name")] + list(row.get("synonyms") or [])
     return [n for n in (norm(x) for x in names) if n]
@@ -344,12 +368,15 @@ class _Index:
         self.ent_key: Dict[str, str] = {}     # normalized name / synonym -> entity element key
         self.canon: Dict[str, str] = {}       # normalized name / synonym -> the row's own name
         self.proc: Dict[tuple, str] = {}
+        self.rx: Dict[tuple, List[Tuple[str, str]]] = {}  # (inputs, outputs) -> [(state, key)]
         self.key_name: Dict[str, Any] = {}    # entity element key -> the row's own name
+        self.key_ids: Dict[str, set] = {}     # entity element key -> its grounded ids
         rows = list(keyed_rows(big, self.taken))  # self.taken: new rows continue the ordinals
         for primary in (True, False):         # primary names win over synonyms
             for section, key, row, _ in rows:
                 if section.startswith("entities.") and isinstance(row, dict):
                     self.key_name[key] = row.get("name")
+                    self.key_ids[key] = grounded_ids(row)
                     names = _names(row)
                     for n in names[:1] if primary else names[1:]:
                         self.ent_key.setdefault(n, key)
@@ -364,11 +391,22 @@ class _Index:
     def rename(self, name: str) -> str:
         return self.canon.get(norm(name)) or name
 
-    def _proc_id(self, section: str, row: Dict[str, Any]) -> tuple:
-        if section == "processes.reactions":
-            return (section, frozenset(map(self.ident, row.get("inputs") or [])),
-                    frozenset(map(self.ident, row.get("outputs") or [])))
-        return (section, signature(section, row))
+    def edge(self, name: Any) -> Optional[str]:
+        """The entity key a name gives a hop edge through: grounded and not a currency metabolite."""
+        if is_currency(name):
+            return None
+        key = self.ident(name)
+        return key if self.key_ids.get(key) else None
+
+    def _rx_sets(self, row: Dict[str, Any]) -> tuple:
+        """Identity sets of inputs and outputs without currency metabolites (all of them if that
+        leaves both sides empty)."""
+        ins, outs = row.get("inputs") or [], row.get("outputs") or []
+        core_in = [n for n in ins if not is_currency(n)]
+        core_out = [n for n in outs if not is_currency(n)]
+        if core_in or core_out:
+            ins, outs = core_in, core_out
+        return frozenset(map(self.ident, ins)), frozenset(map(self.ident, outs))
 
     def _add(self, section: str, row: Any, key: str) -> None:
         if not isinstance(row, dict):
@@ -378,26 +416,37 @@ class _Index:
                 self.by_id.setdefault((section,) + i, key)
             for n in _names(row):
                 self.by_name.setdefault((section, n), key)
+        elif section == "processes.reactions":
+            self.rx.setdefault(self._rx_sets(row), []).append((norm(row.get("biological_state")), key))
         else:
-            self.proc.setdefault(self._proc_id(section, row), key)
+            self.proc.setdefault((section, signature(section, row)), key)
+
+    def _rx_match(self, sets: tuple, state: str) -> Optional[str]:
+        # a state on both sides must agree; a row without a state matches any state
+        return next((k for s, k in self.rx.get(sets, []) if not (s and state) or s == state), None)
 
     def match(self, section: str, row: Any) -> Tuple[Optional[str], bool]:
         if not isinstance(row, dict):
             return None, False
         if section.startswith("entities."):
-            for i in sorted(grounded_ids(row)):
+            ids = grounded_ids(row)
+            for i in sorted(ids):
                 if (section,) + i in self.by_id:
                     return self.by_id[(section,) + i], False
             for n in _names(row):
-                if (section, n) in self.by_name:
-                    return self.by_name[(section, n)], False
+                key = self.by_name.get((section, n))
+                if key and not _ids_conflict(ids, self.key_ids.get(key, set())):
+                    return key, False
             return None, False
-        pid = self._proc_id(section, row)
-        if pid in self.proc:
-            return self.proc[pid], False
-        if section == "processes.reactions" and (section, pid[2], pid[1]) in self.proc:
-            return self.proc[(section, pid[2], pid[1])], True
-        return None, False
+        if section == "processes.reactions":
+            ins, outs = self._rx_sets(row)
+            state = norm(row.get("biological_state"))
+            hit = self._rx_match((ins, outs), state)
+            if hit or ins == outs:
+                return hit, False
+            hit = self._rx_match((outs, ins), state)
+            return hit, hit is not None
+        return self.proc.get((section, signature(section, row))), False
 
     def alias(self, row: Dict[str, Any], key: str, canonical_name: Any) -> None:
         for n in _names(row):
@@ -408,6 +457,7 @@ class _Index:
         key = next_key(section, row, self.taken)
         if section.startswith("entities.") and isinstance(row, dict):
             self.key_name[key] = row.get("name")
+            self.key_ids[key] = grounded_ids(row)
             self.alias(row, key, row.get("name"))
         self._add(section, row, key)
         return key
@@ -426,10 +476,12 @@ def merge_extension(big: Dict[str, Any], rows_by_section: Dict[str, List[Dict[st
     ``biological_states`` ...) to rows in the base shape; ``provenance_by_row`` maps the same path to
     one record list per row. A row matching an existing element (base or extension) by identity is
     not added: its records are appended to that element. Identity: entities by a shared grounded id,
-    else a normalized name or synonym (same section); reactions by the identity sets of inputs and
-    outputs, either orientation (note "orientation reversed"); other rows by their signature. New
-    process / location rows have their entity names rewritten to the matched row's name, so a view
-    stays reference-closed. Hops are recomputed.
+    else a normalized name or synonym (same section) unless both rows carry different ids in one
+    namespace; reactions by the identity sets of inputs and outputs without currency metabolites,
+    either orientation (note "orientation reversed"), and the same normalized state when both rows
+    have one; other rows by their signature. Entity names an incoming row references (participants,
+    actors, complex components, species, state parts) are rewritten to the matched row's name, so a
+    view stays reference-closed. Hops are recomputed.
     """
     big = copy.deepcopy(big)
     for sid, entry in (sources or {}).items():
@@ -440,9 +492,7 @@ def merge_extension(big: Dict[str, Any], rows_by_section: Dict[str, List[Dict[st
         recs_list = (provenance_by_row or {}).get(section) or []
         for i, row in enumerate(rows_by_section[section]):
             recs = copy.deepcopy(recs_list[i]) if i < len(recs_list) else []
-            row = copy.deepcopy(row)
-            if not section.startswith("entities."):
-                _, _, row = refs(section, row, rename=index.rename)
+            _, _, row = refs(section, copy.deepcopy(row), rename=index.rename)
             hit, reversed_ = index.match(section, row)
             if hit:
                 if reversed_:
@@ -459,37 +509,42 @@ def merge_extension(big: Dict[str, Any], rows_by_section: Dict[str, List[Dict[st
 
 
 def compute_hops(big: Dict[str, Any], index: Optional[_Index] = None) -> Dict[str, Optional[int]]:
-    """Base rows 0. An extension process is 1 + the smallest hop among the entities it shares; an
-    extension entity takes the smallest hop of the processes using it; a location row or state takes
-    its entity's / users' hop. Unreachable -> None (shown only in the full view)."""
+    """Base rows 0. Edges run only through shared GROUNDED, non-currency entities (PLAN 2.1; ATP or
+    water would otherwise make everything hop 1). An extension process is 1 + the smallest hop among
+    its edge entities; an extension entity takes the smallest hop of the processes naming it; a
+    location row or state takes its entity's / users' hop. Unreachable -> None (full view only)."""
     index = index or _Index(big)
     rows = list(keyed_rows(big))
     hops: Dict[str, Optional[int]] = {}
-    ent_hop: Dict[str, int] = {}
+    ent_hop: Dict[str, int] = {}   # edge entity key -> hop
     ext_procs = []
     for section, key, row, is_base in rows:
         if is_base:
             hops[key] = 0
             if section.startswith("entities."):
                 ent_hop[key] = 0
-            elif section.startswith("processes."):
-                for n in refs(section, row)[0]:
-                    ent_hop[index.ident(n)] = 0
         elif section.startswith("processes."):
-            ext_procs.append((key, {index.ident(n) for n in refs(section, row)[0]}))
+            names = refs(section, row)[0]
+            ext_procs.append((key, {e for e in map(index.edge, names) if e}, {index.ident(n) for n in names}))
     changed = True
     while changed:  # ponytail: relax-until-stable, O(rounds * processes); BFS if overlays get large
         changed = False
-        for key, parts in ext_procs:
-            near = [ent_hop[e] for e in parts if e in ent_hop]
+        for key, edges, _ in ext_procs:
+            near = [ent_hop[e] for e in edges if e in ent_hop]
             if near and (hops.get(key) is None or min(near) + 1 < hops[key]):
                 hops[key] = min(near) + 1
                 changed = True
             if hops.get(key) is not None:
-                for e in parts:
+                for e in edges:
                     if e not in ent_hop or hops[key] < ent_hop[e]:
                         ent_hop[e] = hops[key]
                         changed = True
+    member_hop = dict(ent_hop)  # any entity a reached process names, edge or not
+    for key, _, members in ext_procs:
+        if hops.get(key) is not None:
+            for e in members:
+                member_hop[e] = min(member_hop.get(e, hops[key]), hops[key])
+
     def ext(h):  # an extension row is never hop 0, even when it touches the base directly
         return None if h is None else max(h, 1)
 
@@ -498,10 +553,10 @@ def compute_hops(big: Dict[str, Any], index: Optional[_Index] = None) -> Dict[st
         if is_base:
             continue
         if section.startswith("entities."):
-            hops[key] = ext(ent_hop.get(key))
+            hops[key] = ext(member_hop.get(key))
         elif section.startswith("element_locations."):
             ents = refs(section, row)[0]
-            hops[key] = ext(ent_hop.get(index.ident(ents[0]))) if ents else None
+            hops[key] = ext(member_hop.get(index.ident(ents[0]))) if ents else None
         elif section.startswith("processes."):
             hops.setdefault(key, None)
         if section != STATES and hops.get(key) is not None:

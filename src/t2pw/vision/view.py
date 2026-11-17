@@ -74,10 +74,12 @@ def _paper_only(big: Dict[str, Any]) -> Dict[str, Any]:
             ents = [norm(n) for n in refs(s, r)[0]]
             if all(e in kept_ents or e not in base_ents for e in ents):
                 keep.add(k)
+    # a state stays when a kept row uses it, no base row used it, or it carries its own paper record
     users = [(k, refs(s, r)[1]) for s, k, r in rows if s.startswith(("processes.", "element_locations."))]
     used = {norm(n) for k, states in users for n in states}
     kept_used = {norm(n) for k, states in users if k in keep for n in states}
-    keep |= {k for s, k, r in rows if s == STATES and (_name(r) in kept_used or _name(r) not in used)}
+    keep |= {k for s, k, r in rows if s == STATES
+             and (_name(r) in kept_used or _name(r) not in used or _is_paper(prov.get(k, [])))}
 
     out = copy.deepcopy(big["base"])
     keys = defaultdict(list)
@@ -85,6 +87,12 @@ def _paper_only(big: Dict[str, Any]) -> Dict[str, Any]:
         keys[s].append(k)
     for s, section in iter_sections(out):
         section[:] = [r for r, k in zip(section, keys[s]) if k in keep]
+    # a dropped reaction's name leaves reaction_order unless a kept reaction carries it
+    # (the rule of service/final_payload_merge.py, keyed by the shared reference key)
+    rx = [(r, k) for s, k, r in rows if s == "processes.reactions" and isinstance(r, dict)]
+    gone = {_name(r) for r, k in rx if k not in keep} - {_name(r) for r, k in rx if k in keep}
+    if gone and isinstance(out.get("reaction_order"), list):
+        out["reaction_order"] = [x for x in out["reaction_order"] if not (isinstance(x, str) and norm(x) in gone)]
     return out
 
 
