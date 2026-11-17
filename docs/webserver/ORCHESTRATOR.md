@@ -34,6 +34,20 @@ Only `docs/webserver/LEDGER.md` and `docs/webserver/results/*.md`. Nothing else,
 
 ## 3. Model and effort routing
 
+**Right-size every agent (PO rule, 2026-11-17).** "We don't want to be throwing a nuclear bomb at a
+small building." Match each agent's model, effort **and context** to the task it is given:
+- **Model and effort.** A lookup, a test run or a mechanical edit gets haiku or sonnet at low or medium.
+  Opus at high is for real judgment: reviews, biology adjudication, design, or a hard debug.
+- **Context.** Give a small agent only what its task needs. Do not paste or point it at planning documents
+  it does not need. For example, `docs/VISION.md` is for orchestrators and planners, not for scouts,
+  runners or narrow implementers.
+- **Count.** Spawn only as many agents as the work needs. One agent with a clear brief beats several
+  with overlapping ones.
+- **Re-check.** Escalate to a stronger model only when a weaker one has actually failed or the stakes
+  need it, and say why in the LEDGER row.
+
+Orchestrators planning product work read **`docs/VISION.md`** (the PO's vision for the next phase) first.
+
 Choose the cheapest model and effort that will do the task right. Pass `model` and
 `effort` explicitly on **every** dispatch, and record both in the LEDGER row.
 
