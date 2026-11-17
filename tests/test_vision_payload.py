@@ -3,8 +3,8 @@
 import copy
 import json
 
-from t2pw.vision.payload import (big_from_run, build_big_payload, element_keys, load_big_payload,
-                                 merge_extension, save_big_payload)
+from t2pw.vision.payload import (big_from_run, build_big_payload, element_keys, is_currency,
+                                 load_big_payload, merge_extension, save_big_payload)
 
 
 def lin(origin, stage="paper_extraction", sources=(), reason="r"):
@@ -234,6 +234,28 @@ def test_f3_currency_ignored_in_reaction_identity():
     assert ext_names(merged) == []
     assert merged["provenance"][by_name(merged, "processes.reactions", "r1")] == \
         big["provenance"][by_name(big, "processes.reactions", "r1")]  # no records were given
+
+
+def test_r1_opposing_irreversible_steps_do_not_merge():
+    p = payload()
+    p["processes"]["reactions"].append({"name": "hexokinase", "inputs": ["glucose", "ATP"],
+                                        "outputs": ["G6P", "ADP"], "evidence": "x"})
+    big = build_big_payload(p)
+    rec = {"kind": "database", "source": None, "quote": None, "stage": "extend_db", "note": ""}
+    # hexokinase reversed goes first: once G6Pase is in, a forward match (currency ignored, like the
+    # NAD+/NADP+ variants) would take G6P + ADP -> glucose + ATP as G6Pase
+    merged = merge_extension(big, {"processes.reactions": [
+        {"name": "hexokinase reversed", "inputs": ["G6P", "ADP"], "outputs": ["glucose", "ATP"]},
+        {"name": "G6Pase", "inputs": ["G6P", "H2O"], "outputs": ["glucose", "Phosphate"]}]},
+        {"processes.reactions": [[rec], [rec]]})
+    assert ext_names(merged) == ["G6Pase"]  # currency does not mirror: a different step
+    last = merged["provenance"][by_name(merged, "processes.reactions", "hexokinase")][-1]
+    assert last["note"] == "orientation reversed"  # currency mirrors: the same step written backwards
+
+
+def test_r4_bare_pi_is_not_currency():
+    assert not is_currency("pi") and not is_currency("PI")  # phosphatidylinositol
+    assert is_currency("Phosphate") and is_currency("NAD+") and is_currency("water")
 
 
 def test_f4_no_name_merge_when_same_namespace_ids_differ():

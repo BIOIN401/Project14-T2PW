@@ -399,14 +399,16 @@ class _Index:
         return key if self.key_ids.get(key) else None
 
     def _rx_sets(self, row: Dict[str, Any]) -> tuple:
-        """Identity sets of inputs and outputs without currency metabolites (all of them if that
-        leaves both sides empty)."""
+        """(inputs, outputs, currency in, currency out): identity sets without currency metabolites
+        (all participants if that leaves both sides empty), plus the folded currency on each side."""
         ins, outs = row.get("inputs") or [], row.get("outputs") or []
+        cur_in = frozenset(_currency_fold(n) for n in ins if is_currency(n))
+        cur_out = frozenset(_currency_fold(n) for n in outs if is_currency(n))
         core_in = [n for n in ins if not is_currency(n)]
         core_out = [n for n in outs if not is_currency(n)]
         if core_in or core_out:
             ins, outs = core_in, core_out
-        return frozenset(map(self.ident, ins)), frozenset(map(self.ident, outs))
+        return frozenset(map(self.ident, ins)), frozenset(map(self.ident, outs)), cur_in, cur_out
 
     def _add(self, section: str, row: Any, key: str) -> None:
         if not isinstance(row, dict):
@@ -417,13 +419,24 @@ class _Index:
             for n in _names(row):
                 self.by_name.setdefault((section, n), key)
         elif section == "processes.reactions":
-            self.rx.setdefault(self._rx_sets(row), []).append((norm(row.get("biological_state")), key))
+            ins, outs, cur_in, cur_out = self._rx_sets(row)
+            self.rx.setdefault((ins, outs), []).append(
+                (norm(row.get("biological_state")), key, cur_in, cur_out))
         else:
             self.proc.setdefault((section, signature(section, row)), key)
 
-    def _rx_match(self, sets: tuple, state: str) -> Optional[str]:
-        # a state on both sides must agree; a row without a state matches any state
-        return next((k for s, k in self.rx.get(sets, []) if not (s and state) or s == state), None)
+    def _rx_match(self, sets: tuple, state: str, mirror: Optional[tuple] = None) -> Optional[str]:
+        """First reaction with these identity sets whose state agrees (a row without a state matches
+        any state). ``mirror`` = the incoming currency (in, out) for a REVERSED match: when both rows
+        list currency it must mirror, so hexokinase (glucose + ATP -> G6P + ADP) never absorbs
+        G6Pase (G6P + H2O -> glucose + Pi). A row listing no currency gives no evidence either way."""
+        for s, k, c_in, c_out in self.rx.get(sets, []):
+            if s and state and s != state:
+                continue
+            if mirror and (c_in or c_out) and (mirror[0] or mirror[1]) and (c_in, c_out) != (mirror[1], mirror[0]):
+                continue
+            return k
+        return None
 
     def match(self, section: str, row: Any) -> Tuple[Optional[str], bool]:
         if not isinstance(row, dict):
@@ -439,12 +452,12 @@ class _Index:
                     return key, False
             return None, False
         if section == "processes.reactions":
-            ins, outs = self._rx_sets(row)
+            ins, outs, cur_in, cur_out = self._rx_sets(row)
             state = norm(row.get("biological_state"))
             hit = self._rx_match((ins, outs), state)
             if hit or ins == outs:
                 return hit, False
-            hit = self._rx_match((outs, ins), state)
+            hit = self._rx_match((outs, ins), state, mirror=(cur_in, cur_out))
             return hit, hit is not None
         return self.proc.get((section, signature(section, row))), False
 
@@ -477,9 +490,12 @@ def merge_extension(big: Dict[str, Any], rows_by_section: Dict[str, List[Dict[st
     one record list per row. A row matching an existing element (base or extension) by identity is
     not added: its records are appended to that element. Identity: entities by a shared grounded id,
     else a normalized name or synonym (same section) unless both rows carry different ids in one
-    namespace; reactions by the identity sets of inputs and outputs without currency metabolites,
-    either orientation (note "orientation reversed"), and the same normalized state when both rows
-    have one; other rows by their signature. Entity names an incoming row references (participants,
+    namespace; reactions by the identity sets of inputs and outputs without currency metabolites
+    and the same normalized state when both rows have one. A FORWARD match ignores currency
+    entirely, so cofactor variants merge: A + NAD+ -> B + NADH and A + NADP+ -> B + NADPH are one
+    element. A REVERSED match (note "orientation reversed") also needs the currency to mirror when
+    both rows list some, so opposing irreversible steps (kinase / phosphatase) stay apart; a row
+    listing no currency still matches either orientation. Other rows match by their signature. Entity names an incoming row references (participants,
     actors, complex components, species, state parts) are rewritten to the matched row's name, so a
     view stays reference-closed. Hops are recomputed.
     """
