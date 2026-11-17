@@ -26,6 +26,7 @@ Checks (names are the ``review_reasons`` prefixes):
   "further processed", "two steps" ...).
 - enzymes: ``enzyme_not_tied_to_step``: the enzyme's evidence (else the reaction's) must name the enzyme and one of the step's
   non-currency substrates or products; failing that, a paper sentence that names both ties it (recorded, not flagged).
+  Run only with the paper text (the Streamlit path has none), like ``evidence_not_in_paper``.
 - compartments: ``estimated_compartment_without_evidence``: a row whose ``compartment_source`` is ``estimated`` (L6),
   ``neighbour_estimate`` or ``llm_estimate`` (L7) must carry a ``compartment_estimate`` entry with a reason; an LLM estimate's
   quote must be in the paper text; a neighbour estimate must name its neighbours. ``unresolved`` rows are already flagged by L7
@@ -308,7 +309,7 @@ def _check_reaction(i: int, row: Dict[str, Any], rows: List[Any], idx: _Index, p
 
     # enzyme belongs to its step
     steps = [p for p in parts if not _currency(p)] or parts
-    for e, actor in enumerate(row.get("enzymes") or []):
+    for e, actor in enumerate(row.get("enzymes") or [] if paper.norm else []):  # the tie is read in the paper
         ename = _actor(actor)
         if not ename:
             continue
@@ -418,6 +419,8 @@ def check_evidence(payload: Dict[str, Any], paper_text: Optional[str] = None, co
     paper_text = paper_text if isinstance(paper_text, str) else ""
     prior = payload.get(FIELD) if isinstance(payload.get(FIELD), dict) else None
     if prior and prior.get("paper_text") and not paper_text:
+        # A run with the paper flagged something; without it the paper checks cannot run, and the paper-free checks
+        # already ran then. (A paper run that found nothing leaves no record, and a paper-free re-run finds nothing.)
         return {"skipped": "already checked with the paper text"}
     report: Dict[str, Any] = {"decision": RULING, "paper_text": bool(paper_text), "counts": {}, "flagged": [],
                               "tied_by_paper_sentence": [], "removed": [], "judge": bool(judge), "judge_errors": [],
@@ -449,8 +452,8 @@ def check_evidence(payload: Dict[str, Any], paper_text: Optional[str] = None, co
         if judge is not None and paper.norm:
             _apply_judge(payload, judge, paper, flagged, report)
         report["flagged_elements"] = len(report["flagged"])
-        if report["paper_text"] or report["flagged"] or report["removed"] or report["placeholder_species_removed"]:
-            # nothing checked against a paper and nothing found: the payload is not touched
+        if report["flagged"] or report["removed"] or report["placeholder_species_removed"]:
+            # nothing found: the payload is not touched
             payload[FIELD] = {k: report[k] for k in ("decision", "paper_text", "counts", "flagged_elements", "removed",
                                                      "placeholder_species_removed")}
     except Exception as exc:  # noqa: BLE001 - fails open: the payload is exactly what it was

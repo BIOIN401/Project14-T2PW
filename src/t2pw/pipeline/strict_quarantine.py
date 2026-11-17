@@ -3288,7 +3288,7 @@ def _placeholder_unidentified_enzymes(working: Dict[str, Any]) -> List[Dict[str,
     Named nowhere else, the complex takes the protein's name and the protein row (and its location rows) goes. Also named
     by an interaction, a transporter or a regulator modifier, the complex is "<name> complex" and the protein row stays
     for those references, which are judged exactly as before (a newly admitted interaction could reach an endpoint the
-    quarantine cannot write: the real-artifact leg 2026-08-02_2130 PMC12444477, FtsH). The sentinel is the payload's own when it
+    quarantine cannot write: a real-artifact lipid A leg, FtsH). The sentinel is the payload's own when it
     has one, else added with no species (D-W24 7c). The complex keeps the protein's species and evidence, and it and each
     reaction naming it carry ``review_required``. Returns one record per placeholder for ``enzyme_wrappers``.
     """
