@@ -465,3 +465,66 @@ def test_l7_a_quote_must_name_the_place_and_a_participant_or_enzyme(answer, why,
     rep = estimate_compartments(p, {"final_payload_paper_text": PAPER}, chat_fn=_Chat({"items": [answer]}))
     assert _by_name(p)["TMLD reaction"]["compartment_source"] == "unresolved"
     assert why in rep["llm"]["rejected"][0]["reason"]
+
+
+# ---- review round 2: N1 (one generic word is not the place), N2 (currency), N3 (paths with spaces), F5 ---------------
+@pytest.mark.parametrize("state,loc,ins,outs,generic,named", [
+    ("PM state", "plasma membrane", ["sphingosine"], ["sphingosine 1-phosphate"],
+     "sphingosine is phosphorylated in the cell", "sphingosine is phosphorylated at the plasma membrane"),
+    ("Golgi state", "golgi apparatus", ["ceramide"], ["glucosylceramide"],
+     "ceramide is glucosylated by a membrane-bound complex", "ceramide is glucosylated in the Golgi complex"),
+    ("extracellular state", "extracellular space", ["angiotensin I"], ["angiotensin II"],
+     "angiotensin I is cleaved in the space around vessels", "angiotensin I is cleaved in the extracellular space"),
+])
+def test_l7_n1_one_shared_generic_word_does_not_name_the_place(state, loc, ins, outs, generic, named, llm_on) -> None:
+    text = f"{generic[0].upper()}{generic[1:]}. {named[0].upper()}{named[1:]}."
+
+    def run(quote):
+        p = _payload([_st("cytosolic state", "cytosol"), _st(state, loc)], [_rx("R", ins, outs)])
+        rep = estimate_compartments(p, {"final_payload_paper_text": text},
+                                    chat_fn=_Chat({"items": [{"id": 0, "state": state, "quote": quote}]}))
+        return _by_name(p)["R"], rep
+
+    r, rep = run(generic)
+    assert r["compartment_source"] == "unresolved" and "biological_state" not in r
+    assert "does not name the place" in rep["llm"]["rejected"][0]["reason"]
+    r, _ = run(named)
+    assert r["biological_state"] == state and r["compartment_source"] == "llm_estimate"
+
+
+def test_l7_n2_a_currency_compound_is_not_the_participant_a_quote_must_name(llm_on) -> None:
+    text = "ATP is made in the mitochondrial matrix. Glucose is phosphorylated in the cytosol."
+    p = _payload([_st("cytosolic state", "cytosol"), _st("mitochondrial state", "mitochondria")],
+                 [_rx("hexokinase reaction", ["glucose", "ATP"], ["glucose 6-phosphate", "ADP"])])
+    rep = estimate_compartments(p, {"final_payload_paper_text": text}, chat_fn=_Chat(
+        {"items": [{"id": 0, "state": "mitochondrial state", "quote": "ATP is made in the mitochondrial matrix"}]}))
+    assert _by_name(p)["hexokinase reaction"]["compartment_source"] == "unresolved"
+    assert "names none of the item's participants" in rep["llm"]["rejected"][0]["reason"]
+
+
+def test_l7_n3_paths_with_spaces_are_redacted_whole(llm_on) -> None:
+    def boom(*a, **k):
+        raise RuntimeError("provider down; config C:\\Users\\Some Person\\My Project\\.env, "
+                           "C:\\Program Files (x86)\\App Dir\\.env; /home/some person/app dir/.env unreadable")
+
+    rep = estimate_compartments(_ambiguous(), {"final_payload_paper_text": PAPER}, chat_fn=boom)
+    err = rep["llm"]["error"]
+    assert err.startswith("RuntimeError: provider down; config <path>") and err.count("<path>") == 3
+    assert not any(w in err for w in (".env", "Person", "Project", "Program", "App", "some person", "dir"))
+
+
+def test_l7_f5_transport_sides_compare_places_not_rows(llm_on) -> None:
+    """Two rows at one place are the same side; apical vs basolateral (same location field) are not."""
+    def run(rows, q_from, q_to):
+        p = _payload(rows, [], [_tr("PAH transport", "PAH")])
+        ans = {"id": 0, "from": {"state": rows[0]["name"], "quote": q_from}, "to": {"state": rows[1]["name"], "quote": q_to}}
+        rep = estimate_compartments(p, {"final_payload_paper_text": f"{q_from}. {q_to}."}, chat_fn=_Chat({"items": [ans]}))
+        return p["processes"]["transports"][0], rep
+
+    t, _ = run([_st("basolateral extracellular", "extracellular"), _st("apical extracellular", "extracellular")],
+               "PAH is taken up from the basolateral extracellular fluid", "PAH is released into the apical extracellular fluid")
+    assert (t["from_biological_state"], t["to_biological_state"]) == ("basolateral extracellular", "apical extracellular")
+    u, rep = run([_st("PM state", "plasma membrane"), _st("cell membrane state", "cell membrane")],
+                 "PAH binds at the plasma membrane", "PAH is released at the cell membrane")
+    assert u["from_biological_state"] is None and u["to_biological_state"] is None
+    assert rep["llm"]["rejected"][-1]["reason"] == "both sides would be the same state"

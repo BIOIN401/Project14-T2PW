@@ -89,7 +89,6 @@ def _prov_attrs(p: Any) -> Dict[str, Any]:
     return {"label": g("label"), "source": g("source"), "matchType": g("match_type"), "retrieved": g("retrieved")}
 
 
-# id type -> (identifiers.org prefix, normaliser returning the id or None, rdf qualifier)
 def _estimate(node: Any) -> Optional[Tuple[str, str]]:
     """D-W24 (2, 7a): (compartment_source, reasons) of a reaction / transport whose compartment was not stated; None if stated."""
     src = node.extras.get("compartment_source")
@@ -99,6 +98,7 @@ def _estimate(node: Any) -> Optional[Tuple[str, str]]:
     return src, " | ".join(reasons) or "no reason recorded"
 
 
+# id type -> (identifiers.org prefix, normaliser returning the id or None, rdf qualifier)
 def _digits(v: str) -> Optional[str]:
     m = re.fullmatch(r"(?:[A-Za-z]+[:_\s]?)?(\d+)", v.strip())
     return m.group(1) if m else None

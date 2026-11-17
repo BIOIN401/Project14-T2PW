@@ -17,8 +17,9 @@ Order, per reaction:
    evidence is the shared participants and the neighbour reaction names. Estimates never feed other estimates.
 2. DEFERRED (``LLM_ESTIMATE = False``; never measured). When on: LLM (``llm/prompts/compartment_estimate_system.txt``): one call per payload for everything step 1 left, temperature 0,
    JSON, with the paper text (or the evidence sentences), the organism and the candidate states. An answer is accepted only
-   when its quote (3+ words) is verbatim in the text, names one of the item's participants or enzymes and the chosen
-   place, and the place is a candidate state or a new location that is a PathWhiz location. A provider failure puts only
+   when its quote (3+ words) is verbatim in the text, names one of the item's participants (not a currency or hub
+   compound) or enzymes, holds a phrase whose location key is the chosen place's (one shared generic word such as "cell"
+   or "space" is not enough), and the place is a candidate state or a new location that is a PathWhiz location. A provider failure puts only
    ``compartment_estimate_unavailable`` on the rows; the error, paths redacted, stays in the report. Replies are cached in the fill cache (key: prompt + request sha256), so a replay is
    deterministic; ``T2PW_FINAL_PAYLOAD_BUDGET_S=0`` (and ``T2PW_OFFLINE_CURATOR`` without an injected ``chat_fn``) skips the
    call (a cached reply is still used, as the other fills do) and the row stays flagged (``llm_estimate``).
@@ -327,14 +328,16 @@ def build_request(items: List[Dict[str, Any]], ctx: _Ctx, text: str) -> Tuple[st
     return _system(), user
 
 
-def _place_words(loc: Any, pro: bool) -> set:
-    """Every spelling of a location's words ("mitochondria" also "mitochondrial", "mitochondrion")."""
+def _names_place(quote: str, loc: Any, pro: bool) -> bool:
+    """The quote holds a phrase (1-4 words) whose location key is the chosen place's ("mitochondrial matrix" names the
+    mitochondrion, "Golgi complex" the Golgi apparatus); one shared generic word ("cell", "complex", "membrane", "space")
+    does not."""
     key = M.location_key(loc, pro)
-    words = M._tokens(loc)
-    for k, v in M.LOCATION_SYNONYMS.items():
-        if M.location_key(k, pro) == key:
-            words |= M._tokens(k) | M._tokens(v)
-    return words - M.NAME_STOPWORDS
+    if not key:
+        return False
+    words = re.findall(r"[a-z0-9]+", str(quote).casefold())
+    return any(M.location_key(" ".join(words[i:i + n]), pro) == key
+               for n in range(1, 5) for i in range(len(words) - n + 1))
 
 
 def _names_one(quote: str, names: List[str]) -> bool:
@@ -361,14 +364,13 @@ def _accept(ans: Any, ctx: _Ctx, text_words: str, names: List[str]) -> Tuple[Opt
         row = ctx.cands.get(_norm(st))
         if row is None:
             return None, f"state '{st}' is not a candidate"
-        if not _place_words(M._state_loc(row) or row.get("name"), ctx.pro) & M._tokens(quote):
+        if not _names_place(quote, M._state_loc(row) or row.get("name"), ctx.pro):
             return None, f"quote does not name the place of '{row['name']}'"
         return ("state", str(row["name"])), quote
     loc = str(ans.get("new_location") or "").strip()
     if not loc or len(loc) > 40:
         return None, "no state and no location given"
-    words = M._tokens(loc) - M.NAME_STOPWORDS
-    if not words or not words <= M._tokens(quote):
+    if not _names_place(quote, loc, ctx.pro):
         return None, f"location '{loc}' is not in the quote"
     from t2pw.pwml.vocabulary_map import map_vocabulary_name
 
@@ -378,18 +380,32 @@ def _accept(ans: Any, ctx: _Ctx, text_words: str, names: List[str]) -> Tuple[Opt
     return ((("state", str(hit["name"])) if hit is not None else ("new", loc)), quote)
 
 
-_PATH = re.compile(r"(?:[A-Za-z]:[\\/]|\\\\|~[\\/]|(?<![\w.])/(?=[\w.-]+/))[^\s'\"<>|,;)]*")
+# ponytail: a path runs to the next quote, <, >, |, comma, semicolon or line end (spaces and "(x86)" included), so text
+# after a path on the same line is cut too; the report loses detail, never leaks a path.
+_PATH = re.compile(r"(?:[A-Za-z]:[\\/]|\\\\|~[\\/]|(?<![\w.])/(?=[\w. -]+/))[^'\"<>|,;\n]*")
 
 
 def _redact(text: str) -> str:
-    """A provider error with filesystem paths (a server may name its .env) cut out."""
+    """A provider error with filesystem paths (a server may name its .env, in a folder with spaces: N3) cut out."""
     return _PATH.sub("<path>", text)
 
 
 def _same(a: Tuple[str, str], b: Tuple[str, str], ctx: _Ctx) -> bool:
-    if a[0] == b[0] == "new":
-        return M.location_key(a[1], ctx.pro) == M.location_key(b[1], ctx.pro)
-    return a[0] == b[0] == "state" and ctx.key(a[1]) == ctx.key(b[1])
+    """Same row, or the same place (F5): location key, position words ("apical" is not "basolateral"), cell type and
+    tissue (a new location has no cell type or tissue)."""
+    if a[0] == b[0] == "state" and ctx.key(a[1]) == ctx.key(b[1]):
+        return True
+
+    def place(t: Tuple[str, str]) -> Tuple[str, frozenset, str, str]:
+        if t[0] == "new":
+            return M.location_key(t[1], ctx.pro), M.position_words({"name": t[1]}), "", ""
+        n = _norm(t[1])
+        row = ctx.states[ctx.last[n]] if n in ctx.last else {}
+        return (M.location_key(M._state_loc(row) or row.get("name"), ctx.pro), M.position_words(row),
+                M.context_key(row.get("cell_type")), M.context_key(row.get("tissue")))
+
+    pa, pb = place(a), place(b)
+    return bool(pa[0]) and pa == pb
 
 
 def _place(target: Tuple[str, str], quote: str, ctx: _Ctx) -> str:
@@ -520,7 +536,7 @@ def _run(payload: Dict[str, Any], state: Any, report: Dict[str, Any], cache: Any
         if hints.get(i):
             item["states_of_linked_reactions"] = hints[i]
         ask[item["id"]] = ("reaction", i, [])
-        names[item["id"]] = ins + outs + item["enzymes"]
+        names[item["id"]] = list(_linking(ins + outs).values()) + item["enzymes"]  # N2: no currency / hub compound
         items.append(item)
     for i in ttodo:
         t = tr[i]
@@ -532,7 +548,7 @@ def _run(payload: Dict[str, Any], state: Any, report: Dict[str, Any], cache: Any
                 "current_to": None if _unstated(t.get(SIDES[1])) else ctx.name(t.get(SIDES[1])),
                 "ask": [f.split("_")[0] for f in sides]}
         ask[item["id"]] = ("transport", i, sides)
-        names[item["id"]] = _cargo(t) + [_actor_name_and_hint(a)[0] for a in (t.get("transporters") or [])]
+        names[item["id"]] = list(_linking(_cargo(t)).values()) + [_actor_name_and_hint(a)[0] for a in (t.get("transporters") or [])]
         items.append(item)
     items, dropped = items[:MAX_ITEMS], items[MAX_ITEMS:]
     for it in dropped:
