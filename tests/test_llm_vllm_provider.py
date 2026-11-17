@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import os
 import sys
 from pathlib import Path
 from typing import Any, Dict, List
@@ -212,6 +213,51 @@ def test_run_model_override_survives_dotenv(monkeypatch: pytest.MonkeyPatch, tmp
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     assert module._resolve_model() == "from-process"
+
+
+def test_vllm_ignores_caller_model_override(load) -> None:
+    """completeness_audit passes an OPENROUTER_* id as model_override; vLLM must not see it."""
+    mod, requests = load(
+        T2PW_LLM_PROVIDER="vllm", VLLM_MODEL="served", OPENROUTER_MODEL="vendor/openrouter-id",
+    )
+    mod.chat([{"role": "user", "content": "hi"}], model_override="vendor/openrouter-id")
+    assert json.loads(requests[0].content)["model"] == "served"
+    assert mod._resolve_model(model_override="vendor/openrouter-id", model_env_var="OPENROUTER_X") == "served"
+    mod, requests = load(T2PW_LLM_PROVIDER="vllm", VLLM_MODEL="served", T2PW_LLM_MODEL="run-model")
+    assert mod._resolve_model(model_override="vendor/openrouter-id") == "run-model"
+
+
+def test_vllm_max_tokens_is_clamped(load) -> None:
+    mod, _ = load(T2PW_LLM_PROVIDER="vllm", VLLM_MODEL="m", VLLM_MAX_TOKENS="9999999")
+    assert mod.configured_max_tokens() == 128_000
+    mod, _ = load(T2PW_LLM_PROVIDER="vllm", VLLM_MODEL="m", VLLM_MAX_TOKENS="3")
+    assert mod.configured_max_tokens() == 500
+
+
+def test_vllm_context_length_400_names_the_fix(load) -> None:
+    mod, _ = load(T2PW_LLM_PROVIDER="vllm", VLLM_MODEL="m")
+    response = httpx.Response(400, request=httpx.Request("POST", "http://x/v1/chat/completions"))
+
+    def boom(**kwargs: Any):
+        raise openai.BadRequestError("maximum context length is 8192 tokens", response=response, body=None)
+
+    mod._client.chat.completions.create = boom
+    with pytest.raises(RuntimeError) as err:
+        mod.chat([{"role": "user", "content": "hi"}])
+    text = str(err.value)
+    assert "VLLM_MAX_TOKENS" in text and "max-model-len" in text
+    assert "openrouter/free" not in text
+
+
+def test_existing_t2pw_llm_variable_still_obeys_dotenv(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    """Only the new names are snapshotted: T2PW_LLM_PROTEIN_FALLBACK keeps today's .env-wins rule."""
+    (tmp_path / ".env").write_text("T2PW_LLM_PROTEIN_FALLBACK=from-dotenv\n")
+    monkeypatch.setenv("T2PW_LLM_PROTEIN_FALLBACK", "from-process")
+    monkeypatch.setattr("t2pw.paths.PROJECT_ROOT", tmp_path)
+    spec = importlib.util.spec_from_file_location("t2pw_llm_client_dotenv3", CLIENT_FILE)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    assert os.environ["T2PW_LLM_PROTEIN_FALLBACK"] == "from-dotenv"
 
 
 def test_ui_defaults_follow_the_provider(monkeypatch: pytest.MonkeyPatch) -> None:

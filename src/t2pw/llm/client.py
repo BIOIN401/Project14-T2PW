@@ -28,7 +28,11 @@ ENV_PATH = PROJECT_ROOT / ".env"
 # override impossible. The per-run vLLM knobs are therefore read BEFORE dotenv and put back
 # AFTER it, so a process-set ``T2PW_LLM_PROVIDER`` / ``VLLM_*`` always wins; every other
 # variable behaves exactly as before.
-_PER_RUN_ENV = {k: v for k, v in os.environ.items() if k.startswith(("T2PW_LLM_", "VLLM_"))}
+_PER_RUN_NAMES = (
+    "T2PW_LLM_PROVIDER", "T2PW_LLM_MODEL",
+    "VLLM_BASE_URL", "VLLM_MODEL", "VLLM_API_KEY", "VLLM_MAX_TOKENS",
+)
+_PER_RUN_ENV = {k: os.environ[k] for k in _PER_RUN_NAMES if k in os.environ}
 load_dotenv(dotenv_path=ENV_PATH, override=True)
 os.environ.update(_PER_RUN_ENV)
 
@@ -36,6 +40,14 @@ os.environ.update(_PER_RUN_ENV)
 PROVIDER = (os.getenv("T2PW_LLM_PROVIDER") or os.getenv("LLM_PROVIDER", "local") or "local").strip().lower()
 #: Used by ``configured_max_tokens`` for ``vllm`` instead of the OpenRouter budget variables.
 VLLM_DEFAULT_MAX_TOKENS = 16_000
+#: ``VLLM_MAX_TOKENS`` is clamped to this range (same bounds as the UI defaults). It must also be
+#: smaller than the server's ``--max-model-len`` minus the prompt, or vLLM answers 400.
+VLLM_MIN_MAX_TOKENS, VLLM_MAX_MAX_TOKENS = 500, 128_000
+_VLLM_400_HINT = (
+    "vLLM rejected the request. If the message says the prompt plus max_tokens exceeds the "
+    "model's maximum context length, lower VLLM_MAX_TOKENS or start the server with a larger "
+    "--max-model-len; otherwise check that VLLM_MODEL names the model the server is serving."
+)
 
 #: One provider request's wall-clock ceiling, in seconds. Read ONCE, here, and
 #: applied to BOTH client constructions below and to every request either retry
@@ -760,7 +772,7 @@ def _resolve_model(
 
     Priority:
       0. T2PW_LLM_MODEL (per run, process environment); beats everything below
-      1. explicit model_override
+      1. explicit model_override (ignored under vllm: the provider serves one model)
       2. stage-specific OpenRouter env var named by the caller
       3. OPENROUTER_MODEL
       4. provider default captured during client setup
@@ -770,7 +782,9 @@ def _resolve_model(
     run_model = (os.getenv("T2PW_LLM_MODEL") or "").strip()
     if run_model:
         return run_model
-    override = (model_override or "").strip()
+    # vllm serves one model: a caller's override is an OpenRouter id (the stage helpers resolve
+    # ``OPENROUTER_*_MODEL`` themselves), which the server would reject.
+    override = (model_override or "").strip() if PROVIDER != "vllm" else ""
     if override:
         return override
 
@@ -827,7 +841,11 @@ def configured_max_tokens(stage_env_var: Optional[str] = None) -> int:
         if value <= 0:
             logger.warning("Invalid VLLM_MAX_TOKENS %r; using %d.", raw_value, VLLM_DEFAULT_MAX_TOKENS)
             return VLLM_DEFAULT_MAX_TOKENS
-        return value
+        clamped = min(max(value, VLLM_MIN_MAX_TOKENS), VLLM_MAX_MAX_TOKENS)
+        if clamped != value:
+            logger.warning("VLLM_MAX_TOKENS=%d clamped to %d (range %d..%d).", value, clamped,
+                           VLLM_MIN_MAX_TOKENS, VLLM_MAX_MAX_TOKENS)
+        return clamped
     raw_value = (
         (os.getenv(stage_env_var) if stage_env_var else None)
         or os.getenv("LLM_MAX_TOKENS")
@@ -1096,6 +1114,8 @@ def chat_detailed(
                 last_err = e
                 diagnostics.note(attempt=attempt + 1, status=STATUS_ERROR, error=str(e))
                 continue
+            if PROVIDER == "vllm":
+                raise RuntimeError(f"Bad request (400). {_VLLM_400_HINT} Original error: {e}") from e
             raise RuntimeError(
                 "Bad request (400). This model/provider may not support response_format JSON. "
                 "Try OPENROUTER_MODEL=openrouter/free or a different model. "
@@ -1305,7 +1325,8 @@ def chat_with_tools(
                 raise RuntimeError(f"Authentication failed (401): {e}") from e
             except BadRequestError as e:
                 _trace(attempt + 1, STATUS_ERROR, error=str(e))
-                raise RuntimeError(f"Bad request (400): {e}") from e
+                hint = f" {_VLLM_400_HINT}" if PROVIDER == "vllm" else ""
+                raise RuntimeError(f"Bad request (400):{hint} {e}") from e
             except RateLimitError as e:
                 last_err = e
                 _trace(attempt + 1, STATUS_ERROR, error=str(e))

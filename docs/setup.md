@@ -51,16 +51,23 @@ $env:VLLM_MODEL = "<model name the server was started with>"   # required
 | `VLLM_MAX_TOKENS` | `16000` | completion budget for every call and the UI defaults |
 | `T2PW_LLM_MODEL` | unset | per-run model for ANY provider; beats `OPENROUTER_MODEL` / `VLLM_MODEL` / `LMSTUDIO_MODEL`, every per-stage `OPENROUTER_*_MODEL` and any caller-resolved model. With it set, `VLLM_MODEL` is optional |
 
-`T2PW_LLM_MODEL` forces one model for every stage, so leave `OPENROUTER_EXTRACTION_FALLBACK_MODEL`
-unset while using it (the ladder's alternate-model rung would re-ask the same model). It works on
-OpenRouter too, e.g. `$env:T2PW_LLM_MODEL = "<model id>"` with `LLM_PROVIDER=openrouter`.
+`T2PW_LLM_MODEL` works on OpenRouter too, e.g. `$env:T2PW_LLM_MODEL = "<model id>"` with
+`LLM_PROVIDER=openrouter`.
 
 With `vllm`, the `OPENROUTER_*` model and budget variables (`OPENROUTER_EXTRACTION_MODEL`,
-`OPENROUTER_EXTRACTION_MAX_TOKENS`, `LLM_MAX_TOKENS`, ...) are ignored. Requests carry no
-OpenRouter headers. Timeouts and retries are the shared `LLM_REQUEST_TIMEOUT_SECONDS`,
-`LLM_MAX_RETRIES` and `LLM_RETRY_*`. Because one model serves every stage, leave
-`OPENROUTER_EXTRACTION_FALLBACK_MODEL` unset: the Stage-1 ladder's alternate-model rung would
-otherwise re-ask the same model.
+`OPENROUTER_EXTRACTION_MAX_TOKENS`, `LLM_MAX_TOKENS`, ...) and any model a caller passes in are
+ignored: `VLLM_MODEL` (or `T2PW_LLM_MODEL`) serves every stage. Requests carry no OpenRouter
+headers. Timeouts and retries are the shared `LLM_REQUEST_TIMEOUT_SECONDS`, `LLM_MAX_RETRIES` and
+`LLM_RETRY_*`.
+
+`VLLM_MAX_TOKENS` is clamped to 500..128000. Size it below the server's `--max-model-len`
+minus the longest prompt, or vLLM answers 400 (the error then says to lower `VLLM_MAX_TOKENS`
+or raise `--max-model-len`).
+
+**One model for every stage (`vllm` or `T2PW_LLM_MODEL`).** The Stage-1 ladder's alternate-model
+rung (`OPENROUTER_EXTRACTION_FALLBACK_MODEL`) then re-asks the same model. That costs time, not
+correctness; unset that variable to skip it. Making the ladder skip it by itself needs a
+`pipeline/` change and is out of scope here.
 
 To reach a vLLM server on the lab GPU machine, run `scripts/vllm_tunnel.ps1` (or
 `ssh -N -L 8000:127.0.0.1:<port> lab-gpu`) and leave `VLLM_BASE_URL` at its default.
