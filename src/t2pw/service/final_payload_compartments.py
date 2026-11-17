@@ -21,7 +21,9 @@ Order, per reaction:
    and is a PathWhiz location. Replies are cached in the fill cache (key: prompt + request sha256), so a replay is
    deterministic; ``T2PW_FINAL_PAYLOAD_BUDGET_S=0`` (and ``T2PW_OFFLINE_CURATOR`` without an injected ``chat_fn``) skips the
    call (a cached reply is still used, as the other fills do) and the row stays flagged (``llm_estimate``).
-3. Otherwise: the organism's general cell state (a stated state of the organism with location cytoplasm (prokaryote) /
+3. DEFERRED (``GENERAL_STATE_FALLBACK = False``): the reaction keeps its state (the IR puts it in the referenced
+   placeholder or the first listed state), ``unresolved``, ``review_required`` with reason ``compartment_not_stated``
+   naming where it lands and that the placement is not evidence. When switched on: the organism's general cell state (a stated state of the organism with location cytoplasm (prokaryote) /
    cell (eukaryote) and no cell type or tissue; else the organism's ``__auto_state__`` renamed "<organism> <location>" with
    every reference re-pointed; else a new "<organism> cytoplasm|cell" state), ``review_required`` with reason
    ``compartment_not_stated`` (``unresolved``).
@@ -58,6 +60,11 @@ MAX_ITEMS = 40
 LLM_TIMEOUT_S = 120.0
 MIN_QUOTE_WORDS = 3
 NOT_STATED = "compartment_not_stated"
+#: Step 3 (the general cell state) is OFF: on the replays it moved 22 reactions off a first state that was sometimes right
+#: by accident (idx 134 TML dioxygenase, mitochondrion; idx 86/98 DHCR24, ER), and without a measured LLM step no-loss cannot
+#: be shown (orchestrator ruling under the PO's no-regression rule). Off: an unresolved reaction keeps its state and is
+#: flagged. Turn on only after the live check passes.
+GENERAL_STATE_FALLBACK = False
 RULING = "D-W24 2, L7"
 SOURCES = ("unresolved", "llm_estimate", "neighbour_estimate")  # weakest first
 SIDES = ("from_biological_state", "to_biological_state")
@@ -560,6 +567,16 @@ def _run(payload: Dict[str, Any], state: Any, report: Dict[str, Any], cache: Any
             continue
         r = rx[i]
         old = orig[i]
+        if not GENERAL_STATE_FALLBACK:  # deferred (orchestrator ruling under the no-regression rule): keep, flag, say where it lands
+            first = (_norm(old) and ctx.name(old)) or (str(ctx.states[0].get("name")) if ctx.states else "a generated default state")
+            reason = (f"no compartment stated and none could be estimated ({why.get(i)}{llm_note}); left where the PWML puts it, "
+                      f"'{first}' (the referenced placeholder, or the first listed state), because no estimate was available ({RULING})")
+            _flag(r, f"left in '{first}' because no estimate was available; that placement is not evidence ({RULING})")
+            _mark(r, "unresolved", {"step": "L7", "field": "biological_state", "from_state": old or None, "to_state": old or None,
+                                    "placed_in": first, "source": "unresolved", "reason": reason})
+            report["reactions"].append({"row": i, "reaction": r.get("name"), "from_state": old or None, "to_state": old or None,
+                                        "placed_in": first, "source": "unresolved", "reason": reason})
+            continue
         g = ctx.general(report)
         if g is None:
             reason = f"no compartment stated and no organism to place it in ({why.get(i)}{llm_note}); left to the default state ({RULING})"

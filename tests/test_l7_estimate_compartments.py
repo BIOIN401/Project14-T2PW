@@ -55,6 +55,12 @@ def _offline_cache(monkeypatch):
     monkeypatch.setenv("T2PW_OFFLINE_CURATOR", "1")  # the real client is never reached; a test passes its own chat_fn
 
 
+@pytest.fixture
+def general_on(monkeypatch):
+    """Step 3 (the general cell state) is off by default (deferred); these tests switch it on."""
+    monkeypatch.setattr("t2pw.service.final_payload_compartments.GENERAL_STATE_FALLBACK", True)
+
+
 class _Chat:
     def __init__(self, reply):
         self.reply, self.calls, self.user = reply, 0, None
@@ -81,7 +87,7 @@ def test_l7_a_chain_with_no_state_takes_its_neighbours_state_not_the_first_state
     assert "review_required" not in rx["B"] and rep["counts"]["neighbour_estimate"] == 2 and FIELD in p
 
 
-def test_l7_neighbours_in_two_states_are_not_a_neighbour_estimate() -> None:
+def test_l7_neighbours_in_two_states_are_not_a_neighbour_estimate(general_on) -> None:
     p = _payload([_st("mitochondrial state", "mitochondria"), _st("cytosolic state", "cytosol")],
                  [_rx("A", ["TML"], ["HTML"], "mitochondrial state"), _rx("B", ["HTML"], ["TMABA"]),
                   _rx("C", ["TMABA"], ["GBB"], "cytosolic state")])
@@ -94,7 +100,7 @@ def test_l7_neighbours_in_two_states_are_not_a_neighbour_estimate() -> None:
     assert {"name": "cell"} in p["entities"]["subcellular_locations"]
 
 
-def test_l7_a_transported_compound_links_no_reactions() -> None:
+def test_l7_a_transported_compound_links_no_reactions(general_on) -> None:
     """idx 84: enterobactin is made inside and bound to iron outside; the biosynthesis is not extracellular."""
     p = _payload([_st("E. coli cytosolic state", "cytosol", "Escherichia coli"), _st("E. coli extracellular", "extracellular", "Escherichia coli")],
                  [_rx("EntF", ["DHB"], ["enterobactin"]), _rx("bind", ["enterobactin", "Fe3+"], ["ferri-enterobactin"], "E. coli extracellular")],
@@ -106,7 +112,7 @@ def test_l7_a_transported_compound_links_no_reactions() -> None:
     assert ent["biological_state"] == "E. coli cytosolic state" and ent["compartment_source"] == "unresolved"
 
 
-def test_l7_a_state_that_names_no_compartment_does_not_decide_a_neighbour_estimate() -> None:
+def test_l7_a_state_that_names_no_compartment_does_not_decide_a_neighbour_estimate(general_on) -> None:
     p = _payload([_st("mitochondrial state", "mitochondria"), _st("human carnitine biosynthesis", "cell")],
                  [_rx("A", ["TML"], ["HTML"], "human carnitine biosynthesis"), _rx("B", ["TML"], ["HTML"])])
     estimate_compartments(p, {})
@@ -181,7 +187,7 @@ def test_l7_a_failing_model_call_leaves_the_rows_flagged() -> None:
 
 
 # ---- step 3: the general cell state ----------------------------------------------------------------------------------
-def test_l7_a_whole_pathway_without_states_goes_to_the_organisms_cell_not_the_extracellular_box() -> None:
+def test_l7_a_whole_pathway_without_states_goes_to_the_organisms_cell_not_the_extracellular_box(general_on) -> None:
     """idx 138: every reaction unstated; row 0 was 'extracellular'. The pipeline's own placeholder becomes the named cell
     state, and every reference to it follows."""
     sp = (("Streptomyces tubercidicus", "Prokaryote", "47759"),)
@@ -197,7 +203,7 @@ def test_l7_a_whole_pathway_without_states_goes_to_the_organisms_cell_not_the_ex
     assert all(r["review_required"] for r in p["processes"]["reactions"])
 
 
-def test_l7_an_existing_plain_state_of_the_organism_is_reused_but_not_a_named_place() -> None:
+def test_l7_an_existing_plain_state_of_the_organism_is_reused_but_not_a_named_place(general_on) -> None:
     p = _payload([_st("afferent nerve fiber state", "cell", "Mus musculus"), _st("Type III cell state", "cell", "Mus musculus",
                                                                                   cell_type="Type III cell")],
                  [_rx("R", ["a"], ["b"])], species=(("Mus musculus", "Eukaryote", "10090"),))
@@ -208,7 +214,7 @@ def test_l7_an_existing_plain_state_of_the_organism_is_reused_but_not_a_named_pl
     assert rep["general_state"] == {"name": "Homo sapiens state", "how": "existing_state"}
 
 
-def test_l7_the_pathway_organism_wins_over_a_heterologous_host() -> None:
+def test_l7_the_pathway_organism_wins_over_a_heterologous_host(general_on) -> None:
     """idx 135: the default species picked Arabidopsis (expression host); the pathway is Saposhnikovia's."""
     sp = (("Saposhnikovia divaricata", "Eukaryote", "1"), ("Arabidopsis thaliana", "Eukaryote", "3702"))
     p = _payload([], [_rx("SdPCS", ["malonyl-CoA"], ["noreugenin"])], species=sp)
@@ -243,7 +249,7 @@ def test_l7_both_sides_missing_are_never_given_a_direction_offline() -> None:
     assert "no direction is invented" in t["review_reasons"][-1]
 
 
-def test_l7_a_side_nobody_estimated_is_not_put_in_the_general_cell_state() -> None:
+def test_l7_a_side_nobody_estimated_is_not_put_in_the_general_cell_state(general_on) -> None:
     """idx 3: 'OTOP1 H+ permeation' had no from side; the general cell state would make it cell -> Type III cell."""
     p = _payload([_st("apical side state", "cell"), _st("Type III cell state", "cell", cell_type="Type III cell")],
                  [_rx("R", ["a"], ["b"])], [_tr("OTOP1-mediated H+ permeation", "H+", None, "Type III cell state")])
@@ -367,3 +373,51 @@ def test_l7_stated_reactions_and_payloads_with_nothing_to_do_are_untouched() -> 
     before = copy.deepcopy(p)
     rep = estimate_compartments(p, {})
     assert p == before and rep["reactions"] == [] and FIELD not in p
+
+
+# ---- step 3 deferred (the default) -----------------------------------------------------------------------------------
+def test_l7_step_3_is_off_by_default() -> None:
+    import t2pw.service.final_payload_compartments as fpc
+
+    assert fpc.GENERAL_STATE_FALLBACK is False
+
+
+def test_l7_deferred_an_unresolved_reaction_keeps_its_state_and_is_flagged_with_where_it_lands() -> None:
+    """idx 134: TML dioxygenase stays where the PWML puts it (row 0, mitochondrial state) instead of the general cell state."""
+    p = _payload([_st("mitochondrial state", "mitochondria"), _st("cytosolic state", "cytosol")],
+                 [_rx("A", ["TML"], ["HTML"], "mitochondrial state"), _rx("B", ["HTML"], ["TMABA"]),
+                  _rx("C", ["TMABA"], ["GBB"], "cytosolic state")])
+    states = copy.deepcopy(p["biological_states"])
+    rep = estimate_compartments(p, {})
+    b = _by_name(p)["B"]
+    assert "biological_state" not in b and p["biological_states"] == states  # nothing moved, nothing created
+    assert b["compartment_source"] == "unresolved" and b["review_required"] is True
+    assert b["review_reasons"][-1].startswith("compartment_not_stated: left in 'mitochondrial state' because no estimate")
+    assert b["compartment_estimate"][-1]["placed_in"] == "mitochondrial state"
+    assert rep["general_state"] is None and rep["reactions"][0]["to_state"] is None
+
+
+def test_l7_deferred_a_placeholder_is_neither_renamed_nor_left_silent() -> None:
+    sp = (("Streptomyces tubercidicus", "Prokaryote", "47759"),)
+    p = _payload([_st("Streptomyces tubercidicus extracellular", "extracellular", "Streptomyces tubercidicus"),
+                  _st("__auto_state__", "cell", "Streptomyces tubercidicus")],
+                 [_rx("TubA", ["PRPP"], ["X"]), _rx("TubB", ["X"], ["Y"], "__auto_state__")], species=sp)
+    estimate_compartments(p, {})
+    rx = _by_name(p)
+    assert [s["name"] for s in p["biological_states"]] == ["Streptomyces tubercidicus extracellular", "__auto_state__"]
+    assert "biological_state" not in rx["TubA"] and rx["TubB"]["biological_state"] == "__auto_state__"
+    assert "'Streptomyces tubercidicus extracellular'" in rx["TubA"]["review_reasons"][-1]
+    assert "'__auto_state__'" in rx["TubB"]["review_reasons"][-1]
+    assert all(r["compartment_source"] == "unresolved" for r in rx.values())
+
+
+def test_l7_deferred_neighbour_and_model_estimates_still_apply() -> None:
+    p = _payload([_st("cytosolic state", "cytosol"), _st("ER state", "endoplasmic reticulum")],
+                 [_rx("A", ["lanosterol"], ["FF-MAS"], "ER state"), _rx("B", ["FF-MAS"], ["T-MAS"])])
+    estimate_compartments(p, {})
+    assert _by_name(p)["B"]["biological_state"] == "ER state"
+    q = _ambiguous()
+    estimate_compartments(q, {"final_payload_paper_text": PAPER},
+                          chat_fn=_Chat({"items": [{"id": 0, "state": "mitochondrial state",
+                                                    "quote": "hydroxylated by TMLD in the mitochondrial matrix"}]}))
+    assert _by_name(q)["TMLD reaction"]["biological_state"] == "mitochondrial state"
