@@ -1,0 +1,19 @@
+Validation files for tests/test_vision_sbgn.py (dev only; never imported by the package).
+
+Repository : https://github.com/sbgn/libsbgn
+Commit     : 2aae05bb5c28b6d61757f8f3123bea505d57a20b  (master at download, 2026-11-17)
+Licence    : LICENSE.txt in that repository: dual LGPL 2.1+ / Apache 2.0 ("either of"); GitHub reports NOASSERTION.
+
+Files (byte-for-byte copies, fetched with User-Agent "t2pw-vision/0.1 (research tool)"):
+  SBGN.xsd      https://raw.githubusercontent.com/sbgn/libsbgn/2aae05bb5c28b6d61757f8f3123bea505d57a20b/resources/SBGN.xsd
+  render.xsd    https://raw.githubusercontent.com/sbgn/libsbgn/2aae05bb5c28b6d61757f8f3123bea505d57a20b/resources/render.xsd   (imported by SBGN.xsd)
+  sbgn_pd.sch   https://raw.githubusercontent.com/sbgn/libsbgn/2aae05bb5c28b6d61757f8f3123bea505d57a20b/validation/rules/sbgn_pd.sch
+
+Schematron under lxml (lxml.isoschematron, XSLT 1.0): lxml.isoschematron.Schematron REJECTS sbgn_pd.sch as read
+(title/ns order, pattern ids starting with a digit, assert attributes id/name/see/diagnostics/role, IDREF checks), and the
+stylesheet built without that check silently fires no rule. Loading works after in-memory edits (done in the tests and the
+proof script, file here untouched): title moved before ns, pattern ids prefixed "p", those assert attributes dropped (assert
+id kept as message prefix). Pattern pd10133 (unique arc ends, uses XPath 2.0 distinct-values) cannot run in XSLT 1.0 and is
+removed; the same property (no duplicate class/source/target arc) is checked in Python. The "sanity" phase (current-time())
+also cannot run. Active phase "basic": 70 rules fire on a sample map; a map with a top-level glyph missing compartmentRef
+fails pd10112, so the validator is not vacuous.
