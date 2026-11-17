@@ -1,0 +1,55 @@
+{
+ "lane": "V1",
+ "branch": "vision/model",
+ "code_commit": "626fe8e9",
+ "built": [
+  "src/t2pw/vision/payload.py: build_big_payload (base deep-copied, input untouched), element keys '<section path>:<signature>' with '#n' ordinals (base first, extension appended, so existing keys never change), row_provenance (lineage origin -> kind; no lineage + evidence -> paper 'no lineage; evidence quote'; neither -> unclassified), sources table, merge_extension, compute_hops, save/load_big_payload, big_from_run",
+  "src/t2pw/vision/view.py: ScopeSpec + PAPER_ONLY / DEFAULT(max_hops=1) / FULL, more_detailed / less_detailed, view (reference-closed), view_stats, unresolved_refs",
+  "Sections handled generically: every list under entities.*, processes.*, element_locations.* plus biological_states (the 152 payloads also carry cell_types, tissues, compartments, element_collections, nucleic_acid_locations, element_collection_locations)",
+  "Name identity uses the shared pipeline reference key t2pw.pipeline.name_keys.reference_key (imported, not changed)"
+ ],
+ "design_choices": {
+  "unresolved_excluded": "origin unresolved / excluded / unknown (e.g. implied_by_usage) -> kind 'unclassified' with note '<origin>: <reason>' (brief: keep as-is in note)",
+  "seed_paper_caveat": "rag_literature lineage always maps to other_paper, even when its only source is tagged 'seed_paper'; the tag is never used to upgrade a row to 'paper' (rag/conform.py ~283: the tag is not a reliable seed test). rag_provenance with source_id seed_paper adds no record; any other rag_provenance source adds an other_paper / database record unless lineage already gave that (kind, source). sources['seed_paper'] carries a note saying so. Effect: paper-only can only show less, never more",
+  "database_records": "one record per lineage entry; source = first source's table id; other source ids listed in note; all registered in the sources table (id = source_id for papers, '<source_type>:<id>' for databases unless already prefixed)",
+  "quote": "paper and other_paper records carry the row's evidence string as quote",
+  "paper_meta": "stored as sources['paper']; paper records then point source 'paper' (else null)",
+  "paper_only": "keeps base processes with a paper record; prunes compounds, proteins, complexes, nucleic acids, element collections to those referenced by kept processes (and kept complexes' components) or with their own paper record; species, subcellular locations, cell types, tissues, compartments pass through; element_locations dropped only when their element was in the base and is no longer in the view; a state is dropped only when base rows used it and no kept row does; all other top-level keys (reaction_order, source_text_index, quarantine reports ...) pass through unchanged",
+  "hops": "base rows 0; an extension process = 1 + min hop of the entities it shares (base entities and any name a base process uses count as 0); extension entities take the min hop of processes using them; extension location rows take their entity's hop, states their users' min hop; extension rows are never below 1; unreachable -> null (FULL only)",
+  "merge_identity": "entities: shared grounded id (chebi/kegg/hmdb/pubchem/pathbank/uniprot/drugbank fields and mapped_ids, same section) then normalized name or synonym; reactions: identity sets of inputs/outputs in either orientation; other rows: their signature. Entity names in new extension process/location rows are rewritten to the matched row's name so the view stays reference-closed"
+ },
+ "files": [
+  "src/t2pw/vision/__init__.py",
+  "src/t2pw/vision/payload.py",
+  "src/t2pw/vision/view.py",
+  "tests/test_vision_payload.py",
+  "tests/test_vision_view.py",
+  "docs/vision/results/V1.json",
+  "docs/vision/evidence/V1/identity_152.json",
+  "docs/vision/evidence/V1/proof_152.py"
+ ],
+ "tests": [
+  {"label": "model-unit-1", "counts": "not run: lost the heavy-lock race to t2pw-show between gate check and wrapper (BW_EXIT=95, child never started)", "log": "C:/t/vis-runs/logs/model-unit-1.log"},
+  {"label": "model-unit-2", "counts": "17 passed, 0 failed, 0 errors, survivors 0", "log": "C:/t/vis-runs/logs/model-unit-2.log"}
+ ],
+ "proofs": [
+  {
+   "label": "model-proof-1",
+   "what": "for all 152 q=true runs in C:/t/ev-cm/runlist.json (read only): big0 = big_from_run(dir); big0.base == file; view(big0, DEFAULT) and view(big0, FULL) == base and json.dumps identical; paper-only stats",
+   "result": "identity 152/152; paper-only new dangling references 0 (139 references already unresolved in the base, unchanged); survivors 0",
+   "reactions": "621 total; kinds present: paper 612, curation 26, other_paper 2; kind sets: paper 593, curation+paper 19, curation 7, other_paper 2",
+   "paper_only_drops": "9 of 621 reactions (612 kept): 7 whose lineage is audit_modified only (introduced by audit/repair, no paper_stated entry), 2 RAG reactions (rag_literature, sources tagged seed_paper / PMC12421875); 10 of 1079 processes overall; 45 of 6326 rows overall",
+   "unclassified_rows": "576 rows with no positive provenance (482 entity rows, mostly subcellular locations without lineage or evidence; 93 states; 1 process)",
+   "summary": "docs/vision/evidence/V1/identity_152.json",
+   "log": "C:/t/vis-runs/logs/model-proof-1.log"
+  }
+ ],
+ "dead_ends": [
+  "first test run lost the heavy-lock race (bw.sh checks the lock, then bounded_run acquires it; another holder took it in between). Re-ran as model-unit-2"
+ ],
+ "open_questions": [
+  "unresolved/excluded lineage is mapped to kind 'unclassified' with the origin in note (per brief). If downstream wants them as their own kinds, it is a one-line change in ORIGIN_KIND",
+  "7 audit-only reactions are dropped by paper-only although they carry an evidence quote. Conservative by the mapping; V7 faithfulness could check whether their quotes are in the paper",
+  "paper-only passes reaction_order through unchanged, so it can name reactions the view dropped (brief: other top-level keys unchanged). Consumers look reactions up by name and tolerate misses; prune it if V6 needs that"
+ ]
+}
