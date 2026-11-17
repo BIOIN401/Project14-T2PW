@@ -199,3 +199,107 @@ def test_l5_an_interaction_whose_endpoint_complex_cannot_be_written_is_kept_as_a
     assert row["origin"] == "export_quarantine"
     assert "LONP1 degrades ALAS1" in {w["name"] for w in build.withheld_interactions}
     assert "LONP1 degrades ALAS1" not in {r["name"] for r in ir["processes"]["interactions"]}
+
+
+# ── Review round 2 ──────────────────────────────────────────────────────────
+
+
+def _drop_on_first_prune(monkeypatch, bucket: str, name: str) -> None:
+    """Remove ``name`` from ``bucket`` behind closure's back, once (as test_strict_quarantine's backstop test)."""
+
+    from t2pw.pipeline import strict_quarantine as sq
+
+    real = sq._prune_entities
+    calls = {"n": 0}
+
+    def prune(payload, keep_norms):
+        removed = real(payload, keep_norms)
+        calls["n"] += 1
+        if calls["n"] == 1:
+            payload["entities"][bucket] = [r for r in payload["entities"][bucket] if r.get("name") != name]
+        return removed
+
+    monkeypatch.setattr(sq, "_prune_entities", prune)
+
+
+def test_l5_an_actor_lost_during_closure_leaves_the_reaction_not_the_reaction_itself(monkeypatch) -> None:
+    """Review F6. Closure's backstop quarantined a surviving reaction whole (``stranded_by_closure``) when only
+    its enzyme stopped resolving. Now, as at admission, the reaction stays and loses only that actor."""
+
+    _drop_on_first_prune(monkeypatch, "protein_complexes", f"{ENZYME} complex")
+    result = quarantine_and_close(_sphingolipid(), strict_db=True, mode="pathwhiz")
+    assert _omitted_names(result) == []
+    reaction = _reaction(result, "ceramide synthase reaction")
+    assert reaction["enzymes"] == [] and reaction["modifiers"] == []
+    assert reaction["inputs"] == ["Sphinganine"] and reaction["outputs"] == ["dihydroceramide"]
+    drops = [(r["bucket"], r["name"], r["reason"], r["detail"]["gate"])
+             for r in result.removed_entity_report["removed_entities"] if r["bucket"] in ("enzymes", "modifiers")]
+    assert drops == [
+        ("enzymes", f"{ENZYME} complex", "unresolved_actor_in_enzymes", "strict_quarantine_closure"),
+        ("modifiers", f"{ENZYME} complex", "unresolved_actor_in_modifiers", "strict_quarantine_closure"),
+    ]
+    assert "omitted_from_pwml:0_processes+2_actors" in result.quarantine_report["release"]["reasons"]
+
+
+def _with_unidentified_regulator() -> Dict[str, Any]:
+    payload = _sphingolipid()
+    payload["entities"]["proteins"].append({"name": "unidentified regulator", "species": "Homo sapiens"})
+    payload["processes"]["reactions"][1]["modifiers"].append(
+        {"entity": "unidentified regulator", "entity_type": "protein", "role": "inhibitor"})
+    return payload
+
+
+def test_l5_a_dropped_actor_stays_in_the_frozen_payload_as_a_withheld_record() -> None:
+    """Review F4 (idx 44 PLP): an actor a kept reaction loses is recorded in the payload itself
+    (``withheld_reaction_actors``), so final_mapped.json and the clean model / SBML keep it, not only
+    removed_entity_report.json."""
+
+    from t2pw.clean_model.builder import build_from_payload
+
+    payload = _sphingolipid()
+    payload["entities"]["compounds"].append({"name": "pyridoxal 5'-phosphate"})
+    payload["element_locations"]["compound_locations"].append(
+        {"compound": "pyridoxal 5'-phosphate", "biological_state": "ER state"})
+    plp = {"entity": "pyridoxal 5'-phosphate", "role": "cofactor"}
+    payload["processes"]["reactions"][1]["modifiers"].append(deepcopy(plp))
+    result = quarantine_and_close(payload, strict_db=True, mode="pathwhiz")
+    (held,) = result.payload["withheld_reaction_actors"]
+    assert (held["reaction"], held["slots"], held["name"], held["reason"], held["actor"], held["decision"]) == (
+        "ceramide synthase reaction", ["modifiers"], "pyridoxal 5'-phosphate", "non_protein_actor_in_modifiers",
+        plp, "D-W24 3")
+    model = build_from_payload(result.payload)
+    assert ("reaction_actor", "pyridoxal 5'-phosphate", "non_protein_actor_in_modifiers") in {
+        (r.kind, r.name, r.reason) for r in model.removed}
+    # A payload that lost no actor is unchanged by this field.
+    assert "withheld_reaction_actors" not in quarantine_and_close(_sphingolipid(), strict_db=True).payload
+
+
+def test_l5_a_reaction_that_leaves_after_losing_an_actor_keeps_that_actor_in_its_original(monkeypatch) -> None:
+    """Review F5. Admission drops an actor from an accepted reaction; if the reaction later leaves anyway, its
+    ``original_process`` is the row as it arrived (actor included), not the edited one. A reaction that left
+    is not listed as having withheld an actor (F4)."""
+
+    _drop_on_first_prune(monkeypatch, "compounds", "dihydroceramide")
+    result = quarantine_and_close(_with_unidentified_regulator(), strict_db=True, mode="pathwhiz")
+    (record,) = result.quarantine_report["quarantined"]
+    assert record["name"] == "ceramide synthase reaction"
+    assert record["reason"].startswith("stranded_by_closure:")
+    assert "unidentified regulator" in [a["entity"] for a in record["original_process"]["modifiers"]]
+    assert "withheld_reaction_actors" not in result.payload
+
+
+def test_l5_the_quarantine_report_records_the_wrappers_it_built() -> None:
+    """Review F7 (PRODUCT_CONTRACT section 3): which bare enzyme the quarantine wrapped, into what, for which
+    reactions, and on what basis."""
+
+    result = quarantine_and_close(_sphingolipid(), strict_db=True, mode="pathwhiz")
+    assert result.quarantine_report["schema_version"] == 7
+    (row,) = result.quarantine_report["enzyme_wrappers"]
+    assert (row["protein"], row["protein_complex"], row["built_here"], row["reactions"], row["decision"]) == (
+        ENZYME, f"{ENZYME} complex", True, ["ceramide synthase reaction"], "D-W24 3")
+    assert (row["stage"], row["origin"], row["paper_explicit"]) == ("quarantine", "inferred", "not_evaluated")
+    # No lineage written on the row: that would switch on the support gate's archival guard.
+    (wrapper,) = result.payload["entities"]["protein_complexes"]
+    assert not wrapper.get("provenance_lineage")
+    assert quarantine_and_close(_sphingolipid(), strict_db=True, mode="research").quarantine_report[
+        "enzyme_wrappers"] == []
