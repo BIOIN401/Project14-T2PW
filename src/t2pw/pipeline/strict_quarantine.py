@@ -223,7 +223,10 @@ DEFAULT_MIN_CORE_COVERAGE = 0.5
 #: the old rules authorize an export judged by the new ones.
 #: 2026-10-25.1 (ORCH-773): per-row export failures are omitted, not refused.
 #: 2026-10-26.1 (ORCH-780): the no-support refusal omits its unsupported reactions instead (D-116).
-QUARANTINE_POLICY_VERSION = "2026-10-26.1"
+#: 2026-11-15.1 (L5, D-W24 item 3): a reaction is never omitted for its enzyme/modifier. A bare protein
+#: enzyme takes the Stage-6 single-protein wrapper; an actor that still cannot be written leaves the
+#: reaction, which stays and is flagged.
+QUARANTINE_POLICY_VERSION = "2026-11-15.1"
 
 
 def _canonical_requested_core(
@@ -1409,30 +1412,48 @@ def _actor_verdict(
     only).
     """
 
+    for _slot, _position, verdict in _failing_actors(bucket, process, registry, strict_db=strict_db):
+        return verdict
+    return None
+
+
+def _failing_actors(
+    bucket: str,
+    process: Mapping[str, Any],
+    registry: _Registry,
+    *,
+    strict_db: bool,
+) -> List[Tuple[str, int, Tuple[str, str, str]]]:
+    """Every unusable actor as ``(slot, position, verdict)``, in slot order; ``_actor_verdict`` is the first."""
+
+    failing: List[Tuple[str, int, Tuple[str, str, str]]] = []
     for slot in _ACTOR_SLOTS.get(bucket, ()):
-        for actor in _safe_list(process.get(slot)):
+        for position, actor in enumerate(_safe_list(process.get(slot))):
+            verdict: Optional[Tuple[str, str, str]] = None
             name = _actor_name(actor) if not isinstance(actor, str) else _canonical(actor)
+            ambiguous = registry.ambiguous(name) if name else ()
+            resolved = registry.resolve(name) if name else None
             if not name:
-                return (QUARANTINED_BROKEN_REFERENCE, f"unnamed_actor_in_{slot}", "")
-            ambiguous = registry.ambiguous(name)
-            if ambiguous:
-                return (
+                verdict = (QUARANTINED_BROKEN_REFERENCE, f"unnamed_actor_in_{slot}", "")
+            elif ambiguous:
+                verdict = (
                     QUARANTINED_BROKEN_REFERENCE,
                     f"ambiguous_entity_type:{'+'.join(ambiguous)}",
                     name,
                 )
-            resolved = registry.resolve(name)
-            if resolved is None:
-                return (QUARANTINED_BROKEN_REFERENCE, f"unresolved_actor_in_{slot}", name)
-            if isinstance(actor, dict) and _normalize(name) not in registry.protein_norms:
-                return (QUARANTINED_BROKEN_REFERENCE, f"non_protein_actor_in_{slot}", name)
-            entity_bucket, row = resolved
-            ok, reason = _entity_representability(
-                entity_bucket, row, registry, strict_db=strict_db
-            )
-            if not ok:
-                return (QUARANTINED_UNMAPPED_ENTITY, reason, name)
-    return None
+            elif resolved is None:
+                verdict = (QUARANTINED_BROKEN_REFERENCE, f"unresolved_actor_in_{slot}", name)
+            elif isinstance(actor, dict) and _normalize(name) not in registry.protein_norms:
+                verdict = (QUARANTINED_BROKEN_REFERENCE, f"non_protein_actor_in_{slot}", name)
+            else:
+                ok, reason = _entity_representability(
+                    resolved[0], resolved[1], registry, strict_db=strict_db
+                )
+                if not ok:
+                    verdict = (QUARANTINED_UNMAPPED_ENTITY, reason, name)
+            if verdict is not None:
+                failing.append((slot, position, verdict))
+    return failing
 
 
 def _scope_is_out_of_scope(process: Mapping[str, Any]) -> bool:
@@ -1670,17 +1691,22 @@ def _admit_processes(
     core_terms: Sequence[str],
     confidence_floor: Optional[float],
     forced: Optional[Mapping[Tuple[str, int], Tuple[str, str, str]]] = None,
+    actor_drops: Optional[List[Dict[str, Any]]] = None,
 ) -> List[Dict[str, Any]]:
     """One admission record per process, in payload order.
 
     ``forced`` maps ``(bucket, index)`` to a verdict decided before admission
     (ORCH-782: :func:`_split_gene_protein_names`); it only ever quarantines.
 
-    Writes no payload row's biology: it neither adds, removes nor reorders a
-    row, and edits no field any gate, hash or exporter reads. Its one write is
-    the PRODUCT_CONTRACT section 3 attribution the block above describes --
-    ``provenance_lineage`` on the rows it quarantines, appended by a final pass
-    once every record here is final.
+    ``actor_drops`` (a list, strict mode; ``None`` in research, which applies
+    nothing): D-W24 item 3. A reaction that passes every other check but names
+    an enzyme or modifier :func:`_actor_verdict` refuses is kept, and loses only
+    those actors; each is appended there as a removed-entity record carrying the
+    actor verbatim. Otherwise it writes no payload row's biology: it neither
+    adds, removes nor reorders a row, and edits no field any gate, hash or
+    exporter reads. Its one other write is the PRODUCT_CONTRACT section 3
+    attribution the block above describes -- ``provenance_lineage`` on the rows
+    it quarantines, appended by a final pass once every record here is final.
     """
 
     processes = _safe_dict(payload.get("processes"))
@@ -1749,6 +1775,17 @@ def _admit_processes(
                 verdict = _essential_participant_verdict(
                     bucket, process, registry, strict_db=strict_db
                 )
+
+            if verdict is None and bucket == "reactions" and actor_drops is not None:
+                failing = _failing_actors(bucket, process, registry, strict_db=strict_db)
+                for slot, position, (_state, reason, _name) in failing:
+                    actor_drops.append(
+                        _actor_drop_record(pointer, name, slot, _safe_list(process.get(slot))[position], reason,
+                                           "strict_quarantine_admission")
+                    )
+                for slot in dict.fromkeys(slot for slot, _position, _verdict in failing):
+                    gone = {position for s, position, _verdict in failing if s == slot}
+                    process[slot] = [a for i, a in enumerate(_safe_list(process.get(slot))) if i not in gone]
 
             if verdict is None:
                 verdict = _actor_verdict(bucket, process, registry, strict_db=strict_db)
@@ -2592,8 +2629,14 @@ def _revalidate_surviving_processes(
     *,
     strict_db: bool,
     iteration: int,
+    actor_drops: Optional[List[Dict[str, Any]]] = None,
 ) -> List[Dict[str, Any]]:
     """Re-check every surviving process against the shrunken graph.
+
+    ``actor_drops`` (strict mode; ``None`` in research): D-W24 3, as at admission. A
+    surviving reaction whose only failure is an enzyme or modifier keeps itself and
+    loses those actors, each appended there as a removed-entity record; it is never
+    ``stranded_by_closure`` for an actor (L5 review F6).
 
     This is requirement 3's "validate every process reference; repeat until no
     new orphan is produced", and it is a BACKSTOP rather than a routine step.
@@ -2627,9 +2670,18 @@ def _revalidate_surviving_processes(
             newly_quarantined.append(record)
             continue
         process = rows[index]
-        verdict = _essential_participant_verdict(
-            bucket, process, registry, strict_db=strict_db
-        ) or _actor_verdict(bucket, process, registry, strict_db=strict_db)
+        verdict = _essential_participant_verdict(bucket, process, registry, strict_db=strict_db)
+        if verdict is None and bucket == "reactions" and actor_drops is not None:
+            failing = _failing_actors(bucket, process, registry, strict_db=strict_db)
+            for slot, position, (_state, reason, _name) in failing:
+                actor_drops.append(_actor_drop_record(
+                    str(record.get("pointer") or ""), str(record.get("name") or ""), slot,
+                    _safe_list(process.get(slot))[position], reason, "strict_quarantine_closure",
+                ))
+            for slot in dict.fromkeys(slot for slot, _position, _verdict in failing):
+                gone = {position for s, position, _verdict in failing if s == slot}
+                process[slot] = [a for i, a in enumerate(_safe_list(process.get(slot))) if i not in gone]
+        verdict = verdict or _actor_verdict(bucket, process, registry, strict_db=strict_db)
         if verdict is None:
             continue
         _state, reason, participant = verdict
@@ -2929,8 +2981,10 @@ def _degree_zero_exports(
 # attaches to it, by that gate's own test); D-113 section 1's inferred wrapper
 # leaves its reaction's actor list while the paper's catalyst and the reaction
 # stay; and a transport whose transporter fails keeps the transport and loses
-# only that transporter (D-114 AMENDMENT 1 section 2). A reaction whose enzyme
-# fails and an interaction with a failing endpoint still leave whole.
+# only that transporter (D-114 AMENDMENT 1 section 2). A reaction whose enzyme or
+# modifier fails keeps itself and loses only that actor, flagged (D-W24 item 3: the
+# quarantine never deletes a correct reaction). An interaction with a failing
+# endpoint still leaves whole.
 #
 # An omission is kept only when it buys a PWML. Strict mode only (research
 # applies nothing); and if the rounds end on a refusal that names no row, on a
@@ -2976,6 +3030,154 @@ def _cap_release_for_omissions(release: Dict[str, Any], reason: str) -> Dict[str
         record["status"] = REVIEW_REQUIRED
         record["strict_acceptance_eligible"] = False
     return record
+
+
+#: D-W24 item 3: the slots whose failure costs a reaction the actor, never the reaction.
+_REACTION_ACTOR_SLOTS: Tuple[str, ...] = _ACTOR_SLOTS["reactions"]
+REACTION_ACTOR_DECISION = "D-W24 3"
+#: L5 (D-W24 3, orchestrator ruling 2): a payload-level list of the interactions the per-row
+#: pass left out because an endpoint entity cannot be written (idx 76/77: a complex with no
+#: components). The IR emits each as a withheld row with its reason, as L4 withholds rows, so
+#: pwml_ir.json and the withheld side file keep it; it is never drawn.
+WITHHELD_INTERACTIONS_FIELD = "withheld_interactions"
+#: L5 review F4: every enzyme/modifier a kept reaction lost (D-W24 3), as a payload-level record so it stays in
+#: final_mapped.json (and the clean model / our SBML) and not only in removed_entity_report.json. Written only
+#: when non-empty, so a payload that lost no actor is unchanged.
+WITHHELD_REACTION_ACTORS_FIELD = "withheld_reaction_actors"
+
+
+def _actor_drop_record(
+    pointer: str, process_name: str, slot: str, actor: Any, reason: str, gate: str
+) -> Dict[str, Any]:
+    """A removed-entity record for one actor a kept reaction lost (D-W24 3), the actor verbatim."""
+
+    name = (_actor_name(actor) if not isinstance(actor, str) else _canonical(actor)) or "<unnamed>"
+    removed_from = {"process": pointer, "process_name": process_name, "slots": [slot],
+                    "decision": REACTION_ACTOR_DECISION}
+    return {
+        "bucket": slot,
+        "name": name,
+        "reason": reason,
+        "had_external_identity": None,
+        "detail": {
+            **scrub_detail({"gate": gate, "omission": "reaction_actor_dropped_reaction_kept",
+                            "actor_removed_from": [removed_from]}),
+            "actor": deepcopy(actor),
+        },
+    }
+
+
+def _wrap_bare_reaction_enzymes(working: Dict[str, Any]) -> List[Dict[str, Any]]:
+    """D-W24 3: give a bare-protein reaction enzyme its PathWhiz complex instead of losing the reaction.
+
+    PathWhiz takes a ProteinComplex as a reaction enzyme, never a bare protein
+    (``reaction_enzyme_must_be_protein_complex``). Stage 6 normally wraps every
+    one; a payload that reaches this boundary with one still bare (an older
+    payload, or a protein identified after Stage 6's wrapper ran) is wrapped here
+    by that same Stage-6 function, offline (no DB, no cache: a single-protein
+    wrapper, ``generated``/``single_protein_pathwhiz_wrapper``), and only for a
+    protein with a database identity, the one kind that wrapper accepts. Anything
+    it leaves bare is dropped from the reaction by the per-actor rule, never the
+    reaction. Upstream of the freeze, so PRODUCT_CONTRACT section 5 holds.
+
+    Returns one record per protein asked to wrap (protein, the complex its actors now
+    name, the reactions that named it, its section 3 facts), for
+    ``quarantine_report["enzyme_wrappers"]`` (L5 review F7). No lineage entry is written on the
+    wrapper row: on a payload with no lineage anywhere that one entry would switch on the
+    reaction-support gate's archival guard (``reaction_support.lineage_carrier_active``) and could
+    turn an ``indeterminate`` support verdict into a refusal.
+    """
+
+    from t2pw.mapping import map_ids
+
+    bare = wrappable_bare_enzymes(working)
+    if not bare:
+        return []
+    named_by: Dict[str, List[str]] = {norm: [] for norm in bare}
+    for reaction in _safe_list(_safe_dict(working.get("processes")).get("reactions")):
+        if isinstance(reaction, dict):
+            for slot in _REACTION_ACTOR_SLOTS:
+                for actor in _safe_list(reaction.get(slot)):
+                    norm = map_ids._normalize_name(map_ids._reaction_actor_name_and_type(
+                        actor if isinstance(actor, dict) else {"entity": actor})[0])
+                    if norm in named_by and _row_name(reaction) not in named_by[norm]:
+                        named_by[norm].append(_row_name(reaction))
+    complexes_before = {
+        id(row) for row in _safe_list(_safe_dict(working.get("entities")).get("protein_complexes"))
+    }
+    map_ids._rewrite_reaction_protein_enzymes_to_complexes(
+        working,
+        db=None,
+        cache=map_ids.MappingCache(Path("."), enabled=False),  # disabled: never read or written
+        global_organism="",
+        only_proteins=set(bare),
+    )
+    complexes = {
+        map_ids._normalize_name(_row_name(row)): row
+        for row in _safe_list(_safe_dict(working.get("entities")).get("protein_complexes"))
+        if isinstance(row, dict)
+    }
+    records: List[Dict[str, Any]] = []
+    for norm, name in sorted(bare.items(), key=lambda item: item[1]):
+        wrapper = complexes.get(map_ids._normalize_name(map_ids._wrapper_complex_name(name)))
+        records.append({
+            "protein": name,
+            "protein_complex": _row_name(wrapper) if wrapper is not None else "",
+            "built_here": wrapper is not None and id(wrapper) not in complexes_before,
+            "reactions": named_by[norm],
+            # PRODUCT_CONTRACT section 3, in the audit record (as Stage 6's own wrapper carries none on the
+            # row): the stage, why, the record it rests on, and that the paper did not state the complex.
+            "stage": "quarantine",
+            "origin": "inferred",
+            "source": "the protein's own database identity (single_protein_pathwhiz_wrapper, offline)",
+            "paper_explicit": "not_evaluated",
+            "decision": REACTION_ACTOR_DECISION,
+        })
+    return records
+
+
+def wrappable_bare_enzymes(working: Mapping[str, Any]) -> Dict[str, str]:
+    """``{normalized name: name}`` of every reaction enzyme/modifier the quarantine will wrap (D-W24 3).
+
+    The one predicate: a bare protein (not also a complex name) with a database identity that is not
+    the PathBank Unknown sentinel. :func:`_wrap_bare_reaction_enzymes` wraps exactly these; lane L6's
+    final-payload merge (``final_payload_merge``), which runs before the quarantine, accepts exactly
+    these as actors that will be written.
+    """
+
+    from t2pw.mapping import map_ids
+
+    entities = _safe_dict(working.get("entities"))
+    protein_rows = {
+        map_ids._normalize_name(_row_name(row)): row
+        for row in _safe_list(entities.get("proteins"))
+        if isinstance(row, dict) and _row_name(row)
+    }
+    complex_norms = {
+        map_ids._normalize_name(_row_name(row))
+        for row in _safe_list(entities.get("protein_complexes"))
+        if isinstance(row, dict)
+    }
+    bare: Dict[str, str] = {}
+    for reaction in _safe_list(_safe_dict(working.get("processes")).get("reactions")):
+        if not isinstance(reaction, dict):
+            continue
+        for slot in _REACTION_ACTOR_SLOTS:
+            for actor in _safe_list(reaction.get(slot)):
+                name, actor_type, _role = map_ids._reaction_actor_name_and_type(
+                    actor if isinstance(actor, dict) else {"entity": actor}
+                )
+                norm = map_ids._normalize_name(name)
+                row = protein_rows.get(norm)
+                if (
+                    row is not None
+                    and actor_type in {"protein", ""}
+                    and norm not in complex_norms
+                    and has_protein_external_identity(row)
+                    and not is_pathbank_unknown_protein(row)
+                ):
+                    bare.setdefault(norm, name)
+    return bare
 
 
 _ROW_POINTER = re.compile(r"^/(processes|entities)/([a-z_]+)/(\d+)(?:/([a-z_]+)/(\d+))?")
@@ -3379,7 +3581,20 @@ def _apply_per_row_failures(
                     actor_removals.append(removal(record, [_TRANSPORTER_SLOT], "D-114 AMENDMENT 1 s2"))
                     actor_drops += 1
                     continue
+                if process_bucket == "reactions" and all(slot in _REACTION_ACTOR_SLOTS for slot, _ in hits):
+                    slots = list(dict.fromkeys(slot for slot, _ in hits))
+                    for slot in slots:
+                        process[slot] = [a for a in _safe_list(process.get(slot)) if not resolves_to(a, row)]
+                    actor_removals.append(removal(record, slots, REACTION_ACTOR_DECISION))
+                    actor_drops += 1
+                    continue
                 slot, ref = next((hit for hit in hits if hit[0] not in _ACTOR_SLOT_NAMES), hits[0])
+                if process_bucket == "interactions":
+                    working.setdefault(WITHHELD_INTERACTIONS_FIELD, []).append(
+                        {"name": str(record.get("name") or ""), "pointer": str(record.get("pointer") or ""),
+                         "reason": reason, "endpoint": name, "slot": slot, "gate": gate,
+                         "row": deepcopy(process)}
+                    )
                 omit(record, QUARANTINED_UNMAPPED_ENTITY, reason, slot, ref, gate, failing)
         # Re-read: the recursion above may already have rewritten this bucket.
         entities[bucket] = [r for r in _safe_list(entities.get(bucket)) if r is not row]
@@ -3476,6 +3691,26 @@ def _apply_per_row_failures(
                 )
             process[_TRANSPORTER_SLOT] = [a for i, a in enumerate(actors) if i not in first_by_position]
             actor_drops += len(first_by_position)
+            continue
+        if record.get("bucket") == "reactions" and all(
+            f["slot"] in _REACTION_ACTOR_SLOTS and f.get("position") is not None for f in group
+        ):
+            # D-W24 3: the reaction stays; the enzymes/modifiers that cannot be written go, flagged.
+            process = process_row(record)
+            first_by_actor: Dict[Tuple[str, int], Mapping[str, Any]] = {}
+            for f in group:
+                if f["position"] < len(_safe_list(process.get(f["slot"]))):
+                    first_by_actor.setdefault((f["slot"], f["position"]), f)
+            for (slot, position), f in sorted(first_by_actor.items()):
+                removed.append(_actor_drop_record(
+                    str(record.get("pointer") or ""), str(record.get("name") or ""), slot,
+                    _safe_list(process.get(slot))[position], f["reason"], f["gate"],
+                ))
+            for slot in dict.fromkeys(slot for slot, _position in sorted(first_by_actor)):
+                process[slot] = [
+                    a for i, a in enumerate(_safe_list(process.get(slot))) if (slot, i) not in first_by_actor
+                ]
+            actor_drops += len(first_by_actor)
             continue
         first = group[0]
         omit(record, QUARANTINED_BROKEN_REFERENCE, first["reason"], first["slot"], first["name"], first["gate"])
@@ -3593,11 +3828,27 @@ def quarantine_and_close(
     split_omissions = _split_gene_protein_names(working)
     kind_removed, kind_removed_locations = _keep_one_kind_per_name(working)
     kind_removed.extend(_spell_references_canonically(working))
+    # D-W24 3, strict only (research applies nothing and its flags stay as they were).
+    admission_actor_drops: Optional[List[Dict[str, Any]]] = None
+    enzyme_wrappers: List[Dict[str, Any]] = []
+    if not is_research(mode):
+        admission_actor_drops = []
+        enzyme_wrappers = _wrap_bare_reaction_enzymes(working)
+        if enzyme_wrappers:
+            logger.info("quarantine_and_close: wrapped bare reaction enzymes (D-W24 3): %s",
+                        ", ".join(row["protein"] for row in enzyme_wrappers))
     registry = _build_registry(working)
     core_terms = collect_requested_core_terms(
         working, requested_core=requested_core, pathway_context=pathway_context
     )
 
+    # L5 review F5: admission now edits accepted reaction rows (D-W24 3 actor drops), so their originals are
+    # snapshotted BEFORE it. A row admission quarantines is never edited there except for its section 3 lineage
+    # entry, which its original keeps (taken after admission, as before).
+    before_admission = {
+        bucket: deepcopy(_safe_list(_safe_dict(working.get("processes")).get(bucket)))
+        for bucket in _PROCESS_KIND_BY_BUCKET
+    }
     admissions = _admit_processes(
         working,
         registry,
@@ -3605,7 +3856,9 @@ def quarantine_and_close(
         core_terms=core_terms,
         confidence_floor=confidence_floor,
         forced=split_omissions,
+        actor_drops=admission_actor_drops,
     )
+    kind_removed.extend(admission_actor_drops or [])
     # The audit artifact keeps the row itself, not a digest: requirement 2 says
     # the original process is retained, and a reviewer restoring one needs the
     # participants back, not a summary of them.
@@ -3614,7 +3867,11 @@ def quarantine_and_close(
     for record in admissions:
         bucket = str(record.get("bucket") or "")
         index = int(record.get("index") or 0)
-        rows = _safe_list(processes_in.get(bucket))
+        rows = (
+            _safe_list(processes_in.get(bucket))
+            if record.get("state") in QUARANTINE_STATES
+            else before_admission.get(bucket) or []
+        )
         if 0 <= index < len(rows):
             originals[(bucket, index)] = deepcopy(rows[index])
 
@@ -3629,7 +3886,10 @@ def quarantine_and_close(
     converged = False
     # ORCH-773: once closure settles, a per-row omission round (see the section
     # above _freeze_candidate). ``rollback`` is the state before the first one.
-    actor_drop_count = 0
+    # Admission's and closure's own actor drops (D-W24 3) are not part of any per-row round, so a rollback keeps
+    # every drop made before it was taken.
+    actor_drop_count = len(admission_actor_drops or [])
+    rollback_drop_count = actor_drop_count
     rollback: Optional[Tuple[Any, ...]] = None
 
     for iteration in range(1, int(max_iterations) + 1):
@@ -3669,9 +3929,12 @@ def quarantine_and_close(
         removed_entities = _prune_entities(working, keep_norms)
         registry = _build_registry(working)
         removed_locations = _prune_locations(working, set(registry.norms), locations_own_kind_at_input)
+        closure_drops: Optional[List[Dict[str, Any]]] = None if is_research(mode) else []
         newly_quarantined = _revalidate_surviving_processes(
-            working, admissions, registry, strict_db=strict_db, iteration=iteration
+            working, admissions, registry, strict_db=strict_db, iteration=iteration, actor_drops=closure_drops
         )
+        removed_entities.extend(closure_drops or [])
+        actor_drop_count += len(closure_drops or [])
         removed_states = _prune_biological_states(working, admissions)
         # ORCH-766 / D-111 section 1. Last: it reads what every prune above left.
         # Recorded with the entity removals, the degree-zero rows' own record.
@@ -3711,6 +3974,7 @@ def quarantine_and_close(
                         (working, admissions, iterations, all_removed_entities,
                          all_removed_locations, all_removed_states)
                     )
+                    rollback_drop_count = actor_drop_count
                 omitted, removed, drops = _apply_per_row_failures(failures, working, admissions, iteration=iteration)
                 actor_drop_count += drops
                 changed = bool(omitted or removed)
@@ -3724,7 +3988,7 @@ def quarantine_and_close(
                 # The omissions did not buy a PWML: undo every round.
                 (working, admissions, iterations, all_removed_entities,
                  all_removed_locations, all_removed_states) = rollback
-                actor_drop_count = 0
+                actor_drop_count = rollback_drop_count
                 changed = False
         if not changed:
             converged = True
@@ -3734,7 +3998,7 @@ def quarantine_and_close(
         # The iteration cap ran out after an omission round: undo every round.
         (working, admissions, iterations, all_removed_entities,
          all_removed_locations, all_removed_states) = rollback
-        actor_drop_count = 0
+        actor_drop_count = rollback_drop_count
         converged = True
 
     if not converged:
@@ -3748,6 +4012,28 @@ def quarantine_and_close(
     # reach it, never written to after: it is the only surviving record of which
     # row each accepted record was written for.
     process_snapshot: Dict[str, Any] = deepcopy(_safe_dict(working.get("processes")))
+    # F4: only for a reaction that is still drawn; one that left later keeps its actors in its original_process.
+    kept_pointers = {str(r.get("pointer") or "") for r in admissions if r.get("state") in ACCEPTED_STATES}
+    withheld_actors = [
+        {
+            "reaction": removed_from.get("process_name"),
+            "pointer": removed_from.get("process"),
+            "slots": removed_from.get("slots"),
+            "actor": _safe_dict(row.get("detail")).get("actor", row.get("name")),
+            "name": row.get("name"),
+            "reason": row.get("reason"),
+            "gate": _safe_dict(row.get("detail")).get("gate"),
+            "decision": REACTION_ACTOR_DECISION,
+        }
+        for row in all_removed_entities
+        for removed_from in _safe_list(_safe_dict(row.get("detail")).get("actor_removed_from"))
+        if isinstance(removed_from, dict) and removed_from.get("decision") == REACTION_ACTOR_DECISION
+        and removed_from.get("process") in kept_pointers
+    ]
+    if withheld_actors and not is_research(mode):
+        # A payload quarantined again (an edit after review) keeps the records of its first pass.
+        held = _safe_list(working.get(WITHHELD_REACTION_ACTORS_FIELD))
+        working[WITHHELD_REACTION_ACTORS_FIELD] = held + [row for row in withheld_actors if row not in held]
     _drop_quarantined_processes(working, admissions)
     lock_accounting = _reconcile_locked_reactions(working, admissions, originals)
 
@@ -4116,7 +4402,11 @@ def quarantine_and_close(
         # anything. What it buys: ``semantic_evaluation: "passed"`` on this
         # report could not previously be told apart from a four-of-four pass,
         # and here it is never four of four.
-        "schema_version": 6,
+        #
+        # 7 (L5, D-W24 3, review F7): ONE key, ``enzyme_wrappers`` -- a list, empty unless the
+        # quarantine wrapped a bare-protein reaction enzyme. Additive as 4-6 were.
+        "schema_version": 7,
+        "enzyme_wrappers": enzyme_wrappers,
         "stage": "pre_export_strict_quarantine",
         "strict_db": bool(strict_db),
         "export_mode": coerce_mode(mode),

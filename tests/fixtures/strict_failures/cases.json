@@ -685,20 +685,18 @@
         "release_status": "review_required",
         "strict_acceptance_eligible": false,
         "review_reasons": [
-          "omitted_from_pwml:1_processes+0_actors"
+          "omitted_from_pwml:0_processes+1_actors"
         ],
         "release_status_note": "ORCH-773 round 1 (orchestrator reading of D-114 s2): a process omitted from the frozen record caps release_ready at review_required. Was release_ready, eligible true, review_reasons [].",
         "refusal_reasons": [],
-        "quarantined": {
-          "OPDA reduction": "quarantined_unmapped_entity"
-        },
-        "surviving_reactions": 2,
+        "quarantined": {},
+        "surviving_reactions": 3,
         "removed_entities": [
-          "OPDA",
-          "OPC-8:0",
+          "OPR3 complex",
           "OPR3",
           "OPR3 complex"
-        ]
+        ],
+        "l5_note": "D-W24 3 / L5: 'OPDA reduction' is kept and loses only its unexportable enzyme 'OPR3 complex' (removed_entities: that actor row, then the complex and OPR3 at degree zero). Was: the reaction quarantined, review_reasons 1_processes+0_actors, 2 surviving reactions, OPDA and OPC-8:0 removed."
       }
     },
     {
