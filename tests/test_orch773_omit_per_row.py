@@ -393,20 +393,40 @@ def test_preservation_a_whole_pathway_refusal_still_refuses_and_nothing_is_omitt
     assert _refusals(result) == ["required:no_defensible_reaction_support"]
 
 
-def test_preservation_omissions_that_buy_no_pwml_are_rolled_back() -> None:
-    """The bare-enzyme leg with its pathway species stripped of every identity: the required-field gate
-    names the LDH reaction AND the species, a whole-pathway requirement. Omitting LDH would still leave no
-    PWML, so nothing is omitted and both refusals stand, exactly as at base."""
+def _per_row_rounds(monkeypatch) -> List[List[str]]:
+    """The process names each per-row omission round omitted, before any rollback (L5 review F9: proves an
+    omission was really attempted, so "nothing is omitted" is a rollback and not a round that never ran)."""
 
-    payload, context = _leg("runs_verify_2026-08-21_2057_PMC12096016")
+    from t2pw.pipeline import strict_quarantine as sq
+
+    real, rounds = sq._apply_per_row_failures, []
+
+    def spy(failures, working, admissions, *, iteration):
+        omitted, removed, drops = real(failures, working, admissions, iteration=iteration)
+        rounds.append([str(row.get("name")) for row in omitted])
+        return omitted, removed, drops
+
+    monkeypatch.setattr(sq, "_apply_per_row_failures", spy)
+    return rounds
+
+
+def test_preservation_omissions_that_buy_no_pwml_are_rolled_back(monkeypatch) -> None:
+    """The EntB leg (``test_g9_unexportable_component_*``) with its pathway species stripped of every
+    identity. The per-row round omits the interaction whose endpoint is the unexportable complex (a process
+    slot, not an actor); the next round then meets the species, a whole-pathway requirement that names no
+    row. The omission bought no PWML, so it is rolled back: nothing is omitted and the refusal stands.
+
+    L5 review F9: this leg replaces the bare-LDH leg, whose only per-row failure was its enzyme -- which
+    D-W24 3 now wraps -- so on that leg no omission was ever attempted and the test could not fail."""
+
+    payload, context = _leg("ORCH-755_enterobactin-strict_2026-10-20_2201")
     for key in ("pathbank_species_id", "pw_species_id", "pathwhiz_id", "species_id", "taxonomy_id", "taxonomy-id"):
         payload["entities"]["species"][0].pop(key, None)
+    rounds = _per_row_rounds(monkeypatch)
     result = _quarantine(payload, context)
-    assert _omitted(result) == [] and _removed(result) == []
-    refusals = _refusals(result)
-    # D-W24 3 / L5: the bare LDH enzyme is wrapped first, so only the species refusal (names no row) stands.
-    assert "required:reaction_enzyme_must_be_protein_complex" not in refusals
-    assert "required:species_missing_taxonomy" in refusals
+    assert rounds == [["2,3-DHB competitive inhibition of EntB"]]  # attempted ...
+    assert _omitted(result) == [] and _removed(result) == []  # ... and rolled back
+    assert _refusals(result) == ["quarantine:unexportable_entity:1"]
 
 
 def test_preservation_a_passing_leg_is_untouched() -> None:
@@ -427,20 +447,29 @@ def test_preservation_research_mode_omits_nothing() -> None:
     assert _omitted(result) == [] and _removed(result) == []
 
 
-def test_preservation_an_omission_that_would_leave_nothing_is_rolled_back() -> None:
-    """Every reaction of this toy fails Stage 8 (no ``entity_type``) and the required-field gate (bare protein
-    enzymes). Omitting them all would leave an empty graph, so nothing is omitted: the export's own gate
-    refuses, exactly as at base."""
+def test_preservation_an_omission_that_would_leave_nothing_is_rolled_back(monkeypatch) -> None:
+    """Every reaction of this toy fails the required-field gate on a row of its own: the toy carries lineage
+    (one compound) and no reaction has defensible support, so ``no_defensible_reaction_support`` names every
+    reaction (D-116 s1). Omitting them all would leave an empty graph, so nothing is omitted: the export's own
+    gate refuses.
 
+    L5 review F9: the toy's old failure was its bare-protein enzymes (Stage 8, an actor), which D-W24 3 now
+    wraps, so no omission was ever attempted; the support gate is a failure of the reaction itself."""
+
+    from t2pw.pipeline import lineage
     from test_strict_quarantine import _glutathione_payload
 
-    result = _quarantine(_glutathione_payload(), None)
-    assert _omitted(result) == [] and _removed(result) == []
+    payload = _glutathione_payload()
+    lineage.record(payload["entities"]["compounds"][0], lineage.LineageEntry(
+        stage="normalization", origin="inferred", support="derived", paper_explicit="not_evaluated",
+        reason="lineage carrier present (L5 F9 fixture)", review_required=False))
+    rounds = _per_row_rounds(monkeypatch)
+    result = _quarantine(payload, None)
+    assert rounds == [["gamma-glutamylcysteine synthesis", "glutathione synthesis"]]  # attempted ...
+    assert _omitted(result) == [] and _removed(result) == []  # ... and rolled back
     assert [row["state"] for row in result.admissions] == ["core_accepted", "core_accepted"]
     assert result.ok
-    # D-W24 3 / L5: the bare enzymes now take their wrappers (entity_type protein_complex), so Stage 8 passes and
-    # the first refusal is the toy's species, a whole-pathway requirement that still names no row.
-    assert _refusals(result)[0].startswith("required:species_missing_classification")
+    assert "required:no_defensible_reaction_support" in _refusals(result)
 
 
 # ── NEW acceptance test (no base failure claimed) ──────────────────────────

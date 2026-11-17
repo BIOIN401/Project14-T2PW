@@ -189,8 +189,27 @@ def _add_unmapped_modifier(payload: Dict[str, Any], reaction: Dict[str, Any], pr
     )
 
 
-def _payload_with_one_bad_peripheral() -> Dict[str, Any]:
-    """Two exportable core reactions plus one peripheral reaction that is not."""
+def _add_unmapped_participant(payload: Dict[str, Any], reaction: Dict[str, Any], protein: str) -> None:
+    """Attach a declared-but-unidentified protein as a PRODUCT of ``reaction`` (L5 review F9).
+
+    D-W24 3 keeps a reaction whose only defect is an enzyme or modifier (it loses that actor), so the
+    tests that are about a reaction the quarantine REMOVES need a participant defect: a reaction cannot
+    be drawn without one of its own products. The protein fails the same Stage 3 identity check as
+    :func:`_add_unmapped_modifier`'s. An OUTPUT, because ``normalize_process_payload`` promotes a protein
+    INPUT to a catalytic modifier on its way past (``catalyst_promoted_to_modifier``), which would make it
+    an actor again; the first version of this helper did exactly that.
+    """
+
+    payload["entities"]["proteins"].append({"name": protein, "species": "Homo sapiens"})
+    reaction["outputs"].append(protein)
+
+
+def _payload_with_one_bad_peripheral(*, participant: bool = False) -> Dict[str, Any]:
+    """Two exportable core reactions plus one peripheral reaction that is not.
+
+    ``participant``: its defect is an unidentified product (the reaction leaves), not an unidentified
+    modifier (D-W24 3: the reaction stays without it).
+    """
 
     payload = _core_payload()
     payload["entities"]["compounds"].extend([{"name": "OPDA"}, {"name": "OPC-8:0"}])
@@ -208,7 +227,7 @@ def _payload_with_one_bad_peripheral() -> Dict[str, Any]:
         "biological_state": "cytosol",
     }
     payload["processes"]["reactions"].append(peripheral)
-    _add_unmapped_modifier(payload, peripheral, "OPR3")
+    (_add_unmapped_participant if participant else _add_unmapped_modifier)(payload, peripheral, "OPR3")
     return payload
 
 
@@ -237,8 +256,10 @@ def _payload_with_no_viable_core() -> Dict[str, Any]:
             "biological_state": "cytosol",
         }
     )
+    # L5 review F9: an unidentified PRODUCT, so each core reaction really is unexportable (an unidentified
+    # modifier only leaves its reaction under D-W24 3, and the core would survive).
     for index, reaction in enumerate(payload["processes"]["reactions"][:2]):
-        _add_unmapped_modifier(payload, reaction, f"unmappable regulator {index}")
+        _add_unmapped_participant(payload, reaction, f"unmappable product {index}")
     return payload
 
 
@@ -672,13 +693,15 @@ def test_a_run_with_no_viable_core_is_refused_at_the_boundary() -> None:
     # The shortfall is still raised and still named -- it moved out of the
     # blocking list, it did not disappear.
     assert report["refusal_reasons"] == []
-    # D-W24 3 / L5: the two core reactions are no longer unexportable -- each loses only its unmappable
-    # regulator -- so the core is satisfied and the release is review_required for the dropped actors, never
-    # success. The unrelated-survivor protection itself is pinned by test_strict_failure_replay
-    # (only_unrelated_reactions_survive), which this change does not move.
-    assert report["review_reasons"] == ["omitted_from_pwml:0_processes+2_actors"]
-    assert report["coverage"]["core_accepted_processes"] == 2
-    assert report["coverage"]["surviving_processes"] == 3
+    assert any(
+        reason.startswith("minimum_core:core_process_count_below_minimum")
+        for reason in report["review_reasons"]
+    )
+    # And the surviving fragment really is the unrelated one: nothing was
+    # admitted to make coverage pass. (L5 review F9: the core reactions now fail on
+    # an unidentified product, which D-W24 3 does not keep; see the fixture.)
+    assert report["coverage"]["core_accepted_processes"] == 0
+    assert report["coverage"]["surviving_processes"] == 1
 
     # Refinement review now OPENS on the fragment, because there is a fragment to
     # review. That is the behaviour change: the reviewer gets the graph plus the
@@ -703,19 +726,16 @@ def test_the_refusal_still_writes_every_artifact() -> None:
     _run_post_pipeline(_payload_with_no_viable_core())
 
     coverage = _artifact(COVERAGE_REPORT_FILENAME)
-    # D-W24 3 / L5: the core reactions are kept without their unmappable regulators, which are recorded.
-    assert coverage["minimum_core_satisfied"] is True
-    assert coverage["core_accepted_processes"] == 2
+    assert coverage["minimum_core_satisfied"] is False
+    assert coverage["core_accepted_processes"] == 0
     report = _artifact(QUARANTINE_REPORT_FILENAME)
     assert report["ok"] is True
     assert report["release"]["status"] == "review_required"
     assert report["release"]["strict_acceptance_eligible"] is False
-    assert report["review_reasons"] == ["omitted_from_pwml:0_processes+2_actors"]
-    assert report["quarantined"] == []
-    assert {(row["name"], row["reason"]) for row in _artifact(REMOVED_ENTITY_REPORT_FILENAME)["removed_entities"]
-            if row["bucket"] == "modifiers"} == {
-        ("unmappable regulator 0", "protein_missing_external_identity"),
-        ("unmappable regulator 1", "protein_missing_external_identity"),
+    assert any(r.startswith("minimum_core:") for r in report["review_reasons"])
+    assert {row["name"] for row in report["quarantined"]} == {
+        "gamma-glutamylcysteine synthesis",
+        "glutathione synthesis",
     }
 
 
@@ -1318,7 +1338,10 @@ def test_one_unmapped_enzyme_reaches_review_in_research_and_is_quarantined_in_st
     exports the rest.
     """
 
-    payload = _payload_with_one_bad_peripheral()
+    # L5 review F9: the peripheral reaction's defect is an unidentified product. An unidentified enzyme
+    # or modifier no longer removes its reaction in strict (D-W24 3: the reaction stays without it), so it
+    # cannot show the pair this test is about.
+    payload = _payload_with_one_bad_peripheral(participant=True)
     research = _run_post_pipeline_research(deepcopy(payload))
     strict = _run_post_pipeline(deepcopy(payload))
 
@@ -1328,11 +1351,9 @@ def test_one_unmapped_enzyme_reaches_review_in_research_and_is_quarantined_in_st
         return [row["name"] for row in working["processes"]["reactions"]]
 
     assert "peripheral OPDA reduction" in _reactions(research)
-    # D-W24 3 / L5: strict keeps the reaction too and removes only the unmapped modifier from it.
-    assert "peripheral OPDA reduction" in _reactions(strict)
+    assert "peripheral OPDA reduction" not in _reactions(strict)
 
-    assert strict.session_state["quarantine_report"]["counts"][QUARANTINED_UNMAPPED_ENTITY] == 0
-    assert strict.session_state["quarantine_report"]["review_reasons"] == ["omitted_from_pwml:0_processes+1_actors"]
+    assert strict.session_state["quarantine_report"]["counts"][QUARANTINED_UNMAPPED_ENTITY] == 1
     research_report = research.session_state["quarantine_report"]
     assert research_report["counts"][QUARANTINED_UNMAPPED_ENTITY] == 1, (
         "research must still MAKE the decision; it just does not apply it"

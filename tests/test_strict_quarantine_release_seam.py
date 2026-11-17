@@ -705,7 +705,7 @@ def test_the_report_schema_is_additive_over_schema_three() -> None:
     # what makes a ``passed`` on this report readable as "three of four gating
     # checks were evaluable" instead of an unqualified pass. Additive again: the
     # containment list below is untouched and still passes.
-    assert report["schema_version"] == 6
+    assert report["schema_version"] == 7  # L5 review F7: + enzyme_wrappers (additive)
     for key in (
         "stage", "strict_db", "export_mode", "policy_version", "admitted_payload_hash",
         "resulting_payload_hash", "decision_inputs", "decision_input_hash", "ok",

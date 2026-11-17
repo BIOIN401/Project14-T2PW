@@ -923,7 +923,7 @@ def test_all_four_artifacts_are_written_even_when_nothing_was_quarantined(tmp_pa
     # ``test_strict_quarantine_release_seam.py:699``. There are TWO pins of this
     # one fact, and this is the second; C-056b moved this same line for its own
     # 4 -> 5 bump (``8eee549``). The record was incomplete, not wrong.
-    assert quarantine["schema_version"] == 6
+    assert quarantine["schema_version"] == 7  # L5 review F7: + enzyme_wrappers (additive)
     assert quarantine["counts"][CORE_ACCEPTED] == 2
     assert quarantine["quarantined"] == []
 
