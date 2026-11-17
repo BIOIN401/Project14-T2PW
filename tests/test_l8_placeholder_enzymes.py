@@ -7,8 +7,8 @@ enzyme is written as the Unknown-backed placeholder complex the Stage-6 fallback
 paper's enzyme, and the reaction and the run are ``review_required``.
 
 7c. PathBank's Unknown protein (9659) was written with species Arabidopsis thaliana in every payload (20 of 26 A1-A4 payloads,
-human ones included). It is now written with no species: PathWhiz binds its existing record 9659 by name and UniProt value
-(``pwml_parser.store_object``: an omitted column is not part of ``find_by``).
+human ones included). The payload, the IR and our clean model now assert no species for it. The PWML keeps its species-id
+4 only as the lookup key that binds record 9659 (review F1: without it PathWhiz binds any of ~2,195 'Unknown' proteins).
 """
 
 from __future__ import annotations
@@ -68,15 +68,42 @@ def test_l8_an_enzyme_without_identity_keeps_its_reaction_as_an_unknown_backed_p
     assert payload == _sphingolipid(uniprot="")  # the input is never mutated
 
 
-def test_l8_the_placeholder_reaches_the_pwml_with_no_species_on_the_unknown_protein() -> None:
+def _asserts_no_species(row: Dict[str, Any]) -> bool:
+    return not {"species", "organism", "species_id", "pathbank_species_id", "taxonomy_id", "species_ref"} & set(row)
+
+
+def test_l8_the_placeholder_reaches_the_pwml_and_its_species_id_is_only_the_9659_lookup_key() -> None:
+    """Review F1: the payload and the IR assert no species for the Unknown protein; the PWML keeps species-id 4, the key
+    that binds PathBank record 9659 (without it PathWhiz binds an arbitrary 'Unknown' protein)."""
     result = quarantine_and_close(_sphingolipid(uniprot=""), strict_db=True, mode="pathwhiz")
+    sentinel = next(p for p in result.payload["entities"]["proteins"] if p["name"] == "Unknown")
+    assert _asserts_no_species(sentinel)
+    assert sentinel["pathwhiz_lookup_species"]["name"] == "Arabidopsis thaliana"
     ir, report, build, root, qa = _export(result.payload)
     enzymes = {r["name"]: [ir_e["entity_key"] for ir_e in r["enzymes"]] for r in ir["processes"]["reactions"]}
     assert len(enzymes[REACTION]) == 1
+    assert _asserts_no_species(next(p for p in ir["entities"]["proteins"] if p["name"] == "Unknown"))
     assert [c.findtext("name") for c in root.iter("protein-complex")] == [ENZYME]
     assert [p.findtext("id") for p in root.iter("protein") if p.findtext("name") == "Unknown"] == ["9659"]
-    assert _protein_species(root, "Unknown") == [None]
-    assert "Arabidopsis thaliana" not in {s.findtext("name") for s in root.iter("species")}
+    assert _protein_species(root, "Unknown") == ["Arabidopsis thaliana"]
+    species = {s.findtext("name"): s.findtext("taxonomy-id") for s in root.iter("species")}
+    assert species["Arabidopsis thaliana"] == "3702"
+    # The complex (the paper's enzyme) keeps the species the pipeline gave it.
+    complex_species = next(c.findtext("species-id") for c in root.iter("protein-complex"))
+    assert {s.findtext("id"): s.findtext("name") for s in root.iter("species")}[complex_species] == "Homo sapiens"
+
+
+def test_l8_with_no_database_the_bare_protein_is_admitted_unchanged() -> None:
+    """Review F4: strict_db=False drops the identity rule; the bare protein stays as it was (no placeholder)."""
+    payload = _sphingolipid(uniprot="")
+    result = quarantine_and_close(deepcopy(payload), strict_db=False, mode="pathwhiz")
+    assert _omitted_names(result) == [] and _actor_drops(result) == []
+    reaction = _reaction(result, REACTION)
+    assert [(a["entity"], a["entity_type"]) for a in reaction["enzymes"]] == [(ENZYME, "protein")]
+    assert ENZYME in {p["name"] for p in result.payload["entities"]["proteins"]}
+    assert "Unknown" not in {p["name"] for p in result.payload["entities"]["proteins"]}
+    assert not [w for w in result.quarantine_report["enzyme_wrappers"] if w["decision"] == "D-W24 7b"]
+    assert "review_required" not in reaction
 
 
 def test_l8_a_stage6_sentinel_loses_its_arabidopsis_species_in_the_final_payload_step() -> None:
@@ -93,12 +120,19 @@ def test_l8_a_stage6_sentinel_loses_its_arabidopsis_species_in_the_final_payload
         {"entity": "dihydroceramide desaturase", "entity_type": "protein_complex", "role": "catalyst"}]
     assert strip_placeholder_species(payload) == ["Arabidopsis thaliana"]
     sentinel = payload["entities"]["proteins"][-1]
-    assert not {"species", "organism", "species_id", "pathbank_species_id", "taxonomy_id"} & set(sentinel)
+    assert _asserts_no_species(sentinel)
+    assert sentinel["pathwhiz_lookup_species"]["taxonomy_id"] == "3702"
+    # our clean model (text record, SBML, web) reads no organism for it
+    from t2pw.clean_model import build_from_payload
+
+    model = build_from_payload(deepcopy(payload), {})
+    unknown = next(p for p in model.proteins if p.name.value == "Unknown")
+    assert unknown.organism.absent and unknown.taxonomy_id.absent
     result = quarantine_and_close(payload, strict_db=True, mode="pathwhiz")
     assert result.ok and _omitted_names(result) == []
-    assert "Arabidopsis thaliana" not in {s["name"] for s in result.payload["entities"]["species"]}
     _ir, _report, _build, root, _qa = _export(result.payload)
-    assert _protein_species(root, "Unknown") == [None]
+    # review F1: the same species-id as before the strip (the lookup key), so the PWML line does not move
+    assert _protein_species(root, "Unknown") == ["Arabidopsis thaliana"]
 
 
 def test_l8_a_sentinel_given_a_species_still_writes_it() -> None:

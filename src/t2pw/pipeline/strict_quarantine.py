@@ -3297,6 +3297,8 @@ def _placeholder_unidentified_enzymes(working: Dict[str, Any]) -> List[Dict[str,
     from t2pw.pipeline.entity_identity import (
         IDENTITY_PLACEHOLDER,
         PATHBANK_UNKNOWN_FALLBACK_RULE,
+        PATHBANK_UNKNOWN_LOOKUP_SPECIES,
+        SENTINEL_LOOKUP_SPECIES_FIELD,
         PATHBANK_UNKNOWN_PROTEIN_ID,
         PATHBANK_UNKNOWN_PROTEIN_NAME,
         PATHBANK_UNKNOWN_PROTEIN_UNIPROT,
@@ -3309,7 +3311,18 @@ def _placeholder_unidentified_enzymes(working: Dict[str, Any]) -> List[Dict[str,
     proteins = entities.setdefault("proteins", [])
     complexes = entities.setdefault("protein_complexes", [])
     if not any(is_pathbank_unknown_protein(row) for row in proteins):
+        # Review F1: the PWML's lookup key for record 9659 needs its species row, as Stage 6 adds it
+        # (map_ids._ensure_unknown_species); the sentinel itself asserts no species.
+        species_rows = entities.setdefault("species", [])
+        key = PATHBANK_UNKNOWN_LOOKUP_SPECIES
+        if not any(isinstance(r, dict) and (_text(r.get("name")) == key["name"]
+                                            or str(r.get("taxonomy_id") or "") == key["taxonomy_id"]) for r in species_rows):
+            species_rows.append({"name": key["name"], "taxonomy_id": key["taxonomy_id"],
+                                 "pathbank_species_id": key["pathbank_species_id"], "species_id": key["pathbank_species_id"],
+                                 "mapping_meta": {"species_resolution": dict(key)}})
         proteins.append({
+            SENTINEL_LOOKUP_SPECIES_FIELD: {
+                **key, "role": "PathWhiz lookup key binding PathBank record 9659; not the enzyme's species (D-W24 7c, L8)"},
             "name": PATHBANK_UNKNOWN_PROTEIN_NAME,
             "pathbank_protein_id": PATHBANK_UNKNOWN_PROTEIN_ID,
             "pw_protein_id": PATHBANK_UNKNOWN_PROTEIN_ID,
@@ -4063,7 +4076,9 @@ def quarantine_and_close(
     if not is_research(mode):
         admission_actor_drops = []
         # D-W24 7b (L8): first, so a protein with no identity is a placeholder complex before anything else reads it.
-        enzyme_wrappers = _placeholder_unidentified_enzymes(working) + _wrap_bare_reaction_enzymes(working)
+        # strict_db only (review F4): without the DB the identity rule does not apply and the bare protein is admitted as is.
+        enzyme_wrappers = (_placeholder_unidentified_enzymes(working) if strict_db else []) \
+            + _wrap_bare_reaction_enzymes(working)
         if enzyme_wrappers:
             logger.info("quarantine_and_close: wrapped bare reaction enzymes (D-W24 3): %s",
                         ", ".join(row["protein"] for row in enzyme_wrappers))

@@ -320,9 +320,15 @@ def protein_species_context(row: Any) -> Any:
     return value
 
 
-#: D-W24 7c (L8): PathBank's Unknown protein (9659) carries no species of its own; the PWML gives it none and PathWhiz binds
-#: the existing record by name and UniProt value. The gates that require a protein species accept it on this value.
+#: D-W24 7c (L8): PathBank's Unknown protein (9659) carries no species in the payload, the text record, our SBML or the
+#: IR. The gates that require a protein species accept it on this value.
 PATHBANK_UNKNOWN_SPECIES_CONTEXT = "PathBank Unknown record (no species asserted)"
+#: L8 review F1: the PWML still needs a species-id on that protein, ONLY as the lookup key that binds PathBank record 9659
+#: (production has ~2,195 proteins named 'Unknown' with UniProt 'Unknown'; without the species PathWhiz binds an arbitrary
+#: one, and an empty database refuses a new protein without a species). The key is kept on the row under this field, which
+#: no biology reader reads; the writer reads it.
+SENTINEL_LOOKUP_SPECIES_FIELD = "pathwhiz_lookup_species"
+PATHBANK_UNKNOWN_LOOKUP_SPECIES = {"name": "Arabidopsis thaliana", "pathbank_species_id": 4, "taxonomy_id": "3702"}
 
 
 def is_generated_complex_wrapper(row: Any) -> bool:

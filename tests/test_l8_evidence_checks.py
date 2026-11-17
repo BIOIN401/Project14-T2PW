@@ -164,6 +164,10 @@ def test_l8_only_a_contradiction_quoted_from_the_paper_removes_an_element() -> N
     report = _run(payload, judge=lambda rec, row, text: {"contradicted": True, "quote": "BBO never touches benzaldehyde"})
     assert report["removed"] == [] and len(report["judge_rejected"]) == 3
     assert "scope_membership" not in payload["processes"]["reactions"][0]
+    # Review F3: a phrase from the paper is not a contradiction; the quote needs 8+ words.
+    payload = _payload(deepcopy(invented))
+    report = _run(payload, judge=lambda rec, row, text: {"contradicted": True, "quote": "benzyl benzoate oxidase (BBO)"})
+    assert report["removed"] == [] and len(report["judge_rejected"]) == 3
     # A quote that is in the paper: the reaction goes to the quarantine as out_of_scope, the enzyme to the withheld record.
     quote = "Benzyl benzoate is first hydroxylated by benzyl benzoate oxidase (BBO) to form benzyl salicylate"
     payload = _payload(deepcopy(invented))
@@ -209,3 +213,19 @@ def test_l8_the_final_payload_seam_runs_the_checks_with_the_flag_on(monkeypatch)
     assert report["evidence"]["paper_text"] is True
     assert "evidence_names_no_participant" in _checks(payload["processes"]["reactions"][0])
     assert payload["final_payload_evidence"]["flagged_elements"] >= 1
+
+
+def test_l8_evidence_flags_never_feed_the_release_status() -> None:
+    """Review F2: the checks are flag-only. A flagged payload gets the same quarantine decision, release status and
+    reasons as the unflagged one."""
+    from t2pw.pipeline.strict_quarantine import quarantine_and_close
+    from test_l5_quarantine_keeps_reactions import _sphingolipid
+
+    clean = _sphingolipid()
+    flagged = _sphingolipid()
+    _run(flagged, paper="Nothing in this paper names any of these compounds or enzymes at all, by design.")
+    assert flagged["final_payload_evidence"]["flagged_elements"] >= 2
+    a = quarantine_and_close(clean, strict_db=True, mode="pathwhiz").quarantine_report
+    b = quarantine_and_close(flagged, strict_db=True, mode="pathwhiz").quarantine_report
+    for key in ("ok", "release", "review_reasons", "refusal_reasons", "counts"):
+        assert a[key] == b[key], key

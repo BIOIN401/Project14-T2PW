@@ -665,7 +665,7 @@ def test_research_mode_still_reports_what_a_strict_run_would_have_removed() -> N
     assert result.quarantine_report["export_mode"] == RESEARCH
 
 
-def test_strict_mode_on_the_same_candidate_does_remove_it() -> None:
+def test_strict_mode_on_the_same_candidate_writes_the_unidentified_enzyme_as_a_placeholder() -> None:
     """The contrast that makes the research assertion mean something."""
 
     strict = quarantine_and_close(_research_candidate(), strict_db=True, mode=PATHWHIZ)

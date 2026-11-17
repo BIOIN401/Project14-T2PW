@@ -33,10 +33,11 @@ Checks (names are the ``review_reasons`` prefixes):
   (``compartment_not_stated``) and are not flagged twice.
 
 D-W24 (7c): :func:`strip_placeholder_species` takes every species field off PathBank's ``Unknown`` protein (9659), which stands
-for an enzyme nobody identified and was given Arabidopsis thaliana (PathBank's own record) in every payload. PathWhiz binds the
-existing record by name and UniProt value when the PWML gives no species (``pwml_parser.store_object``: an omitted column is
-not part of ``find_by``); a new Protein needs a species (``protein.rb`` ``validates :species``), so a database without record
-9659 cannot import it either way.
+for an enzyme nobody identified and was given Arabidopsis thaliana (PathBank's own record) in every payload, so the payload,
+the text record, our SBML and the IR assert no species for it. The PWML keeps the species-id (review F1): PathWhiz's
+``find_by`` needs it to bind record 9659 among ~2,195 'Unknown' proteins, and an empty database refuses a protein without one.
+It is kept under ``pathwhiz_lookup_species`` and read only by the writer. Open item for the PathWhiz-fixes track: PathWhiz
+should bind the placeholder sentinel to 9659 without a species.
 
 Runs once per paper text: a payload that already carries ``final_payload_evidence`` from a run with the paper text is left
 alone by a later call without it (the export seam calls the fill again without the run state).
@@ -59,6 +60,8 @@ CHECKS = (
 ESTIMATED_SOURCES = ("estimated", "neighbour_estimate", "llm_estimate")
 # ponytail: a fixed share of word trigrams; a paraphrase that keeps under 60% of the paper's wording is flagged.
 MIN_TRIGRAM_COVERAGE = 0.6
+#: review F3: a contradiction is a sentence, not a phrase; the judge's quote needs at least this many words, in the paper.
+MIN_CONTRADICTION_WORDS = 8
 _HEADER = re.compile(r"\b10\.\d{4,9}/|\bpmc\d{5,}\b|\bissn\b|\bdoi\b", re.IGNORECASE)
 # ponytail: wording cues only; "then"/"subsequently" order two stated steps, they do not merge them.
 _SEVERAL_STEPS = re.compile(
@@ -67,7 +70,7 @@ _SEVERAL_STEPS = re.compile(
 _ELLIPSIS = re.compile(r"\.\.\.+|…")
 _STATE_WORDS = {"in", "of", "the", "a", "an", "and", "pathway", "biosynthesis", "biosynthetic", "metabolism", "synthesis"}
 _NAME_FIELDS = ("name", "raw_name", "short_name", "common_name", "display_name", "gene_name", "abbreviation")
-_LIST_FIELDS = ("synonyms", "aliases")
+_LIST_FIELDS = ("synonyms", "aliases", "abbreviations")
 _ENTITY_BUCKETS = ("compounds", "proteins", "protein_complexes", "nucleic_acids", "element_collections")
 _FLAG_PREFIXES = tuple(f"{c}:" for c in CHECKS)
 
@@ -89,16 +92,20 @@ def _text(value: Any) -> str:
 
 
 _PAREN = re.compile(r"^(.*?)\s*\(([^()]+)\)\s*$")
+_NUMBERED = re.compile(r"^\s*compound\s+(\w{1,4})\s*$", re.IGNORECASE)
 _ABBREV = re.compile(r"([^()\n.;]{3,120}?)\s*\(\s*([A-Za-z0-9][^()\n,;]{0,14}?)\s*[,;)]")
 
 
 def _aliases(row: Dict[str, Any], *extra: Any) -> List[str]:
     out = [row.get(f) for f in _NAME_FIELDS] + [a for f in _LIST_FIELDS for a in (row.get(f) or [])
                                                   if isinstance(row.get(f), list)] + list(extra)
-    for a in list(out):  # "dihydrosphingosine (DHS)" is named as either half
+    for a in list(out):  # "dihydrosphingosine (DHS)" is named as either half; "compound 3" as "3"
         m = _PAREN.match(a) if isinstance(a, str) else None
         if m:
             out += [m.group(1), m.group(2)]
+        m = _NUMBERED.match(a) if isinstance(a, str) else None
+        if m:
+            out.append(m.group(1))
     seen, names = set(), []
     for a in out:
         n = norm_text(a)
@@ -117,7 +124,7 @@ def names_any(text_norm: str, aliases: Iterable[str]) -> str:
     """The first alias the normalized text names (word match; whole-word compact match for long names), else ``""``."""
     compact = None
     for a in aliases:
-        if len(a.strip()) < 2:
+        if len(a.strip()) < 2 and not a.strip().isdigit():  # a paper's compound number "(4)" is one character
             continue
         if a in text_norm:
             return a.strip()
@@ -367,7 +374,7 @@ def _apply_judge(payload: Dict[str, Any], judge: Callable[..., Any], paper: _Pap
         quote = str(verdict.get("quote") or "")
         if not verdict.get("contradicted"):
             continue
-        if not quote.strip() or not paper.has(quote):
+        if len(norm_text(quote).split()) < MIN_CONTRADICTION_WORDS or not paper.has(quote):
             report["judge_rejected"].append({"element": record["element"], "check": record["check"], "quote": quote[:200]})
             continue
         entry = {"element": record["element"], "kind": record["kind"], "check": record["check"], "quote": quote,
@@ -393,13 +400,19 @@ def _apply_judge(payload: Dict[str, Any], judge: Callable[..., Any], paper: _Pap
 
 def strip_placeholder_species(payload: Dict[str, Any]) -> List[str]:
     """D-W24 (7c): no species on PathBank's Unknown protein. Returns the species names taken off."""
-    from t2pw.pipeline.entity_identity import is_pathbank_unknown_protein
+    from t2pw.pipeline.entity_identity import SENTINEL_LOOKUP_SPECIES_FIELD, is_pathbank_unknown_protein
 
     ents = payload.get("entities") if isinstance(payload.get("entities"), dict) else {}
     taken: List[str] = []
     for row in ents.get("proteins") or []:
         if not is_pathbank_unknown_protein(row):
             continue
+        if row.get("species") or row.get("organism"):
+            # review F1: kept, under a field no biology reader reads, as the PWML's lookup key for record 9659
+            row[SENTINEL_LOOKUP_SPECIES_FIELD] = {
+                "name": row.get("species") or row.get("organism"),
+                **{k: row[k] for k in ("pathbank_species_id", "species_id", "taxonomy_id") if row.get(k) not in (None, "")},
+                "role": "PathWhiz lookup key binding PathBank record 9659; not the enzyme's species (D-W24 7c, L8)"}
         for key in ("species", "organism", "species_name", "species_id", "pathbank_species_id", "taxonomy_id", "species_ref"):
             value = row.pop(key, None)
             if key in ("species", "organism") and isinstance(value, str) and value not in taken:
