@@ -1,0 +1,123 @@
+:root{
+  --bg:#F3F5F8; --panel:#FFFFFF; --ink:#1B2631; --muted:#5B6877; --rule:#D5DBE3; --accent:#1F5F8B;
+  --canvas:#FBFCFD;
+  --c-fill:#FCE9C4; --c-line:#9A6A12;
+  --p-fill:#D7E6F6; --p-line:#2F5F96;
+  --x-fill:#D3EEE3; --x-line:#25765D;
+  --n-fill:#E7DDF3; --n-line:#6D4F9C;
+  --r-extra:#E5EFF8; --r-membrane:#F1E6D2; --r-cytosol:#EBF4EA; --r-organelle:#EFE9F5; --r-auto:#ECEDEF; --r-cell:#EEF3E8; --r-periplasm:#E9F0F4; --r-iface:#F7F2E8;
+  --lipid-h:#C9A26A; --lipid-t:#D9BE90;
+  --edge:#35424F; --act:#177A62; --inh:#BE3B28; --assoc:#76818D;
+  --node-bg:#FFFFFF; --cellline:#6A7F57; --sepline:#C9D0D9;
+  --jn-fill:#FFFFFF; --jn-line:#35424F;
+  --badge-fill:#FFF3C4; --badge-line:#B08900;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#12171D; --panel:#1A2129; --ink:#E6EBF0; --muted:#9AA7B5; --rule:#2E3944; --accent:#7DB7E0;
+  --canvas:#161C23;
+  --c-fill:#5B4417; --c-line:#E0B25A;
+  --p-fill:#1F3A5C; --p-line:#7FB0E6;
+  --x-fill:#1B4A3D; --x-line:#6FCFAE;
+  --n-fill:#3A2E57; --n-line:#B79CE6;
+  --r-extra:#18283A; --r-membrane:#352B1D; --r-cytosol:#1B2B22; --r-organelle:#2A2336; --r-auto:#1F252C; --r-cell:#1C2A1F; --r-periplasm:#1B2B33; --r-iface:#2D281D;
+  --lipid-h:#9C7A45; --lipid-t:#6E5632;
+  --edge:#AEBBC8; --act:#52D1AB; --inh:#FF8A74; --assoc:#8E9AA7;
+  --node-bg:#1A2129; --cellline:#8FB07A; --sepline:#33404C;
+  --jn-fill:#1A2129; --jn-line:#AEBBC8;
+  --badge-fill:#4A3F10; --badge-line:#E0C14F;
+  color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --bg:#12171D; --panel:#1A2129; --ink:#E6EBF0; --muted:#9AA7B5; --rule:#2E3944; --accent:#7DB7E0;
+  --canvas:#161C23;
+  --c-fill:#5B4417; --c-line:#E0B25A;
+  --p-fill:#1F3A5C; --p-line:#7FB0E6;
+  --x-fill:#1B4A3D; --x-line:#6FCFAE;
+  --n-fill:#3A2E57; --n-line:#B79CE6;
+  --r-extra:#18283A; --r-membrane:#352B1D; --r-cytosol:#1B2B22; --r-organelle:#2A2336; --r-auto:#1F252C; --r-cell:#1C2A1F; --r-periplasm:#1B2B33; --r-iface:#2D281D;
+  --lipid-h:#9C7A45; --lipid-t:#6E5632;
+  --edge:#AEBBC8; --act:#52D1AB; --inh:#FF8A74; --assoc:#8E9AA7;
+  --node-bg:#1A2129; --cellline:#8FB07A; --sepline:#33404C;
+  --jn-fill:#1A2129; --jn-line:#AEBBC8;
+  --badge-fill:#4A3F10; --badge-line:#E0C14F;
+  color-scheme:dark;}
+
+.dg{display:block;font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif}
+.dg .canvas{fill:var(--canvas)}
+.dg text{fill:var(--ink);font-size:12px}
+/* bands and regions */
+.dg .band .bg{fill:var(--r-cytosol)}
+.dg .band.extra .bg{fill:var(--r-extra)}
+.dg .band.membrane .bg{fill:var(--r-membrane)}
+.dg .band.organelle .bg{fill:var(--r-organelle)}
+.dg .band.auto .bg{fill:var(--r-auto)}
+.dg .band.cell .bg{fill:var(--r-cell)}
+.dg .band.periplasm .bg{fill:var(--r-periplasm)}
+.dg .band.iface .bg{fill:var(--r-iface)}
+.dg .sep{stroke:var(--sepline);stroke-width:1}
+.dg .gutline{stroke:var(--sepline);stroke-width:1}
+.dg .blabel{font-size:13px;font-weight:600}
+.dg .bsub{font-size:10.5px;fill:var(--muted)}
+.dg .lipid-h{fill:var(--lipid-h)}
+.dg .lipid-t{stroke:var(--lipid-t);stroke-width:1.4;fill:none;stroke-linecap:round}
+.dg .cellfill{fill:var(--r-cell)}
+.dg .cellline{fill:none;stroke:var(--cellline);stroke-width:2.5}
+.dg .celltitle{font-size:12px;font-weight:600;fill:var(--muted);letter-spacing:.02em}
+.dg .orgblob{fill:var(--r-organelle);stroke:var(--p-line);stroke-width:1.2;stroke-dasharray:none;opacity:.98}
+.dg .rlabel{font-size:11.5px;font-weight:600;fill:var(--muted)}
+.dg .ifaceline{stroke:var(--cellline);stroke-width:2;stroke-dasharray:2 5;stroke-linecap:round}
+.dg text.ifacelbl{font-size:10.5px;font-weight:500;fill:var(--muted)}
+/* nodes */
+.dg .n text{pointer-events:none}
+.dg .n.compound rect{fill:var(--c-fill);stroke:var(--c-line);stroke-width:1.4}
+.dg .n.compound.small rect{stroke-dasharray:none;fill:var(--node-bg);stroke-width:1.6}
+.dg .n.protein rect{fill:var(--p-fill);stroke:var(--p-line);stroke-width:1.6}
+.dg .n.complex polygon{fill:var(--x-fill);stroke:var(--x-line);stroke-width:1.8}
+.dg .n.nucleic polygon{fill:var(--n-fill);stroke:var(--n-line);stroke-width:1.6}
+.dg .n .chip{font-size:9.5px;fill:var(--muted)}
+.dg .jn rect{fill:var(--jn-fill);stroke:var(--jn-line);stroke-width:1.5}
+.dg .jn.transport rect.inner{fill:none;stroke-width:1}
+.dg .jn text{font-size:10.5px;font-weight:700;fill:var(--ink)}
+/* edges */
+.dg .e{fill:none;stroke:var(--edge);stroke-width:1.5;stroke-linejoin:round}
+.dg .e.cat,.dg .e.enz{stroke-width:1.2}
+.dg .e.act{stroke:var(--act);stroke-width:1.9}
+.dg .e.inh{stroke:var(--inh);stroke-width:1.9}
+.dg .e.assoc{stroke:var(--assoc);stroke-width:1.3;stroke-dasharray:5 4}
+.dg .e.wh{opacity:.6}
+.dg .mk-fill{fill:var(--edge)}
+.dg .mk-act{fill:var(--canvas);stroke:var(--act);stroke-width:1.6}
+.dg .mk-inh{stroke:var(--inh);stroke-width:2.6;fill:none}
+.dg .mk-cat{fill:var(--canvas);stroke:var(--edge);stroke-width:1.2}
+.dg .mk-dot{fill:var(--assoc)}
+.dg .badge rect{fill:var(--badge-fill);stroke:var(--badge-line);stroke-width:1}
+.dg .badge text{font-size:10px;font-weight:600;fill:var(--ink)}
+
+.dg .spine{fill:var(--r-extra);opacity:.7}
+.dg .spinelbl{font-size:10.5px;font-weight:700;fill:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+
+/* v2: directed links, merged-step badges, legend, regulation toggle, hover highlight */
+.dg .mk-dir{fill:var(--assoc)}
+.dg .e.assoc.dir{stroke-dasharray:none;stroke-width:1.4}
+.dg .e.wh{opacity:.6}
+.dg .badge.merged rect{fill:var(--p-fill);stroke:var(--p-line)}
+.dg .xcap{font-size:9.5px;fill:var(--accent);font-weight:600}
+.dg .legendbg{fill:var(--canvas)}
+.dg .legend text{font-size:12px}
+.dg .legend .jn text{font-size:10px}
+.dg .legend .xcap{font-size:10px}
+.dg .reghead{font-size:12.5px;font-weight:700;fill:var(--accent)}
+.dg .regdet{font-size:11.5px;fill:var(--muted)}
+.dg .regtoggle{cursor:pointer}
+.dg .regtoggle rect{fill:var(--panel);stroke:var(--accent);stroke-width:1.3}
+.dg .regtoggle text{font-size:11px;font-weight:600;fill:var(--accent)}
+.dg .regtoggle:hover rect,.dg .regtoggle:focus rect{fill:var(--p-fill)}
+.dg .regtoggle:focus{outline:none}
+.dg .regtoggle:focus-visible rect{stroke-width:2.5}
+.dg .view-full{display:none}
+.dg.show-reg .view-full{display:inline}
+.dg.show-reg .view-core{display:none}
+.dg .n,.dg .e,.dg .jn{transition:opacity .12s}
+.dg.hl .nodes .n,.dg.hl .nodes .jn,.dg.hl .edges .e,.dg.hl .edges .badge{opacity:.14}
+.dg.hl .nodes .on,.dg.hl .edges .on{opacity:1}
+.dg.hl .edges .e.wh.on{opacity:.85}
+.dg .jn text.xcap{font-size:9.5px;font-weight:600;fill:var(--accent)}
