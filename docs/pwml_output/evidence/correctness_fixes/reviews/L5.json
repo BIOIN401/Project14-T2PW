@@ -1,0 +1,40 @@
+{
+ "lane": "L5",
+ "reviewer": "ws-reviewer opus/high",
+ "agent": "a422bf636b7db9045",
+ "reviewed_head": "ebb08d87",
+ "verdict": "APPROVE WITH NITS (F1 blocking at merge onto 8898f58a)",
+ "findings": [
+  "F1 L6 guard defers bare-protein-actor duplicates; with L5 wrapping in quarantine they stay unmerged and both drawn (idx 113 C4H twice)",
+  "F2 idx 113 gain is that duplicate",
+  "F3 idx 116 ceramide synthase -> TLCD3B mapping (evidence lane)",
+  "F4 idx 44 PLP dropped also from final_mapped/SBML; keep as withheld record",
+  "F5 originals snapshotted after admission drops",
+  "F6 stranded_by_closure can still omit whole reaction",
+  "F7 wrapper actions not recorded in quarantine_report",
+  "F8 writer.py/cases.json/change_log outside listed boundary but needed",
+  "F9 three tests no longer test what their names say",
+  "F10 invented card C-905 label (log in record)",
+  "F11 real-artifact claim 1 rests on an unvetted leg"
+ ],
+ "verified": [
+  "wrapper reuse unchanged offline",
+  "research mode untouched",
+  "28 pins equal after normalization",
+  "152 replays: 5 files change, no drops",
+  "base failures reproduce on clean 111dea4e worktree",
+  "trial merge clean"
+ ],
+ "round2": {
+  "head": "9f3be115 (corr/L5c-quarantine-keep)",
+  "verdict": "APPROVE WITH NITS",
+  "notes": [
+   "F1 idx 113 duplicates with T2PW_FINAL_PAYLOAD=0 (L6 off) - PO note",
+   "F2 idx 6/7/17 deferred actor_not_a_protein_complex (L6 guard synonym gap)",
+   "F3 wrappable_bare_enzymes docstring overclaims (species context)",
+   "F4 stale test names/docstrings",
+   "F5 before_admission after wrapping",
+   "F6 SBML omission lacks reaction ref"
+  ]
+ }
+}

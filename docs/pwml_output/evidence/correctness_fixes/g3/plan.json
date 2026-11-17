@@ -1,0 +1,27 @@
+{
+  "gate": "G3 live A/B, gold papers, T2PW_EXTRACTION_DRAWS=3, everything else production default (.env via approved launcher)",
+  "arms": {
+    "base": {"tree": "C:/t/bt-corr/bisect/12c99a00", "sha": "12c99a005fd7500fbe0f0cc22762052e8a92baac", "note": "release tree = pwml/correctness merge base"},
+    "after": {"tree": "C:/t/bt-corr/g3/after", "sha": "c5734190", "note": "pwml/correctness head, detached worktree"}
+  },
+  "shared_state": "data/rag_index copied from the primary checkout into both trees (new path, same start state); enrichment_cache.json and id_mapping_cache.json identical in both trees (cmp)",
+  "papers": {
+    "PMC12421875": "menaquinone biosynthesis | Lactococcus lactis (scope as ORCH-755/759 gold legs; pinned_v1 has a B. subtilis organism trap, not used); gold_v2 certified",
+    "PMC12096016": "enterobactin biosynthesis | Escherichia coli; gold_v2 certified",
+    "PMC12444477": "lipid A biosynthesis | Escherichia coli; pinned_v1 only"
+  },
+  "leg_command": "bash C:/t/corr-assess/g3/leg.sh <base|after> <PMC> <strict|research>  ==  gate(holder absent, free RAM>=4GB) then: bounded_run.py --heavy-lock corr-g3 --timeout 6000 -- python -u -X utf8 C:/t/corr-assess/scripts/live_launch.py --script <tree>/scripts/batch_run.py --topics C:/t/corr-assess/g3/topics/<PMC>.txt --modes <mode> --out C:/t/bt-corr/g3/legs/<arm>-<PMC>-<mode> --fresh --timeout 5400 --deadline 1.7  (cwd=<tree>, env T2PW_EXTRACTION_DRAWS=3 PYTHONPATH=<tree>/src)",
+  "order": [
+    "PHASE A strict, base then after per paper: PMC12421875, PMC12096016, PMC12444477 (6 legs)",
+    "PHASE B research, same order (6 legs) if time",
+    "PHASE C extra: L8 7b papers, strict only, both arms, if A and B finish within budget"
+  ],
+  "estimate": {
+    "wall_per_leg_min": "20-60 (ORCH-755/756 history: 20-60 min, some 3600 s timeouts)",
+    "phase_A_h": "~3.5",
+    "phase_B_h": "~4.5-5",
+    "total_AB_h": "~8-8.5, at the ~8 h limit: strict first, research after",
+    "llm_cost_usd": "unmeasured here; prior 3-draw legs not recorded in cost; estimate ~1-4 USD per leg (3 extraction draws at up to 64k tokens + curator loop); after-arm usually costs the same tokens (draws concurrent), measured from run artifacts"
+  },
+  "scoring": "C:/t/corr-assess/g3/score_g3.py (acceptance.score_run on pinned_v1 + eval_v2 reactions.score_leg on gold_v2 cases + PWML tag counts + model_attempt counts from LEG_TRACE)"
+}

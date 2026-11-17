@@ -1,0 +1,28 @@
+{
+ "lane": "L9",
+ "reviewer": "ws-reviewer opus/high",
+ "agent": "a94f94f44c335fb4b",
+ "reviewed_head": "41e92e18",
+ "verdict": "APPROVE WITH NITS",
+ "findings": [
+  "F1 docstring/test name 'propagates immediately'",
+  "F2 Recorder script misleading in side_file test",
+  "F3 concurrent budget-refused case untested (serial fixture)",
+  "F4 extraction_diagnostics _flush outside lock (theoretical race, 0 lost in 400 rounds)",
+  "F5 client.py _token_stats unlocked +=",
+  "F6 backoff no jitter; LLM_CALL_SPACING per thread; pool unbounded N; batch driver uses processes not threads",
+  "F7 deadline.py _checkpoints unlocked",
+  "F8 lane evidence on dirty tree; reviewer re-ran at clean 41e92e18: SMOKE 511, 6 loops 76 passed"
+ ],
+ "existing_test_edits": "accepted by orchestrator (legitimate de-flaking)",
+ "fix_round": {
+  "head": "28604f21",
+  "verdict": "APPROVE",
+  "notes": [
+   "N1 boundary-write test passes on old code (guard only)",
+   "N2 client.py comment 1-20 s backoff stale",
+   "N3 no cap on T2PW_EXTRACTION_DRAWS"
+  ],
+  "loops": "3x156 passed"
+ }
+}

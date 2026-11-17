@@ -1,0 +1,182 @@
+{
+ "lane": "L6",
+ "branch": "corr/L6-merge-compartments",
+ "worktree": "C:/t/corr-L6",
+ "base": "111dea4e",
+ "head": "6149dd05",
+ "status": "REVIEW ROUND 2 FIXES COMMITTED AND VERIFIED ON THE COMMITTED HEAD (not merged, not pushed)",
+ "commits": [
+  "c9decdf1 (code + tests; C:/t/corr-assess/msgs/L6_code.txt) -- REJECTED by review",
+  "9c45208d (review fixes F1-F4, F6, F7; C:/t/corr-assess/msgs/L6_review_fixes.txt) -- REJECTED in round 2 (R1)",
+  "6149dd05 (review round 2: R1, R2; C:/t/corr-assess/msgs/L6_review_fixes_r2.txt)"
+ ],
+ "file_boundary": {
+  "declared": [
+   "src/t2pw/service/final_payload_merge.py (new)",
+   "src/t2pw/service/final_payload.py (hook only)",
+   "tests/test_l6_*.py (new)"
+  ],
+  "why_here": "A final-payload step: it runs before the pre-freeze resolver, the freeze and the strict quarantine (postpipeline.prefreeze_with_final_fill), so IR, PWML, SBML and text record all read one merged payload, and T2PW_FINAL_PAYLOAD=0 keeps the old path byte-identical. ir.py untouched.",
+  "outside_boundary": "none"
+ },
+ "files_changed": [
+  "src/t2pw/service/final_payload_merge.py (new)",
+  "src/t2pw/service/final_payload.py (hook: merge called last in maybe_apply_final_id_fill, import and call inside a try)",
+  "tests/test_l6_merge_compartments.py (new, 63 tests)"
+ ],
+ "review_of_the_partial_work_left_by_the_restarted_agent": {
+  "kept": "location table, organism sameness (taxon / binomial / single named strain), transport-ends guard, kept-name guard, union of enzymes+modifiers, strict actor check, fail-open snapshot",
+  "redone": [
+   "NOT WIRED: maybe_apply_final_id_fill had no hook; added (runs even if the online fill raised).",
+   "Lock rule was wrong: 'two copies with different locked_reaction_id never merge' blocked exactly the brief's cases (idx 12 and 120: every copy has its own lock). Now merged-away rows go to quarantined_locked_reactions (the record dedupe_processes already uses for a duplicate lock), so strict_quarantine._reconcile_locked_reactions counts them accounted (tested).",
+   "Archived originals were nested in the kept reaction row (merged_duplicates) and the state re-point walk then rewrote their biological_state: originals are now snapshotted before any change and kept top-level (final_payload_merge record + quarantined_locked_reactions).",
+   "States with no location field all keyed '' and could merge different places: now keyed by name (as the IR reads them), never merged if neither.",
+   "Entity element_states / biological_state string refs were not re-pointed: walk now covers entities too.",
+   "Zero-loss hole found by the replay (idx 113): the kept copy had a bare-protein enzyme (quarantined at export) and the drawn copy was folded into it, losing the C4H step. Now every copy taking part, the kept one included, must have only declared protein-complex actors.",
+   "Biology hole found by the default-path equivalence fixture: 'apical extracellular' merged into 'synaptic extracellular' (both location 'extracellular', tissue taste bud). Added POSITION_WORDS: states merge only with the same positional words in name+location.",
+   "idx 150: a eukaryote __auto_state__ ('cell', no cell type/tissue) merged into 'afferent nerve fiber state'. Eukaryote 'cell' without cell type or tissue now never merges.",
+   "Kept row is the copy with the most enzymes (idx 20: 'MenH-catalyzed...' not 'Spontaneous elimination...'), then a locked one, then the first.",
+   "final_payload_merge is written to the payload only when something merged (deferrals alone would have changed a payload with no biology change)."
+  ]
+ },
+ "normalisation_table": "LOCATION_SYNONYMS / PROKARYOTE_CYTOPLASM / EUKARYOTE_UNSTATED / EUKARYOTE_CELL_AS_CYTOSOL_WHEN_ONLY / POSITION_WORDS in final_payload_merge.py; tested in test_l6_location_table (20 cases) and test_l6_different_organelles_never_share_a_key",
+ "tests_added": [
+  "test_l6_location_table[20 cases]",
+  "test_l6_different_organelles_never_share_a_key",
+  "test_l6_prokaryote_cell_and_intracellular_merge_and_the_duplicate_chain_is_written_once",
+  "test_l6_plastid_and_plastid_state_merge_but_organelles_do_not",
+  "test_l6_eukaryote_cell_stays_apart_from_cytosol_when_organelles_exist",
+  "test_l6_eukaryote_placeholder_does_not_take_a_named_cell_state",
+  "test_l6_eukaryote_cell_is_the_cytosol_when_nothing_else_distinguishes_them",
+  "test_l6_different_cell_type_tissue_or_organism_never_merge",
+  "test_l6_positional_qualifiers_in_the_name_keep_states_apart",
+  "test_l6_states_without_a_location_are_keyed_by_name",
+  "test_l6_a_transport_whose_ends_would_become_one_state_blocks_the_merge",
+  "test_l6_isozymes_written_as_four_locked_rows_become_one_reaction_with_all_enzymes_and_every_lock_accounted",
+  "test_l6_rows_that_are_not_exact_duplicates_stay",
+  "test_l6_the_kept_copy_is_the_catalysed_one",
+  "test_l6_a_copy_that_would_add_a_non_complex_enzyme_is_not_merged",
+  "test_l6_a_copy_with_a_bare_protein_enzyme_is_never_the_kept_row",
+  "test_l6_the_final_payload_seam_runs_the_merge_flag_on",
+  "test_l6_flag_off_leaves_the_payload_untouched",
+  "test_l6_runs_once_and_fails_open"
+ ],
+ "test_runs": {
+  "committed_head": "6149dd05, tree clean at every step (chain7.out)",
+  "before_base_111dea4e": {
+   "log": "C:/t/corr-assess/lanes/L6logs/r2_before.log",
+   "result": "1 error (collection: module absent at base)"
+  },
+  "before_module_without_hook": {
+   "log": "C:/t/corr-assess/lanes/L6logs/r2_before_nohook.log",
+   "result": "2 failed (seam runs the merge; failed-import seam), 61 passed"
+  },
+  "after": {
+   "log": "C:/t/corr-assess/lanes/L6logs/r2_after.log",
+   "result": "63 passed"
+  },
+  "smoke": {
+   "log": "C:/t/corr-assess/lanes/L6logs/r2_smoke.log",
+   "result": "511 passed"
+  },
+  "golden_seam_each_alone": {
+   "test_batch_driver_seam_golden": "2 passed",
+   "test_c011_freeze_seam_golden_equivalence": "8 passed",
+   "test_streamlit_stage8_export_contract": "4 passed",
+   "test_streamlit_quarantine_boundary": "24 passed"
+  },
+  "equivalence_each_alone": {
+   "test_equivalence_run_pathway": "8 passed",
+   "test_equivalence_app_vs_service": "14 passed",
+   "test_equivalence_default_path": "6 passed"
+  },
+  "also": "final_payload default_seam 20, fix2 13, fill 27, default_flip 18, fix1 13; test_orch772_pwml_coverage 35: all passed",
+  "logs": "C:/t/corr-assess/lanes/L6logs/r2_*.log",
+  "all_runs": "bounded_run.py, heavy lock holder corr-l6 via gate.sh, FINAL SURVIVING COUNT 0 every run"
+ },
+ "expectations_changed_by_the_authorized_merge": "none; no existing test edited",
+ "pre_existing_flake_not_l6": {
+  "test": "tests/test_equivalence_run_pathway.py",
+  "evidence": "base tree 111dea4e: 8 passed, 8 passed, then 4 failed (base_g_test_equivalence_run_pathway_r3.log); L6 tree: 3 failed, 2 failed, 8 passed. Same signature every time: an LLM replay key asked but not recorded ('asked': 1, 'recorded': 0), on the strict OR the research case at random. The file pins T2PW_FINAL_PAYLOAD=0, so the L6 step never runs in it. Likely the concurrent Stage-1 draws (L9) ordering prompts; not investigated further.",
+  "logs": [
+   "C:/t/corr-assess/lanes/L6logs/base_g_test_equivalence_run_pathway.log",
+   "C:/t/corr-assess/lanes/L6logs/base_g_test_equivalence_run_pathway_r2.log",
+   "C:/t/corr-assess/lanes/L6logs/base_g_test_equivalence_run_pathway_r3.log",
+   "C:/t/corr-assess/lanes/L6logs/g_test_equivalence_run_pathway_r2.log"
+  ]
+ },
+ "replay_proof": {
+  "method": "C:/t/corr-assess/lanes/L6scripts/dump_replay_l6.py: per run the final-payload fill runs ONCE with the merge patched out (arm A = base behaviour), arm B = a deep copy of A with the merge applied; both through run_pwml_export (layout v2). Identical inputs, so every difference is the merge. Checker: C:/t/corr-assess/lanes/L6scripts/check_l6.py",
+  "table": "C:/t/corr-assess/lanes/L6_replay_table.json (per idx: states/reactions before/after, PWML tag counts A/B, every removed reaction with its kept reaction and member/direction/actor/evidence-record/lock checks, every removed state with its kept state, deferrals)",
+  "totals": {
+   "runs": 97,
+   "exported_A": 97,
+   "exported_B": 97,
+   "states": "290 -> 233 (57 merged)",
+   "payload_reactions": "424 -> 392 (32 merged)",
+   "pwml_reactions": "409 -> 377",
+   "pwml_biological_states": "289 -> 234",
+   "isozyme_groups": 9,
+   "runs_changed": 37,
+   "deferred": "7: 5 actor_not_a_protein_complex (reactions), 1 names_disagree (idx 3 'Type III cell cytosolic state' vs 'Type III cell cytoplasm state', settled by the cytoplasm/cytosol ruling), 1 eukaryote_cell_without_cell_type_or_tissue (idx 150 'afferent nerve fiber state'); 0 agrees_with_states_that_disagree, 0 default_state_is_a_placeholder",
+   "flagged": "idx 20: 'Spontaneous elimination of SEPHCHC to SHCHC' and 'MenH-catalyzed conversion of SEPHCHC to SHCHC' kept apart",
+   "placeholder_references_marked_estimated": 79,
+   "zero_loss_problems": 0
+  },
+  "checks_per_run": "every removed reaction: kept reaction exists, same sides with stoichiometry, same direction, all enzymes/modifiers present, whole original row (evidence included) in quarantined_locked_reactions, lock accounted; every removed state: kept state present with the alias, no reference left naming it; transports/interactions/element_locations counts unchanged in the payload; export ok/refusal/release unchanged, no QA error added, no new quarantine, every A IR reaction has a B IR reaction with the same (merged) state, sides, direction and a superset of enzymes, no entity name lost from the IR, PWML compound/protein/protein-complex/transport/interaction counts not lower",
+  "flag_off_byte_identity": {
+   "layout_v2": "97/97 identical (C:/t/corr-assess/lanes/L6logs/r2_offcmp_v2.json)",
+   "layout_v1": "97/97 identical (C:/t/corr-assess/lanes/L6logs/r2_offcmp_v1.json)",
+   "base_tree": "C:/t/bt-corr/L6/basetree (git archive 111dea4e), re-run this round"
+  },
+  "brief_cases": {
+   "idx 9": "states 7 -> 2, reactions 19 -> 10",
+   "idx 5": "states 5 -> 2, reactions 16 -> 8",
+   "idx 7": "states 10 -> 4, reactions 23 -> 21",
+   "idx 12": "reactions 5 -> 2 (4 UGT copies -> 1 with all four)",
+   "idx 120": "states 4 -> 2, reactions 7 -> 4",
+   "idx 134": "states unchanged, isozymes 10 -> 8",
+   "idx 20": "reactions 5 -> 5 (F3: kept apart, flagged)",
+   "idx 3": "states 10 -> 7 (cytosolic/cytoplasm pair now kept apart)",
+   "idx 150": "states 12 -> 9 (placeholder not merged)"
+  },
+  "run": "C:/t/bt-corr/L6/replay/r2_ab_v2 (committed head 6149dd05)",
+  "text_record_coverage": {
+   "script": "C:/t/corr-assess/lanes/L6scripts/coverage_l6.py (reaction_evidence._omissions on arm A vs arm B)",
+   "out": "C:/t/corr-assess/lanes/L6logs/r2_coverage.json",
+   "computed": "83 runs (14 skipped: payload reactions do not line up with IR reactions without the quarantine report)",
+   "result": "no run gains an omitted reaction; merged copies are KI-014 not counted (idx 9: 19/19 -> 10/10, idx 12 5/5 -> 2/2, idx 120 7/7 -> 4/4, idx 134 10/10 -> 8/8). The percentage falls only where a pre-existing omission stays while duplicates leave the denominator: idx 5 16/17 -> 8/9 and idx 7 23/24 -> 21/22 (still 1 omitted, as before)."
+  }
+ },
+ "open_issues": [
+  "Remaining duplicates (5 copies) are deferred because a copy carries a bare-protein enzyme/modifier (e.g. idx 7 'Coproporphyrinogen-III oxidase 1, chloroplastic'). L5 (bare protein wrapped as a complex in strict mode) would let them merge; re-run the L6 replay after L5 lands.",
+  "Synonym enzymes become two enzymes on one reaction after a union (idx 7: 'glutamyl-tRNA reductase' + 'HEMA1 complex'; data-level synonyms the extraction left as separate entities). Nothing lost, but a reviewer will see both names.",
+  "Kept reaction name is one copy's name (e.g. 'UGT703R3 glucosylation of diosgenin' now carries four UGTs). The other names are in the text record as 'merged into'.",
+  "PathWhiz import of the merged PWMLs not run in this lane (no lane-specific import harness in the brief).",
+  "F3 flags live in review_reasons on the reaction rows; the text record does not print reaction review_reasons yet (outside the boundary).",
+  "F5 (numeric biological_state_index on 2 complex rows) recorded, not fixed."
+ ],
+ "pids": "every run a bounded_run child, FINAL SURVIVING COUNT 0; no L6 process alive at the end; heavy lock released.",
+ "scripts": "C:/t/corr-assess/lanes/L6scripts (gate.sh, focused.sh, replay.sh, dump_replay_l6.py, check_l6.py, offcmp.py, dryrun.py, fixture_merge.py, chain*.sh)",
+ "logs": "C:/t/corr-assess/lanes/L6logs",
+ "review_round_1": {
+  "verdict_on_c9decdf1": "REJECT (F1, F2 blocking)",
+  "F1_fixed": "States merge only when names agree too: name words minus every spelling of the location, the organism (incl. genus initial), cell type, tissue and stopwords; place words (PLACE_WORDS = table words + EXTRA_PLACE_WORDS + POSITION_WORDS) must be equal, other words subset either way, checked against EVERY member of a group. Parenthetical text kept (names and location_key). No species -> never merges. Placeholders have no name words. Tests: one per review case (hepatocyte/neuron cytosol, liver/kidney mitochondrion, thylakoid membrane in chloroplast, chloroplast (thylakoid membrane)/(envelope) as names and as locations, nucleolus/nucleus, lysosome membrane/lysosome, blood/urine, extracellular space/blood, species-less), a generic state not joining two disagreeing specific ones, and the synonyms that must still merge (prokaryote cell/intracellular/cytosol/organism-named/'bacterial cell', 'X state' = X, extracellular = extracellular space, ER spellings, lysosomal).",
+  "F2_fixed": "merged copies carry reason 'duplicate_locked_reaction' (KI-014, merged duplicate, not counted); 'written once as X' in merged_into.note. Test: _omissions coverage 2/2 -> 1/1, merged_duplicates 1, ki KI-014. Replays: see coverage.",
+  "F3_fixed": "a copy with no enzyme is never folded into a catalysed copy; both stay with review_reasons 'same_step_with_and_without_enzyme: ...' (idx 20: Spontaneous elimination + MenH step both kept, flagged). Reactions with an empty side never merge (deferred 'empty_side').",
+  "F4_fixed": "import and call of the merge inside a try in maybe_apply_final_id_fill (test: module that fails to import).",
+  "F5_note": "NOT fixed (as instructed): entities.protein_complexes[].location.biological_state_index / location_links[].biological_state_index are numeric indexes into biological_states; after a state merge removes rows they can point at a different row. No export code reads them (writer reads pathbank/pw *_biological_state_id only); seen in 2 payload rows of the 97.",
+  "F6_fixed": "merged-away reaction names no surviving reaction carries are removed from reaction_order (report reaction_order_removed; test).",
+  "F7_fixed": "every reference re-pointed off an __auto_state__/AutoState_* placeholder gets compartment_source 'estimated' and a compartment_estimate entry {field, from_state, to_state, reason}; the kept state of a group is a stated one, not the placeholder (row 0 excepted). 79 references marked on the replays.",
+  "F8": "everything below re-run on the committed head 9c45208d; every step logged HEAD and refused a dirty tree (C:/t/corr-assess/lanes/L6logs/chain6.out)."
+ },
+ "review_round_2": {
+  "R1_fixed": "fail closed: a state that agrees with two states which disagree with each other is deferred ('agrees_with_states_that_disagree') before grouping, so the result no longer depends on row order. Test parametrized over three orders incl. the reversed one: 'cytosol', 'hepatocyte cytosol', 'neuron cytosol' all stay apart, no payload change.",
+  "R2_fixed": "a placeholder at row 0 with a stated member is not merged ('default_state_is_a_placeholder'): the stated state would have to survive but row 0 never moves. Test added. Non-row-0 placeholders still yield to the stated state.",
+  "effect_on_replays": "none: neither situation occurs in the 97 replays (totals identical to round 1)",
+  "verification": "everything re-run on committed head 6149dd05, every step logged HEAD and refused a dirty tree (23/23 steps clean): C:/t/corr-assess/lanes/L6logs/chain7.out"
+ },
+ "rulings": {
+  "cytoplasm_vs_cytosol": "Orchestrator ruling (review round 2): in eukaryotes cytoplasm and cytosol stay apart (conservative). This settles idx 3: 'Type III cell cytosolic state' (location cytoplasm) stays apart from 'Type III cell cytoplasm state' (deferred names_disagree)."
+ }
+}

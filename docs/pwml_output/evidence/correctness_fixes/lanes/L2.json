@@ -1,0 +1,53 @@
+{
+  "lane": "L2",
+  "branch": "corr/L2-writer-small",
+  "worktree": "C:/t/corr-L2",
+  "commits": ["df23cc86 (F2 + F10 code and tests)", "56096b60 (merge pwml/correctness 12c99a00)", "2d225cc3 (test fixture fix)"],
+  "files_changed": ["src/t2pw/pwml/writer.py", "src/t2pw/pwml/layout.py", "tests/test_pwml_l2_species_ids.py", "tests/test_pwml_l2_label_fit.py"],
+  "F2": {
+    "root_cause": "A species record with no database id (idx 134: unresolved Mus musculus, mapping_meta.resolution.status=unresolved) takes the next value of the shared IdFactory counter. At the species stage the counter is at 1, which equals Homo sapiens' PathBank id 1, so both species were written with id 1. PathWhiz keys the species hash by id (lib/pwml_parser.rb store_object), so the later record overwrote the earlier.",
+    "fix": "writer.py: collect the database ids of all species records first; a species without one takes counter values until it finds one not in that set. Output is unchanged wherever there was no collision.",
+    "ids_in_134": "Mus musculus now gets a free id; all later counter ids in 134 shift by one (and pwt-ids derived from them). No other file changes in layout v1.",
+    "not_changed": "idx 114: 'Staphylococcus aureus' and 'Staphylococcus aureus (MRSA N315)' both carry PathBank id 257 AND taxonomy id 1280 in the payload; same species, not distinct. Left as written (PathWhiz store_object keeps the later record, so it behaves as one species). Open option: write once.",
+    "duplicate_id_scan_97_replays_before": {"species/species": "2 duplicated ids in 114, 134", "compounds/compound": "5 duplicated ids in 116 (L-serine/serine id 120), 124 (hordatine A/C 11673), 128 (CoA-SH/coenzyme A 1099), 129 (D-ribulose 5-phosphate / ribulose 5-phosphate 479), 3 (5-HT/serotonin 178)", "other_id_spaces": "no duplicates (checked every container of id-bearing siblings)"},
+    "duplicate_id_scan_97_replays_after": {"species/species": "1 (114 only, same taxon)", "compounds/compound": "5, unchanged: two IR compound records resolving to one PathBank compound id; zero-loss merge belongs to F11, not L2"}
+  },
+  "F9": {
+    "status": "DROPPED by orchestrator (D-W26: t2pw/07 makes the PathWhiz SBGN export work with template 299). compound_templates.py not touched.",
+    "findings_for_record": "PathWhiz's own editor assigns 299 to Fe3+ (app/assets/javascripts/backbone/models/visualization/compound_location.js.coffee:100) and lib/tasks/templates.rake :add_new_2025 created ion templates 293-303 (Ammonium, Boron, CO, Cobalt, Copper, Fe2+, Fe3+, Lithium, Manganese, Nickel, Zinc). lib/java/sbgn-lib.jar TemplateCollection knows 109 template ids (max 247: 2,3,6,7,8,9,12,14,16,17,37,42-47,49-65,76-78,80-82,85,86,96-99,113,116,119,124,127,130,136-140,144,145,156-159,164,167,170,181,182,186,188,196-217,225-234,239-247) and EntityBuilder throws IllegalArgumentException('Template not found!'). So 293-303 ALL fail SBGN export, not only 299 (also 298 Fe2+ used in idx 146). Fix is PathWhiz-side."
+  },
+  "F10": {
+    "fix": "layout.py: label_parts(): when a label line (PathWhiz 28-char wrap) is wider than the 200-unit label rectangle at Verdana 16 (real glyph widths measured with verdana.ttf; fit limit 180), the label is drawn as stacked one-line label-locations cut by drawn width; box top pad grows to hold them. State name stays whole in biological-states. Labels that already fit are produced exactly as before. v1 never runs this code.",
+    "labels_wider_than_rectangle_97_replays": {"before": "17 of 168 labels in 13 files", "after": "0 of 210 labels in 0 files"},
+    "label_locations_total": {"before": 168, "after": 210, "files_changed": 25},
+    "fit_to_window_scale": "NOT changed. The 5 low scales (idx 148, 7, 138, 128, 9) come from canvas size set by content (F3/F4 layout work); no canvas tightening done here. Open issue."
+  },
+  "tests_added": [
+    "tests/test_pwml_l2_species_ids.py::test_species_without_a_database_id_never_takes_another_species_id",
+    "tests/test_pwml_l2_label_fit.py::test_long_compartment_label_is_laid_out_as_stacked_labels_above_the_first_node",
+    "tests/test_pwml_l2_label_fit.py::test_wrapped_label_that_pathwhiz_would_draw_outside_its_rectangle_is_split_into_one_line_pieces"
+  ],
+  "test_runs": {
+    "before_fix_base_src": {"log": "C:/t/corr-assess/lanes/L2logs/before.log", "result": "3 failed (species id 1 shared by Mus musculus and Species 1; label_parts missing; label test hit KeyError 'label-locations' because the test had no drawn reaction -- test then corrected)"},
+    "after_fix_first_run": {"log": "C:/t/corr-assess/lanes/L2logs/after.log", "result": "1 failed, 42 passed (the species test fixture reused the fixture E. coli id 3; test data fixed)"},
+    "after_fix": {"log": "C:/t/corr-assess/lanes/L2logs/after2.log", "selection": "new tests + test_pwml_layout.py + test_pwml_writer.py", "result": "43 passed"},
+    "smoke": {"log": "C:/t/corr-assess/lanes/L2logs/smoke.log", "result": "511 passed in 58.90s (run on merged tree 56096b60; later commit changes one new test file only)"}
+  },
+  "replay_proof": {
+    "scripts": "C:/t/corr-assess/lanes/L2scripts/ (dump_replay_l2.py writes only under C:/t/bt-corr/L2/replay; compare.py; dupids.py; labels_check.py)",
+    "v1_layout": "base tree = full export of 327f03e7 (src and tracked data; src differs from merged tree only by 2 docstrings). New vs base, T2PW_PWML_LAYOUT=v1, 97 files: 96 byte-identical; only 134.pwml differs (species id shift, F2). A first comparison against a src-only base export showed 23 name differences -- harness artifact (base tree lacked data/), redone with the full export.",
+    "v2_layout": "new vs stored baseline C:/t/corr-assess/replay/on_v2: 71 byte-identical, 26 differ: 25 only by extra stacked label-locations / box geometry, 134 by species id and id shift. Per-file table: C:/t/corr-assess/lanes/L2_replay_table.json. Entity/reaction/interaction/transport/location/bound/edge/species/compound/protein counts equal in all 97 files; only label-locations rise and the id-element count rises by the same amount.",
+    "outside_geometry": "apart from labels, membranes and x/y/width/height/path/options values, 96 of 97 v2 files are identical to baseline; the 97th is 134 (ids)."
+  },
+  "open_issues": [
+    "idx 114 two species records with same PathBank id and taxonomy id (write once?).",
+    "5 compound id duplicates (F11 territory).",
+    "Fit-to-window scale in 5 pathways needs canvas tightening (F3/F4).",
+    "Label cutting is by drawn width, mid-word only for a single word wider than a line."
+  ],
+  "process_notes": [
+    "One accidental empty `python -` stdin invocation early (hung until stopped by TaskStop) and one later that exited at once on EOF; no other effect.",
+    "Stale waiter bash PID 172392 (all.sh until-loop) was killed by PID."
+  ],
+  "pids": "none of mine survive; heavy lock released (holder.json absent)"
+}

@@ -1,0 +1,98 @@
+{
+ "lane": "L8",
+ "branch": "corr/L8-evidence",
+ "worktree": "C:/t/corr-L8",
+ "base": "5c40e9f0",
+ "head": "330113d2",
+ "commits": [
+  "e6528805 code + tests: evidence checks (D-W24 6), Unknown placeholder for identity-less enzymes (7b), Unknown protein species (7c); 13 existing test files' expectations moved",
+  "1e81f352 code: paper-read checks only with the paper text; no record when nothing found; no PMC id in src (c074)",
+  "00e54787 review round 1 fixes F1-F4, F6 (reviewer REJECT of 1e81f352 on 7c)",
+  "330113d2 merge pwml/correctness 4227db07 (L7); one conflict in final_payload.py: L7 estimate_compartments, then L8 check_evidence"
+ ],
+ "review_round_1": {
+  "F1_blocking_7c": "FIXED. The PWML keeps <species-id> 4 for protein 9659, only as the lookup key that binds PathBank record 9659 (writer.protein_species_id, comment cites D-W24 7c and F1). The payload sentinel row carries no species fields (so the payload, the text record, our SBML/clean model and the web IR assert none); the key sits under pathwhiz_lookup_species, read only by the writer (ir.py copies it through). A sentinel the quarantine adds for 7b gets the same key and, if absent, the species row Stage 6 would add. Proof: pre-merge head 00e54787 vs base 5c40e9f0, layout v2 flag on, 97 / 97 PWMLs byte-identical (lanes/L8_replay_table_v2_prefix.json); the 41 species-id lines are back to base. Tests: test_l8_the_placeholder_reaches_the_pwml_and_its_species_id_is_only_the_9659_lookup_key, test_l8_a_stage6_sentinel_loses_its_arabidopsis_species_in_the_final_payload_step (clean model: organism and taxonomy absent).",
+  "F1_open_item_for_pathwhiz_fixes_track": "PathWhiz should bind the placeholder sentinel to record 9659 without a species (today find_by(name, uniprot) matches any of ~2,195 'Unknown'/'Unknown' proteins, and an empty DB refuses a protein without a species).",
+  "F2": "Flag-only, confirmed: no D-W24 6 check feeds the release status, review_reasons, refusal_reasons or counts (test_l8_evidence_flags_never_feed_the_release_status). Only the 7b placeholder adds placeholder_enzyme_without_identity:N. Noise cut: a payload 'abbreviations' list, 'compound N' names and a paper's numbered compounds '(4)' now name their compound; flags 183 -> 165 (evidence_names_no_participant 65 -> 52, enzyme_not_tied_to_step 64 -> 59). Remaining noise acknowledged (reviewer estimate ~49% false positives).",
+  "F3": "FIXED: the optional judge's contradicting quote needs >= 8 words (MIN_CONTRADICTION_WORDS) and must be in the paper; test added.",
+  "F4": "FIXED: 7b runs only with strict_db; strict_db=False admits the bare protein unchanged (test_l8_with_no_database_the_bare_protein_is_admitted_unchanged).",
+  "F6": "FIXED: tests/test_strict_quarantine_versioning.py: test_strict_mode_on_the_same_candidate_does_remove_it -> test_strict_mode_on_the_same_candidate_writes_the_unidentified_enzyme_as_a_placeholder. Fail-first re-run with the CURRENT test files at base 5c40e9f0: 16 failed, 3 passed; the 3 are guards that pass by design (strict_db=False unchanged, flag-off sentinel keeps its species, research untouched). L8logs/base_new_tests_r2.log",
+  "F7": "CORRECTED: 9 of the 10 no_defensible reactions are on the section-13 negative controls (48 x2, 56, 62, 67, 82, 93 x2, 103; all but 146). lanes/L8_nodef_inventory.json updated.",
+  "F9": "Merged pwml/correctness 4227db07 after L7; evidence block after estimate_compartments."
+ },
+ "file_boundary": {
+  "new": ["src/t2pw/service/final_payload_evidence.py", "tests/test_l8_evidence_checks.py", "tests/test_l8_placeholder_enzymes.py"],
+  "changed": [
+   "src/t2pw/service/final_payload.py (one block in maybe_apply_final_id_fill, after L7's estimate_compartments)",
+   "src/t2pw/pipeline/strict_quarantine.py (placeholder_enzymes, _placeholder_unidentified_enzymes, _named_outside_catalysis, _catalyst_role; call before _wrap_bare_reaction_enzymes, strict_db only; review reason + release cap; QUARANTINE_POLICY_VERSION 2026-11-15.1 -> 2026-11-16.1)",
+   "src/t2pw/pipeline/entity_identity.py (protein_species_context: fixed context for a species-less Unknown sentinel; SENTINEL_LOOKUP_SPECIES_FIELD, PATHBANK_UNKNOWN_LOOKUP_SPECIES)",
+   "src/t2pw/pwml/writer.py (protein_species_id: the sentinel's species-id from its lookup key; species_id_of helper)",
+   "src/t2pw/pwml/ir.py (_copy_common_entity_fields copies pathwhiz_lookup_species; one line, outside the first proposal: needed so the writer sees the key)"
+  ],
+  "existing_tests_moved": [
+   "tests/test_l5_quarantine_keeps_reactions.py (1): an identity-less enzyme WITH species is a placeholder now; the case keeps L5's meaning by dropping the protein's species too (reason protein_missing_species)",
+   "tests/test_strict_quarantine.py (1): actor drop -> placeholder complex",
+   "tests/test_strict_quarantine_versioning.py (4; one renamed, F6): actor drop -> placeholder; omitted_from_pwml:0+1 -> placeholder_enzyme_without_identity:1",
+   "tests/test_orch759c_quarantine_bucket_closure.py (2): decision_input_hash (policy version); ORCH782_REMOVED 25 -> 22 (exactly enzymes|, modifiers|ALAD1/HEMB1 and proteins|ALAD1/HEMB1 degree_zero), ORCH782_REMOVED_LOCATIONS 41 -> 40 (its plastid location)",
+   "tests/test_orch766_unreferenced_species.py (28 pins): version fields only; normalized digests identical base vs tip (L8probe/pins_basewt.json, pins_corr-L8.json; old -> new L8probe/repin_766.json)",
+   "tests/test_orch769b_actor_protein_registry.py (1): decision_input_hash only",
+   "tests/test_orch773_omit_per_row.py (2): PLC enzyme/modifier drops gone (actors 5 -> 3)",
+   "tests/test_orch782_gene_protein_split.py (1): ALAD1/HEMB1 drops -> [] + placeholder",
+   "tests/test_strict_quarantine_release_seam.py (1): 7_processes+8_actors -> 7_processes+2_actors + placeholder_enzyme_without_identity:3 (EntB, EntC, EntE)"
+  ],
+  "moved_legs_proof": "L8probe/legs_diff.json: base vs tip quarantine on the 4 real legs; admissions identical; only differences = identity-less enzyme drops replaced by placeholders"
+ },
+ "change": {
+  "D-W24_6": "final_payload_evidence.check_evidence (flag on, deterministic, offline). Reactions: no_evidence, evidence_is_pathway_name, evidence_is_article_header, evidence_names_no_participant, evidence_not_in_paper (verbatim or >=60% word trigrams; not for RAG rows; paper text needed), step_skips_intermediate, evidence_describes_several_steps. Enzymes: enzyme_not_tied_to_step (paper text needed). Compartments: estimated_compartment_without_evidence for estimated / neighbour_estimate / llm_estimate; L7's unresolved rows are left to L7's own flag. Interactions: L4. Flag = row review_required + review_reasons + evidence_checks; never feeds release status. Removal only via the optional judge (default off; quote >= 8 words, in the paper).",
+  "D-W24_7b": "strict quarantine, strict_db only: an identity-less bare-protein enzyme (with a species) becomes a one-component complex of PathBank Unknown 9659 named after it; '<name> complex' with the protein kept when an interaction / transporter / regulator also names it. Reaction + complex review_required; placeholder_enzyme_without_identity:N caps the release.",
+  "D-W24_7c": "the Unknown protein asserts no species in the payload / text record / SBML / IR; the PWML keeps species-id 4 only as the 9659 lookup key (review F1)."
+ },
+ "tests": {
+  "fail_first_base_5c40e9f0_current_files": "16 failed, 3 passed (the 3 guards): L8logs/base_new_tests_r2.log",
+  "merge_result_330113d2": {
+   "focused (l8 x2, l5, l6, l7)": "125 passed (L8logs/m_focused.log)",
+   "smoke": "511 passed (L8logs/m_smoke.log)",
+   "affected": "1 failed, 1655 passed, 11 skipped; the 1 = test_orch768 sour_taste_v2, PRE-EXISTING at base (L8logs/base_preexisting.log)",
+   "reaction_evidence": "19 passed",
+   "clean_model": "101 passed, 1 skipped",
+   "golden_each_alone": {"test_batch_driver_seam_golden": "2 passed", "test_c011_freeze_seam_golden_equivalence": "8 passed", "test_streamlit_stage8_export_contract": "4 passed", "test_streamlit_quarantine_boundary": "24 passed"},
+   "equivalence_each_alone": {"test_equivalence_run_pathway": "8 passed", "test_equivalence_app_vs_service": "14 passed", "test_equivalence_default_path": "6 passed"},
+   "c052_alone": "1 failed, 12 passed (PRE-EXISTING at base)",
+   "c055_alone": "14 passed",
+   "golden_or_equivalence_test_edited": "none"
+  }
+ },
+ "replay": {
+  "script": "L8scripts/dump_replay_l8.py; outputs C:/t/bt-corr/L8/replay/<label>",
+  "pre_merge_00e54787_vs_base_5c40e9f0_v2_flag_on": "97 / 97 byte-identical (lanes/L8_replay_table_v2_prefix.json)",
+  "merge_330113d2_vs_pwml_correctness_4227db07": {"v2_flag_on_152": "exports 97 -> 97, 97 / 97 byte-identical (lanes/L8_postmerge_table_v2.json)", "flag_off_97": "97 / 97 byte-identical (lanes/L8_postmerge_table_f0.json)"},
+  "pwml_effect": "none on the replays: 7b cases were all deleted before the stored payloads; 7c keeps the species-id line; D-W24 6 flags are payload-only",
+  "flags_per_check_v2_merge": {"enzyme_not_tied_to_step": [59, "13 files"], "evidence_names_no_participant": [52, "24 files"], "evidence_not_in_paper": [37, "18 files"], "evidence_describes_several_steps": [10, "10 files"], "step_skips_intermediate": [4, "3 files"], "evidence_is_pathway_name": [2, "1 file"], "evidence_is_article_header": [1, "1 file"], "estimated_compartment_without_evidence": [0, "-"]},
+  "elements_flagged_total": 165,
+  "elements_removed": 0,
+  "l7_rows_on_merge_v2": "compartment_source on exported runs: unresolved 88, neighbour_estimate 10, estimated (L6) 1, llm_estimate 0 (offline). L8 compartment flags: 0; unresolved rows flagged twice: 0.",
+  "per_file_counts": "rows[].flags in lanes/L8_postmerge_table_v2.json; each flag with its evidence in C:/t/bt-corr/L8/replay/m_head_v2/q/<idx>.json",
+  "reactions_kept_that_were_deleted_before": "0 on replays (deleted before the stored payload). A/B live list: lanes/L8probe/ab_live_list.json, 11 runs / 16 reactions (idx 5, 11, 68, 76, 91, 105, 111, 121, 123, 132, 147)."
+ },
+ "no_defensible_reaction_support": {
+  "inventory": "lanes/L8_nodef_inventory.json",
+  "contradicted_by_paper": 0,
+  "result": "NOT changed in code. 9 of the 10 are on the two section-13 negative-control papers (PMC12180156, PMC13231680); most are the F-179 merged class and pass the deterministic checks; 2 are correct reactions (82, 93). Keeping them cannot be shown to be no regression. Needs a ruling."
+ },
+ "open_issues": [
+  "PathWhiz-fixes track: bind the placeholder sentinel to record 9659 without a species (F1).",
+  "no_defensible_reaction_support: ruling needed.",
+  "Contradiction judge: hook only (off); no prompt/cache/live call built (no live LLM).",
+  "7b not visible on replays: A/B live runs on L8probe/ab_live_list.json.",
+  "Checks stay noisy where the paper uses abbreviations the payload lacks and on pathway-level 'sequential' quotes; flag-only.",
+  "Whether any D-W24 6 flag should make a run review_required is a ruling (today: never).",
+  "L6 merge does not count 7b placeholders as writable actors: such duplicates stay deferred (no loss).",
+  "Live Stage-6 runs still put Arabidopsis on the sentinel row (map_ids untouched); the final payload step moves it to the lookup key (flag on). Flag off keeps it as before (byte identity)."
+ ],
+ "process_notes": [
+  "Two accidental `python -` (stdin) Bash calls in round 0, stopped at once with TaskStop; no process left.",
+  "All runs through bounded_run, heavy lock holder corr-l8, behind the lock/RAM gate; every report FINAL SURVIVING COUNT 0; no L8 process left, lock free.",
+  "Extra worktrees (detached, not removed): C:/t/bt-corr/L8/basewt @ 5c40e9f0 (holds the two L8 test files untracked), C:/t/bt-corr/L8/l7wt @ 4227db07."
+ ],
+ "pids": "none left running"
+}

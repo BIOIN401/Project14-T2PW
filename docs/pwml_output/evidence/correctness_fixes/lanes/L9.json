@@ -1,0 +1,90 @@
+{
+  "lane": "L9",
+  "branch": "corr/L9-concurrent-draws",
+  "base": "0f36c82f",
+  "commits": {
+    "code": "b5d1b41a",
+    "existing_test_adjustments": "41e92e18",
+    "review_fixes_F1_F2_F4_F5_F6_F7": "28604f21"
+  },
+  "ruling": "D-W24 (8); D-104 section 2",
+  "files_changed": {
+    "in_boundary": [
+      "src/t2pw/pipeline/stage_one_ensemble.py (new _run_draws, current_draw; run_ensemble walks draws in draw order)",
+      "tests/test_l9_concurrent_draws.py (new)"
+    ],
+    "OUTSIDE_boundary_separate_commit_41e92e18": [
+      "tests/test_stage_one_ensemble.py",
+      "tests/test_orch758b_empty_chunk.py"
+    ],
+    "pipeline.py": "not touched (caller already routes N>1 through run_ensemble, N=1 returns _draw() directly)"
+  },
+  "tests_added": [
+    "test_merge_and_report_do_not_depend_on_finish_order (all 6 finish permutations)",
+    "test_draws_overlap_in_wall_time",
+    "test_draw_threads_see_the_callers_context",
+    "test_one_failed_draw_is_survived_whatever_finishes_first[6 perms]",
+    "test_every_draw_failing_raises_the_last_draws_failure[6 perms]",
+    "test_an_unrelated_exception_propagates_untouched_lowest_draw_first",
+    "test_one_draw_runs_inline_with_no_pool",
+    "test_one_draw_failing_raises_it_unchanged",
+    "tests/test_l9_shared_state.py: token counters, checkpoint numbers, concurrent boundary writes, 429 backoff range"
+  ],
+  "runs": {
+    "before_on_base_src": {
+      "log": "C:/t/corr-assess/lanes/L9logs/before.log",
+      "result": "14 failed, 4 passed (new tests vs unchanged source; sequential draws time out waiting for their finish turn / overlap test takes the sum)"
+    },
+    "after_new_plus_existing_focused": {
+      "log": "C:/t/corr-assess/lanes/L9logs/focused.log",
+      "result": "308 passed",
+      "files": "l9 + test_stage_one_ensemble, _paper_dictionary, orch758b, orch759a x2, orch759b, orch763, orch803, curator_offline_mode, rag_foundation"
+    },
+    "smoke": {
+      "log": "C:/t/corr-assess/lanes/L9logs/smoke.log",
+      "result": "511 passed"
+    },
+    "existing_tests_before_adjustment": {
+      "log": "C:/t/corr-assess/lanes/L9logs/after.log",
+      "result": "test_an_unrelated_exception_propagates_immediately fails deterministically (asserts 1 call, 3 now)"
+    },
+    "flakiness_loops": {
+      "loop.log (existing tests unadjusted, 40 loops)": "4 failures: Recorder fakes index their script by call order",
+      "loop2.log (Recorder fixed, 30 loops)": "3 failures: orch758b budget-refused test, order-dependent",
+      "loop3.log (both adjusted, 30 loops)": "0 failures"
+    }
+  },
+  "replay_proof": "not applicable: no change to merge, mapping, PWML or export code; same payloads in, same merge function, same order. The replays do not exercise the draw loop (stored runs).",
+  "pids": "all PIDs created by the bounded wrapper; every report shows FINAL SURVIVING COUNT 0",
+  "open_issues": [
+    "Boundary records in extraction_boundary_report.json: records the N draws write (per attempt, ladder checkpoints) are appended as they happen, so their ORDER across draws is completion order and they carry no draw number (they carried none before either). The ensemble report, summary and attempt log are in draw order with draw numbers. Kept on purpose: a per-draw buffer would delay the ladder checkpoint that must be on disk BEFORE a long LLM call. current_draw() is available if the boundary record should carry a draw number.",
+    "A non-PipelineFailure exception in one draw waits for the other draws to finish before propagating (cannot cancel a running HTTP call); sequentially they would never have started."
+  ],
+  "rate_limit_analysis": "No shared limiter and no provider concurrency cap exist in src/t2pw/llm. client.chat_detailed retries per call: up to LLM_MAX_RETRIES=8, exponential backoff min(1*2^attempt, 20) s on RateLimitError/timeouts/APIError, plus LLM_CALL_SPACING=0.35 s sleep after each call. Each draw thread backs off independently, so a 429 on one draw does not stall the others and does not defeat the backoff. Pool = N (N=3 in paper runs), so at most N Stage-1 requests are in flight per run; the batch driver already runs legs in threads, so concurrent calls are not new. The web path caps each request at 720 s (LLM_CALL_CAP_SECONDS) on its own worker thread; unaffected. If the provider later needs a cap, add it as a semaphore around chat_detailed in client.py. CORRECTION: the batch driver runs legs as child processes, not threads, so N Stage-1 requests in flight per run IS new load. 429 backoff is now jittered (x0.5..1.0, never above the old value) so draws that hit a 429 together do not retry in lockstep.",
+  "head": "28604f21",
+  "boundary_extended_by_orchestrator": [
+    "src/t2pw/pipeline/extraction_diagnostics.py (_flush under the recorder lock)",
+    "src/t2pw/llm/client.py (token stats lock; 429 backoff x random.uniform(0.5,1.0), both retry loops, cap and attempts unchanged)",
+    "src/t2pw/pipeline/deadline.py (checkpoint sequence lock)"
+  ],
+  "runs_on_committed_head_28604f21_clean_tree": {
+    "focused": {
+      "log": "C:/t/corr-assess/lanes/L9logs/focused2.log",
+      "result": "629 passed (l9 x2, stage-one/orch758-803, deadline, diagnostics, ladder, llm client tests, 429 users)"
+    },
+    "ensemble_loops": {
+      "log": "C:/t/corr-assess/lanes/L9logs/loop_head.log",
+      "result": "5 loops of the ensemble test files, 0 failures"
+    },
+    "smoke": {
+      "log": "C:/t/corr-assess/lanes/L9logs/smoke2.log",
+      "result": "511 passed"
+    },
+    "before_for_shared_state_tests": {
+      "log": "C:/t/corr-assess/lanes/L9logs/before2.log",
+      "result": "3 failed, 1 passed on the previous client/deadline/diagnostics source; the concurrent file-write test did not reproduce a torn write without the lock on this machine"
+    },
+    "surviving_processes": 0
+  },
+  "superseded_evidence": "focused.log, smoke.log, loop*.log were run on a dirty tree (before the commits); the runs above replace them"
+}

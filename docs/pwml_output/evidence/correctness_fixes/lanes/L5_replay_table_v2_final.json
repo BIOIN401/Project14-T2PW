@@ -1,0 +1,8060 @@
+{
+ "summary": {
+  "runs": [
+   152,
+   152
+  ],
+  "exported": [
+   97,
+   97
+  ],
+  "harness_errors": [
+   0,
+   0
+  ],
+  "byte_identical": 92,
+  "byte_changed": 5,
+  "changed_files": [
+   27,
+   29,
+   44,
+   113,
+   116
+  ],
+  "new_exports": [],
+  "lost_exports": [],
+  "runs_gaining_reactions": [
+   {
+    "idx": 27,
+    "gained_reactions": [
+     "LDH coupled reaction"
+    ]
+   },
+   {
+    "idx": 29,
+    "gained_reactions": [
+     "enterobactin synthase complex reaction"
+    ]
+   },
+   {
+    "idx": 44,
+    "gained_reactions": [
+     "ALAS2-catalyzed ALA formation"
+    ]
+   },
+   {
+    "idx": 113,
+    "gained_reactions": [
+     "C4H hydroxylation"
+    ]
+   },
+   {
+    "idx": 116,
+    "gained_reactions": [
+     "ceramide synthase reaction"
+    ]
+   }
+  ],
+  "runs_losing_reactions": [],
+  "pwml_tag_drops": [],
+  "pwml_tag_totals": {
+   "before": {
+    "reaction": 409,
+    "reaction-enzyme": 456,
+    "protein-complex": 393,
+    "protein": 374,
+    "compound": 687,
+    "transport": 74,
+    "interaction": 48,
+    "reaction-left-element": 564,
+    "reaction-right-element": 473
+   },
+   "after": {
+    "reaction": 414,
+    "reaction-enzyme": 460,
+    "protein-complex": 397,
+    "protein": 376,
+    "compound": 691,
+    "transport": 74,
+    "interaction": 49,
+    "reaction-left-element": 571,
+    "reaction-right-element": 479
+   }
+  },
+  "policy_version": [
+   "2026-10-26.1",
+   "2026-11-15.1"
+  ]
+ },
+ "rows": [
+  {
+   "idx": 0,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "stage3_revalidation",
+    "stage3_revalidation"
+   ],
+   "in_reactions": 3,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [
+     [
+      "reaction",
+      "Transcription of araBAD operon",
+      "ambiguous_entity_type:compounds+nucleic_acids"
+     ],
+     [
+      "reaction",
+      "Autoregulation of AraC expression",
+      "ambiguous_entity_type:compounds+nucleic_acids"
+     ],
+     [
+      "reaction",
+      "Activation of AraC by arabinose",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "AraC binds araO2",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "AraC binds araI1",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "AraC binds araI2",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "AraC binds araO1",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "AraC represses P BAD promoter",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "AraC represses P C promoter",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "CRP activates P BAD promoter",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "RNA polymerase binds P BAD promoter",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "arabinose binds AraC",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "AraC activates P BAD",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "CRP binds CRP-binding site",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "RNAP binds -35 box",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "RNAP binds -10 box",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "AraC binds to I1-I2 regulatory elements",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "AraC binds to loop sites",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "AraC represses ara operon",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "AraC interacts with sigma subunit",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "AraC regulates L-arabinose operon",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "AraC inhibits araBAD operon promoter",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "AraC activates ara pBAD",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "AraC binds operator at -280 base pairs",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "AraC binds RNA polymerase",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "CRP binding to P BAD",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "cyclic AMP binds CRP",
+      "protein_missing_external_identity"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "diagnostic_only",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [
+     [
+      "reaction",
+      "Transcription of araBAD operon",
+      "ambiguous_entity_type:compounds+nucleic_acids"
+     ],
+     [
+      "reaction",
+      "Autoregulation of AraC expression",
+      "ambiguous_entity_type:compounds+nucleic_acids"
+     ],
+     [
+      "reaction",
+      "Activation of AraC by arabinose",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "AraC binds araO2",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "AraC binds araI1",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "AraC binds araI2",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "AraC binds araO1",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "AraC represses P BAD promoter",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "AraC represses P C promoter",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "CRP activates P BAD promoter",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "RNA polymerase binds P BAD promoter",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "arabinose binds AraC",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "AraC activates P BAD",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "CRP binds CRP-binding site",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "RNAP binds -35 box",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "RNAP binds -10 box",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "AraC binds to I1-I2 regulatory elements",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "AraC binds to loop sites",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "AraC represses ara operon",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "AraC interacts with sigma subunit",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "AraC regulates L-arabinose operon",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "AraC inhibits araBAD operon promoter",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "AraC activates ara pBAD",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "AraC binds operator at -280 base pairs",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "AraC binds RNA polymerase",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "CRP binding to P BAD",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "cyclic AMP binds CRP",
+      "protein_missing_external_identity"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "diagnostic_only",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 1,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "stage3_revalidation",
+    "stage3_revalidation"
+   ],
+   "in_reactions": 5,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [
+     [
+      "interaction",
+      "Fur binds to promoters of ent gene clusters",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "Fur inhibits transcription from ent gene promoters",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "holo-Fur inhibits ent gene expression",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "Fur represses enterobactin biosynthetic genes",
+      "protein_missing_external_identity"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [
+     [
+      "interaction",
+      "Fur binds to promoters of ent gene clusters",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "Fur inhibits transcription from ent gene promoters",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "holo-Fur inhibits ent gene expression",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "Fur represses enterobactin biosynthetic genes",
+      "protein_missing_external_identity"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 2,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "stage3_revalidation",
+    "stage3_revalidation"
+   ],
+   "in_reactions": 0,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [
+     [
+      "transport",
+      "Ca2+ influx through voltage-gated calcium channel",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "H+ inhibits Kir2.1",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "serotonin activation of 5-HT3 receptor",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "ATP activation of P2X receptor",
+      "protein_missing_external_identity"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [
+     [
+      "transport",
+      "Ca2+ influx through voltage-gated calcium channel",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "H+ inhibits Kir2.1",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "serotonin activation of 5-HT3 receptor",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "ATP activation of P2X receptor",
+      "protein_missing_external_identity"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 3,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 0,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    0,
+    0
+   ],
+   "pwml_reaction_enzyme": [
+    0,
+    0
+   ],
+   "pwml_protein_complex": [
+    0,
+    0
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [
+     [
+      "transporters",
+      "OTOP1",
+      "actor_schema_not_canonical",
+      [
+       "OTOP1-mediated H+ transport"
+      ]
+     ],
+     [
+      "transporters",
+      "OTOP1",
+      "actor_schema_not_canonical",
+      [
+       "H+ permeation through OTOP1"
+      ]
+     ],
+     [
+      "transporters",
+      "OTOP1",
+      "actor_schema_not_canonical",
+      [
+       "OTOP1-mediated H+ permeation"
+      ]
+     ]
+    ],
+    "release": "review_required",
+    "review_reasons": [
+     "minimum_core:requested_core_coverage_below_minimum:0.333<0.500",
+     "omitted_from_pwml:0_processes+3_actors"
+    ]
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [
+     [
+      "transporters",
+      "OTOP1",
+      "actor_schema_not_canonical",
+      [
+       "OTOP1-mediated H+ transport"
+      ]
+     ],
+     [
+      "transporters",
+      "OTOP1",
+      "actor_schema_not_canonical",
+      [
+       "H+ permeation through OTOP1"
+      ]
+     ],
+     [
+      "transporters",
+      "OTOP1",
+      "actor_schema_not_canonical",
+      [
+       "OTOP1-mediated H+ permeation"
+      ]
+     ]
+    ],
+    "release": "review_required",
+    "review_reasons": [
+     "minimum_core:requested_core_coverage_below_minimum:0.333<0.500",
+     "omitted_from_pwml:0_processes+3_actors"
+    ]
+   }
+  },
+  {
+   "idx": 4,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 6,
+   "ir_reactions": [
+    6,
+    6
+   ],
+   "pwml_reaction": [
+    6,
+    6
+   ],
+   "pwml_reaction_enzyme": [
+    12,
+    12
+   ],
+   "pwml_protein_complex": [
+    9,
+    9
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 5,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 16,
+   "ir_reactions": [
+    16,
+    16
+   ],
+   "pwml_reaction": [
+    16,
+    16
+   ],
+   "pwml_reaction_enzyme": [
+    16,
+    16
+   ],
+   "pwml_protein_complex": [
+    8,
+    8
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 6,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 3,
+   "ir_reactions": [
+    3,
+    3
+   ],
+   "pwml_reaction": [
+    3,
+    3
+   ],
+   "pwml_reaction_enzyme": [
+    1,
+    1
+   ],
+   "pwml_protein_complex": [
+    11,
+    11
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 7,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 23,
+   "ir_reactions": [
+    23,
+    23
+   ],
+   "pwml_reaction": [
+    23,
+    23
+   ],
+   "pwml_reaction_enzyme": [
+    31,
+    31
+   ],
+   "pwml_protein_complex": [
+    33,
+    33
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 8,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 5,
+   "ir_reactions": [
+    5,
+    5
+   ],
+   "pwml_reaction": [
+    5,
+    5
+   ],
+   "pwml_reaction_enzyme": [
+    6,
+    6
+   ],
+   "pwml_protein_complex": [
+    6,
+    6
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 9,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 19,
+   "ir_reactions": [
+    19,
+    19
+   ],
+   "pwml_reaction": [
+    19,
+    19
+   ],
+   "pwml_reaction_enzyme": [
+    19,
+    19
+   ],
+   "pwml_protein_complex": [
+    9,
+    9
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "release_ready",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "release_ready",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 10,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 0,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    0,
+    0
+   ],
+   "pwml_reaction_enzyme": [
+    0,
+    0
+   ],
+   "pwml_protein_complex": [
+    1,
+    1
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "minimum_core:requested_core_coverage_below_minimum:0.273<0.500"
+    ]
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "minimum_core:requested_core_coverage_below_minimum:0.273<0.500"
+    ]
+   }
+  },
+  {
+   "idx": 11,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 4,
+   "ir_reactions": [
+    4,
+    4
+   ],
+   "pwml_reaction": [
+    4,
+    4
+   ],
+   "pwml_reaction_enzyme": [
+    4,
+    4
+   ],
+   "pwml_protein_complex": [
+    4,
+    4
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 12,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 5,
+   "ir_reactions": [
+    5,
+    5
+   ],
+   "pwml_reaction": [
+    5,
+    5
+   ],
+   "pwml_reaction_enzyme": [
+    10,
+    10
+   ],
+   "pwml_protein_complex": [
+    4,
+    4
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 13,
+   "mode": "pathwhiz",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "required_field_gate",
+    "required_field_gate"
+   ],
+   "in_reactions": 1,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "minimum_core:requested_core_coverage_below_minimum:0.333<0.500"
+    ]
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "minimum_core:requested_core_coverage_below_minimum:0.333<0.500"
+    ]
+   }
+  },
+  {
+   "idx": 14,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 1,
+   "ir_reactions": [
+    1,
+    1
+   ],
+   "pwml_reaction": [
+    1,
+    1
+   ],
+   "pwml_reaction_enzyme": [
+    1,
+    1
+   ],
+   "pwml_protein_complex": [
+    1,
+    1
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 15,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 2,
+   "ir_reactions": [
+    2,
+    2
+   ],
+   "pwml_reaction": [
+    2,
+    2
+   ],
+   "pwml_reaction_enzyme": [
+    7,
+    7
+   ],
+   "pwml_protein_complex": [
+    4,
+    4
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 16,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 4,
+   "ir_reactions": [
+    4,
+    4
+   ],
+   "pwml_reaction": [
+    4,
+    4
+   ],
+   "pwml_reaction_enzyme": [
+    2,
+    2
+   ],
+   "pwml_protein_complex": [
+    2,
+    2
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 17,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 3,
+   "ir_reactions": [
+    3,
+    3
+   ],
+   "pwml_reaction": [
+    3,
+    3
+   ],
+   "pwml_reaction_enzyme": [
+    3,
+    3
+   ],
+   "pwml_protein_complex": [
+    2,
+    2
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "minimum_core:requested_core_coverage_below_minimum:0.357<0.500"
+    ]
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "minimum_core:requested_core_coverage_below_minimum:0.357<0.500"
+    ]
+   }
+  },
+  {
+   "idx": 18,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 5,
+   "ir_reactions": [
+    5,
+    5
+   ],
+   "pwml_reaction": [
+    5,
+    5
+   ],
+   "pwml_reaction_enzyme": [
+    2,
+    2
+   ],
+   "pwml_protein_complex": [
+    2,
+    2
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 19,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 6,
+   "ir_reactions": [
+    6,
+    6
+   ],
+   "pwml_reaction": [
+    6,
+    6
+   ],
+   "pwml_reaction_enzyme": [
+    12,
+    12
+   ],
+   "pwml_protein_complex": [
+    8,
+    8
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 20,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 5,
+   "ir_reactions": [
+    5,
+    5
+   ],
+   "pwml_reaction": [
+    5,
+    5
+   ],
+   "pwml_reaction_enzyme": [
+    2,
+    2
+   ],
+   "pwml_protein_complex": [
+    2,
+    2
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 21,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "stage3_revalidation",
+    "stage3_revalidation"
+   ],
+   "in_reactions": 5,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 22,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "required_field_gate",
+    "required_field_gate"
+   ],
+   "in_reactions": 4,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 23,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 3,
+   "ir_reactions": [
+    3,
+    3
+   ],
+   "pwml_reaction": [
+    3,
+    3
+   ],
+   "pwml_reaction_enzyme": [
+    3,
+    3
+   ],
+   "pwml_protein_complex": [
+    3,
+    3
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "minimum_core:requested_core_coverage_below_minimum:0.280<0.500"
+    ]
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "minimum_core:requested_core_coverage_below_minimum:0.280<0.500"
+    ]
+   }
+  },
+  {
+   "idx": 24,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "stage3_revalidation",
+    "stage3_revalidation"
+   ],
+   "in_reactions": 4,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [
+     [
+      "reaction",
+      "MenD reaction",
+      "protein_missing_external_identity"
+     ],
+     [
+      "reaction",
+      "Decarboxylation of 2-oxoglutarate to intermediate I",
+      "protein_missing_external_identity"
+     ],
+     [
+      "reaction",
+      "Addition of isochorismate to intermediate I forming intermediate II",
+      "protein_missing_external_identity"
+     ],
+     [
+      "reaction",
+      "Breakdown of intermediate II to SEPHCHC",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "DHNA inhibits MenD",
+      "protein_missing_external_identity"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "diagnostic_only",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [
+     [
+      "reaction",
+      "MenD reaction",
+      "protein_missing_external_identity"
+     ],
+     [
+      "reaction",
+      "Decarboxylation of 2-oxoglutarate to intermediate I",
+      "protein_missing_external_identity"
+     ],
+     [
+      "reaction",
+      "Addition of isochorismate to intermediate I forming intermediate II",
+      "protein_missing_external_identity"
+     ],
+     [
+      "reaction",
+      "Breakdown of intermediate II to SEPHCHC",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "DHNA inhibits MenD",
+      "protein_missing_external_identity"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "diagnostic_only",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 25,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 1,
+   "ir_reactions": [
+    1,
+    1
+   ],
+   "pwml_reaction": [
+    1,
+    1
+   ],
+   "pwml_reaction_enzyme": [
+    1,
+    1
+   ],
+   "pwml_protein_complex": [
+    1,
+    1
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 26,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "stage3_revalidation",
+    "stage3_revalidation"
+   ],
+   "in_reactions": 6,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [
+     [
+      "reaction",
+      "EntC reaction",
+      "protein_missing_external_identity"
+     ],
+     [
+      "reaction",
+      "EntC\u2013EntB channeling reaction in presence of 2,3-DHB (inhibited)",
+      "non_protein_actor_in_enzymes"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [
+     [
+      "reaction",
+      "EntC reaction",
+      "protein_missing_external_identity"
+     ],
+     [
+      "reaction",
+      "EntC\u2013EntB channeling reaction in presence of 2,3-DHB (inhibited)",
+      "non_protein_actor_in_enzymes"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 27,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 6,
+   "ir_reactions": [
+    5,
+    6
+   ],
+   "pwml_reaction": [
+    5,
+    6
+   ],
+   "pwml_reaction_enzyme": [
+    5,
+    6
+   ],
+   "pwml_protein_complex": [
+    4,
+    5
+   ],
+   "same_bytes": false,
+   "before": {
+    "quarantined": [
+     [
+      "reaction",
+      "LDH coupled reaction",
+      "reaction_enzyme_must_be_protein_complex"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "omitted_from_pwml:1_processes+0_actors"
+    ]
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 28,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "stage3_revalidation",
+    "stage3_revalidation"
+   ],
+   "in_reactions": 4,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 29,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 4,
+   "ir_reactions": [
+    3,
+    4
+   ],
+   "pwml_reaction": [
+    3,
+    4
+   ],
+   "pwml_reaction_enzyme": [
+    3,
+    3
+   ],
+   "pwml_protein_complex": [
+    4,
+    4
+   ],
+   "same_bytes": false,
+   "before": {
+    "quarantined": [
+     [
+      "reaction",
+      "enterobactin synthase complex reaction",
+      "Generated protein complex 'enterobactin synthase complex' component 'EntD' is missing positive stoichiometry."
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "omitted_from_pwml:1_processes+0_actors"
+    ]
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "omitted_from_pwml:0_processes+1_actors"
+    ]
+   }
+  },
+  {
+   "idx": 30,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "stage3_revalidation",
+    "stage3_revalidation"
+   ],
+   "in_reactions": 3,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 31,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 5,
+   "ir_reactions": [
+    5,
+    5
+   ],
+   "pwml_reaction": [
+    5,
+    5
+   ],
+   "pwml_reaction_enzyme": [
+    5,
+    5
+   ],
+   "pwml_protein_complex": [
+    6,
+    6
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 32,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "required_field_gate",
+    "required_field_gate"
+   ],
+   "in_reactions": 2,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 33,
+   "mode": "pathwhiz",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "required_field_gate",
+    "required_field_gate"
+   ],
+   "in_reactions": 1,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 34,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "stage3_revalidation",
+    "stage3_revalidation"
+   ],
+   "in_reactions": 4,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [
+     [
+      "reaction",
+      "Enterobactin synthase complex reaction",
+      "protein_complex_component_unrepresentable:enterobactin synthase:protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "Fur represses ent operon transcription",
+      "undeclared_entity_in_entity_1"
+     ],
+     [
+      "interaction",
+      "RyhB downregulates entC and entF",
+      "undeclared_entity_in_entity_1"
+     ],
+     [
+      "interaction",
+      "RyhB downregulates entC and entF",
+      "undeclared_entity_in_entity_1"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [
+     [
+      "reaction",
+      "Enterobactin synthase complex reaction",
+      "protein_complex_component_unrepresentable:enterobactin synthase:protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "Fur represses ent operon transcription",
+      "undeclared_entity_in_entity_1"
+     ],
+     [
+      "interaction",
+      "RyhB downregulates entC and entF",
+      "undeclared_entity_in_entity_1"
+     ],
+     [
+      "interaction",
+      "RyhB downregulates entC and entF",
+      "undeclared_entity_in_entity_1"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 35,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 3,
+   "ir_reactions": [
+    3,
+    3
+   ],
+   "pwml_reaction": [
+    3,
+    3
+   ],
+   "pwml_reaction_enzyme": [
+    2,
+    2
+   ],
+   "pwml_protein_complex": [
+    3,
+    3
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 36,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "required_field_gate",
+    "required_field_gate"
+   ],
+   "in_reactions": 4,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 37,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 4,
+   "ir_reactions": [
+    4,
+    4
+   ],
+   "pwml_reaction": [
+    4,
+    4
+   ],
+   "pwml_reaction_enzyme": [
+    4,
+    4
+   ],
+   "pwml_protein_complex": [
+    4,
+    4
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 38,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "required_field_gate",
+    "required_field_gate"
+   ],
+   "in_reactions": 1,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 39,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 2,
+   "ir_reactions": [
+    2,
+    2
+   ],
+   "pwml_reaction": [
+    2,
+    2
+   ],
+   "pwml_reaction_enzyme": [
+    2,
+    2
+   ],
+   "pwml_protein_complex": [
+    1,
+    1
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 40,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 2,
+   "ir_reactions": [
+    2,
+    2
+   ],
+   "pwml_reaction": [
+    2,
+    2
+   ],
+   "pwml_reaction_enzyme": [
+    2,
+    2
+   ],
+   "pwml_protein_complex": [
+    3,
+    3
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 41,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "stage3_revalidation",
+    "stage3_revalidation"
+   ],
+   "in_reactions": 4,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [
+     [
+      "reaction",
+      "enterobactin synthase complex reaction",
+      "protein_complex_component_unrepresentable:enterobactin synthase:protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "Fur represses ent operon",
+      "undeclared_entity_in_entity_1"
+     ],
+     [
+      "interaction",
+      "RyhB inhibits entC mRNA",
+      "undeclared_entity_in_entity_1"
+     ],
+     [
+      "interaction",
+      "RyhB inhibits entF mRNA",
+      "undeclared_entity_in_entity_1"
+     ],
+     [
+      "interaction",
+      "enterobactin binds Fe3+",
+      "undeclared_entity_in_entity_2"
+     ],
+     [
+      "interaction",
+      "FepA transports ferri-enterobactin",
+      "undeclared_entity_in_entity_2"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [
+     [
+      "reaction",
+      "enterobactin synthase complex reaction",
+      "protein_complex_component_unrepresentable:enterobactin synthase:protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "Fur represses ent operon",
+      "undeclared_entity_in_entity_1"
+     ],
+     [
+      "interaction",
+      "RyhB inhibits entC mRNA",
+      "undeclared_entity_in_entity_1"
+     ],
+     [
+      "interaction",
+      "RyhB inhibits entF mRNA",
+      "undeclared_entity_in_entity_1"
+     ],
+     [
+      "interaction",
+      "enterobactin binds Fe3+",
+      "undeclared_entity_in_entity_2"
+     ],
+     [
+      "interaction",
+      "FepA transports ferri-enterobactin",
+      "undeclared_entity_in_entity_2"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 42,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 4,
+   "ir_reactions": [
+    4,
+    4
+   ],
+   "pwml_reaction": [
+    4,
+    4
+   ],
+   "pwml_reaction_enzyme": [
+    4,
+    4
+   ],
+   "pwml_protein_complex": [
+    4,
+    4
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 43,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "stage3_revalidation",
+    "stage3_revalidation"
+   ],
+   "in_reactions": 1,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [
+     [
+      "reaction",
+      "ALAS2-catalyzed reaction",
+      "non_protein_actor_in_modifiers"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [
+     [
+      "reaction",
+      "ALAS2-catalyzed reaction",
+      "non_protein_actor_in_modifiers"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 44,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 1,
+   "ir_reactions": [
+    0,
+    1
+   ],
+   "pwml_reaction": [
+    0,
+    1
+   ],
+   "pwml_reaction_enzyme": [
+    0,
+    1
+   ],
+   "pwml_protein_complex": [
+    0,
+    1
+   ],
+   "same_bytes": false,
+   "before": {
+    "quarantined": [
+     [
+      "reaction",
+      "ALAS2-catalyzed ALA formation",
+      "non_protein_actor_in_modifiers"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "omitted_from_pwml:1_processes+0_actors"
+    ]
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [
+     [
+      "modifiers",
+      "Pyridoxal 5'-phosphate",
+      "non_protein_actor_in_modifiers",
+      [
+       "ALAS2-catalyzed ALA formation"
+      ]
+     ]
+    ],
+    "release": "review_required",
+    "review_reasons": [
+     "omitted_from_pwml:0_processes+1_actors"
+    ]
+   }
+  },
+  {
+   "idx": 45,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "stage3_revalidation",
+    "stage3_revalidation"
+   ],
+   "in_reactions": 6,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [
+     [
+      "reaction",
+      "EntD-catalyzed phosphopantetheinylation of apo-EntB",
+      "protein_missing_external_identity"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [
+     [
+      "reaction",
+      "EntD-catalyzed phosphopantetheinylation of apo-EntB",
+      "protein_missing_external_identity"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 46,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 5,
+   "ir_reactions": [
+    5,
+    5
+   ],
+   "pwml_reaction": [
+    5,
+    5
+   ],
+   "pwml_reaction_enzyme": [
+    5,
+    5
+   ],
+   "pwml_protein_complex": [
+    4,
+    4
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 47,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "required_field_gate",
+    "required_field_gate"
+   ],
+   "in_reactions": 1,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 48,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 2,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    0,
+    0
+   ],
+   "pwml_reaction_enzyme": [
+    0,
+    0
+   ],
+   "pwml_protein_complex": [
+    1,
+    1
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [
+     [
+      "reaction",
+      "ferrochelatase-catalyzed heme biosynthesis reaction",
+      "no_defensible_reaction_support"
+     ],
+     [
+      "reaction",
+      "glycine consumption in heme biosynthesis",
+      "no_defensible_reaction_support"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "minimum_core:requested_core_coverage_below_minimum:0.429<0.500",
+     "omitted_from_pwml:2_processes+0_actors"
+    ]
+   },
+   "after": {
+    "quarantined": [
+     [
+      "reaction",
+      "ferrochelatase-catalyzed heme biosynthesis reaction",
+      "no_defensible_reaction_support"
+     ],
+     [
+      "reaction",
+      "glycine consumption in heme biosynthesis",
+      "no_defensible_reaction_support"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "minimum_core:requested_core_coverage_below_minimum:0.429<0.500",
+     "omitted_from_pwml:2_processes+0_actors"
+    ]
+   }
+  },
+  {
+   "idx": 49,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "stage3_revalidation",
+    "stage3_revalidation"
+   ],
+   "in_reactions": 4,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 50,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 4,
+   "ir_reactions": [
+    4,
+    4
+   ],
+   "pwml_reaction": [
+    4,
+    4
+   ],
+   "pwml_reaction_enzyme": [
+    3,
+    3
+   ],
+   "pwml_protein_complex": [
+    4,
+    4
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 51,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "stage3_revalidation",
+    "stage3_revalidation"
+   ],
+   "in_reactions": 3,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 52,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 3,
+   "ir_reactions": [
+    3,
+    3
+   ],
+   "pwml_reaction": [
+    3,
+    3
+   ],
+   "pwml_reaction_enzyme": [
+    3,
+    3
+   ],
+   "pwml_protein_complex": [
+    3,
+    3
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "minimum_core:requested_core_coverage_below_minimum:0.259<0.500"
+    ]
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "minimum_core:requested_core_coverage_below_minimum:0.259<0.500"
+    ]
+   }
+  },
+  {
+   "idx": 53,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "required_field_gate",
+    "required_field_gate"
+   ],
+   "in_reactions": 1,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 54,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 1,
+   "ir_reactions": [
+    1,
+    1
+   ],
+   "pwml_reaction": [
+    1,
+    1
+   ],
+   "pwml_reaction_enzyme": [
+    1,
+    1
+   ],
+   "pwml_protein_complex": [
+    1,
+    1
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 55,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "required_field_gate",
+    "required_field_gate"
+   ],
+   "in_reactions": 2,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 56,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 1,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    0,
+    0
+   ],
+   "pwml_reaction_enzyme": [
+    0,
+    0
+   ],
+   "pwml_protein_complex": [
+    0,
+    0
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [
+     [
+      "reaction",
+      "PSA conversion to sulfacetamide",
+      "no_defensible_reaction_support"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "omitted_from_pwml:1_processes+0_actors"
+    ]
+   },
+   "after": {
+    "quarantined": [
+     [
+      "reaction",
+      "PSA conversion to sulfacetamide",
+      "no_defensible_reaction_support"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "omitted_from_pwml:1_processes+0_actors"
+    ]
+   }
+  },
+  {
+   "idx": 57,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "stage3_revalidation",
+    "stage3_revalidation"
+   ],
+   "in_reactions": 6,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [
+     [
+      "reaction",
+      "EntC isochorismate synthase reaction",
+      "protein_missing_external_identity"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [
+     [
+      "reaction",
+      "EntC isochorismate synthase reaction",
+      "protein_missing_external_identity"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 58,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 7,
+   "ir_reactions": [
+    7,
+    7
+   ],
+   "pwml_reaction": [
+    7,
+    7
+   ],
+   "pwml_reaction_enzyme": [
+    6,
+    6
+   ],
+   "pwml_protein_complex": [
+    6,
+    6
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 59,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "stage3_revalidation",
+    "stage3_revalidation"
+   ],
+   "in_reactions": 4,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 60,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 2,
+   "ir_reactions": [
+    2,
+    2
+   ],
+   "pwml_reaction": [
+    2,
+    2
+   ],
+   "pwml_reaction_enzyme": [
+    2,
+    2
+   ],
+   "pwml_protein_complex": [
+    2,
+    2
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 61,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "required_field_gate",
+    "required_field_gate"
+   ],
+   "in_reactions": 2,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "release_ready",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "release_ready",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 62,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 1,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    0,
+    0
+   ],
+   "pwml_reaction_enzyme": [
+    0,
+    0
+   ],
+   "pwml_protein_complex": [
+    0,
+    0
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [
+     [
+      "reaction",
+      "NDM-1 catalyzed hydrolysis of meropenem",
+      "no_defensible_reaction_support"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "omitted_from_pwml:1_processes+0_actors"
+    ]
+   },
+   "after": {
+    "quarantined": [
+     [
+      "reaction",
+      "NDM-1 catalyzed hydrolysis of meropenem",
+      "no_defensible_reaction_support"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "omitted_from_pwml:1_processes+0_actors"
+    ]
+   }
+  },
+  {
+   "idx": 63,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "stage3_revalidation",
+    "stage3_revalidation"
+   ],
+   "in_reactions": 0,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [
+     [
+      "transport",
+      "iron redistribution from cytosolic state to mitochondrial matrix state",
+      "unresolved_actor_in_transporters"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [
+     [
+      "transport",
+      "iron redistribution from cytosolic state to mitochondrial matrix state",
+      "unresolved_actor_in_transporters"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 64,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "required_field_gate",
+    "required_field_gate"
+   ],
+   "in_reactions": 3,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 65,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "stage3_revalidation",
+    "stage3_revalidation"
+   ],
+   "in_reactions": 6,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [
+     [
+      "reaction",
+      "EntF enterobactin synthase reaction",
+      "protein_missing_external_identity"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [
+     [
+      "reaction",
+      "EntF enterobactin synthase reaction",
+      "protein_missing_external_identity"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 66,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 5,
+   "ir_reactions": [
+    5,
+    5
+   ],
+   "pwml_reaction": [
+    5,
+    5
+   ],
+   "pwml_reaction_enzyme": [
+    5,
+    5
+   ],
+   "pwml_protein_complex": [
+    6,
+    6
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 67,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 1,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    0,
+    0
+   ],
+   "pwml_reaction_enzyme": [
+    0,
+    0
+   ],
+   "pwml_protein_complex": [
+    0,
+    0
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [
+     [
+      "reaction",
+      "heme biosynthesis (terminal step catalyzed by ferrochelatase)",
+      "no_defensible_reaction_support"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "minimum_core:requested_core_coverage_below_minimum:0.429<0.500",
+     "omitted_from_pwml:1_processes+0_actors"
+    ]
+   },
+   "after": {
+    "quarantined": [
+     [
+      "reaction",
+      "heme biosynthesis (terminal step catalyzed by ferrochelatase)",
+      "no_defensible_reaction_support"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "minimum_core:requested_core_coverage_below_minimum:0.429<0.500",
+     "omitted_from_pwml:1_processes+0_actors"
+    ]
+   }
+  },
+  {
+   "idx": 68,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 3,
+   "ir_reactions": [
+    3,
+    3
+   ],
+   "pwml_reaction": [
+    3,
+    3
+   ],
+   "pwml_reaction_enzyme": [
+    3,
+    3
+   ],
+   "pwml_protein_complex": [
+    5,
+    5
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 69,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "stage3_revalidation",
+    "stage3_revalidation"
+   ],
+   "in_reactions": 4,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [
+     [
+      "interaction",
+      "Fur represses ent operon",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "RyhB downregulates siderophore production",
+      "protein_missing_external_identity"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [
+     [
+      "interaction",
+      "Fur represses ent operon",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "RyhB downregulates siderophore production",
+      "protein_missing_external_identity"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 70,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 3,
+   "ir_reactions": [
+    3,
+    3
+   ],
+   "pwml_reaction": [
+    3,
+    3
+   ],
+   "pwml_reaction_enzyme": [
+    3,
+    3
+   ],
+   "pwml_protein_complex": [
+    3,
+    3
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 71,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "stage3_revalidation",
+    "stage3_revalidation"
+   ],
+   "in_reactions": 3,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 72,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 3,
+   "ir_reactions": [
+    3,
+    3
+   ],
+   "pwml_reaction": [
+    3,
+    3
+   ],
+   "pwml_reaction_enzyme": [
+    3,
+    3
+   ],
+   "pwml_protein_complex": [
+    2,
+    2
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "minimum_core:requested_core_coverage_below_minimum:0.185<0.500"
+    ]
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "minimum_core:requested_core_coverage_below_minimum:0.185<0.500"
+    ]
+   }
+  },
+  {
+   "idx": 73,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "stage3_revalidation",
+    "stage3_revalidation"
+   ],
+   "in_reactions": 1,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 74,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 1,
+   "ir_reactions": [
+    1,
+    1
+   ],
+   "pwml_reaction": [
+    1,
+    1
+   ],
+   "pwml_reaction_enzyme": [
+    1,
+    1
+   ],
+   "pwml_protein_complex": [
+    2,
+    2
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 75,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "stage3_revalidation",
+    "stage3_revalidation"
+   ],
+   "in_reactions": 6,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [
+     [
+      "reaction",
+      "LpxA reaction",
+      "protein_missing_external_identity"
+     ],
+     [
+      "reaction",
+      "LpxL reaction",
+      "protein_missing_external_identity"
+     ],
+     [
+      "reaction",
+      "LpxM reaction",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "FtsH degrades LpxC",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "LapB binds FtsH",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "LapB binds LpxC",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "YejM binds LapB",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "YejM binds LPS",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "FtsH degrades WaaA",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "FtsH degrades LpxD",
+      "protein_missing_external_identity"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [
+     [
+      "reaction",
+      "LpxA reaction",
+      "protein_missing_external_identity"
+     ],
+     [
+      "reaction",
+      "LpxL reaction",
+      "protein_missing_external_identity"
+     ],
+     [
+      "reaction",
+      "LpxM reaction",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "FtsH degrades LpxC",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "LapB binds FtsH",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "LapB binds LpxC",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "YejM binds LapB",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "YejM binds LPS",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "FtsH degrades WaaA",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "FtsH degrades LpxD",
+      "protein_missing_external_identity"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 76,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 7,
+   "ir_reactions": [
+    7,
+    7
+   ],
+   "pwml_reaction": [
+    7,
+    7
+   ],
+   "pwml_reaction_enzyme": [
+    10,
+    10
+   ],
+   "pwml_protein_complex": [
+    9,
+    9
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [
+     [
+      "interaction",
+      "FtsH/YciM complex regulation of LpxC",
+      "protein_complex_missing_components"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "omitted_from_pwml:1_processes+0_actors"
+    ]
+   },
+   "after": {
+    "quarantined": [
+     [
+      "interaction",
+      "FtsH/YciM complex regulation of LpxC",
+      "protein_complex_missing_components"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "omitted_from_pwml:1_processes+0_actors"
+    ]
+   }
+  },
+  {
+   "idx": 77,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 1,
+   "ir_reactions": [
+    1,
+    1
+   ],
+   "pwml_reaction": [
+    1,
+    1
+   ],
+   "pwml_reaction_enzyme": [
+    2,
+    2
+   ],
+   "pwml_protein_complex": [
+    3,
+    3
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [
+     [
+      "interaction",
+      "LONP1 degrades ALAS1",
+      "protein_complex_missing_components"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "omitted_from_pwml:1_processes+0_actors"
+    ]
+   },
+   "after": {
+    "quarantined": [
+     [
+      "interaction",
+      "LONP1 degrades ALAS1",
+      "protein_complex_missing_components"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "omitted_from_pwml:1_processes+0_actors"
+    ]
+   }
+  },
+  {
+   "idx": 78,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 7,
+   "ir_reactions": [
+    7,
+    7
+   ],
+   "pwml_reaction": [
+    7,
+    7
+   ],
+   "pwml_reaction_enzyme": [
+    9,
+    9
+   ],
+   "pwml_protein_complex": [
+    8,
+    8
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 79,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 4,
+   "ir_reactions": [
+    4,
+    4
+   ],
+   "pwml_reaction": [
+    4,
+    4
+   ],
+   "pwml_reaction_enzyme": [
+    3,
+    3
+   ],
+   "pwml_protein_complex": [
+    3,
+    3
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "minimum_core:requested_core_coverage_below_minimum:0.250<0.500"
+    ]
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "minimum_core:requested_core_coverage_below_minimum:0.250<0.500"
+    ]
+   }
+  },
+  {
+   "idx": 80,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "required_field_gate",
+    "required_field_gate"
+   ],
+   "in_reactions": 5,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 81,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "required_field_gate",
+    "required_field_gate"
+   ],
+   "in_reactions": 2,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 82,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 1,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    0,
+    0
+   ],
+   "pwml_reaction_enzyme": [
+    0,
+    0
+   ],
+   "pwml_protein_complex": [
+    0,
+    0
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [
+     [
+      "reaction",
+      "ferrochelatase reaction",
+      "no_defensible_reaction_support"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "minimum_core:requested_core_coverage_below_minimum:0.333<0.500",
+     "omitted_from_pwml:1_processes+0_actors"
+    ]
+   },
+   "after": {
+    "quarantined": [
+     [
+      "reaction",
+      "ferrochelatase reaction",
+      "no_defensible_reaction_support"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "minimum_core:requested_core_coverage_below_minimum:0.333<0.500",
+     "omitted_from_pwml:1_processes+0_actors"
+    ]
+   }
+  },
+  {
+   "idx": 83,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "stage3_revalidation",
+    "stage3_revalidation"
+   ],
+   "in_reactions": 4,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [
+     [
+      "interaction",
+      "Enterobactin-iron binding",
+      "undeclared_entity_in_entity_2"
+     ],
+     [
+      "interaction",
+      "Fur regulation of ent operon",
+      "protein_missing_external_identity"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [
+     [
+      "interaction",
+      "Enterobactin-iron binding",
+      "undeclared_entity_in_entity_2"
+     ],
+     [
+      "interaction",
+      "Fur regulation of ent operon",
+      "protein_missing_external_identity"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 84,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 5,
+   "ir_reactions": [
+    5,
+    5
+   ],
+   "pwml_reaction": [
+    5,
+    5
+   ],
+   "pwml_reaction_enzyme": [
+    4,
+    4
+   ],
+   "pwml_protein_complex": [
+    5,
+    5
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 85,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "stage3_revalidation",
+    "stage3_revalidation"
+   ],
+   "in_reactions": 4,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 86,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 3,
+   "ir_reactions": [
+    3,
+    3
+   ],
+   "pwml_reaction": [
+    3,
+    3
+   ],
+   "pwml_reaction_enzyme": [
+    3,
+    3
+   ],
+   "pwml_protein_complex": [
+    3,
+    3
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 87,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "stage3_revalidation",
+    "stage3_revalidation"
+   ],
+   "in_reactions": 1,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [
+     [
+      "reaction",
+      "ALAS2-catalyzed condensation of glycine and succinyl-CoA to aminolevulinic acid",
+      "non_protein_actor_in_modifiers"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [
+     [
+      "reaction",
+      "ALAS2-catalyzed condensation of glycine and succinyl-CoA to aminolevulinic acid",
+      "non_protein_actor_in_modifiers"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 88,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 1,
+   "ir_reactions": [
+    1,
+    1
+   ],
+   "pwml_reaction": [
+    1,
+    1
+   ],
+   "pwml_reaction_enzyme": [
+    3,
+    3
+   ],
+   "pwml_protein_complex": [
+    3,
+    3
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 89,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "stage3_revalidation",
+    "stage3_revalidation"
+   ],
+   "in_reactions": 1,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 90,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "stage3_revalidation",
+    "stage3_revalidation"
+   ],
+   "in_reactions": 5,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 91,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 5,
+   "ir_reactions": [
+    5,
+    5
+   ],
+   "pwml_reaction": [
+    5,
+    5
+   ],
+   "pwml_reaction_enzyme": [
+    7,
+    7
+   ],
+   "pwml_protein_complex": [
+    7,
+    7
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 92,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "required_field_gate",
+    "required_field_gate"
+   ],
+   "in_reactions": 2,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 93,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 2,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    0,
+    0
+   ],
+   "pwml_reaction_enzyme": [
+    0,
+    0
+   ],
+   "pwml_protein_complex": [
+    0,
+    0
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [
+     [
+      "reaction",
+      "\u03b4-aminolevulinic acid synthesis from glycine and succinyl-CoA",
+      "no_defensible_reaction_support"
+     ],
+     [
+      "reaction",
+      "SFXN4-modulated ferrochelatase reaction (heme synthesis step)",
+      "no_defensible_reaction_support"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "omitted_from_pwml:2_processes+0_actors"
+    ]
+   },
+   "after": {
+    "quarantined": [
+     [
+      "reaction",
+      "\u03b4-aminolevulinic acid synthesis from glycine and succinyl-CoA",
+      "no_defensible_reaction_support"
+     ],
+     [
+      "reaction",
+      "SFXN4-modulated ferrochelatase reaction (heme synthesis step)",
+      "no_defensible_reaction_support"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "omitted_from_pwml:2_processes+0_actors"
+    ]
+   }
+  },
+  {
+   "idx": 94,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "stage3_revalidation",
+    "stage3_revalidation"
+   ],
+   "in_reactions": 8,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [
+     [
+      "reaction",
+      "LpxL/LpxM acylation",
+      "protein_missing_external_identity"
+     ],
+     [
+      "reaction",
+      "LpxA reaction",
+      "protein_missing_external_identity"
+     ],
+     [
+      "reaction",
+      "LpxC reaction",
+      "protein_missing_external_identity"
+     ],
+     [
+      "transport",
+      "PbgA-mediated cardiolipin transport",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "FtsH degrades LpxC",
+      "ambiguous_entity_type:protein_complexes+proteins"
+     ],
+     [
+      "interaction",
+      "LapB binds LpxC",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "YejM binds LapB",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "YejM binds LPS",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "LPS inhibits YejM-LapB binding",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "LapA binds LapB",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "FtsH degrades LpxD",
+      "ambiguous_entity_type:protein_complexes+proteins"
+     ],
+     [
+      "interaction",
+      "FtsH degrades WaaA",
+      "ambiguous_entity_type:protein_complexes+proteins"
+     ],
+     [
+      "interaction",
+      "YejM inhibits FtsH/YciM complex",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "LapB activates FtsH/YciM complex",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "FadD activates fatty acid degradation",
+      "undeclared_entity_in_entity_2"
+     ],
+     [
+      "interaction",
+      "LapB binds LpxA",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "LapB binds LpxD",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "LapB binds FabZ",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "LapB binds YhcB",
+      "protein_missing_external_identity"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [
+     [
+      "reaction",
+      "LpxL/LpxM acylation",
+      "protein_missing_external_identity"
+     ],
+     [
+      "reaction",
+      "LpxA reaction",
+      "protein_missing_external_identity"
+     ],
+     [
+      "reaction",
+      "LpxC reaction",
+      "protein_missing_external_identity"
+     ],
+     [
+      "transport",
+      "PbgA-mediated cardiolipin transport",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "FtsH degrades LpxC",
+      "ambiguous_entity_type:protein_complexes+proteins"
+     ],
+     [
+      "interaction",
+      "LapB binds LpxC",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "YejM binds LapB",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "YejM binds LPS",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "LPS inhibits YejM-LapB binding",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "LapA binds LapB",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "FtsH degrades LpxD",
+      "ambiguous_entity_type:protein_complexes+proteins"
+     ],
+     [
+      "interaction",
+      "FtsH degrades WaaA",
+      "ambiguous_entity_type:protein_complexes+proteins"
+     ],
+     [
+      "interaction",
+      "YejM inhibits FtsH/YciM complex",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "LapB activates FtsH/YciM complex",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "FadD activates fatty acid degradation",
+      "undeclared_entity_in_entity_2"
+     ],
+     [
+      "interaction",
+      "LapB binds LpxA",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "LapB binds LpxD",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "LapB binds FabZ",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "LapB binds YhcB",
+      "protein_missing_external_identity"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 95,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "stage3_revalidation",
+    "stage3_revalidation"
+   ],
+   "in_reactions": 4,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 96,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 4,
+   "ir_reactions": [
+    4,
+    4
+   ],
+   "pwml_reaction": [
+    4,
+    4
+   ],
+   "pwml_reaction_enzyme": [
+    4,
+    4
+   ],
+   "pwml_protein_complex": [
+    4,
+    4
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 97,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "stage3_revalidation",
+    "stage3_revalidation"
+   ],
+   "in_reactions": 3,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 98,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 3,
+   "ir_reactions": [
+    3,
+    3
+   ],
+   "pwml_reaction": [
+    3,
+    3
+   ],
+   "pwml_reaction_enzyme": [
+    3,
+    3
+   ],
+   "pwml_protein_complex": [
+    3,
+    3
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 99,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "required_field_gate",
+    "required_field_gate"
+   ],
+   "in_reactions": 1,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 100,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 2,
+   "ir_reactions": [
+    2,
+    2
+   ],
+   "pwml_reaction": [
+    2,
+    2
+   ],
+   "pwml_reaction_enzyme": [
+    1,
+    1
+   ],
+   "pwml_protein_complex": [
+    1,
+    1
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 101,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "required_field_gate",
+    "required_field_gate"
+   ],
+   "in_reactions": 3,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 102,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 5,
+   "ir_reactions": [
+    5,
+    5
+   ],
+   "pwml_reaction": [
+    5,
+    5
+   ],
+   "pwml_reaction_enzyme": [
+    5,
+    5
+   ],
+   "pwml_protein_complex": [
+    6,
+    6
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 103,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 1,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    0,
+    0
+   ],
+   "pwml_reaction_enzyme": [
+    0,
+    0
+   ],
+   "pwml_protein_complex": [
+    0,
+    0
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [
+     [
+      "reaction",
+      "heme biosynthesis reaction",
+      "no_defensible_reaction_support"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "minimum_core:requested_core_coverage_below_minimum:0.333<0.500",
+     "omitted_from_pwml:1_processes+0_actors"
+    ]
+   },
+   "after": {
+    "quarantined": [
+     [
+      "reaction",
+      "heme biosynthesis reaction",
+      "no_defensible_reaction_support"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "minimum_core:requested_core_coverage_below_minimum:0.333<0.500",
+     "omitted_from_pwml:1_processes+0_actors"
+    ]
+   }
+  },
+  {
+   "idx": 104,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "stage3_revalidation",
+    "stage3_revalidation"
+   ],
+   "in_reactions": 4,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 105,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 3,
+   "ir_reactions": [
+    3,
+    3
+   ],
+   "pwml_reaction": [
+    3,
+    3
+   ],
+   "pwml_reaction_enzyme": [
+    3,
+    3
+   ],
+   "pwml_protein_complex": [
+    3,
+    3
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [
+     [
+      "transporters",
+      "FepA",
+      "actor_schema_not_canonical",
+      [
+       "ferri-enterobactin import via FepA"
+      ]
+     ]
+    ],
+    "release": "review_required",
+    "review_reasons": [
+     "omitted_from_pwml:0_processes+1_actors"
+    ]
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [
+     [
+      "transporters",
+      "FepA",
+      "actor_schema_not_canonical",
+      [
+       "ferri-enterobactin import via FepA"
+      ]
+     ]
+    ],
+    "release": "review_required",
+    "review_reasons": [
+     "omitted_from_pwml:0_processes+1_actors"
+    ]
+   }
+  },
+  {
+   "idx": 106,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "required_field_gate",
+    "required_field_gate"
+   ],
+   "in_reactions": 4,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 107,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 3,
+   "ir_reactions": [
+    3,
+    3
+   ],
+   "pwml_reaction": [
+    3,
+    3
+   ],
+   "pwml_reaction_enzyme": [
+    3,
+    3
+   ],
+   "pwml_protein_complex": [
+    3,
+    3
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 108,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "required_field_gate",
+    "required_field_gate"
+   ],
+   "in_reactions": 1,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 109,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 1,
+   "ir_reactions": [
+    1,
+    1
+   ],
+   "pwml_reaction": [
+    1,
+    1
+   ],
+   "pwml_reaction_enzyme": [
+    2,
+    2
+   ],
+   "pwml_protein_complex": [
+    2,
+    2
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 110,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "stage3_revalidation",
+    "stage3_revalidation"
+   ],
+   "in_reactions": 3,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [
+     [
+      "reaction",
+      "PvdL reaction",
+      "protein_missing_external_identity"
+     ],
+     [
+      "reaction",
+      "pyoverdine backbone elongation and cyclization",
+      "protein_missing_external_identity"
+     ],
+     [
+      "transport",
+      "PvdE-mediated acylated ferribactin export into the periplasm",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "PvdL interacts with PvdD",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "PvdA interacts with PvdL",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "PvdA interacts with PvdI",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "PvdA interacts with PvdJ",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "PvdA interacts with PvdD",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "PvdL co-localizes with PvdI",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "PvdL co-localizes with PvdJ",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "PvdL co-localizes with PvdD",
+      "protein_missing_external_identity"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [
+     [
+      "reaction",
+      "PvdL reaction",
+      "protein_missing_external_identity"
+     ],
+     [
+      "reaction",
+      "pyoverdine backbone elongation and cyclization",
+      "protein_missing_external_identity"
+     ],
+     [
+      "transport",
+      "PvdE-mediated acylated ferribactin export into the periplasm",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "PvdL interacts with PvdD",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "PvdA interacts with PvdL",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "PvdA interacts with PvdI",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "PvdA interacts with PvdJ",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "PvdA interacts with PvdD",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "PvdL co-localizes with PvdI",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "PvdL co-localizes with PvdJ",
+      "protein_missing_external_identity"
+     ],
+     [
+      "interaction",
+      "PvdL co-localizes with PvdD",
+      "protein_missing_external_identity"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 111,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 0,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    0,
+    0
+   ],
+   "pwml_reaction_enzyme": [
+    0,
+    0
+   ],
+   "pwml_protein_complex": [
+    0,
+    0
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "minimum_core:requested_core_coverage_below_minimum:0.176<0.500"
+    ]
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "minimum_core:requested_core_coverage_below_minimum:0.176<0.500"
+    ]
+   }
+  },
+  {
+   "idx": 112,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "stage3_revalidation",
+    "stage3_revalidation"
+   ],
+   "in_reactions": 6,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [
+     [
+      "reaction",
+      "PAL reaction",
+      "protein_missing_external_identity"
+     ],
+     [
+      "reaction",
+      "PAL reaction",
+      "protein_missing_external_identity"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [
+     [
+      "reaction",
+      "PAL reaction",
+      "protein_missing_external_identity"
+     ],
+     [
+      "reaction",
+      "PAL reaction",
+      "protein_missing_external_identity"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 113,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 6,
+   "ir_reactions": [
+    5,
+    6
+   ],
+   "pwml_reaction": [
+    5,
+    6
+   ],
+   "pwml_reaction_enzyme": [
+    5,
+    6
+   ],
+   "pwml_protein_complex": [
+    3,
+    4
+   ],
+   "same_bytes": false,
+   "before": {
+    "quarantined": [
+     [
+      "reaction",
+      "C4H hydroxylation",
+      "reaction_enzyme_must_be_protein_complex"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "omitted_from_pwml:1_processes+0_actors"
+    ]
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 114,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 2,
+   "ir_reactions": [
+    2,
+    2
+   ],
+   "pwml_reaction": [
+    2,
+    2
+   ],
+   "pwml_reaction_enzyme": [
+    2,
+    2
+   ],
+   "pwml_protein_complex": [
+    2,
+    2
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "minimum_core:requested_core_coverage_below_minimum:0.400<0.500"
+    ]
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "minimum_core:requested_core_coverage_below_minimum:0.400<0.500"
+    ]
+   }
+  },
+  {
+   "idx": 115,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "stage3_revalidation",
+    "stage3_revalidation"
+   ],
+   "in_reactions": 19,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [
+     [
+      "reaction",
+      "SPT reaction",
+      "protein_missing_external_identity"
+     ],
+     [
+      "reaction",
+      "Glucosylceramide synthesis",
+      "protein_missing_external_identity"
+     ],
+     [
+      "reaction",
+      "Galactosylceramide synthesis",
+      "protein_missing_external_identity"
+     ],
+     [
+      "reaction",
+      "Ceramidase reaction",
+      "protein_missing_external_identity"
+     ],
+     [
+      "reaction",
+      "Sphingosine-1-phosphate phosphatase reaction",
+      "protein_missing_external_identity"
+     ],
+     [
+      "reaction",
+      "Sphingomyelinase reaction",
+      "protein_missing_external_identity"
+     ],
+     [
+      "reaction",
+      "S1P dephosphorylation",
+      "protein_missing_external_identity"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "diagnostic_only",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [
+     [
+      "reaction",
+      "SPT reaction",
+      "protein_missing_external_identity"
+     ],
+     [
+      "reaction",
+      "Glucosylceramide synthesis",
+      "protein_missing_external_identity"
+     ],
+     [
+      "reaction",
+      "Galactosylceramide synthesis",
+      "protein_missing_external_identity"
+     ],
+     [
+      "reaction",
+      "Ceramidase reaction",
+      "protein_missing_external_identity"
+     ],
+     [
+      "reaction",
+      "Sphingosine-1-phosphate phosphatase reaction",
+      "protein_missing_external_identity"
+     ],
+     [
+      "reaction",
+      "Sphingomyelinase reaction",
+      "protein_missing_external_identity"
+     ],
+     [
+      "reaction",
+      "S1P dephosphorylation",
+      "protein_missing_external_identity"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "diagnostic_only",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 116,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 15,
+   "ir_reactions": [
+    14,
+    15
+   ],
+   "pwml_reaction": [
+    14,
+    15
+   ],
+   "pwml_reaction_enzyme": [
+    9,
+    10
+   ],
+   "pwml_protein_complex": [
+    9,
+    10
+   ],
+   "same_bytes": false,
+   "before": {
+    "quarantined": [
+     [
+      "reaction",
+      "ceramide synthase reaction",
+      "reaction_enzyme_must_be_protein_complex"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "omitted_from_pwml:1_processes+0_actors"
+    ]
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 117,
+   "mode": "research",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "stage3_revalidation",
+    "stage3_revalidation"
+   ],
+   "in_reactions": 11,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [
+     [
+      "reaction",
+      "riboflavin kinase reaction",
+      "protein_missing_external_identity"
+     ],
+     [
+      "reaction",
+      "FAD synthetase reaction",
+      "protein_missing_external_identity"
+     ],
+     [
+      "reaction",
+      "FAD synthetase reaction",
+      "protein_missing_external_identity"
+     ],
+     [
+      "reaction",
+      "RibFC riboflavin kinase reaction",
+      "protein_missing_external_identity"
+     ],
+     [
+      "reaction",
+      "RibFC FAD synthetase reaction",
+      "protein_missing_external_identity"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [
+     [
+      "reaction",
+      "riboflavin kinase reaction",
+      "protein_missing_external_identity"
+     ],
+     [
+      "reaction",
+      "FAD synthetase reaction",
+      "protein_missing_external_identity"
+     ],
+     [
+      "reaction",
+      "FAD synthetase reaction",
+      "protein_missing_external_identity"
+     ],
+     [
+      "reaction",
+      "RibFC riboflavin kinase reaction",
+      "protein_missing_external_identity"
+     ],
+     [
+      "reaction",
+      "RibFC FAD synthetase reaction",
+      "protein_missing_external_identity"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 118,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 5,
+   "ir_reactions": [
+    5,
+    5
+   ],
+   "pwml_reaction": [
+    5,
+    5
+   ],
+   "pwml_reaction_enzyme": [
+    5,
+    5
+   ],
+   "pwml_protein_complex": [
+    5,
+    5
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 119,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 5,
+   "ir_reactions": [
+    5,
+    5
+   ],
+   "pwml_reaction": [
+    5,
+    5
+   ],
+   "pwml_reaction_enzyme": [
+    5,
+    5
+   ],
+   "pwml_protein_complex": [
+    5,
+    5
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 120,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 7,
+   "ir_reactions": [
+    7,
+    7
+   ],
+   "pwml_reaction": [
+    7,
+    7
+   ],
+   "pwml_reaction_enzyme": [
+    12,
+    12
+   ],
+   "pwml_protein_complex": [
+    4,
+    4
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 121,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 4,
+   "ir_reactions": [
+    4,
+    4
+   ],
+   "pwml_reaction": [
+    4,
+    4
+   ],
+   "pwml_reaction_enzyme": [
+    4,
+    4
+   ],
+   "pwml_protein_complex": [
+    3,
+    3
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "minimum_core:core_process_count_below_minimum:0<1",
+     "minimum_core:requested_core_coverage_below_minimum:0.000<0.500"
+    ]
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "minimum_core:core_process_count_below_minimum:0<1",
+     "minimum_core:requested_core_coverage_below_minimum:0.000<0.500"
+    ]
+   }
+  },
+  {
+   "idx": 122,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 4,
+   "ir_reactions": [
+    4,
+    4
+   ],
+   "pwml_reaction": [
+    4,
+    4
+   ],
+   "pwml_reaction_enzyme": [
+    6,
+    6
+   ],
+   "pwml_protein_complex": [
+    4,
+    4
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 123,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 2,
+   "ir_reactions": [
+    2,
+    2
+   ],
+   "pwml_reaction": [
+    2,
+    2
+   ],
+   "pwml_reaction_enzyme": [
+    2,
+    2
+   ],
+   "pwml_protein_complex": [
+    2,
+    2
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "minimum_core:requested_core_coverage_below_minimum:0.250<0.500"
+    ]
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "minimum_core:requested_core_coverage_below_minimum:0.250<0.500"
+    ]
+   }
+  },
+  {
+   "idx": 124,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 5,
+   "ir_reactions": [
+    5,
+    5
+   ],
+   "pwml_reaction": [
+    5,
+    5
+   ],
+   "pwml_reaction_enzyme": [
+    6,
+    6
+   ],
+   "pwml_protein_complex": [
+    5,
+    5
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 125,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 8,
+   "ir_reactions": [
+    8,
+    8
+   ],
+   "pwml_reaction": [
+    8,
+    8
+   ],
+   "pwml_reaction_enzyme": [
+    8,
+    8
+   ],
+   "pwml_protein_complex": [
+    4,
+    4
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 126,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 5,
+   "ir_reactions": [
+    5,
+    5
+   ],
+   "pwml_reaction": [
+    5,
+    5
+   ],
+   "pwml_reaction_enzyme": [
+    14,
+    14
+   ],
+   "pwml_protein_complex": [
+    7,
+    7
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 127,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 4,
+   "ir_reactions": [
+    4,
+    4
+   ],
+   "pwml_reaction": [
+    4,
+    4
+   ],
+   "pwml_reaction_enzyme": [
+    4,
+    4
+   ],
+   "pwml_protein_complex": [
+    2,
+    2
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "minimum_core:requested_core_coverage_below_minimum:0.385<0.500"
+    ]
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "minimum_core:requested_core_coverage_below_minimum:0.385<0.500"
+    ]
+   }
+  },
+  {
+   "idx": 128,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 11,
+   "ir_reactions": [
+    11,
+    11
+   ],
+   "pwml_reaction": [
+    11,
+    11
+   ],
+   "pwml_reaction_enzyme": [
+    9,
+    9
+   ],
+   "pwml_protein_complex": [
+    12,
+    12
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 129,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 8,
+   "ir_reactions": [
+    8,
+    8
+   ],
+   "pwml_reaction": [
+    8,
+    8
+   ],
+   "pwml_reaction_enzyme": [
+    10,
+    10
+   ],
+   "pwml_protein_complex": [
+    6,
+    6
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 130,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 5,
+   "ir_reactions": [
+    5,
+    5
+   ],
+   "pwml_reaction": [
+    5,
+    5
+   ],
+   "pwml_reaction_enzyme": [
+    4,
+    4
+   ],
+   "pwml_protein_complex": [
+    4,
+    4
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 131,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 4,
+   "ir_reactions": [
+    4,
+    4
+   ],
+   "pwml_reaction": [
+    4,
+    4
+   ],
+   "pwml_reaction_enzyme": [
+    2,
+    2
+   ],
+   "pwml_protein_complex": [
+    2,
+    2
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 132,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 4,
+   "ir_reactions": [
+    4,
+    4
+   ],
+   "pwml_reaction": [
+    4,
+    4
+   ],
+   "pwml_reaction_enzyme": [
+    5,
+    5
+   ],
+   "pwml_protein_complex": [
+    4,
+    4
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 133,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 5,
+   "ir_reactions": [
+    5,
+    5
+   ],
+   "pwml_reaction": [
+    5,
+    5
+   ],
+   "pwml_reaction_enzyme": [
+    6,
+    6
+   ],
+   "pwml_protein_complex": [
+    4,
+    4
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 134,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 10,
+   "ir_reactions": [
+    10,
+    10
+   ],
+   "pwml_reaction": [
+    10,
+    10
+   ],
+   "pwml_reaction_enzyme": [
+    17,
+    17
+   ],
+   "pwml_protein_complex": [
+    6,
+    6
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 135,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 10,
+   "ir_reactions": [
+    10,
+    10
+   ],
+   "pwml_reaction": [
+    10,
+    10
+   ],
+   "pwml_reaction_enzyme": [
+    12,
+    12
+   ],
+   "pwml_protein_complex": [
+    7,
+    7
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 136,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 4,
+   "ir_reactions": [
+    4,
+    4
+   ],
+   "pwml_reaction": [
+    4,
+    4
+   ],
+   "pwml_reaction_enzyme": [
+    4,
+    4
+   ],
+   "pwml_protein_complex": [
+    5,
+    5
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 137,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 4,
+   "ir_reactions": [
+    4,
+    4
+   ],
+   "pwml_reaction": [
+    4,
+    4
+   ],
+   "pwml_reaction_enzyme": [
+    10,
+    10
+   ],
+   "pwml_protein_complex": [
+    8,
+    8
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 138,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 8,
+   "ir_reactions": [
+    8,
+    8
+   ],
+   "pwml_reaction": [
+    8,
+    8
+   ],
+   "pwml_reaction_enzyme": [
+    7,
+    7
+   ],
+   "pwml_protein_complex": [
+    7,
+    7
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 139,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 3,
+   "ir_reactions": [
+    3,
+    3
+   ],
+   "pwml_reaction": [
+    3,
+    3
+   ],
+   "pwml_reaction_enzyme": [
+    4,
+    4
+   ],
+   "pwml_protein_complex": [
+    4,
+    4
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 140,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 2,
+   "ir_reactions": [
+    2,
+    2
+   ],
+   "pwml_reaction": [
+    2,
+    2
+   ],
+   "pwml_reaction_enzyme": [
+    2,
+    2
+   ],
+   "pwml_protein_complex": [
+    1,
+    1
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 141,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 6,
+   "ir_reactions": [
+    6,
+    6
+   ],
+   "pwml_reaction": [
+    6,
+    6
+   ],
+   "pwml_reaction_enzyme": [
+    3,
+    3
+   ],
+   "pwml_protein_complex": [
+    2,
+    2
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 142,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 4,
+   "ir_reactions": [
+    4,
+    4
+   ],
+   "pwml_reaction": [
+    4,
+    4
+   ],
+   "pwml_reaction_enzyme": [
+    4,
+    4
+   ],
+   "pwml_protein_complex": [
+    3,
+    3
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 143,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 3,
+   "ir_reactions": [
+    3,
+    3
+   ],
+   "pwml_reaction": [
+    3,
+    3
+   ],
+   "pwml_reaction_enzyme": [
+    3,
+    3
+   ],
+   "pwml_protein_complex": [
+    3,
+    3
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "release_ready",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "release_ready",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 144,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 6,
+   "ir_reactions": [
+    6,
+    6
+   ],
+   "pwml_reaction": [
+    6,
+    6
+   ],
+   "pwml_reaction_enzyme": [
+    6,
+    6
+   ],
+   "pwml_protein_complex": [
+    3,
+    3
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 145,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 5,
+   "ir_reactions": [
+    5,
+    5
+   ],
+   "pwml_reaction": [
+    5,
+    5
+   ],
+   "pwml_reaction_enzyme": [
+    3,
+    3
+   ],
+   "pwml_protein_complex": [
+    2,
+    2
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 146,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 1,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    0,
+    0
+   ],
+   "pwml_reaction_enzyme": [
+    0,
+    0
+   ],
+   "pwml_protein_complex": [
+    1,
+    1
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [
+     [
+      "reaction",
+      "steroid biosynthesis (acetyl-CoA to cholesterol)",
+      "no_defensible_reaction_support"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "minimum_core:requested_core_coverage_below_minimum:0.250<0.500",
+     "omitted_from_pwml:1_processes+0_actors"
+    ]
+   },
+   "after": {
+    "quarantined": [
+     [
+      "reaction",
+      "steroid biosynthesis (acetyl-CoA to cholesterol)",
+      "no_defensible_reaction_support"
+     ]
+    ],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "minimum_core:requested_core_coverage_below_minimum:0.250<0.500",
+     "omitted_from_pwml:1_processes+0_actors"
+    ]
+   }
+  },
+  {
+   "idx": 147,
+   "mode": "pathwhiz",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "required_field_gate",
+    "required_field_gate"
+   ],
+   "in_reactions": 1,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "minimum_core:requested_core_coverage_below_minimum:0.333<0.500"
+    ]
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "minimum_core:requested_core_coverage_below_minimum:0.333<0.500"
+    ]
+   }
+  },
+  {
+   "idx": 148,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 7,
+   "ir_reactions": [
+    7,
+    7
+   ],
+   "pwml_reaction": [
+    7,
+    7
+   ],
+   "pwml_reaction_enzyme": [
+    7,
+    7
+   ],
+   "pwml_protein_complex": [
+    7,
+    7
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 149,
+   "mode": "pathwhiz",
+   "ok": [
+    false,
+    false
+   ],
+   "stage": [
+    "required_field_gate",
+    "required_field_gate"
+   ],
+   "in_reactions": 1,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    null,
+    null
+   ],
+   "pwml_reaction_enzyme": [
+    null,
+    null
+   ],
+   "pwml_protein_complex": [
+    null,
+    null
+   ],
+   "same_bytes": null,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "minimum_core:requested_core_coverage_below_minimum:0.444<0.500"
+    ]
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "minimum_core:requested_core_coverage_below_minimum:0.444<0.500"
+    ]
+   }
+  },
+  {
+   "idx": 150,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 0,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    0,
+    0
+   ],
+   "pwml_reaction_enzyme": [
+    0,
+    0
+   ],
+   "pwml_protein_complex": [
+    3,
+    3
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": []
+   }
+  },
+  {
+   "idx": 151,
+   "mode": "pathwhiz",
+   "ok": [
+    true,
+    true
+   ],
+   "stage": [
+    "",
+    ""
+   ],
+   "in_reactions": 0,
+   "ir_reactions": [
+    0,
+    0
+   ],
+   "pwml_reaction": [
+    0,
+    0
+   ],
+   "pwml_reaction_enzyme": [
+    0,
+    0
+   ],
+   "pwml_protein_complex": [
+    3,
+    3
+   ],
+   "same_bytes": true,
+   "before": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "minimum_core:requested_core_coverage_below_minimum:0.364<0.500"
+    ]
+   },
+   "after": {
+    "quarantined": [],
+    "actor_drops": [],
+    "release": "review_required",
+    "review_reasons": [
+     "minimum_core:requested_core_coverage_below_minimum:0.364<0.500"
+    ]
+   }
+  }
+ ]
+}
