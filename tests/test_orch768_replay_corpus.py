@@ -66,16 +66,22 @@ def corpus(tmp_path_factory):
                 (inputs / raw).parent.mkdir(parents=True, exist_ok=True)
                 (inputs / raw).write_bytes(gzip.decompress((FIXTURE / meta["path"]).read_bytes()))
                 meta["path"] = raw
-    try:
-        T = H.load_tree(None)
-        probe = H.probe_offline()
-        runs = []
-        for attempt in ("a", "b"):
-            out = tmp_path_factory.mktemp(f"orch768_replay_{attempt}")
-            runs.append({leg["id"]: H.replay_leg(T, leg, out / leg["id"].replace("/", "_"), primary=inputs)
-                         for leg in legs})
-    finally:
-        H.Offline.uninstall()
+    # D-W23 (b): layout v2 / final payload are now default; replay legs pin the old bytes.
+    # The autouse conftest pin is function-scoped and does not reach this module fixture.
+    with pytest.MonkeyPatch.context() as mp:
+        mp.setenv("T2PW_FINAL_PAYLOAD", "0")
+        mp.setenv("T2PW_PWML_LAYOUT", "v1")
+        try:
+            T = H.load_tree(None)
+            probe = H.probe_offline()
+            runs = []
+            for attempt in ("a", "b"):
+                out = tmp_path_factory.mktemp(f"orch768_replay_{attempt}")
+                runs.append({leg["id"]: H.replay_leg(T, leg, out / leg["id"].replace("/", "_"), primary=inputs)
+                             for leg in legs})
+        finally:
+            H.Offline.uninstall()
+
     return {"H": H, "T": T, "legs": {leg["id"]: leg for leg in legs}, "inputs": inputs, "probe": probe, "runs": runs}
 
 
