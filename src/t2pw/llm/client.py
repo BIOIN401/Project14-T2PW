@@ -7,6 +7,7 @@ import os
 import random
 import threading
 import time
+from contextvars import ContextVar
 from datetime import datetime, timezone
 from dataclasses import dataclass, field
 from typing import Any, Callable, Dict, List, Optional, Tuple
@@ -361,7 +362,25 @@ class _CallCapExceeded(Exception):
     """One request ran past :data:`LLM_CALL_CAP_SECONDS` and was abandoned."""
 
 
+#: Returns a context manager that wraps every provider request made in the context it is set in
+#: (it may block on entry). ``stage_one_ensemble`` sets it per Stage-1 draw so that request i of
+#: draw k is issued after request i of draw k-1 (the draws' requests are byte-identical, and
+#: replayed and recorded answers are served in the order requests arrive). ``None`` everywhere
+#: else: no wrapping at all.
+REQUEST_GATE: ContextVar[Optional[Callable[[], Any]]] = ContextVar("t2pw_llm_request_gate", default=None)
+
+
+def _gated() -> Any:
+    gate = REQUEST_GATE.get()
+    return gate() if gate is not None else contextlib.nullcontext()
+
+
 def _create(kwargs: Dict[str, Any], stage: str) -> Any:
+    with _gated():
+        return _create_request(kwargs, stage)
+
+
+def _create_request(kwargs: Dict[str, Any], stage: str) -> Any:
     """``_client.chat.completions.create(**kwargs)``, capped for a website job's measured stages.
 
     Outside a website job, or for a stage not in :data:`LLM_CALL_CAP_STAGES`, this IS the plain
@@ -1162,7 +1181,8 @@ def chat_with_tools(
             try:
                 if trace_diag is not None:
                     trace_diag.begin_attempt()
-                resp = _client.chat.completions.create(**kwargs)
+                with _gated():
+                    resp = _client.chat.completions.create(**kwargs)
                 if trace_diag is not None:
                     trace_diag.observe(resp)
                 _record_usage(resp)

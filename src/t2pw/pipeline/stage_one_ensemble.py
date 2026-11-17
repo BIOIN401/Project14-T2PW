@@ -106,10 +106,14 @@ import json
 import logging
 import os
 import re
+import threading
+import time
 import weakref
 from concurrent.futures import ThreadPoolExecutor
+from contextlib import contextmanager
 from contextvars import ContextVar, copy_context
 from copy import deepcopy
+from functools import partial
 from functools import lru_cache
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple
@@ -1133,6 +1137,58 @@ def paper_defined_pair(a: str, b: str) -> Optional[Tuple[str, str, str]]:
 _DRAW_NUMBER: ContextVar[int] = ContextVar("t2pw_stage1_draw_number", default=0)
 
 
+#: How long request i of a draw waits for request i of the draw before it, once that one has been
+#: ISSUED but has not returned. A replayed request returns in milliseconds, so the wait ends at once
+#: and the order is exact; a real request runs for minutes, so this is only a small stagger.
+ISSUE_INFLIGHT_WAIT_SECONDS = 1.0
+
+
+class _IssueOrder:
+    """Request i of draw k is issued after request i of draw k-1 has returned, or has run for
+    :data:`ISSUE_INFLIGHT_WAIT_SECONDS`, or once draw k-1 has ended.
+
+    The draws' requests are byte-identical (one cassette key; the same prompt at temperature 0), the
+    k-th answer served is draw k's and the merge keeps the first occurrence, so the order the requests
+    arrive in decides the merged payload and everything after it. Sequential draws had this by
+    construction; concurrent threads do not. Letting a request in is not enough (draws released
+    together race to the cassette), so the next draw's request waits for this one to be on its way.
+    Only the ISSUE is ordered, never the wait for the answer: the draws still overlap. It is a chain
+    (k waits on k-1 only), so it cannot deadlock, and a draw that ends, however it ends, frees the next.
+    A request i of draw k-1 that does not come (a retry) is waited for until draw k-1 ends.
+    """
+
+    def __init__(self, n: int) -> None:
+        self._cond = threading.Condition()
+        self._started: List[List[float]] = [[] for _ in range(n + 1)]
+        self._returned = [0] * (n + 1)
+        self._ended = [False] * (n + 1)
+
+    @contextmanager
+    def request(self, draw: int) -> Any:
+        with self._cond:
+            nth = len(self._started[draw]) + 1
+            if draw > 1:
+                prev = draw - 1
+                self._cond.wait_for(lambda: len(self._started[prev]) >= nth or self._ended[prev])
+                if len(self._started[prev]) >= nth:
+                    until = self._started[prev][nth - 1] + ISSUE_INFLIGHT_WAIT_SECONDS
+                    self._cond.wait_for(lambda: self._returned[prev] >= nth or self._ended[prev],
+                                        timeout=max(0.0, until - time.monotonic()))
+            self._started[draw].append(time.monotonic())
+            self._cond.notify_all()
+        try:
+            yield
+        finally:
+            with self._cond:
+                self._returned[draw] += 1
+                self._cond.notify_all()
+
+    def end(self, draw: int) -> None:
+        with self._cond:
+            self._ended[draw] = True
+            self._cond.notify_all()
+
+
 def current_draw() -> int:
     """The number of the Stage-1 draw running on this thread, 0 when none (N = 1, or elsewhere)."""
 
@@ -1148,24 +1204,33 @@ def _run_draws(draw: DrawFn, n: int, failure: type) -> List[Tuple[Optional[Dict[
     a copy of the caller's context: the leg deadline and the run's diagnostics recorder are
     ContextVars and a bare thread would not see them. A draw that raises anything but
     ``failure`` propagates -- the lowest-numbered one, after the other draws have finished, as
-    a sequential run would have raised the first.
+    a sequential run would have raised the first. Their requests are issued in draw order
+    (:class:`_IssueOrder`).
     """
+
+    order = _IssueOrder(n) if n > 1 else None
 
     def one() -> Tuple[Optional[Dict[str, Any]], List[Any], Optional[BaseException]]:
         try:
             payload, logs = draw()
         except failure as exc:  # type: ignore[misc]
             return None, getattr(exc, "attempts", None) or [], exc
+        finally:
+            if order is not None:
+                order.end(current_draw())
         return payload, logs, None
 
     if n == 1:
         return [one()]
+    from t2pw.llm.client import REQUEST_GATE  # function-local: the client needs an API key to import
+
     current_diagnostics()  # created in the caller's context, so every copy shares it
     with ThreadPoolExecutor(max_workers=n, thread_name_prefix="t2pw-draw") as pool:
         futures = []
         for number in range(1, n + 1):
             context = copy_context()
             context.run(_DRAW_NUMBER.set, number)
+            context.run(REQUEST_GATE.set, partial(order.request, number))
             futures.append(pool.submit(context.run, one))
         return [future.result() for future in futures]
 
