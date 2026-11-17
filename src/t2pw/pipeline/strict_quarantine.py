@@ -3020,6 +3020,11 @@ def _cap_release_for_omissions(release: Dict[str, Any], reason: str) -> Dict[str
 #: D-W24 item 3: the slots whose failure costs a reaction the actor, never the reaction.
 _REACTION_ACTOR_SLOTS: Tuple[str, ...] = _ACTOR_SLOTS["reactions"]
 REACTION_ACTOR_DECISION = "D-W24 3"
+#: L5 (D-W24 3, orchestrator ruling 2): a payload-level list of the interactions the per-row
+#: pass left out because an endpoint entity cannot be written (idx 76/77: a complex with no
+#: components). The IR emits each as a withheld row with its reason, as L4 withholds rows, so
+#: pwml_ir.json and the withheld side file keep it; it is never drawn.
+WITHHELD_INTERACTIONS_FIELD = "withheld_interactions"
 
 
 def _actor_drop_record(
@@ -3510,6 +3515,12 @@ def _apply_per_row_failures(
                     actor_drops += 1
                     continue
                 slot, ref = next((hit for hit in hits if hit[0] not in _ACTOR_SLOT_NAMES), hits[0])
+                if process_bucket == "interactions":
+                    working.setdefault(WITHHELD_INTERACTIONS_FIELD, []).append(
+                        {"name": str(record.get("name") or ""), "pointer": str(record.get("pointer") or ""),
+                         "reason": reason, "endpoint": name, "slot": slot, "gate": gate,
+                         "row": deepcopy(process)}
+                    )
                 omit(record, QUARANTINED_UNMAPPED_ENTITY, reason, slot, ref, gate, failing)
         # Re-read: the recursion above may already have rewritten this bucket.
         entities[bucket] = [r for r in _safe_list(entities.get(bucket)) if r is not row]

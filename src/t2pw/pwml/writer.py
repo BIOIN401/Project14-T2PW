@@ -1700,9 +1700,10 @@ class DeterministicPwmlBuilder:
         self.section_items["interactions"] = []
         self.withheld_interactions = []
         # L4: the IR keeps modifier-derived interactions (D-W24 (1)) in their own bucket.
+        # L5: and the export quarantine's withheld interactions in theirs (always withheld).
         all_interactions = [
             row
-            for bucket in ("interactions", "modifier_interactions")
+            for bucket in ("interactions", "modifier_interactions", "quarantine_withheld_interactions")
             for row in (process_items.get(bucket) if isinstance(process_items.get(bucket), list) else [])
         ]
         for interaction in all_interactions:

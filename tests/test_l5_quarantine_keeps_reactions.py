@@ -164,3 +164,38 @@ def test_l5_research_mode_is_untouched() -> None:
     result = quarantine_and_close(payload, strict_db=True, mode="research")
     assert result.payload == payload
     assert result.removed_entity_report["removed_entities"] == []
+
+
+def test_l5_an_interaction_whose_endpoint_complex_cannot_be_written_is_kept_as_a_withheld_row() -> None:
+    """Ruling 2 (idx 76/77 shape). runs_verify 2026-08-25_1216 PMC12856317: 'LONP1' is a complex with no
+    resolvable component, so 'LONP1 degrades ALAS1' cannot be drawn. Base: the interaction left the payload
+    and nothing downstream kept it. Now it is listed as a withheld row with its reason (pwml_ir.json and the
+    withheld side file), as L4 withholds rows; it is still not drawn."""
+
+    from types import SimpleNamespace
+
+    from t2pw.pwml.ir import build_pwml_ir
+    from t2pw.pwml.prefreeze_resolution import run_prefreeze_resolution
+    from t2pw.pwml.validate import discover_structure_signature
+    from t2pw.pwml.writer import DeterministicPwmlBuilder
+    from test_pwml_l4_interactions import REFERENCE
+
+    payload, context = _leg("runs_verify_2026-08-25_1216_PMC12856317")
+    result = quarantine_and_close(payload, strict_db=True, pathway_context=context, mode="pathwhiz")
+    assert _refusals(result) == []
+    (held,) = result.payload["withheld_interactions"]
+    assert (held["name"], held["reason"], held["endpoint"]) == (
+        "LONP1 degrades ALAS1", "protein_complex_missing_components", "LONP1")
+    assert held["row"]["name"] == "LONP1 degrades ALAS1"  # the row verbatim
+    export = deepcopy(result.payload)
+    run_prefreeze_resolution(export, strict_db=True)  # as _refusals and the export do
+    ir, _report = build_pwml_ir(export, strict_db=True, width=3200, height=1400)
+    args = SimpleNamespace(name="Generated Pathway", description="", subject="Metabolic", pw_id="PW000000",
+                           height=1400, width=3200, background_color="#FFFFFF", ref=str(REFERENCE))
+    build = DeterministicPwmlBuilder(extraction=ir, signature=discover_structure_signature(REFERENCE), args=args).build()
+    (row,) = ir["processes"]["quarantine_withheld_interactions"]
+    assert row["export_status"] == "withheld"
+    assert row["withheld"]["reason"] == "protein_complex_missing_components"
+    assert row["origin"] == "export_quarantine"
+    assert "LONP1 degrades ALAS1" in {w["name"] for w in build.withheld_interactions}
+    assert "LONP1 degrades ALAS1" not in {r["name"] for r in ir["processes"]["interactions"]}
