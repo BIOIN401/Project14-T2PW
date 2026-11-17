@@ -1070,6 +1070,7 @@ def build_report(
                 ],
                 "evidence": _quotes(row),
                 "sources": _sources(row, paper_id),
+                **({"compartment": _compartment(row, "biological_state")} if _compartment(row, "biological_state") else {}),
                 "duplicate_of": [],
                 "_key": (tuple(sorted(map(_norm, inputs))), tuple(sorted(map(_norm, outputs)))),
             }
@@ -1143,6 +1144,11 @@ def build_report(
             for row in map(_dict, _list(payload.get(BORROWED_PROTEIN_IDENTITIES_KEY)))
         ],
         "interactions": interactions,
+        "transport_compartments": [
+            f"{_text(row.get('name')) or NOT_RECORDED}: {_compartment(row, 'from_biological_state', 'to_biological_state')}"
+            for row in map(_dict, _list(processes.get("transports")))
+            if _compartment(row, "from_biological_state", "to_biological_state")
+        ],
         "ir_source": ir_source if PWML_IR_FILENAME in artifacts else NOT_RECORDED,
         "quarantined": quarantined,
         "removed_entities": removed_entities,
@@ -1322,6 +1328,19 @@ def omitted_lines(report: Mapping[str, Any]) -> List[str]:
     return lines + [""]
 
 
+def _compartment(row: Mapping[str, Any], *fields: str) -> str:
+    """D-W24 (2, 7a): a compartment the paper record did not state, with how it was placed (``compartment_source`` and the
+    last ``compartment_estimate`` reason); empty for a stated one, so other reports keep their bytes."""
+    source = _text(row.get("compartment_source"))
+    if not source:
+        return ""
+    entries = [e for e in map(_dict, _list(row.get("compartment_estimate"))) if _text(e.get("reason"))]
+    where = "; ".join(f"{f.split('_')[0]}={_text(row.get(f)) or NOT_RECORDED}" for f in fields) if len(fields) > 1 else (
+        _text(row.get(fields[0])) or NOT_RECORDED)
+    reason = _text(entries[-1].get("reason")) if entries else NOT_RECORDED
+    return f"{where} [{source}: {reason}]"
+
+
 def _evidence(quotes: List[str]) -> List[str]:
     return ["Evidence:", *([f'  {i}. "{q}"' for i, q in enumerate(quotes, 1)] or [f"  {NOT_RECORDED}"])]
 
@@ -1343,6 +1362,7 @@ def reaction_lines(reaction: Mapping[str, Any]) -> List[str]:
         f"Products: {', '.join(reaction['products']) or NOT_RECORDED}",
         f"Enzyme(s): {'; '.join(reaction['enzymes']) or NOT_RECORDED}",
         f"Species: {', '.join(reaction['species']) or NOT_RECORDED}",
+        *([f"Compartment (not stated in the paper record): {reaction['compartment']}"] if reaction.get("compartment") else []),
         f"Status: {'; '.join(status)}",
         f"Lineage: {' | '.join(reaction['lineage']) or NOT_RECORDED}",
         "Mapping:",
@@ -1425,6 +1445,9 @@ def render_text(report: Mapping[str, Any]) -> str:
         lines += [*interaction_lines(item), ""]
     if not report["interactions"]:
         lines += _absent(None if report["payload_source"] == NOT_RECORDED else [])
+    if report.get("transport_compartments"):  # absent section when every transport side is stated
+        lines += [*_section(f"TRANSPORT SIDES NOT STATED IN THE PAPER RECORD ({len(report['transport_compartments'])})"),
+                  *(f"- {line}" for line in report["transport_compartments"]), ""]
     if report["borrowed_identities"]:  # absent section when nothing is borrowed: other reports keep their bytes
         lines += [*_section(borrowed_identities_title(report)), *(f"- {line}" for line in report["borrowed_identities"]), ""]
     quarantined = report["quarantined"]
