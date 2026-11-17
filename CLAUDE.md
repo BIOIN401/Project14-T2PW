@@ -23,6 +23,7 @@ Integration branch: **`webserver/refactor`**, cut from `main`. Task branches are
 | [`docs/webserver/DECISIONS.md`](docs/webserver/DECISIONS.md) | Product decisions already made. Product owner only; never append yourself |
 | [`docs/webserver/LEDGER.md`](docs/webserver/LEDGER.md) | Live task state: dispatched, in review, merged, blocked. Single source of truth |
 | [`docs/webserver/ORCHESTRATOR.md`](docs/webserver/ORCHESTRATOR.md) | How the orchestrator runs the track, including model and effort routing |
+| [`docs/VISION.md`](docs/VISION.md) | PO's product vision for the next phase: big payload, scope, on-demand files, checks, benchmark. Read before planning features |
 | [`docs/pwml_recovery_sprint/PRODUCT_CONTRACT.md`](docs/pwml_recovery_sprint/PRODUCT_CONTRACT.md) | Still the definition of biological correctness. Outranks any test or benchmark |
 
 ### Roles
