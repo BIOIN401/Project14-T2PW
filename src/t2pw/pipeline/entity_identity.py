@@ -304,7 +304,7 @@ def protein_species_context(row: Any) -> Any:
         return ""
     species_ref = _mapping(row.get("species_ref"))
     mapping_meta = _mapping(row.get("mapping_meta"))
-    return (
+    value = (
         row.get("species")
         or row.get("organism")
         or row.get("taxonomy_id")
@@ -315,6 +315,14 @@ def protein_species_context(row: Any) -> Any:
         or mapping_meta.get("species")
         or mapping_meta.get("species_id")
     )
+    if not value and is_pathbank_unknown_protein(row):
+        return PATHBANK_UNKNOWN_SPECIES_CONTEXT
+    return value
+
+
+#: D-W24 7c (L8): PathBank's Unknown protein (9659) carries no species of its own; the PWML gives it none and PathWhiz binds
+#: the existing record by name and UniProt value. The gates that require a protein species accept it on this value.
+PATHBANK_UNKNOWN_SPECIES_CONTEXT = "PathBank Unknown record (no species asserted)"
 
 
 def is_generated_complex_wrapper(row: Any) -> bool:

@@ -313,6 +313,14 @@ def maybe_apply_final_id_fill(payload: Dict[str, Any], pathway_context: Any = No
         report["merge"] = merge_states_and_duplicates(payload)
     except Exception as exc:
         report["merge"] = {"error": f"{type(exc).__name__}: {exc}"}
+    # D-W24 (6, 7c), L8: evidence checks, last (after L7's compartment estimate once merged), offline; never raises.
+    try:
+        from t2pw.service.final_payload_evidence import check_evidence
+        ctx = pathway_context if isinstance(pathway_context, dict) else {}
+        report["evidence"] = check_evidence(payload, _paper_kw(state).get("paper_text"), {
+            "pathway_name": str(ctx.get("pathway_name") or ""), "organism": fill_meta(pathway_context, state).get("organism") or ""})
+    except Exception as exc:
+        report["evidence"] = {"error": f"{type(exc).__name__}: {exc}"}
     return report
 
 

@@ -226,7 +226,9 @@ DEFAULT_MIN_CORE_COVERAGE = 0.5
 #: 2026-11-15.1 (L5, D-W24 item 3): a reaction is never omitted for its enzyme/modifier. A bare protein
 #: enzyme takes the Stage-6 single-protein wrapper; an actor that still cannot be written leaves the
 #: reaction, which stays and is flagged.
-QUARANTINE_POLICY_VERSION = "2026-11-15.1"
+#: 2026-11-16.1 (L8, D-W24 item 7b): a reaction enzyme with no database identity is written as an Unknown-backed
+#: placeholder complex of the same name instead of leaving the reaction; the run is review_required.
+QUARANTINE_POLICY_VERSION = "2026-11-16.1"
 
 
 def _canonical_requested_core(
@@ -3180,7 +3182,234 @@ def wrappable_bare_enzymes(working: Mapping[str, Any]) -> Dict[str, str]:
     return bare
 
 
-_ROW_POINTER = re.compile(r"^/(processes|entities)/([a-z_]+)/(\d+)(?:/([a-z_]+)/(\d+))?")
+#: D-W24 7b (L8): a reaction enzyme with no database identity keeps its reaction AND its name, as the Unknown-backed
+#: placeholder complex the Stage-6 fallback ships elsewhere; the run is ``review_required`` with this reason.
+PLACEHOLDER_ENZYME_DECISION = "D-W24 7b"
+PLACEHOLDER_ENZYME_REASON = "placeholder_enzyme_without_identity"
+_UNUSABLE_ENZYME_NAMES = frozenset({"", "unknown", "uncharacterized", "uncharacterised", "hypothetical", "unnamed",
+                                    "enzyme", "protein", "catalyst", "complex"})
+
+
+def placeholder_enzymes(working: Mapping[str, Any]) -> Dict[str, str]:
+    """``{normalized name: name}`` of reaction enzymes the quarantine gives an Unknown-backed placeholder (D-W24 7b).
+
+    A bare protein (not also a complex or compound name) named as a reaction enzyme, or as a catalyst-role modifier, that
+    has no database identity and is not the sentinel itself. Left out: a protein that is also a reaction substrate or
+    product, transport cargo or a complex component (slots a complex cannot fill), and a name that says nothing.
+    """
+
+    from t2pw.mapping import map_ids
+
+    entities = _safe_dict(working.get("entities"))
+    proteins = {
+        map_ids._normalize_name(_row_name(row)): row
+        for row in _safe_list(entities.get("proteins"))
+        if isinstance(row, dict) and _row_name(row)
+    }
+    taken = {
+        map_ids._normalize_name(_row_name(row))
+        for bucket in ("protein_complexes", "compounds", "nucleic_acids", "element_collections")
+        for row in _safe_list(entities.get(bucket))
+        if isinstance(row, dict)
+    }
+    processes = _safe_dict(working.get("processes"))
+    structural: Set[str] = set()
+    for reaction in _safe_list(processes.get("reactions")):
+        if isinstance(reaction, dict):
+            structural.update(map_ids._normalize_name(n) for n in _participant_names(reaction.get("inputs")))
+            structural.update(map_ids._normalize_name(n) for n in _participant_names(reaction.get("outputs")))
+    for transport in _safe_list(processes.get("transports")):
+        if isinstance(transport, dict):
+            structural.update(map_ids._normalize_name(n) for n in _transport_cargo_names(transport)[0])
+    for row in _safe_list(entities.get("protein_complexes")):
+        if isinstance(row, dict):
+            structural.update(map_ids._normalize_name(_component_name(c)) for c in _safe_list(row.get("components")))
+    out: Dict[str, str] = {}
+    for reaction in _safe_list(processes.get("reactions")):
+        if not isinstance(reaction, dict):
+            continue
+        for slot in _REACTION_ACTOR_SLOTS:
+            for actor in _safe_list(reaction.get(slot)):
+                name, actor_type, role = map_ids._reaction_actor_name_and_type(
+                    actor if isinstance(actor, dict) else {"entity": actor})
+                if slot == "modifiers" and _canonical(role).casefold() not in {"", "catalyst", "enzyme"}:
+                    continue
+                norm = map_ids._normalize_name(name)
+                row = proteins.get(norm)
+                if (
+                    row is not None
+                    and actor_type in {"protein", ""}
+                    and norm not in taken
+                    and norm not in structural
+                    and norm not in _UNUSABLE_ENZYME_NAMES
+                    and not has_protein_external_identity(row)
+                    and not is_pathbank_unknown_protein(row)
+                    and not placeholder_claims_real_identity(row)
+                    and protein_species_context(row)  # the complex takes its species; none = still unwritable
+                ):
+                    out.setdefault(norm, name)
+    return out
+
+
+def _catalyst_role(slot: str, role: Any) -> bool:
+    return slot == "enzymes" or _canonical(str(role or "")).casefold() in {"", "catalyst", "enzyme"}
+
+
+def _named_outside_catalysis(working: Mapping[str, Any], norm: str) -> bool:
+    """Whether an interaction, a transporter or a non-catalyst reaction modifier names this protein."""
+
+    from t2pw.mapping import map_ids
+
+    def hit(names: Sequence[str]) -> bool:
+        return any(map_ids._normalize_name(n) == norm for n in names)
+
+    processes = _safe_dict(working.get("processes"))
+    for row in _safe_list(processes.get("interactions")):
+        if isinstance(row, dict) and (hit([n for side in _interaction_endpoints(row) for n in side])
+                                      or hit(_participant_names(row.get("participants")))):
+            return True
+    for row in _safe_list(processes.get("transports")):
+        if isinstance(row, dict) and hit(_participant_names(row.get("transporters"))):
+            return True
+    for row in _safe_list(processes.get("reactions")):
+        if not isinstance(row, dict):
+            continue
+        for slot in _REACTION_ACTOR_SLOTS:
+            for actor in _safe_list(row.get(slot)):
+                name, _type, role = map_ids._reaction_actor_name_and_type(actor)
+                if map_ids._normalize_name(name) == norm and not _catalyst_role(slot, role):
+                    return True
+    return False
+
+
+def _placeholder_unidentified_enzymes(working: Dict[str, Any]) -> List[Dict[str, Any]]:
+    """D-W24 7b: each :func:`placeholder_enzymes` protein becomes a one-component complex holding PathBank's Unknown protein
+    (9659), as ``map_ids._apply_pathbank_unknown_enzyme_fallback`` builds it, and the reaction's catalyst slots name it.
+    Named nowhere else, the complex takes the protein's name and the protein row (and its location rows) goes. Also named
+    by an interaction, a transporter or a regulator modifier, the complex is "<name> complex" and the protein row stays
+    for those references, which are judged exactly as before (a newly admitted interaction could reach an endpoint the
+    quarantine cannot write: the real-artifact leg 2026-08-02_2130 PMC12444477, FtsH). The sentinel is the payload's own when it
+    has one, else added with no species (D-W24 7c). The complex keeps the protein's species and evidence, and it and each
+    reaction naming it carry ``review_required``. Returns one record per placeholder for ``enzyme_wrappers``.
+    """
+
+    from t2pw.mapping import map_ids
+    from t2pw.pipeline.entity_identity import (
+        IDENTITY_PLACEHOLDER,
+        PATHBANK_UNKNOWN_FALLBACK_RULE,
+        PATHBANK_UNKNOWN_PROTEIN_ID,
+        PATHBANK_UNKNOWN_PROTEIN_NAME,
+        PATHBANK_UNKNOWN_PROTEIN_UNIPROT,
+    )
+
+    targets = placeholder_enzymes(working)
+    if not targets:
+        return []
+    entities = working.setdefault("entities", {})
+    proteins = entities.setdefault("proteins", [])
+    complexes = entities.setdefault("protein_complexes", [])
+    if not any(is_pathbank_unknown_protein(row) for row in proteins):
+        proteins.append({
+            "name": PATHBANK_UNKNOWN_PROTEIN_NAME,
+            "pathbank_protein_id": PATHBANK_UNKNOWN_PROTEIN_ID,
+            "pw_protein_id": PATHBANK_UNKNOWN_PROTEIN_ID,
+            "uniprot_id": PATHBANK_UNKNOWN_PROTEIN_UNIPROT,
+            "mapped_ids": {"uniprot": PATHBANK_UNKNOWN_PROTEIN_UNIPROT, "pathbank_protein_id": PATHBANK_UNKNOWN_PROTEIN_ID},
+            "identity_status": IDENTITY_PLACEHOLDER,
+            "species_not_asserted": "D-W24 7c, L8: PathBank's Unknown record stands for an unidentified enzyme; no species "
+                                    "is asserted for it",
+            "mapping_meta": {"provider": "PathBankDB", "source": "db", "chosen_rule": PATHBANK_UNKNOWN_FALLBACK_RULE,
+                             "identity_status": IDENTITY_PLACEHOLDER, "pathbank_protein_id": PATHBANK_UNKNOWN_PROTEIN_ID,
+                             "cross_species_placeholder": True, "confidence": 0.0, "fallback_used": True,
+                             "fallback_reason": "protein_missing_external_identity"},
+        })
+    reason = "the paper's enzyme has no database identity; written as an Unknown-backed placeholder (D-W24 7b, L8)"
+    records: List[Dict[str, Any]] = []
+    by_norm = {map_ids._normalize_name(_row_name(r)): r for r in proteins if isinstance(r, dict) and _row_name(r)}
+    complex_names = {map_ids._normalize_name(_row_name(r)) for r in complexes if isinstance(r, dict)}
+    for norm, name in sorted(targets.items(), key=lambda item: item[1]):
+        protein = by_norm[norm]
+        # Named elsewhere (an interaction, a transporter, a regulator modifier): those references keep the protein and
+        # are judged exactly as before; the catalyst slots take "<name> complex" (L5's wrapper naming). Otherwise the
+        # complex takes the enzyme's own name and the protein row goes, as the Stage-6 fallback ships it (idx 9 MenI).
+        shared = _named_outside_catalysis(working, norm)
+        complex_name = map_ids._wrapper_complex_name(_row_name(protein)) if shared else _row_name(protein)
+        if shared and map_ids._normalize_name(complex_name) in complex_names:
+            continue
+        complex_names.add(map_ids._normalize_name(complex_name))
+        complex_row: Dict[str, Any] = {
+            "name": complex_name,
+            **{k: deepcopy(protein[k]) for k in ("species", "organism", "species_id", "pathbank_species_id", "taxonomy_id",
+                                                 "species_ref", "evidence", "provenance", "source_refs",
+                                                 "provenance_lineage", "synonyms") if k in protein},
+            "generated": True,
+            "generation_reason": "single_protein_pathwhiz_wrapper",
+            "components": [{"name": PATHBANK_UNKNOWN_PROTEIN_NAME, "stoichiometry": 1,
+                            "pathbank_protein_id": PATHBANK_UNKNOWN_PROTEIN_ID,
+                            "mapped_ids": {"uniprot": PATHBANK_UNKNOWN_PROTEIN_UNIPROT,
+                                           "pathbank_protein_id": PATHBANK_UNKNOWN_PROTEIN_ID}}],
+            "identity_status": IDENTITY_PLACEHOLDER,
+            "review_required": True,
+            "review_reasons": [f"{PLACEHOLDER_ENZYME_REASON}: {reason}"],
+            "mapping_meta": {"provider": "PathBankDB", "source": "db", "chosen_rule": PATHBANK_UNKNOWN_FALLBACK_RULE,
+                             "confidence": 0.0, "identity_status": IDENTITY_PLACEHOLDER, "fallback_used": True,
+                             "fallback_reason": "protein_missing_external_identity", "functional_enzyme_name": name,
+                             "sentinel_pathbank_protein_id": PATHBANK_UNKNOWN_PROTEIN_ID,
+                             "decision": PLACEHOLDER_ENZYME_DECISION},
+        }
+        complexes.append(complex_row)
+        if not shared:
+            proteins.remove(protein)
+        named_by: List[str] = []
+        for reaction in _safe_list(_safe_dict(working.get("processes")).get("reactions")):
+            if not isinstance(reaction, dict):
+                continue
+            hit = False
+            for slot in _REACTION_ACTOR_SLOTS:
+                actors = _safe_list(reaction.get(slot))
+                for position, actor in enumerate(actors):
+                    actor_name, _type, role = map_ids._reaction_actor_name_and_type(actor)
+                    if map_ids._normalize_name(actor_name) != norm or not _catalyst_role(slot, role):
+                        continue
+                    if isinstance(actor, dict):
+                        actor.pop("protein", None)
+                        actor.pop("protein-complex", None)
+                        actor.pop("protein_complex", None)
+                        actor.pop("name", None)
+                        actor.update({"entity": complex_row["name"], "entity_type": "protein_complex"})
+                    else:
+                        actors[position] = {"entity": complex_row["name"], "entity_type": "protein_complex",
+                                            "role": "catalyst"}
+                    hit = True
+            if hit:
+                reaction["review_required"] = True
+                reasons = reaction.setdefault("review_reasons", [])
+                line = f"{PLACEHOLDER_ENZYME_REASON}: {name}: {reason}"
+                if line not in reasons:
+                    reasons.append(line)
+                named_by.append(_row_name(reaction))
+        locations = _safe_dict(working.get("element_locations"))
+        if not shared and isinstance(locations.get("protein_locations"), list):
+            locations["protein_locations"] = [
+                row for row in locations["protein_locations"]
+                if map_ids._normalize_name(_row_name(row) or _text(_safe_dict(row).get("protein"))) != norm
+            ]
+        records.append({
+            "protein": name,
+            "protein_complex": complex_row["name"],
+            "built_here": True,
+            "reactions": named_by,
+            "kind": "pathbank_unknown_placeholder",
+            "stage": "quarantine",
+            "origin": "inferred",
+            "source": "the paper's enzyme name; PathBank's Unknown protein 9659 as its component (no database identity)",
+            "paper_explicit": "not_evaluated",
+            "decision": PLACEHOLDER_ENZYME_DECISION,
+        })
+    return records
+
+
+_ROW_POINTER =re.compile(r"^/(processes|entities)/([a-z_]+)/(\d+)(?:/([a-z_]+)/(\d+))?")
 _STATE_POINTER = re.compile(r"^/biological_states/(\d+)$")
 #: ORCH-788: the IR code (``ir.build_pwml_ir`` / ``ir.validate_pwml_ir``) for a state with no location.
 STATE_MISSING_LOCATION_REASON = "biological_state_missing_subcellular_location"
@@ -3833,7 +4062,8 @@ def quarantine_and_close(
     enzyme_wrappers: List[Dict[str, Any]] = []
     if not is_research(mode):
         admission_actor_drops = []
-        enzyme_wrappers = _wrap_bare_reaction_enzymes(working)
+        # D-W24 7b (L8): first, so a protein with no identity is a placeholder complex before anything else reads it.
+        enzyme_wrappers = _placeholder_unidentified_enzymes(working) + _wrap_bare_reaction_enzymes(working)
         if enzyme_wrappers:
             logger.info("quarantine_and_close: wrapped bare reaction enzymes (D-W24 3): %s",
                         ", ".join(row["protein"] for row in enzyme_wrappers))
@@ -4186,6 +4416,13 @@ def quarantine_and_close(
     )
     if omission_reason:
         review_reasons = [*review_reasons, omission_reason]
+    # D-W24 7b (L8): a PWML that writes an enzyme as an Unknown-backed placeholder is review_required.
+    placeholders = sum(1 for row in enzyme_wrappers if row.get("decision") == PLACEHOLDER_ENZYME_DECISION)
+    placeholder_reason = (
+        f"{PLACEHOLDER_ENZYME_REASON}:{placeholders}" if placeholders and not refusal_reasons else ""
+    )
+    if placeholder_reason:
+        review_reasons = [*review_reasons, placeholder_reason]
 
     # D-002's required record, built through C-041's factory rather than beside
     # it: the invariant ``strict_acceptance_eligible == (status ==
@@ -4443,7 +4680,8 @@ def quarantine_and_close(
         # review_required run, so a below-threshold export can never be counted
         # as strict success (TRAP-1 / PRODUCT_CONTRACT 13).
         "release": {
-            **_cap_release_for_omissions(release.to_dict(), omission_reason),
+            **_cap_release_for_omissions(_cap_release_for_omissions(release.to_dict(), omission_reason),
+                                         placeholder_reason),
             # Research decides and applies nothing, so there this is a FINDING,
             # exactly like ``research_mode.would_have_refused`` -- not a verdict
             # anything acted on.
