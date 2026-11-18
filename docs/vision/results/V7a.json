@@ -8,7 +8,7 @@
     "src/t2pw/vision/checks/consistency.py: cross_format(outputs, pwml_ir=None, sbgn_report=None): parses PWML, SBML, SBGN, KGML back; entities clustered across formats by shared database id (chebi, kegg, hmdb, pubchem, cas, drugbank, uniprot) or normalized name; processes compared as multisets of (input entities, output entities); catalysts (PWML, SBML, SBGN); interactions (PWML, SBML, KGML); compartments as groupings of entities. Known differences are reported under known{}, everything else under failures[]",
     "src/t2pw/vision/checks/faithfulness.py: find_paper_text, paper_view (paper quotes in the stored 01_source_text.txt, NFKC/case/whitespace normalised, ellipsis quotes by fragments; audit_modified-only elements whose own quote is verbatim = VD-10 promotion candidates), extended_view (database elements re-found in a cached record, other_paper quotes in the cached cited text; cache = dict or directory; nothing fetched; 'no extension' / 'no cache' reported)",
     "src/t2pw/vision/checks/run_checks.py: CLI over run dirs or a runlist + idx file; per scope generate all four formats, validate, cross-format, faithfulness; --out full report, --totals-out totals only",
-    "tests/test_vision_checks.py: 13 offline tests on the run39 fixture"
+    "tests/test_vision_checks.py: 19 offline tests on the run39 fixture (written, none run yet)"
   ],
   "files": [
     "src/t2pw/vision/checks/__init__.py",
@@ -17,6 +17,7 @@
     "src/t2pw/vision/checks/faithfulness.py",
     "src/t2pw/vision/checks/run_checks.py",
     "tests/test_vision_checks.py",
+    "tests/test_vision_sbgn.py (loader import only, F9)",
     "docs/vision/results/V7a.json",
     "docs/vision/evidence/V7a/PENDING.md"
   ],
@@ -39,6 +40,18 @@
   "open_questions": [
     "Known classes d (PathWhiz wrapper), e (PWML-withheld interactions), f (Unknown sentinel, unplaced entities), g (modifier interactions) and h (extra PWML placements) go beyond the a/b/c classes in the brief. Each rests on code (pipeline/entity_identity.py, pwml/ir.py withheld record, clean_model/builder.py, writer.py), but the 97-run proof was not run, so how many failures remain after them is unknown.",
     "Extension cache format: V4 / V8 are not merged, so extended_view reads a dict or a directory of <source id with non-alphanumerics as _>.<txt|json|xml|html>. The V4 / V8 lanes must write that, or this reader changes.",
-    "SBGN exporter report is not available from generate() (bytes only); cross_format accepts it as an optional argument but run_checks does not pass it."
-  ]
+    "SBGN exporter report is not exposed by generate() (bytes only): run_checks calls export_sbgn.sbgn_export on the same kept graph and IR (generate.py unchanged) and passes the report to cross_format. The report now bounds what class b may explain for regulatory arcs."
+  ],
+  "fix_round_1_review": {
+    "state": "code and tests edited, nothing run",
+    "F1": "compartment_placement_missing_in_pwml / _in_sbgn / _in_sbml for entities placed in one format and not the other (SBGN-only placements of entities SBML leaves unplaced stay class f); test added",
+    "F2": "SBGN stimulation / inhibition / modulation arcs parsed and compared with SBML non-catalyst modifiers (sbgn_regulatory_arc_missing / _extra); class b limited to the exporter report's omitted reaction_arcs count; tests added",
+    "F3": "class f restricted to PWML Protein-type Unknown; counted per format; Unknown in SBML or KGML is a failure (unknown_sentinel_in_<fmt>); test added",
+    "F4": "every renamed compartment pair listed with its count (known.a_compartment_names.pairs, totals.compartment_renames); GO ids compared when both sides carry one (PWML ontology-id, SBML annotation; SBML carries none today)",
+    "F5": "nothing changed; decide from the proof whether KGML enzyme entries need a class",
+    "F6": "injected-mismatch tests for compartment grouping, placement, catalyst, SBGN regulatory arc, Unknown sentinel; clean-run test asserts d=1, f=0, g=0, h=0 for the fixture (expected from the probe, not yet confirmed by a run)",
+    "F7": "quotes under 20 normalised characters counted as short, not judged; DB re-finds by name or id match whole tokens",
+    "F8": "stale lines corrected; second PWML export in check_scope left as is (G._MEMO is keyed by a view hash generate() does not expose)",
+    "F9": "one schematron loader, validate.sbgn_schemas, used by validate.py and tests/test_vision_sbgn.py (that file is outside the original V7a boundary; the change is the loader import only)"
+  }
 }
