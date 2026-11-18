@@ -75,10 +75,10 @@ def build_ours(runlist: str, idxs: List[int], work: Path, scope: str = "default"
         d = work / str(i)
         d.mkdir(parents=True, exist_ok=True)
         run = rl[i]["dir"]
-        meta = read_run_meta(str(run))
-        info: Dict[str, Any] = {"idx": i, "run": str(run), "scope": scope, "pmcid": meta.get("pmcid"), "title": meta.get("title"),
-                                "organism": meta.get("organism"), "size": {k: rl[i].get(k) for k in ("ne", "nr", "nt", "ni")}}
+        info: Dict[str, Any] = {"idx": i, "run": str(run), "scope": scope, "size": {k: rl[i].get(k) for k in ("ne", "nr", "nt", "ni")}}
         try:
+            meta = read_run_meta(str(run))
+            info.update(pmcid=meta.get("pmcid"), title=meta.get("title"), organism=meta.get("organism"))
             big, opts = big_from_run(run), G.export_options_from_run(run)
             sc = G.parse_scope(scope)
             pw, sv = G.generate(big, sc, "pwml", export=opts), G.generate(big, sc, "svg", export=opts)
@@ -112,7 +112,7 @@ def _teardown(pwi: Path) -> None:
     subprocess.run(["docker", "compose", "-p", PROJECT, "-f", str(pwi / "docker-compose.yml"), "down"], env=env, check=False, timeout=300)
 
 
-def run_pathwhiz(work: Path, pwi: str = PWI_DIR, smpdb_src: str = SMPDB_SRC, resume: bool = False) -> Dict[str, Any]:
+def run_pathwhiz(work: Path, pwi: str = PWI_DIR, smpdb_src: str = SMPDB_SRC, resume: bool = False, timeout: int = 6600) -> Dict[str, Any]:
     """Import every <work>/<idx>/<idx>.pwml, screenshot it in the PathWhiz live viewer, bring the stack down."""
     pwi_p = Path(pwi)
     _check_harness(pwi_p)
@@ -124,7 +124,7 @@ def run_pathwhiz(work: Path, pwi: str = PWI_DIR, smpdb_src: str = SMPDB_SRC, res
     cmd = [sys.executable, str(pwi_p / "run_import.py"), "--list", str(lst), "--screenshots"] + [str(f.resolve()) for f in files] + [
         "--out", str(out), "--smpdb-src", smpdb_src, "--work", str(pwi_p / "work" / "smpdb"), "--down"] + (["--resume"] if resume else [])
     try:
-        rc = subprocess.run(cmd).returncode
+        rc = subprocess.run(cmd, timeout=timeout).returncode  # ponytail: kills only run_import.py itself; the finally takes the stack down
     finally:
         _teardown(pwi_p)
     res: Dict[str, Any] = {"exit": rc}
@@ -230,6 +230,7 @@ def main(argv=None) -> int:
     p.add_argument("--pwi", default=PWI_DIR)
     p.add_argument("--smpdb-src", default=SMPDB_SRC)
     p.add_argument("--resume", action="store_true")
+    p.add_argument("--timeout", type=int, default=6600, help="seconds for the whole import + screenshot run (keep it under the wrapper's)")
     s = sub.add_parser("assemble", help="small PNGs and the HTML page")
     s.add_argument("--work", required=True)
     s.add_argument("--out", required=True)
@@ -239,7 +240,7 @@ def main(argv=None) -> int:
     if a.cmd == "ours":
         build_ours(a.runlist, _idx(a.idx), work, a.scope)
     elif a.cmd == "pathwhiz":
-        res = run_pathwhiz(work, a.pwi, a.smpdb_src, a.resume)
+        res = run_pathwhiz(work, a.pwi, a.smpdb_src, a.resume, a.timeout)
         print(json.dumps({k: (v if k == "exit" else {kk: v[kk] for kk in ("success", "error_count", "screenshot")}) for k, v in res.items()}, indent=1))
         return 0 if res.get("exit") == 0 else 1
     else:

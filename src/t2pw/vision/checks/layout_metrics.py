@@ -126,11 +126,10 @@ def _text_width(line: str) -> float:
 
 
 # --------------------------------------------------------------------------- PWML
-def pwml_layout_metrics(pwml: bytes | str, *, pathwhiz_sizes: bool = False) -> Dict[str, Any]:
-    """Drawing metrics of one PWML, read from its stored coordinates.
+def pwml_layout_metrics(pwml: bytes | str) -> Dict[str, Any]:
+    """Drawing metrics of one PWML, read from its stored width/height (the layout writes template sizes there).
 
-    ``pathwhiz_sizes``: size compound locations by their visualization template (what PathWhiz draws) instead of the
-    stored width/height. Keys (all counts unless noted):
+    Keys (all counts unless noted):
 
     nodes, edges, labels, canvas_w, canvas_h
     node_overlaps            pairs of visible location boxes (compounds, proteins, nucleic acids, collections) that intersect
@@ -152,23 +151,16 @@ def pwml_layout_metrics(pwml: bytes | str, *, pathwhiz_sizes: bool = False) -> D
     pv = root if root.tag == "pathway-visualization" else root.find(".//pathway-visualization")
     if pv is None:
         raise ValueError("no <pathway-visualization> in the PWML")
-    dims: Dict[int, Tuple[int, int]] = {}
-    if pathwhiz_sizes:
-        from t2pw.pwml.compound_templates import TEMPLATE_DIMS
-        dims = dict(TEMPLATE_DIMS)
     nm = {_txt(e, "id"): _txt(e, "name") for e in _kids(pv, "compounds")}
 
     # ---- boxes
     nodes: List[Dict[str, Any]] = []
-    box: Dict[str, Rect] = {}  # location id -> box, hidden ones too (a reaction may still reference them)
+    box: Dict[Tuple[str, str], Rect] = {}  # (location tag, id) -> box, hidden ones too; ids repeat across location types
     for tag in LOCS:
         for el in pv.iter(tag):
             x, y, w, h = _num(el, "x"), _num(el, "y"), _num(el, "width"), _num(el, "height")
-            t = _txt(el, "visualization-template-id")
-            if tag == "compound-location" and t.isdigit() and int(t) in dims:
-                w, h = dims[int(t)]
             r = (x, y, x + w, y + h)
-            box[_txt(el, "id")] = r
+            box[(tag, _txt(el, "id"))] = r
             if _txt(el, "hidden", "false") != "true":
                 nodes.append({"id": _txt(el, "id"), "r": r})
     overlaps = [(a["id"], b["id"]) for a, b in combinations(nodes, 2) if _overlap(a["r"], b["r"])]
@@ -234,8 +226,8 @@ def pwml_layout_metrics(pwml: bytes | str, *, pathwhiz_sizes: bool = False) -> D
         v = rviz.get(r["id"])
         if not v:
             return None, None
-        enz = _mean([_centre(box[p]) for e in v["evis"] for p in pcv.get(e, []) if p in box])
-        return enz, _mean([_centre(box[l]) for l in v["cvis"] if l in cstate and l in box])  # compound locations, as the L3 lane
+        enz = _mean([_centre(box[("protein-location", p)]) for e in v["evis"] for p in pcv.get(e, []) if ("protein-location", p) in box])
+        return enz, _mean([_centre(box[("compound-location", l)]) for l in v["cvis"] if l in cstate and ("compound-location", l) in box])  # compound locations, as the L3 lane
 
     far, dmax, n_enz = [], 0.0, 0
     for r in rx:
@@ -400,15 +392,20 @@ def measure_run(run_dir, scope: str = "default") -> Dict[str, Any]:
     """PWML and SVG metrics of one stored run under ``scope`` (generate() builds both from one view)."""
     from t2pw.vision import generate as G
     from t2pw.vision.payload import big_from_run
+    from t2pw.vision import diagram
     big = big_from_run(run_dir)
     sc, opts = G.parse_scope(scope), G.export_options_from_run(run_dir)
+    G._MEMO.clear()
     try:
         pw = pwml_layout_metrics(G.generate(big, sc, "pwml", export=opts))
         sv = svg_layout_metrics(G.generate(big, sc, "svg", export=opts).decode("utf-8"))
+        ir = next(iter(G._MEMO.values()))[1]  # the IR this very view was drawn from (memo was empty before)
+        dm = diagram.diagram_metrics(ir)
     finally:
         G._MEMO.clear()
         G._KEPT.clear()
-    return {"run": str(run_dir), "pwml": pw, "svg": sv}
+    agree = {k: [sv[k], dm[k]] for k in ("enzyme_links", "enzyme_links_gt200")}
+    return {"run": str(run_dir), "pwml": pw, "svg": sv, "svg_equals_model": all(a == b for a, b in agree.values()), "svg_vs_model": agree}
 
 
 def main(argv=None) -> int:
@@ -436,12 +433,13 @@ def main(argv=None) -> int:
         print("%d/%d %s %s" % (n + 1, len(todo), item["idx"], "CRASH" if "crash" in rec else "ok"), flush=True)
     ok = [r for r in runs if "crash" not in r]
     totals = {"scope": a.scope, "pwml": _sum([r["pwml"] for r in ok]), "svg": _sum([r["svg"] for r in ok]),
-              "crashed": [r["run"] for r in runs if "crash" in r]}
+              "crashed": [r["run"] for r in runs if "crash" in r],
+              "svg_model_mismatch": [{"run": r["run"], "idx": r["idx"], "svg_vs_model": r["svg_vs_model"]} for r in ok if not r["svg_equals_model"]]}
     Path(a.out).write_text(json.dumps({"totals": totals, "runs": runs}, indent=1, default=str), encoding="utf-8")
     if a.totals_out:
         Path(a.totals_out).write_text(json.dumps(totals, indent=1), encoding="utf-8")
     print(json.dumps(totals, indent=1))
-    return 0
+    return 1 if totals["svg_model_mismatch"] else 0  # svg_layout_metrics must agree with diagram_metrics on every run
 
 
 if __name__ == "__main__":
