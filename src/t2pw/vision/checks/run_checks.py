@@ -166,6 +166,7 @@ def main(argv=None) -> int:
     ap.add_argument("--scopes", default="paper,default,full")
     ap.add_argument("--cache", default=None, help="extension cache directory (extended-view checks; nothing is fetched)")
     ap.add_argument("--out", required=True)
+    ap.add_argument("--totals-out", default=None, help="also write only the totals (small enough to commit as evidence)")
     a = ap.parse_args(argv)
     scopes = [s.strip() for s in a.scopes.split(",") if s.strip()]
     todo, runs = _run_list(a), []
@@ -182,6 +183,8 @@ def main(argv=None) -> int:
             Path(a.out + ".partial").write_text(json.dumps({"runs": runs}, default=str), encoding="utf-8")
     report = {"scopes": scopes, "totals": aggregate(runs, scopes), "runs": runs}
     Path(a.out).write_text(json.dumps(report, indent=1, default=str), encoding="utf-8")
+    if a.totals_out:
+        Path(a.totals_out).write_text(json.dumps({"scopes": scopes, "totals": report["totals"]}, indent=1, default=str), encoding="utf-8")
     print(json.dumps(report["totals"], indent=1, default=str)[:6000])
     return 0
 
