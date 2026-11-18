@@ -1,7 +1,13 @@
 {
  "lane": "V4",
  "branch": "vision/extend-db",
- "status": "blocked: review round 1 fixes committed (c4935c5e) but NOT tested; live proof not run (PathBank DB unreachable from this PC; HOLD from sub-orchestrator 2026-11-18)",
+ "status": "blocked: review round 1 (c4935c5e) and round 2 (9ec77f18) fixes committed but NOT tested; live proof not run (PathBank DB unreachable from this PC; HOLD from sub-orchestrator 2026-11-18)",
+ "review_round_2": {
+  "R1": "currency_row holds only existing compound rows whose name passes payload.is_currency; otherwise the bare family name (no join to a grounded non-currency row). Test: test_r1_currency_never_joins_a_grounded_non_currency_row",
+  "R2": "Reactome catalyst Set: alternatives only when /data/query/{peDbId} hasMember are all EntityWithAccessionedSequence (and as many UniProt refs); otherwise one name-only complex enzyme, noted. Test: test_r2_catalyst_set_of_complexes_is_one_name_only_enzyme (and the recorded-response test now records hasMember)",
+  "R3": "kept_apart_compartment counted only when the step does not merge. Test: test_r3_kept_apart_not_counted_when_a_stateless_row_merges",
+  "R4": "'intracellular' and GO:0005622 removed from the cytoplasm fold. Test: test_r4_intracellular_is_not_cytoplasm"
+ },
  "review_round_1": {
   "F1": "currency compound (by KEGG/ChEBI id table or a currency spelling) -> the existing compound row of its family (raw family: NADP+ is not NAD+), else the bare family name; written name-only (ids in the note), never suffixed. Test: test_f1_charged_currency_forms_join_the_family_row_never_a_hub",
   "F2": "VD-13 in convert.fold/compatible/pick_reaction/set_state: merge only when one side has no compartment or both fold equal (GO id, else _PLACES table: cytosol/cytoplasm/intracellular one place; periplasm, matrix, ER lumen, stroma, 'cell' distinct); all candidates tried in merge_extension's order with its VD-11 currency rule; the matched row's own state is emitted (a stateless match takes our state); else written apart with its own state, counted kept_apart_compartment. Interactions the same. _same_place removed. Test: test_f2_compartment_fold_decides_the_merge_and_picks_the_right_row",
@@ -15,7 +21,7 @@
   "F10": "report.overlay_entities_hop_none (asserted in test_currency_metabolites_do_not_create_hops)"
  },
  "to_run": [
-  "unit (min 2 GB): PYTHONPATH=C:/t/vis-extend-db/src T2PW_OFFLINE_CURATOR=1 bash C:/t/vis-runs/queue.sh vis-extend-db v4-unit-3 600 C:/t/vis-runs/logs/v4-unit-3.json 2 C:/t/vis-runs/logs/v4-unit-3.log -- C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.venv/Scripts/python.exe C:/t/vis-extend-db/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/vis-extend-db -q --basetemp=C:/t/vis-runs/bt/vis-extend-db/run-3 tests/test_vision_extend_merge.py   (expect 19 tests)",
+  "unit (min 2 GB): PYTHONPATH=C:/t/vis-extend-db/src T2PW_OFFLINE_CURATOR=1 bash C:/t/vis-runs/queue.sh vis-extend-db v4-unit-3 600 C:/t/vis-runs/logs/v4-unit-3.json 2 C:/t/vis-runs/logs/v4-unit-3.log -- C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.venv/Scripts/python.exe C:/t/vis-extend-db/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/vis-extend-db -q --basetemp=C:/t/vis-runs/bt/vis-extend-db/run-3 tests/test_vision_extend_merge.py   (expect 23 tests)",
   "live proof (min 4 GB, needs the DB): cd C:/t/vis-extend-db && PYTHONPATH=C:/t/vis-extend-db/src bash C:/t/vis-runs/queue.sh vis-extend-db v4-live-2 2400 C:/t/vis-runs/logs/v4-live-2.json 4 C:/t/vis-runs/logs/v4-live-2.log -- C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.venv/Scripts/python.exe -u C:/t/vis-runs/scratch/vis-extend-db/launch.py C:/t/vis-runs/scratch/vis-extend-db/live_proof.py C:/t/vis-extend-db/docs/vision/evidence/V4 C:/t/vis-runs/scratch/vis-extend-db/dump 120",
   "after the live run: hand-check 10 added steps, record kept_apart_compartment / renamed_name_conflict / currency_only_twins / overlay_entities_hop_none per run, grep logs for sk-or-"
  ],
