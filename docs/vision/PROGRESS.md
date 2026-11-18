@@ -110,8 +110,11 @@ Merged in `vision/main` (pushed): V1, V2, V3, V5, V6 at 04596e6c. Gated work sti
   `moldb.wishartlab.com/molecules/<pwc_id>/image.png`, i.e. an unrelated production compound. Our PWML carries correct
   ids (serotonin HMDB0000259, ChEBI 28790) and no structure.
 - **Grounding gap seen:** Ca++ in run 10 has no database id.
-- Items (1) and (2) are layout issues in how PWML biological states become PathWhiz boxes; they would need a
-  `pwml/` layout change, outside this programme's no-biology scope: recorded as an open item for main / the PO.
+- Items (1) and (2) are layout issues in how PWML biological states become PathWhiz boxes. **Taken by the main
+  orchestrator** as a separate correctness-track lane after Thursday (pwml/ layout change, gated by replay
+  no-regression and a PathWhiz import A/B); not part of vision. V7b's metrics (duplicate_compartment_boxes,
+  compartment_box_overlaps, unlabeled_compartment_boxes) are kept as that lane's baseline.
+- **Grounding item (logged):** Ca++ in run 10 carries no database id.
 
 ## Rulings from the main orchestrator (2026-11-18) and carried constraints
 
