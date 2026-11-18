@@ -47,6 +47,9 @@ Plan: `docs/vision/PLAN.md`. Branch `vision/main` from `origin/main` `a6c07e16`.
 | 2026-11-17 | V5 | implementer | general-purpose (sonnet/high) | `vision/scope`, `C:/t/vis-scope` | fix r1 | static review (sonnet/high) CHANGES_REQUESTED: negation lookahead keeps the depth word |
 | 2026-11-17 | V6 | implementer | general-purpose (sonnet/high) | `vision/generate`, `C:/t/vis-generate` | fix r1 | static review (opus/high) CHANGES_REQUESTED: proof never pins T2PW_FINAL_PAYLOAD; flags missing from the cache key. Proof now in two arms (flag on, flag 0), 97/97 each |
 | 2026-11-17 | V9 | implementer | general-purpose (sonnet/high) | `vision/bench`, `C:/t/vis-bench` | running | tests wait for the heavy lock |
+| 2026-11-17 | V5 | fix r1 + review r2 | same implementer (sonnet/high); same reviewer (sonnet/high) | `vision/scope` d6c2bbdf | APPROVE | 74 focused tests passed, 0 survivors (`logs/v5-4.log`, run by the sub-orchestrator's queue) |
+| 2026-11-17 | V5 | merge | sub-orchestrator | `vision/main` e7fa005d | MERGED | condition: `scope.py` reads `vision/prompts/*.txt` at import; the pyproject package-data entry `"t2pw.vision" = ["prompts/*"]` comes with V6 (present on `vision/generate`). Confirm it is merged before any non-editable install or deploy |
+| 2026-11-17 | V6 | gated run | sub-orchestrator queue (`C:/t/vis-runs/queue_v6.sh`) | holder vis-generate | waiting | needs the heavy lock free and 4 GB RAM (1.3-1.7 GB free: desktop apps, not a leak per main) |
 
 ## Decisions made by the sub-orchestrator (PO gave full autonomy; recommended option each time)
 
