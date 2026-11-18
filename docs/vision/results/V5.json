@@ -3,6 +3,18 @@
   "branch": "vision/scope",
   "base": "4260ea80",
   "code_commit": "591081a1",
+  "fix_round_1": {
+    "commit": "dbcb6268",
+    "changes": [
+      "Negation now consumes the negated depth phrase (not just the negator): 'not the whole pathway' -> DEFAULT, 'not just the paper' -> DEFAULT/unchanged.",
+      "Negation window is whitespace-only, so a comma ends it ('no problem, show the whole pathway' -> FULL).",
+      "Worker thread catches Exception, not BaseException; comment states LLM_TIMEOUT_S bounds only the caller's wait and the client retry loop (global LLM_MAX_RETRIES env) may continue in the daemon thread. The client has no per-call retry budget, so none is set.",
+      "FULL needs 'whole/entire/complete/full/exhaustive + pathway/network/map/diagram/graph/picture/thing' or 'everything known/available/...' or 'all (that is) known'; 'full text of the paper', 'the whole paper' and 'everything the paper says' are not FULL.",
+      "LESS words are whole phrases: simpler, simplif*, shrink/trim/narrow it|this, narrower, cut/pare (it) down, reduce it|this|the detail/size/scope/context. Bare 'detailed' no longer means more detail ('more detailed' and 'not detailed enough' do).",
+      "New tests for each of the above."
+    ],
+    "note_package_data": "pyproject package-data for src/t2pw/vision/prompts/*.txt is added by lane V6; scope.py reads scope_system.txt at import and needs it shipped."
+  },
   "built": "Scope layer: choose_scope(request, llm=None) and rescope(current, message, llm=None) in one module. LLM stage 'vision_scope' (temperature 0, response_json, OPENROUTER_VISION_SCOPE_MODEL else the global model) with strict validation (paper_only bool, max_hops null or int 0..10, reason str; code fences tolerated). Any error, timeout (45 s thread guard) or invalid answer -> keyword fallback table; unsure -> DEFAULT (choose) / unchanged (rescope). llm=None with T2PW_OFFLINE_CURATOR truthy or a non-openrouter provider -> fallback only, client never imported at module import time. Rescope fallback uses view.more_detailed / less_detailed: DEFAULT->(False,2), PAPER_ONLY->DEFAULT, FULL->DEFAULT (less), DEFAULT->PAPER_ONLY (less). Negated depth words ('not the whole pathway') are stripped before matching.",
   "files": [
     "src/t2pw/vision/scope.py",
@@ -15,6 +27,7 @@
   "proofs": [],
   "dead_ends": [
     "Run 1 (v5-1) waited at the gate on RAM (1 GB free, floor 2), then the PC restarted and killed it.",
+    "Run 3 (v5-3, after fix round 1) printed GATE_BLOCKED: heavy lock held by llm-ab (new token), log C:/t/vis-runs/logs/v5-3.log.",
     "Run 2 (v5-2) printed GATE_BLOCKED: the heavy lock was held for the whole 30 min wait by holder llm-ab (label llmab-A-PMC12421875, live leg)."
   ],
   "not_run": [
