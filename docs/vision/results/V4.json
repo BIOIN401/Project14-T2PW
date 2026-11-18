@@ -19,6 +19,7 @@
    "also": "PW_R213418 coproporphyrin self-loop fixed; menaquinone no longer extended with an Arabidopsis pathway"
   },
   "hand_check": {
+   "seed_reason": "the seed is the round number (round 3 used seed 3, round 4 seed 4), fixed before the draw and run once, so the sample is new and not chosen after looking; the 20 steps checked in rounds 2-3 are excluded by accession. Scripts committed: docs/vision/evidence/V4/sample.py and fidelity.py",
    "sample": "sample.py seed 4 over the round-4 added reaction steps, excluding the 20 steps checked in rounds 2-3: 4 PathBank hop-1, 4 WikiPathways hop-1, 2 Reactome (any hop). Fidelity read back from the source: PathBank by a read-only SELECT per reaction (fidelity.py through launch.py), WikiPathways from the cached GPML line, Reactome from the cached ContentService record. Biology against UniProt / known enzymology.",
    "steps": [
     {"step": "human PathBank PW000148 PW_R001193 sphingosine-1-phosphate -> ethanolamine phosphate + palmitaldehyde (SGPL1)", "fidelity": "match (source: Sphingosine 1-phosphate > O-Phosphoethanolamine + Palmitaldehyde; our 'ethanolamine phosphate' is the paper's row joined by id)", "biology": "wrong (source): UniProt O95470: sphing-4-enine 1-phosphate = (2E)-hexadecenal + phosphoethanolamine; hexadecanal (palmitaldehyde) comes from sphinganine 1-phosphate"},
@@ -240,7 +241,9 @@
   "db_user": "The DB user value equals the public database name 'pathbank' (boolean comparison inside the script, value never printed). That word is also the source-id prefix and a module name, so its raw count is meaningless: mouse 46, enterobactin 34, human 79, menaquinone 56, lipid A 44, Arabidopsis 64, this record 38 (before this entry), v4-live-2.log 16, v4-secrets-3.log 51, analysis printout 146, other logs 0. Accepted by the sub-orchestrator and the main orchestrator (decision a), given the credential-shaped checks above are all 0."
  },
  "open_questions": [
-  "S1 and S2 decide whether the extension is safe at all: should V4 fix them (convert/pathbank only, inside the boundary) before review, or should a follow-up lane do it?",
+  "N1 (standing condition for the wiring lane and default-on): a source-error registry: known curated-record errors (KDSR PW000148 PW_R001169, CAO PW766996 PW_R2146855, ferric citrate PW000760 PW_R1998772, S1P lyase PW000148 PW_R001193, ...) kept as data and applied at admission, so a known-wrong step is flagged or held back.",
+  "N5 (standing condition for the wiring lane and default-on): hand checks so far covered reaction steps only (hop 1, Reactome any hop); transports, interactions and hop >= 2 steps must be hand-checked too.",
+  "S1 and S2 (resolved in rounds 3-4: organism from the processes' states; 'Generated Pathway' records excluded).",
   "Proposal for payload.py (outside this boundary): id-based currency identity and VD-11 ignoring H+/H2O on a forward match (8 duplicate pairs live), plus S5 (no name-only joins between grounded rows).",
   "Not converted: PathBank ReactionCoupledTransport, Reactome regulation (regulatedBy), black-box events, WikiPathways protein->metabolite arrows, element_locations rows. Wanted?"
  ]
