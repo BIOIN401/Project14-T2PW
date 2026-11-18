@@ -48,7 +48,8 @@
   "open_questions": [
     "RESOLVED by VD-15: no LLM on the request path (keyword re-scope only); generate(offline=False) replaces the private _offline patch; per-process lock documented; cache keyed by generate.CACHE_VERSION. New tests: test_rescope_never_reaches_the_real_llm, test_generate_offline_false_swaps_no_environment (also run tests/test_vision_generate.py to confirm the default is unchanged).",
     "Cost of a first view: one child process runs the PWML export once and then six formats (including quarantine) under the lock; with the curator offline this should be seconds to a minute, but the real time is not measured yet (command 3).",
-    "Review notes F2 and F5: to be recorded here verbatim; their text was not in the message that reached the implementer (asked the sub-orchestrator to resend).",
+    "Review note F2: on timeout, serve.py's subprocess.run kills only the direct child. That is not a tree kill like the worker's Job Object (web/worker.py:109-184), and the child is orphaned if the server dies. Acceptable today, because the export path spawns no processes. Reuse the worker's child wrapper if that changes.",
+    "Review note F5: with offline=False, generate's _kept runs a second DB-backed quarantine apart from the one inside run_pwml_export. The settings are the same, but if the DB flips between the two calls, SBML/SBGN/KGML could keep a different graph than the PWML. Rare; no change now.",
     "The refusal whitelist (serve._GENUINE) is a message-prefix match; a reworded export message would be reported as an error and retried instead of remembered (safe direction). Upgrade: a structured error kind from run_pwml_export.",
     "serve.CACHE_VERSION is bumped by hand: forgetting it after an exporter change leaves old jobs on stale files.",
     "Cross-format names (V6 F1b) are not touched here; the panel offers the files as generate() produces them."
