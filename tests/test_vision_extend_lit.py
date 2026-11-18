@@ -217,6 +217,110 @@ def test_unsupported_enzyme_and_unstated_currency_are_dropped():
     assert drops == {"currency_not_in_quote": 2, "enzyme_not_in_quote": 1}
 
 
+def test_stored_quote_is_the_source_text():   # F3
+    from t2pw.vision.extend.literature import check_reaction
+    from t2pw.vision.payload import _Index
+
+    text = "At the branch point, EntC converts chorismate\nto  isochorismate ( see Fig. 2 ) ."
+    step, why, _ = check_reaction(rx(["chorismate"], ["isochorismate"], ["EntC"],
+                                     "entc converts chorismate to ISOCHORISMATE"), text,
+                                  "Escherichia coli", _Index(big0()), "match")
+    assert why is None and step["quote"] == "EntC converts chorismate\nto  isochorismate"
+    from t2pw.vision.extend.literature import source_span
+    assert source_span("isochorismate (see fig. 2).", text) == "isochorismate ( see Fig. 2 ) ."
+    assert source_span("EntC converts chorismate to MenF", text) is None
+
+
+def test_swapped_direction_and_other_organism_quotes_are_refused():   # F7
+    from t2pw.vision.extend.literature import check_reaction
+    from t2pw.vision.payload import _Index
+
+    text = "EntC converts chorismate to isochorismate. In Bacillus subtilis, MenF converts chorismate to isochorismate."
+    _, why, _ = check_reaction(rx(["isochorismate"], ["chorismate"], [], "EntC converts chorismate to isochorismate"),
+                               text, "Escherichia coli", _Index(big0()), "match")
+    assert why == "admission: evidence_direction_disagrees_with_claim"
+    _, why, _ = check_reaction(rx(["chorismate"], ["isochorismate"], ["MenF"],
+                                  "In Bacillus subtilis, MenF converts chorismate to isochorismate"),
+                               text, "Escherichia coli", _Index(big0()), "match")
+    assert why == "quote_organism_mismatch"
+
+
+def test_vd19_organism_verdicts():
+    from t2pw.vision.extend.literature import check_reaction
+    from t2pw.vision.payload import _Index
+
+    text = "EntC converts chorismate to isochorismate. In Escherichia coli, EntC converts chorismate to isochorismate."
+    plain = rx(["chorismate"], ["isochorismate"], ["EntC"], "EntC converts chorismate to isochorismate")
+    named = rx(["chorismate"], ["isochorismate"], ["EntC"],
+               "In Escherichia coli, EntC converts chorismate to isochorismate")
+    for claim, paper, related in ((plain, "match", False), (plain, "unknown", True), (plain, "genus_level", True),
+                                  (named, "unknown", False)):    # the quote's own organism comes first
+        step, why, _ = check_reaction(claim, text, "Escherichia coli", _Index(big0()), paper)
+        assert why is None and step["related_organism"] is related, (paper, claim["quote"])
+
+
+def test_vd19_related_organism_rows_are_full_view_only():
+    from t2pw.vision.view import DEFAULT, FULL, PAPER_ONLY, unresolved_refs, view
+
+    real = fake_get()
+
+    def get(url, *, deadline, cache_dir):   # the abstract-only paper no longer names its organism
+        body = real(url, deadline=deadline, cache_dir=cache_dir)
+        return body.replace(" in Escherichia coli", "") if body and "dihydrodiol" in url else body
+
+    big, report = run(get=get)
+    by_id = {p["source_id"]: p for p in report["papers"]}
+    assert by_id["PMID:30000002"]["organism_match"] == "unknown" and by_id["PMID:30000002"]["accepted"] == 1
+    keys = [k for s, k, r, b in keyed_rows(big) if not b and s == "processes.reactions" and r["inputs"] == ["dihydrodiol"]]
+    recs = big["provenance"][keys[0]]
+    assert all(x["related_organism"] is True and "related_organism" in x["note"] for x in recs)
+    names = lambda v: [r["name"] for r in v["processes"]["reactions"]]  # noqa: E731
+    step = ext_rows(big, "processes.reactions")
+    rel_name = next(r["name"] for r in step if r["inputs"] == ["dihydrodiol"])
+    assert rel_name in names(view(big, FULL))
+    assert rel_name not in names(view(big, DEFAULT)) and rel_name not in names(view(big, PAPER_ONLY))
+    d = view(big, DEFAULT)
+    assert "dihydroxybenzoate" not in [r["name"] for r in d["entities"]["compounds"]]
+    for scope in (DEFAULT, FULL, PAPER_ONLY):
+        assert unresolved_refs(view(big, scope)) == []
+
+
+def test_title_only_and_prefixed_doi_input_paper_match():   # F1
+    item = {"pmid": "9", "title": "Siderophore biosynthesis in <i>Escherichia coli</i>",
+            "doi": "10.5/abc", "journalInfo": {"journal": {"title": "J"}}}
+    assert screen(item, {"title": "Siderophore biosynthesis in Escherichia coli"}) == "input_paper"
+    assert screen(item, {"title": "Siderophore biosynthesis in &lt;i&gt;Escherichia coli&lt;/i&gt;"}) == "input_paper"
+    assert screen(item, {"doi": "https://doi.org/10.5/ABC"}) == "input_paper"
+    assert screen(item, {"doi": "doi:10.5/abc"}) == "input_paper"
+    assert screen(item, {"title": "Another paper"}) is None
+    big, report = run(paper={"title": PAPER["title"]})          # no ids at all: the title alone excludes it
+    assert ("PMC1111111", "input_paper") in {(x["id"], x["reason"]) for x in report["candidates"]}
+
+
+def test_top_level_failure_is_fail_open(monkeypatch):   # F5
+    def boom(big):
+        raise RuntimeError("frontier broke")
+
+    monkeypatch.setattr(literature, "frontier", boom)
+    big = big0()
+    out, report = extend_literature(big, get=fake_get(), chat_fn=fake_chat())
+    assert out is big and report["status"] == "failed" and "frontier broke" in report["error"]
+
+
+def test_step_counted_only_when_to_rows_keeps_it(monkeypatch):   # F6
+    from collections import Counter
+
+    def drop_all(big, pw):
+        return {}, {}, {}, Counter(skipped_self_loop=1)
+
+    monkeypatch.setattr(literature, "to_rows", drop_all)
+    big, report = run()
+    by_id = {p["source_id"]: p for p in report["papers"]}
+    assert by_id["PMID:30000002"]["accepted"] == 0
+    assert by_id["PMID:30000002"]["rejected"]["to_rows: skipped_self_loop"] == 1
+    assert big["extension"] == {}
+
+
 def test_llm_budget_exhaustion_stops_cleanly():
     chats = []
     big, report = run(max_llm_calls=1, chat_fn=fake_chat(chats))

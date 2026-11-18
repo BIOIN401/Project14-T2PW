@@ -17,6 +17,10 @@ Flow, per run (``extend_literature``):
    it (participants, direction, catalysts). Currency the quote does not name is dropped; a catalyst
    the quote does not attach is dropped; no compartment is ever written (the extractor reads none).
    A step must touch a grounded entity already in the payload (otherwise it is not "next to" it).
+   The stored quote is the passage's own text at the match, not the model's string. Organism
+   (VD-19): a quote or paper naming another organism is refused; one that names none, or only a
+   same-genus one, is admitted with ``related_organism: true`` on its records (FULL view only).
+   A step counts as accepted only once ``to_rows`` keeps it.
 5. Kept steps go through ``convert.to_rows`` (the DB extension's identity rules VD-11 / VD-13) and
    ``payload.merge_extension``; records are relabelled ``other_paper`` / ``extension_lit``.
 
@@ -102,7 +106,7 @@ def _ids(item: Dict[str, Any]) -> Dict[str, Optional[str]]:
     if pmcid and not pmcid.startswith("PMC"):
         pmcid = "PMC" + pmcid
     pmid = str(item.get("pmid") or "").strip() or None
-    doi = str(item.get("doi") or "").strip().lower() or None
+    doi = re.sub(r"^(https?://(dx\.)?doi\.org/|doi:\s*)", "", str(item.get("doi") or "").strip().lower()) or None
     return {"pmid": pmid, "pmcid": pmcid, "doi": doi}
 
 
@@ -121,9 +125,9 @@ def screen(item: Dict[str, Any], paper: Dict[str, Any]) -> Optional[str]:
     ids = _ids(item)
     if not any(ids.values()):
         return "no_identifier"
-    mine = {k: _ids(paper)[k] for k in ("pmid", "pmcid", "doi")}
-    if any(ids[k] and ids[k] == mine[k] for k in mine) or (
-            norm(paper.get("title")) and norm(paper.get("title")) == norm(item.get("title"))):
+    mine = _ids(paper)
+    title = normalise(clean_text(paper.get("title")))
+    if any(ids[k] and ids[k] == mine[k] for k in mine) or (title and title == normalise(clean_text(item.get("title")))):
         return "input_paper"
     types = [str(t).lower() for t in ((item.get("pubTypeList") or {}).get("pubType") or [])]
     publisher = str((item.get("bookOrReportDetails") or {}).get("publisher") or "").lower()
@@ -153,17 +157,38 @@ def organism_verdict(requested: Optional[str], text: str) -> Tuple[str, List[str
 
 # ---------------------------------------------------------------- quotes and passages
 
+def _normalise_map(text: Any) -> Tuple[str, List[int]]:
+    """(normalised text, source index of each normalised character). Per character: NFKC, casefold;
+    whitespace runs -> one space; no space before closing / after opening punctuation (full text from
+    XML puts a space wherever a tag ended: 'in <i>B. subtilis</i>.' -> 'subtilis .'); trimmed."""
+    chars: List[Tuple[str, int]] = []
+    for i, c in enumerate(str(text or "")):
+        for d in unicodedata.normalize("NFKC", c).casefold():
+            d = " " if d.isspace() else d
+            if d == " " and (not chars or chars[-1][0] == " " or chars[-1][0] in "(["):
+                continue
+            if d in ".,;:!?)]" and chars and chars[-1][0] == " ":
+                chars.pop()
+            chars.append((d, i))
+    if chars and chars[-1][0] == " ":
+        chars.pop()
+    return "".join(c for c, _ in chars), [i for _, i in chars]
+
+
 def normalise(text: Any) -> str:
-    """NFKC, casefold, whitespace collapsed, and no space before closing / after opening punctuation:
-    full text from XML puts a space wherever a tag ended ('in <i>B. subtilis</i>.' -> 'subtilis .')."""
-    text = re.sub(r"\s+", " ", unicodedata.normalize("NFKC", str(text or "")))
-    text = re.sub(r"\s+([.,;:!?)\]])", r"\1", text)
-    return re.sub(r"([(\[])\s+", r"\1", text).strip().casefold()
+    return _normalise_map(text)[0]
+
+
+def source_span(quote: Any, text: str) -> Optional[str]:
+    """The passage's own text that the quote matches (normalised exact substring, >= MIN_QUOTE), or None."""
+    q = normalise(quote)
+    norm_text, where = _normalise_map(text)
+    at = norm_text.find(q) if len(q) >= MIN_QUOTE else -1
+    return None if at < 0 else text[where[at]:where[at + len(q) - 1] + 1]
 
 
 def quote_in(quote: Any, text: str) -> bool:
-    q = normalise(quote)
-    return len(q) >= MIN_QUOTE and q in normalise(text)
+    return source_span(quote, text) is not None
 
 
 def passages(full_text: str, terms: List[str], k: int) -> List[str]:
@@ -186,14 +211,20 @@ def passages(full_text: str, terms: List[str], k: int) -> List[str]:
 
 # ---------------------------------------------------------------- one reaction
 
-def check_reaction(rx: Dict[str, Any], passage: str, requested: Optional[str], index: _Index):
-    """(neutral step or None, reason, dropped-part counts)."""
+def check_reaction(rx: Dict[str, Any], passage: str, requested: Optional[str], index: _Index,
+                   paper_match: str = "unknown"):
+    """(neutral step or None, reason, dropped-part counts). The stored quote is the passage's own text.
+    Organism (VD-19): the quote's own organisms decide when it names any, else the paper's verdict
+    (title + abstract); 'mismatch' is refused, anything but an exact 'match' is admitted as
+    ``related_organism`` (shown in the FULL view only)."""
     from t2pw.rag.admission import states_name, validate_evidence_span
 
     drops: Counter = Counter()
-    quote = str(rx.get("quote") or "").strip()
-    if not quote_in(quote, passage):
-        return None, "quote_not_verbatim" if len(normalise(quote)) >= MIN_QUOTE else "quote_too_short", drops
+    model_quote = str(rx.get("quote") or "").strip()
+    found = source_span(model_quote, passage)
+    if found is None:
+        return None, "quote_not_verbatim" if len(normalise(model_quote)) >= MIN_QUOTE else "quote_too_short", drops
+    quote = re.sub(r"\s+", " ", found).strip()   # what the checks read; the record keeps ``found``
     names = {}
     for side in ("inputs", "outputs"):
         kept = []
@@ -216,18 +247,24 @@ def check_reaction(rx: Dict[str, Any], passage: str, requested: Optional[str], i
                                          enzymes=[], reversible=bool(rx.get("reversible")))
     if not verdict.ok:
         return None, "admission: " + (verdict.reasons[0].split(":")[0] if verdict.reasons else "refused"), drops
-    match, seen = organism_verdict(requested, quote)
-    if match == "mismatch":
+    quote_match, seen = organism_verdict(requested, quote)
+    if quote_match == "mismatch":
         return None, "quote_organism_mismatch", drops
+    match = quote_match if seen else paper_match
+    if match == "mismatch":   # the paper screen drops these already; kept for direct callers
+        return None, "paper_organism_mismatch", drops
     if not any(index.edge(n) for n in names["inputs"] + names["outputs"]):
         return None, "not_connected", drops
     reversible = verdict.normalized_reversible if verdict.normalized_reversible is not None else bool(
         rx.get("reversible"))
+    related = match != "match"
     step = {"kind": "reaction", "name": str(rx.get("name") or "").strip() or None,
             "inputs": [{"type": "compound", "name": n, "synonyms": [], "ids": {}} for n in names["inputs"]],
             "outputs": [{"type": "compound", "name": n, "synonyms": [], "ids": {}} for n in names["outputs"]],
             "enzymes": enzymes, "location": None, "direction": "reversible" if reversible else None,
-            "quote": quote, "organisms_in_quote": seen}
+            "quote": found, "related_organism": related,
+            "organism_note": f"organism {match} (quote names {', '.join(seen) or 'none'}; paper {paper_match})"
+                             + ("; related_organism: FULL view only" if related else "")}
     return step, None, drops
 
 
@@ -251,8 +288,12 @@ def _rows_for(big: Dict[str, Any], step: Dict[str, Any], sid: str, n: int, title
         for r in rs:
             if r.get("provenance") == "extension_db":
                 r["provenance"] = STAGE
+    # VD-19: ``related_organism`` is a boolean field on every record (view.py shows a row whose records
+    # are all related_organism in FULL only); the note repeats it in words
     provs = {s: [[{"kind": "other_paper", "source": sid, "quote": step["quote"], "stage": STAGE,
-                   "note": f"{note}; {rec.get('note')}"} for rec in recs] for recs in v] for s, v in provs.items()}
+                   "note": f"{note}; {step['organism_note']}; {rec.get('note')}",
+                   "related_organism": step["related_organism"]} for rec in recs] for recs in v]
+             for s, v in provs.items()}
     return rows, provs, counts
 
 
@@ -264,7 +305,18 @@ def _default_chat():
     return _default_chat_fn
 
 
-def extend_literature(big: Dict[str, Any], *, paper: Optional[Dict[str, Any]] = None, max_papers: int = 5,
+def extend_literature(big: Dict[str, Any], **kw) -> Tuple[Dict[str, Any], Dict[str, Any]]:
+    """(extended copy of ``big``, report); arguments as ``_extend_literature``. Fail-open as a whole:
+    an error outside the per-paper guard (frontier, queries, screening, placement) returns ``big``
+    unchanged with status 'failed'."""
+    try:
+        return _extend_literature(big, **kw)
+    except Exception as exc:  # noqa: BLE001 - fail open by design
+        return big, {"status": "failed", "error": f"{type(exc).__name__}: {exc}"[:300], "papers": [],
+                     "candidates": [], "queries": [], "llm": {"calls": None}, "placement": {}}
+
+
+def _extend_literature(big: Dict[str, Any], *, paper: Optional[Dict[str, Any]] = None, max_papers: int = 5,
                       budget_s: float = 120, max_llm_calls: int = 8, max_queries: int = 3, page_size: int = 10,
                       passages_per_paper: int = 2, cache_dir=None,
                       get: Optional[Callable[..., Optional[str]]] = None,
@@ -387,29 +439,35 @@ def extend_literature(big: Dict[str, Any], *, paper: Optional[Dict[str, Any]] = 
                 texts += passages(full, terms, passages_per_paper)
             texts = texts[:left]
             entry["passages"] = len(texts)
-            trial = big
+            trial, tried = big, 0
             for p_i, text in enumerate(texts):
                 if time.monotonic() >= deadline:
                     raise TimeoutError("deadline passed mid-paper")
                 where = "abstract" if p_i == 0 and abstract else f"full text passage {p_i}"
                 for rx in extract_reactions_from_text(text, chat_fn=counted):
                     entry["extracted"] += 1
-                    step, why, drops = check_reaction(rx, text, organism, _Index(trial))
+                    step, why, drops = check_reaction(rx, text, organism, _Index(trial), match or "unknown")
                     entry["dropped_parts"].update(drops)
-                    if not step:
+                    rows = None
+                    if step:
+                        tried += 1
+                        rows, provs, counts = _rows_for(trial, step, sid, tried, title, where)
+                        entry.setdefault("counts", Counter()).update(counts)
+                        if not rows.get("processes.reactions"):   # to_rows skipped it (self loop, one side)
+                            why = "to_rows: " + next((k for k in counts if k.startswith("skipped")), "skipped")
+                    if not rows or not rows.get("processes.reactions"):
                         entry["rejected"][why] += 1
                         if len(entry["rejected_samples"]) < 10:
                             entry["rejected_samples"].append({"reason": why, "quote": str(rx.get("quote"))[:300],
                                                               "inputs": rx.get("inputs"), "outputs": rx.get("outputs")})
                         continue
-                    n = entry["accepted"] = entry["accepted"] + 1
-                    rows, provs, counts = _rows_for(trial, step, sid, n, title, f"{where}; requested organism "
-                                                    f"{organism or 'not given'}: {match}")
+                    entry["accepted"] += 1
+                    if step["related_organism"]:
+                        entry["related_organism"] = entry.get("related_organism", 0) + 1
                     src = {sid: {**_blank_source("other_paper"), **ids, "title": title, "journal": journal_of(item),
                                  "year": item.get("pubYear"), "url": f"https://europepmc.org/article/"
                                  f"{item.get('source') or 'MED'}/{item.get('id')}", "retrieved": retrieved}}
                     trial = merge_extension(trial, rows, provs, src)
-                    entry.setdefault("counts", Counter()).update(counts)
             big = trial   # the whole paper, or nothing from it
         except Exception as exc:  # noqa: BLE001 - fail open per paper
             entry.update(status="failed", error=f"{type(exc).__name__}: {exc}"[:200], accepted_discarded=entry["accepted"])
