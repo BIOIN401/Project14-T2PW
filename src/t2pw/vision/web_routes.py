@@ -43,6 +43,12 @@ _SCOPE_RE = re.compile(r"paper|default|full|hops:[0-9]{1,2}")
 MAX_MESSAGE = 300
 
 
+def _no_llm(system: str, user: str) -> str:
+    # No LLM on a request thread (VD-15): rescope() treats a failing llm as "use the keyword table".
+    # ponytail: LLM re-scoping can move into the serialised child process later.
+    raise RuntimeError("no LLM on the request path")
+
+
 def slug_of(spec: ScopeSpec) -> str:
     if spec.paper_only:
         return "paper"
@@ -145,7 +151,7 @@ def register(app, item_lookup: Callable, page: Callable, cross_site: Callable) -
         slug = scope_arg(scope if isinstance(scope, str) else None)
         text = message.strip()[:MAX_MESSAGE] if isinstance(message, str) else ""
         if text:
-            slug = slug_of(rescope(parse_scope(slug), text)[0])
+            slug = slug_of(rescope(parse_scope(slug), text, llm=_no_llm)[0])
         return "/job/%s/%s/view?scope=%s" % (sid, pos, quote(slug, safe=":"))
 
     @app.post("/job/{sid}/{pos}/rescope")

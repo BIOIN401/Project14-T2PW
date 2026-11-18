@@ -61,7 +61,7 @@ def site(tmp_path, monkeypatch):
 
     def fake(run_dir, slug, fmt, **kw):  # stands in for the child process: writes the cache file a child would
         s.calls.append((Path(run_dir), slug, fmt))
-        p = Path(run_dir) / serve.CACHE_DIR / ("%s.%s" % (serve.fs_slug(slug), fmt))
+        p = serve.cache_dir(run_dir) / ("%s.%s" % (serve.fs_slug(slug), fmt))
         p.parent.mkdir(parents=True, exist_ok=True)
         p.write_bytes(b"FAKE-" + fmt.encode())
         return p
@@ -212,11 +212,51 @@ def test_rescope_hostile_input(site):
 def test_rescope_uses_the_scope_layer_and_survives_its_failure_modes(site, monkeypatch):
     from t2pw.vision.view import PAPER_ONLY
     seen = []
-    monkeypatch.setattr(web_routes, "rescope", lambda cur, msg: (seen.append((cur, msg)), (PAPER_ONLY, "llm"))[1])
+    monkeypatch.setattr(web_routes, "rescope", lambda cur, msg, llm=None: (seen.append((cur, msg, llm)), (PAPER_ONLY, "x"))[1])
     sid = site.job()
     r = site.client.post("/job/%s/0/rescope" % sid, data={"scope": "hops:4", "message": "  strictly the paper  "})
     assert r.headers["location"].endswith("scope=paper")
     assert seen[0][0].max_hops == 4 and seen[0][1] == "strictly the paper"
+    with pytest.raises(Exception):
+        seen[0][2]("s", "u")  # the llm handed to rescope() always fails: keyword table only
+
+
+def test_rescope_never_reaches_the_real_llm(site, monkeypatch):
+    from t2pw.vision import scope as scope_mod
+    monkeypatch.delenv("T2PW_OFFLINE_CURATOR")
+    monkeypatch.setattr(scope_mod, "_default_llm", lambda: pytest.fail("the real LLM client was asked for"))
+    sid = site.job()
+    r = site.client.post("/job/%s/0/rescope" % sid, data={"scope": "default", "message": "make this more detailed"})
+    assert r.headers["location"].endswith("scope=hops:2")
+
+
+def test_generate_offline_false_swaps_no_environment(monkeypatch):
+    from types import SimpleNamespace
+    from t2pw.pipeline import strict_quarantine
+    from t2pw.service import postpipeline
+    from t2pw.vision import generate as G
+    monkeypatch.setenv("PATHBANK_DB_HOST", "db.example")
+    monkeypatch.delenv("T2PW_OFFLINE_CURATOR", raising=False)
+    seen = []
+
+    def spy(*a, **k):
+        seen.append((os.environ.get("PATHBANK_DB_HOST"), os.environ.get("T2PW_OFFLINE_CURATOR")))
+        return {"ok": True, "xml_bytes": b"<x/>", "pwml_ir": {}}
+
+    def spy_q(*a, **k):
+        seen.append((os.environ.get("PATHBANK_DB_HOST"), os.environ.get("T2PW_OFFLINE_CURATOR")))
+        return SimpleNamespace(ok=True, payload={}, refusal_reasons=[])
+
+    monkeypatch.setattr(postpipeline, "run_pwml_export", spy)
+    monkeypatch.setattr(strict_quarantine, "quarantine_and_close", spy_q)
+    before = dict(os.environ)
+    G._export_pwml({}, {}, offline=False)
+    G._kept({}, {}, offline=False)
+    assert seen == [("db.example", None)] * 2 and dict(os.environ) == before, "real DB settings, environment untouched"
+    seen.clear()
+    G._export_pwml({}, {})  # the default is unchanged: DB blanked, curator off, then restored
+    G._kept({}, {})
+    assert seen == [("", "1")] * 2 and dict(os.environ) == before
 
 
 def test_rescope_refuses_cross_site_posts(site):
@@ -275,9 +315,9 @@ def test_run_generate_spawns_one_child_with_an_explicit_env_and_leaves_os_enviro
     calls = []
     monkeypatch.setattr(serve.subprocess, "run", _fake_child(calls))
     p = serve.run_generate(tmp_path, "hops:2", "sbml", timeout=33)
-    assert p == tmp_path / serve.CACHE_DIR / "hops2.sbml" and p.read_bytes() == b"x-sbml"
+    assert p == serve.cache_dir(tmp_path) / "hops2.sbml" and p.parent.name.startswith("v") and p.read_bytes() == b"x-sbml"
     (cmd, kw), = calls
-    assert cmd[:3] == [sys.executable, "-m", "t2pw.vision.serve"] and cmd[3:] == [str(tmp_path), "hops:2", str(tmp_path / serve.CACHE_DIR)]
+    assert cmd[:3] == [sys.executable, "-m", "t2pw.vision.serve"] and cmd[3:] == [str(tmp_path), "hops:2", str(serve.cache_dir(tmp_path))]
     assert kw["timeout"] == 33 and kw["env"] is not os.environ
     assert kw["env"]["PATHBANK_DB_HOST"] == "db.example", "production DB variables pass through as they are"
     assert kw["env"]["T2PW_OFFLINE_CURATOR"] == "1"
@@ -296,7 +336,7 @@ def test_run_generate_failure_modes(tmp_path, monkeypatch):
         serve.run_generate(tmp_path, "full", "pwml")
     with pytest.raises(serve.Refused, match="nothing to export"):  # remembered: no second child
         serve.run_generate(tmp_path, "full", "svg")
-    assert len(calls) == 1 and not (tmp_path / serve.CACHE_DIR / "full.pwml").exists()
+    assert len(calls) == 1 and not (serve.cache_dir(tmp_path) / "full.pwml").exists()
 
     monkeypatch.setattr(serve.subprocess, "run", _fake_child([], rc=1))
     with pytest.raises(serve.ServeError, match="boom: it broke") as e:
@@ -360,11 +400,11 @@ def test_real_child_process(tmp_path):
     try:
         pwml = serve.run_generate(run, "default", "pwml", timeout=600)
     except serve.Refused as e:  # a refused view is a valid verdict: a message, no file
-        assert str(e).strip() and (run / serve.CACHE_DIR / "default.refused").exists()
-        assert not (run / serve.CACHE_DIR / "default.pwml").exists()
+        assert str(e).strip() and (serve.cache_dir(run) / "default.refused").exists()
+        assert not (serve.cache_dir(run) / "default.pwml").exists()
     else:
         assert pwml.read_bytes().lstrip().startswith(b"<?xml")
         for f in serve.PUBLIC_FORMATS:
-            assert (run / serve.CACHE_DIR / ("default." + f)).stat().st_size > 0
+            assert (serve.cache_dir(run) / ("default." + f)).stat().st_size > 0
         assert serve.run_generate(run, "default", "svg").read_bytes().lstrip().startswith(b"<svg")
     assert dict(os.environ) == before

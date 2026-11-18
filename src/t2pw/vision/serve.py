@@ -7,8 +7,10 @@ public format of one scoped view into ``<run_dir>/vision_cache/``, then returns 
 * One child at a time (``_LOCK``). A request that waited finds the first one's files and starts nothing.
 * The child gets an explicit env: a copy of the parent's (production DB variables pass through as they are) plus
   ``T2PW_OFFLINE_CURATOR=1`` (a view request never calls an LLM). The parent's ``os.environ`` is never touched.
-* The child replaces generate's test-only ``_offline()`` (it blanks the DB variables) with a no-op, so the quarantine
-  step and the PWML export step both see the production database. This is the child's own copy of the module.
+* The child calls ``generate(..., offline=False)``: no env swap, so the quarantine step and the PWML export step both
+  see the production database settings the parent passed.
+* Files live in ``<run_dir>/vision_cache/v<generate.CACHE_VERSION>/``; bumping that constant retires old files.
+* SINGLE-WORKER ASSUMPTION: ``_LOCK`` is per process. Run the server with one worker process (or add a lock file).
 * A refused export is recorded as ``<scope>.refused`` (the export's own message) and raises ``Refused``; no file.
 
     python -m t2pw.vision.serve <run_dir> <scope> <out_dir>      (child entry; scope is the canonical slug)
@@ -16,7 +18,6 @@ public format of one scoped view into ``<run_dir>/vision_cache/``, then returns 
 
 from __future__ import annotations
 
-import contextlib
 import os
 import subprocess
 import sys
@@ -38,6 +39,11 @@ class Refused(ServeError):
     """The export refused this view; ``str(e)`` is the export's own message."""
 
 
+def cache_dir(run_dir) -> Path:
+    from t2pw.vision.generate import CACHE_VERSION
+    return Path(run_dir) / CACHE_DIR / ("v" + CACHE_VERSION)
+
+
 def fs_slug(scope: str) -> str:
     return scope.replace(":", "")  # "hops:2" -> "hops2"
 
@@ -57,7 +63,7 @@ def run_generate(run_dir, scope: str, fmt: str, *, timeout: float = TIMEOUT_S) -
     canonical slug (paper | default | full | hops:N); the caller validates it."""
     if fmt not in PUBLIC_FORMATS:
         raise ValueError("fmt must be one of %s" % ", ".join(PUBLIC_FORMATS))
-    cache = Path(run_dir) / CACHE_DIR
+    cache = cache_dir(run_dir)
     target, refused = cache / ("%s.%s" % (fs_slug(scope), fmt)), cache / (fs_slug(scope) + ".refused")
 
     def cached() -> Optional[Path]:
@@ -86,16 +92,10 @@ def run_generate(run_dir, scope: str, fmt: str, *, timeout: float = TIMEOUT_S) -
 
 # --- child -----------------------------------------------------------------------------------------------
 
-@contextlib.contextmanager
-def _production_db():
-    yield
-
-
 def _child(run_dir: str, scope: str, out_dir: str) -> int:
     from t2pw.clean_model.builder import read_run_meta
     from t2pw.vision import generate as G
     from t2pw.vision.payload import big_from_run, load_big_payload
-    G._offline = _production_db  # this process only: DB variables stay as the parent passed them
     src, out = Path(run_dir), Path(out_dir)
     stored = src / "big_payload.json"  # written when the run has an extension; else the base payload is the view
     big = load_big_payload(stored) if stored.is_file() else big_from_run(src)
@@ -103,7 +103,7 @@ def _child(run_dir: str, scope: str, out_dir: str) -> int:
     spec, slug = G.parse_scope(scope), fs_slug(scope)
     for fmt in PUBLIC_FORMATS:  # one process: the PWML export memo is shared by every format
         try:
-            data = G.generate(big, spec, fmt, export=export, meta=meta)
+            data = G.generate(big, spec, fmt, export=export, meta=meta, offline=False)
         except G.GenerateError as e:
             (out / (slug + ".refused")).write_text(str(e), encoding="utf-8")
             print("refused: %s" % e, file=sys.stderr)
