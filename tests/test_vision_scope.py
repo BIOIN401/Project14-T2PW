@@ -98,6 +98,12 @@ def test_llm_none_offline_never_touches_client(monkeypatch):
     ("not only the paper but the whole pathway", FULL),
     ("never show the complete pathway", DEFAULT),
     ("fifteen steps around", DEFAULT),
+    ("not just the paper", DEFAULT),
+    ("not the whole pathway, only the paper", PAPER_ONLY),
+    ("no problem, show the whole pathway", FULL),
+    ("use the full text of the paper", DEFAULT),
+    ("the whole paper, please", DEFAULT),
+    ("everything the paper says", DEFAULT),
 ])
 def test_choose_fallback_table(text, want):
     assert sc.fallback_choose(text)[0] == want
@@ -131,6 +137,13 @@ def test_choose_fallback_table(text, want):
     (DEFAULT, "thanks, looks good", DEFAULT),
     (H2, "not the whole pathway", H2),
     (H2, "simpler but more detailed", H2),
+    (H2, "not just the paper", H2),
+    (DEFAULT, "no problem, show the full pathway", FULL),
+    (DEFAULT, "use the full text of the paper", DEFAULT),
+    (DEFAULT, "reduce the noise in the figure", DEFAULT),
+    (DEFAULT, "I will prepare the figure and compare it", DEFAULT),
+    (H2, "reduce the detail", DEFAULT),
+    (H2, "pare it down", DEFAULT),
 ])
 def test_rescope_fallback(current, text, want):
     assert sc.rescope(current, text, llm=boom)[0] == want

@@ -54,12 +54,15 @@ def _default_llm() -> Optional[LLM]:
 
 
 def _call_with_timeout(llm: LLM, system: str, user: str) -> str:
+    # LLM_TIMEOUT_S bounds only this caller's wait. On a timeout the daemon thread (and the client's own retry
+    # loop, whose budget is the global LLM_MAX_RETRIES env var) may keep running in the background; its result
+    # is discarded.
     box: dict = {}
 
     def run() -> None:
         try:
             box["out"] = llm(system, user)
-        except BaseException as e:  # noqa: BLE001 - any failure means fallback
+        except Exception as e:  # noqa: BLE001 - any failure means fallback
             box["err"] = e
 
     t = threading.Thread(target=run, daemon=True)
@@ -105,17 +108,22 @@ def _ask(llm: Optional[LLM], user: str) -> Optional[Tuple[ScopeSpec, str]]:
 
 _NUM = {w: i for i, w in enumerate(
     "zero one two three four five six seven eight nine ten".split())}
-_NEG = r"(?:\b(?:not|never|no|without)|n't)\b\W+(?:\w+\W+){0,3}?"
-_FULL = re.compile(r"\b(?:whole|entire|complete|full|everything|all (?:known|that is known)|exhaustive)\b")
+# A negator, then up to 3 words on the same clause (whitespace only: a comma ends the window, so
+# "no problem, show the whole pathway" is not negated).
+_NEG = r"(?:\b(?:not|never|no|without)|n't)\s+(?:\w+\s+){0,3}?"
+_FULL = re.compile(r"\b(?:(?:whole|entire|complete|full|exhaustive)\s+(?:pathway|network|map|diagram|graph|picture|thing)"
+                   r"|everything (?:known|available|you know|there is)|all (?:that is |that's )?known)\b")
+_NOT_FULL = re.compile(r"\b(?:full|whole|entire|complete)\s+(?:text|paper|article|manuscript|document|study)\b")
 _PAPER = re.compile(
-    r"\b(?:only|just|strictly|solely|purely)\b\W+(?:\w+\W+){0,4}?(?:paper|article|manuscript|text)\b"
+    r"\b(?:only|just|strictly|solely|purely)\b\W+(?:\w+\W+){0,4}?(?:paper|article|manuscript)\b"
     r"|\b(?:paper|article|manuscript)\W+only\b|\bnothing (?:beyond|but|else|outside)\b"
     r"|\bstrictly (?:from|in|based on)\b\W+(?:\w+\W+){0,2}?(?:paper|article|manuscript)\b")
 _HOPS = re.compile(r"\b(\d+|" + "|".join(_NUM) + r")\s+(?:steps?|hops?|levels?|layers?)\b")
-_MORE = re.compile(r"\b(?:more\s+(?:detail\w*|context|info\w*|background|reactions)|detailed|expand\w*|elaborate|"
+_MORE = re.compile(r"\b(?:more\s+(?:detail\w*|context|info\w*|background|reactions)|expand\w*|elaborate|"
                    r"broader|bigger|deeper|add more|show more|zoom out|wider|enrich\w*)\b")
-_LESS = re.compile(r"\b(?:simpl\w+|less|fewer|smaller|shrink\w*|reduce\w*|trim\w*|narrow\w*|zoom in|"
-                   r"cut (?:it )?down|pare\w*)\b")
+_LESS = re.compile(r"\b(?:simpler|simplif\w+|less|fewer|smaller|shrink\s+(?:it|this)|trim\s+(?:it|this|down)|"
+                   r"narrower|narrow\s+(?:it|this)|zoom in|cut\s+(?:it\s+)?down|pare\s+(?:it\s+)?down|"
+                   r"reduce\s+(?:it|this|the\s+(?:detail|size|scope|context)))\b")
 _TOO_MUCH = re.compile(r"\btoo (?:much|detailed|busy|complex|complicated|cluttered|crowded|big|large)\b")
 _TOO_LITTLE = re.compile(r"\b(?:too (?:simple|little|sparse|small|few|basic|thin)|not (?:detailed|enough)|"
                          r"lacks? (?:detail|context))\b")
@@ -125,8 +133,10 @@ def _clean(text: str) -> Tuple[str, bool]:
     """Lowercase; drop negated depth words ('not the whole pathway') and report whether any was dropped."""
     t = re.sub(r"\s+", " ", text.lower().replace("’", "'"))
     t = re.sub(r"\bnot only\b", "also", t)
-    t, n = re.subn(_NEG + r"(?=" + _FULL.pattern + ")", " ", t)
-    t, n2 = re.subn(_NEG + r"(?=" + _PAPER.pattern + ")", " ", t)
+    t = _NOT_FULL.sub(" ", t)  # "the full text of the paper" is not a request for the full pathway
+    # the negator AND the depth phrase are consumed together
+    t, n = re.subn(_NEG + "(?:" + _FULL.pattern + ")", " ", t)
+    t, n2 = re.subn(_NEG + "(?:" + _PAPER.pattern + ")", " ", t)
     return t, bool(n or n2)
 
 
