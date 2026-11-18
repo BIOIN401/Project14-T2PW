@@ -3,6 +3,7 @@
 ``view(big, scope)`` returns a payload in the final_mapped schema. It is reference-closed: every
 entity and state name a kept row references, and that resolved in the base, still resolves.
 With an empty extension, ``view(big, DEFAULT)`` and ``view(big, FULL)`` are a deep copy of the base.
+Extension rows supported only by ``related_organism`` records (VD-19) appear in FULL only.
 """
 
 from __future__ import annotations
@@ -45,6 +46,10 @@ def less_detailed(spec: ScopeSpec) -> ScopeSpec:
 
 def _is_paper(records: List[Dict[str, Any]]) -> bool:
     return any(isinstance(r, dict) and r.get("kind") == "paper" for r in records)
+
+
+def _related_only(records: List[Dict[str, Any]]) -> bool:
+    return bool(records) and all(isinstance(r, dict) and r.get("related_organism") is True for r in records)
 
 
 def _name(row: Any) -> str:
@@ -106,8 +111,13 @@ def view(big: Dict[str, Any], scope: ScopeSpec = DEFAULT) -> Dict[str, Any]:
     if not ext_rows:
         return out
     hops = big.get("hops") or {}
+    prov = big.get("provenance") or {}
+    # VD-19: a row whose every record is related_organism (other-paper evidence from a paper that names
+    # no organism or only a same-genus one) is FULL-only; the closure below still pulls in such an
+    # entity when a kept row names it
     keep = {k for s, k, r in ext_rows
-            if scope.max_hops is None or (hops.get(k) is not None and hops[k] <= scope.max_hops)}
+            if scope.max_hops is None or (hops.get(k) is not None and hops[k] <= scope.max_hops
+                                          and not _related_only(prov.get(k, [])))}
     changed = True
     while changed:  # closure: kept rows pull in the extension entities and states they name
         changed = False

@@ -132,3 +132,35 @@ def test_f7_paper_only_keeps_state_with_own_paper_record():
     v = view(build_big_payload(p), PAPER_ONLY)
     assert [r["name"] for r in v["biological_states"]] == ["E. coli cytoplasm", "stated state"]
     assert new_dangling(p, v) == []
+
+
+def test_vd19_related_organism_rows_only_in_full():
+    big = build_big_payload(payload())
+    rel = {"kind": "other_paper", "source": "PMID:2", "quote": "q", "stage": "extension_lit", "note": "",
+           "related_organism": True}
+    ok = dict(rel, source="PMID:1", related_organism=False)
+    rows = {"entities.compounds": [{"name": "H", "chebi_id": "20"}, {"name": "J", "chebi_id": "21"},
+                                   {"name": "K", "chebi_id": "22"}],
+            "processes.reactions": [{"name": "related step", "inputs": ["A"], "outputs": ["H"]},
+                                    {"name": "matched step", "inputs": ["A"], "outputs": ["J"]},
+                                    {"name": "both", "inputs": ["A"], "outputs": ["K"]}]}
+    provs = {"entities.compounds": [[rel], [rel], [rel]],
+             "processes.reactions": [[rel], [ok], [rel, ok]]}
+    big = merge_extension(big, rows, provs)
+    base = big["base"]
+    names = lambda v, s, k: [r["name"] for r in v[s][k]]  # noqa: E731
+    d = view(big, DEFAULT)
+    assert names(d, "processes", "reactions")[-2:] == ["matched step", "both"]
+    assert "related step" not in names(d, "processes", "reactions")
+    assert names(d, "entities", "compounds")[-2:] == ["J", "K"]   # related-only rows, pulled in by kept steps
+    assert "H" not in names(d, "entities", "compounds")
+    assert "related step" not in names(view(big, more_detailed(DEFAULT)), "processes", "reactions")
+    f = view(big, FULL)
+    assert names(f, "processes", "reactions")[-3:] == ["related step", "matched step", "both"]
+    assert "H" in names(f, "entities", "compounds")
+    p = view(big, PAPER_ONLY)
+    assert p == view(build_big_payload(payload()), PAPER_ONLY)
+    for v in (d, f, p):
+        assert new_dangling(base, v) == []
+    # the invariant still holds with an empty overlay
+    assert view(build_big_payload(payload()), DEFAULT) == payload()
