@@ -174,22 +174,23 @@ def igold(rel):  # A acts on B
     return paper_gold(interactions=[{"id": "I1", "a": [tm("A")], "b": [tm("B")], "relationship": rel}])
 
 
-@pytest.mark.parametrize("gold_rel, e1, e2, pred_rel, exact, weak", [
-    ("activation", "A", "B", "activates", 1, 0),   # same directional relation, order respected
-    ("activation", "B", "A", "activates", 0, 0),   # swapped direction: contradiction
-    ("activation", "A", "B", "inhibits", 0, 0),    # activation against inhibition: contradiction
-    ("inhibition", "A", "B", "stimulates", 0, 0),
-    ("activation", "A", "B", "binds", 0, 1),       # binding against a directional relation: weak
-    ("activation", "B", "A", "binds", 0, 1),
-    ("activation", "A", "B", "", 0, 1),            # unknown relation: weak
-    ("binding", "A", "B", "activates", 0, 1),      # directional prediction against gold binding: weak
-    ("binding", "B", "A", "binds", 1, 0),          # undirected: either order is exact
-    (None, "A", "B", None, 0, 1),                  # two unknown relations carry no information: weak
+@pytest.mark.parametrize("gold_rel, e1, e2, pred_rel, exact, weak, swapped", [
+    ("activation", "A", "B", "activates", 1, 0, 0),   # same directional relation, order respected
+    ("activation", "B", "A", "activates", 0, 0, 1),   # swapped direction: rejected and counted
+    ("inhibition", "B", "A", "represses", 0, 0, 1),   # swapped, inhibition
+    ("activation", "A", "B", "inhibits", 0, 0, 0),    # activation against inhibition: contradiction (not swapped)
+    ("inhibition", "A", "B", "stimulates", 0, 0, 0),
+    ("activation", "A", "B", "binds", 0, 1, 0),       # binding against a directional relation: weak
+    ("activation", "B", "A", "binds", 0, 1, 0),
+    ("activation", "A", "B", "", 0, 1, 0),            # unknown relation: weak
+    ("binding", "A", "B", "activates", 0, 1, 0),      # directional prediction against gold binding: weak
+    ("binding", "B", "A", "binds", 1, 0, 0),          # undirected: either order is exact
+    (None, "A", "B", None, 0, 1, 0),                  # two unknown relations carry no information: weak
 ])
-def test_interaction_tiers_only_exact_counts_toward_recall(gold_rel, e1, e2, pred_rel, exact, weak):
+def test_interaction_tiers_only_exact_counts_toward_recall(gold_rel, e1, e2, pred_rel, exact, weak, swapped):
     t = score_view(with_interaction(e1, e2, pred_rel), FULL, igold(gold_rel))["types"]["interactions"]
-    assert (t["recalled"], t["recalled_weak"]) == (exact, weak)
-    assert t["recall"] == float(exact) and t["correct"] == exact  # weak never raises recall or correct
+    assert (t["recalled"], t["recalled_weak"], t["swapped"]) == (exact, weak, swapped)
+    assert t["recall"] == float(exact) and t["correct"] == exact  # weak and swapped never raise recall or correct
 
 
 def test_transport_compartments_compare_folded_names_even_when_unknown_to_the_table():
@@ -258,6 +259,7 @@ def test_run_benchmark_keeps_kinds_apart_and_reports_cases_without_runs():
     assert rep["aggregate"]["paper"]["micro"]["types"]["reactions"]["recall_num_den"] == [6, 6]
     assert rep["aggregate"]["full"]["micro"]["types"]["reactions"]["recall_num_den"] == [3, 3]
     assert rep["aggregate"]["paper"]["headline"] == "macro" and list(rep["aggregate"]["paper"]["per_case"]) == ["P"]
+    assert rep["aggregate"]["paper"]["cases"] == rep["aggregate"]["paper"]["macro"]["cases"] == 1  # N=1 beside the headline
     assert "precision" in rep["aggregate"]["paper"]["micro"]["types"]["reactions"]
     assert "match_rate" in rep["aggregate"]["full"]["micro"]["types"]["reactions"]
 
