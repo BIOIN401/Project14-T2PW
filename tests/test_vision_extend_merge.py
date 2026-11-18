@@ -185,6 +185,8 @@ def test_currency_only_twins_counted():
 def test_reactome_reaction_from_recorded_responses(tmp_path):
     for url, body in json.loads((FIX / "reactome_R-HSA-70467.json").read_text(encoding="utf-8")).items():
         (tmp_path / (hashlib.sha256(url.encode()).hexdigest()[:32] + ".txt")).write_text(json.dumps(body), encoding="utf-8")
+    ewas = {"schemaClass": "EntityWithAccessionedSequence"}
+    cache_put(tmp_path, "https://reactome.org/ContentService/data/query/179517", {"hasMember": [ewas, ewas, ewas]})
     step, why = reaction_step("R-HSA-70467", deadline=0, cache_dir=tmp_path)   # cache only: deadline passed
     assert why is None and step["kind"] == "reaction" and step["location"] == "cytosol"
     assert [p["name"] for p in step["inputs"]] == ["Fru(6)P", "ATP"]
@@ -382,3 +384,39 @@ def test_f9_gpml_arrowhead_not_on_last_point_is_skipped():
     steps, notes = to_steps(parse_gpml(g))
     assert [s["kind"] for s in steps] == ["interaction"]
     assert "line r1: arrowhead not on the last point, skipped" in notes
+
+
+# ---------------------------------------------------------------- review round 2 (R1-R4)
+
+def test_r1_currency_never_joins_a_grounded_non_currency_row():
+    b = base()
+    b["entities"]["compounds"].append({"name": "Adenosine triphosphate", "mapped_ids": {"chebi": "15422"},
+                                       "evidence": "ATP"})
+    atp = {"type": "compound", "name": "ATP(4-)", "synonyms": [], "ids": {"chebi": "30616"}}
+    big, report = run_on(b, [rxn("R-2", [part("Ex", "C90011"), atp], [part("Why", "C90012")])])
+    assert "ATP" in ext_names(big)                       # bare family row, not the grounded paper row
+    assert big["extension"]["processes"]["reactions"][0]["inputs"] == ["Ex", "ATP"]
+    assert report["placement"][SID] == {"hop_none": 1}   # no hop through the paper's ATP row
+
+
+def test_r2_catalyst_set_of_complexes_is_one_name_only_enzyme(tmp_path):
+    test_reactome_reaction_from_recorded_responses(tmp_path)   # writes the recorded responses
+    cache_put(tmp_path, "https://reactome.org/ContentService/data/query/179517",
+              {"hasMember": [{"schemaClass": "Complex"}, {"schemaClass": "EntityWithAccessionedSequence"}]})
+    step, _ = reaction_step("R-HSA-70467", deadline=0, cache_dir=tmp_path)
+    assert step["enzymes"] == [{"type": "complex", "name": "PFK tetramer", "synonyms": [], "components": []}]
+
+
+def test_r3_kept_apart_not_counted_when_a_stateless_row_merges():
+    b = two_state_base()
+    b["processes"]["reactions"] = [b["processes"]["reactions"][0],
+                                   {"name": "A to B any", "inputs": ["A"], "outputs": ["B"], "evidence": "A to B"}]
+    big, report = run_on(b, [rxn("R1", [part("A", "C90001")], [part("B", "C90002")], location="periplasm")])
+    assert len(db_records(big, "A to B any")) == 1 and db_records(big, "A to B") == []
+    assert "kept_apart_compartment" not in report["sources"]["pathbank"]["counts"]
+
+
+def test_r4_intracellular_is_not_cytoplasm():
+    from t2pw.vision.extend.convert import fold
+    assert fold("cytosol") == fold("Cytoplasm") == fold(None, "GO:0005829") == fold(None, "0005737")
+    assert fold("intracellular") != fold("cytosol") and fold(None, "GO:0005622") != fold("cytosol")

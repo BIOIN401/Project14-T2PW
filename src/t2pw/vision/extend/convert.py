@@ -57,10 +57,9 @@ _CURRENCY_IDS = {
 CURRENCY_BY_ID = {i: fam for fam, ids in _CURRENCY_IDS.items() for i in ids}
 
 # Compartment fold: GO ids and spellings that name one place. Everything else folds to itself
-# (periplasm, mitochondrial matrix, lumen, stroma, "cell" ... stay distinct).
+# (periplasm, mitochondrial matrix, lumen, stroma, "cell", "intracellular" ... stay distinct).
 _PLACES = {
-    "cytoplasm": ("cytoplasm", "cytosol", "cytoplasmic", "cytosolic", "intracellular",
-                  "GO:0005737", "GO:0005829", "GO:0005622"),
+    "cytoplasm": ("cytoplasm", "cytosol", "cytoplasmic", "cytosolic", "GO:0005737", "GO:0005829"),
     "extracellular": ("extracellular", "extracellular region", "extracellular space", "GO:0005576", "GO:0005615"),
     "plasma membrane": ("plasma membrane", "cell membrane", "GO:0005886"),
     "periplasm": ("periplasm", "periplasmic space", "GO:0042597"),
@@ -186,14 +185,10 @@ def to_rows(big: Dict[str, Any], pw: Dict[str, Any]):
                 complex_by_set.setdefault(u, r.get("name"))
     currency_row: Dict[str, str] = {}       # raw currency family -> existing compound row name
     for s, k, r, _ in existing:
-        if s == "entities.compounds" and isinstance(r, dict) and r.get("name"):
-            if is_currency(r["name"]):
-                currency_row.setdefault(raw_family(r["name"]), r["name"])
-            else:
-                for ns, v in grounded_ids(r):
-                    fam = CURRENCY_BY_ID.get(f"{ns}:{v}")
-                    if fam:
-                        currency_row.setdefault(raw_family(fam), r["name"])
+        # only a row payload itself treats as currency: a grounded "Adenosine triphosphate" row would
+        # be a hop hub for every database step that uses ATP
+        if s == "entities.compounds" and isinstance(r, dict) and is_currency(r.get("name")):
+            currency_row.setdefault(raw_family(r["name"]), r["name"])
     place_of_state = {norm(r.get("name")): fold(r.get("subcellular_location"))
                       for s, k, r, _ in existing if s == "biological_states" and isinstance(r, dict)}
 
@@ -339,7 +334,7 @@ def to_rows(big: Dict[str, Any], pw: Dict[str, Any]):
             row["biological_state"] = st
         elif not hit:
             counts["no_compartment"] += 1
-        if apart:
+        if apart and not hit:
             counts["kept_apart_compartment"] += 1
 
     for step in pw.get("steps") or []:

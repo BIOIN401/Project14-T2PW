@@ -87,10 +87,19 @@ def reaction_step(st_id: str, deadline: float, cache_dir) -> Tuple[Optional[Dict
         part, _ = part_of(pe, subunits)
         if part is not None:
             enzymes.append(part)
-        elif pe.get("schemaClass") in ("DefinedSet", "CandidateSet"):   # "any of": each member alone
-            members = [r for r in pe.get("refEntities") or [] if r.get("schemaClass") == "ReferenceGeneProduct"]
-            enzymes += [_protein(r) for r in members]
-            notes.append(f"catalyst set {split_name(pe.get('displayName', ''))[0]}: members listed as alternatives")
+        elif pe.get("schemaClass") in SETS:
+            # "any of": each member alone, but only when every member is a single protein; refEntities
+            # flatten complex members into subunits, which the source never lists as alternatives
+            name = split_name(pe.get("displayName", ""))[0]
+            members = (_get(f"/data/query/{pe.get('peDbId')}", deadline, cache_dir) or {}).get("hasMember") or []
+            refs = [r for r in pe.get("refEntities") or [] if r.get("schemaClass") == "ReferenceGeneProduct"]
+            if members and all(isinstance(m, dict) and m.get("schemaClass") == "EntityWithAccessionedSequence"
+                               for m in members) and len(refs) == len(members):
+                enzymes += [_protein(r) for r in refs]
+                notes.append(f"catalyst set {name}: members listed as alternatives")
+            else:
+                enzymes.append({"type": "complex", "name": name, "synonyms": [], "components": []})
+                notes.append(f"catalyst set {name}: members not all single proteins, written by name only")
     comp_rows = [c for c in q.get("compartment") or [] if isinstance(c, dict)]
     comps = [c.get("displayName") for c in comp_rows]
     go = (f"GO:{comp_rows[0]['accession']}" if len(comp_rows) == 1 and comp_rows[0].get("accession")
