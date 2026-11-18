@@ -153,3 +153,30 @@ def test_svg_metrics_equal_the_model_metrics(path):
     for k in ("crossings", "bends", "enzyme_links", "enzyme_links_gt200"):
         assert a[k] == b[k], k
     assert abs(a["enzyme_link_max"] - b["enzyme_link_max"]) <= 2
+
+
+# --------------------------------------------------------------------------- gallery (no Docker, no browser)
+def test_gallery_assemble_writes_page_and_small_png(tmp_path):
+    from PIL import Image
+
+    from t2pw.vision.checks import gallery as GA
+    work = tmp_path / "w"
+    d = work / "14"
+    d.mkdir(parents=True)
+    Image.effect_noise((1600, 900), 80).convert("RGB").save(d / "ours.png")  # noisy: forces the size loop
+    (d / "info.json").write_text(json.dumps({"idx": 14, "organism": "Borrelia <b>", "pmcid": "PMC1", "size": {"nr": 1},
+                                             "metrics": {"pwml": {"nodes": 4, "node_overlaps": 0}, "svg": {"crossings": 2}}}), encoding="utf-8")
+    out = tmp_path / "g"
+    page = GA.assemble(work, out).read_text(encoding="utf-8")
+    assert (out / "14_ours.png").stat().st_size <= GA.MAX_PNG
+    assert "14_ours.png" in page and "no PathWhiz screenshot" in page and "Borrelia &lt;b&gt;" in page and "node_overlaps" in page
+
+
+def test_gallery_refuses_a_harness_that_is_not_the_t2pw_vis_copy(tmp_path):
+    from t2pw.vision.checks import gallery as GA
+    (tmp_path / "run_import.py").write_text('PROJECT = "t2pw-pwi"\n', encoding="utf-8")
+    with pytest.raises(SystemExit):
+        GA._check_harness(tmp_path)
+    (tmp_path / "run_import.py").write_text('PROJECT = "t2pw-vis"\n', encoding="utf-8")
+    GA._check_harness(tmp_path)
+    assert len(GA.DEFAULT_PICK) == 6 and GA._idx("3, 4") == [3, 4] and GA._idx(None) == list(GA.DEFAULT_PICK)
