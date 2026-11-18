@@ -1,0 +1,59 @@
+{
+  "lane": "V10",
+  "branch": "vision/web",
+  "base": "bc73c231",
+  "status": "unit-tests-green; real-child test and SMOKE/golden/equivalence still to run (queued by the sub-orchestrator)",
+  "built": [
+    "GET /job/{sid}/{pos}/vision: the panel (HTMX lazy-loads it into the result page; empty 200 when the job has no stored payload or is not released, so the loader disappears)",
+    "GET /job/{sid}/{pos}/view?scope=S: the result page with the panel open, a diagram of scope S (the svg, via <img>), a refused/failed export shown as a message with no file offered",
+    "GET /job/{sid}/{pos}/download/{fmt}?scope=S[&inline=1]: pwml|sbml|sbgn|kgml|svg|html as attachment (inline only for svg, for the <img>); refused export -> 422 error page, no file",
+    "POST /job/{sid}/{pos}/rescope: form fields message and scope -> rescope() -> 303 to /view?scope=<new>; empty message keeps the scope; same CSRF guard as /submit",
+    "serve.run_generate(run_dir, slug, fmt): one child process (python -m t2pw.vision.serve) per (job, scope) that writes all six public formats into <attempt out dir>/vision_cache/, behind a process-wide lock; refusal recorded as <scope>.refused",
+    "Scope slugs are canonical (paper|default|full|hops:N, N 0..10; hops:1 is default, deeper than 10 is full); anything else is 400. fmt must be one of six names, else 400."
+  ],
+  "files": [
+    "src/t2pw/vision/web_routes.py (new, 160 lines)",
+    "src/t2pw/vision/serve.py (new, 118 lines)",
+    "src/t2pw/web/templates/_vision_panel.html (new, 28 lines; loader when `vp` is undefined, the panel when defined)",
+    "src/t2pw/web/templates/result.html (+1 line: {% if it.finished and it.downloads.pwml %}{% include \"_vision_panel.html\" %}{% endif %})",
+    "src/t2pw/web/app.py (+3 lines inside _routes, after the file-download route: a lazy import and register_vision(app, _item, _page, _cross_site))",
+    "tests/test_vision_web.py (new, 370 lines)"
+  ],
+  "boundary": "inside. Edits to existing web files: app.py +3 lines, result.html +1 line. No change under pipeline/pwml/mapping/rag/curation/llm/prompts, VD-15 round: vision/generate.py edited for one change only (public keyword offline=True on generate()); default behaviour unchanged. CACHE_VERSION lives in serve.py (review F6).",
+  "design": {
+    "access": "register() receives app.py's own _item (job lookup: sid format, position range, unknown job -> 404), _page and _cross_site, so every route has exactly the access rules of /job/{sid}/{pos}/file/{kind}. The run dir is <work_root>/item-<id>/attempt-<item.attempt>/out, only when the item is finished and release_ready/review_required (the PWML download's own gate) and final_mapped.json resolves inside item-<id>. No path comes from the URL.",
+    "production_db": "generate._offline() blanks the DB variables and is a process-wide env swap. The server never calls it: the child calls generate(..., offline=False) (VD-15, public keyword; default offline=True unchanged), so the quarantine step and the PWML export both see the DB variables the parent passed; the file cache is vision_cache/v<serve.CACHE_VERSION>/ (bump the constant by hand to retire old files); T2PW_OFFLINE_CURATOR=1 is passed in the child's explicit env (no LLM on a view request). The parent's os.environ is never written.",
+    "serialisation": "threading.Lock in serve.py: one child at a time per server process. A waiter re-checks the cache inside the lock and starts nothing if the first child produced its files. SINGLE-WORKER ASSUMPTION (VD-15): several uvicorn workers would each have their own lock; run one worker process. A lock file is the upgrade (documented in serve.py).",
+    "review_round_1": "Static review (F1, F3, F4, F6 fixed; F2, F5 noted under open_questions). F1: the lock wait is bounded (serve.LOCK_WAIT_S = 30 s) and raises serve.Busy without touching a lock it does not hold; the download route answers 503 + Retry-After 30, the view page shows the message. F3: _child snapshots the env it was passed, imports postpipeline (which loads .env with override=True) FIRST, then re-applies the passed env and forces T2PW_OFFLINE_CURATOR=1. F4: the .refused marker and every format file are written atomically (tmp + os.replace); only a message starting with one of serve._GENUINE (the export's own refusal texts) is remembered, anything else (DB or deployment error, e.g. a connection failure) exits 3 and is retried on the next request. F6: CACHE_VERSION moved from generate.py to serve.py; generate.py's only change is the offline keyword.",
+    "rescope_llm": "VD-15: no LLM on a request thread. web_routes passes llm=_no_llm (always raises) to rescope(), so only the keyword table runs. LLM re-scoping can move into the serialised child process later.",
+    "stored_payload": "the child uses <run_dir>/big_payload.json when it exists (an extension was merged), else big_from_run(run_dir) (final_mapped.json). Nothing writes big_payload.json yet; that is the extension lane.",
+    "choose_scope_hook": "Scope chooser on submission is out of scope. Later: the job form posts a free-text request; app._process_submission calls choose_scope(text) (t2pw.vision.scope; LLM then keyword fallback, never raises) in the threadpool AFTER the rate limit, stores web_routes.slug_of(spec) with the item (a new column or a key in the stored request), and the result page reads it as the default scope: _panel(view, stored_slug) in vision_panel(), and the 'default' fallback in scope_arg() / the links in _vision_panel.html become that slug. web_routes.slug_of() already maps a ScopeSpec to the canonical slug and scope_arg() parses it back, so no new parsing is needed."
+  },
+  "tests": [
+    {"label": "v10-unit-1 (at dbdd3b3b): test_vision_web, test_vision_generate, test_web_app, test_web_review_reasons, test_web_browser_fixes, test_web_design_system", "counts": "155 passed, 2 failed, 1 skipped, 0 survivors; the 2 failures were existing test_vision_generate tests with two-argument fakes of _export_pwml (test_pwml_export_runs_once_per_view, test_refused_export_produces_no_format), broken by the added third argument", "log": "C:/t/vis-runs/logs/v10-unit-1.log"},
+    {"label": "batch1b, same six files at 70ad5d1e (default call shape of _export_pwml/_kept restored; run by the sub-orchestrator)", "counts": "157 passed, 1 skipped (the gated real-child test), 0 survivors", "log": "C:/t/vis-runs/logs/batch1-v10-unit.log"},
+    {"label": "tests/test_vision_web.py::test_real_child_process (T2PW_VISION_GATED_RUN=1)", "counts": "NOT RUN", "log": null}
+  ],
+  "commands_still_to_run": [
+    "DONE (batch1b, 157 passed, 1 skipped): commands 1 and 2 and the test_vision_generate.py re-check. STILL TO RUN: command 3 (the real child, T2PW_VISION_GATED_RUN=1, -k real_child, min 4 GB) and command 4 (SMOKE / golden / equivalence on the merge). The numbering below is the original list.",
+    "1. focused unit tests (min free 2 GB): PYTHONPATH=C:/t/vis-web/src T2PW_OFFLINE_CURATOR=1 bash C:/t/vis-runs/bw.sh vis-web v10-unit 900 C:/t/vis-runs/logs/v10-unit.json 2 -- C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.venv/Scripts/python.exe C:/t/vis-web/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/vis-web -q --basetemp=C:/t/vis-runs/bt/vis-web/run-1 tests/test_vision_web.py   (pipe to C:/t/vis-runs/logs/v10-unit.log; create C:/t/vis-runs/bt/vis-web first)",
+    "2. existing web tests that render the changed result.html (min free 2 GB, new basetemp run-2): tests/test_web_app.py tests/test_web_review_reasons.py tests/test_web_browser_fixes.py tests/test_web_design_system.py; also tests/test_vision_generate.py (generate.py was edited; the new serve tests are test_lock_wait_is_bounded, test_a_busy_view_is_503_with_retry_after, test_child_reapplies_the_passed_env_after_dotenv_and_forces_the_offline_curator, test_child_remembers_only_a_genuine_export_refusal: default behaviour must be unchanged)",
+    "3. the real child on tests/data/vision/generate/run56_final_mapped.json (min free 4 GB, run-3): same wrapper with env T2PW_VISION_GATED_RUN=1 added and `tests/test_vision_web.py -k real_child`. Either a PWML (then all six files exist and the svg starts with <svg) or a Refused with a .refused file and no .pwml is a valid verdict; a ServeError is a defect. Record which one happened.",
+    "4. the sub-orchestrator's SMOKE / golden / equivalence suites on the merge result (they cover the app.py and result.html edits)."
+  ],
+  "proofs": [],
+  "dead_ends": [
+    "A second page template (vision_view.html) would have been needed for /view; avoided by rendering result.html itself with `vp` defined, so the one _vision_panel.html serves as loader, panel and expanded view.",
+    "Passing runner/rescoper into register() would not let tests swap them (default args bind at import); tests replace serve.run_generate and web_routes.rescope, which the handlers look up at call time.",
+    "Stray `python -` (stdin) call at the start of the lane hung for 2 minutes and was stopped by task id; nothing ran from it."
+  ],
+  "open_questions": [
+    "RESOLVED by VD-15: no LLM on the request path (keyword re-scope only); generate(offline=False) replaces the private _offline patch; per-process lock documented; cache keyed by generate.CACHE_VERSION. New tests: test_rescope_never_reaches_the_real_llm, test_generate_offline_false_swaps_no_environment (also run tests/test_vision_generate.py to confirm the default is unchanged).",
+    "Cost of a first view: one child process runs the PWML export once and then six formats (including quarantine) under the lock; with the curator offline this should be seconds to a minute, but the real time is not measured yet (command 3).",
+    "Review note F2: on timeout, serve.py's subprocess.run kills only the direct child. That is not a tree kill like the worker's Job Object (web/worker.py:109-184), and the child is orphaned if the server dies. Acceptable today, because the export path spawns no processes. Reuse the worker's child wrapper if that changes.",
+    "Review note F5: with offline=False, generate's _kept runs a second DB-backed quarantine apart from the one inside run_pwml_export. The settings are the same, but if the DB flips between the two calls, SBML/SBGN/KGML could keep a different graph than the PWML. Rare; no change now.",
+    "The refusal whitelist (serve._GENUINE) is a message-prefix match; a reworded export message would be reported as an error and retried instead of remembered (safe direction). Upgrade: a structured error kind from run_pwml_export.",
+    "serve.CACHE_VERSION is bumped by hand: forgetting it after an exporter change leaves old jobs on stale files.",
+    "Cross-format names (V6 F1b) are not touched here; the panel offers the files as generate() produces them."
+  ]
+}

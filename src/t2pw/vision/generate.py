@@ -99,12 +99,16 @@ def _reference() -> Path:
     raise GenerateError("no reference PWML under %s" % (root / "reference"))
 
 
-def _export_pwml(v: Dict[str, Any], opts: Dict[str, Any]) -> Tuple[Optional[bytes], dict, Optional[str]]:
+def _env(offline: bool):
+    return _offline() if offline else contextlib.nullcontext()
+
+
+def _export_pwml(v: Dict[str, Any], opts: Dict[str, Any], offline: bool = True) -> Tuple[Optional[bytes], dict, Optional[str]]:
     """(pwml bytes, pwml IR, error). The same call the replays make: run_pwml_export on a temp project root."""
     from t2pw.pipeline.export_mode import DEFAULT_EXPORT_MODE, coerce_mode
     from t2pw.service import postpipeline
     ref = _reference()
-    with tempfile.TemporaryDirectory(prefix="t2pw-gen-") as td, _offline():
+    with tempfile.TemporaryDirectory(prefix="t2pw-gen-") as td, _env(offline):
         res = postpipeline.run_pwml_export(
             v, opts.get("pathway_name", "Generated Pathway"), "", "Metabolic", Path(td), ref, 3200, 1400, "#FFFFFF",
             None, bool(opts.get("strict_db", True)), None, None, opts.get("pathway_context"),
@@ -114,14 +118,14 @@ def _export_pwml(v: Dict[str, Any], opts: Dict[str, Any]) -> Tuple[Optional[byte
     return None, res.get("pwml_ir") or {}, str(res.get("error") or "PWML export failed")
 
 
-def _kept(v: Dict[str, Any], opts: Dict[str, Any]) -> Dict[str, Any]:
+def _kept(v: Dict[str, Any], opts: Dict[str, Any], offline: bool = True) -> Dict[str, Any]:
     """The graph the PWML export keeps: the strict quarantine decision ``run_pwml_export`` takes first, with the same
     controls (strict_db, export mode, Stage-0 context). The structural formats are built from this, so SBML, SBGN and
     KGML show exactly the reactions PWML shows (PWML drops a reaction the quarantine boundary refuses: PRODUCT_CONTRACT).
     Raises GenerateError when the boundary refuses the whole view. ``v`` is not mutated."""
     from t2pw.pipeline.export_mode import DEFAULT_EXPORT_MODE, coerce_mode
     from t2pw.pipeline.strict_quarantine import quarantine_and_close
-    with _offline():
+    with _env(offline):
         r = quarantine_and_close(v, strict_db=bool(opts.get("strict_db", True)), pathway_context=opts.get("pathway_context"),
                                  mode=coerce_mode(opts.get("export_mode", DEFAULT_EXPORT_MODE)))
     if not r.ok:
@@ -142,8 +146,13 @@ def _kgml(v: Dict[str, Any], meta: Dict[str, Any]) -> str:
 
 
 def generate(big: Dict[str, Any], scope: ScopeSpec = DEFAULT, fmt: str = "pwml", *,
-             cache_dir=None, export: Optional[Dict[str, Any]] = None, meta: Optional[Dict[str, Any]] = None) -> bytes:
+             cache_dir=None, export: Optional[Dict[str, Any]] = None, meta: Optional[Dict[str, Any]] = None,
+             offline: bool = True) -> bytes:
     """One format of one scoped view, as bytes.
+
+    ``offline=True`` (default): the quarantine and the PWML export run with the PathBank DB variables blanked and the
+    curator off (a process-wide env swap, for tests and replays). ``offline=False``: no swap; both steps see the
+    process's real DB settings and ``os.environ`` is never written (the web server's child process).
 
     ``export``: PWML export controls (pathway_name, strict_db, export_mode, pathway_context); the default is the
     exporter's own. ``meta``: paper metadata for SBML/KGML (clean model ``read_run_meta``). Both, plus the two
@@ -161,6 +170,8 @@ def generate(big: Dict[str, Any], scope: ScopeSpec = DEFAULT, fmt: str = "pwml",
     from t2pw.pwml.layout import layout_version
     from t2pw.service.final_payload import final_payload_enabled
     env = {"final_payload": final_payload_enabled(), "layout": layout_version()}  # both change the PWML bytes
+    if not offline:
+        env["offline"] = False  # a DB-backed export is not the offline one; the default key is unchanged
     vh, oh = _sha(_canon(v)), _sha(_canon([opts, meta, env]))[:8]
     cache = Path(cache_dir) if cache_dir else None
     hit = cache / ("%s.%s.%s" % (vh, oh, fmt)) if cache else None
@@ -172,7 +183,7 @@ def generate(big: Dict[str, Any], scope: ScopeSpec = DEFAULT, fmt: str = "pwml",
         if k not in _MEMO:
             if len(_MEMO) >= 4:
                 _MEMO.pop(next(iter(_MEMO)))
-            _MEMO[k] = _export_pwml(v, opts)
+            _MEMO[k] = _export_pwml(v, opts) if offline else _export_pwml(v, opts, offline=False)  # default call shape unchanged
         return _MEMO[k]
 
     def kept() -> Dict[str, Any]:
@@ -180,7 +191,7 @@ def generate(big: Dict[str, Any], scope: ScopeSpec = DEFAULT, fmt: str = "pwml",
         if k not in _KEPT:
             if len(_KEPT) >= 4:
                 _KEPT.pop(next(iter(_KEPT)))
-            _KEPT[k] = _kept(v, opts)
+            _KEPT[k] = _kept(v, opts) if offline else _kept(v, opts, offline=False)
         return _KEPT[k]
 
     if fmt == "json":
