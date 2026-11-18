@@ -21,25 +21,29 @@
     "tests/data/vision/generate/run56_final_mapped.json (60 KB stored 1-reaction run payload used as the offline fixture; outside the listed boundary, test data only)"
   ],
   "tests": [
-    {"label": "tests/test_vision_generate.py (focused)", "counts": "NOT RUN: GATE_BLOCKED twice (heavy lock held by llm-ab, a live LLM leg, from 19:48 through both 30-minute gate waits)",
+    {"label": "tests/test_vision_generate.py (focused)", "counts": "NOT RUN (test file now has 9 tests): GATE_BLOCKED twice (heavy lock held by llm-ab, a live LLM leg, from 19:48 through both 30-minute gate waits)",
      "log": "C:/t/vis-runs/logs/V6-tests-1.log and C:/t/vis-runs/logs/V6-all.log"}
   ],
   "proofs": {
     "done": "none executed. A scratch probe (try_fix.py, not through the wrapper, one process, tiny payload) showed run idx 56 exports pwml/sbml/sbgn/kgml/svg in default scope; this is not a gate result.",
     "not_done": [
       "tests/test_vision_generate.py (8 tests) and tests/test_vision_diagram.py (font change)",
-      "SBML choice: production json_to_sbml.build_sbml vs clean_model sbml_text on 10 stored payloads (script ready: C:/t/vis-runs/scratch/generate/sbml_compare.py, writes docs/vision/evidence/V6/sbml_compare_10.json). Until it runs, generate uses clean_model sbml_text, which is the offline, DB-free path; build_sbml takes file paths and emits PathWhiz ids only with a DB",
-      "97/97 byte-identity of generate(big_from_run(dir), DEFAULT, 'pwml') against the replay at base (adapted replay C:/t/vis-runs/scratch/generate/replay_base.py, proof C:/t/vis-runs/scratch/generate/proof_generate.py; the 97 indices are the stored baseline runs with ok=true, ok_idx.json)",
-      "format x scope matrix on 10 runs"
+      "SBML choice (undecided, F9): production json_to_sbml.build_sbml vs clean_model sbml_text on 10 stored payloads (script ready: C:/t/vis-runs/scratch/generate/sbml_compare.py, writes docs/vision/evidence/V6/sbml_compare_10.json). json_to_sbml has no DB code (it only reports mysql_connected=false); the choice is made from the species/reactions/compartments counts when it runs. Until then generate uses clean_model sbml_text (takes a payload, no files).",
+      "97/97 byte-identity of generate(big_from_run(dir), DEFAULT, 'pwml') against the replay, in TWO arms: (a) production default, T2PW_FINAL_PAYLOAD unset (ON) + layout v2, baseline replay_base.py --flag 0 --final-env unset (exporter sees the production env, no fill step because generate does no fill); (b) T2PW_FINAL_PAYLOAD=0, baseline replay_base.py --flag 0. The proof pins the arm's env and asserts it, asserts the denominator is the expected 97 (a timeout or missing baseline counts as a failure), and records per run whether the export mode from quarantine_report.json equals the CSV mode the replay uses (F5).",
+      "format x scope matrix on 10 runs (arm a)"
     ],
-    "commands_still_to_run": "PYTHONPATH=C:/t/vis-generate/src T2PW_OFFLINE_CURATOR=1 bash C:/t/vis-runs/bw.sh vis-generate gen-all 7200 C:/t/vis-runs/json/V6-all.json 4 -- bash C:/t/vis-runs/scratch/generate/run_all.sh > C:/t/vis-runs/logs/V6-all.log 2>&1   (run_in_background; runs focused tests, SBML compare, baseline replay of the 97, generate proof and the matrix in one lock hold)"
+    "baseline_source_F3": "Baseline replays run from the vision/generate worktree src (branch HEAD). `git diff --stat 4260ea80 -- src ':!src/t2pw/vision'` is empty (checked at afc0381a), so everything the export touches equals base 4260ea80. run_all.sh re-records it in docs/vision/evidence/V6/diff_outside_vision.txt.",
+    "server_setting_F2": "generate()'s memo and disk cache key include final_payload_enabled() and layout_version(). The server's production default is T2PW_FINAL_PAYLOAD unset (ON) and layout v2, i.e. arm (a). Arm (b) shows the flag-0 path is also byte-identical.",
+    "commands_still_to_run": "PYTHONPATH=C:/t/vis-generate/src T2PW_OFFLINE_CURATOR=1 bash C:/t/vis-runs/bw.sh vis-generate gen-all 7200 C:/t/vis-runs/json/V6-all.json 4 -- bash C:/t/vis-runs/scratch/generate/run_all.sh > C:/t/vis-runs/logs/V6-all.log 2>&1   (run_in_background; one lock hold: focused tests, diff-outside-vision record, SBML compare, both baseline replays of the 97, both proof arms, the matrix)"
   },
   "dead_ends": [
     "synthetic tiny payload (tests/test_vision_payload.payload()) is refused by PWML export Stage 3 revalidation, so the offline fixture is a real stored run payload",
     "run idx 149 (54 KB) is refused by the required-field gate with strict_db and no DB; run idx 56 exports"
   ],
   "open_questions": [
-    "Export controls: the replay takes export mode from tidy_runs.csv, generate takes it from the run's quarantine_report.json (export_options_from_run). If the 97/97 proof shows a mode mismatch for any run, the CSV mode must be passed through export=; confirm when the proof runs.",
+    "Export mode: the replay reads it from tidy_runs.csv, generate from the run's quarantine_report.json (export_options_from_run). The reviewer found they agree 97/97 (F5, closed); the proof re-records it per run in no_regression_pwml_*.json (mode_agrees).",
+    "For the web lane (V10), F7: generate() swaps process-wide environment variables (blank PATHBANK_DB_*, T2PW_OFFLINE_CURATOR=1) for the length of a PWML export and restores them afterwards. That swap must not leak into job subprocesses (a subprocess started during an export inherits blank DB variables) and is not thread-safe; V10 must serialise generate() calls or run it in its own process. Not fixed here.",
+    "Arm (a) uses a baseline replay without the final-payload fill step. A replay with the fill (--flag 1, live public lookups via the fill cache) is a different input (a filled payload) and is not compared; generate does not fill, the web server fills upstream when it builds the big payload.",
     "generate() cannot be byte-identical to the replay without those export controls (strict_db, mode, key_compounds); with export=None it uses the exporter defaults (strict_db True, default mode, no Stage-0 context)."
   ]
 }
