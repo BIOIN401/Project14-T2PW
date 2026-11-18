@@ -67,6 +67,9 @@ Merged in `vision/main` (pushed): V1, V2, V3, V5, V6 at 04596e6c. Gated work sti
 | 2026-11-18 | V4 | static review | ws-reviewer (opus/high) | `vision/extend-db` 14f3230c | CHANGES_REQUESTED | currency rename turns charged ATP into a hop hub; compartment-blind merge (VD-13); Reactome sets flattened into co-subunits; fix r1 code-only during hold |
 | 2026-11-18 | V7a | implementer + static review | general-purpose (sonnet/high); ws-reviewer (sonnet/high) | `vision/checks` 705e62cc | CHANGES_REQUESTED | placements PWML lacks never compared; SBGN regulatory arcs ignored; fix r1 code-only during hold |
 | 2026-11-18 | V9 | implementer + static review | general-purpose (sonnet/high); ws-reviewer (sonnet/high) | `vision/bench` 190ba7b0 | APPROVE WITH NITS | 13 tests passed; paper set PAPER_ONLY 155/165 recall; fix r1 (VD-14) code-only during hold; full-view gold needs the DB |
+| 2026-11-18 | V4 | fix r1-r2 + static re-reviews | same implementer (opus/high); reviewer (opus/high) r2 CHANGES_REQUESTED, delta check (sonnet/medium) APPROVE | `vision/extend-db` cbc5f120 | APPROVED pending runs | 23 tests written; runs held: v4-unit-3, then v4-live-2 when the DB is back |
+| 2026-11-18 | V7a | fix r1-r2 + static re-review | same implementer (sonnet/high); same reviewer (sonnet/high) APPROVE | `vision/checks` 8b8a4b8b | APPROVED pending runs | runs held: 19 tests, then the 97-run proof; reverse-direction SBGN check logged for V7b |
+| 2026-11-18 | V9 | fix r1 | same implementer (sonnet/high) | `vision/bench` 09050671 | pending re-check + runs | runs held (4 commands in V9.json) |
 | 2026-11-17 | V6 | gated run | sub-orchestrator queue (`C:/t/vis-runs/queue_v6.sh`) | holder vis-generate | waiting | needs the heavy lock free and 4 GB RAM (1.3-1.7 GB free: desktop apps, not a leak per main) |
 
 ## Decisions made by the sub-orchestrator (PO gave full autonomy; recommended option each time)
