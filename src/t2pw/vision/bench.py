@@ -141,15 +141,20 @@ def _reaction_gold(raw: Mapping[str, Any], rid: str) -> Optional[Dict[str, Any]]
     ins, outs = _sides_defining(_terms(raw.get("inputs"))), _sides_defining(_terms(raw.get("outputs")))
     if not ins or not outs:
         return None
-    enz = _terms(raw["enzyme"]) if raw.get("enzyme") else []
+    cats = _terms(raw.get("catalysts") or ([raw["enzyme"]] if raw.get("enzyme") else []))
     return {"id": raw.get("id") or rid, "label": raw.get("label") or "", "inputs": ins, "outputs": outs,
-            "enzyme": enz[0] if enz else None, "reversible": bool(raw.get("reversible"))}
+            "enzyme": cats[0] if cats else None, "catalysts": cats, "reversible": bool(raw.get("reversible"))}
 
 
-def _enzymes(reactions: Sequence[Mapping[str, Any]], extra: Sequence[Mapping[str, Any]] = ()) -> List[Dict[str, Any]]:
+def _enzymes(reactions: Sequence[Mapping[str, Any]], transports: Sequence[Mapping[str, Any]] = ()) -> List[Dict[str, Any]]:
+    """Distinct enzymes (every catalyst of every reaction, every transporter), each with ``for``: the
+    ids of the gold reactions / transports that carry it. An enzyme is credited only through those."""
+    owners = [(r["id"], e) for r in reactions for e in r.get("catalysts") or []]
+    owners += [(t["id"], e) for t in transports for e in t.get("transporters") or []]
     seen: Dict[str, Dict[str, Any]] = {}
-    for e in [r["enzyme"] for r in reactions if r.get("enzyme")] + list(extra):
-        seen.setdefault(M.strict_key(e["name"]), {"id": f"E{len(seen) + 1}", **e})
+    for oid, e in owners:
+        k = M.strict_key(e["name"])
+        seen.setdefault(k, {"id": f"E{len(seen) + 1}", **e, "for": []})["for"].append(oid)
     return list(seen.values())
 
 
@@ -190,9 +195,9 @@ def _side(parts: Sequence[Mapping[str, Any]], side: str) -> List[Dict[str, Any]]
     return [t for t in (_pb_term(x) for x in parts if x.get("side") == side) if t]
 
 
-def _pb_enzyme(catalysts: Sequence[Mapping[str, Any]]) -> Optional[Dict[str, Any]]:
-    t = _pb_term(catalysts[0]) if catalysts else None
-    return {**t, "role": "defining"} if t else None
+def _pb_enzymes(catalysts: Sequence[Mapping[str, Any]]) -> List[Dict[str, Any]]:
+    """Every catalyst of a process, not only the first."""
+    return [{**t, "role": "defining"} for t in (_pb_term(c) for c in catalysts) if t]
 
 
 def gold_from_pathbank(extract: Mapping[str, Any], case_id: str) -> Dict[str, Any]:
@@ -206,7 +211,7 @@ def gold_from_pathbank(extract: Mapping[str, Any], case_id: str) -> Dict[str, An
         name = p.get("accession") or p.get("process_id")
         if ptype in ("Reaction", "ReactionCoupledTransport"):
             g = _reaction_gold({"id": name, "inputs": _side(parts, "left"), "outputs": _side(parts, "right"),
-                                "enzyme": _pb_enzyme(p.get("catalysts") or []),
+                                "catalysts": _pb_enzymes(p.get("catalysts") or []),
                                 "reversible": str(p.get("direction") or "") in ("<>", "=", "<=>", "<->", "both")},
                                f"R{len(rx) + 1}")
             if g:
@@ -214,7 +219,10 @@ def gold_from_pathbank(extract: Mapping[str, Any], case_id: str) -> Dict[str, An
             else:
                 skipped.append(name)
         elif ptype == "Interaction":
+            # the left element acts on the right one (signature "R: <acting> > L: <target>" in the extract)
             a, b = _side(parts, "left"), _side(parts, "right")
+            if str(p.get("direction") or "").startswith("<"):
+                a, b = b, a
             if a and b:
                 inter.append({"id": name, "a": a, "b": b, "relationship": _rel(p.get("interaction_type"))})
             else:
@@ -226,7 +234,7 @@ def gold_from_pathbank(extract: Mapping[str, Any], case_id: str) -> Dict[str, An
             comps += [fr, to]
             if cargo:
                 tr.append({"id": name, "cargo": cargo, "from": fr, "to": to,
-                           "transporter": _pb_enzyme(p.get("catalysts") or [])})
+                           "transporters": _pb_enzymes(p.get("catalysts") or [])})
             else:
                 skipped.append(name)
     cs = {_comp(c): c for c in comps if c}
@@ -235,7 +243,7 @@ def gold_from_pathbank(extract: Mapping[str, Any], case_id: str) -> Dict[str, An
             "pathbank": {"accession": extract.get("accession"), "pathway_id": extract.get("pathway_id"),
                          "name": extract.get("name"), "content_sha256": extract.get("content_sha256")},
             "complete": {t: True for t in TYPES}, "reactions": rx, "off_scope_reactions": [],
-            "enzymes": _enzymes(rx, [t["transporter"] for t in tr if t.get("transporter")]),
+            "enzymes": _enzymes(rx, tr),
             "transports": tr, "interactions": inter, "compartments": compartments, "skipped_processes": skipped}
 
 
@@ -272,8 +280,10 @@ def _items(big: Mapping[str, Any], vw: Mapping[str, Any]) -> Dict[str, List[Dict
             if it["dedup"] == dedup:
                 it["is_base"] |= base
                 it["kinds"] |= kinds
-                return
-        found[t].append({"dedup": dedup, "is_base": base, "kinds": set(kinds), **kw})
+                return it
+        new = {"dedup": dedup, "is_base": base, "kinds": set(kinds), "idx": len(found[t]), **kw}
+        found[t].append(new)
+        return new
 
     by_section = {s: rows for s, rows in iter_sections(vw)}
     for t, section in SECTION.items():
@@ -282,11 +292,11 @@ def _items(big: Mapping[str, Any], vw: Mapping[str, Any]) -> Dict[str, List[Dict
             key, is_base = q.popleft() if q else (None, True)
             kinds = {r["kind"] for r in prov.get(key, [])} or {"unclassified"}
             dedup = (_row_key(row) if t == "reactions" else signature(section, row)) if isinstance(row, dict) else _dump(row)
-            add(t, dedup, is_base, kinds, row=row)
+            owner = add(t, dedup, is_base, kinds, row=row)
             if t in ("reactions", "transports") and isinstance(row, dict):  # enzymes come from these rows
                 names = M.enzyme_names(row) if t == "reactions" else M.participant_names(row.get("transporters"))
-                for n in names:
-                    add("enzymes", M.strict_key(n), is_base, kinds, row=n)
+                for n in names:  # refs: the predicted reaction / transport items that name this enzyme
+                    add("enzymes", M.strict_key(n), is_base, kinds, row=n).setdefault("refs", []).append((t, owner["idx"]))
     return found
 
 
@@ -315,17 +325,47 @@ def _m_transport(g, row, ctx) -> bool:
     if not any(_hit(t, row.get("cargo"), ctx) for t in g["cargo"]):
         return False
     for want, state in ((g.get("from"), row.get("from_biological_state")), (g.get("to"), row.get("to_biological_state"))):
-        a, b = _comp(want) if want else None, _comp(ctx.location(state)) if ctx.location(state) else None
-        if a in _COMP.values() and b in _COMP.values() and a != b:
+        have = ctx.location(state)
+        # folded names are compared whenever both sides are known; _COMP only aliases spellings
+        if want and have and _comp(want) != _comp(have):
             return False
     return True
 
 
-def _m_interaction(g, row, ctx) -> bool:
+_DIRECTIONAL = ("activation", "inhibition")
+
+
+def _interaction_tier(g, row, ctx) -> Optional[str]:
+    """None (the entities do not match) | "exact" | "weak" | "contradiction" for one predicted
+    interaction against one gold interaction (a acts on b).
+
+    exact: the same canonical relation, with the order respected when it is directional; only this
+    counts toward recall. weak: binding or an unknown relation against a directional one, or a
+    directional prediction against gold binding (or two unknown relations): reported separately,
+    never added to recall. contradiction: activation against inhibition, or a swapped direction."""
     e1, e2 = row.get("entity_1"), row.get("entity_2")
-    ok = any(all(any(_hit(t, e, ctx) for t in side) for side, e in ((g["a"], x), (g["b"], y))) for x, y in ((e1, e2), (e2, e1)))
-    r1, r2 = g.get("relationship"), _rel(row.get("relationship"))
-    return ok and {r1, r2} != {"activation", "inhibition"}  # binding fits either: a paper says "binds", PathBank "activation"
+
+    def on(terms, e):
+        return any(_hit(t, e, ctx) for t in terms)
+
+    fwd, rev = on(g["a"], e1) and on(g["b"], e2), on(g["a"], e2) and on(g["b"], e1)
+    if not (fwd or rev):
+        return None
+    rg, rp = g.get("relationship"), _rel(row.get("relationship"))
+    if {rg, rp} == set(_DIRECTIONAL):
+        return "contradiction"
+    if rg == rp and rg in _DIRECTIONAL:
+        return "exact" if fwd else "contradiction"
+    return "exact" if rg == rp and rg is not None else "weak"
+
+
+def _credits_enzyme(g, e, gold, hits, ctx) -> bool:
+    """A predicted enzyme counts for gold enzyme ``g`` only through a predicted reaction or transport
+    that matches a gold reaction / transport carrying ``g`` (eval_v2 reactions.py, enzyme verdicts)."""
+    if not _hit(g, e["row"], ctx, enzyme=True):
+        return False
+    owners = set(g.get("for") or [])
+    return any(gold[t][j]["id"] in owners for t, idx in e.get("refs", []) for j in hits[t][idx])
 
 
 def _m_compartment(g, row, ctx) -> bool:
@@ -338,12 +378,18 @@ def _gold_elems(gold: Mapping[str, Any], t: str, scope: ScopeSpec) -> List[Dict[
     return [e for e in gold.get(t) or [] if e.get("in_paper", True) or not scope.paper_only]
 
 
-def _type_stats(gold_n: int, items: List[Dict[str, Any]], hits: List[List[int]], complete: bool) -> Dict[str, Any]:
+def _pkey(kind: Any) -> str:
+    """Paper gold is the paper's own claims, so correct / predicted is a precision. Full gold is the
+    curated pathway: an unmatched prediction is "not in the curated record", not "wrong"."""
+    return "precision" if kind == "paper" else "match_rate"
+
+
+def _type_stats(gold_n: int, items: List[Dict[str, Any]], hits: List[List[int]], complete: bool, pkey: str) -> Dict[str, Any]:
     recalled = {j for h in hits for j in h}
     base_recalled = {j for it, h in zip(items, hits) if it["is_base"] for j in h}
     correct = sum(1 for h in hits if h)
     return {"gold": gold_n, "recalled": len(recalled), "predicted": len(items), "correct": correct, "complete": complete,
-            "recall": _ratio(len(recalled), gold_n), "precision": _ratio(correct, len(items)) if complete else None,
+            "recall": _ratio(len(recalled), gold_n), pkey: _ratio(correct, len(items)) if complete else None,
             "recalled_base_only": len(base_recalled), "recovered_by_extension": len(recalled - base_recalled)}
 
 
@@ -365,23 +411,27 @@ def score_view(big: Mapping[str, Any], scope: ScopeSpec, gold_case: Mapping[str,
             for g in [*gold["reactions"], *(gold_case.get("off_scope_reactions") or [])]}
     match: Dict[str, Callable[[Any, Any], bool]] = {
         "reactions": lambda g, p: _m_reaction(g, objs, p["row"], ctx),
-        "enzymes": lambda g, p: _hit(g, p["row"], ctx, enzyme=True),
         "transports": lambda g, p: _m_transport(g, p["row"], ctx),
-        "interactions": lambda g, p: _m_interaction(g, p["row"], ctx),
         "compartments": lambda g, p: _m_compartment(g, p["row"], ctx)}
-    complete = gold_case.get("complete") or {}
-    types, hit_by_type = {}, {}
-    for t in TYPES:
-        hits = [[j for j, g in enumerate(gold[t]) if match[t](g, p)] for p in items[t]]
-        hit_by_type[t] = hits
-        types[t] = _type_stats(len(gold[t]), items[t], hits, bool(complete.get(t)))
+    complete, pkey = gold_case.get("complete") or {}, _pkey(gold_case.get("kind"))
+    hit_by_type: Dict[str, List[List[int]]] = {}
+    for t in ("reactions", "transports", "compartments"):
+        hit_by_type[t] = [[j for j, g in enumerate(gold[t]) if match[t](g, p)] for p in items[t]]
+    tiers = [[(j, _interaction_tier(g, p["row"], ctx)) for j, g in enumerate(gold["interactions"])] for p in items["interactions"]]
+    hit_by_type["interactions"] = [[j for j, x in row if x == "exact"] for row in tiers]
+    # enzymes last: credited only through the reaction / transport hits above
+    hit_by_type["enzymes"] = [[j for j, g in enumerate(gold["enzymes"]) if _credits_enzyme(g, e, gold, hit_by_type, ctx)]
+                             for e in items["enzymes"]]
+    types = {t: _type_stats(len(gold[t]), items[t], hit_by_type[t], bool(complete.get(t)), pkey) for t in TYPES}
+    exact = {j for h in hit_by_type["interactions"] for j in h}
+    types["interactions"]["recalled_weak"] = len({j for row in tiers for j, x in row if x == "weak"} - exact)
     off = [g for g in gold_case.get("off_scope_reactions") or []]
     types["reactions"]["paper_stated_off_scope"] = sum(
         1 for p, h in zip(items["reactions"], hit_by_type["reactions"]) if not h and any(_m_reaction(g, objs, p["row"], ctx) for g in off))
     ext, prov = {}, {}
     for t in TYPES:
         e = [h for it, h in zip(items[t], hit_by_type[t]) if not it["is_base"]]
-        ext[t] = {"rows": len(e), "correct": sum(1 for h in e if h), "precision": _ratio(sum(1 for h in e if h), len(e))}
+        ext[t] = {"rows": len(e), "correct": sum(1 for h in e if h), "match_rate": _ratio(sum(1 for h in e if h), len(e))}
         any_k, prim = defaultdict(lambda: [0, 0]), defaultdict(lambda: [0, 0])
         for it, h in zip(items[t], hit_by_type[t]):
             for k in it["kinds"]:
@@ -391,8 +441,6 @@ def score_view(big: Mapping[str, Any], scope: ScopeSpec, gold_case: Mapping[str,
             prim[_primary(it["kinds"])][1] += bool(h)
         prov[t] = {"any": {k: {"rows": a, "correct": b} for k, (a, b) in any_k.items()},
                    "primary": {k: {"rows": a, "correct": b} for k, (a, b) in prim.items()}}
-    tot = {"rows": sum(v["rows"] for v in ext.values()), "correct": sum(v["correct"] for v in ext.values())}
-    ext["all"] = {**tot, "precision": _ratio(tot["correct"], tot["rows"])}
     return {"case": gold_case.get("id"), "kind": gold_case.get("kind"),
             "scope": {"paper_only": scope.paper_only, "max_hops": scope.max_hops},
             "types": types, "extension": ext, "provenance": prov}
@@ -400,9 +448,9 @@ def score_view(big: Mapping[str, Any], scope: ScopeSpec, gold_case: Mapping[str,
 
 # ---------------------------------------------------------------- the benchmark
 
-def _micro(legs: List[Dict[str, Any]]) -> Dict[str, Any]:
-    """Sums numerators and denominators over legs (eval_v2 convention). Precision uses only legs
-    whose case declares the type complete."""
+def _micro(legs: List[Dict[str, Any]], pkey: str) -> Dict[str, Any]:
+    """Sums numerators and denominators over legs (eval_v2 convention). The precision / match rate
+    uses only legs whose case declares the type complete."""
     out: Dict[str, Any] = {"legs": len(legs), "types": {}, "extension": {}, "provenance": {}}
     for t in TYPES:
         s = Counter()
@@ -410,35 +458,59 @@ def _micro(legs: List[Dict[str, Any]]) -> Dict[str, Any]:
             x = l["types"][t]
             s["gold"] += x["gold"]
             s["recalled"] += x["recalled"]
+            s["recalled_weak"] += x.get("recalled_weak", 0)
             s["recovered_by_extension"] += x["recovered_by_extension"]
             if x["complete"]:
                 s["p_predicted"] += x["predicted"]
                 s["p_correct"] += x["correct"]
         out["types"][t] = {"recall": _ratio(s["recalled"], s["gold"]), "recall_num_den": [s["recalled"], s["gold"]],
-                           "precision": _ratio(s["p_correct"], s["p_predicted"]),
-                           "precision_num_den": [s["p_correct"], s["p_predicted"]],
+                           pkey: _ratio(s["p_correct"], s["p_predicted"]),
+                           pkey + "_num_den": [s["p_correct"], s["p_predicted"]],
                            "recovered_by_extension": s["recovered_by_extension"]}
+        if t == "interactions":
+            out["types"][t]["recalled_weak"] = s["recalled_weak"]
         e = Counter()
         pk: Dict[str, Counter] = defaultdict(Counter)
         for l in legs:
             e.update({"rows": l["extension"][t]["rows"], "correct": l["extension"][t]["correct"]})
             for k, v in l["provenance"][t]["primary"].items():
                 pk[k].update(v)
-        out["extension"][t] = {"rows": e["rows"], "correct": e["correct"], "precision": _ratio(e["correct"], e["rows"])}
+        out["extension"][t] = {"rows": e["rows"], "correct": e["correct"], "match_rate": _ratio(e["correct"], e["rows"])}
         out["provenance"][t] = {k: dict(v) for k, v in pk.items()}
     return out
+
+
+def _macro(per_case: Mapping[str, Mapping[str, Any]], pkey: str) -> Dict[str, Any]:
+    """Unweighted mean over cases of each case's own (run-micro) ratio; a case with no gold of a type,
+    or no complete gold for its precision, is left out of that type's mean (the count is reported)."""
+    def mean(vals):
+        vals = [v for v in vals if v is not None]
+        return (round(sum(vals) / len(vals), 4) if vals else None), len(vals)
+
+    types = {}
+    for t in TYPES:
+        (r, rn), (p, pn) = (mean(c["types"][t]["recall"] for c in per_case.values()),
+                            mean(c["types"][t][pkey] for c in per_case.values()))
+        types[t] = {"recall": r, "recall_cases": rn, pkey: p, pkey + "_cases": pn}
+    return {"cases": len(per_case), "types": types}
 
 
 def run_benchmark(cases: Sequence[Mapping[str, Any]], runs_by_case: Mapping[str, Mapping[str, Mapping[str, Any]]],
                   scope: ScopeSpec) -> Dict[str, Any]:
     """Score every stored run (``{case id: {run label: big payload}}``) of every case at ``scope``.
-    The aggregate is micro-averaged over legs and kept apart per case kind (paper / full)."""
+    Per case kind (paper / full, never pooled) the aggregate has ``per_case`` (a case's runs
+    micro-averaged), ``macro`` (the HEADLINE: unweighted mean over cases, so a case with many stored
+    runs does not outweigh the rest) and ``micro`` (all legs summed, secondary)."""
     legs, missing = [], []
     for case in cases:
         runs = runs_by_case.get(case["id"]) or {}
         missing += [] if runs else [case["id"]]
         legs += [{"run": label, **score_view(big, scope, case)} for label, big in runs.items()]
-    kinds = sorted({l["kind"] for l in legs})
+    aggregate = {}
+    for kind in sorted({l["kind"] for l in legs}):
+        k, pkey = [l for l in legs if l["kind"] == kind], _pkey(kind)
+        per_case = {c: _micro([l for l in k if l["case"] == c], pkey) for c in dict.fromkeys(l["case"] for l in k)}
+        aggregate[kind] = {"headline": "macro", "macro": _macro(per_case, pkey), "micro": _micro(k, pkey),
+                           "per_case": per_case}
     return {"schema": SCHEMA_REPORT, "scope": {"paper_only": scope.paper_only, "max_hops": scope.max_hops},
-            "legs": legs, "aggregate": {k: _micro([l for l in legs if l["kind"] == k]) for k in kinds},
-            "cases_without_runs": missing}
+            "legs": legs, "aggregate": aggregate, "cases_without_runs": missing}
