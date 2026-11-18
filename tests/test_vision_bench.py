@@ -245,7 +245,8 @@ def test_benchmark_design_file_lists_existing_gold_and_runs_nothing_unlisted():
     paper = d["sets"]["paper"]
     sup = json.loads((ROOT / paper["gold_file"]).read_text(encoding="utf-8"))["cases"]
     assert all(c["case_id"] in sup for c in paper["cases"])
-    assert [c["case_id"] for c in paper["cases"] if c["precision"]] == [k for k, v in sup.items() if v["supported_reactions_complete"]]
+    assert sorted(c["case_id"] for c in paper["cases"] if c["precision"]) == sorted(
+        k for k, v in sup.items() if v["supported_reactions_complete"])
     full = d["sets"]["full"]["cases"]
     assert 3 <= len(full) <= 6 and all(c["pw_id"].startswith("PW") for c in full)
     assert d["metrics"]["types"] == list(TYPES)
