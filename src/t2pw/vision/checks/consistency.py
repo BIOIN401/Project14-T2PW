@@ -478,7 +478,10 @@ def cross_format(outputs: Dict[str, bytes], *, pwml_ir: Optional[dict] = None, s
         cats_of = defaultdict(set)
         for s_, lists in catalysts("sbgn").items():
             cats_of[s_] = set().union(*lists)
-        pair_set = P | Es | Ds
+        from t2pw.vision.export_sbgn import _rel_class  # the SBGN exporter's closed word list (VD-8): binding, component_of, ... are not regulation
+        reg_pairs = lambda f: {(cl[(f, a)], cl[(f, b)]) for a, b, t in models[f].ints  # noqa: E731
+                               if (f, a) in cl and (f, b) in cl and _rel_class(t)} if f in models else set()
+        pair_set = reg_pairs("pwml") | reg_pairs("sbml") | Ds  # only a regulatory interaction explains an SBGN arc
         missing = sorted(Rs - Rg, key=str)
         allowed = sum(((sbgn_report or {}).get("omitted") or {}).get("reaction_arcs", {}).values())
         for x, s_ in missing[allowed:]:

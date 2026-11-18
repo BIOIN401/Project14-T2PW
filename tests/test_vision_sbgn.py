@@ -9,7 +9,7 @@ import pytest
 from t2pw.vision.export_sbgn import sbgn_export, sbgn_text, write_sbgn
 
 etree = pytest.importorskip("lxml.etree")
-isoschematron = pytest.importorskip("lxml.isoschematron")
+pytest.importorskip("lxml.isoschematron")
 
 DATA = Path(__file__).parent / "data" / "vision" / "sbgn"
 NS = {"s": "http://sbgn.org/libsbgn/0.3"}
