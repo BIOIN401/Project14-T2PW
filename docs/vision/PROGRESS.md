@@ -73,6 +73,8 @@ Merged in `vision/main` (pushed): V1, V2, V3, V5, V6 at 04596e6c. Gated work sti
 | 2026-11-18 | V9 | fix r2 + static re-review | same implementer; reviewer (sonnet/high) APPROVE | `vision/bench` d5732418 | APPROVED pending runs | 27 tests written |
 | 2026-11-18 | V7b | implementer + static review + fix | general-purpose (sonnet/high); ws-reviewer (sonnet/high) APPROVE | `vision/layout` ca28897f | APPROVED pending runs | layout metrics (L3 definitions) + PathWhiz gallery on compose project `t2pw-vis`, ports 3040/3347, source `C:/t/pwpr/09` |
 | 2026-11-18 | V10 | implementer + static review | general-purpose (sonnet/high); ws-reviewer (opus/high) | `vision/web` 1a492f5d | CHANGES_REQUESTED -> fix r2 | VD-15: keyword-only rescope on request threads; public `generate(offline=...)`; child process, per-process lock; blocker: unbounded lock wait in sync handlers |
+| 2026-11-18 | V6 merge | post-merge suites | sub-orchestrator chain (`chain1.sh`) | snapshot `C:/t/vis-suite-0459` at 04596e6c | PASS | SMOKE 511, golden 2/8/4/24, equivalence 8/14/6, vision 163; 0 survivors (`evidence/suites/suite-04596e6c.txt`) |
+| 2026-11-18 | V7a, V9, V7b | released gated runs | chain1 | lane branches | ran | V7a: 18/19 tests (1 failure being fixed), 97-run proof ran; V9: 27 tests passed, paper-set proof ran, sk-or- 0; V7b: 16 tests passed, 97-run metrics ran |
 | 2026-11-17 | V6 | gated run | sub-orchestrator queue (`C:/t/vis-runs/queue_v6.sh`) | holder vis-generate | waiting | needs the heavy lock free and 4 GB RAM (1.3-1.7 GB free: desktop apps, not a leak per main) |
 
 ## Decisions made by the sub-orchestrator (PO gave full autonomy; recommended option each time)
