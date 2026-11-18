@@ -1,0 +1,61 @@
+{
+ "lane": "V8",
+ "branch": "vision/extend-lit",
+ "base": "d2e5fa7e",
+ "status": "code + tests committed; focused tests, live proof, hand-check and secret scan NOT RUN (gated runs are batched by the sub-orchestrator)",
+ "built": [
+  "src/t2pw/vision/extend/literature.py: extend_literature(big, *, paper, max_papers=5, budget_s=120, max_llm_calls=8, max_queries=3, page_size=10, passages_per_paper=2, cache_dir, get, chat_fn) -> (big, report); run_if_enabled(big, sources=...) runs only when T2PW_EXTEND is on AND 'literature' is in sources; nothing in the pipeline calls it",
+  "frontier(big): terminal substrates (consumed, never produced) and terminal products of the paper's reactions, currency excluded, plus the enzymes of the steps touching them",
+  "queries: one Europe PMC query per frontier compound (substrates/products alternating), organism-scoped, built by rag.acquire.build_query; candidates round-robin across queries, deduped by PMID/PMCID/DOI",
+  "screen: dropped with a recorded reason when no identifier, input paper (PMID / PMCID / DOI / normalised title against big.sources.paper or the paper argument), preprint (Europe PMC source PPR, pubType Preprint, bioRxiv/medRxiv/Research Square/SSRN/arXiv... as publisher or journal), retracted, no journal record, title+abstract naming only other organisms (rag.admission.organisms_in_span + compare_organism; unknown and genus_level kept, recorded), over max_papers",
+  "text: abstract always (HTML stripped); full text via rag.acquire.fetch_full_text when the record is open access with a PMCID, cut into ~3000-char windows of whole statements (rag.admission.split_statements), the windows naming the most frontier terms kept (passages_per_paper)",
+  "extraction: rag.extract.extract_reactions_from_text per passage (evidence-bound prompt, fails closed); every model call counted (report.llm.calls, errors by type) and bounded by max_llm_calls; time checked before each paper and each passage",
+  "per reaction: quote must be a normalised (NFKC, whitespace collapsed, casefolded) exact substring of the passage, >= 20 chars (else quote_not_verbatim / quote_too_short); rag.admission.validate_evidence_span must accept the quote for the claim (participants, direction, catalysts); a catalyst the quote does not attach is dropped and the step re-checked without it; currency the quote does not name is dropped; quote naming another organism -> rejected; the step must touch a grounded, non-currency payload entity (else not_connected); no compartment is ever written; direction only as 'reversible' when the span states it (to the provenance note)",
+  "rows: convert.to_rows on a one-step neutral pathway (DB extension identity rules VD-11 / VD-13 unchanged), enzyme names the payload uses for a complex are attached as that complex; records relabelled {kind: other_paper, source, quote, stage: extension_lit, note: passage + organism verdict + to_rows note}; row 'provenance' field extension_lit; sources {kind, pmid, pmcid, doi, title, journal, year, url, retrieved} (+ blank db/accession); payload.merge_extension per step",
+  "fail-open: per query (search error -> recorded, next query), per paper atomic (any exception or the deadline passing mid-paper -> no rows from that paper, reason and accepted_discarded recorded); report.placement per source = merged_into_base / hop_1 / hop_2_plus / hop_none",
+  "src/t2pw/vision/extend/__init__.py: one line, LITERATURE = 'literature' (the source name); extend_big_payload unchanged",
+  "docs/vision/evidence/V8/live_proof.py (3 gold runs + 1 human run, LLM calls and token totals, hand-check pool) and secret_scan.py (counts only)"
+ ],
+ "files": {
+  "src/t2pw/vision/extend/literature.py": "new",
+  "src/t2pw/vision/extend/__init__.py": "+1 line (LITERATURE constant)",
+  "tests/test_vision_extend_lit.py": "new, 14 tests (12 functions, one parametrised x3)",
+  "tests/data/vision/extend_lit/search_chorismate.json": "new, hand-written Europe PMC core-shape response",
+  "tests/data/vision/extend_lit/search_dihydrodiol.json": "new, hand-written Europe PMC core-shape response",
+  "tests/data/vision/extend_lit/fulltext_PMC9000001.xml": "new, hand-written JATS full text",
+  "docs/vision/evidence/V8/live_proof.py": "new",
+  "docs/vision/evidence/V8/secret_scan.py": "new"
+ },
+ "tests": [
+  {"label": "v8-compile", "counts": "py_compile clean on all 5 python files (run directly, light)", "log": null},
+  {"label": "v8-unit-1", "counts": "NOT RUN: gated, for the sub-orchestrator's batch", "log": "C:/t/vis-runs/logs/v8-unit-1.log"}
+ ],
+ "commands_to_run": [
+  {"label": "v8-unit-1", "floor_gb": 2, "lock": true,
+   "cmd": "mkdir -p C:/t/vis-runs/bt/vis-extend-lit/1 && cd C:/t/vis-extend-lit && PYTHONPATH=C:/t/vis-extend-lit/src T2PW_OFFLINE_CURATOR=1 bash C:/t/vis-runs/bw.sh vis-extend-lit v8-unit-1 600 C:/t/vis-runs/json/v8-unit-1.json 2 -- C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.venv/Scripts/python.exe C:/t/vis-extend-lit/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/vis-extend-lit -q --basetemp=C:/t/vis-runs/bt/vis-extend-lit/1/t tests/test_vision_extend_lit.py tests/test_vision_extend_merge.py > C:/t/vis-runs/logs/v8-unit-1.log 2>&1",
+   "expect": "14 V8 tests + the V4 merge tests pass, 0 survivors (V4 file included to show the one-line __init__ change breaks nothing)"},
+  {"label": "v8-live-1", "floor_gb": 4, "lock": true, "network": "Europe PMC search + fullTextXML", "llm": "rag_prose_extraction via OPENROUTER_RAG_EXTRACT_MODEL (or the client default)",
+   "cmd": "cd C:/t/vis-extend-lit && PYTHONPATH=C:/t/vis-extend-lit/src bash C:/t/vis-runs/bw.sh vis-extend-lit v8-live-1 3000 C:/t/vis-runs/json/v8-live-1.json 4 -- C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.venv/Scripts/python.exe C:/t/vis-runs/scratch/vis-extend-db/launch.py C:/t/vis-extend-lit/docs/vision/evidence/V8/live_proof.py C:/t/vis-extend-lit/docs/vision/evidence/V8/live 300 12 > C:/t/vis-runs/logs/v8-live-1.log 2>&1",
+   "expect": "4 files <label>.json + handcheck_pool.json under docs/vision/evidence/V8/live; each line of the log prints status, LLM calls, tokens, placement. Budget 300 s / 12 calls per run (defaults 120 s / 8 are likely too small for full text with a real model, see open questions). Calls extend_literature directly, so T2PW_EXTEND is not needed. Search and full-text responses are cached by URL under C:/t/vis-runs/cache/vis-extend-lit (a rerun repeats only the LLM calls)"},
+  {"label": "v8-secrets-1", "floor_gb": 0, "lock": false,
+   "cmd": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.venv/Scripts/python.exe C:/t/vis-runs/scratch/vis-extend-db/launch.py C:/t/vis-extend-lit/docs/vision/evidence/V8/secret_scan.py C:/t/vis-extend-lit/docs/vision/evidence/V8 C:/t/vis-extend-lit/docs/vision/results/V8.json C:/t/vis-runs/logs/v8-live-1.log C:/t/vis-runs/logs/v8-unit-1.log > C:/t/vis-runs/logs/v8-secrets-1.log 2>&1",
+   "expect": "TOTAL 0 before any evidence commit (OpenRouter key prefix, bearer/api_key/password= shapes, user:pw@host, the DB host/user/password and OpenRouter key values, the DB port in a host:port or port= context; counts only)"},
+  {"label": "v8-handcheck", "after": "v8-live-1",
+   "how": "pick 10 steps from handcheck_pool.json (spread over the 4 runs, merged and hop-1 both, prefer full-text passages); for each (a) quote fidelity: does the quote state exactly this step (substrates, products, catalyst, direction)? (b) biology: is the step true for the run's organism? Every miss explained; write docs/vision/evidence/V8/handcheck.json"}
+ ],
+ "proofs": [],
+ "dead_ends": [
+  "rag.acquire.search_candidates not used for the search itself: its CandidatePaper drops the Europe PMC journal, pubType, source (PPR), pmid, pmcid and doi fields the peer-review screen and the input-paper match need. build_query, _EUROPEPMC_SEARCH, CandidatePaper and fetch_full_text are reused; the GET goes through vision.extend.http.get_text (deadline, URL cache, t2pw-vision User-Agent)",
+  "rag.admission.admit_candidates not used: it is gap-bound (needs detect_gaps output and admits only gap fillers). Its evidence core, validate_evidence_span (one statement, participants set-equal, direction, catalyst attached), is used per step, plus organisms_in_span / compare_organism",
+  "NCBI, Crossref, Semantic Scholar, bioRxiv not queried: Europe PMC indexes PubMed and PMC with journal metadata; bioRxiv is excluded by the peer-review rule",
+  "admission's span parser covers 'X converts A to B' / 'A is converted to B' shapes; 'EntA oxidizes A to B' is refused as roles_unassignable (probe, 2026-11-18). Live yield may be low; the refusals are counted per paper (rejected, rejected_samples)",
+  "no pytest run: gated runs are batched by the sub-orchestrator (dispatch instruction); test expectations were traced by hand against the code and a direct probe of validate_evidence_span / organisms_in_span / split_statements on the fixture sentences (C:/t/vis-runs/scratch/vis-extend-lit/probe_span.py)"
+ ],
+ "open_questions": [
+  "Organism policy (needs PO): a paper whose title+abstract names only other organisms is dropped and a quote naming another organism is rejected; papers naming no organism ('unknown') and same-genus ones ('genus_level') are kept, with the verdict in every provenance note. Options: (a) keep as is (allow_unknown, like rag ORGANISM_POLICY_ALLOW_UNKNOWN); (b) strict: require 'match' (fewer steps, safer biology); (c) off. Cost of (a): an E. coli step can reach an L. lactis pathway when the abstract does not name the organism",
+  "Literature entities are not grounded (names only; they join payload rows by name or synonym). New entities therefore carry no ids, so a literature step that touches only another literature step is not_connected (hop chains stop at 1). Grounding via mapping/map_ids would be a later lane",
+  "Budget defaults (120 s, 8 calls) come from the brief; with a real model each call takes ~10-30 s, so a run reads 2-4 papers. The live proof uses 300 s / 12 calls. A call already started may overrun the deadline by its own timeout",
+  "Wiring: extend_big_payload does not dispatch 'literature' (passing it there is recorded as a failed source, fail-open). The wiring lane should call literature.run_if_enabled after the DB extension so DB rows are present for merges",
+  "Stoichiometry stated in a quote is not carried (convert.to_rows reaction rows have none, as for the DB extension)"
+ ]
+}
