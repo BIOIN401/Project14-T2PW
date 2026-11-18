@@ -389,6 +389,78 @@ def test_two_http_requests_in_flight_are_serialised(site, monkeypatch):
     assert codes == [200, 200] and tracker["max"] == 1 and len(calls) == 2
 
 
+def test_lock_wait_is_bounded(monkeypatch, tmp_path):
+    monkeypatch.setattr(serve, "LOCK_WAIT_S", 0.05)
+    calls = []
+    monkeypatch.setattr(serve.subprocess, "run", _fake_child(calls))
+    assert serve._LOCK.acquire(timeout=5)  # another request holds the lock
+    try:
+        t0 = time.monotonic()
+        with pytest.raises(serve.Busy, match="try again shortly"):
+            serve.run_generate(tmp_path, "paper", "pwml")
+        assert time.monotonic() - t0 < 5 and calls == []
+        assert not serve._LOCK.acquire(blocking=False), "the failed waiter must not have released someone else's lock"
+    finally:
+        serve._LOCK.release()
+    assert serve.run_generate(tmp_path, "paper", "pwml").exists() and len(calls) == 1
+
+
+def test_a_busy_view_is_503_with_retry_after(site, monkeypatch):
+    sid = site.job()
+    monkeypatch.setattr(serve, "run_generate", lambda *a, **k: (_ for _ in ()).throw(serve.Busy("busy, try again shortly")))
+    r = site.client.get("/job/%s/0/download/pwml" % sid)
+    assert r.status_code == 503 and r.headers["retry-after"] == "30" and "content-disposition" not in r.headers
+
+
+def _run_child(monkeypatch, tmp_path, generate):
+    from t2pw.vision import generate as G, payload
+    monkeypatch.setattr(payload, "big_from_run", lambda d: {})
+    monkeypatch.setattr(G, "generate", generate)
+    run = tmp_path / "run"
+    out = tmp_path / "out"
+    run.mkdir()
+    out.mkdir()
+    return serve._child(str(run), "default", str(out)), out
+
+
+def test_child_reapplies_the_passed_env_after_dotenv_and_forces_the_offline_curator(tmp_path, monkeypatch):
+    monkeypatch.setenv("PATHBANK_DB_HOST", "db.example")
+    monkeypatch.setenv("T2PW_OFFLINE_CURATOR", "0")
+    seen = []
+
+    def dotenv_overrides():  # what importing postpipeline does: load_dotenv(override=True)
+        os.environ["PATHBANK_DB_HOST"] = "from-dotenv"
+        os.environ["T2PW_OFFLINE_CURATOR"] = "0"
+
+    def gen(big, spec, fmt, **kw):
+        seen.append((os.environ["PATHBANK_DB_HOST"], os.environ["T2PW_OFFLINE_CURATOR"], kw.get("offline")))
+        return b"x"
+
+    monkeypatch.setattr(serve, "_import_loaders", dotenv_overrides)
+    rc, out = _run_child(monkeypatch, tmp_path, gen)
+    assert rc == 0 and set(seen) == {("db.example", "1", False)}
+    assert sorted(p.name for p in out.iterdir()) == sorted("default." + f for f in serve.PUBLIC_FORMATS), "no .tmp left"
+
+
+def test_child_remembers_only_a_genuine_export_refusal(tmp_path, monkeypatch):
+    from t2pw.vision import generate as G
+    monkeypatch.setattr(serve, "_import_loaders", lambda: None)
+
+    def refuse(msg):
+        def gen(big, spec, fmt, **kw):
+            raise G.GenerateError(msg)
+        return gen
+
+    rc, out = _run_child(monkeypatch, tmp_path, refuse("PWML export stopped by the quarantine boundary:\n no_reactions"))
+    assert rc == 2 and (out / "default.refused").read_text(encoding="utf-8") == "PWML export stopped by the quarantine boundary: no_reactions"
+    assert [p.name for p in out.iterdir()] == ["default.refused"], "no half-written marker, no files"
+    for i, msg in enumerate(("(2003, \"Can't connect to MySQL server on 'db.example'\")", "[Errno 2] No such file or directory")):
+        d = tmp_path / ("e%d" % i)
+        d.mkdir()
+        rc, out = _run_child(monkeypatch, d, refuse(msg))
+        assert rc == 3 and list(out.iterdir()) == [], "a DB or deployment error is not cached as a refusal"
+
+
 # -- the real child (gated run only) ----------------------------------------------------------------------
 
 @pytest.mark.skipif(os.environ.get("T2PW_VISION_GATED_RUN") != "1", reason="needs the gated run (real export in a child process)")

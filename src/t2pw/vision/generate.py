@@ -22,9 +22,7 @@ from typing import Any, Dict, Optional, Tuple
 
 from t2pw.vision.view import DEFAULT, FULL, PAPER_ONLY, ScopeSpec, view
 
-FORMATS = ("pwml", "sbml", "sbgn", "kgml", "svg", "html", "json")
-CACHE_VERSION = "1"  # the web server's per-job file cache is keyed by it: bump by hand when any exporter's output changes
-_REF_NAMES = ("PW000001.pwml", "PW012926.pwml")  # structure reference the PWML writer learns its skeleton from
+FORMATS = ("pwml", "sbml", "sbgn", "kgml", "svg", "html", "json")_REF_NAMES = ("PW000001.pwml", "PW012926.pwml")  # structure reference the PWML writer learns its skeleton from
 _DB_ENV = tuple("PATHBANK_DB_" + k for k in ("HOST", "PORT", "USER", "PASSWORD", "SCHEMA",
                                               "CONNECT_TIMEOUT", "READ_TIMEOUT", "WRITE_TIMEOUT"))
 _MEMO: Dict[str, Tuple[Optional[bytes], dict, Optional[str]]] = {}  # export key -> (pwml bytes, ir, error); newest 4

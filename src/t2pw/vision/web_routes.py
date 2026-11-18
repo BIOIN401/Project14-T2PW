@@ -139,6 +139,9 @@ def register(app, item_lookup: Callable, page: Callable, cross_site: Callable) -
         slug = scope_arg(scope)
         try:
             path = serve.run_generate(run_dir, slug, fmt)
+        except serve.Busy as e:
+            return page(request, "error.html", status=503, headers={"Retry-After": "30"},
+                        title="Busy", message=scrub(str(e)))
         except serve.ServeError as e:  # a refused export is a ServeError too: a message, no file
             return page(request, "error.html", status=422, title="No file for this view", message=scrub(str(e)))
         _, media, ext = FORMATS[fmt]

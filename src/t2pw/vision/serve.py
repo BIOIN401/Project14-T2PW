@@ -9,7 +9,11 @@ public format of one scoped view into ``<run_dir>/vision_cache/``, then returns 
   ``T2PW_OFFLINE_CURATOR=1`` (a view request never calls an LLM). The parent's ``os.environ`` is never touched.
 * The child calls ``generate(..., offline=False)``: no env swap, so the quarantine step and the PWML export step both
   see the production database settings the parent passed.
-* Files live in ``<run_dir>/vision_cache/v<generate.CACHE_VERSION>/``; bumping that constant retires old files.
+* Files live in ``<run_dir>/vision_cache/v<CACHE_VERSION>/``; bumping that constant retires old files.
+* The wait for the lock is bounded (``LOCK_WAIT_S``): past it, ``Busy`` (the web layer answers 503 + Retry-After).
+* Only a genuine export refusal is remembered (``<scope>.refused``, written atomically); a DB or deployment error
+  is reported and retried next time.
+* The child imports postpipeline (which loads .env with override=True) first, then re-applies the env it was passed.
 * SINGLE-WORKER ASSUMPTION: ``_LOCK`` is per process. Run the server with one worker process (or add a lock file).
 * A refused export is recorded as ``<scope>.refused`` (the export's own message) and raises ``Refused``; no file.
 
@@ -27,12 +31,23 @@ from typing import Dict, Optional
 
 PUBLIC_FORMATS = ("pwml", "sbml", "sbgn", "kgml", "svg", "html")
 CACHE_DIR = "vision_cache"
+CACHE_VERSION = "1"  # bump by hand when any exporter's output changes: files live under vision_cache/v<this>/
 TIMEOUT_S = 900.0
+LOCK_WAIT_S = 30.0
 _LOCK = threading.Lock()  # ponytail: one process; several uvicorn workers would need a file lock
+# The export's own refusal messages (postpipeline.run_pwml_export and generate's quarantine step). Only these are
+# remembered; any other message is an error (a DB outage, a deployment fault) and is retried on the next request.
+# ponytail: a prefix whitelist; the upgrade is a structured error kind from run_pwml_export.
+_GENUINE = ("PWML export stopped", "quarantine boundary refused", "PWML required-field gate failed",
+            "PWML IR validation failed", "Hard-gate validation failed", "Pre-freeze canonicalization failed")
 
 
 class ServeError(RuntimeError):
-    """The child timed out or crashed (no export verdict)."""
+    """The child timed out or crashed, or hit an error that is not an export refusal."""
+
+
+class Busy(ServeError):
+    """Another view is being made and the wait ran out; try again shortly."""
 
 
 class Refused(ServeError):
@@ -40,7 +55,6 @@ class Refused(ServeError):
 
 
 def cache_dir(run_dir) -> Path:
-    from t2pw.vision.generate import CACHE_VERSION
     return Path(run_dir) / CACHE_DIR / ("v" + CACHE_VERSION)
 
 
@@ -73,7 +87,11 @@ def run_generate(run_dir, scope: str, fmt: str, *, timeout: float = TIMEOUT_S) -
 
     if (hit := cached()) is not None:
         return hit
-    with _LOCK:
+    # A bounded wait: handlers are sync functions in a small thread pool, so an unbounded wait behind a long child
+    # would park the pool. A refused wait does not touch the lock.
+    if not _LOCK.acquire(timeout=LOCK_WAIT_S):
+        raise Busy("the server is busy making another view, try again shortly")
+    try:
         if (hit := cached()) is not None:
             return hit
         cache.mkdir(parents=True, exist_ok=True)
@@ -82,6 +100,8 @@ def run_generate(run_dir, scope: str, fmt: str, *, timeout: float = TIMEOUT_S) -
                                env=child_env(), capture_output=True, text=True, timeout=timeout)
         except subprocess.TimeoutExpired:
             raise ServeError("the view took longer than %d seconds" % timeout) from None
+    finally:
+        _LOCK.release()
     if p.returncode == 2:
         raise Refused(refused.read_text(encoding="utf-8") if refused.exists() else "the export refused this view")
     if p.returncode != 0 or not target.exists():
@@ -92,7 +112,21 @@ def run_generate(run_dir, scope: str, fmt: str, *, timeout: float = TIMEOUT_S) -
 
 # --- child -----------------------------------------------------------------------------------------------
 
+def _import_loaders() -> None:
+    from t2pw.service import postpipeline  # noqa: F401  (loads .env with override=True at import)
+
+
+def _write_atomic(path: Path, data: bytes) -> None:
+    tmp = path.with_name("%s.%d.tmp" % (path.name, os.getpid()))
+    tmp.write_bytes(data)
+    os.replace(tmp, path)  # a reader never sees half a file
+
+
 def _child(run_dir: str, scope: str, out_dir: str) -> int:
+    passed = dict(os.environ)  # what the server handed this process
+    _import_loaders()  # the import may overwrite variables from .env ...
+    os.environ.update(passed)  # ... so the passed settings win again (this process only), and a view never uses an LLM
+    os.environ["T2PW_OFFLINE_CURATOR"] = "1"
     from t2pw.clean_model.builder import read_run_meta
     from t2pw.vision import generate as G
     from t2pw.vision.payload import big_from_run, load_big_payload
@@ -105,12 +139,14 @@ def _child(run_dir: str, scope: str, out_dir: str) -> int:
         try:
             data = G.generate(big, spec, fmt, export=export, meta=meta, offline=False)
         except G.GenerateError as e:
-            (out / (slug + ".refused")).write_text(str(e), encoding="utf-8")
-            print("refused: %s" % e, file=sys.stderr)
+            msg = " ".join(str(e).split())
+            if not msg.startswith(_GENUINE):  # not an export verdict: report, remember nothing
+                print("error: %s" % msg, file=sys.stderr)
+                return 3
+            _write_atomic(out / (slug + ".refused"), msg.encode("utf-8"))
+            print("refused: %s" % msg, file=sys.stderr)
             return 2
-        tmp = out / ("%s.%s.%d.tmp" % (slug, fmt, os.getpid()))
-        tmp.write_bytes(data)
-        os.replace(tmp, out / ("%s.%s" % (slug, fmt)))  # atomic: a reader never sees half a file
+        _write_atomic(out / ("%s.%s" % (slug, fmt)), data)
     return 0
 
 
