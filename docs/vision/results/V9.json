@@ -1,0 +1,49 @@
+{
+ "lane": "V9",
+ "branch": "vision/bench",
+ "base": "4260ea80",
+ "code_commit": "see git log: 7ac69589, 01e45bf3, b357e258 and the last 'binding is compatible with activation' commit",
+ "built": "Benchmark design (docs/vision/BENCHMARK.json) and a pure scorer over scoped views. score_view(big, scope, gold_case) scores view(big, scope) per element type (reactions, enzymes, transports, interactions, compartments): recall always, precision only for types the case declares complete, extension-row precision, recovered_by_extension, and a provenance-kind breakdown ('primary' partitions the predicted elements, 'any' counts every kind an element carries). run_benchmark(cases, {case: {run: big}}, scope) gives legs plus a micro aggregate per case kind (paper and full never pooled). Gold builders: gold_from_supplement (paper kind, from gold_v2 / paper_gold supplements), gold_from_pathbank (full kind, from a pathbank_gold.extract payload, no I/O), build_full_gold (accession -> extract through an injectable extractor; the only DB read). Matching reuses eval_v2: match_reaction, _row_key, matcher.strict/candidate/enzyme keys, plus an identifier bridge over payload.grounded_ids.",
+ "files": [
+  "src/t2pw/vision/bench.py (new, ~420 lines)",
+  "tests/test_vision_bench.py (new, 13 tests)",
+  "docs/vision/BENCHMARK.json (design)",
+  "docs/vision/evidence/V9/proof.py, proof.json",
+  "docs/vision/results/V9.json"
+ ],
+ "paper_set_decision": {
+  "gold_used": "src/t2pw/bench/eval_v2/gold_v2_supported_reactions.json: already paper-scoped (scope field, verbatim quote per reaction, human-certified supported_reactions_complete)",
+  "qualify_for_recall_and_precision": ["PMC12096016 (5 reactions)", "PMC12421875 (9)", "PMC12312563 (1, one step: a partial-coverage paper)"],
+  "recall_only": ["PMC12657337 (3; not certified complete, no stored run)"],
+  "not_used": ["pinned_v1.json: relevance/anchor set, not paper-stated gold", "PMC319880 paper gold (PW701720): uncertified, no run of that paper exists; its 15 interactions are the only paper-scoped interaction gold"]
+ },
+ "tests": [
+  {"label": "bench-unit-1", "counts": "GATE_BLOCKED (heavy lock held by llm-ab)", "log": "C:/t/vis-runs/logs/bench-unit-1.log"},
+  {"label": "bench-unit-2", "counts": "12 passed, 1 failed (case-order assertion in the design-file check, fixed), survivors 0", "log": "C:/t/vis-runs/logs/bench-unit-2.log"},
+  {"label": "bench-unit-3", "counts": "13 passed, 0 failed, survivors 0", "log": "C:/t/vis-runs/logs/bench-unit-3.log"},
+  {"label": "bench-unit-4", "counts": "13 passed, 0 failed, 0 errors, survivors 0 (after the interaction relationship fix)", "log": "C:/t/vis-runs/logs/bench-unit-4.log"}
+ ],
+ "proofs": {
+  "label": "bench-proof-2",
+  "log": "C:/t/vis-runs/logs/bench-proof-2.log",
+  "evidence": "docs/vision/evidence/V9/proof.json",
+  "default_view_equals_eval_v2": "On all 33 stored runs of the gold papers with a final_mapped.json (PMC12096016 29, PMC12312563 2, PMC12421875 2) the DEFAULT-view reaction numbers (recalled, gold, correct, predicted) equal eval_v2 reactions.score_leg table 1 on the same payload. With no extension DEFAULT == base, so these are today's numbers. 25 of those legs are in the committed docs/evaluation_v2/sample_report.json and recall and true-positive count equal it on all 25 (precision denominators differ by design where that report excludes external-lineage rows; this scorer does not use lineage).",
+  "paper_only_vs_default_reactions": "micro over the 33 scored runs of certified gold papers (PMC12657337 has no run, so 3 papers): recall 155/165 = 0.9394 in both views; precision PAPER_ONLY 161/176 = 0.9148, DEFAULT 161/183 = 0.8798. The paper-only view drops 7 non-paper rows without losing a true positive.",
+  "full_set": "PW701720 (committed extract, no database) against the stored Ara run PMC11983282: reactions 0/1 (curated step is araC gene -> AraC protein, the run extracts transcription and binding), interactions 1/7 recalled of 24 predicted, compartments 1/1. FULL == DEFAULT == PAPER_ONLY because there is no extension: this is the paper-payload baseline; recovered_by_extension is 0 and extension precision None by construction.",
+  "survivors": 0
+ },
+ "dead_ends": [
+  "Hard relationship check on interactions (activation vs binding rejected) scored the Ara run 0/7 on interactions; relaxed to reject only activation vs inhibition",
+  "Full-view gold for PW739181, PW495535, PW488575, PW766996 could not be built: the worktree has no PathBank DB configuration (PATHBANK_DB_HOST / _USER not configured), so proof.py recorded it and moved on. No .env was read"
+ ],
+ "not_done": [
+  "Full-view proof for the four cohort pathways other than PW701720. Command: set the PATHBANK_DB_* environment (server read-only user) and rerun: PYTHONPATH=C:/t/vis-bench/src bash C:/t/vis-runs/queue.sh vis-bench bench-proof-3 900 C:/t/vis-runs/logs/bench-proof-3.json 2 C:/t/vis-runs/logs/bench-proof-3.log -- <venv python> C:/t/vis-bench/docs/vision/evidence/V9/proof.py C:/t/vis-bench/docs/vision/evidence/V9 (writes gold_<PW>.json beside proof.json)",
+  "SMOKE, golden and equivalence suites (the sub-orchestrator schedules them; this lane adds only new files under src/t2pw/vision, tests, docs)"
+ ],
+ "open_questions": [
+  "PathBank ids for the enterobactin and menaquinone papers are not recorded in the repository; the ten lab pathway ids named in the brief are not listed in any committed eval or pinned doc (only five of the ORCH-751 cohort are).",
+  "Certified gold exists for reactions only. Interactions, transports and compartments of the paper set are recall-only or not evaluable until a human certifies more (candidate: the PMC319880 supplement's 15 interactions).",
+  "Compartment and relationship spelling tables in bench.py are small (ponytail); a case that needs another spelling extends them.",
+  "PMC12312563 has 2 runs with a /papers/ path in the run list; a third, under runs/PMC12312563__..., has no papers/ segment and was not matched by the run selector."
+ ]
+}

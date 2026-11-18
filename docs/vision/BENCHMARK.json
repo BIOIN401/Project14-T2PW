@@ -71,7 +71,7 @@
    "reactions": "eval_v2 match_reaction: every defining participant of one gold side on one predicted side, currency and cofactors excluded; reversible gold may match backwards. Identifier bridge: a predicted participant whose grounded ids (chebi, kegg, hmdb, pubchem, drugbank, uniprot; HMDB zero-padding folded) meet a gold term's ids is credited as that term.",
    "enzymes": "gold enzyme term (name, aliases, complex members' gene names, member UniProt ids) against enzyme names of predicted reactions and transporters of predicted transports, with complex components expanded (eval_v2 enzyme_keys) or an id match",
    "transports": "predicted cargo hits any gold cargo term; compartments agree unless both sides are known and differ (small spelling table: cytosol = cytoplasm, extracellular space = extracellular region ...)",
-   "interactions": "unordered entity pair, each side hitting a gold term; relationship canonicalised to activation / inhibition / binding and compared only when both sides have one",
+   "interactions": "unordered entity pair, each side hitting a gold term; relationship canonicalised to activation / inhibition / binding; the pair is rejected only when one is activation and the other inhibition (a paper's 'binds' is compatible with a curated 'activation')",
    "compartments": "folded name through the same spelling table"
   },
   "paper_stated_off_scope": "reactions only: predicted rows matching an off_pathway or summary statement the paper makes. They are not true positives and stay in the precision denominator (eval_v2 table 1); the count shows how much of the precision loss is paper-stated chemistry outside the case scope.",
