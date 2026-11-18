@@ -51,6 +51,11 @@
    "label": "bench-unit-5",
    "counts": "27 passed, 0 failed, survivors 0 (fix rounds 1 and 2; run by the sub-orchestrator chain)",
    "log": "C:/t/vis-runs/logs/bench-unit-5.log"
+  },
+  {
+   "label": "bench-unit-6",
+   "counts": "28 passed, 0 failed, survivors 0 (adds the currency-demotion test); a batch1b rerun of the unit file is queued by the sub-orchestrator",
+   "log": "C:/t/vis-runs/logs/bench-unit-6.log"
   }
  ],
  "proofs": {
@@ -75,8 +80,9 @@
    "PW739181 sour taste (PMC7059786, 3 runs)": "research run: enzymes 1/2 (0.5), transports 1/3 (0.5), interactions 0/1, compartments 2/3 (0.33); the two strict runs: enzymes 0/2, transports 0/3, interactions 0/1 or none predicted, compartments 1/3. No curated reactions",
    "PW495535 WNT PCP (PMC10425814, 1 run)": "reactions 0/1, enzymes 0/1, transports 0/1, interactions 1/17 (11 predicted, 0.18), compartments 2/4 (0.33)",
    "PW488575 Wnt/Ca2+ (same paper and run as PW495535, not independent)": "reactions 0/2, enzymes 0/2, transports 0/2, interactions 0/14, compartments 2/4",
-   "PW766996 chlorophyll (PMC5130987, 2 runs)": "reactions 0/14 (22 and 19 predicted), enzymes 0/14, interactions none curated (31 and 65 predicted), compartments 1/1. 0 of 14 against 19-22 predicted reactions is unexpected and was NOT examined: it may be a naming or identifier mismatch of this scorer (stereo-isomers, chlorophyll intermediates with no ids) rather than a real miss; see open_questions",
-   "survivors": 0
+   "survivors": 0,
+   "PW766996 chlorophyll (PMC5130987, 2 runs) AFTER the currency fix": "reactions 7/14 and 8/14 recalled (22 and 19 predicted; 8 and 8 predicted rows match a curated reaction: match rate 0.36 and 0.42), enzymes 3/14 and 5/14, interactions none curated (31 and 65 predicted), compartments 1/1. Before the fix 0/14 and 0/14.",
+   "effect_of_the_fix_on_the_other_pathways": "none: PW701720, PW739181, PW495535, PW488575 are identical before and after (their curated reactions list no unflagged currency that a predicted row omitted); the paper set is untouched (the demotion applies to full gold only, and the DEFAULT numbers still equal eval_v2 on all 34 runs)"
   },
   "credential_scan": "see credential_scan"
  },
@@ -116,12 +122,18 @@
   "Certified gold exists for reactions only. Interactions, transports and compartments of the paper set are recall-only or not evaluable until a human certifies more (candidate: the PMC319880 supplement's 15 interactions).",
   "Compartment and relationship spelling tables in bench.py are small (ponytail); a case that needs another spelling extends them.",
   "(resolved in code, not rerun) PMC12312563 has a third run under papers/PMC12312563__<slug>/ that the first selector skipped; the fixed selector matches it.",
-  "Chlorophyll PW766996: 0/14 curated reactions recalled against 19-22 predicted reactions. Look at the participant names and ids of the run's rows against the curated terms before reading it as an extraction miss; if it is a naming gap, extend the bridge (synonyms, stereo-descriptor folding) in bench.py, not the gold.",
-  "Run-count drift: PMC12312563 has 3 stored runs with the fixed selector (paper set 34 runs)."
+  "Run-count drift: PMC12312563 has 3 stored runs with the fixed selector (paper set 34 runs).",
+  "Chlorophyll: 4 of the 6 remaining unmatched curated reactions are name variants (locants, abbreviations) the strict eval_v2 matcher refuses by design; whether to add curated aliases to the full case is a gold decision for the PO, not a scorer change. 2 are genuine misses (heme, pheophytin)."
  ],
  "credential_scan": {
   "method": "a light script loads the primary .env through live_launch.py without printing it, counts the OpenRouter key prefix and the PATHBANK_DB host, port and user values in every V9 evidence file, the proof logs and this record, and prints counts only (C:/t/vis-runs/scratch/bench/credscan.py, not committed)",
   "first_pass": "host 0, port 0, key prefix 0 in every evidence file. user value: 1 whole-token hit in each of the 4 gold_PW*.json, all on the JSON key I had named for the curated-record block (a schema field name equal to the database user, not a credential leak). Fixed by renaming that key to curated_record in bench.gold_from_pathbank and in the four files (the same key rename a rerun would produce). This record had 2 hits of the key prefix, both my own command text; reworded",
-  "second_pass": "see the last line of the lane report; the commit was made only after every count was 0"
+  "second_pass": "run directly (no queue, no lock) after the key rename and again after the proof refresh: 12 files (V9 evidence incl. gold_PW*.json and the chlorophyll comparisons, proof logs 4 and 5, V9.json, BENCHMARK.json), total hits 0 for the OpenRouter key prefix and the PATHBANK_DB host, port and user values"
+ },
+ "chlorophyll_investigation": {
+  "finding": "0/14 was a scorer gap: PathBank leaves currency unset on this record (all 66 participants are 'defining'), so Water and Hydrogen Ion were required on every predicted reaction listing them, and the pipeline keeps currency out of reaction identity. Evidence: docs/vision/evidence/V9/chlorophyll_compare_before.json (3 gold reactions side by side with the predicted rows, names and ids).",
+  "fix": "bench.scoring_terms: for full gold, a term whose name or alias is a currency metabolite (payload.is_currency) is scored as a cofactor unless that empties the side. Gold untouched; test test_full_gold_with_unflagged_currency_still_matches_a_row_that_omits_it.",
+  "result": "reactions 0/14 -> 7/14 (run 2026-10-22_1231) and 0/14 -> 8/14 (run 2026-10-22_2301)",
+  "remaining_misses": "6 curated reactions are still unmatched in the run examined (docs/vision/evidence/V9/chlorophyll_unmatched_after.json). Two are real extraction misses: protoporphyrin IX + Fe2+ -> heme (no heme in the run) and chlorophyll a -> pheophytin a + Mg (no pheophytin). Four are naming differences that eval_v2's strict matcher refuses on purpose (no locant or abbreviation folding, no congener credit) and that carry no ids to bridge: 'Mg-Protoporphyrin IX 13-monomethyl ester' vs the run's 'Mg-protoporphyrin IX monomethyl ester', '3,8-divinyl protochlorophyllide a' vs '3,8-divinyl-protochlorophyllide', 'Chlorophyllide a' vs 'Chlide a' / '3-vinyl chlorophyllide a', 'Mg-protoporphyrin IX' vs 'Mg-Proto IX'. Not loosened here: a looser matcher would credit congeners, which the product contract and eval_v2 rule out; if wanted, add curated aliases to the case (a gold decision for the PO), not a scorer change."
  }
 }
