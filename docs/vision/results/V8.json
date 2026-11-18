@@ -2,7 +2,7 @@
  "lane": "V8",
  "branch": "vision/extend-lit",
  "base": "d2e5fa7e",
- "status": "round 1 committed; VD-18: rerun queued by the sub-orchestrator (chain11); hand-check of every admitted step from live and live2 (up to 10) follows",
+ "status": "round 2 committed (f653efbb): reviewer fixes F1-F3, F5-F7 and VD-19; v8-unit-3 not run (batched by the sub-orchestrator). Live: 1 admitted step over 8 run-legs, fidelity 100%, biology 1/1",
  "live_round_1": {
   "log": "C:/t/vis-runs/logs/v8-live-1.log (BW_EXIT=0, 0 survivors, 577.7 s, budget 300 s / 12 LLM calls per run)",
   "runs": {
@@ -108,33 +108,22 @@
   },
   {
    "label": "v8-unit-2",
-   "counts": "NOT RUN: round-1 code, for the sub-orchestrator's batch (expect 49)",
-   "log": "C:/t/vis-runs/logs/v8-unit-2.log"
+   "counts": "49 passed (round-1 code), chain11, 0 survivors",
+   "log": "C:/t/vis-runs/logs/chain11.log"
+  },
+  {
+   "label": "v8-unit-3",
+   "counts": "NOT RUN: round-2 code, for the sub-orchestrator's batch",
+   "log": "C:/t/vis-runs/logs/v8-unit-3.log"
   }
  ],
  "commands_to_run": [
   {
-   "label": "v8-unit-2",
+   "label": "v8-unit-3",
    "floor_gb": 2,
    "lock": true,
-   "cmd": "mkdir -p C:/t/vis-runs/bt/vis-extend-lit/2 && cd C:/t/vis-extend-lit && PYTHONPATH=C:/t/vis-extend-lit/src T2PW_OFFLINE_CURATOR=1 bash C:/t/vis-runs/bw.sh vis-extend-lit v8-unit-2 600 C:/t/vis-runs/json/v8-unit-2.json 2 -- C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.venv/Scripts/python.exe C:/t/vis-extend-lit/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/vis-extend-lit -q --basetemp=C:/t/vis-runs/bt/vis-extend-lit/2/t tests/test_vision_extend_lit.py tests/test_vision_extend_merge.py > C:/t/vis-runs/logs/v8-unit-2.log 2>&1",
-   "expect": "49 passed (16 V8 + 33 V4), 0 survivors"
-  },
-  {
-   "label": "v8-live-2",
-   "floor_gb": 4,
-   "lock": true,
-   "network": "Europe PMC search + fullTextXML",
-   "llm": "rag_prose_extraction",
-   "cmd": "cd C:/t/vis-extend-lit && PYTHONPATH=C:/t/vis-extend-lit/src bash C:/t/vis-runs/bw.sh vis-extend-lit v8-live-2 3000 C:/t/vis-runs/json/v8-live-2.json 4 -- C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.venv/Scripts/python.exe C:/t/vis-runs/scratch/vis-extend-db/launch.py C:/t/vis-extend-lit/docs/vision/evidence/V8/live_proof.py C:/t/vis-runs/scratch/vis-extend-lit/live2 300 12 > C:/t/vis-runs/logs/v8-live-2.log 2>&1",
-   "expect": "only worth running after the decision below, or to get past the Europe PMC timeouts (successful responses are cached by URL, failed ones are retried). Output to scratch first; copy to evidence after a secret scan"
-  },
-  {
-   "label": "v8-secrets-2",
-   "floor_gb": 0,
-   "lock": false,
-   "cmd": "C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.venv/Scripts/python.exe C:/t/vis-runs/scratch/vis-extend-db/launch.py C:/t/vis-extend-lit/docs/vision/evidence/V8/secret_scan.py C:/t/vis-extend-lit/docs/vision/evidence/V8 C:/t/vis-extend-lit/docs/vision/results/V8.json C:/t/vis-runs/logs/v8-live-1.log C:/t/vis-runs/logs/v8-unit-1.log",
-   "expect": "TOTAL 0 (counts only)"
+   "cmd": "mkdir -p C:/t/vis-runs/bt/vis-extend-lit/3 && cd C:/t/vis-extend-lit && PYTHONPATH=C:/t/vis-extend-lit/src T2PW_OFFLINE_CURATOR=1 bash C:/t/vis-runs/bw.sh vis-extend-lit v8-unit-3 600 C:/t/vis-runs/json/v8-unit-3.json 2 -- C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.venv/Scripts/python.exe C:/t/vis-extend-lit/docs/pwml_recovery_sprint/evidence/pinned_pytest.py --expect-tree C:/t/vis-extend-lit -q --basetemp=C:/t/vis-runs/bt/vis-extend-lit/3/t tests/test_vision_extend_lit.py tests/test_vision_extend_merge.py tests/test_vision_view.py tests/test_vision_payload.py > C:/t/vis-runs/logs/v8-unit-3.log 2>&1",
+   "expect": "23 V8 tests + V4 merge + view (incl. the new VD-19 test) + payload, all pass, 0 survivors"
   }
  ],
  "proofs": [
@@ -149,7 +138,6 @@
  ],
  "open_questions": [
   "YIELD (needs decision, blocks the 10-step hand-check): 1 step admitted over 4 runs, and it only confirmed a paper step. Causes, largest first: Europe PMC timeouts (3/3 Listeria searches, 7/9 open-access full texts); abstracts rarely state one reaction; the rag.admission span parser refuses common shapes ('is first/further converted into ... by', 'is oxidized to ... by', 'are condensed into ..., catalyzed by'), 4 true steps lost in the audit. Options: (a) rerun live (v8-live-2) to get past the timeouts, no code change, may still give < 10 steps; (b) widen the span parser in rag/admission.py: outside this lane's boundary, changes RAG admission in the pipeline too, needs its own no-regression proof; (c) a literature-only relaxation inside literature.py (e.g. accept roles_unassignable when the one-statement verbatim quote names every participant and the catalyst), cheap but weakens the evidence bar the hand-check measures; (d) raise max_papers / LLM calls (more cost per run, abstracts add little). Recommendation: (a) now, then (b) as its own lane if yield is still low",
-  "Organism policy (needs PO): a paper whose title+abstract names only other organisms is dropped and a quote naming another organism is rejected; papers naming no organism ('unknown') and same-genus ones ('genus_level') are kept, with the verdict in every provenance note. Options: (a) keep as is (allow_unknown, like rag ORGANISM_POLICY_ALLOW_UNKNOWN); (b) strict: require 'match' (fewer steps, safer biology); (c) off. Cost of (a): an E. coli step can reach an L. lactis pathway when the abstract does not name the organism",
   "Literature entities are not grounded (names only; they join payload rows by name or synonym). New entities therefore carry no ids, so a literature step that touches only another literature step is not_connected (hop chains stop at 1). Grounding via mapping/map_ids would be a later lane",
   "Budget defaults (120 s, 8 calls) come from the brief; with a real model each call takes ~10-30 s, so a run reads 2-4 papers. The live proof uses 300 s / 12 calls. A call already started may overrun the deadline by its own timeout",
   "Wiring: extend_big_payload does not dispatch 'literature' (passing it there is recorded as a failed source, fail-open). The wiring lane should call literature.run_if_enabled after the DB extension so DB rows are present for merges",
@@ -273,5 +261,23 @@
   },
   "views": "default and full equal the base sizes on all 4 runs; unresolved_refs unchanged",
   "handcheck": "every admitted step from live and live2 = the same 1 step twice: fidelity 100% (1/1), biology 1/1; 15 live2 refusals audited, 0 wrong by the rules (docs/vision/evidence/V8/handcheck.json)"
+ },
+ "round_2": {
+  "commit": "f653efbb",
+  "F1": "input-paper title compared after clean_text + normalise on both sides; DOI prefixes https://doi.org/, http://dx.doi.org/, doi: stripped",
+  "F2": "the quote's organisms (and the paper verdict) are written into every provenance note: 'organism <verdict> (quote names ...; paper ...)'",
+  "F3": "stored quote = the passage's own text at the match (source_span over _normalise_map, which keeps a source index per normalised character); admission and organism checks read it whitespace-collapsed",
+  "F5": "extend_literature wraps _extend_literature: any error outside the per-paper guard returns big unchanged with status 'failed'",
+  "F6": "a step counts as accepted only after convert.to_rows keeps it; otherwise rejected 'to_rows: skipped_self_loop' / 'skipped_one_sided'",
+  "F7": "tests: verbatim quote with swapped direction -> admission: evidence_direction_disagrees_with_claim; quote naming another organism -> quote_organism_mismatch",
+  "VD19": {
+   "rule": "the quote's own organisms decide when it names any, else the paper's (title + abstract) verdict; 'mismatch' refused; anything but an exact 'match' (unknown, genus_level) is admitted as related_organism",
+   "where_the_tag_lives": "a boolean field 'related_organism' on every provenance record the literature stage writes (true or false), repeated in words in the record's note ('related_organism: FULL view only')",
+   "scope": "view.py: an extension row whose every record has related_organism true is kept only when max_hops is None (FULL); DEFAULT, more_detailed(DEFAULT) and PAPER_ONLY never show it; the closure still pulls in such an entity when a kept row names it (reference-closed); a row with at least one non-related record is unaffected",
+   "invariant": "empty overlay: view() returns before the new rule, so view(big, DEFAULT|FULL) == base still holds (test_empty_extension_default_and_full_equal_base unchanged)",
+   "boundary": "src/t2pw/vision/view.py and tests/test_vision_view.py edited under VD-19's explicit allowance"
+  },
+  "tests_added": "V8: 7 functions (now 21 functions, 23 tests); view: test_vd19_related_organism_rows_only_in_full",
+  "probe": "pure-function probe of source_span / normalise / screen run directly (C:/t/vis-runs/scratch/vis-extend-lit/probe_norm.py): ok"
  }
 }
