@@ -1,7 +1,7 @@
 {
  "tree": {
   "path": "C:\\t\\vis-checks",
-  "head": "9c2921fbd8af1007d630a3307b8cb24932d04a77",
+  "head": "5c456f7f455b19a325797c5c36df5d32ea50b174",
   "dirty": false
  },
  "scopes": [
@@ -277,6 +277,7 @@
      "b_sbgn_omitted_regulatory_arcs": 0,
      "f_unplaced_entities": 280,
      "j_sbgn_assumed_placements": 44,
+     "m_nonanchored_no_placement_overlap": 7,
      "k_sbml_only_placements": 186,
      "a_compartment_names": 22,
      "h_pwml_extra_placements": 184,
@@ -295,6 +296,20 @@
      "pwml=Inner Membrane sbgn=inner membrane (IM)": 1,
      "pwml=Extracellular Space sbml=cell": 1
     },
+    "nonanchored_no_placement_overlap_examples": [
+     {
+      "run": "N/Project14-T2PW/runs_verify/2026-08-25_1216/papers/PMC12444477/strict",
+      "example": "PldA: pwml=['Outer Membrane', 'cytoplasm'] sbml=['outer membrane (OM)']"
+     },
+     {
+      "run": "IN/Project14-T2PW/runs_smoke/2026-09-07_2323/papers/PMC11487621/strict",
+      "example": "EcfT: pwml=['Cell Membrane', 'cell', 'cytoplasm'] sbml=['plasma membrane']"
+     },
+     {
+      "run": "IN/Project14-T2PW/runs_smoke/2026-09-07_2323/papers/PMC11487621/strict",
+      "example": "TcyJ: pwml=['Cell Membrane', 'cell', 'cytoplasm'] sbml=['plasma membrane']"
+     }
+    ],
     "unknown_sentinel_per_format": {
      "pwml": 41,
      "sbml": 0,
@@ -560,6 +575,7 @@
      "b_sbgn_omitted_regulatory_arcs": 0,
      "f_unplaced_entities": 286,
      "j_sbgn_assumed_placements": 46,
+     "m_nonanchored_no_placement_overlap": 7,
      "k_sbml_only_placements": 191,
      "a_compartment_names": 23,
      "h_pwml_extra_placements": 183,
@@ -578,6 +594,20 @@
      "pwml=Inner Membrane sbgn=inner membrane (IM)": 1,
      "pwml=Extracellular Space sbml=cell": 1
     },
+    "nonanchored_no_placement_overlap_examples": [
+     {
+      "run": "N/Project14-T2PW/runs_verify/2026-08-25_1216/papers/PMC12444477/strict",
+      "example": "PldA: pwml=['Outer Membrane', 'cytoplasm'] sbml=['outer membrane (OM)']"
+     },
+     {
+      "run": "IN/Project14-T2PW/runs_smoke/2026-09-07_2323/papers/PMC11487621/strict",
+      "example": "EcfT: pwml=['Cell Membrane', 'cell', 'cytoplasm'] sbml=['plasma membrane']"
+     },
+     {
+      "run": "IN/Project14-T2PW/runs_smoke/2026-09-07_2323/papers/PMC11487621/strict",
+      "example": "TcyJ: pwml=['Cell Membrane', 'cell', 'cytoplasm'] sbml=['plasma membrane']"
+     }
+    ],
     "unknown_sentinel_per_format": {
      "pwml": 41,
      "sbml": 0,
