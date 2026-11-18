@@ -120,14 +120,12 @@ def test_cache_key_includes_env_switches(tmp_path, monkeypatch):
     assert len(list(tmp_path.glob("*.sbml"))) == 3 and not list(tmp_path.glob("*.tmp"))
 
 
-def test_refused_export_raises(monkeypatch):
-    monkeypatch.setattr(G, "_export_pwml", lambda v, o: (None, {}, "refused"))
-    with pytest.raises(G.GenerateError):
-        gen(big(), DEFAULT, "pwml")
-    assert gen(big(), DEFAULT, "sbgn")  # sbgn falls back to its own grid
-    G._MEMO.clear()
-    with pytest.raises(G.GenerateError):
-        gen(big(), DEFAULT, "svg")
+def test_refused_export_produces_no_format(monkeypatch):
+    monkeypatch.setattr(G, "_export_pwml", lambda v, o: (None, {}, "refused by the exporter"))
+    for fmt in ("pwml", "sbml", "sbgn", "kgml", "svg", "html"):
+        with pytest.raises(G.GenerateError, match="refused by the exporter"):
+            gen(big(), DEFAULT, fmt)
+    assert json.loads(gen(big(), DEFAULT, "json"))  # json is the view itself, no export involved
 
 
 def test_quarantined_reaction_is_dropped_by_every_format():

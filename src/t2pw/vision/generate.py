@@ -151,8 +151,8 @@ def generate(big: Dict[str, Any], scope: ScopeSpec = DEFAULT, fmt: str = "pwml",
     cache key next to the view hash, so a different control never returns another control's bytes.
     SBML, KGML and SBGN are built from the graph the PWML export keeps (the strict quarantine decision under the same
     controls), so no format shows a reaction PWML drops; "json" is the view itself, before that decision.
-    Raises GenerateError when the PWML export refuses the view (pwml, svg and html need it; sbgn falls back to its grid)
-    or when the quarantine boundary refuses it (every format but json).
+    Raises GenerateError, with the PWML export's own message, when that export refuses the view: every format but json
+    needs it, so a refused view produces no format at all. Also raised when the quarantine boundary refuses the view.
     """
     if fmt not in FORMATS:
         raise ValueError("fmt must be one of %s, got %r" % (", ".join(FORMATS), fmt))
@@ -185,22 +185,20 @@ def generate(big: Dict[str, Any], scope: ScopeSpec = DEFAULT, fmt: str = "pwml",
 
     if fmt == "json":
         out = json.dumps(v, ensure_ascii=False, indent=1).encode("utf-8")  # the view itself, before any quarantine
-    elif fmt == "sbml":
-        out = _sbml(kept(), meta).encode("utf-8")
-    elif fmt == "kgml":
-        out = _kgml(kept(), meta).encode("utf-8")
     else:
-        xml, ir, err = pwml()
+        xml, ir, err = pwml()  # every other format needs the PWML step to succeed: a refused export produces nothing
+        if xml is None:
+            raise GenerateError(err)
         if fmt == "pwml":
-            if xml is None:
-                raise GenerateError(err)
             out = xml
+        elif fmt == "sbml":
+            out = _sbml(kept(), meta).encode("utf-8")
+        elif fmt == "kgml":
+            out = _kgml(kept(), meta).encode("utf-8")
         elif fmt == "sbgn":
             from t2pw.vision.export_sbgn import sbgn_text
-            out = sbgn_text(kept(), ir=ir if xml is not None else None).encode("utf-8")
+            out = sbgn_text(kept(), ir=ir).encode("utf-8")
         else:
-            if xml is None:
-                raise GenerateError(err)
             from t2pw.vision import diagram
             out = (diagram.render_svg(ir) if fmt == "svg" else diagram.render_html(ir)).encode("utf-8")
     if hit is not None:
