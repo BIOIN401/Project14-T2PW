@@ -336,13 +336,14 @@ _DIRECTIONAL = ("activation", "inhibition")
 
 
 def _interaction_tier(g, row, ctx) -> Optional[str]:
-    """None (the entities do not match) | "exact" | "weak" | "contradiction" for one predicted
+    """None (the entities do not match) | "exact" | "weak" | "contradiction" | "swapped" for one predicted
     interaction against one gold interaction (a acts on b).
 
     exact: the same canonical relation, with the order respected when it is directional; only this
     counts toward recall. weak: binding or an unknown relation against a directional one, or a
     directional prediction against gold binding (or two unknown relations): reported separately,
-    never added to recall. contradiction: activation against inhibition, or a swapped direction."""
+    never added to recall. contradiction: activation against inhibition. swapped: the same directional
+    relation with the entities in the opposite order. Both are always rejected; swapped is counted."""
     e1, e2 = row.get("entity_1"), row.get("entity_2")
 
     def on(terms, e):
@@ -355,7 +356,7 @@ def _interaction_tier(g, row, ctx) -> Optional[str]:
     if {rg, rp} == set(_DIRECTIONAL):
         return "contradiction"
     if rg == rp and rg in _DIRECTIONAL:
-        return "exact" if fwd else "contradiction"
+        return "exact" if fwd else "swapped"
     return "exact" if rg == rp and rg is not None else "weak"
 
 
@@ -425,6 +426,9 @@ def score_view(big: Mapping[str, Any], scope: ScopeSpec, gold_case: Mapping[str,
     types = {t: _type_stats(len(gold[t]), items[t], hit_by_type[t], bool(complete.get(t)), pkey) for t in TYPES}
     exact = {j for h in hit_by_type["interactions"] for j in h}
     types["interactions"]["recalled_weak"] = len({j for row in tiers for j, x in row if x == "weak"} - exact)
+    # predicted interactions with the right entities and relation but the direction reversed, and no exact match
+    types["interactions"]["swapped"] = sum(1 for row in tiers
+                                           if any(x == "swapped" for _, x in row) and not any(x == "exact" for _, x in row))
     off = [g for g in gold_case.get("off_scope_reactions") or []]
     types["reactions"]["paper_stated_off_scope"] = sum(
         1 for p, h in zip(items["reactions"], hit_by_type["reactions"]) if not h and any(_m_reaction(g, objs, p["row"], ctx) for g in off))
@@ -459,6 +463,7 @@ def _micro(legs: List[Dict[str, Any]], pkey: str) -> Dict[str, Any]:
             s["gold"] += x["gold"]
             s["recalled"] += x["recalled"]
             s["recalled_weak"] += x.get("recalled_weak", 0)
+            s["swapped"] += x.get("swapped", 0)
             s["recovered_by_extension"] += x["recovered_by_extension"]
             if x["complete"]:
                 s["p_predicted"] += x["predicted"]
@@ -469,6 +474,7 @@ def _micro(legs: List[Dict[str, Any]], pkey: str) -> Dict[str, Any]:
                            "recovered_by_extension": s["recovered_by_extension"]}
         if t == "interactions":
             out["types"][t]["recalled_weak"] = s["recalled_weak"]
+            out["types"][t]["swapped"] = s["swapped"]
         e = Counter()
         pk: Dict[str, Counter] = defaultdict(Counter)
         for l in legs:
@@ -510,7 +516,8 @@ def run_benchmark(cases: Sequence[Mapping[str, Any]], runs_by_case: Mapping[str,
     for kind in sorted({l["kind"] for l in legs}):
         k, pkey = [l for l in legs if l["kind"] == kind], _pkey(kind)
         per_case = {c: _micro([l for l in k if l["case"] == c], pkey) for c in dict.fromkeys(l["case"] for l in k)}
-        aggregate[kind] = {"headline": "macro", "macro": _macro(per_case, pkey), "micro": _micro(k, pkey),
+        aggregate[kind] = {"headline": "macro", "cases": len(per_case),  # the headline is a mean over this many cases
+                           "macro": _macro(per_case, pkey), "micro": _micro(k, pkey),
                            "per_case": per_case}
     return {"schema": SCHEMA_REPORT, "scope": {"paper_only": scope.paper_only, "max_hops": scope.max_hops},
             "legs": legs, "aggregate": aggregate, "cases_without_runs": missing}
