@@ -1,0 +1,45 @@
+{
+ "lane": "V4",
+ "branch": "vision/extend-db",
+ "status": "blocked: live proof not run (PathBank DB unreachable from this PC; HOLD from sub-orchestrator 2026-11-18)",
+ "built": [
+  "src/t2pw/vision/extend/__init__.py: extend_enabled() (T2PW_EXTEND, default off), run_if_enabled() (wiring entry: returns (big, None) when off), extend_big_payload(big, *, sources, budget_s=120, max_pathways=3, cache_dir=None, fetchers=None) -> (big2, report); per-source fail-open (report keeps only our own or REST error text, DB driver errors by class name only), placement() (per source: steps merged into base rows, hop_1, hop_2_plus, hop_none), currency_only_twins() (VD-11 note a counter)",
+  "src/t2pw/vision/extend/convert.py: neutral pathway shape -> rows for payload.merge_extension with {kind: database, source, quote: null, stage: extension_db, note}; currency compounds renamed by KEGG/ChEBI id to the spelling payload.CURRENCY knows (PathBank 'Hydrogen Ion', 'Water' etc.); F4 rename (same name, conflicting ids -> 'name [db]'); complexes joined to an existing complex when their UniProt member sets are equal, renamed on a name clash otherwise; reactions/interactions that match an existing row are emitted state-blind so the identity merge joins them (source compartment kept in the note, disagreements counted); unmatched steps without a compartment get no state (counted)",
+  "src/t2pw/vision/extend/pathbank.py: candidate search (species by taxonomy id / name, then binomial LIKE; overlap = distinct PathBank compounds in reactions + UniProt in reaction enzymes; >= 2 shared; public pw_id via super_pathway_visualizations; one per pathway name), content via pathbank_gold.extract; records pw_id, name, updated_at, content_sha256",
+  "src/t2pw/vision/extend/reactome.py: ContentService species/all, mapping/{UniProt|ChEBI}/{id}/pathways?species=, pathway containedEvents, per reaction query + participants + catalyst activity; single-cargo compartment change -> transport",
+  "src/t2pw/vision/extend/wikipathways.py: findPathwaysByXref.json index (species + ChEBI/UniProt overlap), GPML parse (conversion, anchored co-substrates/products, catalysis, inhibition/stimulation)",
+  "src/t2pw/vision/extend/http.py: cached, deadline-aware GET (User-Agent t2pw-vision/0.1)"
+ ],
+ "files": [
+  "src/t2pw/vision/extend/__init__.py", "src/t2pw/vision/extend/convert.py", "src/t2pw/vision/extend/http.py",
+  "src/t2pw/vision/extend/pathbank.py", "src/t2pw/vision/extend/reactome.py", "src/t2pw/vision/extend/wikipathways.py",
+  "tests/test_vision_extend_merge.py", "tests/data/vision/extend/reactome_R-HSA-70467.json"
+ ],
+ "cache_dir": "C:/t/vis-runs/cache/vis-extend-db (per source subdirectory; outside the repo, nothing added to .gitignore)",
+ "tests": [
+  {"label": "v4-unit-1", "counts": "not run (GATE_BLOCKED)", "log": "C:/t/vis-runs/logs/v4-unit-1.log"},
+  {"label": "v4-unit-2", "counts": "12 passed, 0 failed, 0 errors, BW_EXIT=0, 0 survivors", "log": "C:/t/vis-runs/logs/v4-unit-2.log"}
+ ],
+ "proofs": {
+  "unit": "fake fetchers: 2-reaction paper core + 5-step PathBank pathway -> both shared steps carry exactly one database record on the base row, no duplicate compound/protein/complex rows, 3 new steps at hops 1/2/1; currency (H2O) creates no hop; DEFAULT view = base + hop<=1 and reference-closed; one source raising -> others still apply, report says failed; T2PW_EXTEND parsing and off -> fetchers never called; F4 rename tested; recorded Reactome R-HSA-70467 and inline GPML parsed as stated",
+  "live": "NOT RUN. v4-live-1 was queued, then stopped on the sub-orchestrator HOLD before it got the lock (no output, no evidence). Command to run when the DB is back: cd C:/t/vis-extend-db && PYTHONPATH=C:/t/vis-extend-db/src bash C:/t/vis-runs/queue.sh vis-extend-db v4-live-2 2400 C:/t/vis-runs/logs/v4-live-2.json 4 C:/t/vis-runs/logs/v4-live-2.log -- C:/Users/Angad/Desktop/SummerBIOIN/Project14-T2PW/.venv/Scripts/python.exe -u C:/t/vis-runs/scratch/vis-extend-db/launch.py C:/t/vis-runs/scratch/vis-extend-db/live_proof.py C:/t/vis-extend-db/docs/vision/evidence/V4 C:/t/vis-runs/scratch/vis-extend-db/dump 120  (runs: menaquinone ORCH-759p strict, enterobactin ORCH-759p strict, lipid A runs_verify/2026-09-01_1612 research, human PMC12376012, Arabidopsis PMC5130987, mouse PMC12059215). Hand-check of 10 added steps and the H+/H2O twin count follow from its output.",
+  "no_regression": "No existing file changed (diff is new files only). Nothing in the pipeline imports t2pw.vision.extend; with T2PW_EXTEND off run_if_enabled returns the payload object untouched and no fetcher runs (tested)."
+ },
+ "dead_ends": [
+  "Reactome containedEvents is shallow (no inputs/outputs): one query + one participants call per reaction is needed, plus one per catalyst activity",
+  "The old WikiPathways webservice is retired; the static JSON index + GPML assets are used instead"
+ ],
+ "merge_risks_seen": [
+  "State names never agree between a paper and a database, so a state-aware match would never merge; convert merges state-blind on match (wrong join possible when the paper and database place the same conversion in different compartments; counted as merged_compartment_differs)",
+  "Database currency spellings ('Hydrogen Ion', 'Water', 'Adenosine triphosphate') are not in payload.CURRENCY: without the id-based rename they would join identity sets (no merge) and carry hop edges (wrong hops)",
+  "Reactome uses charged ChEBI forms (ATP(4-) 30616) where papers ground neutral ones (15422): id match fails, name match may still join; a name match with conflicting ChEBI is renamed and shows twice",
+  "Complexes carry no ids: two different complexes with one name would join by name; convert joins by UniProt member set and renames on clash. Reactome complexes are flattened to their UniProt members (sets inside complexes not distinguished)",
+  "Reactome catalyst sets (DefinedSet) are written as alternative single-protein enzymes, not one complex",
+  "VD-11 (note a): a DB step that adds only H+ or H2O to a paper step stays separate; counted by report.currency_only_twins (unit test shows the case; live count pending)"
+ ],
+ "open_questions": [
+  "Live proof waits for PathBank DB access (and the 10-step hand check, H+/H2O twin numbers).",
+  "Proposal for payload.py (outside this boundary): make currency identity id-based (KEGG/ChEBI table as in extend/convert.py CURRENCY_BY_ID) and let VD-11 ignore H+/H2O differences on a forward match; numbers pending the live run.",
+  "Not converted: PathBank ReactionCoupledTransport, Reactome regulation (regulatedBy), black-box events, WikiPathways protein->metabolite arrows, element_locations rows. Wanted?"
+ ]
+}
