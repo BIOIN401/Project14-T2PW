@@ -2,6 +2,51 @@
 
 Plan: `docs/vision/PLAN.md`. Branch `vision/main` from `origin/main` `a6c07e16`. Sub-orchestrator writes no code.
 
+## Programme status summary (2026-11-18, `vision/main` 75383487, for the main orchestrator's final pass)
+
+**Merged (all reviewed on the actual diff, tests through the bounded wrapper, 0 survivors):**
+
+| Lane | What it gives | Key proof |
+|---|---|---|
+| V1 model | Big payload = frozen `final_mapped.json` (base, never edited) + overlay with provenance, hops, sources; `view(big, scope)`; `ScopeSpec` paper / default / full / hops:N | `view(big0, DEFAULT|FULL) == base` on 152/152 stored payloads |
+| V2 + V2b sbgn | SBGN-ML 0.3 PD exporter; regulation only from a closed word list (VD-8); bytes independent of import order | 97/97 valid (XSD + libSBGN schematron) |
+| V3 diagram | Web diagram renderer moved into `src/t2pw/vision/diagram/` with metrics and selfcheck; bundled DejaVu font | SVG byte-identical to the prototype 97/97 (Segoe UI) |
+| V5 scope | `choose_scope(request)` / `rescope(scope, message)`: LLM with strict JSON, keyword fallback | 74 tests |
+| V6 generate | `generate(big, scope, fmt)` for pwml / sbml / sbgn / kgml / svg / html / json from ONE view; formats follow PWML's quarantine; a refused PWML yields no format | PWML byte-identical to today's replay 97/97 (final payload on and off); format x scope matrix 210/210 |
+| V7a checks | libSBML / SBGN / PWML validation, cross-format consistency, faithfulness | 97/97 valid; cross-format ok 71/97 with named residual classes; quote found-rate 0.684 |
+| V7b layout | PWML and SVG layout metrics; PathWhiz (`t2pw-vis`) vs ours gallery | new baseline 439 crossings, 6 enzyme links > 200 px, 18/261 reading-order; 6-run gallery |
+| V9 bench | Benchmark design (paper-only main set, full-view set) + scorer | paper macro recall 0.94 (N=3); DEFAULT equals eval_v2 on 34 runs |
+| V10 web | Job page: scope panel, re-scope box, on-demand downloads; `generate` in a serialised child with production DB | 157 unit + web tests, real-child test |
+| V4 extend-db | PathBank / Reactome / WikiPathways extension, flag `T2PW_EXTEND` (off) | hand-check fidelity 10/10, biology 9/10 (miss = PathBank source error) |
+| V8 extend-lit | Other peer-reviewed papers, verbatim-quote checked, `related_organism` rows only in FULL | 88 tests; live: 1 step admitted (1/1, 1/1) |
+
+**Final gates on 75383487 (all PASS, 0 survivors, `evidence/suites/final-75383487.txt`):** SMOKE 511; golden-seam
+2/8/4/24; equivalence run_pathway 8, app_vs_service 14, default_path 6; vision 353 (+1 gated skip); web 83;
+`generate(big0, DEFAULT, "pwml")` byte-identical to today's replay PWML on 97/97. With `T2PW_EXTEND` off and the default
+scope, text->PWML output is unchanged.
+
+**Standing conditions (must hold before wiring the extension into the pipeline or turning `T2PW_EXTEND` on):**
+VD-16 biology >= 9/10 on a hand-check; VD-17 a source-error registry on the payload rows and hand-checks that cover
+transports, interactions and hop >= 2; VD-20 a live literature sample with >= 10 admitted steps at the same bars.
+Deploy: `vision/prompts/*.txt` and `diagram/fonts/*` ship via the pyproject package-data entries (V6).
+
+**Open items:**
+- For main's correctness track (post-Thursday): PathWhiz compartment box per biological state (duplicates in 9 runs) and
+  the importer messages on our PWML (listed above); the rag/admission.py span-parser lane (VD-18; 6 refused true steps
+  recorded in V8.json).
+- Grounding: Ca++ in run 10 has no id; literature entities carry no database ids (name-only joins, VD-19 limits the risk).
+- Checks: the compartment rename list mixes 5 contradictions (e.g. ER vs cell) with synonyms; SBGN places enzyme and
+  transporter glyphs in compartments SBML contradicts (class j, 46) without a note; KGML drops compound-compound
+  interactions by design; reverse-direction SBGN check not built.
+- Bench: `gold_collapsed` count for currency-only twin reactions; 4 chlorophyll name variants are a gold/alias question
+  for the PO.
+- V4 follow-ups S6 (synonym-joined ATP), S8 (disease copies of a pathway); payload.py currency-by-id proposal (8 H+/H2O
+  twin pairs live).
+- Not built (deferred by PLAN § 6): wiring extension into the pipeline, BioPAX, third-party SBML/SBGN viewer shots,
+  reversibility and stoichiometry, LLM rescoping inside the serialised child.
+- Housekeeping: the scratch worktree `C:/t/vis-runs/scratch/vis-sbgnfix/old` could not be removed (permission denied);
+  lane worktrees `C:/t/vis-*` and snapshot worktrees `C:/t/vis-suite-*` can be removed once main has merged.
+
 ## Current state
 
 - 2026-11-17: plan written. Wave 1 (V1 model, V2 sbgn, V3 diagram) dispatched. Heavy lock held by the Thursday demo
@@ -84,6 +129,8 @@ Merged in `vision/main` (pushed): V1, V2, V3, V5, V6 at 04596e6c. Gated work sti
 | 2026-11-18 | V7a | merge | sub-orchestrator | `vision/main` 6939a2a7 | MERGED | 61 tests; cross-format ok 71/97; open: the compartment rename list mixes 5 contradictions (ER vs cell etc.) with synonyms; class j = SBGN glyphs in a compartment SBML contradicts (exporter question) |
 | 2026-11-18 | all merged | post-merge suites + PWML no-regression | sub-orchestrator, snapshot `C:/t/vis-suite-6939` | `vision/main` 6939a2a7 | PASS | SMOKE 511, golden 2/8/4/24, equivalence 8/14/6, vision 329 (+1 gated skip), web 83, 0 survivors; `generate(DEFAULT,"pwml")` byte-identical to today's replay 97/97 (`evidence/suites/`) |
 | 2026-11-18 | V8 | implementer + live 1 + static review | general-purpose (opus/high); ws-reviewer (opus/high) APPROVE pending runs | `vision/extend-lit` 0e9e3191 | runs queued (chain11) | live 1 admitted 1 step in 4 runs (fidelity 1/1, biology 1/1); VD-18 |
+| 2026-11-18 | V8 | fix r2 + F1 + merge | same implementer (opus/high); reviewer (opus/high) APPROVE | `vision/main` 75383487 | MERGED | 88 tests; VD-19 related_organism scoping in view.py |
+| 2026-11-18 | final | post-merge suites + PWML 97/97 | sub-orchestrator, snapshot `C:/t/vis-suite-final` | `vision/main` 75383487 | PASS | SMOKE 511, golden 38, equivalence 8/14/6, vision 353 (+1 gated skip), web 83, PWML 97/97 identical |
 | 2026-11-17 | V6 | gated run | sub-orchestrator queue (`C:/t/vis-runs/queue_v6.sh`) | holder vis-generate | waiting | needs the heavy lock free and 4 GB RAM (1.3-1.7 GB free: desktop apps, not a leak per main) |
 
 ## Decisions made by the sub-orchestrator (PO gave full autonomy; recommended option each time)
