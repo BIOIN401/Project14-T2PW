@@ -183,7 +183,7 @@ def generate(big: Dict[str, Any], scope: ScopeSpec = DEFAULT, fmt: str = "pwml",
         if k not in _MEMO:
             if len(_MEMO) >= 4:
                 _MEMO.pop(next(iter(_MEMO)))
-            _MEMO[k] = _export_pwml(v, opts, offline)
+            _MEMO[k] = _export_pwml(v, opts) if offline else _export_pwml(v, opts, offline=False)  # default call shape unchanged
         return _MEMO[k]
 
     def kept() -> Dict[str, Any]:
@@ -191,7 +191,7 @@ def generate(big: Dict[str, Any], scope: ScopeSpec = DEFAULT, fmt: str = "pwml",
         if k not in _KEPT:
             if len(_KEPT) >= 4:
                 _KEPT.pop(next(iter(_KEPT)))
-            _KEPT[k] = _kept(v, opts, offline)
+            _KEPT[k] = _kept(v, opts) if offline else _kept(v, opts, offline=False)
         return _KEPT[k]
 
     if fmt == "json":
