@@ -1,6 +1,6 @@
 {
  "run": "runs_papers/ORCH-759p/legs/menaquinone-strict/2026-10-22_2154/papers/PMC12421875/strict",
- "seconds": 33.7,
+ "seconds": 28.3,
  "report": {
   "budget_s": 120.0,
   "max_pathways": 3,
@@ -21,7 +21,7 @@
     "notes": [
      "species: Arabidopsis thaliana (exact), Lactococcus lactis (exact), Lactococcus lactis subsp. lactis (strain KF147) (exact), Lactococcus lactis subsp. lactis Il1403 (binomial), Lactococcus lactis subsp. cremoris SK11 (binomial), Lactococcus lactis subsp. cremoris MG1363 (binomial), Lactococcus lactis subsp. lactis (binomial), Lactococcus lactis subsp. cremoris (binomial), Lactococcus lactis subsp. lactis A12 (binomial), Lactococcus lactis subsp. lactis KLDS 4.0325 (binomial)",
      "query ids: 6 PathBank compounds, 7 UniProt",
-     "read timeout per query 119 s; the budget is not hard inside one extract",
+     "read timeout per query 59 s; the budget is not hard inside one extract",
      "candidates: PW123993 Ubiquinone Biosynthesis {'compounds': 2}"
     ],
     "counts": {
@@ -30,22 +30,26 @@
      "renamed_name_conflict": 2,
      "no_compartment": 1,
      "steps_transport": 8
-    }
+    },
+    "budget_s": 60.0
    },
    "reactome": {
-    "status": "failed",
+    "status": "no_candidates",
     "pathways": [],
-    "notes": [],
+    "notes": [
+     "Reactome lists Arabidopsis thaliana without a taxId: source skipped"
+    ],
     "counts": {},
-    "error": "KeyError"
+    "budget_s": 45.9
    },
    "wikipathways": {
     "status": "no_candidates",
     "pathways": [],
     "notes": [
-     "species ['arabidopsis thaliana', 'l. lactis', 'lactococcus lactis']; candidates: "
+     "species ['arabidopsis thaliana', 'lactococcus lactis']; candidates: "
     ],
-    "counts": {}
+    "counts": {},
+    "budget_s": 91.8
    }
   },
   "species": [
@@ -58,17 +62,11 @@
     "taxonomy_id": "684738"
    },
    {
-    "name": "L. lactis subsp. lactis KF147",
-    "taxonomy_id": null
-   },
-   {
     "name": "Arabidopsis thaliana",
     "taxonomy_id": "3702"
    }
   ],
-  "failed": [
-   "reactome"
-  ],
+  "failed": [],
   "placement": {
    "pathbank:PW123993": {
     "hop_2_plus": 39,
@@ -440,14 +438,14 @@
   },
   {
    "hop": 2,
-   "name": "4-Hydroxybenzoic acid + Polyprenyl diphosphate -> PPi +  4-Hydroxy-3-polyprenylbenzoate",
+   "name": "4-Hydroxybenzoic acid + Polyprenyl diphosphate -> PPi + 4-Hydroxy-3-polyprenylbenzoate",
    "in": [
     "4-Hydroxybenzoic acid",
     "Polyprenyl diphosphate"
    ],
    "out": [
     "PPi",
-    " 4-Hydroxy-3-polyprenylbenzoate"
+    "4-Hydroxy-3-polyprenylbenzoate"
    ],
    "note": "pathbank PW123993 reaction PW_R213173; source direction >; source compartment: Mitochondrion"
   },
@@ -479,23 +477,23 @@
   },
   {
    "hop": 5,
-   "name": "S-Adenosylmethionine + 2-Polyprenyl-6-methoxy-1,4-benzoquinone -> S-Adenosylhomocysteine +  \t 2-Polyprenyl-3-methyl-6-methoxy-1,4-benzoquinone",
+   "name": "S-Adenosylmethionine + 2-Polyprenyl-6-methoxy-1,4-benzoquinone -> S-Adenosylhomocysteine + 2-Polyprenyl-3-methyl-6-methoxy-1,4-benzoquinone",
    "in": [
     "S-Adenosylmethionine",
     "2-Polyprenyl-6-methoxy-1,4-benzoquinone"
    ],
    "out": [
     "S-Adenosylhomocysteine",
-    " \t 2-Polyprenyl-3-methyl-6-methoxy-1,4-benzoquinone"
+    "2-Polyprenyl-3-methyl-6-methoxy-1,4-benzoquinone"
    ],
    "note": "pathbank PW123993 reaction PW_R213176; source direction >; source compartment: Mitochondrion"
   },
   {
    "hop": 5,
-   "name": "S-Adenosylmethionine +  \t 2-Polyprenyl-3-methyl-5-hydroxy-6-methoxy-1,4-benzoquinone -> S-Adenosylhomocysteine + Ubiquinone",
+   "name": "S-Adenosylmethionine + 2-Polyprenyl-3-methyl-5-hydroxy-6-methoxy-1,4-benzoquinone -> S-Adenosylhomocysteine + Ubiquinone",
    "in": [
     "S-Adenosylmethionine",
-    " \t 2-Polyprenyl-3-methyl-5-hydroxy-6-methoxy-1,4-benzoquinone"
+    "2-Polyprenyl-3-methyl-5-hydroxy-6-methoxy-1,4-benzoquinone"
    ],
    "out": [
     "S-Adenosylhomocysteine",
@@ -517,9 +515,9 @@
   },
   {
    "hop": 3,
-   "name": " 4-Hydroxy-3-polyprenylbenzoate -> 3-Polyprenyl-4,5-dihydroxybenzoate",
+   "name": "4-Hydroxy-3-polyprenylbenzoate -> 3-Polyprenyl-4,5-dihydroxybenzoate",
    "in": [
-    " 4-Hydroxy-3-polyprenylbenzoate"
+    "4-Hydroxy-3-polyprenylbenzoate"
    ],
    "out": [
     "3-Polyprenyl-4,5-dihydroxybenzoate"
@@ -539,12 +537,12 @@
   },
   {
    "hop": 6,
-   "name": " \t 2-Polyprenyl-3-methyl-6-methoxy-1,4-benzoquinone ->  \t 2-Polyprenyl-3-methyl-5-hydroxy-6-methoxy-1,4-benzoquinone",
+   "name": "2-Polyprenyl-3-methyl-6-methoxy-1,4-benzoquinone -> 2-Polyprenyl-3-methyl-5-hydroxy-6-methoxy-1,4-benzoquinone",
    "in": [
-    " \t 2-Polyprenyl-3-methyl-6-methoxy-1,4-benzoquinone"
+    "2-Polyprenyl-3-methyl-6-methoxy-1,4-benzoquinone"
    ],
    "out": [
-    " \t 2-Polyprenyl-3-methyl-5-hydroxy-6-methoxy-1,4-benzoquinone"
+    "2-Polyprenyl-3-methyl-5-hydroxy-6-methoxy-1,4-benzoquinone"
    ],
    "note": "pathbank PW123993 reaction PW_R213182; source direction >; source compartment: Mitochondrion"
   },

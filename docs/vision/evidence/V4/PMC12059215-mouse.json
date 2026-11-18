@@ -1,6 +1,6 @@
 {
  "run": "runs_verify/2026-09-16_2152/papers/PMC12059215/strict",
- "seconds": 80.6,
+ "seconds": 60.6,
  "report": {
   "budget_s": 120.0,
   "max_pathways": 3,
@@ -9,26 +9,6 @@
     "status": "ok",
     "pathways": [
      {
-      "source_id": "pathbank:PW767504",
-      "accession": "PW767504",
-      "name": "Generated Pathway 1790128106",
-      "overlap": {
-       "compounds": 5,
-       "proteins": 4
-      },
-      "steps": 7
-     },
-     {
-      "source_id": "pathbank:PW767505",
-      "accession": "PW767505",
-      "name": "Generated Pathway 1790128948",
-      "overlap": {
-       "compounds": 4,
-       "proteins": 4
-      },
-      "steps": 6
-     },
-     {
       "source_id": "pathbank:PW064569",
       "accession": "PW064569",
       "name": "Androgen and Estrogen Metabolism",
@@ -36,21 +16,46 @@
        "compounds": 6
       },
       "steps": 13
+     },
+     {
+      "source_id": "pathbank:PW132109",
+      "accession": "PW132109",
+      "name": "Progesterone Pathway",
+      "overlap": {
+       "compounds": 4
+      },
+      "steps": 40
+     },
+     {
+      "source_id": "pathbank:PW064670",
+      "accession": "PW064670",
+      "name": "Androstenedione Metabolism",
+      "overlap": {
+       "compounds": 3
+      },
+      "steps": 9
      }
     ],
     "notes": [
      "species: Mus musculus (exact), Mus musculus castaneus (binomial)",
      "query ids: 7 PathBank compounds, 4 UniProt",
-     "read timeout per query 119 s; the budget is not hard inside one extract",
-     "candidates: PW767504 Generated Pathway 1790128106 {'compounds': 5, 'proteins': 4}; PW767505 Generated Pathway 1790128948 {'compounds': 4, 'proteins': 4}; PW064569 Androgen and Estrogen Metabolism {'compounds': 6}; PW132109  Progesterone Pathway  {'compounds': 4}; PW064670 Androstenedione Metabolism {'compounds': 3}; PW064678 Estrone Metabolism {'compounds': 2}"
+     "PW767504 'Generated Pathway 1790128106' skipped: not curated",
+     "PW767505 'Generated Pathway 1790128948' skipped: not curated",
+     "read timeout per query 59 s; the budget is not hard inside one extract",
+     "candidates: PW064569 Androgen and Estrogen Metabolism {'compounds': 6}; PW132109 Progesterone Pathway {'compounds': 4}; PW064670 Androstenedione Metabolism {'compounds': 3}; PW064678 Estrone Metabolism {'compounds': 2}"
     ],
     "counts": {
-     "complex_joined_by_members": 8,
-     "steps_reaction": 26,
      "synonyms_dropped_collision": 1,
-     "currency_renamed": 13,
-     "renamed_name_conflict": 2
-    }
+     "steps_reaction": 37,
+     "currency_renamed": 36,
+     "renamed_name_conflict": 2,
+     "no_compartment": 23,
+     "steps_interaction": 21,
+     "complex_joined_by_members": 8,
+     "steps_transport": 4,
+     "kept_apart_compartment": 1
+    },
+    "budget_s": 60.0
    },
    "reactome": {
     "status": "ok",
@@ -98,7 +103,8 @@
     "counts": {
      "steps_reaction": 5,
      "no_compartment": 4
-    }
+    },
+    "budget_s": 30.0
    },
    "wikipathways": {
     "status": "ok",
@@ -134,11 +140,13 @@
      "WP1264: 46 steps, 5 lines not converted"
     ],
     "counts": {
-     "no_compartment": 56,
+     "renamed_name_conflict": 2,
+     "no_compartment": 50,
      "steps_reaction": 59,
      "currency_renamed": 4,
      "steps_interaction": 1
-    }
+    },
+    "budget_s": 59.8
    }
   },
   "species": [
@@ -149,12 +157,11 @@
   ],
   "failed": [],
   "placement": {
-   "pathbank:PW767504": {
-    "merged_into_base": 2,
-    "hop_1": 1
-   },
-   "pathbank:PW767505": {
-    "merged_into_base": 2
+   "pathbank:PW132109": {
+    "merged_into_base": 1,
+    "hop_1": 10,
+    "hop_2_plus": 7,
+    "hop_none": 22
    },
    "pathbank:PW064569": {
     "hop_1": 9,
@@ -163,6 +170,16 @@
    "wikipathways:WP55": {
     "hop_1": 7,
     "hop_2_plus": 7
+   },
+   "wikipathways:WP1264": {
+    "hop_1": 12,
+    "hop_none": 10,
+    "hop_2_plus": 20
+   },
+   "pathbank:PW064670": {
+    "hop_1": 3,
+    "hop_2_plus": 4,
+    "hop_none": 2
    },
    "reactome:R-MMU-193144": {
     "hop_1": 1
@@ -173,27 +190,15 @@
    "reactome:R-MMU-211976": {
     "hop_2_plus": 1,
     "hop_none": 2
-   },
-   "wikipathways:WP1264": {
-    "hop_none": 15,
-    "hop_2_plus": 15,
-    "hop_1": 12
    }
   },
-  "overlay_entities_hop_none": 39,
+  "overlay_entities_hop_none": 96,
   "currency_only_twins": {
-   "count": 2,
+   "count": 1,
    "pairs": [
     [
      "processes.reactions:estradiol+nadp+>estrone+nadph@cytoplasmmusmusculus",
      "processes.reactions:estradiol+nadp+>estrone+h++nadph@cytosolmusmusculus",
-     [
-      "H+"
-     ]
-    ],
-    [
-     "processes.reactions:estradiol+nadp+>estrone+h++nadph@cytosolmusmusculus",
-     "processes.reactions:estradiol+nadp+>estrone+nadph@cytoplasmmusmusculus",
      [
       "H+"
      ]
@@ -209,129 +214,35 @@
   "unresolved_refs": 0
  },
  "default": {
-  "entities": 82,
-  "reactions": 35,
+  "entities": 87,
+  "reactions": 38,
   "interactions": 0,
-  "transports": 0,
+  "transports": 2,
   "unresolved_refs": 0
  },
  "full": {
-  "entities": 139,
-  "reactions": 77,
-  "interactions": 1,
-  "transports": 0,
+  "entities": 212,
+  "reactions": 88,
+  "interactions": 22,
+  "transports": 4,
   "unresolved_refs": 0
  },
  "merged_into_base": [
-  {
-   "key": "processes.reactions:androstenedione>testosterone@leydigcellsoftestis",
-   "name": "HSD17B3-catalyzed conversion of androstenedione to testosterone",
-   "db": [
-    {
-     "kind": "database",
-     "source": "pathbank:PW767504",
-     "quote": null,
-     "stage": "extension_db",
-     "note": "pathbank PW767504 reaction PW_R050000; source direction >; source compartment: cell; matched row state: Leydig cells of testis"
-    },
-    {
-     "kind": "database",
-     "source": "pathbank:PW767504",
-     "quote": null,
-     "stage": "extension_db",
-     "note": "pathbank PW767504 reaction PW_R050001; source direction >; source compartment: cell; matched row state: Leydig cells of testis"
-    },
-    {
-     "kind": "database",
-     "source": "pathbank:PW767504",
-     "quote": null,
-     "stage": "extension_db",
-     "note": "pathbank PW767504 reaction PW_R050002; source direction >; source compartment: cell; matched row state: Leydig cells of testis"
-    },
-    {
-     "kind": "database",
-     "source": "pathbank:PW767504",
-     "quote": null,
-     "stage": "extension_db",
-     "note": "pathbank PW767504 reaction PW_R050003; source direction >; source compartment: cell; matched row state: Leydig cells of testis"
-    },
-    {
-     "kind": "database",
-     "source": "pathbank:PW767504",
-     "quote": null,
-     "stage": "extension_db",
-     "note": "pathbank PW767504 reaction PW_R050004; source direction >; source compartment: cell; matched row state: Leydig cells of testis"
-    },
-    {
-     "kind": "database",
-     "source": "pathbank:PW767505",
-     "quote": null,
-     "stage": "extension_db",
-     "note": "pathbank PW767505 reaction PW_R050000; source direction >; source compartment: cell; matched row state: Leydig cells of testis"
-    },
-    {
-     "kind": "database",
-     "source": "pathbank:PW767505",
-     "quote": null,
-     "stage": "extension_db",
-     "note": "pathbank PW767505 reaction PW_R050001; source direction >; source compartment: cell; matched row state: Leydig cells of testis"
-    },
-    {
-     "kind": "database",
-     "source": "pathbank:PW767505",
-     "quote": null,
-     "stage": "extension_db",
-     "note": "pathbank PW767505 reaction PW_R050002; source direction >; source compartment: cell; matched row state: Leydig cells of testis"
-    },
-    {
-     "kind": "database",
-     "source": "pathbank:PW767505",
-     "quote": null,
-     "stage": "extension_db",
-     "note": "pathbank PW767505 reaction PW_R050003; source direction >; source compartment: cell; matched row state: Leydig cells of testis"
-    },
-    {
-     "kind": "database",
-     "source": "pathbank:PW767505",
-     "quote": null,
-     "stage": "extension_db",
-     "note": "pathbank PW767505 reaction PW_R050004; source direction >; source compartment: cell; matched row state: Leydig cells of testis"
-    }
-   ]
-  },
   {
    "key": "processes.reactions:estrone>estradiol@leydigcellsoftestis",
    "name": "HSD17B12-catalyzed conversion of estrone to estradiol",
    "db": [
     {
      "kind": "database",
-     "source": "pathbank:PW767504",
+     "source": "pathbank:PW132109",
      "quote": null,
      "stage": "extension_db",
-     "note": "pathbank PW767504 reaction PW_R050005; source direction >; source compartment: cell; matched row state: Leydig cells of testis"
-    },
-    {
-     "kind": "database",
-     "source": "pathbank:PW767505",
-     "quote": null,
-     "stage": "extension_db",
-     "note": "pathbank PW767505 reaction PW_R050005; source direction >; source compartment: cell; matched row state: Leydig cells of testis"
+     "note": "pathbank PW132109 reaction PW_R224315; source direction >; source compartment: not given; matched row state: Leydig cells of testis"
     }
    ]
   }
  ],
  "added_steps": [
-  {
-   "hop": 1,
-   "name": "dihydrotestosterone -> L-Oxalylalbizziine",
-   "in": [
-    "dihydrotestosterone"
-   ],
-   "out": [
-    "L-Oxalylalbizziine"
-   ],
-   "note": "pathbank PW767504 reaction PW_R050006; source direction >; source compartment: cell"
-  },
   {
    "hop": 1,
    "name": "estrone + Phosphoadenosine phosphosulfate -> Estrone sulfate + Adenosine 3',5'-diphosphate",
@@ -501,6 +412,232 @@
    "note": "pathbank PW064569 reaction PW_R109725; source direction >; source compartment: Endoplasmic Reticulum Membrane"
   },
   {
+   "hop": 3,
+   "name": "Pregnenolone + NAD+ -> Progesterone + NADH + H+",
+   "in": [
+    "Pregnenolone",
+    "NAD+"
+   ],
+   "out": [
+    "Progesterone",
+    "NADH",
+    "H+"
+   ],
+   "note": "pathbank PW132109 reaction PW_R110546; source direction >; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "ATP -> cAMP + PPi",
+   "in": [
+    "ATP"
+   ],
+   "out": [
+    "cAMP",
+    "PPi"
+   ],
+   "note": "pathbank PW132109 reaction PW_R174133; source direction >; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "PIP2(16:0/16:2(9Z,12Z)) + H2O -> Inositol 1,4,5-trisphosphate + 1,2-Diacyl-sn-glycerol (dioctadecanoyl, n-C18:0)",
+   "in": [
+    "PIP2(16:0/16:2(9Z,12Z))",
+    "H2O"
+   ],
+   "out": [
+    "Inositol 1,4,5-trisphosphate",
+    "1,2-Diacyl-sn-glycerol (dioctadecanoyl, n-C18:0)"
+   ],
+   "note": "pathbank PW132109 reaction PW_R224311; source direction >; source compartment: Cytosol"
+  },
+  {
+   "hop": 4,
+   "name": "Cholesterol -> Pregnenolone",
+   "in": [
+    "Cholesterol"
+   ],
+   "out": [
+    "Pregnenolone"
+   ],
+   "note": "pathbank PW132109 reaction PW_R224312; source direction >; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "androstenedione -> estrone",
+   "in": [
+    "androstenedione"
+   ],
+   "out": [
+    "estrone"
+   ],
+   "note": "pathbank PW132109 reaction PW_R224313; source direction >; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "testosterone -> estradiol",
+   "in": [
+    "testosterone"
+   ],
+   "out": [
+    "estradiol"
+   ],
+   "note": "pathbank PW132109 reaction PW_R224314; source direction >; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "estradiol -> 4-Hydroxyestradiol",
+   "in": [
+    "estradiol"
+   ],
+   "out": [
+    "4-Hydroxyestradiol"
+   ],
+   "note": "pathbank PW132109 reaction PW_R224316; source direction >; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "estradiol -> 2-Hydroxyestradiol",
+   "in": [
+    "estradiol"
+   ],
+   "out": [
+    "2-Hydroxyestradiol"
+   ],
+   "note": "pathbank PW132109 reaction PW_R224317; source direction >; source compartment: not given"
+  },
+  {
+   "hop": 2,
+   "name": "Dehydroepiandrosterone -> 5-Androstenediol",
+   "in": [
+    "Dehydroepiandrosterone"
+   ],
+   "out": [
+    "5-Androstenediol"
+   ],
+   "note": "pathbank PW132109 reaction PW_R224319; source direction >; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "5-Androstenediol -> testosterone",
+   "in": [
+    "5-Androstenediol"
+   ],
+   "out": [
+    "testosterone"
+   ],
+   "note": "pathbank PW132109 reaction PW_R224320; source direction >; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "testosterone + NAD+ -> androstenedione + NADH + H+",
+   "in": [
+    "testosterone",
+    "NAD+"
+   ],
+   "out": [
+    "androstenedione",
+    "NADH",
+    "H+"
+   ],
+   "note": "pathbank PW064670 reaction PW_R109721; source direction <>; source compartment: Endoplasmic Reticulum"
+  },
+  {
+   "hop": 1,
+   "name": "androstenedione + NADPH + H+ -> Androstanedione + NADP+",
+   "in": [
+    "androstenedione",
+    "NADPH",
+    "H+"
+   ],
+   "out": [
+    "Androstanedione",
+    "NADP+"
+   ],
+   "note": "pathbank PW064670 reaction PW_R110672; source direction >; source compartment: Endoplasmic Reticulum Membrane"
+  },
+  {
+   "hop": 2,
+   "name": "Androstanedione + NADH + H+ -> Androsterone + NAD+",
+   "in": [
+    "Androstanedione",
+    "NADH",
+    "H+"
+   ],
+   "out": [
+    "Androsterone",
+    "NAD+"
+   ],
+   "note": "pathbank PW064670 reaction PW_R110673; source direction >; source compartment: Cytosol"
+  },
+  {
+   "hop": 2,
+   "name": "Androsterone + Uridine diphosphate glucuronic acid -> Androsterone glucuronide + UDP",
+   "in": [
+    "Androsterone",
+    "Uridine diphosphate glucuronic acid"
+   ],
+   "out": [
+    "Androsterone glucuronide",
+    "UDP"
+   ],
+   "note": "pathbank PW064670 reaction PW_R110674; source direction >; source compartment: Endoplasmic Reticulum Membrane"
+  },
+  {
+   "hop": 1,
+   "name": "androstenedione + NADPH + H+ -> NADP+ + Etiocholanedione",
+   "in": [
+    "androstenedione",
+    "NADPH",
+    "H+"
+   ],
+   "out": [
+    "NADP+",
+    "Etiocholanedione"
+   ],
+   "note": "pathbank PW064670 reaction PW_R110676; source direction >; source compartment: Cytosol"
+  },
+  {
+   "hop": 2,
+   "name": "Etiocholanolone + Uridine diphosphate glucuronic acid -> Etiocholanolone glucuronide + UDP",
+   "in": [
+    "Etiocholanolone",
+    "Uridine diphosphate glucuronic acid"
+   ],
+   "out": [
+    "Androsterone glucuronide",
+    "UDP"
+   ],
+   "note": "pathbank PW064670 reaction PW_R110677; source direction >; source compartment: Endoplasmic Reticulum Membrane"
+  },
+  {
+   "hop": null,
+   "name": "11b-Hydroxyandrost-4-ene-3,17-dione + NADP+ -> NADPH + H+ + Adrenosterone",
+   "in": [
+    "11b-Hydroxyandrost-4-ene-3,17-dione",
+    "NADP+"
+   ],
+   "out": [
+    "NADPH",
+    "H+",
+    "Adrenosterone"
+   ],
+   "note": "pathbank PW064670 reaction PW_R110678; source direction >; source compartment: Endoplasmic Reticulum Membrane"
+  },
+  {
+   "hop": 2,
+   "name": "Etiocholanedione + NADH + H+ -> Etiocholanolone + NAD+",
+   "in": [
+    "Etiocholanedione",
+    "NADH",
+    "H+"
+   ],
+   "out": [
+    "Etiocholanolone",
+    "NAD+"
+   ],
+   "note": "pathbank PW064670 reaction PW_R110679; source direction >; source compartment: Cytosol"
+  },
+  {
    "hop": 1,
    "name": "HSD17B11 dehydrogenates EST17b to E1",
    "in": [
@@ -518,7 +655,7 @@
    "hop": 3,
    "name": "CYP17A1 17-hydroxylates PREG",
    "in": [
-    "PREG",
+    "Pregnenolone",
     "O2",
     "NADPH",
     "H+"
@@ -580,9 +717,9 @@
   },
   {
    "hop": 1,
-   "name": "Androstenediol -> testosterone",
+   "name": "Androstenediol [wikipathways] -> testosterone",
    "in": [
-    "Androstenediol"
+    "Androstenediol [wikipathways]"
    ],
    "out": [
     "testosterone"
@@ -612,37 +749,15 @@
    "note": "wikipathways WP55 reaction id316cd981; source direction GPML arrow; source compartment: not given"
   },
   {
-   "hop": 4,
-   "name": "Cholesterol -> PREG",
-   "in": [
-    "Cholesterol"
-   ],
-   "out": [
-    "PREG"
-   ],
-   "note": "wikipathways WP55 reaction id706df932; source direction GPML arrow; source compartment: not given"
-  },
-  {
    "hop": 2,
-   "name": "DHA -> Androstenediol",
+   "name": "DHA -> Androstenediol [wikipathways]",
    "in": [
     "DHA"
    ],
    "out": [
-    "Androstenediol"
+    "Androstenediol [wikipathways]"
    ],
    "note": "wikipathways WP55 reaction id80ccba80; source direction GPML arrow; source compartment: not given"
-  },
-  {
-   "hop": 3,
-   "name": "PREG -> Progesterone",
-   "in": [
-    "PREG"
-   ],
-   "out": [
-    "Progesterone"
-   ],
-   "note": "wikipathways WP55 reaction id8d38d1f9; source direction GPML arrow; source compartment: not given"
   },
   {
    "hop": 2,
@@ -665,28 +780,6 @@
     "androstenedione"
    ],
    "note": "wikipathways WP55 reaction idb4ad76d2; source direction GPML arrow; source compartment: not given"
-  },
-  {
-   "hop": 1,
-   "name": "androstenedione -> estrone",
-   "in": [
-    "androstenedione"
-   ],
-   "out": [
-    "estrone"
-   ],
-   "note": "wikipathways WP55 reaction ide16c9254; source direction GPML arrow; source compartment: not given"
-  },
-  {
-   "hop": 1,
-   "name": "testosterone -> estradiol",
-   "in": [
-    "testosterone"
-   ],
-   "out": [
-    "estradiol"
-   ],
-   "note": "wikipathways WP55 reaction idfa00f3d8; source direction GPML arrow; source compartment: not given"
   },
   {
    "hop": null,
@@ -744,10 +837,10 @@
    "note": "wikipathways WP1264 reaction ac27c; source direction GPML arrow; source compartment: not given"
   },
   {
-   "hop": null,
-   "name": "4-hydroxyestradiol -> 4-hydroxy-estradiol-4-glucuronide",
+   "hop": 2,
+   "name": "4-Hydroxyestradiol -> 4-hydroxy-estradiol-4-glucuronide",
    "in": [
-    "4-hydroxyestradiol"
+    "4-Hydroxyestradiol"
    ],
    "out": [
     "4-hydroxy-estradiol-4-glucuronide"
@@ -819,17 +912,6 @@
     "Superoxide"
    ],
    "note": "wikipathways WP1264 reaction b87f2; source direction GPML arrow; source compartment: not given"
-  },
-  {
-   "hop": 1,
-   "name": "estradiol -> 2-Hydroxyestradiol",
-   "in": [
-    "estradiol"
-   ],
-   "out": [
-    "2-Hydroxyestradiol"
-   ],
-   "note": "wikipathways WP1264 reaction b88f5; source direction GPML arrow; source compartment: not given"
   },
   {
    "hop": 1,
@@ -909,10 +991,10 @@
    "note": "wikipathways WP1264 reaction c9c94; source direction GPML arrow; source compartment: not given"
   },
   {
-   "hop": null,
-   "name": "4-hydroxyestradiol -> 4-hydroxy-estradiol-sulfate",
+   "hop": 2,
+   "name": "4-Hydroxyestradiol -> 4-hydroxy-estradiol-sulfate",
    "in": [
-    "4-hydroxyestradiol"
+    "4-Hydroxyestradiol"
    ],
    "out": [
     "4-hydroxy-estradiol-sulfate"
@@ -953,10 +1035,10 @@
    "note": "wikipathways WP1264 reaction d0591; source direction GPML arrow; source compartment: not given"
   },
   {
-   "hop": 3,
-   "name": "4-hydroxyestradiol -> 4-Methoxyestradiol",
+   "hop": 2,
+   "name": "4-Hydroxyestradiol -> 4-Methoxyestradiol",
    "in": [
-    "4-hydroxyestradiol"
+    "4-Hydroxyestradiol"
    ],
    "out": [
     "2-Methoxyestradiol"
@@ -1041,10 +1123,10 @@
    "note": "wikipathways WP1264 reaction e1681; source direction GPML arrow; source compartment: not given"
   },
   {
-   "hop": null,
-   "name": "4-hydroxyestradiol -> Estradiol-3,4-semiquinone",
+   "hop": 2,
+   "name": "4-Hydroxyestradiol -> Estradiol-3,4-semiquinone",
    "in": [
-    "4-hydroxyestradiol"
+    "4-Hydroxyestradiol"
    ],
    "out": [
     "Estradiol-3,4-semiquinone"
@@ -1085,21 +1167,10 @@
    "note": "wikipathways WP1264 reaction ee72b; source direction GPML arrow; source compartment: not given"
   },
   {
-   "hop": 1,
-   "name": "estradiol -> 4-hydroxyestradiol",
+   "hop": 2,
+   "name": "4-Hydroxyestradiol -> 4-Hydroxyestradiol-3-glucuronide",
    "in": [
-    "estradiol"
-   ],
-   "out": [
-    "4-hydroxyestradiol"
-   ],
-   "note": "wikipathways WP1264 reaction f4b42; source direction GPML arrow; source compartment: not given"
-  },
-  {
-   "hop": null,
-   "name": "4-hydroxyestradiol -> 4-Hydroxyestradiol-3-glucuronide",
-   "in": [
-    "4-hydroxyestradiol"
+    "4-Hydroxyestradiol"
    ],
    "out": [
     "4-Hydroxyestradiol-3-glucuronide"
@@ -1118,13 +1189,13 @@
    "note": "wikipathways WP1264 reaction f7947; source direction GPML arrow; source compartment: not given"
   },
   {
-   "hop": null,
-   "name": "Estradiol-3,4-quinone -> 4-hydroxyestradiol",
+   "hop": 2,
+   "name": "Estradiol-3,4-quinone -> 4-Hydroxyestradiol",
    "in": [
     "Estradiol-3,4-quinone"
    ],
    "out": [
-    "4-hydroxyestradiol"
+    "4-Hydroxyestradiol"
    ],
    "note": "wikipathways WP1264 reaction f8c7d; source direction GPML arrow; source compartment: not given"
   },
@@ -1141,10 +1212,185 @@
   },
   {
    "hop": null,
+   "name": "cAMP activation of Protein kinase A",
+   "in": null,
+   "out": null,
+   "note": "pathbank PW132109 interaction PW_I005449"
+  },
+  {
+   "hop": null,
+   "name": "KISS1 activation of KISS1R",
+   "in": null,
+   "out": null,
+   "note": "pathbank PW132109 interaction PW_I005664"
+  },
+  {
+   "hop": null,
+   "name": "KISS1R activation of PLC-beta",
+   "in": null,
+   "out": null,
+   "note": "pathbank PW132109 interaction PW_I005665"
+  },
+  {
+   "hop": null,
+   "name": "Progonadoliberin-1 activation of GNRHR",
+   "in": null,
+   "out": null,
+   "note": "pathbank PW132109 interaction PW_I005666"
+  },
+  {
+   "hop": null,
+   "name": "Early growth response protein 1 activation of ATF3",
+   "in": null,
+   "out": null,
+   "note": "pathbank PW132109 interaction PW_I005667"
+  },
+  {
+   "hop": null,
+   "name": "SF1 activation of FSH Beta",
+   "in": null,
+   "out": null,
+   "note": "pathbank PW132109 interaction PW_I005668"
+  },
+  {
+   "hop": null,
+   "name": "ATF3 activation of CGA",
+   "in": null,
+   "out": null,
+   "note": "pathbank PW132109 interaction PW_I005669"
+  },
+  {
+   "hop": null,
+   "name": "Catenin beta-1 (CTNNB1) activation of AP1",
+   "in": null,
+   "out": null,
+   "note": "pathbank PW132109 interaction PW_I005670"
+  },
+  {
+   "hop": null,
+   "name": "AP1 activation of FSH Beta",
+   "in": null,
+   "out": null,
+   "note": "pathbank PW132109 interaction PW_I005671"
+  },
+  {
+   "hop": null,
+   "name": "Luteinizing Hormone activation of Lutropin-choriogonadotropic hormone receptor",
+   "in": null,
+   "out": null,
+   "note": "pathbank PW132109 interaction PW_I005672"
+  },
+  {
+   "hop": null,
+   "name": "Follicle Stimulating Hormone activation of Follicle-stimulating hormone receptor bound to G protein complex",
+   "in": null,
+   "out": null,
+   "note": "pathbank PW132109 interaction PW_I005673"
+  },
+  {
+   "hop": null,
+   "name": "Lutropin-choriogonadotropic hormone receptor activation of G protein complex",
+   "in": null,
+   "out": null,
+   "note": "pathbank PW132109 interaction PW_I005674"
+  },
+  {
+   "hop": null,
+   "name": "G protein complex activation of Adenylate cyclase type 1",
+   "in": null,
+   "out": null,
+   "note": "pathbank PW132109 interaction PW_I005675"
+  },
+  {
+   "hop": null,
+   "name": "cAMP activation of Protein kinase A catalytic subunit",
+   "in": null,
+   "out": null,
+   "note": "pathbank PW132109 interaction PW_I005676"
+  },
+  {
+   "hop": null,
+   "name": "Follicle-stimulating hormone receptor bound to G protein complex activation of Adenylate cyclase type 1",
+   "in": null,
+   "out": null,
+   "note": "pathbank PW132109 interaction PW_I005677"
+  },
+  {
+   "hop": null,
+   "name": "Protein kinase A catalytic subunit activation of StAR",
+   "in": null,
+   "out": null,
+   "note": "pathbank PW132109 interaction PW_I005678"
+  },
+  {
+   "hop": null,
+   "name": "Protein kinase A activation of Cytochrome P450 19A1",
+   "in": null,
+   "out": null,
+   "note": "pathbank PW132109 interaction PW_I005679"
+  },
+  {
+   "hop": null,
+   "name": "Inhibin A inhibition of Follicle Stimulating Hormone",
+   "in": null,
+   "out": null,
+   "note": "pathbank PW132109 interaction PW_I005680"
+  },
+  {
+   "hop": 3,
+   "name": "Progesterone activation of Membrane-associated progesterone receptor component 1",
+   "in": null,
+   "out": null,
+   "note": "pathbank PW132109 interaction PW_I005681"
+  },
+  {
+   "hop": null,
+   "name": "Membrane-associated progesterone receptor component 1 inhibition of Progonadoliberin-1",
+   "in": null,
+   "out": null,
+   "note": "pathbank PW132109 interaction PW_I005682"
+  },
+  {
+   "hop": null,
+   "name": "Inositol 1,4,5-trisphosphate activation of Calcium",
+   "in": null,
+   "out": null,
+   "note": "pathbank PW132109 interaction PW_I000637"
+  },
+  {
+   "hop": null,
    "name": "Estradiol-2,3-quinone inhibition of Gsta1:Gstm1",
    "in": null,
    "out": null,
    "note": "wikipathways WP1264 interaction a482f"
+  },
+  {
+   "hop": 1,
+   "name": "androstenedione transport",
+   "in": null,
+   "out": null,
+   "note": "pathbank PW132109 transport PW_T017709; source direction >"
+  },
+  {
+   "hop": 1,
+   "name": "testosterone transport",
+   "in": null,
+   "out": null,
+   "note": "pathbank PW132109 transport PW_T017710; source direction >"
+  },
+  {
+   "hop": 5,
+   "name": "Cholesterol transport",
+   "in": null,
+   "out": null,
+   "note": "pathbank PW132109 transport PW_T017711; source direction >"
+  },
+  {
+   "hop": null,
+   "name": "11b-Hydroxyandrost-4-ene-3,17-dione transport",
+   "in": null,
+   "out": null,
+   "note": "pathbank PW064670 transport PW_T010038; source direction >"
   }
  ]
 }

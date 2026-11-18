@@ -1,6 +1,6 @@
 {
  "run": "runs_verify/2026-09-06_1425/papers/PMC12376012/research",
- "seconds": 119.6,
+ "seconds": 68.3,
  "report": {
   "budget_s": 120.0,
   "max_pathways": 3,
@@ -27,34 +27,26 @@
        "proteins": 5
       },
       "steps": 29
-     },
-     {
-      "source_id": "pathbank:PW127250",
-      "accession": "PW127250",
-      "name": "Gaucher Disease",
-      "overlap": {
-       "compounds": 10,
-       "proteins": 5
-      },
-      "steps": 29
      }
     ],
     "notes": [
      "species: Homo sapiens (exact), Homo sapiens 1 (binomial)",
      "query ids: 49 PathBank compounds, 15 UniProt",
-     "read timeout per query 119 s; the budget is not hard inside one extract",
+     "read timeout per query 59 s; the budget is not hard inside one extract",
+     "budget exhausted before PW127250",
      "candidates: PW569256 Sphingolipid Signaling {'compounds': 8, 'proteins': 9}; PW000148 Sphingolipid Metabolism {'compounds': 10, 'proteins': 5}; PW127250 Gaucher Disease {'compounds': 10, 'proteins': 5}; PW127251 Globoid Cell Leukodystrophy {'compounds': 10, 'proteins': 5}; PW127252 Metachromatic Leukodystrophy (MLD) {'compounds': 10, 'proteins': 5}; PW127253 Fabry Disease {'compounds': 10, 'proteins': 5}; PW720113 tut {'compounds': 9, 'proteins': 6}; PW122154 sphingomyelin {'compounds': 3, 'proteins': 2}; PW566925 Apoptosis Signaling {'compounds': 3, 'proteins': 1}; PW000023 Fatty Acid Metabolism {'compounds': 2}"
     ],
     "counts": {
      "steps_interaction": 3,
-     "steps_reaction": 73,
+     "steps_reaction": 44,
      "kept_apart_compartment": 3,
-     "synonyms_dropped_collision": 5,
+     "synonyms_dropped_collision": 3,
      "renamed_name_conflict": 10,
      "steps_transport": 4,
-     "currency_renamed": 42,
-     "complex_joined_by_members": 28
-    }
+     "currency_renamed": 21,
+     "complex_joined_by_members": 6
+    },
+    "budget_s": 60.0
    },
    "reactome": {
     "status": "ok",
@@ -75,7 +67,7 @@
        "UniProt:Q9NYA1",
        "UniProt:Q9Y5P4"
       ],
-      "steps": 0
+      "steps": 1
      },
      {
       "source_id": "reactome:R-HSA-9845614",
@@ -86,22 +78,105 @@
        "UniProt:O95470",
        "UniProt:Q9BX95"
       ],
-      "steps": 0
+      "steps": 1
      }
     ],
     "notes": [
-     "29 ids probed; candidates: R-HSA-1660661 Sphingolipid de novo biosynthesis 10; R-HSA-9845614 Sphingolipid catabolism 3",
-     "stopped early: BudgetExceeded: https://reactome.org/ContentService/data/query/R-HSA-9843721",
-     "stopped early: BudgetExceeded: https://reactome.org/ContentService/data/pathway/R-HSA-9845614/containedEvents"
+     "29 ids probed; candidates: R-HSA-1660661 Sphingolipid de novo biosynthesis 10; R-HSA-9845614 Sphingolipid catabolism 3"
     ],
-    "counts": {}
+    "counts": {
+     "currency_renamed": 1,
+     "no_compartment": 2,
+     "steps_reaction": 2,
+     "complex_joined_by_members": 1
+    },
+    "budget_s": 29.3
    },
    "wikipathways": {
-    "status": "failed",
-    "pathways": [],
-    "notes": [],
-    "counts": {},
-    "error": "BudgetExceeded: https://www.wikipathways.org/wikipathways-assets/pathways/WP4725/WP4725.gpml"
+    "status": "ok",
+    "pathways": [
+     {
+      "source_id": "wikipathways:WP4725",
+      "accession": "WP4725",
+      "name": "Sphingolipid metabolism overview",
+      "overlap": [
+       "15525",
+       "16197",
+       "16393",
+       "17115",
+       "17553",
+       "17585",
+       "18368",
+       "37550",
+       "O15121",
+       "O15269",
+       "O15270",
+       "O95470",
+       "Q06136",
+       "Q8TCT0",
+       "Q9BX95",
+       "Q9NYA1"
+      ],
+      "steps": 29
+     },
+     {
+      "source_id": "wikipathways:WP1422",
+      "accession": "WP1422",
+      "name": "Sphingolipid pathway",
+      "overlap": [
+       "15525",
+       "16393",
+       "17115",
+       "17553",
+       "31488",
+       "37550",
+       "O15269",
+       "O15270",
+       "O95470",
+       "Q06136",
+       "Q8TCT0",
+       "Q9NUV7",
+       "Q9NYA1",
+       "Q9Y5P4"
+      ],
+      "steps": 34
+     },
+     {
+      "source_id": "wikipathways:WP4726",
+      "accession": "WP4726",
+      "name": "Sphingolipid metabolism: integrated pathway",
+      "overlap": [
+       "15525",
+       "16393",
+       "17115",
+       "17553",
+       "37550",
+       "O15121",
+       "O15269",
+       "O15270",
+       "O95470",
+       "Q06136",
+       "Q8TCT0",
+       "Q9BX95",
+       "Q9NYA1"
+      ],
+      "steps": 113
+     }
+    ],
+    "notes": [
+     "species ['homo sapiens']; candidates: WP4725 Sphingolipid metabolism overview 16; WP1422 Sphingolipid pathway 14; WP4726 Sphingolipid metabolism: integrated pathway 13; WP5194 Synthesis of ceramides and 1-deoxyceramides 11; WP4142 Metabolism of sphingolipids in ER and Golgi apparatus 10; WP5121 Sphingolipid metabolism in senescence 9; WP5179 Biosynthesis and turnover of 1-deoxy-sphingoid bases 6; WP3604 Biochemical pathways: part I 4; WP4577 Neurodegeneration with brain iron accumulation (NBIA) subtypes pathway 4; WP3933 Kennedy pathway from sphingolipids 3",
+     "WP4725: 29 steps, 13 lines not converted",
+     "WP1422: 34 steps, 18 lines not converted",
+     "WP4726: 113 steps, 12 lines not converted"
+    ],
+    "counts": {
+     "no_compartment": 152,
+     "steps_reaction": 176,
+     "synonyms_dropped_collision": 2,
+     "renamed_name_conflict": 4,
+     "name_join_refused_no_shared_id": 1
+    },
+    "budget_s": 53.8
    }
   },
   "species": [
@@ -110,9 +185,7 @@
     "taxonomy_id": "9606"
    }
   ],
-  "failed": [
-   "wikipathways"
-  ],
+  "failed": [],
   "placement": {
    "pathbank:PW569256": {
     "merged_into_base": 5,
@@ -120,18 +193,37 @@
     "hop_2_plus": 2,
     "hop_none": 1
    },
-   "pathbank:PW127250": {
+   "wikipathways:WP1422": {
     "merged_into_base": 2,
-    "hop_1": 19,
-    "hop_2_plus": 7
+    "hop_1": 22,
+    "hop_2_plus": 5,
+    "hop_none": 3
+   },
+   "wikipathways:WP4725": {
+    "merged_into_base": 3,
+    "hop_1": 12,
+    "hop_2_plus": 6,
+    "hop_none": 8
    },
    "pathbank:PW000148": {
     "merged_into_base": 2,
     "hop_1": 19,
     "hop_2_plus": 7
+   },
+   "wikipathways:WP4726": {
+    "merged_into_base": 2,
+    "hop_1": 14,
+    "hop_2_plus": 17,
+    "hop_none": 80
+   },
+   "reactome:R-HSA-1660661": {
+    "hop_2_plus": 1
+   },
+   "reactome:R-HSA-9845614": {
+    "hop_2_plus": 1
    }
   },
-  "overlay_entities_hop_none": 54,
+  "overlay_entities_hop_none": 118,
   "currency_only_twins": {
    "count": 0,
    "pairs": []
@@ -145,15 +237,15 @@
   "unresolved_refs": 2
  },
  "default": {
-  "entities": 152,
-  "reactions": 47,
+  "entities": 186,
+  "reactions": 86,
   "transports": 6,
   "interactions": 2,
   "unresolved_refs": 0
  },
  "full": {
-  "entities": 179,
-  "reactions": 55,
+  "entities": 307,
+  "reactions": 209,
   "transports": 6,
   "interactions": 4,
   "unresolved_refs": 0
@@ -212,17 +304,37 @@
     },
     {
      "kind": "database",
-     "source": "pathbank:PW127250",
+     "source": "wikipathways:WP4725",
      "quote": null,
      "stage": "extension_db",
-     "note": "pathbank PW127250 reaction PW_R001194; source direction >; source compartment: Endoplasmic Reticulum Membrane"
+     "note": "wikipathways WP4725 reaction idbdf2f556; source direction GPML arrow; source compartment: not given"
     },
     {
      "kind": "database",
-     "source": "pathbank:PW127250",
+     "source": "wikipathways:WP1422",
      "quote": null,
      "stage": "extension_db",
-     "note": "pathbank PW127250 reaction PW_R001196; source direction >; source compartment: Cell Membrane"
+     "note": "wikipathways WP1422 reaction bf461; source direction GPML arrow; source compartment: not given"
+    },
+    {
+     "kind": "database",
+     "source": "wikipathways:WP4726",
+     "quote": null,
+     "stage": "extension_db",
+     "note": "wikipathways WP4726 reaction c2b51; source direction GPML arrow; source compartment: not given"
+    }
+   ]
+  },
+  {
+   "key": "processes.reactions:sphingosine1phosphate>ethanolaminephosphate+hexadecenal@",
+   "name": "S1P lyase reaction",
+   "db": [
+    {
+     "kind": "database",
+     "source": "wikipathways:WP4725",
+     "quote": null,
+     "stage": "extension_db",
+     "note": "wikipathways WP4725 reaction id96290d76; source direction GPML arrow; source compartment: not given"
     }
    ]
   },
@@ -246,10 +358,24 @@
     },
     {
      "kind": "database",
-     "source": "pathbank:PW127250",
+     "source": "wikipathways:WP4725",
      "quote": null,
      "stage": "extension_db",
-     "note": "pathbank PW127250 reaction PW_R001195; source direction >; source compartment: Endoplasmic Reticulum Membrane"
+     "note": "wikipathways WP4725 reaction ide0bbc0c3; source direction GPML arrow; source compartment: not given"
+    },
+    {
+     "kind": "database",
+     "source": "wikipathways:WP1422",
+     "quote": null,
+     "stage": "extension_db",
+     "note": "wikipathways WP1422 reaction dd58c; source direction GPML arrow; source compartment: not given"
+    },
+    {
+     "kind": "database",
+     "source": "wikipathways:WP4726",
+     "quote": null,
+     "stage": "extension_db",
+     "note": "wikipathways WP4726 reaction c6980; source direction GPML arrow; source compartment: not given"
     }
    ]
   },
@@ -719,6 +845,1720 @@
     "Sphinganine 1-phosphate"
    ],
    "note": "pathbank PW000148 reaction PW_R000519; source direction >; source compartment: Cytosol"
+  },
+  {
+   "hop": 2,
+   "name": "ABCC1,ABCG2 transport C18-S1P to extracellular region",
+   "in": [
+    "C18-S1P",
+    "ATP",
+    "H2O"
+   ],
+   "out": [
+    "C18-S1P",
+    "ADP",
+    "H+",
+    "phosphate"
+   ],
+   "note": "reactome R-HSA-1660661 reaction R-HSA-9843721; catalyst set ABCC1,ABCG2: members listed as alternatives; compartments ['cytosol', 'plasma membrane', 'extracellular region']: none chosen; source compartment: not given"
+  },
+  {
+   "hop": 2,
+   "name": "ACER3 hydrolyzes phytoceramide",
+   "in": [
+    "H2O",
+    "phytoceramide-C16"
+   ],
+   "out": [
+    "phytosphingosine",
+    "RCOO-"
+   ],
+   "note": "reactome R-HSA-9845614 reaction R-HSA-428262; compartments ['cytosol', 'endoplasmic reticulum membrane']: none chosen; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "3-keto-sphinganine -> Sphinganine",
+   "in": [
+    "3-keto-sphinganine"
+   ],
+   "out": [
+    "Sphinganine"
+   ],
+   "note": "wikipathways WP4725 reaction id11c71881; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "Glc-Cer -> ceramide",
+   "in": [
+    "Glc-Cer"
+   ],
+   "out": [
+    "ceramide"
+   ],
+   "note": "wikipathways WP4725 reaction id12d094d4; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "ceramide -> SM",
+   "in": [
+    "ceramide"
+   ],
+   "out": [
+    "SM"
+   ],
+   "note": "wikipathways WP4725 reaction id204b067; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "DH-Ceramide -> DH-Cer-1-P",
+   "in": [
+    "DH-Ceramide"
+   ],
+   "out": [
+    "DH-Cer-1-P"
+   ],
+   "note": "wikipathways WP4725 reaction id46848a70; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "palmitoyl-CoA + L-serine -> 3-keto-sphinganine",
+   "in": [
+    "palmitoyl-CoA",
+    "L-serine"
+   ],
+   "out": [
+    "3-keto-sphinganine"
+   ],
+   "note": "wikipathways WP4725 reaction id6cf838b; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "CoA(16:0) -> DH-Ceramide",
+   "in": [
+    "CoA(16:0)"
+   ],
+   "out": [
+    "DH-Ceramide"
+   ],
+   "note": "wikipathways WP4725 reaction id6dd64cb8; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "DH-Ceramide -> DH-Gal-Cer",
+   "in": [
+    "DH-Ceramide"
+   ],
+   "out": [
+    "DH-Gal-Cer"
+   ],
+   "note": "wikipathways WP4725 reaction id7451d8ea; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 2,
+   "name": "DH-Ceramide -> DH-Glc-Cer",
+   "in": [
+    "DH-Ceramide"
+   ],
+   "out": [
+    "DH-Glc-Cer"
+   ],
+   "note": "wikipathways WP4725 reaction id79689790; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "ceramide -> Glc-Cer",
+   "in": [
+    "ceramide"
+   ],
+   "out": [
+    "Glc-Cer"
+   ],
+   "note": "wikipathways WP4725 reaction id9884255a; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 2,
+   "name": "DH-SM -> DH-Ceramide",
+   "in": [
+    "DH-SM"
+   ],
+   "out": [
+    "DH-Ceramide"
+   ],
+   "note": "wikipathways WP4725 reaction id9d280dab; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "ceramide -> Gal-Cer",
+   "in": [
+    "ceramide"
+   ],
+   "out": [
+    "Gal-Cer"
+   ],
+   "note": "wikipathways WP4725 reaction idb9579e0d; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 2,
+   "name": "Sphinganine 1-phosphate + H2O -> Sphinganine",
+   "in": [
+    "Sphinganine 1-phosphate",
+    "H2O"
+   ],
+   "out": [
+    "Sphinganine"
+   ],
+   "note": "wikipathways WP4725 reaction idbb8ae26; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "Sphinganine 1-phosphate -> Hexadecanal + ethanolamine phosphate",
+   "in": [
+    "Sphinganine 1-phosphate"
+   ],
+   "out": [
+    "Hexadecanal",
+    "ethanolamine phosphate"
+   ],
+   "note": "wikipathways WP4725 reaction idc2904d49; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "DH-Ceramide -> DH-SM",
+   "in": [
+    "DH-Ceramide"
+   ],
+   "out": [
+    "DH-SM"
+   ],
+   "note": "wikipathways WP4725 reaction idc444fee0; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "SM -> ceramide",
+   "in": [
+    "SM"
+   ],
+   "out": [
+    "ceramide"
+   ],
+   "note": "wikipathways WP4725 reaction idc931ada7; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "DH-Ceramide -> ceramide",
+   "in": [
+    "DH-Ceramide"
+   ],
+   "out": [
+    "ceramide"
+   ],
+   "note": "wikipathways WP4725 reaction idca8136b2; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "ceramide -> Cer-1-P",
+   "in": [
+    "ceramide"
+   ],
+   "out": [
+    "Cer-1-P"
+   ],
+   "note": "wikipathways WP4725 reaction idf29bfd2c; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 3,
+   "name": "CoA(18:0) -> DH-Ceramide",
+   "in": [
+    "CoA(18:0)"
+   ],
+   "out": [
+    "DH-Ceramide"
+   ],
+   "note": "wikipathways WP4725 reaction efb40; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 3,
+   "name": "CoA(20:0) -> DH-Ceramide",
+   "in": [
+    "CoA(20:0)"
+   ],
+   "out": [
+    "DH-Ceramide"
+   ],
+   "note": "wikipathways WP4725 reaction cba2e; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "CoA(22:0) -> DH-Ceramide",
+   "in": [
+    "CoA(22:0)"
+   ],
+   "out": [
+    "DH-Ceramide"
+   ],
+   "note": "wikipathways WP4725 reaction b5996; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "CoA(24:0) -> DH-Ceramide",
+   "in": [
+    "CoA(24:0)"
+   ],
+   "out": [
+    "DH-Ceramide"
+   ],
+   "note": "wikipathways WP4725 reaction af2e4; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "CoA(24:1) -> DH-Ceramide",
+   "in": [
+    "CoA(24:1)"
+   ],
+   "out": [
+    "DH-Ceramide"
+   ],
+   "note": "wikipathways WP4725 reaction e27f1; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "CoA(26:0) -> DH-Ceramide",
+   "in": [
+    "CoA(26:0)"
+   ],
+   "out": [
+    "DH-Ceramide"
+   ],
+   "note": "wikipathways WP4725 reaction ca493; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "CoA(26:1) -> DH-Ceramide",
+   "in": [
+    "CoA(26:1)"
+   ],
+   "out": [
+    "DH-Ceramide"
+   ],
+   "note": "wikipathways WP4725 reaction aa3b3; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "dihydroceramide -> DH-SM",
+   "in": [
+    "dihydroceramide"
+   ],
+   "out": [
+    "DH-SM"
+   ],
+   "note": "wikipathways WP1422 reaction a8c92; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "Sphinganine 1-phosphate -> ethanolamine phosphate",
+   "in": [
+    "Sphinganine 1-phosphate"
+   ],
+   "out": [
+    "ethanolamine phosphate"
+   ],
+   "note": "wikipathways WP1422 reaction b4350; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "sphingosine -> Ceramides",
+   "in": [
+    "sphingosine"
+   ],
+   "out": [
+    "Ceramides"
+   ],
+   "note": "wikipathways WP1422 reaction b6684; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "dihydroceramide -> Ceramides",
+   "in": [
+    "dihydroceramide"
+   ],
+   "out": [
+    "Ceramides"
+   ],
+   "note": "wikipathways WP1422 reaction bd43a; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "DH-SM -> dihydroceramide",
+   "in": [
+    "DH-SM"
+   ],
+   "out": [
+    "dihydroceramide"
+   ],
+   "note": "wikipathways WP1422 reaction ebb18; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "Ceramides -> sphingosine",
+   "in": [
+    "Ceramides"
+   ],
+   "out": [
+    "sphingosine"
+   ],
+   "note": "wikipathways WP1422 reaction f5cd8; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "sphingosine-1-phosphate -> ethanolamine phosphate",
+   "in": [
+    "sphingosine-1-phosphate"
+   ],
+   "out": [
+    "ethanolamine phosphate"
+   ],
+   "note": "wikipathways WP1422 reaction fe0df; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "3-ketodihydroshpingosine -> Sphinganine",
+   "in": [
+    "3-ketodihydroshpingosine"
+   ],
+   "out": [
+    "Sphinganine"
+   ],
+   "note": "wikipathways WP1422 reaction id12d8a1bc; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "DH-Glc-Cer -> DHLacCer",
+   "in": [
+    "DH-Glc-Cer"
+   ],
+   "out": [
+    "DHLacCer"
+   ],
+   "note": "wikipathways WP1422 reaction id387ec8cc; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "dihydroceramide -> DH-Cer-1-P",
+   "in": [
+    "dihydroceramide"
+   ],
+   "out": [
+    "DH-Cer-1-P"
+   ],
+   "note": "wikipathways WP1422 reaction id3beb065f; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "sphingosine-1-phosphate -> C16:1-al",
+   "in": [
+    "sphingosine-1-phosphate"
+   ],
+   "out": [
+    "C16:1-al"
+   ],
+   "note": "wikipathways WP1422 reaction id3c871927; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "glucosylceramide -> Ceramides",
+   "in": [
+    "glucosylceramide"
+   ],
+   "out": [
+    "Ceramides"
+   ],
+   "note": "wikipathways WP1422 reaction id4bcc93e6; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "DH-Gal-Cer -> DHST",
+   "in": [
+    "DH-Gal-Cer"
+   ],
+   "out": [
+    "DHST"
+   ],
+   "note": "wikipathways WP1422 reaction id588a3a68; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 2,
+   "name": "Sphinganine 1-phosphate -> C16:0-al",
+   "in": [
+    "Sphinganine 1-phosphate"
+   ],
+   "out": [
+    "C16:0-al"
+   ],
+   "note": "wikipathways WP1422 reaction id80d3d464; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "dihydroceramide -> DH-Glc-Cer",
+   "in": [
+    "dihydroceramide"
+   ],
+   "out": [
+    "DH-Glc-Cer"
+   ],
+   "note": "wikipathways WP1422 reaction id987779f3; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "dihydroceramide -> DH-Gal-Cer",
+   "in": [
+    "dihydroceramide"
+   ],
+   "out": [
+    "DH-Gal-Cer"
+   ],
+   "note": "wikipathways WP1422 reaction idc464e021; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 2,
+   "name": "Ceramide 1-phosphate [pathbank] -> Ceramides",
+   "in": [
+    "Ceramide 1-phosphate [pathbank]"
+   ],
+   "out": [
+    "Ceramides"
+   ],
+   "note": "wikipathways WP1422 reaction idcc6257d1; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "Gal-Cer -> Sulfatide [wikipathways]",
+   "in": [
+    "Gal-Cer"
+   ],
+   "out": [
+    "Sulfatide [wikipathways]"
+   ],
+   "note": "wikipathways WP1422 reaction ae38a; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "Ceramides -> Ceramide 1-phosphate [pathbank]",
+   "in": [
+    "Ceramides"
+   ],
+   "out": [
+    "Ceramide 1-phosphate [pathbank]"
+   ],
+   "note": "wikipathways WP1422 reaction bd3ce; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 2,
+   "name": "Sphingomyelin [wikipathways] -> Ceramides",
+   "in": [
+    "Sphingomyelin [wikipathways]"
+   ],
+   "out": [
+    "Ceramides"
+   ],
+   "note": "wikipathways WP1422 reaction a17ed; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "Ceramides -> Sphingomyelin [wikipathways]",
+   "in": [
+    "Ceramides"
+   ],
+   "out": [
+    "Sphingomyelin [wikipathways]"
+   ],
+   "note": "wikipathways WP1422 reaction ca982; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "Ceramides -> glucosylceramide",
+   "in": [
+    "Ceramides"
+   ],
+   "out": [
+    "glucosylceramide"
+   ],
+   "note": "wikipathways WP1422 reaction cc8b0; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "Ceramides -> Gal-Cer",
+   "in": [
+    "Ceramides"
+   ],
+   "out": [
+    "Gal-Cer"
+   ],
+   "note": "wikipathways WP1422 reaction fa7c8; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "glucosylceramide -> Lactosylceramide [wikipathways]",
+   "in": [
+    "glucosylceramide"
+   ],
+   "out": [
+    "Lactosylceramide [wikipathways]"
+   ],
+   "note": "wikipathways WP1422 reaction b26d9; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "C16 Cer -> sphingosine",
+   "in": [
+    "C16 Cer"
+   ],
+   "out": [
+    "sphingosine"
+   ],
+   "note": "wikipathways WP4726 reaction id740879f; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "C22 Cer -> sphingosine",
+   "in": [
+    "C22 Cer"
+   ],
+   "out": [
+    "sphingosine"
+   ],
+   "note": "wikipathways WP4726 reaction id8884d516; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C18DH-Cer -> C18DH CerP",
+   "in": [
+    "C18DH-Cer"
+   ],
+   "out": [
+    "C18DH CerP"
+   ],
+   "note": "wikipathways WP4726 reaction a6260; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C20DH-Cer -> C20DH CerP",
+   "in": [
+    "C20DH-Cer"
+   ],
+   "out": [
+    "C20DH CerP"
+   ],
+   "note": "wikipathways WP4726 reaction d4cfb; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 2,
+   "name": "Sphinganine + CoA(20:0) -> C20DH-Cer",
+   "in": [
+    "Sphinganine",
+    "CoA(20:0)"
+   ],
+   "out": [
+    "C20DH-Cer"
+   ],
+   "note": "wikipathways WP4726 reaction ef11e; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C16DH-Cer -> C16 Cer",
+   "in": [
+    "C16DH-Cer"
+   ],
+   "out": [
+    "C16 Cer"
+   ],
+   "note": "wikipathways WP4726 reaction e4172; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C16 Cer -> C16 SM",
+   "in": [
+    "C16 Cer"
+   ],
+   "out": [
+    "C16 SM"
+   ],
+   "note": "wikipathways WP4726 reaction d31af; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 2,
+   "name": "Sphinganine + CoA(22:0) -> C22DH-Cer",
+   "in": [
+    "Sphinganine",
+    "CoA(22:0)"
+   ],
+   "out": [
+    "C22DH-Cer"
+   ],
+   "note": "wikipathways WP4726 reaction d2fdc; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "C16DH-Cer -> C16DH CerP",
+   "in": [
+    "C16DH-Cer"
+   ],
+   "out": [
+    "C16DH CerP"
+   ],
+   "note": "wikipathways WP4726 reaction a5b40; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 2,
+   "name": "Sphinganine + CoA(16:0) -> C16DH-Cer",
+   "in": [
+    "Sphinganine",
+    "CoA(16:0)"
+   ],
+   "out": [
+    "C16DH-Cer"
+   ],
+   "note": "wikipathways WP4726 reaction b75cc; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C16DH-Cer -> C16DH GalCer",
+   "in": [
+    "C16DH-Cer"
+   ],
+   "out": [
+    "C16DH GalCer"
+   ],
+   "note": "wikipathways WP4726 reaction d8e82; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C16DH-Cer -> C16DH GlcCer",
+   "in": [
+    "C16DH-Cer"
+   ],
+   "out": [
+    "C16DH GlcCer"
+   ],
+   "note": "wikipathways WP4726 reaction bc891; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "sphingosine-1-phosphate -> 1-Hexadecenal + ethanolamine phosphate",
+   "in": [
+    "sphingosine-1-phosphate"
+   ],
+   "out": [
+    "1-Hexadecenal",
+    "ethanolamine phosphate"
+   ],
+   "note": "wikipathways WP4726 reaction b5231; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C16 Cer -> C16 GlcCer",
+   "in": [
+    "C16 Cer"
+   ],
+   "out": [
+    "C16 GlcCer"
+   ],
+   "note": "wikipathways WP4726 reaction aec7c; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C16DH SM -> C16DH-Cer",
+   "in": [
+    "C16DH SM"
+   ],
+   "out": [
+    "C16DH-Cer"
+   ],
+   "note": "wikipathways WP4726 reaction c997f; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C16 Cer -> C16 GalCer",
+   "in": [
+    "C16 Cer"
+   ],
+   "out": [
+    "C16 GalCer"
+   ],
+   "note": "wikipathways WP4726 reaction aa50b; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C16DH-Cer -> C16DH SM",
+   "in": [
+    "C16DH-Cer"
+   ],
+   "out": [
+    "C16DH SM"
+   ],
+   "note": "wikipathways WP4726 reaction f9a3a; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C16 SM -> C16 Cer",
+   "in": [
+    "C16 SM"
+   ],
+   "out": [
+    "C16 Cer"
+   ],
+   "note": "wikipathways WP4726 reaction e755b; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 2,
+   "name": "Sphinganine + CoA(14:0) -> C14DH-Ceramide",
+   "in": [
+    "Sphinganine",
+    "CoA(14:0)"
+   ],
+   "out": [
+    "C14DH-Ceramide"
+   ],
+   "note": "wikipathways WP4726 reaction fae67; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "C16 Cer -> C16 CerP",
+   "in": [
+    "C16 Cer"
+   ],
+   "out": [
+    "C16 CerP"
+   ],
+   "note": "wikipathways WP4726 reaction d6c3a; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 2,
+   "name": "Sphinganine + CoA(18:0) -> C18DH-Cer",
+   "in": [
+    "Sphinganine",
+    "CoA(18:0)"
+   ],
+   "out": [
+    "C18DH-Cer"
+   ],
+   "note": "wikipathways WP4726 reaction bdbe0; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C18DH-Cer -> C18DH SM",
+   "in": [
+    "C18DH-Cer"
+   ],
+   "out": [
+    "C18DH SM"
+   ],
+   "note": "wikipathways WP4726 reaction d680f; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C18DH SM -> C18DH-Cer",
+   "in": [
+    "C18DH SM"
+   ],
+   "out": [
+    "C18DH-Cer"
+   ],
+   "note": "wikipathways WP4726 reaction f4cab; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C18DH-Cer -> C18DH GalCer",
+   "in": [
+    "C18DH-Cer"
+   ],
+   "out": [
+    "C18DH GalCer"
+   ],
+   "note": "wikipathways WP4726 reaction dcb7f; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C18DH-Cer -> C18DH GlcCer",
+   "in": [
+    "C18DH-Cer"
+   ],
+   "out": [
+    "C18DH GlcCer"
+   ],
+   "note": "wikipathways WP4726 reaction fa4cd; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 2,
+   "name": "C18DH-Cer -> Ceramide (d18:1/18:0)",
+   "in": [
+    "C18DH-Cer"
+   ],
+   "out": [
+    "Ceramide (d18:1/18:0)"
+   ],
+   "note": "wikipathways WP4726 reaction e4cf1; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 2,
+   "name": "Ceramide (d18:1/18:0) -> C18 SM",
+   "in": [
+    "Ceramide (d18:1/18:0)"
+   ],
+   "out": [
+    "C18 SM"
+   ],
+   "note": "wikipathways WP4726 reaction b9ff5; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 2,
+   "name": "C18 SM -> Ceramide (d18:1/18:0)",
+   "in": [
+    "C18 SM"
+   ],
+   "out": [
+    "Ceramide (d18:1/18:0)"
+   ],
+   "note": "wikipathways WP4726 reaction e2e64; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 2,
+   "name": "Ceramide (d18:1/18:0) -> C18 GalCer",
+   "in": [
+    "Ceramide (d18:1/18:0)"
+   ],
+   "out": [
+    "C18 GalCer"
+   ],
+   "note": "wikipathways WP4726 reaction f4e6c; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 2,
+   "name": "Ceramide (d18:1/18:0) -> C18 GlcCer",
+   "in": [
+    "Ceramide (d18:1/18:0)"
+   ],
+   "out": [
+    "C18 GlcCer"
+   ],
+   "note": "wikipathways WP4726 reaction c2167; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C20DH-Cer -> C20 Cer",
+   "in": [
+    "C20DH-Cer"
+   ],
+   "out": [
+    "C20 Cer"
+   ],
+   "note": "wikipathways WP4726 reaction aa497; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C20DH-Cer -> C20DH GlcCer",
+   "in": [
+    "C20DH-Cer"
+   ],
+   "out": [
+    "C20DH GlcCer"
+   ],
+   "note": "wikipathways WP4726 reaction d4ae5; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C20DH-Cer -> C20DH GalCer",
+   "in": [
+    "C20DH-Cer"
+   ],
+   "out": [
+    "C20DH GalCer"
+   ],
+   "note": "wikipathways WP4726 reaction dde07; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C20DH-Cer -> C20DH SM",
+   "in": [
+    "C20DH-Cer"
+   ],
+   "out": [
+    "C20DH SM"
+   ],
+   "note": "wikipathways WP4726 reaction edb65; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C20DH SM -> C20DH-Cer",
+   "in": [
+    "C20DH SM"
+   ],
+   "out": [
+    "C20DH-Cer"
+   ],
+   "note": "wikipathways WP4726 reaction c6e78; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C20 Cer -> C20 GlcCer",
+   "in": [
+    "C20 Cer"
+   ],
+   "out": [
+    "C20 GlcCer"
+   ],
+   "note": "wikipathways WP4726 reaction c4ae0; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C20 Cer -> C20 CerP",
+   "in": [
+    "C20 Cer"
+   ],
+   "out": [
+    "C20 CerP"
+   ],
+   "note": "wikipathways WP4726 reaction b2634; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C20 Cer -> C20 GalCer",
+   "in": [
+    "C20 Cer"
+   ],
+   "out": [
+    "C20 GalCer"
+   ],
+   "note": "wikipathways WP4726 reaction a0322; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C20 Cer -> C20 SM",
+   "in": [
+    "C20 Cer"
+   ],
+   "out": [
+    "C20 SM"
+   ],
+   "note": "wikipathways WP4726 reaction ddcd7; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C20 SM -> C20 Cer",
+   "in": [
+    "C20 SM"
+   ],
+   "out": [
+    "C20 Cer"
+   ],
+   "note": "wikipathways WP4726 reaction ec597; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C22DH-Cer -> C22 Cer",
+   "in": [
+    "C22DH-Cer"
+   ],
+   "out": [
+    "C22 Cer"
+   ],
+   "note": "wikipathways WP4726 reaction fdb4d; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C22DH-Cer -> C22DH GlcCer",
+   "in": [
+    "C22DH-Cer"
+   ],
+   "out": [
+    "C22DH GlcCer"
+   ],
+   "note": "wikipathways WP4726 reaction c4bd7; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C22DH-Cer -> C22DH GalCer",
+   "in": [
+    "C22DH-Cer"
+   ],
+   "out": [
+    "C22DH GalCer"
+   ],
+   "note": "wikipathways WP4726 reaction fcbe4; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C22DH SM -> C22DH-Cer",
+   "in": [
+    "C22DH SM"
+   ],
+   "out": [
+    "C22DH-Cer"
+   ],
+   "note": "wikipathways WP4726 reaction bd830; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C22 Cer -> C22 GlcCer",
+   "in": [
+    "C22 Cer"
+   ],
+   "out": [
+    "C22 GlcCer"
+   ],
+   "note": "wikipathways WP4726 reaction bde79; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C22 Cer -> C22 CerP",
+   "in": [
+    "C22 Cer"
+   ],
+   "out": [
+    "C22 CerP"
+   ],
+   "note": "wikipathways WP4726 reaction bb9ae; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C22 Cer -> C22 GalCer",
+   "in": [
+    "C22 Cer"
+   ],
+   "out": [
+    "C22 GalCer"
+   ],
+   "note": "wikipathways WP4726 reaction d3bad; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C22 Cer -> C22 SM",
+   "in": [
+    "C22 Cer"
+   ],
+   "out": [
+    "C22 SM"
+   ],
+   "note": "wikipathways WP4726 reaction d0cc4; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C22 SM -> C22 Cer",
+   "in": [
+    "C22 SM"
+   ],
+   "out": [
+    "C22 Cer"
+   ],
+   "note": "wikipathways WP4726 reaction dd234; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C22DH-Cer -> C22DH SM",
+   "in": [
+    "C22DH-Cer"
+   ],
+   "out": [
+    "C22DH SM"
+   ],
+   "note": "wikipathways WP4726 reaction debff; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C22DH-Cer -> C22DH CerP",
+   "in": [
+    "C22DH-Cer"
+   ],
+   "out": [
+    "C22DH CerP"
+   ],
+   "note": "wikipathways WP4726 reaction a9a61; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C24DH-Cer -> C24 Cer",
+   "in": [
+    "C24DH-Cer"
+   ],
+   "out": [
+    "C24 Cer"
+   ],
+   "note": "wikipathways WP4726 reaction a9446; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C24DH-Cer -> C24DH GlcCer",
+   "in": [
+    "C24DH-Cer"
+   ],
+   "out": [
+    "C24DH GlcCer"
+   ],
+   "note": "wikipathways WP4726 reaction ec847; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C24DH-Cer -> C24DH GalCer",
+   "in": [
+    "C24DH-Cer"
+   ],
+   "out": [
+    "C24DH GalCer"
+   ],
+   "note": "wikipathways WP4726 reaction cb300; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C24DH SM -> C24DH-Cer",
+   "in": [
+    "C24DH SM"
+   ],
+   "out": [
+    "C24DH-Cer"
+   ],
+   "note": "wikipathways WP4726 reaction cd1dd; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C24 Cer -> C24 GlcCer",
+   "in": [
+    "C24 Cer"
+   ],
+   "out": [
+    "C24 GlcCer"
+   ],
+   "note": "wikipathways WP4726 reaction c9a74; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C24 Cer -> C24 CerP",
+   "in": [
+    "C24 Cer"
+   ],
+   "out": [
+    "C24 CerP"
+   ],
+   "note": "wikipathways WP4726 reaction eaa90; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C24 Cer -> C24 GalCer",
+   "in": [
+    "C24 Cer"
+   ],
+   "out": [
+    "C24 GalCer"
+   ],
+   "note": "wikipathways WP4726 reaction fe3e1; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C24 Cer -> C24 SM",
+   "in": [
+    "C24 Cer"
+   ],
+   "out": [
+    "C24 SM"
+   ],
+   "note": "wikipathways WP4726 reaction b6b10; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C24 SM -> C24 Cer",
+   "in": [
+    "C24 SM"
+   ],
+   "out": [
+    "C24 Cer"
+   ],
+   "note": "wikipathways WP4726 reaction cf707; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 2,
+   "name": "Sphinganine + CoA(24:0) -> C24DH-Cer",
+   "in": [
+    "Sphinganine",
+    "CoA(24:0)"
+   ],
+   "out": [
+    "C24DH-Cer"
+   ],
+   "note": "wikipathways WP4726 reaction f4261; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C24:1DH-Cer -> C24:1 Cer",
+   "in": [
+    "C24:1DH-Cer"
+   ],
+   "out": [
+    "C24:1 Cer"
+   ],
+   "note": "wikipathways WP4726 reaction f6563; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C24:1DH-Cer -> C24:1DH GlcCer",
+   "in": [
+    "C24:1DH-Cer"
+   ],
+   "out": [
+    "C24:1DH GlcCer"
+   ],
+   "note": "wikipathways WP4726 reaction c28ba; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C24:1DH-Cer -> C24:1DH GalCer",
+   "in": [
+    "C24:1DH-Cer"
+   ],
+   "out": [
+    "C24:1DH GalCer"
+   ],
+   "note": "wikipathways WP4726 reaction ce857; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C24:1 Cer -> C24:1 GlcCer",
+   "in": [
+    "C24:1 Cer"
+   ],
+   "out": [
+    "C24:1 GlcCer"
+   ],
+   "note": "wikipathways WP4726 reaction db5a9; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C24:1 Cer -> C24:1 CerP",
+   "in": [
+    "C24:1 Cer"
+   ],
+   "out": [
+    "C24:1 CerP"
+   ],
+   "note": "wikipathways WP4726 reaction df2be; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C24:1 Cer -> C24:1 GalCer",
+   "in": [
+    "C24:1 Cer"
+   ],
+   "out": [
+    "C24:1 GalCer"
+   ],
+   "note": "wikipathways WP4726 reaction c70dc; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C24:1 Cer -> C24:1 SM",
+   "in": [
+    "C24:1 Cer"
+   ],
+   "out": [
+    "C24:1 SM"
+   ],
+   "note": "wikipathways WP4726 reaction e176b; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C24:1 SM -> C24:1 Cer",
+   "in": [
+    "C24:1 SM"
+   ],
+   "out": [
+    "C24:1 Cer"
+   ],
+   "note": "wikipathways WP4726 reaction fbfee; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 2,
+   "name": "Sphinganine + CoA(24:1) -> C24:1DH-Cer",
+   "in": [
+    "Sphinganine",
+    "CoA(24:1)"
+   ],
+   "out": [
+    "C24:1DH-Cer"
+   ],
+   "note": "wikipathways WP4726 reaction d7ebd; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C24:1DH-Cer -> C24:1DH CerP",
+   "in": [
+    "C24:1DH-Cer"
+   ],
+   "out": [
+    "C24:1DH CerP"
+   ],
+   "note": "wikipathways WP4726 reaction f3fb8; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C24:1DH-Cer -> C24:1DH SM",
+   "in": [
+    "C24:1DH-Cer"
+   ],
+   "out": [
+    "C24:1DH SM"
+   ],
+   "note": "wikipathways WP4726 reaction d90eb; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C24:1DH SM -> C24:1DH-Cer",
+   "in": [
+    "C24:1DH SM"
+   ],
+   "out": [
+    "C24:1DH-Cer"
+   ],
+   "note": "wikipathways WP4726 reaction cf136; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C24DH-Cer -> C24DH SM",
+   "in": [
+    "C24DH-Cer"
+   ],
+   "out": [
+    "C24DH SM"
+   ],
+   "note": "wikipathways WP4726 reaction f9caf; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C24DH-Cer -> C24DH CerP",
+   "in": [
+    "C24DH-Cer"
+   ],
+   "out": [
+    "C24DH CerP"
+   ],
+   "note": "wikipathways WP4726 reaction aba99; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C26:1DH-Cer -> C26:1 Cer",
+   "in": [
+    "C26:1DH-Cer"
+   ],
+   "out": [
+    "C26:1 Cer"
+   ],
+   "note": "wikipathways WP4726 reaction c18d7; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C26:1DH-Cer -> C26:1DH GlcCer",
+   "in": [
+    "C26:1DH-Cer"
+   ],
+   "out": [
+    "C26:1DH GlcCer"
+   ],
+   "note": "wikipathways WP4726 reaction bba8e; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C26:1DH-Cer -> C26:1DH GalCer",
+   "in": [
+    "C26:1DH-Cer"
+   ],
+   "out": [
+    "C26:1DH GalCer"
+   ],
+   "note": "wikipathways WP4726 reaction c3c1c; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C26:1 Cer -> C26:1 GlcCer",
+   "in": [
+    "C26:1 Cer"
+   ],
+   "out": [
+    "C26:1 GlcCer"
+   ],
+   "note": "wikipathways WP4726 reaction cb663; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C26:1 Cer -> C26:1 CerP",
+   "in": [
+    "C26:1 Cer"
+   ],
+   "out": [
+    "C26:1 CerP"
+   ],
+   "note": "wikipathways WP4726 reaction dc5c2; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C26:1 Cer -> C26:1 GalCer",
+   "in": [
+    "C26:1 Cer"
+   ],
+   "out": [
+    "C26:1 GalCer"
+   ],
+   "note": "wikipathways WP4726 reaction c4caa; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C26:1 Cer -> C26:1 SM",
+   "in": [
+    "C26:1 Cer"
+   ],
+   "out": [
+    "C26:1 SM"
+   ],
+   "note": "wikipathways WP4726 reaction cb4af; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C26:1 SM -> C26:1 Cer",
+   "in": [
+    "C26:1 SM"
+   ],
+   "out": [
+    "C26:1 Cer"
+   ],
+   "note": "wikipathways WP4726 reaction d768a; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C26DH-Cer -> C26 Cer",
+   "in": [
+    "C26DH-Cer"
+   ],
+   "out": [
+    "C26 Cer"
+   ],
+   "note": "wikipathways WP4726 reaction c834a; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C26DH-Cer -> C26DH GlcCer",
+   "in": [
+    "C26DH-Cer"
+   ],
+   "out": [
+    "C26DH GlcCer"
+   ],
+   "note": "wikipathways WP4726 reaction e7314; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C26DH-Cer -> C26DH GalCer",
+   "in": [
+    "C26DH-Cer"
+   ],
+   "out": [
+    "C26DH GalCer"
+   ],
+   "note": "wikipathways WP4726 reaction dbc08; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C26 Cer -> C26 GlcCer",
+   "in": [
+    "C26 Cer"
+   ],
+   "out": [
+    "C26 GlcCer"
+   ],
+   "note": "wikipathways WP4726 reaction b8ff5; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C26 Cer -> C26 CerP",
+   "in": [
+    "C26 Cer"
+   ],
+   "out": [
+    "C26 CerP"
+   ],
+   "note": "wikipathways WP4726 reaction a4065; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C26 Cer -> C26 GalCer",
+   "in": [
+    "C26 Cer"
+   ],
+   "out": [
+    "C26 GalCer"
+   ],
+   "note": "wikipathways WP4726 reaction be603; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C26 Cer -> C26 SM",
+   "in": [
+    "C26 Cer"
+   ],
+   "out": [
+    "C26 SM"
+   ],
+   "note": "wikipathways WP4726 reaction f0571; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C26 SM -> C26 Cer",
+   "in": [
+    "C26 SM"
+   ],
+   "out": [
+    "C26 Cer"
+   ],
+   "note": "wikipathways WP4726 reaction bec8d; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 2,
+   "name": "Sphinganine + CoA(26:1) -> C26:1DH-Cer",
+   "in": [
+    "Sphinganine",
+    "CoA(26:1)"
+   ],
+   "out": [
+    "C26:1DH-Cer"
+   ],
+   "note": "wikipathways WP4726 reaction a7adb; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C26:1DH-Cer -> C26:1DH CerP",
+   "in": [
+    "C26:1DH-Cer"
+   ],
+   "out": [
+    "C26:1DH CerP"
+   ],
+   "note": "wikipathways WP4726 reaction b7a47; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C26:1DH-Cer -> C26:1DH SM",
+   "in": [
+    "C26:1DH-Cer"
+   ],
+   "out": [
+    "C26:1DH SM"
+   ],
+   "note": "wikipathways WP4726 reaction b3fae; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C26:1DH SM -> C26:1DH-Cer",
+   "in": [
+    "C26:1DH SM"
+   ],
+   "out": [
+    "C26:1DH-Cer"
+   ],
+   "note": "wikipathways WP4726 reaction f3201; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 2,
+   "name": "Sphinganine + CoA(26:0) -> C26DH-Cer",
+   "in": [
+    "Sphinganine",
+    "CoA(26:0)"
+   ],
+   "out": [
+    "C26DH-Cer"
+   ],
+   "note": "wikipathways WP4726 reaction f59c3; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C26DH-Cer -> C26DH CerP",
+   "in": [
+    "C26DH-Cer"
+   ],
+   "out": [
+    "C26DH CerP"
+   ],
+   "note": "wikipathways WP4726 reaction a11e8; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C26DH-Cer -> C26DH SM",
+   "in": [
+    "C26DH-Cer"
+   ],
+   "out": [
+    "C26DH SM"
+   ],
+   "note": "wikipathways WP4726 reaction d9784; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": null,
+   "name": "C26DH SM -> C26DH-Cer",
+   "in": [
+    "C26DH SM"
+   ],
+   "out": [
+    "C26DH-Cer"
+   ],
+   "note": "wikipathways WP4726 reaction f1693; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "C20 Cer -> sphingosine",
+   "in": [
+    "C20 Cer"
+   ],
+   "out": [
+    "sphingosine"
+   ],
+   "note": "wikipathways WP4726 reaction ac6c1; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "C24:1 Cer -> sphingosine",
+   "in": [
+    "C24:1 Cer"
+   ],
+   "out": [
+    "sphingosine"
+   ],
+   "note": "wikipathways WP4726 reaction d6f6e; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "C24 Cer -> sphingosine",
+   "in": [
+    "C24 Cer"
+   ],
+   "out": [
+    "sphingosine"
+   ],
+   "note": "wikipathways WP4726 reaction b0eb2; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "C26:1 Cer -> sphingosine",
+   "in": [
+    "C26:1 Cer"
+   ],
+   "out": [
+    "sphingosine"
+   ],
+   "note": "wikipathways WP4726 reaction a8435; source direction GPML arrow; source compartment: not given"
+  },
+  {
+   "hop": 1,
+   "name": "C26 Cer -> sphingosine",
+   "in": [
+    "C26 Cer"
+   ],
+   "out": [
+    "sphingosine"
+   ],
+   "note": "wikipathways WP4726 reaction d431c; source direction GPML arrow; source compartment: not given"
   },
   {
    "hop": 1,

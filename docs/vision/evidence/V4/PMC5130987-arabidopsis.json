@@ -1,6 +1,6 @@
 {
  "run": "runs_papers/ORCH-759p/legs/chlorophyll-strict/2026-10-22_2301/papers/PMC5130987/strict",
- "seconds": 43.8,
+ "seconds": 41.5,
  "report": {
   "budget_s": 120.0,
   "max_pathways": 3,
@@ -42,8 +42,8 @@
     "notes": [
      "species: Arabidopsis thaliana (exact)",
      "query ids: 16 PathBank compounds, 36 UniProt",
-     "read timeout per query 119 s; the budget is not hard inside one extract",
-     "candidates: PW124167 Porphyrin and chlorophyll metabolism {'compounds': 12, 'proteins': 7}; PW766996 Chlorophyll biosynthesis {'compounds': 10, 'proteins': 9}; PW012899 Chlorophyll a Biosynthesis II {'compounds': 2, 'proteins': 2}; PW012911 Chlorophyll a Biosynthesis I {'compounds': 2, 'proteins': 2}; PW122504 Terpenoid Backbone Biosynthesis {'compounds': 2, 'proteins': 1}; PW012901 Phylloquinol Biosynthesis {'compounds': 1, 'proteins': 1}; PW123993 Ubiquinone Biosynthesis {'compounds': 2}; PW124158 \tUbiquinone and other terpenoid-quinone biosynthesis {'compounds': 2}; PW126504 Ubiquinone and other terpenoid-quinone biosynthesis Replication Test {'compounds': 2}; PW126505 Ubiquinone and other terpenoid-quinone biosynthesis rep test {'compounds': 2}"
+     "read timeout per query 59 s; the budget is not hard inside one extract",
+     "candidates: PW124167 Porphyrin and chlorophyll metabolism {'compounds': 12, 'proteins': 7}; PW766996 Chlorophyll biosynthesis {'compounds': 10, 'proteins': 9}; PW012899 Chlorophyll a Biosynthesis II {'compounds': 2, 'proteins': 2}; PW012911 Chlorophyll a Biosynthesis I {'compounds': 2, 'proteins': 2}; PW122504 Terpenoid Backbone Biosynthesis {'compounds': 2, 'proteins': 1}; PW012901 Phylloquinol Biosynthesis {'compounds': 1, 'proteins': 1}; PW123993 Ubiquinone Biosynthesis {'compounds': 2}; PW124158 Ubiquinone and other terpenoid-quinone biosynthesis {'compounds': 2}; PW126504 Ubiquinone and other terpenoid-quinone biosynthesis Replication Test {'compounds': 2}; PW126505 Ubiquinone and other terpenoid-quinone biosynthesis rep test {'compounds': 2}"
     ],
     "counts": {
      "currency_renamed": 110,
@@ -54,14 +54,17 @@
      "synonyms_dropped_collision": 15,
      "steps_transport": 4,
      "no_compartment": 1
-    }
+    },
+    "budget_s": 60.0
    },
    "reactome": {
-    "status": "failed",
+    "status": "no_candidates",
     "pathways": [],
-    "notes": [],
+    "notes": [
+     "Reactome lists Arabidopsis thaliana without a taxId: source skipped"
+    ],
     "counts": {},
-    "error": "KeyError"
+    "budget_s": 39.5
    },
    "wikipathways": {
     "status": "ok",
@@ -108,7 +111,8 @@
      "no_compartment": 15,
      "steps_reaction": 12,
      "steps_interaction": 4
-    }
+    },
+    "budget_s": 78.9
    }
   },
   "species": [
@@ -117,9 +121,7 @@
     "taxonomy_id": "3702"
    }
   ],
-  "failed": [
-   "reactome"
-  ],
+  "failed": [],
   "placement": {
    "pathbank:PW124167": {
     "hop_2_plus": 21,
@@ -145,7 +147,7 @@
   },
   "overlay_entities_hop_none": 33,
   "currency_only_twins": {
-   "count": 9,
+   "count": 6,
    "pairs": [
     [
      "processes.reactions:5aminolevulinicacid>h2o+porphobilinogen@chloroplastarabidopsisthaliana",
@@ -188,27 +190,6 @@
      [
       "H+",
       "H2O"
-     ]
-    ],
-    [
-     "processes.reactions:5aminolevulinicacid>h++h2o+porphobilinogen@chloroplastarabidopsisthaliana",
-     "processes.reactions:5aminolevulinicacid>h2o+porphobilinogen@chloroplastarabidopsisthaliana",
-     [
-      "H+"
-     ]
-    ],
-    [
-     "processes.reactions:h++uroporphyrinogeniii>co2+coproporphyrinogeniii@chloroplastarabidopsisthaliana",
-     "processes.reactions:uroporphyrinogeniii>co2+coproporphyrinogeniii@chloroplastarabidopsisthaliana",
-     [
-      "H+"
-     ]
-    ],
-    [
-     "processes.reactions:coproporphyrinogeniii+h++o2>co2+h2o+protoporphyrinogenix@chloroplastarabidopsisthaliana",
-     "processes.reactions:coproporphyrinogeniii+o2>co2+h2o+protoporphyrinogenix@chloroplastarabidopsisthaliana",
-     [
-      "H+"
      ]
     ]
    ]
@@ -383,15 +364,15 @@
   },
   {
    "hop": 3,
-   "name": "\t Magnesium protoporphyrin monomethyl ester + NADPH + H+ + O2 -> \t 13(1)-Hydroxy-magnesium-protoporphyrin IX 13-monomethyl ester + NADP+ + H2O",
+   "name": "Magnesium protoporphyrin monomethyl ester + NADPH + H+ + O2 -> 13(1)-Hydroxy-magnesium-protoporphyrin IX 13-monomethyl ester + NADP+ + H2O",
    "in": [
-    "\t Magnesium protoporphyrin monomethyl ester",
+    "Magnesium protoporphyrin monomethyl ester",
     "NADPH",
     "H+",
     "O2"
    ],
    "out": [
-    "\t 13(1)-Hydroxy-magnesium-protoporphyrin IX 13-monomethyl ester",
+    "13(1)-Hydroxy-magnesium-protoporphyrin IX 13-monomethyl ester",
     "NADP+",
     "H2O"
    ],
@@ -458,7 +439,7 @@
   },
   {
    "hop": 1,
-   "name": "Pchlide + NADPH + H+ -> NADP+ + \t Chlorophyllide ",
+   "name": "Pchlide + NADPH + H+ -> NADP+ + Chlorophyllide",
    "in": [
     "Pchlide",
     "NADPH",
@@ -466,7 +447,7 @@
    ],
    "out": [
     "NADP+",
-    "\t Chlorophyllide "
+    "Chlorophyllide"
    ],
    "note": "pathbank PW124167 reaction PW_R213445; source direction >; source compartment: Chloroplast"
   },
@@ -560,9 +541,9 @@
   },
   {
    "hop": 3,
-   "name": "\t 13(1)-Hydroxy-magnesium-protoporphyrin IX 13-monomethyl ester + NADPH + H+ + O2 -> 13(1)-Oxo-magnesium-protoporphyrin IX 13-monomethyl ester + NADP+ + H2O",
+   "name": "13(1)-Hydroxy-magnesium-protoporphyrin IX 13-monomethyl ester + NADPH + H+ + O2 -> 13(1)-Oxo-magnesium-protoporphyrin IX 13-monomethyl ester + NADP+ + H2O",
    "in": [
-    "\t 13(1)-Hydroxy-magnesium-protoporphyrin IX 13-monomethyl ester",
+    "13(1)-Hydroxy-magnesium-protoporphyrin IX 13-monomethyl ester",
     "NADPH",
     "H+",
     "O2"
@@ -576,23 +557,23 @@
   },
   {
    "hop": 2,
-   "name": "3,8-divinyl chlorophyllide a + NADPH + H+ -> \t Chlorophyllide  + NADP+",
+   "name": "3,8-divinyl chlorophyllide a + NADPH + H+ -> Chlorophyllide + NADP+",
    "in": [
     "3,8-divinyl chlorophyllide a",
     "NADPH",
     "H+"
    ],
    "out": [
-    "\t Chlorophyllide ",
+    "Chlorophyllide",
     "NADP+"
    ],
    "note": "pathbank PW124167 reaction PW_R213506; source direction >; source compartment: Chloroplast"
   },
   {
    "hop": 1,
-   "name": "\t Chlorophyllide  + phytyl pyrophosphate -> chlorophyll a + PPi",
+   "name": "Chlorophyllide + phytyl pyrophosphate -> chlorophyll a + PPi",
    "in": [
-    "\t Chlorophyllide ",
+    "Chlorophyllide",
     "phytyl pyrophosphate"
    ],
    "out": [
@@ -617,9 +598,9 @@
   },
   {
    "hop": 2,
-   "name": "\t Chlorophyllide  + O2 + NADPH + H+ -> 7(1)-Hydroxychlorophyllide a + H2O + NADP+",
+   "name": "Chlorophyllide + O2 + NADPH + H+ -> 7(1)-Hydroxychlorophyllide a + H2O + NADP+",
    "in": [
-    "\t Chlorophyllide ",
+    "Chlorophyllide",
     "O2",
     "NADPH",
     "H+"
@@ -633,9 +614,9 @@
   },
   {
    "hop": 2,
-   "name": "\t Chlorophyllide  + H+ -> pheophorbide a + Magnesium",
+   "name": "Chlorophyllide + H+ -> pheophorbide a + Magnesium",
    "in": [
-    "\t Chlorophyllide ",
+    "Chlorophyllide",
     "H+"
    ],
    "out": [
@@ -676,14 +657,14 @@
   },
   {
    "hop": 2,
-   "name": "S-adenosyl L-methionine + Magnesium protoporphyrin -> S-Adenosylhomocysteine + \t Magnesium protoporphyrin monomethyl ester",
+   "name": "S-adenosyl L-methionine + Magnesium protoporphyrin -> S-Adenosylhomocysteine + Magnesium protoporphyrin monomethyl ester",
    "in": [
     "S-adenosyl L-methionine",
     "Magnesium protoporphyrin"
    ],
    "out": [
     "S-Adenosylhomocysteine",
-    "\t Magnesium protoporphyrin monomethyl ester"
+    "Magnesium protoporphyrin monomethyl ester"
    ],
    "note": "pathbank PW124167 reaction PW_R213513; source direction >; source compartment: Chloroplast"
   },
@@ -859,9 +840,9 @@
   },
   {
    "hop": 1,
-   "name": "\t Chlorophyllide  + geranylgeranyl pyrophosphate + H+ -> geranylgeranyl-chlorophyll a + PPi",
+   "name": "Chlorophyllide + geranylgeranyl pyrophosphate + H+ -> geranylgeranyl-chlorophyll a + PPi",
    "in": [
-    "\t Chlorophyllide ",
+    "Chlorophyllide",
     "geranylgeranyl pyrophosphate",
     "H+"
    ],
