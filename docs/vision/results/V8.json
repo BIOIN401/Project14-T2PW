@@ -209,6 +209,69 @@
      "farnesyl diphosphate"
     ]
    }
+  ],
+  "more_from_live2": [
+   {
+    "run": "PMC12421875-menaquinone",
+    "paper": "PMC13586869",
+    "refusal": "evidence_relation_disagrees_with_claim",
+    "shape": "'chorismate is converted into isochorismate by MenF, which is then converted into SEPHCHC': the relative pronoun is not resolved, so the second step is refused",
+    "claim": "isochorismate -> SEPHCHC"
+   },
+   {
+    "run": "PMC12312563-listeria-mend",
+    "paper": "PMC8091085",
+    "refusal": "evidence_relation_disagrees_with_claim",
+    "shape": "span 'converting DHNA-CoA to DHNA'; the model's names were the full names with the abbreviation in brackets, so names did not match (an extraction naming issue, listed for the same lane)",
+    "claim": "DHNA-CoA -> DHNA"
+   }
   ]
+ },
+ "live_round_2": {
+  "log": "C:/t/vis-runs/logs/v8-live-2.log (chain11, BW_EXIT=0, 0 survivors; round-1 code; v8-unit-2 49 passed first; v8-secrets-3 TOTAL 0)",
+  "runs": {
+   "PMC12421875-menaquinone": {
+    "seconds": 111.8,
+    "candidates": "5 kept; dropped 10 over_max_papers, 2 other organism, 1 input_paper",
+    "papers_read": "5: 2 full text (70214, 62542 chars), 3 abstract only (PMC7093718 full text ReadTimeout)",
+    "llm": "8 calls, 8392 + 8509 tokens",
+    "extracted": 12,
+    "rejected": "roles_unassignable 7, not_connected 1, relation_disagrees 1, not_one_statement 1, no_relation 1",
+    "admitted": 1,
+    "merged_into_base": 1,
+    "added_hop_1": 0
+   },
+   "PMC12096016-enterobactin": {
+    "seconds": 11.8,
+    "candidates": "5 kept; dropped 21 over_max_papers, 3 preprint, 1 other organism",
+    "papers_read": "5 abstract only (PMC13709327 full text HTTPError)",
+    "llm": "5 calls, 3972 + 475 tokens",
+    "extracted": 2,
+    "rejected": "roles_unassignable 1, no_relation 1",
+    "admitted": 0
+   },
+   "PMC12312563-listeria-mend": {
+    "seconds": 126.8,
+    "queries": "3 ok (8, 6, 10 hits)",
+    "candidates": "5 kept; dropped 9 other organism, 7 over_max_papers, 1 input_paper, 1 no_identifier",
+    "papers_read": "5: 1 full text (120137 chars, 1 passage), 4 abstract only (full text HTTPError 1, ReadTimeout 2)",
+    "llm": "6 calls, 6115 + 985 tokens",
+    "extracted": 2,
+    "rejected": "not_connected 1, relation_disagrees 1",
+    "dropped_parts": "enzyme_not_in_quote 2",
+    "admitted": 0
+   },
+   "PMC12376012-human": {
+    "seconds": 153.7,
+    "candidates": "5 kept; dropped 21 over_max_papers, 3 other organism",
+    "papers_read": "5: 3 full text (80696, 85927, 54774 chars), 2 abstract only (ReadTimeout)",
+    "llm": "10 calls, 10850 + 2370 tokens",
+    "extracted": 1,
+    "rejected": "roles_unassignable 1",
+    "admitted": 0
+   }
+  },
+  "views": "default and full equal the base sizes on all 4 runs; unresolved_refs unchanged",
+  "handcheck": "every admitted step from live and live2 = the same 1 step twice: fidelity 100% (1/1), biology 1/1; 15 live2 refusals audited, 0 wrong by the rules (docs/vision/evidence/V8/handcheck.json)"
  }
 }

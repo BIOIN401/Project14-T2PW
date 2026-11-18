@@ -1,39 +1,151 @@
 {
- "run": "v8-live-1 (C:/t/vis-runs/logs/v8-live-1.log), evidence docs/vision/evidence/V8/live",
+ "run": "v8-live-1 (evidence V8/live) and v8-live-2 (evidence V8/live2, round-1 code)",
  "checked_by": "V8 implementer, 2026-11-18, from the stored quotes and the cached full text",
  "admitted_steps": {
   "count": 1,
-  "note": "only 1 step was admitted across the 4 runs, so the 10-step check covers 1 admitted step; the refusals are audited below instead",
+  "note": "every admitted step from live and live2: the same single step was admitted in both runs (same paper, same quote, merged into the same base row), so 1 distinct step; fewer than 10 exist",
   "steps": [
-   {"run": "PMC12421875-menaquinone", "source": "PMC13586869 (Engineering microbiology, 2026, review)",
+   {
+    "run": "PMC12421875-menaquinone",
+    "source": "PMC13586869 (Engineering microbiology, 2026, review)",
     "placement": "merged into the paper's base row (adds an other_paper record, no new row)",
     "step": "chorismate -> isochorismate, catalyst MenF complex (the paper's row name)",
     "quote": "chorismate is converted into isochorismate by the isochorismate synthase MenF",
     "a_quote_fidelity": "yes: the quote states substrate, product, direction and catalyst; nothing added",
-    "b_biology": "yes: MenF is isochorismate synthase (EC 5.4.4.2), the first committed step of menaquinone biosynthesis; L. lactis carries menF"}
+    "b_biology": "yes: MenF is isochorismate synthase (EC 5.4.4.2), the first committed step of menaquinone biosynthesis; L. lactis carries menF"
+   }
   ],
-  "fidelity": "1/1",
-  "biology": "1/1"
+  "fidelity": "1/1 distinct (2/2 admissions) = 100%",
+  "biology": "1/1, no miss",
+  "admitted_in": [
+   "v8-live-1",
+   "v8-live-2"
+  ]
  },
  "refusal_audit": {
   "count": 15,
   "wrongly_refused_by_the_rules": 0,
   "rows": [
-   {"run": "menaquinone", "paper": "PMC13586869", "reason": "not_connected", "claim": "pyruvate -> acetyl-CoA, pyruvate dehydrogenase complex", "biology": "true", "verdict": "refusal correct by rule (no grounded payload entity; not next to the menaquinone core)"},
-   {"run": "menaquinone", "paper": "PMC13586869", "reason": "roles_unassignable", "claim": "acetyl-CoA -> acetyl-Pi, phosphotransacetylase ('is first converted into ... by')", "biology": "true", "verdict": "recall loss: admission span parser does not read this shape"},
-   {"run": "menaquinone", "paper": "PMC13586869", "reason": "roles_unassignable", "claim": "acetyl-Pi -> acetate + ATP, acetate kinase ('is further converted into ..., catalyzed by ...')", "biology": "true", "verdict": "recall loss: parser shape; also not next to the core"},
-   {"run": "menaquinone", "paper": "PMC13586869", "reason": "roles_unassignable", "claim": "NADH -> NAD+, NADH dehydrogenase ('is oxidized to ... by')", "biology": "true", "verdict": "recall loss: parser shape; currency-only step"},
-   {"run": "menaquinone", "paper": "PMC13586869", "reason": "quote_not_verbatim", "claim": "isochorismate -> SEPHCHC, MenD", "biology": "true (already a paper step)", "verdict": "refusal correct: the model's quote was stitched (verbatim for 14 characters only)"},
-   {"run": "menaquinone", "paper": "PMC13586869", "reason": "roles_unassignable", "claim": "acetyl-CoA -> mevalonate ('is condensed and reduced to ... by the consumption of NADPH')", "biology": "true as a summary of 3 steps", "verdict": "refusal acceptable: a multi-step summary is not one step"},
-   {"run": "menaquinone", "paper": "PMC13586869", "reason": "roles_unassignable", "claim": "mevalonate -> IPP + DMAPP", "biology": "true as a summary of several steps", "verdict": "refusal acceptable: multi-step summary"},
-   {"run": "menaquinone", "paper": "PMC13586869", "reason": "roles_unassignable", "claim": "2 IPP + DMAPP -> FPP, geranylgeranyl diphosphate synthase", "biology": "plausible (two condensations written as one)", "verdict": "recall loss: parser shape; relevant to the side-chain branch"},
-   {"run": "menaquinone", "paper": "PMC13586869", "reason": "quote_not_verbatim", "claim": "FPP + 4 IPP -> heptaprenyl diphosphate, HepT/HepS in B. subtilis", "biology": "true for B. subtilis", "verdict": "miss caused by an XML spacing artefact ('subtilis .'), fixed in normalise(); once fixed the quote names B. subtilis and is refused as quote_organism_mismatch for L. lactis, which is correct"},
-   {"run": "menaquinone", "paper": "PMC13586869", "reason": "roles_unassignable", "claim": "IPP + FPP -> nonaprenyl diphosphate by a 'potential' synthase", "biology": "hedged by the authors", "verdict": "refusal correct (speculative statement)"},
-   {"run": "menaquinone", "paper": "PMC13028806", "reason": "states_no_reaction_relation", "claim": "glutamine amidotransferase as an alternative route", "biology": "n/a", "verdict": "refusal correct: no reaction stated"},
-   {"run": "menaquinone", "paper": "PMC7093718", "reason": "roles_unassignable", "claim": "menF/menA overexpression -> more MK-3", "biology": "n/a (genetics, not a reaction)", "verdict": "refusal correct"},
-   {"run": "menaquinone", "paper": "PMC7093718", "reason": "roles_unassignable", "claim": "mvk/llmg_0196 overexpression -> more MK-9", "biology": "n/a (genetics)", "verdict": "refusal correct"},
-   {"run": "human", "paper": "PMC13257386", "reason": "states_no_reaction_relation", "claim": "transsulfuration uses methionine for cysteine biosynthesis", "biology": "true as a pathway summary", "verdict": "refusal correct: no single step"},
-   {"run": "human", "paper": "PMC13411838", "reason": "roles_unassignable", "claim": "ACSL5 increased fatty-acid uptake and oxidation", "biology": "n/a (phenotype)", "verdict": "refusal correct"}
+   {
+    "run": "menaquinone",
+    "paper": "PMC13586869",
+    "reason": "not_connected",
+    "claim": "pyruvate -> acetyl-CoA, pyruvate dehydrogenase complex",
+    "biology": "true",
+    "verdict": "refusal correct by rule (no grounded payload entity; not next to the menaquinone core)"
+   },
+   {
+    "run": "menaquinone",
+    "paper": "PMC13586869",
+    "reason": "roles_unassignable",
+    "claim": "acetyl-CoA -> acetyl-Pi, phosphotransacetylase ('is first converted into ... by')",
+    "biology": "true",
+    "verdict": "recall loss: admission span parser does not read this shape"
+   },
+   {
+    "run": "menaquinone",
+    "paper": "PMC13586869",
+    "reason": "roles_unassignable",
+    "claim": "acetyl-Pi -> acetate + ATP, acetate kinase ('is further converted into ..., catalyzed by ...')",
+    "biology": "true",
+    "verdict": "recall loss: parser shape; also not next to the core"
+   },
+   {
+    "run": "menaquinone",
+    "paper": "PMC13586869",
+    "reason": "roles_unassignable",
+    "claim": "NADH -> NAD+, NADH dehydrogenase ('is oxidized to ... by')",
+    "biology": "true",
+    "verdict": "recall loss: parser shape; currency-only step"
+   },
+   {
+    "run": "menaquinone",
+    "paper": "PMC13586869",
+    "reason": "quote_not_verbatim",
+    "claim": "isochorismate -> SEPHCHC, MenD",
+    "biology": "true (already a paper step)",
+    "verdict": "refusal correct: the model's quote was stitched (verbatim for 14 characters only)"
+   },
+   {
+    "run": "menaquinone",
+    "paper": "PMC13586869",
+    "reason": "roles_unassignable",
+    "claim": "acetyl-CoA -> mevalonate ('is condensed and reduced to ... by the consumption of NADPH')",
+    "biology": "true as a summary of 3 steps",
+    "verdict": "refusal acceptable: a multi-step summary is not one step"
+   },
+   {
+    "run": "menaquinone",
+    "paper": "PMC13586869",
+    "reason": "roles_unassignable",
+    "claim": "mevalonate -> IPP + DMAPP",
+    "biology": "true as a summary of several steps",
+    "verdict": "refusal acceptable: multi-step summary"
+   },
+   {
+    "run": "menaquinone",
+    "paper": "PMC13586869",
+    "reason": "roles_unassignable",
+    "claim": "2 IPP + DMAPP -> FPP, geranylgeranyl diphosphate synthase",
+    "biology": "plausible (two condensations written as one)",
+    "verdict": "recall loss: parser shape; relevant to the side-chain branch"
+   },
+   {
+    "run": "menaquinone",
+    "paper": "PMC13586869",
+    "reason": "quote_not_verbatim",
+    "claim": "FPP + 4 IPP -> heptaprenyl diphosphate, HepT/HepS in B. subtilis",
+    "biology": "true for B. subtilis",
+    "verdict": "miss caused by an XML spacing artefact ('subtilis .'), fixed in normalise(); once fixed the quote names B. subtilis and is refused as quote_organism_mismatch for L. lactis, which is correct"
+   },
+   {
+    "run": "menaquinone",
+    "paper": "PMC13586869",
+    "reason": "roles_unassignable",
+    "claim": "IPP + FPP -> nonaprenyl diphosphate by a 'potential' synthase",
+    "biology": "hedged by the authors",
+    "verdict": "refusal correct (speculative statement)"
+   },
+   {
+    "run": "menaquinone",
+    "paper": "PMC13028806",
+    "reason": "states_no_reaction_relation",
+    "claim": "glutamine amidotransferase as an alternative route",
+    "biology": "n/a",
+    "verdict": "refusal correct: no reaction stated"
+   },
+   {
+    "run": "menaquinone",
+    "paper": "PMC7093718",
+    "reason": "roles_unassignable",
+    "claim": "menF/menA overexpression -> more MK-3",
+    "biology": "n/a (genetics, not a reaction)",
+    "verdict": "refusal correct"
+   },
+   {
+    "run": "menaquinone",
+    "paper": "PMC7093718",
+    "reason": "roles_unassignable",
+    "claim": "mvk/llmg_0196 overexpression -> more MK-9",
+    "biology": "n/a (genetics)",
+    "verdict": "refusal correct"
+   },
+   {
+    "run": "human",
+    "paper": "PMC13257386",
+    "reason": "states_no_reaction_relation",
+    "claim": "transsulfuration uses methionine for cysteine biosynthesis",
+    "biology": "true as a pathway summary",
+    "verdict": "refusal correct: no single step"
+   },
+   {
+    "run": "human",
+    "paper": "PMC13411838",
+    "reason": "roles_unassignable",
+    "claim": "ACSL5 increased fatty-acid uptake and oxidation",
+    "biology": "n/a (phenotype)",
+    "verdict": "refusal correct"
+   }
   ],
   "summary": "0 admitted errors; 4 refusals lost a true single-step reaction to the admission span parser's sentence shapes (rows 2, 3, 4, 8), 1 to a stitched model quote; the rest were right to refuse"
  },
@@ -41,6 +153,73 @@
   "Europe PMC timed out: all 3 searches of the Listeria run (ReadTimeout), and 7 of 9 open-access full texts (not cached = the request raised; fetch_full_text swallowed it; now recorded as full_text_errors)",
   "abstracts rarely state a single reaction: 13 papers read as abstract only (no full text) gave 4 extractions, all refused correctly",
   "the admission span parser reads 'X converts A to B' / 'A is converted to B by E' but not 'is first/further converted into', 'is oxidized to ... by', 'are condensed into ..., catalyzed by'",
-  "max_papers=5 in query order: 52 further candidates were dropped as over_max_papers"
- ]
+  "max_papers=5 in query order: 52 further candidates were dropped as over_max_papers",
+  "live2 (round-1 code records full-text errors): 7 of 13 open-access full texts failed (HTTPError 2, ReadTimeout 5); the searches all answered this time (Listeria 8/6/10 hits)"
+ ],
+ "refusal_audit_live2": {
+  "count": 15,
+  "wrongly_refused_by_the_rules": 0,
+  "rows": [
+   {
+    "run": "enterobactin",
+    "paper": "PMC13709327",
+    "reason": "roles_unassignable",
+    "claim": "chorismate -> 'product of intermolecular C-C bond formation'",
+    "verdict": "refusal correct: no product named"
+   },
+   {
+    "run": "enterobactin",
+    "paper": "PMID:42035817",
+    "reason": "states_no_reaction_relation",
+    "claim": "flavin -> reduced flavin ('has the flavin reductase capabilities')",
+    "verdict": "refusal correct: a capability, not a stated reaction"
+   },
+   {
+    "run": "listeria",
+    "paper": "PMC13093933",
+    "reason": "not_connected",
+    "claim": "glyceraldehyde-3-phosphate -> 3-phosphoglycerate, GAPDH and PGK1",
+    "biology": "true as a 2-step summary",
+    "verdict": "refusal correct by rule (not next to the core) and as a summary"
+   },
+   {
+    "run": "listeria",
+    "paper": "PMC8091085",
+    "reason": "relation_disagrees",
+    "claim": "DHNA-CoA -> DHNA ('converting DHNA-CoA to DHNA')",
+    "biology": "true (DHNA-CoA thioesterase, menaquinone pathway, next to the paper's MenD step region)",
+    "verdict": "recall loss: the model wrote the names expanded with the abbreviation in brackets ('1,4-dihydroxy-2-naphthoyl-coenzyme A (DHNA-CoA)'), which the span does not contain"
+   },
+   {
+    "run": "human",
+    "paper": "PMC13411838",
+    "reason": "roles_unassignable",
+    "claim": "fatty acid -> oxidation products (ACSL5 phenotype)",
+    "verdict": "refusal correct: phenotype"
+   },
+   {
+    "run": "menaquinone",
+    "paper": "PMC13586869",
+    "reason": "as live 1 (8 rows)",
+    "claim": "pyruvate -> acetyl-CoA (not_connected); acetyl-CoA -> acetyl-Pi, acetyl-Pi -> acetate, NADH -> NAD+, acetyl-CoA -> MVA, MVA -> IPP + DMAPP, IPP + DMAPP -> FPP, IPP + FPP -> NPP (roles_unassignable)",
+    "verdict": "same verdicts as the live-1 audit"
+   },
+   {
+    "run": "menaquinone",
+    "paper": "PMC13586869",
+    "reason": "relation_disagrees",
+    "claim": "isochorismate -> SEPHCHC, quote '..., which is then converted into SEPHCHC'",
+    "biology": "true (MenD; already a paper step)",
+    "verdict": "recall loss: the span parser does not resolve the relative pronoun 'which' to isochorismate"
+   },
+   {
+    "run": "menaquinone",
+    "paper": "PMC13586869",
+    "reason": "span_is_not_one_statement",
+    "claim": "FPP + 4 IPP -> HPP; quote spans a semicolon and names B. subtilis",
+    "verdict": "refusal correct (two clauses; and another organism)"
+   }
+  ],
+  "summary": "0 admitted errors; recall losses: 4 parser shapes as in live 1, plus a relative-clause shape ('which is then converted into') and one model naming form (abbreviation in brackets)"
+ }
 }
