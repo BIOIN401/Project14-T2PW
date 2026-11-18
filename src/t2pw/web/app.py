@@ -494,6 +494,9 @@ def _routes(app: FastAPI) -> None:
                             content_disposition_type="inline" if inline else "attachment",
                             headers={"Content-Security-Policy": FILE_CSP})
 
+    from t2pw.vision.web_routes import register as register_vision  # scoped views and formats (V10)
+    register_vision(app, _item, _page, _cross_site)
+
     @app.get("/examples", response_class=HTMLResponse)
     def examples(request: Request):
         return _page(request, "examples.html", active_nav="examples")
