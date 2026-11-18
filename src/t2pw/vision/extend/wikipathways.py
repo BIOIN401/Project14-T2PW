@@ -73,9 +73,9 @@ def parse_gpml(text: str) -> Dict[str, Any]:
             if _tag(a) == "Anchor" and a.get("GraphId"):
                 anchor_of[a.get("GraphId")] = it.get("GraphId")
         if len(pts) >= 2:
-            heads = [p.get("ArrowHead") for p in pts if p.get("ArrowHead")]
             lines.append({"id": it.get("GraphId"), "src": pts[0].get("GraphRef"), "tgt": pts[-1].get("GraphRef"),
-                          "head": heads[-1] if heads else None})
+                          "head": pts[-1].get("ArrowHead"),
+                          "head_not_last": any(p.get("ArrowHead") for p in pts[:-1])})
     return {"nodes": nodes, "groups": groups, "lines": lines, "anchor_of": anchor_of}
 
 
@@ -92,13 +92,16 @@ def to_steps(g: Dict[str, Any]):
         return None
 
     rx: Dict[str, Dict[str, Any]] = {}
-    for ln in g["lines"]:
+    skipped = [ln for ln in g["lines"] if ln.get("head_not_last")]   # direction unclear: not read
+    lines = [ln for ln in g["lines"] if not ln.get("head_not_last")]
+    for ln in lines:
         s, t = nodes.get(ln["src"]), nodes.get(ln["tgt"])
         if ln["head"] in CONVERSION and s and t and s["type"] == t["type"] == "compound":
             rx[ln["id"]] = {"kind": "reaction", "accession": ln["id"], "inputs": [dict(s)], "outputs": [dict(t)],
                             "enzymes": [], "location": None, "direction": "GPML arrow"}
-    steps, notes = [], []
-    for ln in g["lines"]:
+    steps = []
+    notes = [f"line {ln['id']}: arrowhead not on the last point, skipped" for ln in skipped]
+    for ln in lines:
         if ln["id"] in rx:
             continue
         src_rx, tgt_rx = rx.get(anchor_of.get(ln["src"])), rx.get(anchor_of.get(ln["tgt"]))

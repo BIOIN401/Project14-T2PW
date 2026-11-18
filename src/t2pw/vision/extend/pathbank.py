@@ -188,12 +188,16 @@ def to_neutral(ex: Dict[str, Any]) -> Dict[str, Any]:
 
 def fetch(ctx: Dict[str, Any], *, max_pathways: int = 3, deadline: float, cache_dir=None, conn=None,
           min_overlap: int = 2):
-    """(pathways in the neutral shape, notes). ``cache_dir`` is unused: PathBank is read live."""
+    """(pathways in the neutral shape, notes). ``cache_dir`` is unused: PathBank is read live.
+    The socket read timeout is the budget left at connect time; it bounds each query, not their sum
+    (extract runs many), so the budget is checked between pathways and can be overrun by one extract."""
     own = conn is None
-    conn = conn or connect()
+    left = max(5, int(deadline - time.monotonic()))
+    conn = conn or connect({"read_timeout": left, "connect_timeout": min(10, left)})
     try:
         r = _Reader(conn)
         cands, notes = candidates(r, ctx, min_overlap=min_overlap)
+        notes.append(f"read timeout per query {left} s; the budget is not hard inside one extract")
         pathways = []
         for c in cands[:max_pathways]:
             if time.monotonic() >= deadline:

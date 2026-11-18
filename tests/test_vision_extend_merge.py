@@ -105,7 +105,7 @@ def test_shared_steps_merge_and_new_steps_get_chain_hops():
     hops = {rows[k][1]["name"]: big["hops"][k] for k in rows if rows[k][0] == "processes.reactions" and not rows[k][2]}
     assert hops == {"C -> Delta": 1, "Delta -> Epsilon": 2, "A -> Gee": 1}
     assert report["placement"][SID] == {"merged_into_base": 2, "hop_1": 2, "hop_2_plus": 1}
-    assert report["sources"]["pathbank"]["counts"]["currency_renamed"] == 1
+    assert report["sources"]["pathbank"]["counts"].get("kept_apart_compartment", 0) == 0
 
 
 def test_default_view_is_base_plus_hop1_and_reference_closed():
@@ -122,6 +122,7 @@ def test_currency_metabolites_do_not_create_hops():
     k = next(k for k, (s, r, b) in keyed(big).items() if s == "processes.reactions" and not b)
     assert big["hops"][k] is None
     assert report["placement"][SID] == {"hop_none": 1}
+    assert report["overlay_entities_hop_none"] == 2      # Q and R (F10)
     assert view(big, DEFAULT)["processes"]["reactions"] == base()["processes"]["reactions"]
 
 
@@ -245,5 +246,139 @@ def test_pathbank_extract_to_neutral():
 
 def test_report_keys():
     _, big, report = run(five_steps())
-    assert set(report) >= {"sources", "failed", "placement", "currency_only_twins", "species"}
+    assert set(report) >= {"sources", "failed", "placement", "currency_only_twins", "species",
+                           "overlay_entities_hop_none"}
     assert extend.SOURCES == ("pathbank", "reactome", "wikipathways")
+
+
+# ---------------------------------------------------------------- review round 1 (F1-F10)
+
+def run_on(b, steps, sid=SID, db="pathbank"):
+    big0 = build_big_payload(b)
+    return extend_big_payload(big0, sources=(db,), fetchers={db: fake([pathway(steps, sid=sid, db=db)])})
+
+
+def ext_names(big, section="compounds"):
+    return [r["name"] for r in big["extension"].get("entities", {}).get(section, [])]
+
+
+def test_f1_charged_currency_forms_join_the_family_row_never_a_hub():
+    b = base()
+    b["entities"]["compounds"].append({"name": "ATP", "mapped_ids": {"chebi": "15422"}, "evidence": "ATP"})
+    atp4 = {"type": "compound", "name": "ATP(4-)", "synonyms": [], "ids": {"chebi": "30616"}}
+    adp3 = {"type": "compound", "name": "ADP(3-)", "synonyms": [], "ids": {"chebi": "456216"}}
+    steps = [rxn("R-1", [part("C", "C90003"), atp4], [part("Delta", "C90004"), adp3]),
+             rxn("R-2", [part("Ex", "C90011"), atp4], [part("Why", "C90012"), adp3])]
+    big, report = run_on(b, steps, sid="reactome:R-X", db="reactome")
+    names = ext_names(big)
+    assert not any("[reactome]" in n for n in names)
+    assert "ATP" not in names and "ADP" in names          # joined the paper's ATP; bare family name
+    assert {r["name"] for r in big["extension"]["processes"]["reactions"]} == {"C + ATP -> Delta + ADP",
+                                                                                "Ex + ATP -> Why + ADP"}
+    assert report["placement"]["reactome:R-X"] == {"hop_1": 1, "hop_none": 1}   # ATP is no hop edge
+
+
+def two_state_base():
+    b = base()
+    b["biological_states"].append({"name": "peri state", "species": "Escherichia coli",
+                                   "subcellular_location": "periplasm", "evidence": "periplasm"})
+    b["entities"]["subcellular_locations"].append({"name": "periplasm", "evidence": "periplasm"})
+    b["processes"]["reactions"].append({"name": "A to B peri", "inputs": ["A"], "outputs": ["B"],
+                                        "biological_state": "peri state", "evidence": "also in the periplasm"})
+    b["processes"]["interactions"] = [{"name": "A inhibits B", "entity_1": "A", "entity_2": "B",
+                                       "relationship": "inhibition", "biological_state": "cell state",
+                                       "evidence": "A inhibits B"}]
+    return b
+
+
+def db_records(big, name):
+    k = next(k for k, (s, r, b) in keyed(big).items() if b and isinstance(r, dict) and r.get("name") == name)
+    return [r for r in big["provenance"][k] if r["kind"] == "database"]
+
+
+def test_f2_compartment_fold_decides_the_merge_and_picks_the_right_row():
+    A, B = part("A", "C90001"), part("B", "C90002")
+    inh = {"kind": "interaction", "accession": "I1", "relationship": "inhibition", "entity_1": A, "entity_2": B}
+    # GO id for cytosol folds with the paper's "cytoplasm": joins "A to B" (cell state) only
+    big, report = run_on(two_state_base(), [dict(rxn("R1", [A], [B], location="cytosol"), location_go="GO:0005829"),
+                                            dict(inh, location="cytosol")])
+    assert len(db_records(big, "A to B")) == 1 and db_records(big, "A to B peri") == []
+    assert len(db_records(big, "A inhibits B")) == 1
+    assert "processes" not in big["extension"]
+    # periplasm: joins the periplasm row, not the first candidate
+    big, _ = run_on(two_state_base(), [rxn("R1", [A], [B], location="periplasm")])
+    assert db_records(big, "A to B") == [] and len(db_records(big, "A to B peri")) == 1
+    # mitochondrial matrix matches neither: written apart with its own state, counted
+    big, report = run_on(two_state_base(), [rxn("R1", [A], [B], location="mitochondrial matrix"),
+                                            dict(inh, location="mitochondrial matrix")])
+    assert db_records(big, "A to B") == [] and db_records(big, "A to B peri") == []
+    assert [r["biological_state"] for r in big["extension"]["processes"]["reactions"]] == \
+        ["mitochondrial matrix (Escherichia coli)"]
+    assert len(big["extension"]["processes"]["interactions"]) == 1
+    assert report["sources"]["pathbank"]["counts"]["kept_apart_compartment"] == 2
+    # no compartment on the database side: joins the first candidate
+    big, _ = run_on(two_state_base(), [rxn("R1", [A], [B], location=None)])
+    assert len(db_records(big, "A to B")) == 1
+
+
+def cache_put(d, url, body):
+    (d / (hashlib.sha256(url.encode()).hexdigest()[:32] + ".txt")).write_text(json.dumps(body), encoding="utf-8")
+
+
+def test_f3_reactome_complex_with_a_nested_set_has_no_components(tmp_path):
+    base_url = "https://reactome.org/ContentService"
+    ref = lambda u, n: {"identifier": u, "displayName": f"UniProt:{u} {n}", "schemaClass": "ReferenceGeneProduct"}
+    cache_put(tmp_path, f"{base_url}/data/query/R-T-1", {
+        "displayName": "t", "input": [{"dbId": 1}], "output": [{"dbId": 2}], "catalystActivity": [{"dbId": 3}],
+        "compartment": [{"displayName": "cytosol", "accession": "0005829", "databaseName": "GO"}]})
+    cache_put(tmp_path, f"{base_url}/data/participants/R-T-1", [
+        {"peDbId": 1, "displayName": "A [cytosol]", "schemaClass": "SimpleEntity",
+         "refEntities": [{"identifier": "1", "displayName": "a [ChEBI:1]", "schemaClass": "ReferenceMolecule"}]},
+        {"peDbId": 2, "displayName": "B [cytosol]", "schemaClass": "SimpleEntity",
+         "refEntities": [{"identifier": "2", "displayName": "b [ChEBI:2]", "schemaClass": "ReferenceMolecule"}]},
+        {"peDbId": 10, "displayName": "Enz [cytosol]", "schemaClass": "Complex",
+         "refEntities": [ref("P00001", "X"), ref("P00002", "Y")]}])
+    cache_put(tmp_path, f"{base_url}/data/query/3", {"physicalEntity": {"dbId": 10}})
+    cache_put(tmp_path, f"{base_url}/data/complex/10/subunits",
+              [{"dbId": 11, "schemaClass": "DefinedSet"}, {"dbId": 12, "schemaClass": "EntityWithAccessionedSequence"}])
+    step, _ = reaction_step("R-T-1", deadline=0, cache_dir=tmp_path)
+    assert step["enzymes"][0]["components"] == [] and step["location_go"] == "GO:0005829"
+    cache_put(tmp_path, f"{base_url}/data/complex/10/subunits",
+              [{"dbId": 12, "schemaClass": "EntityWithAccessionedSequence"},
+               {"dbId": 13, "schemaClass": "EntityWithAccessionedSequence"}])
+    step, _ = reaction_step("R-T-1", deadline=0, cache_dir=tmp_path)
+    assert [c["ids"]["uniprot"] for c in step["enzymes"][0]["components"]] == ["P00001", "P00002"]
+
+
+def test_f4_member_join_refused_with_an_ungrounded_component():
+    enz = {"type": "complex", "name": "Alpha synthase", "synonyms": [],
+           "components": [part("alpha", t="protein", uniprot="P11111"), part("beta", t="protein")]}
+    big, report = run_on(base(), [rxn("R3", [part("C", "C90003")], [part("Delta", "C90004")], [enz])])
+    assert ext_names(big, "protein_complexes") == ["Alpha synthase"]
+    assert report["sources"]["pathbank"]["counts"].get("complex_joined_by_members", 0) == 0
+
+
+def test_f6_incoming_synonym_naming_another_row_is_dropped():
+    delta = dict(part("Delta", "C90004"), synonyms=["B", "delta-thing"])
+    big, report = run_on(base(), [rxn("R3", [part("C", "C90003")], [delta])])
+    row = next(r for r in big["extension"]["entities"]["compounds"] if r["name"] == "Delta")
+    assert row["synonyms"] == ["delta-thing"]
+    assert report["sources"]["pathbank"]["counts"]["synonyms_dropped_collision"] == 1
+
+
+def test_f7_one_bad_pathway_does_not_stop_the_source():
+    bad = pathway([rxn("RB", [{"name": "no type"}], [part("Delta", "C90004")])], sid="pathbank:PWBAD")
+    good = pathway([rxn("R3", [part("C", "C90003")], [part("Delta", "C90004")])])
+    big, report = extend_big_payload(build_big_payload(base()), sources=("pathbank",),
+                                     fetchers={"pathbank": fake([bad, good])})
+    entry = report["sources"]["pathbank"]
+    assert entry["status"] == "ok" and entry["counts"]["pathways_failed"] == 1
+    assert report["placement"] == {SID: {"hop_1": 1}}
+
+
+def test_f9_gpml_arrowhead_not_on_last_point_is_skipped():
+    g = GPML.replace('<Point GraphRef="a"/><Point GraphRef="b" ArrowHead="mim-conversion"/>',
+                     '<Point GraphRef="a" ArrowHead="mim-conversion"/><Point GraphRef="b"/>')
+    steps, notes = to_steps(parse_gpml(g))
+    assert [s["kind"] for s in steps] == ["interaction"]
+    assert "line r1: arrowhead not on the last point, skipped" in notes

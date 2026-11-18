@@ -36,8 +36,14 @@ def _protein(ref: Dict[str, Any]) -> Dict[str, Any]:
     return {"type": "protein", "name": name, "synonyms": [], "ids": {"uniprot": ref.get("identifier")}}
 
 
-def part_of(pe: Dict[str, Any]) -> Tuple[Optional[Dict[str, Any]], Optional[str]]:
-    """(neutral part or None when not convertible, compartment) for one /participants entry."""
+SETS = ("DefinedSet", "CandidateSet", "OpenSet")
+
+
+def part_of(pe: Dict[str, Any], subunits=None) -> Tuple[Optional[Dict[str, Any]], Optional[str]]:
+    """(neutral part or None when not convertible, compartment) for one /participants entry.
+    A complex gets its UniProt members as components only when ``subunits(dbId)`` (the
+    /data/complex/{id}/subunits list) shows no nested set: participants' refEntities flatten sets,
+    and "any of" members must not become co-subunits. Otherwise it is written by name only."""
     name, comp = split_name(pe.get("displayName") or "")
     cls = pe.get("schemaClass")
     refs = pe.get("refEntities") or []
@@ -49,9 +55,12 @@ def part_of(pe: Dict[str, Any]) -> Tuple[Optional[Dict[str, Any]], Optional[str]
     if cls == "EntityWithAccessionedSequence" and len(prot) == 1:
         p = _protein(prot[0])
         return {**p, "name": name, "synonyms": [p["name"]] if p["name"] != name else []}, comp
-    if cls == "Complex" and prot:
+    if cls == "Complex":
+        subs = subunits(pe.get("peDbId")) if subunits else None
+        flat = bool(prot) and subs is not None and not any(
+            isinstance(s, dict) and s.get("schemaClass") in SETS for s in subs)
         return {"type": "complex", "name": name, "synonyms": [],
-                "components": [_protein(r) for r in prot]}, comp
+                "components": [_protein(r) for r in prot] if flat else []}, comp
     return None, comp
 
 
@@ -62,11 +71,12 @@ def _ids_of(v) -> List[int]:
 def reaction_step(st_id: str, deadline: float, cache_dir) -> Tuple[Optional[Dict[str, Any]], Optional[str]]:
     q = _get(f"/data/query/{st_id}", deadline, cache_dir)
     pes = {p["peDbId"]: p for p in _get(f"/data/participants/{st_id}", deadline, cache_dir) or []}
+    subunits = lambda db_id: _get(f"/data/complex/{db_id}/subunits", deadline, cache_dir)
     side = {}
     for f in ("input", "output"):
         side[f] = []
         for i in dict.fromkeys(_ids_of(q.get(f))):   # repeats are stoichiometry; not carried
-            part, comp = part_of(pes.get(i, {}))
+            part, comp = part_of(pes.get(i, {}), subunits)
             if part is None:
                 return None, f"{st_id}: {f} {pes.get(i, {}).get('schemaClass')} not converted"
             side[f].append((part, comp))
@@ -74,15 +84,19 @@ def reaction_step(st_id: str, deadline: float, cache_dir) -> Tuple[Optional[Dict
     for ca in _ids_of(q.get("catalystActivity")):
         act = _get(f"/data/query/{ca}", deadline, cache_dir) or {}
         pe = pes.get((act.get("physicalEntity") or {}).get("dbId"), {})
-        part, _ = part_of(pe)
+        part, _ = part_of(pe, subunits)
         if part is not None:
             enzymes.append(part)
         elif pe.get("schemaClass") in ("DefinedSet", "CandidateSet"):   # "any of": each member alone
             members = [r for r in pe.get("refEntities") or [] if r.get("schemaClass") == "ReferenceGeneProduct"]
             enzymes += [_protein(r) for r in members]
             notes.append(f"catalyst set {split_name(pe.get('displayName', ''))[0]}: members listed as alternatives")
-    comps = [c.get("displayName") for c in q.get("compartment") or [] if isinstance(c, dict)]
-    key = lambda p: json.dumps(p.get("ids") or [c.get("ids") for c in p.get("components") or []], sort_keys=True)
+    comp_rows = [c for c in q.get("compartment") or [] if isinstance(c, dict)]
+    comps = [c.get("displayName") for c in comp_rows]
+    go = (f"GO:{comp_rows[0]['accession']}" if len(comp_rows) == 1 and comp_rows[0].get("accession")
+          and str(comp_rows[0].get("databaseName", "GO")).upper() == "GO" else None)
+    key = lambda p: json.dumps([p["type"], p["name"], p.get("ids"), [c.get("ids") for c in p.get("components") or []]],
+                               sort_keys=True)
     ins, outs = side["input"], side["output"]
     if len(ins) == 1 and len(outs) == 1 and key(ins[0][0]) == key(outs[0][0]) and ins[0][1] != outs[0][1]:
         return {"kind": "transport", "accession": st_id, "name": q.get("displayName"), "cargo": ins[0][0],
@@ -90,7 +104,7 @@ def reaction_step(st_id: str, deadline: float, cache_dir) -> Tuple[Optional[Dict
                 "note": "; ".join(notes)}, None
     return {"kind": "reaction", "accession": st_id, "name": q.get("displayName"),
             "inputs": [p for p, _ in ins], "outputs": [p for p, _ in outs], "enzymes": enzymes,
-            "location": comps[0] if len(comps) == 1 else None,
+            "location": comps[0] if len(comps) == 1 else None, "location_go": go,
             "note": "; ".join(notes + ([f"compartments {comps}: none chosen"] if len(comps) > 1 else []))}, None
 
 

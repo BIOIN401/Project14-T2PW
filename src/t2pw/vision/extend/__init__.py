@@ -94,17 +94,28 @@ def extend_big_payload(big: Dict[str, Any], *, sources=SOURCES, budget_s: float 
             continue
         entry["notes"] = list(notes or [])
         for pw in pathways:
-            rows, provs, src, counts = to_rows(big, pw)
-            big = merge_extension(big, rows, provs, src)
+            try:   # fail open per pathway: one bad record never stops the source or the run
+                rows, provs, src, counts = to_rows(big, pw)
+                big = merge_extension(big, rows, provs, src)
+            except Exception as exc:  # noqa: BLE001
+                entry["notes"].append(f"{pw.get('source_id')}: conversion failed, {type(exc).__name__}")
+                entry["counts"]["pathways_failed"] += 1
+                continue
             entry["counts"].update(counts)
             entry["pathways"].append({"source_id": pw["source_id"], "accession": pw.get("accession"),
                                       "name": pw.get("name"), "overlap": pw.get("overlap"),
                                       "steps": len(pw.get("steps") or [])})
         if not pathways:
             entry["status"] = "no_candidates"
+        elif not entry["pathways"]:
+            entry["status"] = "failed"
+            report["failed"].append(name)
     for entry in report["sources"].values():
         entry["counts"] = dict(entry["counts"])
     report["placement"] = placement(big)
+    hops = big.get("hops") or {}
+    report["overlay_entities_hop_none"] = sum(   # in FULL only: nothing grounded ties them to the core
+        1 for s, k, _, is_base in keyed_rows(big) if not is_base and s.startswith("entities.") and hops.get(k) is None)
     report["currency_only_twins"] = currency_only_twins(big)
     return big, report
 
