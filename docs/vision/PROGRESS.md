@@ -6,12 +6,40 @@ Plan: `docs/vision/PLAN.md`. Branch `vision/main` from `origin/main` `a6c07e16`.
 
 - 2026-11-17: plan written. Wave 1 (V1 model, V2 sbgn, V3 diagram) dispatched. Heavy lock held by the Thursday demo
   (`vllm-wire`); free RAM about 1 GB at planning time, so wave 1 runs light unit tests only.
+- 2026-11-17 late: V2 and V3 merged into `vision/main` (aedb2d15, 135cfb64). V1 approved with notes in review r3; fix r3
+  (VD-11 cofactor rule) at `vision/model` cee6bae4, review r4 pending, then merge.
+- RAM: the PC has a kernel memory leak (main orchestrator, 2026-11-17). Floors: 2 GB free for focused tests and small
+  proofs, 4 GB for SMOKE, replays, Docker, live legs. I briefly lowered the light floor to 1 GB in `C:/t/vis-runs/RULES.md`;
+  the main orchestrator reversed it and RULES.md is fixed. Two V1 runs ran under the 1 GB floor (model-unit-10, model-proof-4);
+  both finished with 0 survivors.
+
+### Resume notes (after a restart)
+
+1. Worktrees: `C:/t/vis-main` (vision/main), `C:/t/vis-model`, `C:/t/vis-sbgn`, `C:/t/vis-diagram`. Rules for agents:
+   `C:/t/vis-runs/RULES.md`; gate script `C:/t/vis-runs/bw.sh`; briefs ready to send in `C:/t/vis-runs/briefs/`
+   (V4, V5, V6, V9, SUITE). Logs `C:/t/vis-runs/logs/`.
+2. Next: V1 review r4 verdict -> merge `vision/model` into `vision/main` -> post-merge suites for wave 1 (SUITE.txt brief,
+   ws-test-runner haiku/medium, needs 4 GB free and the heavy lock free) -> push `vision/main`.
+3. Then wave 2: V4 extend-db (opus/high), V5 scope (sonnet/high), V9 bench (sonnet/high), each from the new `vision/main`
+   head (replace BASE in the brief), worktrees `C:/t/vis-<lane>`.
 
 ## Dispatch table
 
 | when | lane | role | agent (model/effort) | branch / worktree | state | evidence / note |
 |---|---|---|---|---|---|---|
 | 2026-11-17 | plan | scout x2 + follow-up | ws-scout (sonnet/medium) | read-only, `C:/t/vis-main` | done | payload, exporters, lineage fields, harness, gold, env mapped |
+| 2026-11-17 | V1 | implementer | general-purpose (opus/high) | `vision/model`, `C:/t/vis-model` | done 11699135 | 17 tests; identity 152/152 (DEFAULT and FULL == base) |
+| 2026-11-17 | V1 | review r1 | ws-reviewer (opus/high) | same | CHANGES_REQUESTED | F1 reaction identity ignores state; F2 hops through currency metabolites (blocking); F3-F9 notes, all sent back |
+| 2026-11-17 | V2 | implementer | general-purpose (sonnet/high) | `vision/sbgn`, `C:/t/vis-sbgn` | done 4b94d430 | 9 tests; 97/97 valid (XSD + libSBGN schematron); 498 process glyphs = 424 reactions + 74 transports |
+| 2026-11-17 | V2 | review r1 | ws-reviewer (opus/high) | same | CHANGES_REQUESTED | F1 substring relation matching reverses signs ("deactivates" -> stimulation); F2 non-regulatory relations drawn as modulation (VD-8) |
+| 2026-11-17 | V3 | implementer | general-purpose (sonnet/medium) | `vision/diagram`, `C:/t/vis-diagram` | done e2b83593 | 5 tests; SVG byte-identical to prototype 97/97, selfcheck 0 failures |
+| 2026-11-17 | V3 | review r1 | ws-reviewer (sonnet/high) | same | CHANGES_REQUESTED | fixtures have no reaction or transport; bad font env crashes import |
+| 2026-11-17 | V1 | fix r1 + review r2 | same implementer (opus/high); same reviewer (opus/high) | `vision/model` 44904bfc | CHANGES_REQUESTED | F1-F9 fixed (26 tests, 9 failing first); new R1: currency stripped before the reversed match merges hexokinase with G6Pase |
+| 2026-11-17 | V1 | fix r2 + review r3 | same / same | `vision/model` 94a8a593 | APPROVE WITH NOTES | R1-R4 fixed, 28 tests; identity 152/152; N1/N2 cofactor-merge ruling VD-11 sent as fix r3 before merge |
+| 2026-11-17 | V2 | fix r1 + review r2 | same implementer (sonnet/high); same reviewer (opus/high) | `vision/sbgn` 2ea34e25 | APPROVE WITH NITS | 39 tests; 97/97 valid; interactions drawn 91 -> 5 of 188 (VD-8: 86 not regulatory, 97 no process target, all counted) |
+| 2026-11-17 | V2 | merge | sub-orchestrator | `vision/main` aedb2d15 | MERGED | post-merge suites queued (RAM 1.2 GB free, waiting for 4 GB) |
+| 2026-11-17 | V3 | fix r1 + review r2 | same implementer (sonnet/medium); same reviewer (sonnet/high) | `vision/diagram` ff8be7c3 | APPROVE WITH NITS | 9 tests incl. reaction+transport fixture with pinned SVG hash |
+| 2026-11-17 | V3 | merge | sub-orchestrator | `vision/main` 135cfb64 | MERGED | post-merge suites queued with V2 (new files only; one combined run, VD-12) |
 
 ## Decisions made by the sub-orchestrator (PO gave full autonomy; recommended option each time)
 
@@ -23,6 +51,11 @@ Plan: `docs/vision/PLAN.md`. Branch `vision/main` from `origin/main` `a6c07e16`.
 | VD-4 | No PathWhiz edit planned | D-W28 (b): outside-sourced elements look the same in PathWhiz; edits only if a lane finds a real limit |
 | VD-5 | Own SBGN-ML exporter from the view (not PathWhiz's SBGN export) | VISION § 2.5: every format from the same view |
 | VD-6 | Move the web-diagram prototype into `src/t2pw/vision/diagram/` | the web view and generation need it in the repo; the prototype is proven (0 selfcheck failures on 97) |
+| VD-8 | SBGN interactions: stimulation/inhibition from a closed word list, modulation only for regulates/modulates/modifies/cofactor; binding, component_of, SAME_AS etc. are omitted and counted; entity-to-entity interactions with no process target are omitted and counted (SBGN PD needs a process target; no invented association process) | an arc must not assert regulation the paper did not state (contract § 1) |
+| VD-9 | Diagram font: bundling an open font (DejaVu Sans) and `pyproject` package-data for `diagram.css` go to the generation/deployment lane | the 97/97 proof holds on Segoe UI only; the Linux server needs a fixed font |
+| VD-10 | Paper-only view drops rows whose only lineage is `audit_modified` (7 reactions in 152 runs) | conservative; V7 can promote a row whose quote is verbatim in the paper |
+| VD-11 | Reaction merge identity: forward match merges when either row lists no cofactors, cofactors are equal, or differ only by NAD/NADP variants; a reversed match merges only when both rows list cofactors and they mirror | a wrong merge loses a step and attaches a false database confirmation; a missed merge only shows a step twice |
+| VD-12 | Wave-1 lanes add only new files, so SMOKE, golden-seam and equivalence run once on the combined merge result instead of after each lane | the Thursday demo has priority on the heavy lock and RAM; a per-lane run adds no information when no existing file changes |
 | VD-7 | Per-job extension budget defaults: 3 curated pathways, 5 outside papers, 120 s | VISION § 7 open point; conservative until the PO sets numbers |
 
 ## Deferrals
