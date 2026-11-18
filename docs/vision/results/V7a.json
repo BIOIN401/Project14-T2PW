@@ -42,6 +42,12 @@
     "Extension cache format: V4 / V8 are not merged, so extended_view reads a dict or a directory of <source id with non-alphanumerics as _>.<txt|json|xml|html>. The V4 / V8 lanes must write that, or this reader changes.",
     "SBGN exporter report is not exposed by generate() (bytes only): run_checks calls export_sbgn.sbgn_export on the same kept graph and IR (generate.py unchanged) and passes the report to cross_format. The report now bounds what class b may explain for regulatory arcs."
   ],
+  "round_2_notes": [
+    "compartment_ontology_differs cannot fire for SBML today: SBML compartments carry no GO ids (only PWML ontology-id does), so the check needs both sides to carry one and is inert until SBML gains them",
+    "tests/test_vision_sbgn.py is now coupled to validate.sbgn_schemas (a change in the checks package's SBGN loader changes that V2 test); its unused isoschematron name is removed",
+    "an SBGN arc is explained only by a regulatory interaction: the model keeps the interaction type (PWML interaction-type, SBML kind), filtered with export_sbgn._rel_class, the VD-8 list. Open conflict: that list maps cofactor_of to modulation (test_relationship_word_list), so a cofactor_of interaction still explains an SBGN modulation arc; the reviewer asked to exclude it, which would make the exporter's own arcs show as sbgn_regulatory_arc_extra. Excluded: binding, component_of, SAME_AS and the rest of the non-regulatory words",
+    "V7b item (reviewer note 3, reverse direction): a regulatory SBML or PWML interaction should appear as an SBGN arc on each process its target catalyses, bounded by report.omitted.interactions minus relationship_not_regulatory. Not added: it changes the clean-run expectations (run39 would need the exporter report passed to every ok-asserting test) and cannot be checked without a run"
+  ],
   "fix_round_1_review": {
     "state": "code and tests edited, nothing run",
     "F1": "compartment_placement_missing_in_pwml / _in_sbgn / _in_sbml for entities placed in one format and not the other (SBGN-only placements of entities SBML leaves unplaced stay class f); test added",
